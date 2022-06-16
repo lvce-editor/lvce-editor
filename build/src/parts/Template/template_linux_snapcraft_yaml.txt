@@ -1,0 +1,78 @@
+base: core20
+grade: devel
+confinement: devmode
+name: @@NAME@@
+version: @@VERSION@@
+summary: @@SUMMARY@@
+source-code: @@SOURCE_CODE@@
+license: @@LICENSE@@
+compression: lzo
+description: |
+  Visual Studio Code is a new choice of tool that combines the
+  simplicity of a code editor with what developers need for the core
+  edit-build-debug cycle.
+
+parts:
+  @@NAME@@:
+    plugin: npm
+    npm-node-version: 16.14.2
+    source: files/
+    build-packages:
+      - npm
+      - g++
+      - libavahi-compat-libdnssd-dev
+      - libdbus-1-dev
+      - libx11-dev
+      - libexpat1-dev
+      - libnotify-dev
+      - python3
+      - git
+    stage-packages:
+      - scrot
+      - libnss3
+      - libnspr4
+      - libasound2
+      - libpcre3
+      - libpulse0
+      - libxss1
+      - libxtst6
+    override-build: |
+      export PATH=$PATH:$SNAPCRAFT_PART_BUILD/../npm/bin
+      export PATH=$PATH:$SNAPCRAFT_PART_BUILD/node_modules/.bin
+      # snap always installs wrong node version https://bugs.launchpad.net/snapcraft/+bug/1886858
+      echo $(node --version)
+      echo $(which node)
+      echo $(npm --version)
+      echo $(which npm)
+      echo test
+      npm ci --unsafe-perm
+      node build/bin/build.js --target=snap-internal
+
+  #dump-package:
+  #  plugin: dump
+  #  source: ../stage/dist
+  #  after:
+  #    - @@NAME@@
+
+apps:
+  @@NAME@@:
+    command: snap/command-chain/desktop-launch $SNAP/usr/lib/@@NAME@@/@@NAME@@ --no-sandbox
+    extensions:
+      - gnome-3-38
+    plugs:
+      - media-hub
+      - alsa
+      - browser-support
+      - desktop
+      - desktop-legacy
+      - gsettings
+      - home
+      - network
+      - opengl
+      - pulseaudio
+      - unity7
+      - wayland
+      - x11
+    environment:
+      DISABLE_WAYLAND: '1'
+      TMPDIR: $XDG_RUNTIME_DIR

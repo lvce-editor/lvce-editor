@@ -1,0 +1,34 @@
+{
+  "name": "build",
+  "version": "0.0.0-dev",
+  "description": "",
+  "main": "linux_amd64.js",
+  "type": "module",
+  "scripts": {
+    "build:remote": "node src/build.js --remote",
+    "build:electron": "node src/build.js --electron",
+    "minify": "microbundle --entry ./.tmp/dist/6214a42f/packages/renderer-worker/src/rendererWorkerMain.js --output distmin --format modern --no-compress"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/bytes": "^3.1.1",
+    "@types/fs-extra": "^9.0.13",
+    "@types/verror": "^1.10.5",
+    "electron-builder": "^23.0.3",
+    "electron-rebuild": "^3.2.7",
+    "execa": "^6.1.0"
+  },
+  "dependencies": {
+    "bytes": "^3.1.2",
+    "esbuild": "^0.14.44",
+    "fs-extra": "^10.1.0",
+    "gzip-size": "^7.0.0",
+    "minimist": "^1.2.6",
+    "pretty-bytes": "^6.0.0",
+    "rollup": "^2.75.6",
+    "rollup-plugin-terser": "^7.0.2",
+    "verror": "^1.10.1"
+  }
+}

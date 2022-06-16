@@ -1,0 +1,5 @@
+{
+  "id": "test-author.test-extension",
+  "version": "0.0.1",
+  "main": "src/main.js"
+}

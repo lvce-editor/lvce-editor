@@ -1,0 +1,49 @@
+# electron embedded libraries
+lvce-oss: embedded-library freetype usr/lib/lvce-oss/lvce-oss
+lvce-oss: embedded-library lcms2 usr/lib/lvce-oss/lvce-oss
+lvce-oss: embedded-library libjpeg usr/lib/lvce-oss/lvce-oss
+lvce-oss: embedded-library libjsoncpp usr/lib/lvce-oss/lvce-oss
+lvce-oss: embedded-library libpng usr/lib/lvce-oss/lvce-oss
+lvce-oss: embedded-library openjpeg usr/lib/lvce-oss/lvce-oss
+lvce-oss: embedded-library srtp usr/lib/lvce-oss/lvce-oss
+lvce-oss: embedded-library tiff usr/lib/lvce-oss/lvce-oss
+
+# electron executables
+lvce-oss: shared-library-is-executable usr/lib/lvce-oss/libEGL.so 0755
+lvce-oss: shared-library-is-executable usr/lib/lvce-oss/libGLESv2.so 0755
+lvce-oss: shared-library-is-executable usr/lib/lvce-oss/libffmpeg.so 0755
+lvce-oss: shared-library-is-executable usr/lib/lvce-oss/libvk_swiftshader.so 0755
+lvce-oss: shared-library-is-executable usr/lib/lvce-oss/libvulkan.so.1 0755
+lvce-oss: shared-library-is-executable usr/lib/lvce-oss/swiftshader/libEGL.so 0755
+lvce-oss: shared-library-is-executable usr/lib/lvce-oss/swiftshader/libGLESv2.so 0755
+
+# electron/chrome binaries
+lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/chrome-sandbox
+lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/libEGL.so
+lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/libGLESv2.so
+lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/libffmpeg.so
+lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/libvk_swiftshader.so
+lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/libvulkan.so.1
+lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/lvce-oss
+lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/swiftshader/libEGL.so
+lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/swiftshader/libGLESv2.so
+
+# electron missing dependencies
+lvce-oss: missing-dependency-on-libc needed by usr/lib/lvce-oss/chrome-sandbox and 11 others
+
+# node-pty - not sure how to fix this
+lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-103/node-pty.node
+lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node
+lvce-oss: unstripped-binary-or-object usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node
+lvce-oss: shared-library-is-executable usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-103/node-pty.node 0755
+lvce-oss: shared-library-is-executable usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node 0755
+lvce-oss: shared-library-is-executable usr/lib/lvce-oss/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node 0755
+
+# ripgrep - how to resolve this error?
+lvce-oss: statically-linked-binary usr/lib/lvce-oss/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/bin/rg
+
+# binary is symlinked in postinstall script
+lvce-oss: desktop-command-not-in-package usr/share/applications/lvce-oss.desktop lvce-oss
+
+# too much effort to create another changelog file, skip this
+lvce-oss: no-changelog usr/share/doc/lvce-oss/changelog.gz (native package)

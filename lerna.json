@@ -1,0 +1,12 @@
+{
+  "packages": [
+    "packages/*",
+    "extension-helpers/*",
+    "extension-samples/*",
+    "extensions/*",
+    "build",
+    "test/extension-integration-tests",
+    "benchmark"
+  ],
+  "version": "0.0.0"
+}

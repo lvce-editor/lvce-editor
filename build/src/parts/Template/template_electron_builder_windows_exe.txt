@@ -1,0 +1,20 @@
+{
+  "name": "@@NAME@@",
+  "main": "packages/main-process/dist/mainProcessMain.js",
+  "author": "@@AUTHOR@@",
+  "description": "abc",
+  "version": "@@VERSION@@",
+  "dependencies": {
+    "node-pty": "^0.10.1",
+    "vscode-ripgrep-with-github-api-error-fix": "^2.0.4"
+  },
+  "homepage": "@@HOMEPAGE@@",
+  "build": {
+    "asar": false,
+    "includeSubNodeModules": true,
+    "electronVersion": "@@ELECTRON_VERSION@@",
+    "win": {
+      "target": [{ "target": "nsis" }]
+    }
+  }
+}

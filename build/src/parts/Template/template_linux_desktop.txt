@@ -1,0 +1,13 @@
+[Desktop Entry]
+Name=@@NAME_LONG@@
+Comment=@@SUMMARY@@
+GenericName=Text Editor
+Exec=@@EXEC@@
+Icon=@@ICON@@
+Terminal=false
+Type=Application
+StartupNotify=false
+StartupWMClass=@@NAME_LONG@@
+Categories=Utility;TextEditor;Development;IDE;
+Actions=new-empty-window;
+Keywords=@@KEYWORDS@@

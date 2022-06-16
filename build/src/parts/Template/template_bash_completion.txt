@@ -1,0 +1,31 @@
+
+# -*- shell-script -*-
+
+_@@APPNAME@@() {
+    local cur prev words cword
+    _init_completion || return
+
+    case "$prev" in
+        -f)
+            _filedir
+            return
+            ;;
+        -h)
+            _known_hosts_real "$cur"
+            return
+            ;;
+        -b)
+            COMPREPLY=( $( compgen -W 'counterrevolutionary electroencephalogram uncharacteristically' -- "$cur" ) )
+            return
+            ;;
+    esac
+
+    if [[ "$cur" == -* ]]; then
+        COMPREPLY=( $( compgen -W "--built-in-self-test -h --help -v --version --wait --web" -- "$cur" ) )
+        return
+    fi
+
+    _filedir
+}
+
+complete -F _@@APPNAME@@ @@APPNAME@@

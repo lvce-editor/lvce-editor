@@ -1,0 +1,47 @@
+{
+  "name": "lvce-editor",
+  "version": "0.0.0-dev",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "postinstall": "lerna bootstrap --ci",
+    "test": "lerna run test"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^28.1.1",
+    "@types/node": "^18.0.0",
+    "jest": "^28.1.1",
+    "jest-environment-jsdom": "^28.1.1",
+    "lerna": "^5.1.4",
+    "nodemon": "^2.0.16",
+    "prettier": "^2.7.1",
+    "typescript": "^4.7.3",
+    "wait-for-expect": "^3.0.2"
+  },
+  "prettier": {
+    "semi": false,
+    "singleQuote": true
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/build/**",
+      "**/misc/**",
+      "**/playground/**",
+      "**/static/**",
+      "**/test/**",
+      "**/dist/**",
+      "**/distmin/**",
+      "**/scripts/**",
+      "**/node_modules/**",
+      "**/coverage/**"
+    ],
+    "exec": "node packages/web/bin/web.js"
+  },
+  "dependencies": {
+    "execa": "^6.1.0"
+  }
+}

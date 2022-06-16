@@ -1,0 +1,6 @@
+#!/bin/bash
+set -e
+
+# Symlink bin command to /usr/bin
+rm -f /usr/bin/@@NAME@@
+ln -s /usr/lib/@@NAME@@/@@NAME@@ /usr/bin/@@NAME@@
