@@ -43,5 +43,8 @@
   },
   "dependencies": {
     "execa": "^6.1.0"
+  },
+  "optionalDependencies": {
+    "@lvce/language-features-typescript": "git://github.com/lvce-editor/language-features-typescript.git#15325d6d527ce5659a0ade55308262eb14a280e5"
   }
 }
