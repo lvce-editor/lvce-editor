@@ -463,7 +463,6 @@ const copyResults = async () => {
     to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/dist`,
   })
 
-  // /home/simon/Documents/vscode-faster-layout/build/.tmp/bundle/electron/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix
   await Copy.copy({
     from: `build/.tmp/bundle/electron/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/bin`,
     to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/bin`,

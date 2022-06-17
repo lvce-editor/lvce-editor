@@ -84,10 +84,6 @@ const handleDragStart = (event) => {
   // event.dataTransfer.setData('DownloadURL', '/tmp/some-file.txt')
   // event.preventDefault()
   event.dataTransfer.setData('text/uri-list', 'https://example.com/foobar')
-  // event.dataTransfer.setData(
-  //   'text/uri-list',
-  //   'file:///home/simon/Documents/vscode-faster-layout/packages/renderer-process/src/parts/Viewlet/ViewletExplorer.js'
-  // )
   // event.dataTransfer.setData('x-special/nautilus-clipboard', 'hello-world')
   // event.dataTransfer.setData('text/plain', 'abc')
 }

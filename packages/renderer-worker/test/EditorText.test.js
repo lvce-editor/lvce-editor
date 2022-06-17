@@ -386,7 +386,7 @@ test('getVisible - with semantic tokens decorations', () => {
 
 test('getVisible - with multi-line semantic tokens decorations', () => {
   const editor = {
-    uri: '/home/simon/Documents/vscode-faster-layout/playground/add.js',
+    uri: '/test/playground/add.js',
     languageId: 'javascript',
     lines: ['const add = (a, b) => a + b;', '', 'add(1,2,3)', ''],
     cursor: {

@@ -16,7 +16,7 @@ export const licenseUrl =
 
 export const licenseFileName = 'LICENSE.txt'
 
-export const copyrightShort = `2022, Simon Siefke`
+export const copyrightShort = `2022, Le Vivilet`
 
 // TODO
 export const linuxSummary = 'Simple Code Editor'
@@ -33,9 +33,9 @@ export const descriptionLongLinux = [
 export const version = '0.0.1'
 
 // TODO
-export const repoUrl = 'https://github.com/SimonSiefke/vscode-faster-layout'
+export const repoUrl = 'https://github.com/lvce-editor/lvce-editor'
 
 // TODO need actual home page
-export const homePage = 'https://elated-jones-3064a2.netlify.app'
+export const homePage = 'https://lvce-editor.netlify.app'
 
 export const linuxMaintainer = 'Le Vivilet <levivilet@pm.me>'
