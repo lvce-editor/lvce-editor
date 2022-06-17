@@ -1,0 +1,84 @@
+body,
+html {
+  width: 100%;
+  height: 100%;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-app-region: drag;
+}
+
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #333;
+  background-color: #eee;
+  font-size: 12px;
+  font-family: 'Helvetica', 'Arial', 'ヒラギノ角ゴ Pro W3',
+    'Hiragino Kaku Gothic Pro', 'メイリオ', Meiryo, 'ＭＳ Ｐゴシック',
+    'MS PGothic', sans-serif;
+}
+
+#Logo {
+  width: 200px;
+  height: 200px;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+#Title,
+#Copyright,
+#Description {
+  margin: 0.2em;
+  width: 200px;
+  text-align: center;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+#Versions {
+  border-collapse: collapse;
+  margin-top: 1em;
+  width: 161px;
+}
+
+#Versions tr td:nth-of-type(2)::before {
+  content: ': ';
+}
+
+#Copyright,
+#Versions {
+  color: #999;
+}
+
+.buttons {
+  margin-bottom: 1em;
+  text-align: center;
+}
+
+.buttons button {
+  margin-top: 1em;
+  width: 100px;
+  height: 24px;
+}
+
+.link {
+  cursor: pointer;
+  color: #80a0c2;
+}
+
+.bug-report-link {
+  position: absolute;
+  right: 0.5em;
+  bottom: 0.5em;
+}
+
+.clickable,
+.bug-report-link,
+.buttons button {
+  -webkit-app-region: no-drag;
+}

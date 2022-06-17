@@ -86,43 +86,43 @@ const copyThemeExtensions = async () => {
 }
 
 const copyIconThemeExtensions = async () => {
-  await Copy.copy({
-    from: 'extensions/builtin.vscode-icons',
-    to: 'build/.tmp/bundle/electron/extensions/builtin.vscode-icons',
-    ignore: [
-      'node_modules',
-      'scripts',
-      'package.json',
-      'package-lock.json',
-      'tsconfig.json',
-      '.tmp',
-    ],
-  })
+  // await Copy.copy({
+  //   from: 'extensions/builtin.vscode-icons',
+  //   to: 'build/.tmp/bundle/electron/extensions/builtin.vscode-icons',
+  //   ignore: [
+  //     'node_modules',
+  //     'scripts',
+  //     'package.json',
+  //     'package-lock.json',
+  //     'tsconfig.json',
+  //     '.tmp',
+  //   ],
+  // })
 }
 
 const copyLanguageFeaturesExtensions = async () => {
-  for (const languageId of ['css', 'html', 'typescript']) {
-    await Copy.copy({
-      from: `extensions/builtin.language-features-${languageId}`,
-      to: `build/.tmp/bundle/electron/extensions/builtin.language-features-${languageId}`,
-    })
-  }
+  // for (const languageId of ['css', 'html', 'typescript']) {
+  //   await Copy.copy({
+  //     from: `extensions/builtin.language-features-${languageId}`,
+  //     to: `build/.tmp/bundle/electron/extensions/builtin.language-features-${languageId}`,
+  //   })
+  // }
 }
 
 const copyOtherExtensions = async () => {
-  for (const extension of [
-    'css-lint',
-    'eslint',
-    'git',
-    'gitignore',
-    'prettier',
-    'self-test',
-  ]) {
-    await Copy.copy({
-      from: `extensions/builtin.${extension}`,
-      to: `build/.tmp/bundle/electron/extensions/builtin.${extension}`,
-    })
-  }
+  // for (const extension of [
+  //   'css-lint',
+  //   'eslint',
+  //   'git',
+  //   'gitignore',
+  //   'prettier',
+  //   'self-test',
+  // ]) {
+  //   await Copy.copy({
+  //     from: `extensions/builtin.${extension}`,
+  //     to: `build/.tmp/bundle/electron/extensions/builtin.${extension}`,
+  //   })
+  // }
 }
 
 const copyExtensions = async () => {
@@ -256,46 +256,46 @@ const bundleJs = async () => {
     platform: 'webworker',
   })
 
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(
-      `build/.tmp/bundle/electron/extensions/builtin.language-features-typescript`
-    ),
-    from: `./src/languageFeaturesTypeScriptMain.js`,
-    platform: 'node',
-  })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(
-      `build/.tmp/bundle/electron/extensions/builtin.language-features-css`
-    ),
-    from: `./src/languageFeaturesCssMain.js`,
-    platform: 'node',
-  })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(
-      `build/.tmp/bundle/electron/extensions/builtin.language-features-html`
-    ),
-    from: `./src/languageFeaturesHtmlMain.js`,
-    platform: 'node',
-  })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(
-      `build/.tmp/bundle/electron/extensions/builtin.self-test`
-    ),
-    from: `./src/parts/SelfTest/SelfTest.js`,
-    platform: 'node',
-  })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(
-      `build/.tmp/bundle/electron/extensions/builtin.prettier`
-    ),
-    from: `./src/prettierMain.js`,
-    platform: 'node',
-  })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/bundle/electron/extensions/builtin.eslint`),
-    from: `./src/eslintMain.js`,
-    platform: 'node',
-  })
+  // await BundleJs.bundleJs({
+  //   cwd: Path.absolute(
+  //     `build/.tmp/bundle/electron/extensions/builtin.language-features-typescript`
+  //   ),
+  //   from: `./src/languageFeaturesTypeScriptMain.js`,
+  //   platform: 'node',
+  // })
+  // await BundleJs.bundleJs({
+  //   cwd: Path.absolute(
+  //     `build/.tmp/bundle/electron/extensions/builtin.language-features-css`
+  //   ),
+  //   from: `./src/languageFeaturesCssMain.js`,
+  //   platform: 'node',
+  // })
+  // await BundleJs.bundleJs({
+  //   cwd: Path.absolute(
+  //     `build/.tmp/bundle/electron/extensions/builtin.language-features-html`
+  //   ),
+  //   from: `./src/languageFeaturesHtmlMain.js`,
+  //   platform: 'node',
+  // })
+  // await BundleJs.bundleJs({
+  //   cwd: Path.absolute(
+  //     `build/.tmp/bundle/electron/extensions/builtin.self-test`
+  //   ),
+  //   from: `./src/parts/SelfTest/SelfTest.js`,
+  //   platform: 'node',
+  // })
+  // await BundleJs.bundleJs({
+  //   cwd: Path.absolute(
+  //     `build/.tmp/bundle/electron/extensions/builtin.prettier`
+  //   ),
+  //   from: `./src/prettierMain.js`,
+  //   platform: 'node',
+  // })
+  // await BundleJs.bundleJs({
+  //   cwd: Path.absolute(`build/.tmp/bundle/electron/extensions/builtin.eslint`),
+  //   from: `./src/eslintMain.js`,
+  //   platform: 'node',
+  // })
 
   // const esBuildPath = Path.absolute('build/node_modules/esbuild/bin/esbuild')
   // console.log({ esBuildPath })
@@ -566,191 +566,191 @@ const copyResults = async () => {
       })
     }
   }
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/extensions/builtin.language-features-css/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/dist`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/extensions/builtin.language-features-css/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/src`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/extensions/builtin.language-features-css/data`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/data`,
-  })
-  const languageFeaturesCssPackageJson = await JsonFile.readJson(
-    'extensions/builtin.language-features-css/package.json'
-  )
-  await JsonFile.writeJson({
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/package.json`,
-    value: {
-      name: languageFeaturesCssPackageJson.name,
-      type: languageFeaturesCssPackageJson.type,
-      dependencies: languageFeaturesCssPackageJson.dependencies,
-    },
-  })
-  await Copy.copyFile({
-    from: `build/.tmp/bundle/electron/extensions/builtin.language-features-css/README.md`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/README.md`,
-  })
-  await Copy.copyFile({
-    from: `build/.tmp/bundle/electron/extensions/builtin.language-features-css/extension.json`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/extension.json`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/extensions/builtin.language-features-html/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/dist`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/extensions/builtin.language-features-html/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/src`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/extensions/builtin.language-features-html/data`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/data`,
-  })
-  const languageFeaturesHtmlPackageJson = await JsonFile.readJson(
-    'extensions/builtin.language-features-html/package.json'
-  )
-  await JsonFile.writeJson({
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/package.json`,
-    value: {
-      name: languageFeaturesHtmlPackageJson.name,
-      type: languageFeaturesHtmlPackageJson.type,
-      dependencies: languageFeaturesHtmlPackageJson.dependencies,
-    },
-  })
-  await Copy.copyFile({
-    from: `build/.tmp/bundle/electron/extensions/builtin.language-features-html/README.md`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/README.md`,
-  })
-  await Copy.copyFile({
-    from: `build/.tmp/bundle/electron/extensions/builtin.language-features-html/extension.json`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/extension.json`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/extensions/builtin.self-test/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.self-test/dist`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/extensions/builtin.self-test/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.self-test/src`,
-  })
-  const selfTestPackageJson = await JsonFile.readJson(
-    'extensions/builtin.self-test/package.json'
-  )
-  await JsonFile.writeJson({
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.self-test/package.json`,
-    value: {
-      name: selfTestPackageJson.name,
-      type: selfTestPackageJson.type,
-      dependencies: selfTestPackageJson.dependencies,
-    },
-  })
-  await Copy.copyFile({
-    from: `build/.tmp/bundle/electron/extensions/builtin.self-test/README.md`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.self-test/README.md`,
-  })
-  await Copy.copyFile({
-    from: `build/.tmp/bundle/electron/extensions/builtin.self-test/extension.json`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.self-test/extension.json`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/dist`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/src`,
-  })
-  const packageJson = await JsonFile.readJson('package.json')
-  const languageFeaturesTypeScriptPackageJson = await JsonFile.readJson(
-    'extensions/builtin.language-features-typescript/package.json'
-  )
-  await JsonFile.writeJson({
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/package.json`,
-    value: {
-      name: languageFeaturesTypeScriptPackageJson.name,
-      type: languageFeaturesTypeScriptPackageJson.type,
-      dependencies: {
-        ...languageFeaturesTypeScriptPackageJson.dependencies,
-        typescript: packageJson.devDependencies.typescript,
-      },
-    },
-  })
-  await Copy.copyFile({
-    from: `build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/README.md`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/README.md`,
-  })
-  await Copy.copyFile({
-    from: `build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/extension.json`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/extension.json`,
-  })
-  await Copy.copyFile({
-    from: `node_modules/typescript/package.json`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/node_modules/typescript/package.json`,
-  })
-  await Copy.copy({
-    from: `node_modules/typescript/lib`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/node_modules/typescript/lib`,
-    ignore: [
-      // ignoring these files reduces size from 61.3MB to 12.1MB
-      'tsc.js',
-      'tsserverlibrary.js',
-      'tsserverlibrary.d.ts',
-      'typescript.js',
-      'typescript.d.ts',
-      'typescriptServices.js',
-      'typescriptServices.d.ts',
-      'typesMap.json',
-      'typingsInstaller.js',
-      'README.md',
-      'protocol.d.ts',
-      'cs',
-      'de',
-      'es',
-      'fr',
-      'it',
-      'ja',
-      'ko',
-      'pl',
-      'pt-br',
-      'ru',
-      'tr',
-      'zh-cn',
-      'zh-tw',
-    ],
-  })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-css/dist`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/dist`,
+  // })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-css/src`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/src`,
+  // })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-css/data`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/data`,
+  // })
+  // const languageFeaturesCssPackageJson = await JsonFile.readJson(
+  //   'extensions/builtin.language-features-css/package.json'
+  // )
+  // await JsonFile.writeJson({
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/package.json`,
+  //   value: {
+  //     name: languageFeaturesCssPackageJson.name,
+  //     type: languageFeaturesCssPackageJson.type,
+  //     dependencies: languageFeaturesCssPackageJson.dependencies,
+  //   },
+  // })
+  // await Copy.copyFile({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-css/README.md`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/README.md`,
+  // })
+  // await Copy.copyFile({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-css/extension.json`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/extension.json`,
+  // })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-html/dist`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/dist`,
+  // })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-html/src`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/src`,
+  // })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-html/data`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/data`,
+  // })
+  // const languageFeaturesHtmlPackageJson = await JsonFile.readJson(
+  //   'extensions/builtin.language-features-html/package.json'
+  // )
+  // await JsonFile.writeJson({
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/package.json`,
+  //   value: {
+  //     name: languageFeaturesHtmlPackageJson.name,
+  //     type: languageFeaturesHtmlPackageJson.type,
+  //     dependencies: languageFeaturesHtmlPackageJson.dependencies,
+  //   },
+  // })
+  // await Copy.copyFile({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-html/README.md`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/README.md`,
+  // })
+  // await Copy.copyFile({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-html/extension.json`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/extension.json`,
+  // })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.self-test/dist`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.self-test/dist`,
+  // })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.self-test/src`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.self-test/src`,
+  // })
+  // const selfTestPackageJson = await JsonFile.readJson(
+  //   'extensions/builtin.self-test/package.json'
+  // )
+  // await JsonFile.writeJson({
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.self-test/package.json`,
+  //   value: {
+  //     name: selfTestPackageJson.name,
+  //     type: selfTestPackageJson.type,
+  //     dependencies: selfTestPackageJson.dependencies,
+  //   },
+  // })
+  // await Copy.copyFile({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.self-test/README.md`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.self-test/README.md`,
+  // })
+  // await Copy.copyFile({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.self-test/extension.json`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.self-test/extension.json`,
+  // })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/dist`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/dist`,
+  // })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/src`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/src`,
+  // })
+  // const packageJson = await JsonFile.readJson('package.json')
+  // const languageFeaturesTypeScriptPackageJson = await JsonFile.readJson(
+  //   'extensions/builtin.language-features-typescript/package.json'
+  // )
+  // await JsonFile.writeJson({
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/package.json`,
+  //   value: {
+  //     name: languageFeaturesTypeScriptPackageJson.name,
+  //     type: languageFeaturesTypeScriptPackageJson.type,
+  //     dependencies: {
+  //       ...languageFeaturesTypeScriptPackageJson.dependencies,
+  //       typescript: packageJson.devDependencies.typescript,
+  //     },
+  //   },
+  // })
+  // await Copy.copyFile({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/README.md`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/README.md`,
+  // })
+  // await Copy.copyFile({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/extension.json`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/extension.json`,
+  // })
+  // await Copy.copyFile({
+  //   from: `node_modules/typescript/package.json`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/node_modules/typescript/package.json`,
+  // })
+  // await Copy.copy({
+  //   from: `node_modules/typescript/lib`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/node_modules/typescript/lib`,
+  //   ignore: [
+  //     // ignoring these files reduces size from 61.3MB to 12.1MB
+  //     'tsc.js',
+  //     'tsserverlibrary.js',
+  //     'tsserverlibrary.d.ts',
+  //     'typescript.js',
+  //     'typescript.d.ts',
+  //     'typescriptServices.js',
+  //     'typescriptServices.d.ts',
+  //     'typesMap.json',
+  //     'typingsInstaller.js',
+  //     'README.md',
+  //     'protocol.d.ts',
+  //     'cs',
+  //     'de',
+  //     'es',
+  //     'fr',
+  //     'it',
+  //     'ja',
+  //     'ko',
+  //     'pl',
+  //     'pt-br',
+  //     'ru',
+  //     'tr',
+  //     'zh-cn',
+  //     'zh-tw',
+  //   ],
+  // })
   await Copy.copy({
     from: `build/.tmp/bundle/electron/extensions/builtin.theme-slime`,
     to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.theme-slime`,
   })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/extensions/builtin.vscode-icons`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.vscode-icons`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/extensions/builtin.prettier`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.prettier`,
-    ignore: [
-      'node_modules',
-      'playground',
-      'test',
-      'package-lock.json',
-      'tsconfig.json',
-    ],
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/extensions/builtin.eslint`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.eslint`,
-    ignore: [
-      'node_modules',
-      'playground',
-      'test',
-      'package-lock.json',
-      'tsconfig.json',
-    ],
-  })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.vscode-icons`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.vscode-icons`,
+  // })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.prettier`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.prettier`,
+  //   ignore: [
+  //     'node_modules',
+  //     'playground',
+  //     'test',
+  //     'package-lock.json',
+  //     'tsconfig.json',
+  //   ],
+  // })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/extensions/builtin.eslint`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.eslint`,
+  //   ignore: [
+  //     'node_modules',
+  //     'playground',
+  //     'test',
+  //     'package-lock.json',
+  //     'tsconfig.json',
+  //   ],
+  // })
 
   for (const dirent of await readdir(
     Path.absolute(`build/.tmp/bundle/electron/extensions`)
@@ -932,36 +932,36 @@ const applyOverridesPre = async () => {
     occurrence: `packages/pty-host/bin/ptyHost.js`,
     replacement: `packages/pty-host/dist/ptyHostMain.js`,
   })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-css/src/parts/Root/Root.js',
-    occurrence: `root = join(__dirname, '..', '..', '..')`,
-    replacement: `root = join(__dirname, '..')`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-html/src/parts/Root/Root.js',
-    occurrence: `root = join(__dirname, '..', '..', '..')`,
-    replacement: `root = join(__dirname, '..')`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/src/parts/Root/Root.js',
-    occurrence: `root = join(__dirname, '..', '..', '..')`,
-    replacement: `root = join(__dirname, '..')`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/src/parts/Platform/Platform.js',
-    occurrence: `process.env.TS_SERVER_PATH`,
-    replacement: `join(Root.root, 'node_modules', 'typescript', 'lib','tsserver.js')`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/extensions/builtin.self-test/src/parts/Root/Root.js',
-    occurrence: `root = join(__dirname, '..', '..', '..', '..', '..')`,
-    replacement: `root = join(__dirname, '..', '..')`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/extensions/builtin.self-test/src/parts/Platform/Platform.js',
-    occurrence: `process.env.ELECTRON_BINARY_PATH`,
-    replacement: `join(Root.root, '..', '..', '..', '${Product.applicationName}')`, // TODO support windows and macos
-  })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-css/src/parts/Root/Root.js',
+  //   occurrence: `root = join(__dirname, '..', '..', '..')`,
+  //   replacement: `root = join(__dirname, '..')`,
+  // })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-html/src/parts/Root/Root.js',
+  //   occurrence: `root = join(__dirname, '..', '..', '..')`,
+  //   replacement: `root = join(__dirname, '..')`,
+  // })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/src/parts/Root/Root.js',
+  //   occurrence: `root = join(__dirname, '..', '..', '..')`,
+  //   replacement: `root = join(__dirname, '..')`,
+  // })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/src/parts/Platform/Platform.js',
+  //   occurrence: `process.env.TS_SERVER_PATH`,
+  //   replacement: `join(Root.root, 'node_modules', 'typescript', 'lib','tsserver.js')`,
+  // })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/extensions/builtin.self-test/src/parts/Root/Root.js',
+  //   occurrence: `root = join(__dirname, '..', '..', '..', '..', '..')`,
+  //   replacement: `root = join(__dirname, '..', '..')`,
+  // })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/extensions/builtin.self-test/src/parts/Platform/Platform.js',
+  //   occurrence: `process.env.ELECTRON_BINARY_PATH`,
+  //   replacement: `join(Root.root, '..', '..', '..', '${Product.applicationName}')`, // TODO support windows and macos
+  // })
   await Replace.replace({
     path: 'build/.tmp/bundle/electron/packages/renderer-process/src/parts/Platform/Platform.js',
     occurrence: 'ASSET_DIR',
@@ -999,11 +999,11 @@ const applyOverridesPost = async () => {
     replacement: `.join("/non-existent", "xdg-open")`,
   })
   // workaround for esbuild bug https://github.com/evanw/esbuild/issues/700
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/extensions/builtin.self-test/dist/SelfTest.js',
-    occurrence: `var __create = Object.create;`,
-    replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
-  })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/extensions/builtin.self-test/dist/SelfTest.js',
+  //   occurrence: `var __create = Object.create;`,
+  //   replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
+  // })
 
   // workaround for esbuild issue with electron-clipboard-ex
   await Replace.replace({
@@ -1028,41 +1028,41 @@ var import_node_pty = require("node-pty");`,
     replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); // src/parts/Pty/Pty.js
 var import_node_pty = require("node-pty");`,
   })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-css/extension.json',
-    occurrence: `src/`,
-    replacement: `dist/`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-html/extension.json',
-    occurrence: `src/`,
-    replacement: `dist/`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/extension.json',
-    occurrence: `src/`,
-    replacement: `dist/`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/dist/languageFeaturesTypeScriptMain.js',
-    occurrence: `var __create = Object.create;`,
-    replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/extensions/builtin.prettier/extension.json',
-    occurrence: `src/`,
-    replacement: `dist/`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/extensions/builtin.prettier/dist/prettierMain.js',
-    occurrence: `var __create = Object.create;`,
-    replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/extensions/builtin.eslint/extension.json',
-    occurrence: `src/`,
-    replacement: `dist/`,
-  })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-css/extension.json',
+  //   occurrence: `src/`,
+  //   replacement: `dist/`,
+  // })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-html/extension.json',
+  //   occurrence: `src/`,
+  //   replacement: `dist/`,
+  // })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/extension.json',
+  //   occurrence: `src/`,
+  //   replacement: `dist/`,
+  // })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/dist/languageFeaturesTypeScriptMain.js',
+  //   occurrence: `var __create = Object.create;`,
+  //   replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
+  // })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/extensions/builtin.prettier/extension.json',
+  //   occurrence: `src/`,
+  //   replacement: `dist/`,
+  // })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/extensions/builtin.prettier/dist/prettierMain.js',
+  //   occurrence: `var __create = Object.create;`,
+  //   replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
+  // })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/extensions/builtin.eslint/extension.json',
+  //   occurrence: `src/`,
+  //   replacement: `dist/`,
+  // })
 }
 
 const bundleCss = async () => {

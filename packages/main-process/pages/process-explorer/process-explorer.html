@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Process Explorer</title>
+    <link rel="stylesheet" href="/remote/tmp/process-explorer-theme.css" />
+    <link rel="stylesheet" href="./process-explorer.css" />
+  </head>
+  <body>
+    <h1>Process Explorer</h1>
+
+    <table
+      id="ProcessExplorer"
+      role="treegrid"
+      aria-label="Process Explorer"
+      id="ProcessExplorer"
+    >
+      <colgroup>
+        <col />
+        <col />
+        <col />
+      </colgroup>
+      <thead>
+        <tr>
+          <th scope="col">Process Name</th>
+          <th scope="col">Id</th>
+          <th scope="col">Memory</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <output id="Output"></output>
+    <script src="./process-explorer.js"></script>
+  </body>
+</html>

@@ -1,0 +1,51 @@
+body {
+  background: var(--MainBackground);
+  color: var(--TreeItemForeground);
+}
+
+#ProcessExplorer {
+  white-space: nowrap;
+  border-collapse: collapse;
+  user-select: none;
+}
+
+#ProcessExplorer tr[aria-level='2'] > td:first-child {
+  padding-left: 2.5ch;
+}
+
+#ProcessExplorer tr[aria-level='3'] > td:first-child {
+  padding-left: 5ch;
+}
+#ProcessExplorer tr[aria-level='4'] > td:first-child {
+  padding-left: 7.5ch;
+}
+
+#ProcessExplorer tr > td:not(:first-child),
+#ProcessExplorer tr > th:not(:first-child) {
+  padding-left: 3ch;
+  text-align: right;
+}
+
+.Row {
+  contain: strict;
+}
+
+.Row:focused {
+}
+
+.Row[aria-expanded] td:first-child::before {
+  content: '> ';
+}
+
+.Row[aria-expanded='false'] td:first-child::before {
+  content: '< ';
+}
+
+.Row:focus,
+.Cell:focus {
+  outline: var(--FocusOutline);
+  outline-offset: -1px;
+  outline-style: solid;
+  outline-width: 1px;
+  background-color: #405c50;
+}
