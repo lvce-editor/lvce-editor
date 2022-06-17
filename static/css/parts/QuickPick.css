@@ -1,0 +1,141 @@
+/* TODO commit 9fcc3db9e37ec708459f3ba96715ca1286fc53b4 might be a bit faster
+   for quickpick to open (3.3ms recalculcate style vs 4.2ms now)  */
+
+/* TODO recalculate style is really slow in chrome for unknown reasons */
+#QuickPick {
+  position: absolute;
+  width: 600px;
+  top: 50px;
+  left: 50%;
+  margin-left: -300px; /* TODO maybe this should be 301px because of padding to be centered */
+  padding: 0 1px 6px;
+  background: var(--QuickPickBackground);
+  color: var(--ListForeground);
+  box-sizing: border-box;
+  /* TODO is this useful? */
+  contain: content;
+  /* TODO is this useful? */
+  /* transform: translate3d(0, 0, 0); */
+  display: flex;
+  flex-direction: column;
+  row-gap: 4px;
+  pointer-events: all;
+  /* inset: 0; */
+  /* will-change: transform; */
+  box-shadow: rgb(0 0 0 / 15%) 0px 0px 8px 2px;
+}
+
+#QuickPickHeader {
+  /* width: 100%; */
+  display: flex;
+  /* margin: 6px 6px 0; */
+  padding: 6px 6px 0;
+  /* contain: strict; */
+  height: 30px;
+  contain: strict;
+  /* margin-bottom: -2px; */
+}
+
+#QuickPickItems {
+  outline: 0;
+  overflow-y: auto;
+  /* height: 200px; */
+  max-height: 220px;
+  /* TODO not sure if that makes anything faster here */
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  /* contain: layout style paint; */
+}
+
+.ScrollWrapper {
+  width: 100%;
+  height: 220px;
+  /* TODO check if this makes a difference */
+  /* will-change: transform; needed for effective scrolling */
+  /* contain: strict; */
+  position: relative;
+  z-index: -1;
+}
+
+.Row {
+}
+
+.QuickPickItem {
+  display: flex;
+  /* column-gap: 1rem; */
+  /* padding: 0 6px 0 11px; */
+  white-space: nowrap;
+  /* height: 23px; */
+  /* contain: strict; */
+  align-items: center;
+
+  width: 100%;
+  height: 22px;
+  font-size: 13px;
+  contain: strict;
+  margin: 0;
+  padding: 0;
+  /* position: absolute; */
+  padding: 0 6px;
+  contain: strict;
+}
+
+.QuickPickItem:hover {
+  background: var(--ListHoverBackground);
+  color: var(--ListHoverForeground);
+}
+
+.QuickPickItem.Focused {
+  color: var(--ListActiveSelectionForeground);
+  background: var(--ListActiveSelectionBackground);
+}
+
+.QuickPickItemLabel {
+  /* pointer-events: none; */
+  font-size: 13px;
+}
+
+.QuickPickItemDescription {
+  font-size: 0.8rem;
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+#QuickPickCount {
+  /* Screen Reader Only */
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+/* TODO don't do nesting */
+.QuickPickItem .highlight {
+  color: darkgoldenrod;
+}
+
+/* TODO different way to check if it is file, className may be faster  */
+.QuickPickItem[data-language-id]::before {
+  content: ' ';
+  contain: strict;
+  width: 22px;
+  height: 22px;
+  background-size: 16px;
+  background-position: 0;
+  background-repeat: no-repeat;
+  padding-right: 6px;
+  width: 16px;
+  height: 22px;
+  line-height: inherit !important;
+  display: inline-block;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: top;
+  flex-shrink: 0;
+  background-size: cover;
+  background-size: 16px;
+  background-position: 0;
+}

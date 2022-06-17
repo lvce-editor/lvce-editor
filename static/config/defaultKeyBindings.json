@@ -1,0 +1,649 @@
+[
+  {
+    "key": "ArrowDown",
+    "command": "editorCompletion.focusNext",
+    "when": "focus.editorCompletions"
+  },
+  {
+    "key": "ArrowUp",
+    "command": "editorCompletion.focusPrevious",
+    "when": "focus.editorCompletions"
+  },
+  {
+    "key": "Enter",
+    "command": "editorCompletion.selectCurrent",
+    "when": "focus.editorCompletions"
+  },
+  {
+    "key": "Escape",
+    "command": "editorCompletion.close",
+    "when": "focus.editorCompletions"
+  },
+  {
+    "key": "ctrl+ArrowRight",
+    "command": "editor.cursorWordRight",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+ArrowLeft",
+    "command": "editor.cursorWordLeft",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "alt+Backspace",
+    "command": "editor.deleteWordPartLeft",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "alt+Delete",
+    "command": "editor.deleteWordPartRight",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+Backspace",
+    "command": "editor.deleteWordLeft",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "Enter",
+    "command": "editorRename.finish",
+    "when": "focus.editorRename"
+  },
+  {
+    "key": "Escape",
+    "command": "editorRename.abort",
+    "when": "focus.editorRename"
+  },
+  {
+    "key": "ctrl+Delete",
+    "command": "editor.deleteWordRight",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+d",
+    "command": "editor.selectNextOccurrence",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "Tab",
+    "command": "editor.handleTab",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "shift+Tab",
+    "command": "editor.unindent",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+[",
+    "command": "editor.indentLess",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+]",
+    "command": "editor.indentMore",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "shift+ArrowLeft",
+    "command": "editor.selectCharacterLeft",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+shift+ArrowLeft",
+    "command": "editor.selectWordLeft",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "shift+ArrowRight",
+    "command": "editor.selectCharacterRight",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+shift+ArrowRight",
+    "command": "editor.selectWordRight",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+l",
+    "command": "editor.selectLine",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+shift+Backspace",
+    "command": "editor.deleteAllLeft",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+shift+Delete",
+    "command": "editor.deleteAllRight",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+s",
+    "command": "main.save"
+  },
+  {
+    "key": "ctrl+b",
+    "command": "layout.toggleSideBar"
+  },
+  {
+    "key": "ctrl+m",
+    "command": "layout.toggleActivityBar"
+  },
+  {
+    "key": "ctrl+`",
+    "command": "viewService.toggleView",
+    "args": ["Terminal"]
+  },
+  {
+    "key": "ctrl+shift+m",
+    "command": "viewService.toggleView",
+    "args": ["Output"]
+  },
+  {
+    "key": "ctrl+Enter",
+    "command": "viewletSourceControl.acceptInput",
+    "when": "focus.sourceControlInput"
+  },
+  {
+    "key": "ctrl+n",
+    "command": "viewletExplorer.newFile"
+  },
+  {
+    "key": "ctrl+p",
+    "command": "quickPick.show"
+  },
+  {
+    "key": "ctrl+shift+p",
+    "command": "quickPick.openCommandPalette"
+  },
+  {
+    "key": "shift shift",
+    "command": "quickPick.openCommandPalette"
+  },
+  {
+    "key": "ctrl ctrl",
+    "command": "quickPick.openCommandPalette"
+  },
+  {
+    "key": "alt alt",
+    "command": "quickPick.openCommandPalette"
+  },
+  {
+    "key": "F1",
+    "command": "quickPick.openCommandPalette"
+  },
+  {
+    "key": "Escape",
+    "command": "quickPick.hide",
+    "when": "focus.quickPickInput"
+  },
+  {
+    "key": "ArrowUp",
+    "command": "quickPick.focusPrevious",
+    "when": "focus.quickPickInput"
+  },
+  {
+    "key": "ArrowDown",
+    "command": "quickPick.focusNext",
+    "when": "focus.quickPickInput"
+  },
+  {
+    "key": "PageUp",
+    "command": "quickPick.focusFirst",
+    "when": "focus.quickPickInput"
+  },
+  {
+    "key": "PageDown",
+    "command": "quickPick.focusLast",
+    "when": "focus.quickPickInput"
+  },
+  {
+    "key": "Enter",
+    "command": "quickPick.selectCurrentIndex",
+    "when": "focus.quickPickInput"
+  },
+  {
+    "key": "ctrl+shift+x",
+    "command": "focus.set",
+    "args": ["Extensions"]
+  },
+  {
+    "key": "ctrl+shift+g",
+    "command": "focus.set",
+    "args": ["Source Control"]
+  },
+  {
+    "key": "ctrl+shift+e",
+    "command": "focus.set",
+    "args": ["Explorer"]
+  },
+  {
+    "key": "ctrl+shift+f",
+    "command": "focus.set",
+    "args": ["Search"]
+  },
+  {
+    "key": "ctrl+shift+Y",
+    "command": "focus.set",
+    "args": ["Debug Console"]
+  },
+  {
+    "key": "ctrl+shift+m",
+    "command": "focus.set",
+    "args": ["Problems"]
+  },
+  {
+    "key": "ArrowRight",
+    "command": "viewletExplorer.handleArrowRight",
+    "when": "focus.ViewletExplorer"
+  },
+  {
+    "key": "ArrowLeft",
+    "command": "viewletExplorer.handleArrowLeft",
+    "when": "focus.ViewletExplorer"
+  },
+  {
+    "key": "Home",
+    "command": "viewletExplorer.focusFirst",
+    "when": "focus.ViewletExplorer"
+  },
+  {
+    "key": "End",
+    "command": "viewletExplorer.focusLast",
+    "when": "focus.ViewletExplorer"
+  },
+  {
+    "key": "ArrowUp",
+    "command": "viewletExplorer.focusPrevious",
+    "when": "focus.ViewletExplorer"
+  },
+  {
+    "key": "ArrowDown",
+    "command": "viewletExplorer.focusNext",
+    "when": "focus.ViewletExplorer"
+  },
+  {
+    "key": "shift+*",
+    "command": "viewletExplorer.expandAll",
+    "when": "focus.ViewletExplorer"
+  },
+  {
+    "key": "ctrl+ArrowLeft",
+    "command": "viewletExplorer.collapseAll",
+    "when": "focus.ViewletExplorer"
+  },
+  {
+    "key": "Home",
+    "command": "viewletExtensions.focusFirst",
+    "when": "focus.viewletExtensions"
+  },
+  {
+    "key": "End",
+    "command": "viewletExtensions.focusLast",
+    "when": "focus.viewletExtensions"
+  },
+  {
+    "key": "PageUp",
+    "command": "viewletExtensions.focusPreviousPage",
+    "when": "focus.viewletExtensions"
+  },
+  {
+    "key": "PageDown",
+    "command": "viewletExtensions.focusNextPage",
+    "when": "focus.viewletExtensions"
+  },
+  {
+    "key": "ArrowUp",
+    "command": "viewletExtensions.focusPrevious",
+    "when": "focus.viewletExtensions"
+  },
+  {
+    "key": "ArrowDown",
+    "command": "viewletExtensions.focusNext",
+    "when": "focus.viewletExtensions"
+  },
+  {
+    "key": "ctrl+Space",
+    "command": "viewletExtensions.toggleSuggest",
+    "when": "focus.viewletExtensions"
+  },
+  {
+    "key": "F2",
+    "command": "viewletExplorer.rename",
+    "when": "focus.ViewletExplorer"
+  },
+  {
+    "key": "Escape",
+    "command": "viewletExplorer.cancelRename",
+    "when": "focus.viewletExplorerRename"
+  },
+  {
+    "key": "Enter",
+    "command": "viewletExplorer.acceptRename",
+    "when": "focus.viewletExplorerRename"
+  },
+  {
+    "key": "Escape",
+    "command": "viewletExplorer.cancelNewFile",
+    "when": "focus.viewletExplorerCreateFile"
+  },
+  {
+    "key": "Enter",
+    "command": "viewletExplorer.acceptNewFile",
+    "when": "focus.viewletExplorerCreateFile"
+  },
+  {
+    "key": "Delete",
+    "command": "viewletExplorer.removeDirent",
+    "when": "focus.ViewletExplorer"
+  },
+  {
+    "key": "Space",
+    "command": "viewletExplorer.handleClickCurrent",
+    "when": "focus.ViewletExplorer"
+  },
+  {
+    "key": "Enter",
+    "command": "viewletExplorer.handleClickCurrent",
+    "when": "focus.ViewletExplorer"
+  },
+  {
+    "key": "Escape",
+    "command": "editor.cancelSelection",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+z",
+    "command": "editor.undo",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+,",
+    "command": "preferences.openSettingsJson"
+  },
+  {
+    "key": "ArrowLeft",
+    "command": "editor.cursorLeft",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ArrowRight",
+    "command": "editor.cursorRight",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ArrowUp",
+    "command": "editor.cursorUp",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ArrowDown",
+    "command": "editor.cursorDown",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "Backspace",
+    "command": "editor.deleteLeft",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "Delete",
+    "command": "editor.deleteRight",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "Enter",
+    "command": "editor.insertLineBreak",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+shift+d",
+    "command": "editor.copyLineDown",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+shift+d",
+    "command": "focus.set",
+    "args": ["Run and Debug"]
+  },
+  {
+    "key": "ctrl+shift+ArrowDown",
+    "command": "editor.moveLineDown",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+shift+ArrowUp",
+    "command": "editor.moveLineUp",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+Space",
+    "command": "editorCompletion.open",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "F2",
+    "command": "editorRename.open",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "Home",
+    "command": "editor.cursorHome",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "End",
+    "command": "editor.cursorEnd",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+/",
+    "command": "editor.toggleComment",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ArrowDown",
+    "command": "activityBar.focusNext",
+    "when": "focus.activityBar"
+  },
+  {
+    "key": "ArrowUp",
+    "command": "activityBar.focusPrevious",
+    "when": "focus.activityBar"
+  },
+  {
+    "key": "Home",
+    "command": "activityBar.focusFirst",
+    "when": "focus.activityBar"
+  },
+  {
+    "key": "PageUp",
+    "command": "activityBar.focusFirst",
+    "when": "focus.activityBar"
+  },
+  {
+    "key": "PageDown",
+    "command": "activityBar.focusLast",
+    "when": "focus.activityBar"
+  },
+  {
+    "key": "End",
+    "command": "activityBar.focusLast",
+    "when": "focus.activityBar"
+  },
+  {
+    "key": "Space",
+    "command": "activityBar.selectCurrent",
+    "when": "focus.activityBar"
+  },
+  {
+    "key": "Enter",
+    "command": "activityBar.selectCurrent",
+    "when": "focus.activityBar"
+  },
+  {
+    "key": "Home",
+    "command": "activityBar.focusFirst",
+    "when": "focus.activityBar"
+  },
+  {
+    "key": "End",
+    "command": "activityBar.focusLast",
+    "when": "focus.activityBar"
+  },
+  {
+    "key": "ctrl+c",
+    "command": "editor.copy",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+a",
+    "command": "editor.selectAll",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "alt+ArrowLeft",
+    "command": "editor.cursorWordPartLeft",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "alt+ArrowRight",
+    "command": "editor.cursorWordPartRight",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+w",
+    "command": "main.closeActiveEditor"
+  },
+  {
+    "key": "ctrl+shift+i",
+    "command": "developer.toggleDeveloperTools",
+    "when": "browser.electron"
+  },
+  {
+    "key": "F6",
+    "command": "navigation.focusNextPart"
+  },
+  {
+    "key": "shift+F6",
+    "command": "navigation.focusPreviousPart"
+  },
+  {
+    "key": "alt+F3",
+    "command": "editor.selectAllOccurrences",
+    "when": "focus.ViewletEditorText"
+  },
+  {
+    "key": "ctrl+g",
+    "command": "quickPick.openGoToLine"
+  },
+  {
+    "key": "ctrl+shift+Space",
+    "command": "editor.selectInsideString",
+    "when": "focus.editor"
+  },
+  {
+    "key": "ctrl+Tab",
+    "command": "main.focusNext"
+  },
+  {
+    "key": "ctrl+shift+Tab",
+    "command": "main.focusPrevious"
+  },
+  {
+    "key": "Escape",
+    "command": "dialog.close",
+    "when": "focus.dialog"
+  },
+  {
+    "key": "ctrl+v",
+    "command": "viewletExplorer.handlePaste",
+    "when": "focus.ViewletExplorer"
+  },
+  {
+    "key": "ctrl+c",
+    "command": "viewletExplorer.handleCopy",
+    "when": "focus.ViewletExplorer"
+  },
+  {
+    "key": "ArrowDown",
+    "command": "menu.focusNext",
+    "when": "focus.menu"
+  },
+  {
+    "key": "ArrowUp",
+    "command": "menu.focusPrevious",
+    "when": "focus.menu"
+  },
+  {
+    "key": "Enter",
+    "command": "menu.selectCurrent",
+    "when": "focus.menu"
+  },
+  {
+    "key": "Space",
+    "command": "menu.selectCurrent",
+    "when": "focus.menu"
+  },
+  {
+    "key": "Home",
+    "command": "menu.focusFirst",
+    "when": "focus.menu"
+  },
+  {
+    "key": "End",
+    "command": "menu.focusLast",
+    "when": "focus.menu"
+  },
+  {
+    "key": "Escape",
+    "command": "menu.hide",
+    "when": "focus.menu"
+  },
+  {
+    "key": "ctrl+shift+n",
+    "command": "workbench.newWindow",
+    "when": "browser.electron"
+  },
+  {
+    "key": "Tab",
+    "command": "menu.noop",
+    "when": "focus.menu"
+  },
+  {
+    "key": "Shift+Tab",
+    "command": "menu.noop",
+    "when": "focus.menu"
+  },
+  {
+    "key": "ctrl+shift+r",
+    "command": "file.openRecent"
+  },
+  {
+    "key": "ArrowDown",
+    "command": "viewletLocations.focusNext",
+    "when": "focus.locationList"
+  },
+  {
+    "key": "ArrowUp",
+    "command": "viewletLocations.focusPrevious",
+    "when": "focus.locationList"
+  },
+  {
+    "key": "Home",
+    "command": "viewletLocations.focusFirst",
+    "when": "focus.locationList"
+  },
+  {
+    "key": "End",
+    "command": "viewletLocations.focusLast",
+    "when": "focus.locationList"
+  },
+  {
+    "key": "Enter",
+    "command": "viewletLocations.selectCurrent",
+    "when": "focus.locationList"
+  }
+]

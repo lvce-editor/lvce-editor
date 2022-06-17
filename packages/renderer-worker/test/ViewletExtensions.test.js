@@ -1,0 +1,1807 @@
+import { jest } from '@jest/globals'
+import * as Ajax from '../src/parts/Ajax/Ajax.js'
+import * as ErrorHandling from '../src/parts/ErrorHandling/ErrorHandling.js'
+import * as Platform from '../src/parts/Platform/Platform.js'
+import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
+import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
+import * as ViewletExtensions from '../src/parts/Viewlet/ViewletExtensions.js'
+
+beforeEach(() => {
+  Platform.state.getMarketPlaceUrl = async () => {
+    return 'https://example.com'
+  }
+})
+
+test('name', () => {
+  expect(ViewletExtensions.name).toBe('Extensions')
+})
+
+test('create', () => {
+  const state = ViewletExtensions.create()
+  expect(state).toBeDefined()
+})
+
+// TODO test refreshing and one extension has invalid shape (e.g. null or array where object is expected)
+
+test('loadContent', async () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    width: 200,
+    height: 200,
+    maxLineY: 10,
+  }
+  Ajax.state.getJson = jest.fn(async () => {
+    return [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension',
+      },
+    ]
+  })
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  SharedProcess.state.send = jest.fn((message) => {
+    switch (message.method) {
+      case 'ExtensionManagement.getAllExtensions':
+        SharedProcess.state.receive({
+          jsonrpc: '2.0',
+          id: message.id,
+          result: [
+            {
+              id: 'builtin.language-basics-html',
+              name: 'Language Basics HTML',
+              description:
+                'Provides syntax highlighting and bracket matching in HTML files.',
+              languages: [
+                {
+                  id: 'html',
+                  extensions: ['.html'],
+                  tokenize: 'src/tokenizeHtml.js',
+                  configuration: './languageConfiguration.json',
+                },
+              ],
+            },
+            {
+              id: 'test-author-2.test-extension',
+              publisher: 'test-author-2',
+              description: 'Test Extension',
+              name: 'test-extension',
+              version: '0.0.1',
+              main: 'main.js',
+              path: '/tmp/extensions/test-author-2.test-extension',
+            },
+          ],
+        })
+        break
+      default:
+        console.log({ message })
+        throw new Error('unexpected message')
+    }
+  })
+  expect(await ViewletExtensions.loadContent(state)).toMatchObject({
+    extensions: [
+      {
+        description:
+          'Provides syntax highlighting and bracket matching in HTML files.',
+        id: 'builtin.language-basics-html',
+
+        languages: [
+          {
+            configuration: './languageConfiguration.json',
+            extensions: ['.html'],
+            id: 'html',
+            tokenize: 'src/tokenizeHtml.js',
+          },
+        ],
+        name: 'Language Basics HTML',
+      },
+      {
+        description: 'Test Extension',
+        id: 'test-author-2.test-extension',
+        main: 'main.js',
+        name: 'test-extension',
+        path: '/tmp/extensions/test-author-2.test-extension',
+        publisher: 'test-author-2',
+        version: '0.0.1',
+      },
+    ],
+    filteredExtensions: [
+      {
+        description:
+          'Provides syntax highlighting and bracket matching in HTML files.',
+        icon: '',
+        id: 'builtin.language-basics-html',
+        name: 'Language Basics HTML',
+        publisher: 'builtin',
+        state: 'installed',
+        version: 'n/a',
+        posInSet: 1,
+        setSize: 2,
+        top: 0,
+      },
+      {
+        description: 'Test Extension',
+        icon: '',
+        id: 'test-author-2.test-extension',
+        name: 'test-extension',
+        publisher: 'test-author-2',
+        state: 'installed',
+        version: '0.0.1',
+        posInSet: 2,
+        setSize: 2,
+        top: 62,
+      },
+    ],
+
+    disposed: false,
+    parsedValue: {
+      isLocal: true,
+      query: '',
+    },
+    searchValue: '',
+    suggestionState: 0,
+    focusedIndex: -1,
+    width: 200,
+    height: 200,
+    maxLineY: 3,
+    minLineY: 0,
+    deltaY: 0,
+    negativeMargin: 0,
+  })
+})
+
+// TODO sanitization is now in loadContent
+test.skip('contentLoaded', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  const state = {
+    ...ViewletExtensions.create(),
+    height: 200,
+    maxLineY: 10,
+    filteredExtensions: [
+      {
+        id: 'builtin.language-basics-html',
+        name: 'Language Basics HTML',
+        description:
+          'Provides syntax highlighting and bracket matching in HTML files.',
+        // languages: [
+        //   {
+        //     id: 'html',
+        //     extensions: ['.html'],
+        //     tokenize: 'src/tokenizeHtml.js',
+        //     configuration: './languageConfiguration.json',
+        //   },
+        // ],
+      },
+      {
+        id: 'test-author-2.test-extension',
+        publisher: 'test-author-2',
+        description: 'Test Extension',
+        name: 'test-extension',
+        version: '0.0.1',
+        main: 'main.js',
+        path: '/tmp/extensions/test-author-2.test-extension',
+      },
+    ],
+  }
+  await ViewletExtensions.contentLoaded(state)
+  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'setExtensions',
+    [
+      {
+        description:
+          'Provides syntax highlighting and bracket matching in HTML files.',
+        id: 'builtin.language-basics-html',
+        name: 'Language Basics HTML',
+        publisher: 'builtin',
+        state: 'installed',
+        version: 'n/a',
+        icon: '',
+      },
+      {
+        id: 'test-author-2.test-extension',
+        name: 'test-extension',
+        description: 'Test Extension',
+        publisher: 'test-author-2',
+        state: 'installed',
+        version: '0.0.1',
+        icon: '',
+      },
+    ],
+  ])
+})
+
+// TODO sanitization is now in loadContent
+test.skip('contentLoaded - error - extension is null', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [null],
+    maxLineY: 2,
+  }
+  await ViewletExtensions.contentLoaded(state)
+  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'setExtensions',
+    [
+      {
+        description: 'n/a',
+        id: 'n/a',
+        name: 'n/a',
+        publisher: 'n/a',
+        state: 'installed',
+        version: 'n/a',
+        icon: '',
+      },
+    ],
+  ])
+})
+
+// TODO sanitization is now in loadContent
+test.skip('contentLoaded - error - extension is of type array', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [[]],
+    height: 200,
+    maxLineY: 1,
+  }
+  await ViewletExtensions.contentLoaded(state)
+  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'setExtensions',
+    [
+      {
+        description: 'n/a',
+        id: 'n/a',
+        name: 'n/a',
+        publisher: 'n/a',
+        state: 'installed',
+        version: 'n/a',
+        icon: '',
+      },
+    ],
+  ])
+})
+
+test('install', async () => {
+  const state = ViewletExtensions.create()
+  ErrorHandling.state.handleError = jest.fn()
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  SharedProcess.state.send = jest.fn((message) => {
+    switch (message.method) {
+      case 'ExtensionManagement.install':
+        SharedProcess.state.receive({
+          jsonrpc: '2.0',
+          id: message.id,
+          result: null,
+        })
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ViewletExtensions.handleInstall(state, 'test-author.test-extension')
+  expect(SharedProcess.state.send).toHaveBeenCalledWith({
+    jsonrpc: '2.0',
+    id: expect.any(Number),
+    method: 'ExtensionManagement.install',
+    params: ['test-author.test-extension'],
+  })
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'setExtensionState',
+    'test-author.test-extension',
+    'installing',
+  ])
+  expect(RendererProcess.state.send).toHaveBeenLastCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'setExtensionState',
+    'test-author.test-extension',
+    'installed',
+  ])
+  expect(ErrorHandling.state.handleError).not.toHaveBeenCalled()
+})
+
+test('install - error', async () => {
+  const state = ViewletExtensions.create()
+  ErrorHandling.state.handleError = jest.fn()
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  SharedProcess.state.send = jest.fn((message) => {
+    switch (message.method) {
+      case 'ExtensionManagement.install':
+        SharedProcess.state.receive({
+          jsonrpc: '2.0',
+          id: message.id,
+          error: {
+            message: 'Test Error 2',
+          },
+        })
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  console.error = jest.fn()
+  await ViewletExtensions.handleInstall(state, 'test-author.test-extension')
+  expect(RendererProcess.state.send).toHaveBeenLastCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'setExtensionState',
+    'test-author.test-extension',
+    'uninstalled',
+  ])
+  expect(ErrorHandling.state.handleError).toHaveBeenCalledWith(
+    new Error('Test Error 2')
+  )
+})
+
+test('uninstall', async () => {
+  const state = ViewletExtensions.create()
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  SharedProcess.state.send = jest.fn((message) => {
+    switch (message.method) {
+      case 'ExtensionManagement.uninstall':
+        SharedProcess.state.receive({
+          jsonrpc: '2.0',
+          id: message.id,
+          result: null,
+        })
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ViewletExtensions.handleUninstall(state, 'test-author.test-extension')
+  expect(SharedProcess.state.send).toHaveBeenCalledWith({
+    jsonrpc: '2.0',
+    id: expect.any(Number),
+    method: 'ExtensionManagement.uninstall',
+    params: ['test-author.test-extension'],
+  })
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'setExtensionState',
+    'test-author.test-extension',
+    'uninstalling',
+  ])
+  expect(RendererProcess.state.send).toHaveBeenLastCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'setExtensionState',
+    'test-author.test-extension',
+    'uninstalled',
+  ])
+})
+
+test('uninstall - error', async () => {
+  const state = ViewletExtensions.create()
+  ErrorHandling.state.handleError = jest.fn()
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  SharedProcess.state.send = jest.fn((message) => {
+    switch (message.method) {
+      case 'ExtensionManagement.uninstall':
+        SharedProcess.state.receive({
+          jsonrpc: '2.0',
+          id: message.id,
+          error: {
+            message: 'Test Error 1',
+          },
+        })
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ViewletExtensions.handleUninstall(state, 'test-author.test-extension')
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'setExtensionState',
+    'test-author.test-extension',
+    'installed',
+  ])
+  expect(ErrorHandling.state.handleError).toHaveBeenCalledWith(
+    new Error('Test Error 1')
+  )
+})
+
+test('enable', async () => {
+  // TODO there can only be one viewlet -> use object instead of factory function (maybe)
+  const state = ViewletExtensions.create()
+  ErrorHandling.state.handleError = jest.fn()
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  SharedProcess.state.send = jest.fn((message) => {
+    switch (message.method) {
+      case 'ExtensionManagement.enable':
+        SharedProcess.state.receive({
+          id: message.id,
+          result: null,
+        })
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ViewletExtensions.handleEnable(state, 'test-author.test-extension')
+  expect(SharedProcess.state.send).toHaveBeenCalledWith({
+    id: expect.any(Number),
+    jsonrpc: '2.0',
+    method: 'ExtensionManagement.enable',
+    params: ['test-author.test-extension'],
+  })
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'setExtensionState',
+    'test-author.test-extension',
+    'enabled',
+  ])
+  // SharedProcess.state.receive({
+  //   jsonrpc: '2.0',
+  //   id: ,
+  // })
+  expect(RendererProcess.state.send).toHaveBeenLastCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'setExtensionState',
+    'test-author.test-extension',
+    'enabled',
+  ])
+  expect(ErrorHandling.state.handleError).not.toHaveBeenCalled()
+})
+
+test('enable - error', async () => {
+  const state = ViewletExtensions.create()
+  ErrorHandling.state.handleError = jest.fn()
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  SharedProcess.state.send = jest.fn((message) => {
+    switch (message.method) {
+      case 'ExtensionManagement.enable':
+        SharedProcess.state.receive({
+          jsonrpc: '2.0',
+          id: message.id,
+          error: {
+            code: -32000,
+            message: 'Test Error 3',
+          },
+        })
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ViewletExtensions.handleEnable(state, 'test-author.test-extension')
+  expect(SharedProcess.state.send).toHaveBeenCalledWith({
+    id: expect.any(Number),
+    jsonrpc: '2.0',
+    method: 'ExtensionManagement.enable',
+    params: ['test-author.test-extension'],
+  })
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'setExtensionState',
+    'test-author.test-extension',
+    'disabled',
+  ])
+  expect(ErrorHandling.state.handleError).toHaveBeenCalledWith(
+    new Error('Test Error 3')
+  )
+})
+
+// TODO test when error handling when `getMarketplaceUrl` fails
+test('handleInput', async () => {
+  const state = ViewletExtensions.create()
+  SharedProcess.state.send = jest.fn((message) => {
+    switch (message.method) {
+      case 519:
+        SharedProcess.state.receive({
+          jsonrpc: '2.0',
+          id: message.id,
+          result: 'https://example.com',
+        })
+        break
+      default:
+        console.log({ message })
+        throw new Error('unexpected message')
+    }
+  })
+  Ajax.state.getJson = jest.fn(async () => {
+    return [
+      {
+        id: 'test-author.test-extension',
+        name: 'Test Extension',
+      },
+    ]
+  })
+  await ViewletExtensions.handleInput(state, 'test')
+  expect(Ajax.state.getJson).toHaveBeenCalledTimes(1)
+  expect(Ajax.state.getJson).toHaveBeenCalledWith(
+    'https://example.com/api/extensions/search',
+    {
+      searchParams: {
+        q: 'test',
+      },
+    }
+  )
+})
+
+test('handleInput - error', async () => {
+  const state = ViewletExtensions.create()
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  SharedProcess.state.send = jest.fn((message) => {
+    switch (message.method) {
+      case 519:
+        SharedProcess.state.receive({
+          jsonrpc: '2.0',
+          id: message.id,
+          result: 'https://example.com',
+        })
+        break
+      default:
+        console.log({ message })
+        throw new Error('unexpected message')
+    }
+  })
+  Ajax.state.getJson = jest.fn(async () => {
+    throw new Error('HTTPError: Request failed with status code 404 Not Found')
+  })
+  await ViewletExtensions.handleInput(state, 'test')
+  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'setError',
+    'Failed to load extensions from marketplace: Error: Failed to request json from "https://example.com/api/extensions/search": HTTPError: Request failed with status code 404 Not Found',
+  ])
+})
+
+test.skip('handleInput - should encode uri in ajax requests', async () => {
+  const state = ViewletExtensions.create()
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  Ajax.state.getJson = jest.fn(async () => {
+    return []
+  })
+  await ViewletExtensions.handleInput(state, 'test?')
+  expect(Ajax.state.getJson).toHaveBeenCalledWith(
+    expect.stringContaining('/api/extensions/search?q=test%3F')
+  )
+})
+
+test('handleInput - empty', async () => {
+  const state = ViewletExtensions.create()
+  SharedProcess.state.send = jest.fn()
+  Ajax.state.getJson = jest.fn(async () => {
+    return []
+  })
+  expect(await ViewletExtensions.handleInput(state, '')).toMatchObject({
+    filteredExtensions: [],
+  })
+})
+
+test.skip('handleInput - multiple calls', async () => {
+  const state = ViewletExtensions.create()
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  Ajax.state.getJson = jest.fn(async () => {
+    return []
+  })
+  await Promise.all([
+    ViewletExtensions.handleInput(state, 'test-1'),
+    ViewletExtensions.handleInput(state, 'test-2'),
+  ])
+  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
+})
+// test('handleInput')
+
+// TODO handle input -> error on ajax request
+
+test('handleInput - error on ajax request', () => {})
+
+// TODO handle input -> builtin Extensions
+// handle input -> color themes
+// handle input -> icon themes
+// handle input -> disabled extensions
+// handle input -> enabled extensions
+// handle input -> category filter
+
+test('openSuggest', async () => {
+  const state = ViewletExtensions.create()
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ViewletExtensions.openSuggest(state)
+  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'openSuggest',
+    [
+      '@builtin',
+      '@disabled',
+      '@enabled',
+      '@installed',
+      '@outdated',
+      '@sort:installs',
+      '@id:',
+      '@category',
+    ],
+  ])
+})
+
+test('closeSuggest', async () => {
+  const state = ViewletExtensions.create()
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ViewletExtensions.closeSuggest(state)
+  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'closeSuggest',
+  ])
+})
+
+test('toggleSuggest', async () => {
+  const state = ViewletExtensions.create()
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ViewletExtensions.toggleSuggest(state)
+  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'openSuggest',
+    [
+      '@builtin',
+      '@disabled',
+      '@enabled',
+      '@installed',
+      '@outdated',
+      '@sort:installs',
+      '@id:',
+      '@category',
+    ],
+  ])
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ViewletExtensions.toggleSuggest(state)
+  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+    909090,
+    expect.any(Number),
+    3024,
+    'Extensions',
+    'closeSuggest',
+  ])
+})
+
+// TODO test cors error
+
+// localhost/:1 Access to fetch at 'http://localhost:39367/api/extensions/search?q=te' from origin 'http://localhost:35291' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
+
+test('focusIndex', async () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+      {
+        name: 'test extension 3',
+        authorId: 'test publisher 3',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-3',
+      },
+    ],
+    focusedIndex: 1,
+  }
+  expect(ViewletExtensions.focusIndex(state, 2)).toMatchObject({
+    focusedIndex: 2,
+  })
+})
+
+test('focusIndex - not in view - causes scrolling down', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+      {
+        name: 'test extension 3',
+        authorId: 'test publisher 3',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-3',
+      },
+    ],
+    focusedIndex: 1,
+    minLineY: 1,
+    maxLineY: 2,
+    height: 62,
+  }
+  expect(ViewletExtensions.focusIndex(state, 2)).toMatchObject({
+    focusedIndex: 2,
+    minLineY: 2,
+    maxLineY: 3,
+  })
+})
+
+test('focusIndex - partially in view - causes scrolling down', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+      {
+        name: 'test extension 3',
+        authorId: 'test publisher 3',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-3',
+      },
+    ],
+    focusedIndex: 1,
+    minLineY: 1,
+    maxLineY: 3,
+    height: 100 + ViewletExtensions.HEADER_HEIGHT,
+    deltaY: 62,
+  }
+  expect(ViewletExtensions.focusIndex(state, 2)).toMatchObject({
+    focusedIndex: 2,
+    minLineY: 1,
+    maxLineY: 3,
+    negativeMargin: -86,
+  })
+})
+
+test('focusIndex - not in view - causes scrolling up', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+      {
+        name: 'test extension 3',
+        authorId: 'test publisher 3',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-3',
+      },
+    ],
+    focusedIndex: 1,
+    minLineY: 1,
+    maxLineY: 2,
+    height: 62,
+  }
+  expect(ViewletExtensions.focusIndex(state, 0)).toMatchObject({
+    focusedIndex: 0,
+    minLineY: 0,
+    maxLineY: 1,
+  })
+})
+
+test('focusIndex - partially in view - causes scrolling up', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+      {
+        name: 'test extension 3',
+        authorId: 'test publisher 3',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-3',
+      },
+    ],
+    focusedIndex: 1,
+    minLineY: 0,
+    maxLineY: 2,
+    height: 62,
+    deltaY: 10,
+    negativeMargin: -10,
+  }
+  expect(ViewletExtensions.focusIndex(state, 0)).toMatchObject({
+    focusedIndex: 0,
+    minLineY: 0,
+    maxLineY: 1,
+    negativeMargin: -0,
+  })
+})
+
+test('focusFirst', async () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+    ],
+    focusedIndex: 1,
+  }
+  expect(ViewletExtensions.focusFirst(state)).toMatchObject({ focusedIndex: 0 })
+})
+
+test('focusFirst - no extensions', () => {
+  const state = ViewletExtensions.create()
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  expect(ViewletExtensions.focusFirst(state)).toBe(state)
+})
+
+test('focusLast', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+    ],
+    focusedIndex: 0,
+  }
+  expect(ViewletExtensions.focusLast(state)).toMatchObject({
+    focusedIndex: 1,
+  })
+})
+
+test('focusLast - no extensions', () => {
+  const state = ViewletExtensions.create()
+  expect(ViewletExtensions.focusLast(state)).toBe(state)
+})
+
+test('focusNext', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    extensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+    ],
+    focusedIndex: 0,
+  }
+  expect(ViewletExtensions.focusNext(state)).toMatchObject({ focusedIndex: 1 })
+})
+
+test('focusNext - already at end', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+    ],
+    focusedIndex: 1,
+  }
+  expect(ViewletExtensions.focusNext(state)).toBe(state)
+})
+
+test('focusNextPage - scroll down one full page', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+      {
+        name: 'test extension 3',
+        authorId: 'test publisher 3',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-3',
+      },
+      {
+        name: 'test extension 4',
+        authorId: 'test publisher 4',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-4',
+      },
+      {
+        name: 'test extension 5',
+        authorId: 'test publisher 5',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-5',
+      },
+      {
+        name: 'test extension 6',
+        authorId: 'test publisher 6',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-6',
+      },
+    ],
+    minLineY: 0,
+    maxLineY: 3,
+    focusedIndex: 0,
+    height: ViewletExtensions.ITEM_HEIGHT * 3,
+  }
+  expect(ViewletExtensions.focusNextPage(state)).toMatchObject({
+    minLineY: 2,
+    maxLineY: 5,
+    focusedIndex: 4,
+  })
+})
+
+test('focusNextPage - scroll down half a page', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+      {
+        name: 'test extension 3',
+        authorId: 'test publisher 3',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-3',
+      },
+      {
+        name: 'test extension 4',
+        authorId: 'test publisher 4',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-4',
+      },
+      {
+        name: 'test extension 5',
+        authorId: 'test publisher 5',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-5',
+      },
+      {
+        name: 'test extension 6',
+        authorId: 'test publisher 6',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-6',
+      },
+    ],
+    minLineY: 3,
+    maxLineY: 6,
+    focusedIndex: 4,
+    height: ViewletExtensions.ITEM_HEIGHT * 3,
+  }
+  expect(ViewletExtensions.focusNextPage(state)).toMatchObject({
+    minLineY: 3,
+    maxLineY: 6,
+    focusedIndex: 5,
+  })
+})
+
+test('focusNextPage - already at end', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+    ],
+    minLineY: 1,
+    maxLineY: 2,
+    focusedIndex: 1,
+  }
+  expect(ViewletExtensions.focusNextPage(state)).toBe(state)
+})
+
+test('focusNext - no extensions', async () => {
+  const state = ViewletExtensions.create()
+  expect(ViewletExtensions.focusNext(state)).toBe(state)
+})
+
+test('focusPrevious', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    extensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+    ],
+    focusedIndex: 1,
+  }
+  expect(ViewletExtensions.focusPrevious(state)).toMatchObject({
+    focusedIndex: 0,
+  })
+})
+
+test('focusPrevious - already at start', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    extensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+    ],
+    focusedIndex: 0,
+  }
+  expect(ViewletExtensions.focusPrevious(state)).toBe(state)
+})
+
+test('focusPrevious - no extensions', () => {
+  const state = ViewletExtensions.create()
+  expect(ViewletExtensions.focusPrevious(state)).toBe(state)
+})
+
+test('focusPreviousPage - already at start', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+    ],
+    focusedIndex: 0,
+  }
+  expect(ViewletExtensions.focusPreviousPage(state)).toBe(state)
+})
+
+test('focusPreviousPage - scroll up one full page', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+      {
+        name: 'test extension 3',
+        authorId: 'test publisher 3',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-3',
+      },
+      {
+        name: 'test extension 4',
+        authorId: 'test publisher 4',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-4',
+      },
+      {
+        name: 'test extension 5',
+        authorId: 'test publisher 5',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-5',
+      },
+      {
+        name: 'test extension 6',
+        authorId: 'test publisher 6',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-6',
+      },
+    ],
+    focusedIndex: 3,
+    minLineY: 3,
+    maxLineY: 6,
+    height: ViewletExtensions.ITEM_HEIGHT * 3,
+  }
+  expect(ViewletExtensions.focusPreviousPage(state)).toMatchObject({
+    minLineY: 1,
+    maxLineY: 4,
+    focusedIndex: 1,
+  })
+})
+
+test('focusPreviousPage - scroll up half a page', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+      {
+        name: 'test extension 3',
+        authorId: 'test publisher 3',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-3',
+      },
+      {
+        name: 'test extension 4',
+        authorId: 'test publisher 4',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-4',
+      },
+      {
+        name: 'test extension 5',
+        authorId: 'test publisher 5',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-5',
+      },
+      {
+        name: 'test extension 6',
+        authorId: 'test publisher 6',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-6',
+      },
+    ],
+    focusedIndex: 1,
+    minLineY: 1,
+    maxLineY: 4,
+    height: ViewletExtensions.ITEM_HEIGHT * 3,
+  }
+  expect(ViewletExtensions.focusPreviousPage(state)).toMatchObject({
+    minLineY: 0,
+    maxLineY: 3,
+    focusedIndex: 0,
+  })
+})
+
+test('resize', () => {
+  const state = ViewletExtensions.create()
+  const { newState, commands } = ViewletExtensions.resize(state, {
+    top: 200,
+    left: 200,
+    width: 200,
+    height: 200,
+  })
+  // TODO
+  expect(newState).toMatchObject({
+    disposed: false,
+    extensions: [],
+    filteredExtensions: [],
+    focusedIndex: -1,
+    height: 200,
+    left: 200,
+    minLineY: 0,
+    maxLineY: 3,
+    deltaY: 0,
+    parsedValue: {
+      isLocal: true,
+      query: '',
+    },
+    searchValue: '',
+    suggestionState: 0,
+    top: 200,
+    width: 200,
+    negativeMargin: 0,
+  })
+  expect(commands).toEqual([])
+})
+
+test('handleWheel - scroll down', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+      {
+        name: 'test extension 3',
+        authorId: 'test publisher 3',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-3',
+      },
+    ],
+    height: 124,
+    deltaY: 0,
+  }
+  expect(ViewletExtensions.handleWheel(state, 62)).toMatchObject({
+    minLineY: 1,
+    deltaY: 62,
+  })
+})
+
+test('handleWheel - scroll up', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+      {
+        name: 'test extension 3',
+        authorId: 'test publisher 3',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-3',
+      },
+    ],
+    height: 124,
+    deltaY: 62,
+  }
+  expect(ViewletExtensions.handleWheel(state, -62)).toMatchObject({
+    deltaY: 0,
+    minLineY: 0,
+  })
+})
+
+test('render - same state', () => {
+  const oldState = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+      {
+        name: 'test extension 3',
+        authorId: 'test publisher 3',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-3',
+      },
+    ],
+    height: 124,
+    deltaY: 62,
+  }
+  const newState = oldState
+  expect(ViewletExtensions.render(oldState, newState)).toEqual([])
+})
+
+test('render - filtered extensions are different', () => {
+  const oldState = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+    ],
+    height: 124,
+    deltaY: 62,
+    maxLineY: 10,
+  }
+  const newState = {
+    ...oldState,
+    filteredExtensions: [
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+    ],
+  }
+  expect(ViewletExtensions.render(oldState, newState)).toEqual([
+    [
+      3024,
+      'Extensions',
+      'setExtensions',
+      [
+        {
+          authorId: 'test publisher 2',
+          id: 'test-publisher.test-extension-2',
+          name: 'test extension 2',
+          version: '0.0.1',
+        },
+      ],
+    ],
+  ])
+})
+
+test('render - negative margin is different', () => {
+  const oldState = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+    ],
+    height: 124,
+    deltaY: 62,
+  }
+  const newState = {
+    ...oldState,
+    negativeMargin: -10,
+  }
+  expect(ViewletExtensions.render(oldState, newState)).toEqual([
+    [3024, 'Extensions', 'setNegativeMargin', -10],
+  ])
+})
+
+test('render - focused index is different', () => {
+  const oldState = {
+    ...ViewletExtensions.create(),
+    filteredExtensions: [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-1',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-2',
+      },
+      {
+        name: 'test extension 3',
+        authorId: 'test publisher 3',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension-3',
+      },
+    ],
+    height: 124,
+    deltaY: 62,
+    focusedIndex: 0,
+  }
+  const newState = {
+    ...oldState,
+    focusedIndex: 1,
+  }
+  expect(ViewletExtensions.render(oldState, newState)).toEqual([
+    [3024, 'Extensions', 'setFocusedIndex', 0, 1],
+  ])
+})
+
+// test('scrollBarThumbMouseDown', () => {
+//   const oldState = {
+//     ...ViewletExtensions.create(),
+//     filteredExtensions: [
+//       {
+//         name: 'test extension 1',
+//         authorId: 'test publisher 1',
+//         version: '0.0.1',
+//         id: 'test-publisher.test-extension-1',
+//       },
+//       {
+//         name: 'test extension 2',
+//         authorId: 'test publisher 2',
+//         version: '0.0.1',
+//         id: 'test-publisher.test-extension-2',
+//       },
+//       {
+//         name: 'test extension 3',
+//         authorId: 'test publisher 3',
+//         version: '0.0.1',
+//         id: 'test-publisher.test-extension-3',
+//       },
+//     ],
+//     height: 124,
+//     deltaY: 62,
+//     focusedIndex: 0,
+//   }
+//   const newState = {
+//     ...oldState,
+//     focusedIndex: 1,
+//   }
+//   expect(ViewletExtensions.render(oldState, newState)).toEqual([
+//     [3024, 'Extensions', 'setFocusedIndex', 0, 1],
+//   ])
+// })

@@ -1,0 +1,16 @@
+@keyframes highlight {
+  0% {
+    outline-color: #3d5252;
+  }
+  100% {
+    outline-color: transparent;
+  }
+}
+
+.Highlight {
+  outline: 1px solid;
+  outline-offset: -1px;
+  animation: highlight 1s;
+  /* animation-timing-function: cubic-bezier(0.075, 0.82, 0.165, 1); */
+  animation-timing-function: ease-in;
+}

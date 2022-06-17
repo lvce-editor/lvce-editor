@@ -1,0 +1,12 @@
+.FindWidget {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: flex;
+}
+
+.FindWidgetInput {
+  /* background: transparent; */
+  background: darkgray;
+  color: white;
+}

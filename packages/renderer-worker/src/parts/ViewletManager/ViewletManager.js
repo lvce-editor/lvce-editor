@@ -1,0 +1,237 @@
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+
+export const modules = Object.create(null)
+
+const VIEWLET_STATE_DEFAULT = 0
+const VIEWLET_STATUS_MODULE_LOADED = 1
+const VIEWLET_STATE_CONTENT_LOADED = 2
+const VIEWLET_STATE_RENDERER_PROCESS_VIEWLET_LOADED = 3
+const VIEWLET_STATE_CONTENT_RENDERED = 4
+const VIEWLET_STATE_APPENDED = 5
+
+export const getModule = (id) => {
+  console.assert(typeof id === 'string')
+  switch (id) {
+    // TODO use numeric identifier instead
+    case 'Explorer':
+      return import('../Viewlet/ViewletExplorer.js')
+    case 'Run and Debug':
+      return import('../Viewlet/ViewletRunAndDebug.js')
+    case 'Search':
+      return import('../Viewlet/ViewletSearch.js')
+    case 'Source Control':
+      return import('../Viewlet/ViewletSourceControl.js')
+    case 'Terminal':
+      return import('../Viewlet/ViewletTerminal.js')
+    case 'Debug Console':
+      return import('../Viewlet/ViewletDebugConsole.js')
+    case 'Extensions':
+      return import('../Viewlet/ViewletExtensions.js')
+    case 'Output':
+      return import('../Viewlet/ViewletOutput.js')
+    case 'Problems':
+      return import('../Viewlet/ViewletProblems.js')
+    case 'Noop':
+      return import('../Viewlet/ViewletNoop.js')
+    case 'EditorText':
+      return import('../Viewlet/ViewletEditorText.js')
+    case 'EditorPlainText':
+      return import('../Viewlet/ViewletEditorPlainText.js')
+    case 'EditorImage':
+      return import('../Viewlet/ViewletEditorImage.js')
+    case 'Clock':
+      return import('../Viewlet/ViewletClock.js')
+    case 'ActivityBar':
+      return import('../Viewlet/ViewletActivityBar.js')
+    case 'Panel':
+      return import('../Viewlet/ViewletPanel.js')
+    case 'SideBar':
+      return import('../Viewlet/ViewletSideBar.js')
+    case 'TitleBar':
+      return import('../Viewlet/ViewletTitleBar.js')
+    case 'StatusBar':
+      return import('../Viewlet/ViewletStatusBar.js')
+    case 'Main':
+      return import('../Viewlet/ViewletMain.js')
+    case 'EditorCompletion':
+      return import('../Viewlet/ViewletEditorCompletion.js')
+    case 'References':
+      return import('../Viewlet/ViewletReferences.js')
+    case 'Implementations':
+      return import('../Viewlet/ViewletImplementations.js')
+    default:
+      // TODO use ErrorHandling.handleError instead
+      throw new Error(`unknown viewlet: "${id}", ${id === 'Output'}`)
+  }
+}
+
+/**
+ *
+ * @param {()=>any} getModule
+ * @returns
+ */
+export const create = (
+  getModule,
+  id,
+  parentId,
+  uri,
+  left,
+  top,
+  width,
+  height
+) => {
+  console.assert(typeof getModule === 'function')
+  console.assert(typeof id === 'string')
+  console.assert(typeof parentId === 'string')
+  console.assert(typeof uri === 'string')
+  console.assert(typeof left === 'number')
+  console.assert(typeof top === 'number')
+  console.assert(typeof width === 'number')
+  console.assert(typeof height === 'number')
+  return {
+    type: 0,
+    getModule,
+    id,
+    parentId,
+    uri,
+    left,
+    top,
+    width,
+    height,
+  }
+}
+
+// TODO add lots of unit tests for this
+/**
+ *
+ * @param {{getModule:()=>any, type:number, id:string, disposed:boolean }} viewlet
+ * @returns
+ */
+export const load = async (viewlet, focus = false) => {
+  // console.time(`load/${viewlet.id}`)
+  if (viewlet.type !== 0) {
+    console.log('viewlet must be empty')
+    throw new Error('viewlet must be empty')
+  }
+  let state = VIEWLET_STATE_DEFAULT
+  try {
+    viewlet.type = 1
+    if (viewlet.disposed) {
+      return
+    }
+
+    const module = await viewlet.getModule(viewlet.id)
+    if (viewlet.disposed) {
+      return
+    }
+    state = VIEWLET_STATUS_MODULE_LOADED
+    const viewletState = module.create(
+      viewlet.id,
+      viewlet.uri,
+      viewlet.left,
+      viewlet.top,
+      viewlet.width,
+      viewlet.height
+    )
+
+    const oldVersion =
+      viewletState.version === undefined ? undefined : ++viewletState.version
+    let newState = await module.loadContent(viewletState)
+    if (viewletState.version !== oldVersion) {
+      newState = viewletState
+      console.log('version mismatch')
+      // TODO not sure if Object.assign is a good idea
+      // Object.assign(viewletState, newState)
+    }
+    if (viewlet.disposed) {
+      return
+    }
+    state = VIEWLET_STATE_CONTENT_LOADED
+
+    Viewlet.state.instances[viewlet.id] = { state: newState, factory: module }
+
+    await RendererProcess.invoke(/* Viewlet.load */ 3030, /* id */ viewlet.id)
+    if (viewlet.disposed) {
+      // TODO unload the module from renderer process
+      return
+    }
+    // TODO race condition: viewlet state may have been updated again in the mean time
+    state = VIEWLET_STATE_RENDERER_PROCESS_VIEWLET_LOADED
+    if (viewletState !== newState) {
+      await module.contentLoaded(newState)
+    }
+
+    if (module.hasFunctionalRender) {
+      const commands = module.render(viewletState, newState)
+      for (const command of commands) {
+        RendererProcess.send(command)
+      }
+    }
+
+    if (module.contentLoadedEffects) {
+      module.contentLoadedEffects(newState)
+    }
+    if (viewlet.disposed) {
+      // TODO unload the module from renderer process
+      return
+    }
+    state = VIEWLET_STATE_CONTENT_RENDERED
+    if (viewlet.parentId) {
+      await RendererProcess.invoke(
+        /* Viewlet.append */ 3029,
+        /* parentId */ viewlet.parentId,
+        /* id */ viewlet.id,
+        /* focus */ focus
+      )
+    }
+    state = VIEWLET_STATE_APPENDED
+
+    if (viewlet.disposed) {
+      // TODO unload the module from renderer process
+      return
+    }
+  } catch (error) {
+    viewlet.type = 4
+    console.error(error)
+    try {
+      if (state < VIEWLET_STATE_RENDERER_PROCESS_VIEWLET_LOADED) {
+        await RendererProcess.invoke(
+          /* Viewlet.load */ 3030,
+          /* id */ viewlet.id
+        )
+      }
+      if (state < VIEWLET_STATE_APPENDED && viewlet.parentId) {
+        await RendererProcess.invoke(
+          /* Viewlet.append */ 3029,
+          /* parentId */ viewlet.parentId,
+          /* id */ viewlet.id
+        )
+      }
+      await RendererProcess.invoke(
+        /* viewlet.handleError */ 3031,
+        /* id */ viewlet.id,
+        /* parentId */ viewlet.parentId,
+        /* message */ error.message
+      )
+    } catch (error) {
+      console.error(error)
+      // this is really bad
+      // probably can only show an alert at this point
+    }
+  }
+  // console.timeEnd(`load/${viewlet.id}`)
+}
+
+export const dispose = async (id) => {
+  state[id].disposed = true
+  delete Viewlet.state.instances[id]
+  delete state[id]
+  await RendererProcess.invoke(/* Viewlet.dispose */ 3026, /* id */ id)
+}
+
+export const mutate = async (id, fn) => {
+  // TODO handle race conditions here
+  const viewletState = state[id]
+  await fn(state)
+}

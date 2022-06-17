@@ -1,0 +1,203 @@
+import { MessagePort, parentPort } from 'node:worker_threads'
+import * as Callback from '../Callback/Callback.js'
+import * as Command from '../Command/Command.js'
+import * as Debug from '../Debug/Debug.js'
+import * as Error from '../Error/Error.js'
+import { requiresSocket } from '../RequiresSocket/RequiresSocket.js'
+
+// TODO add tests for this
+
+// TODO handle structure: one shared process multiple extension hosts
+
+// TODO pass socket / port handle also in electron
+
+export const state = {
+  electronPortMap: new Map(),
+}
+
+export const electronSend = (message) => {
+  // @ts-ignore
+  // process.send(message)
+  parentPort.postMessage(message)
+}
+
+const handleMessageFromParentProcess = async (message, handle) => {
+  if (handle) {
+    handle.on('error', (error) => {
+      if (error && error.code === 'ECONNRESET') {
+        return
+      }
+      console.info('[info shared process: handle error]', error)
+    })
+    Command.execute(
+      /* WebSocketServer.handleUpgrade */ 5621,
+      /* message */ message,
+      /* handle */ handle
+    )
+  } else if (message.result) {
+    Callback.resolve(message.id, message.result)
+  } else if (message.method) {
+    console.log({ message })
+    if (message.id) {
+      try {
+        console.log('INISDE HERE')
+        const result = requiresSocket(message.method)
+          ? await Command.invoke(message.method, handle, ...message.params)
+          : await Command.invoke(message.method, ...message.params)
+        electronSend({
+          jsonrpc: '2.0',
+          id: message.id,
+          result: result ?? null,
+        })
+      } catch (error) {
+        console.error('[shared process] command failed to execute')
+        console.error(error)
+        electronSend({
+          jsonrpc: '2.0',
+          code: /* ExpectedError */ -32000,
+          id: message.id,
+          error: 'ExpectedError',
+          // @ts-ignore
+          data: error.toString(),
+        })
+      }
+    } else {
+      // TODO handle error
+      Command.execute(message.method, null, ...message.params)
+    }
+  } else {
+    console.warn('unknown message', message)
+  }
+}
+
+/**
+ *
+ * @param {{initialize:{port: MessagePort, folder:string}}} initializeMessage
+ */
+const electronInitialize = (initializeMessage) => {
+  const port = initializeMessage.initialize.port
+  // TODO handle error
+  const fakeSocket = {
+    send: port.postMessage.bind(port),
+    on(event, listener) {
+      switch (event) {
+        case 'close':
+          port.on('close', listener)
+          break
+        case 'message':
+          port.on('message', listener)
+          break
+        default:
+          console.warn('socket event not implemented', event, listener)
+          break
+      }
+    },
+  }
+  const handleOtherMessagesFromMessagePort = async (message) => {
+    // console.log('got port message', message)
+    if (message.result) {
+      Callback.resolve(message.id, message.result)
+    } else if (message.method) {
+      if (message.id) {
+        try {
+          const result = requiresSocket(message.method)
+            ? await Command.invoke(
+                message.method,
+                fakeSocket,
+                ...message.params
+              )
+            : await Command.invoke(message.method, ...message.params)
+
+          port.postMessage({
+            jsonrpc: '2.0',
+            id: message.id,
+            result: result ?? null,
+          })
+        } catch (error) {
+          // TODO duplicate code with Socket.js, clean this up
+          if (error instanceof Error.OperationalError) {
+            // console.log({ error })
+            const rawCause = error.cause()
+            const errorCause = rawCause ? rawCause.message : ''
+            const errorMessage = rawCause
+              ? error.message.slice(0, error.message.indexOf(errorCause))
+              : ''
+
+            // console.info('expected error', error)
+            port.postMessage({
+              jsonrpc: '2.0',
+              id: message.id,
+              error: {
+                code: /* ExpectedError */ -32000,
+                message: error.message,
+                data: {
+                  stack: error.originalStack,
+                  codeFrame: error.originalCodeFrame,
+                  category: error.category,
+                  // @ts-ignore
+                  stderr: error.stderr,
+                },
+              },
+            })
+          } else {
+            console.error('[shared process] command failed to execute')
+            console.error(error)
+            // TODO check if socket is active
+            port.postMessage({
+              jsonrpc: '2.0',
+              id: message.id,
+              error: {
+                code: /* UnexpectedError */ -32001,
+                // @ts-ignore
+                message: error.toString(),
+              },
+            })
+          }
+          return
+        }
+      } else {
+        Command.execute(message.method, fakeSocket, ...message.params)
+      }
+    } else {
+      console.warn('unknown message', message)
+    }
+  }
+  port.on('message', handleOtherMessagesFromMessagePort)
+}
+
+const handleMessageFromParentProcessElectron = async (message) => {
+  if (message.initialize) {
+    electronInitialize(message)
+    return
+  }
+  console.log({ message })
+  if ('result' in message) {
+    Callback.resolve(message.id, message.result)
+    return
+  }
+
+  console.log('unknown message from electron', message)
+  console.log({ message })
+}
+
+// TODO maybe rename to hydrate
+export const listen = () => {
+  // TODO tree-shake out if-else
+  // console.log({ ...process.env })
+  if (process.env.ELECTRON_RUN_AS_NODE && parentPort) {
+    // electron process listens to main process ipc
+    Debug.debug('is electron')
+    // @ts-ignore
+    parentPort.on('message', handleMessageFromParentProcessElectron)
+    electronSend('ready')
+  } else {
+    Debug.debug('is not electron')
+    // otherwise listen to web process ipc
+    // and when a socket is transferred,
+    // listen to socket messages also
+    process.on('message', handleMessageFromParentProcess)
+    if (process.send) {
+      process.send('ready')
+    }
+  }
+}

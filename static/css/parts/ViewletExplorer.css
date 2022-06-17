@@ -1,0 +1,141 @@
+.ListItems {
+  user-select: none;
+}
+
+.ListItems.DropTarget {
+  background: darkblue;
+}
+
+.TreeItem {
+  cursor: pointer;
+  color: var(--TreeItemForeground, rgb(188, 190, 190));
+  padding-left: 11px;
+  display: flex;
+  gap: 4px;
+  height: 22px;
+  line-height: 22px;
+  contain: strict;
+  width: 100%;
+}
+
+/* .TreeItem:focus {
+  background: rgba(59, 71, 66, 0.5);
+} */
+
+.TreeItem.Focused {
+  background: rgba(59, 71, 66, 0.5);
+}
+
+/* TODO why need focused class when there is :focus ? */
+.Viewlet[data-viewlet-id='Explorer']:focus-within .TreeItem.Focused {
+  /* background: rgba(0, 0, 0, 0.3); */
+  /* background: rgba(59, 71, 66, 0.5); */
+  background: #515f59;
+}
+
+.TreeItem::before {
+  content: ' ';
+  contain: strict;
+  pointer-events: none;
+  background-size: 16px;
+  background-position: 0;
+  background-repeat: no-repeat;
+  width: 16px;
+  height: 22px;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.TreeItem:hover {
+  background: rgba(64, 92, 80, 0.2);
+}
+
+/* .TreeItem.Hover {
+  background: rgba(64, 92, 80, 0.2);
+} */
+
+.TreeItem[aria-level='1'] {
+  padding-left: 1rem;
+}
+
+.TreeItem[aria-level='2'] {
+  padding-left: 2rem;
+}
+
+.TreeItem[aria-level='3'] {
+  padding-left: 3rem;
+}
+
+.TreeItem[aria-level='4'] {
+  padding-left: 4rem;
+}
+
+.TreeItem[aria-level='5'] {
+  padding-left: 5rem;
+}
+
+.TreeItem[aria-level='6'] {
+  padding-left: 6rem;
+}
+
+.TreeItem[aria-level='7'] {
+  padding-left: 7rem;
+}
+
+.TreeItem[aria-level='8'] {
+  padding-left: 8rem;
+}
+
+.TreeItem[aria-level='9'] {
+  padding-left: 9rem;
+}
+
+.TreeItem[aria-level='10'] {
+  padding-left: 10rem;
+}
+
+.TreeItem[aria-level='11'] {
+  padding-left: 11rem;
+}
+
+.TreeItem[aria-level='12'] {
+  padding-left: 12rem;
+}
+
+.TreeItem[aria-level='13'] {
+  padding-left: 13rem;
+}
+
+.TreeItem[aria-level='14'] {
+  padding-left: 14rem;
+}
+
+.TreeItem[aria-level='14'] {
+  padding-left: 14rem;
+}
+
+.TreeItem[aria-level='15'] {
+  padding-left: 15rem;
+}
+
+.TreeItem[aria-level='16'] {
+  padding-left: 16rem;
+}
+
+.TreeItem[aria-level='17'] {
+  padding-left: 17rem;
+}
+
+.TreeItem[aria-level='18'] {
+  padding-left: 18rem;
+}
+
+.TreeItem[aria-level='19'] {
+  padding-left: 19rem;
+}
+
+/* TODO support arbitrary depth */
+
+.TreeItem[aria-level='20'] {
+  padding-left: 20rem;
+}

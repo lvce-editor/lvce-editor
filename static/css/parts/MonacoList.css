@@ -1,0 +1,12 @@
+.MonacoList {
+}
+
+.ListItem {
+}
+
+.ListItems {
+  height: 22px;
+  line-height: 22px;
+  font-size: 14px;
+  contain: strict;
+}

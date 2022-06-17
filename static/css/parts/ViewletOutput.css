@@ -1,0 +1,15 @@
+.Viewlet[data-viewlet-id='Output']:focus {
+  outline: 1px solid red;
+  outline-offset: -1px;
+}
+
+.ViewletOutput {
+  white-space: pre;
+  overflow-y: scroll;
+  color: white;
+}
+
+.OutputContent:empty::before {
+  content: '(empty file)';
+  opacity: 0.3;
+}

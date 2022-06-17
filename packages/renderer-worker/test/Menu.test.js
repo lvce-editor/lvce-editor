@@ -1,0 +1,1236 @@
+import { jest } from '@jest/globals'
+import * as Menu from '../src/parts/Menu/Menu.js'
+import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
+import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
+
+beforeEach(() => {
+  RendererProcess.state.send = () => {
+    throw new Error('not implemented')
+  }
+})
+
+test.skip('show', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  await Menu.show(0, 0, 'file')
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+    909090,
+    expect.any(Number),
+    7905,
+    0,
+    0,
+    250,
+    200,
+    0,
+    expect.any(Array),
+  ])
+})
+
+test.skip('hide', async () => {
+  RendererProcess.state.send = jest.fn()
+  await Menu.hide()
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([909090, 3, 7901])
+})
+
+test('focusFirst', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: 2,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'newFolder',
+          name: 'new Folder',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'newWindow',
+          name: 'new Window',
+          flags: /* None */ 0,
+          children: [],
+        },
+      ],
+    },
+  ]
+  await Menu.focusFirst()
+  expect(Menu.state.menus).toHaveLength(1)
+  expect(Menu.state.menus[0].focusedIndex).toBe(0)
+})
+
+test('focusFirst - no items', async () => {
+  Menu.state.menus = [
+    {
+      focusedIndex: -1,
+      items: [],
+    },
+  ]
+  await Menu.focusFirst()
+  expect(Menu.state.menus).toHaveLength(1)
+  expect(Menu.state.menus[0].focusedIndex).toBe(-1)
+})
+
+test('focusFirst - with disabled items and separators', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: 2,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* Disabled */ 5,
+          command: /* None */ 0,
+        },
+        {
+          id: 'newFolder',
+          name: 'new Folder',
+          flags: /* Disabled */ 5,
+          command: /* None */ 0,
+        },
+        {
+          id: 'separator',
+          label: 'Separator',
+          flags: /* Separator */ 1,
+          command: /* None */ 0,
+        },
+        {
+          id: 'newWindow',
+          name: 'new Window',
+          flags: /* None */ 0,
+          command: /* None */ 0,
+        },
+      ],
+    },
+  ]
+  await Menu.focusFirst()
+  expect(Menu.state.menus).toHaveLength(1)
+  expect(Menu.state.menus[0].focusedIndex).toBe(3)
+})
+
+test('focusLast', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: 0,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'newFolder',
+          name: 'new Folder',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'newWindow',
+          name: 'new Window',
+          flags: /* None */ 0,
+          children: [],
+        },
+      ],
+    },
+  ]
+  await Menu.focusLast()
+  expect(Menu.state.menus).toHaveLength(1)
+  expect(Menu.state.menus[0].focusedIndex).toBe(2)
+})
+
+test('focusLast - no items', async () => {
+  Menu.state.menus = [
+    {
+      focusedIndex: -1,
+      items: [],
+    },
+  ]
+  await Menu.focusFirst()
+  expect(Menu.state.menus).toHaveLength(1)
+  expect(Menu.state.menus[0].focusedIndex).toBe(-1)
+})
+
+test('focusLast - with disabled items and separators', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: 2,
+      items: [
+        {
+          id: 'newWindow',
+          name: 'new Window',
+          flags: /* None */ 0,
+          command: /* None */ 0,
+        },
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* Disabled */ 5,
+          command: /* None */ 0,
+        },
+        {
+          id: 'newFolder',
+          name: 'new Folder',
+          flags: /* Disabled */ 5,
+          command: /* None */ 0,
+        },
+        {
+          id: 'separator',
+          label: 'Separator',
+          flags: /* Separator */ 1,
+          command: /* None */ 0,
+        },
+      ],
+    },
+  ]
+  await Menu.focusLast()
+  expect(Menu.state.menus).toHaveLength(1)
+  expect(Menu.state.menus[0].focusedIndex).toBe(0)
+})
+
+test('focusPrevious', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: 1,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'newFolder',
+          name: 'new Folder',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'newWindow',
+          name: 'new Window',
+          flags: /* None */ 0,
+          children: [],
+        },
+      ],
+    },
+  ]
+  await Menu.focusPrevious()
+  expect(Menu.state.menus).toHaveLength(1)
+  expect(Menu.state.menus[0].focusedIndex).toBe(0)
+})
+
+test('focusPrevious - at start', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: 0,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'newFolder',
+          name: 'new Folder',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'newWindow',
+          name: 'new Window',
+          flags: /* None */ 0,
+          children: [],
+        },
+      ],
+    },
+  ]
+  await Menu.focusPrevious()
+  expect(Menu.state.menus[0].focusedIndex).toBe(2)
+})
+
+test('focusPrevious - when no focus', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: -1,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'newFolder',
+          name: 'new Folder',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'newWindow',
+          name: 'new Window',
+          flags: /* None */ 0,
+          children: [],
+        },
+      ],
+    },
+  ]
+  await Menu.focusPrevious()
+  expect(Menu.state.menus[0].focusedIndex).toBe(2)
+})
+
+test('focusPrevious - with separator', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: 2,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'separator',
+          name: 'Separator',
+          flags: /* Separator */ 1,
+          children: [],
+        },
+        {
+          id: 'newWindow',
+          name: 'new Window',
+          flags: /* None */ 0,
+          children: [],
+        },
+      ],
+    },
+  ]
+  await Menu.focusPrevious()
+  expect(Menu.state.menus[0].focusedIndex).toBe(0)
+})
+
+test('focusPrevious - with disabled items and separators', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: 2,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* Disabled */ 5,
+          command: /* None */ 0,
+        },
+        {
+          id: 'newFolder',
+          name: 'new Folder',
+          flags: /* Disabled */ 5,
+          command: /* None */ 0,
+        },
+        {
+          id: 'separator',
+          label: 'Separator',
+          flags: /* Separator */ 1,
+          command: /* None */ 0,
+        },
+        {
+          id: 'newWindow',
+          name: 'new Window',
+          flags: /* None */ 0,
+          command: /* None */ 0,
+        },
+      ],
+    },
+  ]
+  await Menu.focusPrevious()
+  expect(Menu.state.menus).toHaveLength(1)
+  expect(Menu.state.menus[0].focusedIndex).toBe(3)
+})
+
+test('focusPrevious - no items', async () => {
+  Menu.state.menus = [
+    {
+      focusedIndex: -1,
+      items: [],
+    },
+  ]
+  await Menu.focusPrevious()
+  expect(Menu.state.menus).toHaveLength(1)
+  expect(Menu.state.menus[0].focusedIndex).toBe(-1)
+})
+
+test('focusPrevious - no focusable items', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: -1,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* Disabled */ 5,
+          command: /* None */ 0,
+        },
+        {
+          id: 'newFolder',
+          name: 'new Folder',
+          flags: /* Disabled */ 5,
+          command: /* None */ 0,
+        },
+        {
+          id: 'separator',
+          label: 'Separator',
+          flags: /* Separator */ 1,
+          command: /* None */ 0,
+        },
+      ],
+    },
+  ]
+  await Menu.focusPrevious()
+  expect(Menu.state.menus).toHaveLength(1)
+  expect(Menu.state.menus[0].focusedIndex).toBe(-1)
+})
+
+test('focusNext', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: 0,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* None */ 0,
+        },
+        {
+          id: 'newFolder',
+          name: 'new Folder',
+          flags: /* None */ 0,
+        },
+        {
+          id: 'newWindow',
+          name: 'new Window',
+          flags: /* None */ 0,
+        },
+      ],
+    },
+  ]
+  await Menu.focusNext()
+  expect(Menu.state.menus).toHaveLength(1)
+  expect(Menu.state.menus[0].focusedIndex).toBe(1)
+})
+
+// TODO also test focusPrevious with disabled items and separators
+
+test('focusNext - no items', async () => {
+  Menu.state.menus = [
+    {
+      focusedIndex: -1,
+      items: [],
+    },
+  ]
+  await Menu.focusNext()
+  expect(Menu.state.menus).toHaveLength(1)
+  expect(Menu.state.menus[0].focusedIndex).toBe(-1)
+})
+
+test('focusNext - no focusable items', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: -1,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* Disabled */ 5,
+          command: /* None */ 0,
+        },
+        {
+          id: 'newFolder',
+          name: 'new Folder',
+          flags: /* Disabled */ 5,
+          command: /* None */ 0,
+        },
+        {
+          id: 'separator',
+          label: 'Separator',
+          flags: /* Separator */ 1,
+          command: /* None */ 0,
+        },
+      ],
+    },
+  ]
+  await Menu.focusNext()
+  expect(Menu.state.menus).toHaveLength(1)
+  expect(Menu.state.menus[0].focusedIndex).toBe(-1)
+})
+
+test('focusNext - with disabled items and separators', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: -1,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* Disabled */ 5,
+          command: /* None */ 0,
+        },
+        {
+          id: 'newFolder',
+          name: 'new Folder',
+          flags: /* Disabled */ 5,
+          command: /* None */ 0,
+        },
+        {
+          id: 'separator',
+          label: 'Separator',
+          flags: /* Separator */ 1,
+          command: /* None */ 0,
+        },
+        {
+          id: 'newWindow',
+          name: 'new Window',
+          flags: /* None */ 0,
+          command: /* None */ 0,
+        },
+      ],
+    },
+  ]
+  await Menu.focusNext()
+  expect(Menu.state.menus).toHaveLength(1)
+  expect(Menu.state.menus[0].focusedIndex).toBe(3)
+})
+
+test('focusNext - at end', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: 2,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'newFolder',
+          name: 'new Folder',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'newWindow',
+          name: 'new Window',
+          flags: /* None */ 0,
+          children: [],
+        },
+      ],
+    },
+  ]
+  await Menu.focusNext()
+  expect(Menu.state.menus[0].focusedIndex).toBe(0)
+})
+
+test('focusNext - when no focus', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: -1,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'newFolder',
+          name: 'new Folder',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'newWindow',
+          name: 'new Window',
+          flags: /* None */ 0,
+          children: [],
+        },
+      ],
+    },
+  ]
+  await Menu.focusNext()
+  expect(Menu.state.menus[0].focusedIndex).toBe(0)
+})
+
+test('focusNext - with separator', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: 0,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* None */ 0,
+          children: [],
+        },
+        {
+          id: 'separator',
+          name: 'Separator',
+          flags: /* Separator */ 1,
+          children: [],
+        },
+        {
+          id: 'newWindow',
+          name: 'new Window',
+          flags: /* None */ 0,
+          children: [],
+        },
+      ],
+    },
+  ]
+  await Menu.focusNext()
+  expect(Menu.state.menus[0].focusedIndex).toBe(2)
+})
+
+test.skip('resetFocusedIndex', async () => {
+  Menu.state.focusedIndex = 2
+  Menu.state.items = [
+    {
+      id: 'newFile',
+      name: 'new File',
+      flags: /* None */ 0,
+      children: [],
+    },
+    {
+      id: 'newFolder',
+      name: 'new Folder',
+      flags: /* None */ 0,
+      children: [],
+    },
+    {
+      id: 'newWindow',
+      name: 'new Window',
+      flags: /* None */ 0,
+      children: [],
+    },
+  ]
+  await Menu.resetFocusedIndex()
+  expect(Menu.state.focusedIndex).toBe(-1)
+})
+
+test('focusIndexMouse - focusing submenu index should show submenu', async () => {
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log(message)
+        throw new Error('unexpected message')
+    }
+  })
+  Menu.state.menus = [
+    {
+      focusedIndex: 0,
+      level: 0,
+      x: 0,
+      y: 0,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* None */ 0,
+        },
+        {
+          id: 'separator',
+          name: 'Separator',
+          flags: /* Separator */ 1,
+        },
+        {
+          id: 'openRecent',
+          name: 'Open Recent',
+          flags: /* SubMenu */ 4,
+        },
+      ],
+    },
+  ]
+  SharedProcess.state.send = jest.fn((message) => {
+    switch (message.method) {
+      case 'Platform.getRecentlyOpenedPath':
+        SharedProcess.state.receive({
+          id: message.id,
+          jsonrpc: '2.0',
+          result: '/test/recently-opened.json',
+        })
+        break
+      case 'FileSystem.readFile':
+        SharedProcess.state.receive({
+          id: message.id,
+          jsonrpc: '2.0',
+          result: `["/test/folder-1"]`,
+        })
+        break
+      default:
+        console.log({ message })
+        throw new Error('unexpected message')
+    }
+  })
+
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 7905:
+        break
+      case 7902:
+        break
+      case 909090:
+        const callbackId = message[1]
+        RendererProcess.state.handleMessage([
+          /* Callback.resolve */ 67330,
+          /* callbackId */ callbackId,
+          /* result */ undefined,
+        ])
+        break
+      default:
+        console.log({ message })
+        throw new Error('unexpected message')
+    }
+  })
+  await Menu.handleMouseEnter(0, 2)
+  expect(Menu.state.menus).toHaveLength(2)
+  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
+    7905,
+    150,
+    50,
+    250,
+    116,
+    [
+      {
+        args: ['/test/folder-1'],
+        command: 7633,
+        flags: 0,
+        label: '/test/folder-1',
+      },
+      {
+        command: 5432,
+        flags: 1,
+        id: 'separator',
+        label: 'Separator',
+      },
+      {
+        command: -1,
+        flags: 0,
+        id: 'more',
+        label: 'More...',
+      },
+      {
+        command: 5432,
+        flags: 1,
+        id: 'separator',
+        label: 'Separator',
+      },
+      {
+        command: 5432,
+        flags: 0,
+        id: 'clearRecentlyOpened',
+        label: 'Clear Recently Opened',
+      },
+    ],
+    1,
+    2,
+  ])
+})
+
+test('focusIndexMouse - focusing submenu index should do nothing when already focused', async () => {
+  Menu.state.menus = [
+    {
+      focusedIndex: 2,
+      level: 0,
+      x: 0,
+      y: 0,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* None */ 0,
+        },
+        {
+          id: 'separator',
+          name: 'Separator',
+          flags: /* Separator */ 1,
+        },
+        {
+          id: 'openRecent',
+          name: 'Open Recent',
+          flags: /* SubMenu */ 4,
+        },
+      ],
+    },
+    {
+      focusedIndex: 0,
+      level: 1,
+      x: 0,
+      y: 0,
+      items: [
+        {
+          command: -1,
+          flags: 0,
+          label: '/test/folder-1',
+        },
+        {
+          command: 5432,
+          flags: 1,
+          id: 'separator',
+          label: 'Separator',
+        },
+        {
+          command: -1,
+          flags: 0,
+          id: 'more',
+          label: 'More...',
+        },
+        {
+          command: 5432,
+          flags: 1,
+          id: 'separator',
+          label: 'Separator',
+        },
+        {
+          command: 5432,
+          flags: 0,
+          id: 'clearRecentlyOpened',
+          label: 'Clear Recently Opened',
+        },
+      ],
+    },
+  ]
+  SharedProcess.state.send = jest.fn((message) => {
+    switch (message.method) {
+      case 'Platform.getRecentlyOpenedPath':
+        SharedProcess.state.receive({
+          id: message.id,
+          jsonrpc: '2.0',
+          result: '/test/recently-opened.json',
+        })
+        break
+      case 'FileSystem.readFile':
+        SharedProcess.state.receive({
+          id: message.id,
+          jsonrpc: '2.0',
+          result: `["/test/folder-1"]`,
+        })
+        break
+      default:
+        console.log({ message })
+        throw new Error('unexpected message')
+    }
+  })
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 7905:
+        break
+      default:
+        console.log({ message })
+        throw new Error('unexpected message')
+    }
+  })
+  await Menu.handleMouseEnter(0, 2)
+  expect(Menu.state.menus).toHaveLength(2)
+  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+})
+
+test('selectIndex - should do nothing when already focused', async () => {
+  Menu.state.menus = [
+    {
+      focusedIndex: 2,
+      level: 0,
+      x: 0,
+      y: 0,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* None */ 0,
+        },
+        {
+          id: 'separator',
+          name: 'Separator',
+          flags: /* Separator */ 1,
+        },
+        {
+          id: 'openRecent',
+          name: 'Open Recent',
+          flags: /* SubMenu */ 4,
+        },
+      ],
+    },
+    {
+      focusedIndex: 0,
+      level: 1,
+      x: 0,
+      y: 0,
+      items: [
+        {
+          command: -1,
+          flags: 0,
+          label: '/test/folder-1',
+        },
+        {
+          command: 5432,
+          flags: 1,
+          id: 'separator',
+          label: 'Separator',
+        },
+        {
+          command: -1,
+          flags: 0,
+          id: 'more',
+          label: 'More...',
+        },
+        {
+          command: 5432,
+          flags: 1,
+          id: 'separator',
+          label: 'Separator',
+        },
+        {
+          command: 5432,
+          flags: 0,
+          id: 'clearRecentlyOpened',
+          label: 'Clear Recently Opened',
+        },
+      ],
+    },
+  ]
+  SharedProcess.state.send = jest.fn((message) => {
+    switch (message.method) {
+      case 'Platform.getRecentlyOpenedPath':
+        SharedProcess.state.receive({
+          id: message.id,
+          jsonrpc: '2.0',
+          result: '/test/recently-opened.json',
+        })
+        break
+      case 'FileSystem.readFile':
+        SharedProcess.state.receive({
+          id: message.id,
+          jsonrpc: '2.0',
+          result: `["/test/folder-1"]`,
+        })
+        break
+      default:
+        console.log({ message })
+        throw new Error('unexpected message')
+    }
+  })
+  RendererProcess.state.send = jest.fn((message) => {
+    switch (message[0]) {
+      case 7905:
+        break
+      default:
+        console.log({ message })
+        throw new Error('unexpected message')
+    }
+  })
+  await Menu.selectIndex(0, 2)
+  expect(Menu.state.menus).toHaveLength(2)
+  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+})
+
+test.skip('focusIndexMouse - focusing other index should hide submenu', async () => {
+  Menu.state.menus = [
+    {
+      focusedIndex: 0,
+      items: [
+        {
+          id: 'newFile',
+          name: 'new File',
+          flags: /* None */ 0,
+        },
+        {
+          id: 'separator',
+          name: 'Separator',
+          flags: /* Separator */ 1,
+        },
+        {
+          id: 'openRecent',
+          name: 'Open Recent',
+          flags: /* SubMenu */ 4,
+        },
+      ],
+    },
+    {
+      focusedIndex: 0,
+      items: [
+        {
+          id: 'more',
+          name: 'More...',
+          flags: /* None */ 0,
+        },
+      ],
+    },
+  ]
+  RendererProcess.state.send = jest.fn()
+  await Menu.handleMouseEnter(0, 1)
+  expect(Menu.state.menus).toHaveLength(1)
+  expect(RendererProcess.state.send).toHaveBeenCalledWith([7904, 1])
+})

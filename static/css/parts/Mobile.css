@@ -1,0 +1,28 @@
+body {
+  /* Disables pull-to-refresh since it interferes with scrolling */
+  overscroll-behavior: contain;
+
+  /* Disable tap highlight on chrome android */
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+}
+
+@media screen and (max-width: 600px) {
+  #QuickPick {
+    right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: auto;
+    width: 90%;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  #QuickPick {
+    right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: auto;
+    width: 90%;
+  }
+}

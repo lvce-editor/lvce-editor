@@ -1,0 +1,21 @@
+.InputBox {
+  width: 100%;
+  margin: 0;
+  border: none;
+  outline: none;
+  flex: 1;
+  background: var(--InputBoxBackground);
+  border: 1px solid rgb(55, 65, 63);
+  padding: 4px;
+  color: var(--InputBoxForeground);
+  font-size: 13px;
+  contain: strict;
+}
+
+/* hide small "x" on chromium  */
+.InputBox::-webkit-search-decoration,
+.InputBox::-webkit-search-cancel-button,
+.InputBox::-webkit-search-results-button,
+.InputBox::-webkit-search-results-decoration {
+  display: none;
+}

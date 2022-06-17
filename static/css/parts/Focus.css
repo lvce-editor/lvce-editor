@@ -1,0 +1,21 @@
+/* TODO hide outline on click */
+
+/* [tabindex='0']:focus-visible,
+[tabindex='0']:focus,
+[tabindex='-1']:focus-visible {
+  outline: var(--FocusOutline);
+  outline-offset: -1px;
+  outline-style: solid;
+  outline-width: 1px;
+} */
+
+.InputBox:focus {
+  border-color: var(--FocusOutline);
+}
+
+.FocusOutline {
+  outline: var(--FocusOutline);
+  outline-offset: -1px;
+  outline-style: solid;
+  outline-width: 1px;
+}

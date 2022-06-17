@@ -1,0 +1,23 @@
+#Main {
+  background: var(--MainBackground);
+  display: flex;
+  flex-direction: column;
+}
+
+#MainContent {
+  contain: strict;
+  flex: 1;
+}
+
+.Viewlet[data-viewlet-id='EditorText'] {
+  color: white;
+  white-space: pre;
+}
+
+.Viewlet[data-viewlet-id='EditorImage'] {
+  max-width: 100%;
+}
+
+.Viewlet[data-viewlet-id='Clock'] {
+  color: white;
+}

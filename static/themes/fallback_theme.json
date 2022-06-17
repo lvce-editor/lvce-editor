@@ -1,0 +1,117 @@
+{
+  "type": "dark",
+  "colors": {
+    "ActivityBarBackground": "rgb(41, 48, 48)",
+    "ActivityBarForeground": "rgba(135, 143, 140, 0.4)",
+    "ActivityBarActiveBackground": "#1f2727",
+    "ActivityBarActiveForeground": "rgb(135, 143, 140)",
+
+    "BadgeBackground": "purple",
+    "BadgeForeground": "#fff",
+
+    "EditorBackGround": "#1e2324",
+    "EditorScrollBarBackground": "rgba(57, 71, 71, 0.6)",
+    "EditorCursorBackground": "#a8df5a",
+    "EditorSelectionBackground": "rgba(255, 255, 255, 0.15)",
+
+    "InputBackground": "rgb(36, 41, 42)",
+    "InputForeground": "rgb(225, 225, 225)",
+
+    "ListActiveSelectionBackground": "#515f59",
+    "ListActiveSelectionForeground": "#ffffff",
+    "ListHoverBackground": "#405c5033",
+    "ListHoverForeground": "#e0e0e0",
+    "ListInactiveSelectionBackground": "#3b474280",
+    "ListForeground": "rgb(156, 162, 160)",
+
+    "MainBackground": "#1e2324",
+
+    "PanelBackground": "#1b2020",
+    "PanelBorderTopColor": "rgba(128, 128, 128, 0.35)",
+
+    "QuickPickBackground": "rgb(40, 46, 47)",
+
+    "SideBarBackground": "#1b2020",
+
+    "StatusBarBackground": "rgb(40, 46, 47)",
+    "StatusBarBorderTopColor": "#222222",
+
+    "TabActiveBackground": "#24292a",
+    "TabInactiveBackground": "#282e2f",
+
+    "TitleBarBackground": "rgb(40, 46, 47)",
+    "TitleBarBorderBottomColor": "#222",
+    "TitleBarColor": "#cccccc",
+    "TitleBarColorInactive": "rgba(204, 204, 204, 0.6)"
+  },
+  "tokenColors": [
+    {
+      "name": "TagName",
+      "foreground": "#C9B567"
+    },
+    {
+      "name": "AttributeName",
+      "foreground": "#9AB383"
+    },
+    {
+      "name": "String",
+      "foreground": "#82A2B4"
+    },
+    {
+      "name": "Import",
+      "foreground": "#82A2B4"
+    },
+    {
+      "name": "Comment",
+      "foreground": "#6E7573"
+    },
+    {
+      "name": "CssPropertyName",
+      "foreground": "#83A5A1"
+    },
+    {
+      "name": "CssSelector",
+      "foreground": "#BEB558"
+    },
+    {
+      "name": "CssPropertyValue",
+      "foreground": "#C0C0C3"
+    },
+    {
+      "name": "Punctuation",
+      "foreground": "#CCD2BE"
+    },
+    {
+      "name": "PunctuationTag",
+      "foreground": "#929292"
+    },
+    {
+      "name": "PunctuationString",
+      "foreground": "#C0C0C0"
+    },
+    {
+      "name": "PropertyName",
+      "foreground": "#A8B298"
+    },
+    {
+      "name": "LanguageConstant",
+      "foreground": "#AB6767"
+    },
+    {
+      "name": "VariableName",
+      "foreground": "#BE9296"
+    },
+    {
+      "name": "Keyword",
+      "foreground": "#D88F56"
+    },
+    {
+      "name": "Numeric",
+      "foreground": "#B081B9"
+    },
+    {
+      "name": "Include",
+      "foreground": "#C5A46F"
+    }
+  ]
+}

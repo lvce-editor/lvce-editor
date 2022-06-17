@@ -1,0 +1,64 @@
+{
+  "name": "pty-host",
+  "version": "0.0.0-dev",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
+    "test:watch": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "debug": "^4.3.4",
+    "verror": "^1.10.1"
+  },
+  "devDependencies": {
+    "@types/verror": "^1.10.5"
+  },
+  "optionalDependencies": {
+    "node-pty": "^0.10.1"
+  },
+  "xo": {
+    "rules": {
+      "unicorn/filename-case": "off",
+      "indent": "off",
+      "semi": "off",
+      "no-unused-vars": "off",
+      "unicorn/numeric-separators-style": "off",
+      "no-extra-semi": "off",
+      "arrow-body-style": "off",
+      "padded-blocks": "off",
+      "capitalized-comments": "off",
+      "padding-line-between-statements": "off",
+      "arrow-parens": "off",
+      "no-warning-comments": "off",
+      "array-bracket-spacing": "off",
+      "comma-spacing": "off",
+      "unicorn/no-array-callback-reference": "off",
+      "comma-dangle": "off",
+      "operator-linebreak": "off",
+      "no-case-declarations": "off",
+      "no-undef": "off",
+      "object-curly-spacing": "off",
+      "object-shorthand": "off",
+      "complexity": "off",
+      "no-labels": "off",
+      "no-multi-assign": "off",
+      "max-params": "off",
+      "no-bitwise": "off",
+      "unicorn/prefer-math-trunc": "off",
+      "no-await-in-loop": "off",
+      "unicorn/prefer-add-event-listener": "off",
+      "no-unused-expressions": "off",
+      "node/prefer-global/process": "off",
+      "unicorn/no-for-loop": "off",
+      "unicorn/prevent-abbreviations": "off"
+    },
+    "ignores": [
+      "distmin"
+    ]
+  }
+}

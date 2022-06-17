@@ -1,0 +1,50 @@
+/* #Notifications {
+  width: 100%;
+  height: 100%;
+} */
+
+.Notification {
+  color: white;
+  background: red;
+  z-index: 999;
+  background: black;
+  pointer-events: all;
+  position: fixed;
+  right: 30px;
+  bottom: 30px;
+  width: 250px;
+  height: 75px;
+  padding: 10px 5px;
+  background: rgb(40, 46, 47);
+  box-shadow: rgb(0 0 0 / 36%) 0px 0px 8px 2px;
+}
+
+.NotificationMessage {
+  line-height: 22px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+  user-select: text;
+  margin: 0;
+  padding: 0;
+}
+
+.NotificationOption {
+  color: rgb(255, 255, 255);
+  background-color: rgb(47, 98, 96);
+  width: fit-content;
+  width: -moz-fit-content;
+  padding: 5px 10px;
+  display: inline-block;
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  display: flex;
+  width: 100%;
+  padding: 4px;
+  text-align: center;
+  cursor: pointer;
+  justify-content: center;
+  align-items: center;
+}

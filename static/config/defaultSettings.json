@@ -1,0 +1,17 @@
+{
+  "completions.loadingDelay": 1200,
+
+  "editor.fontSize": 15,
+  "editor.fontFamily": "'Fira Code'",
+  "editor.lineHeight": 20,
+
+  "extensions.autoUpdate": true,
+
+  "serviceWorker.enabled": false,
+
+  "workbench.colorTheme": "slime",
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.activityBar.visible": true,
+  "workbench.sideBar.visible": true,
+  "workbench.saveStateOnVisibilityChange": false
+}

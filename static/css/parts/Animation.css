@@ -1,0 +1,9 @@
+@keyframes spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.AnimationSpin {
+  animation: spin 2s linear infinite;
+}

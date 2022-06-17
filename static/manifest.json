@@ -1,0 +1,34 @@
+{
+  "name": "Code Editor Web - OSS",
+  "short_name": "Web - OSS",
+  "start_url": "/",
+  "background_color": "#282e2f",
+  "theme_color": "#282e2f",
+  "description": "Web Code Editor.",
+  "lang": "en-US",
+  "display": "standalone",
+  "categories": ["education", "productivity", "utilities"],
+  "display_override": ["window-controls-overlay", "minimal-ui"],
+  "icons": [
+    {
+      "src": "/icons/pwa-icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/icons/pwa-icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "images/screenshot.png",
+      "sizes": "1851x978",
+      "platform": "wide",
+      "label": "Edit code in your browser."
+    }
+  ]
+}

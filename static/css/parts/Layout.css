@@ -1,0 +1,14 @@
+.SashHorizontal,
+.SashVertical {
+  position: fixed;
+  contain: strict;
+}
+
+.SashHorizontal {
+  height: 4px;
+}
+
+.SashVertical {
+  width: 4px;
+  cursor: ew-resize;
+}

@@ -1,0 +1,196 @@
+/* progress bar based on the vscode progress bar https://github.com/microsoft/vscode/blob/main/src/vs/base/browser/ui/progressbar/progressbar.css */
+
+.Viewlet[data-viewlet-id='Extensions'] {
+  padding-top: 5px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* .Viewlet[data-viewlet='Extensions']::before, */
+.Viewlet[data-viewlet='Extensions'][aria-busy='true']::before {
+  content: '';
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  animation: progress 4s linear infinite;
+  width: 2%;
+  height: 2px;
+  background: rgb(14, 112, 192);
+}
+
+/* TODO extract progress since it is used also elsewhere -> no copy paste code */
+@keyframes progress {
+  from {
+    transform: translateX(0%) scaleX(1);
+  }
+  50% {
+    transform: translateX(2500%) scaleX(3);
+  }
+  to {
+    transform: translateX(4900%) scaleX(1);
+  }
+}
+
+/* TODO use html element as placeholder so that it can be trimmed and has other size as input text */
+
+.ExtensionHeader {
+  display: grid;
+  padding: 5px 12px 6px 16px;
+}
+
+.ExtensionInput {
+  background-color: rgb(36, 41, 42);
+  color: rgb(225, 225, 225);
+  border-width: 1px;
+  border-style: solid;
+  border-color: rgb(55, 65, 63);
+  padding: 2px 4px;
+  width: 100%;
+  font-size: 80%;
+  line-height: 100%;
+  height: 26px;
+}
+
+/* clears the 'X' from Chrome */
+.ExtensionInput::-webkit-search-decoration,
+.ExtensionInput::-webkit-search-cancel-button,
+.ExtensionInput::-webkit-search-results-button,
+.ExtensionInput::-webkit-search-results-decoration {
+  display: none;
+}
+
+.ViewletExtensionMessage {
+  color: rgb(188, 190, 190);
+  font-size: 13px;
+  padding: 5px 9px 5px 16px;
+}
+
+.ExtensionListWrapper {
+  flex: 1;
+  contain: strict;
+  position: relative;
+}
+
+.ExtensionList {
+  flex: 1;
+  contain: strict;
+  position: relative;
+
+  /* TODO investigate whether or not it makes sense to create another layer here */
+  /* transform: translate3d(0px, 0px, 0px);
+  will-change: top; */
+}
+
+.ExtensionListItem {
+  text-decoration: none;
+  padding: 0 1rem;
+  cursor: pointer;
+  display: flex;
+  gap: 14px;
+  height: 62px;
+  align-items: center;
+  contain: strict;
+  /* TODO use color from color theme */
+  color: rgb(188, 190, 190);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.ExtensionListItem:hover {
+  background: rgba(64, 92, 80, 0.2);
+}
+
+.ExtensionListItem.Focused {
+  /* background: rgba(64, 92, 80, 0.2); */
+  background: #515f59;
+  color: white;
+}
+
+.ExtensionListItem[data-state='disabled'] {
+  color: #606363;
+}
+
+.ExtensionListItem[data-state='disabled'] .ExtensionIcon {
+  opacity: 0.5;
+}
+
+.ExtensionDetail {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  contain: strict;
+}
+
+.ExtensionIcon {
+  width: 42px;
+  height: 42px;
+  flex-shrink: 0;
+}
+
+.ExtensionName {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /* color: rgb(188, 190, 190); */
+  font-weight: 700;
+  font-size: 13px;
+  padding-right: 11px;
+}
+
+.ExtensionDescription {
+  height: 18px;
+  font-size: 13px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-right: 11px;
+}
+
+.ExtensionFooter {
+  display: flex;
+  justify-content: space-between;
+}
+
+.ExtensionAuthorName {
+  /* TODO compute automatically like vscode (opacity 0.9) */
+  /* const authorForeground = foregroundColor.transparent(.9).makeOpaque(WORKBENCH_BACKGROUND(theme));
+  collector.addRule(`.extensions-list .monaco-list .monaco-list-row:not(.disabled) .author { color: ${authorForeground}; }`);
+  const disabledExtensionForeground = foregroundColor.transparent(.5).makeOpaque(WORKBENCH_BACKGROUND(theme));
+  collector.addRule(`.extensions-list .monaco-list .monaco-list-row.disabled { color: ${disabledExtensionForeground}; }`); */
+  /* color: #909593; */
+  font-size: 90%;
+  font-weight: 600;
+}
+
+.ExtensionActionInstall {
+  background: #2f6260;
+  color: white;
+  border: none;
+  cursor: inherit;
+  height: 16px;
+  line-height: 14px;
+  padding: 0 4px;
+  /* padding: 4px; */
+  /* contain: strict; */
+}
+
+.ExtensionActionInstall:hover {
+  background: #387674;
+}
+
+.ExtensionActionManage {
+  all: unset;
+  width: 16px;
+  height: 16px;
+  contain: strict;
+  background: #c5c5c5;
+  -webkit-mask: url(/icons/settings-gear.svg) 50% 50% / 16px no-repeat;
+  mask: url(/icons/settings-gear.svg) 50% 50% / 16px no-repeat;
+}
+
+.NegativeMargin {
+  contain: strict;
+}

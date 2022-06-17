@@ -1,0 +1,39 @@
+#SideBar {
+  background: var(--SideBarBackground, rgb(30, 35, 36));
+  color: var(--SideBarForeground, white);
+  display: flex;
+  flex-direction: column;
+}
+
+#SideBarTitleArea {
+  contain: strict;
+  padding: 0 8px;
+  line-height: 35px;
+  display: grid;
+  height: 35px;
+  grid-template-columns: auto 1fr;
+}
+
+#SideBarTitleAreaTitle {
+  font-size: 11px;
+  cursor: default;
+  font-weight: 400;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  padding-left: 12px;
+}
+
+/* TODO */
+#SideBarTitleAreaButtons {
+  display: none;
+}
+
+#SideBarContent {
+  contain: strict;
+  /* padding: 10px; */
+  /* height: 100%; */
+  flex: 1;
+}

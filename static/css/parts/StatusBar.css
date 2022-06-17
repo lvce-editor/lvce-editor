@@ -1,0 +1,68 @@
+#StatusBar {
+  display: flex;
+  justify-content: space-between;
+}
+
+#StatusBar {
+  background: var(--StatusBarBackground);
+  height: 23px; /* 22px content + 1px border top */
+  border-top: 1px solid var(--StatusBarBorderTopColor);
+  display: flex;
+  color: var(--StatusBarForeground, rgb(98, 112, 106));
+  display: flex;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+#StatusBarItemsLeft,
+#StatusBarItemsRight {
+  /* contain: content; */
+  margin: 0;
+  display: flex;
+}
+
+#StatusBarItemsLeft {
+  padding-left: 7px;
+}
+
+#StatusBarItemsRight {
+  padding-right: 7px;
+}
+
+.StatusBarItem {
+  display: flex;
+  line-height: 22px;
+  height: 100%;
+  outline: none;
+  padding: 0 5px;
+  margin: 0 3px;
+  cursor: pointer;
+  font-size: 12px;
+  align-items: center;
+  /* contain: content; */
+}
+
+.StatusBarItem:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.StatusBarItem:active {
+  background: rgba(255, 255, 255, 0.18);
+}
+
+.StatusBarIcon {
+  outline: none;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 1em;
+  mask-size: 1em;
+  background: currentColor;
+
+  /* TODO have common icon css for activity bar and status bar */
+  width: 1em;
+  height: 1em;
+  display: block;
+  margin-right: 4px;
+}

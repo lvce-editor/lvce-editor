@@ -5,8 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "postinstall": "lerna bootstrap --ci",
-    "test": "lerna run test"
+    "postinstall": "lerna bootstrap --ci && node scripts/use-sample-data.js",
+    "test": "lerna run test",
+    "dev": "nodemon"
   },
   "keywords": [],
   "author": "",

@@ -1,0 +1,367 @@
+[
+  {
+    "id": "layout.toggleSideBar",
+    "label": "Layout: Toggle Side Bar"
+  },
+  {
+    "id": "layout.togglePanel",
+    "label": "Layout: Toggle Panel"
+  },
+  {
+    "id": "layout.toggleActivityBar",
+    "label": "Layout: Toggle Activity Bar"
+  },
+  {
+    "id": "layout.toggleSideBarPosition",
+    "label": "Layout: Toggle Side Bar Position",
+    "aliases": ["Position Side Bar", "Move Side Bar", "Side Bar Location"]
+  },
+  {
+    "id": "focus.output",
+    "label": "Focus: Output"
+  },
+  {
+    "id": "focus.nextPart",
+    "label": "Focus: Next Part"
+  },
+  {
+    "id": "focus.previousPart",
+    "label": "Focus: Previous Part"
+  },
+  {
+    "id": "focus.statusBar",
+    "label": "Focus: Status Bar"
+  },
+  {
+    "id": "focus.problems",
+    "label": "Focus: Problems"
+  },
+  {
+    "id": "focus.debugConsole",
+    "label": "Focus: Debug Console"
+  },
+  {
+    "id": "focus.terminal",
+    "label": "Focus: Terminal"
+  },
+  {
+    "id": "terminal.clear",
+    "label": "Terminal: Clear"
+  },
+  {
+    "id": "terminal.paste",
+    "label": "Terminal: Paste"
+  },
+  {
+    "id": "terminal.kill",
+    "label": "Terminal: Kill active Instance"
+  },
+  {
+    "id": "terminal.scrollUpLine",
+    "label": "Terminal: Scroll Up Line"
+  },
+  {
+    "id": "terminal.scrollDownLine",
+    "label": "Terminal: Scroll Down Line"
+  },
+  {
+    "id": "terminal.scrollUpPage",
+    "label": "Terminal: Scroll Up Page"
+  },
+  {
+    "id": "terminal.scrollDownPage",
+    "label": "Terminal: Scroll Down Page"
+  },
+  {
+    "id": "focus.previousTerminal",
+    "label": "Focus: Previous Terminal"
+  },
+  {
+    "id": "focus.nextTerminal",
+    "label": "Focus: Next Terminal"
+  },
+  {
+    "id": "terminal.split",
+    "label": "Terminal: Split"
+  },
+  {
+    "id": "terminal.toggleSelection",
+    "label": "Toggle Selection"
+  },
+  {
+    "id": "focus.explorer",
+    "label": "Focus: Explorer"
+  },
+  {
+    "id": "focus.search",
+    "label": "Focus: Search"
+  },
+  {
+    "id": "focus.sourceControl",
+    "label": "Focus: Source Control"
+  },
+  {
+    "id": "focus.debugAndRun",
+    "label": "Focus: Debug and Run"
+  },
+  {
+    "id": "focus.extensions",
+    "label": "Focus: Extensions"
+  },
+  {
+    "id": "preferences.openUserKeyBindings",
+    "label": "Preferences: Open User Key Bindings"
+  },
+  {
+    "id": "preferences.openDefaultKeyBindings",
+    "label": "Preferences: Open Default Key Bindings",
+    "aliases": ["Set Key Bindings", "Key Map", "Key Mapping"]
+  },
+  {
+    "id": "preferences.openSettingsJson",
+    "label": "Preferences: Open Settings",
+    "aliases": ["Change Settings", "Configure Settings", "Preferences"]
+  },
+  {
+    "id": "extensions.openExtensionsFolder",
+    "label": "Extensions: Open Extensions Folder",
+    "deprecated": true,
+    "TODO": "add support for deprecated commands"
+  },
+  {
+    "id": "extensions.openCachedExtensionsFolder",
+    "label": "Extensions: Open Cached Extensions Folder"
+  },
+  {
+    "id": "focus.activityBar",
+    "label": "Focus: ActivityBar"
+  },
+  {
+    "id": "focus.titleBar",
+    "label": "Focus: Title Bar"
+  },
+  {
+    "id": "activityBar.focusNext",
+    "label": "ActivityBar: Focus Next"
+  },
+  {
+    "id": "activityBar.focusPrevious",
+    "label": "activityBar: Focus Previous"
+  },
+  {
+    "id": "activityBar.focusFirst",
+    "label": "ActivityBar: Focus First"
+  },
+  {
+    "id": "activityBar.focusLast",
+    "label": "ActivityBar: Focus Last"
+  },
+  {
+    "id": "developer.showMemoryUsage",
+    "label": "Developer: Show Memory Usage"
+  },
+  {
+    "id": "developer.allocateMemoryInSharedProcess",
+    "label": "Developer: Allocate Memory in Shared Process"
+  },
+  {
+    "id": "developer.crashSharedProcess",
+    "label": "Developer: Crash Shared Process"
+  },
+  {
+    "id": "developer.crashMainProcess",
+    "label": "Developer: Crash Main Process"
+  },
+  {
+    "id": "developer.createSharedProcessHeapSnapshot",
+    "label": "Developer: Create Shared Process Heap Snapshot"
+  },
+  {
+    "id": "developer.createSharedProcessProfile",
+    "label": "Developer: Create Shared Process Profile"
+  },
+  {
+    "id": "developer.clearCache",
+    "label": "Developer: Clear Cache"
+  },
+  {
+    "id": "developer.openConfigFolder",
+    "label": "Developer: Open Config Folder"
+  },
+  {
+    "id": "developer.openCacheFolder",
+    "label": "Developer: Open Cache Folder"
+  },
+  {
+    "id": "developer.openDataFolder",
+    "label": "Developer: Open Data Folder"
+  },
+  {
+    "id": "preferences.selectColorTheme",
+    "label": "Preferences: Color Theme",
+    "aliases": ["Select Color Theme", "Switch Color Theme", "Theme Color"]
+  },
+  {
+    "id": "developer.measureLatencyBetweenExtensionHostAndSharedProcess",
+    "label": "Developer: Measure Latency Between Extension Host and Shared Process"
+  },
+  {
+    "id": "developer.measureLatencyBetweenSharedProcessAndRendererProcess",
+    "label": "Developer: Measure Latency Between Shared Process and Renderer Process"
+  },
+  {
+    "id": "developer.showState",
+    "label": "Developer: Show state"
+  },
+  {
+    "id": "developer.startupPerformance",
+    "label": "Developer: Startup Performance"
+  },
+  {
+    "id": "developer.toggleDeveloperTools",
+    "label": "Developer: Toggle Developer Tools"
+  },
+  {
+    "id": "window.reload",
+    "label": "Window: Reload",
+    "aliases": ["Reload Window"]
+  },
+  {
+    "id": "window.close",
+    "label": "Window: Close",
+    "aliases": ["Close Window"]
+  },
+  {
+    "id": "window.minimize",
+    "label": "Window: Minimize",
+    "aliases": ["Minimize Window"]
+  },
+  {
+    "id": "window.maximize",
+    "label": "Window: Maximize",
+    "aliases": ["Maximize Window"]
+  },
+  {
+    "id": "window.unmaximize",
+    "label": "Window: Unmaximize",
+    "aliases": ["Unmaximize Window"]
+  },
+  {
+    "id": "window.makeScreenshot",
+    "label": "Window: Make Screenshot"
+  },
+  {
+    "id": "main.closeEditor",
+    "label": "Main: Close Editor"
+  },
+  {
+    "id": "main.closeAllEditors",
+    "label": "Main: Close all editors"
+  },
+  {
+    "id": "editor.indent",
+    "label": "Editor: Indent",
+    "aliases": ["Indent More", "DeIndent"]
+  },
+  {
+    "id": "editor.unindent",
+    "label": "Editor: Unindent",
+    "aliases": ["Indent Less", "DeIndent"]
+  },
+  {
+    "id": "editor.toggleComment",
+    "label": "Editor: Toggle Comment"
+  },
+  {
+    "id": "editor.toggleBlockComment",
+    "label": "Editor: Toggle Block Comment"
+  },
+  {
+    "id": "editor.openColorPicker",
+    "label": "Editor: Open Color Picker"
+  },
+  {
+    "id": "editor.closeColorPicker",
+    "label": "Editor: Close Color Picker"
+  },
+  {
+    "id": "editor.copyLineDown",
+    "label": "Editor: Copy Line Down"
+  },
+  {
+    "id": "editor.copyLineUp",
+    "label": "Editor: Copy Line Up"
+  },
+  {
+    "id": "editor.moveLineDown",
+    "label": "Editor: Move Line Down"
+  },
+  {
+    "id": "editor.moveLineUp",
+    "label": "Editor: Move Line Up"
+  },
+  {
+    "id": "file.openFolder",
+    "label": "File: Open Folder"
+  },
+  {
+    "id": "file.openRecent",
+    "label": "File: Open Recent"
+  },
+  {
+    "id": "help.about",
+    "label": "Help: About"
+  },
+  {
+    "id": "editor.format",
+    "label": "Editor: Format Document"
+  },
+  {
+    "id": "editor.formatForced",
+    "label": "Editor: Format Document (forced)"
+  },
+  {
+    "id": "editor.selectNextOccurrence",
+    "label": "Editor: Select Next Occurrence"
+  },
+  {
+    "id": "editor.selectAllOccurrences",
+    "label": "Editor: Select All Occurrences"
+  },
+  {
+    "id": "editor.goToDefinition",
+    "label": "Editor: Go To Definition"
+  },
+  {
+    "id": "editor.goToTypeDefinition",
+    "label": "Editor: Go To Type Definition"
+  },
+  {
+    "id": "editor.selectInsideString",
+    "label": "Editor: Select Inside String"
+  },
+  {
+    "id": "audio.playBell",
+    "label": "Audio: Play Bell"
+  },
+  {
+    "id": "serviceWorker.uninstall",
+    "label": "Service Worker: Uninstall"
+  },
+  {
+    "id": "developer.openLogsFolder",
+    "label": "Developer: Open Logs Folder"
+  },
+  {
+    "id": "developer.openProcessExplorer",
+    "label": "Developer: Open Process Explorer"
+  },
+  {
+    "id": "viewletExplorer.collapseAll",
+    "label": "Explorer: Collapse All"
+  },
+  {
+    "id": "viewletExplorer.expandAll",
+    "label": "Explorer: Expand All"
+  }
+]

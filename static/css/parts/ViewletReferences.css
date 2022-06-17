@@ -1,0 +1,22 @@
+.Viewlet[data-viewlet-id='Locations'] {
+  display: flex;
+  flex-direction: column;
+}
+
+.LocationsMessage {
+  padding: 4px 12px 4px 18px;
+  user-select: text;
+  color: rgb(188, 190, 190);
+}
+
+.LocationList {
+  height: 100%;
+  flex: 1;
+  outline: none;
+  contain: strict;
+}
+
+/* TODO figure out if this css is too slow */
+.LocationsList:focus .TreeItem.Focused {
+  color: white;
+}

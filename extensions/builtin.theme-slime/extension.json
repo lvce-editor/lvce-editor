@@ -1,0 +1,13 @@
+{
+  "id": "builtin.theme-slime",
+  "name": "Slime Theme",
+  "description": "",
+  "icon": "icon.png",
+  "colorThemes": [
+    {
+      "id": "slime",
+      "label": "Slime",
+      "path": "color-theme.json"
+    }
+  ]
+}

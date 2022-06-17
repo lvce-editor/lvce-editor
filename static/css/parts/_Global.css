@@ -1,0 +1,116 @@
+@font-face {
+  font-family: 'Fira Code';
+  src: url(/fonts/FiraCode-VariableFont.ttf) format('truetype');
+}
+
+/* TODO check if contain strict also makes sense for html and body */
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  /* font-family: 'Source Sans Pro', 'Helvetica Neue', Arial, sans-serif; */
+  font-family: system-ui, Ubuntu, Droid Sans, sans-serif;
+  user-select: none;
+}
+
+#Workbench {
+  width: 100%;
+  height: 100%;
+  /* width: 800px;
+  height: 600px; */
+  contain: strict;
+  font-size: 13px;
+  line-height: 1.4;
+  /* display: grid; */
+}
+
+#TitleBar,
+#SideBar,
+#Main,
+#ActivityBar,
+#Panel,
+#StatusBar {
+  contain: strict;
+  /*
+   * not sure why this works, but position fixed combined with backface
+   * visibility hidden gives great rendering performance,
+   * see also https://benfrain.com/improving-css-performance-fixed-position-elements/
+   *
+   *
+   * typing benchmark (before):
+   * 216ms scripting
+   * 62ms rendering
+   * 26ms painting
+   * 100ms system
+   *
+   * typing benchmark (after):
+   * 189ms scripting
+   * 117ms rendering
+   * 41ms painting
+   * 122ms system
+   */
+  position: fixed;
+  backface-visibility: hidden;
+}
+
+#TitleBar {
+}
+
+#Main {
+  width: 100%;
+  height: 100%;
+}
+
+/* TODO droptarget css can be lazy loaded and should be in main.css */
+#Main.DropTarget::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 90, 0.5);
+  z-index: 1;
+}
+
+#SideBar {
+  /* TODO width and height are set via javascript, this might not be necessary */
+  width: 200px;
+  height: 200px;
+  bottom: 0;
+  right: 0;
+}
+
+.Hidden {
+  display: none !important;
+}
+
+[hidden] {
+  display: none !important;
+}
+
+/* TODO */
+*::-webkit-scrollbar {
+  /* width: 10px; */
+}
+*::-webkit-scrollbar-track {
+  /* -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3); */
+}
+
+*::-webkit-scrollbar-thumb {
+  /* background-color: rgba(57, 71, 71, 0.6); */
+  /* outline: 1px solid slategrey; */
+}
+
+/*
+ * Using the will-change attribute creates a separate layer.
+ * Updating that layer will be faster since only that layer needs style recalculation and repainting (instead of the whole page)
+ * However this hack should be used sparingly since too many layers can have negative impact for performance
+ */
+.TransformHack {
+  /* will-change: transform;
+  contain: strict; */
+}

@@ -1,0 +1,39 @@
+body {
+  margin: 0;
+}
+.Terminal {
+  position: relative;
+  contain: strict;
+  width: 780px;
+  height: 625px;
+  background: black;
+}
+
+.Layers {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.TerminalCanvasText,
+.TerminalCanvasCursor {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+.TerminalCanvasCursor {
+  opacity: 0.5;
+}
+
+.TerminalTextArea {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+}

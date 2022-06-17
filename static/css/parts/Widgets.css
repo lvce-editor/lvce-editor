@@ -1,0 +1,13 @@
+#Widgets {
+  contain: strict;
+  position: fixed;
+  top: 0;
+  left: 0;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* TODO maybe hide widgets container if empty*/
+#Widgets:empty {
+  display: none;
+}

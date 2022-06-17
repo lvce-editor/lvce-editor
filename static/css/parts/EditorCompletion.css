@@ -1,0 +1,113 @@
+#Completions {
+  top: 0;
+  left: 0;
+  position: absolute;
+  background: var(--ContextMenuBackground);
+  color: white;
+  box-shadow: rgb(0, 0, 0) 0px 2px 4px;
+  user-select: none;
+  width: 150px;
+  margin: 0;
+  /* padding: 0.5rem 0; */
+  font-size: 13px;
+  height: 150px;
+  padding: 0;
+  overflow-y: auto;
+  /* z-index: 1; */
+  pointer-events: all;
+}
+
+.EditorCompletionItem {
+  height: 28px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  list-style: none;
+  cursor: pointer;
+  position: relative;
+  contain: strict;
+}
+
+.EditorCompletionItem:before {
+  content: '';
+  width: 20px;
+  height: 20px;
+  /* background: darkcyan; */
+  contain: strict;
+  content: '';
+  position: absolute;
+  inset: 0;
+  /* -webkit-mask-image: url(/icons/icon-close.svg); */
+  /* -webkit-mask-repeat: no-repeat; */
+  /* mask-repeat: no-repeat; */
+  /* -webkit-mask-position: center; */
+  /* mask-position: center; */
+  /* -webkit-mask-size: 100%; */
+  /* mask-size: 100%; */
+}
+
+.IconProperty::before {
+  -webkit-mask-image: url(/icons/symbol-property.svg);
+  background: #c5c5c5;
+}
+
+.IconValue::before {
+  -webkit-mask-image: url(/icons/symbol-enum.svg);
+  background: #ee9d28;
+}
+
+.IconVariable::before {
+  -webkit-mask-image: url(/icons/symbol-variable.svg);
+  background: #75beff;
+}
+
+.IconFunction::before {
+  -webkit-mask-image: url(/icons/symbol-method.svg);
+  background: #b180d7;
+}
+
+.IconKeyword::before {
+  -webkit-mask-image: url(/icons/symbol-keyword.svg);
+  background: #c5c5c5;
+}
+
+.EditorCompletionItem:hover {
+  background: rgba(64, 92, 80, 0.2);
+}
+
+.EditorCompletionItem.Focused {
+  background: #405c50;
+}
+
+/* TODO maybe put this all into editor */
+
+/* Rename Widget */
+.RenameWidget {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: auto;
+}
+
+/* Error Widget */
+.EditorWidgetError {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: white;
+  background: rgb(37, 35, 35);
+  pointer-events: auto;
+}
+
+/* Alert  */
+.AriaAlert {
+  position: absolute;
+  left: -999em;
+  top: 0;
+}
+
+.monaco-aria-container {
+  width: 0;
+  height: 0;
+}

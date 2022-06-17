@@ -1,0 +1,101 @@
+/* TODO very much copy paste from ContextMenu.css */
+
+.Menu {
+  top: 0;
+  left: 0;
+  position: absolute;
+  background: var(--MenuBackground, rgb(60, 60, 60));
+  color: var(--MenuForeground, white);
+  box-shadow: var(--MenuBoxShadow, rgb(0, 0, 0) 0px 2px 4px);
+  user-select: none;
+  min-width: 150px;
+  /* width: 150px; */
+  margin: 0;
+  padding: 10px 0;
+  font-size: 13px;
+  z-index: 1;
+  outline: none;
+  pointer-events: auto;
+}
+
+.MenuItem {
+  /* border: thin solid transparent; */
+  /* TODO using px and rem -> decide */
+  height: 28px;
+  padding: 0 28px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  list-style: none;
+  position: relative;
+  outline: none;
+  display: flex;
+  contain: content;
+}
+
+.MenuItem:not([disabled]) {
+  cursor: pointer;
+}
+
+.MenuItem.Focused {
+  background: var(--MenuItemHoverBackground, #687f7b33);
+  color: var(--MenuItemHoverForeground, inherit);
+  outline: none;
+}
+
+.MenuItem[aria-checked='true']::before {
+  content: '';
+  position: absolute;
+  top: calc((1.8rem - 0.75rem) / 2);
+  left: calc((1.8rem - 0.75rem) / 2);
+  width: 0.75rem;
+  height: 0.75rem;
+  background: orchid;
+  -webkit-mask-image: url(/icons/check.svg);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 0.75rem;
+  mask-size: 0.75rem;
+  background: currentColor;
+}
+
+.MenuItem[aria-haspopup='true']::after {
+  width: 16px;
+  height: 16px;
+  content: '';
+  display: block;
+  -webkit-mask-image: url(/icons/chevron-right.svg);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 100%;
+  mask-size: 100%;
+  background: currentColor;
+  margin-left: auto;
+  margin-right: -20px;
+}
+
+.MenuItem[disabled] {
+  opacity: 0.4;
+}
+
+.MenuItemSeparator {
+  list-style: none;
+  height: 16px;
+  position: relative;
+}
+
+.MenuItemSeparator::after {
+  position: absolute;
+  content: '';
+  display: block;
+  width: calc(100% - 1.6rem);
+  height: 1px;
+  background: rgb(136, 136, 136);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}

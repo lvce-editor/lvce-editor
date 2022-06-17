@@ -1,0 +1,15 @@
+{
+  "name": "web",
+  "version": "0.0.0-dev",
+  "description": "",
+  "main": "index.js",
+  "bin": {
+    "web": "web.js"
+  },
+  "type": "module",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {}
+}

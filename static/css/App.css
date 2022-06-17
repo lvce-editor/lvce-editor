@@ -1,0 +1,46 @@
+/* third party css */
+@import '/static/lib-css/modern-normalize.css';
+@import '/static/lib-css/termterm.css';
+
+/* application css */
+@import './parts/__Theme.css';
+@import './parts/_Global.css';
+@import './parts/ActivityBar.css';
+@import './parts/EditorTabs.css';
+@import './parts/Dialog.css';
+@import './parts/Menu.css';
+@import './parts/Notification.css';
+@import './parts/ViewletExplorer.css';
+@import './parts/ViewletTerminal.css';
+@import './parts/StatusBar.css';
+@import './parts/ViewletSourceControl.css';
+@import './parts/SideBar.css';
+@import './parts/QuickPick.css';
+@import './parts/ViewletExtensions.css';
+@import './parts/MonacoList.css';
+@import './parts/Panel.css';
+@import './parts/Layout.css';
+@import './parts/Viewlet.css';
+@import './parts/ViewletOutput.css';
+@import './parts/ContextMenu.css';
+@import './parts/Editor.css';
+@import './parts/FindWidget.css';
+@import './parts/EditorCompletion.css';
+@import './parts/InputBox.css';
+@import './parts/ViewletProblems.css';
+@import './parts/ViewletRunAndDebug.css';
+@import './parts/ViewletSearch.css';
+@import './parts/ViewletDebugConsole.css';
+@import './parts/Highlight.css';
+@import './parts/Main.css';
+@import './parts/TitleBar.css';
+@import './parts/Widgets.css';
+@import './parts/EditorHover.css';
+@import './parts/Mobile.css';
+@import './parts/ImagePreview.css';
+@import './parts/BackDrop.css';
+@import './parts/Animation.css';
+@import './parts/ViewletReferences.css';
+
+/* focus css (can be overridden by components) */
+@import './parts/Focus.css';
