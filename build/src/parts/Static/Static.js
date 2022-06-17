@@ -190,10 +190,10 @@ preload()
     occurrence: '/css',
     replacement: `/${commitHash}/css`,
   })
-  await Copy.copy({
-    from: 'extensions/builtin.vscode-icons/icons',
-    to: `build/.tmp/dist/file-icons`,
-  })
+  // await Copy.copy({
+  //   from: 'extensions/builtin.vscode-icons/icons',
+  //   to: `build/.tmp/dist/file-icons`,
+  // })
   await BundleCss.bundleCss({
     to: `build/.tmp/dist/${commitHash}/css/App.css`,
   })
@@ -428,10 +428,10 @@ const copyColorThemes = async () => {
 
 const copyIconThemes = async () => {
   const commitHash = await CommitHash.getCommitHash()
-  await Copy.copyFile({
-    from: 'extensions/builtin.vscode-icons/icon-theme.json',
-    to: `build/.tmp/dist/${commitHash}/icon-themes/vscode-icons.json`,
-  })
+  // await Copy.copyFile({
+  //   from: 'extensions/builtin.vscode-icons/icon-theme.json',
+  //   to: `build/.tmp/dist/${commitHash}/icon-themes/vscode-icons.json`,
+  // })
 }
 
 const bundleJs = async () => {
