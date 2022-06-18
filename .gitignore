@@ -1,4 +1,6 @@
 extensions/builtin.language-basics-html
+extensions/builtin.language-basics-java
+extensions/builtin.language-basics-shellscript
 extensions/builtin.language-basics-css
 extensions/builtin.language-basics-javascript
 extensions/builtin.language-features-css
