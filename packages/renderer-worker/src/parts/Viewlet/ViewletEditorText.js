@@ -97,6 +97,11 @@ const handleEditorChange = async (editor, changes) => {
 }
 
 export const contentLoadedEffects = async (state) => {
+  // TODO dispose listener
+  // TODO don't like side effect here, where to put it?
+  GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
+  GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
+  GlobalEventBus.addListener('editor.change', handleEditorChange)
   const newLanguageId = Languages.getLanguageId(state.uri)
   await Command.execute(
     /* Editor.setLanguageId */ 989,
@@ -106,11 +111,6 @@ export const contentLoadedEffects = async (state) => {
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(state)
   GlobalEventBus.emitEvent('editor.create', state)
-  // TODO dispose listener
-  // TODO don't like side effect here, where to put it?
-  GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
-  GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
-  GlobalEventBus.addListener('editor.change', handleEditorChange)
 }
 
 const handleLanguagesChanged = async () => {
