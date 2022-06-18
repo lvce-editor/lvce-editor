@@ -1,7 +1,9 @@
 import got from 'got'
-import { createWriteStream } from 'node:fs'
+import { createReadStream, createWriteStream, existsSync } from 'node:fs'
 import { mkdir, rm } from 'node:fs/promises'
 import { pipeline } from 'node:stream/promises'
+import { createBrotliDecompress } from 'node:zlib'
+import tar from 'tar-fs'
 import VError from 'verror'
 import * as Path from '../Path/Path.js'
 
@@ -20,14 +22,31 @@ const download = async (url, outFile) => {
 
 const downloadExtension = async (extension) => {
   try {
-    await download(
-      extension.path,
-      Path.absolute(Path.join('extensions', `${extension.name}.tar.br`))
+    const baseName = Path.baseName(extension.path)
+    const cachedPath = Path.absolute(
+      Path.join('build', '.tmp', `cachedExtensions`, baseName)
+    )
+    if (existsSync(cachedPath)) {
+      return
+    }
+    await download(extension.path, cachedPath)
+    await extract(
+      cachedPath,
+      Path.absolute(Path.join(`extensions`, extension.name))
     )
   } catch (error) {
     // @ts-ignore
     throw new VError(error, `Failed to download extension ${extension.name}`)
   }
+}
+
+export const extract = async (inFile, outDir) => {
+  await mkdir(outDir, { recursive: true })
+  await pipeline(
+    createReadStream(inFile),
+    createBrotliDecompress(),
+    tar.extract(outDir)
+  )
 }
 
 const downloadExtensions = async (extensions) => {
@@ -47,6 +66,14 @@ const main = () => {
     {
       name: 'builtin.language-features-typescript',
       path: 'https://github.com/lvce-editor/language-features-typescript/releases/download/v0.0.1/language-features-typescript-v0.0.1.tar.br',
+    },
+    {
+      name: 'builtin.language-features-css',
+      path: 'https://github.com/lvce-editor/language-features-css/releases/download/v0.0.2/language-features-css-v0.0.2.tar.br',
+    },
+    {
+      name: 'builtin.language-basics-javascript',
+      path: 'https://github.com/lvce-editor/language-basics-javascript/releases/download/v0.0.1/language-basics-javascript-v0.0.1.tar.br',
     },
   ]
   downloadExtensions(extensions)

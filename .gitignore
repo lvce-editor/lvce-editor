@@ -1,3 +1,8 @@
+extensions/builtin.language-basics-javascript
+extensions/builtin.language-features-css
+extensions/builtin.language-features-typescript
+extensions/builtin.prettier
+
 *.tar.br
 out.txt
 .tmp

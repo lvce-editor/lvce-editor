@@ -12,6 +12,11 @@ export const isAbsolute = (inputPath) => {
 export const dirname = (dirent) => {
   return path.dirname(dirent)
 }
+
 export const join = (...paths) => {
   return path.join(...paths)
+}
+
+export const baseName = (dirent) => {
+  return path.basename(dirent)
 }
