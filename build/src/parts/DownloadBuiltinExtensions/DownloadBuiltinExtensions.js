@@ -75,6 +75,14 @@ const main = () => {
       name: 'builtin.language-basics-javascript',
       path: 'https://github.com/lvce-editor/language-basics-javascript/releases/download/v0.0.1/language-basics-javascript-v0.0.1.tar.br',
     },
+    {
+      name: 'builtin.language-basics-html',
+      path: 'https://github.com/lvce-editor/language-basics-html/releases/download/v0.0.1/language-basics-html-v0.0.1.tar.br',
+    },
+    {
+      name: 'builtin.language-basics-css',
+      path: 'https://github.com/lvce-editor/language-basics-css/releases/download/v0.0.2/language-basics-css-v0.0.2.tar.br',
+    },
   ]
   downloadExtensions(extensions)
 }
