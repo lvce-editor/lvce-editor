@@ -9,6 +9,7 @@ import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as Remove from '../Remove/Remove.js'
 
 const copyJs = async () => {
   const commitHash = await CommitHash.getCommitHash()
@@ -456,7 +457,7 @@ const bundleJs = async () => {
 
 export const build = async () => {
   Console.time('clean')
-  await Clean.clean()
+  await Remove.remove('build/.tmp/dist')
   Console.timeEnd('clean')
 
   Console.time('copyJs')
