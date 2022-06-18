@@ -5,7 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "postinstall": "lerna bootstrap --ci && node scripts/use-sample-data.js",
+    "postinstall": "lerna bootstrap --ci && node scripts/postinstall.js",
     "test": "lerna run test",
     "dev": "nodemon"
   },
