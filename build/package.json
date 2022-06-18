@@ -24,6 +24,7 @@
     "bytes": "^3.1.2",
     "esbuild": "^0.14.44",
     "fs-extra": "^10.1.0",
+    "got": "^12.1.0",
     "gzip-size": "^7.0.0",
     "minimist": "^1.2.6",
     "pretty-bytes": "^6.0.0",

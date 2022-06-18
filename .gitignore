@@ -1,3 +1,4 @@
+*.tar.br
 out.txt
 .tmp
 distmin
