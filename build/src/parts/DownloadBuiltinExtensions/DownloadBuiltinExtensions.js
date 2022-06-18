@@ -91,6 +91,14 @@ const main = () => {
       name: 'builtin.language-basics-shellscript',
       path: 'https://github.com/lvce-editor/language-basics-shellscript/releases/download/v0.0.1/language-basics-shellscript-v0.0.1.tar.br',
     },
+    {
+      name: 'builtin.language-basics-python',
+      path: 'https://github.com/lvce-editor/language-basics-python/releases/download/v0.0.1/language-basics-python-v0.0.1.tar.br',
+    },
+    {
+      name: 'builtin.language-basics-go',
+      path: 'https://github.com/lvce-editor/language-basics-go/releases/download/v0.0.1/language-basics-go-v0.0.1.tar.br',
+    },
   ]
   downloadExtensions(extensions)
 }
