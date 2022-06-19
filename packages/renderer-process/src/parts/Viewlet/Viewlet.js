@@ -218,3 +218,35 @@ export const appendViewlet = (parentId, childId, focus) => {
     childInstance.factory.focus(childInstance.state)
   }
 }
+
+const renderVirtualDom = (virtualDom) => {
+  if (Array.isArray(virtualDom)) {
+    const $Fragment = document.createDocumentFragment()
+    for (const child of virtualDom) {
+      const $Child = renderVirtualDom(child)
+      $Fragment.append($Child)
+    }
+    return $Fragment
+  }
+  const $Child = document.createElement(virtualDom.component)
+  for (const [key, value] of Object.entries(virtualDom.props)) {
+    $Child.setAttribute(key, value)
+  }
+  if (virtualDom.children) {
+    $Child.append(renderVirtualDom(virtualDom.children))
+  }
+  return $Child
+}
+
+export const functionalRender = (childId, virtualDom) => {
+  const childInstance = state.instances[childId]
+  // TODO
+  const $Element = childInstance.state.$ActivityBar
+  // TODO use dom diffing instead
+  $Element.textContent = ''
+
+  const $Child = renderVirtualDom(virtualDom)
+  $Element.append($Child)
+  // console.log({ virtualDom })
+  // console.log({ childInstance, childId })
+}

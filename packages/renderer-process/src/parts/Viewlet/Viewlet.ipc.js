@@ -11,4 +11,5 @@ export const __initialize__ = () => {
   Command.register(3030, Viewlet.load)
   Command.register(3031, Viewlet.handleError)
   Command.register(3032, Viewlet.sendMultiple)
+  Command.register(3033, Viewlet.functionalRender)
 }

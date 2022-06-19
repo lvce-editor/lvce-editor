@@ -97,7 +97,7 @@ export const render = (oldState, newState) => {
     h('input', {
       className: 'ExtensionsInput',
       role: 'search',
-      onInput: this.props.onInput,
+      onInput: newState.onInput,
     }),
   ])
 }

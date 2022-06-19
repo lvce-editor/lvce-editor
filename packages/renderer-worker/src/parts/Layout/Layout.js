@@ -410,3 +410,7 @@ export const handleResize = async (bounds) => {
     RendererProcess.send(command)
   }
 }
+
+// export const hasFunctionalRender = true
+
+// export const render = (oldState, newState) => {}

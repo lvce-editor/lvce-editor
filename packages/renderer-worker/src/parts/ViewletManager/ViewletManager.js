@@ -163,10 +163,15 @@ export const load = async (viewlet, focus = false) => {
     }
 
     if (module.hasFunctionalRender) {
-      const commands = module.render(viewletState, newState)
-      for (const command of commands) {
-        RendererProcess.send(command)
+      const virtualDom = module.render(viewletState, newState)
+
+      if (virtualDom[0].component === 'div') {
+        RendererProcess.send([3033, viewlet.id, virtualDom])
       }
+      // console.log({ commands: virtualDom })
+      // for (const command of virtualDom) {
+      // RendererProcess.send(command)
+      // }
     }
 
     if (module.contentLoadedEffects) {

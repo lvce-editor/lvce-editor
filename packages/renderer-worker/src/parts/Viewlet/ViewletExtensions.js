@@ -5,6 +5,8 @@ import * as ExtensionsMarketplace from '../ExtensionMarketplace/ExtensionMarketp
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Assert from '../Assert/Assert.js'
+import * as ViewletExtensionsHeader from './ViewletExtensionsHeader.js'
+import * as ViewletExtensionsList from './ViewletExtensionsList.js'
 
 export const ITEM_HEIGHT = 62
 
@@ -710,64 +712,76 @@ export const handleScrollBarClick = (state, y) => {
 export const hasFunctionalRender = true
 
 export const render = (oldState, newState) => {
-  const changes = []
-  if (oldState === newState) {
-    return changes
-  }
-  if (
-    oldState.filteredExtensions !== newState.filteredExtensions ||
-    oldState.minLineY !== newState.minLineY ||
-    oldState.maxLineY !== newState.maxLineY
-  ) {
-    const visibleExtensions = getVisible(newState)
-    changes.push([
-      /* Viewlet.send */ 3024,
-      /* id */ 'Extensions',
-      /* method */ 'setExtensions',
-      /* visibleExtensions */ visibleExtensions,
-    ])
-  }
-  if (
-    oldState.filteredExtensions.length !== newState.filteredExtensions.length
-  ) {
-    const contentHeight = newState.filteredExtensions.length * ITEM_HEIGHT
-    changes.push([
-      /* Viewlet.send */ 3024,
-      /* id */ 'Extensions',
-      /* method */ 'setContentHeight',
-      /* contentHeight */ contentHeight,
-    ])
-  }
+  return [
+    {
+      component: ViewletExtensionsHeader,
+      oldState,
+      newState,
+    },
+    {
+      component: ViewletExtensionsList,
+      oldState,
+      newState,
+    },
+  ]
+  // const changes = []
+  // if (oldState === newState) {
+  //   return changes
+  // }
+  // if (
+  //   oldState.filteredExtensions !== newState.filteredExtensions ||
+  //   oldState.minLineY !== newState.minLineY ||
+  //   oldState.maxLineY !== newState.maxLineY
+  // ) {
+  //   const visibleExtensions = getVisible(newState)
+  //   changes.push([
+  //     /* Viewlet.send */ 3024,
+  //     /* id */ 'Extensions',
+  //     /* method */ 'setExtensions',
+  //     /* visibleExtensions */ visibleExtensions,
+  //   ])
+  // }
+  // if (
+  //   oldState.filteredExtensions.length !== newState.filteredExtensions.length
+  // ) {
+  //   const contentHeight = newState.filteredExtensions.length * ITEM_HEIGHT
+  //   changes.push([
+  //     /* Viewlet.send */ 3024,
+  //     /* id */ 'Extensions',
+  //     /* method */ 'setContentHeight',
+  //     /* contentHeight */ contentHeight,
+  //   ])
+  // }
 
-  if (oldState.negativeMargin !== newState.negativeMargin) {
-    changes.push([
-      /* Viewlet.send */ 3024,
-      /* id */ 'Extensions',
-      /* method */ 'setNegativeMargin',
-      /* negativeMargin */ newState.negativeMargin,
-    ])
-  }
+  // if (oldState.negativeMargin !== newState.negativeMargin) {
+  //   changes.push([
+  //     /* Viewlet.send */ 3024,
+  //     /* id */ 'Extensions',
+  //     /* method */ 'setNegativeMargin',
+  //     /* negativeMargin */ newState.negativeMargin,
+  //   ])
+  // }
 
-  if (oldState.focusedIndex !== newState.focusedIndex) {
-    changes.push([
-      /* Viewlet.send */ 3024,
-      /* id */ 'Extensions',
-      /* method */ 'setFocusedIndex',
-      /* oldFocusedIndex */ oldState.focusedIndex - oldState.minLineY,
-      /* newFocusedIndex */ newState.focusedIndex - newState.minLineY,
-    ])
-  }
-  if (oldState.deltaY !== newState.deltaY) {
-    const scrollBarY =
-      (newState.deltaY / newState.finalDeltaY) *
-      (newState.height - newState.scrollBarHeight)
-    changes.push([
-      /* Viewlet.send */ 3024,
-      /* id */ 'Extensions',
-      /* method */ 'setScrollBar',
-      /* scrollBarY */ scrollBarY,
-      /* scrollBarHeight */ newState.scrollBarHeight,
-    ])
-  }
-  return changes
+  // if (oldState.focusedIndex !== newState.focusedIndex) {
+  //   changes.push([
+  //     /* Viewlet.send */ 3024,
+  //     /* id */ 'Extensions',
+  //     /* method */ 'setFocusedIndex',
+  //     /* oldFocusedIndex */ oldState.focusedIndex - oldState.minLineY,
+  //     /* newFocusedIndex */ newState.focusedIndex - newState.minLineY,
+  //   ])
+  // }
+  // if (oldState.deltaY !== newState.deltaY) {
+  //   const scrollBarY =
+  //     (newState.deltaY / newState.finalDeltaY) *
+  //     (newState.height - newState.scrollBarHeight)
+  //   changes.push([
+  //     /* Viewlet.send */ 3024,
+  //     /* id */ 'Extensions',
+  //     /* method */ 'setScrollBar',
+  //     /* scrollBarY */ scrollBarY,
+  //     /* scrollBarHeight */ newState.scrollBarHeight,
+  //   ])
+  // }
+  // return changes
 }

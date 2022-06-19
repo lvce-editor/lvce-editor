@@ -367,33 +367,54 @@ export const resize = (state, dimensions) => {
   }
 }
 
+const to$ActivityBarItem = (activityBarItem) => {
+  return {
+    component: 'div',
+    props: {
+      class: 'ActivityBarItem',
+      title: activityBarItem.id,
+    },
+    children: [
+      {
+        component: 'div',
+        props: {
+          class: 'ActivityBarItemIcon',
+          style: `-webkit-mask-image: url("${activityBarItem.icon}")`,
+        },
+      },
+    ],
+  }
+}
+
 export const render = (oldState, newState) => {
-  const changes = []
-  if (oldState === newState) {
-    return changes
-  }
-  if (
-    oldState.activityBarItems !== newState.activityBarItems ||
-    oldState.height !== newState.height
-  ) {
-    const visibleItems = getVisibleActivityBarItems(newState)
-    changes.push([
-      /* Viewlet.send */ 3024,
-      /* id */ 'ActivityBar',
-      /* method */ 'setItems',
-      /* items */ visibleItems,
-    ])
-  }
-  if (oldState.focusedIndex !== newState.focusedIndex) {
-    changes.push([
-      /* Viewlet.send */ 3024,
-      /* id */ 'ActivityBar',
-      /* method */ 'setFocusedIndex',
-      /* unFocusIndex */ oldState.focusedIndex,
-      /* focusIndex */ newState.focusedIndex,
-    ])
-  }
-  return changes
+  console.log({ newState })
+  return newState.activityBarItems.map(to$ActivityBarItem)
+  // const changes = []
+  // if (oldState === newState) {
+  //   return changes
+  // }
+  // if (
+  //   oldState.activityBarItems !== newState.activityBarItems ||
+  //   oldState.height !== newState.height
+  // ) {
+  //   const visibleItems = getVisibleActivityBarItems(newState)
+  //   changes.push([
+  //     /* Viewlet.send */ 3024,
+  //     /* id */ 'ActivityBar',
+  //     /* method */ 'setItems',
+  //     /* items */ visibleItems,
+  //   ])
+  // }
+  // if (oldState.focusedIndex !== newState.focusedIndex) {
+  //   changes.push([
+  //     /* Viewlet.send */ 3024,
+  //     /* id */ 'ActivityBar',
+  //     /* method */ 'setFocusedIndex',
+  //     /* unFocusIndex */ oldState.focusedIndex,
+  //     /* focusIndex */ newState.focusedIndex,
+  //   ])
+  // }
+  // return changes
 }
 
 export const hasFunctionalRender = true
