@@ -5,6 +5,7 @@ extensions/builtin.language-basics-go
 extensions/builtin.language-basics-shellscript
 extensions/builtin.language-basics-css
 extensions/builtin.language-basics-javascript
+extensions/builtin.language-basics-elixir
 extensions/builtin.language-features-css
 extensions/builtin.language-features-typescript
 extensions/builtin.prettier

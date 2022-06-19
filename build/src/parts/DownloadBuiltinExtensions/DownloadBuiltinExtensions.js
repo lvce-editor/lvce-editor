@@ -99,6 +99,10 @@ const main = () => {
       name: 'builtin.language-basics-go',
       path: 'https://github.com/lvce-editor/language-basics-go/releases/download/v0.0.1/language-basics-go-v0.0.1.tar.br',
     },
+    {
+      name: 'builtin.language-basics-elixir',
+      path: 'https://github.com/lvce-editor/language-basics-elixir/releases/download/v0.0.1/language-basics-elixir-v0.0.1.tar.br',
+    },
   ]
   downloadExtensions(extensions)
 }
