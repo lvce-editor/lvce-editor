@@ -165,7 +165,7 @@ export const load = async (viewlet, focus = false) => {
     if (module.hasFunctionalRender) {
       const virtualDom = module.render(viewletState, newState)
 
-      if (virtualDom[0].component === 'div') {
+      if (virtualDom[0].component) {
         RendererProcess.send([3033, viewlet.id, virtualDom])
       }
       // console.log({ commands: virtualDom })

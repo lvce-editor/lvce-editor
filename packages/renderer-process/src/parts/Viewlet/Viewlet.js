@@ -228,6 +228,10 @@ const renderVirtualDom = (virtualDom) => {
     }
     return $Fragment
   }
+  if (virtualDom.component === 'text') {
+    const $Child = document.createTextNode(virtualDom.props.text)
+    return $Child
+  }
   const $Child = document.createElement(virtualDom.component)
   for (const [key, value] of Object.entries(virtualDom.props)) {
     $Child.setAttribute(key, value)
@@ -241,11 +245,13 @@ const renderVirtualDom = (virtualDom) => {
 export const functionalRender = (childId, virtualDom) => {
   const childInstance = state.instances[childId]
   // TODO
-  const $Element = childInstance.state.$ActivityBar
+  const $Element =
+    childInstance.state.$ActivityBar || childInstance.state.$Viewlet
   // TODO use dom diffing instead
   $Element.textContent = ''
 
   const $Child = renderVirtualDom(virtualDom)
+  console.log({ virtualDom })
   $Element.append($Child)
   // console.log({ virtualDom })
   // console.log({ childInstance, childId })

@@ -373,6 +373,8 @@ const to$ActivityBarItem = (activityBarItem) => {
     props: {
       class: 'ActivityBarItem',
       title: activityBarItem.id,
+      'data-viewlet-id': activityBarItem.id,
+      tabIndex: -1,
     },
     children: [
       {

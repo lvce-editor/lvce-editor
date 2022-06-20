@@ -47,3 +47,41 @@ export const resize = (state, dimensions) => {
     commands: [],
   }
 }
+
+export const hasFunctionalRender = true
+
+const to$TitleBarItem = (titleBarEntry) => {
+  return {
+    component: 'li',
+    props: {
+      class: 'TitleBarTopLevelEntry',
+      tabIndex: -1,
+      ariaHasPopup: true,
+      ariaExpanded: false,
+      role: 'menuitem',
+      id: `MenuItem-${titleBarEntry.id}`,
+    },
+    children: [
+      {
+        component: 'text',
+        props: {
+          text: titleBarEntry.name,
+        },
+      },
+    ],
+  }
+}
+
+export const render = (oldState, newState) => {
+  console.log({ newState })
+  return [
+    {
+      component: 'ul',
+      props: {
+        id: 'TitleBarMenu',
+        role: 'menubar',
+      },
+      children: newState.titleBarEntries.map(to$TitleBarItem),
+    },
+  ]
+}
