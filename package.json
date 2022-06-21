@@ -40,7 +40,7 @@
       "**/node_modules/**",
       "**/coverage/**"
     ],
-    "exec": "node packages/web/bin/web.js"
+    "exec": "node packages/server/bin/server.js"
   },
   "dependencies": {
     "execa": "^6.1.0"
