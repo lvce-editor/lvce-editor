@@ -9,10 +9,11 @@ const locations = [
   'build/package-lock.json',
   'packages/extension-host/package-lock.json',
   'packages/pty-host/package-lock.json',
+  'packages/main-process/package-lock.json',
   'packages/renderer-process/package-lock.json',
   'packages/renderer-worker/package-lock.json',
   'packages/shared-process/package-lock.json',
-  'packages/web/package-lock.json',
+  'packages/server/package-lock.json',
   'build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js',
 ]
 
