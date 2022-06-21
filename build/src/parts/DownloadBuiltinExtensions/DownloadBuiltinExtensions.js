@@ -107,6 +107,10 @@ const main = () => {
       name: 'builtin.vscode-icons',
       path: 'https://github.com/lvce-editor/vscode-icons/releases/download/v0.0.1/vscode-icons-v0.0.1.tar.br',
     },
+    {
+      name: 'builtin.language-basics-dotenv',
+      path: 'https://github.com/lvce-editor/language-basics-dotenv/releases/download/v0.0.1/language-basics-dotenv-v0.0.1.tar.br',
+    },
   ]
   downloadExtensions(extensions)
 }
