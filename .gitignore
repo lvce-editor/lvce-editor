@@ -9,6 +9,7 @@ extensions/builtin.language-basics-elixir
 extensions/builtin.language-features-css
 extensions/builtin.language-features-typescript
 extensions/builtin.prettier
+extensions/builtin.vscode-icons
 
 *.tar.br
 out.txt
