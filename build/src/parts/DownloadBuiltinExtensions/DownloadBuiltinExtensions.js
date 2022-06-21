@@ -115,6 +115,10 @@ const main = () => {
       name: 'builtin.language-basics-kotlin',
       path: 'https://github.com/lvce-editor/language-basics-kotlin/releases/download/v0.0.1/language-basics-kotlin-v0.0.1.tar.br',
     },
+    {
+      name: 'builtin.language-basics-dart',
+      path: 'https://github.com/lvce-editor/language-basics-dart/releases/download/v0.0.1/language-basics-dart-v0.0.1.tar.br',
+    },
   ]
   downloadExtensions(extensions)
 }
