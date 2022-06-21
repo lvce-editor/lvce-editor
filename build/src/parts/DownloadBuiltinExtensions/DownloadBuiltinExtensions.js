@@ -105,7 +105,7 @@ const main = () => {
     },
     {
       name: 'builtin.vscode-icons',
-      path: 'https://github.com/lvce-editor/vscode-icons/releases/download/v0.0.1/vscode-icons-v0.0.1.tar.br',
+      path: 'https://github.com/lvce-editor/vscode-icons/releases/download/v0.0.2/vscode-icons-v0.0.2.tar.br',
     },
     {
       name: 'builtin.language-basics-dotenv',
@@ -118,6 +118,10 @@ const main = () => {
     {
       name: 'builtin.language-basics-dart',
       path: 'https://github.com/lvce-editor/language-basics-dart/releases/download/v0.0.1/language-basics-dart-v0.0.1.tar.br',
+    },
+    {
+      name: 'builtin.language-basics-julia',
+      path: 'https://github.com/lvce-editor/language-basics-julia/releases/download/v0.0.1/language-basics-julia-v0.0.1.tar.br',
     },
   ]
   downloadExtensions(extensions)
