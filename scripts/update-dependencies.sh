@@ -35,7 +35,7 @@ cd packages/pty-host                                && updateDependencies && cd 
 cd packages/renderer-process                        && updateDependencies && cd ../.. &&
 cd packages/renderer-worker                         && updateDependencies && cd ../.. &&
 cd packages/shared-process                          && updateDependencies && cd ../.. &&
-cd packages/web                                     && updateDependencies && cd ../.. &&
+cd packages/server                                  && updateDependencies && cd ../.. &&
 
 cd build                                            && updateDependencies && cd ..    &&
 
