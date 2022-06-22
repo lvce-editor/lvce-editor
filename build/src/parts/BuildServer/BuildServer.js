@@ -251,6 +251,21 @@ const copyExtensionHostFiles = async () => {
   })
 }
 
+const copyPtyHostFiles = async () => {
+  await Copy.copy({
+    from: 'packages/pty-host',
+    to: 'build/.tmp/server/pty-host',
+    ignore: [
+      'tsconfig.json',
+      'node_modules',
+      'distmin',
+      'example',
+      'test',
+      '.nvmrc',
+    ],
+  })
+}
+
 export const build = async () => {
   Console.time('clean')
   await Remove.remove('build/.tmp/server')
@@ -279,6 +294,10 @@ export const build = async () => {
   console.time('copyExtensionHostFiles')
   await copyExtensionHostFiles()
   console.timeEnd('copyExtensionHostFiles')
+
+  console.time('copyPtyHostFiles')
+  await copyPtyHostFiles()
+  console.timeEnd('copyPtyHostFiles')
 
   console.time('copyServer')
   await copyServer()
