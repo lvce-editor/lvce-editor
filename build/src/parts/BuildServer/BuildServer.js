@@ -216,6 +216,10 @@ const copySharedProcessFiles = async () => {
     to: 'build/.tmp/server/shared-process',
     ignore: ['node_modules', '.nvmrc', 'tsconfig.json'],
   })
+  await Copy.copyFile({
+    from: 'LICENSE',
+    to: 'build/.tmp/server/shared-process/LICENSE',
+  })
 }
 
 const copyServerFiles = async () => {
@@ -224,6 +228,10 @@ const copyServerFiles = async () => {
     to: 'build/.tmp/server/server',
     ignore: ['tsconfig.json'],
   })
+  await Copy.copyFile({
+    from: 'LICENSE',
+    to: 'build/.tmp/server/server/LICENSE',
+  })
 }
 
 const copyExtensionHostFiles = async () => {
@@ -231,6 +239,10 @@ const copyExtensionHostFiles = async () => {
     from: 'packages/extension-host',
     to: 'build/.tmp/server/extension-host',
     ignore: ['tsconfig.json', 'node_modules', 'distmin', 'example', 'test'],
+  })
+  await Copy.copyFile({
+    from: 'LICENSE',
+    to: 'build/.tmp/server/extension-host/LICENSE',
   })
 }
 
@@ -246,6 +258,10 @@ const copyPtyHostFiles = async () => {
       'test',
       '.nvmrc',
     ],
+  })
+  await Copy.copyFile({
+    from: 'LICENSE',
+    to: 'build/.tmp/server/pty-host/LICENSE',
   })
 }
 
