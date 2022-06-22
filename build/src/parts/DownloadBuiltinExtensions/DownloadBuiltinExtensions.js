@@ -123,6 +123,10 @@ const main = () => {
       name: 'builtin.language-basics-julia',
       path: 'https://github.com/lvce-editor/language-basics-julia/releases/download/v0.0.1/language-basics-julia-v0.0.1.tar.br',
     },
+    {
+      name: 'builtin.language-basics-cpp',
+      path: 'https://github.com/lvce-editor/language-basics-cpp/releases/download/v0.0.1/language-basics-cpp-v0.0.1.tar.br',
+    },
   ]
   downloadExtensions(extensions)
 }
