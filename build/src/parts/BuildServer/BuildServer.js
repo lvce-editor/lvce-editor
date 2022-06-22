@@ -231,7 +231,7 @@ const copySharedProcessFiles = async () => {
   await Copy.copy({
     from: 'packages/shared-process',
     to: 'build/.tmp/server/shared-process',
-    ignore: ['node_modules', '.nvmrc'],
+    ignore: ['node_modules', '.nvmrc', 'tsconfig.json'],
   })
 }
 
@@ -240,6 +240,14 @@ const copyServerFiles = async () => {
     from: 'packages/server',
     to: 'build/.tmp/server/server',
     ignore: ['tsconfig.json'],
+  })
+}
+
+const copyExtensionHostFiles = async () => {
+  await Copy.copy({
+    from: 'packages/extension-host',
+    to: 'build/.tmp/server/extension-host',
+    ignore: ['tsconfig.json', 'node_modules', 'distmin', 'example', 'test'],
   })
 }
 
@@ -267,6 +275,10 @@ export const build = async () => {
   console.time('copySharedProcessFiles')
   await copySharedProcessFiles()
   console.timeEnd('copySharedProcessFiles')
+
+  console.time('copyExtensionHostFiles')
+  await copyExtensionHostFiles()
+  console.timeEnd('copyExtensionHostFiles')
 
   console.time('copyServer')
   await copyServer()
