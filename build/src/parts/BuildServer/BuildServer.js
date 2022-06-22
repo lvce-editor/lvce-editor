@@ -12,6 +12,7 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Exec from '../Exec/Exec.js'
 import * as Root from '../Root/Root.js'
+import * as Tag from '../Tag/Tag.js'
 
 const copyStaticFiles = async () => {
   const commitHash = await CommitHash.getCommitHash()
@@ -199,12 +200,6 @@ preload()
   })
 }
 
-const copyRendererProcess = async () => {}
-
-const copyRendererWorker = async () => {}
-
-const copyServer = async () => {}
-
 const getObjectDependencies = (obj) => {
   if (!obj || !obj.dependencies) {
     return []
@@ -213,18 +208,6 @@ const getObjectDependencies = (obj) => {
     obj,
     ...Object.values(obj.dependencies).flatMap(getObjectDependencies),
   ]
-}
-
-const getNodeModuleDependencies = async (root) => {
-  const { stdout } = await Exec.exec(
-    'npm',
-    ['list', '--omit=dev', '--parseable', '--all'],
-    {
-      cwd: root,
-    }
-  )
-  const lines = stdout.split('\n')
-  return lines.slice(1, -1)
 }
 
 const copySharedProcessFiles = async () => {
@@ -266,6 +249,30 @@ const copyPtyHostFiles = async () => {
   })
 }
 
+const setVersions = async () => {
+  const gitTag = await Tag.getGitTag()
+  const files = [
+    'build/.tmp/server/extension-host/package.json',
+    'build/.tmp/server/extension-host/package-lock.json',
+    'build/.tmp/server/pty-host/package.json',
+    'build/.tmp/server/pty-host/package-lock.json',
+    'build/.tmp/server/server/package.json',
+    'build/.tmp/server/server/package-lock.json',
+    'build/.tmp/server/shared-process/package.json',
+    'build/.tmp/server/shared-process/package-lock.json',
+  ]
+  for (const file of files) {
+    const json = await JsonFile.readJson(file)
+    if (json.version !== gitTag) {
+      const newJson = { ...json, version: gitTag }
+      await JsonFile.writeJson({
+        to: file,
+        value: newJson,
+      })
+    }
+  }
+}
+
 export const build = async () => {
   Console.time('clean')
   await Remove.remove('build/.tmp/server')
@@ -279,14 +286,6 @@ export const build = async () => {
   await copyStaticFiles()
   console.timeEnd('copyStaticFiles')
 
-  console.time('copyRendererProcess')
-  await copyRendererProcess()
-  console.timeEnd('copyRendererProcess')
-
-  console.time('copyRendererWorker')
-  await copyRendererWorker()
-  console.timeEnd('copyRendererWorker')
-
   console.time('copySharedProcessFiles')
   await copySharedProcessFiles()
   console.timeEnd('copySharedProcessFiles')
@@ -299,7 +298,7 @@ export const build = async () => {
   await copyPtyHostFiles()
   console.timeEnd('copyPtyHostFiles')
 
-  console.time('copyServer')
-  await copyServer()
-  console.timeEnd('copyServer')
+  console.time('setVersions')
+  await setVersions()
+  console.timeEnd('setVersions')
 }
