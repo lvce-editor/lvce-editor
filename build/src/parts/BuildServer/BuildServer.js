@@ -10,63 +10,65 @@ import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Remove from '../Remove/Remove.js'
+import * as Exec from '../Exec/Exec.js'
+import * as Root from '../Root/Root.js'
 
 const copyStaticFiles = async () => {
   const commitHash = await CommitHash.getCommitHash()
   await Copy.copy({
     from: 'static/config',
-    to: `build/.tmp/server/static/${commitHash}/config`,
+    to: `build/.tmp/server/server/static/${commitHash}/config`,
   })
   await Copy.copy({
     from: 'static/js',
-    to: `build/.tmp/server/static/${commitHash}/static/js`,
+    to: `build/.tmp/server/server/static/${commitHash}/static/js`,
   })
   await Copy.copyFile({
     from: 'static/favicon.ico',
-    to: `build/.tmp/server/static/favicon.ico`,
+    to: `build/.tmp/server/server/static/favicon.ico`,
   })
   await Copy.copyFile({
     from: 'static/serviceWorker.js',
-    to: `build/.tmp/server/static/serviceWorker.js`,
+    to: `build/.tmp/server/server/static/serviceWorker.js`,
   })
   await Copy.copy({
     from: 'static/fonts',
-    to: `build/.tmp/server/static/fonts`,
+    to: `build/.tmp/server/server/static/${commitHash}/fonts`,
   })
   await Copy.copy({
     from: 'static/images',
-    to: `build/.tmp/server/static/images`,
+    to: `build/.tmp/server/server/static/images`,
   })
   await Copy.copy({
     from: 'static/sounds',
-    to: `build/.tmp/server/static/sounds`,
+    to: `build/.tmp/server/server/static/${commitHash}/sounds`,
   })
   await Copy.copyFile({
     from: 'static/manifest.json',
-    to: `build/.tmp/server/static/manifest.json`,
+    to: `build/.tmp/server/server/static/manifest.json`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/static/manifest.json`,
+    path: `build/.tmp/server/server/static/manifest.json`,
     occurrence: '/icons',
     replacement: `/${commitHash}/icons`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/static/serviceWorker.js`,
+    path: `build/.tmp/server/server/static/serviceWorker.js`,
     occurrence: `const CACHE_STATIC_NAME = 'static-v4'`,
     replacement: `const CACHE_STATIC_NAME = 'static-${commitHash}'`,
   })
   await Copy.copyFile({
     from: 'static/index.html',
-    to: `build/.tmp/server/static/index.html`,
+    to: `build/.tmp/server/server/static/index.html`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/static/index.html`,
+    path: `build/.tmp/server/server/static/index.html`,
     occurrence: '/config',
     replacement: `/${commitHash}/config`,
   })
 
   await Replace.replace({
-    path: `build/.tmp/server/static/index.html`,
+    path: `build/.tmp/server/server/static/index.html`,
     occurrence: '</head>',
     replacement: `  <link rel="preload" href="/${commitHash}/config/defaultSettings.json" as="fetch" crossorigin>
     <link rel="preload" href="/${commitHash}/config/languages.json" as="fetch" crossorigin>
@@ -75,7 +77,7 @@ const copyStaticFiles = async () => {
   </head>`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/static/index.html`,
+    path: `build/.tmp/server/server/static/index.html`,
     occurrence: '</body>',
     replacement: `  <script>
 // set background colors to avoid white flash on firefox
@@ -160,40 +162,40 @@ preload()
   </body>`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/static/index.html`,
+    path: `build/.tmp/server/server/static/index.html`,
     occurrence: '/packages/renderer-process/src/rendererProcessMain.js',
     replacement: `/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/static/index.html`,
+    path: `build/.tmp/server/server/static/index.html`,
     occurrence: '/packages/renderer-worker/src/rendererWorkerMain.js',
     replacement: `/${commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/static/index.html`,
+    path: `build/.tmp/server/server/static/index.html`,
     occurrence: '/icons',
     replacement: `/${commitHash}/icons`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/static/index.html`,
+    path: `build/.tmp/server/server/static/index.html`,
     occurrence: '/css',
     replacement: `/${commitHash}/css`,
   })
   await Copy.copy({
     from: 'extensions/builtin.vscode-icons/icons',
-    to: `build/.tmp/server/static/file-icons`,
+    to: `build/.tmp/server/server/static/${commitHash}/file-icons`,
   })
   await BundleCss.bundleCss({
-    to: `build/.tmp/server/static/${commitHash}/css/App.css`,
+    to: `build/.tmp/server/server/static/${commitHash}/css/App.css`,
   })
   await Replace.replace({
-    path: `build/.tmp/server/static/${commitHash}/css/App.css`,
+    path: `build/.tmp/server/server/static/${commitHash}/css/App.css`,
     occurrence: `url(/icons/`,
-    replacement: `url(/${commitHash}/icons/`,
+    replacement: `url(/${commitHash}/${commitHash}/icons/`,
   })
   await Copy.copy({
     from: 'static/icons',
-    to: `build/.tmp/server/static/${commitHash}/icons`,
+    to: `build/.tmp/server/server/static/${commitHash}/icons`,
   })
 }
 
@@ -203,7 +205,53 @@ const copyRendererWorker = async () => {}
 
 const copyServer = async () => {}
 
+const getObjectDependencies = (obj) => {
+  if (!obj || !obj.dependencies) {
+    return []
+  }
+  return [
+    obj,
+    ...Object.values(obj.dependencies).flatMap(getObjectDependencies),
+  ]
+}
+
+const getNodeModuleDependencies = async (root) => {
+  const { stdout } = await Exec.exec(
+    'npm',
+    ['list', '--omit=dev', '--parseable', '--all'],
+    {
+      cwd: root,
+    }
+  )
+  const lines = stdout.split('\n')
+  return lines.slice(1, -1)
+}
+
+const copySharedProcessFiles = async () => {
+  await Copy.copy({
+    from: 'packages/shared-process',
+    to: 'build/.tmp/server/shared-process',
+    ignore: ['node_modules', '.nvmrc'],
+  })
+}
+
+const copyServerFiles = async () => {
+  await Copy.copy({
+    from: 'packages/server',
+    to: 'build/.tmp/server/server',
+    ignore: ['tsconfig.json'],
+  })
+}
+
 export const build = async () => {
+  Console.time('clean')
+  await Remove.remove('build/.tmp/server')
+  Console.timeEnd('clean')
+
+  console.time('copyServerFiles')
+  await copyServerFiles()
+  console.timeEnd('copyServerFiles')
+
   console.time('copyStaticFiles')
   await copyStaticFiles()
   console.timeEnd('copyStaticFiles')
@@ -215,6 +263,10 @@ export const build = async () => {
   console.time('copyRendererWorker')
   await copyRendererWorker()
   console.timeEnd('copyRendererWorker')
+
+  console.time('copySharedProcessFiles')
+  await copySharedProcessFiles()
+  console.timeEnd('copySharedProcessFiles')
 
   console.time('copyServer')
   await copyServer()
