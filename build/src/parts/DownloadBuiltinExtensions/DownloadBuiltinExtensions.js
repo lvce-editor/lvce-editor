@@ -65,7 +65,7 @@ const main = () => {
     },
     {
       name: 'builtin.language-features-typescript',
-      path: 'https://github.com/lvce-editor/language-features-typescript/releases/download/v0.0.1/language-features-typescript-v0.0.1.tar.br',
+      path: 'https://github.com/lvce-editor/language-features-typescript/releases/download/v0.0.2/language-features-typescript-v0.0.2.tar.br',
     },
     {
       name: 'builtin.language-features-css',
