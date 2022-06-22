@@ -1,5 +1,5 @@
 {
-  "name": "server",
+  "name": "@lvce-editor/server",
   "version": "0.0.0-dev",
   "description": "",
   "main": "index.js",
