@@ -4,6 +4,7 @@ import * as Debug from '../Debug/Debug.js'
 import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
 import * as Assert from '../Assert/Assert.js'
+import { ptyHostPath } from '@lvce-editor/pty-host'
 
 export const state = {
   /**
@@ -46,7 +47,6 @@ const handleProcessExit = () => {
 
 const createPtyHost = () => {
   exitHook(handleProcessExit)
-  const ptyHostPath = Path.join(Root.root, 'packages/pty-host/bin/ptyHost.js')
   const ptyHost = fork(ptyHostPath, { stdio: 'inherit' })
   return ptyHost
 }
