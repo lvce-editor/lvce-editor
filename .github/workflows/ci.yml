@@ -25,7 +25,9 @@ jobs:
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
         with:
-          path: '**/node_modules'
+          path: |
+            '**/node_modules'
+            'build/.tmp/cachedExtensions'
           key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
           restore-keys: ${{ runner.os }}-cacheNodeModules-
       - name: npm ci
