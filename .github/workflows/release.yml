@@ -48,9 +48,22 @@ jobs:
         if: steps.npm-cache.outputs.cache-hit != 'true'
       - run: npm test
       - run: node build/bin/build.js --target=server
-      # - run: npm publish --access public
-      #   env:
-      #     NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - run: npm publish --access public
+        working-directory: ./build/.tmp/server/extension-host
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - run: npm publish --access public
+        working-directory: ./build/.tmp/server/pty-host
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - run: npm publish --access public
+        working-directory: ./build/.tmp/server/server
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - run: npm publish --access public
+        working-directory: ./build/.tmp/server/shared-process
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
       # - name: Build archive
       #   shell: bash
