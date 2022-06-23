@@ -72,8 +72,6 @@ const copyStaticFiles = async () => {
     path: `build/.tmp/server/server/static/index.html`,
     occurrence: '</head>',
     replacement: `  <link rel="preload" href="/${commitHash}/config/defaultSettings.json" as="fetch" crossorigin>
-    <link rel="preload" href="/${commitHash}/config/languages.json" as="fetch" crossorigin>
-    <link rel="preload" href="/${commitHash}/themes/slime.json" as="fetch" crossorigin>
     <link rel="preload" href="/${commitHash}/icon-themes/vscode-icons.json" as="fetch" crossorigin>
   </head>`,
   })
@@ -182,6 +180,11 @@ preload()
     occurrence: '/css',
     replacement: `/${commitHash}/css`,
   })
+  await Replace.replace({
+    path: `build/.tmp/server/server/static/index.html`,
+    occurrence: '/fonts',
+    replacement: `/${commitHash}/fonts`,
+  })
   await Copy.copy({
     from: 'extensions/builtin.vscode-icons/icons',
     to: `build/.tmp/server/server/static/${commitHash}/file-icons`,
@@ -239,12 +242,12 @@ const copyServerFiles = async () => {
     to: 'build/.tmp/server/server/LICENSE',
   })
   await Replace.replace({
-    path: 'build/.tmp/server/src/server.js',
+    path: 'build/.tmp/server/server/src/server.js',
     occurrence: `const STATIC = resolve(__dirname, '../../../static')`,
     replacement: `const STATIC = resolve(__dirname, '../static')`,
   })
   await Replace.replace({
-    path: 'build/.tmp/server/src/server.js',
+    path: 'build/.tmp/server/server/src/server.js',
     occurrence: `const ROOT = resolve(__dirname, '../../../')`,
     replacement: `const ROOT = resolve(__dirname, '../')`,
   })
