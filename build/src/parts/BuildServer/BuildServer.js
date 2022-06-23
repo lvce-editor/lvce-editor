@@ -192,7 +192,12 @@ preload()
   await Replace.replace({
     path: `build/.tmp/server/server/static/${commitHash}/css/App.css`,
     occurrence: `url(/icons/`,
-    replacement: `url(/${commitHash}/${commitHash}/icons/`,
+    replacement: `url/${commitHash}/icons/`,
+  })
+  await Replace.replace({
+    path: `build/.tmp/server/server/static/${commitHash}/css/App.css`,
+    occurrence: `url(/fonts/`,
+    replacement: `url(/${commitHash}/fonts/`,
   })
   await Copy.copy({
     from: 'static/icons',
