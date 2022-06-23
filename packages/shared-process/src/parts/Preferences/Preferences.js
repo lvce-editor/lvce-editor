@@ -20,6 +20,7 @@ export const getUserPreferences = async () => {
     }
     return json
   } catch (error) {
+    // @ts-ignore
     throw new VError(error, 'failed to get user preferences')
   }
 }
@@ -27,14 +28,10 @@ export const getUserPreferences = async () => {
 // TODO handle error
 export const getDefaultPreferences = async () => {
   try {
-    const defaultSettingsPath = join(
-      Platform.getAppDir(),
-      'static',
-      'config',
-      'defaultSettings.json'
-    )
+    const defaultSettingsPath = Platform.getDefaultSettingsPath()
     return await JsonFile.readJson(defaultSettingsPath)
   } catch (error) {
+    // @ts-ignore
     throw new VError(error, 'Failed to load default preferences')
   }
 }
