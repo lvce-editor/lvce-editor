@@ -225,7 +225,13 @@ const copySharedProcessFiles = async () => {
   await Copy.copy({
     from: 'packages/shared-process',
     to: 'build/.tmp/server/shared-process',
-    ignore: ['node_modules', '.nvmrc', 'tsconfig.json', 'package-lock.json'],
+    ignore: [
+      'node_modules',
+      '.nvmrc',
+      'tsconfig.json',
+      'package-lock.json',
+      'test',
+    ],
   })
   await Copy.copyFile({
     from: 'LICENSE',
@@ -249,6 +255,11 @@ const copySharedProcessFiles = async () => {
       'defaultSettings.json'
     )`,
     replacement: `Path.join(Root.root, 'config', 'defaultSettings.json')`,
+  })
+  await Replace.replace({
+    path: 'build/.tmp/server/shared-process/src/parts/Env/Env.js',
+    occurrence: `return process.env.FOLDER`,
+    replacement: `return process.env.FOLDER || process.cwd()`,
   })
   // TODO where should builtinExtension be located?
   await Copy.copy({
