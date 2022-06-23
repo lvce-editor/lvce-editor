@@ -198,7 +198,7 @@ preload()
   await Replace.replace({
     path: `build/.tmp/server/server/static/${commitHash}/css/App.css`,
     occurrence: `url(/icons/`,
-    replacement: `url/${commitHash}/icons/`,
+    replacement: `url(/${commitHash}/icons/`,
   })
   await Replace.replace({
     path: `build/.tmp/server/server/static/${commitHash}/css/App.css`,
