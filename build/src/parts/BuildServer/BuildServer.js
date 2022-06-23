@@ -238,6 +238,16 @@ const copyServerFiles = async () => {
     from: 'LICENSE',
     to: 'build/.tmp/server/server/LICENSE',
   })
+  await Replace.replace({
+    path: 'build/.tmp/server/src/server.js',
+    occurrence: `const STATIC = resolve(__dirname, '../../../static')`,
+    replacement: `const STATIC = resolve(__dirname, '../static')`,
+  })
+  await Replace.replace({
+    path: 'build/.tmp/server/src/server.js',
+    occurrence: `const ROOT = resolve(__dirname, '../../../')`,
+    replacement: `const ROOT = resolve(__dirname, '../')`,
+  })
   const content = `This project incorporates components from the projects listed below, that may have licenses
 differing from this project:
 
