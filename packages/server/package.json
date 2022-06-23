@@ -3,9 +3,7 @@
   "version": "0.0.0-dev",
   "description": "",
   "main": "index.js",
-  "bin": {
-    "server": "server.js"
-  },
+  "bin": "bin/server.js",
   "type": "module",
   "scripts": {},
   "keywords": [],
