@@ -84,6 +84,14 @@ export const state = {
   getRecentlyOpenedPath() {
     return Path.join(this.getCacheDir(), 'recently-opened.json')
   },
+  getDefaultSettingsPath() {
+    return Path.join(
+      this.getAppDir(),
+      'static',
+      'config',
+      'defaultSettings.json'
+    )
+  },
 }
 
 export const isWindows = () => {
@@ -162,4 +170,8 @@ export const getExtensionHostPath = () => {
 
 export const getRecentlyOpenedPath = () => {
   return state.getRecentlyOpenedPath()
+}
+
+export const getDefaultSettingsPath = () => {
+  return state.getDefaultSettingsPath()
 }

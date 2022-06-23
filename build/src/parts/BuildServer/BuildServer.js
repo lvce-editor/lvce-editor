@@ -40,6 +40,10 @@ const copyStaticFiles = async () => {
     from: 'static/images',
     to: `build/.tmp/server/server/static/images`,
   })
+  await Copy.copyFile({
+    from: 'extensions/builtin.vscode-icons/icon-theme.json',
+    to: `build/.tmp/server/server/static/${commitHash}/icon-themes/vscode-icons.json`,
+  })
   await Copy.copy({
     from: 'static/sounds',
     to: `build/.tmp/server/server/static/${commitHash}/sounds`,
@@ -67,7 +71,6 @@ const copyStaticFiles = async () => {
     occurrence: '/config',
     replacement: `/${commitHash}/config`,
   })
-
   await Replace.replace({
     path: `build/.tmp/server/server/static/index.html`,
     occurrence: '</head>',
@@ -227,6 +230,25 @@ const copySharedProcessFiles = async () => {
   await Copy.copyFile({
     from: 'LICENSE',
     to: 'build/.tmp/server/shared-process/LICENSE',
+  })
+  await Copy.copy({
+    from: 'static/config',
+    to: 'build/.tmp/server/shared-process/config',
+  })
+  await Replace.replace({
+    path: 'build/.tmp/server/shared-process/src/parts/Root/Root.js',
+    occurrence: `export const root = resolve(__dirname, '../../../../../')`,
+    replacement: `export const root = resolve(__dirname, '../../../')`,
+  })
+  await Replace.replace({
+    path: 'build/.tmp/server/shared-process/src/parts/Platform/Platform.js',
+    occurrence: `Path.join(
+      this.getAppDir(),
+      'static',
+      'config',
+      'defaultSettings.json'
+    )`,
+    replacement: `Path.join(Root.root, 'config', 'defaultSettings.json')`,
   })
 }
 
@@ -515,16 +537,6 @@ const applyJsOverrides = async () => {
     replacement: '/dist/rendererWorkerMain.js',
   })
   await Replace.replace({
-    path: `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,
-    occurrence: `SharedProcess.listen()`,
-    replacement: ``,
-  })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,
-    occurrence: `import * as SharedProcess from '../SharedProcess/SharedProcess.js'`,
-    replacement: ``,
-  })
-  await Replace.replace({
     path: `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
     occurrence: `ASSET_DIR`,
     replacement: `'/${commitHash}'`,
@@ -537,7 +549,7 @@ const applyJsOverrides = async () => {
   await Replace.replace({
     path: `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
     occurrence: 'PLATFORM',
-    replacement: `'web'`,
+    replacement: `'remote'`,
   })
   await Replace.replace({
     path: `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker/src/parts/CacheStorage/CacheStorage.js`,
@@ -563,13 +575,13 @@ export const build = async () => {
   await copyRendererWorkerAndRendererProcessJs()
   console.timeEnd('copyRendererWorkerAndRendererProcessJs')
 
-  console.time('bundleRendererWorkerAndRendererProcessJs')
-  await bundleRendererWorkerAndRendererProcessJs()
-  console.timeEnd('bundleRendererWorkerAndRendererProcessJs')
-
   console.time('applyJsOverrides')
   await applyJsOverrides()
   console.timeEnd('applyJsOverrides')
+
+  console.time('bundleRendererWorkerAndRendererProcessJs')
+  await bundleRendererWorkerAndRendererProcessJs()
+  console.timeEnd('bundleRendererWorkerAndRendererProcessJs')
 
   console.time('copySharedProcessFiles')
   await copySharedProcessFiles()
