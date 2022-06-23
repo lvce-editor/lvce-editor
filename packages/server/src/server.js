@@ -7,6 +7,7 @@ import { createServer } from 'http'
 import { dirname, extname, join, normalize, resolve } from 'path'
 import { pipeline } from 'stream/promises'
 import { fileURLToPath } from 'url'
+import { sharedProcessPath } from '@lvce-editor/shared-process'
 
 // @ts-ignore
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -186,18 +187,15 @@ const launchSharedProcess = () => {
   state.sharedProcessState = /* launching */ 1
   delete process.env.ELECTRON_RUN_AS_NODE
 
-  const sharedProcess = fork(
-    `${__dirname}/../../shared-process/src/sharedProcessMain.js`,
-    {
-      stdio: 'inherit',
-      // execArgv: ['--trace-deopt'],
-      execArgv: ['--enable-source-maps'],
-      env: {
-        ...process.env,
-        ELECTRON_RUN_AS_NODE: '1',
-      },
-    }
-  )
+  const sharedProcess = fork(sharedProcessPath, {
+    stdio: 'inherit',
+    // execArgv: ['--trace-deopt'],
+    execArgv: ['--enable-source-maps'],
+    env: {
+      ...process.env,
+      ELECTRON_RUN_AS_NODE: '1',
+    },
+  })
   const handleFirstMessage = (message) => {
     state.sharedProcessState = /* on */ 2
     for (const listener of state.onSharedProcessReady) {

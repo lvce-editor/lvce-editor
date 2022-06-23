@@ -11,5 +11,7 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "devDependencies": {}
+  "dependencies": {
+    "@lvce-editor/shared-process": "0.0.0-dev"
+  }
 }
