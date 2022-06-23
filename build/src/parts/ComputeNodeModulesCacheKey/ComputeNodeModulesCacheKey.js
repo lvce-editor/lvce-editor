@@ -15,6 +15,7 @@ const locations = [
   'packages/shared-process/package-lock.json',
   'packages/server/package-lock.json',
   'build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js',
+  'build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js',
 ]
 
 const getAbsolutePath = (relativePath) => {
