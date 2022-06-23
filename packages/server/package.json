@@ -10,6 +10,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "@lvce-editor/shared-process": "0.0.0-dev"
+    "@lvce-editor/shared-process": "file:../shared-process"
   }
 }
