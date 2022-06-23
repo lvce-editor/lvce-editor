@@ -3,6 +3,7 @@ import { sep } from 'node:path'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
 import * as Root from '../Root/Root.js'
 import * as Path from '../Path/Path.js'
+import { extensionHostPath } from '@lvce-editor/extension-host'
 
 export const state = {
   getApplicationName() {
@@ -78,13 +79,7 @@ export const state = {
     return Path.join(this.getConfigDir(), 'settings.json')
   },
   getExtensionHostPath() {
-    return Path.join(
-      Root.root,
-      'packages',
-      'extension-host',
-      'src',
-      'extensionHostMain.js'
-    )
+    return extensionHostPath
   },
   getRecentlyOpenedPath() {
     return Path.join(this.getCacheDir(), 'recently-opened.json')

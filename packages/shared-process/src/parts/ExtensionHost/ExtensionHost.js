@@ -6,7 +6,6 @@ import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Socket from '../Socket/Socket.js'
 import * as Assert from '../Assert/Assert.js'
-import { extensionHostPath } from '@lvce-editor/extension-host'
 // TODO maybe rename to extension host management for clarity
 
 // TODO needed? probably not
@@ -63,6 +62,7 @@ const onMessage = (message) => {
 export const start = async (socket) => {
   try {
     Assert.object(socket)
+    const extensionHostPath = Platform.getExtensionHostPath()
     const childProcess = ChildProcess.fork(extensionHostPath, {
       execArgv: [
         '--experimental-json-modules',
