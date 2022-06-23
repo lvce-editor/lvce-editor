@@ -250,6 +250,11 @@ const copySharedProcessFiles = async () => {
     )`,
     replacement: `Path.join(Root.root, 'config', 'defaultSettings.json')`,
   })
+  // TODO where should builtinExtension be located?
+  await Copy.copy({
+    from: 'extensions/builtin.theme-slime',
+    to: 'build/.tmp/server/shared-process/extensions/builtin.theme-slime',
+  })
 }
 
 const copyServerFiles = async () => {
