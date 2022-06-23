@@ -214,7 +214,7 @@ const copySharedProcessFiles = async () => {
   await Copy.copy({
     from: 'packages/shared-process',
     to: 'build/.tmp/server/shared-process',
-    ignore: ['node_modules', '.nvmrc', 'tsconfig.json'],
+    ignore: ['node_modules', '.nvmrc', 'tsconfig.json', 'package-lock.json'],
   })
   await Copy.copyFile({
     from: 'LICENSE',
@@ -227,7 +227,7 @@ const copyServerFiles = async () => {
   await Copy.copy({
     from: 'packages/server',
     to: 'build/.tmp/server/server',
-    ignore: ['tsconfig.json'],
+    ignore: ['tsconfig.json', 'node_modules', 'package-lock.json'],
   })
   await Copy.copyFile({
     from: 'LICENSE',
@@ -378,7 +378,14 @@ const copyExtensionHostFiles = async () => {
   await Copy.copy({
     from: 'packages/extension-host',
     to: 'build/.tmp/server/extension-host',
-    ignore: ['tsconfig.json', 'node_modules', 'distmin', 'example', 'test'],
+    ignore: [
+      'tsconfig.json',
+      'node_modules',
+      'distmin',
+      'example',
+      'test',
+      'package-lock.json',
+    ],
   })
   await Copy.copyFile({
     from: 'LICENSE',
@@ -397,6 +404,7 @@ const copyPtyHostFiles = async () => {
       'example',
       'test',
       '.nvmrc',
+      'package-lock.json',
     ],
   })
   await Copy.copyFile({
@@ -409,23 +417,28 @@ const setVersions = async () => {
   const gitTag = await Tag.getGitTag()
   const files = [
     'build/.tmp/server/extension-host/package.json',
-    'build/.tmp/server/extension-host/package-lock.json',
     'build/.tmp/server/pty-host/package.json',
-    'build/.tmp/server/pty-host/package-lock.json',
     'build/.tmp/server/server/package.json',
-    'build/.tmp/server/server/package-lock.json',
     'build/.tmp/server/shared-process/package.json',
-    'build/.tmp/server/shared-process/package-lock.json',
   ]
   for (const file of files) {
     const json = await JsonFile.readJson(file)
-    if (json.version !== gitTag) {
-      const newJson = { ...json, version: gitTag }
-      await JsonFile.writeJson({
-        to: file,
-        value: newJson,
-      })
+    if (json.dependencies && json.dependencies['@lvce-editor/shared-process']) {
+      json.dependencies['@lvce-editor/shared-process'] = gitTag
     }
+    if (json.dependencies && json.dependencies['@lvce-editor/pty-host']) {
+      json.dependencies['@lvce-editor/pty-host'] = gitTag
+    }
+    if (json.dependencies && json.dependencies['@lvce-editor/extension-host']) {
+      json.dependencies['@lvce-editor/extension-host'] = gitTag
+    }
+    if (json.version) {
+      json.version = gitTag
+    }
+    await JsonFile.writeJson({
+      to: file,
+      value: json,
+    })
   }
 }
 
