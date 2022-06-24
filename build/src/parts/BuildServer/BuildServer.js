@@ -40,10 +40,6 @@ const copyStaticFiles = async () => {
     from: 'static/images',
     to: `build/.tmp/server/server/static/images`,
   })
-  await Copy.copyFile({
-    from: 'extensions/builtin.vscode-icons/icon-theme.json',
-    to: `build/.tmp/server/server/static/${commitHash}/icon-themes/vscode-icons.json`,
-  })
   await Copy.copy({
     from: 'static/sounds',
     to: `build/.tmp/server/server/static/${commitHash}/sounds`,
@@ -75,7 +71,6 @@ const copyStaticFiles = async () => {
     path: `build/.tmp/server/server/static/index.html`,
     occurrence: '</head>',
     replacement: `  <link rel="preload" href="/${commitHash}/config/defaultSettings.json" as="fetch" crossorigin>
-    <link rel="preload" href="/${commitHash}/icon-themes/vscode-icons.json" as="fetch" crossorigin>
   </head>`,
   })
   await Replace.replace({
@@ -188,10 +183,6 @@ preload()
     occurrence: '/fonts',
     replacement: `/${commitHash}/fonts`,
   })
-  await Copy.copy({
-    from: 'extensions/builtin.vscode-icons/icons',
-    to: `build/.tmp/server/server/static/${commitHash}/file-icons`,
-  })
   await BundleCss.bundleCss({
     to: `build/.tmp/server/server/static/${commitHash}/css/App.css`,
   })
@@ -265,6 +256,10 @@ const copySharedProcessFiles = async () => {
   await Copy.copy({
     from: 'extensions/builtin.theme-slime',
     to: 'build/.tmp/server/shared-process/extensions/builtin.theme-slime',
+  })
+  await Copy.copy({
+    from: 'extensions/builtin.vscode-icons',
+    to: 'build/.tmp/server/shared-process/extensions/builtin.vscode-icons',
   })
 }
 
