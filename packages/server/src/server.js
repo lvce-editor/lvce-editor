@@ -158,13 +158,19 @@ const handleMessage = (message) => {
 }
 
 const handleMessageFromParent = (message) => {
-  console.log('got message from parent')
+  // TODO is it actually necessary to change environment variables here?
+  if (message.method === 'Platform.setEnvironmentVariables') {
+    const env = message.params[0]
+    for (const [key, value] of Object.entries(env)) {
+      process.env[key] = value
+    }
+  }
   switch (state.sharedProcessState) {
     case /* off */ 0:
-      console.warn('cannot send message')
+      console.warn('cannot send message (1)')
       break
     case /* launching */ 1:
-      console.warn('cannot send message')
+      console.warn('cannot send message (2)')
       break
     case /* on */ 2:
       // @ts-ignore
