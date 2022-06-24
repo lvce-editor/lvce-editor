@@ -1,8 +1,20 @@
-import { mkdtemp, readFile, writeFile, mkdir } from 'node:fs/promises'
+import { jest } from '@jest/globals'
+import { mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import * as Platform from '../src/parts/Platform/Platform.js'
-import * as Preferences from '../src/parts/Preferences/Preferences.js'
+
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+  getAppDir: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+  getDefaultSettingsPath: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+}))
+
+const Preferences = await import('../src/parts/Preferences/Preferences.js')
+
+const Platform = await import('../src/parts/Platform/Platform.js')
 
 const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
@@ -88,9 +100,10 @@ const getTmpDir = () => {
 
 test('getAll - error', async () => {
   const tmpDir = await getTmpDir()
-  Platform.state.getAppDir = () => {
-    return tmpDir
-  }
+  // @ts-ignore
+  Platform.getDefaultSettingsPath.mockImplementation(() =>
+    join(tmpDir, 'static', 'config', 'defaultSettings.json')
+  )
   await expect(Preferences.getAll()).rejects.toThrowError(
     /^Failed to get all preferences: Failed to load default preferences: ENOENT/
   )
