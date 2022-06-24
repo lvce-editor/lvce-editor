@@ -1,9 +1,33 @@
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import * as ExtensionHost from '../src/parts/ExtensionHost/ExtensionHost.js'
-import * as ExtensionManagement from '../src/parts/ExtensionManagement/ExtensionManagement.js'
-import * as Platform from '../src/parts/Platform/Platform.js'
+import { jest } from '@jest/globals'
+
+afterEach(() => {
+  jest.restoreAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+  getExtensionHostPath: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+  getLogsDir: jest.fn(() => {
+    return ''
+  }),
+  getConfigDir: jest.fn(() => {
+    return ''
+  }),
+}))
+
+const ExtensionHost = await import(
+  '../src/parts/ExtensionHost/ExtensionHost.js'
+)
+
+const Platform = await import('../src/parts/Platform/Platform.js')
+
+const ExtensionManagement = await import(
+  '../src/parts/ExtensionManagement/ExtensionManagement.js'
+)
 
 const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
@@ -21,14 +45,16 @@ test.skip('activateAll', async () => {
   ExtensionManagement.state.builtinExtensionsPath = tmpDir1
   ExtensionManagement.state.extensionPath = tmpDir2
   await ExtensionHost.start()
+  // @ts-ignore
   await ExtensionHost.activateAll()
   await ExtensionHost.stop()
 })
 
 test('start - error - path not found', async () => {
-  Platform.state.getExtensionHostPath = () => {
+  // @ts-ignore
+  Platform.getExtensionHostPath.mockImplementation(() => {
     return '/test'
-  }
+  })
   const socket = {
     on() {},
   }
@@ -41,9 +67,10 @@ test('start - error - path not found', async () => {
 
 test('start - error - path is a directory', async () => {
   const tmpDir = await getTmpDir()
-  Platform.state.getExtensionHostPath = () => {
+  // @ts-ignore
+  Platform.getExtensionHostPath.mockImplementation(() => {
     return tmpDir
-  }
+  })
   const socket = {
     on() {},
   }
@@ -60,9 +87,10 @@ test('start - error - syntax error', async () => {
   const tmpDir = await getTmpDir()
   const extensionHostPath = join(tmpDir, 'extensionHost.js')
   await writeFile(extensionHostPath, '...')
-  Platform.state.getExtensionHostPath = () => {
+  // @ts-ignore
+  Platform.getExtensionHostPath.mockImplementation(() => {
     return extensionHostPath
-  }
+  })
   const socket = {
     on() {},
   }
@@ -78,9 +106,10 @@ test('start - error - uncaught exception', async () => {
   const tmpDir = await getTmpDir()
   const extensionHostPath = join(tmpDir, 'extensionHost.js')
   await writeFile(extensionHostPath, "throw new Error('oops')")
-  Platform.state.getExtensionHostPath = () => {
+  // @ts-ignore
+  Platform.getExtensionHostPath.mockImplementation(() => {
     return extensionHostPath
-  }
+  })
   const socket = {
     on() {},
   }
@@ -96,9 +125,10 @@ test('start - error - custom exit code', async () => {
   const tmpDir = await getTmpDir()
   const extensionHostPath = join(tmpDir, 'extensionHost.js')
   await writeFile(extensionHostPath, 'process.exit(123)')
-  Platform.state.getExtensionHostPath = () => {
+  // @ts-ignore
+  Platform.getExtensionHostPath.mockImplementation(() => {
     return extensionHostPath
-  }
+  })
   const socket = {
     on() {},
   }
@@ -113,9 +143,10 @@ test('start - child process should be closed when socket immediately is closed',
   const tmpDir = await getTmpDir()
   const extensionHostPath = join(tmpDir, 'extensionHost.js')
   await writeFile(extensionHostPath, 'process.on(`message`, ()=>{})')
-  Platform.state.getExtensionHostPath = () => {
+  // @ts-ignore
+  Platform.getExtensionHostPath.mockImplementation(() => {
     return extensionHostPath
-  }
+  })
   const socket = {
     on(event, listener) {
       if (event === 'close') {

@@ -1,10 +1,31 @@
+import { jest } from '@jest/globals'
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
-import * as ExtensionHostColorTheme from '../src/parts/ExtensionHost/ExtensionHostColorTheme.js'
-import * as Platform from '../src/parts/Platform/Platform.js'
-import * as ExtensionManagement from '../src/parts/ExtensionManagement/ExtensionManagement.js'
 import * as JsonFile from '../src/parts/JsonFile/JsonFile.js'
+
+afterEach(() => {
+  jest.restoreAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+  getExtensionsPath: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+  getBuiltinExtensionsPath: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+}))
+
+const ExtensionHostColorTheme = await import(
+  '../src/parts/ExtensionHost/ExtensionHostColorTheme.js'
+)
+
+const Platform = await import('../src/parts/Platform/Platform.js')
+
+const ExtensionManagement = await import(
+  '../src/parts/ExtensionManagement/ExtensionManagement.js'
+)
 
 const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
@@ -12,12 +33,14 @@ const getTmpDir = () => {
 
 test('getColorThemeNames - empty', async () => {
   const tmpDir = await getTmpDir()
-  Platform.state.getExtensionsPath = () => {
+  // @ts-ignore
+  Platform.getExtensionsPath.mockImplementation(() => {
     return tmpDir
-  }
-  Platform.state.getBuiltinExtensionsPath = () => {
+  })
+  // @ts-ignore
+  Platform.getBuiltinExtensionsPath.mockImplementation(() => {
     return tmpDir
-  }
+  })
   expect(await ExtensionHostColorTheme.getColorThemes()).toEqual([])
 })
 
@@ -51,9 +74,10 @@ test.skip('getColorThemeJson - theme id contains number', async () => {
 
 test('getColorThemeJson - invalid json', async () => {
   const tmpDir = await getTmpDir()
-  Platform.state.getBuiltinExtensionsPath = () => {
+  // @ts-ignore
+  Platform.getBuiltinExtensionsPath.mockImplementation(() => {
     return tmpDir
-  }
+  })
   await JsonFile.writeJson(
     join(tmpDir, 'builtin.theme-test', 'extension.json'),
     {
@@ -79,9 +103,10 @@ test('getColorThemeJson - invalid json', async () => {
 
 test('getColorThemeJson - wrong/invalid path', async () => {
   const tmpDir = await getTmpDir()
-  Platform.state.getBuiltinExtensionsPath = () => {
+  // @ts-ignore
+  Platform.getBuiltinExtensionsPath.mockImplementation(() => {
     return tmpDir
-  }
+  })
   await JsonFile.writeJson(
     join(tmpDir, 'builtin.theme-test', 'extension.json'),
     {

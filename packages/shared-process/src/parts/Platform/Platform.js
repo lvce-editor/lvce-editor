@@ -1,119 +1,34 @@
+import { extensionHostPath } from '@lvce-editor/extension-host'
 import { homedir, tmpdir } from 'node:os'
 import { sep } from 'node:path'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
-import * as Root from '../Root/Root.js'
 import * as Path from '../Path/Path.js'
-import { extensionHostPath } from '@lvce-editor/extension-host'
+import * as Root from '../Root/Root.js'
 
-export const state = {
-  getApplicationName() {
-    return 'lvce-oss'
-  },
-  isWindows() {
-    return process.platform === 'win32'
-  },
-  isMacOs() {
-    return process.platform === 'darwin'
-  },
-  getDataDir() {
-    return Path.join(xdgData || tmpdir(), this.getApplicationName())
-  },
-  getConfigDir() {
-    return Path.join(xdgConfig || tmpdir(), this.getApplicationName())
-  },
-  getCacheDir() {
-    return Path.join(xdgCache || tmpdir(), this.getApplicationName())
-  },
-  getAppDir() {
-    return Root.root
-  },
-  getExtensionsPath() {
-    return Path.join(this.getDataDir(), 'extensions')
-  },
-  getBuiltinExtensionsPath() {
-    return Path.join(Root.root, 'extensions')
-  },
-  getDisabledExtensionsPath() {
-    return Path.join(this.getDataDir(), 'disabled-extensions')
-  },
-  getCachedExtensionsPath() {
-    return Path.join(this.getCacheDir(), 'cached-extensions')
-  },
-  getMarketplaceUrl() {
-    return (
-      process.env.LVCE_MARKETPLACE_URL ||
-      'https://marketplace.22e924c84de072d4b25b.com'
-    )
-  },
-  getDesktop() {
-    if (
-      process.env.ORIGINAL_XDG_CURRENT_DESKTOP &&
-      process.env.ORIGINAL_XDG_CURRENT_DESKTOP !== 'undefined'
-    ) {
-      if (process.env.ORIGINAL_XDG_CURRENT_DESKTOP === 'ubuntu:GNOME') {
-        return 'gnome'
-      }
-      return process.env.ORIGINAL_XDG_CURRENT_DESKTOP
-    }
-    if (process.env.XDG_CURRENT_DESKTOP) {
-      if (process.env.XDG_CURRENT_DESKTOP === 'ubuntu:GNOME') {
-        return 'gnome'
-      }
-      return process.env.XDG_CURRENT_DESKTOP
-    }
-    if (process.platform === 'win32') {
-      return 'windows'
-    }
-    return ''
-  },
-  getPathSeparator() {
-    return sep
-  },
-  getStateDir() {
-    return xdgState
-  },
-  getLogsDir() {
-    return Path.join(xdgState || tmpdir(), this.getApplicationName(), 'logs')
-  },
-  getUserSettingsPath() {
-    return Path.join(this.getConfigDir(), 'settings.json')
-  },
-  getExtensionHostPath() {
-    return extensionHostPath
-  },
-  getRecentlyOpenedPath() {
-    return Path.join(this.getCacheDir(), 'recently-opened.json')
-  },
-  getDefaultSettingsPath() {
-    return Path.join(
-      this.getAppDir(),
-      'static',
-      'config',
-      'defaultSettings.json'
-    )
-  },
+export const getApplicationName = () => {
+  return 'lvce-oss'
 }
 
 export const isWindows = () => {
-  return state.isWindows()
+  return process.platform === 'win32'
 }
 
 export const isMacOs = () => {
-  return state.isMacOs()
+  return process.platform === 'darwin'
 }
 
 // TODO pass which version when building: insiders|oss|normal
 
 export const getDataDir = () => {
-  return state.getDataDir()
+  return Path.join(xdgData || tmpdir(), getApplicationName())
 }
 
 export const getConfigDir = () => {
-  return state.getConfigDir()
+  return Path.join(xdgConfig || tmpdir(), getApplicationName())
 }
 
 export const getCacheDir = () => {
-  return state.getCacheDir()
+  return Path.join(xdgCache || tmpdir(), getApplicationName())
 }
 
 export const getHomeDir = () => {
@@ -121,57 +36,78 @@ export const getHomeDir = () => {
 }
 
 export const getAppDir = () => {
-  return state.getAppDir()
+  return Root.root
 }
 
 export const getExtensionsPath = () => {
-  return state.getExtensionsPath()
+  return Path.join(getDataDir(), 'extensions')
 }
 
 export const getBuiltinExtensionsPath = () => {
-  return state.getBuiltinExtensionsPath()
+  return Path.join(Root.root, 'extensions')
 }
 
 export const getDisabledExtensionsPath = () => {
-  return state.getDisabledExtensionsPath()
+  return Path.join(getDataDir(), 'disabled-extensions')
 }
 
 export const getCachedExtensionsPath = () => {
-  return state.getCachedExtensionsPath()
+  return Path.join(getCacheDir(), 'cached-extensions')
 }
 
 export const getMarketplaceUrl = () => {
-  return state.getMarketplaceUrl()
+  return (
+    process.env.LVCE_MARKETPLACE_URL ||
+    'https://marketplace.22e924c84de072d4b25b.com'
+  )
 }
 
 export const getDesktop = () => {
-  return state.getDesktop()
+  if (
+    process.env.ORIGINAL_XDG_CURRENT_DESKTOP &&
+    process.env.ORIGINAL_XDG_CURRENT_DESKTOP !== 'undefined'
+  ) {
+    if (process.env.ORIGINAL_XDG_CURRENT_DESKTOP === 'ubuntu:GNOME') {
+      return 'gnome'
+    }
+    return process.env.ORIGINAL_XDG_CURRENT_DESKTOP
+  }
+  if (process.env.XDG_CURRENT_DESKTOP) {
+    if (process.env.XDG_CURRENT_DESKTOP === 'ubuntu:GNOME') {
+      return 'gnome'
+    }
+    return process.env.XDG_CURRENT_DESKTOP
+  }
+  if (process.platform === 'win32') {
+    return 'windows'
+  }
+  return ''
 }
 
 export const getPathSeparator = () => {
-  return state.getPathSeparator()
+  return sep
 }
 
 export const getStateDir = () => {
-  return state.getStateDir()
+  return xdgState
 }
 
 export const getLogsDir = () => {
-  return state.getLogsDir()
+  return Path.join(xdgState || tmpdir(), getApplicationName(), 'logs')
 }
 
 export const getUserSettingsPath = () => {
-  return state.getUserSettingsPath()
+  return Path.join(getConfigDir(), 'settings.json')
 }
 
 export const getExtensionHostPath = () => {
-  return state.getExtensionHostPath()
+  return extensionHostPath
 }
 
 export const getRecentlyOpenedPath = () => {
-  return state.getRecentlyOpenedPath()
+  return Path.join(getCacheDir(), 'recently-opened.json')
 }
 
 export const getDefaultSettingsPath = () => {
-  return state.getDefaultSettingsPath()
+  return Path.join(getAppDir(), 'static', 'config', 'defaultSettings.json')
 }
