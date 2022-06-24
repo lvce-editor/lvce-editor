@@ -432,9 +432,11 @@ export const showExtensionsQuickPick = async (items) => {
       return items
     },
     async selectPick(item, index) {
-      const ExtensionHost = await import('../ExtensionHost/ExtensionHostCore.js')
+      const ExtensionHost = await import(
+        '../ExtensionHost/ExtensionHostCore.js'
+      )
       await ExtensionHost.invoke(
-        /* ExtensionHostQuickPick.handleQuickPickResult */ 424,
+        /* ExtensionHostQuickPick.handleQuickPickResult */ 'ExtensionHostQuickPick.handleQuickPickResult',
         /* index */ index
       )
       return {
