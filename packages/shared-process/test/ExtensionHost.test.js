@@ -45,6 +45,7 @@ test.skip('activateAll', async () => {
   ExtensionManagement.state.builtinExtensionsPath = tmpDir1
   ExtensionManagement.state.extensionPath = tmpDir2
   await ExtensionHost.start()
+  // @ts-ignore
   await ExtensionHost.activateAll()
   await ExtensionHost.stop()
 })
