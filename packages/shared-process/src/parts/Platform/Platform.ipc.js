@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
 
+// prettier-ignore
 export const __initialize__ = () => {
   Command.register('Platform.getConfigDir', Platform.getConfigDir)
   Command.register('Platform.getAppDir', Platform.getAppDir)
@@ -15,4 +16,6 @@ export const __initialize__ = () => {
   Command.register('Platform.getUserSettingsPath', Platform.getUserSettingsPath)
   Command.register('Platform.getRecentlyOpenedPath', Platform.getRecentlyOpenedPath)
   Command.register('Platform.getCacheDir', Platform.getCacheDir)
+  Command.register('Platform.getCacheDir', Platform.getCacheDir)
+  Command.register('Platform.setEnvironmentVariables', Platform.setEnvironmentVariables)
 }

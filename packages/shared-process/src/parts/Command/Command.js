@@ -178,6 +178,7 @@ const getModuleId = (commandId) => {
     case 'Platform.getUserSettingsPath':
     case 'Platform.getRecentlyOpenedPath':
     case 'Platform.getCacheDir':
+    case 'Platform.setEnvironmentVariables':
       return MODULE_PLATFORM
     case 'Terminal.create':
     case 'Terminal.dispose':
