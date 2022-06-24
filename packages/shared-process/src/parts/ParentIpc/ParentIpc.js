@@ -15,10 +15,19 @@ export const state = {
   electronPortMap: new Map(),
 }
 
+// TODO apparent there are multiple ways for listening to ipc
+// 1. parentPort
+// 2. process.send
+// instead of if/else use interface and abstraction: ParentPortIpc.listen(), ProcessIpc.listen(), ParentPortIpc.send(message), ProcessIpc.send(message)
+
 export const electronSend = (message) => {
-  // @ts-ignore
-  // process.send(message)
-  parentPort.postMessage(message)
+  if (parentPort) {
+    // @ts-ignore
+    // process.send(message)
+    parentPort.postMessage(message)
+  } else if (process.send) {
+    process.send(message)
+  }
 }
 
 const handleMessageFromParentProcess = async (message, handle) => {
