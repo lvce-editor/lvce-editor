@@ -3,6 +3,10 @@ import { mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
+afterEach(() => {
+  jest.restoreAllMocks()
+})
+
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   getAppDir: jest.fn(() => {
     throw new Error('not implemented')

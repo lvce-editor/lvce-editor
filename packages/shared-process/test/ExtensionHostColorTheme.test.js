@@ -4,6 +4,10 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import * as JsonFile from '../src/parts/JsonFile/JsonFile.js'
 
+afterEach(() => {
+  jest.restoreAllMocks()
+})
+
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   getExtensionsPath: jest.fn(() => {
     throw new Error('not implemented')
