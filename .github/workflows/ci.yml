@@ -27,7 +27,7 @@ jobs:
         with:
           path: |
             **/node_modules
-            build/.tmp/cachedExtensions
+            extensions
           key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
           restore-keys: ${{ runner.os }}-cacheNodeModules-
       - name: npm ci
