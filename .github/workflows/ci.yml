@@ -26,10 +26,10 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH: 0
         with:
         path: |
-            **/node_modules
-            build/.tmp/cachedExtensions
-          key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
-          restore-keys: ${{ runner.os }}-cacheNodeModules-
+          **/node_modules
+          build/.tmp/cachedExtensions
+        key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
+        restore-keys: ${{ runner.os }}-cacheNodeModules-
       - name: npm ci
         run: npm ci
         if: steps.npm-cache.outputs.cache-hit != 'true'
