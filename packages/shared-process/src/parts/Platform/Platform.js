@@ -111,3 +111,9 @@ export const getRecentlyOpenedPath = () => {
 export const getDefaultSettingsPath = () => {
   return Path.join(getAppDir(), 'static', 'config', 'defaultSettings.json')
 }
+
+export const setEnvironmentVariables = (variables) => {
+  for (const [key, value] of Object.entries(variables)) {
+    process.env[key] = value
+  }
+}
