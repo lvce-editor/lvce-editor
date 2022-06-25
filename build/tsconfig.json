@@ -13,7 +13,8 @@
     "rootDir": ".",
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
-    "assumeChangesOnlyAffectDirectDependencies": true
+    "assumeChangesOnlyAffectDirectDependencies": true,
+    "resolveJsonModule": true
   },
   "include": ["src", "test"]
 }

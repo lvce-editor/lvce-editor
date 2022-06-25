@@ -15,6 +15,7 @@ extensions/builtin.language-basics-kotlin
 extensions/builtin.language-basics-dart
 extensions/builtin.language-basics-julia
 extensions/builtin.language-basics-cpp
+extensions/builtin.language-features-html
 
 
 *.tar.br
