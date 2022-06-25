@@ -248,14 +248,22 @@ const copySharedProcessFiles = async () => {
     replacement: `return process.env.FOLDER || process.cwd()`,
   })
   // TODO where should builtinExtension be located?
-  await Copy.copy({
-    from: 'extensions/builtin.theme-slime',
-    to: 'build/.tmp/server/shared-process/extensions/builtin.theme-slime',
-  })
-  await Copy.copy({
-    from: 'extensions/builtin.vscode-icons',
-    to: 'build/.tmp/server/shared-process/extensions/builtin.vscode-icons',
-  })
+  const shouldBeCopied = (extensionName) => {
+    return (
+      extensionName === 'builtin.theme-slime' ||
+      extensionName === 'builtin.vscode-icons' ||
+      extensionName.startsWith('builtin.language-basics')
+    )
+  }
+  const extensionNames = await readdir(Path.absolute('extensions'))
+  for (const extensionName of extensionNames) {
+    if (shouldBeCopied(extensionName)) {
+      await Copy.copy({
+        from: `extensions/${extensionName}`,
+        to: `build/.tmp/server/shared-process/extensions/${extensionName}`,
+      })
+    }
+  }
 }
 
 const copyServerFiles = async () => {
