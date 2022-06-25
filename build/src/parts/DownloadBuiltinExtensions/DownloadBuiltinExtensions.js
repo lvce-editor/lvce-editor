@@ -6,6 +6,7 @@ import { createBrotliDecompress } from 'node:zlib'
 import tar from 'tar-fs'
 import VError from 'verror'
 import * as Path from '../Path/Path.js'
+import extensions from './builtinExtensions.json' assert { type: 'json' }
 
 const download = async (url, outFile) => {
   try {
@@ -58,76 +59,6 @@ const downloadExtensions = async (extensions) => {
 }
 
 const main = () => {
-  const extensions = [
-    {
-      name: 'builtin.prettier',
-      path: 'https://github.com/lvce-editor/prettier/releases/download/v0.0.2/prettier-v0.0.2.tar.br',
-    },
-    {
-      name: 'builtin.language-features-typescript',
-      path: 'https://github.com/lvce-editor/language-features-typescript/releases/download/v0.0.2/language-features-typescript-v0.0.2.tar.br',
-    },
-    {
-      name: 'builtin.language-features-css',
-      path: 'https://github.com/lvce-editor/language-features-css/releases/download/v0.0.2/language-features-css-v0.0.2.tar.br',
-    },
-    {
-      name: 'builtin.language-basics-javascript',
-      path: 'https://github.com/lvce-editor/language-basics-javascript/releases/download/v0.0.1/language-basics-javascript-v0.0.1.tar.br',
-    },
-    {
-      name: 'builtin.language-basics-html',
-      path: 'https://github.com/lvce-editor/language-basics-html/releases/download/v0.0.1/language-basics-html-v0.0.1.tar.br',
-    },
-    {
-      name: 'builtin.language-basics-css',
-      path: 'https://github.com/lvce-editor/language-basics-css/releases/download/v0.0.2/language-basics-css-v0.0.2.tar.br',
-    },
-    {
-      name: 'builtin.language-basics-java',
-      path: 'https://github.com/lvce-editor/language-basics-java/releases/download/v0.0.1/language-basics-java-v0.0.1.tar.br',
-    },
-    {
-      name: 'builtin.language-basics-shellscript',
-      path: 'https://github.com/lvce-editor/language-basics-shellscript/releases/download/v0.0.1/language-basics-shellscript-v0.0.1.tar.br',
-    },
-    {
-      name: 'builtin.language-basics-python',
-      path: 'https://github.com/lvce-editor/language-basics-python/releases/download/v0.0.1/language-basics-python-v0.0.1.tar.br',
-    },
-    {
-      name: 'builtin.language-basics-go',
-      path: 'https://github.com/lvce-editor/language-basics-go/releases/download/v0.0.1/language-basics-go-v0.0.1.tar.br',
-    },
-    {
-      name: 'builtin.language-basics-elixir',
-      path: 'https://github.com/lvce-editor/language-basics-elixir/releases/download/v0.0.1/language-basics-elixir-v0.0.1.tar.br',
-    },
-    {
-      name: 'builtin.vscode-icons',
-      path: 'https://github.com/lvce-editor/vscode-icons/releases/download/v0.0.2/vscode-icons-v0.0.2.tar.br',
-    },
-    {
-      name: 'builtin.language-basics-dotenv',
-      path: 'https://github.com/lvce-editor/language-basics-dotenv/releases/download/v0.0.1/language-basics-dotenv-v0.0.1.tar.br',
-    },
-    {
-      name: 'builtin.language-basics-kotlin',
-      path: 'https://github.com/lvce-editor/language-basics-kotlin/releases/download/v0.0.1/language-basics-kotlin-v0.0.1.tar.br',
-    },
-    {
-      name: 'builtin.language-basics-dart',
-      path: 'https://github.com/lvce-editor/language-basics-dart/releases/download/v0.0.1/language-basics-dart-v0.0.1.tar.br',
-    },
-    {
-      name: 'builtin.language-basics-julia',
-      path: 'https://github.com/lvce-editor/language-basics-julia/releases/download/v0.0.1/language-basics-julia-v0.0.1.tar.br',
-    },
-    {
-      name: 'builtin.language-basics-cpp',
-      path: 'https://github.com/lvce-editor/language-basics-cpp/releases/download/v0.0.1/language-basics-cpp-v0.0.1.tar.br',
-    },
-  ]
   downloadExtensions(extensions)
 }
 
