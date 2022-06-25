@@ -100,7 +100,6 @@ export const listen = async (InternalCommand) => {
     process.exit(20)
   }
   const handleMessage = async (message) => {
-    console.log({ message })
     if (Array.isArray(message)) {
       for (const subMessage of message) {
         handleMessage(subMessage)

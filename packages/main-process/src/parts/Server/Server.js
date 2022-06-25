@@ -22,8 +22,6 @@ const handleStdError = (error) => {
 }
 
 const handleChildMessage = async (message) => {
-  console.log('got child message')
-  console.log({ message })
   if (Array.isArray(message)) {
     console.warn('invalid message', message)
     return
