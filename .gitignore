@@ -17,6 +17,7 @@ extensions/builtin.language-basics-julia
 extensions/builtin.language-basics-cpp
 extensions/builtin.language-basics-json
 extensions/builtin.language-features-html
+extensions/builtin.language-basics-typescript
 
 
 *.tar.br
