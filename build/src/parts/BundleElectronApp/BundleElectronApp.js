@@ -14,6 +14,8 @@ import * as WriteFile from '../WriteFile/WriteFile.js'
 import * as Platform from '../Platform/Platform.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import { existsSync } from 'fs'
+import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
+import * as NodeModulesIgnoredFiles from '../NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js'
 
 // TODO cache -> use newest timestamp from files excluding node_modules and build/.tmp
 
@@ -133,6 +135,37 @@ const copyExtensions = async () => {
   await copyOtherExtensions()
 }
 
+const copyPtyHostFiles = async () => {
+  await Copy.copy({
+    from: 'packages/pty-host',
+    to: 'build/.tmp/bundle/electron/packages/pty-host',
+    ignore: [
+      'tsconfig.json',
+      'node_modules',
+      'distmin',
+      'example',
+      'test',
+      '.nvmrc',
+      'package-lock.json',
+    ],
+  })
+  const ptyHostPath = Path.absolute('packages/pty-host')
+  const dependencies = await NpmDependencies.getNpmDependencies(
+    'packages/pty-host'
+  )
+  for (const dependency of dependencies) {
+    const to =
+      'build/.tmp/bundle/electron/packages/pty-host' +
+      dependency.slice(ptyHostPath.length)
+    await Copy.copy({
+      from: dependency,
+      to,
+      ignore: NodeModulesIgnoredFiles.getNodeModulesIgnoredFiles(),
+    })
+  }
+  console.log({ dependencies })
+}
+
 const copyCode = async () => {
   await Copy.copyFile({
     from: 'packages/main-process/package.json',
@@ -146,14 +179,7 @@ const copyCode = async () => {
     from: 'packages/main-process/pages',
     to: `build/.tmp/bundle/electron/packages/main-process/pages`,
   })
-  await Copy.copyFile({
-    from: 'packages/pty-host/package.json',
-    to: `build/.tmp/bundle/electron/packages/pty-host/package.json`,
-  })
-  await Copy.copy({
-    from: 'packages/pty-host/src',
-    to: `build/.tmp/bundle/electron/packages/pty-host/src`,
-  })
+  await copyPtyHostFiles()
   await Copy.copyFile({
     from: 'packages/server/package.json',
     to: `build/.tmp/bundle/electron/packages/server/package.json`,
@@ -218,15 +244,6 @@ const bundleJs = async () => {
       'electron',
       'fsevents',
       'windows-process-tree', // native module
-    ],
-  })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/bundle/electron/packages/pty-host`),
-    from: `./src/ptyHostMain.js`,
-    platform: 'node/cjs',
-    exclude: [
-      'node-pty', // native module
-      'fsevents',
     ],
   })
   await BundleJs.bundleJs({
@@ -319,10 +336,6 @@ const copyNodeModules = async () => {
     to: `build/.tmp/bundle/electron/packages/main-process/node_modules`,
   })
   await Copy.copy({
-    from: 'packages/pty-host/node_modules',
-    to: `build/.tmp/bundle/electron/packages/pty-host/node_modules`,
-  })
-  await Copy.copy({
     from: 'packages/shared-process/node_modules',
     to: `build/.tmp/bundle/electron/packages/shared-process/node_modules`,
   })
@@ -364,8 +377,8 @@ const copyElectron = async (arch) => {
 }
 
 const getNodePtyIgnoreFiles = () => {
-  const files = ['typings', 'README.md', 'scripts']
-  if (!Platform.isWindows) {
+  const files = ['typings', 'README.md', 'scripts', 'src']
+  if (!Platform.isWindows()) {
     files.push('deps')
   }
   return files
@@ -375,19 +388,7 @@ const getWindowsProcessTreeIgnoreFiles = () => {
   return []
 }
 
-const copyResults = async () => {
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/main-process/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/main-process/src`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/main-process/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/main-process/dist`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/main-process/pages`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/main-process/pages`,
-  })
+const copyResultsPtyHost = async () => {
   const ptyHostPackageJson = await JsonFile.readJson(
     'packages/pty-host/package.json'
   )
@@ -404,14 +405,32 @@ const copyResults = async () => {
     to: `build/.tmp/bundle/electron-result/resources/app/packages/pty-host/src`,
   })
   await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/pty-host/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/pty-host/dist`,
+    from: `build/.tmp/bundle/electron/packages/pty-host/node_modules`,
+    to: `build/.tmp/bundle/electron-result/resources/app/packages/pty-host/node_modules`,
+    ignore: ['node-pty'],
   })
   await Copy.copy({
     from: `build/.tmp/bundle/electron/packages/pty-host/node_modules/node-pty`,
     to: `build/.tmp/bundle/electron-result/resources/app/packages/pty-host/node_modules/node-pty`,
     ignore: getNodePtyIgnoreFiles(),
   })
+}
+
+const copyResults = async () => {
+  await Copy.copy({
+    from: `build/.tmp/bundle/electron/packages/main-process/src`,
+    to: `build/.tmp/bundle/electron-result/resources/app/packages/main-process/src`,
+  })
+  await Copy.copy({
+    from: `build/.tmp/bundle/electron/packages/main-process/dist`,
+    to: `build/.tmp/bundle/electron-result/resources/app/packages/main-process/dist`,
+  })
+  await Copy.copy({
+    from: `build/.tmp/bundle/electron/packages/main-process/pages`,
+    to: `build/.tmp/bundle/electron-result/resources/app/packages/main-process/pages`,
+  })
+  await copyResultsPtyHost()
+
   if (process.platform === 'win32') {
     await Copy.copy({
       from: `build/.tmp/bundle/electron/packages/main-process/node_modules/nan`,
@@ -767,10 +786,9 @@ const copyResults = async () => {
 }
 
 const getElectronVersion = async () => {
-  const packageJsonContent = await ReadFile.readFile(
+  const packageJson = await JsonFile.readJson(
     'packages/main-process/node_modules/electron/package.json'
   )
-  const packageJson = JSON.parse(packageJsonContent)
   return packageJson.version
 }
 
@@ -1020,13 +1038,6 @@ const applyOverridesPost = async () => {
     path: 'build/.tmp/bundle/electron/packages/extension-host/dist/extensionHostMain.js',
     occurrence: `var __create = Object.create;`,
     replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/pty-host/dist/ptyHostMain.js',
-    occurrence: `// src/parts/Pty/Pty.js
-var import_node_pty = require("node-pty");`,
-    replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); // src/parts/Pty/Pty.js
-var import_node_pty = require("node-pty");`,
   })
   // await Replace.replace({
   //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-css/extension.json',

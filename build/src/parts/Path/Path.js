@@ -2,6 +2,9 @@ import * as Root from '../Root/Root.js'
 import * as path from 'path'
 
 export const absolute = (relativePath) => {
+  if (isAbsolute(relativePath)) {
+    return relativePath
+  }
   return path.join(Root.root, relativePath)
 }
 
