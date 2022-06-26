@@ -59,8 +59,10 @@ const main = async () => {
   try {
     await module.build()
   } catch (error) {
-    // @ts-ignore
-    throw new VError(error, 'Build failed')
+    throw new Error('Build failed', {
+      // @ts-ignore
+      cause: error,
+    })
   }
 }
 
