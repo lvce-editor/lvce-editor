@@ -155,19 +155,19 @@ const copyCode = async () => {
     to: `build/.tmp/bundle/electron/packages/pty-host/src`,
   })
   await Copy.copyFile({
-    from: 'packages/web/package.json',
-    to: `build/.tmp/bundle/electron/packages/web/package.json`,
+    from: 'packages/server/package.json',
+    to: `build/.tmp/bundle/electron/packages/server/package.json`,
   })
   await Copy.copy({
-    from: 'packages/web/src',
-    to: `build/.tmp/bundle/electron/packages/web/src`,
+    from: 'packages/server/src',
+    to: `build/.tmp/bundle/electron/packages/server/src`,
   })
   await Copy.copy({
-    from: 'packages/web/bin',
-    to: `build/.tmp/bundle/electron/packages/web/bin`,
+    from: 'packages/server/bin',
+    to: `build/.tmp/bundle/electron/packages/server/bin`,
   })
   await Replace.replace({
-    path: `build/.tmp/bundle/electron/packages/web/bin/web.js`,
+    path: `build/.tmp/bundle/electron/packages/server/bin/server.js`,
     occurrence: '#!/usr/bin/env node',
     replacement: '',
   })
@@ -507,9 +507,9 @@ const copyResults = async () => {
     from: `build/.tmp/bundle/electron/packages/renderer-worker/dist`,
     to: `build/.tmp/bundle/electron-result/resources/app/packages/renderer-worker/dist`,
   })
-  const webPackageJson = await JsonFile.readJson('packages/web/package.json')
+  const webPackageJson = await JsonFile.readJson('packages/server/package.json')
   await JsonFile.writeJson({
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/web/package.json`,
+    to: `build/.tmp/bundle/electron-result/resources/app/packages/server/package.json`,
     value: {
       name: webPackageJson.name,
       type: webPackageJson.type,
@@ -517,12 +517,12 @@ const copyResults = async () => {
     },
   })
   await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/web/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/web/src`,
+    from: `build/.tmp/bundle/electron/packages/server/src`,
+    to: `build/.tmp/bundle/electron-result/resources/app/packages/server/src`,
   })
   await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/web/bin`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/web/bin`,
+    from: `build/.tmp/bundle/electron/packages/server/bin`,
+    to: `build/.tmp/bundle/electron-result/resources/app/packages/server/bin`,
   })
   await JsonFile.writeJson({
     to: `build/.tmp/bundle/electron-result/resources/app/package.json`,
@@ -888,7 +888,7 @@ const applyOverridesPre = async () => {
     replacement: 'const METHOD_PREFERRED = METHOD_FORK',
   })
   await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/web/src/web.js',
+    path: 'build/.tmp/bundle/electron/packages/server/src/server.js',
     occurrence: 'shared-process/src/sharedProcessMain.js',
     replacement: 'shared-process/dist/sharedProcessMain.js',
   })
