@@ -8,13 +8,17 @@ import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Queue from '../Queue/Queue.js'
+import path from 'node:path'
 
 export const state = {
   async getExtensions() {
-    if (process.env.ONLY_EXTENSION) {
-      return getExtensionManifests([process.env.ONLY_EXTENSION])
-    }
+    // TODO only read from env once
     const builtinExtensions = await getBuiltinExtensions()
+    if (process.env.ONLY_EXTENSION) {
+      const absolutePath = path.resolve(process.env.ONLY_EXTENSION)
+      const onlyExtension = await getExtensionManifests([absolutePath])
+      return [...builtinExtensions, ...onlyExtension]
+    }
     const installedExtensions = await getInstalledExtensions()
     return [...builtinExtensions, ...installedExtensions]
   },
