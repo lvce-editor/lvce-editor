@@ -74,5 +74,9 @@
   {
     "name": "builtin.language-basics-json",
     "path": "https://github.com/lvce-editor/language-basics-json/releases/download/v0.0.2/language-basics-json-v0.0.2.tar.br"
+  },
+  {
+    "name": "builtin.language-basics-typescript",
+    "path": "https://github.com/lvce-editor/language-basics-typescript/releases/download/v0.0.1/language-basics-typescript-v0.0.1.tar.br"
   }
 ]
