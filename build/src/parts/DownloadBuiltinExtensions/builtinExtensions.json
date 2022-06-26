@@ -70,5 +70,9 @@
   {
     "name": "builtin.language-features-html",
     "path": "https://github.com/lvce-editor/language-features-html/releases/download/v0.0.2/language-features-html-v0.0.2.tar.br"
+  },
+  {
+    "name": "builtin.language-basics-json",
+    "path": "https://github.com/lvce-editor/language-basics-json/releases/download/v0.0.2/language-basics-json-v0.0.2.tar.br"
   }
 ]
