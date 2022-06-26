@@ -25,12 +25,22 @@ jobs:
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
         with:
-          path: |
-            **/node_modules
-            extensions
+          path: '**/node_modules'
           key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
           restore-keys: ${{ runner.os }}-cacheNodeModules-
       - name: npm ci
         run: npm ci
         if: steps.npm-cache.outputs.cache-hit != 'true'
+      - name: Compute builtin extensions cache key
+        id: builtinExtensionsCacheKey
+        run: echo "::set-output name=value::$(node build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)"
+      - uses: actions/cache@v3
+        id: builtin-extensions-cache
+        with:
+          path: extensions
+          key: ${{ runner.os }}-builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
+          restore-keys: ${{ runner.os }}-builtinExtensions-
+      - name: Download Builtin Extensions
+        run: node build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js
+        if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
       - run: npm test
