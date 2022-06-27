@@ -23,5 +23,18 @@ export const getNodeModulesIgnoredFiles = () => {
     'CHANGELOG.md',
     '.eslintrc.json',
     '.npmignore',
+    '.travis.yml',
+    '.editorconfig',
+    '.istanbul.yml',
+    '.eslintignore',
+    '.eslintrc',
+    '.nycrc',
+    '.testem.json',
+    'LICENSE.md',
+    'GOVERNANCE.md',
+    'LICENSE.txt',
+    '.github',
+    'History.md',
+    'node_modules',
   ]
 }
