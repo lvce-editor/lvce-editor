@@ -26,7 +26,7 @@ const getDebPackageArch = (arch) => {
 }
 
 const bundleElectronMaybe = async () => {
-  if (existsSync(Path.absolute(`build/.tmp/bundle/electron-result`))) {
+  if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
     console.info('[electron build skipped]')
     return
   }
@@ -38,7 +38,7 @@ const copyElectronResult = async () => {
   await bundleElectronMaybe()
   const debArch = 'amd64'
   await Copy.copy({
-    from: 'build/.tmp/bundle/electron-result',
+    from: 'build/.tmp/electron-bundle',
     to: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}`,
   })
 }
@@ -252,10 +252,10 @@ const fixPermissions = async () => {
       { stdout: 'ignore', stderr: 'inherit' }
     )
     const extraFiles = [
-      `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/web/bin/web.js`,
-      `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node`,
-      `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node`,
-      `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-106/node-pty.node`,
+      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/web/bin/web.js`,
+      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/build/Release/pty.node`,
+      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/build/Release/obj.target/pty.node`,
+      // `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/pty-host/node_modules/node-pty/bin/linux-x64-106/node-pty.node`,
     ]
     for (const extraFile of extraFiles) {
       await chmod(Path.absolute(extraFile), 0o755)
