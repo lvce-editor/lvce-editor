@@ -76,6 +76,10 @@ const copyMainProcessSources = async ({ arch }) => {
     from: 'packages/main-process/src',
     to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src`,
   })
+  await Copy.copy({
+    from: `packages/main-process/pages`,
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/pages`,
+  })
 }
 
 const copyPtyHostSources = async ({ arch }) => {
