@@ -85,6 +85,20 @@ const copySharedProcessSources = async ({ arch }) => {
   return '${Product.applicationName}'
 }`,
   })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src/parts/Platform/Platform.js`,
+    occurrence: `import { extensionHostPath } from '@lvce-editor/extension-host'\n`,
+    replacement: '',
+  })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src/parts/Platform/Platform.js`,
+    occurrence: `export const getExtensionHostPath = () => {
+  return extensionHostPath
+}`,
+    replacement: `export const getExtensionHostPath = () => {
+  return Path.join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
+}`,
+  })
 }
 
 const copyRendererProcessFiles = async ({ arch }) => {}
