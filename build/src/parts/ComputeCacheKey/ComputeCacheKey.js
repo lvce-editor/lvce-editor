@@ -1,6 +1,6 @@
-import { createHash } from 'crypto'
 import { readFile } from 'fs/promises'
 import { join } from 'path'
+import * as Hash from '../Hash/Hash.js'
 import * as Root from '../Root/Root.js'
 
 const getAbsolutePath = (relativePath) => {
@@ -14,11 +14,8 @@ const getContent = (absolutePath) => {
 const computeHash = async (locations) => {
   const absolutePaths = locations.map(getAbsolutePath)
   const contents = await Promise.all(absolutePaths.map(getContent))
-  const hash = createHash('sha1')
-  for (const content of contents) {
-    hash.update(content)
-  }
-  return hash.digest('hex')
+  const hash = Hash.computeHash(contents)
+  return hash
 }
 
 export const computeCacheKey = async (locations) => {
