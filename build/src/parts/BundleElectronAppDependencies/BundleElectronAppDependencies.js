@@ -156,56 +156,13 @@ const applyOverridesPre = async () => {
     occurrence: `root = join(__dirname, '../../../../..')`,
     replacement: `root = join(__dirname, '../../..')`,
   })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Platform/Platform.js',
-    occurrence: `exports.isProduction = () => {
-  return false
-}`,
-    replacement: `exports.isProduction = () => {
-  return true
-}`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Platform/Platform.js',
-    occurrence: `exports.getApplicationName = () => {
-  return 'lvce-oss'
-}`,
-    replacement: `exports.getApplicationName = () => {
-  return '${Product.nameLong}'
-}`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Platform/Platform.js',
-    occurrence: `exports.isLinux = () => {
-  return process.platform === 'linux'
-}`,
-    replacement: `exports.isLinux = () => {
-  return ${Platform.isLinux()}
-}`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Platform/Platform.js',
-    occurrence: `exports.isMacOs = () => {
-  return process.platform === 'darwin'
-}`,
-    replacement: `exports.isMacOs = () => {
-  return ${Platform.isMacos()}
-}`,
-  })
+
   await Replace.replace({
     path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Platform/Platform.js',
     occurrence: `process.env.BUILTIN_SELF_TEST_PATH`,
     replacement: `join(Root.root, 'extensions', 'builtin.self-test', 'dist', 'SelfTest.js')`,
   })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Platform/Platform.js',
-    occurrence: `exports.getScheme = () => {
-  return 'lvce-oss'
-}`,
-    replacement: `exports.getScheme = () => {
-  return '${Product.applicationName}'
-}`,
-  })
+
   const commitHash = await CommitHash.getCommitHash()
   await Replace.replace({
     path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Platform/Platform.js',
