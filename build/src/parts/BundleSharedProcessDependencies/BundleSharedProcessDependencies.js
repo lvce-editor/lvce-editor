@@ -4,6 +4,68 @@ import * as Hash from '../Hash/Hash.js'
 import * as Path from '../Path/Path.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Remove from '../Remove/Remove.js'
+import * as Exec from '../Exec/Exec.js'
+import * as NodeModulesIgnoredFiles from '../NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js'
+
+const getNpmDependenciesRaw = async (root) => {
+  const absoluteRoot = Path.absolute(root)
+  const { stdout } = await Exec.exec(
+    'npm',
+    ['list', '--omit=dev', '--all', '--json', '--long'],
+    {
+      cwd: absoluteRoot,
+    }
+  )
+  const json = JSON.parse(stdout)
+  return json
+}
+
+const walkDependencies = (object, fn) => {
+  const shouldContinue = fn(object)
+  if (!shouldContinue) {
+    return
+  }
+  if (!object.dependencies) {
+    return
+  }
+  for (const value of Object.values(object.dependencies)) {
+    walkDependencies(value, fn)
+  }
+}
+
+const getNpmDependencies = (rawDependencies) => {
+  rawDependencies
+  console.log({ rawDependencies })
+  const dependencyPaths = []
+  const handleDependency = (dependency) => {
+    if (!dependency.path) {
+      return false
+    }
+    if (!dependency.name) {
+      return false
+    }
+    if (dependency.name === '@lvce-editor/extension-host') {
+      return false
+    }
+    if (dependency.name === '@lvce-editor/pty-host') {
+      return false
+    }
+    if (dependency.name === 'prebuild-install') {
+      return false
+    }
+    if (dependency.name.includes('@types')) {
+      return false
+    }
+    if (dependency.name === 'vscode-ripgrep-with-github-api-error-fix') {
+      return false
+    }
+    dependencyPaths.push(dependency.path)
+    return true
+  }
+  walkDependencies(rawDependencies, handleDependency)
+  console.log({ dependencyPaths })
+  return dependencyPaths.slice(1)
+}
 
 export const bundleSharedProcessDependencies = async ({ cache = false }) => {
   const packageLockJson = await ReadFile.readFile(
@@ -19,10 +81,8 @@ export const bundleSharedProcessDependencies = async ({ cache = false }) => {
     return Path.absolute(`build/.tmp/cachedDependencies/shared-process/${hash}`)
   }
   const projectPath = Path.absolute('packages/shared-process')
-  const NpmDependencies = await import('../NpmDependencies/NpmDependencies.js')
-  const NodeModulesIgnoredFiles = await import(
-    '../NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js'
-  )
+  const npmDependenciesRaw = await getNpmDependenciesRaw(projectPath)
+  const npmDependencies = getNpmDependencies(npmDependenciesRaw)
   await Copy.copyFile({
     from: 'packages/shared-process/package.json',
     to: `build/.tmp/cachedDependencies/shared-process/${hash}/package.json`,
@@ -31,13 +91,7 @@ export const bundleSharedProcessDependencies = async ({ cache = false }) => {
     from: 'packages/shared-process/package-lock.json',
     to: `build/.tmp/cachedDependencies/shared-process/${hash}/package-lock.json`,
   })
-  const dependencies = await NpmDependencies.getNpmDependencies(
-    'packages/shared-process'
-  )
-  const directDependencies = dependencies.filter((dependency) =>
-    dependency.startsWith(projectPath)
-  )
-  for (const dependency of directDependencies) {
+  for (const dependency of npmDependencies) {
     const to =
       'build/.tmp/cachedDependencies/shared-process/' +
       hash +
@@ -48,20 +102,6 @@ export const bundleSharedProcessDependencies = async ({ cache = false }) => {
       ignore: NodeModulesIgnoredFiles.getNodeModulesIgnoredFiles(),
     })
   }
-  const pathsToRemove = [
-    'node_modules/@types',
-    'node_modules/@lvce-editor',
-    'node_modules/type-fest',
-  ]
-  for (const pathToRemove of pathsToRemove) {
-    await Remove.remove(
-      'build/.tmp/cachedDependencies/shared-process/' +
-        hash +
-        '/' +
-        pathToRemove
-    )
-  }
-  return `build/.tmp/cachedDependencies/shared-process/${hash}`
 }
 
 bundleSharedProcessDependencies({
