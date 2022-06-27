@@ -189,7 +189,7 @@ const copyStaticFiles = async ({ arch }) => {
   await Copy.copy({
     from: 'static',
     to: `build/.tmp/electron-bundle/${arch}/resources/app/static`,
-    ignore: ['css'],
+    ignore: ['css', 'js'],
   })
 }
 
