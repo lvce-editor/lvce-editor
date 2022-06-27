@@ -36,5 +36,7 @@ export const getNodeModulesIgnoredFiles = () => {
     '.github',
     'History.md',
     'node_modules',
+    'README.markdown',
+    '@type',
   ]
 }
