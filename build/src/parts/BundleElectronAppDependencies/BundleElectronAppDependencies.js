@@ -202,11 +202,6 @@ const applyOverridesPre = async () => {
     occurrence: 'ASSET_DIR',
     replacement: `'../../../../..'`,
   })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/renderer-worker/src/parts/Platform/Platform.js',
-    occurrence: 'PLATFORM',
-    replacement: `'electron'`,
-  })
 
   await Replace.replace({
     path: 'build/.tmp/bundle/electron/packages/renderer-worker/src/parts/Platform/Platform.js',
