@@ -79,11 +79,6 @@ export const bundleSharedProcessDependencies = async ({ to }) => {
       optionalDependencies: packageJson.optionalDependencies,
     },
   })
-  await Copy.copyFile({
-    from: 'packages/shared-process/package.json',
-    to: `${to}/package.json`,
-  })
-
   for (const dependency of npmDependencies) {
     const dependencyTo = to + dependency.slice(projectPath.length)
     await Copy.copy({
