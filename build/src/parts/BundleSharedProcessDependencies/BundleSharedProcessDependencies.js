@@ -57,6 +57,7 @@ const getNpmDependencies = (rawDependencies) => {
       return false
     }
     if (dependency.name === 'vscode-ripgrep-with-github-api-error-fix') {
+      dependencyPaths.push(dependency.path)
       return false
     }
     dependencyPaths.push(dependency.path)
