@@ -9,6 +9,8 @@ import * as Product from '../Product/Product.js'
 import * as Platform from '../Platform/Platform.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as BundleCss from '../BundleCss/BundleCss.js'
+import * as BundleJs from '../BundleJs/BundleJs.js'
+import * as BundleRendererProcess from '../BundleRendererProcess/BundleRendererProcess.js'
 
 const getDependencyCacheHash = async () => {
   const files = [
@@ -84,6 +86,8 @@ const copySharedProcessSources = async ({ arch }) => {
 }`,
   })
 }
+
+const copyRendererProcessFiles = async ({ arch }) => {}
 
 const copyMainProcessSources = async ({ arch }) => {
   await Copy.copy({
@@ -195,16 +199,24 @@ const copyCss = async ({ arch }) => {
   })
 }
 
+const getRendererProcessCacheHash = async () => {
+  const hash = await Hash.computeFolderHash('packages/renderer-process/src', [
+    'build/src/parts/BundleElectronApp/BundleElectronApp.js',
+    'build/src/parts/BundleJs/BundleJs.js',
+    'build/src/parts/BundleRendererProcess/BundleRendererProcess.js',
+  ])
+  return hash
+}
+
 export const build = async () => {
   const arch = process.arch
-  const cacheHash = await getDependencyCacheHash()
-
-  const cachePath = Path.join(
+  const dependencyCacheHash = await getDependencyCacheHash()
+  const dependencyCachePath = Path.join(
     Path.absolute('build/.tmp/cachedDependencies'),
-    cacheHash
+    dependencyCacheHash
   )
 
-  if (existsSync(cachePath)) {
+  if (existsSync(dependencyCachePath)) {
     console.info('[build step skipped] bundleElectronAppDependencies')
   } else {
     console.time('bundleElectronAppDependencies')
@@ -213,7 +225,7 @@ export const build = async () => {
       '../BundleElectronAppDependencies/BundleElectronAppDependencies.js'
     )
     await BundleElectronAppDependencies.bundleElectronAppDependencies({
-      cachePath,
+      cachePath: dependencyCachePath,
       arch,
     })
     console.timeEnd('bundleElectronAppDependencies')
@@ -227,7 +239,7 @@ export const build = async () => {
 
   console.time('copyDependencies')
   await copyDependencies({
-    cachePath,
+    cachePath: dependencyCachePath,
     arch,
   })
   console.timeEnd('copyDependencies')
@@ -259,4 +271,35 @@ export const build = async () => {
   console.time('copyCss')
   await copyCss({ arch })
   console.timeEnd('copyCss')
+
+  const rendererProcessCacheHash = await getRendererProcessCacheHash()
+  const rendererProcessCachePath = Path.join(
+    Path.absolute('build/.tmp/cachedSources/renderer-process'),
+    rendererProcessCacheHash
+  )
+
+  if (existsSync(rendererProcessCachePath)) {
+    console.info('[build step skipped] bundleRendererProcess')
+  } else {
+    console.time('bundleRendererProcess')
+    await Remove.remove(
+      Path.absolute('build/.tmp/cachedSources/renderer-process')
+    )
+    const BundleRendererProcess = await import(
+      '../BundleRendererProcess/BundleRendererProcess.js'
+    )
+    await BundleRendererProcess.bundleRendererProcess({
+      cachePath: rendererProcessCachePath,
+      arch,
+    })
+    console.timeEnd('bundleRendererProcess')
+  }
+
+  console.time('copyRendererProcessFiles')
+  await Copy.copy({
+    from: rendererProcessCachePath,
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/renderer-process`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyRendererProcessFiles')
 }
