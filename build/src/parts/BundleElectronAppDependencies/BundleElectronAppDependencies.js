@@ -383,17 +383,7 @@ const copyResults = async () => {
       ignore: getWindowsProcessTreeIgnoreFiles(),
     })
   }
-  const extensionHostPackageJson = await JsonFile.readJson(
-    'packages/extension-host/package.json'
-  )
-  await JsonFile.writeJson({
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/extension-host/package.json`,
-    value: {
-      name: extensionHostPackageJson.name,
-      type: extensionHostPackageJson.type,
-      dependencies: extensionHostPackageJson.dependencies,
-    },
-  })
+
   await Copy.copy({
     from: `build/.tmp/bundle/electron/packages/extension-host/src`,
     to: `build/.tmp/bundle/electron-result/resources/app/packages/extension-host/src`,
@@ -728,31 +718,6 @@ const getElectronVersion = async () => {
   return packageJson.version
 }
 
-const rebuildNativeDependencies = async (arch) => {
-  const Rebuild = await import('../Rebuild/Rebuild.js')
-  const electronVersion = await getElectronVersion()
-  console.log({ electronVersion })
-  await Rebuild.rebuild({
-    buildPath: Path.absolute(
-      `build/.tmp/bundle/electron/packages/shared-process`
-    ),
-    electronVersion,
-    arch,
-  })
-  await Rebuild.rebuild({
-    buildPath: Path.absolute(
-      `build/.tmp/bundle/electron/packages/main-process`
-    ),
-    electronVersion,
-    arch,
-  })
-  await Rebuild.rebuild({
-    buildPath: Path.absolute(`build/.tmp/bundle/electron/packages/pty-host`),
-    electronVersion,
-    arch,
-  })
-}
-
 const applyOverridesPre = async () => {
   await Replace.replace({
     path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Root/Root.js',
@@ -1013,19 +978,6 @@ const bundleCss = async () => {
   await BundleCss.bundleCss({
     to: 'build/.tmp/bundle/electron/static/css/App.css',
   })
-}
-
-const getCacheHash = async () => {
-  const files = [
-    'packages/main-process/package-lock.json',
-    'packages/shared-process/package-lock.json',
-    'packages/pty-host/package-lock.json',
-    'packages/extension-host/package-lock.json',
-  ]
-  const absolutePaths = files.map(Path.absolute)
-  const contents = await Promise.all(absolutePaths.map(ReadFile.readFile))
-  const hash = Hash.computeHash(contents)
-  return hash
 }
 
 export const bundleElectronAppDependencies = async ({ cachePath, arch }) => {

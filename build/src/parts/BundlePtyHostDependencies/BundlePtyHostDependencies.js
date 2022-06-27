@@ -2,6 +2,9 @@ import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Remove from '../Remove/Remove.js'
+import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
+import * as NodeModulesIgnoredFiles from '../NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 
 const getNodePtyIgnoreFiles = () => {
   const files = ['typings', 'README.md', 'scripts', 'src']
@@ -22,19 +25,16 @@ export const bundlePtyHostDependencies = async ({
   if (typeof electronVersion !== 'string') {
     throw new Error('electron version must be defined')
   }
-
   const ptyHostPath = Path.absolute('packages/pty-host')
-  const NpmDependencies = await import('../NpmDependencies/NpmDependencies.js')
-  const NodeModulesIgnoredFiles = await import(
-    '../NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js'
-  )
-  await Copy.copyFile({
-    from: 'packages/pty-host/package.json',
+  const packageJson = await JsonFile.readJson('packages/pty-host/package.json')
+  await JsonFile.writeJson({
     to: `${to}/package.json`,
-  })
-  await Copy.copyFile({
-    from: 'packages/pty-host/package-lock.json',
-    to: `${to}/package-lock.json`,
+    value: {
+      name: packageJson.name,
+      type: packageJson.type,
+      dependencies: packageJson.dependencies,
+      optionalDependencies: packageJson.optionalDependencies,
+    },
   })
   const dependencies = await NpmDependencies.getNpmDependencies(
     'packages/pty-host'
