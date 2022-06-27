@@ -66,43 +66,24 @@ const getNpmDependencies = (rawDependencies) => {
   return dependencyPaths.slice(1)
 }
 
-export const bundleSharedProcessDependencies = async ({ cache = false }) => {
-  const packageLockJson = await ReadFile.readFile(
-    'packages/shared-process/package-lock.json'
-  )
-  const hash = Hash.computeHash(packageLockJson)
-  if (
-    cache &&
-    existsSync(
-      Path.absolute(`build/.tmp/cachedDependencies/shared-process/${hash}`)
-    )
-  ) {
-    return Path.absolute(`build/.tmp/cachedDependencies/shared-process/${hash}`)
-  }
+export const bundleSharedProcessDependencies = async ({ to }) => {
   const projectPath = Path.absolute('packages/shared-process')
   const npmDependenciesRaw = await getNpmDependenciesRaw(projectPath)
   const npmDependencies = getNpmDependencies(npmDependenciesRaw)
   await Copy.copyFile({
     from: 'packages/shared-process/package.json',
-    to: `build/.tmp/cachedDependencies/shared-process/${hash}/package.json`,
+    to: `${to}/package.json`,
   })
   await Copy.copyFile({
     from: 'packages/shared-process/package-lock.json',
-    to: `build/.tmp/cachedDependencies/shared-process/${hash}/package-lock.json`,
+    to: `${to}/package-lock.json`,
   })
   for (const dependency of npmDependencies) {
-    const to =
-      'build/.tmp/cachedDependencies/shared-process/' +
-      hash +
-      dependency.slice(projectPath.length)
+    const dependencyTo = to + dependency.slice(projectPath.length)
     await Copy.copy({
       from: dependency,
-      to,
+      to: dependencyTo,
       ignore: NodeModulesIgnoredFiles.getNodeModulesIgnoredFiles(),
     })
   }
 }
-
-bundleSharedProcessDependencies({
-  cache: false,
-})
