@@ -11,6 +11,7 @@ import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleJs from '../BundleJs/BundleJs.js'
 import * as BundleRendererProcess from '../BundleRendererProcess/BundleRendererProcess.js'
+import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const getDependencyCacheHash = async () => {
   const files = [
@@ -101,7 +102,27 @@ const copySharedProcessSources = async ({ arch }) => {
   })
 }
 
-const copyRendererProcessFiles = async ({ arch }) => {}
+const copyPlaygroundFiles = async ({ arch }) => {
+  await WriteFile.writeFile({
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/playground/index.html`,
+    content: `<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="index.css" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>hello world</h1>
+  </body>
+</html>
+`,
+  })
+  await WriteFile.writeFile({
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/playground/index.css`,
+    content: `h1 { color: dodgerblue; }`,
+  })
+}
 
 const copyMainProcessSources = async ({ arch }) => {
   await Copy.copy({
@@ -356,4 +377,8 @@ export const build = async () => {
     ignore: ['static'],
   })
   console.timeEnd('copyRendererWorkerFiles')
+
+  console.time('copyPlaygroundFiles')
+  await copyPlaygroundFiles({ arch })
+  console.timeEnd('copyPlaygroundFiles')
 }

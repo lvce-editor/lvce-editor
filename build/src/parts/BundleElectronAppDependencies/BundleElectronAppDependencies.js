@@ -12,7 +12,6 @@ import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Tag from '../Tag/Tag.js'
-import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const isLanguageBasics = (name) => {
   return name.startsWith('builtin.language-basics')
@@ -87,25 +86,7 @@ const copyResults = async () => {
     from: `build/.tmp/bundle/electron/static`,
     to: `build/.tmp/bundle/electron-result/resources/app/static`,
   })
-  await WriteFile.writeFile({
-    to: 'build/.tmp/bundle/electron-result/resources/app/playground/index.html',
-    content: `<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <link rel="stylesheet" href="index.css" />
-    <title>Document</title>
-  </head>
-  <body>
-    <h1>hello world</h1>
-  </body>
-</html>
-`,
-  })
-  await WriteFile.writeFile({
-    to: 'build/.tmp/bundle/electron-result/resources/app/playground/index.css',
-    content: `h1 { color: dodgerblue; }`,
-  })
+
   for (const dirent of await readdir(
     Path.absolute(`build/.tmp/bundle/electron/extensions`)
   )) {
