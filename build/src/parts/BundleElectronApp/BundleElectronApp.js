@@ -1,9 +1,8 @@
 import { existsSync } from 'fs'
-import { mkdir } from 'fs/promises'
 import * as Hash from '../Hash/Hash.js'
 import * as Path from '../Path/Path.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
-// TODO cache -> use newest timestamp from files excluding node_modules and build/.tmp
+import * as Copy from '../Copy/Copy.js'
 
 const getDependencyCacheHash = async () => {
   const files = [
@@ -24,6 +23,44 @@ const getDependencyCacheHash = async () => {
   const contents = await Promise.all(absolutePaths.map(ReadFile.readFile))
   const hash = Hash.computeHash(contents)
   return hash
+}
+
+const copyElectron = async ({ arch }) => {
+  const electronPath = `packages/main-process/node_modules/electron/dist`
+  await Copy.copy({
+    from: electronPath,
+    to: `build/.tmp/electron-bundle/${arch}`,
+    ignore: [
+      // TODO still include en locale, but exclude other locales
+      // 'locales',
+      'chrome_crashpad_handler',
+      'resources',
+    ],
+  })
+
+  // if (Platform.isWindows()) {
+  //   await Rename.rename({
+  //     from: `build/.tmp/bundle/electron-result/electron.exe`,
+  //     to: `build/.tmp/bundle/electron-result/${Product.applicationName}.exe`,
+  //   })
+  // } else if (Platform.isMacos()) {
+  //   await Rename.rename({
+  //     from: `build/.tmp/bundle/electron-result/Electron.app`,
+  //     to: `build/.tmp/bundle/electron-result/${Product.applicationName}.app`,
+  //   })
+  // } else {
+  //   await Rename.rename({
+  //     from: `build/.tmp/bundle/electron-result/electron`,
+  //     to: `build/.tmp/bundle/electron-result/${Product.applicationName}`,
+  //   })
+  // }
+}
+
+const copyDependencies = async ({ cachePath, arch }) => {
+  await Copy.copy({
+    from: cachePath,
+    to: `build/.tmp/electron-bundle/${arch}/resources/app`,
+  })
 }
 
 export const build = async () => {
@@ -50,6 +87,19 @@ export const build = async () => {
     console.timeEnd('bundleElectronAppDependencies')
   }
   console.log({ cachePath })
+
+  console.time('copyElectron')
+  await copyElectron({
+    arch,
+  })
+  console.timeEnd('copyElectron')
+
+  console.time('copyDependencies')
+  await copyDependencies({
+    cachePath,
+    arch,
+  })
+  console.timeEnd('copyDependencies')
 
   // const electronVersion = await getElectronVersion()
   // console.time('copyPtyHostFiles')
