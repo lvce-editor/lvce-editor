@@ -316,37 +316,6 @@ const bundleJs = async () => {
 
 const copyNodeModules = async () => {}
 
-const copyElectron = async (arch) => {
-  const electronPath = `packages/main-process/node_modules/electron/dist`
-  await Copy.copy({
-    from: electronPath,
-    to: `build/.tmp/bundle/electron-result`,
-    ignore: [
-      // TODO still include en locale, but exclude other locales
-      // 'locales',
-      'chrome_crashpad_handler',
-      'resources',
-    ],
-  })
-
-  if (Platform.isWindows()) {
-    await Rename.rename({
-      from: `build/.tmp/bundle/electron-result/electron.exe`,
-      to: `build/.tmp/bundle/electron-result/${Product.applicationName}.exe`,
-    })
-  } else if (Platform.isMacos()) {
-    await Rename.rename({
-      from: `build/.tmp/bundle/electron-result/Electron.app`,
-      to: `build/.tmp/bundle/electron-result/${Product.applicationName}.app`,
-    })
-  } else {
-    await Rename.rename({
-      from: `build/.tmp/bundle/electron-result/electron`,
-      to: `build/.tmp/bundle/electron-result/${Product.applicationName}`,
-    })
-  }
-}
-
 const getNodePtyIgnoreFiles = () => {
   const files = ['typings', 'README.md', 'scripts', 'src']
   if (!Platform.isWindows()) {
@@ -1117,9 +1086,7 @@ export const bundleElectronAppDependencies = async ({ cachePath, arch }) => {
   // console.time('rebuildNativeDependencies')
   // await rebuildNativeDependencies(arch)
   // console.timeEnd('rebuildNativeDependencies')
-  // console.time('copyElectron')
-  // await copyElectron()
-  // console.timeEnd('copyElectron')
+
   // console.time('copyResults')
   // await copyResults()
   // console.timeEnd('copyResults')
