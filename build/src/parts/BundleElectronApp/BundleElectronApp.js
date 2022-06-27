@@ -99,6 +99,14 @@ const copyExtensions = async ({ arch }) => {
   })
 }
 
+const copyStaticFiles = async ({ arch }) => {
+  await Copy.copy({
+    from: 'static',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/static`,
+    ignore: ['css'],
+  })
+}
+
 export const build = async () => {
   const arch = process.arch
   const cacheHash = await getDependencyCacheHash()
@@ -155,6 +163,10 @@ export const build = async () => {
   console.time('copyExtensions')
   await copyExtensions({ arch })
   console.timeEnd('copyExtensions')
+
+  console.time('copyStaticFiles')
+  await copyStaticFiles({ arch })
+  console.timeEnd('copyStaticFiles')
 
   // const electronVersion = await getElectronVersion()
   // console.time('copyPtyHostFiles')

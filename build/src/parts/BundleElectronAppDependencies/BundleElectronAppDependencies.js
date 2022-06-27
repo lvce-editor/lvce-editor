@@ -17,14 +17,6 @@ import * as Tag from '../Tag/Tag.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 // TODO cache -> use newest timestamp from files excluding node_modules and build/.tmp
 
-const copyStaticFiles = async () => {
-  await Copy.copy({
-    from: 'static',
-    to: `build/.tmp/bundle/electron/static`,
-    ignore: ['css'],
-  })
-}
-
 const isLanguageBasics = (name) => {
   return name.startsWith('builtin.language-basics')
 }
