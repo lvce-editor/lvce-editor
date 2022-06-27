@@ -8,6 +8,7 @@ import * as Replace from '../Replace/Replace.js'
 import * as Product from '../Product/Product.js'
 import * as Platform from '../Platform/Platform.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
+import * as BundleCss from '../BundleCss/BundleCss.js'
 
 const getDependencyCacheHash = async () => {
   const files = [
@@ -188,6 +189,12 @@ const copyStaticFiles = async ({ arch }) => {
   })
 }
 
+const copyCss = async ({ arch }) => {
+  await BundleCss.bundleCss({
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/static/css/App.css`,
+  })
+}
+
 export const build = async () => {
   const arch = process.arch
   const cacheHash = await getDependencyCacheHash()
@@ -249,78 +256,7 @@ export const build = async () => {
   await copyStaticFiles({ arch })
   console.timeEnd('copyStaticFiles')
 
-  // const electronVersion = await getElectronVersion()
-  // console.time('copyPtyHostFiles')
-  // await copyPtyHostFiles({
-  //   arch,
-  //   electronVersion,
-  //   cache,
-  // })
-  // console.timeEnd('copyPtyHostFiles')
-
-  // console.time('copyExtensionHostFiles')
-  // await copyExtensionHostFiles({
-  //   cache,
-  // })
-  // console.timeEnd('copyExtensionHostFiles')
-
-  // console.time('copySharedProcessFiles')
-  // await copySharedProcessFiles({
-  //   cache,
-  // })
-  // console.timeEnd('copySharedProcessFiles')
-
-  // console.time('copyMainProcessFiles')
-  // await copyMainProcessFiles({
-  //   cache,
-  // })
-  // console.timeEnd('copyMainProcessFiles')
-
-  // console.time('copyCode')
-  // await copyCode()
-  // console.timeEnd('copyCode')
-
-  // console.time('copyCode')
-  // await copyCode()
-  // console.timeEnd('copyCode')
-
-  // console.time('copyExtensions')
-  // await copyExtensions()
-  // console.timeEnd('copyExtensions')
-
-  // console.time('copyStaticFiles')
-  // await copyStaticFiles()
-  // console.timeEnd('copyStaticFiles')
-
-  // console.time('applyOverridesPre')
-  // await applyOverridesPre()
-  // console.timeEnd('applyOverridesPre')
-
-  // console.time('copyNodeModules')
-  // await copyNodeModules()
-  // console.timeEnd('copyNodeModules')
-
-  // console.time('bundleJs')
-  // await bundleJs()
-  // console.timeEnd('bundleJs')
-
-  // console.time('bundleCss')
-  // await bundleCss()
-  // console.timeEnd('bundleCss')
-
-  // console.time('applyOverridesPost')
-  // await applyOverridesPost()
-  // console.timeEnd('applyOverridesPost')
-
-  // console.time('rebuildNativeDependencies')
-  // await rebuildNativeDependencies(arch)
-  // console.timeEnd('rebuildNativeDependencies')
-
-  // console.time('copyElectron')
-  // await copyElectron()
-  // console.timeEnd('copyElectron')
-
-  // console.time('copyResults')
-  // await copyResults()
-  // console.timeEnd('copyResults')
+  console.time('copyCss')
+  await copyCss({ arch })
+  console.timeEnd('copyCss')
 }
