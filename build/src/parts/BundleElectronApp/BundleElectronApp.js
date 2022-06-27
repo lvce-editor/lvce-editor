@@ -92,6 +92,13 @@ const copyExtensionHostSources = async ({ arch }) => {
   })
 }
 
+const copyExtensions = async ({ arch }) => {
+  await Copy.copy({
+    from: 'extensions',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions`,
+  })
+}
+
 export const build = async () => {
   const arch = process.arch
   const cacheHash = await getDependencyCacheHash()
@@ -144,6 +151,10 @@ export const build = async () => {
   console.time('copySharedProcessSources')
   await copySharedProcessSources({ arch })
   console.timeEnd('copySharedProcessSources')
+
+  console.time('copyExtensions')
+  await copyExtensions({ arch })
+  console.timeEnd('copyExtensions')
 
   // const electronVersion = await getElectronVersion()
   // console.time('copyPtyHostFiles')
