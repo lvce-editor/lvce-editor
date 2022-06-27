@@ -1,5 +1,4 @@
-import { existsSync } from 'fs'
-import { readdir, readFile } from 'fs/promises'
+import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleExtensionHostDependencies from '../BundleExtensionHostDependencies/BundleExtensionHostDependencies.js'
 import * as BundleJs from '../BundleJs/BundleJs.js'
@@ -10,12 +9,10 @@ import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
-import * as Platform from '../Platform/Platform.js'
 import * as Product from '../Product/Product.js'
 import * as Replace from '../Replace/Replace.js'
 import * as Tag from '../Tag/Tag.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
-// TODO cache -> use newest timestamp from files excluding node_modules and build/.tmp
 
 const isLanguageBasics = (name) => {
   return name.startsWith('builtin.language-basics')
@@ -198,26 +195,7 @@ const applyOverridesPre = async () => {
     occurrence: 'shared-process/src/sharedProcessMain.js',
     replacement: 'shared-process/dist/sharedProcessMain.js',
   })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/packages/shared-process/src/parts/Platform/Platform.js',
-  //   occurrence: 'state.getExtensionHostPath()',
-  //   replacement: `Path.join(Root.root, 'packages', 'extension-host', 'dist', 'extensionHostMain.js')`,
-  // })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/src/parts/Platform/Platform.js',
-    occurrence: `getApplicationName() {
-    return 'lvce-oss'
-  }`,
-    replacement: `getApplicationName() {
-    return '${Product.applicationName}'
-  }`,
-  })
-  // path of is different in build folder
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/src/parts/Root/Root.js',
-    occurrence: `export const root = resolve(__dirname, '../../../../../')`,
-    replacement: `export const root = resolve(__dirname, '../../../')`,
-  })
+
   await Replace.replace({
     path: 'build/.tmp/bundle/electron/static/index-electron.html',
     occurrence: `src="packages/renderer-process/src/rendererProcessMain.js"`,
@@ -233,41 +211,6 @@ const applyOverridesPre = async () => {
     occurrence: `packages/renderer-worker/src/rendererWorkerMain.js`,
     replacement: `packages/renderer-worker/dist/rendererWorkerMain.js`,
   })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/src/parts/Terminal/Terminal.js',
-    occurrence: `packages/pty-host/bin/ptyHost.js`,
-    replacement: `packages/pty-host/dist/ptyHostMain.js`,
-  })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-css/src/parts/Root/Root.js',
-  //   occurrence: `root = join(__dirname, '..', '..', '..')`,
-  //   replacement: `root = join(__dirname, '..')`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-html/src/parts/Root/Root.js',
-  //   occurrence: `root = join(__dirname, '..', '..', '..')`,
-  //   replacement: `root = join(__dirname, '..')`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/src/parts/Root/Root.js',
-  //   occurrence: `root = join(__dirname, '..', '..', '..')`,
-  //   replacement: `root = join(__dirname, '..')`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/src/parts/Platform/Platform.js',
-  //   occurrence: `process.env.TS_SERVER_PATH`,
-  //   replacement: `join(Root.root, 'node_modules', 'typescript', 'lib','tsserver.js')`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.self-test/src/parts/Root/Root.js',
-  //   occurrence: `root = join(__dirname, '..', '..', '..', '..', '..')`,
-  //   replacement: `root = join(__dirname, '..', '..')`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.self-test/src/parts/Platform/Platform.js',
-  //   occurrence: `process.env.ELECTRON_BINARY_PATH`,
-  //   replacement: `join(Root.root, '..', '..', '..', '${Product.applicationName}')`, // TODO support windows and macos
-  // })
   await Replace.replace({
     path: 'build/.tmp/bundle/electron/packages/renderer-process/src/parts/Platform/Platform.js',
     occurrence: 'ASSET_DIR',
@@ -289,78 +232,6 @@ const applyOverridesPre = async () => {
     occurrence: 'ASSET_DIR',
     replacement: `'../../../../..'`,
   })
-}
-
-const applyOverridesPost = async () => {
-  // workaround for esbuild bug https://github.com/evanw/esbuild/issues/700
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
-  //   occurrence: `var __create = Object.create;`,
-  //   replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
-  // })
-  // workaround for esbuild bug https://github.com/evanw/esbuild/issues/1874
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
-  //   occurrence: `.join(__dirname, "xdg-open")`,
-  //   replacement: `.join("/non-existent", "xdg-open")`,
-  // })
-  // workaround for esbuild bug https://github.com/evanw/esbuild/issues/700
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.self-test/dist/SelfTest.js',
-  //   occurrence: `var __create = Object.create;`,
-  //   replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
-  // })
-  // workaround for esbuild issue with electron-clipboard-ex
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
-  //   occurrence: `import clipboardEx from "electron-clipboard-ex";`,
-  //   replacement: `let clipboardEx; try { clipboardEx = require("electron-clipboard-ex"); } catch { /* ignore */ };`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
-  //   occurrence: `const isBundled = !__dirname || __dirname === "/"`,
-  //   replacement: `const isBundled = true`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/packages/extension-host/dist/extensionHostMain.js',
-  //   occurrence: `var __create = Object.create;`,
-  //   replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-css/extension.json',
-  //   occurrence: `src/`,
-  //   replacement: `dist/`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-html/extension.json',
-  //   occurrence: `src/`,
-  //   replacement: `dist/`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/extension.json',
-  //   occurrence: `src/`,
-  //   replacement: `dist/`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/dist/languageFeaturesTypeScriptMain.js',
-  //   occurrence: `var __create = Object.create;`,
-  //   replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.prettier/extension.json',
-  //   occurrence: `src/`,
-  //   replacement: `dist/`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.prettier/dist/prettierMain.js',
-  //   occurrence: `var __create = Object.create;`,
-  //   replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.eslint/extension.json',
-  //   occurrence: `src/`,
-  //   replacement: `dist/`,
-  // })
 }
 
 const bundleCss = async () => {
@@ -412,32 +283,4 @@ export const bundleElectronAppDependencies = async ({ cachePath, arch }) => {
   console.time('addRootPackageJson')
   await addRootPackageJson({ cachePath })
   console.timeEnd('addRootPackageJson')
-
-  // console.time('copyCode')
-  // await copyCode()
-  // console.timeEnd('copyCode')
-  // console.time('copyCode')
-  // await copyCode()
-  // console.timeEnd('copyCode')
-  // console.time('copyExtensions')
-  // await copyExtensions()
-  // console.timeEnd('copyExtensions')
-  // console.time('copyStaticFiles')
-  // await copyStaticFiles()
-  // console.timeEnd('copyStaticFiles')
-  // console.time('applyOverridesPre')
-  // await applyOverridesPre()
-  // console.timeEnd('applyOverridesPre')
-  // console.time('copyNodeModules')
-  // await copyNodeModules()
-  // console.timeEnd('copyNodeModules')
-  // console.time('bundleJs')
-  // await bundleJs()
-  // console.timeEnd('bundleJs')
-  // console.time('bundleCss')
-  // await bundleCss()
-  // console.timeEnd('bundleCss')
-  // console.time('applyOverridesPost')
-  // await applyOverridesPost()
-  // console.timeEnd('applyOverridesPost')
 }
