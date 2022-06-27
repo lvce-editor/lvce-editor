@@ -208,6 +208,15 @@ const getRendererProcessCacheHash = async () => {
   return hash
 }
 
+const getRendererWorkerCacheHash = async () => {
+  const hash = await Hash.computeFolderHash('packages/renderer-worker/src', [
+    'build/src/parts/BundleElectronApp/BundleElectronApp.js',
+    'build/src/parts/BundleJs/BundleJs.js',
+    'build/src/parts/BundleRendererWorker/BundleRendererWorker.js',
+  ])
+  return hash
+}
+
 export const build = async () => {
   const arch = process.arch
   const dependencyCacheHash = await getDependencyCacheHash()
@@ -302,4 +311,35 @@ export const build = async () => {
     ignore: ['static'],
   })
   console.timeEnd('copyRendererProcessFiles')
+
+  const rendererWorkerCacheHash = await getRendererWorkerCacheHash()
+  const rendererWorkerCachePath = Path.join(
+    Path.absolute('build/.tmp/cachedSources/renderer-worker'),
+    rendererWorkerCacheHash
+  )
+
+  if (existsSync(rendererWorkerCachePath)) {
+    console.info('[build step skipped] bundleRendererWorker')
+  } else {
+    console.time('bundleRendererWorker')
+    await Remove.remove(
+      Path.absolute('build/.tmp/cachedSources/renderer-worker')
+    )
+    const BundleRendererWorker = await import(
+      '../BundleRendererWorker/BundleRendererWorker.js'
+    )
+    await BundleRendererWorker.bundleRendererWorker({
+      cachePath: rendererWorkerCachePath,
+      arch,
+    })
+    console.timeEnd('bundleRendererWorker')
+  }
+
+  console.time('copyRendererWorkerFiles')
+  await Copy.copy({
+    from: rendererWorkerCachePath,
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/renderer-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyRendererWorkerFiles')
 }
