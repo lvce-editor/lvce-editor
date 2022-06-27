@@ -15,5 +15,13 @@ export const getNodeModulesIgnoredFiles = () => {
     'license.md',
     'readme.md',
     'float.patch',
+    'scripts',
+    'license',
+    'index.d.ts',
+    'types',
+    'index.js.flow',
+    'CHANGELOG.md',
+    '.eslintrc.json',
+    '.npmignore',
   ]
 }

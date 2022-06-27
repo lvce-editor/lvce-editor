@@ -16,6 +16,9 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 import { existsSync } from 'fs'
 import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 import * as NodeModulesIgnoredFiles from '../NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js'
+import * as Rebuild from '../Rebuild/Rebuild.js'
+import * as BundlePtyHostDependencies from '../BundlePtyHostDependencies/BundlePtyHostDependencies.js'
+import * as BundleExtensionHostDependencies from '../BundleExtensionHostDependencies/BundleExtensionHostDependencies.js'
 
 // TODO cache -> use newest timestamp from files excluding node_modules and build/.tmp
 
@@ -135,10 +138,34 @@ const copyExtensions = async () => {
   await copyOtherExtensions()
 }
 
-const copyPtyHostFiles = async () => {
+const copyPtyHostFiles = async ({ arch, electronVersion, cache }) => {
+  const dependenciesPath =
+    await BundlePtyHostDependencies.bundlePtyHostDependencies({
+      electronVersion,
+      arch,
+      cache,
+    })
   await Copy.copy({
-    from: 'packages/pty-host',
+    from: dependenciesPath,
     to: 'build/.tmp/bundle/electron/packages/pty-host',
+  })
+}
+
+const copyExtensionHostFiles = async ({ cache }) => {
+  const dependenciesPath =
+    await BundleExtensionHostDependencies.bundleExtensionHostDependencies({
+      cache,
+    })
+  await Copy.copy({
+    from: dependenciesPath,
+    to: 'build/.tmp/bundle/electron/packages/extension-host',
+  })
+}
+
+const copySharedProcessFiles = async () => {
+  await Copy.copy({
+    from: 'packages/shared-process',
+    to: 'build/.tmp/bundle/electron/packages/shared-process',
     ignore: [
       'tsconfig.json',
       'node_modules',
@@ -149,21 +176,23 @@ const copyPtyHostFiles = async () => {
       'package-lock.json',
     ],
   })
-  const ptyHostPath = Path.absolute('packages/pty-host')
+  const sharedProcessPath = Path.absolute('packages/shared-process')
+  console.time('getNpmDependencies')
   const dependencies = await NpmDependencies.getNpmDependencies(
-    'packages/pty-host'
+    'packages/shared-process'
   )
+  console.timeEnd('getNpmDependencies')
+  console.log({ dependencies })
   for (const dependency of dependencies) {
     const to =
-      'build/.tmp/bundle/electron/packages/pty-host' +
-      dependency.slice(ptyHostPath.length)
+      'build/.tmp/bundle/electron/packages/shared-process' +
+      dependency.slice(sharedProcessPath.length)
     await Copy.copy({
       from: dependency,
       to,
       ignore: NodeModulesIgnoredFiles.getNodeModulesIgnoredFiles(),
     })
   }
-  console.log({ dependencies })
 }
 
 const copyCode = async () => {
@@ -179,7 +208,8 @@ const copyCode = async () => {
     from: 'packages/main-process/pages',
     to: `build/.tmp/bundle/electron/packages/main-process/pages`,
   })
-  await copyPtyHostFiles()
+  await copyExtensionHostFiles()
+  await copySharedProcessFiles()
   await Copy.copyFile({
     from: 'packages/server/package.json',
     to: `build/.tmp/bundle/electron/packages/server/package.json`,
@@ -225,43 +255,30 @@ const copyCode = async () => {
     from: 'packages/renderer-worker/src',
     to: `build/.tmp/bundle/electron/packages/renderer-worker/src`,
   })
-  await Copy.copyFile({
-    from: 'packages/extension-host/package.json',
-    to: `build/.tmp/bundle/electron/packages/extension-host/package.json`,
-  })
-  await Copy.copy({
-    from: 'packages/extension-host/src',
-    to: `build/.tmp/bundle/electron/packages/extension-host/src`,
-  })
 }
 
 const bundleJs = async () => {
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/bundle/electron/packages/main-process`),
-    from: `./src/mainProcessMain.js`,
-    platform: 'node/cjs',
-    exclude: [
-      'electron',
-      'fsevents',
-      'windows-process-tree', // native module
-    ],
-  })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/bundle/electron/packages/shared-process`),
-    from: `./src/sharedProcessMain.js`,
-    platform: 'node',
-    exclude: [
-      'vscode-ripgrep-with-github-api-error-fix', // must include binary
-      'fsevents', // results in error
-      '@stroncium/procfs', // results in error
-      'electron-clipboard-ex', // must include binary
-    ],
-  })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/bundle/electron/packages/extension-host`),
-    from: `./src/extensionHostMain.js`,
-    platform: 'node',
-  })
+  // await BundleJs.bundleJs({
+  //   cwd: Path.absolute(`build/.tmp/bundle/electron/packages/main-process`),
+  //   from: `./src/mainProcessMain.js`,
+  //   platform: 'node/cjs',
+  //   exclude: [
+  //     'electron',
+  //     'fsevents',
+  //     'windows-process-tree', // native module
+  //   ],
+  // })
+  // await BundleJs.bundleJs({
+  //   cwd: Path.absolute(`build/.tmp/bundle/electron/packages/shared-process`),
+  //   from: `./src/sharedProcessMain.js`,
+  //   platform: 'node',
+  //   exclude: [
+  //     'vscode-ripgrep-with-github-api-error-fix', // must include binary
+  //     'fsevents', // results in error
+  //     '@stroncium/procfs', // results in error
+  //     'electron-clipboard-ex', // must include binary
+  //   ],
+  // })
   await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/bundle/electron/packages/renderer-process`),
     from: `./src/rendererProcessMain.js`,
@@ -330,20 +347,7 @@ const bundleJs = async () => {
   // )
 }
 
-const copyNodeModules = async () => {
-  await Copy.copy({
-    from: 'packages/main-process/node_modules',
-    to: `build/.tmp/bundle/electron/packages/main-process/node_modules`,
-  })
-  await Copy.copy({
-    from: 'packages/shared-process/node_modules',
-    to: `build/.tmp/bundle/electron/packages/shared-process/node_modules`,
-  })
-  await Copy.copy({
-    from: 'packages/extension-host/node_modules',
-    to: `build/.tmp/bundle/electron/packages/extension-host/node_modules`,
-  })
-}
+const copyNodeModules = async () => {}
 
 const copyElectron = async (arch) => {
   const electronPath = `packages/main-process/node_modules/electron/dist`
@@ -421,10 +425,10 @@ const copyResults = async () => {
     from: `build/.tmp/bundle/electron/packages/main-process/src`,
     to: `build/.tmp/bundle/electron-result/resources/app/packages/main-process/src`,
   })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/main-process/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/main-process/dist`,
-  })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/packages/main-process/dist`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/packages/main-process/dist`,
+  // })
   await Copy.copy({
     from: `build/.tmp/bundle/electron/packages/main-process/pages`,
     to: `build/.tmp/bundle/electron-result/resources/app/packages/main-process/pages`,
@@ -458,10 +462,6 @@ const copyResults = async () => {
     from: `build/.tmp/bundle/electron/packages/extension-host/src`,
     to: `build/.tmp/bundle/electron-result/resources/app/packages/extension-host/src`,
   })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/extension-host/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/extension-host/dist`,
-  })
   const sharedProcessPackageJson = await JsonFile.readJson(
     'packages/shared-process/package.json'
   )
@@ -477,23 +477,23 @@ const copyResults = async () => {
     from: `build/.tmp/bundle/electron/packages/shared-process/src`,
     to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/src`,
   })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/shared-process/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/dist`,
-  })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/packages/shared-process/dist`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/dist`,
+  // })
 
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/bin`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/bin`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/src`,
-  })
-  await Copy.copyFile({
-    from: `build/.tmp/bundle/electron/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/package.json`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/package.json`,
-  })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/bin`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/bin`,
+  // })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/src`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/src`,
+  // })
+  // await Copy.copyFile({
+  //   from: `build/.tmp/bundle/electron/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/package.json`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/package.json`,
+  // })
 
   if (
     existsSync(
@@ -506,10 +506,10 @@ const copyResults = async () => {
     })
   }
 
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/shared-process/node_modules/@stroncium/procfs`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/node_modules/@stroncium/procfs`,
-  })
+  // await Copy.copy({
+  //   from: `build/.tmp/bundle/electron/packages/shared-process/node_modules/@stroncium/procfs`,
+  //   to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/node_modules/@stroncium/procfs`,
+  // })
   await Copy.copy({
     from: `build/.tmp/bundle/electron/packages/renderer-process/src`,
     to: `build/.tmp/bundle/electron-result/resources/app/packages/renderer-process/src`,
@@ -793,29 +793,27 @@ const getElectronVersion = async () => {
 }
 
 const rebuildNativeDependencies = async (arch) => {
-  const { rebuild } = await import('electron-rebuild')
+  const Rebuild = await import('../Rebuild/Rebuild.js')
   const electronVersion = await getElectronVersion()
-  await rebuild({
+  console.log({ electronVersion })
+  await Rebuild.rebuild({
     buildPath: Path.absolute(
       `build/.tmp/bundle/electron/packages/shared-process`
     ),
     electronVersion,
     arch,
-    force: true,
   })
-  await rebuild({
+  await Rebuild.rebuild({
     buildPath: Path.absolute(
       `build/.tmp/bundle/electron/packages/main-process`
     ),
     electronVersion,
     arch,
-    force: true,
   })
-  await rebuild({
+  await Rebuild.rebuild({
     buildPath: Path.absolute(`build/.tmp/bundle/electron/packages/pty-host`),
     electronVersion,
     arch,
-    force: true,
   })
 }
 
@@ -910,11 +908,11 @@ const applyOverridesPre = async () => {
     occurrence: 'shared-process/src/sharedProcessMain.js',
     replacement: 'shared-process/dist/sharedProcessMain.js',
   })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/src/parts/Platform/Platform.js',
-    occurrence: 'state.getExtensionHostPath()',
-    replacement: `Path.join(Root.root, 'packages', 'extension-host', 'dist', 'extensionHostMain.js')`,
-  })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/packages/shared-process/src/parts/Platform/Platform.js',
+  //   occurrence: 'state.getExtensionHostPath()',
+  //   replacement: `Path.join(Root.root, 'packages', 'extension-host', 'dist', 'extensionHostMain.js')`,
+  // })
   await Replace.replace({
     path: 'build/.tmp/bundle/electron/packages/shared-process/src/parts/Platform/Platform.js',
     occurrence: `getApplicationName() {
@@ -1005,40 +1003,39 @@ const applyOverridesPre = async () => {
 
 const applyOverridesPost = async () => {
   // workaround for esbuild bug https://github.com/evanw/esbuild/issues/700
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
-    occurrence: `var __create = Object.create;`,
-    replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
-  })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
+  //   occurrence: `var __create = Object.create;`,
+  //   replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
+  // })
   // workaround for esbuild bug https://github.com/evanw/esbuild/issues/1874
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
-    occurrence: `.join(__dirname, "xdg-open")`,
-    replacement: `.join("/non-existent", "xdg-open")`,
-  })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
+  //   occurrence: `.join(__dirname, "xdg-open")`,
+  //   replacement: `.join("/non-existent", "xdg-open")`,
+  // })
   // workaround for esbuild bug https://github.com/evanw/esbuild/issues/700
   // await Replace.replace({
   //   path: 'build/.tmp/bundle/electron/extensions/builtin.self-test/dist/SelfTest.js',
   //   occurrence: `var __create = Object.create;`,
   //   replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
   // })
-
   // workaround for esbuild issue with electron-clipboard-ex
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
-    occurrence: `import clipboardEx from "electron-clipboard-ex";`,
-    replacement: `let clipboardEx; try { clipboardEx = require("electron-clipboard-ex"); } catch { /* ignore */ };`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
-    occurrence: `const isBundled = !__dirname || __dirname === "/"`,
-    replacement: `const isBundled = true`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/extension-host/dist/extensionHostMain.js',
-    occurrence: `var __create = Object.create;`,
-    replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
-  })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
+  //   occurrence: `import clipboardEx from "electron-clipboard-ex";`,
+  //   replacement: `let clipboardEx; try { clipboardEx = require("electron-clipboard-ex"); } catch { /* ignore */ };`,
+  // })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
+  //   occurrence: `const isBundled = !__dirname || __dirname === "/"`,
+  //   replacement: `const isBundled = true`,
+  // })
+  // await Replace.replace({
+  //   path: 'build/.tmp/bundle/electron/packages/extension-host/dist/extensionHostMain.js',
+  //   occurrence: `var __create = Object.create;`,
+  //   replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
+  // })
   // await Replace.replace({
   //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-css/extension.json',
   //   occurrence: `src/`,
@@ -1084,48 +1081,68 @@ const bundleCss = async () => {
 
 export const build = async () => {
   const arch = process.arch
+  const electronVersion = await getElectronVersion()
+  const cache = true
 
-  console.time('copyCode')
-  await copyCode()
-  console.timeEnd('copyCode')
+  console.time('copyPtyHostFiles')
+  await copyPtyHostFiles({
+    arch,
+    electronVersion,
+    cache,
+  })
+  console.timeEnd('copyPtyHostFiles')
 
-  console.time('copyExtensions')
-  await copyExtensions()
-  console.timeEnd('copyExtensions')
+  console.time('copyExtensionHostFiles')
+  await copyExtensionHostFiles({
+    cache,
+  })
+  console.timeEnd('copyExtensionHostFiles')
 
-  console.time('copyStaticFiles')
-  await copyStaticFiles()
-  console.timeEnd('copyStaticFiles')
+  // console.time('copyCode')
+  // await copyCode()
+  // console.timeEnd('copyCode')
 
-  console.time('applyOverridesPre')
-  await applyOverridesPre()
-  console.timeEnd('applyOverridesPre')
+  // console.time('copyCode')
+  // await copyCode()
+  // console.timeEnd('copyCode')
 
-  console.time('copyNodeModules')
-  await copyNodeModules()
-  console.timeEnd('copyNodeModules')
+  // console.time('copyExtensions')
+  // await copyExtensions()
+  // console.timeEnd('copyExtensions')
 
-  console.time('bundleJs')
-  await bundleJs()
-  console.timeEnd('bundleJs')
+  // console.time('copyStaticFiles')
+  // await copyStaticFiles()
+  // console.timeEnd('copyStaticFiles')
 
-  console.time('bundleCss')
-  await bundleCss()
-  console.timeEnd('bundleCss')
+  // console.time('applyOverridesPre')
+  // await applyOverridesPre()
+  // console.timeEnd('applyOverridesPre')
 
-  console.time('applyOverridesPost')
-  await applyOverridesPost()
-  console.timeEnd('applyOverridesPost')
+  // console.time('copyNodeModules')
+  // await copyNodeModules()
+  // console.timeEnd('copyNodeModules')
 
-  console.time('rebuildNativeDependencies')
-  await rebuildNativeDependencies(arch)
-  console.timeEnd('rebuildNativeDependencies')
+  // console.time('bundleJs')
+  // await bundleJs()
+  // console.timeEnd('bundleJs')
 
-  console.time('copyElectron')
-  await copyElectron()
-  console.timeEnd('copyElectron')
+  // console.time('bundleCss')
+  // await bundleCss()
+  // console.timeEnd('bundleCss')
 
-  console.time('copyResults')
-  await copyResults()
-  console.timeEnd('copyResults')
+  // console.time('applyOverridesPost')
+  // await applyOverridesPost()
+  // console.timeEnd('applyOverridesPost')
+
+  // console.time('rebuildNativeDependencies')
+  // await rebuildNativeDependencies(arch)
+  // console.timeEnd('rebuildNativeDependencies')
+
+  // console.time('copyElectron')
+  // await copyElectron()
+  // console.timeEnd('copyElectron')
+
+  // console.time('copyResults')
+  // await copyResults()
+  // console.timeEnd('copyResults')
 }

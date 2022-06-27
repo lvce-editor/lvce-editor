@@ -23,7 +23,6 @@
     "debug": "^4.3.4",
     "exit-hook": "^3.0.0",
     "lines-and-columns": "^2.0.3",
-    "lodash": "^4.17.21",
     "ow": "^1.0.0",
     "p-timeout": "^5.1.0",
     "stack-utils": "^2.0.5",
