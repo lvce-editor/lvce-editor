@@ -1,11 +1,8 @@
-import { existsSync } from 'fs'
 import * as Copy from '../Copy/Copy.js'
-import * as Hash from '../Hash/Hash.js'
-import * as Path from '../Path/Path.js'
-import * as ReadFile from '../ReadFile/ReadFile.js'
-import * as Remove from '../Remove/Remove.js'
 import * as Exec from '../Exec/Exec.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as NodeModulesIgnoredFiles from '../NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js'
+import * as Path from '../Path/Path.js'
 
 const getNpmDependenciesRaw = async (root) => {
   const absoluteRoot = Path.absolute(root)
@@ -70,14 +67,23 @@ export const bundleSharedProcessDependencies = async ({ to }) => {
   const projectPath = Path.absolute('packages/shared-process')
   const npmDependenciesRaw = await getNpmDependenciesRaw(projectPath)
   const npmDependencies = getNpmDependencies(npmDependenciesRaw)
+  const packageJson = await JsonFile.readJson(
+    'packages/shared-process/package.json'
+  )
+  await JsonFile.writeJson({
+    to: `${to}/package.json`,
+    value: {
+      name: packageJson.name,
+      type: packageJson.type,
+      dependencies: packageJson.dependencies,
+      optionalDependencies: packageJson.optionalDependencies,
+    },
+  })
   await Copy.copyFile({
     from: 'packages/shared-process/package.json',
     to: `${to}/package.json`,
   })
-  await Copy.copyFile({
-    from: 'packages/shared-process/package-lock.json',
-    to: `${to}/package-lock.json`,
-  })
+
   for (const dependency of npmDependencies) {
     const dependencyTo = to + dependency.slice(projectPath.length)
     await Copy.copy({

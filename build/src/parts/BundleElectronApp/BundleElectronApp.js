@@ -3,6 +3,7 @@ import * as Hash from '../Hash/Hash.js'
 import * as Path from '../Path/Path.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Copy from '../Copy/Copy.js'
+import * as Remove from '../Remove/Remove.js'
 
 const getDependencyCacheHash = async () => {
   const files = [
@@ -63,9 +64,36 @@ const copyDependencies = async ({ cachePath, arch }) => {
   })
 }
 
+const copySharedProcessSources = async ({ arch }) => {
+  await Copy.copy({
+    from: 'packages/shared-process/src',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src`,
+  })
+}
+
+const copyMainProcessSources = async ({ arch }) => {
+  await Copy.copy({
+    from: 'packages/main-process/src',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src`,
+  })
+}
+
+const copyPtyHostSources = async ({ arch }) => {
+  await Copy.copy({
+    from: 'packages/pty-host/src',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/pty-host/src`,
+  })
+}
+
+const copyExtensionHostSources = async ({ arch }) => {
+  await Copy.copy({
+    from: 'packages/extension-host/src',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/extension-host/src`,
+  })
+}
+
 export const build = async () => {
   const arch = process.arch
-  const cache = true
   const cacheHash = await getDependencyCacheHash()
 
   const cachePath = Path.join(
@@ -77,6 +105,7 @@ export const build = async () => {
     console.info('[build step skipped] bundleElectronAppDependencies')
   } else {
     console.time('bundleElectronAppDependencies')
+    await Remove.remove(Path.absolute('build/.tmp/cachedDependencies'))
     const BundleElectronAppDependencies = await import(
       '../BundleElectronAppDependencies/BundleElectronAppDependencies.js'
     )
@@ -86,7 +115,6 @@ export const build = async () => {
     })
     console.timeEnd('bundleElectronAppDependencies')
   }
-  console.log({ cachePath })
 
   console.time('copyElectron')
   await copyElectron({
@@ -100,6 +128,22 @@ export const build = async () => {
     arch,
   })
   console.timeEnd('copyDependencies')
+
+  console.time('copyExtensionHostSources')
+  await copyExtensionHostSources({ arch })
+  console.timeEnd('copyExtensionHostSources')
+
+  console.time('copyPtyHostSources')
+  await copyPtyHostSources({ arch })
+  console.timeEnd('copyPtyHostSources')
+
+  console.time('copyMainProcessSources')
+  await copyMainProcessSources({ arch })
+  console.timeEnd('copyMainProcessSources')
+
+  console.time('copySharedProcessSources')
+  await copySharedProcessSources({ arch })
+  console.timeEnd('copySharedProcessSources')
 
   // const electronVersion = await getElectronVersion()
   // console.time('copyPtyHostFiles')
