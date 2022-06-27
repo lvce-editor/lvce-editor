@@ -1,4 +1,7 @@
 import { createHash } from 'crypto'
+import { readdir } from 'fs/promises'
+import { join } from 'path'
+import * as ReadFile from '../ReadFile/ReadFile.js'
 
 export const computeHash = (contents) => {
   const hash = createHash('sha1')
@@ -8,6 +11,32 @@ export const computeHash = (contents) => {
     }
   } else if (typeof contents === 'string') {
     hash.update(contents)
+  }
+  return hash.digest('hex')
+}
+
+const walkFiles = async (folder, fn) => {
+  const dirents = await readdir(folder, { withFileTypes: true })
+  for (const dirent of dirents) {
+    const absolutePath = join(folder, dirent.name)
+    if (dirent.isFile()) {
+      await fn(absolutePath)
+    } else if (dirent.isDirectory()) {
+      await walkFiles(absolutePath, fn)
+    }
+  }
+}
+
+export const computeFolderHash = async (folder, extraFiles = []) => {
+  const hash = createHash('sha1')
+  const handleFilePath = async (filePath) => {
+    const content = await ReadFile.readFile(filePath)
+    hash.update(content)
+  }
+  await walkFiles(folder, handleFilePath)
+  for (const extraFile of extraFiles) {
+    const content = await ReadFile.readFile(extraFile)
+    hash.update(content)
   }
   return hash.digest('hex')
 }

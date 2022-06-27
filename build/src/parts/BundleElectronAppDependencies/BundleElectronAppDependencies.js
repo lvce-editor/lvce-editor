@@ -46,11 +46,6 @@ const copyMainProcessFiles = async ({ cachePath }) => {
 
 const bundleJs = async () => {
   await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/bundle/electron/packages/renderer-process`),
-    from: `./src/rendererProcessMain.js`,
-    platform: 'web',
-  })
-  await BundleJs.bundleJs({
     cwd: Path.absolute(`build/.tmp/bundle/electron/packages/renderer-worker`),
     from: `./src/rendererWorkerMain.js`,
     platform: 'webworker',
@@ -181,11 +176,6 @@ const applyOverridesPre = async () => {
 }`,
   })
   await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/SharedProcess/SharedProcess.js',
-    occurrence: `packages/shared-process/src/sharedProcessMain.js`,
-    replacement: `packages/shared-process/dist/sharedProcessMain.js`,
-  })
-  await Replace.replace({
     path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/ChildProcess/ChildProcess.js',
     occurrence: 'const METHOD_PREFERRED = METHOD_SPAWN',
     replacement: 'const METHOD_PREFERRED = METHOD_FORK',
@@ -206,11 +196,7 @@ const applyOverridesPre = async () => {
     occurrence: `packages/renderer-worker/src/rendererWorkerMain.js`,
     replacement: `packages/renderer-worker/dist/rendererWorkerMain.js`,
   })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js',
-    occurrence: `packages/renderer-worker/src/rendererWorkerMain.js`,
-    replacement: `packages/renderer-worker/dist/rendererWorkerMain.js`,
-  })
+
   await Replace.replace({
     path: 'build/.tmp/bundle/electron/packages/renderer-process/src/parts/Platform/Platform.js',
     occurrence: 'ASSET_DIR',
