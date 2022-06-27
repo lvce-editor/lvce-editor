@@ -20,6 +20,7 @@ import * as Rebuild from '../Rebuild/Rebuild.js'
 import * as BundlePtyHostDependencies from '../BundlePtyHostDependencies/BundlePtyHostDependencies.js'
 import * as BundleExtensionHostDependencies from '../BundleExtensionHostDependencies/BundleExtensionHostDependencies.js'
 import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.js'
+import * as BundleMainProcessDependencies from '../BundleMainProcessDependencies/BundleMainProcessDependencies.js'
 
 // TODO cache -> use newest timestamp from files excluding node_modules and build/.tmp
 
@@ -171,6 +172,17 @@ const copySharedProcessFiles = async ({ cache }) => {
   await Copy.copy({
     from: dependenciesPath,
     to: 'build/.tmp/bundle/electron/packages/shared-process',
+  })
+}
+
+const copyMainProcessFiles = async ({ cache }) => {
+  const dependenciesPath =
+    await BundleMainProcessDependencies.bundleMainProcessDependencies({
+      cache,
+    })
+  await Copy.copy({
+    from: dependenciesPath,
+    to: 'build/.tmp/bundle/electron/packages/main-process',
   })
 }
 
@@ -1082,6 +1094,12 @@ export const build = async () => {
     cache,
   })
   console.timeEnd('copySharedProcessFiles')
+
+  console.time('copyMainProcessFiles')
+  await copyMainProcessFiles({
+    cache,
+  })
+  console.timeEnd('copyMainProcessFiles')
 
   // console.time('copyCode')
   // await copyCode()
