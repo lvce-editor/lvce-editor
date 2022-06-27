@@ -35,7 +35,6 @@ const walkDependencies = (object, fn) => {
 
 const getNpmDependencies = (rawDependencies) => {
   rawDependencies
-  console.log({ rawDependencies })
   const dependencyPaths = []
   const handleDependency = (dependency) => {
     if (!dependency.path) {
@@ -64,7 +63,6 @@ const getNpmDependencies = (rawDependencies) => {
     return true
   }
   walkDependencies(rawDependencies, handleDependency)
-  console.log({ dependencyPaths })
   return dependencyPaths.slice(1)
 }
 
