@@ -19,6 +19,7 @@ import * as NodeModulesIgnoredFiles from '../NodeModulesIgnoredFiles/NodeModules
 import * as Rebuild from '../Rebuild/Rebuild.js'
 import * as BundlePtyHostDependencies from '../BundlePtyHostDependencies/BundlePtyHostDependencies.js'
 import * as BundleExtensionHostDependencies from '../BundleExtensionHostDependencies/BundleExtensionHostDependencies.js'
+import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.js'
 
 // TODO cache -> use newest timestamp from files excluding node_modules and build/.tmp
 
@@ -162,37 +163,15 @@ const copyExtensionHostFiles = async ({ cache }) => {
   })
 }
 
-const copySharedProcessFiles = async () => {
-  await Copy.copy({
-    from: 'packages/shared-process',
-    to: 'build/.tmp/bundle/electron/packages/shared-process',
-    ignore: [
-      'tsconfig.json',
-      'node_modules',
-      'distmin',
-      'example',
-      'test',
-      '.nvmrc',
-      'package-lock.json',
-    ],
-  })
-  const sharedProcessPath = Path.absolute('packages/shared-process')
-  console.time('getNpmDependencies')
-  const dependencies = await NpmDependencies.getNpmDependencies(
-    'packages/shared-process'
-  )
-  console.timeEnd('getNpmDependencies')
-  console.log({ dependencies })
-  for (const dependency of dependencies) {
-    const to =
-      'build/.tmp/bundle/electron/packages/shared-process' +
-      dependency.slice(sharedProcessPath.length)
-    await Copy.copy({
-      from: dependency,
-      to,
-      ignore: NodeModulesIgnoredFiles.getNodeModulesIgnoredFiles(),
+const copySharedProcessFiles = async ({ cache }) => {
+  const dependenciesPath =
+    await BundleSharedProcessDependencies.bundleSharedProcessDependencies({
+      cache,
     })
-  }
+  await Copy.copy({
+    from: dependenciesPath,
+    to: 'build/.tmp/bundle/electron/packages/shared-process',
+  })
 }
 
 const copyCode = async () => {
@@ -1097,6 +1076,12 @@ export const build = async () => {
     cache,
   })
   console.timeEnd('copyExtensionHostFiles')
+
+  console.time('copySharedProcessFiles')
+  await copySharedProcessFiles({
+    cache,
+  })
+  console.timeEnd('copySharedProcessFiles')
 
   // console.time('copyCode')
   // await copyCode()
