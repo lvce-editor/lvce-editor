@@ -73,6 +73,15 @@ const copySharedProcessSources = async ({ arch }) => {
     from: 'packages/shared-process/src',
     to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src`,
   })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src/parts/Platform/Platform.js`,
+    occurrence: `getApplicationName() {
+  return 'lvce-oss'
+}`,
+    replacement: `getApplicationName() {
+  return '${Product.applicationName}'
+}`,
+  })
 }
 
 const copyMainProcessSources = async ({ arch }) => {
