@@ -23,7 +23,6 @@
 } */
 
 .ActivityBarItem {
-  cursor: pointer;
   position: relative;
   outline: none;
   -webkit-mask-repeat: no-repeat;
