@@ -817,3 +817,268 @@ test('resize', () => {
     ],
   ])
 })
+
+test('renderVirtualDom - items changed', () => {
+  const state = {
+    rootId: 4,
+    focusedIndex: -1,
+    height: ACTIVITY_BAR_ITEM_HEIGHT * 8,
+    activityBarItems: [],
+  }
+  const newState = {
+    ...state,
+    activityBarItems: [
+      // Top
+      {
+        id: 'Explorer',
+        icon: 'icons/files.svg',
+        enabled: true,
+        flags: /* Tab */ 1,
+        keyShortcuts: 'Control+Shift+E',
+      },
+      {
+        id: 'Search',
+        icon: 'icons/search.svg',
+        enabled: true,
+        flags: /* Tab */ 1,
+        keyShortcuts: 'Control+Shift+F',
+      },
+      {
+        id: 'Source Control',
+        icon: 'icons/source-control.svg',
+        enabled: true,
+        flags: /* Tab */ 1,
+        keyShortcuts: 'Control+Shift+G',
+      },
+      {
+        id: 'Run and Debug',
+        icon: 'icons/debug-alt-2.svg',
+        enabled: true,
+        flags: /* Tab */ 1,
+        keyShortcuts: 'Control+Shift+D',
+      },
+      {
+        id: 'Extensions',
+        icon: 'icons/extensions.svg',
+        enabled: true,
+        flags: /* Tab */ 1,
+        keyShortcuts: 'Control+Shift+X',
+      },
+      // Bottom
+      {
+        id: 'Settings',
+        icon: 'icons/settings-gear.svg',
+        enabled: true,
+        flags: /* Button */ 2,
+        keyShortcuts: '',
+      },
+    ],
+  }
+  expect(ViewletActivityBar.renderVirtualDom(state, newState)).toEqual([
+    [
+      1,
+      4,
+      [
+        {
+          tagName: 'div',
+          props: {
+            ariaKeyShortcuts: 'Control+Shift+E',
+            ariaLabel: '',
+            className: 'ActivityBarItem',
+            tabIndex: -1,
+            title: 'Explorer',
+          },
+          children: [
+            {
+              tagName: 'div',
+              props: {
+                className: 'ActivityBarItemIcon',
+                style: {
+                  maskImage: 'url(icons/files.svg)',
+                  webkitMaskImage: 'url(icons/files.svg)',
+                },
+              },
+              children: [],
+            },
+          ],
+        },
+        {
+          tagName: 'div',
+          props: {
+            ariaKeyShortcuts: 'Control+Shift+F',
+            ariaLabel: '',
+            className: 'ActivityBarItem',
+            tabIndex: -1,
+            title: 'Search',
+          },
+          children: [
+            {
+              tagName: 'div',
+              props: {
+                className: 'ActivityBarItemIcon',
+                style: {
+                  maskImage: 'url(icons/search.svg)',
+                  webkitMaskImage: 'url(icons/search.svg)',
+                },
+              },
+              children: [],
+            },
+          ],
+        },
+        {
+          tagName: 'div',
+          props: {
+            ariaKeyShortcuts: 'Control+Shift+G',
+            ariaLabel: '',
+            className: 'ActivityBarItem',
+            tabIndex: -1,
+            title: 'Source Control',
+          },
+          children: [
+            {
+              tagName: 'div',
+              props: {
+                className: 'ActivityBarItemIcon',
+                style: {
+                  maskImage: 'url(icons/source-control.svg)',
+                  webkitMaskImage: 'url(icons/source-control.svg)',
+                },
+              },
+              children: [],
+            },
+          ],
+        },
+        {
+          tagName: 'div',
+          props: {
+            ariaKeyShortcuts: 'Control+Shift+D',
+            ariaLabel: '',
+            className: 'ActivityBarItem',
+            tabIndex: -1,
+            title: 'Run and Debug',
+          },
+          children: [
+            {
+              tagName: 'div',
+              props: {
+                className: 'ActivityBarItemIcon',
+                style: {
+                  maskImage: 'url(icons/debug-alt-2.svg)',
+                  webkitMaskImage: 'url(icons/debug-alt-2.svg)',
+                },
+              },
+              children: [],
+            },
+          ],
+        },
+        {
+          tagName: 'div',
+          props: {
+            ariaKeyShortcuts: 'Control+Shift+X',
+            ariaLabel: '',
+            className: 'ActivityBarItem',
+            tabIndex: -1,
+            title: 'Extensions',
+          },
+          children: [
+            {
+              tagName: 'div',
+              props: {
+                className: 'ActivityBarItemIcon',
+                style: {
+                  maskImage: 'url(icons/extensions.svg)',
+                  webkitMaskImage: 'url(icons/extensions.svg)',
+                },
+              },
+              children: [],
+            },
+          ],
+        },
+        {
+          tagName: 'div',
+          props: {
+            ariaKeyShortcuts: '',
+            ariaLabel: '',
+            className: 'ActivityBarItem',
+            tabIndex: -1,
+            title: 'Settings',
+          },
+          children: [
+            {
+              tagName: 'div',
+              props: {
+                className: 'ActivityBarItemIcon',
+                style: {
+                  maskImage: 'url(icons/settings-gear.svg)',
+                  webkitMaskImage: 'url(icons/settings-gear.svg)',
+                },
+              },
+              children: [],
+            },
+          ],
+        },
+      ],
+    ],
+  ])
+})
+
+test('renderVirtualDom - focus index below', () => {
+  const state = {
+    rootId: 4,
+    focusedIndex: -1,
+    height: ACTIVITY_BAR_ITEM_HEIGHT * 8,
+    activityBarItems: [
+      // Top
+      {
+        id: 'Explorer',
+        icon: 'icons/files.svg',
+        enabled: true,
+        flags: /* Tab */ 1,
+        keyShortcuts: 'Control+Shift+E',
+      },
+      {
+        id: 'Search',
+        icon: 'icons/search.svg',
+        enabled: true,
+        flags: /* Tab */ 1,
+        keyShortcuts: 'Control+Shift+F',
+      },
+      {
+        id: 'Source Control',
+        icon: 'icons/source-control.svg',
+        enabled: true,
+        flags: /* Tab */ 1,
+        keyShortcuts: 'Control+Shift+G',
+      },
+      {
+        id: 'Run and Debug',
+        icon: 'icons/debug-alt-2.svg',
+        enabled: true,
+        flags: /* Tab */ 1,
+        keyShortcuts: 'Control+Shift+D',
+      },
+      {
+        id: 'Extensions',
+        icon: 'icons/extensions.svg',
+        enabled: true,
+        flags: /* Tab */ 1,
+        keyShortcuts: 'Control+Shift+X',
+      },
+      // Bottom
+      {
+        id: 'Settings',
+        icon: 'icons/settings-gear.svg',
+        enabled: true,
+        flags: /* Button */ 2,
+        keyShortcuts: '',
+      },
+    ],
+  }
+  const newState = {
+    ...state,
+    focusedIndex: 1,
+  }
+  expect(ViewletActivityBar.renderVirtualDom(state, newState)).toEqual([
+    [2, 4, -1, 1],
+  ])
+})

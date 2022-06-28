@@ -397,3 +397,61 @@ export const render = (oldState, newState) => {
 }
 
 export const hasFunctionalRender = true
+
+const $$$createElementNode = (tagName, props, children) => {
+  return {
+    tagName,
+    props,
+    children,
+  }
+}
+
+const $$$createTextNode = (nodeId, text) => {}
+
+const $$$focus = (nodeId) => {}
+
+const render$ActivityBarItem = (activityBarItem) => {
+  return $$$createElementNode(
+    'div',
+    {
+      className: 'ActivityBarItem',
+      ariaLabel: '',
+      title: activityBarItem.id,
+      tabIndex: -1,
+      ariaKeyShortcuts: activityBarItem.keyShortcuts,
+    },
+    [
+      $$$createElementNode(
+        'div',
+        {
+          className: 'ActivityBarItemIcon',
+          style: {
+            maskImage: `url(${activityBarItem.icon})`,
+            webkitMaskImage: `url(${activityBarItem.icon})`,
+          },
+        },
+        []
+      ),
+    ]
+  )
+}
+
+export const renderVirtualDom = (oldState, newState) => {
+  const changes = []
+  if (oldState.activityBarItems !== newState.activityBarItems) {
+    changes.push([
+      /* renderVirtualDom */ 1,
+      /* parentId */ newState.rootId,
+      /* children */ newState.activityBarItems.map(render$ActivityBarItem),
+    ])
+  }
+  if (oldState.focusedIndex !== newState.focusedIndex) {
+    changes.push([
+      /* focusRovingTabIndexIndex */ 2,
+      /* parentId */ newState.rootId,
+      /* unFocusIndex */ oldState.focusedIndex,
+      /* focusIndex */ newState.focusedIndex,
+    ])
+  }
+  return changes
+}
