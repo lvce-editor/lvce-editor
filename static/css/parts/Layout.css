@@ -6,9 +6,10 @@
 
 .SashHorizontal {
   height: 4px;
+  cursor: row-resize;
 }
 
 .SashVertical {
   width: 4px;
-  cursor: ew-resize;
+  cursor: col-resize;
 }

@@ -38,6 +38,7 @@ export const state = {
   titleBarVisible: true,
   windowWidth: 0,
   windowHeight: 0,
+  sashId: '',
 }
 
 const SIDE_BAR_MIN_WIDTH = 170
@@ -369,25 +370,50 @@ const isChild = (id) => {
   )
 }
 
+export const handleSashPointerDown = (id) => {
+  state.sashId = id
+  console.log({ id })
+}
+
 // TODO make this functional
-export const handleSashSideBarMove = async (x) => {
-  const newSideBarWidth = state.windowWidth - state.activityBarWidth - x
-  if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH / 2) {
-    state.sideBarVisible = false
-    state.mainWidth = state.windowWidth - state.activityBarWidth
-  } else if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH) {
-    state.sideBarVisible = true
-    state.sideBarWidth = SIDE_BAR_MIN_WIDTH
-    state.mainWidth =
-      state.windowWidth - state.activityBarWidth - SIDE_BAR_MIN_WIDTH
-    state.sideBarLeft =
-      state.windowWidth - state.activityBarWidth - SIDE_BAR_MIN_WIDTH
-  } else {
-    state.sideBarVisible = true
-    state.mainWidth = x
-    state.sideBarLeft = x
-    state.sideBarWidth = newSideBarWidth
+export const handleSashPointerMove = async (x, y) => {
+  if (state.sashId === 'SideBar') {
+    const newSideBarWidth = state.windowWidth - state.activityBarWidth - x
+    if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH / 2) {
+      state.sideBarVisible = false
+      state.mainWidth = state.windowWidth - state.activityBarWidth
+    } else if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH) {
+      state.sideBarVisible = true
+      state.sideBarWidth = SIDE_BAR_MIN_WIDTH
+      state.mainWidth =
+        state.windowWidth - state.activityBarWidth - SIDE_BAR_MIN_WIDTH
+      state.sideBarLeft =
+        state.windowWidth - state.activityBarWidth - SIDE_BAR_MIN_WIDTH
+    } else {
+      state.sideBarVisible = true
+      state.mainWidth = x
+      state.sideBarLeft = x
+      state.sideBarWidth = newSideBarWidth
+    }
+  } else if (state.sashId === 'Panel') {
+    const newPanelHeight = state.windowHeight - state.statusBarHeight - y
+    if (newPanelHeight < PANEL_MIN_HEIGHT / 2) {
+      state.panelVisible = false
+      state.mainHeight =
+        state.windowHeight - state.statusBarHeight - state.titleBarHeight
+    } else if (newPanelHeight <= PANEL_MIN_HEIGHT) {
+      state.panelVisible = true
+      state.panelHeight = PANEL_MIN_HEIGHT
+      state.mainHeight =
+        state.windowHeight - state.activityBarHeight - PANEL_MIN_HEIGHT
+    } else {
+      state.panelVisible = true
+      state.mainHeight = y - state.titleBarHeight
+      state.panelTop = y
+      state.panelHeight = state.windowHeight - state.statusBarHeight - y
+    }
   }
+
   await updateLayout(state)
 }
 
