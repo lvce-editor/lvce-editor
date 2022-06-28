@@ -1079,6 +1079,7 @@ test('renderVirtualDom - focus index below', () => {
     focusedIndex: 1,
   }
   expect(ViewletActivityBar.renderVirtualDom(state, newState)).toEqual([
-    [2, 4, -1, 1],
+    [3, 'ActivityBarItem-1', 'tabIndex', 0],
+    [2, 'ActivityBarItem-1'],
   ])
 })

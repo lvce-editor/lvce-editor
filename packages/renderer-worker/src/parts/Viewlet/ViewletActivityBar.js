@@ -446,12 +446,26 @@ export const renderVirtualDom = (oldState, newState) => {
     ])
   }
   if (oldState.focusedIndex !== newState.focusedIndex) {
-    changes.push([
-      /* focusRovingTabIndexIndex */ 2,
-      /* parentId */ newState.rootId,
-      /* unFocusIndex */ oldState.focusedIndex,
-      /* focusIndex */ newState.focusedIndex,
-    ])
+    if (oldState.focusedIndex !== -1) {
+      changes.push([
+        /* patchProps */ 3,
+        /* nodeId */ `ActivityBarItem-${oldState.focusedIndex}`,
+        /* prop */ 'tabIndex',
+        /* value */ -1,
+      ])
+    }
+    if (newState.focusedIndex !== -1) {
+      changes.push([
+        /* patchProps */ 3,
+        /* nodeId */ `ActivityBarItem-${newState.focusedIndex}`,
+        /* prop */ 'tabIndex',
+        /* value */ 0,
+      ])
+      changes.push([
+        /* focus */ 2,
+        /* nodeId */ `ActivityBarItem-${newState.focusedIndex}`,
+      ])
+    }
   }
   return changes
 }

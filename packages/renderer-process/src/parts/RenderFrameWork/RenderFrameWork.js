@@ -17,14 +17,7 @@ export const focus = (nodeId) => {
   $Node.focus()
 }
 
-export const focusRovingTabIndexIndex = (nodeId, oldIndex, newIndex) => {
+export const patchProps = (nodeId, prop, value) => {
   const $Node = state.elements[nodeId]
-  if (oldIndex !== -1) {
-    const $OldItem = $Node.children[oldIndex]
-    $OldItem.tabIndex = -1
-  }
-  if (newIndex !== -1) {
-    $Node.tabIndex = 0
-    $Node.children[newIndex].focus()
-  }
+  $Node.setAttribute(prop, value)
 }
