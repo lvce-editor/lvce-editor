@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "esbuild src/rendererProcessMain.js --target=esnext --format=esm --sourcemap --bundle --outfile=dist/rendererProcessMain.js --watch",
     "build-min": "microbundle src/rendererProcessMain.js -o distmin --external none --format modern",
-    "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --collectCoverage",
+    "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js",
     "test:watch": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch"
   },
   "keywords": [],
