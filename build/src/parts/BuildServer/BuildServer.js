@@ -1,18 +1,15 @@
-import { readdir, readFile } from 'fs/promises'
+import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
-import * as Clean from '../Clean/Clean.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
-import * as Path from '../Path/Path.js'
-import * as Replace from '../Replace/Replace.js'
-import * as WriteFile from '../WriteFile/WriteFile.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
-import * as Exec from '../Exec/Exec.js'
-import * as Root from '../Root/Root.js'
+import * as Replace from '../Replace/Replace.js'
 import * as Tag from '../Tag/Tag.js'
+import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const copyStaticFiles = async () => {
   const commitHash = await CommitHash.getCommitHash()
