@@ -14,5 +14,6 @@ export const __initialize__ = () => {
   Command.register(1109, Layout.hydrate)
   Command.register(1110, Layout.hide)
   Command.register(1111, Layout.handleResize)
-  Command.register(1112, Layout.handleSashSideBarMove)
+  Command.register(1112, Layout.handleSashPointerMove)
+  Command.register(1113, Layout.handleSashPointerDown)
 }

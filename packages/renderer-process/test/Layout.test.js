@@ -108,6 +108,11 @@ test('event - move sash', () => {
   $SashSideBar.dispatchEvent(pointerMoveEvent)
   $SashSideBar.dispatchEvent(pointerUpEvent)
   expect($Style.isConnected).toBe(false)
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([1112, 0]) // TODO make it possible to test with custom x/y position
+  expect(RendererWorker.state.send).toHaveBeenCalledTimes(2)
+  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(1, [
+    1113,
+    'SideBar',
+  ])
+  // TODO make it possible to test with custom x/y position
+  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(2, [1112, 0, 0])
 })

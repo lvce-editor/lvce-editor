@@ -533,7 +533,8 @@ test('handleSashSideBarMove', async () => {
         throw new Error('unexpected message')
     }
   })
-  await Layout.handleSashSideBarMove(892)
+  await Layout.handleSashPointerDown('SideBar')
+  await Layout.handleSashPointerMove(892, 892)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
     909090,
@@ -570,7 +571,8 @@ test('handleSashSideBarMove - side bar should stay at min width when dragging ma
         throw new Error('unexpected message')
     }
   })
-  await Layout.handleSashSideBarMove(1092)
+  await Layout.handleSashPointerDown('SideBar')
+  await Layout.handleSashPointerMove(1092, 1092)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
     909090,
@@ -608,7 +610,8 @@ test('handleSashSideBarMove - side bar should collapse dragging makes width is m
         throw new Error('unexpected message')
     }
   })
-  await Layout.handleSashSideBarMove(1192)
+  await Layout.handleSashPointerDown('SideBar')
+  await Layout.handleSashPointerMove(1192, 1192)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
     909090,
