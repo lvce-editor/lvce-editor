@@ -177,24 +177,11 @@ test.skip('focusIndex - when open - when same index', async () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.invoke = jest.fn((message) => {
-    switch (message[0]) {
-      case 1372:
-        break
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ {
-            left: 168,
-            bottom: 0,
-          },
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    return {
+      left: 168,
+      bottom: 0,
     }
   })
   await TitleBarMenu.focusIndex(0)
@@ -271,26 +258,8 @@ test.skip('focusIndex - when open - when different index', async () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.invoke = jest.fn((message) => {
-    switch (message[0]) {
-      case 1372:
-        break
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ {
-            left: 168,
-            bottom: 0,
-          },
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusIndex(1)
   expect(TitleBarMenu.state.focusedIndex).toBe(1)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
@@ -365,24 +334,11 @@ test.skip('focusIndex - when open - race condition', async () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.invoke = jest.fn((message) => {
-    switch (message[0]) {
-      case 1372:
-        break
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ {
-            left: 168,
-            bottom: 0,
-          },
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    return {
+      left: 168,
+      bottom: 0,
     }
   })
   await TitleBarMenu.focusIndex(1)
