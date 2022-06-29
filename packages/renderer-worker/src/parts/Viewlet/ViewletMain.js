@@ -245,7 +245,7 @@ export const openUri = async (state, uri) => {
   state.activeIndex = state.editors.length - 1
   const tabLabel = Workspace.pathBaseName(uri)
   const tabTitle = getTabTitle(uri)
-  RendererProcess.send([
+  await RendererProcess.invoke([
     /* Viewlet.send */ 3024,
     /* id */ 'Main',
     /* method */ 'openViewlet',
@@ -343,14 +343,14 @@ export const closeEditor = async (state, index) => {
     //   height: instance.state.height,
     //   columnWidth: COLUMN_WIDTH,
     // })
-    RendererProcess.send([
+    await RendererProcess.invoke([
       /* Main.closeOneTab */ 2164,
       /* closeIndex */ oldActiveIndex,
       /* focusIndex */ newActiveIndex,
     ])
     return
   }
-  RendererProcess.send([
+  await RendererProcess.invoke([
     /* Viewlet.send */ 3024,
     /* id */ 'Main',
     /* method */ 'closeOneTabOnly',
@@ -443,7 +443,7 @@ export const handleTabClick = (state, index) => {
 export const closeOthers = async (state) => {
   if (state.focusedIndex === state.activeIndex) {
     // view is kept the same, only tabs are closed
-    RendererProcess.send([
+    await RendererProcess.invoke([
       /* Viewlet.send */ 3024,
       /* id */ 'Main',
       /* method */ 'closeOthers',
@@ -452,7 +452,7 @@ export const closeOthers = async (state) => {
     ])
   } else {
     // view needs to be switched to focused index
-    RendererProcess.send([
+    await RendererProcess.invoke([
       /* Viewlet.send */ 3024,
       /* id */ 'Main',
       /* method */ 'closeOthers',
@@ -468,7 +468,7 @@ export const closeOthers = async (state) => {
 export const closeTabsRight = async (state) => {
   if (state.focusedIndex >= state.activeIndex) {
     // view is kept the same, only tabs are closed
-    RendererProcess.send([
+    await RendererProcess.invoke([
       /* Viewlet.send */ 3024,
       /* id */ 'Main',
       /* method */ 'closeTabsRight',
@@ -476,7 +476,7 @@ export const closeTabsRight = async (state) => {
     ])
   } else {
     // view needs to be switched to focused index
-    RendererProcess.send([
+    await RendererProcess.invoke([
       /* Viewlet.send */ 3024,
       /* id */ 'Main',
       /* method */ 'closeTabsRight',
@@ -490,7 +490,7 @@ export const closeTabsRight = async (state) => {
 export const closeTabsLeft = async (state) => {
   if (state.focusedIndex <= state.activeIndex) {
     // view is kept the same, only tabs are closed
-    RendererProcess.send([
+    await RendererProcess.invoke([
       /* Viewlet.send */ 3024,
       /* id */ 'Main',
       /* method */ 'closeTabsLeft',
@@ -498,7 +498,7 @@ export const closeTabsLeft = async (state) => {
     ])
   } else {
     // view needs to be switched to focused index
-    RendererProcess.send([
+    await RendererProcess.invoke([
       /* Viewlet.send */ 3024,
       /* id */ 'Main',
       /* method */ 'closeTabsLeft',
