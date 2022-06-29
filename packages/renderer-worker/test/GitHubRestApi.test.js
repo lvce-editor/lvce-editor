@@ -1,7 +1,22 @@
 import { jest } from '@jest/globals'
-import { HTTPError } from '../../../static/js/ky.js'
-import * as Ajax from '../src/parts/Ajax/Ajax.js'
-import * as GitHubRestApi from '../src/parts/GitHubRestApi/GitHubRestApi.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
+  return {
+    getJson: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const Ajax = await import('../src/parts/Ajax/Ajax.js')
+
+const GitHubRestApi = await import(
+  '../src/parts/GitHubRestApi/GitHubRestApi.js'
+)
 
 beforeAll(() => {
   // @ts-ignore https://github.com/jsdom/jsdom/issues/1724
@@ -18,11 +33,13 @@ beforeAll(() => {
 })
 
 afterAll(() => {
+  // @ts-ignore
   delete globalThis.Response
 })
 
 test('readGitHubDirectory', async () => {
-  Ajax.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(() => {
     return {
       sha: '1b429e743255d7b5a628c8267da990dae74a865c',
       url: 'https://api.github.com/repos/microsoft/vscode/git/trees/1b429e743255d7b5a628c8267da990dae74a865c',
@@ -532,14 +549,14 @@ test('readGitHubDirectory', async () => {
     ],
     truncated: false,
   })
-  expect(Ajax.state.getJson).toHaveBeenCalledWith(
-    'https://api.github.com/repos/microsoft/vscode/git/trees/main',
-    {}
+  expect(Ajax.getJson).toHaveBeenCalledWith(
+    'https://api.github.com/repos/microsoft/vscode/git/trees/main'
   )
 })
 
 test('readGithubFileWithUrl', async () => {
-  Ajax.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(() => {
     return {
       sha: 'f6263094d01a2de129ccec850512c503ef9e25ae',
       node_id:
@@ -565,21 +582,16 @@ test('readGithubFileWithUrl', async () => {
       'KiB0ZXh0PWF1dG8KCkxJQ0VOU0UudHh0IGVvbD1jcmxmClRoaXJkUGFydHlO\nb3RpY2VzLnR4dCBlb2w9Y3JsZgoKKi5iYXQgZW9sPWNybGYKKi5jbWQgZW9s\nPWNybGYKKi5wczEgZW9sPWxmCiouc2ggZW9sPWxmCioucnRmIC10ZXh0Cioq\nLyouanNvbiBsaW5ndWlzdC1sYW5ndWFnZT1qc29uYwo=\n',
     encoding: 'base64',
   })
-  expect(Ajax.state.getJson).toHaveBeenCalledWith(
-    'https://api.github.com/repos/microsoft/vscode/git/blobs/f6263094d01a2de129ccec850512c503ef9e25ae',
-    {}
+  expect(Ajax.getJson).toHaveBeenCalledWith(
+    'https://api.github.com/repos/microsoft/vscode/git/blobs/f6263094d01a2de129ccec850512c503ef9e25ae'
   )
 })
 
 test('readGithubFileWithUrl - error - too many requests', async () => {
-  Ajax.state.getJson = jest.fn(async () => {
-    throw new HTTPError(
-      new Response(
-        '{"message":"API rate limit exceeded for 0.0.0.0. (But here\'s the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)","documentation_url":"https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting"}',
-        {
-          status: 403,
-        }
-      )
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(async () => {
+    throw new Error(
+      'Failed to request json from "https://api.github.com/repos/microsoft/vscode/git/blobs/f6263094d01a2de129ccec850512c503ef9e25ae": API rate limit exceeded for 0.0.0.0. (But here\'s the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)'
     )
   })
   await expect(
@@ -588,13 +600,14 @@ test('readGithubFileWithUrl - error - too many requests', async () => {
     )
   ).rejects.toThrowError(
     new Error(
-      'Failed to request json from \"https://api.github.com/repos/microsoft/vscode/git/blobs/f6263094d01a2de129ccec850512c503ef9e25ae\": API rate limit exceeded for 0.0.0.0. (But here\'s the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)'
+      'Failed to request json from "https://api.github.com/repos/microsoft/vscode/git/blobs/f6263094d01a2de129ccec850512c503ef9e25ae": API rate limit exceeded for 0.0.0.0. (But here\'s the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)'
     )
   )
 })
 
 test('readFile', async () => {
-  Ajax.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(() => {
     return {
       name: '.gitignore',
       path: '.gitignore',
@@ -640,8 +653,7 @@ test('readFile', async () => {
       html: 'https://github.com/microsoft/vscode/blob/main/.gitignore',
     },
   })
-  expect(Ajax.state.getJson).toHaveBeenCalledWith(
-    'https://api.github.com/repos/microsoft/vscode/contents/.gitignore',
-    {}
+  expect(Ajax.getJson).toHaveBeenCalledWith(
+    'https://api.github.com/repos/microsoft/vscode/contents/.gitignore'
   )
 })

@@ -2,8 +2,24 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as Ajax from '../src/parts/Ajax/Ajax.js'
-import * as FileSystemGitHub from '../src/parts/FileSystem/FileSystemGitHub.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
+  return {
+    getJson: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const Ajax = await import('../src/parts/Ajax/Ajax.js')
+
+const FileSystemGitHub = await import(
+  '../src/parts/FileSystem/FileSystemGitHub.js'
+)
 
 beforeAll(() => {
   // see https://github.com/jsdom/jsdom/issues/1721#issuecomment-387279017
@@ -17,7 +33,8 @@ beforeAll(() => {
 })
 
 test('readDirWithFileTypes', async () => {
-  Ajax.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(() => {
     return {
       sha: '1b429e743255d7b5a628c8267da990dae74a865c',
       url: 'https://api.github.com/repos/microsoft/vscode/git/trees/1b429e743255d7b5a628c8267da990dae74a865c',
@@ -410,20 +427,24 @@ test('readDirWithFileTypes', async () => {
   expect(FileSystemGitHub.state.cache['microsoft/vscode']).toBeDefined()
 })
 
+// TODO should use integration test with mock server response for this to ensure error messages compose as expected
 // TODO should throw better error message
 test('readDirWithFileTypes - error', async () => {
-  Ajax.state.getJson = jest.fn(async () => {
-    throw new Error('rate limiting exceeded')
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(async () => {
+    throw new Error(
+      'Failed to request json from "https://api.github.com/repos/microsoft/vscode/git/trees/HEAD:": rate limiting exceeded'
+    )
   })
   await expect(
     FileSystemGitHub.readDirWithFileTypes(
       'github://',
       'github://microsoft/vscode'
     )
-  ).rejects.toThrowError(
-    // TODO test error.cause
-    'Failed to request json from "https://api.github.com/repos/microsoft/vscode/git/trees/HEAD:": rate limiting exceeded'
   )
+    .rejects.toThrowError
+    // TODO test error.cause
+    ()
 })
 
 test('readFile', async () => {
@@ -444,7 +465,8 @@ test('readFile', async () => {
       truncated: false,
     },
   }
-  Ajax.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(() => {
     return {
       sha: 'f6263094d01a2de129ccec850512c503ef9e25ae',
       node_id:
@@ -493,7 +515,8 @@ test('readFile - unicode decoding issue', async () => {
       truncated: false,
     },
   }
-  Ajax.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(() => {
     return {
       sha: '8a44ce8c7ac1b035770cd5a1e4e4c561c0530027',
       node_id:
@@ -553,7 +576,8 @@ test.skip('readFile - ajax error', async () => {
       truncated: false,
     },
   }
-  Ajax.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(() => {
     throw new Error('rate limiting exceeded')
   })
   await expect(
@@ -565,7 +589,8 @@ test.skip('readFile - ajax error', async () => {
 })
 
 test('getBlobUrl', async () => {
-  Ajax.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(() => {
     return {
       sha: 'f6263094d01a2de129ccec850512c503ef9e25ae',
       node_id:
