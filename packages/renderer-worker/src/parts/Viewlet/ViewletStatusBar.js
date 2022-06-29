@@ -141,3 +141,83 @@ export const render = (oldState, newState) => {
   }
   return changes
 }
+
+const renderFunctionalDomStatusBarItem = (changes, statusBarItem) => {
+  changes.push([
+    /* createElementNode */ 1,
+    /* id */ 12,
+    /* parentId */ 11,
+    /* tagName */ 'li',
+    /* props */ {
+      className: 'StatusBarItem',
+      role: 'button',
+      name: statusBarItem.name,
+      title: statusBarItem.tooltip,
+    },
+  ])
+  if (statusBarItem.icon) {
+    changes.push([
+      /* createElementNode */ 1,
+      /* id */ 12,
+      /* parentId */ 11,
+      /* tagName */ 'span',
+      /* props */ {
+        className: 'StatusBarItemIcon',
+      },
+    ])
+  }
+  if (statusBarItem.text) {
+    changes.push([
+      /* createTextNode */ 8,
+      /* id */ 12,
+      /* parentId */ 11,
+      /* text */ statusBarItem.text,
+    ])
+  }
+}
+
+export const renderFunctionalDom = (oldState, newState) => {
+  const changes = []
+  changes.push([
+    /* createElementNode */ 1,
+    /* id */ 12,
+    /* parentId */ 11,
+    /* tagName */ 'div',
+    /* props */ {
+      className: 'Viewlet',
+      'data-viewlet-id': 'StatusBar',
+      tabIndex: 0,
+      role: 'status',
+      ariaLive: 'off',
+    },
+  ])
+  if (newState.statusBarItemsLeft.length > 0) {
+    changes.push([
+      /* createElementNode */ 1,
+      /* id */ 12,
+      /* parentId */ 11,
+      /* tagName */ 'ul',
+      /* props */ {
+        id: 'StatusBarItemsLeft',
+      },
+    ])
+    for (const statusBarItem of newState.statusBarItemsLeft) {
+      renderFunctionalDomStatusBarItem(changes, statusBarItem)
+    }
+  }
+
+  if (newState.statusBarItemsRight.length > 0) {
+    changes.push([
+      /* createElementNode */ 1,
+      /* id */ 12,
+      /* parentId */ 11,
+      /* tagName */ 'ul',
+      /* props */ {
+        id: 'StatusBarItemsRight',
+      },
+    ])
+    for (const statusBarItem of newState.statusBarItemsRight) {
+      renderFunctionalDomStatusBarItem(changes, statusBarItem)
+    }
+  }
+}

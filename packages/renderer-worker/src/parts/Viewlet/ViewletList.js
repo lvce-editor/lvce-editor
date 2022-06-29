@@ -297,3 +297,75 @@ export const render = (oldState, newState) => {
   }
   return changes
 }
+
+export const renderFunctionalDom = (oldState, newState) => {
+  const changes = []
+  if (
+    oldState.items !== newState.items ||
+    oldState.minLineY !== newState.minLineY ||
+    oldState.maxLineY !== newState.maxLineY
+  ) {
+    const visibleItems = getVisible(newState)
+    changes.push([
+      /* renderVirtualDom */ 1,
+      /* parentId */ newState.rootId,
+      /* visibleExtensions */ visibleItems,
+    ])
+  }
+  if (oldState.items.length !== newState.items.length) {
+    const contentHeight = newState.items.length * ITEM_HEIGHT
+    changes.push([
+      /* patchProps */ 3,
+      /* nodeId */ newState.rootId,
+      /* prop */ 'style.height',
+      /* value */ `${contentHeight}px`,
+    ])
+  }
+
+  if (oldState.negativeMargin !== newState.negativeMargin) {
+    changes.push([
+      /* patchProps */ 3,
+      /* nodeId */ newState.root,
+      /* prop */ 'style.top',
+      /* value */ `${newState.negativeMargin}px`,
+    ])
+  }
+  if (oldState.focusedIndex !== newState.focusedIndex) {
+    if (oldState.focusedIndex !== -1) {
+      changes.push([
+        /* patchProps */ 3,
+        /* nodeId */ `List-${newState.rootId}-${oldState.focusedIndex}`,
+        /* prop */ 'className',
+        /* value */ `ListItem`,
+      ])
+    }
+    if (newState.focusedIndex !== -1) {
+      changes.push([
+        /* patchProps */ 3,
+        /* nodeId */ `List-${newState.rootId}-${newState.focusedIndex}`,
+        /* prop */ 'className',
+        /* value */ 'ListItem Focused',
+      ])
+    }
+  }
+  if (oldState.deltaY !== newState.deltaY) {
+    const scrollBarY =
+      (newState.deltaY / newState.finalDeltaY) *
+      (newState.height - newState.scrollBarHeight)
+    changes.push(
+      [
+        /* patchProps */ 3,
+        /* id */ newState.rootId,
+        /* prop */ 'style.top',
+        /* value */ `${scrollBarY}px`,
+      ],
+      [
+        /* patchProps */ 3,
+        /* id */ newState.rootId,
+        /* prop */ 'style.height',
+        /* value */ `${newState.scrollBarHeight}px`,
+      ]
+    )
+  }
+  return changes
+}

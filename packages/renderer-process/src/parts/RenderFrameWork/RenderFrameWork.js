@@ -21,3 +21,5 @@ export const patchProps = (nodeId, prop, value) => {
   const $Node = state.elements[nodeId]
   $Node.setAttribute(prop, value)
 }
+
+export const renderVirtualDom = (nodeId, virtualDom) => {}

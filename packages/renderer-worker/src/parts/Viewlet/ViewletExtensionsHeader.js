@@ -101,3 +101,30 @@ export const render = (oldState, newState) => {
     }),
   ])
 }
+
+export const renderVirtualDom = (oldState, newState) => {
+  const changes = []
+  changes.push([
+    /* renderVirtualDom */ 1,
+    /* parentId */ newState.rootId,
+    /* children */ [
+      {
+        tagName: 'div',
+        props: {
+          className: 'ExtensionsHeader',
+        },
+        children: [
+          {
+            tagName: 'input',
+            props: {
+              className: 'ExtensionsInput',
+              role: 'search',
+            },
+            children: [],
+          },
+        ],
+      },
+    ],
+  ])
+  return changes
+}

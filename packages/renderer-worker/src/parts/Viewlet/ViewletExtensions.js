@@ -5,6 +5,8 @@ import * as ExtensionsMarketplace from '../ExtensionMarketplace/ExtensionMarketp
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Assert from '../Assert/Assert.js'
+import * as ViewletExtensionsHeader from './ViewletExtensionsHeader.js'
+import * as ViewletExtensionsList from './ViewletExtensionsList.js'
 
 export const ITEM_HEIGHT = 62
 
@@ -769,5 +771,34 @@ export const render = (oldState, newState) => {
       /* scrollBarHeight */ newState.scrollBarHeight,
     ])
   }
+  return changes
+}
+
+export const renderVirtualDom = (oldState, newState) => {
+  const changes = []
+  changes.push(...ViewletExtensionsHeader.renderVirtualDom(oldState, newState))
+  if (newState.extensions.length === 0) {
+    changes.push(
+      [
+        /* replaceVirtualDom */ 7,
+        /* parentId */ newState.rootId,
+        /* index */ 1,
+      ],
+      [
+        /* renderVirtualDom */ 1,
+        /* id */ 12,
+        /* parentId */ 11,
+        /* tagName */ 'p',
+        /* props */ {},
+      ],
+      [
+        /* createTextNode */ 8,
+        /* id */ 13,
+        /* parentId */ 12,
+        /* text */ 'No Extensions found',
+      ]
+    )
+  }
+  changes.push(...ViewletExtensionsList.renderVirtualDom(oldState, newState))
   return changes
 }

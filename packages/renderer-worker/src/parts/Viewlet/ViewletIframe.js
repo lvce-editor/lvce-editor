@@ -38,3 +38,21 @@ export const render = (oldState, newState) => {
   }
   return changes
 }
+
+export const renderVirtualDom = (oldState, newState) => {
+  const changes = []
+  changes.push([
+    [
+      /* renderVirtualDom */ 1,
+      /* id */ 12,
+      /* parentId */ 11,
+      /* tagName */ 'iframe',
+      /* props */ {
+        className: 'Viewlet',
+        'data-viewlet-id': 'Iframe',
+        src: newState.src,
+      },
+    ],
+  ])
+  return changes
+}

@@ -398,42 +398,30 @@ export const render = (oldState, newState) => {
 
 export const hasFunctionalRender = true
 
-const $$$createElementNode = (tagName, props, children) => {
-  return {
-    tagName,
-    props,
-    children,
-  }
-}
-
-const $$$createTextNode = (nodeId, text) => {}
-
-const $$$focus = (nodeId) => {}
-
 const render$ActivityBarItem = (activityBarItem) => {
-  return $$$createElementNode(
-    'div',
-    {
+  return {
+    tagName: 'div',
+    props: {
       className: 'ActivityBarItem',
       ariaLabel: '',
       title: activityBarItem.id,
       tabIndex: -1,
       ariaKeyShortcuts: activityBarItem.keyShortcuts,
     },
-    [
-      $$$createElementNode(
-        'div',
-        {
+    children: [
+      {
+        tagName: 'div',
+        props: {
           className: 'ActivityBarItemIcon',
           style: {
             maskImage: `url(${activityBarItem.icon})`,
             webkitMaskImage: `url(${activityBarItem.icon})`,
           },
         },
-        []
-      ),
-    ]
-  )
+        children: [],
+      },
+    ],
+  }
 }
 
 export const renderVirtualDom = (oldState, newState) => {
