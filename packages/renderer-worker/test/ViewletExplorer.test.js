@@ -175,9 +175,7 @@ test('loadContent - race condition', async () => {
   const promise2 = load(state)
   await Promise.all([promise1, promise2])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -200,8 +198,8 @@ test('loadContent - race condition', async () => {
         setSize: 2,
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('loadContent - error - typeError', async () => {
@@ -317,9 +315,7 @@ test('contentLoaded', async () => {
   }
   await ViewletExplorer.contentLoaded(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -351,8 +347,8 @@ test('contentLoaded', async () => {
         setSize: 3,
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test.skip('handleContextMenu', async () => {
@@ -570,9 +566,7 @@ test('handleClick - directory-expanded - scrolled down', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleClick(state, 0)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -586,8 +580,8 @@ test('handleClick - directory-expanded - scrolled down', async () => {
         type: 'directory',
         icon: '',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleClick - collapsed folder', async () => {
@@ -643,9 +637,7 @@ test('handleClick - collapsed folder', async () => {
   await ViewletExplorer.handleClick(state, 2)
   expect(state.focusedIndex).toBe(2)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -686,8 +678,8 @@ test('handleClick - collapsed folder', async () => {
         path: '/test-folder,index.js', // TODO this is wrong
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleClick - race condition - child folder is being expanded and parent folder is being collapsed', async () => {
@@ -744,9 +736,7 @@ test('handleClick - race condition - child folder is being expanded and parent f
   await Promise.all([promise1, promise2])
   expect(state.focusedIndex).toBe(0)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -760,8 +750,8 @@ test('handleClick - race condition - child folder is being expanded and parent f
         path: '/parent-directory',
         type: 'directory',
       },
-    ],
-  ])
+    ]
+  )
 })
 // TODO test expanding folder
 
@@ -820,9 +810,8 @@ test('handleClick - race condition - opening multiple folders at the same time',
   await Promise.all([promise1, promise2, promise3])
   expect(state.focusedIndex).toBe(2)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
     3024,
     'Explorer',
     'updateDirents',
@@ -863,11 +852,10 @@ test('handleClick - race condition - opening multiple folders at the same time',
         setSize: 3,
         type: 'directory-expanded',
       },
-    ],
-  ])
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
+    ]
+  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
     3024,
     'Explorer',
     'updateDirents',
@@ -917,11 +905,10 @@ test('handleClick - race condition - opening multiple folders at the same time',
         setSize: 3,
         type: 'directory-expanded',
       },
-    ],
-  ])
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, [
-    909090,
-    expect.any(Number),
+    ]
+  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    3,
     3024,
     'Explorer',
     'updateDirents',
@@ -980,8 +967,8 @@ test('handleClick - race condition - opening multiple folders at the same time',
         setSize: 1,
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleClick - expanded folder', async () => {
@@ -1035,9 +1022,7 @@ test('handleClick - expanded folder', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleClick(state, 2)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -1070,8 +1055,8 @@ test('handleClick - expanded folder', async () => {
         type: 'directory',
         icon: '',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('focusPrevious', async () => {
@@ -1440,9 +1425,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowLeft(state)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -1480,8 +1463,8 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
         path: '/other-file.html',
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleArrowLeft - nested file - first child', async () => {
@@ -1529,15 +1512,13 @@ test('handleArrowLeft - nested file - first child', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowLeft(state)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'setFocusedIndex',
     3,
-    2,
-  ])
+    2
+  )
 })
 
 test('handleArrowLeft - nested file - third child', async () => {
@@ -1617,15 +1598,13 @@ test('handleArrowLeft - nested file - third child', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowLeft(state)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'setFocusedIndex',
     6,
-    2,
-  ])
+    2
+  )
 })
 
 test('handleArrowLeft - when no focus', async () => {
@@ -1767,9 +1746,7 @@ test('handleArrowRight - collapsed folder', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowRight(state)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -1810,8 +1787,8 @@ test('handleArrowRight - collapsed folder', async () => {
         type: 'file',
         icon: '',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleArrowRight - collapsed empty folder', async () => {
@@ -1861,9 +1838,7 @@ test('handleArrowRight - collapsed empty folder', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowRight(state)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -1893,8 +1868,8 @@ test('handleArrowRight - collapsed empty folder', async () => {
         type: 'directory-expanded',
         icon: '',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleArrowRight - expanded folder', async () => {
@@ -1947,15 +1922,13 @@ test('handleArrowRight - expanded folder', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowRight(state)
   expect(state.focusedIndex).toBe(3)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'setFocusedIndex',
     2,
-    3,
-  ])
+    3
+  )
 })
 
 test('handleArrowRight - expanded empty folder', async () => {
@@ -2085,15 +2058,13 @@ test('focusFirst', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.focusFirst(state)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'setFocusedIndex',
     1,
-    0,
-  ])
+    0
+  )
 })
 
 test('focusFirst - no dirents', async () => {
@@ -2176,15 +2147,13 @@ test('focusLast', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.focusLast(state)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'setFocusedIndex',
     0,
-    1,
-  ])
+    1
+  )
 })
 
 test('focusLast - no dirents', async () => {
@@ -2263,9 +2232,7 @@ test('handleWheel - up', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleWheel(state, -22)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -2279,8 +2246,8 @@ test('handleWheel - up', async () => {
         setSize: 3,
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleWheel - up - already at top', async () => {
@@ -2352,9 +2319,7 @@ test('handleWheel - down', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleWheel(state, 22)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -2368,8 +2333,8 @@ test('handleWheel - down', async () => {
         setSize: 3,
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleWheel - down - already at bottom', async () => {
@@ -2658,21 +2623,25 @@ test('newFile - inside folder', async () => {
     }
   })
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation((method) => {
-    switch (method) {
+  RendererProcess.invoke.mockImplementation((method, ...params) => {
+    switch (params[1]) {
       case 'hideCreateFileInputBox':
         return 'created.txt'
+      case 'updateDirents':
+      case 'setFocusedIndex':
+      case 'showCreateFileInputBox':
+        return null
       default:
+        console.log({ params })
         throw new Error('unexpected message')
     }
   })
   await ViewletExplorer.newFile(state)
   await ViewletExplorer.acceptNewFile(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(4)
-  console.log(state)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(4, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    4,
+
     3024,
     'Explorer',
     'updateDirents',
@@ -2740,8 +2709,8 @@ test('newFile - inside folder', async () => {
         setSize: 3,
         type: 'directory',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test.skip('newFile - error with writeFile', async () => {
@@ -2813,14 +2782,12 @@ test('newFile - canceled', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.newFile(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'showCreateFileInputBox',
-    -1,
-  ])
+    -1
+  )
 })
 
 test.skip('newFile - race condition', () => {
@@ -2877,19 +2844,22 @@ test('removeDirent - first', async () => {
     }
   })
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation((method) => {
-    switch (method) {
+  RendererProcess.invoke.mockImplementation((method, ...params) => {
+    switch (params[1]) {
       case 'hideCreateFileInputBox':
         return 'created.txt'
+      case 'updateDirents':
+      case 'setFocusedIndex':
+        return null
       default:
         throw new Error('unexpected message')
     }
   })
   await ViewletExplorer.removeDirent(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2) // TODO should only be 1 for efficiency
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
+
     3024,
     'Explorer',
     'updateDirents',
@@ -2912,17 +2882,17 @@ test('removeDirent - first', async () => {
         setSize: 3, // TODO should be 2
         type: 'directory',
       },
-    ],
-  ])
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
+    ]
+  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
+
     3024,
     'Explorer',
     'setFocusedIndex',
     0,
-    0,
-  ])
+    0
+  )
 })
 
 test('removeDirent - middle', async () => {
@@ -2974,19 +2944,22 @@ test('removeDirent - middle', async () => {
     }
   })
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation((method) => {
-    switch (method) {
+  RendererProcess.invoke.mockImplementation((method, ...params) => {
+    switch (params[1]) {
       case 'hideCreateFileInputBox':
         return 'created.txt'
+      case 'updateDirents':
+      case 'setFocusedIndex':
+        return null
       default:
+        console.log({ method, params })
         throw new Error('unexpected message')
     }
   })
   await ViewletExplorer.removeDirent(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2) // TODO should only be 1 for efficiency
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
     3024,
     'Explorer',
     'updateDirents',
@@ -3009,17 +2982,16 @@ test('removeDirent - middle', async () => {
         setSize: 3, // TODO should be 2
         type: 'directory',
       },
-    ],
-  ])
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
+    ]
+  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
     3024,
     'Explorer',
     'setFocusedIndex',
     1,
-    0,
-  ])
+    0
+  )
 })
 
 test('removeDirent - last', async () => {
@@ -3071,19 +3043,22 @@ test('removeDirent - last', async () => {
     }
   })
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation((method) => {
-    switch (method) {
+  RendererProcess.invoke.mockImplementation((method, ...params) => {
+    switch (params[1]) {
       case 'hideCreateFileInputBox':
         return 'created.txt'
+      case 'updateDirents':
+      case 'setFocusedIndex':
+        return null
       default:
+        console.log({ method, params })
         throw new Error('unexpected message')
     }
   })
   await ViewletExplorer.removeDirent(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2) // TODO should only be 1 for efficiency
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
     3024,
     'Explorer',
     'updateDirents',
@@ -3106,17 +3081,16 @@ test('removeDirent - last', async () => {
         setSize: 3, // TODO should be 2
         type: 'directory',
       },
-    ],
-  ])
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
+    ]
+  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
     3024,
     'Explorer',
     'setFocusedIndex',
     2,
-    1,
-  ])
+    1
+  )
 })
 
 test('removeDirent - no dirents left', async () => {
