@@ -1,10 +1,24 @@
 import { jest } from '@jest/globals'
-import * as ClipBoard from '../src/parts/ClipBoard/ClipBoard.js'
-import * as EditorCut from '../src/parts/EditorCommand/EditorCommandCut.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/ClipBoard/ClipBoard.js', () => {
+  return {
+    writeText: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
+
+const EditorCut = await import('../src/parts/EditorCommand/EditorCommandCut.js')
 
 test('editorCut', async () => {
-  ClipBoard.state.writeText = jest.fn(async () => {})
+  // @ts-ignore
+  ClipBoard.writeText.mockImplementation(() => {})
   const editor = {
     lines: ['line 1', 'line 2', 'line 3', ''],
     cursor: {
@@ -28,7 +42,6 @@ test('editorCut', async () => {
     rowHeight: 10,
     columnWidth: 8,
     lineCache: [],
-    tokenizer: TokenizePlainText,
     undoStack: [],
   }
   expect(await EditorCut.editorCut(editor)).toMatchObject({
@@ -51,14 +64,15 @@ test('editorCut', async () => {
     lines: ['line 1', 'lne 3', ''],
   })
 
-  expect(ClipBoard.state.writeText).toHaveBeenCalledTimes(1)
-  expect(ClipBoard.state.writeText).toHaveBeenCalledWith(`ine 2
+  expect(ClipBoard.writeText).toHaveBeenCalledTimes(1)
+  expect(ClipBoard.writeText).toHaveBeenCalledWith(`ine 2
 li`)
 })
 
 // TODO handle error gracefully
 test('editorCut - error with clipboard', async () => {
-  ClipBoard.state.writeText = jest.fn(() => {
+  // @ts-ignore
+  ClipBoard.writeText.mockImplementation(() => {
     throw new Error('Writing to clipboard not allowed')
   })
   const editor = {
@@ -84,7 +98,6 @@ test('editorCut - error with clipboard', async () => {
     rowHeight: 10,
     columnWidth: 8,
     lineCache: [],
-    tokenizer: TokenizePlainText,
     undoStack: [],
   }
   await expect(EditorCut.editorCut(editor)).rejects.toThrowError(
@@ -93,7 +106,8 @@ test('editorCut - error with clipboard', async () => {
 })
 
 test.skip('editorCut - no selection', async () => {
-  ClipBoard.state.writeText = jest.fn(async () => {})
+  // @ts-ignore
+  ClipBoard.writeText.mockImplementation(() => {})
   const cursor = {
     rowIndex: 1,
     columnIndex: 1,
@@ -108,7 +122,6 @@ test.skip('editorCut - no selection', async () => {
       },
     ],
     lineCache: [],
-    tokenizer: TokenizePlainText,
   }
   expect(await EditorCut.editorCut(editor)).toMatchObject({
     cursor: {
@@ -129,5 +142,5 @@ test.skip('editorCut - no selection', async () => {
     ],
     lines: ['line 1', 'line 2', 'line 3', ''],
   })
-  expect(ClipBoard.state.writeText).not.toHaveBeenCalled()
+  expect(ClipBoard.writeText).not.toHaveBeenCalled()
 })
