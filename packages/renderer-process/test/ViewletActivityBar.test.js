@@ -56,7 +56,35 @@ test('create', () => {
   ])
 })
 
-test('handleClick - top', () => {
+test('setFocusedIndex', () => {
+  const state = ViewletActivityBar.create()
+  ViewletActivityBar.setItems(state, [
+    {
+      id: 'Explorer',
+      icon: './icons/files.svg',
+      enabled: true,
+      flags: /* Tab */ 1,
+    },
+    {
+      id: 'Search',
+      icon: './icons/search.svg',
+      enabled: true,
+      flags: /* Tab */ 1,
+    },
+    {
+      id: 'Settings',
+      icon: './icons/settings-gear.svg',
+      enabled: true,
+      flags: /* Button */ 2,
+    },
+  ])
+  ViewletActivityBar.setFocusedIndex(state, -1, 0)
+  expect(
+    state.$ActivityBar.children[0].classList.contains('FocusOutline')
+  ).toBe(true)
+})
+
+test('event - handleClick - top', () => {
   RendererWorker.state.send = jest.fn()
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(
@@ -96,7 +124,7 @@ test('handleClick - top', () => {
   expect(RendererWorker.state.send).toHaveBeenCalledWith([8001, 1, 15, 30])
 })
 
-test('handleClick - bottom', () => {
+test('event - handleClick - bottom', () => {
   RendererWorker.state.send = jest.fn()
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(
@@ -134,7 +162,7 @@ test('handleClick - bottom', () => {
   expect(RendererWorker.state.send).toHaveBeenCalledWith([8001, 2, 15, 30])
 })
 
-test('handleClick - no item is clicked', () => {
+test('event - handleClick - no item is clicked', () => {
   RendererWorker.state.send = jest.fn()
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(
@@ -173,7 +201,7 @@ test('handleClick - no item is clicked', () => {
   expect(RendererWorker.state.send).not.toHaveBeenCalled()
 })
 
-test('handleContextMenu', () => {
+test('event - handleContextMenu', () => {
   RendererWorker.state.send = jest.fn()
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(
@@ -239,7 +267,6 @@ test('setItems', () => {
     ],
     0
   )
-  RendererWorker.state.send = jest.fn()
   ViewletActivityBar.setItems(
     state,
     [
