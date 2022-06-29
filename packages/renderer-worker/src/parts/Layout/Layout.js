@@ -433,6 +433,6 @@ export const handleResize = async (bounds) => {
   }
   // TODO send the whole batch at once
   for (const command of commands) {
-    RendererProcess.send(command)
+    RendererProcess.invoke(command)
   }
 }
