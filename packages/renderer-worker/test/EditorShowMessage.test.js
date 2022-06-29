@@ -1,26 +1,36 @@
-import * as EditorShowMessage from '../src/parts/EditorCommand/EditorCommandShowMessage.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
+import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
+import * as Layout from '../src/parts/Layout/Layout.js'
+
 import { jest } from '@jest/globals'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+const EditorShowMessage = await import(
+  '../src/parts/EditorCommand/EditorCommandShowMessage.js'
+)
 
 jest.useFakeTimers()
 
 test('showMessage - should dispose after 3 seconds', async () => {
   const editor = {}
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await EditorShowMessage.editorShowMessage(
     editor,
     {
@@ -29,31 +39,28 @@ test('showMessage - should dispose after 3 seconds', async () => {
     },
     'test'
   )
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'EditorText',
     'showOverlayMessage',
     NaN,
     NaN,
-    'test',
-  ])
+    'test'
+  )
 
   // TODO use jest fake timers
 
   // (but not any new timers that get created during that process)
   jest.runOnlyPendingTimers()
   // TODO assert that message has been hidden now
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
     3024,
     'EditorText',
-    'hideOverlayMessage',
-  ])
+    'hideOverlayMessage'
+  )
 })
 
 // TODO when multiple messages are shown concurrently, only show the last one
