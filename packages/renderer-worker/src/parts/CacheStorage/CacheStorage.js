@@ -11,37 +11,6 @@ const shouldIgnoreError = (error) => {
   )
 }
 
-export const state = {
-  async getJson(key) {
-    try {
-      const response = await getResponse(key)
-      if (!response) {
-        return undefined
-      }
-      const json = await response.json()
-      return json
-    } catch (error) {
-      if (shouldIgnoreError(error)) {
-        return undefined
-      }
-      throw new Error(`Failed to get json from cache "${key}"`, {
-        cause: error,
-      })
-    }
-  },
-  async setJson(key, value) {
-    try {
-      await setResponse(key, JSON.stringify(value), 'application/json')
-    } catch (error) {
-      if (shouldIgnoreError(error)) {
-        return
-      }
-      throw new Error(`Failed to put json into cache "${key}"`, {
-        cause: error,
-      })
-    }
-  },
-}
 // TODO when caches is not defined -> should return undefined
 
 const getCache = async () => {
@@ -61,16 +30,25 @@ const getResponse = async (key) => {
   return response
 }
 
-/**
- * @throws
- */
-export const getJson = (key) => {
-  return state.getJson(key)
+export const getJson = async (key) => {
+  try {
+    const response = await getResponse(key)
+    if (!response) {
+      return undefined
+    }
+    const json = await response.json()
+    return json
+  } catch (error) {
+    if (shouldIgnoreError(error)) {
+      return undefined
+    }
+    throw new Error(`Failed to get json from cache "${key}"`, {
+      // @ts-ignore
+      cause: error,
+    })
+  }
 }
 
-/**
- * @throws
- */
 export const getTextFromCache = async (key) => {
   try {
     const response = await getResponse(key)
@@ -84,6 +62,7 @@ export const getTextFromCache = async (key) => {
       return undefined
     }
     throw new Error(`Failed to get text from cache "${key}"`, {
+      // @ts-ignore
       cause: error,
     })
   }
@@ -123,17 +102,27 @@ export const setText = async (key, value, contentType) => {
     if (shouldIgnoreError(error)) {
       return undefined
     }
-    throw new Error(`Failed to put item into cache "${key}"`, { cause: error })
+    throw new Error(`Failed to put item into cache "${key}"`, {
+      // @ts-ignore
+      cause: error,
+    })
   }
 }
 
 export const setJson = async (key, value) => {
-  return state.setJson(key, value)
+  try {
+    await setResponse(key, JSON.stringify(value), 'application/json')
+  } catch (error) {
+    if (shouldIgnoreError(error)) {
+      return
+    }
+    throw new Error(`Failed to put json into cache "${key}"`, {
+      // @ts-ignore
+      cause: error,
+    })
+  }
 }
 
-/**
- * @throws
- */
 export const clearCache = async () => {
   if (typeof caches === 'undefined') {
     return
@@ -145,6 +134,7 @@ export const clearCache = async () => {
       return
     }
     throw new Error('Failed to clear cache', {
+      // @ts-ignore
       cause: error,
     })
   }
