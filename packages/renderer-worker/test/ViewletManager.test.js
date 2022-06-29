@@ -1,24 +1,31 @@
 import { jest } from '@jest/globals'
-import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+
+const ViewletManager = await import(
+  '../src/parts/ViewletManager/ViewletManager.js'
+)
 
 test('load', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-      case 3031:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const mockModule = {
     create: jest.fn(() => {
       return {
