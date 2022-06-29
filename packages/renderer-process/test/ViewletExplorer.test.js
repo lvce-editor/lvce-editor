@@ -408,9 +408,9 @@ test('focusIndex', () => {
     },
   ])
   document.body.append(state.$Viewlet)
-  ViewletExplorer.focusIndex(state, 0)
+  ViewletExplorer.setFocusedIndex(state, -1, 0)
   expect(document.activeElement).toBe(state.$Viewlet.children[0])
-  ViewletExplorer.focusIndex(state, 1)
+  ViewletExplorer.setFocusedIndex(state, -1, 1)
   expect(document.activeElement).toBe(state.$Viewlet.children[1])
 })
 

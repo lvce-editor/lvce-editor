@@ -61,6 +61,7 @@ const MODULE_LISTENER = 73
 const MODULE_VIEWLET_SEARCH = 74
 const MODULE_VIEWLET_EDITOR_COMPLETION = 75
 const MODULE_VIEWLET_Locations = 76
+const MODULE_VIEWLET_PROBLEMS = 77
 
 export const state = {
   commands: Object.create(null),
@@ -187,6 +188,8 @@ const loadModule = (moduleId) => {
       return import('../Viewlet/ViewletEditorCompletion.ipc.js')
     case MODULE_VIEWLET_Locations:
       return import('../Viewlet/ViewletLocations.ipc.js')
+    case MODULE_VIEWLET_PROBLEMS:
+      return import('../Viewlet/ViewletProblems.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }
@@ -740,6 +743,17 @@ const getModuleId = (commandId) => {
     case 7409:
     case 7410:
       return MODULE_MENU
+    case 7550:
+    case 7551:
+    case 7552:
+    case 7553:
+    case 7554:
+    case 7555:
+    case 7556:
+    case 7557:
+    case 7558:
+    case 7559:
+      return MODULE_VIEWLET_PROBLEMS
     case 7633:
     case 7634:
     case 7635:

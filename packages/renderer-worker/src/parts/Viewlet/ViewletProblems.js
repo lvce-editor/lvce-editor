@@ -7,6 +7,7 @@ export const create = () => {
   return {
     problems: [],
     disposed: false,
+    focusedIndex: -2,
   }
 }
 
@@ -32,6 +33,14 @@ export const loadContent = async (state) => {
 
 export const contentLoaded = async (state) => {}
 
+export const focusIndex = (state, index) => {
+  console.log({ index })
+  return {
+    ...state,
+    focusedIndex: index,
+  }
+}
+
 export const dispose = (state) => {
   return {
     ...state,
@@ -42,6 +51,7 @@ export const dispose = (state) => {
 export const hasFunctionalRender = true
 
 export const render = (oldState, newState) => {
+  console.log('render', oldState, newState)
   const changes = []
   if (oldState.problems !== newState.problems) {
     changes.push([
@@ -49,6 +59,15 @@ export const render = (oldState, newState) => {
       /* id */ 'Problems',
       /* method */ 'setProblems',
       /* problems */ newState.problems,
+    ])
+  }
+  if (oldState.focusedIndex !== newState.focusedIndex) {
+    console.log('focused idnex changed')
+    changes.push([
+      /* Viewlet.invoke */ 3024,
+      /* id */ 'Problems',
+      /* method */ 'setFocusedIndex',
+      /* focusedIndex */ newState.focusedIndex,
     ])
   }
   return changes

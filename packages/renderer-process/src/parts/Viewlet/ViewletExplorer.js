@@ -148,6 +148,7 @@ const handleMouseDown = (event) => {
   if (index === -2) {
     return
   }
+  event.preventDefault()
   RendererWorker.send([
     /* ViewletExplorer.handleClick */ 161,
     /* index */ index,
@@ -323,16 +324,21 @@ export const updateDirents = (state, dirents) => {
   render$Rows(state.$Viewlet, dirents)
 }
 
-export const focusIndex = (state, index) => {
+export const setFocusedIndex = (state, oldIndex, newIndex) => {
   Assert.object(state)
-  Assert.number(index)
+  Assert.number(oldIndex)
+  Assert.number(newIndex)
   const { $Viewlet } = state
-  if (index === -1) {
-    $Viewlet.focus()
-    return
+  if (oldIndex === -1) {
+    $Viewlet.classList.remove('FocusOutline')
   }
-  const $Dirent = $Viewlet.children[index]
-  $Dirent.focus()
+  if (newIndex === -1) {
+    $Viewlet.classList.add('FocusOutline')
+    $Viewlet.focus()
+  } else {
+    const $Dirent = $Viewlet.children[newIndex]
+    $Dirent.focus()
+  }
 }
 
 export const dispose = (state) => {}

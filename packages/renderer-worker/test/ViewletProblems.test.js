@@ -14,6 +14,7 @@ test('loadContent', async () => {
   expect(await ViewletProblems.loadContent(state)).toEqual({
     disposed: false,
     problems: [],
+    focusedIndex: -2,
   })
 })
 
@@ -33,4 +34,11 @@ test('render', () => {
   expect(ViewletProblems.render(oldState, newState)).toEqual([
     [3024, 'Problems', 'setProblems', []],
   ])
+})
+
+test('setFocusedIndex', () => {
+  const state = ViewletProblems.create()
+  expect(ViewletProblems.focusIndex(state, -1)).toMatchObject({
+    focusedIndex: -1,
+  })
 })
