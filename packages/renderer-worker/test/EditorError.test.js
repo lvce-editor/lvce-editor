@@ -1,10 +1,28 @@
 // TODO what happens if editorError is outside of viewport (should not happen)
 
 import { jest } from '@jest/globals'
-import * as EditorError from '../src/parts/EditorError/EditorError.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 
-test('show', () => {
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+const EditorError = await import('../src/parts/EditorError/EditorError.js')
+
+test('show', async () => {
   const editor = {
     lines: [''],
     cursor: {
@@ -16,15 +34,17 @@ test('show', () => {
     columnWidth: 8,
     rowHeight: 20,
   }
-  RendererProcess.state.send = jest.fn()
-  EditorError.show(editor, 'No Definition found', {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await EditorError.show(editor, 'No Definition found', {
     rowIndex: 2,
     columnIndex: 2,
   })
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3700,
     'No Definition found',
     16,
-    60,
-  ])
+    60
+  )
 })

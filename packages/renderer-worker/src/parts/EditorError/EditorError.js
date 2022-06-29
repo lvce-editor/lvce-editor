@@ -1,13 +1,13 @@
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
-export const show = (editor, message, position) => {
+export const show = async (editor, message, position) => {
   const x = EditorPosition.x(editor, position)
   const y = EditorPosition.y(editor, position)
-  RendererProcess.send([
+  await RendererProcess.invoke(
     /* EditorError.show */ 3700,
     /* message */ message,
     /* x */ x,
-    /* y */ y,
-  ])
+    /* y */ y
+  )
 }
