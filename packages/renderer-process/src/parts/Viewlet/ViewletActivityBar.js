@@ -161,10 +161,12 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
   if (oldIndex !== -1) {
     const $OldItem = $ActivityBar.children[oldIndex]
     $OldItem.tabIndex = -1
+    $OldItem.classList.remove('FocusOutline')
   }
   if (newIndex !== -1) {
     const $NewItem = $ActivityBar.children[newIndex]
     $NewItem.tabIndex = 0
+    $NewItem.classList.add('FocusOutline')
     focus$Item($NewItem)
   }
 }

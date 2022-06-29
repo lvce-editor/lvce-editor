@@ -328,6 +328,7 @@ export const focusIndex = (state, index) => {
   Assert.number(index)
   const { $Viewlet } = state
   if (index === -1) {
+    $Viewlet.classList.add('FocusOutline')
     $Viewlet.focus()
     return
   }
