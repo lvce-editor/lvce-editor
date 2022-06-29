@@ -1,52 +1,41 @@
 import { jest } from '@jest/globals'
-import * as Notification from '../src/parts/Notification/Notification.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+const Notification = await import('../src/parts/Notification/Notification.js')
 
 test('create', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await Notification.create('info', 'sample text')
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     991,
     'info',
-    'sample text',
-  ])
+    'sample text'
+  )
 })
 
 test('dispose', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await Notification.dispose(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    992,
-    1,
-  ])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(992, 1)
 })
