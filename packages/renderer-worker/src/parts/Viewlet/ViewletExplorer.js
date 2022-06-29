@@ -101,7 +101,7 @@ export const create = (id, uri, left, top, width, height) => {
   return {
     root: '',
     dirents: [],
-    focusedIndex: -1,
+    focusedIndex: -2,
     hoverIndex: -1,
     top,
     left,
@@ -699,7 +699,7 @@ const handleClickDirectoryExpanded = async (state, dirent, index) => {
 
 export const handleClick = async (state, index) => {
   if (index === -1) {
-    state.focusedIndex = -1
+    await focusIndex(state, -1)
     return
   }
   const actualIndex = index + state.minLineY
@@ -731,12 +731,14 @@ export const handleClickCurrent = async (state) => {
 }
 
 export const focusIndex = async (state, index) => {
+  const oldFocusedIndex = state.focusedIndex
   state.focusedIndex = index
   await RendererProcess.invoke(
     /* viewSend */ 3024,
     /* id */ 'Explorer',
-    /* method */ 'focusIndex',
-    /* focusedIndex */ state.focusedIndex
+    /* method */ 'setFocusedIndex',
+    /* oldIndex */ oldFocusedIndex,
+    /* newIndex */ state.focusedIndex
   )
 }
 
