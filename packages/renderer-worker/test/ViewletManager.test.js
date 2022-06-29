@@ -44,7 +44,7 @@ test('load', async () => {
   const getModule = async () => {
     return mockModule
   }
-  const state = ViewletManager.create(getModule)
+  const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
   await ViewletManager.load(state)
   expect(mockModule.create).toHaveBeenCalledTimes(1)
   expect(mockModule.loadContent).toHaveBeenCalledTimes(1)
@@ -54,22 +54,8 @@ test('load', async () => {
 })
 
 test('load - race condition', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-      case 3031:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const mockModule = {
     create: jest.fn(() => {
       return {
@@ -103,55 +89,26 @@ test('load - race condition', async () => {
 })
 
 test('load - error - no create method', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-      case 3031:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const getModule = async () => {
     return {}
   }
-  const state = ViewletManager.create(getModule)
+  const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
   await ViewletManager.load(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
     3031,
-    undefined,
-    undefined,
-    'module.create is not a function',
-  ])
+    '',
+    '',
+    'module.create is not a function'
+  )
 })
 
 test('load - error - create method throws error', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-      case 3031:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const getModule = async () => {
     return {
       create() {
@@ -159,36 +116,21 @@ test('load - error - create method throws error', async () => {
       },
     }
   }
-  const state = ViewletManager.create(getModule)
+  const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
   await ViewletManager.load(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
     3031,
-    undefined,
-    undefined,
-    'x is not a function',
-  ])
+    '',
+    '',
+    'x is not a function'
+  )
 })
 
 test('load - error - no loadContent method', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-      case 3031:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const getModule = async () => {
     return {
       create() {
@@ -196,36 +138,21 @@ test('load - error - no loadContent method', async () => {
       },
     }
   }
-  const state = ViewletManager.create(getModule)
+  const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
   await ViewletManager.load(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
     3031,
-    undefined,
-    undefined,
-    'module.loadContent is not a function',
-  ])
+    '',
+    '',
+    'module.loadContent is not a function'
+  )
 })
 
 test('load - error - loadContent method throws error', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-      case 3031:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const getModule = async () => {
     return {
       create() {
@@ -238,36 +165,21 @@ test('load - error - loadContent method throws error', async () => {
       },
     }
   }
-  const state = ViewletManager.create(getModule)
+  const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
   await ViewletManager.load(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
     3031,
-    undefined,
-    undefined,
-    'x is not a function',
-  ])
+    '',
+    '',
+    'x is not a function'
+  )
 })
 
 test('load - error - no contentLoaded method', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-      case 3031:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const getModule = async () => {
     return {
       create() {
@@ -276,36 +188,21 @@ test('load - error - no contentLoaded method', async () => {
       async loadContent() {},
     }
   }
-  const state = ViewletManager.create(getModule)
+  const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
   await ViewletManager.load(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
     3031,
-    undefined,
-    undefined,
-    'module.contentLoaded is not a function', // TODO should include TypeError
-  ])
+    '',
+    '',
+    'module.contentLoaded is not a function' // TODO should include TypeError
+  )
 })
 
 test('load - error - contentLoaded method throws error', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-      case 3031:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const getModule = async () => {
     return {
       create() {
@@ -317,21 +214,14 @@ test('load - error - contentLoaded method throws error', async () => {
       },
     }
   }
-  const state = ViewletManager.create(getModule)
+  const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
   await ViewletManager.load(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
-    909090,
-    expect.any(Number),
-    3030,
-    undefined,
-  ])
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 3030, '')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3031,
-    undefined,
-    undefined,
-    'x is not a function',
-  ])
+    '',
+    '',
+    'x is not a function'
+  )
 })
