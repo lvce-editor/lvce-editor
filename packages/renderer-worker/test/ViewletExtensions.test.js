@@ -1,16 +1,62 @@
 import { jest } from '@jest/globals'
-import * as Ajax from '../src/parts/Ajax/Ajax.js'
-import * as ErrorHandling from '../src/parts/ErrorHandling/ErrorHandling.js'
-import * as Platform from '../src/parts/Platform/Platform.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
-import * as ViewletExtensions from '../src/parts/Viewlet/ViewletExtensions.js'
 
 beforeEach(() => {
-  Platform.state.getMarketPlaceUrl = async () => {
-    return 'https://example.com'
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+  return {
+    getMarketplaceUrl: jest.fn(() => {
+      return 'https://example.com'
+    }),
+  }
+})
+jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
+  return {
+    getJson: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
+  return {
+    getMarketplaceUrl: jest.fn(() => {
+      return 'https://example.com'
+    }),
+  }
+})
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+const SharedProcess = await import(
+  '../src/parts/SharedProcess/SharedProcess.js'
+)
+const Ajax = await import('../src/parts/Ajax/Ajax.js')
+
+const ViewletExtensions = await import(
+  '../src/parts/Viewlet/ViewletExtensions.js'
+)
+const ErrorHandling = await import(
+  '../src/parts/ErrorHandling/ErrorHandling.js'
+)
 
 test('name', () => {
   expect(ViewletExtensions.name).toBe('Extensions')
@@ -30,7 +76,8 @@ test('loadContent', async () => {
     height: 200,
     maxLineY: 10,
   }
-  Ajax.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(() => {
     return [
       {
         name: 'test extension 1',
@@ -40,55 +87,38 @@ test('loadContent', async () => {
       },
     ]
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ExtensionManagement.getAllExtensions':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: [
-            {
-              id: 'builtin.language-basics-html',
-              name: 'Language Basics HTML',
-              description:
-                'Provides syntax highlighting and bracket matching in HTML files.',
-              languages: [
-                {
-                  id: 'html',
-                  extensions: ['.html'],
-                  tokenize: 'src/tokenizeHtml.js',
-                  configuration: './languageConfiguration.json',
-                },
-              ],
-            },
-            {
-              id: 'test-author-2.test-extension',
-              publisher: 'test-author-2',
-              description: 'Test Extension',
-              name: 'test-extension',
-              version: '0.0.1',
-              main: 'main.js',
-              path: '/tmp/extensions/test-author-2.test-extension',
-            },
-          ],
-        })
-        break
+        return [
+          {
+            id: 'builtin.language-basics-html',
+            name: 'Language Basics HTML',
+            description:
+              'Provides syntax highlighting and bracket matching in HTML files.',
+            languages: [
+              {
+                id: 'html',
+                extensions: ['.html'],
+                tokenize: 'src/tokenizeHtml.js',
+                configuration: './languageConfiguration.json',
+              },
+            ],
+          },
+          {
+            id: 'test-author-2.test-extension',
+            publisher: 'test-author-2',
+            description: 'Test Extension',
+            name: 'test-extension',
+            version: '0.0.1',
+            main: 'main.js',
+            path: '/tmp/extensions/test-author-2.test-extension',
+          },
+        ]
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -244,28 +274,16 @@ test.skip('contentLoaded', async () => {
 
 // TODO sanitization is now in loadContent
 test.skip('contentLoaded - error - extension is null', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const state = {
     ...ViewletExtensions.create(),
     filteredExtensions: [null],
     maxLineY: 2,
   }
   await ViewletExtensions.contentLoaded(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith([
     909090,
     expect.any(Number),
     3024,
@@ -287,20 +305,8 @@ test.skip('contentLoaded - error - extension is null', async () => {
 
 // TODO sanitization is now in loadContent
 test.skip('contentLoaded - error - extension is of type array', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const state = {
     ...ViewletExtensions.create(),
     filteredExtensions: [[]],
@@ -308,8 +314,8 @@ test.skip('contentLoaded - error - extension is of type array', async () => {
     maxLineY: 1,
   }
   await ViewletExtensions.contentLoaded(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith([
     909090,
     expect.any(Number),
     3024,
@@ -331,42 +337,28 @@ test.skip('contentLoaded - error - extension is of type array', async () => {
 
 test('install', async () => {
   const state = ViewletExtensions.create()
-  ErrorHandling.state.handleError = jest.fn()
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  ErrorHandling.handleError.mockImplementation(() => {})
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ExtensionManagement.install':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: null,
-        })
+        return null
         break
       default:
         throw new Error('unexpected message')
     }
   })
   await ViewletExtensions.handleInstall(state, 'test-author.test-extension')
-  expect(SharedProcess.state.send).toHaveBeenCalledWith({
+  expect(SharedProcess.invoke).toHaveBeenCalledWith({
     jsonrpc: '2.0',
     id: expect.any(Number),
     method: 'ExtensionManagement.install',
     params: ['test-author.test-extension'],
   })
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenCalledWith([
     909090,
     expect.any(Number),
     3024,
@@ -375,7 +367,7 @@ test('install', async () => {
     'test-author.test-extension',
     'installing',
   ])
-  expect(RendererProcess.state.send).toHaveBeenLastCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenLastCalledWith([
     909090,
     expect.any(Number),
     3024,
@@ -384,112 +376,72 @@ test('install', async () => {
     'test-author.test-extension',
     'installed',
   ])
-  expect(ErrorHandling.state.handleError).not.toHaveBeenCalled()
+  expect(ErrorHandling.handleError).not.toHaveBeenCalled()
 })
 
 test('install - error', async () => {
   const state = ViewletExtensions.create()
-  ErrorHandling.state.handleError = jest.fn()
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  ErrorHandling.handleError.mockImplementation(() => {})
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ExtensionManagement.install':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          error: {
-            message: 'Test Error 2',
-          },
-        })
+        throw new Error('Test Error 2')
         break
       default:
-        console.log(message)
         throw new Error('unexpected message')
     }
   })
   console.error = jest.fn()
   await ViewletExtensions.handleInstall(state, 'test-author.test-extension')
-  expect(RendererProcess.state.send).toHaveBeenLastCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenLastCalledWith(
     3024,
     'Extensions',
     'setExtensionState',
     'test-author.test-extension',
-    'uninstalled',
-  ])
-  expect(ErrorHandling.state.handleError).toHaveBeenCalledWith(
+    'uninstalled'
+  )
+  expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
+  expect(ErrorHandling.handleError).toHaveBeenCalledWith(
     new Error('Test Error 2')
   )
 })
 
 test('uninstall', async () => {
   const state = ViewletExtensions.create()
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ExtensionManagement.uninstall':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: null,
-        })
+        return null
         break
       default:
         throw new Error('unexpected message')
     }
   })
   await ViewletExtensions.handleUninstall(state, 'test-author.test-extension')
-  expect(SharedProcess.state.send).toHaveBeenCalledWith({
-    jsonrpc: '2.0',
-    id: expect.any(Number),
-    method: 'ExtensionManagement.uninstall',
-    params: ['test-author.test-extension'],
-  })
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith(
+    'ExtensionManagement.uninstall',
+    'test-author.test-extension'
+  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Extensions',
     'setExtensionState',
     'test-author.test-extension',
-    'uninstalling',
-  ])
-  expect(RendererProcess.state.send).toHaveBeenLastCalledWith([
-    909090,
-    expect.any(Number),
+    'uninstalling'
+  )
+  expect(RendererProcess.invoke).toHaveBeenLastCalledWith(
     3024,
     'Extensions',
     'setExtensionState',
     'test-author.test-extension',
-    'uninstalled',
-  ])
+    'uninstalled'
+  )
 })
 
 test('uninstall - error', async () => {
