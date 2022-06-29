@@ -1,6 +1,3 @@
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
-import * as Layout from '../src/parts/Layout/Layout.js'
-
 import { jest } from '@jest/globals'
 
 beforeEach(() => {
