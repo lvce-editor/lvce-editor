@@ -1,13 +1,38 @@
 import { jest } from '@jest/globals'
 import * as Callback from '../src/parts/Callback/Callback.js'
-import * as Developer from '../src/parts/Developer/Developer.js'
 import * as LifeCycle from '../src/parts/LifeCycle/LifeCycle.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
 
 beforeEach(() => {
+  jest.resetAllMocks()
   Callback.state.id = 0
 })
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+const SharedProcess = await import(
+  '../src/parts/SharedProcess/SharedProcess.js'
+)
+
+const Developer = await import('../src/parts/Developer/Developer.js')
 
 // // TODO maybe put toMarkdownTable into another file (not sure where since it is only used in Developer.js currently)
 // test('toMarkdownTable', () => {
@@ -47,13 +72,13 @@ beforeEach(() => {
 
 test.skip('startupPerformance', async () => {
   LifeCycle.state.phase = LifeCycle.PHASE_TWELVE
-  RendererProcess.state.send = jest.fn()
-  SharedProcess.state.send = jest.fn((message) => {
-    if (message.method === 289) {
-      SharedProcess.state.receive({
-        id: message.id,
-        jsonrpc: '2.0',
-        result: {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 200:
+        return {
           name: 'node',
           entryType: 'node',
           startTime: 0,
@@ -65,13 +90,9 @@ test.skip('startupPerformance', async () => {
           loopStart: 30.154075999744236,
           loopExit: -1,
           idleTime: 1218.696944,
-        },
-      })
-    } else if (message.method === 8309) {
-      SharedProcess.state.receive({
-        id: message.id,
-        jsonrpc: '2.0',
-        result: {
+        }
+      case 8309:
+        return {
           entries: [
             {
               name: 'code/appReady',
@@ -89,11 +110,9 @@ test.skip('startupPerformance', async () => {
             },
           ],
           timeOrigin: 1639505170123.671,
-        },
-      })
-    } else {
-      console.log(message)
-      throw new Error('unexpected message')
+        }
+      default:
+        throw new Error('unexpected message')
     }
   })
   globalThis.performance = {
@@ -171,55 +190,43 @@ test.skip('startupPerformance', async () => {
 `.split('\n'),
     },
   ])
+  // @ts-ignore
   delete globalThis.performance
 })
 
 test.skip('monitorPerformance', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 284:
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: {
-            rss: 60567552,
-            heapTotal: 11350016,
-            heapUsed: 8160336,
-            external: 1654987,
-            arrayBuffers: 85610,
-          },
-        })
-        break
+        return {
+          rss: 60567552,
+          heapTotal: 11350016,
+          heapUsed: 8160336,
+          external: 1654987,
+          arrayBuffers: 85610,
+        }
       case 393:
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: {
-            rss: 60567552,
-            heapTotal: 11350016,
-            heapUsed: 8160336,
-            external: 1654987,
-            arrayBuffers: 85610,
-          },
-        })
-        break
+        return {
+          rss: 60567552,
+          heapTotal: 11350016,
+          heapUsed: 8160336,
+          external: 1654987,
+          arrayBuffers: 85610,
+        }
       default:
-        break
+        throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    if (message[0] === 909090 && message[2] === 284) {
-      RendererProcess.state.handleMessage([
-        67330,
-        message[1],
-        {
-          jsHeapSizeLimit: 2172649472,
-          totalJSHeapSize: 2822704,
-          usedJSHeapSize: 2400652,
-        },
-      ])
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    return {
+      jsHeapSizeLimit: 2172649472,
+      totalJSHeapSize: 2822704,
+      usedJSHeapSize: 2400652,
     }
   })
+
   globalThis.performance = {
     // @ts-ignore
     memory: {
@@ -231,13 +238,13 @@ test.skip('monitorPerformance', async () => {
   SharedProcess.state.totalSent = 379
   SharedProcess.state.totalReceived = 1693
   await Developer.getMemoryUsageContent()
-  expect(SharedProcess.state.send).toHaveBeenCalledWith({
+  expect(SharedProcess.invoke).toHaveBeenCalledWith({
     jsonrpc: '2.0',
     method: 284,
     params: [],
     id: 1,
   })
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenCalledWith([
     2134,
     expect.any(Number),
     'perf://Monitor Performance',
@@ -279,173 +286,119 @@ test.skip('monitorPerformance', async () => {
 `.split('\n'),
     },
   ])
+  // @ts-ignore
   delete globalThis.performance
 })
 
 // TODO test crashSharedProcess error
 
-test('crashSharedProcess', () => {
-  SharedProcess.state.send = jest.fn()
-  Developer.crashSharedProcess()
-  expect(SharedProcess.state.send).toHaveBeenCalledWith({
-    jsonrpc: '2.0',
-    method: 'Developer.crashSharedProcess',
-    params: [],
-  })
+test('crashSharedProcess', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(() => {})
+  await Developer.crashSharedProcess()
+  expect(SharedProcess.invoke).toHaveBeenCalledWith(
+    'Developer.crashSharedProcess'
+  )
 })
 
 // TODO test createSharedProcessHeapSnapshot error
 
 test('createSharedProcessHeapSnapshot', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'Developer.createSharedProcessHeapSnapshot':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: 1,
-        })
-        break
+        return null
       default:
-        break
+        throw new Error('unexpected message')
     }
   })
   await Developer.createSharedProcessHeapSnapshot()
-  expect(SharedProcess.state.send).toHaveBeenCalledWith({
-    id: 1,
-    jsonrpc: '2.0',
-    method: 'Developer.createSharedProcessHeapSnapshot',
-    params: [],
-  })
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith(
+    'Developer.createSharedProcessHeapSnapshot'
+  )
 })
 
 // TODO test toggleDeveloperTools error
 
-test('toggleDeveloperTools', () => {
-  SharedProcess.state.send = jest.fn()
-  Developer.toggleDeveloperTools()
-  expect(SharedProcess.state.send).toHaveBeenCalledWith({
-    jsonrpc: '2.0',
-    method: 'Electron.toggleDevtools',
-    params: [],
-  })
+test('toggleDeveloperTools', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(() => {})
+  await Developer.toggleDeveloperTools()
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Electron.toggleDevtools')
 })
 
 // TODO test openConfigFolder error
 
 test('openConfigFolder', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'Native.openFolder':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
+        return null
       case 'Platform.getConfigDir':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: '/test/config-folder',
-        })
-        break
+        return '/test/config-folder'
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
   await Developer.openConfigFolder()
-  expect(SharedProcess.state.send).toHaveBeenLastCalledWith({
-    id: expect.any(Number),
-    jsonrpc: '2.0',
-    method: 'Native.openFolder',
-    params: ['/test/config-folder'],
-  })
+  expect(SharedProcess.invoke).toHaveBeenLastCalledWith(
+    'Native.openFolder',
+    '/test/config-folder'
+  )
 })
 
 test('openDataFolder', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'Native.openFolder':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
+        return null
       case 'Platform.getDataDir':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: '/test/data-folder',
-        })
-        break
+        return '/test/data-folder'
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
   await Developer.openDataFolder()
-  expect(SharedProcess.state.send).toHaveBeenLastCalledWith({
-    id: expect.any(Number),
-    jsonrpc: '2.0',
-    method: 'Native.openFolder',
-    params: ['/test/data-folder'],
-  })
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(SharedProcess.invoke).toHaveBeenLastCalledWith(
+    'Native.openFolder',
+    '/test/data-folder'
+  )
 })
 
 test('openLogsFolder', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'Native.openFolder':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
+        return null
       case 'Platform.getLogsDir':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: '~/.local/state/app-name',
-        })
-        break
+        return '~/.local/state/app-name'
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
   await Developer.openLogsFolder()
-  expect(SharedProcess.state.send).toHaveBeenLastCalledWith({
-    id: expect.any(Number),
-    jsonrpc: '2.0',
-    method: 'Native.openFolder',
-    params: ['~/.local/state/app-name'],
-  })
+  expect(SharedProcess.invoke).toHaveBeenLastCalledWith(
+    'Native.openFolder',
+    '~/.local/state/app-name'
+  )
 })
 
 test('openLogsFolder - error', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'Native.openFolder':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
+        return null
       case 'Platform.getLogsDir':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          error: {
-            message: 'TypeError: x is not a function',
-          },
-        })
-        break
+        throw new TypeError('x is not a function')
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -455,42 +408,28 @@ test('openLogsFolder - error', async () => {
 })
 
 test('open process explorer', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'Electron.openProcessExplorer':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
+        return null
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
   await Developer.openProcessExplorer()
-  expect(SharedProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.state.send).toHaveBeenCalledWith({
-    id: expect.any(Number),
-    jsonrpc: '2.0',
-    method: 'Electron.openProcessExplorer',
-    params: [],
-  })
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith(
+    'Electron.openProcessExplorer'
+  )
 })
 
 test('open process explorer - error', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'Electron.openProcessExplorer':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          error: {
-            message: 'TypeError: x is not a function',
-          },
-        })
-        break
+        throw new TypeError('x is not a function')
       default:
         throw new Error('unexpected message')
     }
