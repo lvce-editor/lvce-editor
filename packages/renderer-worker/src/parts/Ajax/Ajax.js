@@ -1,25 +1,12 @@
 import ky, { HTTPError } from '../../../../../static/js/ky.js'
 
-export const state = {
-  async getJson(url, options) {
+export const getJson = async (url, options = {}) => {
+  try {
     // cannot use ky(url).json() because it sets "accept: application/json"
     // which doesn't work with preload, see
     // https://stackoverflow.com/questions/41655955/why-are-preload-link-not-working-for-json-requests#answer-48645748
     const response = await ky(url, options)
     return response.json()
-  },
-  async getText(url, options) {
-    return ky(url, options).text()
-  },
-}
-
-/**
- * @throws
- */
-export const getJson = async (url, options = {}) => {
-  try {
-    const result = await state.getJson(url, options)
-    return result
   } catch (error) {
     if (
       error &&
@@ -44,6 +31,7 @@ export const getJson = async (url, options = {}) => {
         throw new Error(`Failed to request json from "${url}": ${json.message}`)
       }
     }
+    // @ts-ignore
     error.message = `Failed to request json from "${url}": ${error.message}`
     throw error
   }
@@ -57,8 +45,7 @@ export const getJsonLocal = (url) => {
 
 export const getText = async (url, options = {}) => {
   try {
-    const result = await state.getText(url, options)
-    return result
+    return ky(url, options).text()
   } catch (error) {
     if (
       error &&
@@ -72,6 +59,9 @@ export const getText = async (url, options = {}) => {
         }
       )
     }
-    throw new Error(`Failed to request text from "${url}"`, { cause: error })
+    throw new Error(`Failed to request text from "${url}"`, {
+      // @ts-ignore
+      cause: error,
+    })
   }
 }
