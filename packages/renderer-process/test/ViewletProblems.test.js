@@ -1,8 +1,9 @@
 /**
  * @jest-environment jsdom
  */
+import { jest } from '@jest/globals'
+import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
 import * as ViewletProblems from '../src/parts/Viewlet/ViewletProblems.js'
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
 
 const getSimpleList = (state) => {
   return Array.from(state.element.children).map((node) => node.textContent)
@@ -39,6 +40,27 @@ test('focus', () => {
   document.body.append(state.$Viewlet)
   ViewletProblems.focus(state)
   expect(document.activeElement).toBe(state.$Viewlet)
+})
+
+test('event - mousedown', () => {
+  const state = ViewletProblems.create()
+  RendererWorker.state.send = jest.fn()
+  const event = new MouseEvent('mousedown', {
+    bubbles: true,
+    clientX: 15,
+    clientY: 30,
+    cancelable: true,
+  })
+  state.$Viewlet.dispatchEvent(event)
+  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([7550, -1])
+  expect(event.defaultPrevented).toBe(true)
+})
+
+test('setFocusedIndex', () => {
+  const state = ViewletProblems.create()
+  ViewletProblems.setFocusedIndex(state, -1)
+  expect(state.$Viewlet.classList.contains('FocusOutline')).toBe(true)
 })
 
 // test('append', () => {
