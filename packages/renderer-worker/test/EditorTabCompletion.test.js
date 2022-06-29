@@ -1,10 +1,28 @@
-import * as EditorTabCompletion from '../src/parts/EditorCommand/EditorCommandTabCompletion.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
-import * as Languages from '../src/parts/Languages/Languages.js'
+import { jest } from '@jest/globals'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/ExtensionHost/ExtensionHostTabCompletion.js',
+  () => {
+    return {
+      executeTabCompletionProvider: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const EditorTabCompletion = await import(
+  '../src/parts/EditorCommand/EditorCommandTabCompletion.js'
+)
+const ExtensionHostTabCompletion = await import(
+  '../src/parts/ExtensionHost/ExtensionHostTabCompletion.js'
+)
 
 test('editorTabCompletion - no tab completion available', async () => {
-  Languages.state.loaded = true
   const cursor = {
     rowIndex: 0,
     columnIndex: 0,
@@ -21,56 +39,17 @@ test('editorTabCompletion - no tab completion available', async () => {
         end: cursor,
       },
     ],
-    tokenizer: TokenizePlainText,
   }
-  SharedProcess.state.send = (message) => {
-    switch (message.method) {
-      case 'ExtensionHost.executeTabCompletionProvider':
-        SharedProcess.state.receive({
-          id: message.id,
-          result: null,
-        })
-        break
-      case 385:
-        break
-      case 'ExtensionHostTextDocument.syncIncremental':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: null,
-        })
-        break
-      case 'ExtensionHost.start':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: null,
-        })
-        break
-      case 'ExtensionHost.setWorkspaceRoot':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: null,
-        })
-        break
-      case 'ExtensionManagement.getExtensions':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: [],
-        })
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
+  // @ts-ignore
+  ExtensionHostTabCompletion.executeTabCompletionProvider.mockImplementation(
+    () => {
+      return null
     }
-  }
+  )
   expect(await EditorTabCompletion.editorTabCompletion(editor)).toBe(editor)
 })
 
 test('editorTabCompletion - tab completion available', async () => {
-  Languages.state.loaded = true
   const cursor = {
     rowIndex: 0,
     columnIndex: 1,
@@ -84,57 +63,19 @@ test('editorTabCompletion - tab completion available', async () => {
         end: cursor,
       },
     ],
-    tokenizer: TokenizePlainText,
     lineCache: [],
     undoStack: [],
   }
-  SharedProcess.state.send = (message) => {
-    switch (message.method) {
-      case 'ExtensionHost.executeTabCompletionProvider':
-        SharedProcess.state.receive({
-          id: message.id,
-          result: {
-            inserted: 'bc',
-            deleted: 1,
-            type: /* Snippet */ 2,
-          },
-        })
-        break
-      case 385:
-        break
-      case 'ExtensionHostTextDocument.syncIncremental':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: null,
-        })
-        break
-      case 'ExtensionHost.start':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: null,
-        })
-        break
-      case 'ExtensionHost.setWorkspaceRoot':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: null,
-        })
-        break
-      case 'ExtensionManagement.getExtensions':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: [],
-        })
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
+  // @ts-ignore
+  ExtensionHostTabCompletion.executeTabCompletionProvider.mockImplementation(
+    () => {
+      return {
+        inserted: 'bc',
+        deleted: 1,
+        type: /* Snippet */ 2,
+      }
     }
-  }
+  )
   expect(await EditorTabCompletion.editorTabCompletion(editor)).toMatchObject({
     lines: ['bc'],
   })
@@ -143,7 +84,6 @@ test('editorTabCompletion - tab completion available', async () => {
 // TODO test multiline snippet
 
 test('editorTabCompletion - multiline snippet', async () => {
-  Languages.state.loaded = true
   const cursor = {
     rowIndex: 0,
     columnIndex: 1,
@@ -157,7 +97,6 @@ test('editorTabCompletion - multiline snippet', async () => {
         end: cursor,
       },
     ],
-    tokenizer: TokenizePlainText,
     lineCache: [],
     minLineY: 0,
     maxLineY: 1,
@@ -170,55 +109,18 @@ test('editorTabCompletion - multiline snippet', async () => {
     scrollBarHeight: 10,
     undoStack: [],
   }
-  SharedProcess.state.send = (message) => {
-    switch (message.method) {
-      case 'ExtensionHost.executeTabCompletionProvider':
-        SharedProcess.state.receive({
-          id: message.id,
-          result: {
-            inserted: `<div>
+  // @ts-ignore
+  ExtensionHostTabCompletion.executeTabCompletionProvider.mockImplementation(
+    () => {
+      return {
+        inserted: `<div>
   $0
 </div>`,
-            deleted: 1,
-            type: /* Snippet */ 2,
-          },
-        })
-        break
-      case 385:
-        break
-      case 'ExtensionHostTextDocument.syncIncremental':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: null,
-        })
-        break
-      case 'ExtensionHost.start':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: null,
-        })
-        break
-      case 'ExtensionHost.setWorkspaceRoot':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: null,
-        })
-        break
-      case 'ExtensionManagement.getExtensions':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: [],
-        })
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
+        deleted: 1,
+        type: /* Snippet */ 2,
+      }
     }
-  }
+  )
   expect(await EditorTabCompletion.editorTabCompletion(editor)).toMatchObject({
     lines: ['<div>', '  $0', '</div>'],
   })
