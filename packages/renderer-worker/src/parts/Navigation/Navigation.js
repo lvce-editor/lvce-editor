@@ -13,28 +13,28 @@ export const state = {
   focusedPart: PART_TITLE_BAR,
 }
 
-export const focusActivityBar = () => {
-  RendererProcess.send([/* ActivityBar.focus */ 717115])
+export const focusActivityBar = async () => {
+  await RendererProcess.invoke(/* ActivityBar.focus */ 717115)
 }
 
-export const focusStatusBar = () => {
-  RendererProcess.send([/* StatusBar.focus */ 8882])
+export const focusStatusBar = async () => {
+  await RendererProcess.invoke(/* StatusBar.focus */ 8882)
 }
 
-export const focusPanel = () => {
-  RendererProcess.send([/* Panel.focus */ 6664])
+export const focusPanel = async () => {
+  await RendererProcess.invoke(/* Panel.focus */ 6664)
 }
 
-export const focusSideBar = () => {
-  RendererProcess.send([/* SideBar.focus */ 5554])
+export const focusSideBar = async () => {
+  await RendererProcess.invoke(/* SideBar.focus */ 5554)
 }
 
-export const focusTitleBar = () => {
-  RendererProcess.send([/* TitleBar.focus */ 1331])
+export const focusTitleBar = async () => {
+  await RendererProcess.invoke(/* TitleBar.focus */ 1331)
 }
 
-export const focusMain = () => {
-  RendererProcess.send([/* Main.focus */ 2145])
+export const focusMain = async () => {
+  await RendererProcess.invoke(/* Main.focus */ 2145)
 }
 
 export const focusNextTerminal = () => {
@@ -49,23 +49,17 @@ export const focusPart = (part) => {
   state.focusedPart = part
   switch (state.focusedPart) {
     case PART_TITLE_BAR:
-      focusTitleBar()
-      break
+      return focusTitleBar()
     case PART_MAIN:
-      focusMain()
-      break
+      return focusMain()
     case PART_PANEL:
-      focusPanel()
-      break
+      return focusPanel()
     case PART_STATUS_BAR:
-      focusStatusBar()
-      break
+      return focusStatusBar()
     case PART_SIDE_BAR:
-      focusSideBar()
-      break
+      return focusSideBar()
     case PART_ACTIVITY_BAR:
-      focusActivityBar()
-      break
+      return focusActivityBar()
     default:
       throw console.warn(`unknown part ${part}`)
   }
@@ -135,14 +129,14 @@ const getCurrentPart = () => {
   return state.focusedPart
 }
 
-export const focusNextPart = () => {
+export const focusNextPart = async () => {
   const currentPart = getCurrentPart()
   const nextPart = getVisiblePartNext(currentPart)
-  focusPart(nextPart)
+  await focusPart(nextPart)
 }
 
-export const focusPreviousPart = () => {
+export const focusPreviousPart = async () => {
   const currentPart = getCurrentPart()
   const previousPart = getVisiblePartPrevious(currentPart)
-  focusPart(previousPart)
+  await focusPart(previousPart)
 }

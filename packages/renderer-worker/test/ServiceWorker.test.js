@@ -1,47 +1,61 @@
 import { jest } from '@jest/globals'
-import * as ServiceWorker from '../src/parts/ServiceWorker/ServiceWorker.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as Preferences from '../src/parts/Preferences/Preferences.js'
 
-test('hydrate', async () => {
-  Preferences.state['serviceWorker.enabled'] = true
-  RendererProcess.state.send = jest.fn((message) => {
-    if (message[0] === 909090 && message[2] === 43725) {
-      RendererProcess.state.handleMessage([67330, message[1], undefined])
-    } else {
-      throw new Error('unexpected message')
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
     }
+  }
+)
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+  return {
+    getPlatform: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+const Platform = await import('../src/parts/Platform/Platform.js')
+
+const ServiceWorker = await import(
+  '../src/parts/ServiceWorker/ServiceWorker.js'
+)
+
+test('hydrate', async () => {
+  // @ts-ignore
+  Platform.getPlatform.mockImplementation(() => {
+    return 'web'
   })
+  Preferences.state['serviceWorker.enabled'] = true
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ServiceWorker.hydrate()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     43725,
-    '/serviceWorker.js',
-  ])
+    '/serviceWorker.js'
+  )
 })
 
 test('uninstall', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
+  // @ts-ignore
+  Platform.getPlatform.mockImplementation(() => {
+    return 'web'
   })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ServiceWorker.uninstall()
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    42726,
-  ])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(42726)
 })

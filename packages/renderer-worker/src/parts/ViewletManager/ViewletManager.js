@@ -1,5 +1,6 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const modules = Object.create(null)
 
@@ -81,14 +82,14 @@ export const create = (
   width,
   height
 ) => {
-  console.assert(typeof getModule === 'function')
-  console.assert(typeof id === 'string')
-  console.assert(typeof parentId === 'string')
-  console.assert(typeof uri === 'string')
-  console.assert(typeof left === 'number')
-  console.assert(typeof top === 'number')
-  console.assert(typeof width === 'number')
-  console.assert(typeof height === 'number')
+  Assert.fn(getModule)
+  Assert.string(id)
+  Assert.string(parentId)
+  Assert.string(uri)
+  Assert.number(left)
+  Assert.number(top)
+  Assert.number(width)
+  Assert.number(height)
   return {
     type: 0,
     getModule,

@@ -18,7 +18,7 @@ test.skip('openViewlet', async () => {
 
 // TODO sideBar is hard to test because of dependencies to Viewlet, Lifecycle and others, would need to mock Viewlet, Lifecycle etc. which would not be good
 
-test('showOrHideViewlet - show explorer, then search, then explorer again', async () => {
+test.skip('showOrHideViewlet - show explorer, then search, then explorer again', async () => {
   RendererProcess.state.send = jest.fn((message) => {
     switch (message[0]) {
       case 909090:

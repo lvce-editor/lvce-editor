@@ -1,5 +1,9 @@
 import { jest } from '@jest/globals'
 
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
 jest.unstable_mockModule(
   '../src/parts/RendererProcess/RendererProcess.js',
   () => {
@@ -15,10 +19,6 @@ const LocalStorage = await import('../src/parts/LocalStorage/LocalStorage.js')
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
-
-afterEach(() => {
-  jest.resetAllMocks()
-})
 
 test('getJson - number', async () => {
   // @ts-ignore

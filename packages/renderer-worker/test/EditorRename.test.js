@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -19,6 +18,21 @@ jest.unstable_mockModule(
   }
 )
 
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+
 const ExtensionHostRename = await import(
   '../src/parts/ExtensionHost/ExtensionHostRename.js'
 )
@@ -26,7 +40,6 @@ const EditorRename = await import('../src/parts/EditorRename/EditorRename.js')
 
 // TODO rename open or openWidget, but should be consistent with editorCompletions, editorHover
 test('open - can rename', async () => {
-  RendererProcess.state.send = jest.fn()
   const editor = {
     lines: [''],
     cursor: {
@@ -45,12 +58,14 @@ test('open - can rename', async () => {
       canRename: true,
     }
   })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await EditorRename.open(editor)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([4512, 0, 20])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(4512, 0, 20)
 })
 
 test('open - cannot rename', async () => {
-  RendererProcess.state.send = jest.fn()
   const editor = {
     lines: [''],
     cursor: {
@@ -68,13 +83,16 @@ test('open - cannot rename', async () => {
       canRename: false,
     }
   })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await EditorRename.open(editor)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3700,
     'You cannot rename this element',
     0,
-    20,
-  ])
+    20
+  )
 })
 
 // TODO test errors
@@ -95,31 +113,17 @@ test('finish - empty workspace edits', async () => {
     columnWidth: 8,
     rowHeight: 20,
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ 'newName',
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    return 'newName'
   })
+
   // @ts-ignore
   ExtensionHostRename.executeRenameProvider.mockImplementation(() => {
     return []
   })
   await EditorRename.finish(editor)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    4513,
-  ])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(4513)
 })
 
 test('abort', async () => {
@@ -134,7 +138,9 @@ test('abort', async () => {
     columnWidth: 8,
     rowHeight: 20,
   }
-  RendererProcess.state.send = jest.fn()
-  EditorRename.abort()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([4514])
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await EditorRename.abort()
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(4514)
 })

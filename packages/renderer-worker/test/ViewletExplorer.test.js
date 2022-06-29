@@ -1,14 +1,42 @@
 import { jest } from '@jest/globals'
 import * as Command from '../src/parts/Command/Command.js'
 import * as GlobalEventBus from '../src/parts/GlobalEventBus/GlobalEventBus.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
-import * as ViewletExplorer from '../src/parts/Viewlet/ViewletExplorer.js'
-import * as Workspace from '../src/parts/Workspace/Workspace.js'
+
+import * as Platform from '../src/parts/Platform/Platform.js'
 
 beforeEach(() => {
+  jest.resetAllMocks()
   GlobalEventBus.state.listenerMap = Object.create(null)
 })
+
+const x = jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+const SharedProcess = await import(
+  '../src/parts/SharedProcess/SharedProcess.js'
+)
+
+const Workspace = await import('../src/parts/Workspace/Workspace.js')
+
+const ViewletExplorer = await import('../src/parts/Viewlet/ViewletExplorer.js')
 
 test('name', () => {
   expect(ViewletExplorer.name).toBe('Explorer')
@@ -22,38 +50,31 @@ test('create', () => {
 test('loadContent', async () => {
   const state = ViewletExplorer.create()
   Workspace.state.workspacePath = '/test'
-  RendererProcess.state.send = jest.fn()
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.readDirWithFileTypes':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: [
-            {
-              name: 'file 1',
-              type: 'file',
-            },
-            {
-              name: 'file 2',
-              type: 'file',
-            },
-            {
-              name: 'file 3',
-              type: 'file',
-            },
-          ],
-        })
-        break
+        return [
+          {
+            name: 'file 1',
+            type: 'file',
+          },
+          {
+            name: 'file 2',
+            type: 'file',
+          },
+          {
+            name: 'file 3',
+            type: 'file',
+          },
+        ]
       case 'FileSystem.getPathSeparator':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: '/',
-        })
-        break
+        return '/'
       default:
-        console.log({ message })
+        console.log({ method })
         throw new Error('unexpected message')
     }
   })
@@ -106,61 +127,36 @@ test('loadContent', async () => {
 // to avoid race conditions, otherwise might miss some
 test('loadContent - race condition', async () => {
   Workspace.state.workspacePath = '/test'
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+
   let x = 0
-  SharedProcess.state.send = jest.fn(async (message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(async (method, ...params) => {
+    switch (method) {
       case 'FileSystem.readDirWithFileTypes':
         if (x++ === 0) {
-          SharedProcess.state.receive({
-            jsonrpc: '2.0',
-            id: message.id,
-            result: [
-              {
-                name: 'file 1',
-                type: 'file',
-              },
-            ],
-          })
+          return [
+            {
+              name: 'file 1',
+              type: 'file',
+            },
+          ]
         } else {
           await new Promise((resolve) => setTimeout(resolve, 1))
-          SharedProcess.state.receive({
-            jsonrpc: '2.0',
-            id: message.id,
-            result: [
-              {
-                name: 'file 1',
-                type: 'file',
-              },
-              {
-                name: 'file 2',
-                type: 'file',
-              },
-            ],
-          })
+          return [
+            {
+              name: 'file 1',
+              type: 'file',
+            },
+            {
+              name: 'file 2',
+              type: 'file',
+            },
+          ]
         }
-        break
       case 'FileSystem.getPathSeparator':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: '/',
-        })
-        break
+        return '/'
       default:
         throw new Error('unexpected message')
     }
@@ -178,10 +174,8 @@ test('loadContent - race condition', async () => {
   const promise1 = load(state)
   const promise2 = load(state)
   await Promise.all([promise1, promise2])
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -204,32 +198,23 @@ test('loadContent - race condition', async () => {
         setSize: 2,
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('loadContent - error - typeError', async () => {
   const state = ViewletExplorer.create()
   Workspace.state.workspacePath = '/test'
-  RendererProcess.state.send = jest.fn()
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.readDirWithFileTypes':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          error: {
-            message: 'TypeError: x is not a function',
-          },
-        })
-        break
+        throw new TypeError('x is not a function')
       case 'FileSystem.getPathSeparator':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: '/',
-        })
-        break
+        return '/'
       default:
         throw new Error('unexpected message')
     }
@@ -242,25 +227,16 @@ test('loadContent - error - typeError', async () => {
 test('loadContent - error - syntaxError', async () => {
   const state = ViewletExplorer.create()
   Workspace.state.workspacePath = '/test'
-  RendererProcess.state.send = jest.fn()
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.readDirWithFileTypes':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          error: {
-            message: 'SyntaxError: unexpected token x',
-          },
-        })
-        break
+        throw new SyntaxError('unexpected token x')
       case 'FileSystem.getPathSeparator':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: '/',
-        })
-        break
+        return '/'
       default:
         throw new Error('unexpected message')
     }
@@ -272,25 +248,16 @@ test('loadContent - error - syntaxError', async () => {
 
 test('loadContent - error - command not found', async () => {
   const state = ViewletExplorer.create()
-  RendererProcess.state.send = jest.fn()
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.readDirWithFileTypes':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          error: {
-            message: 'Error: command -1 not found',
-          },
-        })
-        break
+        throw new Error('command -1 not found')
       case 'FileSystem.getPathSeparator':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: '/',
-        })
-        break
+        return '/'
       default:
         throw new Error('unexpected message')
     }
@@ -303,21 +270,8 @@ test('loadContent - error - command not found', async () => {
 // TODO add test for contentLoaded with windows paths separators ('\')
 
 test('contentLoaded', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const state = {
     ...ViewletExplorer.create(),
     deltaY: 0,
@@ -360,10 +314,8 @@ test('contentLoaded', async () => {
     top: 0,
   }
   await ViewletExplorer.contentLoaded(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -395,42 +347,40 @@ test('contentLoaded', async () => {
         setSize: 3,
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test.skip('handleContextMenu', async () => {
-  RendererProcess.state.send = jest.fn()
-  SharedProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(() => {})
   const state = ViewletExplorer.create()
   await ViewletExplorer.handleContextMenu(state, 0, 0, -1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith(null)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(null)
 })
 
 // TODO should handle error gracefully
 test.skip('refresh - error', async () => {
   const state = ViewletExplorer.create()
   Workspace.state.workspacePath = '/home/test-user/test-path'
-  RendererProcess.state.send = jest.fn()
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.readDirWithFileTypes':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          error: {
-            message: 'TypeError: x is not a function',
-          },
-        })
-        break
+        throw new TypeError('x is not a function')
       default:
         throw new Error('unexpected message')
     }
   })
   // @ts-ignore
   await ViewletExplorer.refresh(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith([
     3024,
     'Explorer',
     'handleError',
@@ -464,21 +414,8 @@ test('handleClick - no element focused', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleClick(state, -1)
   expect(state.focusedIndex).toBe(-1)
 })
@@ -625,26 +562,11 @@ test('handleClick - directory-expanded - scrolled down', async () => {
     ],
     minLineY: 1,
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleClick(state, 0)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -658,8 +580,8 @@ test('handleClick - directory-expanded - scrolled down', async () => {
         type: 'directory',
         icon: '',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleClick - collapsed folder', async () => {
@@ -700,40 +622,22 @@ test('handleClick - collapsed folder', async () => {
       },
     ],
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.readDirWithFileTypes':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: [{ name: 'index.js', type: 'file' }],
-        })
-        break
+        return [{ name: 'index.js', type: 'file' }]
       default:
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleClick(state, 2)
   expect(state.focusedIndex).toBe(2)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -774,8 +678,8 @@ test('handleClick - collapsed folder', async () => {
         path: '/test-folder,index.js', // TODO this is wrong
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleClick - race condition - child folder is being expanded and parent folder is being collapsed', async () => {
@@ -816,42 +720,23 @@ test('handleClick - race condition - child folder is being expanded and parent f
       },
     ],
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.readDirWithFileTypes':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: [{ name: 'index.js', type: 'file' }],
-        })
-        break
+        return [{ name: 'index.js', type: 'file' }]
       default:
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const promise1 = ViewletExplorer.handleClick(state, 1)
   const promise2 = ViewletExplorer.handleClick(state, 0)
   await Promise.all([promise1, promise2])
   expect(state.focusedIndex).toBe(0)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -865,8 +750,8 @@ test('handleClick - race condition - child folder is being expanded and parent f
         path: '/parent-directory',
         type: 'directory',
       },
-    ],
-  ])
+    ]
+  )
 })
 // TODO test expanding folder
 
@@ -908,43 +793,25 @@ test('handleClick - race condition - opening multiple folders at the same time',
       },
     ],
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.readDirWithFileTypes':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: [{ name: 'index.js', type: 'file' }],
-        })
-        break
+        return [{ name: 'index.js', type: 'file' }]
       default:
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const promise1 = ViewletExplorer.handleClick(state, 0)
   const promise2 = ViewletExplorer.handleClick(state, 1)
   const promise3 = ViewletExplorer.handleClick(state, 2)
   await Promise.all([promise1, promise2, promise3])
   expect(state.focusedIndex).toBe(2)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(3)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
     3024,
     'Explorer',
     'updateDirents',
@@ -985,11 +852,10 @@ test('handleClick - race condition - opening multiple folders at the same time',
         setSize: 3,
         type: 'directory-expanded',
       },
-    ],
-  ])
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
+    ]
+  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
     3024,
     'Explorer',
     'updateDirents',
@@ -1039,11 +905,10 @@ test('handleClick - race condition - opening multiple folders at the same time',
         setSize: 3,
         type: 'directory-expanded',
       },
-    ],
-  ])
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(3, [
-    909090,
-    expect.any(Number),
+    ]
+  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    3,
     3024,
     'Explorer',
     'updateDirents',
@@ -1102,8 +967,8 @@ test('handleClick - race condition - opening multiple folders at the same time',
         setSize: 1,
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleClick - expanded folder', async () => {
@@ -1153,26 +1018,11 @@ test('handleClick - expanded folder', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleClick(state, 2)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -1205,25 +1055,13 @@ test('handleClick - expanded folder', async () => {
         type: 'directory',
         icon: '',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('focusPrevious', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: 1,
@@ -1277,39 +1115,15 @@ test('focusPrevious - at start', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.focusPrevious(state)
   expect(state.focusedIndex).toBe(0)
 })
 
 test('focusPrevious - when no focus', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: -1,
@@ -1347,20 +1161,8 @@ test('focusPrevious - when no focus and no dirents', async () => {
     deltaY: 0,
     dirents: [],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.focusPrevious(state)
   expect(state.focusedIndex).toBe(-1)
 })
@@ -1390,20 +1192,8 @@ test('focusNext', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.focusNext(state)
   expect(state.focusedIndex).toBe(1)
 })
@@ -1433,39 +1223,15 @@ test('focusNext - at end', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.focusNext(state)
   expect(state.focusedIndex).toBe(2)
 })
 
 test('focusNext - when no focus', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: -1,
@@ -1536,22 +1302,10 @@ test('handleArrowLeft - root file', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowLeft(state)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('handleArrowLeft - collapsed root folder', async () => {
@@ -1588,22 +1342,10 @@ test('handleArrowLeft - collapsed root folder', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowLeft(state)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('handleArrowLeft - expanded root folder with nested child folders inside', async () => {
@@ -1680,24 +1422,10 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowLeft(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -1735,8 +1463,8 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
         path: '/other-file.html',
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleArrowLeft - nested file - first child', async () => {
@@ -1781,30 +1509,16 @@ test('handleArrowLeft - nested file - first child', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowLeft(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'setFocusedIndex',
     3,
-    2,
-  ])
+    2
+  )
 })
 
 test('handleArrowLeft - nested file - third child', async () => {
@@ -1881,30 +1595,16 @@ test('handleArrowLeft - nested file - third child', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowLeft(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'setFocusedIndex',
     6,
-    2,
-  ])
+    2
+  )
 })
 
 test('handleArrowLeft - when no focus', async () => {
@@ -1941,22 +1641,10 @@ test('handleArrowLeft - when no focus', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowLeft(state)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('handleArrowRight - file', async () => {
@@ -2002,22 +1690,10 @@ test('handleArrowRight - file', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowRight(state)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('handleArrowRight - collapsed folder', async () => {
@@ -2058,37 +1734,19 @@ test('handleArrowRight - collapsed folder', async () => {
       },
     ],
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.readDirWithFileTypes':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: [{ name: 'index.js', type: 'file' }],
-        })
-        break
+        return [{ name: 'index.js', type: 'file' }]
       default:
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowRight(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -2129,8 +1787,8 @@ test('handleArrowRight - collapsed folder', async () => {
         type: 'file',
         icon: '',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleArrowRight - collapsed empty folder', async () => {
@@ -2168,37 +1826,19 @@ test('handleArrowRight - collapsed empty folder', async () => {
       },
     ],
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.readDirWithFileTypes':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: [],
-        })
-        break
+        return []
       default:
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowRight(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -2228,8 +1868,8 @@ test('handleArrowRight - collapsed empty folder', async () => {
         type: 'directory-expanded',
         icon: '',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleArrowRight - expanded folder', async () => {
@@ -2278,31 +1918,17 @@ test('handleArrowRight - expanded folder', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowRight(state)
   expect(state.focusedIndex).toBe(3)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'setFocusedIndex',
     2,
-    3,
-  ])
+    3
+  )
 })
 
 test('handleArrowRight - expanded empty folder', async () => {
@@ -2342,23 +1968,11 @@ test('handleArrowRight - expanded empty folder', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowRight(state)
   expect(state.focusedIndex).toBe(2)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('handleArrowRight - when no focus', async () => {
@@ -2407,22 +2021,10 @@ test('handleArrowRight - when no focus', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowRight(state)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('focusFirst', async () => {
@@ -2453,30 +2055,16 @@ test('focusFirst', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.focusFirst(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'setFocusedIndex',
     1,
-    0,
-  ])
+    0
+  )
 })
 
 test('focusFirst - no dirents', async () => {
@@ -2488,22 +2076,10 @@ test('focusFirst - no dirents', async () => {
     deltaY: 0,
     dirents: [],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.focusFirst(state)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('focusFirst - focus already at first', async () => {
@@ -2534,22 +2110,10 @@ test('focusFirst - focus already at first', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.focusFirst(state)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('focusLast', async () => {
@@ -2580,30 +2144,16 @@ test('focusLast', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.focusLast(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'setFocusedIndex',
     0,
-    1,
-  ])
+    1
+  )
 })
 
 test('focusLast - no dirents', async () => {
@@ -2612,22 +2162,10 @@ test('focusLast - no dirents', async () => {
     focusedIndex: -1,
     dirents: [],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.focusLast(state)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('focusLast - focus already at last', async () => {
@@ -2655,22 +2193,10 @@ test('focusLast - focus already at last', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.focusLast(state)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('handleWheel - up', async () => {
@@ -2703,24 +2229,10 @@ test('handleWheel - up', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleWheel(state, -22)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -2734,8 +2246,8 @@ test('handleWheel - up', async () => {
         setSize: 3,
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleWheel - up - already at top', async () => {
@@ -2768,22 +2280,10 @@ test('handleWheel - up - already at top', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleWheel(state, -10)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('handleWheel - down', async () => {
@@ -2816,24 +2316,10 @@ test('handleWheel - down', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleWheel(state, 22)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -2847,8 +2333,8 @@ test('handleWheel - down', async () => {
         setSize: 3,
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('handleWheel - down - already at bottom', async () => {
@@ -2881,22 +2367,10 @@ test('handleWheel - down - already at bottom', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleWheel(state, 10)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('handleWheel - down - already at bottom but viewlet is larger than items can fit', async () => {
@@ -2929,146 +2403,76 @@ test('handleWheel - down - already at bottom but viewlet is larger than items ca
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleWheel(state, 100)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test.skip('handlePaste - copied gnome files', async () => {
   const state = ViewletExplorer.create('', 0, 0, 0, 0)
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ClipBoard.readFiles':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: {
-            source: 'gnomeCopiedFiles',
-            type: 'copy',
-            files: ['/test/some-file.txt'],
-          },
-        })
-        break
+        return {
+          source: 'gnomeCopiedFiles',
+          type: 'copy',
+          files: ['/test/some-file.txt'],
+        }
       case 'FileSystem.copy':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
+        return null
       default:
-        console.log(message)
+        console.log({ method })
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handlePaste(state)
 })
 
 test('handlePaste - cut gnome files', async () => {
   const state = ViewletExplorer.create('', 0, 0, 0, 0)
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ClipBoard.readFiles':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: {
-            source: 'gnomeCopiedFiles',
-            type: 'cut',
-            files: ['/test/some-file.txt'],
-          },
-        })
-        break
+        return {
+          source: 'gnomeCopiedFiles',
+          type: 'cut',
+          files: ['/test/some-file.txt'],
+        }
       case 'FileSystem.rename':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
+        return null
       default:
-        console.log(message)
+        console.log({ method })
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handlePaste(state)
 })
 
 test('handlePaste - not supported', async () => {
   const state = ViewletExplorer.create('', 0, 0, 0, 0)
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ClipBoard.readFiles':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: {
-            source: 'notSupported',
-            type: 'none',
-            files: [],
-          },
-        })
-        break
+        return {
+          source: 'notSupported',
+          type: 'none',
+          files: [],
+        }
       default:
-        console.log(message)
+        console.log({ method })
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const spy = jest.spyOn(console, 'info').mockImplementation(() => {})
   await ViewletExplorer.handlePaste(state)
   expect(spy).toHaveBeenCalledTimes(1)
@@ -3079,41 +2483,25 @@ test('handlePaste - not supported', async () => {
 
 test.skip('event - workspace change', async () => {
   const state = ViewletExplorer.create('', 0, 0, 0, 0)
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ClipBoard.readFiles':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: {
-            source: 'notSupported',
-            type: 'none',
-            files: [],
-          },
-        })
-        break
+        return {
+          source: 'notSupported',
+          type: 'none',
+          files: [],
+        }
       default:
-        console.log(message)
+        console.log({ method })
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await GlobalEventBus.emitEvent('workspace.change', '/test')
-  expect(RendererProcess.state.send).toBeCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toBeCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith([
     3024,
     'Explorer',
     'updateDirents',
@@ -3130,47 +2518,28 @@ test.skip('newFile - root', async () => {
     minLineY: 0,
     maxLineY: 100,
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.writeFile':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: undefined,
-        })
-        break
+        return null
       default:
-        console.log(message)
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        console.log({ message })
-        if (message[4] === 'hideCreateFileInputBox') {
-          RendererProcess.state.handleMessage([
-            /* Callback.resolve */ 67330,
-            /* callbackId */ callbackId,
-            /* result */ 'new file',
-          ])
-          break
-        }
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'handleCreateFileInputBox':
+        return 'new file'
       default:
         throw new Error('unexpected message')
     }
   })
   await ViewletExplorer.newFile(state)
   await ViewletExplorer.acceptNewFile(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(3)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(3, [
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, [
     909090,
     expect.any(Number),
     3024,
@@ -3229,70 +2598,50 @@ test('newFile - inside folder', async () => {
     minLineY: 0,
     maxLineY: 100,
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.writeFile':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: undefined,
-        })
-        break
+        return null
       case 'FileSystem.readDirWithFileTypes':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: [
-            {
-              name: 'a.txt',
-              type: 'file',
-            },
-            {
-              name: 'b.txt',
-              type: 'file',
-            },
-            {
-              name: 'c.txt',
-              type: 'file',
-            },
-          ],
-        })
-        break
+        return [
+          {
+            name: 'a.txt',
+            type: 'file',
+          },
+          {
+            name: 'b.txt',
+            type: 'file',
+          },
+          {
+            name: 'c.txt',
+            type: 'file',
+          },
+        ]
       default:
-        console.log(message)
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        console.log({ message })
-        if (message[4] === 'hideCreateFileInputBox') {
-          RendererProcess.state.handleMessage([
-            /* Callback.resolve */ 67330,
-            /* callbackId */ callbackId,
-            /* result */ 'created.txt',
-          ])
-          break
-        }
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation((method, ...params) => {
+    switch (params[1]) {
+      case 'hideCreateFileInputBox':
+        return 'created.txt'
+      case 'updateDirents':
+      case 'setFocusedIndex':
+      case 'showCreateFileInputBox':
+        return null
       default:
+        console.log({ params })
         throw new Error('unexpected message')
     }
   })
   await ViewletExplorer.newFile(state)
   await ViewletExplorer.acceptNewFile(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(4)
-  console.log(state)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(4)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    4,
+
     3024,
     'Explorer',
     'updateDirents',
@@ -3360,46 +2709,33 @@ test('newFile - inside folder', async () => {
         setSize: 3,
         type: 'directory',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test.skip('newFile - error with writeFile', async () => {
   const state = ViewletExplorer.create('', '', 0, 0, 0, 0)
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.writeFile':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          error: {
-            message: 'TypeError: x is not a function',
-          },
-        })
-        break
+        throw new TypeError('x is not a function')
       default:
-        console.log(message)
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ 'my-file.txt',
-        ])
-        break
+  RendererProcess.invoke.mockImplementation((method) => {
+    switch (method) {
+      case 'abc':
+        return 'my-file.txt'
       default:
         throw new Error('unexpected message')
     }
   })
   await ViewletExplorer.newFile(state)
   await ViewletExplorer.acceptNewFile(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(3)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [
     909090,
     expect.any(Number),
     3024,
@@ -3407,7 +2743,7 @@ test.skip('newFile - error with writeFile', async () => {
     'showCreateFileInputBox',
     0,
   ])
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, [
     909090,
     expect.any(Number),
     3024,
@@ -3415,7 +2751,7 @@ test.skip('newFile - error with writeFile', async () => {
     'hideCreateFileInputBox',
     0,
   ])
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(3, [
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, [
     909090,
     expect.any(Number),
     7835,
@@ -3433,44 +2769,25 @@ test.skip('newFile - error with writeFile', async () => {
 test('newFile - canceled', async () => {
   const state = ViewletExplorer.create('', 0, 0, 0, 0)
   // TODO mock file system instead
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.writeFile':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: undefined,
-        })
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
+        return null
       default:
         throw new Error('unexpected message')
     }
   })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.newFile(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'showCreateFileInputBox',
-    -1,
-  ])
+    -1
+  )
 })
 
 test.skip('newFile - race condition', () => {
@@ -3516,48 +2833,33 @@ test('removeDirent - first', async () => {
     minLineY: 0,
     maxLineY: 100,
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // TODO mock file system instead
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.remove':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
+        return null
       default:
-        console.log(message)
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        console.log({ message })
-        if (message[4] === 'hideCreateFileInputBox') {
-          RendererProcess.state.handleMessage([
-            /* Callback.resolve */ 67330,
-            /* callbackId */ callbackId,
-            /* result */ 'created.txt',
-          ])
-          break
-        }
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation((method, ...params) => {
+    switch (params[1]) {
+      case 'hideCreateFileInputBox':
+        return 'created.txt'
+      case 'updateDirents':
+      case 'setFocusedIndex':
+        return null
       default:
         throw new Error('unexpected message')
     }
   })
   await ViewletExplorer.removeDirent(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2) // TODO should only be 1 for efficiency
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2) // TODO should only be 1 for efficiency
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
+
     3024,
     'Explorer',
     'updateDirents',
@@ -3580,17 +2882,17 @@ test('removeDirent - first', async () => {
         setSize: 3, // TODO should be 2
         type: 'directory',
       },
-    ],
-  ])
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
+    ]
+  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
+
     3024,
     'Explorer',
     'setFocusedIndex',
     0,
-    0,
-  ])
+    0
+  )
 })
 
 test('removeDirent - middle', async () => {
@@ -3632,48 +2934,32 @@ test('removeDirent - middle', async () => {
     minLineY: 0,
     maxLineY: 100,
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.remove':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
+        return null
       default:
-        console.log(message)
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        console.log({ message })
-        if (message[4] === 'hideCreateFileInputBox') {
-          RendererProcess.state.handleMessage([
-            /* Callback.resolve */ 67330,
-            /* callbackId */ callbackId,
-            /* result */ 'created.txt',
-          ])
-          break
-        }
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation((method, ...params) => {
+    switch (params[1]) {
+      case 'hideCreateFileInputBox':
+        return 'created.txt'
+      case 'updateDirents':
+      case 'setFocusedIndex':
+        return null
       default:
+        console.log({ method, params })
         throw new Error('unexpected message')
     }
   })
   await ViewletExplorer.removeDirent(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2) // TODO should only be 1 for efficiency
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2) // TODO should only be 1 for efficiency
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
     3024,
     'Explorer',
     'updateDirents',
@@ -3696,17 +2982,16 @@ test('removeDirent - middle', async () => {
         setSize: 3, // TODO should be 2
         type: 'directory',
       },
-    ],
-  ])
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
+    ]
+  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
     3024,
     'Explorer',
     'setFocusedIndex',
     1,
-    0,
-  ])
+    0
+  )
 })
 
 test('removeDirent - last', async () => {
@@ -3748,48 +3033,32 @@ test('removeDirent - last', async () => {
     minLineY: 0,
     maxLineY: 100,
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.remove':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
+        return null
       default:
-        console.log(message)
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        console.log({ message })
-        if (message[4] === 'hideCreateFileInputBox') {
-          RendererProcess.state.handleMessage([
-            /* Callback.resolve */ 67330,
-            /* callbackId */ callbackId,
-            /* result */ 'created.txt',
-          ])
-          break
-        }
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation((method, ...params) => {
+    switch (params[1]) {
+      case 'hideCreateFileInputBox':
+        return 'created.txt'
+      case 'updateDirents':
+      case 'setFocusedIndex':
+        return null
       default:
+        console.log({ method, params })
         throw new Error('unexpected message')
     }
   })
   await ViewletExplorer.removeDirent(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2) // TODO should only be 1 for efficiency
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2) // TODO should only be 1 for efficiency
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
     3024,
     'Explorer',
     'updateDirents',
@@ -3812,17 +3081,16 @@ test('removeDirent - last', async () => {
         setSize: 3, // TODO should be 2
         type: 'directory',
       },
-    ],
-  ])
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
+    ]
+  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
     3024,
     'Explorer',
     'setFocusedIndex',
     2,
-    1,
-  ])
+    1
+  )
 })
 
 test('removeDirent - no dirents left', async () => {
@@ -3836,45 +3104,26 @@ test('removeDirent - no dirents left', async () => {
     minLineY: 0,
     maxLineY: 100,
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.remove':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
+        return null
       default:
-        console.log(message)
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        console.log({ message })
-        if (message[4] === 'hideCreateFileInputBox') {
-          RendererProcess.state.handleMessage([
-            /* Callback.resolve */ 67330,
-            /* callbackId */ callbackId,
-            /* result */ 'created.txt',
-          ])
-          break
-        }
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'hideCreateFileInputBox':
+        return 'created.txt'
       default:
         throw new Error('unexpected message')
     }
   })
   await ViewletExplorer.removeDirent(state)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('resize - same height', () => {
@@ -4472,53 +3721,33 @@ test('expandAll', async () => {
       },
     ],
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'FileSystem.readDirWithFileTypes':
-        const path = message.params[0]
+        const path = params[0]
         switch (path) {
           case '/folder-1':
           case '/folder-2':
           case '/folder-3':
-            SharedProcess.state.receive({
-              jsonrpc: '2.0',
-              id: message.id,
-              result: [
-                { name: 'a.txt', type: 'file' },
-                { name: 'b.txt', type: 'file' },
-                { name: 'c.txt', type: 'file' },
-              ],
-            })
-            break
+            return [
+              { name: 'a.txt', type: 'file' },
+              { name: 'b.txt', type: 'file' },
+              { name: 'c.txt', type: 'file' },
+            ]
           default:
             throw new Error('unexpected folder')
         }
 
-        break
       default:
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.expandAll(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -4631,8 +3860,8 @@ test('expandAll', async () => {
         setSize: 3,
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test('collapseAll', async () => {
@@ -4764,26 +3993,11 @@ test('collapseAll', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.collapseAll(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3024,
     'Explorer',
     'updateDirents',
@@ -4824,6 +4038,6 @@ test('collapseAll', async () => {
         setSize: 4,
         type: 'file',
       },
-    ],
-  ])
+    ]
+  )
 })

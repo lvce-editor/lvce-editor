@@ -1,124 +1,79 @@
 import { jest } from '@jest/globals'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as SessionStorage from '../src/parts/SessionStorage/SessionStorage.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+const SessionStorage = await import(
+  '../src/parts/SessionStorage/SessionStorage.js'
+)
 
 test('getJson - number', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ '42',
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    return '42'
   })
   expect(await SessionStorage.getJson('item-1')).toBe(42)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    8977,
-    'item-1',
-  ])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(8977, 'item-1')
 })
 
 test('getJson - object', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ '{}',
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    return '{}'
   })
+
   expect(await SessionStorage.getJson('item-1')).toEqual({})
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    8977,
-    'item-1',
-  ])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(8977, 'item-1')
 })
 
 test('getJson - invalid json', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ '{',
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    return '{'
   })
   expect(await SessionStorage.getJson('item-1')).toBeUndefined()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    8977,
-    'item-1',
-  ])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(8977, 'item-1')
 })
 
 test('setJson', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    return undefined
   })
   await SessionStorage.setJson('item-1', 43)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     8978,
     'item-1',
     `43
-`,
-  ])
+`
+  )
 })
 
 test('clear', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    return undefined
   })
   await SessionStorage.clear()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    8976,
-  ])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(8976)
 })

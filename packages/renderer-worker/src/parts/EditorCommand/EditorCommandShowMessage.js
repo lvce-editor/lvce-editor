@@ -25,6 +25,8 @@ export const editorShowMessage = async (editor, position, message) => {
     console.log('ran timeout fn')
     editorHideMessage(editor)
   }
+
+  // TODO use wrapper timing module instead of this
   // @ts-ignore
   state.timeout = setTimeout(handleTimeout, 3_000)
   return editor

@@ -1,8 +1,29 @@
-import { jest } from '@jest/globals'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as ViewletActivityBar from '../src/parts/Viewlet/ViewletActivityBar.js'
 import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
 import * as Layout from '../src/parts/Layout/Layout.js'
+
+import { jest } from '@jest/globals'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+const ViewletActivityBar = await import(
+  '../src/parts/Viewlet/ViewletActivityBar.js'
+)
 
 const ACTIVITY_BAR_ITEM_HEIGHT = 48
 
@@ -179,21 +200,8 @@ test('render - all items fit but little space is remaining', async () => {
 })
 
 test.skip('contentLoaded - one items does not fit', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const state = {
     ...ViewletActivityBar.create(),
     activityBarItems: [
@@ -547,28 +555,11 @@ test('selectCurrent - settings', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3030:
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletActivityBar.selectCurrent(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     7905,
     750,
     408,
@@ -602,8 +593,8 @@ test('selectCurrent - settings', async () => {
     ],
     0,
     -1,
-    true,
-  ])
+    true
+  )
 })
 
 test('selectCurrent - no item focused', async () => {
@@ -658,14 +649,10 @@ test('selectCurrent - no item focused', async () => {
       },
     ],
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletActivityBar.selectCurrent(state)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 // TODO test when height is too low to show any activity bar items, e.g. height=10px

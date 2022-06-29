@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -15,6 +14,16 @@ jest.unstable_mockModule(
     }
   }
 )
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
 
 const ExtensionHostDiagnostic = await import(
   '../src/parts/ExtensionHost/ExtensionHostDiagnostic.js'
@@ -22,6 +31,10 @@ const ExtensionHostDiagnostic = await import(
 
 const EditorDiagnostics = await import(
   '../src/parts/EditorDiagnostics/EditorDiagnostics.js'
+)
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
 )
 
 test('scheduleDiagnostics', async () => {
@@ -44,9 +57,11 @@ test('scheduleDiagnostics', async () => {
       },
     ]
   })
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await EditorDiagnostics.runDiagnostics(editor)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     770,
     1,
     // TODO this should be intarray for efficiency -> binary search visible diagnostics (get length) -> allocate uint8array -> flatmap visible diagnostic to numbers
@@ -66,8 +81,8 @@ test('scheduleDiagnostics', async () => {
         height: 2,
         top: 200,
       },
-    ],
-  ])
+    ]
+  )
 })
 
 test.skip('scheduleDiagnostics - error', () => {})

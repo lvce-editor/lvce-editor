@@ -5,6 +5,9 @@ import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as Layout from '../Layout/Layout.js'
 
 export const state = {
+  /**
+   * @type {any[]}
+   */
   menus: [],
   latestTimeStamp: 0,
   enterTimeout: -1,
