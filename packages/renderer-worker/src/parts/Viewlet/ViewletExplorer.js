@@ -506,7 +506,7 @@ const newDirent = async (state) => {
   // TODO do it like vscode, select position between folders and files
   const focusedIndex = state.focusedIndex
   const index = state.focusedIndex + 1
-  if (focusedIndex !== -1) {
+  if (focusedIndex >= 0) {
     const dirent = state.dirents[state.focusedIndex]
     console.log({ dirent, dirents: state.dirents, fi: state.focusedIndex })
     if (dirent.type === 'directory') {
