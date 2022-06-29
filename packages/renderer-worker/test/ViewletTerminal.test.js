@@ -64,10 +64,10 @@ test('handleData', () => {
     data: [1, 2, 3, 4, 5],
   })
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     9922,
-    new Uint8Array([1, 2, 3, 4, 5]),
-  ])
+    new Uint8Array([1, 2, 3, 4, 5])
+  )
 })
 
 test('write', async () => {
@@ -87,10 +87,10 @@ test('clear', async () => {
   const state = ViewletTerminal.create()
   await ViewletTerminal.clear(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     9922,
-    new TextEncoder().encode('TODO clear terminal'),
-  ])
+    new TextEncoder().encode('TODO clear terminal')
+  )
 })
 
 test('resize', async () => {

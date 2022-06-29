@@ -36,10 +36,10 @@ export const contentLoadedEffects = async (state) => {
 export const handleData = async (state, data) => {
   // Terminal.handleData(state, data)
   const parsedData = new Uint8Array(data.data)
-  await RendererProcess.invoke([
+  await RendererProcess.invoke(
     /* ViewletTerminal.write */ 9922,
-    /* data */ parsedData,
-  ])
+    /* data */ parsedData
+  )
 }
 
 export const write = async (state, input) => {
@@ -75,8 +75,8 @@ export const resize = async (state, width, height) => {
 }
 
 export const clear = async (state) => {
-  await RendererProcess.invoke([
+  await RendererProcess.invoke(
     /* ViewletTerminal.write */ 9922,
-    /* data */ new TextEncoder().encode('TODO clear terminal'),
-  ])
+    /* data */ new TextEncoder().encode('TODO clear terminal')
+  )
 }
