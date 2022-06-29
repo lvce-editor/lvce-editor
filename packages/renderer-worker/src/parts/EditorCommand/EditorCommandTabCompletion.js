@@ -1,4 +1,3 @@
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionHostTabCompletion from '../ExtensionHost/ExtensionHostTabCompletion.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorSnippet from './EditorCommandSnippet.js'

@@ -427,8 +427,8 @@ export const allocateMemoryInSharedProcess = async () => {
   )
 }
 
-export const crashSharedProcess = () => {
-  SharedProcess.send(
+export const crashSharedProcess = async () => {
+  await SharedProcess.invoke(
     /* Developer.crashSharedProcess */ 'Developer.crashSharedProcess'
   )
 }
@@ -437,8 +437,8 @@ export const crashRendererProcess = () => {}
 
 export const crashRendererWorker = () => {}
 
-export const crashMainProcess = () => {
-  SharedProcess.send(
+export const crashMainProcess = async () => {
+  await SharedProcess.invoke(
     /* Electron.crashMainProcess */ 'Electron.crashMainProcess'
   )
 }
@@ -456,8 +456,10 @@ export const openLogsFolder = async () => {
   await Command.execute(/* Open.openNativeFolder */ 1370, /* path */ logsFolder)
 }
 
-export const toggleDeveloperTools = () => {
-  SharedProcess.send(/* Electron.toggleDevtools */ 'Electron.toggleDevtools')
+export const toggleDeveloperTools = async () => {
+  await SharedProcess.invoke(
+    /* Electron.toggleDevtools */ 'Electron.toggleDevtools'
+  )
 }
 
 export const showIconThemeCss = async () => {

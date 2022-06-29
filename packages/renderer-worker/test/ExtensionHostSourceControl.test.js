@@ -1,31 +1,44 @@
 import { jest } from '@jest/globals'
-import * as ExtensionHostSourceControl from '../src/parts/ExtensionHost/ExtensionHostSourceControl.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
-import * as ExtensionHost from '../src/parts/ExtensionHost/ExtensionHostCore.js'
 
-beforeAll(() => {
-  ExtensionHost.state.status = ExtensionHost.STATUS_RUNNING
+beforeEach(() => {
+  jest.resetAllMocks()
 })
 
+jest.unstable_mockModule(
+  '../src/parts/ExtensionHost/ExtensionHostManagement.js',
+  () => {
+    return {
+      activateByEvent: jest.fn(() => {}),
+    }
+  }
+)
+jest.unstable_mockModule(
+  '../src/parts/ExtensionHost/ExtensionHostCore.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const ExtensionHostSourceControl = await import(
+  '../src/parts/ExtensionHost/ExtensionHostSourceControl.js'
+)
+const ExtensionHost = await import(
+  '../src/parts/ExtensionHost/ExtensionHostCore.js'
+)
+
 test('acceptInput', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  ExtensionHost.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ExtensionHost.sourceControlAcceptInput':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
+        return null
       case 'ExtensionManagement.getExtensions':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: [],
-        })
-        break
+        return []
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -33,24 +46,13 @@ test('acceptInput', async () => {
 })
 
 test('acceptInput - error', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  ExtensionHost.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ExtensionHost.sourceControlAcceptInput':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          error: {
-            message: 'TypeError: x is not a function',
-          },
-        })
-        break
+        throw new TypeError('x is not a function')
       case 'ExtensionManagement.getExtensions':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: [],
-        })
-        break
+        return []
       default:
         throw new Error('unexpected message')
     }
