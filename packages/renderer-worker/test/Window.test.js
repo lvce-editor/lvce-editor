@@ -1,6 +1,5 @@
 import { jest } from '@jest/globals'
 import * as Platform from '../src/parts/Platform/Platform.js'
-// TODO what happens if editorError is outside of viewport (should not happen)
 
 beforeEach(() => {
   jest.resetAllMocks()
