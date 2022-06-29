@@ -592,11 +592,12 @@ test.skip('handleInput - should encode uri in ajax requests', async () => {
   const state = ViewletExtensions.create()
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  Ajax.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(()=>{
     return []
   })
   await ViewletExtensions.handleInput(state, 'test?')
-  expect(Ajax.state.getJson).toHaveBeenCalledWith(
+  expect(Ajax.getJson).toHaveBeenCalledWith(
     expect.stringContaining('/api/extensions/search?q=test%3F')
   )
 })
