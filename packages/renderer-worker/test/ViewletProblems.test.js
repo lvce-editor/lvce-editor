@@ -14,6 +14,7 @@ test('loadContent', async () => {
   expect(await ViewletProblems.loadContent(state)).toEqual({
     disposed: false,
     problems: [],
+    focusedIndex: -2,
   })
 })
 
