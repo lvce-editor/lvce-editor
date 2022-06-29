@@ -47,6 +47,7 @@ const SharedProcess = await import(
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
 test('hydrate', async () => {
+  // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
       case 'Workspace.resolveRoot':
