@@ -32,7 +32,7 @@ test('render', () => {
     problems: [],
   }
   expect(ViewletProblems.render(oldState, newState)).toEqual([
-    [3024, 'Problems', 'setProblems', []],
+    ['Viewlet.send', 'Problems', 'setProblems', []],
   ])
 })
 

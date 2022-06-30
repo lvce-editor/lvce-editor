@@ -119,7 +119,7 @@ test('openUri - no editors exist', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(4)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     1,
-    3024,
+    'Viewlet.send',
     'Main',
     'openViewlet',
     'EditorText',
@@ -127,9 +127,13 @@ test('openUri - no editors exist', async () => {
     '/tmp/file-1.txt',
     -1
   )
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 3030, 'EditorText')
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
+    'Viewlet.load',
+    'EditorText'
+  )
   // expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, [
-  //   3024,
+  //   'Viewlet.send',
   //   'EditorText',
   //   'renderText',
   //   undefined,
@@ -167,7 +171,7 @@ test('openUri - different editor exists', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(4)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     1,
-    3024,
+    'Viewlet.send',
     'Main',
     'openViewlet',
     'EditorText',
@@ -213,7 +217,7 @@ test.skip('openUri - race condition', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     2,
-    3024,
+    'Viewlet.send',
     'EditorText',
     'renderText',
     [],
@@ -223,7 +227,7 @@ test.skip('openUri - race condition', async () => {
   )
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     3,
-    3024,
+    'Viewlet.send',
     'Main',
     'openViewlet',
     'EditorText',
@@ -275,7 +279,7 @@ test.skip('openUri - editor with different uri exists', async () => {
   await ViewletMain.openUri(state, '/tmp/file-2.txt')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [
-    3024,
+    'Viewlet.send',
     'EditorText',
     'renderText',
     [],
@@ -366,7 +370,7 @@ test.skip('openUri, then opening a different uri, then open the first uri again'
   await ViewletMain.openUri(state, '/tmp/file-1.txt')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [
-    3024,
+    'Viewlet.send',
     'EditorText',
     'renderText',
     [],
@@ -399,7 +403,7 @@ test.skip('event - handleTabClick on another tab', async () => {
   await ViewletMain.handleTabClick(state, 0)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [
-    3024,
+    'Viewlet.send',
     'EditorText',
     'renderText',
     [],
@@ -697,7 +701,7 @@ test('closeEditor - 0 1 - first is focused and second tab is selected', async ()
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeOneTabOnly',
     0
@@ -777,7 +781,7 @@ test('closeEditor - 1 0 - middle tab is focused and first tab is selected', asyn
   expect(state.activeIndex).toBe(0)
   expect(state.focusedIndex).toBe(0)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeOneTabOnly',
     1
@@ -848,7 +852,7 @@ test('closeEditor - 1 2 - middle tab is focused and last tab is selected', async
   expect(state.activeIndex).toBe(1)
   expect(state.focusedIndex).toBe(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeOneTabOnly',
     1
@@ -886,7 +890,7 @@ test('closeEditor - 2 0 - last tab is focused and first tab is selected', async 
   expect(state.activeIndex).toBe(0)
   expect(state.focusedIndex).toBe(0)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeOneTabOnly',
     2
@@ -925,7 +929,7 @@ test('closeEditor - 2 1 - last tab is focused and middle tab is selected', async
   expect(state.activeIndex).toBe(1)
   expect(state.focusedIndex).toBe(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeOneTabOnly',
     2
@@ -990,7 +994,7 @@ test.skip('closeEditor - should then show editor to the left', async () => {
   expect(state.activeIndex).toBe(0)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [
-    3024,
+    'Viewlet.send',
     'EditorText',
     'renderText',
     [],
@@ -1049,7 +1053,7 @@ test.skip('handleTabContextMenu', async () => {
   await ViewletMain.handleTabContextMenu(state, 0, 15, 35)
   expect(state.focusedIndex).toBe(0)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3030,
+    'Viewlet.load',
     'ContextMenu',
     -97,
     -235,
@@ -1119,7 +1123,7 @@ test('closeOthers - 0 0 - first tab is selected and first tab is focused', async
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeOthers',
     0,
@@ -1162,7 +1166,7 @@ test('closeOthers - 0 1 - first tab is focused and second tab is selected', asyn
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeOthers',
     0,
@@ -1205,7 +1209,7 @@ test('closeOthers - 0 2 - first tab is focused and third tab is selected', async
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeOthers',
     0,
@@ -1248,7 +1252,7 @@ test('closeOthers - 1 0 - second tab is focused and first tab is selected', asyn
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeOthers',
     1,
@@ -1291,7 +1295,7 @@ test('closeOthers - 1 1 - second tab is focused and second tab is selected', asy
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeOthers',
     1,
@@ -1334,7 +1338,7 @@ test('closeOthers - 1 2 - second tab is focused and third tab is selected', asyn
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeOthers',
     1,
@@ -1377,7 +1381,7 @@ test('closeOthers - 2 0 - third tab is focused and first tab is selected', async
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeOthers',
     2,
@@ -1420,7 +1424,7 @@ test('closeOthers - 2 1 - third tab is focused and second tab is selected', asyn
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeOthers',
     2,
@@ -1463,7 +1467,7 @@ test('closeOthers - 2 2 - third tab is focused and third tab is selected', async
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeOthers',
     2,
@@ -1506,7 +1510,7 @@ test('closeTabsRight - 0 0 - first tab is focused and first tab is selected', as
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsRight',
     0
@@ -1548,7 +1552,7 @@ test('closeTabsRight - 0 1 - first tab is focused and second tab is selected', a
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsRight',
     0
@@ -1590,7 +1594,7 @@ test('closeTabsRight - 0 2 - first tab is focused and third tab is selected', as
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsRight',
     0
@@ -1635,7 +1639,7 @@ test('closeTabsRight - 1 0 - second tab is focused and first tab is selected', a
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsRight',
     1
@@ -1680,7 +1684,7 @@ test('closeTabsRight - 1 1 - second tab is focused and second tab is selected', 
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsRight',
     1
@@ -1725,7 +1729,7 @@ test('closeTabsRight - 1 2 - second tab is focused and third tab is selected', a
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsRight',
     1
@@ -1773,7 +1777,7 @@ test('closeTabsRight - 2 0 - third tab is focused and first tab is selected', as
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsRight',
     2
@@ -1821,7 +1825,7 @@ test('closeTabsRight - 2 1 - third tab is focused and second tab is selected', a
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsRight',
     2
@@ -1869,7 +1873,7 @@ test('closeTabsRight - 2 2 - third tab is focused and third tab is selected', as
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsRight',
     2
@@ -1917,7 +1921,7 @@ test('closeTabsLeft - 0 0 - first tab is focused and first tab is selected', asy
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsLeft',
     0
@@ -1965,7 +1969,7 @@ test('closeTabsLeft - 0 1 - first tab is focused and second tab is selected', as
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsLeft',
     0
@@ -2013,7 +2017,7 @@ test('closeTabsLeft - 0 2 - first tab is focused and third tab is selected', asy
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsLeft',
     0
@@ -2058,7 +2062,7 @@ test('closeTabsLeft - 1 0 - second tab is focused and first tab is selected', as
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsLeft',
     1
@@ -2103,7 +2107,7 @@ test('closeTabsLeft - 1 1 - second tab is focused and second tab is selected', a
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsLeft',
     1
@@ -2148,7 +2152,7 @@ test('closeTabsLeft - 1 2 - second tab is focused and third tab is selected', as
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsLeft',
     1
@@ -2190,7 +2194,7 @@ test('closeTabsLeft - 2 0 - third tab is focused and first tab is selected', asy
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsLeft',
     2
@@ -2232,7 +2236,7 @@ test('closeTabsLeft - 2 1 - third tab is focused and second tab is selected', as
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsLeft',
     2
@@ -2274,7 +2278,7 @@ test('closeTabsLeft - 2 2 - third tab is focused and third tab is selected', asy
     },
   ])
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Main',
     'closeTabsLeft',
     2

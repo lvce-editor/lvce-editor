@@ -9,7 +9,7 @@ test.skip('openViewlet', async () => {
   await ViewletSideBar.openViewlet('Noop')
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    3029,
+    'Viewlet.appendViewlet',
     'SideBar',
     'Noop',
     false,

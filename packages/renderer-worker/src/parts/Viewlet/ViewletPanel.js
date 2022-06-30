@@ -27,7 +27,7 @@ export const loadContent = async (state) => {
 
 export const contentLoaded = async (state) => {
   await RendererProcess.invoke(
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Panel',
     /* method */ 'setTabs',
     /* tabs */ state.views
@@ -44,7 +44,7 @@ export const dispose = (state) => {
 
 const getCachedViewlet = async () => {
   const cachedViewlet = await Command.execute(
-    /* LocalStorage.getItem */ 6902,
+    /* LocalStorage.getJson */ 'LocalStorage.getJson',
     /* key */ 'panelViewlet'
   )
   return cachedViewlet
@@ -81,7 +81,7 @@ export const tabsHandleClick = async (state, index) => {
 
   state.selectedIndex = index
   RendererProcess.send([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Panel',
     /* method */ 'selectTab',
     /* oldSelectedIndex */ oldSelectedIndex,

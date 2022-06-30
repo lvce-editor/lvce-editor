@@ -259,7 +259,7 @@ const getModuleId = (commandId) => {
     case 'ViewletExplorer.expandAll':
     case 'ViewletExplorer.collapseAll':
       return MODULE_VIEWLET_EXPLORER
-    case 232:
+    case 'ColorThemeFromJson.createColorThemeFromJson':
       return MODULE_COLOR_THEME_FROM_JSON
     case 'ClipBoard.readText':
     case 'ClipBoard.writeText':
@@ -428,7 +428,7 @@ const getModuleId = (commandId) => {
     case 'EditorApplyEdit.editorApplyEdit':
     case 'EditorSetDecorations.setDecorations':
       return MODULE_EDITOR_COMMAND
-    case 440:
+    case 'ErrorHandling.handleError':
       return MODULE_ERROR_HANDLING
     case 'FileSystem.readFile':
     case 'FileSystem.remove':
@@ -439,9 +439,9 @@ const getModuleId = (commandId) => {
       return MODULE_VIEWLET_SIDE_BAR
     case 'ViewletStatusBar.updateStatusBarItems':
       return MODULE_STATUS_BAR
-    case 711:
-    case 712:
-    case 713:
+    case 'Panel.tabsHandleClick':
+    case 'Panel.openViewlet':
+    case 'Panel.create':
       return MODULE_PANEL
     case 'Developer.getStartupPerformanceContent':
     case 'Developer.getMemoryUsageContent':
@@ -464,143 +464,165 @@ const getModuleId = (commandId) => {
     case 'Developer.openCacheFolder':
     case 'Developer.openProcessExplorer':
       return MODULE_DEVELOPER
-    case 860:
-    case 861:
-    case 862:
-    case 863:
-    case 864:
-    case 865:
-    case 866:
-    case 867:
-    case 868:
-    case 869:
-    case 870:
-    case 871:
-    case 872:
-    case 873:
-    case 874:
-    case 875:
-    case 876:
-    case 877:
-    case 878:
-    case 879:
+    case 'ViewletExtensions.openSuggest':
+    case 'ViewletExtensions.closeSuggest':
+    case 'ViewletExtensions.toggleSuggest':
+    case 'ViewletExtensions.handleInput':
+    case 'ViewletExtensions.handleContextMenu':
+    case 'ViewletExtensions.handleInstall':
+    case 'ViewletExtensions.handleUninstall':
+    case 'ViewletExtensions.handleClick':
+    case 'ViewletExtensions.focusIndex':
+    case 'ViewletExtensions.focusFirst':
+    case 'ViewletExtensions.focusLast':
+    case 'ViewletExtensions.focusPrevious':
+    case 'ViewletExtensions.focusNext':
+    case 'ViewletExtensions.handleWheel':
+    case 'ViewletExtensions.focusNextPage':
+    case 'ViewletExtensions.focusPreviousPage':
+    case 'ViewletExtensions.setDeltaY':
+    case 'ViewletExtensions.handleScrollBarMove':
+    case 'ViewletExtensions.handleScrollBarClick':
       return MODULE_VIEWLET_EXTENSIONS
-    case 900:
-    case 901:
-    case 902:
-    case 903:
-    case 904:
-    case 905:
-    case 906:
-    case 907:
-    case 908:
+    case 'Notification.create':
+    case 'Notification.dispose':
+    case 'Notification.showWithOptions':
+    case 'Notification.handleClick':
       return MODULE_NOTIFICATION
-    case 950:
-    case 951:
-    case 952:
-    case 953:
-    case 954:
-    case 955:
-    case 956:
-    case 957:
-    case 958:
-    case 959:
-    case 960:
-    case 961:
-    case 962:
-    case 963:
-    case 964:
+    case 'ContextMenu.select':
+    case 'ContextMenu.show':
+    case 'ContextMenu.hide':
+    case 'ContextMenu.focusFirst':
+    case 'ContextMenu.focusLast':
+    case 'ContextMenu.focusNext':
+    case 'ContextMenu.focusPrevious':
+    case 'ContextMenu.selectCurrent':
+    case 'ContextMenu.noop':
       return MODULE_CONTEXT_MENU
-    case 982:
-    case 983:
-    case 984:
-    case 985:
-    case 986:
-    case 987:
+    case 'ViewletEditorCompletion.dispose':
+    case 'ViewletEditorCompletion.selectIndex':
+    case 'ViewletEditorCompletion.focusFirst':
+    case 'ViewletEditorCompletion.focusLast':
+    case 'ViewletEditorCompletion.focusNext':
+    case 'ViewletEditorCompletion.focusPrevious':
+    case 'ViewletEditorCompletion.selectCurrent':
       return MODULE_VIEWLET_EDITOR_COMPLETION
-    case 980:
-    case 981:
-    case 988:
-    case 989:
-    case 990:
-    case 991:
-    case 992:
-    case 993:
-    case 994:
-    case 995:
-    case 996:
-    case 997:
-    case 998:
-    case 999:
-    case 1000:
-    case 1001:
-    case 1002:
-    case 1003:
-    case 1004:
-    case 1005:
-    case 1006:
-    case 1007:
-    case 1008:
-    case 1009:
-    case 1010:
-    case 1011:
-    case 1012:
-    case 1013:
-    case 1014:
-    case 1015:
-    case 1016:
-    case 1017:
+    case 'EditorCursorDown.editorCursorsDown':
+    case 'EditorCursorCharacterLeft.editorCursorCharacterLeft':
+    case 'EditorCursorCharacterRight.editorCursorsCharacterRight':
+    case 'EditorCursorUp.editorCursorsUp':
+    case 'EditorType.editorType':
+    case 'EditorDeleteLeft.editorDeleteCharacterLeft':
+    case 'EditorDeleteRight.editorDeleteCharacterRight':
+    case 'EditorInsertLineBreak.editorInsertLineBreak':
+    case 'EditorCopyLineUp.editorCopyLineUp':
+    case 'EditorCopyLineDown.editorCopyLineDown':
+    case 'EditorMoveLineDown.editorMoveLineDown':
+    case 'EditorCursorWordLeft.editorCursorWordLeft':
+    case 'EditorCursorWordRight.editorCursorWordRight':
+    case 'EditorDeleteWordLeft.editorDeleteWordLeft':
+    case 'EditorDeleteWordRight.editorDeleteWordRight':
+    case 'EditorMoveLineUp.editorMoveLineUp':
+    case 'EditorTabCompletion.editorTabCompletion':
+    case 'EditorCursorHome.editorCursorsHome':
+    case 'EditorCursorEnd.editorCursorEnd':
+    case 'EditorHandleSingleClick.editorHandleSingleClick':
+    case 'EditorSelectWord.editorSelectWord':
+    case 'EditorToggleBlockComment.editorToggleBlockComment':
+    case 'EditorMoveSelection.editorMoveSelection':
+    case 'EditorCut.editorCut':
+    case 'EditorCopy.editorCopy':
+    case 'EditorSelectAll.editorSelectAll':
+    case 'EditorMoveRectangleSelection.editorMoveRectangleSelection':
+    case 'EditorCursorWordPartRight.editorCursorWordPartRight':
+    case 'EditorCursorWordPartLeft.editorCursorWordPartLeft':
+    case 'EditorBlur.editorBlur':
+    case 'EditorToggleComment.editorToggleComment':
+    case 'EditorDeleteAllLeft.editorDeleteAllLeft':
+    case 'EditorDeleteAllRight.editorDeleteAllRight':
+    case 'EditorHandleTripleClick.editorHandleTripleClick':
+    case 'EditorSelectLine.editorSelectLine':
+    case 'EditorSave.editorSave':
+    case 'EditorHandleContextMenu.editorHandleContextMenu':
+    case 'EditorSelectCharacterLeft.editorSelectCharacterLeft':
+    case 'EditorSelectCharacterRight.editorSelectCharacterRight':
+    case 'EditorPasteText.editorPasteText':
+    case 'EditorPaste.editorPaste':
+    case 'EditorSetDeltaY.editorSetDeltaY':
+    case 'EditorHandleDoubleClick.editorHandleDoubleClick':
+    case 'EditorMoveSelectionPx.editorMoveSelectionPx':
+    case 'EditorMoveRectangleSelectionPx.editorMoveRectangleSelectionPx':
+    case 'EditorFormat.editorFormat':
+    case 'EditorHandleMouseMove.editorHandleMouseMove':
+    case 'EditorSelectNextOccurrence.editorSelectNextOccurrence':
+    case 'EditorSelectAllOccurrences.editorSelectAllOccurrences':
+    case 'EditorHandleTab.editorHandleTab':
+    case 'EditorCancelSelection.editorCancelSelection':
+    case 'EditorUnindent.editorUnindent':
+    case 'EditorUndo.editorUndo':
+    case 'EditorCursorSet.editorCursorSet':
+    case 'EditorDeleteWordPartLeft.editorDeleteWordPartLeft':
+    case 'EditorDeleteWordPartRight.editorDeleteWordPartRight':
+    case 'EditorHandleScrollBarMove.editorHandleScrollBarMove':
+    case 'EditorHandleScrollBarClick.editorHandleScrollBarClick':
+    case 'EditorSelectWordRight.editorSelectWordRight':
+    case 'EditorSelectWordLeft.editorSelectWordLeft':
+    case 'EditorSelectInsideString.editorSelectInsideString':
+    case 'EditorHandleTouchStart.editorHandleTouchStart':
+    case 'EditorHandleTouchMove.editorHandleTouchMove':
+    case 'EditorHandleTouchEnd.editorHandleTouchEnd':
+    case 'EditorHandleBeforeInputFromContentEditable.handleBeforeInputFromContentEditable':
+    case 'EditorHandleNativeSelectionChange.editorHandleNativeSelectionChange':
+    case 'EditorCommandIndentMore.editorIndentMore':
+    case 'EditorCommandIndentLess.editorIndentLess':
+    case 'EditorComposition.editorCompositionStart':
+    case 'EditorComposition.editorCompositionUpdate':
+    case 'EditorComposition.editorCompositionEnd':
+    case 'EditorGoToDefinition.editorGoToDefinition':
+    case 'EditorHandleMouseMoveWithAltKey.editorHandleMouseMoveWithAltKey':
+    case 'EditorCompletion.open':
+    case 'EditorCompletion.close':
+    case 'EditorCompletion.openFromType':
+    case 'EditorSetLanguageId.setLanguageId':
+    case 'EditorGoToTypeDefinition.editorGoToTypeDefinition':
+    case 'EditorApplyEdit.editorApplyEdit':
+    case 'EditorSetDecorations.setDecorations':
       return MODULE_EDITOR_COMMAND
-    case 1100:
-    case 1101:
-    case 1102:
-    case 1103:
-    case 1104:
-    case 1105:
-    case 1106:
-    case 1107:
-    case 1108:
-    case 1109:
-    case 1110:
-    case 1111:
-    case 1112:
-    case 1113:
-    case 1114:
-    case 1115:
-    case 1116:
-    case 1117:
-    case 1118:
-    case 1119:
+    case 'Layout.showSideBar':
+    case 'Layout.hideSideBar':
+    case 'Layout.toggleSideBar':
+    case 'Layout.showPanel':
+    case 'Layout.hidePanel':
+    case 'Layout.togglePanel':
+    case 'Layout.showActivityBar':
+    case 'Layout.hideActivityBar':
+    case 'Layout.toggleActivityBar':
+    case 'Layout.hydrate':
+    case 'Layout.hide':
+    case 'Layout.handleResize':
+    case 'Layout.handleSashPointerMove':
+    case 'Layout.handleSashPointerDown':
       return MODULE_LAYOUT
-    case 1200:
-    case 1201:
-    case 1202:
-    case 1203:
-    case 1204:
-    case 1205:
-    case 1206:
-    case 1207:
-    case 1208:
-    case 1209:
-    case 1210:
+    case 'Preferences.openSettingsJson':
+    case 'Preferences.openSettingsJson':
+    case 'Preferences.openKeyBindingsJson':
+    case 'Preferences.hydrate':
       return MODULE_PREFERENCES
     case 1300:
       return MODULE_SOURCE_CONTROL
-    case 1370:
-    case 1371:
-    case 1372:
-    case 1373:
+    case 'Open.openNativeFolder':
       return MODULE_OPEN
-    case 1400:
+    case 'ColorPicker.open':
+    case 'ColorPicker.close':
       return MODULE_COLOR_PICKER
     case 1422:
     case 1423:
       return MODULE_KEY_BINDINGS
-    case 1492:
-    case 1493:
-    case 1494:
-    case 1495:
-    case 1496:
+    case 'Dialog.openFolder':
+    case 'Dialog.showAbout':
+    case 'Dialog.showMessage':
+    case 'Dialog.close':
+    case 'Dialog.handleClick':
       return MODULE_DIALOG
     case 1592:
       return MODULE_COMMAND_INFO
@@ -608,34 +630,23 @@ const getModuleId = (commandId) => {
       return MODULE_VIEWLET
     case 2260:
       return MODULE_VIEWLET_STATUS_BAR
-    case 3030:
-    case 3031:
-    case 3032:
-    case 3033:
-    case 3034:
-    case 3035:
+    case 'IconTheme.getIconThemeCss':
+    case 'IconTheme.hydrate':
+    case 'IconTheme.addIcons':
       return MODULE_ICON_THEME
-    case 3300:
-    case 3301:
-    case 3302:
-    case 3303:
-    case 3304:
-    case 3305:
-    case 3306:
+    case 'EditorRename.open':
+    case 'EditorRename.finish':
+    case 'EditorRename.abort':
       return MODULE_EDITOR_RENAME
-    case 3380:
+    case 'Format.hydrate':
       return MODULE_FORMAT
     case 3444:
       return MODULE_LISTENER
     case 3900:
       return MODULE_EDITOR_ERROR
-    case 4356:
+    case 'Blob.base64StringToBlob':
       return MODULE_BLOB
-    case 4444:
-    case 4445:
-    case 4446:
-    case 4447:
-    case 4448:
+    case 'Audio.playBell':
       return MODULE_AUDIO
     case 4510:
     case 4511:
@@ -648,268 +659,156 @@ const getModuleId = (commandId) => {
     case 4518:
     case 4519:
       return MODULE_TITLE_BAR
-    case 4610:
-    case 4611:
-    case 4612:
-    case 4613:
-    case 4614:
-    case 4615:
-    case 4616:
-    case 4617:
-    case 4618:
-    case 4619:
-    case 4620:
-    case 4621:
-    case 4622:
-    case 4623:
-    case 4624:
-    case 4625:
-    case 4627:
-    case 4628:
-    case 4629:
+    case 'TitleBarMenuBar.toggleIndex':
+    case 'TitleBarMenuBar.hydrate':
+    case 'TitleBarMenuBar.focus':
+    case 'TitleBarMenuBar.focusIndex':
+    case 'TitleBarMenuBar.focusPrevious':
+    case 'TitleBarMenuBar.focusNext':
+    case 'TitleBarMenuBar.closeMenu':
+    case 'TitleBarMenuBar.openMenu':
+    case 'TitleBarMenuBar.handleKeyArrowDown':
+    case 'TitleBarMenuBar.handleKeyArrowUp':
+    case 'TitleBarMenuBar.handleKeyArrowRight':
+    case 'TitleBarMenuBar.handleKeyHome':
+    case 'TitleBarMenuBar.handleKeyEnd':
+    case 'TitleBarMenuBar.handleKeySpace':
+    case 'TitleBarMenuBar.handleKeyEnter':
+    case 'TitleBarMenuBar.handleKeyEscape':
+    case 'TitleBarMenuBar.handleKeyArrowLeft':
       return MODULE_TITLE_BAR_MENU
     case 4870:
     case 4871:
       return MODULE_VIEWLET_TERMINAL
-    case 5200:
-    case 5201:
-    case 5202:
-    case 5203:
-    case 5204:
-    case 5205:
+    case 'FindInWorkspace.findInWorkspace':
       return MODULE_FIND_IN_WORKSPACE
-    case 5430:
-    case 5431:
-    case 5432:
-    case 5433:
-    case 5434:
-    case 5435:
+    case 'RecentlyOpened.getRecentlyOpened':
+    case 'RecentlyOpened.clearRecentlyOpened':
+    case 'RecentlyOpened.addToRecentlyOpened':
+    case 'RecentlyOpened.hydrate':
       return MODULE_RECENTLY_OPENED
-    case 5610:
-    case 5611:
-    case 5612:
-    case 5613:
-    case 5614:
-    case 5615:
-    case 5616:
-    case 5617:
-    case 5618:
-    case 5619:
-    case 5620:
+    case 'ColorTheme.hydrate':
+    case 'ColorTheme.setColorTheme':
       return MODULE_COLOR_THEME
-    case 5740:
-    case 5741:
-    case 5742:
-    case 5743:
-    case 5744:
-    case 5745:
-    case 5746:
-    case 5747:
+    case 'Navigation.focusPreviousPart':
+    case 'Navigation.focusNextPart':
+    case 'Navigation.focusActivityBar':
+    case 'Navigation.focusStatusBar':
+    case 'Navigation.focusPanel':
+    case 'Navigation.focusSideBar':
+    case 'Navigation.focusTitleBar':
+    case 'Navigation.focusMain':
       return MODULE_NAVIGATION
-    case 5783:
-    case 5784:
-    case 5785:
-    case 5786:
-    case 5787:
-    case 5788:
-    case 5789:
-    case 5790:
+    case 'ServiceWorker.hydrate':
+    case 'ServiceWorker.uninstall':
       return MODULE_SERVICE_WORKER
-    case 6532:
+    case 'SourceControl.updateDecorations':
       return MODULE_VIEWLET_SOURCE_CONTROL
-    case 6661:
+    case 'SaveState.hydrate':
       return MODULE_SAVE_STATE
-    case 6755:
-    case 6756:
-    case 6757:
-    case 6758:
-    case 6759:
-    case 6770:
+    case 'SessionStorage.clear':
+    case 'SessionStorage.getJson':
       return MODULE_SESSION_STORAGE
-    case 6800:
-    case 6801:
-    case 6802:
+    case 'CacheStorage.clearCache':
+    case 'CacheStorage.setJson':
+    case 'CacheStorage.getJson':
       return MODULE_CACHE_STORAGE
-    case 6900:
-    case 6901:
-    case 6902:
+    case 'LocalStorage.clear':
+    case 'LocalStorage.setJson':
+    case 'LocalStorage.getJson':
+    case 'LocalStorage.getText':
+    case 'LocalStorage.setText':
+    case 'LocalStorage.getItem':
       return MODULE_LOCAL_STORAGE
-    case 7100:
-    case 7101:
-    case 7102:
-    case 7103:
-    case 7104:
-    case 7105:
-    case 7106:
-    case 7107:
-    case 7108:
-    case 7109:
-    case 7110:
-    case 7111:
-    case 7112:
-    case 7113:
-    case 7114:
-    case 7115:
-    case 7116:
-    case 7117:
-    case 7118:
-    case 7119:
+    case 'ViewletLocations.selectIndex':
+    case 'ViewletLocations.focusFirst':
+    case 'ViewletLocations.focusLast':
+    case 'ViewletLocations.focusNext':
+    case 'ViewletLocations.focusPrevious':
+    case 'ViewletLocations.selectCurrent':
+    case 'ViewletLocations.focusIndex':
       return MODULE_VIEWLET_Locations
-    case 7400:
-    case 7401:
-    case 7402:
-    case 7403:
-    case 7404:
-    case 7405:
-    case 7406:
-    case 7407:
-    case 7408:
-    case 7409:
-    case 7410:
+    case 'Menu.show':
+    case 'Menu.hide':
+    case 'Menu.selectIndex':
+    case 'Menu.focusNext':
+    case 'Menu.focusPrevious':
+    case 'Menu.focusFirst':
+    case 'Menu.focusLast':
+    case 'Menu.focusIndex':
+    case 'Menu.handleMouseEnter':
       return MODULE_MENU
-    case 7550:
-    case 7551:
-    case 7552:
-    case 7553:
-    case 7554:
-    case 7555:
-    case 7556:
-    case 7557:
-    case 7558:
-    case 7559:
+    case 'ViewletProblems.focusIndex':
       return MODULE_VIEWLET_PROBLEMS
-    case 7633:
-    case 7634:
-    case 7635:
-    case 7636:
-    case 7637:
-    case 7638:
-    case 7639:
+    case 'Workspace.setPath':
+    case 'Workspace.hydrate':
+    case 'Workspace.setUri':
       return MODULE_WORKSPACE
     case 7650:
     case 7651:
       return MODULE_EXTENSIONS
-    case 7890:
+    case 'Base64.decode':
       return MODULE_BASE_64
-    case 8000:
-    case 8001:
-    case 8002:
-    case 8003:
-    case 8004:
-    case 8005:
-    case 8006:
-    case 8007:
-    case 8008:
-    case 8009:
-    case 8010:
-    case 8011:
-    case 8012:
-    case 8013:
-    case 8014:
-    case 8015:
-    case 8016:
-    case 8017:
-    case 8018:
-    case 8019:
-    case 8020:
-    case 8021:
-    case 8022:
+    case 'ActivityBar.toggleItem':
+    case 'ActivityBar.handleClick':
+    case 'ActivityBar.handleContextMenu':
+    case 'ActivityBar.focus':
+    case 'ActivityBar.focusNext':
+    case 'ActivityBar.focusPrevious':
+    case 'ActivityBar.focusFirst':
+    case 'ActivityBar.focusLast':
+    case 'ActivityBar.selectCurrent':
+    case 'ActivityBar.getItems':
+    case 'ActivityBar.getHiddenItems':
+    case 'ActivityBar.updateSourceControlCount':
+    case 'ActivityBar.handleSideBarViewletChange':
+    case 'ActivityBar.handleSideBarHidden':
       return MODULE_ACTIVITY_BAR
-    case 8080:
-    case 8081:
-    case 8082:
-    case 8083:
-    case 8084:
-    case 8085:
-    case 8086:
-    case 8087:
-    case 8088:
-    case 8089:
-    case 8090:
-    case 8091:
-    case 8092:
-    case 8093:
-    case 8094:
-    case 8095:
-    case 8096:
-    case 8097:
-    case 8098:
-    case 8099:
+    case 'Window.reload':
+    case 'Window.minimize':
+    case 'Window.maximize':
+    case 'Window.unmaximize':
+    case 'Window.close':
+    case 'Window.makeScreenshot':
+    case 'Window.openNew':
+    case 'Window.exit':
       return MODULE_WINDOW
-    case 8786:
-    case 8787:
-    case 8788:
-    case 8789:
-    case 8790:
+    case 'EditorDiagnostics.hydrate':
       return MODULE_EDITOR_DIAGNOSTICS
-    case 8961:
-    case 8962:
+    case 'KeyBindingsInitial.getKeyBindings':
       return MODULE_KEY_BINDINGS_INITIAL
-    case 9081:
-    case 9082:
-    case 9083:
-    case 9084:
-    case 9085:
+    case 'ImagePreview.show':
+    case 'ImagePreview.hide':
       return MODULE_IMAGE_PREVIEW
-    case 9444:
-    case 9445:
-    case 9446:
-    case 9447:
-    case 9448:
-    case 9449:
-    case 9450:
-    case 9451:
-    case 9452:
-    case 9453:
-    case 9454:
-    case 9455:
-    case 9456:
-    case 9457:
-    case 9458:
-    case 9459:
-    case 9460:
-    case 9461:
-    case 9462:
-    case 9463:
-    case 9464:
-    case 9465:
-    case 9466:
-    case 9467:
-    case 9468:
-    case 9469:
+    case 'ViewletSearch.handleInput':
+    case 'ViewletSearch.handleClick':
       return MODULE_VIEWLET_SEARCH
     case 47110:
       return MODULE_WORKBENCH
-    case 67330:
-    case 67331:
+    case 'Callback.resolve':
+    case 'Callback.reject':
       return MODULE_CALLBACK
-    case 71179:
-    case 71178:
-    case 71180:
-    case 71181:
-    case 7611:
-    case 7612:
-    case 18920:
-    case 18921:
-    case 18922:
-    case 18923:
-    case 18924:
-    case 18925:
-    case 18926:
-    case 18927:
-    case 18928:
-    case 18929:
-    case 18930:
-    case 18931:
-    case 18932:
-    case 18933:
-    case 18934:
-    case 18935:
+    case 'QuickPick.openEverythingQuickPick':
+    case 'QuickPick.dispose':
+    case 'QuickPick.selectCurrentIndex':
+    case 'QuickPick.handleInput':
+    case 'QuickPick.selectIndex':
+    case 'QuickPick.openCommandPalette':
+    case 'QuickPick.openView':
+    case 'QuickPick.focusFirst':
+    case 'QuickPick.focusLast':
+    case 'QuickPick.focusPrevious':
+    case 'QuickPick.focusNext':
+    case 'QuickPick.openGoToLine':
+    case 'QuickPick.openColorTheme':
+    case 'QuickPick.fileOpenRecent':
+    case 'QuickPick.handleBlur':
+    case 'QuickPick.showExtensionsQuickPick':
       return MODULE_QUICK_PICK
-    case 212333:
-    case 212334:
-    case 4101:
-    case 4102:
+    case 'FindWidget.create':
+    case 'FindWidget.dispose':
+    case 'FindWidget.setValue':
+    case 'FindWidget.dispose':
       return MODULE_FIND_WIDGET
     default:
       throw new Error(`command ${commandId} not found`)

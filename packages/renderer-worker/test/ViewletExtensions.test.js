@@ -233,7 +233,7 @@ test.skip('contentLoaded', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledWith([
     909090,
     expect.any(Number),
-    3024,
+    'Viewlet.send',
     'Extensions',
     'setExtensions',
     [
@@ -274,7 +274,7 @@ test.skip('contentLoaded - error - extension is null', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledWith([
     909090,
     expect.any(Number),
-    3024,
+    'Viewlet.send',
     'Extensions',
     'setExtensions',
     [
@@ -306,7 +306,7 @@ test.skip('contentLoaded - error - extension is of type array', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledWith([
     909090,
     expect.any(Number),
-    3024,
+    'Viewlet.send',
     'Extensions',
     'setExtensions',
     [
@@ -344,14 +344,14 @@ test('install', async () => {
     'test-author.test-extension'
   )
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Extensions',
     'setExtensionState',
     'test-author.test-extension',
     'installing'
   )
   expect(RendererProcess.invoke).toHaveBeenLastCalledWith(
-    3024,
+    'Viewlet.send',
     'Extensions',
     'setExtensionState',
     'test-author.test-extension',
@@ -378,7 +378,7 @@ test('install - error', async () => {
   console.error = jest.fn()
   await ViewletExtensions.handleInstall(state, 'test-author.test-extension')
   expect(RendererProcess.invoke).toHaveBeenLastCalledWith(
-    3024,
+    'Viewlet.send',
     'Extensions',
     'setExtensionState',
     'test-author.test-extension',
@@ -409,14 +409,14 @@ test('uninstall', async () => {
     'test-author.test-extension'
   )
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Extensions',
     'setExtensionState',
     'test-author.test-extension',
     'uninstalling'
   )
   expect(RendererProcess.invoke).toHaveBeenLastCalledWith(
-    3024,
+    'Viewlet.send',
     'Extensions',
     'setExtensionState',
     'test-author.test-extension',
@@ -441,7 +441,7 @@ test('uninstall - error', async () => {
   })
   await ViewletExtensions.handleUninstall(state, 'test-author.test-extension')
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Extensions',
     'setExtensionState',
     'test-author.test-extension',
@@ -474,7 +474,7 @@ test('enable', async () => {
     'test-author.test-extension'
   )
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Extensions',
     'setExtensionState',
     'test-author.test-extension',
@@ -485,7 +485,7 @@ test('enable', async () => {
   //   id: ,
   // })
   expect(RendererProcess.invoke).toHaveBeenLastCalledWith(
-    3024,
+    'Viewlet.send',
     'Extensions',
     'setExtensionState',
     'test-author.test-extension',
@@ -515,7 +515,7 @@ test('enable - error', async () => {
     'test-author.test-extension'
   )
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Extensions',
     'setExtensionState',
     'test-author.test-extension',
@@ -581,7 +581,7 @@ test('handleInput - error', async () => {
   await ViewletExtensions.handleInput(state, 'test')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Extensions',
     'setError',
     'Failed to load extensions from marketplace: Error: Failed to request json from "https://example.com/api/extensions/search": HTTPError: Request failed with status code 404 Not Found'
@@ -593,7 +593,7 @@ test.skip('handleInput - should encode uri in ajax requests', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   // @ts-ignore
-  Ajax.getJson.mockImplementation(()=>{
+  Ajax.getJson.mockImplementation(() => {
     return []
   })
   await ViewletExtensions.handleInput(state, 'test?')
@@ -648,7 +648,7 @@ test('openSuggest', async () => {
   await ViewletExtensions.openSuggest(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Extensions',
     'openSuggest',
     [
@@ -671,7 +671,7 @@ test('closeSuggest', async () => {
   await ViewletExtensions.closeSuggest(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Extensions',
     'closeSuggest'
   )
@@ -684,7 +684,7 @@ test.skip('toggleSuggest', async () => {
   await ViewletExtensions.toggleSuggest(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Extensions',
     'openSuggest',
     [
@@ -703,7 +703,7 @@ test.skip('toggleSuggest', async () => {
   await ViewletExtensions.toggleSuggest(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Extensions',
     'closeSuggest'
   )
@@ -1458,7 +1458,7 @@ test('render - filtered extensions are different', () => {
   }
   expect(ViewletExtensions.render(oldState, newState)).toEqual([
     [
-      3024,
+      'Viewlet.send',
       'Extensions',
       'setExtensions',
       [
@@ -1492,7 +1492,7 @@ test('render - negative margin is different', () => {
     negativeMargin: -10,
   }
   expect(ViewletExtensions.render(oldState, newState)).toEqual([
-    [3024, 'Extensions', 'setNegativeMargin', -10],
+    ['Viewlet.send', 'Extensions', 'setNegativeMargin', -10],
   ])
 })
 
@@ -1528,7 +1528,7 @@ test('render - focused index is different', () => {
     focusedIndex: 1,
   }
   expect(ViewletExtensions.render(oldState, newState)).toEqual([
-    [3024, 'Extensions', 'setFocusedIndex', 0, 1],
+    ['Viewlet.send', 'Extensions', 'setFocusedIndex', 0, 1],
   ])
 })
 
@@ -1564,6 +1564,6 @@ test('render - focused index is different', () => {
 //     focusedIndex: 1,
 //   }
 //   expect(ViewletExtensions.render(oldState, newState)).toEqual([
-//     [3024, 'Extensions', 'setFocusedIndex', 0, 1],
+//     ['Viewlet.send', 'Extensions', 'setFocusedIndex', 0, 1],
 //   ])
 // })

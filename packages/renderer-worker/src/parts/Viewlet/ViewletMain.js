@@ -85,7 +85,9 @@ const hydrateLazy = async () => {
   // TODO main should not know about languages
   await Languages.hydrate()
   // TODO this should be in extension host
-  await Command.execute(/* EditorDiagnostics.hydrate */ 8786)
+  await Command.execute(
+    /* EditorDiagnostics.hydrate */ 'EditorDiagnostics.hydrate'
+  )
 }
 
 export const name = 'Main'
@@ -154,7 +156,7 @@ const id = 'EditorText'
 
 const getRestoredEditors = async () => {
   const savedState = await Command.execute(
-    /* LocalStorage.getItem */ 6902,
+    /* LocalStorage.getJson */ 'LocalStorage.getJson',
     /* key */ 'stateToSave'
   )
   const restoredEditor = getMainEditor(savedState)
@@ -195,7 +197,7 @@ export const contentLoaded = async (state) => {
   const tabLabel = Workspace.pathBaseName(editor.uri)
   const tabTitle = getTabTitle(editor.uri)
   RendererProcess.send([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'openViewlet',
     /* id */ id,
@@ -246,7 +248,7 @@ export const openUri = async (state, uri) => {
   const tabLabel = Workspace.pathBaseName(uri)
   const tabTitle = getTabTitle(uri)
   await RendererProcess.invoke(
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'openViewlet',
     /* id */ id,
@@ -302,7 +304,7 @@ export const closeActiveEditor = (state) => {
 
 export const closeAllEditors = (state) => {
   RendererProcess.send([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'dispose',
   ])
@@ -351,7 +353,7 @@ export const closeEditor = async (state, index) => {
     return
   }
   await RendererProcess.invoke(
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'closeOneTabOnly',
     /* closeIndex */ index
@@ -406,7 +408,7 @@ export const focusIndex = (state, index) => {
 
   // TODO race condition
   RendererProcess.send([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'focusAnotherTab',
     /* unFocusIndex */ oldActiveIndex,
@@ -444,7 +446,7 @@ export const closeOthers = async (state) => {
   if (state.focusedIndex === state.activeIndex) {
     // view is kept the same, only tabs are closed
     await RendererProcess.invoke(
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Main',
       /* method */ 'closeOthers',
       /* keepIndex */ state.focusedIndex,
@@ -453,7 +455,7 @@ export const closeOthers = async (state) => {
   } else {
     // view needs to be switched to focused index
     await RendererProcess.invoke(
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Main',
       /* method */ 'closeOthers',
       /* keepIndex */ state.focusedIndex,
@@ -469,7 +471,7 @@ export const closeTabsRight = async (state) => {
   if (state.focusedIndex >= state.activeIndex) {
     // view is kept the same, only tabs are closed
     await RendererProcess.invoke(
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Main',
       /* method */ 'closeTabsRight',
       /* index */ state.focusedIndex
@@ -477,7 +479,7 @@ export const closeTabsRight = async (state) => {
   } else {
     // view needs to be switched to focused index
     await RendererProcess.invoke(
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Main',
       /* method */ 'closeTabsRight',
       /* index */ state.focusedIndex
@@ -491,7 +493,7 @@ export const closeTabsLeft = async (state) => {
   if (state.focusedIndex <= state.activeIndex) {
     // view is kept the same, only tabs are closed
     await RendererProcess.invoke(
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Main',
       /* method */ 'closeTabsLeft',
       /* index */ state.focusedIndex
@@ -499,7 +501,7 @@ export const closeTabsLeft = async (state) => {
   } else {
     // view needs to be switched to focused index
     await RendererProcess.invoke(
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Main',
       /* method */ 'closeTabsLeft',
       /* index */ state.focusedIndex

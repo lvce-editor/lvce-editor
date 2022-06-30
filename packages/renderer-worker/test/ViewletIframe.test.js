@@ -32,6 +32,6 @@ test('render', () => {
     src: 'test://example.com',
   }
   expect(ViewletIframe.render(oldState, newState)).toEqual([
-    [3024, 'Iframe', 'setSrc', 'test://example.com'],
+    ['Viewlet.send', 'Iframe', 'setSrc', 'test://example.com'],
   ])
 })

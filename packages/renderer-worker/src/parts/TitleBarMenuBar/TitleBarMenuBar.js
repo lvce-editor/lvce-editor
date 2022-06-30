@@ -33,7 +33,7 @@ const openMenuAtIndex = async (index, shouldBeFocused) => {
   const items = await MenuEntries.getMenuEntries(id)
   Menu.state.menus = []
   const bounds = await RendererProcess.invoke(
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'TitleBar',
     /* method */ 'menuGetEntryBounds',
     /* index */ index
@@ -54,7 +54,7 @@ const openMenuAtIndex = async (index, shouldBeFocused) => {
     y,
   })
   RendererProcess.send([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'TitleBar',
     /* method */ 'menuOpen',
     /* unFocusIndex */ state.focusedIndex,
@@ -89,7 +89,7 @@ export const closeMenu = async (keepFocus) => {
   // TODO use Viewlet.dispose instead
   state.isMenuOpen = false
   await RendererProcess.invoke(
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'TitleBar',
     /* method */ 'menuClose',
     /* unFocusIndex */ state.focusedIndex,

@@ -131,7 +131,7 @@ test("closeMenu - don't keep focus", () => {
   TitleBarMenu.closeMenu(/* keepFocus */ false)
   expect(TitleBarMenu.state.isMenuOpen).toBe(false)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'TitleBar',
     'menuClose',
     0,
@@ -156,7 +156,7 @@ test('closeMenu - keep focus', () => {
   TitleBarMenu.closeMenu(/* keepFocus */ true)
   expect(TitleBarMenu.state.isMenuOpen).toBe(false)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'TitleBar',
     'menuClose',
     0,
@@ -597,7 +597,7 @@ test('toggleIndex - when open - when same index', async () => {
   await TitleBarMenu.toggleIndex(0)
   expect(TitleBarMenu.state.focusedIndex).toBe(0)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'TitleBar',
     'menuClose',
     0,

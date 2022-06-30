@@ -18,7 +18,7 @@ const toFastKeyBinding = async (keyBinding) => {
 export const getKeyBindings = async () => {
   const assetDir = Platform.getAssetDir()
   const defaultKeyBindings = await Command.execute(
-    /* Ajax.getJson */ 270,
+    /* Ajax.getJson */ 'Ajax.getJson',
     /* url */ `${assetDir}/config/defaultKeyBindings.json`
   )
   const actualKeyBindings = await Promise.all(

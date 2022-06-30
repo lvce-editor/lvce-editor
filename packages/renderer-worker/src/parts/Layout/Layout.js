@@ -143,9 +143,12 @@ export const getPoints = (layout, bounds) => {
 export const updateLayout = async (layout) => {
   const points = getPoints(layout, state)
   Object.assign(state, points)
-  RendererProcess.invoke(/* Layout.update */ 1100, /* points */ points)
+  RendererProcess.invoke(
+    /* Layout.update */ 'Layout.update',
+    /* points */ points
+  )
   await Command.execute(
-    /* LocalStorage.setJson */ 6901,
+    /* LocalStorage.setJson */ 'LocalStorage.setJson',
     /* key */ 'layout',
     /* value */ state
   )
@@ -337,13 +340,13 @@ export const toggleTitleBar = async () => {
 }
 
 const getBounds = async () => {
-  return RendererProcess.invoke(/* Layout.getBounds */ 1111)
+  return RendererProcess.invoke(/* Layout.getBounds */ 'Layout.getBounds')
 }
 
 const getInitialLayout = async () => {
   // TODO this is very similar to state
   const cachedLayout = await Command.execute(
-    /* LocalStorage.getItem */ 6902,
+    /* LocalStorage.getJson */ 'LocalStorage.getJson',
     /* key */ 'layout'
   )
   if (cachedLayout) {
@@ -357,7 +360,10 @@ export const hydrate = async () => {
   const initialLayout = await getInitialLayout()
   const points = getPoints(initialLayout, windowBounds)
   Object.assign(state, points)
-  await RendererProcess.invoke(/* Layout.show */ 1109, /* points */ points)
+  await RendererProcess.invoke(
+    /* Layout.show */ 'Layout.show',
+    /* points */ points
+  )
 }
 
 const isChild = (id) => {
@@ -421,7 +427,10 @@ export const handleSashPointerMove = async (x, y) => {
 export const handleResize = async (bounds) => {
   const points = getPoints(state, bounds)
   Object.assign(state, points)
-  await RendererProcess.invoke(/* Layout.update */ 1100, /* points */ points)
+  await RendererProcess.invoke(
+    /* Layout.update */ 'Layout.update',
+    /* points */ points
+  )
   const ids = ['Main', 'ActivityBar', 'SideBar', 'TitleBar', 'StatusBar']
   const resizeInstance = (id) => {
     const dimensions = getDimensions(state, id)

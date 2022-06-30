@@ -135,7 +135,7 @@ test('contentLoaded', async () => {
   await ViewletTitleBar.contentLoaded(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'TitleBar',
     'menuSetEntries',
     [

@@ -35,13 +35,13 @@ const getColorThemeJsonFromStaticFolder = (colorThemeId) => {
   const assetDir = Platform.getAssetDir()
   const url = `${assetDir}/themes/${colorThemeId}.json`
   // TODO handle error ?
-  return Command.execute(/* Ajax.getJson */ 270, /* url */ url)
+  return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
 }
 
 const getFallbackColorTheme = async () => {
   const assetDir = Platform.getAssetDir()
   const url = `${assetDir}/themes/fallback_theme.json`
-  return Command.execute(/* Ajax.getJson */ 270, /* url */ url)
+  return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
 }
 
 // TODO json parsing should also happen in renderer worker
@@ -56,7 +56,7 @@ const getColorThemeJson = (colorThemeId) => {
 
 export const getColorThemeCss = async (colorThemeId, colorThemeJson) => {
   const colorThemeCss = await Command.execute(
-    /* ColorThemeFromJson.createColorThemeFromJson */ 232,
+    /* ColorThemeFromJson.createColorThemeFromJson */ 'ColorThemeFromJson.createColorThemeFromJson',
     /* colorThemeId */ colorThemeId,
     /* colorThemeJson */ colorThemeJson
   )

@@ -134,7 +134,7 @@ export const getBounds = () => {
 
 const handleResize = (event) => {
   RendererWorker.send([
-    /* Layout.handleResize */ 1111,
+    /* Layout.handleResize */ 'Layout.handleResize',
     /* bounds */ getBounds(),
   ])
 }
@@ -191,7 +191,7 @@ const handleSashPointerDown = (event) => {
   RendererWorker.send([/* Layout.handleSashPointerDown */ 1113, /* id */ id])
 }
 
-export const hydrate = (points) => {
+export const show = (points) => {
   const $ActivityBar = document.createElement('div')
   $ActivityBar.id = 'ActivityBar'
 

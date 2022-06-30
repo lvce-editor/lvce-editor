@@ -30,7 +30,7 @@ export const render = (oldState, newState) => {
   const changes = []
   if (oldState.src !== newState.src) {
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Iframe',
       /* method */ 'setSrc',
       /* src */ newState.src,

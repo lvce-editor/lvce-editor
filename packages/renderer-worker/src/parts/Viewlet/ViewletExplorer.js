@@ -192,7 +192,7 @@ const getVisible = (state) => {
 const scheduleDirents = async (state) => {
   const visibleDirents = getVisible(state)
   await RendererProcess.invoke(
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'updateDirents',
     /* visibleDirents */ visibleDirents
@@ -303,7 +303,7 @@ export const renameDirent = async (state) => {
   const dirent = state.dirents[index]
   const name = dirent.name
   await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'showRenameInputBox',
     /* index */ index,
@@ -316,7 +316,7 @@ export const cancelRename = async (state) => {
   const dirent = state.dirents[index]
   state.editingIndex = -1
   await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'hideRenameBox',
     /* index */ index,
@@ -446,7 +446,7 @@ export const acceptRename = async (state) => {
   state.editingIndex = -1
   const renamedDirent = state.dirents[index]
   const newDirentName = await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'hideRenameBox',
     /* index */ index,
@@ -516,7 +516,7 @@ const newDirent = async (state) => {
   }
   state.editingIndex = index
   await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'showCreateFileInputBox',
     /* index */ index
@@ -532,7 +532,7 @@ const cancelDirent = async (state) => {
   const index = state.editingIndex
   state.editingIndex = -1
   await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'hideCreateFileInputBox',
     /* index */ index
@@ -555,7 +555,7 @@ const acceptDirent = async (state, type) => {
   const focusedIndex = state.focusedIndex
   state.editingIndex = -1
   const newFileName = await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'hideCreateFileInputBox',
     /* index */ editingIndex
@@ -679,7 +679,7 @@ const handleClickDirectoryExpanding = async (state, dirent, index) => {
   dirent.type = 'directory'
   dirent.icon = IconTheme.getIcon(dirent)
   await RendererProcess.invoke(
-    /* viewSend */ 3024,
+    /* viewSend */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'collapse',
     /* index */ index,
@@ -734,7 +734,7 @@ export const focusIndex = async (state, index) => {
   const oldFocusedIndex = state.focusedIndex
   state.focusedIndex = index
   await RendererProcess.invoke(
-    /* viewSend */ 3024,
+    /* viewSend */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'setFocusedIndex',
     /* oldIndex */ oldFocusedIndex,
@@ -1000,7 +1000,7 @@ export const resize = (state, dimensions) => {
   const visibleDirents = getVisible(newState)
   const commands = [
     [
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Explorer',
       /* method */ 'updateDirents',
       /* visibleDirents */ visibleDirents,

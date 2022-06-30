@@ -64,7 +64,7 @@ export const contentLoaded = async (state) => {
   // if (state.searchValue === '') {
   //   const visible = getVisible(state)
   //   await RendererProcess.invoke(
-  //     /* Viewlet.invoke */ 3024,
+  //     /* Viewlet.invoke */ 'Viewlet.send',
   //     /* id */ 'Extensions',
   //     /* method */ 'setExtensions',
   //     /* viewObjects */ visible,
@@ -73,7 +73,7 @@ export const contentLoaded = async (state) => {
   //   return
   // }
   // await RendererProcess.invoke(
-  //   /* Viewlet.invoke */ 3024,
+  //   /* Viewlet.invoke */ 'Viewlet.send',
   //   /* id */ 'Extensions',
   //   /* method */ 'setExtensions',
   //   /* viewObjects */ [],
@@ -269,7 +269,7 @@ export const focusLast = (state) => {
 // TODO show error / warning  when installment fails / times out
 export const handleInstall = async (state, id) => {
   await RendererProcess.invoke(
-    /* viewletSend */ 3024,
+    /* viewletSend */ 'Viewlet.send',
     /* id */ 'Extensions',
     /* method */ 'setExtensionState',
     /* id */ id,
@@ -280,7 +280,7 @@ export const handleInstall = async (state, id) => {
   } catch (error) {
     // TODO have multi send command
     await RendererProcess.invoke(
-      /* viewletSend */ 3024,
+      /* viewletSend */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setExtensionState',
       /* id */ id,
@@ -291,7 +291,7 @@ export const handleInstall = async (state, id) => {
     return
   }
   await RendererProcess.invoke(
-    /* viewletSend */ 3024,
+    /* viewletSend */ 'Viewlet.send',
     /* id */ 'Extensions',
     /* method */ 'setExtensionState',
     /* id */ id,
@@ -302,7 +302,7 @@ export const handleInstall = async (state, id) => {
 // TODO lazyload this
 export const handleUninstall = async (state, id) => {
   await RendererProcess.invoke(
-    /* viewletSend */ 3024,
+    /* viewletSend */ 'Viewlet.send',
     /* id */ 'Extensions',
     /* method */ 'setExtensionState',
     /* id */ id,
@@ -312,7 +312,7 @@ export const handleUninstall = async (state, id) => {
     await ExtensionManagement.uninstall(id)
   } catch (error) {
     await RendererProcess.invoke(
-      /* viewletSend */ 3024,
+      /* viewletSend */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setExtensionState',
       /* id */ id,
@@ -322,7 +322,7 @@ export const handleUninstall = async (state, id) => {
     return
   }
   await RendererProcess.invoke(
-    /* viewletSend */ 3024,
+    /* viewletSend */ 'Viewlet.send',
     /* id */ 'Extensions',
     /* method */ 'setExtensionState',
     /* id */ id,
@@ -336,7 +336,7 @@ export const handleEnable = async (state, id) => {
     await ExtensionManagement.enable(id)
   } catch (error) {
     await RendererProcess.invoke(
-      /* viewletSend */ 3024,
+      /* viewletSend */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setExtensionState',
       /* id */ id,
@@ -346,7 +346,7 @@ export const handleEnable = async (state, id) => {
     return
   }
   await RendererProcess.invoke(
-    /* viewletSend */ 3024,
+    /* viewletSend */ 'Viewlet.send',
     /* id */ 'Extensions',
     /* method */ 'setExtensionState',
     /* id */ id,
@@ -364,7 +364,7 @@ export const handleDisable = async (state, id) => {
     return
   }
   await RendererProcess.invoke(
-    /* viewletSend */ 3024,
+    /* viewletSend */ 'Viewlet.send',
     /* id */ 'Extensions',
     /* method */ 'setExtensionState',
     /* id */ id,
@@ -507,7 +507,7 @@ export const render = (oldState, newState) => {
   ) {
     const visibleExtensions = getVisible(newState)
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setExtensions',
       /* visibleExtensions */ visibleExtensions,
@@ -518,7 +518,7 @@ export const render = (oldState, newState) => {
   ) {
     const contentHeight = newState.filteredExtensions.length * ITEM_HEIGHT
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setContentHeight',
       /* contentHeight */ contentHeight,
@@ -527,7 +527,7 @@ export const render = (oldState, newState) => {
 
   if (oldState.negativeMargin !== newState.negativeMargin) {
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setNegativeMargin',
       /* negativeMargin */ newState.negativeMargin,
@@ -536,7 +536,7 @@ export const render = (oldState, newState) => {
 
   if (oldState.focusedIndex !== newState.focusedIndex) {
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldState.focusedIndex - oldState.minLineY,
@@ -548,7 +548,7 @@ export const render = (oldState, newState) => {
       (newState.deltaY / newState.finalDeltaY) *
       (newState.height - newState.scrollBarHeight)
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setScrollBar',
       /* scrollBarY */ scrollBarY,

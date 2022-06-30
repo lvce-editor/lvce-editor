@@ -77,7 +77,7 @@ test.skip('contentLoaded', async () => {
   await ViewletOutput.contentLoaded(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Output',
     'setOptions',
     [
@@ -110,7 +110,11 @@ test('setOutputChannel', async () => {
     '/tmp/log-extension-host.txt'
   )
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(3024, 'Output', 'clear')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Viewlet.send',
+    'Output',
+    'clear'
+  )
 })
 
 test('dispose', async () => {

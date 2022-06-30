@@ -169,7 +169,7 @@ export const render = (oldState, newState) => {
   if (oldState.displayReferences !== newState.displayReferences) {
     // const message =
     changes.push([
-      /* Viewlet.invoke */ 3024,
+      /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ newState.id,
       /* method */ 'setLocations',
       /* references */ newState.displayReferences,
@@ -177,7 +177,7 @@ export const render = (oldState, newState) => {
   }
   if (oldState.message !== newState.message) {
     changes.push([
-      /* Viewlet.invoke */ 3024,
+      /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ newState.id,
       /* method */ 'setMessage',
       /* message */ newState.message,
@@ -185,7 +185,7 @@ export const render = (oldState, newState) => {
   }
   if (oldState.focusedIndex !== newState.focusedIndex) {
     changes.push([
-      /* Viewlet.invoke */ 3024,
+      /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ newState.id,
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldState.focusedIndex,

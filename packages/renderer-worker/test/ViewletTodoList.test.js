@@ -24,6 +24,6 @@ test('render', () => {
     todos: [{ id: 1, text: 'test' }],
   }
   expect(ViewletTodoList.render(oldState, newState)).toEqual([
-    [3024, 'TodoList', 'setTodos', [{ id: 1, text: 'test' }]],
+    ['Viewlet.send', 'TodoList', 'setTodos', [{ id: 1, text: 'test' }]],
   ])
 })

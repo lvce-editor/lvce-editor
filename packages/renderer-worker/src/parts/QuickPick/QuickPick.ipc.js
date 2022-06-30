@@ -8,7 +8,6 @@ export const __initialize__ = () => {
   Command.register('QuickPick.selectCurrentIndex', QuickPick.selectCurrentIndex)
   Command.register('QuickPick.handleInput', QuickPick.handleInput)
   Command.register('QuickPick.selectIndex', QuickPick.selectIndex)
-  // TODO should this be inside quickpick?
   Command.register('QuickPick.openCommandPalette', QuickPick.openCommandPalette)
   Command.register('QuickPick.openView', QuickPick.openView)
   Command.register('QuickPick.focusFirst', QuickPick.focusFirst)

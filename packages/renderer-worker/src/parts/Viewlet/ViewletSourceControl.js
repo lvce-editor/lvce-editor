@@ -62,7 +62,7 @@ export const loadContent = async (state) => {
 export const contentLoaded = async (state) => {
   // TODO
   // await RendererProcess.invoke(
-  //   /* Viewlet.send */ 3024,
+  //   /* Viewlet.send */ 'Viewlet.send',
   //   /* id */ 'Source Control',
   //   /* method */ 'setChangedFiles',
   //   /* changedFiles */ state.changedFiles
@@ -99,7 +99,7 @@ export const render = (oldState, newState) => {
   const changes = []
   if (oldState.inputValue !== newState.inputValue) {
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Source Control',
       /* method */ 'setInputValue',
       /* value */ newState.inputValue,

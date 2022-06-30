@@ -59,7 +59,7 @@ export const contentLoaded = async (state) => {
     y -= contextMenuHeight
   }
   await RendererProcess.invoke(
-    /* Viewlet.load */ 3030,
+    /* Viewlet.load */ 'Viewlet.load',
     /* id */ 'ContextMenu',
     /* top */ y,
     /* left */ x,

@@ -45,6 +45,6 @@ test('render', () => {
     content: 'test',
   }
   expect(ViewletEditorPlainText.render(oldState, newState)).toEqual([
-    [3024, 'EditorPlainText', 'setContent', 'test'],
+    ['Viewlet.send', 'EditorPlainText', 'setContent', 'test'],
   ])
 })

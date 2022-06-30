@@ -54,7 +54,7 @@ export const handleResult = async (state, result) => {
     return
   }
   await RendererProcess.invoke(
-    /* viewletInvoke */ 3024,
+    /* viewletInvoke */ 'Viewlet.send',
     /* id */ state.id,
     /* method */ 'handleSearchResult',
     /* result */ result
@@ -150,7 +150,7 @@ export const render = (oldState, newState) => {
   const changes = []
   if (oldState.searchResults !== newState.searchResults) {
     changes.push([
-      /* viewletSend */ 3024,
+      /* viewletSend */ 'Viewlet.send',
       /* id */ 'Search',
       /* method */ 'setResults',
       /* results */ newState.searchResults,

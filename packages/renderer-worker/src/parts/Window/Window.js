@@ -54,7 +54,10 @@ export const exit = async () => {
 }
 
 export const setTitle = async (title) => {
-  await RendererProcess.invoke(/* Window.setTitle */ 8085, /* title */ title)
+  await RendererProcess.invoke(
+    /* Window.setTitle */ 'Window.setTitle',
+    /* title */ title
+  )
 }
 
 export const openNew = async () => {

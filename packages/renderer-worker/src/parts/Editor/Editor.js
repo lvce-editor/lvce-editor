@@ -62,7 +62,7 @@ export const renderText = (editor) => {
   Assert.object(editor)
   const textInfos = EditorText.getVisible(editor)
   RendererProcess.send([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'EditorText',
     /* method */ 'renderText',
     /* scrollBarY */ editor.scrollBarY,
@@ -84,7 +84,7 @@ export const renderTextAndCursorAndSelectionsCommands = (editor) => {
     (editor.deltaY / editor.finalDeltaY) *
     (editor.height - editor.scrollBarHeight)
   return [
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'EditorText',
     /* method */ 'renderTextAndCursorsAndSelections',
     /* scrollBarY */ scrollBarY,
@@ -120,7 +120,7 @@ export const scheduleSelections = (editor, selectionEdits) => {
   // const cursorInfos = EditorCursor.getVisible(editor)
   // const selectionInfos = EditorSelection.getVisible(editor)
   // RendererProcess.send([
-  //   /* Viewlet.invoke */ 3024,
+  //   /* Viewlet.invoke */ 'Viewlet.send',
   //   /* id */ 'EditorText',
   //   /* method */ 'renderCursorsAndSelections',
   //   /* cursorInfos */ cursorInfos,
@@ -147,7 +147,7 @@ export const scheduleSelectionsAndScrollPosition = (
   //   (editor.height - editor.scrollBarHeight)
   // const scrollBarHeight = editor.scrollBarHeight
   // RendererProcess.send([
-  //   /* Viewlet.invoke */ 3024,
+  //   /* Viewlet.invoke */ 'Viewlet.send',
   //   /* id */ 'EditorText',
   //   /* method */ 'renderTextAndCursorsAndSelections',
   //   /* deltaY */ scrollBarY,
@@ -202,7 +202,7 @@ export const scheduleDocumentAndCursorsSelections = (editor, changes) => {
   //   editor.undoStack.push(changes)
   // }
   // RendererProcess.send([
-  //   /* Viewlet.invoke */ 3024,
+  //   /* Viewlet.invoke */ 'Viewlet.send',
   //   /* id */ 'EditorText',
   //   /* method */ 'renderTextAndCursorsAndSelections',
   //   /* deltaY */ editor.deltaY,
@@ -242,7 +242,7 @@ export const scheduleDocument = async (editor, changes) => {
   GlobalEventBus.emitEvent('editor.change', editor, changes)
   return newEditor
   // RendererProcess.send([
-  //   /* Viewlet.invoke */ 3024,
+  //   /* Viewlet.invoke */ 'Viewlet.send',
   //   /* id */ 'EditorText',
   //   /* method */ 'renderTextAndCursorsAndSelections',
   //   /* deltaY */ scrollBarY,
@@ -313,7 +313,7 @@ export const render = (oldState, newState) => {
   ) {
     const textInfos = EditorText.getVisible(newState)
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'EditorText',
       /* method */ 'setText',
       /* textInfos */ textInfos,
@@ -324,7 +324,7 @@ export const render = (oldState, newState) => {
     const cursorInfos = EditorCursor.getVisible(newState)
     const selectionInfos = EditorSelection.getVisible(newState)
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'EditorText',
       /* method */ 'setSelections',
       /* cursorInfos */ cursorInfos,
@@ -339,7 +339,7 @@ export const render = (oldState, newState) => {
       (newState.deltaY / newState.finalDeltaY) *
       (newState.height - newState.scrollBarHeight)
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'EditorText',
       /* method */ 'setScrollBar',
       /* scrollBarY */ scrollBarY,

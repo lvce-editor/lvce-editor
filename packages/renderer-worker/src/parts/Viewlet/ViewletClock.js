@@ -13,7 +13,7 @@ export const create = (id, uri, left, top, width, height) => {
 export const loadContent = (state) => {
   const update = async () => {
     await RendererProcess.invoke(
-      /* Viewlet.invoke */ 3024,
+      /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ state.id,
       /* method */ 'setTime',
       /* time */ Date.now()

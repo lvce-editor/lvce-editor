@@ -7,7 +7,7 @@ export const clear = async () => {
 
 export const getText = async (key) => {
   const item = await RendererProcess.invoke(
-    /* LocalStorage.getItem */ 8987,
+    /* LocalStorage.getItem */ 'LocalStorage.getItem',
     /* key */ key
   )
   return item || ''
@@ -27,7 +27,7 @@ export const getJson = async (key) => {
 
 export const setText = async (key, value) => {
   await RendererProcess.invoke(
-    /* LocalStorage.setItem */ 8988,
+    /* LocalStorage.setItem */ 'LocalStorage.setItem',
     /* key */ key,
     /* value */ value
   )

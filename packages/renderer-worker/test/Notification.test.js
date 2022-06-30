@@ -26,7 +26,7 @@ test('create', async () => {
   await Notification.create('info', 'sample text')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    991,
+    'Notification.create',
     'info',
     'sample text'
   )

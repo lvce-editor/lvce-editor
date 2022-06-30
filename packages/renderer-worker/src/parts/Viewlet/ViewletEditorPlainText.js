@@ -33,7 +33,7 @@ export const render = (oldState, newState) => {
   const changes = []
   if (oldState.content !== newState.content) {
     changes.push([
-      /* Viewlet.invoke */ 3024,
+      /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'EditorPlainText',
       /* method */ 'setContent',
       /* content */ newState.content,

@@ -7,7 +7,7 @@ export const state = {
 export const create = async (type, text) => {
   state.notifications.push({ type, text })
   await RendererProcess.invoke(
-    /* Notification.create */ 991,
+    /* Notification.create */ 'Notification.create',
     /* type */ type,
     /* text */ text
   )

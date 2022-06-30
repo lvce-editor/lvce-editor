@@ -31,7 +31,7 @@ const getBuiltinPicks = async () => {
   const assetDir = Platform.getAssetDir()
   const url = `${assetDir}/config/builtinCommands.json`
   const builtinPicks = await Command.execute(
-    /* Ajax.getJson */ 270,
+    /* Ajax.getJson */ 'Ajax.getJson',
     /* url */ url
   )
   return builtinPicks

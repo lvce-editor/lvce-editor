@@ -4,7 +4,9 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 const getKeyBindings = async () => {
-  return Command.execute(/* KeyBindingsInitial.getKeyBindings */ 8961)
+  return Command.execute(
+    /* KeyBindingsInitial.getKeyBindings */ 'KeyBindingsInitial.getKeyBindings'
+  )
 }
 
 export const hydrate = async () => {

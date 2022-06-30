@@ -148,7 +148,7 @@ test('render - all items fit but little space is remaining', async () => {
 
   expect(ViewletActivityBar.render(oldState, newState)).toEqual([
     [
-      3024,
+      'Viewlet.send',
       'ActivityBar',
       'setItems',
       [
@@ -256,7 +256,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
     909090,
     expect.any(Number),
-    3024,
+    'Viewlet.send',
     'ActivityBar',
     'setItems',
     [
@@ -355,7 +355,7 @@ test('render - two items do not fit', () => {
 
   expect(ViewletActivityBar.render(oldState, newState)).toEqual([
     [
-      3024,
+      'Viewlet.send',
       'ActivityBar',
       'setItems',
       [
@@ -774,7 +774,7 @@ test('resize', () => {
   })
   expect(commands).toEqual([
     [
-      3024,
+      'Viewlet.send',
       'ActivityBar',
       'setItems',
       [

@@ -132,23 +132,15 @@ const getModuleId = (commandId) => {
     case 'Layout.hide':
     case 'Layout.getBounds':
       return MODULE_LAYOUT
-    case 3022:
-    case 3023:
-    case 3024:
-    case 3025:
-    case 3026:
-    case 3027:
-    case 3028:
-    case 3029:
-    case 3030:
-    case 3031:
-    case 3032:
-    case 3033:
-    case 3034:
-    case 3035:
-    case 3036:
-    case 3037:
-    case 3038:
+    case 'Viewlet.refresh':
+    case 'Viewlet.invoke':
+    case 'Viewlet.send':
+    case 'Viewlet.focus':
+    case 'Viewlet.dispose':
+    case 'Viewlet.appendViewlet':
+    case 'Viewlet.load':
+    case 'Viewlet.handleError':
+    case 'Viewlet.sendMultiple':
       return MODULE_VIEWLET
     case 'Audio.play':
       return MODULE_AUDIO

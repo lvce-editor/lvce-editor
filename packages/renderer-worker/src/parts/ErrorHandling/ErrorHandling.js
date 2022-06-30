@@ -58,7 +58,7 @@ export const state = {
     printError(error)
     const enhancedErrorMessage = enhanceErrorMessage(error)
     await Command.execute(
-      /* Notification.create */ 900,
+      /* Notification.create */ 'Notification.create',
       /* type */ 'error',
       /* text */ enhancedErrorMessage
     )

@@ -23,7 +23,7 @@ export const openKeyBindingsJson = async () => {
 const getPreferencesJson = async () => {
   if (Platform.getPlatform() === 'web') {
     const cachedPreferences = await Command.execute(
-      /* LocalStorage.getJson */ 6902,
+      /* LocalStorage.getJson */ 'LocalStorage.getJson',
       /* key */ 'preferences'
     )
     if (cachedPreferences) {
@@ -31,7 +31,7 @@ const getPreferencesJson = async () => {
     }
     const assetDir = Platform.getAssetDir()
     const url = `${assetDir}/config/defaultSettings.json`
-    return Command.execute(/* Ajax.getJson */ 270, /* url */ url)
+    return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
   }
   return SharedProcess.invoke(/* Preferences.getAll */ 'Preferences.getAll')
 }
@@ -85,7 +85,7 @@ export const set = async (key, value) => {
   if (Platform.getPlatform() === 'web') {
     const preferences = { ...state, [key]: value }
     await Command.execute(
-      /* LocalStorage.setJson */ 6901,
+      /* LocalStorage.setJson */ 'LocalStorage.setJson',
       /* key */ 'preferences',
       /* value */ preferences
     )

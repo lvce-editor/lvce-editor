@@ -47,7 +47,7 @@ export const loadContent = async (state) => {
 
 export const contentLoaded = async (state) => {
   await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'Output',
     /* method */ 'setOptions',
     /* options */ state.options,
@@ -59,7 +59,7 @@ export const setOutputChannel = async (state, option) => {
   state.selectedOption = option
   // TODO race condition
   await RendererProcess.invoke(
-    /* viewletSend */ 3024,
+    /* viewletSend */ 'Viewlet.send',
     /* id */ 'Output',
     /* method */ 'clear'
   )
@@ -75,7 +75,7 @@ export const setOutputChannel = async (state, option) => {
 export const handleData = async (state, data) => {
   console.log({ handleData: data })
   await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'Output',
     /* method */ 'append',
     /* data */ data
