@@ -72,10 +72,7 @@ export const getPicks = async () => {
 
 const selectPickBuiltin = async (item) => {
   // TODO ids should be all numbers for efficiency -> also directly can call command
-  const id = await Command.execute(
-    /* CommandInfo.getCommandInfo */ 1592,
-    /* id */ item.id
-  )
+  const id = await Command.execute(/* id */ item.id)
   await Command.execute(id)
   console.log('execute', id)
 }

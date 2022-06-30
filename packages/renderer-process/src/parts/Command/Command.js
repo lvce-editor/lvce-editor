@@ -105,8 +105,7 @@ const getModuleId = (commandId) => {
     case 550:
     case 551:
       return MODULE_VIEW_SERVICE
-    case 755:
-    case 756:
+    case 'KeyBindings.hydrate':
       return MODULE_KEYBINDINGS
     case 764:
     case 765:

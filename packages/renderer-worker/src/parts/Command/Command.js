@@ -615,8 +615,8 @@ const getModuleId = (commandId) => {
     case 'ColorPicker.open':
     case 'ColorPicker.close':
       return MODULE_COLOR_PICKER
-    case 1422:
-    case 1423:
+    case 'KeyBindings.handleKeyBinding':
+    case 'KeyBindings.hydrate':
       return MODULE_KEY_BINDINGS
     case 'Dialog.openFolder':
     case 'Dialog.showAbout':
@@ -624,8 +624,6 @@ const getModuleId = (commandId) => {
     case 'Dialog.close':
     case 'Dialog.handleClick':
       return MODULE_DIALOG
-    case 1592:
-      return MODULE_COMMAND_INFO
     case 2133:
       return MODULE_VIEWLET
     case 2260:

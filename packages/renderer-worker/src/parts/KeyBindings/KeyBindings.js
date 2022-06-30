@@ -13,7 +13,7 @@ export const hydrate = async () => {
   try {
     const keyBindings = await getKeyBindings()
     await RendererProcess.invoke(
-      /* KeyBindings.hydrate */ 755,
+      /* KeyBindings.hydrate */ 'KeyBindings.hydrate',
       /* keyBindings */ keyBindings
     )
   } catch (error) {

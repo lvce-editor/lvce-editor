@@ -493,9 +493,9 @@ export const showColorThemeCss = async () => {
 }
 
 export const clearCache = async () => {
-  await Command.execute(/* CacheStorage.clearCache */ 6800)
-  await Command.execute(/* LocalStorage.clear */ 6900)
-  await Command.execute(/* SessionStorage.clear */ 6755)
+  await Command.execute(/* CacheStorage.clearCache */ 'CacheStorage.clearCache')
+  await Command.execute(/* LocalStorage.clear */ 'LocalStorage.clear')
+  await Command.execute(/* SessionStorage.clear */ 'SessionStorage.clear')
 }
 
 export const editors = {
