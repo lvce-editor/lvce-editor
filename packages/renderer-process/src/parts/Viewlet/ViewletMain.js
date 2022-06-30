@@ -12,7 +12,7 @@ const handleDrop = async (event) => {
   console.log('[main] drop')
   event.preventDefault()
   Layout.state.$Main.classList.remove('DropTarget')
-  RendererWorker.send([/* handleDrop */ 92])
+  RendererWorker.send([/* handleDrop */ 'Main.handleDrop'])
 }
 
 const create$MainTabs = () => {
@@ -121,16 +121,25 @@ const getIndex = ($Target) => {
 }
 
 const handleTabCloseButtonMouseDown = (event, index) => {
-  RendererWorker.send([/* Main.closeEditor */ 99, /* index */ index])
+  RendererWorker.send([
+    /* Main.closeEditor */ 'Main.closeEditor',
+    /* index */ index,
+  ])
 }
 
 const handleTabMouseDown = (event, index) => {
   switch (event.button) {
     case /* LeftClick */ 0:
-      RendererWorker.send([/* Main.handleTabClick */ 100, /* index */ index])
+      RendererWorker.send([
+        /* Main.handleTabClick */ 'Main.handleTabClick',
+        /* index */ index,
+      ])
       break
     case /* MiddleClick */ 1:
-      RendererWorker.send([/* Main.closeEditor */ 99, /* index */ index])
+      RendererWorker.send([
+        /* Main.closeEditor */ 'Main.closeEditor',
+        /* index */ index,
+      ])
       break
     case /* RightClick */ 2:
       break

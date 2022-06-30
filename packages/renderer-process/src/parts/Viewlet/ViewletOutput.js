@@ -16,7 +16,7 @@ const handleChange = (event) => {
   const $Target = event.target
   const value = $Target.value
   RendererWorker.send([
-    /* viewletSend */ 2133,
+    /* viewletSend */ 'Viewlet.send',
     /* ViewletId */ 'Output',
     /* method */ 'setOutputChannel',
     /* option */ value,

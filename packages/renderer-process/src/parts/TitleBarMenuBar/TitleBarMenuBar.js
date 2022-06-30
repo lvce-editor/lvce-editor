@@ -208,50 +208,68 @@ const handleKeyDown = (event) => {
     case 'ArrowDown':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([/* TitleBarMenu.handleKeyArrowDown */ 4618])
+      RendererWorker.send([
+        /* TitleBarMenu.handleKeyArrowDown */ 'TitleBarMenu.handleKeyArrowDown',
+      ])
       break
     case 'ArrowUp':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([/* TitleBarMenu.handleKeyArrowUp */ 4619])
+      RendererWorker.send([
+        /* TitleBarMenu.handleKeyArrowUp */ 'TitleBarMenu.handleKeyArrowUp',
+      ])
       break
     case 'ArrowRight':
       console.log('arrow right')
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([/* TitleBarMenu.handleKeyArrowRight */ 4620])
+      RendererWorker.send([
+        /* TitleBarMenu.handleKeyArrowRight */ 'TitleBarMenu.handleKeyArrowRight',
+      ])
       break
     case 'ArrowLeft':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([/* TitleBarMenu.handleKeyArrowLeft */ 4626])
+      RendererWorker.send([
+        /* TitleBarMenu.handleKeyArrowLeft */ 'TitleBarMenu.handleKeyArrowLeft',
+      ])
       break
     case 'Enter':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([/* TitleBarMenu.handleKeyEnter */ 4624])
+      RendererWorker.send([
+        /* TitleBarMenu.handleKeyEnter */ 'TitleBarMenu.handleKeyEnter',
+      ])
       break
     case ' ':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([/* TitleBarMenu.handleKeySpace */ 4623])
+      RendererWorker.send([
+        /* TitleBarMenu.handleKeySpace */ 'TitleBarMenu.handleKeySpace',
+      ])
       break
     case 'Home':
     case 'PageUp':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([/* TitleBarMenu.handleKeyHome */ 4621])
+      RendererWorker.send([
+        /* TitleBarMenu.handleKeyHome */ 'TitleBarMenu.handleKeyHome',
+      ])
       break
     case 'End':
     case 'PageDown':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([/* TitleBarMenu.handleKeyEnd */ 4622])
+      RendererWorker.send([
+        /* TitleBarMenu.handleKeyEnd */ 'TitleBarMenu.handleKeyEnd',
+      ])
       break
     case 'Escape':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([/* TitleBarMenu.handleKeyEscape */ 4625])
+      RendererWorker.send([
+        /* TitleBarMenu.handleKeyEscape */ 'TitleBarMenu.handleKeyEscape',
+      ])
       break
     default:
       break

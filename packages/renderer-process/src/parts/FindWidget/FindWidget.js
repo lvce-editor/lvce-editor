@@ -4,11 +4,14 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 const handleInput = (event) => {
   const $Target = event.target
   const value = $Target.value
-  RendererWorker.send([/* FindWidget.setValue  */ 4101, /* value */ value])
+  RendererWorker.send([
+    /* FindWidget.setValue  */ 'FindWidget.setValue',
+    /* value */ value,
+  ])
 }
 
 const handleClose = (event) => {
-  RendererWorker.send([/* FindWidget.dispose  */ 4102])
+  RendererWorker.send([/* FindWidget.dispose  */ 'FindWidget.dispose'])
 }
 
 const handleFocus = (event) => {

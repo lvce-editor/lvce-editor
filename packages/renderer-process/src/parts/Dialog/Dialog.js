@@ -119,7 +119,10 @@ const getNodeIndex = ($Node) => {
 const handleDialogOptionClick = (event) => {
   const $Target = event.target
   const index = getNodeIndex($Target)
-  RendererWorker.send([/* Dialog.handleClick */ 1496, /* index */ index])
+  RendererWorker.send([
+    /* Dialog.handleClick */ 'Dialog.handleClick',
+    /* index */ index,
+  ])
 }
 
 // TODO this show be a viewlet

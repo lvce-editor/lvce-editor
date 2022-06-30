@@ -132,7 +132,7 @@ const handleContextMenu = (event) => {
   const x = event.clientX
   const y = event.clientY
   RendererWorker.send([
-    /* ViewletExplorer.handleContextMenu */ 162,
+    /* ViewletExplorer.handleContextMenu */ 'Explorer.handleContextMenu',
     /* x */ x,
     /* y */ y,
     /* index */ index,
@@ -193,13 +193,13 @@ const handleWheel = (event) => {
   switch (event.deltaMode) {
     case event.DOM_DELTA_LINE:
       RendererWorker.send([
-        /* ViewletExplorer.handleWheel */ 163,
+        /* ViewletExplorer.handleWheel */ 'Explorer.handleWheel',
         /* deltaY */ event.deltaY,
       ])
       break
     case event.DOM_DELTA_PIXEL:
       RendererWorker.send([
-        /* ViewletExplorer.handleWheel */ 163,
+        /* ViewletExplorer.handleWheel */ 'Explorer.handleWheel',
         /* deltaY */ event.deltaY,
       ])
       break

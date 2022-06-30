@@ -30,7 +30,7 @@ const handleMousedown = (event) => {
     return
   }
   RendererWorker.send([
-    /* ViewletEditorCompletion.selectIndex */ 982,
+    /* ViewletEditorCompletion.selectIndex */ 'EditorCompletion.selectIndex',
     /* index */ index,
   ])
 }

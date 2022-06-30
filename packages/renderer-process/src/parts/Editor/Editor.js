@@ -42,7 +42,10 @@ const handleBeforeInput = (event) => {
   event.preventDefault()
   switch (event.inputType) {
     case 'insertText':
-      RendererWorker.send([/* Editor.type */ 345, /* text */ event.data])
+      RendererWorker.send([
+        /* Editor.type */ 'Editor.type',
+        /* text */ event.data,
+      ])
       break
     default:
       break
@@ -61,25 +64,28 @@ const handleBeforeInput = (event) => {
 
 const handleCompositionStart = (event) => {
   RendererWorker.send([
-    /* Editor.compositionStart */ 411,
+    /* Editor.compositionStart */ 'Editor.compositionStart',
     /* text */ event.data,
   ])
 }
 
 const handleCompositionUpdate = (event) => {
   RendererWorker.send([
-    /* Editor.compositionUpdate */ 412,
+    /* Editor.compositionUpdate */ 'Editor.compositionUpdate',
     /* text */ event.data,
   ])
 }
 
 const handleCompositionEnd = (event) => {
-  RendererWorker.send([/* Editor.compositionEnd */ 413, /* text */ event.data])
+  RendererWorker.send([
+    /* Editor.compositionEnd */ 'Editor.compositionEnd',
+    /* text */ event.data,
+  ])
 }
 
 const handleCut = (event) => {
   event.preventDefault()
-  RendererWorker.send([/* Editor.cut */ 364])
+  RendererWorker.send([/* Editor.cut */ 'Editor.cut'])
 }
 
 const handleSelectionMove = (event) => {
@@ -88,14 +94,14 @@ const handleSelectionMove = (event) => {
   const totalOffset = getTotalOffset(event)
   if (event.altKey) {
     RendererWorker.send([
-      /* Editor.moveRectangleSelectionPx */ 387,
+      /* Editor.moveRectangleSelectionPx */ 'Editor.moveRectangleSelectionPx',
       /* x */ x,
       /* y */ y,
       /* offset */ totalOffset,
     ])
   } else {
     RendererWorker.send([
-      /* Editor.moveSelectionPx */ 386,
+      /* Editor.moveSelectionPx */ 'Editor.moveSelectionPx',
       /* x */ x,
       /* y */ y,
       /* offset */ totalOffset,
@@ -146,7 +152,7 @@ const handleDoubleClick = (event, x, y, offset) => {
 
 const handleTripleClick = (event, x, y, offset) => {
   RendererWorker.send([
-    /* Editor.handleTripleClick */ 376,
+    /* Editor.handleTripleClick */ 'Editor.handleTripleClick',
     /* x */ x,
     /* y */ y,
     /* offset */ offset,
@@ -231,7 +237,7 @@ const handleMouseMove = (event) => {
   if (event.altKey) {
     const offset = getTotalOffset(event)
     RendererWorker.send([
-      /* Editor.handleMouseMoveWithAltKey */ 415,
+      /* Editor.handleMouseMoveWithAltKey */ 'Editor.handleMouseMoveWithAltKey',
       /* x */ x,
       /* y */ y,
       /* offset */ offset,
@@ -266,12 +272,15 @@ const handleWheel = (event) => {
 const handlePaste = (event) => {
   event.preventDefault()
   const text = event.clipboardData.getData('text')
-  RendererWorker.send([/* Editor.paste */ 382, /* text */ text])
+  RendererWorker.send([/* Editor.paste */ 'Editor.paste', /* text */ text])
 }
 
 const handleScrollBarThumbMouseMove = (event) => {
   const y = event.clientY
-  RendererWorker.send([/* Editor.handleScrollBarMouseMove */ 399, /* y */ y])
+  RendererWorker.send([
+    /* Editor.handleScrollBarMouseMove */ 'Editor.handleScrollBarMouseMove',
+    /* y */ y,
+  ])
 }
 
 const handleScrollBarThumbMouseUp = () => {
@@ -287,7 +296,7 @@ const handleScrollBarThumbMouseDown = (event) => {
 const handleScrollBarMouseDown = (event) => {
   const y = event.clientY
   RendererWorker.send([
-    /* EditorHandleScrollBarClick.editorHandleScrollBarClick */ 400,
+    /* EditorHandleScrollBarClick.editorHandleScrollBarClick */ 'Editor.handleScrollBarClick',
     /* y */ y,
   ])
 }
@@ -315,7 +324,7 @@ const toSimpleTouchEvent = (event) => {
 const handleTouchStart = (event) => {
   const touchEvent = toSimpleTouchEvent(event)
   RendererWorker.send([
-    /* EditorHandleTouchStart.editorHandleTouchStart */ 404,
+    /* EditorHandleTouchStart.editorHandleTouchStart */ 'Editor.handleTouchStart',
     /* touchEvent */ touchEvent,
   ])
 }
@@ -323,7 +332,7 @@ const handleTouchStart = (event) => {
 const handleTouchMove = (event) => {
   const touchEvent = toSimpleTouchEvent(event)
   RendererWorker.send([
-    /* EditorHandleTouchMove.editorHandleTouchMove */ 405,
+    /* EditorHandleTouchMove.editorHandleTouchMove */ 'Editor.handleTouchMove',
     /* touchEvent */ touchEvent,
   ])
 }
@@ -334,7 +343,7 @@ const handleTouchEnd = (event) => {
   }
   const touchEvent = toSimpleTouchEvent(event)
   RendererWorker.send([
-    /* EditorHandleTouchEnd.editorHandleTouchEnd */ 406,
+    /* EditorHandleTouchEnd.editorHandleTouchEnd */ 'Editor.handleTouchEnd',
     /* touchEvent */ touchEvent,
   ])
 }
@@ -394,7 +403,7 @@ const handleContentEditableBeforeInput = (event) => {
     return
   }
   RendererWorker.send([
-    /* EditorHandleBeforeInputFromContentEditable.editorHandleBeforeInputFromContentEditable */ 407,
+    /* EditorHandleBeforeInputFromContentEditable.editorHandleBeforeInputFromContentEditable */ 'Editor.handleBeforeInputFromContentEditable',
     /* data */ event.data || '',
     /* range */ range,
   ])
@@ -412,7 +421,7 @@ const handleNativeSelectionChange = (event) => {
     return
   }
   RendererWorker.send([
-    /* EditorHandleNativeSelectionChange.editorHandleNativeSelectionChange */ 408,
+    /* EditorHandleNativeSelectionChange.editorHandleNativeSelectionChange */ 'Editor.handleNativeSelectionChange',
     /* range */ range,
   ])
 }
