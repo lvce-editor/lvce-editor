@@ -65,7 +65,7 @@ test('setJson', async () => {
   await LocalStorage.setJson('item-1', 43)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    8988,
+    'LocalStorage.setItem',
     'item-1',
     `43
 `

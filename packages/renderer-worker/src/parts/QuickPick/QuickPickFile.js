@@ -17,7 +17,7 @@ const searchFile = async (path, value) => {
 }
 
 const openUri = (path) => {
-  return Command.execute(/* Main.openUri */ 97, /* uri */ path)
+  return Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path)
 }
 
 const toPick = (file) => {

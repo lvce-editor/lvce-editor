@@ -177,7 +177,7 @@ export const handleClick = async (state, index, x, y) => {
     case 'Settings':
       console.log('is settings')
       await Command.execute(
-        /* ContextMenu.show */ 951,
+        /* ContextMenu.show */ 'ContextMenu.show',
         /* x */ x,
         /* y */ y,
         /* id */ 'settings'
@@ -185,7 +185,7 @@ export const handleClick = async (state, index, x, y) => {
       break
     case 'Additional Views':
       await Command.execute(
-        /* ContextMenu.show */ 951,
+        /* ContextMenu.show */ 'ContextMenu.show',
         /* x */ x,
         /* y */ y,
         /* id */ 'activity-bar-additional-views'
@@ -276,7 +276,7 @@ export const toggleActivityBarItem = async (state, item) => {
 
 export const handleContextMenu = async (state, x, y) => {
   await Command.execute(
-    /* ContextMenu.show */ 951,
+    /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
     /* id */ 'activityBar'

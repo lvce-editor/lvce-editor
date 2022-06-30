@@ -138,14 +138,14 @@ test('hydrate - use data from ajax when not available from cache storage', async
   ErrorHandling.handleError.mockImplementation(() => {})
   await KeyBindings.hydrate()
   expect(ErrorHandling.handleError).not.toHaveBeenCalled()
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(755, [
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('KeyBindings.hydrate', [
     {
-      command: 985,
+      command: 'editorCompletion.focusNext',
       key: 'ArrowDown',
       when: 'focus.editorCompletions',
     },
     {
-      command: 986,
+      command: 'editorCompletion.focusPrevious',
       key: 'ArrowUp',
       when: 'focus.editorCompletions',
     },

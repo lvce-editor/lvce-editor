@@ -33,5 +33,8 @@ test('setPathName', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await Location.setPathName('/')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(5612, '/')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Location.setPathName',
+    '/'
+  )
 })

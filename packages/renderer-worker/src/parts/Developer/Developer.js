@@ -453,7 +453,10 @@ export const openLogsFolder = async () => {
     return
   }
   const logsFolder = await Platform.getLogsDir()
-  await Command.execute(/* Open.openNativeFolder */ 1370, /* path */ logsFolder)
+  await Command.execute(
+    /* Open.openNativeFolder */ 'Open.openNativeFolder',
+    /* path */ logsFolder
+  )
 }
 
 export const toggleDeveloperTools = async () => {
@@ -506,7 +509,7 @@ export const editors = {
 export const openConfigFolder = async () => {
   const configFolder = await Platform.getConfigPath()
   await Command.execute(
-    /* Open.openNativeFolder */ 1370,
+    /* Open.openNativeFolder */ 'Open.openNativeFolder',
     /* path */ configFolder
   )
 }
@@ -514,7 +517,7 @@ export const openConfigFolder = async () => {
 export const openCacheFolder = async () => {
   const cacheFolder = await Platform.getCachePath()
   await Command.execute(
-    /* Open.openNativeFolder */ 1370,
+    /* Open.openNativeFolder */ 'Open.openNativeFolder',
     /* path */ cacheFolder
   )
 }
@@ -523,7 +526,10 @@ export const openDataFolder = async () => {
   const dataFolder = await SharedProcess.invoke(
     /* Platform.getDataDir */ 'Platform.getDataDir'
   )
-  await Command.execute(/* Open.openNativeFolder */ 1370, /* path */ dataFolder)
+  await Command.execute(
+    /* Open.openNativeFolder */ 'Open.openNativeFolder',
+    /* path */ dataFolder
+  )
 }
 
 export const showMessageBox = () => {}

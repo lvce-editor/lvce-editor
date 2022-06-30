@@ -561,7 +561,7 @@ test('selectCurrent - settings', async () => {
   await ViewletActivityBar.selectCurrent(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Menu.show',
+    'Menu.showMenu',
     750,
     408,
     250,

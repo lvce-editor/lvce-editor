@@ -951,7 +951,9 @@ export const handleCopy = async (state) => {
 }
 
 export const handlePaste = async (state) => {
-  const nativeFiles = await Command.execute(/* ClipBoard.readNativeFiles */ 244)
+  const nativeFiles = await Command.execute(
+    /* ClipBoard.readNativeFiles */ 'ClipBoard.readNativeFiles'
+  )
   if (nativeFiles.type === 'none') {
     console.info('[ViewletExplorer/handlePaste] no paths detected')
     return

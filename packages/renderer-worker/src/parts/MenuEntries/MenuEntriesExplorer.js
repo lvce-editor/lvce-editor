@@ -92,9 +92,10 @@ const isFileEntry = (entry) => {
 }
 
 export const getMenuEntries = async () => {
+  // TODO need a way to access state of other components synchronously
   // TODO explorer might already be disposed (race condition)
   const focusedDirent = await Command.execute(
-    /* ViewletExplorer.getFocusedDirent */ 153
+    /* ViewletExplorer.getFocusedDirent */ 'ViewletExplorer.getFocusedDirent'
   )
   if (!focusedDirent) {
     return ALL_ENTRIES

@@ -128,7 +128,7 @@ const getUri = (state, index) => {
 const selectIndexLead = async (state, index) => {
   const uri = getUri(state, index)
   // TODO open file and jump to line
-  await Command.execute(/* Main.openUri */ 97, /* uri */ uri)
+  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ uri)
   return {
     ...state,
     focusedIndex: index,
