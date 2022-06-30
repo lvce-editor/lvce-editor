@@ -17,7 +17,10 @@ export const openFolder = async () => {
       /* Dialog.prompt */ 7833,
       /* message */ 'Choose path:'
     )
-    await Command.execute(/* Workspace.setPath */ 7633, /* path */ path)
+    await Command.execute(
+      /* Workspace.setPath */ 'Workspace.setPath',
+      /* path */ path
+    )
     return
   }
   const folders = await SharedProcess.invoke(
@@ -27,7 +30,10 @@ export const openFolder = async () => {
     return
   }
   const path = folders[0]
-  await Command.execute(/* Workspace.setPath */ 7633, /* path */ path)
+  await Command.execute(
+    /* Workspace.setPath */ 'Workspace.setPath',
+    /* path */ path
+  )
 }
 
 export const showAbout = async () => {

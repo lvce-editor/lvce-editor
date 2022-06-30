@@ -81,7 +81,7 @@ const handleMousedown = (event) => {
   const x = event.clientX
   const y = event.clientY
   RendererWorker.send([
-    /* ActivityBar.handleClick */ 8001,
+    /* ActivityBar.handleClick */ 'ActivityBar.handleClick',
     /* index */ index,
     /* x */ x,
     /* y */ y,

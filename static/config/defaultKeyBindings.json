@@ -152,7 +152,7 @@
   },
   {
     "key": "ctrl+p",
-    "command": "QuickPick.show"
+    "command": "QuickPick.openEverythingQuickPick"
   },
   {
     "key": "ctrl+shift+p",

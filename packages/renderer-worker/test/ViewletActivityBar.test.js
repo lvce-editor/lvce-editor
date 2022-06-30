@@ -500,6 +500,7 @@ test('focusPrevious', () => {
 })
 
 test('selectCurrent - settings', async () => {
+  // TODO mock menu instead
   Layout.state.windowWidth = 1000
   Layout.state.windowHeight = 1000
   const state = {
@@ -560,7 +561,7 @@ test('selectCurrent - settings', async () => {
   await ViewletActivityBar.selectCurrent(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    7905,
+    'Menu.show',
     750,
     408,
     250,

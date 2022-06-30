@@ -6,13 +6,15 @@ const toMenuItem = (folder) => {
   return {
     label: folder,
     flags: /* None */ 0,
-    command: /* Workspace.setPath */ 7633,
+    command: /* Workspace.setPath */ 'Workspace.setPath',
     args: [folder],
   }
 }
 
 const getRecentlyOpened = () => {
-  return Command.execute(/* RecentlyOpened.getRecentlyOpened */ 5430)
+  return Command.execute(
+    /* RecentlyOpened.getRecentlyOpened */ 'RecentlyOpened.getRecentlyOpened'
+  )
 }
 
 export const getMenuEntries = async () => {

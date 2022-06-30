@@ -57,7 +57,7 @@ const handleMouseDown = (event) => {
   event.preventDefault()
   const level = getLevel($Menu)
   RendererWorker.send([
-    /* Menu.handleClick */ 7403,
+    /* Menu.handleClick */ 'Menu.selectIndex',
     /* level */ level,
     /* index */ index,
   ])
@@ -110,7 +110,7 @@ const handleMouseEnter = (event) => {
   const level = getLevel($Menu)
   console.log('focus index mouse', index)
   RendererWorker.send([
-    /* Menu.focusIndexMouse */ 7409,
+    /* Menu.handleMouseEnter */ 'Menu.handleMouseEnter',
     /* level */ level,
     /* index */ index,
     /* x */ x,

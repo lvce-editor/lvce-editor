@@ -150,7 +150,7 @@ const handleMouseDown = (event) => {
   }
   event.preventDefault()
   RendererWorker.send([
-    /* ViewletExplorer.handleClick */ 161,
+    /* ViewletExplorer.handleClick */ 'ViewletExplorer.handleClick',
     /* index */ index,
   ])
 }
@@ -172,7 +172,7 @@ const handleMouseEnter = (event) => {
     return
   }
   RendererWorker.send([
-    /* ViewletExplorer.handleMouseEnter */ 159,
+    /* ViewletExplorer.handleMouseEnter */ 'ViewletExplorer.handleMouseEnter',
     /* index */ index,
   ])
 }
@@ -184,7 +184,7 @@ const handleMouseLeave = (event) => {
     return
   }
   RendererWorker.send([
-    /* ViewletExplorer.handleMouseLeave */ 160,
+    /* ViewletExplorer.handleMouseLeave */ 'ViewletExplorer.handleMouseLeave',
     /* index */ index,
   ])
 }

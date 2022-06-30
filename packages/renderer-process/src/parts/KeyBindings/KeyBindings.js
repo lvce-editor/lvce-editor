@@ -105,7 +105,7 @@ const handleMatchingKeyBinding = (matchingKeyBinding) => {
   } else if (typeof matchingKeyBinding.command === 'string') {
     // TODO matchingKeyBinding.command should always be number
     RendererWorker.send([
-      /* KeyBindings.handleKeyBinding */ 1422,
+      /* KeyBindings.handleKeyBinding */ 'KeyBindings.handleKeyBinding',
       /* keyBinding */ matchingKeyBinding,
     ])
   }

@@ -1,11 +1,16 @@
 import * as Command from '../Command/Command.js'
 
 const getRecentlyOpened = () => {
-  return Command.execute(/* RecentlyOpened.getRecentlyOpened */ 5430)
+  return Command.execute(
+    /* RecentlyOpened.getRecentlyOpened */ 'RecentlyOpened.getRecentlyOpened'
+  )
 }
 
 const openWorkspaceFolder = (uri) => {
-  return Command.execute(/* Workspace.setPath */ 7633, /* path */ uri)
+  return Command.execute(
+    /* Workspace.setPath */ 'Workspace.setPath',
+    /* path */ uri
+  )
 }
 
 export const getPlaceholder = () => {

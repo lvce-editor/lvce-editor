@@ -194,7 +194,7 @@ export const handleClick = async (state, index, x, y) => {
     default:
       if (Layout.isSideBarVisible()) {
         await Command.execute(
-          /* SideBar.showOrHideViewlet */ 553,
+          /* SideBar.showOrHideViewlet */ 'ViewletSideBar.showOrHideViewlet',
           /* id */ viewletId
         )
       } else {

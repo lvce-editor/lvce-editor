@@ -96,7 +96,10 @@ const handleClick = (event) => {
     return
   }
   // event.preventDefault()
-  RendererWorker.send([/* TitleBarMenu.handleClick */ 4610, /* index */ index])
+  RendererWorker.send([
+    /* TitleBarMenu.toggleIndex */ 'TitleBarMenuBar.toggleIndex',
+    /* index */ index,
+  ])
 }
 
 export const focusIndex = (state, unFocusIndex, index) => {
@@ -122,7 +125,7 @@ const handleMouseEnter = (event) => {
   const enterX = event.clientX
   const enterY = event.clientY
   RendererWorker.send([
-    /* TitleBarMenu.focusIndex */ 4613,
+    /* TitleBarMenu.focusIndex */ 'TitleBarMenuBar.focusIndex',
     /* index */ index,
     /* enterX */ enterX,
     /* enterY */ enterY,
@@ -269,7 +272,7 @@ const handleFocusOut = (event) => {
     return
   }
   RendererWorker.send([
-    /* TitleBarMenu.closeMenu */ 4616,
+    /* TitleBarMenu.closeMenu */ 'TitleBarMenuBar.closeMenu',
     /* keepFocus */ false,
   ])
 }

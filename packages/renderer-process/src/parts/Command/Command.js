@@ -188,6 +188,7 @@ const getModuleId = (commandId) => {
     case 'Menu.hideSubMenu':
     case 'Menu.showMenu':
     case 'Menu.showContextMenu':
+    case 'Menu.show':
       return MODULE_MENU
     case 'Window.reload':
     case 'Window.minimize':
