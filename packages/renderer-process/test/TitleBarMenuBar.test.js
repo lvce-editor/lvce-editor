@@ -105,7 +105,7 @@ test('event - click on menu item', () => {
   expect(event.defaultPrevented).toBe(false)
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.state.send).toHaveBeenCalledWith([
-    'TitleBarMenuBar.handleClick',
+    'TitleBarMenuBar.toggleIndex',
     1,
   ])
 })

@@ -163,7 +163,12 @@ test('event - handleClick - top', () => {
   })
   state.$ActivityBar.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([8001, 1, 15, 30])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'ActivityBar.handleClick',
+    1,
+    15,
+    30,
+  ])
 })
 
 test('event - handleClick - bottom', () => {
@@ -197,7 +202,12 @@ test('event - handleClick - bottom', () => {
       clientY: 30,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([8001, 2, 15, 30])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'ActivityBar.handleClick',
+    2,
+    15,
+    30,
+  ])
 })
 
 test('event - handleClick - no item is clicked', () => {

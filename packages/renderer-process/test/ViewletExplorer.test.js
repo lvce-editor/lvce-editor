@@ -529,7 +529,10 @@ test('event - click', () => {
       button: 0,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([161, 0])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'ViewletExplorer.handleClick',
+    0,
+  ])
 })
 
 test('event - click on wrapper div', () => {
@@ -558,7 +561,10 @@ test('event - click on wrapper div', () => {
     })
   )
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([161, -1])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'ViewletExplorer.handleClick',
+    -1,
+  ])
 })
 
 test('event - right click', () => {

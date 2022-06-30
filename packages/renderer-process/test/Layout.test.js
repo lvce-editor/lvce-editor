@@ -73,7 +73,7 @@ test('handleResize', () => {
   )
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.state.send).toHaveBeenCalledWith([
-    1111,
+    'Layout.handleResize',
     { windowWidth: 1024, windowHeight: 768, titleBarHeight: 0 },
   ])
 })
