@@ -456,10 +456,11 @@ test('readDirWithFileTypes - error', async () => {
       'github://',
       'github://microsoft/vscode'
     )
+  ).rejects.toThrowError(
+    new Error(
+      'Failed to request json from "https://api.github.com/repos/microsoft/vscode/git/trees/HEAD:": API rate limit exceeded for 0.0.0.0. (But here\'s the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)'
+    )
   )
-    .rejects.toThrowError
-    // TODO test error.cause
-    ()
 })
 
 test('readFile', async () => {
