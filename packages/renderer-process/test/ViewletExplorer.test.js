@@ -468,7 +468,12 @@ test('event - contextmenu', () => {
       bubbles: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([162, 50, 50, 0])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'Explorer.handleContextMenu',
+    50,
+    50,
+    0,
+  ])
 })
 
 // TODO test expand/collapse

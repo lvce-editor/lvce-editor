@@ -277,7 +277,11 @@ test('event - handleContextMenu', () => {
       clientY: 30,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([8002, 15, 30])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'ActivityBar.handleContextMenu',
+    15,
+    30,
+  ])
 })
 
 // TODO test interaction with sidebar

@@ -102,7 +102,10 @@ test('event - left click on tree', () => {
   RendererWorker.state.send = jest.fn()
   state.$Locations.dispatchEvent(event)
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([7106, -1])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'Locations.focusIndex',
+    -1,
+  ])
 })
 
 test('event - left click on reference', () => {
@@ -134,5 +137,8 @@ test('event - left click on reference', () => {
   RendererWorker.state.send = jest.fn()
   $Location.dispatchEvent(event)
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([7100, 1])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'Locations.selectIndex',
+    1,
+  ])
 })
