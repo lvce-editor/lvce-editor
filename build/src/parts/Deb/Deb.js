@@ -38,7 +38,7 @@ const copyElectronResult = async () => {
   await bundleElectronMaybe()
   const debArch = 'amd64'
   await Copy.copy({
-    from: 'build/.tmp/electron-bundle',
+    from: `build/.tmp/electron-bundle/x64`,
     to: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}`,
   })
 }
