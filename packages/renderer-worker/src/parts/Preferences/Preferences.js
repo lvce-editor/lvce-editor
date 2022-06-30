@@ -68,8 +68,9 @@ export const hydrate = async () => {
   const css = `:root {
 ${styles.join('\n')}
 }`
+  // TODO make Css.setInlineStyle a separate module in renderer-worker
   await RendererProcess.invoke(
-    /* Css.setInlineStyle */ 4551,
+    /* Css.setInlineStyle */ 'Css.setInlineStyle',
     /* id */ 'Settings',
     /* css */ css
   )

@@ -146,7 +146,7 @@ export const hydrate = async () => {
 
     const iconThemeCss = getIconThemeCss2(iconTheme)
     await RendererProcess.invoke(
-      /* Css.setInlineStyle */ 4551,
+      /* Css.setInlineStyle */ 'Css.setInlineStyle',
       /* id */ 'ContributedIconTheme',
       /* css */ iconThemeCss
     )

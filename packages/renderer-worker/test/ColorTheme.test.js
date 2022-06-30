@@ -65,7 +65,7 @@ test('hydrate', async () => {
   )
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    4551,
+    'Css.setInlineStyle',
     'ContributedColorTheme',
     `:root {
   --ActivityBarBackground: rgb(41, 48, 48);

@@ -2,7 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as EditorRename from './EditorRename.js'
 
 export const __initialize__ = () => {
-  Command.register(3300, EditorRename.open)
-  Command.register(3301, EditorRename.finish)
-  Command.register(3302, EditorRename.abort)
+  Command.register('EditorRename.open', EditorRename.open)
+  Command.register('EditorRename.finish', EditorRename.finish)
+  Command.register('EditorRename.abort', EditorRename.abort)
 }

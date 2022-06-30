@@ -76,7 +76,7 @@ const applyColorTheme = async (colorThemeId) => {
     const colorThemeJson = await getColorThemeJson(colorThemeId)
     const colorThemeCss = await getColorThemeCss(colorThemeId, colorThemeJson)
     await RendererProcess.invoke(
-      /* Css.setInlineStyle */ 4551,
+      /* Css.setInlineStyle */ 'Css.setInlineStyle',
       /* id */ 'ContributedColorTheme',
       /* css */ colorThemeCss
     )
