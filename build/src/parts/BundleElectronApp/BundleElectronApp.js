@@ -12,6 +12,7 @@ import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleJs from '../BundleJs/BundleJs.js'
 import * as BundleRendererProcess from '../BundleRendererProcess/BundleRendererProcess.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as Rename from '../Rename/Rename.js'
 
 const getDependencyCacheHash = async () => {
   const files = [
@@ -47,22 +48,22 @@ const copyElectron = async ({ arch }) => {
     ],
   })
 
-  // if (Platform.isWindows()) {
-  //   await Rename.rename({
-  //     from: `build/.tmp/bundle/electron-result/electron.exe`,
-  //     to: `build/.tmp/bundle/electron-result/${Product.applicationName}.exe`,
-  //   })
-  // } else if (Platform.isMacos()) {
-  //   await Rename.rename({
-  //     from: `build/.tmp/bundle/electron-result/Electron.app`,
-  //     to: `build/.tmp/bundle/electron-result/${Product.applicationName}.app`,
-  //   })
-  // } else {
-  //   await Rename.rename({
-  //     from: `build/.tmp/bundle/electron-result/electron`,
-  //     to: `build/.tmp/bundle/electron-result/${Product.applicationName}`,
-  //   })
-  // }
+  if (Platform.isWindows()) {
+    await Rename.rename({
+      from: `build/.tmp/electron-bundle/${arch}/electron.exe`,
+      to: `build/.tmp/electron-bundle/${arch}/${Product.applicationName}.exe`,
+    })
+  } else if (Platform.isMacos()) {
+    await Rename.rename({
+      from: `build/.tmp/electron-bundle/${arch}/Electron.app`,
+      to: `build/.tmp/electron-bundle/${arch}/${Product.applicationName}.app`,
+    })
+  } else {
+    await Rename.rename({
+      from: `build/.tmp/electron-bundle/${arch}/electron`,
+      to: `build/.tmp/electron-bundle/${arch}/${Product.applicationName}`,
+    })
+  }
 }
 
 const copyDependencies = async ({ cachePath, arch }) => {
