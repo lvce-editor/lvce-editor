@@ -31,25 +31,6 @@ afterAll(() => {
   mswServer.close()
 })
 
-beforeAll(() => {
-  // @ts-ignore https://github.com/jsdom/jsdom/issues/1724
-  globalThis.Response = class {
-    constructor(value, init) {
-      this.value = value
-      this.init = init
-    }
-
-    async json() {
-      return JSON.parse(this.value)
-    }
-  }
-})
-
-afterAll(() => {
-  // @ts-ignore
-  delete globalThis.Response
-})
-
 test('readGitHubDirectory', async () => {
   mswServer.use(
     rest.get('https://api.github.com/*', (req, res, ctx) => {
