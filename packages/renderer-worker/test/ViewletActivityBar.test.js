@@ -568,7 +568,7 @@ test('selectCurrent - settings', async () => {
     132,
     [
       {
-        command: 1200,
+        command: 'Preferences.openSettingsJson',
         flags: 0,
         id: 'settings',
         label: 'Settings',
@@ -580,7 +580,7 @@ test('selectCurrent - settings', async () => {
         label: 'Keyboard Shortcuts',
       },
       {
-        command: 18925,
+        command: 'QuickPick.openColorTheme', // TODO have arg instead
         flags: 0,
         id: 'colorTheme',
         label: 'Color Theme',

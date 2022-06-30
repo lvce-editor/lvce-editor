@@ -132,7 +132,7 @@ export const focusLast = (state) => {
 // TODO pass index instead
 export const handleContextMenu = async (state, x, y, extensionId) => {
   // await Command.execute(
-  //   /* ContextMenu.show */ 951,
+  //   /* ContextMenu.show */ 'ContextMenu.show',
   //   /* x */ x,
   //   /* y */ y,
   //   /* id */ 'manageExtension'

@@ -254,7 +254,7 @@ export const getStartupPerformanceContent = async () => {
 
 export const showStartupPerformance = async () => {
   await Command.execute(
-    /* Main.openUri */ 97,
+    /* Main.openUri */ 'Main.openUri',
     /* uri */ 'app://startup-performance'
   )
 }
@@ -417,7 +417,10 @@ ${formattedExtensionHostMemoryUsage}
 }
 
 export const showMemoryUsage = async () => {
-  await Command.execute(/* Main.openUri */ 97, /* uri */ 'app://memory-usage')
+  await Command.execute(
+    /* Main.openUri */ 'Main.openUri',
+    /* uri */ 'app://memory-usage'
+  )
 }
 
 // TODO not sure if this function is useful

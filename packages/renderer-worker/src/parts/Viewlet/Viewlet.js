@@ -138,7 +138,7 @@ export const wrapViewletCommand = (id, fn) => {
       }
       const commands = activeInstance.factory.render(oldState, newState)
       RendererProcess.send([
-        /* Viewlet.sendMultiple */ 3032,
+        /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
         /* commands */ commands,
       ])
       state.instances[id].state = newState
@@ -177,7 +177,7 @@ export const setState = (id, newState) => {
     const oldState = instance.state
     const commands = instance.factory.render(oldState, newState)
     RendererProcess.send([
-      /* Viewlet.sendMultiple */ 3032,
+      /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
       /* commands */ commands,
     ])
     instance.state = newState

@@ -447,10 +447,12 @@ test('handleClick - file', async () => {
     ],
   }
   // TODO dont assign -> has effect on other tests
-  Command.state.commands[97] = jest.fn()
+  Command.state.commands['Main.openUri'] = jest.fn()
   await ViewletExplorer.handleClick(state, 0)
   expect(state.focusedIndex).toBe(0)
-  expect(Command.state.commands[97]).toHaveBeenCalledWith('/index.css')
+  expect(Command.state.commands['Main.openUri']).toHaveBeenCalledWith(
+    '/index.css'
+  )
 })
 
 test('handleClick - file - error', async () => {
@@ -480,10 +482,12 @@ test('handleClick - file - error', async () => {
     ],
   }
   // TODO dont assign -> has effect on other tests
-  Command.state.commands[97] = jest.fn()
+  Command.state.commands['Main.openUri'] = jest.fn()
   await ViewletExplorer.handleClick(state, 0)
   expect(state.focusedIndex).toBe(0)
-  expect(Command.state.commands[97]).toHaveBeenCalledWith('/index.css')
+  expect(Command.state.commands['Main.openUri']).toHaveBeenCalledWith(
+    '/index.css'
+  )
 })
 
 test('handleClick - directory-expanded - error', async () => {
@@ -513,10 +517,12 @@ test('handleClick - directory-expanded - error', async () => {
     ],
   }
   // TODO dont assign -> has effect on other tests
-  Command.state.commands[97] = jest.fn()
+  Command.state.commands['Main.openUri'] = jest.fn()
   await ViewletExplorer.handleClick(state, 0)
   expect(state.focusedIndex).toBe(0)
-  expect(Command.state.commands[97]).toHaveBeenCalledWith('/index.css')
+  expect(Command.state.commands['Main.openUri']).toHaveBeenCalledWith(
+    '/index.css'
+  )
 })
 
 test('handleClick - directory-expanded - scrolled down', async () => {

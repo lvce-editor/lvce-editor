@@ -8,12 +8,15 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 export const state = Object.create(null)
 
 export const openSettingsJson = async () => {
-  await Command.execute(/* Main.openUri */ 97, /* uri */ 'app://settings.json')
+  await Command.execute(
+    /* Main.openUri */ 'Main.openUri',
+    /* uri */ 'app://settings.json'
+  )
 }
 
 export const openKeyBindingsJson = async () => {
   await Command.execute(
-    /* Main.openUri */ 97,
+    /* Main.openUri */ 'Main.openUri',
     /* uri */ 'app://keyBindings.json'
   )
 }

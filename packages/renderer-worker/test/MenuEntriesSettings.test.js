@@ -6,6 +6,6 @@ test('getMenuEntries', () => {
     id: 'settings',
     label: 'Settings',
     flags: 0,
-    command: 1200,
+    command: 'Preferences.openSettingsJson',
   })
 })

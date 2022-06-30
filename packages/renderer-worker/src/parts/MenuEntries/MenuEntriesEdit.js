@@ -22,19 +22,19 @@ export const getMenuEntries = () => {
       id: 'cut',
       label: 'Cut',
       flags: /* None */ 0,
-      command: /* EditorCut.editorCut */ 364,
+      command: /* Editor.cut */ 'Editor.cut',
     },
     {
       id: 'copy',
       label: 'Copy',
       flags: /* None */ 0,
-      command: /* EditorCopy.editorCopy */ 365,
+      command: /* Editor.copy */ 'Editor.copy',
     },
     {
       id: 'paste',
       label: 'Paste',
       flags: /* None */ 0,
-      command: /* EditorPaste.editorPaste */ 383,
+      command: /* Editor.paste */ 'Editor.paste',
     },
     {
       id: 'separator',
@@ -46,13 +46,13 @@ export const getMenuEntries = () => {
       id: 'toggle-line-comment',
       label: 'Toggle Line Comment',
       flags: /* None */ 0,
-      command: /* EditorToggleLineComment.editorToggleLineComment */ 373,
+      command: /* Editor.toggleLineComment */ 'Editor.toggleLineComment',
     },
     {
       id: 'toggle-block-comment',
       label: 'Toggle Block Comment',
       flags: /* None */ 0,
-      command: /* EditorToggleBlockComment.editorToggleBlockComment */ 362,
+      command: /* Editor.toggleBlockComment */ 'Editor.toggleBlockComment',
     },
   ]
 }

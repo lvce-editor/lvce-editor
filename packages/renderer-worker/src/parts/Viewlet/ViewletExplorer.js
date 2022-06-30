@@ -229,7 +229,7 @@ export const handleContextMenu = async (state, x, y, index) => {
   state.focusedIndex = index
   console.log('ctx menu', index, state)
   await Command.execute(
-    /* ContextMenu.show */ 951,
+    /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
     /* id */ 'explorer'
@@ -655,7 +655,7 @@ export const newFolder = async (state) => {
 
 const handleClickFile = async (state, dirent, index) => {
   await Command.execute(
-    /* Main.openAbsolutePath */ 97,
+    /* Main.openAbsolutePath */ 'Main.openUri',
     /* absolutePath */ dirent.path
   )
 }

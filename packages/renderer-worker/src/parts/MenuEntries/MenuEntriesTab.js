@@ -5,19 +5,19 @@ export const getMenuEntries = () => {
       id: 'tabClose',
       label: 'Close',
       flags: /* None */ 0,
-      command: /* Main.closeFocusedTab */ 105,
+      command: 'Main.closeFocusedTab',
     },
     {
       id: 'tabCloseOthers',
       label: 'Close Others',
       flags: /* None */ 0,
-      command: /* Main.closeOthers */ 106,
+      command: 'Main.closeOthers',
     },
     {
       id: 'tabCloseToTheRight',
       label: 'Close to the Right',
       flags: /* None */ 0,
-      command: /* Main.closeTabsToTheRight */ 107,
+      command: 'Main.closeTabsToTheRight',
     },
     {
       id: 'tabCloseAll',

@@ -130,7 +130,10 @@ export const handleInput = async (state, value) => {
 export const handleClick = async (state, index) => {
   const searchResult = state.searchResults[index]
   console.log({ searchResult })
-  await Command.execute(/* Main.openUri */ 97, /* uri */ searchResult.path)
+  await Command.execute(
+    /* Main.openUri */ 'Main.openUri',
+    /* uri */ searchResult.path
+  )
 }
 
 export const resize = (state, dimensions) => {

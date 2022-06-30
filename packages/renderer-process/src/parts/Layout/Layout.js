@@ -154,7 +154,7 @@ const handleSashPointerMove = (event) => {
   const x = event.clientX
   const y = event.clientY
   RendererWorker.send([
-    /* Layout.handleSashPointerMove */ 1112,
+    /* Layout.handleSashPointerMove */ 'Layout.handleSashPointerMove',
     /* x */ x,
     /* y */ y,
   ])
@@ -188,7 +188,10 @@ const handleSashPointerDown = (event) => {
   window.addEventListener('pointerup', handleSashPointerUp)
   const $Target = event.target
   const id = getSashId($Target)
-  RendererWorker.send([/* Layout.handleSashPointerDown */ 1113, /* id */ id])
+  RendererWorker.send([
+    /* Layout.handleSashPointerDown */ 'Layout.handleSashPointerDown',
+    /* id */ id,
+  ])
 }
 
 export const show = (points) => {

@@ -104,7 +104,7 @@ export const contentLoadedEffects = async (state) => {
   GlobalEventBus.addListener('editor.change', handleEditorChange)
   const newLanguageId = Languages.getLanguageId(state.uri)
   await Command.execute(
-    /* Editor.setLanguageId */ 989,
+    /* Editor.setLanguageId */ 'Editor.setLanguageId',
     /* languageId */ newLanguageId
   )
   await ExtensionHostTextDocument.handleEditorCreate(state)
@@ -131,7 +131,7 @@ const handleLanguagesChanged = async () => {
   //   Editor.setLanguageId(state, newLanguageId),
   // ])
   await Command.execute(
-    /* Editor.setLanguageId */ 989,
+    /* Editor.setLanguageId */ 'Editor.setLanguageId',
     /* languageId */ newLanguageId
   )
 

@@ -26,7 +26,7 @@ export const getMenuEntries = async () => {
       id: 'separator',
       label: 'Separator',
       flags: /* Separator */ 1,
-      command: /* RecentlyOpened.clearRecentlyOpened */ 5432,
+      command: /* None */ 0,
     },
     {
       id: 'more',
@@ -38,13 +38,13 @@ export const getMenuEntries = async () => {
       id: 'separator',
       label: 'Separator',
       flags: /* Separator */ 1,
-      command: /* RecentlyOpened.clearRecentlyOpened */ 5432,
+      command: /* None */ 0,
     },
     {
       id: 'clearRecentlyOpened',
       label: 'Clear Recently Opened',
       flags: /* None */ 0,
-      command: /* RecentlyOpened.clearRecentlyOpened */ 5432,
+      command: 'RecentlyOpened.clearRecentlyOpened',
     },
   ]
 }

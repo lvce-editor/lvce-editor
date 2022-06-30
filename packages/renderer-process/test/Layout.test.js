@@ -110,9 +110,13 @@ test('event - move sash', () => {
   expect($Style.isConnected).toBe(false)
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(2)
   expect(RendererWorker.state.send).toHaveBeenNthCalledWith(1, [
-    1113,
+    'Layout.handleSashPointerDown',
     'SideBar',
   ])
   // TODO make it possible to test with custom x/y position
-  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(2, [1112, 0, 0])
+  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(2, [
+    'Layout.handleSashPointerMove',
+    0,
+    0,
+  ])
 })

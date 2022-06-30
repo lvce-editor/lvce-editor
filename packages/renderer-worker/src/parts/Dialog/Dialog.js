@@ -103,7 +103,7 @@ export const handleClick = async (index) => {
     case 'Show Command Output':
       await close()
       const uri = `data://${dialog.message.stderr}`
-      await Command.execute(/* Main.openUri */ 97, uri)
+      await Command.execute(/* Main.openUri */ 'Main.openUri', uri)
       // TODO show stderr in editor
       // TODO close dialog
       break

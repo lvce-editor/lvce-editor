@@ -5,6 +5,6 @@ test('getMenuEntries', () => {
     id: 'selectAll',
     label: 'Select All',
     flags: 0,
-    command: 366,
+    command: 'Editor.selectAll',
   })
 })

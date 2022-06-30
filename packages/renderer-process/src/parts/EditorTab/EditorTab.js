@@ -10,7 +10,7 @@ const handleEditorTabsContextMenu = (event) => {
   const x = event.clientX
   const y = event.clientY
   RendererWorker.send([
-    /* editorTabsHandleContextMenu */ 95,
+    /* editorTabsHandleContextMenu */ 'Main.handleTabContextMenu',
     /* x */ x,
     /* y */ y,
   ])

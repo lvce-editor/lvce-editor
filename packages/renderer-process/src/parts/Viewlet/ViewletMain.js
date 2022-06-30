@@ -169,7 +169,7 @@ const handleTabsContextMenu = (event) => {
   const x = event.clientX
   const y = event.clientY
   RendererWorker.send([
-    /* Main.handleTabContextMenu */ 95,
+    /* Main.handleTabContextMenu */ 'Main.handleTabContextMenu',
     /* index */ index,
     /* x */ x,
     /* y */ y,

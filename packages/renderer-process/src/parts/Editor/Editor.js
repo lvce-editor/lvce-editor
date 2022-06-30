@@ -21,7 +21,7 @@ const handleContextMenu = (event) => {
   const x = event.clientX
   const y = event.clientY
   RendererWorker.send([
-    /* ContextMenu.show */ 951,
+    /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
     /* id */ 'editor',
@@ -121,7 +121,7 @@ const getModifier = (event) => {
 const handleSingleClick = (event, x, y, offset) => {
   const modifier = getModifier(event)
   RendererWorker.send([
-    /* Editor.handleSingleClick */ 360,
+    /* Editor.handleSingleClick */ 'Editor.handleSingleClick',
     /* modifier */ modifier,
     /* x */ x,
     /* y */ y,
