@@ -641,13 +641,13 @@ const getModuleId = (commandId) => {
     case 'LocalStorage.setText':
     case 'LocalStorage.getItem':
       return MODULE_LOCAL_STORAGE
-    case 'ViewletLocations.selectIndex':
-    case 'ViewletLocations.focusFirst':
-    case 'ViewletLocations.focusLast':
-    case 'ViewletLocations.focusNext':
-    case 'ViewletLocations.focusPrevious':
-    case 'ViewletLocations.selectCurrent':
-    case 'ViewletLocations.focusIndex':
+    case 'Locations.selectIndex':
+    case 'Locations.focusFirst':
+    case 'Locations.focusLast':
+    case 'Locations.focusNext':
+    case 'Locations.focusPrevious':
+    case 'Locations.selectCurrent':
+    case 'Locations.focusIndex':
       return MODULE_VIEWLET_Locations
     case 'Menu.show':
     case 'Menu.hide':
