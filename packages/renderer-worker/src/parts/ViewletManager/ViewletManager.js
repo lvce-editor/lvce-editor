@@ -231,7 +231,10 @@ export const dispose = async (id) => {
   state[id].disposed = true
   delete Viewlet.state.instances[id]
   delete state[id]
-  await RendererProcess.invoke(/* Viewlet.dispose */ 3026, /* id */ id)
+  await RendererProcess.invoke(
+    /* Viewlet.dispose */ 'Viewlet.dispose',
+    /* id */ id
+  )
 }
 
 export const mutate = async (id, fn) => {

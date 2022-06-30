@@ -92,23 +92,13 @@ const handleMatchingKeyBinding = (matchingKeyBinding) => {
   // better directly
   // TODO always should be number
   // when launching keybindings -> map string command to number
-  if (typeof matchingKeyBinding.command === 'number') {
-    if (matchingKeyBinding.command === -1) {
-      console.warn('keybinding not fully specified', matchingKeyBinding)
-      return
-    }
-    RendererWorker.send([
-      /* command */ matchingKeyBinding.command,
-      // TODO should args always be defined? (probably yes -> monomorphism & simpler code since all objects are the same)
-      ...(matchingKeyBinding.args || []),
-    ])
-  } else if (typeof matchingKeyBinding.command === 'string') {
-    // TODO matchingKeyBinding.command should always be number
-    RendererWorker.send([
-      /* KeyBindings.handleKeyBinding */ 'KeyBindings.handleKeyBinding',
-      /* keyBinding */ matchingKeyBinding,
-    ])
-  }
+  // TODO should args always be defined? (probably yes -> monomorphism & simpler code since all objects are the same)
+
+  // TODO matchingKeyBinding.command should always be number
+  RendererWorker.send([
+    /* KeyBindings.handleKeyBinding */ 'KeyBindings.handleKeyBinding',
+    /* keyBinding */ matchingKeyBinding,
+  ])
 }
 
 const handleKeyDown = (event) => {

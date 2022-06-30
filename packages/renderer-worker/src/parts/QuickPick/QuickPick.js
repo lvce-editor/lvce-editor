@@ -189,7 +189,10 @@ export const dispose = () => {
       break
     case STATE_FINISHED:
       state.state = STATE_DEFAULT
-      RendererProcess.invoke(/* Viewlet.dispose */ 3026, /* id */ 'QuickPick')
+      RendererProcess.invoke(
+        /* Viewlet.dispose */ 'Viewlet.dispose',
+        /* id */ 'QuickPick'
+      )
       break
     default:
       break

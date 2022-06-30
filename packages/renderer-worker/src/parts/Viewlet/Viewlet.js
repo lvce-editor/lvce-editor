@@ -92,7 +92,10 @@ export const dispose = async (id) => {
       throw new Error(`${id} is missing a factory function`)
     }
     instance.factory.dispose(instance.state)
-    await RendererProcess.invoke(/* Viewlet.dispose */ 3026, /* id */ id)
+    await RendererProcess.invoke(
+      /* Viewlet.dispose */ 'Viewlet.dispose',
+      /* id */ id
+    )
   } catch (error) {
     console.error(error)
     // TODO use Error.cause once proper stack traces are supported by chrome

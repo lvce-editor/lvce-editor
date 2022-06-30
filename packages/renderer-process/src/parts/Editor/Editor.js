@@ -35,7 +35,7 @@ const handleFocus = (event) => {
 const handleBlur = (event) => {
   // needed for save on blur
   // also needed to close completions on blur
-  RendererWorker.send([/* EditorBlur.editorBlur */ 370])
+  RendererWorker.send([/* EditorBlur.editorBlur */ 'Editor.blur'])
 }
 
 const handleBeforeInput = (event) => {

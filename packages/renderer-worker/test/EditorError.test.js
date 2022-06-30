@@ -42,7 +42,7 @@ test('show', async () => {
   })
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3700,
+    'EditorError.show',
     'No Definition found',
     16,
     60

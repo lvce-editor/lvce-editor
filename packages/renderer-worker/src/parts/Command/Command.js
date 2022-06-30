@@ -356,8 +356,9 @@ const getModuleId = (commandId) => {
     case 'FileSystem.remove':
     case 'FileSystem.readDirWithFileTypes':
       return MODULE_FILE_SYSTEM
-    case 'ViewletSideBar.showOrHideViewlet':
-    case 'ViewletSideBar.openViewlet':
+    case 'SideBar.showOrHideViewlet':
+    case 'SideBar.openViewlet':
+    case 'SideBar.show':
       return MODULE_VIEWLET_SIDE_BAR
     case 'ViewletStatusBar.updateStatusBarItems':
       return MODULE_STATUS_BAR

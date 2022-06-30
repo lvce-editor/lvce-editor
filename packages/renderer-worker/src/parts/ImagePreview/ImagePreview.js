@@ -44,7 +44,7 @@ export const show = async (uri, top, left) => {
 export const hide = async () => {
   ++state.versionId
   await RendererProcess.invoke(
-    /* Viewlet.dispose */ 3026,
+    /* Viewlet.dispose */ 'Viewlet.dispose',
     /* id */ 'ImagePreview'
   )
 }

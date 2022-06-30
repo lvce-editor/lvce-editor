@@ -149,7 +149,7 @@ test.skip('open - cursor changes to row above', async () => {
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,
     expect.any(Number),
-    3026,
+    'Viewlet.dispose',
     'EditorCompletion',
   ])
 })
@@ -276,7 +276,7 @@ test.skip('open - cursor changes to row below', async () => {
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,
     expect.any(Number),
-    3026,
+    'Viewlet.dispose',
     'EditorCompletion',
   ])
 })
@@ -525,7 +525,7 @@ test.skip('open - cursor changes to column left - matches no word', async () => 
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,
     expect.any(Number),
-    3026,
+    'Viewlet.dispose',
     'EditorCompletion',
   ])
 })
@@ -774,7 +774,7 @@ test.skip('open - cursor changes to column right - matches no word', async () =>
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,
     expect.any(Number),
-    3026,
+    'Viewlet.dispose',
     'EditorCompletion',
   ])
 })

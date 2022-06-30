@@ -202,7 +202,7 @@ test('dispose', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   QuickPick.dispose()
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Viewlet.dispose */ 3026,
+    /* Viewlet.dispose */ 'Viewlet.dispose',
     /* id */ 'QuickPick'
   )
 })
@@ -221,7 +221,7 @@ test('select', async () => {
   await QuickPick.selectIndex(0)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Viewlet.dispose */ 3026,
+    /* Viewlet.dispose */ 'Viewlet.dispose',
     /* id */ 'QuickPick'
   )
 })

@@ -26,7 +26,7 @@ export const execute = async (commandId, ...args) => {
   const command = state.commands[commandId]
   if (!command) {
     throw new VError(
-      `Command "${commandId}" not found. Please try to register the command with \`vscode.registerCommand(myCommand)\``
+      `Extension Command "${commandId}" not found. Please try to register the command with \`vscode.registerCommand(myCommand)\``
     )
   }
   try {
