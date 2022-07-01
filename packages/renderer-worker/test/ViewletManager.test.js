@@ -99,7 +99,7 @@ test('load - error - no create method', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     2,
-    3031,
+    'Viewlet.handleError',
     '',
     '',
     'module.create is not a function'
@@ -121,7 +121,7 @@ test('load - error - create method throws error', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     2,
-    3031,
+    'Viewlet.handleError',
     '',
     '',
     'x is not a function'
@@ -143,7 +143,7 @@ test('load - error - no loadContent method', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     2,
-    3031,
+    'Viewlet.handleError',
     '',
     '',
     'module.loadContent is not a function'
@@ -170,7 +170,7 @@ test('load - error - loadContent method throws error', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     2,
-    3031,
+    'Viewlet.handleError',
     '',
     '',
     'x is not a function'
@@ -193,7 +193,7 @@ test('load - error - no contentLoaded method', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     2,
-    3031,
+    'Viewlet.handleError',
     '',
     '',
     'module.contentLoaded is not a function' // TODO should include TypeError
@@ -219,7 +219,7 @@ test('load - error - contentLoaded method throws error', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.load', '')
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3031,
+    'Viewlet.handleError',
     '',
     '',
     'x is not a function'
