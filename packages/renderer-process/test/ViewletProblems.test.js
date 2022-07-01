@@ -2,8 +2,27 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
-import * as ViewletProblems from '../src/parts/Viewlet/ViewletProblems.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const ViewletProblems = await import('../src/parts/Viewlet/ViewletProblems.js')
 
 const getSimpleList = (state) => {
   return Array.from(state.element.children).map((node) => node.textContent)
@@ -44,7 +63,8 @@ test('focus', () => {
 
 test('event - mousedown', () => {
   const state = ViewletProblems.create()
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('mousedown', {
     bubbles: true,
     clientX: 15,
@@ -52,8 +72,8 @@ test('event - mousedown', () => {
     cancelable: true,
   })
   state.$Viewlet.dispatchEvent(event)
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([7550, -1])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith([7550, -1])
   expect(event.defaultPrevented).toBe(true)
 })
 
