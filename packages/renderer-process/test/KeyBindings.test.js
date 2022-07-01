@@ -2,9 +2,28 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as Context from '../src/parts/Context/Context.js'
-import * as KeyBindings from '../src/parts/KeyBindings/KeyBindings.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const KeyBindings = await import('../src/parts/KeyBindings/KeyBindings.js')
+const Context = await import('../src/parts/Context/Context.js')
 
 afterAll(() => {
   if (KeyBindings.state.modifierTimeout !== -1) {

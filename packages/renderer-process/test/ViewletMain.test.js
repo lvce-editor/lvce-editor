@@ -2,10 +2,29 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as Main from '../src/parts/Viewlet/ViewletMain.js'
-import * as Layout from '../src/parts/Layout/Layout.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const Main = await import('../src/parts/Viewlet/ViewletMain.js')
+const Layout = await import('../src/parts/Layout/Layout.js')
+const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 
 beforeEach(async () => {
   Layout.state.$Main = document.createElement('div')

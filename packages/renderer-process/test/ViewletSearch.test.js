@@ -2,8 +2,27 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as ViewletSearch from '../src/parts/Viewlet/ViewletSearch.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const ViewletSearch = await import('../src/parts/Viewlet/ViewletSearch.js')
 
 test('name', () => {
   expect(ViewletSearch.name).toBe('Search')
