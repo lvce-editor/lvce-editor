@@ -2,12 +2,27 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as Menu from '../src/parts/OldMenu/Menu.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
 
 beforeEach(() => {
+  jest.resetAllMocks()
   Menu.state.$$Menus = []
 })
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+const Menu = await import('../src/parts/OldMenu/Menu.js')
 
 const getTextContent = ($Node) => {
   return $Node.textContent
@@ -295,7 +310,8 @@ test('event - click', () => {
       flags: 0,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const $Menu = Menu.state.$$Menus[0]
   $Menu.children[0].dispatchEvent(
     new Event('mousedown', {
@@ -303,11 +319,7 @@ test('event - click', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
-    'Menu.selectIndex',
-    0,
-    0,
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledWith(['Menu.selectIndex', 0, 0])
 })
 
 test('event - click - outside', () => {
@@ -321,7 +333,8 @@ test('event - click - outside', () => {
       flags: 0,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const $Menu = Menu.state.$$Menus[0]
   $Menu.dispatchEvent(
     new Event('mousedown', {
@@ -329,7 +342,7 @@ test('event - click - outside', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('event - right click outside', () => {
@@ -352,7 +365,8 @@ test('event - right click outside', () => {
     -1,
     true
   )
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const $BackDrop = document.getElementById('BackDrop')
   $BackDrop.dispatchEvent(
     new MouseEvent('mousedown', {
@@ -361,8 +375,8 @@ test('event - right click outside', () => {
       button: 2,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([7401])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith([7401])
 })
 
 test('event - context menu', () => {
@@ -376,7 +390,8 @@ test('event - context menu', () => {
       flags: 0,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('contextmenu', {
     bubbles: true,
     cancelable: true,
@@ -384,7 +399,7 @@ test('event - context menu', () => {
   const $Menu = Menu.state.$$Menus[0]
   $Menu.children[0].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('event - context menu - outside', () => {
@@ -407,7 +422,8 @@ test('event - context menu - outside', () => {
     -1,
     true
   )
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('contextmenu', {
     bubbles: true,
     cancelable: true,
@@ -415,7 +431,7 @@ test('event - context menu - outside', () => {
   const $BackDrop = document.getElementById('BackDrop')
   $BackDrop.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 // TODO test pageup/pagedown
