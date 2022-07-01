@@ -1,5 +1,4 @@
 import minimist from 'minimist'
-import VError from 'verror'
 
 const getBuildModule = (target) => {
   console.log({ target })

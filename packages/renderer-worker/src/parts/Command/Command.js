@@ -138,8 +138,6 @@ const loadModule = (moduleId) => {
       return import('../SessionStorage/SessionStorage.ipc.js')
     case MODULE_CALLBACK:
       return import('../Callback/Callback.ipc.js')
-    case MODULE_COMMAND_INFO:
-      return import('../CommandInfo/CommandInfo.ipc.js')
     case MODULE_DIALOG:
       return import('../Dialog/Dialog.ipc.js')
     case MODULE_WORKSPACE:
