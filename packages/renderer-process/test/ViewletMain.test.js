@@ -51,14 +51,12 @@ test('event - left click on tab', () => {
     'test://sample.txt',
     -1
   )
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
   state.$MainTabs.children[0].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
-    'Main.handleTabClick',
-    0,
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledWith(['Main.handleTabClick', 0])
 })
 
 test('event - middle click on tab', () => {
@@ -70,17 +68,15 @@ test('event - middle click on tab', () => {
     'test://sample.txt',
     -1
   )
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('mousedown', {
     bubbles: true,
     button: 1,
     cancelable: true,
   })
   state.$MainTabs.children[0].dispatchEvent(event)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
-    'Main.closeEditor',
-    0,
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledWith(['Main.closeEditor', 0])
 })
 
 test('event - right click on tab', () => {
@@ -92,11 +88,12 @@ test('event - right click on tab', () => {
     'test://sample.txt',
     -1
   )
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$MainTabs.children[0].dispatchEvent(
     new MouseEvent('mousedown', { bubbles: true, button: 2, cancelable: true })
   )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('event - context menu on tab', () => {
@@ -108,7 +105,8 @@ test('event - context menu on tab', () => {
     'test://sample.txt',
     -1
   )
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$MainTabs.children[0].dispatchEvent(
     new MouseEvent('contextmenu', {
       bubbles: true,
@@ -116,7 +114,7 @@ test('event - context menu on tab', () => {
       clientY: 30,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'Main.handleTabContextMenu',
     0,
     15,
@@ -134,11 +132,12 @@ test('event - click on tabs', () => {
     ...Main.create(),
     $MainTabs,
   }
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
   state.$MainTabs.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 // TODO test closeAllViewlets

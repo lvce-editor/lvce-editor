@@ -55,7 +55,8 @@ test('update', () => {
 })
 
 test('handleResize', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Layout.show({
     'SideBar.visible': false,
     'SideBar.width': 100,
@@ -71,15 +72,16 @@ test('handleResize', () => {
       bubbles: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'Layout.handleResize',
     { windowWidth: 1024, windowHeight: 768, titleBarHeight: 0 },
   ])
 })
 
 test('event - move sash', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Layout.show({
     'SideBar.visible': true,
     'SideBar.width': 100,
@@ -108,13 +110,13 @@ test('event - move sash', () => {
   $SashSideBar.dispatchEvent(pointerMoveEvent)
   $SashSideBar.dispatchEvent(pointerUpEvent)
   expect($Style.isConnected).toBe(false)
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(1, [
+  expect(RendererWorker.send).toHaveBeenCalledTimes(2)
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(1, [
     'Layout.handleSashPointerDown',
     'SideBar',
   ])
   // TODO make it possible to test with custom x/y position
-  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(2, [
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(2, [
     'Layout.handleSashPointerMove',
     0,
     0,

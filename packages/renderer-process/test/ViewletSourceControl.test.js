@@ -46,7 +46,8 @@ test('focus', () => {
 })
 
 test('event - click', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletSourceControl.create()
   ViewletSourceControl.setChangedFiles(state, {
     workingTree: [
@@ -64,7 +65,7 @@ test('event - click', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     2133,
     'Source Control',
     'handleClick',

@@ -64,15 +64,16 @@ test('event - mousedown', () => {
       label: 'item 3',
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$Viewlet.children[0].dispatchEvent(
     new Event('mousedown', {
       bubbles: true,
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'EditorCompletion.selectIndex',
     0,
   ])
@@ -91,14 +92,15 @@ test('event - click outside', () => {
       label: 'item 3',
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$Viewlet.dispatchEvent(
     new Event('mousedown', {
       bubbles: true,
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('dispose', () => {

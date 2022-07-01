@@ -34,7 +34,8 @@ test('event - mousedown - first tab clicked', () => {
     'Debug Console',
     'Terminal',
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$PanelTabs.children[0].dispatchEvent(
     new MouseEvent('mousedown', {
       clientX: 50,
@@ -43,11 +44,8 @@ test('event - mousedown - first tab clicked', () => {
       button: 1,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
-    'Panel.tabsHandleClick',
-    0,
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(['Panel.tabsHandleClick', 0])
 })
 
 test('event - mousedown - no tab clicked', () => {
@@ -58,7 +56,8 @@ test('event - mousedown - no tab clicked', () => {
     'Debug Console',
     'Terminal',
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$PanelTabs.dispatchEvent(
     new MouseEvent('mousedown', {
       clientX: 50,
@@ -67,7 +66,7 @@ test('event - mousedown - no tab clicked', () => {
       button: 1,
     })
   )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('accessibility - PanelTabs should have role tablist', () => {

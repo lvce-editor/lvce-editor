@@ -105,7 +105,8 @@ test.skip('setExtensionState', () => {
 
 test.skip('event -  input', () => {
   const state = ViewletExtensions.create()
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$InputBox.value = 'abc'
   state.$InputBox.dispatchEvent(
     new Event('input', {
@@ -114,7 +115,7 @@ test.skip('event -  input', () => {
     })
   )
   expect(state.element.ariaBusy).toBe('true')
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     2133,
     'Extensions',
     'handleInput',
@@ -127,7 +128,8 @@ test.skip('event -  input', () => {
 // TODO
 test.skip('user clicks install', () => {
   const state = ViewletExtensions.create()
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   ViewletExtensions.setExtensions(state, [
     {
       id: 'test-author.test=extension-1',
@@ -144,7 +146,7 @@ test.skip('user clicks install', () => {
         cancelable: true,
       })
     )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     1,
     2133,
     'Extensions',
@@ -155,7 +157,8 @@ test.skip('user clicks install', () => {
 
 test.skip('user clicks while installing', () => {
   const state = ViewletExtensions.create()
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   ViewletExtensions.setExtensions(state, [
     {
       id: 'test-author.test=extension-1',
@@ -172,12 +175,13 @@ test.skip('user clicks while installing', () => {
         cancelable: true,
       })
     )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test.skip('event - click - somewhere else', () => {
   const state = ViewletExtensions.create()
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   ViewletExtensions.setExtensions(state, [
     {
       id: 'test-author.test=extension-1',
@@ -191,7 +195,7 @@ test.skip('event - click - somewhere else', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     867,
     'test-author.test=extension-1',
   ])
@@ -200,7 +204,8 @@ test.skip('event - click - somewhere else', () => {
 // TODO
 test.skip('user clicks uninstall', () => {
   const state = ViewletExtensions.create()
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   ViewletExtensions.setExtensions(state, [
     {
       id: 'test-author.test-extension-1',
@@ -217,7 +222,7 @@ test.skip('user clicks uninstall', () => {
         cancelable: true,
       })
     )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     1,
     2133,
     'Extensions',

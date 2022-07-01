@@ -29,7 +29,8 @@ test('dispose', () => {
 })
 
 test('appendViewlet', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletSideBar.create()
   const $TestViewlet = document.createElement('div')
   $TestViewlet.id = 'TestViewlet'
@@ -41,7 +42,8 @@ test('appendViewlet', () => {
 })
 
 test('appendViewlet - a viewlet already exists', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletSideBar.create()
   const $TestViewlet1 = document.createElement('div')
   $TestViewlet1.id = 'TestViewlet1'

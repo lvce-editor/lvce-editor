@@ -87,15 +87,16 @@ test('event - mousedown', () => {
     },
   ])
   const $QuickPickItemTwo = state.$QuickPickItems.children[1]
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   $QuickPickItemTwo.dispatchEvent(
     new MouseEvent('mousedown', {
       bubbles: true,
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([71182, 1])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith([71182, 1])
 })
 
 test('event - mousedown - on focused item', () => {
@@ -114,14 +115,15 @@ test('event - mousedown - on focused item', () => {
     -1
   )
   const $QuickPickItemOne = state.$QuickPickItems.children[0]
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   $QuickPickItemOne.dispatchEvent(
     new MouseEvent('mousedown', {
       bubbles: true,
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([71182, 0])
+  expect(RendererWorker.send).toHaveBeenCalledWith([71182, 0])
 })
 
 test('event - beforeinput', () => {
@@ -139,7 +141,8 @@ test('event - beforeinput', () => {
     },
   ])
   const $QuickPickInput = state.$QuickPickInput
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   $QuickPickInput.dispatchEvent(
     new InputEvent('beforeinput', {
       bubbles: true,
@@ -147,7 +150,7 @@ test('event - beforeinput', () => {
       data: 'a',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([71181, '>a'])
+  expect(RendererWorker.send).toHaveBeenCalledWith([71181, '>a'])
 })
 
 test('event - input', () => {
@@ -164,7 +167,8 @@ test('event - input', () => {
     },
   ])
   const $QuickPickInput = state.$QuickPickInput
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   $QuickPickInput.value = '>a'
   $QuickPickInput.dispatchEvent(
     new InputEvent('input', {
@@ -172,7 +176,7 @@ test('event - input', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([71181, '>a'])
+  expect(RendererWorker.send).toHaveBeenCalledWith([71181, '>a'])
 })
 
 test('accessibility - QuickPick should have aria label', () => {

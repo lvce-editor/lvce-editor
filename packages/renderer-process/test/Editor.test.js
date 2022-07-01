@@ -52,7 +52,8 @@ test('event - mousedown - left', () => {
   const $EditorRow = document.createElement('div')
   $EditorRow.append($Token)
   state.$LayerText.append($EditorRow)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   // @ts-ignore
   document.caretPositionFromPoint = () => {
     return {
@@ -63,7 +64,7 @@ test('event - mousedown - left', () => {
   state.$LayerText.dispatchEvent(
     new MouseEvent('mousedown', { detail: 1, clientX: 8, clientY: 5 })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'Editor.handleSingleClick',
     '',
     8,
@@ -79,7 +80,8 @@ test('event - mousedown - right', () => {
   const $EditorRow = document.createElement('div')
   $EditorRow.append($Token)
   state.$LayerText.append($EditorRow)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   // @ts-ignore
   document.caretPositionFromPoint = () => {
     return {
@@ -95,7 +97,7 @@ test('event - mousedown - right', () => {
       button: 2,
     })
   )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('event - mousedown - left - out of viewport', () => {
@@ -105,7 +107,8 @@ test('event - mousedown - left - out of viewport', () => {
   const $EditorRow = document.createElement('div')
   $EditorRow.append($Token)
   state.$LayerText.append($EditorRow)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   // @ts-ignore
   document.caretPositionFromPoint = () => {
     return null
@@ -117,8 +120,8 @@ test('event - mousedown - left - out of viewport', () => {
       clientY: -10,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'Editor.handleSingleClick',
     '',
     -10,
@@ -134,7 +137,8 @@ test('event - double click', () => {
   const $EditorRow = document.createElement('div')
   $EditorRow.append($Token)
   state.$LayerText.append($EditorRow)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   // @ts-ignore
   document.caretPositionFromPoint = () => {
     return {
@@ -144,11 +148,12 @@ test('event - double click', () => {
   }
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new MouseEvent('mousedown', { detail: 2, clientX: 8, clientY: 5 })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([385, 8, 5, 2])
+  expect(RendererWorker.send).toHaveBeenCalledWith([385, 8, 5, 2])
 })
 
 test.skip('event - double click and move mouse to create selection', () => {
@@ -161,11 +166,12 @@ test.skip('event - double click and move mouse to create selection', () => {
   state.$LayerText.dispatchEvent(
     new MouseEvent('mousedown', { detail: 2, clientX: 10, clientY: 5 })
   )
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   document.dispatchEvent(
     new MouseEvent('mousemove', { clientX: 15, clientY: 5 })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     363,
     {
       columnIndex: 3,
@@ -175,7 +181,7 @@ test.skip('event - double click and move mouse to create selection', () => {
   document.dispatchEvent(
     new MouseEvent('mousemove', { clientX: 20, clientY: 5 })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     363,
     {
       columnIndex: 4,
@@ -191,7 +197,8 @@ test('event - triple click', () => {
   const $EditorRow = document.createElement('div')
   $EditorRow.append($Token)
   state.$LayerText.append($EditorRow)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   // @ts-ignore
   document.caretPositionFromPoint = () => {
     return {
@@ -202,7 +209,7 @@ test('event - triple click', () => {
   state.$LayerText.dispatchEvent(
     new MouseEvent('mousedown', { detail: 3, clientX: 8, clientY: 5 })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'Editor.handleTripleClick',
     8,
     5,
@@ -213,7 +220,8 @@ test('event - triple click', () => {
 test.skip('event - touchstart - single touch', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new TouchEvent('touchstart', {
       touches: [
@@ -229,7 +237,7 @@ test.skip('event - touchstart - single touch', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     404,
     {
       touches: [
@@ -246,7 +254,8 @@ test.skip('event - touchstart - single touch', () => {
 test.skip('event - touchmove - single touch', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new TouchEvent('touchmove', {
       touches: [
@@ -262,7 +271,7 @@ test.skip('event - touchmove - single touch', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     405,
     {
       touches: [
@@ -282,7 +291,8 @@ test('event - touchend - single touch', () => {
   }
   const state = Editor.create()
   EditorHelper.setState(1, state)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const event = new TouchEvent('touchend', {
     touches: [
       // @ts-ignore https://github.com/jsdom/jsdom/issues/2152
@@ -298,8 +308,8 @@ test('event - touchend - single touch', () => {
   })
   state.$Editor.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'Editor.handleTouchEnd',
     {
       touches: [
@@ -319,7 +329,8 @@ test('event - touchend - single touch - not cancelable', () => {
   }
   const state = Editor.create()
   EditorHelper.setState(1, state)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const event = new TouchEvent('touchend', {
     touches: [
       // @ts-ignore https://github.com/jsdom/jsdom/issues/2152
@@ -335,8 +346,8 @@ test('event - touchend - single touch - not cancelable', () => {
   })
   state.$Editor.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'Editor.handleTouchEnd',
     {
       touches: [
@@ -358,9 +369,10 @@ test.skip('event - paste', () => {
   Editor.setTextDocument(state, {
     lines: ['file1 content'],
   })
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$EditorInput.dispatchEvent(new Event('paste', { bubbles: true }))
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'Editor.handleSingleClick',
     0,
     2,
@@ -374,7 +386,8 @@ test('event - context menu', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new MouseEvent('contextmenu', {
       bubbles: true,
@@ -382,8 +395,8 @@ test('event - context menu', () => {
       clientY: 30,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'ContextMenu.show',
     15,
     30,
@@ -425,7 +438,8 @@ test.skip('accessibility - textarea should have selection set', async () => {
       'line 20',
     ],
   })
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   // @ts-ignore
   Editor.setCursors(state, { rowIndex: 5, columnIndex: 5 })
   expect(state.$EditorInput.value).toBe(`line 1
@@ -465,7 +479,8 @@ test('event - beforeinput on contenteditable on mobile - no selection', () => {
   Platform.state.isMobileOrTablet = () => true
   const state = Editor.create()
   EditorHelper.setState(1, state)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new InputEvent('beforeinput', {
@@ -475,7 +490,7 @@ test('event - beforeinput on contenteditable on mobile - no selection', () => {
     })
   )
   console.log(Platform.state.isMobileOrTablet)
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
   expect(spy).toHaveBeenCalledWith(
     '[Editor] cannot handle input event without selection'
   )
@@ -497,7 +512,8 @@ test('event - beforeinput on contenteditable on mobile - cursor in middle', () =
   range.setStart($Token2.firstChild, 4)
   document.getSelection().removeAllRanges()
   document.getSelection().addRange(range)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new InputEvent('beforeinput', {
       data: 'a',
@@ -505,7 +521,7 @@ test('event - beforeinput on contenteditable on mobile - cursor in middle', () =
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'Editor.handleBeforeInputFromContentEditable',
     'a',
     {
@@ -524,7 +540,8 @@ test('event - composition', () => {
   const $Row1 = create$EditorRow()
   state.$LayerText.append($Row1)
   document.body.append(state.$Editor)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$EditorInput.dispatchEvent(
     new CompositionEvent('compositionstart', {
       data: 'a',
@@ -539,12 +556,12 @@ test('event - composition', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(1, [
+  expect(RendererWorker.send).toHaveBeenCalledTimes(2)
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(1, [
     'Editor.compositionStart',
     'a',
   ])
-  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(2, [
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(2, [
     'Editor.compositionEnd',
     'ñ',
   ])
@@ -566,7 +583,8 @@ test('renderTextAndCursorsAndSelections - beforeinput on contenteditable on mobi
   range.setStart($Token2.firstChild, 4)
   document.getSelection().removeAllRanges()
   document.getSelection().addRange(range)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Editor.renderTextAndCursorsAndSelections(
     state,
     0,
@@ -609,7 +627,8 @@ test('event - beforeinput on contenteditable on mobile - word in middle selected
   range.setEnd($Token2.firstChild, 10)
   document.getSelection().removeAllRanges()
   document.getSelection().addRange(range)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new InputEvent('beforeinput', {
       data: 'a',
@@ -617,7 +636,7 @@ test('event - beforeinput on contenteditable on mobile - word in middle selected
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'Editor.handleBeforeInputFromContentEditable',
     'a',
     {
@@ -646,7 +665,8 @@ test('renderTextAndCursorsAndSelections - native selection - word in middle sele
   range.setEnd($Token2.firstChild, 10)
   document.getSelection().removeAllRanges()
   document.getSelection().addRange(range)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Editor.renderTextAndCursorsAndSelections(
     state,
     0,
@@ -695,7 +715,8 @@ test('renderTextAndCursorsAndSelections - bug with multiple tokens', () => {
   range.setEnd($Token3.firstChild, 1)
   document.getSelection().removeAllRanges()
   document.getSelection().addRange(range)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Editor.renderTextAndCursorsAndSelections(
     state,
     0,
@@ -748,14 +769,15 @@ test.skip('event - native selection change', () => {
   range.setEnd($Token3.firstChild, 1)
   document.getSelection().removeAllRanges()
   document.getSelection().addRange(range)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new InputEvent('selectionchange', {
       bubbles: true,
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     408,
     {
       endColumnIndex: 13,

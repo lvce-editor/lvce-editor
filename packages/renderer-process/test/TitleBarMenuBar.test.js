@@ -37,7 +37,8 @@ test.skip('create', async () => {
 })
 
 test('event - click on menu', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: 'file',
@@ -68,11 +69,12 @@ test('event - click on menu', () => {
   })
   state.$TitleBarMenu.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('event - click on menu item', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: 'file',
@@ -103,15 +105,16 @@ test('event - click on menu item', () => {
   })
   state.$TitleBarMenu.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'TitleBarMenuBar.toggleIndex',
     1,
   ])
 })
 
 test.skip('event - key - ArrowDown', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: 'file',
@@ -135,11 +138,12 @@ test.skip('event - key - ArrowDown', () => {
       key: 'ArrowDown',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([4618])
+  expect(RendererWorker.send).toHaveBeenCalledWith([4618])
 })
 
 test.skip('event - key - ArrowUp', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: 'file',
@@ -163,11 +167,12 @@ test.skip('event - key - ArrowUp', () => {
       key: 'ArrowUp',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([4619])
+  expect(RendererWorker.send).toHaveBeenCalledWith([4619])
 })
 
 test.skip('event - key - Enter', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: 'file',
@@ -191,11 +196,12 @@ test.skip('event - key - Enter', () => {
       key: 'Enter',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([4624])
+  expect(RendererWorker.send).toHaveBeenCalledWith([4624])
 })
 
 test.skip('event - key - Space', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: 'file',
@@ -219,11 +225,12 @@ test.skip('event - key - Space', () => {
       key: ' ',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([4623])
+  expect(RendererWorker.send).toHaveBeenCalledWith([4623])
 })
 
 test.skip('event - key - Home', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: 'file',
@@ -247,11 +254,12 @@ test.skip('event - key - Home', () => {
       key: 'Home',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([4621])
+  expect(RendererWorker.send).toHaveBeenCalledWith([4621])
 })
 
 test.skip('event - key - End', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: 'file',
@@ -275,11 +283,12 @@ test.skip('event - key - End', () => {
       key: 'End',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([4622])
+  expect(RendererWorker.send).toHaveBeenCalledWith([4622])
 })
 
 test.skip('event - key - Escape', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: 'file',
@@ -303,7 +312,7 @@ test.skip('event - key - Escape', () => {
       key: 'Escape',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([4625])
+  expect(RendererWorker.send).toHaveBeenCalledWith([4625])
 })
 
 // TODO test pageup/pagedown

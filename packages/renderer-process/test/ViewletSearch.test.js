@@ -21,7 +21,8 @@ test('refresh', () => {
 
 test('event - input', () => {
   const state = ViewletSearch.create()
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$ViewletSearchInput.value = 'test search'
   state.$ViewletSearchInput.dispatchEvent(
     new Event('input', {
@@ -29,7 +30,7 @@ test('event - input', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([9444, 'test search'])
+  expect(RendererWorker.send).toHaveBeenCalledWith([9444, 'test search'])
 })
 
 test('setResults - no results', () => {

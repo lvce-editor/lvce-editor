@@ -23,7 +23,8 @@ test('name', () => {
 })
 
 test('create', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(state, [
     {
@@ -53,7 +54,8 @@ test('create', () => {
 })
 
 test('setItems', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(state, [
     {
@@ -131,7 +133,8 @@ test('setFocusedIndex', () => {
 })
 
 test('event - handleClick - top', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(state, [
     {
@@ -154,7 +157,8 @@ test('event - handleClick - top', () => {
     },
   ])
   ViewletActivityBar.setFocusedIndex(state, -1, 0)
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('mousedown', {
     bubbles: true,
     clientX: 15,
@@ -163,7 +167,7 @@ test('event - handleClick - top', () => {
   })
   state.$ActivityBar.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'ActivityBar.handleClick',
     1,
     15,
@@ -172,7 +176,8 @@ test('event - handleClick - top', () => {
 })
 
 test('event - handleClick - bottom', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(state, [
     {
@@ -194,7 +199,8 @@ test('event - handleClick - bottom', () => {
       flags: /* Button */ 2,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$ActivityBar.lastChild.dispatchEvent(
     new MouseEvent('mousedown', {
       bubbles: true,
@@ -202,7 +208,7 @@ test('event - handleClick - bottom', () => {
       clientY: 30,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'ActivityBar.handleClick',
     2,
     15,
@@ -211,7 +217,8 @@ test('event - handleClick - bottom', () => {
 })
 
 test('event - handleClick - no item is clicked', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(state, [
     {
@@ -233,7 +240,8 @@ test('event - handleClick - no item is clicked', () => {
       flags: /* Button */ 2,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('mousedown', {
     bubbles: true,
     clientX: 15,
@@ -242,11 +250,12 @@ test('event - handleClick - no item is clicked', () => {
   })
   state.$ActivityBar.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('event - handleContextMenu', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(state, [
     {
@@ -268,7 +277,8 @@ test('event - handleContextMenu', () => {
       flags: /* Button */ 2,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const $ActivityBarItemsTop = state.$ActivityBar.children[1]
   $ActivityBarItemsTop.children[0].dispatchEvent(
     new MouseEvent('contextmenu', {
@@ -277,7 +287,7 @@ test('event - handleContextMenu', () => {
       clientY: 30,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'ActivityBar.handleContextMenu',
     15,
     30,
