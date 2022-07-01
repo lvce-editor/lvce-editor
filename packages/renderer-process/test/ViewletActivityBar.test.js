@@ -2,9 +2,31 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as Layout from '../src/parts/Layout/Layout.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
-import * as ViewletActivityBar from '../src/parts/Viewlet/ViewletActivityBar.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+  Layout.state.$ActivityBar = document.createElement('div')
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const ViewletActivityBar = await import(
+  '../src/parts/Viewlet/ViewletActivityBar.js'
+)
+const Layout = await import('../src/parts/Layout/Layout.js')
 
 const getTitle = ($Element) => {
   return $Element.title
@@ -13,10 +35,6 @@ const getTitle = ($Element) => {
 const getSimpleList = ($ActivityBar) => {
   return Array.from($ActivityBar.children).map(getTitle)
 }
-
-beforeEach(() => {
-  Layout.state.$ActivityBar = document.createElement('div')
-})
 
 test('name', () => {
   expect(ViewletActivityBar.name).toBe('ActivityBar')
