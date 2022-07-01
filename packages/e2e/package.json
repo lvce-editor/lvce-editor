@@ -8,6 +8,10 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "scripts": {
+    "e2e": "node src/_all.js",
+    "e2e:headless": "node src/_all.js --headless"
+  },
   "dependencies": {
     "@playwright/test": "^1.23.0",
     "get-port": "^6.1.2"

@@ -36,7 +36,7 @@ export const state = {
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-const root = join(__dirname, '..', '..', '..')
+export const root = join(__dirname, '..', '..', '..')
 
 export const getTmpDir = (prefix = 'foo-') => {
   return mkdtemp(join(tmpdir(), prefix))
