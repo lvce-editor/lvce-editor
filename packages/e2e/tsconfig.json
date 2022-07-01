@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "lib": ["esnext"],
+    "checkJs": true,
+    "module": "esnext",
+    "target": "esnext",
+    "types": ["node"],
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "noEmit": true,
+    "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
+    "assumeChangesOnlyAffectDirectDependencies": true,
+    "strict": true
+  },
+  "include": ["src"]
+}

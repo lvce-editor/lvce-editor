@@ -215,7 +215,6 @@ const getDecorationClassName = (type) => {
 }
 
 const getLineInfo = (line, tokens, decorations, TokenMap, lineOffset) => {
-  console.log({ decorations })
   let start = 0
   let end = 0
   const lineInfo = []

@@ -14,6 +14,7 @@ export const state = {
   async getExtensions() {
     // TODO only read from env once
     const builtinExtensions = await getBuiltinExtensions()
+    console.log('only extension', process.env.ONLY_EXTENSION)
     if (process.env.ONLY_EXTENSION) {
       const absolutePath = path.resolve(process.env.ONLY_EXTENSION)
       const onlyExtension = await getExtensionManifests([absolutePath])
