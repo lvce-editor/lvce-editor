@@ -323,8 +323,8 @@ const getModuleId = (commandId) => {
     case 'Editor.moveRectangleSelectionPx':
     case 'Editor.moveSelection':
     case 'Editor.moveSelectionPx':
-    case 'Editor.open':
-    case 'Editor.openFromType':
+    case 'Editor.openCompletion':
+    case 'Editor.openCompletionFromType':
     case 'Editor.paste':
     case 'Editor.pasteText':
     case 'Editor.save':
@@ -420,13 +420,13 @@ const getModuleId = (commandId) => {
     case 'ContextMenu.selectCurrent':
     case 'ContextMenu.noop':
       return MODULE_CONTEXT_MENU
-    case 'ViewletEditorCompletion.dispose':
-    case 'ViewletEditorCompletion.selectIndex':
-    case 'ViewletEditorCompletion.focusFirst':
-    case 'ViewletEditorCompletion.focusLast':
-    case 'ViewletEditorCompletion.focusNext':
-    case 'ViewletEditorCompletion.focusPrevious':
-    case 'ViewletEditorCompletion.selectCurrent':
+    case 'EditorCompletion.dispose':
+    case 'EditorCompletion.selectIndex':
+    case 'EditorCompletion.focusFirst':
+    case 'EditorCompletion.focusLast':
+    case 'EditorCompletion.focusNext':
+    case 'EditorCompletion.focusPrevious':
+    case 'EditorCompletion.selectCurrent':
       return MODULE_VIEWLET_EDITOR_COMPLETION
     case 'EditorCursorDown.editorCursorsDown':
     case 'EditorCursorCharacterLeft.editorCursorCharacterLeft':

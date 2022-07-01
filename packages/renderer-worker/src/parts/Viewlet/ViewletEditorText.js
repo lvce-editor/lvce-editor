@@ -72,7 +72,7 @@ const updateSemanticTokens = async (state) => {
     const newSemanticTokens =
       await ExtensionHostSemanticTokens.executeSemanticTokenProvider(state)
     await Command.execute(
-      /* Editor.setDecorations */ 992,
+      /* Editor.setDecorations */ 'Editor.setDecorations',
       /* decorations */ newSemanticTokens
     )
     // TODO apply semantic tokens to editor and rerender

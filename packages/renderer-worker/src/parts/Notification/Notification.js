@@ -35,5 +35,8 @@ export const handleClick = (index) => {
 }
 
 export const dispose = async (id) => {
-  await RendererProcess.invoke(/* Notification.dispose */ 992, /* id */ id)
+  await RendererProcess.invoke(
+    /* Notification.dispose */ 'Notification.dispose',
+    /* id */ id
+  )
 }

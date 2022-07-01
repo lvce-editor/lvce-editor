@@ -420,7 +420,7 @@
   },
   {
     "key": "ctrl+Space",
-    "command": "EditorCompletion.open",
+    "command": "Editor.openCompletion",
     "when": "focus.ViewletEditorText"
   },
   {

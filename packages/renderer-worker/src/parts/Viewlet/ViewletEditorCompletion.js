@@ -147,7 +147,7 @@ const select = async (state, completionItem) => {
   const word = completionItem.label
   const snippet = getInsertSnippet(word, leadingWord)
   // TODO type and dispose commands should be sent to renderer process at the same time
-  await Command.execute(/* EditorType.editorType */ 345, /* text */ snippet)
+  await Command.execute(/* Editor.type */ 'Editor.type', /* text */ snippet)
   return {
     ...state,
     disposed: true,
