@@ -2,9 +2,28 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as Layout from '../src/parts/Layout/Layout.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
-import * as ViewletSideBar from '../src/parts/Viewlet/ViewletSideBar.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const ViewletSideBar = await import('../src/parts/Viewlet/ViewletSideBar.js')
+const Layout = await import('../src/parts/Layout/Layout.js')
 
 // TODO side effect here is bad
 beforeAll(() => {
