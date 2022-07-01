@@ -77,7 +77,7 @@ export const showMessage = async (message, options) => {
     // state.dialog = undefined
   } else {
     await RendererProcess.invoke(
-      /* Dialog.showErrorDialogWithOptions */ 7835,
+      /* Dialog.showErrorDialogWithOptions */ 'Dialog.showErrorDialogWithOptions',
       /* message */ message,
       /* options */ options
     )

@@ -96,9 +96,11 @@ const startBrowser = async ({ port, headless = false }) => {
 
 export const runWithExtension = async ({ folder = '', env = {}, name }) => {
   folder ||= await getTmpDir()
-  const onlyExtension = join(root, 'packages', 'e2e', 'fixtures', name)
-  // @ts-ignore
-  env['ONLY_EXTENSION'] = onlyExtension
+  if (name) {
+    const onlyExtension = join(root, 'packages', 'e2e', 'fixtures', name)
+    // @ts-ignore
+    env['ONLY_EXTENSION'] = onlyExtension
+  }
   if (state.page && state.childProcess) {
     console.info('recycle page')
     state.childProcess.send({

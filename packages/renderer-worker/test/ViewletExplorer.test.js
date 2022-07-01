@@ -2760,7 +2760,7 @@ test.skip('newFile - error with writeFile', async () => {
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, [
     909090,
     expect.any(Number),
-    7835,
+    'Dialog.showErrorDialogWithOptions',
     {
       category: undefined,
       codeFrame: undefined,

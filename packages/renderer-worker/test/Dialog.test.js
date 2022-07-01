@@ -86,7 +86,7 @@ test('showMessage - web', async () => {
   )
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    7835,
+    'Dialog.showErrorDialogWithOptions',
     {
       message: 'Error: Oops',
       codeFrame: '',

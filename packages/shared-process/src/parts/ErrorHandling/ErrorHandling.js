@@ -27,7 +27,7 @@ export const handleError = (error) => {
   const prettyError = preparePrettyError(error)
   Socket.send({
     jsonrpc: '2.0',
-    method: /* Dialog.showErrorDialogWithOptions */ 1494,
+    method: /* Dialog.showErrorDialogWithOptions */ 'Dialog.showMessage',
     params: [
       {
         message: prettyError.message,

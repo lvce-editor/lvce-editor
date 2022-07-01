@@ -19,7 +19,7 @@ export const showNotificationWithOptions = async (type, text, options) => {
   switch (type) {
     case 'error-dialog': {
       const selectedOption = await SharedProcess.invoke(
-        /* Dialog.showMessage */ 1494,
+        /* Dialog.showMessage */ 'Dialog.showMessage',
         /* text */ text,
         /* options */ options
       )
