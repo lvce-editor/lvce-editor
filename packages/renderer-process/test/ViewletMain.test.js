@@ -2,10 +2,29 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as Main from '../src/parts/Viewlet/ViewletMain.js'
-import * as Layout from '../src/parts/Layout/Layout.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const Main = await import('../src/parts/Viewlet/ViewletMain.js')
+const Layout = await import('../src/parts/Layout/Layout.js')
+const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 
 beforeEach(async () => {
   Layout.state.$Main = document.createElement('div')
@@ -51,14 +70,12 @@ test('event - left click on tab', () => {
     'test://sample.txt',
     -1
   )
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
   state.$MainTabs.children[0].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
-    'Main.handleTabClick',
-    0,
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledWith(['Main.handleTabClick', 0])
 })
 
 test('event - middle click on tab', () => {
@@ -70,17 +87,15 @@ test('event - middle click on tab', () => {
     'test://sample.txt',
     -1
   )
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('mousedown', {
     bubbles: true,
     button: 1,
     cancelable: true,
   })
   state.$MainTabs.children[0].dispatchEvent(event)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
-    'Main.closeEditor',
-    0,
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledWith(['Main.closeEditor', 0])
 })
 
 test('event - right click on tab', () => {
@@ -92,11 +107,12 @@ test('event - right click on tab', () => {
     'test://sample.txt',
     -1
   )
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$MainTabs.children[0].dispatchEvent(
     new MouseEvent('mousedown', { bubbles: true, button: 2, cancelable: true })
   )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('event - context menu on tab', () => {
@@ -108,7 +124,8 @@ test('event - context menu on tab', () => {
     'test://sample.txt',
     -1
   )
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$MainTabs.children[0].dispatchEvent(
     new MouseEvent('contextmenu', {
       bubbles: true,
@@ -116,7 +133,7 @@ test('event - context menu on tab', () => {
       clientY: 30,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'Main.handleTabContextMenu',
     0,
     15,
@@ -134,11 +151,12 @@ test('event - click on tabs', () => {
     ...Main.create(),
     $MainTabs,
   }
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
   state.$MainTabs.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 // TODO test closeAllViewlets

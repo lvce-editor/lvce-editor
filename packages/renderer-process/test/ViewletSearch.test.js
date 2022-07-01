@@ -2,8 +2,27 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as ViewletSearch from '../src/parts/Viewlet/ViewletSearch.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const ViewletSearch = await import('../src/parts/Viewlet/ViewletSearch.js')
 
 test('name', () => {
   expect(ViewletSearch.name).toBe('Search')
@@ -21,7 +40,8 @@ test('refresh', () => {
 
 test('event - input', () => {
   const state = ViewletSearch.create()
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$ViewletSearchInput.value = 'test search'
   state.$ViewletSearchInput.dispatchEvent(
     new Event('input', {
@@ -29,7 +49,7 @@ test('event - input', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([9444, 'test search'])
+  expect(RendererWorker.send).toHaveBeenCalledWith([9444, 'test search'])
 })
 
 test('setResults - no results', () => {

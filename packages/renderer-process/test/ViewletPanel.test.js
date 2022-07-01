@@ -1,10 +1,29 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletPanel from '../src/parts/Viewlet/ViewletPanel.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
-import * as Layout from '../src/parts/Layout/Layout.js'
 import { jest } from '@jest/globals'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const ViewletPanel = await import('../src/parts/Viewlet/ViewletPanel.js')
+const Layout = await import('../src/parts/Layout/Layout.js')
 
 // TODO side effect here is bad
 beforeAll(() => {
@@ -34,7 +53,8 @@ test('event - mousedown - first tab clicked', () => {
     'Debug Console',
     'Terminal',
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$PanelTabs.children[0].dispatchEvent(
     new MouseEvent('mousedown', {
       clientX: 50,
@@ -43,11 +63,8 @@ test('event - mousedown - first tab clicked', () => {
       button: 1,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
-    'Panel.tabsHandleClick',
-    0,
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(['Panel.tabsHandleClick', 0])
 })
 
 test('event - mousedown - no tab clicked', () => {
@@ -58,7 +75,8 @@ test('event - mousedown - no tab clicked', () => {
     'Debug Console',
     'Terminal',
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$PanelTabs.dispatchEvent(
     new MouseEvent('mousedown', {
       clientX: 50,
@@ -67,7 +85,7 @@ test('event - mousedown - no tab clicked', () => {
       button: 1,
     })
   )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('accessibility - PanelTabs should have role tablist', () => {

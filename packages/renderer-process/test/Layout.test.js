@@ -2,20 +2,27 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as Layout from '../src/parts/Layout/Layout.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
 
-// beforeAll(() => {
-//   // https://github.com/jsdom/jsdom/issues/2527
-//   // @ts-ignore
-//   globalThis.PointerEvent = class extends Event {
-//     constructor(type, { x, y }) {
-//       super(type)
-//       this.x = x
-//       this.y = y
-//     }
-//   }
-// })
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const Layout = await import('../src/parts/Layout/Layout.js')
 
 test.skip('base components', () => {
   expect(Layout.state.$ActivityBar).toBeInstanceOf(HTMLElement)
@@ -55,7 +62,8 @@ test('update', () => {
 })
 
 test('handleResize', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Layout.show({
     'SideBar.visible': false,
     'SideBar.width': 100,
@@ -71,15 +79,16 @@ test('handleResize', () => {
       bubbles: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'Layout.handleResize',
     { windowWidth: 1024, windowHeight: 768, titleBarHeight: 0 },
   ])
 })
 
 test('event - move sash', () => {
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Layout.show({
     'SideBar.visible': true,
     'SideBar.width': 100,
@@ -108,13 +117,13 @@ test('event - move sash', () => {
   $SashSideBar.dispatchEvent(pointerMoveEvent)
   $SashSideBar.dispatchEvent(pointerUpEvent)
   expect($Style.isConnected).toBe(false)
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(1, [
+  expect(RendererWorker.send).toHaveBeenCalledTimes(2)
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(1, [
     'Layout.handleSashPointerDown',
     'SideBar',
   ])
   // TODO make it possible to test with custom x/y position
-  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(2, [
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(2, [
     'Layout.handleSashPointerMove',
     0,
     0,

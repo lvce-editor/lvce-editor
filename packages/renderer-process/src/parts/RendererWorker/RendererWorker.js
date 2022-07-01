@@ -6,8 +6,10 @@ import * as WebWorker from '../WebWorker/WebWorker.js'
 // '/packages/renderer-worker/distmin/rendererWorkerMain-0ead0bed.js'
 
 export const state = {
-  send(message) {},
-  sendAndTransfer(message, transferables) {},
+  /**
+   * @type {any}
+   */
+  ipc: undefined,
 }
 
 const handleMessageFromRendererWorker = (event) => {
@@ -19,17 +21,30 @@ const handleMessageFromRendererWorker = (event) => {
   }
 }
 
-export const hydrate = async (config) => {
+const getIpc = async () => {
   const assetDir = Platform.getAssetDir()
   const urlRendererWorker = `${assetDir}/packages/renderer-worker/src/rendererWorkerMain.js`
   const rendererWorker = await WebWorker.create(urlRendererWorker)
-  rendererWorker.onmessage = handleMessageFromRendererWorker
-  state.send = (message) => {
-    rendererWorker.postMessage(message)
+  return {
+    send(message) {
+      rendererWorker.postMessage(message)
+    },
+    sendAndTransfer(message, transferables) {
+      rendererWorker.postMessage(message, transferables)
+    },
+    get onmessage() {
+      return rendererWorker.onmessage
+    },
+    set onmessage(listener) {
+      rendererWorker.onmessage = listener
+    },
   }
-  state.sendAndTransfer = (message, transferables) => {
-    rendererWorker.postMessage(message, transferables)
-  }
+}
+
+export const hydrate = async (config) => {
+  const ipc = await getIpc()
+  ipc.onmessage = handleMessageFromRendererWorker
+  state.ipc = ipc
 }
 
 // TODO needed?
@@ -44,11 +59,11 @@ export const send = (message) => {
     console.warn('invalid message', message)
     return
   }
-  state.send(message)
+  state.ipc.send(message)
 }
 
 export const sendAndTransfer = (message, transfer) => {
-  state.sendAndTransfer(message, transfer)
+  state.ipc.sendAndTransfer(message, transfer)
 }
 
 export const handleInvoke = async (callbackId, method, ...params) => {
@@ -56,14 +71,14 @@ export const handleInvoke = async (callbackId, method, ...params) => {
   try {
     result = await Command.execute(method, ...params)
   } catch (error) {
-    state.send([
+    send([
       /* Callback.reject */ 67331,
       /* callbackId */ callbackId,
       /* error */ error,
     ])
     return
   }
-  state.send([
+  send([
     /* Callback.resolve */ 67330,
     /* callbackId */ callbackId,
     /* result */ result,

@@ -2,8 +2,27 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
-import * as ViewletExplorer from '../src/parts/Viewlet/ViewletExplorer.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const ViewletExplorer = await import('../src/parts/Viewlet/ViewletExplorer.js')
 
 const getSimpleList = (state) => {
   return Array.from(state.$Viewlet.children).map((node) => node.textContent)
@@ -460,7 +479,8 @@ test('event - contextmenu', () => {
   ])
   // @ts-ignore
   const $GitKeep = state.$Viewlet.children[0]
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   $GitKeep.dispatchEvent(
     new MouseEvent('contextmenu', {
       clientX: 50,
@@ -468,7 +488,7 @@ test('event - contextmenu', () => {
       bubbles: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'Explorer.handleContextMenu',
     50,
     50,
@@ -525,7 +545,8 @@ test('event - click', () => {
     },
   ])
   const $GitKeep = state.$Viewlet.children[0]
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   $GitKeep.dispatchEvent(
     new MouseEvent('mousedown', {
       clientX: 50,
@@ -534,7 +555,7 @@ test('event - click', () => {
       button: 0,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'ViewletExplorer.handleClick',
     0,
   ])
@@ -556,7 +577,8 @@ test('event - click on wrapper div', () => {
       path: '/index.html',
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$Viewlet.dispatchEvent(
     new MouseEvent('mousedown', {
       clientX: 50,
@@ -565,8 +587,8 @@ test('event - click on wrapper div', () => {
       button: 0,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith([
     'ViewletExplorer.handleClick',
     -1,
   ])
@@ -607,7 +629,8 @@ test('event - right click', () => {
     },
   ])
   const $GitKeep = state.$Viewlet.children[0]
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   $GitKeep.dispatchEvent(
     new MouseEvent('mousedown', {
       clientX: 50,
@@ -616,7 +639,7 @@ test('event - right click', () => {
       button: 1,
     })
   )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('accessibility - viewlet should have role tree', () => {
