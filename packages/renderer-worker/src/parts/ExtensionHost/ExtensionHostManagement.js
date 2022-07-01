@@ -54,6 +54,7 @@ export const ensureExtensionHostIsStarted = async () => {
 }
 
 export const activateByEvent = async (event) => {
+  console.log('activate by event', event)
   if (!Languages.hasLoaded()) {
     await Languages.waitForLoad()
   }
@@ -62,6 +63,8 @@ export const activateByEvent = async (event) => {
   // TODO this seems too inefficient -> leave extensions in shared process and just send activation event to shared process
   // TODO should not query extensions multiple times
   const extensions = await ExtensionMeta.getExtensions()
+
+  console.log({ extensions })
   // TODO if many (more than two?) extensions cannot be loaded,
   // it shouldn't should that many error messages
   for (const extension of extensions) {

@@ -14,6 +14,8 @@ const locations = [
   'build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js',
   'build/src/parts/ComputeCacheKey/ComputeCacheKey.js',
   'build/src/parts/Hash/Hash.js',
+  '.github/workflows/ci.yml',
+  '.github/workflows/release.yml',
 ]
 
 const main = async () => {
