@@ -2,11 +2,30 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as Editor from '../src/parts/Editor/Editor.js'
-import * as EditorHelper from '../src/parts/Editor/EditorHelper.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
-import * as Platform from '../src/parts/Platform/Platform.js'
-import * as ActiveViewlet from '../src/parts/Viewlet/ActiveViewlet.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const Editor = await import('../src/parts/Editor/Editor.js')
+const Platform = await import('../src/parts/Platform/Platform.js')
+const EditorHelper = await import('../src/parts/Editor/EditorHelper.js')
+const ActiveViewlet = await import('../src/parts/Viewlet/ActiveViewlet.js')
 
 afterEach(() => {
   jest.restoreAllMocks()
