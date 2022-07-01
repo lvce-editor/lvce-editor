@@ -213,7 +213,7 @@ export const load = async (viewlet, focus = false) => {
         )
       }
       await RendererProcess.invoke(
-        /* viewlet.handleError */ 3031,
+        /* viewlet.handleError */ 'Viewlet.handleError',
         /* id */ viewlet.id,
         /* parentId */ viewlet.parentId,
         /* message */ error.message
