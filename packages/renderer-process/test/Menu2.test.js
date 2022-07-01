@@ -2,8 +2,27 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as Menu from '../src/parts/OldMenu/Menu2.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const Menu = await import('../src/parts/OldMenu/Menu2.js')
 
 const getTextContent = (node) => {
   return node.textContent
@@ -12,10 +31,6 @@ const getTextContent = (node) => {
 const getSimpleList = ($Menu) => {
   return Array.from($Menu.children).map(getTextContent)
 }
-
-afterEach(() => {
-  jest.restoreAllMocks()
-})
 
 test('show', () => {
   Menu.show(0, 0, 0, [
