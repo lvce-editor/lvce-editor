@@ -217,7 +217,7 @@ test('load - error - contentLoaded method throws error', async () => {
   const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
   await ViewletManager.load(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 3030, '')
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.load', '')
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3031,
     '',

@@ -4,14 +4,16 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 const getKeyBindings = async () => {
-  return Command.execute(/* KeyBindingsInitial.getKeyBindings */ 8961)
+  return Command.execute(
+    /* KeyBindingsInitial.getKeyBindings */ 'KeyBindingsInitial.getKeyBindings'
+  )
 }
 
 export const hydrate = async () => {
   try {
     const keyBindings = await getKeyBindings()
     await RendererProcess.invoke(
-      /* KeyBindings.hydrate */ 755,
+      /* KeyBindings.hydrate */ 'KeyBindings.hydrate',
       /* keyBindings */ keyBindings
     )
   } catch (error) {
@@ -36,18 +38,18 @@ export const lookupKeyBinding = (commandId) => {
 }
 
 export const handleKeyBinding = async (keyBinding) => {
-  if (typeof keyBinding.command === 'number') {
-    Command.execute(
-      /* command */ keyBinding.command,
-      // TODO should args always be defined? (probably yes -> monomorphism & simpler code since all objects are the same)
-      ...(keyBinding.args || [])
-    )
-  } else if (typeof keyBinding.command === 'string') {
-    // TODO should calling command be async ? (actually don't care if it resolves -> can just send error event in case of error)
-    await SharedProcess.invoke(
-      /* ExtensionHost.executeCommand */ 'ExtensionHost.executeCommand',
-      /* commandId */ keyBinding.command,
-      ...(keyBinding.args || [])
-    )
-  }
+  await Command.execute(
+    /* command */ keyBinding.command,
+    // TODO should args always be defined? (probably yes -> monomorphism & simpler code since all objects are the same)
+    ...(keyBinding.args || [])
+  )
+  // TODO
+  // else if (typeof keyBinding.command === 'string') {
+  //   // TODO should calling command be async ? (actually don't care if it resolves -> can just send error event in case of error)
+  //   await SharedProcess.invoke(
+  //     /* ExtensionHost.executeCommand */ 'ExtensionHost.executeCommand',
+  //     /* commandId */ keyBinding.command,
+  //     ...(keyBinding.args || [])
+  //   )
+  // }
 }

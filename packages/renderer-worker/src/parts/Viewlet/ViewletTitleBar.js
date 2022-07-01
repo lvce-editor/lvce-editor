@@ -20,7 +20,7 @@ export const loadContent = async (state) => {
 
 export const contentLoaded = async (state) => {
   await RendererProcess.invoke(
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'TitleBar',
     /* method */ 'menuSetEntries',
     /* titleBarEntries */ state.titleBarEntries

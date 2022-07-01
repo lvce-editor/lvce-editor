@@ -468,7 +468,12 @@ test('event - contextmenu', () => {
       bubbles: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([162, 50, 50, 0])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'Explorer.handleContextMenu',
+    50,
+    50,
+    0,
+  ])
 })
 
 // TODO test expand/collapse
@@ -529,7 +534,10 @@ test('event - click', () => {
       button: 0,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([161, 0])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'ViewletExplorer.handleClick',
+    0,
+  ])
 })
 
 test('event - click on wrapper div', () => {
@@ -558,7 +566,10 @@ test('event - click on wrapper div', () => {
     })
   )
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([161, -1])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'ViewletExplorer.handleClick',
+    -1,
+  ])
 })
 
 test('event - right click', () => {

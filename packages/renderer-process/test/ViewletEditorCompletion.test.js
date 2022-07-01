@@ -72,7 +72,10 @@ test('event - mousedown', () => {
     })
   )
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([982, 0])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'EditorCompletion.selectIndex',
+    0,
+  ])
 })
 
 test('event - click outside', () => {

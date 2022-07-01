@@ -32,7 +32,7 @@ test('handleError - normal error', async () => {
   expect(spy).toHaveBeenCalledWith(mockError)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Notification.create */ 991,
+    /* Notification.create */ 'Notification.create',
     'error',
     {
       codeFrame: undefined,
@@ -52,7 +52,7 @@ test('handleError - null', async () => {
   expect(spy).toHaveBeenCalledWith(mockError)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Notification.create */ 991,
+    /* Notification.create */ 'Notification.create',
     'error',
     {
       codeFrame: undefined,
@@ -82,7 +82,7 @@ test('handleError - multiple causes', async () => {
   expect(spy).toHaveBeenCalledWith(mockError2)
   expect(spy).toHaveBeenCalledWith(mockError1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Notification.create */ 991,
+    /* Notification.create */ 'Notification.create',
     'error',
     {
       codeFrame: undefined,

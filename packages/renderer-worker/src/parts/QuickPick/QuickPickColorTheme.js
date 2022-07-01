@@ -6,7 +6,7 @@ const getColorThemeNames = async () => {
   if (Platform.getPlatform() === 'web') {
     const assetDir = Platform.getAssetDir()
     const url = `${assetDir}/config/themes.json`
-    return Command.execute(/* Ajax.getJson */ 270, /* url */ url)
+    return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
   }
   return SharedProcess.invoke(
     /* ExtensionHost.getColorThemeNames */ 'ExtensionHost.getColorThemeNames'

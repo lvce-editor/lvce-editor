@@ -128,7 +128,7 @@ const getUri = (state, index) => {
 const selectIndexLead = async (state, index) => {
   const uri = getUri(state, index)
   // TODO open file and jump to line
-  await Command.execute(/* Main.openUri */ 97, /* uri */ uri)
+  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ uri)
   return {
     ...state,
     focusedIndex: index,
@@ -169,7 +169,7 @@ export const render = (oldState, newState) => {
   if (oldState.displayReferences !== newState.displayReferences) {
     // const message =
     changes.push([
-      /* Viewlet.invoke */ 3024,
+      /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ newState.id,
       /* method */ 'setLocations',
       /* references */ newState.displayReferences,
@@ -177,7 +177,7 @@ export const render = (oldState, newState) => {
   }
   if (oldState.message !== newState.message) {
     changes.push([
-      /* Viewlet.invoke */ 3024,
+      /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ newState.id,
       /* method */ 'setMessage',
       /* message */ newState.message,
@@ -185,7 +185,7 @@ export const render = (oldState, newState) => {
   }
   if (oldState.focusedIndex !== newState.focusedIndex) {
     changes.push([
-      /* Viewlet.invoke */ 3024,
+      /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ newState.id,
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldState.focusedIndex,

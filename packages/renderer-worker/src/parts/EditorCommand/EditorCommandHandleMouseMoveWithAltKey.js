@@ -67,7 +67,7 @@ export const editorHandleMouseMoveWithAltKey = async (editor, x, y, offset) => {
     // .tokens
     // console.log({ editor })
     await RendererProcess.invoke(
-      /* Viewlet.invoke */ 3024,
+      /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'EditorText',
       /* method */ 'highlightAsLink',
       /* relativeY */ definitionRelativeY,

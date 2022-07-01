@@ -25,7 +25,7 @@ test.skip('editorCompositionEnd', () => {
 test('editorComposition - ä', async () => {
   RendererProcess.state.send = jest.fn((message) => {
     switch (message[0]) {
-      case 3024:
+      case 'Viewlet.send':
         break
       default:
         console.log({ message })
@@ -88,7 +88,7 @@ test('editorComposition - ä', async () => {
 test('editorComposition - ñ', async () => {
   RendererProcess.state.send = jest.fn((message) => {
     switch (message[0]) {
-      case 3024:
+      case 'Viewlet.send':
         break
       default:
         console.log({ message })
@@ -152,7 +152,7 @@ test('editorComposition - ñ', async () => {
 test('editorComposition - on and off', async () => {
   RendererProcess.state.send = jest.fn((message) => {
     switch (message[0]) {
-      case 3024:
+      case 'Viewlet.send':
         break
       default:
         console.log({ message })

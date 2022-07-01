@@ -19,7 +19,7 @@ export const render = (oldState, newState) => {
   const changes = []
   if (oldState.todos !== newState.todos) {
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'TodoList',
       /* method */ 'setTodos',
       /* todos */ newState.todos,

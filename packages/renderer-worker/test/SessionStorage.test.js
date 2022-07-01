@@ -29,7 +29,10 @@ test('getJson - number', async () => {
   })
   expect(await SessionStorage.getJson('item-1')).toBe(42)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(8977, 'item-1')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'SessionStorage.getItem',
+    'item-1'
+  )
 })
 
 test('getJson - object', async () => {
@@ -40,7 +43,10 @@ test('getJson - object', async () => {
 
   expect(await SessionStorage.getJson('item-1')).toEqual({})
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(8977, 'item-1')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'SessionStorage.getItem',
+    'item-1'
+  )
 })
 
 test('getJson - invalid json', async () => {
@@ -50,7 +56,10 @@ test('getJson - invalid json', async () => {
   })
   expect(await SessionStorage.getJson('item-1')).toBeUndefined()
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(8977, 'item-1')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'SessionStorage.getItem',
+    'item-1'
+  )
 })
 
 test('setJson', async () => {
@@ -61,7 +70,7 @@ test('setJson', async () => {
   await SessionStorage.setJson('item-1', 43)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    8978,
+    'SessionStorage.setItem',
     'item-1',
     `43
 `
@@ -75,5 +84,5 @@ test('clear', async () => {
   })
   await SessionStorage.clear()
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(8976)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('SessionStorage.clear')
 })

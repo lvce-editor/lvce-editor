@@ -39,7 +39,7 @@ test.skip('show', async () => {
   await Menu.show(0, 0, 'file')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    7905,
+    'Menu.show',
     0,
     0,
     250,
@@ -722,7 +722,7 @@ test.skip('focusIndexMouse - focusing submenu index should show submenu', async 
   expect(Menu.state.menus).toHaveLength(2)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, [
-    7905,
+    'Menu.show',
     150,
     50,
     250,

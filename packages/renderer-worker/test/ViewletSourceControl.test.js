@@ -96,6 +96,6 @@ test('render - inputValue changed', () => {
     inputValue: 'abc',
   }
   expect(ViewletSourceControl.render(oldState, newState)).toEqual([
-    [3024, 'Source Control', 'setInputValue', 'abc'],
+    ['Viewlet.send', 'Source Control', 'setInputValue', 'abc'],
   ])
 })

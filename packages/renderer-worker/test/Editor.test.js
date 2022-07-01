@@ -22,7 +22,7 @@ test.skip('renderText', () => {
   RendererProcess.state.send = jest.fn()
   Editor.renderText(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    3024,
+    'Viewlet.send',
     'EditorText',
     'renderText',
     [
@@ -51,7 +51,7 @@ test.skip('renderTextAndCursorAndSelections', () => {
   RendererProcess.state.send = jest.fn()
   Editor.renderTextAndCursorAndSelections(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    3024,
+    'Viewlet.send',
     'EditorText',
     'renderTextAndCursorAndSelections',
     0,
@@ -68,7 +68,7 @@ test.skip('renderTextAndCursorAndSelections', () => {
 test('scheduleDocumentAndCursorsSelections', () => {
   RendererProcess.state.send = jest.fn((message) => {
     switch (message[0]) {
-      case 3024:
+      case 'Viewlet.send':
         break
       default:
         console.log({ message })
@@ -118,7 +118,7 @@ test('scheduleDocumentAndCursorsSelections', () => {
   })
   // expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
   // expect(RendererProcess.state.send).toHaveBeenCalledWith([
-  //   3024,
+  //   'Viewlet.send',
   //   'EditorText',
   //   'renderTextAndCursorsAndSelections',
   //   0,
@@ -132,7 +132,7 @@ test('scheduleDocumentAndCursorsSelections', () => {
 test('scheduleDocumentAndCursorsSelections - add one character', () => {
   RendererProcess.state.send = jest.fn((message) => {
     switch (message[0]) {
-      case 3024:
+      case 'Viewlet.send':
         break
       default:
         console.log({ message })
@@ -182,7 +182,7 @@ test('scheduleDocumentAndCursorsSelections - add one character', () => {
   })
   // expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
   // expect(RendererProcess.state.send).toHaveBeenCalledWith([
-  //   3024,
+  //   'Viewlet.send',
   //   'EditorText',
   //   'renderTextAndCursorsAndSelections',
   //   0,
@@ -196,7 +196,7 @@ test('scheduleDocumentAndCursorsSelections - add one character', () => {
 test('scheduleDocumentAndCursorsSelections - delete one character', () => {
   RendererProcess.state.send = jest.fn((message) => {
     switch (message[0]) {
-      case 3024:
+      case 'Viewlet.send':
         break
       default:
         console.log({ message })
@@ -246,7 +246,7 @@ test('scheduleDocumentAndCursorsSelections - delete one character', () => {
   })
   // expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
   // expect(RendererProcess.state.send).toHaveBeenCalledWith([
-  //   3024,
+  //   'Viewlet.send',
   //   'EditorText',
   //   'renderTextAndCursorsAndSelections',
   //   0,

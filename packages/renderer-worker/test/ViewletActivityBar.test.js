@@ -148,7 +148,7 @@ test('render - all items fit but little space is remaining', async () => {
 
   expect(ViewletActivityBar.render(oldState, newState)).toEqual([
     [
-      3024,
+      'Viewlet.send',
       'ActivityBar',
       'setItems',
       [
@@ -256,7 +256,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
     909090,
     expect.any(Number),
-    3024,
+    'Viewlet.send',
     'ActivityBar',
     'setItems',
     [
@@ -355,7 +355,7 @@ test('render - two items do not fit', () => {
 
   expect(ViewletActivityBar.render(oldState, newState)).toEqual([
     [
-      3024,
+      'Viewlet.send',
       'ActivityBar',
       'setItems',
       [
@@ -500,6 +500,7 @@ test('focusPrevious', () => {
 })
 
 test('selectCurrent - settings', async () => {
+  // TODO mock menu instead
   Layout.state.windowWidth = 1000
   Layout.state.windowHeight = 1000
   const state = {
@@ -560,14 +561,14 @@ test('selectCurrent - settings', async () => {
   await ViewletActivityBar.selectCurrent(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    7905,
+    'Menu.showMenu',
     750,
     408,
     250,
     132,
     [
       {
-        command: 1200,
+        command: 'Preferences.openSettingsJson',
         flags: 0,
         id: 'settings',
         label: 'Settings',
@@ -579,7 +580,7 @@ test('selectCurrent - settings', async () => {
         label: 'Keyboard Shortcuts',
       },
       {
-        command: 18925,
+        command: 'QuickPick.openColorTheme', // TODO have arg instead
         flags: 0,
         id: 'colorTheme',
         label: 'Color Theme',
@@ -774,7 +775,7 @@ test('resize', () => {
   })
   expect(commands).toEqual([
     [
-      3024,
+      'Viewlet.send',
       'ActivityBar',
       'setItems',
       [

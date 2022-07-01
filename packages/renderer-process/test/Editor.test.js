@@ -63,7 +63,13 @@ test('event - mousedown - left', () => {
   state.$LayerText.dispatchEvent(
     new MouseEvent('mousedown', { detail: 1, clientX: 8, clientY: 5 })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([360, '', 8, 5, 2])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'Editor.handleSingleClick',
+    '',
+    8,
+    5,
+    2,
+  ])
 })
 
 test('event - mousedown - right', () => {
@@ -112,7 +118,13 @@ test('event - mousedown - left - out of viewport', () => {
     })
   )
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([360, '', -10, -10, 0])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'Editor.handleSingleClick',
+    '',
+    -10,
+    -10,
+    0,
+  ])
 })
 
 test('event - double click', () => {
@@ -190,7 +202,12 @@ test('event - triple click', () => {
   state.$LayerText.dispatchEvent(
     new MouseEvent('mousedown', { detail: 3, clientX: 8, clientY: 5 })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([376, 8, 5, 2])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'Editor.handleTripleClick',
+    8,
+    5,
+    2,
+  ])
 })
 
 test.skip('event - touchstart - single touch', () => {
@@ -283,7 +300,7 @@ test('event - touchend - single touch', () => {
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.state.send).toHaveBeenCalledWith([
-    406,
+    'Editor.handleTouchEnd',
     {
       touches: [
         {
@@ -320,7 +337,7 @@ test('event - touchend - single touch - not cancelable', () => {
   expect(event.defaultPrevented).toBe(false)
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.state.send).toHaveBeenCalledWith([
-    406,
+    'Editor.handleTouchEnd',
     {
       touches: [
         {
@@ -343,7 +360,11 @@ test.skip('event - paste', () => {
   })
   RendererWorker.state.send = jest.fn()
   state.$EditorInput.dispatchEvent(new Event('paste', { bubbles: true }))
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([360, 0, 2])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'Editor.handleSingleClick',
+    0,
+    2,
+  ])
 })
 
 test('event - context menu', () => {
@@ -363,7 +384,7 @@ test('event - context menu', () => {
   )
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.state.send).toHaveBeenCalledWith([
-    951,
+    'ContextMenu.show',
     15,
     30,
     'editor',
@@ -485,7 +506,7 @@ test('event - beforeinput on contenteditable on mobile - cursor in middle', () =
     })
   )
   expect(RendererWorker.state.send).toHaveBeenCalledWith([
-    407,
+    'Editor.handleBeforeInputFromContentEditable',
     'a',
     {
       startColumnIndex: 6,
@@ -519,8 +540,14 @@ test('event - composition', () => {
     })
   )
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(1, [411, 'a'])
-  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(2, [413, 'ñ'])
+  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(1, [
+    'Editor.compositionStart',
+    'a',
+  ])
+  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(2, [
+    'Editor.compositionEnd',
+    'ñ',
+  ])
 })
 
 test('renderTextAndCursorsAndSelections - beforeinput on contenteditable on mobile - cursor in middle - native', () => {
@@ -591,7 +618,7 @@ test('event - beforeinput on contenteditable on mobile - word in middle selected
     })
   )
   expect(RendererWorker.state.send).toHaveBeenCalledWith([
-    407,
+    'Editor.handleBeforeInputFromContentEditable',
     'a',
     {
       startColumnIndex: 2,

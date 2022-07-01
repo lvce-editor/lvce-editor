@@ -13,6 +13,7 @@ const locations = [
   'packages/server/package-lock.json',
   'build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js',
   'build/src/parts/ComputeCacheKey/ComputeCacheKey.js',
+  'build/src/parts/Hash/Hash.js',
 ]
 
 const main = async () => {

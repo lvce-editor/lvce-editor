@@ -12,7 +12,10 @@ export const editorCopy = async (editor) => {
   const text = TextDocument.getSelectionText(editor, selection).join('\n')
   console.log({ text })
   try {
-    await Command.execute(/* ClipBoard.writeText */ 241, /* text */ text)
+    await Command.execute(
+      /* ClipBoard.writeText */ 'ClipBoard.writeText',
+      /* text */ text
+    )
   } catch (error) {
     console.warn(error)
   }

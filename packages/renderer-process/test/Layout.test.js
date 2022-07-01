@@ -29,7 +29,7 @@ test.skip('base components', () => {
 test('show', async () => {
   // TODO this should be different
   // TODO check attributes on elements
-  Layout.hydrate({
+  Layout.show({
     'SideBar.visible': false,
     'SideBar.width': 100,
     'SideBar.position': 'left',
@@ -56,7 +56,7 @@ test('update', () => {
 
 test('handleResize', () => {
   RendererWorker.state.send = jest.fn()
-  Layout.hydrate({
+  Layout.show({
     'SideBar.visible': false,
     'SideBar.width': 100,
     'SideBar.position': 'left',
@@ -73,14 +73,14 @@ test('handleResize', () => {
   )
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.state.send).toHaveBeenCalledWith([
-    1111,
+    'Layout.handleResize',
     { windowWidth: 1024, windowHeight: 768, titleBarHeight: 0 },
   ])
 })
 
 test('event - move sash', () => {
   RendererWorker.state.send = jest.fn()
-  Layout.hydrate({
+  Layout.show({
     'SideBar.visible': true,
     'SideBar.width': 100,
     'SideBar.position': 'left',
@@ -110,9 +110,13 @@ test('event - move sash', () => {
   expect($Style.isConnected).toBe(false)
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(2)
   expect(RendererWorker.state.send).toHaveBeenNthCalledWith(1, [
-    1113,
+    'Layout.handleSashPointerDown',
     'SideBar',
   ])
   // TODO make it possible to test with custom x/y position
-  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(2, [1112, 0, 0])
+  expect(RendererWorker.state.send).toHaveBeenNthCalledWith(2, [
+    'Layout.handleSashPointerMove',
+    0,
+    0,
+  ])
 })

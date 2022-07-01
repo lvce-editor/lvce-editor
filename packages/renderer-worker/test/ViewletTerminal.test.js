@@ -65,7 +65,7 @@ test('handleData', () => {
   })
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    9922,
+    'Terminal.write',
     new Uint8Array([1, 2, 3, 4, 5])
   )
 })
@@ -88,7 +88,7 @@ test('clear', async () => {
   await ViewletTerminal.clear(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    9922,
+    'Terminal.write',
     new TextEncoder().encode('TODO clear terminal')
   )
 })

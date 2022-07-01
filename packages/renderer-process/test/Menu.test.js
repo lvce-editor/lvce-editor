@@ -303,7 +303,11 @@ test('event - click', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([7403, 0, 0])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'Menu.selectIndex',
+    0,
+    0,
+  ])
 })
 
 test('event - click - outside', () => {

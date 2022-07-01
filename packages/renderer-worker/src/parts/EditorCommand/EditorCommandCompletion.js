@@ -72,7 +72,7 @@ const handleSelectionChange = (editor, selectionChanges) => {
   const x = EditorPosition.x(editor, editor.cursor)
   const y = EditorPosition.y(editor, editor.cursor)
   RendererProcess.send([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'EditorCompletion',
     /* method */ 'show',
     /* x */ x,
@@ -171,7 +171,7 @@ export const open = async (editor, openingReason = 1) => {
   // }
 
   // await RendererProcess.invoke(
-  //   /* Viewlet.send */ 3024,
+  //   /* Viewlet.send */ 'Viewlet.send',
   //   /* id */ 'EditorCompletion',
   //   /* method */ 'show',
   //   /* x */ x,

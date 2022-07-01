@@ -10,7 +10,7 @@ export const getMenuEntries = () => {
       id: 'newWindow',
       label: 'New Window',
       flags: /* None */ 0,
-      command: /* Window.openNew */ 8086,
+      command: /* Window.openNew */ 'Window.openNew',
     },
     {
       id: 'separator',
@@ -46,7 +46,7 @@ export const getMenuEntries = () => {
       id: 'exit',
       label: 'Exit',
       flags: /* None */ 0,
-      command: /* Window.exit */ 8087,
+      command: /* Window.exit */ 'Window.exit',
     },
   ]
 }

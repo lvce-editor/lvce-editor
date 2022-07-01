@@ -88,7 +88,7 @@ test('open - cannot rename', async () => {
   await EditorRename.open(editor)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3700,
+    'EditorError.show',
     'You cannot rename this element',
     0,
     20

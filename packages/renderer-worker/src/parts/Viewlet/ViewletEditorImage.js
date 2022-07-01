@@ -29,7 +29,7 @@ export const render = (oldState, newState) => {
   const changes = []
   if (oldState.src !== newState.src) {
     changes.push([
-      /* Viewlet.invoke */ 3024,
+      /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'EditorImage',
       /* method */ 'setSrc',
       /* src */ `/remote${newState.src}`,

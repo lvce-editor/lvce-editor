@@ -31,7 +31,7 @@ const getBuiltinPicks = async () => {
   const assetDir = Platform.getAssetDir()
   const url = `${assetDir}/config/builtinCommands.json`
   const builtinPicks = await Command.execute(
-    /* Ajax.getJson */ 270,
+    /* Ajax.getJson */ 'Ajax.getJson',
     /* url */ url
   )
   return builtinPicks
@@ -72,10 +72,7 @@ export const getPicks = async () => {
 
 const selectPickBuiltin = async (item) => {
   // TODO ids should be all numbers for efficiency -> also directly can call command
-  const id = await Command.execute(
-    /* CommandInfo.getCommandInfo */ 1592,
-    /* id */ item.id
-  )
+  const id = await Command.execute(/* id */ item.id)
   await Command.execute(id)
   console.log('execute', id)
 }

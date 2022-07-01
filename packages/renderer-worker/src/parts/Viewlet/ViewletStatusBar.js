@@ -132,7 +132,7 @@ export const render = (oldState, newState) => {
     oldState.statusBarItemsRight !== newState.statusBarItemsRight
   ) {
     changes.push([
-      /* Viewlet.invoke */ 3024,
+      /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'StatusBar',
       /* method */ 'setItems',
       /* statusBarItemsLeft */ newState.statusBarItemsLeft,

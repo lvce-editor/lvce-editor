@@ -48,7 +48,7 @@ const isValid = (resolvedRoot) => {
 
 const getResolveRootFromSessionStorage = async () => {
   const resolvedRoot = await Command.execute(
-    /* SessionStorage.getJson */ 6756,
+    /* SessionStorage.getJson */ 'SessionStorage.getJson',
     /* key */ 'workspace'
   )
   if (!isValid(resolvedRoot)) {

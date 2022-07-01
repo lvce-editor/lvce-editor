@@ -26,7 +26,7 @@ test('resize - increase height', () => {
   )
   expect(commands).toEqual([
     [
-      3024,
+      'Viewlet.send',
       'EditorText',
       'renderTextAndCursorsAndSelections',
       0,
@@ -67,7 +67,7 @@ test('resize - same height', () => {
   )
   expect(commands).toEqual([
     [
-      3024,
+      'Viewlet.send',
       'EditorText',
       'renderTextAndCursorsAndSelections',
       0,
@@ -109,7 +109,7 @@ test('resize - reduce height', () => {
   )
   expect(commands).toEqual([
     [
-      3024,
+      'Viewlet.send',
       'EditorText',
       'renderTextAndCursorsAndSelections',
       0,

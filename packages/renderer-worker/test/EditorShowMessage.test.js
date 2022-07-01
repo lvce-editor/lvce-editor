@@ -38,7 +38,7 @@ test('showMessage - should dispose after 3 seconds', async () => {
   )
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'EditorText',
     'showOverlayMessage',
     NaN,
@@ -54,7 +54,7 @@ test('showMessage - should dispose after 3 seconds', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     2,
-    3024,
+    'Viewlet.send',
     'EditorText',
     'hideOverlayMessage'
   )

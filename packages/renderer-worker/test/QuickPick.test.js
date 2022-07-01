@@ -76,10 +76,14 @@ test('show', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await QuickPick.show('', mockProvider)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 3030, 'QuickPick')
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
+    'Viewlet.load',
+    'QuickPick'
+  )
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     2,
-    3024,
+    'Viewlet.send',
     'QuickPick',
     'updateValueAndPicksAndPlaceholder',
     '',
@@ -109,11 +113,19 @@ test('show called twice', async () => {
   const promise2 = QuickPick.show('', mockProvider)
   await Promise.all([promise1, promise2])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 3030, 'QuickPick')
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 3030, 'QuickPick')
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
+    'Viewlet.load',
+    'QuickPick'
+  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
+    'Viewlet.load',
+    'QuickPick'
+  )
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     3,
-    3024,
+    'Viewlet.send',
     'QuickPick',
     'updateValueAndPicksAndPlaceholder',
     '',
@@ -190,7 +202,7 @@ test('dispose', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   QuickPick.dispose()
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Viewlet.dispose */ 3026,
+    /* Viewlet.dispose */ 'Viewlet.dispose',
     /* id */ 'QuickPick'
   )
 })
@@ -209,7 +221,7 @@ test('select', async () => {
   await QuickPick.selectIndex(0)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Viewlet.dispose */ 3026,
+    /* Viewlet.dispose */ 'Viewlet.dispose',
     /* id */ 'QuickPick'
   )
 })
@@ -220,7 +232,7 @@ test('focusFirst', async () => {
   await QuickPick.focusFirst()
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'QuickPick',
     /* method */ 'focusIndex',
     0,
@@ -234,7 +246,7 @@ test('focusLast', async () => {
   await QuickPick.focusLast()
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'QuickPick',
     'focusIndex',
     0,
@@ -248,7 +260,7 @@ test('focusPrevious', async () => {
   await QuickPick.focusPrevious()
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'QuickPick',
     /* method */ 'focusIndex',
     0,
@@ -261,7 +273,7 @@ test('focusNext', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await QuickPick.focusNext()
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     'QuickPick',
     'focusIndex',
     0,
@@ -357,7 +369,7 @@ test('show - twice', async () => {
   await QuickPick.show('', mockProvider1)
   await QuickPick.show('', mockProvider2)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'QuickPick',
     'updateValueAndPicksAndPlaceholder',
     '',

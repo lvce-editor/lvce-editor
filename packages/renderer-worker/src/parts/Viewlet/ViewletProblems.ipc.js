@@ -4,5 +4,5 @@ import * as ViewletProblems from './ViewletProblems.js'
 
 // prettier-ignore
 export const __initialize__ = () => {
-  Command.register(7550, Viewlet.wrapViewletCommand('Problems', ViewletProblems.focusIndex))
+  Command.register('ViewletProblems.focusIndex', Viewlet.wrapViewletCommand('Problems', ViewletProblems.focusIndex))
 }

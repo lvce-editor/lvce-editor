@@ -3,19 +3,19 @@ import * as MenuEntriesEdit from '../src/parts/MenuEntries/MenuEntriesEdit.js'
 test('getMenuEntries', () => {
   const menuEntries = MenuEntriesEdit.getMenuEntries()
   expect(menuEntries).toContainEqual({
-    command: 364,
+    command: 'Editor.cut',
     flags: 0,
     id: 'cut',
     label: 'Cut',
   })
   expect(menuEntries).toContainEqual({
-    command: 365,
+    command: 'Editor.copy',
     flags: 0,
     id: 'copy',
     label: 'Copy',
   })
   expect(menuEntries).toContainEqual({
-    command: 383,
+    command: 'Editor.paste',
     flags: 0,
     id: 'paste',
     label: 'Paste',

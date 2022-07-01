@@ -30,9 +30,10 @@ test('setPathName - should do nothing if we are already at the url', () => {
 })
 
 test('hydrate', () => {
+  // TODO mock instead
   RendererWorker.state.send = jest.fn()
   Location.hydrate()
   window.dispatchEvent(new PopStateEvent('popstate'))
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([7634])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith(['Workspace.hydrate'])
 })

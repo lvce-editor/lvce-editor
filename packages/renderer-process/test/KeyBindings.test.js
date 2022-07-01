@@ -27,7 +27,13 @@ test('hydrate', async () => {
       key: 'a',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'a',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with no matching keyBinding', async () => {
@@ -78,7 +84,14 @@ test('hydrate - dispatch Event with context matching', async () => {
       key: 'a',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'a',
+      when: 'testContext',
+    },
+  ])
 })
 
 test('hydrate - dispatch Event with Arrow Key', async () => {
@@ -94,7 +107,13 @@ test('hydrate - dispatch Event with Arrow Key', async () => {
       key: 'ArrowLeft',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'ArrowLeft',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with ctrl modifier', async () => {
@@ -111,7 +130,13 @@ test('hydrate - dispatch event with ctrl modifier', async () => {
       ctrlKey: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'ctrl+a',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with shift modifier', async () => {
@@ -128,7 +153,13 @@ test('hydrate - dispatch event with shift modifier', async () => {
       shiftKey: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'shift+a',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with alt modifier', async () => {
@@ -145,7 +176,13 @@ test('hydrate - dispatch event with alt modifier', async () => {
       altKey: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'alt+a',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with space key', async () => {
@@ -161,7 +198,13 @@ test('hydrate - dispatch event with space key', async () => {
       key: ' ',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'Space',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with double shift key', async () => {
@@ -197,7 +240,13 @@ test('hydrate - dispatch event with double shift key', async () => {
       shiftKey: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'shift shift',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with double alt key', async () => {
@@ -233,7 +282,13 @@ test('hydrate - dispatch event with double alt key', async () => {
       altKey: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'alt alt',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with double ctrl key', async () => {
@@ -269,7 +324,13 @@ test('hydrate - dispatch event with double ctrl key', async () => {
       ctrlKey: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'ctrl ctrl',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with ctrl alt ctrl key should not trigger ctrl ctrl', async () => {
@@ -375,5 +436,11 @@ test('hydrate - dispatch event with ctrl alt shift shift key should trigger shif
       shiftKey: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'shift shift',
+    },
+  ])
 })

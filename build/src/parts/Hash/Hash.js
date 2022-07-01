@@ -1,6 +1,5 @@
 import { createHash } from 'crypto'
 import { join } from 'path'
-import VError from 'verror'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 
@@ -42,7 +41,9 @@ export const computeFolderHash = async (folder, extraFiles = []) => {
     }
     return hash.digest('hex')
   } catch (error) {
-    // @ts-ignore
-    throw new VError(error, 'Failed to compute hash')
+    throw new Error('Failed to compute hash', {
+      // @ts-ignore
+      cause: error,
+    })
   }
 }

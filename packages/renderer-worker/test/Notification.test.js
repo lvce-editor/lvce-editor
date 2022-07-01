@@ -26,7 +26,7 @@ test('create', async () => {
   await Notification.create('info', 'sample text')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    991,
+    'Notification.create',
     'info',
     'sample text'
   )
@@ -37,5 +37,5 @@ test('dispose', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await Notification.dispose(1)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(992, 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Notification.dispose', 1)
 })

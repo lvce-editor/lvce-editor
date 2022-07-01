@@ -9,7 +9,7 @@ export const showNotification = (type, text) => {
   }
   SharedProcess.send({
     jsonrpc: '2.0',
-    method: /* Notification.show */ 900,
+    method: /* Notification.create */ 'Notification.create',
     params: [type, text],
   })
   // throw new Error('not implemented')

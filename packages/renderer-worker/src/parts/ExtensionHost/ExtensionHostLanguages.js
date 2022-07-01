@@ -14,7 +14,7 @@ const getLanguagesFromStaticFolder = async () => {
   const assetDir = Platform.getAssetDir()
   const url = `${assetDir}/config/languages.json`
   // TODO handle error ?
-  return Command.execute(/* Ajax.getJson */ 270, /* url */ url)
+  return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
 }
 
 export const getLanguages = () => {

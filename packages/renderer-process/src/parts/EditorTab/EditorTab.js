@@ -10,7 +10,7 @@ const handleEditorTabsContextMenu = (event) => {
   const x = event.clientX
   const y = event.clientY
   RendererWorker.send([
-    /* editorTabsHandleContextMenu */ 95,
+    /* editorTabsHandleContextMenu */ 'Main.handleTabContextMenu',
     /* x */ x,
     /* y */ y,
   ])
@@ -31,7 +31,7 @@ const handleMouseDown = (event) => {
       console.log('left click')
       break
     case 1:
-      RendererWorker.send([/* Main.closeEditor */ 99])
+      RendererWorker.send([/* Main.closeEditor */ 'Main.closeFocusedEditor'])
       break
     default:
       break

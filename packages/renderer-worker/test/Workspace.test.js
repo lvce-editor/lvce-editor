@@ -56,7 +56,6 @@ test('hydrate', async () => {
           homeDir: '~',
         }
 
-        break
       default:
         throw new Error('unexpected message')
     }
@@ -69,7 +68,7 @@ test('hydrate', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     2,
-    8085,
+    'Window.setTitle',
     '/tmp/some-folder'
   )
 })
@@ -80,7 +79,6 @@ test('hydrate - error', async () => {
     switch (method) {
       case 'Workspace.resolveRoot':
         throw new TypeError('x is not a function')
-        break
       default:
         throw new Error('unexpected message')
     }
@@ -117,7 +115,7 @@ test.skip('setPath', async () => {
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
     909090,
     expect.any(Number),
-    8085,
+    'Window.setTitle',
     '/test',
   ])
 })

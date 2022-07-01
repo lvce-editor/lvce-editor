@@ -37,7 +37,7 @@ export const handleData = async (state, data) => {
   // Terminal.handleData(state, data)
   const parsedData = new Uint8Array(data.data)
   await RendererProcess.invoke(
-    /* ViewletTerminal.write */ 9922,
+    /* ViewletTerminal.write */ 'Terminal.write',
     /* data */ parsedData
   )
 }
@@ -76,7 +76,7 @@ export const resize = async (state, width, height) => {
 
 export const clear = async (state) => {
   await RendererProcess.invoke(
-    /* ViewletTerminal.write */ 9922,
+    /* ViewletTerminal.write */ 'Terminal.write',
     /* data */ new TextEncoder().encode('TODO clear terminal')
   )
 }

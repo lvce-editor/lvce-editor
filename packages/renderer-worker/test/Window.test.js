@@ -77,7 +77,7 @@ test('setTitle', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await Window.setTitle('test')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(8085, 'test')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Window.setTitle', 'test')
 })
 
 test('openNew - web', async () => {

@@ -14,17 +14,17 @@ export const readGitHubFile = async (owner, repo, fileSha) => {
 }
 
 export const readGithubFileWithUrl = (githubUrl) => {
-  return Command.execute(/* Ajax.getJson */ 270, /* url */ githubUrl)
+  return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ githubUrl)
 }
 
 export const readFile = (owner, repo, path) => {
   const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`
-  return Command.execute(/* Ajax.getJson */ 270, /* url */ url)
+  return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
 }
 
 export const readGitHubDirectory = (owner, repo, ref, path) => {
   const url = `https://api.github.com/repos/${owner}/${repo}/git/trees/${ref}${encodeFilePath(
     path
   ).replace(/^\//, ':')}`
-  return Command.execute(/* Ajax.getJson */ 270, /* url */ url)
+  return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
 }

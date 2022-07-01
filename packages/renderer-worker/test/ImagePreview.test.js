@@ -100,5 +100,8 @@ test('hide', async () => {
   await ImagePreview.show('/tmp/sample-image.png')
   await ImagePreview.hide()
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(3026, 'ImagePreview')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Viewlet.dispose',
+    'ImagePreview'
+  )
 })

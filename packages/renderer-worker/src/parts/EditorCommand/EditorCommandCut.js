@@ -12,6 +12,9 @@ export const editorCut = async (editor) => {
   const changes = editorReplaceSelections(editor, [''], 'editorCut')
   const text = changes[0].deleted.join('\n')
   // TODO remove selected text from document
-  await Command.execute(/* ClipBoard.writeText */ 241, /* text */ text)
+  await Command.execute(
+    /* ClipBoard.writeText */ 'ClipBoard.writeText',
+    /* text */ text
+  )
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }

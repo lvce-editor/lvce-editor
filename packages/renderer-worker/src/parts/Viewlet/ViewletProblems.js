@@ -55,7 +55,7 @@ export const render = (oldState, newState) => {
   const changes = []
   if (oldState.problems !== newState.problems) {
     changes.push([
-      /* Viewlet.invoke */ 3024,
+      /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'Problems',
       /* method */ 'setProblems',
       /* problems */ newState.problems,
@@ -64,7 +64,7 @@ export const render = (oldState, newState) => {
   if (oldState.focusedIndex !== newState.focusedIndex) {
     console.log('focused idnex changed')
     changes.push([
-      /* Viewlet.invoke */ 3024,
+      /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'Problems',
       /* method */ 'setFocusedIndex',
       /* focusedIndex */ newState.focusedIndex,

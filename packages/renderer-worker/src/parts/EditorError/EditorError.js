@@ -5,7 +5,7 @@ export const show = async (editor, message, position) => {
   const x = EditorPosition.x(editor, position)
   const y = EditorPosition.y(editor, position)
   await RendererProcess.invoke(
-    /* EditorError.show */ 3700,
+    /* EditorError.show */ 'EditorError.show',
     /* message */ message,
     /* x */ x,
     /* y */ y

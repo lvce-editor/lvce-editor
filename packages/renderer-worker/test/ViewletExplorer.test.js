@@ -176,7 +176,7 @@ test('loadContent - race condition', async () => {
   await Promise.all([promise1, promise2])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -316,7 +316,7 @@ test('contentLoaded', async () => {
   await ViewletExplorer.contentLoaded(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -381,7 +381,7 @@ test.skip('refresh - error', async () => {
   await ViewletExplorer.refresh(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    3024,
+    'Viewlet.send',
     'Explorer',
     'handleError',
     new Error('TypeError: x is not a function'),
@@ -447,10 +447,12 @@ test('handleClick - file', async () => {
     ],
   }
   // TODO dont assign -> has effect on other tests
-  Command.state.commands[97] = jest.fn()
+  Command.state.commands['Main.openUri'] = jest.fn()
   await ViewletExplorer.handleClick(state, 0)
   expect(state.focusedIndex).toBe(0)
-  expect(Command.state.commands[97]).toHaveBeenCalledWith('/index.css')
+  expect(Command.state.commands['Main.openUri']).toHaveBeenCalledWith(
+    '/index.css'
+  )
 })
 
 test('handleClick - file - error', async () => {
@@ -480,10 +482,12 @@ test('handleClick - file - error', async () => {
     ],
   }
   // TODO dont assign -> has effect on other tests
-  Command.state.commands[97] = jest.fn()
+  Command.state.commands['Main.openUri'] = jest.fn()
   await ViewletExplorer.handleClick(state, 0)
   expect(state.focusedIndex).toBe(0)
-  expect(Command.state.commands[97]).toHaveBeenCalledWith('/index.css')
+  expect(Command.state.commands['Main.openUri']).toHaveBeenCalledWith(
+    '/index.css'
+  )
 })
 
 test('handleClick - directory-expanded - error', async () => {
@@ -513,10 +517,12 @@ test('handleClick - directory-expanded - error', async () => {
     ],
   }
   // TODO dont assign -> has effect on other tests
-  Command.state.commands[97] = jest.fn()
+  Command.state.commands['Main.openUri'] = jest.fn()
   await ViewletExplorer.handleClick(state, 0)
   expect(state.focusedIndex).toBe(0)
-  expect(Command.state.commands[97]).toHaveBeenCalledWith('/index.css')
+  expect(Command.state.commands['Main.openUri']).toHaveBeenCalledWith(
+    '/index.css'
+  )
 })
 
 test('handleClick - directory-expanded - scrolled down', async () => {
@@ -567,7 +573,7 @@ test('handleClick - directory-expanded - scrolled down', async () => {
   await ViewletExplorer.handleClick(state, 0)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -638,7 +644,7 @@ test('handleClick - collapsed folder', async () => {
   expect(state.focusedIndex).toBe(2)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -737,7 +743,7 @@ test('handleClick - race condition - child folder is being expanded and parent f
   expect(state.focusedIndex).toBe(0)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -812,7 +818,7 @@ test('handleClick - race condition - opening multiple folders at the same time',
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     1,
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -856,7 +862,7 @@ test('handleClick - race condition - opening multiple folders at the same time',
   )
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     2,
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -909,7 +915,7 @@ test('handleClick - race condition - opening multiple folders at the same time',
   )
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     3,
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -1023,7 +1029,7 @@ test('handleClick - expanded folder', async () => {
   await ViewletExplorer.handleClick(state, 2)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -1426,7 +1432,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowLeft(state)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -1513,7 +1519,7 @@ test('handleArrowLeft - nested file - first child', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowLeft(state)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'setFocusedIndex',
     3,
@@ -1599,7 +1605,7 @@ test('handleArrowLeft - nested file - third child', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowLeft(state)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'setFocusedIndex',
     6,
@@ -1747,7 +1753,7 @@ test('handleArrowRight - collapsed folder', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowRight(state)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -1839,7 +1845,7 @@ test('handleArrowRight - collapsed empty folder', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleArrowRight(state)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -1923,7 +1929,7 @@ test('handleArrowRight - expanded folder', async () => {
   await ViewletExplorer.handleArrowRight(state)
   expect(state.focusedIndex).toBe(3)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'setFocusedIndex',
     2,
@@ -2059,7 +2065,7 @@ test('focusFirst', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.focusFirst(state)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'setFocusedIndex',
     1,
@@ -2148,7 +2154,7 @@ test('focusLast', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.focusLast(state)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'setFocusedIndex',
     0,
@@ -2233,7 +2239,7 @@ test('handleWheel - up', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleWheel(state, -22)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -2320,7 +2326,7 @@ test('handleWheel - down', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.handleWheel(state, 22)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -2502,7 +2508,7 @@ test.skip('event - workspace change', async () => {
   await GlobalEventBus.emitEvent('workspace.change', '/test')
   expect(RendererProcess.invoke).toBeCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [],
@@ -2542,7 +2548,7 @@ test.skip('newFile - root', async () => {
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, [
     909090,
     expect.any(Number),
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -2642,7 +2648,7 @@ test('newFile - inside folder', async () => {
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     4,
 
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -2738,7 +2744,7 @@ test.skip('newFile - error with writeFile', async () => {
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [
     909090,
     expect.any(Number),
-    3024,
+    'Viewlet.send',
     'Explorer',
     'showCreateFileInputBox',
     0,
@@ -2746,7 +2752,7 @@ test.skip('newFile - error with writeFile', async () => {
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, [
     909090,
     expect.any(Number),
-    3024,
+    'Viewlet.send',
     'Explorer',
     'hideCreateFileInputBox',
     0,
@@ -2783,7 +2789,7 @@ test('newFile - canceled', async () => {
   await ViewletExplorer.newFile(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'showCreateFileInputBox',
     -1
@@ -2860,7 +2866,7 @@ test('removeDirent - first', async () => {
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     1,
 
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -2887,7 +2893,7 @@ test('removeDirent - first', async () => {
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     2,
 
-    3024,
+    'Viewlet.send',
     'Explorer',
     'setFocusedIndex',
     0,
@@ -2960,7 +2966,7 @@ test('removeDirent - middle', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2) // TODO should only be 1 for efficiency
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     1,
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -2986,7 +2992,7 @@ test('removeDirent - middle', async () => {
   )
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     2,
-    3024,
+    'Viewlet.send',
     'Explorer',
     'setFocusedIndex',
     1,
@@ -3059,7 +3065,7 @@ test('removeDirent - last', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2) // TODO should only be 1 for efficiency
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     1,
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -3085,7 +3091,7 @@ test('removeDirent - last', async () => {
   )
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     2,
-    3024,
+    'Viewlet.send',
     'Explorer',
     'setFocusedIndex',
     2,
@@ -3192,7 +3198,7 @@ test('resize - same height', () => {
   )
   expect(commands).toEqual([
     [
-      3024,
+      'Viewlet.send',
       'Explorer',
       'updateDirents',
       [
@@ -3748,7 +3754,7 @@ test('expandAll', async () => {
   await ViewletExplorer.expandAll(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [
@@ -3998,7 +4004,7 @@ test('collapseAll', async () => {
   await ViewletExplorer.collapseAll(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    3024,
+    'Viewlet.send',
     'Explorer',
     'updateDirents',
     [

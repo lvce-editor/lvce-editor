@@ -50,12 +50,12 @@ test('getKeyBindings', async () => {
   CacheStorage.setJson.mockImplementation(() => {})
   expect(await KeyBindingsInitial.getKeyBindings()).toEqual([
     {
-      command: 985,
+      command: 'editorCompletion.focusNext',
       key: 'ArrowDown',
       when: 'focus.editorCompletions',
     },
     {
-      command: 986,
+      command: 'editorCompletion.focusPrevious',
       key: 'ArrowUp',
       when: 'focus.editorCompletions',
     },
@@ -72,7 +72,7 @@ test('getKeyBindings - empty', async () => {
   expect(await KeyBindingsInitial.getKeyBindings()).toEqual([])
 })
 
-test('getKeyBindings - wrong shape', async () => {
+test.skip('getKeyBindings - wrong shape', async () => {
   // @ts-ignore
   Ajax.getJson.mockImplementation(() => {
     return null

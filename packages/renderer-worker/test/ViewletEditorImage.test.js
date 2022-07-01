@@ -30,6 +30,6 @@ test('render', () => {
     src: '/test/image.png',
   }
   expect(ViewletEditorImage.render(oldState, newState)).toEqual([
-    [3024, 'EditorImage', 'setSrc', '/remote/test/image.png'],
+    ['Viewlet.send', 'EditorImage', 'setSrc', '/remote/test/image.png'],
   ])
 })

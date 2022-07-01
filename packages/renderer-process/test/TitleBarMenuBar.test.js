@@ -104,7 +104,10 @@ test('event - click on menu item', () => {
   state.$TitleBarMenu.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
   expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([4610, 1])
+  expect(RendererWorker.state.send).toHaveBeenCalledWith([
+    'TitleBarMenuBar.toggleIndex',
+    1,
+  ])
 })
 
 test.skip('event - key - ArrowDown', () => {

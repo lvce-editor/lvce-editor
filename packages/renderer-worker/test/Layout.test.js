@@ -294,7 +294,7 @@ test.skip('updateLayout', () => {
   Layout.updateLayout(Layout.state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    1100,
+    'Layout.update',
     {
       'ActivityBar.visible': true,
       'Panel.height': 160,
@@ -405,7 +405,7 @@ test('handleSashSideBarMove', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     1,
-    1100,
+    'Layout.update',
     expect.objectContaining({
       mainWidth: 892,
       sideBarLeft: 892,
@@ -425,7 +425,7 @@ test('handleSashSideBarMove - side bar should stay at min width when dragging ma
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     1,
-    1100,
+    'Layout.update',
     expect.objectContaining({
       mainWidth: 1062,
       sideBarLeft: 1062,
@@ -449,7 +449,7 @@ test('handleSashSideBarMove - side bar should collapse dragging makes width is m
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     1,
-    1100,
+    'Layout.update',
     expect.objectContaining({
       mainWidth: 1232,
       sideBarLeft: 1232,

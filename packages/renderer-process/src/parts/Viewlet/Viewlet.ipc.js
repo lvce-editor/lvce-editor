@@ -2,13 +2,13 @@ import * as Command from '../Command/Command.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
 export const __initialize__ = () => {
-  Command.register(3022, Viewlet.refresh)
-  Command.register(3024, Viewlet.invoke)
-  Command.register(3027, Viewlet.focus)
-  Command.register(3026, Viewlet.dispose)
-  // Command.register(3028, Viewlet.hydrate)
-  Command.register(3029, Viewlet.appendViewlet)
-  Command.register(3030, Viewlet.load)
-  Command.register(3031, Viewlet.handleError)
-  Command.register(3032, Viewlet.sendMultiple)
+  Command.register('Viewlet.refresh', Viewlet.refresh)
+  Command.register('Viewlet.invoke', Viewlet.invoke)
+  Command.register('Viewlet.send', Viewlet.invoke)
+  Command.register('Viewlet.focus', Viewlet.focus)
+  Command.register('Viewlet.dispose', Viewlet.dispose)
+  Command.register('Viewlet.appendViewlet', Viewlet.appendViewlet)
+  Command.register('Viewlet.load', Viewlet.load)
+  Command.register('Viewlet.handleError', Viewlet.handleError)
+  Command.register('Viewlet.sendMultiple', Viewlet.sendMultiple)
 }

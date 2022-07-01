@@ -152,7 +152,10 @@ export const load = async (viewlet, focus = false) => {
 
     Viewlet.state.instances[viewlet.id] = { state: newState, factory: module }
 
-    await RendererProcess.invoke(/* Viewlet.load */ 3030, /* id */ viewlet.id)
+    await RendererProcess.invoke(
+      /* Viewlet.load */ 'Viewlet.load',
+      /* id */ viewlet.id
+    )
     if (viewlet.disposed) {
       // TODO unload the module from renderer process
       return
@@ -180,7 +183,7 @@ export const load = async (viewlet, focus = false) => {
     state = VIEWLET_STATE_CONTENT_RENDERED
     if (viewlet.parentId) {
       await RendererProcess.invoke(
-        /* Viewlet.append */ 3029,
+        /* Viewlet.append */ 'Viewlet.appendViewlet',
         /* parentId */ viewlet.parentId,
         /* id */ viewlet.id,
         /* focus */ focus
@@ -198,13 +201,13 @@ export const load = async (viewlet, focus = false) => {
     try {
       if (state < VIEWLET_STATE_RENDERER_PROCESS_VIEWLET_LOADED) {
         await RendererProcess.invoke(
-          /* Viewlet.load */ 3030,
+          /* Viewlet.load */ 'Viewlet.load',
           /* id */ viewlet.id
         )
       }
       if (state < VIEWLET_STATE_APPENDED && viewlet.parentId) {
         await RendererProcess.invoke(
-          /* Viewlet.append */ 3029,
+          /* Viewlet.append */ 'Viewlet.appendViewlet',
           /* parentId */ viewlet.parentId,
           /* id */ viewlet.id
         )
@@ -228,7 +231,10 @@ export const dispose = async (id) => {
   state[id].disposed = true
   delete Viewlet.state.instances[id]
   delete state[id]
-  await RendererProcess.invoke(/* Viewlet.dispose */ 3026, /* id */ id)
+  await RendererProcess.invoke(
+    /* Viewlet.dispose */ 'Viewlet.dispose',
+    /* id */ id
+  )
 }
 
 export const mutate = async (id, fn) => {
