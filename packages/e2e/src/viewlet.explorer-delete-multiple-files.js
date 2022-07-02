@@ -14,7 +14,7 @@ test('viewlet.explorer-delete-multiple-files', async () => {
   const file1 = explorer.locator('text=file1.txt')
   const file2 = explorer.locator('text=file2.txt')
   const file3 = explorer.locator('text=file3.txt')
-  await file3.click()
+  await file3.focus()
 
   await page.keyboard.press('Delete')
   await expect(file3).toBeHidden()

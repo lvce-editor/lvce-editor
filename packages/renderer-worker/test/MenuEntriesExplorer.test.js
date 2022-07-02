@@ -62,7 +62,7 @@ test('getMenuEntries - focused file', async () => {
   }
   const menuEntries = await MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({
-    command: 166,
+    command: 'Explorer.handleCopy',
     flags: 0,
     id: 'copy',
     label: 'Copy',

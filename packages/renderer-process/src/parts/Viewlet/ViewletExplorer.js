@@ -69,8 +69,20 @@ const getAllEntries = async (dataTransfer) => {
   return allEntries
 }
 
-const handleFocusIn = () => {
+const handleFocusIn = (event) => {
+  console.log('explorer focus in')
   Focus.setFocus('Explorer')
+  const $Target = event.target
+  const index = findIndex($Target)
+  if (index === -2) {
+    return
+  }
+  console.log('focus index', { index })
+  event.preventDefault()
+  RendererWorker.send([
+    /* Explorer.handleClick */ 'Explorer.focusIndex',
+    /* index */ index,
+  ])
 }
 
 const handleDragOver = (event) => {
