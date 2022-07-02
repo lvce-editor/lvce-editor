@@ -1,0 +1,4 @@
+{
+  "main": "main.js",
+  "activation": ["onCommand:command-provider.sampleCommand"]
+}
