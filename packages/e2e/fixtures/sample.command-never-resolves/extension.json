@@ -1,0 +1,9 @@
+{
+  "main": "main.js",
+  "commands": [
+    {
+      "id": "command-never-resolves.sampleCommand",
+      "label": "Command Never Resolves: Sample Command"
+    }
+  ]
+}
