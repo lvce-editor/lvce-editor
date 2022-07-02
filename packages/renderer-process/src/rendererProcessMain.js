@@ -47,6 +47,7 @@ const main = async () => {
     alert(error)
   }
   onunhandledrejection = (event) => {
+    console.info(`[renderer-process] Unhandled Rejection: ${event.reason}`)
     alert(event.reason)
   }
 

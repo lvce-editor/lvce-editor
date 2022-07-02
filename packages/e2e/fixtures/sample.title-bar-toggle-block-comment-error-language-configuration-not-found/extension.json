@@ -1,0 +1,9 @@
+{
+  "languages": [
+    {
+      "id": "test-html",
+      "extensions": [".test-html"],
+      "configuration": "./languageConfiguration.json"
+    }
+  ]
+}
