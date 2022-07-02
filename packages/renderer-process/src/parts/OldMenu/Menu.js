@@ -180,7 +180,7 @@ export const focusIndex = (level, oldFocusedIndex, newFocusedIndex) => {
 // TODO replace function that recycles menu dom nodes
 
 const handleBackDropMouseDown = () => {
-  RendererWorker.send([/* Menu.hide */ 7401])
+  RendererWorker.send([/* Menu.hide */ 'Menu.hide'])
 }
 
 const handleContextMenu = (event) => {

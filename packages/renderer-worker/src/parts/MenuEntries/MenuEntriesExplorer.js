@@ -5,19 +5,20 @@ const ALL_ENTRIES = [
     id: 'newFile',
     label: 'New File',
     flags: /* None */ 0,
-    command: /* ViewletExplorer.newFile  */ 147,
+    command: /* Explorer.newFile  */ 'Explorer.newFile',
   },
   {
     id: 'newFolder',
     label: 'New Folder',
     flags: /* None */ 0,
-    command: /* ViewletExplorer.newFolder */ 152,
+    command: /* Explorer.newFolder */ 'Explorer.newFolder',
   },
   {
     id: 'openContainingFolder',
     label: 'Open Containing Folder',
     flags: /* None */ 0,
-    command: /*  ViewletExplorer.openContainingFolder */ 148,
+    command:
+      /*  Explorer.openContainingFolder */ 'Explorer.openContainingFolder',
   },
   {
     id: 'openInIntegratedTerminal',
@@ -41,13 +42,13 @@ const ALL_ENTRIES = [
     id: 'copy',
     label: 'Copy',
     flags: /* None */ 0,
-    command: /* ViewletExplorer.handleCopy */ 166,
+    command: /* Explorer.handleCopy */ 'Explorer.handleCopy',
   },
   {
     id: 'paste',
     label: 'Paste',
     flags: /* None */ 0,
-    command: /* ViewletExplorer.handlePaste */ 165,
+    command: /* Explorer.handlePaste */ 'Explorer.handlePaste',
   },
   {
     id: '',
@@ -77,13 +78,13 @@ const ALL_ENTRIES = [
     id: 'rename',
     label: 'Rename',
     flags: /* None */ 0,
-    command: /* ViewletExplorer.renameDirent */ 158,
+    command: /* Explorer.renameDirent */ 'Explorer.renameDirent',
   },
   {
     id: 'delete',
     label: 'Delete',
     flags: /* None */ 0,
-    command: /* ViewletExplorer.removeDirent */ 151,
+    command: /* Explorer.removeDirent */ 'Explorer.removeDirent',
   },
 ]
 
@@ -95,7 +96,7 @@ export const getMenuEntries = async () => {
   // TODO need a way to access state of other components synchronously
   // TODO explorer might already be disposed (race condition)
   const focusedDirent = await Command.execute(
-    /* ViewletExplorer.getFocusedDirent */ 'ViewletExplorer.getFocusedDirent'
+    /* Explorer.getFocusedDirent */ 'Explorer.getFocusedDirent'
   )
   if (!focusedDirent) {
     return ALL_ENTRIES

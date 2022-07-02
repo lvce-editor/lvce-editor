@@ -73,7 +73,7 @@ export const activateByEvent = async (event) => {
       const codeFrame = extension.reason.jse_cause.codeFrame
       const stack = extension.reason.originalStack
       await Command.execute(
-        /* Dialog.showMessage */ 1494,
+        /* Dialog.showMessage */ 'Dialog.showMessage',
         /* error */ { message, codeFrame, stack }
       )
     }

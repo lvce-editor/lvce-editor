@@ -376,7 +376,7 @@ test('event - right click outside', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith([7401])
+  expect(RendererWorker.send).toHaveBeenCalledWith(['Menu.hide'])
 })
 
 test('event - context menu', () => {

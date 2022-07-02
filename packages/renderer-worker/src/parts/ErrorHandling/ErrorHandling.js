@@ -66,7 +66,7 @@ export const state = {
   async showErrorDialog(error) {
     const enhancedErrorMessage = enhanceErrorMessage(error)
     await Command.execute(
-      /* Dialog.showErrorMessage */ 1494,
+      /* Dialog.showMessage */ 'Dialog.showMessage',
       /* message */ enhancedErrorMessage
     )
   },

@@ -705,6 +705,7 @@ export const handleClick = async (state, index) => {
   const actualIndex = index + state.minLineY
   state.focusedIndex = actualIndex
   const dirent = state.dirents[actualIndex]
+  console.log('click', index)
   // TODO dirent type should be numeric
   switch (dirent.type) {
     case 'file':

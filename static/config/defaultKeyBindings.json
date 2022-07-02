@@ -22,27 +22,27 @@
   {
     "key": "ctrl+ArrowRight",
     "command": "Editor.cursorWordRight",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+ArrowLeft",
     "command": "Editor.cursorWordLeft",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "alt+Backspace",
     "command": "Editor.deleteWordPartLeft",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "alt+Delete",
     "command": "Editor.deleteWordPartRight",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+Backspace",
     "command": "Editor.deleteWordLeft",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "Enter",
@@ -57,67 +57,67 @@
   {
     "key": "ctrl+Delete",
     "command": "Editor.deleteWordRight",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+d",
     "command": "Editor.selectNextOccurrence",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "Tab",
     "command": "Editor.handleTab",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "shift+Tab",
     "command": "Editor.unindent",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+[",
     "command": "Editor.indentLess",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+]",
     "command": "Editor.indentMore",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "shift+ArrowLeft",
     "command": "Editor.selectCharacterLeft",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+shift+ArrowLeft",
     "command": "Editor.selectWordLeft",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "shift+ArrowRight",
     "command": "Editor.selectCharacterRight",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+shift+ArrowRight",
     "command": "Editor.selectWordRight",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+l",
     "command": "Editor.selectLine",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+shift+Backspace",
     "command": "Editor.deleteAllLeft",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+shift+Delete",
     "command": "Editor.deleteAllRight",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+s",
@@ -143,12 +143,12 @@
   },
   {
     "key": "ctrl+Enter",
-    "command": "ViewletSourceControl.acceptInput",
+    "command": "SourceControl.acceptInput",
     "when": "focus.sourceControlInput"
   },
   {
     "key": "ctrl+n",
-    "command": "ViewletExplorer.newFile"
+    "command": "Explorer.newFile"
   },
   {
     "key": "ctrl+p",
@@ -236,128 +236,128 @@
   },
   {
     "key": "ArrowRight",
-    "command": "ViewletExplorer.handleArrowRight",
-    "when": "focus.ViewletExplorer"
+    "command": "Explorer.handleArrowRight",
+    "when": "focus.Explorer"
   },
   {
     "key": "ArrowLeft",
-    "command": "ViewletExplorer.handleArrowLeft",
-    "when": "focus.ViewletExplorer"
+    "command": "Explorer.handleArrowLeft",
+    "when": "focus.Explorer"
   },
   {
     "key": "Home",
-    "command": "ViewletExplorer.focusFirst",
-    "when": "focus.ViewletExplorer"
+    "command": "Explorer.focusFirst",
+    "when": "focus.Explorer"
   },
   {
     "key": "End",
-    "command": "ViewletExplorer.focusLast",
-    "when": "focus.ViewletExplorer"
+    "command": "Explorer.focusLast",
+    "when": "focus.Explorer"
   },
   {
     "key": "ArrowUp",
-    "command": "ViewletExplorer.focusPrevious",
-    "when": "focus.ViewletExplorer"
+    "command": "Explorer.focusPrevious",
+    "when": "focus.Explorer"
   },
   {
     "key": "ArrowDown",
-    "command": "ViewletExplorer.focusNext",
-    "when": "focus.ViewletExplorer"
+    "command": "Explorer.focusNext",
+    "when": "focus.Explorer"
   },
   {
     "key": "shift+*",
-    "command": "ViewletExplorer.expandAll",
-    "when": "focus.ViewletExplorer"
+    "command": "Explorer.expandAll",
+    "when": "focus.Explorer"
   },
   {
     "key": "ctrl+ArrowLeft",
-    "command": "ViewletExplorer.collapseAll",
-    "when": "focus.ViewletExplorer"
+    "command": "Explorer.collapseAll",
+    "when": "focus.Explorer"
   },
   {
     "key": "Home",
-    "command": "ViewletExtensions.focusFirst",
-    "when": "focus.viewletExtensions"
+    "command": "Extensions.focusFirst",
+    "when": "focus.Extensions"
   },
   {
     "key": "End",
-    "command": "ViewletExtensions.focusLast",
-    "when": "focus.viewletExtensions"
+    "command": "Extensions.focusLast",
+    "when": "focus.Extensions"
   },
   {
     "key": "PageUp",
-    "command": "ViewletExtensions.focusPreviousPage",
-    "when": "focus.viewletExtensions"
+    "command": "Extensions.focusPreviousPage",
+    "when": "focus.Extensions"
   },
   {
     "key": "PageDown",
-    "command": "ViewletExtensions.focusNextPage",
-    "when": "focus.viewletExtensions"
+    "command": "Extensions.focusNextPage",
+    "when": "focus.Extensions"
   },
   {
     "key": "ArrowUp",
-    "command": "ViewletExtensions.focusPrevious",
-    "when": "focus.viewletExtensions"
+    "command": "Extensions.focusPrevious",
+    "when": "focus.Extensions"
   },
   {
     "key": "ArrowDown",
-    "command": "ViewletExtensions.focusNext",
-    "when": "focus.viewletExtensions"
+    "command": "Extensions.focusNext",
+    "when": "focus.Extensions"
   },
   {
     "key": "ctrl+Space",
-    "command": "ViewletExtensions.toggleSuggest",
-    "when": "focus.viewletExtensions"
+    "command": "Extensions.toggleSuggest",
+    "when": "focus.Extensions"
   },
   {
     "key": "F2",
-    "command": "ViewletExplorer.rename",
-    "when": "focus.ViewletExplorer"
+    "command": "Explorer.rename",
+    "when": "focus.Explorer"
   },
   {
     "key": "Escape",
-    "command": "ViewletExplorer.cancelRename",
-    "when": "focus.viewletExplorerRename"
+    "command": "Explorer.cancelRename",
+    "when": "focus.ExplorerRename"
   },
   {
     "key": "Enter",
-    "command": "ViewletExplorer.acceptRename",
-    "when": "focus.viewletExplorerRename"
+    "command": "Explorer.acceptRename",
+    "when": "focus.ExplorerRename"
   },
   {
     "key": "Escape",
-    "command": "ViewletExplorer.cancelNewFile",
-    "when": "focus.viewletExplorerCreateFile"
+    "command": "Explorer.cancelNewFile",
+    "when": "focus.ExplorerCreateFile"
   },
   {
     "key": "Enter",
-    "command": "ViewletExplorer.acceptNewFile",
-    "when": "focus.viewletExplorerCreateFile"
+    "command": "Explorer.acceptNewFile",
+    "when": "focus.ExplorerCreateFile"
   },
   {
     "key": "Delete",
-    "command": "ViewletExplorer.removeDirent",
-    "when": "focus.ViewletExplorer"
+    "command": "Explorer.removeDirent",
+    "when": "focus.Explorer"
   },
   {
     "key": "Space",
-    "command": "ViewletExplorer.handleClickCurrent",
-    "when": "focus.ViewletExplorer"
+    "command": "Explorer.handleClickCurrent",
+    "when": "focus.Explorer"
   },
   {
     "key": "Enter",
-    "command": "ViewletExplorer.handleClickCurrent",
-    "when": "focus.ViewletExplorer"
+    "command": "Explorer.handleClickCurrent",
+    "when": "focus.Explorer"
   },
   {
     "key": "Escape",
     "command": "Editor.cancelSelection",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+z",
     "command": "Editor.undo",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+,",
@@ -366,42 +366,42 @@
   {
     "key": "ArrowLeft",
     "command": "Editor.cursorLeft",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ArrowRight",
     "command": "Editor.cursorRight",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ArrowUp",
     "command": "Editor.cursorUp",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ArrowDown",
     "command": "Editor.cursorDown",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "Backspace",
     "command": "Editor.deleteLeft",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "Delete",
     "command": "Editor.deleteRight",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "Enter",
     "command": "Editor.insertLineBreak",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+shift+d",
     "command": "Editor.copyLineDown",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+shift+d",
@@ -411,37 +411,37 @@
   {
     "key": "ctrl+shift+ArrowDown",
     "command": "Editor.moveLineDown",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+shift+ArrowUp",
     "command": "Editor.moveLineUp",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+Space",
     "command": "Editor.openCompletion",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "F2",
     "command": "EditorRename.open",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "Home",
     "command": "Editor.cursorHome",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "End",
     "command": "Editor.cursorEnd",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+/",
     "command": "Editor.toggleComment",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ArrowDown",
@@ -496,22 +496,22 @@
   {
     "key": "ctrl+c",
     "command": "Editor.copy",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+a",
     "command": "Editor.selectAll",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "alt+ArrowLeft",
     "command": "Editor.cursorWordPartLeft",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "alt+ArrowRight",
     "command": "Editor.cursorWordPartRight",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+w",
@@ -533,7 +533,7 @@
   {
     "key": "alt+F3",
     "command": "Editor.selectAllOccurrences",
-    "when": "focus.ViewletEditorText"
+    "when": "focus.EditorText"
   },
   {
     "key": "ctrl+g",
@@ -559,13 +559,13 @@
   },
   {
     "key": "ctrl+v",
-    "command": "ViewletExplorer.handlePaste",
-    "when": "focus.ViewletExplorer"
+    "command": "Explorer.handlePaste",
+    "when": "focus.Explorer"
   },
   {
     "key": "ctrl+c",
-    "command": "ViewletExplorer.handleCopy",
-    "when": "focus.ViewletExplorer"
+    "command": "Explorer.handleCopy",
+    "when": "focus.Explorer"
   },
   {
     "key": "ArrowDown",
@@ -623,27 +623,27 @@
   },
   {
     "key": "ArrowDown",
-    "command": "ViewletLocations.focusNext",
+    "command": "Locations.focusNext",
     "when": "focus.locationList"
   },
   {
     "key": "ArrowUp",
-    "command": "ViewletLocations.focusPrevious",
+    "command": "Locations.focusPrevious",
     "when": "focus.locationList"
   },
   {
     "key": "Home",
-    "command": "ViewletLocations.focusFirst",
+    "command": "Locations.focusFirst",
     "when": "focus.locationList"
   },
   {
     "key": "End",
-    "command": "ViewletLocations.focusLast",
+    "command": "Locations.focusLast",
     "when": "focus.locationList"
   },
   {
     "key": "Enter",
-    "command": "ViewletLocations.selectCurrent",
+    "command": "Locations.selectCurrent",
     "when": "focus.locationList"
   }
 ]
