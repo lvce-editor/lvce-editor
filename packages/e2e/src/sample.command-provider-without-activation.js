@@ -21,6 +21,6 @@ test('sample.command-provider-without-activation', async () => {
   // TODO should improve error message that no extension has been activated for command
   // and that probably activationEvents should be adjusted
   await expect(errorMessage).toHaveText(
-    `Error: Command "command-provider.sampleCommand" not found. Please try to register the command with \`vscode.registerCommand(myCommand)\``
+    `Error: Extension Command "command-provider.sampleCommand" not found. Please try to register the command with \`vscode.registerCommand(myCommand)\``
   )
 })
