@@ -70,7 +70,7 @@ const getAllEntries = async (dataTransfer) => {
 }
 
 const handleFocusIn = () => {
-  Focus.setFocus('ViewletExplorer')
+  Focus.setFocus('Explorer')
 }
 
 const handleDragOver = (event) => {
@@ -132,7 +132,7 @@ const handleContextMenu = (event) => {
   const x = event.clientX
   const y = event.clientY
   RendererWorker.send([
-    /* ViewletExplorer.handleContextMenu */ 'Explorer.handleContextMenu',
+    /* Explorer.handleContextMenu */ 'Explorer.handleContextMenu',
     /* x */ x,
     /* y */ y,
     /* index */ index,
@@ -150,7 +150,7 @@ const handleMouseDown = (event) => {
   }
   event.preventDefault()
   RendererWorker.send([
-    /* ViewletExplorer.handleClick */ 'ViewletExplorer.handleClick',
+    /* Explorer.handleClick */ 'Explorer.handleClick',
     /* index */ index,
   ])
 }
@@ -172,7 +172,7 @@ const handleMouseEnter = (event) => {
     return
   }
   RendererWorker.send([
-    /* ViewletExplorer.handleMouseEnter */ 'ViewletExplorer.handleMouseEnter',
+    /* Explorer.handleMouseEnter */ 'Explorer.handleMouseEnter',
     /* index */ index,
   ])
 }
@@ -184,7 +184,7 @@ const handleMouseLeave = (event) => {
     return
   }
   RendererWorker.send([
-    /* ViewletExplorer.handleMouseLeave */ 'ViewletExplorer.handleMouseLeave',
+    /* Explorer.handleMouseLeave */ 'Explorer.handleMouseLeave',
     /* index */ index,
   ])
 }
@@ -193,13 +193,13 @@ const handleWheel = (event) => {
   switch (event.deltaMode) {
     case event.DOM_DELTA_LINE:
       RendererWorker.send([
-        /* ViewletExplorer.handleWheel */ 'Explorer.handleWheel',
+        /* Explorer.handleWheel */ 'Explorer.handleWheel',
         /* deltaY */ event.deltaY,
       ])
       break
     case event.DOM_DELTA_PIXEL:
       RendererWorker.send([
-        /* ViewletExplorer.handleWheel */ 'Explorer.handleWheel',
+        /* Explorer.handleWheel */ 'Explorer.handleWheel',
         /* deltaY */ event.deltaY,
       ])
       break
@@ -360,7 +360,7 @@ export const showCreateFileInputBox = (state, index) => {
   const $Dirent = state.$Viewlet.children[index]
   $Dirent.before($InputBox)
   $InputBox.focus()
-  Focus.setFocus('viewletExplorerCreateFile')
+  Focus.setFocus('ExplorerCreateFile')
 }
 
 export const hideCreateFileInputBox = (state, index) => {
@@ -376,7 +376,7 @@ export const showRenameInputBox = (state, index, name) => {
   $Dirent.replaceWith($InputBox)
   $InputBox.select()
   $InputBox.setSelectionRange(0, $InputBox.value.length)
-  Focus.setFocus('viewletExplorerRename')
+  Focus.setFocus('ExplorerRename')
 }
 
 export const hideRenameBox = (state, index, dirent) => {

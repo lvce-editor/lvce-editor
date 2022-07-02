@@ -35,7 +35,7 @@ const handleContextMenu = (event) => {
   }
   const extension = state.extensions[index]
   RendererWorker.send([
-    /* ViewletExplorer.handleContextMenu */ 864,
+    /* Extensions.handleContextMenu */ 'Extensions.handleContextMenu',
     /* x */ event.clientX,
     /* y */ event.clientY,
     /* extensionId */ extension.id,

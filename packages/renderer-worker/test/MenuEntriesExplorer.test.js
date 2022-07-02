@@ -12,7 +12,7 @@ test('getMenuEntries - no focused dirent', async () => {
   }
   const menuEntries = await MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({
-    command: 147,
+    command: 'Explorer.newFile',
     flags: 0,
     id: 'newFile',
     label: 'New File',
@@ -37,7 +37,7 @@ test('getMenuEntries - focused folder', async () => {
   }
   const menuEntries = await MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({
-    command: 147,
+    command: 'Explorer.newFile',
     flags: 0,
     id: 'newFile',
     label: 'New File',
@@ -68,7 +68,7 @@ test('getMenuEntries - focused file', async () => {
     label: 'Copy',
   })
   expect(menuEntries).not.toContainEqual({
-    command: 147,
+    command: 'Explorer.newFile',
     flags: 0,
     id: 'newFile',
     label: 'New File',
@@ -93,7 +93,7 @@ test('getMenuEntries - focused symlink', async () => {
   }
   const menuEntries = await MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({
-    command: 147,
+    command: 'Explorer.newFile',
     flags: 0,
     id: 'newFile',
     label: 'New File',

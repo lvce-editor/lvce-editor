@@ -225,37 +225,37 @@ const getModuleId = (commandId) => {
     case 'Main.closeTabsRight':
     case 'Main.closeTabsLeft':
       return MODULE_MAIN
-    case 'ViewletExplorer.focusNext':
-    case 'ViewletExplorer.focusPrevious':
-    case 'ViewletExplorer.scrollUp':
-    case 'ViewletExplorer.scrollDown':
-    case 'ViewletExplorer.handleClickCurrent':
-    case 'ViewletExplorer.newFile':
-    case 'ViewletExplorer.openContainingFolder':
-    case 'ViewletExplorer.copyPath':
-    case 'ViewletExplorer.copyRelativePath':
-    case 'ViewletExplorer.removeDirent':
-    case 'ViewletExplorer.newFolder':
-    case 'ViewletExplorer.getFocusedDirent':
-    case 'ViewletExplorer.handleArrowRight':
-    case 'ViewletExplorer.handleArrowLeft':
-    case 'ViewletExplorer.focusFirst':
-    case 'ViewletExplorer.focusLast':
-    case 'ViewletExplorer.renameDirent':
-    case 'ViewletExplorer.handleMouseEnter':
-    case 'ViewletExplorer.handleMouseLeave':
-    case 'ViewletExplorer.handleClick':
-    case 'ViewletExplorer.handleContextMenu':
-    case 'ViewletExplorer.handleWheel':
-    case 'ViewletExplorer.setDeltaY':
-    case 'ViewletExplorer.handlePaste':
-    case 'ViewletExplorer.handleCopy':
-    case 'ViewletExplorer.cancelRename':
-    case 'ViewletExplorer.acceptRename':
-    case 'ViewletExplorer.cancelNewFile':
-    case 'ViewletExplorer.acceptNewFile':
-    case 'ViewletExplorer.expandAll':
-    case 'ViewletExplorer.collapseAll':
+    case 'Explorer.focusNext':
+    case 'Explorer.focusPrevious':
+    case 'Explorer.scrollUp':
+    case 'Explorer.scrollDown':
+    case 'Explorer.handleClickCurrent':
+    case 'Explorer.newFile':
+    case 'Explorer.openContainingFolder':
+    case 'Explorer.copyPath':
+    case 'Explorer.copyRelativePath':
+    case 'Explorer.removeDirent':
+    case 'Explorer.newFolder':
+    case 'Explorer.getFocusedDirent':
+    case 'Explorer.handleArrowRight':
+    case 'Explorer.handleArrowLeft':
+    case 'Explorer.focusFirst':
+    case 'Explorer.focusLast':
+    case 'Explorer.renameDirent':
+    case 'Explorer.handleMouseEnter':
+    case 'Explorer.handleMouseLeave':
+    case 'Explorer.handleClick':
+    case 'Explorer.handleContextMenu':
+    case 'Explorer.handleWheel':
+    case 'Explorer.setDeltaY':
+    case 'Explorer.handlePaste':
+    case 'Explorer.handleCopy':
+    case 'Explorer.cancelRename':
+    case 'Explorer.acceptRename':
+    case 'Explorer.cancelNewFile':
+    case 'Explorer.acceptNewFile':
+    case 'Explorer.expandAll':
+    case 'Explorer.collapseAll':
       return MODULE_VIEWLET_EXPLORER
     case 'ColorThemeFromJson.createColorThemeFromJson':
       return MODULE_COLOR_THEME_FROM_JSON
