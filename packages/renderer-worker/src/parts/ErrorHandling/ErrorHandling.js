@@ -60,7 +60,7 @@ export const state = {
     await Command.execute(
       /* Notification.create */ 'Notification.create',
       /* type */ 'error',
-      /* text */ enhancedErrorMessage
+      /* text */ enhancedErrorMessage.message
     )
   },
   async showErrorDialog(error) {
