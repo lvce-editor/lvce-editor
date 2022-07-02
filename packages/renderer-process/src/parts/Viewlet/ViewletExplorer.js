@@ -73,8 +73,12 @@ const handleFocusIn = (event) => {
   console.log('explorer focus in')
   Focus.setFocus('Explorer')
   const $Target = event.target
+  console.log($Target)
+  if ($Target.className === 'InputBox') {
+    return
+  }
   const index = findIndex($Target)
-  if (index === -2) {
+  if (index < 0) {
     return
   }
   console.log('focus index', { index })
