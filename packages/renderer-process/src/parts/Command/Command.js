@@ -207,7 +207,7 @@ const getModuleId = (commandId) => {
       return MODULE_LOCAL_STORAGE
     case 9922:
       return MODULE_VIEWLET_TERMINAL
-    case 'Meta.setColorTheme':
+    case 'Meta.setThemeColor':
       return MODULE_META
     case 'ServiceWorker.register':
     case 'ServiceWorker.uninstall':

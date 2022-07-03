@@ -1,7 +1,5 @@
 import { jest } from '@jest/globals'
 
-import * as Platform from '../src/parts/Platform/Platform.js'
-
 beforeEach(() => {
   jest.resetAllMocks()
 })
