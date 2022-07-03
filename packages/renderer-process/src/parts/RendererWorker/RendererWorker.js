@@ -78,7 +78,3 @@ export const send = (message) => {
 export const sendAndTransfer = (message, transfer) => {
   state.ipc.sendAndTransfer(message, transfer)
 }
-
-export const handleInvoke = async (callbackId, method, ...params) => {
-  let result
-}

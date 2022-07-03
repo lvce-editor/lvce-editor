@@ -13,7 +13,6 @@ const MODULE_VIEWLET_TERMINAL = 22
 const MODULE_FIND_WIDGET = 23
 const MODULE_KEYBINDINGS = 26
 const MODULE_MENU = 31
-const MODULE_RENDERER_WORKER = 33
 const MODULE_SESSION_STORAGE = 34
 const MODULE_LOCAL_STORAGE = 35
 const MODULE_DIALOG = 36
@@ -55,8 +54,6 @@ const loadModule = (moduleId) => {
       return import('../KeyBindings/KeyBindings.ipc.js')
     case MODULE_MENU:
       return import('../OldMenu/Menu.ipc.js')
-    case MODULE_RENDERER_WORKER:
-      return import('../RendererWorker/RendererWorker.ipc.js')
     case MODULE_SESSION_STORAGE:
       return import('../SessionStorage/SessionStorage.ipc.js')
     case MODULE_LOCAL_STORAGE:
@@ -212,8 +209,6 @@ const getModuleId = (commandId) => {
     case 'ServiceWorker.register':
     case 'ServiceWorker.uninstall':
       return MODULE_SERVICE_WORKER
-    case 909090:
-      return MODULE_RENDERER_WORKER
     default:
       throw new Error(`command ${commandId} not found`)
   }
