@@ -1,6 +1,6 @@
 import express from 'express'
 import getPort from 'get-port'
-import { expect, getTmpDir, test } from './_testFrameWork.js'
+import { expect, getTmpDir, runWithExtension, test } from './_testFrameWork.js'
 
 const runMarketPlaceServer = async (port) => {
   // let implementation = (req, res) => {
@@ -31,16 +31,17 @@ const runMarketPlaceServer = async (port) => {
   }
 }
 
-test('viewlet.extensions-marketplace-search-no-results', async () => {
+test.skip('viewlet.extensions-marketplace-search-no-results', async () => {
   const marketPlacePort = await getPort()
   const marketPlaceServer = await runMarketPlaceServer(marketPlacePort)
   const marketPlaceUri = marketPlaceServer.uri
   const dataDir = await getTmpDir()
-  const page = await runNormal({
+  const page = await runWithExtension({
     env: {
       LVCE_MARKETPLACE_URL: marketPlaceUri,
       XDG_DATA_HOME: dataDir,
     },
+    name: '',
   })
   const activityBarItemExtensions = page.locator(
     '.ActivityBarItem[data-viewlet-id="Extensions"]'
