@@ -4,6 +4,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Window from '../Window/Window.js'
 import * as Command from '../Command/Command.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const state = {
   workspacePath: '',
@@ -66,6 +67,14 @@ const getResolvedRootFromRendererProcess = async () => {
     console.log({ replayId })
     const SessionReplay = await import('../SessionReplay/SessionReplay.js')
     const events = await SessionReplay.getEvents()
+    const originalIpc = RendererProcess.state.ipc
+    const originalSend = originalIpc.send
+    RendererProcess.state.ipc.onmessage = null
+    RendererProcess.state.ipc.send = () => {}
+    console.log({ events })
+    for (const event of events) {
+      originalSend(event)
+    }
     console.log({ events })
   }
   console.log({ url })

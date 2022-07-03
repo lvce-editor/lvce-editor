@@ -8,19 +8,20 @@ import {
 export const state = {
   databases: Object.create(null),
   eventId: 0,
-  dbVersion: 2,
+  dbVersion: 1,
 }
 
 export const saveValue = async (storeId, value) => {
   try {
     const db = await openDB('session', state.dbVersion, {
-      async upgrade(db) {
-        console.log('upgrade db')
-        await db.createObjectStore(storeId)
+      async upgrade(db, oldVersion) {
+        if (!db.objectStoreNames.contains('session')) {
+          await db.createObjectStore('session', { autoIncrement: true })
+        }
       },
     })
     const eventId = state.eventId++
-    await db.put(storeId, value, eventId)
+    await db.add('session', value)
   } catch (error) {
     throw new Error('Failed to save value to indexed db', {
       // @ts-ignore

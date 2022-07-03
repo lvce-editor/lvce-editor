@@ -1,5 +1,6 @@
 import * as IndexedDb from '../IndexedDb/IndexedDb.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const state = {
   sessionId: '',
@@ -7,7 +8,7 @@ export const state = {
 
 const getSessionId = () => {
   if (!state.sessionId) {
-    state.sessionId = `session-${new Date()}`.replaceAll(' ', '-')
+    state.sessionId = `session-${new Date().toISOString()}`
   }
   return state.sessionId
 }
@@ -35,7 +36,8 @@ export const replaySession = async () => {
   // 3. replay ui with commands from indexeddb
 
   const replayUrl = `${location.href}?replayId=${state.sessionId}`
-  console.log({ replayUrl })
+
+  // console.log({ replayUrl })
   const newWindow = open(replayUrl)
 }
 
@@ -44,7 +46,8 @@ export const getEvents = async (sessionId) => {
     const sessionId = getSessionId()
     const timestamp = performance.now()
     // console.log({ message, timestamp })
-    await IndexedDb.getValues(sessionId)
+    const events = await IndexedDb.getValues('session')
+    return events
   } catch (error) {
     ErrorHandling.handleError(error)
     // console.info(`failed to get events from indexeddb: ${error}`)
