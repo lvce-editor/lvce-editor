@@ -46,10 +46,8 @@ const handleMessageFromParentProcess = async (message, handle) => {
   } else if (message.result) {
     Callback.resolve(message.id, message.result)
   } else if (message.method) {
-    console.log({ message })
     if (message.id) {
       try {
-        console.log('INISDE HERE')
         const result = requiresSocket(message.method)
           ? await Command.invoke(message.method, handle, ...message.params)
           : await Command.invoke(message.method, ...message.params)
@@ -179,7 +177,6 @@ const handleMessageFromParentProcessElectron = async (message) => {
     electronInitialize(message)
     return
   }
-  console.log({ message })
   if ('result' in message) {
     Callback.resolve(message.id, message.result)
     return

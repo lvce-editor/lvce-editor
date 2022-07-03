@@ -187,7 +187,6 @@ test.skip('openUri - race condition', async () => {
   SharedProcess.state.send = jest.fn((message) => {
     switch (message.method) {
       case 101:
-        console.log({ message })
         pending.unshift(message)
         if (message.params[0] === '/tmp/file-3.txt') {
           console.log('resolve all')
@@ -201,7 +200,6 @@ test.skip('openUri - race condition', async () => {
         }
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })

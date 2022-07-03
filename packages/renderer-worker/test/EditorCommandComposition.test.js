@@ -28,7 +28,6 @@ test('editorComposition - ä', async () => {
       case 'Viewlet.send':
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -91,7 +90,6 @@ test('editorComposition - ñ', async () => {
       case 'Viewlet.send':
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -155,7 +153,6 @@ test('editorComposition - on and off', async () => {
       case 'Viewlet.send':
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
