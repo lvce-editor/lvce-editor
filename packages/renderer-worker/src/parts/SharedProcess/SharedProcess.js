@@ -3,6 +3,7 @@ import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
 import * as WebSocket from '../WebSocket/WebSocket.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 
 // TODO duplicate code with platform module
 /**
@@ -79,6 +80,7 @@ export const state = {
   },
   async receive(message) {
     if (message.method) {
+      await SessionReplay.handleMessage('from-shared-process', message)
       const result = await Command.execute(message.method, ...message.params)
       if (message.id) {
         state.send({

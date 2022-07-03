@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
+import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 
 export const state = {
   pendingMessages: [],
@@ -24,7 +25,6 @@ const handleMessageFromRendererProcess = (event) => {
 }
 
 const listenModuleWorker = () => {
-  onmessage = handleMessageFromRendererProcess
   return {
     send(message) {
       postMessage(message)
@@ -32,12 +32,17 @@ const listenModuleWorker = () => {
     sendAndTransfer(message, transferables) {
       postMessage(message, transferables)
     },
+    get onmessage() {
+      return onmessage
+    },
+    set onmessage(listener) {
+      onmessage = listener
+    },
   }
 }
 
 const listenMessagePort = () => {
   const messageChannel = new MessageChannel()
-  messageChannel.port1.onmessage = handleMessageFromRendererProcess
   globalThis.acceptPort(messageChannel.port2)
   return {
     send(message) {
@@ -45,6 +50,12 @@ const listenMessagePort = () => {
     },
     sendAndTransfer(message, transferables) {
       messageChannel.port1.postMessage(message, transferables)
+    },
+    set onmessage(listener) {
+      messageChannel.port1.onmessage = listener
+    },
+    get onmessage() {
+      return messageChannel.port1.onmessage
     },
   }
 }
@@ -63,6 +74,13 @@ const listenReferencePort = () => {
     sendAndTransfer({ data: message }, transferables) {
       referencePort.onmessage(message, transferables)
     },
+    get onmessage() {
+      // TODO
+      return null
+    },
+    set onmessage(listener) {
+      // TODO
+    },
   }
 }
 
@@ -80,7 +98,26 @@ const getIpc = () => {
 export const listen = () => {
   console.assert(state.pendingMessages.length === 0)
   const ipc = getIpc()
-  state.ipc = ipc
+  ipc.onmessage = handleMessageFromRendererProcess
+  const wrappedIpc = {
+    async send(message) {
+      ipc.send(message)
+      await SessionReplay.handleMessage('to-renderer-process', message)
+    },
+    sendAndTransfer(message, transferables) {
+      ipc.sendAndTransfer(message, transferables)
+    },
+    get onmessage() {
+      return ipc.onmessage
+    },
+    set onmessage(listener) {
+      ipc.onmessage = async (message) => {
+        await listener(message)
+        await SessionReplay.handleMessage('from-renderer-process', message)
+      }
+    },
+  }
+  state.ipc = wrappedIpc
 }
 
 /**
