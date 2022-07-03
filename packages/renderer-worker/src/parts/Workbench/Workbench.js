@@ -12,9 +12,26 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
 import * as Location from '../Location/Location.js'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+
+const handleUnhandledRejection = async (event) => {
+  console.info(`[renderer-process] Unhandled Rejection: ${event.reason}`)
+  try {
+    await ErrorHandling.handleError(event.reason)
+  } catch {}
+}
+
+const handleError = async (event) => {
+  console.info(`[renderer-process] Unhandled Error: ${event}`)
+  try {
+    await ErrorHandling.handleError(event.reason)
+  } catch {}
+}
 
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
 export const startup = async (config) => {
+  onunhandledrejection = handleUnhandledRejection
+  onerror = handleError
   LifeCycle.mark(LifeCycle.PHASE_ZERO)
 
   Performance.mark('willStartupWorkbench')

@@ -44,9 +44,11 @@ globalThis.M = [
 
 const main = async () => {
   onerror = (error) => {
+    console.info(`[renderer-process] Unhandled Error: ${error}`)
     alert(error)
   }
   onunhandledrejection = (event) => {
+    console.info(`[renderer-process] Unhandled Rejection: ${event.reason}`)
     alert(event.reason)
   }
 
