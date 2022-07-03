@@ -34,12 +34,7 @@ test('handleError - normal error', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
     /* Notification.create */ 'Notification.create',
     'error',
-    {
-      codeFrame: undefined,
-      message: 'Error: oops',
-      stack: undefined,
-      category: undefined,
-    }
+    'Error: oops'
   )
 })
 
@@ -54,11 +49,7 @@ test('handleError - null', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
     /* Notification.create */ 'Notification.create',
     'error',
-    {
-      codeFrame: undefined,
-      message: 'Error: null',
-      stack: undefined,
-    }
+    'Error: null'
   )
 })
 
@@ -84,12 +75,6 @@ test('handleError - multiple causes', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
     /* Notification.create */ 'Notification.create',
     'error',
-    {
-      codeFrame: undefined,
-      message:
-        'Error: Failed to load keybindings: Error: Failed to load url /keyBindings.json: Error: SyntaxError: Unexpected token , in JSON at position 7743',
-      stack: undefined,
-      category: undefined,
-    }
+    'Error: Failed to load keybindings: Error: Failed to load url /keyBindings.json: Error: SyntaxError: Unexpected token , in JSON at position 7743'
   )
 })
