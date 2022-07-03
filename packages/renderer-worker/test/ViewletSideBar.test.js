@@ -30,7 +30,6 @@ test.skip('showOrHideViewlet - show explorer, then search, then explorer again',
         ])
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -44,7 +43,6 @@ test.skip('showOrHideViewlet - show explorer, then search, then explorer again',
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })

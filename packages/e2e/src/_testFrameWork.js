@@ -102,7 +102,6 @@ export const runWithExtension = async ({ folder = '', env = {}, name }) => {
     env['ONLY_EXTENSION'] = onlyExtension
   }
   if (state.page && state.childProcess) {
-    console.info('recycle page')
     state.childProcess.send({
       jsonrpc: '2.0',
       method: 'Platform.setEnvironmentVariables',

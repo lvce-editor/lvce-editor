@@ -79,7 +79,6 @@ test('acceptInput', async () => {
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })

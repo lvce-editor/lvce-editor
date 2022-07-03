@@ -712,7 +712,6 @@ test.skip('focusIndexMouse - focusing submenu index should show submenu', async 
       case 'FileSystem.readFile':
         return `["/test/folder-1"]`
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -845,7 +844,6 @@ test('focusIndexMouse - focusing submenu index should do nothing when already fo
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })

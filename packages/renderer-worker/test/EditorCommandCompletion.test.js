@@ -46,7 +46,6 @@ test.skip('open - cursor changes to row above', async () => {
       case 'Viewlet.send':
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -101,7 +100,6 @@ test.skip('open - cursor changes to row above', async () => {
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -169,7 +167,6 @@ test.skip('open - cursor changes to row below', async () => {
       case 'Viewlet.send':
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -224,7 +221,6 @@ test.skip('open - cursor changes to row below', async () => {
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -296,7 +292,6 @@ test.skip('open - cursor changes to column left - matches word', async () => {
       case 'Viewlet.send':
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -351,7 +346,6 @@ test.skip('open - cursor changes to column left - matches word', async () => {
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -422,7 +416,6 @@ test.skip('open - cursor changes to column left - matches no word', async () => 
       case 'Viewlet.send':
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -477,7 +470,6 @@ test.skip('open - cursor changes to column left - matches no word', async () => 
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -545,7 +537,6 @@ test.skip('open - cursor changes to column right - matches word', async () => {
       case 'Viewlet.send':
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -600,7 +591,6 @@ test.skip('open - cursor changes to column right - matches word', async () => {
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -671,7 +661,6 @@ test.skip('open - cursor changes to column right - matches no word', async () =>
       case 'Viewlet.send':
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -726,7 +715,6 @@ test.skip('open - cursor changes to column right - matches no word', async () =>
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })

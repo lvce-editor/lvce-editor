@@ -71,7 +71,6 @@ test('scheduleDocumentAndCursorsSelections', () => {
       case 'Viewlet.send':
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -135,7 +134,6 @@ test('scheduleDocumentAndCursorsSelections - add one character', () => {
       case 'Viewlet.send':
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -199,7 +197,6 @@ test('scheduleDocumentAndCursorsSelections - delete one character', () => {
       case 'Viewlet.send':
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })

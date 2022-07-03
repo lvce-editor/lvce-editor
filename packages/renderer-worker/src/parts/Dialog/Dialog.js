@@ -55,7 +55,6 @@ export const showMessage = async (message, options) => {
   if (!options) {
     options = ['Show Command Output', 'Cancel', 'Open Git Log']
   }
-  console.log({ message })
   state.dialog = {
     message,
     options,
