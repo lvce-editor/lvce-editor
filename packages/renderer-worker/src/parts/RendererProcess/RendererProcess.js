@@ -11,16 +11,16 @@ export const state = {
   ipc: undefined,
 }
 
-const handleMessageFromRendererProcess = (event) => {
+const handleMessageFromRendererProcess = async (event) => {
   const message = event.data
-  switch (message[0]) {
-    case 67330:
-    case 67331:
-      Callback.resolve(message[1], message[2])
-      break
-    default:
-      Command.execute(...message)
-      break
+  if (message.id) {
+    if ('result' in message) {
+      Callback.resolve(message.id, message.result)
+    } else {
+      Callback.reject(message.id, message.error)
+    }
+  } else {
+    await Command.execute(...message)
   }
 }
 
@@ -131,12 +131,12 @@ export const send = (message) => {
 export const invoke = async (method, ...params) => {
   const responseMessage = await new Promise((resolve, reject) => {
     const callbackId = Callback.register(resolve, reject)
-    state.ipc.send([
-      /* RendererWorker.invoke */ 909090,
-      /* callbackId */ callbackId,
-      /* method */ method,
-      /* params */ ...params,
-    ])
+    state.ipc.send({
+      jsonrpc: '2.0',
+      method,
+      params,
+      id: callbackId,
+    })
   })
   if (responseMessage instanceof Error) {
     throw responseMessage

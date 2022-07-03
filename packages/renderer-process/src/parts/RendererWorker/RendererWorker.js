@@ -12,8 +12,25 @@ export const state = {
   ipc: undefined,
 }
 
-const handleMessageFromRendererWorker = (event) => {
+const handleMessageFromRendererWorker = async (event) => {
   const data = event.data
+  if (data.method && data.id) {
+    try {
+      const result = await Command.execute(data.method, ...data.params)
+      send({
+        jsonrpc: '2.0',
+        id: data.id,
+        result,
+      })
+      return
+    } catch (error) {
+      send({
+        jsonrpc: '2.0',
+        id: data.id,
+        error,
+      })
+    }
+  }
   if (event.ports && event.ports.length > 0) {
     Command.execute(...data, ...event.ports)
   } else {
@@ -55,32 +72,9 @@ export const dispose = () => {
 }
 
 export const send = (message) => {
-  if (!message[0]) {
-    console.warn('invalid message', message)
-    return
-  }
   state.ipc.send(message)
 }
 
 export const sendAndTransfer = (message, transfer) => {
   state.ipc.sendAndTransfer(message, transfer)
-}
-
-export const handleInvoke = async (callbackId, method, ...params) => {
-  let result
-  try {
-    result = await Command.execute(method, ...params)
-  } catch (error) {
-    send([
-      /* Callback.reject */ 67331,
-      /* callbackId */ callbackId,
-      /* error */ error,
-    ])
-    return
-  }
-  send([
-    /* Callback.resolve */ 67330,
-    /* callbackId */ callbackId,
-    /* result */ result,
-  ])
 }
