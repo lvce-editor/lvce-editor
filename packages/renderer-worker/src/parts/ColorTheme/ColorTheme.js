@@ -83,7 +83,7 @@ const applyColorTheme = async (colorThemeId) => {
     if (Platform.getPlatform() === 'web') {
       const themeColor = getMetaThemeColor(colorThemeJson) || ''
       await RendererProcess.invoke(
-        /* Meta.setThemeColor */ 11122,
+        /* Meta.setThemeColor */ 'Meta.setColorTheme',
         /* color */ themeColor
       )
     }
