@@ -110,10 +110,10 @@ export const show = async (x, y, id, mouseBlocking = false) => {
 export const closeSubMenu = () => {
   const menu = state.menus.pop()
   const parentMenu = state.menus.at(-1)
-  RendererProcess.send([
+  RendererProcess.invoke(
     /* Menu.hideSubMenu */ 7903,
-    /* parentIndex */ parentMenu.focusedIndex,
-  ])
+    /* parentIndex */ parentMenu.focusedIndex
+  )
 }
 
 const showSubMenuAtEnter = async (level, index, enterX, enterY) => {
@@ -134,7 +134,7 @@ const showSubMenuAtEnter = async (level, index, enterX, enterY) => {
   })
   const width = getMenuWidth()
   const height = getMenuHeight(subMenuItems)
-  RendererProcess.send([
+  RendererProcess.invoke(
     /* Menu.showMenu */ 'Menu.showMenu',
     /* x */ subMenu.x,
     /* y */ subMenu.y,
@@ -142,8 +142,8 @@ const showSubMenuAtEnter = async (level, index, enterX, enterY) => {
     /* height */ height,
     /* items */ subMenu.items,
     /* level */ subMenu.level,
-    /* parentIndex */ index,
-  ])
+    /* parentIndex */ index
+  )
 }
 
 export const showSubMenu = async (level, index) => {

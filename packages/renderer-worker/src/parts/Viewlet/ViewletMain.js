@@ -196,14 +196,14 @@ export const contentLoaded = async (state) => {
   )
   const tabLabel = Workspace.pathBaseName(editor.uri)
   const tabTitle = getTabTitle(editor.uri)
-  RendererProcess.send([
+  RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'openViewlet',
     /* id */ id,
     /* tabLabel */ tabLabel,
-    /* tabTitle */ tabTitle,
-  ])
+    /* tabTitle */ tabTitle
+  )
   // TODO race condition: Viewlet may have been resized before it has loaded
   await ViewletManager.load(instance)
 }
@@ -303,11 +303,11 @@ export const closeActiveEditor = (state) => {
 }
 
 export const closeAllEditors = (state) => {
-  RendererProcess.send([
+  RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
-    /* method */ 'dispose',
-  ])
+    /* method */ 'dispose'
+  )
   state.editors = []
   state.focusedIndex = -1
   state.selectedIndex = -1
@@ -407,13 +407,13 @@ export const focusIndex = (state, index) => {
   )
 
   // TODO race condition
-  RendererProcess.send([
+  RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'focusAnotherTab',
     /* unFocusIndex */ oldActiveIndex,
-    /* focusIndex */ state.activeIndex,
-  ])
+    /* focusIndex */ state.activeIndex
+  )
   return ViewletManager.load(viewlet)
 }
 

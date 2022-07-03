@@ -220,7 +220,7 @@ export const editorToggleBlockComment = async (editor) => {
   //     }
   //   })
   // }
-  // RendererProcess.send([/* setLines */ 2135, /* lines */ lines])
+  // RendererProcess.invoke(/* setLines */ 2135, /* lines */ lines)
 
   return Editor.scheduleDocument(editor, changes)
 }

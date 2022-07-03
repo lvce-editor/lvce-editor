@@ -71,15 +71,15 @@ const handleSelectionChange = (editor, selectionChanges) => {
   console.log({ leadingWord })
   const x = EditorPosition.x(editor, editor.cursor)
   const y = EditorPosition.y(editor, editor.cursor)
-  RendererProcess.send([
+  RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'EditorCompletion',
     /* method */ 'show',
     /* x */ x,
     /* y */ y,
     /* completionItems */ filteredCompletionItems,
-    /* reason */ 1,
-  ])
+    /* reason */ 1
+  )
 }
 
 const handleCursorChange = (anyEditor, cursorChange) => {
@@ -187,11 +187,11 @@ export const advance = (word) => {
     return completionItem.includes(word)
   }
   const filteredCompletions = state.completionItems.filter(includesWord)
-  RendererProcess.send([
+  RendererProcess.invoke(
     /* EditorCompletion.open */ 836,
     /* items */ filteredCompletions,
-    /* reason */ state.openingReason,
-  ])
+    /* reason */ state.openingReason
+  )
 }
 
 // export const onDidType = () => {}

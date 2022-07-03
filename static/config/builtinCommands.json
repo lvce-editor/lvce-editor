@@ -1,303 +1,303 @@
 [
   {
-    "id": "layout.toggleSideBar",
+    "id": "Layout.toggleSideBar",
     "label": "Layout: Toggle Side Bar"
   },
   {
-    "id": "layout.togglePanel",
+    "id": "Layout.togglePanel",
     "label": "Layout: Toggle Panel"
   },
   {
-    "id": "layout.toggleActivityBar",
+    "id": "Layout.toggleActivityBar",
     "label": "Layout: Toggle Activity Bar"
   },
   {
-    "id": "layout.toggleSideBarPosition",
+    "id": "Layout.toggleSideBarPosition",
     "label": "Layout: Toggle Side Bar Position",
     "aliases": ["Position Side Bar", "Move Side Bar", "Side Bar Location"]
   },
   {
-    "id": "focus.output",
+    "id": "Focus.output",
     "label": "Focus: Output"
   },
   {
-    "id": "focus.nextPart",
+    "id": "Focus.nextPart",
     "label": "Focus: Next Part"
   },
   {
-    "id": "focus.previousPart",
+    "id": "Focus.previousPart",
     "label": "Focus: Previous Part"
   },
   {
-    "id": "focus.statusBar",
+    "id": "Focus.statusBar",
     "label": "Focus: Status Bar"
   },
   {
-    "id": "focus.problems",
+    "id": "Focus.problems",
     "label": "Focus: Problems"
   },
   {
-    "id": "focus.debugConsole",
+    "id": "Focus.debugConsole",
     "label": "Focus: Debug Console"
   },
   {
-    "id": "focus.terminal",
+    "id": "Focus.terminal",
     "label": "Focus: Terminal"
   },
   {
-    "id": "terminal.clear",
+    "id": "Terminal.clear",
     "label": "Terminal: Clear"
   },
   {
-    "id": "terminal.paste",
+    "id": "Terminal.paste",
     "label": "Terminal: Paste"
   },
   {
-    "id": "terminal.kill",
+    "id": "Terminal.kill",
     "label": "Terminal: Kill active Instance"
   },
   {
-    "id": "terminal.scrollUpLine",
+    "id": "Terminal.scrollUpLine",
     "label": "Terminal: Scroll Up Line"
   },
   {
-    "id": "terminal.scrollDownLine",
+    "id": "Terminal.scrollDownLine",
     "label": "Terminal: Scroll Down Line"
   },
   {
-    "id": "terminal.scrollUpPage",
+    "id": "Terminal.scrollUpPage",
     "label": "Terminal: Scroll Up Page"
   },
   {
-    "id": "terminal.scrollDownPage",
+    "id": "Terminal.scrollDownPage",
     "label": "Terminal: Scroll Down Page"
   },
   {
-    "id": "focus.previousTerminal",
+    "id": "Focus.previousTerminal",
     "label": "Focus: Previous Terminal"
   },
   {
-    "id": "focus.nextTerminal",
+    "id": "Focus.nextTerminal",
     "label": "Focus: Next Terminal"
   },
   {
-    "id": "terminal.split",
+    "id": "Terminal.split",
     "label": "Terminal: Split"
   },
   {
-    "id": "terminal.toggleSelection",
+    "id": "Terminal.toggleSelection",
     "label": "Toggle Selection"
   },
   {
-    "id": "focus.explorer",
+    "id": "Focus.explorer",
     "label": "Focus: Explorer"
   },
   {
-    "id": "focus.search",
+    "id": "Focus.search",
     "label": "Focus: Search"
   },
   {
-    "id": "focus.sourceControl",
+    "id": "Focus.sourceControl",
     "label": "Focus: Source Control"
   },
   {
-    "id": "focus.debugAndRun",
+    "id": "Focus.debugAndRun",
     "label": "Focus: Debug and Run"
   },
   {
-    "id": "focus.extensions",
+    "id": "Focus.Extensions",
     "label": "Focus: Extensions"
   },
   {
-    "id": "preferences.openUserKeyBindings",
+    "id": "Preferences.openUserKeyBindings",
     "label": "Preferences: Open User Key Bindings"
   },
   {
-    "id": "preferences.openDefaultKeyBindings",
+    "id": "Preferences.openDefaultKeyBindings",
     "label": "Preferences: Open Default Key Bindings",
     "aliases": ["Set Key Bindings", "Key Map", "Key Mapping"]
   },
   {
-    "id": "preferences.openSettingsJson",
+    "id": "Preferences.openSettingsJson",
     "label": "Preferences: Open Settings",
     "aliases": ["Change Settings", "Configure Settings", "Preferences"]
   },
   {
-    "id": "extensions.openExtensionsFolder",
+    "id": "Extensions.openExtensionsFolder",
     "label": "Extensions: Open Extensions Folder",
     "deprecated": true,
     "TODO": "add support for deprecated commands"
   },
   {
-    "id": "extensions.openCachedExtensionsFolder",
+    "id": "Extensions.openCachedExtensionsFolder",
     "label": "Extensions: Open Cached Extensions Folder"
   },
   {
-    "id": "focus.activityBar",
+    "id": "Focus.ActivityBar",
     "label": "Focus: ActivityBar"
   },
   {
-    "id": "focus.titleBar",
+    "id": "Focus.titleBar",
     "label": "Focus: Title Bar"
   },
   {
-    "id": "activityBar.focusNext",
+    "id": "ActivityBar.focusNext",
     "label": "ActivityBar: Focus Next"
   },
   {
-    "id": "activityBar.focusPrevious",
-    "label": "activityBar: Focus Previous"
+    "id": "ActivityBar.focusPrevious",
+    "label": "ActivityBar: Focus Previous"
   },
   {
-    "id": "activityBar.focusFirst",
+    "id": "ActivityBar.focusFirst",
     "label": "ActivityBar: Focus First"
   },
   {
-    "id": "activityBar.focusLast",
+    "id": "ActivityBar.focusLast",
     "label": "ActivityBar: Focus Last"
   },
   {
-    "id": "developer.showMemoryUsage",
+    "id": "Developer.showMemoryUsage",
     "label": "Developer: Show Memory Usage"
   },
   {
-    "id": "developer.allocateMemoryInSharedProcess",
+    "id": "Developer.allocateMemoryInSharedProcess",
     "label": "Developer: Allocate Memory in Shared Process"
   },
   {
-    "id": "developer.crashSharedProcess",
+    "id": "Developer.crashSharedProcess",
     "label": "Developer: Crash Shared Process"
   },
   {
-    "id": "developer.crashMainProcess",
+    "id": "Developer.crashMainProcess",
     "label": "Developer: Crash Main Process"
   },
   {
-    "id": "developer.createSharedProcessHeapSnapshot",
+    "id": "Developer.createSharedProcessHeapSnapshot",
     "label": "Developer: Create Shared Process Heap Snapshot"
   },
   {
-    "id": "developer.createSharedProcessProfile",
+    "id": "Developer.createSharedProcessProfile",
     "label": "Developer: Create Shared Process Profile"
   },
   {
-    "id": "developer.clearCache",
+    "id": "Developer.clearCache",
     "label": "Developer: Clear Cache"
   },
   {
-    "id": "developer.openConfigFolder",
+    "id": "Developer.openConfigFolder",
     "label": "Developer: Open Config Folder"
   },
   {
-    "id": "developer.openCacheFolder",
+    "id": "Developer.openCacheFolder",
     "label": "Developer: Open Cache Folder"
   },
   {
-    "id": "developer.openDataFolder",
+    "id": "Developer.openDataFolder",
     "label": "Developer: Open Data Folder"
   },
   {
-    "id": "preferences.selectColorTheme",
+    "id": "Preferences.selectColorTheme",
     "label": "Preferences: Color Theme",
     "aliases": ["Select Color Theme", "Switch Color Theme", "Theme Color"]
   },
   {
-    "id": "developer.measureLatencyBetweenExtensionHostAndSharedProcess",
+    "id": "Developer.measureLatencyBetweenExtensionHostAndSharedProcess",
     "label": "Developer: Measure Latency Between Extension Host and Shared Process"
   },
   {
-    "id": "developer.measureLatencyBetweenSharedProcessAndRendererProcess",
+    "id": "Developer.measureLatencyBetweenSharedProcessAndRendererProcess",
     "label": "Developer: Measure Latency Between Shared Process and Renderer Process"
   },
   {
-    "id": "developer.showState",
+    "id": "Developer.showState",
     "label": "Developer: Show state"
   },
   {
-    "id": "developer.startupPerformance",
+    "id": "Developer.startupPerformance",
     "label": "Developer: Startup Performance"
   },
   {
-    "id": "developer.toggleDeveloperTools",
+    "id": "Developer.toggleDeveloperTools",
     "label": "Developer: Toggle Developer Tools"
   },
   {
-    "id": "window.reload",
+    "id": "Window.reload",
     "label": "Window: Reload",
     "aliases": ["Reload Window"]
   },
   {
-    "id": "window.close",
+    "id": "Window.close",
     "label": "Window: Close",
     "aliases": ["Close Window"]
   },
   {
-    "id": "window.minimize",
+    "id": "Window.minimize",
     "label": "Window: Minimize",
     "aliases": ["Minimize Window"]
   },
   {
-    "id": "window.maximize",
+    "id": "Window.maximize",
     "label": "Window: Maximize",
     "aliases": ["Maximize Window"]
   },
   {
-    "id": "window.unmaximize",
+    "id": "Window.unmaximize",
     "label": "Window: Unmaximize",
     "aliases": ["Unmaximize Window"]
   },
   {
-    "id": "window.makeScreenshot",
+    "id": "Window.makeScreenshot",
     "label": "Window: Make Screenshot"
   },
   {
-    "id": "main.closeEditor",
+    "id": "main.EloseEditor",
     "label": "Main: Close Editor"
   },
   {
-    "id": "main.closeAllEditors",
-    "label": "Main: Close all editors"
+    "id": "main.EloseAllEditors",
+    "label": "Main: Close all Editors"
   },
   {
-    "id": "editor.indent",
+    "id": "Editor.indent",
     "label": "Editor: Indent",
     "aliases": ["Indent More", "DeIndent"]
   },
   {
-    "id": "editor.unindent",
+    "id": "Editor.unindent",
     "label": "Editor: Unindent",
     "aliases": ["Indent Less", "DeIndent"]
   },
   {
-    "id": "editor.toggleComment",
+    "id": "Editor.toggleComment",
     "label": "Editor: Toggle Comment"
   },
   {
-    "id": "editor.toggleBlockComment",
+    "id": "Editor.toggleBlockComment",
     "label": "Editor: Toggle Block Comment"
   },
   {
-    "id": "editor.openColorPicker",
+    "id": "Editor.openColorPicker",
     "label": "Editor: Open Color Picker"
   },
   {
-    "id": "editor.closeColorPicker",
+    "id": "Editor.closeColorPicker",
     "label": "Editor: Close Color Picker"
   },
   {
-    "id": "editor.copyLineDown",
+    "id": "Editor.copyLineDown",
     "label": "Editor: Copy Line Down"
   },
   {
-    "id": "editor.copyLineUp",
+    "id": "Editor.copyLineUp",
     "label": "Editor: Copy Line Up"
   },
   {
-    "id": "editor.moveLineDown",
+    "id": "Editor.moveLineDown",
     "label": "Editor: Move Line Down"
   },
   {
-    "id": "editor.moveLineUp",
+    "id": "Editor.moveLineUp",
     "label": "Editor: Move Line Up"
   },
   {
@@ -313,31 +313,31 @@
     "label": "Help: About"
   },
   {
-    "id": "editor.format",
+    "id": "Editor.format",
     "label": "Editor: Format Document"
   },
   {
-    "id": "editor.formatForced",
+    "id": "Editor.formatForced",
     "label": "Editor: Format Document (forced)"
   },
   {
-    "id": "editor.selectNextOccurrence",
+    "id": "Editor.selectNextOccurrence",
     "label": "Editor: Select Next Occurrence"
   },
   {
-    "id": "editor.selectAllOccurrences",
+    "id": "Editor.selectAllOccurrences",
     "label": "Editor: Select All Occurrences"
   },
   {
-    "id": "editor.goToDefinition",
+    "id": "Editor.goToDefinition",
     "label": "Editor: Go To Definition"
   },
   {
-    "id": "editor.goToTypeDefinition",
+    "id": "Editor.goToTypeDefinition",
     "label": "Editor: Go To Type Definition"
   },
   {
-    "id": "editor.selectInsideString",
+    "id": "Editor.selectInsideString",
     "label": "Editor: Select Inside String"
   },
   {
@@ -349,19 +349,19 @@
     "label": "Service Worker: Uninstall"
   },
   {
-    "id": "developer.openLogsFolder",
+    "id": "Developer.openLogsFolder",
     "label": "Developer: Open Logs Folder"
   },
   {
-    "id": "developer.openProcessExplorer",
+    "id": "Developer.openProcessExplorer",
     "label": "Developer: Open Process Explorer"
   },
   {
-    "id": "viewletExplorer.collapseAll",
+    "id": "Explorer.collapseAll",
     "label": "Explorer: Collapse All"
   },
   {
-    "id": "viewletExplorer.expandAll",
+    "id": "Explorer.expandAll",
     "label": "Explorer: Expand All"
   },
   {

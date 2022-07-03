@@ -80,11 +80,11 @@ export const tabsHandleClick = async (state, index) => {
   const oldSelectedIndex = state.selectedIndex
 
   state.selectedIndex = index
-  RendererProcess.send([
+  RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Panel',
     /* method */ 'selectTab',
     /* oldSelectedIndex */ oldSelectedIndex,
-    /* newSelectedIndex */ index,
-  ])
+    /* newSelectedIndex */ index
+  )
 }

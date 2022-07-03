@@ -16,12 +16,12 @@ const showHover = async (editor, position) => {
     return
   }
 
-  RendererProcess.send([
+  RendererProcess.invoke(
     /* EditorHover.show */ 6216,
     /* x */ editor.left + position.columnIndex * editor.columnWidth,
     /* y */ editor.top + position.rowIndex * editor.rowHeight,
-    /* hover */ hover,
-  ])
+    /* hover */ hover
+  )
   console.log({ hover })
 }
 
