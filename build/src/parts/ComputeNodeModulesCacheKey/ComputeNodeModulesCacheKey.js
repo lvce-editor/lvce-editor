@@ -11,6 +11,7 @@ const locations = [
   'packages/renderer-worker/package-lock.json',
   'packages/shared-process/package-lock.json',
   'packages/server/package-lock.json',
+  'packages/e2e/package-lock.json',
   'build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js',
   'build/src/parts/ComputeCacheKey/ComputeCacheKey.js',
   'build/src/parts/Hash/Hash.js',
