@@ -111,9 +111,13 @@ export const listen = () => {
       return ipc.onmessage
     },
     set onmessage(listener) {
-      ipc.onmessage = async (message) => {
-        await listener(message)
-        await SessionReplay.handleMessage('from-renderer-process', message)
+      if (listener) {
+        ipc.onmessage = async (message) => {
+          await listener(message)
+          await SessionReplay.handleMessage('from-renderer-process', message)
+        }
+      } else {
+        ipc.onmessage = null
       }
     },
   }

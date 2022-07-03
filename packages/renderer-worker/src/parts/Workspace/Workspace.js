@@ -73,7 +73,9 @@ const getResolvedRootFromRendererProcess = async () => {
     RendererProcess.state.ipc.send = () => {}
     console.log({ events })
     for (const event of events) {
-      originalSend(event)
+      if (event.source === 'to-renderer-process') {
+        originalSend(event)
+      }
     }
     console.log({ events })
   }
