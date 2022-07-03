@@ -116,7 +116,4 @@ test('viewlet.extensions-accessibility', async () => {
   await expect(secondExtension).toHaveAttribute('role', 'listitem')
 
   // TODO test error behaviour
-  if (process.send) {
-    process.send('succeeded')
-  }
 })
