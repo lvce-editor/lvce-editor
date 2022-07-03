@@ -44,5 +44,11 @@ test('sample.title-bar-toggle-block-comment-error-language-configuration-not-fou
   )
   await menuItemOpenToggleBlockComment.click()
 
-  // await expect(editor).toHaveText('<!--content-1-->')
+  const notification = page.locator('.Notification')
+  await expect(notification).toHaveCount(1)
+  // TODO when developing an extension, it would be useful to show this as a dialog
+  // not sure if the error message should be shown in production as well
+  await expect(notification).toHaveText(
+    `Error: VError: Failed to load language configuration for unknown: ENOENT: no such file or directory, open ''`
+  )
 })

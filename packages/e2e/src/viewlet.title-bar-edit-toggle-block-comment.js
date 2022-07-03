@@ -18,7 +18,7 @@ const openFile = async (page, fileName) => {
   await expect(cursor).toHaveCSS('left', '36px')
 }
 
-test('viewlet.title-bar-edit-toggle-block-comment', async () => {
+test.skip('viewlet.title-bar-edit-toggle-block-comment', async () => {
   const tmpDir1 = await getTmpDir('folder-1')
   await writeFile(join(tmpDir1, 'test.html'), 'content-1')
   const page = await runWithExtension({

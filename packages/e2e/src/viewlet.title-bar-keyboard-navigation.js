@@ -1,7 +1,7 @@
 import { writeFile } from 'fs/promises'
 import { expect, getTmpDir, runWithExtension, test } from './_testFrameWork.js'
 
-test('viewlet.title-bar-keyboard-navigation', async () => {
+test.skip('viewlet.title-bar-keyboard-navigation', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(`${tmpDir}/test.txt`, 'div')
   const page = await runWithExtension({

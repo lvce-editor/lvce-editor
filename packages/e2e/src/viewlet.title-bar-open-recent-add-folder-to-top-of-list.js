@@ -2,7 +2,7 @@ import { mkdir, writeFile } from 'fs/promises'
 import { join } from 'node:path'
 import { expect, getTmpDir, runWithExtension, test } from './_testFrameWork.js'
 
-test('viewlet.title-bar-open-recent-add-folder-to-top-of-list', async () => {
+test.skip('viewlet.title-bar-open-recent-add-folder-to-top-of-list', async () => {
   const tmpDir1 = await getTmpDir('folder-1')
   const tmpDir2 = await getTmpDir('folder-2')
   const tmpDir3 = await getTmpDir('folder-3')

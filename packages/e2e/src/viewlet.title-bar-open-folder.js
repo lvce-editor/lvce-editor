@@ -2,7 +2,7 @@ import { writeFile } from 'fs/promises'
 import { join } from 'node:path'
 import { expect, getTmpDir, runWithExtension, test } from './_testFrameWork.js'
 
-test('viewlet.title-bar-open-folder', async () => {
+test.skip('viewlet.title-bar-open-folder', async () => {
   const tmpDir1 = await getTmpDir()
   const tmpDir2 = await getTmpDir()
   await writeFile(join(tmpDir2, 'file.txt'), '')

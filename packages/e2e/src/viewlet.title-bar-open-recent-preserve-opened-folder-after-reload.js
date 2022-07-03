@@ -2,7 +2,7 @@ import { mkdir, writeFile } from 'fs/promises'
 import { join } from 'node:path'
 import { expect, getTmpDir, runWithExtension, test } from './_testFrameWork.js'
 
-test('viewlet.title-bar-open-recent-preserve-opened-folder-after-reload', async () => {
+test.skip('viewlet.title-bar-open-recent-preserve-opened-folder-after-reload', async () => {
   const tmpDir1 = await getTmpDir('folder-1')
   const tmpDir2 = await getTmpDir('folder-2')
   await writeFile(join(tmpDir1, 'file-1.txt'), 'content-1')
