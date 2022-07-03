@@ -363,5 +363,9 @@
   {
     "id": "viewletExplorer.expandAll",
     "label": "Explorer: Expand All"
+  },
+  {
+    "id": "SessionReplay.replaySession",
+    "label": "SessionReplay: Replay Session"
   }
 ]

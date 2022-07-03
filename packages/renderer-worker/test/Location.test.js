@@ -28,6 +28,19 @@ test('getPathName', async () => {
   expect(await Location.getPathName()).toBe('/test-path')
 })
 
+test('getHref', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    return 'http://localhost:3000/test-path'
+  })
+  expect(await Location.getHref()).toBe('http://localhost:3000/test-path')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Location.getHref',
+    'http://localhost:3000/test-path'
+  )
+})
+
 test('setPathName', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})

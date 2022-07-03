@@ -62,6 +62,7 @@ const MODULE_VIEWLET_SEARCH = 74
 const MODULE_VIEWLET_EDITOR_COMPLETION = 75
 const MODULE_VIEWLET_Locations = 76
 const MODULE_VIEWLET_PROBLEMS = 77
+const MODULE_SESSION_REPLAY = 78
 
 export const state = {
   commands: Object.create(null),
@@ -188,6 +189,8 @@ const loadModule = (moduleId) => {
       return import('../Viewlet/ViewletLocations.ipc.js')
     case MODULE_VIEWLET_PROBLEMS:
       return import('../Viewlet/ViewletProblems.ipc.js')
+    case MODULE_SESSION_REPLAY:
+      return import('../SessionReplay/SessionReplay.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }
@@ -730,6 +733,8 @@ const getModuleId = (commandId) => {
     case 'FindWidget.setValue':
     case 'FindWidget.dispose':
       return MODULE_FIND_WIDGET
+    case 'SessionReplay.replaySession':
+      return MODULE_SESSION_REPLAY
     default:
       throw new Error(`command ${commandId} not found`)
   }

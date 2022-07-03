@@ -72,9 +72,7 @@ export const getPicks = async () => {
 
 const selectPickBuiltin = async (item) => {
   // TODO ids should be all numbers for efficiency -> also directly can call command
-  const id = await Command.execute(/* id */ item.id)
-  await Command.execute(id)
-  console.log('execute', id)
+  await Command.execute(item.id)
 }
 
 const selectPickExtension = async (item) => {

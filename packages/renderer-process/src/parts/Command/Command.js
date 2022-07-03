@@ -164,6 +164,7 @@ const getModuleId = (commandId) => {
     case 'Location.getPathName':
     case 'Location.setPathName':
     case 'Location.hydrate':
+    case 'Location.getHref':
       return MODULE_LOCATION
     case 'EditorHover.create':
       return MODULE_EDITOR_HOVER

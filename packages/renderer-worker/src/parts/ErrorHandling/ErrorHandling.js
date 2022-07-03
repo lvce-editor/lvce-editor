@@ -74,11 +74,19 @@ export const state = {
 }
 
 export const handleError = async (error) => {
-  await state.handleError(error)
+  try {
+    await state.handleError(error)
+  } catch {
+    // ignore
+  }
 }
 
 export const showErrorDialog = async (error) => {
-  await state.showErrorDialog(error)
+  try {
+    await state.showErrorDialog(error)
+  } catch {
+    // ignore
+  }
 }
 
 export const warn = (...args) => {

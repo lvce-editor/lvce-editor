@@ -53,3 +53,7 @@ test('hydrate', () => {
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(['Workspace.hydrate'])
 })
+
+test('getHref', () => {
+  expect(Location.getHref()).toBe('/')
+})

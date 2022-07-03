@@ -58,10 +58,20 @@ const getResolveRootFromSessionStorage = async () => {
 }
 
 const getResolvedRootFromRendererProcess = async () => {
-  const pathName = await Location.getPathName()
-  if (pathName.startsWith('/github')) {
+  const href = await Location.getHref()
+  console.log({ href })
+  const url = new URL(href)
+  if (url.searchParams.has('replayId')) {
+    const replayId = url.searchParams.get('replayId')
+    console.log({ replayId })
+    const SessionReplay = await import('../SessionReplay/SessionReplay.js')
+    const events = await SessionReplay.getEvents()
+    console.log({ events })
+  }
+  console.log({ url })
+  if (url.pathname.startsWith('/github')) {
     return {
-      path: `github://${pathName.slice('/github'.length + 1)}`,
+      path: `github://${href.slice('/github'.length + 1)}`,
       homeDir: '',
       pathSeparator: '/',
       source: 'renderer-process',
