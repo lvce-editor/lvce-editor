@@ -19,7 +19,7 @@ const runMarketPlaceServer = async (port) => {
   }
 }
 
-test('viewlet.extensions-marketplace-search-error-404', async () => {
+test.skip('viewlet.extensions-marketplace-search-error-404', async () => {
   const marketPlacePort = await getPort()
   const marketPlaceServer = await runMarketPlaceServer(marketPlacePort)
   const marketPlaceUri = marketPlaceServer.uri

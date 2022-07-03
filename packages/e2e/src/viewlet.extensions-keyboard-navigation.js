@@ -19,7 +19,7 @@ const runMarketPlaceServer = async (port) => {
   }
 }
 
-test('viewlet.extensions-keyboard-navigation', async () => {
+test.skip('viewlet.extensions-keyboard-navigation', async () => {
   const marketPlacePort = await getPort()
   const marketPlaceServer = await runMarketPlaceServer(marketPlacePort)
   const marketPlaceUri = marketPlaceServer.uri
