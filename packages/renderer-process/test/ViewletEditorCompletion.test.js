@@ -2,8 +2,29 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as ViewletEditorCompletion from '../src/parts/Viewlet/ViewletEditorCompletion.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const ViewletEditorCompletion = await import(
+  '../src/parts/Viewlet/ViewletEditorCompletion.js'
+)
 
 const getTextContent = (node) => {
   return node.textContent
@@ -64,15 +85,19 @@ test('event - mousedown', () => {
       label: 'item 3',
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$Viewlet.children[0].dispatchEvent(
     new Event('mousedown', {
       bubbles: true,
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([982, 0])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith([
+    'EditorCompletion.selectIndex',
+    0,
+  ])
 })
 
 test('event - click outside', () => {
@@ -88,14 +113,15 @@ test('event - click outside', () => {
       label: 'item 3',
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$Viewlet.dispatchEvent(
     new Event('mousedown', {
       bubbles: true,
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('dispose', () => {

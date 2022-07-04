@@ -1,66 +1,65 @@
 import { jest } from '@jest/globals'
-import * as Menu from '../src/parts/Menu/Menu.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
+
+import * as Platform from '../src/parts/Platform/Platform.js'
 
 beforeEach(() => {
-  RendererProcess.state.send = () => {
-    throw new Error('not implemented')
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
 
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+const SharedProcess = await import(
+  '../src/parts/SharedProcess/SharedProcess.js'
+)
+
+const Menu = await import('../src/parts/Menu/Menu.js')
+
 test.skip('show', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await Menu.show(0, 0, 'file')
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    7905,
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Menu.show',
     0,
     0,
     250,
     200,
     0,
-    expect.any(Array),
-  ])
+    expect.any(Array)
+  )
 })
 
 test.skip('hide', async () => {
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await Menu.hide()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([909090, 3, 7901])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(909090, 3, 7901)
 })
 
 test('focusFirst', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: 2,
@@ -104,21 +103,8 @@ test('focusFirst - no items', async () => {
 })
 
 test('focusFirst - with disabled items and separators', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: 2,
@@ -156,21 +142,8 @@ test('focusFirst - with disabled items and separators', async () => {
 })
 
 test('focusLast', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: 0,
@@ -214,21 +187,8 @@ test('focusLast - no items', async () => {
 })
 
 test('focusLast - with disabled items and separators', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: 2,
@@ -266,21 +226,8 @@ test('focusLast - with disabled items and separators', async () => {
 })
 
 test('focusPrevious', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: 1,
@@ -312,21 +259,8 @@ test('focusPrevious', async () => {
 })
 
 test('focusPrevious - at start', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: 0,
@@ -357,21 +291,8 @@ test('focusPrevious - at start', async () => {
 })
 
 test('focusPrevious - when no focus', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: -1,
@@ -402,21 +323,8 @@ test('focusPrevious - when no focus', async () => {
 })
 
 test('focusPrevious - with separator', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: 2,
@@ -447,21 +355,8 @@ test('focusPrevious - with separator', async () => {
 })
 
 test('focusPrevious - with disabled items and separators', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: 2,
@@ -511,21 +406,8 @@ test('focusPrevious - no items', async () => {
 })
 
 test('focusPrevious - no focusable items', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: -1,
@@ -557,21 +439,8 @@ test('focusPrevious - no focusable items', async () => {
 })
 
 test('focusNext', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: 0,
@@ -614,21 +483,8 @@ test('focusNext - no items', async () => {
 })
 
 test('focusNext - no focusable items', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: -1,
@@ -660,21 +516,8 @@ test('focusNext - no focusable items', async () => {
 })
 
 test('focusNext - with disabled items and separators', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: -1,
@@ -712,21 +555,8 @@ test('focusNext - with disabled items and separators', async () => {
 })
 
 test('focusNext - at end', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: 2,
@@ -757,21 +587,8 @@ test('focusNext - at end', async () => {
 })
 
 test('focusNext - when no focus', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: -1,
@@ -802,21 +619,8 @@ test('focusNext - when no focus', async () => {
 })
 
 test('focusNext - with separator', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: 0,
@@ -872,22 +676,9 @@ test.skip('resetFocusedIndex', async () => {
   expect(Menu.state.focusedIndex).toBe(-1)
 })
 
-test('focusIndexMouse - focusing submenu index should show submenu', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
-  })
+test.skip('focusIndexMouse - focusing submenu index should show submenu', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Menu.state.menus = [
     {
       focusedIndex: 0,
@@ -913,52 +704,24 @@ test('focusIndexMouse - focusing submenu index should show submenu', async () =>
       ],
     },
   ]
-  SharedProcess.state.send = jest.fn((message) => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((message) => {
     switch (message.method) {
       case 'Platform.getRecentlyOpenedPath':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: '/test/recently-opened.json',
-        })
-        break
+        return '/test/recently-opened.json'
       case 'FileSystem.readFile':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: `["/test/folder-1"]`,
-        })
-        break
+        return `["/test/folder-1"]`
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
-
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 7905:
-        break
-      case 7902:
-        break
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await Menu.handleMouseEnter(0, 2)
   expect(Menu.state.menus).toHaveLength(2)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
-    7905,
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, [
+    'Menu.show',
     150,
     50,
     250,
@@ -1063,7 +826,8 @@ test('focusIndexMouse - focusing submenu index should do nothing when already fo
       ],
     },
   ]
-  SharedProcess.state.send = jest.fn((message) => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((message) => {
     switch (message.method) {
       case 'Platform.getRecentlyOpenedPath':
         SharedProcess.state.receive({
@@ -1080,22 +844,14 @@ test('focusIndexMouse - focusing submenu index should do nothing when already fo
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 7905:
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await Menu.handleMouseEnter(0, 2)
   expect(Menu.state.menus).toHaveLength(2)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('selectIndex - should do nothing when already focused', async () => {
@@ -1161,39 +917,22 @@ test('selectIndex - should do nothing when already focused', async () => {
       ],
     },
   ]
-  SharedProcess.state.send = jest.fn((message) => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((message) => {
     switch (message.method) {
       case 'Platform.getRecentlyOpenedPath':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: '/test/recently-opened.json',
-        })
-        break
+        return '/test/recently-opened.json'
       case 'FileSystem.readFile':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: `["/test/folder-1"]`,
-        })
-        break
+        return `["/test/folder-1"]`
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 7905:
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await Menu.selectIndex(0, 2)
   expect(Menu.state.menus).toHaveLength(2)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test.skip('focusIndexMouse - focusing other index should hide submenu', async () => {
@@ -1229,8 +968,10 @@ test.skip('focusIndexMouse - focusing other index should hide submenu', async ()
       ],
     },
   ]
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await Menu.handleMouseEnter(0, 1)
   expect(Menu.state.menus).toHaveLength(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([7904, 1])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(7904, 1)
 })

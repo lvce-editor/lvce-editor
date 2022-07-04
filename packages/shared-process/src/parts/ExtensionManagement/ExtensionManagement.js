@@ -10,6 +10,10 @@ import * as Platform from '../Platform/Platform.js'
 import * as Queue from '../Queue/Queue.js'
 import path from 'node:path'
 
+const isLanguageBasics = (extension) => {
+  return extension.id.includes('language-basics')
+}
+
 export const state = {
   async getExtensions() {
     // TODO only read from env once
@@ -17,7 +21,7 @@ export const state = {
     if (process.env.ONLY_EXTENSION) {
       const absolutePath = path.resolve(process.env.ONLY_EXTENSION)
       const onlyExtension = await getExtensionManifests([absolutePath])
-      return [...builtinExtensions, ...onlyExtension]
+      return [...builtinExtensions.filter(isLanguageBasics), ...onlyExtension]
     }
     const installedExtensions = await getInstalledExtensions()
     return [...builtinExtensions, ...installedExtensions]

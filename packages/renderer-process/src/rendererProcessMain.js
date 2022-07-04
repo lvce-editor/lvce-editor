@@ -8,7 +8,6 @@ import * as M7 from '../src/parts/KeyBindings/KeyBindings.ipc.js'
 import * as M9 from '../src/parts/GlobalEventBus/GlobalEventBus.js'
 import * as M14 from '../src/parts/Widget/Widget.js'
 import * as M15 from '../src/parts/LocalStorage/LocalStorage.ipc.js'
-import * as M17 from '../src/parts/RendererWorker/RendererWorker.ipc.js'
 import * as M18 from '../src/parts/Platform/Platform.js'
 import * as M22 from '../src/parts/ServiceWorker/ServiceWorker.ipc.js'
 import * as M26 from '../src/parts/Location/Location.ipc.js'
@@ -32,7 +31,6 @@ globalThis.M = [
   M13,
   M14,
   M15,
-  M17,
   M18,
   M22,
   M26,
@@ -44,9 +42,11 @@ globalThis.M = [
 
 const main = async () => {
   onerror = (error) => {
+    console.info(`[renderer-process] Unhandled Error: ${error}`)
     alert(error)
   }
   onunhandledrejection = (event) => {
+    console.info(`[renderer-process] Unhandled Rejection: ${event.reason}`)
     alert(event.reason)
   }
 

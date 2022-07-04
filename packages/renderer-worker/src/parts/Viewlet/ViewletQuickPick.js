@@ -110,7 +110,7 @@ export const show = async (value, provider) => {
     const visiblePicks = getVisiblePicks(newPicks, filterValue)
     const placeholder = provider.getPlaceholder()
     RendererProcess.send([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'updateValueAndPicksAndPlaceholder',
       /* value */ value,
@@ -133,7 +133,10 @@ export const show = async (value, provider) => {
   state.state = STATE_CREATING
   const version = ++state.versionId
   // TODO also pass initial value here
-  await RendererProcess.invoke(/* Viewlet.load */ 3030, /* id */ 'QuickPick')
+  await RendererProcess.invoke(
+    /* Viewlet.load */ 'Viewlet.load',
+    /* id */ 'QuickPick'
+  )
   const newPicks = await provider.getPicks(value)
   Assert.array(newPicks)
   if (version !== state.versionId) {
@@ -142,7 +145,7 @@ export const show = async (value, provider) => {
   if (newPicks.length === 0) {
     const noResults = await provider.getNoResults()
     RendererProcess.send([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'showNoResults',
       /* noResults */ noResults,
@@ -159,7 +162,7 @@ export const show = async (value, provider) => {
     newPicks.length - 1
   )
   RendererProcess.send([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'QuickPick',
     /* method */ 'setValueAndPicks',
     /* value */ value,
@@ -175,7 +178,10 @@ export const dispose = () => {
       break
     case STATE_FINISHED:
       state.state = STATE_DEFAULT
-      RendererProcess.send([/* Viewlet.dispose */ 3026, /* id */ 'QuickPick'])
+      RendererProcess.send([
+        /* Viewlet.dispose */ 'Viewlet.dispose',
+        /* id */ 'QuickPick',
+      ])
       break
     default:
       break
@@ -245,7 +251,7 @@ export const handleInput = async (value) => {
   const visiblePicks = getVisiblePicks(newPicks, filterValue)
 
   RendererProcess.send([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'QuickPick',
     /* method */ 'updatePicks',
     /* picks */ visiblePicks,
@@ -287,7 +293,7 @@ export const focusIndex = async (index) => {
     const relativeFocusIndex = index - state.minLineY
     const relativeUnFocusIndex = state.focusedIndex - state.minLineY
     RendererProcess.send([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'updateValueAndPicks', // TODO don't need to update value, just picks and focus
       /* value */ state.value,
@@ -322,7 +328,7 @@ export const focusIndex = async (index) => {
       relativeUnFocusIndex,
     })
     RendererProcess.send([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'updateValueAndPicks', // TODO don't need to update value, just picks and focus
       /* value */ state.value,
@@ -332,7 +338,7 @@ export const focusIndex = async (index) => {
     ])
   } else {
     RendererProcess.send([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'focusIndex',
       /* unFocusIndex */ state.focusedIndex,

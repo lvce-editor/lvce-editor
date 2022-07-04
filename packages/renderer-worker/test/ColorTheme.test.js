@@ -1,67 +1,71 @@
 import { jest } from '@jest/globals'
-import * as ColorTheme from '../src/parts/ColorTheme/ColorTheme.js'
 import * as Preferences from '../src/parts/Preferences/Preferences.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+const SharedProcess = await import(
+  '../src/parts/SharedProcess/SharedProcess.js'
+)
+
+const ColorTheme = await import('../src/parts/ColorTheme/ColorTheme.js')
+
 test('hydrate', async () => {
   Preferences.state['workbench.colorTheme'] = 'slime'
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ExtensionHost.getColorThemeJson':
-        const colorThemeId = message.params[0]
+        const colorThemeId = params[0]
         switch (colorThemeId) {
           case 'slime':
-            SharedProcess.state.receive({
-              id: message.id,
-              jsonrpc: '2.0',
-              result: {
-                type: 'dark',
-                colors: {
-                  ActivityBarBackground: 'rgb(41, 48, 48)',
-                  ActivityBarForeground: 'rgba(135, 143, 140, 0.4)',
-                },
-                tokenColors: [],
+            return {
+              type: 'dark',
+              colors: {
+                ActivityBarBackground: 'rgb(41, 48, 48)',
+                ActivityBarForeground: 'rgba(135, 143, 140, 0.4)',
               },
-            })
-            break
-          default:
-            throw new Error('unexpected message (1)')
+              tokenColors: [],
+            }
         }
-        break
       default:
         throw new Error('unexpected message (2)')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+
   await ColorTheme.hydrate()
-  expect(SharedProcess.state.send).toHaveBeenCalledWith({
-    id: expect.any(Number),
-    jsonrpc: '2.0',
-    method: 'ExtensionHost.getColorThemeJson',
-    params: ['slime'],
-  })
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    4,
-    4551,
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith(
+    'ExtensionHost.getColorThemeJson',
+    'slime'
+  )
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Css.setInlineStyle',
     'ContributedColorTheme',
     `:root {
   --ActivityBarBackground: rgb(41, 48, 48);
@@ -71,58 +75,40 @@ test('hydrate', async () => {
 
 
 
-`,
-  ])
+`
+  )
 })
 
 test('hydrate - color theme fails to load from shared process', async () => {
   Preferences.state['workbench.colorTheme'] = 'atom-one-dark'
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ExtensionHost.getColorThemeJson':
-        const colorThemeId = message.params[0]
+        const colorThemeId = params[0]
         switch (colorThemeId) {
           case 'atom-one-dark':
             throw new Error(
               'Color theme "atom-one-dark" not found in extensions folder'
             )
           case 'slime':
-            SharedProcess.state.receive({
-              id: message.id,
-              jsonrpc: '2.0',
-              result: {
-                type: 'dark',
-                colors: {
-                  ActivityBarBackground: 'rgb(41, 48, 48)',
-                  ActivityBarForeground: 'rgba(135, 143, 140, 0.4)',
-                },
-                tokenColors: [],
+            return {
+              type: 'dark',
+              colors: {
+                ActivityBarBackground: 'rgb(41, 48, 48)',
+                ActivityBarForeground: 'rgba(135, 143, 140, 0.4)',
               },
-            })
-            break
+              tokenColors: [],
+            }
           default:
             throw new Error('unexpected message (1)')
         }
-        break
       default:
         throw new Error('unexpected message (2)')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   await ColorTheme.hydrate()
   expect(spy).toHaveBeenCalledTimes(1)
@@ -137,10 +123,11 @@ test('hydrate - color theme fails to load from shared process', async () => {
 // or something more useful
 test('hydrate - color theme fails to load and fallback color theme also fails to load', async () => {
   Preferences.state['workbench.colorTheme'] = 'atom-one-dark'
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ExtensionHost.getColorThemeJson':
-        const colorThemeId = message.params[0]
+        const colorThemeId = params[0]
         switch (colorThemeId) {
           case 'atom-one-dark':
             throw new Error(
@@ -157,20 +144,8 @@ test('hydrate - color theme fails to load and fallback color theme also fails to
         throw new Error('unexpected message (2)')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   await expect(ColorTheme.hydrate()).rejects.toThrowError(
     new Error(
@@ -188,36 +163,23 @@ test('hydrate - color theme fails to load and fallback color theme also fails to
 
 test('hydrate - color id is fallback color theme id and fails to load', async () => {
   Preferences.state['workbench.colorTheme'] = 'slime'
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ExtensionHost.getColorThemeJson':
-        const colorThemeId = message.params[0]
+        const colorThemeId = params[0]
         switch (colorThemeId) {
           case 'slime':
             throw new Error(
               'Color theme "slime" not found in extensions folder'
             )
-          default:
-            throw new Error('unexpected message (1)')
         }
       default:
         throw new Error('unexpected message (2)')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   await expect(ColorTheme.hydrate()).rejects.toThrowError(
     new Error(

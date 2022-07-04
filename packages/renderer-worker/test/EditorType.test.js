@@ -163,7 +163,6 @@ test('editorType - braceCompletion - opening curly brace', async () => {
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -237,7 +236,6 @@ test('editorType - braceCompletion - opening round brace', async () => {
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -311,7 +309,6 @@ test('editorType - braceCompletion - opening square brace', async () => {
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })

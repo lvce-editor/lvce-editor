@@ -1,6 +1,27 @@
 import { jest } from '@jest/globals'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as TitleBarMenu from '../src/parts/TitleBarMenuBar/TitleBarMenuBar.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+
+const TitleBarMenu = await import(
+  '../src/parts/TitleBarMenuBar/TitleBarMenuBar.js'
+)
 
 test('openMenu - when no focusedIndex', async () => {
   TitleBarMenu.state.focusedIndex = -1
@@ -14,10 +35,11 @@ test('openMenu - when no focusedIndex', async () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.openMenu(/* focus */ false)
   expect(TitleBarMenu.state.isMenuOpen).toBe(false)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test.skip('openMenu - when focusedIndex', async () => {
@@ -32,28 +54,15 @@ test.skip('openMenu - when focusedIndex', async () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 1372:
-        break
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ {
-            left: 168,
-            bottom: 0,
-          },
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    return {
+      left: 168,
+      bottom: 0,
     }
   })
   await TitleBarMenu.openMenu(/* focus */ true)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenCalledWith([
     1372,
     0,
     0,
@@ -105,7 +114,7 @@ test.skip('openMenu - when focusedIndex', async () => {
   ])
 })
 
-test('closeMenu - don\'t keep focus', () => {
+test("closeMenu - don't keep focus", () => {
   TitleBarMenu.state.titleBarEntries = [
     {
       id: 'file',
@@ -117,16 +126,17 @@ test('closeMenu - don\'t keep focus', () => {
     },
   ]
   TitleBarMenu.state.focusedIndex = 0
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   TitleBarMenu.closeMenu(/* keepFocus */ false)
   expect(TitleBarMenu.state.isMenuOpen).toBe(false)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    3024,
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Viewlet.send',
     'TitleBar',
     'menuClose',
     0,
-    -1,
-  ])
+    -1
+  )
 })
 
 test('closeMenu - keep focus', () => {
@@ -140,17 +150,18 @@ test('closeMenu - keep focus', () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   TitleBarMenu.state.focusedIndex = 0
   TitleBarMenu.closeMenu(/* keepFocus */ true)
   expect(TitleBarMenu.state.isMenuOpen).toBe(false)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    3024,
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Viewlet.send',
     'TitleBar',
     'menuClose',
     0,
-    0,
-  ])
+    0
+  )
 })
 
 test.skip('focusIndex - when open - when same index', async () => {
@@ -166,36 +177,23 @@ test.skip('focusIndex - when open - when same index', async () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 1372:
-        break
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ {
-            left: 168,
-            bottom: 0,
-          },
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    return {
+      left: 168,
+      bottom: 0,
     }
   })
   await TitleBarMenu.focusIndex(0)
   expect(TitleBarMenu.state.focusedIndex).toBe(0)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [
     909090,
     expect.any(Number),
     1374,
     0,
   ])
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, [
     1372,
     0,
     0,
@@ -260,36 +258,18 @@ test.skip('focusIndex - when open - when different index', async () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 1372:
-        break
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ {
-            left: 168,
-            bottom: 0,
-          },
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusIndex(1)
   expect(TitleBarMenu.state.focusedIndex).toBe(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [
     909090,
     expect.any(Number),
     1374,
     1,
   ])
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, [
     1372,
     0,
     1,
@@ -354,36 +334,23 @@ test.skip('focusIndex - when open - race condition', async () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 1372:
-        break
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ {
-            left: 168,
-            bottom: 0,
-          },
-        ])
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    return {
+      left: 168,
+      bottom: 0,
     }
   })
   await TitleBarMenu.focusIndex(1)
   expect(TitleBarMenu.state.focusedIndex).toBe(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [
     909090,
     expect.any(Number),
     1374,
     1,
   ])
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, [
     1372,
     0,
     1,
@@ -448,10 +415,11 @@ test('focusIndex - when closed - when same index', async () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusIndex(0)
   expect(TitleBarMenu.state.focusedIndex).toBe(0)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([1371, 0, 0])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 0, 0)
 })
 
 test('focusIndex - when closed - when different index', async () => {
@@ -467,10 +435,11 @@ test('focusIndex - when closed - when different index', async () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusIndex(1)
   expect(TitleBarMenu.state.focusedIndex).toBe(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([1371, 0, 1])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 0, 1)
 })
 
 test('focus', async () => {
@@ -485,10 +454,11 @@ test('focus', async () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focus()
   expect(TitleBarMenu.state.focusedIndex).toBe(0)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([1371, 42, 0])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 42, 0)
 })
 
 test('focusPrevious', async () => {
@@ -507,10 +477,11 @@ test('focusPrevious', async () => {
       name: 'Selection',
     },
   ]
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusPrevious()
   expect(TitleBarMenu.state.focusedIndex).toBe(0)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([1371, 1, 0])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 1, 0)
 })
 
 test('focusPrevious - at start', async () => {
@@ -529,10 +500,11 @@ test('focusPrevious - at start', async () => {
       name: 'Selection',
     },
   ]
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusPrevious()
   expect(TitleBarMenu.state.focusedIndex).toBe(2)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([1371, 0, 2])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 0, 2)
 })
 
 test('focusNext', async () => {
@@ -551,10 +523,11 @@ test('focusNext', async () => {
       name: 'Selection',
     },
   ]
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusNext()
   expect(TitleBarMenu.state.focusedIndex).toBe(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([1371, 0, 1])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 0, 1)
 })
 
 test.skip('focusNext - with disabled items', async () => {
@@ -576,10 +549,11 @@ test.skip('focusNext - with disabled items', async () => {
       flags: /* None */ 0,
     },
   ]
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusNext()
   expect(TitleBarMenu.state.focusedIndex).toBe(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([1371, 1])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 1)
 })
 
 test('focusNext - at end', async () => {
@@ -598,10 +572,11 @@ test('focusNext - at end', async () => {
       name: 'Selection',
     },
   ]
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusNext()
   expect(TitleBarMenu.state.focusedIndex).toBe(0)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([1371, 2, 0])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 2, 0)
 })
 
 test('toggleIndex - when open - when same index', async () => {
@@ -617,16 +592,17 @@ test('toggleIndex - when open - when same index', async () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.toggleIndex(0)
   expect(TitleBarMenu.state.focusedIndex).toBe(0)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    3024,
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Viewlet.send',
     'TitleBar',
     'menuClose',
     0,
-    0,
-  ])
+    0
+  )
 })
 
 test.skip('toggleIndex - when open - when different index', async () => {
@@ -642,10 +618,11 @@ test.skip('toggleIndex - when open - when different index', async () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.toggleIndex(1)
   expect(TitleBarMenu.state.focusedIndex).toBe(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenCalledWith([
     1372,
     1,
     [
@@ -682,10 +659,11 @@ test.skip('toggleIndex - when closed - when same index', async () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.toggleIndex(0)
   expect(TitleBarMenu.state.focusedIndex).toBe(0)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenCalledWith([
     1372,
     0,
     [
@@ -717,10 +695,11 @@ test.skip('toggleIndex - when closed - when different index', async () => {
       name: 'Edit',
     },
   ]
-  RendererProcess.state.send = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.toggleIndex(1)
   expect(TitleBarMenu.state.focusedIndex).toBe(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenCalledWith([
     1372,
     1,
     [

@@ -81,7 +81,7 @@ const handleMousedown = (event) => {
   const x = event.clientX
   const y = event.clientY
   RendererWorker.send([
-    /* ActivityBar.handleClick */ 8001,
+    /* ActivityBar.handleClick */ 'ActivityBar.handleClick',
     /* index */ index,
     /* x */ x,
     /* y */ y,
@@ -94,7 +94,7 @@ const handleContextMenu = (event) => {
   const x = event.clientX
   const y = event.clientY
   RendererWorker.send([
-    /* activityBarHandleContextMenu */ 8002,
+    /* activityBarHandleContextMenu */ 'ActivityBar.handleContextMenu',
     /* x */ x,
     /* y */ y,
   ])
@@ -161,10 +161,12 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
   if (oldIndex !== -1) {
     const $OldItem = $ActivityBar.children[oldIndex]
     $OldItem.tabIndex = -1
+    $OldItem.classList.remove('FocusOutline')
   }
   if (newIndex !== -1) {
     const $NewItem = $ActivityBar.children[newIndex]
     $NewItem.tabIndex = 0
+    $NewItem.classList.add('FocusOutline')
     focus$Item($NewItem)
   }
 }

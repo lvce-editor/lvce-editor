@@ -9,38 +9,44 @@ export const reload = async () => {
   }
   if (Platform.getPlatform() === 'electron') {
     // TODO should use invoke here
-    SharedProcess.send(/* Electron.windowReload */ 'Electron.windowReload')
+    await SharedProcess.invoke(
+      /* Electron.windowReload */ 'Electron.windowReload'
+    )
   }
 }
 
-export const minimize = () => {
+export const minimize = async () => {
   if (Platform.getPlatform() === 'web') {
     return
   }
-  SharedProcess.send(/* Electron.windowMinimize */ 'Electron.windowMinimize')
+  await SharedProcess.invoke(
+    /* Electron.windowMinimize */ 'Electron.windowMinimize'
+  )
 }
 
-export const maximize = () => {
+export const maximize = async () => {
   if (Platform.getPlatform() === 'web') {
     return
   }
-  SharedProcess.send(/* Electron.windowMaximize */ 'Electron.windowMaximize')
+  await SharedProcess.invoke(
+    /* Electron.windowMaximize */ 'Electron.windowMaximize'
+  )
 }
 
-export const unmaximize = () => {
+export const unmaximize = async () => {
   if (Platform.getPlatform() === 'web') {
     return
   }
-  SharedProcess.send(
+  await SharedProcess.invoke(
     /* Electron.windowUnmaximize */ 'Electron.windowUnMaximize'
   )
 }
 
-export const close = () => {
+export const close = async () => {
   if (Platform.getPlatform() === 'web') {
     return
   }
-  SharedProcess.send(/* Electron.windowClose */ 'Electron.windowClose')
+  await SharedProcess.invoke(/* Electron.windowClose */ 'Electron.windowClose')
 }
 
 export const exit = async () => {
@@ -48,7 +54,10 @@ export const exit = async () => {
 }
 
 export const setTitle = async (title) => {
-  await RendererProcess.invoke(/* Window.setTitle */ 8085, /* title */ title)
+  await RendererProcess.invoke(
+    /* Window.setTitle */ 'Window.setTitle',
+    /* title */ title
+  )
 }
 
 export const openNew = async () => {

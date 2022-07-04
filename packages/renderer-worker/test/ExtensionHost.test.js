@@ -34,7 +34,6 @@ test.skip('start', async () => {
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -104,7 +103,6 @@ test.skip('activateByEvent', async () => {
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -155,7 +153,6 @@ test.skip('activateByEvent - error', async () => {
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })

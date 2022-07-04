@@ -7,7 +7,7 @@ export const state = {
 export const create = async (type, text) => {
   state.notifications.push({ type, text })
   await RendererProcess.invoke(
-    /* Notification.create */ 991,
+    /* Notification.create */ 'Notification.create',
     /* type */ type,
     /* text */ text
   )
@@ -35,5 +35,8 @@ export const handleClick = (index) => {
 }
 
 export const dispose = async (id) => {
-  await RendererProcess.invoke(/* Notification.dispose */ 992, /* id */ id)
+  await RendererProcess.invoke(
+    /* Notification.dispose */ 'Notification.dispose',
+    /* id */ id
+  )
 }

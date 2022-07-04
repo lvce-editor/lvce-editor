@@ -38,7 +38,7 @@ test('copy - to self', async () => {
   const target = source
   await expect(FileSystem.copy(source, target)).rejects.toThrowError(
     new Error(
-      `Failed to copy "${source}" to "${target}": Source and destination must not be the same.`
+      `Failed to copy "${source}" to "${target}": Invalid src or dest: cp returned EINVAL (src and dest cannot be the same) ${source}`
     )
   )
 })

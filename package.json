@@ -7,16 +7,18 @@
   "scripts": {
     "postinstall": "lerna bootstrap --ci && node scripts/postinstall.js",
     "test": "lerna run test",
-    "dev": "nodemon"
+    "dev": "nodemon",
+    "e2e": "cd packages/e2e && npm run e2e",
+    "e2e:headless": "cd packages/e2e && npm run e2e:headless"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@types/jest": "^28.1.3",
+    "@types/jest": "^28.1.4",
     "@types/node": "^18.0.0",
-    "jest": "^28.1.1",
-    "jest-environment-jsdom": "^28.1.1",
+    "jest": "^28.1.2",
+    "jest-environment-jsdom": "^28.1.2",
     "lerna": "^5.1.6",
     "nodemon": "^2.0.18",
     "prettier": "^2.7.1",

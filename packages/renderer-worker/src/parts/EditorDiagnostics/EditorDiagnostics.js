@@ -49,12 +49,12 @@ export const runDiagnostics = async (editor) => {
   const visibleDiagnostics = getVisibleDiagnostics(editor, diagnostics)
   const scrollBarDiagnostics = getScrollBarDiagnostics(editor, diagnostics)
   // TODO only send visible diagnostics
-  RendererProcess.send([
+  await RendererProcess.invoke(
     /* Editor.renderDiagnostics */ 770,
     /* id */ editor.id,
     /* diagnostics */ visibleDiagnostics,
-    /* scrollBarDiagnostics */ scrollBarDiagnostics,
-  ])
+    /* scrollBarDiagnostics */ scrollBarDiagnostics
+  )
 }
 
 const runDiagnosticsAll = () => {

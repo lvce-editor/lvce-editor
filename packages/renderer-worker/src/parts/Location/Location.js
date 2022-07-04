@@ -1,16 +1,18 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const getPathName = () => {
-  return RendererProcess.invoke(/* Location.getPathName */ 5611)
+  return RendererProcess.invoke(
+    /* Location.getPathName */ 'Location.getPathName'
+  )
 }
 
 export const setPathName = (pathName) => {
   return RendererProcess.invoke(
-    /* Location.setPathName */ 5612,
+    /* Location.setPathName */ 'Location.setPathName',
     /* pathName */ pathName
   )
 }
 
 export const hydrate = () => {
-  return RendererProcess.invoke(/* Location.hydrate */ 5613)
+  return RendererProcess.invoke(/* Location.hydrate */ 'Location.hydrate')
 }

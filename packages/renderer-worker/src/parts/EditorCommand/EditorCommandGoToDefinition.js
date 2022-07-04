@@ -73,7 +73,10 @@ export const editorGoToDefinition = async (
     // TODO if definition.file is not of type string, show a popup that definition.file must be of type string
     // TODO open file and scroll to that position and set cursor to that position
 
-    await Command.execute(/* Main.openUri */ 97, /* uri */ definition.file)
+    await Command.execute(
+      /* Main.openUri */ 'Main.openUri',
+      /* uri */ definition.file
+    )
     return editor
   } catch (error) {
     // TODO if editor is already disposed at this point, do nothing

@@ -58,15 +58,15 @@ export const state = {
     printError(error)
     const enhancedErrorMessage = enhanceErrorMessage(error)
     await Command.execute(
-      /* Notification.create */ 900,
+      /* Notification.create */ 'Notification.create',
       /* type */ 'error',
-      /* text */ enhancedErrorMessage
+      /* text */ enhancedErrorMessage.message
     )
   },
   async showErrorDialog(error) {
     const enhancedErrorMessage = enhanceErrorMessage(error)
     await Command.execute(
-      /* Dialog.showErrorMessage */ 1494,
+      /* Dialog.showMessage */ 'Dialog.showMessage',
       /* message */ enhancedErrorMessage
     )
   },

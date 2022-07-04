@@ -4,7 +4,7 @@ export const getMenuEntries = () => {
       id: 'settings',
       label: 'Settings',
       flags: /* None */ 0,
-      command: /* Preferences.openSettingsJson */ 1200,
+      command: 'Preferences.openSettingsJson',
     },
     {
       id: 'keyboardShortcuts',
@@ -16,7 +16,7 @@ export const getMenuEntries = () => {
       id: 'colorTheme',
       label: 'Color Theme',
       flags: /* None */ 0,
-      command: /* QuickPick.openColorTheme */ 18925,
+      command: 'QuickPick.openColorTheme',
     },
     {
       id: 'checkForUpdates',

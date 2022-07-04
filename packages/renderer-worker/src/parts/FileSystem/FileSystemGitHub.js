@@ -23,7 +23,7 @@ export const readFile = async (protocol, path) => {
     throw new Error('unsupported encoding')
   }
   return Command.execute(
-    /* Base64.decode */ 7890,
+    /* Base64.decode */ 'Base64.decode',
     /* encoded */ githubFile.content
   )
 }

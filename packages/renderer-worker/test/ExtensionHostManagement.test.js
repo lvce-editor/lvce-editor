@@ -34,7 +34,6 @@ test.skip('activateExtension - called multiple times', async () => {
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })

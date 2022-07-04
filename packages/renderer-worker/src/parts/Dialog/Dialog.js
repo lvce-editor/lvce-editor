@@ -17,7 +17,10 @@ export const openFolder = async () => {
       /* Dialog.prompt */ 7833,
       /* message */ 'Choose path:'
     )
-    await Command.execute(/* Workspace.setPath */ 7633, /* path */ path)
+    await Command.execute(
+      /* Workspace.setPath */ 'Workspace.setPath',
+      /* path */ path
+    )
     return
   }
   const folders = await SharedProcess.invoke(
@@ -27,7 +30,10 @@ export const openFolder = async () => {
     return
   }
   const path = folders[0]
-  await Command.execute(/* Workspace.setPath */ 7633, /* path */ path)
+  await Command.execute(
+    /* Workspace.setPath */ 'Workspace.setPath',
+    /* path */ path
+  )
 }
 
 export const showAbout = async () => {
@@ -49,7 +55,6 @@ export const showMessage = async (message, options) => {
   if (!options) {
     options = ['Show Command Output', 'Cancel', 'Open Git Log']
   }
-  console.log({ message })
   state.dialog = {
     message,
     options,
@@ -71,7 +76,7 @@ export const showMessage = async (message, options) => {
     // state.dialog = undefined
   } else {
     await RendererProcess.invoke(
-      /* Dialog.showErrorDialogWithOptions */ 7835,
+      /* Dialog.showErrorDialogWithOptions */ 'Dialog.showErrorDialogWithOptions',
       /* message */ message,
       /* options */ options
     )
@@ -97,7 +102,7 @@ export const handleClick = async (index) => {
     case 'Show Command Output':
       await close()
       const uri = `data://${dialog.message.stderr}`
-      await Command.execute(/* Main.openUri */ 97, uri)
+      await Command.execute(/* Main.openUri */ 'Main.openUri', uri)
       // TODO show stderr in editor
       // TODO close dialog
       break

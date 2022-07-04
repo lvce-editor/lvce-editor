@@ -14,7 +14,7 @@ export const editorShowMessage = async (editor, position, message) => {
   const y = EditorPosition.y(editor, position)
   const displayErrorMessage = message
   await RendererProcess.invoke(
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'EditorText',
     /* method */ 'showOverlayMessage',
     /* x */ x,
@@ -25,6 +25,8 @@ export const editorShowMessage = async (editor, position, message) => {
     console.log('ran timeout fn')
     editorHideMessage(editor)
   }
+
+  // TODO use wrapper timing module instead of this
   // @ts-ignore
   state.timeout = setTimeout(handleTimeout, 3_000)
   return editor
@@ -34,7 +36,7 @@ export const editorHideMessage = async (editor) => {
   clearTimeout(state.timeout)
   state.timeout = -1
   await RendererProcess.invoke(
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'EditorText',
     /* method */ 'hideOverlayMessage'
   )

@@ -2,8 +2,27 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as Menu from '../src/parts/OldMenu/Menu2.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const Menu = await import('../src/parts/OldMenu/Menu2.js')
 
 const getTextContent = (node) => {
   return node.textContent
@@ -12,10 +31,6 @@ const getTextContent = (node) => {
 const getSimpleList = ($Menu) => {
   return Array.from($Menu.children).map(getTextContent)
 }
-
-afterEach(() => {
-  jest.restoreAllMocks()
-})
 
 test('show', () => {
   Menu.show(0, 0, 0, [
@@ -76,7 +91,8 @@ test('event - mousedown', () => {
       flags: 0,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const $MenuItemOne = Menu.state.$$Menus[0].firstChild
   $MenuItemOne.dispatchEvent(
     new Event('mousedown', {
@@ -84,7 +100,7 @@ test('event - mousedown', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([7403, 0, 0])
+  expect(RendererWorker.send).toHaveBeenCalledWith(['Menu.selectIndex', 0, 0])
 })
 
 test.skip('event - key - ArrowDown', () => {
@@ -94,13 +110,14 @@ test.skip('event - key - ArrowDown', () => {
       flags: 0,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Menu.state.$$Menus[0].dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowDown',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([958])
+  expect(RendererWorker.send).toHaveBeenCalledWith([958])
 })
 
 test.skip('event - key - ArrowUp', () => {
@@ -110,13 +127,14 @@ test.skip('event - key - ArrowUp', () => {
       flags: 0,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Menu.state.$Menu.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowUp',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([959])
+  expect(RendererWorker.send).toHaveBeenCalledWith([959])
 })
 
 test.skip('event - key - Enter', () => {
@@ -126,13 +144,14 @@ test.skip('event - key - Enter', () => {
       flags: 0,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Menu.state.$Menu.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Enter',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([960])
+  expect(RendererWorker.send).toHaveBeenCalledWith([960])
 })
 
 test.skip('event - key - Space', () => {
@@ -142,13 +161,14 @@ test.skip('event - key - Space', () => {
       flags: 0,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Menu.state.$Menu.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: ' ',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([961])
+  expect(RendererWorker.send).toHaveBeenCalledWith([961])
 })
 
 test.skip('event - key - Home', () => {
@@ -158,13 +178,14 @@ test.skip('event - key - Home', () => {
       flags: 0,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Menu.state.$Menu.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Home',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([962])
+  expect(RendererWorker.send).toHaveBeenCalledWith([962])
 })
 
 test.skip('event - key - End', () => {
@@ -174,13 +195,14 @@ test.skip('event - key - End', () => {
       flags: 0,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Menu.state.$Menu.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'End',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([963])
+  expect(RendererWorker.send).toHaveBeenCalledWith([963])
 })
 
 test.skip('event - key - Escape', () => {
@@ -190,13 +212,14 @@ test.skip('event - key - Escape', () => {
       flags: 0,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Menu.state.$Menu.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Escape',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([964])
+  expect(RendererWorker.send).toHaveBeenCalledWith([964])
 })
 
 test.skip('event - click - outside', () => {
@@ -210,14 +233,15 @@ test.skip('event - click - outside', () => {
       flags: 0,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Menu.state.$Menu.dispatchEvent(
     new Event('mousedown', {
       bubbles: true,
       cancelable: true,
     })
   )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test.skip('adjust position when it is near edge of screen', () => {

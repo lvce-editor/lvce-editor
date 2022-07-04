@@ -1,6 +1,24 @@
 import { jest } from '@jest/globals'
-import * as QuickPick from '../src/parts/QuickPick/QuickPick.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+const QuickPick = await import('../src/parts/QuickPick/QuickPick.js')
 
 const mockProvider = {
   name: 'mock',
@@ -54,33 +72,18 @@ afterEach(() => {
 })
 
 test('show', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3024:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await QuickPick.show('', mockProvider)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
-    /* QuickPick.hydrate */ 909090,
-    3,
-    3030,
-    'QuickPick',
-  ])
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
-    3024,
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
+    'Viewlet.load',
+    'QuickPick'
+  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
+    'Viewlet.send',
     'QuickPick',
     'updateValueAndPicksAndPlaceholder',
     '',
@@ -99,46 +102,30 @@ test('show', async () => {
     0,
     -1,
     'mock placeholder',
-    '',
-  ])
+    ''
+  )
 })
 
 test('show called twice', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3024:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   const promise1 = QuickPick.show('', mockProvider)
   const promise2 = QuickPick.show('', mockProvider)
   await Promise.all([promise1, promise2])
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(3)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
-    909090,
-    expect.any(Number),
-    3030,
-    'QuickPick',
-  ])
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
-    3030,
-    'QuickPick',
-  ])
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(3, [
-    3024,
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
+    'Viewlet.load',
+    'QuickPick'
+  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
+    'Viewlet.load',
+    'QuickPick'
+  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    3,
+    'Viewlet.send',
     'QuickPick',
     'updateValueAndPicksAndPlaceholder',
     '',
@@ -149,8 +136,8 @@ test('show called twice', async () => {
     0,
     -1,
     'mock placeholder',
-    '',
-  ])
+    ''
+  )
 })
 
 test('show - item with missing value', async () => {
@@ -196,24 +183,8 @@ test('show - item with missing value', async () => {
       return ''
     },
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3024:
-      case 3026:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await QuickPick.show('', mockProvider)
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith('[QuickPick] item has missing label', {
@@ -224,199 +195,90 @@ test('show - item with missing value', async () => {
 })
 
 test('dispose', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3024:
-      case 3026:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await QuickPick.show('', mockProvider)
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3024:
-      case 3026:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   QuickPick.dispose()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    /* Viewlet.dispose */ 3026,
-    /* id */ 'QuickPick',
-  ])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    /* Viewlet.dispose */ 'Viewlet.dispose',
+    /* id */ 'QuickPick'
+  )
 })
 
 test('select', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3024:
-      case 3026:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
-
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await QuickPick.show('', mockProvider)
   QuickPick.state.recentPicks = []
   QuickPick.state.filteredPicks = [
     {
+      // @ts-ignore
       label: 'test item 1',
     },
   ]
   await QuickPick.selectIndex(0)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    /* Viewlet.dispose */ 3026,
-    /* id */ 'QuickPick',
-  ])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    /* Viewlet.dispose */ 'Viewlet.dispose',
+    /* id */ 'QuickPick'
+  )
 })
 
 test('focusFirst', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3024:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
-
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await QuickPick.focusFirst()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    /* Viewlet.send */ 3024,
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'QuickPick',
     /* method */ 'focusIndex',
     0,
-    0,
-  ])
+    0
+  )
 })
 
 test('focusLast', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3024:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
-
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await QuickPick.focusLast()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    /* Viewlet.send */ 3024,
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'QuickPick',
     'focusIndex',
     0,
-    0,
-  ])
+    0
+  )
 })
 
 test('focusPrevious', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3024:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
-
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await QuickPick.focusPrevious()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    /* Viewlet.send */ 3024,
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'QuickPick',
     /* method */ 'focusIndex',
     0,
-    0,
-  ])
+    0
+  )
 })
 
 test('focusNext', async () => {
-  // TODO focused state should be in renderer-worker, not in renderer-process
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3024:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
-
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await QuickPick.focusNext()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    /* Viewlet.send */ 3024,
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    /* Viewlet.send */ 'Viewlet.send',
     'QuickPick',
     'focusIndex',
     0,
-    0,
-  ])
+    0
+  )
 })
 
 test('show - twice', async () => {
@@ -502,28 +364,12 @@ test('show - twice', async () => {
       return ''
     },
   }
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3024:
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message (3)')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await QuickPick.show('', mockProvider1)
-
   await QuickPick.show('', mockProvider2)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    3024,
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Viewlet.send',
     'QuickPick',
     'updateValueAndPicksAndPlaceholder',
     '',
@@ -542,6 +388,6 @@ test('show - twice', async () => {
     0,
     0,
     'mock placeholder 2',
-    '',
-  ])
+    ''
+  )
 })

@@ -38,6 +38,7 @@ export const state = {
   titleBarVisible: true,
   windowWidth: 0,
   windowHeight: 0,
+  sashId: '',
 }
 
 const SIDE_BAR_MIN_WIDTH = 170
@@ -142,9 +143,12 @@ export const getPoints = (layout, bounds) => {
 export const updateLayout = async (layout) => {
   const points = getPoints(layout, state)
   Object.assign(state, points)
-  RendererProcess.invoke(/* Layout.update */ 1100, /* points */ points)
+  RendererProcess.invoke(
+    /* Layout.update */ 'Layout.update',
+    /* points */ points
+  )
   await Command.execute(
-    /* LocalStorage.setJson */ 6901,
+    /* LocalStorage.setJson */ 'LocalStorage.setJson',
     /* key */ 'layout',
     /* value */ state
   )
@@ -336,13 +340,13 @@ export const toggleTitleBar = async () => {
 }
 
 const getBounds = async () => {
-  return RendererProcess.invoke(/* Layout.getBounds */ 1111)
+  return RendererProcess.invoke(/* Layout.getBounds */ 'Layout.getBounds')
 }
 
 const getInitialLayout = async () => {
   // TODO this is very similar to state
   const cachedLayout = await Command.execute(
-    /* LocalStorage.getItem */ 6902,
+    /* LocalStorage.getJson */ 'LocalStorage.getJson',
     /* key */ 'layout'
   )
   if (cachedLayout) {
@@ -356,7 +360,10 @@ export const hydrate = async () => {
   const initialLayout = await getInitialLayout()
   const points = getPoints(initialLayout, windowBounds)
   Object.assign(state, points)
-  await RendererProcess.invoke(/* Layout.show */ 1109, /* points */ points)
+  await RendererProcess.invoke(
+    /* Layout.show */ 'Layout.show',
+    /* points */ points
+  )
 }
 
 const isChild = (id) => {
@@ -369,25 +376,50 @@ const isChild = (id) => {
   )
 }
 
+export const handleSashPointerDown = (id) => {
+  state.sashId = id
+  console.log({ id })
+}
+
 // TODO make this functional
-export const handleSashSideBarMove = async (x) => {
-  const newSideBarWidth = state.windowWidth - state.activityBarWidth - x
-  if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH / 2) {
-    state.sideBarVisible = false
-    state.mainWidth = state.windowWidth - state.activityBarWidth
-  } else if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH) {
-    state.sideBarVisible = true
-    state.sideBarWidth = SIDE_BAR_MIN_WIDTH
-    state.mainWidth =
-      state.windowWidth - state.activityBarWidth - SIDE_BAR_MIN_WIDTH
-    state.sideBarLeft =
-      state.windowWidth - state.activityBarWidth - SIDE_BAR_MIN_WIDTH
-  } else {
-    state.sideBarVisible = true
-    state.mainWidth = x
-    state.sideBarLeft = x
-    state.sideBarWidth = newSideBarWidth
+export const handleSashPointerMove = async (x, y) => {
+  if (state.sashId === 'SideBar') {
+    const newSideBarWidth = state.windowWidth - state.activityBarWidth - x
+    if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH / 2) {
+      state.sideBarVisible = false
+      state.mainWidth = state.windowWidth - state.activityBarWidth
+    } else if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH) {
+      state.sideBarVisible = true
+      state.sideBarWidth = SIDE_BAR_MIN_WIDTH
+      state.mainWidth =
+        state.windowWidth - state.activityBarWidth - SIDE_BAR_MIN_WIDTH
+      state.sideBarLeft =
+        state.windowWidth - state.activityBarWidth - SIDE_BAR_MIN_WIDTH
+    } else {
+      state.sideBarVisible = true
+      state.mainWidth = x
+      state.sideBarLeft = x
+      state.sideBarWidth = newSideBarWidth
+    }
+  } else if (state.sashId === 'Panel') {
+    const newPanelHeight = state.windowHeight - state.statusBarHeight - y
+    if (newPanelHeight < PANEL_MIN_HEIGHT / 2) {
+      state.panelVisible = false
+      state.mainHeight =
+        state.windowHeight - state.statusBarHeight - state.titleBarHeight
+    } else if (newPanelHeight <= PANEL_MIN_HEIGHT) {
+      state.panelVisible = true
+      state.panelHeight = PANEL_MIN_HEIGHT
+      state.mainHeight =
+        state.windowHeight - state.activityBarHeight - PANEL_MIN_HEIGHT
+    } else {
+      state.panelVisible = true
+      state.mainHeight = y - state.titleBarHeight
+      state.panelTop = y
+      state.panelHeight = state.windowHeight - state.statusBarHeight - y
+    }
   }
+
   await updateLayout(state)
 }
 
@@ -395,7 +427,10 @@ export const handleSashSideBarMove = async (x) => {
 export const handleResize = async (bounds) => {
   const points = getPoints(state, bounds)
   Object.assign(state, points)
-  await RendererProcess.invoke(/* Layout.update */ 1100, /* points */ points)
+  await RendererProcess.invoke(
+    /* Layout.update */ 'Layout.update',
+    /* points */ points
+  )
   const ids = ['Main', 'ActivityBar', 'SideBar', 'TitleBar', 'StatusBar']
   const resizeInstance = (id) => {
     const dimensions = getDimensions(state, id)
@@ -407,6 +442,6 @@ export const handleResize = async (bounds) => {
   }
   // TODO send the whole batch at once
   for (const command of commands) {
-    RendererProcess.send(command)
+    RendererProcess.invoke(...command)
   }
 }

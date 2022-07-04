@@ -1,342 +1,45 @@
-import { readdir, readFile } from 'fs/promises'
-import { platform } from 'os'
+import { existsSync } from 'fs'
+import * as Hash from '../Hash/Hash.js'
+import * as Path from '../Path/Path.js'
+import * as ReadFile from '../ReadFile/ReadFile.js'
+import * as Copy from '../Copy/Copy.js'
+import * as Remove from '../Remove/Remove.js'
+import * as Replace from '../Replace/Replace.js'
+import * as Product from '../Product/Product.js'
+import * as Platform from '../Platform/Platform.js'
+import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleJs from '../BundleJs/BundleJs.js'
-import * as CommitHash from '../CommitHash/CommitHash.js'
-import * as Copy from '../Copy/Copy.js'
-import * as Path from '../Path/Path.js'
-import * as Product from '../Product/Product.js'
-import * as ReadFile from '../ReadFile/ReadFile.js'
-import * as Rename from '../Rename/Rename.js'
-import * as Replace from '../Replace/Replace.js'
-import * as Tag from '../Tag/Tag.js'
+import * as BundleRendererProcess from '../BundleRendererProcess/BundleRendererProcess.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
-import * as Platform from '../Platform/Platform.js'
-import * as JsonFile from '../JsonFile/JsonFile.js'
-import { existsSync } from 'fs'
+import * as Rename from '../Rename/Rename.js'
 
-// TODO cache -> use newest timestamp from files excluding node_modules and build/.tmp
-
-const copyStaticFiles = async () => {
-  await Copy.copy({
-    from: 'static',
-    to: `build/.tmp/bundle/electron/static`,
-    ignore: ['css'],
-  })
+const getDependencyCacheHash = async () => {
+  const files = [
+    'packages/main-process/package-lock.json',
+    'packages/shared-process/package-lock.json',
+    'packages/pty-host/package-lock.json',
+    'packages/extension-host/package-lock.json',
+    'build/src/parts/BundleElectronApp/BundleElectronApp.js',
+    'build/src/parts/BundleElectronAppDependencies/BundleElectronAppDependencies.js',
+    'build/src/parts/BundleExtensionHostDependencies/BundleExtensionHostDependencies.js',
+    'build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.js',
+    'build/src/parts/BundlePtyHostDependencies/BundlePtyHostDependencies.js',
+    'build/src/parts/BundleMainProcessDependencies/BundleMainProcessDependencies.js',
+    'build/src/parts/NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js',
+    'build/src/parts/NpmDependencies/NpmDependencies.js',
+  ]
+  const absolutePaths = files.map(Path.absolute)
+  const contents = await Promise.all(absolutePaths.map(ReadFile.readFile))
+  const hash = Hash.computeHash(contents)
+  return hash
 }
 
-const isLanguageBasics = (name) => {
-  return name.startsWith('builtin.language-basics')
-}
-
-const readExtensionJsonFile = async (extension) => {
-  const absolutePath = Path.absolute(`extensions/${extension}/extension.json`)
-  const content = await readFile(absolutePath, 'utf-8')
-  return content
-}
-
-const getLanguages = (content) => {
-  const json = JSON.parse(content)
-  const languages = json.languages || []
-  return languages
-}
-const getLanguageBasicsNames = async () => {
-  const extensionPath = Path.absolute('extensions')
-  const extensions = await readdir(extensionPath)
-  const languageBasics = extensions.filter(isLanguageBasics)
-  return languageBasics
-}
-
-const copyLanguageBasicsExtensions = async () => {
-  const languageBasics = await getLanguageBasicsNames()
-  for (const languageBasic of languageBasics) {
-    await Copy.copy({
-      from: `extensions/${languageBasic}`,
-      to: `build/.tmp/bundle/electron/extensions/${languageBasic}`,
-      ignore: [
-        'benchmark',
-        'test',
-        'package.json',
-        'package-lock.json',
-        'tsconfig.json',
-        '.tmp',
-      ],
-    })
-  }
-}
-
-const isTheme = (extensionName) => {
-  return extensionName.startsWith('builtin.theme')
-}
-
-const getThemeName = (extensionName) => {
-  return extensionName.slice('builtin.theme-'.length)
-}
-
-const copyThemeExtensions = async () => {
-  const allExtensions = await readdir(Path.absolute('extensions'))
-  const themeExtensions = allExtensions.filter(isTheme)
-  const themes = themeExtensions.map(getThemeName)
-  for (const theme of themes) {
-    await Copy.copy({
-      from: `extensions/builtin.theme-${theme}`,
-      to: `build/.tmp/bundle/electron/extensions/builtin.theme-${theme}`,
-    })
-  }
-}
-
-const copyIconThemeExtensions = async () => {
-  // await Copy.copy({
-  //   from: 'extensions/builtin.vscode-icons',
-  //   to: 'build/.tmp/bundle/electron/extensions/builtin.vscode-icons',
-  //   ignore: [
-  //     'node_modules',
-  //     'scripts',
-  //     'package.json',
-  //     'package-lock.json',
-  //     'tsconfig.json',
-  //     '.tmp',
-  //   ],
-  // })
-}
-
-const copyLanguageFeaturesExtensions = async () => {
-  // for (const languageId of ['css', 'html', 'typescript']) {
-  //   await Copy.copy({
-  //     from: `extensions/builtin.language-features-${languageId}`,
-  //     to: `build/.tmp/bundle/electron/extensions/builtin.language-features-${languageId}`,
-  //   })
-  // }
-}
-
-const copyOtherExtensions = async () => {
-  // for (const extension of [
-  //   'css-lint',
-  //   'eslint',
-  //   'git',
-  //   'gitignore',
-  //   'prettier',
-  //   'self-test',
-  // ]) {
-  //   await Copy.copy({
-  //     from: `extensions/builtin.${extension}`,
-  //     to: `build/.tmp/bundle/electron/extensions/builtin.${extension}`,
-  //   })
-  // }
-}
-
-const copyExtensions = async () => {
-  await copyLanguageBasicsExtensions()
-  await copyThemeExtensions()
-  await copyIconThemeExtensions()
-  await copyLanguageFeaturesExtensions()
-  await copyOtherExtensions()
-}
-
-const copyCode = async () => {
-  await Copy.copyFile({
-    from: 'packages/main-process/package.json',
-    to: `build/.tmp/bundle/electron/packages/main-process/package.json`,
-  })
-  await Copy.copy({
-    from: 'packages/main-process/src',
-    to: `build/.tmp/bundle/electron/packages/main-process/src`,
-  })
-  await Copy.copy({
-    from: 'packages/main-process/pages',
-    to: `build/.tmp/bundle/electron/packages/main-process/pages`,
-  })
-  await Copy.copyFile({
-    from: 'packages/pty-host/package.json',
-    to: `build/.tmp/bundle/electron/packages/pty-host/package.json`,
-  })
-  await Copy.copy({
-    from: 'packages/pty-host/src',
-    to: `build/.tmp/bundle/electron/packages/pty-host/src`,
-  })
-  await Copy.copyFile({
-    from: 'packages/web/package.json',
-    to: `build/.tmp/bundle/electron/packages/web/package.json`,
-  })
-  await Copy.copy({
-    from: 'packages/web/src',
-    to: `build/.tmp/bundle/electron/packages/web/src`,
-  })
-  await Copy.copy({
-    from: 'packages/web/bin',
-    to: `build/.tmp/bundle/electron/packages/web/bin`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/bundle/electron/packages/web/bin/web.js`,
-    occurrence: '#!/usr/bin/env node',
-    replacement: '',
-  })
-  await Copy.copyFile({
-    from: 'packages/shared-process/package.json',
-    to: `build/.tmp/bundle/electron/packages/shared-process/package.json`,
-  })
-  await Copy.copy({
-    from: 'packages/shared-process/src',
-    to: `build/.tmp/bundle/electron/packages/shared-process/src`,
-  })
-  await Copy.copy({
-    from: 'packages/shared-process/bin',
-    to: `build/.tmp/bundle/electron/packages/shared-process/bin`,
-  })
-  await Copy.copyFile({
-    from: 'packages/renderer-process/package.json',
-    to: `build/.tmp/bundle/electron/packages/renderer-process/package.json`,
-  })
-  await Copy.copy({
-    from: 'packages/renderer-process/src',
-    to: `build/.tmp/bundle/electron/packages/renderer-process/src`,
-  })
-  await Copy.copyFile({
-    from: 'packages/renderer-worker/package.json',
-    to: `build/.tmp/bundle/electron/packages/renderer-worker/package.json`,
-  })
-  await Copy.copy({
-    from: 'packages/renderer-worker/src',
-    to: `build/.tmp/bundle/electron/packages/renderer-worker/src`,
-  })
-  await Copy.copyFile({
-    from: 'packages/extension-host/package.json',
-    to: `build/.tmp/bundle/electron/packages/extension-host/package.json`,
-  })
-  await Copy.copy({
-    from: 'packages/extension-host/src',
-    to: `build/.tmp/bundle/electron/packages/extension-host/src`,
-  })
-}
-
-const bundleJs = async () => {
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/bundle/electron/packages/main-process`),
-    from: `./src/mainProcessMain.js`,
-    platform: 'node/cjs',
-    exclude: [
-      'electron',
-      'fsevents',
-      'windows-process-tree', // native module
-    ],
-  })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/bundle/electron/packages/pty-host`),
-    from: `./src/ptyHostMain.js`,
-    platform: 'node/cjs',
-    exclude: [
-      'node-pty', // native module
-      'fsevents',
-    ],
-  })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/bundle/electron/packages/shared-process`),
-    from: `./src/sharedProcessMain.js`,
-    platform: 'node',
-    exclude: [
-      'vscode-ripgrep-with-github-api-error-fix', // must include binary
-      'fsevents', // results in error
-      '@stroncium/procfs', // results in error
-      'electron-clipboard-ex', // must include binary
-    ],
-  })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/bundle/electron/packages/extension-host`),
-    from: `./src/extensionHostMain.js`,
-    platform: 'node',
-  })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/bundle/electron/packages/renderer-process`),
-    from: `./src/rendererProcessMain.js`,
-    platform: 'web',
-  })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(`build/.tmp/bundle/electron/packages/renderer-worker`),
-    from: `./src/rendererWorkerMain.js`,
-    platform: 'webworker',
-  })
-
-  // await BundleJs.bundleJs({
-  //   cwd: Path.absolute(
-  //     `build/.tmp/bundle/electron/extensions/builtin.language-features-typescript`
-  //   ),
-  //   from: `./src/languageFeaturesTypeScriptMain.js`,
-  //   platform: 'node',
-  // })
-  // await BundleJs.bundleJs({
-  //   cwd: Path.absolute(
-  //     `build/.tmp/bundle/electron/extensions/builtin.language-features-css`
-  //   ),
-  //   from: `./src/languageFeaturesCssMain.js`,
-  //   platform: 'node',
-  // })
-  // await BundleJs.bundleJs({
-  //   cwd: Path.absolute(
-  //     `build/.tmp/bundle/electron/extensions/builtin.language-features-html`
-  //   ),
-  //   from: `./src/languageFeaturesHtmlMain.js`,
-  //   platform: 'node',
-  // })
-  // await BundleJs.bundleJs({
-  //   cwd: Path.absolute(
-  //     `build/.tmp/bundle/electron/extensions/builtin.self-test`
-  //   ),
-  //   from: `./src/parts/SelfTest/SelfTest.js`,
-  //   platform: 'node',
-  // })
-  // await BundleJs.bundleJs({
-  //   cwd: Path.absolute(
-  //     `build/.tmp/bundle/electron/extensions/builtin.prettier`
-  //   ),
-  //   from: `./src/prettierMain.js`,
-  //   platform: 'node',
-  // })
-  // await BundleJs.bundleJs({
-  //   cwd: Path.absolute(`build/.tmp/bundle/electron/extensions/builtin.eslint`),
-  //   from: `./src/eslintMain.js`,
-  //   platform: 'node',
-  // })
-
-  // const esBuildPath = Path.absolute('build/node_modules/esbuild/bin/esbuild')
-  // console.log({ esBuildPath })
-  // await Exec.exec(
-  //   esBuildPath,
-  //   [
-  //     // 'packages/main-process/src/mainProcessMain.cjs',
-  //     '--version',
-  //     // '--bundle',
-  //     // '--outfile=out.js',
-  //   ],
-  //   {
-  //     cwd: `build/.tmp/bundle/electron`,
-  //   }
-  // )
-}
-
-const copyNodeModules = async () => {
-  await Copy.copy({
-    from: 'packages/main-process/node_modules',
-    to: `build/.tmp/bundle/electron/packages/main-process/node_modules`,
-  })
-  await Copy.copy({
-    from: 'packages/pty-host/node_modules',
-    to: `build/.tmp/bundle/electron/packages/pty-host/node_modules`,
-  })
-  await Copy.copy({
-    from: 'packages/shared-process/node_modules',
-    to: `build/.tmp/bundle/electron/packages/shared-process/node_modules`,
-  })
-  await Copy.copy({
-    from: 'packages/extension-host/node_modules',
-    to: `build/.tmp/bundle/electron/packages/extension-host/node_modules`,
-  })
-}
-
-const copyElectron = async (arch) => {
+const copyElectron = async ({ arch }) => {
   const electronPath = `packages/main-process/node_modules/electron/dist`
   await Copy.copy({
     from: electronPath,
-    to: `build/.tmp/bundle/electron-result`,
+    to: `build/.tmp/electron-bundle/${arch}`,
     ignore: [
       // TODO still include en locale, but exclude other locales
       // 'locales',
@@ -347,198 +50,62 @@ const copyElectron = async (arch) => {
 
   if (Platform.isWindows()) {
     await Rename.rename({
-      from: `build/.tmp/bundle/electron-result/electron.exe`,
-      to: `build/.tmp/bundle/electron-result/${Product.applicationName}.exe`,
+      from: `build/.tmp/electron-bundle/${arch}/electron.exe`,
+      to: `build/.tmp/electron-bundle/${arch}/${Product.applicationName}.exe`,
     })
   } else if (Platform.isMacos()) {
     await Rename.rename({
-      from: `build/.tmp/bundle/electron-result/Electron.app`,
-      to: `build/.tmp/bundle/electron-result/${Product.applicationName}.app`,
+      from: `build/.tmp/electron-bundle/${arch}/Electron.app`,
+      to: `build/.tmp/electron-bundle/${arch}/${Product.applicationName}.app`,
     })
   } else {
     await Rename.rename({
-      from: `build/.tmp/bundle/electron-result/electron`,
-      to: `build/.tmp/bundle/electron-result/${Product.applicationName}`,
+      from: `build/.tmp/electron-bundle/${arch}/electron`,
+      to: `build/.tmp/electron-bundle/${arch}/${Product.applicationName}`,
     })
   }
 }
 
-const getNodePtyIgnoreFiles = () => {
-  const files = ['typings', 'README.md', 'scripts']
-  if (!Platform.isWindows) {
-    files.push('deps')
-  }
-  return files
+const copyDependencies = async ({ cachePath, arch }) => {
+  await Copy.copy({
+    from: cachePath,
+    to: `build/.tmp/electron-bundle/${arch}/resources/app`,
+  })
 }
 
-const getWindowsProcessTreeIgnoreFiles = () => {
-  return []
+const copySharedProcessSources = async ({ arch }) => {
+  await Copy.copy({
+    from: 'packages/shared-process/src',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src`,
+  })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src/parts/Platform/Platform.js`,
+    occurrence: `getApplicationName() {
+  return 'lvce-oss'
+}`,
+    replacement: `getApplicationName() {
+  return '${Product.applicationName}'
+}`,
+  })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src/parts/Platform/Platform.js`,
+    occurrence: `import { extensionHostPath } from '@lvce-editor/extension-host'\n`,
+    replacement: '',
+  })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src/parts/Platform/Platform.js`,
+    occurrence: `export const getExtensionHostPath = () => {
+  return extensionHostPath
+}`,
+    replacement: `export const getExtensionHostPath = () => {
+  return Path.join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
+}`,
+  })
 }
 
-const copyResults = async () => {
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/main-process/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/main-process/src`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/main-process/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/main-process/dist`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/main-process/pages`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/main-process/pages`,
-  })
-  const ptyHostPackageJson = await JsonFile.readJson(
-    'packages/pty-host/package.json'
-  )
-  await JsonFile.writeJson({
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/pty-host/package.json`,
-    value: {
-      name: ptyHostPackageJson.name,
-      type: ptyHostPackageJson.type,
-      dependencies: ptyHostPackageJson.dependencies,
-    },
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/pty-host/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/pty-host/src`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/pty-host/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/pty-host/dist`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/pty-host/node_modules/node-pty`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/pty-host/node_modules/node-pty`,
-    ignore: getNodePtyIgnoreFiles(),
-  })
-  if (process.platform === 'win32') {
-    await Copy.copy({
-      from: `build/.tmp/bundle/electron/packages/main-process/node_modules/nan`,
-      to: `build/.tmp/bundle/electron-result/resources/app/packages/main-process/node_modules/nan`,
-      ignore: getWindowsProcessTreeIgnoreFiles(),
-    })
-    await Copy.copy({
-      from: `build/.tmp/bundle/electron/packages/main-process/node_modules/windows-process-tree`,
-      to: `build/.tmp/bundle/electron-result/resources/app/packages/main-process/node_modules/windows-process-tree`,
-      ignore: getWindowsProcessTreeIgnoreFiles(),
-    })
-  }
-  const extensionHostPackageJson = await JsonFile.readJson(
-    'packages/extension-host/package.json'
-  )
-  await JsonFile.writeJson({
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/extension-host/package.json`,
-    value: {
-      name: extensionHostPackageJson.name,
-      type: extensionHostPackageJson.type,
-      dependencies: extensionHostPackageJson.dependencies,
-    },
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/extension-host/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/extension-host/src`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/extension-host/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/extension-host/dist`,
-  })
-  const sharedProcessPackageJson = await JsonFile.readJson(
-    'packages/shared-process/package.json'
-  )
-  await JsonFile.writeJson({
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/package.json`,
-    value: {
-      name: sharedProcessPackageJson.name,
-      type: sharedProcessPackageJson.type,
-      dependencies: sharedProcessPackageJson.dependencies,
-    },
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/shared-process/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/src`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/shared-process/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/dist`,
-  })
-
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/bin`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/bin`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/src`,
-  })
-  await Copy.copyFile({
-    from: `build/.tmp/bundle/electron/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/package.json`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix/package.json`,
-  })
-
-  if (
-    existsSync(
-      `build/.tmp/bundle/electron/packages/shared-process/node_modules/electron-clipboard-ex`
-    )
-  ) {
-    await Copy.copy({
-      from: `build/.tmp/bundle/electron/packages/shared-process/node_modules/electron-clipboard-ex`,
-      to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/node_modules/electron-clipboard-ex`,
-    })
-  }
-
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/shared-process/node_modules/@stroncium/procfs`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/shared-process/node_modules/@stroncium/procfs`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/renderer-process/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/renderer-process/src`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/renderer-process/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/renderer-process/dist`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/renderer-worker/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/renderer-worker/src`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/renderer-worker/dist`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/renderer-worker/dist`,
-  })
-  const webPackageJson = await JsonFile.readJson('packages/web/package.json')
-  await JsonFile.writeJson({
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/web/package.json`,
-    value: {
-      name: webPackageJson.name,
-      type: webPackageJson.type,
-      dependencies: webPackageJson.dependencies,
-    },
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/web/src`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/web/src`,
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/packages/web/bin`,
-    to: `build/.tmp/bundle/electron-result/resources/app/packages/web/bin`,
-  })
-  await JsonFile.writeJson({
-    to: `build/.tmp/bundle/electron-result/resources/app/package.json`,
-    value: {
-      main: 'packages/main-process/dist/mainProcessMain.js',
-      name: Product.applicationName,
-      productName: Product.nameLong,
-      version: Product.version,
-    },
-  })
-  await Copy.copy({
-    from: `build/.tmp/bundle/electron/static`,
-    to: `build/.tmp/bundle/electron-result/resources/app/static`,
-  })
+const copyPlaygroundFiles = async ({ arch }) => {
   await WriteFile.writeFile({
-    to: 'build/.tmp/bundle/electron-result/resources/app/playground/index.html',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/playground/index.html`,
     content: `<!DOCTYPE html>
 <html>
   <head>
@@ -553,262 +120,22 @@ const copyResults = async () => {
 `,
   })
   await WriteFile.writeFile({
-    to: 'build/.tmp/bundle/electron-result/resources/app/playground/index.css',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/playground/index.css`,
     content: `h1 { color: dodgerblue; }`,
   })
-  for (const dirent of await readdir(
-    Path.absolute(`build/.tmp/bundle/electron/extensions`)
-  )) {
-    if (isLanguageBasics(dirent)) {
-      await Copy.copy({
-        from: `build/.tmp/bundle/electron/extensions/${dirent}`,
-        to: `build/.tmp/bundle/electron-result/resources/app/extensions/${dirent}`,
-      })
-    }
-  }
-  // await Copy.copy({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-css/dist`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/dist`,
-  // })
-  // await Copy.copy({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-css/src`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/src`,
-  // })
-  // await Copy.copy({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-css/data`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/data`,
-  // })
-  // const languageFeaturesCssPackageJson = await JsonFile.readJson(
-  //   'extensions/builtin.language-features-css/package.json'
-  // )
-  // await JsonFile.writeJson({
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/package.json`,
-  //   value: {
-  //     name: languageFeaturesCssPackageJson.name,
-  //     type: languageFeaturesCssPackageJson.type,
-  //     dependencies: languageFeaturesCssPackageJson.dependencies,
-  //   },
-  // })
-  // await Copy.copyFile({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-css/README.md`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/README.md`,
-  // })
-  // await Copy.copyFile({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-css/extension.json`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-css/extension.json`,
-  // })
-  // await Copy.copy({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-html/dist`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/dist`,
-  // })
-  // await Copy.copy({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-html/src`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/src`,
-  // })
-  // await Copy.copy({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-html/data`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/data`,
-  // })
-  // const languageFeaturesHtmlPackageJson = await JsonFile.readJson(
-  //   'extensions/builtin.language-features-html/package.json'
-  // )
-  // await JsonFile.writeJson({
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/package.json`,
-  //   value: {
-  //     name: languageFeaturesHtmlPackageJson.name,
-  //     type: languageFeaturesHtmlPackageJson.type,
-  //     dependencies: languageFeaturesHtmlPackageJson.dependencies,
-  //   },
-  // })
-  // await Copy.copyFile({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-html/README.md`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/README.md`,
-  // })
-  // await Copy.copyFile({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-html/extension.json`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-html/extension.json`,
-  // })
-  // await Copy.copy({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.self-test/dist`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.self-test/dist`,
-  // })
-  // await Copy.copy({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.self-test/src`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.self-test/src`,
-  // })
-  // const selfTestPackageJson = await JsonFile.readJson(
-  //   'extensions/builtin.self-test/package.json'
-  // )
-  // await JsonFile.writeJson({
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.self-test/package.json`,
-  //   value: {
-  //     name: selfTestPackageJson.name,
-  //     type: selfTestPackageJson.type,
-  //     dependencies: selfTestPackageJson.dependencies,
-  //   },
-  // })
-  // await Copy.copyFile({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.self-test/README.md`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.self-test/README.md`,
-  // })
-  // await Copy.copyFile({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.self-test/extension.json`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.self-test/extension.json`,
-  // })
-  // await Copy.copy({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/dist`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/dist`,
-  // })
-  // await Copy.copy({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/src`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/src`,
-  // })
-  // const packageJson = await JsonFile.readJson('package.json')
-  // const languageFeaturesTypeScriptPackageJson = await JsonFile.readJson(
-  //   'extensions/builtin.language-features-typescript/package.json'
-  // )
-  // await JsonFile.writeJson({
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/package.json`,
-  //   value: {
-  //     name: languageFeaturesTypeScriptPackageJson.name,
-  //     type: languageFeaturesTypeScriptPackageJson.type,
-  //     dependencies: {
-  //       ...languageFeaturesTypeScriptPackageJson.dependencies,
-  //       typescript: packageJson.devDependencies.typescript,
-  //     },
-  //   },
-  // })
-  // await Copy.copyFile({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/README.md`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/README.md`,
-  // })
-  // await Copy.copyFile({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/extension.json`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/extension.json`,
-  // })
-  // await Copy.copyFile({
-  //   from: `node_modules/typescript/package.json`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/node_modules/typescript/package.json`,
-  // })
-  // await Copy.copy({
-  //   from: `node_modules/typescript/lib`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.language-features-typescript/node_modules/typescript/lib`,
-  //   ignore: [
-  //     // ignoring these files reduces size from 61.3MB to 12.1MB
-  //     'tsc.js',
-  //     'tsserverlibrary.js',
-  //     'tsserverlibrary.d.ts',
-  //     'typescript.js',
-  //     'typescript.d.ts',
-  //     'typescriptServices.js',
-  //     'typescriptServices.d.ts',
-  //     'typesMap.json',
-  //     'typingsInstaller.js',
-  //     'README.md',
-  //     'protocol.d.ts',
-  //     'cs',
-  //     'de',
-  //     'es',
-  //     'fr',
-  //     'it',
-  //     'ja',
-  //     'ko',
-  //     'pl',
-  //     'pt-br',
-  //     'ru',
-  //     'tr',
-  //     'zh-cn',
-  //     'zh-tw',
-  //   ],
-  // })
+}
+
+const copyMainProcessSources = async ({ arch }) => {
   await Copy.copy({
-    from: `build/.tmp/bundle/electron/extensions/builtin.theme-slime`,
-    to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.theme-slime`,
+    from: 'packages/main-process/src',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src`,
   })
-  // await Copy.copy({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.vscode-icons`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.vscode-icons`,
-  // })
-  // await Copy.copy({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.prettier`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.prettier`,
-  //   ignore: [
-  //     'node_modules',
-  //     'playground',
-  //     'test',
-  //     'package-lock.json',
-  //     'tsconfig.json',
-  //   ],
-  // })
-  // await Copy.copy({
-  //   from: `build/.tmp/bundle/electron/extensions/builtin.eslint`,
-  //   to: `build/.tmp/bundle/electron-result/resources/app/extensions/builtin.eslint`,
-  //   ignore: [
-  //     'node_modules',
-  //     'playground',
-  //     'test',
-  //     'package-lock.json',
-  //     'tsconfig.json',
-  //   ],
-  // })
-
-  for (const dirent of await readdir(
-    Path.absolute(`build/.tmp/bundle/electron/extensions`)
-  )) {
-    if (!dirent.startsWith('builtin.theme-')) {
-      continue
-    }
-    await Copy.copy({
-      from: `build/.tmp/bundle/electron/extensions/${dirent}`,
-      to: `build/.tmp/bundle/electron-result/resources/app/extensions/${dirent}`,
-      ignore: ['node_modules', 'test', 'package-lock.json'],
-    })
-  }
-}
-
-const getElectronVersion = async () => {
-  const packageJsonContent = await ReadFile.readFile(
-    'packages/main-process/node_modules/electron/package.json'
-  )
-  const packageJson = JSON.parse(packageJsonContent)
-  return packageJson.version
-}
-
-const rebuildNativeDependencies = async (arch) => {
-  const { rebuild } = await import('electron-rebuild')
-  const electronVersion = await getElectronVersion()
-  await rebuild({
-    buildPath: Path.absolute(
-      `build/.tmp/bundle/electron/packages/shared-process`
-    ),
-    electronVersion,
-    arch,
-    force: true,
-  })
-  await rebuild({
-    buildPath: Path.absolute(
-      `build/.tmp/bundle/electron/packages/main-process`
-    ),
-    electronVersion,
-    arch,
-    force: true,
-  })
-  await rebuild({
-    buildPath: Path.absolute(`build/.tmp/bundle/electron/packages/pty-host`),
-    electronVersion,
-    arch,
-    force: true,
-  })
-}
-
-const applyOverridesPre = async () => {
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Root/Root.js',
-    occurrence: `root = join(__dirname, '../../../../..')`,
-    replacement: `root = join(__dirname, '../../..')`,
+  await Copy.copy({
+    from: `packages/main-process/pages`,
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/pages`,
   })
   await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Platform/Platform.js',
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
     occurrence: `exports.isProduction = () => {
   return false
 }`,
@@ -817,7 +144,7 @@ const applyOverridesPre = async () => {
 }`,
   })
   await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Platform/Platform.js',
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
     occurrence: `exports.getApplicationName = () => {
   return 'lvce-oss'
 }`,
@@ -826,7 +153,7 @@ const applyOverridesPre = async () => {
 }`,
   })
   await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Platform/Platform.js',
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
     occurrence: `exports.isLinux = () => {
   return process.platform === 'linux'
 }`,
@@ -835,7 +162,16 @@ const applyOverridesPre = async () => {
 }`,
   })
   await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Platform/Platform.js',
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
+    occurrence: `exports.isWindows = () => {
+  return process.platform === 'win32'
+}`,
+    replacement: `exports.isWindows = () => {
+  return ${Platform.isWindows()}
+}`,
+  })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
     occurrence: `exports.isMacOs = () => {
   return process.platform === 'darwin'
 }`,
@@ -844,12 +180,7 @@ const applyOverridesPre = async () => {
 }`,
   })
   await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Platform/Platform.js',
-    occurrence: `process.env.BUILTIN_SELF_TEST_PATH`,
-    replacement: `join(Root.root, 'extensions', 'builtin.self-test', 'dist', 'SelfTest.js')`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Platform/Platform.js',
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
     occurrence: `exports.getScheme = () => {
   return 'lvce-oss'
 }`,
@@ -859,7 +190,7 @@ const applyOverridesPre = async () => {
   })
   const commitHash = await CommitHash.getCommitHash()
   await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Platform/Platform.js',
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
     occurrence: `exports.getCommit = () => {
   return 'unknown commit'
 }`,
@@ -867,254 +198,188 @@ const applyOverridesPre = async () => {
   return '${commitHash}'
 }`,
   })
-  const version = await Tag.getGitTag()
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/Platform/Platform.js',
-    occurrence: `exports.getVersion = () => {
-  return '0.0.0-dev'
-}`,
-    replacement: `exports.getVersion = () => {
-  return '${version}'
-}`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/SharedProcess/SharedProcess.js',
-    occurrence: `packages/shared-process/src/sharedProcessMain.js`,
-    replacement: `packages/shared-process/dist/sharedProcessMain.js`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/main-process/src/parts/ChildProcess/ChildProcess.js',
-    occurrence: 'const METHOD_PREFERRED = METHOD_SPAWN',
-    replacement: 'const METHOD_PREFERRED = METHOD_FORK',
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/web/src/web.js',
-    occurrence: 'shared-process/src/sharedProcessMain.js',
-    replacement: 'shared-process/dist/sharedProcessMain.js',
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/src/parts/Platform/Platform.js',
-    occurrence: 'state.getExtensionHostPath()',
-    replacement: `Path.join(Root.root, 'packages', 'extension-host', 'dist', 'extensionHostMain.js')`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/src/parts/Platform/Platform.js',
-    occurrence: `getApplicationName() {
-    return 'lvce-oss'
-  }`,
-    replacement: `getApplicationName() {
-    return '${Product.applicationName}'
-  }`,
-  })
-  // path of is different in build folder
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/src/parts/Root/Root.js',
-    occurrence: `export const root = resolve(__dirname, '../../../../../')`,
-    replacement: `export const root = resolve(__dirname, '../../../')`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/static/index-electron.html',
-    occurrence: `src="packages/renderer-process/src/rendererProcessMain.js"`,
-    replacement: `src="packages/renderer-process/dist/rendererProcessMain.js"`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/static/index-electron.html',
-    occurrence: `packages/renderer-worker/src/rendererWorkerMain.js`,
-    replacement: `packages/renderer-worker/dist/rendererWorkerMain.js`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js',
-    occurrence: `packages/renderer-worker/src/rendererWorkerMain.js`,
-    replacement: `packages/renderer-worker/dist/rendererWorkerMain.js`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/src/parts/Terminal/Terminal.js',
-    occurrence: `packages/pty-host/bin/ptyHost.js`,
-    replacement: `packages/pty-host/dist/ptyHostMain.js`,
-  })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-css/src/parts/Root/Root.js',
-  //   occurrence: `root = join(__dirname, '..', '..', '..')`,
-  //   replacement: `root = join(__dirname, '..')`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-html/src/parts/Root/Root.js',
-  //   occurrence: `root = join(__dirname, '..', '..', '..')`,
-  //   replacement: `root = join(__dirname, '..')`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/src/parts/Root/Root.js',
-  //   occurrence: `root = join(__dirname, '..', '..', '..')`,
-  //   replacement: `root = join(__dirname, '..')`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/src/parts/Platform/Platform.js',
-  //   occurrence: `process.env.TS_SERVER_PATH`,
-  //   replacement: `join(Root.root, 'node_modules', 'typescript', 'lib','tsserver.js')`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.self-test/src/parts/Root/Root.js',
-  //   occurrence: `root = join(__dirname, '..', '..', '..', '..', '..')`,
-  //   replacement: `root = join(__dirname, '..', '..')`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.self-test/src/parts/Platform/Platform.js',
-  //   occurrence: `process.env.ELECTRON_BINARY_PATH`,
-  //   replacement: `join(Root.root, '..', '..', '..', '${Product.applicationName}')`, // TODO support windows and macos
-  // })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/renderer-process/src/parts/Platform/Platform.js',
-    occurrence: 'ASSET_DIR',
-    replacement: `'../../../../..'`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/renderer-worker/src/parts/Platform/Platform.js',
-    occurrence: 'PLATFORM',
-    replacement: `'electron'`,
-  })
+}
 
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/renderer-worker/src/parts/Platform/Platform.js',
-    occurrence: 'IS_MOBILE_OR_TABLET',
-    replacement: `false`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/renderer-worker/src/parts/Platform/Platform.js',
-    occurrence: 'ASSET_DIR',
-    replacement: `'../../../../..'`,
+const copyPtyHostSources = async ({ arch }) => {
+  await Copy.copy({
+    from: 'packages/pty-host/src',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/pty-host/src`,
   })
 }
 
-const applyOverridesPost = async () => {
-  // workaround for esbuild bug https://github.com/evanw/esbuild/issues/700
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
-    occurrence: `var __create = Object.create;`,
-    replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
+const copyExtensionHostSources = async ({ arch }) => {
+  await Copy.copy({
+    from: 'packages/extension-host/src',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/extension-host/src`,
   })
-  // workaround for esbuild bug https://github.com/evanw/esbuild/issues/1874
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
-    occurrence: `.join(__dirname, "xdg-open")`,
-    replacement: `.join("/non-existent", "xdg-open")`,
-  })
-  // workaround for esbuild bug https://github.com/evanw/esbuild/issues/700
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.self-test/dist/SelfTest.js',
-  //   occurrence: `var __create = Object.create;`,
-  //   replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
-  // })
-
-  // workaround for esbuild issue with electron-clipboard-ex
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
-    occurrence: `import clipboardEx from "electron-clipboard-ex";`,
-    replacement: `let clipboardEx; try { clipboardEx = require("electron-clipboard-ex"); } catch { /* ignore */ };`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/shared-process/dist/sharedProcessMain.js',
-    occurrence: `const isBundled = !__dirname || __dirname === "/"`,
-    replacement: `const isBundled = true`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/extension-host/dist/extensionHostMain.js',
-    occurrence: `var __create = Object.create;`,
-    replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/bundle/electron/packages/pty-host/dist/ptyHostMain.js',
-    occurrence: `// src/parts/Pty/Pty.js
-var import_node_pty = require("node-pty");`,
-    replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); // src/parts/Pty/Pty.js
-var import_node_pty = require("node-pty");`,
-  })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-css/extension.json',
-  //   occurrence: `src/`,
-  //   replacement: `dist/`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-html/extension.json',
-  //   occurrence: `src/`,
-  //   replacement: `dist/`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/extension.json',
-  //   occurrence: `src/`,
-  //   replacement: `dist/`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.language-features-typescript/dist/languageFeaturesTypeScriptMain.js',
-  //   occurrence: `var __create = Object.create;`,
-  //   replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.prettier/extension.json',
-  //   occurrence: `src/`,
-  //   replacement: `dist/`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.prettier/dist/prettierMain.js',
-  //   occurrence: `var __create = Object.create;`,
-  //   replacement: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); var __create = Object.create;`,
-  // })
-  // await Replace.replace({
-  //   path: 'build/.tmp/bundle/electron/extensions/builtin.eslint/extension.json',
-  //   occurrence: `src/`,
-  //   replacement: `dist/`,
-  // })
 }
 
-const bundleCss = async () => {
+const copyExtensions = async ({ arch }) => {
+  await Copy.copy({
+    from: 'extensions',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/extensions`,
+  })
+}
+
+const copyStaticFiles = async ({ arch }) => {
+  await Copy.copy({
+    from: 'static',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/static`,
+    ignore: ['css', 'js'],
+  })
+}
+
+const copyCss = async ({ arch }) => {
   await BundleCss.bundleCss({
-    to: 'build/.tmp/bundle/electron/static/css/App.css',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/static/css/App.css`,
   })
+}
+
+const getRendererProcessCacheHash = async () => {
+  const hash = await Hash.computeFolderHash('packages/renderer-process/src', [
+    'build/src/parts/BundleElectronApp/BundleElectronApp.js',
+    'build/src/parts/BundleJs/BundleJs.js',
+    'build/src/parts/BundleRendererProcess/BundleRendererProcess.js',
+  ])
+  return hash
+}
+
+const getRendererWorkerCacheHash = async () => {
+  const hash = await Hash.computeFolderHash('packages/renderer-worker/src', [
+    'build/src/parts/BundleElectronApp/BundleElectronApp.js',
+    'build/src/parts/BundleJs/BundleJs.js',
+    'build/src/parts/BundleRendererWorker/BundleRendererWorker.js',
+  ])
+  return hash
 }
 
 export const build = async () => {
   const arch = process.arch
+  const dependencyCacheHash = await getDependencyCacheHash()
+  const dependencyCachePath = Path.join(
+    Path.absolute('build/.tmp/cachedDependencies'),
+    dependencyCacheHash
+  )
 
-  console.time('copyCode')
-  await copyCode()
-  console.timeEnd('copyCode')
+  if (existsSync(dependencyCachePath)) {
+    console.info('[build step skipped] bundleElectronAppDependencies')
+  } else {
+    console.time('bundleElectronAppDependencies')
+    await Remove.remove(Path.absolute('build/.tmp/cachedDependencies'))
+    const BundleElectronAppDependencies = await import(
+      '../BundleElectronAppDependencies/BundleElectronAppDependencies.js'
+    )
+    await BundleElectronAppDependencies.bundleElectronAppDependencies({
+      cachePath: dependencyCachePath,
+      arch,
+    })
+    console.timeEnd('bundleElectronAppDependencies')
+  }
+
+  console.time('copyElectron')
+  await copyElectron({
+    arch,
+  })
+  console.timeEnd('copyElectron')
+
+  console.time('copyDependencies')
+  await copyDependencies({
+    cachePath: dependencyCachePath,
+    arch,
+  })
+  console.timeEnd('copyDependencies')
+
+  console.time('copyExtensionHostSources')
+  await copyExtensionHostSources({ arch })
+  console.timeEnd('copyExtensionHostSources')
+
+  console.time('copyPtyHostSources')
+  await copyPtyHostSources({ arch })
+  console.timeEnd('copyPtyHostSources')
+
+  console.time('copyMainProcessSources')
+  await copyMainProcessSources({ arch })
+  console.timeEnd('copyMainProcessSources')
+
+  console.time('copySharedProcessSources')
+  await copySharedProcessSources({ arch })
+  console.timeEnd('copySharedProcessSources')
 
   console.time('copyExtensions')
-  await copyExtensions()
+  await copyExtensions({ arch })
   console.timeEnd('copyExtensions')
 
   console.time('copyStaticFiles')
-  await copyStaticFiles()
+  await copyStaticFiles({ arch })
   console.timeEnd('copyStaticFiles')
 
-  console.time('applyOverridesPre')
-  await applyOverridesPre()
-  console.timeEnd('applyOverridesPre')
+  console.time('copyCss')
+  await copyCss({ arch })
+  console.timeEnd('copyCss')
 
-  console.time('copyNodeModules')
-  await copyNodeModules()
-  console.timeEnd('copyNodeModules')
+  const rendererProcessCacheHash = await getRendererProcessCacheHash()
+  const rendererProcessCachePath = Path.join(
+    Path.absolute('build/.tmp/cachedSources/renderer-process'),
+    rendererProcessCacheHash
+  )
 
-  console.time('bundleJs')
-  await bundleJs()
-  console.timeEnd('bundleJs')
+  if (existsSync(rendererProcessCachePath)) {
+    console.info('[build step skipped] bundleRendererProcess')
+  } else {
+    console.time('bundleRendererProcess')
+    await Remove.remove(
+      Path.absolute('build/.tmp/cachedSources/renderer-process')
+    )
+    const BundleRendererProcess = await import(
+      '../BundleRendererProcess/BundleRendererProcess.js'
+    )
+    await BundleRendererProcess.bundleRendererProcess({
+      cachePath: rendererProcessCachePath,
+      arch,
+    })
+    console.timeEnd('bundleRendererProcess')
+  }
 
-  console.time('bundleCss')
-  await bundleCss()
-  console.timeEnd('bundleCss')
+  console.time('copyRendererProcessFiles')
+  await Copy.copy({
+    from: rendererProcessCachePath,
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/renderer-process`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyRendererProcessFiles')
 
-  console.time('applyOverridesPost')
-  await applyOverridesPost()
-  console.timeEnd('applyOverridesPost')
+  const rendererWorkerCacheHash = await getRendererWorkerCacheHash()
+  const rendererWorkerCachePath = Path.join(
+    Path.absolute('build/.tmp/cachedSources/renderer-worker'),
+    rendererWorkerCacheHash
+  )
 
-  console.time('rebuildNativeDependencies')
-  await rebuildNativeDependencies(arch)
-  console.timeEnd('rebuildNativeDependencies')
+  if (existsSync(rendererWorkerCachePath)) {
+    console.info('[build step skipped] bundleRendererWorker')
+  } else {
+    console.time('bundleRendererWorker')
+    await Remove.remove(
+      Path.absolute('build/.tmp/cachedSources/renderer-worker')
+    )
+    const BundleRendererWorker = await import(
+      '../BundleRendererWorker/BundleRendererWorker.js'
+    )
+    await BundleRendererWorker.bundleRendererWorker({
+      cachePath: rendererWorkerCachePath,
+      arch,
+    })
+    console.timeEnd('bundleRendererWorker')
+  }
 
-  console.time('copyElectron')
-  await copyElectron()
-  console.timeEnd('copyElectron')
+  console.time('copyRendererWorkerFiles')
+  await Copy.copy({
+    from: rendererWorkerCachePath,
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/renderer-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyRendererWorkerFiles')
 
-  console.time('copyResults')
-  await copyResults()
-  console.timeEnd('copyResults')
+  console.time('copyPlaygroundFiles')
+  await copyPlaygroundFiles({ arch })
+  console.timeEnd('copyPlaygroundFiles')
 }

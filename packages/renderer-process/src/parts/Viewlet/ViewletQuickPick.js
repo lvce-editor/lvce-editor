@@ -48,22 +48,25 @@ const handleMouseDown = (event) => {
   }
   // console.log('button', event.button)
   // console.log({ index })
-  RendererWorker.send([/* QuickPick.selectIndex */ 71182, /* index */ index])
+  RendererWorker.send([/* QuickPick.selectIndex */ 'QuickPick.selectIndex', /* index */ index])
 }
 
 // TODO beforeinput event should prevent input event maybe
-const handleBeforeInput = (event) => {
-  if (!event.data) {
-    return
-  }
-  const value = event.target.value + event.data
-  RendererWorker.send([/* quickPickHandleInput */ 71181, /* value */ value])
-}
+// const handleBeforeInput = (event) => {
+//   if (!event.data) {
+//     return
+//   }
+//   const value = event.target.value + event.data
+//   RendererWorker.send([
+//     /* quickPickHandleInput */ 'QuickPick.handleInput',
+//     /* value */ value,
+//   ])
+// }
 
 const handleInput = (event) => {
   const $Target = event.target
   RendererWorker.send([
-    /* quickPickHandleInput */ 71181,
+    /* quickPickHandleInput */ 'QuickPick.handleInput',
     /* value */ $Target.value,
   ])
 }
@@ -74,7 +77,7 @@ const handleBlur = (event) => {
   //   console.log('no related target')
   //   return
   // }
-  RendererWorker.send([/* QuickPick.handleBlur */ 18927])
+  RendererWorker.send([/* QuickPick.handleBlur */ 'QuickPick.handleBlur'])
 }
 
 // TODO forbidden:
@@ -270,7 +273,7 @@ export const create = (value, visiblePicks, focusIndex) => {
   $QuickPickInput.setAttribute('aria-activedescendant', '')
   $QuickPickInput.setAttribute('aria-activedescendant', 'QuickPickItem-1') // TODO only if list length is not zero
   $QuickPickInput.onblur = handleBlur
-  $QuickPickInput.addEventListener('beforeinput', handleBeforeInput)
+  // $QuickPickInput.addEventListener('beforeinput', handleBeforeInput)
   $QuickPickInput.oninput = handleInput
   $QuickPickInput.ariaExpanded = 'true'
 

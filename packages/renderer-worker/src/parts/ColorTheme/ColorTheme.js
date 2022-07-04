@@ -1,9 +1,9 @@
 import * as Command from '../Command/Command.js'
+import * as Css from '../Css/Css.js'
+import * as Meta from '../Meta/Meta.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-
 // TODO by default color theme should come from local storage, session storage, cache storage, indexeddb or blob url -> fast initial load
 // actual color theme can be computed after workbench has loaded (most times will be the same and doesn't need to be computed)
 
@@ -35,13 +35,13 @@ const getColorThemeJsonFromStaticFolder = (colorThemeId) => {
   const assetDir = Platform.getAssetDir()
   const url = `${assetDir}/themes/${colorThemeId}.json`
   // TODO handle error ?
-  return Command.execute(/* Ajax.getJson */ 270, /* url */ url)
+  return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
 }
 
 const getFallbackColorTheme = async () => {
   const assetDir = Platform.getAssetDir()
   const url = `${assetDir}/themes/fallback_theme.json`
-  return Command.execute(/* Ajax.getJson */ 270, /* url */ url)
+  return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
 }
 
 // TODO json parsing should also happen in renderer worker
@@ -56,7 +56,7 @@ const getColorThemeJson = (colorThemeId) => {
 
 export const getColorThemeCss = async (colorThemeId, colorThemeJson) => {
   const colorThemeCss = await Command.execute(
-    /* ColorThemeFromJson.createColorThemeFromJson */ 232,
+    /* ColorThemeFromJson.createColorThemeFromJson */ 'ColorThemeFromJson.createColorThemeFromJson',
     /* colorThemeId */ colorThemeId,
     /* colorThemeJson */ colorThemeJson
   )
@@ -75,17 +75,10 @@ const applyColorTheme = async (colorThemeId) => {
   try {
     const colorThemeJson = await getColorThemeJson(colorThemeId)
     const colorThemeCss = await getColorThemeCss(colorThemeId, colorThemeJson)
-    await RendererProcess.invoke(
-      /* Css.setInlineStyle */ 4551,
-      /* id */ 'ContributedColorTheme',
-      /* css */ colorThemeCss
-    )
+    await Css.setInlineStyle('ContributedColorTheme', colorThemeCss)
     if (Platform.getPlatform() === 'web') {
       const themeColor = getMetaThemeColor(colorThemeJson) || ''
-      await RendererProcess.invoke(
-        /* Meta.setThemeColor */ 11122,
-        /* color */ themeColor
-      )
+      await Meta.setThemeColor(themeColor)
     }
   } catch (error) {
     throw new Error(`Failed to apply color theme "${colorThemeId}": ${error}`)

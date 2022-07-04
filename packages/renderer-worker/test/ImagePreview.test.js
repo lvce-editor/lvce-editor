@@ -1,55 +1,52 @@
-import { jest } from '@jest/globals'
 import * as FileSystem from '../src/parts/FileSystem/FileSystem.js'
-import * as ImagePreview from '../src/parts/ImagePreview/ImagePreview.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
+import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
+import * as Layout from '../src/parts/Layout/Layout.js'
+
+import { jest } from '@jest/globals'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+
+const ImagePreview = await import('../src/parts/ImagePreview/ImagePreview.js')
 
 beforeEach(() => {
   ImagePreview.state.uri = ''
 })
 
 test('show', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ImagePreview.show('/tmp/sample-image.png', 10, 20)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3028,
     'ImagePreview',
     // TODO should be single slash
     '/remote//tmp/sample-image.png',
     -12,
-    -160,
-  ])
+    -160
+  )
 })
 
 test('show - multiple times and out of order promises', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   FileSystem.state.fileSystems['test'] = {
     async getBlobUrl(protocol, uri) {
       if (uri === 'test:///image-1.png') {
@@ -66,33 +63,19 @@ test('show - multiple times and out of order promises', async () => {
   const promise1 = ImagePreview.show('test:///image-1.png', 10, 20)
   const promise2 = ImagePreview.show('test:///tmp/image-2.png', 10, 20)
   await Promise.all([promise1, promise2])
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3028,
     'ImagePreview',
     '/image-2.png',
     -12,
-    -160,
-  ])
+    -160
+  )
 })
 
 test('show - error', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   FileSystem.state.fileSystems['test'] = {
     async getBlobUrl(protocol, uri) {
       throw new Error(
@@ -101,39 +84,24 @@ test('show - error', async () => {
     },
   }
   await ImagePreview.show('test:///image-1.png', 10, 20)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
     3028,
     'ImagePreview',
     'Image could not be loaded',
     -12,
-    -160,
-  ])
+    -160
+  )
 })
 
 test('hide', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ImagePreview.show('/tmp/sample-image.png')
   await ImagePreview.hide()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    3026,
-    'ImagePreview',
-  ])
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Viewlet.dispose',
+    'ImagePreview'
+  )
 })

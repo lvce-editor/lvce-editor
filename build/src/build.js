@@ -1,5 +1,4 @@
 import minimist from 'minimist'
-import VError from 'verror'
 
 const getBuildModule = (target) => {
   console.log({ target })
@@ -59,8 +58,10 @@ const main = async () => {
   try {
     await module.build()
   } catch (error) {
-    // @ts-ignore
-    throw new VError(error, 'Build failed')
+    throw new Error('Build failed', {
+      // @ts-ignore
+      cause: error,
+    })
   }
 }
 

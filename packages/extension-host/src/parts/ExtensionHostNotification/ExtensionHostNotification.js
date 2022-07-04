@@ -9,7 +9,7 @@ export const showNotification = (type, text) => {
   }
   SharedProcess.send({
     jsonrpc: '2.0',
-    method: /* Notification.show */ 900,
+    method: /* Notification.create */ 'Notification.create',
     params: [type, text],
   })
   // throw new Error('not implemented')
@@ -19,7 +19,7 @@ export const showNotificationWithOptions = async (type, text, options) => {
   switch (type) {
     case 'error-dialog': {
       const selectedOption = await SharedProcess.invoke(
-        /* Dialog.showMessage */ 1494,
+        /* Dialog.showMessage */ 'Dialog.showMessage',
         /* text */ text,
         /* options */ options
       )

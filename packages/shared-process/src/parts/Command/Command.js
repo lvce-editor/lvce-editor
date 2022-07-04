@@ -231,7 +231,7 @@ export const invoke = async (command, ...args) => {
     await loadCommand(command)
     if (!(command in commands)) {
       console.warn(`[shared process] Unknown command "${command}"`)
-      return
+      throw new Error(`Command ${command} not found`)
     }
   }
   if (typeof commands[command] !== 'function') {

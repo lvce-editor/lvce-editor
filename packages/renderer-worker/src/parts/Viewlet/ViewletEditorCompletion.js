@@ -109,7 +109,7 @@ export const loadingContent = () => {
   const x = EditorPosition.x(editor, editor.cursor)
   const y = EditorPosition.y(editor, editor.cursor)
   const changes = [
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'EditorCompletion',
     /* method */ 'showLoading',
     /* x */ x,
@@ -147,7 +147,7 @@ const select = async (state, completionItem) => {
   const word = completionItem.label
   const snippet = getInsertSnippet(word, leadingWord)
   // TODO type and dispose commands should be sent to renderer process at the same time
-  await Command.execute(/* EditorType.editorType */ 345, /* text */ snippet)
+  await Command.execute(/* Editor.type */ 'Editor.type', /* text */ snippet)
   return {
     ...state,
     disposed: true,
@@ -194,7 +194,7 @@ export const render = (oldState, newState) => {
   const changes = []
   if (oldState.x !== newState.x || oldState.y !== newState.y) {
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'EditorCompletion',
       /* method */ 'setPosition',
       /* x */ newState.x,
@@ -203,7 +203,7 @@ export const render = (oldState, newState) => {
   }
   if (oldState.visibleItems !== newState.visibleItems) {
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'EditorCompletion',
       /* method */ 'setItems',
       /* items */ newState.visibleItems,

@@ -17,7 +17,7 @@ test.skip('showItems - top left', async () => {
     },
   ])
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    3030,
+    'Viewlet.load',
     'ContextMenu',
     0,
     0,
@@ -41,7 +41,7 @@ test.skip('showItems - top right', async () => {
     },
   ])
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    3030,
+    'Viewlet.load',
     'ContextMenu',
     0,
     774,
@@ -65,7 +65,7 @@ test.skip('showItems - bottom right', async () => {
     },
   ])
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    3030,
+    'Viewlet.load',
     'ContextMenu',
     720,
     774,
@@ -89,7 +89,7 @@ test.skip('showItems - bottom left', async () => {
     },
   ])
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    3030,
+    'Viewlet.load',
     'ContextMenu',
     720,
     0,
@@ -163,7 +163,7 @@ test.skip('focusFirst', () => {
   RendererProcess.state.send = jest.fn()
   ContextMenu.focusFirst()
   expect(RendererProcess.state.send).toHaveBeenLastCalledWith([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'ContextMenu',
     /* method */ 'focusIndex',
     -1,
@@ -193,7 +193,7 @@ test.skip('focusLast', () => {
   ]
   ContextMenu.focusLast()
   expect(RendererProcess.state.send).toHaveBeenLastCalledWith([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'ContextMenu',
     /* method */ 'focusIndex',
     -1,
@@ -230,7 +230,7 @@ test.skip('focusPrevious', () => {
   RendererProcess.state.send = jest.fn()
   ContextMenu.focusPrevious()
   expect(RendererProcess.state.send).toHaveBeenLastCalledWith([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'ContextMenu',
     /* method */ 'focusIndex',
     2,
@@ -267,7 +267,7 @@ test.skip('focusPrevious - no focus', () => {
   RendererProcess.state.send = jest.fn()
   ContextMenu.focusPrevious()
   expect(RendererProcess.state.send).toHaveBeenLastCalledWith([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'ContextMenu',
     /* method */ 'focusIndex',
     -1,
@@ -304,7 +304,7 @@ test.skip('focusPrevious - at start', () => {
   RendererProcess.state.send = jest.fn()
   ContextMenu.focusPrevious()
   expect(RendererProcess.state.send).toHaveBeenLastCalledWith([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'ContextMenu',
     /* method */ 'focusIndex',
     0,
@@ -347,7 +347,7 @@ test.skip('focusPrevious - with separator', () => {
   RendererProcess.state.send = jest.fn()
   ContextMenu.focusPrevious()
   expect(RendererProcess.state.send).toHaveBeenLastCalledWith([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'ContextMenu',
     /* method */ 'focusIndex',
     3,

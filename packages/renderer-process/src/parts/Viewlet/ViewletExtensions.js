@@ -46,13 +46,13 @@ const handleWheel = (event) => {
   switch (event.deltaMode) {
     case event.DOM_DELTA_LINE:
       RendererWorker.send([
-        /* ViewletExtensions.handleWheel */ 873,
+        /* ViewletExtensions.handleWheel */ 'Extensions.handleWheel',
         /* deltaY */ event.deltaY,
       ])
       break
     case event.DOM_DELTA_PIXEL:
       RendererWorker.send([
-        /* ViewletExtensions.handleWheel */ 873,
+        /* ViewletExtensions.handleWheel */ 'Extensions.handleWheel',
         /* deltaY */ event.deltaY,
       ])
       break
@@ -82,7 +82,7 @@ const handleContextMenu = (event) => {
   }
   const extension = state.extensions[index]
   RendererWorker.send([
-    /* ViewletExplorer.handleContextMenu */ 864,
+    /* Extensions.handleContextMenu */ 'Extensions.handleContextMenu',
     /* x */ event.clientX,
     /* y */ event.clientY,
     /* extensionId */ extension.id,
@@ -104,7 +104,7 @@ const handleClick = (event) => {
     case 'Extension': {
       const index = getNodeIndex($Target)
       RendererWorker.send([
-        /* ViewletExplorer.handleClick */ 867,
+        /* Extensions.handleClick */ 'Extensions.handleClick',
         /* index */ index,
       ])
       break
@@ -114,7 +114,7 @@ const handleClick = (event) => {
     case 'ExtensionFooter': {
       const index = getNodeIndex($Target.parentNode.parentNode)
       RendererWorker.send([
-        /* ViewletExplorer.handleClick */ 867,
+        /* Extensions.handleClick */ 'Extensions.handleClick',
         /* index */ index,
       ])
       break
@@ -122,7 +122,7 @@ const handleClick = (event) => {
     case 'ExtensionAuthorName': {
       const index = getNodeIndex($Target.parentNode.parentNode.parentNode)
       RendererWorker.send([
-        /* ViewletExplorer.handleClick */ 867,
+        /* Extensions.handleClick */ 'Extensions.handleClick',
         /* index */ index,
       ])
       break
@@ -150,7 +150,7 @@ const handleScrollBarMouseDown = (event) => {
     const y = event.clientY
     console.log({ y })
     RendererWorker.send([
-      /* ViewletExtensions.handleScrollBarClick */ 878,
+      /* ViewletExtensions.handleScrollBarClick */ 'Extensions.handleScrollBarClick',
       /* y */ y,
     ])
   }
@@ -159,7 +159,7 @@ const handleScrollBarMouseDown = (event) => {
 const handleScrollBarThumbMouseMove = (event) => {
   const y = event.clientY
   RendererWorker.send([
-    /* ViewletExtensions.handleScrollBarMouseMove */ 877,
+    /* ViewletExtensions.handleScrollBarMouseMove */ 'Extensions.handleScrollBarMove',
     /* y */ y,
   ])
 }

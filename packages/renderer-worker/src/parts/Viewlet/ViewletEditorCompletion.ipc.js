@@ -2,12 +2,13 @@ import * as Command from '../Command/Command.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletEditorCompletion from './ViewletEditorCompletion.js'
 
+// prettier-ignore
 export const __initialize__ = () => {
-  Command.register(981, Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.dispose))
-  Command.register(982, Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.selectIndex))
-  Command.register(983, Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.focusFirst))
-  Command.register(984, Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.focusLast))
-  Command.register(985, Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.focusNext))
-  Command.register(986, Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.focusPrevious))
-  Command.register(987, Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.selectCurrent))
+  Command.register('EditorCompletion.dispose', Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.dispose))
+  Command.register('EditorCompletion.selectIndex', Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.selectIndex))
+  Command.register('EditorCompletion.focusFirst', Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.focusFirst))
+  Command.register('EditorCompletion.focusLast', Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.focusLast))
+  Command.register('EditorCompletion.focusNext', Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.focusNext))
+  Command.register('EditorCompletion.focusPrevious', Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.focusPrevious))
+  Command.register('EditorCompletion.selectCurrent', Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.selectCurrent))
 }

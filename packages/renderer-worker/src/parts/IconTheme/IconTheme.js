@@ -19,7 +19,10 @@ const getIconThemeJson = async (iconThemeId) => {
   if (Platform.getPlatform() === 'web') {
     const assetDir = Platform.getAssetDir()
     const url = `${assetDir}/icon-themes/${iconThemeId}.json`
-    const json = await Command.execute(/* Ajax.getJson */ 270, /* url */ url)
+    const json = await Command.execute(
+      /* Ajax.getJson */ 'Ajax.getJson',
+      /* url */ url
+    )
     return {
       json,
     }
@@ -146,7 +149,7 @@ export const hydrate = async () => {
 
     const iconThemeCss = getIconThemeCss2(iconTheme)
     await RendererProcess.invoke(
-      /* Css.setInlineStyle */ 4551,
+      /* Css.setInlineStyle */ 'Css.setInlineStyle',
       /* id */ 'ContributedIconTheme',
       /* css */ iconThemeCss
     )

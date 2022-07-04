@@ -28,7 +28,7 @@ export const getMenuEntries = async () => {
       id: 'hideActivityBar',
       label: 'Hide Activity Bar',
       flags: /* None */ 0,
-      command: /* Layout.hideActivityBar */ 1107,
+      command: /* Layout.hideActivityBar */ 'Layout.hideActivityBar',
     },
   ]
 }

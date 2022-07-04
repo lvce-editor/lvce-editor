@@ -1,0 +1,9 @@
+{
+  "main": "main.js",
+  "commands": [
+    {
+      "id": "command-provider-error.sampleCommand",
+      "label": "Command Provider Error: Sample Command"
+    }
+  ]
+}

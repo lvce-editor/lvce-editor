@@ -4,6 +4,9 @@ import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const state = {
+  /**
+   * @type{any[]}
+   */
   titleBarEntries: [],
   focusedIndex: 0,
   isMenuOpen: false,
@@ -30,7 +33,7 @@ const openMenuAtIndex = async (index, shouldBeFocused) => {
   const items = await MenuEntries.getMenuEntries(id)
   Menu.state.menus = []
   const bounds = await RendererProcess.invoke(
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'TitleBar',
     /* method */ 'menuGetEntryBounds',
     /* index */ index
@@ -51,7 +54,7 @@ const openMenuAtIndex = async (index, shouldBeFocused) => {
     y,
   })
   RendererProcess.send([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'TitleBar',
     /* method */ 'menuOpen',
     /* unFocusIndex */ state.focusedIndex,
@@ -78,20 +81,20 @@ export const openMenu = async (focus) => {
   await openMenuAtIndex(state.focusedIndex, focus)
 }
 
-export const closeMenu = (keepFocus) => {
+export const closeMenu = async (keepFocus) => {
   // TODO send to renderer process
   // 1. close menu
   // 2. focus top level entry
   const focusIndex = keepFocus ? state.focusedIndex : -1
   // TODO use Viewlet.dispose instead
-  RendererProcess.send([
-    /* Viewlet.send */ 3024,
+  state.isMenuOpen = false
+  await RendererProcess.invoke(
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'TitleBar',
     /* method */ 'menuClose',
     /* unFocusIndex */ state.focusedIndex,
-    /* focusIndex */ focusIndex,
-  ])
-  state.isMenuOpen = false
+    /* focusIndex */ focusIndex
+  )
 }
 
 export const toggleMenu = async () => {
@@ -106,11 +109,11 @@ export const focusIndex = async (index) => {
   if (state.isMenuOpen) {
     await openMenuAtIndex(index, /* focus */ false)
   } else {
-    RendererProcess.send([
+    await RendererProcess.invoke(
       /* TitleBarMenuBar.focusIndex */ 1371,
       /* unFocusIndex */ state.focusedIndex,
-      /* index */ index,
-    ])
+      /* index */ index
+    )
   }
   state.focusedIndex = index
 }
@@ -145,7 +148,6 @@ const getIndexToFocusNextStartingAt = (items, index) => {
 }
 
 export const focusNext = async () => {
-  console.log('ff next')
   const indexToFocus = getIndexToFocusNextStartingAt(
     state.titleBarEntries,
     state.focusedIndex + 1

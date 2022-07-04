@@ -12,9 +12,8 @@ export const state = {
 }
 
 export const copy = async (source, target) => {
-  const { copy } = await import('fs-extra')
   try {
-    await copy(source, target, { recursive: true })
+    await fs.cp(source, target, { recursive: true })
   } catch (error) {
     throw new Error.OperationalError({
       cause: error,

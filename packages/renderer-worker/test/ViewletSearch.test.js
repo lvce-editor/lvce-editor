@@ -47,7 +47,7 @@ test.skip('handleInput - empty results', async () => {
   RendererProcess.state.send = jest.fn()
   await ViewletSearch.handleInput(state, 'test search')
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    3024,
+    'Viewlet.send',
     'Search',
     'setResults',
     [],
@@ -71,7 +71,7 @@ test.skip('handleInput - error', async () => {
   RendererProcess.state.send = jest.fn()
   await ViewletSearch.handleInput(state, 'test search')
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    3024,
+    'Viewlet.send',
     'Search',
     'setError',
     'Error: could not load search results',

@@ -85,7 +85,9 @@ const hydrateLazy = async () => {
   // TODO main should not know about languages
   await Languages.hydrate()
   // TODO this should be in extension host
-  await Command.execute(/* EditorDiagnostics.hydrate */ 8786)
+  await Command.execute(
+    /* EditorDiagnostics.hydrate */ 'EditorDiagnostics.hydrate'
+  )
 }
 
 export const name = 'Main'
@@ -154,7 +156,7 @@ const id = 'EditorText'
 
 const getRestoredEditors = async () => {
   const savedState = await Command.execute(
-    /* LocalStorage.getItem */ 6902,
+    /* LocalStorage.getJson */ 'LocalStorage.getJson',
     /* key */ 'stateToSave'
   )
   const restoredEditor = getMainEditor(savedState)
@@ -195,7 +197,7 @@ export const contentLoaded = async (state) => {
   const tabLabel = Workspace.pathBaseName(editor.uri)
   const tabTitle = getTabTitle(editor.uri)
   RendererProcess.send([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'openViewlet',
     /* id */ id,
@@ -245,15 +247,15 @@ export const openUri = async (state, uri) => {
   state.activeIndex = state.editors.length - 1
   const tabLabel = Workspace.pathBaseName(uri)
   const tabTitle = getTabTitle(uri)
-  RendererProcess.send([
-    /* Viewlet.send */ 3024,
+  await RendererProcess.invoke(
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'openViewlet',
     /* id */ id,
     /* tabLabel */ tabLabel,
     /* tabTitle */ tabTitle,
-    /* oldActiveIndex */ oldActiveIndex,
-  ])
+    /* oldActiveIndex */ oldActiveIndex
+  )
   return ViewletManager.load(instance)
 }
 
@@ -302,7 +304,7 @@ export const closeActiveEditor = (state) => {
 
 export const closeAllEditors = (state) => {
   RendererProcess.send([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'dispose',
   ])
@@ -343,19 +345,19 @@ export const closeEditor = async (state, index) => {
     //   height: instance.state.height,
     //   columnWidth: COLUMN_WIDTH,
     // })
-    RendererProcess.send([
+    await RendererProcess.invoke(
       /* Main.closeOneTab */ 2164,
       /* closeIndex */ oldActiveIndex,
-      /* focusIndex */ newActiveIndex,
-    ])
+      /* focusIndex */ newActiveIndex
+    )
     return
   }
-  RendererProcess.send([
-    /* Viewlet.send */ 3024,
+  await RendererProcess.invoke(
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'closeOneTabOnly',
-    /* closeIndex */ index,
-  ])
+    /* closeIndex */ index
+  )
   state.editors.splice(index, 1)
   if (index < state.activeIndex) {
     state.activeIndex--
@@ -372,7 +374,7 @@ export const closeFocusedTab = (state) => {
 export const handleTabContextMenu = async (state, index, x, y) => {
   state.focusedIndex = index
   await Command.execute(
-    /* ContextMenu.show */ 951,
+    /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
     /* id */ 'tab'
@@ -406,7 +408,7 @@ export const focusIndex = (state, index) => {
 
   // TODO race condition
   RendererProcess.send([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'focusAnotherTab',
     /* unFocusIndex */ oldActiveIndex,
@@ -443,22 +445,22 @@ export const handleTabClick = (state, index) => {
 export const closeOthers = async (state) => {
   if (state.focusedIndex === state.activeIndex) {
     // view is kept the same, only tabs are closed
-    RendererProcess.send([
-      /* Viewlet.send */ 3024,
+    await RendererProcess.invoke(
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Main',
       /* method */ 'closeOthers',
       /* keepIndex */ state.focusedIndex,
-      /* focusIndex */ state.focusedIndex,
-    ])
+      /* focusIndex */ state.focusedIndex
+    )
   } else {
     // view needs to be switched to focused index
-    RendererProcess.send([
-      /* Viewlet.send */ 3024,
+    await RendererProcess.invoke(
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Main',
       /* method */ 'closeOthers',
       /* keepIndex */ state.focusedIndex,
-      /* focusIndex */ state.focusedIndex,
-    ])
+      /* focusIndex */ state.focusedIndex
+    )
   }
   state.editors = [state.editors[state.focusedIndex]]
   state.activeIndex = 0
@@ -468,20 +470,20 @@ export const closeOthers = async (state) => {
 export const closeTabsRight = async (state) => {
   if (state.focusedIndex >= state.activeIndex) {
     // view is kept the same, only tabs are closed
-    RendererProcess.send([
-      /* Viewlet.send */ 3024,
+    await RendererProcess.invoke(
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Main',
       /* method */ 'closeTabsRight',
-      /* index */ state.focusedIndex,
-    ])
+      /* index */ state.focusedIndex
+    )
   } else {
     // view needs to be switched to focused index
-    RendererProcess.send([
-      /* Viewlet.send */ 3024,
+    await RendererProcess.invoke(
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Main',
       /* method */ 'closeTabsRight',
-      /* index */ state.focusedIndex,
-    ])
+      /* index */ state.focusedIndex
+    )
   }
   state.editors = state.editors.slice(0, state.focusedIndex + 1)
   state.activeIndex = state.focusedIndex
@@ -490,20 +492,20 @@ export const closeTabsRight = async (state) => {
 export const closeTabsLeft = async (state) => {
   if (state.focusedIndex <= state.activeIndex) {
     // view is kept the same, only tabs are closed
-    RendererProcess.send([
-      /* Viewlet.send */ 3024,
+    await RendererProcess.invoke(
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Main',
       /* method */ 'closeTabsLeft',
-      /* index */ state.focusedIndex,
-    ])
+      /* index */ state.focusedIndex
+    )
   } else {
     // view needs to be switched to focused index
-    RendererProcess.send([
-      /* Viewlet.send */ 3024,
+    await RendererProcess.invoke(
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Main',
       /* method */ 'closeTabsLeft',
-      /* index */ state.focusedIndex,
-    ])
+      /* index */ state.focusedIndex
+    )
   }
   state.editors = state.editors.slice(state.focusedIndex)
   state.activeIndex = state.focusedIndex

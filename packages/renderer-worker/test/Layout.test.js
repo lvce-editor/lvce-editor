@@ -1,6 +1,25 @@
 import { jest } from '@jest/globals'
-import * as Layout from '../src/parts/Layout/Layout.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+
+const Layout = await import('../src/parts/Layout/Layout.js')
 
 test('getPoints - default layout', () => {
   expect(
@@ -270,23 +289,12 @@ test('getPoints - sideBar hidden', () => {
 // TODO test hydrate
 
 test.skip('updateLayout', () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Layout.updateLayout(Layout.state)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    1100,
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith([
+    'Layout.update',
     {
       'ActivityBar.visible': true,
       'Panel.height': 160,
@@ -301,209 +309,85 @@ test.skip('updateLayout', () => {
 })
 
 test('showSideBar', () => {
-  // TODO this can be replaced with jest.spyOn(RendererProcess) once jest supports it
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Layout.state.sideBarVisible = false
   Layout.showSideBar()
   expect(Layout.state.sideBarVisible).toBe(true)
 })
 
 test('hideSideBar', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Layout.state.sideBarVisible = true
   await Layout.hideSideBar()
   expect(Layout.state.sideBarVisible).toBe(false)
 })
 
 test.skip('toggleSideBar - on', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Layout.state.sideBarVisible = false
   await Layout.toggleSideBar()
   expect(Layout.state.sideBarVisible).toBe(true)
 })
 
 test('showPanel', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+
   Layout.state.panelVisible = false
   await Layout.showPanel()
   expect(Layout.state.panelVisible).toBe(true)
 })
 
 test('hidePanel', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Layout.state.panelVisible = true
   await Layout.hidePanel()
   expect(Layout.state.panelVisible).toBe(false)
 })
 
 test('togglePanel - on', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Layout.state.panelVisible = false
   await Layout.togglePanel()
   expect(Layout.state.panelVisible).toBe(true)
 })
 
 test('showActivityBar', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Layout.state.activityBarVisible = false
   await Layout.showActivityBar()
   expect(Layout.state.activityBarVisible).toBe(true)
 })
 
 test('hideActivityBar', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Layout.state.activityBarVisible = true
   await Layout.hideActivityBar()
   expect(Layout.state.activityBarVisible).toBe(false)
 })
 
 test('toggleActivityBar - on', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   Layout.state.activityBarVisible = false
   await Layout.toggleActivityBar()
   expect(Layout.state.activityBarVisible).toBe(true)
 })
 
 test('handleResize', async () => {
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3024:
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message')
-    }
-  })
-  await Layout.handleResize({
-    windowWidth: 1852,
-    windowHeight: 500,
-    titleBarHeight: 0,
-  })
+  expect.any(Number),
+    await Layout.handleResize({
+      windowWidth: 1852,
+      windowHeight: 500,
+      titleBarHeight: 0,
+    })
   expect(Layout.state.windowHeight).toBe(500)
   expect(Layout.state.windowWidth).toBe(1852)
 })
@@ -516,35 +400,18 @@ test('handleSashSideBarMove', async () => {
   Layout.state.sideBarVisible = true
   Layout.state.sideBarWidth = 240
   Layout.state.windowWidth = 1280
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3024:
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message')
-    }
-  })
-  await Layout.handleSashSideBarMove(892)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
-    909090,
-    35,
-    1100,
+  expect.any(Number), await Layout.handleSashPointerDown('SideBar')
+  await Layout.handleSashPointerMove(892, 892)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
+    'Layout.update',
     expect.objectContaining({
       mainWidth: 892,
       sideBarLeft: 892,
       sideBarWidth: 340,
-    }),
-  ])
+    })
+  )
 })
 
 test('handleSashSideBarMove - side bar should stay at min width when dragging makes width a bit smaller than min width', async () => {
@@ -553,36 +420,19 @@ test('handleSashSideBarMove - side bar should stay at min width when dragging ma
   Layout.state.sideBarVisible = true
   Layout.state.sideBarWidth = 240
   Layout.state.windowWidth = 1280
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3024:
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message')
-    }
-  })
-  await Layout.handleSashSideBarMove(1092)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
-    909090,
-    expect.any(Number),
-    1100,
+  expect.any(Number), await Layout.handleSashPointerDown('SideBar')
+  await Layout.handleSashPointerMove(1092, 1092)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
+    'Layout.update',
     expect.objectContaining({
       mainWidth: 1062,
       sideBarLeft: 1062,
       sideBarWidth: 170,
       sideBarVisible: true,
-    }),
-  ])
+    })
+  )
 })
 
 test('handleSashSideBarMove - side bar should collapse dragging makes width is much smaller than min width', async () => {
@@ -591,34 +441,20 @@ test('handleSashSideBarMove - side bar should collapse dragging makes width is m
   Layout.state.sideBarVisible = true
   Layout.state.sideBarWidth = 240
   Layout.state.windowWidth = 1280
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      case 3024:
-        break
-      default:
-        console.log({ message })
-        throw new Error('unexpected message')
-    }
-  })
-  await Layout.handleSashSideBarMove(1192)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(1, [
-    909090,
-    expect.any(Number),
-    1100,
+
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Layout.handleSashPointerDown('SideBar')
+  await Layout.handleSashPointerMove(1192, 1192)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
+    'Layout.update',
     expect.objectContaining({
       mainWidth: 1232,
       sideBarLeft: 1232,
       sideBarWidth: 0,
       sideBarVisible: false,
-    }),
-  ])
+    })
+  )
 })

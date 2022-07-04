@@ -1,19 +1,30 @@
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
 import { jest } from '@jest/globals'
-import * as Platform from '../src/parts/Platform/Platform.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const SharedProcess = await import(
+  '../src/parts/SharedProcess/SharedProcess.js'
+)
+
+const Platform = await import('../src/parts/Platform/Platform.js')
 
 test('getLogsDir', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'Platform.getLogsDir':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: '~/.local/state/app-name',
-        })
-        break
+        return '~/.local/state/app-name'
       default:
-        console.log(message)
         throw new Error('unexpected message')
     }
   })
@@ -21,19 +32,12 @@ test('getLogsDir', async () => {
 })
 
 test('getLogsDir - error', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(async (method, ...params) => {
+    switch (method) {
       case 'Platform.getLogsDir':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          error: {
-            message: 'TypeError: x is not a function',
-          },
-        })
-        break
+        throw new TypeError('x is not a function')
       default:
-        console.log(message)
         throw new Error('unexpected message')
     }
   })
@@ -43,17 +47,12 @@ test('getLogsDir - error', async () => {
 })
 
 test('getUserSettingsPath', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'Platform.getUserSettingsPath':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: '~/.config/app/settings.json',
-        })
-        break
+        return '~/.config/app/settings.json'
       default:
-        console.log(message)
         throw new Error('unexpected message')
     }
   })
@@ -63,19 +62,12 @@ test('getUserSettingsPath', async () => {
 })
 
 test('getUserSettingsPath - error', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(async (method, ...params) => {
+    switch (method) {
       case 'Platform.getUserSettingsPath':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          error: {
-            message: 'TypeError: x is not a function',
-          },
-        })
-        break
+        throw new TypeError('x is not a function')
       default:
-        console.log(message)
         throw new Error('unexpected message')
     }
   })

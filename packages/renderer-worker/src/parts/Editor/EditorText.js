@@ -169,8 +169,8 @@ const getDecorationClassName = (type) => {
   switch (type) {
     case 2816:
     case 2817:
-    case 2825:
     case 2824:
+    case 2825:
     case 2856:
     case 2857:
     case 3072:
@@ -201,8 +201,8 @@ const getDecorationClassName = (type) => {
     case 2089:
     case 2313:
     case 2560:
-    case 2569:
     case 2561:
+    case 2569:
     case 2584:
       return 'VariableName'
     case 256:

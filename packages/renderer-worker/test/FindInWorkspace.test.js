@@ -1,39 +1,44 @@
-import * as FindInWorkspace from '../src/parts/FindInWorkspace/FindInWorkspace.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
+import { jest } from '@jest/globals'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const SharedProcess = await import(
+  '../src/parts/SharedProcess/SharedProcess.js'
+)
+
+const FindInWorkspace = await import(
+  '../src/parts/FindInWorkspace/FindInWorkspace.js'
+)
 
 test('findInWorkspace', async () => {
-  SharedProcess.state.send = (message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'Search.search':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: [],
-        })
-        break
+        return []
       default:
         throw new Error('unexpected message')
     }
-    console.log(message)
-  }
+  })
   expect(await FindInWorkspace.findInWorkspace('test search')).toEqual([])
 })
 
-test.skip('findInWorkspace - error', async () => {
-  SharedProcess.state.send = (message) => {
-    switch (message.method) {
-      case 'Search.search':
-        // TODO should return error
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: [],
-        })
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-    console.log(message)
-  }
-  expect(await FindInWorkspace.findInWorkspace('test search')).toEqual([])
+test('findInWorkspace - error', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(async (method, ...params) => {
+    throw new TypeError('x is not a function')
+  })
+  await expect(
+    FindInWorkspace.findInWorkspace('test search')
+  ).rejects.toThrowError(new TypeError('x is not a function'))
 })

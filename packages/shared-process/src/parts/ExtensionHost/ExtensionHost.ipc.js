@@ -28,10 +28,10 @@ import * as ExtensionHostTypeDefinition from './ExtensionHostTypeDefinition.js'
 import * as ExtensionHostClosingTag from './ExtensionHostClosingTag.js'
 import * as ExtensionHostSemanticTokens from './ExtensionHostSemanticTokens.js'
 
+// prettier-ignore
 export const __initialize__ = () => {
   Command.register('ExtensionHost.getCommands', ExtensionHostCommand.getCommandsIpc)
   Command.register('ExtensionHostCompletion.execute', ExtensionHost.wrapExtensionHostCommand(ExtensionHostCompletion.executeCompletionProvider))
-  // Command.register(385, ExtensionHost.textDocumentSync)
   Command.register('ExtensionHost.executeTabCompletionProvider', ExtensionHost.wrapExtensionHostCommand(ExtensionHostTabCompletion.executeTabCompletionProvider))
   Command.register('ExtensionHost.getLanguages', ExtensionHostLanguages.getLanguages)
   Command.register('ExtensionHost.getIconThemeJson', ExtensionHostIconTheme.getIconTheme)
@@ -43,7 +43,6 @@ export const __initialize__ = () => {
   Command.register('ExtensionHost.getSourceControlBadgeCount', ExtensionHost.wrapExtensionHostCommand(ExtensionHostSourceControl.getSourceControlBadgeCount))
   Command.register('ExtensionHost.format', ExtensionHost.wrapExtensionHostCommand(ExtensionHostFormatting.format))
   Command.register('ExtensionHost.executeCommand', ExtensionHost.wrapExtensionHostCommand(ExtensionHostCommand.executeCommand))
-
   Command.register('ExtensionHost.sourceControlGetChangedFiles', ExtensionHost.wrapExtensionHostCommand(ExtensionHostSourceControl.getSourceControlChangedFiles))
   Command.register('ExtensionHost.getLanguageConfiguration', ExtensionHostLanguages.getLanguageConfiguration)
   Command.register('ExtensionHost.getColorThemes', ExtensionHostColorTheme.getColorThemes)

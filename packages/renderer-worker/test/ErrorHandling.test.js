@@ -1,70 +1,56 @@
 import { jest } from '@jest/globals'
-import * as ErrorHandling from '../src/parts/ErrorHandling/ErrorHandling.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+const ErrorHandling = await import(
+  '../src/parts/ErrorHandling/ErrorHandling.js'
+)
 
 test('handleError - normal error', async () => {
   const mockError = new Error('oops')
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+
   await ErrorHandling.handleError(mockError)
   expect(spy).toHaveBeenCalledWith(mockError)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    /* Notification.create */ 991,
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    /* Notification.create */ 'Notification.create',
     'error',
-    {
-      codeFrame: undefined,
-      message: 'Error: oops',
-      stack: undefined,
-      category: undefined,
-    },
-  ])
+    'Error: oops'
+  )
 })
 
 test('handleError - null', async () => {
   const mockError = null
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ErrorHandling.handleError(mockError)
   expect(spy).toHaveBeenCalledWith(mockError)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    /* Notification.create */ 991,
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    /* Notification.create */ 'Notification.create',
     'error',
-    {
-      codeFrame: undefined,
-      message: 'Error: null',
-      stack: undefined,
-    },
-  ])
+    'Error: null'
+  )
 })
 
 test('handleError - multiple causes', async () => {
@@ -80,35 +66,15 @@ test('handleError - multiple causes', async () => {
     cause: mockError2,
   })
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await ErrorHandling.handleError(mockError3)
   expect(spy).toHaveBeenCalledWith(mockError3)
   expect(spy).toHaveBeenCalledWith(mockError2)
   expect(spy).toHaveBeenCalledWith(mockError1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    /* Notification.create */ 991,
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    /* Notification.create */ 'Notification.create',
     'error',
-    {
-      codeFrame: undefined,
-      message:
-        'Error: Failed to load keybindings: Error: Failed to load url /keyBindings.json: Error: SyntaxError: Unexpected token , in JSON at position 7743',
-      stack: undefined,
-      category: undefined,
-    },
-  ])
+    'Error: Failed to load keybindings: Error: Failed to load url /keyBindings.json: Error: SyntaxError: Unexpected token , in JSON at position 7743'
+  )
 })

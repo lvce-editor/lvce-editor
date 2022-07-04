@@ -111,8 +111,8 @@ export const show = async (value, provider) => {
     const visiblePicks = getVisiblePicks(newPicks, filterValue)
     const placeholder = provider.getPlaceholder()
     const label = provider.getLabel()
-    RendererProcess.send([
-      /* Viewlet.send */ 3024,
+    RendererProcess.invoke(
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'updateValueAndPicksAndPlaceholder',
       /* value */ value,
@@ -120,8 +120,8 @@ export const show = async (value, provider) => {
       /* focusIndex */ 0,
       /* unFocusIndex */ state.focusedIndex,
       /* placeholder */ placeholder,
-      /* label */ label,
-    ])
+      /* label */ label
+    )
     state.picks = newPicks
     state.visiblePicks = visiblePicks
     state.focusedIndex = 0
@@ -136,7 +136,10 @@ export const show = async (value, provider) => {
   state.state = STATE_CREATING
   const version = ++state.versionId
   // TODO also pass initial value here
-  await RendererProcess.invoke(/* Viewlet.load */ 3030, /* id */ 'QuickPick')
+  await RendererProcess.invoke(
+    /* Viewlet.load */ 'Viewlet.load',
+    /* id */ 'QuickPick'
+  )
   const newPicks = await provider.getPicks(value)
   Assert.array(newPicks)
   if (version !== state.versionId) {
@@ -144,21 +147,21 @@ export const show = async (value, provider) => {
   }
   if (newPicks.length === 0) {
     const noResults = await provider.getNoResults()
-    RendererProcess.send([
-      /* Viewlet.send */ 3024,
+    RendererProcess.invoke(
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'showNoResults',
       /* noResults */ noResults,
-      /* unfocusIndex */ state.focusedIndex,
-    ])
+      /* unfocusIndex */ state.focusedIndex
+    )
     return
   }
   const filterValue = provider.getFilterValue(value)
   const visiblePicks = getVisiblePicks(newPicks, filterValue)
   const placeholder = provider.getPlaceholder()
   const label = provider.getLabel()
-  RendererProcess.send([
-    /* Viewlet.send */ 3024,
+  RendererProcess.invoke(
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'QuickPick',
     /* method */ 'updateValueAndPicksAndPlaceholder',
     /* value */ value,
@@ -166,8 +169,8 @@ export const show = async (value, provider) => {
     /* focusIndex */ 0,
     /* unFocusIndex */ -1,
     /* placeholder */ placeholder,
-    /* label */ label,
-  ])
+    /* label */ label
+  )
   state.picks = newPicks
   state.visiblePicks = visiblePicks
   state.focusedIndex = 0
@@ -186,7 +189,10 @@ export const dispose = () => {
       break
     case STATE_FINISHED:
       state.state = STATE_DEFAULT
-      RendererProcess.send([/* Viewlet.dispose */ 3026, /* id */ 'QuickPick'])
+      RendererProcess.invoke(
+        /* Viewlet.dispose */ 'Viewlet.dispose',
+        /* id */ 'QuickPick'
+      )
       break
     default:
       break
@@ -269,7 +275,7 @@ export const handleInput = async (value) => {
   const visiblePicks = getVisiblePicks(newPicks, filterValue)
 
   RendererProcess.send([
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'QuickPick',
     /* method */ 'updatePicks',
     /* picks */ visiblePicks,
@@ -310,15 +316,15 @@ export const focusIndex = async (index) => {
     const displayPicks = toDisplayPicks(slicedPicks)
     const relativeFocusIndex = index - state.minLineY
     const relativeUnFocusIndex = state.focusedIndex - state.minLineY
-    RendererProcess.send([
-      /* Viewlet.send */ 3024,
+    RendererProcess.invoke(
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'updateValueAndPicks', // TODO don't need to update value, just picks and focus
       /* value */ state.value,
       /* visiblePicks */ displayPicks,
       /* focusIndex */ relativeFocusIndex,
-      /* unFocusIndex */ relativeUnFocusIndex,
-    ])
+      /* unFocusIndex */ relativeUnFocusIndex
+    )
     // TODO need to scroll up
   } else if (index > state.maxLineY) {
     // TODO need to scroll down
@@ -345,23 +351,23 @@ export const focusIndex = async (index) => {
       relativeFocusIndex,
       relativeUnFocusIndex,
     })
-    RendererProcess.send([
-      /* Viewlet.send */ 3024,
+    RendererProcess.invoke(
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'updateValueAndPicks', // TODO don't need to update value, just picks and focus
       /* value */ state.value,
       /* visiblePicks */ displayPicks,
       /* focusIndex */ relativeFocusIndex,
-      /* unFocusIndex */ relativeUnFocusIndex,
-    ])
+      /* unFocusIndex */ relativeUnFocusIndex
+    )
   } else {
-    RendererProcess.send([
-      /* Viewlet.send */ 3024,
+    RendererProcess.invoke(
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'focusIndex',
       /* unFocusIndex */ state.focusedIndex,
-      /* index */ index,
-    ])
+      /* index */ index
+    )
   }
 
   state.focusedIndex = index

@@ -1,42 +1,47 @@
 import { jest } from '@jest/globals'
-import * as Open from '../src/parts/Open/Open.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const SharedProcess = await import(
+  '../src/parts/SharedProcess/SharedProcess.js'
+)
+
+const Open = await import('../src/parts/Open/Open.js')
 
 test('openNativeFolder', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'Native.openFolder':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
+        return null
       default:
         throw new Error('unexpected message')
     }
   })
   await Open.openNativeFolder('/test/my-folder')
-  expect(SharedProcess.state.send).toHaveBeenCalledWith({
-    id: expect.any(Number),
-    jsonrpc: '2.0',
-    method: 'Native.openFolder',
-    params: ['/test/my-folder'],
-  })
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith(
+    'Native.openFolder',
+    '/test/my-folder'
+  )
 })
 
 test('openNativeFolder - error', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(async (method, ...params) => {
+    switch (method) {
       case 'Native.openFolder':
-        SharedProcess.state.receive({
-          id: message.id,
-          error: {
-            message: 'x is not a function',
-            data: 'x is not a function',
-          },
-        })
-        break
+        throw new TypeError('x is not a function')
       default:
         throw new Error('unexpected message')
     }

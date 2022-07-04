@@ -5,6 +5,9 @@ import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as Layout from '../Layout/Layout.js'
 
 export const state = {
+  /**
+   * @type {any[]}
+   */
   menus: [],
   latestTimeStamp: 0,
   enterTimeout: -1,
@@ -92,7 +95,7 @@ export const show = async (x, y, id, mouseBlocking = false) => {
     y: bounds.y,
   })
   await RendererProcess.invoke(
-    /* Menu.show */ 7905,
+    /* Menu.show */ 'Menu.showMenu',
     /* x */ bounds.x,
     /* y */ bounds.y,
     /* width */ bounds.width,
@@ -132,7 +135,7 @@ const showSubMenuAtEnter = async (level, index, enterX, enterY) => {
   const width = getMenuWidth()
   const height = getMenuHeight(subMenuItems)
   RendererProcess.send([
-    /* Menu.showMenu */ 7905,
+    /* Menu.showMenu */ 'Menu.showMenu',
     /* x */ subMenu.x,
     /* y */ subMenu.y,
     /* width */ width,
@@ -181,7 +184,7 @@ export const hide = async () => {
     return
   }
   state.menus = []
-  await RendererProcess.invoke(/* Menu.hide */ 7901)
+  await RendererProcess.invoke(/* Menu.hide */ 'Menu.hide')
 }
 
 // TODO difference between focusing with mouse or keyboard
@@ -192,7 +195,7 @@ const hideSubMenus = async (level) => {
   if (level < state.menus.length) {
     state.menus = state.menus.slice(0, level + 1)
     await RendererProcess.invoke(
-      /* Menu.hideSubMenu */ 7904,
+      /* Menu.hideSubMenu */ 'Menu.hideSubMenu',
       /* level */ level + 1
     )
   }
@@ -249,7 +252,7 @@ export const focusIndex = async (menu, index) => {
   const oldFocusedIndex = menu.focusedIndex
   menu.focusedIndex = index
   await RendererProcess.invoke(
-    /* Menu.focusIndex */ 7902,
+    /* Menu.focusIndex */ 'Menu.focusIndex',
     /* level */ menu.level,
     /* oldFocusedIndex */ oldFocusedIndex,
     /* newFocusedIndex */ index

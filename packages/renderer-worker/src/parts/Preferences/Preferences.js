@@ -8,12 +8,15 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 export const state = Object.create(null)
 
 export const openSettingsJson = async () => {
-  await Command.execute(/* Main.openUri */ 97, /* uri */ 'app://settings.json')
+  await Command.execute(
+    /* Main.openUri */ 'Main.openUri',
+    /* uri */ 'app://settings.json'
+  )
 }
 
 export const openKeyBindingsJson = async () => {
   await Command.execute(
-    /* Main.openUri */ 97,
+    /* Main.openUri */ 'Main.openUri',
     /* uri */ 'app://keyBindings.json'
   )
 }
@@ -23,7 +26,7 @@ export const openKeyBindingsJson = async () => {
 const getPreferencesJson = async () => {
   if (Platform.getPlatform() === 'web') {
     const cachedPreferences = await Command.execute(
-      /* LocalStorage.getJson */ 6902,
+      /* LocalStorage.getJson */ 'LocalStorage.getJson',
       /* key */ 'preferences'
     )
     if (cachedPreferences) {
@@ -31,7 +34,7 @@ const getPreferencesJson = async () => {
     }
     const assetDir = Platform.getAssetDir()
     const url = `${assetDir}/config/defaultSettings.json`
-    return Command.execute(/* Ajax.getJson */ 270, /* url */ url)
+    return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
   }
   return SharedProcess.invoke(/* Preferences.getAll */ 'Preferences.getAll')
 }
@@ -68,8 +71,9 @@ export const hydrate = async () => {
   const css = `:root {
 ${styles.join('\n')}
 }`
+  // TODO make Css.setInlineStyle a separate module in renderer-worker
   await RendererProcess.invoke(
-    /* Css.setInlineStyle */ 4551,
+    /* Css.setInlineStyle */ 'Css.setInlineStyle',
     /* id */ 'Settings',
     /* css */ css
   )
@@ -84,7 +88,7 @@ export const set = async (key, value) => {
   if (Platform.getPlatform() === 'web') {
     const preferences = { ...state, [key]: value }
     await Command.execute(
-      /* LocalStorage.setJson */ 6901,
+      /* LocalStorage.setJson */ 'LocalStorage.setJson',
       /* key */ 'preferences',
       /* value */ preferences
     )

@@ -2,8 +2,29 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
-import * as ViewletLocations from '../src/parts/Viewlet/ViewletLocations.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const ViewletLocations = await import(
+  '../src/parts/Viewlet/ViewletLocations.js'
+)
 
 test('name', () => {
   expect(ViewletLocations.name).toBe('Locations')
@@ -99,10 +120,11 @@ test('event - left click on tree', () => {
   const event = new MouseEvent('mousedown', {
     bubbles: true,
   })
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   state.$Locations.dispatchEvent(event)
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([7106, -1])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(['Locations.focusIndex', -1])
 })
 
 test('event - left click on reference', () => {
@@ -131,8 +153,9 @@ test('event - left click on reference', () => {
   const event = new MouseEvent('mousedown', {
     bubbles: true,
   })
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   $Location.dispatchEvent(event)
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([7100, 1])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(['Locations.selectIndex', 1])
 })

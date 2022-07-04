@@ -1,5 +1,9 @@
 import { jest } from '@jest/globals'
 
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
 jest.unstable_mockModule(
   '../src/parts/RendererProcess/RendererProcess.js',
   () => {
@@ -16,10 +20,6 @@ const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
 
-afterEach(() => {
-  jest.resetAllMocks()
-})
-
 test('getJson - number', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {
@@ -27,7 +27,10 @@ test('getJson - number', async () => {
   })
   expect(await LocalStorage.getJson('item-1')).toBe(42)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(8987, 'item-1')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'LocalStorage.getItem',
+    'item-1'
+  )
 })
 
 test('getJson - object', async () => {
@@ -37,7 +40,10 @@ test('getJson - object', async () => {
   })
   expect(await LocalStorage.getJson('item-1')).toEqual({})
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(8987, 'item-1')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'LocalStorage.getItem',
+    'item-1'
+  )
 })
 
 test('getJson - invalid json', async () => {
@@ -47,7 +53,10 @@ test('getJson - invalid json', async () => {
   })
   expect(await LocalStorage.getJson('item-1')).toBeUndefined()
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(8987, 'item-1')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'LocalStorage.getItem',
+    'item-1'
+  )
 })
 
 test('setJson', async () => {
@@ -56,7 +65,7 @@ test('setJson', async () => {
   await LocalStorage.setJson('item-1', 43)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    8988,
+    'LocalStorage.setItem',
     'item-1',
     `43
 `

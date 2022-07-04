@@ -8,7 +8,7 @@
     "test": "test"
   },
   "scripts": {
-    "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --collectCoverage --detectOpenHandles --forceExit",
+    "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
     "test:watch": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch",
     "build-min": "microbundle --entry src/rendererWorkerMain.js --output distmin --format modern --no-compress",
     "build-min2": "microbundle --entry src/parts/Editor/Editor.js --output distmin --format modern --no-compress",
@@ -19,7 +19,10 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
-  "devDependencies": {},
+  "devDependencies": {
+    "msw": "^0.42.3",
+    "node-fetch": "^3.2.6"
+  },
   "jest": {
     "moduleNameMapper": {
       "^/static/(.*)$": "<rootDir>/../../static/$1"

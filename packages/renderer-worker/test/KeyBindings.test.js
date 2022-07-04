@@ -1,31 +1,78 @@
 import { jest } from '@jest/globals'
-import * as ErrorHandling from '../src/parts/ErrorHandling/ErrorHandling.js'
-import * as KeyBindings from '../src/parts/KeyBindings/KeyBindings.js'
-import * as Ajax from '../src/parts/Ajax/Ajax.js'
-import * as CacheStorage from '../src/parts/CacheStorage/CacheStorage.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
+  return {
+    handleError: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
+  return {
+    getJson: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+jest.unstable_mockModule('../src/parts/CacheStorage/CacheStorage.js', () => {
+  return {
+    getJson: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    setJson: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+
+const ErrorHandling = await import(
+  '../src/parts/ErrorHandling/ErrorHandling.js'
+)
+const CacheStorage = await import('../src/parts/CacheStorage/CacheStorage.js')
+
+const Ajax = await import('../src/parts/Ajax/Ajax.js')
+
+const KeyBindings = await import('../src/parts/KeyBindings/KeyBindings.js')
 
 // TODO when https://github.com/facebook/jest/issues/11598 is fixed, could use spyOn(CacheStorage.getJsonFromCache)
 test.skip('hydrate - use data from cache storage first', async () => {
-  ErrorHandling.state.handleError = jest.fn()
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  Ajax.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  ErrorHandling.handleError.mockImplementation(() => {})
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(() => {
     return []
   })
-  CacheStorage.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  CacheStorage.getJson.mockImplementation(() => {
     return [
       {
         key: 'ArrowDown',
@@ -39,11 +86,12 @@ test.skip('hydrate - use data from cache storage first', async () => {
       },
     ]
   })
-  ErrorHandling.state.handleError = jest.fn()
+  // @ts-ignore
+  ErrorHandling.handleError.mockImplementation(() => {})
   await KeyBindings.hydrate()
-  expect(ErrorHandling.state.handleError).not.toHaveBeenCalled()
-  expect(Ajax.state.getJson).not.toHaveBeenCalled()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+  expect(ErrorHandling.handleError).not.toHaveBeenCalled()
+  expect(Ajax.getJson).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).toHaveBeenCalledWith([
     755,
     [
       {
@@ -61,22 +109,12 @@ test.skip('hydrate - use data from cache storage first', async () => {
 })
 
 test('hydrate - use data from ajax when not available from cache storage', async () => {
-  ErrorHandling.state.handleError = jest.fn()
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  Ajax.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  ErrorHandling.handleError.mockImplementation(() => {})
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(() => {
     return [
       {
         key: 'ArrowDown',
@@ -90,49 +128,37 @@ test('hydrate - use data from ajax when not available from cache storage', async
       },
     ]
   })
-  CacheStorage.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  CacheStorage.getJson.mockImplementation(() => {
     return undefined
   })
-  CacheStorage.state.setJson = jest.fn(async () => {})
-  ErrorHandling.state.handleError = jest.fn()
+  // @ts-ignore
+  CacheStorage.setJson.mockImplementation(() => {})
+  // @ts-ignore
+  ErrorHandling.handleError.mockImplementation(() => {})
   await KeyBindings.hydrate()
-  expect(ErrorHandling.state.handleError).not.toHaveBeenCalled()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    755,
-    [
-      {
-        command: 985,
-        key: 'ArrowDown',
-        when: 'focus.editorCompletions',
-      },
-      {
-        command: 986,
-        key: 'ArrowUp',
-        when: 'focus.editorCompletions',
-      },
-    ],
+  expect(ErrorHandling.handleError).not.toHaveBeenCalled()
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('KeyBindings.hydrate', [
+    {
+      command: 'editorCompletion.focusNext',
+      key: 'ArrowDown',
+      when: 'focus.editorCompletions',
+    },
+    {
+      command: 'editorCompletion.focusPrevious',
+      key: 'ArrowUp',
+      when: 'focus.editorCompletions',
+    },
   ])
 })
 
 test.skip('hydrate - use data from ajax when not available from cache storage but fails to put item into cache', async () => {
-  ErrorHandling.state.handleError = jest.fn()
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  Ajax.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  ErrorHandling.handleError.mockImplementation(() => {})
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(() => {
     return [
       {
         key: 'ArrowDown',
@@ -146,13 +172,18 @@ test.skip('hydrate - use data from ajax when not available from cache storage bu
       },
     ]
   })
-  CacheStorage.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  CacheStorage.getJson.mockImplementation(() => {
     return undefined
   })
-  CacheStorage.state.setJson = jest.fn(async () => {
+  // @ts-ignore
+  CacheStorage.setJson.mockImplementation(() => {
     throw new Error('Failed to put json into cache "/keybindings.json"')
   })
-  ErrorHandling.state.handleError = jest.fn()
+  // @ts-ignore
+
+  ErrorHandling.handleError.mockImplementation(() => {})
+
   await KeyBindings.hydrate()
   expect(ErrorHandling.state.handleError).toHaveBeenCalledWith(
     new Error('Failed to load KeyBindings')
@@ -160,29 +191,37 @@ test.skip('hydrate - use data from ajax when not available from cache storage bu
 })
 
 test('hydrate - error with ajax', async () => {
-  ErrorHandling.state.handleError = jest.fn()
-  Ajax.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  ErrorHandling.handleError.mockImplementation(() => {})
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(() => {
     throw new Error('404 - not found')
   })
-  CacheStorage.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  CacheStorage.getJson.mockImplementation(() => {
     return undefined
   })
   await KeyBindings.hydrate()
-  expect(ErrorHandling.state.handleError).toHaveBeenCalledWith(
+  expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
+  expect(ErrorHandling.handleError).toHaveBeenCalledWith(
     new Error('Failed to load KeyBindings')
   )
 })
 
 test.skip('hydrate - error with cache storage', async () => {
-  ErrorHandling.state.handleError = jest.fn()
-  Ajax.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  ErrorHandling.handleError.mockImplementation(() => {})
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(() => {
     return []
   })
-  CacheStorage.state.getJson = jest.fn(async () => {
+  // @ts-ignore
+  CacheStorage.getJson.mockImplementation(() => {
     throw new Error('CacheStorage is not available')
   })
   await KeyBindings.hydrate()
-  expect(ErrorHandling.state.handleError).toHaveBeenCalledWith(
+  expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
+  expect(ErrorHandling.handleError).toHaveBeenCalledWith(
     new Error('Failed to load KeyBindings')
   )
 })

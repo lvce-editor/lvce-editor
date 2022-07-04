@@ -1,77 +1,121 @@
 import { jest } from '@jest/globals'
-import * as Navigation from '../src/parts/Navigation/Navigation.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 
-test('focusTitleBar', () => {
-  RendererProcess.state.send = jest.fn()
-  Navigation.focusTitleBar()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([1331])
+beforeEach(() => {
+  jest.resetAllMocks()
 })
 
-test('focusActivityBar', () => {
-  RendererProcess.state.send = jest.fn()
-  Navigation.focusActivityBar()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([717115])
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
 })
 
-test('focusStatusBar', () => {
-  RendererProcess.state.send = jest.fn()
-  Navigation.focusStatusBar()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([8882])
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+
+const Navigation = await import('../src/parts/Navigation/Navigation.js')
+
+test('focusTitleBar', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Navigation.focusTitleBar()
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(1331)
 })
 
-test('focusPanel', () => {
-  RendererProcess.state.send = jest.fn()
-  Navigation.focusPanel()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([6664])
+test('focusActivityBar', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Navigation.focusActivityBar()
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(717115)
 })
 
-test('focusSideBar', () => {
-  RendererProcess.state.send = jest.fn()
-  Navigation.focusSideBar()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([5554])
+test('focusStatusBar', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Navigation.focusStatusBar()
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(8882)
 })
 
-test('focusMain', () => {
-  RendererProcess.state.send = jest.fn()
-  Navigation.focusMain()
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([2145])
+test('focusPanel', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Navigation.focusPanel()
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(6664)
 })
 
-test('focusPart', () => {
-  RendererProcess.state.send = jest.fn()
-  Navigation.focusPart(/* PART_TITLE_BAR */ 1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([1331])
-  RendererProcess.state.send = jest.fn()
-  Navigation.focusPart(/* PART_MAIN */ 2)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([2145])
-  RendererProcess.state.send = jest.fn()
-  Navigation.focusPart(/* PART_PANEL */ 3)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([6664])
-  RendererProcess.state.send = jest.fn()
-  Navigation.focusPart(/* PART_STATUS_BAR */ 4)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([8882])
-  RendererProcess.state.send = jest.fn()
-  Navigation.focusPart(/* PART_SIDE_BAR */ 5)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([5554])
-  RendererProcess.state.send = jest.fn()
-  Navigation.focusPart(/* PART_ACTIVITY_BAR */ 6)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([717115])
+test('focusSideBar', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Navigation.focusSideBar()
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(5554)
 })
 
-test('focusNextPart', () => {
+test('focusMain', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Navigation.focusMain()
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(2145)
+})
+
+test('focusPart', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Navigation.focusPart(/* PART_TITLE_BAR */ 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(1331)
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Navigation.focusPart(/* PART_MAIN */ 2)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(2145)
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Navigation.focusPart(/* PART_PANEL */ 3)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(6664)
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Navigation.focusPart(/* PART_STATUS_BAR */ 4)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(8882)
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Navigation.focusPart(/* PART_SIDE_BAR */ 5)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(5554)
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Navigation.focusPart(/* PART_ACTIVITY_BAR */ 6)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(717115)
+})
+
+test('focusNextPart', async () => {
   Navigation.state.focusedPart = /* PART_TITLE_BAR */ 1
-  Navigation.focusNextPart()
+  await Navigation.focusNextPart()
   expect(Navigation.state.focusedPart).toBe(/* PART_MAIN */ 2)
-  Navigation.focusNextPart()
+  await Navigation.focusNextPart()
   expect(Navigation.state.focusedPart).toBe(/* PART_PANEL */ 3)
-  Navigation.focusNextPart()
+  await Navigation.focusNextPart()
   expect(Navigation.state.focusedPart).toBe(/* PART_STATUS_BAR */ 4)
-  Navigation.focusNextPart()
+  await Navigation.focusNextPart()
   expect(Navigation.state.focusedPart).toBe(/* PART_SIDE_BAR */ 5)
-  Navigation.focusNextPart()
+  await Navigation.focusNextPart()
   expect(Navigation.state.focusedPart).toBe(/* PART_ACTIVITY_BAR */ 6)
-  Navigation.focusNextPart()
+  await Navigation.focusNextPart()
   expect(Navigation.state.focusedPart).toBe(/* PART_TITLE_BAR */ 1)
 })
 

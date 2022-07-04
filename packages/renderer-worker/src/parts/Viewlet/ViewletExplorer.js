@@ -101,7 +101,7 @@ export const create = (id, uri, left, top, width, height) => {
   return {
     root: '',
     dirents: [],
-    focusedIndex: -1,
+    focusedIndex: -2,
     hoverIndex: -1,
     top,
     left,
@@ -192,7 +192,7 @@ const getVisible = (state) => {
 const scheduleDirents = async (state) => {
   const visibleDirents = getVisible(state)
   await RendererProcess.invoke(
-    /* Viewlet.send */ 3024,
+    /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'updateDirents',
     /* visibleDirents */ visibleDirents
@@ -229,7 +229,7 @@ export const handleContextMenu = async (state, x, y, index) => {
   state.focusedIndex = index
   console.log('ctx menu', index, state)
   await Command.execute(
-    /* ContextMenu.show */ 951,
+    /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
     /* id */ 'explorer'
@@ -303,7 +303,7 @@ export const renameDirent = async (state) => {
   const dirent = state.dirents[index]
   const name = dirent.name
   await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'showRenameInputBox',
     /* index */ index,
@@ -316,7 +316,7 @@ export const cancelRename = async (state) => {
   const dirent = state.dirents[index]
   state.editingIndex = -1
   await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'hideRenameBox',
     /* index */ index,
@@ -446,7 +446,7 @@ export const acceptRename = async (state) => {
   state.editingIndex = -1
   const renamedDirent = state.dirents[index]
   const newDirentName = await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'hideRenameBox',
     /* index */ index,
@@ -506,7 +506,7 @@ const newDirent = async (state) => {
   // TODO do it like vscode, select position between folders and files
   const focusedIndex = state.focusedIndex
   const index = state.focusedIndex + 1
-  if (focusedIndex !== -1) {
+  if (focusedIndex >= 0) {
     const dirent = state.dirents[state.focusedIndex]
     console.log({ dirent, dirents: state.dirents, fi: state.focusedIndex })
     if (dirent.type === 'directory') {
@@ -516,7 +516,7 @@ const newDirent = async (state) => {
   }
   state.editingIndex = index
   await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'showCreateFileInputBox',
     /* index */ index
@@ -532,7 +532,7 @@ const cancelDirent = async (state) => {
   const index = state.editingIndex
   state.editingIndex = -1
   await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'hideCreateFileInputBox',
     /* index */ index
@@ -555,7 +555,7 @@ const acceptDirent = async (state, type) => {
   const focusedIndex = state.focusedIndex
   state.editingIndex = -1
   const newFileName = await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'hideCreateFileInputBox',
     /* index */ editingIndex
@@ -655,7 +655,7 @@ export const newFolder = async (state) => {
 
 const handleClickFile = async (state, dirent, index) => {
   await Command.execute(
-    /* Main.openAbsolutePath */ 97,
+    /* Main.openAbsolutePath */ 'Main.openUri',
     /* absolutePath */ dirent.path
   )
 }
@@ -679,7 +679,7 @@ const handleClickDirectoryExpanding = async (state, dirent, index) => {
   dirent.type = 'directory'
   dirent.icon = IconTheme.getIcon(dirent)
   await RendererProcess.invoke(
-    /* viewSend */ 3024,
+    /* viewSend */ 'Viewlet.send',
     /* id */ 'Explorer',
     /* method */ 'collapse',
     /* index */ index,
@@ -699,12 +699,13 @@ const handleClickDirectoryExpanded = async (state, dirent, index) => {
 
 export const handleClick = async (state, index) => {
   if (index === -1) {
-    state.focusedIndex = -1
+    await focusIndex(state, -1)
     return
   }
   const actualIndex = index + state.minLineY
   state.focusedIndex = actualIndex
   const dirent = state.dirents[actualIndex]
+  console.log('click', index)
   // TODO dirent type should be numeric
   switch (dirent.type) {
     case 'file':
@@ -731,12 +732,14 @@ export const handleClickCurrent = async (state) => {
 }
 
 export const focusIndex = async (state, index) => {
+  const oldFocusedIndex = state.focusedIndex
   state.focusedIndex = index
   await RendererProcess.invoke(
-    /* viewSend */ 3024,
+    /* viewSend */ 'Viewlet.send',
     /* id */ 'Explorer',
-    /* method */ 'focusIndex',
-    /* focusedIndex */ state.focusedIndex
+    /* method */ 'setFocusedIndex',
+    /* oldIndex */ oldFocusedIndex,
+    /* newIndex */ state.focusedIndex
   )
 }
 
@@ -949,7 +952,9 @@ export const handleCopy = async (state) => {
 }
 
 export const handlePaste = async (state) => {
-  const nativeFiles = await Command.execute(/* ClipBoard.readNativeFiles */ 244)
+  const nativeFiles = await Command.execute(
+    /* ClipBoard.readNativeFiles */ 'ClipBoard.readNativeFiles'
+  )
   if (nativeFiles.type === 'none') {
     console.info('[ViewletExplorer/handlePaste] no paths detected')
     return
@@ -998,7 +1003,7 @@ export const resize = (state, dimensions) => {
   const visibleDirents = getVisible(newState)
   const commands = [
     [
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Explorer',
       /* method */ 'updateDirents',
       /* visibleDirents */ visibleDirents,

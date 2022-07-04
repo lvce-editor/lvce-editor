@@ -92,7 +92,10 @@ export const dispose = async (id) => {
       throw new Error(`${id} is missing a factory function`)
     }
     instance.factory.dispose(instance.state)
-    await RendererProcess.invoke(/* Viewlet.dispose */ 3026, /* id */ id)
+    await RendererProcess.invoke(
+      /* Viewlet.dispose */ 'Viewlet.dispose',
+      /* id */ id
+    )
   } catch (error) {
     console.error(error)
     // TODO use Error.cause once proper stack traces are supported by chrome
@@ -138,7 +141,7 @@ export const wrapViewletCommand = (id, fn) => {
       }
       const commands = activeInstance.factory.render(oldState, newState)
       RendererProcess.send([
-        /* Viewlet.sendMultiple */ 3032,
+        /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
         /* commands */ commands,
       ])
       state.instances[id].state = newState
@@ -177,7 +180,7 @@ export const setState = (id, newState) => {
     const oldState = instance.state
     const commands = instance.factory.render(oldState, newState)
     RendererProcess.send([
-      /* Viewlet.sendMultiple */ 3032,
+      /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
       /* commands */ commands,
     ])
     instance.state = newState

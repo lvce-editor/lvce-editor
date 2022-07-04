@@ -37,7 +37,7 @@ export const contentLoaded = async (state) => {
 
 const getSideBarViewlet = async () => {
   const cachedViewlet = await Command.execute(
-    /* LocalStorage.getItem */ 6902,
+    /* LocalStorage.getJson */ 'LocalStorage.getJson',
     /* key */ 'sideBarPanel'
   )
   if (cachedViewlet) {

@@ -177,7 +177,7 @@ export const handleClick = async (state, index, x, y) => {
     case 'Settings':
       console.log('is settings')
       await Command.execute(
-        /* ContextMenu.show */ 951,
+        /* ContextMenu.show */ 'ContextMenu.show',
         /* x */ x,
         /* y */ y,
         /* id */ 'settings'
@@ -185,7 +185,7 @@ export const handleClick = async (state, index, x, y) => {
       break
     case 'Additional Views':
       await Command.execute(
-        /* ContextMenu.show */ 951,
+        /* ContextMenu.show */ 'ContextMenu.show',
         /* x */ x,
         /* y */ y,
         /* id */ 'activity-bar-additional-views'
@@ -194,7 +194,7 @@ export const handleClick = async (state, index, x, y) => {
     default:
       if (Layout.isSideBarVisible()) {
         await Command.execute(
-          /* SideBar.showOrHideViewlet */ 553,
+          /* SideBar.showOrHideViewlet */ 'SideBar.showOrHideViewlet',
           /* id */ viewletId
         )
       } else {
@@ -211,7 +211,7 @@ export const handleSideBarViewletChange = async (state, id, ...args) => {
   const oldIndex = state.selectedIndex
   state.selectedIndex = index
   await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'ActivityBar',
     /* method */ 'selectIndex',
     /* oldIndex */ oldIndex,
@@ -223,7 +223,7 @@ export const handleSideBarHidden = async (state) => {
   const oldIndex = state.focusedIndex
   state.focusedIndex = -1
   await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'ActivityBar',
     /* method */ 'selectIndex',
     /* oldIndex */ oldIndex,
@@ -242,7 +242,7 @@ export const updateSourceControlCount = async (state, count) => {
     return
   }
   await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'ActivityBar',
     /* method */ 'setBadgeCount',
     /* index */ index,
@@ -266,7 +266,7 @@ export const toggleActivityBarItem = async (state, item) => {
   )
   activityBarItem.enabled = !activityBarItem.enabled
   await RendererProcess.invoke(
-    /* Viewlet.invoke */ 3024,
+    /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'ActivityBar',
     /* method */ 'setItems',
     /* items */ state.activityBarItems.filter(isEnabled),
@@ -276,7 +276,7 @@ export const toggleActivityBarItem = async (state, item) => {
 
 export const handleContextMenu = async (state, x, y) => {
   await Command.execute(
-    /* ContextMenu.show */ 951,
+    /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
     /* id */ 'activityBar'
@@ -354,7 +354,7 @@ export const resize = (state, dimensions) => {
   const visibleItems = getVisibleActivityBarItems(newState)
   const commands = [
     [
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'ActivityBar',
       /* method */ 'setItems',
       /* items */ visibleItems,
@@ -378,7 +378,7 @@ export const render = (oldState, newState) => {
   ) {
     const visibleItems = getVisibleActivityBarItems(newState)
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'ActivityBar',
       /* method */ 'setItems',
       /* items */ visibleItems,
@@ -386,7 +386,7 @@ export const render = (oldState, newState) => {
   }
   if (oldState.focusedIndex !== newState.focusedIndex) {
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'ActivityBar',
       /* method */ 'setFocusedIndex',
       /* unFocusIndex */ oldState.focusedIndex,

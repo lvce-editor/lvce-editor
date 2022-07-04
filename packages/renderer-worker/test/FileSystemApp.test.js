@@ -20,7 +20,6 @@ test('readFile - settings', async () => {
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })
@@ -124,7 +123,6 @@ test('writeFile - settings - error parent folder does not exist', async () => {
         })
         break
       default:
-        console.log({ message })
         throw new Error('unexpected message')
     }
   })

@@ -47,7 +47,7 @@ export const openSuggest = async (state) => {
   const filteredSuggestions = SUGGESTIONS
   state.suggestionState = /* Open */ 1
   await RendererProcess.invoke(
-    /* viewletSend */ 3024,
+    /* viewletSend */ 'Viewlet.send',
     /* id */ 'Extensions',
     /* method */ 'openSuggest',
     /* suggestions */ filteredSuggestions
@@ -57,7 +57,7 @@ export const openSuggest = async (state) => {
 export const closeSuggest = async (state) => {
   state.suggestionState = /* Closed */ 0
   await RendererProcess.invoke(
-    /* viewletSend */ 3024,
+    /* viewletSend */ 'Viewlet.send',
     /* id */ 'Extensions',
     /* method */ 'closeSuggest'
   )

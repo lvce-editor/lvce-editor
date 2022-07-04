@@ -33,10 +33,6 @@
   contain: content;
 }
 
-.MenuItem:not([disabled]) {
-  cursor: pointer;
-}
-
 .MenuItem.Focused {
   background: var(--MenuItemHoverBackground, #687f7b33);
   color: var(--MenuItemHoverForeground, inherit);

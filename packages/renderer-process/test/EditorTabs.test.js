@@ -53,7 +53,7 @@ test.skip('setTabs - renderTabsLess - single tab already exists', () => {
   const spy = jest.spyOn(document, 'createElement')
   EditorTabs.setTabs(state, tabs)
   expect(state.$EditorTabs.innerHTML).toBe(
-    '<li role=\"tab\" class=\"EditorTab\" aria-description=\"\" title=\"/tmp/some-file.txt\" data-language-id=\"plaintext\" data-file-name=\"some-file.txt\">some-file.txt</li><li role=\"tab\" class=\"EditorTab\" aria-selected=\"true\" tabindex=\"0\" aria-description=\"\" title=\"/tmp/some-file-2.txt\" data-language-id=\"plaintext\" data-file-name=\"some-file-2.txt\">some-file-2.txt</li>'
+    '<li role="tab" class="EditorTab" aria-description="" title="/tmp/some-file.txt" data-language-id="plaintext" data-file-name="some-file.txt">some-file.txt</li><li role="tab" class="EditorTab" aria-selected="true" tabindex="0" aria-description="" title="/tmp/some-file-2.txt" data-language-id="plaintext" data-file-name="some-file-2.txt">some-file-2.txt</li>'
   )
   expect(spy).toHaveBeenCalledTimes(1)
 })
@@ -107,7 +107,8 @@ test.skip('event - contextmenu', () => {
       languageId: 'plaintext',
     },
   ]
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   EditorTabs.setTabs(state, tabs)
   state.$EditorTabs.children[0].dispatchEvent(
     new MouseEvent('contextmenu', {
@@ -116,7 +117,7 @@ test.skip('event - contextmenu', () => {
       bubbles: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([95, 50, 50])
+  expect(RendererWorker.send).toHaveBeenCalledWith([95, 50, 50])
 })
 
 test.skip('event - middle click', () => {
@@ -129,7 +130,8 @@ test.skip('event - middle click', () => {
       languageId: 'plaintext',
     },
   ]
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   EditorTabs.setTabs(state, tabs)
   state.$EditorTabs.children[0].dispatchEvent(
     new MouseEvent('mousedown', {
@@ -139,5 +141,5 @@ test.skip('event - middle click', () => {
       button: 1,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([99])
+  expect(RendererWorker.send).toHaveBeenCalledWith([99])
 })

@@ -30,11 +30,11 @@ export const open = async (editor) => {
     const y = EditorPosition.y(editor, editor.cursor)
     // const prepareRenameResult = await prepareRename(editor)
     // console.log({ prepareRenameResult })
-    RendererProcess.send([
+    await RendererProcess.invoke(
       /* EditorRename.openWidget */ 4512,
       /* x */ x,
-      /* y */ y,
-    ])
+      /* y */ y
+    )
   } else {
     // TODO also show error when promise rejects
     await Command.execute(
@@ -89,6 +89,6 @@ export const finish = async (editor) => {
   // console.log({ workspaceEdits })
 }
 
-export const abort = () => {
-  RendererProcess.send([/* EditorRename.closeWidget */ 4514])
+export const abort = async () => {
+  await RendererProcess.invoke(/* EditorRename.closeWidget */ 4514)
 }

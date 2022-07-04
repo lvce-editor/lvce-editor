@@ -132,7 +132,7 @@ export const focusLast = (state) => {
 // TODO pass index instead
 export const handleContextMenu = async (state, x, y, extensionId) => {
   // await Command.execute(
-  //   /* ContextMenu.show */ 951,
+  //   /* ContextMenu.show */ 'ContextMenu.show',
   //   /* x */ x,
   //   /* y */ y,
   //   /* id */ 'manageExtension'
@@ -249,7 +249,7 @@ export const render = (oldState, newState) => {
   ) {
     const visibleItems = getVisible(newState)
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'List',
       /* method */ 'setItems',
       /* visibleExtensions */ visibleItems,
@@ -258,7 +258,7 @@ export const render = (oldState, newState) => {
   if (oldState.items.length !== newState.items.length) {
     const contentHeight = newState.items.length * ITEM_HEIGHT
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'List',
       /* method */ 'setContentHeight',
       /* contentHeight */ contentHeight,
@@ -267,7 +267,7 @@ export const render = (oldState, newState) => {
 
   if (oldState.negativeMargin !== newState.negativeMargin) {
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'List',
       /* method */ 'setNegativeMargin',
       /* negativeMargin */ newState.negativeMargin,
@@ -276,7 +276,7 @@ export const render = (oldState, newState) => {
 
   if (oldState.focusedIndex !== newState.focusedIndex) {
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'List',
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldState.focusedIndex - oldState.minLineY,
@@ -288,7 +288,7 @@ export const render = (oldState, newState) => {
       (newState.deltaY / newState.finalDeltaY) *
       (newState.height - newState.scrollBarHeight)
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'List',
       /* method */ 'setScrollBar',
       /* scrollBarY */ scrollBarY,

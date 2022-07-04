@@ -4,7 +4,7 @@ import * as CacheStorage from './CacheStorage.js'
 // TODO only use CacheStorage module via ipc -> that way is is always lazyloaded
 
 export const __initialize__ = () => {
-  Command.register(6800, CacheStorage.clearCache)
-  Command.register(6801, CacheStorage.setJson)
-  Command.register(6802, CacheStorage.getJson)
+  Command.register('CacheStorage.clearCache', CacheStorage.clearCache)
+  Command.register('CacheStorage.setJson', CacheStorage.setJson)
+  Command.register('CacheStorage.getJson', CacheStorage.getJson)
 }

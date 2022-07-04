@@ -134,16 +134,30 @@ export const getBounds = () => {
 
 const handleResize = (event) => {
   RendererWorker.send([
-    /* Layout.handleResize */ 1111,
+    /* Layout.handleResize */ 'Layout.handleResize',
     /* bounds */ getBounds(),
   ])
 }
 
+const getSashId = ($Target) => {
+  console.log({ $Target })
+  if ($Target.id === 'SashPanel') {
+    return 'Panel'
+  }
+  if ($Target.id === 'SashSideBar') {
+    return 'SideBar'
+  }
+  return ''
+}
+
 const handleSashPointerMove = (event) => {
-  // console.log({ event })
   const x = event.clientX
-  console.log({ x })
-  RendererWorker.send([/* Layout.handleSashSideBarMove */ 1112, /* x */ x])
+  const y = event.clientY
+  RendererWorker.send([
+    /* Layout.handleSashPointerMove */ 'Layout.handleSashPointerMove',
+    /* x */ x,
+    /* y */ y,
+  ])
 }
 
 const handleSashPointerUp = () => {
@@ -155,7 +169,7 @@ const handleSashPointerUp = () => {
   $Style.remove()
 }
 
-const handleSashPointerDown = () => {
+const handleSashPointerDown = (event) => {
   // TODO maybe add a class to body instead?
   const $Style = document.createElement('style')
   $Style.id = 'SashStyle'
@@ -172,9 +186,15 @@ const handleSashPointerDown = () => {
   document.head.append($Style)
   window.addEventListener('pointermove', handleSashPointerMove)
   window.addEventListener('pointerup', handleSashPointerUp)
+  const $Target = event.target
+  const id = getSashId($Target)
+  RendererWorker.send([
+    /* Layout.handleSashPointerDown */ 'Layout.handleSashPointerDown',
+    /* id */ id,
+  ])
 }
 
-export const hydrate = (points) => {
+export const show = (points) => {
   const $ActivityBar = document.createElement('div')
   $ActivityBar.id = 'ActivityBar'
 
@@ -196,10 +216,12 @@ export const hydrate = (points) => {
   // TODO use aria role splitter once supported https://github.com/w3c/aria/issues/1348
   const $SashSideBar = document.createElement('div')
   $SashSideBar.className = 'SashVertical'
+  $SashSideBar.id = 'SashSideBar'
 
   // TODO use aria role splitter once supported https://github.com/w3c/aria/issues/1348
   const $SashPanel = document.createElement('div')
   $SashPanel.className = 'SashHorizontal'
+  $SashPanel.id = 'SashPanel'
 
   const $Workbench = document.createElement('div')
   $Workbench.id = 'Workbench'
@@ -229,6 +251,7 @@ export const hydrate = (points) => {
   document.body.append($Workbench)
   window.addEventListener('resize', handleResize, { passive: true })
   $SashSideBar.addEventListener('pointerdown', handleSashPointerDown)
+  $SashPanel.addEventListener('pointerdown', handleSashPointerDown)
 }
 
 export const hide = () => {

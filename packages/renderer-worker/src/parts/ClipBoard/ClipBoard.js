@@ -1,45 +1,38 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
-export const state = {
-  async readText() {
-    let text
-    try {
+export const readText = async () => {
+  let text
+  try {
+    // @ts-ignore
+    text = await navigator.clipboard.readText()
+  } catch (error) {
+    // @ts-ignore
+    if (error.message === 'Read permission denied.') {
+      console.warn(
+        'Failed to paste text: The Browser disallowed reading from clipboard'
+      )
+    } else if (
       // @ts-ignore
-      text = await navigator.clipboard.readText()
-    } catch (error) {
-      if (error.message === 'Read permission denied.') {
-        console.warn(
-          'Failed to paste text: The Browser disallowed reading from clipboard'
-        )
-      } else if (
-        error.message === 'navigator.clipboard.readText is not a function'
-      ) {
-        console.warn(
-          'Failed to paste text: The Clipboard Api is not available in Firefox'
-        )
-      } else {
-        console.warn(error)
-      }
-      return
-    }
-    return text
-  },
-  async writeText(path) {
-    try {
-      // @ts-ignore
-      await navigator.clipboard.writeText(path)
-    } catch (error) {
+      error.message === 'navigator.clipboard.readText is not a function'
+    ) {
+      console.warn(
+        'Failed to paste text: The Clipboard Api is not available in Firefox'
+      )
+    } else {
       console.warn(error)
     }
-  },
-}
-
-export const readText = () => {
-  return state.readText()
+    return
+  }
+  return text
 }
 
 export const writeText = async (path) => {
-  await state.writeText(path)
+  try {
+    // @ts-ignore
+    await navigator.clipboard.writeText(path)
+  } catch (error) {
+    console.warn(error)
+  }
 }
 
 export const writeNativeFiles = (type, files) => {

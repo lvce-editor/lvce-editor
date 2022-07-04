@@ -7,7 +7,7 @@ export const getMarketplaceExtensions = async (props) => {
     searchParams: props,
   }
   return Command.execute(
-    /* Ajax.getJson */ 270,
+    /* Ajax.getJson */ 'Ajax.getJson',
     /* url */ `${marketplaceUrl}/api/extensions/search`,
     /* options */ options
   )

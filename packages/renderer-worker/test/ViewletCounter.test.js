@@ -36,6 +36,6 @@ test('render', () => {
     count: 1,
   }
   expect(ViewletCounter.render(oldState, newState)).toEqual([
-    [3024, 'Counter', 'setCount', 1],
+    ['Viewlet.send', 'Counter', 'setCount', 1],
   ])
 })

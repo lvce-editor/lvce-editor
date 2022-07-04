@@ -4,7 +4,7 @@ export const getMenuEntries = () => {
       id: 'selectAll',
       label: 'Select All',
       flags: /* None */ 0,
-      command: /* EditorSelectAll.editorSelectAll */ 366,
+      command: 'Editor.selectAll',
     },
   ]
 }

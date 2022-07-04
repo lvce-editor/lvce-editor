@@ -1,22 +1,22 @@
 import * as Command from '../Command/Command.js'
 import * as QuickPick from './QuickPick.js'
 
+// prettier-ignore
 export const __initialize__ = () => {
-  Command.register(71179, QuickPick.openEverythingQuickPick)
-  Command.register(71178, QuickPick.dispose)
-  Command.register(71180, QuickPick.selectCurrentIndex)
-  Command.register(71181, QuickPick.handleInput)
-  Command.register(71182, QuickPick.selectIndex)
-  // TODO should this be inside quickpick?
-  Command.register(7611, QuickPick.openCommandPalette)
-  Command.register(7612, QuickPick.openView)
-  Command.register(18920, QuickPick.focusFirst)
-  Command.register(18921, QuickPick.focusLast)
-  Command.register(18922, QuickPick.focusPrevious)
-  Command.register(18923, QuickPick.focusNext)
-  Command.register(18924, QuickPick.openGoToLine)
-  Command.register(18925, QuickPick.openColorTheme)
-  Command.register(18926, QuickPick.fileOpenRecent)
-  Command.register(18927, QuickPick.handleBlur)
-  Command.register(18928, QuickPick.showExtensionsQuickPick)
+  Command.register('QuickPick.openEverythingQuickPick', QuickPick.openEverythingQuickPick)
+  Command.register('QuickPick.dispose', QuickPick.dispose)
+  Command.register('QuickPick.selectCurrentIndex', QuickPick.selectCurrentIndex)
+  Command.register('QuickPick.handleInput', QuickPick.handleInput)
+  Command.register('QuickPick.selectIndex', QuickPick.selectIndex)
+  Command.register('QuickPick.openCommandPalette', QuickPick.openCommandPalette)
+  Command.register('QuickPick.openView', QuickPick.openView)
+  Command.register('QuickPick.focusFirst', QuickPick.focusFirst)
+  Command.register('QuickPick.focusLast', QuickPick.focusLast)
+  Command.register('QuickPick.focusPrevious', QuickPick.focusPrevious)
+  Command.register('QuickPick.focusNext', QuickPick.focusNext)
+  Command.register('QuickPick.openGoToLine', QuickPick.openGoToLine)
+  Command.register('QuickPick.openColorTheme', QuickPick.openColorTheme)
+  Command.register('QuickPick.fileOpenRecent', QuickPick.fileOpenRecent)
+  Command.register('QuickPick.handleBlur', QuickPick.handleBlur)
+  Command.register('QuickPick.showExtensionsQuickPick', QuickPick.showExtensionsQuickPick)
 }

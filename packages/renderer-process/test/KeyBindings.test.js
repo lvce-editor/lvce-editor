@@ -2,9 +2,28 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as Context from '../src/parts/Context/Context.js'
-import * as KeyBindings from '../src/parts/KeyBindings/KeyBindings.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const KeyBindings = await import('../src/parts/KeyBindings/KeyBindings.js')
+const Context = await import('../src/parts/Context/Context.js')
 
 afterAll(() => {
   if (KeyBindings.state.modifierTimeout !== -1) {
@@ -21,13 +40,20 @@ test('hydrate', async () => {
       command: 14,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   window.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'a',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'a',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with no matching keyBinding', async () => {
@@ -37,13 +63,14 @@ test('hydrate - dispatch event with no matching keyBinding', async () => {
       command: 14,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   window.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'b',
     })
   )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('hydrate - dispatch Event with context not matching', async () => {
@@ -54,13 +81,14 @@ test('hydrate - dispatch Event with context not matching', async () => {
       when: 'testContext',
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   window.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'a',
     })
   )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('hydrate - dispatch Event with context matching', async () => {
@@ -71,14 +99,22 @@ test('hydrate - dispatch Event with context matching', async () => {
       when: 'testContext',
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Context.set('testContext', true)
   window.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'a',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'a',
+      when: 'testContext',
+    },
+  ])
 })
 
 test('hydrate - dispatch Event with Arrow Key', async () => {
@@ -88,13 +124,20 @@ test('hydrate - dispatch Event with Arrow Key', async () => {
       command: 14,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   window.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowLeft',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'ArrowLeft',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with ctrl modifier', async () => {
@@ -104,14 +147,21 @@ test('hydrate - dispatch event with ctrl modifier', async () => {
       command: 14,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   window.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'a',
       ctrlKey: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'ctrl+a',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with shift modifier', async () => {
@@ -121,14 +171,21 @@ test('hydrate - dispatch event with shift modifier', async () => {
       command: 14,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   window.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'a',
       shiftKey: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'shift+a',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with alt modifier', async () => {
@@ -138,14 +195,21 @@ test('hydrate - dispatch event with alt modifier', async () => {
       command: 14,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   window.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'a',
       altKey: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'alt+a',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with space key', async () => {
@@ -155,13 +219,20 @@ test('hydrate - dispatch event with space key', async () => {
       command: 14,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   window.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: ' ',
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'Space',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with double shift key', async () => {
@@ -171,7 +242,8 @@ test('hydrate - dispatch event with double shift key', async () => {
       command: 14,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   window.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Shift',
@@ -190,14 +262,20 @@ test('hydrate - dispatch event with double shift key', async () => {
       shiftKey: true,
     })
   )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
   window.dispatchEvent(
     new KeyboardEvent('keyup', {
       key: 'Shift',
       shiftKey: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'shift shift',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with double alt key', async () => {
@@ -207,7 +285,8 @@ test('hydrate - dispatch event with double alt key', async () => {
       command: 14,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   window.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Alt',
@@ -226,14 +305,20 @@ test('hydrate - dispatch event with double alt key', async () => {
       altKey: true,
     })
   )
-  expect(RendererWorker.state.send).not.toBeCalled()
+  expect(RendererWorker.send).not.toBeCalled()
   window.dispatchEvent(
     new KeyboardEvent('keyup', {
       key: 'Alt',
       altKey: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'alt alt',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with double ctrl key', async () => {
@@ -243,7 +328,8 @@ test('hydrate - dispatch event with double ctrl key', async () => {
       command: 14,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   window.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Control',
@@ -262,14 +348,20 @@ test('hydrate - dispatch event with double ctrl key', async () => {
       ctrlKey: true,
     })
   )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
   window.dispatchEvent(
     new KeyboardEvent('keyup', {
       key: 'Control',
       ctrlKey: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'ctrl ctrl',
+    },
+  ])
 })
 
 test('hydrate - dispatch event with ctrl alt ctrl key should not trigger ctrl ctrl', async () => {
@@ -279,7 +371,8 @@ test('hydrate - dispatch event with ctrl alt ctrl key should not trigger ctrl ct
       command: 14,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   window.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Control',
@@ -316,7 +409,7 @@ test('hydrate - dispatch event with ctrl alt ctrl key should not trigger ctrl ct
       ctrlKey: true,
     })
   )
-  expect(RendererWorker.state.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('hydrate - dispatch event with ctrl alt shift shift key should trigger shift shift', async () => {
@@ -326,7 +419,8 @@ test('hydrate - dispatch event with ctrl alt shift shift key should trigger shif
       command: 14,
     },
   ])
-  RendererWorker.state.send = jest.fn()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   window.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Control',
@@ -375,5 +469,11 @@ test('hydrate - dispatch event with ctrl alt shift shift key should trigger shif
       shiftKey: true,
     })
   )
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([14])
+  expect(RendererWorker.send).toHaveBeenCalledWith([
+    'KeyBindings.handleKeyBinding',
+    {
+      command: 14,
+      key: 'shift shift',
+    },
+  ])
 })

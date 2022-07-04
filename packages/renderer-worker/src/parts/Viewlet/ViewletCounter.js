@@ -34,7 +34,7 @@ export const render = (oldState, newState) => {
   const changes = []
   if (oldState.count !== newState.count) {
     changes.push([
-      /* Viewlet.send */ 3024,
+      /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Counter',
       /* method */ 'setCount',
       /* newCount */ newState.count,

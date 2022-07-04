@@ -1,6 +1,22 @@
 import { jest } from '@jest/globals'
-import * as ClipBoard from '../src/parts/ClipBoard/ClipBoard.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const SharedProcess = await import(
+  '../src/parts/SharedProcess/SharedProcess.js'
+)
+
+const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
 
 test('readText', async () => {
   globalThis.navigator = {
@@ -84,19 +100,15 @@ test('writeText - error', async () => {
 
 // TODO test readNativeFiles error
 test('readNativeFiles - not supported', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ClipBoard.readFiles':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: {
-            source: 'notSupported',
-            type: 'none',
-            files: [],
-          },
-        })
-        break
+        return {
+          source: 'notSupported',
+          type: 'none',
+          files: [],
+        }
       default:
         throw new Error('unexpected message')
     }
@@ -109,19 +121,15 @@ test('readNativeFiles - not supported', async () => {
 })
 
 test('readNativeFiles - copied gnome files', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ClipBoard.readFiles':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: {
-            source: 'gnomeCopiedFiles',
-            type: 'copy',
-            files: ['/test/some-file.txt'],
-          },
-        })
-        break
+        return {
+          source: 'gnomeCopiedFiles',
+          type: 'copy',
+          files: ['/test/some-file.txt'],
+        }
       default:
         throw new Error('unexpected message')
     }
@@ -134,19 +142,15 @@ test('readNativeFiles - copied gnome files', async () => {
 })
 
 test('readNativeFiles - cut gnome files', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ClipBoard.readFiles':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: {
-            source: 'gnomeCopiedFiles',
-            type: 'cut',
-            files: ['/test/some-file.txt'],
-          },
-        })
-        break
+        return {
+          source: 'gnomeCopiedFiles',
+          type: 'cut',
+          files: ['/test/some-file.txt'],
+        }
       default:
         throw new Error('unexpected message')
     }
@@ -159,25 +163,20 @@ test('readNativeFiles - cut gnome files', async () => {
 })
 
 test('writeNativeFiles', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ClipBoard.writeFiles':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
+        return null
       default:
-        console.log(message)
         throw new Error('unexpected message')
     }
   })
   await ClipBoard.writeNativeFiles('copy', ['/test/my-folder'])
-  expect(SharedProcess.state.send).toHaveBeenCalledWith({
-    id: expect.any(Number),
-    jsonrpc: '2.0',
-    method: 'ClipBoard.writeFiles',
-    params: ['copy', ['/test/my-folder']],
-  })
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith(
+    'ClipBoard.writeFiles',
+    'copy',
+    ['/test/my-folder']
+  )
 })

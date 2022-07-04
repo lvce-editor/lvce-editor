@@ -69,8 +69,24 @@ const getAllEntries = async (dataTransfer) => {
   return allEntries
 }
 
-const handleFocusIn = () => {
-  Focus.setFocus('ViewletExplorer')
+const handleFocusIn = (event) => {
+  console.log('explorer focus in')
+  Focus.setFocus('Explorer')
+  const $Target = event.target
+  console.log($Target)
+  if ($Target.className === 'InputBox') {
+    return
+  }
+  const index = findIndex($Target)
+  if (index < 0) {
+    return
+  }
+  console.log('focus index', { index })
+  event.preventDefault()
+  RendererWorker.send([
+    /* Explorer.handleClick */ 'Explorer.focusIndex',
+    /* index */ index,
+  ])
 }
 
 const handleDragOver = (event) => {
@@ -132,7 +148,7 @@ const handleContextMenu = (event) => {
   const x = event.clientX
   const y = event.clientY
   RendererWorker.send([
-    /* ViewletExplorer.handleContextMenu */ 162,
+    /* Explorer.handleContextMenu */ 'Explorer.handleContextMenu',
     /* x */ x,
     /* y */ y,
     /* index */ index,
@@ -148,8 +164,9 @@ const handleMouseDown = (event) => {
   if (index === -2) {
     return
   }
+  event.preventDefault()
   RendererWorker.send([
-    /* ViewletExplorer.handleClick */ 161,
+    /* Explorer.handleClick */ 'Explorer.handleClick',
     /* index */ index,
   ])
 }
@@ -171,7 +188,7 @@ const handleMouseEnter = (event) => {
     return
   }
   RendererWorker.send([
-    /* ViewletExplorer.handleMouseEnter */ 159,
+    /* Explorer.handleMouseEnter */ 'Explorer.handleMouseEnter',
     /* index */ index,
   ])
 }
@@ -183,7 +200,7 @@ const handleMouseLeave = (event) => {
     return
   }
   RendererWorker.send([
-    /* ViewletExplorer.handleMouseLeave */ 160,
+    /* Explorer.handleMouseLeave */ 'Explorer.handleMouseLeave',
     /* index */ index,
   ])
 }
@@ -192,13 +209,13 @@ const handleWheel = (event) => {
   switch (event.deltaMode) {
     case event.DOM_DELTA_LINE:
       RendererWorker.send([
-        /* ViewletExplorer.handleWheel */ 163,
+        /* Explorer.handleWheel */ 'Explorer.handleWheel',
         /* deltaY */ event.deltaY,
       ])
       break
     case event.DOM_DELTA_PIXEL:
       RendererWorker.send([
-        /* ViewletExplorer.handleWheel */ 163,
+        /* Explorer.handleWheel */ 'Explorer.handleWheel',
         /* deltaY */ event.deltaY,
       ])
       break
@@ -323,16 +340,21 @@ export const updateDirents = (state, dirents) => {
   render$Rows(state.$Viewlet, dirents)
 }
 
-export const focusIndex = (state, index) => {
+export const setFocusedIndex = (state, oldIndex, newIndex) => {
   Assert.object(state)
-  Assert.number(index)
+  Assert.number(oldIndex)
+  Assert.number(newIndex)
   const { $Viewlet } = state
-  if (index === -1) {
-    $Viewlet.focus()
-    return
+  if (oldIndex === -1) {
+    $Viewlet.classList.remove('FocusOutline')
   }
-  const $Dirent = $Viewlet.children[index]
-  $Dirent.focus()
+  if (newIndex === -1) {
+    $Viewlet.classList.add('FocusOutline')
+    $Viewlet.focus()
+  } else {
+    const $Dirent = $Viewlet.children[newIndex]
+    $Dirent.focus()
+  }
 }
 
 export const dispose = (state) => {}
@@ -354,7 +376,7 @@ export const showCreateFileInputBox = (state, index) => {
   const $Dirent = state.$Viewlet.children[index]
   $Dirent.before($InputBox)
   $InputBox.focus()
-  Focus.setFocus('viewletExplorerCreateFile')
+  Focus.setFocus('ExplorerCreateFile')
 }
 
 export const hideCreateFileInputBox = (state, index) => {
@@ -370,7 +392,7 @@ export const showRenameInputBox = (state, index, name) => {
   $Dirent.replaceWith($InputBox)
   $InputBox.select()
   $InputBox.setSelectionRange(0, $InputBox.value.length)
-  Focus.setFocus('viewletExplorerRename')
+  Focus.setFocus('ExplorerRename')
 }
 
 export const hideRenameBox = (state, index, dirent) => {

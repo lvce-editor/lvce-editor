@@ -1,87 +1,90 @@
 import { jest } from '@jest/globals'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
-import * as Workspace from '../src/parts/Workspace/Workspace.js'
 import * as GlobalEventBus from '../src/parts/GlobalEventBus/GlobalEventBus.js'
 
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/ExtensionHost/ExtensionHostRename.js',
+  () => {
+    return {
+      executePrepareRenameProvider: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+      executeRenameProvider: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+const SharedProcess = await import(
+  '../src/parts/SharedProcess/SharedProcess.js'
+)
+const Workspace = await import('../src/parts/Workspace/Workspace.js')
+
 test('hydrate', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'Workspace.resolveRoot':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: {
-            path: '/tmp/some-folder',
-            homeDir: '~',
-          },
-        })
-        break
+        return {
+          path: '/tmp/some-folder',
+          homeDir: '~',
+        }
+
       default:
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   await Workspace.hydrate()
-  expect(SharedProcess.state.send).toHaveBeenCalledWith({
-    jsonrpc: '2.0',
-    id: expect.any(Number),
-    method: 'Workspace.resolveRoot',
-    params: [],
-  })
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(2)
-  expect(RendererProcess.state.send).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
-    8085,
-    '/tmp/some-folder',
-  ])
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
+    'Window.setTitle',
+    '/tmp/some-folder'
+  )
 })
 
 test('hydrate - error', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'Workspace.resolveRoot':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          error: {
-            message: 'x is not a function',
-            data: 'x is not a function',
-          },
-        })
-        break
+        throw new TypeError('x is not a function')
       default:
         throw new Error('unexpected message')
     }
   })
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
   // TODO should handle error gracefully
   await expect(Workspace.hydrate()).rejects.toThrowError(
     new Error('x is not a function')
@@ -112,7 +115,7 @@ test.skip('setPath', async () => {
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
     909090,
     expect.any(Number),
-    8085,
+    'Window.setTitle',
     '/test',
   ])
 })

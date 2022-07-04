@@ -1,13 +1,28 @@
 /**
  * @jest-environment jsdom
  */
-import * as Location from '../src/parts/Location/Location.js'
 import { jest } from '@jest/globals'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
 
-afterEach(() => {
-  jest.restoreAllMocks()
+beforeEach(() => {
+  jest.resetAllMocks()
 })
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
+
+const Location = await import('../src/parts/Location/Location.js')
 
 test('getPathName', () => {
   expect(Location.getPathName()).toBe('/')
@@ -30,9 +45,11 @@ test('setPathName - should do nothing if we are already at the url', () => {
 })
 
 test('hydrate', () => {
-  RendererWorker.state.send = jest.fn()
+  // TODO mock instead
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   Location.hydrate()
   window.dispatchEvent(new PopStateEvent('popstate'))
-  expect(RendererWorker.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.state.send).toHaveBeenCalledWith([7634])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(['Workspace.hydrate'])
 })

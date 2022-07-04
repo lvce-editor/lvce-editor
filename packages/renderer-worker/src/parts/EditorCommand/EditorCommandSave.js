@@ -13,7 +13,7 @@ export const editorSave = async (editor) => {
     const betterError = new Error(`Failed to save file "${uri}"`, {
       cause: error,
     })
-    await ErrorHandling.showErrorDialog(betterError)
+    await ErrorHandling.handleError(betterError)
     return
   }
   await GlobalEventBus.emitEvent('editor.save', editor)
