@@ -140,10 +140,10 @@ export const wrapViewletCommand = (id, fn) => {
         return
       }
       const commands = activeInstance.factory.render(oldState, newState)
-      RendererProcess.send([
+      RendererProcess.invoke(
         /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
-        /* commands */ commands,
-      ])
+        /* commands */ commands
+      )
       state.instances[id].state = newState
     } else {
       return fn(activeInstance.state, ...args)
@@ -179,10 +179,10 @@ export const setState = (id, newState) => {
   if (instance && instance.factory && instance.factory.hasFunctionalRender) {
     const oldState = instance.state
     const commands = instance.factory.render(oldState, newState)
-    RendererProcess.send([
+    RendererProcess.invoke(
       /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
-      /* commands */ commands,
-    ])
+      /* commands */ commands
+    )
     instance.state = newState
   }
 }

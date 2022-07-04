@@ -168,9 +168,10 @@ export const load = async (viewlet, focus = false) => {
 
     if (module.hasFunctionalRender) {
       const commands = module.render(viewletState, newState)
-      for (const command of commands) {
-        RendererProcess.send(command)
-      }
+      RendererProcess.invoke(
+        /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
+        /* commands */ commands
+      )
     }
 
     if (module.contentLoadedEffects) {
