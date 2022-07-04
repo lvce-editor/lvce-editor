@@ -72,7 +72,6 @@ const getAllEntries = async (dataTransfer) => {
 const handleFocus = (event) => {
   Focus.setFocus('Explorer')
   const $Target = event.target
-  console.log($Target)
   if ($Target.className === 'InputBox') {
     return
   }
@@ -80,7 +79,6 @@ const handleFocus = (event) => {
   if (index < 0) {
     return
   }
-  console.log('focus index', { index })
   event.preventDefault()
   RendererWorker.send([
     /* Explorer.handleClick */ 'Explorer.focusIndex',
@@ -89,7 +87,6 @@ const handleFocus = (event) => {
 }
 
 const handleBlur = () => {
-  console.log('explorer blur')
   RendererWorker.send([/* Explorer.handleBlur */ 'Explorer.handleBlur'])
 }
 
@@ -109,12 +106,9 @@ const handleDragStart = (event) => {
 }
 
 const handleDrop = async (event) => {
-  console.log('DROP')
   const state = ActiveViewlet.getStateFromEvent(event)
   state.element.classList.remove('DropTarget')
   event.preventDefault()
-  console.log(event.dataTransfer.items)
-  console.log('FILES', event.dataTransfer.files)
   const allEntries = await getAllEntries(event.dataTransfer)
   const firstEntry = allEntries[0]
   if (!firstEntry) {
@@ -140,7 +134,6 @@ const handleDrop = async (event) => {
   // RendererWorker.send()
   // const content = await firstEntry.file.text()
   // console.log(event.dataTransfer)
-  console.log('ENTRIES', allEntries)
 
   // console.log(content)
 }
@@ -287,7 +280,6 @@ const render$Row = ($Row, rowInfo) => {
       $Row.className = `TreeItem Icon${rowInfo.icon}`
       break
     default:
-      // console.log({ rowInfo })
       break
   }
 }
@@ -334,9 +326,7 @@ const render$Rows = ($Rows, rowInfos) => {
 export const handleError = (state, message) => {
   Assert.object(state)
   Assert.string(message)
-  console.log('HANDLE ERROR 2', { message })
   state.$Viewlet.textContent = message
-  console.log(state.$Viewlet)
 }
 
 export const updateDirents = (state, dirents) => {
@@ -346,7 +336,6 @@ export const updateDirents = (state, dirents) => {
 }
 
 export const setFocusedIndex = (state, oldIndex, newIndex) => {
-  console.log({ setFocusedIndex: true, oldIndex, newIndex })
   Assert.object(state)
   Assert.number(oldIndex)
   Assert.number(newIndex)
