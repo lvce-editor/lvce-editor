@@ -2,7 +2,7 @@ import { mkdir, writeFile } from 'fs/promises'
 import { join } from 'node:path'
 import { expect, getTmpDir, runWithExtension, test } from './_testFrameWork.js'
 
-test('viewlet.title-bar-edit-sub-menu-issue', async () => {
+test.skip('viewlet.title-bar-edit-sub-menu-issue', async () => {
   const tmpDir = await getTmpDir()
   const cacheDir = await getTmpDir()
   await mkdir(join(cacheDir, 'lvce-oss'))
