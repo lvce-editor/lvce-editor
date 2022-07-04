@@ -250,13 +250,13 @@ export const handleInput = async (value) => {
   const filterValue = state.provider.getFilterValue(value)
   const visiblePicks = getVisiblePicks(newPicks, filterValue)
 
-  RendererProcess.send([
+  RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'QuickPick',
     /* method */ 'updatePicks',
     /* picks */ visiblePicks,
-    /* unFocusIndex */ state.focusedIndex,
-  ])
+    /* unFocusIndex */ state.focusedIndex
+  )
   state.picks = newPicks
   state.visiblePicks = visiblePicks
   state.focusedIndex = 0
