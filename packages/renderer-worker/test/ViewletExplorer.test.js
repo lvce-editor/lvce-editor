@@ -2647,7 +2647,6 @@ test('newFile - inside folder', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(4)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     4,
-
     'Viewlet.send',
     'Explorer',
     'updateDirents',

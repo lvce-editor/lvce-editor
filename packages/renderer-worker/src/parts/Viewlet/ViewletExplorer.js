@@ -544,14 +544,13 @@ export const cancelNewFile = async (state) => {
 }
 
 const getParentFolder = (dirents, index, root) => {
-  if (index === -1) {
+  if (index < 0) {
     return root
   }
   return dirents[index].path
 }
 
 const acceptDirent = async (state, type) => {
-  state.focusedIndex = state.editingIndex
   const editingIndex = state.editingIndex
   const focusedIndex = state.focusedIndex
   state.editingIndex = -1
@@ -592,10 +591,13 @@ const acceptDirent = async (state, type) => {
   }
   console.log({ focusedIndex })
   console.log(state.dirents)
-  const parentDirent = state.dirents[focusedIndex] || {
-    depth: 0,
-    path: state.root,
-  }
+  const parentDirent =
+    focusedIndex >= 0
+      ? state.dirents[focusedIndex]
+      : {
+          depth: 0,
+          path: state.root,
+        }
   const depth = parentDirent.depth + 1
   const newDirent = {
     path: absolutePath,
@@ -611,7 +613,7 @@ const acceptDirent = async (state, type) => {
   let deltaPosInSet = 0
   let posInSet = 1
   let setSize = 1
-  let i = state.focusedIndex + 1
+  let i = Math.max(state.focusedIndex, -1) + 1
   for (; i < state.dirents.length; i++) {
     const dirent = state.dirents[i]
     if (dirent.depth !== depth) {
