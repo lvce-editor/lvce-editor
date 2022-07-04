@@ -1,10 +1,11 @@
-import * as Exec from '../Exec/Exec.js'
-
 // parse ps output based on vscode https://github.com/microsoft/vscode/blob/c0769274fa136b45799edeccc0d0a2f645b75caf/src/vs/base/node/ps.ts (License MIT)
 
+import * as Exec from '../Exec/Exec.js'
+
+const PID_CMD =
+  /^\s*([0-9]+)\s+([0-9]+)\s+([0-9]+\.[0-9]+)\s+([0-9]+\.[0-9]+)\s+(.+)$/
+
 const parsePsOutputLine = (line) => {
-  const PID_CMD =
-    /^\s*([0-9]+)\s+([0-9]+)\s+([0-9]+\.[0-9]+)\s+([0-9]+\.[0-9]+)\s+(.+)$/
   const matches = PID_CMD.exec(line.trim())
   if (matches && matches.length === 6) {
     return {

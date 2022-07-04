@@ -1,13 +1,13 @@
-// based on https://github.com/microsoft/vscode/tree/1.64.2/src/vs/server/node/webClientServer.ts
+// based on https://github.com/microsoft/vscode/tree/1.64.2/src/vs/server/node/webClientServer.ts (License MIT)
 
+import { sharedProcessPath } from '@lvce-editor/shared-process'
 import { ChildProcess, fork } from 'child_process'
 import { createReadStream } from 'fs'
 import { stat } from 'fs/promises'
 import { createServer } from 'http'
-import { dirname, extname, join, normalize, resolve } from 'path'
+import { dirname, extname, join, resolve } from 'path'
 import { pipeline } from 'stream/promises'
 import { fileURLToPath } from 'url'
-import { sharedProcessPath } from '@lvce-editor/shared-process'
 
 // @ts-ignore
 const __dirname = dirname(fileURLToPath(import.meta.url))

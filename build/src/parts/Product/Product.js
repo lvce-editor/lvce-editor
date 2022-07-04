@@ -12,7 +12,7 @@ export const win32MutextName = 'lvceoss'
 export const licenseName = 'MIT'
 
 export const licenseUrl =
-  'https://github.com/microsoft/vscode/blob/main/LICENSE.txt'
+  'https://github.com/lvce-editor/lvce-editor/blob/main/LICENSE'
 
 export const licenseFileName = 'LICENSE.txt'
 
@@ -22,11 +22,7 @@ export const copyrightShort = `2022, Le Vivilet`
 export const linuxSummary = 'Simple Code Editor'
 
 // TODO
-export const descriptionLongLinux = [
-  'Visual Studio Code is a new choice of tool that combines the',
-  'simplicity of a code editor with what developers need for the core',
-  'edit-build-debug cycle.',
-]
+export const descriptionLongLinux = ['']
 
 // TODO
 
