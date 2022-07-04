@@ -1,3 +1,7 @@
+import * as WebWorkerWithMessagePort from './WebWorkerWithMessagePort.js'
+import * as WebWorkerWithModuleWorker from './WebWorkerWithModuleWorker.js'
+import * as WebWorkerWithReferencePort from './WebWorkerWithReferencePort.js'
+
 /* istanbul ignore file */
 const METHOD_MESSAGE_PORT = 1
 const METHOD_MODULE_WORKER = 2
@@ -8,38 +12,14 @@ const METHOD_REFERENCE_PORT = 3
  */
 const METHOD_PREFERRED = METHOD_MESSAGE_PORT
 
-const createModuleWorker = (url) => {
-  return new Worker(url, {
-    type: 'module',
-  })
-}
-
-const createMessagePort = async (url) => {
-  const port = await new Promise((resolve) => {
-    globalThis.acceptPort = resolve
-    import(url)
-  })
-  delete globalThis.acceptPort
-  return port
-}
-
-const createReferencePort = async (url) => {
-  const referencePort = await new Promise((resolve) => {
-    globalThis.acceptReferencePort = resolve
-    import(url)
-  })
-  delete globalThis.acceptReferencePort
-  return referencePort
-}
-
 export const create = async (url) => {
   switch (METHOD_PREFERRED) {
     case METHOD_MODULE_WORKER:
-      return createModuleWorker(url)
+      return WebWorkerWithModuleWorker.create(url)
     case METHOD_MESSAGE_PORT:
-      return createMessagePort(url)
+      return WebWorkerWithMessagePort.create(url)
     case METHOD_REFERENCE_PORT:
-      return createReferencePort(url)
+      return WebWorkerWithReferencePort.create(url)
     default:
       throw new Error('unknown method')
   }
