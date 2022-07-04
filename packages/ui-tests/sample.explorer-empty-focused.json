@@ -1,0 +1,7 @@
+[
+  {
+    "jsonrpc": "2.0",
+    "method": "Explorer.focusIndex",
+    "params": [-1]
+  }
+]
