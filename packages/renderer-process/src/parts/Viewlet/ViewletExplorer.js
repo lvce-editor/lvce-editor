@@ -362,6 +362,7 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
     default:
       const $Dirent = $Viewlet.children[newIndex]
       $Dirent.classList.add('FocusOutline')
+      $Viewlet.focus()
       break
   }
 }
