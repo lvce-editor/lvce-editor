@@ -9,6 +9,10 @@
   outline-width: 1px;
 } */
 
+* {
+  outline: none;
+}
+
 .InputBox:focus {
   border-color: var(--FocusOutline);
 }

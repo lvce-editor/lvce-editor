@@ -1066,3 +1066,7 @@ export const collapseAll = async (state) => {
   state.dirents = newDirents
   await scheduleDirents(state)
 }
+
+export const handleBlur = async (state) => {
+  await focusIndex(state, -2)
+}

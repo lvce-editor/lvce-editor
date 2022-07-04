@@ -69,8 +69,7 @@ const getAllEntries = async (dataTransfer) => {
   return allEntries
 }
 
-const handleFocusIn = (event) => {
-  console.log('explorer focus in')
+const handleFocus = (event) => {
   Focus.setFocus('Explorer')
   const $Target = event.target
   console.log($Target)
@@ -87,6 +86,11 @@ const handleFocusIn = (event) => {
     /* Explorer.handleClick */ 'Explorer.focusIndex',
     /* index */ index,
   ])
+}
+
+const handleBlur = () => {
+  console.log('explorer blur')
+  RendererWorker.send([/* Explorer.handleBlur */ 'Explorer.handleBlur'])
 }
 
 const handleDragOver = (event) => {
@@ -237,7 +241,8 @@ export const create = () => {
   $Viewlet.addEventListener('mouseleave', handleMouseLeave, { capture: true })
   $Viewlet.addEventListener('wheel', handleWheel, { passive: true })
   $Viewlet.addEventListener('drop', handleDrop)
-  $Viewlet.addEventListener('focusin', handleFocusIn)
+  $Viewlet.addEventListener('focus', handleFocus)
+  $Viewlet.addEventListener('blur', handleBlur)
   return {
     $Viewlet,
   }
@@ -341,19 +346,34 @@ export const updateDirents = (state, dirents) => {
 }
 
 export const setFocusedIndex = (state, oldIndex, newIndex) => {
+  console.log({ setFocusedIndex: true, oldIndex, newIndex })
   Assert.object(state)
   Assert.number(oldIndex)
   Assert.number(newIndex)
   const { $Viewlet } = state
-  if (oldIndex === -1) {
-    $Viewlet.classList.remove('FocusOutline')
+  switch (oldIndex) {
+    case -2:
+      break
+    case -1:
+      $Viewlet.classList.remove('FocusOutline')
+      break
+    default:
+      const $Dirent = $Viewlet.children[oldIndex]
+      $Dirent.classList.remove('FocusOutline')
+      break
   }
-  if (newIndex === -1) {
-    $Viewlet.classList.add('FocusOutline')
-    $Viewlet.focus()
-  } else {
-    const $Dirent = $Viewlet.children[newIndex]
-    $Dirent.focus()
+  switch (newIndex) {
+    case -2:
+      $Viewlet.classList.remove('FocusOutline')
+      break
+    case -1:
+      $Viewlet.classList.add('FocusOutline')
+      $Viewlet.focus()
+      break
+    default:
+      const $Dirent = $Viewlet.children[newIndex]
+      $Dirent.classList.add('FocusOutline')
+      break
   }
 }
 
