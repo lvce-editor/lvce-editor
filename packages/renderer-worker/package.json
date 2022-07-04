@@ -20,7 +20,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "msw": "^0.42.3",
+    "msw": "^0.43.0",
     "node-fetch": "^3.2.6"
   },
   "jest": {

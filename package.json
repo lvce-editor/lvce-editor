@@ -16,7 +16,7 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^28.1.4",
-    "@types/node": "^18.0.0",
+    "@types/node": "^18.0.1",
     "jest": "^28.1.2",
     "jest-environment-jsdom": "^28.1.2",
     "lerna": "^5.1.6",
