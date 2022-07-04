@@ -93,13 +93,12 @@ test('getMarketplaceExtensions', async () => {
     })
   ).toEqual([
     {
-      id: 'microsoft.python',
-      name: 'python',
+      id: 'test-author-1.test-extension-1',
+      name: 'test-extension',
       displayName: null,
-      description:
-        'IntelliSense (Pylance), Linting, Debugging (multi-threaded, remote), Jupyter Notebooks, code formatting, refactoring, unit tests, and more.',
-      authorId: 'microsoft',
-      authorName: 'Microsoft',
+      description: 'Test Extension',
+      authorId: 'test-author',
+      authorName: 'Test Author',
       createdAt: '',
       updatedAt: '',
       version: '0.0.1',
@@ -114,7 +113,7 @@ test('getMarketplaceExtensions', async () => {
       ],
     },
     {
-      id: 'test-author-2.test-extension',
+      id: 'test-author-2.test-extension-2',
       name: 'test-extension',
       displayName: null,
       description: 'Test Extension',
@@ -134,7 +133,7 @@ test('getMarketplaceExtensions', async () => {
       ],
     },
     {
-      id: 'test-author.test-extension',
+      id: 'test-author-3.test-extension-3',
       name: 'test-extension',
       displayName: null,
       description: 'Test Extension',
