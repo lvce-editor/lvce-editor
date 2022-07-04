@@ -31,11 +31,6 @@ const handleMessageFromRendererWorker = async (event) => {
       })
     }
   }
-  if (event.ports && event.ports.length > 0) {
-    Command.execute(...data, ...event.ports)
-  } else {
-    Command.execute(...data)
-  }
 }
 
 const getIpc = async () => {

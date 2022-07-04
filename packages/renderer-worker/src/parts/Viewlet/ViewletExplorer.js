@@ -551,6 +551,7 @@ const getParentFolder = (dirents, index, root) => {
 }
 
 const acceptDirent = async (state, type) => {
+  state.focusedIndex = state.editingIndex
   const editingIndex = state.editingIndex
   const focusedIndex = state.focusedIndex
   state.editingIndex = -1

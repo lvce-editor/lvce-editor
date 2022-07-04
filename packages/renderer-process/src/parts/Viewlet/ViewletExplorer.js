@@ -382,17 +382,29 @@ export const hoverIndex = (state, oldIndex, newIndex) => {
 }
 
 export const showCreateFileInputBox = (state, index) => {
+  const { $Viewlet } = state
   const $InputBox = InputBox.create()
-  const $Dirent = state.$Viewlet.children[index]
-  $Dirent.before($InputBox)
+  if (index === -1) {
+    $Viewlet.append($InputBox)
+  } else {
+    const $Dirent = $Viewlet.children[index]
+    $Dirent.before($InputBox)
+  }
   $InputBox.focus()
   Focus.setFocus('ExplorerCreateFile')
 }
 
 export const hideCreateFileInputBox = (state, index) => {
-  const $InputBox = state.$Viewlet.children[index]
-  $InputBox.remove()
-  return $InputBox.value
+  const { $Viewlet } = state
+  if (index === -1) {
+    const $InputBox = $Viewlet.lastChild
+    $InputBox.remove()
+    return $InputBox.value
+  } else {
+    const $InputBox = $Viewlet.children[index]
+    $InputBox.remove()
+    return $InputBox.value
+  }
 }
 
 export const showRenameInputBox = (state, index, name) => {
