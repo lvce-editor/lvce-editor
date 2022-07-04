@@ -161,6 +161,9 @@ const handleMouseDown = (event) => {
   if (index === -2) {
     return
   }
+  if (index === -1) {
+    return
+  }
   event.preventDefault()
   RendererWorker.send([
     /* Explorer.handleClick */ 'Explorer.handleClick',
@@ -357,6 +360,7 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
       break
     case -1:
       $Viewlet.classList.add('FocusOutline')
+      console.log('focus it', document.activeElement)
       $Viewlet.focus()
       break
     default:
