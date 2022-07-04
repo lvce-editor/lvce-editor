@@ -1,9 +1,7 @@
-import { join } from 'node:path'
 import VError from 'verror'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Platform from '../Platform/Platform.js'
 
-const CACHED_SETTINGS_PATH = '~/.cache/vscode/cachedSettings.json'
 // TODO need jsonc parser for settings with comments
 
 export const getUserPreferences = async () => {
