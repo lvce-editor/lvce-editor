@@ -2000,11 +2000,7 @@ test('handleArrowRight - expanded empty folder', async () => {
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.handleArrowRight(state)
-  expect(state.focusedIndex).toBe(2)
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(await ViewletExplorer.handleArrowRight(state)).toBe(state)
 })
 
 test('handleArrowRight - when no focus', async () => {
@@ -2053,13 +2049,10 @@ test('handleArrowRight - when no focus', async () => {
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.handleArrowRight(state)
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(await ViewletExplorer.handleArrowRight(state)).toBe(state)
 })
 
-test('focusFirst', async () => {
+test('focusFirst', () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: 1,
@@ -2092,7 +2085,7 @@ test('focusFirst', async () => {
   })
 })
 
-test('focusFirst - no dirents', async () => {
+test('focusFirst - no dirents', () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: -1,
@@ -2101,13 +2094,10 @@ test('focusFirst - no dirents', async () => {
     deltaY: 0,
     dirents: [],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.focusFirst(state)
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(ViewletExplorer.focusFirst(state)).toBe(state)
 })
 
-test('focusFirst - focus already at first', async () => {
+test('focusFirst - focus already at first', () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: 0,
@@ -2135,10 +2125,7 @@ test('focusFirst - focus already at first', async () => {
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.focusFirst(state)
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(ViewletExplorer.focusFirst(state)).toBe(state)
 })
 
 test('focusLast', () => {
@@ -2186,7 +2173,7 @@ test('focusLast - no dirents', () => {
   })
 })
 
-test('focusLast - focus already at last', async () => {
+test('focusLast - focus already at last', () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: 1,
@@ -2211,13 +2198,10 @@ test('focusLast - focus already at last', async () => {
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.focusLast(state)
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(ViewletExplorer.focusLast(state)).toBe(state)
 })
 
-test.skip('handleWheel - up', async () => {
+test('handleWheel - up', () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: -1,
@@ -2247,28 +2231,30 @@ test.skip('handleWheel - up', async () => {
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.handleWheel(state, -22)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Explorer',
-    'updateDirents',
+  const newState = ViewletExplorer.handleWheel(state, -22)
+  console.log({ newState })
+  expect(ViewletExplorer.render(state, newState)).toEqual([
     [
-      {
-        depth: 1,
-        index: 0,
-        languageId: 'unknown',
-        name: 'index.css',
-        path: '/index.css',
-        setSize: 3,
-        type: 'file',
-      },
-    ]
-  )
+      'Viewlet.send',
+      'Explorer',
+      'updateDirents',
+      [
+        {
+          depth: 1,
+          index: 0,
+          languageId: 'unknown',
+          name: 'index.css',
+          path: '/index.css',
+          setSize: 3,
+          type: 'file',
+        },
+      ],
+    ],
+    ['Viewlet.send', 'Explorer', 'setFocusedIndex', -1, -1],
+  ])
 })
 
-test.skip('handleWheel - up - already at top', async () => {
+test('handleWheel - up - already at top', () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: -1,
@@ -2298,14 +2284,12 @@ test.skip('handleWheel - up - already at top', async () => {
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.handleWheel(state, -10)
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(ViewletExplorer.handleWheel(state, -10)).toBe(state)
 })
 
-test.skip('handleWheel - down', async () => {
+test.skip('handleWheel - down', () => {
   const state = {
+    ...ViewletExplorer.create(),
     root: '/home/test-user/test-path',
     focusedIndex: -1,
     top: 0,
@@ -2334,28 +2318,46 @@ test.skip('handleWheel - down', async () => {
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.handleWheel(state, 22)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Explorer',
-    'updateDirents',
+  const newState = ViewletExplorer.handleWheel(state, 22)
+  console.log({ newState })
+  expect(ViewletExplorer.render(state, newState)).toEqual([
     [
-      {
-        depth: 1,
-        index: 1,
-        languageId: 'unknown',
-        name: 'index.html',
-        path: '/index.html',
-        setSize: 3,
-        type: 'file',
-      },
-    ]
-  )
+      'Viewlet.send',
+      'Explorer',
+      'updateDirents',
+      [
+        {
+          depth: 1,
+          index: 0,
+          languageId: 'unknown',
+          name: 'index.css',
+          path: '/index.css',
+          setSize: 3,
+          type: 'file',
+        },
+      ],
+    ],
+    ['Viewlet.send', 'Explorer', 'setFocusedIndex', -1, -1],
+  ])
+  // expect(RendererProcess.invoke).toHaveBeenCalledWith(
+  //   'Viewlet.send',
+  //   'Explorer',
+  //   'updateDirents',
+  //   [
+  //     {
+  //       depth: 1,
+  //       index: 1,
+  //       languageId: 'unknown',
+  //       name: 'index.html',
+  //       path: '/index.html',
+  //       setSize: 3,
+  //       type: 'file',
+  //     },
+  //   ]
+  // )
 })
 
-test('handleWheel - down - already at bottom', async () => {
+test('handleWheel - down - already at bottom', () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: -1,
@@ -2385,13 +2387,10 @@ test('handleWheel - down - already at bottom', async () => {
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.handleWheel(state, 10)
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(ViewletExplorer.handleWheel(state, 10)).toBe(state)
 })
 
-test('handleWheel - down - already at bottom but viewlet is larger than items can fit', async () => {
+test('handleWheel - down - already at bottom but viewlet is larger than items can fit', () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: -1,
@@ -2421,10 +2420,7 @@ test('handleWheel - down - already at bottom but viewlet is larger than items ca
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.handleWheel(state, 100)
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(ViewletExplorer.handleWheel(state, 100)).toBe(state)
 })
 
 test.skip('handlePaste - copied gnome files', async () => {
@@ -2654,15 +2650,10 @@ test.skip('newFile - inside folder', async () => {
         throw new Error('unexpected message')
     }
   })
+
   await ViewletExplorer.newFile(state)
-  await ViewletExplorer.acceptNewFile(state)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(4)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
-    4,
-    'Viewlet.send',
-    'Explorer',
-    'updateDirents',
-    [
+  expect(await ViewletExplorer.acceptNewFile(state)).toMatchObject({
+    dirents: [
       {
         depth: 1,
         icon: '',
@@ -2726,8 +2717,16 @@ test.skip('newFile - inside folder', async () => {
         setSize: 3,
         type: 'directory',
       },
-    ]
-  )
+    ],
+  })
+  // expect(RendererProcess.invoke).toHaveBeenCalledTimes(4)
+  // expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+  //   4,
+  //   'Viewlet.send',
+  //   'Explorer',
+  //   'updateDirents',
+
+  // )
 })
 
 test.skip('newFile - error with writeFile', async () => {

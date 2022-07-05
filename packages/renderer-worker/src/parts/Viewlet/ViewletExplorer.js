@@ -194,7 +194,7 @@ const getVisible = (state) => {
   return state.dirents.slice(state.minLineY, state.maxLineY)
 }
 
-export const setDeltaY = async (state, deltaY) => {
+export const setDeltaY = (state, deltaY) => {
   if (deltaY < 0) {
     deltaY = 0
   } else if (deltaY > state.dirents.length * ITEM_HEIGHT - state.height) {
@@ -203,7 +203,7 @@ export const setDeltaY = async (state, deltaY) => {
   if (state.deltaY === deltaY) {
     return state
   }
-  const minLineY = Math.round(state.deltaY / ITEM_HEIGHT)
+  const minLineY = Math.round(deltaY / ITEM_HEIGHT)
   const maxLineY = minLineY + Math.round(state.height / ITEM_HEIGHT)
   return {
     ...state,
@@ -213,8 +213,8 @@ export const setDeltaY = async (state, deltaY) => {
   }
 }
 
-export const handleWheel = async (state, deltaY) => {
-  await setDeltaY(state, state.deltaY + deltaY)
+export const handleWheel = (state, deltaY) => {
+  return setDeltaY(state, state.deltaY + deltaY)
 }
 
 export const handleContextMenu = async (state, x, y, index) => {
@@ -226,6 +226,7 @@ export const handleContextMenu = async (state, x, y, index) => {
     /* y */ y,
     /* id */ 'explorer'
   )
+  return state
 }
 
 export const getFocusedDirent = (state) => {
@@ -525,11 +526,12 @@ const newDirent = async (state) => {
     /* method */ 'showCreateFileInputBox',
     /* index */ index
   )
+  return state
 }
 
 // TODO much shared logic with newFolder
 export const newFile = async (state) => {
-  await newDirent(state)
+  return newDirent(state)
 }
 
 const cancelDirent = async (state) => {
@@ -541,10 +543,11 @@ const cancelDirent = async (state) => {
     /* method */ 'hideCreateFileInputBox',
     /* index */ index
   )
+  return state
 }
 
 export const cancelNewFile = async (state) => {
-  await cancelDirent()
+  return cancelDirent()
 }
 
 const getParentFolder = (dirents, index, root) => {
@@ -570,7 +573,7 @@ const acceptDirent = async (state, type) => {
     await ErrorHandling.showErrorDialog(
       new Error('file name must not be empty')
     )
-    return
+    return state
   }
   // console.log({ index: editingIndex, dirent: state.dirents[editingIndex] })
   const parentFolder = getParentFolder(state.dirents, focusedIndex, state.root)
@@ -640,24 +643,25 @@ const acceptDirent = async (state, type) => {
   newDirent.posInSet = posInSet
   state.dirents.splice(insertIndex + 1, 0, newDirent)
 
-  console.log(state.dirents)
-  // TODO insert dirent here
-  // await updateDirents(state)
-  await contentLoaded(state)
+  const newDirents = [...state.dirents]
+  return {
+    ...state,
+    dirents: newDirents,
+  }
 }
 
 // TODO much duplicate logic with acceptNewFolder
-export const acceptNewFile = async (state) => {
-  await acceptDirent(state, 'file')
+export const acceptNewFile = (state) => {
+  return acceptDirent(state, 'file')
 }
 
-export const acceptNewFolder = async (state) => {
-  await acceptDirent(state, 'directory')
+export const acceptNewFolder = (state) => {
+  return acceptDirent(state, 'directory')
 }
 
 // TODO much copy paste with newFIle command
 export const newFolder = async (state) => {
-  await newDirent(state)
+  return newDirent(state)
 }
 
 const handleClickFile = async (state, dirent, index) => {
@@ -1094,7 +1098,11 @@ export const hasFunctionalRender = true
 
 export const render = (oldState, newState) => {
   const changes = []
-  if (oldState.dirents !== newState.dirents) {
+  if (
+    oldState.dirents !== newState.dirents ||
+    oldState.minLineY !== newState.minLineY ||
+    oldState.maxLineY !== newState.maxLineY
+  ) {
     const visibleDirents = getVisible(newState)
     changes.push([
       /* Viewlet.send */ 'Viewlet.send',
