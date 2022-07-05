@@ -164,7 +164,6 @@
 
 .EditorOverlayMessage {
   padding: 1px 4px;
-  /* color: var(--vscode-inputValidation-infoForeground); */
   background-color: #063b49;
   border: 1px solid #007acc;
   color: white;

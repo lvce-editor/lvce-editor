@@ -13,7 +13,7 @@ test('invoke - error', async () => {
             code: -32000,
             message:
               'OperationalError: Failed to read directory "/test/playground,languages": ENOENT: no such file or directory, scandir \'/test/playground,languages\'',
-            data: 'VError: Failed to read directory "/test/playground,languages": ENOENT: no such file or directory, scandir \'/test/playground,languages\'\n    at Object.readDirWithFileTypes (file:///test/vscode-faster-layout/packages/shared-process/src/parts/FileSystem/FileSystem.js:161:11)\n    at async MessagePort.handleOtherMessagesFromMessagePort (file:///test/vscode-faster-layout/packages/shared-process/src/parts/ParentIpc/ParentIpc.js:79:26)',
+            data: 'VError: Failed to read directory "/test/playground,languages": ENOENT: no such file or directory, scandir \'/test/playground,languages\'\n    at Object.readDirWithFileTypes (file:///test/packages/shared-process/src/parts/FileSystem/FileSystem.js:161:11)\n    at async MessagePort.handleOtherMessagesFromMessagePort (file:///test/packages/shared-process/src/parts/ParentIpc/ParentIpc.js:79:26)',
           },
         })
         break
@@ -39,7 +39,7 @@ test('invoke - error stack', async () => {
             code: -32000,
             message:
               'OperationalError: Failed to read directory "/test/playground,languages": ENOENT: no such file or directory, scandir \'/test/playground,languages\'',
-            data: 'VError: Failed to read directory "/test/playground,languages": ENOENT: no such file or directory, scandir \'/test/playground,languages\'\n    at Object.readDirWithFileTypes (file:///test/vscode-faster-layout/packages/shared-process/src/parts/FileSystem/FileSystem.js:161:11)\n    at async MessagePort.handleOtherMessagesFromMessagePort (file:///test/vscode-faster-layout/packages/shared-process/src/parts/ParentIpc/ParentIpc.js:79:26)',
+            data: 'VError: Failed to read directory "/test/playground,languages": ENOENT: no such file or directory, scandir \'/test/playground,languages\'\n    at Object.readDirWithFileTypes (file:///test/packages/shared-process/src/parts/FileSystem/FileSystem.js:161:11)\n    at async MessagePort.handleOtherMessagesFromMessagePort (file:///test/packages/shared-process/src/parts/ParentIpc/ParentIpc.js:79:26)',
           },
         })
         break
