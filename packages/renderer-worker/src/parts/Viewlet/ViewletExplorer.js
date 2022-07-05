@@ -1095,6 +1095,15 @@ export const render = (oldState, newState) => {
       /* method */ 'updateDirents',
       /* visibleDirents */ visibleDirents,
     ])
+    // TODO rendering dirents should not override focus
+    // when that issue is fixed, this can be removed
+    changes.push([
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'Explorer',
+      /* method */ 'setFocusedIndex',
+      /* oldindex */ oldState.focusedIndex,
+      /* newIndex */ newState.focusedIndex,
+    ])
   }
   if (oldState.focusedIndex !== newState.focusedIndex) {
     changes.push([
