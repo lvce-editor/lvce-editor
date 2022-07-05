@@ -133,16 +133,18 @@ export const loadContent = async (state) => {
 }
 
 export const updateIcons = (state) => {
+  // TODO avoid mutating state
   for (const dirent of state.dirents) {
     dirent.icon = IconTheme.getIcon(dirent)
   }
+  const newDirents = [...state.dirents]
+  return newDirents
 }
 
 export const contentLoaded = async (state) => {
   // console.trace({ state })
   // TODO execute command directly
   // TODO this should a promise and be awaited
-  await scheduleDirents(state)
 }
 
 const getTopLevelDirents = ({ root, pathSeparator }) => {
@@ -167,8 +169,7 @@ export const contentLoadedEffects = (state) => {
   // TODO dispose listener when explorer is disposed
   // TODO hoist function
   GlobalEventBus.addListener('languages.changed', async () => {
-    updateIcons(state)
-    await scheduleDirents(state)
+    const newState = updateIcons(state)
   })
 
   // TODO hoist function
@@ -189,24 +190,6 @@ const getVisible = (state) => {
   return state.dirents.slice(state.minLineY, state.maxLineY)
 }
 
-const scheduleDirents = async (state) => {
-  const visibleDirents = getVisible(state)
-  await RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'Explorer',
-    /* method */ 'updateDirents',
-    /* visibleDirents */ visibleDirents
-  )
-}
-
-const updateViewport = (state) => {
-  const minLineY = Math.round(state.deltaY / ITEM_HEIGHT)
-  const maxLineY = minLineY + Math.round(state.height / ITEM_HEIGHT)
-  // TODO this should be functional (return new state)
-  state.minLineY = minLineY
-  state.maxLineY = maxLineY
-}
-
 export const setDeltaY = async (state, deltaY) => {
   if (deltaY < 0) {
     deltaY = 0
@@ -214,11 +197,16 @@ export const setDeltaY = async (state, deltaY) => {
     deltaY = Math.max(state.dirents.length * ITEM_HEIGHT - state.height, 0)
   }
   if (state.deltaY === deltaY) {
-    return
+    return state
   }
-  state.deltaY = deltaY
-  updateViewport(state)
-  await scheduleDirents(state)
+  const minLineY = Math.round(state.deltaY / ITEM_HEIGHT)
+  const maxLineY = minLineY + Math.round(state.height / ITEM_HEIGHT)
+  return {
+    ...state,
+    deltaY,
+    minLineY,
+    maxLineY,
+  }
 }
 
 export const handleWheel = async (state, deltaY) => {
@@ -679,6 +667,7 @@ const handleClickDirectory = async (state, dirent, index) => {
   dirent.type = 'directory-expanding'
   // TODO handle error
   const dirents = await getChildDirents(state, dirent)
+  // TODO use Viewlet.getState here and check if it exists
   const newIndex = state.dirents.indexOf(dirent)
   if (newIndex === -1) {
     return state
@@ -691,6 +680,7 @@ const handleClickDirectory = async (state, dirent, index) => {
   return {
     ...state,
     dirents: newDirents,
+    focusedIndex: newIndex,
   }
 }
 
@@ -914,7 +904,7 @@ export const handleMouseEnter = async (state, index) => {
   const dirent = state.dirents[index]
   if (!isImage(dirent)) {
     // TODO preload content maybe when it is a long hover
-    return
+    return state
   }
   const uri = `${state.root}${dirent.path}`
   const top = state.top + index * ITEM_HEIGHT
@@ -930,8 +920,9 @@ export const handleMouseEnter = async (state, index) => {
 // TODO what happens when mouse leave and anther mouse enter event occur?
 // should update preview instead of closing and reopening
 
-export const handleMouseLeave = async () => {
+export const handleMouseLeave = async (state) => {
   // await Command.execute(/* ImagePreview.hide */ 9082)
+  return state
 }
 
 // TODO on windows this would be different
@@ -1088,8 +1079,31 @@ export const collapseAll = (state) => {
   }
 }
 
-export const handleBlur = async (state) => {
-  await focusIndex(state, -2)
+export const handleBlur = (state) => {
+  return focusIndex(state, -2)
 }
 
-export const render = (oldState, newState) => {}
+export const hasFunctionalRender = true
+
+export const render = (oldState, newState) => {
+  const changes = []
+  if (oldState.dirents !== newState.dirents) {
+    const visibleDirents = getVisible(newState)
+    changes.push([
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'Explorer',
+      /* method */ 'updateDirents',
+      /* visibleDirents */ visibleDirents,
+    ])
+  }
+  if (oldState.focusedIndex !== newState.focusedIndex) {
+    changes.push([
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'Explorer',
+      /* method */ 'setFocusedIndex',
+      /* oldindex */ oldState.focusedIndex,
+      /* newIndex */ newState.focusedIndex,
+    ])
+  }
+  return changes
+}
