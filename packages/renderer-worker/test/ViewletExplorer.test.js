@@ -2897,6 +2897,55 @@ test('removeDirent - first', async () => {
   })
 })
 
+test('removeDirent - only folder', async () => {
+  const state = {
+    ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
+    pathSeparator: '/',
+    focusedIndex: 0,
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-1',
+        path: '/test/folder-1',
+        posInSet: 1,
+        setSize: 1,
+        type: 'directory',
+      },
+    ],
+    width: 600,
+    height: 600,
+    minLineY: 0,
+    maxLineY: 100,
+  }
+  // TODO mock file system instead
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'FileSystem.remove':
+        return null
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation((method, ...params) => {
+    switch (params[1]) {
+      case 'hideCreateFileInputBox':
+        return 'created.txt'
+      case 'updateDirents':
+      case 'setFocusedIndex':
+        return null
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
+    dirents: [],
+    focusedIndex: -1,
+  })
+})
+
 test('removeDirent - expanded folder', async () => {
   const state = {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),

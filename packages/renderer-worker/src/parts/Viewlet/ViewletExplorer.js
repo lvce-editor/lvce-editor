@@ -258,7 +258,7 @@ export const removeDirent = async (state) => {
   // TODO race condition
   // const newState = await loadContent(state)
   if (state.version !== newVersion || state.disposed) {
-    return
+    return state
   }
   // TODO is it possible to make this more functional instead of mutating state?
   // maybe every function returns a new state?
@@ -276,7 +276,7 @@ export const removeDirent = async (state) => {
   newDirents.splice(index, deleteCount)
   let indexToFocus = -1
 
-  if (state.dirents.length === 0) {
+  if (newDirents.length === 0) {
     indexToFocus = -1
   } else if (index < state.focusedIndex) {
     indexToFocus = state.focusedIndex - 1
