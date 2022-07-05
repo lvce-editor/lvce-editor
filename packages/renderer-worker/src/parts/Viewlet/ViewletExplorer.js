@@ -243,7 +243,7 @@ export const getFocusedDirent = (state) => {
 
 // TODO support multiselection and removing multiple dirents
 export const removeDirent = async (state) => {
-  if (state.focusedIndex === -1) {
+  if (state.focusedIndex < 0) {
     return
   }
   const dirent = getFocusedDirent(state)
@@ -269,7 +269,16 @@ export const removeDirent = async (state) => {
   // TODO is it possible to make this more functional instead of mutating state?
   // maybe every function returns a new state?
   const index = state.dirents.indexOf(dirent)
-  state.dirents.splice(index, 1)
+  let deleteEnd = index + 1
+
+  for (; deleteEnd < state.dirents.length; deleteEnd++) {
+    console.log({ dirent: state.dirents[deleteEnd] })
+    if (state.dirents[deleteEnd].depth <= dirent.depth) {
+      break
+    }
+  }
+  const deleteCount = deleteEnd - index
+  state.dirents.splice(index, deleteCount)
   let indexToFocus = -1
 
   if (state.dirents.length === 0) {
@@ -544,7 +553,7 @@ export const cancelNewFile = async (state) => {
 }
 
 const getParentFolder = (dirents, index, root) => {
-  if (index === -1) {
+  if (index < 0) {
     return root
   }
   return dirents[index].path
@@ -591,10 +600,13 @@ const acceptDirent = async (state, type) => {
   }
   console.log({ focusedIndex })
   console.log(state.dirents)
-  const parentDirent = state.dirents[focusedIndex] || {
-    depth: 0,
-    path: state.root,
-  }
+  const parentDirent =
+    focusedIndex >= 0
+      ? state.dirents[focusedIndex]
+      : {
+          depth: 0,
+          path: state.root,
+        }
   const depth = parentDirent.depth + 1
   const newDirent = {
     path: absolutePath,
@@ -610,7 +622,7 @@ const acceptDirent = async (state, type) => {
   let deltaPosInSet = 0
   let posInSet = 1
   let setSize = 1
-  let i = state.focusedIndex + 1
+  let i = Math.max(state.focusedIndex, -1) + 1
   for (; i < state.dirents.length; i++) {
     const dirent = state.dirents[i]
     if (dirent.depth !== depth) {
@@ -1065,4 +1077,8 @@ export const collapseAll = async (state) => {
   const newDirents = state.dirents.filter(isTopLevel).map(toCollapsedDirent)
   state.dirents = newDirents
   await scheduleDirents(state)
+}
+
+export const handleBlur = async (state) => {
+  await focusIndex(state, -2)
 }

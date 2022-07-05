@@ -13,10 +13,10 @@ export const create = ({ getText }) => {
     // textContent: '',
     getText,
   }
-  RendererProcess.send([
+  RendererProcess.invoke(
     /* FindWidget.create */ 4100,
-    /* id */ state.activeWidget.id,
-  ])
+    /* id */ state.activeWidget.id
+  )
 }
 
 const update = async (widget) => {
@@ -27,11 +27,11 @@ const update = async (widget) => {
       results.push(i)
     }
   }
-  RendererProcess.send([
+  RendererProcess.invoke(
     /* findWidgetSetResults */ 4103,
     /* id */ widget.id,
-    /* results */ results,
-  ])
+    /* results */ results
+  )
 }
 
 export const setValue = async (value) => {
@@ -47,9 +47,9 @@ export const dispose = () => {
   if (!state.activeWidget) {
     return
   }
-  RendererProcess.send([
+  RendererProcess.invoke(
     /* FindWidget.dispose */ 4102,
-    /* id */ state.activeWidget.id,
-  ])
+    /* id */ state.activeWidget.id
+  )
   state.activeWidget = undefined
 }

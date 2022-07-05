@@ -53,7 +53,7 @@ const openMenuAtIndex = async (index, shouldBeFocused) => {
     x,
     y,
   })
-  RendererProcess.send([
+  RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'TitleBar',
     /* method */ 'menuOpen',
@@ -66,8 +66,8 @@ const openMenuAtIndex = async (index, shouldBeFocused) => {
     /* x */ x,
     /* y */ y,
     /* width */ width,
-    /* height */ height,
-  ])
+    /* height */ height
+  )
   state.isMenuOpen = true
 }
 

@@ -30,11 +30,8 @@ const handleMessageFromRendererWorker = async (event) => {
         error,
       })
     }
-  }
-  if (event.ports && event.ports.length > 0) {
-    Command.execute(...data, ...event.ports)
   } else {
-    Command.execute(...data)
+    console.info('unknown message', data)
   }
 }
 

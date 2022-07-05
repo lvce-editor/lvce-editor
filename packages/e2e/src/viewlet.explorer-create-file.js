@@ -1,7 +1,8 @@
 import { writeFile } from 'fs/promises'
 import { expect, getTmpDir, runWithExtension, test } from './_testFrameWork.js'
 
-test('viewlet.explorer-create-file', async () => {
+// TODO test is flaky https://github.com/lvce-editor/lvce-editor/runs/7198459873?check_suite_focus=true
+test.skip('viewlet.explorer-create-file', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(`${tmpDir}/file1.txt`, 'content 1')
   await writeFile(`${tmpDir}/file2.txt`, 'content 2')

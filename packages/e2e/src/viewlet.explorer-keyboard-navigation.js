@@ -10,7 +10,7 @@ const escapePath = (path) => {
   return path.replaceAll('/', sep).replaceAll('\\', '\\\\')
 }
 
-test('viewlet.explorer-keyboard-navigation', async () => {
+test.skip('viewlet.explorer-keyboard-navigation', async () => {
   const tmpDir = await getTmpDir()
   await mkdir(`${tmpDir}/a/b`, { recursive: true })
   await writeFile(`${tmpDir}/a/b/c.txt`, 'ccccc')

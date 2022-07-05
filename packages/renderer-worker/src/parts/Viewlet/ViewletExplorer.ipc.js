@@ -20,6 +20,7 @@ export const __initialize__ = () => {
   Command.register('Explorer.getFocusedDirent',     Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.getFocusedDirent))
   Command.register('Explorer.handleArrowLeft',      Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleArrowLeft))
   Command.register('Explorer.handleArrowRight',     Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleArrowRight))
+  Command.register('Explorer.handleBlur',           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleBlur))
   Command.register('Explorer.handleClick',          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleClick))
   Command.register('Explorer.handleClickCurrent',   Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleClickCurrent))
   Command.register('Explorer.handleContextMenu',    Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleContextMenu))

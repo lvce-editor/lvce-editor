@@ -54,7 +54,6 @@ export const ensureExtensionHostIsStarted = async () => {
 }
 
 export const activateByEvent = async (event) => {
-  console.log('activate by event', event)
   if (!Languages.hasLoaded()) {
     await Languages.waitForLoad()
   }
@@ -64,7 +63,6 @@ export const activateByEvent = async (event) => {
   // TODO should not query extensions multiple times
   const extensions = await ExtensionMeta.getExtensions()
 
-  console.log({ extensions })
   // TODO if many (more than two?) extensions cannot be loaded,
   // it shouldn't should that many error messages
   for (const extension of extensions) {
