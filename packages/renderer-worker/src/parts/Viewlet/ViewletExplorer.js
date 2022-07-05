@@ -737,6 +737,11 @@ export const handleClick = async (state, index) => {
     default:
       break
   }
+  await focusIndex(state, actualIndex)
+}
+
+export const focusNone = async (state) => {
+  await focusIndex(state, -1)
 }
 
 export const handleClickCurrent = async (state) => {
