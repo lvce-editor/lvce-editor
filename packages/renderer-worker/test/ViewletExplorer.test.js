@@ -445,8 +445,9 @@ test('handleClick - file', async () => {
   }
   // TODO dont assign -> has effect on other tests
   Command.state.commands['Main.openUri'] = jest.fn()
-  await ViewletExplorer.handleClick(state, 0)
-  expect(state.focusedIndex).toBe(0)
+  expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
+    focusedIndex: 0,
+  })
   expect(Command.state.commands['Main.openUri']).toHaveBeenCalledWith(
     '/index.css'
   )
@@ -480,8 +481,9 @@ test('handleClick - file - error', async () => {
   }
   // TODO dont assign -> has effect on other tests
   Command.state.commands['Main.openUri'] = jest.fn()
-  await ViewletExplorer.handleClick(state, 0)
-  expect(state.focusedIndex).toBe(0)
+  expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
+    focusedIndex: 0,
+  })
   expect(Command.state.commands['Main.openUri']).toHaveBeenCalledWith(
     '/index.css'
   )
@@ -602,8 +604,9 @@ test('handleClick - directory-expanded - error', async () => {
   }
   // TODO dont assign -> has effect on other tests
   Command.state.commands['Main.openUri'] = jest.fn()
-  await ViewletExplorer.handleClick(state, 0)
-  expect(state.focusedIndex).toBe(0)
+  expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
+    focusedIndex: 0,
+  })
   expect(Command.state.commands['Main.openUri']).toHaveBeenCalledWith(
     '/index.css'
   )
