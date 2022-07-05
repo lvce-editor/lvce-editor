@@ -2900,6 +2900,125 @@ test('removeDirent - first', async () => {
   )
 })
 
+test('removeDirent - expanded folder', async () => {
+  const state = {
+    ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
+    pathSeparator: '/',
+    focusedIndex: 0,
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-1',
+        path: '/test/folder-1',
+        posInSet: 1,
+        setSize: 3,
+        type: 'directory',
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'a.txt',
+        path: '/test/folder-1/a.txt',
+        posInSet: 1,
+        setSize: 2,
+        type: 'file',
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'b.txt',
+        path: '/test/folder-1/b.txt',
+        posInSet: 2,
+        setSize: 2,
+        type: 'file',
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-2',
+        path: '/test/folder-2',
+        posInSet: 2,
+        setSize: 3,
+        type: 'directory',
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-3',
+        path: '/test/folder-3',
+        posInSet: 3,
+        setSize: 3,
+        type: 'directory',
+      },
+    ],
+    width: 600,
+    height: 600,
+    minLineY: 0,
+    maxLineY: 100,
+  }
+  // TODO mock file system instead
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'FileSystem.remove':
+        return null
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation((method, ...params) => {
+    switch (params[1]) {
+      case 'hideCreateFileInputBox':
+        return 'created.txt'
+      case 'updateDirents':
+      case 'setFocusedIndex':
+        return null
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ViewletExplorer.removeDirent(state)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2) // TODO should only be 1 for efficiency
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    1,
+
+    'Viewlet.send',
+    'Explorer',
+    'updateDirents',
+    [
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-2',
+        path: '/test/folder-2',
+        posInSet: 2, // TODO should be 1
+        setSize: 3, // TODO should be 2
+        type: 'directory',
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-3',
+        path: '/test/folder-3',
+        posInSet: 3, // TODO should be 2
+        setSize: 3, // TODO should be 2
+        type: 'directory',
+      },
+    ]
+  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
+    2,
+
+    'Viewlet.send',
+    'Explorer',
+    'setFocusedIndex',
+    0,
+    0
+  )
+})
+
 test('removeDirent - middle', async () => {
   const state = {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),

@@ -269,7 +269,16 @@ export const removeDirent = async (state) => {
   // TODO is it possible to make this more functional instead of mutating state?
   // maybe every function returns a new state?
   const index = state.dirents.indexOf(dirent)
-  state.dirents.splice(index, 1)
+  let deleteEnd = index + 1
+
+  for (; deleteEnd < state.dirents.length; deleteEnd++) {
+    console.log({ dirent: state.dirents[deleteEnd] })
+    if (state.dirents[deleteEnd].depth <= dirent.depth) {
+      break
+    }
+  }
+  const deleteCount = deleteEnd - index
+  state.dirents.splice(index, deleteCount)
   let indexToFocus = -1
 
   if (state.dirents.length === 0) {
