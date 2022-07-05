@@ -2,7 +2,7 @@ import { mkdir, writeFile } from 'fs/promises'
 import { join } from 'node:path'
 import { expect, getTmpDir, runWithExtension, test } from './_testFrameWork.js'
 
-test('viewlet.explorer-create-file-inside-folder', async () => {
+test.skip('viewlet.explorer-create-file-inside-folder', async () => {
   const tmpDir = await getTmpDir()
   await mkdir(`${tmpDir}/folder-1`, { recursive: true })
   await mkdir(`${tmpDir}/folder-2`, { recursive: true })
