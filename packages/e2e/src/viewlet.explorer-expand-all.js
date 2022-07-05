@@ -2,7 +2,7 @@ import { mkdir, writeFile } from 'fs/promises'
 import { join } from 'node:path'
 import { expect, getTmpDir, runWithExtension, test } from './_testFrameWork.js'
 
-test.skip('viewlet.explorer-expand-all', async () => {
+test('viewlet.explorer-expand-all', async () => {
   const tmpDir = await getTmpDir()
   await mkdir(`${tmpDir}/folder-1`, { recursive: true })
   await mkdir(`${tmpDir}/folder-2`, { recursive: true })
@@ -27,7 +27,7 @@ test.skip('viewlet.explorer-expand-all', async () => {
 
   await page.keyboard.press('ArrowDown')
   const folder1 = explorer.locator('text=folder-1')
-  await expect(folder1).toBeFocused()
+  await expect(folder1).toHaveClass(/FocusOutline/)
 
   await page.keyboard.press('Shift+*')
 

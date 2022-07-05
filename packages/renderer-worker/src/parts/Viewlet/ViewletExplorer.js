@@ -1033,7 +1033,7 @@ export const expandAll = async (state) => {
   console.log('EXPAND ALL')
   const { dirents, focusedIndex } = state
   if (focusedIndex === -1) {
-    return
+    return state
   }
   const dirent = dirents[focusedIndex]
   const depth = dirent.depth
