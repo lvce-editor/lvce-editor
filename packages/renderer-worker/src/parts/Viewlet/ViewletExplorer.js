@@ -138,7 +138,7 @@ export const updateIcons = (state) => {
     dirent.icon = IconTheme.getIcon(dirent)
   }
   const newDirents = [...state.dirents]
-  return newDirents
+  return { ...state, dirents: newDirents }
 }
 
 export const contentLoaded = async (state) => {
@@ -168,9 +168,13 @@ export const contentLoadedEffects = (state) => {
   // TODO create should not have side effects
   // TODO dispose listener when explorer is disposed
   // TODO hoist function
-  GlobalEventBus.addListener('languages.changed', async () => {
+  const handleLanguagesChanged = () => {
+    const state = Viewlet.getState('Explorer')
+    console.log({ state })
     const newState = updateIcons(state)
-  })
+    Viewlet.setState('Explorer', newState)
+  }
+  GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
 
   // TODO hoist function
   GlobalEventBus.addListener('workspace.change', async () => {
