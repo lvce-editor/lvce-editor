@@ -1,7 +1,7 @@
 import { writeFile } from 'fs/promises'
 import { getTmpDir, runWithExtension, test, expect } from './_testFrameWork.js'
 
-test.skip('viewlet.explorer-create-file-and-type', async () => {
+test('viewlet.explorer-create-file-and-type', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(`${tmpDir}/file1.txt`, 'content 1')
   await writeFile(`${tmpDir}/file2.txt`, 'content 2')
