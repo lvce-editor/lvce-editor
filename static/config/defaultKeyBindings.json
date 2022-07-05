@@ -340,6 +340,11 @@
     "when": "focus.Explorer"
   },
   {
+    "key": "Escape",
+    "command": "Explorer.focusNone",
+    "when": "focus.Explorer"
+  },
+  {
     "key": "Space",
     "command": "Explorer.handleClickCurrent",
     "when": "focus.Explorer"
