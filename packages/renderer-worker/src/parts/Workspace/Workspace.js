@@ -66,15 +66,30 @@ const getResolvedRootFromRendererProcess = async () => {
     const replayId = url.searchParams.get('replayId')
     console.log({ replayId })
     const SessionReplay = await import('../SessionReplay/SessionReplay.js')
-    const events = await SessionReplay.getEvents()
+    const events = await SessionReplay.getEvents(replayId)
     const originalIpc = RendererProcess.state.ipc
     const originalSend = originalIpc.send
-    RendererProcess.state.ipc.onmessage = null
     RendererProcess.state.ipc.send = () => {}
+    RendererProcess.state.ipc.onmessage = (event) => {
+      const data = event.data
+      console.log({ data })
+      if ('result' in data) {
+        callbacks[data.id].resolve(data.result)
+      } else if ('error' in data) {
+        callbacks[data.id].reject(data.error)
+      }
+    }
     console.log({ events })
+    const callbacks = Object.create(null)
+    const invoke = (event) => {
+      return new Promise((resolve, reject) => {
+        callbacks[event.id] = { resolve, reject }
+        originalSend(event)
+      })
+    }
     for (const event of events) {
       if (event.source === 'to-renderer-process') {
-        originalSend(event)
+        await invoke(event)
       }
     }
     console.log({ events })

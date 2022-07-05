@@ -112,7 +112,8 @@ export const listen = () => {
     },
     set onmessage(listener) {
       if (listener) {
-        ipc.onmessage = async (message) => {
+        ipc.onmessage = async (event) => {
+          const message = event.data
           await listener(message)
           await SessionReplay.handleMessage('from-renderer-process', message)
         }

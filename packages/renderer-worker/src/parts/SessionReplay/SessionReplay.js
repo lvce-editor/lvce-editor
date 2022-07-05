@@ -18,7 +18,12 @@ export const handleMessage = async (source, message) => {
     const sessionId = getSessionId()
     const timestamp = performance.now()
     // console.log({ message, timestamp })
-    await IndexedDb.saveValue(sessionId, { source, ...message })
+    await IndexedDb.saveValue(sessionId, {
+      source,
+      timestamp,
+      sessionId,
+      ...message,
+    })
   } catch (error) {
     console.error(error)
     if (error.cause) {
@@ -43,11 +48,14 @@ export const replaySession = async () => {
 
 export const getEvents = async (sessionId) => {
   try {
-    const sessionId = getSessionId()
     const timestamp = performance.now()
     // console.log({ message, timestamp })
     const events = await IndexedDb.getValues('session')
-    return events
+    const matchesSessionId = (event) => {
+      return event.sessionId === sessionId
+    }
+    const filteredEvents = events.filter(matchesSessionId)
+    return filteredEvents
   } catch (error) {
     ErrorHandling.handleError(error)
     // console.info(`failed to get events from indexeddb: ${error}`)
