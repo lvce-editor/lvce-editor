@@ -665,7 +665,10 @@ const handleClickFile = async (state, dirent, index) => {
     /* Main.openAbsolutePath */ 'Main.openUri',
     /* absolutePath */ dirent.path
   )
-  return state
+  return {
+    ...state,
+    focusedIndex: index,
+  }
 }
 
 const handleClickDirectory = async (state, dirent, index) => {
@@ -721,7 +724,6 @@ export const handleClick = async (state, index) => {
     return focusIndex(state, -1)
   }
   const actualIndex = index + state.minLineY
-  state.focusedIndex = actualIndex
   const dirent = state.dirents[actualIndex]
   // TODO dirent type should be numeric
   switch (dirent.type) {
@@ -740,12 +742,12 @@ export const handleClick = async (state, index) => {
   }
 }
 
-export const focusNone = async (state) => {
-  await focusIndex(state, -1)
+export const focusNone = (state) => {
+  return focusIndex(state, -1)
 }
 
-export const handleClickCurrent = async (state) => {
-  await handleClick(state, state.focusedIndex)
+export const handleClickCurrent = (state) => {
+  return handleClick(state, state.focusedIndex)
 }
 
 export const focusIndex = (state, index) => {
