@@ -244,7 +244,7 @@ export const getFocusedDirent = (state) => {
 // TODO support multiselection and removing multiple dirents
 export const removeDirent = async (state) => {
   if (state.focusedIndex < 0) {
-    return
+    return state
   }
   const dirent = getFocusedDirent(state)
   const absolutePath = dirent.path
@@ -260,6 +260,7 @@ export const removeDirent = async (state) => {
     return
   }
   console.log('remove dirent')
+  // TODO avoid state mutation
   const newVersion = ++state.version
   // TODO race condition
   // const newState = await loadContent(state)
@@ -278,7 +279,8 @@ export const removeDirent = async (state) => {
     }
   }
   const deleteCount = deleteEnd - index
-  state.dirents.splice(index, deleteCount)
+  const newDirents = [...state.dirents]
+  newDirents.splice(index, deleteCount)
   let indexToFocus = -1
 
   if (state.dirents.length === 0) {
@@ -290,10 +292,11 @@ export const removeDirent = async (state) => {
   } else {
     indexToFocus = Math.max(state.focusedIndex - 1, 0)
   }
-
-  // TODO removing of file and setting focus should happen at the same time
-  await scheduleDirents(state)
-  await focusIndex(state, indexToFocus)
+  return {
+    ...state,
+    dirents: newDirents,
+    focusedIndex: indexToFocus,
+  }
 }
 
 const updateDirents = async (state) => {
@@ -678,13 +681,17 @@ const handleClickDirectory = async (state, dirent, index) => {
   const dirents = await getChildDirents(state, dirent)
   const newIndex = state.dirents.indexOf(dirent)
   if (newIndex === -1) {
-    return
+    return state
   }
   // console.log(state.dirents[index] === dirent)
-  state.dirents.splice(newIndex + 1, 0, ...dirents)
+  const newDirents = [...state.dirents]
+  newDirents.splice(newIndex + 1, 0, ...dirents)
   dirent.type = 'directory-expanded'
   dirent.icon = IconTheme.getIcon(dirent)
-  await scheduleDirents(state)
+  return {
+    ...state,
+    dirents: newDirents,
+  }
 }
 
 const handleClickDirectoryExpanding = async (state, dirent, index) => {
@@ -697,47 +704,45 @@ const handleClickDirectoryExpanding = async (state, dirent, index) => {
     /* index */ index,
     /* removeCount */ 0
   )
+  return state
 }
 
-const handleClickDirectoryExpanded = async (state, dirent, index) => {
+const handleClickDirectoryExpanded = (state, dirent, index) => {
   dirent.type = 'directory'
   dirent.icon = IconTheme.getIcon(dirent)
   const endIndex = getParentEndIndex(state.dirents, index)
   const removeCount = endIndex - index - 1
   // TODO race conditions and side effects are everywhere
-  state.dirents.splice(index + 1, removeCount)
-  await scheduleDirents(state)
+  const newDirents = [...state.dirents]
+  newDirents.splice(index + 1, removeCount)
+  return {
+    ...state,
+    dirents: newDirents,
+  }
 }
 
 export const handleClick = async (state, index) => {
   if (index === -1) {
-    await focusIndex(state, -1)
-    return
+    return focusIndex(state, -1)
   }
   const actualIndex = index + state.minLineY
   state.focusedIndex = actualIndex
   const dirent = state.dirents[actualIndex]
-  console.log('click', index)
   // TODO dirent type should be numeric
   switch (dirent.type) {
     case 'file':
-      await handleClickFile(state, dirent, actualIndex)
-      break
+      return handleClickFile(state, dirent, actualIndex)
     // TODO decide on one name
     case 'folder':
     case 'directory':
-      await handleClickDirectory(state, dirent, actualIndex)
-      break
+      return handleClickDirectory(state, dirent, actualIndex)
     case 'directory-expanding':
-      await handleClickDirectoryExpanding(state, dirent, actualIndex)
-      break
+      return handleClickDirectoryExpanding(state, dirent, actualIndex)
     case 'directory-expanded':
-      await handleClickDirectoryExpanded(state, dirent, actualIndex)
-      break
+      return handleClickDirectoryExpanded(state, dirent, actualIndex)
     default:
       break
   }
-  await focusIndex(state, actualIndex)
 }
 
 export const focusNone = async (state) => {
@@ -748,56 +753,49 @@ export const handleClickCurrent = async (state) => {
   await handleClick(state, state.focusedIndex)
 }
 
-export const focusIndex = async (state, index) => {
-  const oldFocusedIndex = state.focusedIndex
-  state.focusedIndex = index
-  await RendererProcess.invoke(
-    /* viewSend */ 'Viewlet.send',
-    /* id */ 'Explorer',
-    /* method */ 'setFocusedIndex',
-    /* oldIndex */ oldFocusedIndex,
-    /* newIndex */ state.focusedIndex
-  )
-}
-
-export const focusNext = async (state) => {
-  if (state.focusedIndex === state.dirents.length - 1) {
-    return
+export const focusIndex = (state, index) => {
+  return {
+    ...state,
+    focusedIndex: index,
   }
-  await focusIndex(state, state.focusedIndex + 1)
 }
 
-export const focusPrevious = async (state) => {
+export const focusNext = (state) => {
+  if (state.focusedIndex === state.dirents.length - 1) {
+    return state
+  }
+  return focusIndex(state, state.focusedIndex + 1)
+}
+
+export const focusPrevious = (state) => {
   switch (state.focusedIndex) {
     case -1:
       if (state.dirents.length === 0) {
-        break
+        return state
       }
-      await focusIndex(state, state.dirents.length - 1)
-      break
+      return focusIndex(state, state.dirents.length - 1)
     case 0:
-      break
+      return state
     default:
-      await focusIndex(state, state.focusedIndex - 1)
-      break
+      return focusIndex(state, state.focusedIndex - 1)
   }
 }
 
-export const focusFirst = async (state) => {
+export const focusFirst = (state) => {
   if (state.dirents.length === 0 || state.focusedIndex === 0) {
-    return
+    return state
   }
-  await focusIndex(state, 0)
+  return focusIndex(state, 0)
 }
 
-export const focusLast = async (state) => {
+export const focusLast = (state) => {
   if (
     state.dirents.length === 0 ||
     state.focusedIndex === state.dirents.length - 1
   ) {
-    return
+    return state
   }
-  await focusIndex(state, state.dirents.length - 1)
+  return focusIndex(state, state.dirents.length - 1)
 }
 
 export const scrollUp = () => {}
@@ -807,53 +805,50 @@ export const scrollDown = () => {}
 
 export const handleArrowRight = async (state) => {
   if (state.focusedIndex === -1) {
-    return
+    return state
   }
   const dirent = state.dirents[state.focusedIndex]
   switch (dirent.type) {
     case 'file':
-      break
+      return state
     case 'directory':
-      await handleClickDirectory(state, dirent, state.focusedIndex)
-      break
+      return handleClickDirectory(state, dirent, state.focusedIndex)
     case 'directory-expanded':
       if (state.focusedIndex === state.dirents.length - 1) {
-        break
+        return state
       }
       const nextDirent = state.dirents[state.focusedIndex + 1]
       if (nextDirent.depth === dirent.depth + 1) {
-        await focusIndex(state, state.focusedIndex + 1)
+        return focusIndex(state, state.focusedIndex + 1)
       }
       break
     default:
-      break
+      return state
   }
 }
 
-const focusParentFolder = async (state) => {
+const focusParentFolder = (state) => {
   const parentStartIndex = getParentStartIndex(
     state.dirents,
     state.focusedIndex
   )
   if (parentStartIndex === -1) {
-    return
+    return state
   }
-  await focusIndex(state, parentStartIndex)
+  return focusIndex(state, parentStartIndex)
 }
 
-export const handleArrowLeft = async (state) => {
+export const handleArrowLeft = (state) => {
   if (state.focusedIndex === -1) {
-    return
+    return state
   }
   const dirent = state.dirents[state.focusedIndex]
   switch (dirent.type) {
     case 'directory':
     case 'file':
-      await focusParentFolder(state)
-      break
+      return focusParentFolder(state)
     case 'directory-expanded':
-      await handleClickDirectoryExpanded(state, dirent, state.focusedIndex)
-      break
+      return handleClickDirectoryExpanded(state, dirent, state.focusedIndex)
     default:
       // TODO handle expanding directory and cancel file system call to read child dirents
       break
@@ -1044,24 +1039,31 @@ export const expandAll = async (state) => {
   }
   const dirent = dirents[focusedIndex]
   const depth = dirent.depth
-  for (const dirent of dirents) {
+  const newDirents = [...dirents]
+  // TODO fetch child dirents in parallel
+  for (const dirent of newDirents) {
     if (dirent.depth === depth && dirent.type === 'directory') {
       // TODO expand
+      // TODO avoid mutating state here
       dirent.type = 'directory-expanding'
       // TODO handle error
+      // TODO race condition
       const childDirents = await getChildDirents(state, dirent)
-      const newIndex = dirents.indexOf(dirent)
+      const newIndex = newDirents.indexOf(dirent)
       if (newIndex === -1) {
         continue
       }
       // console.log(state.dirents[index] === dirent)
-      dirents.splice(newIndex + 1, 0, ...childDirents)
+      newDirents.splice(newIndex + 1, 0, ...childDirents)
+      // TODO avoid mutating state here
       dirent.type = 'directory-expanded'
       // await expand(state, dirent.index)
     }
   }
-  console.log({ dirents: [...dirents] })
-  await scheduleDirents(state)
+  return {
+    ...state,
+    dirents: newDirents,
+  }
 }
 
 const isTopLevel = (dirent) => {
@@ -1078,12 +1080,16 @@ const toCollapsedDirent = (dirent) => {
   return dirent
 }
 
-export const collapseAll = async (state) => {
+export const collapseAll = (state) => {
   const newDirents = state.dirents.filter(isTopLevel).map(toCollapsedDirent)
-  state.dirents = newDirents
-  await scheduleDirents(state)
+  return {
+    ...state,
+    dirents: newDirents,
+  }
 }
 
 export const handleBlur = async (state) => {
   await focusIndex(state, -2)
 }
+
+export const render = (oldState, newState) => {}
