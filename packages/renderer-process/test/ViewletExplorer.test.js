@@ -428,9 +428,9 @@ test('focusIndex', () => {
   ])
   document.body.append(state.$Viewlet)
   ViewletExplorer.setFocusedIndex(state, -1, 0)
-  expect(document.activeElement).toBe(state.$Viewlet.children[0])
+  expect(document.activeElement).toBe(state.$Viewlet)
   ViewletExplorer.setFocusedIndex(state, -1, 1)
-  expect(document.activeElement).toBe(state.$Viewlet.children[1])
+  expect(document.activeElement).toBe(state.$Viewlet)
 })
 
 test('event - contextmenu', () => {

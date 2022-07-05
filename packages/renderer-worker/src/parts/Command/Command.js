@@ -260,6 +260,7 @@ const getModuleId = (commandId) => {
     case 'Explorer.scrollDown':
     case 'Explorer.scrollUp':
     case 'Explorer.setDeltaY':
+    case 'Explorer.handleBlur':
       return MODULE_VIEWLET_EXPLORER
     case 'ColorThemeFromJson.createColorThemeFromJson':
       return MODULE_COLOR_THEME_FROM_JSON

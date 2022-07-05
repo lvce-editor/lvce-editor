@@ -30,6 +30,8 @@ const handleMessageFromRendererWorker = async (event) => {
         error,
       })
     }
+  } else {
+    console.info('unknown message', data)
   }
 }
 
