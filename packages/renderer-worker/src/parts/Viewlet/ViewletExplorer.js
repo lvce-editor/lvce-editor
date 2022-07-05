@@ -665,6 +665,7 @@ const handleClickFile = async (state, dirent, index) => {
     /* Main.openAbsolutePath */ 'Main.openUri',
     /* absolutePath */ dirent.path
   )
+  return state
 }
 
 const handleClickDirectory = async (state, dirent, index) => {
