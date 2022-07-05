@@ -243,7 +243,7 @@ export const getFocusedDirent = (state) => {
 
 // TODO support multiselection and removing multiple dirents
 export const removeDirent = async (state) => {
-  if (state.focusedIndex === -1) {
+  if (state.focusedIndex < 0) {
     return
   }
   const dirent = getFocusedDirent(state)

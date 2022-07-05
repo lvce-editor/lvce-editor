@@ -348,7 +348,9 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
       break
     default:
       const $Dirent = $Viewlet.children[oldIndex]
-      $Dirent.classList.remove('FocusOutline')
+      if ($Dirent) {
+        $Dirent.classList.remove('FocusOutline')
+      }
       break
   }
   switch (newIndex) {
