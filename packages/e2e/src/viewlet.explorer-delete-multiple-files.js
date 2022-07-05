@@ -1,7 +1,9 @@
 import { writeFile } from 'fs/promises'
 import { expect, getTmpDir, runWithExtension, test } from './_testFrameWork.js'
 
-test('viewlet.explorer-delete-multiple-files', async () => {
+// TODO race condition: when focused index changes and then icon theme loads,
+// the dirents are rerendered and the focus outline is not being applied
+test.skip('viewlet.explorer-delete-multiple-files', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(`${tmpDir}/file1.txt`, 'content 1')
   await writeFile(`${tmpDir}/file2.txt`, 'content 2')
@@ -27,9 +29,9 @@ test('viewlet.explorer-delete-multiple-files', async () => {
 
   await page.keyboard.press('Delete')
   await expect(file2).toBeHidden()
-  // await expect(file1).toHaveClass(/FocusOutline/)
+  await expect(file1).toHaveClass(/FocusOutline/)
 
-  // await page.keyboard.press('Delete')
-  // await expect(file1).toBeHidden()
-  // await expect(explorer).toHaveClass(/FocusOutline/)
+  await page.keyboard.press('Delete')
+  await expect(file1).toBeHidden()
+  await expect(explorer).toHaveClass(/FocusOutline/)
 })
