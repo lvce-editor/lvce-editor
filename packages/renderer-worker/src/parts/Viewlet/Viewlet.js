@@ -149,6 +149,7 @@ export const wrapViewletCommand = (id, fn) => {
       return fn(activeInstance.state, ...args)
     }
   }
+  return wrappedViewletCommand
 }
 
 export const resize = (id, dimensions) => {
