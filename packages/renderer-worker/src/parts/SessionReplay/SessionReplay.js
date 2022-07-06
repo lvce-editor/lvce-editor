@@ -54,14 +54,16 @@ export const replaySession = async (sessionId) => {
   const originalIpc = RendererProcess.state.ipc
   const originalSend = originalIpc.send
   RendererProcess.state.ipc.send = () => {}
-  RendererProcess.state.ipc.onmessage = (data) => {
+  RendererProcess.state.ipc.onmessage = (event) => {
+    const data = event.data
     if ('result' in data) {
       callbacks[data.id].resolve(data.result)
     } else if ('error' in data) {
       callbacks[data.id].reject(data.error)
+    } else {
+      throw new Error('unexpected message')
     }
   }
-  console.log({ events })
   const callbacks = Object.create(null)
   const invoke = (event) => {
     return new Promise((resolve, reject) => {
