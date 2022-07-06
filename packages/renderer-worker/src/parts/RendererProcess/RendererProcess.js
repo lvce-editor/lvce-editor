@@ -20,7 +20,8 @@ const handleMessageFromRendererProcess = async (event) => {
       Callback.reject(message.id, message.error)
     }
   } else {
-    await Command.execute(...message)
+    console.log({ message })
+    await Command.execute(message.method, ...message.params)
   }
 }
 

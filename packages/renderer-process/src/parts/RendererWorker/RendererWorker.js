@@ -17,14 +17,14 @@ const handleMessageFromRendererWorker = async (event) => {
   if (data.method && data.id) {
     try {
       const result = await Command.execute(data.method, ...data.params)
-      send({
+      state.ipc.send({
         jsonrpc: '2.0',
         id: data.id,
         result,
       })
       return
     } catch (error) {
-      send({
+      state.ipc.send({
         jsonrpc: '2.0',
         id: data.id,
         error,
@@ -69,6 +69,7 @@ export const dispose = () => {
 }
 
 export const send = (method, ...params) => {
+  console.trace('send', method, params)
   state.ipc.send({
     jsonrpc: '2.0',
     method,
