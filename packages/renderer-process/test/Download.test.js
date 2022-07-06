@@ -9,7 +9,6 @@ test('downloadFile', () => {
   const spyCreateElement = jest.spyOn(document, 'createElement')
   const spyDownload = jest.spyOn(HTMLAnchorElement.prototype, 'download', 'set')
   const spyHref = jest.spyOn(HTMLAnchorElement.prototype, 'href', 'set')
-  const spyRemove = jest.spyOn(Element.prototype, 'remove')
   const spyClick = jest.spyOn(HTMLElement.prototype, 'click')
 
   // act
@@ -23,6 +22,4 @@ test('downloadFile', () => {
   expect(spyHref).toHaveBeenCalledTimes(1)
   expect(spyHref).toHaveBeenCalledWith('test://test-url')
   expect(spyClick).toHaveBeenCalledTimes(1)
-  expect(spyRemove).toHaveBeenCalledTimes(1)
-  expect(document.body.children).toHaveLength(0)
 })

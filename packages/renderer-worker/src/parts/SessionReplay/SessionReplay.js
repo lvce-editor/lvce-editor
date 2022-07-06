@@ -70,7 +70,9 @@ export const downloadSession = async () => {
     const sessionId = getSessionId()
     const events = await getEvents(sessionId)
     const stringifiedEvents = JSON.stringify(events, null, 2)
-    const blob = new Blob([stringifiedEvents])
+    const blob = new Blob([stringifiedEvents], {
+      type: 'application/json',
+    })
     const fileName = `${sessionId}.json`
     url = URL.createObjectURL(blob)
     await Command.execute(
