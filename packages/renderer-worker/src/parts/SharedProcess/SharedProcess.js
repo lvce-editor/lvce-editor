@@ -1,8 +1,9 @@
 /* istanbul ignore file */
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
-import * as WebSocket from '../WebSocket/WebSocket.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as SharedProcessWithElectron from './SharedProcessWithElectron.js'
+import * as SharedProcessWithWebSocket from './SharedProcessWithWebSocket.js'
 
 // TODO duplicate code with platform module
 /**
@@ -71,72 +72,40 @@ const preparePrettyError = (rawError) => {
   return error
 }
 
-// TODO state is actually not needed here, only for testing because jest doesn't support mocking esm
 export const state = {
-  pendingMessages: [],
-  send(message) {
-    state.pendingMessages.push(message)
-  },
-  async receive(message) {
-    if (message.method) {
-      const result = await Command.execute(message.method, ...message.params)
-      if (message.id) {
-        state.send({
-          jsonrpc: '2.0',
-          id: message.id,
-          result,
-        })
-      }
-    } else {
-      Callback.resolve(message.id, message)
+  ipc: undefined,
+}
+
+const handleMessageFromSharedProcess = async (message) => {
+  if (message.method) {
+    const result = await Command.execute(message.method, ...message.params)
+    if (message.id) {
+      state.send({
+        jsonrpc: '2.0',
+        id: message.id,
+        result,
+      })
     }
-  },
-  dispose() {},
-  totalSent: 0,
-  totalReceived: 0,
-  retryCount: 0,
+  } else {
+    Callback.resolve(message.id, message)
+  }
+}
+
+const getIpc = () => {
+  if (platform === 'web' || platform === 'remote') {
+    return SharedProcessWithWebSocket.listen()
+  }
+  if (platform === 'electron') {
+    return SharedProcessWithElectron.listen()
+  } else {
+    throw new Error('unsupported platform')
+  }
 }
 
 export const listen = () => {
-  console.assert(state.pendingMessages.length === 0)
-  if (platform === 'web' || platform === 'remote') {
-    // TODO replace this during build
-    const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
-    const wsUrl = `${wsProtocol}//${location.host}`
-    const webSocket = WebSocket.create(wsUrl, state)
-  } else if (platform === 'electron') {
-    const handleMessage = (event) => {
-      const port = event.ports[0]
-      state.send = (message) => {
-        port.postMessage(message)
-      }
-      port.onmessage = (event) => {
-        const message = event.data
-        state.receive(message)
-      }
-      for (const pendingMessage of state.pendingMessages) {
-        state.send(pendingMessage)
-      }
-      // port.start()
-    }
-    if (
-      // @ts-ignore
-      typeof window !== 'undefined' &&
-      // @ts-ignore
-      window.myApi &&
-      // @ts-ignore
-      window.myApi.ipcConnect &&
-      // @ts-ignore
-      typeof window.myApi.ipcConnect === 'function'
-    ) {
-      // @ts-ignore
-      window.addEventListener('message', handleMessage, { once: true })
-      // @ts-ignore
-      window.myApi.ipcConnect()
-    } else {
-      console.warn('api is not available')
-    }
-  }
+  const ipc = getIpc()
+  ipc.onmessage = handleMessageFromSharedProcess
+  state.ipc = ipc
 }
 
 export const send = (method, ...params) => {
@@ -144,7 +113,7 @@ export const send = (method, ...params) => {
     console.warn('SharedProcess is not available on web')
     return
   }
-  JsonRpc.send(state, method, ...params)
+  JsonRpc.send(state.ipc, method, ...params)
 }
 
 export const invoke = async (method, ...params) => {
@@ -152,7 +121,7 @@ export const invoke = async (method, ...params) => {
     console.warn('SharedProcess is not available on web')
     return
   }
-  const responseMessage = await JsonRpc.invoke(state, method, ...params)
+  const responseMessage = await JsonRpc.invoke(state.ipc, method, ...params)
   if (responseMessage.error) {
     const prettyError = preparePrettyError(responseMessage.error)
     throw prettyError

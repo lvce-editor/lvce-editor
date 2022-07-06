@@ -140,7 +140,7 @@ export const startup = async (config) => {
   Performance.mark('code/didLoadRecentlyOpened')
 
   Performance.mark('code/willLoadSessionReplay')
-  // await SessionReplay.startRecording()
+  await SessionReplay.startRecording()
   Performance.mark('code/didLoadSessionReplay')
 
   // TODO tree shake out service worker in electron build
