@@ -12,7 +12,7 @@ const handleDrop = async (event) => {
   console.log('[main] drop')
   event.preventDefault()
   Layout.state.$Main.classList.remove('DropTarget')
-  RendererWorker.send([/* handleDrop */ 'Main.handleDrop'])
+  RendererWorker.send(/* handleDrop */ 'Main.handleDrop')
 }
 
 const create$MainTabs = () => {
@@ -121,25 +121,25 @@ const getIndex = ($Target) => {
 }
 
 const handleTabCloseButtonMouseDown = (event, index) => {
-  RendererWorker.send([
+  RendererWorker.send(
     /* Main.closeEditor */ 'Main.closeEditor',
-    /* index */ index,
-  ])
+    /* index */ index
+  )
 }
 
 const handleTabMouseDown = (event, index) => {
   switch (event.button) {
     case /* LeftClick */ 0:
-      RendererWorker.send([
+      RendererWorker.send(
         /* Main.handleTabClick */ 'Main.handleTabClick',
-        /* index */ index,
-      ])
+        /* index */ index
+      )
       break
     case /* MiddleClick */ 1:
-      RendererWorker.send([
+      RendererWorker.send(
         /* Main.closeEditor */ 'Main.closeEditor',
-        /* index */ index,
-      ])
+        /* index */ index
+      )
       break
     case /* RightClick */ 2:
       break
@@ -177,12 +177,12 @@ const handleTabsContextMenu = (event) => {
   event.preventDefault()
   const x = event.clientX
   const y = event.clientY
-  RendererWorker.send([
+  RendererWorker.send(
     /* Main.handleTabContextMenu */ 'Main.handleTabContextMenu',
     /* index */ index,
     /* x */ x,
-    /* y */ y,
-  ])
+    /* y */ y
+  )
 }
 
 export const openViewlet = (state, id, tabLabel, tabTitle, oldActiveIndex) => {

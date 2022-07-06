@@ -185,12 +185,12 @@ test('event - handleClick - top', () => {
   })
   state.$ActivityBar.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith(
     'ActivityBar.handleClick',
     1,
     15,
-    30,
-  ])
+    30
+  )
 })
 
 test('event - handleClick - bottom', () => {
@@ -226,12 +226,12 @@ test('event - handleClick - bottom', () => {
       clientY: 30,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith(
     'ActivityBar.handleClick',
     2,
     15,
-    30,
-  ])
+    30
+  )
 })
 
 test('event - handleClick - no item is clicked', () => {
@@ -305,11 +305,11 @@ test('event - handleContextMenu', () => {
       clientY: 30,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith(
     'ActivityBar.handleContextMenu',
     15,
-    30,
-  ])
+    30
+  )
 })
 
 // TODO test interaction with sidebar

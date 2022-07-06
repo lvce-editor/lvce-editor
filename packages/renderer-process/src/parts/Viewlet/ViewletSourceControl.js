@@ -30,12 +30,12 @@ const handleClick = (event) => {
   const $Parent = $Target.closest('.ViewletTree')
   const index = findIndex($Parent, $Target)
   // TODO ignore when index === -1
-  RendererWorker.send([
+  RendererWorker.send(
     /* viewletCommand */ 2133,
     /* viewletId */ 'Source Control',
     /* type */ 'handleClick',
-    /* index */ index,
-  ])
+    /* index */ index
+  )
 }
 
 const getPlaceHolderText = () => {

@@ -80,10 +80,11 @@ test('handleResize', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith([
-    'Layout.handleResize',
-    { windowWidth: 1024, windowHeight: 768, titleBarHeight: 0 },
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledWith('Layout.handleResize', {
+    windowWidth: 1024,
+    windowHeight: 768,
+    titleBarHeight: 0,
+  })
 })
 
 test('event - move sash', () => {
@@ -118,14 +119,16 @@ test('event - move sash', () => {
   $SashSideBar.dispatchEvent(pointerUpEvent)
   expect($Style.isConnected).toBe(false)
   expect(RendererWorker.send).toHaveBeenCalledTimes(2)
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(1, [
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(
+    1,
     'Layout.handleSashPointerDown',
-    'SideBar',
-  ])
+    'SideBar'
+  )
   // TODO make it possible to test with custom x/y position
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(2, [
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(
+    2,
     'Layout.handleSashPointerMove',
     0,
-    0,
-  ])
+    0
+  )
 })

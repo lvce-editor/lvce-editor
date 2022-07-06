@@ -18,15 +18,15 @@ const handleLocationsMouseDown = (event) => {
   const $Target = event.target
   if ($Target.classList.contains('TreeItem')) {
     const index = getNodeIndex($Target)
-    RendererWorker.send([
+    RendererWorker.send(
       /* ViewletLocations.selectIndex */ 'Locations.selectIndex',
-      /* index */ index,
-    ])
+      /* index */ index
+    )
   } else if ($Target.classList.contains('LocationList')) {
-    RendererWorker.send([
+    RendererWorker.send(
       /* ViewletLocations.focusIndex */ 'Locations.focusIndex',
-      /* index */ -1,
-    ])
+      /* index */ -1
+    )
   }
 }
 

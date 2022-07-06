@@ -83,13 +83,13 @@ test('event - mousedown - left', () => {
   state.$LayerText.dispatchEvent(
     new MouseEvent('mousedown', { detail: 1, clientX: 8, clientY: 5 })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith(
     'Editor.handleSingleClick',
     '',
     8,
     5,
-    2,
-  ])
+    2
+  )
 })
 
 test('event - mousedown - right', () => {
@@ -140,13 +140,13 @@ test('event - mousedown - left - out of viewport', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith(
     'Editor.handleSingleClick',
     '',
     -10,
     -10,
-    0,
-  ])
+    0
+  )
 })
 
 test('event - double click', () => {
@@ -172,7 +172,7 @@ test('event - double click', () => {
   state.$LayerText.dispatchEvent(
     new MouseEvent('mousedown', { detail: 2, clientX: 8, clientY: 5 })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([385, 8, 5, 2])
+  expect(RendererWorker.send).toHaveBeenCalledWith(385, 8, 5, 2)
 })
 
 test.skip('event - double click and move mouse to create selection', () => {
@@ -228,12 +228,12 @@ test('event - triple click', () => {
   state.$LayerText.dispatchEvent(
     new MouseEvent('mousedown', { detail: 3, clientX: 8, clientY: 5 })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith(
     'Editor.handleTripleClick',
     8,
     5,
-    2,
-  ])
+    2
+  )
 })
 
 test.skip('event - touchstart - single touch', () => {
@@ -328,18 +328,15 @@ test('event - touchend - single touch', () => {
   state.$Editor.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith([
-    'Editor.handleTouchEnd',
-    {
-      touches: [
-        {
-          x: 10,
-          y: 5,
-        },
-      ],
-      changedTouches: [],
-    },
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleTouchEnd', {
+    touches: [
+      {
+        x: 10,
+        y: 5,
+      },
+    ],
+    changedTouches: [],
+  })
 })
 
 test('event - touchend - single touch - not cancelable', () => {
@@ -366,18 +363,15 @@ test('event - touchend - single touch - not cancelable', () => {
   state.$Editor.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith([
-    'Editor.handleTouchEnd',
-    {
-      touches: [
-        {
-          x: 10,
-          y: 5,
-        },
-      ],
-      changedTouches: [],
-    },
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.handleTouchEnd', {
+    touches: [
+      {
+        x: 10,
+        y: 5,
+      },
+    ],
+    changedTouches: [],
+  })
 })
 
 // TODO
@@ -415,12 +409,12 @@ test('event - context menu', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith(
     'ContextMenu.show',
     15,
     30,
-    'editor',
-  ])
+    'editor'
+  )
 })
 
 // TODO
@@ -540,7 +534,7 @@ test('event - beforeinput on contenteditable on mobile - cursor in middle', () =
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith(
     'Editor.handleBeforeInputFromContentEditable',
     'a',
     {
@@ -548,8 +542,8 @@ test('event - beforeinput on contenteditable on mobile - cursor in middle', () =
       startRowIndex: 0,
       endColumnIndex: 6,
       endRowIndex: 0,
-    },
-  ])
+    }
+  )
 })
 
 test('event - composition', () => {
@@ -576,14 +570,16 @@ test('event - composition', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(2)
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(1, [
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(
+    1,
     'Editor.compositionStart',
-    'a',
-  ])
-  expect(RendererWorker.send).toHaveBeenNthCalledWith(2, [
+    'a'
+  )
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(
+    2,
     'Editor.compositionEnd',
-    'ñ',
-  ])
+    'ñ'
+  )
 })
 
 test('renderTextAndCursorsAndSelections - beforeinput on contenteditable on mobile - cursor in middle - native', () => {
@@ -655,7 +651,7 @@ test('event - beforeinput on contenteditable on mobile - word in middle selected
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith(
     'Editor.handleBeforeInputFromContentEditable',
     'a',
     {
@@ -663,8 +659,8 @@ test('event - beforeinput on contenteditable on mobile - word in middle selected
       startRowIndex: 0,
       endColumnIndex: 12,
       endRowIndex: 0,
-    },
-  ])
+    }
+  )
 })
 
 test('renderTextAndCursorsAndSelections - native selection - word in middle selected', () => {

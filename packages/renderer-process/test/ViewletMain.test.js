@@ -75,7 +75,7 @@ test('event - left click on tab', () => {
   const event = new MouseEvent('mousedown', { bubbles: true, cancelable: true })
   state.$MainTabs.children[0].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
-  expect(RendererWorker.send).toHaveBeenCalledWith(['Main.handleTabClick', 0])
+  expect(RendererWorker.send).toHaveBeenCalledWith('Main.handleTabClick', 0)
 })
 
 test('event - middle click on tab', () => {
@@ -95,7 +95,7 @@ test('event - middle click on tab', () => {
     cancelable: true,
   })
   state.$MainTabs.children[0].dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledWith(['Main.closeEditor', 0])
+  expect(RendererWorker.send).toHaveBeenCalledWith('Main.closeEditor', 0)
 })
 
 test('event - right click on tab', () => {
@@ -133,12 +133,12 @@ test('event - context menu on tab', () => {
       clientY: 30,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith(
     'Main.handleTabContextMenu',
     0,
     15,
-    30,
-  ])
+    30
+  )
 })
 
 test('event - click on tabs', () => {

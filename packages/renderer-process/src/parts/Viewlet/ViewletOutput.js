@@ -15,12 +15,12 @@ export const name = 'Output'
 const handleChange = (event) => {
   const $Target = event.target
   const value = $Target.value
-  RendererWorker.send([
+  RendererWorker.send(
     /* viewletSend */ 'Viewlet.send',
     /* ViewletId */ 'Output',
     /* method */ 'setOutputChannel',
-    /* option */ value,
-  ])
+    /* option */ value
+  )
 }
 
 export const create = () => {

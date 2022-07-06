@@ -45,16 +45,16 @@ const handleIconError = (event) => {
 const handleWheel = (event) => {
   switch (event.deltaMode) {
     case event.DOM_DELTA_LINE:
-      RendererWorker.send([
+      RendererWorker.send(
         /* ViewletExtensions.handleWheel */ 'Extensions.handleWheel',
-        /* deltaY */ event.deltaY,
-      ])
+        /* deltaY */ event.deltaY
+      )
       break
     case event.DOM_DELTA_PIXEL:
-      RendererWorker.send([
+      RendererWorker.send(
         /* ViewletExtensions.handleWheel */ 'Extensions.handleWheel',
-        /* deltaY */ event.deltaY,
-      ])
+        /* deltaY */ event.deltaY
+      )
       break
     default:
       break
@@ -64,10 +64,10 @@ const handleWheel = (event) => {
 const handleInput = (event) => {
   // const state = ActiveViewlet.getStateFromEvent(event)
   const $Target = event.target
-  RendererWorker.send([
+  RendererWorker.send(
     /* ViewletExtensions.handleInput */ 863,
-    /* value */ $Target.value,
-  ])
+    /* value */ $Target.value
+  )
   // TODO
   // state.$Viewlet.ariaBusy = 'true'
 }
@@ -81,12 +81,12 @@ const handleContextMenu = (event) => {
     return
   }
   const extension = state.extensions[index]
-  RendererWorker.send([
+  RendererWorker.send(
     /* Extensions.handleContextMenu */ 'Extensions.handleContextMenu',
     /* x */ event.clientX,
     /* y */ event.clientY,
-    /* extensionId */ extension.id,
-  ])
+    /* extensionId */ extension.id
+  )
 }
 
 const getNodeIndex = ($Node) => {
@@ -103,28 +103,28 @@ const handleClick = (event) => {
   switch ($Target.className) {
     case 'Extension': {
       const index = getNodeIndex($Target)
-      RendererWorker.send([
+      RendererWorker.send(
         /* Extensions.handleClick */ 'Extensions.handleClick',
-        /* index */ index,
-      ])
+        /* index */ index
+      )
       break
     }
     case 'ExtensionName':
     case 'ExtensionDescription':
     case 'ExtensionFooter': {
       const index = getNodeIndex($Target.parentNode.parentNode)
-      RendererWorker.send([
+      RendererWorker.send(
         /* Extensions.handleClick */ 'Extensions.handleClick',
-        /* index */ index,
-      ])
+        /* index */ index
+      )
       break
     }
     case 'ExtensionAuthorName': {
       const index = getNodeIndex($Target.parentNode.parentNode.parentNode)
-      RendererWorker.send([
+      RendererWorker.send(
         /* Extensions.handleClick */ 'Extensions.handleClick',
-        /* index */ index,
-      ])
+        /* index */ index
+      )
       break
     }
     default:
@@ -138,7 +138,7 @@ const handleFocus = (event) => {
   // TODO maybe have one focus listener inside Viewlet.js instead of each viewlet
   Focus.setFocus('viewletExtensions')
 
-  // RendererWorker.send([/* ViewletExtensions.focusIndex */ 868, /* index */ -1])
+  // RendererWorker.send(/* ViewletExtensions.focusIndex */ 868, /* index */ -1)
 }
 
 const handleScrollBarMouseDown = (event) => {
@@ -149,19 +149,19 @@ const handleScrollBarMouseDown = (event) => {
   } else {
     const y = event.clientY
     console.log({ y })
-    RendererWorker.send([
+    RendererWorker.send(
       /* ViewletExtensions.handleScrollBarClick */ 'Extensions.handleScrollBarClick',
-      /* y */ y,
-    ])
+      /* y */ y
+    )
   }
 }
 
 const handleScrollBarThumbMouseMove = (event) => {
   const y = event.clientY
-  RendererWorker.send([
+  RendererWorker.send(
     /* ViewletExtensions.handleScrollBarMouseMove */ 'Extensions.handleScrollBarMove',
-    /* y */ y,
-  ])
+    /* y */ y
+  )
 }
 
 const handleScrollBarThumbMouseUp = () => {

@@ -95,10 +95,10 @@ const handleMatchingKeyBinding = (matchingKeyBinding) => {
   // TODO should args always be defined? (probably yes -> monomorphism & simpler code since all objects are the same)
 
   // TODO matchingKeyBinding.command should always be number
-  RendererWorker.send([
+  RendererWorker.send(
     /* KeyBindings.handleKeyBinding */ 'KeyBindings.handleKeyBinding',
-    /* keyBinding */ matchingKeyBinding,
-  ])
+    /* keyBinding */ matchingKeyBinding
+  )
 }
 
 const handleKeyDown = (event) => {

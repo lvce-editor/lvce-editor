@@ -86,12 +86,12 @@ test('event - click', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith(
     2133,
     'Source Control',
     'handleClick',
-    0,
-  ])
+    0
+  )
 })
 
 test('accessibility - SourceControlInput should have aria-label', () => {

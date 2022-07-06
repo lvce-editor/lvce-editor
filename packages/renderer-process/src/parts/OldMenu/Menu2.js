@@ -67,11 +67,11 @@ const handleMouseDown = (event) => {
     return
   }
   const menuIndex = state.$$Menus.indexOf($Menu)
-  RendererWorker.send([
+  RendererWorker.send(
     /* Menu.handleClick */ 'Menu.selectIndex',
     /* menuIndex */ menuIndex,
-    /* index */ index,
-  ])
+    /* index */ index
+  )
 }
 
 const handleMouseEnter = (event) => {
@@ -82,11 +82,11 @@ const handleMouseEnter = (event) => {
     return
   }
   const level = state.$$Menus.indexOf($Menu)
-  RendererWorker.send([
+  RendererWorker.send(
     /* Menu.handleMouseEnter */ 'Menu.handleMouseEnter',
     /* level */ level,
-    /* index */ index,
-  ])
+    /* index */ index
+  )
 }
 
 /**

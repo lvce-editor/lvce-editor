@@ -5,7 +5,7 @@ import * as Assert from '../Assert/Assert.js'
 const handleInput = (event) => {
   const $Target = event.target
   const value = $Target.value
-  RendererWorker.send([/* ViewletSearch.handleInput */ 9444, /* value */ value])
+  RendererWorker.send(/* ViewletSearch.handleInput */ 9444, /* value */ value)
 }
 
 const getNodeIndex = ($Node) => {
@@ -21,10 +21,10 @@ const handleClick = (event) => {
   switch ($Target.className) {
     case 'TreeItem':
       const index = getNodeIndex($Target)
-      RendererWorker.send([
+      RendererWorker.send(
         /* ViewletSearch.handleClick */ 9445,
-        /* index */ index,
-      ])
+        /* index */ index
+      )
       break
     default:
       break

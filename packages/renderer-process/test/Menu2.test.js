@@ -100,7 +100,7 @@ test('event - mousedown', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith(['Menu.selectIndex', 0, 0])
+  expect(RendererWorker.send).toHaveBeenCalledWith('Menu.selectIndex', 0, 0)
 })
 
 test.skip('event - key - ArrowDown', () => {

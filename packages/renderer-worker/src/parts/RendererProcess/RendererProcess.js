@@ -111,16 +111,15 @@ export const listen = () => {
       return ipc.onmessage
     },
     set onmessage(listener) {
-      if (listener) {
-        ipc.onmessage = async (event) => {
-          const message = event.data
-          await listener(message)
-          await SessionReplay.handleMessage('from-renderer-process', message)
-        }
-      } else {
-        ipc.onmessage = null
-      }
+      ipc.onmessage = listener
     },
+  }
+  const originalOnMessage = wrappedIpc.onmessage
+  wrappedIpc.onmessage = async (event) => {
+    const message = event.data
+    // @ts-ignore
+    await originalOnMessage(event)
+    await SessionReplay.handleMessage('from-renderer-process', message)
   }
   state.ipc = wrappedIpc
 }

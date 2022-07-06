@@ -68,8 +68,12 @@ export const dispose = () => {
   }
 }
 
-export const send = (message) => {
-  state.ipc.send(message)
+export const send = (method, ...params) => {
+  state.ipc.send({
+    jsonrpc: '2.0',
+    method,
+    params,
+  })
 }
 
 export const sendAndTransfer = (message, transfer) => {

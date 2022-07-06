@@ -18,7 +18,7 @@ export const setPathName = (pathName) => {
 }
 
 const handlePopState = (event) => {
-  RendererWorker.send([/* Workspace.hydrate */ 'Workspace.hydrate'])
+  RendererWorker.send(/* Workspace.hydrate */ 'Workspace.hydrate')
 }
 
 export const hydrate = () => {

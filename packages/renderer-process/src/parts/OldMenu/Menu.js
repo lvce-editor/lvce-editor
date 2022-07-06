@@ -56,33 +56,33 @@ const handleMouseDown = (event) => {
   }
   event.preventDefault()
   const level = getLevel($Menu)
-  RendererWorker.send([
+  RendererWorker.send(
     /* Menu.handleClick */ 'Menu.selectIndex',
     /* level */ level,
-    /* index */ index,
-  ])
+    /* index */ index
+  )
 }
 
 // const handleKeyDown = (event) => {
 //   console.log({ key: event.key })
 //   switch (event.key) {
 //     case 'ArrowUp':
-//       RendererWorker.send([ /* Menu.focusPrevious */ 7405])
+//       RendererWorker.send( /* Menu.focusPrevious */ 7405)
 //       break
 //     case 'ArrowLeft':
 //       // TODO collapse menu maybe
 //       break
 //     case 'ArrowDown':
-//       RendererWorker.send([ /* Menu.focusNext */ 7404])
+//       RendererWorker.send( /* Menu.focusNext */ 7404)
 //       break
 //     case 'ArrowRight':
 //       // TODO expand sub menu maybe
 //       break
 //     case 'Home':
-//       RendererWorker.send([ /* Menu.focusFirst */ 7406])
+//       RendererWorker.send( /* Menu.focusFirst */ 7406)
 //       break
 //     case 'End':
-//       RendererWorker.send([ /* Menu.focusLast */ 7407])
+//       RendererWorker.send( /* Menu.focusLast */ 7407)
 //       break
 //     default:
 //       break
@@ -109,14 +109,14 @@ const handleMouseEnter = (event) => {
   }
   const level = getLevel($Menu)
   console.log('focus index mouse', index)
-  RendererWorker.send([
+  RendererWorker.send(
     /* Menu.handleMouseEnter */ 'Menu.handleMouseEnter',
     /* level */ level,
     /* index */ index,
     /* x */ x,
     /* y */ y,
-    /* timeStamp */ timeStamp,
-  ])
+    /* timeStamp */ timeStamp
+  )
 }
 
 const handleMouseMove = (event) => {
@@ -180,7 +180,7 @@ export const focusIndex = (level, oldFocusedIndex, newFocusedIndex) => {
 // TODO replace function that recycles menu dom nodes
 
 const handleBackDropMouseDown = () => {
-  RendererWorker.send([/* Menu.hide */ 'Menu.hide'])
+  RendererWorker.send(/* Menu.hide */ 'Menu.hide')
 }
 
 const handleContextMenu = (event) => {

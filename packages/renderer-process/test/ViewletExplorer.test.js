@@ -488,12 +488,12 @@ test('event - contextmenu', () => {
       bubbles: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith(
     'Explorer.handleContextMenu',
     50,
     50,
-    0,
-  ])
+    0
+  )
 })
 
 // TODO test expand/collapse
@@ -555,7 +555,7 @@ test('event - click', () => {
       button: 0,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith(['Explorer.handleClick', 0])
+  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleClick', 0)
 })
 
 test('event - click on wrapper div', () => {
@@ -585,7 +585,7 @@ test('event - click on wrapper div', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(['Explorer.handleClick', -1])
+  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleClick', -1)
 })
 
 test('event - right click', () => {

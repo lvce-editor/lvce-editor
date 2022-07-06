@@ -5,7 +5,7 @@ export const name = 'Problems'
 
 const handleMouseDown = (event) => {
   event.preventDefault()
-  RendererWorker.send([/* ViewletProblems.focusIndex */ 7550, /* index */ -1])
+  RendererWorker.send(/* ViewletProblems.focusIndex */ 7550, /* index */ -1)
 }
 
 export const create = (problemsCount) => {
