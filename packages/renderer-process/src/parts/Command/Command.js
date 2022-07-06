@@ -26,6 +26,7 @@ const MODULE_IMAGE_PREVIEW = 43
 const MODULE_LOCATION = 44
 const MODULE_AUDIO = 45
 const MODULE_META = 46
+const MODULE_DOWNLOAD = 47
 
 export const state = {
   commands: Object.create(null),
@@ -78,6 +79,8 @@ const loadModule = (moduleId) => {
       return import('../Audio/Audio.ipc.js')
     case MODULE_META:
       return import('../Meta/Meta.ipc.js')
+    case MODULE_DOWNLOAD:
+      return import('../Download/Download.ipc.js')
     default:
       throw new Error('unknown module')
   }
@@ -98,6 +101,8 @@ const getModuleId = (commandId) => {
     case 'Developer.showState':
     case 'Developer.getMemoryUsage':
       return MODULE_DEVELOPER
+    case 'Download.downloadFile':
+      return MODULE_DOWNLOAD
     case 549:
     case 550:
     case 551:

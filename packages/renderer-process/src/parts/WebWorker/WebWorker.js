@@ -10,7 +10,7 @@ const METHOD_REFERENCE_PORT = 3
 /**
  * @type {number}
  */
-const METHOD_PREFERRED = METHOD_MESSAGE_PORT
+const METHOD_PREFERRED = METHOD_MODULE_WORKER
 
 export const create = async (url) => {
   switch (METHOD_PREFERRED) {

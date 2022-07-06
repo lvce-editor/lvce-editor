@@ -63,6 +63,7 @@ const MODULE_VIEWLET_EDITOR_COMPLETION = 75
 const MODULE_VIEWLET_Locations = 76
 const MODULE_VIEWLET_PROBLEMS = 77
 const MODULE_SESSION_REPLAY = 78
+const MODULE_DOWNLOAD = 79
 
 export const state = {
   commands: Object.create(null),
@@ -191,6 +192,8 @@ const loadModule = (moduleId) => {
       return import('../Viewlet/ViewletProblems.ipc.js')
     case MODULE_SESSION_REPLAY:
       return import('../SessionReplay/SessionReplay.ipc.js')
+    case MODULE_DOWNLOAD:
+      return import('../Download/Download.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }
@@ -210,6 +213,8 @@ const getOrLoadModule = (moduleId) => {
 
 const getModuleId = (commandId) => {
   switch (commandId) {
+    case 'Download.downloadFile':
+      return MODULE_DOWNLOAD
     case 'Main.save':
     case 'Main.handleDrop':
     case 'Main.closeActiveEditor':
