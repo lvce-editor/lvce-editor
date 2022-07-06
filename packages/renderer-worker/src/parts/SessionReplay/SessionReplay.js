@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as IndexedDb from '../IndexedDb/IndexedDb.js'
+import * as Location from '../Location/Location.js'
 
 export const state = {
   sessionId: '',
@@ -40,10 +41,9 @@ export const replaySession = async () => {
   // 2. open new window
   // 3. replay ui with commands from indexeddb
 
-  const replayUrl = `${location.href}?replayId=${state.sessionId}`
-
-  // console.log({ replayUrl })
-  const newWindow = open(replayUrl)
+  const href = await Location.getHref()
+  const replayUrl = `${href}?replayId=${state.sessionId}`
+  await Command.execute('Open.openUrl', /* url */ replayUrl)
 }
 
 export const getEvents = async (sessionId) => {

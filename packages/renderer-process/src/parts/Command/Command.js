@@ -27,6 +27,7 @@ const MODULE_LOCATION = 44
 const MODULE_AUDIO = 45
 const MODULE_META = 46
 const MODULE_DOWNLOAD = 47
+const MODULE_OPEN = 48
 
 export const state = {
   commands: Object.create(null),
@@ -81,6 +82,8 @@ const loadModule = (moduleId) => {
       return import('../Meta/Meta.ipc.js')
     case MODULE_DOWNLOAD:
       return import('../Download/Download.ipc.js')
+    case MODULE_OPEN:
+      return import('../Open/Open.ipc.js')
     default:
       throw new Error('unknown module')
   }
@@ -103,6 +106,8 @@ const getModuleId = (commandId) => {
       return MODULE_DEVELOPER
     case 'Download.downloadFile':
       return MODULE_DOWNLOAD
+    case 'Open.openUrl':
+      return MODULE_OPEN
     case 549:
     case 550:
     case 551:

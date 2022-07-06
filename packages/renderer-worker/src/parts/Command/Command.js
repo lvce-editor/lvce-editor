@@ -542,6 +542,7 @@ const getModuleId = (commandId) => {
     case 1300:
       return MODULE_SOURCE_CONTROL
     case 'Open.openNativeFolder':
+    case 'Open.openUrl':
       return MODULE_OPEN
     case 'ColorPicker.open':
     case 'ColorPicker.close':
