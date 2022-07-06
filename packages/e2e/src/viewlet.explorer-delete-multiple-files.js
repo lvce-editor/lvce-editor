@@ -1,9 +1,7 @@
 import { writeFile } from 'fs/promises'
 import { expect, getTmpDir, runWithExtension, test } from './_testFrameWork.js'
 
-// TODO race condition: when focused index changes and then icon theme loads,
-// the dirents are rerendered and the focus outline is not being applied
-test.skip('viewlet.explorer-delete-multiple-files', async () => {
+test('viewlet.explorer-delete-multiple-files', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(`${tmpDir}/file1.txt`, 'content 1')
   await writeFile(`${tmpDir}/file2.txt`, 'content 2')

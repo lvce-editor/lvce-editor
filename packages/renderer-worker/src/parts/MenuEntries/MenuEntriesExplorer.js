@@ -1,4 +1,4 @@
-import * as Command from '../Command/Command.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 
 const ALL_ENTRIES = [
   {
@@ -92,12 +92,19 @@ const isFileEntry = (entry) => {
   return entry.id !== 'newFile' && entry.id !== 'newFolder'
 }
 
-export const getMenuEntries = async () => {
-  // TODO need a way to access state of other components synchronously
-  // TODO explorer might already be disposed (race condition)
-  const focusedDirent = await Command.execute(
-    /* Explorer.getFocusedDirent */ 'Explorer.getFocusedDirent'
-  )
+// TODO there are two possible ways of getting the focused dirent of explorer
+// 1. directly access state of explorer (bad because it directly accesses state of another component)
+// 2. expose getFocusedDirent method in explorer (bad because explorer code should not know about for menuEntriesExplorer, which needs that method)
+const getFocusedDirent = () => {
+  const explorerState = Viewlet.getState('Explorer')
+  if (!explorerState || explorerState.focusedIndex < 0) {
+    return undefined
+  }
+  return explorerState.dirents[explorerState.focusedIndex]
+}
+
+export const getMenuEntries = () => {
+  const focusedDirent = getFocusedDirent()
   if (!focusedDirent) {
     return ALL_ENTRIES
   }

@@ -16,6 +16,7 @@ export const __initialize__ = () => {
   Command.register('Explorer.focusIndex',           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusIndex))
   Command.register('Explorer.focusLast',            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusLast))
   Command.register('Explorer.focusNext',            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusNext))
+  Command.register('Explorer.focusNone',            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusNone))
   Command.register('Explorer.focusPrevious',        Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusPrevious))
   Command.register('Explorer.getFocusedDirent',     Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.getFocusedDirent))
   Command.register('Explorer.handleArrowLeft',      Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleArrowLeft))
