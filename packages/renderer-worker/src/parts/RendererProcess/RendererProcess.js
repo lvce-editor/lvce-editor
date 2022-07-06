@@ -26,6 +26,7 @@ const handleMessageFromRendererProcess = async (event) => {
 }
 
 const listenModuleWorker = () => {
+  postMessage('ready')
   return {
     send(message) {
       postMessage(message)
