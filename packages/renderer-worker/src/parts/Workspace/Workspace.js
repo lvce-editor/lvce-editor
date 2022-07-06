@@ -71,7 +71,6 @@ const getResolvedRootFromRendererProcess = async () => {
     const originalSend = originalIpc.send
     RendererProcess.state.ipc.send = () => {}
     RendererProcess.state.ipc.onmessage = (data) => {
-      console.log({ data })
       if ('result' in data) {
         callbacks[data.id].resolve(data.result)
       } else if ('error' in data) {
@@ -89,7 +88,7 @@ const getResolvedRootFromRendererProcess = async () => {
     let now = 0
     for (const event of events) {
       if (event.source === 'to-renderer-process') {
-        console.log(event.timestamp)
+        // console.log(event.timestamp)
         const timeDifference = event.timestamp - now
         await new Promise((resolve, reject) => {
           setTimeout(resolve, timeDifference)
@@ -97,8 +96,11 @@ const getResolvedRootFromRendererProcess = async () => {
         await invoke(event)
         now = event.timestamp
       }
+      if (event.source === 'from-renderer-process') {
+        console.log(event)
+      }
     }
-    console.log({ events })
+    // console.log({ events })
   }
   console.log({ url })
   if (url.pathname.startsWith('/github')) {

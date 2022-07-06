@@ -367,5 +367,9 @@
   {
     "id": "SessionReplay.replaySession",
     "label": "SessionReplay: Replay Session"
+  },
+  {
+    "id": "SessionReplay.downloadSession",
+    "label": "SessionReplay: Download Session"
   }
 ]

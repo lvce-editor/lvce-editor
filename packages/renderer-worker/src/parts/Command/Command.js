@@ -734,6 +734,7 @@ const getModuleId = (commandId) => {
     case 'FindWidget.setValue':
     case 'FindWidget.dispose':
       return MODULE_FIND_WIDGET
+    case 'SessionReplay.downloadSession':
     case 'SessionReplay.replaySession':
       return MODULE_SESSION_REPLAY
     default:

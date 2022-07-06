@@ -48,7 +48,10 @@ const handleMouseDown = (event) => {
   }
   // console.log('button', event.button)
   // console.log({ index })
-  RendererWorker.send([/* QuickPick.selectIndex */ 'QuickPick.selectIndex', /* index */ index])
+  RendererWorker.send([
+    /* QuickPick.selectIndex */ 'QuickPick.selectIndex',
+    /* index */ index,
+  ])
 }
 
 // TODO beforeinput event should prevent input event maybe
@@ -338,5 +341,6 @@ export const dispose = (state) => {
 }
 
 export const setValue = (state, value) => {
-  state.$QuickPickInput.value = value
+  const { $QuickPickInput } = state
+  $QuickPickInput.value = value
 }

@@ -63,3 +63,20 @@ export const getEvents = async (sessionId) => {
     return []
   }
 }
+
+export const downloadSession = async () => {
+  const sessionId = getSessionId()
+  const events = await getEvents(sessionId)
+  const stringifiedEvents = JSON.stringify(events, null, 2)
+  const blob = new Blob([stringifiedEvents])
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.style.display = 'none'
+  a.href = url
+  // the filename you want
+  a.download = `${sessionId}.json`
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+  URL.revokeObjectURL(url)
+}
