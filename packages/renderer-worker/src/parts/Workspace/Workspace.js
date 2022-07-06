@@ -88,13 +88,15 @@ const getResolvedRootFromRendererProcess = async () => {
     let now = 0
     for (const event of events) {
       if (event.source === 'to-renderer-process') {
-        // console.log(event.timestamp)
-        const timeDifference = event.timestamp - now
-        await new Promise((resolve, reject) => {
-          setTimeout(resolve, timeDifference)
-        })
-        await invoke(event)
-        now = event.timestamp
+        if (event.method !== 'Open.openUrl') {
+          // console.log(event.timestamp)
+          const timeDifference = event.timestamp - now
+          await new Promise((resolve, reject) => {
+            setTimeout(resolve, timeDifference)
+          })
+          await invoke(event)
+          now = event.timestamp
+        }
       }
       if (event.source === 'from-renderer-process') {
         console.log(event)
