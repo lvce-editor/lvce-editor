@@ -77,9 +77,7 @@ test('openUrl - error', async () => {
 
 test('openUrl', async () => {
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {
-    throw new TypeError('x is not a function')
-  })
+  RendererProcess.invoke.mockImplementation(() => {})
   await Open.openUrl('test://test.txt')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(

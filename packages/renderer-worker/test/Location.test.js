@@ -35,10 +35,7 @@ test('getHref', async () => {
   })
   expect(await Location.getHref()).toBe('http://localhost:3000/test-path')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Location.getHref',
-    'http://localhost:3000/test-path'
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Location.getHref')
 })
 
 test('setPathName', async () => {

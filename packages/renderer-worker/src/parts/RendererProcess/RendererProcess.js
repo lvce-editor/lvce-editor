@@ -1,7 +1,6 @@
 /* istanbul ignore file */
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
-import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 
 export const state = {
   pendingMessages: [],
@@ -101,29 +100,6 @@ export const listen = () => {
   console.assert(state.pendingMessages.length === 0)
   const ipc = getIpc()
   ipc.onmessage = handleMessageFromRendererProcess
-  const wrappedIpc = {
-    async send(message) {
-      ipc.send(message)
-      await SessionReplay.handleMessage('to-renderer-process', message)
-    },
-    sendAndTransfer(message, transferables) {
-      ipc.sendAndTransfer(message, transferables)
-    },
-    get onmessage() {
-      return ipc.onmessage
-    },
-    set onmessage(listener) {
-      ipc.onmessage = listener
-    },
-  }
-  const originalOnMessage = wrappedIpc.onmessage
-  wrappedIpc.onmessage = async (event) => {
-    const message = event.data
-    // @ts-ignore
-    await originalOnMessage(event)
-    await SessionReplay.handleMessage('from-renderer-process', message)
-  }
-  state.ipc = wrappedIpc
 }
 
 /**
