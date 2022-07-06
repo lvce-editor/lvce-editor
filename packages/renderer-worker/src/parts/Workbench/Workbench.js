@@ -45,6 +45,11 @@ export const startup = async (config) => {
   await Preferences.hydrate()
   Performance.mark('code/didLoadPreferences')
 
+  // TODO only load this if session replay is enabled in preferences
+  Performance.mark('code/willLoadSessionReplay')
+  await SessionReplay.startRecording()
+  Performance.mark('code/didLoadSessionReplay')
+
   LifeCycle.mark(LifeCycle.PHASE_TWO)
 
   Performance.mark('code/willOpenWorkspace')
@@ -138,10 +143,6 @@ export const startup = async (config) => {
   Performance.mark('code/willLoadRecentlyOpened')
   await RecentlyOpened.hydrate()
   Performance.mark('code/didLoadRecentlyOpened')
-
-  Performance.mark('code/willLoadSessionReplay')
-  await SessionReplay.startRecording()
-  Performance.mark('code/didLoadSessionReplay')
 
   // TODO tree shake out service worker in electron build
 
