@@ -13,6 +13,7 @@ import * as Workspace from '../Workspace/Workspace.js'
 import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
 import * as Location from '../Location/Location.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 
 const handleUnhandledRejection = async (event) => {
   console.info(`[renderer-process] Unhandled Rejection: ${event.reason}`)
@@ -137,6 +138,10 @@ export const startup = async (config) => {
   Performance.mark('code/willLoadRecentlyOpened')
   await RecentlyOpened.hydrate()
   Performance.mark('code/didLoadRecentlyOpened')
+
+  Performance.mark('code/willLoadSessionReplay')
+  // await SessionReplay.startRecording()
+  Performance.mark('code/didLoadSessionReplay')
 
   // TODO tree shake out service worker in electron build
 
