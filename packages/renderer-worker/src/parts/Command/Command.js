@@ -742,6 +742,7 @@ const getModuleId = (commandId) => {
       return MODULE_FIND_WIDGET
     case 'SessionReplay.downloadSession':
     case 'SessionReplay.replaySession':
+    case 'SessionReplay.replayCurrentSession':
       return MODULE_SESSION_REPLAY
     default:
       throw new Error(`command ${commandId} not found`)

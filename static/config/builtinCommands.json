@@ -365,8 +365,8 @@
     "label": "Explorer: Expand All"
   },
   {
-    "id": "SessionReplay.replaySession",
-    "label": "SessionReplay: Replay Session"
+    "id": "SessionReplay.replayCurrentSession",
+    "label": "SessionReplay: Replay Current Session"
   },
   {
     "id": "SessionReplay.downloadSession",

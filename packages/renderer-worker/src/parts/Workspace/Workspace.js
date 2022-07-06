@@ -1,10 +1,9 @@
+import * as Command from '../Command/Command.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Window from '../Window/Window.js'
-import * as Command from '../Command/Command.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const state = {
   workspacePath: '',
@@ -60,49 +59,14 @@ const getResolveRootFromSessionStorage = async () => {
 
 const getResolvedRootFromRendererProcess = async () => {
   const href = await Location.getHref()
-  console.log({ href })
   const url = new URL(href)
   if (url.searchParams.has('replayId')) {
     const replayId = url.searchParams.get('replayId')
-    console.log({ replayId })
-    const SessionReplay = await import('../SessionReplay/SessionReplay.js')
-    const events = await SessionReplay.getEvents(replayId)
-    const originalIpc = RendererProcess.state.ipc
-    const originalSend = originalIpc.send
-    RendererProcess.state.ipc.send = () => {}
-    RendererProcess.state.ipc.onmessage = (data) => {
-      if ('result' in data) {
-        callbacks[data.id].resolve(data.result)
-      } else if ('error' in data) {
-        callbacks[data.id].reject(data.error)
-      }
-    }
-    console.log({ events })
-    const callbacks = Object.create(null)
-    const invoke = (event) => {
-      return new Promise((resolve, reject) => {
-        callbacks[event.id] = { resolve, reject }
-        originalSend(event)
-      })
-    }
-    let now = 0
-    for (const event of events) {
-      if (event.source === 'to-renderer-process') {
-        if (event.method !== 'Open.openUrl') {
-          // console.log(event.timestamp)
-          const timeDifference = event.timestamp - now
-          await new Promise((resolve, reject) => {
-            setTimeout(resolve, timeDifference)
-          })
-          await invoke(event)
-          now = event.timestamp
-        }
-      }
-      if (event.source === 'from-renderer-process') {
-        console.log(event)
-      }
-    }
-    // console.log({ events })
+    await Command.execute(
+      'SessionReplay.replaySession',
+      /* sessionId */ replayId
+    )
+    return
   }
   console.log({ url })
   if (url.pathname.startsWith('/github')) {
