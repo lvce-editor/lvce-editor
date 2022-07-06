@@ -136,7 +136,7 @@ export const downloadSession = async () => {
   }
 }
 
-const wrapIpc = (ipc, name) => {
+const wrapIpc = (ipc, name, getData) => {
   const nameFrom = `from-${name}`
   const nameTo = `to-${name}`
   const wrappedIpc = {
@@ -156,7 +156,7 @@ const wrapIpc = (ipc, name) => {
   }
   const originalOnMessage = wrappedIpc.onmessage
   wrappedIpc.onmessage = async (event) => {
-    const message = event.data
+    const message = getData(event)
     await originalOnMessage(event)
     await handleMessage(nameFrom, message)
   }
@@ -166,7 +166,12 @@ const wrapIpc = (ipc, name) => {
 export const startRecording = () => {
   RendererProcess.state.ipc = wrapIpc(
     RendererProcess.state.ipc,
-    'renderer-process'
+    'renderer-process',
+    (event) => event.data
   )
-  SharedProcess.state.ipc = wrapIpc(SharedProcess.state.ipc, 'shared-process')
+  SharedProcess.state.ipc = wrapIpc(
+    SharedProcess.state.ipc,
+    'shared-process',
+    (event) => event
+  )
 }

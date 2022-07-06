@@ -25,6 +25,7 @@ export const listen = () => {
     set onmessage(listener) {
       if (listener) {
         handleMessage = (event) => {
+          console.log({ event })
           if (event instanceof MessageEvent) {
             const message = JSON.parse(event.data)
             listener(message)
