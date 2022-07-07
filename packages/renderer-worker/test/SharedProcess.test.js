@@ -4,7 +4,6 @@ import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
 test('invoke - error', async () => {
   SharedProcess.state.ipc = {
     send: jest.fn((message) => {
-      console.log({ message })
       switch (message.method) {
         case 123456:
           SharedProcess.handleMessageFromSharedProcess({
