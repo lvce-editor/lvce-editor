@@ -4,6 +4,7 @@ import * as IndexedDb from '../IndexedDb/IndexedDb.js'
 import * as Location from '../Location/Location.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const state = {
   sessionId: '',
@@ -137,6 +138,12 @@ export const downloadSession = async () => {
 }
 
 const wrapIpc = (ipc, name, getData) => {
+  if (!ipc) {
+    return
+  }
+  Assert.object(ipc)
+  Assert.string(name)
+  Assert.fn(getData)
   const nameFrom = `from-${name}`
   const nameTo = `to-${name}`
   const wrappedIpc = {
