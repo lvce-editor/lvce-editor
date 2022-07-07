@@ -35,6 +35,6 @@ export const create = async (url) => {
       error.preventDefault()
       return WebWorkerWithMessagePort.create(url)
     }
-    throw error
+    console.error(`Failed to start worker: ${error}`)
   }
 }
