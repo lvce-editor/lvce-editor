@@ -39,7 +39,7 @@ export const ensureExtensionHostIsStarted = async () => {
   switch (ExtensionHostCore.state.status) {
     case ExtensionHostCore.STATUS_OFF:
       ExtensionHostCore.state.extensionHostPromise =
-        ExtensionHostCore.startExtensionHost()
+        ExtensionHostCore.startNodeExtensionHost()
       await ExtensionHostCore.state.extensionHostPromise
       await activateByEvent('onStartupFinished')
       break

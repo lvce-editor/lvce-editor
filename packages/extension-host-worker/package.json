@@ -1,0 +1,11 @@
+{
+  "name": "extension-host-worker",
+  "version": "0.0.0-dev",
+  "description": "",
+  "main": "src/extensionHostWorkerMain.js",
+  "type": "module",
+  "scripts": {},
+  "keywords": [],
+  "author": "",
+  "license": "MIT"
+}

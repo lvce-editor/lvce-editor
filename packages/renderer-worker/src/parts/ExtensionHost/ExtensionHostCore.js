@@ -1,5 +1,6 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const STATUS_OFF = 0
 export const STATUS_LOADING = 1
@@ -18,9 +19,14 @@ export const state = {
    * @type {Promise<void>|undefined}
    */
   extensionHostPromise: undefined,
+
+  /**
+   * @type {any}
+   */
+  extensionHostWorker: undefined,
 }
 
-export const startExtensionHost = async () => {
+export const startNodeExtensionHost = async () => {
   switch (state.status) {
     case STATUS_LOADING:
     case STATUS_RUNNING:
@@ -38,6 +44,31 @@ export const startExtensionHost = async () => {
     /* ExtensionHost.setWorkspaceRoot */ 'ExtensionHost.setWorkspaceRoot',
     /* root */ Workspace.getWorkspacePath()
   )
+}
+
+export const startWebExtensionHost = async () => {
+  console.info('starting web extension host')
+  const worker = new Worker(
+    '/packages/extension-host-worker/src/extensionHostWorkerMain.js',
+    {
+      type: 'module',
+      name: 'Extension Host',
+    }
+  )
+  state.extensionHostWorker = worker
+}
+
+export const loadWebExtension = async (name) => {
+  Assert.object(state.extensionHostWorker)
+  // TODO use invoke
+  await new Promise((resolve) => {
+    setTimeout(resolve, 120)
+  })
+  state.extensionHostWorker.postMessage({
+    jsonrpc: '2.0',
+    method: 'Extension.activate',
+    params: [name],
+  })
 }
 
 export const invoke = (...args) => {
