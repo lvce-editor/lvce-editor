@@ -51,11 +51,15 @@ const toLocaleString = (number, locale, options) => {
   }
   return result;
 };
-var prettyBytes = (number, options) => {
+function prettyBytes(number, options) {
   if (!Number.isFinite(number)) {
     throw new TypeError(`Expected a finite number, got ${typeof number}: ${number}`);
   }
-  options = Object.assign({bits: false, binary: false}, options);
+  options = {
+    bits: false,
+    binary: false,
+    ...options
+  };
   const UNITS = options.bits ? options.binary ? BIBIT_UNITS : BIT_UNITS : options.binary ? BIBYTE_UNITS : BYTE_UNITS;
   if (options.signed && number === 0) {
     return ` 0 ${UNITS[0]}`;
@@ -70,19 +74,19 @@ var prettyBytes = (number, options) => {
     localeOptions = {minimumFractionDigits: options.minimumFractionDigits};
   }
   if (options.maximumFractionDigits !== void 0) {
-    localeOptions = Object.assign({maximumFractionDigits: options.maximumFractionDigits}, localeOptions);
+    localeOptions = {maximumFractionDigits: options.maximumFractionDigits, ...localeOptions};
   }
   if (number < 1) {
     const numberString2 = toLocaleString(number, options.locale, localeOptions);
     return prefix + numberString2 + " " + UNITS[0];
   }
   const exponent = Math.min(Math.floor(options.binary ? Math.log(number) / Math.log(1024) : Math.log10(number) / 3), UNITS.length - 1);
-  number /= Math.pow(options.binary ? 1024 : 1e3, exponent);
+  number /= (options.binary ? 1024 : 1e3) ** exponent;
   if (!localeOptions) {
     number = number.toPrecision(3);
   }
   const numberString = toLocaleString(Number(number), options.locale, localeOptions);
   const unit = UNITS[exponent];
   return prefix + numberString + " " + unit;
-};
+}
 export default prettyBytes;

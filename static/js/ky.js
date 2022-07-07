@@ -5,6 +5,24 @@ class HTTPError extends Error {
     const status = `${code} ${title}`.trim();
     const reason = status ? `status code ${status}` : "an unknown error";
     super(`Request failed with ${reason}`);
+    Object.defineProperty(this, "response", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: void 0
+    });
+    Object.defineProperty(this, "request", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: void 0
+    });
+    Object.defineProperty(this, "options", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: void 0
+    });
     this.name = "HTTPError";
     this.response = response;
     this.request = request;
@@ -14,6 +32,12 @@ class HTTPError extends Error {
 class TimeoutError extends Error {
   constructor(request) {
     super("Request timed out");
+    Object.defineProperty(this, "request", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: void 0
+    });
     this.name = "TimeoutError";
     this.request = request;
   }
@@ -123,8 +147,37 @@ const delay = async (ms) => new Promise((resolve) => {
 });
 class Ky {
   constructor(input, options = {}) {
-    var _a, _b;
-    this._retryCount = 0;
+    var _a, _b, _c;
+    Object.defineProperty(this, "request", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: void 0
+    });
+    Object.defineProperty(this, "abortController", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: void 0
+    });
+    Object.defineProperty(this, "_retryCount", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: 0
+    });
+    Object.defineProperty(this, "_input", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: void 0
+    });
+    Object.defineProperty(this, "_options", {
+      enumerable: true,
+      configurable: true,
+      writable: true,
+      value: void 0
+    });
     this._input = input;
     this._options = {
       credentials: this._input.credentials || "same-origin",
@@ -133,14 +186,15 @@ class Ky {
       hooks: deepMerge({
         beforeRequest: [],
         beforeRetry: [],
+        beforeError: [],
         afterResponse: []
       }, options.hooks),
-      method: normalizeRequestMethod((_a = options.method) !== null && _a !== void 0 ? _a : this._input.method),
+      method: normalizeRequestMethod((_a = options.method) != null ? _a : this._input.method),
       prefixUrl: String(options.prefixUrl || ""),
       retry: normalizeRetryOptions(options.retry),
       throwHttpErrors: options.throwHttpErrors !== false,
       timeout: typeof options.timeout === "undefined" ? 1e4 : options.timeout,
-      fetch: (_b = options.fetch) !== null && _b !== void 0 ? _b : globalThis.fetch.bind(globalThis)
+      fetch: (_b = options.fetch) != null ? _b : globalThis.fetch.bind(globalThis)
     };
     if (typeof this._input !== "string" && !(this._input instanceof URL || this._input instanceof globalThis.Request)) {
       throw new TypeError("`input` must be a string, URL, or Request");
@@ -175,7 +229,7 @@ class Ky {
     }
     if (this._options.json !== void 0) {
       this._options.body = JSON.stringify(this._options.json);
-      this.request.headers.set("content-type", "application/json");
+      this.request.headers.set("content-type", (_c = this._options.headers.get("content-type")) != null ? _c : "application/json");
       this.request = new globalThis.Request(this.request, {body: this._options.body});
     }
   }
@@ -195,7 +249,11 @@ class Ky {
       }
       ky2._decorateResponse(response);
       if (!response.ok && ky2._options.throwHttpErrors) {
-        throw new HTTPError(response, ky2.request, ky2._options);
+        let error = new HTTPError(response, ky2.request, ky2._options);
+        for (const hook of ky2._options.hooks.beforeError) {
+          error = await hook(error);
+        }
+        throw error;
       }
       if (ky2._options.onDownloadProgress) {
         if (typeof ky2._options.onDownloadProgress !== "function") {
@@ -213,7 +271,8 @@ class Ky {
     for (const [type, mimeType] of Object.entries(responseTypes)) {
       result[type] = async () => {
         ky2.request.headers.set("accept", ky2.request.headers.get("accept") || mimeType);
-        const response = (await result).clone();
+        const awaitedResult = await result;
+        const response = awaitedResult.clone();
         if (type === "json") {
           if (response.status === 204) {
             return "";
@@ -326,7 +385,11 @@ class Ky {
         }
         await read();
       }
-    }));
+    }), {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers
+    });
   }
 }
 /*! MIT License © Sindre Sorhus */

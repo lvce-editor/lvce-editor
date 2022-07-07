@@ -3,7 +3,7 @@ import {
   deleteDB,
   wrap,
   unwrap,
-} from 'https://cdn.jsdelivr.net/npm/idb@7/+esm'
+} from '../../../../../static/js/idb/index.js'
 
 export const state = {
   databases: Object.create(null),
@@ -13,6 +13,7 @@ export const state = {
 
 export const saveValue = async (storeId, value) => {
   try {
+    // @ts-ignore
     const db = await openDB('session', state.dbVersion, {
       async upgrade(db, oldVersion) {
         if (!db.objectStoreNames.contains('session')) {
@@ -33,6 +34,7 @@ export const saveValue = async (storeId, value) => {
 export const getValues = async (storeId) => {
   try {
     console.log({ storeId })
+    // @ts-ignore
     const db = await openDB('session', state.dbVersion, {
       async upgrade(db) {
         await db.createObjectStore(storeId)
