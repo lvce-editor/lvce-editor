@@ -16,14 +16,14 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 
 const handleUnhandledRejection = async (event) => {
-  console.info(`[renderer-process] Unhandled Rejection: ${event.reason}`)
+  console.info(`[renderer-worker] Unhandled Rejection: ${event.reason}`)
   try {
     await ErrorHandling.handleError(event.reason)
   } catch {}
 }
 
 const handleError = async (event) => {
-  console.info(`[renderer-process] Unhandled Error: ${event}`)
+  console.info(`[renderer-worker] Unhandled Error: ${event}`)
   try {
     await ErrorHandling.handleError(event.reason)
   } catch {}
