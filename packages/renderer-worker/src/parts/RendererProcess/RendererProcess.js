@@ -1,9 +1,9 @@
 /* istanbul ignore file */
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
-import * as RendererProcessWithMessagePort from './RendererProcessWithMessagePort.js'
-import * as RendererProcessWithModuleWorker from './RendererProcessWithModuleWorker.js'
-import * as RendererProcessWithReferencePort from './RendererProcessWithReferencePort.js'
+import * as IpcWithMessagePort from '../Ipc/IpcWithMessagePort.js'
+import * as IpcWithModuleWorker from '../Ipc/IpcWithModuleWorker.js'
+import * as IpcWithReferencePort from '../Ipc/IpcWithReferencePort.js'
 
 export const state = {
   pendingMessages: [],
@@ -30,11 +30,11 @@ const handleMessageFromRendererProcess = async (event) => {
 const getIpc = () => {
   // TODO tree-shake out if/else in prod
   if (globalThis.acceptPort) {
-    return RendererProcessWithMessagePort.listen()
+    return IpcWithMessagePort.listen()
   } else if (globalThis.acceptReferencePort) {
-    return RendererProcessWithReferencePort.listen()
+    return IpcWithReferencePort.listen()
   } else {
-    return RendererProcessWithModuleWorker.listen()
+    return IpcWithModuleWorker.listen()
   }
 }
 
