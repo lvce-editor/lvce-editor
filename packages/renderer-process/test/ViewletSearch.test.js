@@ -49,7 +49,7 @@ test('event - input', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([9444, 'test search'])
+  expect(RendererWorker.send).toHaveBeenCalledWith(9444, 'test search')
 })
 
 test('setResults - no results', () => {

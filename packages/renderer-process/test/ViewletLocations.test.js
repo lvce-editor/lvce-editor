@@ -124,7 +124,7 @@ test('event - left click on tree', () => {
   RendererWorker.send.mockImplementation(() => {})
   state.$Locations.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(['Locations.focusIndex', -1])
+  expect(RendererWorker.send).toHaveBeenCalledWith('Locations.focusIndex', -1)
 })
 
 test('event - left click on reference', () => {
@@ -157,5 +157,5 @@ test('event - left click on reference', () => {
   RendererWorker.send.mockImplementation(() => {})
   $Location.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(['Locations.selectIndex', 1])
+  expect(RendererWorker.send).toHaveBeenCalledWith('Locations.selectIndex', 1)
 })

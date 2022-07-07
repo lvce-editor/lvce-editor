@@ -29,10 +29,10 @@ const handleMousedown = (event) => {
   if (index === -1) {
     return
   }
-  RendererWorker.send([
+  RendererWorker.send(
     /* ViewletEditorCompletion.selectIndex */ 'EditorCompletion.selectIndex',
-    /* index */ index,
-  ])
+    /* index */ index
+  )
 }
 
 const create$CompletionItem = (item, index) => {

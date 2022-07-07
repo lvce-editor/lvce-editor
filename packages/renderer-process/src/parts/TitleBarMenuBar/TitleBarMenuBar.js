@@ -96,10 +96,10 @@ const handleClick = (event) => {
     return
   }
   // event.preventDefault()
-  RendererWorker.send([
+  RendererWorker.send(
     /* TitleBarMenu.toggleIndex */ 'TitleBarMenuBar.toggleIndex',
-    /* index */ index,
-  ])
+    /* index */ index
+  )
 }
 
 export const focusIndex = (state, unFocusIndex, index) => {
@@ -124,12 +124,12 @@ const handleMouseEnter = (event) => {
   }
   const enterX = event.clientX
   const enterY = event.clientY
-  RendererWorker.send([
+  RendererWorker.send(
     /* TitleBarMenu.focusIndex */ 'TitleBarMenuBar.focusIndex',
     /* index */ index,
     /* enterX */ enterX,
-    /* enterY */ enterY,
-  ])
+    /* enterY */ enterY
+  )
 }
 
 // TODO the focus variable is confusing: false means keep focus in menubar, true means focus the menu
@@ -208,68 +208,68 @@ const handleKeyDown = (event) => {
     case 'ArrowDown':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([
-        /* TitleBarMenu.handleKeyArrowDown */ 'TitleBarMenu.handleKeyArrowDown',
-      ])
+      RendererWorker.send(
+        /* TitleBarMenu.handleKeyArrowDown */ 'TitleBarMenu.handleKeyArrowDown'
+      )
       break
     case 'ArrowUp':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([
-        /* TitleBarMenu.handleKeyArrowUp */ 'TitleBarMenu.handleKeyArrowUp',
-      ])
+      RendererWorker.send(
+        /* TitleBarMenu.handleKeyArrowUp */ 'TitleBarMenu.handleKeyArrowUp'
+      )
       break
     case 'ArrowRight':
       console.log('arrow right')
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([
-        /* TitleBarMenu.handleKeyArrowRight */ 'TitleBarMenu.handleKeyArrowRight',
-      ])
+      RendererWorker.send(
+        /* TitleBarMenu.handleKeyArrowRight */ 'TitleBarMenu.handleKeyArrowRight'
+      )
       break
     case 'ArrowLeft':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([
-        /* TitleBarMenu.handleKeyArrowLeft */ 'TitleBarMenu.handleKeyArrowLeft',
-      ])
+      RendererWorker.send(
+        /* TitleBarMenu.handleKeyArrowLeft */ 'TitleBarMenu.handleKeyArrowLeft'
+      )
       break
     case 'Enter':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([
-        /* TitleBarMenu.handleKeyEnter */ 'TitleBarMenu.handleKeyEnter',
-      ])
+      RendererWorker.send(
+        /* TitleBarMenu.handleKeyEnter */ 'TitleBarMenu.handleKeyEnter'
+      )
       break
     case ' ':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([
-        /* TitleBarMenu.handleKeySpace */ 'TitleBarMenu.handleKeySpace',
-      ])
+      RendererWorker.send(
+        /* TitleBarMenu.handleKeySpace */ 'TitleBarMenu.handleKeySpace'
+      )
       break
     case 'Home':
     case 'PageUp':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([
-        /* TitleBarMenu.handleKeyHome */ 'TitleBarMenu.handleKeyHome',
-      ])
+      RendererWorker.send(
+        /* TitleBarMenu.handleKeyHome */ 'TitleBarMenu.handleKeyHome'
+      )
       break
     case 'End':
     case 'PageDown':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([
-        /* TitleBarMenu.handleKeyEnd */ 'TitleBarMenu.handleKeyEnd',
-      ])
+      RendererWorker.send(
+        /* TitleBarMenu.handleKeyEnd */ 'TitleBarMenu.handleKeyEnd'
+      )
       break
     case 'Escape':
       event.preventDefault()
       event.stopPropagation()
-      RendererWorker.send([
-        /* TitleBarMenu.handleKeyEscape */ 'TitleBarMenu.handleKeyEscape',
-      ])
+      RendererWorker.send(
+        /* TitleBarMenu.handleKeyEscape */ 'TitleBarMenu.handleKeyEscape'
+      )
       break
     default:
       break
@@ -289,10 +289,10 @@ const handleFocusOut = (event) => {
     console.log('RETURN')
     return
   }
-  RendererWorker.send([
+  RendererWorker.send(
     /* TitleBarMenu.closeMenu */ 'TitleBarMenuBar.closeMenu',
-    /* keepFocus */ false,
-  ])
+    /* keepFocus */ false
+  )
 }
 
 export const create = () => {

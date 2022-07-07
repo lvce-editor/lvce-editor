@@ -4,7 +4,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 const handleBlur = () => {
-  RendererWorker.send([/* EditorRename.abort */ 'EditorRename.abort'])
+  RendererWorker.send(/* EditorRename.abort */ 'EditorRename.abort')
 }
 
 export const create = (x, y) => {

@@ -9,16 +9,16 @@ export const name = 'List'
 const handleWheel = (event) => {
   switch (event.deltaMode) {
     case event.DOM_DELTA_LINE:
-      RendererWorker.send([
+      RendererWorker.send(
         /* ViewletExtensions.handleWheel */ 873,
-        /* deltaY */ event.deltaY,
-      ])
+        /* deltaY */ event.deltaY
+      )
       break
     case event.DOM_DELTA_PIXEL:
-      RendererWorker.send([
+      RendererWorker.send(
         /* ViewletExtensions.handleWheel */ 873,
-        /* deltaY */ event.deltaY,
-      ])
+        /* deltaY */ event.deltaY
+      )
       break
     default:
       break
@@ -34,12 +34,12 @@ const handleContextMenu = (event) => {
     return
   }
   const extension = state.extensions[index]
-  RendererWorker.send([
+  RendererWorker.send(
     /* Extensions.handleContextMenu */ 'Extensions.handleContextMenu',
     /* x */ event.clientX,
     /* y */ event.clientY,
-    /* extensionId */ extension.id,
-  ])
+    /* extensionId */ extension.id
+  )
 }
 
 const getNodeIndex = ($Node) => {
@@ -56,7 +56,7 @@ const handleFocus = (event) => {
   // TODO maybe have one focus listener inside Viewlet.js instead of each viewlet
   Focus.setFocus('ViewletList')
 
-  // RendererWorker.send([/* ViewletExtensions.focusIndex */ 868, /* index */ -1])
+  // RendererWorker.send(/* ViewletExtensions.focusIndex */ 868, /* index */ -1)
 }
 
 const handleScrollBarMouseDown = (event) => {
@@ -67,16 +67,13 @@ const handleScrollBarMouseDown = (event) => {
   } else {
     const y = event.clientY
     console.log({ y })
-    RendererWorker.send([/* ViewletList.handleScrollBarClick */ 878, /* y */ y])
+    RendererWorker.send(/* ViewletList.handleScrollBarClick */ 878, /* y */ y)
   }
 }
 
 const handleScrollBarThumbMouseMove = (event) => {
   const y = event.clientY
-  RendererWorker.send([
-    /* ViewletList.handleScrollBarMouseMove */ 877,
-    /* y */ y,
-  ])
+  RendererWorker.send(/* ViewletList.handleScrollBarMouseMove */ 877, /* y */ y)
 }
 
 const handleScrollBarThumbMouseUp = () => {

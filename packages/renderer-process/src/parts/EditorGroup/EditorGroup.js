@@ -8,11 +8,11 @@ const handleEditorTabsContextMenu = (event) => {
   event.preventDefault()
   const x = event.clientX
   const y = event.clientY
-  RendererWorker.send([
+  RendererWorker.send(
     /* editorTabsHandleContextMenu */ 'Main.handleTabContextMenu',
     /* x */ x,
-    /* y */ y,
-  ])
+    /* y */ y
+  )
 }
 
 export const create = () => {

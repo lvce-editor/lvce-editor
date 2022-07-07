@@ -1,9 +1,9 @@
+import * as Command from '../Command/Command.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Window from '../Window/Window.js'
-import * as Command from '../Command/Command.js'
 
 export const state = {
   workspacePath: '',
@@ -58,10 +58,20 @@ const getResolveRootFromSessionStorage = async () => {
 }
 
 const getResolvedRootFromRendererProcess = async () => {
-  const pathName = await Location.getPathName()
-  if (pathName.startsWith('/github')) {
+  const href = await Location.getHref()
+  const url = new URL(href)
+  if (url.searchParams.has('replayId')) {
+    const replayId = url.searchParams.get('replayId')
+    await Command.execute(
+      'SessionReplay.replaySession',
+      /* sessionId */ replayId
+    )
+    return
+  }
+  console.log({ url })
+  if (url.pathname.startsWith('/github')) {
     return {
-      path: `github://${pathName.slice('/github'.length + 1)}`,
+      path: `github://${href.slice('/github'.length + 1)}`,
       homeDir: '',
       pathSeparator: '/',
       source: 'renderer-process',

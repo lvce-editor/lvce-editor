@@ -11,12 +11,12 @@ let globalTerminal
 export const name = 'Terminal'
 
 const handleInput = (input) => {
-  RendererWorker.send([
+  RendererWorker.send(
     /* viewletSend */ 2133,
     /* viewletId */ 'Terminal',
     /* method */ 'write',
-    /* input */ input,
-  ])
+    /* input */ input
+  )
 }
 
 const handleFocus = () => {
@@ -42,13 +42,13 @@ export const create = (id) => {
     handleUpdate() {
       // const width = $Viewlet.clientWidth
       // const height = $Viewlet.clientHeight
-      // RendererWorker.send([
+      // RendererWorker.send(
       //   /* viewletSend */ 2133,
       //   /* viewletId */ 'Terminal',
       //   /* method */ 'resize',
       //   /* width */ width,
       //   /* height */ height,
-      // ])
+      // )
     },
   }
 

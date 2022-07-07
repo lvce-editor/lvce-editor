@@ -61,7 +61,7 @@ export const dispose = (id) => {
 export const renderText = (editor) => {
   Assert.object(editor)
   const textInfos = EditorText.getVisible(editor)
-  RendererProcess.send([
+  RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'EditorText',
     /* method */ 'renderText',
@@ -70,8 +70,8 @@ export const renderText = (editor) => {
     /* textInfos */ textInfos,
     /* fontSize */ editor.fontSize, // TODO only send these properties once on first render
     /* lineHeight */ editor.rowHeight,
-    /* letterSpacing */ editor.letterSpacing,
-  ])
+    /* letterSpacing */ editor.letterSpacing
+  )
 }
 
 export const renderTextAndCursorAndSelectionsCommands = (editor) => {

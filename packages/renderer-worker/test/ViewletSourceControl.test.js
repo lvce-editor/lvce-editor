@@ -1,12 +1,33 @@
-import * as ViewletSourceControl from '../src/parts/Viewlet/ViewletSourceControl.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as ExtensionHost from '../src/parts/ExtensionHost/ExtensionHostCore.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
 import { jest } from '@jest/globals'
 
-beforeAll(() => {
-  ExtensionHost.state.status = ExtensionHost.STATUS_RUNNING
+beforeEach(() => {
+  jest.resetAllMocks()
 })
+
+jest.unstable_mockModule(
+  '../src/parts/ExtensionHost/ExtensionHostSourceControl.js',
+  () => {
+    return {
+      acceptInput: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+      getChangedFiles: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+      getFileBefore: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const ViewletSourceControl = await import(
+  '../src/parts/Viewlet/ViewletSourceControl.js'
+)
+
+const ExtensionHostSourceControl = await import(
+  '../src/parts/ExtensionHost/ExtensionHostSourceControl.js'
+)
 
 test('name', () => {
   expect(ViewletSourceControl.name).toBe('Source Control')
@@ -28,8 +49,6 @@ test.skip('loadContent', async () => {
 test.skip('contentLoaded', async () => {
   const state = { ...ViewletSourceControl.create() }
   await ViewletSourceControl.contentLoaded(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith({})
 })
 
 test('dispose', () => {
@@ -62,26 +81,8 @@ test('resize', () => {
 })
 
 test('acceptInput', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
-      case 'ExtensionHost.sourceControlAcceptInput':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
-      case 'ExtensionManagement.getExtensions':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: [],
-        })
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  // @ts-ignore
+  ExtensionHostSourceControl.acceptInput.mockImplementation(() => {})
   const state = ViewletSourceControl.create()
   expect(await ViewletSourceControl.acceptInput(state, 'abc')).toMatchObject({
     inputValue: '',

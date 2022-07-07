@@ -80,12 +80,12 @@ const handleMousedown = (event) => {
   const index = getNodeIndex($Item)
   const x = event.clientX
   const y = event.clientY
-  RendererWorker.send([
+  RendererWorker.send(
     /* ActivityBar.handleClick */ 'ActivityBar.handleClick',
     /* index */ index,
     /* x */ x,
-    /* y */ y,
-  ])
+    /* y */ y
+  )
 }
 
 const handleContextMenu = (event) => {
@@ -93,11 +93,11 @@ const handleContextMenu = (event) => {
   // TODO also move side bar position command
   const x = event.clientX
   const y = event.clientY
-  RendererWorker.send([
+  RendererWorker.send(
     /* activityBarHandleContextMenu */ 'ActivityBar.handleContextMenu',
     /* x */ x,
-    /* y */ y,
-  ])
+    /* y */ y
+  )
 }
 
 const handleBlur = () => {}

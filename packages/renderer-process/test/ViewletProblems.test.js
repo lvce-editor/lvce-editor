@@ -73,7 +73,7 @@ test('event - mousedown', () => {
   })
   state.$Viewlet.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith([7550, -1])
+  expect(RendererWorker.send).toHaveBeenCalledWith(7550, -1)
   expect(event.defaultPrevented).toBe(true)
 })
 

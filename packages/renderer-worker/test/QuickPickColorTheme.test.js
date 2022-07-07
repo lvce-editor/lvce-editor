@@ -1,21 +1,44 @@
 import { jest } from '@jest/globals'
-import * as QuickPickColorTheme from '../src/parts/QuickPick/QuickPickColorTheme.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const QuickPickColorTheme = await import(
+  '../src/parts/QuickPick/QuickPickColorTheme.js'
+)
+const SharedProcess = await import(
+  '../src/parts/SharedProcess/SharedProcess.js'
+)
 
 test('getPlaceholder', () => {
   expect(QuickPickColorTheme.getPlaceholder()).toBe('Select Color Theme')
 })
 
 test('getPicks', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
       case 'ExtensionHost.getColorThemeNames':
-        SharedProcess.state.receive({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: ['monokai', 'shades-of-purple', 'slime'],
-        })
-        break
+        return ['monokai', 'shades-of-purple', 'slime']
       default:
         throw new Error('unexpected message')
     }

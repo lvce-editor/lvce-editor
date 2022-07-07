@@ -142,7 +142,7 @@ test('event - mousedown - on focused item', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith(['QuickPick.selectIndex', 0])
+  expect(RendererWorker.send).toHaveBeenCalledWith('QuickPick.selectIndex', 0)
 })
 
 test.skip('event - beforeinput', () => {
@@ -198,10 +198,10 @@ test('event - input', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
+  expect(RendererWorker.send).toHaveBeenCalledWith(
     'QuickPick.handleInput',
-    '>a',
-  ])
+    '>a'
+  )
 })
 
 test('accessibility - QuickPick should have aria label', () => {

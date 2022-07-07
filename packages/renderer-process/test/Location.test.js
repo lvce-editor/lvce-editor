@@ -51,5 +51,9 @@ test('hydrate', () => {
   Location.hydrate()
   window.dispatchEvent(new PopStateEvent('popstate'))
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(['Workspace.hydrate'])
+  expect(RendererWorker.send).toHaveBeenCalledWith('Workspace.hydrate')
+})
+
+test.skip('getHref', () => {
+  expect(Location.getHref()).toBe('/')
 })

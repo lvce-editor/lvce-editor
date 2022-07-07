@@ -48,7 +48,10 @@ const handleMouseDown = (event) => {
   }
   // console.log('button', event.button)
   // console.log({ index })
-  RendererWorker.send([/* QuickPick.selectIndex */ 'QuickPick.selectIndex', /* index */ index])
+  RendererWorker.send(
+    /* QuickPick.selectIndex */ 'QuickPick.selectIndex',
+    /* index */ index
+  )
 }
 
 // TODO beforeinput event should prevent input event maybe
@@ -57,18 +60,18 @@ const handleMouseDown = (event) => {
 //     return
 //   }
 //   const value = event.target.value + event.data
-//   RendererWorker.send([
+//   RendererWorker.send(
 //     /* quickPickHandleInput */ 'QuickPick.handleInput',
 //     /* value */ value,
-//   ])
+//   )
 // }
 
 const handleInput = (event) => {
   const $Target = event.target
-  RendererWorker.send([
+  RendererWorker.send(
     /* quickPickHandleInput */ 'QuickPick.handleInput',
-    /* value */ $Target.value,
-  ])
+    /* value */ $Target.value
+  )
 }
 // TODO when blur hides quickpick automatically it doesn't necessarily need to be sent command to hide itself
 const handleBlur = (event) => {
@@ -77,7 +80,7 @@ const handleBlur = (event) => {
   //   console.log('no related target')
   //   return
   // }
-  RendererWorker.send([/* QuickPick.handleBlur */ 'QuickPick.handleBlur'])
+  RendererWorker.send(/* QuickPick.handleBlur */ 'QuickPick.handleBlur')
 }
 
 // TODO forbidden:
@@ -338,5 +341,6 @@ export const dispose = (state) => {
 }
 
 export const setValue = (state, value) => {
-  state.$QuickPickInput.value = value
+  const { $QuickPickInput } = state
+  $QuickPickInput.value = value
 }

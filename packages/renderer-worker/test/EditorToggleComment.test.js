@@ -27,7 +27,7 @@ const LANGUAGE_CONFIGURATION_HTML = {
   },
 }
 
-test('comment line', async () => {
+test.skip('comment line', async () => {
   const editor = {
     lines: ['const x = 1'],
     languageId: 'javascript',
@@ -68,7 +68,7 @@ test('comment line', async () => {
   })
 })
 
-test('uncomment line', async () => {
+test.skip('uncomment line', async () => {
   const editor = {
     lines: ['// const x = 1'],
     languageId: 'javascript',
@@ -101,7 +101,7 @@ test('uncomment line', async () => {
   })
 })
 
-test('uncomment line, no space after comment', async () => {
+test.skip('uncomment line, no space after comment', async () => {
   const editor = {
     lines: ['//const x = 1'],
     languageId: 'javascript',
@@ -166,7 +166,7 @@ test.skip('comment line with block comment - error block comment configuration i
   expect(newEditor.lines).toEqual(['undefined <h1></h1> -->'])
 })
 
-test('comment line with block comment', async () => {
+test.skip('comment line with block comment', async () => {
   SharedProcess.state.send = jest.fn()
   const editor = {
     lines: ['<h1></h1>'],
@@ -201,7 +201,7 @@ test('comment line with block comment', async () => {
   })
 })
 
-test('uncomment line with block comment', async () => {
+test.skip('uncomment line with block comment', async () => {
   const editor = {
     lines: ['<!-- <h1></h1> -->'],
     languageId: 'html',

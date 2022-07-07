@@ -319,7 +319,7 @@ test('event - click', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith(['Menu.selectIndex', 0, 0])
+  expect(RendererWorker.send).toHaveBeenCalledWith('Menu.selectIndex', 0, 0)
 })
 
 test('event - click - outside', () => {
@@ -376,7 +376,7 @@ test('event - right click outside', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(['Menu.hide'])
+  expect(RendererWorker.send).toHaveBeenCalledWith('Menu.hide')
 })
 
 test('event - context menu', () => {

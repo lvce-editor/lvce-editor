@@ -80,14 +80,14 @@ const handleFocus = (event) => {
     return
   }
   event.preventDefault()
-  RendererWorker.send([
+  RendererWorker.send(
     /* Explorer.handleClick */ 'Explorer.focusIndex',
-    /* index */ index,
-  ])
+    /* index */ index
+  )
 }
 
 const handleBlur = () => {
-  RendererWorker.send([/* Explorer.handleBlur */ 'Explorer.handleBlur'])
+  RendererWorker.send(/* Explorer.handleBlur */ 'Explorer.handleBlur')
 }
 
 const handleDragOver = (event) => {
@@ -144,12 +144,12 @@ const handleContextMenu = (event) => {
   const index = findIndex($Target)
   const x = event.clientX
   const y = event.clientY
-  RendererWorker.send([
+  RendererWorker.send(
     /* Explorer.handleContextMenu */ 'Explorer.handleContextMenu',
     /* x */ x,
     /* y */ y,
-    /* index */ index,
-  ])
+    /* index */ index
+  )
 }
 
 const handleMouseDown = (event) => {
@@ -162,10 +162,10 @@ const handleMouseDown = (event) => {
     return
   }
   event.preventDefault()
-  RendererWorker.send([
+  RendererWorker.send(
     /* Explorer.handleClick */ 'Explorer.handleClick',
-    /* index */ index,
-  ])
+    /* index */ index
+  )
 }
 
 const findIndex = ($Target) => {
@@ -184,10 +184,10 @@ const handleMouseEnter = (event) => {
   if (index === -1) {
     return
   }
-  RendererWorker.send([
+  RendererWorker.send(
     /* Explorer.handleMouseEnter */ 'Explorer.handleMouseEnter',
-    /* index */ index,
-  ])
+    /* index */ index
+  )
 }
 
 const handleMouseLeave = (event) => {
@@ -196,25 +196,25 @@ const handleMouseLeave = (event) => {
   if (index === -1) {
     return
   }
-  RendererWorker.send([
+  RendererWorker.send(
     /* Explorer.handleMouseLeave */ 'Explorer.handleMouseLeave',
-    /* index */ index,
-  ])
+    /* index */ index
+  )
 }
 
 const handleWheel = (event) => {
   switch (event.deltaMode) {
     case event.DOM_DELTA_LINE:
-      RendererWorker.send([
+      RendererWorker.send(
         /* Explorer.handleWheel */ 'Explorer.handleWheel',
-        /* deltaY */ event.deltaY,
-      ])
+        /* deltaY */ event.deltaY
+      )
       break
     case event.DOM_DELTA_PIXEL:
-      RendererWorker.send([
+      RendererWorker.send(
         /* Explorer.handleWheel */ 'Explorer.handleWheel',
-        /* deltaY */ event.deltaY,
-      ])
+        /* deltaY */ event.deltaY
+      )
       break
     default:
       break

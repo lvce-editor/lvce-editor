@@ -45,11 +45,6 @@ const isSlash = (text) => {
 }
 
 const editorTypeWithBraceCompletion = async (editor, text) => {
-  if (!Languages.state.loaded) {
-    await Languages.waitForLoad()
-  }
-  editor.languageId = Languages.getLanguageId(editor.uri) // TODO avoid side effect here
-
   const offset = TextDocument.offsetAt(editor, editor.cursor)
   const result =
     await ExtensionHostBraceCompletion.executeBraceCompletionProvider(
@@ -57,6 +52,7 @@ const editorTypeWithBraceCompletion = async (editor, text) => {
       offset,
       text
     )
+  console.log({ result })
   if (result) {
     const closingBrace = getMatchingClosingBrace(text)
     const insertText = text + closingBrace
@@ -68,11 +64,6 @@ const editorTypeWithBraceCompletion = async (editor, text) => {
 }
 
 const editorTypeWithSlashCompletion = async (editor, text) => {
-  if (!Languages.state.loaded) {
-    await Languages.waitForLoad()
-  }
-  editor.languageId = Languages.getLanguageId(editor.uri) // TODO avoid side effect here
-
   const offset = TextDocument.offsetAt(editor, editor.cursor)
   const result = await ExtensionHostClosingTag.executeClosingTagProvider(
     editor,
@@ -83,13 +74,15 @@ const editorTypeWithSlashCompletion = async (editor, text) => {
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
 
+// TODO implement typing command without brace completion -> brace completion should be independent module
 export const editorType = async (editor, text) => {
-  if (isBrace(text)) {
-    return editorTypeWithBraceCompletion(editor, text)
-  }
-  if (isSlash(text)) {
-    return editorTypeWithSlashCompletion(editor, text)
-  }
+  // if (isBrace(text)) {
+  //   console.log('is brace')
+  //   return editorTypeWithBraceCompletion(editor, text)
+  // }
+  // if (isSlash(text)) {
+  //   return editorTypeWithSlashCompletion(editor, text)
+  // }
   const changes = editorReplaceSelections(editor, [text], 'editorType')
   // // TODO trigger characters should be monomorph -> then skip this check
   // if (
@@ -100,7 +93,7 @@ export const editorType = async (editor, text) => {
   // }
 
   // TODO should editor type command know about editor completion? -> no
-  EditorCommandCompletion.openFromType(editor, text)
+  // EditorCommandCompletion.openFromType(editor, text)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
 

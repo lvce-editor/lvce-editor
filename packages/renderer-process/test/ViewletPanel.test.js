@@ -64,7 +64,7 @@ test('event - mousedown - first tab clicked', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(['Panel.tabsHandleClick', 0])
+  expect(RendererWorker.send).toHaveBeenCalledWith('Panel.tabsHandleClick', 0)
 })
 
 test('event - mousedown - no tab clicked', () => {

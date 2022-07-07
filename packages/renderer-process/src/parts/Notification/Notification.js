@@ -39,10 +39,10 @@ const handleNotificationClick = (event) => {
   switch ($Target.className) {
     case 'NotificationOption':
       const index = findIndex($Target)
-      RendererWorker.send([
+      RendererWorker.send(
         /* Notification.handleClick */ 'Notification.handleClick',
-        /* index */ index,
-      ])
+        /* index */ index
+      )
       break
     default:
       break

@@ -5,6 +5,7 @@ import * as QuickPick from './QuickPick.js'
 export const __initialize__ = () => {
   Command.register('QuickPick.openEverythingQuickPick', QuickPick.openEverythingQuickPick)
   Command.register('QuickPick.dispose', QuickPick.dispose)
+  Command.register('QuickPick.hide', QuickPick.dispose)
   Command.register('QuickPick.selectCurrentIndex', QuickPick.selectCurrentIndex)
   Command.register('QuickPick.handleInput', QuickPick.handleInput)
   Command.register('QuickPick.selectIndex', QuickPick.selectIndex)

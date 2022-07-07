@@ -261,6 +261,7 @@ export const selectCurrentIndex = async () => {
 
 // TODO when user types letters -> no need to query provider again -> just filter existing results
 export const handleInput = async (value) => {
+  console.log({ value })
   if (state.state === STATE_DEFAULT) {
     return
   }

@@ -62,6 +62,8 @@ const MODULE_VIEWLET_SEARCH = 74
 const MODULE_VIEWLET_EDITOR_COMPLETION = 75
 const MODULE_VIEWLET_Locations = 76
 const MODULE_VIEWLET_PROBLEMS = 77
+const MODULE_SESSION_REPLAY = 78
+const MODULE_DOWNLOAD = 79
 
 export const state = {
   commands: Object.create(null),
@@ -188,6 +190,10 @@ const loadModule = (moduleId) => {
       return import('../Viewlet/ViewletLocations.ipc.js')
     case MODULE_VIEWLET_PROBLEMS:
       return import('../Viewlet/ViewletProblems.ipc.js')
+    case MODULE_SESSION_REPLAY:
+      return import('../SessionReplay/SessionReplay.ipc.js')
+    case MODULE_DOWNLOAD:
+      return import('../Download/Download.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }
@@ -207,6 +213,8 @@ const getOrLoadModule = (moduleId) => {
 
 const getModuleId = (commandId) => {
   switch (commandId) {
+    case 'Download.downloadFile':
+      return MODULE_DOWNLOAD
     case 'Main.save':
     case 'Main.handleDrop':
     case 'Main.closeActiveEditor':
@@ -534,6 +542,7 @@ const getModuleId = (commandId) => {
     case 1300:
       return MODULE_SOURCE_CONTROL
     case 'Open.openNativeFolder':
+    case 'Open.openUrl':
       return MODULE_OPEN
     case 'ColorPicker.open':
     case 'ColorPicker.close':
@@ -731,6 +740,10 @@ const getModuleId = (commandId) => {
     case 'FindWidget.setValue':
     case 'FindWidget.dispose':
       return MODULE_FIND_WIDGET
+    case 'SessionReplay.downloadSession':
+    case 'SessionReplay.replaySession':
+    case 'SessionReplay.replayCurrentSession':
+      return MODULE_SESSION_REPLAY
     default:
       throw new Error(`command ${commandId} not found`)
   }

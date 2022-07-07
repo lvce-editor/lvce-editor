@@ -24,10 +24,10 @@ const panelTabsHandleClick = (event) => {
   switch ($Target.className) {
     case 'PanelTab': {
       const index = getNodeIndex($Target)
-      RendererWorker.send([
+      RendererWorker.send(
         /* Panel.tabsHandleClick */ 'Panel.tabsHandleClick',
-        /* index */ index,
-      ])
+        /* index */ index
+      )
       break
     }
     default:

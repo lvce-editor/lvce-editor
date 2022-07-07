@@ -6,6 +6,10 @@ export const getPathName = () => {
   )
 }
 
+export const getHref = () => {
+  return RendererProcess.invoke(/* Location.getHref */ 'Location.getHref')
+}
+
 export const setPathName = (pathName) => {
   return RendererProcess.invoke(
     /* Location.setPathName */ 'Location.setPathName',

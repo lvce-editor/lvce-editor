@@ -20,12 +20,12 @@ const handleContextMenu = (event) => {
   event.preventDefault()
   const x = event.clientX
   const y = event.clientY
-  RendererWorker.send([
+  RendererWorker.send(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
-    /* id */ 'editor',
-  ])
+    /* id */ 'editor'
+  )
 }
 
 const handleFocus = (event) => {
@@ -35,17 +35,17 @@ const handleFocus = (event) => {
 const handleBlur = (event) => {
   // needed for save on blur
   // also needed to close completions on blur
-  RendererWorker.send([/* EditorBlur.editorBlur */ 'Editor.blur'])
+  RendererWorker.send(/* EditorBlur.editorBlur */ 'Editor.blur')
 }
 
 const handleBeforeInput = (event) => {
   event.preventDefault()
   switch (event.inputType) {
     case 'insertText':
-      RendererWorker.send([
+      RendererWorker.send(
         /* Editor.type */ 'Editor.type',
-        /* text */ event.data,
-      ])
+        /* text */ event.data
+      )
       break
     default:
       break
@@ -63,29 +63,29 @@ const handleBeforeInput = (event) => {
 // - vscode does not draw a line, but displays characters during composition
 
 const handleCompositionStart = (event) => {
-  RendererWorker.send([
+  RendererWorker.send(
     /* Editor.compositionStart */ 'Editor.compositionStart',
-    /* text */ event.data,
-  ])
+    /* text */ event.data
+  )
 }
 
 const handleCompositionUpdate = (event) => {
-  RendererWorker.send([
+  RendererWorker.send(
     /* Editor.compositionUpdate */ 'Editor.compositionUpdate',
-    /* text */ event.data,
-  ])
+    /* text */ event.data
+  )
 }
 
 const handleCompositionEnd = (event) => {
-  RendererWorker.send([
+  RendererWorker.send(
     /* Editor.compositionEnd */ 'Editor.compositionEnd',
-    /* text */ event.data,
-  ])
+    /* text */ event.data
+  )
 }
 
 const handleCut = (event) => {
   event.preventDefault()
-  RendererWorker.send([/* Editor.cut */ 'Editor.cut'])
+  RendererWorker.send(/* Editor.cut */ 'Editor.cut')
 }
 
 const handleSelectionMove = (event) => {
@@ -93,19 +93,19 @@ const handleSelectionMove = (event) => {
   const y = event.clientY
   const totalOffset = getTotalOffset(event)
   if (event.altKey) {
-    RendererWorker.send([
+    RendererWorker.send(
       /* Editor.moveRectangleSelectionPx */ 'Editor.moveRectangleSelectionPx',
       /* x */ x,
       /* y */ y,
-      /* offset */ totalOffset,
-    ])
+      /* offset */ totalOffset
+    )
   } else {
-    RendererWorker.send([
+    RendererWorker.send(
       /* Editor.moveSelectionPx */ 'Editor.moveSelectionPx',
       /* x */ x,
       /* y */ y,
-      /* offset */ totalOffset,
-    ])
+      /* offset */ totalOffset
+    )
   }
 }
 
@@ -126,13 +126,13 @@ const getModifier = (event) => {
 
 const handleSingleClick = (event, x, y, offset) => {
   const modifier = getModifier(event)
-  RendererWorker.send([
+  RendererWorker.send(
     /* Editor.handleSingleClick */ 'Editor.handleSingleClick',
     /* modifier */ modifier,
     /* x */ x,
     /* y */ y,
-    /* offset */ offset,
-  ])
+    /* offset */ offset
+  )
   const $Target = event.target
   const $InputBox = $Target.closest('.Editor').firstElementChild
   $InputBox.focus()
@@ -142,21 +142,21 @@ const handleSingleClick = (event, x, y, offset) => {
 }
 
 const handleDoubleClick = (event, x, y, offset) => {
-  RendererWorker.send([
+  RendererWorker.send(
     /* Editor.handleDoubleClick */ 385,
     /* x */ x,
     /* y */ y,
-    /* offset */ offset,
-  ])
+    /* offset */ offset
+  )
 }
 
 const handleTripleClick = (event, x, y, offset) => {
-  RendererWorker.send([
+  RendererWorker.send(
     /* Editor.handleTripleClick */ 'Editor.handleTripleClick',
     /* x */ x,
     /* y */ y,
-    /* offset */ offset,
-  ])
+    /* offset */ offset
+  )
 }
 
 const isRightClick = (event) => {
@@ -236,15 +236,15 @@ const handleMouseMove = (event) => {
   const y = event.clientY
   if (event.altKey) {
     const offset = getTotalOffset(event)
-    RendererWorker.send([
+    RendererWorker.send(
       /* Editor.handleMouseMoveWithAltKey */ 'Editor.handleMouseMoveWithAltKey',
       /* x */ x,
       /* y */ y,
-      /* offset */ offset,
-    ])
+      /* offset */ offset
+    )
   }
   // console.log(event.altKey)
-  // RendererWorker.send([/* Editor.handleMouseMove */ 389, /* x */ x, /* y */ y])
+  // RendererWorker.send(/* Editor.handleMouseMove */ 389, /* x */ x, /* y */ y)
 }
 
 const handleWheel = (event) => {
@@ -253,16 +253,10 @@ const handleWheel = (event) => {
   // TODO send editor id
   switch (event.deltaMode) {
     case event.DOM_DELTA_LINE:
-      RendererWorker.send([
-        /* Editor.setDeltaY */ 384,
-        /* value */ event.deltaY,
-      ])
+      RendererWorker.send(/* Editor.setDeltaY */ 384, /* value */ event.deltaY)
       break
     case event.DOM_DELTA_PIXEL:
-      RendererWorker.send([
-        /* Editor.setDeltaY */ 384,
-        /* value */ event.deltaY,
-      ])
+      RendererWorker.send(/* Editor.setDeltaY */ 384, /* value */ event.deltaY)
       break
     default:
       break
@@ -272,15 +266,15 @@ const handleWheel = (event) => {
 const handlePaste = (event) => {
   event.preventDefault()
   const text = event.clipboardData.getData('text')
-  RendererWorker.send([/* Editor.paste */ 'Editor.paste', /* text */ text])
+  RendererWorker.send(/* Editor.paste */ 'Editor.paste', /* text */ text)
 }
 
 const handleScrollBarThumbMouseMove = (event) => {
   const y = event.clientY
-  RendererWorker.send([
+  RendererWorker.send(
     /* Editor.handleScrollBarMouseMove */ 'Editor.handleScrollBarMouseMove',
-    /* y */ y,
-  ])
+    /* y */ y
+  )
 }
 
 const handleScrollBarThumbMouseUp = () => {
@@ -295,10 +289,10 @@ const handleScrollBarThumbMouseDown = (event) => {
 
 const handleScrollBarMouseDown = (event) => {
   const y = event.clientY
-  RendererWorker.send([
+  RendererWorker.send(
     /* EditorHandleScrollBarClick.editorHandleScrollBarClick */ 'Editor.handleScrollBarClick',
-    /* y */ y,
-  ])
+    /* y */ y
+  )
 }
 
 const toSimpleTouch = (touch) => {
@@ -323,18 +317,18 @@ const toSimpleTouchEvent = (event) => {
 
 const handleTouchStart = (event) => {
   const touchEvent = toSimpleTouchEvent(event)
-  RendererWorker.send([
+  RendererWorker.send(
     /* EditorHandleTouchStart.editorHandleTouchStart */ 'Editor.handleTouchStart',
-    /* touchEvent */ touchEvent,
-  ])
+    /* touchEvent */ touchEvent
+  )
 }
 
 const handleTouchMove = (event) => {
   const touchEvent = toSimpleTouchEvent(event)
-  RendererWorker.send([
+  RendererWorker.send(
     /* EditorHandleTouchMove.editorHandleTouchMove */ 'Editor.handleTouchMove',
-    /* touchEvent */ touchEvent,
-  ])
+    /* touchEvent */ touchEvent
+  )
 }
 
 const handleTouchEnd = (event) => {
@@ -342,10 +336,10 @@ const handleTouchEnd = (event) => {
     event.preventDefault()
   }
   const touchEvent = toSimpleTouchEvent(event)
-  RendererWorker.send([
+  RendererWorker.send(
     /* EditorHandleTouchEnd.editorHandleTouchEnd */ 'Editor.handleTouchEnd',
-    /* touchEvent */ touchEvent,
-  ])
+    /* touchEvent */ touchEvent
+  )
 }
 
 const getRangeFromSelection = (selection) => {
@@ -402,11 +396,11 @@ const handleContentEditableBeforeInput = (event) => {
     console.error('[Editor] cannot handle input event without selection')
     return
   }
-  RendererWorker.send([
+  RendererWorker.send(
     /* EditorHandleBeforeInputFromContentEditable.editorHandleBeforeInputFromContentEditable */ 'Editor.handleBeforeInputFromContentEditable',
     /* data */ event.data || '',
-    /* range */ range,
-  ])
+    /* range */ range
+  )
 }
 
 const handleNativeSelectionChange = (event) => {
@@ -420,10 +414,10 @@ const handleNativeSelectionChange = (event) => {
   if (!range) {
     return
   }
-  RendererWorker.send([
+  RendererWorker.send(
     /* EditorHandleNativeSelectionChange.editorHandleNativeSelectionChange */ 'Editor.handleNativeSelectionChange',
-    /* range */ range,
-  ])
+    /* range */ range
+  )
 }
 
 // TODO all create functions should have no arguments

@@ -133,10 +133,10 @@ export const getBounds = () => {
 }
 
 const handleResize = (event) => {
-  RendererWorker.send([
+  RendererWorker.send(
     /* Layout.handleResize */ 'Layout.handleResize',
-    /* bounds */ getBounds(),
-  ])
+    /* bounds */ getBounds()
+  )
 }
 
 const getSashId = ($Target) => {
@@ -153,11 +153,11 @@ const getSashId = ($Target) => {
 const handleSashPointerMove = (event) => {
   const x = event.clientX
   const y = event.clientY
-  RendererWorker.send([
+  RendererWorker.send(
     /* Layout.handleSashPointerMove */ 'Layout.handleSashPointerMove',
     /* x */ x,
-    /* y */ y,
-  ])
+    /* y */ y
+  )
 }
 
 const handleSashPointerUp = () => {
@@ -188,10 +188,10 @@ const handleSashPointerDown = (event) => {
   window.addEventListener('pointerup', handleSashPointerUp)
   const $Target = event.target
   const id = getSashId($Target)
-  RendererWorker.send([
+  RendererWorker.send(
     /* Layout.handleSashPointerDown */ 'Layout.handleSashPointerDown',
-    /* id */ id,
-  ])
+    /* id */ id
+  )
 }
 
 export const show = (points) => {

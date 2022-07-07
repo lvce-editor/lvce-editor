@@ -13,6 +13,7 @@ import * as Workspace from '../Workspace/Workspace.js'
 import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
 import * as Location from '../Location/Location.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 
 const handleUnhandledRejection = async (event) => {
   console.info(`[renderer-process] Unhandled Rejection: ${event.reason}`)
@@ -44,11 +45,17 @@ export const startup = async (config) => {
   await Preferences.hydrate()
   Performance.mark('code/didLoadPreferences')
 
+  // TODO only load this if session replay is enabled in preferences
+  Performance.mark('code/willLoadSessionReplay')
+  await SessionReplay.startRecording()
+  Performance.mark('code/didLoadSessionReplay')
+
   LifeCycle.mark(LifeCycle.PHASE_TWO)
 
   Performance.mark('code/willOpenWorkspace')
   await Workspace.hydrate()
   Performance.mark('code/didOpenWorkspace')
+  console.log('did open workspace')
 
   LifeCycle.mark(LifeCycle.PHASE_THREE)
 

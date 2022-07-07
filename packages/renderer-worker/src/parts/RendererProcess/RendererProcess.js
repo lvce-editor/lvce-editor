@@ -1,6 +1,9 @@
 /* istanbul ignore file */
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
+import * as RendererProcessWithMessagePort from './RendererProcessWithMessagePort.js'
+import * as RendererProcessWithModuleWorker from './RendererProcessWithModuleWorker.js'
+import * as RendererProcessWithReferencePort from './RendererProcessWithReferencePort.js'
 
 export const state = {
   pendingMessages: [],
@@ -19,67 +22,26 @@ const handleMessageFromRendererProcess = async (event) => {
       Callback.reject(message.id, message.error)
     }
   } else {
-    await Command.execute(...message)
-  }
-}
-
-const listenModuleWorker = () => {
-  onmessage = handleMessageFromRendererProcess
-  return {
-    send(message) {
-      postMessage(message)
-    },
-    sendAndTransfer(message, transferables) {
-      postMessage(message, transferables)
-    },
-  }
-}
-
-const listenMessagePort = () => {
-  const messageChannel = new MessageChannel()
-  messageChannel.port1.onmessage = handleMessageFromRendererProcess
-  globalThis.acceptPort(messageChannel.port2)
-  return {
-    send(message) {
-      messageChannel.port1.postMessage(message)
-    },
-    sendAndTransfer(message, transferables) {
-      messageChannel.port1.postMessage(message, transferables)
-    },
-  }
-}
-
-const listenReferencePort = () => {
-  const referencePort = {
-    onmessage(message, transferables) {},
-    postMessage: state.handleMessage,
-  }
-  // TODO get rid of extra data wrapper
-  globalThis.acceptReferencePort(referencePort)
-  return {
-    send(message) {
-      referencePort.onmessage({ data: message })
-    },
-    sendAndTransfer({ data: message }, transferables) {
-      referencePort.onmessage(message, transferables)
-    },
+    console.log({ message })
+    await Command.execute(message.method, ...message.params)
   }
 }
 
 const getIpc = () => {
   // TODO tree-shake out if/else in prod
   if (globalThis.acceptPort) {
-    return listenMessagePort()
+    return RendererProcessWithMessagePort.listen()
   } else if (globalThis.acceptReferencePort) {
-    return listenReferencePort()
+    return RendererProcessWithReferencePort.listen()
   } else {
-    return listenModuleWorker()
+    return RendererProcessWithModuleWorker.listen()
   }
 }
 
 export const listen = () => {
   console.assert(state.pendingMessages.length === 0)
   const ipc = getIpc()
+  ipc.onmessage = handleMessageFromRendererProcess
   state.ipc = ipc
 }
 
