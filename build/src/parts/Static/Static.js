@@ -325,6 +325,7 @@ Disallow: /
  */
 const TEMPLATE_NETLIFY_HEADERS = `/COMMIT_HASH/*
   Cache-Control: public, max-age=31536000, immutable
+  Cross-Origin-Embedder-Policy: require-corp
   X-Content-Type-Options: nosniff
 
 /fonts/*
@@ -350,7 +351,7 @@ const TEMPLATE_NETLIFY_HEADERS = `/COMMIT_HASH/*
 /
   Cache-Control: public, max-age=600, immutable
   X-Content-Type-Options: nosniff
-  Cross-Origin-Embedder-Policy: credentialless
+  Cross-Origin-Embedder-Policy: require-corp
   Cross-Origin-Opener-Policy: same-origin
 `
 
