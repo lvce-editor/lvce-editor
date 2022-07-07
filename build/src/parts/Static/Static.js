@@ -350,7 +350,7 @@ const TEMPLATE_NETLIFY_HEADERS = `/COMMIT_HASH/*
 /
   Cache-Control: public, max-age=600, immutable
   X-Content-Type-Options: nosniff
-  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Embedder-Policy: credentialless
   Cross-Origin-Opener-Policy: same-origin
 `
 
