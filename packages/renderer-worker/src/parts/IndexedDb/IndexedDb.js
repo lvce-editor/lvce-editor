@@ -1,3 +1,5 @@
+// TODO high memory usage in idb because of transactionDoneMap
+
 import { openDB } from '../../../../../static/js/idb/index.js'
 
 export const state = {
