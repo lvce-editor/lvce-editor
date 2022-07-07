@@ -64,6 +64,7 @@ const MODULE_VIEWLET_Locations = 76
 const MODULE_VIEWLET_PROBLEMS = 77
 const MODULE_SESSION_REPLAY = 78
 const MODULE_DOWNLOAD = 79
+const MODULE_EXTENSION_HOST_CORE = 80
 
 export const state = {
   commands: Object.create(null),
@@ -194,6 +195,8 @@ const loadModule = (moduleId) => {
       return import('../SessionReplay/SessionReplay.ipc.js')
     case MODULE_DOWNLOAD:
       return import('../Download/Download.ipc.js')
+    case MODULE_EXTENSION_HOST_CORE:
+      return import('../ExtensionHost/ExtensionHostCore.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }
@@ -215,6 +218,9 @@ const getModuleId = (commandId) => {
   switch (commandId) {
     case 'Download.downloadFile':
       return MODULE_DOWNLOAD
+    case 'ExtensionHost.startWebExtensionHost':
+    case 'ExtensionHost.loadWebExtension':
+      return MODULE_EXTENSION_HOST_CORE
     case 'Main.save':
     case 'Main.handleDrop':
     case 'Main.closeActiveEditor':

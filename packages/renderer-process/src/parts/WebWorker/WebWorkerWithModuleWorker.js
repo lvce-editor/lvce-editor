@@ -4,6 +4,7 @@ export const create = async (url) => {
   try {
     const worker = new Worker(url, {
       type: 'module',
+      name: 'Renderer Worker',
     })
     await new Promise((resolve, reject) => {
       const cleanup = () => {
