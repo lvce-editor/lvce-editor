@@ -15,7 +15,7 @@ const readFileInternal = async (getPath) => {
     }
     const assetDir = Platform.getAssetDir()
     const url = `${assetDir}/config/defaultSettings.json`
-    return Command.execute(/* Ajax.getText */ 271, /* url */ url)
+    return Command.execute(/* Ajax.getText */ 'Ajax.getText', /* url */ url)
   }
   // TODO handle enoent and other errors gracefully
   const userSettingsContent = await FileSystemDisk.readFile('file', path)
