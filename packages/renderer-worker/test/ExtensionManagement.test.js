@@ -11,6 +11,7 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
     }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     getMarketplaceUrl: jest.fn(() => {

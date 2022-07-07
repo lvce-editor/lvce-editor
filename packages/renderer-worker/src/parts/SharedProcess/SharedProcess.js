@@ -79,7 +79,7 @@ export const state = {
   ipc: undefined,
 }
 
-const handleMessageFromSharedProcess = async (message) => {
+export const handleMessageFromSharedProcess = async (message) => {
   if (message.method) {
     const result = await Command.execute(message.method, ...message.params)
     if (message.id) {
