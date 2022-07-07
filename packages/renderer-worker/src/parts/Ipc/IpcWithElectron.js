@@ -1,4 +1,6 @@
-export const listen = () => {
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+
+export const listen = async () => {
   const ipc = {
     _pendingMessages: [],
     _listener: undefined,
@@ -10,38 +12,41 @@ export const listen = () => {
       this._listener = listener
     },
   }
-  const handleMessage = (event) => {
-    const port = event.ports[0]
-    ipc.send = (message) => {
+
+  const originalOnMessage = onmessage
+  const port = await new Promise((resolve, reject) => {
+    onmessage = (event) => {
+      const port = event.ports[0]
+      resolve(port)
+    }
+  })
+
+  console.log({ port })
+  onmessage = originalOnMessage
+
+  let handleMessage
+
+  return {
+    send(message) {
       port.postMessage(message)
-    }
-    port.onmessage = (event) => {
-      const message = event.data
-      if (ipc._listener) {
-        // @ts-ignore
-        ipc._listener(message)
+    },
+    get onmessage() {
+      return handleMessage
+    },
+    set onmessage(listener) {
+      if (listener) {
+        handleMessage = (event) => {
+          // TODO why are some events not instance of message event?
+          if (event instanceof MessageEvent) {
+            listener(event.data)
+          } else {
+            listener(event)
+          }
+        }
+      } else {
+        handleMessage = null
       }
-    }
-    for (const pendingMessage of ipc.pendingMessages) {
-      ipc.send(pendingMessage)
-    }
-    // port.start()
-  }
-  if (
-    // @ts-ignore
-    typeof window !== 'undefined' &&
-    // @ts-ignore
-    window.myApi &&
-    // @ts-ignore
-    window.myApi.ipcConnect &&
-    // @ts-ignore
-    typeof window.myApi.ipcConnect === 'function'
-  ) {
-    // @ts-ignore
-    window.addEventListener('message', handleMessage, { once: true })
-    // @ts-ignore
-    window.myApi.ipcConnect()
-  } else {
-    console.warn('api is not available')
+      port.onmessage = handleMessage
+    },
   }
 }

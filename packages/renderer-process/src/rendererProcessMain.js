@@ -90,3 +90,5 @@ main()
 // globalThis.ViewService = ViewService
 // globalThis.SideBar = SideBar
 // globalThis.FileSystem = FileSystem
+
+console.log(window.myApi)

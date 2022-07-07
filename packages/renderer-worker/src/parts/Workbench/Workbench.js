@@ -37,7 +37,7 @@ export const startup = async (config) => {
 
   Performance.mark('willStartupWorkbench')
   RendererProcess.listen()
-  SharedProcess.listen()
+  await SharedProcess.listen()
 
   LifeCycle.mark(LifeCycle.PHASE_ONE)
 

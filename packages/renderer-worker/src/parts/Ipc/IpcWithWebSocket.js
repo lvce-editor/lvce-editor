@@ -25,12 +25,11 @@ export const listen = () => {
     set onmessage(listener) {
       if (listener) {
         handleMessage = (event) => {
-          console.log({ event })
+          // TODO why are some events not instance of message event?
           if (event instanceof MessageEvent) {
             const message = JSON.parse(event.data)
             listener(message)
           } else {
-            console.log({ event })
             listener(event)
           }
         }

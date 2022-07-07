@@ -19,24 +19,13 @@ const getPlatform = () => {
   if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
     return 'test'
   }
-
-  // TODO don't use window here -> want to run renderer-worker as webworker
-  if (
-    // @ts-ignore
-    typeof window !== 'undefined' &&
-    // @ts-ignore
-    window.myApi &&
-    // @ts-ignore
-    window.myApi.ipcConnect &&
-    // @ts-ignore
-    typeof window.myApi.ipcConnect === 'function'
-  ) {
+  if (navigator.appVersion.includes('Electron')) {
     return 'electron'
   }
   return 'remote'
 }
 
-export const platform = getPlatform() // TODO tree-shake this out in production
+const platform = getPlatform() // TODO tree-shake this out in production
 
 const constructError = (message) => {
   if (message.startsWith('Error: ')) {
@@ -96,6 +85,7 @@ export const handleMessageFromSharedProcess = async (message) => {
 
 const getIpc = () => {
   if (platform === 'web' || platform === 'remote') {
+    console.log('ws ipc')
     return IpcWithWebSocket.listen()
   }
   if (platform === 'electron') {
@@ -105,8 +95,8 @@ const getIpc = () => {
   }
 }
 
-export const listen = () => {
-  const ipc = getIpc()
+export const listen = async () => {
+  const ipc = await getIpc()
   ipc.onmessage = handleMessageFromSharedProcess
   state.ipc = ipc
 }

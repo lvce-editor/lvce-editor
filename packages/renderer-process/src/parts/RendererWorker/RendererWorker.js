@@ -57,6 +57,24 @@ const getIpc = async () => {
 
 export const hydrate = async (config) => {
   const ipc = await getIpc()
+
+  // setup electron message port
+  if (Platform.isElectron()) {
+    await new Promise((resolve) => {
+      const handleMessage = (event) => {
+        const port = event.ports[0]
+        // console.log(message)
+        ipc.sendAndTransfer('port', [port])
+        console.log('sent port')
+        resolve()
+      }
+
+      // @ts-ignore
+      window.addEventListener('message', handleMessage, { once: true })
+      // @ts-ignore
+      window.myApi.ipcConnect()
+    })
+  }
   ipc.onmessage = handleMessageFromRendererWorker
   state.ipc = ipc
 }
@@ -69,7 +87,6 @@ export const dispose = () => {
 }
 
 export const send = (method, ...params) => {
-  console.trace('send', method, params)
   state.ipc.send({
     jsonrpc: '2.0',
     method,
