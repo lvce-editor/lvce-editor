@@ -3,15 +3,13 @@ import * as Platform from '../Platform/Platform.js'
 import * as FileSystemDisk from './FileSystemDisk.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Assert from '../Assert/Assert.js'
+import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 
 const readFileInternal = async (getPath) => {
   const path = await getPath()
   Assert.string(path)
   if (Platform.getPlatform() === 'web') {
-    const settingsJsonContent = await Command.execute(
-      /* LocalStorage.getText */ 6903,
-      /* key */ path
-    )
+    const settingsJsonContent = await LocalStorage.getText(path)
     if (settingsJsonContent) {
       return settingsJsonContent
     }
