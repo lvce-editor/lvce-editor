@@ -1,31 +1,15 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const listen = async () => {
-  const ipc = {
-    _pendingMessages: [],
-    _listener: undefined,
-    send(message) {},
-    get onmessage() {
-      return this._listener
-    },
-    set onmessage(listener) {
-      this._listener = listener
-    },
-  }
-
-  const originalOnMessage = onmessage
+  const originalOnMessage = RendererProcess.state.ipc.onmessage
   const port = await new Promise((resolve, reject) => {
-    onmessage = (event) => {
+    RendererProcess.state.ipc.onmessage = (event) => {
       const port = event.ports[0]
       resolve(port)
     }
   })
-
-  console.log({ port })
-  onmessage = originalOnMessage
-
+  RendererProcess.state.ipc.onmessage = originalOnMessage
   let handleMessage
-
   return {
     send(message) {
       port.postMessage(message)
