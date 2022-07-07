@@ -1,6 +1,21 @@
 import { jest } from '@jest/globals'
-import * as Languages from '../src/parts/Languages/Languages.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const Languages = await import('../src/parts/Languages/Languages.js')
+const SharedProcess = await import(
+  '../src/parts/SharedProcess/SharedProcess.js'
+)
 
 beforeEach(() => {
   Languages.state.loaded = false
@@ -8,21 +23,17 @@ beforeEach(() => {
 
 test('getLanguageConfiguration - error - languages must be loaded before requesting language configuration', async () => {
   Languages.state.loaded = true
-  SharedProcess.state.send = jest.fn((message) => {
-    if (message.method === 'ExtensionHost.getLanguageConfiguration') {
-      SharedProcess.state.receive({
-        jsonrpc: '2.0',
-        id: message.id,
-        result: [
-          {
-            comments: {
-              blockComment: ['<!--', '-->'],
-            },
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'ExtensionHost.getLanguageConfiguration':
+        return {
+          comments: {
+            blockComment: ['<!--', '-->'],
           },
-        ],
-      })
-    } else {
-      throw new Error('unexpected message')
+        }
+      default:
+        throw new Error('unexpected message')
     }
   })
   expect(
@@ -30,31 +41,25 @@ test('getLanguageConfiguration - error - languages must be loaded before request
       uri: '',
       languageId: 'html',
     })
-  ).toEqual([
-    {
-      comments: {
-        blockComment: ['<!--', '-->'],
-      },
+  ).toEqual({
+    comments: {
+      blockComment: ['<!--', '-->'],
     },
-  ])
+  })
 })
 
 test('getLanguageConfiguration - error - languages must be loaded before requesting language configuration', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    if (message.method === 'ExtensionHost.getLanguageConfiguration') {
-      SharedProcess.state.receive({
-        jsonrpc: '2.0',
-        id: message.id,
-        result: [
-          {
-            comments: {
-              blockComment: ['<!--', '-->'],
-            },
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'ExtensionHost.getLanguageConfiguration':
+        return {
+          comments: {
+            blockComment: ['<!--', '-->'],
           },
-        ],
-      })
-    } else {
-      throw new Error('unexpected message')
+        }
+      default:
+        throw new Error('unexpected message')
     }
   })
   await expect(Languages.getLanguageConfiguration('html')).rejects.toThrowError(
@@ -65,30 +70,23 @@ test('getLanguageConfiguration - error - languages must be loaded before request
 })
 
 test('hydrate', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    if (message.method === 'ExtensionHost.getLanguages') {
-      SharedProcess.state.receive({
-        jsonrpc: '2.0',
-        id: message.id,
-        result: [
-          {
-            id: 'html',
-            extensions: ['.html'],
-            tokenize: '/tmp/src/tokenizeHtml.js',
-            configuration: '/tmp/languageConfiguration.json',
-          },
-        ],
-      })
-    } else {
-      throw new Error('unexpected message')
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'ExtensionHost.getLanguages':
+        return {
+          id: 'html',
+          extensions: ['.html'],
+          tokenize: '/tmp/src/tokenizeHtml.js',
+          configuration: '/tmp/languageConfiguration.json',
+        }
+      default:
+        throw new Error('unexpected message')
     }
   })
   await Languages.hydrate()
-  expect(SharedProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.state.send).toHaveBeenCalledWith({
-    id: expect.any(Number),
-    jsonrpc: '2.0',
-    method: 'ExtensionHost.getLanguages',
-    params: [],
-  })
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith(
+    'ExtensionHost.getLanguages'
+  )
 })
