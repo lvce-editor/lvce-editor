@@ -2,8 +2,8 @@
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as SharedProcessWithElectron from './SharedProcessWithElectron.js'
-import * as SharedProcessWithWebSocket from './SharedProcessWithWebSocket.js'
+import * as IpcWithElectron from '../Ipc/IpcWithElectron.js'
+import * as IpcWithWebSocket from '../Ipc/IpcWithWebSocket.js'
 
 // TODO duplicate code with platform module
 /**
@@ -96,10 +96,10 @@ export const handleMessageFromSharedProcess = async (message) => {
 
 const getIpc = () => {
   if (platform === 'web' || platform === 'remote') {
-    return SharedProcessWithWebSocket.listen()
+    return IpcWithWebSocket.listen()
   }
   if (platform === 'electron') {
-    return SharedProcessWithElectron.listen()
+    return IpcWithElectron.listen()
   } else {
     throw new Error('unsupported platform')
   }
