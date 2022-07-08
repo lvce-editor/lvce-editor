@@ -17,26 +17,37 @@ export const readFile = (uri) => {
   return dirent.content
 }
 
+const ensureParentDir = (uri) => {
+  let startIndex = 0
+  let endIndex = uri.indexOf('/')
+  while (endIndex >= 0) {
+    const part = uri.slice(startIndex, endIndex + 1)
+    state.files[part] = {
+      type: 'directory',
+      content: '',
+    }
+    endIndex = uri.indexOf('/', endIndex + 1)
+  }
+}
+
 export const writeFile = (uri, content) => {
   const dirent = getDirent(uri)
   if (dirent) {
     dirent.content = content
   } else {
-    let startIndex = 0
-    let endIndex = uri.indexOf('/')
-    while (endIndex >= 0) {
-      const part = uri.slice(startIndex, endIndex + 1)
-      state.files[part] = {
-        type: 'directory',
-        content: '',
-      }
-      endIndex = uri.indexOf('/', endIndex + 1)
-    }
-
+    ensureParentDir(uri)
     state.files[uri] = {
       type: 'file',
       content,
     }
+  }
+}
+
+export const mkdir = (uri) => {
+  ensureParentDir(uri)
+  state.files[uri] = {
+    type: 'directory',
+    content: '',
   }
 }
 
