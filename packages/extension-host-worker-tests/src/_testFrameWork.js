@@ -2,11 +2,79 @@ export const getTmpDir = async () => {
   return `memfs://`
 }
 
-const createLocator = () => {
+const querySelectorByText = (text) => {
+  let node
+  const elements = []
+  const walk = document.createTreeWalker(
+    document.body,
+    NodeFilter.SHOW_TEXT,
+    null
+  )
+  while ((node = walk.nextNode())) {
+    // @ts-ignore
+    if (node.nodeValue === text) {
+      elements.push(node.parentNode)
+    }
+  }
+  return elements
+}
+
+const querySelector = (selector) => {
+  if (typeof selector !== 'string') {
+    throw new Error('selector must be of type string')
+  }
+  if (selector.startsWith('text=')) {
+    // TODO get element by text content
+    return querySelectorByText(selector.slice('text='.length))
+  }
+  return []
+}
+
+const ElementActions = {
+  mouseEvent(element, eventType) {
+    const event = new MouseEvent(eventType, {
+      cancelable: true,
+      bubbles: true,
+    })
+    element.dispatchEvent(event)
+  },
+  mouseDown(element) {
+    this.mouseEvent(element, 'mousedown')
+  },
+  mouseUp(element) {
+    this.mouseEvent(element, 'mouseup')
+  },
+  click(element) {
+    this.mouseDown(element)
+    this.mouseEvent(element, 'click')
+    this.mouseUp(element)
+  },
+}
+
+const createLocator = (selector, selectorOptions) => {
   return {
-    async click(options) {},
+    async click(options) {
+      await new Promise((resolve) => setTimeout(resolve, 500))
+      // const
+      // const $Element=document.querySelector(selectors)
+      console.log({ selector })
+      const elements = querySelector(selector)
+      console.log('elements length', elements.length)
+      console.log({ elements })
+      if (elements.length === 0) {
+        // no elements found
+      } else if (elements.length === 1) {
+        const element = elements[0]
+        ElementActions.click(element)
+        // TODO dispatch click event
+      } else {
+        // Too many matching elements
+      }
+    },
     first() {
-      return createLocator()
+      return createLocator(selector, {
+        nth: 0,
+      })
     },
   }
 }
@@ -14,7 +82,7 @@ const createLocator = () => {
 const createPage = () => {
   return {
     locator(selector, options) {
-      return createLocator()
+      return createLocator(selector, options)
     },
   }
 }
