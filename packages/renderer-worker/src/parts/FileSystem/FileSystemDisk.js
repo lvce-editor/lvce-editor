@@ -1,7 +1,7 @@
 import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
-export const copy = (protocol, source, target) => {
+export const copy = (source, target) => {
   return SharedProcess.invoke(
     /* FileSystem.copy */ 'Filesystem.copy',
     /* source */ source,
@@ -9,21 +9,21 @@ export const copy = (protocol, source, target) => {
   )
 }
 
-export const readFile = (protocol, path) => {
+export const readFile = (path) => {
   return SharedProcess.invoke(
     /* FileSystem.readFile */ 'FileSystem.readFile',
     /* path */ path
   )
 }
 
-export const remove = (protocol, path) => {
+export const remove = (path) => {
   return SharedProcess.invoke(
     /* FileSystem.remove */ 'FileSystem.remove',
     /* path */ path
   )
 }
 
-export const rename = (protocol, oldUri, newUri) => {
+export const rename = (oldUri, newUri) => {
   return SharedProcess.invoke(
     /* FileSystem.rename */ 'FileSystem.rename',
     /* oldPath */ oldUri,
@@ -31,14 +31,14 @@ export const rename = (protocol, oldUri, newUri) => {
   )
 }
 
-export const mkdir = (protocol, path) => {
+export const mkdir = (path) => {
   return SharedProcess.invoke(
     /* FileSystem.mkdir */ 'FileSystem.mkdir',
     /* path */ path
   )
 }
 
-export const writeFile = async (protocol, path, content) => {
+export const writeFile = async (path, content) => {
   await SharedProcess.invoke(
     /* FileSystem.writeFile */ 'FileSystem.writeFile',
     /* path */ path,
@@ -48,18 +48,18 @@ export const writeFile = async (protocol, path, content) => {
 
 export const ensureFile = async () => {}
 
-export const readDirWithFileTypes = (protocol, path) => {
+export const readDirWithFileTypes = (path) => {
   return SharedProcess.invoke(
     /* FileSystem.readDirWithFileTypes */ 'FileSystem.readDirWithFileTypes',
     /* path */ path
   )
 }
 
-export const getBlobUrl = (protocol, path) => {
+export const getBlobUrl = (path) => {
   return `/remote/${path}`
 }
 
-export const getPathSeparator = (protocol) => {
+export const getPathSeparator = () => {
   if (Platform.getPlatform() === 'web') {
     return '/'
   }

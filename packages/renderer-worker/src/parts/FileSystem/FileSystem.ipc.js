@@ -9,6 +9,7 @@ export const __initialize__ = () => {
   Command.register('FileSystem.readFile', FileSystem.readFile)
   Command.register('FileSystem.remove', FileSystem.remove)
   Command.register('FileSystem.readDirWithFileTypes', FileSystem.readDirWithFileTypes)
+  Command.register('FileSystem.writeFile', FileSystem.writeFile)
 }
 
 // TODO maybe no ipc needed for this module

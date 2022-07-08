@@ -29,7 +29,7 @@ test('readFile', async () => {
     }
   })
   // TODO passing protocol here seems unnecessary, but it is useful for extension host which has several protocols
-  expect(await FileSystemDisk.readFile('file', '/tmp/some-file.txt')).toEqual(
+  expect(await FileSystemDisk.readFile('/tmp/some-file.txt')).toEqual(
     'sample text'
   )
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
@@ -50,7 +50,7 @@ test('readFile - error', async () => {
     }
   })
   await expect(
-    FileSystemDisk.readFile('file', '/tmp/some-file.txt')
+    FileSystemDisk.readFile('/tmp/some-file.txt')
   ).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
@@ -64,7 +64,7 @@ test('removeFile', async () => {
         throw new Error('unexpected message')
     }
   })
-  await FileSystemDisk.remove('file', '/tmp/some-file.txt')
+  await FileSystemDisk.remove('/tmp/some-file.txt')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
     'FileSystem.remove',
@@ -83,7 +83,7 @@ test('removeFile - error', async () => {
     }
   })
   await expect(
-    FileSystemDisk.remove('file', '/tmp/some-file.txt')
+    FileSystemDisk.remove('/tmp/some-file.txt')
   ).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
@@ -97,11 +97,7 @@ test('rename', async () => {
         throw new Error('unexpected message')
     }
   })
-  await FileSystemDisk.rename(
-    'file://',
-    '/tmp/some-file.txt',
-    '/tmp/renamed.txt'
-  )
+  await FileSystemDisk.rename('/tmp/some-file.txt', '/tmp/renamed.txt')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
     'FileSystem.rename',
@@ -121,7 +117,7 @@ test('rename - error', async () => {
     }
   })
   await expect(
-    FileSystemDisk.rename('file', '/tmp/some-file.txt', '/tmp/renamed.txt')
+    FileSystemDisk.rename('/tmp/some-file.txt', '/tmp/renamed.txt')
   ).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
@@ -135,7 +131,7 @@ test('mkdir', async () => {
         throw new Error('unexpected message')
     }
   })
-  await FileSystemDisk.mkdir('file', '/tmp/some-dir')
+  await FileSystemDisk.mkdir('/tmp/some-dir')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
     'FileSystem.mkdir',
@@ -153,9 +149,9 @@ test('mkdir - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(
-    FileSystemDisk.mkdir('file', '/tmp/some-dir')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(FileSystemDisk.mkdir('/tmp/some-dir')).rejects.toThrowError(
+    new TypeError('x is not a function')
+  )
 })
 
 test('writeFile', async () => {
@@ -168,7 +164,7 @@ test('writeFile', async () => {
         throw new Error('unexpected message')
     }
   })
-  await FileSystemDisk.writeFile('file', '/tmp/some-file.txt', 'sample text')
+  await FileSystemDisk.writeFile('/tmp/some-file.txt', 'sample text')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
     'FileSystem.writeFile',
@@ -188,7 +184,7 @@ test('writeFile - error', async () => {
     }
   })
   await expect(
-    FileSystemDisk.writeFile('file', '/tmp/some-file.txt', 'sample text')
+    FileSystemDisk.writeFile('/tmp/some-file.txt', 'sample text')
   ).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
@@ -215,9 +211,7 @@ test('readDirWithFileTypes', async () => {
         throw new Error('unexpected message')
     }
   })
-  expect(
-    await FileSystemDisk.readDirWithFileTypes('file', '/tmp/some-dir')
-  ).toEqual([
+  expect(await FileSystemDisk.readDirWithFileTypes('/tmp/some-dir')).toEqual([
     {
       name: 'file 1',
       type: 'file',
@@ -249,7 +243,7 @@ test('readDirWithFileTypes - error', async () => {
     }
   })
   await expect(
-    FileSystemDisk.readDirWithFileTypes('file', '/tmp/some-dir')
+    FileSystemDisk.readDirWithFileTypes('/tmp/some-dir')
   ).rejects.toThrowError(new TypeError('x is not a function'))
 })
 

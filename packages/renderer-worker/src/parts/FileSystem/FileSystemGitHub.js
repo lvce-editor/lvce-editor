@@ -17,7 +17,7 @@ const getGitHubFile = async (uri) => {
   return githubFile
 }
 
-export const readFile = async (protocol, path) => {
+export const readFile = async (path) => {
   const githubFile = await getGitHubFile(path)
   if (githubFile.encoding !== 'base64') {
     throw new Error('unsupported encoding')
@@ -50,7 +50,7 @@ const toDirents = (githubResponse) => {
   return githubResponse.tree.map(toDirent)
 }
 
-export const readDirWithFileTypes = async (protocol, path) => {
+export const readDirWithFileTypes = async (path) => {
   const relativeUri = path.slice('github://'.length)
   const parts = relativeUri.split('/')
   const [owner, repo, ...rest] = parts
@@ -67,7 +67,7 @@ export const readDirWithFileTypes = async (protocol, path) => {
   return dirents
 }
 
-export const getBlobUrl = async (protocol, path) => {
+export const getBlobUrl = async (path) => {
   const githubFile = await getGitHubFile(path)
   return githubFile.download_url
 }

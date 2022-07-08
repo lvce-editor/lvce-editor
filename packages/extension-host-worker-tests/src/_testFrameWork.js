@@ -19,13 +19,18 @@ const createPage = () => {
   }
 }
 
+const getRendererWorker = async () => {
+  const RendererWorker = await import(
+    '/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js'
+  )
+  return RendererWorker
+}
+
 export const runWithExtension = async (options) => {
   await new Promise((resolve) => {
     requestIdleCallback(resolve)
   })
-  const RendererWorker = await import(
-    '/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js'
-  )
+  const RendererWorker = await getRendererWorker()
   if (options.name) {
     // TODO should implement rendererWorker.invoke here
     // TODO ask renderer worker to activate this extension
@@ -63,4 +68,11 @@ export const expect = (locator) => {
   }
 }
 
-export const writeFile = async (path, content) => {}
+export const writeFile = async (path, content) => {
+  const RendererWorker = await getRendererWorker()
+  await new Promise((resolve) => requestIdleCallback(resolve))
+  console.log({ RendererWorker })
+  RendererWorker.send('FileSystem.writeFile', path, content)
+
+  console.log({ path, content })
+}
