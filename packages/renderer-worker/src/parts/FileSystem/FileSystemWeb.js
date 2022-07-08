@@ -222,7 +222,7 @@ const getRelativePath = (path) => {
   return path.slice('web:///workspace'.length)
 }
 
-export const readFile = async (protocol, path) => {
+export const readFile = async (path) => {
   const relativePath = getRelativePath(path)
   const file = files[relativePath]
   if (file === undefined) {
@@ -231,27 +231,27 @@ export const readFile = async (protocol, path) => {
   return file
 }
 
-export const remove = async (protocol, path) => {
+export const remove = async (path) => {
   throw new Error('not implemented')
 }
 
-export const rename = async (protocol, oldPath, newPath) => {
+export const rename = async (oldPath, newPath) => {
   throw new Error('not implemented')
 }
 
-export const mkdir = async (protocol, path) => {
+export const mkdir = async (path) => {
   throw new Error('not implemented')
 }
 
-export const createFile = async (protocol, path) => {
+export const createFile = async (path) => {
   throw new Error('not implemented')
 }
 
-export const createFolder = async (protocol, path) => {
+export const createFolder = async (path) => {
   throw new Error('not implemented')
 }
 
-export const writeFile = async (protocol, path, content) => {
+export const writeFile = async (path, content) => {
   throw new Error('not implemented')
 }
 
@@ -269,7 +269,7 @@ const getDirent = (path, relativePath) => {
   }
 }
 
-export const readDirWithFileTypes = (protocol, path) => {
+export const readDirWithFileTypes = (path) => {
   const relativePath = getRelativePath(path)
   const dirents = []
   for (const key in files) {
@@ -282,15 +282,15 @@ export const readDirWithFileTypes = (protocol, path) => {
   return dirents
 }
 
-export const watch = async (protocol, path) => {
+export const watch = async (path) => {
   throw new Error('not implemented')
 }
 
-export const unwatch = (protocol, id) => {
+export const unwatch = (id) => {
   throw new Error('not implemented')
 }
 
-export const unwatchAll = (protocol) => {
+export const unwatchAll = () => {
   throw new Error('not implemented')
 }
 

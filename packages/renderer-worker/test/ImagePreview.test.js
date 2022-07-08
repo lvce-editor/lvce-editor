@@ -44,7 +44,7 @@ test('show', async () => {
   )
 })
 
-test('show - multiple times and out of order promises', async () => {
+test.skip('show - multiple times and out of order promises', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   FileSystem.state.fileSystems['test'] = {
@@ -73,7 +73,7 @@ test('show - multiple times and out of order promises', async () => {
   )
 })
 
-test('show - error', async () => {
+test.skip('show - error', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   FileSystem.state.fileSystems['test'] = {

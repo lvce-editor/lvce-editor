@@ -18,7 +18,7 @@ const readFileInternal = async (getPath) => {
     return Command.execute(/* Ajax.getText */ 'Ajax.getText', /* url */ url)
   }
   // TODO handle enoent and other errors gracefully
-  const userSettingsContent = await FileSystemDisk.readFile('file', path)
+  const userSettingsContent = await FileSystemDisk.readFile(path)
   return userSettingsContent
 }
 
@@ -31,7 +31,7 @@ const readFileRecentlyOpenedJson = async () => {
   return readFileInternal(Platform.getRecentlyOpenedPath)
 }
 
-export const readFile = (protocol, path) => {
+export const readFile = (path) => {
   switch (path) {
     case 'app://startup-performance':
       return Command.execute(/* Developer.getStartupPerformanceContent */ 820)
@@ -59,15 +59,15 @@ const writeFileInternal = async (getPath, content) => {
   }
   // TODO handle enoent and other errors gracefully
   try {
-    await FileSystemDisk.writeFile('file', path, content)
+    await FileSystemDisk.writeFile(path, content)
   } catch (error) {
     // TODO error should just have enoent code that could be checked
 
     if (error.message.includes('ENOENT')) {
       try {
         const dirname = Workspace.pathDirName(path)
-        await FileSystemDisk.mkdir('file', dirname)
-        await FileSystemDisk.writeFile('file', path, content)
+        await FileSystemDisk.mkdir(dirname)
+        await FileSystemDisk.writeFile(path, content)
       } catch (error) {
         error.message = `Failed to write ${path}: ${error.message}`
         throw error
@@ -87,7 +87,7 @@ const writeFileRecentlyOpenedJson = (content) => {
   return writeFileInternal(Platform.getRecentlyOpenedPath, content)
 }
 
-export const writeFile = async (protocol, path, content) => {
+export const writeFile = async (path, content) => {
   switch (path) {
     case 'app://settings.json':
       // TODO in web write to local storage, in electron write to config file
@@ -105,18 +105,18 @@ export const readDirWithFileTypes = () => {
   return []
 }
 
-export const rename = async (protocol, oldUri, newUri) => {
+export const rename = async (oldUri, newUri) => {
   throw new Error('not allowed')
 }
 
-export const remove = async (protocol, path) => {
+export const remove = async (path) => {
   throw new Error('not allowed')
 }
 
-export const mkdir = async (protocol, path) => {
+export const mkdir = async (path) => {
   throw new Error('not allowed')
 }
 
-export const getPathSeparator = (protocol) => {
+export const getPathSeparator = () => {
   return '/'
 }

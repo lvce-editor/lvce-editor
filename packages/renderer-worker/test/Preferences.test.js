@@ -104,7 +104,7 @@ test('set', async () => {
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
       case 'Platform.getUserSettingsPath':
-        return ''
+        return '/test/settings.json'
       case 'FileSystem.writeFile':
         return null
       default:
@@ -120,7 +120,7 @@ test('set', async () => {
   expect(SharedProcess.invoke).toHaveBeenNthCalledWith(
     2,
     'FileSystem.writeFile',
-    '',
+    '/test/settings.json',
     `{
   \"x\": 42
 }
