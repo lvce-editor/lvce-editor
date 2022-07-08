@@ -55,7 +55,6 @@ export const startup = async (config) => {
   Performance.mark('code/willOpenWorkspace')
   await Workspace.hydrate()
   Performance.mark('code/didOpenWorkspace')
-  console.log('did open workspace')
 
   LifeCycle.mark(LifeCycle.PHASE_THREE)
 
