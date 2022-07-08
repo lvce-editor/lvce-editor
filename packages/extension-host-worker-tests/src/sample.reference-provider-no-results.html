@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/css/App.css" />
+    <link
+      rel="preload"
+      href="/fonts/FiraCode-VariableFont.ttf"
+      as="font"
+      type="font/ttf"
+      crossorigin
+    />
+    <script
+      type="module"
+      src="/packages/renderer-process/src/rendererProcessMain.js"
+    ></script>
+    <link
+      rel="modulepreload"
+      href="/packages/renderer-worker/src/rendererWorkerMain.js"
+    />
+  </head>
+  <body>
+    <script
+      type="module"
+      src="./sample.reference-provider-no-results.js"
+    ></script>
+  </body>
+</html>
