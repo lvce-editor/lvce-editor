@@ -85,7 +85,6 @@ export const handleMessageFromSharedProcess = async (message) => {
 
 const getIpc = () => {
   if (platform === 'web' || platform === 'remote') {
-    console.log('ws ipc')
     return IpcWithWebSocket.listen()
   }
   if (platform === 'electron') {

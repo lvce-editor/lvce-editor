@@ -24,9 +24,7 @@ export const writeFile = (uri, content) => {
   } else {
     let startIndex = 0
     let endIndex = uri.indexOf('/')
-    console.log({ endIndex })
     while (endIndex >= 0) {
-      console.log({ endIndex })
       const part = uri.slice(startIndex, endIndex + 1)
       state.files[part] = {
         type: 'directory',
@@ -71,7 +69,5 @@ export const readDirWithFileTypes = (uri) => {
       }
     }
   }
-  console.log({ dirents })
-  console.log(state)
   return dirents
 }

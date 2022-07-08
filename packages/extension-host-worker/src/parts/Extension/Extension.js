@@ -1,5 +1,5 @@
 export const activate = async (path) => {
-  console.log('activating ', path)
+  // console.log('activating ', path)
   try {
     await import(path)
   } catch (error) {
@@ -8,5 +8,5 @@ export const activate = async (path) => {
       cause: error,
     })
   }
-  console.info('activated', path)
+  // console.info('activated', path)
 }

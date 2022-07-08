@@ -13,7 +13,6 @@ export const state = {
 export const getLanguageId = (path) => {
   Assert.string(path)
   const extension = path.slice(path.lastIndexOf('.'))
-  console.log({ state })
   for (const language of state.languages) {
     if (language.extensions && language.extensions.includes(extension)) {
       return language.id
@@ -42,7 +41,6 @@ export const hydrate = async () => {
   state.isHydrating = true
   // TODO handle error
   // TODO main parts should have nothing todo with shared process -> only sub components
-  console.log('set languages')
   state.languages = await getLanguages()
   await GlobalEventBus.emitEvent('languages.changed')
   state.loaded = true
