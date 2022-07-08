@@ -74,14 +74,18 @@ const toButtonNumber = (buttonType) => {
   }
 }
 
-const createLocator = (selector, selectorOptions) => {
+const createLocator = (selector, { nth = -1, hasText = '' } = {}) => {
   return {
     async click({ button = 'left', retryCount = 3 } = {}) {
       await new Promise((resolve) => setTimeout(resolve, 500))
       // const
       // const $Element=document.querySelector(selectors)
       console.log({ selector })
-      const elements = querySelector(selector)
+      // TODO use const here
+      let elements = querySelector(selector)
+      if (hasText) {
+        elements = elements.filter((element) => element.textContent === hasText)
+      }
       console.log('elements length', elements.length)
       console.log({ elements })
       if (elements.length === 0) {
@@ -106,10 +110,10 @@ const createLocator = (selector, selectorOptions) => {
         // TODO dispatch click event
         return
       }
-      if (selectorOptions.nth === -1) {
+      if (nth === -1) {
         throw new Error(`too many matching elements for ${selector}`)
       }
-      const element = elements[selectorOptions.nth]
+      const element = elements[nth]
       if (!element) {
         throw new Error(`selector not found: ${selector}`)
       }
@@ -170,6 +174,7 @@ export const runWithExtension = async (options) => {
 }
 
 export const test = async (name, fn) => {
+  const start = performance.now()
   console.info('starting', name)
   try {
     await fn()
@@ -177,7 +182,9 @@ export const test = async (name, fn) => {
     error.message = `Test failed: ${name}: ${error.message}`
     console.error(error)
   }
-  console.info('finished', name)
+  const end = performance.now()
+  const duration = `${end - start}ms`
+  console.info(`[test passed] ${name} in ${duration}`)
 }
 
 export const expect = (locator) => {
