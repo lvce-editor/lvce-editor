@@ -370,6 +370,7 @@ const getModuleId = (commandId) => {
     case 'FileSystem.remove':
     case 'FileSystem.readDirWithFileTypes':
     case 'FileSystem.writeFile':
+    case 'FileSystem.mkdir':
       return MODULE_FILE_SYSTEM
     case 'SideBar.showOrHideViewlet':
     case 'SideBar.openViewlet':

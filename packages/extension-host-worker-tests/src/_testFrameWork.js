@@ -82,8 +82,6 @@ const querySelectorWithOptions = (
   if (hasText) {
     elements = elements.filter((element) => element.textContent === hasText)
   }
-  console.log('elements length', elements.length)
-  console.log({ elements })
   if (elements.length === 0) {
     return undefined
   }
@@ -211,9 +209,21 @@ export const test = async (name, fn) => {
   document.body.append($TestOverlay)
 }
 
+const Conditions = {
+  toBeVisible(element) {
+    return element.isVisible()
+  },
+  async toHaveText(element, { text }) {
+    return element.textContent === text
+  },
+  async toHaveAttribute(element, { key, value }) {
+    return element.getAttribute(key) === value
+  },
+}
+
 export const expect = (locator) => {
   return {
-    async toBeVisible({ retryCount = 3 } = {}) {
+    async checkCondition(fn, options, retryCount) {
       const element = querySelectorWithOptions(
         locator.selector,
         locator.options
@@ -223,32 +233,24 @@ export const expect = (locator) => {
           throw new Error(`expected selector to be visible ${locator.selector}`)
         }
         await new Promise((resolve) => setTimeout(resolve, 1000))
-        return this.toBeVisible({ retryCount: retryCount - 1 })
+        return this.checkCondition(fn, options, retryCount - 1)
       }
-      if (!element.isVisible()) {
+      if (!fn(options)) {
         if (retryCount <= 0) {
           throw new Error(`expected selector to be visible ${locator.selector}`)
         }
         await new Promise((resolve) => setTimeout(resolve, 1000))
-        return this.toBeVisible({ retryCount: retryCount - 1 })
+        return this.checkCondition(fn, options, retryCount - 1)
       }
     },
-    async toHaveText(text, { retryCount = 3 } = {}) {
-      const element = querySelectorWithOptions(locator.selector, locator.optios)
-      if (!element) {
-        if (retryCount <= 0) {
-          throw new Error(`expected selector to be visible ${locator.selector}`)
-        }
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        return this.toHaveText(text, { retryCount: retryCount - 1 })
-      }
-      if (element.textContent !== text) {
-        if (retryCount <= 0) {
-          throw new Error(`expected selector to be visible ${locator.selector}`)
-        }
-        await new Promise((resolve) => setTimeout(resolve, 1000))
-        return this.toHaveText(text, { retryCount: retryCount - 1 })
-      }
+    async toBeVisible() {
+      return this.checkCondition(Conditions.toBeVisible, {})
+    },
+    async toHaveText(text) {
+      return this.checkCondition(Conditions.toHaveText, { text })
+    },
+    async toHaveAttribute(key, value) {
+      return this.checkCondition(Conditions.toHaveAttribute, { key, value })
     },
   }
 }
@@ -256,8 +258,11 @@ export const expect = (locator) => {
 export const writeFile = async (path, content) => {
   const RendererWorker = await getRendererWorker()
   await new Promise((resolve) => requestIdleCallback(resolve))
-  console.log({ RendererWorker })
   RendererWorker.send('FileSystem.writeFile', path, content)
+}
 
-  console.log({ path, content })
+export const mkdir = async (path) => {
+  const RendererWorker = await getRendererWorker()
+  await new Promise((resolve) => requestIdleCallback(resolve))
+  RendererWorker.send('FileSystem.mkdir', path)
 }
