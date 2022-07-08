@@ -24,7 +24,6 @@ const querySelector = (selector) => {
     throw new Error('selector must be of type string')
   }
   if (selector.startsWith('text=')) {
-    // TODO get element by text content
     return querySelectorByText(selector.slice('text='.length))
   }
   return []
