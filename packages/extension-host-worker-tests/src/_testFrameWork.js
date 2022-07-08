@@ -181,6 +181,7 @@ export const runWithExtension = async (options) => {
 }
 
 export const test = async (name, fn) => {
+  let _error
   try {
     const start = performance.now()
     console.info('starting', name)
@@ -189,9 +190,25 @@ export const test = async (name, fn) => {
     const duration = `${end - start}ms`
     console.info(`[test passed] ${name} in ${duration}`)
   } catch (error) {
+    _error = error.message
     error.message = `Test failed: ${name}: ${error.message}`
     console.error(error)
   }
+  const $TestOverlay = document.createElement('div')
+  $TestOverlay.id = 'TestOverlay'
+  $TestOverlay.style.position = 'fixed'
+  $TestOverlay.style.bottom = '0px'
+  $TestOverlay.style.left = '0px'
+  $TestOverlay.style.right = '0px'
+  $TestOverlay.style.height = '20px'
+  if (_error) {
+    $TestOverlay.style.background = 'red'
+    $TestOverlay.textContent = `test failed: ${_error}`
+  } else {
+    $TestOverlay.style.background = 'green'
+    $TestOverlay.textContent = `test passed`
+  }
+  document.body.append($TestOverlay)
 }
 
 export const expect = (locator) => {
@@ -216,8 +233,22 @@ export const expect = (locator) => {
         return this.toBeVisible({ retryCount: retryCount - 1 })
       }
     },
-    async toHaveText(text) {
-      return true
+    async toHaveText(text, { retryCount = 3 } = {}) {
+      const element = querySelectorWithOptions(locator.selector, locator.optios)
+      if (!element) {
+        if (retryCount <= 0) {
+          throw new Error(`expected selector to be visible ${locator.selector}`)
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+        return this.toHaveText(text, { retryCount: retryCount - 1 })
+      }
+      if (element.textContent !== text) {
+        if (retryCount <= 0) {
+          throw new Error(`expected selector to be visible ${locator.selector}`)
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+        return this.toHaveText(text, { retryCount: retryCount - 1 })
+      }
     },
   }
 }
