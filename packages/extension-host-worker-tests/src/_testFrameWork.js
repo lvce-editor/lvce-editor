@@ -74,21 +74,47 @@ const toButtonNumber = (buttonType) => {
   }
 }
 
+const querySelectorWithOptions = (
+  selector,
+  { nth = -1, hasText = '' } = {}
+) => {
+  let elements = querySelector(selector)
+  if (hasText) {
+    elements = elements.filter((element) => element.textContent === hasText)
+  }
+  console.log('elements length', elements.length)
+  console.log({ elements })
+  if (elements.length === 0) {
+    return undefined
+  }
+  if (elements.length === 1) {
+    const element = elements[0]
+    return element
+  }
+  if (nth === -1) {
+    throw new Error(`too many matching elements for ${selector}`)
+  }
+  const element = elements[nth]
+  if (!element) {
+    throw new Error(`selector not found: ${selector}`)
+  }
+  return element
+}
+
 const createLocator = (selector, { nth = -1, hasText = '' } = {}) => {
   return {
+    selector,
+    options: {
+      nth,
+      hasText,
+    },
     async click({ button = 'left', retryCount = 3 } = {}) {
       await new Promise((resolve) => setTimeout(resolve, 500))
-      // const
-      // const $Element=document.querySelector(selectors)
-      console.log({ selector })
-      // TODO use const here
-      let elements = querySelector(selector)
-      if (hasText) {
-        elements = elements.filter((element) => element.textContent === hasText)
-      }
-      console.log('elements length', elements.length)
-      console.log({ elements })
-      if (elements.length === 0) {
+      const element = querySelectorWithOptions(selector, {
+        hasText,
+        nth,
+      })
+      if (!element) {
         if (retryCount <= 0) {
           throw new Error(`selector not found: ${selector}`)
         }
@@ -97,25 +123,6 @@ const createLocator = (selector, { nth = -1, hasText = '' } = {}) => {
         })
         return this.click({ button, retryCount: retryCount - 1 })
         // no elements found
-      }
-      if (elements.length === 1) {
-        const element = elements[0]
-        const clickOptions = {
-          cancable: true,
-          bubbles: true,
-          button: toButtonNumber(button),
-        }
-        console.log({ clickOptions })
-        ElementActions.click(element, clickOptions)
-        // TODO dispatch click event
-        return
-      }
-      if (nth === -1) {
-        throw new Error(`too many matching elements for ${selector}`)
-      }
-      const element = elements[nth]
-      if (!element) {
-        throw new Error(`selector not found: ${selector}`)
       }
       const clickOptions = {
         cancable: true,
@@ -174,23 +181,40 @@ export const runWithExtension = async (options) => {
 }
 
 export const test = async (name, fn) => {
-  const start = performance.now()
-  console.info('starting', name)
   try {
+    const start = performance.now()
+    console.info('starting', name)
     await fn()
+    const end = performance.now()
+    const duration = `${end - start}ms`
+    console.info(`[test passed] ${name} in ${duration}`)
   } catch (error) {
     error.message = `Test failed: ${name}: ${error.message}`
     console.error(error)
   }
-  const end = performance.now()
-  const duration = `${end - start}ms`
-  console.info(`[test passed] ${name} in ${duration}`)
 }
 
 export const expect = (locator) => {
   return {
-    async toBeVisible() {
-      return true
+    async toBeVisible({ retryCount = 3 } = {}) {
+      const element = querySelectorWithOptions(
+        locator.selector,
+        locator.options
+      )
+      if (!element) {
+        if (retryCount <= 0) {
+          throw new Error(`expected selector to be visible ${locator.selector}`)
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+        return this.toBeVisible({ retryCount: retryCount - 1 })
+      }
+      if (!element.isVisible()) {
+        if (retryCount <= 0) {
+          throw new Error(`expected selector to be visible ${locator.selector}`)
+        }
+        await new Promise((resolve) => setTimeout(resolve, 1000))
+        return this.toBeVisible({ retryCount: retryCount - 1 })
+      }
     },
     async toHaveText(text) {
       return true
