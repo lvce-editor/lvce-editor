@@ -19,7 +19,7 @@ const getProtocol = (uri) => {
   if (protocolMatch) {
     return protocolMatch[1]
   }
-  return 'file'
+  return ''
 }
 
 export const state = {
@@ -38,40 +38,56 @@ const getFileSystem = (protocol) => {
   return state.fileSystems[protocol] || FileSystemDisk
 }
 
+const PROTOCOL_POST_FIX_LENGTH = 3
+
+const getPath = (protocol, uri) => {
+  if (protocol === '') {
+    return uri
+  }
+  return uri.slice(protocol.length + PROTOCOL_POST_FIX_LENGTH)
+}
+
 export const readFile = (uri) => {
   const protocol = getProtocol(uri)
+  const path = getPath(protocol, uri)
   const fileSystem = getFileSystem(protocol)
-  return fileSystem.readFile(uri)
+  return fileSystem.readFile(path)
 }
 
 export const remove = async (uri) => {
   const protocol = getProtocol(uri)
+  const path = getPath(protocol, uri)
   const fileSystem = getFileSystem(protocol)
-  await fileSystem.remove(uri)
+  await fileSystem.remove(path)
 }
 
 export const rename = async (oldUri, newUri) => {
   const protocol = getProtocol(oldUri)
+  const oldPath = getPath(protocol, oldUri)
+  const newPath = getPath(protocol, newUri)
   const fileSystem = getFileSystem(protocol)
-  await fileSystem.rename(oldUri, newUri)
+  await fileSystem.rename(oldPath, newPath)
 }
 
 export const mkdir = async (uri) => {
   const protocol = getProtocol(uri)
+  const path = getPath(protocol, uri)
   const fileSystem = getFileSystem(protocol)
-  await fileSystem.mkdir(uri)
+  await fileSystem.mkdir(path)
 }
 
 export const writeFile = async (uri, content) => {
   const protocol = getProtocol(uri)
+  const path = getPath(protocol, uri)
   const fileSystem = getFileSystem(protocol)
-  await fileSystem.writeFile(uri, content)
+  await fileSystem.writeFile(path, content)
 }
 
 export const readDirWithFileTypes = (uri) => {
   const protocol = getProtocol(uri)
+  const path = getPath(protocol, uri)
   const fileSystem = getFileSystem(protocol)
-  return fileSystem.readDirWithFileTypes(uri)
+  return fileSystem.readDirWithFileTypes(path)
 }
 
 export const unwatch = (id) => {
@@ -84,15 +100,18 @@ export const unwatchAll = () => {
 
 export const getBlobUrl = (uri) => {
   const protocol = getProtocol(uri)
+  const path = getPath(protocol, uri)
   const fileSystem = getFileSystem(protocol)
-  return fileSystem.getBlobUrl(uri)
+  return fileSystem.getBlobUrl(path)
 }
 
-export const copy = (source, target) => {
+export const copy = (sourceUri, targetUri) => {
   // TODO what if it is not the same file system?
-  const protocol = getProtocol(source)
+  const protocol = getProtocol(sourceUri)
   const fileSystem = getFileSystem(protocol)
-  return fileSystem.copy(source, target)
+  const sourcePath = getPath(protocol, sourceUri)
+  const targetPath = getPath(protocol, targetUri)
+  return fileSystem.copy(sourcePath, targetPath)
 }
 
 export const getPathSeparator = (uri) => {

@@ -75,3 +75,54 @@ test('readDirWithFileTypes - directory', () => {
     },
   ])
 })
+
+test('readDirWithFileTypes - mixed content', () => {
+  FileSystemMemory.state.files = {
+    '/': {
+      type: 'directory',
+      content: '',
+    },
+    '/languages/': {
+      type: 'directory',
+      content: '',
+    },
+    '/sample-folder/': {
+      type: 'directory',
+      content: '',
+    },
+    '/test.txt': {
+      type: 'file',
+      content: 'div',
+    },
+    '/languages/index.html': {
+      type: 'file',
+      content: 'div',
+    },
+    '/sample-folder/a.txt': {
+      type: 'file',
+      content: '',
+    },
+    '/sample-folder/b.txt': {
+      type: 'file',
+      content: '',
+    },
+    '/sample-folder/c.txt': {
+      type: 'file',
+      content: '',
+    },
+  }
+  expect(FileSystemMemory.readDirWithFileTypes('/')).toEqual([
+    {
+      name: 'languages',
+      type: 'directory',
+    },
+    {
+      name: 'sample-folder',
+      type: 'directory',
+    },
+    {
+      name: 'test.txt',
+      type: 'file',
+    },
+  ])
+})

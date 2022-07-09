@@ -106,6 +106,9 @@ const createLocator = (selector, { nth = -1, hasText = '' } = {}) => {
       nth,
       hasText,
     },
+    async performAction(fn, options) {
+      // TODO
+    },
     async click({ button = 'left', retryCount = 3 } = {}) {
       await new Promise((resolve) => setTimeout(resolve, 500))
       const element = querySelectorWithOptions(selector, {
@@ -213,35 +216,60 @@ const Conditions = {
   toBeVisible(element) {
     return element.isVisible()
   },
-  async toHaveText(element, { text }) {
+  toHaveText(element, { text }) {
     return element.textContent === text
   },
-  async toHaveAttribute(element, { key, value }) {
-    return element.getAttribute(key) === value
+  toHaveAttribute(element, { key, value }) {
+    const attribute = element.getAttribute(key)
+    console.log({ key, attribute, value })
+    return attribute === value
+  },
+}
+
+const ConditionErrors = {
+  toBeVisible(locator) {
+    return `expected selector to be visible ${locator.selector}`
+  },
+  toHaveText(locator, { text }) {
+    return `expected selector to have text ${locator.selector} ${text}`
+  },
+  toHaveAttribute(locator, { key, value }) {
+    return `expected ${locator.selector} to have attribute ${key} ${value}`
+  },
+}
+
+const Timeout = {
+  async short() {
+    await new Promise((resolve) => setTimeout(resolve, 1000))
   },
 }
 
 export const expect = (locator) => {
   return {
-    async checkCondition(fn, options, retryCount) {
+    async checkCondition(fn, options, retryCount = 3) {
+      console.log('checking...', retryCount)
       const element = querySelectorWithOptions(
         locator.selector,
         locator.options
       )
       if (!element) {
         if (retryCount <= 0) {
-          throw new Error(`expected selector to be visible ${locator.selector}`)
+          const message = ConditionErrors[fn.name](locator, options)
+          throw new Error(message)
         }
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        await Timeout.short()
         return this.checkCondition(fn, options, retryCount - 1)
       }
-      if (!fn(options)) {
+      if (!fn(element, options)) {
         if (retryCount <= 0) {
-          throw new Error(`expected selector to be visible ${locator.selector}`)
+          const message = ConditionErrors[fn.name](locator, options)
+          throw new Error(message)
         }
-        await new Promise((resolve) => setTimeout(resolve, 1000))
+        console.log('retrying...')
+        await Timeout.short()
         return this.checkCondition(fn, options, retryCount - 1)
       }
+      console.log('condition fulfilled', fn.name, options, fn(element, options))
     },
     async toBeVisible() {
       return this.checkCondition(Conditions.toBeVisible, {})
@@ -251,6 +279,10 @@ export const expect = (locator) => {
     },
     async toHaveAttribute(key, value) {
       return this.checkCondition(Conditions.toHaveAttribute, { key, value })
+    },
+    get not() {
+      this.negated = true
+      return this
     },
   }
 }
