@@ -2,14 +2,10 @@ export const getTmpDir = async () => {
   return `memfs://`
 }
 
-const querySelectorByText = (text) => {
+const querySelectorByText = (root, text) => {
   let node
   const elements = []
-  const walk = document.createTreeWalker(
-    document.body,
-    NodeFilter.SHOW_TEXT,
-    null
-  )
+  const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null)
   while ((node = walk.nextNode())) {
     // @ts-ignore
     if (node.nodeValue === text) {
@@ -28,7 +24,16 @@ const querySelector = (selector) => {
     throw new Error('selector must be of type string')
   }
   if (selector.startsWith('text=')) {
-    return querySelectorByText(selector.slice('text='.length))
+    return querySelectorByText(document.body, selector.slice('text='.length))
+  }
+  if (selector.includes('text=')) {
+    const index = selector.indexOf('text=')
+    const elements = querySelectorByCss(selector.slice(0, index))
+    const text = selector.slice(index + 'text='.length)
+    return elements.flatMap((element) => {
+      return querySelectorByText(element, text)
+    })
+    // for(const element of elements)
   }
   if (selector.startsWith('.')) {
     return querySelectorByCss(selector)
@@ -45,22 +50,25 @@ const ElementActions = {
     element.dispatchEvent(event)
   },
   mouseDown(element, options) {
-    this.mouseEvent(element, 'mousedown', options)
+    ElementActions.mouseEvent(element, 'mousedown', options)
   },
   mouseUp(element, options) {
-    this.mouseEvent(element, 'mouseup', options)
+    ElementActions.mouseEvent(element, 'mouseup', options)
   },
   contextMenu(element, options) {
-    this.mouseEvent(element, 'contextmenu', options)
+    ElementActions.mouseEvent(element, 'contextmenu', options)
   },
   click(element, options) {
-    this.mouseDown(element, options)
-    this.mouseEvent(element, 'click', options)
-    this.mouseUp(element, options)
+    ElementActions.mouseDown(element, options)
+    ElementActions.mouseEvent(element, 'click', options)
+    ElementActions.mouseUp(element, options)
     if (options.button === 2 /* right */) {
       console.log('dispatch context menu event')
-      this.contextMenu(element, options)
+      ElementActions.contextMenu(element, options)
     }
+  },
+  hover(element, options) {
+    ElementActions.mouseEvent(element, 'mouseenter', options)
   },
 }
 
@@ -82,6 +90,7 @@ const querySelectorWithOptions = (
   { nth = -1, hasText = '' } = {}
 ) => {
   let elements = querySelector(selector)
+  console.log({ elements })
   if (hasText) {
     elements = elements.filter((element) => element.textContent === hasText)
   }
@@ -109,10 +118,7 @@ const createLocator = (selector, { nth = -1, hasText = '' } = {}) => {
       nth,
       hasText,
     },
-    async performAction(fn, options) {
-      // TODO
-    },
-    async click({ button = 'left', retryCount = 3 } = {}) {
+    async performAction(fn, options, retryCount = 3) {
       await new Promise((resolve) => setTimeout(resolve, 500))
       const element = querySelectorWithOptions(selector, {
         hasText,
@@ -125,16 +131,28 @@ const createLocator = (selector, { nth = -1, hasText = '' } = {}) => {
         await new Promise((resolve) => {
           setTimeout(resolve, 1000)
         })
-        return this.click({ button, retryCount: retryCount - 1 })
-        // no elements found
+        return this.performAction(fn, options, retryCount - 1)
       }
-      const clickOptions = {
+      fn(element, options)
+
+      // console.log({ clickOptions })
+      // ElementActions.click(element, clickOptions)
+      // TODO
+    },
+    async click({ button = 'left' } = {}) {
+      const options = {
         cancable: true,
         bubbles: true,
         button: toButtonNumber(button),
       }
-      console.log({ clickOptions })
-      ElementActions.click(element, clickOptions)
+      return this.performAction(ElementActions.click, options)
+    },
+    async hover() {
+      const options = {
+        cancable: true,
+        bubbles: true,
+      }
+      return this.performAction(ElementActions.hover, options)
     },
     first() {
       return createLocator(selector, {
@@ -143,6 +161,9 @@ const createLocator = (selector, { nth = -1, hasText = '' } = {}) => {
     },
     locator(subSelector) {
       return createLocator(`${selector} ${subSelector}`)
+    },
+    nth(nth) {
+      return createLocator(selector, { nth })
     },
   }
 }
@@ -230,6 +251,15 @@ const Conditions = {
     console.log({ key, attribute, value })
     return attribute === value
   },
+  toBeFocused(element) {
+    console.log({ element })
+    return element === document.activeElement
+  },
+  toHaveClass(element, { className }) {
+    console.log({ element, className: element.className, expected: className })
+    console.log(element.classList.contains('Focused'))
+    return element.classList.contains(className)
+  },
 }
 
 const MultiElementConditions = {
@@ -249,7 +279,13 @@ const ConditionErrors = {
     return `expected ${locator.selector} to have attribute ${key} ${value}`
   },
   toHaveCount(locator, { count }) {
-    return `expected ${locator} to have count ${count}`
+    return `expected ${locator.selector} to have count ${count}`
+  },
+  toBeFocused(locator) {
+    return `expected ${locator.selector} to be focused`
+  },
+  toHaveClass(locator, { className }) {
+    return `expected ${locator.selector} to have class ${className}`
   },
 }
 
@@ -261,13 +297,14 @@ const Timeout = {
 
 export const expect = (locator) => {
   return {
-    async checkSingleElementCondition(fn, options, retryCount = 3) {
+    async checkSingleElementCondition(fn, options, retryCount = 4) {
       console.log('checking...', retryCount)
       const element = querySelectorWithOptions(
         locator.selector,
         locator.options
       )
       if (!element) {
+        console.log('element not found')
         if (retryCount <= 0) {
           const message = ConditionErrors[fn.name](locator, options)
           throw new Error(message)
@@ -303,10 +340,18 @@ export const expect = (locator) => {
     async toHaveText(text) {
       return this.checkSingleElementCondition(Conditions.toHaveText, { text })
     },
+    async toBeFocused() {
+      return this.checkSingleElementCondition(Conditions.toBeFocused)
+    },
     async toHaveAttribute(key, value) {
       return this.checkSingleElementCondition(Conditions.toHaveAttribute, {
         key,
         value,
+      })
+    },
+    async toHaveClass(className) {
+      return this.checkSingleElementCondition(Conditions.toHaveClass, {
+        className,
       })
     },
     async toHaveCount(count) {

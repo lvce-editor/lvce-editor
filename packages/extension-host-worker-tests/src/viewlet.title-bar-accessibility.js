@@ -60,11 +60,11 @@ test('viewlet.title-bar-accessibility', async () => {
 
   const menuItemNewWindow = menu.locator('text=New Window')
   await menuItemNewWindow.hover()
-  await expect(menuItemNewWindow).toBeFocused()
+  await expect(menuItemNewWindow).toHaveClass('Focused')
 
   const menuItemOpenRecent = menu.locator('text=Open Recent')
   await menuItemOpenRecent.hover()
-  await expect(menuItemOpenRecent).toBeFocused()
+  await expect(menuItemOpenRecent).toHaveClass('Focused')
 
   await expect(menu).toHaveCount(2)
   const subMenu = menu.nth(1)
