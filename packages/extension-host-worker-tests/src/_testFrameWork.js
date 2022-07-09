@@ -33,6 +33,9 @@ const querySelector = (selector) => {
   if (selector.startsWith('.')) {
     return querySelectorByCss(selector)
   }
+  if (selector.startsWith('#')) {
+    return querySelectorByCss(selector)
+  }
   throw new Error(`unsupported selector: ${selector}`)
 }
 
@@ -138,6 +141,9 @@ const createLocator = (selector, { nth = -1, hasText = '' } = {}) => {
         nth: 0,
       })
     },
+    locator(subSelector) {
+      return createLocator(`${selector} ${subSelector}`)
+    },
   }
 }
 
@@ -226,6 +232,12 @@ const Conditions = {
   },
 }
 
+const MultiElementConditions = {
+  toHaveCount(elements, { count }) {
+    return elements.length === count
+  },
+}
+
 const ConditionErrors = {
   toBeVisible(locator) {
     return `expected selector to be visible ${locator.selector}`
@@ -235,6 +247,9 @@ const ConditionErrors = {
   },
   toHaveAttribute(locator, { key, value }) {
     return `expected ${locator.selector} to have attribute ${key} ${value}`
+  },
+  toHaveCount(locator, { count }) {
+    return `expected ${locator} to have count ${count}`
   },
 }
 
@@ -246,7 +261,7 @@ const Timeout = {
 
 export const expect = (locator) => {
   return {
-    async checkCondition(fn, options, retryCount = 3) {
+    async checkSingleElementCondition(fn, options, retryCount = 3) {
       console.log('checking...', retryCount)
       const element = querySelectorWithOptions(
         locator.selector,
@@ -258,7 +273,7 @@ export const expect = (locator) => {
           throw new Error(message)
         }
         await Timeout.short()
-        return this.checkCondition(fn, options, retryCount - 1)
+        return this.checkSingleElementCondition(fn, options, retryCount - 1)
       }
       if (!fn(element, options)) {
         if (retryCount <= 0) {
@@ -267,18 +282,38 @@ export const expect = (locator) => {
         }
         console.log('retrying...')
         await Timeout.short()
-        return this.checkCondition(fn, options, retryCount - 1)
+        return this.checkSingleElementCondition(fn, options, retryCount - 1)
       }
-      console.log('condition fulfilled', fn.name, options, fn(element, options))
+    },
+    async checkMultiElementCondition(fn, options, retryCount = 3) {
+      const elements = querySelector(locator.selector)
+      if (!fn(elements, options)) {
+        if (retryCount <= 0) {
+          const message = ConditionErrors[fn.name](locator, options)
+          throw new Error(message)
+        }
+        console.log('retrying...')
+        await Timeout.short()
+        return this.checkMultiElementCondition(fn, options, retryCount - 1)
+      }
     },
     async toBeVisible() {
-      return this.checkCondition(Conditions.toBeVisible, {})
+      return this.checkSingleElementCondition(Conditions.toBeVisible, {})
     },
     async toHaveText(text) {
-      return this.checkCondition(Conditions.toHaveText, { text })
+      return this.checkSingleElementCondition(Conditions.toHaveText, { text })
     },
     async toHaveAttribute(key, value) {
-      return this.checkCondition(Conditions.toHaveAttribute, { key, value })
+      return this.checkSingleElementCondition(Conditions.toHaveAttribute, {
+        key,
+        value,
+      })
+    },
+    async toHaveCount(count) {
+      return this.checkMultiElementCondition(
+        MultiElementConditions.toHaveCount,
+        { count }
+      )
     },
     get not() {
       this.negated = true
