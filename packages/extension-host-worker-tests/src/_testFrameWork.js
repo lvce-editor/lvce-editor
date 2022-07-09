@@ -70,6 +70,19 @@ const ElementActions = {
   hover(element, options) {
     ElementActions.mouseEvent(element, 'mouseenter', options)
   },
+  type(element, options) {
+    element.value = options.text
+  },
+  keyboardEvent(element, eventType, options) {
+    const event = new KeyboardEvent(eventType, options)
+    element.dispatchEvent(event)
+  },
+  keyDown(element, options) {
+    ElementActions.keyboardEvent(element, 'keydown', options)
+  },
+  keyUp(element, options) {
+    ElementActions.keyboardEvent(element, 'keyup', options)
+  },
 }
 
 const toButtonNumber = (buttonType) => {
@@ -165,6 +178,25 @@ const createLocator = (selector, { nth = -1, hasText = '' } = {}) => {
     nth(nth) {
       return createLocator(selector, { nth })
     },
+    async type(text) {
+      const options = { text }
+      return this.performAction(ElementActions.type, options)
+    },
+  }
+}
+
+const createKeyBoard = () => {
+  return {
+    async press(key) {
+      const element = document.activeElement
+      const options = {
+        key,
+        cancelable: true,
+        bubbles: true,
+      }
+      ElementActions.keyDown(element, options)
+      ElementActions.keyUp(element, options)
+    },
   }
 }
 
@@ -173,6 +205,7 @@ const createPage = () => {
     locator(selector, options) {
       return createLocator(selector, options)
     },
+    keyboard: createKeyBoard(),
   }
 }
 
@@ -229,6 +262,8 @@ export const test = async (name, fn) => {
   $TestOverlay.style.left = '0px'
   $TestOverlay.style.right = '0px'
   $TestOverlay.style.height = '20px'
+  $TestOverlay.style.whiteSpace = 'nowrap'
+  $TestOverlay.style.contain = 'strict'
   if (_error) {
     $TestOverlay.style.background = 'red'
     $TestOverlay.textContent = `test failed: ${_error}`
@@ -297,7 +332,8 @@ const Timeout = {
 
 export const expect = (locator) => {
   return {
-    async checkSingleElementCondition(fn, options, retryCount = 4) {
+    async checkSingleElementCondition(fn, options, retryCount = 3) {
+      console.log({ locator })
       console.log('checking...', retryCount)
       const element = querySelectorWithOptions(
         locator.selector,
