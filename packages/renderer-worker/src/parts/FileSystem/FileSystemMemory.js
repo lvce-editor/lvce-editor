@@ -44,6 +44,9 @@ export const writeFile = (uri, content) => {
 }
 
 export const mkdir = (uri) => {
+  if (!uri.endsWith('/')) {
+    uri += '/'
+  }
   ensureParentDir(uri)
   state.files[uri] = {
     type: 'directory',
@@ -56,29 +59,39 @@ export const getPathSeparator = () => {
 }
 
 export const readDirWithFileTypes = (uri) => {
+  if (!uri.endsWith('/')) {
+    uri += '/'
+  }
   const dirents = []
   for (const [key, value] of Object.entries(state.files)) {
     if (key.startsWith(uri)) {
-      if (
-        value.type === 'directory' &&
-        key.slice(0, -1).indexOf('/', uri.length) === -1 &&
-        key !== `${uri}/` &&
-        key !== uri
-      ) {
-        dirents.push({
-          type: value.type,
-          name: key.slice(uri.length, -1),
-        })
-      } else if (
-        value.type === 'file' &&
-        key.indexOf('/', uri.length + 1) === -1
-      ) {
-        dirents.push({
-          type: value.type,
-          name: key.slice(uri.length + 1),
-        })
+      switch (value.type) {
+        case 'directory':
+          if (
+            key.slice(0, -1).indexOf('/', uri.length) === -1 &&
+            key !== `${uri}/` &&
+            key !== uri
+          ) {
+            dirents.push({
+              type: value.type,
+              name: key.slice(uri.length, -1),
+            })
+          }
+          break
+        case 'file':
+          if (key.indexOf('/', uri.length + 1) === -1) {
+            dirents.push({
+              type: value.type,
+              name: key.slice(uri.length),
+            })
+          }
+
+          break
+        default:
+          break
       }
     }
   }
+  console.log({ files: { ...state.files }, dirents, uri })
   return dirents
 }
