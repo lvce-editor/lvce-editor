@@ -337,6 +337,19 @@ const Timeout = {
   },
 }
 
+const Assert = {
+  string(value, message) {
+    if (typeof value !== 'string') {
+      throw new Error(message)
+    }
+  },
+  number(value, message) {
+    if (typeof value !== 'number' || isNaN(value)) {
+      throw new Error(message)
+    }
+  },
+}
+
 export const expect = (locator) => {
   return {
     async checkSingleElementCondition(fn, options, retryCount = 3) {
@@ -381,23 +394,28 @@ export const expect = (locator) => {
       return this.checkSingleElementCondition(Conditions.toBeVisible, {})
     },
     async toHaveText(text) {
+      Assert.string(text, 'text must be of type string')
       return this.checkSingleElementCondition(Conditions.toHaveText, { text })
     },
     async toBeFocused() {
       return this.checkSingleElementCondition(Conditions.toBeFocused)
     },
     async toHaveAttribute(key, value) {
+      Assert.string(key, 'key must be of type string')
+      Assert.string(value, 'value must be of type string')
       return this.checkSingleElementCondition(Conditions.toHaveAttribute, {
         key,
         value,
       })
     },
     async toHaveClass(className) {
-      return this.checkSingleElementCondition(Conditions.toHaveClass, {
+      Assert.string(className, 'className must be of type string')
+      return await this.checkSingleElementCondition(Conditions.toHaveClass, {
         className,
       })
     },
     async toHaveCount(count) {
+      Assert.number(count, 'count must be of type string')
       return this.checkMultiElementCondition(
         MultiElementConditions.toHaveCount,
         { count }
