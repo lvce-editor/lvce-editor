@@ -278,6 +278,7 @@ const Conditions = {
   toBeVisible(element) {
     return element.isVisible()
   },
+
   toHaveText(element, { text }) {
     return element.textContent === text
   },
@@ -301,6 +302,9 @@ const MultiElementConditions = {
   toHaveCount(elements, { count }) {
     return elements.length === count
   },
+  toBeHidden(elements) {
+    return elements.length === 0
+  },
 }
 
 const ConditionErrors = {
@@ -321,6 +325,9 @@ const ConditionErrors = {
   },
   toHaveClass(locator, { className }) {
     return `expected ${locator.selector} to have class ${className}`
+  },
+  toBeHidden(locator) {
+    return `expected ${locator.selector} to be hidden`
   },
 }
 
@@ -394,6 +401,12 @@ export const expect = (locator) => {
       return this.checkMultiElementCondition(
         MultiElementConditions.toHaveCount,
         { count }
+      )
+    },
+    async toBeHidden() {
+      return this.checkMultiElementCondition(
+        MultiElementConditions.toBeHidden,
+        {}
       )
     },
     get not() {
