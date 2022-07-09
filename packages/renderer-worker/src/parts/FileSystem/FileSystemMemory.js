@@ -58,6 +58,18 @@ export const getPathSeparator = () => {
   return '/'
 }
 
+export const remove = (uri) => {
+  const toDelete = []
+  for (const key of Object.keys(state.files)) {
+    if (key.startsWith(uri)) {
+      toDelete.push(key)
+    }
+  }
+  for (const key of toDelete) {
+    delete state.files[key]
+  }
+}
+
 export const readDirWithFileTypes = (uri) => {
   if (!uri.endsWith('/')) {
     uri += '/'
