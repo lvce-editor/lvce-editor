@@ -10,6 +10,7 @@ import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Remove from '../Remove/Remove.js'
+import * as ReadDir from '../ReadDir/ReadDir.js'
 
 const copyJs = async () => {
   const commitHash = await CommitHash.getCommitHash()
@@ -456,6 +457,48 @@ const bundleJs = async () => {
   })
 }
 
+const copyTestFiles = async () => {
+  const commitHash = await CommitHash.getCommitHash()
+  await Copy.copy({
+    from: 'packages/extension-host-worker-tests/src',
+    to: `build/.tmp/dist/tests`,
+  })
+  const dirents = await ReadDir.readDir('build/.tmp/dist/tests')
+  const appCssPath = `/${commitHash}/css/App.css`
+  const rendererProcessPath = `/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`
+  const rendererWorkerPath = `/${commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`
+  for (const dirent of dirents) {
+    if (
+      !dirent.name.endsWith('.html') ||
+      dirent.name.startsWith('_') ||
+      !dirent.isFile()
+    ) {
+      continue
+    }
+    const direntPath = Path.join('build/.tmp/dist/tests', dirent.name)
+    await Replace.replace({
+      path: direntPath,
+      occurrence: '/packages/renderer-process/src/rendererProcessMain.js',
+      replacement: rendererProcessPath,
+    })
+    await Replace.replace({
+      path: direntPath,
+      occurrence: '/packages/renderer-worker/src/rendererWorkerMain.js',
+      replacement: rendererWorkerPath,
+    })
+    await Replace.replace({
+      path: direntPath,
+      occurrence: '/css/App.css',
+      replacement: appCssPath,
+    })
+  }
+  await Replace.replace({
+    path: 'build/.tmp/dist/tests/_testFrameWork.js',
+    occurrence: `/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js`,
+    replacement: rendererWorkerPath,
+  })
+}
+
 export const build = async () => {
   Console.time('clean')
   await Remove.remove('build/.tmp/dist')
@@ -500,6 +543,10 @@ export const build = async () => {
   Console.time('addVersionFile')
   await addVersionFile()
   Console.timeEnd('addVersionFile')
+
+  Console.time('copyTestFiles')
+  await copyTestFiles()
+  Console.timeEnd('copyTestFiles')
 
   // console.time('removeUnusedThings')
   // await removeUnusedThings()
