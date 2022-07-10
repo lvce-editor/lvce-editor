@@ -49,8 +49,10 @@ const handleConsole = (event) => {
 }
 
 const main = async () => {
+  const argv = process.argv
+  const headless = argv.includes('--headless')
   const browser = await chromium.launch({
-    headless: false,
+    headless,
     args: ['--enable-experimental-web-platform-features'], // enable isVisible Api in Chrome 103
   })
   const page = await browser.newPage()

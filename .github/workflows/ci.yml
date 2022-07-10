@@ -51,6 +51,18 @@ jobs:
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Run headless test
+        working-directory: ./packages/e2e
+        run: npm run e2e:headless
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: install playwright dependencies (extension host worker tests)
+        working-directory: ./packages/extension-host-worker-tests
+        run: npx playwright install chromium
+        if: steps.npm-cache.outputs.cache-hit != 'true'
+        env:
+          PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Run extension host worker tests
+        working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0

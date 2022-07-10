@@ -5,7 +5,8 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "node src/_all.js"
+    "e2e": "node src/_all.js",
+    "e2e:headless": "node src/_all.js --headless"
   },
   "keywords": [],
   "author": "",
