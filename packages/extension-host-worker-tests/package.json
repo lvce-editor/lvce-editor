@@ -1,0 +1,17 @@
+{
+  "name": "extension-host-worker-tests",
+  "version": "0.0.0-dev",
+  "description": "",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "node src/_all.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@playwright/test": "^1.24.0-alpha-jul-10-2022",
+    "@types/node": "^18.0.3"
+  }
+}
