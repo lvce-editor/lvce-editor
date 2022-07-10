@@ -268,8 +268,8 @@ const applyJsOverrides = async () => {
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js`,
-    occurrence: `export const platform = getPlatform() `,
-    replacement: "export const platform = 'web'",
+    occurrence: `const platform = getPlatform() `,
+    replacement: "const platform = 'web'",
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js`,
@@ -495,7 +495,7 @@ const copyTestFiles = async () => {
   await Replace.replace({
     path: 'build/.tmp/dist/tests/_testFrameWork.js',
     occurrence: `/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js`,
-    replacement: rendererWorkerPath,
+    replacement: `/${commitHash}/packages/renderer-process/dist/renderer-process.modern.js`,
   })
 }
 

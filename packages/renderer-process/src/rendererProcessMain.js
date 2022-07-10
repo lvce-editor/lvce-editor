@@ -57,23 +57,8 @@ const main = async () => {
       event.preventDefault()
     }
   }
-  // TODO remove this, all messages should come from renderer worker
-  // const config = JSON.parse(document.getElementById('Config').textContent)
-  // await Workbench.startup(config)
-
-  // ColorTheme.set(`* {color: red}`)
   // TODO this is discovered very late
   await RendererWorker.hydrate()
-
-  // if ('serviceWorker' in navigator) {
-  //   await navigator.serviceWorker.register('/serviceWorker.js', {
-  //     scope: '/',
-  //   })
-  //   console.log('sw registered')
-  // } else {
-  //   console.log('serviceworker not available')
-  // }
-  // logger.info(`[Service Worker] registered`)
 }
 
 main()
@@ -91,4 +76,4 @@ main()
 // globalThis.SideBar = SideBar
 // globalThis.FileSystem = FileSystem
 
-console.log(window.myApi)
+export const send = RendererWorker.send

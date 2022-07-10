@@ -15,11 +15,17 @@ export const state = {
 
 const handleMessageFromRendererProcess = async (event) => {
   const message = event.data
+  if (typeof message === 'string') {
+    console.warn(`unexpected message from renderer process: ${message}`)
+    return
+  }
   if (message.id) {
     if ('result' in message) {
       Callback.resolve(message.id, message.result)
-    } else {
+    } else if ('error' in message) {
       Callback.reject(message.id, message.error)
+    } else {
+      Callback.reject(message.id, new Error('unexpected return value'))
     }
   } else {
     await Command.execute(message.method, ...message.params)
@@ -30,11 +36,11 @@ const getIpc = () => {
   // TODO tree-shake out if/else in prod
   if (globalThis.acceptPort) {
     return IpcWithMessagePort.listen()
-  } else if (globalThis.acceptReferencePort) {
-    return IpcWithReferencePort.listen()
-  } else {
-    return IpcWithModuleWorker.listen()
   }
+  if (globalThis.acceptReferencePort) {
+    return IpcWithReferencePort.listen()
+  }
+  return IpcWithModuleWorker.listen()
 }
 
 export const listen = () => {
