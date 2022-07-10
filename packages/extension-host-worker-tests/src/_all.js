@@ -1,5 +1,5 @@
 import { chromium, expect } from '@playwright/test'
-import { readdir } from 'fs/promises'
+import { readdir, rm } from 'fs/promises'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -49,20 +49,36 @@ const handleConsole = (event) => {
 }
 
 const main = async () => {
+  await rm(join(__dirname, '..', 'videos'), { recursive: true, force: true })
   const argv = process.argv
   const headless = argv.includes('--headless')
+  const recordVideos = argv.includes('--record-videos')
   const browser = await chromium.launch({
     headless,
     args: ['--enable-experimental-web-platform-features'], // enable isVisible Api in Chrome 103
   })
-  const page = await browser.newPage()
-  page.on('console', handleConsole)
-  const testNames = await getPaths()
-  for (const testName of testNames) {
-    await testFile(page, testName)
+  const context = await browser.newContext({
+    recordVideo: recordVideos
+      ? {
+          dir: 'videos/',
+          size: { width: 1280, height: 720 },
+        }
+      : undefined,
+  })
+  const page = await context.newPage()
+  try {
+    page.on('console', handleConsole)
+    const testNames = await getPaths()
+    for (const testName of testNames) {
+      await testFile(page, testName)
+    }
+  } catch (error) {
+    throw error
+  } finally {
+    await page.close()
+    await context.close()
+    await browser.close()
   }
-  await page.close()
-  await browser.close()
 }
 
 main()

@@ -59,6 +59,7 @@ const main = async () => {
   }
   // TODO this is discovered very late
   await RendererWorker.hydrate()
+  dispatchEvent(new CustomEvent('code/ready'))
 }
 
 main()
