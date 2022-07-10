@@ -1,4 +1,5 @@
 import { chromium, expect } from '@playwright/test'
+import { fork } from 'child_process'
 import { readdir, rm } from 'fs/promises'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
@@ -7,6 +8,8 @@ const SKIPPED = ['sample.reference-provider-error.html']
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..', '..', '..')
+
+const SERVER_PATH = join(root, 'packages', 'server', 'src', 'server.js')
 
 const isTestFile = (dirent) => {
   return dirent.endsWith('.html') && dirent !== 'index.html'
@@ -49,6 +52,7 @@ const handleConsole = (event) => {
 }
 
 const main = async () => {
+  const server = fork(SERVER_PATH, { stdio: 'inherit' })
   await rm(join(__dirname, '..', 'videos'), { recursive: true, force: true })
   const argv = process.argv
   const headless = argv.includes('--headless')
@@ -78,6 +82,7 @@ const main = async () => {
     await page.close()
     await context.close()
     await browser.close()
+    server.kill('SIGKILL')
   }
 }
 
