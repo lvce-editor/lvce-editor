@@ -3,6 +3,8 @@
 import * as GitHubRestApi from '../GitHubRestApi/GitHubRestApi.js'
 import * as Command from '../Command/Command.js'
 
+export const name = 'GitHub'
+
 export const state = {
   cache: Object.create(null),
 }

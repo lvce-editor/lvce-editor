@@ -1,6 +1,8 @@
 import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
+export const name = 'Disk'
+
 export const copy = (source, target) => {
   return SharedProcess.invoke(
     /* FileSystem.copy */ 'Filesystem.copy',
@@ -49,6 +51,7 @@ export const writeFile = async (path, content) => {
 export const ensureFile = async () => {}
 
 export const readDirWithFileTypes = (path) => {
+  console.log('invoke shared process', path)
   return SharedProcess.invoke(
     /* FileSystem.readDirWithFileTypes */ 'FileSystem.readDirWithFileTypes',
     /* path */ path

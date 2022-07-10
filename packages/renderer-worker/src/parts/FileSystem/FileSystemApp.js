@@ -5,6 +5,8 @@ import * as Workspace from '../Workspace/Workspace.js'
 import * as Assert from '../Assert/Assert.js'
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 
+export const name = 'App'
+
 const readFileInternal = async (getPath) => {
   const path = await getPath()
   Assert.string(path)

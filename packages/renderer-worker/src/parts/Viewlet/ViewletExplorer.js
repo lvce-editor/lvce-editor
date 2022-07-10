@@ -180,8 +180,8 @@ export const contentLoadedEffects = (state) => {
   GlobalEventBus.addListener('workspace.change', async () => {
     state.root = Workspace.state.workspacePath
     const newState = await loadContent(state)
-    Viewlet.state.instances['Explorer'].state = newState
-    await contentLoaded(newState)
+    await Viewlet.setState('Explorer', newState)
+    // await contentLoaded(newState)
     // TODO
   })
 
