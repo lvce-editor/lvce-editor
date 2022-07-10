@@ -1,3 +1,6 @@
+const URL_RENDERER_WORKER =
+  '/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js'
+
 export const getTmpDir = async () => {
   return `memfs://`
 }
@@ -210,9 +213,10 @@ const createPage = () => {
 }
 
 const getRendererWorker = async () => {
-  const RendererWorker = await import(
-    '/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js'
-  )
+  const RendererWorker = await import(URL_RENDERER_WORKER)
+  if (typeof RendererWorker.send !== 'function') {
+    throw new Error('RendererWorker could not be loaded')
+  }
   return RendererWorker
 }
 

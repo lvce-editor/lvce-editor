@@ -11,9 +11,13 @@ export const create = async (url) => {
         worker.onmessage = null
         worker.onerror = null
       }
-      const handleFirstMessage = () => {
+      const handleFirstMessage = (event) => {
         cleanup()
-        resolve()
+        if (event.data === 'ready') {
+          resolve()
+        } else {
+          reject(new Error('unexpected first message from renderer worker'))
+        }
       }
       const handleFirstError = (event) => {
         cleanup()
