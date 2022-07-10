@@ -269,11 +269,13 @@ export const test = async (name, fn) => {
   $TestOverlay.style.whiteSpace = 'nowrap'
   $TestOverlay.style.contain = 'strict'
   if (_error) {
+    $TestOverlay.dataset.state = 'fail'
     $TestOverlay.style.background = 'red'
     $TestOverlay.textContent = `test failed: ${_error}`
   } else {
     $TestOverlay.style.background = 'green'
     $TestOverlay.textContent = `test passed`
+    $TestOverlay.dataset.state = 'pass'
   }
   document.body.append($TestOverlay)
 }
