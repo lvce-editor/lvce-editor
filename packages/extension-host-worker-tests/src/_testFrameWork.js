@@ -248,6 +248,9 @@ export const runWithExtension = async (options) => {
 export const test = async (name, fn) => {
   let _error
   try {
+    await new Promise((resolve) => {
+      window.addEventListener('code/ready', resolve)
+    })
     const start = performance.now()
     console.info('starting', name)
     await fn()
