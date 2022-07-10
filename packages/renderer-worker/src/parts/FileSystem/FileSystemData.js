@@ -1,3 +1,5 @@
+export const name = 'Data'
+
 export const copy = (source, target) => {
   throw new Error('not implemented')
 }

@@ -1,3 +1,5 @@
+export const name = 'Memory'
+
 export const state = {
   files: Object.create(null),
 }

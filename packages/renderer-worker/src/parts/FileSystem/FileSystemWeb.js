@@ -1,6 +1,8 @@
 // TODO when it rejects, it should throw a custom error,
 // FileSystemError
 
+export const name = 'Web'
+
 const files = Object.create(null)
 
 files['/.gitkeep'] = ``

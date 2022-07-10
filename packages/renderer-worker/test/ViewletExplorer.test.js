@@ -1,6 +1,5 @@
 import { jest } from '@jest/globals'
 import * as Command from '../src/parts/Command/Command.js'
-import * as GlobalEventBus from '../src/parts/GlobalEventBus/GlobalEventBus.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -25,6 +24,14 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
+  return {
+    setState: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
@@ -35,6 +42,12 @@ const SharedProcess = await import(
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
 const ViewletExplorer = await import('../src/parts/Viewlet/ViewletExplorer.js')
+
+const GlobalEventBus = await import(
+  '../src/parts/GlobalEventBus/GlobalEventBus.js'
+)
+
+const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 
 test('name', () => {
   expect(ViewletExplorer.name).toBe('Explorer')
@@ -4157,4 +4170,87 @@ test('collapseAll', () => {
       },
     ],
   })
+})
+
+test('global event - workspace change', async () => {
+  const state = {
+    ...ViewletExplorer.create(),
+  }
+  ViewletExplorer.contentLoadedEffects(state)
+
+  // @ts-ignore
+  Viewlet.setState.mockImplementation(() => {})
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    console.log({ method, params })
+    switch (method) {
+      case 'FileSystem.readDirWithFileTypes':
+        return [
+          {
+            name: 'file 1',
+            type: 'file',
+          },
+          {
+            name: 'file 2',
+            type: 'file',
+          },
+          {
+            name: 'file 3',
+            type: 'file',
+          },
+        ]
+      case 'FileSystem.getPathSeparator':
+        return '/'
+      default:
+        console.log({ method })
+        throw new Error('unexpected message')
+    }
+  })
+  Workspace.state.workspacePath = '/test'
+  await GlobalEventBus.emitEvent('workspace.change')
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(SharedProcess.invoke).toHaveBeenNthCalledWith(
+    1,
+    'FileSystem.getPathSeparator'
+  )
+  expect(SharedProcess.invoke).toHaveBeenNthCalledWith(
+    2,
+    'FileSystem.readDirWithFileTypes',
+    '/test'
+  )
+  expect(Viewlet.setState).toHaveBeenCalledTimes(1)
+  expect(Viewlet.setState).toHaveBeenCalledWith(
+    'Explorer',
+    expect.objectContaining({
+      dirents: [
+        {
+          depth: 1,
+          icon: '',
+          name: 'file 1',
+          path: '/test/file 1',
+          posInSet: 1,
+          setSize: 3,
+          type: 'file',
+        },
+        {
+          depth: 1,
+          icon: '',
+          name: 'file 2',
+          path: '/test/file 2',
+          posInSet: 2,
+          setSize: 3,
+          type: 'file',
+        },
+        {
+          depth: 1,
+          icon: '',
+          name: 'file 3',
+          path: '/test/file 3',
+          posInSet: 3,
+          setSize: 3,
+          type: 'file',
+        },
+      ],
+    })
+  )
 })
