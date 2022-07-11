@@ -17,6 +17,7 @@ export const state = {
  * @param {string|undefined} path
  */
 export const setPath = async (path) => {
+  console.log('set path', path)
   // TODO not in electron
   state.workspacePath = path
   await onWorkspaceChange()
@@ -131,7 +132,13 @@ const onWorkspaceChange = async () => {
 }
 
 export const hydrate = async () => {
+  if (state.workspacePath) {
+    return
+  }
   const resolvedRoot = await getResolvedRoot()
+  if (state.workspacePath) {
+    return
+  }
   // TODO why is this if statement here?
   if (state.homeDir !== resolvedRoot.homeDir) {
     state.homeDir = resolvedRoot.homeDir
@@ -144,6 +151,7 @@ export const hydrate = async () => {
   state.workspaceUri = resolvedRoot.uri
   state.source = resolvedRoot.source
   await onWorkspaceChange()
+  console.log('hydrated with', resolvedRoot.path)
 }
 
 /**
