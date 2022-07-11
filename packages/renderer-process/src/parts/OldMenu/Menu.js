@@ -108,7 +108,6 @@ const handleMouseEnter = (event) => {
     return
   }
   const level = getLevel($Menu)
-  console.log('focus index mouse', index)
   RendererWorker.send(
     /* Menu.handleMouseEnter */ 'Menu.handleMouseEnter',
     /* level */ level,
@@ -222,7 +221,6 @@ export const showMenu = (
   Widget.append($Menu)
 
   if (level === 0) {
-    console.info('focus menu')
     Focus.focus($Menu, 'menu')
   }
 }

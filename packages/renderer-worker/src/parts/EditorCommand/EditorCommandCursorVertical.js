@@ -42,7 +42,6 @@ const editorCursorsVerticalWithIntlSegmenter = (
     }
   }
   const selectionEdits = editor.selections.map(moveSelection)
-  console.log({ selectionEdits })
   return Editor.scheduleSelections(editor, selectionEdits)
 }
 

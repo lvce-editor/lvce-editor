@@ -13,7 +13,6 @@ test('sample.reference-provider-error', async () => {
     `export const add = () => {}
 `
   )
-  console.log('call run with ext')
   const page = await runWithExtension({
     name: 'sample.reference-provider-error',
     folder: tmpDir,

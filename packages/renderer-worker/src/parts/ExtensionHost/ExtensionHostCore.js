@@ -47,7 +47,6 @@ export const startNodeExtensionHost = async () => {
 }
 
 export const startWebExtensionHost = async () => {
-  console.info('starting web extension host')
   const worker = new Worker(
     '/packages/extension-host-worker/src/extensionHostWorkerMain.js',
     {

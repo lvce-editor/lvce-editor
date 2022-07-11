@@ -25,7 +25,6 @@ const getSelectionFromChange = (change) => {
 export const setSelections = (editor, selections) => {
   Assert.object(editor)
   Assert.array(selections)
-  console.log({ selections })
   return {
     ...editor,
     selections,

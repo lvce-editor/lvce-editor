@@ -66,7 +66,6 @@ const ElementActions = {
     ElementActions.mouseEvent(element, 'click', options)
     ElementActions.mouseUp(element, options)
     if (options.button === 2 /* right */) {
-      console.log('dispatch context menu event')
       ElementActions.contextMenu(element, options)
     }
   },
@@ -106,7 +105,6 @@ const querySelectorWithOptions = (
   { nth = -1, hasText = '' } = {}
 ) => {
   let elements = querySelector(selector)
-  console.log({ elements })
   if (hasText) {
     elements = elements.filter((element) => element.textContent === hasText)
   }
@@ -233,12 +231,10 @@ export const runWithExtension = async (options) => {
       `../fixtures/${options.name}/main.js`,
       location.href
     ).href
-    console.log({ absolutePath })
     RendererWorker.send('ExtensionHost.loadWebExtension', absolutePath)
   }
   if (options.folder) {
     // TODO ask renderer worker to open this folder
-    console.log('folder', options.folder)
     RendererWorker.send('Workspace.setPath', options.folder)
   }
   const page = createPage()
@@ -254,7 +250,6 @@ export const test = async (name, fn) => {
       })
     }
     const start = performance.now()
-    console.info('starting', name)
     await fn()
     const end = performance.now()
     const duration = `${end - start}ms`
@@ -364,14 +359,12 @@ const Assert = {
 export const expect = (locator) => {
   return {
     async checkSingleElementCondition(fn, options, retryCount = 3) {
-      console.log({ locator })
       console.log('checking...', retryCount)
       const element = querySelectorWithOptions(
         locator.selector,
         locator.options
       )
       if (!element) {
-        console.log('element not found')
         if (retryCount <= 0) {
           const message = ConditionErrors[fn.name](locator, options)
           throw new Error(message)

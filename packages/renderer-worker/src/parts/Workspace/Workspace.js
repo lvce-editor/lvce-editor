@@ -17,7 +17,6 @@ export const state = {
  * @param {string|undefined} path
  */
 export const setPath = async (path) => {
-  console.log('set path', path)
   // TODO not in electron
   state.workspacePath = path
   await onWorkspaceChange()
@@ -69,7 +68,6 @@ const getResolvedRootFromRendererProcess = async () => {
     )
     return
   }
-  console.log({ url })
   if (url.pathname.startsWith('/github')) {
     return {
       path: `github://${href.slice('/github'.length + 1)}`,
@@ -151,7 +149,6 @@ export const hydrate = async () => {
   state.workspaceUri = resolvedRoot.uri
   state.source = resolvedRoot.source
   await onWorkspaceChange()
-  console.log('hydrated with', resolvedRoot.path)
 }
 
 /**

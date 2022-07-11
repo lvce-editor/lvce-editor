@@ -137,7 +137,6 @@ const handleFocusIn = () => {
 }
 
 export const selectIndex = (state, oldIndex, newIndex) => {
-  console.log({ select: true, oldIndex, newIndex })
   if (oldIndex !== -1) {
     const $OldItem = state.$ActivityBar.children[oldIndex]
     $OldItem.ariaSelected = 'false'

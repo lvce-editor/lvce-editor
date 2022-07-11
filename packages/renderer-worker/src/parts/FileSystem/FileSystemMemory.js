@@ -106,6 +106,5 @@ export const readDirWithFileTypes = (uri) => {
       }
     }
   }
-  console.log({ files: { ...state.files }, dirents, uri })
   return dirents
 }
