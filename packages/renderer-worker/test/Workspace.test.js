@@ -1,8 +1,10 @@
 import { jest } from '@jest/globals'
+import { setTimeout } from 'node:timers/promises'
 import * as GlobalEventBus from '../src/parts/GlobalEventBus/GlobalEventBus.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
+  Workspace.state.workspacePath = ''
 })
 
 jest.unstable_mockModule(
@@ -71,6 +73,37 @@ test('hydrate', async () => {
     'Window.setTitle',
     '/tmp/some-folder'
   )
+})
+
+test.only('hydrate - path changed in the meantime', async () => {
+  let _resolve = (value) => {}
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(async (method, ...params) => {
+    switch (method) {
+      case 'Workspace.resolveRoot':
+        await new Promise((resolve) => {
+          _resolve = resolve
+        })
+        return {
+          path: '/tmp/some-folder',
+          homeDir: '~',
+        }
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  const promise1 = Workspace.hydrate()
+  const promise2 = Workspace.setPath('/test')
+  await promise2
+  await setTimeout(0)
+  _resolve()
+  await promise1
+  expect(Workspace.state.workspacePath).toBe('/test')
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
 })
 
 test('hydrate - error', async () => {
