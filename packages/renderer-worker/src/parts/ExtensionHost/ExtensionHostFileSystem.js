@@ -14,8 +14,11 @@ export const readFile = async (protocol, path) => {
 }
 
 export const remove = async (protocol, path) => {
-  await ExtensionHostManagement.activateByEvent(`onFileSystem:${protocol}`)
+  const ipc = await ExtensionHostManagement.activateByEvent(
+    `onFileSystem:${protocol}`
+  )
   return ExtensionHost.invoke(
+    /* ipc */ ipc,
     /* ExtensionHost.remove */ 'ExtensionHostFileSystem.remove',
     /* protocol */ protocol,
     /* path */ path
@@ -29,8 +32,11 @@ export const remove = async (protocol, path) => {
  * @param {string} newPath
  */
 export const rename = async (protocol, oldPath, newPath) => {
-  await ExtensionHostManagement.activateByEvent(`onFileSystem:${protocol}`)
+  const ipc = await ExtensionHostManagement.activateByEvent(
+    `onFileSystem:${protocol}`
+  )
   return ExtensionHost.invoke(
+    /* ipc */ ipc,
     /* ExtensionHost.rename */ 'ExtensionHostFileSystem.rename',
     /* protocol */ protocol,
     /* path */ oldPath,
@@ -39,8 +45,11 @@ export const rename = async (protocol, oldPath, newPath) => {
 }
 
 export const mkdir = async (protocol, path) => {
-  await ExtensionHostManagement.activateByEvent(`onFileSystem:${protocol}`)
+  const ipc = await ExtensionHostManagement.activateByEvent(
+    `onFileSystem:${protocol}`
+  )
   return ExtensionHost.invoke(
+    /* ipc */ ipc,
     /* ExtensionHost.mkdir */ -1,
     /* protocol */ protocol,
     /* path */ path
@@ -48,8 +57,11 @@ export const mkdir = async (protocol, path) => {
 }
 
 export const createFile = async (protocol, path) => {
-  await ExtensionHostManagement.activateByEvent(`onFileSystem:${protocol}`)
+  const ipc = await ExtensionHostManagement.activateByEvent(
+    `onFileSystem:${protocol}`
+  )
   return ExtensionHost.invoke(
+    /* ipc */ ipc,
     /* ExtensionHost.writeFile */ 'ExtensionHostFileSystem.writeFile',
     /* protocol */ protocol,
     /* path */ path,
@@ -58,12 +70,17 @@ export const createFile = async (protocol, path) => {
 }
 
 export const createFolder = async (protocol, path) => {
-  await ExtensionHostManagement.activateByEvent(`onFileSystem:${protocol}`)
+  const ipc = await ExtensionHostManagement.activateByEvent(
+    `onFileSystem:${protocol}`
+  )
 }
 
 export const writeFile = async (protocol, path, content) => {
-  await ExtensionHostManagement.activateByEvent(`onFileSystem:${protocol}`)
+  const ipc = await ExtensionHostManagement.activateByEvent(
+    `onFileSystem:${protocol}`
+  )
   return ExtensionHost.invoke(
+    /* ipc */ ipc,
     /* ExtensionHost.writeFile */ 'ExtensionHostFileSystem.writeFile',
     /* protocol */ protocol,
     /* path */ path,
@@ -72,8 +89,11 @@ export const writeFile = async (protocol, path, content) => {
 }
 
 export const readDirWithFileTypes = async (protocol, path) => {
-  await ExtensionHostManagement.activateByEvent(`onFileSystem:${protocol}`)
+  const ipc = await ExtensionHostManagement.activateByEvent(
+    `onFileSystem:${protocol}`
+  )
   const dirents = await ExtensionHost.invoke(
+    /* ipc */ ipc,
     /* ExtensionHost.readDirWithFileTypes */ 'ExtensionHostFileSystem.readDirWithFileTypes',
     /* protocol */ protocol,
     /* path */ path
@@ -83,8 +103,11 @@ export const readDirWithFileTypes = async (protocol, path) => {
 }
 
 export const getPathSeparator = async (protocol) => {
-  await ExtensionHostManagement.activateByEvent(`onFileSystem:${protocol}`)
+  const ipc = await ExtensionHostManagement.activateByEvent(
+    `onFileSystem:${protocol}`
+  )
   const pathSeparator = await ExtensionHost.invoke(
+    /* ipc */ ipc,
     /* ExtensionHost.getPathSeparator */ 'ExtensionHostFileSystem.getPathSeparator',
     /* protocol */ protocol
   )

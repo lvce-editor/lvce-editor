@@ -1,6 +1,7 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Command from '../Command/Command.js'
 
 export const STATUS_OFF = 0
 export const STATUS_LOADING = 1
@@ -24,6 +25,10 @@ export const state = {
    * @type {any}
    */
   extensionHostWorker: undefined,
+  /**
+   * @type {any[]}
+   */
+  webExtensions: [],
 }
 
 export const startNodeExtensionHost = async () => {
@@ -57,20 +62,39 @@ export const startWebExtensionHost = async () => {
   state.extensionHostWorker = worker
 }
 
-export const loadWebExtension = async (name) => {
-  Assert.object(state.extensionHostWorker)
-  // TODO use invoke
-  await new Promise((resolve) => {
-    setTimeout(resolve, 120)
-  })
-  state.extensionHostWorker.postMessage({
-    jsonrpc: '2.0',
-    method: 'Extension.activate',
-    params: [name],
-  })
+const getWebExtensionManifest = async (path) => {
+  const manifestPath = `${path}/extension.json`
+  const manifest = await Command.execute(
+    /* Ajax.getJson */ 'Ajax.getJson',
+    /* url */ manifestPath
+  )
+  return {
+    ...manifest,
+    path,
+  }
 }
 
-export const invoke = (...args) => {
+export const loadWebExtension = async (path) => {
+  Assert.object(state.extensionHostWorker)
+  const manifest = await getWebExtensionManifest(path)
+  state.webExtensions.push(manifest)
+  console.log({ manifest })
+  // TODO use invoke
+  // await new Promise((resolve) => {
+  //   setTimeout(resolve, 120)
+  // })
+  // state.extensionHostWorker.postMessage({
+  //   jsonrpc: '2.0',
+  //   method: 'Extension.activate',
+  //   params: [name],
+  // })
+}
+
+export const invoke = async (ipc, method, ...params) => {
+  // for (const extensionHost of state.extensionHosts) {
+  // }
   // console.log({ args })
-  return SharedProcess.invoke(...args)
+  // return SharedProcess.invoke(...args)
+  // TODO use JSON rpc here or ipc.invoke
+  throw new Error('not implemented')
 }

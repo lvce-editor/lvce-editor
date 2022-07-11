@@ -1,11 +1,18 @@
 import * as Command from '../Command/Command.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as ExtensionHostCore from './ExtensionHostCore.js'
 import * as Languages from '../Languages/Languages.js'
+import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
+
+const ExtensionHostState = {
+  Off: 0,
+  Loading: 1,
+  Running: 2,
+  Error: 3,
+}
 
 export const state = {
   extensionPromiseCache: Object.create(null),
+  extensionHosts: Object.create(null),
 }
 
 const isActivatableExtension = (extension) => {
@@ -54,13 +61,13 @@ export const ensureExtensionHostIsStarted = async () => {
 }
 
 const getExtensionsToActivate = (extensions, event) => {
-  const toActivate = []
+  const extensionsToActivate = []
   for (const extension of extensions) {
     if (extension.activation && extension.activation.includes(event)) {
-      toActivate.push(extension)
+      extensionsToActivate.push(extension)
     }
   }
-  return toActivate
+  return extensionsToActivate
 }
 
 const getExtensionsWithError = (extensions) => {
@@ -83,14 +90,76 @@ const handleExtensionActivationError = async (extension) => {
   )
 }
 
+// const startExtensionHost = async (type) => {
+//   return ExtensionHostIpc.listen(ExtensionHostIpc.Methods.SharedProcess)
+// }
+
+export const startExtensionHost = async (key, method) => {
+  const existingExtensionHost = state.extensionHosts[key]
+  if (existingExtensionHost) {
+    switch (existingExtensionHost.state) {
+      case ExtensionHostState.Off:
+        throw new Error('extension host cannot be off')
+      default:
+        throw new Error('unexpected extension host state')
+    }
+  }
+  const promise = ExtensionHostIpc.listen(method)
+  state.extensionHosts[key] = {
+    state: ExtensionHostState.Loading,
+    promise,
+  }
+  const ipc = await promise
+  state.extensionHosts[key] = {
+    state: ExtensionHostState.Running,
+    ipc,
+  }
+  return ipc
+}
+
+export const stopExtensionHost = async (key) => {
+  const existingExtensionHost = state.extensionHosts[key]
+  if (existingExtensionHost) {
+    switch (existingExtensionHost.state) {
+      case ExtensionHostState.Off:
+        throw new Error('extension host cannot be off')
+      case ExtensionHostState.Loading:
+      case ExtensionHostState.Error:
+        existingExtensionHost.ipc.dispose()
+        break
+      default:
+        throw new Error('invalid extension host state')
+    }
+  }
+}
+
+const startExtensionHostNode = () => {
+  return startExtensionHost(
+    'nodeExtensionHost',
+    ExtensionHostIpc.Methods.WebWorker
+  )
+}
+
+const startExtensionHostWeb = () => {}
+
+const stopExtensionHostNode = () => {}
+
+const isExtensionHostNodeExtension = (extension) => {
+  return typeof extension.main === 'string'
+}
+
+const isExtensionHostWebExtension = (extension) => {
+  return typeof extension.browser === 'string'
+}
+
+const startNodeExtensionHost = async () => {}
+
+const startWebExtensionHost = async () => {}
+
 export const activateByEvent = async (event) => {
-  console.log('activate by event', event)
   if (!Languages.hasLoaded()) {
     await Languages.waitForLoad()
   }
-  // console.log('activate', event)
-  await ensureExtensionHostIsStarted()
-  // TODO this seems too inefficient -> leave extensions in shared process and just send activation event to shared process
   // TODO should not query extensions multiple times
   const extensions = await ExtensionMeta.getExtensions()
 
@@ -100,8 +169,18 @@ export const activateByEvent = async (event) => {
   for (const extension of extensionsWithError) {
     await handleExtensionActivationError(extension)
   }
-  const toActivate = getExtensionsToActivate(extensions, event)
-  for (const extension of toActivate) {
+  const extensionsToActivate = getExtensionsToActivate(extensions, event)
+  // TODO how to handle when multiple reference providers are registered for nodejs and webworker extension host?
+  // what happens when all of them / some of them throw error?
+  // what happens when some of them take very long to activate?
+
+  if (extensionsToActivate.some(isExtensionHostNodeExtension)) {
+    // TODO start node extension host
+  }
+  if (extensionsToActivate.some(isExtensionHostWebExtension)) {
+    // TODO start web extension host
+  }
+  for (const extension of extensionsToActivate) {
     await activateExtension(extension)
   }
 
@@ -110,4 +189,8 @@ export const activateByEvent = async (event) => {
   return {
     // TODO return ipc
   }
+}
+
+export const canActivate = (manager, extensions) => {
+  return extensions.some(manager.canActivate)
 }
