@@ -60,6 +60,8 @@ const main = async () => {
   // TODO this is discovered very late
   await RendererWorker.hydrate()
   dispatchEvent(new CustomEvent('code/ready'))
+  // TODO avoid creating global variables
+  globalThis.__codeLoaded = true
 }
 
 main()
