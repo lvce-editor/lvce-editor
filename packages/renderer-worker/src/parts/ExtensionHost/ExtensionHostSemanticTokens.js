@@ -6,10 +6,11 @@ export const executeSemanticTokenProvider = async (editor) => {
   if (Platform.getPlatform() === 'web') {
     return []
   }
-  await ExtensionHostManagement.activateByEvent(
+  const ipc = await ExtensionHostManagement.activateByEvent(
     `onSemanticTokens:${editor.languageId}`
   )
   return ExtensionHost.invoke(
+    /* ipc */ ipc,
     /* ExtensionHostSemanticTokens.execute */ 'ExtensionHostSemanticTokens.executeSemanticTokenProvider',
     /* textDocumentId */ editor.id
   )

@@ -12,8 +12,9 @@ export const getCommands = async () => {
 // TODO add test for when this errors
 
 export const executeCommand = async (id) => {
-  await ExtensionHostManagement.activateByEvent(`onCommand:${id}`)
+  const ipc = await ExtensionHostManagement.activateByEvent(`onCommand:${id}`)
   await ExtensionHost.invoke(
+    /* ipc */ ipc,
     /* extensionHost.executeCommandFromQuickPick */ 'ExtensionHost.executeCommand',
     /* id */ id
   )

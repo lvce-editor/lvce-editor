@@ -6,10 +6,11 @@ export const executeBraceCompletionProvider = async (
   offset,
   openingBrace
 ) => {
-  await ExtensionHostManagement.activateByEvent(
+  const ipc = await ExtensionHostManagement.activateByEvent(
     `onBraceCompletion:${textDocument.languageId}`
   )
   return ExtensionHost.invoke(
+    /* ipc */ ipc,
     /* ExtensionHostBraceCompletion.executeBraceCompletionProvider */ 'ExtensionHostBraceCompletion.executeBraceCompletionProvider',
     /* textDocumentId */ textDocument.id,
     /* offset */ offset,

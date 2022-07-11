@@ -1,17 +1,7 @@
-import * as Command from './parts/Command/Command.js'
-
-const handleMessage = async (event) => {
-  const message = event.data
-  await Command.execute(message.method, ...message.params)
-}
-
-const Ipc = {
-  listen() {
-    onmessage = handleMessage
-  },
-}
+import * as Ipc from './parts/Ipc/Ipc.js'
 
 const main = () => {
+  console.log('ext host worker started')
   Ipc.listen()
 }
 

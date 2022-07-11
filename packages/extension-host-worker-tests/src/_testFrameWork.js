@@ -227,10 +227,8 @@ export const runWithExtension = async (options) => {
     // TODO should implement rendererWorker.invoke here
     // TODO ask renderer worker to activate this extension
     RendererWorker.send('ExtensionHost.startWebExtensionHost')
-    const absolutePath = new URL(
-      `../fixtures/${options.name}/main.js`,
-      location.href
-    ).href
+    const absolutePath = new URL(`../fixtures/${options.name}`, location.href)
+      .href
     RendererWorker.send('ExtensionHost.loadWebExtension', absolutePath)
   }
   if (options.folder) {
