@@ -5,18 +5,10 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostManagement.js',
+  '../src/parts/ExtensionHost/ExtensionHostShared.js',
   () => {
     return {
-      activateByEvent: jest.fn(() => {}),
-    }
-  }
-)
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
+      executeProviders: jest.fn(() => {
         throw new Error('not implemented')
       }),
     }
@@ -26,21 +18,14 @@ jest.unstable_mockModule(
 const ExtensionHostTypeDefinition = await import(
   '../src/parts/ExtensionHost/ExtensionHostTypeDefinition.js'
 )
-const ExtensionHost = await import(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js'
+const ExtensionHostShared = await import(
+  '../src/parts/ExtensionHost/ExtensionHostShared.js'
 )
 
 test('executeTypeDefinitionProvider', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'ExtensionHostClosingTag.executeTypeDefinitionProvider':
-        return []
-      case 'ExtensionManagement.getExtensions':
-        return []
-      default:
-        throw new Error('unexpected message')
-    }
+  ExtensionHostShared.executeProviders.mockImplementation(() => {
+    return []
   })
   expect(
     await ExtensionHostTypeDefinition.executeTypeDefinitionProvider(
@@ -52,18 +37,9 @@ test('executeTypeDefinitionProvider', async () => {
 
 test('executeTypeDefinitionProvider - error', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'ExtensionHostClosingTag.executeTypeDefinitionProvider':
-        throw new TypeError('x is not a function')
-      case 'ExtensionManagement.getExtensions':
-        return []
-      default:
-        throw new Error('unexpected message')
-    }
+  ExtensionHostShared.executeProviders.mockImplementation(() => {
+    throw new TypeError('x is not a function')
   })
-  // TODO should also revive error constructor if possible
-  // TypeError, SyntaxError, ReferenceError
   await expect(
     ExtensionHostTypeDefinition.executeTypeDefinitionProvider(
       { id: 1, uri: '' },
