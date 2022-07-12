@@ -172,7 +172,12 @@ test('event - double click', () => {
   state.$LayerText.dispatchEvent(
     new MouseEvent('mousedown', { detail: 2, clientX: 8, clientY: 5 })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith(385, 8, 5, 2)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Editor.handleDoubleClick',
+    8,
+    5,
+    2
+  )
 })
 
 test.skip('event - double click and move mouse to create selection', () => {

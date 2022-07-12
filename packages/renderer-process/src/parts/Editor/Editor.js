@@ -143,7 +143,7 @@ const handleSingleClick = (event, x, y, offset) => {
 
 const handleDoubleClick = (event, x, y, offset) => {
   RendererWorker.send(
-    /* Editor.handleDoubleClick */ 385,
+    /* Editor.handleDoubleClick */ 'Editor.handleDoubleClick',
     /* x */ x,
     /* y */ y,
     /* offset */ offset
