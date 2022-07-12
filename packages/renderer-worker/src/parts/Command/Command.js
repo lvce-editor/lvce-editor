@@ -298,9 +298,9 @@ const getModuleId = (commandId) => {
     case 'Editor.copy':
     case 'Editor.copyLineDown':
     case 'Editor.copyLineUp':
-    case 'Editor.cursorCharacterLeft':
+    case 'Editor.cursorLeft':
+    case 'Editor.cursorRight':
     case 'Editor.cursorEnd':
-    case 'Editor.cursorsCharacterRight':
     case 'Editor.cursorsDown':
     case 'Editor.cursorSet':
     case 'Editor.cursorsHome':
