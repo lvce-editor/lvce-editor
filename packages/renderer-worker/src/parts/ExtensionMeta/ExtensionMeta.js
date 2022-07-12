@@ -1,6 +1,8 @@
 import * as Platform from '../Platform/Platform.js'
 import * as Command from '../Command/Command.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as Languages from '../Languages/Languages.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 
 export const state = {
   /**
@@ -37,6 +39,11 @@ const getWebExtensionManifest = async (path) => {
 export const addWebExtension = async (path) => {
   const manifest = await getWebExtensionManifest(path)
   state.webExtensions.push(manifest)
+  console.log({ manifest })
+  if (manifest.languages) {
+    // TODO handle case when languages is not of type array
+    await Languages.addLanguages(manifest.languages)
+  }
 }
 
 const getSharedProcessExtensions = () => {

@@ -1,7 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
-import * as ExtensionHostTextDocument from '../ExtensionHost/ExtensionHostTextDocument.js'
+// import * as ExtensionHostTextDocument from '../ExtensionHost/ExtensionHostTextDocument.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Languages from '../Languages/Languages.js'
@@ -91,7 +91,7 @@ const updateSemanticTokens = async (state) => {
 }
 
 const handleEditorChange = async (editor, changes) => {
-  await ExtensionHostTextDocument.handleEditorChange(editor, changes)
+  // await ExtensionHostTextDocument.handleEditorChange(editor, changes)
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(editor)
 }
@@ -103,11 +103,12 @@ export const contentLoadedEffects = async (state) => {
   GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
   GlobalEventBus.addListener('editor.change', handleEditorChange)
   const newLanguageId = Languages.getLanguageId(state.uri)
+  console.log('setting language id', newLanguageId)
   await Command.execute(
     /* Editor.setLanguageId */ 'Editor.setLanguageId',
     /* languageId */ newLanguageId
   )
-  await ExtensionHostTextDocument.handleEditorCreate(state)
+  // await ExtensionHostTextDocument.handleEditorCreate(state)
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(state)
   GlobalEventBus.emitEvent('editor.create', state)
@@ -123,7 +124,7 @@ const handleLanguagesChanged = async () => {
   const state = instance.state
   const newLanguageId = Languages.getLanguageId(state.uri)
   state.languageId = newLanguageId
-  await ExtensionHostTextDocument.handleEditorLanguageChange(state)
+  // await ExtensionHostTextDocument.handleEditorLanguageChange(state)
   // if (state.languageId === newLanguageId) {
   //   return
   // }

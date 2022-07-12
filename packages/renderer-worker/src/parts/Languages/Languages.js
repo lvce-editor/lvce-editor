@@ -41,9 +41,16 @@ export const hydrate = async () => {
   state.isHydrating = true
   // TODO handle error
   // TODO main parts should have nothing todo with shared process -> only sub components
-  state.languages = await getLanguages()
-  await GlobalEventBus.emitEvent('languages.changed')
+  const languages = await getLanguages()
+  // TODO avoid side effect here, but how?
+  await addLanguages(languages)
   state.loaded = true
+}
+
+export const addLanguages = async (languages) => {
+  // @ts-ignore
+  state.languages.push(...languages)
+  await GlobalEventBus.emitEvent('languages.changed')
 }
 
 export const hasLoaded = () => {

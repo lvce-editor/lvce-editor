@@ -18,7 +18,8 @@ export const activate = async (extension) => {
       path: extension.path,
       absolutePath,
     })
-    await import(absolutePath)
+    const module = await import(absolutePath)
+    await module.activate()
   } catch (error) {
     throw new Error(`Failed to activate extension`, {
       // @ts-ignore
