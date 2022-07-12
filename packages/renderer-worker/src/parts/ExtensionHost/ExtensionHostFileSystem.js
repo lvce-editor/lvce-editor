@@ -1,28 +1,28 @@
-import * as Assert from '../Assert/Assert.js'
-import * as ExtensionHostManagement from './ExtensionHostManagement.js'
+import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 export const readFile = async (protocol, path) => {
-  const extensionHost = await ExtensionHostManagement.activateByEvent(
-    `onFileSystem:${protocol}`
-  )
-  const content = await extensionHost.invoke(
-    /* ExtensionHost.readFile */ 'ExtensionHostFileSystem.readFile',
-    /* protocol */ protocol,
-    /* path */ path
-  )
-  Assert.string(content)
-  return content
+  // TODO there shouldn't be multiple file system providers for the same protocol
+  return ExtensionHostShared.executeProviders({
+    event: `onFileSystem:${protocol}`,
+    method: 'ExtensionHostFileSystem.readFile',
+    params: [protocol, path],
+    noProviderFoundMessage: 'no file system provider found',
+    combineResults(results) {
+      return results[0]
+    },
+  })
 }
 
 export const remove = async (protocol, path) => {
-  const extensionHost = await ExtensionHostManagement.activateByEvent(
-    `onFileSystem:${protocol}`
-  )
-  return extensionHost.invoke(
-    /* ExtensionHost.remove */ 'ExtensionHostFileSystem.remove',
-    /* protocol */ protocol,
-    /* path */ path
-  )
+  return ExtensionHostShared.executeProviders({
+    event: `onFileSystem:${protocol}`,
+    method: 'ExtensionHostFileSystem.remove',
+    params: [protocol, path],
+    noProviderFoundMessage: `no file system provider found`,
+    combineResults(results) {
+      return results[0]
+    },
+  })
 }
 
 /**
@@ -32,80 +32,85 @@ export const remove = async (protocol, path) => {
  * @param {string} newPath
  */
 export const rename = async (protocol, oldPath, newPath) => {
-  const extensionHost = await ExtensionHostManagement.activateByEvent(
-    `onFileSystem:${protocol}`
-  )
-  return extensionHost.invoke(
-    /* ExtensionHost.rename */ 'ExtensionHostFileSystem.rename',
-    /* protocol */ protocol,
-    /* path */ oldPath,
-    /* newPath */ newPath
-  )
+  return ExtensionHostShared.executeProviders({
+    event: `onFileSystem:${protocol}`,
+    method: 'ExtensionHostFileSystem.rename',
+    params: [protocol, oldPath, newPath],
+    noProviderFoundMessage: 'no file system provider found',
+    combineResults(results) {
+      return results[0]
+    },
+  })
 }
 
 export const mkdir = async (protocol, path) => {
-  const extensionHost = await ExtensionHostManagement.activateByEvent(
-    `onFileSystem:${protocol}`
-  )
-  return extensionHost.invoke(
-    /* ipc */ extensionHost,
-    /* ExtensionHost.mkdir */ -1,
-    /* protocol */ protocol,
-    /* path */ path
-  )
+  return ExtensionHostShared.executeProviders({
+    event: `onFileSystem:${protocol}`,
+    method: 'ExtensionHostFileSystem.mkdir',
+    params: [protocol, path],
+    noProviderFoundMessage: 'no file system provider found',
+    combineResults(results) {
+      return results[0]
+    },
+  })
 }
 
 export const createFile = async (protocol, path) => {
-  const extensionHost = await ExtensionHostManagement.activateByEvent(
-    `onFileSystem:${protocol}`
-  )
-  return extensionHost.invoke(
-    /* ExtensionHost.writeFile */ 'ExtensionHostFileSystem.writeFile',
-    /* protocol */ protocol,
-    /* path */ path,
-    /* content */ ''
-  )
+  return ExtensionHostShared.executeProviders({
+    event: `onFileSystem:${protocol}`,
+    method: 'ExtensionHostFileSystem.writeFile',
+    params: [protocol, path, ''],
+    noProviderFoundMessage: 'no file system provider found',
+    combineResults(results) {
+      return results[0]
+    },
+  })
 }
 
 export const createFolder = async (protocol, path) => {
-  const extensionHost = await ExtensionHostManagement.activateByEvent(
-    `onFileSystem:${protocol}`
-  )
+  return ExtensionHostShared.executeProviders({
+    event: `onFileSystem:${protocol}`,
+    method: 'ExtensionHostFileSystem.createFolder',
+    params: [protocol, path],
+    noProviderFoundMessage: 'no file system provider found',
+    combineResults(results) {
+      return results[0]
+    },
+  })
 }
 
 export const writeFile = async (protocol, path, content) => {
-  const extensionHost = await ExtensionHostManagement.activateByEvent(
-    `onFileSystem:${protocol}`
-  )
-  return extensionHost.invoke(
-    /* ExtensionHost.writeFile */ 'ExtensionHostFileSystem.writeFile',
-    /* protocol */ protocol,
-    /* path */ path,
-    /* content */ content
-  )
+  return ExtensionHostShared.executeProviders({
+    event: `onFileSystem:${protocol}`,
+    method: 'ExtensionHostFileSystem.writeFile',
+    params: [protocol, path, content],
+    noProviderFoundMessage: 'no file system provider found',
+    combineResults(results) {
+      return results[0]
+    },
+  })
 }
 
 export const readDirWithFileTypes = async (protocol, path) => {
-  const extensionHost = await ExtensionHostManagement.activateByEvent(
-    `onFileSystem:${protocol}`
-  )
-  const dirents = await extensionHost.invoke(
-    /* ExtensionHost.readDirWithFileTypes */ 'ExtensionHostFileSystem.readDirWithFileTypes',
-    /* protocol */ protocol,
-    /* path */ path
-  )
-  Assert.array(dirents)
-  return dirents
+  return ExtensionHostShared.executeProviders({
+    event: `onFileSystem:${protocol}`,
+    method: 'ExtensionHostFileSystem.readDirWithFileTypes',
+    params: [protocol, path],
+    noProviderFoundMessage: 'no file system provider found',
+    combineResults(results) {
+      return results[0]
+    },
+  })
 }
 
 export const getPathSeparator = async (protocol) => {
-  const extensionHost = await ExtensionHostManagement.activateByEvent(
-    `onFileSystem:${protocol}`
-  )
-  const pathSeparator = await extensionHost.invoke(
-    /* ExtensionHost.getPathSeparator */ 'ExtensionHostFileSystem.getPathSeparator',
-    /* protocol */ protocol
-  )
-  Assert.string(pathSeparator)
-  return pathSeparator
+  return ExtensionHostShared.executeProviders({
+    event: `onFileSystem:${protocol}`,
+    method: 'ExtensionHostFileSystem.getPathSeparator',
+    params: [protocol],
+    noProviderFoundMessage: 'no file system provider found',
+    combineResults(results) {
+      return results[0]
+    },
+  })
 }
