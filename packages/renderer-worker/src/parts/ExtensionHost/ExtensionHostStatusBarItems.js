@@ -1,7 +1,5 @@
-import * as ExtensionHost from './ExtensionHostCore.js'
 import * as Listener from '../Listener/Listener.js'
-import * as Platform from '../Platform/Platform.js'
-import * as ExtensionHostManagement from './ExtensionHostManagement.js'
+import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 export const state = {
   changeListeners: [],
@@ -18,23 +16,25 @@ const getStatusBarItemsFromExtensions = (extensions) => {
   return extensions.flatMap(getStatusBarItemsFromExtension)
 }
 
+const combineResults = (results) => {
+  return []
+}
+
 export const getStatusBarItems = async () => {
-  if (Platform.getPlatform() === 'web') {
-    return []
-  }
-  const ipc = await ExtensionHostManagement.activateByEvent('onStatusBarItem')
-  const statusBarItems = await ExtensionHost.invoke(
-    /* ipc */ ipc,
-    /* ExtensionHost.getStatusBarItems */ 'ExtensionHost.getStatusBarItems'
-  )
-  return statusBarItems
+  return ExtensionHostShared.executeProviders({
+    event: 'onStatusBarItem',
+    method: 'ExtensionHost.getStatusBarItems',
+    params: [],
+    noProviderFoundMessage: 'No status bar item provider found',
+    combineResults,
+  })
 }
 
 // TODO add function to dispose listener
 export const onChange = async (listener) => {
   const id = Listener.register(listener)
-  await ExtensionHost.invoke(
-    /* ExtensionHostStatusBar.registerChangeListener */ 'ExtensionHostStatusBar.registerChangeListener',
-    /* id */ id
-  )
+  return ExtensionHostShared.execute({
+    method: 'ExtensionHostStatusBar.registerChangeListener',
+    params: [id],
+  })
 }

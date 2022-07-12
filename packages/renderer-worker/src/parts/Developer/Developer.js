@@ -469,7 +469,7 @@ export const toggleDeveloperTools = async () => {
 }
 
 export const showIconThemeCss = async () => {
-  const iconThemeCss = await IconTheme.getIconThemeCss()
+  // const iconThemeCss = await IconTheme.getIconThemeCss()
   // Main.openRawText('css://icon-theme.css', iconThemeCss)
 }
 

@@ -1,23 +1,21 @@
-import * as ExtensionHost from './ExtensionHostCore.js'
-import * as ExtensionHostManagement from './ExtensionHostManagement.js'
+import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 export const getCommands = async () => {
   // TODO can use extensions that are already loaded
-  return await ExtensionHost.invoke(
-    /* ExtensionHost.getCommands */ 'ExtensionHost.getCommands'
-  )
+  return ExtensionHostShared.execute({
+    method: 'ExtensionHost.getCommands',
+    params: [],
+  })
 }
 
 // TODO add test for this
 // TODO add test for when this errors
 
 export const executeCommand = async (id) => {
-  const extensionHost = await ExtensionHostManagement.activateByEvent(
-    `onCommand:${id}`
-  )
-  await extensionHost.invoke(
-    /* ipc */ extensionHost,
-    /* extensionHost.executeCommandFromQuickPick */ 'ExtensionHost.executeCommand',
-    /* id */ id
-  )
+  return ExtensionHostShared.executeProvider({
+    event: `onCommand:${id}`,
+    method: 'ExtensionHost.executeCommand',
+    params: [id],
+    noProviderFoundMessage: 'No command provider found',
+  })
 }

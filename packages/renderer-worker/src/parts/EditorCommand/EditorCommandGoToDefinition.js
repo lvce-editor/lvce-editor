@@ -82,7 +82,9 @@ export const editorGoToDefinition = async (
     // TODO if editor is already disposed at this point, do nothing
     if (
       error &&
+      // @ts-ignore
       error.message &&
+      // @ts-ignore
       error.message.startsWith(
         'Failed to execute definition provider: No definition provider found'
       )

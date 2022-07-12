@@ -41,9 +41,6 @@ const SharedProcess = await import(
 const ExtensionHostBraceCompletion = await import(
   '../src/parts/ExtensionHost/ExtensionHostBraceCompletion.js'
 )
-const ExtensionHostManagement = await import(
-  '../src/parts/ExtensionHost/ExtensionHostManagement.js'
-)
 
 const ExtensionHost = await import(
   '../src/parts/ExtensionHost/ExtensionHostCore.js'

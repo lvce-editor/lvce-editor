@@ -92,7 +92,9 @@ export const editorGoToTypeDefinition = async (
     // TODO if editor is already disposed at this point, do nothing
     if (
       error &&
+      // @ts-ignore
       error.message &&
+      // @ts-ignore
       error.message.startsWith(
         'Failed to execute type definition provider: No type definition provider found'
       )
