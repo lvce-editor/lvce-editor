@@ -40,6 +40,7 @@ test('executeSemanticTokenProvider', async () => {
     method: 'ExtensionHostSemanticTokens.executeSemanticTokenProvider',
     noProviderFoundMessage: 'No Semantic Token Provider found',
     params: [1],
+    noProviderFoundResult: [],
   })
 })
 

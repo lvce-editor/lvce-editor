@@ -24,7 +24,7 @@ const ExtensionHostShared = await import(
 
 test('executeTypeDefinitionProvider', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     return []
   })
   expect(
@@ -37,7 +37,7 @@ test('executeTypeDefinitionProvider', async () => {
 
 test('executeTypeDefinitionProvider - error', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(
