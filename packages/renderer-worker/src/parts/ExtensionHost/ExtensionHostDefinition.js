@@ -1,12 +1,15 @@
-import * as ExtensionHostManagement from './ExtensionHostManagement.js'
+import * as ExtensionHostShared from './ExtensionHostShared.js'
 
-export const executeDefinitionProvider = async (editor, offset) => {
-  const extensionHost = await ExtensionHostManagement.activateByEvent(
-    `onDefinition:${editor.languageId}`
-  )
-  return extensionHost.invoke(
-    /* ExtensionHost.getDefinition */ 'ExtensionHostDefinition.executeDefinitionProvider',
-    /* textDocumentId */ editor.id,
-    /* offset */ offset
-  )
+const combineResults = (results) => {
+  return results[0]
+}
+
+export const executeDefinitionProvider = (editor, offset) => {
+  return ExtensionHostShared.executeProviders({
+    event: `onDefinition:${editor.languageId}`,
+    method: 'ExtensionHostDefinition.executeDefinitionProvider',
+    params: [editor.id, offset],
+    noProviderFoundMessage: 'no definition provider found',
+    combineResults,
+  })
 }
