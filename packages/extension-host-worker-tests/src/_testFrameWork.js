@@ -158,6 +158,7 @@ const createLocator = (selector, { nth = -1, hasText = '' } = {}) => {
         cancable: true,
         bubbles: true,
         button: toButtonNumber(button),
+        detail: 1,
       }
       return this.performAction(ElementActions.click, options)
     },

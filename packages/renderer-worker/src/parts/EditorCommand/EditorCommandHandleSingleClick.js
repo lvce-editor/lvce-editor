@@ -30,6 +30,7 @@ export const editorHandleSingleClick = async (
       return newEditor
     }
   }
+  console.log({ position })
   EditorMoveSelection.state.position = position
   return EditorCursorSet.editorCursorSet(
     editor,
