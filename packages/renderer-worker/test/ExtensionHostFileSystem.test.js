@@ -5,21 +5,12 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js',
+  '../src/parts/ExtensionHost/ExtensionHostShared.js',
   () => {
     return {
-      invoke: jest.fn(() => {
+      executeProviders: jest.fn(() => {
         throw new Error('not implemented')
       }),
-    }
-  }
-)
-
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostManagement.js',
-  () => {
-    return {
-      activateByEvent: jest.fn(),
     }
   }
 )
@@ -27,13 +18,13 @@ jest.unstable_mockModule(
 const ExtensionHostFileSystem = await import(
   '../src/parts/ExtensionHost/ExtensionHostFileSystem.js'
 )
-const ExtensionHost = await import(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js'
+const ExtensionHostShared = await import(
+  '../src/parts/ExtensionHost/ExtensionHostShared.js'
 )
 
 test('readFile', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     return 'test content'
   })
   expect(await ExtensionHostFileSystem.readFile('memfs:///test.txt')).toBe(
@@ -43,7 +34,7 @@ test('readFile', async () => {
 
 test('readFile - error', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(
@@ -53,19 +44,21 @@ test('readFile - error', async () => {
 
 test('remove', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {})
+  ExtensionHostShared.executeProviders.mockImplementation(() => {})
   await ExtensionHostFileSystem.remove('memfs://', 'memfs:///test.txt')
-  expect(ExtensionHost.invoke).toHaveBeenCalledTimes(1)
-  expect(ExtensionHost.invoke).toHaveBeenCalledWith(
-    'ExtensionHostFileSystem.remove',
-    'memfs://',
-    'memfs:///test.txt'
-  )
+  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledWith({
+    combineResults: expect.any(Function),
+    event: 'onFileSystem:memfs://',
+    method: 'ExtensionHostFileSystem.remove',
+    noProviderFoundMessage: 'no file system provider found',
+    params: ['memfs://', 'memfs:///test.txt'],
+  })
 })
 
 test('remove - error', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(
@@ -75,24 +68,25 @@ test('remove - error', async () => {
 
 test('rename', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {})
+  ExtensionHostShared.executeProviders.mockImplementation(() => {})
   await ExtensionHostFileSystem.rename(
     'memfs',
     'memfs:///test.txt',
     'memfs:///test2.txt'
   )
-  expect(ExtensionHost.invoke).toHaveBeenCalledTimes(1)
-  expect(ExtensionHost.invoke).toHaveBeenCalledWith(
-    'ExtensionHostFileSystem.rename',
-    'memfs',
-    'memfs:///test.txt',
-    'memfs:///test2.txt'
-  )
+  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledWith({
+    combineResults: expect.any(Function),
+    event: 'onFileSystem:memfs',
+    method: 'ExtensionHostFileSystem.rename',
+    noProviderFoundMessage: 'no file system provider found',
+    params: ['memfs', 'memfs:///test.txt', 'memfs:///test2.txt'],
+  })
 })
 
 test('rename - error', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(
@@ -106,19 +100,21 @@ test('rename - error', async () => {
 
 test('mkdir', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {})
+  ExtensionHostShared.executeProviders.mockImplementation(() => {})
   await ExtensionHostFileSystem.mkdir('memfs', 'memfs:///test-folder')
-  expect(ExtensionHost.invoke).toHaveBeenCalledTimes(1)
-  expect(ExtensionHost.invoke).toHaveBeenCalledWith(
-    -1,
-    'memfs',
-    'memfs:///test-folder'
-  )
+  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledWith({
+    combineResults: expect.any(Function),
+    event: 'onFileSystem:memfs',
+    method: 'ExtensionHostFileSystem.mkdir',
+    noProviderFoundMessage: 'no file system provider found',
+    params: ['memfs', 'memfs:///test-folder'],
+  })
 })
 
 test('mkdir - error', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(
@@ -128,24 +124,25 @@ test('mkdir - error', async () => {
 
 test('writeFile', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {})
+  ExtensionHostShared.executeProviders.mockImplementation(() => {})
   await ExtensionHostFileSystem.writeFile(
     'memfs',
     'memfs:///test-folder',
     'test'
   )
-  expect(ExtensionHost.invoke).toHaveBeenCalledTimes(1)
-  expect(ExtensionHost.invoke).toHaveBeenCalledWith(
-    'ExtensionHostFileSystem.writeFile',
-    'memfs',
-    'memfs:///test-folder',
-    'test'
-  )
+  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledWith({
+    combineResults: expect.any(Function),
+    event: 'onFileSystem:memfs',
+    method: 'ExtensionHostFileSystem.writeFile',
+    noProviderFoundMessage: 'no file system provider found',
+    params: ['memfs', 'memfs:///test-folder', 'test'],
+  })
 })
 
 test('writeFile - error', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(
@@ -155,7 +152,7 @@ test('writeFile - error', async () => {
 
 test('readDirWithFileTypes', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     return [
       {
         name: 'file 1',
@@ -191,7 +188,7 @@ test('readDirWithFileTypes', async () => {
 
 test('readDirWithFileTypes - error', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(
