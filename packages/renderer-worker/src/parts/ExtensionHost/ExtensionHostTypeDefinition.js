@@ -1,14 +1,15 @@
-import * as ExtensionHost from './ExtensionHostCore.js'
-import * as ExtensionHostManagement from './ExtensionHostManagement.js'
+import * as ExtensionHostShared from './ExtensionHostShared.js'
+
+const combineResults = (results) => {
+  return results[0]
+}
 
 export const executeTypeDefinitionProvider = async (editor, offset) => {
-  const ipc = await ExtensionHostManagement.activateByEvent(
-    `onTypeDefinition:${editor.languageId}`
-  )
-  return ExtensionHost.invoke(
-    /* ipc */ ipc,
-    /* ExtensionHost.executeTypeDefinitionProvider */ 'ExtensionHostClosingTag.executeTypeDefinitionProvider',
-    /* textDocumentId */ editor.id,
-    /* offset */ offset
-  )
+  return ExtensionHostShared.executeProviders({
+    event: `onTypeDefinition:${editor.languageId}`,
+    method: 'ExtensionHostClosingTag.executeTypeDefinitionProvider',
+    params: [editor.id, offset],
+    noProviderFoundMessage: `No type definition provider found`,
+    combineResults,
+  })
 }
