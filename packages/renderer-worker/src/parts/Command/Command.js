@@ -225,6 +225,7 @@ const getModuleId = (commandId) => {
     case 'ExtensionHost.loadWebExtension':
       return MODULE_EXTENSION_HOST_CORE
     case 'ExtensionMeta.addExtension':
+    case 'ExtensionMeta.addWebExtension':
       return MODULE_EXTENSION_META
     case 'Main.save':
     case 'Main.handleDrop':

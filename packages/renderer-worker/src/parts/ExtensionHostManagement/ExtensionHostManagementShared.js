@@ -3,6 +3,9 @@ import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as Languages from '../Languages/Languages.js'
 import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
 
+/**
+ * @enum
+ */
 const ExtensionHostState = {
   Off: 0,
   Loading: 1,
@@ -27,10 +30,7 @@ const toActivatableExtension = (extension) => {
   }
 }
 
-const activateExtension = async (extension) => {
-  if (!extension.main) {
-    return
-  }
+const activateExtension = async (extensionHost, extension) => {
   if (!state.extensionPromiseCache[extension.id]) {
     const activatableExtension = toActivatableExtension(extension)
     state.extensionPromiseCache[extension.id] = SharedProcess.invoke(
@@ -114,6 +114,10 @@ export const startExtensionHost = async (key, method) => {
     promise,
   }
   const ipc = await promise
+  const handleMessage = (message) => {
+    console.log()
+  }
+  ipc.onmessage
   state.extensionHosts[key] = {
     state: ExtensionHostState.Running,
     ipc,
@@ -159,41 +163,6 @@ const isExtensionHostWebExtension = (extension) => {
 const startNodeExtensionHost = async () => {}
 
 const startWebExtensionHost = async () => {}
-
-export const activateByEvent = async (event) => {
-  if (!Languages.hasLoaded()) {
-    await Languages.waitForLoad()
-  }
-  // TODO should not query extensions multiple times
-  const extensions = await ExtensionMeta.getExtensions()
-
-  // TODO if many (more than two?) extensions cannot be loaded,
-  // it shouldn't should that many error messages
-  const extensionsWithError = getExtensionsWithError(extensions)
-  for (const extension of extensionsWithError) {
-    await handleExtensionActivationError(extension)
-  }
-  const extensionsToActivate = getExtensionsToActivate(extensions, event)
-  // TODO how to handle when multiple reference providers are registered for nodejs and webworker extension host?
-  // what happens when all of them / some of them throw error?
-  // what happens when some of them take very long to activate?
-
-  if (extensionsToActivate.some(isExtensionHostNodeExtension)) {
-    // TODO start node extension host
-  }
-  if (extensionsToActivate.some(isExtensionHostWebExtension)) {
-    // TODO start web extension host
-  }
-  for (const extension of extensionsToActivate) {
-    await activateExtension(extension)
-  }
-
-  // TODO ask shared process to activate extension
-  // TODO in web, create web worker extension host
-  return {
-    // TODO return ipc
-  }
-}
 
 export const canActivate = (manager, extensions) => {
   return extensions.some(manager.canActivate)

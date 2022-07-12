@@ -10,6 +10,7 @@ export const executeReferenceProvider = (editor, offset) => {
     method: 'ExtensionHostReferences.executeReferenceProvider',
     params: [editor.id, offset],
     noProviderFoundMessage: 'no reference providers found',
+    noProviderFoundResult: [],
     combineResults,
   })
 }

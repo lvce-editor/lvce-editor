@@ -2,13 +2,13 @@ export const name = 'App'
 
 const getModule = (uri) => {
   switch (uri) {
-    case 'app://startup-performance':
+    case 'startup-performance':
       return import('./FileSystemAppStartupPerformance.js')
-    case 'app://memory-usage':
+    case 'memory-usage':
       return import('./FileSystemAppMemoryUsage.js')
-    case 'app://settings.json':
+    case 'settings.json':
       return import('./FileSystemAppSettings.js')
-    case 'app://recently-opened.json':
+    case 'recently-opened.json':
       return import('./FileSystemAppRecentlyOpened.js')
     default:
       throw new Error(`unsupported file: ${uri}`)

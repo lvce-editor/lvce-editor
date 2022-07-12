@@ -7,8 +7,6 @@ export const state = {
 
 export const editorCompositionStart = (editor, event) => {
   state.isComposing = true
-  console.log({ event })
-  console.log('composition start')
   return editor
 }
 
