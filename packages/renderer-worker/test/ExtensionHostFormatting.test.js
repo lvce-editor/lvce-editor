@@ -5,21 +5,12 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js',
+  '../src/parts/ExtensionHost/ExtensionHostShared.js',
   () => {
     return {
-      invoke: jest.fn(() => {
+      executeProvider: jest.fn(() => {
         throw new Error('not implemented')
       }),
-    }
-  }
-)
-
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostManagement.js',
-  () => {
-    return {
-      activateByEvent: jest.fn(),
     }
   }
 )
@@ -27,26 +18,39 @@ jest.unstable_mockModule(
 const ExtensionHostFormatting = await import(
   '../src/parts/ExtensionHost/ExtensionHostFormatting.js'
 )
-const ExtensionHost = await import(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js'
+const ExtensionHostShared = await import(
+  '../src/parts/ExtensionHost/ExtensionHostShared.js'
 )
 
 test('executeFormattingProvider', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProvider.mockImplementation(async () => {
     return 'test content'
   })
   expect(
-    await ExtensionHostFormatting.executeFormattingProvider({ id: 1 })
+    await ExtensionHostFormatting.executeFormattingProvider({
+      id: 1,
+      languageId: 'test',
+    })
   ).toBe('test content')
+  expect(ExtensionHostShared.executeProvider).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostShared.executeProvider).toHaveBeenCalledWith({
+    event: 'onFormatting:test',
+    method: 'ExtensionHostFormatting.executeFormattingProvider',
+    params: [1],
+    noProviderFoundMessage: 'No formatting provider found',
+  })
 })
 
 test('executeFormattingProvider - error', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProvider.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(
-    ExtensionHostFormatting.executeFormattingProvider('memfs:///test.txt')
+    ExtensionHostFormatting.executeFormattingProvider({
+      id: 1,
+      languageId: 'test',
+    })
   ).rejects.toThrowError(new TypeError('x is not a function'))
 })
