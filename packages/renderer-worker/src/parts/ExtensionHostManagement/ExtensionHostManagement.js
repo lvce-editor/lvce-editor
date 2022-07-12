@@ -95,8 +95,6 @@ export const activateByEvent = async (event) => {
     extensionHostManagerTypes,
     extensionsToActivate
   )
-
-  console.log({ managersWithExtensions })
   for (const managerWithExtensions of managersWithExtensions) {
     const extensionHost =
       await ExtensionHostManagementShared.startExtensionHost(

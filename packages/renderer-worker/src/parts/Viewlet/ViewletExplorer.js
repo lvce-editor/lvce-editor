@@ -170,7 +170,6 @@ export const contentLoadedEffects = (state) => {
   // TODO hoist function
   const handleLanguagesChanged = () => {
     const state = Viewlet.getState('Explorer')
-    console.log({ state })
     const newState = updateIcons(state)
     Viewlet.setState('Explorer', newState)
   }

@@ -51,7 +51,6 @@ export const writeFile = async (path, content) => {
 export const ensureFile = async () => {}
 
 export const readDirWithFileTypes = (path) => {
-  console.log('invoke shared process', path)
   return SharedProcess.invoke(
     /* FileSystem.readDirWithFileTypes */ 'FileSystem.readDirWithFileTypes',
     /* path */ path
