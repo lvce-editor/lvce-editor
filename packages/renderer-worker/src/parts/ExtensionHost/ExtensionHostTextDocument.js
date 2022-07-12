@@ -1,6 +1,5 @@
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as ExtensionHost from './ExtensionHostCore.js'
-import * as ExtensionHostManagement from '../ExtensionHost/ExtensionHostManagement.js'
+import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 // TODO instead of sending full document from
 // shared process to renderer-worker to shared process
@@ -8,32 +7,23 @@ import * as ExtensionHostManagement from '../ExtensionHost/ExtensionHostManageme
 // or shared process could send extension host file to open
 // after sending file to renderer process
 export const handleEditorCreate = async (editor) => {
-  await ExtensionHostManagement.ensureExtensionHostIsStarted()
   const text = TextDocument.getText(editor)
-  // TODO should use invoke
-  await ExtensionHost.invoke(
-    /* ExtensionHostTextDocument.syncFull */ 'ExtensionHostTextDocument.syncFull',
-    /* uri */ editor.uri,
-    /* documentId */ editor.id,
-    /* languageId */ editor.languageId,
-    /* text */ text
-  )
+  return ExtensionHostShared.execute({
+    method: 'ExtensionHostTextDocument.syncFull',
+    params: [editor.uri, editor.id, editor.languageId, text],
+  })
 }
 
 export const handleEditorChange = async (editor, changes) => {
-  await ExtensionHostManagement.ensureExtensionHostIsStarted()
-  await ExtensionHost.invoke(
-    /* ExtensionHostTextDocument.syncIncremental */ 'ExtensionHostTextDocument.syncIncremental',
-    /* textDocumentId */ editor.id,
-    /* changes */ changes
-  )
+  return ExtensionHostShared.execute({
+    method: 'ExtensionHostTextDocument.syncIncremental',
+    params: [editor.id, changes],
+  })
 }
 
 export const handleEditorLanguageChange = async (editor) => {
-  await ExtensionHostManagement.ensureExtensionHostIsStarted()
-  await ExtensionHost.invoke(
-    /* ExtensionHostTextDocument.setLanguageId */ 'ExtensionHostTextDocument.setLanguageId',
-    /* textDocumentId */ editor.id,
-    /* languageId */ editor.languageId
-  )
+  return ExtensionHostShared.execute({
+    method: 'ExtensionHostTextDocument.setLanguageId',
+    params: [editor.id, editor.languageId],
+  })
 }

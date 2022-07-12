@@ -37,3 +37,5 @@ export const executeProvider = async ({
   const results = await Promise.all(promises)
   return results[0]
 }
+
+export const execute = async ({ method, params }) => {}
