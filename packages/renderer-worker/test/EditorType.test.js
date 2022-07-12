@@ -22,14 +22,6 @@ jest.unstable_mockModule(
     }
   }
 )
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostManagement.js',
-  () => {
-    return {
-      activateByEvent: jest.fn(() => {}),
-    }
-  }
-)
 
 const EditorType = await import(
   '../src/parts/EditorCommand/EditorCommandType.js'
