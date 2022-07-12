@@ -4,7 +4,6 @@ import * as Languages from '../Languages/Languages.js'
 import * as ExtensionHostManagementBrowser from './ExtensionHostManagementBrowser.js'
 import * as ExtensionHostManagementNode from './ExtensionHostManagementNode.js'
 import * as ExtensionHostManagementShared from './ExtensionHostManagementShared.js'
-
 import * as Platform from '../Platform/Platform.js'
 
 const getExtensionHostManagementTypes = () => {
@@ -62,7 +61,9 @@ const getManagersWithExtensionsToActivate = (
         toActivate.push(extension)
       }
     }
-    managersToActivate.push({ manager, toActivate })
+    if (toActivate.length > 0) {
+      managersToActivate.push({ manager, toActivate })
+    }
   }
   return managersToActivate
 }
@@ -91,19 +92,25 @@ export const activateByEvent = async (event) => {
     extensionsToActivate
   )
 
+  console.log({ managersWithExtensions })
   for (const managerWithExtensions of managersWithExtensions) {
-    if (managerWithExtensions.toActivate.length > 0) {
-      const ipc = await ExtensionHostManagementShared.startExtensionHost(
+    const extensionHost =
+      await ExtensionHostManagementShared.startExtensionHost(
         managerWithExtensions.manager.name,
         managerWithExtensions.manager.ipc
       )
-      for (const extension of managerWithExtensions.toActivate) {
-        // TODO tell extension host to activate extension
-      }
+    for (const extension of managerWithExtensions.toActivate) {
+      // TODO tell extension host to activate extension
+      await extensionHost.activateExtension(extension)
     }
+    return extensionHost
   }
 
+  // TODO support querying completion items from multiple extension hosts
+  // e.g. completion items from node extension host and word based completions from web worker extension host
   return {
-    // TODO return ipc
+    invoke() {
+      throw new Error('not implemented')
+    },
   }
 }

@@ -102,7 +102,8 @@ export const activateByEvent = async (event) => {
   }
   const toActivate = getExtensionsToActivate(extensions, event)
   for (const extension of toActivate) {
-    await activateExtension(extension)
+    const contribution = await activateExtension(extension)
+    LanguageFeatures.addContribution(contribution)
   }
 
   // TODO ask shared process to activate extension

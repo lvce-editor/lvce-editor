@@ -5,21 +5,12 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js',
+  '../src/parts/ExtensionHost/ExtensionHostShared.js',
   () => {
     return {
-      invoke: jest.fn(() => {
+      executeProviders: jest.fn(() => {
         throw new Error('not implemented')
       }),
-    }
-  }
-)
-
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostManagement.js',
-  () => {
-    return {
-      activateByEvent: jest.fn(),
     }
   }
 )
@@ -27,13 +18,13 @@ jest.unstable_mockModule(
 const ExtensionHostReference = await import(
   '../src/parts/ExtensionHost/ExtensionHostReference.js'
 )
-const ExtensionHost = await import(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js'
+const ExtensionHostShared = await import(
+  '../src/parts/ExtensionHost/ExtensionHostShared.js'
 )
 
 test('executeReferenceProvider - no references found', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(() => {
     return []
   })
   expect(
@@ -43,7 +34,7 @@ test('executeReferenceProvider - no references found', async () => {
 
 test('executeReferenceProvider - single reference found', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(() => {
     return [
       {
         uri: '/test/index.js',
@@ -67,7 +58,7 @@ test('executeReferenceProvider - single reference found', async () => {
 
 test('executeReferenceProvider - error - referenceProvider throws error', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     throw new Error(
       'Failed to execute reference provider: TypeError: x is not a function'
     )

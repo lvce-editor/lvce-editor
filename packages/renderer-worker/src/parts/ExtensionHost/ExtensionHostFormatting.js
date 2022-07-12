@@ -1,12 +1,10 @@
-import * as ExtensionHost from '../ExtensionHost/ExtensionHostCore.js'
 import * as ExtensionHostManagement from './ExtensionHostManagement.js'
 
 export const executeFormattingProvider = async (editor) => {
-  const ipc = await ExtensionHostManagement.activateByEvent(
+  const extensionHost = await ExtensionHostManagement.activateByEvent(
     `onFormatting:${editor.languageId}`
   )
-  return ExtensionHost.invoke(
-    /* ipc */ ipc,
+  return extensionHost.invoke(
     /* ExtensionHost.format */ 'ExtensionHost.format',
     /* textDocumentId */ editor.id
   )

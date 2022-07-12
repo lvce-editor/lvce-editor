@@ -22,8 +22,9 @@ export const getStatusBarItems = async () => {
   if (Platform.getPlatform() === 'web') {
     return []
   }
-  await ExtensionHostManagement.activateByEvent('onStatusBarItem')
+  const ipc = await ExtensionHostManagement.activateByEvent('onStatusBarItem')
   const statusBarItems = await ExtensionHost.invoke(
+    /* ipc */ ipc,
     /* ExtensionHost.getStatusBarItems */ 'ExtensionHost.getStatusBarItems'
   )
   return statusBarItems

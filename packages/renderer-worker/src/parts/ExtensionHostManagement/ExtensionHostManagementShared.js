@@ -100,6 +100,10 @@ export const startExtensionHost = async (key, method) => {
     switch (existingExtensionHost.state) {
       case ExtensionHostState.Off:
         throw new Error('extension host cannot be off')
+      case ExtensionHostState.Loading:
+        return existingExtensionHost.promise
+      case ExtensionHostState.Running:
+        return existingExtensionHost.ipc
       default:
         throw new Error('unexpected extension host state')
     }

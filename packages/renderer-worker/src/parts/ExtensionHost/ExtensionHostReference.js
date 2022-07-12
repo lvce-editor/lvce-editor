@@ -1,14 +1,15 @@
-import * as ExtensionHost from './ExtensionHostCore.js'
-import * as ExtensionHostManagement from './ExtensionHostManagement.js'
+import * as ExtensionHostShared from './ExtensionHostShared.js'
 
-export const executeReferenceProvider = async (editor, offset) => {
-  const ipc = await ExtensionHostManagement.activateByEvent(
-    `onReferences:${editor.languageId}`
-  )
-  return ExtensionHost.invoke(
-    /* ipc */ ipc,
-    /* ExtensionHost.executeReferenceProvider */ 'ExtensionHostReferences.executeReferenceProvider',
-    /* textDocumentId */ editor.id,
-    /* offset */ offset
-  )
+const combineResults = (results) => {
+  return results[0]
+}
+
+export const executeReferenceProvider = (editor, offset) => {
+  return ExtensionHostShared.executeProviders({
+    event: `onReferences:${editor.languageId}`,
+    method: 'ExtensionHostReferences.executeReferenceProvider',
+    params: [editor.id, offset],
+    noProviderFoundMessage: 'no reference providers found',
+    combineResults,
+  })
 }
