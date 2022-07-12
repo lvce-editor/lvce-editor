@@ -12,9 +12,13 @@ export const listen = async () => {
       worker.onmessage = null
       worker.onerror = null
     }
-    const handleFirstMessage = () => {
+    const handleFirstMessage = (event) => {
       cleanup()
-      resolve(undefined)
+      if (event.data === 'ready') {
+        resolve(undefined)
+      } else {
+        reject(new Error('unexpected first message from extension host worker'))
+      }
     }
     const handleFirstError = () => {
       cleanup()

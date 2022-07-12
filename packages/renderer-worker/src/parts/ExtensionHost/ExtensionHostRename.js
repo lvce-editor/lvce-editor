@@ -2,11 +2,10 @@ import * as ExtensionHost from '../ExtensionHost/ExtensionHostCore.js'
 import * as ExtensionHostManagement from './ExtensionHostManagement.js'
 
 export const executePrepareRenameProvider = async (editor, offset) => {
-  const ipc = await ExtensionHostManagement.activateByEvent(
+  const extensionHost = await ExtensionHostManagement.activateByEvent(
     `onRename:${editor.languageId}`
   )
-  return ExtensionHost.invoke(
-    /* ipc */ ipc,
+  return extensionHost.invoke(
     /* ExtensionHost.prepareRename */ 'ExtensionHostRename.executePrepareRename',
     /* documentId */ editor.id,
     /* offset */ offset
@@ -14,11 +13,10 @@ export const executePrepareRenameProvider = async (editor, offset) => {
 }
 
 export const executeRenameProvider = async (editor, offset, newName) => {
-  const ipc = await ExtensionHostManagement.activateByEvent(
+  const extensionHost = await ExtensionHostManagement.activateByEvent(
     `onRename:${editor.languageId}`
   )
-  return ExtensionHost.invoke(
-    /* ipc */ ipc,
+  return extensionHost.invoke(
     /* ExtensionHost.rename */ 'ExtensionHostRename.executeRename',
     /* documentId */ editor.id,
     /* offset */ offset,

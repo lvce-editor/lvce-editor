@@ -1,12 +1,10 @@
-import * as ExtensionHost from './ExtensionHostCore.js'
 import * as ExtensionHostManagement from './ExtensionHostManagement.js'
 
 export const executeCompletionProvider = async (editor, offset) => {
-  const ipc = await ExtensionHostManagement.activateByEvent(
+  const extensionHost = await ExtensionHostManagement.activateByEvent(
     `onCompletion:${editor.languageId}`
   )
-  return ExtensionHost.invoke(
-    /* ipc */ ipc,
+  return extensionHost.invoke(
     /* ExtensionHostCompletion.execute */ 'ExtensionHostCompletion.execute',
     /* textDocumentId */ editor.id,
     /* offset */ offset

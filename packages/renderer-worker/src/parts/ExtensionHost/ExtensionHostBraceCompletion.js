@@ -1,4 +1,3 @@
-import * as ExtensionHost from './ExtensionHostCore.js'
 import * as ExtensionHostManagement from './ExtensionHostManagement.js'
 
 export const executeBraceCompletionProvider = async (
@@ -6,11 +5,10 @@ export const executeBraceCompletionProvider = async (
   offset,
   openingBrace
 ) => {
-  const ipc = await ExtensionHostManagement.activateByEvent(
+  const extensionHost = await ExtensionHostManagement.activateByEvent(
     `onBraceCompletion:${textDocument.languageId}`
   )
-  return ExtensionHost.invoke(
-    /* ipc */ ipc,
+  return extensionHost.invoke(
     /* ExtensionHostBraceCompletion.executeBraceCompletionProvider */ 'ExtensionHostBraceCompletion.executeBraceCompletionProvider',
     /* textDocumentId */ textDocument.id,
     /* offset */ offset,

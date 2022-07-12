@@ -7,3 +7,20 @@ export const ipc = ExtensionHostIpc.Methods.WebWorker
 export const canActivate = (extension) => {
   return typeof extension.browser === 'string'
 }
+
+export const create = () => {
+  return {
+    // Completion
+    executeCompletionProvider:
+      ExtensionHostCompletion.executeCompletionProvider,
+
+    // Definition
+    executeDefinitionProvider() {},
+
+    // File system
+    readDirWithFileTypes() {},
+
+    // Type Definition
+    executeTypeDefinitionProvider() {},
+  }
+}
