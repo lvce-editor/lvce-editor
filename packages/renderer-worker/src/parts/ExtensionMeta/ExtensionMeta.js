@@ -9,15 +9,28 @@ export const state = {
   webExtensions: [],
 }
 
+const getId = (path) => {
+  const slashIndex = path.lastIndexOf('/')
+  return path.slice(slashIndex + 1)
+}
+
 const getWebExtensionManifest = async (path) => {
-  const manifestPath = `${path}/extension.json`
-  const manifest = await Command.execute(
-    /* Ajax.getJson */ 'Ajax.getJson',
-    /* url */ manifestPath
-  )
-  return {
-    ...manifest,
-    path,
+  try {
+    const manifestPath = `${path}/extension.json`
+    const manifest = await Command.execute(
+      /* Ajax.getJson */ 'Ajax.getJson',
+      /* url */ manifestPath
+    )
+    return {
+      ...manifest,
+      path,
+    }
+  } catch (error) {
+    const id = getId(path)
+    throw new Error(`Failed to load extension manifest for ${id}`, {
+      // @ts-ignore
+      cause: error,
+    })
   }
 }
 
