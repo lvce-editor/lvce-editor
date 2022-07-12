@@ -1,11 +1,10 @@
-import * as ExtensionHostManagement from './ExtensionHostManagement.js'
+import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 export const executeFormattingProvider = async (editor) => {
-  const extensionHost = await ExtensionHostManagement.activateByEvent(
-    `onFormatting:${editor.languageId}`
-  )
-  return extensionHost.invoke(
-    /* ExtensionHost.format */ 'ExtensionHost.format',
-    /* textDocumentId */ editor.id
-  )
+  return ExtensionHostShared.executeProvider({
+    event: `onFormatting:${editor.languageId}`,
+    method: 'ExtensionHostFormatting.executeFormattingProvider',
+    params: [editor.id],
+    noProviderFoundMessage: 'No formatting provider found',
+  })
 }
