@@ -366,7 +366,7 @@
   },
   {
     "key": "ctrl+,",
-    "command": "preferences.openSettingsJson"
+    "command": "Preferences.openSettingsJson"
   },
   {
     "key": "ArrowLeft",
