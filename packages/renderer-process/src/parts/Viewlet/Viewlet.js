@@ -161,7 +161,7 @@ export const replace = () => {
 }
 
 export const handleError = (id, parentId, message) => {
-  console.log('HANDLE ERROR')
+  console.log(`[viewlet-error] ${id}: ${message}`)
   const instance = state.instances[id]
   if (instance && instance.factory && instance.factory.handleError) {
     instance.factory.handleError(instance.state, message)
