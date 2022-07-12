@@ -29,7 +29,7 @@ const handleContextMenu = (event) => {
 }
 
 const handleFocus = (event) => {
-  Focus.setFocus('ViewletEditorText')
+  Focus.setFocus('EditorText')
 }
 
 const handleBlur = (event) => {
