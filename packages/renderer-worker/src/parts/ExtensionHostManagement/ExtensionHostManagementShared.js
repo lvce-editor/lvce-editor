@@ -114,10 +114,6 @@ export const startExtensionHost = async (key, method) => {
     promise,
   }
   const ipc = await promise
-  const handleMessage = (message) => {
-    console.log()
-  }
-  ipc.onmessage
   state.extensionHosts[key] = {
     state: ExtensionHostState.Running,
     ipc,

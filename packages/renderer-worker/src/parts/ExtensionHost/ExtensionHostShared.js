@@ -39,4 +39,9 @@ export const executeProvider = async ({
   return results[0]
 }
 
-export const execute = async ({ method, params }) => {}
+export const execute = async ({ method, params }) => {
+  const extensionHosts = ExtensionHostManagement.getExtensionHosts()
+  for (const extensionHost of extensionHosts) {
+    await extensionHost.invoke(method, ...params)
+  }
+}

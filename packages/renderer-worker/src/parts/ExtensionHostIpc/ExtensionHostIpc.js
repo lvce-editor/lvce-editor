@@ -1,6 +1,7 @@
 import * as ExtensionHostIpcWithSharedProcess from './ExtensionHostIpcWithSharedProcess.js'
 import * as ExtensionHostIpcWithWebWorker from './ExtensionHostIpcWithWebWorker.js'
 import * as Callback from '../Callback/Callback.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 export const Methods = {
   SharedProcess: 1,
@@ -44,5 +45,9 @@ const handleMessage = (event) => {
 export const listen = async (method) => {
   const ipc = await getIpc(method)
   ipc.onmessage = handleMessage
-  return ipc
+  return {
+    invoke(method, ...params) {
+      return JsonRpc.invoke(ipc, method, ...params)
+    },
+  }
 }

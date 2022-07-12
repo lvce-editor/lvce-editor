@@ -1,12 +1,21 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as Languages from '../Languages/Languages.js'
+import * as Platform from '../Platform/Platform.js'
 import * as ExtensionHostManagementBrowser from './ExtensionHostManagementBrowser.js'
 import * as ExtensionHostManagementNode from './ExtensionHostManagementNode.js'
 import * as ExtensionHostManagementShared from './ExtensionHostManagementShared.js'
-import * as Platform from '../Platform/Platform.js'
-import * as Assert from '../Assert/Assert.js'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+
+export const state = {
+  /**
+   * @type {any[]}
+   */
+  extensionHosts: [],
+}
 
 const getExtensionHostManagementTypes = () => {
   const platform = Platform.getPlatform()
@@ -70,8 +79,46 @@ const getManagersWithExtensionsToActivate = (
   return managersToActivate
 }
 
-const getManager = (object) => {
-  return object.manager
+const startTextDocumentSyncing = async (extensionHost) => {
+  const handleEditorCreate = (editor) => {
+    const text = TextDocument.getText(editor)
+    return extensionHost.invoke(
+      'ExtensionHostTextDocument.syncFull',
+      editor.uri,
+      editor.id,
+      editor.languageId,
+      text
+    )
+  }
+  GlobalEventBus.addListener('editor.create', handleEditorCreate)
+
+  const handleEditorChange = (editor, changes) => {
+    return extensionHost.invoke(
+      'ExtensionHostTextDocument.syncIncremental',
+      editor.id,
+      changes
+    )
+  }
+  GlobalEventBus.addListener('editor.change', handleEditorChange)
+
+  const handleEditorLanguageChange = (editor) => {
+    return extensionHost.inoke(
+      'ExtensionHostTextDocument.setLanguageId',
+      editor.id,
+      editor.languageId
+    )
+  }
+
+  GlobalEventBus.addListener(
+    'editor.languageChange',
+    handleEditorLanguageChange
+  )
+
+  const instances = Viewlet.state.instances
+  const editorInstance = instances['EditorText']
+  if (editorInstance) {
+    await handleEditorCreate(editorInstance.state)
+  }
 }
 
 export const activateByEvent = async (event) => {
@@ -89,18 +136,17 @@ export const activateByEvent = async (event) => {
     await handleExtensionActivationError(extension)
   }
   const extensionsToActivate = getExtensionsToActivate(extensions, event)
-  console.log({ extensionsToActivate })
   // TODO how to handle when multiple reference providers are registered for nodejs and webworker extension host?
   // what happens when all of them / some of them throw error?
   // what happens when some of them take very long to activate?
 
   const extensionHostManagerTypes = getExtensionHostManagementTypes()
-  const managersWithExtensions = getManagersWithExtensionsToActivate(
+  const extensionHostsWithExtensions = getManagersWithExtensionsToActivate(
     extensionHostManagerTypes,
     extensionsToActivate
   )
-  console.log({ managersWithExtensions, extensions })
-  for (const managerWithExtensions of managersWithExtensions) {
+  const extensionHosts = []
+  for (const managerWithExtensions of extensionHostsWithExtensions) {
     const extensionHost =
       await ExtensionHostManagementShared.startExtensionHost(
         managerWithExtensions.manager.name,
@@ -110,15 +156,23 @@ export const activateByEvent = async (event) => {
     console.log({ extensionHost })
     for (const extension of managerWithExtensions.toActivate) {
       // TODO tell extension host to activate extension
-      await JsonRpc.invoke(
-        extensionHost,
+      await extensionHost.invoke(
         'ExtensionHostExtension.enableExtension',
         extension
       )
+      // TODO register text document change listener and sync text documents
+      await startTextDocumentSyncing(extensionHost)
     }
+    extensionHosts.push(extensionHost)
   }
+
+  state.extensionHosts = extensionHosts
 
   // TODO support querying completion items from multiple extension hosts
   // e.g. completion items from node extension host and word based completions from web worker extension host
-  return managersWithExtensions.map(getManager)
+  return extensionHosts
+}
+
+export const getExtensionHosts = () => {
+  return state.extensionHosts
 }

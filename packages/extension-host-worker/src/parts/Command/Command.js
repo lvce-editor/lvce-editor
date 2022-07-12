@@ -1,5 +1,7 @@
 import * as ExtensionHostExtension from '../ExtensionHostExtension/ExtensionHostExtension.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
+import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
+import * as ExtensionHostTextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
 const getFn = (method) => {
   switch (method) {
@@ -9,6 +11,10 @@ const getFn = (method) => {
     case 'Reference.execute':
     case 'References.execute':
       return ExtensionHostReference.executeReferenceProvider
+    case 'ExtensionHostCompletion.execute':
+      return ExtensionHostCompletion.executeCompletionProvider
+    case 'ExtensionHostTextDocument.syncFull':
+      return ExtensionHostTextDocument.syncFull
     default:
       throw new Error(`method not found: ${method}`)
   }
