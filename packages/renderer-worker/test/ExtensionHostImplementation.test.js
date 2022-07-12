@@ -8,7 +8,7 @@ jest.unstable_mockModule(
   '../src/parts/ExtensionHost/ExtensionHostShared.js',
   () => {
     return {
-      executeProviders: jest.fn(() => {
+      executeProviders: jest.fn(async () => {
         throw new Error('not implemented')
       }),
     }
@@ -24,7 +24,7 @@ const ExtensionHostShared = await import(
 
 test('executeImplementationProvider - no implementations found', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     return []
   })
   expect(
@@ -45,7 +45,7 @@ test('executeImplementationProvider - no implementations found', async () => {
 
 test('executeImplementationProvider - single implementation found', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     return [
       {
         uri: '/test/index.js',
@@ -72,7 +72,7 @@ test('executeImplementationProvider - single implementation found', async () => 
 
 test('executeImplementationProvider - error - implementationProvider throws error', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     throw new Error(
       'Failed to execute implementation provider: TypeError: x is not a function'
     )
