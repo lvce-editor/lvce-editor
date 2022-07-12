@@ -1,5 +1,5 @@
 {
-  "main": "main.js",
+  "browser": "main.js",
   "activation": ["onReferences:javascript"],
   "languages": [
     {

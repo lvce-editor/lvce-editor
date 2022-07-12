@@ -10,6 +10,7 @@ export const executeDiagnosticProvider = (editor) => {
     method: 'ExtensionHost.executeDiagnosticProvider',
     params: [editor.id],
     noProviderFoundMessage: 'no diagnostic provider found',
+    noProviderResult: [],
     combineResults,
   })
 }

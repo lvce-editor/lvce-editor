@@ -1,13 +1,13 @@
 import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHostManagement.js'
 
-export const executeProviders = async (
+export const executeProviders = async ({
   event,
   method,
   params,
   noProviderFoundMessage = 'No provider found',
   noProviderFoundResult,
-  combineResults
-) => {
+  combineResults,
+}) => {
   const extensionHosts = await ExtensionHostManagement.activateByEvent(event)
   if (extensionHosts.length === 0) {
     return noProviderFoundResult ?? undefined

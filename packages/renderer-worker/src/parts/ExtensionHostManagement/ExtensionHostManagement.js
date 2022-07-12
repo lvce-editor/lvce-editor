@@ -5,6 +5,8 @@ import * as ExtensionHostManagementBrowser from './ExtensionHostManagementBrowse
 import * as ExtensionHostManagementNode from './ExtensionHostManagementNode.js'
 import * as ExtensionHostManagementShared from './ExtensionHostManagementShared.js'
 import * as Platform from '../Platform/Platform.js'
+import * as Assert from '../Assert/Assert.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 const getExtensionHostManagementTypes = () => {
   const platform = Platform.getPlatform()
@@ -73,6 +75,7 @@ const getManager = (object) => {
 }
 
 export const activateByEvent = async (event) => {
+  Assert.string(event)
   if (!Languages.hasLoaded()) {
     await Languages.waitForLoad()
   }
@@ -86,6 +89,7 @@ export const activateByEvent = async (event) => {
     await handleExtensionActivationError(extension)
   }
   const extensionsToActivate = getExtensionsToActivate(extensions, event)
+  console.log({ extensionsToActivate })
   // TODO how to handle when multiple reference providers are registered for nodejs and webworker extension host?
   // what happens when all of them / some of them throw error?
   // what happens when some of them take very long to activate?
@@ -95,17 +99,23 @@ export const activateByEvent = async (event) => {
     extensionHostManagerTypes,
     extensionsToActivate
   )
+  console.log({ managersWithExtensions, extensions })
   for (const managerWithExtensions of managersWithExtensions) {
     const extensionHost =
       await ExtensionHostManagementShared.startExtensionHost(
         managerWithExtensions.manager.name,
         managerWithExtensions.manager.ipc
       )
+    Assert.object(extensionHost)
+    console.log({ extensionHost })
     for (const extension of managerWithExtensions.toActivate) {
       // TODO tell extension host to activate extension
-      await extensionHost.activateExtension(extension)
+      await JsonRpc.invoke(
+        extensionHost,
+        'ExtensionHostExtension.enableExtension',
+        extension
+      )
     }
-    return extensionHost
   }
 
   // TODO support querying completion items from multiple extension hosts

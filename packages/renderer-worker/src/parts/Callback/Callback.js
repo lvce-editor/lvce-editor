@@ -1,3 +1,5 @@
+import * as Assert from '../Assert/Assert.js'
+
 export const state = {
   callbacks: Object.create(null),
   onceListeners: new Set(),
@@ -18,6 +20,7 @@ export const unregister = (id) => {
 
 // TODO merge resolve and resolveEmpty
 export const resolve = (id, args) => {
+  Assert.number(id)
   if (!(id in state.callbacks)) {
     console.log(args)
     console.warn(`callback ${id} may already be disposed`)
@@ -36,6 +39,7 @@ export const resolveEmpty = (id) => {
 }
 
 export const reject = (id, error) => {
+  Assert.number(id)
   if (!(id in state.callbacks)) {
     console.warn(`callback ${id} may already be disposed`)
     return
