@@ -4,7 +4,7 @@ const combineResults = (results) => {
   return results[0]
 }
 
-export const executeHoverProvider = async (editor, offset) => {
+export const executeHoverProvider = (editor, offset) => {
   return ExtensionHostShared.executeProviders({
     event: `onHover:${editor.languageId}`,
     method: 'ExtensionHostHover.execute',

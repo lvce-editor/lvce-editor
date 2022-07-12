@@ -4,7 +4,7 @@ const combineResults = (results) => {
   return results[0]
 }
 
-export const executeDiagnosticProvider = async (editor) => {
+export const executeDiagnosticProvider = (editor) => {
   return ExtensionHostShared.executeProviders({
     event: `onDiagnostic:${editor.languageId}`,
     method: 'ExtensionHost.executeDiagnosticProvider',

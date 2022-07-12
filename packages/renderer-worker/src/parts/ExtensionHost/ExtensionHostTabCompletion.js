@@ -4,7 +4,7 @@ const combineResults = (results) => {
   return results[0]
 }
 
-export const executeTabCompletionProvider = async (editor, offset) => {
+export const executeTabCompletionProvider = (editor, offset) => {
   return ExtensionHostShared.executeProviders({
     event: `onTabCompletion:${editor.languageId}`,
     method: 'ExtensionHost.executeTabCompletionProvider',

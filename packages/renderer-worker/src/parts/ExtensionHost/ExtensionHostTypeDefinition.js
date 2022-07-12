@@ -4,7 +4,7 @@ const combineResults = (results) => {
   return results[0]
 }
 
-export const executeTypeDefinitionProvider = async (editor, offset) => {
+export const executeTypeDefinitionProvider = (editor, offset) => {
   return ExtensionHostShared.executeProviders({
     event: `onTypeDefinition:${editor.languageId}`,
     method: 'ExtensionHostClosingTag.executeTypeDefinitionProvider',

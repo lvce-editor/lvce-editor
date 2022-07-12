@@ -4,7 +4,7 @@ const combineResultsPrepareRename = (results) => {
   return results[0]
 }
 
-export const executePrepareRenameProvider = async (editor, offset) => {
+export const executePrepareRenameProvider = (editor, offset) => {
   return ExtensionHostShared.executeProviders({
     event: `onRename:${editor.languageId}`,
     method: 'ExtensionHostRename.executePrepareRename',
@@ -18,7 +18,7 @@ const combineResultsRename = (results) => {
   return results[0]
 }
 
-export const executeRenameProvider = async (editor, offset, newName) => {
+export const executeRenameProvider = (editor, offset, newName) => {
   return ExtensionHostShared.executeProviders({
     event: `onRename:${editor.languageId}`,
     method: 'ExtensionHostRename.executeRename',

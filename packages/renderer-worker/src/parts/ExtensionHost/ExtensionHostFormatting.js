@@ -1,6 +1,6 @@
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 
-export const executeFormattingProvider = async (editor) => {
+export const executeFormattingProvider = (editor) => {
   return ExtensionHostShared.executeProvider({
     event: `onFormatting:${editor.languageId}`,
     method: 'ExtensionHostFormatting.executeFormattingProvider',

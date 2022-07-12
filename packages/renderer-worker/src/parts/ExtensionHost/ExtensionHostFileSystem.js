@@ -1,6 +1,6 @@
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 
-export const readFile = async (protocol, path) => {
+export const readFile = (protocol, path) => {
   // TODO there shouldn't be multiple file system providers for the same protocol
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
@@ -10,7 +10,7 @@ export const readFile = async (protocol, path) => {
   })
 }
 
-export const remove = async (protocol, path) => {
+export const remove = (protocol, path) => {
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.remove',
@@ -25,7 +25,7 @@ export const remove = async (protocol, path) => {
  * @param {string} oldPath
  * @param {string} newPath
  */
-export const rename = async (protocol, oldPath, newPath) => {
+export const rename = (protocol, oldPath, newPath) => {
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.rename',
@@ -34,7 +34,7 @@ export const rename = async (protocol, oldPath, newPath) => {
   })
 }
 
-export const mkdir = async (protocol, path) => {
+export const mkdir = (protocol, path) => {
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.mkdir',
@@ -43,7 +43,7 @@ export const mkdir = async (protocol, path) => {
   })
 }
 
-export const createFile = async (protocol, path) => {
+export const createFile = (protocol, path) => {
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.writeFile',
@@ -52,7 +52,7 @@ export const createFile = async (protocol, path) => {
   })
 }
 
-export const createFolder = async (protocol, path) => {
+export const createFolder = (protocol, path) => {
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.createFolder',
@@ -61,7 +61,7 @@ export const createFolder = async (protocol, path) => {
   })
 }
 
-export const writeFile = async (protocol, path, content) => {
+export const writeFile = (protocol, path, content) => {
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.writeFile',
@@ -70,7 +70,7 @@ export const writeFile = async (protocol, path, content) => {
   })
 }
 
-export const readDirWithFileTypes = async (protocol, path) => {
+export const readDirWithFileTypes = (protocol, path) => {
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.readDirWithFileTypes',
@@ -79,7 +79,7 @@ export const readDirWithFileTypes = async (protocol, path) => {
   })
 }
 
-export const getPathSeparator = async (protocol) => {
+export const getPathSeparator = (protocol) => {
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.getPathSeparator',
