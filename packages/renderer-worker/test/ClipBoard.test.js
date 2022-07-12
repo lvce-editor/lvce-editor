@@ -22,6 +22,7 @@ test('readText', async () => {
   globalThis.navigator = {
     // @ts-ignore
     clipboard: {
+      // @ts-ignore
       readText() {
         return 'abc'
       },
@@ -76,6 +77,7 @@ test('writeText', async () => {
   globalThis.navigator = {
     // @ts-ignore
     clipboard: {
+      // @ts-ignore
       writeText: jest.fn(),
     },
   }

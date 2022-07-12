@@ -65,16 +65,19 @@ const writeFileInternal = async (getPath, content) => {
   } catch (error) {
     // TODO error should just have enoent code that could be checked
 
+    // @ts-ignore
     if (error.message.includes('ENOENT')) {
       try {
         const dirname = Workspace.pathDirName(path)
         await FileSystemDisk.mkdir(dirname)
         await FileSystemDisk.writeFile(path, content)
       } catch (error) {
+        // @ts-ignore
         error.message = `Failed to write ${path}: ${error.message}`
         throw error
       }
     } else {
+      // @ts-ignore
       error.message = `Failed to write ${path}: ${error.message}`
       throw error
     }

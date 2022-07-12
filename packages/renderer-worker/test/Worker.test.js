@@ -34,7 +34,9 @@ beforeAll(() => {
   }
 })
 afterAll(() => {
+  // @ts-ignore
   delete globalThis.MessageChannel
+  // @ts-ignore
   delete globalThis.MessagePort
 })
 

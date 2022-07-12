@@ -3,9 +3,9 @@ export const state = {
 }
 
 export const editorBlur = (editor) => {
-  for (const listener of state.blurListeners) {
-    listener(editor)
-  }
+  // for (const listener of state.blurListeners) {
+  //   listener(editor)
+  // }
   // TODO save on blur
   // Command.execute(/* Main.save */ 89)
   return editor

@@ -1,17 +1,18 @@
-import * as ExtensionHostManagement from './ExtensionHostManagement.js'
+import * as ExtensionHostShared from './ExtensionHostShared.js'
+
+const combineResults = (results) => {
+  return results[0]
+}
 
 export const executeClosingTagProvider = async (
   textDocument,
   offset,
   openingBrace
 ) => {
-  const extensionHost = await ExtensionHostManagement.activateByEvent(
-    `onClosingTag:${textDocument.languageId}`
-  )
-  return extensionHost.invoke(
-    /* ExtensionHostClosingTag.executeClosingTagProvider */ 'ExtensionHostClosingTag.executeClosingTagProvider',
-    /* textDocumentId */ textDocument.id,
-    /* offset */ offset,
-    /* openingBrace */ openingBrace
-  )
+  return ExtensionHostShared.executeProviders({
+    event: `onClosingTag:${textDocument.languageId}`,
+    method: 'ExtensionHostClosingTag.executeClosingTagProvider',
+    params: [textDocument.id, offset, openingBrace],
+    combineResults,
+  })
 }

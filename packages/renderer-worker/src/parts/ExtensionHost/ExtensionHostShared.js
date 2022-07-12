@@ -1,15 +1,15 @@
-import * as ExtensionHostManagement from './ExtensionHostManagement.js'
+import * as ExtensionHostManagement from '../ExtensionHostManagement/ExtensionHostManagement.js'
 
 export const executeProviders = async (
   event,
   method,
   params,
-  errorMessage,
+  noProviderFoundMessage = 'No provider found',
   combineResults
 ) => {
   const extensionHosts = await ExtensionHostManagement.activateByEvent(event)
   if (extensionHosts.length === 0) {
-    throw new Error(errorMessage)
+    throw new Error(noProviderFoundMessage)
   }
   const promises = []
   for (const extensionHost of extensionHosts) {

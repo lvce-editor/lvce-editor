@@ -21,8 +21,11 @@ export const state = {
     // TODO don't use window here -> want to run renderer-worker as webworker
     if (
       typeof window !== 'undefined' &&
+      // @ts-ignore
       window.myApi &&
+      // @ts-ignore
       window.myApi.ipcConnect &&
+      // @ts-ignore
       typeof window.myApi.ipcConnect === 'function'
     ) {
       return 'electron'

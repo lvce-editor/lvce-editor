@@ -55,6 +55,7 @@ export const showMessage = async (message, options) => {
   if (!options) {
     options = ['Show Command Output', 'Cancel', 'Open Git Log']
   }
+  // @ts-ignore
   state.dialog = {
     message,
     options,

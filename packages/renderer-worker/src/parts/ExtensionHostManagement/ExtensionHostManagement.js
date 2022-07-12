@@ -68,6 +68,10 @@ const getManagersWithExtensionsToActivate = (
   return managersToActivate
 }
 
+const getManager = (object) => {
+  return object.manager
+}
+
 export const activateByEvent = async (event) => {
   if (!Languages.hasLoaded()) {
     await Languages.waitForLoad()
@@ -108,9 +112,5 @@ export const activateByEvent = async (event) => {
 
   // TODO support querying completion items from multiple extension hosts
   // e.g. completion items from node extension host and word based completions from web worker extension host
-  return {
-    invoke() {
-      throw new Error('not implemented')
-    },
-  }
+  return managersWithExtensions.map(getManager)
 }
