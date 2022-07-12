@@ -5,18 +5,10 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostManagement.js',
+  '../src/parts/ExtensionHost/ExtensionHostShared.js',
   () => {
     return {
-      activateByEvent: jest.fn(() => {}),
-    }
-  }
-)
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
+      executeProvider: jest.fn(() => {
         throw new Error('not implemented')
       }),
     }
@@ -26,36 +18,22 @@ jest.unstable_mockModule(
 const ExtensionHostSourceControl = await import(
   '../src/parts/ExtensionHost/ExtensionHostSourceControl.js'
 )
-const ExtensionHost = await import(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js'
+const ExtensionHostShared = await import(
+  '../src/parts/ExtensionHost/ExtensionHostShared.js'
 )
 
 test('acceptInput', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'ExtensionHost.sourceControlAcceptInput':
-        return null
-      case 'ExtensionManagement.getExtensions':
-        return []
-      default:
-        throw new Error('unexpected message')
-    }
+  ExtensionHostShared.executeProvider.mockImplementation(async () => {
+    return undefined
   })
   expect(await ExtensionHostSourceControl.acceptInput('')).toBeUndefined()
 })
 
 test('acceptInput - error', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'ExtensionHost.sourceControlAcceptInput':
-        throw new TypeError('x is not a function')
-      case 'ExtensionManagement.getExtensions':
-        return []
-      default:
-        throw new Error('unexpected message')
-    }
+  ExtensionHostShared.executeProvider.mockImplementation(async () => {
+    throw new TypeError('x is not a function')
   })
   await expect(ExtensionHostSourceControl.acceptInput()).rejects.toThrowError(
     new TypeError('x is not a function')
