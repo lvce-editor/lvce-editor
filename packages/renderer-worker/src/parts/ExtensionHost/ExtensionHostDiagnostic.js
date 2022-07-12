@@ -1,14 +1,17 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ExtensionHostManagement from './ExtensionHostManagement.js'
+import * as ExtensionHostShared from './ExtensionHostShared.js'
+
+const combineResults = (results) => {
+  return results[0]
+}
 
 export const executeDiagnosticProvider = async (editor) => {
-  const extensionHost = await ExtensionHostManagement.activateByEvent(
-    `onDiagnostic:${editor.languageId}`
-  )
-  const diagnostics = await extensionHost.invoke(
-    /* ExtensionHost.executeDiagnosticProvider */ 'ExtensionHost.executeDiagnosticProvider',
-    /* documentId */ editor.id
-  )
-  Assert.array(diagnostics)
-  return diagnostics
+  return ExtensionHostShared.executeProviders({
+    event: `onDiagnostic:${editor.languageId}`,
+    method: 'ExtensionHost.executeDiagnosticProvider',
+    params: [editor.id],
+    noProviderFoundMessage: 'no diagnostic provider found',
+    combineResults,
+  })
 }

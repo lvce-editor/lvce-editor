@@ -5,21 +5,12 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js',
+  '../src/parts/ExtensionHost/ExtensionHostShared.js',
   () => {
     return {
-      invoke: jest.fn(() => {
+      executeProviders: jest.fn(() => {
         throw new Error('not implemented')
       }),
-    }
-  }
-)
-
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostManagement.js',
-  () => {
-    return {
-      activateByEvent: jest.fn(),
     }
   }
 )
@@ -27,12 +18,13 @@ jest.unstable_mockModule(
 const ExtensionHostDiagnostic = await import(
   '../src/parts/ExtensionHost/ExtensionHostDiagnostic.js'
 )
-const ExtensionHost = await import(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js'
+const ExtensionHostShared = await import(
+  '../src/parts/ExtensionHost/ExtensionHostShared.js'
 )
+
 test('executeDiagnosticProvider - no results', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     return []
   })
   expect(
@@ -42,7 +34,7 @@ test('executeDiagnosticProvider - no results', async () => {
 
 test('executeDiagnosticProvider - error', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(
