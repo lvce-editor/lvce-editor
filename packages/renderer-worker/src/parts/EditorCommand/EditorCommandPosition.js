@@ -5,8 +5,9 @@ export const at = (editor, x, y, offset) => {
   Assert.number(x)
   Assert.number(y)
   Assert.number(offset)
-  const rowIndex = Math.floor(
-    (y - editor.top + editor.deltaY) / editor.rowHeight
+  const rowIndex = Math.max(
+    Math.floor((y - editor.top + editor.deltaY) / editor.rowHeight),
+    0
   )
   const columnIndex = offset
   return {

@@ -204,6 +204,7 @@ const getTotalOffset = (event) => {
 }
 
 const handleMouseDown = (event) => {
+  console.log('mousedown event')
   if (isRightClick(event)) {
     return
   }
@@ -211,6 +212,7 @@ const handleMouseDown = (event) => {
   const totalOffset = getTotalOffset(event)
   const x = event.clientX
   const y = event.clientY
+  console.log('detail', event.detail)
   switch (event.detail) {
     case 1:
       handleSingleClick(event, x, y, totalOffset)
