@@ -1,5 +1,3 @@
-import * as Assert from '../Assert/Assert.js'
-import * as ExtensionHostManagement from './ExtensionHostManagement.js'
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 const combineResults = (results) => {
