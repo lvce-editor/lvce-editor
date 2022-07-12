@@ -19,11 +19,18 @@ const toUiStatusBarItem = (extensionHostStatusBarItem) => {
   }
 }
 
+const toUiStatusBarItems = (statusBarItems) => {
+  if (!statusBarItems) {
+    return []
+  }
+  return statusBarItems.map(toUiStatusBarItems)
+}
+
 export const loadContent = async (state) => {
   const extensionStatusBarItems =
     await ExtensionHostStatusBarItems.getStatusBarItems()
 
-  const uiStatusBarItems = extensionStatusBarItems.map(toUiStatusBarItem)
+  const uiStatusBarItems = toUiStatusBarItems(extensionStatusBarItems)
   return {
     ...state,
     statusBarItemsLeft: [
