@@ -5,11 +5,12 @@ export const executeProviders = async (
   method,
   params,
   noProviderFoundMessage = 'No provider found',
+  noProviderFoundResult,
   combineResults
 ) => {
   const extensionHosts = await ExtensionHostManagement.activateByEvent(event)
   if (extensionHosts.length === 0) {
-    throw new Error(noProviderFoundMessage)
+    return noProviderFoundResult ?? undefined
   }
   const promises = []
   for (const extensionHost of extensionHosts) {

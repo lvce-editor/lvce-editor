@@ -4,7 +4,7 @@ const combineResults = (results) => {
   return results[0]
 }
 
-export const executeBraceCompletionProvider = async (
+export const executeBraceCompletionProvider = (
   editor,
   offset,
   openingBrace

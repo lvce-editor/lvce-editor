@@ -4,7 +4,7 @@ const combineResults = (results) => {
   return results[0]
 }
 
-export const executeClosingTagProvider = async (
+export const executeClosingTagProvider = (
   textDocument,
   offset,
   openingBrace

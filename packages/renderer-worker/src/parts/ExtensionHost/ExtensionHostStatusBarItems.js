@@ -20,18 +20,19 @@ const combineResults = (results) => {
   return []
 }
 
-export const getStatusBarItems = async () => {
+export const getStatusBarItems = () => {
   return ExtensionHostShared.executeProviders({
     event: 'onStatusBarItem',
     method: 'ExtensionHost.getStatusBarItems',
     params: [],
     noProviderFoundMessage: 'No status bar item provider found',
+    noProviderFoundResult: [],
     combineResults,
   })
 }
 
 // TODO add function to dispose listener
-export const onChange = async (listener) => {
+export const onChange = (listener) => {
   const id = Listener.register(listener)
   return ExtensionHostShared.execute({
     method: 'ExtensionHostStatusBar.registerChangeListener',

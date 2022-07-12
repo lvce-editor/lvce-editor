@@ -4,7 +4,7 @@ const combineResults = (results) => {
   return results[0]
 }
 
-export const executeImplementationProvider = async (editor, offset) => {
+export const executeImplementationProvider = (editor, offset) => {
   return ExtensionHostShared.executeProviders({
     event: `onImplementation:${editor.languageId}`,
     method: 'ExtensionHostImplementation.executeImplementationProvider',

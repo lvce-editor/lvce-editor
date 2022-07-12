@@ -6,7 +6,7 @@ import * as ExtensionHostShared from './ExtensionHostShared.js'
 // to extension host, extension host could just read file directly
 // or shared process could send extension host file to open
 // after sending file to renderer process
-export const handleEditorCreate = async (editor) => {
+export const handleEditorCreate = (editor) => {
   const text = TextDocument.getText(editor)
   return ExtensionHostShared.execute({
     method: 'ExtensionHostTextDocument.syncFull',
@@ -14,14 +14,14 @@ export const handleEditorCreate = async (editor) => {
   })
 }
 
-export const handleEditorChange = async (editor, changes) => {
+export const handleEditorChange = (editor, changes) => {
   return ExtensionHostShared.execute({
     method: 'ExtensionHostTextDocument.syncIncremental',
     params: [editor.id, changes],
   })
 }
 
-export const handleEditorLanguageChange = async (editor) => {
+export const handleEditorLanguageChange = (editor) => {
   return ExtensionHostShared.execute({
     method: 'ExtensionHostTextDocument.setLanguageId',
     params: [editor.id, editor.languageId],
