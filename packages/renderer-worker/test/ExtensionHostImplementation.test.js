@@ -5,21 +5,12 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js',
+  '../src/parts/ExtensionHost/ExtensionHostShared.js',
   () => {
     return {
-      invoke: jest.fn(() => {
+      executeProviders: jest.fn(() => {
         throw new Error('not implemented')
       }),
-    }
-  }
-)
-
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostManagement.js',
-  () => {
-    return {
-      activateByEvent: jest.fn(),
     }
   }
 )
@@ -27,26 +18,34 @@ jest.unstable_mockModule(
 const ExtensionHostImplementation = await import(
   '../src/parts/ExtensionHost/ExtensionHostImplementation.js'
 )
-const ExtensionHost = await import(
-  '../src/parts/ExtensionHost/ExtensionHostCore.js'
+const ExtensionHostShared = await import(
+  '../src/parts/ExtensionHost/ExtensionHostShared.js'
 )
 
 test('executeImplementationProvider - no implementations found', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(() => {
     return []
   })
   expect(
     await ExtensionHostImplementation.executeImplementationProvider(
-      { id: 1, uri: '' },
+      { id: 1, languageId: 'test' },
       0
     )
   ).toEqual([])
+  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledWith({
+    combineResults: expect.any(Function),
+    event: 'onImplementation:test',
+    method: 'ExtensionHostImplementation.executeImplementationProvider',
+    noProviderFoundMessage: 'No implementation provider found',
+    params: [1, 0],
+  })
 })
 
 test('executeImplementationProvider - single implementation found', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(() => {
     return [
       {
         uri: '/test/index.js',
@@ -73,7 +72,7 @@ test('executeImplementationProvider - single implementation found', async () => 
 
 test('executeImplementationProvider - error - implementationProvider throws error', async () => {
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation(() => {
+  ExtensionHostShared.executeProviders.mockImplementation(() => {
     throw new Error(
       'Failed to execute implementation provider: TypeError: x is not a function'
     )
