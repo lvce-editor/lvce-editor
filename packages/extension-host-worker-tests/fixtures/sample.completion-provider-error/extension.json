@@ -1,4 +1,4 @@
 {
   "browser": "main.js",
-  "activation": ["onCompletion:test"]
+  "activation": ["onCompletion:xyz"]
 }

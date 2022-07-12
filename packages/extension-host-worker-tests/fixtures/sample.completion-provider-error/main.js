@@ -1,5 +1,5 @@
 const completionProvider = {
-  languageId: 'test',
+  languageId: 'xyz',
   provideCompletions(textDocument, offset) {
     throw new Error('oops')
   },

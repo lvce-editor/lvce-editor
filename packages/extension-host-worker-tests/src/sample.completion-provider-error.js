@@ -9,7 +9,7 @@ import {
 test('sample.completion-provider-error', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(
-    `${tmpDir}/test.js`,
+    `${tmpDir}/test.xyz`,
     `export const add = () => {}
 `
   )
@@ -17,7 +17,7 @@ test('sample.completion-provider-error', async () => {
     name: 'sample.completion-provider-error',
     folder: tmpDir,
   })
-  const testTxt = page.locator('text=test.js')
+  const testTxt = page.locator('text=test.xyz')
   await testTxt.click()
 
   const token = page.locator('.Token').first()

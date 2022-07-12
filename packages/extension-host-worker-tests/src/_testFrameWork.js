@@ -187,15 +187,51 @@ const createLocator = (selector, { nth = -1, hasText = '' } = {}) => {
   }
 }
 
+const getKeyOptions = (rawKey) => {
+  if (rawKey.includes('+')) {
+    const parts = rawKey.split('+')
+    let ctrlKey = false
+    let altKey = false
+    let spaceKey = false
+    let key = ''
+    console.log({ parts })
+    for (const part of parts) {
+      switch (part) {
+        case 'Control':
+          ctrlKey = true
+          break
+        case 'Space':
+          key = ' '
+          break
+        case 'Alt':
+          altKey = true
+          break
+        default:
+          key = part
+          break
+      }
+    }
+    return {
+      key,
+      ctrlKey,
+      altKey,
+    }
+  }
+  return rawKey
+}
+
 const createKeyBoard = () => {
   return {
     async press(key) {
+      console.log('press', key)
       const element = document.activeElement
+      const keyOptions = getKeyOptions(key)
       const options = {
-        key,
         cancelable: true,
         bubbles: true,
+        ...keyOptions,
       }
+      console.log({ options })
       ElementActions.keyDown(element, options)
       ElementActions.keyUp(element, options)
     },
