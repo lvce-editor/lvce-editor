@@ -42,6 +42,8 @@ const ensureError = (input) => {
 
 export const create = ({ name, resultShape, textDocumentRegistry }) => {
   const providers = Object.create(null)
+  const multipleResults = resultShape.type === 'array'
+  const methodName = multipleResults ? `provide${name}s` : `provide${name}`
   return {
     [`register${name}Provider`](provider) {
       providers[provider.languageId] = provider
@@ -50,10 +52,12 @@ export const create = ({ name, resultShape, textDocumentRegistry }) => {
       try {
         const textDocument = textDocumentRegistry.get(textDocumentId)
         const provider = providers[textDocument.languageId]
-        const multipleResults = resultShape.type === 'array'
-        const methodName = multipleResults
-          ? `provide${name}s`
-          : `provide${name}`
+        if (!provider) {
+          const spacedOutName = spaceOut(name)
+          throw new VError(
+            `No ${spacedOutName} provider found for ${textDocument.languageId}`
+          )
+        }
         const result = await provider[methodName](textDocumentId, ...params)
         const error = Validation.validate(result, resultShape)
         if (error) {
@@ -65,6 +69,15 @@ export const create = ({ name, resultShape, textDocumentRegistry }) => {
         const actualError = ensureError(error)
         const spacedOutName = spaceOut(name)
         if (actualError && actualError.message) {
+          if (
+            actualError.message === 'provider[methodName] is not a function'
+          ) {
+            const camelCaseName = toCamelCase(name)
+
+            throw new VError(
+              `Failed to execute ${spacedOutName} provider: VError: ${camelCaseName}Provider.${methodName} is not a function`
+            )
+          }
           const message =
             actualError.name === 'Error'
               ? `${actualError.message}`
