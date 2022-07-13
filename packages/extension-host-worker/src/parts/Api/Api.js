@@ -3,15 +3,13 @@ import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHost
 import * as ExtensionHostTextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
+import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
 
 export const create = () => {
   // prettier-ignore
   return  {
     ...ExtensionHostBraceCompletion.createApi(),
-    // Completion
     ...ExtensionHostCompletion.createApi(),
-
-    // References
     ...ExtensionHostReference.createApi(),
 
 
@@ -27,7 +25,7 @@ export const create = () => {
     setLanguageId: ExtensionHostTextDocument.setLanguageId,
     getTextDocuments: ExtensionHostTextDocument.getTextDocuments,
 
-    // Type Definition
+    ...ExtensionHostTabCompletion.createApi(),
     ...ExtensionHostTypeDefinition.createApi(),
   }
 }
