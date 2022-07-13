@@ -39,7 +39,6 @@ const getWebExtensionManifest = async (path) => {
 export const addWebExtension = async (path) => {
   const manifest = await getWebExtensionManifest(path)
   state.webExtensions.push(manifest)
-  console.log({ manifest })
   if (manifest.languages) {
     // TODO handle case when languages is not of type array
     await Languages.addLanguages(manifest.languages)

@@ -153,7 +153,6 @@ export const activateByEvent = async (event) => {
         managerWithExtensions.manager.ipc
       )
     Assert.object(extensionHost)
-    console.log({ extensionHost })
     for (const extension of managerWithExtensions.toActivate) {
       // TODO tell extension host to activate extension
       await extensionHost.invoke(

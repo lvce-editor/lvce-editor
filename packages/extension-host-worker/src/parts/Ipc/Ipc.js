@@ -24,12 +24,10 @@ const improveError = (error) => {
 export const listen = () => {
   const ipc = getIpc()
   const handleMessage = async (event) => {
-    console.log({ event })
     const message = event.data
     if (message.method) {
       try {
         const result = await Command.execute(message.method, ...message.params)
-        console.log({ result })
         ipc.send({
           jsonrpc: '2.0',
           id: message.id,
