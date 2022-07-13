@@ -124,3 +124,8 @@ export const showLoading = (state, x, y) => {
   Widget.append($Viewlet)
   Focus.setAdditionalFocus('editorCompletions')
 }
+
+export const handleError = (state, error) => {
+  const { $Viewlet } = state
+  $Viewlet.textContent = `${error}`
+}

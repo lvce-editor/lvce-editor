@@ -213,6 +213,7 @@ export const load = async (viewlet, focus = false) => {
           /* id */ viewlet.id
         )
       }
+      console.log({ error })
       await RendererProcess.invoke(
         /* viewlet.handleError */ 'Viewlet.handleError',
         /* id */ viewlet.id,
