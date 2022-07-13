@@ -4,7 +4,10 @@ import { readdir, rm } from 'fs/promises'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
-const SKIPPED = ['sample.reference-provider-error.html']
+const SKIPPED = [
+  'sample.reference-provider-error.html',
+  'sample.reference-provider-no-results.html',
+]
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..', '..', '..')

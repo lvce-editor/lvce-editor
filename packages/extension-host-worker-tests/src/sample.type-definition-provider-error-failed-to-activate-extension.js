@@ -36,7 +36,9 @@ add(1, 2)
 
   const overlayMessage = page.locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
-  // TODO should show overlay with stack trace in development mode
-  // TODO should print extension id and error message
-  await expect(overlayMessage).toHaveText('Error: Failed to activate extension')
+  // TODO error message is too long
+  // TODO probably should just display "failed to execute type definition provider: TypeError: x is not a function"
+  await expect(overlayMessage).toHaveText(
+    'Error: Failed to activate extension sample.type-definition-provider-error-failed-to-activate-extension: TypeError: x is not a function'
+  )
 })
