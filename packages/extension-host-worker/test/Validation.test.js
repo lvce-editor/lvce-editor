@@ -51,3 +51,11 @@ test('validate - object property must be of type number but is missing', () => {
     `item.endOffset must be of type number`
   )
 })
+
+test('validate - item must be of type object - no properties', () => {
+  const item = {}
+  const shape = {
+    type: 'object',
+  }
+  expect(Validation.validate(item, shape)).toBe(undefined)
+})
