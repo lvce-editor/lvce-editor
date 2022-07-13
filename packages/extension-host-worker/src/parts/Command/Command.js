@@ -2,6 +2,7 @@ import * as ExtensionHostExtension from '../ExtensionHostExtension/ExtensionHost
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
 import * as ExtensionHostTextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
+import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 
 const getFn = (method) => {
   switch (method) {
@@ -15,6 +16,8 @@ const getFn = (method) => {
       return ExtensionHostCompletion.executeCompletionProvider
     case 'ExtensionHostTextDocument.syncFull':
       return ExtensionHostTextDocument.syncFull
+    case 'ExtensionHostTypeDefinition.executeTypeDefinitionProvider':
+      return ExtensionHostTypeDefinition.executeTypeDefinitionProvider
     default:
       throw new Error(`method not found: ${method}`)
   }
