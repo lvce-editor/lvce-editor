@@ -67,3 +67,18 @@ export const executeDefinitionProvider = async (textDocumentId, offset) => {
     })
   }
 }
+
+export const createDefinitionRegistry = ({ TextDocuments }) => {
+  const registry = Registry.create({
+    name: 'Definition',
+  })
+  return {
+    registerDefinitionProvider(provider) {
+      registry.register(provider)
+    },
+    executeDefinitionProvider(textDocumentId, offset) {
+      const textDocument = TextDocuments.get(textDocumentId)
+      const provider = registry.get(textDocument.languageId)
+    },
+  }
+}

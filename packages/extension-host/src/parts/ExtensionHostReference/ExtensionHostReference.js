@@ -1,6 +1,7 @@
 import VError from 'verror'
 import { ExecutionError } from '../Error/Error.js'
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
+import * as Registry from '../Registry/Registry.js'
 
 export const state = {
   referenceProviders: Object.create(null),
@@ -49,4 +50,9 @@ export const executeReferenceProvider = async (documentId, offset) => {
       message: 'Failed to execute reference provider',
     })
   }
+}
+
+export const createExtensionHostReferenceRegistry = () => {
+  const registry = Registry.create({ name: 'Reference' })
+  return registry
 }
