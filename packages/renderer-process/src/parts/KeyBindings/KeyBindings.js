@@ -104,6 +104,7 @@ const handleMatchingKeyBinding = (matchingKeyBinding) => {
 const handleKeyDown = (event) => {
   const identifier = getIdentifier(event)
   const matchingKeyBinding = getMatchingKeyBinding(identifier)
+  console.log({ identifier, matchingKeyBinding, event })
   if (!matchingKeyBinding) {
     return
   }

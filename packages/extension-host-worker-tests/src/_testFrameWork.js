@@ -217,7 +217,7 @@ const getKeyOptions = (rawKey) => {
       altKey,
     }
   }
-  return rawKey
+  return { key: rawKey }
 }
 
 const createKeyBoard = () => {
@@ -231,7 +231,6 @@ const createKeyBoard = () => {
         bubbles: true,
         ...keyOptions,
       }
-      console.log({ options })
       ElementActions.keyDown(element, options)
       ElementActions.keyUp(element, options)
     },
@@ -336,6 +335,10 @@ const Conditions = {
     console.log(element.classList.contains('Focused'))
     return element.classList.contains(className)
   },
+  toHaveCss(element, { key, value }) {
+    const style = getComputedStyle(element)
+    return style[key] === value
+  },
 }
 
 const MultiElementConditions = {
@@ -368,6 +371,15 @@ const ConditionErrors = {
   },
   toBeHidden(locator) {
     return `expected ${locator.selector} to be hidden`
+  },
+  toHaveCss(locator, { key, value }) {
+    const [element] = querySelector(locator.selector)
+    if (!element) {
+      return `expected ${locator.selector} to have css ${key} ${value}`
+    }
+    const style = getComputedStyle(element)
+    const actual = style[key]
+    return `expected ${locator.selector} to have css ${key} ${value} but was ${actual}`
   },
 }
 
@@ -437,6 +449,12 @@ export const expect = (locator) => {
     },
     async toBeFocused() {
       return this.checkSingleElementCondition(Conditions.toBeFocused)
+    },
+    async toHaveCSS(key, value) {
+      return this.checkSingleElementCondition(Conditions.toHaveCss, {
+        key,
+        value,
+      })
     },
     async toHaveAttribute(key, value) {
       Assert.string(key, 'key must be of type string')
