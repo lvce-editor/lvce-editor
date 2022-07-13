@@ -6,7 +6,7 @@ import {
   writeFile,
 } from './_testFrameWork.js'
 
-test('sample.type-definition-no-result', async () => {
+test('sample.type-definition-provider-error', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(
     `${tmpDir}/test.xyz`,
@@ -18,7 +18,7 @@ add(1, 2)
     `
   )
   const page = await runWithExtension({
-    name: 'sample.type-definition-no-result',
+    name: 'sample.type-definition-provider-error',
     folder: tmpDir,
   })
   const testTxt = page.locator('text=test.xyz')

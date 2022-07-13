@@ -1,5 +1,5 @@
 const typeDefinitionProvider = {
-  languageId: 'javascript',
+  languageId: 'xyz',
   provideTypeDefinition(textDocument, offset) {
     throw new Error('oops')
   },

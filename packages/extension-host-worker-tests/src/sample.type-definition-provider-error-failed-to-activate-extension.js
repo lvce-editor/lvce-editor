@@ -6,7 +6,7 @@ import {
   writeFile,
 } from './_testFrameWork.js'
 
-test('sample.type-definition-no-result', async () => {
+test('sample.type-definition-provider-error-failed-to-activate-extension', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(
     `${tmpDir}/test.xyz`,
@@ -18,7 +18,7 @@ add(1, 2)
     `
   )
   const page = await runWithExtension({
-    name: 'sample.type-definition-no-result',
+    name: 'sample.type-definition-provider-error-failed-to-activate-extension',
     folder: tmpDir,
   })
   const testTxt = page.locator('text=test.xyz')
@@ -36,5 +36,7 @@ add(1, 2)
 
   const overlayMessage = page.locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
-  await expect(overlayMessage).toHaveText('No type definition found')
+  // TODO should show overlay with stack trace in development mode
+  // TODO should print extension id and error message
+  await expect(overlayMessage).toHaveText('Error: Failed to activate extension')
 })
