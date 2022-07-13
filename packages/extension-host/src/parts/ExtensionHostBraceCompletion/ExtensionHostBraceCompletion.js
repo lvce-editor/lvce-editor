@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import { ExecutionError } from '../Error/Error.js'
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
+import * as Registry from '../Registry/Registry.js'
 
 export const state = {
   braceCompletionProviderMap: Object.create(null),
@@ -55,4 +56,11 @@ export const executeBraceCompletionProvider = async (
       message: 'Failed to execute brace completion provider',
     })
   }
+}
+
+export const createBraceCompletionRegistry = () => {
+  const registry = Registry.create({
+    name: 'BraceCompletion',
+  })
+  return registry
 }

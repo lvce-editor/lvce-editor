@@ -21,8 +21,20 @@ import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/Exten
 import * as ExtensionHostTextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
+import * as Registry from '../Registry/Registry.js'
 
 const noop = () => {}
+
+// export const createApi = () => {
+//   const definitionRegistry = Registry.create({
+//     name: 'Definition',
+//     methods: {
+//       rename: {},
+//       executeRenameProvider() {},
+//       registerRenameProvider() {},
+//     },
+//   })
+// }
 
 // prettier-ignore
 export const vscode = {
