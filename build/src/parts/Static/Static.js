@@ -22,6 +22,10 @@ const copyJs = async () => {
     from: 'packages/renderer-worker/src',
     to: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src`,
   })
+  await Copy.copy({
+    from: 'packages/extension-host-worker/src',
+    to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src`,
+  })
 }
 
 const copyStaticFiles = async () => {
@@ -302,6 +306,12 @@ const applyJsOverrides = async () => {
     replacement: `'web'`,
   })
   await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
+    occurrence:
+      '/packages/extension-host-worker/src/extensionHostWorkerMain.js',
+    replacement: `/${commitHash}/packages/extension-host-worker/dist/extensionHostWorkerMain.js`,
+  })
+  await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/CacheStorage/CacheStorage.js`,
     occurrence: `const CACHE_NAME = 'lvce-runtime'`,
     replacement: `const CACHE_NAME = 'lvce-runtime-${commitHash}'`,
@@ -452,6 +462,14 @@ const bundleJs = async () => {
       `build/.tmp/dist/${commitHash}/packages/renderer-worker`
     ),
     from: 'src/rendererWorkerMain.js',
+    platform: 'webworker',
+    codeSplitting: false,
+  })
+  await BundleJs.bundleJs({
+    cwd: Path.absolute(
+      `build/.tmp/dist/${commitHash}/packages/extension-host-worker`
+    ),
+    from: 'src/extensionHostWorkerMain.js',
     platform: 'webworker',
     codeSplitting: false,
   })
