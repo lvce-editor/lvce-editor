@@ -1,6 +1,6 @@
 import { runWithExtension, test, expect } from './_testFrameWork.js'
 
-test('sample.command-provider-error-not-registered-in-js', async () => {
+test.skip('sample.command-provider-error-not-registered-in-js', async () => {
   const page = await runWithExtension({
     name: 'sample.command-provider-error-not-registered-in-js',
   })

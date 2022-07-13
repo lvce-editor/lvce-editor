@@ -1,6 +1,6 @@
 import { runWithExtension, expect, test } from './_testFrameWork.js'
 
-test('sample.command-provider-without-label-and-id', async () => {
+test.skip('sample.command-provider-without-label-and-id', async () => {
   const page = await runWithExtension({
     name: 'sample.command-provider-without-label-and-id',
   })
