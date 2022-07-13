@@ -184,3 +184,7 @@ export const getConfigPath = () => {
 export const getCachePath = () => {
   return state.getCachePath()
 }
+
+export const getExtensionHostWorkerUrl = () => {
+  return '/packages/extension-host-worker/src/extensionHostWorkerMain.js'
+}
