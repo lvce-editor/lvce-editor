@@ -1,26 +1,23 @@
 import * as ExtensionHostReference from '../src/parts/ExtensionHostReference/ExtensionHostReference.js'
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
-beforeEach(() => {
-  ExtensionHostReference.state.referenceProviders = Object.create(null)
-  TextDocument.state.textDocuments = Object.create(null)
-})
-
 test('executeReferenceProvider - no results', async () => {
-  ExtensionHostReference.registerReferenceProvider({
+  const textDocumentRegistry = TextDocument.createRegistry()
+  const api = ExtensionHostReference.createApi({ textDocumentRegistry })
+  api.registerReferenceProvider({
     languageId: 'javascript',
     async provideReferences() {
       return []
     },
   })
-  TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  expect(await ExtensionHostReference.executeReferenceProvider(1, 0)).toEqual(
-    []
-  )
+  textDocumentRegistry.syncFull('/test.index.js', 1, 'javascript', '')
+  expect(await api.executeReferenceProvider(1, 0)).toEqual([])
 })
 
 test('executeReferenceProvider - single result', async () => {
-  ExtensionHostReference.registerReferenceProvider({
+  const textDocumentRegistry = TextDocument.createRegistry()
+  const api = ExtensionHostReference.createApi({ textDocumentRegistry })
+  api.registerReferenceProvider({
     languageId: 'javascript',
     async provideReferences() {
       return [
@@ -33,8 +30,8 @@ test('executeReferenceProvider - single result', async () => {
       ]
     },
   })
-  TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  expect(await ExtensionHostReference.executeReferenceProvider(1, 0)).toEqual([
+  textDocumentRegistry.syncFull('/test.index.js', 1, 'javascript', '')
+  expect(await api.executeReferenceProvider(1, 0)).toEqual([
     {
       endOffset: 0,
       lineText: '',
@@ -45,16 +42,24 @@ test('executeReferenceProvider - single result', async () => {
 })
 
 test('executeReferenceProvider - error - reference provider throws error', async () => {
-  ExtensionHostReference.registerReferenceProvider({
+  const textDocumentRegistry = TextDocument.createRegistry({
+    initialFiles: [
+      {
+        id: 1,
+        path: '/test/index.js',
+        languageId: 'javascript',
+        content: '',
+      },
+    ],
+  })
+  const api = ExtensionHostReference.createApi({ textDocumentRegistry })
+  api.registerReferenceProvider({
     languageId: 'javascript',
     provideReferences() {
       throw new TypeError('x is not a function')
     },
   })
-  TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostReference.executeReferenceProvider(1, 0)
-  ).rejects.toThrowError(
+  await expect(api.executeReferenceProvider(1, 0)).rejects.toThrowError(
     new Error('Failed to execute reference provider', {
       cause: new TypeError('x is not a function'),
     })
@@ -62,14 +67,22 @@ test('executeReferenceProvider - error - reference provider throws error', async
 })
 
 test('executeReferenceProvider - error - referenceProvider has wrong shape', async () => {
-  ExtensionHostReference.registerReferenceProvider({
+  const textDocumentRegistry = TextDocument.createRegistry({
+    initialFiles: [
+      {
+        id: 1,
+        path: '/test/index.js',
+        languageId: 'javascript',
+        content: '',
+      },
+    ],
+  })
+  const api = ExtensionHostReference.createApi({ textDocumentRegistry })
+  api.registerReferenceProvider({
     languageId: 'javascript',
     abc() {},
   })
-  TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostReference.executeReferenceProvider(1, 0)
-  ).rejects.toThrowError(
+  await expect(api.executeReferenceProvider(1, 0)).rejects.toThrowError(
     new Error('Failed to execute reference provider', {
       cause: new Error(
         `TypeError: referenceProvider.provideReferences is not a function`
@@ -79,10 +92,18 @@ test('executeReferenceProvider - error - referenceProvider has wrong shape', asy
 })
 
 test('executeReferenceProvider - error - no reference provider found', async () => {
-  TextDocument.syncFull('/test.index.js', 1, 'javascript', '')
-  await expect(
-    ExtensionHostReference.executeReferenceProvider(1, 0)
-  ).rejects.toThrowError(
+  const textDocumentRegistry = TextDocument.createRegistry({
+    initialFiles: [
+      {
+        id: 1,
+        path: '/test/index.js',
+        languageId: 'javascript',
+        content: '',
+      },
+    ],
+  })
+  const api = ExtensionHostReference.createApi({ textDocumentRegistry })
+  await expect(api.executeReferenceProvider(1, 0)).rejects.toThrowError(
     new Error('Failed to execute reference provider', {
       cause: new Error('no reference provider found for javascript'),
     })

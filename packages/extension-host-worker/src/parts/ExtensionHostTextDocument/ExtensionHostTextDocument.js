@@ -339,3 +339,35 @@ export const setLanguageId = (textDocumentId, languageId) => {
 export const getTextDocuments = () => {
   return Object.values(state.textDocuments)
 }
+
+export const createRegistry = ({ initialFiles = [] } = {}) => {
+  const state = {
+    /** @type{any[]} */
+    onDidOpenEditorListeners: [],
+    /** @type{any[]} */
+    onWillChangeEditorListeners: [],
+    /** @type{any[]} */
+    onDidChangeTextDocumentListeners: [],
+    /** @type{any[]} */
+    onDidSaveTextDocumentListeners: [],
+    textDocuments: Object.create(null),
+  }
+  for (const initialFile of initialFiles) {
+    state.textDocuments[initialFile.id] = initialFile
+  }
+  return {
+    syncFull(uri, textDocumentId, languageId, text) {
+      const textDocument = {
+        uri,
+        documentId: textDocumentId,
+        languageId,
+        text,
+      }
+      state.textDocuments[textDocumentId] = textDocument
+    },
+    get(textDocumentId) {
+      const textDocument = state.textDocuments[textDocumentId]
+      return textDocument
+    },
+  }
+}
