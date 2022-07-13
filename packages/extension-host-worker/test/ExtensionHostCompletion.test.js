@@ -30,7 +30,7 @@ test('executeCompletionProvider - when completion provider has no result', async
   expect(await api.executeCompletionProvider(1, 1)).toEqual([])
 })
 
-test.skip('execute - when tab completion provider has wrong shape', async () => {
+test('execute - when tab completion provider has wrong shape', async () => {
   const textDocumentRegistry = TextDocument.createRegistry({
     initialFiles: [
       {
@@ -48,7 +48,7 @@ test.skip('execute - when tab completion provider has wrong shape', async () => 
   })
   await expect(api.executeCompletionProvider(1, 1)).rejects.toThrowError(
     new Error(
-      'Failed to execute completion provider: TypeError: completionProvider.provideCompletions is not a function'
+      'Failed to execute completion provider: VError: completionProvider.provideCompletions is not a function'
     )
   )
 })
@@ -92,7 +92,7 @@ test('executeCompletionProvider - when completion provider has normal result', a
   ])
 })
 
-test.skip('executeCompletionProvider - when completion provider throws error', async () => {
+test('executeCompletionProvider - completion provider throws error', async () => {
   const textDocumentRegistry = TextDocument.createRegistry({
     initialFiles: [
       {
@@ -107,10 +107,12 @@ test.skip('executeCompletionProvider - when completion provider throws error', a
   api.registerCompletionProvider({
     languageId: 'unknown',
     provideCompletions(textDocument, offset) {
-      throw new Error('x is not a function')
+      throw new TypeError('x is not a function')
     },
   })
   await expect(api.executeCompletionProvider(1, 1)).rejects.toThrowError(
-    new Error('Failed to execute completion provider: x is not a function')
+    new Error(
+      'Failed to execute completion provider: TypeError: x is not a function'
+    )
   )
 })
