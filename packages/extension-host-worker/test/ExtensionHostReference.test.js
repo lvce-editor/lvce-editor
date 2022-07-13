@@ -60,9 +60,9 @@ test('executeReferenceProvider - error - reference provider throws error', async
     },
   })
   await expect(api.executeReferenceProvider(1, 0)).rejects.toThrowError(
-    new Error('Failed to execute reference provider', {
-      cause: new TypeError('x is not a function'),
-    })
+    new Error(
+      'Failed to execute reference provider: TypeError: x is not a function'
+    )
   )
 })
 
@@ -83,11 +83,9 @@ test('executeReferenceProvider - error - referenceProvider has wrong shape', asy
     abc() {},
   })
   await expect(api.executeReferenceProvider(1, 0)).rejects.toThrowError(
-    new Error('Failed to execute reference provider', {
-      cause: new Error(
-        `TypeError: referenceProvider.provideReferences is not a function`
-      ),
-    })
+    new Error(
+      'Failed to execute reference provider: VError: referenceProvider.provideReferences is not a function'
+    )
   )
 })
 
@@ -104,8 +102,8 @@ test('executeReferenceProvider - error - no reference provider found', async () 
   })
   const api = ExtensionHostReference.createApi({ textDocumentRegistry })
   await expect(api.executeReferenceProvider(1, 0)).rejects.toThrowError(
-    new Error('Failed to execute reference provider', {
-      cause: new Error('no reference provider found for javascript'),
-    })
+    new Error(
+      `Failed to execute reference provider: VError: No reference provider found for javascript`
+    )
   )
 })
