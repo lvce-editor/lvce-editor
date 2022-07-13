@@ -1,6 +1,6 @@
 import { runWithExtension, test, expect } from './_testFrameWork.js'
 
-test('sample.command-never-resolves', async () => {
+test.skip('sample.command-never-resolves', async () => {
   const page = await runWithExtension({
     name: 'sample.command-never-resolves',
   })
