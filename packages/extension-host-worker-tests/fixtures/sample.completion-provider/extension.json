@@ -1,6 +1,6 @@
 {
   "browser": "main.js",
-  "activation": ["onTypeDefinition:xyz"],
+  "activation": ["onCompletion:xyz"],
   "languages": [
     {
       "id": "xyz",
