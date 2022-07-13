@@ -3,33 +3,29 @@ import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHost
 import * as ExtensionHostTextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 
-// prettier-ignore
-export const vscode = {
+export const create = () => {
+  // prettier-ignore
+  return  {
+    // Completion
+    ...ExtensionHostCompletion.createApi(),
 
-  // Completion
-  executeCompletionProvider: ExtensionHostCompletion.executeCompletionProvider,
-  registerCompletionProvider: ExtensionHostCompletion.registerCompletionProvider,
-  unregisterCompletionProvider: ExtensionHostCompletion.unregisterCompletionProvider,
-
-
-  // References
-  registerReferenceProvider: ExtensionHostReference.registerReferenceProvider,
-  executeReferenceProvider: ExtensionHostReference.executeReferenceProvider,
+    // References
+    ...ExtensionHostReference.createApi(),
 
 
-  // TextDocument
-  onDidOpenTextDocument: ExtensionHostTextDocument.onDidOpenTextDocument,
-  onWillChangeTextDocument: ExtensionHostTextDocument.onWillChangeTextDocument,
-  onDidChangeTextDocument: ExtensionHostTextDocument.onDidChangeTextDocument,
-  onDidSaveTextDocument: ExtensionHostTextDocument.onDidSaveTextDocument,
-  getTextFromTextDocument: ExtensionHostTextDocument.getText,
-  applyEdit: ExtensionHostTextDocument.applyEdit,
-  getPosition: ExtensionHostTextDocument.getPosition,
-  getOffset: ExtensionHostTextDocument.getOffset,
-  setLanguageId: ExtensionHostTextDocument.setLanguageId,
-  getTextDocuments: ExtensionHostTextDocument.getTextDocuments,
+    // TextDocument
+    onDidOpenTextDocument: ExtensionHostTextDocument.onDidOpenTextDocument,
+    onWillChangeTextDocument: ExtensionHostTextDocument.onWillChangeTextDocument,
+    onDidChangeTextDocument: ExtensionHostTextDocument.onDidChangeTextDocument,
+    onDidSaveTextDocument: ExtensionHostTextDocument.onDidSaveTextDocument,
+    getTextFromTextDocument: ExtensionHostTextDocument.getText,
+    applyEdit: ExtensionHostTextDocument.applyEdit,
+    getPosition: ExtensionHostTextDocument.getPosition,
+    getOffset: ExtensionHostTextDocument.getOffset,
+    setLanguageId: ExtensionHostTextDocument.setLanguageId,
+    getTextDocuments: ExtensionHostTextDocument.getTextDocuments,
 
-  // Type Definition
-  registerTypeDefinitionProvider: ExtensionHostTypeDefinition.registerTypeDefinitionProvider,
-  executeTypeDefinitionProvider: ExtensionHostTypeDefinition.executeTypeDefinitionProvider
+    // Type Definition
+    ...ExtensionHostTypeDefinition.createApi(),
+  }
 }
