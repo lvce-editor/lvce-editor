@@ -69,7 +69,7 @@ test('getLanguageConfiguration - error - languages must be loaded before request
   )
 })
 
-test('hydrate', async () => {
+test.skip('hydrate', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
