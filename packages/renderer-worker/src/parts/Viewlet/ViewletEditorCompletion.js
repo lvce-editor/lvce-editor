@@ -56,7 +56,7 @@ const getIconClassName = (item) => {
   switch (item.kind) {
     case /* Property */ 1:
       return 'IconProperty'
-    case 2:
+    case /* Value */ 2:
       return 'IconValue'
     case /* Function */ 3:
       return 'IconFunction'
