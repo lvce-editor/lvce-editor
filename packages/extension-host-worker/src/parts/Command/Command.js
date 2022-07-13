@@ -20,7 +20,7 @@ const getFn = (method) => {
   }
 }
 
-export const execute = async (method, ...params) => {
+export const execute = (method, ...params) => {
   const fn = getFn(method)
-  await fn(...params)
+  return fn(...params)
 }

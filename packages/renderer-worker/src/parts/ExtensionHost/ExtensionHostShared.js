@@ -17,6 +17,7 @@ export const executeProviders = async ({
     promises.push(extensionHost.invoke(method, ...params))
   }
   const results = await Promise.all(promises)
+  console.log({ results })
   const combinedResult = combineResults(results)
   return combinedResult
 }

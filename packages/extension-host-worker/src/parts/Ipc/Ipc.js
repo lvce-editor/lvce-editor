@@ -29,6 +29,7 @@ export const listen = () => {
     if (message.method) {
       try {
         const result = await Command.execute(message.method, ...message.params)
+        console.log({ result })
         ipc.send({
           jsonrpc: '2.0',
           id: message.id,
