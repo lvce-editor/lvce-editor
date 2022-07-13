@@ -53,7 +53,8 @@ export const editorGoToTypeDefinition = async (
       return EditorShowMessage.editorShowMessage(
         editor,
         position,
-        'No type definition found'
+        'No type definition found',
+        /* isError */ false
       )
     }
 
@@ -103,7 +104,8 @@ export const editorGoToTypeDefinition = async (
       await EditorShowMessage.editorShowMessage(
         /* editor */ editor,
         /* position */ position,
-        /* message */ displayErrorMessage
+        /* message */ displayErrorMessage,
+        /* isError */ false
       )
       return editor
     }
@@ -114,7 +116,8 @@ export const editorGoToTypeDefinition = async (
     await EditorShowMessage.editorShowMessage(
       /* editor */ editor,
       /* position */ position,
-      /* message */ displayErrorMessage
+      /* message */ displayErrorMessage,
+      /* isError */ true
     )
     return editor
   }

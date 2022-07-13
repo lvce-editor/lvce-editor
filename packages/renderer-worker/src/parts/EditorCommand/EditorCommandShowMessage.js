@@ -6,7 +6,7 @@ export const state = {
   timeout: -1,
 }
 
-export const editorShowMessage = async (editor, position, message) => {
+export const editorShowMessage = async (editor, position, message, isError) => {
   Assert.object(editor)
   Assert.object(position)
   Assert.string(message)
@@ -21,14 +21,17 @@ export const editorShowMessage = async (editor, position, message) => {
     /* y */ y,
     /* content */ displayErrorMessage
   )
-  const handleTimeout = () => {
-    console.log('ran timeout fn')
-    editorHideMessage(editor)
-  }
 
-  // TODO use wrapper timing module instead of this
-  // @ts-ignore
-  state.timeout = setTimeout(handleTimeout, 3_000)
+  if (!isError) {
+    const handleTimeout = () => {
+      console.log('ran timeout fn')
+      editorHideMessage(editor)
+    }
+
+    // TODO use wrapper timing module instead of this
+    // @ts-ignore
+    state.timeout = setTimeout(handleTimeout, 3_000)
+  }
   return editor
 }
 
