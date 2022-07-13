@@ -1,12 +1,26 @@
+const EXTENSION_HOST_WORKER_URL =
+  '/packages/extension-host-worker/src/extensionHostWorkerMain.js'
+
+const tryToGetActualErrorMessage = async (extensionHostWorkerUrl) => {
+  try {
+    const response = await fetch(extensionHostWorkerUrl)
+    switch (response.status) {
+      case 404:
+        return 'Failed to start extension host worker: Not found (404)'
+      default:
+        return 'Failed to start extension host worker: Unknown Error'
+    }
+  } catch (error) {
+    return 'Failed to start extension host worker: Unknown Error'
+  }
+}
+
 export const listen = async () => {
   // TODO implement message port fallback for this
-  const worker = new Worker(
-    '/packages/extension-host-worker/src/extensionHostWorkerMain.js',
-    {
-      type: 'module',
-      name: 'Extension Host',
-    }
-  )
+  const worker = new Worker(EXTENSION_HOST_WORKER_URL, {
+    type: 'module',
+    name: 'Extension Host',
+  })
   await new Promise((resolve, reject) => {
     const cleanup = () => {
       worker.onmessage = null
@@ -20,9 +34,14 @@ export const listen = async () => {
         reject(new Error('unexpected first message from extension host worker'))
       }
     }
-    const handleFirstError = () => {
+    const handleFirstError = async (event) => {
+      console.log(event)
       cleanup()
-      reject(new Error('Failed to start extension host worker'))
+
+      const actualErrorMessage = await tryToGetActualErrorMessage(
+        EXTENSION_HOST_WORKER_URL
+      )
+      reject(new Error(actualErrorMessage))
     }
     worker.onmessage = handleFirstMessage
     worker.onerror = handleFirstError
