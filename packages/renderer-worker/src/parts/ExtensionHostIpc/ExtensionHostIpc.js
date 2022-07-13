@@ -2,6 +2,7 @@ import * as ExtensionHostIpcWithSharedProcess from './ExtensionHostIpcWithShared
 import * as ExtensionHostIpcWithWebWorker from './ExtensionHostIpcWithWebWorker.js'
 import * as Callback from '../Callback/Callback.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import { JsonRpcError } from '../Errors/Errors.js'
 
 export const Methods = {
   SharedProcess: 1,
@@ -27,18 +28,35 @@ const isErrorMessage = (message) => {
   return 'error' in message
 }
 
+const restoreError = (error) => {
+  if (error instanceof Error) {
+    return error
+  }
+  if (error.code && error.code === -32601) {
+    console.log('create json rpc error')
+    const restoredError = new JsonRpcError(error.message)
+    restoredError.stack = error.stack
+    return restoredError
+  }
+  const restoredError = new Error(error.message)
+  restoredError.stack = error.stack
+  return restoredError
+}
+
 const handleMessage = (event) => {
   const message = event.data
   if (message.id) {
     if (isResultMessage(message)) {
       Callback.resolve(message.id, message.result)
     } else if (isErrorMessage(message)) {
-      Callback.reject(message.id, message.error)
+      const restoredError = restoreError(message.error)
+      console.log({ restoredError })
+      Callback.reject(message.id, restoredError)
     } else {
-      throw new Error('unexpected message type')
+      throw new JsonRpcError('unexpected message type')
     }
   } else {
-    throw new Error('unexpected message type')
+    throw new JsonRpcError('unexpected message type')
   }
 }
 

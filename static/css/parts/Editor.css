@@ -167,4 +167,6 @@
   background-color: #063b49;
   border: 1px solid #007acc;
   color: white;
+  pointer-events: all;
+  user-select: text;
 }

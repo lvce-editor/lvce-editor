@@ -15,6 +15,12 @@ const getIpc = () => {
   }
 }
 
+const improveError = (error) => {
+  if (!error) {
+    return new Error('<unknown error>')
+  }
+}
+
 export const listen = () => {
   const ipc = getIpc()
   const handleMessage = async (event) => {
@@ -33,11 +39,27 @@ export const listen = () => {
         if (error && error.cause) {
           console.error(error.cause)
         }
-        ipc.send({
-          jsonrpc: '2.0',
-          id: message.id,
-          error,
-        })
+        if (
+          error &&
+          error.message &&
+          error.message.startsWith('method not found')
+        ) {
+          ipc.send({
+            jsonrpc: '2.0',
+            id: message.id,
+            error: {
+              code: -32601,
+              message: error.message,
+              data: error.stack,
+            },
+          })
+        } else {
+          ipc.send({
+            jsonrpc: '2.0',
+            id: message.id,
+            error,
+          })
+        }
       }
     }
   }
