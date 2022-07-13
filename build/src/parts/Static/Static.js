@@ -462,6 +462,11 @@ const copyTestFiles = async () => {
   await Copy.copy({
     from: 'packages/extension-host-worker-tests/src',
     to: `build/.tmp/dist/tests`,
+    ignore: ['videos'],
+  })
+  await Copy.copy({
+    from: 'packages/extension-host-worker-tests/fixtures',
+    to: `build/.tmp/dist/fixtures`,
   })
   const dirents = await ReadDir.readDir('build/.tmp/dist/tests')
   const appCssPath = `/${commitHash}/css/App.css`
