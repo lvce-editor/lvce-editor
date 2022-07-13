@@ -149,7 +149,8 @@ test('editorGoToTypeDefinition - error', async () => {
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
     editor.cursor,
-    'TypeError: x is not a function'
+    'TypeError: x is not a function',
+    true
   )
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith(new TypeError('x is not a function'))
@@ -185,7 +186,8 @@ test('editorGoToTypeDefinition - error - no type definition provider found', asy
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
     editor.cursor,
-    'No type definition provider found'
+    'No type definition provider found',
+    false
   )
   expect(spy).not.toHaveBeenCalled()
 })
@@ -217,6 +219,7 @@ test('editorGoToTypeDefinition - no type definition found', async () => {
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
     editor.cursor,
-    'No type definition found'
+    'No type definition found',
+    false
   )
 })
