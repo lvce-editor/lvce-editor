@@ -1,7 +1,7 @@
 import { runWithExtension, expect, test } from './_testFrameWork.js'
 import waitForExpect from 'wait-for-expect'
 
-test('sample.command-provider-error-command-null-in-extension-manifest', async () => {
+test.skip('sample.command-provider-error-command-null-in-extension-manifest', async () => {
   const page = await runWithExtension({
     name: 'sample.command-provider-error-command-null-in-extension-manifest',
   })
