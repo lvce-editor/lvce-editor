@@ -4,6 +4,7 @@ import * as ExtensionHostCompletion from '../ExtensionHost/ExtensionHostCompleti
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js'
 
 export const create = (id, uri, top, left, width, height) => {
   console.log({ id, uri, top, left, width, height })
@@ -85,22 +86,54 @@ const getVisibleItems = (filteredItems) => {
   // for(const )
 }
 
-export const loadContent = async (state) => {
-  const editor = getEditor()
-  const completionItems = await getCompletions(editor)
-  const filteredCompletionItems = filterCompletionItems(completionItems, '')
-  const x = EditorPosition.x(editor, editor.cursor)
-  const y = EditorPosition.y(editor, editor.cursor)
-  const visibleItems = getVisibleItems(filteredCompletionItems)
-  console.log({ completionItems, filteredCompletionItems, visibleItems })
-  return {
-    ...state,
-    completionItems,
-    filteredCompletionItems,
-    visibleItems,
-    x,
-    y,
+const getDisplayErrorMessage = (error) => {
+  let message = `${error.message}`
+  let currentError = error.cause
+  while (currentError) {
+    message += `: ${currentError.message}`
+    currentError = currentError.cause
   }
+  return message
+}
+
+export const loadContent = async (state) => {
+  try {
+    const editor = getEditor()
+    const completionItems = await getCompletions(editor)
+    const filteredCompletionItems = filterCompletionItems(completionItems, '')
+    const x = EditorPosition.x(editor, editor.cursor)
+    const y = EditorPosition.y(editor, editor.cursor)
+    const visibleItems = getVisibleItems(filteredCompletionItems)
+    console.log({ completionItems, filteredCompletionItems, visibleItems })
+    return {
+      ...state,
+      completionItems,
+      filteredCompletionItems,
+      visibleItems,
+      x,
+      y,
+    }
+  } catch (error) {
+    const editor = getEditor()
+    const displayErrorMessage = getDisplayErrorMessage(error)
+    await EditorShowMessage.editorShowMessage(
+      /* editor */ editor,
+      /* position */ { rowIndex: 0, columnIndex: 0 },
+      /* message */ displayErrorMessage,
+      /* isError */ true
+    )
+  }
+}
+
+export const handleError = async (error) => {
+  const displayErrorMessage = error.toString()
+  const editor = getEditor()
+  await EditorShowMessage.editorShowMessage(
+    /* editor */ editor,
+    /* position */ { rowIndex: 0, columnIndex: 0 },
+    /* message */ displayErrorMessage,
+    /* isError */ true
+  )
 }
 
 export const loadingContent = () => {

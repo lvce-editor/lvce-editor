@@ -36,6 +36,15 @@ export const refreshInstance = async (instance, id) => {
   try {
     await instance.factory.refresh(instance.state)
   } catch (error) {
+    if (instance.factory.handleError) {
+      try {
+        await instance.factory.handleError(error)
+      } catch (innerError) {
+        console.error(innerError)
+        console.error(error)
+        return
+      }
+    }
     // TODO use ErrorHandling.handleError
     // TODO show notification maybe
     console.error(error)
