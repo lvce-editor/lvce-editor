@@ -204,7 +204,6 @@ const getTotalOffset = (event) => {
 }
 
 const handleMouseDown = (event) => {
-  console.log('mousedown event')
   if (isRightClick(event)) {
     return
   }

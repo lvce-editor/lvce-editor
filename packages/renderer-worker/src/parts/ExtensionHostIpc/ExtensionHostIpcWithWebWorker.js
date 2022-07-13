@@ -27,7 +27,6 @@ export const listen = async () => {
     worker.onmessage = handleFirstMessage
     worker.onerror = handleFirstError
   })
-  console.log('worker is ready')
   return {
     get onmessage() {
       return worker.onmessage

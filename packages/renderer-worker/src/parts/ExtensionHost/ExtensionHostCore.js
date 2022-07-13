@@ -78,7 +78,6 @@ export const loadWebExtension = async (path) => {
   Assert.object(state.extensionHostWorker)
   const manifest = await getWebExtensionManifest(path)
   state.webExtensions.push(manifest)
-  console.log({ manifest })
   // TODO use invoke
   // await new Promise((resolve) => {
   //   setTimeout(resolve, 120)
