@@ -1,6 +1,6 @@
 import { runWithExtension, test, expect } from './_testFrameWork.js'
 
-test('sample.command-provider-error', async () => {
+test.skip('sample.command-provider-error', async () => {
   const page = await runWithExtension({
     name: 'sample.command-provider-error',
   })

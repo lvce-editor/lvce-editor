@@ -1,6 +1,6 @@
 import { expect, runWithExtension, test } from './_testFrameWork.js'
 
-test('sample.command-provider-without-activation', async () => {
+test.skip('sample.command-provider-without-activation', async () => {
   const page = await runWithExtension({
     name: 'sample.command-provider-without-activation',
   })
