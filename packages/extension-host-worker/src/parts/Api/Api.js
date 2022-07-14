@@ -4,12 +4,16 @@ import * as ExtensionHostTextDocument from '../ExtensionHostTextDocument/Extensi
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
 import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
+import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
+import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
 
 export const create = () => {
   // prettier-ignore
   return  {
     ...ExtensionHostBraceCompletion.createApi(),
     ...ExtensionHostCompletion.createApi(),
+    ...ExtensionHostDefinition.createApi(),
+    ...ExtensionHostImplementation.createApi(),
     ...ExtensionHostReference.createApi(),
 
 
