@@ -186,7 +186,7 @@ test('editorGoToTypeDefinition - error - no type definition provider found', asy
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
     editor.cursor,
-    'No type definition provider found',
+    'Error: Failed to execute type definition provider: No type definition provider found',
     false
   )
   expect(spy).not.toHaveBeenCalled()
