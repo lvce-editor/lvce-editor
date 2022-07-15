@@ -21,7 +21,9 @@ const improveValidationError = (name, validationError) => {
   const camelCaseName = toCamelCase(name)
   const spacedOutName = spaceOut(name)
   const pre = `invalid ${spacedOutName} result`
-  const post = validationError.replace('item', camelCaseName)
+  const post = validationError
+    .replace('item', camelCaseName)
+    .replace(`result`, `${camelCaseName} item`)
   return pre + ': ' + post
 }
 
