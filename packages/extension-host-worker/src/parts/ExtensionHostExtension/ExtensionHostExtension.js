@@ -1,5 +1,4 @@
 import * as Assert from '../Assert/Assert.js'
-import { ExtensionActivationError } from '../Errors/Errors.js'
 
 const getAbsolutePath = (path, relativePath) => {
   if (path.endsWith('/')) {
