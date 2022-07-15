@@ -48,6 +48,9 @@ export const create = (services) => {
     registerTabCompletionProvider: ExtensionHostTabCompletion.registerTabCompletionProvider,
     executeTabCompletionProvider: ExtensionHostTabCompletion.executeTabCompletionProvider,
 
+    // Text Document
+    getTextFromTextDocument: TextDocument.getText,
+
     // Type Definition
     registerTypeDefinitionProvider: ExtensionHostTypeDefinition.registerTypeDefinitionProvider,
     executeTypeDefinitionProvider: ExtensionHostTypeDefinition.executeTypeDefinitionProvider,

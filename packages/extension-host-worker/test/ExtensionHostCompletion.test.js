@@ -136,3 +136,51 @@ test('executeCompletionProvider - invalid return value - array with undefined va
     )
   )
 })
+
+test('executeCompletionProvider - invalid return value - number', async () => {
+  TextDocument.setFiles([
+    {
+      path: '/tmp/some-file.txt',
+      id: 1,
+      languageId: 'unknown',
+      content: 'sample text',
+    },
+  ])
+  ExtensionHostCompletion.registerCompletionProvider({
+    languageId: 'unknown',
+    provideCompletions(textDocument, offset) {
+      return 42
+    },
+  })
+  await expect(
+    ExtensionHostCompletion.executeCompletionProvider(1, 1)
+  ).rejects.toThrowError(
+    new Error(
+      'Failed to execute completion provider: VError: invalid completion result: completion must be of type array but is 42'
+    )
+  )
+})
+
+test('executeCompletionProvider - invalid return value - undefined', async () => {
+  TextDocument.setFiles([
+    {
+      path: '/tmp/some-file.txt',
+      id: 1,
+      languageId: 'unknown',
+      content: 'sample text',
+    },
+  ])
+  ExtensionHostCompletion.registerCompletionProvider({
+    languageId: 'unknown',
+    provideCompletions(textDocument, offset) {
+      return undefined
+    },
+  })
+  await expect(
+    ExtensionHostCompletion.executeCompletionProvider(1, 1)
+  ).rejects.toThrowError(
+    new Error(
+      'Failed to execute completion provider: VError: invalid completion result: completion must be of type array but is undefined'
+    )
+  )
+})

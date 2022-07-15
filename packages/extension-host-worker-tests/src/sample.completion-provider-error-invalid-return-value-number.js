@@ -34,6 +34,6 @@ test('sample.completion-provider-error-invalid-return-value-number', async () =>
   // TODO maybe have a setting to handle this kind of error without showing a popup,
   // just handle undefined value gracefully
   await expect(overlayMessage).toHaveText(
-    `Failed to execute completion provider: invalid completion item: 42`
+    `Failed to execute completion provider: VError: invalid completion result: completion must be of type array but is 42`
   )
 })
