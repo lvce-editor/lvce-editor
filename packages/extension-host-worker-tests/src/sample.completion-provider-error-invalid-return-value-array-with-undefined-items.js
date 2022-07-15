@@ -33,6 +33,6 @@ test('sample.completion-provider-error-invalid-return-value-array-with-undefined
   await expect(overlayMessage).toBeVisible()
   // TODO maybe just handle undefined value gracefully
   await expect(overlayMessage).toHaveText(
-    `Failed to execute completion provider: invalid completion item: undefined`
+    `Failed to execute completion provider: VError: invalid completion result: expected completion item to be of type object but was of type undefined`
   )
 })

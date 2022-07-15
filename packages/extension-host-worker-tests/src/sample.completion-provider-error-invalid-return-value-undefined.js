@@ -34,6 +34,6 @@ test('sample.completion-provider-error-invalid-return-value-undefined', async ()
   // TODO should say failed to load completions because of invalid return value
   // or just handle undefined value gracefully
   await expect(overlayMessage).toHaveText(
-    `Failed to execute completion provider: invalid completion item: undefined`
+    `Failed to execute completion provider: VError: invalid completion result: completion must be of type array but is undefined`
   )
 })
