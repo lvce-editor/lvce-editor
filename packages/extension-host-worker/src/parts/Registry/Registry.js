@@ -1,5 +1,6 @@
 import * as Validation from '../Validation/Validation.js'
 import { VError } from '../VError/VError.js'
+import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
 const RE_UPPERCASE_LETTER = /[A-Z]/g
 
@@ -40,7 +41,7 @@ const ensureError = (input) => {
   return input
 }
 
-export const create = ({ name, resultShape, textDocumentRegistry }) => {
+export const create = ({ name, resultShape }) => {
   const providers = Object.create(null)
   const multipleResults = resultShape.type === 'array'
   const methodName = multipleResults ? `provide${name}s` : `provide${name}`
@@ -50,7 +51,7 @@ export const create = ({ name, resultShape, textDocumentRegistry }) => {
     },
     async [`execute${name}Provider`](textDocumentId, ...params) {
       try {
-        const textDocument = textDocumentRegistry.get(textDocumentId)
+        const textDocument = TextDocument.get(textDocumentId)
         const provider = providers[textDocument.languageId]
         if (!provider) {
           const spacedOutName = spaceOut(name)

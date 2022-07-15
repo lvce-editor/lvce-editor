@@ -2,29 +2,24 @@ import * as ExtensionHostBraceCompletion from '../src/parts/ExtensionHostBraceCo
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
 test('executeBraceCompletionProvider - true', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-    ],
-  })
-  const api = ExtensionHostBraceCompletion.createApi({
-    textDocumentRegistry,
-  })
-  api.registerBraceCompletionProvider({
+  TextDocument.setFiles([
+    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
+  ])
+  ExtensionHostBraceCompletion.registerBraceCompletionProvider({
     languageId: 'javascript',
     provideBraceCompletion() {
       return true
     },
   })
-  expect(await api.executeBraceCompletionProvider(1, 0, '{')).toBe(true)
+  expect(
+    await ExtensionHostBraceCompletion.executeBraceCompletionProvider(1, 0, '{')
+  ).toBe(true)
 })
 
 test('executeBraceCompletionProvider - false', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-    ],
-  })
+  TextDocument.setFiles([
+    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
+  ])
   const api = ExtensionHostBraceCompletion.createApi({ textDocumentRegistry })
   api.registerBraceCompletionProvider({
     languageId: 'javascript',

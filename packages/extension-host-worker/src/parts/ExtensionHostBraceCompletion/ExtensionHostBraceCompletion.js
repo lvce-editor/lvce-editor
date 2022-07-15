@@ -1,11 +1,11 @@
 import * as Registry from '../Registry/Registry.js'
 
-export const createApi = ({ textDocumentRegistry }) => {
-  return Registry.create({
-    textDocumentRegistry,
+const { registerBraceCompletionProvider, executeBraceCompletionProvider } =
+  Registry.create({
     name: 'BraceCompletion',
     resultShape: {
       type: 'boolean',
     },
   })
-}
+
+export { registerBraceCompletionProvider, executeBraceCompletionProvider }
