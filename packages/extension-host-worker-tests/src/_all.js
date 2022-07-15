@@ -56,10 +56,12 @@ const handleConsole = (event) => {
 
 const main = async () => {
   const server = fork(SERVER_PATH, { stdio: 'inherit' })
-  await rm(join(__dirname, '..', 'videos'), { recursive: true, force: true })
   const argv = process.argv
   const headless = argv.includes('--headless')
   const recordVideos = argv.includes('--record-videos')
+  if (recordVideos) {
+    await rm(join(__dirname, '..', 'videos'), { recursive: true, force: true })
+  }
   const browser = await chromium.launch({
     headless,
     args: ['--enable-experimental-web-platform-features'], // enable isVisible Api in Chrome 103
@@ -67,7 +69,7 @@ const main = async () => {
   const context = await browser.newContext({
     recordVideo: recordVideos
       ? {
-          dir: 'videos/',
+          dir: join(__dirname, '..', 'videos'),
           size: { width: 1280, height: 720 },
         }
       : undefined,
