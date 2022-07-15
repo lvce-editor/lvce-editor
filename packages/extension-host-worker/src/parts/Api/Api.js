@@ -22,7 +22,7 @@ export const createCommandMap = () => {
 }
 
 // prettier-ignore
-export const create = (services) => {
+export const create = () => {
   return {
     // Brace Completion
     registerBraceCompletionProcider:ExtensionHostBraceCompletion.registerBraceCompletionProvider,
