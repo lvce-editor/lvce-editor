@@ -1,7 +1,6 @@
 import * as Registry from '../Registry/Registry.js'
-import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
-const { registerTypeDefinitionProvider, executeTypeDefinitionProvider } =
+const { registerTypeDefinitionProvider, executeTypeDefinitionProvider, reset } =
   Registry.create({
     name: 'TypeDefinition',
     resultShape: {
@@ -20,4 +19,4 @@ const { registerTypeDefinitionProvider, executeTypeDefinitionProvider } =
     },
   })
 
-export { registerTypeDefinitionProvider, executeTypeDefinitionProvider }
+export { registerTypeDefinitionProvider, executeTypeDefinitionProvider, reset }
