@@ -1,6 +1,6 @@
 import * as Registry from '../Registry/Registry.js'
 
-const { registerDefinitionProvider, executeDefinitionProvider } =
+const { registerDefinitionProvider, executeDefinitionProvider, reset } =
   Registry.create({
     name: 'Definition',
     resultShape: {
@@ -19,4 +19,4 @@ const { registerDefinitionProvider, executeDefinitionProvider } =
     },
   })
 
-export { registerDefinitionProvider, executeDefinitionProvider }
+export { registerDefinitionProvider, executeDefinitionProvider, reset }
