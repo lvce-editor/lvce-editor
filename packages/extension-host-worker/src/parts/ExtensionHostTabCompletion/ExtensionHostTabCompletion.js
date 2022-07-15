@@ -1,6 +1,6 @@
 import * as Registry from '../Registry/Registry.js'
 
-const { registerTabCompletionProvider, executeTabCompletionProvider } =
+const { registerTabCompletionProvider, executeTabCompletionProvider, reset } =
   Registry.create({
     name: 'TabCompletion',
     resultShape: {
@@ -8,4 +8,4 @@ const { registerTabCompletionProvider, executeTabCompletionProvider } =
     },
   })
 
-export { registerTabCompletionProvider, executeTabCompletionProvider }
+export { registerTabCompletionProvider, executeTabCompletionProvider, reset }
