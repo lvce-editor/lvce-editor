@@ -1,6 +1,6 @@
 import * as Registry from '../Registry/Registry.js'
 
-const { registerImplementationProvider, executeImplementationProvider } =
+const { registerImplementationProvider, executeImplementationProvider, reset } =
   Registry.create({
     name: 'Implementation',
     resultShape: {
@@ -11,4 +11,4 @@ const { registerImplementationProvider, executeImplementationProvider } =
     },
   })
 
-export { registerImplementationProvider, executeImplementationProvider }
+export { registerImplementationProvider, executeImplementationProvider, reset }

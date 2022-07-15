@@ -1,40 +1,40 @@
 import * as ExtensionHostImplementation from '../src/parts/ExtensionHostImplementation/ExtensionHostImplementation.js'
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
+beforeEach(() => {
+  ExtensionHostImplementation.reset()
+})
+
 test('executeImplementationProvider - no results', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      {
-        path: '/test.index.js',
-        id: 1,
-        languageId: 'javascript',
-        content: '',
-      },
-    ],
-  })
-  const api = ExtensionHostImplementation.createApi({ textDocumentRegistry })
-  api.registerImplementationProvider({
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: '',
+    },
+  ])
+  ExtensionHostImplementation.registerImplementationProvider({
     languageId: 'javascript',
     async provideImplementations() {
       return []
     },
   })
-  expect(await api.executeImplementationProvider(1, 0)).toEqual([])
+  expect(
+    await ExtensionHostImplementation.executeImplementationProvider(1, 0)
+  ).toEqual([])
 })
 
 test('executeImplementationProvider - single result', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      {
-        path: '/test.index.js',
-        id: 1,
-        languageId: 'javascript',
-        content: '',
-      },
-    ],
-  })
-  const api = ExtensionHostImplementation.createApi({ textDocumentRegistry })
-  api.registerImplementationProvider({
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: '',
+    },
+  ])
+  ExtensionHostImplementation.registerImplementationProvider({
     languageId: 'javascript',
     async provideImplementations() {
       return [
@@ -47,7 +47,9 @@ test('executeImplementationProvider - single result', async () => {
       ]
     },
   })
-  expect(await api.executeImplementationProvider(1, 0)).toEqual([
+  expect(
+    await ExtensionHostImplementation.executeImplementationProvider(1, 0)
+  ).toEqual([
     {
       endOffset: 0,
       lineText: '',
@@ -58,24 +60,23 @@ test('executeImplementationProvider - single result', async () => {
 })
 
 test('executeImplementationProvider - error - Implementation provider throws error', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      {
-        path: '/test.index.js',
-        id: 1,
-        languageId: 'javascript',
-        content: '',
-      },
-    ],
-  })
-  const api = ExtensionHostImplementation.createApi({ textDocumentRegistry })
-  api.registerImplementationProvider({
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: '',
+    },
+  ])
+  ExtensionHostImplementation.registerImplementationProvider({
     languageId: 'javascript',
     provideImplementations() {
       throw new TypeError('x is not a function')
     },
   })
-  await expect(api.executeImplementationProvider(1, 0)).rejects.toThrowError(
+  await expect(
+    ExtensionHostImplementation.executeImplementationProvider(1, 0)
+  ).rejects.toThrowError(
     new Error(
       'Failed to execute implementation provider: TypeError: x is not a function'
     )
@@ -83,22 +84,21 @@ test('executeImplementationProvider - error - Implementation provider throws err
 })
 
 test('executeImplementationProvider - error - ImplementationProvider has wrong shape', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      {
-        path: '/test.index.js',
-        id: 1,
-        languageId: 'javascript',
-        content: '',
-      },
-    ],
-  })
-  const api = ExtensionHostImplementation.createApi({ textDocumentRegistry })
-  api.registerImplementationProvider({
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: '',
+    },
+  ])
+  ExtensionHostImplementation.registerImplementationProvider({
     languageId: 'javascript',
     abc() {},
   })
-  await expect(api.executeImplementationProvider(1, 0)).rejects.toThrowError(
+  await expect(
+    ExtensionHostImplementation.executeImplementationProvider(1, 0)
+  ).rejects.toThrowError(
     new Error(
       'Failed to execute implementation provider: VError: implementationProvider.provideImplementations is not a function'
     )
@@ -106,18 +106,17 @@ test('executeImplementationProvider - error - ImplementationProvider has wrong s
 })
 
 test('executeImplementationProvider - error - no Implementation provider found', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      {
-        path: '/test.index.js',
-        id: 1,
-        languageId: 'javascript',
-        content: '',
-      },
-    ],
-  })
-  const api = ExtensionHostImplementation.createApi({ textDocumentRegistry })
-  await expect(api.executeImplementationProvider(1, 0)).rejects.toThrowError(
+  TextDocument.setFiles([
+    {
+      path: '/test.index.js',
+      id: 1,
+      languageId: 'javascript',
+      content: '',
+    },
+  ])
+  await expect(
+    ExtensionHostImplementation.executeImplementationProvider(1, 0)
+  ).rejects.toThrowError(
     new Error(
       'Failed to execute implementation provider: VError: No implementation provider found for javascript'
     )
