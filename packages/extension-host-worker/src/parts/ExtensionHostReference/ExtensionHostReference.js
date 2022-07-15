@@ -1,7 +1,7 @@
 import * as Registry from '../Registry/Registry.js'
 
-const { registerReferenceProvider, executeReferenceProvider } = Registry.create(
-  {
+const { registerReferenceProvider, executeReferenceProvider, reset } =
+  Registry.create({
     name: 'Reference',
     resultShape: {
       type: 'array',
@@ -9,7 +9,6 @@ const { registerReferenceProvider, executeReferenceProvider } = Registry.create(
         type: 'object',
       },
     },
-  }
-)
+  })
 
-export { registerReferenceProvider, executeReferenceProvider }
+export { registerReferenceProvider, executeReferenceProvider, reset }

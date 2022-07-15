@@ -49,6 +49,11 @@ export const create = ({ name, resultShape }) => {
     [`register${name}Provider`](provider) {
       providers[provider.languageId] = provider
     },
+    reset() {
+      for (const key in providers) {
+        delete providers[key]
+      }
+    },
     async [`execute${name}Provider`](textDocumentId, ...params) {
       try {
         const textDocument = TextDocument.get(textDocumentId)
