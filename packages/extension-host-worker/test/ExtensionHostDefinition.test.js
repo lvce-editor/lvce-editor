@@ -1,14 +1,15 @@
 import * as ExtensionHostDefinition from '../src/parts/ExtensionHostDefinition/ExtensionHostDefinition.js'
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
+beforeEach(() => {
+  ExtensionHostDefinition.reset()
+})
+
 test('executeDefinitionProvider', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-    ],
-  })
-  const api = ExtensionHostDefinition.createApi({ textDocumentRegistry })
-  api.registerDefinitionProvider({
+  TextDocument.setFiles([
+    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
+  ])
+  ExtensionHostDefinition.registerDefinitionProvider({
     languageId: 'javascript',
     provideDefinition() {
       return {
@@ -18,21 +19,20 @@ test('executeDefinitionProvider', async () => {
       }
     },
   })
-  expect(await api.executeDefinitionProvider(1, 0)).toEqual({
-    endOffset: 22,
-    startOffset: 15,
-    uri: '/test/index.js',
-  })
+  expect(await ExtensionHostDefinition.executeDefinitionProvider(1, 0)).toEqual(
+    {
+      endOffset: 22,
+      startOffset: 15,
+      uri: '/test/index.js',
+    }
+  )
 })
 
 test('executeDefinitionProvider - definition.startOffset is zero', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-    ],
-  })
-  const api = ExtensionHostDefinition.createApi({ textDocumentRegistry })
-  api.registerDefinitionProvider({
+  TextDocument.setFiles([
+    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
+  ])
+  ExtensionHostDefinition.registerDefinitionProvider({
     languageId: 'javascript',
     provideDefinition() {
       return {
@@ -42,27 +42,28 @@ test('executeDefinitionProvider - definition.startOffset is zero', async () => {
       }
     },
   })
-  expect(await api.executeDefinitionProvider(1, 0)).toEqual({
-    endOffset: 0,
-    startOffset: 0,
-    uri: '/test/index.js',
-  })
+  expect(await ExtensionHostDefinition.executeDefinitionProvider(1, 0)).toEqual(
+    {
+      endOffset: 0,
+      startOffset: 0,
+      uri: '/test/index.js',
+    }
+  )
 })
 
 test('executeDefinitionProvider - error - definition must be of type object but is array', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-    ],
-  })
-  const api = ExtensionHostDefinition.createApi({ textDocumentRegistry })
-  api.registerDefinitionProvider({
+  TextDocument.setFiles([
+    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
+  ])
+  ExtensionHostDefinition.registerDefinitionProvider({
     languageId: 'javascript',
     provideDefinition() {
       return []
     },
   })
-  await expect(api.executeDefinitionProvider(1, 0)).rejects.toThrowError(
+  await expect(
+    ExtensionHostDefinition.executeDefinitionProvider(1, 0)
+  ).rejects.toThrowError(
     new Error(
       'Failed to execute definition provider: VError: invalid definition result: definition must be of type object but is []'
     )
@@ -70,19 +71,18 @@ test('executeDefinitionProvider - error - definition must be of type object but 
 })
 
 test('executeDefinitionProvider - error - definition must be of type object but is function', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-    ],
-  })
-  const api = ExtensionHostDefinition.createApi({ textDocumentRegistry })
-  api.registerDefinitionProvider({
+  TextDocument.setFiles([
+    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
+  ])
+  ExtensionHostDefinition.registerDefinitionProvider({
     languageId: 'javascript',
     provideDefinition() {
       return () => {}
     },
   })
-  await expect(api.executeDefinitionProvider(1, 0)).rejects.toThrowError(
+  await expect(
+    ExtensionHostDefinition.executeDefinitionProvider(1, 0)
+  ).rejects.toThrowError(
     new Error(
       'Failed to execute definition provider: VError: invalid definition result: definition must be of type object but is () => {}'
     )
@@ -90,19 +90,18 @@ test('executeDefinitionProvider - error - definition must be of type object but 
 })
 
 test('executeDefinitionProvider - error - definition.uri must be of type string', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-    ],
-  })
-  const api = ExtensionHostDefinition.createApi({ textDocumentRegistry })
-  api.registerDefinitionProvider({
+  TextDocument.setFiles([
+    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
+  ])
+  ExtensionHostDefinition.registerDefinitionProvider({
     languageId: 'javascript',
     provideDefinition() {
       return {}
     },
   })
-  await expect(api.executeDefinitionProvider(1, 0)).rejects.toThrowError(
+  await expect(
+    ExtensionHostDefinition.executeDefinitionProvider(1, 0)
+  ).rejects.toThrowError(
     new Error(
       'Failed to execute definition provider: VError: invalid definition result: definition.uri must be of type string'
     )
@@ -110,13 +109,10 @@ test('executeDefinitionProvider - error - definition.uri must be of type string'
 })
 
 test('executeDefinitionProvider - error - definition.startOffset must be of type number', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-    ],
-  })
-  const api = ExtensionHostDefinition.createApi({ textDocumentRegistry })
-  api.registerDefinitionProvider({
+  TextDocument.setFiles([
+    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
+  ])
+  ExtensionHostDefinition.registerDefinitionProvider({
     languageId: 'javascript',
     provideDefinition() {
       return {
@@ -124,7 +120,9 @@ test('executeDefinitionProvider - error - definition.startOffset must be of type
       }
     },
   })
-  await expect(api.executeDefinitionProvider(1, 0)).rejects.toThrowError(
+  await expect(
+    ExtensionHostDefinition.executeDefinitionProvider(1, 0)
+  ).rejects.toThrowError(
     new Error(
       'Failed to execute definition provider: VError: invalid definition result: definition.startOffset must be of type number'
     )
@@ -132,13 +130,10 @@ test('executeDefinitionProvider - error - definition.startOffset must be of type
 })
 
 test('executeDefinitionProvider - error - definition.endOffset must be of type number', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-    ],
-  })
-  const api = ExtensionHostDefinition.createApi({ textDocumentRegistry })
-  api.registerDefinitionProvider({
+  TextDocument.setFiles([
+    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
+  ])
+  ExtensionHostDefinition.registerDefinitionProvider({
     languageId: 'javascript',
     provideDefinition() {
       return {
@@ -147,7 +142,9 @@ test('executeDefinitionProvider - error - definition.endOffset must be of type n
       }
     },
   })
-  await expect(api.executeDefinitionProvider(1, 0)).rejects.toThrowError(
+  await expect(
+    ExtensionHostDefinition.executeDefinitionProvider(1, 0)
+  ).rejects.toThrowError(
     new Error(
       'Failed to execute definition provider: VError: invalid definition result: definition.endOffset must be of type number'
     )
@@ -155,19 +152,18 @@ test('executeDefinitionProvider - error - definition.endOffset must be of type n
 })
 
 test('executeDefinitionProvider - error - definition provider throws error', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-    ],
-  })
-  const api = ExtensionHostDefinition.createApi({ textDocumentRegistry })
-  api.registerDefinitionProvider({
+  TextDocument.setFiles([
+    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
+  ])
+  ExtensionHostDefinition.registerDefinitionProvider({
     languageId: 'javascript',
     provideDefinition() {
       throw new TypeError('x is not a function')
     },
   })
-  await expect(api.executeDefinitionProvider(1, 0)).rejects.toThrowError(
+  await expect(
+    ExtensionHostDefinition.executeDefinitionProvider(1, 0)
+  ).rejects.toThrowError(
     new Error(
       'Failed to execute definition provider: TypeError: x is not a function'
     )
@@ -175,17 +171,16 @@ test('executeDefinitionProvider - error - definition provider throws error', asy
 })
 
 test.skip('executeDefinitionProvider - no definition found', async () => {
-  const textDocumentRegistry = TextDocument.createRegistry({
-    initialFiles: [
-      { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-    ],
-  })
-  const api = ExtensionHostDefinition.createApi({ textDocumentRegistry })
-  api.registerDefinitionProvider({
+  TextDocument.setFiles([
+    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
+  ])
+  ExtensionHostDefinition.registerDefinitionProvider({
     languageId: 'javascript',
     provideDefinition() {
       return undefined
     },
   })
-  expect(await api.executeDefinitionProvider(1, 0)).toBe(undefined)
+  expect(await ExtensionHostDefinition.executeDefinitionProvider(1, 0)).toBe(
+    undefined
+  )
 })
