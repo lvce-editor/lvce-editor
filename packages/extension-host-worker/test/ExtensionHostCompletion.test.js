@@ -113,6 +113,28 @@ test('executeCompletionProvider - completion provider throws error', async () =>
   )
 })
 
+test('executeCompletionProvider - completion provider throws null error', async () => {
+  TextDocument.setFiles([
+    {
+      path: '/tmp/some-file.txt',
+      id: 1,
+      languageId: 'unknown',
+      content: 'sample text',
+    },
+  ])
+  ExtensionHostCompletion.registerCompletionProvider({
+    languageId: 'unknown',
+    provideCompletions(textDocument, offset) {
+      throw null
+    },
+  })
+  await expect(
+    ExtensionHostCompletion.executeCompletionProvider(1, 1)
+  ).rejects.toThrowError(
+    new Error('Failed to execute completion provider: NonError: null')
+  )
+})
+
 test('executeCompletionProvider - invalid return value - array with undefined value', async () => {
   TextDocument.setFiles([
     {

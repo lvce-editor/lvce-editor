@@ -26,16 +26,6 @@ const getTypeDefinition = async (editor, position) => {
 // - when open is called twice, previous dom nodes can either be reused or the previous dom nodes must be disposed
 
 const getTypeDefinitionErrorMessage = (error) => {
-  if (
-    error &&
-    error.message &&
-    error.message.startsWith('Failed to execute type definition provider: ')
-  ) {
-    return error.message.replace(
-      'Failed to execute type definition provider: ',
-      ''
-    )
-  }
   return `${error}`
 }
 
