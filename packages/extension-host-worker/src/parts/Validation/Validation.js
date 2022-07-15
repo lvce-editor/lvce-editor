@@ -16,6 +16,8 @@ const getType = (value) => {
       return 'object'
     case 'boolean':
       return 'boolean'
+    case 'undefined':
+      return 'undefined'
     default:
       return 'unknown'
   }

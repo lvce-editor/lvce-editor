@@ -112,3 +112,27 @@ test('executeCompletionProvider - completion provider throws error', async () =>
     )
   )
 })
+
+test('executeCompletionProvider - invalid return value - array with undefined value', async () => {
+  TextDocument.setFiles([
+    {
+      path: '/tmp/some-file.txt',
+      id: 1,
+      languageId: 'unknown',
+      content: 'sample text',
+    },
+  ])
+  ExtensionHostCompletion.registerCompletionProvider({
+    languageId: 'unknown',
+    provideCompletions(textDocument, offset) {
+      return [undefined]
+    },
+  })
+  await expect(
+    ExtensionHostCompletion.executeCompletionProvider(1, 1)
+  ).rejects.toThrowError(
+    new Error(
+      `Failed to execute completion provider: VError: invalid completion result: expected completion item to be of type object but was of type undefined`
+    )
+  )
+})
