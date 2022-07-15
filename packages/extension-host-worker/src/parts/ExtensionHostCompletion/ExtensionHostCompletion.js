@@ -1,8 +1,7 @@
 import * as Registry from '../Registry/Registry.js'
 
-export const createApi = ({ textDocumentRegistry }) => {
-  return Registry.create({
-    textDocumentRegistry,
+const { registerCompletionProvider, executeCompletionProvider } =
+  Registry.create({
     name: 'Completion',
     resultShape: {
       type: 'array',
@@ -11,4 +10,5 @@ export const createApi = ({ textDocumentRegistry }) => {
       },
     },
   })
-}
+
+export { registerCompletionProvider, executeCompletionProvider }

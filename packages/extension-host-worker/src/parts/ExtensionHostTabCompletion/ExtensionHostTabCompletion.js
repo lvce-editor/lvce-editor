@@ -1,11 +1,11 @@
 import * as Registry from '../Registry/Registry.js'
 
-export const createApi = ({ textDocumentRegistry }) => {
-  return Registry.create({
-    textDocumentRegistry,
+const { registerTabCompletionProvider, executeTabCompletionProvider } =
+  Registry.create({
     name: 'TabCompletion',
     resultShape: {
       type: 'object',
     },
   })
-}
+
+export { registerTabCompletionProvider, executeTabCompletionProvider }

@@ -1,8 +1,8 @@
 import * as Registry from '../Registry/Registry.js'
+import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
-export const createApi = ({ textDocumentRegistry }) => {
-  return Registry.create({
-    textDocumentRegistry,
+const { registerTypeDefinitionProvider, executeTypeDefinitionProvider } =
+  Registry.create({
     name: 'TypeDefinition',
     resultShape: {
       type: 'object',
@@ -19,4 +19,5 @@ export const createApi = ({ textDocumentRegistry }) => {
       },
     },
   })
-}
+
+export { registerTypeDefinitionProvider, executeTypeDefinitionProvider }

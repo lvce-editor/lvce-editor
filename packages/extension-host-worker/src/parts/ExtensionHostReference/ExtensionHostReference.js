@@ -1,8 +1,7 @@
 import * as Registry from '../Registry/Registry.js'
 
-export const createApi = ({ textDocumentRegistry }) => {
-  return Registry.create({
-    textDocumentRegistry,
+const { registerReferenceProvider, executeReferenceProvider } = Registry.create(
+  {
     name: 'Reference',
     resultShape: {
       type: 'array',
@@ -10,5 +9,7 @@ export const createApi = ({ textDocumentRegistry }) => {
         type: 'object',
       },
     },
-  })
-}
+  }
+)
+
+export { registerReferenceProvider, executeReferenceProvider }
