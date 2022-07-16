@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import VError from 'verror'
-import * as ExtensionManagement from '../src/parts/ExtensionManagement/ExtensionManagement.js'
+import * as ExtensionManagement from '../src/parts/ExtensionHostExtension/ExtensionHostExtension.js'
 
 const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
