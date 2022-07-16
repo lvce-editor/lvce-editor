@@ -1,7 +1,7 @@
 import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import * as ExtensionHostIconTheme from '../src/parts/ExtensionHost/ExtensionHostIconTheme.js'
+import * as ExtensionHostIconTheme from '../src/parts/ExtensionManagement/ExtensionManagementIconTheme.js'
 import * as ExtensionManagement from '../src/parts/ExtensionManagement/ExtensionManagement.js'
 
 const getTmpDir = () => {

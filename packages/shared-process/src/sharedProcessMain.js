@@ -5,9 +5,18 @@ import * as PrettyError from './parts/PrettyError/PrettyError.js'
 
 // TODO use named functions here
 
+const firstErrorLine = (error) => {
+  if (error.stack) {
+    return error.stack.slice(0, error.stack.indexOf('\n'))
+  }
+  if (error.message) {
+    return error.message
+  }
+  return `${error}`
+}
+
 const handleUncaughtExceptionMonitor = (error, origin) => {
-  console.info(`[shared process] uncaught exception: ${error.stack}`)
-  console.info('code', error.code)
+  console.info(`[shared process] uncaught exception: ${firstErrorLine(error)}`)
   if (error && error.code === 'EPIPE' && !process.connected) {
     // parent process is disposed, ignore
     return
@@ -16,9 +25,9 @@ const handleUncaughtExceptionMonitor = (error, origin) => {
     // parent process is disposed, ignore
     return
   }
-  console.log(error)
+  // console.log(error)
   const prettyError = PrettyError.prepare(error)
-  console.error(prettyError.message)
+  // console.error(prettyError.message)
   console.error(prettyError.codeFrame)
   console.error(prettyError.stack)
   process.exit(1)

@@ -1,7 +1,10 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const listen = async () => {
-  await SharedProcess.invoke(/* ExtensionHost.start */ 'ExtensionHost.start')
+  const id = await SharedProcess.invoke(
+    /* ExtensionHost.start */ 'ExtensionHost.start'
+  )
+  console.log({ id })
   let _onmessage
   return {
     get onmessage() {
@@ -11,9 +14,18 @@ export const listen = async () => {
       _onmessage = listener
       // TODO actually set listener
     },
-    dispose() {},
+    dispose() {
+      return SharedProcess.invoke(
+        /* ExtensionHost.send */ 'ExtensionHost.dispose',
+        /* id */ id
+      )
+    },
     send(message) {
-      // TODO
+      return SharedProcess.invoke(
+        /* ExtensionHost.send */ 'ExtensionHost.send',
+        /* id */ id,
+        /* message */ message
+      )
     },
   }
 }

@@ -2,7 +2,7 @@ import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import * as ExtensionHostLanguages from '../src/parts/ExtensionHost/ExtensionHostLanguages.js'
+import * as ExtensionHostLanguages from '../src/parts/ExtensionManagement/ExtensionManagementLanguages.js'
 import * as ExtensionManagement from '../src/parts/ExtensionManagement/ExtensionManagement.js'
 
 const getTmpDir = () => {
