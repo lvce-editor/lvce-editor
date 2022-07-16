@@ -18,6 +18,7 @@ export const __initialize__ = () => {
   Command.register('Developer.toggleDeveloperTools', Developer.toggleDeveloperTools)
   Command.register('Developer.crashMainProcess', Developer.crashMainProcess)
   Command.register('Developer.showStartupPerformance', Developer.showStartupPerformance)
+  Command.register('Developer.startupPerformance', Developer.showStartupPerformance)
   Command.register('Developer.showMemoryUsage', Developer.showMemoryUsage)
   Command.register('Developer.openConfigFolder', Developer.openConfigFolder)
   Command.register('Developer.openDataFolder', Developer.openDataFolder)

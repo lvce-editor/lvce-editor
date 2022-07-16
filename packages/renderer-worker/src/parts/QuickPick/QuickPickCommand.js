@@ -52,10 +52,15 @@ const prefixIdWithExt = (item) => {
 }
 
 const getExtensionPicks = async () => {
-  // TODO don't call this every time
-  const extensionPicks = await ExtensionHostCommands.getCommands()
-  const mappedPicks = extensionPicks.map(prefixIdWithExt)
-  return mappedPicks
+  try {
+    // TODO don't call this every time
+    const extensionPicks = await ExtensionHostCommands.getCommands()
+    const mappedPicks = extensionPicks.map(prefixIdWithExt)
+    return mappedPicks
+  } catch (error) {
+    console.error(`Failed to get extension picks: ${error}`)
+    return []
+  }
 }
 
 // TODO send strings to renderer process only once for next occurrence send uint16array of ids of strings
