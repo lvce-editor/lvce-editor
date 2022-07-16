@@ -204,6 +204,7 @@ const getModuleId = (commandId) => {
     case 'Window.unmaximize':
     case 'Window.close':
     case 'Window.setTitle':
+    case 'Window.onVisibilityChange':
       return MODULE_WINDOW
     case 'SessionStorage.clear':
     case 'SessionStorage.getItem':

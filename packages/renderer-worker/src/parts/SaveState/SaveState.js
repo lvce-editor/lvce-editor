@@ -4,6 +4,9 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Json from '../Json/Json.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as LocalStorage from '../LocalStorage/LocalStorage.js'
+import * as SessionStorage from '../SessionStorage/SessionStorage.js'
 
 const getStateToSave = () => {
   const instances = Viewlet.state.instances
@@ -20,20 +23,25 @@ const getStateToSave = () => {
   }
 }
 
-export const hydrate = () => {
+export const handleVisibilityChange = async (visibilityState) => {
+  console.log('[renderer worker] visibility changed to ', visibilityState)
+  if (visibilityState === 'hidden') {
+    const stateToSave = getStateToSave()
+    await Promise.all([
+      LocalStorage.setJson('stateToSave', stateToSave),
+      SessionStorage.setJson('workspace', stateToSave.workspace),
+    ])
+    console.log('state was saved')
+  }
+}
+
+export const hydrate = async () => {
   // TODO should set up listener in renderer process
   if (!Preferences.get('workbench.saveStateOnVisibilityChange')) {
-    // console.info(
-    // '[info] not saving state on visibility change - disabled by settings'
-    // )
+    console.info(
+      '[info] not saving state on visibility change - disabled by settings'
+    )
     return
   }
-  document.addEventListener('visibilitychange', () => {
-    console.log('visibility changed')
-    if (document.visibilityState === 'hidden') {
-      const stateToSave = getStateToSave()
-      localStorage.setItem('stateToSave', Json.stringify(stateToSave))
-      sessionStorage.setItem('workspace', Json.stringify(stateToSave.workspace))
-    }
-  })
+  await RendererProcess.invoke('Window.onVisibilityChange')
 }

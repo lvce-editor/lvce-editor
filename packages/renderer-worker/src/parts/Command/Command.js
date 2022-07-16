@@ -649,6 +649,7 @@ const getModuleId = (commandId) => {
     case 'SourceControl.updateDecorations':
       return MODULE_VIEWLET_SOURCE_CONTROL
     case 'SaveState.hydrate':
+    case 'SaveState.handleVisibilityChange':
       return MODULE_SAVE_STATE
     case 'SessionStorage.clear':
     case 'SessionStorage.getJson':

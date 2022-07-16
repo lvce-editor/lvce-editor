@@ -261,7 +261,7 @@ export const openUri = async (state, uri) => {
 
 export const save = () => {
   // TODO handle different types of editors / custom editors / webviews
-  Command.execute(/* EditorSave.editorSave */ 378)
+  Command.execute(/* EditorSave.editorSave */ 'Editor.save')
 }
 
 // const getEditor = (uri) => {
