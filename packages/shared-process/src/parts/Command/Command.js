@@ -100,6 +100,7 @@ const getModuleId = (commandId) => {
     case 'Developer.createHeapSnapshot':
     case 'Developer.createProfile':
     case 'Developer.getNodeStartupTiming':
+    case 'Developer.getNodeStartupTime':
       return MODULE_DEVELOPER
     case 'ExtensionHost.executeTabCompletionProvider':
     case 'ExtensionHostLanguages.getLanguages':
@@ -213,7 +214,7 @@ const getModuleId = (commandId) => {
     case 'Electron.openProcessExplorer':
       return MODULE_ELECTRON
     default:
-      throw new Error(`command ${commandId} not found`)
+      throw new Error(`[shared-process] command ${commandId} not found`)
   }
 }
 

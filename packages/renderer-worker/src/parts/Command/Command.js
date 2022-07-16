@@ -292,6 +292,7 @@ const getModuleId = (commandId) => {
     case 'Editor.applyEdit':
     case 'Editor.blur':
     case 'Editor.cancelSelection':
+    case 'Editor.handleScrollBarMove':
     case 'Editor.close':
     case 'Editor.compositionEnd':
     case 'Editor.compositionStart':
@@ -390,6 +391,7 @@ const getModuleId = (commandId) => {
       return MODULE_PANEL
     case 'Developer.getStartupPerformanceContent':
     case 'Developer.getMemoryUsageContent':
+    case 'Developer.startupPerformance':
     case 'Developer.allocateMemoryInSharedProcess':
     case 'Developer.crashSharedProcess':
     case 'Developer.createSharedProcessHeapSnapshot':
@@ -760,7 +762,7 @@ const getModuleId = (commandId) => {
     case 'SessionReplay.replayCurrentSession':
       return MODULE_SESSION_REPLAY
     default:
-      throw new Error(`command ${commandId} not found`)
+      throw new Error(`[renderer-worker] command ${commandId} not found`)
   }
 }
 

@@ -273,7 +273,7 @@ const handlePaste = (event) => {
 const handleScrollBarThumbMouseMove = (event) => {
   const y = event.clientY
   RendererWorker.send(
-    /* Editor.handleScrollBarMouseMove */ 'Editor.handleScrollBarMouseMove',
+    /* Editor.handleScrollBarMouseMove */ 'Editor.handleScrollBarMove',
     /* y */ y
   )
 }
