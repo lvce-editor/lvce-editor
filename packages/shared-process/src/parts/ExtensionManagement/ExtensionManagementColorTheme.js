@@ -1,5 +1,5 @@
 import * as Error from '../Error/Error.js'
-import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js'
+import * as ExtensionManagement from './ExtensionManagement.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 
 // TODO test this function

@@ -35,7 +35,7 @@ const getTmpDir = () => {
 
 test.skip('start / stop', async () => {
   await ExtensionHost.start()
-  ExtensionHost.stop()
+  ExtensionHost.dispose()
 })
 
 // TODO test with mock extensions
@@ -47,7 +47,7 @@ test.skip('activateAll', async () => {
   await ExtensionHost.start()
   // @ts-ignore
   await ExtensionHost.activateAll()
-  await ExtensionHost.stop()
+  await ExtensionHost.dispose()
 })
 
 test('start - error - path not found', async () => {

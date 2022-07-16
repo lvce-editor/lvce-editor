@@ -101,22 +101,17 @@ const getModuleId = (commandId) => {
     case 'Developer.createProfile':
     case 'Developer.getNodeStartupTiming':
       return MODULE_DEVELOPER
-    case 'ExtensionHost.getColorThemeJson':
-    case 'ExtensionHost.getIconThemeJson':
     case 'ExtensionHost.executeTabCompletionProvider':
     case 'ExtensionHostLanguages.getLanguages':
-    case 'ExtensionHost.getIconTheme':
     case 'ExtensionHostKeyBindings.getKeyBindings':
     case 'ExtensionHost.executeCommand':
-    case 'ExtensionHost.getColorThemeJson':
-    case 'ExtensionHost.getColorThemeNames':
+
     case 'ExtensionHost.getMemoryUsage':
     case 'ExtensionHost.getSourceControlBadgeCount':
     case 'ExtensionHost.format':
     case 'ExtensionHost.executeCommand':
     case 'ExtensionHost.getSourceControlBadgeCount':
-    case 'ExtensionHost.getLanguageConfiguration':
-    case 'ExtensionHost.getColorThemes':
+
     case 'ExtensionHostTextDocument.syncInitial':
     case 'ExtensionHostHover.execute':
     case 'ExtensionHostDiagnostic.execute':
@@ -131,6 +126,7 @@ const getModuleId = (commandId) => {
     case 'ExtensionHostFileSystem.rename':
     case 'ExtensionHostSourceControl.acceptInput':
     case 'ExtensionHost.start':
+    case 'ExtensionHost.dispose':
     case 'ExtensionHostManagement.activateAll':
     case 'ExtensionHostManagement.enableExtensions':
     case 'ExtensionHostFileSystem.getPathSeparator':
@@ -148,20 +144,25 @@ const getModuleId = (commandId) => {
     case 'ExtensionHostTextDocument.syncFull':
     case 'ExtensionHost.setWorkspacePath':
     case 'ExtensionHost.enableExtension':
-    case 'ExtensionHost.getIconThemeJson':
-    case 'ExtensionHost.getLanguages':
     case 'ExtensionHostCompletion.execute':
     case 'ExtensionHostTextDocument.syncIncremental':
     case 'ExtensionHostClosingTag.executeClosingTagProvider':
     case 'ExtensionHost.sourceControlGetChangedFiles':
     case 'ExtensionHostSemanticTokens.executeSemanticTokenProvider':
       return MODULE_EXTENSION_HOST
-    case 'ExtensionManagement.install':
-    case 'ExtensionManagement.uninstall':
-    case 'ExtensionManagement.enable':
+    case 'ExtensionHost.getColorThemeJson':
+    case 'ExtensionHost.getColorThemeNames':
+    case 'ExtensionHost.getColorThemes':
+    case 'ExtensionHost.getIconTheme':
+    case 'ExtensionHost.getIconThemeJson':
+    case 'ExtensionHost.getLanguageConfiguration':
+    case 'ExtensionHost.getLanguages':
     case 'ExtensionManagement.disable':
+    case 'ExtensionManagement.enable':
     case 'ExtensionManagement.getAllExtensions':
     case 'ExtensionManagement.getExtensions':
+    case 'ExtensionManagement.install':
+    case 'ExtensionManagement.uninstall':
       return MODULE_EXTENSION_MANAGEMENT
     case 'Search.search':
       return MODULE_SEARCH

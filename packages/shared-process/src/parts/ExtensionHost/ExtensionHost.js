@@ -1,37 +1,17 @@
 import VError from 'verror'
-import * as Callback from '../Callback/Callback.js'
-import * as ChildProcess from '../ChildProcess/ChildProcess.js'
-import * as Error from '../Error/Error.js'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as Platform from '../Platform/Platform.js'
-import * as Socket from '../Socket/Socket.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Callback from '../Callback/Callback.js'
+import * as Error from '../Error/Error.js'
+import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as Socket from '../Socket/Socket.js'
 // TODO maybe rename to extension host management for clarity
 
-// TODO needed? probably not
-const NULL_EXTENSION_HOST = {
-  dispose() {
-    throw new VError('not implemented')
-  },
-  send(message) {
-    throw new VError(
-      'extension host must be started before commands can be invoked'
-    )
-  },
-  async invoke(commandId, ...args) {
-    throw new VError(
-      'extension host must be started before commands can be invoked'
-    )
-  },
-}
-
 /**
- * @type{{
- *   extensionHost: {dispose:()=>void, invoke:(commandId, ...args)=>Promise<any>},
- * }}
+ * @type{any}
  */
 export const state = {
-  extensionHost: NULL_EXTENSION_HOST,
+  extensionHosts: Object.create(null),
 }
 
 const onMessage = (message) => {
@@ -59,105 +39,105 @@ const onMessage = (message) => {
 }
 
 // TODO this function is very ugly and has probably memory leaks
+const createExtensionHost = async (socket) => {
+  Assert.object(socket)
+  const ipc = ExtensionHostIpc.create()
+
+  const handleChildProcessError = (error) => {
+    console.error(`[Extension Host] ${error}`)
+  }
+
+  const handleChildProcessExit = (exitCode) => {
+    console.info(`[SharedProcess] Extension Host exited with code ${exitCode}`)
+  }
+
+  const handleSocketClose = () => {
+    console.info('[shared process] disposing extension host')
+    ipc.dispose()
+  }
+
+  socket.on('close', handleSocketClose)
+
+  ipc.on('error', handleChildProcessError)
+
+  ipc.on('exit', handleChildProcessExit)
+
+  const extensionHost = {
+    send(message) {
+      ipc.send(message)
+    },
+    invoke(...args) {
+      return JsonRpc.invoke(ipc, ...args)
+    },
+    dispose() {
+      ipc.dispose()
+    },
+  }
+
+  await new Promise((resolve, reject) => {
+    const handleFirstError = (error) => {
+      cleanup()
+      reject(error)
+    }
+    const handleFirstExit = (exitCode) => {
+      cleanup()
+      reject(new VError(`Extension Host exited with code ${exitCode}`))
+    }
+    const handleFirstMessage = () => {
+      cleanup()
+      ipc.on('message', onMessage)
+      resolve(undefined)
+    }
+    const handleSocketClose = () => {
+      cleanup()
+      ipc.off('error', handleChildProcessError)
+      ipc.off('exit', handleChildProcessExit)
+      resolve(undefined)
+    }
+    const cleanup = () => {
+      ipc.off('error', handleFirstError)
+      ipc.off('exit', handleFirstExit)
+      ipc.off('message', handleFirstMessage)
+    }
+    ipc.on('error', handleFirstError)
+    ipc.on('exit', handleFirstExit)
+    ipc.on('message', handleFirstMessage)
+    socket.on('close', handleSocketClose)
+  })
+  return extensionHost
+}
+
 export const start = async (socket) => {
   try {
-    Assert.object(socket)
-    const extensionHostPath = Platform.getExtensionHostPath()
-    const childProcess = ChildProcess.fork(extensionHostPath, {
-      execArgv: [
-        '--experimental-json-modules',
-        '--max-old-space-size=60',
-        '--enable-source-maps',
-      ],
-      env: {
-        ...process.env,
-        LOGS_DIR: Platform.getLogsDir(),
-        CONFIG_DIR: Platform.getConfigDir(),
-      },
-    })
-
-    const handleChildProcessError = (error) => {
-      console.error(`[Extension Host] ${error}`)
-    }
-
-    const handleChildProcessExit = (exitCode) => {
-      console.info(
-        `[SharedProcess] Extension Host exited with code ${exitCode}`
-      )
-      state.extensionHost = NULL_EXTENSION_HOST
-    }
-
-    const handleSocketClose = () => {
-      console.info('[shared process] disposing extension host')
-      childProcess.kill()
-    }
-
-    socket.on('close', handleSocketClose)
-
-    childProcess.on('error', handleChildProcessError)
-
-    childProcess.on('exit', handleChildProcessExit)
-
-    state.extensionHost = {
-      invoke(...args) {
-        return JsonRpc.invoke(childProcess, ...args)
-      },
-      dispose() {
-        childProcess.kill()
-      },
-    }
-
-    await new Promise((resolve, reject) => {
-      const handleFirstError = (error) => {
-        cleanup()
-        reject(error)
-      }
-      const handleFirstExit = (exitCode) => {
-        cleanup()
-        reject(
-          new globalThis.Error(`Extension Host exited with code ${exitCode}`)
-        )
-      }
-      const handleFirstMessage = () => {
-        cleanup()
-        childProcess.on('message', onMessage)
-        resolve(undefined)
-      }
-      const handleSocketClose = () => {
-        cleanup()
-        childProcess.off('error', handleChildProcessError)
-        childProcess.off('exit', handleChildProcessExit)
-        resolve(undefined)
-      }
-      const cleanup = () => {
-        childProcess.off('error', handleFirstError)
-        childProcess.off('exit', handleFirstExit)
-        childProcess.off('message', handleFirstMessage)
-      }
-      childProcess.on('error', handleFirstError)
-      childProcess.on('exit', handleFirstExit)
-      childProcess.on('message', handleFirstMessage)
-      socket.on('close', handleSocketClose)
-    })
+    const id = 1
+    console.log('start extension host', id)
+    const extensionHost = await createExtensionHost(socket)
+    state.extensionHosts[id] = extensionHost
+    return id
   } catch (error) {
     // @ts-ignore
     throw new VError(error, 'Failed to start extension host')
   }
 }
 
-export const stop = () => {
-  state.extensionHost.dispose()
-  state.extensionHost = NULL_EXTENSION_HOST
-}
-
-export const restart = () => {
-  stop()
-  start()
-}
-
-export const wrapExtensionHostCommand = (fn) => {
-  const wrappedExtensionHostCommand = (...args) => {
-    return fn(state.extensionHost, ...args)
+export const send = (id, message) => {
+  console.log({ id, message })
+  Assert.number(id)
+  Assert.object(message)
+  console.log(state.extensionHosts)
+  const extensionHost = state.extensionsHosts[id]
+  if (!extensionHost) {
+    throw new VError(`no extension host with id ${id} found`)
   }
-  return wrappedExtensionHostCommand
+  console.log({ extensionHost })
+  extensionHost.send(message)
+}
+
+export const dispose = (id) => {
+  const extensionHost = state.extensionHosts[id]
+  if (!extensionHost) {
+    throw new VError(`no extension host with id ${id} found`)
+  }
+  extensionHost.dispose()
+  delete state.extensionHosts[id]
 }
