@@ -8,4 +8,5 @@ export const __initialize__ = () => {
   Command.register('Window.unmaximize', Window.unmaximize)
   Command.register('Window.close', Window.close)
   Command.register('Window.setTitle', Window.setTitle)
+  Command.register('Window.onVisibilityChange', Window.onVisibilityChange)
 }
