@@ -6,7 +6,7 @@
 import './suppress-experimental.js' // must be first import
 import exitHook from 'exit-hook'
 import * as Api from './parts/Api/Api.js'
-import * as ExtensionManagement from './parts/ExtensionManagement/ExtensionManagement.js'
+import * as ExtensionManagement from './parts/ExtensionHostExtension/ExtensionHostExtension.js'
 import * as SharedProcess from './parts/SharedProcess/SharedProcess.js'
 import * as InternalCommand from './parts/InternalCommand/InternalCommand.js'
 

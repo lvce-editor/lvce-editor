@@ -8,34 +8,10 @@ import * as Socket from '../Socket/Socket.js'
 // TODO maybe rename to extension host management for clarity
 
 /**
- * @type{any}
+ * @type{{extensionHosts:any }}
  */
 export const state = {
   extensionHosts: Object.create(null),
-}
-
-const onMessage = (message) => {
-  if (message.id) {
-    if ('result' in message) {
-      Callback.resolve(message.id, message.result)
-    } else if ('error' in message) {
-      Callback.reject(
-        message.id,
-        new Error.OperationalError({
-          code: 'E_CALLBACK_REJECTED',
-          message: message.error.message,
-          stack: message.error.data.stack,
-          codeFrame: message.error.data.codeFrame,
-          // @ts-ignore
-          stderr: message.error.data.stderr,
-        })
-      )
-    } else {
-      Socket.send(message)
-    }
-  } else {
-    Socket.send(message)
-  }
 }
 
 // TODO this function is very ugly and has probably memory leaks
@@ -63,11 +39,11 @@ const createExtensionHost = async (socket) => {
   ipc.on('exit', handleChildProcessExit)
 
   const extensionHost = {
+    on(event, listener) {
+      ipc.on(event, listener)
+    },
     send(message) {
       ipc.send(message)
-    },
-    invoke(...args) {
-      return JsonRpc.invoke(ipc, ...args)
     },
     dispose() {
       ipc.dispose()
@@ -85,7 +61,6 @@ const createExtensionHost = async (socket) => {
     }
     const handleFirstMessage = () => {
       cleanup()
-      ipc.on('message', onMessage)
       resolve(undefined)
     }
     const handleSocketClose = () => {
@@ -111,7 +86,12 @@ export const start = async (socket) => {
   try {
     const id = 1
     console.log('start extension host', id)
+    const handleMessage = (message) => {
+      console.log({ message })
+      socket.send(message)
+    }
     const extensionHost = await createExtensionHost(socket)
+    extensionHost.on('message', handleMessage)
     state.extensionHosts[id] = extensionHost
     return id
   } catch (error) {
@@ -121,15 +101,13 @@ export const start = async (socket) => {
 }
 
 export const send = (id, message) => {
-  console.log({ id, message })
   Assert.number(id)
   Assert.object(message)
-  console.log(state.extensionHosts)
-  const extensionHost = state.extensionsHosts[id]
+  console.log(Object.keys(state))
+  const extensionHost = state.extensionHosts[id]
   if (!extensionHost) {
     throw new VError(`no extension host with id ${id} found`)
   }
-  console.log({ extensionHost })
   extensionHost.send(message)
 }
 

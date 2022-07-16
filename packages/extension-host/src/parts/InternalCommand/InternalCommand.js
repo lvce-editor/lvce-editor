@@ -20,7 +20,7 @@ import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/Exten
 import * as ExtensionHostTextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
-import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js'
+import * as ExtensionHostExtension from '../ExtensionHostExtension/ExtensionHostExtension.js'
 import * as Stats from '../Stats/Stats.js'
 
 const getFn = (id) => {
@@ -51,10 +51,13 @@ const getFn = (id) => {
     case 400:
     case 'TextDocument.syncInitial':
     case 'TextDocument.syncFull':
+    case 'ExtensionHostTextDocument.syncFull':
       return ExtensionHostTextDocument.syncFull
     case 'TextDocument.syncIncremental':
+    case 'ExtensionHostTextDocument.syncIncremental':
       return ExtensionHostTextDocument.syncIncremental
     case 'TextDocument.setLanguageId':
+    case 'ExtensionHostTextDocument.setLanguageId':
       return ExtensionHostTextDocument.setLanguageId
     case 401:
     case 'Hover.execute':
@@ -99,9 +102,11 @@ const getFn = (id) => {
     case 416:
     case 'ExtensionManagement.enable':
     case 'enableExtension':
-      return ExtensionManagement.enable
+    case 'ExtensionHostExtension.enableExtension':
+      return ExtensionHostExtension.enable
     case 'ExtensionManagement.disable':
-      return ExtensionManagement.disable
+    case 'ExtensionHostExtension.disable':
+      return ExtensionHostExtension.disable
     case 419:
     case 'OutputChannel.getOutputChannels':
       return ExtensionHostOutputChannel.getOutputChannels
@@ -130,6 +135,7 @@ const getFn = (id) => {
     case 'ClosingTag.execute':
       return ExtensionHostClosingTag.executeClosingTagProvider
     case 'SemanticTokens.execute':
+    case 'ExtensionHostSemanticTokens.executeSemanticTokenProvider':
       return ExtensionHostSemanticTokens.executeSemanticTokenProvider
     default:
       throw new Error(`unknown command ${id}`)

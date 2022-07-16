@@ -12,7 +12,7 @@ import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/Exten
 import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
 import * as ExtensionHostTextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
-import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js'
+import * as ExtensionManagement from '../ExtensionHostExtension/ExtensionHostExtension.js'
 import * as Stats from '../Stats/Stats.js'
 import * as ExtensionHostStatusBar from '../ExtensionHostStatusBar/ExtensionHostStatusBar.js'
 import * as ExtensionHostQuickPick from '../ExtensionHostQuickPick/ExtensionHostQuickPick.js'
