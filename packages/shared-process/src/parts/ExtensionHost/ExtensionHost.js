@@ -87,8 +87,13 @@ export const start = async (socket) => {
     const id = 1
     console.log('start extension host', id)
     const handleMessage = (message) => {
-      console.log({ message })
-      socket.send(message)
+      if ('result' in message) {
+        Callback.resolve(message.id, message.result)
+      } else if ('error' in message) {
+        Callback.reject(message.id, message.error)
+      } else {
+        console.error('unsupported message type')
+      }
     }
     const extensionHost = await createExtensionHost(socket)
     extensionHost.on('message', handleMessage)
@@ -100,7 +105,7 @@ export const start = async (socket) => {
   }
 }
 
-export const send = (id, message) => {
+export const send = async (id, message) => {
   Assert.number(id)
   Assert.object(message)
   console.log(Object.keys(state))
@@ -108,7 +113,13 @@ export const send = (id, message) => {
   if (!extensionHost) {
     throw new VError(`no extension host with id ${id} found`)
   }
-  extensionHost.send(message)
+  const result = await JsonRpc.invoke(
+    extensionHost,
+    message.method,
+    ...message.params
+  )
+  console.log({ result })
+  return result
 }
 
 export const dispose = (id) => {
