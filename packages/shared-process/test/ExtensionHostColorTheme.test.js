@@ -18,7 +18,7 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
 }))
 
 const ExtensionHostColorTheme = await import(
-  '../src/parts/ExtensionManagement/ExtensionHostColorTheme.js'
+  '../src/parts/ExtensionManagement/ExtensionManagementColorTheme.js'
 )
 
 const Platform = await import('../src/parts/Platform/Platform.js')
