@@ -76,6 +76,10 @@ const handleSigPipe = () => {
   console.info('[extension-host] sigpipe')
 }
 
+const handleMessage = (message) => {
+  console.info('[extension host] message', message)
+}
+
 const main = async () => {
   process.on('beforeExit', handleBeforeExit)
   process.on('disconnect', handleDisconnect)
@@ -85,6 +89,7 @@ const main = async () => {
   process.on('uncaughtException', handleUncaughtException)
   process.on('SIGTERM', handleSigTerm)
   process.on('SIGPIPE', handleSigPipe)
+  process.on('message', handleMessage)
 
   // process.on('disconnect', handleDisconnect)
   exitHook(ExtensionManagement.runExitHooks)
@@ -93,7 +98,7 @@ const main = async () => {
   // step 1: listen to shared process
   // step 2: when extension is activated, load whole extension api and extension commands
 
-  await SharedProcess.listen(InternalCommand)
+  // await SharedProcess.listen(InternalCommand)
 }
 
 main()

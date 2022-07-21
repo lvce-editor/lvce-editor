@@ -52,5 +52,6 @@ export const create = () => {
     dispose() {
       childProcess.kill()
     },
+    _process: childProcess,
   }
 }

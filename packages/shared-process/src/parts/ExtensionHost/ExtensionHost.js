@@ -1,10 +1,10 @@
 import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
 import * as Callback from '../Callback/Callback.js'
-import * as Error from '../Error/Error.js'
 import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
+import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as Socket from '../Socket/Socket.js'
+
 // TODO maybe rename to extension host management for clarity
 
 /**
@@ -18,68 +18,8 @@ export const state = {
 const createExtensionHost = async (socket) => {
   Assert.object(socket)
   const ipc = ExtensionHostIpc.create()
-
-  const handleChildProcessError = (error) => {
-    console.error(`[Extension Host] ${error}`)
-  }
-
-  const handleChildProcessExit = (exitCode) => {
-    console.info(`[SharedProcess] Extension Host exited with code ${exitCode}`)
-  }
-
-  const handleSocketClose = () => {
-    console.info('[shared process] disposing extension host')
-    ipc.dispose()
-  }
-
-  socket.on('close', handleSocketClose)
-
-  ipc.on('error', handleChildProcessError)
-
-  ipc.on('exit', handleChildProcessExit)
-
-  const extensionHost = {
-    on(event, listener) {
-      ipc.on(event, listener)
-    },
-    send(message) {
-      ipc.send(message)
-    },
-    dispose() {
-      ipc.dispose()
-    },
-  }
-
-  await new Promise((resolve, reject) => {
-    const handleFirstError = (error) => {
-      cleanup()
-      reject(error)
-    }
-    const handleFirstExit = (exitCode) => {
-      cleanup()
-      reject(new VError(`Extension Host exited with code ${exitCode}`))
-    }
-    const handleFirstMessage = () => {
-      cleanup()
-      resolve(undefined)
-    }
-    const handleSocketClose = () => {
-      cleanup()
-      ipc.off('error', handleChildProcessError)
-      ipc.off('exit', handleChildProcessExit)
-      resolve(undefined)
-    }
-    const cleanup = () => {
-      ipc.off('error', handleFirstError)
-      ipc.off('exit', handleFirstExit)
-      ipc.off('message', handleFirstMessage)
-    }
-    ipc.on('error', handleFirstError)
-    ipc.on('exit', handleFirstExit)
-    ipc.on('message', handleFirstMessage)
-    socket.on('close', handleSocketClose)
-  })
-  return extensionHost
+  const rpc = ExtensionHostRpc.create(ipc, socket)
+  return rpc
 }
 
 export const start = async (socket) => {
