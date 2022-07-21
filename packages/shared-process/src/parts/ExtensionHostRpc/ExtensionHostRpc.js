@@ -1,8 +1,10 @@
 import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
+import * as Timeout from '../Timeout/Timeout.js'
+
 // TODO maybe rename to extension host management for clarity
 
-const CONNECTION_TIMEOUT = 100
+const CONNECTION_TIMEOUT = 1000
 
 export const create = async (ipc, socket) => {
   Assert.object(socket)
@@ -59,7 +61,7 @@ export const create = async (ipc, socket) => {
       cleanup()
       reject(new VError('Extension host did not connect'))
     }
-    const timeout = setTimeout(handleTimeout, CONNECTION_TIMEOUT)
+    const timeout = Timeout.setTimeout(handleTimeout, CONNECTION_TIMEOUT)
     ipc.on('error', handleFirstError)
     ipc.on('exit', handleFirstExit)
     ipc.on('message', handleFirstMessage)

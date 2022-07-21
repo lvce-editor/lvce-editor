@@ -98,11 +98,8 @@ const main = async () => {
   // step 1: listen to shared process
   // step 2: when extension is activated, load whole extension api and extension commands
 
-  // await SharedProcess.listen(InternalCommand)
+  console.log('hello from extension host')
+  await SharedProcess.listen(InternalCommand)
 }
 
 main()
-
-// setTimeout(() => {
-//   throw new Error('channel closed')
-// }, 0)

@@ -35,8 +35,6 @@ export const electronSend = (message) => {
 
 const handleWebSocketSharedProcess = (message, handle) => {
   // TODO when it is an extension host websocket, spawn extension host
-  console.log('[shared-process] got websocket handle for shared process')
-  console.log(message)
   handle.on('error', (error) => {
     if (error && error.code === 'ECONNRESET') {
       return

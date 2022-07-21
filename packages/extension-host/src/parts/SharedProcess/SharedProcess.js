@@ -1,3 +1,5 @@
+import * as Ipc from '../Ipc/Ipc.js'
+
 // import * as PrettyError from '../PrettyError/PrettyError.js'
 
 export const state = {
@@ -30,48 +32,6 @@ export const send = (message) => {
 //   throw error
 // }
 
-const listenProcess = async (commandRegistry) => {
-  if (!process.send) {
-    return undefined
-  }
-  return {
-    send(message) {
-      // @ts-ignore
-      process.send(message)
-    },
-    on(event, listener) {
-      switch (event) {
-        case 'message':
-          process.on('message', listener)
-          break
-        default:
-          throw new Error('unknown event listener type')
-      }
-    },
-  }
-}
-
-const listenWorker = async (commandRegistry) => {
-  const { parentPort } = await import('node:worker_threads')
-  if (!parentPort) {
-    return undefined
-  }
-  return {
-    send(message) {
-      parentPort.postMessage(message)
-    },
-    on(event, listener) {
-      switch (event) {
-        case 'message':
-          parentPort.on('message', listener)
-          break
-        default:
-          throw new Error('unknown event listener type')
-      }
-    },
-  }
-}
-
 const shouldPrintError = (error) => {
   if (!error || !error.message) {
     return true
@@ -92,11 +52,11 @@ const shouldPrintError = (error) => {
   return true
 }
 
+// TODO pass ipc type via argv
 export const listen = async (InternalCommand) => {
-  const ipc = (await listenProcess()) || (await listenWorker())
-
+  const ipc = await Ipc.listen(Ipc.Methods.WebSocket)
   if (!ipc) {
-    console.warn('cannot connect to parent process')
+    console.warn('[extension-host] cannot connect to parent process')
     process.exit(20)
   }
   const handleMessage = async (message) => {
@@ -165,7 +125,8 @@ export const listen = async (InternalCommand) => {
   // @ts-ignore
   state.ipc = ipc
   ipc.on('message', handleMessage)
-  ipc.send('ready')
+  console.log('[extension host] finished ipc setup')
+  console.log({ ipc })
 }
 
 export const invoke = (method, ...parameters) => {
