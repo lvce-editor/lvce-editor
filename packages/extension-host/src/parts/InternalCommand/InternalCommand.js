@@ -127,6 +127,7 @@ const getFn = (id) => {
       return ExtensionHostBraceCompletion.executeBraceCompletionProvider
     case 'Reference.execute':
     case 'References.execute':
+    case 'ExtensionHostReferences.executeReferenceProvider':
       return ExtensionHostReference.executeReferenceProvider
     case 'Implementation.execute':
       return ExtensionHostImplementation.executeImplementationProvider

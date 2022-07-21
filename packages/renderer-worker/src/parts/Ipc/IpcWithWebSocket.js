@@ -1,8 +1,8 @@
-export const listen = () => {
+export const listen = ({ protocol }) => {
   // TODO replace this during build
   const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
   const wsUrl = `${wsProtocol}//${location.host}`
-  const webSocket = new WebSocket(wsUrl)
+  const webSocket = new WebSocket(wsUrl, [protocol])
   const pendingMessages = []
   webSocket.onopen = () => {
     ipc.send = (message) => {

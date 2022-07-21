@@ -22,6 +22,7 @@ export const unregisterReferenceProvider = (referenceProvider) => {
 }
 
 export const executeReferenceProvider = async (documentId, offset) => {
+  console.log('execute reference provider', documentId, offset)
   try {
     const textDocument = TextDocument.get(documentId)
     if (!textDocument) {

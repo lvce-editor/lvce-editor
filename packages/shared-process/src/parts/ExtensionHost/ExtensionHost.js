@@ -105,7 +105,7 @@ export const start = async (socket) => {
   }
 }
 
-export const send = async (id, message) => {
+export const send = async (socket, id, message) => {
   Assert.number(id)
   Assert.object(message)
   console.log(Object.keys(state))
@@ -113,13 +113,25 @@ export const send = async (id, message) => {
   if (!extensionHost) {
     throw new VError(`no extension host with id ${id} found`)
   }
-  const result = await JsonRpc.invoke(
-    extensionHost,
-    message.method,
-    ...message.params
-  )
-  console.log({ result })
-  return result
+  try {
+    const result = await JsonRpc.invoke(
+      extensionHost,
+      message.method,
+      ...message.params
+    )
+    socket.send({
+      jsonrpc: '2.0',
+      id: message.id,
+      result,
+    })
+  } catch (error) {
+    // console.log({ error })
+    socket.send({
+      jsonrpc: '2.0',
+      id: message.id,
+      error,
+    })
+  }
 }
 
 export const dispose = (id) => {

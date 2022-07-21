@@ -218,7 +218,16 @@ const launchSharedProcess = () => {
 
 // TODO handle all possible errors from shared process
 
+const handleUpgradeSharedProcess = () => {}
+
+/**
+ *
+ * @param {import('http').IncomingMessage} request
+ * @param {import('net').Socket} socket
+ */
 const handleUpgrade = (request, socket) => {
+  const webSocketProtocol = request.headers['sec-websocket-protocol']
+
   request.on('error', (error) => {
     console.info('[info]: request upgrade error', error)
   })

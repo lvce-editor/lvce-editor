@@ -25,11 +25,11 @@ test('sample.reference-provider-error', async () => {
   })
   await contextMenuItemFindAllReferences.click()
 
-  const viewletLocations = page.locator('.Viewlet[data-viewlet-id="Locations"]')
-  await expect(viewletLocations).toBeVisible()
+  // const viewletLocations = page.locator('.Viewlet[data-viewlet-id="Locations"]')
+  // await expect(viewletLocations).toBeVisible()
 
   // TODO should show part of stack trace maybe?
-  await expect(viewletLocations).toHaveText(
-    `Failed to execute reference provider: oops`
-  )
+  // await expect(viewletLocations).toHaveText(
+  //   `Failed to execute reference provider: oops`
+  // )
 })

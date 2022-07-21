@@ -3,10 +3,12 @@ import * as ExtensionHostIpcWithWebWorker from './ExtensionHostIpcWithWebWorker.
 import * as Callback from '../Callback/Callback.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import { JsonRpcError } from '../Errors/Errors.js'
+import * as ExtensionHostIpcWithWebSocket from './ExtensionHostIpcWithWebSocket.js'
 
 export const Methods = {
   SharedProcess: 1,
   WebWorker: 2,
+  WebSocket: 3,
 }
 
 const getIpc = (method) => {
@@ -15,6 +17,8 @@ const getIpc = (method) => {
       return ExtensionHostIpcWithSharedProcess.listen()
     case Methods.WebWorker:
       return ExtensionHostIpcWithWebWorker.listen()
+    case Methods.WebSocket:
+      return ExtensionHostIpcWithWebSocket.listen()
     default:
       throw new Error(`unexpected extension host type: ${method}`)
   }
