@@ -13,8 +13,11 @@ const getActualPath = (fileUri) => {
 
 export const prepare = (error) => {
   const message = error.message
-  if (error.cause) {
-    error = error.cause()
+  if (error && error.cause) {
+    const cause = error.cause()
+    if (cause) {
+      error = cause
+    }
   }
   const cleanedStack = cleanStack(error.stack)
   const lines = cleanedStack.split('\n')

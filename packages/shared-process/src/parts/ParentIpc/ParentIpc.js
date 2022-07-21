@@ -5,7 +5,9 @@ import * as Command from '../Command/Command.js'
 import * as Debug from '../Debug/Debug.js'
 import * as Error from '../Error/Error.js'
 import { requiresSocket } from '../RequiresSocket/RequiresSocket.js'
-
+import * as Platform from '../Platform/Platform.js'
+import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
+import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
 // TODO add tests for this
 
 // TODO handle structure: one shared process multiple extension hosts
@@ -48,8 +50,17 @@ const handleWebSocketSharedProcess = (message, handle) => {
   )
 }
 
-const handleWebSocketExtensionHost = (message, handle) => {
-  console.log('[shared-process] received extension host websocket', message)
+// TODO lazyload modules for spawning extension host, they are only needed later
+const handleWebSocketExtensionHost = async (message, handle) => {
+  // console.log('[shared-process] received extension host websocket', message)
+  const ipc = ExtensionHostIpc.create()
+  console.info('[sharedprocess] creating extension ipc')
+  const rpc = await ExtensionHostRpc.create(ipc, handle)
+  console.info('[sharedprocess] created extension host rpc')
+  ipc._process.send(message, handle)
+  // rpc.send(message)
+  // console.log('spawned extension host')
+  // console.log(rpc)
 }
 
 const handleWebSocket = (message, handle) => {
