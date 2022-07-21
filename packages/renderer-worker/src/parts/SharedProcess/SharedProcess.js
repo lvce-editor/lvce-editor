@@ -85,7 +85,7 @@ export const handleMessageFromSharedProcess = async (message) => {
 
 const getIpc = () => {
   if (platform === 'web' || platform === 'remote') {
-    return IpcWithWebSocket.listen()
+    return IpcWithWebSocket.listen({ protocol: 'lvce.shared-process' })
   }
   if (platform === 'electron') {
     return IpcWithElectron.listen()

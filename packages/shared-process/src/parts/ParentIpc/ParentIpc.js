@@ -1,4 +1,5 @@
 import { MessagePort, parentPort } from 'node:worker_threads'
+import VError from 'verror'
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
 import * as Debug from '../Debug/Debug.js'
@@ -30,51 +31,90 @@ export const electronSend = (message) => {
   }
 }
 
-const handleMessageFromParentProcess = async (message, handle) => {
-  if (handle) {
-    handle.on('error', (error) => {
-      if (error && error.code === 'ECONNRESET') {
-        return
-      }
-      console.info('[info shared process: handle error]', error)
-    })
-    Command.execute(
-      /* WebSocketServer.handleUpgrade */ 5621,
-      /* message */ message,
-      /* handle */ handle
-    )
-  } else if (message.result) {
-    Callback.resolve(message.id, message.result)
-  } else if (message.method) {
-    if (message.id) {
-      try {
-        const result = requiresSocket(message.method)
-          ? await Command.invoke(message.method, handle, ...message.params)
-          : await Command.invoke(message.method, ...message.params)
-        electronSend({
-          jsonrpc: '2.0',
-          id: message.id,
-          result: result ?? null,
-        })
-      } catch (error) {
-        console.error('[shared process] command failed to execute')
-        console.error(error)
-        electronSend({
-          jsonrpc: '2.0',
-          code: /* ExpectedError */ -32000,
-          id: message.id,
-          error: 'ExpectedError',
-          // @ts-ignore
-          data: error.toString(),
-        })
-      }
-    } else {
-      // TODO handle error
-      Command.execute(message.method, null, ...message.params)
+const handleWebSocketSharedProcess = (message, handle) => {
+  // TODO when it is an extension host websocket, spawn extension host
+  console.log('[shared-process] got websocket handle for shared process')
+  console.log(message)
+  handle.on('error', (error) => {
+    if (error && error.code === 'ECONNRESET') {
+      return
+    }
+    console.info('[info shared process: handle error]', error)
+  })
+  Command.execute(
+    /* WebSocketServer.handleUpgrade */ 5621,
+    /* message */ message,
+    /* handle */ handle
+  )
+}
+
+const handleWebSocketExtensionHost = (message, handle) => {
+  console.log('[shared-process] received extension host websocket', message)
+}
+
+const handleWebSocket = (message, handle) => {
+  const headers = message.headers
+  if (!headers) {
+    throw new VError('missing websocket headers')
+  }
+  const protocol = headers['sec-websocket-protocol']
+  if (!protocol) {
+    throw new VError('missing sec websocket protocol header')
+  }
+  switch (protocol) {
+    case 'lvce.shared-process':
+      return handleWebSocketSharedProcess(message, handle)
+    case 'lvce.extension-host':
+      return handleWebSocketExtensionHost(message, handle)
+    default:
+      throw new VError(`unsupported sec-websocket-procotol ${protocol}`)
+  }
+}
+
+const handleJsonRpcResult = (message) => {
+  Callback.resolve(message.id, message.result)
+}
+
+const handleJsonRpcMessage = async (message, handle) => {
+  if (message.id) {
+    try {
+      const result = requiresSocket(message.method)
+        ? await Command.invoke(message.method, handle, ...message.params)
+        : await Command.invoke(message.method, ...message.params)
+      electronSend({
+        jsonrpc: '2.0',
+        id: message.id,
+        result: result ?? null,
+      })
+    } catch (error) {
+      console.error('[shared process] command failed to execute')
+      console.error(error)
+      electronSend({
+        jsonrpc: '2.0',
+        code: /* ExpectedError */ -32000,
+        id: message.id,
+        error: 'ExpectedError',
+        // @ts-ignore
+        data: error.toString(),
+      })
     }
   } else {
-    console.warn('unknown message', message)
+    // TODO handle error
+    Command.execute(message.method, null, ...message.params)
   }
+}
+
+const handleMessageFromParentProcess = async (message, handle) => {
+  if (handle) {
+    return handleWebSocket(message, handle)
+  }
+  if (message.result) {
+    return handleJsonRpcResult(message)
+  }
+  if (message.method) {
+    return handleJsonRpcMessage(message, handle)
+  }
+  console.warn('unknown message', message)
 }
 
 /**
