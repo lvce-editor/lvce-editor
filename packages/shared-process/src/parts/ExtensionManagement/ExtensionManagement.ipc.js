@@ -17,5 +17,6 @@ export const __initialize__ = () => {
   Command.register('ExtensionHost.getColorThemeNames', ExtensionHostColorTheme.getColorThemeNames)
 
   Command.register('ExtensionHost.getLanguages', ExtensionHostLanguages.getLanguages)
+  Command.register('ExtensionHost.getLanguageConfiguration', ExtensionHostLanguages.getLanguageConfiguration)
   Command.register('ExtensionHost.getIconThemeJson', ExtensionHostIconTheme.getIconTheme)
 }
