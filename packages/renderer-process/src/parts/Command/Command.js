@@ -28,6 +28,7 @@ const MODULE_AUDIO = 45
 const MODULE_META = 46
 const MODULE_DOWNLOAD = 47
 const MODULE_OPEN = 48
+const MODULE_CLIPBOARD = 49
 
 export const state = {
   commands: Object.create(null),
@@ -84,6 +85,8 @@ const loadModule = (moduleId) => {
       return import('../Download/Download.ipc.js')
     case MODULE_OPEN:
       return import('../Open/Open.ipc.js')
+    case MODULE_CLIPBOARD:
+      return import('../ClipBoard/ClipBoard.ipc.js')
     default:
       throw new Error('unknown module')
   }
@@ -101,6 +104,9 @@ const getOrLoadModule = (moduleId) => {
 
 const getModuleId = (commandId) => {
   switch (commandId) {
+    case 'ClipBoard.readText':
+    case 'ClipBoard.writeText':
+      return MODULE_CLIPBOARD
     case 'Developer.showState':
     case 'Developer.getMemoryUsage':
       return MODULE_DEVELOPER

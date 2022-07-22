@@ -1,16 +1,16 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
 import * as Assert from '../Assert/Assert.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const readText = async () => {
-  let text
   try {
-    text = await navigator.clipboard.readText()
+    return await RendererProcess.invoke('ClipBoard.readText')
   } catch (error) {
     // @ts-ignore
     if (error.message === 'Read permission denied.') {
       throw new VError(
-        'Failed to paste text: The Browser disallowed reading from clipboard'
+        'Failed to read text from clipboard: The Browser disallowed reading from clipboard'
       )
     }
     if (
@@ -18,18 +18,17 @@ export const readText = async () => {
       error.message === 'navigator.clipboard.readText is not a function'
     ) {
       throw new VError(
-        'Failed to read text: The Clipboard Api is not available in Firefox'
+        'Failed to read text from clipboard: The Clipboard Api is not available in Firefox'
       )
     }
     throw new VError(error, `Failed to read text from clipboard`)
   }
-  return text
 }
 
-export const writeText = async (path) => {
+export const writeText = async (text) => {
   try {
-    Assert.string(path)
-    await navigator.clipboard.writeText(path)
+    Assert.string(text)
+    await RendererProcess.invoke('ClipBoard.writeText', /* text */ text)
   } catch (error) {
     throw new VError(error, 'Failed to write text to clipboard')
   }

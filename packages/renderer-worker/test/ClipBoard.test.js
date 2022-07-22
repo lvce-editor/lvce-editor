@@ -11,63 +11,65 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
     }),
   }
 })
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
 
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
+)
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
 )
 
 const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
 
 test('readText', async () => {
-  globalThis.navigator = {
-    // @ts-ignore
-    clipboard: {
-      // @ts-ignore
-      readText() {
-        return 'abc'
-      },
-    },
-  }
-  await expect(ClipBoard.readText()).resolves.toBe('abc')
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    return 'abc'
+  })
+  expect(await ClipBoard.readText()).toBe('abc')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('ClipBoard.readText')
 })
 
 test('readText - clipboard not available', async () => {
-  globalThis.navigator = {
-    // @ts-ignore
-    clipboard: {},
-  }
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    throw new TypeError('navigator.clipboard.readText is not a function')
+  })
   await expect(ClipBoard.readText()).rejects.toThrowError(
     new Error(
-      `Failed to read text: The Clipboard Api is not available in Firefox`
+      `Failed to read text from clipboard: The Clipboard Api is not available in Firefox`
     )
   )
 })
 
 test('readText - clipboard blocked', async () => {
-  globalThis.navigator = {
-    // @ts-ignore
-    clipboard: {
-      readText() {
-        throw new Error('Read permission denied.')
-      },
-    },
-  }
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    throw new Error('Read permission denied.')
+  })
   await expect(ClipBoard.readText()).rejects.toThrowError(
     new Error(
-      `Failed to paste text: The Browser disallowed reading from clipboard`
+      `Failed to read text from clipboard: The Browser disallowed reading from clipboard`
     )
   )
 })
 
 test('readText - other error', async () => {
-  globalThis.navigator = {
-    // @ts-ignore
-    clipboard: {
-      readText() {
-        throw new TypeError('x is not a function')
-      },
-    },
-  }
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    throw new TypeError('x is not a function')
+  })
   await expect(ClipBoard.readText()).rejects.toThrowError(
     new Error(
       'Failed to read text from clipboard: TypeError: x is not a function'
@@ -76,27 +78,21 @@ test('readText - other error', async () => {
 })
 
 test('writeText', async () => {
-  globalThis.navigator = {
-    // @ts-ignore
-    clipboard: {
-      // @ts-ignore
-      writeText: jest.fn(),
-    },
-  }
-  await ClipBoard.writeText('abc')
   // @ts-ignore
-  expect(globalThis.navigator.clipboard.writeText).toHaveBeenCalledWith('abc')
+  RendererProcess.invoke.mockImplementation(() => {})
+  await ClipBoard.writeText('abc')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'ClipBoard.writeText',
+    'abc'
+  )
 })
 
 test('writeText - error', async () => {
-  globalThis.navigator = {
-    // @ts-ignore
-    clipboard: {
-      writeText() {
-        throw new Error('not allowed')
-      },
-    },
-  }
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    throw new Error('not allowed')
+  })
   await expect(ClipBoard.writeText('abc')).rejects.toThrowError(
     new Error('Failed to write text to clipboard: Error: not allowed')
   )
@@ -106,15 +102,10 @@ test('writeText - error', async () => {
 test('readNativeFiles - not supported', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'ClipBoard.readFiles':
-        return {
-          source: 'notSupported',
-          type: 'none',
-          files: [],
-        }
-      default:
-        throw new Error('unexpected message')
+    return {
+      source: 'notSupported',
+      type: 'none',
+      files: [],
     }
   })
   expect(await ClipBoard.readNativeFiles()).toEqual({
@@ -127,15 +118,10 @@ test('readNativeFiles - not supported', async () => {
 test('readNativeFiles - copied gnome files', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'ClipBoard.readFiles':
-        return {
-          source: 'gnomeCopiedFiles',
-          type: 'copy',
-          files: ['/test/some-file.txt'],
-        }
-      default:
-        throw new Error('unexpected message')
+    return {
+      source: 'gnomeCopiedFiles',
+      type: 'copy',
+      files: ['/test/some-file.txt'],
     }
   })
   expect(await ClipBoard.readNativeFiles()).toEqual({
@@ -148,15 +134,10 @@ test('readNativeFiles - copied gnome files', async () => {
 test('readNativeFiles - cut gnome files', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'ClipBoard.readFiles':
-        return {
-          source: 'gnomeCopiedFiles',
-          type: 'cut',
-          files: ['/test/some-file.txt'],
-        }
-      default:
-        throw new Error('unexpected message')
+    return {
+      source: 'gnomeCopiedFiles',
+      type: 'cut',
+      files: ['/test/some-file.txt'],
     }
   })
   expect(await ClipBoard.readNativeFiles()).toEqual({
@@ -169,12 +150,7 @@ test('readNativeFiles - cut gnome files', async () => {
 test('writeNativeFiles', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'ClipBoard.writeFiles':
-        return null
-      default:
-        throw new Error('unexpected message')
-    }
+    return null
   })
   await ClipBoard.writeNativeFiles('copy', ['/test/my-folder'])
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
