@@ -36,10 +36,10 @@ test('readText - clipboard not available', async () => {
     // @ts-ignore
     clipboard: {},
   }
-  console.warn = jest.fn()
-  await expect(ClipBoard.readText()).resolves.toBe(undefined)
-  expect(console.warn).toHaveBeenCalledWith(
-    'Failed to paste text: The Clipboard Api is not available in Firefox'
+  await expect(ClipBoard.readText()).rejects.toThrowError(
+    new Error(
+      `Failed to read text: The Clipboard Api is not available in Firefox`
+    )
   )
 })
 
@@ -52,10 +52,10 @@ test('readText - clipboard blocked', async () => {
       },
     },
   }
-  console.warn = jest.fn()
-  await expect(ClipBoard.readText()).resolves.toBe(undefined)
-  expect(console.warn).toHaveBeenCalledWith(
-    'Failed to paste text: The Browser disallowed reading from clipboard'
+  await expect(ClipBoard.readText()).rejects.toThrowError(
+    new Error(
+      `Failed to paste text: The Browser disallowed reading from clipboard`
+    )
   )
 })
 
@@ -64,13 +64,15 @@ test('readText - other error', async () => {
     // @ts-ignore
     clipboard: {
       readText() {
-        throw new Error('test error')
+        throw new TypeError('x is not a function')
       },
     },
   }
-  console.warn = jest.fn()
-  await expect(ClipBoard.readText()).resolves.toBe(undefined)
-  expect(console.warn).toHaveBeenCalledWith(new Error('test error'))
+  await expect(ClipBoard.readText()).rejects.toThrowError(
+    new Error(
+      'Failed to read text from clipboard: TypeError: x is not a function'
+    )
+  )
 })
 
 test('writeText', async () => {
@@ -95,9 +97,9 @@ test('writeText - error', async () => {
       },
     },
   }
-  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
-  await ClipBoard.writeText('abc')
-  expect(spy).toHaveBeenCalledWith(new Error('not allowed'))
+  await expect(ClipBoard.writeText('abc')).rejects.toThrowError(
+    new Error('Failed to write text to clipboard: Error: not allowed')
+  )
 })
 
 // TODO test readNativeFiles error
