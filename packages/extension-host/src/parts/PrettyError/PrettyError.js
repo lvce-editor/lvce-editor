@@ -8,6 +8,8 @@ import { ExecutionError } from '../Error/Error.js'
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
 
+const WS_PATH = 'extension-host/node_modules/ws'
+
 const getActualPath = (fileUri) => {
   if (fileUri.startsWith('file://')) {
     return fileURLToPath(fileUri)
@@ -63,6 +65,21 @@ export const prepare = (error) => {
   const index = lines.indexOf(file)
   if (index !== -1) {
     relevantStack = lines.slice(index)
+  }
+  for (let i = 0; i < relevantStack.length; i++) {
+    const line = relevantStack[i]
+    let match = line.match(RE_PATH_1)
+    if (!match) {
+      match = line.match(RE_PATH_2)
+    }
+    if (match) {
+      const [_, path, line, column] = match
+      // exclude stack from ws module
+      if (path.includes(WS_PATH)) {
+        relevantStack = relevantStack.slice(0, i)
+        break
+      }
+    }
   }
   return {
     message,
