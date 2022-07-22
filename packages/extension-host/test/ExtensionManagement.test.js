@@ -4,14 +4,14 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import VError from 'verror'
-import * as ExtensionManagement from '../src/parts/ExtensionHostExtension/ExtensionHostExtension.js'
+import * as ExtensionHostExtension from '../src/parts/ExtensionHostExtension/ExtensionHostExtension.js'
 
 const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 
 test('enable - no parameters', async () => {
-  await expect(ExtensionManagement.enable()).rejects.toThrowError(
+  await expect(ExtensionHostExtension.enable()).rejects.toThrowError(
     new Error(`extension must be defined but is undefined`)
   )
 })
@@ -25,13 +25,13 @@ test('enable - extension throws error on import', async () => {
 `
   )
   await expect(
-    ExtensionManagement.enable({
+    ExtensionHostExtension.enable({
       path: tmpDir,
       main: 'main.js',
       id: 'test-author.test-extension',
     })
   ).rejects.toThrowError(
-    new VError('Failed to load extension "test-author.test-extension": Oops')
+    new Error('Failed to load extension "test-author.test-extension": Oops')
   )
 })
 
@@ -40,13 +40,13 @@ test('enable - extension has no activate method', async () => {
   await writeFile(join(tmpDir, 'package.json'), `{ "type": "module" }`)
   await writeFile(join(tmpDir, 'main.js'), ``)
   await expect(
-    ExtensionManagement.enable({
+    ExtensionHostExtension.enable({
       path: tmpDir,
       main: 'main.js',
       id: 'test-author.test-extension',
     })
   ).rejects.toThrowError(
-    new VError(
+    new Error(
       'Failed to activate extension "test-author.test-extension": TypeError: module.activate is not a function'
     )
   )
@@ -65,13 +65,13 @@ test('enable - activate is not a function', async () => {
 `
   )
   await expect(
-    ExtensionManagement.enable({
+    ExtensionHostExtension.enable({
       path: tmpDir,
       main: 'main.js',
       id: 'test-author.test-extension',
     })
   ).rejects.toThrowError(
-    new VError(
+    new Error(
       'Failed to activate extension "test-author.test-extension": TypeError: module.activate is not a function'
     )
   )
@@ -82,14 +82,14 @@ test('enable - importing extension that has wrong main file throws error', async
   await writeFile(join(tmpDir, 'package.json'), `{ "type": "module" }`)
   const wrongAbsolutePath = join(tmpDir, 'src', 'non-existent.js')
   await expect(
-    ExtensionManagement.enable({
+    ExtensionHostExtension.enable({
       path: `${tmpDir}`,
       main: 'src/non-existent.js',
       id: 'test-author.test-extension',
     })
   ).rejects.toThrowError(
-    new VError(
-      `Failed to load extension \"test-author.test-extension\": Cannot find module '${wrongAbsolutePath}' from 'src/parts/ExtensionManagement/ExtensionManagement.js'`
+    new Error(
+      `Failed to load extension \"test-author.test-extension\": Cannot find module '${wrongAbsolutePath}' from 'src/parts/ExtensionHostExtension/ExtensionHostExtension.js'`
     )
   )
 })
@@ -105,13 +105,13 @@ test('enable - reference error', async () => {
 `
   )
   await expect(
-    ExtensionManagement.enable({
+    ExtensionHostExtension.enable({
       path: `${tmpDir}`,
       main: 'main.js',
       id: 'test-author.test-extension',
     })
   ).rejects.toThrowError(
-    new VError(
+    new Error(
       `Failed to activate extension \"test-author.test-extension\": ReferenceError: vscode is not defined`
     )
   )
@@ -125,7 +125,7 @@ test('enable - commonjs extension', async () => {
     `exports.activate = () => {}
 `
   )
-  await ExtensionManagement.enable({
+  await ExtensionHostExtension.enable({
     path: `${tmpDir}`,
     main: 'main.js',
     id: 'test-author.test-extension',

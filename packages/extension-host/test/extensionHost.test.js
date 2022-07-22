@@ -102,7 +102,7 @@ const createExtensionHostViaWorker = async () => {
 
 // TODO skip these integration tests, use e2e tests instead (tests/extension-api-tests)
 
-// test('extensionHost loads via fork', async () => {
+// test.skip('extensionHost loads via fork', async () => {
 //   const extensionHost = await createExtensionHostViaFork()
 //   extensionHost.dispose()
 // })
@@ -142,7 +142,7 @@ afterEach(() => {
   extensionHost.dispose()
 })
 
-test('activate extension', async () => {
+test.skip('activate extension', async () => {
   const extension1 = await getManifest({
     path: `${__dirname}/fixtures/extension-1`,
   })
@@ -266,7 +266,7 @@ test.skip('executing failing tab completion provider should log error message bu
 
 // TODO test that extension host doesn't crash when formatting provider fails
 
-test('memory stats', async () => {
+test.skip('memory stats', async () => {
   expect(
     await invoke(extensionHost, {
       method: 'Stats.getMemoryInfo',
@@ -286,7 +286,7 @@ test('memory stats', async () => {
 
 // TODO test when command fails to execute
 
-test('Api - Command.execute', async () => {
+test.skip('Api - Command.execute', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(
     join(tmpDir, 'package.json'),
