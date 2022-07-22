@@ -1,6 +1,18 @@
 import { jest } from '@jest/globals'
 import { EventEmitter } from 'events'
-import * as IpcWithWebSocket from '../src/parts/Ipc/IpcWithWebSocket.js'
+
+jest.unstable_mockModule('ws', () => {
+  return {
+    WebSocketServer: class {
+      handleUpgrade(message, socket, buffer, callback) {
+        callback(socket)
+      }
+    },
+  }
+})
+
+const IpcWithWebSocket = await import('../src/parts/Ipc/IpcWithWebSocket.js')
+const ws = await import('ws')
 
 const createFakeIpc = () => {
   const emitter = new EventEmitter()
@@ -39,6 +51,6 @@ test('listen', async () => {
   const ipcPromise = IpcWithWebSocket.listen(processIpc)
   const socket = {}
   processIpc.emit('message', '', socket)
-  expect(await ipcPromise).toBe(socket)
+  expect(await ipcPromise).toBeDefined()
   expect(processIpc.listenerCount()).toBe(0)
 })
