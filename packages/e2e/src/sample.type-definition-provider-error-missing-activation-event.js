@@ -6,7 +6,7 @@ import {
   expect,
 } from './_testFrameWork.js'
 
-test('sample.type-definition-provider-error-missing-activation-event', async () => {
+test.skip('sample.type-definition-provider-error-missing-activation-event', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(
     `${tmpDir}/test.js`,
