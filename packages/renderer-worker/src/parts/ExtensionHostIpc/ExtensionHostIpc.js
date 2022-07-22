@@ -1,9 +1,6 @@
-import * as ExtensionHostIpcWithSharedProcess from './ExtensionHostIpcWithSharedProcess.js'
-import * as ExtensionHostIpcWithWebWorker from './ExtensionHostIpcWithWebWorker.js'
 import * as Callback from '../Callback/Callback.js'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import { JsonRpcError } from '../Errors/Errors.js'
-import * as ExtensionHostIpcWithWebSocket from './ExtensionHostIpcWithWebSocket.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 export const Methods = {
   SharedProcess: 1,
@@ -11,14 +8,14 @@ export const Methods = {
   WebSocket: 3,
 }
 
-const getIpc = (method) => {
+const getModule = (method) => {
   switch (method) {
     case Methods.SharedProcess:
-      return ExtensionHostIpcWithSharedProcess.listen()
+      return import('./ExtensionHostIpcWithSharedProcess.js')
     case Methods.WebWorker:
-      return ExtensionHostIpcWithWebWorker.listen()
+      return import('./ExtensionHostIpcWithWebWorker.js')
     case Methods.WebSocket:
-      return ExtensionHostIpcWithWebSocket.listen()
+      return import('./ExtensionHostIpcWithWebSocket.js')
     default:
       throw new Error(`unexpected extension host type: ${method}`)
   }
@@ -47,8 +44,7 @@ const restoreError = (error) => {
   return restoredError
 }
 
-const handleMessage = (event) => {
-  const message = event.data
+const handleMessage = (message) => {
   if (message.id) {
     if (isResultMessage(message)) {
       Callback.resolve(message.id, message.result)
@@ -65,7 +61,8 @@ const handleMessage = (event) => {
 }
 
 export const listen = async (method) => {
-  const ipc = await getIpc(method)
+  const module = await getModule(method)
+  const ipc = await module.listen()
   ipc.onmessage = handleMessage
   return {
     invoke(method, ...params) {

@@ -33,6 +33,7 @@ const getFn = (id) => {
     case 384:
     case 'Completion.execute':
     case 'executeCompletionProvider':
+    case 'ExtensionHostCompletion.execute':
       return ExtensionHostCompletion.executeCompletionProvider
     case 386:
     case 'executeTabCompletionProvider':
