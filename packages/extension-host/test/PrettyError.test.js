@@ -152,18 +152,31 @@ test('prepareJsonError', async () => {
   })
 })
 
-test.skip('prepare - error with internal websocket stack trace', () => {
+test('prepare - error with internal websocket stack trace', () => {
   const error = new Error()
   error.message = 'oops'
   error.stack = `Error: Failed to execute reference provider: oops
-    at Object.provideReferences (file:///user/Documents/lvce-editor/packages/e2e/fixtures/sample.reference-provider-error/main.js:5:11)
-    at executeReferenceProvider (file:///user/Documents/lvce-editor/packages/extension-host/src/parts/ExtensionHostReference/ExtensionHostReference.js:43:48)
-    at Module.invoke (file:///user/Documents/lvce-editor/packages/extension-host/src/parts/InternalCommand/InternalCommand.js:149:10)
-    at handleMessage (file:///user/Documents/lvce-editor/packages/extension-host/src/parts/SharedProcess/SharedProcess.js:83:44)
-    at WebSocket.wrappedListener (file:///user/Documents/lvce-editor/packages/extension-host/src/parts/Ipc/IpcWithWebSocket.js:59:13)
-    at Receiver.receiverOnMessage (/home/lvce-editor/packages/extension-host/node_modules/ws/lib/websocket.js:1178:20)
-    at Receiver.dataMessage (/home/lvce-editor/packages/extension-host/node_modules/ws/lib/receiver.js:528:14)
-    at Receiver.getData (/home/lvce-editor/packages/extension-host/node_modules/ws/lib/receiver.js:446:17)`
+    at Object.provideReferences (file:///test/lvce-editor/packages/e2e/fixtures/sample.reference-provider-error/main.js:5:11)
+    at executeReferenceProvider (file:///test/lvce-editor/packages/extension-host/src/parts/ExtensionHostReference/ExtensionHostReference.js:43:48)
+    at Module.invoke (file:///test/lvce-editor/packages/extension-host/src/parts/InternalCommand/InternalCommand.js:149:10)
+    at handleMessage (file:///test/lvce-editor/packages/extension-host/src/parts/SharedProcess/SharedProcess.js:83:44)
+    at WebSocket.wrappedListener (file:///test/lvce-editor/packages/extension-host/src/parts/Ipc/IpcWithWebSocket.js:59:13)
+    at Receiver.receiverOnMessage (/test/lvce-editor/packages/extension-host/node_modules/ws/lib/websocket.js:1178:20)
+    at Receiver.dataMessage (/test/lvce-editor/packages/extension-host/node_modules/ws/lib/receiver.js:528:14)
+    at Receiver.getData (/test/lvce-editor/packages/extension-host/node_modules/ws/lib/receiver.js:446:17)`
+  // @ts-ignore
+  fs.readFileSync.mockImplementation(() => {
+    return `export const activate = () => {
+  throw new Error('oops')
+}
+`
+  })
   const prettyError = PrettyError.prepare(error)
-  expect(prettyError.stack).toBe(`abc`)
+  // TODO in this case, only the first two stack lines are actually relevant
+  expect(prettyError.stack)
+    .toBe(`    at Object.provideReferences (file:///test/lvce-editor/packages/e2e/fixtures/sample.reference-provider-error/main.js:5:11)
+    at executeReferenceProvider (file:///test/lvce-editor/packages/extension-host/src/parts/ExtensionHostReference/ExtensionHostReference.js:43:48)
+    at Module.invoke (file:///test/lvce-editor/packages/extension-host/src/parts/InternalCommand/InternalCommand.js:149:10)
+    at handleMessage (file:///test/lvce-editor/packages/extension-host/src/parts/SharedProcess/SharedProcess.js:83:44)
+    at WebSocket.wrappedListener (file:///test/lvce-editor/packages/extension-host/src/parts/Ipc/IpcWithWebSocket.js:59:13)`)
 })
