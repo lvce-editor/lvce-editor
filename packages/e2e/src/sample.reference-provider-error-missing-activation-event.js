@@ -1,7 +1,7 @@
 import { writeFile } from 'fs/promises'
 import { getTmpDir, runWithExtension, test, expect } from './_testFrameWork.js'
 
-test('sample.reference-provider-error-missing-activation-event', async () => {
+test.skip('sample.reference-provider-error-missing-activation-event', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(
     `${tmpDir}/test.js`,
