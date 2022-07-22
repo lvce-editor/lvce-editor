@@ -29,7 +29,7 @@ test('listen - error - unexpected extension host type', async () => {
   )
 })
 
-test('handleMessage - error - method not found', async () => {
+test.only('handleMessage - error - method not found', async () => {
   // @ts-ignore
   ExtensionHostIpcWithWebWorker.listen.mockImplementation(() => {
     let _onmessage
@@ -42,17 +42,15 @@ test('handleMessage - error - method not found', async () => {
       },
       send(message) {
         _onmessage({
-          data: {
-            jsonrpc: '2.0',
-            id: message.id,
-            error: {
-              code: -32601,
-              message: `method not found: ${message.method}`,
-              data: `Error: method not found: ${message.method}
+          jsonrpc: '2.0',
+          id: message.id,
+          error: {
+            code: -32601,
+            message: `method not found: ${message.method}`,
+            data: `Error: method not found: ${message.method}
   at getFn (/test/Command.js:19:13)
   at Module.execute (/test/Command.js:24:14)
   at handleMessage (/test/Ipc/Ipc.js:31:38)`,
-            },
           },
         })
       },
