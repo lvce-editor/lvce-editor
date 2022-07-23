@@ -11,6 +11,7 @@ export const state = {
   pathSeparator: '',
   workspaceUri: '',
   source: '',
+  href: '',
 }
 
 /**
@@ -60,13 +61,16 @@ const getResolveRootFromSessionStorage = async () => {
 const getResolvedRootFromRendererProcess = async () => {
   const href = await Location.getHref()
   const url = new URL(href)
+  if (href.includes('tests/')) {
+    return undefined
+  }
   if (url.searchParams.has('replayId')) {
     const replayId = url.searchParams.get('replayId')
     await Command.execute(
       'SessionReplay.replaySession',
       /* sessionId */ replayId
     )
-    return
+    return undefined
   }
   if (url.pathname.startsWith('/github')) {
     return {
