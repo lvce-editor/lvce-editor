@@ -11,7 +11,7 @@ const getDirent = (uri) => {
 export const readFile = (uri) => {
   const dirent = getDirent(uri)
   if (!dirent) {
-    throw new Error('File not found')
+    throw new Error(`File not found: ${uri}`)
   }
   if (dirent.type !== 'file') {
     throw new Error('file is a directory')

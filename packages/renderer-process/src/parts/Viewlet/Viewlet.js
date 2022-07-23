@@ -175,6 +175,7 @@ export const handleError = (id, parentId, message) => {
     parentInstance.factory.handleError
   ) {
     parentInstance.factory.handleError(instance.state, message)
+    console.log('parent instance', parentInstance)
     return
   }
   if (
@@ -182,7 +183,7 @@ export const handleError = (id, parentId, message) => {
     instance.state.$Viewlet &&
     instance.state.$Viewlet.isConnected
   ) {
-    instance.state.$Viewlet.textContent = message
+    instance.state.$Viewlet.textContent = `${message}`
   }
 }
 

@@ -63,6 +63,7 @@ const handleMessage = (message) => {
 export const listen = async (method) => {
   const module = await getModule(method)
   const ipc = await module.listen()
+  // TODO maybe pass handleMessage as paramter to make code more functional
   ipc.onmessage = handleMessage
   return {
     invoke(method, ...params) {
