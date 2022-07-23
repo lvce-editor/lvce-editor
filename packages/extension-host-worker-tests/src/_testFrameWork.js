@@ -132,22 +132,23 @@ const createLocator = (selector, { nth = -1, hasText = '' } = {}) => {
       nth,
       hasText,
     },
-    async performAction(fn, options, retryCount = 3) {
-      await new Promise((resolve) => setTimeout(resolve, 500))
-      const element = querySelectorWithOptions(selector, {
-        hasText,
-        nth,
-      })
-      if (!element) {
-        if (retryCount <= 0) {
-          throw new Error(`selector not found: ${selector}`)
-        }
-        await new Promise((resolve) => {
-          setTimeout(resolve, 1000)
+    async performAction(fn, options) {
+      const startTime = Time.getTimeStamp()
+      const endTime = startTime + maxTimeout
+      let currentTime = startTime
+      while (currentTime < endTime) {
+        const element = querySelectorWithOptions(selector, {
+          hasText,
+          nth,
         })
-        return this.performAction(fn, options, retryCount - 1)
+        if (element) {
+          fn(element, options)
+          return
+        }
+        await Timeout.waitForMutation(100)
+        currentTime = Time.getTimeStamp()
       }
-      fn(element, options)
+      throw new Error(`selector not found: ${selector}`)
 
       // console.log({ clickOptions })
       // ElementActions.click(element, clickOptions)
@@ -276,17 +277,20 @@ export const runWithExtension = async (options) => {
 
 export const test = async (name, fn) => {
   let _error
+  let _start
+  let _end
+  let _duration
   try {
     if (!globalThis.__codeLoaded) {
       await new Promise((resolve) => {
         window.addEventListener('code/ready', resolve, { once: true })
       })
     }
-    const start = performance.now()
+    _start = performance.now()
     await fn()
-    const end = performance.now()
-    const duration = `${end - start}ms`
-    console.info(`[test passed] ${name} in ${duration}`)
+    _end = performance.now()
+    _duration = `${_end - _start}ms`
+    console.info(`[test passed] ${name} in ${_duration}`)
   } catch (error) {
     _error = error.message
     error.message = `Test failed: ${name}: ${error.message}`
@@ -307,7 +311,7 @@ export const test = async (name, fn) => {
     $TestOverlay.textContent = `test failed: ${_error}`
   } else {
     $TestOverlay.style.background = 'green'
-    $TestOverlay.textContent = `test passed`
+    $TestOverlay.textContent = `test passed in ${_duration}`
     $TestOverlay.dataset.state = 'pass'
   }
   document.body.append($TestOverlay)
@@ -387,6 +391,37 @@ const Timeout = {
   async short() {
     await new Promise((resolve) => setTimeout(resolve, 1000))
   },
+  async waitForMutation(maxDelay) {
+    const disposables = []
+    await Promise.race([
+      new Promise((resolve) => {
+        const timeout = setTimeout(resolve, maxDelay)
+        disposables.push(() => {
+          clearTimeout(timeout)
+        })
+      }),
+      new Promise((resolve) => {
+        const callback = (mutations) => {
+          resolve(undefined)
+        }
+        const observer = new MutationObserver(callback)
+        observer.observe(document.body, {
+          childList: true,
+          attributes: true,
+          characterData: true,
+          subtree: true,
+          attributeOldValue: true,
+          characterDataOldValue: true,
+        })
+        disposables.push(() => {
+          observer.disconnect()
+        })
+      }),
+    ])
+    for (const disposable of disposables) {
+      disposable()
+    }
+  },
 }
 
 const Assert = {
@@ -402,43 +437,52 @@ const Assert = {
   },
 }
 
+const maxTimeout = 2000
+
+const Time = {
+  getTimeStamp() {
+    return performance.now()
+  },
+}
+
 export const expect = (locator) => {
   return {
-    async checkSingleElementCondition(fn, options, retryCount = 3) {
-      console.log('checking...', retryCount)
-      const element = querySelectorWithOptions(
-        locator.selector,
-        locator.options
-      )
-      if (!element) {
-        if (retryCount <= 0) {
-          const message = ConditionErrors[fn.name](locator, options)
-          throw new Error(message)
+    async checkSingleElementCondition(fn, options) {
+      const startTime = Time.getTimeStamp()
+      const endTime = startTime + maxTimeout
+      let currentTime = startTime
+      while (currentTime < endTime) {
+        const element = querySelectorWithOptions(
+          locator.selector,
+          locator.options
+        )
+        if (element) {
+          const successful = fn(element, options)
+          if (successful) {
+            return
+          }
         }
-        await Timeout.short()
-        return this.checkSingleElementCondition(fn, options, retryCount - 1)
+        await Timeout.waitForMutation(100)
+        currentTime = Time.getTimeStamp()
       }
-      if (!fn(element, options)) {
-        if (retryCount <= 0) {
-          const message = ConditionErrors[fn.name](locator, options)
-          throw new Error(message)
-        }
-        console.log('retrying...')
-        await Timeout.short()
-        return this.checkSingleElementCondition(fn, options, retryCount - 1)
-      }
+      const message = ConditionErrors[fn.name](locator, options)
+      throw new Error(message)
     },
-    async checkMultiElementCondition(fn, options, retryCount = 3) {
-      const elements = querySelector(locator.selector)
-      if (!fn(elements, options)) {
-        if (retryCount <= 0) {
-          const message = ConditionErrors[fn.name](locator, options)
-          throw new Error(message)
+    async checkMultiElementCondition(fn, options) {
+      const startTime = Time.getTimeStamp()
+      const endTime = startTime + maxTimeout
+      let currentTime = startTime
+      while (currentTime < endTime) {
+        const elements = querySelector(locator.selector)
+        const successful = fn(elements, options)
+        if (successful) {
+          return
         }
-        console.log('retrying...')
-        await Timeout.short()
-        return this.checkMultiElementCondition(fn, options, retryCount - 1)
+        await Timeout.waitForMutation(100)
+        currentTime = Time.getTimeStamp()
       }
+      const message = ConditionErrors[fn.name](locator, options)
+      throw new Error(message)
     },
     async toBeVisible() {
       return this.checkSingleElementCondition(Conditions.toBeVisible, {})
