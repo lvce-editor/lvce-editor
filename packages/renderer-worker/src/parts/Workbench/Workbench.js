@@ -14,6 +14,7 @@ import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
 import * as Location from '../Location/Location.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
+import * as InitData from '../InitData/InitData.js'
 
 const handleUnhandledRejection = async (event) => {
   console.info(`[renderer-worker] Unhandled Rejection: ${event.reason}`)
@@ -40,6 +41,9 @@ export const startup = async (config) => {
   await SharedProcess.listen()
 
   LifeCycle.mark(LifeCycle.PHASE_ONE)
+
+  // const initData = await InitData.getInitData()
+  // console.log({ initData })
 
   Performance.mark('code/willLoadPreferences')
   await Preferences.hydrate()

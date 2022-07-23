@@ -29,6 +29,7 @@ const MODULE_META = 46
 const MODULE_DOWNLOAD = 47
 const MODULE_OPEN = 48
 const MODULE_CLIPBOARD = 49
+const MODULE_INIT_DATA = 50
 
 export const state = {
   commands: Object.create(null),
@@ -87,6 +88,8 @@ const loadModule = (moduleId) => {
       return import('../Open/Open.ipc.js')
     case MODULE_CLIPBOARD:
       return import('../ClipBoard/ClipBoard.ipc.js')
+    case MODULE_INIT_DATA:
+      return import('../InitData/InitData.ipc.js')
     default:
       throw new Error('unknown module')
   }
@@ -114,6 +117,8 @@ const getModuleId = (commandId) => {
       return MODULE_DOWNLOAD
     case 'Open.openUrl':
       return MODULE_OPEN
+    case 'InitData.getInitData':
+      return MODULE_INIT_DATA
     case 549:
     case 550:
     case 551:
