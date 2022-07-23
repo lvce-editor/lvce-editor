@@ -25,7 +25,7 @@ const tryToGetActualErrorMessage = async (extensionHostWorkerUrl) => {
   }
 }
 
-export const listen = async () => {
+export const listen = async ({ handleMessage }) => {
   const extensionHostWorkerUrl = Platform.getExtensionHostWorkerUrl()
   // TODO implement message port fallback for this
   const worker = new Worker(extensionHostWorkerUrl, {
@@ -56,13 +56,17 @@ export const listen = async () => {
     worker.onmessage = handleFirstMessage
     worker.onerror = handleFirstError
   })
+  const wrappedHandleMessage = (event) => {
+    // TODO why are some events not instance of message event?
+    if (event instanceof MessageEvent) {
+      const message = JSON.parse(event.data)
+      handleMessage(message)
+    } else {
+      handleMessage(event)
+    }
+  }
+  worker.onmessage = wrappedHandleMessage
   return {
-    get onmessage() {
-      return worker.onmessage
-    },
-    set onmessage(listener) {
-      worker.onmessage = listener
-    },
     dispose() {
       worker.terminate()
     },

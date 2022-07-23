@@ -116,13 +116,14 @@ export const load = async (viewlet, focus = false) => {
     throw new Error('viewlet must be empty')
   }
   let state = VIEWLET_STATE_DEFAULT
+  let module
   try {
     viewlet.type = 1
     if (viewlet.disposed) {
       return
     }
 
-    const module = await viewlet.getModule(viewlet.id)
+    module = await viewlet.getModule(viewlet.id)
     if (viewlet.disposed) {
       return
     }
@@ -200,6 +201,9 @@ export const load = async (viewlet, focus = false) => {
     viewlet.type = 4
     console.error(error)
     try {
+      if (module && module.handleError) {
+        return await module.handleError(error)
+      }
       if (state < VIEWLET_STATE_RENDERER_PROCESS_VIEWLET_LOADED) {
         await RendererProcess.invoke(
           /* Viewlet.load */ 'Viewlet.load',
@@ -218,7 +222,7 @@ export const load = async (viewlet, focus = false) => {
         /* viewlet.handleError */ 'Viewlet.handleError',
         /* id */ viewlet.id,
         /* parentId */ viewlet.parentId,
-        /* message */ error.message
+        /* message */ `${error}`
       )
     } catch (error) {
       console.error(error)

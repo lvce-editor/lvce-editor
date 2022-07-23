@@ -1,7 +1,4 @@
 import VError from 'verror'
-import * as IpcWithChildProcess from '../Ipc/IpcWithChildProcess.js'
-import * as IpcWithWorker from '../Ipc/IpcWithWorker.js'
-import * as IpcWithWebSocket from '../Ipc/IpcWithWebSocket.js'
 
 export const Methods = {
   WebSocket: 1,
@@ -9,15 +6,20 @@ export const Methods = {
   Worker: 3,
 }
 
-export const listen = async (method) => {
+const getModule = (method) => {
   switch (method) {
     case Methods.WebSocket:
-      return IpcWithWebSocket.listen(process)
+      return import('./IpcWithWebSocket.js')
     case Methods.ChildProcess:
-      return IpcWithChildProcess.listen()
+      return import('./IpcWithChildProcess.js')
     case Methods.Worker:
-      return IpcWithWorker.listen()
+      return import('./IpcWithWorker.js')
     default:
       throw new VError('unexpected ipc type')
   }
+}
+
+export const listen = async (method) => {
+  const module = await getModule(method)
+  return module.listen()
 }
