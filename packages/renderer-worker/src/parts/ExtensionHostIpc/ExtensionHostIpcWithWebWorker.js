@@ -7,6 +7,7 @@ const tryToGetActualErrorMessage = async (extensionHostWorkerUrl) => {
   } catch (error) {
     if (
       error &&
+      error instanceof Error &&
       error.message.startsWith('Failed to fetch dynamically imported module')
     ) {
       try {
