@@ -355,9 +355,9 @@ const getInitialLayout = async () => {
   return state
 }
 
-export const hydrate = async () => {
-  const windowBounds = await getBounds()
-  const initialLayout = await getInitialLayout()
+export const hydrate = async (initData) => {
+  const windowBounds = initData.Layout.bounds
+  const initialLayout = initData.layout ? JSON.parse(initData.layout) : state
   const points = getPoints(initialLayout, windowBounds)
   Object.assign(state, points)
   await RendererProcess.invoke(

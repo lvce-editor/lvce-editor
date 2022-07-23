@@ -42,8 +42,8 @@ export const startup = async (config) => {
 
   LifeCycle.mark(LifeCycle.PHASE_ONE)
 
-  // const initData = await InitData.getInitData()
-  // console.log({ initData })
+  const initData = await InitData.getInitData()
+  console.log({ initData })
 
   Performance.mark('code/willLoadPreferences')
   await Preferences.hydrate()
@@ -57,7 +57,7 @@ export const startup = async (config) => {
   LifeCycle.mark(LifeCycle.PHASE_TWO)
 
   Performance.mark('code/willOpenWorkspace')
-  await Workspace.hydrate()
+  await Workspace.hydrate(initData.Location)
   Performance.mark('code/didOpenWorkspace')
 
   LifeCycle.mark(LifeCycle.PHASE_THREE)
@@ -69,7 +69,7 @@ export const startup = async (config) => {
   LifeCycle.mark(LifeCycle.PHASE_FOUR)
 
   Performance.mark('code/willShowLayout')
-  await Layout.hydrate()
+  await Layout.hydrate(initData)
   Performance.mark('code/didShowLayout')
 
   LifeCycle.mark(LifeCycle.PHASE_FIVE)
