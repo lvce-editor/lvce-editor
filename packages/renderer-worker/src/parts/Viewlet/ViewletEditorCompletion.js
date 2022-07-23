@@ -87,11 +87,10 @@ const getVisibleItems = (filteredItems) => {
 }
 
 const getDisplayErrorMessage = (error) => {
-  let message = `${error.message}`
-  let currentError = error.cause
-  while (currentError) {
-    message += `: ${currentError.message}`
-    currentError = currentError.cause
+  let message = `${error}`
+  const errorPrefix = 'Error: '
+  if (message.startsWith(errorPrefix)) {
+    return message.slice(errorPrefix.length)
   }
   return message
 }
@@ -115,7 +114,7 @@ export const loadContent = async (state) => {
 }
 
 export const handleError = async (error) => {
-  const displayErrorMessage = `${error}`
+  const displayErrorMessage = getDisplayErrorMessage(error)
   const editor = getEditor()
   await EditorShowMessage.editorShowMessage(
     /* editor */ editor,
