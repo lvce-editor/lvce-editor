@@ -148,6 +148,7 @@ const getModuleId = (commandId) => {
     case 'Layout.hydrate':
     case 'Layout.hide':
     case 'Layout.getBounds':
+    case 'Layout.show':
       return MODULE_LAYOUT
     case 'Viewlet.refresh':
     case 'Viewlet.invoke':

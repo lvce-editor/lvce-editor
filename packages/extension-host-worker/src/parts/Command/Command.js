@@ -20,6 +20,8 @@ const getFn = (method) => {
       return ExtensionHostCompletion.executeCompletionProvider
     case 'ExtensionHostTextDocument.syncFull':
       return TextDocument.syncFull
+    case 'ExtensionHostTextDocument.setLanguageId':
+      return TextDocument.setLanguageId
     case 'ExtensionHostTypeDefinition.executeTypeDefinitionProvider':
       return ExtensionHostTypeDefinition.executeTypeDefinitionProvider
     default:

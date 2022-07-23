@@ -102,7 +102,7 @@ const startTextDocumentSyncing = async (extensionHost) => {
   GlobalEventBus.addListener('editor.change', handleEditorChange)
 
   const handleEditorLanguageChange = (editor) => {
-    return extensionHost.inoke(
+    return extensionHost.invoke(
       'ExtensionHostTextDocument.setLanguageId',
       editor.id,
       editor.languageId

@@ -58,8 +58,7 @@ const getResolveRootFromSessionStorage = async () => {
   return resolvedRoot
 }
 
-const getResolvedRootFromRendererProcess = async () => {
-  const href = await Location.getHref()
+const getResolvedRootFromRendererProcess = async (href) => {
   const url = new URL(href)
   if (href.includes('tests/')) {
     return undefined
@@ -92,13 +91,13 @@ const getResolvedRootFromRendererProcess = async () => {
   return undefined
 }
 
-const getResolvedRoot = async () => {
+const getResolvedRoot = async (href) => {
   if (Platform.getPlatform() === 'web') {
-    return getResolvedRootFromRendererProcess()
+    return getResolvedRootFromRendererProcess(href)
   }
   if (Platform.getPlatform() === 'remote') {
     const resolvedRootFromRendererProcess =
-      await getResolvedRootFromRendererProcess()
+      await getResolvedRootFromRendererProcess(href)
     if (resolvedRootFromRendererProcess) {
       return resolvedRootFromRendererProcess
     }
@@ -133,11 +132,11 @@ const onWorkspaceChange = async () => {
   await GlobalEventBus.emitEvent('workspace.change', state.workspacePath)
 }
 
-export const hydrate = async () => {
+export const hydrate = async ({ href }) => {
   if (state.workspacePath) {
     return
   }
-  const resolvedRoot = await getResolvedRoot()
+  const resolvedRoot = await getResolvedRoot(href)
   if (state.workspacePath) {
     return
   }
@@ -152,6 +151,7 @@ export const hydrate = async () => {
   state.pathSeparator = resolvedRoot.pathSeparator
   state.workspaceUri = resolvedRoot.uri
   state.source = resolvedRoot.source
+  console.log({ state })
   await onWorkspaceChange()
 }
 
