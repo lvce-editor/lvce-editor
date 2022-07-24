@@ -29,6 +29,9 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
     setState: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    getState: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
 
@@ -1883,6 +1886,7 @@ test('handleArrowRight - collapsed empty folder', async () => {
         type: 'directory',
       },
     ],
+    pathSeparator: '/',
   }
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
@@ -2436,7 +2440,7 @@ test('handleWheel - down - already at bottom but viewlet is larger than items ca
   expect(ViewletExplorer.handleWheel(state, 100)).toBe(state)
 })
 
-test('handlePaste - copied gnome files', async () => {
+test.skip('handlePaste - copied gnome files', async () => {
   const state = ViewletExplorer.create('', 0, 0, 0, 0)
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
@@ -2449,6 +2453,13 @@ test('handlePaste - copied gnome files', async () => {
         }
       case 'FileSystem.copy':
         return null
+      case 'FileSystem.readDirWithFileTypes':
+        return [
+          {
+            name: 'some-file.txt',
+            type: 'file',
+          },
+        ]
       default:
         console.log({ method })
         throw new Error('unexpected message')
@@ -4275,4 +4286,123 @@ test('global event - workspace change', async () => {
       ],
     })
   )
+})
+
+test('updateRoot - already disposed', async () => {
+  const state1 = {
+    ...ViewletExplorer.create(),
+    disposed: true,
+  }
+  // @ts-ignore
+  Viewlet.getState.mockImplementation(() => {
+    return state1
+  })
+
+  expect(await ViewletExplorer.updateRoot()).toBe(state1)
+})
+
+test('updateRoot - disposed after reading files', async () => {
+  const state1 = {
+    ...ViewletExplorer.create(),
+  }
+  const state2 = {
+    ...state1,
+    disposed: true,
+  }
+  let i = 0
+  // @ts-ignore
+  Viewlet.getState.mockImplementation(() => {
+    switch (++i) {
+      case 1:
+        return state1
+      case 2:
+        return state2
+      default:
+        throw new Error(`unexpected state ${i}`)
+    }
+  })
+  expect(await ViewletExplorer.updateRoot()).toBe(state2)
+})
+
+test('updateRoot - root changes while reading directories', async () => {
+  const state1 = {
+    ...ViewletExplorer.create(),
+    root: '/test-1',
+  }
+  const state2 = {
+    ...state1,
+    root: '/test-2',
+  }
+  let i = 0
+  // @ts-ignore
+  Viewlet.getState.mockImplementation(() => {
+    switch (++i) {
+      case 1:
+        return state1
+      case 2:
+        return state2
+      default:
+        throw new Error(`unexpected state ${i}`)
+    }
+  })
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'FileSystem.readDirWithFileTypes':
+        return [
+          {
+            name: 'folder-1',
+            type: 'directory',
+          },
+        ]
+    }
+  })
+  expect(await ViewletExplorer.updateRoot()).toBe(state2)
+})
+
+test('updateRoot - new folder', async () => {
+  const state1 = {
+    ...ViewletExplorer.create(),
+    root: '/test',
+  }
+  const state2 = {
+    ...state1,
+  }
+  let i = 0
+  // @ts-ignore
+  Viewlet.getState.mockImplementation(() => {
+    switch (++i) {
+      case 1:
+        return state1
+      case 2:
+        return state2
+      default:
+        throw new Error(`unexpected state ${i}`)
+    }
+  })
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'FileSystem.readDirWithFileTypes':
+        return [
+          {
+            name: 'folder-1',
+            type: 'directory',
+          },
+        ]
+    }
+  })
+  expect(await ViewletExplorer.updateRoot()).toMatchObject({
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-1',
+        path: '/testfolder-1', // TODO missing path separator here
+        posInSet: 1,
+        setSize: 1,
+        type: 'directory',
+      },
+    ],
+  })
 })

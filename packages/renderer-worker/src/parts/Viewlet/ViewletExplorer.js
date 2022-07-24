@@ -7,7 +7,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js' // TODO should not import shared process -> use command.execute instead (maybe)
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
-
+import * as Assert from '../Assert/Assert.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -62,13 +62,13 @@ const compareDirent = (direntA, direntB) => {
   )
 }
 
-const toDisplayDirents = (state, rawDirents, parentDirent) => {
+const toDisplayDirents = (root, pathSeparator, rawDirents, parentDirent) => {
   rawDirents.sort(compareDirent) // TODO maybe shouldn't mutate input argument, maybe sort after mapping
   // TODO figure out whether this uses too much memory (name,path -> redundant, depth could be computed on demand)
   const toDisplayDirent = (rawDirent, index) => {
     const path = parentDirent.path
-      ? [parentDirent.path, rawDirent.name].join(state.pathSeparator)
-      : [state.root, rawDirent.name].join(state.pathSeparator)
+      ? [parentDirent.path, rawDirent.name].join(pathSeparator)
+      : [root, rawDirent.name].join(pathSeparator)
     return {
       name: rawDirent.name,
       posInSet: index + 1,
@@ -82,7 +82,10 @@ const toDisplayDirents = (state, rawDirents, parentDirent) => {
   return rawDirents.map(toDisplayDirent)
 }
 
-const getChildDirents = async (state, parentDirent) => {
+const getChildDirents = async (root, pathSeparator, parentDirent) => {
+  Assert.string(root)
+  Assert.string(pathSeparator)
+  Assert.object(parentDirent)
   // TODO use event/actor based code instead, this is impossible to cancel right now
   // also cancel updating when opening new folder
   // const dispose = state => state.pendingRequests.forEach(cancelRequest)
@@ -91,7 +94,12 @@ const getChildDirents = async (state, parentDirent) => {
   // and more performant
   const uri = parentDirent.path
   const rawDirents = await FileSystem.readDirWithFileTypes(uri)
-  const displayDirents = toDisplayDirents(state, rawDirents, parentDirent)
+  const displayDirents = toDisplayDirents(
+    root,
+    pathSeparator,
+    rawDirents,
+    parentDirent
+  )
   return displayDirents
 }
 
@@ -122,7 +130,7 @@ const getPathSeparator = (root) => {
 export const loadContent = async (state) => {
   const root = Workspace.getWorkspacePath()
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
-  const dirents = await getTopLevelDirents({ root, pathSeparator })
+  const dirents = await getTopLevelDirents(root, pathSeparator)
   return {
     ...state,
     root,
@@ -147,18 +155,15 @@ export const contentLoaded = async (state) => {
   // TODO this should a promise and be awaited
 }
 
-const getTopLevelDirents = ({ root, pathSeparator }) => {
+const getTopLevelDirents = (root, pathSeparator) => {
   if (!root) {
     return []
   }
-  return getChildDirents(
-    { root, pathSeparator },
-    {
-      depth: 0,
-      path: root,
-      type: 'directory',
-    }
-  )
+  return getChildDirents(root, pathSeparator, {
+    depth: 0,
+    path: root,
+    type: 'directory',
+  })
 }
 
 export const contentLoadedEffects = (state) => {
@@ -680,9 +685,10 @@ const handleClickFile = async (state, dirent, index) => {
 const handleClickDirectory = async (state, dirent, index) => {
   dirent.type = 'directory-expanding'
   // TODO handle error
-  const dirents = await getChildDirents(state, dirent)
+  const dirents = await getChildDirents(state.root, state.pathSeparator, dirent)
   // TODO use Viewlet.getState here and check if it exists
   const newIndex = state.dirents.indexOf(dirent)
+  // TODO if viewlet is disposed or root has changed, return
   if (newIndex === -1) {
     return state
   }
@@ -972,7 +978,53 @@ const handlePasteNone = (state, nativeFiles) => {
   return state
 }
 
+const mergeDirents = (oldDirents, newDirents) => {
+  const merged = []
+  let oldIndex = 0
+  for (const newDirent of newDirents) {
+    merged.push(newDirent)
+    for (let i = oldIndex; i < oldDirents.length; i++) {
+      if (oldDirents[i].path === newDirent.path) {
+        // TOOD copy children of old dirent
+        oldIndex = i
+        break
+      }
+    }
+  }
+  return merged
+}
+
+// TODO add lots of tests for this
+export const updateRoot = async () => {
+  const state1 = Viewlet.getState('Explorer')
+  if (state1.disposed) {
+    return state1
+  }
+  // const file = nativeFiles.files[0]
+  // console.log({ files: file })
+  const topLevelDirents = await getTopLevelDirents(
+    state1.root,
+    state1.pathSeparator
+  )
+  const state2 = Viewlet.getState('Explorer')
+  // TODO what if root changes while reading directories?
+  if (state2.disposed || state2.root !== state1.root) {
+    return state2
+  }
+  console.log({ topLevelDirents })
+  const newDirents = mergeDirents(state2.dirents, topLevelDirents)
+  const state3 = {
+    ...state2,
+    dirents: newDirents,
+  }
+  return state3
+}
+
 const handlePasteCopy = async (state, nativeFiles) => {
+  // TODO handle pasting files into nested folder
+  // TODO handle pasting files into symlink
+  // TODO handle pasting files into broken symlink
+  // TODO handle pasting files into hardlink
   for (const source of nativeFiles.files) {
     const target = `${state.root}${state.pathSeparator}${getBaseName(
       source,
@@ -980,7 +1032,17 @@ const handlePasteCopy = async (state, nativeFiles) => {
     )}`
     await FileSystem.copy(source, target)
   }
-  return state
+  const stateNow = Viewlet.getState('Explorer')
+  if (stateNow.disposed) {
+    return
+  }
+  const file = nativeFiles.files[0]
+  console.log({ files: file })
+  const newDirents = [...stateNow.dirents]
+  const topLevelDirents = await FileSystem.readDirWithFileTypes(state.root)
+  console.log({ topLevelDirents })
+  // console.log({ files: nativeFiles.files })
+  return updateRoot()
 }
 
 const handlePasteCut = async (state, nativeFiles) => {
@@ -1068,7 +1130,11 @@ export const expandAll = async (state) => {
       dirent.type = 'directory-expanding'
       // TODO handle error
       // TODO race condition
-      const childDirents = await getChildDirents(state, dirent)
+      const childDirents = await getChildDirents(
+        state.root,
+        state.pathSeparator,
+        dirent
+      )
       const newIndex = newDirents.indexOf(dirent)
       if (newIndex === -1) {
         continue
