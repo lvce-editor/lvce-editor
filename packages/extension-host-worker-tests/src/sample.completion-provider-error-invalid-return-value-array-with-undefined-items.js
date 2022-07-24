@@ -17,8 +17,8 @@ test('sample.completion-provider-error-invalid-return-value-array-with-undefined
     name: 'sample.completion-provider-error-invalid-return-value-array-with-undefined-items',
     folder: tmpDir,
   })
-  const testTxt = page.locator('text=test.xyz')
-  await testTxt.click()
+
+  await page.openUri(`${tmpDir}/test.xyz`)
 
   const token = page.locator('.Token').first()
   await expect(token).toBeVisible()
@@ -26,6 +26,8 @@ test('sample.completion-provider-error-invalid-return-value-array-with-undefined
 
   const cursor = page.locator('.EditorCursor')
   await expect(cursor).toHaveCount(1)
+  await expect(cursor).toHaveCSS('top', '0px')
+  await expect(cursor).toHaveCSS('left', '95px')
 
   await page.keyboard.press('Control+Space')
 

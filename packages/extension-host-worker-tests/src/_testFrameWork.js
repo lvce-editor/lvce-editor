@@ -244,6 +244,10 @@ const createPage = () => {
       return createLocator(selector, options)
     },
     keyboard: createKeyBoard(),
+    async openUri(uri) {
+      const rendererWorker = await getRendererWorker()
+      await rendererWorker.invoke('Main.openUri', uri)
+    },
   }
 }
 

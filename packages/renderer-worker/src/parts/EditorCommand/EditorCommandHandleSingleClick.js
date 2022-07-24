@@ -3,6 +3,7 @@ import * as EditorPosition from './EditorCommandPosition.js'
 import * as EditorMoveSelection from './EditorCommandMoveSelection.js'
 import * as Assert from '../Assert/Assert.js'
 import * as EditorGoToDefinition from './EditorCommandGoToDefinition.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const editorHandleSingleClick = async (
   editor,
@@ -32,6 +33,8 @@ export const editorHandleSingleClick = async (
   }
   console.log({ position })
   EditorMoveSelection.state.position = position
+  // TODO also focus editor input
+  await RendererProcess.invoke('Viewlet.invoke', 'EditorText', 'focus')
   return EditorCursorSet.editorCursorSet(
     editor,
     EditorMoveSelection.state.position

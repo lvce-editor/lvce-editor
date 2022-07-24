@@ -65,10 +65,6 @@ export const isTest = () => {
 
 const getResolvedRootFromRendererProcess = async (href) => {
   const url = new URL(href)
-  if (href.includes('tests/')) {
-    state.isTest = true
-    return undefined
-  }
   if (url.searchParams.has('replayId')) {
     const replayId = url.searchParams.get('replayId')
     await Command.execute(
@@ -76,6 +72,15 @@ const getResolvedRootFromRendererProcess = async (href) => {
       /* sessionId */ replayId
     )
     return undefined
+  }
+  if (href.includes('tests/')) {
+    state.isTest = true
+    return {
+      path: '',
+      homeDir: '',
+      pathSeparator: '/',
+      source: 'test',
+    }
   }
   if (url.pathname.startsWith('/github')) {
     return {

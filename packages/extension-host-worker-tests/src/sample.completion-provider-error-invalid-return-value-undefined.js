@@ -26,6 +26,8 @@ test('sample.completion-provider-error-invalid-return-value-undefined', async ()
 
   const cursor = page.locator('.EditorCursor')
   await expect(cursor).toHaveCount(1)
+  await expect(cursor).toHaveCSS('left', '0')
+  console.log({ cursor })
 
   await page.keyboard.press('Control+Space')
 

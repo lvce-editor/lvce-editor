@@ -43,3 +43,5 @@ export const hideOverlayMessage = (state) => {
     }
   }
 }
+
+export const focus = Editor.focus

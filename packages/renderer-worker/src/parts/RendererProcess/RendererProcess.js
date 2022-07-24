@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
+import { JsonRpcError } from '../Errors/Errors.js'
 import * as IpcWithMessagePort from '../Ipc/IpcWithMessagePort.js'
 import * as IpcWithModuleWorker from '../Ipc/IpcWithModuleWorker.js'
 import * as IpcWithReferencePort from '../Ipc/IpcWithReferencePort.js'
@@ -22,14 +23,38 @@ const handleMessageFromRendererProcess = async (event) => {
   if (message.id) {
     if ('result' in message) {
       Callback.resolve(message.id, message.result)
-    } else if ('error' in message) {
-      Callback.reject(message.id, message.error)
-    } else {
-      Callback.reject(message.id, new Error('unexpected return value'))
+      return
     }
-  } else {
-    await Command.execute(message.method, ...message.params)
+    if ('error' in message) {
+      Callback.reject(message.id, message.error)
+      return
+    }
+    if ('method' in message) {
+      try {
+        const result = await Command.execute(message.method, ...message.params)
+        state.ipc.send({
+          jsonrpc: '2.0',
+          id: message.id,
+          result,
+        })
+        return
+      } catch (error) {
+        state.ipc.send({
+          jsonrpc: '2.0',
+          id: message.id,
+          error,
+        })
+        return
+      }
+    }
+
+    Callback.reject(
+      message.id,
+      new JsonRpcError('unexpected message from renderer process')
+    )
+    return
   }
+  await Command.execute(message.method, ...message.params)
 }
 
 const getIpc = () => {
