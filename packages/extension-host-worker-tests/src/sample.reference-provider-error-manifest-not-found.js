@@ -9,7 +9,7 @@ import {
 test('sample.reference-provider-error-manifest-not-found', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(
-    `${tmpDir}/test.js`,
+    `${tmpDir}/test.xyz`,
     `export const add = () => {}
 `
   )
@@ -17,18 +17,10 @@ test('sample.reference-provider-error-manifest-not-found', async () => {
     name: 'sample.reference-provider-error-manifest-not-found',
     folder: tmpDir,
   })
-  const testTxt = page.locator('text=test.js')
-  await testTxt.click()
-
-  const token = page.locator('.Token').first()
-  await token.click({
-    button: 'right',
-  })
-
-  const contextMenuItemFindAllReferences = page.locator('.MenuItem', {
-    hasText: 'Find all references',
-  })
-  await contextMenuItemFindAllReferences.click()
+  await page.openUri(`${tmpDir}/test.xyz`)
+  await page.setCursor(0, 0)
+  await page.openEditorContextMenu()
+  await page.selectContextMenuItem('Find all references')
 
   // TODO viewlet locations should still be visible
   // const viewletLocations = page.locator('.Viewlet[data-viewlet-id="Locations"]')

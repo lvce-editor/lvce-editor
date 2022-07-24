@@ -21,18 +21,10 @@ add(1, 2)
     name: 'sample.type-definition-provider-error',
     folder: tmpDir,
   })
-  const testTxt = page.locator('text=test.xyz')
-  await testTxt.click()
-
-  const token = page.locator('.Token', { hasText: 'add(1, 2)' })
-  await token.click({
-    button: 'right',
-  })
-
-  const contextMenuItemGoToTypeDefinition = page.locator('.MenuItem', {
-    hasText: 'Go To Type Definition',
-  })
-  await contextMenuItemGoToTypeDefinition.click()
+  await page.openUri(`${tmpDir}/test.xyz`)
+  await page.setCursor(0, 0)
+  await page.openEditorContextMenu()
+  await page.selectContextMenuItem('Go To Type Definition')
 
   const overlayMessage = page.locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()

@@ -21,18 +21,14 @@ add(1, 2)
     name: 'sample.type-definition-provider-error-failed-to-activate-extension',
     folder: tmpDir,
   })
-  const testTxt = page.locator('text=test.xyz')
-  await testTxt.click()
-
-  const token = page.locator('.Token', { hasText: 'add(1, 2)' })
-  await token.click({
-    button: 'right',
-  })
-
-  const contextMenuItemGoToTypeDefinition = page.locator('.MenuItem', {
-    hasText: 'Go To Type Definition',
-  })
-  await contextMenuItemGoToTypeDefinition.click()
+  // TODO open uri should return editor object
+  await page.openUri(`${tmpDir}/test.xyz`)
+  // TODO editor object should have setCursor function
+  await page.setCursor(0, 0)
+  // TODO editor object should have openContextMenu function
+  await page.openEditorContextMenu()
+  // TODO contextMenu should have selectItem function
+  await page.selectContextMenuItem('Go To Type Definition')
 
   const overlayMessage = page.locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()

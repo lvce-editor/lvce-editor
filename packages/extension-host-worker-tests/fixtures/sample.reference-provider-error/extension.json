@@ -1,10 +1,10 @@
 {
   "browser": "main.js",
-  "activation": ["onReferences:javascript"],
+  "activation": ["onReferences:xyz"],
   "languages": [
     {
-      "id": "javascript",
-      "extensions": [".js"]
+      "id": "xyz",
+      "extensions": [".xyz"]
     }
   ]
 }

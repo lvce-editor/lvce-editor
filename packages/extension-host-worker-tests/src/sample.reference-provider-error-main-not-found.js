@@ -20,11 +20,7 @@ test('sample.reference-provider-error-main-not-found', async () => {
   await page.openUri(`${tmpDir}/test.xyz`)
   await page.setCursor(0, 0)
   await page.openEditorContextMenu()
-
-  const contextMenuItemFindAllReferences = page.locator('.MenuItem', {
-    hasText: 'Find all references',
-  })
-  await contextMenuItemFindAllReferences.click()
+  await page.selectContextMenuItem('Find all references')
 
   const viewletLocations = page.locator('.Viewlet[data-viewlet-id="Locations"]')
   await expect(viewletLocations).toBeVisible()
