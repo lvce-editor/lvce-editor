@@ -16,7 +16,7 @@
     "@types/bytes": "^3.1.1",
     "@types/fs-extra": "^9.0.13",
     "@types/tar-fs": "^2.0.1",
-    "@types/verror": "^1.10.5",
+    "@types/verror": "^1.10.6",
     "electron-builder": "^23.1.0",
     "electron-rebuild": "^3.2.8",
     "execa": "^6.1.0"
@@ -25,11 +25,11 @@
     "bytes": "^3.1.2",
     "esbuild": "^0.14.49",
     "fs-extra": "^10.1.0",
-    "got": "^12.1.0",
+    "got": "^12.2.0",
     "gzip-size": "^7.0.0",
     "minimist": "^1.2.6",
     "pretty-bytes": "^6.0.0",
-    "rollup": "^2.76.0",
+    "rollup": "^2.77.0",
     "rollup-plugin-terser": "^7.0.2",
     "tar-fs": "^2.1.1",
     "verror": "^1.10.1"

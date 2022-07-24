@@ -12,8 +12,8 @@
   "license": "MIT",
   "devDependencies": {
     "@types/debug": "^4.1.7",
-    "@types/verror": "^1.10.5",
-    "electron": "^19.0.8",
+    "@types/verror": "^1.10.6",
+    "electron": "^19.0.9",
     "electron-rebuild": "^3.2.8"
   },
   "dependencies": {
