@@ -134,8 +134,8 @@ const handleSingleClick = (event, x, y, offset) => {
     /* offset */ offset
   )
   const $Target = event.target
-  const $InputBox = $Target.closest('.Editor').firstElementChild
-  $InputBox.focus()
+  // const $InputBox = $Target.closest('.Editor').firstElementChild
+  // $InputBox.focus()
   // TODO this logic should be in renderer worker
   document.addEventListener('mousemove', handleSelectionMove, { passive: true })
   document.addEventListener('mouseup', handleSelectionDone)
@@ -612,7 +612,9 @@ export const mount = (state, $Parent) => {
 export const dispose = (state) => {}
 
 export const focus = (state) => {
-  // state.$EditorInput.focus()
+  const { $EditorInput } = state
+  console.log('focus editor')
+  $EditorInput.focus()
 }
 
 export const setLanguageId = async (state, languageId) => {

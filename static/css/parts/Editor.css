@@ -106,10 +106,10 @@
   content: attr(data-row-index);
 } */
 
-/* great css solution -> only nesting is bad -> can be avoided? */
+/* great css solution -> only nesting is bad -> can be avoided?
 .Editor:not(:focus-within) .EditorCursor {
   display: none;
-}
+} */
 
 .EditorSelection {
   position: absolute;

@@ -40,7 +40,6 @@ export const handleMessage = async (source, message) => {
 }
 
 export const replayCurrentSession = async () => {
-  console.log('replay session')
   // TODO
   // 1. read commands from indexeddb
   // 2. open new window
@@ -58,6 +57,8 @@ export const getSessionContent = async () => {
   return JSON.stringify(events, null, 2) + '\n'
 }
 
+const DONT_REPLAY = ['Open.openUrl', 'Download.downloadFile']
+
 export const replaySession = async (sessionId) => {
   const events = await getEvents(sessionId)
   const originalIpc = RendererProcess.state.ipc
@@ -69,8 +70,10 @@ export const replaySession = async (sessionId) => {
       callbacks[data.id].resolve(data.result)
     } else if ('error' in data) {
       callbacks[data.id].reject(data.error)
+    } else if ('method' in data) {
+      // ignore
     } else {
-      throw new Error('unexpected message')
+      throw new Error('unexpected message from renderer worker')
     }
   }
   const callbacks = Object.create(null)
@@ -83,7 +86,7 @@ export const replaySession = async (sessionId) => {
   let now = 0
   for (const event of events) {
     if (event.source === 'to-renderer-process') {
-      if (event.method !== 'Open.openUrl') {
+      if (!DONT_REPLAY.includes(event.method)) {
         // console.log(event.timestamp)
         const timeDifference = event.timestamp - now
         await new Promise((resolve, reject) => {
@@ -93,9 +96,9 @@ export const replaySession = async (sessionId) => {
         now = event.timestamp
       }
     }
-    if (event.source === 'from-renderer-process') {
-      console.log(event)
-    }
+    // if (event.source === 'from-renderer-process') {
+    //   console.log(event)
+    // }
   }
   // console.log({ events })
 }

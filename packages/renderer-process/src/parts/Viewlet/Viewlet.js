@@ -87,7 +87,8 @@ export const invoke = (viewletId, method, ...args) => {
     return
   }
   if (typeof instance.factory[method] !== 'function') {
-    console.warn(`method ${method} not implemented`)
+    console.warn(`method ${method} in ${viewletId} not implemented`)
+    console.log(instance.factory)
     return
   }
   return instance.factory[method](instance.state, ...args)

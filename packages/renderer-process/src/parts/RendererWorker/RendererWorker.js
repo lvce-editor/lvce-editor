@@ -1,6 +1,8 @@
 import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
 import * as WebWorker from '../WebWorker/WebWorker.js'
+import * as Callback from '../Callback/Callback.js'
+import { JsonRpcError } from '../Errors/JsonRpcError.js'
 
 // const URL_RENDERER_WORKER =
 // '/packages/renderer-worker/distmin/rendererWorkerMain-0ead0bed.js'
@@ -13,26 +15,36 @@ export const state = {
 }
 
 const handleMessageFromRendererWorker = async (event) => {
-  const data = event.data
-  if (data.method && data.id) {
-    try {
-      const result = await Command.execute(data.method, ...data.params)
-      state.ipc.send({
-        jsonrpc: '2.0',
-        id: data.id,
-        result,
-      })
+  const message = event.data
+  if (message.id) {
+    if ('method' in message) {
+      try {
+        const result = await Command.execute(message.method, ...message.params)
+        state.ipc.send({
+          jsonrpc: '2.0',
+          id: message.id,
+          result,
+        })
+        return
+      } catch (error) {
+        state.ipc.send({
+          jsonrpc: '2.0',
+          id: message.id,
+          error,
+        })
+      }
       return
-    } catch (error) {
-      state.ipc.send({
-        jsonrpc: '2.0',
-        id: data.id,
-        error,
-      })
     }
-  } else {
-    console.info('unknown message', data)
+    if ('result' in message) {
+      Callback.resolve(message.id, message.result)
+      return
+    }
+    if ('error' in message) {
+      Callback.reject(message.id, message.error)
+      return
+    }
   }
+  throw new JsonRpcError('unexpected message from renderer process')
 }
 
 const getIpc = async () => {
@@ -92,6 +104,22 @@ export const send = (method, ...params) => {
     method,
     params,
   })
+}
+
+export const invoke = async (method, ...params) => {
+  const responseMessage = await new Promise((resolve, reject) => {
+    const callbackId = Callback.register(resolve, reject)
+    state.ipc.send({
+      jsonrpc: '2.0',
+      method,
+      params,
+      id: callbackId,
+    })
+  })
+  if (responseMessage instanceof Error) {
+    throw responseMessage
+  }
+  return responseMessage
 }
 
 export const sendAndTransfer = (message, transfer) => {
