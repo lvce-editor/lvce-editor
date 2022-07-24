@@ -19,17 +19,8 @@ test('sample.completion-provider-error-invalid-return-value-array-with-undefined
   })
 
   await page.openUri(`${tmpDir}/test.xyz`)
-
-  const token = page.locator('.Token').first()
-  await expect(token).toBeVisible()
-  await token.click()
-
-  const cursor = page.locator('.EditorCursor')
-  await expect(cursor).toHaveCount(1)
-  await expect(cursor).toHaveCSS('top', '0px')
-  await expect(cursor).toHaveCSS('left', '95px')
-
-  await page.keyboard.press('Control+Space')
+  await page.setCursor(0, 0)
+  await page.openCompletion()
 
   const overlayMessage = page.locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()

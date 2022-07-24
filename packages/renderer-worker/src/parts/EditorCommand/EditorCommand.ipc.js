@@ -95,7 +95,7 @@ export const __initialize__ = () => {
   Command.register('Editor.cursorEnd', Viewlet.wrapViewletCommand('EditorText', EditorCursorEnd.editorCursorEnd))
   Command.register('Editor.cursorCharacterRight', Viewlet.wrapViewletCommand('EditorText', EditorCursorCharacterRight.editorCursorsCharacterRight))
   Command.register('Editor.cursorDown', Viewlet.wrapViewletCommand('EditorText', EditorCursorDown.editorCursorsDown))
-  Command.register('Editor.cursoret', Viewlet.wrapViewletCommand('EditorText', EditorCursorSet.editorCursorSet))
+  Command.register('Editor.cursorSet', Viewlet.wrapViewletCommand('EditorText', EditorCursorSet.editorCursorSet))
   Command.register('Editor.cursorHome', Viewlet.wrapViewletCommand('EditorText', EditorCursorHome.editorCursorsHome))
   Command.register('Editor.cursorUp', Viewlet.wrapViewletCommand('EditorText', EditorCursorUp.editorCursorsUp))
   Command.register('Editor.cursorWordLeft', Viewlet.wrapViewletCommand('EditorText', EditorCursorWordLeft.editorCursorWordLeft))

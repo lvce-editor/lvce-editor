@@ -62,6 +62,7 @@ const ElementActions = {
     ElementActions.mouseEvent(element, 'contextmenu', options)
   },
   click(element, options) {
+    console.log('click', { text: element.textContent, options })
     ElementActions.mouseDown(element, options)
     ElementActions.mouseEvent(element, 'click', options)
     ElementActions.mouseUp(element, options)
@@ -244,9 +245,23 @@ const createPage = () => {
       return createLocator(selector, options)
     },
     keyboard: createKeyBoard(),
-    async openUri(uri) {
+    async invokeRendererWorker(command, ...args) {
       const rendererWorker = await getRendererWorker()
-      await rendererWorker.invoke('Main.openUri', uri)
+      await rendererWorker.invoke(command, ...args)
+    },
+    async openUri(uri) {
+      await this.invokeRendererWorker('Main.openUri', uri)
+    },
+    async setCursor(rowIndex, columnIndex) {
+      await this.invokeRendererWorker('Editor.cursorSet', [
+        { rowIndex, columnIndex },
+      ])
+    },
+    async openCompletion() {
+      await this.invokeRendererWorker('Editor.openCompletion')
+    },
+    async openEditorContextMenu() {
+      await this.invokeRendererWorker('Editor.handleContextMenu', 0, 0)
     },
   }
 }
