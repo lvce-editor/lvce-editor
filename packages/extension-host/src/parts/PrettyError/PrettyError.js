@@ -124,3 +124,13 @@ export const print = (prettyError) => {
     `Error: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}`
   )
 }
+
+export const firstErrorLine = (error) => {
+  if (error.stack) {
+    return error.stack.slice(0, error.stack.indexOf('\n'))
+  }
+  if (error.message) {
+    return error.message
+  }
+  return `${error}`
+}
