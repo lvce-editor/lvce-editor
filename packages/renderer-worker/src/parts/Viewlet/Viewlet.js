@@ -129,7 +129,9 @@ export const wrapViewletCommand = (id, fn) => {
     // TODO get actual focused instance
     const activeInstance = state.instances[id]
     if (!activeInstance) {
-      console.info(`no active instance for ${id}`)
+      console.info(
+        `cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`
+      )
       return
     }
     if (activeInstance.factory && activeInstance.factory.hasFunctionalRender) {
