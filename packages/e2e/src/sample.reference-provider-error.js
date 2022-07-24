@@ -30,6 +30,6 @@ test('sample.reference-provider-error', async () => {
 
   // TODO should show part of stack trace maybe?
   await expect(viewletLocations).toHaveText(
-    `Failed to execute reference provider: oops`
+    `Error: Failed to execute reference provider: oops`
   )
 })
