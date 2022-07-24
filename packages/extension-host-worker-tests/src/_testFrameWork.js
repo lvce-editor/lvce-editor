@@ -404,7 +404,7 @@ const ConditionErrors = {
   toHaveAttribute(locator, { key, value }) {
     const [element] = querySelector(locator.selector)
     if (!element) {
-      return `expected ${locator.selector} to have attribute ${key} ${value}`
+      return `expected ${locator.selector} to have attribute ${key} ${value} but element was not found`
     }
     const actual = element.getAttribute(key)
     return `expected ${locator.selector} to have attribute ${key} ${value} but was ${actual}`
