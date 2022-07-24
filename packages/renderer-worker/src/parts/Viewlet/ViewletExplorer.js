@@ -1025,6 +1025,7 @@ const handlePasteCopy = async (state, nativeFiles) => {
   // TODO handle pasting files into symlink
   // TODO handle pasting files into broken symlink
   // TODO handle pasting files into hardlink
+  // TODO what if folder is big and it takes a long time
   for (const source of nativeFiles.files) {
     const target = `${state.root}${state.pathSeparator}${getBaseName(
       source,
@@ -1036,12 +1037,7 @@ const handlePasteCopy = async (state, nativeFiles) => {
   if (stateNow.disposed) {
     return
   }
-  const file = nativeFiles.files[0]
-  console.log({ files: file })
-  const newDirents = [...stateNow.dirents]
-  const topLevelDirents = await FileSystem.readDirWithFileTypes(state.root)
-  console.log({ topLevelDirents })
-  // console.log({ files: nativeFiles.files })
+  // TODO only update folder at which level it changed
   return updateRoot()
 }
 
