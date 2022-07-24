@@ -985,7 +985,7 @@ const handlePasteCopy = async (state, nativeFiles) => {
 
 const handlePasteCut = async (state, nativeFiles) => {
   for (const source of nativeFiles.files) {
-    const target = `${state.root}/${getBaseName(source)}`
+    const target = `${state.root}${state.pathSeparator}${getBaseName(source)}`
     await FileSystem.rename(source, target)
   }
   return state
