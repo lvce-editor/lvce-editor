@@ -42,7 +42,6 @@ test('viewlet.explorer-accessibility', async () => {
   const treeItemLanguages = page.locator(
     `.TreeItem[title$="${titleLanguages}"]`
   )
-  await expect(treeItemLanguages).toHaveAttribute('tabindex', '-1')
   await expect(treeItemLanguages).toHaveAttribute('role', 'treeitem')
   await expect(treeItemLanguages).toHaveAttribute('aria-level', '1')
   await expect(treeItemLanguages).toHaveAttribute('aria-posinset', '1')
@@ -53,7 +52,6 @@ test('viewlet.explorer-accessibility', async () => {
   const treeItemSampleFolder = page.locator(
     `.TreeItem[title$="${titleSampleFolder}"]`
   )
-  await expect(treeItemSampleFolder).toHaveAttribute('tabindex', '-1')
   await expect(treeItemSampleFolder).toHaveAttribute('role', 'treeitem')
   await expect(treeItemSampleFolder).toHaveAttribute('aria-level', '1')
   await expect(treeItemSampleFolder).toHaveAttribute('aria-posinset', '2')
@@ -62,7 +60,6 @@ test('viewlet.explorer-accessibility', async () => {
 
   const titleTest = escapePath('/test.txt')
   const treeItemTestTxt = page.locator(`.TreeItem[title$="${titleTest}"]`)
-  await expect(treeItemTestTxt).toHaveAttribute('tabindex', '-1')
   await expect(treeItemTestTxt).toHaveAttribute('aria-level', '1')
   await expect(treeItemTestTxt).toHaveAttribute('aria-posinset', '3')
   await expect(treeItemTestTxt).toHaveAttribute('aria-setsize', '3')
@@ -78,7 +75,6 @@ test('viewlet.explorer-accessibility', async () => {
   const treeItemIndexHtml = page.locator(
     `.TreeItem[title$="${titleIndexHtml}"]`
   )
-  await expect(treeItemIndexHtml).toHaveAttribute('tabindex', '-1')
   await expect(treeItemIndexHtml).toHaveAttribute('aria-level', '2')
   await expect(treeItemIndexHtml).toHaveAttribute('aria-posinset', '1')
   await expect(treeItemIndexHtml).toHaveAttribute('aria-setsize', '1')
