@@ -23,7 +23,8 @@ import { expect, getTmpDir, runWithExtension, test } from './_testFrameWork.js'
 // windows narrator says: "Clear recently opened, menu item, four of four"
 // orca says: "Clear recently opened"
 
-test('viewlet.title-bar-accessibility', async () => {
+// TODO test is flaky https://github.com/lvce-editor/lvce-editor/runs/7490304588?check_suite_focus=true
+test.skip('viewlet.title-bar-accessibility', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(`${tmpDir}/test.txt`, 'div')
   const page = await runWithExtension({
