@@ -38,6 +38,8 @@ const openMenuAtIndex = async (index, shouldBeFocused) => {
     /* method */ 'menuGetEntryBounds',
     /* index */ index
   )
+  // TODO race condition: another menu might already be open at this point
+
   const x = bounds.left
   const y = bounds.bottom
   const width = Menu.getMenuWidth()

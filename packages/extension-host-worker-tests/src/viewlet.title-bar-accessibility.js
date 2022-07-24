@@ -28,7 +28,7 @@ import {
 // windows narrator says: "Clear recently opened, menu item, four of four"
 // orca says: "Clear recently opened"
 
-test('viewlet.title-bar-accessibility', async () => {
+test.skip('viewlet.title-bar-accessibility', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(`${tmpDir}/test.txt`, 'div')
   const page = await runWithExtension({
