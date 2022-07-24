@@ -86,7 +86,7 @@ const handleFocus = (event) => {
   )
 }
 
-const handleBlur = () => {
+const handleBlur = (event) => {
   RendererWorker.send(/* Explorer.handleBlur */ 'Explorer.handleBlur')
 }
 
@@ -161,7 +161,6 @@ const handleMouseDown = (event) => {
   if (index === -2) {
     return
   }
-  event.preventDefault()
   RendererWorker.send(
     /* Explorer.handleClick */ 'Explorer.handleClick',
     /* index */ index
@@ -252,7 +251,6 @@ const create$Row = () => {
 const render$Row = ($Row, rowInfo) => {
   $Row.textContent = rowInfo.name
   $Row.title = rowInfo.path
-  $Row.tabIndex = -1
   $Row.ariaSetSize = `${rowInfo.setSize}`
   // TODO bug with windows narrator
   // windows narrator reads heading level 1

@@ -547,15 +547,17 @@ test('event - click', () => {
   const $GitKeep = state.$Viewlet.children[0]
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
-  $GitKeep.dispatchEvent(
-    new MouseEvent('mousedown', {
-      clientX: 50,
-      clientY: 50,
-      bubbles: true,
-      button: 0,
-    })
-  )
+  const event = new MouseEvent('mousedown', {
+    clientX: 50,
+    clientY: 50,
+    bubbles: true,
+    button: 0,
+    cancelable: true,
+  })
+  $GitKeep.dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleClick', 0)
+  expect(event.defaultPrevented).toBe(false)
 })
 
 test('event - click on wrapper div', () => {
@@ -625,15 +627,59 @@ test('event - right click', () => {
   const $GitKeep = state.$Viewlet.children[0]
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
-  $GitKeep.dispatchEvent(
-    new MouseEvent('mousedown', {
-      clientX: 50,
-      clientY: 50,
-      bubbles: true,
-      button: 1,
-    })
-  )
+  const event = new MouseEvent('mousedown', {
+    clientX: 50,
+    clientY: 50,
+    bubbles: true,
+    button: 1,
+  })
+  $GitKeep.dispatchEvent(event)
   expect(RendererWorker.send).not.toHaveBeenCalled()
+})
+
+test('event - blur', () => {
+  const state = ViewletExplorer.create()
+  ViewletExplorer.updateDirents(state, [
+    {
+      name: '.gitkeep',
+      depth: 1,
+      type: 'file',
+      path: '/.gitkeep',
+    },
+    {
+      name: 'another-folder',
+      depth: 1,
+      type: 'directory',
+      path: '/another-folder',
+    },
+    {
+      name: 'index.css',
+      depth: 1,
+      type: 'file',
+      path: '/index.css',
+    },
+    {
+      name: 'index.html',
+      depth: 1,
+      type: 'file',
+      path: '/index.html',
+    },
+    {
+      name: 'nested',
+      depth: 1,
+      type: 'directory',
+      path: '/nested',
+    },
+  ])
+  const $GitKeep = state.$Viewlet.children[0]
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const event = new FocusEvent('blur', {
+    bubbles: true,
+  })
+  $GitKeep.dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleBlur')
 })
 
 test('accessibility - viewlet should have role tree', () => {
@@ -666,6 +712,7 @@ test('accessibility - dirents should have ariaSetSize, ariaPosInSet, ariaLevel a
   expect($DirentOne.ariaPosInSet).toBe('1')
   expect($DirentOne.ariaSetSize).toBe('2')
   expect($DirentOne.ariaLevel).toBe('1')
+  expect($DirentOne.getAttribute('tabIndex')).toBeNull()
   // @ts-ignore
   expect($DirentOne.ariaDescription).toBe('')
 
@@ -674,6 +721,7 @@ test('accessibility - dirents should have ariaSetSize, ariaPosInSet, ariaLevel a
   expect($DirentTwo.ariaPosInSet).toBe('2')
   expect($DirentTwo.ariaSetSize).toBe('2')
   expect($DirentTwo.ariaLevel).toBe('1')
+  expect($DirentTwo.getAttribute('tabIndex')).toBeNull()
   // @ts-ignore
   expect($DirentOne.ariaDescription).toBe('')
 })

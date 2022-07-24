@@ -19,8 +19,7 @@ test('viewlet.explorer-create-file-error-no-name-provided', async () => {
   await explorer.click({
     button: 'right',
   })
-  const menuItemNewFile = page.locator('text=New File')
-  await menuItemNewFile.click()
+  await page.selectContextMenuItem('New File')
 
   const inputBox = explorer.locator('input')
   await expect(inputBox).toBeVisible()

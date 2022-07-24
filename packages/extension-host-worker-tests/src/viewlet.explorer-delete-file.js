@@ -20,7 +20,6 @@ test('viewlet.explorer-delete-file', async () => {
   await file1.click({
     button: 'right',
   })
-  const deleteMenuItem = page.locator('text=Delete')
-  await deleteMenuItem.click()
+  await page.selectContextMenuItem('Delete')
   await expect(file1).toBeHidden()
 })
