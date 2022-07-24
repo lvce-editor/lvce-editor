@@ -102,7 +102,7 @@ test('load - error - no create method', async () => {
     'Viewlet.handleError',
     '',
     '',
-    'module.create is not a function'
+    'TypeError: module.create is not a function'
   )
 })
 
@@ -124,7 +124,7 @@ test('load - error - create method throws error', async () => {
     'Viewlet.handleError',
     '',
     '',
-    'x is not a function'
+    'TypeError: x is not a function'
   )
 })
 
@@ -146,7 +146,7 @@ test('load - error - no loadContent method', async () => {
     'Viewlet.handleError',
     '',
     '',
-    'module.loadContent is not a function'
+    'TypeError: module.loadContent is not a function'
   )
 })
 
@@ -173,7 +173,7 @@ test('load - error - loadContent method throws error', async () => {
     'Viewlet.handleError',
     '',
     '',
-    'x is not a function'
+    'TypeError: x is not a function'
   )
 })
 
@@ -196,7 +196,7 @@ test('load - error - no contentLoaded method', async () => {
     'Viewlet.handleError',
     '',
     '',
-    'module.contentLoaded is not a function' // TODO should include TypeError
+    'TypeError: module.contentLoaded is not a function' // TODO should include TypeError
   )
 })
 
@@ -222,6 +222,6 @@ test('load - error - contentLoaded method throws error', async () => {
     'Viewlet.handleError',
     '',
     '',
-    'x is not a function'
+    'TypeError: x is not a function'
   )
 })
