@@ -64,7 +64,7 @@ test('hydrate', async () => {
   })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  await Workspace.hydrate()
+  await Workspace.hydrate({ href: '' })
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
@@ -75,7 +75,7 @@ test('hydrate', async () => {
   )
 })
 
-test.only('hydrate - path changed in the meantime', async () => {
+test('hydrate - path changed in the meantime', async () => {
   let _resolve = (value) => {}
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...params) => {
@@ -94,7 +94,7 @@ test.only('hydrate - path changed in the meantime', async () => {
   })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  const promise1 = Workspace.hydrate()
+  const promise1 = Workspace.hydrate({ href: '' })
   const promise2 = Workspace.setPath('/test')
   await promise2
   await setTimeout(0)
@@ -119,7 +119,7 @@ test('hydrate - error', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   // TODO should handle error gracefully
-  await expect(Workspace.hydrate()).rejects.toThrowError(
+  await expect(Workspace.hydrate({ href: '' })).rejects.toThrowError(
     new Error('x is not a function')
   )
 })

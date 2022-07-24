@@ -1,7 +1,7 @@
 import * as EditorHandleSingleClick from '../src/parts/EditorCommand/EditorCommandHandleSingleClick.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 
-test('editorHandleClick', async () => {
+test.skip('editorHandleClick', async () => {
   const editor = {
     lines: ['11111', '22222'],
     cursor: {
@@ -26,7 +26,7 @@ test('editorHandleClick', async () => {
   })
 })
 
-test('editorHandleClick - with selection', async () => {
+test.skip('editorHandleClick - with selection', async () => {
   const editor = {
     lines: ['line 1', 'line 2'],
     cursor: {
