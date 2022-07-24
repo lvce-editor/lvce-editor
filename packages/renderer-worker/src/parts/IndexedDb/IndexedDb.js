@@ -1,6 +1,6 @@
 // TODO high memory usage in idb because of transactionDoneMap
 
-import { openDB } from '../../../../../static/js/idb/index.js'
+import { openDB } from '../../../../../static/js/idb/with-async-ittr.js'
 
 export const state = {
   databases: Object.create(null),
@@ -17,7 +17,10 @@ const getDb = async () => {
   const db = await openDB('session', state.dbVersion, {
     async upgrade(db, oldVersion) {
       if (!db.objectStoreNames.contains('session')) {
-        await db.createObjectStore('session', { autoIncrement: true })
+        const objectStore = await db.createObjectStore('session', {
+          autoIncrement: true,
+        })
+        objectStore.createIndex('sessionId', 'sessionId', { unique: false })
       }
     },
   })
@@ -56,4 +59,16 @@ export const getValues = async (storeId) => {
       cause: error,
     })
   }
+}
+
+export const getValuesByIndexName = async (storeId, indexName, only) => {
+  const db = await getDbMemoized()
+  const transaction = db.transaction(storeId)
+  const index = transaction.store.index(indexName)
+  const iterator = index.iterate(only)
+  const objects = []
+  for await (const cursor of iterator) {
+    objects.push(cursor.value)
+  }
+  return objects
 }
