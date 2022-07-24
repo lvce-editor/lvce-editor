@@ -87,6 +87,28 @@ test('removeFile - error', async () => {
   ).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
+test('copy', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {})
+  await FileSystemDisk.copy('/test/a', '/test/b')
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith(
+    'FileSystem.copy',
+    '/test/a',
+    '/test/b'
+  )
+})
+
+test('copy - error', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(async (method, ...params) => {
+    throw new TypeError('x is not a function')
+  })
+  await expect(FileSystemDisk.copy('/test/a', '/test/b')).rejects.toThrowError(
+    new TypeError('x is not a function')
+  )
+})
+
 test('rename', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {

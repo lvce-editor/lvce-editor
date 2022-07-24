@@ -2436,7 +2436,7 @@ test('handleWheel - down - already at bottom but viewlet is larger than items ca
   expect(ViewletExplorer.handleWheel(state, 100)).toBe(state)
 })
 
-test.skip('handlePaste - copied gnome files', async () => {
+test('handlePaste - copied gnome files', async () => {
   const state = ViewletExplorer.create('', 0, 0, 0, 0)
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
@@ -2505,6 +2505,28 @@ test('handlePaste - not supported', async () => {
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith(
     '[ViewletExplorer/handlePaste] no paths detected'
+  )
+})
+
+test('handlePaste - unexpected result', async () => {
+  const state = ViewletExplorer.create('', 0, 0, 0, 0)
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'ClipBoard.readFiles':
+        return {
+          source: 'non-existing',
+          type: 'non-existing',
+          files: [],
+        }
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await expect(ViewletExplorer.handlePaste(state)).rejects.toThrowError(
+    new Error('unexpected native paste type: non-existing')
   )
 })
 

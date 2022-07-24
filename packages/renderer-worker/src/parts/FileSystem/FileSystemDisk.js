@@ -5,7 +5,7 @@ export const name = 'Disk'
 
 export const copy = (source, target) => {
   return SharedProcess.invoke(
-    /* FileSystem.copy */ 'Filesystem.copy',
+    /* FileSystem.copy */ 'FileSystem.copy',
     /* source */ source,
     /* target */ target
   )

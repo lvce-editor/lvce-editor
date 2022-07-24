@@ -967,15 +967,40 @@ export const handleCopy = async (state) => {
   )
 }
 
+const handlePasteNone = (state, nativeFiles) => {
+  console.info('[ViewletExplorer/handlePaste] no paths detected')
+  return state
+}
+
+const handlePasteCopy = async (state, nativeFiles) => {
+  for (const source of nativeFiles.files) {
+    const target = `${state.root}${state.pathSeparator}${getBaseName(
+      source,
+      state.pathSeparator
+    )}`
+    await FileSystem.copy(source, target)
+  }
+  return state
+}
+
+const handlePasteCut = async (state, nativeFiles) => {
+  for (const source of nativeFiles.files) {
+    const target = `${state.root}/${getBaseName(source)}`
+    await FileSystem.rename(source, target)
+  }
+  return state
+}
+
+const NativeFileTypes = {
+  None: 'none',
+  Copy: 'copy',
+  Cut: 'cut',
+}
+
 export const handlePaste = async (state) => {
   const nativeFiles = await Command.execute(
     /* ClipBoard.readNativeFiles */ 'ClipBoard.readNativeFiles'
   )
-  if (nativeFiles.type === 'none') {
-    console.info('[ViewletExplorer/handlePaste] no paths detected')
-    return
-  }
-  console.log({ nativeFiles })
   // TODO detect cut/paste event, not sure if that is possible
   // TODO check that pasted folder is not a parent folder of opened folder
   // TODO support pasting multiple paths
@@ -988,25 +1013,16 @@ export const handlePaste = async (state) => {
   // TODO but what if a file is currently selected? Then maybe the parent folder
   // TODO but will it work if the folder is a symlink?
   // TODO handle error gracefully when copy fails
-  if (nativeFiles.type === 'copy') {
-    for (const source of nativeFiles.files) {
-      const target = `${state.root}${state.pathSeparator}${getBaseName(
-        source,
-        state.pathSeparator
-      )}`
-      await FileSystem.copy(source, target)
-    }
-    // await refresh(state)
-    return
+  switch (nativeFiles.type) {
+    case NativeFileTypes.None:
+      return handlePasteNone(state, nativeFiles)
+    case NativeFileTypes.Copy:
+      return handlePasteCopy(state, nativeFiles)
+    case NativeFileTypes.Cut:
+      return handlePasteCut(state, nativeFiles)
+    default:
+      throw new Error(`unexpected native paste type: ${nativeFiles.type}`)
   }
-  if (nativeFiles.type === 'cut') {
-    for (const source of nativeFiles.files) {
-      const target = `${state.root}/${getBaseName(source)}`
-      await FileSystem.rename(source, target)
-    }
-    // await refresh(state)
-  }
-  // await refresh(state)
 }
 
 export const resize = (state, dimensions) => {
