@@ -51,6 +51,13 @@ export const replayCurrentSession = async () => {
   await Command.execute('Open.openUrl', /* url */ replayUrl)
 }
 
+export const getSessionContent = async () => {
+  const sessionId = state.sessionId
+  const events = await getEvents(sessionId)
+  // TODO use JSON module for this
+  return JSON.stringify(events, null, 2) + '\n'
+}
+
 export const replaySession = async (sessionId) => {
   const events = await getEvents(sessionId)
   const originalIpc = RendererProcess.state.ipc
@@ -180,5 +187,12 @@ export const startRecording = () => {
     SharedProcess.state.ipc,
     'shared-process',
     (event) => event
+  )
+}
+
+export const openSession = async () => {
+  await Command.execute(
+    /* Main.openUri */ 'Main.openUri',
+    /* uri */ 'app://session.json'
   )
 }

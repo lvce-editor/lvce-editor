@@ -12,6 +12,7 @@ export const state = {
   workspaceUri: '',
   source: '',
   href: '',
+  isTest: false,
 }
 
 /**
@@ -58,9 +59,14 @@ const getResolveRootFromSessionStorage = async () => {
   return resolvedRoot
 }
 
+export const isTest = () => {
+  return state.isTest
+}
+
 const getResolvedRootFromRendererProcess = async (href) => {
   const url = new URL(href)
   if (href.includes('tests/')) {
+    state.isTest = true
     return undefined
   }
   if (url.searchParams.has('replayId')) {
