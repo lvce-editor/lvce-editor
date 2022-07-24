@@ -371,5 +371,9 @@
   {
     "id": "SessionReplay.downloadSession",
     "label": "SessionReplay: Download Session"
+  },
+  {
+    "id": "SessionReplay.openSession",
+    "label": "SessionReplay: Open Session"
   }
 ]

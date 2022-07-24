@@ -760,6 +760,7 @@ const getModuleId = (commandId) => {
     case 'SessionReplay.downloadSession':
     case 'SessionReplay.replaySession':
     case 'SessionReplay.replayCurrentSession':
+    case 'SessionReplay.openSession':
       return MODULE_SESSION_REPLAY
     default:
       throw new Error(`[renderer-worker] command ${commandId} not found`)

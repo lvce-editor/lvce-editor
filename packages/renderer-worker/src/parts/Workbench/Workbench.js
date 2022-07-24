@@ -137,9 +137,11 @@ export const startup = async (config) => {
 
   LifeCycle.mark(LifeCycle.PHASE_FIFTEEN)
 
-  Performance.mark('code/willLoadSaveState')
-  await SaveState.hydrate()
-  Performance.mark('code/didLoadSaveState')
+  if (!Workspace.isTest()) {
+    Performance.mark('code/willLoadSaveState')
+    await SaveState.hydrate()
+    Performance.mark('code/didLoadSaveState')
+  }
 
   LifeCycle.mark(LifeCycle.PHASE_SIXTEEN)
 

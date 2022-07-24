@@ -155,6 +155,9 @@ const TAB_HEIGHT = 35
 const id = 'EditorText'
 
 const getRestoredEditors = async () => {
+  if (Workspace.isTest()) {
+    return []
+  }
   const savedState = await Command.execute(
     /* LocalStorage.getJson */ 'LocalStorage.getJson',
     /* key */ 'stateToSave'

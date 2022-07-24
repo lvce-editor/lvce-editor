@@ -10,6 +10,8 @@ const getModule = (uri) => {
       return import('./FileSystemAppSettings.js')
     case 'recently-opened.json':
       return import('./FileSystemAppRecentlyOpened.js')
+    case 'session.json':
+      return import('./FileSystemAppSession.js')
     default:
       throw new Error(`unsupported file: ${uri}`)
   }
