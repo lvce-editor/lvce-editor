@@ -15,6 +15,8 @@ const getFn = (method) => {
       return ExtensionHostExtension.activate
     case 'Reference.execute':
     case 'References.execute':
+    case 'ExtensionHostReference.executeReferenceProvider':
+    case 'ExtensionHostReferences.executeReferenceProvider':
       return ExtensionHostReference.executeReferenceProvider
     case 'ExtensionHostCompletion.execute':
       return ExtensionHostCompletion.executeCompletionProvider

@@ -3,7 +3,7 @@ import * as Editor from '../Editor/Editor.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHost/ExtensionHostTypeDefinition.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
-
+import * as Assert from '../Assert/Assert.js'
 // TODO duplicate code with editorCommandGoToDefinition
 // TODO race condition, check that editor hasn't been closed in the meantime
 
@@ -35,6 +35,13 @@ export const editorGoToTypeDefinition = async (
   explicit = true
 ) => {
   try {
+    // TODO position should not be of type array
+    if (Array.isArray(position)) {
+      position = position[0]
+    }
+    Assert.object(editor)
+    Assert.object(position)
+    Assert.boolean(explicit)
     const typeDefinition = await getTypeDefinition(editor, position)
     // TODO if editor is already disposed at this point, do nothing
     if (!typeDefinition) {

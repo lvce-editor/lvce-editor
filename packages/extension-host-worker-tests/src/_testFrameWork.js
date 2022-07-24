@@ -62,7 +62,6 @@ const ElementActions = {
     ElementActions.mouseEvent(element, 'contextmenu', options)
   },
   click(element, options) {
-    console.log('click', { text: element.textContent, options })
     ElementActions.mouseDown(element, options)
     ElementActions.mouseEvent(element, 'click', options)
     ElementActions.mouseUp(element, options)
@@ -150,10 +149,6 @@ const createLocator = (selector, { nth = -1, hasText = '' } = {}) => {
         currentTime = Time.getTimeStamp()
       }
       throw new Error(`selector not found: ${selector}`)
-
-      // console.log({ clickOptions })
-      // ElementActions.click(element, clickOptions)
-      // TODO
     },
     async click({ button = 'left' } = {}) {
       const options = {
@@ -196,7 +191,6 @@ const getKeyOptions = (rawKey) => {
     let altKey = false
     let spaceKey = false
     let key = ''
-    console.log({ parts })
     for (const part of parts) {
       switch (part) {
         case 'Control':
@@ -225,7 +219,6 @@ const getKeyOptions = (rawKey) => {
 const createKeyBoard = () => {
   return {
     async press(key) {
-      console.log('press', key)
       const element = document.activeElement
       const keyOptions = getKeyOptions(key)
       const options = {
@@ -262,6 +255,12 @@ const createPage = () => {
     },
     async openEditorContextMenu() {
       await this.invokeRendererWorker('Editor.handleContextMenu', 0, 0)
+    },
+    async selectContextMenuItem(text) {
+      const contextMenuItem = this.locator('.MenuItem', {
+        hasText: text,
+      })
+      await contextMenuItem.click()
     },
   }
 }
@@ -346,16 +345,12 @@ const Conditions = {
   },
   toHaveAttribute(element, { key, value }) {
     const attribute = element.getAttribute(key)
-    console.log({ key, attribute, value })
     return attribute === value
   },
   toBeFocused(element) {
-    console.log({ element })
     return element === document.activeElement
   },
   toHaveClass(element, { className }) {
-    console.log({ element, className: element.className, expected: className })
-    console.log(element.classList.contains('Focused'))
     return element.classList.contains(className)
   },
   toHaveCss(element, { key, value }) {
