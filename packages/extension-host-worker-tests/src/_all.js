@@ -43,6 +43,8 @@ const testFile = async (page, name) => {
   switch (state) {
     case 'pass':
       break
+    case 'skip':
+      break
     case 'fail':
       throw new Error(`Test Failed: ${text}`)
     default:

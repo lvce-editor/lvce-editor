@@ -262,6 +262,9 @@ const createPage = () => {
       })
       await contextMenuItem.click()
     },
+    async openExplorerContextMenu(index) {
+      await this.invokeRendererWorker('Explorer.handleContextMenu', 0, 0)
+    },
   }
 }
 
@@ -308,6 +311,19 @@ const waitForReady = async () => {
   throw new Error(`Main element not found`)
 }
 
+const createOverlay = () => {
+  const $TestOverlay = document.createElement('div')
+  $TestOverlay.id = 'TestOverlay'
+  $TestOverlay.style.position = 'fixed'
+  $TestOverlay.style.bottom = '0px'
+  $TestOverlay.style.left = '0px'
+  $TestOverlay.style.right = '0px'
+  $TestOverlay.style.height = '20px'
+  $TestOverlay.style.whiteSpace = 'nowrap'
+  $TestOverlay.style.contain = 'strict'
+  return $TestOverlay
+}
+
 export const test = async (name, fn) => {
   let _error
   let _start
@@ -325,15 +341,7 @@ export const test = async (name, fn) => {
     error.message = `Test failed: ${name}: ${error.message}`
     console.error(error)
   }
-  const $TestOverlay = document.createElement('div')
-  $TestOverlay.id = 'TestOverlay'
-  $TestOverlay.style.position = 'fixed'
-  $TestOverlay.style.bottom = '0px'
-  $TestOverlay.style.left = '0px'
-  $TestOverlay.style.right = '0px'
-  $TestOverlay.style.height = '20px'
-  $TestOverlay.style.whiteSpace = 'nowrap'
-  $TestOverlay.style.contain = 'strict'
+  const $TestOverlay = createOverlay()
   if (_error) {
     $TestOverlay.dataset.state = 'fail'
     $TestOverlay.style.background = 'red'
@@ -343,6 +351,13 @@ export const test = async (name, fn) => {
     $TestOverlay.textContent = `test passed in ${_duration}`
     $TestOverlay.dataset.state = 'pass'
   }
+  document.body.append($TestOverlay)
+}
+
+test.skip = (id, fn) => {
+  const $TestOverlay = createOverlay()
+  $TestOverlay.textContent = 'test skipped'
+  $TestOverlay.dataset.state = 'skip'
   document.body.append($TestOverlay)
 }
 
@@ -527,7 +542,7 @@ export const expect = (locator) => {
     },
     async toHaveAttribute(key, value) {
       Assert.string(key, 'key must be of type string')
-      Assert.string(value, 'value must be of type string')
+      // Assert.string(value, 'value must be of type string')
       return this.checkSingleElementCondition(Conditions.toHaveAttribute, {
         key,
         value,

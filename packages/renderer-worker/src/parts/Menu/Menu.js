@@ -154,6 +154,7 @@ export const selectIndex = async (level, index) => {
   const menu = state.menus[level]
   menu.focusedIndex = index
   const item = menu.items[menu.focusedIndex]
+  console.log('[menu] select index', item)
   switch (item.flags) {
     case /* None */ 0:
       if (!item.command) {

@@ -218,7 +218,7 @@ export const handleWheel = (state, deltaY) => {
 
 export const handleContextMenu = async (state, x, y, index) => {
   state.focusedIndex = index
-  console.log('ctx menu', index, state)
+  console.log('[explorer] context menu', index, state)
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
@@ -235,7 +235,10 @@ export const getFocusedDirent = (state) => {
 
 // TODO support multiselection and removing multiple dirents
 export const removeDirent = async (state) => {
+  console.log('[explorer] focused index', state.focusedIndex)
   if (state.focusedIndex < 0) {
+    console.info('not deleting dirent')
+    console.log(state.dirents)
     return state
   }
   const dirent = getFocusedDirent(state)
@@ -1090,6 +1093,9 @@ export const collapseAll = (state) => {
 }
 
 export const handleBlur = (state) => {
+  // TODO when blur event occurs because of context menu, focused index should stay the same
+  // but focus outline should be removed
+  console.log('explorer handle blur', 'focus none')
   return focusIndex(state, -2)
 }
 
