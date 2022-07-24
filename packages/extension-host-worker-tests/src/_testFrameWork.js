@@ -293,17 +293,28 @@ export const runWithExtension = async (options) => {
   return page
 }
 
+const waitForReady = async () => {
+  const startTime = Time.getTimeStamp()
+  const endTime = startTime + maxTimeout
+  let currentTime = startTime
+  while (currentTime < endTime) {
+    const element = querySelectorWithOptions('#Main')
+    if (element) {
+      return
+    }
+    await Timeout.waitForMutation(100)
+    currentTime = Time.getTimeStamp()
+  }
+  throw new Error(`Main element not found`)
+}
+
 export const test = async (name, fn) => {
   let _error
   let _start
   let _end
   let _duration
   try {
-    if (!globalThis.__codeLoaded) {
-      await new Promise((resolve) => {
-        window.addEventListener('code/ready', resolve, { once: true })
-      })
-    }
+    await waitForReady()
     _start = performance.now()
     await fn()
     _end = performance.now()

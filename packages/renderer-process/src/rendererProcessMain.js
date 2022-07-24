@@ -40,15 +40,19 @@ globalThis.M = [
   M30,
 ]
 
+const handleError = (error) => {
+  console.info(`[renderer-process] Unhandled Error: ${error}`)
+  alert(error)
+}
+
+const handleUnhandledRejection = (event) => {
+  console.info(`[renderer-process] Unhandled Rejection: ${event.reason}`)
+  alert(event.reason)
+}
+
 const main = async () => {
-  onerror = (error) => {
-    console.info(`[renderer-process] Unhandled Error: ${error}`)
-    alert(error)
-  }
-  onunhandledrejection = (event) => {
-    console.info(`[renderer-process] Unhandled Rejection: ${event.reason}`)
-    alert(event.reason)
-  }
+  onerror = handleError
+  onunhandledrejection = handleUnhandledRejection
 
   if (Platform.platform === 'web') {
     // disable prompt to download app as pwa
