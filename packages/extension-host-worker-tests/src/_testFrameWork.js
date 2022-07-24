@@ -402,7 +402,12 @@ const ConditionErrors = {
     return `expected selector to have text ${locator.selector} ${text}`
   },
   toHaveAttribute(locator, { key, value }) {
-    return `expected ${locator.selector} to have attribute ${key} ${value}`
+    const [element] = querySelector(locator.selector)
+    if (!element) {
+      return `expected ${locator.selector} to have attribute ${key} ${value}`
+    }
+    const actual = element.getAttribute(key)
+    return `expected ${locator.selector} to have attribute ${key} ${value} but was ${actual}`
   },
   toHaveCount(locator, { count }) {
     return `expected ${locator.selector} to have count ${count}`
