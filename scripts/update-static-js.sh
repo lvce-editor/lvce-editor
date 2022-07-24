@@ -57,6 +57,8 @@ download_pkg "termterm" "0.0.22"
 download_css "termterm" "0.0.22" "css/termterm.css"
 download_css "modern-normalize" "1.1.0" "modern-normalize.css"
 
-mkdir -p static/js/idb
-download_file "idb/index" "https://unpkg.com/idb@7.0.2/build/index.js"
-download_file "idb/wrap-idb-value" "https://unpkg.com/idb@7.0.2/build/wrap-idb-value.js"
+mkdir -p static/js/idb/build
+download_file "idb/build/index" "https://unpkg.com/idb@7.0.2/build/index.js"
+download_file "idb/build/wrap-idb-value" "https://unpkg.com/idb@7.0.2/build/wrap-idb-value.js"
+download_file "idb/with-async-ittr" "https://unpkg.com/idb@7.0.2/with-async-ittr.js"
+download_file "idb/build/async-iterators" "https://unpkg.com/idb@7.0.2/build/async-iterators.js"

@@ -104,12 +104,12 @@ export const getEvents = async (sessionId) => {
   try {
     const timestamp = performance.now()
     // console.log({ message, timestamp })
-    const events = await IndexedDb.getValues('session')
-    const matchesSessionId = (event) => {
-      return event.sessionId === sessionId
-    }
-    const filteredEvents = events.filter(matchesSessionId)
-    return filteredEvents
+    const events = await IndexedDb.getValuesByIndexName(
+      'session',
+      'sessionId',
+      sessionId
+    )
+    return events
   } catch (error) {
     ErrorHandling.handleError(error)
     // console.info(`failed to get events from indexeddb: ${error}`)
