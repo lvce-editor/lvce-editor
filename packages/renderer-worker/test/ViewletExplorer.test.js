@@ -2440,8 +2440,23 @@ test('handleWheel - down - already at bottom but viewlet is larger than items ca
   expect(ViewletExplorer.handleWheel(state, 100)).toBe(state)
 })
 
-test.skip('handlePaste - copied gnome files', async () => {
-  const state = ViewletExplorer.create('', 0, 0, 0, 0)
+test('handlePaste - copied gnome files', async () => {
+  const state1 = {
+    ...ViewletExplorer.create('', 0, 0, 0, 0),
+    root: '/test',
+  }
+  let i = 0
+  // @ts-ignore
+  Viewlet.getState.mockImplementation(() => {
+    switch (++i) {
+      case 1:
+      case 2:
+      case 3:
+        return state1
+      default:
+        throw new Error(`unexpected state ${i}`)
+    }
+  })
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
@@ -2461,13 +2476,24 @@ test.skip('handlePaste - copied gnome files', async () => {
           },
         ]
       default:
-        console.log({ method })
         throw new Error('unexpected message')
     }
   })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.handlePaste(state)
+  expect(await ViewletExplorer.handlePaste(state1)).toMatchObject({
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'some-file.txt',
+        path: '/testsome-file.txt',
+        posInSet: 1,
+        setSize: 1,
+        type: 'file',
+      },
+    ],
+  })
 })
 
 test('handlePaste - cut gnome files', async () => {
