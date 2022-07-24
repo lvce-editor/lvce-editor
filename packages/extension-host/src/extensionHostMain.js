@@ -9,6 +9,7 @@ import * as Api from './parts/Api/Api.js'
 import * as ExtensionManagement from './parts/ExtensionHostExtension/ExtensionHostExtension.js'
 import * as SharedProcess from './parts/SharedProcess/SharedProcess.js'
 import * as InternalCommand from './parts/InternalCommand/InternalCommand.js'
+import * as PrettyError from './parts/PrettyError/PrettyError.js'
 
 const canBeIgnored = (error) => {
   if (error && error.code === 'EPIPE') {
@@ -29,12 +30,14 @@ const handleUncaughtExceptionMonitor = (error, origin) => {
   if (canBeIgnored(error)) {
     return
   }
-
-  // if(error && error.code ==='')
   console.info(
-    '[extension host] Uncaught exception, more details should be below:'
+    `[extension-host] uncaught exception: ${PrettyError.firstErrorLine(error)}`
   )
-  console.error(error)
+  const prettyError = PrettyError.prepare(error)
+  // console.error(prettyError.message)
+  console.error(prettyError.codeFrame)
+  console.error(prettyError.stack)
+  process.exit(1)
 }
 
 const handleUncaughtException = (error) => {

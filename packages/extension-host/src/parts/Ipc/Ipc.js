@@ -21,5 +21,5 @@ const getModule = (method) => {
 
 export const listen = async (method) => {
   const module = await getModule(method)
-  return module.listen()
+  return module.listen(process)
 }
