@@ -17,19 +17,12 @@ test('sample.completion-provider-error-invalid-return-value-undefined', async ()
     name: 'sample.completion-provider-error-invalid-return-value-undefined',
     folder: tmpDir,
   })
-  const testTxt = page.locator('text=test.xyz')
-  await testTxt.click()
 
-  const token = page.locator('.Token').first()
-  await expect(token).toBeVisible()
-  await token.click()
+  await page.openUri(`${tmpDir}/test.xyz`)
 
-  const cursor = page.locator('.EditorCursor')
-  await expect(cursor).toHaveCount(1)
-  await expect(cursor).toHaveCSS('left', '0')
-  console.log({ cursor })
-
-  await page.keyboard.press('Control+Space')
+  await page.openUri(`${tmpDir}/test.xyz`)
+  await page.setCursor(0, 0)
+  await page.openCompletion()
 
   const overlayMessage = page.locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()

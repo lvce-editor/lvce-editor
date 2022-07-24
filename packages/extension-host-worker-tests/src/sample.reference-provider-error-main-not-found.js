@@ -9,7 +9,7 @@ import {
 test('sample.reference-provider-error-main-not-found', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(
-    `${tmpDir}/test.js`,
+    `${tmpDir}/test.xyz`,
     `export const add = () => {}
 `
   )
@@ -17,13 +17,9 @@ test('sample.reference-provider-error-main-not-found', async () => {
     name: 'sample.reference-provider-error-main-not-found',
     folder: tmpDir,
   })
-  const testTxt = page.locator('text=test.js')
-  await testTxt.click()
-
-  const token = page.locator('.Token').first()
-  await token.click({
-    button: 'right',
-  })
+  await page.openUri(`${tmpDir}/test.xyz`)
+  await page.setCursor(0, 0)
+  await page.openEditorContextMenu()
 
   const contextMenuItemFindAllReferences = page.locator('.MenuItem', {
     hasText: 'Find all references',
@@ -36,11 +32,11 @@ test('sample.reference-provider-error-main-not-found', async () => {
   // TODO should improve error message
   // TODO should show part of stack trace maybe?
   // const origin = location.origin
-  const mainurl = new URL(
+  const mainUrl = new URL(
     '../fixtures/sample.reference-provider-error-main-not-found/not-found.js',
     location.href.slice(0, location.href.lastIndexOf('/')) + '/'
   ).toString()
   await expect(viewletLocations).toHaveText(
-    `Failed to activate extension sample.reference-provider-error-main-not-found: TypeError: Failed to fetch dynamically imported module: ${mainurl}`
+    `Error: Failed to activate extension sample.reference-provider-error-main-not-found: TypeError: Failed to fetch dynamically imported module: ${mainUrl}`
   )
 })

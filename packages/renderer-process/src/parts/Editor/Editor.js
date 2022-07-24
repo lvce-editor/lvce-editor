@@ -125,6 +125,7 @@ const getModifier = (event) => {
 }
 
 const handleSingleClick = (event, x, y, offset) => {
+  console.log('click', { x, y, offset })
   const modifier = getModifier(event)
   RendererWorker.send(
     /* Editor.handleSingleClick */ 'Editor.handleSingleClick',

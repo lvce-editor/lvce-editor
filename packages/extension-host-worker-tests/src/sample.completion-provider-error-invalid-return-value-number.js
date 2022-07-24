@@ -17,17 +17,9 @@ test('sample.completion-provider-error-invalid-return-value-number', async () =>
     name: 'sample.completion-provider-error-invalid-return-value-number',
     folder: tmpDir,
   })
-  const testTxt = page.locator('text=test.xyz')
-  await testTxt.click()
-
-  const token = page.locator('.Token').first()
-  await expect(token).toBeVisible()
-  await token.click()
-
-  const cursor = page.locator('.EditorCursor')
-  await expect(cursor).toHaveCount(1)
-
-  await page.keyboard.press('Control+Space')
+  await page.openUri(`${tmpDir}/test.xyz`)
+  await page.setCursor(0, 0)
+  await page.openCompletion()
 
   const overlayMessage = page.locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()

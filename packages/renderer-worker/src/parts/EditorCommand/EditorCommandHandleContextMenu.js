@@ -7,4 +7,5 @@ export const editorHandleContextMenu = async (editor, x, y) => {
     /* y */ y,
     /* id */ 'editor'
   )
+  return editor
 }
