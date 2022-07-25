@@ -7,6 +7,7 @@ import tar from 'tar-fs'
 import VError from 'verror'
 import * as Path from '../Path/Path.js'
 import extensions from './builtinExtensions.json' assert { type: 'json' }
+import pMap from 'p-map'
 
 const download = async (url, outFile) => {
   try {
@@ -50,12 +51,14 @@ export const extract = async (inFile, outDir) => {
   )
 }
 
+const downloadExtensionAndLog = async (extension) => {
+  console.time(`[download] ${extension.name}`)
+  await downloadExtension(extension)
+  console.timeEnd(`[download] ${extension.name}`)
+}
+
 const downloadExtensions = async (extensions) => {
-  for (const extension of extensions) {
-    console.time(`[download] ${extension.name}`)
-    await downloadExtension(extension)
-    console.timeEnd(`[download] ${extension.name}`)
-  }
+  await pMap(extensions, downloadExtensionAndLog)
 }
 
 const main = () => {
