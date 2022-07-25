@@ -124,7 +124,8 @@ test('loadContent', async () => {
         type: 'file',
       },
     ],
-    focusedIndex: -2,
+    focusedIndex: -1,
+    focused: false,
     height: undefined,
     hoverIndex: -1,
     left: undefined,
@@ -2875,7 +2876,7 @@ test('newFile - canceled', async () => {
     'Viewlet.send',
     'Explorer',
     'showCreateFileInputBox',
-    -1
+    0
   )
 })
 
@@ -4431,4 +4432,48 @@ test('updateRoot - new folder', async () => {
       },
     ],
   })
+})
+
+test('event - issue with blur event after context menu event', async () => {
+  const state = {
+    ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
+    pathSeparator: '/',
+    focusedIndex: 2,
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-1',
+        path: '/test/folder-1',
+        posInSet: 1,
+        setSize: 3,
+        type: 'directory',
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-2',
+        path: '/test/folder-2',
+        posInSet: 2,
+        setSize: 3,
+        type: 'directory',
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-3',
+        path: '/test/folder-3',
+        posInSet: 3,
+        setSize: 3,
+        type: 'directory',
+      },
+    ],
+    width: 600,
+    height: 600,
+    minLineY: 0,
+    maxLineY: 100,
+  }
+  const state2 = await ViewletExplorer.handleContextMenu(state, 0, 0, 0)
+  const state3 = await ViewletExplorer.handleBlur(state2)
+  expect(state3.focusedIndex).toBe(0)
 })
