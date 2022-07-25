@@ -5,7 +5,6 @@ import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { jest } from '@jest/globals'
-import * as WebWorker from '../src/parts/WebWorker/WebWorker.js'
 
 const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))

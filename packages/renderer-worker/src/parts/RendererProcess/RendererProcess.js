@@ -2,9 +2,7 @@
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
 import { JsonRpcError } from '../Errors/Errors.js'
-import * as IpcWithMessagePort from '../Ipc/IpcWithMessagePort.js'
-import * as IpcWithModuleWorker from '../Ipc/IpcWithModuleWorker.js'
-import * as IpcWithReferencePort from '../Ipc/IpcWithReferencePort.js'
+import * as IpcChild from '../IpcChild/IpcChild.js'
 
 export const state = {
   pendingMessages: [],
@@ -60,17 +58,17 @@ const handleMessageFromRendererProcess = async (event) => {
 const getIpc = () => {
   // TODO tree-shake out if/else in prod
   if (globalThis.acceptPort) {
-    return IpcWithMessagePort.listen()
+    return IpcChild.listen({ method: IpcChild.Methods.MessagePort })
   }
   if (globalThis.acceptReferencePort) {
-    return IpcWithReferencePort.listen()
+    return IpcChild.listen({ method: IpcChild.Methods.ReferencePort })
   }
-  return IpcWithModuleWorker.listen()
+  return IpcChild.listen({ method: IpcChild.Methods.ModuleWorker })
 }
 
-export const listen = () => {
+export const listen = async () => {
   console.assert(state.pendingMessages.length === 0)
-  const ipc = getIpc()
+  const ipc = await getIpc()
   ipc.onmessage = handleMessageFromRendererProcess
   state.ipc = ipc
 }

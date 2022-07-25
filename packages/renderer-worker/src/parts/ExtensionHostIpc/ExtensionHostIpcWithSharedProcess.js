@@ -1,6 +1,6 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
-export const listen = async () => {
+export const create = async () => {
   // TODO maybe use direct websocket connection
   // overhead would be that there is another websocket connection
   // but benefit would be that messages aren't routed through shared process

@@ -1,8 +1,9 @@
-import * as WebWorkerWithMessagePort from './WebWorkerWithMessagePort.js'
+// TODO lazyload fallback module
+import * as IpcParentWithMessagePort from './IpcParentWithMessagePort.js'
 
-const tryToGetActualErrorMessage = async (name, extensionHostWorkerUrl) => {
+const tryToGetActualErrorMessage = async ({ url, name }) => {
   try {
-    await import(extensionHostWorkerUrl)
+    await import(url)
     return `Failed to start ${name} worker: Unknown Error`
   } catch (error) {
     if (
@@ -11,7 +12,7 @@ const tryToGetActualErrorMessage = async (name, extensionHostWorkerUrl) => {
       error.message.startsWith('Failed to fetch dynamically imported module')
     ) {
       try {
-        const response = await fetch(extensionHostWorkerUrl)
+        const response = await fetch(url)
         switch (response.status) {
           case 404:
             return `Failed to start ${name} worker: Not found (404)`
@@ -26,11 +27,11 @@ const tryToGetActualErrorMessage = async (name, extensionHostWorkerUrl) => {
   }
 }
 
-export const create = async (url) => {
+export const create = async ({ url, name }) => {
   try {
     const worker = new Worker(url, {
       type: 'module',
-      name: 'Renderer Worker',
+      name,
     })
     await new Promise((resolve, reject) => {
       const cleanup = () => {
@@ -40,17 +41,17 @@ export const create = async (url) => {
       const handleFirstMessage = (event) => {
         cleanup()
         if (event.data === 'ready') {
-          resolve()
+          resolve(undefined)
         } else {
           reject(new Error('unexpected first message from renderer worker'))
         }
       }
       const handleFirstError = async (event) => {
         cleanup()
-        const actualErrorMessage = await tryToGetActualErrorMessage(
-          'renderer worker',
-          url
-        )
+        const actualErrorMessage = await tryToGetActualErrorMessage({
+          url,
+          name,
+        })
         reject(new Error(actualErrorMessage))
         reject(event)
       }
@@ -69,7 +70,7 @@ export const create = async (url) => {
     ) {
       // @ts-ignore
       error.preventDefault()
-      return WebWorkerWithMessagePort.create(url)
+      return IpcParentWithMessagePort.create(url)
     }
     throw error
   }

@@ -4,18 +4,24 @@ import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 export const Methods = {
   SharedProcess: 1,
-  WebWorker: 2,
+  ModuleWebWorker: 2,
   WebSocket: 3,
+  Messageport: 4,
+  ReferencePort: 5,
 }
 
 const getModule = (method) => {
   switch (method) {
     case Methods.SharedProcess:
       return import('./ExtensionHostIpcWithSharedProcess.js')
-    case Methods.WebWorker:
-      return import('./ExtensionHostIpcWithWebWorker.js')
+    case Methods.ModuleWebWorker:
+      return import('./ExtensionHostIpcWithModuleWorker.js')
     case Methods.WebSocket:
       return import('./ExtensionHostIpcWithWebSocket.js')
+    case Methods.ReferencePort:
+      return import('./ExtensionHostIpcWithReferencePort.js')
+    case Methods.Messageport:
+      return import('./ExtensionHostIpcWithMessagePort.js')
     default:
       throw new Error(`unexpected extension host type: ${method}`)
   }
@@ -62,7 +68,7 @@ const handleMessage = (message) => {
 
 export const listen = async (method) => {
   const module = await getModule(method)
-  const ipc = await module.listen()
+  const ipc = await module.create()
   // TODO maybe pass handleMessage as paramter to make code more functional
   ipc.onmessage = handleMessage
   return {
