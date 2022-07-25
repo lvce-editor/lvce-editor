@@ -2,8 +2,8 @@ import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at star
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
-import * as ActiveViewlet from './ActiveViewlet.js'
 import * as InputBox from '../InputBox/InputBox.js'
+import * as ActiveViewlet from './ActiveViewlet.js'
 
 export const name = 'Explorer'
 
@@ -59,8 +59,7 @@ const getAllEntries = async (dataTransfer) => {
           handleEntryFile(entry)
         } else if (entry.isDirectory) {
           handleEntryDirectory(entry)
-        } else {
-        }
+        } else {}
       }
     }
 
@@ -400,11 +399,11 @@ export const hideCreateFileInputBox = (state, index) => {
     const $InputBox = $Viewlet.lastChild
     $InputBox.remove()
     return $InputBox.value
-  } else {
+  }
     const $InputBox = $Viewlet.children[index]
     $InputBox.remove()
     return $InputBox.value
-  }
+
 }
 
 export const showRenameInputBox = (state, index, name) => {

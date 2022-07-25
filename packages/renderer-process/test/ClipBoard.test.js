@@ -25,7 +25,7 @@ test('readText - clipboard not available', async () => {
     clipboard: {},
   }
   await expect(ClipBoard.readText()).rejects.toThrowError(
-    new TypeError(`navigator.clipboard.readText is not a function`)
+    new TypeError('navigator.clipboard.readText is not a function')
   )
 })
 
@@ -39,7 +39,7 @@ test('readText - clipboard blocked', async () => {
     },
   }
   await expect(ClipBoard.readText()).rejects.toThrowError(
-    new Error(`Read permission denied.`)
+    new Error('Read permission denied.')
   )
 })
 

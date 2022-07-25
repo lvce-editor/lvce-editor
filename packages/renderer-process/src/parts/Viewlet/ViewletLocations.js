@@ -65,7 +65,7 @@ const render$Location = ($Location, location) => {
   console.log({ reference: location })
   switch (location.type) {
     case 'leaf':
-      $Location.className = `TreeItem`
+      $Location.className = 'TreeItem'
       $Location.textContent = location.lineText || '(empty line)'
       $Location.ariaExpanded = undefined
       $Location.id = `Reference-${location.index}`

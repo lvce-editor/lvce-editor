@@ -22,7 +22,7 @@ const getMaskImageUrl = (icon) => {
     case '$(sync-spin)':
     case '$(sync~spin)':
     case '$(sync)':
-      return `url(/icons/icon-sync.svg)`
+      return 'url(/icons/icon-sync.svg)'
     case '$(source-control)':
       return 'url(/icons/icon-source-control.svg)'
     default:

@@ -4,13 +4,13 @@ import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ActiveViewlet from '../Viewlet/ActiveViewlet.js'
 import * as Platform from '../Platform/Platform.js'
+import * as Assert from '../Assert/Assert.js'
 import * as EditorHelper from './EditorHelper.js'
 import * as LayerCursor from './LayerCursor.js'
 import * as LayerDiagnostics from './LayerDiagnostics.js'
 import * as LayerScrollBar from './LayerScrollBar.js'
 import * as LayerSelections from './LayerSelections.js'
 import * as LayerText3 from './LayerText.js'
-import * as Assert from '../Assert/Assert.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
@@ -187,7 +187,7 @@ const getTotalOffset = (event) => {
     const totalOffset = textNodeOffset + offset
     return totalOffset
     // @ts-ignore
-  } else if (document.caretPositionFromPoint) {
+  } if (document.caretPositionFromPoint) {
     // firefox uses new version
     // @ts-ignore
     const range = document.caretPositionFromPoint(event.clientX, event.clientY)
@@ -199,9 +199,9 @@ const getTotalOffset = (event) => {
     const offset = range.offset
     const totalOffset = textNodeOffset + offset
     return totalOffset
-  } else {
-    throw new Error('caret position is not supported')
   }
+    throw new Error('caret position is not supported')
+
 }
 
 const handleMouseDown = (event) => {
@@ -599,7 +599,7 @@ const getColumnWidth = () => {
   testSpan.style.fontSize = '15px'
   testSpan.style.letterSpacing = '0.5px'
   testSpan.style.position = 'fixed'
-  testSpan.style.fontFamily = "'Fira Code'"
+  testSpan.style.fontFamily = '\'Fira Code\''
   document.body.append(testSpan)
   const result = Number.parseFloat(getComputedStyle(testSpan).width) / 1
   testSpan.remove()

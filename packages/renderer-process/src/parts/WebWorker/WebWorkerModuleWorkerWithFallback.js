@@ -13,8 +13,8 @@ export const create = async (url) => {
       ].includes(error.message)
     ) {
       return WebWorkerWithMessagePort.create(url)
-    } else {
-      throw error
     }
+      throw error
+
   }
 }

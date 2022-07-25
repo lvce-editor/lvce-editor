@@ -11,7 +11,7 @@ const render$Cursor = ($Cursor, $Texts, cursor) => {
   const range = document.createRange()
   if (cursor.leftIndex === -1) {
     console.warn('cursor left is negative')
-    $Cursor.style.left = `0px` // TODO need to compute column width, this would only work for monospace fonts
+    $Cursor.style.left = '0px' // TODO need to compute column width, this would only work for monospace fonts
     return
   }
   const $Row = $Texts.children[cursor.topIndex]
@@ -25,7 +25,7 @@ const render$Cursor = ($Cursor, $Texts, cursor) => {
     return
   }
   if (cursor.leftIndex === 0 && cursor.remainingOffset === 0) {
-    $Cursor.style.left = `0px`
+    $Cursor.style.left = '0px'
   } else {
     const $TextNode = $Node.firstChild
     range.setStart($TextNode, cursor.remainingOffset)

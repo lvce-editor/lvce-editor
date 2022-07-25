@@ -140,11 +140,8 @@ export const showErrorDialogWithOptions = (error, options) => {
 
   const $DialogBodyErrorMessage = document.createElement('p')
   $DialogBodyErrorMessage.id = 'DialogBodyErrorMessage'
-  if (typeof error === 'string') {
-    $DialogBodyErrorMessage.textContent = error
-  } else {
-    $DialogBodyErrorMessage.textContent = error.message
-  }
+  $DialogBodyErrorMessage.textContent =
+    typeof error === 'string' ? error : error.message
 
   const $DialogBodyErrorCodeFrame = document.createElement('code')
   $DialogBodyErrorCodeFrame.id = 'DialogBodyErrorCodeFrame'

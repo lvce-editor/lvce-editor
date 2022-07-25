@@ -25,6 +25,7 @@
   "xo": {
     "rules": {
       "unicorn/filename-case": "off",
+      "unicorn/prefer-query-selector": "off",
       "indent": "off",
       "semi": "off",
       "no-unused-vars": "off",
