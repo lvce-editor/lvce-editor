@@ -277,9 +277,9 @@ export const readDirWithFileTypes = (path) => {
   for (const key in files) {
     if (key.startsWith(relativePath)) {
       const dirent = getDirent(key, relativePath)
-      if (!dirents.find((otherDirent) => otherDirent.name === dirent.name)) {
-dirents.push(dirent)
-}
+      if (!dirents.some((otherDirent) => otherDirent.name === dirent.name)) {
+        dirents.push(dirent)
+      }
     }
   }
   return dirents

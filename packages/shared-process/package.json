@@ -83,7 +83,11 @@
       "node/prefer-global/process": "off",
       "unicorn/prevent-abbreviations": "off",
       "unicorn/no-process-exit": "off",
-      "quotes": "off"
+      "quotes": "off",
+      "n/prefer-global/process": [
+        "error",
+        "always"
+      ]
     },
     "ignores": [
       "distmin"
