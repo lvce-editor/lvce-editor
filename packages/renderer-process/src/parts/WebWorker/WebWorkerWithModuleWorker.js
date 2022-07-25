@@ -1,5 +1,31 @@
 import * as WebWorkerWithMessagePort from './WebWorkerWithMessagePort.js'
 
+const tryToGetActualErrorMessage = async (name, extensionHostWorkerUrl) => {
+  try {
+    await import(extensionHostWorkerUrl)
+    return `Failed to start ${name} worker: Unknown Error`
+  } catch (error) {
+    if (
+      error &&
+      error instanceof Error &&
+      error.message.startsWith('Failed to fetch dynamically imported module')
+    ) {
+      try {
+        const response = await fetch(extensionHostWorkerUrl)
+        switch (response.status) {
+          case 404:
+            return `Failed to start ${name} worker: Not found (404)`
+          default:
+            return `Failed to start ${name} worker: Unknown Network Error`
+        }
+      } catch {
+        return `Failed to start ${name} worker: Unknown Network Error`
+      }
+    }
+    return `Failed to start ${name} worker: ${error}`
+  }
+}
+
 export const create = async (url) => {
   try {
     const worker = new Worker(url, {
@@ -19,8 +45,13 @@ export const create = async (url) => {
           reject(new Error('unexpected first message from renderer worker'))
         }
       }
-      const handleFirstError = (event) => {
+      const handleFirstError = async (event) => {
         cleanup()
+        const actualErrorMessage = await tryToGetActualErrorMessage(
+          'renderer worker',
+          url
+        )
+        reject(new Error(actualErrorMessage))
         reject(event)
       }
       worker.onmessage = handleFirstMessage
@@ -40,6 +71,6 @@ export const create = async (url) => {
       error.preventDefault()
       return WebWorkerWithMessagePort.create(url)
     }
-    throw new Error('Failed to start worker')
+    throw error
   }
 }
