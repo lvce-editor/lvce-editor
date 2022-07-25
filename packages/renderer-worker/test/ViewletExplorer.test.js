@@ -2250,7 +2250,6 @@ test('handleWheel - up', () => {
     ],
   }
   const newState = ViewletExplorer.handleWheel(state, -22)
-  console.log({ newState })
   expect(ViewletExplorer.render(state, newState)).toEqual([
     [
       'Viewlet.send',
@@ -2268,7 +2267,7 @@ test('handleWheel - up', () => {
         },
       ],
     ],
-    ['Viewlet.send', 'Explorer', 'setFocusedIndex', -1, -1],
+    ['Viewlet.send', 'Explorer', 'setFocusedIndex', -2, -2],
   ])
 })
 
@@ -4475,5 +4474,5 @@ test('event - issue with blur event after context menu event', async () => {
   }
   const state2 = await ViewletExplorer.handleContextMenu(state, 0, 0, 0)
   const state3 = await ViewletExplorer.handleBlur(state2)
-  expect(state3.focusedIndex).toBe(0)
+  expect(state3).toMatchObject({ focusedIndex: 0, focused: false })
 })
