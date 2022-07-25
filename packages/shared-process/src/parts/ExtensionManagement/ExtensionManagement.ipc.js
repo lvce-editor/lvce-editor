@@ -1,6 +1,6 @@
 import * as Command from '../Command/Command.js'
-import * as ExtensionHostColorTheme from './ExtensionManagementColorTheme.js'
 import * as ExtensionHostIconTheme from '../ExtensionManagement/ExtensionManagementIconTheme.js'
+import * as ExtensionHostColorTheme from './ExtensionManagementColorTheme.js'
 import * as ExtensionHostLanguages from './ExtensionManagementLanguages.js'
 import * as ExtensionManagement from './ExtensionManagement.js'
 

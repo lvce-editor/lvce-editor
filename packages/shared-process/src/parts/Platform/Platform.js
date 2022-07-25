@@ -1,6 +1,6 @@
-import { extensionHostPath } from '@lvce-editor/extension-host'
 import { homedir, tmpdir } from 'node:os'
 import { sep } from 'node:path'
+import { extensionHostPath } from '@lvce-editor/extension-host'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
 import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'

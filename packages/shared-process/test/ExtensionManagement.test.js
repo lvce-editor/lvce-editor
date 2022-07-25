@@ -1,5 +1,3 @@
-import { jest } from '@jest/globals'
-import getPort from 'get-port'
 import { createReadStream, createWriteStream } from 'node:fs'
 import {
   access,
@@ -15,6 +13,8 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import { constants, createBrotliCompress } from 'node:zlib'
+import getPort from 'get-port'
+import { jest } from '@jest/globals'
 import tar from 'tar-fs'
 import VError from 'verror'
 

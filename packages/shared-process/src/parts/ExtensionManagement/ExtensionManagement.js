@@ -1,5 +1,6 @@
 import { mkdir, readdir, rename, rm } from 'node:fs/promises'
 import { performance } from 'node:perf_hooks'
+import path from 'node:path'
 import isObject from 'is-object'
 import VError from 'verror'
 import * as Debug from '../Debug/Debug.js'
@@ -8,7 +9,6 @@ import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Queue from '../Queue/Queue.js'
-import path from 'node:path'
 
 const isLanguageBasics = (extension) => {
   return extension.id.includes('language-basics')

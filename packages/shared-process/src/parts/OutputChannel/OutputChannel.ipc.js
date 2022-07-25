@@ -10,7 +10,7 @@ const open = (socket, id, path) => {
   console.log({path})
   Assert.object(socket)
   // Assert.string(id)
-  Assert.string(path )
+  Assert.string(path)
   if (!socket) {
     console.warn('socket not available')
     return

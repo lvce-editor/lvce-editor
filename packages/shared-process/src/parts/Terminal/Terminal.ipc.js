@@ -1,6 +1,6 @@
 import * as Command from '../Command/Command.js'
-import * as Terminal from './Terminal.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Terminal from './Terminal.js'
 
 const create = (socket, id, cwd) => {
   Assert.object(socket)
@@ -24,7 +24,7 @@ const create = (socket, id, cwd) => {
   Terminal.create(socket, id, cwd)
 }
 
-const write = ( id, input) => {
+const write = (id, input) => {
   console.log({ id, input})
   Terminal.write(id, input)
 }

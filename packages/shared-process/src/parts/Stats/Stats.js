@@ -3,17 +3,17 @@
 import * as Exec from '../Exec/Exec.js'
 
 const PID_CMD =
-  /^\s*([0-9]+)\s+([0-9]+)\s+([0-9]+\.[0-9]+)\s+([0-9]+\.[0-9]+)\s+(.+)$/
+  /^\s*(\d+)\s+(\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(.+)$/
 
 const parsePsOutputLine = (line) => {
   const matches = PID_CMD.exec(line.trim())
   if (matches && matches.length === 6) {
     return {
-      pid: parseInt(matches[1]),
-      ppid: parseInt(matches[2]),
+      pid: Number.parseInt(matches[1]),
+      ppid: Number.parseInt(matches[2]),
       cwd: matches[5],
-      load: parseInt(matches[3]),
-      mem: parseInt(matches[4]),
+      load: Number.parseInt(matches[3]),
+      mem: Number.parseInt(matches[4]),
     }
   }
 }

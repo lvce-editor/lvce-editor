@@ -26,7 +26,7 @@ export const copy = async (source, target) => {
 
 export const readFile = async (path) => {
   try {
-    const content = await fs.readFile(path, 'utf-8')
+    const content = await fs.readFile(path, 'utf8')
     return content
   } catch (error) {
     throw new Error.OperationalError({

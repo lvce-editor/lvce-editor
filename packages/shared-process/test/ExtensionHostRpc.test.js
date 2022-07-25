@@ -1,5 +1,5 @@
+import EventEmitter from 'node:events'
 import { jest } from '@jest/globals'
-import EventEmitter from 'events'
 import * as ExtensionHostRpc from '../src/parts/ExtensionHostRpc/ExtensionHostRpc.js'
 
 jest.useFakeTimers()
