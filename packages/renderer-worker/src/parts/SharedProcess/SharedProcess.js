@@ -2,8 +2,7 @@
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as IpcWithElectron from '../Ipc/IpcWithElectron.js'
-import * as IpcWithWebSocket from '../Ipc/IpcWithWebSocket.js'
+import * as IpcParent from '../IpcParent/IpcParent.js'
 
 // TODO duplicate code with platform module
 /**
@@ -85,13 +84,15 @@ export const handleMessageFromSharedProcess = async (message) => {
 
 const getIpc = () => {
   if (platform === 'web' || platform === 'remote') {
-    return IpcWithWebSocket.listen({ protocol: 'lvce.shared-process' })
+    return IpcParent.create({
+      method: IpcParent.Methods.WebSocket,
+      protocol: 'lvce.shared-process',
+    })
   }
   if (platform === 'electron') {
-    return IpcWithElectron.listen()
-  } else {
-    throw new Error('unsupported platform')
+    return IpcParent.create({ method: IpcParent.Methods.Electron })
   }
+  throw new Error('unsupported platform')
 }
 
 export const listen = async () => {

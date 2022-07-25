@@ -23,7 +23,7 @@ const ExtensionHostIpcWithSharedProcess = await import(
 test('listen', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(() => {})
-  await ExtensionHostIpcWithSharedProcess.listen()
+  await ExtensionHostIpcWithSharedProcess.create()
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionHost.start')
 })
@@ -33,7 +33,7 @@ test('listen - error', async () => {
   SharedProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ExtensionHostIpcWithSharedProcess.listen()).rejects.toThrowError(
+  await expect(ExtensionHostIpcWithSharedProcess.create()).rejects.toThrowError(
     new TypeError('x is not a function')
   )
 })

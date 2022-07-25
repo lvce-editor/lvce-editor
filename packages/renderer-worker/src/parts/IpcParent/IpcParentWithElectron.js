@@ -1,6 +1,6 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
-export const listen = async () => {
+export const create = async (url, name) => {
   const originalOnMessage = RendererProcess.state.ipc.onmessage
   const port = await new Promise((resolve, reject) => {
     RendererProcess.state.ipc.onmessage = (event) => {

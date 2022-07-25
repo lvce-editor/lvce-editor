@@ -8,11 +8,11 @@ export const listen = () => {
     sendAndTransfer(message, transferables) {
       messageChannel.port1.postMessage(message, transferables)
     },
-    set onmessage(listener) {
-      messageChannel.port1.onmessage = listener
-    },
     get onmessage() {
       return messageChannel.port1.onmessage
+    },
+    set onmessage(listener) {
+      messageChannel.port1.onmessage = listener
     },
   }
 }

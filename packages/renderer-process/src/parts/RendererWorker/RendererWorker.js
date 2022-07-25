@@ -1,8 +1,8 @@
-import * as Command from '../Command/Command.js'
-import * as Platform from '../Platform/Platform.js'
-import * as WebWorker from '../WebWorker/WebWorker.js'
 import * as Callback from '../Callback/Callback.js'
+import * as Command from '../Command/Command.js'
 import { JsonRpcError } from '../Errors/JsonRpcError.js'
+import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as Platform from '../Platform/Platform.js'
 
 // const URL_RENDERER_WORKER =
 // '/packages/renderer-worker/distmin/rendererWorkerMain-0ead0bed.js'
@@ -50,7 +50,10 @@ const handleMessageFromRendererWorker = async (event) => {
 const getIpc = async () => {
   const assetDir = Platform.getAssetDir()
   const urlRendererWorker = `${assetDir}/packages/renderer-worker/src/rendererWorkerMain.js`
-  const rendererWorker = await WebWorker.create(urlRendererWorker)
+  const rendererWorker = await IpcParent.create(
+    urlRendererWorker,
+    'Renderer Worker'
+  )
   return {
     send(message) {
       rendererWorker.postMessage(message)

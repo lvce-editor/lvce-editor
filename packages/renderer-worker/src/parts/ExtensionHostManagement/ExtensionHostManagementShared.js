@@ -140,7 +140,7 @@ export const stopExtensionHost = async (key) => {
 const startExtensionHostNode = () => {
   return startExtensionHost(
     'nodeExtensionHost',
-    ExtensionHostIpc.Methods.WebWorker
+    ExtensionHostIpc.Methods.ModuleWebWorker
   )
 }
 

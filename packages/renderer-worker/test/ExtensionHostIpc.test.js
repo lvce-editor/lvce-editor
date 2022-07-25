@@ -20,7 +20,7 @@ const ExtensionHostIpc = await import(
   '../src/parts/ExtensionHostIpc/ExtensionHostIpc.js'
 )
 const ExtensionHostIpcWithWebWorker = await import(
-  '../src/parts/ExtensionHostIpc/ExtensionHostIpcWithWebWorker.js'
+  '../src/parts/ExtensionHostIpc/ExtensionHostIpcWithModuleWorker.js'
 )
 
 test('listen - error - unexpected extension host type', async () => {
@@ -31,7 +31,7 @@ test('listen - error - unexpected extension host type', async () => {
 
 test.only('handleMessage - error - method not found', async () => {
   // @ts-ignore
-  ExtensionHostIpcWithWebWorker.listen.mockImplementation(() => {
+  ExtensionHostIpcWithWebWorker.create.mockImplementation(() => {
     let _onmessage
     return {
       get onmessage() {
@@ -56,7 +56,9 @@ test.only('handleMessage - error - method not found', async () => {
       },
     }
   })
-  const ipc = await ExtensionHostIpc.listen(ExtensionHostIpc.Methods.WebWorker)
+  const ipc = await ExtensionHostIpc.listen(
+    ExtensionHostIpc.Methods.ModuleWebWorker
+  )
   await expect(
     ipc.invoke('ExtensionHostTypeDefinition.executeTypeDefinitionProvider')
   ).rejects.toThrowError(

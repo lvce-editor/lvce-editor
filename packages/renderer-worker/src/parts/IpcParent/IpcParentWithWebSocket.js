@@ -1,7 +1,12 @@
-export const listen = ({ protocol }) => {
-  // TODO replace this during build
+const getWsUrl = () => {
   const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
-  const wsUrl = `${wsProtocol}//${location.host}`
+
+  return `${wsProtocol}//${location.host}`
+}
+
+export const create = ({ protocol }) => {
+  // TODO replace this during build
+  const wsUrl = getWsUrl()
   const webSocket = new WebSocket(wsUrl, [protocol])
   const pendingMessages = []
   webSocket.onopen = () => {

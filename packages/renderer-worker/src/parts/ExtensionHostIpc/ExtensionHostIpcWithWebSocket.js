@@ -1,8 +1,9 @@
 /* istanbul ignore file */
-import * as IpcWithWebSocket from '../Ipc/IpcWithWebSocket.js'
+import * as IpcParent from '../IpcParent/IpcParent.js'
 
-export const listen = () => {
-  return IpcWithWebSocket.listen({
+export const create = () => {
+  return IpcParent.create({
+    method: IpcParent.Methods.WebSocket,
     protocol: 'lvce.extension-host',
   })
 }
