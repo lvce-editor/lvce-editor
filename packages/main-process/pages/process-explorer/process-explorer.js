@@ -121,6 +121,8 @@ const handleDoubleClick = (event) => {
       handleClickIndex(index)
       break
     }
+    default:
+      throw new Error('unexpected class name')
   }
 }
 
@@ -174,7 +176,6 @@ const handleArrowUpRow = ($ActiveElement) => {
   }
   // @ts-ignore
   $RowAbove.focus()
-  return
 }
 
 const handleArrowUpCell = ($ActiveElement) => {
@@ -186,7 +187,6 @@ const handleArrowUpCell = ($ActiveElement) => {
   const $CellAbove = $RowAbove.children[index]
   // @ts-ignore
   $CellAbove.focus()
-  return
 }
 
 const handleArrowUp = () => {
@@ -210,7 +210,6 @@ const handleArrowDownRow = ($ActiveElement) => {
   }
   // @ts-ignore
   $RowBelow.focus()
-  return
 }
 
 const handleArrowDownCell = ($ActiveElement) => {
@@ -222,7 +221,6 @@ const handleArrowDownCell = ($ActiveElement) => {
   const $CellBelow = $RowBelow.children[index]
   // @ts-ignore
   $CellBelow.focus()
-  return
 }
 
 const handleArrowDown = () => {
@@ -283,7 +281,6 @@ const handleArrowRightRow = ($ActiveElement) => {
   //  @ts-ignore
   $Cell.focus()
   // @ts-ignore
-  return
 }
 
 const handleArrowRightCell = ($ActiveElement) => {
@@ -498,14 +495,14 @@ const render$ProcessesLess = ($Processes, processes) => {
 }
 
 const render$ProcessesEqual = ($Processes, processes) => {
-  for (let i = 0; i < processes.length; i++) {
-    render$Process($Processes.children[i], processes[i])
+  for (const [i, process_] of processes.entries()) {
+    render$Process($Processes.children[i], process_)
   }
 }
 
 const render$ProcessesMore = ($Processes, processes) => {
-  for (let i = 0; i < processes.length; i++) {
-    render$Process($Processes.children[i], processes[i])
+  for (const [i, process_] of processes.entries()) {
+    render$Process($Processes.children[i], process_)
   }
   const diff = $Processes.children.length - processes.length
   for (let i = processes.length; i < processes.length + diff; i++) {

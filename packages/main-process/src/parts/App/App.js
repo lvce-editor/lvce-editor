@@ -1,11 +1,10 @@
 const { spawn } = require('child_process')
 const { MessageChannel } = require('worker_threads')
+const { app } = require('electron')
 const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
 const minimist = require('minimist')
 const Electron = require('../Electron/Electron.js')
 const Platform = require('../Platform/Platform.js')
-const Path = require('../Path/Path.js')
-const Root = require('../Root/Root.js')
 const SharedProcess = require('../SharedProcess/SharedProcess.js')
 const Debug = require('../Debug/Debug.js')
 const LifeCycle = require('../LifeCycle/LifeCycle.js')
@@ -13,7 +12,6 @@ const Performance = require('../Performance/Performance.js')
 const Cli = require('../Cli/Cli.js')
 const Session = require('../Session/Session.js')
 const AppWindow = require('../AppWindow/AppWindow.js')
-const { app } = require('electron')
 
 // TODO use Platform.getScheme() instead of Product.getTheme()
 

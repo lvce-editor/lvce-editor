@@ -70,7 +70,11 @@
       "no-unused-expressions": "off",
       "node/prefer-global/process": "off",
       "unicorn/prefer-module": "off",
-      "quotes": "off"
+      "quotes": "off",
+      "n/prefer-global/process": "off",
+      "no-mixed-operators": "off",
+      "radix": "off",
+      "unicorn/prefer-query-selector": "off"
     },
     "ignores": [
       "distmin"

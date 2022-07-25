@@ -1,4 +1,4 @@
-import { fork } from 'child_process'
+import { fork } from 'node:child_process'
 
 export const create = (url, options) => {
   const childProcess = fork(url, options)
