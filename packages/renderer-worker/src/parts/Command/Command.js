@@ -60,7 +60,7 @@ const MODULE_VIEWLET_STATUS_BAR = 72
 const MODULE_LISTENER = 73
 const MODULE_VIEWLET_SEARCH = 74
 const MODULE_VIEWLET_EDITOR_COMPLETION = 75
-const MODULE_VIEWLET_Locations = 76
+const MODULE_VIEWLET_LOCATIONS = 76
 const MODULE_VIEWLET_PROBLEMS = 77
 const MODULE_SESSION_REPLAY = 78
 const MODULE_DOWNLOAD = 79
@@ -188,7 +188,7 @@ const loadModule = (moduleId) => {
       return import('../Viewlet/ViewletSearch.ipc.js')
     case MODULE_VIEWLET_EDITOR_COMPLETION:
       return import('../Viewlet/ViewletEditorCompletion.ipc.js')
-    case MODULE_VIEWLET_Locations:
+    case MODULE_VIEWLET_LOCATIONS:
       return import('../Viewlet/ViewletLocations.ipc.js')
     case MODULE_VIEWLET_PROBLEMS:
       return import('../Viewlet/ViewletProblems.ipc.js')
@@ -330,7 +330,6 @@ const getModuleId = (commandId) => {
     case 'Editor.handleMouseMoveWithAltKey':
     case 'Editor.handleNativeSelectionChange':
     case 'Editor.handleScrollBarClick':
-    case 'Editor.handleScrollBarMove':
     case 'Editor.handleSingleClick':
     case 'Editor.handleTab':
     case 'Editor.handleTouchEnd':
@@ -551,7 +550,6 @@ const getModuleId = (commandId) => {
     case 'Layout.handleSashPointerDown':
       return MODULE_LAYOUT
     case 'Preferences.openSettingsJson':
-    case 'Preferences.openSettingsJson':
     case 'Preferences.openKeyBindingsJson':
     case 'Preferences.hydrate':
       return MODULE_PREFERENCES
@@ -674,7 +672,7 @@ const getModuleId = (commandId) => {
     case 'Locations.focusPrevious':
     case 'Locations.selectCurrent':
     case 'Locations.focusIndex':
-      return MODULE_VIEWLET_Locations
+      return MODULE_VIEWLET_LOCATIONS
     case 'Menu.show':
     case 'Menu.hide':
     case 'Menu.selectIndex':
@@ -755,7 +753,6 @@ const getModuleId = (commandId) => {
     case 'FindWidget.create':
     case 'FindWidget.dispose':
     case 'FindWidget.setValue':
-    case 'FindWidget.dispose':
       return MODULE_FIND_WIDGET
     case 'SessionReplay.downloadSession':
     case 'SessionReplay.replaySession':

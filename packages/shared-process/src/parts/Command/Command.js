@@ -106,13 +106,9 @@ const getModuleId = (commandId) => {
     case 'ExtensionHostLanguages.getLanguages':
     case 'ExtensionHostKeyBindings.getKeyBindings':
     case 'ExtensionHost.executeCommand':
-
     case 'ExtensionHost.getMemoryUsage':
     case 'ExtensionHost.getSourceControlBadgeCount':
     case 'ExtensionHost.format':
-    case 'ExtensionHost.executeCommand':
-    case 'ExtensionHost.getSourceControlBadgeCount':
-
     case 'ExtensionHostTextDocument.syncInitial':
     case 'ExtensionHostHover.execute':
     case 'ExtensionHostDiagnostic.execute':
