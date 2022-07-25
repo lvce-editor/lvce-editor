@@ -109,7 +109,8 @@ export const create = (id, uri, left, top, width, height) => {
   return {
     root: '',
     dirents: [],
-    focusedIndex: -2,
+    focusedIndex: -1,
+    focused: false,
     hoverIndex: -1,
     top,
     left,
@@ -766,6 +767,7 @@ export const focusIndex = (state, index) => {
   return {
     ...state,
     focusedIndex: index,
+    focused: true,
   }
 }
 
@@ -1174,7 +1176,10 @@ export const handleBlur = (state) => {
   // TODO when blur event occurs because of context menu, focused index should stay the same
   // but focus outline should be removed
   console.log('explorer handle blur', 'focus none')
-  return focusIndex(state, -2)
+  return {
+    ...state,
+    focused: false,
+  }
 }
 
 export const hasFunctionalRender = true
@@ -1195,21 +1200,28 @@ export const render = (oldState, newState) => {
     ])
     // TODO rendering dirents should not override focus
     // when that issue is fixed, this can be removed
+    const oldFocusedIndex = oldState.focused ? oldState.focusedIndex : -2
+    const newFocusedIndex = newState.focused ? newState.focusedIndex : -2
     changes.push([
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Explorer',
       /* method */ 'setFocusedIndex',
-      /* oldindex */ oldState.focusedIndex,
-      /* newIndex */ newState.focusedIndex,
+      /* oldindex */ oldFocusedIndex,
+      /* newIndex */ newFocusedIndex,
     ])
   }
-  if (oldState.focusedIndex !== newState.focusedIndex) {
+  if (
+    oldState.focusedIndex !== newState.focusedIndex ||
+    oldState.focused !== newState.focused
+  ) {
+    const oldFocusedIndex = oldState.focused ? oldState.focusedIndex : -2
+    const newFocusedIndex = newState.focused ? newState.focusedIndex : -2
     changes.push([
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Explorer',
       /* method */ 'setFocusedIndex',
-      /* oldindex */ oldState.focusedIndex,
-      /* newIndex */ newState.focusedIndex,
+      /* oldindex */ oldFocusedIndex,
+      /* newIndex */ newFocusedIndex,
     ])
   }
   return changes
