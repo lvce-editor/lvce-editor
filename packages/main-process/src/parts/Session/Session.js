@@ -1,8 +1,8 @@
 const Electron = require('electron')
-const minimist = require('minimist')
 const Platform = require('../Platform/Platform.js')
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
+const ContentSecurityPolicy = require('../ContentSecurityPolicy/ContentSecurityPolicy.js')
 
 const state = {
   /**
@@ -10,16 +10,6 @@ const state = {
    */
   session: undefined,
 }
-
-const CONTENT_SECURITY_POLICY = [
-  `default-src 'none'`,
-  `img-src 'self' https: data:`,
-  `media-src 'none'`,
-  `script-src 'self'`,
-  `style-src 'self' 'unsafe-inline'`,
-  `connect-src 'self' https: ws:`,
-  `font-src 'self' https:`,
-].join('; ')
 
 /**
  *
@@ -32,7 +22,8 @@ const handleHeadersReceived = (details, callback) => {
       callback({
         responseHeaders: {
           ...details.responseHeaders,
-          'Content-Security-Policy': CONTENT_SECURITY_POLICY,
+          'Content-Security-Policy':
+            ContentSecurityPolicy.contentSecurityPolicy,
         },
       })
       break
