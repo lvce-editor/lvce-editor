@@ -21,7 +21,7 @@ export const readText = async () => {
         'Failed to read text from clipboard: The Clipboard Api is not available in Firefox'
       )
     }
-    throw new VError(error, `Failed to read text from clipboard`)
+    throw new VError(error, 'Failed to read text from clipboard')
   }
 }
 
@@ -42,7 +42,7 @@ export const writeNativeFiles = async (type, files) => {
       /* files */ files
     )
   } catch (error) {
-    throw new VError(error, `Failed to write files to native clipboard`)
+    throw new VError(error, 'Failed to write files to native clipboard')
   }
 }
 
@@ -50,6 +50,6 @@ export const readNativeFiles = async () => {
   try {
     return await SharedProcess.invoke(/* command */ 'ClipBoard.readFiles')
   } catch (error) {
-    throw new VError(error, `Failed to read files from native clipboard`)
+    throw new VError(error, 'Failed to read files from native clipboard')
   }
 }

@@ -29,12 +29,12 @@ export const editorDeleteHorizontalRight = (editor, getDelta) => {
       })
     }
     return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
-  } else {
+  }
     const changes = editorReplaceSelections(
       editor,
       [''],
       'deleteHorizontalRight'
     )
     return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
-  }
+
 }

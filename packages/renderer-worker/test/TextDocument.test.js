@@ -278,11 +278,11 @@ test('applyEdits - issue with pasting many lines', () => {
           rowIndex: 0,
           columnIndex: 0,
         },
-        inserted: [...Array(150_000).fill('a')],
+        inserted: [...Array.from({length: 150_000}).fill('a')],
         deleted: [''],
       },
     ])
-  ).toEqual([...Array(150_000).fill('a')])
+  ).toEqual([...Array.from({length: 150_000}).fill('a')])
 })
 
 test('applyEdits - virtual space', () => {

@@ -20,7 +20,7 @@ export const readFile = (uri) => {
 }
 
 const ensureParentDir = (uri) => {
-  let startIndex = 0
+  const startIndex = 0
   let endIndex = uri.indexOf('/')
   while (endIndex >= 0) {
     const part = uri.slice(startIndex, endIndex + 1)
@@ -82,7 +82,7 @@ export const readDirWithFileTypes = (uri) => {
       switch (value.type) {
         case 'directory':
           if (
-            key.slice(0, -1).indexOf('/', uri.length) === -1 &&
+            !key.slice(0, -1).includes('/', uri.length) &&
             key !== `${uri}/` &&
             key !== uri
           ) {
@@ -93,7 +93,7 @@ export const readDirWithFileTypes = (uri) => {
           }
           break
         case 'file':
-          if (key.indexOf('/', uri.length + 1) === -1) {
+          if (!key.includes('/', uri.length + 1)) {
             dirents.push({
               type: value.type,
               name: key.slice(uri.length),

@@ -1,5 +1,5 @@
-import { jest } from '@jest/globals'
 import { setTimeout } from 'node:timers/promises'
+import { jest } from '@jest/globals'
 import * as GlobalEventBus from '../src/parts/GlobalEventBus/GlobalEventBus.js'
 
 beforeEach(() => {
@@ -50,7 +50,7 @@ const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
 test('hydrate', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'Workspace.resolveRoot':
         return {
@@ -78,7 +78,7 @@ test('hydrate', async () => {
 test('hydrate - path changed in the meantime', async () => {
   let _resolve = (value) => {}
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(async (method, ...params) => {
+  SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
     switch (method) {
       case 'Workspace.resolveRoot':
         await new Promise((resolve) => {
@@ -108,7 +108,7 @@ test('hydrate - path changed in the meantime', async () => {
 
 test('hydrate - error', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'Workspace.resolveRoot':
         throw new TypeError('x is not a function')

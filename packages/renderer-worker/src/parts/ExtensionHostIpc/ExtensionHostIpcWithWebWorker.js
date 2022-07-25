@@ -18,7 +18,7 @@ const tryToGetActualErrorMessage = async (extensionHostWorkerUrl) => {
           default:
             return 'Failed to start extension host worker: Unknown Network Error'
         }
-      } catch (error) {
+      } catch {
         return 'Failed to start extension host worker: Unknown Network Error'
       }
     }

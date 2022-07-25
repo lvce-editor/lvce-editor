@@ -8,7 +8,7 @@ export const name = 'Implementations'
 // TODO speed up this function by 130% by not running activation event (onReferences) again and again
 // e.g. (21ms activation event, 11ms getReferences) => (11ms getReferences)
 const getImplementations = async () => {
-  const editor = Viewlet.state.instances['EditorText'].state
+  const editor = Viewlet.state.instances.EditorText.state
   const offset = TextDocument.offsetAt(editor, editor.cursor)
   const implementations =
     await ExtensionHostImplementation.executeImplementationProvider(
@@ -26,7 +26,7 @@ export const loadContent = async (state) => {
 }
 
 export const contentLoaded = (state) => {
-  Viewlet.state.instances['Locations'] = {
+  Viewlet.state.instances.Locations = {
     factory: ViewletLocations,
     state,
   }

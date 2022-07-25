@@ -148,7 +148,7 @@ test.skip('editorType - braceCompletion - opening curly brace', async () => {
     uri: '',
   }
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation((method, ...params) => {
+  ExtensionHost.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'ExtensionHostBraceCompletion.executeBraceCompletionProvider':
         return true
@@ -184,7 +184,7 @@ test.skip('editorType - braceCompletion - opening round brace', async () => {
     uri: '',
   }
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation((method, ...params) => {
+  ExtensionHost.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'ExtensionHostBraceCompletion.executeBraceCompletionProvider':
         return true
@@ -220,7 +220,7 @@ test.skip('editorType - braceCompletion - opening square brace', async () => {
     uri: '',
   }
   // @ts-ignore
-  ExtensionHost.invoke.mockImplementation((method, ...params) => {
+  ExtensionHost.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'ExtensionHostBraceCompletion.executeBraceCompletionProvider':
         return []

@@ -71,14 +71,14 @@ test('addToRecentlyOpened - already at front of list', async () => {
 test('addToRecentlyOpened - error - recently opened path is of type array', async () => {
   // @ts-ignore
   FileSystem.readFile.mockImplementation(() => {
-    throw new Error(`expected value to be of type string`)
+    throw new Error('expected value to be of type string')
   })
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   await RecentlyOpened.addToRecentlyOpened('/test/folder-3')
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith(
     new Error(
-      `Failed to read recently opened: expected value to be of type string`
+      'Failed to read recently opened: expected value to be of type string'
     )
   )
 })

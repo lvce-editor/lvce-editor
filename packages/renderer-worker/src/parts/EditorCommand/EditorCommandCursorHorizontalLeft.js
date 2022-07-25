@@ -1,5 +1,5 @@
-import * as EditorGetPositionLeft from './EditorCommandGetPositionLeft.js'
 import * as Editor from '../Editor/Editor.js'
+import * as EditorGetPositionLeft from './EditorCommandGetPositionLeft.js'
 
 const getNewSelection = (selection, lines, getDelta) => {
   if (selection.start !== selection.end) {

@@ -1,9 +1,9 @@
 // TODO file system providers should be lazy loaded (maybe)
 
+import * as FileSystemExtensionHost from '../ExtensionHost/ExtensionHostFileSystem.js'
 import * as FileSystemApp from './FileSystemApp.js'
 import * as FileSystemDisk from './FileSystemDisk.js'
 import * as FileSystemGitHub from './FileSystemGitHub.js'
-import * as FileSystemExtensionHost from '../ExtensionHost/ExtensionHostFileSystem.js'
 import * as FileSystemWeb from './FileSystemWeb.js'
 import * as FileSystemData from './FileSystemData.js'
 import * as FileSystemMemory from './FileSystemMemory.js'
@@ -28,11 +28,11 @@ export const state = {
 
 // TODO extension host should be able to register arbitrary protocols (except app, http, https, file, )
 state.fileSystems['extension-host'] = FileSystemExtensionHost
-state.fileSystems['app'] = FileSystemApp
-state.fileSystems['github'] = FileSystemGitHub
-state.fileSystems['web'] = FileSystemWeb
-state.fileSystems['data'] = FileSystemData
-state.fileSystems['memfs'] = FileSystemMemory
+state.fileSystems.app = FileSystemApp
+state.fileSystems.github = FileSystemGitHub
+state.fileSystems.web = FileSystemWeb
+state.fileSystems.data = FileSystemData
+state.fileSystems.memfs = FileSystemMemory
 
 const getFileSystem = (protocol) => {
   return state.fileSystems[protocol] || FileSystemDisk

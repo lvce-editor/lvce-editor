@@ -16,7 +16,7 @@ const toProblem = (diagnostic) => {
 }
 
 export const loadContent = async (state) => {
-  const instance = Viewlet.state.instances['EditorText']
+  const instance = Viewlet.state.instances.EditorText
   if (!instance) {
     return state
   }

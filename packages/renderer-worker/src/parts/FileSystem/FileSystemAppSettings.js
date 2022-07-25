@@ -1,5 +1,5 @@
-import * as FileSystemAppShared from './FileSystemAppShared.js'
 import * as Platform from '../Platform/Platform.js'
+import * as FileSystemAppShared from './FileSystemAppShared.js'
 
 export const readFile = () => {
   return FileSystemAppShared.readFileInternal(Platform.getUserSettingsPath)

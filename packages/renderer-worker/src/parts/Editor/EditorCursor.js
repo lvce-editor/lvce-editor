@@ -46,8 +46,7 @@ export const getVisible = (editor) => {
           rowIndex: selection.end.rowIndex - editor.minLineY,
           columnIndex: selection.end.columnIndex,
         })
-      } else {
-      }
+      } else {}
     }
     return visibleCursors
   }

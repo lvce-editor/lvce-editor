@@ -42,7 +42,7 @@ export const state = {
 }
 
 const SIDE_BAR_MIN_WIDTH = 170
-const SIDE_BAR_MAX_WIDTH = Infinity
+const SIDE_BAR_MAX_WIDTH = Number.POSITIVE_INFINITY
 const PANEL_MIN_HEIGHT = 150
 const PANEL_MAX_HEIGHT = 600
 
@@ -231,11 +231,7 @@ const hide = async (key, id) => {
 }
 
 const toggle = async (key, id) => {
-  if (state[key]) {
-    await hide(key, id)
-  } else {
-    await show(key, id)
-  }
+  await (state[key] ? hide(key, id) : show(key, id));
 }
 
 // TODO replace with one method in renderer process: setSideBarVisibility(true|false)

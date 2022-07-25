@@ -29,7 +29,7 @@ const SharedProcess = await import(
 
 test.skip('readFile - settings', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'Platform.getUserSettingsPath':
         return '~/.config/app/settings.json'
@@ -46,7 +46,7 @@ test.skip('readFile - settings', async () => {
 
 test.skip('readFile - settings - error', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'Platform.getUserSettingsPath':
         throw new TypeError('x is not a function')
@@ -110,7 +110,7 @@ test.skip('writeFile - settings - error parent folder does not exist', async () 
             id: message.id,
             jsonrpc: '2.0',
             error: {
-              message: `Failed to write to file "/test/app-name/settings.json": ENOENT: no such file or directory, open '/test/app-name/settings.json'`,
+              message: 'Failed to write to file "/test/app-name/settings.json": ENOENT: no such file or directory, open \'/test/app-name/settings.json\'',
             },
           })
         } else {

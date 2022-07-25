@@ -61,7 +61,7 @@ test('editorCopy', async () => {
 
   expect(await EditorCopy.editorCopy(editor)).toBe(editor)
   expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(`line 1\nline 2\nline 3`)
+  expect(spy).toHaveBeenCalledWith('line 1\nline 2\nline 3')
 })
 
 test('editorCopy - error from clipboard - document is not focused', async () => {

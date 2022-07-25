@@ -710,7 +710,7 @@ test.skip('focusIndexMouse - focusing submenu index should show submenu', async 
       case 'Platform.getRecentlyOpenedPath':
         return '/test/recently-opened.json'
       case 'FileSystem.readFile':
-        return `["/test/folder-1"]`
+        return '["/test/folder-1"]'
       default:
         throw new Error('unexpected message')
     }
@@ -840,7 +840,7 @@ test('focusIndexMouse - focusing submenu index should do nothing when already fo
         SharedProcess.state.receive({
           id: message.id,
           jsonrpc: '2.0',
-          result: `["/test/folder-1"]`,
+          result: '["/test/folder-1"]',
         })
         break
       default:
@@ -923,7 +923,7 @@ test('selectIndex - should do nothing when already focused', async () => {
       case 'Platform.getRecentlyOpenedPath':
         return '/test/recently-opened.json'
       case 'FileSystem.readFile':
-        return `["/test/folder-1"]`
+        return '["/test/folder-1"]'
       default:
         throw new Error('unexpected message')
     }

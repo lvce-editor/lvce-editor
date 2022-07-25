@@ -63,7 +63,9 @@
       "no-await-in-loop": "off",
       "unicorn/prefer-add-event-listener": "off",
       "no-unused-expressions": "off",
-      "unicorn/better-regex": "off"
+      "unicorn/better-regex": "off",
+      "unicorn/no-array-push-push": "off",
+      "unicorn/prevent-abbreviations": "off"
     },
     "ignores": [
       "distmin"

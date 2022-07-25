@@ -230,8 +230,7 @@ const getLineInfo = (line, tokens, decorations, TokenMap, lineOffset) => {
   for (const token of tokens) {
     const decorationOffset = decorations[decorationIndex]
     let extraClassName = ''
-    if (decorationOffset !== undefined) {
-      if (decorationOffset - lineOffset === start) {
+    if (decorationOffset !== undefined && decorationOffset - lineOffset === start) {
         const decorationLength = decorations[++decorationIndex]
         const decorationType = decorations[++decorationIndex]
         const decorationModifiers = decorations[++decorationIndex]
@@ -243,7 +242,6 @@ const getLineInfo = (line, tokens, decorations, TokenMap, lineOffset) => {
         // })
         extraClassName = getDecorationClassName(decorationType)
       }
-    }
 
     end += token.length
     const text = line.slice(start, end)

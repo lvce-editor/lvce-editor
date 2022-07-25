@@ -75,7 +75,7 @@ test.skip('startupPerformance', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 200:
         return {
@@ -196,7 +196,7 @@ test.skip('startupPerformance', async () => {
 
 test.skip('monitorPerformance', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 284:
         return {
@@ -305,7 +305,7 @@ test('crashSharedProcess', async () => {
 
 test('createSharedProcessHeapSnapshot', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'Developer.createSharedProcessHeapSnapshot':
         return null
@@ -334,7 +334,7 @@ test('toggleDeveloperTools', async () => {
 
 test('openConfigFolder', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'Native.openFolder':
         return null
@@ -353,7 +353,7 @@ test('openConfigFolder', async () => {
 
 test('openDataFolder', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'Native.openFolder':
         return null
@@ -373,7 +373,7 @@ test('openDataFolder', async () => {
 
 test('openLogsFolder', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'Native.openFolder':
         return null
@@ -392,7 +392,7 @@ test('openLogsFolder', async () => {
 
 test('openLogsFolder - error', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'Native.openFolder':
         return null
@@ -409,7 +409,7 @@ test('openLogsFolder - error', async () => {
 
 test('open process explorer', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'Electron.openProcessExplorer':
         return null
@@ -426,7 +426,7 @@ test('open process explorer', async () => {
 
 test('open process explorer - error', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'Electron.openProcessExplorer':
         throw new TypeError('x is not a function')

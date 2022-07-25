@@ -18,7 +18,7 @@ const getMessage = (resultCount, fileCount) => {
     return 'No Results'
   }
   if (resultCount === 1 && fileCount === 1) {
-    return `1 result in 1 file`
+    return '1 result in 1 file'
   }
   if (fileCount === 1) {
     return `${resultCount} results in 1 file`

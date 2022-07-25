@@ -1,8 +1,7 @@
+import { jest } from '@jest/globals'
 import * as FileSystem from '../src/parts/FileSystem/FileSystem.js'
 import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
 import * as Layout from '../src/parts/Layout/Layout.js'
-
-import { jest } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -47,7 +46,7 @@ test('show', async () => {
 test.skip('show - multiple times and out of order promises', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  FileSystem.state.fileSystems['test'] = {
+  FileSystem.state.fileSystems.test = {
     async getBlobUrl(protocol, uri) {
       if (uri === 'test:///image-1.png') {
         await new Promise((resolve) => {
@@ -76,7 +75,7 @@ test.skip('show - multiple times and out of order promises', async () => {
 test.skip('show - error', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  FileSystem.state.fileSystems['test'] = {
+  FileSystem.state.fileSystems.test = {
     async getBlobUrl(protocol, uri) {
       throw new Error(
         'Error: Failed to request json from "https://api.github.com/repos/microsoft/vscode-docs/contents/blogs/2018/05/07/vsls.json.png": API rate limit exceeded for 127.0.0.0. (But here\'s the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)'

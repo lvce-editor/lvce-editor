@@ -43,7 +43,7 @@ test.skip('loadTokenizer - module not found', async () => {
   const spy = jest.spyOn(console, 'error')
   await Tokenizer.loadTokenizer(id)
   expect(spy).toHaveBeenCalledWith(
-    new Error("Cannot find module '/abc' from 'src/parts/Editor/Tokenizer.js'")
+    new Error('Cannot find module \'/abc\' from \'src/parts/Editor/Tokenizer.js\'')
   )
   spy.mockRestore()
 })

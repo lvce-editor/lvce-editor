@@ -29,8 +29,8 @@ export const editorDeleteHorizontalLeft = (editor, getDelta) => {
       })
     }
     return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
-  } else {
+  }
     const changes = editorReplaceSelections(editor, [''], 'delete')
     return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
-  }
+
 }

@@ -95,5 +95,5 @@ export const set = async (key, value) => {
     return
   }
   const content = Json.stringify(state)
-  await FileSystem.writeFile(`app://settings.json`, content)
+  await FileSystem.writeFile('app://settings.json', content)
 }

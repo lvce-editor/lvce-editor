@@ -87,7 +87,7 @@ const getVisibleItems = (filteredItems) => {
 }
 
 const getDisplayErrorMessage = (error) => {
-  let message = `${error}`
+  const message = `${error}`
   const errorPrefix = 'Error: '
   if (message.startsWith(errorPrefix)) {
     return message.slice(errorPrefix.length)
