@@ -41,8 +41,8 @@ test('showMessage - should dispose after 3 seconds', async () => {
     'Viewlet.send',
     'EditorText',
     'showOverlayMessage',
-    NaN,
-    NaN,
+    Number.NaN,
+    Number.NaN,
     'test'
   )
 

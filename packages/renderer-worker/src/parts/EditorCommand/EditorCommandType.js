@@ -1,11 +1,11 @@
 // import * as EditorCompletion from '../EditorCompletion/EditorCompletion.js'
 import * as Editor from '../Editor/Editor.js'
-import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
-import * as EditorCommandCompletion from './EditorCommandCompletion.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHost/ExtensionHostBraceCompletion.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Languages from '../Languages/Languages.js'
 import * as ExtensionHostClosingTag from '../ExtensionHost/ExtensionHostClosingTagCompletion.js'
+import * as EditorCommandCompletion from './EditorCommandCompletion.js'
+import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 
 const RE_CHARACTER = new RegExp(/^\p{L}/, 'u')
 

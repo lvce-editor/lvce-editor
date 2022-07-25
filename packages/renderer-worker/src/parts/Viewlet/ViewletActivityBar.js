@@ -329,12 +329,11 @@ const getPosition = (state, index) => {
         state.height -
         (state.activityBarItems.length - 1 - index) * ACTIVITY_BAR_ITEM_HEIGHT,
     }
-  } else {
-    // at top
-    return {
-      x: state.left,
-      y: state.top + index * ACTIVITY_BAR_ITEM_HEIGHT,
-    }
+  }
+  // at top
+  return {
+    x: state.left,
+    y: state.top + index * ACTIVITY_BAR_ITEM_HEIGHT,
   }
 }
 

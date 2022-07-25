@@ -4,7 +4,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletLocations from './ViewletLocations.js'
 
 const getReferences = async () => {
-  const editor = Viewlet.state.instances['EditorText'].state
+  const editor = Viewlet.state.instances.EditorText.state
   const offset = TextDocument.offsetAt(editor, editor.cursor)
   const references = await ExtensionHostReferences.executeReferenceProvider(
     editor,
@@ -25,7 +25,7 @@ export const loadContent = async (state) => {
 
 // TODO side effect is not good here, find a way to call ViewletLocations
 export const contentLoaded = (state) => {
-  Viewlet.state.instances['Locations'] = {
+  Viewlet.state.instances.Locations = {
     factory: ViewletLocations,
     state,
   }

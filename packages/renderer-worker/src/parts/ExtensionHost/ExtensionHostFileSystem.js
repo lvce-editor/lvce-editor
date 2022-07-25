@@ -15,7 +15,7 @@ export const remove = (protocol, path) => {
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.remove',
     params: [protocol, path],
-    noProviderFoundMessage: `no file system provider found`,
+    noProviderFoundMessage: 'no file system provider found',
   })
 }
 

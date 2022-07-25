@@ -3,7 +3,7 @@ import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
 
 beforeAll(() => {
   Viewlet.state.instances = Object.create(null)
-  Viewlet.state.instances['EditorText'] = {
+  Viewlet.state.instances.EditorText = {
     state: {
       uri: '',
       lines: [],

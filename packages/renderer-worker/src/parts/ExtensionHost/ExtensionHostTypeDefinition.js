@@ -9,7 +9,7 @@ export const executeTypeDefinitionProvider = (editor, offset) => {
     event: `onTypeDefinition:${editor.languageId}`,
     method: 'ExtensionHostTypeDefinition.executeTypeDefinitionProvider',
     params: [editor.id, offset],
-    noProviderFoundMessage: `No type definition provider found`,
+    noProviderFoundMessage: 'No type definition provider found',
     noProviderFoundResult: undefined,
     combineResults,
   })

@@ -24,7 +24,7 @@ beforeEach(() => {
 test('getLanguageConfiguration - error - languages must be loaded before requesting language configuration', async () => {
   Languages.state.loaded = true
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'ExtensionHost.getLanguageConfiguration':
         return {
@@ -50,7 +50,7 @@ test('getLanguageConfiguration - error - languages must be loaded before request
 
 test('getLanguageConfiguration - error - languages must be loaded before requesting language configuration', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'ExtensionHost.getLanguageConfiguration':
         return {
@@ -71,7 +71,7 @@ test('getLanguageConfiguration - error - languages must be loaded before request
 
 test.skip('hydrate', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
       case 'ExtensionHost.getLanguages':
         return {

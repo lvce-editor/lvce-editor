@@ -1,6 +1,6 @@
-import * as TokenizePlainText from './TokenizePlainText.js'
 import * as Languages from '../Languages/Languages.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as TokenizePlainText from './TokenizePlainText.js'
 
 export const state = {
   tokenizers: Object.create(null),

@@ -48,7 +48,7 @@ test('readText - clipboard not available', async () => {
   })
   await expect(ClipBoard.readText()).rejects.toThrowError(
     new Error(
-      `Failed to read text from clipboard: The Clipboard Api is not available in Firefox`
+      'Failed to read text from clipboard: The Clipboard Api is not available in Firefox'
     )
   )
 })
@@ -60,7 +60,7 @@ test('readText - clipboard blocked', async () => {
   })
   await expect(ClipBoard.readText()).rejects.toThrowError(
     new Error(
-      `Failed to read text from clipboard: The Browser disallowed reading from clipboard`
+      'Failed to read text from clipboard: The Browser disallowed reading from clipboard'
     )
   )
 })
@@ -101,7 +101,7 @@ test('writeText - error', async () => {
 // TODO test readNativeFiles error
 test('readNativeFiles - not supported', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     return {
       source: 'notSupported',
       type: 'none',
@@ -117,7 +117,7 @@ test('readNativeFiles - not supported', async () => {
 
 test('readNativeFiles - copied gnome files', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     return {
       source: 'gnomeCopiedFiles',
       type: 'copy',
@@ -133,7 +133,7 @@ test('readNativeFiles - copied gnome files', async () => {
 
 test('readNativeFiles - cut gnome files', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     return {
       source: 'gnomeCopiedFiles',
       type: 'cut',
@@ -149,7 +149,7 @@ test('readNativeFiles - cut gnome files', async () => {
 
 test('writeNativeFiles', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     return null
   })
   await ClipBoard.writeNativeFiles('copy', ['/test/my-folder'])

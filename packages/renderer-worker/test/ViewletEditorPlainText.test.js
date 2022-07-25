@@ -11,7 +11,7 @@ test('create', () => {
 })
 
 test('loadContent', async () => {
-  FileSystem.state.fileSystems['test'] = {
+  FileSystem.state.fileSystems.test = {
     readFile(uri) {
       return 'test content'
     },

@@ -10,7 +10,7 @@ const toContextMenuItem = (activityBarItem) => {
 
 export const getMenuEntries = async () => {
   const activityBarItems =
-    Viewlet.state.instances['ActivityBar'].state.activityBarItems
+    Viewlet.state.instances.ActivityBar.state.activityBarItems
   return [
     ...activityBarItems.map(toContextMenuItem),
     {

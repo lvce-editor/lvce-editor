@@ -1,7 +1,6 @@
+import { jest } from '@jest/globals'
 import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
 import * as Layout from '../src/parts/Layout/Layout.js'
-
-import { jest } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -33,7 +32,7 @@ test('name', () => {
 
 test('loadContent', async () => {
   const state = ViewletActivityBar.create()
-  Viewlet.state.instances['SideBar'] = {
+  Viewlet.state.instances.SideBar = {
     state: {
       currentViewletId: 'Search',
     },

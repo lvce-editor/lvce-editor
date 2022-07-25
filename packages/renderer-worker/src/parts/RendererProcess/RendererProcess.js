@@ -83,13 +83,13 @@ export const send = (message) => {
   state.ipc.send(message)
 }
 
-export const invoke = async (method, ...params) => {
+export const invoke = async (method, ...parameters) => {
   const responseMessage = await new Promise((resolve, reject) => {
     const callbackId = Callback.register(resolve, reject)
     state.ipc.send({
       jsonrpc: '2.0',
       method,
-      params,
+      params: parameters,
       id: callbackId,
     })
   })

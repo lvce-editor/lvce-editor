@@ -6,8 +6,8 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as Viewlet from './Viewlet.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Viewlet from './Viewlet.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -301,8 +301,7 @@ export const handleDrop = async () => {
 }
 
 export const closeActiveEditor = (state) => {
-  if (!state.activeEditor) {
-  }
+  if (!state.activeEditor) {}
 }
 
 export const closeAllEditors = (state) => {
@@ -386,7 +385,7 @@ export const handleTabContextMenu = async (state, index, x, y) => {
 
 export const focusIndex = (state, index) => {
   if (index === state.activeIndex) {
-    console.log('index', index, ' is already active index')
+    console.log('index', index, 'is already active index')
     return
   }
   const oldActiveIndex = state.activeIndex

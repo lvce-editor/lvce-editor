@@ -224,12 +224,12 @@ export const editorSelectNextOccurrence = (editor) => {
   const selectionEdits = result.selectionEdits
   if (isRangeInViewPort(editor, revealRange)) {
     return Editor.scheduleSelections(editor, selectionEdits)
-  } else {
+  }
     const deltaY = (revealRange.start.rowIndex - 5) * editor.rowHeight
     return Editor.scheduleSelectionsAndScrollPosition(
       editor,
       selectionEdits,
       deltaY
     )
-  }
+
 }

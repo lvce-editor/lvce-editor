@@ -1,8 +1,8 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
-import * as QuickPickNoop from './QuickPickNoop.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
+import * as QuickPickNoop from './QuickPickNoop.js'
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
 

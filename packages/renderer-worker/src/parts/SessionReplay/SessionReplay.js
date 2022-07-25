@@ -57,7 +57,7 @@ export const getSessionContent = async () => {
   return JSON.stringify(events, null, 2) + '\n'
 }
 
-const DONT_REPLAY = ['Open.openUrl', 'Download.downloadFile']
+const DONT_REPLAY = new Set(['Open.openUrl', 'Download.downloadFile'])
 
 export const replaySession = async (sessionId) => {
   const events = await getEvents(sessionId)
@@ -85,8 +85,7 @@ export const replaySession = async (sessionId) => {
   }
   let now = 0
   for (const event of events) {
-    if (event.source === 'to-renderer-process') {
-      if (!DONT_REPLAY.includes(event.method)) {
+    if (event.source === 'to-renderer-process' && !DONT_REPLAY.has(event.method)) {
         // console.log(event.timestamp)
         const timeDifference = event.timestamp - now
         await new Promise((resolve, reject) => {
@@ -95,7 +94,6 @@ export const replaySession = async (sessionId) => {
         await invoke(event)
         now = event.timestamp
       }
-    }
     // if (event.source === 'from-renderer-process') {
     //   console.log(event)
     // }

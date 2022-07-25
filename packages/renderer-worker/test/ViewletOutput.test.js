@@ -136,10 +136,10 @@ test('handleError', () => {
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   ViewletOutput.handleError(
     state,
-    new Error(`ENOENT: no such file or directory, access '/tmp/log-main.txt'`)
+    new Error("ENOENT: no such file or directory, access '/tmp/log-main.txt'")
   )
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith(
-    new Error(`ENOENT: no such file or directory, access '/tmp/log-main.txt'`)
+    new Error("ENOENT: no such file or directory, access '/tmp/log-main.txt'")
   )
 })

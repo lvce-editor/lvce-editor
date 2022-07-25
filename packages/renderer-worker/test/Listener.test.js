@@ -1,5 +1,5 @@
-import * as Listener from '../src/parts/Listener/Listener.js'
 import { jest } from '@jest/globals'
+import * as Listener from '../src/parts/Listener/Listener.js'
 
 afterEach(() => {
   for (const id in Listener.state) {

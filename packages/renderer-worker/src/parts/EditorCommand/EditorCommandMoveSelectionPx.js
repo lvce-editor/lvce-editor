@@ -1,6 +1,6 @@
+import * as Assert from '../Assert/Assert.js'
 import * as EditorMoveSelection from './EditorCommandMoveSelection.js'
 import * as EditorPosition from './EditorCommandPosition.js'
-import * as Assert from '../Assert/Assert.js'
 
 export const editorMoveSelectionPx = (editor, x, y, offset) => {
   Assert.object(editor)

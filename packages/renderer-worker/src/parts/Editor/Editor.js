@@ -1,12 +1,12 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
+import * as Assert from '../Assert/Assert.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as EditorCursor from './EditorCursor.js'
 import * as EditorScrolling from './EditorScrolling.js'
 import * as EditorSelection from './EditorSelection.js'
 import * as EditorText from './EditorText.js'
-import * as Assert from '../Assert/Assert.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 
 const MINIMUM_SLIDER_SIZE = 20
 

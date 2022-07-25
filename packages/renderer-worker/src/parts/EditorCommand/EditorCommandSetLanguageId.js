@@ -7,12 +7,12 @@ export const setLanguageId = async (editor, languageId) => {
   await Tokenizer.loadTokenizer(languageId)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   if (tokenizer === editor.tokenizer) {
-    return Viewlet.state.instances['EditorText'].state
+    return Viewlet.state.instances.EditorText.state
   }
   // TODO update syntax highlighting
   // TODO get edits
 
-  const latestEditor = Viewlet.state.instances['EditorText'].state
+  const latestEditor = Viewlet.state.instances.EditorText.state
 
   return {
     ...latestEditor,

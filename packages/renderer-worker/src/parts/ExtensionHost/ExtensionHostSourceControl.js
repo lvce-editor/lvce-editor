@@ -2,7 +2,7 @@ import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 export const acceptInput = async (text) => {
   return ExtensionHostShared.executeProvider({
-    event: `onSourceControl`,
+    event: 'onSourceControl',
     method: 'ExtensionHost.sourceControlAcceptInput',
     params: [text],
     noProviderFoundMessage: 'No source control provider found',

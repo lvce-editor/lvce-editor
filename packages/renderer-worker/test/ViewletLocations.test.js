@@ -11,7 +11,7 @@ const ViewletMain = await import('../src/parts/Viewlet/ViewletMain.js')
 
 beforeAll(() => {
   Viewlet.state.instances = Object.create(null)
-  Viewlet.state.instances['EditorText'] = {
+  Viewlet.state.instances.EditorText = {
     state: {
       uri: '',
       lines: [],
@@ -21,7 +21,7 @@ beforeAll(() => {
       },
     },
   }
-  Viewlet.state.instances['Main'] = {
+  Viewlet.state.instances.Main = {
     state: {},
     factory: {},
   }

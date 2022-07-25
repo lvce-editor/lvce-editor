@@ -5,7 +5,7 @@ export const name = 'Web'
 
 const files = Object.create(null)
 
-files['/.gitkeep'] = ``
+files['/.gitkeep'] = ''
 
 files['/languages/index.dart'] = `void main() {
   print('Hello, World!');
@@ -117,7 +117,7 @@ line 99
 line 100
 `
 
-files['/languages/index.html'] = `<h1 class="abc">hello world</h1>`
+files['/languages/index.html'] = '<h1 class="abc">hello world</h1>'
 
 files['/languages/index.css'] = `h1 {
   font-size: 24px;
@@ -205,7 +205,7 @@ int main(char arg_num, char** vargs) {
     #error I should be able to write single quotes in here: Don't make errors
 }`
 
-files['/languages/index.env'] = `KEY=42`
+files['/languages/index.env'] = 'KEY=42'
 
 files['/sample-folder/a.txt'] = ''
 files['/sample-folder/b.txt'] = ''
@@ -277,8 +277,9 @@ export const readDirWithFileTypes = (path) => {
   for (const key in files) {
     if (key.startsWith(relativePath)) {
       const dirent = getDirent(key, relativePath)
-      if (!dirents.find((otherDirent) => otherDirent.name === dirent.name))
-        dirents.push(dirent)
+      if (!dirents.find((otherDirent) => otherDirent.name === dirent.name)) {
+dirents.push(dirent)
+}
     }
   }
   return dirents

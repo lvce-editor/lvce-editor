@@ -3,12 +3,12 @@ import * as Command from '../Command/Command.js'
 import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Platform from '../Platform/Platform.js'
-import * as ExtensionHostManagementBrowser from './ExtensionHostManagementBrowser.js'
-import * as ExtensionHostManagementNode from './ExtensionHostManagementNode.js'
-import * as ExtensionHostManagementShared from './ExtensionHostManagementShared.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as ExtensionHostManagementBrowser from './ExtensionHostManagementBrowser.js'
+import * as ExtensionHostManagementNode from './ExtensionHostManagementNode.js'
+import * as ExtensionHostManagementShared from './ExtensionHostManagementShared.js'
 
 export const state = {
   /**
@@ -115,7 +115,7 @@ const startTextDocumentSyncing = async (extensionHost) => {
   )
 
   const instances = Viewlet.state.instances
-  const editorInstance = instances['EditorText']
+  const editorInstance = instances.EditorText
   if (editorInstance) {
     await handleEditorCreate(editorInstance.state)
   }
