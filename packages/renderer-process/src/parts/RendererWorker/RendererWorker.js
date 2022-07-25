@@ -50,10 +50,11 @@ const handleMessageFromRendererWorker = async (event) => {
 const getIpc = async () => {
   const assetDir = Platform.getAssetDir()
   const urlRendererWorker = `${assetDir}/packages/renderer-worker/src/rendererWorkerMain.js`
-  const rendererWorker = await IpcParent.create(
-    urlRendererWorker,
-    'Renderer Worker'
-  )
+  const rendererWorker = await IpcParent.create({
+    method: IpcParent.Methods.ModuleWorker,
+    url: urlRendererWorker,
+    name: 'Renderer Worker',
+  })
   return {
     send(message) {
       rendererWorker.postMessage(message)

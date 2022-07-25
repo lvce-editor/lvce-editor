@@ -1,10 +1,18 @@
-// TODO lazyload fallback module
-import * as IpcParentWithMessagePort from './IpcParentWithMessagePort.js'
+const getDisplayName = (name) => {
+  if (!name) {
+    return '<unknown> worker'
+  }
+  if (name.endsWith('Worker')) {
+    return name.toLowerCase()
+  }
+  return `${name} worker`
+}
 
-const tryToGetActualErrorMessage = async (url, name) => {
+const tryToGetActualErrorMessage = async ({ url, name }) => {
+  const displayName = getDisplayName(name)
   try {
     await import(url)
-    return `Failed to start ${name} worker: Unknown Error`
+    return `Failed to start ${displayName}: Unknown Error`
   } catch (error) {
     if (
       error &&
@@ -15,19 +23,26 @@ const tryToGetActualErrorMessage = async (url, name) => {
         const response = await fetch(url)
         switch (response.status) {
           case 404:
-            return `Failed to start ${name} worker: Not found (404)`
+            return `Failed to start ${displayName}: Not found (404)`
           default:
-            return `Failed to start ${name} worker: Unknown Network Error`
+            return `Failed to start ${displayName}: Unknown Network Error`
         }
       } catch {
-        return `Failed to start ${name} worker: Unknown Network Error`
+        return `Failed to start ${displayName}: Unknown Network Error`
       }
     }
-    return `Failed to start ${name} worker: ${error}`
+    return `Failed to start ${displayName}: ${error}`
   }
 }
 
-export const create = async (url, name) => {
+const isFirefoxError = (message) => {
+  return [
+    'SyntaxError: import declarations may only appear at top level of a module',
+    'SyntaxError: export declarations may only appear at top level of a module',
+  ].includes(message)
+}
+
+export const create = async ({ url, name }) => {
   try {
     const worker = new Worker(url, {
       type: 'module',
@@ -48,9 +63,15 @@ export const create = async (url, name) => {
       }
       const handleFirstError = async (event) => {
         cleanup()
-        const actualErrorMessage = await tryToGetActualErrorMessage(url, name)
-        reject(new Error(actualErrorMessage))
-        reject(event)
+        if (isFirefoxError(event.message)) {
+          reject(new Error('module workers are not supported in firefox'))
+        } else {
+          const actualErrorMessage = await tryToGetActualErrorMessage({
+            url,
+            name,
+          })
+          reject(new Error(actualErrorMessage))
+        }
       }
       worker.onmessage = handleFirstMessage
       worker.onerror = handleFirstError
@@ -59,14 +80,12 @@ export const create = async (url, name) => {
   } catch (error) {
     if (
       error &&
-      [
-        'SyntaxError: import declarations may only appear at top level of a module',
-        'SyntaxError: export declarations may only appear at top level of a module',
-        // @ts-ignore
-      ].includes(error.message)
+      error instanceof Error &&
+      error.message === 'module workers are not supported in firefox'
     ) {
-      // @ts-ignore
-      error.preventDefault()
+      const IpcParentWithMessagePort = await import(
+        './IpcParentWithMessagePort.js'
+      )
       return IpcParentWithMessagePort.create(url)
     }
     throw error
