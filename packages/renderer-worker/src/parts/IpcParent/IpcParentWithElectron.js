@@ -7,6 +7,7 @@ export const create = async (url, name) => {
       const port = event.ports[0]
       resolve(port)
     }
+    RendererProcess.state.ipc.send('get-port')
   })
   RendererProcess.state.ipc.onmessage = originalOnMessage
   let handleMessage

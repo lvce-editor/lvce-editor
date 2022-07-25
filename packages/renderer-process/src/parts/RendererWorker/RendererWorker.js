@@ -74,19 +74,26 @@ export const hydrate = async (config) => {
 
   // setup electron message port
   if (Platform.isElectron()) {
-    await new Promise((resolve) => {
-      const handleMessage = (event) => {
-        const port = event.ports[0]
-        // console.log(message)
-        ipc.sendAndTransfer('port', [port])
-        console.log('sent port')
-        resolve()
-      }
+    await new Promise((resolve, reject) => {
+      const handleIpcMessage = (event) => {
+        if (event.data !== 'get-port') {
+          reject(new Error('unexpected message from renderer worker'))
+          return
+        }
+        const handleMessageFromWindow = (event) => {
+          const port = event.ports[0]
+          ipc.sendAndTransfer('port', [port])
+          resolve()
+        }
 
-      // @ts-ignore
-      window.addEventListener('message', handleMessage, { once: true })
-      // @ts-ignore
-      window.myApi.ipcConnect()
+        // @ts-ignore
+        window.addEventListener('message', handleMessageFromWindow, {
+          once: true,
+        })
+        // @ts-ignore
+        window.myApi.ipcConnect()
+      }
+      ipc.onmessage = handleIpcMessage
     })
   }
   ipc.onmessage = handleMessageFromRendererWorker

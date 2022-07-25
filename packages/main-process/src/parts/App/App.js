@@ -177,7 +177,7 @@ exports.hydrate = async () => {
   Electron.app.on('before-quit', handleBeforeQuit)
   // Electron.app.on('ready', handleAppReady)
   Electron.app.on('second-instance', handleSecondInstance)
-  Electron.app
+  Electron.app.enableSandbox()
   await Electron.app.whenReady()
   Performance.mark('code/appReady')
 
