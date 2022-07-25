@@ -1,9 +1,9 @@
 import * as Platform from '../Platform/Platform.js'
 
-const tryToGetActualErrorMessage = async (extensionHostWorkerUrl) => {
+const tryToGetActualErrorMessage = async (name, workerUrl) => {
   try {
-    await import(extensionHostWorkerUrl)
-    return 'Failed to start extension host worker: Unknown Error'
+    await import(workerUrl)
+    return `Failed to start ${name} worker: Unknown Error`
   } catch (error) {
     if (
       error &&
@@ -11,18 +11,18 @@ const tryToGetActualErrorMessage = async (extensionHostWorkerUrl) => {
       error.message.startsWith('Failed to fetch dynamically imported module')
     ) {
       try {
-        const response = await fetch(extensionHostWorkerUrl)
+        const response = await fetch(workerUrl)
         switch (response.status) {
           case 404:
-            return 'Failed to start extension host worker: Not found (404)'
+            return `Failed to start ${name} worker: Not found (404)`
           default:
-            return 'Failed to start extension host worker: Unknown Network Error'
+            return `Failed to start ${name} worker: Unknown Network Error`
         }
       } catch {
-        return 'Failed to start extension host worker: Unknown Network Error'
+        return `Failed to start ${name} worker: Unknown Network Error`
       }
     }
-    return `Failed to start extension host worker: ${error}`
+    return `Failed to start ${name} worker: ${error}`
   }
 }
 
@@ -50,6 +50,7 @@ export const listen = async () => {
       console.log(event)
       cleanup()
       const actualErrorMessage = await tryToGetActualErrorMessage(
+        'extension host',
         extensionHostWorkerUrl
       )
       reject(new Error(actualErrorMessage))
