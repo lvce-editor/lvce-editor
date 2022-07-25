@@ -16,14 +16,14 @@ export const Methods = {
  */
 const METHOD_PREFERRED = Methods.ModuleWorker
 
-export const create = async (url, name) => {
+export const create = async ({ method, ...options }) => {
   switch (METHOD_PREFERRED) {
     case Methods.ModuleWorker:
-      return IpcParentWithModuleWorker.create(url)
+      return IpcParentWithModuleWorker.create(options)
     case Methods.MessagePort:
-      return IpcParentWithMessagePort.create(url)
+      return IpcParentWithMessagePort.create(options)
     case Methods.ReferencePort:
-      return IpcParentWithReferencePort.create(url)
+      return IpcParentWithReferencePort.create(options)
     default:
       throw new Error('unknown method')
   }
