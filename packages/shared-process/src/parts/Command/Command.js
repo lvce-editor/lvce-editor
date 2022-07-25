@@ -237,7 +237,7 @@ export const invoke = async (command, ...args) => {
     }
   }
   if (typeof commands[command] !== 'function') {
-    throw new Error(`Command ${command} is not a function`)
+    throw new TypeError(`Command ${command} is not a function`)
   }
   return commands[command](...args)
 }

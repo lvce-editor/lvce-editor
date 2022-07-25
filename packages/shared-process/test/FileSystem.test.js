@@ -16,7 +16,7 @@ test('copy - file', async () => {
   const tmpDir2 = await getTmpDir()
   const target = join(tmpDir2, 'a.txt')
   await FileSystem.copy(source, target)
-  expect(await fs.promises.readFile(target, 'utf-8')).toBe('a')
+  expect(await fs.promises.readFile(target, 'utf8')).toBe('a')
 })
 
 test('copy - error - source does not exist', async () => {
@@ -47,7 +47,7 @@ test('createFile', async () => {
   const tmpDir = await getTmpDir()
   const testFile = join(tmpDir, 'a.txt')
   await FileSystem.createFile(testFile)
-  expect(await fs.promises.readFile(testFile, 'utf-8')).toBe('')
+  expect(await fs.promises.readFile(testFile, 'utf8')).toBe('')
 })
 
 test('createFile - should throw error if file already exists', async () => {
@@ -82,7 +82,7 @@ test('writeFile', async () => {
   const testFile = join(tmpDir, 'writefile.txt')
   expect(await FileSystem.exists(testFile)).toBe(false)
   await FileSystem.writeFile(testFile, 'Hello World')
-  expect(await fs.promises.readFile(testFile, 'utf-8')).toBe('Hello World')
+  expect(await fs.promises.readFile(testFile, 'utf8')).toBe('Hello World')
 })
 
 test('writeFile - nonexistent file', async () => {
@@ -110,11 +110,11 @@ test.skip('writeFile - parallel write on different files works', async () => {
     FileSystem.writeFile(testFile4, 'Hello World 4'),
     FileSystem.writeFile(testFile5, 'Hello World 5'),
   ])
-  expect(fs.readFileSync(testFile1, 'utf-8')).toBe('Hello World 1')
-  expect(fs.readFileSync(testFile2, 'utf-8')).toBe('Hello World 2')
-  expect(fs.readFileSync(testFile3, 'utf-8')).toBe('Hello World 3')
-  expect(fs.readFileSync(testFile4, 'utf-8')).toBe('Hello World 4')
-  expect(fs.readFileSync(testFile5, 'utf-8')).toBe('Hello World 5')
+  expect(fs.readFileSync(testFile1, 'utf8')).toBe('Hello World 1')
+  expect(fs.readFileSync(testFile2, 'utf8')).toBe('Hello World 2')
+  expect(fs.readFileSync(testFile3, 'utf8')).toBe('Hello World 3')
+  expect(fs.readFileSync(testFile4, 'utf8')).toBe('Hello World 4')
+  expect(fs.readFileSync(testFile5, 'utf8')).toBe('Hello World 5')
 })
 
 test.skip('writeFile - parallel write on same files works and is sequentialized', async () => {
@@ -129,7 +129,7 @@ test.skip('writeFile - parallel write on same files works and is sequentialized'
     FileSystem.writeFile(testFile, 'Hello World 4'),
     setTimeout(10).then(() => FileSystem.writeFile(testFile, 'Hello World 5')),
   ])
-  expect(fs.readFileSync(testFile, 'utf-8')).toBe('Hello World 5')
+  expect(fs.readFileSync(testFile, 'utf8')).toBe('Hello World 5')
 })
 
 test('writeFile (string, error handling)', async () => {
@@ -150,7 +150,7 @@ test('ensureFile - created parent folders recursively', async () => {
   const testFile = join(tmpDir, 'a', 'b', 'c', 'd', 'writefile.txt')
   expect(await FileSystem.exists(testFile)).toBe(false)
   await FileSystem.ensureFile(testFile, 'Hello World')
-  expect(await fs.promises.readFile(testFile, 'utf-8')).toBe('Hello World')
+  expect(await fs.promises.readFile(testFile, 'utf8')).toBe('Hello World')
 })
 
 test('remove', async () => {

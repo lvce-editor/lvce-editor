@@ -1,4 +1,4 @@
-import { Worker } from 'worker_threads'
+import { Worker } from 'node:worker_threads'
 import * as Platform from '../Platform/Platform.js'
 
 export const create = () => {

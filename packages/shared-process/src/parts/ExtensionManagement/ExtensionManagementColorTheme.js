@@ -1,6 +1,6 @@
 import * as Error from '../Error/Error.js'
-import * as ExtensionManagement from './ExtensionManagement.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
+import * as ExtensionManagement from './ExtensionManagement.js'
 
 // TODO test this function
 // TODO very similar with getIconTheme

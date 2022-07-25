@@ -209,7 +209,7 @@ const electronInitialize = (initializeMessage) => {
               },
             })
           }
-          return
+
         }
       } else {
         Command.execute(message.method, fakeSocket, ...message.params)

@@ -1,7 +1,7 @@
-import { jest } from '@jest/globals'
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
+import { jest } from '@jest/globals'
 import * as JsonFile from '../src/parts/JsonFile/JsonFile.js'
 
 afterEach(() => {
