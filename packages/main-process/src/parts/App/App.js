@@ -17,46 +17,6 @@ const { app } = require('electron')
 
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
-const getAbsolutePath = (requestUrl) => {
-  const scheme = Platform.getScheme()
-  // TODO remove if/else in prod (use replacement)
-  if (requestUrl === `${scheme}://-/`) {
-    return Path.join(Root.root, 'static', 'index-electron.html')
-  }
-  if (requestUrl.startsWith(`${scheme}://-/packages`)) {
-    return Path.join(Root.root, requestUrl.slice(scheme.length + 4))
-  }
-  if (requestUrl.startsWith(`${scheme}://-/static`)) {
-    return Path.join(Root.root, requestUrl.slice(scheme.length + 4))
-  }
-  if (requestUrl.startsWith(`${scheme}://-/extensions`)) {
-    return Path.join(Root.root, requestUrl.slice(scheme.length + 4))
-  }
-  // TODO maybe have a separate protocol for remote, e.g. vscode has vscode-remote
-  if (requestUrl.startsWith(`${scheme}://-/remote`)) {
-    return requestUrl.slice(scheme.length + 4 + '/remote'.length)
-  }
-  return Path.join(Root.root, 'static', requestUrl.slice(scheme.length + 4))
-}
-/**
- *
- * @param {globalThis.Electron.ProtocolRequest} request
- * @param {(response: string | globalThis.Electron.ProtocolResponse) => void} callback
- */
-
-const handleRequest = (request, callback) => {
-  // const path = join(__dirname, request.url.slice(6))
-  const path = getAbsolutePath(request.url)
-  // console.log(request.url, '->', path)
-  callback({
-    path,
-    headers: {
-      'X-Custom': '1',
-      'Cache-Control': 'public, max-age=31536000, immutable', // TODO caching is not working, see https://github.com/electron/electron/issues/27075 and https://github.com/electron/electron/issues/23482
-    },
-  })
-}
-
 // const handleAppReady = async () => {
 
 // }
@@ -198,6 +158,7 @@ exports.hydrate = async () => {
     process.exit(0)
   }
 
+  // protocol
   Electron.protocol.registerSchemesAsPrivileged([
     {
       scheme: Platform.getScheme(),
@@ -209,15 +170,21 @@ exports.hydrate = async () => {
       },
     },
   ])
+
+  // ipcMain
   Electron.ipcMain.on('port', handlePort)
+
+  // app
   Electron.app.on('window-all-closed', handleWindowAllClosed)
   Electron.app.on('before-quit', handleBeforeQuit)
   // Electron.app.on('ready', handleAppReady)
   Electron.app.on('second-instance', handleSecondInstance)
   await Electron.app.whenReady()
   Performance.mark('code/appReady')
+
+  // session
+
   const session = Session.get()
-  session.protocol.registerFileProtocol(Platform.getScheme(), handleRequest)
   await handleReady(parsedCliArgs, process.cwd())
   Debug.debug('[info] app window created')
 }

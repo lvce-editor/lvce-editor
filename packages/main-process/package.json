@@ -68,7 +68,9 @@
       "no-await-in-loop": "off",
       "unicorn/prefer-add-event-listener": "off",
       "no-unused-expressions": "off",
-      "node/prefer-global/process": "off"
+      "node/prefer-global/process": "off",
+      "unicorn/prefer-module": "off",
+      "quotes": "off"
     },
     "ignores": [
       "distmin"
