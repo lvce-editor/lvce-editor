@@ -276,7 +276,7 @@ const applyJsOverrides = async () => {
     replacement: "const platform = 'web'",
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js`,
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
     occurrence: `/src/rendererWorkerMain.js`,
     replacement: '/dist/rendererWorkerMain.js',
   })

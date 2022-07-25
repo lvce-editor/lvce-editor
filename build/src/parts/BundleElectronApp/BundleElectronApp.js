@@ -227,16 +227,16 @@ const copyStaticFiles = async ({ arch }) => {
     to: `build/.tmp/electron-bundle/${arch}/resources/app/static`,
     ignore: ['css', 'js'],
   })
-  // await Replace.replace({
-  //   path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index-electron.html`,
-  //   occurrence: 'packages/renderer-process/src/rendererProcessMain.js',
-  //   replacement: `packages/renderer-process/dist/rendererProcessMain.js`,
-  // })
-  // await Replace.replace({
-  //   path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index-electron.html`,
-  //   occurrence: 'packages/renderer-worker/src/rendererWorkerMain.js',
-  //   replacement: `packages/renderer-worker/dist/rendererWorkerMain.js`,
-  // })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index-electron.html`,
+    occurrence: 'packages/renderer-process/src/rendererProcessMain.js',
+    replacement: `packages/renderer-process/dist/rendererProcessMain.js`,
+  })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index-electron.html`,
+    occurrence: 'packages/renderer-worker/src/rendererWorkerMain.js',
+    replacement: `packages/renderer-worker/dist/rendererWorkerMain.js`,
+  })
   // await
 }
 
@@ -271,6 +271,7 @@ export const build = async () => {
     Path.absolute('build/.tmp/cachedDependencies'),
     dependencyCacheHash
   )
+  const commitHash = await CommitHash.getCommitHash()
 
   if (existsSync(dependencyCachePath)) {
     console.info('[build step skipped] bundleElectronAppDependencies')
@@ -347,6 +348,7 @@ export const build = async () => {
     await BundleRendererProcess.bundleRendererProcess({
       cachePath: rendererProcessCachePath,
       arch,
+      commitHash,
     })
     console.timeEnd('bundleRendererProcess')
   }
