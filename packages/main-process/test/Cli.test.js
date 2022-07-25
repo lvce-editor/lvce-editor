@@ -1,4 +1,4 @@
-const Cli = require('../src/parts/Cli/Cli')
+const Cli = require('../src/parts/Cli/Cli.js')
 
 jest.mock('electron', () => {
   return {

@@ -1,23 +1,23 @@
 const { join } = require('path')
 const childProcess = require('child_process')
 const { readFile } = require('fs/promises')
-const Assert = require('../Assert/Assert.js')
-const { VError } = require('verror')
 const util = require('util')
+const { VError } = require('verror')
+const Assert = require('../Assert/Assert.js')
 
 const execFile = util.promisify(childProcess.execFile)
 
 // parse ps output based on vscode https://github.com/microsoft/vscode/blob/c0769274fa136b45799edeccc0d0a2f645b75caf/src/vs/base/node/ps.ts (License MIT)
 
-const PID_CMD = /^\s*([0-9]+)\s+([0-9]+)\s+([0-9\.]+)\s+([0-9\.]+)\s+(.+)$/s
+const PID_CMD = /^\s*(\d+)\s+(\d+)\s+([\d.]+)\s+([\d.]+)\s+(.+)$/s
 
 const parsePsOutputLine = (line) => {
   Assert.string(line)
   const matches = PID_CMD.exec(line.trim())
   if (matches && matches.length === 6) {
     return {
-      pid: parseInt(matches[1]),
-      ppid: parseInt(matches[2]),
+      pid: Number.parseInt(matches[1]),
+      ppid: Number.parseInt(matches[2]),
       cmd: matches[5],
       // load: parseInt(matches[3]),
       // mem: parseInt(matches[4]),
@@ -96,8 +96,8 @@ const getAccurateMemoryUsage = async (pid) => {
     const trimmedContent = content.trim()
     const numberBlocks = trimmedContent.split(' ')
     const pageSize = 4096
-    const rss = parseInt(numberBlocks[1]) * pageSize
-    const shared = parseInt(numberBlocks[2]) * pageSize
+    const rss = Number.parseInt(numberBlocks[1]) * pageSize
+    const shared = Number.parseInt(numberBlocks[2]) * pageSize
     const memory = rss - shared
     return memory
   } catch (error) {

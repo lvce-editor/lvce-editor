@@ -1,6 +1,6 @@
-const ListProcessesWithMemoryUsage = require('../src/parts/ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsageUnix.js')
-const child_process = require('child_process')
+const childProcess = require('child_process')
 const fsPromises = require('fs/promises')
+const ListProcessesWithMemoryUsage = require('../src/parts/ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsageUnix.js')
 
 jest.mock('child_process', () => ({
   execFile: jest.fn(),
@@ -12,7 +12,7 @@ jest.mock('fs/promises', () => ({
 
 test('listProcessesWithMemoryUsage', async () => {
   // @ts-ignore
-  child_process.execFile.mockImplementation((command, args, callback) => {
+  childProcess.execFile.mockImplementation((command, args, callback) => {
     callback(null, {
       stdout: `1       0  0.0  0.1 /sbin/init splash
 2127    1442  0.0  0.2 /usr/libexec/gsd-keyboard
@@ -91,7 +91,7 @@ test('listProcessesWithMemoryUsage', async () => {
 
 test('listProcessesWithMemoryUsage - bug with parsing this specific line', async () => {
   // @ts-ignore
-  child_process.execFile.mockImplementation((command, args, callback) => {
+  childProcess.execFile.mockImplementation((command, args, callback) => {
     callback(null, {
       stdout:
         ' 25666   24775  131  1.4 /snap/code/97/usr/share/code/code --ms-enable-electron-run-as-node --max-old-space-size=3072 /snap/code/97/usr/share/code/resources/app/extensions/node_modules/typescript/lib/tsserver.js --useInferredProjectPerProjectRoot --disableAutomaticTypingAcquisition --enableTelemetry --cancellationPipeName /tmp/vscode-typescript1000/25df66cb1c287c2f519c/tscancellation-9462d6e60479e4eb5d2f.tmp* --locale en --noGetErrOnBackgroundUpdate --validateDefaultNpmLocation --useNodeIpc',
@@ -115,7 +115,7 @@ test('listProcessesWithMemoryUsage - bug with parsing this specific line', async
 
 test('listProcessesWithMemoryUsage - error - line could not be parsed', async () => {
   // @ts-ignore
-  child_process.execFile.mockImplementation((command, args, callback) => {
+  childProcess.execFile.mockImplementation((command, args, callback) => {
     callback(null, { stdout: 'abc' })
   })
   await expect(

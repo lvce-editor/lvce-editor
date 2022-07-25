@@ -1,6 +1,6 @@
-const ListProcessesWithMemoryUsage = require('../src/parts/ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsageWindows.js')
 const WindowsProcessTree = require('windows-process-tree')
 const { VError } = require('verror')
+const ListProcessesWithMemoryUsage = require('../src/parts/ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsageWindows.js')
 
 jest.mock(
   'windows-process-tree',

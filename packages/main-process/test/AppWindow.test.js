@@ -12,7 +12,16 @@ test('createAppWindow', async () => {
     return {
       session: {
         fromPartition() {
-          return {}
+          return {
+            webRequest: {
+              onHeadersReceived() {},
+            },
+            protocol: {
+              registerFileProtocol() {},
+            },
+            setPermissionRequestHandler() {},
+            setPermissionCheckHandler() {},
+          }
         },
       },
       screen: {
@@ -41,7 +50,16 @@ test('createAppWindow - error', async () => {
     return {
       session: {
         fromPartition() {
-          return {}
+          return {
+            webRequest: {
+              onHeadersReceived() {},
+            },
+            protocol: {
+              registerFileProtocol() {},
+            },
+            setPermissionRequestHandler() {},
+            setPermissionCheckHandler() {},
+          }
         },
       },
       screen: {
