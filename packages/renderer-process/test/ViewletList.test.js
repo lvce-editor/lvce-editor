@@ -1,8 +1,8 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletList from '../src/parts/Viewlet/ViewletList.js'
 import { jest } from '@jest/globals'
+import * as ViewletList from '../src/parts/Viewlet/ViewletList.js'
 
 beforeEach(() => {
   jest.restoreAllMocks()

@@ -158,7 +158,7 @@ const getStatusMessage = (resultCount, fileResultCount) => {
     return 'No results found'
   }
   if (resultCount === 1 && fileResultCount === 1) {
-    return `Found 1 result in 1 file`
+    return 'Found 1 result in 1 file'
   }
   if (fileResultCount === 1) {
     return `Found ${resultCount} results in 1 file`
