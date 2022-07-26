@@ -2,44 +2,7 @@
 
 const WindowsProcessTree = require('windows-process-tree')
 const { VError } = require('verror')
-const Assert = require('../Assert/Assert.js')
-
-/**
- *
- * @param {WindowsProcessTree.IProcessCpuInfo} process
- * @param {number } rootPid
- * @returns
- */
-const findName = (process, rootPid) => {
-  Assert.object(process)
-  Assert.number(rootPid)
-  if (process.pid === rootPid) {
-    return 'main'
-  }
-  const cmd = process.commandLine
-  if (!cmd) {
-    return '<unknown>'
-  }
-  if (cmd.includes('--type=zygote')) {
-    return 'zygote'
-  }
-  if (cmd.includes('--type=gpu-process')) {
-    return 'gpu-process'
-  }
-  if (cmd.includes('--type=utility')) {
-    return 'utility'
-  }
-  if (cmd.includes('extensionHostMain.js')) {
-    return 'extension-host'
-  }
-  if (cmd.includes('--type=renderer')) {
-    if (cmd.includes('--enable-sandbox')) {
-      return 'renderer'
-    }
-    return 'chrome-devtools'
-  }
-  return `<unknown> ${cmd}`
-}
+const ListProcessGetName = require('../ListProcessGetName/ListProcessGetName.js')
 
 /**
  *
@@ -70,7 +33,7 @@ const addCpuUsage = (processList) => {
  */
 const toResultItem = (item, rootPid) => {
   return {
-    name: findName(item, rootPid),
+    name: ListProcessGetName.getName(item.pid, item.commandLine, rootPid),
     pid: item.pid,
     ppid: item.ppid,
     memory: item.memory,
