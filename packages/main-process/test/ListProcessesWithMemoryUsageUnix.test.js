@@ -1,14 +1,35 @@
 const childProcess = require('child_process')
 const fsPromises = require('fs/promises')
+const electron = require('electron')
 const ListProcessesWithMemoryUsage = require('../src/parts/ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsageUnix.js')
 
+beforeEach(() => {
+  jest.restoreAllMocks()
+  jest.resetModules()
+  jest.resetAllMocks()
+})
+
 jest.mock('child_process', () => ({
-  execFile: jest.fn(),
+  execFile: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
 }))
 
 jest.mock('fs/promises', () => ({
-  readFile: jest.fn(),
+  readFile: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
 }))
+
+jest.mock('electron', () => {
+  return {
+    BrowserWindow: {
+      getAllWindows: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    },
+  }
+})
 
 test('listProcessesWithMemoryUsage', async () => {
   // @ts-ignore
@@ -27,6 +48,10 @@ test('listProcessesWithMemoryUsage', async () => {
   })
   // @ts-ignore
   fsPromises.readFile.mockImplementation(() => '41700 2023 1199 224 0 5027 0')
+  // @ts-ignore
+  electron.BrowserWindow.getAllWindows.mockImplementation(() => {
+    return []
+  })
   expect(
     await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(1442)
   ).toEqual([
@@ -99,6 +124,10 @@ test('listProcessesWithMemoryUsage - bug with parsing this specific line', async
   })
   // @ts-ignore
   fsPromises.readFile.mockImplementation(() => '41700 2023 1199 224 0 5027 0')
+  // @ts-ignore
+  electron.BrowserWindow.getAllWindows.mockImplementation(() => {
+    return []
+  })
   expect(
     await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(25666)
   ).toEqual([
@@ -121,4 +150,32 @@ test('listProcessesWithMemoryUsage - error - line could not be parsed', async ()
   await expect(
     ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(1)
   ).rejects.toThrowError(new Error('line could not be parsed: abc'))
+})
+
+test('listProcessesWithMemoryUsage - detect chrome devtools', async () => {
+  // @ts-ignore
+  childProcess.execFile.mockImplementation((command, args, callback) => {
+    callback(null, {
+      stdout:
+        ' 25666   24775  131  1.4 /snap/code/97/usr/share/code/code --ms-enable-electron-run-as-node --max-old-space-size=3072 /snap/code/97/usr/share/code/resources/app/extensions/node_modules/typescript/lib/tsserver.js --useInferredProjectPerProjectRoot --disableAutomaticTypingAcquisition --enableTelemetry --cancellationPipeName /tmp/vscode-typescript1000/25df66cb1c287c2f519c/tscancellation-9462d6e60479e4eb5d2f.tmp* --locale en --noGetErrOnBackgroundUpdate --validateDefaultNpmLocation --useNodeIpc',
+    })
+  })
+  // @ts-ignore
+  fsPromises.readFile.mockImplementation(() => '41700 2023 1199 224 0 5027 0')
+  // @ts-ignore
+  electron.BrowserWindow.getAllWindows.mockImplementation(() => {
+    return []
+  })
+  expect(
+    await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(25666)
+  ).toEqual([
+    {
+      cmd: '/snap/code/97/usr/share/code/code --ms-enable-electron-run-as-node --max-old-space-size=3072 /snap/code/97/usr/share/code/resources/app/extensions/node_modules/typescript/lib/tsserver.js --useInferredProjectPerProjectRoot --disableAutomaticTypingAcquisition --enableTelemetry --cancellationPipeName /tmp/vscode-typescript1000/25df66cb1c287c2f519c/tscancellation-9462d6e60479e4eb5d2f.tmp* --locale en --noGetErrOnBackgroundUpdate --validateDefaultNpmLocation --useNodeIpc',
+      depth: 1,
+      memory: 3375104,
+      name: 'main',
+      pid: 25666,
+      ppid: 24775,
+    },
+  ])
 })

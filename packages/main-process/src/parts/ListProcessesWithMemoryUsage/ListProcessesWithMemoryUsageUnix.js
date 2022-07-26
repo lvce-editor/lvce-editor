@@ -4,6 +4,7 @@ const { readFile } = require('fs/promises')
 const util = require('util')
 const { VError } = require('verror')
 const Assert = require('../Assert/Assert.js')
+const ListProcessGetName = require('../ListProcessGetName/ListProcessGetName.js')
 
 const execFile = util.promisify(childProcess.execFile)
 
@@ -26,36 +27,6 @@ const parsePsOutputLine = (line) => {
   throw new Error(`line could not be parsed: ${line}`)
 }
 
-const findName = (process, rootPid) => {
-  Assert.object(process)
-  Assert.number(rootPid)
-  if (process.pid === rootPid) {
-    return 'main'
-  }
-  if (process.cmd.includes('--type=zygote')) {
-    return 'zygote'
-  }
-  if (process.cmd.includes('--type=gpu-process')) {
-    return 'gpu-process'
-  }
-  if (process.cmd.includes('--type=utility')) {
-    return 'utility'
-  }
-  if (process.cmd.includes('extensionHostMain.js')) {
-    return 'extension-host'
-  }
-  if (process.cmd.includes('--type=renderer')) {
-    if (process.cmd.includes('--enable-sandbox')) {
-      return 'renderer'
-    }
-    return 'chrome-devtools'
-  }
-  if (process.cmd.includes('typescript/lib/tsserver.js')) {
-    return 'tsserver.js'
-  }
-  return `<unknown> ${process.cmd}`
-}
-
 const parsePsOutput = (stdout, rootPid) => {
   Assert.string(stdout)
   Assert.number(rootPid)
@@ -72,7 +43,7 @@ const parsePsOutput = (stdout, rootPid) => {
     result.push({
       ...parsedLine,
       depth,
-      name: findName(parsedLine, rootPid),
+      name: ListProcessGetName.getName(parsedLine.pid, parsedLine.cmd, rootPid),
     })
     depthMap[parsedLine.pid] = depth + 1
   }
@@ -130,6 +101,7 @@ const hasPositiveMemoryUsage = (process) => {
 exports.listProcessesWithMemoryUsage = async (rootPid) => {
   // console.time('getPsOutput')
   const stdout = await getPsOutput()
+  // console.log({ stdout })
   // console.timeEnd('getPsOutput')
   // console.time('parsePsOutput')
   const parsed = parsePsOutput(stdout, rootPid)

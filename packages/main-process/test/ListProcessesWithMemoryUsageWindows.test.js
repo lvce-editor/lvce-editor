@@ -1,3 +1,4 @@
+const electron = require('electron')
 const WindowsProcessTree = require('windows-process-tree')
 const { VError } = require('verror')
 const ListProcessesWithMemoryUsage = require('../src/parts/ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsageWindows.js')
@@ -17,7 +18,21 @@ jest.mock(
   }
 )
 
+jest.mock('electron', () => {
+  return {
+    BrowserWindow: {
+      getAllWindows: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    },
+  }
+})
+
 test('listProcessesWithMemoryUsage - error - rootPid not found', async () => {
+  // @ts-ignore
+  electron.BrowserWindow.getAllWindows.mockImplementation(() => {
+    return []
+  })
   // @ts-ignore
   WindowsProcessTree.getProcessList.mockImplementation((rootPid, callback) => {
     callback([
@@ -163,7 +178,7 @@ test('listProcessesWithMemoryUsage - error - rootPid not found', async () => {
     {
       cmd: '"C:\\Users\\test-user\\Documents\\app\\packages\\main-process\\node_modules\\electron\\dist\\electron.exe" --type=renderer --user-data-dir="C:\\Users\\test-user\\AppData\\Roaming\\main-process" --standard-schemes=lvce-oss --secure-schemes=lvce-oss --bypasscsp-schemes --cors-schemes --fetch-schemes=lvce-oss --service-worker-schemes --streaming-schemes=lvce-oss --app-path="C:\\Users\\test-user\\Documents\\app\\packages\\main-process" --enable-sandbox --lang=en-US --device-scale-factor=1 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=4 --launch-time-ticks=3327042247 --mojo-platform-channel-handle=2184 --field-trial-handle=1380,i,10773524994372501887,514931115338394725,131072 --disable-features=SpareRendererForSitePerProcess,WinRetrieveSuggestionsOnlyOnDemand /prefetch:1',
       memory: 83259392,
-      name: 'renderer',
+      name: '<unknown renderer>',
       pid: 11608,
       ppid: 9176,
     },
@@ -177,7 +192,7 @@ test('listProcessesWithMemoryUsage - error - rootPid not found', async () => {
     {
       cmd: '"C:\\Users\\test-user\\Documents\\app\\packages\\main-process\\node_modules\\electron\\dist\\electron.exe" --type=renderer --user-data-dir="C:\\Users\\test-user\\AppData\\Roaming\\main-process" --standard-schemes=lvce-oss --secure-schemes=lvce-oss --bypasscsp-schemes --cors-schemes --fetch-schemes=lvce-oss --service-worker-schemes --streaming-schemes=lvce-oss --app-path="C:\\Users\\test-user\\Documents\\app\\packages\\main-process" --enable-sandbox --lang=en-US --device-scale-factor=1 --num-raster-threads=4 --enable-main-frame-before-activation --renderer-client-id=5 --launch-time-ticks=3330732877 --mojo-platform-channel-handle=3216 --field-trial-handle=1380,i,10773524994372501887,514931115338394725,131072 --disable-features=SpareRendererForSitePerProcess,WinRetrieveSuggestionsOnlyOnDemand /prefetch:1',
       memory: 73048064,
-      name: 'renderer',
+      name: '<unknown renderer>',
       pid: 2000,
       ppid: 9176,
     },
