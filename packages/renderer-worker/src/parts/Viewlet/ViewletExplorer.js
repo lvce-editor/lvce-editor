@@ -196,20 +196,20 @@ const getTopLevelDirents = (root, pathSeparator) => {
 //   })
 // }
 
-export const events = {
-  async 'languages.changed'(state) {
-    return updateIcons(state)
-  },
-  async 'workspace.change'(state) {
-    const newRoot = Workspace.state.workspacePath
-    const state1 = { ...state, root: newRoot }
-    const newState = await loadContent(state1)
-    return newState
-  },
-  async 'iconTheme.change'(state) {
-    // TODO
-    return state
-  },
+export const handleLanguagesChanged = (state) => {
+  return updateIcons(state)
+}
+
+export const handleWorkspaceChange = async (state) => {
+  const newRoot = Workspace.state.workspacePath
+  const state1 = { ...state, root: newRoot }
+  const newState = await loadContent(state1)
+  return newState
+}
+
+export const handleIconThemeChange = (state) => {
+  // TODO
+  return state
 }
 
 const getVisible = (state) => {
@@ -1204,6 +1204,12 @@ export const shouldApplyNewState = (newState, fn) => {
     return false
   }
   return true
+}
+
+export const events = {
+  'languages.changed': handleLanguagesChanged,
+  'workspace.change': handleWorkspaceChange,
+  'iconTheme.change': handleIconThemeChange,
 }
 
 export const hasFunctionalRender = true

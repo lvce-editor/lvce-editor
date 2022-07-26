@@ -301,7 +301,7 @@ test('readDirWithFileTypes', async () => {
     })
   )
   expect(
-    await FileSystemGitHub.readDirWithFileTypes('github://microsoft/vscode')
+    await FileSystemGitHub.readDirWithFileTypes('microsoft/vscode')
   ).toEqual([
     {
       name: '.devcontainer',
@@ -449,7 +449,7 @@ test('readDirWithFileTypes - error', async () => {
     })
   )
   await expect(
-    FileSystemGitHub.readDirWithFileTypes('github://microsoft/vscode')
+    FileSystemGitHub.readDirWithFileTypes('microsoft/vscode')
   ).rejects.toThrowError(
     new Error(
       'Failed to request json from "https://api.github.com/repos/microsoft/vscode/git/trees/HEAD:": API rate limit exceeded for 0.0.0.0. (But here\'s the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)'
@@ -491,9 +491,8 @@ test('readFile', async () => {
       )
     })
   )
-  expect(
-    await FileSystemGitHub.readFile('github://microsoft/vscode/.gitattributes')
-  ).toBe(`* text=auto
+  expect(await FileSystemGitHub.readFile('microsoft/vscode/.gitattributes'))
+    .toBe(`* text=auto
 
 LICENSE.txt eol=crlf
 ThirdPartyNotices.txt eol=crlf
@@ -541,9 +540,8 @@ test('readFile - unicode decoding issue', async () => {
       )
     })
   )
-  expect(
-    await FileSystemGitHub.readFile('github://microsoft/vscode/.gitattributes')
-  ).toBe(`---
+  expect(await FileSystemGitHub.readFile('microsoft/vscode/.gitattributes'))
+    .toBe(`---
 name: Bug report
 about: Create a report to help us improve
 ---
@@ -597,7 +595,7 @@ test.skip('readFile - ajax error', async () => {
     })
   )
   await expect(
-    FileSystemGitHub.readFile('github://microsoft/vscode/.gitattributes')
+    FileSystemGitHub.readFile('microsoft/vscode/.gitattributes')
   ).rejects.toThrowError('rate limiting exceeded')
 })
 
@@ -621,9 +619,7 @@ test('getBlobUrl', async () => {
     })
   )
   expect(
-    await FileSystemGitHub.getBlobUrl(
-      'github://microsoft/vscode/.gitattributes'
-    )
+    await FileSystemGitHub.getBlobUrl('microsoft/vscode/.gitattributes')
   ).toBe(
     'https://raw.githubusercontent.com/microsoft/vscode/main/.gitattributes'
   )

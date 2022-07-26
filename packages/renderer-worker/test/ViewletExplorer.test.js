@@ -4332,7 +4332,7 @@ test('event - workspace change', async () => {
     }
   })
   Workspace.state.workspacePath = '/test'
-  const newState = await ViewletExplorer.events['workspace.change'](state)
+  const newState = await ViewletExplorer.handleWorkspaceChange(state)
   expect(newState).toMatchObject({
     dirents: [
       {
