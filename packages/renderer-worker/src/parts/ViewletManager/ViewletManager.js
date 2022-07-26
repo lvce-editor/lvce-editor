@@ -1,6 +1,7 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as Assert from '../Assert/Assert.js'
+import { CancelationError } from '../Errors/CancelationError.js'
 
 export const modules = Object.create(null)
 
@@ -198,6 +199,9 @@ export const load = async (viewlet, focus = false) => {
       return
     }
   } catch (error) {
+    if (error && error instanceof CancelationError) {
+      return
+    }
     viewlet.type = 4
     console.error(error)
     try {
