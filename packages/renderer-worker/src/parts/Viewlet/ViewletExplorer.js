@@ -129,7 +129,7 @@ const getPathSeparator = (root) => {
 
 export const loadContent = async (state) => {
   const root = Workspace.state.workspacePath
-  console.log('explorer root', root)
+  console.log('explorer root', { root })
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
   const dirents = await getTopLevelDirents(root, pathSeparator)
   return {
