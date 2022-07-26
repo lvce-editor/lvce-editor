@@ -286,7 +286,13 @@ export const runWithExtension = async (options) => {
     // TODO ask renderer worker to activate this extension
     const absolutePath = new URL(`../fixtures/${options.name}`, location.href)
       .href
-    await RendererWorker.invoke('ExtensionMeta.addWebExtension', absolutePath)
+
+    try {
+      await RendererWorker.invoke('ExtensionMeta.addWebExtension', absolutePath)
+    } catch (error) {
+      // might be intential
+      console.error(error)
+    }
   }
   if (options.folder) {
     // TODO ask renderer worker to open this folder
