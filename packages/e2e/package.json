@@ -19,5 +19,42 @@
   "devDependencies": {
     "@types/express": "^4.17.13",
     "express": "^4.18.1"
+  },
+  "xo": {
+    "rules": {
+      "unicorn/filename-case": "off",
+      "indent": "off",
+      "semi": "off",
+      "no-unused-vars": "off",
+      "unicorn/numeric-separators-style": "off",
+      "no-extra-semi": "off",
+      "arrow-body-style": "off",
+      "padded-blocks": "off",
+      "capitalized-comments": "off",
+      "padding-line-between-statements": "off",
+      "arrow-parens": "off",
+      "no-warning-comments": "off",
+      "array-bracket-spacing": "off",
+      "comma-spacing": "off",
+      "unicorn/no-array-callback-reference": "off",
+      "comma-dangle": "off",
+      "operator-linebreak": "off",
+      "no-case-declarations": "off",
+      "no-undef": "off",
+      "object-curly-spacing": "off",
+      "object-shorthand": "off",
+      "complexity": "off",
+      "no-labels": "off",
+      "no-multi-assign": "off",
+      "max-params": "off",
+      "no-bitwise": "off",
+      "unicorn/prefer-math-trunc": "off",
+      "no-await-in-loop": "off",
+      "unicorn/prefer-add-event-listener": "off",
+      "no-unused-expressions": "off",
+      "unicorn/better-regex": "off",
+      "unicorn/no-array-push-push": "off",
+      "unicorn/prevent-abbreviations": "off"
+    }
   }
 }
