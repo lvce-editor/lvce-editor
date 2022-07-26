@@ -77,7 +77,9 @@ export const enable = async (extension) => {
   }
   state.modules[extension.id] = module
   try {
-    await pTimeout(module.activate(), Constants.ExtensionActivationTimeout)
+    await pTimeout(module.activate(), {
+      milliseconds: Constants.ExtensionActivationTimeout,
+    })
   } catch (error) {
     // console.error(error)
     state.states[extension.id] = 'error'
