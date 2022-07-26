@@ -755,6 +755,10 @@ export const handleClick = async (state, index) => {
   }
   const actualIndex = index + state.minLineY
   const dirent = state.dirents[actualIndex]
+  if (!dirent) {
+    console.warn(`[explorer] dirent at index ${actualIndex} not found`, state)
+    return state
+  }
   // TODO dirent type should be numeric
   switch (dirent.type) {
     case 'file':
