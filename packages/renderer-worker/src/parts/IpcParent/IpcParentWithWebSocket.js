@@ -21,9 +21,6 @@ export const create = ({ protocol }) => {
   }
   let handleMessage
   const ipc = {
-    send(message) {
-      pendingMessages.push(message)
-    },
     get onmessage() {
       return handleMessage
     },
@@ -42,6 +39,9 @@ export const create = ({ protocol }) => {
         handleMessage = null
       }
       webSocket.onmessage = handleMessage
+    },
+    send(message) {
+      pendingMessages.push(message)
     },
   }
   return ipc
