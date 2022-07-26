@@ -1,10 +1,11 @@
-import * as Ipc from './parts/Ipc/Ipc.js'
 import * as Api from './parts/Api/Api.js'
-import * as Command from './parts/Command/Command.js'
+import * as IpcChild from './parts/IpcChild/IpcChild.js'
+import * as Rpc from './parts/Rpc/Rpc.js'
 
-const main = () => {
+const main = async () => {
   globalThis.vscode = Api.create()
-  Ipc.listen()
+  const ipc = await IpcChild.listen({ method: IpcChild.Methods.Auto })
+  Rpc.listen(ipc)
 }
 
 main()

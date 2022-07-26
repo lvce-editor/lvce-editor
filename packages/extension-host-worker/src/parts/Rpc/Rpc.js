@@ -1,28 +1,6 @@
 import * as Command from '../Command/Command.js'
 
-const getIpc = () => {
-  postMessage('ready')
-  return {
-    get onmessage() {
-      return onmessage
-    },
-    set onmessage(listener) {
-      onmessage = listener
-    },
-    send(message) {
-      postMessage(message)
-    },
-  }
-}
-
-const improveError = (error) => {
-  if (!error) {
-    return new Error('<unknown error>')
-  }
-}
-
-export const listen = () => {
-  const ipc = getIpc()
+export const listen = (ipc) => {
   const handleMessage = async (event) => {
     const message = event.data
     if (message.method) {
