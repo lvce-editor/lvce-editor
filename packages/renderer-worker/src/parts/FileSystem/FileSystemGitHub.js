@@ -62,7 +62,7 @@ export const readDirWithFileTypes = async (path) => {
     'HEAD',
     relativePath
   )
-  state.cache[parts] = githubDirents
+  state.cache[path] = githubDirents
   const dirents = toDirents(githubDirents)
   return dirents
 }
