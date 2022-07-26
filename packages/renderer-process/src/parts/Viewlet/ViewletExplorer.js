@@ -59,7 +59,8 @@ const getAllEntries = async (dataTransfer) => {
           handleEntryFile(entry)
         } else if (entry.isDirectory) {
           handleEntryDirectory(entry)
-        } else {}
+        } else {
+        }
       }
     }
 
@@ -387,6 +388,10 @@ export const showCreateFileInputBox = (state, index) => {
     $Viewlet.append($InputBox)
   } else {
     const $Dirent = $Viewlet.children[index]
+    // TODO this should never happen
+    if (!$Dirent) {
+      throw new Error(`dirent at index ${index} should be defined`)
+    }
     $Dirent.before($InputBox)
   }
   $InputBox.focus()
@@ -400,10 +405,9 @@ export const hideCreateFileInputBox = (state, index) => {
     $InputBox.remove()
     return $InputBox.value
   }
-    const $InputBox = $Viewlet.children[index]
-    $InputBox.remove()
-    return $InputBox.value
-
+  const $InputBox = $Viewlet.children[index]
+  $InputBox.remove()
+  return $InputBox.value
 }
 
 export const showRenameInputBox = (state, index, name) => {
