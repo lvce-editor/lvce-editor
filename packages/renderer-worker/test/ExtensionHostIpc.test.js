@@ -6,10 +6,10 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule(
-  '../src/parts/ExtensionHostIpc/ExtensionHostIpcWithWebWorker.js',
+  '../src/parts/ExtensionHostIpc/ExtensionHostIpcWithModuleWorker.js',
   () => {
     return {
-      listen: jest.fn(() => {
+      create: jest.fn(() => {
         throw new Error('not implemented')
       }),
     }
@@ -19,7 +19,7 @@ jest.unstable_mockModule(
 const ExtensionHostIpc = await import(
   '../src/parts/ExtensionHostIpc/ExtensionHostIpc.js'
 )
-const ExtensionHostIpcWithWebWorker = await import(
+const ExtensionHostIpcWithModuleWorker = await import(
   '../src/parts/ExtensionHostIpc/ExtensionHostIpcWithModuleWorker.js'
 )
 
@@ -31,7 +31,7 @@ test('listen - error - unexpected extension host type', async () => {
 
 test.only('handleMessage - error - method not found', async () => {
   // @ts-ignore
-  ExtensionHostIpcWithWebWorker.create.mockImplementation(() => {
+  ExtensionHostIpcWithModuleWorker.create.mockImplementation(() => {
     let _onmessage
     return {
       get onmessage() {
