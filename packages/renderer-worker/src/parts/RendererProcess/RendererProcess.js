@@ -56,14 +56,7 @@ const handleMessageFromRendererProcess = async (event) => {
 }
 
 const getIpc = () => {
-  // TODO tree-shake out if/else in prod
-  if (globalThis.acceptPort) {
-    return IpcChild.listen({ method: IpcChild.Methods.MessagePort })
-  }
-  if (globalThis.acceptReferencePort) {
-    return IpcChild.listen({ method: IpcChild.Methods.ReferencePort })
-  }
-  return IpcChild.listen({ method: IpcChild.Methods.ModuleWorker })
+  return IpcChild.listen({ method: IpcChild.Methods.Auto })
 }
 
 export const listen = async () => {
