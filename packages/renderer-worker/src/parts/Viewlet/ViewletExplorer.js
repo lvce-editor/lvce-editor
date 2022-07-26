@@ -8,6 +8,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js' // TODO shoul
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Assert from '../Assert/Assert.js'
+import { CancelationError } from '../Errors/CancelationError.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -128,10 +129,17 @@ const getPathSeparator = (root) => {
   return FileSystem.getPathSeparator(root)
 }
 
+export const shouldApplyNewState = (oldState, newState) => {}
+
 export const loadContent = async (state) => {
-  const root = Workspace.getWorkspacePath()
+  const root = Workspace.state.workspacePath
+  console.log('explorer root', root)
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
   const dirents = await getTopLevelDirents(root, pathSeparator)
+  const root2 = Workspace.state.workspacePath
+  if (root !== root2) {
+    throw new CancelationError()
+  }
   return {
     ...state,
     root,
@@ -183,8 +191,9 @@ export const contentLoadedEffects = (state) => {
 
   // TODO hoist function
   GlobalEventBus.addListener('workspace.change', async () => {
-    state.root = Workspace.state.workspacePath
-    const newState = await loadContent(state)
+    const newRoot = Workspace.state.workspacePath
+    const state1 = { ...state, root: newRoot }
+    const newState = await loadContent(state1)
     await Viewlet.setState('Explorer', newState)
     // await contentLoaded(newState)
     // TODO

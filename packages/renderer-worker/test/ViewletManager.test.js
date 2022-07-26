@@ -1,7 +1,10 @@
 import { jest } from '@jest/globals'
+import { CancelationError } from '../src/parts/Errors/CancelationError.js'
+import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
+  Viewlet.state.instances = Object.create(null)
 })
 
 jest.unstable_mockModule(
@@ -44,13 +47,14 @@ test('load', async () => {
   const getModule = async () => {
     return mockModule
   }
-  const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
+  const state = ViewletManager.create(getModule, 'test', '', '', 0, 0, 0, 0)
   await ViewletManager.load(state)
   expect(mockModule.create).toHaveBeenCalledTimes(1)
   expect(mockModule.loadContent).toHaveBeenCalledTimes(1)
   expect(mockModule.loadContent).toHaveBeenCalledWith({ x: 0 })
   expect(mockModule.contentLoaded).toHaveBeenCalledTimes(1)
   expect(mockModule.contentLoaded).toHaveBeenCalledWith({ x: 42 })
+  expect(Viewlet.state.instances['test']).toBeDefined()
 })
 
 test('load - race condition', async () => {
@@ -224,4 +228,31 @@ test('load - error - contentLoaded method throws error', async () => {
     '',
     'TypeError: x is not a function'
   )
+})
+
+test('load - canceled', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  const mockModule = {
+    create: jest.fn(() => {
+      return {
+        x: 0,
+        version: 0,
+      }
+    }),
+    loadContent: jest.fn(async (state) => {
+      throw new CancelationError()
+    }),
+    contentLoaded: jest.fn(),
+  }
+  const getModule = async () => {
+    return mockModule
+  }
+  const state = ViewletManager.create(getModule, 'test', '', '', 0, 0, 0, 0)
+  await ViewletManager.load(state)
+  expect(mockModule.create).toHaveBeenCalledTimes(1)
+  expect(mockModule.loadContent).toHaveBeenCalledTimes(1)
+  expect(mockModule.loadContent).toHaveBeenCalledWith({ x: 0, version: 1 })
+  expect(mockModule.contentLoaded).not.toHaveBeenCalled()
+  expect(Viewlet.state.instances['test']).toBeUndefined()
 })

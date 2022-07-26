@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as Command from '../src/parts/Command/Command.js'
+import { CancelationError } from '../src/parts/Errors/CancelationError.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -136,6 +137,76 @@ test('loadContent', async () => {
     pathSeparator: '/',
     editingIndex: -1,
   })
+})
+
+test('loadContent - race condition - workspace changes while loading after getting path separator', async () => {
+  const state = ViewletExplorer.create()
+  Workspace.state.workspacePath = '/test'
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(async (method, ...params) => {
+    switch (method) {
+      case 'FileSystem.readDirWithFileTypes':
+        return [
+          {
+            name: 'file 1',
+            type: 'file',
+          },
+          {
+            name: 'file 2',
+            type: 'file',
+          },
+          {
+            name: 'file 3',
+            type: 'file',
+          },
+        ]
+      case 'FileSystem.getPathSeparator':
+        Workspace.state.workspacePath = '/test-2'
+        return '/'
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(
+    new CancelationError()
+  )
+})
+
+test('loadContent - race condition - workspace changes while loading after reading dirents', async () => {
+  const state = ViewletExplorer.create()
+  Workspace.state.workspacePath = '/test'
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(async (method, ...params) => {
+    switch (method) {
+      case 'FileSystem.readDirWithFileTypes':
+        Workspace.state.workspacePath = '/test-2'
+        return [
+          {
+            name: 'file 1',
+            type: 'file',
+          },
+          {
+            name: 'file 2',
+            type: 'file',
+          },
+          {
+            name: 'file 3',
+            type: 'file',
+          },
+        ]
+      case 'FileSystem.getPathSeparator':
+        return '/'
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(
+    new CancelationError()
+  )
 })
 
 // TODO race conditions can happen at several locations, find good pattern/architecture
@@ -4416,6 +4487,8 @@ test('updateRoot - new folder', async () => {
             type: 'directory',
           },
         ]
+      default:
+        throw new Error('unexpected method')
     }
   })
   expect(await ViewletExplorer.updateRoot()).toMatchObject({
