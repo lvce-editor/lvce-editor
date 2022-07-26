@@ -425,6 +425,10 @@ const ConditionErrors = {
     return `expected ${locator.selector} to be focused`
   },
   toHaveClass(locator, { className }) {
+    const [element] = querySelector(locator.selector)
+    if (!element) {
+      return `expected ${locator.selector} to have class ${className} but element was not found`
+    }
     return `expected ${locator.selector} to have class ${className}`
   },
   toBeHidden(locator) {
