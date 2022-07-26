@@ -9,9 +9,8 @@ export const state = {
   cache: Object.create(null),
 }
 
-const getGitHubFile = async (uri) => {
-  const relativeUri = uri.slice('github://'.length)
-  const parts = relativeUri.split('/')
+const getGitHubFile = async (path) => {
+  const parts = path.split('/')
   const [owner, repo, ...rest] = parts
   const relativePath = rest.join('/') // TODO many times split/join a bit unnecessary
   const githubFile = await GitHubRestApi.readFile(owner, repo, relativePath)
@@ -53,8 +52,7 @@ const toDirents = (githubResponse) => {
 }
 
 export const readDirWithFileTypes = async (path) => {
-  const relativeUri = path.slice('github://'.length)
-  const parts = relativeUri.split('/')
+  const parts = path.split('/')
   const [owner, repo, ...rest] = parts
   const relativePath = '/' + rest.join('/') // TODO many times split/join a bit unnecessary
   // TODO handle reading real directory
@@ -64,7 +62,7 @@ export const readDirWithFileTypes = async (path) => {
     'HEAD',
     relativePath
   )
-  state.cache[relativeUri] = githubDirents
+  state.cache[parts] = githubDirents
   const dirents = toDirents(githubDirents)
   return dirents
 }

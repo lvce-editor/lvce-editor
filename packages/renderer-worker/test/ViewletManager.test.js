@@ -256,3 +256,36 @@ test('load - canceled', async () => {
   expect(mockModule.contentLoaded).not.toHaveBeenCalled()
   expect(Viewlet.state.instances['test']).toBeUndefined()
 })
+
+test('load - shouldApplyNewState returns false', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  const mockModule = {
+    create: jest.fn(() => {
+      return {
+        x: 0,
+        version: 0,
+      }
+    }),
+    loadContent: jest.fn(async (state) => {
+      return {
+        ...state,
+        x: 1,
+      }
+    }),
+    contentLoaded: jest.fn(),
+    shouldApplyNewState() {
+      return false
+    },
+  }
+  const getModule = async () => {
+    return mockModule
+  }
+  const state = ViewletManager.create(getModule, 'test', '', '', 0, 0, 0, 0)
+  await ViewletManager.load(state)
+  expect(mockModule.create).toHaveBeenCalledTimes(1)
+  expect(mockModule.loadContent).toHaveBeenCalledTimes(1)
+  expect(mockModule.loadContent).toHaveBeenCalledWith({ x: 0, version: 1 })
+  expect(mockModule.contentLoaded).not.toHaveBeenCalled()
+  expect(Viewlet.state.instances['test']).toBeUndefined()
+})

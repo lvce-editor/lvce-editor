@@ -1,6 +1,7 @@
 // based on https://github.com/conwnet/github1s/blob/master/extensions/github1s/src/interfaces/github-api-rest.ts
 
 import * as Command from '../Command/Command.js'
+import * as Platform from '../Platform/Platform.js'
 
 const encodeFilePath = (filePath) => {
   return filePath
@@ -18,12 +19,14 @@ export const readGithubFileWithUrl = (githubUrl) => {
 }
 
 export const readFile = (owner, repo, path) => {
-  const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path}`
+  const githubApiUrl = Platform.getGithubApiUrl()
+  const url = `${githubApiUrl}/repos/${owner}/${repo}/contents/${path}`
   return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
 }
 
 export const readGitHubDirectory = (owner, repo, ref, path) => {
-  const url = `https://api.github.com/repos/${owner}/${repo}/git/trees/${ref}${encodeFilePath(
+  const githubApiUrl = Platform.getGithubApiUrl()
+  const url = `${githubApiUrl}/repos/${owner}/${repo}/git/trees/${ref}${encodeFilePath(
     path
   ).replace(/^\//, ':')}`
   return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)

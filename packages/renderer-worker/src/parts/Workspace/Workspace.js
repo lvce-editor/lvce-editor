@@ -83,8 +83,9 @@ const getResolvedRootFromRendererProcess = async (href) => {
     }
   }
   if (url.pathname.startsWith('/github')) {
+    const path = `github://${url.pathname.slice('/github'.length + 1)}`
     return {
-      path: `github://${href.slice('/github'.length + 1)}`,
+      path,
       homeDir: '',
       pathSeparator: '/',
       source: 'renderer-process',

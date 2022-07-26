@@ -1,14 +1,12 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js' // TODO should not import shared process -> use command.execute instead (maybe)
-import * as Workspace from '../Workspace/Workspace.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
-import * as Assert from '../Assert/Assert.js'
-import { CancelationError } from '../Errors/CancelationError.js'
+import * as Workspace from '../Workspace/Workspace.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -129,17 +127,11 @@ const getPathSeparator = (root) => {
   return FileSystem.getPathSeparator(root)
 }
 
-export const shouldApplyNewState = (oldState, newState) => {}
-
 export const loadContent = async (state) => {
   const root = Workspace.state.workspacePath
   console.log('explorer root', root)
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
   const dirents = await getTopLevelDirents(root, pathSeparator)
-  const root2 = Workspace.state.workspacePath
-  if (root !== root2) {
-    throw new CancelationError()
-  }
   return {
     ...state,
     root,
@@ -175,33 +167,49 @@ const getTopLevelDirents = (root, pathSeparator) => {
   })
 }
 
-export const contentLoadedEffects = (state) => {
-  // TODO why is this event emitted?
-  GlobalEventBus.emitEvent('dirents.update', state.dirents)
+// export const contentLoadedEffects = (state) => {
+//   // TODO why is this event emitted?
+//   GlobalEventBus.emitEvent('dirents.update', state.dirents)
 
-  // TODO create should not have side effects
-  // TODO dispose listener when explorer is disposed
-  // TODO hoist function
-  const handleLanguagesChanged = () => {
-    const state = Viewlet.getState('Explorer')
-    const newState = updateIcons(state)
-    Viewlet.setState('Explorer', newState)
-  }
-  GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
+//   // TODO create should not have side effects
+//   // TODO dispose listener when explorer is disposed
+//   // TODO hoist function
+//   const handleLanguagesChanged = () => {
+//     const state = Viewlet.getState('Explorer')
+//     const newState = updateIcons(state)
+//     Viewlet.setState('Explorer', newState)
+//   }
+//   GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
 
-  // TODO hoist function
-  GlobalEventBus.addListener('workspace.change', async () => {
+//   // TODO hoist function
+//   GlobalEventBus.addListener('workspace.change', async () => {
+//     const newRoot = Workspace.state.workspacePath
+//     const state1 = { ...state, root: newRoot }
+//     const newState = await loadContent(state1)
+//     await Viewlet.setState('Explorer', newState)
+//     // await contentLoaded(newState)
+//     // TODO
+//   })
+
+//   GlobalEventBus.addListener('iconTheme.change', async () => {
+//     await contentLoaded(state)
+//   })
+// }
+
+export const events = {
+  async 'languages.changed'(state) {
+    return updateIcons(state)
+  },
+  async 'workspace.change'(state) {
     const newRoot = Workspace.state.workspacePath
     const state1 = { ...state, root: newRoot }
     const newState = await loadContent(state1)
-    await Viewlet.setState('Explorer', newState)
-    // await contentLoaded(newState)
+    return newState
+  },
+  async 'iconTheme.change'(state) {
     // TODO
-  })
-
-  GlobalEventBus.addListener('iconTheme.change', async () => {
-    await contentLoaded(state)
-  })
+    return state
+  },
 }
 
 const getVisible = (state) => {
@@ -1189,6 +1197,13 @@ export const handleBlur = (state) => {
     ...state,
     focused: false,
   }
+}
+
+export const shouldApplyNewState = (newState, fn) => {
+  if (newState.root !== Workspace.state.workspacePath) {
+    return false
+  }
+  return true
 }
 
 export const hasFunctionalRender = true

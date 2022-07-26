@@ -8,3 +8,15 @@ test.skip('focus', () => {
   Viewlet.focus('Noop')
   expect(RendererProcess.state.send).toHaveBeenCalledWith([3027, 'Noop'])
 })
+
+test.skip('setState - shouldApplyNewState returns false', () => {
+  Viewlet.state.instances['test'] = {
+    factory: {
+      hasFunctionalRender: true,
+      render() {
+        return []
+      },
+    },
+    state: {},
+  }
+})
