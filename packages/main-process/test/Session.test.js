@@ -9,6 +9,14 @@ afterEach(() => {
 test('get', () => {
   const fakeSession = {
     x: 42,
+    webRequest: {
+      onHeadersReceived() {},
+    },
+    protocol: {
+      registerFileProtocol() {},
+    },
+    setPermissionRequestHandler() {},
+    setPermissionCheckHandler() {},
   }
   jest.mock('electron', () => {
     return {
@@ -31,7 +39,6 @@ test('get - error', () => {
     return {
       session: {
         fromPartition() {
-          console.log('from part')
           throw new TypeError(`x is not a function`)
         },
       },
