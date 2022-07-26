@@ -174,7 +174,7 @@ export const load = async (viewlet, focus = false) => {
       for (const [key, value] of Object.entries(module.events)) {
         const handleUpdate = async () => {
           const instance = Viewlet.state.instances[viewlet.id]
-          const newState = await Com(instance.state)
+          const newState = await value(instance.state)
           const commands = module.render(instance.state, newState)
           RendererProcess.invoke(
             /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
