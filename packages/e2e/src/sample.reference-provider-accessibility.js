@@ -30,7 +30,8 @@ import { getTmpDir, runWithExtension, test, expect } from './_testFrameWork.js'
 
 // TODO when there are no results or there is an error, the references list should be hidden
 
-test('sample.reference-provider-accessibility', async () => {
+// TODO test is flaky https://github.com/lvce-editor/lvce-editor/runs/7528507119?check_suite_focus=true
+test.skip('sample.reference-provider-accessibility', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(
     `${tmpDir}/test.js`,
