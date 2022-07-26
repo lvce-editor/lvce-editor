@@ -363,7 +363,10 @@ test.skip = (id, fn) => {
 
 const Conditions = {
   toBeVisible(element) {
-    return element.isVisible()
+    if (typeof element.isVisible === 'function') {
+      return element.isVisible()
+    }
+    return element.isConnected
   },
 
   toHaveText(element, { text }) {
