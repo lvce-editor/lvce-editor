@@ -185,6 +185,17 @@ export const load = async (viewlet, focus = false) => {
       }
     }
 
+    if (module.shouldApplyNewState) {
+      for (let i = 0; i < 2; i++) {
+        if (module.shouldApplyNewState(newState)) {
+          Viewlet.state.instances[viewlet.id].state = newState
+          break
+        }
+        newState = await module.loadContent(viewletState)
+      }
+      throw new Error('viewlet could not be updated')
+    }
+
     if (viewletState !== newState) {
       await module.contentLoaded(newState)
     }
