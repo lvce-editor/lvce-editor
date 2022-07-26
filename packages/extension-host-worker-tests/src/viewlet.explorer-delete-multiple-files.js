@@ -22,6 +22,7 @@ test('viewlet.explorer-delete-multiple-files', async () => {
 
   await explorer.click()
   await expect(explorer).toHaveClass('FocusOutline')
+  await expect(explorer).toBeFocused()
 
   await page.keyboard.press('ArrowUp')
   await expect(file3).toHaveClass('FocusOutline')
