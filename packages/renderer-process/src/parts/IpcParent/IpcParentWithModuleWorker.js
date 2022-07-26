@@ -87,7 +87,7 @@ export const create = async ({ url, name }) => {
       const IpcParentWithMessagePort = await import(
         './IpcParentWithMessagePort.js'
       )
-      return IpcParentWithMessagePort.create(url)
+      return IpcParentWithMessagePort.create({ url })
     }
     throw error
   }
