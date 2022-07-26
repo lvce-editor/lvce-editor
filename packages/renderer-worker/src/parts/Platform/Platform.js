@@ -188,3 +188,7 @@ export const getCachePath = () => {
 export const getExtensionHostWorkerUrl = () => {
   return '/packages/extension-host-worker/src/extensionHostWorkerMain.js'
 }
+
+export const getGithubApiUrl = () => {
+  return `https://api.github.com`
+}

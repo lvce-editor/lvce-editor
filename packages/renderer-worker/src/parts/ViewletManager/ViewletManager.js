@@ -2,7 +2,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as Assert from '../Assert/Assert.js'
 import { CancelationError } from '../Errors/CancelationError.js'
-
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 export const modules = Object.create(null)
 
 const VIEWLET_STATE_DEFAULT = 0
@@ -141,6 +141,9 @@ export const load = async (viewlet, focus = false) => {
     const oldVersion =
       viewletState.version === undefined ? undefined : ++viewletState.version
     let newState = await module.loadContent(viewletState)
+    if (module.shouldApplyNewState && !module.shouldApplyNewState(newState)) {
+      return
+    }
     if (viewletState.version !== oldVersion) {
       newState = viewletState
       console.log('version mismatch')
@@ -164,6 +167,23 @@ export const load = async (viewlet, focus = false) => {
     }
     // TODO race condition: viewlet state may have been updated again in the mean time
     state = VIEWLET_STATE_RENDERER_PROCESS_VIEWLET_LOADED
+
+    if (module.events) {
+      // TODO remove event listeners when viewlet is disposed
+      for (const [key, value] of Object.entries(module.events)) {
+        const handleUpdate = async () => {
+          const instance = Viewlet.state.instances[viewlet.id]
+          const newState = await value(instance.state)
+          const commands = module.render(instance.state, newState)
+          RendererProcess.invoke(
+            /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
+            /* commands */ commands
+          )
+        }
+        GlobalEventBus.addListener(key, handleUpdate)
+      }
+    }
+
     if (viewletState !== newState) {
       await module.contentLoaded(newState)
     }
