@@ -12,9 +12,6 @@ export const create = async (url, name) => {
   RendererProcess.state.ipc.onmessage = originalOnMessage
   let handleMessage
   return {
-    send(message) {
-      port.postMessage(message)
-    },
     get onmessage() {
       return handleMessage
     },
@@ -32,6 +29,9 @@ export const create = async (url, name) => {
         handleMessage = null
       }
       port.onmessage = handleMessage
+    },
+    send(message) {
+      port.postMessage(message)
     },
   }
 }

@@ -64,6 +64,7 @@ export const create = async ({ url, name }) => {
       const handleFirstError = async (event) => {
         cleanup()
         if (isFirefoxError(event.message)) {
+          event.preventDefault()
           reject(new Error('module workers are not supported in firefox'))
         } else {
           const actualErrorMessage = await tryToGetActualErrorMessage({
@@ -76,7 +77,32 @@ export const create = async ({ url, name }) => {
       worker.onmessage = handleFirstMessage
       worker.onerror = handleFirstError
     })
-    return worker
+    let handleMessage
+
+    return {
+      get onmessage() {
+        return handleMessage
+      },
+      set onmessage(listener) {
+        if (listener) {
+          handleMessage = (event) => {
+            // TODO why are some events not instance of message event?
+            if (event instanceof MessageEvent) {
+              const message = event.data
+              listener(message)
+            } else {
+              listener(event)
+            }
+          }
+        } else {
+          handleMessage = null
+        }
+        worker.onmessage = handleMessage
+      },
+      send(message) {
+        worker.postMessage(message)
+      },
+    }
   } catch (error) {
     if (
       error &&
