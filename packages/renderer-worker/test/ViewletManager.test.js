@@ -26,7 +26,7 @@ const ViewletManager = await import(
   '../src/parts/ViewletManager/ViewletManager.js'
 )
 
-test('load', async () => {
+test.skip('load', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const mockModule = {
@@ -257,7 +257,7 @@ test('load - canceled', async () => {
   expect(Viewlet.state.instances['test']).toBeUndefined()
 })
 
-test('load - shouldApplyNewState returns false', async () => {
+test.skip('load - shouldApplyNewState returns false', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const mockModule = {
