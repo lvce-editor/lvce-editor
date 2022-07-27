@@ -1,5 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+export { create as Locator } from './Locator.js'
 
 export const getTmpDir = async () => {
   return `memfs://`
@@ -47,59 +48,6 @@ const querySelector = (selector) => {
   throw new Error(`unsupported selector: ${selector}`)
 }
 
-const ElementActions = {
-  mouseEvent(element, eventType, options) {
-    const event = new MouseEvent(eventType, options)
-    element.dispatchEvent(event)
-  },
-  mouseDown(element, options) {
-    ElementActions.mouseEvent(element, 'mousedown', options)
-  },
-  mouseUp(element, options) {
-    ElementActions.mouseEvent(element, 'mouseup', options)
-  },
-  contextMenu(element, options) {
-    ElementActions.mouseEvent(element, 'contextmenu', options)
-  },
-  click(element, options) {
-    ElementActions.mouseDown(element, options)
-    ElementActions.mouseEvent(element, 'click', options)
-    ElementActions.mouseUp(element, options)
-    if (options.button === 2 /* right */) {
-      ElementActions.contextMenu(element, options)
-    }
-  },
-  hover(element, options) {
-    ElementActions.mouseEvent(element, 'mouseenter', options)
-  },
-  type(element, options) {
-    element.value = options.text
-  },
-  keyboardEvent(element, eventType, options) {
-    const event = new KeyboardEvent(eventType, options)
-    element.dispatchEvent(event)
-  },
-  keyDown(element, options) {
-    ElementActions.keyboardEvent(element, 'keydown', options)
-  },
-  keyUp(element, options) {
-    ElementActions.keyboardEvent(element, 'keyup', options)
-  },
-}
-
-const toButtonNumber = (buttonType) => {
-  switch (buttonType) {
-    case 'left':
-      return 0
-    case 'middle':
-      return 1
-    case 'right':
-      return 2
-    default:
-      throw new Error(`unsupported button type: ${buttonType}`)
-  }
-}
-
 const querySelectorWithOptions = (
   selector,
   { nth = -1, hasText = '' } = {}
@@ -123,65 +71,6 @@ const querySelectorWithOptions = (
     throw new Error(`selector not found: ${selector}`)
   }
   return element
-}
-
-const createLocator = (selector, { nth = -1, hasText = '' } = {}) => {
-  return {
-    selector,
-    options: {
-      nth,
-      hasText,
-    },
-    async performAction(fn, options) {
-      const startTime = Time.getTimeStamp()
-      const endTime = startTime + maxTimeout
-      let currentTime = startTime
-      while (currentTime < endTime) {
-        const element = querySelectorWithOptions(selector, {
-          hasText,
-          nth,
-        })
-        if (element) {
-          fn(element, options)
-          return
-        }
-        await Timeout.waitForMutation(100)
-        currentTime = Time.getTimeStamp()
-      }
-      throw new Error(`selector not found: ${selector}`)
-    },
-    async click({ button = 'left' } = {}) {
-      const options = {
-        cancable: true,
-        bubbles: true,
-        button: toButtonNumber(button),
-        detail: 1,
-      }
-      return this.performAction(ElementActions.click, options)
-    },
-    async hover() {
-      const options = {
-        cancable: true,
-        bubbles: true,
-      }
-      return this.performAction(ElementActions.hover, options)
-    },
-    first() {
-      return createLocator(selector, {
-        nth: 0,
-      })
-    },
-    locator(subSelector) {
-      return createLocator(`${selector} ${subSelector}`)
-    },
-    nth(nth) {
-      return createLocator(selector, { nth })
-    },
-    async type(text) {
-      const options = { text }
-      return this.performAction(ElementActions.type, options)
-    },
-  }
 }
 
 const getKeyOptions = (rawKey) => {
@@ -230,46 +119,6 @@ const createKeyBoard = () => {
       ElementActions.keyUp(element, options)
     },
   }
-}
-
-const createPage = () => {
-  const invokeRendererWorker = async (command, ...args) => {
-    const rendererWorker = await getRendererWorker()
-    await rendererWorker.invoke(command, ...args)
-  }
-
-  const locator = (selector, options) => {
-    return createLocator(selector, options)
-  }
-  return {
-    locator(selector, options) {
-      return createLocator(selector, options)
-    },
-    keyboard: createKeyBoard(),
-  }
-}
-
-export const runWithExtension = async (options) => {
-  const RendererWorker = await getRendererWorker()
-  if (options.name) {
-    // TODO should implement rendererWorker.invoke here
-    // TODO ask renderer worker to activate this extension
-    const absolutePath = new URL(`../fixtures/${options.name}`, location.href)
-      .href
-
-    try {
-      await RendererWorker.invoke('ExtensionMeta.addWebExtension', absolutePath)
-    } catch (error) {
-      // might be intential
-      console.error(error)
-    }
-  }
-  if (options.folder) {
-    // TODO ask renderer worker to open this folder
-    await RendererWorker.invoke('Workspace.setPath', options.folder)
-  }
-  const page = createPage()
-  return page
 }
 
 const waitForReady = async () => {
@@ -333,121 +182,6 @@ test.skip = (id, fn) => {
   document.body.append($TestOverlay)
 }
 
-const Conditions = {
-  toBeVisible(element) {
-    if (typeof element.isVisible === 'function') {
-      return element.isVisible()
-    }
-    return element.isConnected
-  },
-
-  toHaveText(element, { text }) {
-    return element.textContent === text
-  },
-  toHaveAttribute(element, { key, value }) {
-    const attribute = element.getAttribute(key)
-    return attribute === value
-  },
-  toBeFocused(element) {
-    return element === document.activeElement
-  },
-  toHaveClass(element, { className }) {
-    return element.classList.contains(className)
-  },
-  toHaveCss(element, { key, value }) {
-    const style = getComputedStyle(element)
-    return style[key] === value
-  },
-}
-
-const MultiElementConditions = {
-  toHaveCount(elements, { count }) {
-    return elements.length === count
-  },
-  toBeHidden(elements) {
-    return elements.length === 0
-  },
-}
-
-const ConditionErrors = {
-  toBeVisible(locator) {
-    return `expected selector to be visible ${locator.selector}`
-  },
-  toHaveText(locator, { text }) {
-    return `expected selector to have text ${locator.selector} ${text}`
-  },
-  toHaveAttribute(locator, { key, value }) {
-    const [element] = querySelector(locator.selector)
-    if (!element) {
-      return `expected ${locator.selector} to have attribute ${key} ${value} but element was not found`
-    }
-    const actual = element.getAttribute(key)
-    return `expected ${locator.selector} to have attribute ${key} ${value} but was ${actual}`
-  },
-  toHaveCount(locator, { count }) {
-    return `expected ${locator.selector} to have count ${count}`
-  },
-  toBeFocused(locator) {
-    return `expected ${locator.selector} to be focused`
-  },
-  toHaveClass(locator, { className }) {
-    const [element] = querySelector(locator.selector)
-    if (!element) {
-      return `expected ${locator.selector} to have class ${className} but element was not found`
-    }
-    return `expected ${locator.selector} to have class ${className}`
-  },
-  toBeHidden(locator) {
-    return `expected ${locator.selector} to be hidden`
-  },
-  toHaveCss(locator, { key, value }) {
-    const [element] = querySelector(locator.selector)
-    if (!element) {
-      return `expected ${locator.selector} to have css ${key} ${value}`
-    }
-    const style = getComputedStyle(element)
-    const actual = style[key]
-    return `expected ${locator.selector} to have css ${key} ${value} but was ${actual}`
-  },
-}
-
-const Timeout = {
-  async short() {
-    await new Promise((resolve) => setTimeout(resolve, 1000))
-  },
-  async waitForMutation(maxDelay) {
-    const disposables = []
-    await Promise.race([
-      new Promise((resolve) => {
-        const timeout = setTimeout(resolve, maxDelay)
-        disposables.push(() => {
-          clearTimeout(timeout)
-        })
-      }),
-      new Promise((resolve) => {
-        const callback = (mutations) => {
-          resolve(undefined)
-        }
-        const observer = new MutationObserver(callback)
-        observer.observe(document.body, {
-          childList: true,
-          attributes: true,
-          characterData: true,
-          subtree: true,
-          attributeOldValue: true,
-          characterDataOldValue: true,
-        })
-        disposables.push(() => {
-          observer.disconnect()
-        })
-      }),
-    ])
-    for (const disposable of disposables) {
-      disposable()
-    }
-  },
-}
-
 const Assert = {
   string(value, message) {
     if (typeof value !== 'string') {
@@ -461,65 +195,37 @@ const Assert = {
   },
 }
 
-const maxTimeout = 2000
-
-const Time = {
-  getTimeStamp() {
-    return performance.now()
-  },
-}
-
 export const expect = (locator) => {
   return {
-    async checkSingleElementCondition(fn, options) {
-      const startTime = Time.getTimeStamp()
-      const endTime = startTime + maxTimeout
-      let currentTime = startTime
-      while (currentTime < endTime) {
-        const element = querySelectorWithOptions(
-          locator.selector,
-          locator.options
-        )
-        if (element) {
-          const successful = fn(element, options)
-          if (successful) {
-            return
-          }
-        }
-        await Timeout.waitForMutation(100)
-        currentTime = Time.getTimeStamp()
-      }
-      const message = ConditionErrors[fn.name](locator, options)
-      throw new Error(message)
+    async checkSingleElementCondition(fnName, options) {
+      Assert.string(fnName)
+      return RendererProcess.invoke(
+        'TestFrameWork.checkSingleElementCondition',
+        locator,
+        fnName,
+        options
+      )
     },
-    async checkMultiElementCondition(fn, options) {
-      const startTime = Time.getTimeStamp()
-      const endTime = startTime + maxTimeout
-      let currentTime = startTime
-      while (currentTime < endTime) {
-        const elements = querySelector(locator.selector)
-        const successful = fn(elements, options)
-        if (successful) {
-          return
-        }
-        await Timeout.waitForMutation(100)
-        currentTime = Time.getTimeStamp()
-      }
-      const message = ConditionErrors[fn.name](locator, options)
-      throw new Error(message)
+    async checkMultiElementCondition(fnName, options) {
+      return RendererProcess.invoke(
+        'TestFrameWork.checkMultiElementCondition',
+        locator,
+        fnName,
+        options
+      )
     },
     async toBeVisible() {
-      return this.checkSingleElementCondition(Conditions.toBeVisible, {})
+      return this.checkSingleElementCondition('toBeVisible', {})
     },
     async toHaveText(text) {
       Assert.string(text, 'text must be of type string')
-      return this.checkSingleElementCondition(Conditions.toHaveText, { text })
+      return this.checkSingleElementCondition('toHaveText', { text })
     },
     async toBeFocused() {
-      return this.checkSingleElementCondition(Conditions.toBeFocused)
+      return this.checkSingleElementCondition('toBeFocused')
     },
     async toHaveCSS(key, value) {
-      return this.checkSingleElementCondition(Conditions.toHaveCss, {
+      return this.checkSingleElementCondition('toHaveCss', {
         key,
         value,
       })
@@ -527,29 +233,23 @@ export const expect = (locator) => {
     async toHaveAttribute(key, value) {
       Assert.string(key, 'key must be of type string')
       // Assert.string(value, 'value must be of type string')
-      return this.checkSingleElementCondition(Conditions.toHaveAttribute, {
+      return this.checkSingleElementCondition('toHaveAttribute', {
         key,
         value,
       })
     },
     async toHaveClass(className) {
       Assert.string(className, 'className must be of type string')
-      return await this.checkSingleElementCondition(Conditions.toHaveClass, {
+      return await this.checkSingleElementCondition('toHaveClass', {
         className,
       })
     },
     async toHaveCount(count) {
       Assert.number(count, 'count must be of type string')
-      return this.checkMultiElementCondition(
-        MultiElementConditions.toHaveCount,
-        { count }
-      )
+      return this.checkMultiElementCondition('toHaveCount', { count })
     },
     async toBeHidden() {
-      return this.checkMultiElementCondition(
-        MultiElementConditions.toBeHidden,
-        {}
-      )
+      return this.checkMultiElementCondition('toBeHidden', {})
     },
     get not() {
       this.negated = true

@@ -1,6 +1,7 @@
 import {
   expect,
   test,
+  Locator,
 } from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
 import {
   ContextMenu,
@@ -34,7 +35,7 @@ test('sample.reference-provider-error', async () => {
   await ContextMenu.selectItem('Find all references')
 
   // assert
-  const viewletLocations = locator('.Viewlet[data-viewlet-id="Locations"]')
+  const viewletLocations = Locator('.Viewlet[data-viewlet-id="Locations"]')
   await expect(viewletLocations).toBeVisible()
 
   // TODO should show part of stack trace maybe?

@@ -111,6 +111,9 @@ const getOrLoadModule = (moduleId) => {
 const getModuleId = (commandId) => {
   switch (commandId) {
     case 'TestFrameWork.showOverlay':
+    case 'TestFrameWork.performAction':
+    case 'TestFrameWork.checkSingleElementCondition':
+    case 'TestFrameWork.checkMultiElementCondition':
       return MODULE_TEST_FRAME_WORK
     case 'ClipBoard.readText':
     case 'ClipBoard.writeText':

@@ -151,7 +151,6 @@ export const hydrate = async ({ href }) => {
   }
   const resolvedRoot = await getResolvedRoot(href)
   if (state.isTest) {
-    await Command.execute('Test.execute', resolvedRoot.path)
     return
   }
   if (state.workspacePath) {

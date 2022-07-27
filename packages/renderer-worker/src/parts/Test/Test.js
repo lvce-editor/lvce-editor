@@ -1,6 +1,7 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Location from '../Location/Location.js'
 import { VError } from '../VError/VError.js'
+import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 
 export const state = {
   tests: [],
@@ -23,6 +24,7 @@ const importScript = async (url) => {
 export const execute = async () => {
   console.log('test/execute')
   // TODO
+  // 0. wait for page to be ready
   // 1. get script to import from renderer process (url or from html)
   const scriptUrl = await getScriptToImport()
   // 2. import that script
