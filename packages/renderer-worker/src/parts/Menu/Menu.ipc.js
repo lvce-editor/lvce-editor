@@ -11,4 +11,5 @@ export const __initialize__ = () => {
   Command.register('Menu.focusLast', Menu.focusLast)
   Command.register('Menu.focusIndex', Menu.focusIndex)
   Command.register('Menu.handleMouseEnter', Menu.handleMouseEnter)
+  Command.register('Menu.selectItem', Menu.selectItem)
 }

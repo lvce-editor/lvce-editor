@@ -3,24 +3,26 @@ export const state = {
   phase: 0,
 }
 
-export const PHASE_ZERO = 0
-export const PHASE_ONE = 1
-export const PHASE_TWO = 2
-export const PHASE_THREE = 3
-export const PHASE_FOUR = 4
-export const PHASE_FIVE = 5
-export const PHASE_SIX = 6
-export const PHASE_SEVEN = 7
-export const PHASE_EIGHT = 8
-export const PHASE_NINE = 9
-export const PHASE_TEN = 10
-export const PHASE_ELEVEN = 11
-export const PHASE_TWELVE = 12
-export const PHASE_THIRTEEN = 13
-export const PHASE_FOURTEEN = 14
-export const PHASE_FIFTEEN = 15
-export const PHASE_SIXTEEN = 16
-export const PHASE_SEVENTEEN = 17
+export const Phase = {
+  Zero: 0,
+  One: 1,
+  Two: 2,
+  Three: 3,
+  Four: 4,
+  Five: 5,
+  Six: 6,
+  Seven: 7,
+  Eight: 8,
+  Nine: 9,
+  Ten: 10,
+  Eleven: 11,
+  Twelve: 12,
+  Thirteen: 13,
+  Fourteen: 14,
+  Fifteen: 15,
+  Sixteen: 16,
+  SevenTeen: 17,
+}
 
 export const once = (event, listener) => {
   if (state.phase >= event) {
@@ -38,7 +40,7 @@ export const mark = (event) => {
     listener()
   }
   state.phase = event
-  if (event === PHASE_TWELVE) {
+  if (event === Phase.Twelve) {
     state.listenerMap = Object.create(null)
   }
 }

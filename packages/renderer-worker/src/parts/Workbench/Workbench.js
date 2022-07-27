@@ -34,13 +34,13 @@ const handleError = async (event) => {
 export const startup = async (config) => {
   onunhandledrejection = handleUnhandledRejection
   onerror = handleError
-  LifeCycle.mark(LifeCycle.PHASE_ZERO)
+  LifeCycle.mark(LifeCycle.Phase.Zero)
 
   Performance.mark('willStartupWorkbench')
   await RendererProcess.listen()
   await SharedProcess.listen()
 
-  LifeCycle.mark(LifeCycle.PHASE_ONE)
+  LifeCycle.mark(LifeCycle.Phase.One)
 
   const initData = await InitData.getInitData()
   console.log({ initData })
@@ -54,37 +54,37 @@ export const startup = async (config) => {
   await SessionReplay.startRecording()
   Performance.mark('code/didLoadSessionReplay')
 
-  LifeCycle.mark(LifeCycle.PHASE_TWO)
+  LifeCycle.mark(LifeCycle.Phase.Twelve)
 
   Performance.mark('code/willOpenWorkspace')
   await Workspace.hydrate(initData.Location)
   Performance.mark('code/didOpenWorkspace')
 
-  LifeCycle.mark(LifeCycle.PHASE_THREE)
+  LifeCycle.mark(LifeCycle.Phase.Three)
 
   Performance.mark('code/willLoadColorTheme')
   await ColorTheme.hydrate()
   Performance.mark('code/didLoadColorTheme')
 
-  LifeCycle.mark(LifeCycle.PHASE_FOUR)
+  LifeCycle.mark(LifeCycle.Phase.Four)
 
   Performance.mark('code/willShowLayout')
   await Layout.hydrate(initData)
   Performance.mark('code/didShowLayout')
 
-  LifeCycle.mark(LifeCycle.PHASE_FIVE)
+  LifeCycle.mark(LifeCycle.Phase.Five)
 
   Performance.mark('code/willLoadMain')
   await Layout.showMain()
   Performance.mark('code/didLoadMain')
 
-  LifeCycle.mark(LifeCycle.PHASE_SIX)
+  LifeCycle.mark(LifeCycle.Phase.Six)
 
   Performance.mark('code/willLoadKeyBindings')
   await KeyBindings.hydrate()
   Performance.mark('code/didLoadKeyBindings')
 
-  LifeCycle.mark(LifeCycle.PHASE_SEVEN)
+  LifeCycle.mark(LifeCycle.Phase.Seven)
 
   Performance.mark('code/willLoadSideBar')
   if (Layout.state.sideBarVisible) {
@@ -92,7 +92,7 @@ export const startup = async (config) => {
   }
   Performance.mark('code/didLoadSideBar')
 
-  LifeCycle.mark(LifeCycle.PHASE_EIGHT)
+  LifeCycle.mark(LifeCycle.Phase.Eight)
 
   Performance.mark('code/willLoadPanel')
   if (Layout.state.panelVisible) {
@@ -100,7 +100,7 @@ export const startup = async (config) => {
   }
   Performance.mark('code/didLoadPanel')
 
-  LifeCycle.mark(LifeCycle.PHASE_NINE)
+  LifeCycle.mark(LifeCycle.Phase.Nine)
 
   Performance.mark('code/willLoadActivityBar')
   if (Layout.state.activityBarVisible) {
@@ -108,7 +108,7 @@ export const startup = async (config) => {
   }
   Performance.mark('code/didLoadActivityBar')
 
-  LifeCycle.mark(LifeCycle.PHASE_TEN)
+  LifeCycle.mark(LifeCycle.Phase.Ten)
 
   Performance.mark('code/willLoadStatusBar')
   if (Layout.state.statusBarVisible) {
@@ -116,18 +116,18 @@ export const startup = async (config) => {
   }
   Performance.mark('code/didLoadStatusBar')
 
-  LifeCycle.mark(LifeCycle.PHASE_ELEVEN)
+  LifeCycle.mark(LifeCycle.Phase.Eleven)
 
   Performance.mark('code/willLoadIconTheme')
   // TODO check preferences if icon theme is enabled
   await IconTheme.hydrate()
   Performance.mark('code/didLoadIconTheme')
 
-  LifeCycle.mark(LifeCycle.PHASE_TWELVE)
+  LifeCycle.mark(LifeCycle.Phase.Twelve)
 
-  LifeCycle.mark(LifeCycle.PHASE_THIRTEEN)
+  LifeCycle.mark(LifeCycle.Phase.Thirteen)
 
-  LifeCycle.mark(LifeCycle.PHASE_FOURTEEN)
+  LifeCycle.mark(LifeCycle.Phase.Fourteen)
 
   Performance.mark('code/willLoadTitleBar')
   if (Layout.state.titleBarVisible) {
@@ -135,7 +135,7 @@ export const startup = async (config) => {
   }
   Performance.mark('code/didLoadTitleBar')
 
-  LifeCycle.mark(LifeCycle.PHASE_FIFTEEN)
+  LifeCycle.mark(LifeCycle.Phase.Fifteen)
 
   if (!Workspace.isTest()) {
     Performance.mark('code/willLoadSaveState')
@@ -143,7 +143,7 @@ export const startup = async (config) => {
     Performance.mark('code/didLoadSaveState')
   }
 
-  LifeCycle.mark(LifeCycle.PHASE_SIXTEEN)
+  LifeCycle.mark(LifeCycle.Phase.Sixteen)
 
   Performance.mark('code/willLoadRecentlyOpened')
   await RecentlyOpened.hydrate()

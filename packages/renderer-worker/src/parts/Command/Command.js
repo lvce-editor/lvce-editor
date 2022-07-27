@@ -66,6 +66,7 @@ const MODULE_SESSION_REPLAY = 78
 const MODULE_DOWNLOAD = 79
 const MODULE_EXTENSION_HOST_CORE = 80
 const MODULE_EXTENSION_META = 81
+const MODULE_TEST = 82
 
 export const state = {
   commands: Object.create(null),
@@ -200,6 +201,8 @@ const loadModule = (moduleId) => {
       return import('../ExtensionHost/ExtensionHostCore.ipc.js')
     case MODULE_EXTENSION_META:
       return import('../ExtensionMeta/ExtensionMeta.ipc.js')
+    case MODULE_TEST:
+      return import('../Test/Test.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }
@@ -246,6 +249,8 @@ const getModuleId = (commandId) => {
     case 'Main.closeTabsRight':
     case 'Main.closeTabsLeft':
       return MODULE_MAIN
+    case 'Test.execute':
+      return MODULE_TEST
     case 'Explorer.acceptNewFile':
     case 'Explorer.acceptRename':
     case 'Explorer.cancelNewFile':
@@ -685,6 +690,7 @@ const getModuleId = (commandId) => {
     case 'Menu.focusLast':
     case 'Menu.focusIndex':
     case 'Menu.handleMouseEnter':
+    case 'Menu.selectItem':
       return MODULE_MENU
     case 'ViewletProblems.focusIndex':
       return MODULE_VIEWLET_PROBLEMS

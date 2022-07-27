@@ -1,5 +1,5 @@
-const URL_RENDERER_WORKER =
-  '/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js'
+import * as Command from '../Command/Command.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const getTmpDir = async () => {
   return `memfs://`
@@ -246,52 +246,10 @@ const createPage = () => {
       return createLocator(selector, options)
     },
     keyboard: createKeyBoard(),
-    ContextMenu: {
-      async selectItem(text) {
-        const contextMenuItem = locator('.MenuItem', {
-          hasText: text,
-        })
-        await contextMenuItem.click()
-      },
-    },
-    Editor: {
-      async setCursor(rowIndex, columnIndex) {
-        await invokeRendererWorker('Editor.cursorSet', [
-          { rowIndex, columnIndex },
-        ])
-      },
-      async openCompletion() {
-        await invokeRendererWorker('Editor.openCompletion')
-      },
-      async openEditorContextMenu() {
-        await invokeRendererWorker('Editor.handleContextMenu', 0, 0)
-      },
-    },
-    Explorer: {
-      async openContextMenu(index) {
-        await invokeRendererWorker('Explorer.handleContextMenu', 0, 0)
-      },
-    },
-    Main: {
-      async openUri(uri) {
-        await invokeRendererWorker('Main.openUri', uri)
-      },
-    },
   }
-}
-
-const getRendererWorker = async () => {
-  const RendererWorker = await import(URL_RENDERER_WORKER)
-  if (typeof RendererWorker.send !== 'function') {
-    throw new Error('RendererWorker could not be loaded')
-  }
-  return RendererWorker
 }
 
 export const runWithExtension = async (options) => {
-  await new Promise((resolve) => {
-    requestIdleCallback(resolve)
-  })
   const RendererWorker = await getRendererWorker()
   if (options.name) {
     // TODO should implement rendererWorker.invoke here
@@ -315,18 +273,6 @@ export const runWithExtension = async (options) => {
 }
 
 const waitForReady = async () => {
-  const entries = performance.getEntriesByType('measure')
-  if (entries.includes(11)) {
-    return
-  }
-
-  await new Promise((resolve) => {})
-  const callback = (event) => {
-    console.log(event)
-  }
-  const observer = new PerformanceObserver(callback)
-  observer.observe({ entryTypes: ['measure'] })
-
   //   const startTime = Time.getTimeStamp()
   //   const endTime = startTime + maxTimeout
   //   let currentTime = startTime
@@ -341,19 +287,6 @@ const waitForReady = async () => {
   //     currentTime = Time.getTimeStamp()
   //   }
   // throw new Error(`Main element not found`)
-}
-
-const createOverlay = () => {
-  const $TestOverlay = document.createElement('div')
-  $TestOverlay.id = 'TestOverlay'
-  $TestOverlay.style.position = 'fixed'
-  $TestOverlay.style.bottom = '0px'
-  $TestOverlay.style.left = '0px'
-  $TestOverlay.style.right = '0px'
-  $TestOverlay.style.height = '20px'
-  $TestOverlay.style.whiteSpace = 'nowrap'
-  $TestOverlay.style.contain = 'strict'
-  return $TestOverlay
 }
 
 export const test = async (name, fn) => {
@@ -373,17 +306,24 @@ export const test = async (name, fn) => {
     error.message = `Test failed: ${name}: ${error.message}`
     console.error(error)
   }
-  const $TestOverlay = createOverlay()
+  let state
+  let background
+  let text
   if (_error) {
-    $TestOverlay.dataset.state = 'fail'
-    $TestOverlay.style.background = 'red'
-    $TestOverlay.textContent = `test failed: ${_error}`
+    state = 'fail'
+    background = 'red'
+    text = `test failed: ${_error}`
   } else {
-    $TestOverlay.style.background = 'green'
-    $TestOverlay.textContent = `test passed in ${_duration}`
-    $TestOverlay.dataset.state = 'pass'
+    background = 'green'
+    text = `test passed in ${_duration}`
+    state = 'pass'
   }
-  document.body.append($TestOverlay)
+  await RendererProcess.invoke(
+    'TestFrameWork.showOverlay',
+    state,
+    background,
+    text
+  )
 }
 
 test.skip = (id, fn) => {
@@ -616,14 +556,4 @@ export const expect = (locator) => {
       return this
     },
   }
-}
-
-export const writeFile = async (path, content) => {
-  const RendererWorker = await getRendererWorker()
-  await RendererWorker.invoke('FileSystem.writeFile', path, content)
-}
-
-export const mkdir = async (path) => {
-  const RendererWorker = await getRendererWorker()
-  await RendererWorker.invoke('FileSystem.mkdir', path)
 }
