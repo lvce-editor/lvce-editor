@@ -138,7 +138,6 @@ export const loadContent = async (state) => {
     dirents,
     maxLineY: Math.round(state.height / ITEM_HEIGHT),
     pathSeparator,
-    version: state.version + 1,
   }
 }
 
@@ -711,18 +710,17 @@ const handleClickDirectory = async (state, dirent, index) => {
   const dirents = await getChildDirents(state.root, state.pathSeparator, dirent)
   const state2 = Viewlet.getState('Explorer')
   if (!state2) {
-    // canceled
-    return
+    return state
   }
   // TODO use Viewlet.getState here and check if it exists
-  const newIndex = state.dirents.indexOf(dirent)
+  const newIndex = state2.dirents.indexOf(dirent)
   // TODO if viewlet is disposed or root has changed, return
   if (newIndex === -1) {
     console.log('[explorer] dirent not found')
     return state
   }
   // console.log(state.dirents[index] === dirent)
-  const newDirents = [...state.dirents]
+  const newDirents = [...state2.dirents]
   newDirents.splice(newIndex + 1, 0, ...dirents)
   dirent.type = 'directory-expanded'
   dirent.icon = IconTheme.getIcon(dirent)
@@ -869,7 +867,7 @@ export const handleArrowRight = async (state) => {
       }
       break
     default:
-      return state
+      throw new Error(`unsupported file type ${dirent.type}`)
   }
 }
 
