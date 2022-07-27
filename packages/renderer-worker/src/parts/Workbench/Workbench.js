@@ -139,7 +139,7 @@ export const startup = async (config) => {
   LifeCycle.mark(LifeCycle.Phase.Fifteen)
 
   if (Workspace.isTest()) {
-    await Command.execute('Test.execute', initData.href)
+    await Command.execute('Test.execute', initData.Location.href)
   } else {
     Performance.mark('code/willLoadSaveState')
     await SaveState.hydrate()
