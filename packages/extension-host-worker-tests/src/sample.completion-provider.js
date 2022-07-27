@@ -1,22 +1,31 @@
 import {
-  runWithExtension,
-  test,
   expect,
-  getTmpDir,
-  writeFile,
-} from './_testFrameWork.js'
+  Locator,
+  test,
+} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
+import {
+  Editor,
+  Extension,
+  FileSystem,
+  Main,
+  Workspace,
+} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
 
 test('sample.completion-provider', async () => {
   // arrange
-  const tmpDir = await getTmpDir()
-  await writeFile(
+  const tmpDir = await FileSystem.getTmpDir()
+  await FileSystem.writeFile(
     `${tmpDir}/test.xyz`,
     ['   line   ', '   line   ', '   line   '].join('\n')
   )
-  const { Main, Editor, locator } = await runWithExtension({
-    name: 'sample.completion-provider',
-    folder: tmpDir,
-  })
+
+  await Workspace.setPath(tmpDir)
+  await Extension.addWebExtension(
+    new URL(
+      '../fixtures/sample.completion-provider',
+      import.meta.url
+    ).toString()
+  )
 
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
@@ -24,7 +33,7 @@ test('sample.completion-provider', async () => {
   await Editor.openCompletion()
 
   // assert
-  const completions = locator('#Completions')
+  const completions = Locator('#Completions')
   await expect(completions).toBeVisible()
   // TODO widget is not positioned correctly, especially with variable width fonts and unicode characters
   // await expect(completions).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 90, 75)')

@@ -76,9 +76,9 @@ export const performAction = async (locator, fnName, options) => {
   let currentTime = startTime
   const fn = ElementActions[fnName]
   while (currentTime < endTime) {
-    const element = QuerySelector.querySelectorWithOptions(locator.selector, {
-      hasText: locator.hasText,
-      nth: locator.nth,
+    const element = QuerySelector.querySelectorWithOptions(locator._selector, {
+      hasText: locator._hasText,
+      nth: locator._nth,
     })
     if (element) {
       fn(element, options)
@@ -95,10 +95,10 @@ export const checkSingleElementCondition = async (locator, fnName, options) => {
   let currentTime = startTime
   const fn = SingleElementConditions[fnName]
   while (currentTime < endTime) {
-    const element = QuerySelector.querySelectorWithOptions(
-      locator.selector,
-      locator.options
-    )
+    const element = QuerySelector.querySelectorWithOptions(locator._selector, {
+      hasText: locator._hasText,
+      nth: locator._nth,
+    })
     if (element) {
       const successful = fn(element, options)
       if (successful) {
@@ -118,7 +118,7 @@ export const checkMultiElementCondition = async (locator, fnName, options) => {
   let currentTime = startTime
   const fn = MultiElementConditions[fnName]
   while (currentTime < endTime) {
-    const elements = QuerySelector.querySelector(locator.selector)
+    const elements = QuerySelector.querySelector(locator._selector)
     const successful = fn(elements, options)
     if (successful) {
       return
