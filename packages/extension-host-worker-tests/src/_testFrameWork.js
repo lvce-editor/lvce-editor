@@ -606,12 +606,10 @@ export const expect = (locator) => {
 
 export const writeFile = async (path, content) => {
   const RendererWorker = await getRendererWorker()
-  await new Promise((resolve) => requestIdleCallback(resolve))
-  RendererWorker.send('FileSystem.writeFile', path, content)
+  await RendererWorker.invoke('FileSystem.writeFile', path, content)
 }
 
 export const mkdir = async (path) => {
   const RendererWorker = await getRendererWorker()
-  await new Promise((resolve) => requestIdleCallback(resolve))
-  RendererWorker.send('FileSystem.mkdir', path)
+  await RendererWorker.invoke('FileSystem.mkdir', path)
 }

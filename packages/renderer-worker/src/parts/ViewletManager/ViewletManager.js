@@ -6,12 +6,14 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 
 export const modules = Object.create(null)
 
-const VIEWLET_STATE_DEFAULT = 0
-const VIEWLET_STATUS_MODULE_LOADED = 1
-const VIEWLET_STATE_CONTENT_LOADED = 2
-const VIEWLET_STATE_RENDERER_PROCESS_VIEWLET_LOADED = 3
-const VIEWLET_STATE_CONTENT_RENDERED = 4
-const VIEWLET_STATE_APPENDED = 5
+const ViewletState = {
+  Default: 0,
+  ModuleLoaded: 1,
+  ContentLoaded: 2,
+  RendererProcessViewletLoaded: 3,
+  ContentRendered: 4,
+  Appended: 5,
+}
 
 export const getModule = (id) => {
   console.assert(typeof id === 'string')
@@ -117,7 +119,7 @@ export const load = async (viewlet, focus = false) => {
     console.log('viewlet must be empty')
     throw new Error('viewlet must be empty')
   }
-  let state = VIEWLET_STATE_DEFAULT
+  let state = ViewletState.Default
   let module
   try {
     viewlet.type = 1
@@ -129,7 +131,7 @@ export const load = async (viewlet, focus = false) => {
     if (viewlet.disposed) {
       return
     }
-    state = VIEWLET_STATUS_MODULE_LOADED
+    state = ViewletState.ModuleLoaded
     const viewletState = module.create(
       viewlet.id,
       viewlet.uri,
@@ -142,19 +144,6 @@ export const load = async (viewlet, focus = false) => {
     const oldVersion =
       viewletState.version === undefined ? undefined : ++viewletState.version
     let newState = await module.loadContent(viewletState)
-    outer: if (module.shouldApplyNewState) {
-      for (let i = 0; i < 2; i++) {
-        if (module.shouldApplyNewState(newState)) {
-          Viewlet.state.instances[viewlet.id] = {
-            state: newState,
-            factory: module,
-          }
-          break outer
-        }
-        newState = await module.loadContent(viewletState)
-      }
-      throw new Error('viewlet could not be updated')
-    }
     if (viewletState.version !== oldVersion) {
       newState = viewletState
       console.log('version mismatch')
@@ -164,9 +153,7 @@ export const load = async (viewlet, focus = false) => {
     if (viewlet.disposed) {
       return
     }
-    state = VIEWLET_STATE_CONTENT_LOADED
-
-    Viewlet.state.instances[viewlet.id] = { state: newState, factory: module }
+    state = ViewletState.ContentLoaded
 
     await RendererProcess.invoke(
       /* Viewlet.load */ 'Viewlet.load',
@@ -177,30 +164,17 @@ export const load = async (viewlet, focus = false) => {
       return
     }
     // TODO race condition: viewlet state may have been updated again in the mean time
-    state = VIEWLET_STATE_RENDERER_PROCESS_VIEWLET_LOADED
-
-    if (module.events) {
-      // TODO remove event listeners when viewlet is disposed
-      for (const [key, value] of Object.entries(module.events)) {
-        const handleUpdate = async () => {
-          const instance = Viewlet.state.instances[viewlet.id]
-          const newState = await value(instance.state)
-          const commands = module.render(instance.state, newState)
-          RendererProcess.invoke(
-            /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
-            /* commands */ commands
-          )
-        }
-        GlobalEventBus.addListener(key, handleUpdate)
-      }
-    }
+    state = ViewletState.RendererProcessViewletLoaded
 
     outer: if (module.shouldApplyNewState) {
       for (let i = 0; i < 2; i++) {
         console.log('try', i)
         if (module.shouldApplyNewState(newState)) {
           console.log('set state', viewlet.id, newState)
-          Viewlet.state.instances[viewlet.id].state = newState
+          Viewlet.state.instances[viewlet.id] = {
+            state: newState,
+            factory: module,
+          }
           break outer
         }
         newState = await module.loadContent(viewletState)
@@ -214,7 +188,7 @@ export const load = async (viewlet, focus = false) => {
 
     if (module.hasFunctionalRender) {
       const commands = module.render(viewletState, newState)
-      RendererProcess.invoke(
+      await RendererProcess.invoke(
         /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
         /* commands */ commands
       )
@@ -227,7 +201,7 @@ export const load = async (viewlet, focus = false) => {
       // TODO unload the module from renderer process
       return
     }
-    state = VIEWLET_STATE_CONTENT_RENDERED
+    state = ViewletState.ContentRendered
     if (viewlet.parentId) {
       await RendererProcess.invoke(
         /* Viewlet.append */ 'Viewlet.appendViewlet',
@@ -236,7 +210,52 @@ export const load = async (viewlet, focus = false) => {
         /* focus */ focus
       )
     }
-    state = VIEWLET_STATE_APPENDED
+    state = ViewletState.Appended
+
+    // TODO race condition
+    // outer: if (module.shouldApplyNewState) {
+    //   for (let i = 0; i < 2; i++) {
+    //     if (module.shouldApplyNewState(newState)) {
+    //       Viewlet.state.instances[viewlet.id] = {
+    //         state: newState,
+    //         factory: module,
+    //       }
+    //       break outer
+    //     }
+    //     newState = await module.loadContent(viewletState)
+    //   }
+    //   throw new Error('viewlet could not be updated')
+    // }
+
+    if (module.events) {
+      // TODO remove event listeners when viewlet is disposed
+      for (const [key, value] of Object.entries(module.events)) {
+        const handleUpdate = async () => {
+          const instance = Viewlet.state.instances[viewlet.id]
+          const newState = await value(instance.state)
+          console.log(key, { newState })
+          if (!module.shouldApplyNewState(newState)) {
+            console.log('[viewlet manager] return', newState)
+
+            return
+          }
+          const commands = module.render(instance.state, newState)
+          instance.state = newState
+          console.log(
+            '[viewlet manager] handle update',
+            viewlet.id,
+            key,
+            newState
+          )
+          console.log({ commands })
+          await RendererProcess.invoke(
+            /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
+            /* commands */ commands
+          )
+        }
+        GlobalEventBus.addListener(key, handleUpdate)
+      }
+    }
 
     if (viewlet.disposed) {
       // TODO unload the module from renderer process
@@ -252,13 +271,13 @@ export const load = async (viewlet, focus = false) => {
       if (module && module.handleError) {
         return await module.handleError(error)
       }
-      if (state < VIEWLET_STATE_RENDERER_PROCESS_VIEWLET_LOADED) {
+      if (state < ViewletState.RendererProcessViewletLoaded) {
         await RendererProcess.invoke(
           /* Viewlet.load */ 'Viewlet.load',
           /* id */ viewlet.id
         )
       }
-      if (state < VIEWLET_STATE_APPENDED && viewlet.parentId) {
+      if (state < ViewletState.Appended && viewlet.parentId) {
         await RendererProcess.invoke(
           /* Viewlet.append */ 'Viewlet.appendViewlet',
           /* parentId */ viewlet.parentId,

@@ -19,6 +19,7 @@ export const state = {
  * @param {string|undefined} path
  */
 export const setPath = async (path) => {
+  console.log('[workspace] set path', path)
   // TODO not in electron
   state.workspacePath = path
   await onWorkspaceChange()
