@@ -5,9 +5,9 @@ export const create = (selector, options) => {
 }
 
 const Locator = function (selector, { nth = -1, hasText = '' } = {}) {
-  this.selector = selector
-  this.nth = nth
-  this.hasText = hasText
+  this._selector = selector
+  this._nth = nth
+  this._hasText = hasText
 }
 
 const performAction = async (locator, fnName, options) => {
@@ -51,17 +51,17 @@ Locator.prototype.hover = async () => {
 }
 
 Locator.prototype.first = function () {
-  return Locator(this.selector, {
+  return create(this._selector, {
     nth: 0,
   })
 }
 
 Locator.prototype.locator = function (subSelector) {
-  return Locator(`${this.selector} ${subSelector}`)
+  return create(`${this._selector} ${subSelector}`)
 }
 
 Locator.prototype.nth = function (nth) {
-  return Locator(this.selector, { nth })
+  return create(this._selector, { nth })
 }
 
 Locator.prototype.type = async (text) => {
