@@ -25,4 +25,5 @@ export const __initialize__ = () => {
   Command.register('Developer.openLogsFolder', Developer.openLogsFolder)
   Command.register('Developer.openCacheFolder', Developer.openCacheFolder)
   Command.register('Developer.openProcessExplorer', Developer.openProcessExplorer)
+  Command.register('Developer.downloadViewletState', Developer.downloadViewletState)
 }

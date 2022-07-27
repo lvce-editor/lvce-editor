@@ -161,6 +161,10 @@
     "label": "Developer: Show Memory Usage"
   },
   {
+    "id": "Developer.downloadViewletState",
+    "label": "Developer: Download Viewlets"
+  },
+  {
     "id": "Developer.allocateMemoryInSharedProcess",
     "label": "Developer: Allocate Memory in Shared Process"
   },

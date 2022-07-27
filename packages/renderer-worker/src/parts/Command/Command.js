@@ -220,6 +220,7 @@ const getOrLoadModule = (moduleId) => {
 const getModuleId = (commandId) => {
   switch (commandId) {
     case 'Download.downloadFile':
+    case 'Download.downloadJson':
       return MODULE_DOWNLOAD
     case 'ExtensionHost.startWebExtensionHost':
     case 'ExtensionHost.loadWebExtension':
@@ -409,6 +410,7 @@ const getModuleId = (commandId) => {
     case 'Developer.openLogsFolder':
     case 'Developer.openCacheFolder':
     case 'Developer.openProcessExplorer':
+    case 'Developer.downloadViewletState':
       return MODULE_DEVELOPER
     case 'ViewletExtensions.openSuggest':
     case 'ViewletExtensions.closeSuggest':
@@ -571,6 +573,7 @@ const getModuleId = (commandId) => {
     case 'Dialog.handleClick':
       return MODULE_DIALOG
     case 2133:
+    case 'Viewlet.getAllStates':
       return MODULE_VIEWLET
     case 2260:
       return MODULE_VIEWLET_STATUS_BAR

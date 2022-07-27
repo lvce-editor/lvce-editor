@@ -7,20 +7,24 @@ import {
 } from './_testFrameWork.js'
 
 test('sample.completion-provider', async () => {
+  // arrange
   const tmpDir = await getTmpDir()
   await writeFile(
     `${tmpDir}/test.xyz`,
     ['   line   ', '   line   ', '   line   '].join('\n')
   )
-  const page = await runWithExtension({
+  const { Main, Editor, locator } = await runWithExtension({
     name: 'sample.completion-provider',
     folder: tmpDir,
   })
-  await page.openUri(`${tmpDir}/test.xyz`)
-  await page.setCursor(0, 0)
-  await page.openCompletion()
 
-  const completions = page.locator('#Completions')
+  // act
+  await Main.openUri(`${tmpDir}/test.xyz`)
+  await Editor.setCursor(0, 0)
+  await Editor.openCompletion()
+
+  // assert
+  const completions = locator('#Completions')
   await expect(completions).toBeVisible()
   // TODO widget is not positioned correctly, especially with variable width fonts and unicode characters
   // await expect(completions).toHaveCSS('transform', 'matrix(1, 0, 0, 1, 90, 75)')

@@ -13,15 +13,15 @@ test('sample.completion-provider-error-invalid-return-value-number', async () =>
     `export const add = () => {}
 `
   )
-  const page = await runWithExtension({
+  const { Main, Editor, locator } = await runWithExtension({
     name: 'sample.completion-provider-error-invalid-return-value-number',
     folder: tmpDir,
   })
-  await page.openUri(`${tmpDir}/test.xyz`)
-  await page.setCursor(0, 0)
-  await page.openCompletion()
+  await Main.openUri(`${tmpDir}/test.xyz`)
+  await Editor.setCursor(0, 0)
+  await Editor.openCompletion()
 
-  const overlayMessage = page.locator('.EditorOverlayMessage')
+  const overlayMessage = locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
   // TODO maybe have a setting to handle this kind of error without showing a popup,
   // just handle undefined value gracefully

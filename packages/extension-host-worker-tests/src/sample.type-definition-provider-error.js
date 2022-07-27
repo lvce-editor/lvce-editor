@@ -7,6 +7,7 @@ import {
 } from './_testFrameWork.js'
 
 test('sample.type-definition-provider-error', async () => {
+  // arrange
   const tmpDir = await getTmpDir()
   await writeFile(
     `${tmpDir}/test.xyz`,
@@ -17,16 +18,19 @@ test('sample.type-definition-provider-error', async () => {
 add(1, 2)
     `
   )
-  const page = await runWithExtension({
+  const { Main, Editor, ContextMenu, locator } = await runWithExtension({
     name: 'sample.type-definition-provider-error',
     folder: tmpDir,
   })
-  await page.openUri(`${tmpDir}/test.xyz`)
-  await page.setCursor(0, 0)
-  await page.openEditorContextMenu()
-  await page.selectContextMenuItem('Go To Type Definition')
 
-  const overlayMessage = page.locator('.EditorOverlayMessage')
+  // act
+  await Main.openUri(`${tmpDir}/test.xyz`)
+  await Editor.setCursor(0, 0)
+  await Editor.openEditorContextMenu()
+  await ContextMenu.selectItem('Go To Type Definition')
+
+  // assert
+  const overlayMessage = locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
   await expect(overlayMessage).toHaveText(
     'Error: Failed to execute type definition provider: oops'

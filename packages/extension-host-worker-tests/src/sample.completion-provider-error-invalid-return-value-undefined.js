@@ -13,18 +13,17 @@ test('sample.completion-provider-error-invalid-return-value-undefined', async ()
     `export const add = () => {}
 `
   )
-  const page = await runWithExtension({
+  const { Main, Editor, locator } = await runWithExtension({
     name: 'sample.completion-provider-error-invalid-return-value-undefined',
     folder: tmpDir,
   })
 
-  await page.openUri(`${tmpDir}/test.xyz`)
+  await Main.openUri(`${tmpDir}/test.xyz`)
 
-  await page.openUri(`${tmpDir}/test.xyz`)
-  await page.setCursor(0, 0)
-  await page.openCompletion()
+  await Editor.setCursor(0, 0)
+  await Editor.openCompletion()
 
-  const overlayMessage = page.locator('.EditorOverlayMessage')
+  const overlayMessage = locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
   // TODO should say failed to load completions because of invalid return value
   // or just handle undefined value gracefully

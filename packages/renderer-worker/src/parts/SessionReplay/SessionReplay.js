@@ -85,15 +85,18 @@ export const replaySession = async (sessionId) => {
   }
   let now = 0
   for (const event of events) {
-    if (event.source === 'to-renderer-process' && !DONT_REPLAY.has(event.method)) {
-        // console.log(event.timestamp)
-        const timeDifference = event.timestamp - now
-        await new Promise((resolve, reject) => {
-          setTimeout(resolve, timeDifference)
-        })
-        await invoke(event)
-        now = event.timestamp
-      }
+    if (
+      event.source === 'to-renderer-process' &&
+      !DONT_REPLAY.has(event.method)
+    ) {
+      // console.log(event.timestamp)
+      const timeDifference = event.timestamp - now
+      await new Promise((resolve, reject) => {
+        setTimeout(resolve, timeDifference)
+      })
+      await invoke(event)
+      now = event.timestamp
+    }
     // if (event.source === 'from-renderer-process') {
     //   console.log(event)
     // }
@@ -124,16 +127,11 @@ export const downloadSession = async () => {
   try {
     const sessionId = getSessionId()
     const events = await getEvents(sessionId)
-    const stringifiedEvents = JSON.stringify(events, null, 2)
-    const blob = new Blob([stringifiedEvents], {
-      type: 'application/json',
-    })
     const fileName = `${sessionId}.json`
-    url = URL.createObjectURL(blob)
     await Command.execute(
-      /* Download.downloadFile */ 'Download.downloadFile',
-      /* fileName */ fileName,
-      /* url */ url
+      /* Download.downloadJson */ 'Download.downloadJson',
+      /* json */ events,
+      /* fileName */ fileName
     )
   } catch (error) {
     throw new Error('Failed to download session', {

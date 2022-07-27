@@ -10,3 +10,22 @@ export const downloadFile = async (fileName, url) => {
     /* url */ url
   )
 }
+
+export const downloadJson = async (json, fileName) => {
+  let url = ''
+  try {
+    const stringified = JSON.stringify(json, null, 2)
+    const blob = new Blob([stringified], {
+      type: 'application/json',
+    })
+    url = URL.createObjectURL(blob)
+    await downloadFile(fileName, url)
+  } catch (error) {
+    throw new Error(`Failed to download ${fileName}`, {
+      // @ts-ignore
+      cause: error,
+    })
+  } finally {
+    URL.revokeObjectURL(url)
+  }
+}

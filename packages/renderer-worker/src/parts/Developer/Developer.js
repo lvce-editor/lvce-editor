@@ -494,7 +494,9 @@ export const reloadColorTheme = async () => {
 }
 
 export const showColorThemeCss = async () => {
+  // @ts-ignore
   const colorThemeCss = await ColorTheme.getColorThemeCssCacheFirst()
+  // @ts-ignore
   Main.openRawText('css://color-theme.css', colorThemeCss)
 }
 
@@ -540,5 +542,14 @@ export const showMessageBox = () => {}
 export const openProcessExplorer = async () => {
   await SharedProcess.invoke(
     /* Electron.openProcessExplorer */ 'Electron.openProcessExplorer'
+  )
+}
+
+export const downloadViewletState = async () => {
+  const states = await Command.execute('Viewlet.getAllStates')
+  await Command.execute(
+    'Download.downloadJson',
+    /* json */ states,
+    /* fileName */ 'viewlets.json'
   )
 }

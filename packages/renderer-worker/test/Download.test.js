@@ -52,3 +52,35 @@ test('downloadFile', async () => {
     'test://test-url'
   )
 })
+
+test('downloadJson - error with download', async () => {
+  URL.createObjectURL = jest.fn(() => 'test://test-session.json')
+  URL.revokeObjectURL = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    throw new TypeError('x is not a function')
+  })
+
+  await expect(Download.downloadJson([], 'test.json')).rejects.toThrowError(
+    new Error('Failed to download test.json')
+  )
+  expect(URL.revokeObjectURL).toHaveBeenCalledTimes(1)
+  expect(URL.revokeObjectURL).toHaveBeenCalledWith('test://test-session.json')
+})
+
+test('downloadJson', async () => {
+  URL.createObjectURL = jest.fn(() => 'test://test-session.json')
+  URL.revokeObjectURL = jest.fn()
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+
+  await Download.downloadJson([], 'test.json')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Download.downloadFile',
+    'test.json',
+    'test://test-session.json'
+  )
+  expect(URL.revokeObjectURL).toHaveBeenCalledTimes(1)
+  expect(URL.revokeObjectURL).toHaveBeenCalledWith('test://test-session.json')
+})

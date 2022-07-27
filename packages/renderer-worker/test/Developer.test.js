@@ -24,6 +24,20 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
     }),
   }
 })
+jest.unstable_mockModule('../src/parts/Download/Download.js', () => {
+  return {
+    downloadJson: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
+  return {
+    getAllStates: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
 
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
@@ -31,6 +45,8 @@ const RendererProcess = await import(
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
 )
+const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+const Download = await import('../src/parts/Download/Download.js')
 
 const Developer = await import('../src/parts/Developer/Developer.js')
 
@@ -436,5 +452,26 @@ test('open process explorer - error', async () => {
   })
   await expect(Developer.openProcessExplorer()).rejects.toThrowError(
     new TypeError('x is not a function')
+  )
+})
+
+test('getAllStates', async () => {
+  // @ts-ignore
+  Viewlet.getAllStates.mockImplementation(() => {
+    return {
+      Explorer: {
+        state: {
+          root: '/test',
+        },
+      },
+    }
+  })
+  // @ts-ignore
+  Download.downloadJson.mockImplementation(() => {})
+  await Developer.downloadViewletState()
+  expect(Download.downloadJson).toHaveBeenCalledTimes(1)
+  expect(Download.downloadJson).toHaveBeenCalledWith(
+    { Explorer: { state: { root: '/test' } } },
+    'viewlets.json'
   )
 })

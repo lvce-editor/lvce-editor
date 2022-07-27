@@ -7,22 +7,26 @@ import {
 } from './_testFrameWork.js'
 
 test('sample.reference-provider-error', async () => {
+  // arrange
   const tmpDir = await getTmpDir()
   await writeFile(
     `${tmpDir}/test.xyz`,
     `export const add = () => {}
 `
   )
-  const page = await runWithExtension({
+  const { Main, Editor, ContextMenu, locator } = await runWithExtension({
     name: 'sample.reference-provider-error',
     folder: tmpDir,
   })
-  await page.openUri(`${tmpDir}/test.xyz`)
-  await page.setCursor(0, 0)
-  await page.openEditorContextMenu()
-  await page.selectContextMenuItem('Find all references')
 
-  const viewletLocations = page.locator('.Viewlet[data-viewlet-id="Locations"]')
+  // act
+  await Main.openUri(`${tmpDir}/test.xyz`)
+  await Editor.setCursor(0, 0)
+  await Editor.openEditorContextMenu()
+  await ContextMenu.selectItem('Find all references')
+
+  // assert
+  const viewletLocations = locator('.Viewlet[data-viewlet-id="Locations"]')
   await expect(viewletLocations).toBeVisible()
 
   // TODO should show part of stack trace maybe?
