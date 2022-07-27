@@ -15,6 +15,7 @@ import * as Location from '../Location/Location.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 import * as InitData from '../InitData/InitData.js'
+import * as Command from '../Command/Command.js'
 
 const handleUnhandledRejection = async (event) => {
   console.info(`[renderer-worker] Unhandled Rejection: ${event.reason}`)
@@ -137,7 +138,9 @@ export const startup = async (config) => {
 
   LifeCycle.mark(LifeCycle.Phase.Fifteen)
 
-  if (!Workspace.isTest()) {
+  if (Workspace.isTest()) {
+    await Command.execute('Test.execute', initData.href)
+  } else {
     Performance.mark('code/willLoadSaveState')
     await SaveState.hydrate()
     Performance.mark('code/didLoadSaveState')

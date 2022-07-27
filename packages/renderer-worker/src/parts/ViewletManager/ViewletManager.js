@@ -180,6 +180,11 @@ export const load = async (viewlet, focus = false) => {
         newState = await module.loadContent(viewletState)
       }
       throw new Error('viewlet could not be updated')
+    } else {
+      Viewlet.state.instances[viewlet.id] = {
+        state: newState,
+        factory: module,
+      }
     }
 
     if (viewletState !== newState) {
