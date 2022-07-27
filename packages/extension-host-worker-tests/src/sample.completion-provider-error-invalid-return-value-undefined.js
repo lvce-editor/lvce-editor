@@ -1,29 +1,37 @@
 import {
-  getTmpDir,
-  runWithExtension,
-  test,
   expect,
-  writeFile,
-} from './_testFrameWork.js'
+  Locator,
+  test,
+} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
+import {
+  Editor,
+  Extension,
+  FileSystem,
+  Main,
+  Workspace,
+} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
 
 test('sample.completion-provider-error-invalid-return-value-undefined', async () => {
-  const tmpDir = await getTmpDir()
-  await writeFile(
+  const tmpDir = await FileSystem.getTmpDir()
+  await FileSystem.writeFile(
     `${tmpDir}/test.xyz`,
     `export const add = () => {}
 `
   )
-  const { Main, Editor, locator } = await runWithExtension({
-    name: 'sample.completion-provider-error-invalid-return-value-undefined',
-    folder: tmpDir,
-  })
 
+  await Workspace.setPath(tmpDir)
+  await Extension.addWebExtension(
+    new URL(
+      '../fixtures/sample.completion-provider-error-invalid-return-value-undefined',
+      import.meta.url
+    ).toString()
+  )
   await Main.openUri(`${tmpDir}/test.xyz`)
 
   await Editor.setCursor(0, 0)
   await Editor.openCompletion()
 
-  const overlayMessage = locator('.EditorOverlayMessage')
+  const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
   // TODO should say failed to load completions because of invalid return value
   // or just handle undefined value gracefully
