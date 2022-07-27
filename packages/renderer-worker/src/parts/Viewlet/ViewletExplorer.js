@@ -138,16 +138,20 @@ export const loadContent = async (state) => {
     dirents,
     maxLineY: Math.round(state.height / ITEM_HEIGHT),
     pathSeparator,
+    version: state.version + 1,
   }
 }
 
+const updateIcon = (dirent) => {
+  return { ...dirent, icon: IconTheme.getIcon(dirent) }
+}
+
 export const updateIcons = (state) => {
-  // TODO avoid mutating state
-  for (const dirent of state.dirents) {
-    dirent.icon = IconTheme.getIcon(dirent)
+  const newDirents = state.dirents.map(updateIcon)
+  return {
+    ...state,
+    dirents: newDirents,
   }
-  const newDirents = [...state.dirents]
-  return { ...state, dirents: newDirents }
 }
 
 export const contentLoaded = async (state) => {
@@ -701,13 +705,20 @@ const handleClickFile = async (state, dirent, index) => {
 }
 
 const handleClickDirectory = async (state, dirent, index) => {
+  console.log('[explorer] click directory')
   dirent.type = 'directory-expanding'
   // TODO handle error
   const dirents = await getChildDirents(state.root, state.pathSeparator, dirent)
+  const state2 = Viewlet.getState('Explorer')
+  if (!state2) {
+    // canceled
+    return
+  }
   // TODO use Viewlet.getState here and check if it exists
   const newIndex = state.dirents.indexOf(dirent)
   // TODO if viewlet is disposed or root has changed, return
   if (newIndex === -1) {
+    console.log('[explorer] dirent not found')
     return state
   }
   // console.log(state.dirents[index] === dirent)
@@ -715,6 +726,8 @@ const handleClickDirectory = async (state, dirent, index) => {
   newDirents.splice(newIndex + 1, 0, ...dirents)
   dirent.type = 'directory-expanded'
   dirent.icon = IconTheme.getIcon(dirent)
+  // TODO when focused index has changed while expanding, don't update it
+  console.log({ newDirents })
   return {
     ...state,
     dirents: newDirents,
@@ -750,6 +763,7 @@ const handleClickDirectoryExpanded = (state, dirent, index) => {
 }
 
 export const handleClick = async (state, index) => {
+  console.log('[explorer] click', index)
   if (index === -1) {
     return focusIndex(state, -1)
   }
@@ -1224,6 +1238,7 @@ export const events = {
 export const hasFunctionalRender = true
 
 export const render = (oldState, newState) => {
+  console.log({ oldState, newState })
   const changes = []
   if (
     oldState.dirents !== newState.dirents ||

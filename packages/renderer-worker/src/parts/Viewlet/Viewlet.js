@@ -137,6 +137,7 @@ export const wrapViewletCommand = (id, fn) => {
     if (activeInstance.factory && activeInstance.factory.hasFunctionalRender) {
       const oldState = activeInstance.state
       const newState = await fn(oldState, ...args)
+      console.log('[wrapped command 1]', { newState })
       if (!newState) {
         console.log({ fn })
       }
@@ -145,18 +146,15 @@ export const wrapViewletCommand = (id, fn) => {
       if (oldState === newState) {
         return
       }
-      if (newState.disposed) {
-        await dispose(id)
-        console.log('DISPOSED')
-        return
-      }
+      console.log('[wrapped command 2]', { newState })
       const commands = activeInstance.factory.render(oldState, newState)
-      RendererProcess.invoke(
+      state.instances[id].state = newState
+      await RendererProcess.invoke(
         /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
         /* commands */ commands
       )
-      state.instances[id].state = newState
     } else {
+      console.log('not functional render', fn.name)
       return fn(activeInstance.state, ...args)
     }
   }
