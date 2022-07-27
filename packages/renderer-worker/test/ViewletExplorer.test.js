@@ -616,6 +616,10 @@ test('handleClick - directory', async () => {
     ],
   }
   // @ts-ignore
+  Viewlet.getState.mockImplementation(() => {
+    return state
+  })
+  // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
       case 'FileSystem.readDirWithFileTypes':
@@ -798,6 +802,10 @@ test('handleClick - collapsed folder', async () => {
       },
     ],
   }
+  // @ts-ignore
+  Viewlet.getState.mockImplementation(() => {
+    return state
+  })
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
@@ -1874,6 +1882,10 @@ test('handleArrowRight - collapsed folder', async () => {
     ],
   }
   // @ts-ignore
+  Viewlet.getState.mockImplementation(() => {
+    return state
+  })
+  // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
       case 'FileSystem.readDirWithFileTypes':
@@ -1924,6 +1936,7 @@ test('handleArrowRight - collapsed folder', async () => {
   })
 })
 
+// TODO test for race condition: when viewlet state changes while loading children
 test('handleArrowRight - collapsed empty folder', async () => {
   const state = {
     root: '/home/test-user/test-path',
@@ -1960,6 +1973,9 @@ test('handleArrowRight - collapsed empty folder', async () => {
     ],
     pathSeparator: '/',
   }
+  Viewlet.getState.mockImplementation(() => {
+    return state
+  })
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
