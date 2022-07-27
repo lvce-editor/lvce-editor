@@ -30,6 +30,7 @@ const MODULE_DOWNLOAD = 47
 const MODULE_OPEN = 48
 const MODULE_CLIPBOARD = 49
 const MODULE_INIT_DATA = 50
+const MODULE_TEST_FRAME_WORK = 51
 
 export const state = {
   commands: Object.create(null),
@@ -90,6 +91,8 @@ const loadModule = (moduleId) => {
       return import('../ClipBoard/ClipBoard.ipc.js')
     case MODULE_INIT_DATA:
       return import('../InitData/InitData.ipc.js')
+    case MODULE_TEST_FRAME_WORK:
+      return import('../TestFrameWork/TestFrameWork.ipc.js')
     default:
       throw new Error('unknown module')
   }
@@ -107,6 +110,8 @@ const getOrLoadModule = (moduleId) => {
 
 const getModuleId = (commandId) => {
   switch (commandId) {
+    case 'TestFrameWork.showOverlay':
+      return MODULE_TEST_FRAME_WORK
     case 'ClipBoard.readText':
     case 'ClipBoard.writeText':
       return MODULE_CLIPBOARD

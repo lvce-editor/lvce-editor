@@ -1,0 +1,7 @@
+export * as ContextMenu from './TestFrameWorkComponentContextMenu.js'
+export * as Editor from './TestFrameWorkComponentEditor.js'
+export * as Explorer from './TestFrameWorkComponentExplorer.js'
+export * as Extension from './TestFrameWorkComponentExtension.js'
+export * as FileSystem from './TestFrameWorkComponentFileSystem.js'
+export * as Main from './TestFrameWorkComponentMain.js'
+export * as Workspace from './TestFrameWorkComponentWorkspace.js'

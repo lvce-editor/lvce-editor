@@ -3,6 +3,7 @@ import * as Command from '../Command/Command.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Languages from '../Languages/Languages.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   /**
@@ -29,10 +30,7 @@ const getWebExtensionManifest = async (path) => {
     }
   } catch (error) {
     const id = getId(path)
-    throw new Error(`Failed to load extension manifest for ${id}`, {
-      // @ts-ignore
-      cause: error,
-    })
+    throw new VError(error, `Failed to load extension manifest for ${id}`)
   }
 }
 

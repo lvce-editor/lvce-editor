@@ -77,7 +77,7 @@ const getResolvedRootFromRendererProcess = async (href) => {
   if (href.includes('tests/')) {
     state.isTest = true
     return {
-      path: '',
+      path: href,
       homeDir: '',
       pathSeparator: '/',
       source: 'test',
@@ -150,6 +150,10 @@ export const hydrate = async ({ href }) => {
     return
   }
   const resolvedRoot = await getResolvedRoot(href)
+  if (state.isTest) {
+    await Command.execute('Test.execute', resolvedRoot.path)
+    return
+  }
   if (state.workspacePath) {
     return
   }

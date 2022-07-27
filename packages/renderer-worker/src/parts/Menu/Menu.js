@@ -175,6 +175,19 @@ export const selectIndex = async (level, index) => {
   }
 }
 
+export const selectItem = (text) => {
+  for (let level = 0; level < state.menus.length; level++) {
+    const menu = state.menus[level]
+    for (let i = 0; i < menu.items.length; i++) {
+      const item = menu.items[i]
+      if (item.label === text) {
+        return selectIndex(level, i)
+      }
+    }
+  }
+  throw new Error(`menu item not found: ${text}`)
+}
+
 export const selectCurrent = async (level) => {
   const menu = state.menus[level]
   await selectIndex(level, menu.focusedIndex)
