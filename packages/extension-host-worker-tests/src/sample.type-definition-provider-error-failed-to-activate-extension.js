@@ -7,6 +7,7 @@ import {
 } from './_testFrameWork.js'
 
 test('sample.type-definition-provider-error-failed-to-activate-extension', async () => {
+  // arrange
   const tmpDir = await getTmpDir()
   await writeFile(
     `${tmpDir}/test.xyz`,
@@ -17,20 +18,20 @@ test('sample.type-definition-provider-error-failed-to-activate-extension', async
 add(1, 2)
     `
   )
-  const page = await runWithExtension({
+  const { Main, Editor, ContextMenu, locator } = await runWithExtension({
     name: 'sample.type-definition-provider-error-failed-to-activate-extension',
     folder: tmpDir,
   })
   // TODO open uri should return editor object
-  await page.openUri(`${tmpDir}/test.xyz`)
+  await Main.openUri(`${tmpDir}/test.xyz`)
   // TODO editor object should have setCursor function
-  await page.setCursor(0, 0)
+  await Editor.setCursor(0, 0)
   // TODO editor object should have openContextMenu function
-  await page.openEditorContextMenu()
+  await Editor.openEditorContextMenu()
   // TODO contextMenu should have selectItem function
-  await page.selectContextMenuItem('Go To Type Definition')
+  await ContextMenu.selectItem('Go To Type Definition')
 
-  const overlayMessage = page.locator('.EditorOverlayMessage')
+  const overlayMessage = locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
   // TODO error message is too long
   // TODO probably should just display "failed to execute type definition provider: TypeError: x is not a function"

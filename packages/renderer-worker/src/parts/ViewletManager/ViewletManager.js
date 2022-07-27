@@ -142,8 +142,18 @@ export const load = async (viewlet, focus = false) => {
     const oldVersion =
       viewletState.version === undefined ? undefined : ++viewletState.version
     let newState = await module.loadContent(viewletState)
-    if (module.shouldApplyNewState && !module.shouldApplyNewState(newState)) {
-      return
+    outer: if (module.shouldApplyNewState) {
+      for (let i = 0; i < 2; i++) {
+        if (module.shouldApplyNewState(newState)) {
+          Viewlet.state.instances[viewlet.id] = {
+            state: newState,
+            factory: module,
+          }
+          break outer
+        }
+        newState = await module.loadContent(viewletState)
+      }
+      throw new Error('viewlet could not be updated')
     }
     if (viewletState.version !== oldVersion) {
       newState = viewletState
@@ -189,6 +199,7 @@ export const load = async (viewlet, focus = false) => {
       for (let i = 0; i < 2; i++) {
         console.log('try', i)
         if (module.shouldApplyNewState(newState)) {
+          console.log('set state', viewlet.id, newState)
           Viewlet.state.instances[viewlet.id].state = newState
           break outer
         }

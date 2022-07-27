@@ -20,6 +20,7 @@ import {
 // orca says: "sample-folder, collapsed"
 
 test('viewlet.explorer-accessibility', async () => {
+  // arrange
   const tmpDir = await getTmpDir()
   await mkdir(`${tmpDir}/languages`)
   await mkdir(`${tmpDir}/sample-folder`)
@@ -28,17 +29,16 @@ test('viewlet.explorer-accessibility', async () => {
   await writeFile(`${tmpDir}/sample-folder/a.txt`, '')
   await writeFile(`${tmpDir}/sample-folder/b.txt`, '')
   await writeFile(`${tmpDir}/sample-folder/c.txt`, '')
-  const page = await runWithExtension({
+  const { Main, locator } = await runWithExtension({
     folder: tmpDir,
     name: '',
   })
 
-  await page.openUri(`${tmpDir}/test.txt`)
+  // act
+  await Main.openUri(`${tmpDir}/test.txt`)
 
   const titleLanguages = '/languages'
-  const treeItemLanguages = page.locator(
-    `.TreeItem[title$="${titleLanguages}"]`
-  )
+  const treeItemLanguages = locator(`.TreeItem[title$="${titleLanguages}"]`)
   await expect(treeItemLanguages).toHaveAttribute('tabindex', null)
   await expect(treeItemLanguages).toHaveAttribute('role', 'treeitem')
   await expect(treeItemLanguages).toHaveAttribute('aria-level', '1')
@@ -47,7 +47,7 @@ test('viewlet.explorer-accessibility', async () => {
   await expect(treeItemLanguages).toHaveAttribute('aria-expanded', 'false')
 
   const titleSampleFolder = '/sample-folder'
-  const treeItemSampleFolder = page.locator(
+  const treeItemSampleFolder = locator(
     `.TreeItem[title$="${titleSampleFolder}"]`
   )
   await expect(treeItemSampleFolder).toHaveAttribute('tabindex', null)
@@ -58,7 +58,7 @@ test('viewlet.explorer-accessibility', async () => {
   await expect(treeItemSampleFolder).toHaveAttribute('aria-expanded', 'false')
 
   const titleTest = '/test.txt'
-  const treeItemTestTxt = page.locator(`.TreeItem[title$="${titleTest}"]`)
+  const treeItemTestTxt = locator(`.TreeItem[title$="${titleTest}"]`)
   await expect(treeItemTestTxt).toHaveAttribute('tabindex', null)
   await expect(treeItemTestTxt).toHaveAttribute('aria-level', '1')
   await expect(treeItemTestTxt).toHaveAttribute('aria-posinset', '3')
@@ -72,9 +72,7 @@ test('viewlet.explorer-accessibility', async () => {
   await expect(treeItemLanguages).toHaveAttribute('aria-expanded', 'true')
 
   const titleIndexHtml = '/languages/index.html'
-  const treeItemIndexHtml = page.locator(
-    `.TreeItem[title$="${titleIndexHtml}"]`
-  )
+  const treeItemIndexHtml = locator(`.TreeItem[title$="${titleIndexHtml}"]`)
   await expect(treeItemIndexHtml).toHaveAttribute('tabindex', null)
   await expect(treeItemIndexHtml).toHaveAttribute('aria-level', '2')
   await expect(treeItemIndexHtml).toHaveAttribute('aria-posinset', '1')

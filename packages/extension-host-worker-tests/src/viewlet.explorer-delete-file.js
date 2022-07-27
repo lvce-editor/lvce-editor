@@ -7,19 +7,24 @@ import {
 } from './_testFrameWork.js'
 
 test('viewlet.explorer-delete-file', async () => {
+  // arrange
   const tmpDir = await getTmpDir()
   await writeFile(`${tmpDir}/file1.txt`, 'content 1')
   await writeFile(`${tmpDir}/file2.txt`, 'content 2')
   await writeFile(`${tmpDir}/file3.txt`, 'content 3')
-  const page = await runWithExtension({
+  const { Main, locator, ContextMenu } = await runWithExtension({
     folder: tmpDir,
     name: '',
   })
-  const explorer = page.locator('.Viewlet[data-viewlet-id="Explorer"]')
+
+  // act
+  const explorer = locator('.Viewlet[data-viewlet-id="Explorer"]')
   const file1 = explorer.locator('text=file1.txt')
   await file1.click({
     button: 'right',
   })
-  await page.selectContextMenuItem('Delete')
+
+  // assert
+  await ContextMenu.selectItem('Delete')
   await expect(file1).toBeHidden()
 })

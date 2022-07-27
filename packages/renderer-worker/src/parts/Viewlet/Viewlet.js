@@ -197,3 +197,11 @@ export const setState = async (id, newState) => {
     )
   }
 }
+
+export const getAllStates = () => {
+  const states = Object.create(null)
+  for (const [key, value] of Object.entries(state.instances)) {
+    states[key] = value.state
+  }
+  return states
+}

@@ -7,22 +7,25 @@ import {
 } from './_testFrameWork.js'
 
 test('sample.completion-provider-error', async () => {
+  // arrange
   const tmpDir = await getTmpDir()
   await writeFile(
     `${tmpDir}/test.xyz`,
     `export const add = () => {}
 `
   )
-  const page = await runWithExtension({
+  const { Main, Editor, locator } = await runWithExtension({
     name: 'sample.completion-provider-error',
     folder: tmpDir,
   })
 
-  await page.openUri(`${tmpDir}/test.xyz`)
-  await page.setCursor(0, 0)
-  await page.openCompletion()
+  // act
+  await Main.openUri(`${tmpDir}/test.xyz`)
+  await Editor.setCursor(0, 0)
+  await Editor.openCompletion()
 
-  const overlayMessage = page.locator('.EditorOverlayMessage')
+  // assert
+  const overlayMessage = locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
   await expect(overlayMessage).toHaveText(
     'Failed to execute completion provider: oops'

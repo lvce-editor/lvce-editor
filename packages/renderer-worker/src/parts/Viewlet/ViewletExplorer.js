@@ -1211,6 +1211,7 @@ export const shouldApplyNewState = (newState, fn) => {
     )
     return false
   }
+  console.log('diff', newState.root, Workspace.state.workspacePath, newState)
   return true
 }
 

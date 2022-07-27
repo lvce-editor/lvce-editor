@@ -233,37 +233,49 @@ const createKeyBoard = () => {
 }
 
 const createPage = () => {
+  const invokeRendererWorker = async (command, ...args) => {
+    const rendererWorker = await getRendererWorker()
+    await rendererWorker.invoke(command, ...args)
+  }
+
+  const locator = (selector, options) => {
+    return createLocator(selector, options)
+  }
   return {
     locator(selector, options) {
       return createLocator(selector, options)
     },
     keyboard: createKeyBoard(),
-    async invokeRendererWorker(command, ...args) {
-      const rendererWorker = await getRendererWorker()
-      await rendererWorker.invoke(command, ...args)
+    ContextMenu: {
+      async selectItem(text) {
+        const contextMenuItem = locator('.MenuItem', {
+          hasText: text,
+        })
+        await contextMenuItem.click()
+      },
     },
-    async openUri(uri) {
-      await this.invokeRendererWorker('Main.openUri', uri)
+    Editor: {
+      async setCursor(rowIndex, columnIndex) {
+        await invokeRendererWorker('Editor.cursorSet', [
+          { rowIndex, columnIndex },
+        ])
+      },
+      async openCompletion() {
+        await invokeRendererWorker('Editor.openCompletion')
+      },
+      async openEditorContextMenu() {
+        await invokeRendererWorker('Editor.handleContextMenu', 0, 0)
+      },
     },
-    async setCursor(rowIndex, columnIndex) {
-      await this.invokeRendererWorker('Editor.cursorSet', [
-        { rowIndex, columnIndex },
-      ])
+    Explorer: {
+      async openContextMenu(index) {
+        await invokeRendererWorker('Explorer.handleContextMenu', 0, 0)
+      },
     },
-    async openCompletion() {
-      await this.invokeRendererWorker('Editor.openCompletion')
-    },
-    async openEditorContextMenu() {
-      await this.invokeRendererWorker('Editor.handleContextMenu', 0, 0)
-    },
-    async selectContextMenuItem(text) {
-      const contextMenuItem = this.locator('.MenuItem', {
-        hasText: text,
-      })
-      await contextMenuItem.click()
-    },
-    async openExplorerContextMenu(index) {
-      await this.invokeRendererWorker('Explorer.handleContextMenu', 0, 0)
+    Main: {
+      async openUri(uri) {
+        await invokeRendererWorker('Main.openUri', uri)
+      },
     },
   }
 }
