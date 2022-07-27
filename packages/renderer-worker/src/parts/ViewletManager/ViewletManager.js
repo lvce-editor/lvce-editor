@@ -185,12 +185,12 @@ export const load = async (viewlet, focus = false) => {
       }
     }
 
-    if (module.shouldApplyNewState) {
+    outer: if (module.shouldApplyNewState) {
       for (let i = 0; i < 2; i++) {
         console.log('try', i)
         if (module.shouldApplyNewState(newState)) {
           Viewlet.state.instances[viewlet.id].state = newState
-          break
+          break outer
         }
         newState = await module.loadContent(viewletState)
       }
