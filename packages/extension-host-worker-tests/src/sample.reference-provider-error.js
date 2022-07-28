@@ -12,6 +12,8 @@ import {
   Workspace,
 } from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
 
+const name = 'sample.reference-provider-error'
+
 test('sample.reference-provider-error', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
@@ -24,10 +26,7 @@ test('sample.reference-provider-error', async () => {
   // act
   await Workspace.setPath(tmpDir)
   await Extension.addWebExtension(
-    new URL(
-      '../fixtures/sample.reference-provider-error',
-      import.meta.url
-    ).toString()
+    new URL(`../fixtures/${name}`, import.meta.url).toString()
   )
   await Main.openUri(`${tmpDir}/test.xyz`)
   await Editor.setCursor(0, 0)
