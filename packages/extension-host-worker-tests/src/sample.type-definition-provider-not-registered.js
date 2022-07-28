@@ -12,9 +12,9 @@ import {
   Workspace,
 } from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
 
-const name = 'sample.type-definition-provider-no-result'
+const name = 'sample.type-definition-provider-not-registered'
 
-test.skip('sample.type-definition-provider-no-result', async () => {
+test('sample.type-definition-provider-not-registered', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -28,9 +28,6 @@ add(1, 2)
   )
   // act
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
 
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
@@ -41,5 +38,6 @@ add(1, 2)
   // assert
   const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
+  // TODO should say "no type definition provider found"
   await expect(overlayMessage).toHaveText('No type definition found')
 })

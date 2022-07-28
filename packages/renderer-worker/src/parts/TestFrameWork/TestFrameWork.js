@@ -175,11 +175,16 @@ export const test = async (name, fn) => {
   )
 }
 
-test.skip = (id, fn) => {
-  const $TestOverlay = createOverlay()
-  $TestOverlay.textContent = 'test skipped'
-  $TestOverlay.dataset.state = 'skip'
-  document.body.append($TestOverlay)
+test.skip = async (id, fn) => {
+  const state = 'skip'
+  const background = 'yellow'
+  const text = `test skipped ${id}`
+  await RendererProcess.invoke(
+    'TestFrameWork.showOverlay',
+    state,
+    background,
+    text
+  )
 }
 
 const Assert = {
