@@ -23,6 +23,7 @@ jobs:
         run: echo "::set-output name=value::$(node build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js)"
       - uses: actions/cache@v3
         id: npm-cache
+        if: matrix.os != 'windows-latest' # workaround for https://github.com/actions/cache/issues/728
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
