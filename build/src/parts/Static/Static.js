@@ -282,7 +282,7 @@ const applyJsOverrides = async () => {
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,
-    occurrence: `SharedProcess.listen()`,
+    occurrence: `await SharedProcess.listen()`,
     replacement: ``,
   })
   await Replace.replace({
@@ -463,7 +463,7 @@ const bundleJs = async () => {
     ),
     from: 'src/rendererWorkerMain.js',
     platform: 'webworker',
-    codeSplitting: false,
+    codeSplitting: true,
   })
   await BundleJs.bundleJs({
     cwd: Path.absolute(
@@ -513,6 +513,30 @@ const copyTestFiles = async () => {
       path: direntPath,
       occurrence: '/css/App.css',
       replacement: appCssPath,
+    })
+  }
+  const rendererWorkerPathTestFrameWorkBefore = `../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js`
+  const rendererWorkerPathTestFrameWorkAfter = `../${commitHash}/packages/renderer-worker/dist/TestFrameWork.js`
+  const rendererWorkerPathTestComponentBefore = `../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js`
+  const rendererWorkerPathTestComponentAfter = `../${commitHash}/packages/renderer-worker/dist/TestFrameWorkComponent.js`
+  for (const dirent of dirents) {
+    if (
+      !dirent.name.endsWith('.js') ||
+      dirent.name.startsWith('_') ||
+      !dirent.isFile()
+    ) {
+      continue
+    }
+    const direntPath = Path.join('build/.tmp/dist/tests', dirent.name)
+    await Replace.replace({
+      path: direntPath,
+      occurrence: rendererWorkerPathTestFrameWorkBefore,
+      replacement: rendererWorkerPathTestFrameWorkAfter,
+    })
+    await Replace.replace({
+      path: direntPath,
+      occurrence: rendererWorkerPathTestComponentBefore,
+      replacement: rendererWorkerPathTestComponentAfter,
     })
   }
 }

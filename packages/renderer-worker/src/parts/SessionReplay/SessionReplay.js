@@ -5,6 +5,7 @@ import * as Location from '../Location/Location.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Assert from '../Assert/Assert.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   sessionId: '',
@@ -123,7 +124,6 @@ export const getEvents = async (sessionId) => {
 }
 
 export const downloadSession = async () => {
-  let url = ''
   try {
     const sessionId = getSessionId()
     const events = await getEvents(sessionId)
@@ -134,12 +134,7 @@ export const downloadSession = async () => {
       /* fileName */ fileName
     )
   } catch (error) {
-    throw new Error('Failed to download session', {
-      // @ts-ignore
-      cause: error,
-    })
-  } finally {
-    URL.revokeObjectURL(url)
+    throw new VError(error, 'Failed to download session')
   }
 }
 

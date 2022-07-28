@@ -67,6 +67,8 @@ const MODULE_DOWNLOAD = 79
 const MODULE_EXTENSION_HOST_CORE = 80
 const MODULE_EXTENSION_META = 81
 const MODULE_TEST = 82
+const MODULE_TEST_FRAMEWORK = 83
+const MODULE_TEST_FRAMEWORK_COMPONENT = 84
 
 export const state = {
   commands: Object.create(null),
@@ -203,6 +205,10 @@ const loadModule = (moduleId) => {
       return import('../ExtensionMeta/ExtensionMeta.ipc.js')
     case MODULE_TEST:
       return import('../Test/Test.ipc.js')
+    case MODULE_TEST_FRAMEWORK:
+      return import('../TestFrameWork/TestFrameWork.js')
+    case MODULE_TEST_FRAMEWORK_COMPONENT:
+      return import('../TestFrameWorkComponent/TestFrameWorkComponent.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }
@@ -222,6 +228,10 @@ const getOrLoadModule = (moduleId) => {
 
 const getModuleId = (commandId) => {
   switch (commandId) {
+    case '001':
+      return MODULE_TEST_FRAMEWORK
+    case '002':
+      return MODULE_TEST_FRAMEWORK_COMPONENT
     case 'Download.downloadFile':
     case 'Download.downloadJson':
       return MODULE_DOWNLOAD
