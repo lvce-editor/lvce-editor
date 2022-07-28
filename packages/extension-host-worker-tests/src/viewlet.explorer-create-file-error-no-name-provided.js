@@ -4,12 +4,11 @@ import {
   test,
 } from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
 import {
-  FileSystem,
-  Main,
-  Workspace,
   ContextMenu,
-  KeyBoard,
   Explorer,
+  FileSystem,
+  KeyBoard,
+  Workspace,
 } from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
 
 test('viewlet.explorer-create-file-error-no-name-provided', async () => {

@@ -1,22 +1,24 @@
 import {
   expect,
-  getTmpDir,
-  runWithExtension,
+  Locator,
   test,
-  writeFile,
-} from './_testFrameWork.js'
+} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
+import {
+  FileSystem,
+  KeyBoard,
+  Workspace,
+} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
 
-test('viewlet.explorer-delete-multiple-files', async () => {
+test.skip('viewlet.explorer-delete-multiple-files', async () => {
   // arrange
-  const tmpDir = await getTmpDir()
-  await writeFile(`${tmpDir}/file1.txt`, 'content 1')
-  await writeFile(`${tmpDir}/file2.txt`, 'content 2')
-  await writeFile(`${tmpDir}/file3.txt`, 'content 3')
-  const page = await runWithExtension({
-    folder: tmpDir,
-    name: '',
-  })
-  const explorer = page.locator('.Viewlet[data-viewlet-id="Explorer"]')
+  const tmpDir = await FileSystem.getTmpDir()
+  await FileSystem.writeFile(`${tmpDir}/file1.txt`, 'content 1')
+  await FileSystem.writeFile(`${tmpDir}/file2.txt`, 'content 2')
+  await FileSystem.writeFile(`${tmpDir}/file3.txt`, 'content 3')
+
+  await Workspace.setPath(tmpDir)
+
+  const explorer = Locator('.Viewlet[data-viewlet-id="Explorer"]')
   const file1 = explorer.locator('text=file1.txt')
   const file2 = explorer.locator('text=file2.txt')
   const file3 = explorer.locator('text=file3.txt')
@@ -29,27 +31,27 @@ test('viewlet.explorer-delete-multiple-files', async () => {
   await expect(explorer).toBeFocused()
 
   // act
-  await page.keyboard.press('ArrowUp')
+  await KeyBoard.press('ArrowUp')
 
   // assert
   await expect(file3).toHaveClass('FocusOutline')
 
   // act
-  await page.keyboard.press('Delete')
+  await KeyBoard.press('Delete')
 
   // assert
   await expect(file3).toBeHidden()
   await expect(file2).toHaveClass('FocusOutline')
 
   // act
-  await page.keyboard.press('Delete')
+  await KeyBoard.press('Delete')
 
   // assert
   await expect(file2).toBeHidden()
   await expect(file1).toHaveClass('FocusOutline')
 
   // act
-  await page.keyboard.press('Delete')
+  await KeyBoard.press('Delete')
 
   // assert
   await expect(file1).toBeHidden()
