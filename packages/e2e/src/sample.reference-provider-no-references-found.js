@@ -1,7 +1,8 @@
 import { writeFile } from 'fs/promises'
 import { getTmpDir, runWithExtension, test, expect } from './_testFrameWork.js'
 
-test('sample.reference-provider-no-references-found', async () => {
+// TODO test is flaky https://github.com/lvce-editor/lvce-editor/runs/7568058650?check_suite_focus=true
+test.skip('sample.reference-provider-no-references-found', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(
     `${tmpDir}/test.js`,
