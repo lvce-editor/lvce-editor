@@ -1,12 +1,12 @@
 name: CI
 
 on:
-  push:
+  pull_request:
     branches:
       - main
 
 jobs:
-  ci:
+  pr:
     strategy:
       fail-fast: false
       matrix:
@@ -54,21 +54,3 @@ jobs:
         run: npm run e2e:headless
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
-
-      - name: Build static site
-        run: node build/bin/build.js --target=static
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v1
-        with:
-          path: ./build/.tmp/dist
-
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-22.04
-    needs: ci
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v1
