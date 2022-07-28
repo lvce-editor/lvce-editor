@@ -40,7 +40,7 @@ test('downloadSession - error with download', async () => {
     return []
   })
   await expect(SessionReplay.downloadSession()).rejects.toThrowError(
-    new Error('Failed to download session')
+    new Error('Failed to download session: TypeError: x is not a function')
   )
 })
 
