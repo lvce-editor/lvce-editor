@@ -58,7 +58,9 @@ const downloadExtensionAndLog = async (extension) => {
 }
 
 const downloadExtensions = async (extensions) => {
-  await pMap(extensions, downloadExtensionAndLog)
+  await pMap(extensions, downloadExtensionAndLog, {
+    concurrency: 3,
+  })
 }
 
 const main = () => {
