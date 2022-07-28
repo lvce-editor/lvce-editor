@@ -32,7 +32,7 @@ const toButtonNumber = (buttonType) => {
   }
 }
 
-Locator.prototype.click = async ({ button = 'left' } = {}) => {
+Locator.prototype.click = async function ({ button = 'left' } = {}) {
   const options = {
     cancable: true,
     bubbles: true,
@@ -42,7 +42,7 @@ Locator.prototype.click = async ({ button = 'left' } = {}) => {
   return performAction(this, 'click', options)
 }
 
-Locator.prototype.hover = async () => {
+Locator.prototype.hover = async function () {
   const options = {
     cancable: true,
     bubbles: true,
@@ -64,7 +64,7 @@ Locator.prototype.nth = function (nth) {
   return create(this._selector, { nth })
 }
 
-Locator.prototype.type = async (text) => {
+Locator.prototype.type = async function (text) {
   const options = { text }
   return performAction(this, 'type', options)
 }

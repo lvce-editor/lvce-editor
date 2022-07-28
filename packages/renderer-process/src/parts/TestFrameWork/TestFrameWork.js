@@ -3,6 +3,7 @@ import * as QuerySelector from './QuerySelector.js'
 import * as SingleElementConditions from './SingleElementConditions.js'
 import * as MultiElementConditions from './MultiElementConditions.js'
 import * as ConditionErrors from './ConditionErrors.js'
+import * as Assert from '../Assert/Assert.js'
 
 const create$Overlay = () => {
   const $TestOverlay = document.createElement('div')
@@ -71,6 +72,9 @@ const Timeout = {
 }
 
 export const performAction = async (locator, fnName, options) => {
+  Assert.object(locator)
+  Assert.string(fnName)
+  Assert.object(options)
   const startTime = Time.getTimeStamp()
   const endTime = startTime + maxTimeout
   let currentTime = startTime
