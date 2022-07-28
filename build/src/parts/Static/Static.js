@@ -515,11 +515,6 @@ const copyTestFiles = async () => {
       replacement: appCssPath,
     })
   }
-  await Replace.replace({
-    path: 'build/.tmp/dist/tests/_testFrameWork.js',
-    occurrence: `/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js`,
-    replacement: `/${commitHash}/packages/renderer-process/dist/renderer-process.modern.js`,
-  })
 }
 
 export const build = async () => {
