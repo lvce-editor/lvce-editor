@@ -1,23 +1,32 @@
 import {
-  getTmpDir,
-  runWithExtension,
-  test,
   expect,
-  writeFile,
-} from './_testFrameWork.js'
+  Locator,
+  test,
+} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
+import {
+  Editor,
+  Extension,
+  FileSystem,
+  Main,
+  Workspace,
+  ContextMenu,
+} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
+
+const name = 'sample.reference-provider-error-main-not-found'
 
 test('sample.reference-provider-error-manifest-not-found', async () => {
   // arrange
-  const tmpDir = await getTmpDir()
-  await writeFile(
+  const tmpDir = await FileSystem.getTmpDir()
+  await FileSystem.writeFile(
     `${tmpDir}/test.xyz`,
     `export const add = () => {}
 `
   )
-  const { Main, Editor, ContextMenu, locator } = await runWithExtension({
-    name: 'sample.reference-provider-error-manifest-not-found',
-    folder: tmpDir,
-  })
+
+  await Workspace.setPath(tmpDir)
+  await Extension.addWebExtension(
+    new URL(`../fixtures/${name}`, import.meta.url).toString()
+  )
 
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
