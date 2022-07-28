@@ -1,131 +1,128 @@
 import {
   expect,
-  getTmpDir,
-  runWithExtension,
+  Locator,
   test,
-  writeFile,
-  mkdir,
-} from './_testFrameWork.js'
+} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
+import {
+  Explorer,
+  FileSystem,
+  KeyBoard,
+  Workspace,
+} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
 
-test('viewlet.explorer-keyboard-navigation', async () => {
+test.skip('viewlet.explorer-keyboard-navigation', async () => {
   // arrange
-  const tmpDir = await getTmpDir()
-  await mkdir(`${tmpDir}/a/b`)
-  await writeFile(`${tmpDir}/a/b/c.txt`, 'ccccc')
-  await mkdir(`${tmpDir}/folder-1`)
-  await mkdir(`${tmpDir}/folder-2`)
-  await mkdir(`${tmpDir}/folder-3`)
-  await writeFile(`${tmpDir}/test.txt`, 'div')
-  const { Main, locator, ContextMenu, keyboard } = await runWithExtension({
-    folder: tmpDir,
-    name: '',
-  })
+  const tmpDir = await FileSystem.getTmpDir()
+  await FileSystem.mkdir(`${tmpDir}/a/b`)
+  await FileSystem.writeFile(`${tmpDir}/a/b/c.txt`, 'ccccc')
+  await FileSystem.mkdir(`${tmpDir}/folder-1`)
+  await FileSystem.mkdir(`${tmpDir}/folder-2`)
+  await FileSystem.mkdir(`${tmpDir}/folder-3`)
+  await FileSystem.writeFile(`${tmpDir}/test.txt`, 'div')
+
+  await Workspace.setPath(tmpDir)
 
   // act
-  const testTxt = locator('text=test.txt')
-  await testTxt.click()
-  const tokenText = locator('.Token.Text')
-  await tokenText.click()
-  const explorer = locator('.Viewlet[data-viewlet-id="Explorer"]')
+  const explorer = Locator('.Viewlet[data-viewlet-id="Explorer"]')
   await explorer.click()
 
   // assert
   await expect(explorer).toHaveClass('FocusOutline')
 
   // act
-  await keyboard.press('ArrowDown')
+  await KeyBoard.press('ArrowDown')
 
   // assert
   const titleA = '/a'
-  const treeItemA = locator(`.TreeItem[title$="${titleA}"]`)
+  const treeItemA = Locator(`.TreeItem[title$="${titleA}"]`)
   await expect(treeItemA).toHaveClass('FocusOutline')
 
   // act
-  await keyboard.press('Space')
+  await KeyBoard.press('Space')
 
   // assert
   const titleB = '/a/b'
-  const treeItemB = locator(`.TreeItem[title$="${titleB}"]`)
+  const treeItemB = Locator(`.TreeItem[title$="${titleB}"]`)
   await expect(treeItemB).toBeVisible()
   await expect(treeItemA).toHaveClass('FocusOutline')
 
   // act
-  await keyboard.press('ArrowDown')
+  await KeyBoard.press('ArrowDown')
 
   // assert
   await expect(treeItemB).toHaveClass('FocusOutline')
 
   // act
-  await keyboard.press('Enter')
+  await KeyBoard.press('Enter')
 
   // assert
   const titleC = '/a/b/c.txt'
-  const treeItemC = locator(`.TreeItem[title$="${titleC}"]`)
+  const treeItemC = Locator(`.TreeItem[title$="${titleC}"]`)
   await expect(treeItemC).toBeVisible()
   await expect(treeItemB).toHaveClass('FocusOutline')
 
   // act
-  await keyboard.press('ArrowDown')
+  await KeyBoard.press('ArrowDown')
 
   // assert
   await expect(treeItemC).toHaveClass('FocusOutline')
 
   // act
-  await keyboard.press('Enter')
+  await KeyBoard.press('Enter')
 
   // assert
-  const editor = locator('.Editor')
+  const editor = Locator('.Editor')
   await expect(editor).toHaveText('ccccc')
 
   // act
-  await keyboard.press('ArrowLeft')
+  await KeyBoard.press('ArrowLeft')
 
   // assert
   await expect(treeItemB).toHaveClass('FocusOutline')
   await expect(treeItemC).toBeVisible()
 
   // act
-  await keyboard.press('ArrowLeft')
+  await KeyBoard.press('ArrowLeft')
 
   // assert
   await expect(treeItemB).toHaveClass('FocusOutline')
   await expect(treeItemC).not.toBeVisible()
 
   // act
-  await keyboard.press('ArrowLeft')
+  await KeyBoard.press('ArrowLeft')
 
   // assert
   await expect(treeItemA).toHaveClass('FocusOutline')
   await expect(treeItemB).toBeVisible()
 
   // act
-  await keyboard.press('ArrowLeft')
+  await KeyBoard.press('ArrowLeft')
 
   // assert
   await expect(treeItemA).toHaveClass('FocusOutline')
   await expect(treeItemB).not.toBeVisible()
 
   // act
-  await keyboard.press('End')
+  await KeyBoard.press('End')
 
   // assert
   const titleTest = '/test.txt'
-  const treeItemTestTxt = locator(`.TreeItem[title$="${titleTest}"]`)
+  const treeItemTestTxt = Locator(`.TreeItem[title$="${titleTest}"]`)
   await expect(treeItemTestTxt).toHaveClass('FocusOutline')
 
   // act
-  await keyboard.press('Home')
+  await KeyBoard.press('Home')
 
   // assert
   await expect(treeItemA).toHaveClass('FocusOutline')
 
   // act
-  await keyboard.press('Delete')
+  await KeyBoard.press('Delete')
 
   // assert
   await expect(treeItemA).not.toBeVisible()
   const titleFolder1 = `/folder-1`
-  const treeItemFolder1 = locator(`.TreeItem[title$="${titleFolder1}"]`)
+  const treeItemFolder1 = Locator(`.TreeItem[title$="${titleFolder1}"]`)
   await expect(treeItemFolder1).toHaveClass('FocusOutline')
 
   // TODO test rename behavior
