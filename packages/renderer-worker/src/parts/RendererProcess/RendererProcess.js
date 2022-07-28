@@ -77,6 +77,10 @@ export const send = (message) => {
 export const invoke = async (method, ...parameters) => {
   const responseMessage = await new Promise((resolve, reject) => {
     const callbackId = Callback.register(resolve, reject)
+    if (!state.ipc) {
+      reject(new Error('ipc not active'))
+      return
+    }
     state.ipc.send({
       jsonrpc: '2.0',
       method,
