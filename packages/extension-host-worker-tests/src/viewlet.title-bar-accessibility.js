@@ -1,10 +1,12 @@
 import {
   expect,
-  getTmpDir,
-  runWithExtension,
+  Locator,
   test,
-  writeFile,
-} from './_testFrameWork.js'
+} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
+import {
+  FileSystem,
+  Workspace,
+} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
 
 // manual accessibility tests
 
@@ -29,20 +31,14 @@ import {
 // orca says: "Clear recently opened"
 
 test.skip('viewlet.title-bar-accessibility', async () => {
-  const tmpDir = await getTmpDir()
-  await writeFile(`${tmpDir}/test.txt`, 'div')
-  const page = await runWithExtension({
-    folder: tmpDir,
-    name: '',
-  })
-  const testTxt = page.locator('text=test.txt')
-  await testTxt.click()
-  const tokenText = page.locator('.Token.Text')
-  await tokenText.click()
+  const tmpDir = await FileSystem.getTmpDir()
+  await FileSystem.writeFile(`${tmpDir}/test.txt`, 'div')
 
-  const titleBar = page.locator('#TitleBar')
+  await Workspace.setPath(tmpDir)
+
+  const titleBar = Locator('#TitleBar')
   await expect(titleBar).toHaveAttribute('role', 'contentinfo')
-  const titleBarMenuBar = page.locator('#TitleBarMenu')
+  const titleBarMenuBar = Locator('#TitleBarMenu')
   await expect(titleBarMenuBar).toHaveAttribute('role', 'menubar')
   const menuItemFile = titleBarMenuBar.locator(
     '.TitleBarTopLevelEntry[data-id="file"]'
@@ -55,7 +51,7 @@ test.skip('viewlet.title-bar-accessibility', async () => {
 
   await expect(menuItemFile).toHaveAttribute('aria-expanded', 'true')
 
-  const menu = page.locator('.Menu')
+  const menu = Locator('.Menu')
   await expect(menu).toHaveCount(1)
 
   const menuItemNewWindow = menu.locator('text=New Window')
