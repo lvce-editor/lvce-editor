@@ -1,15 +1,24 @@
 import {
-  runWithExtension,
-  test,
   expect,
-  getTmpDir,
-  writeFile,
-} from './_testFrameWork.js'
+  test,
+  Locator,
+} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
+import {
+  ContextMenu,
+  Editor,
+  Extension,
+  FileSystem,
+  Main,
+  Workspace,
+} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
+
+const name =
+  'sample.type-definition-provider-error-failed-to-activate-extension'
 
 test('sample.type-definition-provider-error-failed-to-activate-extension', async () => {
   // arrange
-  const tmpDir = await getTmpDir()
-  await writeFile(
+  const tmpDir = await FileSystem.getTmpDir()
+  await FileSystem.writeFile(
     `${tmpDir}/test.xyz`,
     `export const add = () => {
   return a + b
@@ -18,10 +27,11 @@ test('sample.type-definition-provider-error-failed-to-activate-extension', async
 add(1, 2)
     `
   )
-  const { Main, Editor, ContextMenu, locator } = await runWithExtension({
-    name: 'sample.type-definition-provider-error-failed-to-activate-extension',
-    folder: tmpDir,
-  })
+  // act
+  await Workspace.setPath(tmpDir)
+  await Extension.addWebExtension(
+    new URL(`../fixtures/${name}`, import.meta.url).toString()
+  )
   // TODO open uri should return editor object
   await Main.openUri(`${tmpDir}/test.xyz`)
   // TODO editor object should have setCursor function
@@ -31,7 +41,7 @@ add(1, 2)
   // TODO contextMenu should have selectItem function
   await ContextMenu.selectItem('Go To Type Definition')
 
-  const overlayMessage = locator('.EditorOverlayMessage')
+  const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
   // TODO error message is too long
   // TODO probably should just display "failed to execute type definition provider: TypeError: x is not a function"
