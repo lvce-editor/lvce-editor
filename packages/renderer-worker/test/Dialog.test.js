@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import * as Platform from '../src/parts/Platform/Platform.js'
 
 beforeEach(() => {
   Dialog.state.dialog = undefined
@@ -24,12 +23,21 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+  return {
+    getPlatform: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
 )
+const Platform = await import('../src/parts/Platform/Platform.js')
 const Dialog = await import('../src/parts/Dialog/Dialog.js')
 
 // TODO would need to test different platforms
@@ -52,10 +60,10 @@ test.skip('openFolder', async () => {
 })
 
 test('showAbout - electron', async () => {
-  // TODO mock platform
-  Platform.state.getPlatform = () => {
+  // @ts-ignore
+  Platform.getPlatform.mockImplementation(() => {
     return 'electron'
-  }
+  })
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(() => {
     return null
@@ -70,9 +78,10 @@ test('showAbout - electron', async () => {
 // be careful and add test
 
 test('showMessage - web', async () => {
-  Platform.state.getPlatform = () => {
+  // @ts-ignore
+  Platform.getPlatform.mockImplementation(() => {
     return 'web'
-  }
+  })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await Dialog.showMessage(
@@ -96,9 +105,10 @@ test('showMessage - web', async () => {
 })
 
 test('showMessage - electron', async () => {
-  Platform.state.getPlatform = () => {
+  // @ts-ignore
+  Platform.getPlatform.mockImplementation(() => {
     return 'electron'
-  }
+  })
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(() => {
     return null
@@ -118,9 +128,10 @@ test('showMessage - electron', async () => {
 })
 
 test('close - web', async () => {
-  Platform.state.getPlatform = () => {
+  // @ts-ignore
+  Platform.getPlatform.mockImplementation(() => {
     return 'web'
-  }
+  })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await Dialog.showMessage(
