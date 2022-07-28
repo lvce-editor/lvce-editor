@@ -1,3 +1,5 @@
+import { htmlElements } from './HtmlElements.js'
+
 const querySelectorByText = (root, text) => {
   let node
   const elements = []
@@ -13,6 +15,10 @@ const querySelectorByText = (root, text) => {
 
 const querySelectorByCss = (selector) => {
   return Array.from(document.querySelectorAll(selector))
+}
+
+const isElement = (selector) => {
+  return htmlElements.includes(selector)
 }
 
 export const querySelector = (selector) => {
@@ -35,6 +41,9 @@ export const querySelector = (selector) => {
     return querySelectorByCss(selector)
   }
   if (selector.startsWith('#')) {
+    return querySelectorByCss(selector)
+  }
+  if (isElement(selector)) {
     return querySelectorByCss(selector)
   }
   throw new Error(`unsupported selector: ${selector}`)

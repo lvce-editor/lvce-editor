@@ -4,6 +4,7 @@ import * as SingleElementConditions from './SingleElementConditions.js'
 import * as MultiElementConditions from './MultiElementConditions.js'
 import * as ConditionErrors from './ConditionErrors.js'
 import * as Assert from '../Assert/Assert.js'
+import * as KeyBoardActions from './KeyBoardActions.js'
 
 const create$Overlay = () => {
   const $TestOverlay = document.createElement('div')
@@ -91,6 +92,11 @@ export const performAction = async (locator, fnName, options) => {
     await Timeout.waitForMutation(100)
     currentTime = Time.getTimeStamp()
   }
+}
+
+export const performKeyBoardAction = (fnName, options) => {
+  const fn = KeyBoardActions[fnName]
+  fn(options)
 }
 
 export const checkSingleElementCondition = async (locator, fnName, options) => {

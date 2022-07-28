@@ -7,4 +7,5 @@ export const __initialize__ = () => {
   Command.register('TestFrameWork.performAction', TestFrameWork.performAction)
   Command.register('TestFrameWork.checkSingleElementCondition', TestFrameWork.checkSingleElementCondition)
   Command.register('TestFrameWork.checkMultiElementCondition', TestFrameWork.checkMultiElementCondition)
+  Command.register('TestFrameWork.performKeyBoardAction', TestFrameWork.performKeyBoardAction)
 }

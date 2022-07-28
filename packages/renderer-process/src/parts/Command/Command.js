@@ -114,6 +114,7 @@ const getModuleId = (commandId) => {
     case 'TestFrameWork.performAction':
     case 'TestFrameWork.checkSingleElementCondition':
     case 'TestFrameWork.checkMultiElementCondition':
+    case 'TestFrameWork.performKeyBoardAction':
       return MODULE_TEST_FRAME_WORK
     case 'ClipBoard.readText':
     case 'ClipBoard.writeText':
