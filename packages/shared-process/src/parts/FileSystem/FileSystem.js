@@ -6,6 +6,7 @@ import * as Error from '../Error/Error.js'
 import * as Path from '../Path/Path.js'
 import * as Trash from '../Trash/Trash.js'
 import * as Platform from '../Platform/Platform.js'
+import VError from 'verror'
 
 export const state = {
   watcherMap: Object.create(null),
@@ -15,6 +16,17 @@ export const copy = async (source, target) => {
   try {
     await fs.cp(source, target, { recursive: true })
   } catch (error) {
+    if (
+      error &&
+      error.message &&
+      error.message.startsWith(
+        'Invalid src or dest: cp returned EINVAL (src and dest cannot be the same)'
+      )
+    ) {
+      throw new VError(
+        `Failed to copy "${source}" to "${target}": src and dest cannot be the same`
+      )
+    }
     throw new Error.OperationalError({
       cause: error,
       code: 'E_FILE_SYSTEM_ERROR',
