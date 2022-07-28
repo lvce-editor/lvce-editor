@@ -1,11 +1,13 @@
 import {
-  getTmpDir,
-  runWithExtension,
-  test,
   expect,
-  writeFile,
-  mkdir,
-} from './_testFrameWork.js'
+  Locator,
+  test,
+} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
+import {
+  FileSystem,
+  Main,
+  Workspace,
+} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
 
 // manual accessibility tests
 
@@ -21,24 +23,21 @@ import {
 
 test('viewlet.explorer-accessibility', async () => {
   // arrange
-  const tmpDir = await getTmpDir()
-  await mkdir(`${tmpDir}/languages`)
-  await mkdir(`${tmpDir}/sample-folder`)
-  await writeFile(`${tmpDir}/test.txt`, 'div')
-  await writeFile(`${tmpDir}/languages/index.html`, 'div')
-  await writeFile(`${tmpDir}/sample-folder/a.txt`, '')
-  await writeFile(`${tmpDir}/sample-folder/b.txt`, '')
-  await writeFile(`${tmpDir}/sample-folder/c.txt`, '')
-  const { Main, locator } = await runWithExtension({
-    folder: tmpDir,
-    name: '',
-  })
+  const tmpDir = await FileSystem.getTmpDir()
+  await FileSystem.mkdir(`${tmpDir}/languages`)
+  await FileSystem.mkdir(`${tmpDir}/sample-folder`)
+  await FileSystem.writeFile(`${tmpDir}/test.txt`, 'div')
+  await FileSystem.writeFile(`${tmpDir}/languages/index.html`, 'div')
+  await FileSystem.writeFile(`${tmpDir}/sample-folder/a.txt`, '')
+  await FileSystem.writeFile(`${tmpDir}/sample-folder/b.txt`, '')
+  await FileSystem.writeFile(`${tmpDir}/sample-folder/c.txt`, '')
 
   // act
+  await Workspace.setPath(tmpDir)
   await Main.openUri(`${tmpDir}/test.txt`)
 
   const titleLanguages = '/languages'
-  const treeItemLanguages = locator(`.TreeItem[title$="${titleLanguages}"]`)
+  const treeItemLanguages = Locator(`.TreeItem[title$="${titleLanguages}"]`)
   await expect(treeItemLanguages).toHaveAttribute('tabindex', null)
   await expect(treeItemLanguages).toHaveAttribute('role', 'treeitem')
   await expect(treeItemLanguages).toHaveAttribute('aria-level', '1')
@@ -47,7 +46,7 @@ test('viewlet.explorer-accessibility', async () => {
   await expect(treeItemLanguages).toHaveAttribute('aria-expanded', 'false')
 
   const titleSampleFolder = '/sample-folder'
-  const treeItemSampleFolder = locator(
+  const treeItemSampleFolder = Locator(
     `.TreeItem[title$="${titleSampleFolder}"]`
   )
   await expect(treeItemSampleFolder).toHaveAttribute('tabindex', null)
@@ -58,7 +57,7 @@ test('viewlet.explorer-accessibility', async () => {
   await expect(treeItemSampleFolder).toHaveAttribute('aria-expanded', 'false')
 
   const titleTest = '/test.txt'
-  const treeItemTestTxt = locator(`.TreeItem[title$="${titleTest}"]`)
+  const treeItemTestTxt = Locator(`.TreeItem[title$="${titleTest}"]`)
   await expect(treeItemTestTxt).toHaveAttribute('tabindex', null)
   await expect(treeItemTestTxt).toHaveAttribute('aria-level', '1')
   await expect(treeItemTestTxt).toHaveAttribute('aria-posinset', '3')
@@ -72,7 +71,7 @@ test('viewlet.explorer-accessibility', async () => {
   await expect(treeItemLanguages).toHaveAttribute('aria-expanded', 'true')
 
   const titleIndexHtml = '/languages/index.html'
-  const treeItemIndexHtml = locator(`.TreeItem[title$="${titleIndexHtml}"]`)
+  const treeItemIndexHtml = Locator(`.TreeItem[title$="${titleIndexHtml}"]`)
   await expect(treeItemIndexHtml).toHaveAttribute('tabindex', null)
   await expect(treeItemIndexHtml).toHaveAttribute('aria-level', '2')
   await expect(treeItemIndexHtml).toHaveAttribute('aria-posinset', '1')
