@@ -16,6 +16,7 @@ const locations = [
   'build/src/parts/ComputeCacheKey/ComputeCacheKey.js',
   'build/src/parts/Hash/Hash.js',
   '.github/workflows/ci.yml',
+  '.github/workflows/pr.yml',
   '.github/workflows/release.yml',
 ]
 
