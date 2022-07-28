@@ -155,12 +155,13 @@ test('prepareJsonError', async () => {
 test('prepare - error with internal websocket stack trace', () => {
   const error = new Error()
   error.message = 'oops'
+  const filePrefix = process.platform === 'win32' ? 'file:///C:' : `file://`
   error.stack = `Error: Failed to execute reference provider: oops
-    at Object.provideReferences (file:///test/lvce-editor/packages/e2e/fixtures/sample.reference-provider-error/main.js:5:11)
-    at executeReferenceProvider (file:///test/lvce-editor/packages/extension-host/src/parts/ExtensionHostReference/ExtensionHostReference.js:43:48)
-    at Module.invoke (file:///test/lvce-editor/packages/extension-host/src/parts/InternalCommand/InternalCommand.js:149:10)
-    at handleMessage (file:///test/lvce-editor/packages/extension-host/src/parts/SharedProcess/SharedProcess.js:83:44)
-    at WebSocket.wrappedListener (file:///test/lvce-editor/packages/extension-host/src/parts/Ipc/IpcWithWebSocket.js:59:13)
+    at Object.provideReferences (${filePrefix}/test/lvce-editor/packages/e2e/fixtures/sample.reference-provider-error/main.js:5:11)
+    at executeReferenceProvider (${filePrefix}/test/lvce-editor/packages/extension-host/src/parts/ExtensionHostReference/ExtensionHostReference.js:43:48)
+    at Module.invoke (${filePrefix}/test/lvce-editor/packages/extension-host/src/parts/InternalCommand/InternalCommand.js:149:10)
+    at handleMessage (${filePrefix}/test/lvce-editor/packages/extension-host/src/parts/SharedProcess/SharedProcess.js:83:44)
+    at WebSocket.wrappedListener (${filePrefix}/test/lvce-editor/packages/extension-host/src/parts/Ipc/IpcWithWebSocket.js:59:13)
     at Receiver.receiverOnMessage (/test/lvce-editor/packages/extension-host/node_modules/ws/lib/websocket.js:1178:20)
     at Receiver.dataMessage (/test/lvce-editor/packages/extension-host/node_modules/ws/lib/receiver.js:528:14)
     at Receiver.getData (/test/lvce-editor/packages/extension-host/node_modules/ws/lib/receiver.js:446:17)`
@@ -174,9 +175,9 @@ test('prepare - error with internal websocket stack trace', () => {
   const prettyError = PrettyError.prepare(error)
   // TODO in this case, only the first two stack lines are actually relevant
   expect(prettyError.stack)
-    .toBe(`    at Object.provideReferences (file:///test/lvce-editor/packages/e2e/fixtures/sample.reference-provider-error/main.js:5:11)
-    at executeReferenceProvider (file:///test/lvce-editor/packages/extension-host/src/parts/ExtensionHostReference/ExtensionHostReference.js:43:48)
-    at Module.invoke (file:///test/lvce-editor/packages/extension-host/src/parts/InternalCommand/InternalCommand.js:149:10)
-    at handleMessage (file:///test/lvce-editor/packages/extension-host/src/parts/SharedProcess/SharedProcess.js:83:44)
-    at WebSocket.wrappedListener (file:///test/lvce-editor/packages/extension-host/src/parts/Ipc/IpcWithWebSocket.js:59:13)`)
+    .toBe(`    at Object.provideReferences (${filePrefix}/test/lvce-editor/packages/e2e/fixtures/sample.reference-provider-error/main.js:5:11)
+    at executeReferenceProvider (${filePrefix}/test/lvce-editor/packages/extension-host/src/parts/ExtensionHostReference/ExtensionHostReference.js:43:48)
+    at Module.invoke (${filePrefix}/test/lvce-editor/packages/extension-host/src/parts/InternalCommand/InternalCommand.js:149:10)
+    at handleMessage (${filePrefix}/test/lvce-editor/packages/extension-host/src/parts/SharedProcess/SharedProcess.js:83:44)
+    at WebSocket.wrappedListener (${filePrefix}/test/lvce-editor/packages/extension-host/src/parts/Ipc/IpcWithWebSocket.js:59:13)`)
 })
