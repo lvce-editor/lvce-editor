@@ -1,15 +1,26 @@
 /**
  * @jest-environment jsdom
  */
-import * as EditorCursor from '../src/parts/Editor/EditorCursor.js'
-import * as Platform from '../src/parts/Platform/Platform.js'
+import { jest } from '@jest/globals'
+
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
+  isMobileOrTablet: jest.fn().mockImplementation(() => {
+    throw new Error('not implemented')
+  }),
+}))
+
+const Platform = await import('../src/parts/Platform/Platform.js')
+
+const EditorCursor = await import('../src/parts/Editor/EditorCursor.js')
 
 beforeEach(() => {
-  Platform.state.cachedIsMobileOrTablet = undefined
+  jest.resetAllMocks()
 })
-
 test('getVisible - desktop', () => {
-  Platform.state.isMobileOrTablet = () => false
+  // @ts-ignore
+  Platform.isMobileOrTablet.mockImplementation(() => {
+    return false
+  })
   const cursor = {
     rowIndex: 0,
     columnIndex: 0,
@@ -39,7 +50,10 @@ test('getVisible - desktop', () => {
 })
 
 test('getVisible - native', () => {
-  Platform.state.isMobileOrTablet = () => true
+  // @ts-ignore
+  Platform.isMobileOrTablet.mockImplementation(() => {
+    return true
+  })
   const cursor = {
     rowIndex: 0,
     columnIndex: 0,
@@ -69,9 +83,10 @@ test('getVisible - native', () => {
 })
 
 test.only('getVisible - emoji - 👮🏽‍♀️', () => {
-  Platform.state.isMobileOrTablet = () => {
+  // @ts-ignore
+  Platform.isMobileOrTablet.mockImplementation(() => {
     return false
-  }
+  })
   const cursor = {
     rowIndex: 0,
     columnIndex: 7,

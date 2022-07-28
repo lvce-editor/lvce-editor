@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import * as Platform from '../src/parts/Platform/Platform.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -15,9 +14,18 @@ jest.unstable_mockModule(
     }
   }
 )
+
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+  return {
+    getPlatform: jest.fn(() => {
       throw new Error('not implemented')
     }),
   }
@@ -29,6 +37,7 @@ const RendererProcess = await import(
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
 )
+const Platform = await import('../src/parts/Platform/Platform.js')
 
 const Window = await import('../src/parts/Window/Window.js')
 
@@ -43,6 +52,10 @@ test.skip('reload', async () => {
 
 test('minimize', async () => {
   // @ts-ignore
+  Platform.getPlatform.mockImplementation(() => {
+    return 'remote'
+  })
+  // @ts-ignore
   SharedProcess.invoke.mockImplementation(() => {})
   await Window.minimize()
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
@@ -50,6 +63,10 @@ test('minimize', async () => {
 })
 
 test('maximize', async () => {
+  // @ts-ignore
+  Platform.getPlatform.mockImplementation(() => {
+    return 'remote'
+  })
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(() => {})
   await Window.maximize()
@@ -59,12 +76,20 @@ test('maximize', async () => {
 
 test('unmaximize', async () => {
   // @ts-ignore
+  Platform.getPlatform.mockImplementation(() => {
+    return 'remote'
+  })
+  // @ts-ignore
   SharedProcess.invoke.mockImplementation(() => {})
   await Window.unmaximize()
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Electron.windowUnMaximize')
 })
 
 test('close', async () => {
+  // @ts-ignore
+  Platform.getPlatform.mockImplementation(() => {
+    return 'remote'
+  })
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(() => {})
   await Window.close()
@@ -74,6 +99,10 @@ test('close', async () => {
 
 test('setTitle', async () => {
   // @ts-ignore
+  Platform.getPlatform.mockImplementation(() => {
+    return 'web'
+  })
+  // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await Window.setTitle('test')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
@@ -81,9 +110,10 @@ test('setTitle', async () => {
 })
 
 test('openNew - web', async () => {
-  Platform.state.getPlatform = () => {
+  // @ts-ignore
+  Platform.getPlatform.mockImplementation(() => {
     return 'web'
-  }
+  })
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(() => {})
   await Window.openNew()
@@ -91,9 +121,10 @@ test('openNew - web', async () => {
 })
 
 test('openNew - electron', async () => {
-  Platform.state.getPlatform = () => {
+  // @ts-ignore
+  Platform.getPlatform.mockImplementation(() => {
     return 'electron'
-  }
+  })
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(() => {
     return null
