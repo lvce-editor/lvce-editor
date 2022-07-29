@@ -316,6 +316,11 @@ const applyJsOverrides = async () => {
     occurrence: `const CACHE_NAME = 'lvce-runtime'`,
     replacement: `const CACHE_NAME = 'lvce-runtime-${commitHash}'`,
   })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,
+    occurrence: `/packages/extension-host-worker-tests/src`,
+    replacement: `/${commitHash}/packages/extension-host-worker-tests/src`,
+  })
 }
 
 const addRobotsTxt = async () => {
@@ -479,55 +484,60 @@ const copyTestFiles = async () => {
   const commitHash = await CommitHash.getCommitHash()
   await Copy.copy({
     from: 'packages/extension-host-worker-tests/src',
-    to: `build/.tmp/dist/tests`,
+    to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/src`,
     ignore: ['videos'],
   })
   await Copy.copy({
     from: 'packages/extension-host-worker-tests/fixtures',
-    to: `build/.tmp/dist/fixtures`,
+    to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`,
   })
-  const dirents = await ReadDir.readDir('build/.tmp/dist/tests')
+  await Copy.copy({
+    from: 'static/tests/_template.html',
+    to: `build/.tmp/dist/tests/_template.html`,
+  })
+  await Copy.copy({
+    from: 'static/tests/index.html',
+    to: `build/.tmp/dist/tests/index.html`,
+  })
   const appCssPath = `/${commitHash}/css/App.css`
   const rendererProcessPath = `/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`
   const rendererWorkerPath = `/${commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`
+  await Replace.replace({
+    path: 'build/.tmp/dist/tests/_template.html',
+    occurrence: '/packages/renderer-process/src/rendererProcessMain.js',
+    replacement: rendererProcessPath,
+  })
+  await Replace.replace({
+    path: 'build/.tmp/dist/tests/_template.html',
+    occurrence: '/packages/renderer-worker/src/rendererWorkerMain.js',
+    replacement: rendererWorkerPath,
+  })
+  await Replace.replace({
+    path: 'build/.tmp/dist/tests/_template.html',
+    occurrence: '/css/App.css',
+    replacement: appCssPath,
+  })
+  const dirents = await ReadDir.readDir('static/tests')
   for (const dirent of dirents) {
-    if (
-      !dirent.name.endsWith('.html') ||
-      dirent.name.startsWith('_') ||
-      !dirent.isFile()
-    ) {
+    if (dirent.name === '_template.html' || dirent.name === 'index.html') {
       continue
     }
-    const direntPath = Path.join('build/.tmp/dist/tests', dirent.name)
-    await Replace.replace({
-      path: direntPath,
-      occurrence: '/packages/renderer-process/src/rendererProcessMain.js',
-      replacement: rendererProcessPath,
-    })
-    await Replace.replace({
-      path: direntPath,
-      occurrence: '/packages/renderer-worker/src/rendererWorkerMain.js',
-      replacement: rendererWorkerPath,
-    })
-    await Replace.replace({
-      path: direntPath,
-      occurrence: '/css/App.css',
-      replacement: appCssPath,
+    await Copy.copyFile({
+      from: 'build/.tmp/dist/tests/_template.html',
+      to: `build/.tmp/dist/tests/${dirent.name}`,
     })
   }
+
   const rendererWorkerPathTestFrameWorkBefore = `../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js`
-  const rendererWorkerPathTestFrameWorkAfter = `../${commitHash}/packages/renderer-worker/dist/TestFrameWork.js`
+  const rendererWorkerPathTestFrameWorkAfter = `../../renderer-worker/dist/TestFrameWork.js`
   const rendererWorkerPathTestComponentBefore = `../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js`
-  const rendererWorkerPathTestComponentAfter = `../${commitHash}/packages/renderer-worker/dist/TestFrameWorkComponent.js`
+  const rendererWorkerPathTestComponentAfter = `../../renderer-worker/dist/TestFrameWorkComponent.js`
   for (const dirent of dirents) {
-    if (
-      !dirent.name.endsWith('.js') ||
-      dirent.name.startsWith('_') ||
-      !dirent.isFile()
-    ) {
+    if (dirent.name === '_template.html' || dirent.name === 'index.html') {
       continue
     }
-    const direntPath = Path.join('build/.tmp/dist/tests', dirent.name)
+    const name = dirent.name.replace('.html', '')
+    const direntPath = `build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/src/${name}.js`
     await Replace.replace({
       path: direntPath,
       occurrence: rendererWorkerPathTestFrameWorkBefore,
