@@ -23,7 +23,6 @@ jobs:
         run: echo "::set-output name=value::$(node build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js)"
       - uses: actions/cache@v3
         id: npm-cache
-        if: matrix.os != 'windows-2022' # workaround for https://github.com/actions/cache/issues/728
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-cacheNodeModules-${{ steps.nodeModulesCacheKey.outputs.value }}
@@ -32,6 +31,8 @@ jobs:
         if: steps.npm-cache.outputs.cache-hit != 'true'
         env:
           DOWNLOAD_BUILTIN_EXTENSIONS: 0
+      - run: npm run postinstall
+        if: matrix.os == 'windows-2022' # workaround for https://github.com/actions/cache/issues/728
       - run: npm test
       - name: install playwright dependencies
         working-directory: ./packages/e2e
