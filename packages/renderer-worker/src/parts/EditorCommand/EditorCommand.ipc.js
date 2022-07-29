@@ -76,6 +76,7 @@ import * as EditorToggleComment from './EditorCommandToggleComment.js'
 import * as EditorType from './EditorCommandType.js'
 import * as EditorUndo from './EditorCommandUndo.js'
 import * as EditorUnindent from './EditorCommandUnindent.js'
+import * as EditorBraceCompletion from './EditorCommandBraceCompletion.js'
 
 // prettier-ignore
 export const __initialize__ = () => {
@@ -161,6 +162,7 @@ export const __initialize__ = () => {
   Command.register('Editor.type', Viewlet.wrapViewletCommand('EditorText', EditorType.editorType))
   Command.register('Editor.undo', Viewlet.wrapViewletCommand('EditorText', EditorUndo.editorUndo))
   Command.register('Editor.unindent', Viewlet.wrapViewletCommand('EditorText', EditorUnindent.editorUnindent))
+  Command.register('Editor.braceCompletion', Viewlet.wrapViewletCommand('EditorText', EditorBraceCompletion.editorBraceCompletion))
     // TODO command to set cursor position
   // TODO command copy line up/down
   // TODO command move line up/down
