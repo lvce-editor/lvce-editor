@@ -10,6 +10,7 @@ export const executeProviders = async ({
 }) => {
   const extensionHosts = await ExtensionHostManagement.activateByEvent(event)
   if (extensionHosts.length === 0) {
+    console.log('no extension hosts found')
     return noProviderFoundResult ?? undefined
   }
   const promises = []
@@ -19,6 +20,7 @@ export const executeProviders = async ({
   const results = await Promise.all(promises)
   console.log({ results })
   const combinedResult = combineResults(results)
+  console.log({ combinedResult })
   return combinedResult
 }
 
