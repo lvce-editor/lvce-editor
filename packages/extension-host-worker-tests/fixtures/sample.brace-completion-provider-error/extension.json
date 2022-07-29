@@ -1,0 +1,10 @@
+{
+  "browser": "main.js",
+  "activation": ["onBraceCompletion:xyz"],
+  "languages": [
+    {
+      "id": "xyz",
+      "extensions": [".xyz"]
+    }
+  ]
+}

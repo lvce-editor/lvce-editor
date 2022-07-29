@@ -345,3 +345,7 @@ export const setFiles = (files) => {
     state.textDocuments[file.id] = file
   }
 }
+
+export const getAll = () => {
+  return Object.values(state.textDocuments)
+}

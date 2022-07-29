@@ -307,6 +307,7 @@ const getModuleId = (commandId) => {
       return MODULE_AJAX
     case 'Editor.applyEdit':
     case 'Editor.blur':
+    case 'Editor.braceCompletion':
     case 'Editor.cancelSelection':
     case 'Editor.handleScrollBarMove':
     case 'Editor.close':

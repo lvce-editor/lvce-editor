@@ -15,3 +15,7 @@ export const openEditorContextMenu = async () => {
 export const executeTabCompletion = async () => {
   await Command.execute('Editor.tabCompletion')
 }
+
+export const executeBraceCompletion = async (text) => {
+  await Command.execute('Editor.braceCompletion', text)
+}

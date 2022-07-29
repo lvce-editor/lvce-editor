@@ -28,6 +28,8 @@ const getFn = (method) => {
       return ExtensionHostTypeDefinition.executeTypeDefinitionProvider
     case 'ExtensionHost.executeTabCompletionProvider':
       return ExtensionHostTabCompletion.executeTabCompletionProvider
+    case 'ExtensionHostBraceCompletion.executeBraceCompletionProvider':
+      return ExtensionHostBraceCompletion.executeBraceCompletionProvider
     default:
       throw new Error(`method not found: ${method}`)
   }

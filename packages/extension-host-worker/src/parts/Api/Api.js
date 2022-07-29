@@ -25,7 +25,7 @@ export const createCommandMap = () => {
 export const create = () => {
   return {
     // Brace Completion
-    registerBraceCompletionProcider:ExtensionHostBraceCompletion.registerBraceCompletionProvider,
+    registerBraceCompletionProvider:ExtensionHostBraceCompletion.registerBraceCompletionProvider,
     executeBraceCompletionProvider: ExtensionHostBraceCompletion.executeBraceCompletionProvider,
 
     // Completion
