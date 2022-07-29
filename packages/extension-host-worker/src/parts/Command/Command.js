@@ -26,6 +26,8 @@ const getFn = (method) => {
       return TextDocument.setLanguageId
     case 'ExtensionHostTypeDefinition.executeTypeDefinitionProvider':
       return ExtensionHostTypeDefinition.executeTypeDefinitionProvider
+    case 'ExtensionHost.executeTabCompletionProvider':
+      return ExtensionHostTabCompletion.executeTabCompletionProvider
     default:
       throw new Error(`method not found: ${method}`)
   }

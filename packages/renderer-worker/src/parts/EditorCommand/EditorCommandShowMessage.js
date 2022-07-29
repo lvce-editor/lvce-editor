@@ -35,6 +35,10 @@ export const editorShowMessage = async (editor, position, message, isError) => {
   return editor
 }
 
+export const showErrorMessage = (editor, position, message) => {
+  return editorShowMessage(editor, position, message, /* isError */ true)
+}
+
 export const editorHideMessage = async (editor) => {
   clearTimeout(state.timeout)
   state.timeout = -1

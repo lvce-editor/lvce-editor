@@ -10,6 +10,7 @@ export const executeTabCompletionProvider = (editor, offset) => {
     method: 'ExtensionHost.executeTabCompletionProvider',
     params: [editor.id, offset],
     noProviderFoundMessage: 'No tab completion provider found',
+    noProviderFoundResult: undefined,
     combineResults,
   })
 }

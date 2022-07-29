@@ -11,3 +11,7 @@ export const openCompletion = async () => {
 export const openEditorContextMenu = async () => {
   await Command.execute('Editor.handleContextMenu', 0, 0)
 }
+
+export const executeTabCompletion = async () => {
+  await Command.execute('Editor.tabCompletion')
+}
