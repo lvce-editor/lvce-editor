@@ -5,7 +5,7 @@ export const toBeVisible = (locator) => {
 }
 
 export const toHaveText = (locator, { text }) => {
-  return `expected selector to have text ${locator._selector} ${text}`
+  return `expected selector ${locator._selector} to have text ${text}`
 }
 
 export const toHaveAttribute = (locator, { key, value }) => {
