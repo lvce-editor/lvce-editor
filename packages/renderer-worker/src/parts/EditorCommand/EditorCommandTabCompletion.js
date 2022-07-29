@@ -11,8 +11,6 @@ const getTabCompletion = async (editor) => {
       editor,
       offset
     )
-  console.log({ tabCompletion })
-  Assert.object(tabCompletion)
   return tabCompletion
 }
 
