@@ -5,6 +5,7 @@ const { registerTabCompletionProvider, executeTabCompletionProvider, reset } =
     name: 'TabCompletion',
     resultShape: {
       type: 'object',
+      allowUndefined: true,
     },
   })
 
