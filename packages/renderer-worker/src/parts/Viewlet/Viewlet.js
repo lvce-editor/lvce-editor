@@ -138,7 +138,6 @@ export const wrapViewletCommand = (id, fn) => {
     if (activeInstance.factory && activeInstance.factory.hasFunctionalRender) {
       const oldState = activeInstance.state
       const newState = await fn(oldState, ...args)
-      console.log('[wrapped command 1]', { newState })
       if (!newState) {
         console.log({ fn })
       }
@@ -147,7 +146,6 @@ export const wrapViewletCommand = (id, fn) => {
       if (oldState === newState) {
         return
       }
-      console.log('[wrapped command 2]', { newState })
       const commands = activeInstance.factory.render(oldState, newState)
       state.instances[id].state = newState
       await RendererProcess.invoke(
