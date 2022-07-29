@@ -38,6 +38,7 @@ const getFn = (id) => {
     case 386:
     case 'executeTabCompletionProvider':
     case 'TabCompletion.execute':
+    case 'ExtensionHost.executeTabCompletionProvider':
       return ExtensionHostTabCompletion.executeTabCompletionProvider
     case 393:
     case 'Stats.getMemoryInfo':
