@@ -1,0 +1,10 @@
+{
+  "browser": "main.js",
+  "activation": ["onTabCompletion:xyz"],
+  "languages": [
+    {
+      "id": "xyz",
+      "extensions": [".xyz"]
+    }
+  ]
+}

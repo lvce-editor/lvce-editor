@@ -1,7 +1,7 @@
 import * as Command from '../Command/Command.js'
 
 export const setCursor = async (rowIndex, columnIndex) => {
-  await Command.execute('Editor.cursorSet', [{ rowIndex, columnIndex }])
+  await Command.execute('Editor.cursorSet', { rowIndex, columnIndex })
 }
 
 export const openCompletion = async () => {

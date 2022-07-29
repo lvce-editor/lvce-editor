@@ -11,14 +11,14 @@ import {
   Workspace,
 } from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
 
-const name = 'sample.tab-completion-provider-error'
+const name = 'sample.tab-completion-provider'
 
-test('sample.tab-completion-provider-error', async () => {
+test('sample.tab-completion-provider', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
     `${tmpDir}/test.xyz`,
-    `export const add = () => {}
+    `t
 `
   )
 
@@ -29,13 +29,10 @@ test('sample.tab-completion-provider-error', async () => {
 
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
-  await Editor.setCursor(0, 0)
+  await Editor.setCursor(0, 1)
   await Editor.executeTabCompletion()
 
   // assert
-  const overlayMessage = Locator('.EditorOverlayMessage')
-  await expect(overlayMessage).toBeVisible()
-  await expect(overlayMessage).toHaveText(
-    'Error: Failed to execute tab completion provider: oops'
-  )
+  const editor = Locator('.Viewlet.Editor')
+  await expect(editor).toHaveText(`test`)
 })

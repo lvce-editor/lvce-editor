@@ -31,6 +31,7 @@ export const editorTabCompletion = async (editor) => {
     }
     return EditorSnippet.editorSnippet(editor, tabCompletion)
   } catch (error) {
+    console.error(error)
     // TODO cursor should always be of type object
     const position = Array.isArray(editor.cursor)
       ? editor.cursor[0]
