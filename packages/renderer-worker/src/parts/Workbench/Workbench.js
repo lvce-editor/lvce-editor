@@ -44,7 +44,6 @@ export const startup = async (config) => {
   LifeCycle.mark(LifeCycle.Phase.One)
 
   const initData = await InitData.getInitData()
-  console.log({ initData })
 
   Performance.mark('code/willLoadPreferences')
   await Preferences.hydrate()
