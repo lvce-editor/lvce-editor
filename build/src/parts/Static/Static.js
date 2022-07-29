@@ -356,6 +356,10 @@ const TEMPLATE_NETLIFY_HEADERS = `/COMMIT_HASH/*
   Cache-Control: public, max-age=31536000, immutable
   X-Content-Type-Options: nosniff
 
+/tests/*
+  Cache-Control: public, max-age=31536000, immutable
+  X-Content-Type-Options: nosniff
+
 /manifest.json
   Cache-Control: public, max-age=604800, immutable
   X-Content-Type-Options: nosniff
