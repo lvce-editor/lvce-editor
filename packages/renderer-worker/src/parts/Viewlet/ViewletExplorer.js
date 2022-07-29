@@ -211,8 +211,7 @@ export const handleWorkspaceChange = async (state) => {
 }
 
 export const handleIconThemeChange = (state) => {
-  // TODO
-  return state
+  return updateIcons(state)
 }
 
 const getVisible = (state) => {
