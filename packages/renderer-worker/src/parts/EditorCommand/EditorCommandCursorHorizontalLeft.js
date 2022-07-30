@@ -18,7 +18,7 @@ const getNewSelections = (selections, lines, getDelta) => {
         newSelections[i + 2] = 0
         newSelections[i + 3] = 0
       } else {
-        const positionLeft = EditorGetPositionLeft.moveToPositionLeft(
+        EditorGetPositionLeft.moveToPositionLeft(
           newSelections,
           i,
           selectionStartRow,
@@ -28,10 +28,8 @@ const getNewSelections = (selections, lines, getDelta) => {
         )
       }
     } else {
-      newSelections[i] = selections[i]
-      newSelections[i + 1] = selections[i + 1]
-      newSelections[i + 2] = selections[i]
-      newSelections[i + 3] = selections[i + 1]
+      newSelections[i] = newSelections[i + 2] = selections[i]
+      newSelections[i + 1] = newSelections[i + 3] = selections[i + 1]
     }
   }
   return newSelections

@@ -16,3 +16,21 @@ export const editorGetPositionRight = (position, lines, getDelta) => {
     columnIndex: columnIndex + delta,
   }
 }
+
+export const moveToPositionRight = (
+  selections,
+  i,
+  rowIndex,
+  columnIndex,
+  lines,
+  getDelta
+) => {
+  if (columnIndex >= lines[rowIndex.length]) {
+    selections[i] = selections[i + 2] = selections[i] + 1
+    selections[i + 1] = selections[i + 3] = 0
+  } else {
+    const delta = getDelta(lines[rowIndex], columnIndex)
+    selections[i] = selections[i + 2] = rowIndex
+    selections[i + 1] = selections[i + 3] = columnIndex + delta
+  }
+}
