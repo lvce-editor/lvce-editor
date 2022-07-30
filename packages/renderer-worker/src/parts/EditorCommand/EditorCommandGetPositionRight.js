@@ -25,7 +25,7 @@ export const moveToPositionRight = (
   lines,
   getDelta
 ) => {
-  if (columnIndex >= lines[rowIndex.length]) {
+  if (columnIndex >= lines[rowIndex].length) {
     selections[i] = selections[i + 2] = selections[i] + 1
     selections[i + 1] = selections[i + 3] = 0
   } else {

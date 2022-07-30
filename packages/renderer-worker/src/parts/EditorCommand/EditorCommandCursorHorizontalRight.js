@@ -9,8 +9,8 @@ const getNewSelections = (selections, lines, getDelta) => {
     const selectionEndRow = selections[i + 2]
     const selectionEndColumn = selections[i + 3]
     if (
-      selectionStartRow == selectionEndRow &&
-      selectionStartColumn == selectionEndColumn
+      selectionStartRow === selectionEndRow &&
+      selectionStartColumn === selectionEndColumn
     ) {
       EditorGetPositionRight.moveToPositionRight(
         newSelections,
@@ -23,12 +23,6 @@ const getNewSelections = (selections, lines, getDelta) => {
     } else {
       newSelections[i] = newSelections[i + 2] = selections[i + 2]
       newSelections[i + 1] = newSelections[i + 3] = selections[i + 3]
-    }
-  }
-  if (selections.start !== selections.end) {
-    return {
-      start: selections.end,
-      end: selections.end,
     }
   }
   return newSelections
