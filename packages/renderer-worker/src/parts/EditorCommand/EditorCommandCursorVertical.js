@@ -1,6 +1,7 @@
 import * as Editor from '../Editor/Editor.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as TextSegmenter from '../TextSegmenter/TextSegmenter.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
 const editorCursorsVerticalWithIntlSegmenter = (
   editor,
@@ -45,32 +46,28 @@ const editorCursorsVerticalWithIntlSegmenter = (
   return Editor.scheduleSelections(editor, selectionEdits)
 }
 
-const moveSelectionWithoutIntlSegmenter = (selection) => {
-  if (selection.start.rowIndex === 0) {
-    const newPosition = {
-      rowIndex: 0,
-      columnIndex: 0,
-    }
-    return {
-      start: newPosition,
-      end: newPosition,
-    }
-  }
-  const newPosition = {
-    rowIndex: selection.start.rowIndex - 1,
-    columnIndex: selection.start.columnIndex,
-  }
-  return {
-    start: newPosition,
-    end: newPosition,
+const moveSelectionWithoutIntlSegmenter = (
+  selections,
+  i,
+  selectionStartRow,
+  selectionStartColumn,
+  selectionEndRow,
+  selectionEndColumn
+) => {
+  if (selectionStartRow === 0) {
+    EditorSelection.moveRangeToPosition(selections, i, 0, 0)
+  } else {
+    EditorSelection.moveRangeToPosition(
+      selections,
+      i,
+      selectionStartRow - 1,
+      selectionStartColumn
+    )
   }
 }
 
-const editorCursorsVerticalWithoutIntlSegmenter = (editor) => {
-  const selectionEdits = editor.selections.map(
-    moveSelectionWithoutIntlSegmenter
-  )
-  return Editor.scheduleSelections(editor, selectionEdits)
+const getNewSelections = (selections) => {
+  return EditorSelection.map(selections, moveSelectionWithoutIntlSegmenter)
 }
 
 export const editorCommandCursorVertical = (
@@ -79,13 +76,15 @@ export const editorCommandCursorVertical = (
   getEdgePosition,
   delta
 ) => {
-  if (TextSegmenter.supported()) {
-    return editorCursorsVerticalWithIntlSegmenter(
-      editor,
-      getPosition,
-      getEdgePosition,
-      delta
-    )
-  }
-  return editorCursorsVerticalWithoutIntlSegmenter(editor)
+  // if (TextSegmenter.supported()) {
+  //   return editorCursorsVerticalWithIntlSegmenter(
+  //     editor,
+  //     getPosition,
+  //     getEdgePosition,
+  //     delta
+  //   )
+  // }
+  const selections = editor.selections
+  const newSelections = getNewSelections(selections)
+  return Editor.scheduleSelections(editor, newSelections)
 }
