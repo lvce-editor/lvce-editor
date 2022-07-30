@@ -16,6 +16,7 @@ const ExtensionHostState = {
 export const state = {
   extensionPromiseCache: Object.create(null),
   extensionHosts: Object.create(null),
+  pendingIpcs: Object.create(null),
 }
 
 const isActivatableExtension = (extension) => {
@@ -94,31 +95,28 @@ const handleExtensionActivationError = async (extension) => {
 //   return ExtensionHostIpc.listen(ExtensionHostIpc.Methods.SharedProcess)
 // }
 
-export const startExtensionHost = async (key, method) => {
-  const existingExtensionHost = state.extensionHosts[key]
-  if (existingExtensionHost) {
-    switch (existingExtensionHost.state) {
-      case ExtensionHostState.Off:
-        throw new Error('extension host cannot be off')
-      case ExtensionHostState.Loading:
-        return existingExtensionHost.promise
-      case ExtensionHostState.Running:
-        return existingExtensionHost.ipc
-      default:
-        throw new Error('unexpected extension host state')
+export const startExtensionHost = async (name, ipcType) => {
+  const exisingIpcPromise = state.pendingIpcs[name]
+  if (exisingIpcPromise) {
+    const ipc = await exisingIpcPromise
+    return {
+      name: ipcType,
+      ipc,
     }
   }
-  const promise = ExtensionHostIpc.listen(method)
-  state.extensionHosts[key] = {
-    state: ExtensionHostState.Loading,
-    promise,
+  if (state.extensionHosts[name]) {
+    return state.extensionHosts[name]
   }
+  const promise = ExtensionHostIpc.listen(ipcType)
+  state.pendingIpcs[name] = promise
   const ipc = await promise
-  state.extensionHosts[key] = {
+  delete state.pendingIpcs[name]
+  state.extensionHosts[name] = {
     state: ExtensionHostState.Running,
     ipc,
+    name: ipcType,
   }
-  return ipc
+  return state.extensionHosts[name]
 }
 
 export const stopExtensionHost = async (key) => {

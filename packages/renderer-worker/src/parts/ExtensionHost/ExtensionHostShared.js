@@ -14,7 +14,7 @@ export const executeProviders = async ({
   }
   const promises = []
   for (const extensionHost of extensionHosts) {
-    promises.push(extensionHost.invoke(method, ...params))
+    promises.push(extensionHost.ipc.invoke(method, ...params))
   }
   const results = await Promise.all(promises)
   console.log({ results })
@@ -35,7 +35,7 @@ export const executeProvider = async ({
   }
   const promises = []
   for (const extensionHost of extensionHosts) {
-    promises.push(extensionHost.invoke(method, ...params))
+    promises.push(extensionHost.ipc.invoke(method, ...params))
   }
   const results = await Promise.all(promises)
   return results[0]
@@ -44,6 +44,6 @@ export const executeProvider = async ({
 export const execute = async ({ method, params }) => {
   const extensionHosts = ExtensionHostManagement.getExtensionHosts()
   for (const extensionHost of extensionHosts) {
-    await extensionHost.invoke(method, ...params)
+    await extensionHost.ipc.invoke(method, ...params)
   }
 }
