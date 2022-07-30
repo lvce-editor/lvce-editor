@@ -25,7 +25,7 @@ test('sample.brace-completion-provider-error', async () => {
 
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
-  await Editor.setCursor(0, 1)
+  await Editor.setCursor(0, 0)
   await Editor.executeBraceCompletion('{')
 
   // // assert

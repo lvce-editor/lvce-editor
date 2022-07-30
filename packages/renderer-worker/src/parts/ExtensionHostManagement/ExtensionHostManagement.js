@@ -82,7 +82,7 @@ const getManagersWithExtensionsToActivate = (
 const startTextDocumentSyncing = async (extensionHost) => {
   const handleEditorCreate = (editor) => {
     const text = TextDocument.getText(editor)
-    return extensionHost.invoke(
+    return extensionHost.ipc.invoke(
       'ExtensionHostTextDocument.syncFull',
       editor.uri,
       editor.id,
@@ -119,6 +119,7 @@ const startTextDocumentSyncing = async (extensionHost) => {
   if (editorInstance) {
     await handleEditorCreate(editorInstance.state)
   }
+  console.log('finish text document synching')
 }
 
 export const activateByEvent = async (event) => {
@@ -155,7 +156,7 @@ export const activateByEvent = async (event) => {
     Assert.object(extensionHost)
     for (const extension of managerWithExtensions.toActivate) {
       // TODO tell extension host to activate extension
-      await extensionHost.invoke(
+      await extensionHost.ipc.invoke(
         'ExtensionHostExtension.enableExtension',
         extension
       )

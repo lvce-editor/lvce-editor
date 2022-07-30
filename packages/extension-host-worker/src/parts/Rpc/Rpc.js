@@ -13,11 +13,12 @@ export const listen = (ipc) => {
         })
       } catch (error) {
         console.error(error)
-        if (error && error.cause) {
+        if (error && error instanceof Error && error.cause) {
           console.error(error.cause)
         }
         if (
           error &&
+          error instanceof Error &&
           error.message &&
           error.message.startsWith('method not found')
         ) {

@@ -59,6 +59,9 @@ export const create = ({ name, resultShape }) => {
     async [`execute${name}Provider`](textDocumentId, ...params) {
       try {
         const textDocument = TextDocument.get(textDocumentId)
+        if (!textDocument) {
+          throw new Error(`textDocument with id ${textDocumentId} not found`)
+        }
         const provider = providers[textDocument.languageId]
         if (!provider) {
           const spacedOutName = spaceOut(name)

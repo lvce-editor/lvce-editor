@@ -8,6 +8,7 @@ import * as Languages from '../Languages/Languages.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as Id from '../Id/Id.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -35,7 +36,9 @@ const handleTokenizeChange = () => {
 
 // TODO uri?
 export const create = (id, uri, left, top, width, height) => {
-  const state = Editor.create(1, uri, 'unknown', '')
+  console.log({ id })
+  const instanceId = Id.create()
+  const state = Editor.create(instanceId, uri, 'unknown', '')
   const newState = Editor.setBounds(state, top, left, height, COLUMN_WIDTH)
   const languageId = Languages.getLanguageId(uri)
   return {
@@ -80,6 +83,7 @@ const updateSemanticTokens = async (state) => {
   } catch (error) {
     if (
       error &&
+      error instanceof Error &&
       error.message.startsWith(
         'Failed to execute semantic token provider: VError: no semantic token provider found for'
       )
@@ -160,5 +164,6 @@ export const resize = (state, dimensions) => {
 export const hasFunctionalRender = true
 
 export const render = (oldState, newState) => {
+  console.log({ oldState, newState })
   return Editor.render(oldState, newState)
 }
