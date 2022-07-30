@@ -1,7 +1,7 @@
 import { writeFile } from 'fs/promises'
 import { getTmpDir, runWithExtension, test, expect } from './_testFrameWork.js'
 
-test('sample.reference-provider-single-reference-found', async () => {
+test.skip('sample.reference-provider-single-reference-found', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(
     `${tmpDir}/test.js`,
