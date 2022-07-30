@@ -1,7 +1,7 @@
 import * as EditorCursorDown from '../src/parts/EditorCommand/EditorCommandCursorDown.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
-test.only('editorCursorDown', () => {
+test('editorCursorDown', () => {
   const editor = {
     lines: ['line 1', 'line 2'],
     primarySelectionIndex: 0,
@@ -23,7 +23,7 @@ test('editorCursorDown - with selection', () => {
   })
 })
 
-test('editorCursorDown - with emoji - 👮🏽‍♀️', () => {
+test.skip('editorCursorDown - with emoji - 👮🏽‍♀️', () => {
   const editor = {
     lines: ['👮🏽‍♀️👮🏽‍♀️👮🏽‍♀️', 'abc'],
     primarySelectionIndex: 0,
@@ -40,6 +40,6 @@ test('editorCursorDown - line below is shorter', () => {
     selections: EditorSelection.fromRange(0, 4, 0, 4),
   }
   expect(EditorCursorDown.editorCursorsDown(editor)).toMatchObject({
-    selections: EditorSelection.fromRange(1, 1, 1, 1), // TODO with virtual space, this would be 1,4
+    selections: EditorSelection.fromRange(1, 4, 1, 4),
   })
 })

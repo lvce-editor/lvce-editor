@@ -1,21 +1,28 @@
-import * as EditorCursorVertical from './EditorCommandCursorVertical.js'
+import * as Editor from '../Editor/Editor.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
-const getPosition = (selection) => {
-  return selection.end
+const moveSelectionDown = (
+  selections,
+  i,
+  selectionStartRow,
+  selectionStartColumn,
+  selectionEndRow,
+  selectionEndColumn
+) => {
+  EditorSelection.moveRangeToPosition(
+    selections,
+    i,
+    selectionEndRow + 1,
+    selectionEndColumn
+  )
 }
 
-const getEdgePosition = (editor) => {
-  return {
-    rowIndex: editor.lines.length - 1,
-    columnIndex: editor.lines[editor.lines.length - 1].length,
-  }
+const getNewSelections = (selections) => {
+  return EditorSelection.map(selections, moveSelectionDown)
 }
 
 export const editorCursorsDown = (editor) => {
-  return EditorCursorVertical.editorCommandCursorVertical(
-    editor,
-    getPosition,
-    getEdgePosition,
-    1
-  )
+  const selections = editor.selections
+  const newSelections = getNewSelections(selections)
+  return Editor.scheduleSelections(editor, newSelections)
 }

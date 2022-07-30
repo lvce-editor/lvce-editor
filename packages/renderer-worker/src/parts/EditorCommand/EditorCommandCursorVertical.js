@@ -85,6 +85,6 @@ export const editorCommandCursorVertical = (
   //   )
   // }
   const selections = editor.selections
-  const newSelections = getNewSelections(selections)
+  const newSelections = getNewSelections(selections, delta)
   return Editor.scheduleSelections(editor, newSelections)
 }
