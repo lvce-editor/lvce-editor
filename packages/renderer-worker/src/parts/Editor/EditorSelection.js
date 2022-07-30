@@ -24,11 +24,10 @@ const getSelectionFromChange = (change) => {
 
 export const setSelections = (editor, selections) => {
   Assert.object(editor)
-  Assert.array(selections)
+  Assert.uint32array(selections)
   return {
     ...editor,
     selections,
-    cursor: selections[0].end,
   }
   // editor.selections = selections
   // GlobalEventBus.emitEvent('editor.selectionChange', editor, selections)

@@ -28,7 +28,7 @@ export const create = (id, uri, languageId, content) => {
     },
     // TODO how to get the trigger characters here from extension host
     completionTriggerCharacters: [],
-    selections: [],
+    selections: new Uint32Array(),
     id,
     tokenizer,
     deltaY: 0,
@@ -116,6 +116,7 @@ export const setDeltaY = (editor, value) => {
 }
 
 export const scheduleSelections = (editor, selectionEdits) => {
+  console.log(selectionEdits)
   return EditorSelection.setSelections(editor, selectionEdits)
   // const cursorInfos = EditorCursor.getVisible(editor)
   // const selectionInfos = EditorSelection.getVisible(editor)
