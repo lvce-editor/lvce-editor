@@ -57,6 +57,7 @@ jobs:
         run: node build/bin/build.js --target=static
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v1
+        if: matrix.os == 'ubuntu-22.04'
         with:
           path: ./build/.tmp/dist
 
