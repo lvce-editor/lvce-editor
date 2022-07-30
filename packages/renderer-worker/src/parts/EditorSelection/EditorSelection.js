@@ -15,3 +15,7 @@ export const fromRange = (
 export const fromPosition = (rowIndex, columnIndex) => {
   return fromRange(rowIndex, columnIndex, rowIndex, columnIndex)
 }
+
+export const clone = (selections) => {
+  return new Uint32Array(selections.length)
+}

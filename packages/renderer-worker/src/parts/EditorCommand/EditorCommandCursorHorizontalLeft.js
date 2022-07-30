@@ -26,10 +26,22 @@ const getNewSelections = (selections, lines, getDelta) => {
           lines,
           getDelta
         )
+        EditorGetPositionLeft.moveToPositionLeft(
+          newSelections,
+          i + 2,
+          selectionStartRow,
+          selectionStartColumn,
+          lines,
+          getDelta
+        )
       }
     } else {
-      newSelections[i] = newSelections[i + 2] = selections[i]
-      newSelections[i + 1] = newSelections[i + 3] = selections[i + 1]
+      EditorGetPositionLeft.moveRangeToPosition(
+        newSelections,
+        i,
+        selections[i],
+        selections[i + 1]
+      )
     }
   }
   return newSelections

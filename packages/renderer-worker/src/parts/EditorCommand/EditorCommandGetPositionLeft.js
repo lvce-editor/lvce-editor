@@ -22,6 +22,16 @@ export const editorGetPositionLeft = (
   }
 }
 
+export const moveToPositionEqual = (selections, i, rowIndex, columnIndex) => {
+  selections[i] = rowIndex
+  selections[i + 1] = columnIndex
+}
+
+export const moveRangeToPosition = (selections, i, rowIndex, columnIndex) => {
+  selections[i] = selections[i + 2] = rowIndex
+  selections[i + 1] = selections[i + 3] = columnIndex
+}
+
 export const moveToPositionLeft = (
   selections,
   i,
@@ -31,11 +41,16 @@ export const moveToPositionLeft = (
   getDelta
 ) => {
   if (columnIndex === 0) {
-    selections[i] = selections[i + 2] = rowIndex - 1
-    selections[i + 1] = selections[i + 3] = lines[rowIndex - 1].length
+    if (rowIndex === 0) {
+      selections[i] = 0
+      selections[i + 1] = 0
+    } else {
+      selections[i] = rowIndex - 1
+      selections[i + 1] = lines[rowIndex - 1].length
+    }
   } else {
     const delta = getDelta(lines[rowIndex], columnIndex)
-    selections[i] = selections[i + 2] = rowIndex
-    selections[i + 1] = selections[i + 3] = columnIndex - delta
+    selections[i] = rowIndex
+    selections[i + 1] = columnIndex - delta
   }
 }

@@ -116,7 +116,6 @@ export const setDeltaY = (editor, value) => {
 }
 
 export const scheduleSelections = (editor, selectionEdits) => {
-  console.log(selectionEdits)
   return EditorSelection.setSelections(editor, selectionEdits)
   // const cursorInfos = EditorCursor.getVisible(editor)
   // const selectionInfos = EditorSelection.getVisible(editor)

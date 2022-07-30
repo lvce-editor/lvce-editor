@@ -80,7 +80,6 @@ export const fn = (value) => {
 
 export const uint32array = (value) => {
   const type = getType(value)
-  console.log({ type })
   if (type !== 'uint32array') {
     throw new Error('expected value to be of type uint32array')
   }
