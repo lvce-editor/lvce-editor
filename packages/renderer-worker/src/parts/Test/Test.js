@@ -13,7 +13,6 @@ const importScript = async (url) => {
 }
 
 export const execute = async (href) => {
-  console.log('test/execute')
   // TODO
   // 0. wait for page to be ready
   // 1. get script to import from renderer process (url or from html)
@@ -21,7 +20,6 @@ export const execute = async (href) => {
   // 2. import that script
   const module = await importScript(scriptUrl)
   // 3. if import fails, display error message
-  console.log({ module })
 
   // 4. run the test
   // 5. if test fails, display error message

@@ -153,7 +153,6 @@ export const wrapViewletCommand = (id, fn) => {
         /* commands */ commands
       )
     } else {
-      console.log('not functional render', fn.name)
       return fn(activeInstance.state, ...args)
     }
   }
