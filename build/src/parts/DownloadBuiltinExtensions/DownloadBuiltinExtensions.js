@@ -59,12 +59,31 @@ const downloadExtensionAndLog = async (extension) => {
 
 const downloadExtensions = async (extensions) => {
   await pMap(extensions, downloadExtensionAndLog, {
-    concurrency: 3,
+    concurrency: 1,
   })
 }
 
-const main = () => {
-  downloadExtensions(extensions)
+const printError = (error) => {
+  if (
+    error &&
+    error instanceof Error &&
+    error.message.includes(
+      'Response code 503 (Egress is over the account limit.)'
+    )
+  ) {
+    console.error(error.message)
+  } else {
+    console.error(error)
+  }
+}
+
+const main = async () => {
+  try {
+    await downloadExtensions(extensions)
+  } catch (error) {
+    printError(error)
+    process.exit(1)
+  }
 }
 
 main()
