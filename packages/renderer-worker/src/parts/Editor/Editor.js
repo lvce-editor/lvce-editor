@@ -28,7 +28,7 @@ export const create = (id, uri, languageId, content) => {
     },
     // TODO how to get the trigger characters here from extension host
     completionTriggerCharacters: [],
-    selections: [],
+    selections: new Uint32Array(),
     id,
     tokenizer,
     deltaY: 0,
@@ -187,7 +187,6 @@ export const scheduleDocumentAndCursorsSelections = (editor, changes) => {
     ...partialNewEditor,
     lines: newLines,
     selections: newSelections,
-    cursor: newSelections[0].end,
     undoStack: [...editor.undoStack, changes],
     invalidStartIndex,
   }

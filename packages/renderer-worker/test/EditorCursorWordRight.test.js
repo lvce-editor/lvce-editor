@@ -1,124 +1,78 @@
-import { jest } from '@jest/globals'
 import * as EditorCursorWordRight from '../src/parts/EditorCommand/EditorCommandCursorWordRight.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test.skip('editorCursorWordRight', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 4,
-  }
   const editor = {
     lines: ['    <title>Document</title>'],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 4, 0, 4),
   }
-  RendererProcess.state.send = jest.fn()
   EditorCursorWordRight.editorCursorWordRight(editor)
-  expect(editor.cursor).toEqual({
-    rowIndex: 0,
-    columnIndex: 10,
+  expect(editor).toMatchObject({
+    selections: EditorSelection.fromRange(0, 10, 0, 10),
   })
   EditorCursorWordRight.editorCursorWordRight(editor)
-  expect(editor.cursor).toEqual({
-    rowIndex: 0,
-    columnIndex: 11,
+  expect(editor).toMatchObject({
+    selections: EditorSelection.fromRange(0, 11, 0, 11),
   })
   EditorCursorWordRight.editorCursorWordRight(editor)
-  expect(editor.cursor).toEqual({
-    rowIndex: 0,
-    columnIndex: 19,
+  expect(editor).toMatchObject({
+    selections: EditorSelection.fromRange(0, 19, 0, 19),
   })
   EditorCursorWordRight.editorCursorWordRight(editor)
-  expect(editor.cursor).toEqual({
-    rowIndex: 0,
-    columnIndex: 26,
+  expect(editor).toMatchObject({
+    selections: EditorSelection.fromRange(0, 26, 0, 26),
   })
   EditorCursorWordRight.editorCursorWordRight(editor)
-  expect(editor.cursor).toEqual({
-    rowIndex: 0,
-    columnIndex: 27,
+  expect(editor).toMatchObject({
+    selections: EditorSelection.fromRange(0, 27, 0, 27),
   })
 })
 
 test.skip('editorCursorWordRight - with dots', () => {
   const editor = {
     lines: ['this.is.a.test'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
-    selections: [],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  RendererProcess.state.send = jest.fn()
   EditorCursorWordRight.editorCursorWordRight(editor)
-  expect(editor.cursor).toEqual({
-    rowIndex: 0,
-    columnIndex: 4,
+  expect(editor).toMatchObject({
+    selections: EditorSelection.fromRange(0, 4, 0, 4),
   })
   EditorCursorWordRight.editorCursorWordRight(editor)
-  expect(editor.cursor).toEqual({
-    rowIndex: 0,
-    columnIndex: 7,
+  expect(editor).toMatchObject({
+    selections: EditorSelection.fromRange(0, 7, 0, 7),
   })
   EditorCursorWordRight.editorCursorWordRight(editor)
-  expect(editor.cursor).toEqual({
-    rowIndex: 0,
-    columnIndex: 9,
+  expect(editor).toMatchObject({
+    selections: EditorSelection.fromRange(0, 9, 0, 9),
   })
   EditorCursorWordRight.editorCursorWordRight(editor)
-  expect(editor.cursor).toEqual({
-    rowIndex: 0,
-    columnIndex: 14,
+  expect(editor).toMatchObject({
+    selections: EditorSelection.fromRange(0, 14, 0, 14),
   })
 })
 
 test.skip('editorCursorWordRight - with selection', () => {
   const editor = {
     lines: ['<title>Document</title>'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 5,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 5,
-        },
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 5),
   }
-  RendererProcess.state.send = jest.fn()
   EditorCursorWordRight.editorCursorWordRight(editor)
-  expect(editor.cursor).toEqual({
-    rowIndex: 0,
-    columnIndex: 6,
+  expect(editor).toMatchObject({
+    selections: EditorSelection.fromRange(0, 6, 0, 6),
   })
-  expect(editor.selections).toEqual([])
 })
 
 test.skip('editorCursorWordRight - at end of line', () => {
-  const lines = ['line 1', 'line 2']
   const editor = {
-    lines,
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 6,
-    },
-    selections: [],
+    lines: ['line 1', 'line 2'],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 6, 0, 6),
   }
   EditorCursorWordRight.editorCursorWordRight(editor)
-  expect(editor.cursor).toEqual({
-    rowIndex: 1,
-    columnIndex: 0,
+  expect(editor).toMatchObject({
+    selections: EditorSelection.fromRange(1, 0, 1, 0),
   })
 })
