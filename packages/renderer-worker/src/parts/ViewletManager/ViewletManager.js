@@ -168,9 +168,7 @@ export const load = async (viewlet, focus = false) => {
 
     outer: if (module.shouldApplyNewState) {
       for (let i = 0; i < 2; i++) {
-        console.log('try', i)
         if (module.shouldApplyNewState(newState)) {
-          console.log('set state', viewlet.id, newState)
           Viewlet.state.instances[viewlet.id] = {
             state: newState,
             factory: module,
@@ -238,7 +236,6 @@ export const load = async (viewlet, focus = false) => {
         const handleUpdate = async () => {
           const instance = Viewlet.state.instances[viewlet.id]
           const newState = await value(instance.state)
-          console.log(key, { newState })
           if (!module.shouldApplyNewState(newState)) {
             console.log('[viewlet manager] return', newState)
 
@@ -246,13 +243,6 @@ export const load = async (viewlet, focus = false) => {
           }
           const commands = module.render(instance.state, newState)
           instance.state = newState
-          console.log(
-            '[viewlet manager] handle update',
-            viewlet.id,
-            key,
-            newState
-          )
-          console.log({ commands })
           await RendererProcess.invoke(
             /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
             /* commands */ commands

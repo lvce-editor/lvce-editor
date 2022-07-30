@@ -129,7 +129,6 @@ const getPathSeparator = (root) => {
 
 export const loadContent = async (state) => {
   const root = Workspace.state.workspacePath
-  console.log('explorer root', { root })
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
   const dirents = await getTopLevelDirents(root, pathSeparator)
   return {
@@ -243,7 +242,6 @@ export const handleWheel = (state, deltaY) => {
 
 export const handleContextMenu = async (state, x, y, index) => {
   state.focusedIndex = index
-  console.log('[explorer] context menu', index, state)
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
@@ -260,10 +258,7 @@ export const getFocusedDirent = (state) => {
 
 // TODO support multiselection and removing multiple dirents
 export const removeDirent = async (state) => {
-  console.log('[explorer] focused index', state.focusedIndex)
   if (state.focusedIndex < 0) {
-    console.info('not deleting dirent')
-    console.log(state.dirents)
     return state
   }
   const dirent = getFocusedDirent(state)
@@ -279,7 +274,6 @@ export const removeDirent = async (state) => {
     await ErrorHandling.showErrorDialog(error)
     return
   }
-  console.log('remove dirent')
   // TODO avoid state mutation
   const newVersion = ++state.version
   // TODO race condition
@@ -293,7 +287,6 @@ export const removeDirent = async (state) => {
   let deleteEnd = index + 1
 
   for (; deleteEnd < state.dirents.length; deleteEnd++) {
-    console.log({ dirent: state.dirents[deleteEnd] })
     if (state.dirents[deleteEnd].depth <= dirent.depth) {
       break
     }
@@ -375,30 +368,20 @@ export const computeRenamedDirent = (dirents, index, newName) => {
   // TODO
   for (; startIndex >= 0; startIndex--) {
     const dirent = dirents[startIndex]
-    // console.log(dirent, startIndex)
-    console.log('check', dirent.path)
     if (dirent.depth > depth) {
-      console.log('continue', dirent.path, startIndex)
-
       continue
     }
     if (dirent.depth < depth) {
-      console.log('break', dirent.depth, depth)
       break
     }
-    console.log({ startIndex })
-    console.log('comp', compareDirent(dirent, newDirent))
     if (compareDirent(dirent, newDirent) === 1) {
-      console.log('is smaller', dirent.path, newDirent.path)
       insertIndex = startIndex
       posInSet = dirent.posInSet
       // dirent.posInSet++
     } else {
-      console.log('is larger', dirent.path, newDirent.path)
     }
   }
   startIndex++
-  console.log({ insertIndex, startIndex })
   for (; innerEndIndex < dirents.length; innerEndIndex++) {
     const dirent = dirents[innerEndIndex]
     if (dirent.depth <= depth) {
@@ -419,10 +402,8 @@ export const computeRenamedDirent = (dirents, index, newName) => {
       break
     }
     if (insertIndex === -1 && compareDirent(dirent, newDirent === -1)) {
-      console.log('bigger', dirent.path)
       for (; endIndex < dirents.length; endIndex++) {
         const childDirent = dirents[endIndex]
-        console.log(childDirent)
       }
       insertIndex = endIndex
       posInSet = dirent.posInSet + 1
@@ -462,7 +443,6 @@ export const computeRenamedDirent = (dirents, index, newName) => {
   }
   newDirent.posInSet = posInSet
 
-  console.log({ startIndex, endIndex, index, innerEndIndex, insertIndex })
   const newDirents = [...dirents]
   if (index < insertIndex) {
     insertIndex--
@@ -540,7 +520,6 @@ const newDirent = async (state) => {
   const index = state.focusedIndex + 1
   if (focusedIndex >= 0) {
     const dirent = state.dirents[state.focusedIndex]
-    console.log({ dirent, dirents: state.dirents, fi: state.focusedIndex })
     if (dirent.type === 'directory') {
       // TODO handle error
       await handleClickDirectory(state, dirent, focusIndex)
@@ -602,9 +581,7 @@ const acceptDirent = async (state, type) => {
     )
     return state
   }
-  // console.log({ index: editingIndex, dirent: state.dirents[editingIndex] })
   const parentFolder = getParentFolder(state.dirents, focusedIndex, state.root)
-  console.log({ parentFolder, focusedIndex, state })
   const absolutePath = [parentFolder, newFileName].join(state.pathSeparator)
   // TODO better handle error
   try {
@@ -623,8 +600,6 @@ const acceptDirent = async (state, type) => {
     await ErrorHandling.showErrorDialog(error)
     return
   }
-  console.log({ focusedIndex })
-  console.log(state.dirents)
   const parentDirent =
     focusedIndex >= 0
       ? state.dirents[focusedIndex]
@@ -665,7 +640,6 @@ const acceptDirent = async (state, type) => {
     dirent.setSize++
     dirent.posInSet += deltaPosInSet
   }
-  console.log({ insertIndex })
   newDirent.setSize = setSize
   newDirent.posInSet = posInSet
   state.dirents.splice(insertIndex + 1, 0, newDirent)
@@ -703,7 +677,6 @@ const handleClickFile = async (state, dirent, index) => {
 }
 
 const handleClickDirectory = async (state, dirent, index) => {
-  console.log('[explorer] click directory')
   dirent.type = 'directory-expanding'
   // TODO handle error
   const dirents = await getChildDirents(state.root, state.pathSeparator, dirent)
@@ -715,7 +688,6 @@ const handleClickDirectory = async (state, dirent, index) => {
   const newIndex = state2.dirents.indexOf(dirent)
   // TODO if viewlet is disposed or root has changed, return
   if (newIndex === -1) {
-    console.log('[explorer] dirent not found')
     return state
   }
   // console.log(state.dirents[index] === dirent)
@@ -724,7 +696,6 @@ const handleClickDirectory = async (state, dirent, index) => {
   dirent.type = 'directory-expanded'
   dirent.icon = IconTheme.getIcon(dirent)
   // TODO when focused index has changed while expanding, don't update it
-  console.log({ newDirents })
   return {
     ...state,
     dirents: newDirents,
@@ -760,7 +731,6 @@ const handleClickDirectoryExpanded = (state, dirent, index) => {
 }
 
 export const handleClick = async (state, index) => {
-  console.log('[explorer] click', index)
   if (index === -1) {
     return focusIndex(state, -1)
   }
@@ -1035,7 +1005,6 @@ export const updateRoot = async () => {
     return state1
   }
   // const file = nativeFiles.files[0]
-  // console.log({ files: file })
   const topLevelDirents = await getTopLevelDirents(
     state1.root,
     state1.pathSeparator
@@ -1045,7 +1014,6 @@ export const updateRoot = async () => {
   if (state2.disposed || state2.root !== state1.root) {
     return state2
   }
-  console.log({ topLevelDirents })
   const newDirents = mergeDirents(state2.dirents, topLevelDirents)
   const state3 = {
     ...state2,
@@ -1144,7 +1112,6 @@ export const resize = (state, dimensions) => {
 }
 
 export const expandAll = async (state) => {
-  console.log('EXPAND ALL')
   const { dirents, focusedIndex } = state
   if (focusedIndex === -1) {
     return state
@@ -1169,7 +1136,6 @@ export const expandAll = async (state) => {
       if (newIndex === -1) {
         continue
       }
-      // console.log(state.dirents[index] === dirent)
       newDirents.splice(newIndex + 1, 0, ...childDirents)
       // TODO avoid mutating state here
       dirent.type = 'directory-expanded'
@@ -1207,7 +1173,6 @@ export const collapseAll = (state) => {
 export const handleBlur = (state) => {
   // TODO when blur event occurs because of context menu, focused index should stay the same
   // but focus outline should be removed
-  console.log('explorer handle blur', 'focus none')
   return {
     ...state,
     focused: false,
@@ -1234,7 +1199,6 @@ export const events = {
 export const hasFunctionalRender = true
 
 export const render = (oldState, newState) => {
-  console.log({ oldState, newState })
   const changes = []
   if (
     oldState.dirents !== newState.dirents ||

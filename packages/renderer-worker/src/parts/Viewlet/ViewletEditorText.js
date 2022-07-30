@@ -103,7 +103,6 @@ export const contentLoadedEffects = async (state) => {
   GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
   GlobalEventBus.addListener('editor.change', handleEditorChange)
   const newLanguageId = Languages.getLanguageId(state.uri)
-  console.log('setting language id', newLanguageId)
   await Command.execute(
     /* Editor.setLanguageId */ 'Editor.setLanguageId',
     /* languageId */ newLanguageId
