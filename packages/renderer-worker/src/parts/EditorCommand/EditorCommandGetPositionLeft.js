@@ -1,14 +1,12 @@
 export const editorGetPositionLeft = (
-  selectionStartRow,
-  selectionStartColumn,
-  selectionEndRow,
-  selectionEndColumn,
+  rowIndex,
+  columnIndex,
   lines,
   getDelta
 ) => {
-  if (selectionEndColumn === 0) {
-    if (selectionEndRow === 0) {
-      return position
+  if (columnIndex === 0) {
+    if (rowIndex === 0) {
+      return { rowIndex: 0, columnIndex: 0 }
     }
     return {
       rowIndex: rowIndex - 1,

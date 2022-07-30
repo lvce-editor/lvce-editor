@@ -187,7 +187,6 @@ export const scheduleDocumentAndCursorsSelections = (editor, changes) => {
     ...partialNewEditor,
     lines: newLines,
     selections: newSelections,
-    cursor: newSelections[0].end,
     undoStack: [...editor.undoStack, changes],
     invalidStartIndex,
   }

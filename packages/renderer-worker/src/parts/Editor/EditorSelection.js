@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
 const getSelectionFromChange = (change) => {
   if (change.inserted.length === 1) {
@@ -34,10 +35,12 @@ export const setSelections = (editor, selections) => {
 }
 
 // TODO maybe only accept sorted selection edits in the first place
+
+// TODO avoid allocating too many objects when creating new selection from changes
 export const applyEdit = (editor, changes) => {
   Assert.object(editor)
   Assert.array(changes)
-  const newSelections = changes.map(getSelectionFromChange)
+  const newSelections = EditorSelection.from(changes, getSelectionFromChange)
   // setSelections(editor, newSelections)
   return newSelections
 }
