@@ -91,6 +91,11 @@ const copyStaticFiles = async ({ pathPrefix }) => {
       occurrence: '/manifest.json',
       replacement: `${pathPrefix}/manifest.json`,
     })
+    await Replace.replace({
+      path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IconTheme/IconTheme.js`,
+      occurrence: `/file-icons/`,
+      replacement: `${pathPrefix}/file-icons/`,
+    })
   }
 
   await Replace.replace({
