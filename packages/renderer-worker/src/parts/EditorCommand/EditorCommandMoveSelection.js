@@ -56,17 +56,23 @@ const editorMoveSelectionForwards = (editor, anchor, position) => {
   return Editor.scheduleSelections(editor, selectionEdits)
 }
 
-export const editorMoveSelection = (editor, position) => {
-  const anchor = state.position
-  // TODO if selection equals previous selection -> do nothing
+const getNewSelections = (anchor, position) => {
   switch (compare(position, anchor)) {
     case -1:
-      return editorMoveSelectionBackwards(editor, anchor, position)
+      return editorMoveSelectionBackwards(anchor, position)
     case 0:
-      return editorMoveSelectionEqual(editor, anchor, position)
+      return editorMoveSelectionEqual(anchor, position)
     case 1:
-      return editorMoveSelectionForwards(editor, anchor, position)
+      return editorMoveSelectionForwards(anchor, position)
     default:
+      throw new Error('unexpected comparison result')
       break
   }
+}
+
+export const editorMoveSelection = (editor, position) => {
+  const anchor = state.position
+  const newSelections = getNewSelections(anchor, position)
+  // TODO if selection equals previous selection -> do nothing
+  return Editor.scheduleSelections(editor, newSelections)
 }

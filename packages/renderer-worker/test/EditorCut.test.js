@@ -16,27 +16,17 @@ const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
 
 const EditorCut = await import('../src/parts/EditorCommand/EditorCommandCut.js')
 
+const EditorSelection = await import(
+  '../src/parts/EditorSelection/EditorSelection.js'
+)
+
 test('editorCut', async () => {
   // @ts-ignore
   ClipBoard.writeText.mockImplementation(() => {})
   const editor = {
     lines: ['line 1', 'line 2', 'line 3', ''],
-    cursor: {
-      rowIndex: 2,
-      columnIndex: 2,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 1,
-          columnIndex: 1,
-        },
-        end: {
-          rowIndex: 2,
-          columnIndex: 2,
-        },
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(1, 1, 2, 2),
     top: 10,
     left: 20,
     rowHeight: 10,
@@ -45,22 +35,7 @@ test('editorCut', async () => {
     undoStack: [],
   }
   expect(await EditorCut.editorCut(editor)).toMatchObject({
-    cursor: {
-      rowIndex: 1,
-      columnIndex: 1,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 1,
-          columnIndex: 1,
-        },
-        end: {
-          rowIndex: 1,
-          columnIndex: 1,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(1, 1, 1, 1),
     lines: ['line 1', 'lne 3', ''],
   })
 
@@ -77,22 +52,7 @@ test('editorCut - error with clipboard', async () => {
   })
   const editor = {
     lines: ['line 1', 'line 2', 'line 3', ''],
-    cursor: {
-      rowIndex: 2,
-      columnIndex: 2,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 1,
-          columnIndex: 1,
-        },
-        end: {
-          rowIndex: 2,
-          columnIndex: 2,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(1, 1, 2, 2),
     top: 10,
     left: 20,
     rowHeight: 10,
@@ -108,38 +68,13 @@ test('editorCut - error with clipboard', async () => {
 test.skip('editorCut - no selection', async () => {
   // @ts-ignore
   ClipBoard.writeText.mockImplementation(() => {})
-  const cursor = {
-    rowIndex: 1,
-    columnIndex: 1,
-  }
   const editor = {
     lines: ['line 1', 'line 2', 'line 3', ''],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
-    lineCache: [],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(1, 1, 1, 1),
   }
   expect(await EditorCut.editorCut(editor)).toMatchObject({
-    cursor: {
-      rowIndex: 1,
-      columnIndex: 1,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 1,
-          columnIndex: 1,
-        },
-        end: {
-          rowIndex: 1,
-          columnIndex: 1,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(1, 1, 1, 1),
     lines: ['line 1', 'line 2', 'line 3', ''],
   })
   expect(ClipBoard.writeText).not.toHaveBeenCalled()
