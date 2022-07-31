@@ -518,7 +518,7 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
     from: 'static/tests/index.html',
     to: `build/.tmp/dist/tests/index.html`,
   })
-  const appCssPath = `/${commitHash}/css/App.css`
+  const appCssPath = `${pathPrefix}/${commitHash}/css/App.css`
   const rendererProcessPath = `${pathPrefix}/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`
   const rendererWorkerPath = `${pathPrefix}/${commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`
   await Replace.replace({
@@ -536,6 +536,13 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
     occurrence: '/css/App.css',
     replacement: appCssPath,
   })
+  if (pathPrefix) {
+    await Replace.replace({
+      path: 'build/.tmp/dist/tests/_template.html',
+      occurrence: '/fonts/',
+      replacement: `${pathPrefix}/fonts/`,
+    })
+  }
   const dirents = await ReadDir.readDir('static/tests')
   for (const dirent of dirents) {
     if (dirent.name === '_template.html' || dirent.name === 'index.html') {
