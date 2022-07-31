@@ -62,14 +62,13 @@ jobs:
       - name: Build static site
         if: matrix.os == 'ubuntu-22.04'
         run: node build/bin/build.js --target=static
+        env:
+          PATH_PREFIX: /lvce-editor
       - name: Upload artifact
         if: matrix.os == 'ubuntu-22.04'
         uses: actions/upload-pages-artifact@v1
         with:
           path: ./build/.tmp/dist
-        env:
-          PATH_PREFIX: /lvce-editor
-
   deploy:
     environment:
       name: github-pages
