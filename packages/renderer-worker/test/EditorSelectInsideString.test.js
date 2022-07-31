@@ -1,34 +1,14 @@
 import * as EditorSelectInsideString from '../src/parts/EditorCommand/EditorCommandSelectInsideString.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectInsideString', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 1,
-  }
   const editor = {
     lines: ['"line 1"', '"line 2"'],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 1, 0, 1),
   }
   expect(
     EditorSelectInsideString.editorSelectInsideString(editor)
   ).toMatchObject({
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 1,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 7,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 1, 0, 7),
   })
 })
