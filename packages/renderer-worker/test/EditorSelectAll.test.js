@@ -1,36 +1,13 @@
 import * as EditorSelectAll from '../src/parts/EditorCommand/EditorCommandSelectAll.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectAll', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: ['line 1', 'line 2', ''],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
   expect(EditorSelectAll.editorSelectAll(editor)).toMatchObject({
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 3,
-          columnIndex: 0,
-        },
-      },
-    ],
-    cursor: {
-      rowIndex: 3,
-      columnIndex: 0,
-    },
+    selections: EditorSelection.fromRange(0, 0, 3, 0),
   })
 })
