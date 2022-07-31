@@ -18,7 +18,8 @@ const openFile = async (page, fileName) => {
   await expect(cursor).toHaveCSS('left', '36px')
 }
 
-test('sample.title-bar-toggle-block-comment-error-language-configuration-not-found', async () => {
+// TODO test is flaky https://github.com/lvce-editor/lvce-editor/runs/7594240186?check_suite_focus=true
+test.skip('sample.title-bar-toggle-block-comment-error-language-configuration-not-found', async () => {
   const tmpDir1 = await getTmpDir('folder-1')
   await writeFile(join(tmpDir1, 'test.test-html'), 'content-1')
   const page = await runWithExtension({
