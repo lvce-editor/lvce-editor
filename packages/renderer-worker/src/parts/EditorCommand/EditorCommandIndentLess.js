@@ -1,10 +1,12 @@
 import * as Editor from '../Editor/Editor.js'
 
-export const editorIndentLess = (editor) => {
+const getChanges = (selections) => {
   const changes = []
   const rowsToIndentLess = []
-  for (const selection of editor.selections) {
-    for (let i = selection.start.rowIndex; i <= selection.end.rowIndex; i++) {
+  for (let i = 0; i < selections.length; i += 4) {
+    const selectionStartRow = selections[i]
+    const selectionEndRow = selections[i + 2]
+    for (let i = selectionStartRow; i <= selectionEndRow; i++) {
       rowsToIndentLess.push(i)
     }
   }
@@ -23,5 +25,11 @@ export const editorIndentLess = (editor) => {
       origin: 'indentLess',
     })
   }
+  return changes
+}
+
+export const editorIndentLess = (editor) => {
+  const selections = editor.selections
+  const changes = getChanges(selections)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
