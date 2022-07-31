@@ -1,24 +1,30 @@
 import * as Editor from '../Editor/Editor.js'
-import * as EditorGetPositionRight from './EditorCommandGetPositionRight.js'
 
-const getNewSelection = (selection, lines, getDelta) => {
-  const positionRight = EditorGetPositionRight.editorGetPositionRight(
-    selection.end,
-    lines,
-    getDelta
-  )
-  return {
-    start: selection.start,
-    end: positionRight,
+const getNewSelections = (selections, lines, getDelta) => {
+  const newSelections = new Uint32Array(selections.length)
+  for (let i = 0; i < selections.length; i += 4) {
+    const selectionStartRow = selections[i]
+    const selectionStartColumn = selections[i + 1]
+    const selectionEndRow = selections[i + 2]
+    const selectionEndColumn = selections[i + 3]
+    const line = lines[selectionEndRow]
+    newSelections[i] = selectionStartRow
+    newSelections[i + 1] = selectionStartColumn
+    if (selectionEndColumn >= line.length) {
+      newSelections[i + 2] = selectionEndRow + 1
+      newSelections[i + 3] = 0
+    } else {
+      const delta = getDelta(line, selectionEndColumn)
+      newSelections[i + 2] = selectionEndRow
+      newSelections[i + 3] = selectionEndColumn + delta
+    }
   }
+  return newSelections
 }
 
 export const editorSelectHorizontalRight = (editor, getDelta) => {
-  const selectionEdits = []
   const lines = editor.lines
-  for (const selection of editor.selections) {
-    const newSelection = getNewSelection(selection, lines, getDelta)
-    selectionEdits.push(newSelection)
-  }
-  return Editor.scheduleSelections(editor, selectionEdits)
+  const selections = editor.selections
+  const newSelections = getNewSelections(selections, lines, getDelta)
+  return Editor.scheduleSelections(editor, newSelections)
 }
