@@ -1,25 +1,15 @@
 import * as Editor from '../Editor/Editor.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 
-const getLineSelection = (line, rowIndex) => {
-  const selection = {
-    start: {
-      rowIndex,
-      columnIndex: 0,
-    },
-    end: {
-      rowIndex,
-      // TODO handle virtual space when columnIndex is greater than line length
-      columnIndex: line.length,
-    },
-  }
-  return selection
+const getNewSelections = (line, rowIndex) => {
+  // TODO handle virtual space when columnIndex is greater than line length
+  return new Uint32Array([rowIndex, 0, rowIndex, line.length])
 }
 
 export const editorSelectLine = (editor) => {
-  const rowIndex = editor.cursor.rowIndex
+  const selections = editor.selections
+  const rowIndex = selections[editor.primarySelectionIndex]
   const line = TextDocument.getLine(editor, rowIndex)
-  const selection = getLineSelection(line, rowIndex)
-  const selectionEdits = [selection]
-  return Editor.scheduleSelections(editor, selectionEdits)
+  const newSelections = getNewSelections(line, rowIndex)
+  return Editor.scheduleSelections(editor, newSelections)
 }
