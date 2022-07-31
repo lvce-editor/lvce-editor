@@ -1,60 +1,24 @@
 import * as EditorPasteText from '../src/parts/EditorCommand/EditorCommandPasteText.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorPasteText', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: [''],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
-    lineCache: [],
-    tokenizer: TokenizePlainText,
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     undoStack: [],
   }
   expect(EditorPasteText.editorPasteText(editor, 'line 1')).toMatchObject({
     lines: ['line 1'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 6,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 6,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 6,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 6, 0, 6),
   })
 })
 
 test.skip('editorPasteText - middle of line', () => {
-  const cursor = {
-    rowIndex: 1,
-    columnIndex: 1,
-  }
   const editor = {
     lines: ['aaa', 'bbb', 'ccc'],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
-    tokenizer: TokenizePlainText,
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(1, 1, 1, 1),
   }
   expect(
     EditorPasteText.editorPasteText(
@@ -64,11 +28,7 @@ test.skip('editorPasteText - middle of line', () => {
     )
   ).toMatchObject({
     lines: ['aaa', 'b 111', '222 bb', 'ccc'],
-    cursor: {
-      rowIndex: 2,
-      columnIndex: 4,
-    },
-    selections: [],
+    selections: EditorSelection.fromRange(2, 4, 2, 4),
   })
 })
 
@@ -77,23 +37,8 @@ test('editorPasteText - issue with pasting multiple lines', () => {
     uri: '/tmp/foo-ScUYJ4/test.txt',
     languageId: 'plaintext',
     lines: ['line 1', 'line 2', 'line 3'],
-    cursor: {
-      rowIndex: 3,
-      columnIndex: 6,
-    },
     completionTriggerCharacters: [],
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 3,
-          columnIndex: 6,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 3, 6),
     id: 1,
     deltaY: 0,
     minLineY: 0,
