@@ -1,14 +1,16 @@
 import * as Editor from '../Editor/Editor.js'
 import * as Assert from '../Assert/Assert.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
-export const editorCursorSet = (editor, position) => {
+export const editorCursorSet = (editor, rowIndex, columnIndex) => {
   Assert.object(editor)
-  Assert.object(position)
-  const selectionEdits = [
-    {
-      start: position,
-      end: position,
-    },
-  ]
+  Assert.number(rowIndex)
+  Assert.number(columnIndex)
+  const selectionEdits = EditorSelection.fromRange(
+    rowIndex,
+    columnIndex,
+    rowIndex,
+    columnIndex
+  )
   return Editor.scheduleSelections(editor, selectionEdits)
 }

@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   isMobileOrTablet: jest.fn().mockImplementation(() => {
@@ -21,25 +22,15 @@ test('getVisible - desktop', () => {
   Platform.isMobileOrTablet.mockImplementation(() => {
     return false
   })
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: [''],
-    cursor,
     minLineY: 0,
     maxLineY: 10,
     top: 10,
     left: 5,
     rowHeight: 10,
     columnWidth: 8,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
   expect(EditorCursor.getVisible(editor)).toEqual([
     {
@@ -54,25 +45,15 @@ test('getVisible - native', () => {
   Platform.isMobileOrTablet.mockImplementation(() => {
     return true
   })
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: [''],
-    cursor,
     minLineY: 0,
     maxLineY: 10,
     top: 10,
     left: 5,
     rowHeight: 10,
     columnWidth: 8,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
   expect(EditorCursor.getVisible(editor)).toEqual([
     {
@@ -87,25 +68,16 @@ test.only('getVisible - emoji - 👮🏽‍♀️', () => {
   Platform.isMobileOrTablet.mockImplementation(() => {
     return false
   })
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 7,
-  }
+
   const editor = {
     lines: ['👮🏽‍♀️'],
-    cursor,
     minLineY: 0,
     maxLineY: 10,
     top: 10,
     left: 5,
     rowHeight: 10,
     columnWidth: 8,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 7, 0, 7),
     lineCache: [
       {},
       {

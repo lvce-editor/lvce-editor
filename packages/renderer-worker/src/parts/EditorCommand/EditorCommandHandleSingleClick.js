@@ -37,6 +37,7 @@ export const editorHandleSingleClick = async (
   await RendererProcess.invoke('Viewlet.invoke', 'EditorText', 'focus')
   return EditorCursorSet.editorCursorSet(
     editor,
-    EditorMoveSelection.state.position
+    EditorMoveSelection.state.position.rowIndex,
+    EditorMoveSelection.state.position.columnIndex
   )
 }

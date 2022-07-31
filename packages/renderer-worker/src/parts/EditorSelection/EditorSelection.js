@@ -12,6 +12,10 @@ export const fromRange = (
   ])
 }
 
+export const fromRanges = (...items) => {
+  return new Uint32Array(items.flat(1))
+}
+
 export const fromPosition = (rowIndex, columnIndex) => {
   return fromRange(rowIndex, columnIndex, rowIndex, columnIndex)
 }
@@ -106,5 +110,22 @@ export const from = (array, getSelection) => {
     newSelections[i++] = end.columnIndex
   }
   console.log({ newSelections })
+  return newSelections
+}
+
+export const push = (
+  selections,
+  startRowIndex,
+  startColumnIndex,
+  endRowIndex,
+  endColumnIndex
+) => {
+  const oldLength = selections.length
+  const newSelections = alloc(oldLength + 4)
+  newSelections.set(selections)
+  newSelections[oldLength + 1] = startRowIndex
+  newSelections[oldLength + 2] = startColumnIndex
+  newSelections[oldLength + 3] = endRowIndex
+  newSelections[oldLength + 4] = endColumnIndex
   return newSelections
 }
