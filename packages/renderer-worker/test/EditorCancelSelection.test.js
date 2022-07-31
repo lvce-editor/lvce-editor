@@ -1,4 +1,5 @@
 import * as EditorCancelSelection from '../src/parts/EditorCommand/EditorCommandCancelSelection.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorCancelSelection', () => {
   const editor = {
@@ -7,62 +8,19 @@ test('editorCancelSelection', () => {
       rowIndex: 0,
       columnIndex: 4,
     },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 4,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 4),
   }
   expect(EditorCancelSelection.editorCancelSelection(editor)).toMatchObject({
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })
 
 test('editorCancelSelection - when there is no selection', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 4,
-  }
   const editor = {
     lines: ['line 1', 'line 2', 'line 3'],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 4, 0, 4),
   }
   expect(EditorCancelSelection.editorCancelSelection(editor)).toMatchObject({
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 4,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 4,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 4, 0, 4),
   })
 })
