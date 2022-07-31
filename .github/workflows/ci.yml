@@ -67,6 +67,8 @@ jobs:
         uses: actions/upload-pages-artifact@v1
         with:
           path: ./build/.tmp/dist
+        env:
+          PATH_PREFIX: /lvce-editor
 
   deploy:
     environment:
