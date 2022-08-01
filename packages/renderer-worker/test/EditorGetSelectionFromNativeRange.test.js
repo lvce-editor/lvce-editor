@@ -15,7 +15,7 @@ test('editorGetSelectionFromNativeRange', () => {
       '  color: white;',
       '  outline: none;',
       '  border: none;',
-      '  font-family: \'Fira Code\', monospace;',
+      "  font-family: 'Fira Code', monospace;",
       '  position: relative;',
       '  white-space: pre;',
       '  font-size: 15px;',
@@ -35,14 +35,5 @@ test('editorGetSelectionFromNativeRange', () => {
       endRowIndex: 10,
       endColumnIndex: 14,
     })
-  ).toEqual({
-    start: {
-      rowIndex: 10,
-      columnIndex: 10,
-    },
-    end: {
-      rowIndex: 10,
-      columnIndex: 14,
-    },
-  })
+  ).toEqual(new Uint32Array([10, 10, 10, 14]))
 })
