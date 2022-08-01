@@ -221,7 +221,7 @@ const getName = (path) => {
 }
 
 const getRelativePath = (path) => {
-  return path.slice('web:///workspace'.length)
+  return path.slice('/workspace'.length)
 }
 
 export const readFile = async (path) => {
