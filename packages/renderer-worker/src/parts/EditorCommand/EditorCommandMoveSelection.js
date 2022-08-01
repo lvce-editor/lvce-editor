@@ -25,35 +25,31 @@ const compare = (positionA, positionB) => {
   return -1
 }
 
-const editorMoveSelectionBackwards = (editor, anchor, position) => {
-  const selectionEdits = [
-    {
-      start: position,
-      end: anchor,
-    },
-  ]
-  return Editor.scheduleSelections(editor, selectionEdits)
+const editorMoveSelectionBackwards = (anchor, position) => {
+  return new Uint32Array([
+    position.rowIndex,
+    position.columnIndex,
+    anchor.rowIndex,
+    anchor.columnIndex,
+  ])
 }
 
-const editorMoveSelectionEqual = (editor, anchor, position) => {
-  const selectionEdits = [
-    {
-      start: position,
-      end: position,
-      type: 1,
-    },
-  ]
-  return Editor.scheduleSelections(editor, selectionEdits)
+const editorMoveSelectionEqual = (anchor, position) => {
+  return new Uint32Array([
+    position.rowIndex,
+    position.columnIndex,
+    position.rowIndex,
+    position.columnIndex,
+  ])
 }
 
-const editorMoveSelectionForwards = (editor, anchor, position) => {
-  const selectionEdits = [
-    {
-      start: anchor,
-      end: position,
-    },
-  ]
-  return Editor.scheduleSelections(editor, selectionEdits)
+const editorMoveSelectionForwards = (anchor, position) => {
+  return new Uint32Array([
+    anchor.rowIndex,
+    anchor.columnIndex,
+    position.rowIndex,
+    position.columnIndex,
+  ])
 }
 
 const getNewSelections = (anchor, position) => {
@@ -66,7 +62,6 @@ const getNewSelections = (anchor, position) => {
       return editorMoveSelectionForwards(anchor, position)
     default:
       throw new Error('unexpected comparison result')
-      break
   }
 }
 
