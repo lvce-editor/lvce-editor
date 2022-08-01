@@ -38,112 +38,54 @@ const ExtensionHost = await import(
   '../src/parts/ExtensionHost/ExtensionHostCore.js'
 )
 
+const EditorSelection = await import(
+  '../src/parts/EditorSelection/EditorSelection.js'
+)
+
 test('editorType', async () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: [''],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     lineCache: [],
     undoStack: [],
   }
   expect(await EditorType.editorType(editor, 'a')).toMatchObject({
     lines: ['a'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 1,
-    },
+    selections: EditorSelection.fromRange(0, 1, 0, 1),
   })
 })
 
 test('editorType - with selection', async () => {
   const editor = {
     lines: ['line 1', 'line 2'],
-    cursor: {
-      rowIndex: 1,
-      columnIndex: 2,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 1,
-        },
-        end: {
-          rowIndex: 1,
-          columnIndex: 2,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 1, 1, 2),
     lineCache: [],
     undoStack: [],
   }
   expect(await EditorType.editorType(editor, 'a')).toMatchObject({
     lines: ['lane 2'],
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 2,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 2,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 2, 0, 2),
   })
 })
 
 test('editorType - emoji 👮🏽‍♀️', async () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: [''],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     lineCache: [],
     undoStack: [],
   }
   expect(await EditorType.editorType(editor, '👮🏽‍♀️')).toMatchObject({
     lines: ['👮🏽‍♀️'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 7,
-    },
+    selections: EditorSelection.fromRange(0, 7, 0, 7),
   })
 })
 
 test.skip('editorType - braceCompletion - opening curly brace', async () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: [''],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
-    lineCache: [],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     undoStack: [],
     uri: '',
   }
@@ -158,27 +100,14 @@ test.skip('editorType - braceCompletion - opening curly brace', async () => {
   })
   expect(await EditorType.editorType(editor, '{')).toMatchObject({
     lines: ['{}'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 2,
-    },
+    selections: EditorSelection.fromRange(0, 2, 0, 2),
   })
 })
 
 test.skip('editorType - braceCompletion - opening round brace', async () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: [''],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     lineCache: [],
     undoStack: [],
     uri: '',
@@ -194,27 +123,14 @@ test.skip('editorType - braceCompletion - opening round brace', async () => {
   })
   expect(await EditorType.editorType(editor, '(')).toMatchObject({
     lines: ['()'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 2,
-    },
+    selections: EditorSelection.fromRange(0, 2, 0, 2),
   })
 })
 
 test.skip('editorType - braceCompletion - opening square brace', async () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: [''],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     lineCache: [],
     undoStack: [],
     uri: '',
@@ -230,9 +146,6 @@ test.skip('editorType - braceCompletion - opening square brace', async () => {
   })
   expect(await EditorType.editorType(editor, '[')).toMatchObject({
     lines: ['[]'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 2,
-    },
+    selections: EditorSelection.fromRange(0, 2, 0, 2),
   })
 })
