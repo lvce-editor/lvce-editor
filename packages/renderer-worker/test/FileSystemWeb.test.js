@@ -1,9 +1,8 @@
 import * as FileSystemWeb from '../src/parts/FileSystem/FileSystemWeb.js'
 
 test('readFile', async () => {
-  // TODO passing protocol here seems unnecessary, but it is useful for extension host which has several protocols
   expect(
-    await FileSystemWeb.readFile('web:///workspace/languages/index.dart')
+    await FileSystemWeb.readFile('/workspace/languages/index.dart')
   ).toEqual(
     `void main() {
   print('Hello, World!');
@@ -11,9 +10,8 @@ test('readFile', async () => {
   )
 })
 test('readFile - error', async () => {
-  // TODO passing protocol here seems unnecessary, but it is useful for extension host which has several protocols
   await expect(
-    FileSystemWeb.readFile('web:///languages/index.dart')
+    FileSystemWeb.readFile('/languages/index.dart')
   ).rejects.toThrowError(new Error('file not found'))
 })
 
