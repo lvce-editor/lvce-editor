@@ -10,18 +10,23 @@ export const editorCompositionStart = (editor, event) => {
   return editor
 }
 
-const getCompositionChanges = (editor, data) => {
+const getCompositionChanges = (selections, data) => {
   const changes = []
-  for (const selection of editor.selections) {
-    const startRowIndex = selection.start.rowIndex
-    const startColumnIndex =
-      selection.start.columnIndex - state.compositionText.length
+  for (let i = 0; i < selections.length; i += 4) {
+    const selectionStartRow = selections[i]
+    const selectionStartColumn = selections[i + 1]
+    const selectionEndRow = selections[i + 2]
+    const selectionEndColumn = selections[i + 3]
+    const startColumnIndex = selectionStartColumn - state.compositionText.length
     changes.push({
       start: {
-        rowIndex: startRowIndex,
+        rowIndex: selectionStartRow,
         columnIndex: startColumnIndex,
       },
-      end: selection.end,
+      end: {
+        rowIndex: selectionEndRow,
+        columnIndex: selectionEndColumn,
+      },
       inserted: [data],
       deleted: [state.compositionText],
       origin: 'compositionUpdate',
@@ -31,14 +36,16 @@ const getCompositionChanges = (editor, data) => {
 }
 
 export const editorCompositionUpdate = (editor, data) => {
-  const changes = getCompositionChanges(editor, data)
-  console.log('composition update', { changes })
+  const selections = editor.selections
+  const changes = getCompositionChanges(selections, data)
+  console.log('composition update', changes)
   state.compositionText = data
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
 
 export const editorCompositionEnd = (editor, data) => {
-  const changes = getCompositionChanges(editor, data)
+  const selections = editor.selections
+  const changes = getCompositionChanges(selections, data)
   console.log('composition end', { changes })
   state.isComposing = false
   state.compositionText = ''

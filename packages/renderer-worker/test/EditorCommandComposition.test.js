@@ -2,6 +2,7 @@ import { jest } from '@jest/globals'
 import * as EditorComposition from '../src/parts/EditorCommand/EditorCommandComposition.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 beforeEach(() => {
   EditorComposition.state.isComposing = false
@@ -38,18 +39,7 @@ test('editorComposition - ä', async () => {
     numberOfVisibleLines: 2,
     tokenizer: TokenizePlainText,
     lineCache: [],
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     id: 1,
     deltaY: 0,
     finalDeltaY: 122,
@@ -100,18 +90,7 @@ test('editorComposition - ñ', async () => {
     numberOfVisibleLines: 2,
     tokenizer: TokenizePlainText,
     lineCache: [],
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     id: 1,
     deltaY: 0,
     finalDeltaY: 122,
@@ -163,18 +142,7 @@ test('editorComposition - on and off', async () => {
     numberOfVisibleLines: 2,
     tokenizer: TokenizePlainText,
     lineCache: [],
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     id: 1,
     deltaY: 0,
     finalDeltaY: 122,
