@@ -1,91 +1,28 @@
 import * as EditorSelectAllOccurrences from '../src/parts/EditorCommand/EditorCommandSelectAllOccurrences.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectAllOccurrences - single line selection', () => {
   const editor = {
     lines: ['sample text, sample text'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 5,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 5,
-        },
-      },
-    ],
-    tokenizer: TokenizePlainText,
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 5),
   }
   expect(
     EditorSelectAllOccurrences.editorSelectAllOccurrences(editor)
   ).toMatchObject({
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 5,
-        },
-      },
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 13,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 18,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRanges([0, 0, 0, 5], [0, 13, 0, 18]),
   })
 })
 
 test('editorSelectAllOccurrences - single line selection - no more to add', () => {
   const editor = {
     lines: ['sample text'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 5,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 5,
-        },
-      },
-    ],
-    tokenizer: TokenizePlainText,
+    selections: EditorSelection.fromRange(0, 0, 0, 5),
   }
   expect(
     EditorSelectAllOccurrences.editorSelectAllOccurrences(editor)
   ).toMatchObject({
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 5,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 5),
   })
   // TODO test that renderProcess.send has not been called since selection has not been modified
 })
@@ -93,103 +30,37 @@ test('editorSelectAllOccurrences - single line selection - no more to add', () =
 test('editorSelectAllOccurrences - no selections, but word at cursor position exists', () => {
   const editor = {
     lines: ['sample text, sample text'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 6,
-    },
-    selections: [],
-    tokenizer: TokenizePlainText,
+    primarySelectionIndex: 0,
+    selections: new Uint32Array([0, 6, 0, 6]),
   }
   expect(
     EditorSelectAllOccurrences.editorSelectAllOccurrences(editor)
   ).toMatchObject({
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 6,
-        },
-      },
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 13,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 19,
-        },
-      },
-    ],
+    selections: new Uint32Array([0, 0, 0, 6, 0, 13, 0, 19]),
   })
 })
 
 test('editorSelectAllOccurrences - no selections and no word at cursor position', () => {
   const editor = {
     lines: ['before         after'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 10,
-    },
-    selections: [],
-    tokenizer: TokenizePlainText,
+    selections: EditorSelection.fromRange(0, 10, 0, 10),
   }
   expect(
     EditorSelectAllOccurrences.editorSelectAllOccurrences(editor)
   ).toMatchObject({
-    selections: [],
+    selections: new Uint32Array([0, 10, 0, 10]),
   })
 })
 
 test('editorSelectAllOccurrences - multi line selection', () => {
   const editor = {
     lines: ['sample text', 'sample text', 'sample text'],
-    cursor: {
-      rowIndex: 1,
-      columnIndex: 5,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 7,
-        },
-        end: {
-          rowIndex: 1,
-          columnIndex: 6,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 7, 1, 6),
   }
   expect(
     EditorSelectAllOccurrences.editorSelectAllOccurrences(editor)
   ).toMatchObject({
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 7,
-        },
-        end: {
-          rowIndex: 1,
-          columnIndex: 6,
-        },
-      },
-      {
-        start: {
-          rowIndex: 1,
-          columnIndex: 7,
-        },
-        end: {
-          rowIndex: 2,
-          columnIndex: 6,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRanges([0, 7, 1, 6], [1, 7, 2, 6]),
   })
 })
 

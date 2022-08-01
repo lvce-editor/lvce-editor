@@ -18,7 +18,11 @@ const getPlatform = () => {
   if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
     return 'test'
   }
-  if (navigator.appVersion.includes('Electron')) {
+  if (
+    typeof navigator !== 'undefined' &&
+    typeof navigator.appVersion !== 'undefined' &&
+    navigator.appVersion.includes('Electron')
+  ) {
     return 'electron'
   }
   return 'remote'
