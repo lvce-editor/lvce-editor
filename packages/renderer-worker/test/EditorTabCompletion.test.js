@@ -21,24 +21,15 @@ const EditorTabCompletion = await import(
 const ExtensionHostTabCompletion = await import(
   '../src/parts/ExtensionHost/ExtensionHostTabCompletion.js'
 )
+const EditorSelection = await import(
+  '../src/parts/EditorSelection/EditorSelection.js'
+)
 
 test('editorTabCompletion - no tab completion available', async () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: ['a'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
   // @ts-ignore
   ExtensionHostTabCompletion.executeTabCompletionProvider.mockImplementation(
@@ -50,19 +41,9 @@ test('editorTabCompletion - no tab completion available', async () => {
 })
 
 test('editorTabCompletion - tab completion available', async () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 1,
-  }
   const editor = {
     lines: ['a'],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 1, 0, 1),
     lineCache: [],
     undoStack: [],
   }
@@ -84,19 +65,9 @@ test('editorTabCompletion - tab completion available', async () => {
 // TODO test multiline snippet
 
 test('editorTabCompletion - multiline snippet', async () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 1,
-  }
   const editor = {
     lines: ['a'],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 1, 0, 1),
     lineCache: [],
     minLineY: 0,
     maxLineY: 1,
