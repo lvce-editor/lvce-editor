@@ -14,6 +14,7 @@
     "build-min2": "microbundle --entry src/parts/Editor/Editor.js --output distmin --format modern --no-compress",
     "build-min3": "microbundle --entry src/rendererWorkerMain.js --output distmin --format modern",
     "build-min4": "microbundle --entry src/parts/Editor/Editor.js --output distmin --format modern",
+    "build-min5": "microbundle --entry src/parts/EditorCommand/EditorCommand.ipc.js --output distmin --format modern",
     "lint": "npx xo ."
   },
   "keywords": [],
