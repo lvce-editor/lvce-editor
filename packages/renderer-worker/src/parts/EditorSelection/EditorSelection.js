@@ -126,7 +126,6 @@ export const from = (array, getSelection) => {
     newSelections[i++] = end.rowIndex
     newSelections[i++] = end.columnIndex
   }
-  console.log({ newSelections })
   return newSelections
 }
 
