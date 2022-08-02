@@ -50,61 +50,53 @@ export const applyEdit = (editor, changes) => {
 
 export const getVisible = (editor) => {
   const visibleSelections = []
-  // let i=0
   // // TODO binary search
 
-  // // before
-  // while(i < editor.selections.length){
-  //   if(editor.selections[i].start.rowIndex < editor.minLineY){
-  //     break
-  //   }
-  //   i++
-  // }
-  // // start
-  // while(i < editor.selections.length){
-  //   if(editor.selections[i].start.rowIndex < ){
-
-  //   }
-  // }
-  // // middle
-
-  // // end
-
   // // after
-  for (const selection of editor.selections) {
-    if (selection.end.rowIndex < editor.minLineY) {
+  const selections = editor.selections
+  for (let i = 0; i < selections.length; i += 4) {
+    const selectionStartRow = selections[i]
+    const selectionStartColumn = selections[i + 1]
+    const selectionEndRow = selections[i + 2]
+    const selectionEndColumn = selections[i + 3]
+
+    if (selectionEndRow < editor.minLineY) {
       continue
     }
-    if (selection.start.rowIndex > editor.maxLineY) {
+    if (selectionStartRow > editor.maxLineY) {
       break
     }
-    if (selection.start === selection.end) {
+    if (
+      EditorSelection.isEmpty(
+        selectionStartRow,
+        selectionStartColumn,
+        selectionEndRow,
+        selectionEndColumn
+      )
+    ) {
       continue
     }
-    if (selection.start.rowIndex === selection.end.rowIndex) {
+    if (selectionStartRow === selectionEndRow) {
       visibleSelections.push({
-        top: (selection.start.rowIndex - editor.minLineY) * editor.rowHeight,
-        left: selection.start.columnIndex * editor.columnWidth,
-        width:
-          (selection.end.columnIndex - selection.start.columnIndex) *
-          editor.columnWidth,
+        top: (selectionStartRow - editor.minLineY) * editor.rowHeight,
+        left: selectionStartColumn * editor.columnWidth,
+        width: (selectionEndColumn - selectionStartColumn) * editor.columnWidth,
         height: editor.rowHeight,
       })
     } else {
-      if (selection.start.rowIndex >= editor.minLineY) {
+      if (selectionStartRow >= editor.minLineY) {
         visibleSelections.push({
-          top: (selection.start.rowIndex - editor.minLineY) * editor.rowHeight,
-          left: selection.start.columnIndex * editor.columnWidth,
+          top: (selectionStartRow - editor.minLineY) * editor.rowHeight,
+          left: selectionStartColumn * editor.columnWidth,
           width:
-            (editor.lines[selection.start.rowIndex].length -
-              selection.start.columnIndex) *
+            (editor.lines[selectionStartRow].length - selectionStartColumn) *
             editor.columnWidth,
           height: editor.rowHeight,
         })
       }
       for (
-        let i = Math.max(selection.start.rowIndex + 1, editor.minLineY);
-        i < Math.min(selection.end.rowIndex, editor.maxLineY);
+        let i = Math.max(selectionStartRow + 1, editor.minLineY);
+        i < Math.min(selectionEndRow, editor.maxLineY);
         i++
       ) {
         visibleSelections.push({
@@ -114,11 +106,11 @@ export const getVisible = (editor) => {
           height: editor.rowHeight,
         })
       }
-      if (selection.end.rowIndex <= editor.maxLineY) {
+      if (selectionEndRow <= editor.maxLineY) {
         visibleSelections.push({
-          top: (selection.end.rowIndex - editor.minLineY) * editor.rowHeight,
+          top: (selectionEndRow - editor.minLineY) * editor.rowHeight,
           left: 0,
-          width: selection.end.columnIndex * editor.columnWidth,
+          width: selectionEndColumn * editor.columnWidth,
           height: editor.rowHeight,
         })
       }

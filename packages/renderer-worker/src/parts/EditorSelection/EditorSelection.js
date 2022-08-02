@@ -67,7 +67,7 @@ export const moveRangeToPosition = (selections, i, rowIndex, columnIndex) => {
   selections[i + 1] = selections[i + 3] = columnIndex
 }
 
-const isSelectionEmpty = (
+export const isEmpty = (
   selectionStartRow,
   selectionStartColumn,
   selectionEndRow,
@@ -109,7 +109,7 @@ export const isEverySelection = (selections, fn) => {
 }
 
 export const isEverySelectionEmpty = (selections) => {
-  return isEverySelection(selections, isSelectionEmpty)
+  return isEverySelection(selections, isEmpty)
 }
 
 export const isEverySelectionSingleLine = (selections) => {
