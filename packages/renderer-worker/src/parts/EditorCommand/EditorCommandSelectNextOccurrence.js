@@ -65,23 +65,13 @@ const getSelectionEditsSingleLineWord = (lines, selections) => {
     const columnIndex = line.indexOf(word)
     if (columnIndex !== -1) {
       const columnIndexEnd = columnIndex + word.length
-      const revealRange = {
-        start: {
-          rowIndex: i,
-          columnIndex,
-        },
-        end: {
-          rowIndex: i,
-          columnIndex: columnIndexEnd,
-        },
-      }
-      const newSelections = EditorSelection.push(
-        selections,
-        i,
-        columnIndex,
-        i,
-        columnIndexEnd
-      )
+      const newSelections = new Uint32Array(selections.length + 4)
+      newSelections.set(selections, 0)
+      const insertIndex = selections.length
+      newSelections[insertIndex] = i
+      newSelections[insertIndex + 1] = columnIndex
+      newSelections[insertIndex + 2] = i
+      newSelections[insertIndex + 3] = columnIndexEnd
       return {
         revealRange: newSelections.length - 4,
         selectionEdits: newSelections,
@@ -192,7 +182,7 @@ const getSelectNextOccurrenceResult = (editor) => {
   const lines = editor.lines
   const selections = editor.selections
   if (EditorSelection.isEverySelectionEmpty(selections)) {
-    const newSelections = EditorSelection.alloc(selections.length)
+    const newSelections = new Uint32Array(selections.length)
     for (let i = 0; i < selections.length; i += 4) {
       const startRowIndex = selections[i]
       const startColumnIndex = selections[i + 1]
@@ -204,6 +194,7 @@ const getSelectNextOccurrenceResult = (editor) => {
         startRowIndex,
         startColumnIndex
       )
+      wordMatch //?
       if (wordMatch.start === wordMatch.end) {
         newSelections[i] = startRowIndex
         newSelections[i + 1] = startColumnIndex
@@ -223,7 +214,7 @@ const getSelectNextOccurrenceResult = (editor) => {
     }
   }
 
-  if (EditorSelection.isEverySelectionEmpty(editor.selections)) {
+  if (EditorSelection.isEverySelectionSingleLine(editor.selections)) {
     return getSelectionEditsSingleLineWord(editor.lines, editor.selections)
   }
   return undefined
@@ -253,6 +244,7 @@ export const editorSelectNextOccurrence = (editor) => {
   ) {
     return Editor.scheduleSelections(editor, selectionEdits)
   }
+  // TODO what is this magic number 5?
   const deltaY = (revealRangeStartRowIndex - 5) * editor.rowHeight
   return Editor.scheduleSelectionsAndScrollPosition(
     editor,
@@ -260,3 +252,10 @@ export const editorSelectNextOccurrence = (editor) => {
     deltaY
   )
 }
+
+// const editor = {
+//   lines: ['line 1', 'line 2'],
+//   primarySelectionIndex: 0,
+//   selections: EditorSelection.fromRanges([0, 0, 0, 4], [1, 0, 1, 4]),
+// }
+// const newEditor = editorSelectNextOccurrence(editor)

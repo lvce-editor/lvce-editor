@@ -79,14 +79,23 @@ const isSelectionEmpty = (
   )
 }
 
-export const isEverySelectionEmpty = (selections) => {
+const isSelectionSingleLine = (
+  selectionStartRow,
+  selectionStartColumn,
+  selectionEndRow,
+  selectionEndColumn
+) => {
+  return selectionStartRow === selectionEndRow
+}
+
+export const isEverySelection = (selections, fn) => {
   for (let i = 0; i < selections.length; i += 4) {
     const selectionStartRow = selections[i]
     const selectionStartColumn = selections[i + 1]
     const selectionEndRow = selections[i + 2]
     const selectionEndColumn = selections[i + 3]
     if (
-      !isSelectionEmpty(
+      !fn(
         selectionStartRow,
         selectionStartColumn,
         selectionEndRow,
@@ -97,6 +106,14 @@ export const isEverySelectionEmpty = (selections) => {
     }
   }
   return true
+}
+
+export const isEverySelectionEmpty = (selections) => {
+  return isEverySelection(selections, isSelectionEmpty)
+}
+
+export const isEverySelectionSingleLine = (selections) => {
+  return isEverySelection(selections, isSelectionSingleLine)
 }
 
 export const from = (array, getSelection) => {

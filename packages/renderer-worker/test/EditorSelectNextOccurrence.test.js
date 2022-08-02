@@ -46,7 +46,7 @@ test('editorSelectNextOccurrence - no selection and cursor position at end of wo
   expect(newEditor.selections).toEqual(EditorSelection.fromRange(0, 0, 0, 4))
 })
 
-test.only('editorSelectNextOccurrence - one selection and more selections possible after', () => {
+test('editorSelectNextOccurrence - one selection and more selections possible after', () => {
   const editor = {
     lines: ['line 1', 'line 2', ''],
     primarySelectionIndex: 0,
