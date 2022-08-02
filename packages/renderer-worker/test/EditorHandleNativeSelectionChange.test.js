@@ -1,5 +1,5 @@
 import * as EditorHandleNativeSelectionChange from '../src/parts/EditorCommand/EditorCommandHandleNativeSelectionChange.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorHandleNativeSelectionChange', () => {
   const editor = {
@@ -25,8 +25,7 @@ test('editorHandleNativeSelectionChange', () => {
       '}',
       '',
     ],
-    lineCache: [],
-    tokenizer: TokenizePlainText,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
   expect(
     EditorHandleNativeSelectionChange.editorHandleNativeSelectionChange(
@@ -39,11 +38,6 @@ test('editorHandleNativeSelectionChange', () => {
       }
     )
   ).toMatchObject({
-    selections: [
-      {
-        end: { columnIndex: 14, rowIndex: 10 },
-        start: { columnIndex: 10, rowIndex: 10 },
-      },
-    ],
+    selections: EditorSelection.fromRange(10, 10, 10, 14),
   })
 })

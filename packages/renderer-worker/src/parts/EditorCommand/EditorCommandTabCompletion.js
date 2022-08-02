@@ -5,7 +5,11 @@ import * as Assert from '../Assert/Assert.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
 
 const getTabCompletion = async (editor) => {
-  const offset = TextDocument.offsetAt(editor, editor.cursor)
+  const position = {
+    rowIndex: editor.selections[0],
+    columnIndex: editor.selections[1],
+  }
+  const offset = TextDocument.offsetAt(editor, position)
   const tabCompletion =
     await ExtensionHostTabCompletion.executeTabCompletionProvider(
       editor,
@@ -31,9 +35,10 @@ export const editorTabCompletion = async (editor) => {
   } catch (error) {
     console.error(error)
     // TODO cursor should always be of type object
-    const position = Array.isArray(editor.cursor)
-      ? editor.cursor[0]
-      : editor.cursor
+    const position = {
+      rowIndex: editor.selections[0],
+      columnIndex: editor.selections[1],
+    }
     return EditorShowMessage.showErrorMessage(
       editor,
       position,

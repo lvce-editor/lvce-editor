@@ -1,75 +1,28 @@
 import * as EditorSelectCharacterLeft from '../src/parts/EditorCommand/EditorCommandSelectCharacterLeft.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
-test('editorSelectCharacterLeft', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 1,
-  }
+test('editorSelectCharacterLeft - single character', () => {
   const editor = {
     lines: ['line 1', 'line 2', ''],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 1, 0, 1),
   }
   expect(
     EditorSelectCharacterLeft.editorSelectCharacterLeft(editor)
   ).toMatchObject({
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 1,
-        },
-      },
-    ],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 1, // TODO should be 0
-    },
+    selections: EditorSelection.fromRange(0, 0, 0, 1),
   })
 })
 
 test('editorSelectCharacterLeft - at start of file', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: ['line 1', 'line 2', ''],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
   expect(
     EditorSelectCharacterLeft.editorSelectCharacterLeft(editor)
   ).toMatchObject({
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-      },
-    ],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })

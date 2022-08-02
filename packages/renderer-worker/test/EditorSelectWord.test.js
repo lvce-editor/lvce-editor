@@ -1,161 +1,46 @@
 import * as EditorSelectWord from '../src/parts/EditorCommand/EditorCommandSelectWord.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectWord', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 5,
-  }
   const editor = {
     lines: ['abcde', 'abcde'],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 5, 0, 5),
   }
-  expect(
-    EditorSelectWord.editorSelectWord(
-      editor,
-      editor.cursor.rowIndex,
-      editor.cursor.columnIndex
-    )
-  ).toMatchObject({
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 5,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 5,
-        },
-      },
-    ],
+  expect(EditorSelectWord.editorSelectWord(editor, 0, 5)).toMatchObject({
+    selections: EditorSelection.fromRange(0, 0, 0, 5),
   })
 })
 
 test('editorSelectWord - with numbers', () => {
   const editor = {
     lines: ['11111', '22222'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
-
-    selections: [],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(
-    EditorSelectWord.editorSelectWord(
-      editor,
-      editor.cursor.rowIndex,
-      editor.cursor.columnIndex
-    )
-  ).toMatchObject({
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 5,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 5,
-        },
-      },
-    ],
+  expect(EditorSelectWord.editorSelectWord(editor, 0, 0)).toMatchObject({
+    selections: EditorSelection.fromRange(0, 0, 0, 5),
   })
 })
 
 test('editorSelectWord - with umlaut', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: ['füße'],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(
-    EditorSelectWord.editorSelectWord(
-      editor,
-      editor.cursor.rowIndex,
-      editor.cursor.columnIndex
-    )
-  ).toMatchObject({
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 4,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 4,
-        },
-      },
-    ],
+  expect(EditorSelectWord.editorSelectWord(editor, 0, 0)).toMatchObject({
+    selections: EditorSelection.fromRange(0, 0, 0, 4),
   })
 })
 
 test('editorSelectWord - with accent', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: ['tàste'],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(
-    EditorSelectWord.editorSelectWord(
-      editor,
-      editor.cursor.rowIndex,
-      editor.cursor.columnIndex
-    )
-  ).toMatchObject({
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 5,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 5,
-        },
-      },
-    ],
+  expect(EditorSelectWord.editorSelectWord(editor, 0, 0)).toMatchObject({
+    selections: EditorSelection.fromRange(0, 0, 0, 5),
   })
 })
 
@@ -167,76 +52,20 @@ test('editorSelectWord - with word before', () => {
   const editor = {
     lines: ['abc   '],
     cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 3, 0, 3),
   }
-  expect(
-    EditorSelectWord.editorSelectWord(
-      editor,
-      editor.cursor.rowIndex,
-      editor.cursor.columnIndex
-    )
-  ).toMatchObject({
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 3,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 3,
-        },
-      },
-    ],
+  expect(EditorSelectWord.editorSelectWord(editor, 0, 3)).toMatchObject({
+    selections: EditorSelection.fromRange(0, 0, 0, 3),
   })
 })
 
 test('editorSelectWord - with word after', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 3,
-  }
   const editor = {
     lines: ['   def'],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 3, 0, 3),
   }
-  expect(
-    EditorSelectWord.editorSelectWord(
-      editor,
-      editor.cursor.rowIndex,
-      editor.cursor.columnIndex
-    )
-  ).toMatchObject({
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 6,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 3,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 6,
-        },
-      },
-    ],
+  expect(EditorSelectWord.editorSelectWord(editor, 0, 3)).toMatchObject({
+    selections: EditorSelection.fromRange(0, 3, 0, 6),
   })
 })

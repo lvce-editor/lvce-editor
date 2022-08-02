@@ -1,20 +1,12 @@
 import * as EditorHandleDoubleClick from '../src/parts/EditorCommand/EditorCommandHandleDoubleClick.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorHandleDoubleClick - with selection', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: ['line 1', 'line 2'],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     top: 10,
     left: 20,
     rowHeight: 10,
@@ -26,39 +18,14 @@ test('editorHandleDoubleClick - with selection', () => {
     EditorHandleDoubleClick.editorHandleDoubleClick(editor, 21, 11, 4)
   ).toMatchObject({
     lines: ['line 1', 'line 2'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 4,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 4,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 4),
   })
 })
 
 test.skip('editorHandleDoubleClick - no word to select', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: ['11111    22222'],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     top: 10,
     left: 20,
     rowHeight: 10,
@@ -70,10 +37,6 @@ test.skip('editorHandleDoubleClick - no word to select', () => {
   expect(
     EditorHandleDoubleClick.editorHandleDoubleClick(editor, 68, 11)
   ).toMatchObject({
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 6,
-    },
-    selections: [],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })

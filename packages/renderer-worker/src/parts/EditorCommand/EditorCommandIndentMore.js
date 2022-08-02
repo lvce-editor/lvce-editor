@@ -1,13 +1,15 @@
 import * as Editor from '../Editor/Editor.js'
 
-export const editorIndentMore = (editor) => {
-  const changes = []
+const getChanges = (selections) => {
   const rowsToIndent = []
-  for (const selection of editor.selections) {
-    for (let i = selection.start.rowIndex; i <= selection.end.rowIndex; i++) {
+  for (let i = 0; i < selections.length; i += 4) {
+    const selectionStartRow = selections[i]
+    const selectionEndRow = selections[i + 2]
+    for (let i = selectionStartRow; i <= selectionEndRow; i++) {
       rowsToIndent.push(i)
     }
   }
+  const changes = []
   for (const rowToIndent of rowsToIndent) {
     changes.push({
       start: {
@@ -23,5 +25,11 @@ export const editorIndentMore = (editor) => {
       origin: 'indentMore',
     })
   }
+  return changes
+}
+
+export const editorIndentMore = (editor) => {
+  const selections = editor.selections
+  const changes = getChanges(selections)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }

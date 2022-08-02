@@ -5,29 +5,24 @@ import * as TextDocument from '../TextDocument/TextDocument.js'
 const RE_WORD_START = /^[a-z\u00C0-\u017F\d]+/i
 const RE_WORD_END = /[a-z\u00C0-\u017F\d]+$/i
 
-const getWordSelection = (line, rowIndex, columnIndex) => {
+const getNewSelections = (line, rowIndex, columnIndex) => {
   const before = line.slice(0, columnIndex)
   const after = line.slice(columnIndex)
   const beforeMatch = before.match(RE_WORD_END)
   const afterMatch = after.match(RE_WORD_START)
   const columnStart = columnIndex - (beforeMatch ? beforeMatch[0].length : 0)
   const columnEnd = columnIndex + (afterMatch ? afterMatch[0].length : 0)
-  const selection = {
-    start: {
-      rowIndex,
-      columnIndex: columnStart,
-    },
-    end: {
-      rowIndex,
-      columnIndex: columnEnd,
-    },
-  }
-  return selection
+  const newSelections = new Uint32Array([
+    rowIndex,
+    columnStart,
+    rowIndex,
+    columnEnd,
+  ])
+  return newSelections
 }
 
 export const editorSelectWord = (editor, rowIndex, columnIndex) => {
   const line = TextDocument.getLine(editor, rowIndex)
-  const selection = getWordSelection(line, rowIndex, columnIndex)
-  const selectionEdits = [selection]
-  return Editor.scheduleSelections(editor, selectionEdits)
+  const newSelections = getNewSelections(line, rowIndex, columnIndex)
+  return Editor.scheduleSelections(editor, newSelections)
 }

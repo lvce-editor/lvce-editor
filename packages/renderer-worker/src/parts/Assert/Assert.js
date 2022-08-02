@@ -15,6 +15,9 @@ const getType = (value) => {
       if (Array.isArray(value)) {
         return 'array'
       }
+      if (value instanceof Uint32Array) {
+        return 'uint32array'
+      }
       return 'object'
     case 'boolean':
       return 'boolean'
@@ -72,5 +75,12 @@ export const fn = (value) => {
   const type = getType(value)
   if (type !== 'function') {
     throw new Error('expected value to be of type function')
+  }
+}
+
+export const uint32array = (value) => {
+  const type = getType(value)
+  if (type !== 'uint32array') {
+    throw new Error('expected value to be of type uint32array')
   }
 }

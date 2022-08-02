@@ -1,28 +1,42 @@
-import * as EditorHandleSingleClick from '../src/parts/EditorCommand/EditorCommandHandleSingleClick.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import { jest } from '@jest/globals'
 
-test.skip('editorHandleClick', async () => {
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const EditorSelection = await import(
+  '../src/parts/EditorSelection/EditorSelection.js'
+)
+
+const EditorHandleSingleClick = await import(
+  '../src/parts/EditorCommand/EditorCommandHandleSingleClick.js'
+)
+
+test('editorHandleClick', async () => {
   const editor = {
     lines: ['11111', '22222'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
-    selections: [],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     top: 10,
     left: 20,
     rowHeight: 10,
     columnWidth: 8,
-    tokenizer: TokenizePlainText,
     deltaY: 0,
   }
   expect(
     await EditorHandleSingleClick.editorHandleSingleClick(editor, '', 21, 11, 0)
   ).toMatchObject({
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })
 

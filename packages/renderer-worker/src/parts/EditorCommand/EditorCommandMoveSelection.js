@@ -25,48 +25,49 @@ const compare = (positionA, positionB) => {
   return -1
 }
 
-const editorMoveSelectionBackwards = (editor, anchor, position) => {
-  const selectionEdits = [
-    {
-      start: position,
-      end: anchor,
-    },
-  ]
-  return Editor.scheduleSelections(editor, selectionEdits)
+const editorMoveSelectionBackwards = (anchor, position) => {
+  return new Uint32Array([
+    position.rowIndex,
+    position.columnIndex,
+    anchor.rowIndex,
+    anchor.columnIndex,
+  ])
 }
 
-const editorMoveSelectionEqual = (editor, anchor, position) => {
-  const selectionEdits = [
-    {
-      start: position,
-      end: position,
-      type: 1,
-    },
-  ]
-  return Editor.scheduleSelections(editor, selectionEdits)
+const editorMoveSelectionEqual = (anchor, position) => {
+  return new Uint32Array([
+    position.rowIndex,
+    position.columnIndex,
+    position.rowIndex,
+    position.columnIndex,
+  ])
 }
 
-const editorMoveSelectionForwards = (editor, anchor, position) => {
-  const selectionEdits = [
-    {
-      start: anchor,
-      end: position,
-    },
-  ]
-  return Editor.scheduleSelections(editor, selectionEdits)
+const editorMoveSelectionForwards = (anchor, position) => {
+  return new Uint32Array([
+    anchor.rowIndex,
+    anchor.columnIndex,
+    position.rowIndex,
+    position.columnIndex,
+  ])
+}
+
+const getNewSelections = (anchor, position) => {
+  switch (compare(position, anchor)) {
+    case -1:
+      return editorMoveSelectionBackwards(anchor, position)
+    case 0:
+      return editorMoveSelectionEqual(anchor, position)
+    case 1:
+      return editorMoveSelectionForwards(anchor, position)
+    default:
+      throw new Error('unexpected comparison result')
+  }
 }
 
 export const editorMoveSelection = (editor, position) => {
   const anchor = state.position
+  const newSelections = getNewSelections(anchor, position)
   // TODO if selection equals previous selection -> do nothing
-  switch (compare(position, anchor)) {
-    case -1:
-      return editorMoveSelectionBackwards(editor, anchor, position)
-    case 0:
-      return editorMoveSelectionEqual(editor, anchor, position)
-    case 1:
-      return editorMoveSelectionForwards(editor, anchor, position)
-    default:
-      break
-  }
+  return Editor.scheduleSelections(editor, newSelections)
 }

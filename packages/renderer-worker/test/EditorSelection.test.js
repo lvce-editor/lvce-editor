@@ -20,38 +20,7 @@ test('getVisible', () => {
       'line 9',
       'line 10',
     ],
-    selections: [
-      {
-        start: {
-          rowIndex: 1,
-          columnIndex: 3,
-        },
-        end: {
-          rowIndex: 2,
-          columnIndex: 4,
-        },
-      },
-      {
-        start: {
-          rowIndex: 3,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 6,
-          columnIndex: 6,
-        },
-      },
-      {
-        start: {
-          rowIndex: 8,
-          columnIndex: 2,
-        },
-        end: {
-          rowIndex: 8,
-          columnIndex: 3,
-        },
-      },
-    ],
+    selections: new Uint32Array([1, 3, 2, 4, 3, 0, 6, 6, 8, 2, 8, 3]),
   }
   expect(EditorSelection.getVisible(editor)).toEqual([
     {
@@ -90,18 +59,7 @@ test('getVisible - bug with two lines', () => {
     minLineY: 0,
     maxLineY: 4,
     lines: ['line 1', 'line 2', 'line 3', 'line 4'],
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 4,
-        },
-        end: {
-          rowIndex: 1,
-          columnIndex: 4,
-        },
-      },
-    ],
+    selections: new Uint32Array([0, 4, 1, 4]),
   }
   expect(EditorSelection.getVisible(editor)).toEqual([
     {
@@ -132,12 +90,7 @@ test('getVisible - cursors should be treated separately', () => {
     minLineY: 0,
     maxLineY: 4,
     lines: ['line 1', 'line 2', 'line 3', 'line 4'],
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: new Uint32Array([0, 4, 0, 4]),
   }
   expect(EditorSelection.getVisible(editor)).toEqual([])
 })
@@ -162,18 +115,7 @@ test('getVisible - bug with multiple lines', () => {
       'line 9',
       'line 10',
     ],
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 3,
-        },
-        end: {
-          rowIndex: 2,
-          columnIndex: 3,
-        },
-      },
-    ],
+    selections: new Uint32Array([0, 3, 2, 3]),
   }
   expect(EditorSelection.getVisible(editor)).toEqual([
     {
@@ -202,23 +144,8 @@ test.skip('applyEdit - emoji ', () => {
     uri: '/tmp/foo-U2zmaH/test.txt',
     languageId: 'plaintext',
     lines: ['👮line 1'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
     completionTriggerCharacters: [],
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-      },
-    ],
+    selections: new Uint32Array([0, 0, 0, 0]),
     id: 1,
     tokenizer: {
       TokenMap: {

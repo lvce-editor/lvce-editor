@@ -1,207 +1,66 @@
 import * as EditorSelectCharacterRight from '../src/parts/EditorCommand/EditorCommandSelectCharacterRight.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectCharacterRight - no selection', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: ['line 1', 'line 2', ''],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
   expect(
     EditorSelectCharacterRight.editorSelectCharacterRight(editor)
   ).toMatchObject({
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 1,
-        },
-      },
-    ],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 1,
-    },
+    selections: EditorSelection.fromRange(0, 0, 0, 1),
   })
 })
 
 test.skip('editorSelectCharacterRight - no selection and at end of line', () => {
   const editor = {
     lines: ['line 1', 'line 2', ''],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 6,
-    },
-
-    selections: [],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 6, 0, 6),
   }
   expect(
     EditorSelectCharacterRight.editorSelectCharacterRight(editor)
   ).toMatchObject({
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 6,
-        },
-        end: {
-          rowIndex: 1,
-          columnIndex: 1,
-        },
-      },
-    ],
-    cursor: {
-      rowIndex: 1,
-      columnIndex: 1,
-    },
+    selections: EditorSelection.fromRange(0, 6, 1, 1),
   })
 })
 
-test.skip('editorSelectCharacterRight - has selection - single line', () => {
+test('editorSelectCharacterRight - has selection - single line', () => {
   const editor = {
     lines: ['line 1', 'line 2', ''],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 1,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 1,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 1),
   }
   expect(
     EditorSelectCharacterRight.editorSelectCharacterRight(editor)
   ).toMatchObject({
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 2,
-        },
-      },
-    ],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 2,
-    },
+    selections: EditorSelection.fromRange(0, 0, 0, 2),
   })
 })
 
 test.skip('editorSelectCharacterRight - has selection - nothing more to select', () => {
   const editor = {
     lines: ['line 1', 'line 2', ''],
-    cursor: {
-      rowIndex: 2,
-      columnIndex: 1,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 2,
-          columnIndex: 1,
-        },
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 2, 1),
   }
   expect(
     EditorSelectCharacterRight.editorSelectCharacterRight(editor)
   ).toMatchObject({
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 2,
-          columnIndex: 1,
-        },
-      },
-    ],
-    cursor: {
-      rowIndex: 2,
-      columnIndex: 1,
-    },
+    selections: EditorSelection.fromRange(0, 0, 2, 1),
   })
 })
 
 test.skip('editorSelectCharacterRight - has selection - merge selections', () => {
   const editor = {
     lines: ['line 1', 'line 2', ''],
-    cursor: {
-      rowIndex: 1,
-      columnIndex: 6,
-    },
-
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 6,
-        },
-      },
-      {
-        start: {
-          rowIndex: 1,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 6,
-        },
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRanges([0, 0, 0, 6], [1, 0, 0, 6]),
   }
   expect(
     EditorSelectCharacterRight.editorSelectCharacterRight(editor)
   ).toMatchObject({
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 2,
-          columnIndex: 1,
-        },
-      },
-    ],
-    cursor: {
-      rowIndex: 2,
-      columnIndex: 1,
-    },
+    selections: EditorSelection.fromRange(0, 0, 2, 1),
   })
 })

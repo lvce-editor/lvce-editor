@@ -2,35 +2,52 @@ import * as Editor from '../Editor/Editor.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 import * as EditorGetPositionLeft from './EditorCommandGetPositionLeft.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
-const isEmpty = (selection) => {
-  return selection.start === selection.end
+// TODO optimize this function by profiling and not allocating too many objects
+const getChanges = (lines, selections, getDelta) => {
+  const changes = []
+  const deleteSelection = (
+    selectionStartRow,
+    selectionStartColumn,
+    selectionEndRow,
+    selectionEndColumn
+  ) => {
+    const positionLeft = EditorGetPositionLeft.editorGetPositionLeft(
+      selectionStartRow,
+      selectionStartColumn,
+      lines,
+      getDelta
+    )
+    const selectionEnd = {
+      rowIndex: selectionEndRow,
+      columnIndex: selectionEndColumn,
+    }
+    changes.push({
+      start: positionLeft,
+      end: selectionEnd,
+      inserted: [''],
+      deleted: TextDocument.getSelectionText(
+        { lines },
+        {
+          start: positionLeft,
+          end: selectionEnd,
+        }
+      ),
+      origin: 'delete',
+    })
+  }
+  EditorSelection.forEach(selections, deleteSelection)
+  return changes
 }
 
 export const editorDeleteHorizontalLeft = (editor, getDelta) => {
-  if (editor.selections.every(isEmpty)) {
-    const changes = []
-    const lines = editor.lines
-    for (const selection of editor.selections) {
-      const positionLeft = EditorGetPositionLeft.editorGetPositionLeft(
-        selection.start,
-        lines,
-        getDelta
-      )
-      changes.push({
-        start: positionLeft,
-        end: selection.end,
-        inserted: [''],
-        deleted: TextDocument.getSelectionText(editor, {
-          start: positionLeft,
-          end: selection.end,
-        }),
-        origin: 'delete',
-      })
-    }
+  const lines = editor.lines
+  const selections = editor.selections
+  if (EditorSelection.isEverySelectionEmpty(selections)) {
+    const changes = getChanges(lines, selections, getDelta)
     return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
   }
-    const changes = editorReplaceSelections(editor, [''], 'delete')
-    return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
-
+  const changes = editorReplaceSelections(editor, [''], 'delete')
+  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }

@@ -1,23 +1,12 @@
 import * as Editor from '../src/parts/Editor/Editor.js'
 import * as EditorReplaceSelection from '../src/parts/EditorCommand/EditorCommandReplaceSelection.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('replaceSelection - virtual space insertion', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 5,
-  }
   const editor = {
     lines: [''],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
-    lineCache: [],
-    tokenizer: TokenizePlainText,
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 5, 0, 5),
     undoStack: [],
   }
   const changes = EditorReplaceSelection.editorReplaceSelections(

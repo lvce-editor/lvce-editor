@@ -1,5 +1,5 @@
 import * as EditorHandleBeforeInputFromContentEditable from '../src/parts/EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorHandleBeforeInputFromContentEditable', () => {
   const editor = {
@@ -25,9 +25,8 @@ test('editorHandleBeforeInputFromContentEditable', () => {
       '}',
       '',
     ],
-    selections: [],
-    lineCache: [],
-    tokenizer: TokenizePlainText,
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     undoStack: [],
   }
   expect(
@@ -64,17 +63,6 @@ test('editorHandleBeforeInputFromContentEditable', () => {
       '}',
       '',
     ],
-    selections: [
-      {
-        end: {
-          columnIndex: 10,
-          rowIndex: 10,
-        },
-        start: {
-          columnIndex: 10,
-          rowIndex: 10,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(10, 10, 10, 10),
   })
 })

@@ -1,87 +1,35 @@
 import * as EditorCursorHome from '../src/parts/EditorCommand/EditorCommandCursorHome.js'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorCursorHome', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 4,
-  }
   const editor = {
     lines: ['aaaaa'],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 4, 0, 4),
   }
   expect(EditorCursorHome.editorCursorsHome(editor)).toMatchObject({
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })
 
 test('editorCursorHome - with indent', () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 6,
-  }
   const editor = {
     lines: ['  aaaaa'],
-    cursor,
-    selections: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 6, 0, 6),
   }
   expect(EditorCursorHome.editorCursorsHome(editor)).toMatchObject({
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 2,
-    },
+    selections: EditorSelection.fromRange(0, 2, 0, 2),
   })
 })
 
 test('editorCursorHome - with selection', () => {
   const editor = {
     lines: ['aaaaa'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 4,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 4,
-        },
-      },
-    ],
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 4),
   }
   expect(EditorCursorHome.editorCursorsHome(editor)).toMatchObject({
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })

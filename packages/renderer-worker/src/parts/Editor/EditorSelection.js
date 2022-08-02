@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
 const getSelectionFromChange = (change) => {
   if (change.inserted.length === 1) {
@@ -24,21 +25,22 @@ const getSelectionFromChange = (change) => {
 
 export const setSelections = (editor, selections) => {
   Assert.object(editor)
-  Assert.array(selections)
+  Assert.uint32array(selections)
   return {
     ...editor,
     selections,
-    cursor: selections[0].end,
   }
   // editor.selections = selections
   // GlobalEventBus.emitEvent('editor.selectionChange', editor, selections)
 }
 
 // TODO maybe only accept sorted selection edits in the first place
+
+// TODO avoid allocating too many objects when creating new selection from changes
 export const applyEdit = (editor, changes) => {
   Assert.object(editor)
   Assert.array(changes)
-  const newSelections = changes.map(getSelectionFromChange)
+  const newSelections = EditorSelection.from(changes, getSelectionFromChange)
   // setSelections(editor, newSelections)
   return newSelections
 }
@@ -48,76 +50,71 @@ export const applyEdit = (editor, changes) => {
 
 export const getVisible = (editor) => {
   const visibleSelections = []
-  // let i=0
   // // TODO binary search
 
-  // // before
-  // while(i < editor.selections.length){
-  //   if(editor.selections[i].start.rowIndex < editor.minLineY){
-  //     break
-  //   }
-  //   i++
-  // }
-  // // start
-  // while(i < editor.selections.length){
-  //   if(editor.selections[i].start.rowIndex < ){
-
-  //   }
-  // }
-  // // middle
-
-  // // end
-
   // // after
-  for (const selection of editor.selections) {
-    if (selection.end.rowIndex < editor.minLineY) {
+  const selections = editor.selections
+  const minLineY = editor.minLineY
+  const maxLineY = editor.maxLineY
+  const rowHeight = editor.rowHeight
+  const columnWidth = editor.columnWidth
+  const lines = editor.lines
+  for (let i = 0; i < selections.length; i += 4) {
+    const selectionStartRow = selections[i]
+    const selectionStartColumn = selections[i + 1]
+    const selectionEndRow = selections[i + 2]
+    const selectionEndColumn = selections[i + 3]
+
+    if (selectionEndRow < minLineY) {
       continue
     }
-    if (selection.start.rowIndex > editor.maxLineY) {
+    if (selectionStartRow > maxLineY) {
       break
     }
-    if (selection.start === selection.end) {
+    if (
+      EditorSelection.isEmpty(
+        selectionStartRow,
+        selectionStartColumn,
+        selectionEndRow,
+        selectionEndColumn
+      )
+    ) {
       continue
     }
-    if (selection.start.rowIndex === selection.end.rowIndex) {
+    if (selectionStartRow === selectionEndRow) {
       visibleSelections.push({
-        top: (selection.start.rowIndex - editor.minLineY) * editor.rowHeight,
-        left: selection.start.columnIndex * editor.columnWidth,
-        width:
-          (selection.end.columnIndex - selection.start.columnIndex) *
-          editor.columnWidth,
-        height: editor.rowHeight,
+        top: (selectionStartRow - minLineY) * rowHeight,
+        left: selectionStartColumn * columnWidth,
+        width: (selectionEndColumn - selectionStartColumn) * columnWidth,
+        height: rowHeight,
       })
     } else {
-      if (selection.start.rowIndex >= editor.minLineY) {
+      if (selectionStartRow >= minLineY) {
         visibleSelections.push({
-          top: (selection.start.rowIndex - editor.minLineY) * editor.rowHeight,
-          left: selection.start.columnIndex * editor.columnWidth,
+          top: (selectionStartRow - minLineY) * rowHeight,
+          left: selectionStartColumn * columnWidth,
           width:
-            (editor.lines[selection.start.rowIndex].length -
-              selection.start.columnIndex) *
-            editor.columnWidth,
-          height: editor.rowHeight,
+            (lines[selectionStartRow].length - selectionStartColumn) *
+            columnWidth,
+          height: rowHeight,
         })
       }
-      for (
-        let i = Math.max(selection.start.rowIndex + 1, editor.minLineY);
-        i < Math.min(selection.end.rowIndex, editor.maxLineY);
-        i++
-      ) {
+      const iMin = Math.max(selectionStartRow + 1, minLineY)
+      const iMax = Math.min(selectionEndRow, maxLineY)
+      for (let i = iMin; i < iMax; i++) {
         visibleSelections.push({
-          top: (i - editor.minLineY) * editor.rowHeight,
+          top: (i - minLineY) * rowHeight,
           left: 0,
-          width: editor.lines[i].length * editor.columnWidth,
-          height: editor.rowHeight,
+          width: lines[i].length * columnWidth,
+          height: rowHeight,
         })
       }
-      if (selection.end.rowIndex <= editor.maxLineY) {
+      if (selectionEndRow <= maxLineY) {
         visibleSelections.push({
-          top: (selection.end.rowIndex - editor.minLineY) * editor.rowHeight,
+          top: (selectionEndRow - minLineY) * rowHeight,
           left: 0,
-          width: selection.end.columnIndex * editor.columnWidth,
-          height: editor.rowHeight,
+          width: selectionEndColumn * columnWidth,
+          height: rowHeight,
         })
       }
     }
