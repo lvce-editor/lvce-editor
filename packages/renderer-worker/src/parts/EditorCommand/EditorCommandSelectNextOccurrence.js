@@ -79,36 +79,39 @@ const getSelectionEditsSingleLineWord = (lines, selections) => {
     }
   }
   let selectionIndex = 0
-  let selection = selections[selectionIndex]
   for (let i = 0; i <= rowIndex; i++) {
     const line = lines[i]
     let columnIndex = -word.length
     while (
       (columnIndex = line.indexOf(word, columnIndex + word.length)) !== -1
     ) {
-      while (
-        selection.start.rowIndex < i &&
-        selectionIndex < selections.length
-      ) {
-        selection = selections[selectionIndex++]
+      let startRowIndex = selections[selectionIndex]
+      while (startRowIndex < i && selectionIndex < selections.length) {
+        selectionIndex += 4
+        startRowIndex = selections[selectionIndex]
       }
-      if (selection.start.rowIndex === i) {
+      if (startRowIndex === i) {
+        let endColumnIndex = selections[selectionIndex + 3]
         while (
-          selection.end.columnIndex < columnIndex &&
+          endColumnIndex < columnIndex &&
           selectionIndex < selections.length
         ) {
-          selection = selections[selectionIndex++]
+          selectionIndex += 4
+          endColumnIndex = selections[endColumnIndex + 3]
         }
       }
+      startRowIndex = selections[selectionIndex]
+      let startColumnIndex = selections[selectionIndex + 1]
+      let endColumnIndex = selections[selectionIndex + 3]
       if (
-        selection.start.rowIndex === i &&
-        selection.start.columnIndex <= columnIndex &&
-        columnIndex <= selection.end.columnIndex
+        startRowIndex === i &&
+        startColumnIndex <= columnIndex &&
+        columnIndex <= endColumnIndex
       ) {
         continue
       }
-      if (selection.start.rowIndex > i) {
-        selectionIndex--
+      if (startRowIndex > i) {
+        selectionIndex -= 4
       }
       const columnEndIndex = columnIndex + word.length
       const revealRange = {
@@ -121,17 +124,14 @@ const getSelectionEditsSingleLineWord = (lines, selections) => {
           columnIndex: columnEndIndex,
         },
       }
-      const newSelections = EditorSelection.alloc(selections.length + 1)
-      newSelections.set(selections.subarray(0, selectionIndex * 4), 0)
-      newSelections[selectionIndex * 4] = i
-      newSelections[selectionIndex * 4 + 1] = columnIndex
-      newSelections[selectionIndex * 4 + 2] = i
-      newSelections[selectionIndex * 4 + 3] = columnEndIndex
-      newSelections.set(
-        selections.subarray(selectionIndex * 4),
-        selectionIndex * 4 + 4
-      )
-
+      selectionIndex += 4
+      const newSelections = new Uint32Array(selections.length + 4)
+      newSelections.set(selections.subarray(0, selectionIndex), 0)
+      newSelections[selectionIndex] = i
+      newSelections[selectionIndex + 1] = columnIndex
+      newSelections[selectionIndex + 2] = i
+      newSelections[selectionIndex + 3] = columnEndIndex
+      newSelections.set(selections.subarray(selectionIndex), selectionIndex + 4)
       return {
         revealRange,
         selectionEdits: newSelections,
@@ -252,10 +252,3 @@ export const editorSelectNextOccurrence = (editor) => {
     deltaY
   )
 }
-
-// const editor = {
-//   lines: ['line 1', 'line 2'],
-//   primarySelectionIndex: 0,
-//   selections: EditorSelection.fromRanges([0, 0, 0, 4], [1, 0, 1, 4]),
-// }
-// const newEditor = editorSelectNextOccurrence(editor)

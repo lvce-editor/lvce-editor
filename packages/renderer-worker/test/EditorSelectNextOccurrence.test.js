@@ -100,10 +100,6 @@ test('editorSelectNextOccurrence - one selection and more selections possible in
   }
   const newEditor =
     EditorSelectNextOccurrence.editorSelectNextOccurrence(editor)
-  // expect(newEditor.cursor).toEqual({
-  //   rowIndex: 1,
-  //   columnIndex: 4,
-  // })
   expect(newEditor.selections).toEqual(
     EditorSelection.fromRanges(
       [0, 0, 0, 4],
@@ -148,10 +144,6 @@ test('editorSelectNextOccurrence - multiple selections and no more selections po
   }
   const newEditor =
     EditorSelectNextOccurrence.editorSelectNextOccurrence(editor)
-  expect(newEditor.cursor).toEqual({
-    rowIndex: 0,
-    columnIndex: 4,
-  })
   expect(newEditor.selections).toEqual(
     EditorSelection.fromRanges([0, 0, 0, 4], [1, 0, 1, 4])
   )
