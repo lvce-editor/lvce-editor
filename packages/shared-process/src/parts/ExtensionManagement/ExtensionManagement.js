@@ -11,7 +11,10 @@ import * as Platform from '../Platform/Platform.js'
 import * as Queue from '../Queue/Queue.js'
 
 const isLanguageBasics = (extension) => {
-  return extension.id.includes('language-basics')
+  if (extension && extension.id) {
+    return extension.id.includes('language-basics')
+  }
+  return false
 }
 
 export const state = {

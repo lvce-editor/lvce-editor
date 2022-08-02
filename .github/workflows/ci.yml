@@ -5,6 +5,12 @@ on:
     branches:
       - main
 
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   ci:
     strategy:
@@ -30,6 +36,19 @@ jobs:
       - name: npm ci
         run: npm ci
         if: steps.npm-cache.outputs.cache-hit != 'true'
+        env:
+          DOWNLOAD_BUILTIN_EXTENSIONS: 0
+      - name: Compute builtin extensions cache key
+        id: builtinExtensionsCacheKey
+        run: echo "::set-output name=value::$(node build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)"
+      - uses: actions/cache@v3
+        id: builtin-extensions-cache
+        with:
+          path: extensions
+          key: builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
+      - name: Download Builtin Extensions
+        run: node build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js
+        if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'
       - run: npm test
       - name: install playwright dependencies
         working-directory: ./packages/e2e
@@ -54,12 +73,15 @@ jobs:
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build static site
+        if: matrix.os == 'ubuntu-22.04'
         run: node build/bin/build.js --target=static
+        env:
+          PATH_PREFIX: /lvce-editor
       - name: Upload artifact
+        if: matrix.os == 'ubuntu-22.04'
         uses: actions/upload-pages-artifact@v1
         with:
           path: ./build/.tmp/dist
-
   deploy:
     environment:
       name: github-pages

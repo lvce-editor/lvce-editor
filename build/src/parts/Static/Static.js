@@ -1,19 +1,18 @@
-import { readdir, readFile } from 'fs/promises'
+import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
-import * as Clean from '../Clean/Clean.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
+import * as Platform from '../Platform/Platform.js'
+import * as ReadDir from '../ReadDir/ReadDir.js'
+import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
-import * as JsonFile from '../JsonFile/JsonFile.js'
-import * as Remove from '../Remove/Remove.js'
-import * as ReadDir from '../ReadDir/ReadDir.js'
 
-const copyJs = async () => {
-  const commitHash = await CommitHash.getCommitHash()
+const copyJs = async ({ commitHash }) => {
   await Copy.copy({
     from: 'packages/renderer-process/src',
     to: `build/.tmp/dist/${commitHash}/packages/renderer-process/src`,
@@ -28,7 +27,7 @@ const copyJs = async () => {
   })
 }
 
-const copyStaticFiles = async () => {
+const copyStaticFiles = async ({ pathPrefix }) => {
   const commitHash = await CommitHash.getCommitHash()
   await Copy.copy({
     from: 'static/config',
@@ -65,7 +64,7 @@ const copyStaticFiles = async () => {
   await Replace.replace({
     path: `build/.tmp/dist/manifest.json`,
     occurrence: '/icons',
-    replacement: `/${commitHash}/icons`,
+    replacement: `${pathPrefix}/${commitHash}/icons`,
   })
   await Replace.replace({
     path: `build/.tmp/dist/serviceWorker.js`,
@@ -79,16 +78,33 @@ const copyStaticFiles = async () => {
   await Replace.replace({
     path: `build/.tmp/dist/index.html`,
     occurrence: '/config',
-    replacement: `/${commitHash}/config`,
+    replacement: `${pathPrefix}/${commitHash}/config`,
   })
+  if (pathPrefix) {
+    await Replace.replace({
+      path: `build/.tmp/dist/index.html`,
+      occurrence: '/fonts/',
+      replacement: `${pathPrefix}/fonts/`,
+    })
+    await Replace.replace({
+      path: `build/.tmp/dist/index.html`,
+      occurrence: '/manifest.json',
+      replacement: `${pathPrefix}/manifest.json`,
+    })
+    await Replace.replace({
+      path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IconTheme/IconTheme.js`,
+      occurrence: `/file-icons/`,
+      replacement: `${pathPrefix}/file-icons/`,
+    })
+  }
 
   await Replace.replace({
     path: `build/.tmp/dist/index.html`,
     occurrence: '</head>',
-    replacement: `  <link rel="preload" href="/${commitHash}/config/defaultSettings.json" as="fetch" crossorigin>
-    <link rel="preload" href="/${commitHash}/config/languages.json" as="fetch" crossorigin>
-    <link rel="preload" href="/${commitHash}/themes/slime.json" as="fetch" crossorigin>
-    <link rel="preload" href="/${commitHash}/icon-themes/vscode-icons.json" as="fetch" crossorigin>
+    replacement: `  <link rel="preload" href="${pathPrefix}/${commitHash}/config/defaultSettings.json" as="fetch" crossorigin>
+    <link rel="preload" href="${pathPrefix}/${commitHash}/config/languages.json" as="fetch" crossorigin>
+    <link rel="preload" href="${pathPrefix}/${commitHash}/themes/slime.json" as="fetch" crossorigin>
+    <link rel="preload" href="${pathPrefix}/${commitHash}/icon-themes/vscode-icons.json" as="fetch" crossorigin>
   </head>`,
   })
   await Replace.replace({
@@ -179,22 +195,22 @@ preload()
   await Replace.replace({
     path: `build/.tmp/dist/index.html`,
     occurrence: '/packages/renderer-process/src/rendererProcessMain.js',
-    replacement: `/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`,
+    replacement: `${pathPrefix}/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`,
   })
   await Replace.replace({
     path: `build/.tmp/dist/index.html`,
     occurrence: '/packages/renderer-worker/src/rendererWorkerMain.js',
-    replacement: `/${commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`,
+    replacement: `${pathPrefix}/${commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`,
   })
   await Replace.replace({
     path: `build/.tmp/dist/index.html`,
     occurrence: '/icons',
-    replacement: `/${commitHash}/icons`,
+    replacement: `${pathPrefix}/${commitHash}/icons`,
   })
   await Replace.replace({
     path: `build/.tmp/dist/index.html`,
     occurrence: '/css',
-    replacement: `/${commitHash}/css`,
+    replacement: `${pathPrefix}/${commitHash}/css`,
   })
   await Copy.copy({
     from: 'extensions/builtin.vscode-icons/icons',
@@ -206,7 +222,7 @@ preload()
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/css/App.css`,
     occurrence: `url(/icons/`,
-    replacement: `url(/${commitHash}/icons/`,
+    replacement: `url(/${pathPrefix}${commitHash}/icons/`,
   })
   await Copy.copy({
     from: 'static/icons',
@@ -236,8 +252,7 @@ const getAbsolutePath = (extensionName) => {
   return `extensions/${extensionName}/extension.json`
 }
 
-const bundleLanguageJsonFiles = async () => {
-  const commitHash = await CommitHash.getCommitHash()
+const bundleLanguageJsonFiles = async ({ commitHash, pathPrefix }) => {
   const languageBasics = await getLanguageBasicsNames()
   const extensionPaths = languageBasics.map(getAbsolutePath)
   const extensions = await Promise.all(extensionPaths.map(JsonFile.readJson))
@@ -245,7 +260,7 @@ const bundleLanguageJsonFiles = async () => {
     const getLanguage = (language) => {
       return {
         ...language,
-        tokenize: `/${commitHash}/extensions/${extension.id}/${language.tokenize}`,
+        tokenize: `${pathPrefix}/${commitHash}/extensions/${extension.id}/${language.tokenize}`,
       }
     }
     const languages = extension.languages || []
@@ -258,12 +273,11 @@ const bundleLanguageJsonFiles = async () => {
   })
 }
 
-const applyJsOverrides = async () => {
-  const commitHash = await CommitHash.getCommitHash()
+const applyJsOverrides = async ({ pathPrefix, commitHash }) => {
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
     occurrence: `ASSET_DIR`,
-    replacement: `'/${commitHash}'`,
+    replacement: `'${pathPrefix}/${commitHash}'`,
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
@@ -293,12 +307,12 @@ const applyJsOverrides = async () => {
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
     occurrence: `ASSET_DIR`,
-    replacement: `'/${commitHash}'`,
+    replacement: `'${pathPrefix}/${commitHash}'`,
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Tokenizer/Tokenizer.js`,
     occurrence: `/extensions`,
-    replacement: `/${commitHash}/extensions`,
+    replacement: `${pathPrefix}/${commitHash}/extensions`,
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
@@ -309,7 +323,7 @@ const applyJsOverrides = async () => {
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
     occurrence:
       '/packages/extension-host-worker/src/extensionHostWorkerMain.js',
-    replacement: `/${commitHash}/packages/extension-host-worker/dist/extensionHostWorkerMain.js`,
+    replacement: `${pathPrefix}/${commitHash}/packages/extension-host-worker/dist/extensionHostWorkerMain.js`,
   })
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/CacheStorage/CacheStorage.js`,
@@ -417,8 +431,7 @@ const addNetlifyConfigFiles = async () => {
   })
 }
 
-const addVersionFile = async () => {
-  const commitHash = await CommitHash.getCommitHash()
+const addVersionFile = async ({ commitHash }) => {
   const commitMessage = await CommitHash.getCommitMessage()
   await JsonFile.writeJson({
     to: `build/.tmp/dist/version`,
@@ -437,8 +450,7 @@ const getThemeName = (extensionName) => {
   return extensionName.slice('builtin.theme-'.length)
 }
 
-const copyColorThemes = async () => {
-  const commitHash = await CommitHash.getCommitHash()
+const copyColorThemes = async ({ commitHash }) => {
   const allExtensions = await readdir(Path.absolute('extensions'))
   const themeExtensions = allExtensions.filter(isTheme)
   const themes = themeExtensions.map(getThemeName)
@@ -454,16 +466,14 @@ const copyColorThemes = async () => {
   })
 }
 
-const copyIconThemes = async () => {
-  const commitHash = await CommitHash.getCommitHash()
+const copyIconThemes = async ({ commitHash }) => {
   await Copy.copyFile({
     from: 'extensions/builtin.vscode-icons/icon-theme.json',
     to: `build/.tmp/dist/${commitHash}/icon-themes/vscode-icons.json`,
   })
 }
 
-const bundleJs = async () => {
-  const commitHash = await CommitHash.getCommitHash()
+const bundleJs = async ({ commitHash }) => {
   await BundleJs.bundleJs({
     cwd: Path.absolute(
       `build/.tmp/dist/${commitHash}/packages/renderer-process`
@@ -490,8 +500,7 @@ const bundleJs = async () => {
   })
 }
 
-const copyTestFiles = async () => {
-  const commitHash = await CommitHash.getCommitHash()
+const copyTestFiles = async ({ pathPrefix, commitHash }) => {
   await Copy.copy({
     from: 'packages/extension-host-worker-tests/src',
     to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/src`,
@@ -509,9 +518,9 @@ const copyTestFiles = async () => {
     from: 'static/tests/index.html',
     to: `build/.tmp/dist/tests/index.html`,
   })
-  const appCssPath = `/${commitHash}/css/App.css`
-  const rendererProcessPath = `/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`
-  const rendererWorkerPath = `/${commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`
+  const appCssPath = `${pathPrefix}/${commitHash}/css/App.css`
+  const rendererProcessPath = `${pathPrefix}/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`
+  const rendererWorkerPath = `${pathPrefix}/${commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`
   await Replace.replace({
     path: 'build/.tmp/dist/tests/_template.html',
     occurrence: '/packages/renderer-process/src/rendererProcessMain.js',
@@ -527,6 +536,13 @@ const copyTestFiles = async () => {
     occurrence: '/css/App.css',
     replacement: appCssPath,
   })
+  if (pathPrefix) {
+    await Replace.replace({
+      path: 'build/.tmp/dist/tests/_template.html',
+      occurrence: '/fonts/',
+      replacement: `${pathPrefix}/fonts/`,
+    })
+  }
   const dirents = await ReadDir.readDir('static/tests')
   for (const dirent of dirents) {
     if (dirent.name === '_template.html' || dirent.name === 'index.html') {
@@ -562,36 +578,39 @@ const copyTestFiles = async () => {
 }
 
 export const build = async () => {
+  const commitHash = await CommitHash.getCommitHash()
+  const pathPrefix = Platform.getPathPrefix()
+
   Console.time('clean')
   await Remove.remove('build/.tmp/dist')
   Console.timeEnd('clean')
 
   Console.time('copyJs')
-  await copyJs()
+  await copyJs({ commitHash })
   Console.timeEnd('copyJs')
 
   Console.time('copyStaticFiles')
-  await copyStaticFiles()
+  await copyStaticFiles({ pathPrefix })
   Console.timeEnd('copyStaticFiles')
 
   Console.time('applyJsOverrides')
-  await applyJsOverrides()
+  await applyJsOverrides({ pathPrefix, commitHash })
   Console.timeEnd('applyJsOverrides')
 
   Console.time('bundleJs')
-  await bundleJs()
+  await bundleJs({ commitHash })
   Console.timeEnd('bundleJs')
 
   Console.time('copyColorThemes')
-  await copyColorThemes()
+  await copyColorThemes({ commitHash })
   Console.timeEnd('copyColorThemes')
 
   Console.time('copyIconThemes')
-  await copyIconThemes()
+  await copyIconThemes({ commitHash })
   Console.timeEnd('copyIconThemes')
 
   Console.time('bundleLanguageJsonFiles')
-  await bundleLanguageJsonFiles()
+  await bundleLanguageJsonFiles({ commitHash, pathPrefix })
   Console.timeEnd('bundleLanguageJsonFiles')
 
   Console.time('addRobotsTxt')
@@ -603,11 +622,11 @@ export const build = async () => {
   Console.timeEnd('addNetlifyHeaders')
 
   Console.time('addVersionFile')
-  await addVersionFile()
+  await addVersionFile({ commitHash })
   Console.timeEnd('addVersionFile')
 
   Console.time('copyTestFiles')
-  await copyTestFiles()
+  await copyTestFiles({ pathPrefix, commitHash })
   Console.timeEnd('copyTestFiles')
 
   // console.time('removeUnusedThings')
