@@ -7,9 +7,11 @@ export const state = {
   },
 }
 
+const JSON_RPC_VERSION = '2.0'
+
 const send = (method, ...params) => {
   state.send({
-    jsonrpc: '2.0',
+    jsonrpc: JSON_RPC_VERSION,
     method,
     params,
   })
@@ -20,7 +22,7 @@ const invoke = async (method, ...params) => {
     // TODO use one map instead of two
     const callbackId = Callback.register(resolve, reject)
     state.send({
-      jsonrpc: '2.0',
+      jsonrpc: JSON_RPC_VERSION,
       method,
       params,
       id: callbackId,

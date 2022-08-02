@@ -17,9 +17,11 @@ export const registerSourceControlProvider = (sourceControlProvider) => {
   state.sourceControlProviders.push(sourceControlProvider)
 }
 
+const JSON_RPC_VERSION = '2.0'
+
 export const updateGitDecorations = () => {
   SharedProcess.send({
-    jsonrpc: '2.0',
+    jsonrpc: JSON_RPC_VERSION,
     method: 'updateGitDecorations',
     params: [],
   })

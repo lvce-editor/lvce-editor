@@ -5,6 +5,8 @@ export const state = {
   ptyMap: Object.create(null),
 }
 
+const JSON_RPC_VERSION = '2.0'
+
 // TODO maybe merge pty and pty controller
 export const create = (id, cwd) => {
   Debug.debug(`create ${id} ${cwd}`)
@@ -12,7 +14,7 @@ export const create = (id, cwd) => {
   const handleData = (data) => {
     if (process.send) {
       process.send({
-        jsonrpc: '2.0',
+        jsonrpc: JSON_RPC_VERSION,
         method: 'Terminal.handleData',
         params: [id, data],
       })

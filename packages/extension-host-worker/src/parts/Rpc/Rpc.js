@@ -1,5 +1,7 @@
 import * as Command from '../Command/Command.js'
 
+const JSON_RPC_VERSION = '2.0'
+
 export const listen = (ipc) => {
   const handleMessage = async (event) => {
     const message = event.data
@@ -7,7 +9,7 @@ export const listen = (ipc) => {
       try {
         const result = await Command.execute(message.method, ...message.params)
         ipc.send({
-          jsonrpc: '2.0',
+          jsonrpc: JSON_RPC_VERSION,
           id: message.id,
           result,
         })
@@ -23,7 +25,7 @@ export const listen = (ipc) => {
           error.message.startsWith('method not found')
         ) {
           ipc.send({
-            jsonrpc: '2.0',
+            jsonrpc: JSON_RPC_VERSION,
             id: message.id,
             error: {
               code: -32601,
@@ -33,7 +35,7 @@ export const listen = (ipc) => {
           })
         } else {
           ipc.send({
-            jsonrpc: '2.0',
+            jsonrpc: JSON_RPC_VERSION,
             id: message.id,
             error,
           })

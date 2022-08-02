@@ -94,6 +94,8 @@ const startBrowser = async ({ port, headless = false }) => {
   return page
 }
 
+const JSON_RPC_VERSION = '2.0'
+
 export const runWithExtension = async ({ folder = '', env = {}, name }) => {
   folder ||= await getTmpDir()
   if (name) {
@@ -103,7 +105,7 @@ export const runWithExtension = async ({ folder = '', env = {}, name }) => {
   }
   if (state.page && state.childProcess) {
     state.childProcess.send({
-      jsonrpc: '2.0',
+      jsonrpc: JSON_RPC_VERSION,
       method: 'Platform.setEnvironmentVariables',
       params: [
         {

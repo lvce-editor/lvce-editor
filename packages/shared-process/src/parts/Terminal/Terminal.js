@@ -54,11 +54,13 @@ const createPtyHost = () => {
 // const send = (method, ...params) => {
 
 //   state.ptyHost.send({
-//     jsonrpc: '2.0',
+//     jsonrpc: JSON_RPC_VERSION,
 //     method,
 //     params,
 //   })
 // }
+
+const JSON_RPC_VERSION = '2.0'
 
 export const create = (socket, id, cwd) => {
   Assert.object(socket)
@@ -77,7 +79,7 @@ export const create = (socket, id, cwd) => {
         const handleMessage = (message) => {
           const data = message.params[1]
           socket.send({
-            jsonrpc: '2.0',
+            jsonrpc: JSON_RPC_VERSION,
             method: 2133,
             params: ['Terminal', 'handleData', data],
           })
@@ -104,7 +106,7 @@ export const create = (socket, id, cwd) => {
       break
   }
   state.send({
-    jsonrpc: '2.0',
+    jsonrpc: JSON_RPC_VERSION,
     method: 'Terminal.create',
     params: [id, cwd],
   })
@@ -130,7 +132,7 @@ export const write = (id, data) => {
     return
   }
   state.send({
-    jsonrpc: '2.0',
+    jsonrpc: JSON_RPC_VERSION,
     method: 'Terminal.write',
     params: [id, data],
   })
@@ -142,7 +144,7 @@ export const resize = (state, columns, rows) => {
 
 export const dispose = (id) => {
   state.send({
-    jsonrpc: '2.0',
+    jsonrpc: JSON_RPC_VERSION,
     method: 'Terminal.dispose',
     params: [id],
   })

@@ -12,6 +12,8 @@ export const state = {
   ipc: undefined,
 }
 
+const JSON_RPC_VERSION = '2.0'
+
 const handleMessageFromRendererProcess = async (event) => {
   const message = event.data
   if (typeof message === 'string') {
@@ -31,14 +33,14 @@ const handleMessageFromRendererProcess = async (event) => {
       try {
         const result = await Command.execute(message.method, ...message.params)
         state.ipc.send({
-          jsonrpc: '2.0',
+          jsonrpc: JSON_RPC_VERSION,
           id: message.id,
           result,
         })
         return
       } catch (error) {
         state.ipc.send({
-          jsonrpc: '2.0',
+          jsonrpc: JSON_RPC_VERSION,
           id: message.id,
           error,
         })
@@ -82,7 +84,7 @@ export const invoke = async (method, ...parameters) => {
       return
     }
     state.ipc.send({
-      jsonrpc: '2.0',
+      jsonrpc: JSON_RPC_VERSION,
       method,
       params: parameters,
       id: callbackId,

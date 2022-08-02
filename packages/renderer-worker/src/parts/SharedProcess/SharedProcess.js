@@ -71,12 +71,14 @@ export const state = {
   ipc: undefined,
 }
 
+const JSON_RPC_VERSION = '2.0'
+
 export const handleMessageFromSharedProcess = async (message) => {
   if (message.method) {
     const result = await Command.execute(message.method, ...message.params)
     if (message.id) {
       state.send({
-        jsonrpc: '2.0',
+        jsonrpc: JSON_RPC_VERSION,
         id: message.id,
         result,
       })

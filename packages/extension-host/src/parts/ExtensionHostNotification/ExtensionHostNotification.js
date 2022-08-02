@@ -2,13 +2,15 @@ import { VALIDATION_ENABLED } from '../Flags/Flags.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { ow } from '../Validation/Validation.js'
 
+const JSON_RPC_VERSION = '2.0'
+
 export const showNotification = (type, text) => {
   if (VALIDATION_ENABLED) {
     ow(type, ow.string.oneOf(['info', 'error']))
     ow(text, ow.string)
   }
   SharedProcess.send({
-    jsonrpc: '2.0',
+    jsonrpc: JSON_RPC_VERSION,
     method: /* Notification.create */ 'Notification.create',
     params: [type, text],
   })
@@ -55,7 +57,7 @@ export const hide = (id) => {
     ow(id, ow.number)
   }
   SharedProcess.send({
-    jsonrpc: '2.0',
+    jsonrpc: JSON_RPC_VERSION,
     method: /* Notification.hide */ 901,
     params: [id],
   })

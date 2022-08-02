@@ -25,6 +25,8 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const EXTENSION_HOST_PATH = `${__dirname}/../src/extensionHostMain.js`
 
+const JSON_RPC_VERSION = '2.0'
+
 const createExtensionHostViaFork = async () => {
   const extensionHost = fork(EXTENSION_HOST_PATH, {
     execArgv: ['--max-old-space-size=10'],
@@ -43,7 +45,7 @@ const createExtensionHostViaFork = async () => {
   return {
     send(method, ...params) {
       extensionHost.send({
-        jsonrpc: '2.0',
+        jsonrpc: JSON_RPC_VERSION,
         method,
         params,
       })

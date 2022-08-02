@@ -368,6 +368,8 @@ const handleMouseDown = (event) => {
   }
 }
 
+const JSON_RPC_VERSION = '2.0'
+
 const handleContextMenu = (event) => {
   console.log(event)
   event.preventDefault()
@@ -378,7 +380,7 @@ const handleContextMenu = (event) => {
 
   const displayProcess = state.displayProcesses[index]
   state.port.postMessage({
-    jsonrpc: '2.0',
+    jsonrpc: JSON_RPC_VERSION,
     method: 'showContextMenu',
     params: [displayProcess.pid],
   })

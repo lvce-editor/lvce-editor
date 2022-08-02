@@ -46,11 +46,13 @@ export const getStatusBarItems = () => {
   return rendererState
 }
 
+const JSON_RPC_VERSION = '2.0'
+
 export const registerChangeListener = (id) => {
   Assert.number(id)
   const handleChange = () => {
     SharedProcess.send({
-      jsonrpc: '2.0',
+      jsonrpc: JSON_RPC_VERSION,
       method: /* Listener.execute */ 3444,
       params: [id],
     })

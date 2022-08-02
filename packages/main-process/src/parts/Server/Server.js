@@ -21,6 +21,8 @@ const handleStdError = (error) => {
   process.exit(1)
 }
 
+const JSON_RPC_VERSION = '2.0'
+
 const handleChildMessage = async (message) => {
   if (Array.isArray(message)) {
     console.warn('invalid message', message)
@@ -35,7 +37,7 @@ const handleChildMessage = async (message) => {
       console.error(error)
       if (state.child) {
         state.child.send({
-          jsonrpc: '2.0',
+          jsonrpc: JSON_RPC_VERSION,
           code: /* UnexpectedError */ -32001,
           id: object.id,
           error: 'UnexpectedError',
@@ -46,7 +48,7 @@ const handleChildMessage = async (message) => {
     }
     if (state.child) {
       state.child.send({
-        jsonrpc: '2.0',
+        jsonrpc: JSON_RPC_VERSION,
         result,
         id: object.id,
       })

@@ -19,6 +19,8 @@ const printPrettyError = (prettyError) => {
   )
 }
 
+const JSON_RPC_VERSION = '2.0'
+
 export const handleError = (error) => {
   if (state.seenErrors.includes(error.message)) {
     return
@@ -26,7 +28,7 @@ export const handleError = (error) => {
   state.seenErrors.push(error.message)
   const prettyError = preparePrettyError(error)
   Socket.send({
-    jsonrpc: '2.0',
+    jsonrpc: JSON_RPC_VERSION,
     method: /* Dialog.showErrorDialogWithOptions */ 'Dialog.showMessage',
     params: [
       {

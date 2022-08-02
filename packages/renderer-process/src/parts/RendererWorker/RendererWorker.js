@@ -14,6 +14,8 @@ export const state = {
   ipc: undefined,
 }
 
+const JSON_RPC_VERSION = '2.0'
+
 const handleMessageFromRendererWorker = async (event) => {
   const message = event.data
   if (message.id) {
@@ -21,14 +23,14 @@ const handleMessageFromRendererWorker = async (event) => {
       try {
         const result = await Command.execute(message.method, ...message.params)
         state.ipc.send({
-          jsonrpc: '2.0',
+          jsonrpc: JSON_RPC_VERSION,
           id: message.id,
           result,
         })
         return
       } catch (error) {
         state.ipc.send({
-          jsonrpc: '2.0',
+          jsonrpc: JSON_RPC_VERSION,
           id: message.id,
           error,
         })
@@ -109,7 +111,7 @@ export const dispose = () => {
 
 export const send = (method, ...params) => {
   state.ipc.send({
-    jsonrpc: '2.0',
+    jsonrpc: JSON_RPC_VERSION,
     method,
     params,
   })
@@ -119,7 +121,7 @@ export const invoke = async (method, ...params) => {
   const responseMessage = await new Promise((resolve, reject) => {
     const callbackId = Callback.register(resolve, reject)
     state.ipc.send({
-      jsonrpc: '2.0',
+      jsonrpc: JSON_RPC_VERSION,
       method,
       params,
       id: callbackId,

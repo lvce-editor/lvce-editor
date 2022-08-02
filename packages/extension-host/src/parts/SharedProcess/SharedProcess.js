@@ -52,6 +52,8 @@ const shouldPrintError = (error) => {
   return true
 }
 
+const JSON_RPC_VERSION = '2.0'
+
 // TODO pass ipc type via argv
 export const listen = async (InternalCommand) => {
   const ipc = await Ipc.listen(Ipc.Methods.WebSocket)
@@ -88,7 +90,7 @@ export const listen = async (InternalCommand) => {
               PrettyError.print(prettyError)
             }
             send({
-              jsonrpc: '2.0',
+              jsonrpc: JSON_RPC_VERSION,
               id: message.id,
               error: {
                 code: -32001,
@@ -104,7 +106,7 @@ export const listen = async (InternalCommand) => {
             return
           }
           ipc.send({
-            jsonrpc: '2.0',
+            jsonrpc: JSON_RPC_VERSION,
             id: message.id,
             result: result ?? null,
           })
@@ -137,7 +139,7 @@ export const invoke = (method, ...parameters) => {
       reject,
     }
     send({
-      jsonrpc: '2.0',
+      jsonrpc: JSON_RPC_VERSION,
       method,
       params: parameters,
       id: callbackId,

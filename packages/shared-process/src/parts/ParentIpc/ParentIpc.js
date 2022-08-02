@@ -84,6 +84,8 @@ const handleJsonRpcResult = (message) => {
   Callback.resolve(message.id, message.result)
 }
 
+const JSON_RPC_VERSION = '2.0'
+
 const handleJsonRpcMessage = async (message, handle) => {
   if (message.id) {
     try {
@@ -91,7 +93,7 @@ const handleJsonRpcMessage = async (message, handle) => {
         ? await Command.invoke(message.method, handle, ...message.params)
         : await Command.invoke(message.method, ...message.params)
       electronSend({
-        jsonrpc: '2.0',
+        jsonrpc: JSON_RPC_VERSION,
         id: message.id,
         result: result ?? null,
       })
@@ -99,7 +101,7 @@ const handleJsonRpcMessage = async (message, handle) => {
       console.error('[shared process] command failed to execute')
       console.error(error)
       electronSend({
-        jsonrpc: '2.0',
+        jsonrpc: JSON_RPC_VERSION,
         code: /* ExpectedError */ -32000,
         id: message.id,
         error: 'ExpectedError',
@@ -165,7 +167,7 @@ const electronInitialize = (initializeMessage) => {
             : await Command.invoke(message.method, ...message.params)
 
           port.postMessage({
-            jsonrpc: '2.0',
+            jsonrpc: JSON_RPC_VERSION,
             id: message.id,
             result: result ?? null,
           })
@@ -181,7 +183,7 @@ const electronInitialize = (initializeMessage) => {
 
             // console.info('expected error', error)
             port.postMessage({
-              jsonrpc: '2.0',
+              jsonrpc: JSON_RPC_VERSION,
               id: message.id,
               error: {
                 code: /* ExpectedError */ -32000,
@@ -200,7 +202,7 @@ const electronInitialize = (initializeMessage) => {
             console.error(error)
             // TODO check if socket is active
             port.postMessage({
-              jsonrpc: '2.0',
+              jsonrpc: JSON_RPC_VERSION,
               id: message.id,
               error: {
                 code: /* UnexpectedError */ -32001,
@@ -209,7 +211,6 @@ const electronInitialize = (initializeMessage) => {
               },
             })
           }
-
         }
       } else {
         Command.execute(message.method, fakeSocket, ...message.params)

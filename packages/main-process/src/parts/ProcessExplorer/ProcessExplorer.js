@@ -10,6 +10,8 @@ const ColorTheme = require('../ColorTheme/ColorTheme.js')
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
 
+const JSON_RPC_VERSION = '2.0'
+
 exports.openProcessExplorer = async () => {
   const processExplorerWindow = new BrowserWindow({
     width: 800,
@@ -44,7 +46,7 @@ exports.openProcessExplorer = async () => {
           process.pid
         )
       browserWindowPort.postMessage({
-        jsonrpc: '2.0',
+        jsonrpc: JSON_RPC_VERSION,
         method: 'processWithMemoryUsage',
         params: [processesWithMemoryUsage],
       })

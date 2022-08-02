@@ -18,6 +18,8 @@ export const send = (message) => {
   state.socket.send(message)
 }
 
+const JSON_RPC_VERSION = '2.0'
+
 const handleMessage = async (event) => {
   const object = JSON.parse(event.data)
   if (object.id) {
@@ -46,7 +48,7 @@ const handleMessage = async (event) => {
 
         // console.info('expected error', error)
         send({
-          jsonrpc: '2.0',
+          jsonrpc: JSON_RPC_VERSION,
           id: object.id,
           error: {
             code: /* ExpectedError */ -32000,
@@ -64,7 +66,7 @@ const handleMessage = async (event) => {
         console.error(error)
         // TODO check if socket is active
         send({
-          jsonrpc: '2.0',
+          jsonrpc: JSON_RPC_VERSION,
           id: object.id,
           error: {
             code: /* UnexpectedError */ -32001,
@@ -76,7 +78,7 @@ const handleMessage = async (event) => {
       return
     }
     send({
-      jsonrpc: '2.0',
+      jsonrpc: JSON_RPC_VERSION,
       result,
       id: object.id,
     })
