@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import * as EditorDeleteSelection from '../src/parts/EditorCommand/EditorCommandDeleteSelection.js'
+import * as EditorDeleteSelection from '../src/parts/EditorCommandDeleteSelection/EditorCommandDeleteSelection.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 

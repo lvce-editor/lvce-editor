@@ -1,4 +1,4 @@
-import * as EditorSelectLine from '../src/parts/EditorCommand/EditorCommandSelectLine.js'
+import * as EditorSelectLine from '../src/parts/EditorCommandSelectLine/EditorCommandSelectLine.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 // TODO test with multiple cursors

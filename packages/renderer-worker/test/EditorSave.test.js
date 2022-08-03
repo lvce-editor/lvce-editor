@@ -26,7 +26,7 @@ const ErrorHandling = await import(
 )
 
 const EditorSave = await import(
-  '../src/parts/EditorCommand/EditorCommandSave.js'
+  '../src/parts/EditorCommandSave/EditorCommandSave.js'
 )
 
 test('editorSave', async () => {

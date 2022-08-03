@@ -1,4 +1,4 @@
-import * as EditorDelta from '../src/parts/EditorCommand/EditorCommandDelta.js'
+import * as EditorDelta from '../src/parts/EditorCommandDelta/EditorCommandDelta.js'
 
 test('characterLeft', () => {
   expect(EditorDelta.characterLeft('a', 1)).toBe(1)

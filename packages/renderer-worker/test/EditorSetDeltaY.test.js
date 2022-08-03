@@ -1,4 +1,4 @@
-import * as EditorSetDeltaY from '../src/parts/EditorCommand/EditorCommandSetDeltaY.js'
+import * as EditorSetDeltaY from '../src/parts/EditorCommandSetDeltaY/EditorCommandSetDeltaY.js'
 
 test('setDeltaYFixedValue', () => {
   const editor = {

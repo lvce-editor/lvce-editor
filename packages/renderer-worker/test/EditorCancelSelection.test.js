@@ -1,4 +1,4 @@
-import * as EditorCancelSelection from '../src/parts/EditorCommand/EditorCommandCancelSelection.js'
+import * as EditorCancelSelection from '../src/parts/EditorCommandCancelSelection/EditorCommandCancelSelection.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorCancelSelection', () => {

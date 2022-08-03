@@ -1,4 +1,4 @@
-import * as EditorCursorSet from '../src/parts/EditorCommand/EditorCommandCursorSet.js'
+import * as EditorCursorSet from '../src/parts/EditorCommandCursorSet/EditorCommandCursorSet.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorCursorSet - invalid argument - array', () => {

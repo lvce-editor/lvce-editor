@@ -1,5 +1,5 @@
 import * as Editor from '../src/parts/Editor/Editor.js'
-import * as EditorReplaceSelection from '../src/parts/EditorCommand/EditorCommandReplaceSelection.js'
+import * as EditorReplaceSelection from '../src/parts/EditorCommandReplaceSelection/EditorCommandReplaceSelection.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('replaceSelection - virtual space insertion', () => {

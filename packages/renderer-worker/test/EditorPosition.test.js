@@ -1,4 +1,4 @@
-import * as EditorPosition from '../src/parts/EditorCommand/EditorCommandPosition.js'
+import * as EditorPosition from '../src/parts/EditorCommandPosition/EditorCommandPosition.js'
 
 test('x', () => {
   const editor = {

@@ -1,4 +1,4 @@
-import * as EditorSelectNextOccurrence from '../src/parts/EditorCommand/EditorCommandSelectNextOccurrence.js'
+import * as EditorSelectNextOccurrence from '../src/parts/EditorCommandSelectNextOccurrence/EditorCommandSelectNextOccurrence.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test.skip('editorSelectNextOccurrence - no selection and no word at cursor position', () => {

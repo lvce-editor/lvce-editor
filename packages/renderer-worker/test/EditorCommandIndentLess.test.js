@@ -1,4 +1,4 @@
-import * as EditorIndentLess from '../src/parts/EditorCommand/EditorCommandIndentLess.js'
+import * as EditorIndentLess from '../src/parts/EditorCommandIndentLess/EditorCommandIndentLess.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test.skip('editorIndentLess - already at start of line', () => {

@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import * as EditorHandleTouchMove from '../src/parts/EditorCommand/EditorCommandHandleTouchMove.js'
-import * as EditorHandleTouchStart from '../src/parts/EditorCommand/EditorCommandHandleTouchStart.js'
+import * as EditorHandleTouchStart from '../src/parts/EditorCommandHandleTouchStart/EditorCommandHandleTouchStart.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 

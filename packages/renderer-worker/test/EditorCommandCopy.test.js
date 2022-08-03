@@ -15,7 +15,7 @@ beforeAll(() => {
 const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
 
 const EditorCopy = await import(
-  '../src/parts/EditorCommand/EditorCommandCopy.js'
+  '../src/parts/EditorCommandCopy/EditorCommandCopy.js'
 )
 
 test('editorCopy', async () => {

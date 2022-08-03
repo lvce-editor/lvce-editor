@@ -1,4 +1,4 @@
-import * as EditorMoveSelection from '../src/parts/EditorCommand/EditorCommandMoveSelection.js'
+import * as EditorMoveSelection from '../src/parts/EditorCommandMoveSelection/EditorCommandMoveSelection.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorMoveSelection', () => {

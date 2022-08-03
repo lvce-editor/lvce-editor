@@ -1,4 +1,4 @@
-import * as EditorCursorWordRight from '../src/parts/EditorCommand/EditorCommandCursorWordRight.js'
+import * as EditorCursorWordRight from '../src/parts/EditorCommandCursorWordRight/EditorCommandCursorWordRight.js/index.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test.skip('editorCursorWordRight', () => {

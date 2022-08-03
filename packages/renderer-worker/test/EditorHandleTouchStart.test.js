@@ -1,6 +1,6 @@
-import * as EditorHandleTouchStart from '../src/parts/EditorCommand/EditorCommandHandleTouchStart.js'
+import * as EditorHandleTouchStart from '../src/parts/EditorCommandHandleTouchStart/EditorCommandHandleTouchStart.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
-import * as EditorMoveSelection from '../src/parts/EditorCommand/EditorCommandMoveSelection.js'
+import * as EditorMoveSelection from '../src/parts/EditorCommandMoveSelection/EditorCommandMoveSelection.js'
 
 test.skip('editorHandleTouchStart - no touches', () => {
   const editor = {

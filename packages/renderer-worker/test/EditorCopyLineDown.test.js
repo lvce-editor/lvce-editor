@@ -1,4 +1,4 @@
-import * as EditorCopyLineDown from '../src/parts/EditorCommand/EditorCommandCopyLineDown.js'
+import * as EditorCopyLineDown from '../src/parts/EditorCommandCopyLineDown/EditorCommandCopyLineDown.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 

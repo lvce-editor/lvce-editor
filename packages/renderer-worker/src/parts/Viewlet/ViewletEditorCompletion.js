@@ -1,5 +1,5 @@
 import * as Command from '../Command/Command.js'
-import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
+import * as EditorPosition from '../EditorCommandPosition/EditorCommandPosition.js'
 import * as ExtensionHostCompletion from '../ExtensionHost/ExtensionHostCompletion.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'

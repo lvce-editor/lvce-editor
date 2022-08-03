@@ -1,4 +1,4 @@
-import * as EditorSelectInsideString from '../src/parts/EditorCommand/EditorCommandSelectInsideString.js'
+import * as EditorSelectInsideString from '../src/parts/EditorCommandSelectInsideString/EditorCommandSelectInsideString.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectInsideString', () => {

@@ -1,4 +1,4 @@
-import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
+import * as EditorPosition from '../EditorCommandPosition/EditorCommandPosition.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const show = async (editor, message, position) => {

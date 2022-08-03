@@ -1,4 +1,4 @@
-import * as EditorInsertLineBreak from '../src/parts/EditorCommand/EditorCommandInsertLineBreak.js'
+import * as EditorInsertLineBreak from '../src/parts/EditorCommandInsertLineBreak/EditorCommandInsertLineBreak.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 

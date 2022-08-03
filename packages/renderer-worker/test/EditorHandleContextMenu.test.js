@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import * as EditorHandleContextMenu from '../src/parts/EditorCommand/EditorCommandHandleContextMenu.js'
+import * as EditorHandleContextMenu from '../src/parts/EditorCommandHandleContextMenu/EditorCommandHandleContextMenu.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 
 test.skip('editorHandleContextMenu', async () => {

@@ -1,4 +1,4 @@
-import * as EditorHandleNativeSelectionChange from '../src/parts/EditorCommand/EditorCommandHandleNativeSelectionChange.js'
+import * as EditorHandleNativeSelectionChange from '../src/parts/EditorCommandHandleNativeSelectionChange/EditorCommandHandleNativeSelectionChange.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorHandleNativeSelectionChange', () => {

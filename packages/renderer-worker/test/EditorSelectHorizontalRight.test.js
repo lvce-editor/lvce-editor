@@ -1,4 +1,4 @@
-import * as EditorSelectHorizontalRight from '../src/parts/EditorCommand/EditorCommandSelectHorizontalRight.js'
+import * as EditorSelectHorizontalRight from '../src/parts/EditorCommandSelectHorizontalRight/EditorCommandSelectHorizontalRight.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectHorizontalRight - single character', () => {

@@ -16,7 +16,7 @@ jest.unstable_mockModule(
 )
 
 const EditorTabCompletion = await import(
-  '../src/parts/EditorCommand/EditorCommandTabCompletion.js'
+  '../src/parts/EditorCommandTabCompletion/EditorCommandTabCompletion.js/index.js'
 )
 const ExtensionHostTabCompletion = await import(
   '../src/parts/ExtensionHost/ExtensionHostTabCompletion.js'

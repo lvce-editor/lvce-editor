@@ -26,7 +26,7 @@ jest.unstable_mockModule('../src/parts/Editor/Editor.js', () => {
 })
 
 const EditorHandleScrollBarClick = await import(
-  '../src/parts/EditorCommand/EditorCommandHandleScrollBarClick.js'
+  '../src/parts/EditorCommandHandleScrollBarClick/EditorCommandHandleScrollBarClick.js'
 )
 
 test.skip('editorHandleScrollBarClick - in middle', () => {

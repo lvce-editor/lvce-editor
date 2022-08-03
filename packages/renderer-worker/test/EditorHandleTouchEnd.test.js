@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals'
 import * as EditorHandleTouchEnd from '../src/parts/EditorCommand/EditorCommandHandleTouchEnd.js'
 import * as EditorHandleTouchMove from '../src/parts/EditorCommand/EditorCommandHandleTouchMove.js'
-import * as EditorHandleTouchStart from '../src/parts/EditorCommand/EditorCommandHandleTouchStart.js'
+import * as EditorHandleTouchStart from '../src/parts/EditorCommandHandleTouchStart/EditorCommandHandleTouchStart.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 
 test.skip('editorHandleTouchEnd - selection was moved', () => {

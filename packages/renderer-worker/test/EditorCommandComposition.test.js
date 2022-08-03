@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import * as EditorComposition from '../src/parts/EditorCommand/EditorCommandComposition.js'
+import * as EditorComposition from '../src/parts/EditorCommandComposition/EditorCommandComposition.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'

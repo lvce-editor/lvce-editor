@@ -1,4 +1,4 @@
-import * as EditorSelectAllOccurrences from '../src/parts/EditorCommand/EditorCommandSelectAllOccurrences.js'
+import * as EditorSelectAllOccurrences from '../src/parts/EditorCommandSelectAllOccurrences/EditorCommandSelectAllOccurrences.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectAllOccurrences - single line selection', () => {

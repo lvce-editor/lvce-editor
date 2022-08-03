@@ -1,6 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
-import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
+import * as EditorPosition from '../EditorCommandPosition/EditorCommandPosition.js'
 import * as ExtensionHostRename from '../ExtensionHost/ExtensionHostRename.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'

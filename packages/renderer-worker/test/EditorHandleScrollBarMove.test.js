@@ -19,11 +19,11 @@ jest.unstable_mockModule('../src/parts/Editor/Editor.js', () => {
 })
 
 const EditorHandleScrollBarMove = await import(
-  '../src/parts/EditorCommand/EditorCommandHandleScrollBarMove.js'
+  '../src/parts/EditorCommandHandleScrollBarMove/EditorCommandHandleScrollBarMove.js'
 )
 
 const EditorHandleScrollBarClick = await import(
-  '../src/parts/EditorCommand/EditorCommandHandleScrollBarClick.js'
+  '../src/parts/EditorCommandHandleScrollBarClick/EditorCommandHandleScrollBarClick.js'
 )
 
 test.skip('editorHandleScrollBarMove', () => {

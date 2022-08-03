@@ -1,4 +1,4 @@
-import * as EditorIndentMore from '../src/parts/EditorCommand/EditorCommandIndentMore.js'
+import * as EditorIndentMore from '../src/parts/EditorCommandIndentMore/EditorCommandIndentMore.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorIndentMore - indent empty selection at start of line', () => {

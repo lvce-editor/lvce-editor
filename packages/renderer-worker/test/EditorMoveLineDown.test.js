@@ -1,4 +1,4 @@
-import * as EditorMoveLineDown from '../src/parts/EditorCommand/EditorCommandMoveLineDown.js'
+import * as EditorMoveLineDown from '../src/parts/EditorCommandMoveLineDown/EditorCommandMoveLineDown.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 
 test.skip('editorMoveLineDown', () => {

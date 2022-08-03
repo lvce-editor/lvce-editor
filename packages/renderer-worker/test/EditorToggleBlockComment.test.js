@@ -16,7 +16,7 @@ jest.unstable_mockModule('../src/parts/Languages/Languages.js', () => {
 })
 
 const EditorToggleBlockComment = await import(
-  '../src/parts/EditorCommand/EditorCommandToggleBlockComment.js'
+  '../src/parts/EditorCommandToggleBlockComment/EditorCommandToggleBlockComment.js'
 )
 const Languages = await import('../src/parts/Languages/Languages.js')
 

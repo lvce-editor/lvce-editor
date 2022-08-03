@@ -1,4 +1,4 @@
-import * as EditorHandleBeforeInputFromContentEditable from '../src/parts/EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.js'
+import * as EditorHandleBeforeInputFromContentEditable from '../src/parts/EditorCommandHandleNativeBeforeInputFromContentEditable/EditorCommandHandleNativeBeforeInputFromContentEditable.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorHandleBeforeInputFromContentEditable', () => {

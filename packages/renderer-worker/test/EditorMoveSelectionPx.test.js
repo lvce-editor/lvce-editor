@@ -1,4 +1,4 @@
-import * as EditorMoveSelection from '../src/parts/EditorCommand/EditorCommandMoveSelection.js'
+import * as EditorMoveSelection from '../src/parts/EditorCommandMoveSelection/EditorCommandMoveSelection.js'
 import * as EditorMoveSelectionPx from '../src/parts/EditorCommand/EditorCommandMoveSelectionPx.js'
 
 test.skip('editorMoveSelectionPx', () => {

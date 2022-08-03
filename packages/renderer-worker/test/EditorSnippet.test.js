@@ -1,4 +1,4 @@
-import * as EditorSnippet from '../src/parts/EditorCommand/EditorCommandSnippet.js'
+import * as EditorSnippet from '../src/parts/EditorCommandSnippet/EditorCommandSnippet.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSnippet', () => {

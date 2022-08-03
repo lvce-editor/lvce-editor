@@ -1,4 +1,4 @@
-import * as EditorGetSelectionFromNativeRange from '../src/parts/EditorCommand/EditorCommandGetSelectionFromNativeRange.js'
+import * as EditorGetSelectionFromNativeRange from '../src/parts/EditorCommandGetSelectionFromNativeRange/EditorCommandGetSelectionFromNativeRange.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 
 test('editorGetSelectionFromNativeRange', () => {

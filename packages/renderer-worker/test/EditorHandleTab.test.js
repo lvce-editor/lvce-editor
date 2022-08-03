@@ -30,7 +30,7 @@ jest.unstable_mockModule(
 )
 
 const EditorHandleTab = await import(
-  '../src/parts/EditorCommand/EditorCommandHandleTab.js'
+  '../src/parts/EditorCommandHandleTab/EditorCommandHandleTab.js/index.js'
 )
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'

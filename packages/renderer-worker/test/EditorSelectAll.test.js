@@ -1,4 +1,4 @@
-import * as EditorSelectAll from '../src/parts/EditorCommand/EditorCommandSelectAll.js'
+import * as EditorSelectAll from '../src/parts/EditorCommandSelectAll/EditorCommandSelectAll.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectAll', () => {
