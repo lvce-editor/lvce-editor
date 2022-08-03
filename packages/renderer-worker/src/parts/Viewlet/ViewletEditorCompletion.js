@@ -4,7 +4,7 @@ import * as ExtensionHostCompletion from '../ExtensionHost/ExtensionHostCompleti
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
-import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js'
+import * as EditorShowMessage from '../EditorCommandShowMessage/EditorCommandShowMessage.js'
 
 export const create = (id, uri, top, left, width, height) => {
   console.log({ id, uri, top, left, width, height })

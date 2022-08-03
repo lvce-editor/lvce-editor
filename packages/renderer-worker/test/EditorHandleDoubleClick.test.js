@@ -1,4 +1,4 @@
-import * as EditorHandleDoubleClick from '../src/parts/EditorCommand/EditorCommandHandleDoubleClick.js'
+import * as EditorHandleDoubleClick from '../src/parts/EditorCommandHandleDoubleClick/EditorCommandHandleDoubleClick.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 

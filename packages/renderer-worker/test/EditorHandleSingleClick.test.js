@@ -20,7 +20,7 @@ const EditorSelection = await import(
 )
 
 const EditorHandleSingleClick = await import(
-  '../src/parts/EditorCommand/EditorCommandHandleSingleClick.js'
+  '../src/parts/EditorCommandHandleSingleClick/EditorCommandHandleSingleClick.js'
 )
 
 test('editorHandleClick', async () => {

@@ -1,4 +1,4 @@
-import * as EditorPasteText from '../src/parts/EditorCommand/EditorCommandPasteText.js'
+import * as EditorPasteText from '../src/parts/EditorCommandPasteText/EditorCommandPasteText.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorPasteText', () => {

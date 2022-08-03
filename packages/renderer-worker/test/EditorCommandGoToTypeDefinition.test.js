@@ -11,7 +11,7 @@ jest.unstable_mockModule(
   })
 )
 jest.unstable_mockModule(
-  '../src/parts/EditorCommand/EditorCommandShowMessage.js',
+  '../src/parts/EditorCommandShowMessage/EditorCommandShowMessage.js',
   () => ({
     editorShowMessage: jest.fn().mockImplementation(() => {
       throw new Error('not implemented')
@@ -23,7 +23,7 @@ const ExtensionHostTypeDefinition = await import(
   '../src/parts/ExtensionHost/ExtensionHostTypeDefinition.js'
 )
 const EditorGoToTypeDefinition = await import(
-  '../src/parts/EditorCommand/EditorCommandGoToTypeDefinition.js'
+  '../src/parts/EditorCommandGoToTypeDefinition/EditorCommandGoToTypeDefinition.js'
 )
 
 const EditorShowMessage = await import(

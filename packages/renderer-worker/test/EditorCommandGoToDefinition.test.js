@@ -23,11 +23,11 @@ const ExtensionHostDefinition = await import(
   '../src/parts/ExtensionHost/ExtensionHostDefinition.js'
 )
 const EditorGoToDefinition = await import(
-  '../src/parts/EditorCommand/EditorCommandGoToDefinition.js'
+  '../src/parts/EditorCommandGoToDefinition/EditorCommandGoToDefinition.js'
 )
 
 const EditorShowMessage = await import(
-  '../src/parts/EditorCommand/EditorCommandShowMessage.js'
+  '../src/parts/EditorCommandShowMessage/EditorCommandShowMessage.jsf'
 )
 
 beforeEach(() => {
