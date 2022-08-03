@@ -1,5 +1,5 @@
 import * as Editor from '../Editor/Editor.js'
-import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
+import { editorReplaceSelections } from '../EditorCommandReplaceSelection/EditorCommandReplaceSelection.js'
 
 export const editorPasteText = (editor, text) => {
   const insertedLines = text.split('\n')

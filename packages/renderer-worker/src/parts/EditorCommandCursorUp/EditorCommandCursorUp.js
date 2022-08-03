@@ -1,4 +1,4 @@
-import * as EditorCursorVertical from './EditorCommandCursorVertical.js'
+import * as EditorCursorVertical from '../EditorCommandCursorVertical/EditorCommandCursorVertical.js'
 
 const getEdgePosition = (editor) => {
   return {

@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as EditorPosition from './EditorCommandPosition.js'
+import * as EditorPosition from '../EditorCommandPosition/EditorCommandPosition.js'
 
 export const state = {
   timeout: -1,

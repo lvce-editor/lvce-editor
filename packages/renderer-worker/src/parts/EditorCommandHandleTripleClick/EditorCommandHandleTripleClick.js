@@ -1,5 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
-import * as EditorSelectLine from './EditorCommandSelectLine.js'
+import * as EditorSelectLine from '../EditorCommandSelectLine/EditorCommandSelectLine.js'
 
 // TODO rowIndex and columnIndex should already be set because of singleClick which occurred before triple click
 export const editorHandleTripleClick = (editor, x, y, offset) => {

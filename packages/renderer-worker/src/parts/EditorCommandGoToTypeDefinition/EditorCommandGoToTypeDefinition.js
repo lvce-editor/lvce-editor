@@ -3,7 +3,7 @@ import * as Editor from '../Editor/Editor.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHost/ExtensionHostTypeDefinition.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Assert from '../Assert/Assert.js'
-import * as EditorShowMessage from './EditorCommandShowMessage.js'
+import * as EditorShowMessage from '../EditorCommandShowMessage/EditorCommandShowMessage.js'
 // TODO duplicate code with editorCommandGoToDefinition
 // TODO race condition, check that editor hasn't been closed in the meantime
 

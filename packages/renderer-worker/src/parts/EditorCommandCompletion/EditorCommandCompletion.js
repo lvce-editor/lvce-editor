@@ -4,8 +4,8 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as EditorBlur from './EditorCommandBlur.js'
-import * as EditorPosition from './EditorCommandPosition.js'
+import * as EditorBlur from '../EditorCommandBlur/EditorCommandBlur.js'
+import * as EditorPosition from '../EditorCommandPosition/EditorCommandPosition.js'
 
 const handleBlur = () => {
   close()

@@ -1,4 +1,4 @@
-import * as EditorHandleTouchStart from './EditorCommandHandleTouchStart.js'
+import * as EditorHandleTouchStart from '../EditorCommandHandleTouchStart/EditorCommandHandleTouchStart.js'
 import * as EditorSetDeltaY from '../EditorCommandSetDeltaY/EditorCommandSetDeltaY.js'
 
 export const editorHandleTouchMove = (editor, touchEvent) => {

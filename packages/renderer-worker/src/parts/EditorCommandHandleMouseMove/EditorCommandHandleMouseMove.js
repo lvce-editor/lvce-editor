@@ -1,7 +1,7 @@
 import * as ExtensionHostHover from '../ExtensionHost/ExtensionHostHover.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as EditorPosition from './EditorCommandPosition.js'
+import * as EditorPosition from '../EditorCommandPosition/EditorCommandPosition.js'
 
 const getHover = async (editor, position) => {
   const offset = TextDocument.offsetAt(editor, position)

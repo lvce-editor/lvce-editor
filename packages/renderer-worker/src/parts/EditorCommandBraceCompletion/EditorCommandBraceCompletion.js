@@ -1,10 +1,9 @@
 // import * as EditorCompletion from '../EditorCompletion/EditorCompletion.js'
 import * as Editor from '../Editor/Editor.js'
+import { editorReplaceSelections } from '../EditorCommandReplaceSelection/EditorCommandReplaceSelection.js'
+import * as EditorShowMessage from '../EditorCommandShowMessage/EditorCommandShowMessage.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHost/ExtensionHostBraceCompletion.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import { editorReplaceSelections } from '../EditorCommandReplaceSelection/EditorCommandReplaceSelection.js'
-import * as ExtensionHostTabCompletion from '../ExtensionHost/ExtensionHostTabCompletion.js'
-import * as EditorShowMessage from './EditorCommandShowMessage.js'
 
 const getErrorMessage = (error) => {
   return `${error}`

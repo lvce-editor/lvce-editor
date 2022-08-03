@@ -1,8 +1,7 @@
+import * as EditorShowMessage from '../EditorCommandShowMessage/EditorCommandShowMessage.js'
+import * as EditorSnippet from '../EditorCommandSnippet/EditorCommandSnippet.js'
 import * as ExtensionHostTabCompletion from '../ExtensionHost/ExtensionHostTabCompletion.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as EditorSnippet from '../EditorCommandSnippet/EditorCommandSnippet.js'
-import * as Assert from '../Assert/Assert.js'
-import * as EditorShowMessage from './EditorCommandShowMessage.js'
 
 const getTabCompletion = async (editor) => {
   const position = {

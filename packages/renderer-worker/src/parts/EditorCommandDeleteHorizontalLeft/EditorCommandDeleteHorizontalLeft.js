@@ -1,7 +1,7 @@
 import * as Editor from '../Editor/Editor.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
-import * as EditorGetPositionLeft from './EditorCommandGetPositionLeft.js'
+import { editorReplaceSelections } from '../EditorCommandReplaceSelection/EditorCommandReplaceSelection.js'
+import * as EditorGetPositionLeft from '../EditorCommandGetPositionLeft/EditorCommandGetPositionLeft.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
 // TODO optimize this function by profiling and not allocating too many objects

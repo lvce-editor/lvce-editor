@@ -1,5 +1,4 @@
 import * as Editor from '../Editor/Editor.js'
-import * as EditorHandleClick from './EditorCommandHandleSingleClick.js'
 import * as EditorMoveSelection from '../EditorCommandMoveSelection/EditorCommandMoveSelection.js'
 
 export const editorMoveRectangleSelection = (editor, position) => {

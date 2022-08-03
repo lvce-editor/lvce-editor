@@ -1,5 +1,4 @@
 import * as Editor from '../Editor/Editor.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 // TODO handle virtual space
 

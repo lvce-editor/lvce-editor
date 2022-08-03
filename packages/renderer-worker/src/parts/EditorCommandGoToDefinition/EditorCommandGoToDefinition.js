@@ -2,7 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as ExtensionHostDefinition from '../ExtensionHost/ExtensionHostDefinition.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as EditorShowMessage from './EditorCommandShowMessage.js'
+import * as EditorShowMessage from '../EditorCommandShowMessage/EditorCommandShowMessage.js'
 // TODO race condition, check that editor hasn't been closed in the meantime
 
 // TODO in case of error should show message "Definition Error: Cannot ready Property x of undefined"

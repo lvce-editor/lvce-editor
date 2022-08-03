@@ -1,6 +1,6 @@
-import * as EditorPosition from './EditorCommandPosition.js'
-import * as EditorHandleTouchStart from './EditorCommandHandleTouchStart.js'
-import * as EditorSelectWord from './EditorCommandSelectWord.js'
+import * as EditorPosition from '../EditorCommandPosition/EditorCommandPosition.js'
+import * as EditorHandleTouchStart from '../EditorCommandHandleTouchStart/EditorCommandHandleTouchStart.js'
+import * as EditorSelectWord from '../EditorCommandSelectWord/EditorCommandSelectWord.js'
 import * as EditorCursorSet from '../EditorCommandCursorSet/EditorCommandCursorSet.js'
 import * as EditorMoveSelection from '../EditorCommandMoveSelection/EditorCommandMoveSelection.js'
 

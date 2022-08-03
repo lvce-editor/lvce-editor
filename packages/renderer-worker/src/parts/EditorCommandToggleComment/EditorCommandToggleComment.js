@@ -1,5 +1,5 @@
-import * as EditorToggleBlockComment from './EditorCommandToggleBlockComment.js'
-import * as EditorToggleLineComment from './EditorCommandToggleLineComment.js'
+import * as EditorToggleBlockComment from '../EditorCommandToggleBlockComment/EditorCommandToggleBlockComment.js'
+import * as EditorToggleLineComment from '../EditorCommandToggleLineComment/EditorCommandToggleLineComment.js'
 
 // TODO rename file
 // TODO when handle case when editor has selection

@@ -1,4 +1,4 @@
-import * as Editor from './Editor.js'
+import * as Editor from '../Editor/Editor.js'
 
 export const editorDeleteHorizontalRight = (editor, getDelta) => {
   if (Editor.hasSelection(editor)) {

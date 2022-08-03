@@ -1,6 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
-import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
+import { editorReplaceSelections } from '../EditorCommandReplaceSelection/EditorCommandReplaceSelection.js'
 
 export const editorCut = async (editor) => {
   const selection = editor.selections[0]

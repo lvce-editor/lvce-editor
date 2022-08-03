@@ -1,9 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as EditorCursorSet from './EditorCommandCursorSet.js'
-import * as EditorPosition from './EditorCommandPosition.js'
-import * as EditorMoveSelection from './EditorCommandMoveSelection.js'
-import * as EditorGoToDefinition from './EditorCommandGoToDefinition.js'
+import * as EditorCursorSet from '../EditorCommandCursorSet/EditorCommandCursorSet.js'
+import * as EditorPosition from '../EditorCommandPosition/EditorCommandPosition.js'
+import * as EditorMoveSelection from '../EditorCommandMoveSelection/EditorCommandMoveSelection.js'
+import * as EditorGoToDefinition from '../EditorCommandGoToDefinition/EditorCommandGoToDefinition.js'
 
 export const editorHandleSingleClick = async (
   editor,

@@ -1,5 +1,5 @@
-import * as EditorDeleteHorizontalRight from './EditorCommandDeleteHorizontalRight.js'
-import * as EditorDelta from './EditorCommandDelta.js'
+import * as EditorDeleteHorizontalRight from '../EditorCommandDeleteHorizontalRight/EditorCommandDeleteHorizontalRight.js'
+import * as EditorDelta from '../EditorCommandDelta/EditorCommandDelta.js'
 
 export const editorDeleteWordPartRight = (editor) => {
   EditorDeleteHorizontalRight.editorDeleteHorizontalRight(

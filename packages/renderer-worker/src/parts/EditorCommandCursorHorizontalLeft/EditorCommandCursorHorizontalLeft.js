@@ -1,5 +1,5 @@
 import * as Editor from '../Editor/Editor.js'
-import * as EditorGetPositionLeft from './EditorCommandGetPositionLeft.js'
+import * as EditorGetPositionLeft from '../EditorCommandGetPositionLeft/EditorCommandGetPositionLeft.js'
 
 const getNewSelections = (selections, lines, getDelta) => {
   const newSelections = new Uint32Array(selections.length)

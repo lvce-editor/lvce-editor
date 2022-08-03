@@ -1,4 +1,4 @@
-import * as EditorSelectHorizontalLeft from './EditorCommandSelectHorizontalLeft.js'
+import * as EditorSelectHorizontalLeft from '../EditorCommandSelectHorizontalLeft/EditorCommandSelectHorizontalLeft.js'
 import * as EditorDelta from '../EditorCommandDelta/EditorCommandDelta.js'
 
 export const editorSelectWordLeft = (editor) => {

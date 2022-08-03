@@ -1,5 +1,5 @@
-import * as EditorTabCompletion from '../EditorCommandTabCompletion/EditorCommandTabCompletion.js/index.js'
-import * as EditorType from './EditorCommandType.js'
+import * as EditorTabCompletion from '../EditorCommandTabCompletion/EditorCommandTabCompletion.js'
+import * as EditorType from '../EditorCommandType/EditorCommandType.js'
 import * as EditorIndent from '../EditorCommandIndentMore/EditorCommandIndentMore.js'
 
 const isStartEndSame = (selection) => {

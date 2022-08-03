@@ -1,7 +1,7 @@
 import * as Editor from '../Editor/Editor.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as EditorGetPositionRight from './EditorCommandGetPositionRight.js'
-import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
+import * as EditorGetPositionRight from '../EditorCommandGetPositionRight/EditorCommandGetPositionRight.js'
+import { editorReplaceSelections } from '../EditorCommandReplaceSelection/EditorCommandReplaceSelection.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
 const getChanges = (editor, getDelta) => {

@@ -12,9 +12,11 @@ export const editorBlur = (editor) => {
 }
 
 export const registerListener = (fn) => {
+  // @ts-ignore
   state.blurListeners.push(fn)
 }
 
 export const removeListener = (fn) => {
+  // @ts-ignore
   state.blurListeners.splice(state.blurListeners.indexOf(fn), 1)
 }
