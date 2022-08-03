@@ -34,12 +34,14 @@ const loadModule = async (moduleId) => {
   }
 }
 
+const initializeModule = (module) => {
+  module.__initialize__()
+}
+
 const getOrLoadModule = (moduleId) => {
   if (!pendingModules[moduleId]) {
     const importPromise = loadModule(moduleId)
-    pendingModules[moduleId] = importPromise.then((module) =>
-      module.__initialize__()
-    )
+    pendingModules[moduleId] = importPromise.then(initializeModule)
   }
   return pendingModules[moduleId]
 }
