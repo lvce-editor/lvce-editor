@@ -13,7 +13,6 @@ const MODULE_PANEL = 22
 const MODULE_FIND_WIDGET = 23
 const MODULE_PREFERENCES = 25
 const MODULE_DEVELOPER = 26
-const MODULE_EDITOR_COMMAND = 27
 const MODULE_EDITOR_COMPLETION = 28
 const MODULE_KEY_BINDINGS = 29
 const MODULE_EXTENSIONS = 30
@@ -176,6 +175,7 @@ export const state = {
   pendingModules: Object.create(null),
 }
 
+// prettier-ignore
 const loadModule = (moduleId) => {
   switch (moduleId) {
     case MODULE_NOTIFICATION:
@@ -313,21 +313,25 @@ const loadModule = (moduleId) => {
     case MODULE_EDITOR_COMMAND_BLUR:
       return import('../EditorCommandBlur/EditorCommandBlur.ipc.js')
     case MODULE_EDITOR_COMMAND_BRACE_COMPLETION:
-      return import(
-        '../EditorCommandBraceCompletion/EditorCommandBraceCompletion.ipc.js'
-      )
+      return import('../EditorCommandBraceCompletion/EditorCommandBraceCompletion.ipc.js')
     case MODULE_EDITOR_COMMAND_CANCEL_SELECTION:
-      return import(
-        '../EditorCommandCancelSelection/EditorCommandCancelSelection.ipc.js'
-      )
+      return import('../EditorCommandCancelSelection/EditorCommandCancelSelection.ipc.js')
     case MODULE_EDITOR_COMMAND_COMPLETION:
       return import('../EditorCommandCompletion/EditorCommandCompletion.ipc.js')
     case MODULE_EDITOR_COMMAND_COMPOSITION:
-      return import(
-        '../EditorCommandComposition/EditorCommandComposition.ipc.js'
-      )
+      return import('../EditorCommandComposition/EditorCommandComposition.ipc.js')
     case MODULE_EDITOR_COMMAND_COPY:
       return import('../EditorCommandCopy/EditorCommandCopy.ipc.js')
+    case MODULE_EDITOR_COMMAND_COPY_LINE_DOWN:
+      return import('../EditorCommandCopyLineDown/EditorCommandCopyLineDown.ipc.js')
+    case MODULE_EDITOR_COMMAND_COPY_LINE_UP:
+      return import('../EditorCommandCopyLineUp/EditorCommandCopyLineUp.js')
+    case MODULE_EDITOR_COMMAND_CURSOR_CHARACTER_LEFT:
+      return import('../EditorCommandCursorCharacterLeft/EditorCommandCursorCharacterLeft.ipc.js')
+    case MODULE_EDITOR_COMMAND_CURSOR_CHARACTER_RIGHT:
+      return import('../EditorCommandCursorCharacterRight/EditorCommandCursorCharacterRight.ipc.js')
+    case MODULE_EDITOR_COMMAND_SET_LANGUAGE_ID:
+      return import('../EditorCommandSetLanguageId/EditorCommandSetLanguageId.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }
@@ -425,28 +429,47 @@ const getModuleId = (commandId) => {
     case 'Ajax.getText':
       return MODULE_AJAX
     case 'Editor.applyEdit':
+      return MODULE_EDITOR_COMMAND_APPLY_EDIT
     case 'Editor.blur':
+      return MODULE_EDITOR_COMMAND_BLUR
     case 'Editor.braceCompletion':
+      return MODULE_EDITOR_COMMAND_BRACE_COMPLETION
     case 'Editor.cancelSelection':
+      return MODULE_EDITOR_COMMAND_CANCEL_SELECTION
     case 'Editor.handleScrollBarMove':
-    case 'Editor.close':
+      return MODULE_EDITOR_COMMAND_HANDLE_SCROLL_BAR_MOVE
     case 'Editor.compositionEnd':
     case 'Editor.compositionStart':
     case 'Editor.compositionUpdate':
+      return MODULE_EDITOR_COMMAND_COMPOSITION
     case 'Editor.copy':
+      return MODULE_EDITOR_COMMAND_COPY
     case 'Editor.copyLineDown':
+      return MODULE_EDITOR_COMMAND_COPY_LINE_DOWN
     case 'Editor.copyLineUp':
+      return MODULE_EDITOR_COMMAND_COPY_LINE_UP
     case 'Editor.cursorLeft':
+      return MODULE_EDITOR_COMMAND_CURSOR_CHARACTER_LEFT
     case 'Editor.cursorRight':
+      return MODULE_EDITOR_COMMAND_CURSOR_CHARACTER_RIGHT
     case 'Editor.cursorEnd':
+      return MODULE_EDITOR_COMMAND_CURSOR_END
     case 'Editor.cursorsDown':
+      return MODULE_EDITOR_COMMAND_CURSOR_DOWN
     case 'Editor.cursorSet':
+      return MODULE_EDITOR_COMMAND_CURSOR_SET
     case 'Editor.cursorsHome':
+      return MODULE_EDITOR_COMMAND_CURSOR_HOME
     case 'Editor.cursorsUp':
+      return MODULE_EDITOR_COMMAND_CURSOR_UP
     case 'Editor.cursorWordLeft':
+      return MODULE_EDITOR_COMMAND_CURSOR_WORD_LEFT
     case 'Editor.cursorWordPartLeft':
+      return MODULE_EDITOR_COMMAND_CURSOR_WORD_PART_LEFT
     case 'Editor.cursorWordPartRight':
+      return MODULE_EDITOR_COMMAND_CURSOR_WORD_PART_RIGHT
     case 'Editor.cursorWordRight':
+      return MODULE_EDITOR_COMMAND_CURSOR_WORD_PART_RIGHT
     case 'Editor.cut':
     case 'Editor.deleteAllLeft':
     case 'Editor.deleteAllRight':
@@ -485,27 +508,47 @@ const getModuleId = (commandId) => {
     case 'Editor.openCompletionFromType':
     case 'Editor.paste':
     case 'Editor.pasteText':
+      return MODULE_EDITOR_COMMAND_PASTE_TEXT
     case 'Editor.save':
+      return MODULE_EDITOR_COMMAND_SAVE
     case 'Editor.selectAll':
+      return MODULE_EDITOR_COMMAND_SELECT_ALL
     case 'Editor.selectAllOccurrences':
+      return MODULE_EDITOR_COMMAND_SELECT_ALL_OCCURRENCES
     case 'Editor.selectCharacterLeft':
+      return MODULE_EDITOR_COMMAND_SELECT_CHARACTER_LEFT
     case 'Editor.selectCharacterRight':
+      return MODULE_EDITOR_COMMAND_SELECT_CHARACTER_RIGHT
     case 'Editor.selectInsideString':
+      return MODULE_EDITOR_COMMAND_SELECT_INSIDE_STRING
     case 'Editor.selectLine':
+      return MODULE_EDITOR_COMMAND_SELECT_LINE
     case 'Editor.selectNextOccurrence':
+      return MODULE_EDITOR_COMMAND_SELECT_NEXT_OCCURRENCE
     case 'Editor.selectWord':
+      return MODULE_EDITOR_COMMAND_SELECT_WORD
     case 'Editor.selectWordLeft':
+      return MODULE_EDITOR_COMMAND_SELECT_WORD_LEFT
     case 'Editor.selectWordRight':
+      return MODULE_EDITOR_COMMAND_SELECT_WORD_RIGHT
     case 'Editor.setDecorations':
+      return MODULE_EDITOR_COMMAND_SET_DECORATIONS
     case 'Editor.setDeltaY':
+      return MODULE_EDITOR_COMMAND_SET_DELTA_Y
     case 'Editor.setLanguageId':
+      return MODULE_EDITOR_COMMAND_SET_LANGUAGE_ID
     case 'Editor.tabCompletion':
+      return MODULE_EDITOR_COMMAND_TAB_COMPLETION
     case 'Editor.toggleBlockComment':
+      return MODULE_EDITOR_COMMAND_TOGGLE_BLOCK_COMMENT
     case 'Editor.toggleComment':
+      return MODULE_EDITOR_COMMAND_TOGGLE_COMMENT
     case 'Editor.type':
+      return MODULE_EDITOR_COMMAND_TYPE
     case 'Editor.undo':
+      return MODULE_EDITOR_COMMAND_UNDO
     case 'Editor.unindent':
-      return MODULE_EDITOR_COMMAND
+      return MODULE_EDITOR_COMMAND_UNINDENT
     case 'ErrorHandling.handleError':
       return MODULE_ERROR_HANDLING
     case 'FileSystem.readFile':
