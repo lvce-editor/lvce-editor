@@ -1,4 +1,4 @@
-import * as EditorSelectCharacterRight from '../src/parts/EditorCommand/EditorCommandSelectCharacterRight.js'
+import * as EditorSelectCharacterRight from '../src/parts/EditorCommandSelectCharacterRight/EditorCommandSelectCharacterRight.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectCharacterRight - no selection', () => {

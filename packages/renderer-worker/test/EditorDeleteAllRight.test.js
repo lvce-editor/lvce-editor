@@ -1,4 +1,4 @@
-import * as EditorDeleteAllRight from '../src/parts/EditorCommand/EditorCommandDeleteAllRight.js'
+import * as EditorDeleteAllRight from '../src/parts/EditorCommandDeleteAllRight/EditorCommandDeleteAllRight.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 

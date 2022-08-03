@@ -1,4 +1,4 @@
-import * as EditorDeleteHorizontalLeft from '../src/parts/EditorCommand/EditorCommandDeleteHorizontalLeft.js'
+import * as EditorDeleteHorizontalLeft from '../src/parts/EditorCommandDeleteHorizontalLeft/EditorCommandDeleteHorizontalLeft.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorDeleteCharacterHorizontalLeft - single character - no selection', () => {

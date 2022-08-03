@@ -19,7 +19,7 @@ const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
 const EditorShowMessage = await import(
-  '../src/parts/EditorCommand/EditorCommandShowMessage.js'
+  '../src/parts/EditorCommandShowMessage/EditorCommandShowMessage.js'
 )
 
 jest.useFakeTimers()

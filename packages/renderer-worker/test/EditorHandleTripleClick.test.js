@@ -1,4 +1,4 @@
-import * as EditorHandleTripleClick from '../src/parts/EditorCommand/EditorCommandHandleTripleClick.js'
+import * as EditorHandleTripleClick from '../src/parts/EditorCommandHandleTripleClick/EditorCommandHandleTripleClick.js'
 
 test.skip('editorHandleTripleClick', () => {
   const editor = {

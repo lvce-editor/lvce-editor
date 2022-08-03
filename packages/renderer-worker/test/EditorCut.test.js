@@ -14,7 +14,7 @@ jest.unstable_mockModule('../src/parts/ClipBoard/ClipBoard.js', () => {
 
 const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
 
-const EditorCut = await import('../src/parts/EditorCommand/EditorCommandCut.js')
+const EditorCut = await import('../src/parts/EditorCommandCut/EditorCommandCut.js')
 
 const EditorSelection = await import(
   '../src/parts/EditorSelection/EditorSelection.js'

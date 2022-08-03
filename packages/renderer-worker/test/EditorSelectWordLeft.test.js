@@ -1,4 +1,4 @@
-import * as EditorSelectWordLeft from '../src/parts/EditorCommandSelectWordLeft/EditorCommandSelectWordLeft.js/index.js'
+import * as EditorSelectWordLeft from '../src/parts/EditorCommandSelectWordLeft/EditorCommandSelectWordLeft.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectWordLeft', () => {

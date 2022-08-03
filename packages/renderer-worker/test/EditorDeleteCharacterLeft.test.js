@@ -1,4 +1,4 @@
-import * as EditorDeleteCharacterLeft from '../src/parts/EditorCommand/EditorCommandDeleteCharacterLeft.js'
+import * as EditorDeleteCharacterLeft from '../src/parts/EditorCommandDeleteCharacterLeft/EditorCommandDeleteCharacterLeft.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorDeleteCharacterLeft', () => {

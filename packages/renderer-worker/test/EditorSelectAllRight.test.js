@@ -1,4 +1,4 @@
-import * as EditorSelectAllRight from '../src/parts/EditorCommand/EditorCommandSelectAllRight.js'
+import * as EditorSelectAllRight from '../src/parts/EditorCommandSelectAllRight/EditorCommandSelectAllRight.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 

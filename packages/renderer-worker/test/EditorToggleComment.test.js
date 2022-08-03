@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import * as EditorToggleComment from '../src/parts/EditorCommand/EditorCommandToggleComment.js'
+import * as EditorToggleComment from '../src/parts/EditorCommandToggleComment/EditorCommandToggleComment.js'
 import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 import * as Languages from '../src/parts/Languages/Languages.js'

@@ -1,4 +1,4 @@
-import * as EditorDeleteWordRight from '../src/parts/EditorCommand/EditorCommandDeleteWordRight.js'
+import * as EditorDeleteWordRight from '../src/parts/EditorCommandDeleteWordRight/EditorCommandDeleteWordRight.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
