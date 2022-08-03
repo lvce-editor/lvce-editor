@@ -23,7 +23,7 @@
     "jsonc-parser": "^3.1.0",
     "lines-and-columns": "^2.0.3",
     "open": "^8.4.0",
-    "p-queue": "^7.2.0",
+    "p-queue": "^7.3.0",
     "parse-json": "^6.0.2",
     "tail": "^2.2.4",
     "tar-fs": "^2.1.1",

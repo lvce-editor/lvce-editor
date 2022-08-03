@@ -12,8 +12,8 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@playwright/test": "^1.24.1",
-    "@types/node": "^18.6.2"
+    "@playwright/test": "^1.24.2",
+    "@types/node": "^18.6.3"
   },
   "xo": {
     "rules": {

@@ -22,7 +22,7 @@
   "license": "MIT",
   "devDependencies": {
     "msw": "^0.44.2",
-    "node-fetch": "^3.2.9"
+    "node-fetch": "^3.2.10"
   },
   "jest": {
     "moduleNameMapper": {
