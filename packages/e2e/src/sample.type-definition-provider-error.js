@@ -6,7 +6,8 @@ import {
   expect,
 } from './_testFrameWork.js'
 
-test('sample.type-definition-provider-error', async () => {
+// TODO test is flaky https://github.com/lvce-editor/lvce-editor/runs/7658611842?check_suite_focus=true
+test.skip('sample.type-definition-provider-error', async () => {
   const tmpDir = await getTmpDir()
   await writeFile(
     `${tmpDir}/test.js`,
