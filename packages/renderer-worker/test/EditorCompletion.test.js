@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import * as Editor from '../src/parts/Editor/Editor.js'
-import * as EditorCompletion from '../src/parts/EditorCommand/EditorCommandCompletion.js'
+import * as EditorCompletion from '../src/parts/EditorCommandCompletion/EditorCommandCompletion.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
 import * as EditorBlur from '../src/parts/EditorCommandBlur/EditorCommandBlur.js'

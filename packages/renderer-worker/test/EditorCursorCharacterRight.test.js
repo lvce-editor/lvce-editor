@@ -1,4 +1,4 @@
-import * as EditorCursorCharacterRight from '../src/parts/EditorCommand/EditorCommandCursorCharacterRight.js'
+import * as EditorCursorCharacterRight from '../src/parts/EditorCommandCursorCharacterRight/EditorCommandCursorCharacterRight.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorCursorCharacterRight', () => {

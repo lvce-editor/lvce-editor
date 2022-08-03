@@ -1,4 +1,4 @@
-import * as EditorMoveRectangleSelection from '../src/parts/EditorCommandMoveRectangleSelection/EditorCommandMoveRectangleSelection.js/index.js'
+import * as EditorMoveRectangleSelection from '../src/parts/EditorCommandMoveRectangleSelection/EditorCommandMoveRectangleSelection.js'
 import * as EditorMoveSelection from '../src/parts/EditorCommandMoveSelection/EditorCommandMoveSelection.js'
 
 test.skip('editorMoveRectangleSelection', () => {

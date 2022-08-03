@@ -1,4 +1,4 @@
-import * as EditorCursorHome from '../src/parts/EditorCommand/EditorCommandCursorHome.js'
+import * as EditorCursorHome from '../src/parts/EditorCommandCursorHome/EditorCommandCursorHome.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorCursorHome', () => {

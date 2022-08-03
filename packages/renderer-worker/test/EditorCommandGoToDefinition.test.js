@@ -11,7 +11,7 @@ jest.unstable_mockModule(
   })
 )
 jest.unstable_mockModule(
-  '../src/parts/EditorCommand/EditorCommandShowMessage.js',
+  '../src/parts/EditorCommandShowMessage/EditorCommandShowMessage.js',
   () => ({
     editorShowMessage: jest.fn().mockImplementation(() => {
       throw new Error('not implemented')
@@ -27,7 +27,7 @@ const EditorGoToDefinition = await import(
 )
 
 const EditorShowMessage = await import(
-  '../src/parts/EditorCommandShowMessage/EditorCommandShowMessage.jsf'
+  '../src/parts/EditorCommandShowMessage/EditorCommandShowMessage.js'
 )
 
 beforeEach(() => {

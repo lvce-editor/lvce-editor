@@ -1,4 +1,4 @@
-import * as EditorCursorLeft from '../src/parts/EditorCommand/EditorCommandCursorCharacterLeft.js'
+import * as EditorCursorLeft from '../src/parts/EditorCommandCursorCharacterLeft/EditorCommandCursorCharacterLeft.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorCursorCharacterLeft - at start', () => {

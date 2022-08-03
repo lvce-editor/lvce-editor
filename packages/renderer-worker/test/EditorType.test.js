@@ -24,7 +24,7 @@ jest.unstable_mockModule(
 )
 
 const EditorType = await import(
-  '../src/parts/EditorCommand/EditorCommandType.js'
+  '../src/parts/EditorCommandType/EditorCommandType.js'
 )
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'

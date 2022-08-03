@@ -27,7 +27,7 @@ const EditorGoToTypeDefinition = await import(
 )
 
 const EditorShowMessage = await import(
-  '../src/parts/EditorCommand/EditorCommandShowMessage.js'
+  '../src/parts/EditorCommandShowMessage/EditorCommandShowMessage.js'
 )
 
 beforeEach(() => {

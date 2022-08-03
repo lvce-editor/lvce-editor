@@ -1,4 +1,4 @@
-import * as EditorCursorEnd from '../src/parts/EditorCommand/EditorCommandCursorEnd.js'
+import * as EditorCursorEnd from '../src/parts/EditorCommandCursorEnd/EditorCommandCursorEnd.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorCursorEnd', () => {
