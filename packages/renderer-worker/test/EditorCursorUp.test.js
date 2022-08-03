@@ -1,4 +1,4 @@
-import * as EditorCursorUp from '../src/parts/EditorCommand/EditorCommandCursorUp.js'
+import * as EditorCursorUp from '../src/parts/EditorCommandCursorUp/EditorCommandCursorUp.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorCursorUp - at start of file', () => {

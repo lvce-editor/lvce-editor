@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import * as EditorPaste from '../src/parts/EditorCommand/EditorCommandPaste.js'
+import * as EditorPaste from '../src/parts/EditorCommandPaste/EditorCommandPaste.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 

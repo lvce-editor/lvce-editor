@@ -1,4 +1,4 @@
-import * as EditorCursorWordPartLeft from '../src/parts/EditorCommand/EditorCommandCursorWordPartLeft.js'
+import * as EditorCursorWordPartLeft from '../src/parts/EditorCommandCursorWordPartLeft/EditorCommandCursorWordPartLeft.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorCursorWordPartLeft - camelCase', () => {

@@ -1,4 +1,4 @@
-import * as EditorSelectCharacterLeft from '../src/parts/EditorCommand/EditorCommandSelectCharacterLeft.js'
+import * as EditorSelectCharacterLeft from '../src/parts/EditorCommandSelectCharacterLeft/EditorCommandSelectCharacterLeft.js'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 test('editorSelectCharacterLeft - single character', () => {

@@ -1,5 +1,5 @@
 import * as EditorMoveSelection from '../src/parts/EditorCommandMoveSelection/EditorCommandMoveSelection.js'
-import * as EditorMoveSelectionPx from '../src/parts/EditorCommand/EditorCommandMoveSelectionPx.js'
+import * as EditorMoveSelectionPx from '../src/parts/EditorCommandMoveSelectionPx/EditorCommandMoveSelectionPx.js'
 
 test.skip('editorMoveSelectionPx', () => {
   const editor = {
