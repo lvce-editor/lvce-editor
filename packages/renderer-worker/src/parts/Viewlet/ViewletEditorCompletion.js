@@ -101,8 +101,10 @@ export const loadContent = async (state) => {
   const editor = getEditor()
   const completionItems = await getCompletions(editor)
   const filteredCompletionItems = filterCompletionItems(completionItems, '')
-  const x = EditorPosition.x(editor, editor.cursor)
-  const y = EditorPosition.y(editor, editor.cursor)
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
+  const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const visibleItems = getVisibleItems(filteredCompletionItems)
   console.log({ completionItems, filteredCompletionItems, visibleItems })
   return {
@@ -129,8 +131,10 @@ export const handleError = async (error) => {
 export const loadingContent = () => {
   const editor = getEditor()
   console.log('show loading')
-  const x = EditorPosition.x(editor, editor.cursor)
-  const y = EditorPosition.y(editor, editor.cursor)
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
+  const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const changes = [
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'EditorCompletion',

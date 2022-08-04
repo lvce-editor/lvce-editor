@@ -26,8 +26,10 @@ export const open = async (editor) => {
   // TODO race condition, what is when editor is closed before promise resolves
 
   if (prepareRenameResult.canRename) {
-    const x = EditorPosition.x(editor, editor.cursor)
-    const y = EditorPosition.y(editor, editor.cursor)
+    const rowIndex = editor.selections[0]
+    const columnIndex = editor.selections[1]
+    const x = EditorPosition.x(editor, rowIndex, columnIndex)
+    const y = EditorPosition.y(editor, rowIndex, columnIndex)
     // const prepareRenameResult = await prepareRename(editor)
     // console.log({ prepareRenameResult })
     await RendererProcess.invoke(

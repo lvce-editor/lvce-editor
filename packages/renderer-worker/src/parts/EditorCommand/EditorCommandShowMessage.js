@@ -10,8 +10,8 @@ export const editorShowMessage = async (editor, position, message, isError) => {
   Assert.object(editor)
   Assert.object(position)
   Assert.string(message)
-  const x = EditorPosition.x(editor, position)
-  const y = EditorPosition.y(editor, position)
+  const x = EditorPosition.x(editor, position.rowIndex, position.columnIndex)
+  const y = EditorPosition.y(editor, position.rowIndex, position.columnIndex)
   const displayErrorMessage = message
   await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
