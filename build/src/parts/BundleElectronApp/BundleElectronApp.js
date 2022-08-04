@@ -271,9 +271,13 @@ export const build = async () => {
     Path.absolute('build/.tmp/cachedDependencies'),
     dependencyCacheHash
   )
+  const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
   const commitHash = await CommitHash.getCommitHash()
 
-  if (existsSync(dependencyCachePath)) {
+  if (
+    existsSync(dependencyCachePath) &&
+    existsSync(dependencyCachePathFinished)
+  ) {
     console.info('[build step skipped] bundleElectronAppDependencies')
   } else {
     console.time('bundleElectronAppDependencies')
@@ -395,4 +399,9 @@ export const build = async () => {
   console.time('copyPlaygroundFiles')
   await copyPlaygroundFiles({ arch })
   console.timeEnd('copyPlaygroundFiles')
+
+  await WriteFile.writeFile({
+    to: dependencyCachePathFinished,
+    content: '1',
+  })
 }
