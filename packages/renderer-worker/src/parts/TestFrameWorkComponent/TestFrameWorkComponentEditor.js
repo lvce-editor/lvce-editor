@@ -31,3 +31,11 @@ export const cursorCharacterLeft = async () => {
 export const copyLineDown = async () => {
   await Command.execute('Editor.copyLineDown')
 }
+
+export const cursorDown = async () => {
+  await Command.execute('Editor.cursorDown')
+}
+
+export const cursorUp = async () => {
+  await Command.execute('Editor.cursorUp')
+}
