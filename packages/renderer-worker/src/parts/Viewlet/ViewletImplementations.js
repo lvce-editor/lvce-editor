@@ -9,7 +9,9 @@ export const name = 'Implementations'
 // e.g. (21ms activation event, 11ms getReferences) => (11ms getReferences)
 const getImplementations = async () => {
   const editor = Viewlet.state.instances.EditorText.state
-  const offset = TextDocument.offsetAt(editor, editor.cursor)
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
+  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const implementations =
     await ExtensionHostImplementation.executeImplementationProvider(
       editor,

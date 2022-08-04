@@ -10,24 +10,28 @@ export const state = {
 }
 
 const prepareRename = async (editor) => {
-  const offset = TextDocument.offsetAt(editor, editor.cursor)
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
+  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   return ExtensionHostRename.executePrepareRenameProvider(editor, offset)
 }
 
 const rename = (editor, newName) => {
-  const offset = TextDocument.offsetAt(editor, editor.cursor)
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
+  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   return ExtensionHostRename.executeRenameProvider(editor, offset)
 }
 
 export const open = async (editor) => {
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
   // TODO handle error and add tests for handled error
   const prepareRenameResult = await prepareRename(editor)
 
   // TODO race condition, what is when editor is closed before promise resolves
 
   if (prepareRenameResult.canRename) {
-    const rowIndex = editor.selections[0]
-    const columnIndex = editor.selections[1]
     const x = EditorPosition.x(editor, rowIndex, columnIndex)
     const y = EditorPosition.y(editor, rowIndex, columnIndex)
     // const prepareRenameResult = await prepareRename(editor)
@@ -43,7 +47,8 @@ export const open = async (editor) => {
       /* EditorError.show */ 3900,
       /* editor */ editor,
       /* message */ 'You cannot rename this element',
-      /* position */ editor.cursor
+      /* rowIndex */ rowIndex,
+      /* columnIndex */ columnIndex
     )
   }
 }

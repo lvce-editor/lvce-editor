@@ -12,8 +12,8 @@ import * as EditorShowMessage from './EditorCommandShowMessage.js'
 // TODO show some kind of message maybe ("No Definition found")
 
 // TODO possible to do this with events/state machine instead of promises -> enables canceling operations / concurrent calls
-const getTypeDefinition = async (editor, position) => {
-  const offset = TextDocument.offsetAt(editor, position)
+const getTypeDefinition = async (editor, rowIndex, columnIndex) => {
+  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const definition =
     await ExtensionHostTypeDefinition.executeTypeDefinitionProvider(
       editor,
@@ -42,7 +42,11 @@ export const editorGoToTypeDefinition = async (
     Assert.object(editor)
     Assert.object(position)
     Assert.boolean(explicit)
-    const typeDefinition = await getTypeDefinition(editor, position)
+    const typeDefinition = await getTypeDefinition(
+      editor,
+      position.rowIndex,
+      position.columnIndex
+    )
     // TODO if editor is already disposed at this point, do nothing
     if (!typeDefinition) {
       // TODO show popup that no definition was found

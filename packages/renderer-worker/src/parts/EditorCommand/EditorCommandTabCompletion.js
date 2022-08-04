@@ -5,11 +5,9 @@ import * as Assert from '../Assert/Assert.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
 
 const getTabCompletion = async (editor) => {
-  const position = {
-    rowIndex: editor.selections[0],
-    columnIndex: editor.selections[1],
-  }
-  const offset = TextDocument.offsetAt(editor, position)
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
+  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const tabCompletion =
     await ExtensionHostTabCompletion.executeTabCompletionProvider(
       editor,
