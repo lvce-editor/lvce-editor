@@ -39,3 +39,11 @@ export const cursorDown = async () => {
 export const cursorUp = async () => {
   await Command.execute('Editor.cursorUp')
 }
+
+export const cursorWordLeft = async () => {
+  await Command.execute('Editor.cursorWordLeft')
+}
+
+export const cursorWordRight = async () => {
+  await Command.execute('Editor.cursorWordRight')
+}
