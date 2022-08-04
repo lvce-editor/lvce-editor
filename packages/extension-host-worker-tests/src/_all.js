@@ -7,6 +7,9 @@ import { fileURLToPath } from 'url'
 const SKIPPED = [
   'sample.reference-provider-error.html',
   'sample.reference-provider-no-results.html',
+  'sample.brace-completion-provider-error-spelling.html',
+  'sample.brace-completion-provider-error.html',
+  'sample.brace-completion-provider.html',
 ]
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -15,15 +18,20 @@ const root = join(__dirname, '..', '..', '..')
 const SERVER_PATH = join(root, 'packages', 'server', 'src', 'server.js')
 
 const isTestFile = (dirent) => {
-  return dirent.endsWith('.html') && dirent !== 'index.html'
+  return (
+    dirent.endsWith('.html') &&
+    dirent !== 'index.html' &&
+    dirent !== '_template.html'
+  )
 }
 
 const getRelativePath = (testFile) => {
-  return join(__dirname, testFile).slice(root.length)
+  return join(root, 'tests', testFile).slice(root.length)
 }
 
 const getPaths = async () => {
-  const dirents = await readdir(__dirname)
+  const testsPath = join(root, 'static', 'tests')
+  const dirents = await readdir(testsPath)
   const testFiles = dirents.filter(isTestFile)
   return testFiles
 }
@@ -33,6 +41,7 @@ const testFile = async (page, name) => {
     console.info(`[skipped] ${name}`)
     return
   }
+  console.info(`[starting] ${name}`)
   const relativePath = getRelativePath(name)
   const url = `http://localhost:3000${relativePath}`
   await page.goto(url)
