@@ -29,23 +29,18 @@ const getTypeDefinitionErrorMessage = (error) => {
   return `${error}`
 }
 
-export const editorGoToTypeDefinition = async (
-  editor,
-  position = editor.cursor,
-  explicit = true
-) => {
+export const editorGoToTypeDefinition = async (editor, explicit = true) => {
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
   try {
-    // TODO position should not be of type array
-    if (Array.isArray(position)) {
-      position = position[0]
-    }
     Assert.object(editor)
-    Assert.object(position)
+    Assert.number(rowIndex)
+    Assert.number(columnIndex)
     Assert.boolean(explicit)
     const typeDefinition = await getTypeDefinition(
       editor,
-      position.rowIndex,
-      position.columnIndex
+      rowIndex,
+      columnIndex
     )
     // TODO if editor is already disposed at this point, do nothing
     if (!typeDefinition) {
@@ -53,7 +48,8 @@ export const editorGoToTypeDefinition = async (
       // TODO if there was an error, show popup that go to definition resulted in an error
       return EditorShowMessage.editorShowMessage(
         editor,
-        position,
+        rowIndex,
+        columnIndex,
         'No type definition found',
         /* isError */ false
       )
@@ -104,7 +100,8 @@ export const editorGoToTypeDefinition = async (
       const displayErrorMessage = getTypeDefinitionErrorMessage(error)
       await EditorShowMessage.editorShowMessage(
         /* editor */ editor,
-        /* position */ position,
+        /* rowIndex */ rowIndex,
+        /* columnIndex */ columnIndex,
         /* message */ displayErrorMessage,
         /* isError */ false
       )
@@ -116,7 +113,8 @@ export const editorGoToTypeDefinition = async (
     const displayErrorMessage = getTypeDefinitionErrorMessage(error)
     await EditorShowMessage.editorShowMessage(
       /* editor */ editor,
-      /* position */ position,
+      /* rowIndex */ rowIndex,
+      /* columnIndex */ columnIndex,
       /* message */ displayErrorMessage,
       /* isError */ true
     )

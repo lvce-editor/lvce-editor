@@ -4,14 +4,6 @@ import { readdir, rm } from 'fs/promises'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
-const SKIPPED = [
-  'sample.reference-provider-error.html',
-  'sample.reference-provider-no-results.html',
-  'sample.brace-completion-provider-error-spelling.html',
-  'sample.brace-completion-provider-error.html',
-  'sample.brace-completion-provider.html',
-]
-
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = join(__dirname, '..', '..', '..')
 
@@ -37,10 +29,6 @@ const getPaths = async () => {
 }
 
 const testFile = async (page, name) => {
-  if (SKIPPED.includes(name)) {
-    console.info(`[skipped] ${name}`)
-    return
-  }
   console.info(`[starting] ${name}`)
   const relativePath = getRelativePath(name)
   const url = `http://localhost:3000${relativePath}`

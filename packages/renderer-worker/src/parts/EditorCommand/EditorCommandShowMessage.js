@@ -6,12 +6,19 @@ export const state = {
   timeout: -1,
 }
 
-export const editorShowMessage = async (editor, position, message, isError) => {
+export const editorShowMessage = async (
+  editor,
+  rowIndex,
+  columnIndex,
+  message,
+  isError
+) => {
   Assert.object(editor)
-  Assert.object(position)
+  Assert.number(rowIndex)
+  Assert.number(columnIndex)
   Assert.string(message)
-  const x = EditorPosition.x(editor, position.rowIndex, position.columnIndex)
-  const y = EditorPosition.y(editor, position.rowIndex, position.columnIndex)
+  const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const displayErrorMessage = message
   await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
