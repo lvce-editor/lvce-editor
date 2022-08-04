@@ -4,21 +4,19 @@ import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as ExtensionHostRename from '../ExtensionHost/ExtensionHostRename.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as Assert from '../Assert/Assert.js'
 
+// TODO memory leak
 export const state = {
   editor: undefined,
 }
 
-const prepareRename = async (editor) => {
-  const rowIndex = editor.selections[0]
-  const columnIndex = editor.selections[1]
+const prepareRename = async (editor, rowIndex, columnIndex) => {
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   return ExtensionHostRename.executePrepareRenameProvider(editor, offset)
 }
 
-const rename = (editor, newName) => {
-  const rowIndex = editor.selections[0]
-  const columnIndex = editor.selections[1]
+const rename = (editor, rowIndex, columnIndex, newName) => {
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   return ExtensionHostRename.executeRenameProvider(editor, offset)
 }
@@ -26,8 +24,11 @@ const rename = (editor, newName) => {
 export const open = async (editor) => {
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]
+  Assert.number(rowIndex)
+  Assert.number(columnIndex)
+
   // TODO handle error and add tests for handled error
-  const prepareRenameResult = await prepareRename(editor)
+  const prepareRenameResult = await prepareRename(editor, rowIndex, columnIndex)
 
   // TODO race condition, what is when editor is closed before promise resolves
 
@@ -86,10 +87,15 @@ const applyWorkspaceEdits = async (editor, workspaceEdits) => {
 }
 
 export const finish = async (editor) => {
+  // TODO what if cursor position changes while rename is in progress?
+  // TODO what happens if file content changes while rename is in progress?
+  // TODO what happens when file is closed while rename is in progress?
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
   const newName = await RendererProcess.invoke(/* EditorRename.finish */ 4513)
   console.log('do actual rename', { value: newName })
   // TODO support canceling rename (e.g. when user presses escape)
-  const workspaceEdits = await rename(editor, newName)
+  const workspaceEdits = await rename(editor, rowIndex, columnIndex, newName)
   await applyWorkspaceEdits(editor, workspaceEdits)
   // console.log({ workspaceEdits })
   // Editor.scheduleDocumentAndSelections(editor)

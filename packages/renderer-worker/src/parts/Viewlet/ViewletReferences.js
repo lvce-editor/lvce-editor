@@ -5,7 +5,9 @@ import * as ViewletLocations from './ViewletLocations.js'
 
 const getReferences = async () => {
   const editor = Viewlet.state.instances.EditorText.state
-  const offset = TextDocument.offsetAt(editor, editor.cursor)
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
+  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const references = await ExtensionHostReferences.executeReferenceProvider(
     editor,
     offset

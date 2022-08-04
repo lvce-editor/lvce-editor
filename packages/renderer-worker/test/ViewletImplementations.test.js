@@ -1,16 +1,15 @@
 import { jest } from '@jest/globals'
 import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
 
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
+
 beforeAll(() => {
   Viewlet.state.instances = Object.create(null)
   Viewlet.state.instances.EditorText = {
     state: {
       uri: '',
       lines: [],
-      cursor: {
-        rowIndex: 0,
-        columnIndex: 0,
-      },
+      selections: EditorSelection.fromRange(0, 0, 0, 0),
     },
   }
 })

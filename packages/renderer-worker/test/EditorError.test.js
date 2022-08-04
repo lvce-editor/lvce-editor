@@ -36,10 +36,12 @@ test('show', async () => {
   }
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  await EditorError.show(editor, 'No Definition found', {
-    rowIndex: 2,
-    columnIndex: 2,
-  })
+  await EditorError.show(
+    editor,
+    'No Definition found',
+    /* rowIndex */ 2,
+    /* columnIndex */ 2
+  )
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
     'EditorError.show',
