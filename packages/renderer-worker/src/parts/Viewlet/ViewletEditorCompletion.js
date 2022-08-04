@@ -122,7 +122,8 @@ export const handleError = async (error) => {
   const editor = getEditor()
   await EditorShowMessage.editorShowMessage(
     /* editor */ editor,
-    /* position */ { rowIndex: 0, columnIndex: 0 },
+    /* rowIndex */ 0,
+    /* columnIndex */ 0,
     /* message */ displayErrorMessage,
     /* isError */ true
   )

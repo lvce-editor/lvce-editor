@@ -6,6 +6,15 @@ export const state = {
   timeout: -1,
 }
 
+/**
+ *
+ * @param {any} editor
+ * @param {number} rowIndex
+ * @param {number} columnIndex
+ * @param {string} message
+ * @param {boolean} isError
+ * @returns
+ */
 export const editorShowMessage = async (
   editor,
   rowIndex,
@@ -42,8 +51,22 @@ export const editorShowMessage = async (
   return editor
 }
 
-export const showErrorMessage = (editor, position, message) => {
-  return editorShowMessage(editor, position, message, /* isError */ true)
+/**
+ *
+ * @param {any} editor
+ * @param {number} rowIndex
+ * @param {number} columnIndex
+ * @param {string} message
+ * @returns
+ */
+export const showErrorMessage = (editor, rowIndex, columnIndex, message) => {
+  return editorShowMessage(
+    editor,
+    rowIndex,
+    columnIndex,
+    message,
+    /* isError */ true
+  )
 }
 
 export const editorHideMessage = async (editor) => {
