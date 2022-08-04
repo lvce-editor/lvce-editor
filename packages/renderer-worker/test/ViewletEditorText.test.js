@@ -44,7 +44,7 @@ test('resize - increase height', () => {
           topIndex: 0,
         },
       ],
-      [],
+      new Uint32Array(),
     ],
   ])
 })
@@ -92,7 +92,7 @@ test('resize - same height', () => {
           topIndex: 0,
         },
       ],
-      [],
+      new Uint32Array(),
     ],
   ])
 })
@@ -137,7 +137,7 @@ test('resize - reduce height', () => {
           topIndex: 0,
         },
       ],
-      [],
+      new Uint32Array(),
     ],
   ])
 })
