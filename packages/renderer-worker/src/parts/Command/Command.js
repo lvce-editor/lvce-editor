@@ -386,6 +386,54 @@ const loadModule = (moduleId) => {
       return import('../EditorCommandHandleNativeSelectionChange/EditorCommandHandleNativeSelectionChange.js')
     case MODULE_EDITOR_COMMAND_HANDLE_SCROLL_BAR_CLICK:
       return import('../EditorCommandHandleScrollBarClick/EditorCommandHandleScrollBarClick.ipc.js')
+    case MODULE_EDITOR_COMMAND_SET_DECORATIONS:
+      return import('../EditorCommandSetDecorations/EditorCommandSetDecorations.ipc.js')
+    case MODULE_EDITOR_COMMAND_HANDLE_SINGLE_CLICK:
+      return import('../EditorCommandHandleSingleClick/EditorCommandHandleSingleClick.ipc.js')
+    case MODULE_EDITOR_COMMAND_HANDLE_TAB:
+      return import('../EditorCommandHandleTab/EditorCommandHandleTab.ipc.js')
+    case MODULE_EDITOR_COMMAND_HANDLE_TOUCH_END:
+      return import('../EditorCommandHandleTouchEnd/EditorCommandHandleTouchEnd.js')
+    case MODULE_EDITOR_COMMAND_HANDLE_TOUCH_MOVE:
+      return import('../EditorCommandHandleTouchMove/EditorCommandHandleTouchMove.js')
+    case MODULE_EDITOR_COMMAND_HANDLE_TOUCH_START:
+      return import('../EditorCommandHandleTouchStart/EditorCommandHandleTouchStart.js')
+    case MODULE_EDITOR_COMMAND_HANDLE_TRIPLE_CLICK:
+      return import('../EditorCommandHandleTripleClick/EditorCommandHandleTripleClick.ipc.js')
+    case MODULE_EDITOR_COMMAND_HANDLE_WHEEL:
+      return import('../EditorCommandHandleWheel/EditorCommandHandleWheel.ipc.js')
+    case MODULE_EDITOR_COMMAND_INDENT:
+      return import('../EditorCommandIndent/EditorCommandIndent.js')
+    case MODULE_EDITOR_COMMAND_INDENT_LESS:
+      return import('../EditorCommandIndentLess/EditorCommandIndentLess.ipc.js')
+    case MODULE_EDITOR_COMMAND_INDENT_MORE:
+      return import('../EditorCommandIndentMore/EditorCommandIndentMore.ipc.js')
+    case MODULE_EDITOR_COMMAND_INDENT_SELECTION:
+      return import('../EditorCommandIndentSelection/EditorCommandIndentSelection.ipc.js')
+    case MODULE_EDITOR_COMMAND_INSERT_LINE_BREAK:
+      return import('../EditorCommandInsertLineBreak/EditorCommandInsertLineBreak.ipc.js')
+    case MODULE_EDITOR_COMMAND_MOVE_LINE_DOWN:
+      return import('../EditorCommandMoveLineDown/EditorCommandMoveLineDown.ipc.js')
+    case MODULE_EDITOR_COMMAND_MOVE_LINE_UP:
+      return import('../EditorCommandMoveLineUp/EditorCommandMoveLineUp.ipc.js')
+    case MODULE_EDITOR_COMMAND_MOVE_RECTANGLE_SELECTION:
+      return import('../EditorCommandMoveRectangleSelection/EditorCommandMoveRectangleSelection.ipc.js')
+    case MODULE_EDITOR_COMMAND_MOVE_RECTANGLE_SELECTION_PX:
+      return import('../EditorCommandMoveRectangleSelectionPx/EditorCommandMoveRectangleSelectionPx.ipc.js')
+    case MODULE_EDITOR_COMMAND_MOVE_SELECTION:
+      return import('../EditorCommandMoveSelection/EditorCommandMoveSelection.ipc.js')
+    case MODULE_EDITOR_COMMAND_MOVE_SELECTION_PX:
+      return import('../EditorCommandMoveSelectionPx/EditorCommandMoveSelectionPx.ipc.js')
+    case MODULE_EDITOR_COMMAND_PASTE:
+      return import('../EditorCommandPaste/EditorCommandPaste.ipc.js')
+    case MODULE_EDITOR_COMMAND_PASTE_TEXT:
+      return import('../EditorCommandPasteText/EditorCommandPasteText.ipc.js')
+    case MODULE_EDITOR_COMMAND_POSITION:
+      return import('../EditorCommandPosition/EditorCommandPosition.js')
+    case MODULE_EDITOR_COMMAND_REPLACE_RANGE:
+      return import('../EditorCommandReplaceRange/EditorCommandReplaceRange.js')
+    case MODULE_EDITOR_COMMAND_REPLACE_SELECTION:
+      return import('../EditorCommandReplaceSelection/EditorCommandReplaceSelection.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }
@@ -688,51 +736,97 @@ const getModuleId = (commandId) => {
     case 'EditorCompletion.selectCurrent':
       return MODULE_VIEWLET_EDITOR_COMPLETION
     case 'EditorCursorDown.editorCursorsDown':
+      return MODULE_EDITOR_COMMAND_CURSOR_DOWN
     case 'EditorCursorCharacterLeft.editorCursorCharacterLeft':
+      return MODULE_EDITOR_COMMAND_CURSOR_CHARACTER_LEFT
     case 'EditorCursorCharacterRight.editorCursorsCharacterRight':
+      return MODULE_EDITOR_COMMAND_CURSOR_CHARACTER_RIGHT
     case 'EditorCursorUp.editorCursorsUp':
+      return MODULE_EDITOR_COMMAND_CURSOR_UP
     case 'EditorType.editorType':
+      return MODULE_EDITOR_COMMAND_TYPE
     case 'EditorDeleteLeft.editorDeleteCharacterLeft':
+      return MODULE_EDITOR_COMMAND_DELETE_CHARACTER_LEFT
     case 'EditorDeleteRight.editorDeleteCharacterRight':
+      return MODULE_EDITOR_COMMAND_DELETE_CHARACTER_RIGHT
     case 'EditorInsertLineBreak.editorInsertLineBreak':
+      return MODULE_EDITOR_COMMAND_INSERT_LINE_BREAK
     case 'EditorCopyLineUp.editorCopyLineUp':
+      return MODULE_EDITOR_COMMAND_COPY_LINE_UP
     case 'EditorCopyLineDown.editorCopyLineDown':
+      return MODULE_EDITOR_COMMAND_COPY_LINE_DOWN
     case 'EditorMoveLineDown.editorMoveLineDown':
+      return MODULE_EDITOR_COMMAND_MOVE_LINE_DOWN
     case 'EditorCursorWordLeft.editorCursorWordLeft':
+      return MODULE_EDITOR_COMMAND_CURSOR_WORD_LEFT
     case 'EditorCursorWordRight.editorCursorWordRight':
+      return MODULE_EDITOR_COMMAND_CURSOR_WORD_PART_RIGHT
     case 'EditorDeleteWordLeft.editorDeleteWordLeft':
+      return MODULE_EDITOR_COMMAND_DELETE_WORD_LEFT
     case 'EditorDeleteWordRight.editorDeleteWordRight':
+      return MODULE_EDITOR_COMMAND_DELETE_WORD_RIGHT
     case 'EditorMoveLineUp.editorMoveLineUp':
+      return MODULE_EDITOR_COMMAND_MOVE_LINE_UP
     case 'EditorTabCompletion.editorTabCompletion':
+      return MODULE_EDITOR_COMMAND_TAB_COMPLETION
     case 'EditorCursorHome.editorCursorsHome':
+      return MODULE_EDITOR_COMMAND_CURSOR_HOME
     case 'EditorCursorEnd.editorCursorEnd':
+      return MODULE_EDITOR_COMMAND_CURSOR_END
     case 'EditorHandleSingleClick.editorHandleSingleClick':
+      return MODULE_EDITOR_COMMAND_HANDLE_SINGLE_CLICK
     case 'EditorSelectWord.editorSelectWord':
+      return MODULE_EDITOR_COMMAND_SELECT_WORD
     case 'EditorToggleBlockComment.editorToggleBlockComment':
+      return MODULE_EDITOR_COMMAND_TOGGLE_BLOCK_COMMENT
     case 'EditorMoveSelection.editorMoveSelection':
+      return MODULE_EDITOR_COMMAND_MOVE_SELECTION
     case 'EditorCut.editorCut':
+      return MODULE_EDITOR_COMMAND_CUT
     case 'EditorCopy.editorCopy':
+      return MODULE_EDITOR_COMMAND_COPY
     case 'EditorSelectAll.editorSelectAll':
+      return MODULE_EDITOR_COMMAND_SELECT_ALL
     case 'EditorMoveRectangleSelection.editorMoveRectangleSelection':
+      return MODULE_EDITOR_COMMAND_MOVE_RECTANGLE_SELECTION
     case 'EditorCursorWordPartRight.editorCursorWordPartRight':
+      return MODULE_EDITOR_COMMAND_CURSOR_WORD_PART_RIGHT
     case 'EditorCursorWordPartLeft.editorCursorWordPartLeft':
+      return MODULE_EDITOR_COMMAND_CURSOR_WORD_PART_LEFT
     case 'EditorBlur.editorBlur':
+      return MODULE_EDITOR_COMMAND_BLUR
     case 'EditorToggleComment.editorToggleComment':
+      return MODULE_EDITOR_COMMAND_TOGGLE_COMMENT
     case 'EditorDeleteAllLeft.editorDeleteAllLeft':
+      return MODULE_EDITOR_COMMAND_DELETE_ALL_LEFT
     case 'EditorDeleteAllRight.editorDeleteAllRight':
+      return MODULE_EDITOR_COMMAND_DELETE_ALL_LEFT
     case 'EditorHandleTripleClick.editorHandleTripleClick':
+      return MODULE_EDITOR_COMMAND_HANDLE_TRIPLE_CLICK
     case 'EditorSelectLine.editorSelectLine':
+      return MODULE_EDITOR_COMMAND_SELECT_LINE
     case 'EditorSave.editorSave':
+      return MODULE_EDITOR_COMMAND_SAVE
     case 'EditorHandleContextMenu.editorHandleContextMenu':
+      return MODULE_EDITOR_COMMAND_HANDLE_CONTEXT_MENU
     case 'EditorSelectCharacterLeft.editorSelectCharacterLeft':
+      return MODULE_EDITOR_COMMAND_SELECT_CHARACTER_LEFT
     case 'EditorSelectCharacterRight.editorSelectCharacterRight':
+      return MODULE_EDITOR_COMMAND_SELECT_CHARACTER_RIGHT
     case 'EditorPasteText.editorPasteText':
+      return MODULE_EDITOR_COMMAND_PASTE_TEXT
     case 'EditorPaste.editorPaste':
+      return MODULE_EDITOR_COMMAND_PASTE
     case 'EditorSetDeltaY.editorSetDeltaY':
+      return MODULE_EDITOR_COMMAND_SET_DELTA_Y
     case 'EditorHandleDoubleClick.editorHandleDoubleClick':
+      return MODULE_EDITOR_COMMAND_HANDLE_DOUBLE_CLICK
     case 'EditorMoveSelectionPx.editorMoveSelectionPx':
+      return MODULE_EDITOR_COMMAND_MOVE_SELECTION_PX
     case 'EditorMoveRectangleSelectionPx.editorMoveRectangleSelectionPx':
+      return MODULE_EDITOR_COMMAND_MOVE_RECTANGLE_SELECTION_PX
     case 'EditorFormat.editorFormat':
+      return MODULE_FORMAT
     case 'EditorHandleMouseMove.editorHandleMouseMove':
     case 'EditorSelectNextOccurrence.editorSelectNextOccurrence':
     case 'EditorSelectAllOccurrences.editorSelectAllOccurrences':
