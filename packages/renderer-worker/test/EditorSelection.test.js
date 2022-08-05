@@ -22,32 +22,14 @@ test('getVisible', () => {
     ],
     selections: new Uint32Array([1, 3, 2, 4, 3, 0, 6, 6, 8, 2, 8, 3]),
   }
-  expect(EditorSelection.getVisible(editor)).toEqual([
-    {
-      height: 20,
-      left: 0,
-      top: 0,
-      width: 48,
-    },
-    {
-      height: 20,
-      left: 0,
-      top: 20,
-      width: 48,
-    },
-    {
-      height: 20,
-      left: 0,
-      top: 40,
-      width: 48,
-    },
-    {
-      height: 20,
-      left: 16,
-      top: 80,
-      width: 8,
-    },
-  ])
+  expect(EditorSelection.getVisible(editor)).toEqual(
+    new Uint32Array([
+      /* top */ 0, /* left */ 0, /* width */ 48, /* height */ 20 /*  */,
+      /* top */ 20, /* left */ 0, /* width */ 48, /* height */ 20 /*  */,
+      /* top */ 40, /* left */ 0, /* width */ 48, /* height */ 20 /*  */,
+      /* top */ 80, /* left */ 16, /* width */ 8, /* height */ 20,
+    ])
+  )
 })
 
 test('getVisible - bug with two lines', () => {
@@ -61,20 +43,12 @@ test('getVisible - bug with two lines', () => {
     lines: ['line 1', 'line 2', 'line 3', 'line 4'],
     selections: new Uint32Array([0, 4, 1, 4]),
   }
-  expect(EditorSelection.getVisible(editor)).toEqual([
-    {
-      height: 20,
-      left: 32,
-      top: 0,
-      width: 16,
-    },
-    {
-      height: 20,
-      left: 0,
-      top: 20,
-      width: 32,
-    },
-  ])
+  expect(EditorSelection.getVisible(editor)).toEqual(
+    new Uint32Array([
+      /* top */ 0, /* left */ 32, /* width */ 16, /* height */ 20 /*  */,
+      /* top */ 20, /* left */ 0, /* width */ 32, /* height */ 20,
+    ])
+  )
 })
 
 test('getVisible - cursors should be treated separately', () => {
@@ -92,7 +66,7 @@ test('getVisible - cursors should be treated separately', () => {
     lines: ['line 1', 'line 2', 'line 3', 'line 4'],
     selections: new Uint32Array([0, 4, 0, 4]),
   }
-  expect(EditorSelection.getVisible(editor)).toEqual([])
+  expect(EditorSelection.getVisible(editor)).toEqual(new Uint32Array([]))
 })
 
 test('getVisible - bug with multiple lines', () => {
@@ -117,26 +91,13 @@ test('getVisible - bug with multiple lines', () => {
     ],
     selections: new Uint32Array([0, 3, 2, 3]),
   }
-  expect(EditorSelection.getVisible(editor)).toEqual([
-    {
-      height: 20,
-      left: 24,
-      top: 0,
-      width: 24,
-    },
-    {
-      height: 20,
-      left: 0,
-      top: 20,
-      width: 48,
-    },
-    {
-      height: 20,
-      left: 0,
-      top: 40,
-      width: 24,
-    },
-  ])
+  expect(EditorSelection.getVisible(editor)).toEqual(
+    new Uint32Array([
+      /* top */ 0, /* left */ 24, /* width */ 24, /* height */ 20 /*  */,
+      /* top */ 20, /* left */ 0, /* width */ 48, /* height */ 20 /*  */,
+      /* top */ 40, /* left */ 0, /* width */ 24, /* height */ 20,
+    ])
+  )
 })
 
 test.skip('applyEdit - emoji ', () => {
