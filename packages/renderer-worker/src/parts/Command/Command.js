@@ -1,14 +1,11 @@
 const MODULE_NOTIFICATION = 2
 const MODULE_ACTIVITY_BAR = 11
 const MODULE_WINDOW = 14
-const MODULE_MAIN = 15
 const MODULE_CONTEXT_MENU = 16
 const MODULE_LAYOUT = 17
 const MODULE_VIEWLET = 18
 const MODULE_WORKBENCH = 19
-const MODULE_VIEWLET_TERMINAL = 20
 const MODULE_QUICK_PICK = 21
-const MODULE_PANEL = 22
 // TODO rename to widgetFind and group together with other widgets (contextMenu, hover, tooltip)
 const MODULE_FIND_WIDGET = 23
 const MODULE_PREFERENCES = 25
@@ -16,16 +13,9 @@ const MODULE_DEVELOPER = 26
 const MODULE_EDITOR_COMMAND = 27
 const MODULE_EDITOR_COMPLETION = 28
 const MODULE_KEY_BINDINGS = 29
-const MODULE_EXTENSIONS = 30
-const MODULE_VIEWLET_EXPLORER = 31
-const MODULE_SOURCE_CONTROL = 32
 const MODULE_COLOR_PICKER = 33
-const MODULE_VIEWLET_EXTENSIONS = 34
-const MODULE_TITLE_BAR = 35
 const MODULE_CLIP_BOARD = 36
 const MODULE_AJAX = 37
-const MODULE_VIEWLET_SIDE_BAR = 38
-const MODULE_STATUS_BAR = 39
 const MODULE_FORMAT = 40
 const MODULE_COLOR_THEME = 41
 const MODULE_ICON_THEME = 42
@@ -49,19 +39,13 @@ const MODULE_EDITOR_RENAME = 60
 const MODULE_EDITOR_ERROR = 62
 const MODULE_KEY_BINDINGS_INITIAL = 63
 const MODULE_SAVE_STATE = 64
-const MODULE_VIEWLET_SOURCE_CONTROL = 65
 const MODULE_SERVICE_WORKER = 66
 const MODULE_IMAGE_PREVIEW = 67
 const MODULE_BASE_64 = 68
 const MODULE_BLOB = 69
 const MODULE_OPEN = 70
 const MODULE_AUDIO = 71
-const MODULE_VIEWLET_STATUS_BAR = 72
 const MODULE_LISTENER = 73
-const MODULE_VIEWLET_SEARCH = 74
-const MODULE_VIEWLET_EDITOR_COMPLETION = 75
-const MODULE_VIEWLET_LOCATIONS = 76
-const MODULE_VIEWLET_PROBLEMS = 77
 const MODULE_SESSION_REPLAY = 78
 const MODULE_DOWNLOAD = 79
 const MODULE_EXTENSION_HOST_CORE = 80
@@ -79,12 +63,8 @@ const loadModule = (moduleId) => {
   switch (moduleId) {
     case MODULE_NOTIFICATION:
       return import('../Notification/Notification.ipc.js')
-    case MODULE_ACTIVITY_BAR:
-      return import('../Viewlet/ViewletActivityBar.ipc.js')
     case MODULE_WINDOW:
       return import('../Window/Window.ipc.js')
-    case MODULE_MAIN:
-      return import('../Viewlet/ViewletMain.ipc.js')
     case MODULE_CONTEXT_MENU:
       return import('../ContextMenu/ContextMenu.ipc.js')
     case MODULE_LAYOUT:
@@ -95,8 +75,6 @@ const loadModule = (moduleId) => {
       return import('../Workbench/Workbench.ipc.js')
     case MODULE_QUICK_PICK:
       return import('../QuickPick/QuickPick.ipc.js')
-    case MODULE_PANEL:
-      return import('../Panel/Panel.ipc.js')
     case MODULE_FIND_WIDGET:
       return import('../FindWidget/FindWidget.ipc.js')
     case MODULE_PREFERENCES:
@@ -107,18 +85,8 @@ const loadModule = (moduleId) => {
       return import('../EditorCommand/EditorCommand.ipc.js')
     case MODULE_KEY_BINDINGS:
       return import('../KeyBindings/KeyBindings.ipc.js')
-    case MODULE_EXTENSIONS:
-      return import('../Extensions/Extensions.ipc.js')
-    case MODULE_VIEWLET_EXPLORER:
-      return import('../Viewlet/ViewletExplorer.ipc.js')
-    case MODULE_SOURCE_CONTROL:
-      return import('../SourceControl/SourceControl.ipc.js')
-    case MODULE_VIEWLET_TERMINAL:
-      return import('../Viewlet/ViewletTerminal.ipc.js')
     case MODULE_COLOR_PICKER:
       return import('../ColorPicker/ColorPicker.ipc.js')
-    case MODULE_VIEWLET_EXTENSIONS:
-      return import('../Viewlet/ViewletExtensions.ipc.js')
     case MODULE_CLIP_BOARD:
       return import('../ClipBoard/ClipBoard.ipc.js')
     case MODULE_AJAX:
@@ -167,8 +135,6 @@ const loadModule = (moduleId) => {
       return import('../KeyBindingsInitial/KeyBindingsInitial.ipc.js')
     case MODULE_SAVE_STATE:
       return import('../SaveState/SaveState.ipc.js')
-    case MODULE_VIEWLET_SOURCE_CONTROL:
-      return import('../Viewlet/ViewletSourceControl.ipc.js')
     case MODULE_SERVICE_WORKER:
       return import('../ServiceWorker/ServiceWorker.ipc.js')
     case MODULE_IMAGE_PREVIEW:
@@ -181,20 +147,8 @@ const loadModule = (moduleId) => {
       return import('../Open/Open.ipc.js')
     case MODULE_AUDIO:
       return import('../Audio/Audio.ipc.js')
-    case MODULE_VIEWLET_SIDE_BAR:
-      return import('../Viewlet/ViewletSideBar.ipc.js')
-    case MODULE_VIEWLET_STATUS_BAR:
-      return import('../Viewlet/ViewletStatusBar.ipc.js')
     case MODULE_LISTENER:
       return import('../Listener/Listener.ipc.js')
-    case MODULE_VIEWLET_SEARCH:
-      return import('../Viewlet/ViewletSearch.ipc.js')
-    case MODULE_VIEWLET_EDITOR_COMPLETION:
-      return import('../Viewlet/ViewletEditorCompletion.ipc.js')
-    case MODULE_VIEWLET_LOCATIONS:
-      return import('../Viewlet/ViewletLocations.ipc.js')
-    case MODULE_VIEWLET_PROBLEMS:
-      return import('../Viewlet/ViewletProblems.ipc.js')
     case MODULE_SESSION_REPLAY:
       return import('../SessionReplay/SessionReplay.ipc.js')
     case MODULE_DOWNLOAD:
@@ -241,60 +195,8 @@ const getModuleId = (commandId) => {
     case 'ExtensionMeta.addExtension':
     case 'ExtensionMeta.addWebExtension':
       return MODULE_EXTENSION_META
-    case 'Main.save':
-    case 'Main.handleDrop':
-    case 'Main.closeActiveEditor':
-    case 'Main.closeAllEditors':
-    case 'Main.handleTabContextMenu':
-    case 'Main.hydrate':
-    case 'Main.openUri':
-    case 'Main.closeEditor':
-    case 'Main.handleTabClick':
-    case 'Main.focusFirst':
-    case 'Main.focusLast':
-    case 'Main.focusPrevious':
-    case 'Main.focusNext':
-    case 'Main.closeFocusedTab':
-    case 'Main.closeOthers':
-    case 'Main.closeTabsRight':
-    case 'Main.closeTabsLeft':
-      return MODULE_MAIN
     case 'Test.execute':
       return MODULE_TEST
-    case 'Explorer.acceptNewFile':
-    case 'Explorer.acceptRename':
-    case 'Explorer.cancelNewFile':
-    case 'Explorer.cancelRename':
-    case 'Explorer.collapseAll':
-    case 'Explorer.copyPath':
-    case 'Explorer.copyRelativePath':
-    case 'Explorer.expandAll':
-    case 'Explorer.focusFirst':
-    case 'Explorer.focusIndex':
-    case 'Explorer.focusLast':
-    case 'Explorer.focusNext':
-    case 'Explorer.focusPrevious':
-    case 'Explorer.getFocusedDirent':
-    case 'Explorer.handleArrowLeft':
-    case 'Explorer.handleArrowRight':
-    case 'Explorer.handleClick':
-    case 'Explorer.handleClickCurrent':
-    case 'Explorer.handleContextMenu':
-    case 'Explorer.handleCopy':
-    case 'Explorer.handleMouseEnter':
-    case 'Explorer.handleMouseLeave':
-    case 'Explorer.handlePaste':
-    case 'Explorer.handleWheel':
-    case 'Explorer.newFile':
-    case 'Explorer.newFolder':
-    case 'Explorer.openContainingFolder':
-    case 'Explorer.removeDirent':
-    case 'Explorer.renameDirent':
-    case 'Explorer.scrollDown':
-    case 'Explorer.scrollUp':
-    case 'Explorer.setDeltaY':
-    case 'Explorer.handleBlur':
-      return MODULE_VIEWLET_EXPLORER
     case 'ColorThemeFromJson.createColorThemeFromJson':
       return MODULE_COLOR_THEME_FROM_JSON
     case 'ClipBoard.readText':
@@ -395,16 +297,6 @@ const getModuleId = (commandId) => {
     case 'FileSystem.writeFile':
     case 'FileSystem.mkdir':
       return MODULE_FILE_SYSTEM
-    case 'SideBar.showOrHideViewlet':
-    case 'SideBar.openViewlet':
-    case 'SideBar.show':
-      return MODULE_VIEWLET_SIDE_BAR
-    case 'ViewletStatusBar.updateStatusBarItems':
-      return MODULE_STATUS_BAR
-    case 'Panel.tabsHandleClick':
-    case 'Panel.openViewlet':
-    case 'Panel.create':
-      return MODULE_PANEL
     case 'Developer.getStartupPerformanceContent':
     case 'Developer.getMemoryUsageContent':
     case 'Developer.startupPerformance':
@@ -428,26 +320,6 @@ const getModuleId = (commandId) => {
     case 'Developer.openProcessExplorer':
     case 'Developer.downloadViewletState':
       return MODULE_DEVELOPER
-    case 'ViewletExtensions.openSuggest':
-    case 'ViewletExtensions.closeSuggest':
-    case 'ViewletExtensions.toggleSuggest':
-    case 'ViewletExtensions.handleInput':
-    case 'ViewletExtensions.handleContextMenu':
-    case 'ViewletExtensions.handleInstall':
-    case 'ViewletExtensions.handleUninstall':
-    case 'ViewletExtensions.handleClick':
-    case 'ViewletExtensions.focusIndex':
-    case 'ViewletExtensions.focusFirst':
-    case 'ViewletExtensions.focusLast':
-    case 'ViewletExtensions.focusPrevious':
-    case 'ViewletExtensions.focusNext':
-    case 'ViewletExtensions.handleWheel':
-    case 'ViewletExtensions.focusNextPage':
-    case 'ViewletExtensions.focusPreviousPage':
-    case 'ViewletExtensions.setDeltaY':
-    case 'ViewletExtensions.handleScrollBarMove':
-    case 'ViewletExtensions.handleScrollBarClick':
-      return MODULE_VIEWLET_EXTENSIONS
     case 'Notification.create':
     case 'Notification.dispose':
     case 'Notification.showWithOptions':
@@ -463,14 +335,6 @@ const getModuleId = (commandId) => {
     case 'ContextMenu.selectCurrent':
     case 'ContextMenu.noop':
       return MODULE_CONTEXT_MENU
-    case 'EditorCompletion.dispose':
-    case 'EditorCompletion.selectIndex':
-    case 'EditorCompletion.focusFirst':
-    case 'EditorCompletion.focusLast':
-    case 'EditorCompletion.focusNext':
-    case 'EditorCompletion.focusPrevious':
-    case 'EditorCompletion.selectCurrent':
-      return MODULE_VIEWLET_EDITOR_COMPLETION
     case 'EditorCursorDown.editorCursorsDown':
     case 'EditorCursorCharacterLeft.editorCursorCharacterLeft':
     case 'EditorCursorCharacterRight.editorCursorsCharacterRight':
@@ -571,8 +435,6 @@ const getModuleId = (commandId) => {
     case 'Preferences.openKeyBindingsJson':
     case 'Preferences.hydrate':
       return MODULE_PREFERENCES
-    case 1300:
-      return MODULE_SOURCE_CONTROL
     case 'Open.openNativeFolder':
     case 'Open.openUrl':
       return MODULE_OPEN
@@ -591,8 +453,6 @@ const getModuleId = (commandId) => {
     case 2133:
     case 'Viewlet.getAllStates':
       return MODULE_VIEWLET
-    case 2260:
-      return MODULE_VIEWLET_STATUS_BAR
     case 'IconTheme.getIconThemeCss':
     case 'IconTheme.hydrate':
     case 'IconTheme.addIcons':
@@ -611,17 +471,6 @@ const getModuleId = (commandId) => {
       return MODULE_BLOB
     case 'Audio.playBell':
       return MODULE_AUDIO
-    case 4510:
-    case 4511:
-    case 4512:
-    case 4513:
-    case 4514:
-    case 4515:
-    case 4516:
-    case 4517:
-    case 4518:
-    case 4519:
-      return MODULE_TITLE_BAR
     case 'TitleBarMenuBar.toggleIndex':
     case 'TitleBarMenuBar.hydrate':
     case 'TitleBarMenuBar.focus':
@@ -640,9 +489,6 @@ const getModuleId = (commandId) => {
     case 'TitleBarMenuBar.handleKeyEscape':
     case 'TitleBarMenuBar.handleKeyArrowLeft':
       return MODULE_TITLE_BAR_MENU
-    case 4870:
-    case 4871:
-      return MODULE_VIEWLET_TERMINAL
     case 'FindInWorkspace.findInWorkspace':
       return MODULE_FIND_IN_WORKSPACE
     case 'RecentlyOpened.getRecentlyOpened':
@@ -665,8 +511,6 @@ const getModuleId = (commandId) => {
     case 'ServiceWorker.hydrate':
     case 'ServiceWorker.uninstall':
       return MODULE_SERVICE_WORKER
-    case 'SourceControl.updateDecorations':
-      return MODULE_VIEWLET_SOURCE_CONTROL
     case 'SaveState.hydrate':
     case 'SaveState.handleVisibilityChange':
       return MODULE_SAVE_STATE
@@ -684,14 +528,6 @@ const getModuleId = (commandId) => {
     case 'LocalStorage.setText':
     case 'LocalStorage.getItem':
       return MODULE_LOCAL_STORAGE
-    case 'Locations.selectIndex':
-    case 'Locations.focusFirst':
-    case 'Locations.focusLast':
-    case 'Locations.focusNext':
-    case 'Locations.focusPrevious':
-    case 'Locations.selectCurrent':
-    case 'Locations.focusIndex':
-      return MODULE_VIEWLET_LOCATIONS
     case 'Menu.show':
     case 'Menu.hide':
     case 'Menu.selectIndex':
@@ -703,15 +539,10 @@ const getModuleId = (commandId) => {
     case 'Menu.handleMouseEnter':
     case 'Menu.selectItem':
       return MODULE_MENU
-    case 'ViewletProblems.focusIndex':
-      return MODULE_VIEWLET_PROBLEMS
     case 'Workspace.setPath':
     case 'Workspace.hydrate':
     case 'Workspace.setUri':
       return MODULE_WORKSPACE
-    case 7650:
-    case 7651:
-      return MODULE_EXTENSIONS
     case 'Base64.decode':
       return MODULE_BASE_64
     case 'ActivityBar.toggleItem':
@@ -745,11 +576,6 @@ const getModuleId = (commandId) => {
     case 'ImagePreview.show':
     case 'ImagePreview.hide':
       return MODULE_IMAGE_PREVIEW
-    case 'ViewletSearch.handleInput':
-    case 'ViewletSearch.handleClick':
-      return MODULE_VIEWLET_SEARCH
-    case 47110:
-      return MODULE_WORKBENCH
     case 'Callback.resolve':
     case 'Callback.reject':
       return MODULE_CALLBACK

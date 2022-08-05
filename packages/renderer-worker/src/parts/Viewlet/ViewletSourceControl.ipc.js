@@ -1,7 +1,9 @@
-import * as Command from '../Command/Command.js'
-import * as ViewletSourceControl from './ViewletSourceControl.js'
 import * as Viewlet from './Viewlet.js'
+import * as ViewletSourceControl from './ViewletSourceControl.js'
 
-export const __initialize__ = () => {
-  Command.register(6532, Viewlet.wrapViewletCommand('Source Control',ViewletSourceControl.acceptInput))
+// prettier-ignore
+export const Commands = {
+  '6532': Viewlet.wrapViewletCommand('Source Control',ViewletSourceControl.acceptInput)
 }
+
+export * from './ViewletSourceControl.js'

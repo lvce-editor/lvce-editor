@@ -3,6 +3,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as Assert from '../Assert/Assert.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Command from '../Command/Command.js'
 
 export const modules = Object.create(null)
 
@@ -20,51 +21,51 @@ export const getModule = (id) => {
   switch (id) {
     // TODO use numeric identifier instead
     case 'Explorer':
-      return import('../Viewlet/ViewletExplorer.js')
+      return import('../Viewlet/ViewletExplorer.ipc.js')
     case 'Run and Debug':
-      return import('../Viewlet/ViewletRunAndDebug.js')
+      return import('../Viewlet/ViewletRunAndDebug.ipc.js')
     case 'Search':
-      return import('../Viewlet/ViewletSearch.js')
+      return import('../Viewlet/ViewletSearch.ipc.js')
     case 'Source Control':
-      return import('../Viewlet/ViewletSourceControl.js')
+      return import('../Viewlet/ViewletSourceControl.ipc.js')
     case 'Terminal':
-      return import('../Viewlet/ViewletTerminal.js')
+      return import('../Viewlet/ViewletTerminal.ipc.js')
     case 'Debug Console':
-      return import('../Viewlet/ViewletDebugConsole.js')
+      return import('../Viewlet/ViewletDebugConsole.ipc.js')
     case 'Extensions':
-      return import('../Viewlet/ViewletExtensions.js')
+      return import('../Viewlet/ViewletExtensions.ipc.js')
     case 'Output':
-      return import('../Viewlet/ViewletOutput.js')
+      return import('../Viewlet/ViewletOutput.ipc.js')
     case 'Problems':
-      return import('../Viewlet/ViewletProblems.js')
+      return import('../Viewlet/ViewletProblems.ipc.js')
     case 'Noop':
-      return import('../Viewlet/ViewletNoop.js')
+      return import('../Viewlet/ViewletNoop.ipc.js')
     case 'EditorText':
       return import('../Viewlet/ViewletEditorText.js')
     case 'EditorPlainText':
       return import('../Viewlet/ViewletEditorPlainText.js')
     case 'EditorImage':
-      return import('../Viewlet/ViewletEditorImage.js')
+      return import('../Viewlet/ViewletEditorImage.ipc.js')
     case 'Clock':
-      return import('../Viewlet/ViewletClock.js')
+      return import('../Viewlet/ViewletClock.ipc.js')
     case 'ActivityBar':
-      return import('../Viewlet/ViewletActivityBar.js')
+      return import('../Viewlet/ViewletActivityBar.ipc.js')
     case 'Panel':
-      return import('../Viewlet/ViewletPanel.js')
+      return import('../Viewlet/ViewletPanel.ipc.js')
     case 'SideBar':
-      return import('../Viewlet/ViewletSideBar.js')
+      return import('../Viewlet/ViewletSideBar.ipc.js')
     case 'TitleBar':
-      return import('../Viewlet/ViewletTitleBar.js')
+      return import('../Viewlet/ViewletTitleBar.ipc.js')
     case 'StatusBar':
-      return import('../Viewlet/ViewletStatusBar.js')
+      return import('../Viewlet/ViewletStatusBar.ipc.js')
     case 'Main':
-      return import('../Viewlet/ViewletMain.js')
+      return import('../Viewlet/ViewletMain.ipc.js')
     case 'EditorCompletion':
-      return import('../Viewlet/ViewletEditorCompletion.js')
+      return import('../Viewlet/ViewletEditorCompletion.ipc.js')
     case 'References':
-      return import('../Viewlet/ViewletReferences.js')
+      return import('../Viewlet/ViewletReferences.ipc.js')
     case 'Implementations':
-      return import('../Viewlet/ViewletImplementations.js')
+      return import('../Viewlet/ViewletImplementations.ipc.js')
     default:
       // TODO use ErrorHandling.handleError instead
       throw new Error(`unknown viewlet: "${id}", ${id === 'Output'}`)
@@ -130,6 +131,11 @@ export const load = async (viewlet, focus = false) => {
     module = await viewlet.getModule(viewlet.id)
     if (viewlet.disposed) {
       return
+    }
+    if (module.Commands) {
+      for (const [key, value] of Object.entries(module.Commands)) {
+        Command.register(key, value)
+      }
     }
     state = ViewletState.ModuleLoaded
     const viewletState = module.create(
