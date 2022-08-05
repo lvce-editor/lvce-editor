@@ -51,21 +51,21 @@ export const getModule = (id) => {
     case 'ActivityBar':
       return import('../Viewlet/ViewletActivityBar.ipc.js')
     case 'Panel':
-      return import('../Viewlet/ViewletPanel.js')
+      return import('../Viewlet/ViewletPanel.ipc.js')
     case 'SideBar':
-      return import('../Viewlet/ViewletSideBar.js')
+      return import('../Viewlet/ViewletSideBar.ipc.js')
     case 'TitleBar':
-      return import('../Viewlet/ViewletTitleBar.js')
+      return import('../Viewlet/ViewletTitleBar.ipc.js')
     case 'StatusBar':
-      return import('../Viewlet/ViewletStatusBar.js')
+      return import('../Viewlet/ViewletStatusBar.ipc.js')
     case 'Main':
-      return import('../Viewlet/ViewletMain.js')
+      return import('../Viewlet/ViewletMain.ipc.js')
     case 'EditorCompletion':
-      return import('../Viewlet/ViewletEditorCompletion.js')
+      return import('../Viewlet/ViewletEditorCompletion.ipc.js')
     case 'References':
-      return import('../Viewlet/ViewletReferences.js')
+      return import('../Viewlet/ViewletReferences.ipc.js')
     case 'Implementations':
-      return import('../Viewlet/ViewletImplementations.js')
+      return import('../Viewlet/ViewletImplementations.ipc.js')
     default:
       // TODO use ErrorHandling.handleError instead
       throw new Error(`unknown viewlet: "${id}", ${id === 'Output'}`)
