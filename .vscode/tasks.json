@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "type": "npm",
+      "script": "test",
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": [],
+      "label": "npm: test",
+      "detail": "lerna run test"
+    },
+    {
+      "type": "npm",
+      "script": "e2e",
+      "path": "packages/extension-host-worker-tests",
+      "problemMatcher": [],
+      "label": "npm: e2e - packages/extension-host-worker-tests",
+      "detail": "node src/_all.js"
+    }
+  ]
+}
