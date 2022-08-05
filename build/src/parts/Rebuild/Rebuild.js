@@ -11,10 +11,16 @@ export const rebuild = async ({ electronVersion, buildPath, arch }) => {
       force: true,
     })
   } catch (error) {
-    throw new VError(
-      // @ts-ignore
-      error,
-      `Failed to rebuild native dependendencies in ${buildPath}`
-    )
+    if (process.env.IGNORE_NATIVE_DEPENDENCY_ERRORS) {
+      console.error(
+        `Failed to rebuild native dependendencies in ${buildPath}: ${error}`
+      )
+    } else {
+      throw new VError(
+        // @ts-ignore
+        error,
+        `Failed to rebuild native dependendencies in ${buildPath}`
+      )
+    }
   }
 }
