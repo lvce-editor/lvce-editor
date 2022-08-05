@@ -1,13 +1,15 @@
 import { jest } from '@jest/globals'
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
 
-jest.unstable_mockModule('../src/parts/Viewlet/ViewletMain.js', () => ({
-  openUri: jest.fn().mockImplementation(() => {
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
+  execute: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))
 
 const ViewletMain = await import('../src/parts/Viewlet/ViewletMain.js')
+const Command = await import('../src/parts/Command/Command.js')
+
+const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 
 beforeAll(() => {
   Viewlet.state.instances = Object.create(null)
@@ -284,10 +286,10 @@ test('selectIndex - reference', async () => {
     message: '1 result in 1 file',
   }
   // @ts-ignore
-  ViewletMain.openUri.mockImplementation(() => {})
+  Command.execute.mockImplementation(() => {})
   await ViewletLocations.selectIndex(state, 1)
-  expect(ViewletMain.openUri).toHaveBeenCalledTimes(1)
-  expect(ViewletMain.openUri).toHaveBeenCalledWith({}, '/test/index.js')
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/test/index.js')
 })
 
 test('focusFirst', () => {
@@ -508,7 +510,7 @@ test('selectCurrent - no item focused', () => {
     focusedIndex: -1,
   }
   // @ts-ignore
-  ViewletMain.openUri.mockImplementation(() => {})
+  Command.execute.mockImplementation(() => {})
   expect(ViewletLocations.selectCurrent(state)).toBe(state)
-  expect(ViewletMain.openUri).not.toHaveBeenCalled()
+  expect(Command.execute).not.toHaveBeenCalled()
 })

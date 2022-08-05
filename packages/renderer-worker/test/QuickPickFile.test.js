@@ -1,6 +1,29 @@
 import { jest } from '@jest/globals'
-import * as QuickPickFile from '../src/parts/QuickPick/QuickPickFile.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const QuickPickFile = await import('../src/parts/QuickPick/QuickPickFile.js')
+const SharedProcess = await import(
+  '../src/parts/SharedProcess/SharedProcess.js'
+)
 
 test('name', () => {
   expect(QuickPickFile.name).toBe('file')
@@ -30,19 +53,9 @@ test('getPicks', async () => {
 })
 
 test('selectPick', async () => {
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
-      case 101:
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: 'sample text',
-        })
-        break
-      default:
-        console.log(message)
-        throw new Error('unexpected message')
-    }
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    return 'sample text'
   })
   expect(
     await QuickPickFile.selectPick({
