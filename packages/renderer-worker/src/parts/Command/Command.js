@@ -332,6 +332,60 @@ const loadModule = (moduleId) => {
       return import('../EditorCommandCursorCharacterRight/EditorCommandCursorCharacterRight.ipc.js')
     case MODULE_EDITOR_COMMAND_SET_LANGUAGE_ID:
       return import('../EditorCommandSetLanguageId/EditorCommandSetLanguageId.ipc.js')
+    case MODULE_EDITOR_COMMAND_CUT:
+      return import('../EditorCommandCut/EditorCommandCut.ipc.js')
+    case MODULE_EDITOR_COMMAND_DELETE_ALL_LEFT:
+      return import('../EditorCommandDeleteAllLeft/EditorCommandDeleteAllLeft.ipc.js')
+    case MODULE_EDITOR_COMMAND_DELETE_ALL_RIGHT:
+      return import('../EditorCommandDeleteAllRight/EditorCommandDeleteAllRight.ipc.js')
+    case MODULE_EDITOR_COMMAND_DELETE_CHARACTER_LEFT:
+      return import('../EditorCommandDeleteCharacterLeft/EditorCommandDeleteCharacterLeft.ipc.js')
+    case MODULE_EDITOR_COMMAND_DELETE_CHARACTER_RIGHT:
+      return import('../EditorCommandDeleteAllLeft/EditorCommandDeleteAllLeft.ipc.js')
+    case MODULE_EDITOR_COMMAND_DELETE_HORIZONTAL:
+      return import('../EditorCommandDeleteAllRight/EditorCommandDeleteAllRight.ipc.js')
+    case MODULE_EDITOR_COMMAND_DELETE_HORIZONTAL_LEFT:
+      return import('../EditorCommandDeleteHorizontalLeft/EditorCommandDeleteHorizontalLeft.js')
+    case MODULE_EDITOR_COMMAND_DELETE_HORIZONTAL_RIGHT:
+      return import('../EditorCommandDeleteHorizontalRight/EditorCommandDeleteHorizontalRight.js')
+    case MODULE_EDITOR_COMMAND_DELETE_SELECTION:
+      return import('../EditorCommandDeleteSelection/EditorCommandDeleteSelection.js')
+    case MODULE_EDITOR_COMMAND_DELETE_WORD_LEFT:
+      return import('../EditorCommandDeleteWordLeft/EditorCommandDeleteWordLeft.ipc.js')
+    case MODULE_EDITOR_COMMAND_DELETE_WORD_PART_LEFT:
+      return import('../EditorCommandDeleteWordPartLeft/EditorCommandDeleteWordPartLeft.ipc.js')
+    case MODULE_EDITOR_COMMAND_DELETE_WORD_PART_RIGHT:
+      return import('../EditorCommandDeleteWordPartRight/EditorCommandDeleteWordPartRight.ipc.js')
+    case MODULE_EDITOR_COMMAND_DELETE_WORD_RIGHT:
+      return import('../EditorCommandDeleteWordRight/EditorCommandDeleteWordRight.ipc.js')
+    case MODULE_EDITOR_COMMAND_DELTA:
+      return import('../EditorCommandDelta/EditorCommandDelta.js')
+    case MODULE_EDITOR_COMMAND_FORMAT:
+      return import('../EditorCommandFormat/EditorCommandFormat.ipc.js')
+    case MODULE_EDITOR_COMMAND_GET_POSITION_LEFT:
+      return import('../EditorCommandGetPositionLeft/EditorCommandGetPositionLeft.js')
+    case MODULE_EDITOR_COMMAND_GET_POSITION_RIGHT:
+      return import('../EditorCommandGetPositionLeft/EditorCommandGetPositionLeft.js')
+    case MODULE_EDITOR_COMMAND_GET_SELECTION_FROM_NATIVE_RANGE:
+      return import('../EditorCommandGetSelectionFromNativeRange/EditorCommandGetSelectionFromNativeRange.js')
+    case MODULE_EDITOR_COMMAND_GO_TO_DEFINITION:
+      return import('../EditorCommandGoToDefinition/EditorCommandGoToDefinition.ipc.js')
+    case MODULE_EDITOR_COMMAND_GO_TO_TYPE_DEFINITION:
+      return import('../EditorCommandGoToTypeDefinition/EditorCommandGoToTypeDefinition.ipc.js')
+    case MODULE_EDITOR_COMMAND_HANDLE_CONTEXT_MENU:
+      return import('../EditorCommandHandleContextMenu/EditorCommandHandleContextMenu.ipc.js')
+    case MODULE_EDITOR_COMMAND_HANDLE_DOUBLE_CLICK:
+      return import('../EditorCommandHandleDoubleClick/EditorCommandHandleDoubleClick.ipc.js')
+    case MODULE_EDITOR_COMMAND_HANDLE_MOUSE_MOVE:
+      return import('../EditorCommandHandleMouseMove/EditorCommandHandleMouseMove.ipc.js')
+    case MODULE_EDITOR_COMMAND_HANDLE_MOUSE_MOVE_WITH_ALT_KEY:
+      return import('../EditorCommandHandleMouseMoveWithAltKey/EditorCommandHandleMouseMoveWithAltKey.ipc.js')
+    case MODULE_EDITOR_COMMAND_HANDLE_BEFORE_INPUT_FROM_CONTENT_EDITABLE:
+      return import('../EditorCommandHandleNativeBeforeInputFromContentEditable/EditorCommandHandleNativeBeforeInputFromContentEditable.js')
+    case MODULE_EDITOR_COMMAND_HANDLE_NATIVE_SELECTION_CHANGE:
+      return import('../EditorCommandHandleNativeSelectionChange/EditorCommandHandleNativeSelectionChange.js')
+    case MODULE_EDITOR_COMMAND_HANDLE_SCROLL_BAR_CLICK:
+      return import('../EditorCommandHandleScrollBarClick/EditorCommandHandleScrollBarClick.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }

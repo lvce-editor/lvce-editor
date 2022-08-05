@@ -4,5 +4,5 @@ import * as EditorCommandSetLanguageId from './EditorCommandSetLanguageId.js'
 
 // prettier-ignore
 export const __initialize__ = () => {
-  Command.register('Editor.setLanguageId', Viewlet.wrapViewletCommand('EditorText', EditorCommandSetLanguageId.editorSetLanguageId))
+  Command.register('Editor.setLanguageId', Viewlet.wrapViewletCommand('EditorText', EditorCommandSetLanguageId.setLanguageId))
 }
