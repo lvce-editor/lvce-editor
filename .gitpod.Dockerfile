@@ -14,7 +14,8 @@ RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
         libxfixes3 \
         libxrandr2 \
         libgbm1 \
-        libatspi2.0-0
+        libatspi2.0-0 \
+        libwayland-client0   
 
 # Install nodeJs
 RUN bash -c ". .nvm/nvm.sh \
