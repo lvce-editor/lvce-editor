@@ -35,21 +35,21 @@ export const getModule = (id) => {
     case 'Extensions':
       return import('../Viewlet/ViewletExtensions.ipc.js')
     case 'Output':
-      return import('../Viewlet/ViewletOutput.js')
+      return import('../Viewlet/ViewletOutput.ipc.js')
     case 'Problems':
-      return import('../Viewlet/ViewletProblems.js')
+      return import('../Viewlet/ViewletProblems.ipc.js')
     case 'Noop':
-      return import('../Viewlet/ViewletNoop.js')
+      return import('../Viewlet/ViewletNoop.ipc.js')
     case 'EditorText':
       return import('../Viewlet/ViewletEditorText.js')
     case 'EditorPlainText':
       return import('../Viewlet/ViewletEditorPlainText.js')
     case 'EditorImage':
-      return import('../Viewlet/ViewletEditorImage.js')
+      return import('../Viewlet/ViewletEditorImage.ipc.js')
     case 'Clock':
-      return import('../Viewlet/ViewletClock.js')
+      return import('../Viewlet/ViewletClock.ipc.js')
     case 'ActivityBar':
-      return import('../Viewlet/ViewletActivityBar.js')
+      return import('../Viewlet/ViewletActivityBar.ipc.js')
     case 'Panel':
       return import('../Viewlet/ViewletPanel.js')
     case 'SideBar':
