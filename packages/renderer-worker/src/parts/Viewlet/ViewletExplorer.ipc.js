@@ -1,41 +1,42 @@
-import * as Command from '../Command/Command.js'
-import * as ViewletExplorer from './ViewletExplorer.js'
 import * as Viewlet from './Viewlet.js'
+import * as ViewletExplorer from './ViewletExplorer.js'
 
 // prettier-ignore
-export const __initialize__ = () => {
-  Command.register('Explorer.acceptNewFile',        Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.acceptNewFile))
-  Command.register('Explorer.acceptRename',         Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.acceptRename))
-  Command.register('Explorer.cancelNewFile',        Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.cancelNewFile))
-  Command.register('Explorer.cancelRename',         Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.cancelRename))
-  Command.register('Explorer.collapseAll',          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.collapseAll))
-  Command.register('Explorer.copyPath',             Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.copyPath))
-  Command.register('Explorer.copyRelativePath',     Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.copyRelativePath))
-  Command.register('Explorer.expandAll',            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.expandAll))
-  Command.register('Explorer.focusFirst',           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusFirst))
-  Command.register('Explorer.focusIndex',           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusIndex))
-  Command.register('Explorer.focusLast',            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusLast))
-  Command.register('Explorer.focusNext',            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusNext))
-  Command.register('Explorer.focusNone',            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusNone))
-  Command.register('Explorer.focusPrevious',        Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusPrevious))
-  Command.register('Explorer.getFocusedDirent',     Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.getFocusedDirent))
-  Command.register('Explorer.handleArrowLeft',      Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleArrowLeft))
-  Command.register('Explorer.handleArrowRight',     Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleArrowRight))
-  Command.register('Explorer.handleBlur',           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleBlur))
-  Command.register('Explorer.handleClick',          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleClick))
-  Command.register('Explorer.handleClickCurrent',   Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleClickCurrent))
-  Command.register('Explorer.handleContextMenu',    Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleContextMenu))
-  Command.register('Explorer.handleCopy',           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleCopy))
-  Command.register('Explorer.handleMouseEnter',     Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleMouseEnter))
-  Command.register('Explorer.handleMouseLeave',     Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleMouseLeave))
-  Command.register('Explorer.handlePaste',          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handlePaste))
-  Command.register('Explorer.handleWheel',          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleWheel))
-  Command.register('Explorer.newFile',              Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.newFile))
-  Command.register('Explorer.newFolder',            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.newFolder))
-  Command.register('Explorer.openContainingFolder', Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.openContainingFolder))
-  Command.register('Explorer.removeDirent',         Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.removeDirent))
-  Command.register('Explorer.renameDirent',         Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.renameDirent))
-  Command.register('Explorer.scrollDown',           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.scrollDown))
-  Command.register('Explorer.scrollUp',             Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.scrollUp))
-  Command.register('Explorer.setDeltaY',            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.setDeltaY))
+export const Commands = {
+  'Explorer.acceptNewFile':        Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.acceptNewFile),
+  'Explorer.acceptRename':         Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.acceptRename),
+  'Explorer.cancelNewFile':        Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.cancelNewFile),
+  'Explorer.cancelRename':         Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.cancelRename),
+  'Explorer.collapseAll':          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.collapseAll),
+  'Explorer.copyPath':             Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.copyPath),
+  'Explorer.copyRelativePath':     Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.copyRelativePath),
+  'Explorer.expandAll':            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.expandAll),
+  'Explorer.focusFirst':           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusFirst),
+  'Explorer.focusIndex':           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusIndex),
+  'Explorer.focusLast':            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusLast),
+  'Explorer.focusNext':            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusNext),
+  'Explorer.focusNone':            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusNone),
+  'Explorer.focusPrevious':        Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusPrevious),
+  'Explorer.getFocusedDirent':     Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.getFocusedDirent),
+  'Explorer.handleArrowLeft':      Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleArrowLeft),
+  'Explorer.handleArrowRight':     Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleArrowRight),
+  'Explorer.handleBlur':           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleBlur),
+  'Explorer.handleClick':          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleClick),
+  'Explorer.handleClickCurrent':   Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleClickCurrent),
+  'Explorer.handleContextMenu':    Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleContextMenu),
+  'Explorer.handleCopy':           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleCopy),
+  'Explorer.handleMouseEnter':     Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleMouseEnter),
+  'Explorer.handleMouseLeave':     Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleMouseLeave),
+  'Explorer.handlePaste':          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handlePaste),
+  'Explorer.handleWheel':          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleWheel),
+  'Explorer.newFile':              Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.newFile),
+  'Explorer.newFolder':            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.newFolder),
+  'Explorer.openContainingFolder': Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.openContainingFolder),
+  'Explorer.removeDirent':         Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.removeDirent),
+  'Explorer.renameDirent':         Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.renameDirent),
+  'Explorer.scrollDown':           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.scrollDown),
+  'Explorer.scrollUp':             Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.scrollUp),
+  'Explorer.setDeltaY':            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.setDeltaY),
 }
+
+export * from './ViewletExplorer.js'

@@ -17,7 +17,6 @@ const MODULE_EDITOR_COMMAND = 27
 const MODULE_EDITOR_COMPLETION = 28
 const MODULE_KEY_BINDINGS = 29
 const MODULE_EXTENSIONS = 30
-const MODULE_VIEWLET_EXPLORER = 31
 const MODULE_SOURCE_CONTROL = 32
 const MODULE_COLOR_PICKER = 33
 const MODULE_VIEWLET_EXTENSIONS = 34
@@ -109,8 +108,6 @@ const loadModule = (moduleId) => {
       return import('../KeyBindings/KeyBindings.ipc.js')
     case MODULE_EXTENSIONS:
       return import('../Extensions/Extensions.ipc.js')
-    case MODULE_VIEWLET_EXPLORER:
-      return import('../Viewlet/ViewletExplorer.ipc.js')
     case MODULE_SOURCE_CONTROL:
       return import('../SourceControl/SourceControl.ipc.js')
     case MODULE_VIEWLET_TERMINAL:
@@ -261,40 +258,6 @@ const getModuleId = (commandId) => {
       return MODULE_MAIN
     case 'Test.execute':
       return MODULE_TEST
-    case 'Explorer.acceptNewFile':
-    case 'Explorer.acceptRename':
-    case 'Explorer.cancelNewFile':
-    case 'Explorer.cancelRename':
-    case 'Explorer.collapseAll':
-    case 'Explorer.copyPath':
-    case 'Explorer.copyRelativePath':
-    case 'Explorer.expandAll':
-    case 'Explorer.focusFirst':
-    case 'Explorer.focusIndex':
-    case 'Explorer.focusLast':
-    case 'Explorer.focusNext':
-    case 'Explorer.focusPrevious':
-    case 'Explorer.getFocusedDirent':
-    case 'Explorer.handleArrowLeft':
-    case 'Explorer.handleArrowRight':
-    case 'Explorer.handleClick':
-    case 'Explorer.handleClickCurrent':
-    case 'Explorer.handleContextMenu':
-    case 'Explorer.handleCopy':
-    case 'Explorer.handleMouseEnter':
-    case 'Explorer.handleMouseLeave':
-    case 'Explorer.handlePaste':
-    case 'Explorer.handleWheel':
-    case 'Explorer.newFile':
-    case 'Explorer.newFolder':
-    case 'Explorer.openContainingFolder':
-    case 'Explorer.removeDirent':
-    case 'Explorer.renameDirent':
-    case 'Explorer.scrollDown':
-    case 'Explorer.scrollUp':
-    case 'Explorer.setDeltaY':
-    case 'Explorer.handleBlur':
-      return MODULE_VIEWLET_EXPLORER
     case 'ColorThemeFromJson.createColorThemeFromJson':
       return MODULE_COLOR_THEME_FROM_JSON
     case 'ClipBoard.readText':

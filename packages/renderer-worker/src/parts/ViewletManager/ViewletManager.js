@@ -3,6 +3,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as Assert from '../Assert/Assert.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Command from '../Command/Command.js'
 
 export const modules = Object.create(null)
 
@@ -20,7 +21,7 @@ export const getModule = (id) => {
   switch (id) {
     // TODO use numeric identifier instead
     case 'Explorer':
-      return import('../Viewlet/ViewletExplorer.js')
+      return import('../Viewlet/ViewletExplorer.ipc.js')
     case 'Run and Debug':
       return import('../Viewlet/ViewletRunAndDebug.js')
     case 'Search':
@@ -130,6 +131,11 @@ export const load = async (viewlet, focus = false) => {
     module = await viewlet.getModule(viewlet.id)
     if (viewlet.disposed) {
       return
+    }
+    if (module.Commands) {
+      for (const [key, value] of Object.entries(module.Commands)) {
+        Command.register(key, value)
+      }
     }
     state = ViewletState.ModuleLoaded
     const viewletState = module.create(
