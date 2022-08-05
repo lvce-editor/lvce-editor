@@ -56,3 +56,9 @@ jobs:
         run: npm run e2e:headless
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Build Electron App (deb)
+        if: matrix.os == 'ubuntu-22.04'
+        run: node build/bin/build.js --target=electron-deb
+      - name: Build Electron App (exe)
+        if: matrix.os == 'windows-2022'
+        run: node build/bin/build.js --target=electron-builder-windows-exe
