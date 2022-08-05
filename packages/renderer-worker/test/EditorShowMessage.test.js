@@ -30,11 +30,10 @@ test('showMessage - should dispose after 3 seconds', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await EditorShowMessage.editorShowMessage(
     editor,
-    {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
-    'test'
+    /* rowIndex */ 0,
+    /* columnIndex */ 0,
+    /* message */ 'test',
+    /* isError */ false
   )
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(

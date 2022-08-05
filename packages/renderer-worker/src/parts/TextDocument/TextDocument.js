@@ -145,16 +145,23 @@ export const getSelectionText = (textDocument, range) => {
   return selectedLines
 }
 
-export const offsetAt = (textDocument, position) => {
+export const offsetAt = (
+  textDocument,
+  positionRowIndex,
+  positionColumnIndex
+) => {
+  Assert.object(textDocument)
+  Assert.number(positionRowIndex)
+  Assert.number(positionColumnIndex)
   let offset = 0
   let rowIndex = 0
   const lines = textDocument.lines
-  const max = Math.min(position.rowIndex, textDocument.lines.length)
+  const max = Math.min(positionRowIndex, textDocument.lines.length)
   while (rowIndex < max) {
     offset += lines[rowIndex].length + 1
     rowIndex++
   }
-  offset += position.columnIndex
+  offset += positionColumnIndex
   return offset
 }
 

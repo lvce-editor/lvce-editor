@@ -1,9 +1,9 @@
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
-export const show = async (editor, message, position) => {
-  const x = EditorPosition.x(editor, position)
-  const y = EditorPosition.y(editor, position)
+export const show = async (editor, message, rowIndex, columnIndex) => {
+  const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  const y = EditorPosition.y(editor, rowIndex, columnIndex)
   await RendererProcess.invoke(
     /* EditorError.show */ 'EditorError.show',
     /* message */ message,

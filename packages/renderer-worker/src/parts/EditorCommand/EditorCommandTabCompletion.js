@@ -1,15 +1,12 @@
 import * as ExtensionHostTabCompletion from '../ExtensionHost/ExtensionHostTabCompletion.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as EditorSnippet from './EditorCommandSnippet.js'
-import * as Assert from '../Assert/Assert.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
+import * as EditorSnippet from './EditorCommandSnippet.js'
 
 const getTabCompletion = async (editor) => {
-  const position = {
-    rowIndex: editor.selections[0],
-    columnIndex: editor.selections[1],
-  }
-  const offset = TextDocument.offsetAt(editor, position)
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
+  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const tabCompletion =
     await ExtensionHostTabCompletion.executeTabCompletionProvider(
       editor,
@@ -35,13 +32,12 @@ export const editorTabCompletion = async (editor) => {
   } catch (error) {
     console.error(error)
     // TODO cursor should always be of type object
-    const position = {
-      rowIndex: editor.selections[0],
-      columnIndex: editor.selections[1],
-    }
+    const rowIndex = editor.selections[0]
+    const columnIndex = editor.selections[1]
     return EditorShowMessage.showErrorMessage(
       editor,
-      position,
+      rowIndex,
+      columnIndex,
       getErrorMessage(error)
     )
   }

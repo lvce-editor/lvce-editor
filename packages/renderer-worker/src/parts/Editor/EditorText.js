@@ -230,18 +230,21 @@ const getLineInfo = (line, tokens, decorations, TokenMap, lineOffset) => {
   for (const token of tokens) {
     const decorationOffset = decorations[decorationIndex]
     let extraClassName = ''
-    if (decorationOffset !== undefined && decorationOffset - lineOffset === start) {
-        const decorationLength = decorations[++decorationIndex]
-        const decorationType = decorations[++decorationIndex]
-        const decorationModifiers = decorations[++decorationIndex]
-        // console.log('MATCHING DECORATION', {
-        //   decorationIndex,
-        //   decorationLength,
-        //   decorationType,
-        //   decorationModifiers,
-        // })
-        extraClassName = getDecorationClassName(decorationType)
-      }
+    if (
+      decorationOffset !== undefined &&
+      decorationOffset - lineOffset === start
+    ) {
+      const decorationLength = decorations[++decorationIndex]
+      const decorationType = decorations[++decorationIndex]
+      const decorationModifiers = decorations[++decorationIndex]
+      // console.log('MATCHING DECORATION', {
+      //   decorationIndex,
+      //   decorationLength,
+      //   decorationType,
+      //   decorationModifiers,
+      // })
+      extraClassName = getDecorationClassName(decorationType)
+    }
 
     end += token.length
     const text = line.slice(start, end)
@@ -289,10 +292,7 @@ export const getVisible = (editor) => {
     editor.lines.length
   )
   const tokens = getTokensViewport(editor, minLineY, maxLineY)
-  const minLineOffset = TextDocument.offsetAt(editor, {
-    rowIndex: minLineY,
-    columnIndex: 0,
-  })
+  const minLineOffset = TextDocument.offsetAt(editor, minLineY, 0)
   const textInfos = getLineInfosViewport(
     editor,
     tokens,

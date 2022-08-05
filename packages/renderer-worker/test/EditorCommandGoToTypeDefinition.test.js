@@ -30,24 +30,18 @@ const EditorShowMessage = await import(
   '../src/parts/EditorCommand/EditorCommandShowMessage.js'
 )
 
+const EditorSelection = await import(
+  '../src/parts/EditorSelection/EditorSelection.js'
+)
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
 test('editorGoToTypeDefinition', async () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: ['line 1', 'line 2', 'line 3'],
-    cursor,
-    selection: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     lineCache: [],
     tokenizer: TokenizePlainText,
   }
@@ -75,23 +69,13 @@ test('editorGoToTypeDefinition', async () => {
         throw new Error('unexpected message')
     }
   })
-  await EditorGoToTypeDefinition.editorGoToTypeDefinition(editor, cursor)
+  await EditorGoToTypeDefinition.editorGoToTypeDefinition(editor)
 })
 
 test('editorGoToTypeDefinition - startOffset is 0', async () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: ['line 1', 'line 2', 'line 3'],
-    cursor,
-    selection: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     lineCache: [],
     tokenizer: TokenizePlainText,
   }
@@ -119,16 +103,13 @@ test('editorGoToTypeDefinition - startOffset is 0', async () => {
         throw new Error('unexpected message')
     }
   })
-  await EditorGoToTypeDefinition.editorGoToTypeDefinition(editor, cursor)
+  await EditorGoToTypeDefinition.editorGoToTypeDefinition(editor)
 })
 
 test('editorGoToTypeDefinition - error', async () => {
   const editor = {
     lines: ['line 1', 'line 1'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     top: 0,
     left: 0,
     columnWidth: 8,
@@ -148,7 +129,8 @@ test('editorGoToTypeDefinition - error', async () => {
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
-    editor.cursor,
+    0,
+    0,
     'TypeError: x is not a function',
     true
   )
@@ -159,16 +141,12 @@ test('editorGoToTypeDefinition - error', async () => {
 test('editorGoToTypeDefinition - error - no type definition provider found', async () => {
   const editor = {
     lines: ['line 1', 'line 1'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     top: 0,
     left: 0,
     columnWidth: 8,
     rowHeight: 20,
     uri: '/tmp/index.ts',
-    selections: [],
   }
   // @ts-ignore
   ExtensionHostTypeDefinition.executeTypeDefinitionProvider.mockImplementation(
@@ -185,7 +163,8 @@ test('editorGoToTypeDefinition - error - no type definition provider found', asy
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
-    editor.cursor,
+    0,
+    0,
     'Error: Failed to execute type definition provider: No type definition provider found',
     false
   )
@@ -195,16 +174,12 @@ test('editorGoToTypeDefinition - error - no type definition provider found', asy
 test('editorGoToTypeDefinition - no type definition found', async () => {
   const editor = {
     lines: ['line 1', 'line 1'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     top: 0,
     left: 0,
     columnWidth: 8,
     rowHeight: 20,
     uri: '/test/index.ts',
-    selections: [],
   }
   // @ts-ignore
   ExtensionHostTypeDefinition.executeTypeDefinitionProvider.mockImplementation(
@@ -218,7 +193,8 @@ test('editorGoToTypeDefinition - no type definition found', async () => {
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
-    editor.cursor,
+    0,
+    0,
     'No type definition found',
     false
   )

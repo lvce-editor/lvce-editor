@@ -21,15 +21,16 @@ export const at = (editor, x, y, offset) => {
  * Use position computation in renderer process instead
  *
  * @param {object} editor
- * @param {object} position
+ * @param {number} rowIndex
+ * @param {number} columnIndex
  * @returns
  */
-export const x = (editor, position) => {
-  const x = position.columnIndex * editor.columnWidth + editor.left
+export const x = (editor, rowIndex, columnIndex) => {
+  const x = columnIndex * editor.columnWidth + editor.left
   return x
 }
 
-export const y = (editor, position) => {
-  const y = (position.rowIndex + 1) * editor.rowHeight + editor.top
+export const y = (editor, rowIndex, columnIndex) => {
+  const y = (rowIndex + 1) * editor.rowHeight + editor.top
   return y
 }

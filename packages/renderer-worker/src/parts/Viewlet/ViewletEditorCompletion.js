@@ -28,8 +28,10 @@ export const create = (id, uri, top, left, width, height) => {
 
 // TODO possible to do this with events/state machine instead of promises -> enables canceling operations / concurrent calls
 const getCompletions = async (editor) => {
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
   // Editor.sync(editor)
-  const offset = TextDocument.offsetAt(editor, editor.cursor)
+  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const completions = await ExtensionHostCompletion.executeCompletionProvider(
     editor,
     offset
@@ -99,8 +101,10 @@ export const loadContent = async (state) => {
   const editor = getEditor()
   const completionItems = await getCompletions(editor)
   const filteredCompletionItems = filterCompletionItems(completionItems, '')
-  const x = EditorPosition.x(editor, editor.cursor)
-  const y = EditorPosition.y(editor, editor.cursor)
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
+  const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const visibleItems = getVisibleItems(filteredCompletionItems)
   console.log({ completionItems, filteredCompletionItems, visibleItems })
   return {
@@ -118,7 +122,8 @@ export const handleError = async (error) => {
   const editor = getEditor()
   await EditorShowMessage.editorShowMessage(
     /* editor */ editor,
-    /* position */ { rowIndex: 0, columnIndex: 0 },
+    /* rowIndex */ 0,
+    /* columnIndex */ 0,
     /* message */ displayErrorMessage,
     /* isError */ true
   )
@@ -127,8 +132,10 @@ export const handleError = async (error) => {
 export const loadingContent = () => {
   const editor = getEditor()
   console.log('show loading')
-  const x = EditorPosition.x(editor, editor.cursor)
-  const y = EditorPosition.y(editor, editor.cursor)
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
+  const x = EditorPosition.x(editor, rowIndex, columnIndex)
+  const y = EditorPosition.y(editor, rowIndex, columnIndex)
   const changes = [
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'EditorCompletion',

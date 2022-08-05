@@ -13,7 +13,7 @@ import {
 
 const name = 'sample.brace-completion-provider'
 
-test('sample.brace-completion-provider', async () => {
+test.skip('sample.brace-completion-provider', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/test.xyz`, ``)
