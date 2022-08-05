@@ -80,7 +80,7 @@ const main = async () => {
     }
     const name = dirent.replace(/\.js$/, '')
     const to = join(root, 'static', 'tests', `${name}.html`)
-    const from = join(root, 'static', 'tests', '_template.html')
+    const from = './_template.html'
     await symlink(from, to)
   }
 }
