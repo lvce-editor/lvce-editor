@@ -23,17 +23,17 @@ export const getModule = (id) => {
     case 'Explorer':
       return import('../Viewlet/ViewletExplorer.ipc.js')
     case 'Run and Debug':
-      return import('../Viewlet/ViewletRunAndDebug.js')
+      return import('../Viewlet/ViewletRunAndDebug.ipc.js')
     case 'Search':
-      return import('../Viewlet/ViewletSearch.js')
+      return import('../Viewlet/ViewletSearch.ipc.js')
     case 'Source Control':
-      return import('../Viewlet/ViewletSourceControl.js')
+      return import('../Viewlet/ViewletSourceControl.ipc.js')
     case 'Terminal':
-      return import('../Viewlet/ViewletTerminal.js')
+      return import('../Viewlet/ViewletTerminal.ipc.js')
     case 'Debug Console':
-      return import('../Viewlet/ViewletDebugConsole.js')
+      return import('../Viewlet/ViewletDebugConsole.ipc.js')
     case 'Extensions':
-      return import('../Viewlet/ViewletExtensions.js')
+      return import('../Viewlet/ViewletExtensions.ipc.js')
     case 'Output':
       return import('../Viewlet/ViewletOutput.js')
     case 'Problems':
