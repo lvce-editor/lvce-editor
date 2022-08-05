@@ -82,42 +82,41 @@ export const getVisible = (editor) => {
       continue
     }
     if (selectionStartRow === selectionEndRow) {
-      visibleSelections.push({
-        top: (selectionStartRow - minLineY) * rowHeight,
-        left: selectionStartColumn * columnWidth,
-        width: (selectionEndColumn - selectionStartColumn) * columnWidth,
-        height: rowHeight,
-      })
+      visibleSelections.push(
+        /* top */ (selectionStartRow - minLineY) * rowHeight,
+        /* left */ selectionStartColumn * columnWidth,
+        /* width */ (selectionEndColumn - selectionStartColumn) * columnWidth,
+        /* height */ rowHeight
+      )
     } else {
       if (selectionStartRow >= minLineY) {
-        visibleSelections.push({
-          top: (selectionStartRow - minLineY) * rowHeight,
-          left: selectionStartColumn * columnWidth,
-          width:
-            (lines[selectionStartRow].length - selectionStartColumn) *
+        visibleSelections.push(
+          /* top */ (selectionStartRow - minLineY) * rowHeight,
+          /*left */ selectionStartColumn * columnWidth,
+          /* width */ (lines[selectionStartRow].length - selectionStartColumn) *
             columnWidth,
-          height: rowHeight,
-        })
+          /* height */ rowHeight
+        )
       }
       const iMin = Math.max(selectionStartRow + 1, minLineY)
       const iMax = Math.min(selectionEndRow, maxLineY)
       for (let i = iMin; i < iMax; i++) {
-        visibleSelections.push({
-          top: (i - minLineY) * rowHeight,
-          left: 0,
-          width: lines[i].length * columnWidth,
-          height: rowHeight,
-        })
+        visibleSelections.push(
+          /* top */ (i - minLineY) * rowHeight,
+          /* left */ 0,
+          /* width */ lines[i].length * columnWidth,
+          /* height */ rowHeight
+        )
       }
       if (selectionEndRow <= maxLineY) {
-        visibleSelections.push({
-          top: (selectionEndRow - minLineY) * rowHeight,
-          left: 0,
-          width: selectionEndColumn * columnWidth,
-          height: rowHeight,
-        })
+        visibleSelections.push(
+          /* top */ (selectionEndRow - minLineY) * rowHeight,
+          /* left */ 0,
+          /* width */ selectionEndColumn * columnWidth,
+          /* height */ rowHeight
+        )
       }
     }
   }
-  return visibleSelections
+  return new Uint32Array(visibleSelections)
 }

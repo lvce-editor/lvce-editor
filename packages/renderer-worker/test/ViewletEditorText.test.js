@@ -36,8 +36,15 @@ test('resize - increase height', () => {
         ['line 2', 'Token Text'],
         ['line 3', 'Token Text'],
       ],
-      [],
-      [],
+      [
+        {
+          leftIndex: 0,
+          remainingOffset: 0,
+          top: 0,
+          topIndex: 0,
+        },
+      ],
+      new Uint32Array(),
     ],
   ])
 })
@@ -77,8 +84,15 @@ test('resize - same height', () => {
         ['line 2', 'Token Text'],
         ['line 3', 'Token Text'],
       ],
-      [],
-      [],
+      [
+        {
+          leftIndex: 0,
+          remainingOffset: 0,
+          top: 0,
+          topIndex: 0,
+        },
+      ],
+      new Uint32Array(),
     ],
   ])
 })
@@ -115,8 +129,15 @@ test('resize - reduce height', () => {
       0,
       0,
       [['line 1', 'Token Text']],
-      [],
-      [],
+      [
+        {
+          leftIndex: 0,
+          remainingOffset: 0,
+          top: 0,
+          topIndex: 0,
+        },
+      ],
+      new Uint32Array(),
     ],
   ])
 })

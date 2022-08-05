@@ -64,9 +64,10 @@ test('editorTabCompletion - tab completion available', async () => {
 
 // TODO test multiline snippet
 
-test('editorTabCompletion - multiline snippet', async () => {
+test.only('editorTabCompletion - multiline snippet', async () => {
   const editor = {
     lines: ['a'],
+    primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 1, 0, 1),
     lineCache: [],
     minLineY: 0,

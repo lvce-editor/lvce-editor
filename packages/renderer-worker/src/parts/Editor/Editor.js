@@ -22,13 +22,11 @@ export const create = (id, uri, languageId, content) => {
     // TODO cursor should be part of selection,
     // codemirror has selections: Selection[]
     //            selectionIndex: number
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
+
     // TODO how to get the trigger characters here from extension host
     completionTriggerCharacters: [],
-    selections: new Uint32Array(),
+    primarySelectionIndex: 0,
+    selections: new Uint32Array([0, 0, 0, 0]),
     id,
     tokenizer,
     deltaY: 0,

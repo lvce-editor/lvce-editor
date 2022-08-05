@@ -13,7 +13,7 @@ import {
 
 const name = 'sample.brace-completion-provider-error-spelling'
 
-test('sample.brace-completion-provider-error-spelling', async () => {
+test.skip('sample.brace-completion-provider-error-spelling', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/test.xyz`, ``)

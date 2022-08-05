@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -42,10 +43,8 @@ const EditorRename = await import('../src/parts/EditorRename/EditorRename.js')
 test('open - can rename', async () => {
   const editor = {
     lines: [''],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     top: 0,
     left: 0,
     columnWidth: 8,
@@ -68,10 +67,8 @@ test('open - can rename', async () => {
 test('open - cannot rename', async () => {
   const editor = {
     lines: [''],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     top: 0,
     left: 0,
     columnWidth: 8,
@@ -104,10 +101,8 @@ test('open - cannot rename', async () => {
 test('finish - empty workspace edits', async () => {
   const editor = {
     lines: [''],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     top: 0,
     left: 0,
     columnWidth: 8,
@@ -129,10 +124,8 @@ test('finish - empty workspace edits', async () => {
 test('abort', async () => {
   const editor = {
     lines: [''],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
+    primarySelectionIndex: 0,
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
     top: 0,
     left: 0,
     columnWidth: 8,

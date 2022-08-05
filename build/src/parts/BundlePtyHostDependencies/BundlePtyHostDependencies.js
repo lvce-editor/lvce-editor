@@ -51,7 +51,7 @@ export const bundlePtyHostDependencies = async ({
   await Rebuild.rebuild({
     arch,
     buildPath: Path.absolute(to),
-    electronVersion: '19.0.6',
+    electronVersion,
   })
   const nodePtyIgnoreFiles = getNodePtyIgnoreFiles()
   for (const file of nodePtyIgnoreFiles) {

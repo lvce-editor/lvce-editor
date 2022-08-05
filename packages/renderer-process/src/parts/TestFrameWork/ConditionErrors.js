@@ -5,7 +5,11 @@ export const toBeVisible = (locator) => {
 }
 
 export const toHaveText = (locator, { text }) => {
-  return `expected selector ${locator._selector} to have text ${text}`
+  const [element] = QuerySelector.querySelector(locator._selector)
+  if (!element) {
+    return `expected selector ${locator._selector} to have text "${text}" element was not found`
+  }
+  return `expected selector ${locator._selector} to have text "${text}" but was "${element.textContent}"`
 }
 
 export const toHaveAttribute = (locator, { key, value }) => {

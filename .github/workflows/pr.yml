@@ -51,6 +51,7 @@ jobs:
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Run extension host worker tests
+        if: false
         working-directory: ./packages/extension-host-worker-tests
         run: npm run e2e:headless
         env:

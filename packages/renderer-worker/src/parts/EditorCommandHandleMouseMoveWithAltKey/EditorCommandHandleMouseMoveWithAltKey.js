@@ -22,7 +22,11 @@ export const editorHandleMouseMoveWithAltKey = async (editor, x, y, offset) => {
   Assert.number(y)
   Assert.number(offset)
   const position = EditorPosition.at(editor, x, y, offset)
-  const documentOffset = TextDocument.offsetAt(editor, position)
+  const documentOffset = TextDocument.offsetAt(
+    editor,
+    position.rowIndex,
+    position.columnIndex
+  )
   try {
     const definition = await ExtensionHostDefinition.executeDefinitionProvider(
       editor,

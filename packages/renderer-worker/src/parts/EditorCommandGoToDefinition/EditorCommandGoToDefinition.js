@@ -11,7 +11,11 @@ import * as EditorShowMessage from '../EditorCommandShowMessage/EditorCommandSho
 
 // TODO possible to do this with events/state machine instead of promises -> enables canceling operations / concurrent calls
 const getDefinition = async (editor, position) => {
-  const offset = TextDocument.offsetAt(editor, position)
+  const offset = TextDocument.offsetAt(
+    editor,
+    position.rowIndex,
+    position.columnIndex
+  )
   const definition = await ExtensionHostDefinition.executeDefinitionProvider(
     editor,
     offset

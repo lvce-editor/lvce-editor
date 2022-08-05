@@ -4,30 +4,37 @@ import * as EditorPosition from '../EditorCommandPosition/EditorCommandPosition.
 import * as ExtensionHostRename from '../ExtensionHost/ExtensionHostRename.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as Assert from '../Assert/Assert.js'
 
+// TODO memory leak
 export const state = {
   editor: undefined,
 }
 
-const prepareRename = async (editor) => {
-  const offset = TextDocument.offsetAt(editor, editor.cursor)
+const prepareRename = async (editor, rowIndex, columnIndex) => {
+  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   return ExtensionHostRename.executePrepareRenameProvider(editor, offset)
 }
 
-const rename = (editor, newName) => {
-  const offset = TextDocument.offsetAt(editor, editor.cursor)
+const rename = (editor, rowIndex, columnIndex, newName) => {
+  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   return ExtensionHostRename.executeRenameProvider(editor, offset)
 }
 
 export const open = async (editor) => {
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
+  Assert.number(rowIndex)
+  Assert.number(columnIndex)
+
   // TODO handle error and add tests for handled error
-  const prepareRenameResult = await prepareRename(editor)
+  const prepareRenameResult = await prepareRename(editor, rowIndex, columnIndex)
 
   // TODO race condition, what is when editor is closed before promise resolves
 
   if (prepareRenameResult.canRename) {
-    const x = EditorPosition.x(editor, editor.cursor)
-    const y = EditorPosition.y(editor, editor.cursor)
+    const x = EditorPosition.x(editor, rowIndex, columnIndex)
+    const y = EditorPosition.y(editor, rowIndex, columnIndex)
     // const prepareRenameResult = await prepareRename(editor)
     // console.log({ prepareRenameResult })
     await RendererProcess.invoke(
@@ -41,7 +48,8 @@ export const open = async (editor) => {
       /* EditorError.show */ 3900,
       /* editor */ editor,
       /* message */ 'You cannot rename this element',
-      /* position */ editor.cursor
+      /* rowIndex */ rowIndex,
+      /* columnIndex */ columnIndex
     )
   }
 }
@@ -79,10 +87,15 @@ const applyWorkspaceEdits = async (editor, workspaceEdits) => {
 }
 
 export const finish = async (editor) => {
+  // TODO what if cursor position changes while rename is in progress?
+  // TODO what happens if file content changes while rename is in progress?
+  // TODO what happens when file is closed while rename is in progress?
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
   const newName = await RendererProcess.invoke(/* EditorRename.finish */ 4513)
   console.log('do actual rename', { value: newName })
   // TODO support canceling rename (e.g. when user presses escape)
-  const workspaceEdits = await rename(editor, newName)
+  const workspaceEdits = await rename(editor, rowIndex, columnIndex, newName)
   await applyWorkspaceEdits(editor, workspaceEdits)
   // console.log({ workspaceEdits })
   // Editor.scheduleDocumentAndSelections(editor)

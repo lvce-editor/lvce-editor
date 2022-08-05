@@ -3,14 +3,14 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorPosition from '../EditorCommandPosition/EditorCommandPosition.js'
 
-const getHover = async (editor, position) => {
-  const offset = TextDocument.offsetAt(editor, position)
+const getHover = async (editor, rowIndex, columnIndex) => {
+  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
   const hover = await ExtensionHostHover.executeHoverProvider(editor, offset)
   return hover
 }
 
 const showHover = async (editor, position) => {
-  const hover = await getHover(editor, position)
+  const hover = await getHover(editor, position.rowIndex, position.columnIndex)
   if (!hover) {
     console.log('no hover')
     return

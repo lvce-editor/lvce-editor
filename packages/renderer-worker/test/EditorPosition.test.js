@@ -12,7 +12,7 @@ test('x', () => {
     columnWidth: 8,
     rowHeight: 20,
   }
-  expect(EditorPosition.x(editor, editor.cursor)).toBe(13)
+  expect(EditorPosition.x(editor, 1, 1)).toBe(13)
 })
 
 test('y', () => {
@@ -27,5 +27,5 @@ test('y', () => {
     columnWidth: 8,
     rowHeight: 20,
   }
-  expect(EditorPosition.y(editor, editor.cursor)).toBe(20)
+  expect(EditorPosition.y(editor, 0, 0)).toBe(20)
 })
