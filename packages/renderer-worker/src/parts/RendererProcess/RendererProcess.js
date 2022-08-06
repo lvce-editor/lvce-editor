@@ -89,7 +89,6 @@ class RendererProcessError extends Error {
 }
 
 export const invoke = async (method, ...parameters) => {
-  console.log({ method, parameters })
   const responseMessage = await new Promise((resolve, reject) => {
     const callbackId = Callback.register(resolve, reject)
     if (!state.ipc) {
