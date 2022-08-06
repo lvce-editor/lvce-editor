@@ -43,7 +43,7 @@ const testFile = async (page, name) => {
     case 'skip':
       break
     case 'fail':
-      throw new Error(`Test Failed: ${text}`)
+      throw new Error(`Test Failed: ${name}: ${text}`)
     default:
       throw new Error(`unexpected test state: ${state}`)
   }
