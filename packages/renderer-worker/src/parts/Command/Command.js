@@ -1,5 +1,4 @@
 const MODULE_NOTIFICATION = 2
-const MODULE_ACTIVITY_BAR = 11
 const MODULE_WINDOW = 14
 const MODULE_CONTEXT_MENU = 16
 const MODULE_LAYOUT = 17
@@ -545,21 +544,6 @@ const getModuleId = (commandId) => {
       return MODULE_WORKSPACE
     case 'Base64.decode':
       return MODULE_BASE_64
-    case 'ActivityBar.toggleItem':
-    case 'ActivityBar.handleClick':
-    case 'ActivityBar.handleContextMenu':
-    case 'ActivityBar.focus':
-    case 'ActivityBar.focusNext':
-    case 'ActivityBar.focusPrevious':
-    case 'ActivityBar.focusFirst':
-    case 'ActivityBar.focusLast':
-    case 'ActivityBar.selectCurrent':
-    case 'ActivityBar.getItems':
-    case 'ActivityBar.getHiddenItems':
-    case 'ActivityBar.updateSourceControlCount':
-    case 'ActivityBar.handleSideBarViewletChange':
-    case 'ActivityBar.handleSideBarHidden':
-      return MODULE_ACTIVITY_BAR
     case 'Window.reload':
     case 'Window.minimize':
     case 'Window.maximize':
