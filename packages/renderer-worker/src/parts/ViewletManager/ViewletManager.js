@@ -41,7 +41,7 @@ export const getModule = (id) => {
     case 'Noop':
       return import('../Viewlet/ViewletNoop.ipc.js')
     case 'EditorText':
-      return import('../Viewlet/ViewletEditorText.js')
+      return import('../Viewlet/ViewletEditorText.ipc.js')
     case 'EditorPlainText':
       return import('../Viewlet/ViewletEditorPlainText.js')
     case 'EditorImage':
