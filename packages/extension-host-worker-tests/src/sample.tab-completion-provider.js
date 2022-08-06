@@ -34,5 +34,5 @@ test('sample.tab-completion-provider', async () => {
 
   // assert
   const editor = Locator('.Viewlet.Editor')
-  await expect(editor).toHaveText(`test3`)
+  await expect(editor).toHaveText(`test`)
 })
