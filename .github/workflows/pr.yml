@@ -62,5 +62,5 @@ jobs:
         env:
           IGNORE_NATIVE_DEPENDENCY_ERRORS: 1 # workaround for issue with node-pty
       - name: Build Electron App (exe)
-        if: matrix.os == 'windows-2022'
+        if: false
         run: node build/bin/build.js --target=electron-builder-windows-exe
