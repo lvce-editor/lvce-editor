@@ -514,6 +514,25 @@ test('event - beforeinput on contenteditable on mobile - no selection', () => {
   )
 })
 
+test('event - wheel', () => {
+  // TODO mock platform module instead
+  Platform.state.isMobileOrTablet = () => false
+  const state = Editor.create()
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  state.$ScrollBarThumb.dispatchEvent(
+    new WheelEvent('wheel', {
+      deltaX: 1,
+      deltaY: 42,
+      bubbles: true,
+      cancelable: true,
+      deltaMode: WheelEvent.DOM_DELTA_PIXEL,
+    })
+  )
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Editor.setDeltaY', 42)
+})
+
 test('event - beforeinput on contenteditable on mobile - cursor in middle', () => {
   Platform.state.isMobileOrTablet = () => true
   const state = Editor.create()
