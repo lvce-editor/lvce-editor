@@ -298,7 +298,6 @@ export const focusIndex = async (state, index) => {
     // @ts-ignore
     await state.provider.focusPick(state.filteredPicks[index])
   }
-  console.log({ index, maxLineY: state.maxLineY })
   if (index < state.minLineY) {
     const minLineY = index
     const maxLineY = Math.min(
@@ -350,6 +349,7 @@ export const focusIndex = async (state, index) => {
       focusedIndex: index,
     }
   }
+  console.log('focus', index)
   return {
     ...state,
     focusedIndex: index,

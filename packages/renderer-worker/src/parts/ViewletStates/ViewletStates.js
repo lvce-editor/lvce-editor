@@ -1,8 +1,13 @@
+import * as Assert from '../Assert/Assert.js'
+
 export const state = {
   instances: Object.create(null),
 }
 
 export const set = (key, value) => {
+  Assert.object(value)
+  Assert.object(value.factory)
+  Assert.object(value.state)
   state.instances[key] = value
 }
 

@@ -187,7 +187,7 @@ export const load = async (viewlet, focus = false) => {
     } else {
       ViewletStates.set(viewlet.id, {
         state: newState,
-        module,
+        factory: module,
       })
     }
 
