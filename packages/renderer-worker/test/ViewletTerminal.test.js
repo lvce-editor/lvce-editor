@@ -38,7 +38,9 @@ const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
 )
 
-const ViewletTerminal = await import('../src/parts/Viewlet/ViewletTerminal.js')
+const ViewletTerminal = await import(
+  '../src/parts/ViewletTerminal/ViewletTerminal.js'
+)
 
 test('name', () => {
   expect(ViewletTerminal.name).toBe('Terminal')

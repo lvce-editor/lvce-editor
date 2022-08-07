@@ -4,7 +4,7 @@ import * as Layout from '../Layout/Layout.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as Assert from '../Assert/Assert.js'
-import * as Viewlet from './Viewlet.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 
 export const create = (id, uri, left, top, width, height) => {
   return {

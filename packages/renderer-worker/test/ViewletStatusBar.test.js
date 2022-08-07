@@ -22,7 +22,7 @@ const ExtensionHostStatusBarItems = await import(
 )
 
 const ViewletStatusBar = await import(
-  '../src/parts/Viewlet/ViewletStatusBar.js'
+  '../src/parts/ViewletStatusBar/ViewletStatusBar.js'
 )
 
 beforeEach(() => {

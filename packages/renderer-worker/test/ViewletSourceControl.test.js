@@ -22,7 +22,7 @@ jest.unstable_mockModule(
 )
 
 const ViewletSourceControl = await import(
-  '../src/parts/Viewlet/ViewletSourceControl.js'
+  '../src/parts/ViewletSourceControl/ViewletSourceControl.js'
 )
 
 const ExtensionHostSourceControl = await import(
