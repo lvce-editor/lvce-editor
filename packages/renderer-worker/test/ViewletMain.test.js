@@ -33,7 +33,7 @@ const ViewletStates = await import(
   '../src/parts/ViewletStates/ViewletStates.js'
 )
 
-const ViewletMain = await import('../src/parts/Viewlet/ViewletMain.js')
+const ViewletMain = await import('../src/parts/ViewletMain/ViewletMain.js')
 
 test('name', () => {
   expect(ViewletMain.name).toBe('Main')

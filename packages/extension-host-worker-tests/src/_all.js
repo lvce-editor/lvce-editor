@@ -1,6 +1,8 @@
 import { chromium, expect } from '@playwright/test'
 import { fork } from 'child_process'
 import { readdir, rm } from 'fs/promises'
+import { mkdtemp } from 'node:fs/promises'
+import { tmpdir } from 'node:os'
 import { dirname, join } from 'path'
 import { fileURLToPath } from 'url'
 
@@ -53,8 +55,22 @@ const handleConsole = (event) => {
   console.log(event)
 }
 
+const getTmpDir = () => {
+  return mkdtemp(join(tmpdir(), 'foo-'))
+}
+
 const main = async () => {
-  const server = fork(SERVER_PATH, { stdio: 'inherit' })
+  const configDir = await getTmpDir()
+  const cacheDir = await getTmpDir()
+  const dataDir = await getTmpDir()
+  const server = fork(SERVER_PATH, {
+    stdio: 'inherit',
+    env: {
+      XDG_CONFIG_HOME: configDir,
+      XDG_CACHE_HOME: cacheDir,
+      XDG_DATA_HOME: dataDir,
+    },
+  })
   const argv = process.argv
   const headless = argv.includes('--headless')
   const recordVideos = argv.includes('--record-videos')

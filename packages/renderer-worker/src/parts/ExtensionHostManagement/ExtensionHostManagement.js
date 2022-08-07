@@ -53,6 +53,9 @@ const getExtensionsWithError = (extensions) => {
 
 const handleExtensionActivationError = async (extension) => {
   const message = extension.reason.message
+  if (message.includes(`Failed to load extension manifest: ENOENT`)) {
+    return
+  }
   const codeFrame = extension.reason.jse_cause.codeFrame
   const stack = extension.reason.originalStack
   await Command.execute(
@@ -123,6 +126,7 @@ const startTextDocumentSyncing = async (extensionHost) => {
   console.log('finish text document synching')
 }
 
+// TODO add tests for this
 export const activateByEvent = async (event) => {
   Assert.string(event)
   if (!Languages.hasLoaded()) {

@@ -1,4 +1,4 @@
-import * as ViewletList from '../src/parts/Viewlet/ViewletList.js'
+import * as ViewletList from '../src/parts/ViewletList/ViewletList.js'
 
 test('create', () => {
   const state = ViewletList.create()

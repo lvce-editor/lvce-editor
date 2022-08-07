@@ -6,7 +6,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
   }),
 }))
 
-const ViewletMain = await import('../src/parts/Viewlet/ViewletMain.js')
+const ViewletMain = await import('../src/parts/ViewletMain/ViewletMain.js')
 const Command = await import('../src/parts/Command/Command.js')
 
 const ViewletStates = await import(

@@ -463,3 +463,23 @@ test('getExtensions - error - invalid json', async () => {
     },
   ])
 })
+
+test('getExtensions - error - manifest not found', async () => {
+  const tmpDir1 = await getTmpDir()
+  const tmpDir2 = await getTmpDir()
+  await mkdir(join(tmpDir1, 'test-extension-1'))
+  // @ts-ignore
+  Platform.getBuiltinExtensionsPath.mockImplementation(() => tmpDir1)
+  // @ts-ignore
+  Platform.getExtensionsPath.mockImplementation(() => tmpDir2)
+  const manifestPath = join(tmpDir1, 'test-extension-1', 'extension.json')
+  expect(await ExtensionManagement.getExtensions()).toEqual([
+    {
+      status: 'rejected',
+      reason: new VError(
+        `Failed to load extension "test-extension-1": Failed to load extension manifest: ENOENT: no such file or directory, open '${manifestPath}'`
+      ),
+      path: join(tmpDir1, 'test-extension-1'),
+    },
+  ])
+})

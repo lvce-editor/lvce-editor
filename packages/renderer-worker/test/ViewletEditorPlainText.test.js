@@ -1,5 +1,5 @@
 import * as FileSystem from '../src/parts/FileSystem/FileSystem.js'
-import * as ViewletEditorPlainText from '../src/parts/Viewlet/ViewletEditorPlainText.js'
+import * as ViewletEditorPlainText from '../src/parts/ViewletEditorPlainText/ViewletEditorPlainText.js'
 
 test('name', () => {
   expect(ViewletEditorPlainText.name).toBe('PlainText')

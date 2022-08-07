@@ -1,4 +1,4 @@
-import * as ViewletCounter from '../src/parts/Viewlet/ViewletCounter.js'
+import * as ViewletCounter from '../src/parts/ViewletCounter/ViewletCounter.js'
 
 test('name', () => {
   expect(ViewletCounter.name).toBe('Counter')

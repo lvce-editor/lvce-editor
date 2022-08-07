@@ -1,14 +1,12 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as Languages from '../Languages/Languages.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
-import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as Assert from '../Assert/Assert.js'
-import * as Viewlet from './Viewlet.js'
-import * as ViewletState from '../ViewletStates/ViewletStates.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
