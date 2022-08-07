@@ -158,12 +158,12 @@
   {
     "key": "ctrl+shift+p",
     "command": "Viewlet.openWidget",
-    "args": ["QuickPick", "commandPalette"]
+    "args": ["QuickPick", "everything"]
   },
   {
     "key": "F1",
     "command": "Viewlet.openWidget",
-    "args": ["QuickPick", "commandPalette"]
+    "args": ["QuickPick", "everything"]
   },
   {
     "key": "Escape",

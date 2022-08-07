@@ -119,6 +119,8 @@ const getProvider = (uri) => {
       return import('../QuickPick/QuickPickCommand.js')
     case 'quickPick://file':
       return import('../QuickPick/QuickPickFile.js')
+    case 'quickPick://everything':
+      return import('../QuickPick/QuickPickEverything.js')
     case 'quickPick://noop':
       return import('../QuickPick/QuickPickNoop.js')
     case 'quickPick://number':
@@ -140,7 +142,7 @@ const getProvider = (uri) => {
 
 const getDefaultValue = (uri) => {
   switch (uri) {
-    case 'quickPick://commandPalette':
+    case 'quickPick://everything':
       return '>'
     default:
       return ''
