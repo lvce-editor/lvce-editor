@@ -52,7 +52,7 @@ const SharedProcess = await import(
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
 
 const ViewletExtensions = await import(
-  '../src/parts/Viewlet/ViewletExtensions.js'
+  '../src/parts/ViewletExtensions/ViewletExtensions.js'
 )
 const ErrorHandling = await import(
   '../src/parts/ErrorHandling/ErrorHandling.js'

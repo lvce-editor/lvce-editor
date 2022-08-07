@@ -18,7 +18,9 @@ jest.unstable_mockModule(
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
-const ViewletTitleBar = await import('../src/parts/Viewlet/ViewletTitleBar.js')
+const ViewletTitleBar = await import(
+  '../src/parts/ViewletTitleBar/ViewletTitleBar.js'
+)
 
 test('name', () => {
   expect(ViewletTitleBar.name).toBe('TitleBar')

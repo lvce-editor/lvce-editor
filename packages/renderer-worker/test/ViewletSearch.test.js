@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as ViewletSearch from '../src/parts/Viewlet/ViewletSearch.js'
+import * as ViewletSearch from '../src/parts/ViewletSearch/ViewletSearch.js'
 
 test('name', () => {
   expect(ViewletSearch.name).toBe('Search')

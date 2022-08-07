@@ -45,7 +45,9 @@ const SharedProcess = await import(
 
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
-const ViewletExplorer = await import('../src/parts/Viewlet/ViewletExplorer.js')
+const ViewletExplorer = await import(
+  '../src/parts/ViewletExplorer/ViewletExplorer.js'
+)
 
 const GlobalEventBus = await import(
   '../src/parts/GlobalEventBus/GlobalEventBus.js'

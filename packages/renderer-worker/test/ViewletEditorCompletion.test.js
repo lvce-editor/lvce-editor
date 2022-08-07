@@ -1,4 +1,4 @@
-import * as ViewletEditorCompletion from '../src/parts/Viewlet/ViewletEditorCompletion.js'
+import * as ViewletEditorCompletion from '../src/parts/ViewletEditorCompletion/ViewletEditorCompletion.js'
 
 // TODO the message payload was more efficient before: 831,1
 

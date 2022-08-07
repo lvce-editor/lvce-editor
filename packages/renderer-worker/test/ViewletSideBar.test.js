@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as ViewletSideBar from '../src/parts/Viewlet/ViewletSideBar.js'
+import * as ViewletSideBar from '../src/parts/ViewletSideBar/ViewletSideBar.js'
 import * as Layout from '../src/parts/Layout/Layout.js'
 import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
 

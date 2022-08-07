@@ -1,4 +1,4 @@
-import * as ViewletDebugConsole from '../src/parts/Viewlet/ViewletDebugConsole.js'
+import * as ViewletDebugConsole from '../src/parts/ViewletDebugConsole/ViewletDebugConsole.js'
 
 test('name', () => {
   expect(ViewletDebugConsole.name).toBe('Debug Console')

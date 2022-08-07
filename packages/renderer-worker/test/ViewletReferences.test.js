@@ -31,7 +31,7 @@ const ExtensionHostReferences = await import(
 )
 
 const ViewletReferences = await import(
-  '../src/parts/Viewlet/ViewletReferences.js'
+  '../src/parts/ViewletReferences/ViewletReferences.js'
 )
 
 test('name', () => {
