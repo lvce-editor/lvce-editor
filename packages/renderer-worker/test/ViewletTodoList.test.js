@@ -1,4 +1,4 @@
-import * as ViewletTodoList from '../src/parts/Viewlet/ViewletTodoList.js'
+import * as ViewletTodoList from '../src/parts/ViewletTodoList/ViewletTodoList.js'
 
 test('name', () => {
   expect(ViewletTodoList.name).toBe('TodoList')

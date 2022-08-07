@@ -1,4 +1,4 @@
-import * as ViewletEditorText from '../src/parts/Viewlet/ViewletEditorText.js'
+import * as ViewletEditorText from '../src/parts/ViewletEditorText/ViewletEditorText.js'
 
 test('resize - increase height', () => {
   const state = {

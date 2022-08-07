@@ -43,7 +43,7 @@ const SharedProcess = await import(
 
 const Preferences = await import('../src/parts/Preferences/Preferences.js')
 
-const Main = await import('../src/parts/Viewlet/ViewletMain.js')
+const Main = await import('../src/parts/ViewletMain/ViewletMain.js')
 
 test.skip('openSettingsJson', async () => {
   // @ts-ignore
