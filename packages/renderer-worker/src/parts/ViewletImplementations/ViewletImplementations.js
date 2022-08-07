@@ -2,13 +2,14 @@ import * as ExtensionHostImplementation from '../ExtensionHost/ExtensionHostImpl
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletLocations from '../ViewletLocations/ViewletLocations.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const name = 'Implementations'
 
 // TODO speed up this function by 130% by not running activation event (onReferences) again and again
 // e.g. (21ms activation event, 11ms getReferences) => (11ms getReferences)
 const getImplementations = async () => {
-  const editor = Viewlet.state.instances.EditorText.state
+  const editor = ViewletStates.getState('EditorText')
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]
   const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
@@ -28,10 +29,10 @@ export const loadContent = async (state) => {
 }
 
 export const contentLoaded = (state) => {
-  Viewlet.state.instances.Locations = {
+  ViewletStates.set('Locations', {
     factory: ViewletLocations,
     state,
-  }
+  })
 }
 
 export const dispose = ViewletLocations.dispose

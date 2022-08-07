@@ -1,5 +1,5 @@
 import * as ExtensionHostDiagnostic from '../ExtensionHost/ExtensionHostDiagnostic.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const name = 'Problems'
 
@@ -16,7 +16,7 @@ const toProblem = (diagnostic) => {
 }
 
 export const loadContent = async (state) => {
-  const instance = Viewlet.state.instances.EditorText
+  const instance = ViewletStates.getInstance('EditorText')
   if (!instance) {
     return state
   }

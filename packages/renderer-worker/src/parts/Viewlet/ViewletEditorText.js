@@ -7,9 +7,8 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as Id from '../Id/Id.js'
-
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
 const getContent = async (uri) => {
@@ -19,7 +18,7 @@ const getContent = async (uri) => {
 
 // TODO how to connect this function with tokenizer?
 const handleTokenizeChange = () => {
-  const instances = Viewlet.state.instances
+  const instances = ViewletStates.getAllInstances()
   const instance = instances.EditorText
   if (!instance) {
     console.log('no text editor')
@@ -118,7 +117,7 @@ export const contentLoadedEffects = async (state) => {
 }
 
 const handleLanguagesChanged = async () => {
-  const instances = Viewlet.state.instances
+  const instances = ViewletStates.getAllInstances()
   const instance = instances.EditorText
   if (!instance) {
     console.log('no text editor')

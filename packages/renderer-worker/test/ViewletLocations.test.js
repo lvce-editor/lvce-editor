@@ -9,11 +9,13 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
 const ViewletMain = await import('../src/parts/Viewlet/ViewletMain.js')
 const Command = await import('../src/parts/Command/Command.js')
 
-const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+const ViewletStates = await import(
+  '../src/parts/ViewletStates/ViewletStates.js'
+)
 
 beforeAll(() => {
-  Viewlet.state.instances = Object.create(null)
-  Viewlet.state.instances.EditorText = {
+  ViewletStates.reset()
+  ViewletStates.set('EditorText', {
     state: {
       uri: '',
       lines: [],
@@ -22,11 +24,11 @@ beforeAll(() => {
         columnIndex: 0,
       },
     },
-  }
-  Viewlet.state.instances.Main = {
+  })
+  ViewletStates.set('Main', {
     state: {},
     factory: {},
-  }
+  })
 })
 
 beforeEach(() => {

@@ -1,4 +1,5 @@
 import * as MenuEntries from '../src/parts/MenuEntries/MenuEntries.js'
+import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
 test.skip('getMenuEntries - activityBar', async () => {
   expect(await MenuEntries.getMenuEntries('activityBar')).toBeInstanceOf(Array)
@@ -14,14 +15,12 @@ test('getMenuEntries - editor', async () => {
 
 test('getMenuEntries - explorer', async () => {
   const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
-  Viewlet.state.instances = {
-    Explorer: {
-      state: {
-        focusedIndex: -1,
-        dirents: [],
-      },
+  ViewletStates.set('Explorer', {
+    state: {
+      focusedIndex: -1,
+      dirents: [],
     },
-  }
+  })
   expect(await MenuEntries.getMenuEntries('explorer')).toBeInstanceOf(Array)
 })
 

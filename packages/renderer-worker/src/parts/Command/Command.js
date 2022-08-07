@@ -284,6 +284,7 @@ const getModuleId = (commandId) => {
       return MODULE_DIALOG
     case 2133:
     case 'Viewlet.getAllStates':
+    case 'Viewlet.openWidget':
       return MODULE_VIEWLET
     case 'IconTheme.getIconThemeCss':
     case 'IconTheme.hydrate':
@@ -439,6 +440,9 @@ const hasThrown = new Set()
 
 export const execute = (command, ...args) => {
   if (command in state.commands) {
+    if (typeof state.commands[command] !== 'function') {
+      throw new Error(`[renderer-worker] Command ${command} is not a function`)
+    }
     return state.commands[command](...args)
   }
   return (

@@ -7,9 +7,10 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 import * as SessionStorage from '../SessionStorage/SessionStorage.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const getStateToSave = () => {
-  const instances = Viewlet.state.instances
+  const instances = ViewletStates.getAllInstances()
   // const mainEditors = Main.state.editors
   return {
     instances,

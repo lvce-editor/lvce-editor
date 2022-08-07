@@ -1,10 +1,10 @@
 import { jest } from '@jest/globals'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
+import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
-  Viewlet.state.instances = Object.create(null)
+  ViewletStates.reset()
 })
 
 jest.unstable_mockModule(
@@ -54,7 +54,7 @@ test.skip('load', async () => {
   expect(mockModule.loadContent).toHaveBeenCalledWith({ x: 0 })
   expect(mockModule.contentLoaded).toHaveBeenCalledTimes(1)
   expect(mockModule.contentLoaded).toHaveBeenCalledWith({ x: 42 })
-  expect(Viewlet.state.instances['test']).toBeDefined()
+  expect(ViewletStates.getInstance('test')).toBeDefined()
 })
 
 test('load - race condition', async () => {
@@ -254,7 +254,7 @@ test('load - canceled', async () => {
   expect(mockModule.loadContent).toHaveBeenCalledTimes(1)
   expect(mockModule.loadContent).toHaveBeenCalledWith({ x: 0, version: 1 })
   expect(mockModule.contentLoaded).not.toHaveBeenCalled()
-  expect(Viewlet.state.instances['test']).toBeUndefined()
+  expect(ViewletStates.getInstance('test')).toBeUndefined()
 })
 
 test.skip('load - shouldApplyNewState returns false', async () => {
@@ -287,5 +287,5 @@ test.skip('load - shouldApplyNewState returns false', async () => {
   expect(mockModule.loadContent).toHaveBeenCalledTimes(1)
   expect(mockModule.loadContent).toHaveBeenCalledWith({ x: 0, version: 1 })
   expect(mockModule.contentLoaded).not.toHaveBeenCalled()
-  expect(Viewlet.state.instances['test']).toBeUndefined()
+  expect(ViewletStates.getInstance('test')).toBeUndefined()
 })

@@ -1,6 +1,28 @@
 export const state = {
-  states: Object.create(null),
-  modules: Object.create(null),
+  instances: Object.create(null),
 }
 
-export const setState = (key, value) => {}
+export const set = (key, value) => {
+  state.instances[key] = value
+}
+
+export const getInstance = (key) => {
+  return state.instances[key]
+}
+
+export const remove = (key) => {
+  delete state.instances[key]
+}
+
+export const getAllInstances = () => {
+  return state.instances
+}
+
+export const getState = (key) => {
+  const instance = getInstance(key)
+  return instance.state
+}
+
+export const reset = () => {
+  state.instances = Object.create(null)
+}

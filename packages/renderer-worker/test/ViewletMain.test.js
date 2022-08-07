@@ -29,7 +29,9 @@ const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
 )
 
-const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+const ViewletStates = await import(
+  '../src/parts/ViewletStates/ViewletStates.js'
+)
 
 const ViewletMain = await import('../src/parts/Viewlet/ViewletMain.js')
 
@@ -636,15 +638,13 @@ test.skip('closeEditor - 0 0 - first tab is focused and first tab is selected', 
     activeIndex: 0,
     focusedIndex: 0,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeEditor(state, 0)
   expect(state.editors).toEqual([
     {
@@ -680,15 +680,13 @@ test('closeEditor - 0 1 - first is focused and second tab is selected', async ()
   }
   // TODO main has strong dependency on viewlet, that makes testing difficult
   // and is probably a sign for bad code structure
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeEditor(state, 0)
   expect(state.editors).toEqual([
     {
@@ -725,15 +723,13 @@ test.skip('closeEditor - 0 2 - first tab is focused and last tab is selected', a
     activeIndex: 2,
     focusedIndex: 0,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeEditor(state, 0)
   expect(state.editors).toEqual([
     {
@@ -1105,15 +1101,13 @@ test('closeOthers - 0 0 - first tab is selected and first tab is focused', async
     activeIndex: 0,
     focusedIndex: 0,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeOthers(state)
   expect(state.editors).toEqual([
     {
@@ -1148,15 +1142,13 @@ test('closeOthers - 0 1 - first tab is focused and second tab is selected', asyn
     activeIndex: 1,
     focusedIndex: 0,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeOthers(state)
   expect(state.editors).toEqual([
     {
@@ -1191,15 +1183,13 @@ test('closeOthers - 0 2 - first tab is focused and third tab is selected', async
     activeIndex: 2,
     focusedIndex: 0,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeOthers(state)
   expect(state.editors).toEqual([
     {
@@ -1234,15 +1224,13 @@ test('closeOthers - 1 0 - second tab is focused and first tab is selected', asyn
     activeIndex: 0,
     focusedIndex: 1,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeOthers(state)
   expect(state.editors).toEqual([
     {
@@ -1277,15 +1265,13 @@ test('closeOthers - 1 1 - second tab is focused and second tab is selected', asy
     activeIndex: 1,
     focusedIndex: 1,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeOthers(state)
   expect(state.editors).toEqual([
     {
@@ -1320,15 +1306,13 @@ test('closeOthers - 1 2 - second tab is focused and third tab is selected', asyn
     activeIndex: 2,
     focusedIndex: 1,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeOthers(state)
   expect(state.editors).toEqual([
     {
@@ -1363,15 +1347,13 @@ test('closeOthers - 2 0 - third tab is focused and first tab is selected', async
     activeIndex: 0,
     focusedIndex: 2,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeOthers(state)
   expect(state.editors).toEqual([
     {
@@ -1406,15 +1388,13 @@ test('closeOthers - 2 1 - third tab is focused and second tab is selected', asyn
     activeIndex: 1,
     focusedIndex: 2,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeOthers(state)
   expect(state.editors).toEqual([
     {
@@ -1449,15 +1429,13 @@ test('closeOthers - 2 2 - third tab is focused and third tab is selected', async
     activeIndex: 1,
     focusedIndex: 2,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeOthers(state)
   expect(state.editors).toEqual([
     {
@@ -1492,15 +1470,13 @@ test('closeTabsRight - 0 0 - first tab is focused and first tab is selected', as
     activeIndex: 0,
     focusedIndex: 0,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsRight(state)
   expect(state.editors).toEqual([
     {
@@ -1534,15 +1510,13 @@ test('closeTabsRight - 0 1 - first tab is focused and second tab is selected', a
     activeIndex: 1,
     focusedIndex: 0,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsRight(state)
   expect(state.editors).toEqual([
     {
@@ -1576,15 +1550,13 @@ test('closeTabsRight - 0 2 - first tab is focused and third tab is selected', as
     activeIndex: 2,
     focusedIndex: 0,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsRight(state)
   expect(state.editors).toEqual([
     {
@@ -1618,15 +1590,13 @@ test('closeTabsRight - 1 0 - second tab is focused and first tab is selected', a
     activeIndex: 0,
     focusedIndex: 1,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsRight(state)
   expect(state.editors).toEqual([
     {
@@ -1663,15 +1633,13 @@ test('closeTabsRight - 1 1 - second tab is focused and second tab is selected', 
     activeIndex: 1,
     focusedIndex: 1,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsRight(state)
   expect(state.editors).toEqual([
     {
@@ -1708,15 +1676,13 @@ test('closeTabsRight - 1 2 - second tab is focused and third tab is selected', a
     activeIndex: 2,
     focusedIndex: 1,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsRight(state)
   expect(state.editors).toEqual([
     {
@@ -1753,15 +1719,13 @@ test('closeTabsRight - 2 0 - third tab is focused and first tab is selected', as
     activeIndex: 0,
     focusedIndex: 2,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsRight(state)
   expect(state.editors).toEqual([
     {
@@ -1801,15 +1765,13 @@ test('closeTabsRight - 2 1 - third tab is focused and second tab is selected', a
     activeIndex: 1,
     focusedIndex: 2,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsRight(state)
   expect(state.editors).toEqual([
     {
@@ -1849,15 +1811,13 @@ test('closeTabsRight - 2 2 - third tab is focused and third tab is selected', as
     activeIndex: 1,
     focusedIndex: 2,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsRight(state)
   expect(state.editors).toEqual([
     {
@@ -1897,15 +1857,13 @@ test('closeTabsLeft - 0 0 - first tab is focused and first tab is selected', asy
     activeIndex: 0,
     focusedIndex: 0,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsLeft(state)
   expect(state.editors).toEqual([
     {
@@ -1945,15 +1903,13 @@ test('closeTabsLeft - 0 1 - first tab is focused and second tab is selected', as
     activeIndex: 1,
     focusedIndex: 0,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsLeft(state)
   expect(state.editors).toEqual([
     {
@@ -1993,15 +1949,13 @@ test('closeTabsLeft - 0 2 - first tab is focused and third tab is selected', asy
     activeIndex: 2,
     focusedIndex: 0,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsLeft(state)
   expect(state.editors).toEqual([
     {
@@ -2041,15 +1995,13 @@ test('closeTabsLeft - 1 0 - second tab is focused and first tab is selected', as
     activeIndex: 0,
     focusedIndex: 1,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsLeft(state)
   expect(state.editors).toEqual([
     {
@@ -2086,15 +2038,13 @@ test('closeTabsLeft - 1 1 - second tab is focused and second tab is selected', a
     activeIndex: 1,
     focusedIndex: 1,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsLeft(state)
   expect(state.editors).toEqual([
     {
@@ -2131,15 +2081,13 @@ test('closeTabsLeft - 1 2 - second tab is focused and third tab is selected', as
     activeIndex: 2,
     focusedIndex: 1,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsLeft(state)
   expect(state.editors).toEqual([
     {
@@ -2176,15 +2124,13 @@ test('closeTabsLeft - 2 0 - third tab is focused and first tab is selected', asy
     activeIndex: 0,
     focusedIndex: 2,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsLeft(state)
   expect(state.editors).toEqual([
     {
@@ -2218,15 +2164,13 @@ test('closeTabsLeft - 2 1 - third tab is focused and second tab is selected', as
     activeIndex: 1,
     focusedIndex: 2,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsLeft(state)
   expect(state.editors).toEqual([
     {
@@ -2260,15 +2204,13 @@ test('closeTabsLeft - 2 2 - third tab is focused and third tab is selected', asy
     activeIndex: 1,
     focusedIndex: 2,
   }
-  Viewlet.state.instances = {
-    EditorText: {
-      factory: {
-        loadContent() {},
-        refresh() {},
-      },
-      state: {},
+  ViewletStates.set('EditorText', {
+    factory: {
+      loadContent() {},
+      refresh() {},
     },
-  }
+    state: {},
+  })
   await ViewletMain.closeTabsLeft(state)
   expect(state.editors).toEqual([
     {

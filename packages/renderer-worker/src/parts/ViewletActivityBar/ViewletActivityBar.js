@@ -2,7 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Layout from '../Layout/Layout.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const ACTIVITY_BAR_ITEM_HEIGHT = 48
 
@@ -125,7 +125,7 @@ const getActivityBarItems = () => {
 
 export const loadContent = async (state) => {
   const activityBarItems = getActivityBarItems()
-  const sideBar = Viewlet.state.instances.SideBar
+  const sideBar = ViewletStates.getState('SideBar')
   const viewletId =
     sideBar && sideBar.state ? sideBar.state.currentViewletId : ''
   const selectedIndex = findIndex(activityBarItems, viewletId)

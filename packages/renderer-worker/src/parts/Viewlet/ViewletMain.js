@@ -8,6 +8,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Viewlet from './Viewlet.js'
+import * as ViewletState from '../ViewletStates/ViewletStates.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -70,7 +71,7 @@ const restoreEditors = async (state) => {
 }
 
 const handleTokenizeChange = (languageId) => {
-  const instances = Viewlet.state.instances
+  const instances = ViewletState.getAllInstances()
   if (instances.EditorText) {
     const instance = instances.EditorText
   }
@@ -301,7 +302,8 @@ export const handleDrop = async () => {
 }
 
 export const closeActiveEditor = (state) => {
-  if (!state.activeEditor) {}
+  if (!state.activeEditor) {
+  }
 }
 
 export const closeAllEditors = (state) => {
@@ -314,7 +316,7 @@ export const closeAllEditors = (state) => {
   state.focusedIndex = -1
   state.selectedIndex = -1
   // TODO should call dispose method, but only in renderer-worker
-  delete Viewlet.state.instances.EditorText
+  ViewletState.remove('EditorText')
 }
 
 export const dispose = () => {}

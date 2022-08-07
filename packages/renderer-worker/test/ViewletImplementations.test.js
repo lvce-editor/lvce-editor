@@ -1,17 +1,16 @@
 import { jest } from '@jest/globals'
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
-
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
+import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
 beforeAll(() => {
-  Viewlet.state.instances = Object.create(null)
-  Viewlet.state.instances.EditorText = {
+  ViewletStates.reset()
+  ViewletStates.set('EditorText', {
     state: {
       uri: '',
       lines: [],
       selections: EditorSelection.fromRange(0, 0, 0, 0),
     },
-  }
+  })
 })
 
 beforeEach(() => {

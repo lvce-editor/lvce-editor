@@ -152,7 +152,8 @@
   },
   {
     "key": "ctrl+p",
-    "command": "QuickPick.openEverythingQuickPick"
+    "command": "Viewlet.openWidget",
+    "args": ["QuickPick", "everything"]
   },
   {
     "key": "ctrl+shift+p",

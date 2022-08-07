@@ -9,13 +9,13 @@ test.skip('focus', () => {
 })
 
 test.skip('setState - shouldApplyNewState returns false', () => {
-  Viewlet.state.instances['test'] = {
-    factory: {
-      hasFunctionalRender: true,
-      render() {
-        return []
-      },
-    },
-    state: {},
-  }
+  // Viewlet.state.instances['test'] = {
+  //   factory: {
+  //     hasFunctionalRender: true,
+  //     render() {
+  //       return []
+  //     },
+  //   },
+  //   state: {},
+  // }
 })
