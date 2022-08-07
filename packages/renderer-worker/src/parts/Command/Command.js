@@ -9,8 +9,6 @@ const MODULE_QUICK_PICK = 21
 const MODULE_FIND_WIDGET = 23
 const MODULE_PREFERENCES = 25
 const MODULE_DEVELOPER = 26
-const MODULE_EDITOR_COMMAND = 27
-const MODULE_EDITOR_COMPLETION = 28
 const MODULE_KEY_BINDINGS = 29
 const MODULE_COLOR_PICKER = 33
 const MODULE_CLIP_BOARD = 36
@@ -80,8 +78,6 @@ const loadModule = (moduleId) => {
       return import('../Preferences/Preferences.ipc.js')
     case MODULE_DEVELOPER:
       return import('../Developer/Developer.ipc.js')
-    case MODULE_EDITOR_COMMAND:
-      return import('../EditorCommand/EditorCommand.ipc.js')
     case MODULE_KEY_BINDINGS:
       return import('../KeyBindings/KeyBindings.ipc.js')
     case MODULE_COLOR_PICKER:
@@ -206,88 +202,6 @@ const getModuleId = (commandId) => {
     case 'Ajax.getJson':
     case 'Ajax.getText':
       return MODULE_AJAX
-    case 'Editor.applyEdit':
-    case 'Editor.blur':
-    case 'Editor.braceCompletion':
-    case 'Editor.cancelSelection':
-    case 'Editor.handleScrollBarMove':
-    case 'Editor.close':
-    case 'Editor.compositionEnd':
-    case 'Editor.compositionStart':
-    case 'Editor.compositionUpdate':
-    case 'Editor.copy':
-    case 'Editor.copyLineDown':
-    case 'Editor.copyLineUp':
-    case 'Editor.cursorLeft':
-    case 'Editor.cursorRight':
-    case 'Editor.cursorEnd':
-    case 'Editor.cursorsDown':
-    case 'Editor.cursorSet':
-    case 'Editor.cursorsHome':
-    case 'Editor.cursorsUp':
-    case 'Editor.cursorWordLeft':
-    case 'Editor.cursorWordPartLeft':
-    case 'Editor.cursorWordPartRight':
-    case 'Editor.cursorWordRight':
-    case 'Editor.cut':
-    case 'Editor.deleteAllLeft':
-    case 'Editor.deleteAllRight':
-    case 'Editor.deleteCharacterLeft':
-    case 'Editor.deleteCharacterRight':
-    case 'Editor.deleteWordLeft':
-    case 'Editor.deleteWordPartLeft':
-    case 'Editor.deleteWordPartRight':
-    case 'Editor.deleteWordRight':
-    case 'Editor.format':
-    case 'Editor.goToDefinition':
-    case 'Editor.goToTypeDefinition':
-    case 'Editor.handleBeforeInputFromContentEditable':
-    case 'Editor.handleContextMenu':
-    case 'Editor.handleDoubleClick':
-    case 'Editor.handleMouseMove':
-    case 'Editor.handleMouseMoveWithAltKey':
-    case 'Editor.handleNativeSelectionChange':
-    case 'Editor.handleScrollBarClick':
-    case 'Editor.handleSingleClick':
-    case 'Editor.handleTab':
-    case 'Editor.handleTouchEnd':
-    case 'Editor.handleTouchMove':
-    case 'Editor.handleTouchStart':
-    case 'Editor.handleTripleClick':
-    case 'Editor.indentLess':
-    case 'Editor.indentMore':
-    case 'Editor.insertLineBreak':
-    case 'Editor.moveLineDown':
-    case 'Editor.moveLineUp':
-    case 'Editor.moveRectangleSelection':
-    case 'Editor.moveRectangleSelectionPx':
-    case 'Editor.moveSelection':
-    case 'Editor.moveSelectionPx':
-    case 'Editor.openCompletion':
-    case 'Editor.openCompletionFromType':
-    case 'Editor.paste':
-    case 'Editor.pasteText':
-    case 'Editor.save':
-    case 'Editor.selectAll':
-    case 'Editor.selectAllOccurrences':
-    case 'Editor.selectCharacterLeft':
-    case 'Editor.selectCharacterRight':
-    case 'Editor.selectInsideString':
-    case 'Editor.selectLine':
-    case 'Editor.selectNextOccurrence':
-    case 'Editor.selectWord':
-    case 'Editor.selectWordLeft':
-    case 'Editor.selectWordRight':
-    case 'Editor.setDecorations':
-    case 'Editor.setDeltaY':
-    case 'Editor.setLanguageId':
-    case 'Editor.tabCompletion':
-    case 'Editor.toggleBlockComment':
-    case 'Editor.toggleComment':
-    case 'Editor.type':
-    case 'Editor.undo':
-    case 'Editor.unindent':
-      return MODULE_EDITOR_COMMAND
     case 'ErrorHandling.handleError':
       return MODULE_ERROR_HANDLING
     case 'FileSystem.readFile':
@@ -334,87 +248,6 @@ const getModuleId = (commandId) => {
     case 'ContextMenu.selectCurrent':
     case 'ContextMenu.noop':
       return MODULE_CONTEXT_MENU
-    case 'EditorCursorDown.editorCursorsDown':
-    case 'EditorCursorCharacterLeft.editorCursorCharacterLeft':
-    case 'EditorCursorCharacterRight.editorCursorsCharacterRight':
-    case 'EditorCursorUp.editorCursorsUp':
-    case 'EditorType.editorType':
-    case 'EditorDeleteLeft.editorDeleteCharacterLeft':
-    case 'EditorDeleteRight.editorDeleteCharacterRight':
-    case 'EditorInsertLineBreak.editorInsertLineBreak':
-    case 'EditorCopyLineUp.editorCopyLineUp':
-    case 'EditorCopyLineDown.editorCopyLineDown':
-    case 'EditorMoveLineDown.editorMoveLineDown':
-    case 'EditorCursorWordLeft.editorCursorWordLeft':
-    case 'EditorCursorWordRight.editorCursorWordRight':
-    case 'EditorDeleteWordLeft.editorDeleteWordLeft':
-    case 'EditorDeleteWordRight.editorDeleteWordRight':
-    case 'EditorMoveLineUp.editorMoveLineUp':
-    case 'EditorTabCompletion.editorTabCompletion':
-    case 'EditorCursorHome.editorCursorsHome':
-    case 'EditorCursorEnd.editorCursorEnd':
-    case 'EditorHandleSingleClick.editorHandleSingleClick':
-    case 'EditorSelectWord.editorSelectWord':
-    case 'EditorToggleBlockComment.editorToggleBlockComment':
-    case 'EditorMoveSelection.editorMoveSelection':
-    case 'EditorCut.editorCut':
-    case 'EditorCopy.editorCopy':
-    case 'EditorSelectAll.editorSelectAll':
-    case 'EditorMoveRectangleSelection.editorMoveRectangleSelection':
-    case 'EditorCursorWordPartRight.editorCursorWordPartRight':
-    case 'EditorCursorWordPartLeft.editorCursorWordPartLeft':
-    case 'EditorBlur.editorBlur':
-    case 'EditorToggleComment.editorToggleComment':
-    case 'EditorDeleteAllLeft.editorDeleteAllLeft':
-    case 'EditorDeleteAllRight.editorDeleteAllRight':
-    case 'EditorHandleTripleClick.editorHandleTripleClick':
-    case 'EditorSelectLine.editorSelectLine':
-    case 'EditorSave.editorSave':
-    case 'EditorHandleContextMenu.editorHandleContextMenu':
-    case 'EditorSelectCharacterLeft.editorSelectCharacterLeft':
-    case 'EditorSelectCharacterRight.editorSelectCharacterRight':
-    case 'EditorPasteText.editorPasteText':
-    case 'EditorPaste.editorPaste':
-    case 'EditorSetDeltaY.editorSetDeltaY':
-    case 'EditorHandleDoubleClick.editorHandleDoubleClick':
-    case 'EditorMoveSelectionPx.editorMoveSelectionPx':
-    case 'EditorMoveRectangleSelectionPx.editorMoveRectangleSelectionPx':
-    case 'EditorFormat.editorFormat':
-    case 'EditorHandleMouseMove.editorHandleMouseMove':
-    case 'EditorSelectNextOccurrence.editorSelectNextOccurrence':
-    case 'EditorSelectAllOccurrences.editorSelectAllOccurrences':
-    case 'EditorHandleTab.editorHandleTab':
-    case 'EditorCancelSelection.editorCancelSelection':
-    case 'EditorUnindent.editorUnindent':
-    case 'EditorUndo.editorUndo':
-    case 'EditorCursorSet.editorCursorSet':
-    case 'EditorDeleteWordPartLeft.editorDeleteWordPartLeft':
-    case 'EditorDeleteWordPartRight.editorDeleteWordPartRight':
-    case 'EditorHandleScrollBarMove.editorHandleScrollBarMove':
-    case 'EditorHandleScrollBarClick.editorHandleScrollBarClick':
-    case 'EditorSelectWordRight.editorSelectWordRight':
-    case 'EditorSelectWordLeft.editorSelectWordLeft':
-    case 'EditorSelectInsideString.editorSelectInsideString':
-    case 'EditorHandleTouchStart.editorHandleTouchStart':
-    case 'EditorHandleTouchMove.editorHandleTouchMove':
-    case 'EditorHandleTouchEnd.editorHandleTouchEnd':
-    case 'EditorHandleBeforeInputFromContentEditable.handleBeforeInputFromContentEditable':
-    case 'EditorHandleNativeSelectionChange.editorHandleNativeSelectionChange':
-    case 'EditorCommandIndentMore.editorIndentMore':
-    case 'EditorCommandIndentLess.editorIndentLess':
-    case 'EditorComposition.editorCompositionStart':
-    case 'EditorComposition.editorCompositionUpdate':
-    case 'EditorComposition.editorCompositionEnd':
-    case 'EditorGoToDefinition.editorGoToDefinition':
-    case 'EditorHandleMouseMoveWithAltKey.editorHandleMouseMoveWithAltKey':
-    case 'EditorCompletion.open':
-    case 'EditorCompletion.close':
-    case 'EditorCompletion.openFromType':
-    case 'EditorSetLanguageId.setLanguageId':
-    case 'EditorGoToTypeDefinition.editorGoToTypeDefinition':
-    case 'EditorApplyEdit.editorApplyEdit':
-    case 'EditorSetDecorations.setDecorations':
-      return MODULE_EDITOR_COMMAND
     case 'Layout.showSideBar':
     case 'Layout.hideSideBar':
     case 'Layout.toggleSideBar':
@@ -498,6 +331,8 @@ const getModuleId = (commandId) => {
     case 'ColorTheme.hydrate':
     case 'ColorTheme.setColorTheme':
       return MODULE_COLOR_THEME
+
+    // TODO this should be in layout module
     case 'Navigation.focusPreviousPart':
     case 'Navigation.focusNextPart':
     case 'Navigation.focusActivityBar':
