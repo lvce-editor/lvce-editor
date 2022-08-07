@@ -36,7 +36,7 @@ export const create = () => {
     recentPickIds: new Map(), // TODO use object.create(null) instead
     versionId: 0,
     provider: QuickPickEveryThing, // TODO make this dynamic again
-    focusedIndex: 0,
+    focusedIndex: -1,
     warned: [],
     visiblePicks: [],
     minLineY: 0,
@@ -448,8 +448,32 @@ export const hasFunctionalRender = true
 
 export const render = (oldState, newState) => {
   console.log({ oldState, newState })
-  const commands = []
+  const changes = []
   if (oldState.value !== newState.value) {
+    changes.push([
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'QuickPick',
+      /* method */ 'setValue',
+      /* value */ newState.value,
+    ])
   }
-  return []
+  if (oldState.visiblePicks !== newState.visiblePicks) {
+    // TODO compute visible picks here from filteredPicks and minLineY / maxLineY, maybe also do filtering here
+    changes.push([
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'QuickPick',
+      /* method */ 'setVisiblePicks',
+      /* visiblePicks */ newState.visiblePicks,
+    ])
+  }
+  if (oldState.focusedIndex !== newState.focusedIndex) {
+    changes.push([
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'QuickPick',
+      /* method */ 'setFocusedIndex',
+      /* oldFocusedIndex */ oldState.focusedIndex,
+      /* newFocusedIndex */ newState.focusedIndex,
+    ])
+  }
+  return changes
 }

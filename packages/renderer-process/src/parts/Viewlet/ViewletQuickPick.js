@@ -222,45 +222,19 @@ export const updatePicks = (state, visiblePicks, unFocusIndex) => {
   focusIndex(state, unFocusIndex, 0) // TODO handle length zero
 }
 
-export const updateValueAndPicks = (
-  state,
-  value,
-  visiblePicks,
-  focusIndex,
-  unFocusIndex
-) => {
-  state.$QuickPickInput.value = value
-  if (unFocusIndex !== -1) {
-    state.$QuickPickItems.children[unFocusIndex].classList.remove('Focused')
-  }
+export const setVisiblePicks = (state, visiblePicks) => {
   render$QuickPickItems(state.$QuickPickItems, visiblePicks)
-  if (focusIndex !== -1) {
-    // TODO set aria-activedescendant
-    state.$QuickPickItems.children[focusIndex].classList.add('Focused')
-  }
 }
 
-export const updateValueAndPicksAndPlaceholder = (
-  state,
-  value,
-  visiblePicks,
-  focusIndex,
-  unFocusIndex,
-  placeholder,
-  label
-) => {
-  const { $QuickPickInput, $QuickPickItems } = state
-  updateValueAndPicks(state, value, visiblePicks, focusIndex, unFocusIndex)
-  $QuickPickInput.placeholder = placeholder
-  $QuickPickInput.ariaLabel = placeholder
-  $QuickPickItems.ariaLabel = label
-  console.log({ placeholder, label })
-  // setTimeout(() => {
-  // $QuickPickInput.focus()
-  // }, 100)
-  // $QuickPickInput.ariaDescription = 'this is a description'
-
-  // $QuickPickInput.focus()
+export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
+  const { $QuickPickItems, $QuickPickInput } = state
+  if (oldFocusedIndex !== -1) {
+    const $OldItem = $QuickPickItems.children[oldFocusedIndex]
+    $OldItem.classList.remove('Focused')
+  }
+  const $NewItem = $QuickPickItems.children[newFocusedIndex]
+  $NewItem.classList.add('Focused')
+  $QuickPickInput.setAttribute('aria-activedescendant', $NewItem.id)
 }
 
 // TODO
