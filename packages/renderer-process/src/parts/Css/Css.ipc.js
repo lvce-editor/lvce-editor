@@ -3,4 +3,5 @@ import * as Css from './Css.js'
 
 export const __initialize__ = () => {
   Command.register('Css.setInlineStyle', Css.setInlineStyle)
+  Command.register('Css.addStyleSheet', Css.addStyleSheet)
 }

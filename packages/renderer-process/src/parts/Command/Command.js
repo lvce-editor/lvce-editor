@@ -188,6 +188,7 @@ const getModuleId = (commandId) => {
     case 'EditorRename.dispose':
       return MODULE_EDITOR_RENAME
     case 'Css.setInlineStyle':
+    case 'Css.addStyleSheet':
       return MODULE_CSS
     case 'Location.getPathName':
     case 'Location.setPathName':

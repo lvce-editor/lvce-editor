@@ -19,4 +19,6 @@ export const Commands = {
   'ActivityBar.handleSideBarHidden': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.handleSideBarHidden),
 }
 
+export const Css = '/css/parts/ActivityBar.css'
+
 export * from './ViewletActivityBar.js'

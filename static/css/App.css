@@ -5,7 +5,7 @@
 /* application css */
 @import './parts/__Theme.css';
 @import './parts/_Global.css';
-@import './parts/ActivityBar.css';
+/* @import './parts/ActivityBar.css';
 @import './parts/EditorTabs.css';
 @import './parts/Dialog.css';
 @import './parts/Menu.css';
@@ -40,7 +40,7 @@
 @import './parts/ImagePreview.css';
 @import './parts/BackDrop.css';
 @import './parts/Animation.css';
-@import './parts/ViewletReferences.css';
+@import './parts/ViewletReferences.css'; */
 
 /* focus css (can be overridden by components) */
 @import './parts/Focus.css';

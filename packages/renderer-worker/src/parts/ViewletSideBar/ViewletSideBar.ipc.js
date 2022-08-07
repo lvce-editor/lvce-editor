@@ -8,4 +8,6 @@ export const Commands =  {
   'SideBar.show': Viewlet.wrapViewletCommand('SideBar', ViewletSideBar.openViewlet),
 }
 
+export const Css = '/css/parts/SideBar.css'
+
 export * from './ViewletSideBar.js'

@@ -7,4 +7,6 @@ export const Commands = {
   'ViewletSearch.handleClick': Viewlet.wrapViewletCommand('Search', ViewletSearch.handleClick),
 }
 
+export const Css = '/css/parts/ViewletSearch.css'
+
 export * from './ViewletSearch.js'

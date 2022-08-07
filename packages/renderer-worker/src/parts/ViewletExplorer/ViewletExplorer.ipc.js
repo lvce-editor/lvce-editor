@@ -39,4 +39,6 @@ export const Commands = {
   'Explorer.setDeltaY':            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.setDeltaY),
 }
 
+export const Css = '/css/parts/ViewletExplorer.css'
+
 export * from './ViewletExplorer.js'

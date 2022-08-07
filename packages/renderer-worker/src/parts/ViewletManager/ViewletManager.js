@@ -4,8 +4,13 @@ import * as Assert from '../Assert/Assert.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Command from '../Command/Command.js'
+import * as Css from '../Css/Css.js'
 
 export const modules = Object.create(null)
+
+export const loadingCss = Object.create(null)
+
+export const loadedCss = Object.create(null)
 
 const ViewletState = {
   Default: 0,
@@ -136,6 +141,11 @@ export const load = async (viewlet, focus = false) => {
       for (const [key, value] of Object.entries(module.Commands)) {
         Command.register(key, value)
       }
+    }
+    if (module.Css) {
+      const css = module.Css
+      await Css.addStyleSheet('', css)
+      // console.log({ css })
     }
     state = ViewletState.ModuleLoaded
     const viewletState = module.create(
