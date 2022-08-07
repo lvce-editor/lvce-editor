@@ -37,7 +37,7 @@ test('loadContent', async () => {
       currentViewletId: 'Search',
     },
   })
-  expect(await ViewletActivityBar.loadContent(state)).toEqual({
+  expect(await ViewletActivityBar.loadContent(state)).toMatchObject({
     activityBarItems: [
       {
         enabled: true,

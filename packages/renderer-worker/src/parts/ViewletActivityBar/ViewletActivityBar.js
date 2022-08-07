@@ -125,7 +125,7 @@ const getActivityBarItems = () => {
 
 export const loadContent = async (state) => {
   const activityBarItems = getActivityBarItems()
-  const sideBar = ViewletStates.getState('SideBar')
+  const sideBar = ViewletStates.getInstance('SideBar')
   const viewletId =
     sideBar && sideBar.state ? sideBar.state.currentViewletId : ''
   const selectedIndex = findIndex(activityBarItems, viewletId)
