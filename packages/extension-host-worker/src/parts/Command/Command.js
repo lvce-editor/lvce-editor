@@ -30,6 +30,8 @@ const getFn = (method) => {
       return ExtensionHostTabCompletion.executeTabCompletionProvider
     case 'ExtensionHostBraceCompletion.executeBraceCompletionProvider':
       return ExtensionHostBraceCompletion.executeBraceCompletionProvider
+    case 'ExtensionHostTextDocument.syncIncremental':
+      return TextDocument.syncIncremental
     default:
       throw new Error(`method not found: ${method}`)
   }
