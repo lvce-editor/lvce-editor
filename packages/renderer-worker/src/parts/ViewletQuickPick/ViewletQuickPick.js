@@ -3,7 +3,7 @@ import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as QuickPickEveryThing from '../QuickPick/QuickPickEverything.js'
-
+import * as Viewlet from '../Viewlet/Viewlet.js'
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
 
@@ -207,6 +207,8 @@ export const handleBlur = async (state) => {
 }
 
 const getPick = (state, index) => {
+  Assert.object(state)
+  Assert.number(index)
   // if (index < state.recentPicks.length) {
   //   return state.recentPicks[index]
   // }
@@ -219,20 +221,13 @@ const getPick = (state, index) => {
 
 export const selectIndex = async (state, index, button = /* left */ 0) => {
   const pick = getPick(state, index)
-  const versionBefore = state.versionId
   const selectPickResult = await state.provider.selectPick(pick, index, button)
   Assert.object(selectPickResult)
   Assert.string(selectPickResult.command)
   const { command } = selectPickResult
-  const versionAfter = state.versionId
-  if (versionBefore !== versionAfter) {
-    // selecting a pick might have opened another quick pick
-    // so there is no need to hide the quick pick
-    return
-  }
   switch (command) {
     case 'hide':
-      dispose()
+      await Viewlet.closeWidget('QuickPick')
       break
     default:
       break
@@ -250,7 +245,7 @@ export const selectIndex = async (state, index, button = /* left */ 0) => {
 }
 
 export const selectCurrentIndex = async (state) => {
-  await selectIndex(state.focusedIndex)
+  await selectIndex(state, state.focusedIndex)
 }
 
 // TODO when user types letters -> no need to query provider again -> just filter existing results

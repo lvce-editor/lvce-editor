@@ -141,7 +141,7 @@ export const wrapViewletCommand = (id, fn) => {
         return
       }
       const commands = activeInstance.factory.render(oldState, newState)
-      ViewletStates.set(id, newState)
+      ViewletStates.setState(id, newState)
       await RendererProcess.invoke(
         /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
         /* commands */ commands
@@ -203,4 +203,12 @@ export const openWidget = async (id, ...args) => {
     id,
     type: 0,
   })
+}
+
+export const closeWidget = async (id) => {
+  await RendererProcess.invoke(
+    /* Viewlet.dispose */ 'Viewlet.dispose',
+    /* id */ id
+  )
+  ViewletStates.remove(id)
 }

@@ -23,6 +23,11 @@ export const getState = (key) => {
   return instance.state
 }
 
+export const setState = (key, newState) => {
+  const instance = getInstance(key)
+  instance.state = newState
+}
+
 export const reset = () => {
   state.instances = Object.create(null)
 }
