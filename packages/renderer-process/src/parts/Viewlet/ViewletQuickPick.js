@@ -233,8 +233,11 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
     $OldItem.classList.remove('Focused')
   }
   const $NewItem = $QuickPickItems.children[newFocusedIndex]
-  $NewItem.classList.add('Focused')
-  $QuickPickInput.setAttribute('aria-activedescendant', $NewItem.id)
+  // TODO new item should always be defined probably
+  if ($NewItem) {
+    $NewItem.classList.add('Focused')
+    $QuickPickInput.setAttribute('aria-activedescendant', $NewItem.id)
+  }
 }
 
 // TODO

@@ -153,27 +153,17 @@
   {
     "key": "ctrl+p",
     "command": "Viewlet.openWidget",
-    "args": ["QuickPick", "everything"]
+    "args": ["QuickPick", "file"]
   },
   {
     "key": "ctrl+shift+p",
-    "command": "QuickPick.openCommandPalette"
-  },
-  {
-    "key": "shift shift",
-    "command": "QuickPick.openCommandPalette"
-  },
-  {
-    "key": "ctrl ctrl",
-    "command": "QuickPick.openCommandPalette"
-  },
-  {
-    "key": "alt alt",
-    "command": "QuickPick.openCommandPalette"
+    "command": "Viewlet.openWidget",
+    "args": ["QuickPick", "commandPalette"]
   },
   {
     "key": "F1",
-    "command": "QuickPick.openCommandPalette"
+    "command": "Viewlet.openWidget",
+    "args": ["QuickPick", "commandPalette"]
   },
   {
     "key": "Escape",

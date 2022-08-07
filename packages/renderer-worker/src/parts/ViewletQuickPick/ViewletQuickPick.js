@@ -27,7 +27,7 @@ const QuickPickState = {
 
 export const name = 'QuickPick'
 
-export const create = () => {
+export const create = (id, uri, top, left, width, height) => {
   return {
     state: QuickPickState.Default,
     picks: [],
@@ -42,6 +42,7 @@ export const create = () => {
     minLineY: 0,
     maxLineY: 0,
     maxVisibleItems: 10,
+    uri,
   }
 }
 
@@ -111,48 +112,47 @@ const getVisiblePicks = (state, picks, filterValue) => {
   return toDisplayPicks(slicedPicks)
 }
 
-// TODO have lazy loadable provider as argument
-export const loadContent = async (state) => {
-  const value = ''
-  const provider = state.provider
-  if (state.state === QuickPickState.Finished) {
-    const version = ++state.versionId
-    // TODO if provider is immutable, don't necessarily need to get new picks
-    const newPicks = await provider.getPicks(value)
-    Assert.array(newPicks)
-    if (version !== state.versionId) {
-      return
-    }
-    const filterValue = provider.getFilterValue(value)
-    const visiblePicks = getVisiblePicks(state, newPicks, filterValue)
-    const placeholder = provider.getPlaceholder()
-    const label = provider.getLabel()
-
-    const minLineY = 0
-    const maxLineY = Math.min(
-      minLineY + state.maxVisibleItems,
-      newPicks.length - 1
-    )
-    return {
-      ...state,
-      picks: newPicks,
-      visiblePicks,
-      focusedIndex: 0,
-      state: QuickPickState.Finished,
-    }
+const getProvider = (uri) => {
+  console.log({ uri })
+  switch (uri) {
+    case 'quickPick://commandPalette':
+      return import('../QuickPick/QuickPickCommand.js')
+    case 'quickPick://file':
+      return import('../QuickPick/QuickPickFile.js')
+    case 'quickPick://noop':
+      return import('../QuickPick/QuickPickNoop.js')
+    case 'quickPick://number':
+      return import('../QuickPick/QuickPickNumber.js')
+    case 'quickPick://recent':
+      return import('../QuickPick/QuickPickOpenRecent.js')
+    case 'quickPick://color-theme':
+      return import('../QuickPick/QuickPickColorTheme.js')
+    case 'quickPick://symbol':
+      return import('../QuickPick/QuickPickSymbol.js')
+    case 'quickPick://view':
+      return import('../QuickPick/QuickPickView.js')
+    case 'quickPick://workspace-symbol':
+      return import('../QuickPick/QuickPickWorkspaceSymbol.js')
+    default:
+      throw new Error(`unsupported quick pick type: ${uri}`)
   }
-  state.state = QuickPickState.Creating
-  const version = ++state.versionId
-  // TODO also pass initial value here
-  await RendererProcess.invoke(
-    /* Viewlet.load */ 'Viewlet.load',
-    /* id */ 'QuickPick'
-  )
+}
+
+const getDefaultValue = (uri) => {
+  switch (uri) {
+    case 'quickPick://commandPalette':
+      return '>'
+    default:
+      return ''
+  }
+}
+
+export const loadContent = async (state) => {
+  const uri = state.uri
+  const value = getDefaultValue(uri)
+  const provider = await getProvider(uri)
   const newPicks = await provider.getPicks(value)
   Assert.array(newPicks)
-  if (version !== state.versionId) {
-    return
-  }
   if (newPicks.length === 0) {
     const noResults = await provider.getNoResults()
     RendererProcess.invoke(
@@ -181,6 +181,7 @@ export const loadContent = async (state) => {
     state: QuickPickState.Finished,
     minLineY,
     maxLineY,
+    value,
   }
 }
 
@@ -194,16 +195,7 @@ export const dispose = (state) => {
 }
 
 export const handleBlur = async (state) => {
-  switch (state.state) {
-    case QuickPickState.Default:
-    case QuickPickState.Creating:
-      break
-    case QuickPickState.Finished:
-      await dispose()
-      break
-    default:
-      break
-  }
+  return state
 }
 
 const getPick = (state, index) => {
@@ -442,7 +434,6 @@ export const showExtensionsQuickPick = async (items) => {
 export const hasFunctionalRender = true
 
 export const render = (oldState, newState) => {
-  console.log({ oldState, newState })
   const changes = []
   if (oldState.value !== newState.value) {
     changes.push([
@@ -470,5 +461,6 @@ export const render = (oldState, newState) => {
       /* newFocusedIndex */ newState.focusedIndex,
     ])
   }
+  console.log({ changes })
   return changes
 }

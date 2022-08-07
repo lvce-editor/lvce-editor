@@ -164,6 +164,9 @@ const loadModule = (moduleId) => {
 }
 
 const initializeModule = (module) => {
+  if (typeof module.__initialize__ !== 'function') {
+    throw new Error(`module ${module.name} is missing an initialize function`)
+  }
   return module.__initialize__()
 }
 

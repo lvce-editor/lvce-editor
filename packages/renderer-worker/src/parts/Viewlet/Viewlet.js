@@ -198,10 +198,12 @@ export const getAllStates = () => {
 
 export const openWidget = async (id, ...args) => {
   console.log({ args })
+  const type = args[0]
   await ViewletManager.load({
     getModule: ViewletManager.getModule,
     id,
     type: 0,
+    uri: `quickPick://${type}`,
   })
 }
 

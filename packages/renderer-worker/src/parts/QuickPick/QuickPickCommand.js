@@ -55,6 +55,9 @@ const getExtensionPicks = async () => {
   try {
     // TODO don't call this every time
     const extensionPicks = await ExtensionHostCommands.getCommands()
+    if (!extensionPicks) {
+      return []
+    }
     const mappedPicks = extensionPicks.map(prefixIdWithExt)
     return mappedPicks
   } catch (error) {
