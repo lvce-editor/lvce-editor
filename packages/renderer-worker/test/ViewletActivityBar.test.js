@@ -21,7 +21,7 @@ const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
 const ViewletActivityBar = await import(
-  '../src/parts/Viewlet/ViewletActivityBar.js'
+  '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
 )
 
 const ACTIVITY_BAR_ITEM_HEIGHT = 48

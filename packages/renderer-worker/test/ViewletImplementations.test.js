@@ -32,7 +32,7 @@ const ExtensionHostImplementations = await import(
 )
 
 const ViewletImplementations = await import(
-  '../src/parts/Viewlet/ViewletImplementations.js'
+  '../src/parts/ViewletImplementations/ViewletImplementations.js'
 )
 
 test('name', () => {

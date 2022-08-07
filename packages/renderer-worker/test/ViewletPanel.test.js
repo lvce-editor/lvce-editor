@@ -1,4 +1,4 @@
-import * as ViewletPanel from '../src/parts/Viewlet/ViewletPanel.js'
+import * as ViewletPanel from '../src/parts/ViewletPanel/ViewletPanel.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 
 test('name', () => {

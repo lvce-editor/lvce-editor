@@ -34,7 +34,7 @@ beforeEach(() => {
 })
 
 const ViewletLocations = await import(
-  '../src/parts/Viewlet/ViewletLocations.js'
+  '../src/parts/ViewletLocations/ViewletLocations.js'
 )
 
 test('name', () => {
