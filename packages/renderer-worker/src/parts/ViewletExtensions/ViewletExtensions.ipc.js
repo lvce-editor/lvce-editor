@@ -24,4 +24,6 @@ export const Commands = {
   'Extensions.handleScrollBarClick': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.handleScrollBarClick),
 }
 
+export const Css = '/css/parts/ViewletExtensions.css'
+
 export * from './ViewletExtensions.js'

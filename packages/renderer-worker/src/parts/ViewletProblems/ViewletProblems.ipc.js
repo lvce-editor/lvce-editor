@@ -6,4 +6,6 @@ export const Commands = {
   'ViewletProblems.focusIndex': Viewlet.wrapViewletCommand('Problems', ViewletProblems.focusIndex),
 }
 
+export const Css = '/css/parts/ViewletProblems.css'
+
 export * from './ViewletProblems.js'

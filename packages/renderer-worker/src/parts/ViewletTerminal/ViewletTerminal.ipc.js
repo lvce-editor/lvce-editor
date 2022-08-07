@@ -7,4 +7,6 @@ export const Commands = {
   4871: Viewlet.wrapViewletCommand('Terminal', ViewletTerminal.clear),
 }
 
+export const Css = '/css/parts/ViewletTerminal.css'
+
 export * from './ViewletTerminal.js'
