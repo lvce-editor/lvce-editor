@@ -1,7 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
-import * as Viewlet from './Viewlet.js'
 
 export const name = 'Panel'
 
