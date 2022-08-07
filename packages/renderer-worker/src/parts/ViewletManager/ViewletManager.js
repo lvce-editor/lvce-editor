@@ -43,7 +43,7 @@ export const getModule = (id) => {
     case 'EditorText':
       return import('../ViewletEditorText/ViewletEditorText.ipc.js')
     case 'EditorPlainText':
-      return import('../Viewlet/ViewletEditorPlainText.js')
+      return import('../ViewletEditorPlainText/ViewletEditorPlainText.js')
     case 'EditorImage':
       return import('../ViewletEditorImage/ViewletEditorImage.ipc.js')
     case 'Clock':
