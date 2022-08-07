@@ -4,8 +4,6 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 // prettier-ignore
 export const Commands = {
   'QuickPick.openEverythingQuickPick': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.openEverythingQuickPick),
-  'QuickPick.dispose': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.dispose),
-  'QuickPick.hide': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.dispose),
   'QuickPick.selectCurrentIndex': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.selectCurrentIndex),
   'QuickPick.handleInput': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.handleInput),
   'QuickPick.selectIndex': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.selectIndex),

@@ -208,9 +208,9 @@ export const openWidget = async (id, ...args) => {
 }
 
 export const closeWidget = async (id) => {
+  ViewletStates.remove(id)
   await RendererProcess.invoke(
     /* Viewlet.dispose */ 'Viewlet.dispose',
     /* id */ id
   )
-  ViewletStates.remove(id)
 }

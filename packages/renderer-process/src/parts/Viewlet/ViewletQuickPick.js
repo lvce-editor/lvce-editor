@@ -277,7 +277,7 @@ export const create = (value, visiblePicks, focusIndex) => {
   // $QuickPick.setAttribute('aria-modal', 'false') // TODO why is this
   $QuickPick.ariaLabel = 'Quick open'
 
-  // workaround for chrome bug, role application is already on body but
+  // workaround for chrome bug (maybe?), role application is already on body but
   // chrome sometimes uses role document
   document.body.setAttribute('role', 'application')
 

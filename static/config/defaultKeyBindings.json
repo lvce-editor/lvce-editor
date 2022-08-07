@@ -167,7 +167,8 @@
   },
   {
     "key": "Escape",
-    "command": "QuickPick.hide",
+    "command": "Viewlet.closeWidget",
+    "args": ["QuickPick"],
     "when": "focus.quickPickInput"
   },
   {

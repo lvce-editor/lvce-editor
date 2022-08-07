@@ -402,22 +402,14 @@ const getModuleId = (commandId) => {
     case 'Callback.resolve':
     case 'Callback.reject':
       return MODULE_CALLBACK
-    case 'QuickPick.openEverythingQuickPick':
-    case 'QuickPick.dispose':
     case 'QuickPick.selectCurrentIndex':
     case 'QuickPick.handleInput':
     case 'QuickPick.selectIndex':
-    case 'QuickPick.openCommandPalette':
-    case 'QuickPick.openView':
     case 'QuickPick.focusFirst':
     case 'QuickPick.focusLast':
     case 'QuickPick.focusPrevious':
     case 'QuickPick.focusNext':
-    case 'QuickPick.openGoToLine':
-    case 'QuickPick.openColorTheme':
-    case 'QuickPick.fileOpenRecent':
     case 'QuickPick.handleBlur':
-    case 'QuickPick.showExtensionsQuickPick':
       return MODULE_VIEWLET_QUICK_PICK
     case 'FindWidget.create':
     case 'FindWidget.dispose':

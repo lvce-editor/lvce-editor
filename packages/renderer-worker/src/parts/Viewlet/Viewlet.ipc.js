@@ -5,4 +5,5 @@ export const __initialize__ = () => {
   Command.register(2133, Viewlet.send)
   Command.register('Viewlet.getAllStates', Viewlet.getAllStates)
   Command.register('Viewlet.openWidget', Viewlet.openWidget)
+  Command.register('Viewlet.closeWidget', Viewlet.closeWidget)
 }

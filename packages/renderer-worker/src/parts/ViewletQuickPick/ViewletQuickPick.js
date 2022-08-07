@@ -190,13 +190,11 @@ export const loadContent = async (state) => {
 export const contentLoaded = () => {}
 
 export const dispose = (state) => {
-  return {
-    ...state,
-    disposed: true,
-  }
+  return state
 }
 
 export const handleBlur = async (state) => {
+  await Viewlet.closeWidget('QuickPick')
   return state
 }
 
@@ -357,68 +355,6 @@ export const focusPrevious = (state) => {
 export const focusNext = (state) => {
   const nextIndex = (state.focusedIndex + 1) % state.filteredPicks.length
   return focusIndex(state, nextIndex)
-}
-
-// TODO not sure these should be in this file
-export const openCommandPalette = async () => {
-  const QuickPickEverything = await import('./QuickPickEverything.js')
-  await show('>', QuickPickEverything)
-}
-
-export const openEverythingQuickPick = async () => {
-  const QuickPickEverything = await import('./QuickPickEverything.js')
-  await show('', QuickPickEverything)
-}
-
-export const openGoToLine = async () => {
-  const QuickPickEverything = await import('./QuickPickEverything.js')
-  await show(':', QuickPickEverything)
-}
-
-export const openView = async () => {
-  await show('view ')
-}
-
-export const openColorTheme = async () => {
-  const QuickPickColorTheme = await import('./QuickPickColorTheme.js')
-  await show('', QuickPickColorTheme)
-}
-
-export const fileOpenRecent = async () => {
-  const QuickPickOpenRecent = await import('./QuickPickOpenRecent.js')
-  await show('', QuickPickOpenRecent)
-}
-
-export const showExtensionsQuickPick = async (items) => {
-  Assert.array(items)
-  // TODO handle error, promise swallows error
-  const provider = {
-    getPicks() {
-      return items
-    },
-    async selectPick(item, index) {
-      const ExtensionHost = await import(
-        '../ExtensionHost/ExtensionHostCore.js'
-      )
-      await ExtensionHost.invoke(
-        /* ExtensionHostQuickPick.handleQuickPickResult */ 'ExtensionHostQuickPick.handleQuickPickResult',
-        /* index */ index
-      )
-      return {
-        command: 'hide',
-      }
-    },
-    getFilterValue(value) {
-      return value
-    },
-    getPlaceholder() {
-      return ''
-    },
-    getLabel() {
-      return 'extension pick'
-    },
-  }
-  await show('', provider)
 }
 
 export const hasFunctionalRender = true
