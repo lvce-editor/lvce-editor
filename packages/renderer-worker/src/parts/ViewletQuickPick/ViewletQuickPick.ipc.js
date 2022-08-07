@@ -1,24 +1,25 @@
 import * as ViewletQuickPick from './ViewletQuickPick.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 
 // prettier-ignore
 export const Commands = {
-  'QuickPick.openEverythingQuickPick': ViewletQuickPick.openEverythingQuickPick,
-  'QuickPick.dispose': ViewletQuickPick.dispose,
-  'QuickPick.hide': ViewletQuickPick.dispose,
-  'QuickPick.selectCurrentIndex': ViewletQuickPick.selectCurrentIndex,
-  'QuickPick.handleInput': ViewletQuickPick.handleInput,
-  'QuickPick.selectIndex': ViewletQuickPick.selectIndex,
-  'QuickPick.openCommandPalette': ViewletQuickPick.openCommandPalette,
-  'QuickPick.openView': ViewletQuickPick.openView,
-  'QuickPick.focusFirst': ViewletQuickPick.focusFirst,
-  'QuickPick.focusLast': ViewletQuickPick.focusLast,
-  'QuickPick.focusPrevious': ViewletQuickPick.focusPrevious,
-  'QuickPick.focusNext': ViewletQuickPick.focusNext,
-  'QuickPick.openGoToLine': ViewletQuickPick.openGoToLine,
-  'QuickPick.openColorTheme': ViewletQuickPick.openColorTheme,
-  'QuickPick.fileOpenRecent': ViewletQuickPick.fileOpenRecent,
-  'QuickPick.handleBlur': ViewletQuickPick.handleBlur,
-  'QuickPick.showExtensionsQuickPick': ViewletQuickPick.showExtensionsQuickPick,
+  'QuickPick.openEverythingQuickPick': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.openEverythingQuickPick),
+  'QuickPick.dispose': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.dispose),
+  'QuickPick.hide': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.dispose),
+  'QuickPick.selectCurrentIndex': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.selectCurrentIndex),
+  'QuickPick.handleInput': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.handleInput),
+  'QuickPick.selectIndex': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.selectIndex),
+  'QuickPick.openCommandPalette': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.openCommandPalette),
+  'QuickPick.openView': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.openView),
+  'QuickPick.focusFirst': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.focusFirst),
+  'QuickPick.focusLast': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.focusLast),
+  'QuickPick.focusPrevious': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.focusPrevious),
+  'QuickPick.focusNext': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.focusNext),
+  'QuickPick.openGoToLine': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.openGoToLine),
+  'QuickPick.openColorTheme': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.openColorTheme),
+  'QuickPick.fileOpenRecent': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.fileOpenRecent),
+  'QuickPick.handleBlur': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.handleBlur),
+  'QuickPick.showExtensionsQuickPick': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.showExtensionsQuickPick),
 }
 
 export * from './ViewletQuickPick.js'

@@ -2,6 +2,8 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
+import * as QuickPickEveryThing from '../QuickPick/QuickPickEverything.js'
+
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
 
@@ -33,7 +35,7 @@ export const create = () => {
     recentPicks: [],
     recentPickIds: new Map(), // TODO use object.create(null) instead
     versionId: 0,
-    provider: undefined,
+    provider: QuickPickEveryThing, // TODO make this dynamic again
     focusedIndex: 0,
     warned: [],
     visiblePicks: [],
@@ -94,7 +96,15 @@ const toDisplayPicks = (picks) => {
 }
 
 const getVisiblePicks = (state, picks, filterValue) => {
-  const filteredPicks = filterPicks(picks, state.recentPickIds, filterValue)
+  Assert.object(state)
+  Assert.array(picks)
+  Assert.string(filterValue)
+  const filteredPicks = filterPicks(
+    state,
+    picks,
+    state.recentPickIds,
+    filterValue
+  )
   state.filteredPicks = filteredPicks
   state.state = QuickPickState.Finished
   const slicedPicks = slicePicks(filteredPicks)
@@ -102,8 +112,9 @@ const getVisiblePicks = (state, picks, filterValue) => {
 }
 
 // TODO have lazy loadable provider as argument
-export const show = async (state, value, provider) => {
-  state.provider = provider
+export const loadContent = async (state) => {
+  const value = ''
+  const provider = state.provider
   if (state.state === QuickPickState.Finished) {
     const version = ++state.versionId
     // TODO if provider is immutable, don't necessarily need to get new picks
@@ -113,30 +124,22 @@ export const show = async (state, value, provider) => {
       return
     }
     const filterValue = provider.getFilterValue(value)
-    const visiblePicks = getVisiblePicks(newPicks, filterValue)
+    const visiblePicks = getVisiblePicks(state, newPicks, filterValue)
     const placeholder = provider.getPlaceholder()
     const label = provider.getLabel()
-    RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'QuickPick',
-      /* method */ 'updateValueAndPicksAndPlaceholder',
-      /* value */ value,
-      /* picks */ visiblePicks,
-      /* focusIndex */ 0,
-      /* unFocusIndex */ state.focusedIndex,
-      /* placeholder */ placeholder,
-      /* label */ label
-    )
-    state.picks = newPicks
-    state.visiblePicks = visiblePicks
-    state.focusedIndex = 0
-    state.state = QuickPickState.Finished
-    state.minLineY = 0
-    state.maxLineY = Math.min(
-      state.minLineY + state.maxVisibleItems,
+
+    const minLineY = 0
+    const maxLineY = Math.min(
+      minLineY + state.maxVisibleItems,
       newPicks.length - 1
     )
-    return
+    return {
+      ...state,
+      picks: newPicks,
+      visiblePicks,
+      focusedIndex: 0,
+      state: QuickPickState.Finished,
+    }
   }
   state.state = QuickPickState.Creating
   const version = ++state.versionId
@@ -162,45 +165,31 @@ export const show = async (state, value, provider) => {
     return
   }
   const filterValue = provider.getFilterValue(value)
-  const visiblePicks = getVisiblePicks(newPicks, filterValue)
+  const visiblePicks = getVisiblePicks(state, newPicks, filterValue)
   const placeholder = provider.getPlaceholder()
   const label = provider.getLabel()
-  RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'QuickPick',
-    /* method */ 'updateValueAndPicksAndPlaceholder',
-    /* value */ value,
-    /* picks */ visiblePicks,
-    /* focusIndex */ 0,
-    /* unFocusIndex */ -1,
-    /* placeholder */ placeholder,
-    /* label */ label
-  )
-  state.picks = newPicks
-  state.visiblePicks = visiblePicks
-  state.focusedIndex = 0
-  state.state = QuickPickState.Finished
-  state.minLineY = 0
-  state.maxLineY = Math.min(
-    state.minLineY + state.maxVisibleItems,
+  const minLineY = 0
+  const maxLineY = Math.min(
+    minLineY + state.maxVisibleItems,
     newPicks.length - 1
   )
+  return {
+    ...state,
+    picks: newPicks,
+    visiblePicks,
+    focusedIndex: 0,
+    state: QuickPickState.Finished,
+    minLineY,
+    maxLineY,
+  }
 }
 
+export const contentLoaded = () => {}
+
 export const dispose = (state) => {
-  switch (state.state) {
-    case QuickPickState.Default:
-    case QuickPickState.Creating:
-      break
-    case QuickPickState.Finished:
-      state.state = QuickPickState.Default
-      RendererProcess.invoke(
-        /* Viewlet.dispose */ 'Viewlet.dispose',
-        /* id */ 'QuickPick'
-      )
-      break
-    default:
-      break
+  return {
+    ...state,
+    disposed: true,
   }
 }
 
@@ -278,7 +267,7 @@ export const handleInput = async (state, value) => {
     return
   }
   const filterValue = state.provider.getFilterValue(value)
-  const visiblePicks = getVisiblePicks(newPicks, filterValue)
+  const visiblePicks = getVisiblePicks(state, newPicks, filterValue)
 
   RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
@@ -453,4 +442,14 @@ export const showExtensionsQuickPick = async (items) => {
     },
   }
   await show('', provider)
+}
+
+export const hasFunctionalRender = true
+
+export const render = (oldState, newState) => {
+  console.log({ oldState, newState })
+  const commands = []
+  if (oldState.value !== newState.value) {
+  }
+  return []
 }

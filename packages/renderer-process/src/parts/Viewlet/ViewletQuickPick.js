@@ -314,9 +314,7 @@ export const create = (value, visiblePicks, focusIndex) => {
   }
 }
 
-export const setValueAndPicks = (state, value, visiblePicks) => {
-  // TODO set value might cause recalc style / layout -> investigate
-  state.$QuickPickInput.value = value
+export const setPicks = (state, visiblePicks) => {
   render$QuickPickItems(state.$QuickPickItems, visiblePicks)
   state.$QuickPickItems.children[0].classList.add('Focused')
 }
@@ -341,6 +339,7 @@ export const dispose = (state) => {
 }
 
 export const setValue = (state, value) => {
+  // TODO set value might cause recalc style / layout -> investigate
   const { $QuickPickInput } = state
   $QuickPickInput.value = value
 }

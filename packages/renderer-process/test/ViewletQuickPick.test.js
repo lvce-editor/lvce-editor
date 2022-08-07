@@ -26,7 +26,7 @@ const QuickPick = await import('../src/parts/Viewlet/ViewletQuickPick.js')
 
 test('create', () => {
   const state = QuickPick.create('>')
-  QuickPick.setValueAndPicks(state, '>', [
+  QuickPick.setPicks(state, '>', [
     {
       posInSet: 1,
       setSize: 2,
@@ -48,7 +48,7 @@ test('create', () => {
 
 test('focusIndex', () => {
   const state = QuickPick.create('>')
-  QuickPick.setValueAndPicks(state, '>', [
+  QuickPick.setPicks(state, '>', [
     {
       posInSet: 1,
       setSize: 2,
@@ -93,7 +93,7 @@ test('updateValueAndPicks - less picks', () => {
 
 test.skip('event - mousedown', () => {
   const state = QuickPick.create('>')
-  QuickPick.setValueAndPicks(state, '>', [
+  QuickPick.setPicks(state, '>', [
     {
       posInSet: 1,
       setSize: 2,
@@ -147,7 +147,7 @@ test('event - mousedown - on focused item', () => {
 
 test.skip('event - beforeinput', () => {
   const state = QuickPick.create('>')
-  QuickPick.setValueAndPicks(state, '>', [
+  QuickPick.setPicks(state, '>', [
     {
       posInSet: 1,
       setSize: 2,
@@ -222,7 +222,7 @@ test('accessibility - QuickPick should have aria label', () => {
 
 test('accessibility - QuickPickInput should have aria label', () => {
   const state = QuickPick.create('>')
-  QuickPick.setValueAndPicks(state, '>', [
+  QuickPick.setPicks(state, '>', [
     {
       posInSet: 1,
       setSize: 2,
@@ -241,7 +241,7 @@ test('accessibility - QuickPickInput should have aria label', () => {
 
 test('accessibility - aria-activedescendant should point to quick pick item', () => {
   const state = QuickPick.create('>')
-  QuickPick.setValueAndPicks(state, '>', [
+  QuickPick.setPicks(state, '>', [
     {
       posInSet: 1,
       setSize: 2,
