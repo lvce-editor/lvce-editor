@@ -1,4 +1,4 @@
-import * as Viewlet from './Viewlet.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletTerminal from './ViewletTerminal.js'
 
 // prettier-ignore

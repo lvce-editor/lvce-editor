@@ -1,6 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as ViewletLocations from './ViewletLocations.js'
-import * as Viewlet from './Viewlet.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 
 // prettier-ignore
 export const __initialize__ = () => {
