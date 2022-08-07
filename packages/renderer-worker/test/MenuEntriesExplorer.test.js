@@ -1,15 +1,14 @@
 import * as MenuEntriesExplorer from '../src/parts/MenuEntries/MenuEntriesExplorer.js'
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
+import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 
 test('getMenuEntries - no focused dirent', async () => {
-  Viewlet.state.instances = {
-    Explorer: {
-      state: {
-        focusedIndex: -1,
-        dirents: [],
-      },
+  ViewletStates.set('Explorer', {
+    state: {
+      focusedIndex: -1,
+      dirents: [],
     },
-  }
+    factory: {},
+  })
   const menuEntries = await MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({
     command: 'Explorer.newFile',
@@ -20,21 +19,20 @@ test('getMenuEntries - no focused dirent', async () => {
 })
 
 test('getMenuEntries - focused folder', async () => {
-  Viewlet.state.instances = {
-    Explorer: {
-      state: {
-        focusedIndex: 0,
-        dirents: [
-          {
-            name: 'sample-folder',
-            depth: 1,
-            type: 'directory',
-            path: '/sample-folder',
-          },
-        ],
-      },
+  ViewletStates.set('Explorer', {
+    state: {
+      focusedIndex: 0,
+      dirents: [
+        {
+          name: 'sample-folder',
+          depth: 1,
+          type: 'directory',
+          path: '/sample-folder',
+        },
+      ],
     },
-  }
+    factory: {},
+  })
   const menuEntries = await MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({
     command: 'Explorer.newFile',
@@ -45,21 +43,20 @@ test('getMenuEntries - focused folder', async () => {
 })
 
 test('getMenuEntries - focused file', async () => {
-  Viewlet.state.instances = {
-    Explorer: {
-      state: {
-        focusedIndex: 0,
-        dirents: [
-          {
-            name: 'sample-file',
-            depth: 1,
-            type: 'file',
-            path: '/sample-file',
-          },
-        ],
-      },
+  ViewletStates.set('Explorer', {
+    state: {
+      focusedIndex: 0,
+      dirents: [
+        {
+          name: 'sample-file',
+          depth: 1,
+          type: 'file',
+          path: '/sample-file',
+        },
+      ],
     },
-  }
+    factory: {},
+  })
   const menuEntries = await MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({
     command: 'Explorer.handleCopy',
@@ -76,21 +73,20 @@ test('getMenuEntries - focused file', async () => {
 })
 
 test('getMenuEntries - focused symlink', async () => {
-  Viewlet.state.instances = {
-    Explorer: {
-      state: {
-        focusedIndex: 0,
-        dirents: [
-          {
-            name: 'link',
-            depth: 1,
-            type: 'symlink',
-            path: '/link',
-          },
-        ],
-      },
+  ViewletStates.set('Explorer', {
+    state: {
+      focusedIndex: 0,
+      dirents: [
+        {
+          name: 'link',
+          depth: 1,
+          type: 'symlink',
+          path: '/link',
+        },
+      ],
     },
-  }
+    factory: {},
+  })
   const menuEntries = await MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({
     command: 'Explorer.newFile',

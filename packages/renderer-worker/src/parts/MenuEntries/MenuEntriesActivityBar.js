@@ -1,4 +1,4 @@
-import * as Viewlet from '../Viewlet/Viewlet.js' // TODO dependency to viewlet is not good
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const toContextMenuItem = (activityBarItem) => {
   return {
@@ -10,7 +10,7 @@ const toContextMenuItem = (activityBarItem) => {
 
 export const getMenuEntries = async () => {
   const activityBarItems =
-    Viewlet.state.instances.ActivityBar.state.activityBarItems
+    ViewletStates.getState('ActivityBar').activityBarItems
   return [
     ...activityBarItems.map(toContextMenuItem),
     {

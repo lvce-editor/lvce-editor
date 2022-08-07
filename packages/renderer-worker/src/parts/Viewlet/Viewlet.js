@@ -2,11 +2,8 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Command from '../Command/Command.js'
 import * as Assert from '../Assert/Assert.js'
-
-export const state = {
-  instances: Object.create(null),
-  modules: Object.create(null),
-}
+import * as ViewletManager from '../ViewletManager/ViewletManager.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 /**
  * @deprecated
@@ -59,7 +56,7 @@ export const refreshInstance = async (instance, id) => {
  * @deprecated
  */
 export const refresh = async (id) => {
-  const instance = state.instances[id]
+  const instance = ViewletStates.getInstance(id)
   if (!instance) {
     return
   }
@@ -70,10 +67,9 @@ export const refresh = async (id) => {
  * @deprecated
  */
 export const send = (id, method, ...args) => {
-  const instance = state.instances[id]
+  const instance = ViewletStates.getInstance(id)
   if (!instance) {
     console.info('instance disposed', { id, method, args })
-    console.info(state.instances)
     return
   }
   const fn = instance.factory[method]
@@ -89,7 +85,7 @@ export const dispose = async (id) => {
     console.warn('no instance to dispose')
     return
   }
-  const instance = state.instances[id]
+  const instance = ViewletStates.getInstance(id)
   if (!instance) {
     console.info('instance may already be disposed')
     return
@@ -111,8 +107,7 @@ export const dispose = async (id) => {
     throw new Error(`Failed to dispose viewlet ${id}: ${error}`)
   }
   instance.status = 'disposed'
-  delete state.instances[id]
-  delete state.modules[id]
+  ViewletStates.remove(id)
   await GlobalEventBus.emitEvent(`Viewlet.dispose.${id}`)
 }
 
@@ -127,9 +122,8 @@ export const replace = () => {}
 export const wrapViewletCommand = (id, fn) => {
   const wrappedViewletCommand = async (...args) => {
     // TODO get actual focused instance
-    const activeInstance = state.instances[id]
+    const activeInstance = ViewletStates.getInstance(id)
     if (!activeInstance) {
-      console.log(state.instances)
       console.info(
         `cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`
       )
@@ -147,7 +141,7 @@ export const wrapViewletCommand = (id, fn) => {
         return
       }
       const commands = activeInstance.factory.render(oldState, newState)
-      state.instances[id].state = newState
+      ViewletStates.setState(id, newState)
       await RendererProcess.invoke(
         /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
         /* commands */ commands
@@ -160,7 +154,7 @@ export const wrapViewletCommand = (id, fn) => {
 }
 
 export const resize = (id, dimensions) => {
-  const instance = state.instances[id]
+  const instance = ViewletStates.getInstance(id)
   if (!instance || !instance.factory || !instance.factory.resize) {
     console.warn('cannot resize', id)
     return []
@@ -169,7 +163,7 @@ export const resize = (id, dimensions) => {
   const { newState, commands } = instance.factory.resize(oldState, dimensions)
   Assert.object(newState)
   Assert.array(commands)
-  state.instances[id].state = newState
+  ViewletStates.set(id, newState)
   if (instance.factory.hasFunctionalRender) {
     return instance.factory.render(oldState, newState)
   }
@@ -177,12 +171,12 @@ export const resize = (id, dimensions) => {
 }
 
 export const getState = (id) => {
-  const instance = state.instances[id]
+  const instance = ViewletStates.getInstance(id)
   return instance.state
 }
 
 export const setState = async (id, newState) => {
-  const instance = state.instances[id]
+  const instance = ViewletStates.getInstance(id)
   if (instance && instance.factory && instance.factory.hasFunctionalRender) {
     const oldState = instance.state
     const commands = instance.factory.render(oldState, newState)
@@ -196,8 +190,27 @@ export const setState = async (id, newState) => {
 
 export const getAllStates = () => {
   const states = Object.create(null)
-  for (const [key, value] of Object.entries(state.instances)) {
+  for (const [key, value] of Object.entries(ViewletStates.getAllInstances())) {
     states[key] = value.state
   }
   return states
+}
+
+export const openWidget = async (id, ...args) => {
+  console.log({ args })
+  const type = args[0]
+  await ViewletManager.load({
+    getModule: ViewletManager.getModule,
+    id,
+    type: 0,
+    uri: `quickPick://${type}`,
+  })
+}
+
+export const closeWidget = async (id) => {
+  ViewletStates.remove(id)
+  await RendererProcess.invoke(
+    /* Viewlet.dispose */ 'Viewlet.dispose',
+    /* id */ id
+  )
 }

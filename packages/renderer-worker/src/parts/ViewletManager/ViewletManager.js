@@ -1,11 +1,9 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as Assert from '../Assert/Assert.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Command from '../Command/Command.js'
-
-export const modules = Object.create(null)
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const ViewletState = {
   Default: 0,
@@ -66,6 +64,8 @@ export const getModule = (id) => {
       return import('../ViewletReferences/ViewletReferences.ipc.js')
     case 'Implementations':
       return import('../ViewletImplementations/ViewletImplementations.ipc.js')
+    case 'QuickPick':
+      return import('../ViewletQuickPick/ViewletQuickPick.ipc.js')
     default:
       // TODO use ErrorHandling.handleError instead
       throw new Error(`unknown viewlet: "${id}", ${id === 'Output'}`)
@@ -175,20 +175,20 @@ export const load = async (viewlet, focus = false) => {
     outer: if (module.shouldApplyNewState) {
       for (let i = 0; i < 2; i++) {
         if (module.shouldApplyNewState(newState)) {
-          Viewlet.state.instances[viewlet.id] = {
+          ViewletStates.set(viewlet.id, {
             state: newState,
             factory: module,
-          }
+          })
           break outer
         }
         newState = await module.loadContent(viewletState)
       }
       throw new Error('viewlet could not be updated')
     } else {
-      Viewlet.state.instances[viewlet.id] = {
+      ViewletStates.set(viewlet.id, {
         state: newState,
         factory: module,
-      }
+      })
     }
 
     if (viewletState !== newState) {
@@ -240,7 +240,7 @@ export const load = async (viewlet, focus = false) => {
       // TODO remove event listeners when viewlet is disposed
       for (const [key, value] of Object.entries(module.events)) {
         const handleUpdate = async () => {
-          const instance = Viewlet.state.instances[viewlet.id]
+          const instance = ViewletStates.getInstance(viewlet.id)
           const newState = await value(instance.state)
           if (!module.shouldApplyNewState(newState)) {
             console.log('[viewlet manager] return', newState)

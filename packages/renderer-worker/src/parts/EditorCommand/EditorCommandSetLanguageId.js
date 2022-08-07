@@ -1,5 +1,5 @@
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletState from '../ViewletStates/ViewletStates.js'
 
 export const setLanguageId = async (editor, languageId) => {
   // TODO only load tokenizer if not already loaded
@@ -7,12 +7,12 @@ export const setLanguageId = async (editor, languageId) => {
   await Tokenizer.loadTokenizer(languageId)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   if (tokenizer === editor.tokenizer) {
-    return Viewlet.state.instances.EditorText.state
+    return ViewletState.getState('EditorText')
   }
   // TODO update syntax highlighting
   // TODO get edits
 
-  const latestEditor = Viewlet.state.instances.EditorText.state
+  const latestEditor = ViewletState.getState('EditorText')
 
   return {
     ...latestEditor,

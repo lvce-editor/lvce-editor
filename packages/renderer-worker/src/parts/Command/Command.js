@@ -4,7 +4,7 @@ const MODULE_CONTEXT_MENU = 16
 const MODULE_LAYOUT = 17
 const MODULE_VIEWLET = 18
 const MODULE_WORKBENCH = 19
-const MODULE_QUICK_PICK = 21
+const MODULE_VIEWLET_QUICK_PICK = 21
 // TODO rename to widgetFind and group together with other widgets (contextMenu, hover, tooltip)
 const MODULE_FIND_WIDGET = 23
 const MODULE_PREFERENCES = 25
@@ -70,8 +70,8 @@ const loadModule = (moduleId) => {
       return import('../Viewlet/Viewlet.ipc.js')
     case MODULE_WORKBENCH:
       return import('../Workbench/Workbench.ipc.js')
-    case MODULE_QUICK_PICK:
-      return import('../QuickPick/QuickPick.ipc.js')
+    case MODULE_VIEWLET_QUICK_PICK:
+      return import('../ViewletQuickPick/ViewletQuickPick.ipc.js')
     case MODULE_FIND_WIDGET:
       return import('../FindWidget/FindWidget.ipc.js')
     case MODULE_PREFERENCES:
@@ -164,6 +164,9 @@ const loadModule = (moduleId) => {
 }
 
 const initializeModule = (module) => {
+  if (typeof module.__initialize__ !== 'function') {
+    throw new Error(`module ${module.name} is missing an initialize function`)
+  }
   return module.__initialize__()
 }
 
@@ -284,6 +287,7 @@ const getModuleId = (commandId) => {
       return MODULE_DIALOG
     case 2133:
     case 'Viewlet.getAllStates':
+    case 'Viewlet.openWidget':
       return MODULE_VIEWLET
     case 'IconTheme.getIconThemeCss':
     case 'IconTheme.hydrate':
@@ -398,23 +402,15 @@ const getModuleId = (commandId) => {
     case 'Callback.resolve':
     case 'Callback.reject':
       return MODULE_CALLBACK
-    case 'QuickPick.openEverythingQuickPick':
-    case 'QuickPick.dispose':
     case 'QuickPick.selectCurrentIndex':
     case 'QuickPick.handleInput':
     case 'QuickPick.selectIndex':
-    case 'QuickPick.openCommandPalette':
-    case 'QuickPick.openView':
     case 'QuickPick.focusFirst':
     case 'QuickPick.focusLast':
     case 'QuickPick.focusPrevious':
     case 'QuickPick.focusNext':
-    case 'QuickPick.openGoToLine':
-    case 'QuickPick.openColorTheme':
-    case 'QuickPick.fileOpenRecent':
     case 'QuickPick.handleBlur':
-    case 'QuickPick.showExtensionsQuickPick':
-      return MODULE_QUICK_PICK
+      return MODULE_VIEWLET_QUICK_PICK
     case 'FindWidget.create':
     case 'FindWidget.dispose':
     case 'FindWidget.setValue':
@@ -439,6 +435,9 @@ const hasThrown = new Set()
 
 export const execute = (command, ...args) => {
   if (command in state.commands) {
+    if (typeof state.commands[command] !== 'function') {
+      throw new Error(`[renderer-worker] Command ${command} is not a function`)
+    }
     return state.commands[command](...args)
   }
   return (

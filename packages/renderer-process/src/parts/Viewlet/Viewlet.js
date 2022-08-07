@@ -1,4 +1,5 @@
 import * as ActiveViewlet from './ActiveViewlet.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const state = {
   instances: Object.create(null),
@@ -141,8 +142,13 @@ export const sendMultiple = (commands) => {
  * @deprecated
  */
 export const dispose = (id) => {
+  Assert.string(id)
   ActiveViewlet.deleteState(id)
   const instance = state.instances[id]
+  if (!instance) {
+    console.warn(`viewlet instance ${id} not found and cannot be disposed`)
+    return
+  }
   try {
     instance.factory.dispose(instance.state)
     if (instance.state.$Viewlet && instance.state.$Viewlet.isConnected) {

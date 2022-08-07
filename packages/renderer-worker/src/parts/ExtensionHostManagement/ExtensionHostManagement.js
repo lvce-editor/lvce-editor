@@ -9,6 +9,7 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as ExtensionHostManagementBrowser from './ExtensionHostManagementBrowser.js'
 import * as ExtensionHostManagementNode from './ExtensionHostManagementNode.js'
 import * as ExtensionHostManagementShared from './ExtensionHostManagementShared.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const state = {
   /**
@@ -117,7 +118,7 @@ const startTextDocumentSyncing = async (extensionHost) => {
     handleEditorLanguageChange
   )
 
-  const instances = Viewlet.state.instances
+  const instances = ViewletStates.getAllInstances()
   const editorInstance = instances.EditorText
   if (editorInstance) {
     await handleEditorCreate(editorInstance.state)

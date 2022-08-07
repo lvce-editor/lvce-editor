@@ -6,6 +6,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as EditorBlur from './EditorCommandBlur.js'
 import * as EditorPosition from './EditorCommandPosition.js'
+import * as ViewletState from '../ViewletStates/ViewletStates.js'
 
 const handleBlur = () => {
   close()
@@ -217,7 +218,7 @@ export const openFromType = async (editor, text) => {
   // } else if (state.isOpened) {
   //   await close()
   // }
-  return Viewlet.state.instances.EditorText.state
+  return ViewletState.getState('EditorText')
 }
 
 export const close = async (editor) => {

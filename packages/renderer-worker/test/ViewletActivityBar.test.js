@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
+import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 import * as Layout from '../src/parts/Layout/Layout.js'
 
 beforeEach(() => {
@@ -32,12 +32,13 @@ test('name', () => {
 
 test('loadContent', async () => {
   const state = ViewletActivityBar.create()
-  Viewlet.state.instances.SideBar = {
+  ViewletStates.set('SideBar', {
     state: {
       currentViewletId: 'Search',
     },
-  }
-  expect(await ViewletActivityBar.loadContent(state)).toEqual({
+    factory: {},
+  })
+  expect(await ViewletActivityBar.loadContent(state)).toMatchObject({
     activityBarItems: [
       {
         enabled: true,

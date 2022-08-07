@@ -69,7 +69,7 @@ const restoreEditors = async (state) => {
 }
 
 const handleTokenizeChange = (languageId) => {
-  const instances = Viewlet.state.instances
+  const instances = ViewletState.getAllInstances()
   if (instances.EditorText) {
     const instance = instances.EditorText
   }
@@ -314,7 +314,7 @@ export const closeAllEditors = (state) => {
   state.focusedIndex = -1
   state.selectedIndex = -1
   // TODO should call dispose method, but only in renderer-worker
-  delete Viewlet.state.instances.EditorText
+  ViewletState.remove('EditorText')
 }
 
 export const dispose = () => {}
