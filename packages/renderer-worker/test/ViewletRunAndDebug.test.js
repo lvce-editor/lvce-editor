@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import * as ViewletRunAndDebug from '../src/parts/Viewlet/ViewletRunAndDebug.js'
+import * as ViewletRunAndDebug from '../src/parts/ViewletRunAndDebug/ViewletRunAndDebug.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 
 test('name', () => {

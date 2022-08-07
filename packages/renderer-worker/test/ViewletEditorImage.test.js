@@ -1,4 +1,4 @@
-import * as ViewletEditorImage from '../src/parts/Viewlet/ViewletEditorImage.js'
+import * as ViewletEditorImage from '../src/parts/ViewletEditorImage/ViewletEditorImage.js'
 
 test('name', () => {
   expect(ViewletEditorImage.name).toBe('EditorImage')
