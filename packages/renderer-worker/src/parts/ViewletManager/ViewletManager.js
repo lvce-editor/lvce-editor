@@ -144,11 +144,7 @@ export const load = async (viewlet, focus = false) => {
     }
     if (module.Css) {
       const css = module.Css
-      Assert.array(css)
-      for (const url of css) {
-        await Css.addStyleSheet(url)
-      }
-      // console.log({ css })
+      await Css.addStyleSheets(css)
     }
     state = ViewletState.ModuleLoaded
     const viewletState = module.create(

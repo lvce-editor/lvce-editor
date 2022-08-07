@@ -1,6 +1,6 @@
+import * as Assert from '../Assert/Assert.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { VError } from '../VError/VError.js'
-import * as Assert from '../Assert/Assert.js'
 
 export const setInlineStyle = async (id, css) => {
   // TODO could also import blob url style sheet, if that is faster
@@ -18,4 +18,9 @@ export const addStyleSheet = async (url) => {
   } catch (error) {
     throw new VError(error, `Failed to add style sheet ${url}`)
   }
+}
+
+export const addStyleSheets = async (urls) => {
+  Assert.array(urls)
+  await Promise.all(urls.map(addStyleSheet))
 }
