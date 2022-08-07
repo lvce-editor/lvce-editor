@@ -293,7 +293,6 @@ export const create = (value, visiblePicks, focusIndex) => {
 
 export const setPicks = (state, visiblePicks) => {
   render$QuickPickItems(state.$QuickPickItems, visiblePicks)
-  state.$QuickPickItems.children[0].classList.add('Focused')
 }
 
 export const showNoResults = (state, noResults, unfocusIndex) => {

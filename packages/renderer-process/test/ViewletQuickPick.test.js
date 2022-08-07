@@ -26,7 +26,8 @@ const QuickPick = await import('../src/parts/Viewlet/ViewletQuickPick.js')
 
 test('create', () => {
   const state = QuickPick.create('>')
-  QuickPick.setPicks(state, '>', [
+  QuickPick.setValue(state, '>')
+  QuickPick.setPicks(state, [
     {
       posInSet: 1,
       setSize: 2,
@@ -48,7 +49,7 @@ test('create', () => {
 
 test('focusIndex', () => {
   const state = QuickPick.create('>')
-  QuickPick.setPicks(state, '>', [
+  QuickPick.setPicks(state, [
     {
       posInSet: 1,
       setSize: 2,
@@ -67,33 +68,27 @@ test('focusIndex', () => {
   expect($QuickPickItemTwo.classList.contains('Focused')).toBe(true)
 })
 
-test('updateValueAndPicks - less picks', () => {
+test('setPicks - less picks', () => {
   const state = QuickPick.create('>')
-  QuickPick.updateValueAndPicks(
-    state,
-    '>',
-    [
-      {
-        posInSet: 1,
-        setSize: 2,
-        label: 'item 1',
-      },
-      {
-        posInSet: 2,
-        setSize: 2,
-        label: 'item 2',
-      },
-    ],
-    1,
-    -1
-  )
-  QuickPick.updateValueAndPicks(state, '>', [], -1, 1)
+  QuickPick.setPicks(state, [
+    {
+      posInSet: 1,
+      setSize: 2,
+      label: 'item 1',
+    },
+    {
+      posInSet: 2,
+      setSize: 2,
+      label: 'item 2',
+    },
+  ])
+  QuickPick.setPicks(state, [])
   expect(state.$QuickPickItems.children).toHaveLength(0)
 })
 
 test.skip('event - mousedown', () => {
   const state = QuickPick.create('>')
-  QuickPick.setPicks(state, '>', [
+  QuickPick.setPicks(state, [
     {
       posInSet: 1,
       setSize: 2,
@@ -120,19 +115,14 @@ test.skip('event - mousedown', () => {
 
 test('event - mousedown - on focused item', () => {
   const state = QuickPick.create('>')
-  QuickPick.updateValueAndPicks(
-    state,
-    '>',
-    [
-      {
-        posInSet: 1,
-        setSize: 1,
-        label: 'item 1',
-      },
-    ],
-    0,
-    -1
-  )
+  QuickPick.setPicks(state, [
+    {
+      posInSet: 1,
+      setSize: 1,
+      label: 'item 1',
+    },
+  ])
+  QuickPick.setFocusedIndex(state, 0, -1)
   const $QuickPickItemOne = state.$QuickPickItems.children[0]
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
@@ -147,7 +137,7 @@ test('event - mousedown - on focused item', () => {
 
 test.skip('event - beforeinput', () => {
   const state = QuickPick.create('>')
-  QuickPick.setPicks(state, '>', [
+  QuickPick.setPicks(state, [
     {
       posInSet: 1,
       setSize: 2,
@@ -222,7 +212,7 @@ test('accessibility - QuickPick should have aria label', () => {
 
 test('accessibility - QuickPickInput should have aria label', () => {
   const state = QuickPick.create('>')
-  QuickPick.setPicks(state, '>', [
+  QuickPick.setPicks(state, [
     {
       posInSet: 1,
       setSize: 2,
@@ -241,7 +231,7 @@ test('accessibility - QuickPickInput should have aria label', () => {
 
 test('accessibility - aria-activedescendant should point to quick pick item', () => {
   const state = QuickPick.create('>')
-  QuickPick.setPicks(state, '>', [
+  QuickPick.setPicks(state, [
     {
       posInSet: 1,
       setSize: 2,
