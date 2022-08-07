@@ -1,5 +1,4 @@
 #Main {
-  background: var(--MainBackground);
   display: flex;
   flex-direction: column;
 }

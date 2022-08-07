@@ -1,3 +1,24 @@
+#Main {
+  background: var(--MainBackground);
+}
+
+#StatusBar {
+  background: var(--StatusBarBackground);
+}
+
+#ActivityBar {
+  background: var(--ActivityBarBackground);
+}
+
+#SideBar {
+  background: var(--SideBarBackground, rgb(30, 35, 36));
+}
+
+#TitleBar {
+  background: rgb(40, 46, 47);
+  background: var(--TitleBarBackground);
+}
+
 .SashHorizontal,
 .SashVertical {
   position: fixed;

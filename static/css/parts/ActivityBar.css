@@ -1,5 +1,4 @@
 #ActivityBar {
-  background: var(--ActivityBarBackground);
   color: var(--ActivityBarForeground);
   contain: strict;
 }
