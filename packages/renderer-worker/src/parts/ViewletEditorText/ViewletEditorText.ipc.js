@@ -1,7 +1,4 @@
-import * as EditorApplyEdit from '../EditorCommand/EditorCommandApplyEdit.js'
-import * as EditorBlur from '../EditorCommand/EditorCommandBlur.js'
 import * as EditorBraceCompletion from '../EditorCommand/EditorCommandBraceCompletion.js'
-import * as EditorCancelSelection from '../EditorCommand/EditorCommandCancelSelection.js'
 import * as EditorCompletion from '../EditorCommand/EditorCommandCompletion.js'
 import * as EditorComposition from '../EditorCommand/EditorCommandComposition.js'
 import * as EditorCopy from '../EditorCommand/EditorCommandCopy.js'
@@ -77,11 +74,26 @@ import * as EditorUndo from '../EditorCommand/EditorCommandUndo.js'
 import * as EditorUnindent from '../EditorCommand/EditorCommandUnindent.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
+const createLazyCommand = (importFn, key) => {
+  const lazyCommand = async (...args) => {
+    const module = await importFn()
+    return module[key](...args)
+  }
+  return Viewlet.wrapViewletCommand('EditorText', lazyCommand)
+}
+
+// prettier-ignore
+const Imports = {
+  ApplyEdit: () => import('../EditorCommand/EditorCommandApplyEdit.js'),
+  Blur: () => import('../EditorCommand/EditorCommandBlur.js'),
+  CancelSelection: () => import('../EditorCommand/EditorCommandCancelSelection.js')
+}
+
 // prettier-ignore
 export const Commands = {
-  'Editor.applyEdit': Viewlet.wrapViewletCommand('EditorText', EditorApplyEdit.editorApplyEdit),
-  'Editor.blur': Viewlet.wrapViewletCommand('EditorText', EditorBlur.editorBlur), // TODO needed?
-  'Editor.cancelSelection': Viewlet.wrapViewletCommand('EditorText', EditorCancelSelection.editorCancelSelection),
+  'Editor.applyEdit': createLazyCommand(Imports.ApplyEdit, 'editorApplyEdit'),
+  'Editor.blur': createLazyCommand(Imports.Blur, 'editorBlur'), // TODO needed?
+  'Editor.cancelSelection': createLazyCommand(Imports.CancelSelection, 'editorCancelSelection'),
   'Editor.close': Viewlet.wrapViewletCommand('EditorText', EditorCompletion.close),
   'Editor.compositionEnd': Viewlet.wrapViewletCommand('EditorText', EditorComposition.editorCompositionEnd),
   'Editor.compositionStart': Viewlet.wrapViewletCommand('EditorText', EditorComposition.editorCompositionStart),
