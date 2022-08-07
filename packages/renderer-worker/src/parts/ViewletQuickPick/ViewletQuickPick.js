@@ -106,8 +106,8 @@ const getVisiblePicks = (state, picks, filterValue) => {
     state.recentPickIds,
     filterValue
   )
+  // TODO avoid mutation
   state.filteredPicks = filteredPicks
-  state.state = QuickPickState.Finished
   const slicedPicks = slicePicks(filteredPicks)
   return toDisplayPicks(slicedPicks)
 }
@@ -244,31 +244,19 @@ export const selectCurrentIndex = async (state) => {
 
 // TODO when user types letters -> no need to query provider again -> just filter existing results
 export const handleInput = async (state, value) => {
-  console.log({ value })
-  if (state.state === QuickPickState.Default) {
-    return
+  if (state.value === value) {
+    return state
   }
-  state.state = QuickPickState.Creating
-  const version = ++state.versionId
-  // TODO if provider is immutable, don't necessarily need to get new picks
   const newPicks = await state.provider.getPicks(value)
-  if (version !== state.versionId) {
-    return
-  }
   const filterValue = state.provider.getFilterValue(value)
   const visiblePicks = getVisiblePicks(state, newPicks, filterValue)
-
-  RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'QuickPick',
-    /* method */ 'updatePicks',
-    /* picks */ visiblePicks,
-    /* unFocusIndex */ state.focusedIndex
-  )
-  state.picks = newPicks
-  state.visiblePicks = visiblePicks
-  state.focusedIndex = 0
-  state.state = QuickPickState.Finished
+  return {
+    ...state,
+    value,
+    picks: newPicks,
+    visiblePicks,
+    focusedIndex: 0,
+  }
 }
 
 // TODO use reactive Programming
