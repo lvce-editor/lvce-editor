@@ -19,76 +19,12 @@ export const state = {
   pendingIpcs: Object.create(null),
 }
 
-const isActivatableExtension = (extension) => {
-  return extension.main
-}
-
 const toActivatableExtension = (extension) => {
   return {
     path: extension.path,
     id: extension.id,
     main: extension.main,
   }
-}
-
-const activateExtension = async (extensionHost, extension) => {
-  if (!state.extensionPromiseCache[extension.id]) {
-    const activatableExtension = toActivatableExtension(extension)
-    state.extensionPromiseCache[extension.id] = SharedProcess.invoke(
-      /* ExtensionHost.enableExtension */ 'ExtensionHost.enableExtension',
-      /* activatableExtension */ activatableExtension
-    )
-  }
-  // TODO what if activation fails or extension is restarted ot extension host is restarted?
-  return state.extensionPromiseCache[extension.id]
-}
-
-export const ensureExtensionHostIsStarted = async () => {
-  switch (ExtensionHostCore.state.status) {
-    case ExtensionHostCore.STATUS_OFF:
-      ExtensionHostCore.state.extensionHostPromise =
-        ExtensionHostCore.startNodeExtensionHost()
-      await ExtensionHostCore.state.extensionHostPromise
-      await activateByEvent('onStartupFinished')
-      break
-    case ExtensionHostCore.STATUS_LOADING:
-      await ExtensionHostCore.state.extensionHostPromise
-      break
-    case ExtensionHostCore.STATUS_RUNNING:
-      break
-    case ExtensionHostCore.STATUS_ERROR:
-      throw new Error('extension host is broken')
-  }
-}
-
-const getExtensionsToActivate = (extensions, event) => {
-  const extensionsToActivate = []
-  for (const extension of extensions) {
-    if (extension.activation && extension.activation.includes(event)) {
-      extensionsToActivate.push(extension)
-    }
-  }
-  return extensionsToActivate
-}
-
-const getExtensionsWithError = (extensions) => {
-  const extensionsWithError = []
-  for (const extension of extensions) {
-    if (extension.status === 'rejected') {
-      extensionsWithError.push(extension)
-    }
-  }
-  return extensionsWithError
-}
-
-const handleExtensionActivationError = async (extension) => {
-  const message = extension.reason.message
-  const codeFrame = extension.reason.jse_cause.codeFrame
-  const stack = extension.reason.originalStack
-  await Command.execute(
-    /* Dialog.showMessage */ 'Dialog.showMessage',
-    /* error */ { message, codeFrame, stack }
-  )
 }
 
 // const startExtensionHost = async (type) => {
@@ -134,29 +70,6 @@ export const stopExtensionHost = async (key) => {
     }
   }
 }
-
-const startExtensionHostNode = () => {
-  return startExtensionHost(
-    'nodeExtensionHost',
-    ExtensionHostIpc.Methods.ModuleWebWorker
-  )
-}
-
-const startExtensionHostWeb = () => {}
-
-const stopExtensionHostNode = () => {}
-
-const isExtensionHostNodeExtension = (extension) => {
-  return typeof extension.main === 'string'
-}
-
-const isExtensionHostWebExtension = (extension) => {
-  return typeof extension.browser === 'string'
-}
-
-const startNodeExtensionHost = async () => {}
-
-const startWebExtensionHost = async () => {}
 
 export const canActivate = (manager, extensions) => {
   return extensions.some(manager.canActivate)
