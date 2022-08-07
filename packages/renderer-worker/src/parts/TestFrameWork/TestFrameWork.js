@@ -1,124 +1,8 @@
-import * as Command from '../Command/Command.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 export { create as Locator } from './Locator.js'
 
 export const getTmpDir = async () => {
   return `memfs://`
-}
-
-const querySelectorByText = (root, text) => {
-  let node
-  const elements = []
-  const walk = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null)
-  while ((node = walk.nextNode())) {
-    // @ts-ignore
-    if (node.nodeValue === text) {
-      elements.push(node.parentNode)
-    }
-  }
-  return elements
-}
-
-const querySelectorByCss = (selector) => {
-  return Array.from(document.querySelectorAll(selector))
-}
-
-const querySelector = (selector) => {
-  if (typeof selector !== 'string') {
-    throw new Error('selector must be of type string')
-  }
-  if (selector.startsWith('text=')) {
-    return querySelectorByText(document.body, selector.slice('text='.length))
-  }
-  if (selector.includes('text=')) {
-    const index = selector.indexOf('text=')
-    const elements = querySelectorByCss(selector.slice(0, index))
-    const text = selector.slice(index + 'text='.length)
-    return elements.flatMap((element) => {
-      return querySelectorByText(element, text)
-    })
-    // for(const element of elements)
-  }
-  if (selector.startsWith('.')) {
-    return querySelectorByCss(selector)
-  }
-  if (selector.startsWith('#')) {
-    return querySelectorByCss(selector)
-  }
-  throw new Error(`unsupported selector: ${selector}`)
-}
-
-const querySelectorWithOptions = (
-  selector,
-  { nth = -1, hasText = '' } = {}
-) => {
-  let elements = querySelector(selector)
-  if (hasText) {
-    elements = elements.filter((element) => element.textContent === hasText)
-  }
-  if (elements.length === 0) {
-    return undefined
-  }
-  if (elements.length === 1) {
-    const element = elements[0]
-    return element
-  }
-  if (nth === -1) {
-    throw new Error(`too many matching elements for ${selector}`)
-  }
-  const element = elements[nth]
-  if (!element) {
-    throw new Error(`selector not found: ${selector}`)
-  }
-  return element
-}
-
-const getKeyOptions = (rawKey) => {
-  if (rawKey.includes('+')) {
-    const parts = rawKey.split('+')
-    let ctrlKey = false
-    let altKey = false
-    let spaceKey = false
-    let key = ''
-    for (const part of parts) {
-      switch (part) {
-        case 'Control':
-          ctrlKey = true
-          break
-        case 'Space':
-          key = ' '
-          break
-        case 'Alt':
-          altKey = true
-          break
-        default:
-          key = part
-          break
-      }
-    }
-    return {
-      key,
-      ctrlKey,
-      altKey,
-    }
-  }
-  return { key: rawKey }
-}
-
-const createKeyBoard = () => {
-  return {
-    async press(key) {
-      const element = document.activeElement
-      const keyOptions = getKeyOptions(key)
-      const options = {
-        cancelable: true,
-        bubbles: true,
-        ...keyOptions,
-      }
-      ElementActions.keyDown(element, options)
-      ElementActions.keyUp(element, options)
-    },
-  }
 }
 
 const waitForReady = async () => {
@@ -151,6 +35,7 @@ export const test = async (name, fn) => {
     _duration = `${_end - _start}ms`
     console.info(`[test passed] ${name} in ${_duration}`)
   } catch (error) {
+    console.log({ error })
     _error = error.message
     error.message = `Test failed: ${name}: ${error.message}`
     console.error(error)

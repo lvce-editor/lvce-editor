@@ -93,7 +93,7 @@ const startTextDocumentSyncing = async (extensionHost) => {
   GlobalEventBus.addListener('editor.create', handleEditorCreate)
 
   const handleEditorChange = (editor, changes) => {
-    return extensionHost.invoke(
+    return extensionHost.ipc.invoke(
       'ExtensionHostTextDocument.syncIncremental',
       editor.id,
       changes
@@ -102,7 +102,7 @@ const startTextDocumentSyncing = async (extensionHost) => {
   GlobalEventBus.addListener('editor.change', handleEditorChange)
 
   const handleEditorLanguageChange = (editor) => {
-    return extensionHost.invoke(
+    return extensionHost.ipc.invoke(
       'ExtensionHostTextDocument.setLanguageId',
       editor.id,
       editor.languageId

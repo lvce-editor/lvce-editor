@@ -46,7 +46,7 @@ export const showAbout = async () => {
 
 export const showMessage = async (message, options) => {
   if (state.dialog) {
-    console.info('cannot show multiple dialogs at the same time')
+    console.info('cannot show multiple dialogs at the same time', message)
     return
   }
   // TODO implement actual dialog component for web
