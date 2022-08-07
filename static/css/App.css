@@ -7,11 +7,11 @@
 @import './parts/_Global.css';
 @import './parts/Layout.css';
 
-/*
+/* TODO put these into separate components */
 @import './parts/Dialog.css';
 @import './parts/Menu.css';
 @import './parts/Notification.css';
-@import './parts/QuickPick.css';p
+@import './parts/QuickPick.css';
 @import './parts/MonacoList.css';
 @import './parts/Viewlet.css';
 @import './parts/ContextMenu.css';
@@ -23,7 +23,6 @@
 @import './parts/ImagePreview.css';
 @import './parts/BackDrop.css';
 @import './parts/Animation.css';
- */
 
 /* focus css (can be overridden by components) */
 @import './parts/Focus.css';
