@@ -2,7 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Layout from '../Layout/Layout.js'
-import * as Viewlet from './Viewlet.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 
 const ACTIVITY_BAR_ITEM_HEIGHT = 48
 

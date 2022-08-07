@@ -1,4 +1,4 @@
-import * as ActivityBar from '../src/parts/Viewlet/ViewletActivityBar.js'
+import * as ActivityBar from '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
 import * as MenuEntriesActivityBar from '../src/parts/MenuEntries/MenuEntriesActivityBar.js'
 
 test.skip('getMenuEntries', async () => {
