@@ -226,61 +226,6 @@ test('select', async () => {
   )
 })
 
-test('focusFirst', async () => {
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await QuickPick.focusFirst()
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'QuickPick',
-    /* method */ 'focusIndex',
-    0,
-    0
-  )
-})
-
-test('focusLast', async () => {
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await QuickPick.focusLast()
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'QuickPick',
-    'focusIndex',
-    0,
-    0
-  )
-})
-
-test('focusPrevious', async () => {
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await QuickPick.focusPrevious()
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'QuickPick',
-    /* method */ 'focusIndex',
-    0,
-    0
-  )
-})
-
-test('focusNext', async () => {
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await QuickPick.focusNext()
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Viewlet.send */ 'Viewlet.send',
-    'QuickPick',
-    'focusIndex',
-    0,
-    0
-  )
-})
-
 test('show - twice', async () => {
   const mockProvider1 = {
     name: 'mock',

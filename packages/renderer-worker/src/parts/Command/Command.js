@@ -4,7 +4,7 @@ const MODULE_CONTEXT_MENU = 16
 const MODULE_LAYOUT = 17
 const MODULE_VIEWLET = 18
 const MODULE_WORKBENCH = 19
-const MODULE_QUICK_PICK = 21
+const MODULE_VIEWLET_QUICK_PICK = 21
 // TODO rename to widgetFind and group together with other widgets (contextMenu, hover, tooltip)
 const MODULE_FIND_WIDGET = 23
 const MODULE_PREFERENCES = 25
@@ -70,8 +70,8 @@ const loadModule = (moduleId) => {
       return import('../Viewlet/Viewlet.ipc.js')
     case MODULE_WORKBENCH:
       return import('../Workbench/Workbench.ipc.js')
-    case MODULE_QUICK_PICK:
-      return import('../QuickPick/QuickPick.ipc.js')
+    case MODULE_VIEWLET_QUICK_PICK:
+      return import('../ViewletQuickPick/ViewletQuickPick.ipc.js')
     case MODULE_FIND_WIDGET:
       return import('../FindWidget/FindWidget.ipc.js')
     case MODULE_PREFERENCES:
@@ -414,7 +414,7 @@ const getModuleId = (commandId) => {
     case 'QuickPick.fileOpenRecent':
     case 'QuickPick.handleBlur':
     case 'QuickPick.showExtensionsQuickPick':
-      return MODULE_QUICK_PICK
+      return MODULE_VIEWLET_QUICK_PICK
     case 'FindWidget.create':
     case 'FindWidget.dispose':
     case 'FindWidget.setValue':
