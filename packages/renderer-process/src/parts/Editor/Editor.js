@@ -187,7 +187,8 @@ const getTotalOffset = (event) => {
     const totalOffset = textNodeOffset + offset
     return totalOffset
     // @ts-ignore
-  } if (document.caretPositionFromPoint) {
+  }
+  if (document.caretPositionFromPoint) {
     // firefox uses new version
     // @ts-ignore
     const range = document.caretPositionFromPoint(event.clientX, event.clientY)
@@ -200,8 +201,7 @@ const getTotalOffset = (event) => {
     const totalOffset = textNodeOffset + offset
     return totalOffset
   }
-    throw new Error('caret position is not supported')
-
+  throw new Error('caret position is not supported')
 }
 
 const handleMouseDown = (event) => {
@@ -255,10 +255,16 @@ const handleWheel = (event) => {
   // TODO send editor id
   switch (event.deltaMode) {
     case event.DOM_DELTA_LINE:
-      RendererWorker.send(/* Editor.setDeltaY */ 384, /* value */ event.deltaY)
+      RendererWorker.send(
+        /* Editor.setDeltaY */ 'Editor.setDeltaY',
+        /* value */ event.deltaY
+      )
       break
     case event.DOM_DELTA_PIXEL:
-      RendererWorker.send(/* Editor.setDeltaY */ 384, /* value */ event.deltaY)
+      RendererWorker.send(
+        /* Editor.setDeltaY */ 'Editor.setDeltaY',
+        /* value */ event.deltaY
+      )
       break
     default:
       break
@@ -599,7 +605,7 @@ const getColumnWidth = () => {
   testSpan.style.fontSize = '15px'
   testSpan.style.letterSpacing = '0.5px'
   testSpan.style.position = 'fixed'
-  testSpan.style.fontFamily = '\'Fira Code\''
+  testSpan.style.fontFamily = "'Fira Code'"
   document.body.append(testSpan)
   const result = Number.parseFloat(getComputedStyle(testSpan).width) / 1
   testSpan.remove()
