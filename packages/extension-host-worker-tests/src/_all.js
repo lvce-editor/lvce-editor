@@ -62,11 +62,13 @@ const getTmpDir = () => {
 const main = async () => {
   const configDir = await getTmpDir()
   const cacheDir = await getTmpDir()
+  const dataDir = await getTmpDir()
   const server = fork(SERVER_PATH, {
     stdio: 'inherit',
     env: {
       XDG_CONFIG_HOME: configDir,
       XDG_CACHE_HOME: cacheDir,
+      XDG_DATA_HOME: dataDir,
     },
   })
   const argv = process.argv
