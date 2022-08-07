@@ -22,6 +22,6 @@ export const Commands = {
   'Main.closeTabsLeft': Viewlet.wrapViewletCommand('Main', ViewletMain.closeTabsLeft),
 }
 
-export const Css = '/css/parts/Main.css'
+export const Css = ['/css/parts/Main.css']
 
 export * from './ViewletMain.js'

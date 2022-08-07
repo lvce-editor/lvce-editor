@@ -37,9 +37,7 @@ test('addStyleSheet - error', async () => {
   RendererProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(
-    Css.addStyleSheet('test', '/test/not-found.css')
-  ).rejects.toThrowError(
+  await expect(Css.addStyleSheet('/test/not-found.css')).rejects.toThrowError(
     new Error(
       'Failed to add style sheet /test/not-found.css: TypeError: x is not a function'
     )
@@ -49,7 +47,7 @@ test('addStyleSheet - error', async () => {
 test('addStyleSheet - error', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(async () => {})
-  await Css.addStyleSheet('test', '/test/not-found.css')
+  await Css.addStyleSheet('/test/not-found.css')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
     'Css.addStyleSheet',

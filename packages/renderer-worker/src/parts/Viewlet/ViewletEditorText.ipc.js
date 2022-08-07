@@ -167,6 +167,6 @@ export const Commands = {
   // TODO command move line up/down
 }
 
-export const Css = '/css/parts/Editor.css'
+export const Css = ['/css/parts/Editor.css']
 
 export * from './ViewletEditorText.js'
