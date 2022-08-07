@@ -9,6 +9,8 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Id from '../Id/Id.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
 const getContent = async (uri) => {

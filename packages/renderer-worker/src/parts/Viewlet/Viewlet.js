@@ -196,6 +196,11 @@ export const getAllStates = () => {
   return states
 }
 
-export const openWidget = (...args) => {
+export const openWidget = async (id, ...args) => {
   console.log({ args })
+  await ViewletManager.load({
+    getModule: ViewletManager.getModule,
+    id,
+    type: 0,
+  })
 }
