@@ -23,7 +23,7 @@ export const getModule = (id) => {
     case 'Explorer':
       return import('../ViewletExplorer/ViewletExplorer.ipc.js')
     case 'Run and Debug':
-      return import('../Viewlet/ViewletRunAndDebug.ipc.js')
+      return import('../ViewletRunAndDebug/ViewletRunAndDebug.ipc.js')
     case 'Search':
       return import('../ViewletSearch/ViewletSearch.ipc.js')
     case 'Source Control':
@@ -41,17 +41,17 @@ export const getModule = (id) => {
     case 'Noop':
       return import('../ViewletNoop/ViewletNoop.ipc.js')
     case 'EditorText':
-      return import('../Viewlet/ViewletEditorText.ipc.js')
+      return import('../ViewletEditorText/ViewletEditorText.ipc.js')
     case 'EditorPlainText':
       return import('../Viewlet/ViewletEditorPlainText.js')
     case 'EditorImage':
-      return import('../Viewlet/ViewletEditorImage.ipc.js')
+      return import('../ViewletEditorImage/ViewletEditorImage.ipc.js')
     case 'Clock':
       return import('../ViewletClock/ViewletClock.ipc.js')
     case 'ActivityBar':
       return import('../ViewletActivityBar/ViewletActivityBar.ipc.js')
     case 'Panel':
-      return import('../Viewlet/ViewletPanel.ipc.js')
+      return import('../ViewletPanel/ViewletPanel.ipc.js')
     case 'SideBar':
       return import('../ViewletSideBar/ViewletSideBar.ipc.js')
     case 'TitleBar':
@@ -59,7 +59,7 @@ export const getModule = (id) => {
     case 'StatusBar':
       return import('../ViewletStatusBar/ViewletStatusBar.ipc.js')
     case 'Main':
-      return import('../Viewlet/ViewletMain.ipc.js')
+      return import('../ViewletMain/ViewletMain.ipc.js')
     case 'EditorCompletion':
       return import('../ViewletEditorCompletion/ViewletEditorCompletion.ipc.js')
     case 'References':

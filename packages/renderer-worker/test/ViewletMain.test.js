@@ -31,7 +31,7 @@ const SharedProcess = await import(
 
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 
-const ViewletMain = await import('../src/parts/Viewlet/ViewletMain.js')
+const ViewletMain = await import('../src/parts/ViewletMain/ViewletMain.js')
 
 test('name', () => {
   expect(ViewletMain.name).toBe('Main')

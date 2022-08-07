@@ -1,4 +1,4 @@
-import * as ViewletIframe from '../src/parts/Viewlet/ViewletIframe.js'
+import * as ViewletIframe from '../src/parts/ViewletIframe/ViewletIframe.js'
 
 test('name', () => {
   expect(ViewletIframe.name).toBe('Iframe')
