@@ -10,6 +10,7 @@ beforeAll(() => {
       lines: [],
       selections: EditorSelection.fromRange(0, 0, 0, 0),
     },
+    factory: {},
   })
 })
 

@@ -36,6 +36,7 @@ test('loadContent', async () => {
     state: {
       currentViewletId: 'Search',
     },
+    factory: {},
   })
   expect(await ViewletActivityBar.loadContent(state)).toMatchObject({
     activityBarItems: [

@@ -24,6 +24,7 @@ beforeAll(() => {
         columnIndex: 0,
       },
     },
+    factory: {},
   })
   ViewletStates.set('Main', {
     state: {},

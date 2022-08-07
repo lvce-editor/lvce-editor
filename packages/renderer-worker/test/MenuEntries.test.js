@@ -20,6 +20,7 @@ test('getMenuEntries - explorer', async () => {
       focusedIndex: -1,
       dirents: [],
     },
+    factory:{}
   })
   expect(await MenuEntries.getMenuEntries('explorer')).toBeInstanceOf(Array)
 })

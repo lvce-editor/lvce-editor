@@ -7,6 +7,7 @@ test('getMenuEntries - no focused dirent', async () => {
       focusedIndex: -1,
       dirents: [],
     },
+    factory: {},
   })
   const menuEntries = await MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({
@@ -30,6 +31,7 @@ test('getMenuEntries - focused folder', async () => {
         },
       ],
     },
+    factory: {},
   })
   const menuEntries = await MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({
@@ -53,6 +55,7 @@ test('getMenuEntries - focused file', async () => {
         },
       ],
     },
+    factory: {},
   })
   const menuEntries = await MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({
@@ -82,6 +85,7 @@ test('getMenuEntries - focused symlink', async () => {
         },
       ],
     },
+    factory: {},
   })
   const menuEntries = await MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({

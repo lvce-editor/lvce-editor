@@ -189,7 +189,11 @@ test('load - error - no contentLoaded method', async () => {
       create() {
         return {}
       },
-      async loadContent() {},
+      async loadContent(state) {
+        return {
+          ...state,
+        }
+      },
     }
   }
   const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
@@ -212,7 +216,11 @@ test('load - error - contentLoaded method throws error', async () => {
       create() {
         return {}
       },
-      async loadContent() {},
+      async loadContent(state) {
+        return {
+          ...state,
+        }
+      },
       contentLoaded() {
         throw new TypeError('x is not a function')
       },
