@@ -246,7 +246,6 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
 
 const handleBeforeInput = (event) => {
   event.preventDefault()
-  console.log(event)
   const $Target = event.target
   const selectionStart = $Target.selectionStart
   const selectionEnd = $Target.selectionEnd

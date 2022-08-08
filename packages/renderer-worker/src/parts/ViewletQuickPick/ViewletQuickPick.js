@@ -297,6 +297,34 @@ const getNewValueDeleteContentBackward = (
   }
 }
 
+const RE_ALPHA_NUMERIC = /[a-z\d]/i
+
+const isAlphaNumeric = (character) => {
+  return RE_ALPHA_NUMERIC.test(character)
+}
+
+const getNewValueDeleteWordBackward = (value, selectionStart, selectionEnd) => {
+  const after = value.slice(selectionEnd)
+  if (selectionStart === selectionEnd) {
+    let startIndex = Math.max(selectionStart - 1, 0)
+    while (startIndex > 0 && isAlphaNumeric(value[startIndex])) {
+      startIndex--
+    }
+    const before = value.slice(0, startIndex)
+    const newValue = before + after
+    return {
+      newValue,
+      cursorOffset: before.length,
+    }
+  }
+  const before = value.slice(0, selectionStart)
+  const newValue = before + after
+  return {
+    newValue,
+    cursorOffset: selectionStart,
+  }
+}
+
 const getNewValueDeleteContentForward = (
   value,
   selectionStart,
@@ -335,6 +363,8 @@ const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
         selectionStart,
         selectionEnd
       )
+    case 'deleteWordBackward':
+      return getNewValueDeleteWordBackward(value, selectionStart, selectionEnd)
     default:
       throw new Error(`unsupported input type ${inputType}`)
   }
