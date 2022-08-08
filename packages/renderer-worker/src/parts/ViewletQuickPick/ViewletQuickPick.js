@@ -374,55 +374,66 @@ const getNewValueDeleteWordForward = (value, selectionStart, selectionEnd) => {
   }
 }
 
-const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
-  switch (inputType) {
-    case 'insertText':
-      return getNewValueInsertText(value, data, selectionStart, selectionEnd)
-    case 'deleteContentBackward':
-      return getNewValueDeleteContentBackward(
-        value,
-        selectionStart,
-        selectionEnd
-      )
-    case 'deleteContentForward':
-      return getNewValueDeleteContentForward(
-        value,
-        selectionStart,
-        selectionEnd
-      )
-    case 'deleteWordForward':
-      return getNewValueDeleteWordForward(value, selectionStart, selectionEnd)
-    case 'deleteWordBackward':
-      return getNewValueDeleteWordBackward(value, selectionStart, selectionEnd)
+// const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
+//   switch (inputType) {
+//     case 'insertText':
+//       return getNewValueInsertText(value, data, selectionStart, selectionEnd)
+//     case 'deleteContentBackward':
+//       return getNewValueDeleteContentBackward(
+//         value,
+//         selectionStart,
+//         selectionEnd
+//       )
+//     case 'deleteContentForward':
+//       return getNewValueDeleteContentForward(
+//         value,
+//         selectionStart,
+//         selectionEnd
+//       )
+//     case 'deleteWordForward':
+//       return getNewValueDeleteWordForward(value, selectionStart, selectionEnd)
+//     case 'deleteWordBackward':
+//       return getNewValueDeleteWordBackward(value, selectionStart, selectionEnd)
+//     default:
+//       throw new Error(`unsupported input type ${inputType}`)
+//   }
+// }
+
+const getNewValue = (value, key) => {
+  switch (key) {
+    case 'Backspace':
+      return value.slice(0, -1)
+    case 'Delete':
+      return value.slice(0, -1)
     default:
-      throw new Error(`unsupported input type ${inputType}`)
+      return value + key
   }
 }
 
 export const handleKeyDown = (state, key) => {
-  const newValue = state.value + key
+  const newValue = getNewValue(state.value, key)
   return handleInput(state, newValue, newValue.length)
 }
 
-export const handleBeforeInput = (
-  state,
-  inputType,
-  data,
-  selectionStart,
-  selectionEnd
-) => {
-  Assert.string(inputType)
-  Assert.number(selectionStart)
-  Assert.number(selectionEnd)
-  const { newValue, cursorOffset } = getNewValue(
-    state.value,
-    inputType,
-    data,
-    selectionStart,
-    selectionEnd
-  )
-  return handleInput(state, newValue, cursorOffset)
-}
+// export const handleBeforeInput = (
+//   state,
+//   inputType,
+//   data,
+//   selectionStart,
+//   selectionEnd
+// ) => {
+// Assert.string(inputType)
+// Assert.number(selectionStart)
+// Assert.number(selectionEnd)
+// const { newValue, cursorOffset } = getNewValue(
+//   state.value,
+//   inputType,
+//   data,
+//   selectionStart,
+//   selectionEnd
+// )
+// return handleInput(state, newValue, cursorOffset)
+// }
 
 // TODO use reactive Programming
 // https://angular-2-training-book.rangle.io/http/search_with_switchmap
