@@ -244,6 +244,22 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
 // - for windows narrator, ariaLabel works well
 // - for nvda ariaRoleDescription works better
 
+const handleBeforeInput = (event) => {
+  event.preventDefault()
+  const $Target = event.target
+  const selectionStart = $Target.selectionStart
+  const selectionEnd = $Target.selectionEnd
+  const inputType = event.inputType
+  const data = event.data
+  RendererWorker.send(
+    'QuickPick.handleBeforeInput',
+    /* inputType */ inputType,
+    /* data */ data,
+    /* selectionStart */ selectionStart,
+    /* selectionEnd */ selectionEnd
+  )
+}
+
 export const create = (value, visiblePicks, focusIndex) => {
   const $QuickPickInput = InputBox.create()
   $QuickPickInput.setAttribute('aria-controls', 'QuickPickItems')
@@ -253,8 +269,8 @@ export const create = (value, visiblePicks, focusIndex) => {
   $QuickPickInput.setAttribute('aria-activedescendant', '')
   $QuickPickInput.setAttribute('aria-activedescendant', 'QuickPickItem-1') // TODO only if list length is not zero
   $QuickPickInput.onblur = handleBlur
-  // $QuickPickInput.addEventListener('beforeinput', handleBeforeInput)
   $QuickPickInput.oninput = handleInput
+  $QuickPickInput.addEventListener('beforeinput', handleBeforeInput)
   $QuickPickInput.ariaExpanded = 'true'
 
   const $QuickPickHeader = document.createElement('div')
@@ -315,7 +331,12 @@ export const dispose = (state) => {
 }
 
 export const setValue = (state, value) => {
-  // TODO set value might cause recalc style / layout -> investigate
   const { $QuickPickInput } = state
   $QuickPickInput.value = value
+}
+
+export const setCursorOffset = (state, cursorOffset) => {
+  const { $QuickPickInput } = state
+  $QuickPickInput.selectionStart = cursorOffset
+  $QuickPickInput.selectionEnd = cursorOffset
 }

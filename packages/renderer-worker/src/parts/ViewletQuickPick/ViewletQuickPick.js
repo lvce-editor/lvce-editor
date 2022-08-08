@@ -43,6 +43,7 @@ export const create = (id, uri, top, left, width, height) => {
     maxLineY: 0,
     maxVisibleItems: 10,
     uri,
+    cursorOffset: 0,
   }
 }
 
@@ -113,7 +114,6 @@ const getVisiblePicks = (state, picks, filterValue) => {
 }
 
 const getProvider = (uri) => {
-  console.log({ uri })
   switch (uri) {
     case 'quickPick://commandPalette':
       return import('../QuickPick/QuickPickCommand.js')
@@ -241,7 +241,7 @@ export const selectCurrentIndex = async (state) => {
 }
 
 // TODO when user types letters -> no need to query provider again -> just filter existing results
-export const handleInput = async (state, value) => {
+export const handleInput = async (state, value, cursorOffset) => {
   if (state.value === value) {
     return state
   }
@@ -254,7 +254,164 @@ export const handleInput = async (state, value) => {
     picks: newPicks,
     visiblePicks,
     focusedIndex: 0,
+    cursorOffset,
   }
+}
+
+const getNewValueInsertText = (value, data, selectionStart, selectionEnd) => {
+  if (selectionStart === value.length) {
+    const newValue = value + data
+    return {
+      newValue,
+      cursorOffset: newValue.length,
+    }
+  }
+  const before = value.slice(0, selectionStart)
+  const after = value.slice(selectionEnd)
+  const newValue = before + data + after
+  return {
+    newValue,
+    cursorOffset: selectionStart + data.length,
+  }
+}
+
+const getNewValueDeleteContentBackward = (
+  value,
+  selectionStart,
+  selectionEnd
+) => {
+  const after = value.slice(selectionEnd)
+  if (selectionStart === selectionEnd) {
+    const before = value.slice(0, selectionStart - 1)
+    const newValue = before + after
+    return {
+      newValue,
+      cursorOffset: before.length,
+    }
+  }
+  const before = value.slice(0, selectionStart)
+  const newValue = before + after
+  return {
+    newValue,
+    cursorOffset: selectionStart,
+  }
+}
+
+const RE_ALPHA_NUMERIC = /[a-z\d]/i
+
+const isAlphaNumeric = (character) => {
+  return RE_ALPHA_NUMERIC.test(character)
+}
+
+const getNewValueDeleteWordBackward = (value, selectionStart, selectionEnd) => {
+  const after = value.slice(selectionEnd)
+  if (selectionStart === selectionEnd) {
+    let startIndex = Math.max(selectionStart - 1, 0)
+    while (startIndex > 0 && isAlphaNumeric(value[startIndex])) {
+      startIndex--
+    }
+    const before = value.slice(0, startIndex)
+    const newValue = before + after
+    return {
+      newValue,
+      cursorOffset: before.length,
+    }
+  }
+  const before = value.slice(0, selectionStart)
+  const newValue = before + after
+  return {
+    newValue,
+    cursorOffset: selectionStart,
+  }
+}
+
+const getNewValueDeleteContentForward = (
+  value,
+  selectionStart,
+  selectionEnd
+) => {
+  const before = value.slice(0, selectionStart)
+  if (selectionStart === selectionEnd) {
+    const after = value.slice(selectionEnd + 1)
+    const newValue = before + after
+    return {
+      newValue,
+      cursorOffset: selectionStart,
+    }
+  }
+  const after = value.slice(selectionEnd)
+  const newValue = before + after
+  return {
+    newValue,
+    cursorOffset: selectionStart,
+  }
+}
+
+const getNewValueDeleteWordForward = (value, selectionStart, selectionEnd) => {
+  const before = value.slice(0, selectionStart)
+  if (selectionStart === selectionEnd) {
+    let startIndex = Math.min(selectionStart + 1, value.length - 1)
+    while (startIndex < value.length && isAlphaNumeric(value[startIndex])) {
+      startIndex++
+    }
+    const after = value.slice(startIndex)
+    const newValue = before + after
+    return {
+      newValue,
+      cursorOffset: before.length,
+    }
+  }
+  const after = value.slice(selectionEnd)
+  const newValue = before + after
+  return {
+    newValue,
+    cursorOffset: selectionStart,
+  }
+}
+
+const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
+  switch (inputType) {
+    case 'insertText':
+      return getNewValueInsertText(value, data, selectionStart, selectionEnd)
+    case 'deleteContentBackward':
+      return getNewValueDeleteContentBackward(
+        value,
+        selectionStart,
+        selectionEnd
+      )
+    case 'deleteContentForward':
+      return getNewValueDeleteContentForward(
+        value,
+        selectionStart,
+        selectionEnd
+      )
+    case 'deleteWordForward':
+      return getNewValueDeleteWordForward(value, selectionStart, selectionEnd)
+    case 'deleteWordBackward':
+      return getNewValueDeleteWordBackward(value, selectionStart, selectionEnd)
+    default:
+      throw new Error(`unsupported input type ${inputType}`)
+  }
+}
+
+export const handleBeforeInput = (
+  state,
+  inputType,
+  data,
+  selectionStart,
+  selectionEnd
+) => {
+  Assert.string(inputType)
+  Assert.number(selectionStart)
+  Assert.number(selectionEnd)
+  const { newValue, cursorOffset } = getNewValue(
+    state.value,
+    inputType,
+    data,
+    selectionStart,
+    selectionEnd
+  )
+  return handleInput(state, newValue, cursorOffset)
 }
 
 // TODO use reactive Programming
@@ -311,13 +468,6 @@ export const focusIndex = async (state, index) => {
       state.minLineY,
       state.maxLineY
     )
-    console.log(
-      'scroll down',
-      index,
-      state.minLineY,
-      state.maxLineY,
-      slicedPicks
-    )
     const displayPicks = toDisplayPicks(slicedPicks)
     const relativeFocusIndex = index - state.minLineY
     const relativeUnFocusIndex = state.focusedIndex - state.minLineY
@@ -329,7 +479,6 @@ export const focusIndex = async (state, index) => {
       focusedIndex: index,
     }
   }
-  console.log('focus', index)
   return {
     ...state,
     focusedIndex: index,
@@ -369,6 +518,17 @@ export const render = (oldState, newState) => {
       /* value */ newState.value,
     ])
   }
+  if (
+    oldState.cursorOffset !== newState.cursorOffset &&
+    newState.cursorOffset !== newState.value.length
+  ) {
+    changes.push([
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'QuickPick',
+      /* method */ 'setCursorOffset',
+      /* cursorOffset */ newState.cursorOffset,
+    ])
+  }
   if (oldState.visiblePicks !== newState.visiblePicks) {
     // TODO compute visible picks here from filteredPicks and minLineY / maxLineY, maybe also do filtering here
     changes.push([
@@ -387,6 +547,5 @@ export const render = (oldState, newState) => {
       /* newFocusedIndex */ newState.focusedIndex,
     ])
   }
-  console.log({ changes })
   return changes
 }

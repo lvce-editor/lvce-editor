@@ -92,3 +92,194 @@ test('handleInput - different value', async () => {
   expect(state.provider.getPicks).toHaveBeenCalledTimes(1)
   expect(state.provider.getPicks).toHaveBeenCalledWith('abc')
 })
+
+test('handleBeforeInput - insertText - at end', async () => {
+  const state = {
+    ...ViewletQuickPick.create(),
+    value: 'ab',
+    focusedIndex: 0,
+    provider: {
+      getPicks() {
+        return []
+      },
+      getFilterValue(value) {
+        return value
+      },
+    },
+    filteredPicks: [],
+  }
+  expect(
+    await ViewletQuickPick.handleBeforeInput(state, 'insertText', 'c', 2, 2)
+  ).toMatchObject({
+    value: 'abc',
+    cursorOffset: 3,
+  })
+})
+
+test('handleBeforeInput - insertText - at start', async () => {
+  const state = {
+    ...ViewletQuickPick.create(),
+    value: 'bc',
+    focusedIndex: 0,
+    provider: {
+      getPicks() {
+        return []
+      },
+      getFilterValue(value) {
+        return value
+      },
+    },
+    filteredPicks: [],
+  }
+  expect(
+    await ViewletQuickPick.handleBeforeInput(state, 'insertText', 'a', 0, 0)
+  ).toMatchObject({
+    value: 'abc',
+    cursorOffset: 1,
+  })
+})
+
+test('handleBeforeInput - deleteContentForward - at start', async () => {
+  const state = {
+    ...ViewletQuickPick.create(),
+    value: 'abc',
+    focusedIndex: 0,
+    provider: {
+      getPicks() {
+        return []
+      },
+      getFilterValue(value) {
+        return value
+      },
+    },
+    filteredPicks: [],
+  }
+  expect(
+    await ViewletQuickPick.handleBeforeInput(
+      state,
+      'deleteContentForward',
+      null,
+      0,
+      0
+    )
+  ).toMatchObject({
+    value: 'bc',
+    cursorOffset: 0,
+  })
+})
+
+test('handleBeforeInput - deleteContentForward - in middle', async () => {
+  const state = {
+    ...ViewletQuickPick.create(),
+    value: 'abc',
+    focusedIndex: 0,
+    provider: {
+      getPicks() {
+        return []
+      },
+      getFilterValue(value) {
+        return value
+      },
+    },
+    filteredPicks: [],
+  }
+  expect(
+    await ViewletQuickPick.handleBeforeInput(
+      state,
+      'deleteContentForward',
+      null,
+      1,
+      1
+    )
+  ).toMatchObject({
+    value: 'ac',
+    cursorOffset: 1,
+  })
+})
+
+test('handleBeforeInput - deleteContentBackward - at end', async () => {
+  const state = {
+    ...ViewletQuickPick.create(),
+    value: 'abc',
+    focusedIndex: 0,
+    provider: {
+      getPicks() {
+        return []
+      },
+      getFilterValue(value) {
+        return value
+      },
+    },
+    filteredPicks: [],
+  }
+  expect(
+    await ViewletQuickPick.handleBeforeInput(
+      state,
+      'deleteContentBackward',
+      null,
+      3,
+      3
+    )
+  ).toMatchObject({
+    value: 'ab',
+    cursorOffset: 2,
+  })
+})
+
+test('handleBeforeInput - deleteWordBackward', async () => {
+  const state = {
+    ...ViewletQuickPick.create(),
+    value: 'abc',
+    focusedIndex: 0,
+    provider: {
+      getPicks() {
+        return []
+      },
+      getFilterValue(value) {
+        return value
+      },
+    },
+    filteredPicks: [],
+  }
+  expect(
+    await ViewletQuickPick.handleBeforeInput(
+      state,
+      'deleteWordBackward',
+      null,
+      3,
+      3
+    )
+  ).toMatchObject({
+    value: '',
+    cursorOffset: 0,
+  })
+})
+
+test('handleBeforeInput - deleteWordForward', async () => {
+  const state = {
+    ...ViewletQuickPick.create(),
+    value: 'abc',
+    focusedIndex: 0,
+    provider: {
+      getPicks() {
+        return []
+      },
+      getFilterValue(value) {
+        return value
+      },
+    },
+    filteredPicks: [],
+  }
+  expect(
+    await ViewletQuickPick.handleBeforeInput(
+      state,
+      'deleteWordForward',
+      null,
+      0,
+      0
+    )
+  ).toMatchObject({
+    value: '',
+    cursorOffset: 0,
+  })
+})
