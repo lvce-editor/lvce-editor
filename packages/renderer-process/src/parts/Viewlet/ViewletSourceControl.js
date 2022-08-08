@@ -39,9 +39,7 @@ const handleClick = (event) => {
 }
 
 const getPlaceHolderText = () => {
-  return `Message (${KeyBindings.lookupKeyBinding(
-    'scm.acceptInput'
-  )} to commit on 'master'`
+  return `Message (TODO insert keybinding here) to commit on 'master'`
 }
 
 export const create = () => {
