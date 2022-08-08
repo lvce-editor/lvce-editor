@@ -23,7 +23,7 @@
 
 .Cursor {
   width: 2px;
-  background: red;
+  background: var(--EditorCursorBackground, red);
   contain: strict;
   height: 100%;
   position: absolute;
