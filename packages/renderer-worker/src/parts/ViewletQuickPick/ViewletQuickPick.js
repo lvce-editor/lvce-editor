@@ -113,7 +113,6 @@ const getVisiblePicks = (state, picks, filterValue) => {
 }
 
 const getProvider = (uri) => {
-  console.log({ uri })
   switch (uri) {
     case 'quickPick://commandPalette':
       return import('../QuickPick/QuickPickCommand.js')
@@ -257,6 +256,37 @@ export const handleInput = async (state, value) => {
   }
 }
 
+const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
+  switch (inputType) {
+    case 'insertText':
+      const before = value.slice(0, selectionStart)
+      const after = value.slice(selectionEnd)
+      return before + data + after
+    default:
+      throw new Error(`unsupported input type ${inputType}`)
+  }
+}
+
+export const handleBeforeInput = (
+  state,
+  inputType,
+  data,
+  selectionStart,
+  selectionEnd
+) => {
+  Assert.string(inputType)
+  Assert.number(selectionStart)
+  Assert.number(selectionEnd)
+  const newValue = getNewValue(
+    state.value,
+    inputType,
+    data,
+    selectionStart,
+    selectionEnd
+  )
+  return handleInput(state, newValue)
+}
+
 // TODO use reactive Programming
 // https://angular-2-training-book.rangle.io/http/search_with_switchmap
 
@@ -311,13 +341,6 @@ export const focusIndex = async (state, index) => {
       state.minLineY,
       state.maxLineY
     )
-    console.log(
-      'scroll down',
-      index,
-      state.minLineY,
-      state.maxLineY,
-      slicedPicks
-    )
     const displayPicks = toDisplayPicks(slicedPicks)
     const relativeFocusIndex = index - state.minLineY
     const relativeUnFocusIndex = state.focusedIndex - state.minLineY
@@ -329,7 +352,6 @@ export const focusIndex = async (state, index) => {
       focusedIndex: index,
     }
   }
-  console.log('focus', index)
   return {
     ...state,
     focusedIndex: index,
@@ -387,6 +409,5 @@ export const render = (oldState, newState) => {
       /* newFocusedIndex */ newState.focusedIndex,
     ])
   }
-  console.log({ changes })
   return changes
 }

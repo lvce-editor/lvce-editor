@@ -244,6 +244,23 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
 // - for windows narrator, ariaLabel works well
 // - for nvda ariaRoleDescription works better
 
+const handleBeforeInput = (event) => {
+  event.preventDefault()
+  console.log(event)
+  const $Target = event.target
+  const selectionStart = $Target.selectionStart
+  const selectionEnd = $Target.selectionEnd
+  const inputType = event.inputType
+  const data = event.data
+  RendererWorker.send(
+    'QuickPick.handleBeforeInput',
+    /* inputType */ inputType,
+    /* data */ data,
+    /* selectionStart */ selectionStart,
+    /* selectionEnd */ selectionEnd
+  )
+}
+
 export const create = (value, visiblePicks, focusIndex) => {
   const $QuickPickInput = InputBox.create()
   $QuickPickInput.setAttribute('aria-controls', 'QuickPickItems')
@@ -253,8 +270,8 @@ export const create = (value, visiblePicks, focusIndex) => {
   $QuickPickInput.setAttribute('aria-activedescendant', '')
   $QuickPickInput.setAttribute('aria-activedescendant', 'QuickPickItem-1') // TODO only if list length is not zero
   $QuickPickInput.onblur = handleBlur
-  // $QuickPickInput.addEventListener('beforeinput', handleBeforeInput)
   $QuickPickInput.oninput = handleInput
+  $QuickPickInput.addEventListener('beforeinput', handleBeforeInput)
   $QuickPickInput.ariaExpanded = 'true'
 
   const $QuickPickHeader = document.createElement('div')
