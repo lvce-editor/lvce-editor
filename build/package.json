@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "bytes": "^3.1.2",
-    "esbuild": "^0.14.53",
+    "esbuild": "^0.14.54",
     "fs-extra": "^10.1.0",
     "got": "^12.3.1",
     "gzip-size": "^7.0.0",
