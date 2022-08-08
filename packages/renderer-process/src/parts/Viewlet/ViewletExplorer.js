@@ -1,4 +1,3 @@
-import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
@@ -70,7 +69,7 @@ const getAllEntries = async (dataTransfer) => {
 }
 
 const handleFocus = (event) => {
-  Focus.setFocus('Explorer')
+  // Focus.setFocus('Explorer')
   const $Target = event.target
   if ($Target.className === 'InputBox') {
     return
@@ -395,7 +394,7 @@ export const showCreateFileInputBox = (state, index) => {
     $Dirent.before($InputBox)
   }
   $InputBox.focus()
-  Focus.setFocus('ExplorerCreateFile')
+  // Focus.setFocus('ExplorerCreateFile')
 }
 
 export const hideCreateFileInputBox = (state, index) => {
@@ -417,7 +416,7 @@ export const showRenameInputBox = (state, index, name) => {
   $Dirent.replaceWith($InputBox)
   $InputBox.select()
   $InputBox.setSelectionRange(0, $InputBox.value.length)
-  Focus.setFocus('ExplorerRename')
+  // Focus.setFocus('ExplorerRename')
 }
 
 export const hideRenameBox = (state, index, dirent) => {

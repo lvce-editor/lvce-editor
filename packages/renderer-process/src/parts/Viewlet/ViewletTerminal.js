@@ -1,9 +1,8 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
+import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Terminal from '../Terminal/Terminal.js'
-import * as Context from '../Context/Context.js'
-import * as Focus from '../Focus/Focus.js'
-import * as Assert from '../Assert/Assert.js'
 
 // TODO support multiple terminals
 let globalTerminal

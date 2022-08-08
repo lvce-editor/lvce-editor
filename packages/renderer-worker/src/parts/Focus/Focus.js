@@ -1,22 +1,35 @@
-import * as Command from '../Command/Command.js'
+import * as Context from '../Context/Context.js'
 
-export const focusTerminal = () => {}
+// TODO not sure if its worth to have a separate module for this or keep it inside Context.js
+// export const setFocus = (item) => {
+//   if (Context.state.currentFocus) {
+//     Context.remove(Context.state.currentFocus)
+//   }
+//   Context.set(`focus.${item}`, true)
+// }
 
-export const focusExtensions = () => {}
-
-// TODO are these wrapper functions useful?
-export const focusActivityBar = async () => {
-  await Command.execute(/* ActivityBar.focus */ 8003)
+export const state = {
+  currentFocus: '',
 }
 
-export const focusStatusBar = () => {}
+export const setFocus = (key) => {
+  if (state.currentFocus) {
+    Context.remove(state.currentFocus)
+  }
+  // TODO could make focus key numeric enum which would be more efficient
+  state.currentFocus = `focus.${key}`
+  Context.set(state.currentFocus, true)
+}
 
-export const focusProblems = () => {}
+export const setAdditionalFocus = (key) => {
+  // TODO key should be numeric
+  Context.set(`focus.${key}`, true)
+}
 
-export const focusExplorer = () => {}
+export const removeAdditionalFocus = (key) => {
+  Context.remove(`focus.${key}`)
+}
 
-export const focusPreviousTerminal = () => {}
-
-export const focusNextTerminal = () => {}
-
-export const focusDebugConsole = () => {}
+export const focus = (key) => {
+  setFocus(key)
+}

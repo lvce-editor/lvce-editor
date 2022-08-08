@@ -1,4 +1,3 @@
-import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 const handleInput = (event) => {
@@ -15,7 +14,7 @@ const handleClose = (event) => {
 }
 
 const handleFocus = (event) => {
-  Focus.setFocus('findWidget')
+  // Focus.setFocus('findWidget')
 }
 
 export const create = (id) => {

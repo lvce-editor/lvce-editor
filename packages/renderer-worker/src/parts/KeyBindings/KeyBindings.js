@@ -146,7 +146,7 @@ const handleMatchingKeyBinding = (matchingKeyBinding) => {
   // TODO execute that command
 }
 
-const handleKeyUp = (event) => {
+export const handleKeyUp = (event) => {
   const modifier = getModifier(event)
   if (!modifier) {
     clearModifier()

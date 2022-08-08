@@ -1,5 +1,4 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Focus from '../Focus/Focus.js'
 
 export const name = 'Locations'
 
@@ -135,5 +134,5 @@ export const focus = (state) => {
   const { $Locations } = state
   $Locations.classList.add('FocusOutline')
   $Locations.focus()
-  Focus.setFocus('locationList')
+  // Focus.setFocus('locationList')
 }

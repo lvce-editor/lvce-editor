@@ -3,7 +3,6 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Widget from '../Widget/Widget.js'
 import * as MenuItem from '../MenuItem/MenuItem.js'
 import * as BackDrop from '../BackDrop/BackDrop.js'
-import * as Focus from '../Focus/Focus.js'
 
 // TODO when pressing tab -> focus next element in tab order and close menu
 
@@ -221,7 +220,7 @@ export const showMenu = (
   Widget.append($Menu)
 
   if (level === 0) {
-    Focus.focus($Menu, 'menu')
+    // Focus.focus($Menu, 'menu')
   }
 }
 
@@ -319,7 +318,7 @@ export const hide = (restoreFocus = true) => {
   }
   // TODO focus previous item
   if (restoreFocus) {
-    Focus.focusPrevious()
+    // Focus.focusPrevious()
   }
 }
 

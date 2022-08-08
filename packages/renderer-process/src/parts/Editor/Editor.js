@@ -1,11 +1,9 @@
 // TODO so many things in this file
 
-import * as Focus from '../Focus/Focus.js'
+import * as Assert from '../Assert/Assert.js'
+import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ActiveViewlet from '../Viewlet/ActiveViewlet.js'
-import * as Platform from '../Platform/Platform.js'
-import * as Assert from '../Assert/Assert.js'
-import * as EditorHelper from './EditorHelper.js'
 import * as LayerCursor from './LayerCursor.js'
 import * as LayerDiagnostics from './LayerDiagnostics.js'
 import * as LayerScrollBar from './LayerScrollBar.js'
@@ -28,9 +26,9 @@ const handleContextMenu = (event) => {
   )
 }
 
-const handleFocus = (event) => {
-  Focus.setFocus('EditorText')
-}
+// const handleFocus = (event) => {
+//   Focus.setFocus('EditorText')
+// }
 
 const handleBlur = (event) => {
   // needed for save on blur
@@ -451,7 +449,7 @@ export const create = () => {
   $EditorInput.addEventListener('compositionstart', handleCompositionStart)
   $EditorInput.addEventListener('compositionupdate', handleCompositionUpdate)
   $EditorInput.addEventListener('compositionend', handleCompositionEnd)
-  $EditorInput.onfocus = handleFocus
+  // $EditorInput.onfocus = handleFocus
   $EditorInput.onblur = handleBlur
   $EditorInput.oncut = handleCut
 

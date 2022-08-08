@@ -1,6 +1,5 @@
 import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
-import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ActiveViewlet from './ActiveViewlet.js'
 
@@ -54,7 +53,6 @@ const handleFocus = (event) => {
   const $Target = event.target
   $Target.classList.add('FocusOutline')
   // TODO maybe have one focus listener inside Viewlet.js instead of each viewlet
-  Focus.setFocus('ViewletList')
 
   // RendererWorker.send(/* ViewletExtensions.focusIndex */ 868, /* index */ -1)
 }

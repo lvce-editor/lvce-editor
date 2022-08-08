@@ -1,5 +1,4 @@
 import * as Widget from '../Widget/Widget.js'
-import * as Focus from '../Focus/Focus.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
@@ -31,7 +30,7 @@ export const prompt = async (message) => {
     Widget.append($Dialog)
     // @ts-ignore
     $Dialog.showModal()
-    Focus.setFocus('dialog')
+    // Focus.setFocus('dialog')
     state.$Dialog = $Dialog
     // TODO what if there is an error inside the body of the promise function?
     return new Promise((resolve, reject) => {
@@ -70,7 +69,7 @@ export const close = () => {
   console.log('dialog removed')
   Widget.remove(state.$Dialog)
   state.$Dialog = undefined
-  Focus.focusPrevious()
+  // Focus.focusPrevious()
 }
 
 const RE_STACK_1 = /\((.*):(\d+):(\d+)\)$/
@@ -178,6 +177,6 @@ export const showErrorDialogWithOptions = (error, options) => {
   Widget.append($Dialog)
   // @ts-ignore
   $Dialog.showModal()
-  Focus.setFocus('dialog')
+  // Focus.setFocus('dialog')
   state.$Dialog = $Dialog
 }

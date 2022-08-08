@@ -1,5 +1,4 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Focus from '../Focus/Focus.js'
 import * as Layout from '../Layout/Layout.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
@@ -113,7 +112,7 @@ export const create = () => {
   $ActivityBar.onmousedown = handleMousedown
   $ActivityBar.oncontextmenu = handleContextMenu
   $ActivityBar.onblur = handleBlur
-  $ActivityBar.addEventListener('focusin', handleFocusIn)
+  // $ActivityBar.addEventListener('focusin', handleFocusIn)
   // $ActivityBar.children[focusedIndex].tabIndex = 0
   return {
     $ActivityBar,
@@ -132,10 +131,6 @@ export const setItems = (state, activityBarItems) => {
   $ActivityBar.append(...activityBarItems.map(create$ActivityBarItem))
 }
 
-const handleFocusIn = () => {
-  Focus.setFocus('activityBar')
-}
-
 export const selectIndex = (state, oldIndex, newIndex) => {
   if (oldIndex !== -1) {
     const $OldItem = state.$ActivityBar.children[oldIndex]
@@ -152,7 +147,7 @@ export const selectIndex = (state, oldIndex, newIndex) => {
 }
 
 const focus$Item = ($Item) => {
-  Focus.focus($Item, 'activityBar')
+  // Focus.focus($Item, 'activityBar')
 }
 
 export const setFocusedIndex = (state, oldIndex, newIndex) => {

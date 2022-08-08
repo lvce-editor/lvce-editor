@@ -1,3 +1,5 @@
+import * as Assert from '../Assert/Assert.js'
+
 const MODULE_NOTIFICATION = 2
 const MODULE_WINDOW = 14
 const MODULE_CONTEXT_MENU = 16
@@ -179,6 +181,7 @@ const getOrLoadModule = (moduleId) => {
 }
 
 const getModuleId = (commandId) => {
+  Assert.string(commandId)
   switch (commandId) {
     case '001':
       return MODULE_TEST_FRAMEWORK
@@ -276,8 +279,9 @@ const getModuleId = (commandId) => {
     case 'ColorPicker.open':
     case 'ColorPicker.close':
       return MODULE_COLOR_PICKER
-    case 'KeyBindings.handleKeyBinding':
     case 'KeyBindings.hydrate':
+    case 'KeyBindings.handleKeyDown':
+    case 'KeyBindings.handleKeyUp':
       return MODULE_KEY_BINDINGS
     case 'Dialog.openFolder':
     case 'Dialog.showAbout':
@@ -421,7 +425,9 @@ const getModuleId = (commandId) => {
     case 'SessionReplay.openSession':
       return MODULE_SESSION_REPLAY
     default:
-      throw new Error(`[renderer-worker] command ${commandId} not found`)
+      throw new Error(
+        `[renderer-worker] command ${commandId || 'n/a'} not found`
+      )
   }
 }
 

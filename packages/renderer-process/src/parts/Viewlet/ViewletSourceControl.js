@@ -1,5 +1,4 @@
 import { findIndex } from '../../shared/findIndex.js'
-import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
@@ -22,7 +21,7 @@ const create$Item = (item) => {
 }
 
 const handleFocus = () => {
-  Focus.setFocus('sourceControlInput')
+  // Focus.setFocus('sourceControlInput')
 }
 
 const handleClick = (event) => {
