@@ -340,11 +340,15 @@ export const setValue = (state, value) => {
 }
 
 export const setCursorOffset = (state, cursorOffset) => {
+  // TODO maybe implement two ways for applying cursor offset
+  // 1. when it is a monospace font and ascii characters, compute the pixel offset with javascript (very fast)
+  // 2. when it contains other characters, use getBoundingClientRange to compute exact offset
   const { $QuickPickInputCursor, $QuickPickInputText } = state
   const charWidth = 6.88
   const padding = 4
   const left = padding + charWidth * cursorOffset
   $QuickPickInputCursor.style.left = `${left}px`
+  // TODO this is too slow as it causes synchronous layout
   // const range = document.createRange()
   // range.setStart($QuickPickInputText, cursorOffset)
   // range.setEnd($QuickPickInputText, cursorOffset)
