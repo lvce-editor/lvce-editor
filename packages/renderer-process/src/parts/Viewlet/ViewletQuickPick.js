@@ -260,6 +260,11 @@ const handleBeforeInput = (event) => {
 }
 
 export const create = (value, visiblePicks, focusIndex) => {
+  const $QuickPickInputCursor = document.createElement('div')
+  $QuickPickInputCursor.className = 'Cursor'
+
+  const $QuickPickInputText = document.createTextNode('')
+
   const $QuickPickInput = InputBox.create()
   $QuickPickInput.setAttribute('aria-controls', 'QuickPickItems')
   $QuickPickInput.setAttribute('role', 'combobox') // TODO use idl once supported
@@ -271,6 +276,7 @@ export const create = (value, visiblePicks, focusIndex) => {
   $QuickPickInput.oninput = handleInput
   $QuickPickInput.addEventListener('beforeinput', handleBeforeInput)
   $QuickPickInput.ariaExpanded = 'true'
+  $QuickPickInput.append($QuickPickInputText, $QuickPickInputCursor)
 
   const $QuickPickHeader = document.createElement('div')
   $QuickPickHeader.id = 'QuickPickHeader'
@@ -302,6 +308,8 @@ export const create = (value, visiblePicks, focusIndex) => {
     $QuickPick,
     $QuickPickInput,
     $QuickPickItems,
+    $QuickPickInputCursor,
+    $QuickPickInputText,
   }
 }
 
@@ -327,12 +335,20 @@ export const dispose = (state) => {
 }
 
 export const setValue = (state, value) => {
-  const { $QuickPickInput } = state
-  $QuickPickInput.value = value
+  const { $QuickPickInputText } = state
+  $QuickPickInputText.data = value
 }
 
 export const setCursorOffset = (state, cursorOffset) => {
-  const { $QuickPickInput } = state
-  $QuickPickInput.selectionStart = cursorOffset
-  $QuickPickInput.selectionEnd = cursorOffset
+  const { $QuickPickInputCursor, $QuickPickInputText } = state
+  const charWidth = 6.88
+  const padding = 4
+  const left = padding + charWidth * cursorOffset
+  $QuickPickInputCursor.style.left = `${left}px`
+  // const range = document.createRange()
+  // range.setStart($QuickPickInputText, cursorOffset)
+  // range.setEnd($QuickPickInputText, cursorOffset)
+  // const rect = range.getBoundingClientRect()
+  // const left = Math.round(rect.left)
+  // $QuickPickInputCursor.style.left = `${left}px`
 }

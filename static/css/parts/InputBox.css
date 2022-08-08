@@ -10,6 +10,7 @@
   color: var(--InputBoxForeground);
   font-size: 13px;
   contain: strict;
+  /* position: relative; */
 }
 
 /* hide small "x" on chromium  */
@@ -18,4 +19,14 @@
 .InputBox::-webkit-search-results-button,
 .InputBox::-webkit-search-results-decoration {
   display: none;
+}
+
+.Cursor {
+  width: 2px;
+  background: red;
+  contain: strict;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }

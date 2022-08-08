@@ -539,10 +539,7 @@ export const render = (oldState, newState) => {
       /* value */ newState.value,
     ])
   }
-  if (
-    oldState.cursorOffset !== newState.cursorOffset &&
-    newState.cursorOffset !== newState.value.length
-  ) {
+  if (oldState.cursorOffset !== newState.cursorOffset) {
     changes.push([
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',

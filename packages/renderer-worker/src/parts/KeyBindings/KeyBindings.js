@@ -120,7 +120,6 @@ export const lookupKeyBinding = (commandId) => {
 }
 
 export const handleKeyDown = async (isCtrlKey, isShiftKey, isAltKey, key) => {
-  console.log({ key })
   const identifier = getIdentifier(isCtrlKey, isShiftKey, isAltKey, key)
   const matchingKeyBinding = getMatchingKeyBinding(identifier)
   if (!matchingKeyBinding) {
