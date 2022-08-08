@@ -19,3 +19,9 @@ test('remove', () => {
   Context.remove('a')
   expect(Context.get('a')).toBeUndefined()
 })
+
+test('reset', () => {
+  Context.set('a', 1)
+  Context.reset()
+  expect(Context.getAll()).toEqual({})
+})

@@ -2,6 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { VError } from '../VError/VError.js'
+import * as Context from '../Context/Context.js'
 
 // TODO store keybindings as json somewhere
 
