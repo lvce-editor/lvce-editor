@@ -145,3 +145,38 @@ export const getExtensionHostWorkerUrl = () => {
 export const getGithubApiUrl = () => {
   return `https://api.github.com`
 }
+
+// TODO if necessary support more browser detection
+// TODO cache/memoize this function
+export const getBrowser = () => {
+  const platform = getPlatform()
+  if (platform === 'electron') {
+    return 'electron'
+  }
+  if (typeof navigator !== 'undefined') {
+    // @ts-ignore
+    const userAgentData = navigator.userAgentData
+    if (userAgentData) {
+      for (const brand of userAgentData.brands) {
+        const actualBrand = brand.brand.toLowerCase()
+        switch (actualBrand) {
+          case 'firefox':
+            return 'firefox'
+          case 'chromium':
+            return 'chromium'
+          default:
+            break
+        }
+      }
+    }
+    const userAgent = navigator.userAgent.toLowerCase()
+    if (userAgent.includes('firefox')) {
+      return 'firefox'
+    }
+    if (userAgent.includes('Electron')) {
+      return 'electron'
+    }
+  }
+
+  return 'chromium'
+}

@@ -3,6 +3,7 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { VError } from '../VError/VError.js'
 import * as Context from '../Context/Context.js'
+import * as Platform from '../Platform/Platform.js'
 
 // TODO store keybindings as json somewhere
 
@@ -75,10 +76,11 @@ const clearModifier = () => {
 
 const getMatchingKeyBinding = (identifier) => {
   // TODO this could be more efficient in O(N) instead of O(2N)
+  // TODO this could be more efficient with hashmap or UInt32Array in O(1)
   const matchesIdentifier = (keyBinding) => {
     return keyBinding.key === identifier
   }
-  const matchingKeyBindings = keyBindings.filter(matchesIdentifier)
+  const matchingKeyBindings = state.keyBindings.filter(matchesIdentifier)
   const matchingKeyBinding = matchingKeyBindings.find(matchesContext)
   return matchingKeyBinding
 }
