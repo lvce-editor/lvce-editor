@@ -4,6 +4,8 @@ import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as QuickPickEveryThing from '../QuickPick/QuickPickEverything.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as Focus from '../Focus/Focus.js'
+
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
 
@@ -175,6 +177,9 @@ export const loadContent = async (state) => {
     minLineY + state.maxVisibleItems,
     newPicks.length - 1
   )
+
+  // TODO avoid side effect here
+  Focus.setFocus('QuickPick')
   return {
     ...state,
     picks: newPicks,
@@ -392,6 +397,11 @@ const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
     default:
       throw new Error(`unsupported input type ${inputType}`)
   }
+}
+
+export const handleKeyDown = (state, key) => {
+  const newValue = state.value + key
+  return handleInput(state, newValue, newValue.length)
 }
 
 export const handleBeforeInput = (

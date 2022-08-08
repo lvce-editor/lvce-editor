@@ -12,6 +12,7 @@ export const Commands = {
   'QuickPick.focusNext': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.focusNext),
   'QuickPick.handleBlur': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.handleBlur),
   'QuickPick.handleBeforeInput': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.handleBeforeInput),
+  'QuickPick.handleKeyDown': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.handleKeyDown),
 }
 
 export * from './ViewletQuickPick.js'
