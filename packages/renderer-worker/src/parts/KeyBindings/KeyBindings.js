@@ -22,18 +22,17 @@ export const state = {
   modifierTimeout: -1,
 }
 
-const getIdentifier = (event) => {
+const getIdentifier = (isCtrlKey, isShiftKey, isAltKey, key) => {
   let identifier = ''
-  if (event.ctrlKey) {
+  if (isCtrlKey) {
     identifier += 'ctrl+'
   }
-  if (event.shiftKey) {
+  if (isShiftKey) {
     identifier += 'shift+'
   }
-  if (event.altKey) {
+  if (isAltKey) {
     identifier += 'alt+'
   }
-  let key = event.key
   if (key === ' ') {
     key = 'Space'
   }
@@ -119,11 +118,28 @@ export const lookupKeyBinding = (commandId) => {
   }
 }
 
-export const handleKeyDown = async (keyBinding) => {
+export const handleKeyDown = async (isCtrlKey, isShiftKey, isAltKey, key) => {
+  const identifier = getIdentifier(isCtrlKey, isShiftKey, isAltKey, key)
+  const matchingKeyBinding = getMatchingKeyBinding(identifier)
+  if (!matchingKeyBinding) {
+    return
+  }
+  await handleMatchingKeyBinding(matchingKeyBinding)
+}
+
+const handleMatchingKeyBinding = async (matchingKeyBinding) => {
+  // TODO execute command directly or -> executeCommand -> keybindings -> executeCommand
+  // better directly
+  // TODO always should be number
+  // when launching keybindings -> map string command to number
+  // TODO should args always be defined? (probably yes -> monomorphism & simpler code since all objects are the same)
+  // TODO matchingKeyBinding.command should always be number
+  // TODO execute that command
+
   await Command.execute(
-    /* command */ keyBinding.command,
+    /* command */ matchingKeyBinding.command,
     // TODO should args always be defined? (probably yes -> monomorphism & simpler code since all objects are the same)
-    ...(keyBinding.args || [])
+    ...(matchingKeyBinding.args || [])
   )
   // TODO
   // else if (typeof keyBinding.command === 'string') {
@@ -134,16 +150,6 @@ export const handleKeyDown = async (keyBinding) => {
   //     ...(keyBinding.args || [])
   //   )
   // }
-}
-
-const handleMatchingKeyBinding = (matchingKeyBinding) => {
-  // TODO execute command directly or -> executeCommand -> keybindings -> executeCommand
-  // better directly
-  // TODO always should be number
-  // when launching keybindings -> map string command to number
-  // TODO should args always be defined? (probably yes -> monomorphism & simpler code since all objects are the same)
-  // TODO matchingKeyBinding.command should always be number
-  // TODO execute that command
 }
 
 export const handleKeyUp = (event) => {

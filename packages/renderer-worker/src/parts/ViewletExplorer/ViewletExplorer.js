@@ -7,6 +7,8 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js' // TODO should not import shared process -> use command.execute instead (maybe)
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Focus from '../Focus/Focus.js'
+
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -766,6 +768,8 @@ export const handleClickCurrent = (state) => {
 }
 
 export const focusIndex = (state, index) => {
+  // TODO is it possible to avoid side effect here?
+  Focus.setFocus('Explorer')
   return {
     ...state,
     focusedIndex: index,
