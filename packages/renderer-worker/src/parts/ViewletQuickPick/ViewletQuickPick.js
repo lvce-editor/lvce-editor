@@ -256,12 +256,59 @@ export const handleInput = async (state, value) => {
   }
 }
 
+const getNewValueInsertText = (value, data, selectionStart, selectionEnd) => {
+  if (selectionStart === value.length) {
+    return value + data
+  }
+  const before = value.slice(0, selectionStart)
+  const after = value.slice(selectionEnd)
+  return before + data + after
+}
+
+const getNewValueDeleteContentBackward = (
+  value,
+  selectionStart,
+  selectionEnd
+) => {
+  const after = value.slice(selectionEnd)
+  if (selectionStart === selectionEnd) {
+    const before = value.slice(0, selectionStart - 1)
+    return before + after
+  }
+  const before = value.slice(0, selectionStart)
+  return before + after
+}
+
+const getNewValueDeleteContentForward = (
+  value,
+  selectionStart,
+  selectionEnd
+) => {
+  const before = value.slice(0, selectionStart)
+  if (selectionStart === selectionEnd) {
+    const after = value.slice(selectionEnd + 1)
+    return before + after
+  }
+  const after = value.slice(selectionEnd)
+  return before + after
+}
+
 const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
   switch (inputType) {
     case 'insertText':
-      const before = value.slice(0, selectionStart)
-      const after = value.slice(selectionEnd)
-      return before + data + after
+      return getNewValueInsertText(value, data, selectionStart, selectionEnd)
+    case 'deleteContentBackward':
+      return getNewValueDeleteContentBackward(
+        value,
+        selectionStart,
+        selectionEnd
+      )
+    case 'deleteContentForward':
+      return getNewValueDeleteContentForward(
+        value,
+        selectionStart,
+        selectionEnd
+      )
     default:
       throw new Error(`unsupported input type ${inputType}`)
   }
