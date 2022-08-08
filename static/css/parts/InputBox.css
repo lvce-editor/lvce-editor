@@ -24,7 +24,7 @@
 
 .Cursor {
   width: 1px;
-  background: var(--EditorCursorBackground, red);
+  background: rgb(225, 225, 225);
   contain: strict;
   height: 14px;
   position: absolute;
