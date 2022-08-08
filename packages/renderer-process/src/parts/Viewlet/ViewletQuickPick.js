@@ -332,7 +332,12 @@ export const dispose = (state) => {
 }
 
 export const setValue = (state, value) => {
-  // TODO set value might cause recalc style / layout -> investigate
   const { $QuickPickInput } = state
   $QuickPickInput.value = value
+}
+
+export const setCursorOffset = (state, cursorOffset) => {
+  const { $QuickPickInput } = state
+  $QuickPickInput.selectionStart = cursorOffset
+  $QuickPickInput.selectionEnd = cursorOffset
 }

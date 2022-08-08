@@ -112,6 +112,7 @@ test('handleBeforeInput - insertText - at end', async () => {
     await ViewletQuickPick.handleBeforeInput(state, 'insertText', 'c', 2, 2)
   ).toMatchObject({
     value: 'abc',
+    cursorOffset: 3,
   })
 })
 
@@ -134,6 +135,7 @@ test('handleBeforeInput - insertText - at start', async () => {
     await ViewletQuickPick.handleBeforeInput(state, 'insertText', 'a', 0, 0)
   ).toMatchObject({
     value: 'abc',
+    cursorOffset: 1,
   })
 })
 
@@ -162,6 +164,7 @@ test('handleBeforeInput - deleteContentForward - at start', async () => {
     )
   ).toMatchObject({
     value: 'bc',
+    cursorOffset: 0,
   })
 })
 
@@ -190,6 +193,7 @@ test('handleBeforeInput - deleteContentForward - in middle', async () => {
     )
   ).toMatchObject({
     value: 'ac',
+    cursorOffset: 1,
   })
 })
 
@@ -218,5 +222,6 @@ test('handleBeforeInput - deleteContentBackward - at end', async () => {
     )
   ).toMatchObject({
     value: 'ab',
+    cursorOffset: 2,
   })
 })

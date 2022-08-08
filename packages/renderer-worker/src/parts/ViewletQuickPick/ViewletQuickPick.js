@@ -43,6 +43,7 @@ export const create = (id, uri, top, left, width, height) => {
     maxLineY: 0,
     maxVisibleItems: 10,
     uri,
+    cursorOffset: 0,
   }
 }
 
@@ -240,7 +241,7 @@ export const selectCurrentIndex = async (state) => {
 }
 
 // TODO when user types letters -> no need to query provider again -> just filter existing results
-export const handleInput = async (state, value) => {
+export const handleInput = async (state, value, cursorOffset) => {
   if (state.value === value) {
     return state
   }
@@ -253,16 +254,25 @@ export const handleInput = async (state, value) => {
     picks: newPicks,
     visiblePicks,
     focusedIndex: 0,
+    cursorOffset,
   }
 }
 
 const getNewValueInsertText = (value, data, selectionStart, selectionEnd) => {
   if (selectionStart === value.length) {
-    return value + data
+    const newValue = value + data
+    return {
+      newValue,
+      cursorOffset: newValue.length,
+    }
   }
   const before = value.slice(0, selectionStart)
   const after = value.slice(selectionEnd)
-  return before + data + after
+  const newValue = before + data + after
+  return {
+    newValue,
+    cursorOffset: selectionStart + data.length,
+  }
 }
 
 const getNewValueDeleteContentBackward = (
@@ -273,10 +283,18 @@ const getNewValueDeleteContentBackward = (
   const after = value.slice(selectionEnd)
   if (selectionStart === selectionEnd) {
     const before = value.slice(0, selectionStart - 1)
-    return before + after
+    const newValue = before + after
+    return {
+      newValue,
+      cursorOffset: before.length,
+    }
   }
   const before = value.slice(0, selectionStart)
-  return before + after
+  const newValue = before + after
+  return {
+    newValue,
+    cursorOffset: selectionStart,
+  }
 }
 
 const getNewValueDeleteContentForward = (
@@ -287,10 +305,18 @@ const getNewValueDeleteContentForward = (
   const before = value.slice(0, selectionStart)
   if (selectionStart === selectionEnd) {
     const after = value.slice(selectionEnd + 1)
-    return before + after
+    const newValue = before + after
+    return {
+      newValue,
+      cursorOffset: selectionStart,
+    }
   }
   const after = value.slice(selectionEnd)
-  return before + after
+  const newValue = before + after
+  return {
+    newValue,
+    cursorOffset: selectionStart,
+  }
 }
 
 const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
@@ -324,14 +350,14 @@ export const handleBeforeInput = (
   Assert.string(inputType)
   Assert.number(selectionStart)
   Assert.number(selectionEnd)
-  const newValue = getNewValue(
+  const { newValue, cursorOffset } = getNewValue(
     state.value,
     inputType,
     data,
     selectionStart,
     selectionEnd
   )
-  return handleInput(state, newValue)
+  return handleInput(state, newValue, cursorOffset)
 }
 
 // TODO use reactive Programming
@@ -436,6 +462,17 @@ export const render = (oldState, newState) => {
       /* id */ 'QuickPick',
       /* method */ 'setValue',
       /* value */ newState.value,
+    ])
+  }
+  if (
+    oldState.cursorOffset !== newState.cursorOffset &&
+    newState.cursorOffset !== newState.value.length
+  ) {
+    changes.push([
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'QuickPick',
+      /* method */ 'setCursorOffset',
+      /* cursorOffset */ newState.cursorOffset,
     ])
   }
   if (oldState.visiblePicks !== newState.visiblePicks) {
