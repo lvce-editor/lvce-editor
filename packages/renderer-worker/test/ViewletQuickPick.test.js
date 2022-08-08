@@ -254,3 +254,32 @@ test('handleBeforeInput - deleteWordBackward', async () => {
     cursorOffset: 0,
   })
 })
+
+test('handleBeforeInput - deleteWordForward', async () => {
+  const state = {
+    ...ViewletQuickPick.create(),
+    value: 'abc',
+    focusedIndex: 0,
+    provider: {
+      getPicks() {
+        return []
+      },
+      getFilterValue(value) {
+        return value
+      },
+    },
+    filteredPicks: [],
+  }
+  expect(
+    await ViewletQuickPick.handleBeforeInput(
+      state,
+      'deleteWordForward',
+      null,
+      0,
+      0
+    )
+  ).toMatchObject({
+    value: '',
+    cursorOffset: 0,
+  })
+})

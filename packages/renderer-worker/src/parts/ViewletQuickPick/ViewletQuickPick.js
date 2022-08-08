@@ -347,6 +347,28 @@ const getNewValueDeleteContentForward = (
   }
 }
 
+const getNewValueDeleteWordForward = (value, selectionStart, selectionEnd) => {
+  const before = value.slice(0, selectionStart)
+  if (selectionStart === selectionEnd) {
+    let startIndex = Math.min(selectionStart + 1, value.length - 1)
+    while (startIndex < value.length && isAlphaNumeric(value[startIndex])) {
+      startIndex++
+    }
+    const after = value.slice(startIndex)
+    const newValue = before + after
+    return {
+      newValue,
+      cursorOffset: before.length,
+    }
+  }
+  const after = value.slice(selectionEnd)
+  const newValue = before + after
+  return {
+    newValue,
+    cursorOffset: selectionStart,
+  }
+}
+
 const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
   switch (inputType) {
     case 'insertText':
@@ -363,6 +385,8 @@ const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
         selectionStart,
         selectionEnd
       )
+    case 'deleteWordForward':
+      return getNewValueDeleteWordForward(value, selectionStart, selectionEnd)
     case 'deleteWordBackward':
       return getNewValueDeleteWordBackward(value, selectionStart, selectionEnd)
     default:
