@@ -163,7 +163,7 @@ export const resize = (id, dimensions) => {
   const { newState, commands } = instance.factory.resize(oldState, dimensions)
   Assert.object(newState)
   Assert.array(commands)
-  ViewletStates.set(id, newState)
+  ViewletStates.setState(id, newState)
   if (instance.factory.hasFunctionalRender) {
     return instance.factory.render(oldState, newState)
   }
