@@ -5,6 +5,7 @@ import * as ExtensionsMarketplace from '../ExtensionMarketplace/ExtensionMarketp
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Focus from '../Focus/Focus.js'
 
 export const ITEM_HEIGHT = 62
 
@@ -350,6 +351,8 @@ export const handleInput = async (state, value) => {
 }
 
 export const focusIndex = (state, index) => {
+  // TODO avoid side effect of changing context
+  Focus.setFocus('Extensions')
   if (index === -1) {
     return {
       ...state,
