@@ -4,6 +4,7 @@ import * as EditorCursorSet from './EditorCommandCursorSet.js'
 import * as EditorPosition from './EditorCommandPosition.js'
 import * as EditorMoveSelection from './EditorCommandMoveSelection.js'
 import * as EditorGoToDefinition from './EditorCommandGoToDefinition.js'
+import * as Focus from '../Focus/Focus.js'
 
 export const editorHandleSingleClick = async (
   editor,
@@ -34,7 +35,9 @@ export const editorHandleSingleClick = async (
   console.log({ position })
   EditorMoveSelection.state.position = position
   // TODO also focus editor input
+  // TODO avoid side effects here
   await RendererProcess.invoke('Viewlet.invoke', 'EditorText', 'focus')
+  Focus.setFocus('EditorText')
   return EditorCursorSet.editorCursorSet(
     editor,
     position.rowIndex,

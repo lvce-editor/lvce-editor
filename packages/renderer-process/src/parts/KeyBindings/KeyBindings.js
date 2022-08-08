@@ -12,6 +12,10 @@ const handleKeyDown = (event) => {
     /* isAltKey */ isAltKey,
     /* key */ key
   )
+  // print dialog overlaps with file search
+  if (isCtrlKey && key === 'p') {
+    event.preventDefault()
+  }
 }
 
 const handleKeyUp = (event) => {

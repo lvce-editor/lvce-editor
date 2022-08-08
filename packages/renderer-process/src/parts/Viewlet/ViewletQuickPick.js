@@ -1,6 +1,5 @@
 /* Tries to implement the pattern for combobox with listbox popup https://www.w3.org/TR/wai-aria-1.2/#combobox */
 
-import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Widget from '../Widget/Widget.js'
@@ -298,8 +297,7 @@ export const create = (value, visiblePicks, focusIndex) => {
   document.body.setAttribute('role', 'application')
 
   Widget.append($QuickPick)
-  Focus.focus($QuickPickInput, 'quickPickInput')
-
+  $QuickPickInput.focus()
   return {
     $QuickPick,
     $QuickPickInput,
@@ -315,7 +313,6 @@ export const showNoResults = (state, noResults, unfocusIndex) => {
   console.log({ noResults })
   updatePicks(state, [noResults], unfocusIndex)
   Widget.append(state.$QuickPick)
-  Focus.focus(state.$QuickPickInput, 'quickPickInput')
 }
 
 // TODO QuickPick module is always loaded lazily -> can create $QuickPick eagerly (no state / less state laying around)
@@ -327,7 +324,6 @@ export const dispose = (state) => {
   // TODO make hidden or remove, which is better?  -> remove less dom nodes in dom, hidden -> maybe less style recalculations when shown again
   state.$QuickPickInput.onblur = null
   Widget.remove(state.$QuickPick)
-  Focus.focusPrevious()
 }
 
 export const setValue = (state, value) => {
