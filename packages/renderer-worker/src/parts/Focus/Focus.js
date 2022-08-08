@@ -33,3 +33,7 @@ export const removeAdditionalFocus = (key) => {
 export const focus = (key) => {
   setFocus(key)
 }
+
+export const get = () => {
+  return state.currentFocus.slice('focus.'.length)
+}

@@ -73,6 +73,7 @@ import * as EditorType from '../EditorCommand/EditorCommandType.js'
 import * as EditorUndo from '../EditorCommand/EditorCommandUndo.js'
 import * as EditorUnindent from '../EditorCommand/EditorCommandUnindent.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as EditorHandleKeyDown from '../EditorCommand/EditorCommandHandleKeyDown.js'
 
 const createLazyCommand = (importFn, key) => {
   const lazyCommand = async (...args) => {
@@ -176,6 +177,7 @@ export const Commands = {
   'Editor.undo': Viewlet.wrapViewletCommand('EditorText', EditorUndo.editorUndo),
   'Editor.unindent': Viewlet.wrapViewletCommand('EditorText', EditorUnindent.editorUnindent),
   'Editor.braceCompletion': Viewlet.wrapViewletCommand('EditorText', EditorBraceCompletion.editorBraceCompletion),
+  'EditorText.handleKeyDown': Viewlet.wrapViewletCommand('EditorText', EditorHandleKeyDown.editorHandleKeyDown),
     // TODO command to set cursor position
   // TODO command copy line up/down
   // TODO command move line up/down

@@ -4,6 +4,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { VError } from '../VError/VError.js'
 import * as Context from '../Context/Context.js'
 import * as Platform from '../Platform/Platform.js'
+import * as Focus from '../Focus/Focus.js'
 
 // TODO store keybindings as json somewhere
 
@@ -119,9 +120,17 @@ export const lookupKeyBinding = (commandId) => {
 }
 
 export const handleKeyDown = async (isCtrlKey, isShiftKey, isAltKey, key) => {
+  console.log({ key })
   const identifier = getIdentifier(isCtrlKey, isShiftKey, isAltKey, key)
   const matchingKeyBinding = getMatchingKeyBinding(identifier)
   if (!matchingKeyBinding) {
+    const focus = Focus.get()
+    if (focus) {
+      await Command.execute(`${focus}.handleKeyDown`, key)
+    }
+    // console.log({ focus })
+    // TODO if there are no meta keys and there is a focused input element,
+    // dispatch keycode to that input element
     return
   }
   await handleMatchingKeyBinding(matchingKeyBinding)

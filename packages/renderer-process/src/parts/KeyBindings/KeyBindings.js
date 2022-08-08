@@ -12,10 +12,11 @@ const handleKeyDown = (event) => {
     /* isAltKey */ isAltKey,
     /* key */ key
   )
-  // print dialog overlaps with file search
-  if (isCtrlKey && key === 'p') {
-    event.preventDefault()
+  if (isCtrlKey && key === 'I') {
+    // allow opening devtools
+    return
   }
+  event.preventDefault()
 }
 
 const handleKeyUp = (event) => {
@@ -36,5 +37,5 @@ export const hydrate = () => {
   // TODO could also use onkeydown and onkeyup global events which is a bit shorter
   window.addEventListener('keydown', handleKeyDown)
   // TODO only need keyup listener if keybindings include double modifier key (e.g "shift shift")
-  window.addEventListener('keyup', handleKeyUp)
+  // window.addEventListener('keyup', handleKeyUp)
 }
