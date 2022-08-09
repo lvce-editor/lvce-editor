@@ -1,9 +1,10 @@
 /* Tries to implement the pattern for combobox with listbox popup https://www.w3.org/TR/wai-aria-1.2/#combobox */
 
-import * as InputBox from '../InputBox/InputBox.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Widget from '../Widget/Widget.js'
 import * as Assert from '../Assert/Assert.js'
+import * as ViewletInputBox from './ViewletInputBox.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -260,12 +261,7 @@ const handleBeforeInput = (event) => {
 }
 
 export const create = (value, visiblePicks, focusIndex) => {
-  const $QuickPickInputCursor = document.createElement('div')
-  $QuickPickInputCursor.className = 'Cursor'
-
-  const $QuickPickInputText = document.createTextNode('')
-
-  const $QuickPickInput = InputBox.create()
+  const { $InputBox: $QuickPickInput } = Viewlet.create(ViewletInputBox)
   $QuickPickInput.setAttribute('aria-controls', 'QuickPickItems')
   $QuickPickInput.setAttribute('role', 'combobox') // TODO use idl once supported
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
@@ -276,7 +272,6 @@ export const create = (value, visiblePicks, focusIndex) => {
   $QuickPickInput.oninput = handleInput
   $QuickPickInput.addEventListener('beforeinput', handleBeforeInput)
   $QuickPickInput.ariaExpanded = 'true'
-  $QuickPickInput.append($QuickPickInputText, $QuickPickInputCursor)
 
   const $QuickPickHeader = document.createElement('div')
   $QuickPickHeader.id = 'QuickPickHeader'
@@ -308,8 +303,6 @@ export const create = (value, visiblePicks, focusIndex) => {
     $QuickPick,
     $QuickPickInput,
     $QuickPickItems,
-    $QuickPickInputCursor,
-    $QuickPickInputText,
   }
 }
 
@@ -332,29 +325,4 @@ export const dispose = (state) => {
   // TODO make hidden or remove, which is better?  -> remove less dom nodes in dom, hidden -> maybe less style recalculations when shown again
   state.$QuickPickInput.onblur = null
   Widget.remove(state.$QuickPick)
-}
-
-export const setValue = (state, value) => {
-  const { $QuickPickInputText } = state
-  $QuickPickInputText.data = value
-}
-
-export const setCursorOffset = (state, cursorOffset) => {
-  // TODO maybe implement two ways for applying cursor offset
-  // 1. when it is a monospace font and ascii characters, compute the pixel offset with javascript (very fast)
-  // 2. when it contains other characters, use getBoundingClientRange to compute exact offset
-  const { $QuickPickInputCursor, $QuickPickInputText } = state
-  // TODO this is slow as it causes synchronous layout
-  const range = document.createRange()
-  range.setStart($QuickPickInputText, cursorOffset)
-  range.setEnd($QuickPickInputText, cursorOffset)
-  const rect = range.getBoundingClientRect()
-  const parentRect = $QuickPickInputText.parentNode.getBoundingClientRect()
-  const left = Math.round(rect.left - parentRect.left)
-  $QuickPickInputCursor.style.left = `${left}px`
-}
-
-export const setCursorOffsetPx = (state, left) => {
-  const { $QuickPickInputCursor } = state
-  $QuickPickInputCursor.style.left = `${left}px`
 }

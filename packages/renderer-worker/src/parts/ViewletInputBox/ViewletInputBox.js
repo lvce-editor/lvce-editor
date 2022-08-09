@@ -98,8 +98,8 @@ export const render = (oldState, newState) => {
   ) {
     changes.push([
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'QuickPick',
-      /* method */ 'setSelectiom',
+      /* id */ 'Input',
+      /* method */ 'setSelection',
       /* selectionStart */ newState.selectionStart,
       /* selectionEnd */ newState.selectionEnd,
     ])

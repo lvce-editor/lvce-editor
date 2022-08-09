@@ -539,22 +539,6 @@ export const hasFunctionalRender = true
 
 export const render = (oldState, newState) => {
   const changes = []
-  if (oldState.value !== newState.value) {
-    changes.push([
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'QuickPick',
-      /* method */ 'setValue',
-      /* value */ newState.value,
-    ])
-  }
-  if (oldState.cursorOffset !== newState.cursorOffset) {
-    changes.push([
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'QuickPick',
-      /* method */ 'setCursorOffset',
-      /* cursorOffset */ newState.cursorOffset,
-    ])
-  }
   if (oldState.visiblePicks !== newState.visiblePicks) {
     // TODO compute visible picks here from filteredPicks and minLineY / maxLineY, maybe also do filtering here
     changes.push([

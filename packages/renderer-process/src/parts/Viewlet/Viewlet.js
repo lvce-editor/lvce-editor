@@ -60,6 +60,8 @@ const get = (id) => {
       return import('./ViewletReferences.js')
     case 'Implementations':
       return import('./ViewletImplementations.js')
+    case 'InputBox':
+      return import('./ViewletInputBox.js')
     default:
       throw new Error(`unknown viewlet ${id}`)
   }
@@ -225,4 +227,10 @@ export const appendViewlet = (parentId, childId, focus) => {
   if (focus) {
     childInstance.factory.focus(childInstance.state)
   }
+}
+
+export const create = (factory) => {
+  const instanceState = factory.create()
+  state.instances[factory.name] = { state: instanceState, factory }
+  return instanceState
 }
