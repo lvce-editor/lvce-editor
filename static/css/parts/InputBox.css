@@ -37,7 +37,8 @@
   height: 14px;
   position: absolute;
   contain: strict;
-  top: 0;
+  top: 4px; /* padding */
   left: 0;
-  background: rgba(0, 0, 0, 0.1);
+  z-index: -1;
+  background: rgb(5, 127, 197);
 }

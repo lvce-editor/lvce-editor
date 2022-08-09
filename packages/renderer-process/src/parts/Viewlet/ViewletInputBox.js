@@ -37,7 +37,7 @@ export const create = () => {
   $InputBox.ondblclick = handleDoubleClick
   $InputBox.onclick = handleSingleClick
 
-  $InputBox.append($InputText, $InputCursor, $InputSelection)
+  $InputBox.append($InputCursor, $InputSelection, $InputText)
   return { $InputBox, $InputText, $InputCursor, $InputSelection }
 }
 
@@ -76,7 +76,11 @@ export const setSelection = (state, selectionStart, selectionEnd) => {
     const rect = range.getBoundingClientRect()
     const parentRect = $InputText.parentNode.getBoundingClientRect()
     const left = Math.round(rect.left - parentRect.left)
-    $InputCursor.style.left = `${left}px`
+    // @ts-ignore
+    $InputCursor.style.left = CSS.px(left)
+    // TODO remove from dom instead of settings display none
+    $InputCursor.style.display = 'block'
+    $InputSelection.style.display = 'none'
   } else {
     range.setStart($InputText, selectionStart)
     range.setEnd($InputText, selectionEnd)
@@ -85,7 +89,11 @@ export const setSelection = (state, selectionStart, selectionEnd) => {
     const start = Math.round(rect.left - parentRect.left)
     const end = Math.round(rect.right - parentRect.left)
     const width = end - start
-    $InputSelection.style.left = `${start}px`
-    $InputSelection.style.width = `${width}px`
+    // @ts-ignore
+    $InputSelection.style.left = CSS.px(start)
+    // @ts-ignore
+    $InputSelection.style.width = CSS.px(width)
+    $InputSelection.style.display = 'block'
+    $InputCursor.style.display = 'none'
   }
 }
