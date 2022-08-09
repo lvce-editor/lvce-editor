@@ -344,15 +344,17 @@ export const setCursorOffset = (state, cursorOffset) => {
   // 1. when it is a monospace font and ascii characters, compute the pixel offset with javascript (very fast)
   // 2. when it contains other characters, use getBoundingClientRange to compute exact offset
   const { $QuickPickInputCursor, $QuickPickInputText } = state
-  const charWidth = 6.88
-  const padding = 4
-  const left = padding + charWidth * cursorOffset
+  // TODO this is slow as it causes synchronous layout
+  const range = document.createRange()
+  range.setStart($QuickPickInputText, cursorOffset)
+  range.setEnd($QuickPickInputText, cursorOffset)
+  const rect = range.getBoundingClientRect()
+  const parentRect = $QuickPickInputText.parentNode.getBoundingClientRect()
+  const left = Math.round(rect.left - parentRect.left)
   $QuickPickInputCursor.style.left = `${left}px`
-  // TODO this is too slow as it causes synchronous layout
-  // const range = document.createRange()
-  // range.setStart($QuickPickInputText, cursorOffset)
-  // range.setEnd($QuickPickInputText, cursorOffset)
-  // const rect = range.getBoundingClientRect()
-  // const left = Math.round(rect.left)
-  // $QuickPickInputCursor.style.left = `${left}px`
+}
+
+export const setCursorOffsetPx = (state, left) => {
+  const { $QuickPickInputCursor } = state
+  $QuickPickInputCursor.style.left = `${left}px`
 }

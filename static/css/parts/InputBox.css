@@ -10,8 +10,9 @@
   color: var(--InputBoxForeground);
   font-size: 13px;
   contain: strict;
-  /* position: relative; */
+  position: relative;
   cursor: text;
+  /* position: relative; */
 }
 
 /* hide small "x" on chromium  */

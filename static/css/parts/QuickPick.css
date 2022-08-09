@@ -6,8 +6,8 @@
   position: absolute;
   width: 600px;
   top: 50px;
-  left: 50%;
-  margin-left: -300px; /* TODO maybe this should be 301px because of padding to be centered */
+  /*  TODO maybe this should be 301px because of padding to be centered */
+  left: calc(50% - 300px);
   padding: 0 1px 6px;
   background: var(--QuickPickBackground);
   color: var(--ListForeground);
