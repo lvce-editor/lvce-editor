@@ -14,11 +14,43 @@ export const create = ({ handleInput }) => {
 }
 
 export const cursorLeft = (state) => {
-  return state
+  const { selectionStart, selectionEnd } = state
+  if (selectionStart === selectionEnd) {
+    if (selectionStart === 0) {
+      return state
+    }
+    const newOffset = selectionStart - 1
+    return {
+      ...state,
+      selectionStart: newOffset,
+      selectionEnd: newOffset,
+    }
+  }
+  return {
+    ...state,
+    selectionStart,
+    selectionEnd: selectionStart,
+  }
 }
 
 export const cursorRight = (state) => {
-  return state
+  const { selectionStart, selectionEnd, value } = state
+  if (selectionStart === selectionEnd) {
+    if (selectionEnd >= value.length) {
+      return state
+    }
+    const newOffset = selectionEnd + 1
+    return {
+      ...state,
+      selectionStart: newOffset,
+      selectionEnd: newOffset,
+    }
+  }
+  return {
+    ...state,
+    selectionStart: selectionEnd,
+    selectionEnd,
+  }
 }
 
 export const cursorEnd = (state) => {
