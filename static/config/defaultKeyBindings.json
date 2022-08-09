@@ -662,5 +662,15 @@
     "key": "Home",
     "command": "Input.cursorHome",
     "when": "focus.Input"
+  },
+  {
+    "key": "Backspace",
+    "command": "Input.deleteLeft",
+    "when": "focus.Input"
+  },
+  {
+    "key": "Delete",
+    "command": "Input.deleteRight",
+    "when": "focus.Input"
   }
 ]

@@ -46,15 +46,29 @@ const getNewValue = (value, key) => {
   return value + key
 }
 
-export const handleKeyDown = async (state, key) => {
-  console.log({ state })
-  console.log('handle key down', key)
-  const newValue = getNewValue(state.value, key)
+const handleInput = async (state, newValue) => {
   await Command.execute(state.handleInput, newValue)
   return {
     ...state,
     value: newValue,
   }
+}
+
+export const handleKeyDown = async (state, key) => {
+  console.log({ state })
+  console.log('handle key down', key)
+  const newValue = getNewValue(state.value, key)
+  return handleInput(state, newValue)
+}
+
+export const deleteLeft = (state) => {
+  const newValue = state.value.slice(0, -1)
+  return handleInput(state, newValue)
+}
+
+export const deleteRight = (state) => {
+  const newValue = state.value.slice(0, -1)
+  return handleInput(state, newValue)
 }
 
 export const hasFunctionalRender = true

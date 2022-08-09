@@ -8,6 +8,8 @@ export const Commands = {
   'Input.cursorHome': Viewlet.wrapViewletCommand('Input', ViewletInputBox.cursorHome),
   'Input.cursorEnd': Viewlet.wrapViewletCommand('Input', ViewletInputBox.cursorEnd),
   'Input.handleKeyDown': Viewlet.wrapViewletCommand('Input', ViewletInputBox.handleKeyDown),
+  'Input.deleteLeft': Viewlet.wrapViewletCommand('Input', ViewletInputBox.deleteLeft),
+  'Input.deleteRight': Viewlet.wrapViewletCommand('Input', ViewletInputBox.deleteRight),
 }
 
 export * from './ViewletInputBox.js'
