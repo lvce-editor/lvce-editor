@@ -41,7 +41,7 @@ const getPreferencesJson = async () => {
 
 const getPreferences = async () => {
   // TODO cache preferences, but they should not be stale
-  const preferences = getPreferencesJson()
+  const preferences = await getPreferencesJson()
   return preferences
 }
 

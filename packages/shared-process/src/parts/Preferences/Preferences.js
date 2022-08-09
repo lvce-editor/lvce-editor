@@ -12,6 +12,12 @@ export const getUserPreferences = async () => {
       json = await JsonFile.readJson(userSettingsPath)
     } catch (error) {
       if (error && error.code === 'ENOENT') {
+        // create file if it doesn't exist yet
+        try {
+          await JsonFile.writeJson(userSettingsPath, {})
+        } catch {
+          // ignore
+        }
         return {}
       }
       throw error
