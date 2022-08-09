@@ -5,6 +5,14 @@ const handleKeyDown = (event) => {
   const isShiftKey = event.shiftKey
   const isAltKey = event.altKey
   const key = event.key
+  if (
+    (isCtrlKey && key === 'I') ||
+    key === 'Unidentified' ||
+    key === 'ContextMenu'
+  ) {
+    // allow opening devtools
+    return
+  }
   RendererWorker.send(
     /* KeyBindings.handleKeyDown */ 'KeyBindings.handleKeyDown',
     /* isCtrlKey */ isCtrlKey,
@@ -12,10 +20,7 @@ const handleKeyDown = (event) => {
     /* isAltKey */ isAltKey,
     /* key */ key
   )
-  if (isCtrlKey && key === 'I') {
-    // allow opening devtools
-    return
-  }
+
   event.preventDefault()
 }
 
