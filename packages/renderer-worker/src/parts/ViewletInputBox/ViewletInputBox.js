@@ -13,6 +13,14 @@ export const create = ({ handleInput }) => {
   }
 }
 
+export const setCursor = (state, offset) => {
+  return {
+    ...state,
+    selectionStart: offset,
+    selectionEnd: offset,
+  }
+}
+
 export const cursorLeft = (state) => {
   const { selectionStart, selectionEnd } = state
   if (selectionStart === selectionEnd) {
@@ -20,17 +28,9 @@ export const cursorLeft = (state) => {
       return state
     }
     const newOffset = selectionStart - 1
-    return {
-      ...state,
-      selectionStart: newOffset,
-      selectionEnd: newOffset,
-    }
+    return setCursor(state, newOffset)
   }
-  return {
-    ...state,
-    selectionStart,
-    selectionEnd: selectionStart,
-  }
+  return setCursor(state, selectionStart)
 }
 
 export const cursorRight = (state) => {
@@ -40,25 +40,17 @@ export const cursorRight = (state) => {
       return state
     }
     const newOffset = selectionEnd + 1
-    return {
-      ...state,
-      selectionStart: newOffset,
-      selectionEnd: newOffset,
-    }
+    return setCursor(state, newOffset)
   }
-  return {
-    ...state,
-    selectionStart: selectionEnd,
-    selectionEnd,
-  }
+  return setCursor(state, selectionEnd)
 }
 
 export const cursorEnd = (state) => {
-  return state
+  return setCursor(state, state.value.length)
 }
 
 export const cursorHome = (state) => {
-  return state
+  return setCursor(state, 0)
 }
 
 export const selectLeftByCharacter = (state) => {
