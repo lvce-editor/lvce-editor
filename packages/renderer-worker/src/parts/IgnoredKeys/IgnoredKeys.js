@@ -24,6 +24,7 @@ const IGNORED_KEYS = [
   'ArrowUp',
   'ArrowLeft',
   'ArrowRight',
+  'Enter',
 ]
 
 export const isIgnoredKey = (key) => {
