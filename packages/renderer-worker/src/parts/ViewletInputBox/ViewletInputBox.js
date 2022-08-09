@@ -1,5 +1,5 @@
-import * as Command from '../Command/Command.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Command from '../Command/Command.js'
 
 export const name = 'Input'
 
@@ -74,10 +74,46 @@ export const deleteLeft = (state) => {
   return handleInput(state, newValue, cursorOffset, cursorOffset)
 }
 
+const getNewValueDeleteRight = (value, selectionStart, selectionEnd) => {
+  if (selectionStart === selectionEnd) {
+    return {
+      value: value.slice(0, -1),
+      selectionStart: value.length - 1,
+      selectionEnd: value.length - 1,
+    }
+  }
+  return {
+    value: '',
+    selectionStart: 0,
+    selectionEnd: 0,
+  }
+}
+
 export const deleteRight = (state) => {
-  const newValue = state.value.slice(0, -1)
-  const cursorOffset = newValue.length
-  return handleInput(state, newValue, cursorOffset, cursorOffset)
+  const { selectionStart, selectionEnd, value } = state
+  const newState = getNewValueDeleteRight(value, selectionStart, selectionEnd)
+  return handleInput(
+    state,
+    newState.newValue,
+    newState.selectionStart,
+    newState.selectionEnd
+  )
+}
+
+export const handleDoubleClick = (state) => {
+  return {
+    ...state,
+    selectionStart: 0,
+    selectionEnd: state.value.length,
+  }
+}
+
+export const handleSingleClick = (state, offset) => {
+  return {
+    ...state,
+    selectionStart: offset,
+    selectionEnd: offset,
+  }
 }
 
 export const hasFunctionalRender = true

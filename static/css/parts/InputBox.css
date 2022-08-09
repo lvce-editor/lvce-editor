@@ -32,3 +32,12 @@
   top: 4px; /* padding */
   left: 0;
 }
+
+.Selection {
+  height: 14px;
+  position: absolute;
+  contain: strict;
+  top: 0;
+  left: 0;
+  background: rgba(0, 0, 0, 0.1);
+}

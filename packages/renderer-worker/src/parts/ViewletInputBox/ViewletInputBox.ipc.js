@@ -10,6 +10,8 @@ export const Commands = {
   'Input.handleKeyDown': Viewlet.wrapViewletCommand('Input', ViewletInputBox.handleKeyDown),
   'Input.deleteLeft': Viewlet.wrapViewletCommand('Input', ViewletInputBox.deleteLeft),
   'Input.deleteRight': Viewlet.wrapViewletCommand('Input', ViewletInputBox.deleteRight),
+  'Input.handleDoubleClick': Viewlet.wrapViewletCommand('Input', ViewletInputBox.handleDoubleClick),
+  'Input.handleSingleClick': Viewlet.wrapViewletCommand('Input', ViewletInputBox.handleSingleClick),
 }
 
 export * from './ViewletInputBox.js'

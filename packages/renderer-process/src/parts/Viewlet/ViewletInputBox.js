@@ -1,4 +1,21 @@
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+
 export const name = 'Input'
+
+const handleDoubleClick = (event) => {
+  RendererWorker.send('Input.handleDoubleClick')
+}
+
+const handleSingleClick = (event) => {
+  const $Target = event.target
+  const $InputText = $Target.firstChild
+  const clientX = event.clientX
+  const clientY = event.clientY
+  const range = document.caretRangeFromPoint(clientX, clientY)
+  const textNode = range.startContainer
+  const offset = range.startOffset
+  RendererWorker.send('Input.handleSingleClick', /* offset */ offset)
+}
 
 export const create = () => {
   // $InputBox.spellcheck = false
@@ -11,12 +28,17 @@ export const create = () => {
   const $InputCursor = document.createElement('div')
   $InputCursor.className = 'Cursor'
 
+  const $InputSelection = document.createElement('div')
+  $InputSelection.className = 'Selection'
+
   const $InputBox = document.createElement('div')
   $InputBox.className = 'InputBox'
   $InputBox.setAttribute('role', 'textbox')
+  $InputBox.ondblclick = handleDoubleClick
+  $InputBox.onclick = handleSingleClick
 
-  $InputBox.append($InputText, $InputCursor)
-  return { $InputBox, $InputText, $InputCursor }
+  $InputBox.append($InputText, $InputCursor, $InputSelection)
+  return { $InputBox, $InputText, $InputCursor, $InputSelection }
 }
 
 export const setCursorOffset = (state, cursorOffset) => {
@@ -45,13 +67,25 @@ export const setCursorOffsetPx = (state, left) => {
 }
 
 export const setSelection = (state, selectionStart, selectionEnd) => {
-  const { $InputCursor, $InputText } = state
+  const { $InputCursor, $InputText, $InputSelection } = state
   // TODO this is slow as it causes synchronous layout
   const range = document.createRange()
-  range.setStart($InputText, selectionStart)
-  range.setEnd($InputText, selectionEnd)
-  const rect = range.getBoundingClientRect()
-  const parentRect = $InputText.parentNode.getBoundingClientRect()
-  const left = Math.round(rect.left - parentRect.left)
-  $InputCursor.style.left = `${left}px`
+  if (selectionStart === selectionEnd) {
+    range.setStart($InputText, selectionStart)
+    range.setEnd($InputText, selectionEnd)
+    const rect = range.getBoundingClientRect()
+    const parentRect = $InputText.parentNode.getBoundingClientRect()
+    const left = Math.round(rect.left - parentRect.left)
+    $InputCursor.style.left = `${left}px`
+  } else {
+    range.setStart($InputText, selectionStart)
+    range.setEnd($InputText, selectionEnd)
+    const rect = range.getBoundingClientRect()
+    const parentRect = $InputText.parentNode.getBoundingClientRect()
+    const start = Math.round(rect.left - parentRect.left)
+    const end = Math.round(rect.right - parentRect.left)
+    const width = end - start
+    $InputSelection.style.left = `${start}px`
+    $InputSelection.style.width = `${width}px`
+  }
 }
