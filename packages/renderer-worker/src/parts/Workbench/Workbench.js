@@ -49,10 +49,11 @@ export const startup = async (config) => {
   await Preferences.hydrate()
   Performance.mark('code/didLoadPreferences')
 
-  // TODO only load this if session replay is enabled in preferences
-  Performance.mark('code/willLoadSessionReplay')
-  await SessionReplay.startRecording()
-  Performance.mark('code/didLoadSessionReplay')
+  if (Preferences.get('sessionReplay.enabled')) {
+    Performance.mark('code/willLoadSessionReplay')
+    await SessionReplay.startRecording()
+    Performance.mark('code/didLoadSessionReplay')
+  }
 
   LifeCycle.mark(LifeCycle.Phase.Twelve)
 

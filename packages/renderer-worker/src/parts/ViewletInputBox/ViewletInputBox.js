@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
+import * as IgnoredKeys from '../IgnoredKeys/IgnoredKeys.js'
 
 export const name = 'Input'
 
@@ -63,6 +64,9 @@ const handleInput = async (state, newValue, selectionStart, selectionEnd) => {
 }
 
 export const handleKeyDown = async (state, key) => {
+  if (IgnoredKeys.isIgnoredKey(key)) {
+    return state
+  }
   const newValue = getNewValue(state.value, key)
   const cursorOffset = newValue.length
   return handleInput(state, newValue, cursorOffset, cursorOffset)
