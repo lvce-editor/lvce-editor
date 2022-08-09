@@ -77,8 +77,15 @@ export const selectRightByWord = (state) => {
   return state
 }
 
-const getNewValue = (value, key) => {
-  return value + key
+const getNewValueAndOffset = (value, selectionStart, selectionEnd, key) => {
+  const before = value.slice(0, selectionStart)
+  const after = value.slice(selectionEnd)
+  const newValue = before + key + after
+  const offset = selectionStart + key.length
+  return {
+    newValue,
+    offset,
+  }
 }
 
 const handleInput = async (state, newValue, selectionStart, selectionEnd) => {
@@ -99,9 +106,14 @@ export const handleKeyDown = async (state, key) => {
   if (IgnoredKeys.isIgnoredKey(key)) {
     return state
   }
-  const newValue = getNewValue(state.value, key)
-  const cursorOffset = newValue.length
-  return handleInput(state, newValue, cursorOffset, cursorOffset)
+  const { selectionStart, selectionEnd, value } = state
+  const { newValue, offset } = getNewValueAndOffset(
+    value,
+    selectionStart,
+    selectionEnd,
+    key
+  )
+  return handleInput(state, newValue, offset, offset)
 }
 
 export const deleteLeft = (state) => {

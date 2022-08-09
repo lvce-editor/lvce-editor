@@ -50,6 +50,7 @@ export const startup = async (config) => {
   Performance.mark('code/didLoadPreferences')
 
   if (Preferences.get('sessionReplay.enabled')) {
+    console.info('sessionReplay enabled')
     Performance.mark('code/willLoadSessionReplay')
     await SessionReplay.startRecording()
     Performance.mark('code/didLoadSessionReplay')
