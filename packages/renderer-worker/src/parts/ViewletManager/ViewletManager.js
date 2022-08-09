@@ -147,6 +147,13 @@ export const load = async (viewlet, focus = false) => {
       viewlet.height
     )
 
+    // if (module.inheritsFrom) {
+    //   ViewletStates.set(module.inheritsFrom.name, {
+    //     factory: module.inheritsFrom,
+    //     state: viewletState,
+    //   })
+    // }
+
     const oldVersion =
       viewletState.version === undefined ? undefined : ++viewletState.version
     let newState = await module.loadContent(viewletState)

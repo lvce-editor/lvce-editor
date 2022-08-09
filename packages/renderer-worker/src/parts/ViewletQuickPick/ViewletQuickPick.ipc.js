@@ -1,5 +1,6 @@
 import * as ViewletQuickPick from './ViewletQuickPick.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletInputBoxIpc from '../ViewletInputBox/ViewletInputBox.ipc.js'
 
 // prettier-ignore
 export const Commands = {
@@ -13,6 +14,7 @@ export const Commands = {
   'QuickPick.handleBlur': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.handleBlur),
   'QuickPick.handleBeforeInput': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.handleBeforeInput),
   'QuickPick.handleKeyDown': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.handleKeyDown),
+  ...ViewletInputBoxIpc.Commands
 }
 
 export * from './ViewletQuickPick.js'

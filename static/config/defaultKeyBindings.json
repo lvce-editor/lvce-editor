@@ -642,5 +642,25 @@
     "key": "Enter",
     "command": "Locations.selectCurrent",
     "when": "focus.locationList"
+  },
+  {
+    "key": "ArrowLeft",
+    "command": "Input.cursorLeft",
+    "when": "focus.Input"
+  },
+  {
+    "key": "ArrowRight",
+    "command": "Input.cursorRight",
+    "when": "focus.Input"
+  },
+  {
+    "key": "End",
+    "command": "Input.cursorEnd",
+    "when": "focus.Input"
+  },
+  {
+    "key": "Home",
+    "command": "Input.cursorHome",
+    "when": "focus.Input"
   }
 ]

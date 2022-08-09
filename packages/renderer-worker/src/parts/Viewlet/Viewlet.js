@@ -214,3 +214,11 @@ export const closeWidget = async (id) => {
     /* id */ id
   )
 }
+
+export const create = (factory, state) => {
+  console.log('create', state)
+  ViewletStates.set(factory.name, {
+    factory,
+    state,
+  })
+}

@@ -5,6 +5,7 @@ import * as Command from '../Command/Command.js'
 import * as QuickPickEveryThing from '../QuickPick/QuickPickEverything.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as Focus from '../Focus/Focus.js'
+import * as ViewletInputBox from '../ViewletInputBox/ViewletInputBox.js'
 
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
@@ -30,6 +31,10 @@ const QuickPickState = {
 export const name = 'QuickPick'
 
 export const create = (id, uri, top, left, width, height) => {
+  const inputBox = Viewlet.create(
+    ViewletInputBox,
+    ViewletInputBox.create({ handleInput: 'QuickPick.handleInput' })
+  )
   return {
     state: QuickPickState.Default,
     picks: [],
@@ -45,9 +50,11 @@ export const create = (id, uri, top, left, width, height) => {
     maxLineY: 0,
     maxVisibleItems: 10,
     uri,
-    cursorOffset: 0,
+    inputBox,
   }
 }
+
+export const inheritsFrom = ViewletInputBox
 
 // TODO naming for provider.getNoResults is a bit weird
 
@@ -179,7 +186,8 @@ export const loadContent = async (state) => {
   )
 
   // TODO avoid side effect here
-  Focus.setFocus('QuickPick')
+  Focus.setFocus('Input')
+  Focus.setAdditionalFocus('QuickPick')
   return {
     ...state,
     picks: newPicks,

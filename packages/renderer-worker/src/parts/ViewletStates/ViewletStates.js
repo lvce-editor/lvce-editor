@@ -8,6 +8,7 @@ export const set = (key, value) => {
   Assert.object(value)
   Assert.object(value.factory)
   Assert.object(value.state)
+
   state.instances[key] = value
 }
 
