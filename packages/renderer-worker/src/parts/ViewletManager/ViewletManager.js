@@ -196,7 +196,16 @@ export const load = async (viewlet, focus = false) => {
     }
 
     if (module.hasFunctionalRender) {
-      const commands = module.render(viewletState, newState)
+      let commands = []
+      if (Array.isArray(module.render)) {
+        for (const item of module.render) {
+          if (!item.isEqual(viewletState, newState)) {
+            commands.push(item.apply(viewletState, newState))
+          }
+        }
+      } else {
+        commands = module.render(viewletState, newState)
+      }
       await RendererProcess.invoke(
         /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
         /* commands */ commands
@@ -314,4 +323,17 @@ export const mutate = async (id, fn) => {
   // TODO handle race conditions here
   const viewletState = state[id]
   await fn(state)
+}
+
+export const render = (module, oldState, newState) => {
+  if (Array.isArray(module.render)) {
+    const commands = []
+    for (const item of module.render) {
+      if (!item.isEqual(oldState, newState)) {
+        commands.push(item.apply(oldState, newState))
+      }
+    }
+    return commands
+  }
+  return module.render(oldState, newState)
 }

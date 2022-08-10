@@ -24,7 +24,15 @@ const ViewletActivityBar = await import(
   '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
 )
 
+const ViewletManager = await import(
+  '../src/parts/ViewletManager/ViewletManager.js'
+)
+
 const ACTIVITY_BAR_ITEM_HEIGHT = 48
+
+const render = (oldState, newState) => {
+  return ViewletManager.render(ViewletActivityBar, oldState, newState)
+}
 
 test('name', () => {
   expect(ViewletActivityBar.name).toBe('ActivityBar')
@@ -146,7 +154,7 @@ test('render - all items fit but little space is remaining', async () => {
     ],
   }
 
-  expect(ViewletActivityBar.render(oldState, newState)).toEqual([
+  expect(render(oldState, newState)).toEqual([
     [
       'Viewlet.send',
       'ActivityBar',
@@ -353,7 +361,7 @@ test('render - two items do not fit', () => {
     ],
   }
 
-  expect(ViewletActivityBar.render(oldState, newState)).toEqual([
+  expect(render(oldState, newState)).toEqual([
     [
       'Viewlet.send',
       'ActivityBar',
