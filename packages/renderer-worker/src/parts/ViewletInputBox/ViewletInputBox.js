@@ -64,6 +64,15 @@ export const selectLeftByCharacter = (state) => {
   }
 }
 
+export const selectAll = (state) => {
+  const { value } = state
+  return {
+    ...state,
+    selectionStart: 0,
+    selectionEnd: value.length,
+  }
+}
+
 export const selectLeftByWord = (state) => {
   return state
 }
@@ -131,9 +140,15 @@ export const handleKeyDown = async (state, key) => {
 }
 
 export const deleteLeft = (state) => {
-  const newValue = state.value.slice(0, -1)
-  const cursorOffset = newValue.length
-  return handleInput(state, newValue, cursorOffset, cursorOffset)
+  const { value, selectionStart, selectionEnd } = state
+  if (selectionStart === selectionEnd) {
+    const newValue = value.slice(0, -1)
+    const cursorOffset = newValue.length
+    return handleInput(state, newValue, cursorOffset, cursorOffset)
+  }
+  const newValue = value.slice(0, selectionStart) + value.slice(selectionEnd)
+  console.log({ selectionStart })
+  return handleInput(state, newValue, selectionStart, selectionStart)
 }
 
 const getNewValueDeleteRight = (value, selectionStart, selectionEnd) => {
