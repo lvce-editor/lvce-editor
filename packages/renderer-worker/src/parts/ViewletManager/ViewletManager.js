@@ -256,7 +256,7 @@ export const load = async (viewlet, focus = false) => {
 
             return
           }
-          const commands = module.render(instance.state, newState)
+          const commands = render(instance.factory, instance.state, newState)
           instance.state = newState
           await RendererProcess.invoke(
             /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
