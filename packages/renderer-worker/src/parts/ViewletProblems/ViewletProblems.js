@@ -50,25 +50,32 @@ export const dispose = (state) => {
 
 export const hasFunctionalRender = true
 
-export const render = (oldState, newState) => {
-  console.log('render', oldState, newState)
-  const changes = []
-  if (oldState.problems !== newState.problems) {
-    changes.push([
+const renderProblems = {
+  isEqual(oldState, newState) {
+    return oldState.problems === newState.problems
+  },
+  apply(oldState, newState) {
+    return [
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'Problems',
       /* method */ 'setProblems',
       /* problems */ newState.problems,
-    ])
-  }
-  if (oldState.focusedIndex !== newState.focusedIndex) {
-    console.log('focused idnex changed')
-    changes.push([
+    ]
+  },
+}
+
+const renderFocusedIndex = {
+  isEqual(oldState, newState) {
+    return oldState.focusedIndex === newState.focusedIndex
+  },
+  apply(oldState, newState) {
+    return [
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'Problems',
       /* method */ 'setFocusedIndex',
       /* focusedIndex */ newState.focusedIndex,
-    ])
-  }
-  return changes
+    ]
+  },
 }
+
+export const render = [renderProblems, renderFocusedIndex]
