@@ -216,35 +216,43 @@ export const focusNext = (state) => {
   return focusIndex(state, state.focusedIndex + 1)
 }
 
-export const hasFunctionalRender = true
-
-export const render = (oldState, newState) => {
-  const changes = []
-  if (oldState.x !== newState.x || oldState.y !== newState.y) {
-    changes.push([
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'EditorCompletion',
-      /* method */ 'setPosition',
-      /* x */ newState.x,
-      /* y */ newState.y,
-    ])
-  }
-  if (oldState.visibleItems !== newState.visibleItems) {
-    changes.push([
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'EditorCompletion',
-      /* method */ 'setItems',
-      /* items */ newState.visibleItems,
-      /* reason */ 1,
-    ])
-  }
-  console.log({ changes })
-  return changes
-}
-
 export const dispose = (state) => {
   return {
     ...state,
     disposed: true,
   }
 }
+
+export const hasFunctionalRender = true
+
+const renderPosition = {
+  isEqual(oldState, newState) {
+    return oldState.x === newState.x && oldState.y === newState.y
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'EditorCompletion',
+      /* method */ 'setPosition',
+      /* x */ newState.x,
+      /* y */ newState.y,
+    ]
+  },
+}
+
+const renderItems = {
+  isEqual(oldState, newState) {
+    return oldState.visibleItems === newState.visibleItems
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'EditorCompletion',
+      /* method */ 'setItems',
+      /* items */ newState.visibleItems,
+      /* reason */ 1,
+    ]
+  },
+}
+
+export const render = [renderItems, renderPosition]
