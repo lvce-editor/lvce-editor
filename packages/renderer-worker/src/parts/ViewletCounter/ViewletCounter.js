@@ -30,15 +30,18 @@ export const dispose = (state) => {
 
 export const hasFunctionalRender = true
 
-export const render = (oldState, newState) => {
-  const changes = []
-  if (oldState.count !== newState.count) {
-    changes.push([
+const renderCount = {
+  isEqual(oldState, newState) {
+    return oldState.count === newState.count
+  },
+  apply(oldState, newState) {
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Counter',
       /* method */ 'setCount',
       /* newCount */ newState.count,
-    ])
-  }
-  return changes
+    ]
+  },
 }
+
+export const render = [renderCount]

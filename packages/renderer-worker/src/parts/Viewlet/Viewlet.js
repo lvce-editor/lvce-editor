@@ -140,7 +140,11 @@ export const wrapViewletCommand = (id, fn) => {
       if (oldState === newState) {
         return
       }
-      const commands = activeInstance.factory.render(oldState, newState)
+      const commands = ViewletManager.render(
+        activeInstance.factory,
+        oldState,
+        newState
+      )
       ViewletStates.setState(id, newState)
       await RendererProcess.invoke(
         /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
