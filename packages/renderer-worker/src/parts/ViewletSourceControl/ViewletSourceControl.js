@@ -97,7 +97,7 @@ export const hasFunctionalRender = true
 
 const renderValue = {
   isEqual(oldState, newState) {
-    return oldState.inputValue !== newState.inputValue
+    return oldState.inputValue === newState.inputValue
   },
   apply(oldState, newState) {
     return [

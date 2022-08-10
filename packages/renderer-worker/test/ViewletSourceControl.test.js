@@ -29,6 +29,14 @@ const ExtensionHostSourceControl = await import(
   '../src/parts/ExtensionHost/ExtensionHostSourceControl.js'
 )
 
+const ViewletManager = await import(
+  '../src/parts/ViewletManager/ViewletManager.js'
+)
+
+const render = (oldState, newState) => {
+  return ViewletManager.render(ViewletSourceControl, oldState, newState)
+}
+
 test('name', () => {
   expect(ViewletSourceControl.name).toBe('Source Control')
 })
@@ -95,7 +103,7 @@ test('render - inputValue changed', () => {
     ...oldState,
     inputValue: 'abc',
   }
-  expect(ViewletSourceControl.render(oldState, newState)).toEqual([
+  expect(render(oldState, newState)).toEqual([
     ['Viewlet.send', 'Source Control', 'setInputValue', 'abc'],
   ])
 })
