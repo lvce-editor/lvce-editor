@@ -324,3 +324,16 @@ export const mutate = async (id, fn) => {
   const viewletState = state[id]
   await fn(state)
 }
+
+export const render = (module, oldState, newState) => {
+  if (Array.isArray(module.render)) {
+    const commands = []
+    for (const item of module.render) {
+      if (!item.isEqual(oldState, newState)) {
+        commands.push(item.apply(oldState, newState))
+      }
+    }
+    return commands
+  }
+  return module.render(oldState, newState)
+}
