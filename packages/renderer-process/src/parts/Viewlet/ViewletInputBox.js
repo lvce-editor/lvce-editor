@@ -35,7 +35,7 @@ export const create = () => {
   $InputBox.className = 'InputBox'
   $InputBox.setAttribute('role', 'textbox')
   $InputBox.ondblclick = handleDoubleClick
-  $InputBox.onclick = handleSingleClick
+  $InputBox.onmousedown = handleSingleClick
 
   $InputBox.append($InputCursor, $InputSelection, $InputText)
   return { $InputBox, $InputText, $InputCursor, $InputSelection }
