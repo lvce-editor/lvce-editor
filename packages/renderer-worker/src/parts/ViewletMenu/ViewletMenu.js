@@ -3,6 +3,7 @@ import * as Command from '../Command/Command.js'
 // TODO lazyload menuEntries and use Command.execute (maybe)
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as Layout from '../Layout/Layout.js'
+import { state } from '../Callback/Callback.js'
 
 export const create = () => {
   return {
@@ -12,6 +13,7 @@ export const create = () => {
     id: '',
     width: 0,
     height: 0,
+    focusedIndex: -1,
   }
 }
 
@@ -236,41 +238,11 @@ const resolveAfterTimeout = (fn) => {
   setTimeout(fn, MENU_DELAY_TRIANGLE)
 }
 
-export const handleMouseEnter = async (
-  level,
-  index,
-  enterX,
-  enterY,
-  enterTimeStamp
-) => {
-  state.latestTimeStamp = enterTimeStamp
-  if (level >= state.menus.length) {
-    return
-  }
-  const menu = state.menus[level]
-  if (menu.focusedIndex === index) {
-    return
-  }
-  if (level < state.menus.length - 1) {
-    const subMenu = state.menus[level + 1]
-    const subMenuEnterX = subMenu.enterX
-    // TODO should check for triangle position here
-    if (enterX >= subMenuEnterX) {
-      await new Promise(resolveAfterTimeout)
-      if (state.latestTimeStamp !== enterTimeStamp) {
-        return
-      }
-    }
-  }
-  const item = menu.items[index]
-  await focusIndex(menu, index)
-  switch (item.flags) {
-    case /* SubMenu */ 4:
-      await showSubMenuAtEnter(menu.level, index, enterX, enterY)
-      break
-    default:
-      await hideSubMenus(menu.level)
-      break
+export const handleMouseEnter = async (state, index) => {
+  console.log({ index })
+  return {
+    ...state,
+    focusedIndex: index,
   }
 }
 
@@ -388,6 +360,15 @@ export const render = (oldState, newState) => {
       'setPosition',
       /* x */ newState.x,
       /* y */ newState.y,
+    ])
+  }
+  if (oldState.focusedIndex !== newState.focusedIndex) {
+    changes.push([
+      'Viewlet.send',
+      'Menu',
+      'setFocusedIndex',
+      /* oldIndex */ oldState.focusedIndex,
+      /* newIndex */ newState.focusedIndex,
     ])
   }
   console.log({ changes })

@@ -67,7 +67,7 @@ export const getModule = (id) => {
     case 'QuickPick':
       return import('../ViewletQuickPick/ViewletQuickPick.ipc.js')
     case 'Menu':
-      return import('../ViewletMenu/ViewletMenu.js')
+      return import('../ViewletMenu/ViewletMenu.ipc.js')
     default:
       // TODO use ErrorHandling.handleError instead
       throw new Error(`unknown viewlet: "${id}", ${id === 'Output'}`)

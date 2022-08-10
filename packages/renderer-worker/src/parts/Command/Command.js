@@ -16,7 +16,6 @@ const MODULE_AJAX = 37
 const MODULE_FORMAT = 40
 const MODULE_COLOR_THEME = 41
 const MODULE_ICON_THEME = 42
-const MODULE_MENU = 43
 const MODULE_TITLE_BAR_MENU = 44
 const MODULE_ERROR_HANDLING = 45
 const MODULE_NAVIGATION = 46
@@ -92,8 +91,6 @@ const loadModule = (moduleId) => {
       return import('../ColorTheme/ColorTheme.ipc.js')
     case MODULE_ICON_THEME:
       return import('../IconTheme/IconTheme.ipc.js')
-    case MODULE_MENU:
-      return import('../Menu/Menu.ipc.js')
     case MODULE_TITLE_BAR_MENU:
       return import('../TitleBarMenuBar/TitleBarMenuBar.ipc.js')
     case MODULE_ERROR_HANDLING:
@@ -366,17 +363,6 @@ const getModuleId = (commandId) => {
     case 'LocalStorage.setText':
     case 'LocalStorage.getItem':
       return MODULE_LOCAL_STORAGE
-    case 'Menu.show':
-    case 'Menu.hide':
-    case 'Menu.selectIndex':
-    case 'Menu.focusNext':
-    case 'Menu.focusPrevious':
-    case 'Menu.focusFirst':
-    case 'Menu.focusLast':
-    case 'Menu.focusIndex':
-    case 'Menu.handleMouseEnter':
-    case 'Menu.selectItem':
-      return MODULE_MENU
     case 'Workspace.setPath':
     case 'Workspace.hydrate':
     case 'Workspace.setUri':

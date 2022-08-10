@@ -75,12 +75,12 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
   if (oldIndex !== -1) {
     const $OldItem = $Menu.children[oldIndex]
     $OldItem.tabIndex = -1
-    $OldItem.classList.remove('FocusOutline')
+    $OldItem.classList.remove('Focused')
   }
   if (newIndex !== -1) {
     const $NewItem = $Menu.children[newIndex]
     $NewItem.tabIndex = 0
-    $NewItem.classList.add('FocusOutline')
+    $NewItem.classList.add('Focused')
   }
 }
 
@@ -142,17 +142,13 @@ const handleMouseEnter = (event) => {
   const timeStamp = event.timeStamp
 
   const index = FindIndex.findIndex($Menu, $Target)
+  console.log({ index })
   if (index === -1) {
     return
   }
-  const level = getLevel($Menu)
   RendererWorker.send(
     /* Menu.handleMouseEnter */ 'Menu.handleMouseEnter',
-    /* level */ level,
-    /* index */ index,
-    /* x */ x,
-    /* y */ y,
-    /* timeStamp */ timeStamp
+    /* index */ index
   )
 }
 

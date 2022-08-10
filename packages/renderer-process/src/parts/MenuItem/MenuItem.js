@@ -13,7 +13,6 @@ export const create$MenuItem = (item) => {
       $MenuItem.className = 'MenuItem'
       $MenuItem.setAttribute('role', 'menuitem')
       $MenuItem.textContent = getLabel(item)
-      $MenuItem.tabIndex = -1
       break
     case /* Separator */ 1:
       $MenuItem.className = 'MenuItemSeparator'
@@ -24,20 +23,17 @@ export const create$MenuItem = (item) => {
       $MenuItem.setAttribute('role', 'menuitemcheckbox')
       $MenuItem.ariaChecked = 'true'
       $MenuItem.textContent = getLabel(item)
-      $MenuItem.tabIndex = -1
       break
     case /* UnChecked */ 3:
       $MenuItem.className = 'MenuItem'
       $MenuItem.setAttribute('role', 'menuitemcheckbox')
       $MenuItem.ariaChecked = 'false'
       $MenuItem.textContent = getLabel(item)
-      $MenuItem.tabIndex = -1
       break
     case /* SubMenu */ 4:
       $MenuItem.className = 'MenuItem'
       $MenuItem.setAttribute('role', 'menuitem')
       $MenuItem.textContent = getLabel(item)
-      $MenuItem.tabIndex = -1
       $MenuItem.ariaHasPopup = 'true'
       $MenuItem.ariaExpanded = 'false'
       break
@@ -45,14 +41,12 @@ export const create$MenuItem = (item) => {
       $MenuItem.className = 'MenuItem'
       $MenuItem.setAttribute('role', 'menuitem')
       $MenuItem.textContent = getLabel(item)
-      $MenuItem.tabIndex = -1
       $MenuItem.setAttribute('disabled', 'true')
       break
     default:
       $MenuItem.className = 'MenuItem'
       $MenuItem.setAttribute('role', 'menuitem')
       $MenuItem.textContent = getLabel(item)
-      $MenuItem.tabIndex = -1
       console.warn('invalid menu item flags:', item)
       break
   }
