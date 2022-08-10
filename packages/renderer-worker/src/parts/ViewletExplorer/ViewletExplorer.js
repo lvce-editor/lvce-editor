@@ -1198,45 +1198,48 @@ export const events = {
 
 export const hasFunctionalRender = true
 
-export const render = (oldState, newState) => {
-  const changes = []
-  if (
-    oldState.dirents !== newState.dirents ||
-    oldState.minLineY !== newState.minLineY ||
-    oldState.maxLineY !== newState.maxLineY
-  ) {
+const renderItems = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.dirents === newState.dirents &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY
+    )
+  },
+  apply(oldState, newState) {
     const visibleDirents = getVisible(newState)
-    changes.push([
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Explorer',
       /* method */ 'updateDirents',
       /* visibleDirents */ visibleDirents,
-    ])
-    // TODO rendering dirents should not override focus
-    // when that issue is fixed, this can be removed
-    const oldFocusedIndex = oldState.focused ? oldState.focusedIndex : -2
-    const newFocusedIndex = newState.focused ? newState.focusedIndex : -2
-    changes.push([
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Explorer',
-      /* method */ 'setFocusedIndex',
-      /* oldindex */ oldFocusedIndex,
-      /* newIndex */ newFocusedIndex,
-    ])
-  }
-  if (
-    oldState.focusedIndex !== newState.focusedIndex ||
-    oldState.focused !== newState.focused
-  ) {
-    const oldFocusedIndex = oldState.focused ? oldState.focusedIndex : -2
-    const newFocusedIndex = newState.focused ? newState.focusedIndex : -2
-    changes.push([
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Explorer',
-      /* method */ 'setFocusedIndex',
-      /* oldindex */ oldFocusedIndex,
-      /* newIndex */ newFocusedIndex,
-    ])
-  }
-  return changes
+    ]
+  },
 }
+
+const renderFocusedIndex = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.focusedIndex === newState.focusedIndex &&
+      oldState.focused === newState.focused &&
+      // TODO rendering dirents should not override focus
+      // when that issue is fixed, this can be removed
+      oldState.dirents === newState.dirents &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY
+    )
+  },
+  apply(oldState, newState) {
+    const oldFocusedIndex = oldState.focused ? oldState.focusedIndex : -2
+    const newFocusedIndex = newState.focused ? newState.focusedIndex : -2
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'Explorer',
+      /* method */ 'setFocusedIndex',
+      /* oldindex */ oldFocusedIndex,
+      /* newIndex */ newFocusedIndex,
+    ]
+  },
+}
+
+export const render = [renderItems, renderFocusedIndex]
