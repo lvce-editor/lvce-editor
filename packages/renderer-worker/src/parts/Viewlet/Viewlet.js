@@ -208,6 +208,7 @@ export const openWidget = async (id, ...args) => {
   })
   // TODO race condition: check if element is disposed
   await RendererProcess.invoke('Widget.openWidget', id)
+  // await RendererProcess.invoke('Viewlet.focusViewlet', id)
 }
 
 export const closeWidget = async (id) => {
