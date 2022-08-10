@@ -508,44 +508,68 @@ export const focusNext = (state) => {
 
 export const hasFunctionalRender = true
 
-export const render = (oldState, newState) => {
-  const changes = []
-  if (oldState.value !== newState.value) {
-    changes.push([
+const renderValue = {
+  isEqual(oldState, newState) {
+    return oldState.value === newState.value
+  },
+  apply(oldState, newState) {
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'setValue',
       /* value */ newState.value,
-    ])
-  }
-  if (
-    oldState.cursorOffset !== newState.cursorOffset &&
-    newState.cursorOffset !== newState.value.length
-  ) {
-    changes.push([
+    ]
+  },
+}
+
+const renderCursorOffset = {
+  isEqual(oldState, newState) {
+    oldState.cursorOffset === newState.cursorOffset ||
+      newState.cursorOffset === newState.value.length
+  },
+  apply(oldState, newState) {
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'setCursorOffset',
       /* cursorOffset */ newState.cursorOffset,
-    ])
-  }
-  if (oldState.visiblePicks !== newState.visiblePicks) {
+    ]
+  },
+}
+
+const renderItems = {
+  isEqual(oldState, newState) {
+    return oldState.visiblePicks === newState.visiblePicks
+  },
+  apply(oldState, newState) {
     // TODO compute visible picks here from filteredPicks and minLineY / maxLineY, maybe also do filtering here
-    changes.push([
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'setVisiblePicks',
       /* visiblePicks */ newState.visiblePicks,
-    ])
-  }
-  if (oldState.focusedIndex !== newState.focusedIndex) {
-    changes.push([
+    ]
+  },
+}
+
+const renderFocusedIndex = {
+  isEqual(oldState, newState) {
+    return oldState.focusedIndex === newState.focusedIndex
+  },
+  apply(oldState, newState) {
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldState.focusedIndex,
       /* newFocusedIndex */ newState.focusedIndex,
-    ])
-  }
-  return changes
+    ]
+  },
 }
+
+export const render = [
+  renderFocusedIndex,
+  renderCursorOffset,
+  renderItems,
+  renderValue,
+]
