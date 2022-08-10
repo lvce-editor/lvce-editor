@@ -132,19 +132,22 @@ export const resize = (state, dimensions) => {
 
 export const hasFunctionalRender = true
 
-export const render = (oldState, newState) => {
-  const changes = []
-  if (
-    oldState.statusBarItemsLeft !== newState.statusBarItemsLeft ||
-    oldState.statusBarItemsRight !== newState.statusBarItemsRight
-  ) {
-    changes.push([
+const renderItems = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.statusBarItemsLeft === newState.statusBarItemsLeft &&
+      oldState.statusBarItemsRight === newState.statusBarItemsRight
+    )
+  },
+  apply(oldState, newState) {
+    return [
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'StatusBar',
       /* method */ 'setItems',
       /* statusBarItemsLeft */ newState.statusBarItemsLeft,
       /* statusBarItemsRight */ newState.statusBarItemsRight,
-    ])
-  }
-  return changes
+    ]
+  },
 }
+
+export const render = [renderItems]
