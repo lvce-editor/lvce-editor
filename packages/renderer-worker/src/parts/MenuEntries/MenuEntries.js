@@ -1,4 +1,7 @@
+import * as Assert from '../Assert/Assert.js'
+
 const getModule = (id) => {
+  Assert.string(id)
   switch (id) {
     case 'activityBar':
       return import('./MenuEntriesActivityBar.js')

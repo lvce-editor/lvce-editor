@@ -31,6 +31,7 @@ const MODULE_OPEN = 48
 const MODULE_CLIPBOARD = 49
 const MODULE_INIT_DATA = 50
 const MODULE_TEST_FRAME_WORK = 51
+const MODULE_WIDGET = 52
 
 export const state = {
   commands: Object.create(null),
@@ -93,6 +94,8 @@ const loadModule = (moduleId) => {
       return import('../InitData/InitData.ipc.js')
     case MODULE_TEST_FRAME_WORK:
       return import('../TestFrameWork/TestFrameWork.ipc.js')
+    case MODULE_WIDGET:
+      return import('../Widget/Widget.ipc.js')
     default:
       throw new Error('unknown module')
   }
@@ -110,6 +113,8 @@ const getOrLoadModule = (moduleId) => {
 
 const getModuleId = (commandId) => {
   switch (commandId) {
+    case 'Widget.openWidget':
+      return MODULE_WIDGET
     case 'TestFrameWork.showOverlay':
     case 'TestFrameWork.performAction':
     case 'TestFrameWork.checkSingleElementCondition':

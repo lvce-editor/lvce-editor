@@ -66,6 +66,8 @@ export const getModule = (id) => {
       return import('../ViewletImplementations/ViewletImplementations.ipc.js')
     case 'QuickPick':
       return import('../ViewletQuickPick/ViewletQuickPick.ipc.js')
+    case 'Menu':
+      return import('../ViewletMenu/ViewletMenu.js')
     default:
       // TODO use ErrorHandling.handleError instead
       throw new Error(`unknown viewlet: "${id}", ${id === 'Output'}`)
@@ -149,7 +151,13 @@ export const load = async (viewlet, focus = false) => {
 
     const oldVersion =
       viewletState.version === undefined ? undefined : ++viewletState.version
-    let newState = await module.loadContent(viewletState)
+    let newState
+
+    if (viewlet.args) {
+      newState = await module.loadContent(viewletState, ...viewlet.args)
+    } else {
+      newState = await module.loadContent(viewletState)
+    }
     if (viewletState.version !== oldVersion) {
       newState = viewletState
       console.log('version mismatch')
@@ -191,7 +199,7 @@ export const load = async (viewlet, focus = false) => {
       })
     }
 
-    if (viewletState !== newState) {
+    if (viewletState !== newState && module.contentLoaded) {
       await module.contentLoaded(newState)
     }
 

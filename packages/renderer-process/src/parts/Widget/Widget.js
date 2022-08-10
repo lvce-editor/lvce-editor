@@ -1,3 +1,6 @@
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as Assert from '../Assert/Assert.js'
+
 export const state = {
   isInDom: false,
   $PreviousFocusElement: undefined,
@@ -47,4 +50,11 @@ export const remove = ($Element) => {
     state.$Widgets.remove()
     state.$Widgets = undefined
   }
+}
+
+export const openWidget = (id) => {
+  const instance = Viewlet.state.instances[id].state
+  const $Element = instance.$Menu
+  Assert.object($Element)
+  append($Element)
 }

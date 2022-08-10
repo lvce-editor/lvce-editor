@@ -204,7 +204,10 @@ export const openWidget = async (id, ...args) => {
     id,
     type: 0,
     uri: `quickPick://${type}`,
+    args,
   })
+  // TODO race condition: check if element is disposed
+  await RendererProcess.invoke('Widget.openWidget', id)
 }
 
 export const closeWidget = async (id) => {

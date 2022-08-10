@@ -60,6 +60,8 @@ const get = (id) => {
       return import('./ViewletReferences.js')
     case 'Implementations':
       return import('./ViewletImplementations.js')
+    case 'Menu':
+      return import('./ViewletMenu.js')
     default:
       throw new Error(`unknown viewlet ${id}`)
   }

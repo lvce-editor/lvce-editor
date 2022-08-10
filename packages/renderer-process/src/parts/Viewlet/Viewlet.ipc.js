@@ -11,4 +11,5 @@ export const __initialize__ = () => {
   Command.register('Viewlet.load', Viewlet.load)
   Command.register('Viewlet.handleError', Viewlet.handleError)
   Command.register('Viewlet.sendMultiple', Viewlet.sendMultiple)
+  Command.register('Viewlet.openWidget', Viewlet.openWidget)
 }
