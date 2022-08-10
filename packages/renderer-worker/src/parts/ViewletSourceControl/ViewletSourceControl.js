@@ -95,15 +95,18 @@ export const resize = (state, dimensions) => {
 
 export const hasFunctionalRender = true
 
-export const render = (oldState, newState) => {
-  const changes = []
-  if (oldState.inputValue !== newState.inputValue) {
-    changes.push([
+const renderValue = {
+  isEqual(oldState, newState) {
+    return oldState.inputValue === newState.inputValue
+  },
+  apply(oldState, newState) {
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Source Control',
       /* method */ 'setInputValue',
       /* value */ newState.inputValue,
-    ])
-  }
-  return changes
+    ]
+  },
 }
+
+export const render = [renderValue]
