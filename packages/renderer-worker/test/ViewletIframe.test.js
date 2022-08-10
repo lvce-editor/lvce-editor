@@ -1,5 +1,13 @@
 import * as ViewletIframe from '../src/parts/ViewletIframe/ViewletIframe.js'
 
+const ViewletManager = await import(
+  '../src/parts/ViewletManager/ViewletManager.js'
+)
+
+const render = (oldState, newState) => {
+  return ViewletManager.render(ViewletIframe, oldState, newState)
+}
+
 test('name', () => {
   expect(ViewletIframe.name).toBe('Iframe')
 })
@@ -31,7 +39,7 @@ test('render', () => {
     ...oldState,
     src: 'test://example.com',
   }
-  expect(ViewletIframe.render(oldState, newState)).toEqual([
+  expect(render(oldState, newState)).toEqual([
     ['Viewlet.send', 'Iframe', 'setSrc', 'test://example.com'],
   ])
 })
