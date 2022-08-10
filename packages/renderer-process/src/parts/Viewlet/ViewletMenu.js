@@ -40,16 +40,12 @@ export const create = () => {
   $Menu.tabIndex = -1
   // $ContextMenu.onmousedown = contextMenuHandleMouseDown
   // TODO mousedown vs click? (click is usually better but mousedown is faster, why wait 100ms?)
-  $Menu.addEventListener('mousedown', handleMouseDown)
-  $Menu.addEventListener('mouseenter', handleMouseEnter, {
-    capture: true,
-  })
-  $Menu.addEventListener('mouseleave', handleMouseLeave, {
-    capture: true,
-  })
-  $Menu.addEventListener('mousemove', handleMouseMove, {
-    passive: true,
-  })
+  $Menu.onmousedown = handleMouseDown
+  $Menu.onmouseover = handleMouseOver
+  // $Menu.addEventListener('mouseleave', handleMouseLeave)
+  // $Menu.addEventListener('mousemove', handleMouseMove, {
+  //   passive: true,
+  // })
   $Menu.oncontextmenu = handleContextMenu
   // $ContextMenu.onfocus = handleFocus
   // $ContextMenu.onblur = handleBlur
@@ -74,13 +70,14 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
   const { $Menu } = state
   if (oldIndex !== -1) {
     const $OldItem = $Menu.children[oldIndex]
-    $OldItem.tabIndex = -1
     $OldItem.classList.remove('Focused')
   }
-  if (newIndex !== -1) {
+  if (newIndex === -1) {
+    $Menu.removeAttribute('aria-activedescendant')
+  } else {
     const $NewItem = $Menu.children[newIndex]
-    $NewItem.tabIndex = 0
     $NewItem.classList.add('Focused')
+    $Menu.setAttribute('aria-activedescendant', $NewItem.id) // TODO use idl once supported
   }
 }
 
@@ -133,7 +130,7 @@ const MOUSE_LOCS_TRACKED = 3
  *
  * @param {MouseEvent} event
  */
-const handleMouseEnter = (event) => {
+const handleMouseOver = (event) => {
   const $Target = event.target
   // @ts-ignore
   const $Menu = $Target.closest('.Menu')
@@ -147,7 +144,7 @@ const handleMouseEnter = (event) => {
     return
   }
   RendererWorker.send(
-    /* Menu.handleMouseEnter */ 'Menu.handleMouseEnter',
+    /* Menu.handleMouseOver */ 'Menu.handleMouseOver',
     /* index */ index
   )
 }

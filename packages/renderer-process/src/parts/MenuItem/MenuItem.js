@@ -8,6 +8,7 @@ const getLabel = (item) => {
 
 export const create$MenuItem = (item) => {
   const $MenuItem = document.createElement('li')
+  $MenuItem.id = item.id
   switch (item.flags) {
     case /* None */ 0:
       $MenuItem.className = 'MenuItem'

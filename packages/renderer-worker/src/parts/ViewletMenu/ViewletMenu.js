@@ -17,12 +17,23 @@ export const create = () => {
   }
 }
 
+const getDisplayItems = (items) => {
+  const addId = (item, index) => {
+    return {
+      ...item,
+      id: `MenuItem-${index}`,
+    }
+  }
+  return items.map(addId)
+}
+
 export const loadContent = async (state, x, y, id) => {
   const items = await MenuEntries.getMenuEntries(id)
+  const displayItems = getDisplayItems(items)
   const bounds = getMenuBounds(x, y, items)
   return {
     ...state,
-    items,
+    items: displayItems,
     x: bounds.x,
     y: bounds.y,
     width: bounds.width,
@@ -238,7 +249,7 @@ const resolveAfterTimeout = (fn) => {
   setTimeout(fn, MENU_DELAY_TRIANGLE)
 }
 
-export const handleMouseEnter = async (state, index) => {
+export const handleMouseOver = async (state, index) => {
   console.log({ index })
   return {
     ...state,
