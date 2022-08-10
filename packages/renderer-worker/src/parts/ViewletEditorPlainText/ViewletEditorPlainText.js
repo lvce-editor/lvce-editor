@@ -29,15 +29,18 @@ export const dispose = (state) => {
 
 export const hasFunctionalRender = true
 
-export const render = (oldState, newState) => {
-  const changes = []
-  if (oldState.content !== newState.content) {
-    changes.push([
+const renderContent = {
+  isEqual(oldState, newState) {
+    return oldState.content === newState.content
+  },
+  apply(oldState, newState) {
+    return [
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'EditorPlainText',
       /* method */ 'setContent',
       /* content */ newState.content,
-    ])
-  }
-  return changes
+    ]
+  },
 }
+
+export const render = [renderContent]

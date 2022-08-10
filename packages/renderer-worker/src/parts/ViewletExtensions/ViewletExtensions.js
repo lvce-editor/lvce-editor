@@ -709,65 +709,93 @@ export const handleScrollBarClick = (state, y) => {
 
 export const hasFunctionalRender = true
 
-export const render = (oldState, newState) => {
-  const changes = []
-  if (oldState === newState) {
-    return changes
-  }
-  if (
-    oldState.filteredExtensions !== newState.filteredExtensions ||
-    oldState.minLineY !== newState.minLineY ||
-    oldState.maxLineY !== newState.maxLineY
-  ) {
+const renderExtensions = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.filteredExtensions === newState.filteredExtensions &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY
+    )
+  },
+  apply(oldState, newState) {
     const visibleExtensions = getVisible(newState)
-    changes.push([
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setExtensions',
       /* visibleExtensions */ visibleExtensions,
-    ])
-  }
-  if (
-    oldState.filteredExtensions.length !== newState.filteredExtensions.length
-  ) {
+    ]
+  },
+}
+
+const renderHeight = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.filteredExtensions.length === newState.filteredExtensions.length
+    )
+  },
+  apply(oldState, newState) {
     const contentHeight = newState.filteredExtensions.length * ITEM_HEIGHT
-    changes.push([
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setContentHeight',
       /* contentHeight */ contentHeight,
-    ])
-  }
+    ]
+  },
+}
 
-  if (oldState.negativeMargin !== newState.negativeMargin) {
-    changes.push([
+const renderNegativeMargin = {
+  isEqual(oldState, newState) {
+    return oldState.negativeMargin === newState.negativeMargin
+  },
+  apply(oldState, newState) {
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setNegativeMargin',
       /* negativeMargin */ newState.negativeMargin,
-    ])
-  }
+    ]
+  },
+}
 
-  if (oldState.focusedIndex !== newState.focusedIndex) {
-    changes.push([
+const renderFocusedIndex = {
+  isEqual(oldState, newState) {
+    return oldState.focusedIndex === newState.focusedIndex
+  },
+  apply(oldState, newState) {
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldState.focusedIndex - oldState.minLineY,
       /* newFocusedIndex */ newState.focusedIndex - newState.minLineY,
-    ])
-  }
-  if (oldState.deltaY !== newState.deltaY) {
+    ]
+  },
+}
+
+const renderScrollBarY = {
+  isEqual(oldState, newState) {
+    return oldState.deltaY === newState.deltaY
+  },
+  apply(oldState, newState) {
     const scrollBarY =
       (newState.deltaY / newState.finalDeltaY) *
       (newState.height - newState.scrollBarHeight)
-    changes.push([
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setScrollBar',
       /* scrollBarY */ scrollBarY,
       /* scrollBarHeight */ newState.scrollBarHeight,
-    ])
-  }
-  return changes
+    ]
+  },
 }
+
+export const render = [
+  renderHeight,
+  renderFocusedIndex,
+  renderScrollBarY,
+  renderNegativeMargin,
+  renderExtensions,
+]
