@@ -162,39 +162,6 @@ export const selectIndex = (state, index) => {
   }
 }
 
-export const hasFunctionalRender = true
-
-export const render = (oldState, newState) => {
-  const changes = []
-  if (oldState.displayReferences !== newState.displayReferences) {
-    // const message =
-    changes.push([
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ newState.id,
-      /* method */ 'setLocations',
-      /* references */ newState.displayReferences,
-    ])
-  }
-  if (oldState.message !== newState.message) {
-    changes.push([
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ newState.id,
-      /* method */ 'setMessage',
-      /* message */ newState.message,
-    ])
-  }
-  if (oldState.focusedIndex !== newState.focusedIndex) {
-    changes.push([
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ newState.id,
-      /* method */ 'setFocusedIndex',
-      /* oldFocusedIndex */ oldState.focusedIndex,
-      /* newFocusedIndex */ newState.focusedIndex,
-    ])
-  }
-  return changes
-}
-
 export const focusIndex = (state, index) => {
   return {
     ...state,
@@ -236,3 +203,50 @@ export const selectCurrent = (state) => {
   }
   return selectIndex(state, state.focusedIndex)
 }
+
+export const hasFunctionalRender = true
+
+const renderLocations = {
+  isEqual(oldState, newState) {
+    return oldState.displayReferences === newState.displayReferences
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.invoke */ 'Viewlet.send',
+      /* id */ newState.id,
+      /* method */ 'setLocations',
+      /* references */ newState.displayReferences,
+    ]
+  },
+}
+
+const renderMessage = {
+  idEqual(oldState, newState) {
+    return oldState.message === newState.message
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.invoke */ 'Viewlet.send',
+      /* id */ newState.id,
+      /* method */ 'setMessage',
+      /* message */ newState.message,
+    ]
+  },
+}
+
+const renderFocusedIndex = {
+  isEqual(oldState, newState) {
+    return oldState.focusedIndex === newState.focusedIndex
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.invoke */ 'Viewlet.send',
+      /* id */ newState.id,
+      /* method */ 'setFocusedIndex',
+      /* oldFocusedIndex */ oldState.focusedIndex,
+      /* newFocusedIndex */ newState.focusedIndex,
+    ]
+  },
+}
+
+export const render = [renderFocusedIndex, renderLocations, renderMessage]
