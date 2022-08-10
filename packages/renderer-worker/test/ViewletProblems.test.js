@@ -1,5 +1,13 @@
 import * as ViewletProblems from '../src/parts/ViewletProblems/ViewletProblems.js'
 
+const ViewletManager = await import(
+  '../src/parts/ViewletManager/ViewletManager.js'
+)
+
+const render = (oldState, newState) => {
+  return ViewletManager.render(ViewletProblems, oldState, newState)
+}
+
 test('name', () => {
   expect(ViewletProblems.name).toBe('Problems')
 })
@@ -31,7 +39,7 @@ test('render', () => {
     ...oldState,
     problems: [],
   }
-  expect(ViewletProblems.render(oldState, newState)).toEqual([
+  expect(render(oldState, newState)).toEqual([
     ['Viewlet.send', 'Problems', 'setProblems', []],
   ])
 })
