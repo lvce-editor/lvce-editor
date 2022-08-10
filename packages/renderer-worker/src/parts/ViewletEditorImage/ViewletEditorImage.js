@@ -25,15 +25,18 @@ export const dispose = (state) => {
 
 export const hasFunctionalRender = true
 
-export const render = (oldState, newState) => {
-  const changes = []
-  if (oldState.src !== newState.src) {
-    changes.push([
+const renderSrc = {
+  isEqual(oldState, newState) {
+    return oldState.src === newState.src
+  },
+  apply(oldState, newState) {
+    return [
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'EditorImage',
       /* method */ 'setSrc',
       /* src */ `/remote${newState.src}`,
-    ])
-  }
-  return changes
+    ]
+  },
 }
+
+export const render = [renderSrc]
