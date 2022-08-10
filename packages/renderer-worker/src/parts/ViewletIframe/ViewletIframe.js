@@ -26,15 +26,18 @@ export const dispose = (state) => {
 
 export const hasFunctionalRender = true
 
-export const render = (oldState, newState) => {
-  const changes = []
-  if (oldState.src !== newState.src) {
-    changes.push([
+const renderSrc = {
+  isEqual(oldState, newState) {
+    return oldState.src === newState.src
+  },
+  apply(oldState, newState) {
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Iframe',
       /* method */ 'setSrc',
       /* src */ newState.src,
-    ])
-  }
-  return changes
+    ]
+  },
 }
+
+export const render = [renderSrc]
