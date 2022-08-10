@@ -58,6 +58,14 @@ const ErrorHandling = await import(
   '../src/parts/ErrorHandling/ErrorHandling.js'
 )
 
+const ViewletManager = await import(
+  '../src/parts/ViewletManager/ViewletManager.js'
+)
+
+const render = (oldState, newState) => {
+  return ViewletManager.render(ViewletExtensions, oldState, newState)
+}
+
 test('name', () => {
   expect(ViewletExtensions.name).toBe('Extensions')
 })
@@ -394,6 +402,7 @@ test('uninstall', async () => {
   const state = ViewletExtensions.create()
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
       case 'ExtensionManagement.uninstall':
@@ -619,6 +628,7 @@ test.skip('handleInput - multiple calls', async () => {
   const state = ViewletExtensions.create()
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
   Ajax.state.getJson = jest.fn(async () => {
     return []
   })
@@ -1427,7 +1437,7 @@ test('render - same state', () => {
     deltaY: 62,
   }
   const newState = oldState
-  expect(ViewletExtensions.render(oldState, newState)).toEqual([])
+  expect(render(oldState, newState)).toEqual([])
 })
 
 test('render - filtered extensions are different', () => {
@@ -1456,7 +1466,7 @@ test('render - filtered extensions are different', () => {
       },
     ],
   }
-  expect(ViewletExtensions.render(oldState, newState)).toEqual([
+  expect(render(oldState, newState)).toEqual([
     [
       'Viewlet.send',
       'Extensions',
@@ -1491,7 +1501,7 @@ test('render - negative margin is different', () => {
     ...oldState,
     negativeMargin: -10,
   }
-  expect(ViewletExtensions.render(oldState, newState)).toEqual([
+  expect(render(oldState, newState)).toEqual([
     ['Viewlet.send', 'Extensions', 'setNegativeMargin', -10],
   ])
 })
@@ -1527,7 +1537,7 @@ test('render - focused index is different', () => {
     ...oldState,
     focusedIndex: 1,
   }
-  expect(ViewletExtensions.render(oldState, newState)).toEqual([
+  expect(render(oldState, newState)).toEqual([
     ['Viewlet.send', 'Extensions', 'setFocusedIndex', 0, 1],
   ])
 })
@@ -1563,7 +1573,7 @@ test('render - focused index is different', () => {
 //     ...oldState,
 //     focusedIndex: 1,
 //   }
-//   expect(ViewletExtensions.render(oldState, newState)).toEqual([
+//   expect(render(oldState, newState)).toEqual([
 //     ['Viewlet.send', 'Extensions', 'setFocusedIndex', 0, 1],
 //   ])
 // })

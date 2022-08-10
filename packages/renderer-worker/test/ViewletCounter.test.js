@@ -1,4 +1,9 @@
 import * as ViewletCounter from '../src/parts/ViewletCounter/ViewletCounter.js'
+import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
+
+const render = (oldState, newState) => {
+  return ViewletManager.render(ViewletCounter, oldState, newState)
+}
 
 test('name', () => {
   expect(ViewletCounter.name).toBe('Counter')
@@ -35,7 +40,7 @@ test('render', () => {
     ...oldState,
     count: 1,
   }
-  expect(ViewletCounter.render(oldState, newState)).toEqual([
+  expect(render(oldState, newState)).toEqual([
     ['Viewlet.send', 'Counter', 'setCount', 1],
   ])
 })

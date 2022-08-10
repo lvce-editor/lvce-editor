@@ -1,5 +1,10 @@
 import * as FileSystem from '../src/parts/FileSystem/FileSystem.js'
 import * as ViewletEditorPlainText from '../src/parts/ViewletEditorPlainText/ViewletEditorPlainText.js'
+import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
+
+const render = (oldState, newState) => {
+  return ViewletManager.render(ViewletEditorPlainText, oldState, newState)
+}
 
 test('name', () => {
   expect(ViewletEditorPlainText.name).toBe('PlainText')
@@ -44,7 +49,7 @@ test('render', () => {
     ...oldState,
     content: 'test',
   }
-  expect(ViewletEditorPlainText.render(oldState, newState)).toEqual([
+  expect(render(oldState, newState)).toEqual([
     ['Viewlet.send', 'EditorPlainText', 'setContent', 'test'],
   ])
 })
