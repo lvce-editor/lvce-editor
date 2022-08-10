@@ -61,8 +61,24 @@ export const selectLeftByWord = (state) => {
   return state
 }
 
+const setSelection = (state, selectionStart, selectionEnd) => {
+  return {
+    ...state,
+    selectionStart,
+    selectionEnd,
+  }
+}
+
 export const selectRightByCharacter = (state) => {
-  return state
+  console.log('select char right')
+  const { selectionEnd, value } = state
+  if (selectionEnd >= value.length) {
+    return state
+  }
+  return {
+    ...state,
+    selectionEnd: selectionEnd + 1,
+  }
 }
 
 export const selectRightByWord = (state) => {

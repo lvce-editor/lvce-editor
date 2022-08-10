@@ -672,5 +672,15 @@
     "key": "Delete",
     "command": "Input.deleteRight",
     "when": "focus.Input"
+  },
+  {
+    "key": "shift+ArrowRight",
+    "command": "Input.selectCharacterRight",
+    "when": "focus.Input"
+  },
+  {
+    "key": "shift+ArrowLeft",
+    "command": "Input.selectCharacterLeft",
+    "when": "focus.Input"
   }
 ]
