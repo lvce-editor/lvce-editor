@@ -54,7 +54,14 @@ export const cursorHome = (state) => {
 }
 
 export const selectLeftByCharacter = (state) => {
-  return state
+  const { selectionStart } = state
+  if (selectionStart === 0) {
+    return state
+  }
+  return {
+    ...state,
+    selectionStart: selectionStart - 1,
+  }
 }
 
 export const selectLeftByWord = (state) => {
@@ -70,7 +77,6 @@ const setSelection = (state, selectionStart, selectionEnd) => {
 }
 
 export const selectRightByCharacter = (state) => {
-  console.log('select char right')
   const { selectionEnd, value } = state
   if (selectionEnd >= value.length) {
     return state
