@@ -221,7 +221,7 @@ const renderLocations = {
 }
 
 const renderMessage = {
-  idEqual(oldState, newState) {
+  isEqual(oldState, newState) {
     return oldState.message === newState.message
   },
   apply(oldState, newState) {
