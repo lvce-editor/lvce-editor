@@ -55,6 +55,14 @@ const GlobalEventBus = await import(
 
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 
+const ViewletManager = await import(
+  '../src/parts/ViewletManager/ViewletManager.js'
+)
+
+const render = (oldState, newState) => {
+  return ViewletManager.render(ViewletExplorer, oldState, newState)
+}
+
 test('name', () => {
   expect(ViewletExplorer.name).toBe('Explorer')
 })
@@ -1975,6 +1983,7 @@ test('handleArrowRight - collapsed empty folder', async () => {
     ],
     pathSeparator: '/',
   }
+  // @ts-ignore
   Viewlet.getState.mockImplementation(() => {
     return state
   })
@@ -2339,7 +2348,7 @@ test('handleWheel - up', () => {
     ],
   }
   const newState = ViewletExplorer.handleWheel(state, -22)
-  expect(ViewletExplorer.render(state, newState)).toEqual([
+  expect(render(state, newState)).toEqual([
     [
       'Viewlet.send',
       'Explorer',
@@ -2426,7 +2435,7 @@ test.skip('handleWheel - down', () => {
   }
   const newState = ViewletExplorer.handleWheel(state, 22)
   console.log({ newState })
-  expect(ViewletExplorer.render(state, newState)).toEqual([
+  expect(render(state, newState)).toEqual([
     [
       'Viewlet.send',
       'Explorer',
