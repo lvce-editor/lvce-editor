@@ -249,11 +249,18 @@ const resolveAfterTimeout = (fn) => {
   setTimeout(fn, MENU_DELAY_TRIANGLE)
 }
 
-export const handleMouseOver = async (state, index) => {
-  console.log({ index })
+export const handleMouseOver = (state, index) => {
   return {
     ...state,
     focusedIndex: index,
+  }
+}
+
+export const handleMouseOut = (state) => {
+  // TODO if sub menu item is focused, focus remains
+  return {
+    ...state,
+    focusedIndex: -1,
   }
 }
 
@@ -382,7 +389,6 @@ export const render = (oldState, newState) => {
       /* newIndex */ newState.focusedIndex,
     ])
   }
-  console.log({ changes })
   return changes
 }
 

@@ -42,6 +42,7 @@ export const create = () => {
   // TODO mousedown vs click? (click is usually better but mousedown is faster, why wait 100ms?)
   $Menu.onmousedown = handleMouseDown
   $Menu.onmouseover = handleMouseOver
+  $Menu.onmouseout = handleMouseOut
   // $Menu.addEventListener('mouseleave', handleMouseLeave)
   // $Menu.addEventListener('mousemove', handleMouseMove, {
   //   passive: true,
@@ -139,7 +140,6 @@ const handleMouseOver = (event) => {
   const timeStamp = event.timeStamp
 
   const index = FindIndex.findIndex($Menu, $Target)
-  console.log({ index })
   if (index === -1) {
     return
   }
@@ -147,6 +147,17 @@ const handleMouseOver = (event) => {
     /* Menu.handleMouseOver */ 'Menu.handleMouseOver',
     /* index */ index
   )
+}
+
+const handleMouseOut = (event) => {
+  const $Target = event.target
+  const $Parent = $Target.parentNode
+  const $RelatedTarget = event.relatedTarget
+  if ($RelatedTarget && $Parent.contains($RelatedTarget)) {
+    return
+  }
+
+  RendererWorker.send(/* Menu.handleMouseOut */ 'Menu.handleMouseOut')
 }
 
 const handleMouseMove = (event) => {
