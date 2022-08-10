@@ -366,33 +366,39 @@ export const resize = (state, dimensions) => {
   }
 }
 
-export const render = (oldState, newState) => {
-  const changes = []
-  if (oldState === newState) {
-    return changes
-  }
-  if (
-    oldState.activityBarItems !== newState.activityBarItems ||
-    oldState.height !== newState.height
-  ) {
+const renderActivityBarItems = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.activityBarItems === newState.activityBarItems &&
+      oldState.height === newState.height
+    )
+  },
+  apply(oldState, newState) {
     const visibleItems = getVisibleActivityBarItems(newState)
-    changes.push([
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'ActivityBar',
       /* method */ 'setItems',
       /* items */ visibleItems,
-    ])
-  }
-  if (oldState.focusedIndex !== newState.focusedIndex) {
-    changes.push([
+    ]
+  },
+}
+
+const renderFocusedIndex = {
+  isEqual(oldState, newState) {
+    return oldState.focusedIndex === newState.focusedIndex
+  },
+  apply(oldState, newState) {
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'ActivityBar',
       /* method */ 'setFocusedIndex',
       /* unFocusIndex */ oldState.focusedIndex,
       /* focusIndex */ newState.focusedIndex,
-    ])
-  }
-  return changes
+    ]
+  },
 }
+
+export const render = [renderActivityBarItems, renderFocusedIndex]
 
 export const hasFunctionalRender = true

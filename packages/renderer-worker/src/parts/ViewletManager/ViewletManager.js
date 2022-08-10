@@ -196,7 +196,16 @@ export const load = async (viewlet, focus = false) => {
     }
 
     if (module.hasFunctionalRender) {
-      const commands = module.render(viewletState, newState)
+      let commands = []
+      if (Array.isArray(module.render)) {
+        for (const item of module.render) {
+          if (!item.isEqual(viewletState, newState)) {
+            commands.push(item.apply(viewletState, newState))
+          }
+        }
+      } else {
+        commands = module.render(viewletState, newState)
+      }
       await RendererProcess.invoke(
         /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
         /* commands */ commands
