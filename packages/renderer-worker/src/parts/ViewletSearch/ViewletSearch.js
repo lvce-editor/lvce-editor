@@ -148,18 +148,20 @@ export const resize = (state, dimensions) => {
 
 export const hasFunctionalRender = true
 
-export const render = (oldState, newState) => {
-  console.log('RENDER')
-  const changes = []
-  if (oldState.searchResults !== newState.searchResults) {
-    changes.push([
+const renderResults = {
+  isEqual(oldState, newState) {
+    return oldState.searchResults === newState.searchResults
+  },
+  apply(oldState, newState) {
+    return [
       /* viewletSend */ 'Viewlet.send',
       /* id */ 'Search',
       /* method */ 'setResults',
       /* results */ newState.searchResults,
       /* resultCount */ newState.searchResults.length,
       /* fileCount */ newState.fileCount,
-    ])
-  }
-  return changes
+    ]
+  },
 }
+
+export const render = [renderResults]
