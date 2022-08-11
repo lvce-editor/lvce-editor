@@ -11,7 +11,7 @@ export const state = {
 const get = (id) => {
   switch (id) {
     case 'Explorer':
-      return import('./ViewletExplorer.js')
+      return import('../ViewletExplorer/ViewletExplorer.js')
     case 'Run and Debug':
       return import('./ViewletRunAndDebug.js')
     case 'Search':
