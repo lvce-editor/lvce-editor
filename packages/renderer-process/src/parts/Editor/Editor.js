@@ -2,7 +2,6 @@
 
 import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as ActiveViewlet from '../Viewlet/ActiveViewlet.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Assert from '../Assert/Assert.js'
 import * as EditorHelper from './EditorHelper.js'
@@ -188,6 +187,7 @@ const getTotalOffset = (event) => {
     return totalOffset
     // @ts-ignore
   }
+  // @ts-ignore
   if (document.caretPositionFromPoint) {
     // firefox uses new version
     // @ts-ignore
@@ -412,20 +412,19 @@ const handleContentEditableBeforeInput = (event) => {
 }
 
 const handleNativeSelectionChange = (event) => {
-  const state = ActiveViewlet.getStateFromEvent(event)
-  if (state.shouldIgnoreSelectionChange) {
-    state.shouldIgnoreSelectionChange = false
-    return
-  }
-  const selection = document.getSelection()
-  const range = getRangeFromSelection(selection)
-  if (!range) {
-    return
-  }
-  RendererWorker.send(
-    /* EditorHandleNativeSelectionChange.editorHandleNativeSelectionChange */ 'Editor.handleNativeSelectionChange',
-    /* range */ range
-  )
+  // if (state.shouldIgnoreSelectionChange) {
+  //   state.shouldIgnoreSelectionChange = false
+  //   return
+  // }
+  // const selection = document.getSelection()
+  // const range = getRangeFromSelection(selection)
+  // if (!range) {
+  //   return
+  // }
+  // RendererWorker.send(
+  //   /* EditorHandleNativeSelectionChange.editorHandleNativeSelectionChange */ 'Editor.handleNativeSelectionChange',
+  //   /* range */ range
+  // )
 }
 
 // TODO all create functions should have no arguments

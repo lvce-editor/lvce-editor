@@ -1,13 +1,11 @@
 import * as Highlight from '../FocusHighlight/FocusHighlight.js'
 import * as Assert from '../Assert/Assert.js'
-import * as ActiveViewlet from './ActiveViewlet.js'
 
 // TODO is name export necessary? (probably not)
 export const name = 'Run and Debug'
 
 const handleMousedown = (event) => {
-  const state = ActiveViewlet.getStateFromEvent(event)
-  Highlight.highlightStart(state.$Viewlet)
+  // Highlight.highlightStart(state.$Viewlet)
 }
 
 export const create = () => {
