@@ -1085,29 +1085,14 @@ export const handlePaste = async (state) => {
   }
 }
 
+export const hasFunctionalResize = true
+
 export const resize = (state, dimensions) => {
   const maxLineY = state.minLineY + Math.round(dimensions.height / ITEM_HEIGHT)
-  const newState = {
+  return {
     ...state,
     ...dimensions,
     maxLineY,
-  }
-  const visibleDirents = getVisible(newState)
-  const commands = [
-    [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Explorer',
-      /* method */ 'updateDirents',
-      /* visibleDirents */ visibleDirents,
-    ],
-  ]
-  return {
-    newState: {
-      ...state,
-      ...dimensions,
-      maxLineY,
-    },
-    commands,
   }
 }
 

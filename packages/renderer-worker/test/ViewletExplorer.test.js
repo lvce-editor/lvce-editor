@@ -3476,55 +3476,18 @@ test('resize - same height', () => {
     root: '/test',
     top: 0,
   }
-  const { newState, commands } = ViewletExplorer.resize(state, {
+  const newState = ViewletExplorer.resize(state, {
     top: 200,
     left: 200,
     width: 200,
     height: 60,
   })
-  console.log({ newState })
   expect(newState).toEqual(
     expect.objectContaining({
       minLineY: 0,
       maxLineY: 3,
     })
   )
-  expect(commands).toEqual([
-    [
-      'Viewlet.send',
-      'Explorer',
-      'updateDirents',
-      [
-        {
-          depth: 1,
-          icon: '',
-          name: 'file 1',
-          path: 'file 1',
-          posInSet: 1,
-          setSize: 4,
-          type: 'file',
-        },
-        {
-          depth: 1,
-          icon: '',
-          name: 'file 2',
-          path: 'file 2',
-          posInSet: 2,
-          setSize: 4,
-          type: 'file',
-        },
-        {
-          depth: 1,
-          icon: '',
-          name: 'file 3',
-          path: 'file 3',
-          posInSet: 3,
-          setSize: 4,
-          type: 'file',
-        },
-      ],
-    ],
-  ])
 })
 
 test('computeRenamedDirents - file', () => {
