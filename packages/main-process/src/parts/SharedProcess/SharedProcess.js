@@ -2,6 +2,7 @@ const { Worker } = require('worker_threads')
 const ChildProcess = require('../ChildProcess/ChildProcess.js')
 const Command = require('../Command/Command.js')
 const Path = require('../Path/Path.js')
+const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
 
 const state = (exports.state = {
   /**
@@ -62,6 +63,7 @@ const handleChildMessage = async (message) => {
           data: error.toString(),
         })
       }
+      return
     }
     if (state.sharedProcess) {
       state.sharedProcess.postMessage({
@@ -71,7 +73,11 @@ const handleChildMessage = async (message) => {
       })
     }
   } else {
-    Command.execute(object.method, ...object.params)
+    try {
+      await Command.execute(object.method, ...object.params)
+    } catch (error) {
+      ErrorHandling.handleError(error)
+    }
   }
 }
 
