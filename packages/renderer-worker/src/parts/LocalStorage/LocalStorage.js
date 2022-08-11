@@ -1,39 +1,29 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as Json from '../Json/Json.js'
+import * as StorageBrowser from '../WebStorage/WebStorage.js'
 
-export const clear = async () => {
-  await RendererProcess.invoke(/* LocalStorage.clear */ 8986)
+export const clear = () => {
+  return StorageBrowser.clear(StorageBrowser.StorageType.LocalStorage)
 }
 
-export const getText = async (key) => {
-  const item = await RendererProcess.invoke(
-    /* LocalStorage.getItem */ 'LocalStorage.getItem',
-    /* key */ key
-  )
-  return item || ''
+export const getText = (key) => {
+  return StorageBrowser.getText(StorageBrowser.StorageType.LocalStorage, key)
 }
 
-export const getJson = async (key) => {
-  const item = await getText(key)
-  if (!item) {
-    return undefined
-  }
-  try {
-    return Json.parse(item)
-  } catch {
-    return undefined
-  }
+export const getJson = (key) => {
+  return StorageBrowser.getJson(StorageBrowser.StorageType.LocalStorage, key)
 }
 
-export const setText = async (key, value) => {
-  await RendererProcess.invoke(
-    /* LocalStorage.setItem */ 'LocalStorage.setItem',
-    /* key */ key,
-    /* value */ value
+export const setText = (key, value) => {
+  return StorageBrowser.setText(
+    StorageBrowser.StorageType.LocalStorage,
+    key,
+    value
   )
 }
 
-export const setJson = async (key, value) => {
-  const stringifiedValue = Json.stringify(value)
-  await setText(key, stringifiedValue)
+export const setJson = (key, value) => {
+  return StorageBrowser.setJson(
+    StorageBrowser.StorageType.LocalStorage,
+    key,
+    value
+  )
 }

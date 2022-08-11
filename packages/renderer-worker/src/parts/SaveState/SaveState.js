@@ -1,13 +1,10 @@
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
 // import * as Main from '../Main/Main.js'
-import * as Workspace from '../Workspace/Workspace.js'
-import * as Json from '../Json/Json.js'
+import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 import * as SessionStorage from '../SessionStorage/SessionStorage.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 const getStateToSave = () => {
   const instances = ViewletStates.getAllInstances()

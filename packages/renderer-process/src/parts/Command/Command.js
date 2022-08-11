@@ -11,8 +11,6 @@ const MODULE_VIEWLET = 21
 const MODULE_FIND_WIDGET = 23
 const MODULE_KEYBINDINGS = 26
 const MODULE_MENU = 31
-const MODULE_SESSION_STORAGE = 34
-const MODULE_LOCAL_STORAGE = 35
 const MODULE_DIALOG = 36
 const MODULE_EDITOR_HOVER = 37
 const MODULE_CSS = 38
@@ -29,6 +27,7 @@ const MODULE_OPEN = 48
 const MODULE_CLIPBOARD = 49
 const MODULE_INIT_DATA = 50
 const MODULE_TEST_FRAME_WORK = 51
+const MODULE_WEB_STORAGE = 52
 
 export const state = {
   commands: Object.create(null),
@@ -53,10 +52,8 @@ const loadModule = (moduleId) => {
       return import('../KeyBindings/KeyBindings.ipc.js')
     case MODULE_MENU:
       return import('../OldMenu/Menu.ipc.js')
-    case MODULE_SESSION_STORAGE:
-      return import('../SessionStorage/SessionStorage.ipc.js')
-    case MODULE_LOCAL_STORAGE:
-      return import('../LocalStorage/LocalStorage.ipc.js')
+    case MODULE_WEB_STORAGE:
+      return import('../WebStorage/WebStorage.ipc.js')
     case MODULE_DIALOG:
       return import('../Dialog/Dialog.ipc.js')
     case MODULE_EDITOR_HOVER:
@@ -219,14 +216,10 @@ const getModuleId = (commandId) => {
     case 'Window.setTitle':
     case 'Window.onVisibilityChange':
       return MODULE_WINDOW
-    case 'SessionStorage.clear':
-    case 'SessionStorage.getItem':
-    case 'SessionStorage.setItem':
-      return MODULE_SESSION_STORAGE
-    case 'LocalStorage.clear':
-    case 'LocalStorage.getItem':
-    case 'LocalStorage.setItem':
-      return MODULE_LOCAL_STORAGE
+    case 'StorageBrowser.clear':
+    case 'StorageBrowser.getItem':
+    case 'StorageBrowser.setItem':
+      return MODULE_WEB_STORAGE
     case 'Meta.setThemeColor':
       return MODULE_META
     case 'ServiceWorker.register':
