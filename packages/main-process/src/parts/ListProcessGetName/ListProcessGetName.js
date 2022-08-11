@@ -38,6 +38,9 @@ exports.getName = (pid, cmd, rootPid) => {
   if (cmd.includes('extensionHostMain.js')) {
     return 'extension-host'
   }
+  if (cmd.includes('--lvce-window-kind=process-explorer')) {
+    return 'process-explorer'
+  }
   if (cmd.includes('--type=renderer')) {
     return pidWindowMap[pid] || `<unknown renderer>`
   }

@@ -1,6 +1,5 @@
 const { ipcMain } = require('electron')
 const { writeFile } = require('fs/promises')
-const { join } = require('path')
 const VError = require('verror')
 const { BrowserWindow, Menu } = require('../Electron/Electron.js')
 const ListProcessesWithMemoryUsage = require('../ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsage.js')
@@ -25,6 +24,7 @@ exports.openProcessExplorer = async () => {
         'process-explorer-preload.js'
       ),
       sandbox: true,
+      additionalArguments: ['--lvce-window-kind=process-explorer'],
     },
   })
   processExplorerWindow.setMenuBarVisibility(false)
