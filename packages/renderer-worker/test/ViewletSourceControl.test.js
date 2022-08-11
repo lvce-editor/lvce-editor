@@ -68,7 +68,7 @@ test('dispose', () => {
 
 test('resize', () => {
   const state = ViewletSourceControl.create()
-  const { newState, commands } = ViewletSourceControl.resize(state, {
+  const newState = ViewletSourceControl.resize(state, {
     top: 200,
     left: 200,
     width: 200,
