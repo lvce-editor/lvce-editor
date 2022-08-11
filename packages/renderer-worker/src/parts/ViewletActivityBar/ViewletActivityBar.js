@@ -345,24 +345,12 @@ export const selectCurrent = async (state) => {
   await handleClick(state, state.focusedIndex, position.x, position.y)
 }
 
+export const hasFunctionalResize = true
+
 export const resize = (state, dimensions) => {
-  const newState = {
+  return {
     ...state,
     ...dimensions,
-  }
-  const visibleItems = getVisibleActivityBarItems(newState)
-  const commands = [
-    [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'ActivityBar',
-      /* method */ 'setItems',
-      /* items */ visibleItems,
-      /* selectedIndex */ newState.selectedIndex,
-    ],
-  ]
-  return {
-    newState,
-    commands,
   }
 }
 
