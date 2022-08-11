@@ -11,7 +11,7 @@ export const rebuild = async ({ electronVersion, buildPath, arch }) => {
       force: true,
     })
   } catch (error) {
-    if (process.env.IGNORE_NATIVE_DEPENDENCY_ERRORS) {
+    if (process.argv.includes('--force')) {
       console.error(
         `Failed to rebuild native dependendencies in ${buildPath}: ${error}`
       )

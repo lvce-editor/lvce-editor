@@ -57,9 +57,7 @@ jobs:
           PLAYWRIGHT_BROWSERS_PATH: 0
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-22.04'
-        run: node build/bin/build.js --target=electron-deb
-        env:
-          IGNORE_NATIVE_DEPENDENCY_ERRORS: 1 # workaround for issue with node-pty
+        run: node build/bin/build.js --target=electron-deb --force # --force workaround for issue with node-pty
       - name: Build Electron App (exe)
         if: false
         run: node build/bin/build.js --target=electron-builder-windows-exe
