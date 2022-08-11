@@ -37,7 +37,8 @@ if (Platform.isWindows()) {
     OutputChannel.dispose(state)
   })
 
-  test('writing to channel', async () => {
+  // TODO test is flaky https://github.com/lvce-editor/lvce-editor/runs/7788113403?check_suite_focus=true
+  test.skip('writing to channel', async () => {
     const tmpDir = await getTmpDir()
     await fs.writeFile(join(tmpDir, 'log.txt'), '')
     const onData = jest.fn()
