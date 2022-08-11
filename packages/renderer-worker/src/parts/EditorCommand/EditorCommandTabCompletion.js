@@ -2,6 +2,7 @@ import * as ExtensionHostTabCompletion from '../ExtensionHost/ExtensionHostTabCo
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
 import * as EditorSnippet from './EditorCommandSnippet.js'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 
 const getTabCompletion = async (editor) => {
   const rowIndex = editor.selections[0]
@@ -30,7 +31,7 @@ export const editorTabCompletion = async (editor) => {
     }
     return EditorSnippet.editorSnippet(editor, tabCompletion)
   } catch (error) {
-    console.error(error)
+    ErrorHandling.printError(error)
     // TODO cursor should always be of type object
     const rowIndex = editor.selections[0]
     const columnIndex = editor.selections[1]

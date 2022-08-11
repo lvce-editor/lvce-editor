@@ -46,7 +46,13 @@ const restoreError = (error) => {
     return restoredError
   }
   const restoredError = new Error(error.message)
-  restoredError.stack = error.stack
+  if (error.data.stack) {
+    restoredError.stack = error.data.stack
+  }
+  if (error.data.codeFrame) {
+    // @ts-ignore
+    restoredError.codeFrame = error.data.codeFrame
+  }
   return restoredError
 }
 
@@ -56,7 +62,6 @@ const handleMessage = (message) => {
       Callback.resolve(message.id, message.result)
     } else if (isErrorMessage(message)) {
       const restoredError = restoreError(message.error)
-      console.log({ restoredError })
       Callback.reject(message.id, restoredError)
     } else {
       throw new JsonRpcError('unexpected message type')

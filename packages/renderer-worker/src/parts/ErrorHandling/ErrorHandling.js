@@ -44,11 +44,15 @@ const enhanceErrorMessage = (error) => {
 //   console.error(message)
 // }
 
-const printError = (error) => {
-  console.error(error)
-  if (error && error.cause) {
-    console.error('caused by')
-    printError(error.cause)
+export const printError = (error) => {
+  if (error && error.message && error.codeFrame) {
+    console.error(`${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
+  } else {
+    console.error(error)
+    if (error && error.cause) {
+      console.error('caused by')
+      printError(error.cause)
+    }
   }
 }
 
