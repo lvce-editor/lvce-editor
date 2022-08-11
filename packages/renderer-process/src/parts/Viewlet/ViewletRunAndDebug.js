@@ -1,4 +1,3 @@
-import * as Highlight from '../FocusHighlight/FocusHighlight.js'
 import * as Assert from '../Assert/Assert.js'
 
 // TODO is name export necessary? (probably not)
