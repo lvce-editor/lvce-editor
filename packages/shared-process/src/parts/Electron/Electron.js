@@ -29,47 +29,49 @@ const invoke = async (method, ...params) => {
 }
 
 export const toggleDevtools = () => {
-  send(/* Window.toggleDevtools */ 6523)
+  send(/* Window.toggleDevtools */ 'Window.toggleDevtools')
 }
 
 export const windowMinimize = () => {
-  send(/* Window.minimize */ 6521)
+  send(/* Window.minimize */ 'Window.minimize')
 }
 
 export const windowMaximize = () => {
-  send(/* Window.maximize */ 6522)
+  send(/* Window.maximize */ 'Window.maximize')
 }
 
 export const windowUnmaximize = () => {
-  send(/* Window.unmaximize */ 6524)
+  send(/* Window.unmaximize */ 'Window.unmaximize')
 }
 
 export const windowClose = () => {
-  send(/* Window.close */ 6525)
+  send(/* Window.close */ 'Window.close')
 }
 
 export const windowReload = () => {
-  send(/* Window.reload */ 6526)
+  send(/* Window.reload */ 'Window.reload')
 }
 
 // TODO move these into separate files like done extension host
 
 export const windowOpenNew = () => {
-  send(/* AppWindow.openNew */ 8527)
+  send(/* AppWindow.openNew */ 'AppWindow.openNew')
 }
 
 export const about = () => {
-  send(/* About.open */ 20001)
+  send(/* About.open */ 'Dialog.showAbout')
 }
 
 export const showOpenDialog = async () => {
-  const result = await invoke(/* Dialog.showOpenDialog */ 20100)
+  const result = await invoke(
+    /* Dialog.showOpenDialog */ 'Dialog.showOpenDialog'
+  )
   return result
 }
 
 export const showMessageBox = async (message, buttons) => {
   const result = await invoke(
-    /* Dialog.showMessageBox */ 20101,
+    /* Dialog.showMessageBox */ 'Dialog.showMessageBox',
     message,
     buttons
   )
@@ -77,23 +79,27 @@ export const showMessageBox = async (message, buttons) => {
 }
 
 export const crashMainProcess = () => {
-  send(/* Developer.crashMainProcess */ 7723)
+  send(/* Developer.crashMainProcess */ 'Developer.crashMainProcess')
 }
 
 export const getPerformanceEntries = async () => {
-  const result = await invoke(/* Developer.getPerformanceEntries */ 7722)
+  const result = await invoke(
+    /* Developer.getPerformanceEntries */ 'Developer.getPerformanceEntries'
+  )
   return result
 }
 
 export const beep = async () => {
   // TODO when is remote should send to renderer worker
-  await invoke(/* Beep.beep */ 50000)
+  await invoke(/* Beep.beep */ 'Beep.beep')
 }
 
 export const exit = async () => {
-  await invoke(/* App.exit */ 2211)
+  await invoke(/* App.exit */ 'App.exit')
 }
 
 export const openProcessExplorer = async () => {
-  await invoke(/* ProcessExplorer.openProcessExplorer */ 8822)
+  await invoke(
+    /* ProcessExplorer.openProcessExplorer */ 'ProcessExplorer.openProcessExplorer'
+  )
 }
