@@ -59,7 +59,7 @@ export const windowOpenNew = () => {
 }
 
 export const about = () => {
-  send(/* About.open */ 'Dialog.showAbout')
+  send(/* About.open */ 'About.open')
 }
 
 export const showOpenDialog = async () => {
