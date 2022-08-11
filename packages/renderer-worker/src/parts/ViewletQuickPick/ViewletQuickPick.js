@@ -220,7 +220,7 @@ export const selectIndex = async (state, index, button = /* left */ 0) => {
   switch (command) {
     case 'hide':
       await Viewlet.closeWidget('QuickPick')
-      break
+      return state
     default:
       break
   }
