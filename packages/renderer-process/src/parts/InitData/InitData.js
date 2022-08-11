@@ -1,6 +1,5 @@
 import * as Location from '../Location/Location.js'
 import * as Layout from '../Layout/Layout.js'
-import * as LocalStorage from '../StorageLocal/StorageLocal.js/index.js'
 
 export const getInitData = () => {
   const initData = {
@@ -11,8 +10,8 @@ export const getInitData = () => {
       bounds: Layout.getBounds(),
     },
     LocalStorage: {
-      savedState: LocalStorage.getItem('stateToSave'),
-      layout: LocalStorage.getItem('layout'),
+      savedState: localStorage.getItem('stateToSave'),
+      layout: localStorage.getItem('layout'),
     },
   }
   return initData
