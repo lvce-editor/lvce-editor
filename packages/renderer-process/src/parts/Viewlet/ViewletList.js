@@ -2,7 +2,6 @@ import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as ActiveViewlet from './ActiveViewlet.js'
 
 export const name = 'List'
 
@@ -27,19 +26,18 @@ const handleWheel = (event) => {
 
 const handleContextMenu = (event) => {
   event.preventDefault()
-  const state = ActiveViewlet.getStateFromEvent(event)
   const $Target = event.target
-  const index = FindIndex.findIndex(state.$Extensions, $Target)
-  if (index === -1) {
-    return
-  }
-  const extension = state.extensions[index]
-  RendererWorker.send(
-    /* Extensions.handleContextMenu */ 'Extensions.handleContextMenu',
-    /* x */ event.clientX,
-    /* y */ event.clientY,
-    /* extensionId */ extension.id
-  )
+  // const index = FindIndex.findIndex(state.$Extensions, $Target)
+  // if (index === -1) {
+  //   return
+  // }
+  // const extension = state.extensions[index]
+  // RendererWorker.send(
+  //   /* Extensions.handleContextMenu */ 'Extensions.handleContextMenu',
+  //   /* x */ event.clientX,
+  //   /* y */ event.clientY,
+  //   /* extensionId */ extension.id
+  // )
 }
 
 const getNodeIndex = ($Node) => {

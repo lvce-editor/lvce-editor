@@ -1,4 +1,3 @@
-import * as ActiveViewlet from './ActiveViewlet.js'
 import * as Assert from '../Assert/Assert.js'
 
 export const state = {
@@ -143,7 +142,6 @@ export const sendMultiple = (commands) => {
  */
 export const dispose = (id) => {
   Assert.string(id)
-  ActiveViewlet.deleteState(id)
   const instance = state.instances[id]
   if (!instance) {
     console.warn(`viewlet instance ${id} not found and cannot be disposed`)

@@ -3,7 +3,6 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
 import * as InputBox from '../InputBox/InputBox.js'
-import * as ActiveViewlet from '../Viewlet/ActiveViewlet.js'
 
 export const name = 'Explorer'
 
@@ -91,9 +90,8 @@ const handleBlur = (event) => {
 }
 
 const handleDragOver = (event) => {
-  const state = ActiveViewlet.getStateFromEvent(event)
   event.preventDefault()
-  state.element.classList.add('DropTarget')
+  // state.element.classList.add('DropTarget')
 }
 
 const handleDragStart = (event) => {
@@ -106,8 +104,7 @@ const handleDragStart = (event) => {
 }
 
 const handleDrop = async (event) => {
-  const state = ActiveViewlet.getStateFromEvent(event)
-  state.element.classList.remove('DropTarget')
+  // state.element.classList.remove('DropTarget')
   event.preventDefault()
   const allEntries = await getAllEntries(event.dataTransfer)
   const firstEntry = allEntries[0]

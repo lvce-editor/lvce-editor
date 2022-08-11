@@ -25,7 +25,6 @@ const RendererWorker = await import(
 const Editor = await import('../src/parts/Editor/Editor.js')
 const Platform = await import('../src/parts/Platform/Platform.js')
 const EditorHelper = await import('../src/parts/Editor/EditorHelper.js')
-const ActiveViewlet = await import('../src/parts/Viewlet/ActiveViewlet.js')
 
 afterEach(() => {
   jest.restoreAllMocks()
@@ -789,7 +788,6 @@ test('renderTextAndCursorsAndSelections - bug with multiple tokens', () => {
 test.skip('event - native selection change', () => {
   Platform.state.isMobileOrTablet = () => true
   const state = Editor.create()
-  ActiveViewlet.setState(1, state)
   const $Token1 = create$Token('  ', 'Whitespace')
   const $Token2 = create$Token('background', 'CssPropertyName')
   const $Token3 = create$Token(' ', 'Whitespace')
