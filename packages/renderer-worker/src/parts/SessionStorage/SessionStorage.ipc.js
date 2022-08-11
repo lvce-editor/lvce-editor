@@ -1,5 +1,5 @@
 import * as Command from '../Command/Command.js'
-import * as SessionStorage from './StorageBrowserSession.js'
+import * as SessionStorage from './SessionStorage.js/index.js'
 
 // TODO only use SessionStorage module via ipc -> that way is is always lazyloaded
 

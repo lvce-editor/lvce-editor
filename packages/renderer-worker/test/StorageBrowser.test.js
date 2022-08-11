@@ -15,9 +15,7 @@ jest.unstable_mockModule(
   }
 )
 
-const StorageBrowser = await import(
-  '../src/parts/StorageBrowser/StorageBrowser.js'
-)
+const StorageBrowser = await import('../src/parts/WebStorage/WebStorage.js')
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )

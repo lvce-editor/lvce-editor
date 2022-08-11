@@ -1,5 +1,5 @@
 import * as Command from '../Command/Command.js'
-import * as LocalStorage from './StorageBrowserLocal.js'
+import * as LocalStorage from './LocalStorage.js'
 
 // TODO only use LocalStorage module via ipc -> that way is is always lazyloaded
 

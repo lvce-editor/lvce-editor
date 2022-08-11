@@ -103,9 +103,9 @@ const loadModule = (moduleId) => {
     case MODULE_CACHE_STORAGE:
       return import('../CacheStorage/CacheStorage.ipc.js')
     case MODULE_LOCAL_STORAGE:
-      return import('../StorageBrowserLocal/StorageBrowserLocal.ipc.js')
+      return import('../LocalStorage/LocalStorage.ipc.js')
     case MODULE_SESSION_STORAGE:
-      return import('../StorageBrowserSession/StorageBrowserSession.ipc.js')
+      return import('../SessionStorage/SessionStorage.ipc.js')
     case MODULE_CALLBACK:
       return import('../Callback/Callback.ipc.js')
     case MODULE_DIALOG:
