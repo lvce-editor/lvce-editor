@@ -35,6 +35,8 @@ const handleTokenizeChange = () => {
   Viewlet.setState('EditorText', newState)
 }
 
+export const name = 'EditorText'
+
 // TODO uri?
 export const create = (id, uri, left, top, width, height) => {
   console.log({ id })

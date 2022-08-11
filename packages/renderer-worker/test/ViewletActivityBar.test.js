@@ -718,7 +718,7 @@ test('resize', () => {
       },
     ],
   }
-  const { newState, commands } = ViewletActivityBar.resize(state, {
+  const newState = ViewletActivityBar.resize(state, {
     top: 150,
     left: 150,
     width: 150,
@@ -781,35 +781,4 @@ test('resize', () => {
     top: 150,
     width: 150,
   })
-  expect(commands).toEqual([
-    [
-      'Viewlet.send',
-      'ActivityBar',
-      'setItems',
-      [
-        {
-          enabled: true,
-          flags: 1,
-          icon: 'icons/files.svg',
-          id: 'Explorer',
-          keyShortcuts: 'Control+Shift+E',
-        },
-        {
-          enabled: true,
-          flags: 2,
-          icon: 'icons/ellipsis.svg',
-          id: 'Additional Views',
-          keyShortCuts: '',
-        },
-        {
-          enabled: true,
-          flags: 2,
-          icon: 'icons/settings-gear.svg',
-          id: 'Settings',
-          keyShortcuts: '',
-        },
-      ],
-      -1,
-    ],
-  ])
 })
