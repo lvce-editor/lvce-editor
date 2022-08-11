@@ -1,4 +1,4 @@
-import * as StorageBrowser from '../StorageBrowser./StorageBrowser.js'
+import * as StorageBrowser from '../StorageBrowser/StorageBrowser.js'
 
 export const clear = () => {
   return StorageBrowser.clear(StorageBrowser.StorageType.SessionStorage)
