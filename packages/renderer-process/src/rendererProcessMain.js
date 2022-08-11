@@ -5,7 +5,6 @@ import * as M4 from '../src/parts/Editor/Editor.js'
 import * as M5 from '../src/parts/Focus/Focus.js'
 import * as M6 from '../src/parts/Viewlet/Viewlet.ipc.js'
 import * as M7 from '../src/parts/KeyBindings/KeyBindings.ipc.js'
-import * as M9 from '../src/parts/GlobalEventBus/GlobalEventBus.js'
 import * as M14 from '../src/parts/Widget/Widget.js'
 import * as M15 from '../src/parts/LocalStorage/LocalStorage.ipc.js'
 import * as M18 from '../src/parts/Platform/Platform.js'
@@ -27,7 +26,6 @@ globalThis.M = [
   M5,
   M6,
   M7,
-  M9,
   M13,
   M14,
   M15,
