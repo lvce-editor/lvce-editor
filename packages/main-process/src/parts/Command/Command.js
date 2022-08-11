@@ -33,9 +33,19 @@ const loadModule = async (moduleId) => {
       throw new Error('unknown module')
   }
 }
-
 const initializeModule = (module) => {
-  module.__initialize__()
+  if (typeof module.__initialize__ !== 'function') {
+    if (module.Commands) {
+      for (const [key, value] of Object.entries(module.Commands)) {
+        register(key, value)
+      }
+      return
+    }
+    throw new Error(
+      `module ${module.name} is missing an initialize function and commands`
+    )
+  }
+  return module.__initialize__()
 }
 
 const getOrLoadModule = (moduleId) => {
@@ -79,9 +89,9 @@ const getModuleId = (commandId) => {
 
 const loadCommand = (command) => getOrLoadModule(getModuleId(command))
 
-exports.register = (commandId, listener) => {
+const register = (exports.register = (commandId, listener) => {
   commands[commandId] = listener
-}
+})
 
 const hasThrown = new Set()
 
