@@ -54,9 +54,9 @@ const loadModule = (moduleId) => {
     case MODULE_MENU:
       return import('../OldMenu/Menu.ipc.js')
     case MODULE_SESSION_STORAGE:
-      return import('../SessionStorage/SessionStorage.ipc.js')
+      return import('../StorageSession/StorageSession.ipc.js/index.js')
     case MODULE_LOCAL_STORAGE:
-      return import('../LocalStorage/LocalStorage.ipc.js')
+      return import('../StorageLocal/StorageLocal.ipc.js/index.js')
     case MODULE_DIALOG:
       return import('../Dialog/Dialog.ipc.js')
     case MODULE_EDITOR_HOVER:

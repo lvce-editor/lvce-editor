@@ -1,24 +1,24 @@
 /**
  * @jest-environment jsdom
  */
-import * as SessionStorage from '../src/parts/SessionStorage/SessionStorage.js'
+import * as StorageSession from '../src/parts/StorageSession/StorageSession.js'
 
 test('getItem', () => {
-  SessionStorage.setItem('sample', 'abc')
-  expect(SessionStorage.getItem('sample')).toBe('abc')
+  StorageSession.setItem('sample', 'abc')
+  expect(StorageSession.getItem('sample')).toBe('abc')
 })
 
 test('getItem - empty', () => {
-  expect(SessionStorage.getItem('non-existent')).toBeUndefined()
+  expect(StorageSession.getItem('non-existent')).toBeUndefined()
 })
 
 test('getItem - number should get converted to string', () => {
-  SessionStorage.setItem('sample', 1)
-  expect(SessionStorage.getItem('sample')).toBe('1')
+  StorageSession.setItem('sample', 1)
+  expect(StorageSession.getItem('sample')).toBe('1')
 })
 
 test('clear', () => {
-  SessionStorage.setItem('a', 'b')
-  SessionStorage.clear()
-  expect(SessionStorage.getItem('a')).toBeUndefined()
+  StorageSession.setItem('a', 'b')
+  StorageSession.clear()
+  expect(StorageSession.getItem('a')).toBeUndefined()
 })
