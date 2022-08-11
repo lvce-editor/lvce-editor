@@ -1227,6 +1227,4 @@ const renderFocusedIndex = {
   },
 }
 
-export const hasFunctionalRender = true
-
 export const render = [renderItems, renderFocusedIndex]
