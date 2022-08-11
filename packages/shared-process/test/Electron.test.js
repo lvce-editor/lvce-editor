@@ -6,7 +6,7 @@ test('toggleDevtools', () => {
   Electron.toggleDevtools()
   expect(Electron.state.send).toHaveBeenCalledWith({
     jsonrpc: '2.0',
-    method: 6523,
+    method: 'Window.toggleDevtools',
     params: [],
   })
 })
@@ -16,7 +16,7 @@ test('windowMinimize', () => {
   Electron.windowMinimize()
   expect(Electron.state.send).toHaveBeenCalledWith({
     jsonrpc: '2.0',
-    method: 6521,
+    method: 'Window.minimize',
     params: [],
   })
 })
@@ -26,7 +26,7 @@ test('windowMaximize', () => {
   Electron.windowMaximize()
   expect(Electron.state.send).toHaveBeenCalledWith({
     jsonrpc: '2.0',
-    method: 6522,
+    method: 'Window.maximize',
     params: [],
   })
 })
@@ -36,7 +36,7 @@ test('windowUnmaximize', () => {
   Electron.windowUnmaximize()
   expect(Electron.state.send).toHaveBeenCalledWith({
     jsonrpc: '2.0',
-    method: 6524,
+    method: 'Window.unmaximize',
     params: [],
   })
 })
@@ -46,7 +46,7 @@ test('windowClose', () => {
   Electron.windowClose()
   expect(Electron.state.send).toBeCalledWith({
     jsonrpc: '2.0',
-    method: 6525,
+    method: 'Window.close',
     params: [],
   })
 })
@@ -56,7 +56,7 @@ test('windowReload', () => {
   Electron.windowReload()
   expect(Electron.state.send).toBeCalledWith({
     jsonrpc: '2.0',
-    method: 6526,
+    method: 'Window.reload',
     params: [],
   })
 })
@@ -66,7 +66,7 @@ test('about', () => {
   Electron.about()
   expect(Electron.state.send).toBeCalledWith({
     jsonrpc: '2.0',
-    method: 20001,
+    method: 'Dialog.showAbout',
     params: [],
   })
 })
@@ -76,7 +76,7 @@ test('showOpenDialog', () => {
   Electron.showOpenDialog()
   expect(Electron.state.send).toBeCalledWith({
     jsonrpc: '2.0',
-    method: 20100,
+    method: 'Dialog.showOpenDialog',
     params: [],
     id: expect.any(Number),
   })
@@ -87,7 +87,7 @@ test('crashMainProcess', () => {
   Electron.crashMainProcess()
   expect(Electron.state.send).toBeCalledWith({
     jsonrpc: '2.0',
-    method: 7723,
+    method: 'Developer.crashMainProcess',
     params: [],
   })
 })
