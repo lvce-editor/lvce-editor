@@ -41,6 +41,9 @@ export const handleMessage = async (source, message) => {
 }
 
 export const replayCurrentSession = async () => {
+  if (!state.sessionId) {
+    throw new VError(`session replay is disabled in settings`)
+  }
   // TODO
   // 1. read commands from indexeddb
   // 2. open new window
