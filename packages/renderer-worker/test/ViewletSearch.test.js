@@ -80,7 +80,7 @@ test.skip('handleInput - error', async () => {
 
 test('resize', () => {
   const state = ViewletSearch.create()
-  const { newState, commands } = ViewletSearch.resize(state, {
+  const newState = ViewletSearch.resize(state, {
     top: 200,
     left: 200,
     width: 200,
@@ -99,5 +99,4 @@ test('resize', () => {
     width: 200,
     fileCount: 0,
   })
-  expect(commands).toEqual([])
 })
