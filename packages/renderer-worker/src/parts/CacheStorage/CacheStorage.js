@@ -1,7 +1,5 @@
 import * as Platform from '../Platform/Platform.js'
 
-const CACHE_NAME = 'lvce-runtime'
-
 const shouldIgnoreError = (error) => {
   // Firefox throws dom exception in private mode
   return (
@@ -14,7 +12,8 @@ const shouldIgnoreError = (error) => {
 // TODO when caches is not defined -> should return undefined
 
 const getCache = async () => {
-  return await caches.open(CACHE_NAME)
+  const cacheName = Platform.getCacheName()
+  return await caches.open(cacheName)
 }
 
 const getResponse = async (key) => {
@@ -83,7 +82,8 @@ const setResponse = async (key, value, contentType) => {
     console.warn(`invalid value ${value}`)
     return
   }
-  const cache = await caches.open(CACHE_NAME)
+  const cacheName = Platform.getCacheName()
+  const cache = await caches.open(cacheName)
   await cache.put(
     key,
     new Response(value, {
@@ -128,7 +128,8 @@ export const clearCache = async () => {
     return
   }
   try {
-    await caches.delete(CACHE_NAME)
+    const cacheName = Platform.getCacheName()
+    await caches.delete(cacheName)
   } catch (error) {
     if (shouldIgnoreError(error)) {
       return
