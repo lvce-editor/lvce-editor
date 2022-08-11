@@ -66,7 +66,7 @@ test('about', () => {
   Electron.about()
   expect(Electron.state.send).toBeCalledWith({
     jsonrpc: '2.0',
-    method: 'Dialog.showAbout',
+    method: 'About.open',
     params: [],
   })
 })
