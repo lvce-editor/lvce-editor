@@ -1,9 +1,9 @@
 import * as Command from '../Command/Command.js'
 import * as Viewlet from './Viewlet.js'
 
-export const __initialize__ = () => {
-  Command.register(2133, Viewlet.send)
-  Command.register('Viewlet.getAllStates', Viewlet.getAllStates)
-  Command.register('Viewlet.openWidget', Viewlet.openWidget)
-  Command.register('Viewlet.closeWidget', Viewlet.closeWidget)
+export const Commands = {
+  2133: Viewlet.send,
+  'Viewlet.getAllStates': Viewlet.getAllStates,
+  'Viewlet.openWidget': Viewlet.openWidget,
+  'Viewlet.closeWidget': Viewlet.closeWidget,
 }
