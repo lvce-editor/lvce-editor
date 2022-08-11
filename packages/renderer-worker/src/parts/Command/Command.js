@@ -165,7 +165,15 @@ const loadModule = (moduleId) => {
 
 const initializeModule = (module) => {
   if (typeof module.__initialize__ !== 'function') {
-    throw new Error(`module ${module.name} is missing an initialize function`)
+    if (module.Commands) {
+      for (const [key, value] of module.Commands) {
+        register(key, value)
+      }
+    } else {
+      throw new Error(
+        `module ${module.name} is missing an initialize function and commands`
+      )
+    }
   }
   return module.__initialize__()
 }
