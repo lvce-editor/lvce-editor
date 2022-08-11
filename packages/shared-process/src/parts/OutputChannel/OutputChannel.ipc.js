@@ -3,11 +3,11 @@ import * as Command from '../Command/Command.js'
 import * as OutputChannel from './OutputChannel.js'
 
 export const state = {
-  outputChannels: Object.create(null)
+  outputChannels: Object.create(null),
 }
 
 const open = (socket, id, path) => {
-  console.log({path})
+  console.log({ path })
   Assert.object(socket)
   // Assert.string(id)
   Assert.string(path)
@@ -20,22 +20,19 @@ const open = (socket, id, path) => {
   }
   const onData = (data) => {
     console.log('send data', data)
-    socket.send(
-      {
-        jsonrpc: '2.0',
-        method: 2133,
-        params: ['Output', 'handleData', data],
-      }
-    )
+    socket.send({
+      jsonrpc: '2.0',
+      method: 2133,
+      params: ['Output', 'handleData', data],
+    })
   }
   const onError = (error) => {
     console.info(`[shared process] output channel error: ${error}`)
-    socket.send(
-      {
-        jsonrpc: '2.0',
-        method: 2133,
-        params: ['Output', 'handleError', error],
-      })
+    socket.send({
+      jsonrpc: '2.0',
+      method: 2133,
+      params: ['Output', 'handleError', error],
+    })
   }
   state.outputChannels[id] = OutputChannel.open(path, onData, onError)
 }
@@ -45,7 +42,7 @@ const close = (socket, id) => {
   delete state.outputChannels[id]
 }
 
-export const __initialize__ = () => {
-  Command.register('OutputChannel.open', open)
-  Command.register('OutputChannel.close', close)
+export const Commands = {
+  'OutputChannel.open': open,
+  'OutputChannel.close': close,
 }

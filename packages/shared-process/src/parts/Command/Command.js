@@ -59,11 +59,26 @@ const loadModule = (moduleId) => {
   }
 }
 
+const initializeModule = (module) => {
+  if (typeof module.__initialize__ !== 'function') {
+    if (module.Commands) {
+      for (const [key, value] of Object.entries(module.Commands)) {
+        register(key, value)
+      }
+      return
+    }
+    throw new Error(
+      `module ${module.name} is missing an initialize function and commands`
+    )
+  }
+  return module.__initialize__()
+}
+
 const getOrLoadModule = (moduleId) => {
   if (!pendingModules[moduleId]) {
     const importPromise = loadModule(moduleId)
     pendingModules[moduleId] = importPromise
-      .then((module) => module.__initialize__())
+      .then(initializeModule)
       .catch((error) => {
         console.error(error)
       })

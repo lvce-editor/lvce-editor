@@ -4,18 +4,19 @@ import * as ExtensionHostCommand from './ExtensionHostCommand.js'
 import * as ExtensionHostKeyBindings from './ExtensionHostKeyBindings.js'
 
 // prettier-ignore
-export const __initialize__ = () => {
-  Command.register('ExtensionHost.getCommands', ExtensionHostCommand.getCommandsIpc)
-  Command.register('ExtensionHostKeyBindings.getKeyBindings', ExtensionHostKeyBindings.getKeyBindings)
-  Command.register('ExtensionHost.start', ExtensionHost.start)
-  Command.register('ExtensionHost.dispose', ExtensionHost.dispose)
-  Command.register('ExtensionHost.send', ExtensionHost.send)
+export const Commands = {
 
-  Command.register('ExtensionHostExtension.activate', ExtensionHost.forward)
-  Command.register('ExtensionHostExtension.disable', ExtensionHost.forward)
-  Command.register('ExtensionHostSemanticTokens.executeSemanticTokenProvider', ExtensionHost.forward)
-  Command.register('ExtensionHostTextDocument.setLanguageId', ExtensionHost.forward)
-  Command.register('ExtensionHostTextDocument.syncIncremental', ExtensionHost.forward)
-  Command.register('ExtensionHostTextDocument.syncFull', ExtensionHost.forward)
-  Command.register('ExtensionHostCompletion.execute', ExtensionHost.forward)
+  'ExtensionHost.getCommands': ExtensionHostCommand.getCommandsIpc,
+  'ExtensionHostKeyBindings.getKeyBindings': ExtensionHostKeyBindings.getKeyBindings,
+  'ExtensionHost.start': ExtensionHost.start,
+  'ExtensionHost.dispose': ExtensionHost.dispose,
+  'ExtensionHost.send': ExtensionHost.send,
+
+  'ExtensionHostExtension.activate': ExtensionHost.forward,
+  'ExtensionHostExtension.disable': ExtensionHost.forward,
+  'ExtensionHostSemanticTokens.executeSemanticTokenProvider': ExtensionHost.forward,
+  'ExtensionHostTextDocument.setLanguageId': ExtensionHost.forward,
+  'ExtensionHostTextDocument.syncIncremental': ExtensionHost.forward,
+  'ExtensionHostTextDocument.syncFull': ExtensionHost.forward,
+  'ExtensionHostCompletion.execute': ExtensionHost.forward,
 }
