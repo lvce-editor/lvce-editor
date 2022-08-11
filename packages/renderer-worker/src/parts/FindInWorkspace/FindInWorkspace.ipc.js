@@ -1,7 +1,6 @@
-import * as Command from '../Command/Command.js'
 import * as FindInWorkspace from './FindInWorkspace.js'
 
 // prettier-ignore
-export const __initialize__ = () => {
-  Command.register('FindInWorkspace.findInWorkspace', FindInWorkspace.findInWorkspace)
+export const Commands = {
+  'FindInWorkspace.findInWorkspace': FindInWorkspace.findInWorkspace
 }

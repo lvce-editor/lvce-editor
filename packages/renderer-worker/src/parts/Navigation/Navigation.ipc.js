@@ -1,13 +1,12 @@
-import * as Command from '../Command/Command.js'
 import * as Navigation from './Navigation.js'
 
-export const __initialize__ = () => {
-  Command.register('Navigation.focusPreviousPart', Navigation.focusPreviousPart)
-  Command.register('Navigation.focusNextPart', Navigation.focusNextPart)
-  Command.register('Navigation.focusActivityBar', Navigation.focusActivityBar)
-  Command.register('Navigation.focusStatusBar', Navigation.focusStatusBar)
-  Command.register('Navigation.focusPanel', Navigation.focusPanel)
-  Command.register('Navigation.focusSideBar', Navigation.focusSideBar)
-  Command.register('Navigation.focusTitleBar', Navigation.focusTitleBar)
-  Command.register('Navigation.focusMain', Navigation.focusMain)
+export const Commands = {
+  'Navigation.focusPreviousPart': Navigation.focusPreviousPart,
+  'Navigation.focusNextPart': Navigation.focusNextPart,
+  'Navigation.focusActivityBar': Navigation.focusActivityBar,
+  'Navigation.focusStatusBar': Navigation.focusStatusBar,
+  'Navigation.focusPanel': Navigation.focusPanel,
+  'Navigation.focusSideBar': Navigation.focusSideBar,
+  'Navigation.focusTitleBar': Navigation.focusTitleBar,
+  'Navigation.focusMain': Navigation.focusMain,
 }

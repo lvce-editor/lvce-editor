@@ -164,13 +164,24 @@ export const resize = (id, dimensions) => {
     return []
   }
   const oldState = instance.state
-  const { newState, commands } = instance.factory.resize(oldState, dimensions)
+  let newState
+  let commands
+  if (instance.factory.hasFunctionalResize) {
+    newState = instance.factory.resize(oldState, dimensions)
+    if ('newState' in newState) {
+      throw new Error(
+        `functional resize not supported in ${instance.factory.name}`
+      )
+    }
+    commands = ViewletManager.render(instance.factory, instance.state, newState)
+  } else {
+    const result = instance.factory.resize(oldState, dimensions)
+    newState = result.newState
+    commands = result.commands
+  }
   Assert.object(newState)
   Assert.array(commands)
-  ViewletStates.set(id, newState)
-  if (instance.factory.hasFunctionalRender) {
-    return instance.factory.render(oldState, newState)
-  }
+  ViewletStates.setState(id, newState)
   return commands
 }
 

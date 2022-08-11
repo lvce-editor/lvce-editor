@@ -1316,7 +1316,7 @@ test('focusPreviousPage - scroll up half a page', () => {
 
 test('resize', () => {
   const state = ViewletExtensions.create()
-  const { newState, commands } = ViewletExtensions.resize(state, {
+  const newState = ViewletExtensions.resize(state, {
     top: 200,
     left: 200,
     width: 200,
@@ -1343,7 +1343,6 @@ test('resize', () => {
     width: 200,
     negativeMargin: 0,
   })
-  expect(commands).toEqual([])
 })
 
 test('handleWheel - scroll down', () => {

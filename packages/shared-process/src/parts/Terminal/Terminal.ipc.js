@@ -5,7 +5,7 @@ import * as Terminal from './Terminal.js'
 const create = (socket, id, cwd) => {
   Assert.object(socket)
   if (!socket) {
-    console.log({socket, id, cwd})
+    console.log({ socket, id, cwd })
     console.warn('socket not available')
     return
   }
@@ -25,7 +25,7 @@ const create = (socket, id, cwd) => {
 }
 
 const write = (id, input) => {
-  console.log({ id, input})
+  console.log({ id, input })
   Terminal.write(id, input)
 }
 
@@ -37,9 +37,9 @@ const dispose = (socket, id) => {
   Terminal.dispose(id)
 }
 
-export const __initialize__ = () => {
-  Command.register('Terminal.create', create)
-  Command.register('Terminal.dispose', dispose)
-  Command.register('Terminal.write', write)
-  Command.register('Terminal.resize', resize)
+export const Commands = {
+  'Terminal.create': create,
+  'Terminal.dispose': dispose,
+  'Terminal.write': write,
+  'Terminal.resize': resize,
 }

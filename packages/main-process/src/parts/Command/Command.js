@@ -33,9 +33,19 @@ const loadModule = async (moduleId) => {
       throw new Error('unknown module')
   }
 }
-
 const initializeModule = (module) => {
-  module.__initialize__()
+  if (typeof module.__initialize__ !== 'function') {
+    if (module.Commands) {
+      for (const [key, value] of Object.entries(module.Commands)) {
+        register(key, value)
+      }
+      return
+    }
+    throw new Error(
+      `module ${module.name} is missing an initialize function and commands`
+    )
+  }
+  return module.__initialize__()
 }
 
 const getOrLoadModule = (moduleId) => {
@@ -48,62 +58,29 @@ const getOrLoadModule = (moduleId) => {
 
 const getModuleId = (commandId) => {
   switch (commandId) {
-    case 2211:
+    case 'App.exit':
       return MODULE_APP
-    case 6520:
-    case 6521:
-    case 6522:
-    case 6523:
-    case 6524:
-    case 6525:
-    case 6526:
-    case 6528:
-    case 6529:
-    case 6530:
-    case 6531:
-    case 6532:
-    case 6533:
-    case 6534:
-    case 6535:
-    case 6536:
-    case 6537:
-    case 6538:
-    case 6539:
+    case 'Window.minimize':
+    case 'Window.maximize':
+    case 'Window.toggleDevtools':
+    case 'Window.toggleDevtools':
+    case 'Window.unmaximize':
+    case 'Window.close':
+    case 'Window.reload':
       return MODULE_WINDOW
-    case 7722:
-    case 7723:
-    case 7724:
-    case 7725:
-    case 7726:
-    case 7727:
-    case 7728:
-    case 7729:
+    case 'Developer.getPerformanceEntries':
+    case 'Developer.crashMainProcess':
       return MODULE_DEVELOPER
-    case 8527:
+    case 'AppWindow.createAppWindow':
       return MODULE_APP_WINDOW
-    case 8822:
-    case 8823:
-    case 8824:
-    case 8825:
-    case 8826:
-    case 8827:
-    case 8828:
+    case 'ProcessExplorer.openProcessExplorer':
       return MODULE_PROCESS_EXPLORER
     case 'About.open':
       return MODULE_ABOUT
-    case 20100:
-    case 20101:
-    case 20102:
-    case 20103:
-    case 20104:
-    case 20105:
-    case 20106:
-    case 20107:
-    case 20108:
-    case 20109:
-    case 20110:
+    case 'Dialog.showOpenDialog':
+    case 'Dialog.showMessageBox':
       return MODULE_DIALOG
-    case 50000:
+    case 'Beep.beep':
       return MODULE_BEEP
     default:
       throw new Error(`command ${commandId} not found`)
@@ -112,9 +89,9 @@ const getModuleId = (commandId) => {
 
 const loadCommand = (command) => getOrLoadModule(getModuleId(command))
 
-exports.register = (commandId, listener) => {
+const register = (exports.register = (commandId, listener) => {
   commands[commandId] = listener
-}
+})
 
 const hasThrown = new Set()
 

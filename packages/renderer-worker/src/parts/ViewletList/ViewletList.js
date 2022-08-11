@@ -139,17 +139,16 @@ export const handleContextMenu = async (state, x, y, extensionId) => {
   // )
 }
 
+export const hasFunctionalResize = true
+
 export const resize = (state, dimensions) => {
   // TODO should just return new state, render function can take old state and new state and return render commands
   const listHeight = dimensions.height
   const maxLineY = state.minLineY + Math.ceil(listHeight / ITEM_HEIGHT)
   return {
-    newState: {
-      ...state,
-      ...dimensions,
-      maxLineY,
-    },
-    commands: [],
+    ...state,
+    ...dimensions,
+    maxLineY,
   }
 }
 
