@@ -5,13 +5,13 @@ Generate a `.deb` file that can be installed with the `apt` package manager.
 ## Build
 
 ```sh
-node bin/build.js --target=electron-deb
+node bin/build.js --target=electron-deb --force
 ```
 
 ## Try out
 
 ```sh
-sudo dpkg -i ./lvce-oss_0.0.1_amd64.deb
+sudo dpkg -i ./.tmp/linux/deb/amd64/deb/app.deb
 ```
 
 ## Troubleshooting
