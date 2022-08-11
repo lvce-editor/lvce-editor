@@ -1,14 +1,11 @@
 import * as EditorTabCompletion from './EditorCommandTabCompletion.js'
 import * as EditorType from './EditorCommandType.js'
 import * as EditorIndent from './EditorCommandIndentMore.js'
-
-const isStartEndSame = (selection) => {
-  return selection.start.rowIndex === selection.end.rowIndex
-}
+import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
 // TODO tab doesn't work well with configurable keybindings
 export const editorHandleTab = async (editor) => {
-  if (editor.selections.every(isStartEndSame)) {
+  if (EditorSelection.isEverySelectionEmpty(editor.selections)) {
     console.log('call tab completion')
     const applied = await EditorTabCompletion.editorTabCompletion(editor)
     if (applied !== editor) {
