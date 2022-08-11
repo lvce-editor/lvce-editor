@@ -3,7 +3,7 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
 import * as InputBox from '../InputBox/InputBox.js'
-import * as ActiveViewlet from './ActiveViewlet.js'
+import * as ActiveViewlet from '../Viewlet/ActiveViewlet.js'
 
 export const name = 'Explorer'
 

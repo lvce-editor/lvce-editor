@@ -1,7 +1,6 @@
 const MODULE_MAIN = 1
 const MODULE_NOTIFICATION = 2
 const MODULE_TEST = 3
-const MODULE_VIEWLET_SOURCE_CONTROL = 5
 const MODULE_VIEW_SERVICE = 9
 const MODULE_WINDOW = 14
 const MODULE_DEVELOPER = 15
@@ -9,7 +8,6 @@ const MODULE_LAYOUT = 16
 const MODULE_PANEL = 18
 const MODULE_WORKBENCH = 20
 const MODULE_VIEWLET = 21
-const MODULE_VIEWLET_TERMINAL = 22
 const MODULE_FIND_WIDGET = 23
 const MODULE_KEYBINDINGS = 26
 const MODULE_MENU = 31
@@ -41,8 +39,6 @@ const loadModule = (moduleId) => {
   switch (moduleId) {
     case MODULE_NOTIFICATION:
       return import('../Notification/Notification.ipc.js')
-    case MODULE_VIEWLET_SOURCE_CONTROL:
-      return import('../Viewlet/ViewletExplorer.js')
     case MODULE_WINDOW:
       return import('../Window/Window.ipc.js')
     case MODULE_DEVELOPER:
@@ -51,8 +47,6 @@ const loadModule = (moduleId) => {
       return import('../Layout/Layout.ipc.js')
     case MODULE_VIEWLET:
       return import('../Viewlet/Viewlet.ipc.js')
-    case MODULE_VIEWLET_TERMINAL:
-      return import('../Viewlet/ViewletTerminal.js')
     case MODULE_FIND_WIDGET:
       return import('../FindWidget/FindWidget.ipc.js')
     case MODULE_KEYBINDINGS:
@@ -201,8 +195,6 @@ const getModuleId = (commandId) => {
     case 6663:
     case 6664:
       return MODULE_PANEL
-    case 8181:
-      return MODULE_VIEWLET_SOURCE_CONTROL
     case 33111:
       return MODULE_WORKBENCH
     case 'Dialog.prompt':
@@ -235,8 +227,6 @@ const getModuleId = (commandId) => {
     case 'LocalStorage.getItem':
     case 'LocalStorage.setItem':
       return MODULE_LOCAL_STORAGE
-    case 9922:
-      return MODULE_VIEWLET_TERMINAL
     case 'Meta.setThemeColor':
       return MODULE_META
     case 'ServiceWorker.register':

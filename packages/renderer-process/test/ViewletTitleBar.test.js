@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import * as Layout from '../src/parts/Layout/Layout.js'
-import * as ViewletTitleBar from '../src/parts/Viewlet/ViewletTitleBar.js'
+import * as ViewletTitleBar from '../src/parts/ViewletTitleBar/ViewletTitleBar.js'
 
 const getTextContent = (node) => {
   return node.innerHTML

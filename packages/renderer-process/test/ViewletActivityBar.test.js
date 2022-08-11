@@ -24,7 +24,7 @@ const RendererWorker = await import(
 )
 
 const ViewletActivityBar = await import(
-  '../src/parts/Viewlet/ViewletActivityBar.js'
+  '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
 )
 const Layout = await import('../src/parts/Layout/Layout.js')
 

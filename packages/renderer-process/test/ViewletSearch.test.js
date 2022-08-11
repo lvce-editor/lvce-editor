@@ -22,7 +22,9 @@ const RendererWorker = await import(
   '../src/parts/RendererWorker/RendererWorker.js'
 )
 
-const ViewletSearch = await import('../src/parts/Viewlet/ViewletSearch.js')
+const ViewletSearch = await import(
+  '../src/parts/ViewletSearch/ViewletSearch.js'
+)
 
 test('name', () => {
   expect(ViewletSearch.name).toBe('Search')
