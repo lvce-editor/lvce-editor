@@ -89,7 +89,7 @@ const getModuleId = (commandId) => {
     case 8827:
     case 8828:
       return MODULE_PROCESS_EXPLORER
-    case 20001:
+    case 'About.open':
       return MODULE_ABOUT
     case 20100:
     case 20101:
