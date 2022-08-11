@@ -2,7 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Assert from '../Assert/Assert.js'
-import * as LocalStorage from '../LocalStorage/LocalStorage.js'
+import * as LocalStorage from '../StorageBrowserLocal/StorageBrowserLocal.js'
 import * as FileSystemDisk from './FileSystemDisk.js'
 
 export const readFileInternal = async (getPath) => {

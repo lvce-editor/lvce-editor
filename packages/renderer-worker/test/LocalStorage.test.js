@@ -15,7 +15,9 @@ jest.unstable_mockModule(
   }
 )
 
-const LocalStorage = await import('../src/parts/LocalStorage/LocalStorage.js')
+const LocalStorage = await import(
+  '../src/parts/StorageBrowserLocal/StorageBrowserLocal.js'
+)
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )

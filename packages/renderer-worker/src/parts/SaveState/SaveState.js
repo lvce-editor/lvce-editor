@@ -5,8 +5,8 @@ import * as Workspace from '../Workspace/Workspace.js'
 import * as Json from '../Json/Json.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as LocalStorage from '../LocalStorage/LocalStorage.js'
-import * as SessionStorage from '../SessionStorage/SessionStorage.js'
+import * as LocalStorage from '../StorageBrowserLocal/StorageBrowserLocal.js'
+import * as SessionStorage from '../StorageBrowserSession/StorageBrowserSession.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const getStateToSave = () => {

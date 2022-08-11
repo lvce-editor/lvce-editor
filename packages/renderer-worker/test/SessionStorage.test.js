@@ -19,7 +19,7 @@ const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
 const SessionStorage = await import(
-  '../src/parts/SessionStorage/SessionStorage.js'
+  '../src/parts/StorageBrowserSession/StorageBrowserSession.js'
 )
 
 test('getJson - number', async () => {
