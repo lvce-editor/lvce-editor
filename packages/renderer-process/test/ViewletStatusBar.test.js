@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import * as Layout from '../src/parts/Layout/Layout.js'
-import * as ViewletStatusBar from '../src/parts/Viewlet/ViewletStatusBar.js'
+import * as ViewletStatusBar from '../src/parts/ViewletStatusBar/ViewletStatusBar.js'
 
 beforeEach(() => {
   Layout.state.$StatusBar = document.createElement('div')

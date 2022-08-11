@@ -15,11 +15,11 @@ const get = (id) => {
     case 'Run and Debug':
       return import('./ViewletRunAndDebug.js')
     case 'Search':
-      return import('./ViewletSearch.js')
+      return import('../ViewletSearch/ViewletSearch.js')
     case 'Source Control':
       return import('./ViewletSourceControl.js')
     case 'Terminal':
-      return import('./ViewletTerminal.js')
+      return import('../ViewletTerminal/ViewletTerminal.js')
     case 'Extensions':
       return import('./ViewletExtensions.js')
     case 'Debug Console':
@@ -39,19 +39,19 @@ const get = (id) => {
     case 'Clock':
       return import('./ViewletClock.js')
     case 'SideBar':
-      return import('./ViewletSideBar.js')
+      return import('../ViewletSideBar/ViewletSideBar.js')
     case 'Panel':
       return import('./ViewletPanel.js')
     case 'ActivityBar':
-      return import('./ViewletActivityBar.js')
+      return import('../ViewletActivityBar/ViewletActivityBar.js')
     case 'ImagePreview':
       return import('../ImagePreview/ImagePreview.js')
     case 'QuickPick':
       return import('./ViewletQuickPick.js')
     case 'StatusBar':
-      return import('./ViewletStatusBar.js')
+      return import('../ViewletStatusBar/ViewletStatusBar.js')
     case 'TitleBar':
-      return import('./ViewletTitleBar.js')
+      return import('../ViewletTitleBar/ViewletTitleBar.js')
     case 'Main':
       return import('./ViewletMain.js')
     case 'EditorCompletion':

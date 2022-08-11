@@ -22,7 +22,9 @@ const RendererWorker = await import(
   '../src/parts/RendererWorker/RendererWorker.js'
 )
 
-const ViewletExplorer = await import('../src/parts/Viewlet/ViewletExplorer.js')
+const ViewletExplorer = await import(
+  '../src/parts/ViewletExplorer/ViewletExplorer.js'
+)
 
 const getSimpleList = (state) => {
   return Array.from(state.$Viewlet.children).map((node) => node.textContent)

@@ -52,7 +52,7 @@ const loadModule = (moduleId) => {
     case MODULE_VIEWLET:
       return import('../Viewlet/Viewlet.ipc.js')
     case MODULE_VIEWLET_TERMINAL:
-      return import('../Viewlet/ViewletTerminal.js')
+      return import('../ViewletTerminal/ViewletTerminal.js')
     case MODULE_FIND_WIDGET:
       return import('../FindWidget/FindWidget.ipc.js')
     case MODULE_KEYBINDINGS:
