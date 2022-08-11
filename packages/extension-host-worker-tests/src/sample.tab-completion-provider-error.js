@@ -35,7 +35,6 @@ test('sample.tab-completion-provider-error', async () => {
   // assert
   const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
-  // TODO should say that error is because of tab completion
   await expect(overlayMessage).toHaveText(
     'Error: Failed to execute tab completion provider: oops'
   )
