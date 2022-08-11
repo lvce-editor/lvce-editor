@@ -136,13 +136,12 @@ export const handleClick = async (state, index) => {
   )
 }
 
+export const hasFunctionalResize = true
+
 export const resize = (state, dimensions) => {
   return {
-    newState: {
-      ...state,
-      ...dimensions,
-    },
-    commands: [],
+    ...state,
+    ...dimensions,
   }
 }
 
