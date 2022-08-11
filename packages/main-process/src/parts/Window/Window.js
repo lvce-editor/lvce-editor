@@ -91,6 +91,7 @@ exports.create = ({
         'preload.js'
       ),
       session,
+      additionalArguments: ['--lvce-window-kind'],
     },
     backgroundColor: background,
     show: false,
