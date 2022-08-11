@@ -145,3 +145,7 @@ export const getExtensionHostWorkerUrl = () => {
 export const getGithubApiUrl = () => {
   return `https://api.github.com`
 }
+
+export const getCacheName = () => {
+  return 'lvce-runtime'
+}
