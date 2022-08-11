@@ -1,4 +1,4 @@
-const StorageType = {
+export const StorageType = {
   LocalStorage: 1,
   SessionStorage: 2,
 }

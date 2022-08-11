@@ -1,5 +1,5 @@
 import * as Command from '../Command/Command.js'
-import * as StorageBrowser from './StorageBrowser.js'
+import * as StorageBrowser from './WebStorage.js'
 
 export const __initialize__ = () => {
   Command.register('StorageBrowser.clear', StorageBrowser.clear)

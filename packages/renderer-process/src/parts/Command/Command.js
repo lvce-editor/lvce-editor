@@ -27,7 +27,7 @@ const MODULE_OPEN = 48
 const MODULE_CLIPBOARD = 49
 const MODULE_INIT_DATA = 50
 const MODULE_TEST_FRAME_WORK = 51
-const MODULE_STORAGE_BROWSER = 52
+const MODULE_WEB_STORAGE = 52
 
 export const state = {
   commands: Object.create(null),
@@ -52,8 +52,8 @@ const loadModule = (moduleId) => {
       return import('../KeyBindings/KeyBindings.ipc.js')
     case MODULE_MENU:
       return import('../OldMenu/Menu.ipc.js')
-    case MODULE_STORAGE_BROWSER:
-      return import('../StorageBrowser/StorageBrowser.ipc.js')
+    case MODULE_WEB_STORAGE:
+      return import('../WebStorage/WebStorage.ipc.js')
     case MODULE_DIALOG:
       return import('../Dialog/Dialog.ipc.js')
     case MODULE_EDITOR_HOVER:
@@ -219,7 +219,7 @@ const getModuleId = (commandId) => {
     case 'StorageBrowser.clear':
     case 'StorageBrowser.getItem':
     case 'StorageBrowser.setItem':
-      return MODULE_STORAGE_BROWSER
+      return MODULE_WEB_STORAGE
     case 'Meta.setThemeColor':
       return MODULE_META
     case 'ServiceWorker.register':
