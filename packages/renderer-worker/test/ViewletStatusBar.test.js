@@ -153,7 +153,7 @@ test('itemRightUpdate', () => {
 
 test('resize', () => {
   const state = ViewletStatusBar.create()
-  const { newState } = ViewletStatusBar.resize(state, {
+  const newState = ViewletStatusBar.resize(state, {
     top: 200,
     left: 200,
     width: 200,

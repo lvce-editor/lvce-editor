@@ -120,13 +120,12 @@ export const handleClick = (name) => {
   // sendExtensionWorker([/* statusBarItemHandleClick */ 7657, /* name */ name])
 }
 
+export const hasFunctionalResize = true
+
 export const resize = (state, dimensions) => {
   return {
-    newState: {
-      ...state,
-      ...dimensions,
-    },
-    commands: [],
+    ...state,
+    ...dimensions,
   }
 }
 
