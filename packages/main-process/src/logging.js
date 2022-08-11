@@ -14,17 +14,3 @@ for (const method of ['log', 'info', 'warn', 'error']) {
     logger[method](...args)
   }
 }
-
-process.on('unhandledRejection', (event) => {
-  console.error(event)
-  writeStream.end(() => {
-    process.exit(1)
-  })
-})
-
-process.on('uncaughtException', (event) => {
-  console.error(event)
-  writeStream.end(() => {
-    process.exit(1)
-  })
-})

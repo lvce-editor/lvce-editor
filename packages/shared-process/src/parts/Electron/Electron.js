@@ -5,6 +5,18 @@ export const state = {
   send(message) {
     ParentIpc.electronSend(message)
   },
+  async invoke(method, ...params) {
+    return new Promise((resolve, reject) => {
+      // TODO use one map instead of two
+      const callbackId = Callback.register(resolve, reject)
+      state.send({
+        jsonrpc: '2.0',
+        method,
+        params,
+        id: callbackId,
+      })
+    })
+  },
 }
 
 const send = (method, ...params) => {
@@ -16,50 +28,41 @@ const send = (method, ...params) => {
 }
 
 const invoke = async (method, ...params) => {
-  return new Promise((resolve, reject) => {
-    // TODO use one map instead of two
-    const callbackId = Callback.register(resolve, reject)
-    state.send({
-      jsonrpc: '2.0',
-      method,
-      params,
-      id: callbackId,
-    })
-  })
+  return state.invoke(method, ...params)
 }
 
-export const toggleDevtools = () => {
-  send(/* Window.toggleDevtools */ 'Window.toggleDevtools')
+export const toggleDevtools = async () => {
+  await invoke(/* Window.toggleDevtools */ 'Window.toggleDevtools')
 }
 
-export const windowMinimize = () => {
-  send(/* Window.minimize */ 'Window.minimize')
+export const windowMinimize = async () => {
+  await invoke(/* Window.minimize */ 'Window.minimize')
 }
 
-export const windowMaximize = () => {
-  send(/* Window.maximize */ 'Window.maximize')
+export const windowMaximize = async () => {
+  await invoke(/* Window.maximize */ 'Window.maximize')
 }
 
-export const windowUnmaximize = () => {
-  send(/* Window.unmaximize */ 'Window.unmaximize')
+export const windowUnmaximize = async () => {
+  await invoke(/* Window.unmaximize */ 'Window.unmaximize')
 }
 
-export const windowClose = () => {
-  send(/* Window.close */ 'Window.close')
+export const windowClose = async () => {
+  await invoke(/* Window.close */ 'Window.close')
 }
 
-export const windowReload = () => {
-  send(/* Window.reload */ 'Window.reload')
+export const windowReload = async () => {
+  await invoke(/* Window.reload */ 'Window.reload')
 }
 
 // TODO move these into separate files like done extension host
 
-export const windowOpenNew = () => {
-  send(/* AppWindow.openNew */ 'AppWindow.openNew')
+export const windowOpenNew = async () => {
+  await invoke(/* AppWindow.openNew */ 'AppWindow.openNew')
 }
 
-export const about = () => {
-  send(/* About.open */ 'Dialog.showAbout')
+export const about = async () => {
+  await invoke(/* About.open */ 'About.open')
 }
 
 export const showOpenDialog = async () => {
@@ -78,8 +81,8 @@ export const showMessageBox = async (message, buttons) => {
   return result
 }
 
-export const crashMainProcess = () => {
-  send(/* Developer.crashMainProcess */ 'Developer.crashMainProcess')
+export const crashMainProcess = async () => {
+  await invoke(/* Developer.crashMainProcess */ 'Developer.crashMainProcess')
 }
 
 export const getPerformanceEntries = async () => {

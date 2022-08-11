@@ -313,7 +313,7 @@
     "label": "File: Open Recent"
   },
   {
-    "id": "help.about",
+    "id": "Dialog.showAbout",
     "label": "Help: About"
   },
   {

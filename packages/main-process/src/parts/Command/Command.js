@@ -95,25 +95,27 @@ const register = (exports.register = (commandId, listener) => {
 
 const hasThrown = new Set()
 
-const execute = (exports.execute = (command, ...args) => {
+const loadThenExecute = async (command, ...args) => {
+  await loadCommand(command)
+  // TODO can skip then block in prod (only to prevent endless loop in dev)
+  if (!(command in commands)) {
+    if (hasThrown.has(command)) {
+      return
+    }
+    hasThrown.add(command)
+    throw new Error(`Command did not register "${command}"`)
+  }
+  return execute(command, ...args)
+}
+
+const execute = (command, ...args) => {
   if (command in commands) {
     return commands[command](...args)
   }
-  return (
-    loadCommand(command)
-      // TODO can skip then block in prod (only to prevent endless loop in dev)
-      .then(() => {
-        if (!(command in commands)) {
-          if (hasThrown.has(command)) {
-            return
-          }
-          hasThrown.add(command)
-          throw new Error(`Command did not register "${command}"`)
-        }
-        return execute(command, ...args)
-      })
-  )
-})
+  return loadThenExecute(command, ...args)
+}
+
+exports.execute = execute
 
 exports.invoke = async (command, ...args) => {
   if (!(command in commands)) {

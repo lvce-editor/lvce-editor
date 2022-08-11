@@ -37,7 +37,9 @@ export const openFolder = async () => {
 }
 
 export const showAbout = async () => {
-  if (Platform.getPlatform() === 'web' || Platform.getPlatform() === 'remote') {
+  const platform = Platform.getPlatform()
+  console.log({ platform })
+  if (platform === 'web' || platform === 'remote') {
     console.warn('show about - not implemented')
     return
   }

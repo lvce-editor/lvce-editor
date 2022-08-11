@@ -93,14 +93,9 @@ export const getPlatform = () => {
 
   // TODO don't use window here -> want to run renderer-worker as webworker
   if (
-    // @ts-ignore
-    typeof window !== 'undefined' &&
-    // @ts-ignore
-    window.myApi &&
-    // @ts-ignore
-    window.myApi.ipcConnect &&
-    // @ts-ignore
-    typeof window.myApi.ipcConnect === 'function'
+    typeof navigator !== 'undefined' &&
+    typeof navigator.appVersion !== 'undefined' &&
+    navigator.appVersion.includes('Electron')
   ) {
     return 'electron'
   }
