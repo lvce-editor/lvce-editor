@@ -1201,6 +1201,104 @@ const getPathPartChildren = (pathPart) => {
   return children
 }
 
+const mergeVisibleWithHiddenItems = (visibleItems, hiddenItems) => {
+  const hiddenItemRoot = hiddenItems[0].path
+  const merged = [...hiddenItems]
+  const seen = Object.create(null)
+  const unique = []
+  for (const item of merged) {
+    if (seen[item.path]) {
+      continue
+    }
+    seen[item.path] = true
+    unique.push(item)
+  }
+  const ordered = []
+
+  // depth one
+  //   let depth=1
+  //   while(true){
+  //     for(const item of unique){
+  //       if(item.depth===depth){
+  //         ordered.push(item)
+  //       }
+  //     }
+  // break
+  //   }
+  // const getChildren = (path) => {
+  //   const children = []
+  //   for (const item of unique) {
+  //     if (item.path.startsWith(path) && item.path !== path) {
+  //       ordered.push(item)
+  //     }
+  //   }
+  //   return children
+  // }
+  // for (const item of unique) {
+  //   for (const potentialChild of unique) {
+  //     if (
+  //       potentialChild.path.startsWith(item.path) &&
+  //       potentialChild.path !== item.path
+  //     ) {
+  //       ordered.push(potentialChild)
+  //     }
+  //   }
+  // }
+  // const refreshedRoots = Object.create(null)
+  // for (const hiddenItem of hiddenItems) {
+  //   const parent = hiddenItem.path.slice(0, hiddenItem.path.lastIndexOf('/'))
+  //   refreshedRoots[parent] = true
+  // }
+  // const mergedDirents = []
+  // for(const v)
+  // console.log({ hiddenItems })
+  // for (const visibleItem of visibleItems) {
+  //   console.log({ visibleItem, hiddenItemRoot, hiddenItems })
+  //   if (visibleItem.path === hiddenItemRoot) {
+  //     // TODO update aria posinset and aria setsize
+  //     mergedDirents.push(...hiddenItems)
+  //   } else {
+  //     for (const hiddenItem of hiddenItems) {
+  //       if (hiddenItem.path === visibleItem.path) {
+  //         continue
+  //       }
+  //     }
+  //     mergedDirents.push(visibleItem)
+  //   }
+  // }
+  console.log({ unique })
+
+  return unique
+}
+
+const orderDirents = (dirents) => {
+  if (dirents.length === 0) {
+    return dirents
+  }
+  // const parentMap = Object.create(null)
+  // for(const dirent of dirents){
+  //   const parentPath = dirent.slice(0, dirent.lastIndexOf('/'))
+  //   parentMap[parentPath]||=[]
+  //   parentMap[parentPath].push(dirent)
+  // }
+  const withDeepChildren = (parent) => {
+    const children = []
+    for (const dirent of dirents) {
+      if (
+        dirent.depth === parent.depth + 1 &&
+        dirent.path.startsWith(parent.path)
+      ) {
+        children.push(dirent)
+      }
+    }
+    return [parent, ...children]
+  }
+  const topLevelDirents = dirents.filter(isTopLevel)
+
+  const ordered = topLevelDirents.flatMap(withDeepChildren)
+  return ordered
+}
+
 // TODO maybe just insert items into explorer and refresh whole explorer
 const revealItemHidden = async (state, uri) => {
   const { root, pathSeparator, dirents } = state
@@ -1210,7 +1308,9 @@ const revealItemHidden = async (state, uri) => {
     pathPartsToReveal.map(getPathPartChildren)
   )
   const pathPartsChildrenFlat = pathPartsChildren.flat(1)
-  const mergedDirents = [...dirents, ...pathPartsChildrenFlat]
+  const orderedPathParts = orderDirents(pathPartsChildrenFlat)
+  console.log({ orderedPathParts })
+  const mergedDirents = mergeVisibleWithHiddenItems(dirents, orderedPathParts)
   const index = getIndex(mergedDirents, uri)
   return {
     ...state,

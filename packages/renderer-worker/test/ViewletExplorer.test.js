@@ -4535,6 +4535,222 @@ test('revealItem - two levels deep', async () => {
   })
 })
 
+test('revealItem - insert into existing tree', async () => {
+  const state = {
+    ...ViewletExplorer.create(),
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    maxLineY: 20,
+    root: '/test',
+    pathSeparator: '/',
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-1',
+        path: '/test/folder-1',
+        posInSet: 1,
+        setSize: 3,
+        type: 'directory',
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-2',
+        path: '/test/folder-2',
+        posInSet: 2,
+        setSize: 3,
+        type: 'directory',
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-3',
+        path: '/test/folder-3',
+        posInSet: 3,
+        setSize: 3,
+        type: 'directory',
+      },
+    ],
+  }
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test':
+        return [
+          {
+            depth: 1,
+            icon: '',
+            name: 'folder-1',
+            path: '/test/folder-1',
+            posInSet: 1,
+            setSize: 3,
+            type: 'directory',
+          },
+          {
+            depth: 1,
+            icon: '',
+            name: 'folder-2',
+            path: '/test/folder-2',
+            posInSet: 2,
+            setSize: 3,
+            type: 'directory',
+          },
+          {
+            depth: 1,
+            icon: '',
+            name: 'folder-3',
+            path: '/test/folder-3',
+            posInSet: 3,
+            setSize: 3,
+            type: 'directory',
+          },
+        ]
+      case '/test/folder-1':
+        return [{ name: 'a.txt', type: 'file' }]
+      default:
+        throw new Error(`file not found ${uri}`)
+    }
+  })
+  expect(
+    await ViewletExplorer.revealItem(state, '/test/folder-1/a.txt')
+  ).toMatchObject({
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-1',
+        path: '/test/folder-1',
+        posInSet: 1,
+        setSize: 3,
+        type: 'directory',
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'a.txt',
+        path: '/test/folder-1/a.txt',
+        posInSet: 1,
+        setSize: 1,
+        type: 'file',
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-2',
+        path: '/test/folder-2',
+        posInSet: 2,
+        setSize: 3,
+        type: 'directory',
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-3',
+        path: '/test/folder-3',
+        posInSet: 3,
+        setSize: 3,
+        type: 'directory',
+      },
+    ],
+    focused: true,
+    focusedIndex: 1,
+  })
+})
+
+test("revealItem - insert into existing tree - some sibling nodes don't exist anymore", async () => {
+  const state = {
+    ...ViewletExplorer.create(),
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    maxLineY: 20,
+    root: '/test',
+    pathSeparator: '/',
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-1',
+        path: '/test/folder-1',
+        posInSet: 1,
+        setSize: 3,
+        type: 'directory',
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-2',
+        path: '/test/folder-2',
+        posInSet: 2,
+        setSize: 3,
+        type: 'directory',
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-3',
+        path: '/test/folder-3',
+        posInSet: 3,
+        setSize: 3,
+        type: 'directory',
+      },
+    ],
+  }
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test':
+        return [
+          {
+            depth: 1,
+            icon: '',
+            name: 'folder-1',
+            path: '/test/folder-1',
+            posInSet: 1,
+            setSize: 1,
+            type: 'directory',
+          },
+        ]
+      case '/test/folder-1':
+        return [{ name: 'a.txt', type: 'file' }]
+      default:
+        throw new Error(`file not found ${uri}`)
+    }
+  })
+  expect(
+    await ViewletExplorer.revealItem(state, '/test/folder-1/a.txt')
+  ).toMatchObject({
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'folder-1',
+        path: '/test/folder-1',
+        posInSet: 1,
+        setSize: 1,
+        type: 'directory',
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'a.txt',
+        path: '/test/folder-1/a.txt',
+        posInSet: 1,
+        setSize: 1,
+        type: 'file',
+      },
+    ],
+    focused: true,
+    focusedIndex: 1,
+  })
+})
+
 test('revealItem - already visible', async () => {
   const state = {
     ...ViewletExplorer.create(),
