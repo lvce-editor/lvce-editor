@@ -67,7 +67,9 @@ test('handleData', () => {
   })
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Terminal.write',
+    'Viewlet.send',
+    'Terminal',
+    'write',
     new Uint8Array([1, 2, 3, 4, 5])
   )
 })

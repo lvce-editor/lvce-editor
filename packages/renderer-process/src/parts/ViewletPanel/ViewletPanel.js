@@ -59,7 +59,6 @@ export const create = () => {
 }
 
 export const setTabs = (state, tabs) => {
-  console.log({ tabs })
   state.$PanelTabs.append(...tabs.map(create$PanelTab))
 }
 
