@@ -1,15 +1,5 @@
 import * as EditorBraceCompletion from '../EditorCommand/EditorCommandBraceCompletion.js'
 import * as EditorCompletion from '../EditorCommand/EditorCommandCompletion.js'
-import * as EditorCursorCharacterRight from '../EditorCommand/EditorCommandCursorCharacterRight.js'
-import * as EditorCursorDown from '../EditorCommand/EditorCommandCursorDown.js'
-import * as EditorCursorEnd from '../EditorCommand/EditorCommandCursorEnd.js'
-import * as EditorCursorHome from '../EditorCommand/EditorCommandCursorHome.js'
-import * as EditorCursorSet from '../EditorCommand/EditorCommandCursorSet.js'
-import * as EditorCursorUp from '../EditorCommand/EditorCommandCursorUp.js'
-import * as EditorCursorWordLeft from '../EditorCommand/EditorCommandCursorWordLeft.js'
-import * as EditorCursorWordPartLeft from '../EditorCommand/EditorCommandCursorWordPartLeft.js'
-import * as EditorCursorWordPartRight from '../EditorCommand/EditorCommandCursorWordPartRight.js'
-import * as EditorCursorWordRight from '../EditorCommand/EditorCommandCursorWordRight.js'
 import * as EditorCut from '../EditorCommand/EditorCommandCut.js'
 import * as EditorDeleteAllLeft from '../EditorCommand/EditorCommandDeleteAllLeft.js'
 import * as EditorDeleteAllRight from '../EditorCommand/EditorCommandDeleteAllRight.js'
@@ -89,6 +79,15 @@ const Imports = {
   CopyLineUp:()=>import('../EditorCommand/EditorCommandCopyLineUp.js'),
   CursorCharacterLeft:()=>import('../EditorCommand/EditorCommandCursorCharacterLeft.js'),
   CursorCharacterRight:()=>import('../EditorCommand/EditorCommandCursorCharacterRight.js'),
+  CursorEnd:()=>import('../EditorCommand/EditorCommandCursorEnd.js'),
+  CursorDown:()=>import('../EditorCommand/EditorCommandCursorDown.js'),
+  CursorSet:()=>import('../EditorCommand/EditorCommandCursorSet.js'),
+  CursorHome:()=>import('../EditorCommand/EditorCommandCursorHome.js'),
+  CursorUp:()=>import('../EditorCommand/EditorCommandCursorUp.js'),
+  CursorWordLeft:()=>import('../EditorCommand/EditorCommandCursorWordLeft.js'),
+  CursorWordPartLeft:()=>import('../EditorCommand/EditorCommandCursorWordPartLeft.js'),
+  CursorWordRight:()=>import('../EditorCommand/EditorCommandCursorWordRight.js'),
+  CursorWordPartRight:()=>import('../EditorCommand/EditorCommandCursorWordPartRight.js'),
 }
 
 // prettier-ignore
@@ -106,16 +105,16 @@ export const Commands = {
   'Editor.cursorCharacterLeft': lazyCommand(Imports.CursorCharacterLeft, 'editorCursorCharacterLeft'),
   'Editor.cursorLeft': lazyCommand(Imports.CursorCharacterLeft, 'editorCursorCharacterLeft'),
   'Editor.cursorRight': lazyCommand(Imports.CursorCharacterRight, 'editorCursorCharacterRight'),
-  'Editor.cursorEnd': Viewlet.wrapViewletCommand('EditorText', EditorCursorEnd.editorCursorEnd),
-  'Editor.cursorCharacterRight': Viewlet.wrapViewletCommand('EditorText', EditorCursorCharacterRight.editorCursorsCharacterRight),
-  'Editor.cursorDown': Viewlet.wrapViewletCommand('EditorText', EditorCursorDown.editorCursorsDown),
-  'Editor.cursorSet': Viewlet.wrapViewletCommand('EditorText', EditorCursorSet.editorCursorSet),
-  'Editor.cursorHome': Viewlet.wrapViewletCommand('EditorText', EditorCursorHome.editorCursorsHome),
-  'Editor.cursorUp': Viewlet.wrapViewletCommand('EditorText', EditorCursorUp.editorCursorsUp),
-  'Editor.cursorWordLeft': Viewlet.wrapViewletCommand('EditorText', EditorCursorWordLeft.editorCursorWordLeft),
-  'Editor.cursorWordPartLeft': Viewlet.wrapViewletCommand('EditorText', EditorCursorWordPartLeft.editorCursorWordPartLeft),
-  'Editor.cursorWordPartRight': Viewlet.wrapViewletCommand('EditorText', EditorCursorWordPartRight.editorCursorWordPartRight),
-  'Editor.cursorWordRight': Viewlet.wrapViewletCommand('EditorText', EditorCursorWordRight.editorCursorWordRight),
+  'Editor.cursorCharacterRight': lazyCommand(Imports.CursorCharacterRight, 'editorCursorCharacterRight'),
+  'Editor.cursorEnd': lazyCommand(Imports.CursorEnd, 'editorCursorEnd'),
+  'Editor.cursorDown': lazyCommand(Imports.CursorDown, 'editorCursorDown'),
+  'Editor.cursorSet': lazyCommand(Imports.CursorSet, 'editorCursorSet') ,
+  'Editor.cursorHome': lazyCommand(Imports.CursorHome, 'editorCursorsHome'),
+  'Editor.cursorUp': lazyCommand(Imports.CursorUp, 'editorCursorsUp'),
+  'Editor.cursorWordLeft': lazyCommand(Imports.CursorWordLeft, 'editorCursorWordLeft'),
+  'Editor.cursorWordPartLeft': lazyCommand(Imports.CursorWordPartLeft,'editorCursorWordPartLeft'),
+  'Editor.cursorWordPartRight': lazyCommand(Imports.CursorWordPartRight, 'editorCursorWordPartRight'),
+  'Editor.cursorWordRight': lazyCommand(Imports.CursorWordRight, 'editorCursorWordRight'),
   'Editor.cut': Viewlet.wrapViewletCommand('EditorText', EditorCut.editorCut),
   'Editor.deleteAllLeft': Viewlet.wrapViewletCommand('EditorText', EditorDeleteAllLeft.editorDeleteAllLeft),
   'Editor.deleteAllRight': Viewlet.wrapViewletCommand('EditorText', EditorDeleteAllRight.editorDeleteAllRight),
