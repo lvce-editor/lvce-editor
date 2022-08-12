@@ -23,7 +23,7 @@ const RendererWorker = await import(
 )
 
 const ViewletEditorCompletion = await import(
-  '../src/parts/Viewlet/ViewletEditorCompletion.js'
+  '../src/parts/ViewletEditorCompletion/ViewletEditorCompletion.js'
 )
 
 const getTextContent = (node) => {
