@@ -16,6 +16,13 @@
   line-height: 22px;
   contain: strict;
   width: 100%;
+  display: flex;
+}
+
+.TreeItemLabel {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: inline-block;
 }
 
 /* .TreeItem:focus {
@@ -33,7 +40,7 @@
   background: #515f59;
 }
 
-.TreeItem::before {
+.TreeItem [class^='Icon']::before {
   content: ' ';
   contain: strict;
   pointer-events: none;
