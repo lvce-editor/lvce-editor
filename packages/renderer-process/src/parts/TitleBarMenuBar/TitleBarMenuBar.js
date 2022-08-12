@@ -53,7 +53,8 @@ const create$TopLevelEntry = (item) => {
   $TitleBarTopLevelEntry.tabIndex = -1
   $TitleBarTopLevelEntry.ariaHasPopup = 'true'
   $TitleBarTopLevelEntry.ariaExpanded = 'false'
-  $TitleBarTopLevelEntry.setAttribute('role', 'menuitem') // TODO use idl once supported by chrome
+  // @ts-ignore
+  $TitleBarTopLevelEntry.role = 'menuitem'
   if (item.keyboardShortCut) {
     $TitleBarTopLevelEntry.ariaKeyShortcuts = item.keyboardShortCut
   }
@@ -298,7 +299,8 @@ const handleFocusOut = (event) => {
 export const create = () => {
   const $TitleBarMenu = document.createElement('ul')
   $TitleBarMenu.id = 'TitleBarMenu'
-  $TitleBarMenu.setAttribute('role', 'menubar')
+  // @ts-ignore
+  $TitleBarMenu.role = 'menubar'
   $TitleBarMenu.onkeydown = handleKeyDown
   // TODO could have one mousedown listener on titlebar that delegates to titlebarMenu if necessary
   $TitleBarMenu.onmousedown = handleClick

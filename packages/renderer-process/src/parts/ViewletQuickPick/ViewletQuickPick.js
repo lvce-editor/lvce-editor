@@ -97,7 +97,8 @@ const create$QuickPickItem = () => {
   // $QuickPickItemDescription.textContent = item.description
   const $QuickPickItem = document.createElement('div') // TODO ul/li would be better for structure but might be slower
   $QuickPickItem.className = 'QuickPickItem'
-  $QuickPickItem.setAttribute('role', 'option')
+  // @ts-ignore
+  $QuickPickItem.role = 'option'
   // $QuickPickItem.id = `QuickPickItem-${index}`
   // $QuickPickItem.dataset.index = index
   // $QuickPickItem.ariaPosInSet = `${index + 1}`
@@ -262,8 +263,9 @@ const handleBeforeInput = (event) => {
 
 export const create = (value, visiblePicks, focusIndex) => {
   const $QuickPickInput = InputBox.create()
-  $QuickPickInput.setAttribute('aria-controls', 'QuickPickItems')
-  $QuickPickInput.setAttribute('role', 'combobox') // TODO use idl once supported
+  $QuickPickInput.setAttribute('aria-controls', 'QuickPickItems') // TODO use idl once supported
+  // @ts-ignore
+  $QuickPickInput.role = 'combobox'
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
   $QuickPickInput.ariaAutoComplete = 'list'
   $QuickPickInput.setAttribute('aria-activedescendant', '')
@@ -279,7 +281,8 @@ export const create = (value, visiblePicks, focusIndex) => {
 
   const $QuickPickItems = document.createElement('div')
   $QuickPickItems.id = 'QuickPickItems'
-  $QuickPickItems.setAttribute('role', 'listbox')
+  // @ts-ignore
+  $QuickPickItems.role = 'listbox'
   $QuickPickItems.onmousedown = handleMouseDown
 
   // TODO this works well with nvda but not with windows narrator
@@ -288,14 +291,15 @@ export const create = (value, visiblePicks, focusIndex) => {
 
   const $QuickPick = document.createElement('div')
   $QuickPick.id = 'QuickPick'
-  // $QuickPick.setAttribute('role', 'dialog')
+  // $QuickPick.role= 'dialog'
   $QuickPick.append($QuickPickHeader, $QuickPickItems)
   // $QuickPick.setAttribute('aria-modal', 'false') // TODO why is this
   $QuickPick.ariaLabel = 'Quick open'
 
   // workaround for chrome bug (maybe?), role application is already on body but
   // chrome sometimes uses role document
-  document.body.setAttribute('role', 'application')
+  // @ts-ignore
+  document.body.role = 'application'
 
   Widget.append($QuickPick)
   Focus.focus($QuickPickInput, 'quickPickInput')

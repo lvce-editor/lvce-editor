@@ -7,7 +7,8 @@ import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
 
 const create$Tab = () => {
   const $Tab = document.createElement('li')
-  $Tab.setAttribute('role', 'tab')
+  // @ts-ignore
+  $Tab.role = 'tab'
   $Tab.className = 'EditorTab'
   $Tab.setAttribute('aria-description', '')
   return $Tab

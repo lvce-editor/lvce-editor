@@ -32,11 +32,13 @@ const create$ActivityBarItem = (item) => {
   }
   switch (item.flags) {
     case /* Tab */ 1:
-      $ActivityBarItem.setAttribute('role', 'tab')
+      // @ts-ignore
+      $ActivityBarItem.role = 'tab'
       $ActivityBarItem.ariaSelected = 'false'
       break
     case /* Button */ 2:
-      $ActivityBarItem.setAttribute('role', 'button')
+      // @ts-ignore
+      $ActivityBarItem.role = 'button'
       $ActivityBarItem.ariaHasPopup = 'true'
       break
     default:
@@ -106,7 +108,7 @@ export const name = 'ActivityBar'
 
 export const create = () => {
   const $ActivityBar = Layout.state.$ActivityBar
-  $ActivityBar.setAttribute('role', 'toolbar') // TODO use idl once supported by chrome
+  $ActivityBar.role = 'toolbar'
   $ActivityBar.ariaLabel = 'Activity Bar'
   $ActivityBar.ariaOrientation = 'vertical'
   // $ActivityBar.append(...activityBarItems.map(create$ActivityBarItem))

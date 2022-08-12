@@ -179,7 +179,8 @@ export const create = () => {
   $ExtensionList.className = 'ExtensionList'
   $ExtensionList.tabIndex = 0
   $ExtensionList.ariaLabel = 'Extensions'
-  $ExtensionList.setAttribute('role', 'list')
+  // @ts-ignore
+  $ExtensionList.role = 'list'
   $ExtensionList.oncontextmenu = handleContextMenu
   $ExtensionList.onclick = handleClick
   $ExtensionList.onfocus = handleFocus
@@ -345,9 +346,10 @@ const create$Extension = () => {
     $ExtensionFooter
   )
   const $ExtensionListItem = document.createElement('article')
-  $ExtensionListItem.ariaRoleDescription = 'Extension' // TODO use idl once supported and add test for this
+  $ExtensionListItem.ariaRoleDescription = 'Extension'
   $ExtensionListItem.className = 'ExtensionListItem'
-  $ExtensionListItem.setAttribute('role', 'listitem')
+  // @ts-ignore
+  $ExtensionListItem.role = 'listitem'
 
   $ExtensionListItem.append(icon, $ExtensionDetail)
   return $ExtensionListItem

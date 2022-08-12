@@ -207,7 +207,8 @@ export const create = (props) => {
   $Viewlet.className = 'ListItems Viewlet'
   $Viewlet.tabIndex = 0
   $Viewlet.dataset.viewletId = 'Explorer'
-  $Viewlet.setAttribute('role', 'tree')
+  // @ts-ignore
+  $Viewlet.role= 'tree'
   $Viewlet.ariaLabel = 'Files Explorer'
   $Viewlet.addEventListener('keydown', handleKeyDown)
   $Viewlet.addEventListener('mousedown', handleMouseDown)

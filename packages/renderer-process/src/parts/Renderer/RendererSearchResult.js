@@ -3,7 +3,8 @@ export const renderTemplate = () => {
   label.className = 'SearchResultLabel'
   const root = document.createElement('div')
   root.className = 'ListItem SearchResults'
-  root.setAttribute('role', 'option')
+  // @ts-ignore
+  root.role = 'option'
   root.append(label)
   return {
     root,

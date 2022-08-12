@@ -7,7 +7,8 @@ export const state = {
 const create$AriaAlert = () => {
   const $AriaAlert = document.createElement('div')
   $AriaAlert.className = 'AriaAlert'
-  $AriaAlert.setAttribute('role', 'alert') // TODO use idl once supported in chrome
+  // @ts-ignore
+  $AriaAlert.role = 'alert' // TODO use idl once supported in chrome
   $AriaAlert.ariaAtomic = 'true'
   return $AriaAlert
 }

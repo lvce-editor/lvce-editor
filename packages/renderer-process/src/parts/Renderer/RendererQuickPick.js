@@ -5,7 +5,8 @@ export const renderTemplate = () => {
   description.className = 'QuickPickItemDescription'
   const root = document.createElement('li')
   root.className = 'ListItem QuickPickItem'
-  root.setAttribute('role', 'option')
+  // @ts-ignore
+  root.role= 'option'
   root.append(label, description)
   return {
     root,

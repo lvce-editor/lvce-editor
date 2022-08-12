@@ -34,10 +34,12 @@ export const create = () => {
   const $Message = document.createElement('div')
   $Message.className = 'LocationsMessage'
   $Message.id = 'LocationsMessage'
-  $Message.setAttribute('role', 'status')
+  // @ts-ignore
+  $Message.role = 'status'
   const $Locations = document.createElement('div')
   $Locations.className = 'LocationList'
-  $Locations.setAttribute('role', 'tree')
+  // @ts-ignore
+  $Locations.role = 'tree'
   $Locations.ariaLabel = 'Locations'
   $Locations.tabIndex = 0
   $Locations.onmousedown = handleLocationsMouseDown
@@ -57,7 +59,8 @@ const create$Location = () => {
   // TODO reuse logic from tree view
   const $Location = document.createElement('div')
   $Location.className = 'TreeItem'
-  $Location.setAttribute('role', 'treeitem')
+  // @ts-ignore
+  $Location.role = 'treeitem'
   return $Location
 }
 

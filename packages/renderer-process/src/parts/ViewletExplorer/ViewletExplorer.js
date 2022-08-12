@@ -228,10 +228,12 @@ export const create = () => {
   $Viewlet.className = 'Viewlet'
   $Viewlet.tabIndex = 0
   $Viewlet.dataset.viewletId = 'Explorer'
-  $Viewlet.setAttribute('role', 'tree')
+  // @ts-ignore
+  $Viewlet.role = 'tree'
   $Viewlet.ariaLabel = 'Files Explorer'
   $Viewlet.onmousedown = handleMouseDown
   $Viewlet.oncontextmenu = handleContextMenu
+  // TODO use the other mouse events that capture automatically
   $Viewlet.addEventListener('mouseenter', handleMouseEnter, { capture: true })
   $Viewlet.addEventListener('mouseleave', handleMouseLeave, { capture: true })
   $Viewlet.addEventListener('wheel', handleWheel, { passive: true })
@@ -245,7 +247,8 @@ export const create = () => {
 
 const create$Row = () => {
   const $Row = document.createElement('div')
-  $Row.setAttribute('role', 'treeitem')
+  // @ts-ignore
+  $Row.role = 'treeitem'
   $Row.className = 'TreeItem'
   const $LabelText = document.createTextNode('')
   const $Label = document.createElement('div')

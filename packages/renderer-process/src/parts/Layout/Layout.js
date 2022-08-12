@@ -246,8 +246,9 @@ export const show = (points) => {
   state.$SashPanel = $SashPanel
   state.$SashSideBar = $SashSideBar
   update(points)
-  // document.body.setAttribute('role', 'application') // TODO this doesn't seem to work
-  $Workbench.setAttribute('role', 'application')
+  // document.body.role= 'application' // TODO this doesn't seem to work
+  // @ts-ignore
+  $Workbench.role = 'application'
   document.body.append($Workbench)
   window.addEventListener('resize', handleResize, { passive: true })
   $SashSideBar.addEventListener('pointerdown', handleSashPointerDown)

@@ -8,7 +8,7 @@ export const create = () => {
   // TODO add tests for aria properties
   const $TitleBar = Layout.state.$TitleBar
   $TitleBar.ariaLabel = 'Title Bar'
-  $TitleBar.setAttribute('role', 'contentinfo')
+  $TitleBar.role = 'contentinfo'
   $TitleBar.append($TitleBarMenu)
   return {
     $TitleBar,
