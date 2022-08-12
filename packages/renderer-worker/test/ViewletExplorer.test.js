@@ -4461,3 +4461,138 @@ test('openContainingFolder', async () => {
   expect(Command.execute).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenCalledWith('Open.openNativeFolder', '/test')
 })
+
+test('revealItem - error - not found', async () => {
+  const state = {
+    ...ViewletExplorer.create(),
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    maxLineY: 20,
+    root: '/test',
+    dirents: [],
+  }
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    throw new Error('File not found: /test/index.js')
+  })
+  await expect(
+    ViewletExplorer.revealItem(state, '/test/index.js')
+  ).rejects.toThrowError('File not found: /test/index.js')
+})
+
+test.skip('revealItem - one level deep', async () => {
+  const state = {
+    ...ViewletExplorer.create(),
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    maxLineY: 20,
+    root: '/test',
+    pathSeparator: '/',
+    dirents: [],
+  }
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test/':
+        return [{ name: 'a', type: 'folder' }]
+      case '/test/a':
+        return [{ name: 'b.txt', type: 'file' }]
+      default:
+        throw new Error(`file not found ${uri}`)
+    }
+  })
+  expect(
+    await ViewletExplorer.revealItem(state, '/test/a/b.txt')
+  ).toMatchObject({
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 1,
+        type: 'directory',
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'b.txt',
+        path: '/test/b.txt',
+        posInSet: 1,
+        setSize: 1,
+        type: 'file',
+      },
+    ],
+  })
+})
+
+test('revealItem - already visible', async () => {
+  const state = {
+    ...ViewletExplorer.create(),
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    maxLineY: 20,
+    root: '/test',
+    pathSeparator: '/',
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 1,
+        type: 'directory',
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'b.txt',
+        path: '/test/a/b.txt',
+        posInSet: 1,
+        setSize: 1,
+        type: 'file',
+      },
+    ],
+  }
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    throw new Error(`file not found ${uri}`)
+  })
+  expect(
+    await ViewletExplorer.revealItem(state, '/test/a/b.txt')
+  ).toMatchObject({
+    focused: true,
+    focusedIndex: 1,
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 1,
+        type: 'directory',
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'b.txt',
+        path: '/test/a/b.txt',
+        posInSet: 1,
+        setSize: 1,
+        type: 'file',
+      },
+    ],
+  })
+})

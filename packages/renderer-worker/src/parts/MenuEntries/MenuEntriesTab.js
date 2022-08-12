@@ -1,5 +1,10 @@
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+
 // TODO should pass tab uri as argument or tab index
 export const getMenuEntries = () => {
+  const mainState = ViewletStates.getState('Main')
+  const editor = mainState.editors[mainState.focusedIndex]
+  const uri = editor.uri
   return [
     {
       id: 'tabClose',
@@ -24,6 +29,13 @@ export const getMenuEntries = () => {
       label: 'Close All',
       flags: /* None */ 0,
       command: /* TODO */ -1,
+    },
+    {
+      id: 'revealInExplorer',
+      label: 'Reveal in Explorer',
+      flags: /* None */ 0,
+      command: 'Explorer.revealItem',
+      args: [uri],
     },
   ]
 }
