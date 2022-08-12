@@ -143,7 +143,8 @@ const create$Menu = () => {
   // TODO set aria label on menu (e.g. File, Edit, Selection)
   const $Menu = document.createElement('ul')
   $Menu.className = 'Menu'
-  $Menu.setAttribute('role', 'menu')
+  // @ts-ignore
+  $Menu.role = 'menu'
   $Menu.tabIndex = -1
   // $ContextMenu.onmousedown = contextMenuHandleMouseDown
   // TODO mousedown vs click? (click is usually better but mousedown is faster, why wait 100ms?)

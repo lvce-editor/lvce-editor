@@ -30,7 +30,8 @@ export const create = () => {
   $ViewletOutputSelect.ariaLabel = 'Select a log'
   const $ViewletOutputContent = document.createElement('div')
   $ViewletOutputContent.className = 'OutputContent'
-  $ViewletOutputContent.setAttribute('role', 'log')
+  // @ts-ignore
+  $ViewletOutputContent.role = 'log'
   $ViewletOutputContent.tabIndex = 0
   const $ViewletOutputWidgets = document.createElement('div')
   $ViewletOutputWidgets.className = 'OutputWidgets'

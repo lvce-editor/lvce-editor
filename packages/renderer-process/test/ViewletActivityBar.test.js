@@ -341,7 +341,7 @@ test('accessibility - ActivityBarItem tab should have role tab and aria-keyshort
       flags: /* Button */ 2,
     },
   ])
-  expect(state.$ActivityBar.firstChild.getAttribute('role')).toBe('tab')
+  expect(state.$ActivityBar.firstChild.role).toBe('tab')
   expect(state.$ActivityBar.firstChild.ariaKeyShortcuts).toBe('Control+Shift+X')
 })
 
@@ -367,7 +367,7 @@ test('accessibility - ActivityBar should have role toolbar, ariaLabel and ariaOr
       flags: /* Button */ 2,
     },
   ])
-  expect(state.$ActivityBar.getAttribute('role')).toBe('toolbar')
+  expect(state.$ActivityBar.role).toBe('toolbar')
   expect(state.$ActivityBar.ariaLabel).toBe('Activity Bar')
   expect(state.$ActivityBar.ariaOrientation).toBe('vertical')
 })
@@ -397,7 +397,7 @@ test('accessibility - ActivityBarItem button should have role button and ariaHas
       keyShortcuts: '',
     },
   ])
-  expect(state.$ActivityBar.lastChild.getAttribute('role')).toBe('button')
+  expect(state.$ActivityBar.lastChild.role).toBe('button')
   expect(state.$ActivityBar.lastChild.ariaHasPopup).toBe('true')
 })
 

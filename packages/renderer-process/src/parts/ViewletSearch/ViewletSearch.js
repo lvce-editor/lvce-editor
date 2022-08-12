@@ -46,7 +46,8 @@ export const create = () => {
   $SearchResults.onclick = handleClick
 
   const $SearchStatus = document.createElement('div')
-  $SearchStatus.setAttribute('role', 'status')
+  // @ts-ignore
+  $SearchStatus.role = 'status'
 
   const $Viewlet = document.createElement('div')
   $Viewlet.dataset.viewletId = 'Search'
@@ -73,7 +74,8 @@ export const focus = (state) => {
 
 const create$Row = () => {
   const $Row = document.createElement('div')
-  $Row.setAttribute('role', 'treeitem')
+  // @ts-ignore
+  $Row.role = 'treeitem'
   $Row.className = 'TreeItem'
   return $Row
 }

@@ -5,7 +5,8 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 const create$PanelTab = (label, index) => {
   const $PanelTab = document.createElement('div')
   $PanelTab.className = 'PanelTab'
-  $PanelTab.setAttribute('role', 'tab')
+  // @ts-ignore
+  $PanelTab.role = 'tab'
   $PanelTab.textContent = label
   $PanelTab.id = `PanelTab-${index + 1}`
   return $PanelTab
@@ -38,7 +39,8 @@ const panelTabsHandleClick = (event) => {
 export const create = () => {
   const $PanelTabs = document.createElement('div')
   $PanelTabs.id = 'PanelTabs'
-  $PanelTabs.setAttribute('role', 'tablist')
+  // @ts-ignore
+  $PanelTabs.role = 'tablist'
   $PanelTabs.onmousedown = panelTabsHandleClick
   $PanelTabs.tabIndex = -1
   const $PanelHeader = document.createElement('div')

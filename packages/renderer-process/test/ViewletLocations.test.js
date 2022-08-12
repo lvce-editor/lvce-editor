@@ -91,7 +91,8 @@ test('accessibility - location list should have role tree, aria label and tabind
     },
   ])
   // expect(state.$Locations.ariaLabel).toBe('References') // TODO
-  expect(state.$Locations.getAttribute('role')).toBe('tree')
+  // @ts-ignore
+  expect(state.$Locations.role).toBe('tree')
   expect(state.$Locations.tabIndex).toBe(0)
 })
 

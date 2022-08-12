@@ -48,7 +48,8 @@ export const create = () => {
 
 const create$Tab = () => {
   const $Tab = document.createElement('li')
-  $Tab.setAttribute('role', 'tab')
+  // @ts-ignore
+  $Tab.role ='tab'
   $Tab.className = 'EditorTab'
   $Tab.ariaSelected = 'true'
   $Tab.tabIndex = 0

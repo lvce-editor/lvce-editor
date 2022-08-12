@@ -18,7 +18,8 @@ const handleDrop = async (event) => {
 const create$MainTabs = () => {
   const $MainTabs = document.createElement('div')
   $MainTabs.className = 'MainTabs'
-  $MainTabs.setAttribute('role', 'tablist')
+  // @ts-ignore
+  $MainTabs.role = 'tablist'
   $MainTabs.onmousedown = handleTabsMouseDown
   $MainTabs.oncontextmenu = handleTabsContextMenu
   // TODO race condition: what if tab has already been closed?
@@ -36,7 +37,6 @@ export const create = () => {
 
   // const $MainTabs = document.createElement('div')
   // $MainTabs.className = 'MainTabs'
-  // $MainTabs.setAttribute('role', 'tablist')
   // $MainTabs.onmousedown = handleTabsMouseDown
   // $MainTabs.oncontextmenu = handleTabsContextMenu
   // // TODO race condition: what if tab has already been closed?
@@ -191,7 +191,8 @@ export const openViewlet = (state, id, tabLabel, tabTitle, oldActiveIndex) => {
   $Tab.textContent = tabLabel
   $Tab.title = tabTitle
   $Tab.ariaSelected = 'true'
-  $Tab.setAttribute('role', 'tab')
+  // @ts-ignore
+  $Tab.role = 'tab'
 
   const $TabCloseButton = document.createElement('button')
   $TabCloseButton.className = 'EditorTabCloseButton'
@@ -256,7 +257,8 @@ export const openAnotherTab = async (
   $Tab.textContent = tabLabel
   $Tab.title = tabTitle
   $Tab.ariaSelected = 'true'
-  $Tab.setAttribute('role', 'tab')
+  // @ts-ignore
+  $Tab.role = 'tab'
   $Tab.tabIndex = 0
   const $TabCloseButton = document.createElement('button')
   $TabCloseButton.className = 'EditorTabCloseButton'

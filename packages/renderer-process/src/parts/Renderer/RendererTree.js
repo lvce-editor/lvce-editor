@@ -3,7 +3,8 @@ export const renderTemplate = () => {
   label.className = 'TreeItemLabel'
   const root = document.createElement('div')
   root.className = 'ListItem TreeItem'
-  root.setAttribute('role', 'treeitem')
+  // @ts-ignore
+  root.role = 'treeitem'
   root.append(label)
   return {
     root,
@@ -34,7 +35,7 @@ export const renderElement = (template, data, index) => {
 }
 
 export const renderWrapper = (wrapper) => {
-  wrapper.setAttribute('role', 'tree')
+  wrapper.role = 'tree'
   wrapper.ariaLabel = 'Files Explorer'
   wrapper.setAttribute('aria-multiselectable', 'true')
 }

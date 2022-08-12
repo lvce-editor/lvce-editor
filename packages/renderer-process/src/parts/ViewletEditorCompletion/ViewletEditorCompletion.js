@@ -38,7 +38,8 @@ const handleMousedown = (event) => {
 const create$CompletionItem = (item, index) => {
   const $CompletionItem = document.createElement('li')
   $CompletionItem.textContent = item.label
-  $CompletionItem.setAttribute('role', 'option')
+  // @ts-ignore
+  $CompletionItem.role = 'option'
   $CompletionItem.id = `CompletionItem-${index}`
   $CompletionItem.className = `EditorCompletionItem Icon${item.icon}`
   return $CompletionItem
@@ -50,7 +51,8 @@ export const create = () => {
   $Viewlet.className = 'Viewlet Completions'
   $Viewlet.dataset.viewletId = name
   $Viewlet.id = 'Completions'
-  $Viewlet.setAttribute('role', 'listbox')
+  // @ts-ignore
+  $Viewlet.role= 'listbox'
   $Viewlet.ariaLabel = 'Suggest'
   $Viewlet.onmousedown = handleMousedown
   return {

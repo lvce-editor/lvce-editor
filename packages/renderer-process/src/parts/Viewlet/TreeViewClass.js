@@ -5,7 +5,8 @@ class TreeView {
     this.$Viewlet.className = 'ListItems Viewlet'
     this.$Viewlet.tabIndex = 0
     this.$Viewlet.dataset.viewletId = 'Explorer'
-    this.$Viewlet.setAttribute('role', 'tree')
+    // @ts-ignore
+    this.$Viewlet.role = 'tree'
     this.$Viewlet.addEventListener('keydown', this.handleKeyDown.bind(this))
     this.$Viewlet.addEventListener('mousedown', this.handleMouseDown.bind(this))
     this.$Viewlet.addEventListener(

@@ -36,7 +36,8 @@ test('setOptions', () => {
 
 test('accessibility - should have role log', () => {
   const state = ViewletOutput.create()
-  expect(state.$Content.getAttribute('role')).toBe('log')
+  // @ts-ignore
+  expect(state.$Content.role).toBe('log')
 })
 
 test('append', () => {
@@ -68,5 +69,6 @@ test('handleError', () => {
 
 test('accessibility - ViewletOutputContent should have role log', () => {
   const state = ViewletOutput.create()
-  expect(state.$Content.getAttribute('role')).toBe('log')
+  // @ts-ignore
+  expect(state.$Content.role).toBe('log')
 })

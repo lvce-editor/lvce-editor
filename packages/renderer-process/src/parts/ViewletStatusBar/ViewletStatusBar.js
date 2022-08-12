@@ -33,7 +33,8 @@ const getMaskImageUrl = (icon) => {
 const create$StatusBarItem = (item) => {
   const $StatusBarItem = document.createElement('li')
   $StatusBarItem.className = 'StatusBarItem'
-  $StatusBarItem.setAttribute('role', 'button')
+  // @ts-ignore
+  $StatusBarItem.role = 'button'
   $StatusBarItem.dataset.name = item.name
   $StatusBarItem.tabIndex = -1
   $StatusBarItem.textContent = item.text
@@ -83,7 +84,7 @@ export const create = (statusBarItemsLeft, statusBarItemsRight) => {
   const $StatusBar = Layout.state.$StatusBar
   $StatusBar.onclick = handleClick
   $StatusBar.tabIndex = 0
-  $StatusBar.setAttribute('role', 'status')
+  $StatusBar.role = 'status'
   $StatusBar.ariaLive = 'off' // see https://github.com/microsoft/vscode/issues/94677
   $StatusBar.append($StatusBarItemsLeft, $StatusBarItemsRight)
 

@@ -459,7 +459,8 @@ const render$Process = ($Process, process) => {
 const create$GridCell = () => {
   const $Cell = document.createElement('td')
   $Cell.className = 'Cell'
-  $Cell.setAttribute('role', 'gridcell')
+  // @ts-ignore
+  $Cell.role = 'gridcell'
   $Cell.tabIndex = -1
   const $Text = document.createTextNode('')
   $Cell.append($Text)
@@ -469,7 +470,8 @@ const create$GridCell = () => {
 const create$Row = () => {
   const $Row = document.createElement('tr')
   $Row.className = 'Row'
-  $Row.setAttribute('role', 'row')
+  // @ts-ignore
+  $Row.role= 'row'
   $Row.tabIndex = -1
   // Set aria-description to empty string so that screen readers don't read title as well
   // More details https://github.com/microsoft/vscode/issues/95378

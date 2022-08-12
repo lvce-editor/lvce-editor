@@ -443,7 +443,8 @@ export const create = () => {
   $EditorInput.setAttribute('autocorrect', 'off')
   $EditorInput.setAttribute('wrap', 'off')
   $EditorInput.setAttribute('spellcheck', 'false')
-  $EditorInput.setAttribute('role', 'textbox')
+  // @ts-ignore
+  $EditorInput.role= 'textbox'
   $EditorInput.onpaste = handlePaste
   // TODO where to best put listeners (side effects)
   $EditorInput.addEventListener('beforeinput', handleBeforeInput)
@@ -516,7 +517,8 @@ export const create = () => {
   const $Editor = document.createElement('div')
   $Editor.className = 'Viewlet Editor'
   $Editor.dataset.viewletId = 'EditorText'
-  $Editor.setAttribute('role', 'code')
+  // @ts-ignore
+  $Editor.role= 'code'
   $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBar)
   if (Platform.isMobileOrTablet()) {
     $Editor.addEventListener('touchstart', handleTouchStart, { passive: true })
