@@ -133,7 +133,7 @@
   },
   {
     "key": "ctrl+`",
-    "command": "ViewService.toggleView",
+    "command": "Layout.togglePanel",
     "args": ["Terminal"]
   },
   {

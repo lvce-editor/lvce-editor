@@ -37,7 +37,9 @@ export const handleData = async (state, data) => {
   // Terminal.handleData(state, data)
   const parsedData = new Uint8Array(data.data)
   await RendererProcess.invoke(
-    /* ViewletTerminal.write */ 'Terminal.write',
+    /* Viewlet.send */ 'Viewlet.send',
+    /* id */ 'Terminal',
+    /* method */ 'write',
     /* data */ parsedData
   )
 }

@@ -6,7 +6,6 @@ const create$PanelTab = (label) => {
   const $PanelTab = document.createElement('div')
   $PanelTab.className = 'PanelTab'
   $PanelTab.setAttribute('role', 'tab')
-  $PanelTab.tabIndex = -1
   $PanelTab.textContent = label
   return $PanelTab
 }
@@ -25,7 +24,7 @@ const panelTabsHandleClick = (event) => {
     case 'PanelTab': {
       const index = getNodeIndex($Target)
       RendererWorker.send(
-        /* Panel.tabsHandleClick */ 'Panel.tabsHandleClick',
+        /* Panel.selectIndex */ 'Panel.selectIndex',
         /* index */ index
       )
       break
@@ -40,6 +39,7 @@ export const create = () => {
   $PanelTabs.id = 'PanelTabs'
   $PanelTabs.setAttribute('role', 'tablist')
   $PanelTabs.onmousedown = panelTabsHandleClick
+  $PanelTabs.tabIndex = -1
   const $PanelHeader = document.createElement('div')
   $PanelHeader.id = 'PanelHeader'
   $PanelHeader.append($PanelTabs)
@@ -100,16 +100,16 @@ export const dispose = (state) => {
   }
 }
 
-export const selectTab = (state, oldSelectedIndex, newSelectedIndex) => {
+export const setSelectedIndex = (state, oldIndex, newIndex) => {
   const { $PanelTabs } = state
-  if (oldSelectedIndex !== -1) {
-    const $PanelTab = $PanelTabs.children[oldSelectedIndex]
-    $PanelTab.removeAttribute('aria-selected')
-    $PanelTab.tabIndex = -1
+  if (oldIndex !== -1) {
+    const $PanelTab = $PanelTabs.children[oldIndex]
+    $PanelTab.classList.remove('Selected')
   }
-  if (newSelectedIndex !== -1) {
-    const $PanelTab = $PanelTabs.children[newSelectedIndex]
+  if (newIndex !== -1) {
+    const $PanelTab = $PanelTabs.children[newIndex]
+    // $PanelTab.classList.add('Selected')
     $PanelTab.ariaSelected = true
-    $PanelTab.tabIndex = 0
+    $PanelTabs.setAttribute('aria-activedescendant', $PanelTab.id)
   }
 }

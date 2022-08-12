@@ -111,3 +111,17 @@ test('accessibility - PanelTab should have role tab and tabindex 0', () => {
   expect($PanelTabProblems.getAttribute('role')).toBe('tab')
   expect($PanelTabProblems.getAttribute('tabindex')).toBe('-1')
 })
+
+test('setFocusedIndex', () => {
+  const state = ViewletPanel.create()
+  ViewletPanel.setTabs(state, [
+    'Problems',
+    'Output',
+    'Debug Console',
+    'Terminal',
+  ])
+  ViewletPanel.setSelectedIndex(state, -1, 0)
+  expect(state.$PanelTabs.getAttribute('aria-activedescentant')).toBe(
+    'PanelTab-1'
+  )
+})
