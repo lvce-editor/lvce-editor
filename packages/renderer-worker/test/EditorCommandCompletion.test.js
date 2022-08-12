@@ -633,7 +633,7 @@ test.skip('open - cursor changes to column right - matches word', async () => {
     invalidStartIndex: 0,
   }
   await EditorCompletion.open(editor)
-  await EditorCommandCursorCharacterRight.editorCursorsCharacterRight(editor)
+  await EditorCommandCursorCharacterRight.editorCursorCharacterRight(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     'Viewlet.send',
@@ -757,7 +757,7 @@ test.skip('open - cursor changes to column right - matches no word', async () =>
     invalidStartIndex: 0,
   }
   await EditorCompletion.open(editor)
-  await EditorCommandCursorCharacterRight.editorCursorsCharacterRight(editor)
+  await EditorCommandCursorCharacterRight.editorCursorCharacterRight(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,
