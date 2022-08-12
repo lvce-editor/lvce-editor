@@ -165,6 +165,12 @@ const handleMouseDown = (event) => {
 }
 
 const findIndex = ($Target) => {
+  if (
+    $Target.className.includes('Icon') ||
+    $Target.className.includes('TreeItemLabel')
+  ) {
+    return FindIndex.findIndex($Target.parentNode.parentNode, $Target)
+  }
   if ($Target.classList.contains('TreeItem')) {
     return FindIndex.findIndex($Target.parentNode, $Target)
   }
