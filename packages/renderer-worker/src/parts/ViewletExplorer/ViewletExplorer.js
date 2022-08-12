@@ -1184,45 +1184,51 @@ const getIndex = (dirents, uri) => {
   return -1
 }
 
-export const revealItem = async (state, uri) => {
-  Assert.object(state)
-  Assert.string(uri)
-  const root = state.root
-  const dirents = state.dirents
-  const pathSeparator = state.pathSeparator
-  const index = getIndex(dirents, uri)
-  console.log({ index, uri, dirents })
-  if (index === -1) {
-    const relativePath = uri.slice(root.length)
-    const parts = relativePath.split(pathSeparator).slice(0, -1)
-    const newDirents = []
-    for (let i = 0; i < parts.length; i++) {
-      const part = parts[i]
-      const partPath = `${root}${pathSeparator}${part}`
-      console.log({ partPath, part })
-      const childDirents = await getChildDirents(root, pathSeparator, {
-        depth: 0,
-        path: partPath,
-      })
-      newDirents.push(...childDirents)
-      // const dirents = await FileSystem.readDirWithFileTypes(partPath)
-      console.log({ part, childDirents })
-    }
-    const mergedDirents = mergeDirents(state.dirents, newDirents)
-
-    console.log({ relativePath })
-    // TODO
-    console.log({ uri })
-    return {
-      ...state,
-      dirents: mergedDirents,
-    }
+const revealItemHidden = async (state, uri) => {
+  const { root, pathSeparator } = state
+  const relativePath = uri.slice(root.length)
+  const parts = relativePath.split(pathSeparator).slice(0, -1)
+  const newDirents = []
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i]
+    const partPath = `${root}${pathSeparator}${part}`
+    console.log({ partPath, part })
+    const childDirents = await getChildDirents(root, pathSeparator, {
+      depth: 0,
+      path: partPath,
+    })
+    newDirents.push(...childDirents)
+    // const dirents = await FileSystem.readDirWithFileTypes(partPath)
+    console.log({ part, childDirents })
   }
+  const mergedDirents = mergeDirents(state.dirents, newDirents)
+
+  console.log({ relativePath })
+  // TODO
+  console.log({ uri })
+  return {
+    ...state,
+    dirents: mergedDirents,
+  }
+}
+
+const revealItemVisible = (state, index) => {
   return {
     ...state,
     focused: true,
     focusedIndex: index,
   }
+}
+
+export const revealItem = async (state, uri) => {
+  Assert.object(state)
+  Assert.string(uri)
+  const dirents = state.dirents
+  const index = getIndex(dirents, uri)
+  if (index === -1) {
+    return revealItemHidden(state, uri)
+  }
+  return revealItemVisible(state, index)
 }
 
 export const shouldApplyNewState = (newState, fn) => {
