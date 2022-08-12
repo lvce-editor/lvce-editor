@@ -1,10 +1,5 @@
 import * as EditorBraceCompletion from '../EditorCommand/EditorCommandBraceCompletion.js'
 import * as EditorCompletion from '../EditorCommand/EditorCommandCompletion.js'
-import * as EditorComposition from '../EditorCommand/EditorCommandComposition.js'
-import * as EditorCopy from '../EditorCommand/EditorCommandCopy.js'
-import * as EditorCopyLineDown from '../EditorCommand/EditorCommandCopyLineDown.js'
-import * as EditorCopyLineUp from '../EditorCommand/EditorCommandCopyLineUp.js'
-import * as EditorCursorCharacterLeft from '../EditorCommand/EditorCommandCursorCharacterLeft.js'
 import * as EditorCursorCharacterRight from '../EditorCommand/EditorCommandCursorCharacterRight.js'
 import * as EditorCursorDown from '../EditorCommand/EditorCommandCursorDown.js'
 import * as EditorCursorEnd from '../EditorCommand/EditorCommandCursorEnd.js'
@@ -74,7 +69,7 @@ import * as EditorUndo from '../EditorCommand/EditorCommandUndo.js'
 import * as EditorUnindent from '../EditorCommand/EditorCommandUnindent.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
-const createLazyCommand = (importFn, key) => {
+const lazyCommand = (importFn, key) => {
   const lazyCommand = async (...args) => {
     const module = await importFn()
     return module[key](...args)
@@ -86,24 +81,31 @@ const createLazyCommand = (importFn, key) => {
 const Imports = {
   ApplyEdit: () => import('../EditorCommand/EditorCommandApplyEdit.js'),
   Blur: () => import('../EditorCommand/EditorCommandBlur.js'),
-  CancelSelection: () => import('../EditorCommand/EditorCommandCancelSelection.js')
+  CancelSelection: () => import('../EditorCommand/EditorCommandCancelSelection.js'),
+  EditorCompletion:()=>import('../EditorCommand/EditorCommandCompletion.js'),
+  EditorComposition:()=>import('../EditorCommand/EditorCommandComposition.js'),
+  EditorCopy:()=>import('../EditorCommand/EditorCommandCopy.js'),
+  CopyLineDown:()=>import('../EditorCommand/EditorCommandCopyLineDown.js'),
+  CopyLineUp:()=>import('../EditorCommand/EditorCommandCopyLineUp.js'),
+  CursorCharacterLeft:()=>import('../EditorCommand/EditorCommandCursorCharacterLeft.js'),
+  CursorCharacterRight:()=>import('../EditorCommand/EditorCommandCursorCharacterRight.js'),
 }
 
 // prettier-ignore
 export const Commands = {
-  'Editor.applyEdit': createLazyCommand(Imports.ApplyEdit, 'editorApplyEdit'),
-  'Editor.blur': createLazyCommand(Imports.Blur, 'editorBlur'), // TODO needed?
-  'Editor.cancelSelection': createLazyCommand(Imports.CancelSelection, 'editorCancelSelection'),
-  'Editor.close': Viewlet.wrapViewletCommand('EditorText', EditorCompletion.close),
-  'Editor.compositionEnd': Viewlet.wrapViewletCommand('EditorText', EditorComposition.editorCompositionEnd),
-  'Editor.compositionStart': Viewlet.wrapViewletCommand('EditorText', EditorComposition.editorCompositionStart),
-  'Editor.compositionUpdate': Viewlet.wrapViewletCommand('EditorText', EditorComposition.editorCompositionUpdate),
-  'Editor.copy': Viewlet.wrapViewletCommand('EditorText', EditorCopy.editorCopy),
-  'Editor.copyLineDown': Viewlet.wrapViewletCommand('EditorText', EditorCopyLineDown.editorCopyLineDown),
-  'Editor.copyLineUp': Viewlet.wrapViewletCommand('EditorText', EditorCopyLineUp.editorCopyLineUp),
-  'Editor.cursorCharacterLeft': Viewlet.wrapViewletCommand('EditorText', EditorCursorCharacterLeft.editorCursorCharacterLeft),
-  'Editor.cursorLeft': Viewlet.wrapViewletCommand('EditorText', EditorCursorCharacterLeft.editorCursorCharacterLeft),
-  'Editor.cursorRight': Viewlet.wrapViewletCommand('EditorText', EditorCursorCharacterRight.editorCursorsCharacterRight),
+  'Editor.applyEdit': lazyCommand(Imports.ApplyEdit, 'editorApplyEdit'),
+  'Editor.blur': lazyCommand(Imports.Blur, 'editorBlur'), // TODO needed?
+  'Editor.cancelSelection': lazyCommand(Imports.CancelSelection, 'editorCancelSelection'),
+  'Editor.close': lazyCommand(Imports.EditorCompletion, 'close'),
+  'Editor.compositionEnd': lazyCommand(Imports.EditorComposition,'editorCompositionEnd'),
+  'Editor.compositionStart': lazyCommand(Imports.EditorComposition,'editorCompositionStart'),
+  'Editor.compositionUpdate': lazyCommand(Imports.EditorComposition,'editorCompositionUpdate'),
+  'Editor.copy': lazyCommand(Imports.EditorCopy, 'editorCopy'),
+  'Editor.copyLineDown': lazyCommand(Imports.CopyLineDown, 'editorCopyLineDown'),
+  'Editor.copyLineUp': lazyCommand(Imports.CopyLineUp, 'editorCopyLineUp'),
+  'Editor.cursorCharacterLeft': lazyCommand(Imports.CursorCharacterLeft, 'editorCursorCharacterLeft'),
+  'Editor.cursorLeft': lazyCommand(Imports.CursorCharacterLeft, 'editorCursorCharacterLeft'),
+  'Editor.cursorRight': lazyCommand(Imports.CursorCharacterRight, 'editorCursorCharacterRight'),
   'Editor.cursorEnd': Viewlet.wrapViewletCommand('EditorText', EditorCursorEnd.editorCursorEnd),
   'Editor.cursorCharacterRight': Viewlet.wrapViewletCommand('EditorText', EditorCursorCharacterRight.editorCursorsCharacterRight),
   'Editor.cursorDown': Viewlet.wrapViewletCommand('EditorText', EditorCursorDown.editorCursorsDown),
