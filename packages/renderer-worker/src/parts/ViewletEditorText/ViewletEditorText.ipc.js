@@ -11,8 +11,6 @@ import * as EditorHandleTouchEnd from '../EditorCommand/EditorCommandHandleTouch
 import * as EditorHandleTouchMove from '../EditorCommand/EditorCommandHandleTouchMove.js'
 import * as EditorHandleTouchStart from '../EditorCommand/EditorCommandHandleTouchStart.js'
 import * as EditorHandleTripleClick from '../EditorCommand/EditorCommandHandleTripleClick.js'
-import * as EditorCommandIndentLess from '../EditorCommand/EditorCommandIndentLess.js'
-import * as EditorCommandIndentMore from '../EditorCommand/EditorCommandIndentMore.js'
 import * as EditorInsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.js'
 import * as EditorMoveLineDown from '../EditorCommand/EditorCommandMoveLineDown.js'
 import * as EditorMoveLineUp from '../EditorCommand/EditorCommandMoveLineUp.js'
@@ -22,7 +20,6 @@ import * as EditorMoveSelection from '../EditorCommand/EditorCommandMoveSelectio
 import * as EditorMoveSelectionPx from '../EditorCommand/EditorCommandMoveSelectionPx.js'
 import * as EditorPaste from '../EditorCommand/EditorCommandPaste.js'
 import * as EditorPasteText from '../EditorCommand/EditorCommandPasteText.js'
-import * as EditorSave from '../EditorCommand/EditorCommandSave.js'
 import * as EditorSelectAllOccurrences from '../EditorCommand/EditorCommandSelectAllOccurrences.js'
 import * as EditorSelectCharacterLeft from '../EditorCommand/EditorCommandSelectCharacterLeft.js'
 import * as EditorSelectCharacterRight from '../EditorCommand/EditorCommandSelectCharacterRight.js'
@@ -30,8 +27,6 @@ import * as EditorSelectInsideString from '../EditorCommand/EditorCommandSelectI
 import * as EditorSelectLine from '../EditorCommand/EditorCommandSelectLine.js'
 import * as EditorSelectNextOccurrence from '../EditorCommand/EditorCommandSelectNextOccurrence.js'
 import * as EditorSelectWord from '../EditorCommand/EditorCommandSelectWord.js'
-import * as EditorSelectWordLeft from '../EditorCommand/EditorCommandSelectWordLeft.js'
-import * as EditorSelectWordRight from '../EditorCommand/EditorCommandSelectWordRight.js'
 import * as EditorSetDecorations from '../EditorCommand/EditorCommandSetDecorations.js'
 import * as EditorSetDeltaY from '../EditorCommand/EditorCommandSetDeltaY.js'
 import * as EditorSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
@@ -56,6 +51,7 @@ const Imports = {
   ApplyEdit: () => import('../EditorCommand/EditorCommandApplyEdit.js'),
   Blur: () => import('../EditorCommand/EditorCommandBlur.js'),
   CancelSelection: () => import('../EditorCommand/EditorCommandCancelSelection.js'),
+  ContextMenu:()=>import('../EditorCommand/EditorCommandHandleContextMenu.js'),
   CopyLineDown:()=>import('../EditorCommand/EditorCommandCopyLineDown.js'),
   CopyLineUp:()=>import('../EditorCommand/EditorCommandCopyLineUp.js'),
   CursorCharacterLeft:()=>import('../EditorCommand/EditorCommandCursorCharacterLeft.js'),
@@ -88,8 +84,10 @@ const Imports = {
   HandleSingleClick:()=>import('../EditorCommand/EditorCommandHandleSingleClick.js'),
   IndentLess :()=>import('../EditorCommand/EditorCommandIndentLess.js'),
   IndentMore:()=>import('../EditorCommand/EditorCommandIndentMore.js'),
+  Save:()=>import('../EditorCommand/EditorCommandSave.js'),
   SelectAll:()=>import('../EditorCommand/EditorCommandSelectAll.js'),
-  ContextMenu:()=>import('../EditorCommand/EditorCommandHandleContextMenu.js'),
+  SelectWordLeft:()=>import('../EditorCommand/EditorCommandSelectWordLeft.js'),
+  SelectWordRight:()=>import('../EditorCommand/EditorCommandSelectWordRight.js'),
 }
 
 // prettier-ignore
@@ -144,8 +142,8 @@ export const Commands = {
   'Editor.handleTouchMove': Viewlet.wrapViewletCommand('EditorText', EditorHandleTouchMove.editorHandleTouchMove),
   'Editor.handleTouchStart': Viewlet.wrapViewletCommand('EditorText', EditorHandleTouchStart.editorHandleTouchStart),
   'Editor.handleTripleClick': Viewlet.wrapViewletCommand('EditorText', EditorHandleTripleClick.editorHandleTripleClick),
-  'Editor.indentLess': Viewlet.wrapViewletCommand('EditorText', EditorCommandIndentLess.editorIndentLess),
-  'Editor.indentMore': Viewlet.wrapViewletCommand('EditorText', EditorCommandIndentMore.editorIndentMore),
+  'Editor.indentLess': lazyCommand(Imports.IndentLess, 'editorIndentLess'),
+  'Editor.indentMore': lazyCommand(Imports.IndentMore, 'editorIndentMore'),
   'Editor.insertLineBreak': Viewlet.wrapViewletCommand('EditorText', EditorInsertLineBreak.editorInsertLineBreak),
   'Editor.moveLineDown': Viewlet.wrapViewletCommand('EditorText', EditorMoveLineDown.editorMoveLineDown),
   'Editor.moveLineUp': Viewlet.wrapViewletCommand('EditorText', EditorMoveLineUp.editorMoveLineUp),
@@ -157,7 +155,7 @@ export const Commands = {
   'Editor.openCompletionFromType': Viewlet.wrapViewletCommand('EditorText', EditorCompletion.openFromType),
   'Editor.paste': Viewlet.wrapViewletCommand('EditorText', EditorPaste.editorPaste),
   'Editor.pasteText': Viewlet.wrapViewletCommand('EditorText', EditorPasteText.editorPasteText),
-  'Editor.save': Viewlet.wrapViewletCommand('EditorText', EditorSave.editorSave),
+  'Editor.save': lazyCommand(Imports.Save, 'editorSave'),
   'Editor.selectAll': lazyCommand(Imports.SelectAll, 'editorSelectAll'),
   'Editor.selectAllOccurrences': Viewlet.wrapViewletCommand('EditorText', EditorSelectAllOccurrences.editorSelectAllOccurrences),
   'Editor.selectCharacterLeft': Viewlet.wrapViewletCommand('EditorText', EditorSelectCharacterLeft.editorSelectCharacterLeft),
@@ -166,8 +164,8 @@ export const Commands = {
   'Editor.selectLine': Viewlet.wrapViewletCommand('EditorText', EditorSelectLine.editorSelectLine),
   'Editor.selectNextOccurrence': Viewlet.wrapViewletCommand('EditorText', EditorSelectNextOccurrence.editorSelectNextOccurrence),
   'Editor.selectWord': Viewlet.wrapViewletCommand('EditorText', EditorSelectWord.editorSelectWord),
-  'Editor.selectWordLeft': Viewlet.wrapViewletCommand('EditorText', EditorSelectWordLeft.editorSelectWordLeft),
-  'Editor.selectWordRight': Viewlet.wrapViewletCommand('EditorText', EditorSelectWordRight.editorSelectWordRight),
+  'Editor.selectWordLeft': lazyCommand(Imports.SelectWordLeft, 'editorSelectWordLeft'),
+  'Editor.selectWordRight': lazyCommand(Imports.SelectWordRight, 'editorSelectWordRight'),
   'Editor.setDecorations': Viewlet.wrapViewletCommand('EditorText', EditorSetDecorations.setDecorations),
   'Editor.setDeltaY': Viewlet.wrapViewletCommand('EditorText', EditorSetDeltaY.editorSetDeltaY),
   'Editor.setLanguageId': Viewlet.wrapViewletCommand('EditorText', EditorSetLanguageId.setLanguageId),
