@@ -41,7 +41,11 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 const lazyCommand = (importFn, key) => {
   const lazyCommand = async (...args) => {
     const module = await importFn()
-    return module[key](...args)
+    const fn = module[key]
+    if (typeof fn !== 'function') {
+      throw new Error(`Editor.${key} is not a function`)
+    }
+    return fn(...args)
   }
   return Viewlet.wrapViewletCommand('EditorText', lazyCommand)
 }
