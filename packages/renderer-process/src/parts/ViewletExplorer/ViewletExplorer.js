@@ -241,12 +241,19 @@ const create$Row = () => {
   const $Row = document.createElement('div')
   $Row.setAttribute('role', 'treeitem')
   $Row.className = 'TreeItem'
+  const $LabelText = document.createTextNode('')
+  const $Label = document.createElement('div')
+  $Label.className = 'TreeItemLabel'
+  $Label.append($LabelText)
+  const $Icon = document.createElement('i')
+  $Row.append($Icon, $Label)
   return $Row
 }
 
 // TODO rename to renderDirent
 const render$Row = ($Row, rowInfo) => {
-  $Row.textContent = rowInfo.name
+  $Row.childNodes[0].className = `Icon${rowInfo.icon}`
+  $Row.childNodes[1].childNodes[0].data = rowInfo.name
   $Row.title = rowInfo.path
   $Row.ariaSetSize = `${rowInfo.setSize}`
   // TODO bug with windows narrator
@@ -260,19 +267,15 @@ const render$Row = ($Row, rowInfo) => {
     case 'directory':
     case 'folder':
       $Row.ariaExpanded = 'false'
-      $Row.className = `TreeItem Icon${rowInfo.icon}`
       break
     case 'directory-expanding':
-      $Row.className = `TreeItem Icon${rowInfo.icon}`
       $Row.ariaExpanded = 'true' // TODO tree should be aria-busy then
       break
     case 'directory-expanded':
-      $Row.className = `TreeItem Icon${rowInfo.icon}`
       $Row.ariaExpanded = 'true'
       break
     case 'file':
       $Row.ariaExpanded = undefined
-      $Row.className = `TreeItem Icon${rowInfo.icon}`
       break
     default:
       break
