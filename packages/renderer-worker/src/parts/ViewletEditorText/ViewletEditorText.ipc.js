@@ -1,26 +1,11 @@
 import * as EditorBraceCompletion from '../EditorCommand/EditorCommandBraceCompletion.js'
 import * as EditorCompletion from '../EditorCommand/EditorCommandCompletion.js'
-import * as EditorCut from '../EditorCommand/EditorCommandCut.js'
-import * as EditorDeleteAllLeft from '../EditorCommand/EditorCommandDeleteAllLeft.js'
-import * as EditorDeleteAllRight from '../EditorCommand/EditorCommandDeleteAllRight.js'
-import * as EditorDeleteLeft from '../EditorCommand/EditorCommandDeleteCharacterLeft.js'
-import * as EditorDeleteRight from '../EditorCommand/EditorCommandDeleteCharacterRight.js'
-import * as EditorDeleteWordLeft from '../EditorCommand/EditorCommandDeleteWordLeft.js'
-import * as EditorDeleteWordPartLeft from '../EditorCommand/EditorCommandDeleteWordPartLeft.js'
-import * as EditorDeleteWordPartRight from '../EditorCommand/EditorCommandDeleteWordPartRight.js'
-import * as EditorDeleteWordRight from '../EditorCommand/EditorCommandDeleteWordRight.js'
-import * as EditorFormat from '../EditorCommand/EditorCommandFormat.js'
-import * as EditorGoToDefinition from '../EditorCommand/EditorCommandGoToDefinition.js'
-import * as EditorGoToTypeDefinition from '../EditorCommand/EditorCommandGoToTypeDefinition.js'
-import * as EditorHandleContextMenu from '../EditorCommand/EditorCommandHandleContextMenu.js'
-import * as EditorHandleDoubleClick from '../EditorCommand/EditorCommandHandleDoubleClick.js'
 import * as EditorHandleMouseMove from '../EditorCommand/EditorCommandHandleMouseMove.js'
 import * as EditorHandleMouseMoveWithAltKey from '../EditorCommand/EditorCommandHandleMouseMoveWithAltKey.js'
 import * as EditorHandleBeforeInputFromContentEditable from '../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.js'
 import * as EditorHandleNativeSelectionChange from '../EditorCommand/EditorCommandHandleNativeSelectionChange.js'
 import * as EditorHandleScrollBarClick from '../EditorCommand/EditorCommandHandleScrollBarClick.js'
 import * as EditorHandleScrollBarMove from '../EditorCommand/EditorCommandHandleScrollBarMove.js'
-import * as EditorHandleSingleClick from '../EditorCommand/EditorCommandHandleSingleClick.js'
 import * as EditorHandleTab from '../EditorCommand/EditorCommandHandleTab.js'
 import * as EditorHandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.js'
 import * as EditorHandleTouchMove from '../EditorCommand/EditorCommandHandleTouchMove.js'
@@ -38,7 +23,6 @@ import * as EditorMoveSelectionPx from '../EditorCommand/EditorCommandMoveSelect
 import * as EditorPaste from '../EditorCommand/EditorCommandPaste.js'
 import * as EditorPasteText from '../EditorCommand/EditorCommandPasteText.js'
 import * as EditorSave from '../EditorCommand/EditorCommandSave.js'
-import * as EditorSelectAll from '../EditorCommand/EditorCommandSelectAll.js'
 import * as EditorSelectAllOccurrences from '../EditorCommand/EditorCommandSelectAllOccurrences.js'
 import * as EditorSelectCharacterLeft from '../EditorCommand/EditorCommandSelectCharacterLeft.js'
 import * as EditorSelectCharacterRight from '../EditorCommand/EditorCommandSelectCharacterRight.js'
@@ -72,22 +56,19 @@ const Imports = {
   ApplyEdit: () => import('../EditorCommand/EditorCommandApplyEdit.js'),
   Blur: () => import('../EditorCommand/EditorCommandBlur.js'),
   CancelSelection: () => import('../EditorCommand/EditorCommandCancelSelection.js'),
-  EditorCompletion:()=>import('../EditorCommand/EditorCommandCompletion.js'),
-  EditorComposition:()=>import('../EditorCommand/EditorCommandComposition.js'),
-  EditorCopy:()=>import('../EditorCommand/EditorCommandCopy.js'),
   CopyLineDown:()=>import('../EditorCommand/EditorCommandCopyLineDown.js'),
   CopyLineUp:()=>import('../EditorCommand/EditorCommandCopyLineUp.js'),
   CursorCharacterLeft:()=>import('../EditorCommand/EditorCommandCursorCharacterLeft.js'),
   CursorCharacterRight:()=>import('../EditorCommand/EditorCommandCursorCharacterRight.js'),
-  CursorEnd:()=>import('../EditorCommand/EditorCommandCursorEnd.js'),
   CursorDown:()=>import('../EditorCommand/EditorCommandCursorDown.js'),
-  CursorSet:()=>import('../EditorCommand/EditorCommandCursorSet.js'),
+  CursorEnd:()=>import('../EditorCommand/EditorCommandCursorEnd.js'),
   CursorHome:()=>import('../EditorCommand/EditorCommandCursorHome.js'),
+  CursorSet:()=>import('../EditorCommand/EditorCommandCursorSet.js'),
   CursorUp:()=>import('../EditorCommand/EditorCommandCursorUp.js'),
   CursorWordLeft:()=>import('../EditorCommand/EditorCommandCursorWordLeft.js'),
   CursorWordPartLeft:()=>import('../EditorCommand/EditorCommandCursorWordPartLeft.js'),
-  CursorWordRight:()=>import('../EditorCommand/EditorCommandCursorWordRight.js'),
   CursorWordPartRight:()=>import('../EditorCommand/EditorCommandCursorWordPartRight.js'),
+  CursorWordRight:()=>import('../EditorCommand/EditorCommandCursorWordRight.js'),
   Cut:()=>import('../EditorCommand/EditorCommandCut.js'),
   DeleteAllLeft:()=>import('../EditorCommand/EditorCommandDeleteAllLeft.js'),
   DeleteAllRight:()=>import('../EditorCommand/EditorCommandDeleteAllRight.js'),
@@ -95,16 +76,27 @@ const Imports = {
   DeleteRight:()=>import('../EditorCommand/EditorCommandDeleteCharacterRight.js'),
   DeleteWordLeft:()=>import('../EditorCommand/EditorCommandDeleteWordLeft.js'),
   DeleteWordPartLeft:()=>import('../EditorCommand/EditorCommandDeleteWordPartLeft.js'),
-  DeleteWordRight:()=>import('../EditorCommand/EditorCommandDeleteWordRight.js'),
   DeleteWordPartRight:()=>import('../EditorCommand/EditorCommandDeleteWordPartRight.js'),
+  DeleteWordRight:()=>import('../EditorCommand/EditorCommandDeleteWordRight.js'),
+  EditorCompletion:()=>import('../EditorCommand/EditorCommandCompletion.js'),
+  EditorComposition:()=>import('../EditorCommand/EditorCommandComposition.js'),
+  EditorCopy:()=>import('../EditorCommand/EditorCommandCopy.js'),
   Format:()=>import('../EditorCommand/EditorCommandFormat.js'),
   GoToDefinition:()=>import('../EditorCommand/EditorCommandGoToDefinition.js'),
+  GoToTypeDefinition:()=>import('../EditorCommand/EditorCommandGoToTypeDefinition.js'),
+  HandleDoubleClick:()=>import('../EditorCommand/EditorCommandHandleDoubleClick.js'),
+  HandleSingleClick:()=>import('../EditorCommand/EditorCommandHandleSingleClick.js'),
+  IndentLess :()=>import('../EditorCommand/EditorCommandIndentLess.js'),
+  IndentMore:()=>import('../EditorCommand/EditorCommandIndentMore.js'),
+  SelectAll:()=>import('../EditorCommand/EditorCommandSelectAll.js'),
+  ContextMenu:()=>import('../EditorCommand/EditorCommandHandleContextMenu.js'),
 }
 
 // prettier-ignore
 export const Commands = {
   'Editor.applyEdit': lazyCommand(Imports.ApplyEdit, 'editorApplyEdit'),
   'Editor.blur': lazyCommand(Imports.Blur, 'editorBlur'), // TODO needed?
+  'Editor.braceCompletion': Viewlet.wrapViewletCommand('EditorText', EditorBraceCompletion.editorBraceCompletion),
   'Editor.cancelSelection': lazyCommand(Imports.CancelSelection, 'editorCancelSelection'),
   'Editor.close': lazyCommand(Imports.EditorCompletion, 'close'),
   'Editor.compositionEnd': lazyCommand(Imports.EditorComposition,'editorCompositionEnd'),
@@ -114,13 +106,13 @@ export const Commands = {
   'Editor.copyLineDown': lazyCommand(Imports.CopyLineDown, 'editorCopyLineDown'),
   'Editor.copyLineUp': lazyCommand(Imports.CopyLineUp, 'editorCopyLineUp'),
   'Editor.cursorCharacterLeft': lazyCommand(Imports.CursorCharacterLeft, 'editorCursorCharacterLeft'),
+  'Editor.cursorCharacterRight': lazyCommand(Imports.CursorCharacterRight, 'editorCursorCharacterRight'),
+  'Editor.cursorDown': lazyCommand(Imports.CursorDown, 'editorCursorDown'),
+  'Editor.cursorEnd': lazyCommand(Imports.CursorEnd, 'editorCursorEnd'),
+  'Editor.cursorHome': lazyCommand(Imports.CursorHome, 'editorCursorsHome'),
   'Editor.cursorLeft': lazyCommand(Imports.CursorCharacterLeft, 'editorCursorCharacterLeft'),
   'Editor.cursorRight': lazyCommand(Imports.CursorCharacterRight, 'editorCursorCharacterRight'),
-  'Editor.cursorCharacterRight': lazyCommand(Imports.CursorCharacterRight, 'editorCursorCharacterRight'),
-  'Editor.cursorEnd': lazyCommand(Imports.CursorEnd, 'editorCursorEnd'),
-  'Editor.cursorDown': lazyCommand(Imports.CursorDown, 'editorCursorDown'),
   'Editor.cursorSet': lazyCommand(Imports.CursorSet, 'editorCursorSet') ,
-  'Editor.cursorHome': lazyCommand(Imports.CursorHome, 'editorCursorsHome'),
   'Editor.cursorUp': lazyCommand(Imports.CursorUp, 'editorCursorsUp'),
   'Editor.cursorWordLeft': lazyCommand(Imports.CursorWordLeft, 'editorCursorWordLeft'),
   'Editor.cursorWordPartLeft': lazyCommand(Imports.CursorWordPartLeft,'editorCursorWordPartLeft'),
@@ -137,16 +129,16 @@ export const Commands = {
   'Editor.deleteWordRight': lazyCommand(Imports.DeleteWordRight, 'editorDeleteWordRight'),
   'Editor.format': lazyCommand(Imports.Format, 'editorFormat'),
   'Editor.goToDefinition': lazyCommand(Imports.GoToDefinition, 'editorGoToDefinition'),
-  'Editor.goToTypeDefinition': Viewlet.wrapViewletCommand('EditorText', EditorGoToTypeDefinition.editorGoToTypeDefinition),
+  'Editor.goToTypeDefinition': lazyCommand(Imports.GoToTypeDefinition, 'editorGoToTypeDefinition'),
   'Editor.handleBeforeInputFromContentEditable': Viewlet.wrapViewletCommand('EditorText', EditorHandleBeforeInputFromContentEditable.handleBeforeInputFromContentEditable),
-  'Editor.handleContextMenu': Viewlet.wrapViewletCommand('EditorText', EditorHandleContextMenu.editorHandleContextMenu),
-  'Editor.handleDoubleClick': Viewlet.wrapViewletCommand('EditorText', EditorHandleDoubleClick.editorHandleDoubleClick),
+  'Editor.handleContextMenu': lazyCommand(Imports.ContextMenu, 'editorHandleContextMenu'),
+  'Editor.handleDoubleClick': lazyCommand(Imports.HandleDoubleClick, 'editorHandleDoubleClick'),
   'Editor.handleMouseMove': Viewlet.wrapViewletCommand('EditorText', EditorHandleMouseMove.editorHandleMouseMove),
   'Editor.handleMouseMoveWithAltKey': Viewlet.wrapViewletCommand('EditorText', EditorHandleMouseMoveWithAltKey.editorHandleMouseMoveWithAltKey),
   'Editor.handleNativeSelectionChange': Viewlet.wrapViewletCommand('EditorText', EditorHandleNativeSelectionChange.editorHandleNativeSelectionChange),
   'Editor.handleScrollBarClick': Viewlet.wrapViewletCommand('EditorText', EditorHandleScrollBarClick.editorHandleScrollBarClick),
   'Editor.handleScrollBarMove': Viewlet.wrapViewletCommand('EditorText', EditorHandleScrollBarMove.editorHandleScrollBarMove),
-  'Editor.handleSingleClick': Viewlet.wrapViewletCommand('EditorText', EditorHandleSingleClick.editorHandleSingleClick),
+  'Editor.handleSingleClick': lazyCommand(Imports.HandleSingleClick, 'editorHandleSingleClick'),
   'Editor.handleTab': Viewlet.wrapViewletCommand('EditorText', EditorHandleTab.editorHandleTab),
   'Editor.handleTouchEnd': Viewlet.wrapViewletCommand('EditorText', EditorHandleTouchEnd.editorHandleTouchEnd),
   'Editor.handleTouchMove': Viewlet.wrapViewletCommand('EditorText', EditorHandleTouchMove.editorHandleTouchMove),
@@ -166,7 +158,7 @@ export const Commands = {
   'Editor.paste': Viewlet.wrapViewletCommand('EditorText', EditorPaste.editorPaste),
   'Editor.pasteText': Viewlet.wrapViewletCommand('EditorText', EditorPasteText.editorPasteText),
   'Editor.save': Viewlet.wrapViewletCommand('EditorText', EditorSave.editorSave),
-  'Editor.selectAll': Viewlet.wrapViewletCommand('EditorText', EditorSelectAll.editorSelectAll),
+  'Editor.selectAll': lazyCommand(Imports.SelectAll, 'editorSelectAll'),
   'Editor.selectAllOccurrences': Viewlet.wrapViewletCommand('EditorText', EditorSelectAllOccurrences.editorSelectAllOccurrences),
   'Editor.selectCharacterLeft': Viewlet.wrapViewletCommand('EditorText', EditorSelectCharacterLeft.editorSelectCharacterLeft),
   'Editor.selectCharacterRight': Viewlet.wrapViewletCommand('EditorText', EditorSelectCharacterRight.editorSelectCharacterRight),
@@ -185,7 +177,6 @@ export const Commands = {
   'Editor.type': Viewlet.wrapViewletCommand('EditorText', EditorType.editorType),
   'Editor.undo': Viewlet.wrapViewletCommand('EditorText', EditorUndo.editorUndo),
   'Editor.unindent': Viewlet.wrapViewletCommand('EditorText', EditorUnindent.editorUnindent),
-  'Editor.braceCompletion': Viewlet.wrapViewletCommand('EditorText', EditorBraceCompletion.editorBraceCompletion),
     // TODO command to set cursor position
   // TODO command copy line up/down
   // TODO command move line up/down
