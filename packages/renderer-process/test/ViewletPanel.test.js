@@ -96,7 +96,8 @@ test('accessibility - PanelTabs should have role tablist', () => {
     'Debug Console',
     'Terminal',
   ])
-  expect(state.$PanelTabs.getAttribute('role')).toBe('tablist')
+  // @ts-ignore
+  expect(state.$PanelTabs.role).toBe('tablist')
 })
 
 test('accessibility - PanelTab should have role tab', () => {
@@ -108,7 +109,8 @@ test('accessibility - PanelTab should have role tab', () => {
     'Terminal',
   ])
   const $PanelTabProblems = state.$PanelTabs.children[0]
-  expect($PanelTabProblems.getAttribute('role')).toBe('tab')
+  // @ts-ignore
+  expect($PanelTabProblems.role).toBe('tab')
 })
 
 test('setSelectedIndex', () => {

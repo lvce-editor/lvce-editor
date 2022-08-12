@@ -686,7 +686,8 @@ test('event - blur', () => {
 
 test('accessibility - viewlet should have role tree', () => {
   const state = ViewletExplorer.create()
-  expect(state.$Viewlet.getAttribute('role')).toBe('tree')
+  // @ts-ignore
+  expect(state.$Viewlet.role).toBe('tree')
 })
 
 test('accessibility - dirents should have ariaSetSize, ariaPosInSet, ariaLevel and ariaDescription', () => {

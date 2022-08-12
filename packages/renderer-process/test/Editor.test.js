@@ -489,7 +489,8 @@ line 20`)
 
 test('accessibility - Editor should have role code', async () => {
   const state = Editor.create()
-  expect(state.$Editor.getAttribute('role')).toBe('code')
+  // @ts-ignore
+  expect(state.$Editor.role).toBe('code')
 })
 
 test('event - beforeinput on contenteditable on mobile - no selection', () => {

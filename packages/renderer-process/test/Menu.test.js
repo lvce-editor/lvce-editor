@@ -141,7 +141,7 @@ test('accessibility - Menu show have role menu', () => {
     width: 100,
     height: 100,
   })
-  expect(Menu.state.$$Menus[0].getAttribute('role')).toBe('menu')
+  expect(Menu.state.$$Menus[0].role).toBe('menu')
 })
 
 test('accessibility - MenuItem show have role menuitem or separator', () => {
@@ -177,8 +177,8 @@ test('accessibility - MenuItem show have role menuitem or separator', () => {
     width: 100,
   })
   const $Menu = Menu.state.$$Menus[0]
-  expect($Menu.firstChild.getAttribute('role')).toBe('menuitem')
-  expect($Menu.children[1].getAttribute('role')).toBe('separator')
+  expect($Menu.firstChild.role).toBe('menuitem')
+  expect($Menu.children[1].role).toBe('separator')
 })
 
 test('showMenu - error - item has missing flags', () => {
