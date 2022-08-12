@@ -14,7 +14,7 @@ export const openFolder = async () => {
   }
   if (Platform.getPlatform() === 'remote') {
     const path = await RendererProcess.invoke(
-      /* Dialog.prompt */ 7833,
+      /* Dialog.prompt */ 'Dialog.prompt',
       /* message */ 'Choose path:'
     )
     await Command.execute(
