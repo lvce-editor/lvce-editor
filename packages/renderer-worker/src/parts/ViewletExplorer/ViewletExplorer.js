@@ -505,13 +505,8 @@ export const copyPath = async (state) => {
 }
 
 export const openContainingFolder = async (state) => {
-  // TODO handle error
-  // TODO should return folder to open
-  // TODO use command.execute instead
-  await SharedProcess.invoke(
-    /* Native.openFolder */ 'Native.openFolder',
-    /* path */ state.root
-  )
+  await Command.execute('Open.openNativeFolder', /* path */ state.root)
+  return state
 }
 
 const newDirent = async (state) => {

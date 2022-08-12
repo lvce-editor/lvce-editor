@@ -1,5 +1,4 @@
 import { jest } from '@jest/globals'
-import * as Command from '../src/parts/Command/Command.js'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
 
 beforeEach(() => {
@@ -17,13 +16,6 @@ jest.unstable_mockModule(
     }
   }
 )
-jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
-  return {
-    invoke: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  }
-})
 
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
   return {
@@ -35,12 +27,38 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
     }),
   }
 })
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
+  return {
+    rename: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    writeFile: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    copy: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    remove: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    readDirWithFileTypes: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    getPathSeparator: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
 
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
-)
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
 )
 
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
@@ -58,6 +76,8 @@ const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const ViewletManager = await import(
   '../src/parts/ViewletManager/ViewletManager.js'
 )
+const Command = await import('../src/parts/Command/Command.js')
+const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
 const render = (oldState, newState) => {
   return ViewletManager.render(ViewletExplorer, oldState, newState)
@@ -79,29 +99,25 @@ test('loadContent', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   // @ts-ignore
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.readDirWithFileTypes':
-        return [
-          {
-            name: 'file 1',
-            type: 'file',
-          },
-          {
-            name: 'file 2',
-            type: 'file',
-          },
-          {
-            name: 'file 3',
-            type: 'file',
-          },
-        ]
-      case 'FileSystem.getPathSeparator':
-        return '/'
-      default:
-        console.log({ method })
-        throw new Error('unexpected message')
-    }
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    return [
+      {
+        name: 'file 1',
+        type: 'file',
+      },
+      {
+        name: 'file 2',
+        type: 'file',
+      },
+      {
+        name: 'file 3',
+        type: 'file',
+      },
+    ]
+  })
+  // @ts-ignore
+  FileSystem.getPathSeparator.mockImplementation(() => {
+    return '/'
   })
   expect(await ViewletExplorer.loadContent(state)).toEqual({
     deltaY: 0,
@@ -304,16 +320,12 @@ test('loadContent - error - typeError', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   // @ts-ignore
+  FileSystem.getPathSeparator.mockImplementation(() => {
+    return '/'
+  })
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.readDirWithFileTypes':
-        throw new TypeError('x is not a function')
-      case 'FileSystem.getPathSeparator':
-        return '/'
-      default:
-        throw new Error('unexpected message')
-    }
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    throw new TypeError('x is not a function')
   })
   await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(
     new TypeError('x is not a function')
@@ -326,16 +338,12 @@ test('loadContent - error - syntaxError', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    throw new SyntaxError('unexpected token x')
+  })
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.readDirWithFileTypes':
-        throw new SyntaxError('unexpected token x')
-      case 'FileSystem.getPathSeparator':
-        return '/'
-      default:
-        throw new Error('unexpected message')
-    }
+  FileSystem.getPathSeparator.mockImplementation(() => {
+    return '/'
   })
   await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(
     new SyntaxError('unexpected token x')
@@ -347,16 +355,12 @@ test('loadContent - error - command not found', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    throw new Error('command -1 not found')
+  })
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.readDirWithFileTypes':
-        throw new Error('command -1 not found')
-      case 'FileSystem.getPathSeparator':
-        return '/'
-      default:
-        throw new Error('unexpected message')
-    }
+  FileSystem.getPathSeparator.mockImplementation(() => {
+    return '/'
   })
   await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(
     new Error('command -1 not found')
@@ -541,14 +545,20 @@ test('handleClick - file', async () => {
       },
     ],
   }
-  // TODO dont assign -> has effect on other tests
-  Command.state.commands['Main.openUri'] = jest.fn()
+  // @ts-ignore
+  Command.execute.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Main.openUri':
+        break
+      default:
+        throw new Error('unexpected method')
+    }
+  })
   expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
     focusedIndex: 0,
   })
-  expect(Command.state.commands['Main.openUri']).toHaveBeenCalledWith(
-    '/index.css'
-  )
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/index.css')
 })
 
 test('handleClick - file - error', async () => {
@@ -577,14 +587,20 @@ test('handleClick - file - error', async () => {
       },
     ],
   }
-  // TODO dont assign -> has effect on other tests
-  Command.state.commands['Main.openUri'] = jest.fn()
+  // @ts-ignore
+  Command.execute.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Main.openUri':
+        break
+      default:
+        throw new Error('unexpected method')
+    }
+  })
   expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
     focusedIndex: 0,
   })
-  expect(Command.state.commands['Main.openUri']).toHaveBeenCalledWith(
-    '/index.css'
-  )
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/index.css')
 })
 
 // TODO test error
@@ -630,13 +646,8 @@ test('handleClick - directory', async () => {
     return state
   })
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.readDirWithFileTypes':
-        return [{ name: 'index.js', type: 'file' }]
-      default:
-        throw new Error('unexpected message')
-    }
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    return [{ name: 'index.js', type: 'file' }]
   })
   expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
     dirents: [
@@ -704,14 +715,20 @@ test('handleClick - directory-expanded - error', async () => {
       },
     ],
   }
-  // TODO dont assign -> has effect on other tests
-  Command.state.commands['Main.openUri'] = jest.fn()
+  // @ts-ignore
+  Command.execute.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Main.openUri':
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
   expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
     focusedIndex: 0,
   })
-  expect(Command.state.commands['Main.openUri']).toHaveBeenCalledWith(
-    '/index.css'
-  )
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/index.css')
 })
 
 test.skip('handleClick - directory-expanded - scrolled down', async () => {
@@ -817,13 +834,8 @@ test('handleClick - collapsed folder', async () => {
     return state
   })
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.readDirWithFileTypes':
-        return [{ name: 'index.js', type: 'file' }]
-      default:
-        throw new Error('unexpected message')
-    }
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    return [{ name: 'index.js', type: 'file' }]
   })
   expect(await ViewletExplorer.handleClick(state, 2)).toMatchObject({
     dirents: [
@@ -1896,13 +1908,8 @@ test('handleArrowRight - collapsed folder', async () => {
     return state
   })
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.readDirWithFileTypes':
-        return [{ name: 'index.js', type: 'file' }]
-      default:
-        throw new Error('unexpected message')
-    }
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    return [{ name: 'index.js', type: 'file' }]
   })
   expect(await ViewletExplorer.handleArrowRight(state)).toMatchObject({
     dirents: [
@@ -1988,13 +1995,8 @@ test('handleArrowRight - collapsed empty folder', async () => {
     return state
   })
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.readDirWithFileTypes':
-        return []
-      default:
-        throw new Error('unexpected message')
-    }
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    return []
   })
   expect(await ViewletExplorer.handleArrowRight(state)).toMatchObject({
     dirents: [
@@ -2556,23 +2558,25 @@ test('handlePaste - copied gnome files', async () => {
     }
   })
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    return [
+      {
+        name: 'some-file.txt',
+        type: 'file',
+      },
+    ]
+  })
+  // @ts-ignore
+  FileSystem.copy.mockImplementation(() => {})
+  // @ts-ignore
+  Command.execute.mockImplementation((method, ...params) => {
     switch (method) {
-      case 'ClipBoard.readFiles':
+      case 'ClipBoard.readNativeFiles':
         return {
           source: 'gnomeCopiedFiles',
           type: 'copy',
           files: ['/test/some-file.txt'],
         }
-      case 'FileSystem.copy':
-        return null
-      case 'FileSystem.readDirWithFileTypes':
-        return [
-          {
-            name: 'some-file.txt',
-            type: 'file',
-          },
-        ]
       default:
         throw new Error('unexpected message')
     }
@@ -2597,19 +2601,18 @@ test('handlePaste - copied gnome files', async () => {
 test('handlePaste - cut gnome files', async () => {
   const state = ViewletExplorer.create('', 0, 0, 0, 0)
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  FileSystem.rename.mockImplementation(() => {})
+  // @ts-ignore
+  Command.execute.mockImplementation((method, ...params) => {
     switch (method) {
-      case 'ClipBoard.readFiles':
+      case 'ClipBoard.readNativeFiles':
         return {
           source: 'gnomeCopiedFiles',
           type: 'cut',
           files: ['/test/some-file.txt'],
         }
-      case 'FileSystem.rename':
-        return null
       default:
-        console.log({ method })
-        throw new Error('unexpected message')
+        throw new Error(`unexpected method ${method}`)
     }
   })
   // @ts-ignore
@@ -2620,17 +2623,16 @@ test('handlePaste - cut gnome files', async () => {
 test('handlePaste - not supported', async () => {
   const state = ViewletExplorer.create('', 0, 0, 0, 0)
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
+  Command.execute.mockImplementation((method, ...params) => {
     switch (method) {
-      case 'ClipBoard.readFiles':
+      case 'ClipBoard.readNativeFiles':
         return {
           source: 'notSupported',
           type: 'none',
           files: [],
         }
       default:
-        console.log({ method })
-        throw new Error('unexpected message')
+        throw new Error(`unexpected message ${method}`)
     }
   })
   // @ts-ignore
@@ -2646,20 +2648,11 @@ test('handlePaste - not supported', async () => {
 test('handlePaste - unexpected result', async () => {
   const state = ViewletExplorer.create('', 0, 0, 0, 0)
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'ClipBoard.readFiles':
-        return {
-          source: 'non-existing',
-          type: 'non-existing',
-          files: [],
-        }
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {
+    throw new Error('unexpected native paste type: non-existing')
+  })
   await expect(ViewletExplorer.handlePaste(state)).rejects.toThrowError(
     new Error('unexpected native paste type: non-existing')
   )
@@ -2955,16 +2948,8 @@ test.skip('newFile - error with writeFile', async () => {
 
 test('newFile - canceled', async () => {
   const state = ViewletExplorer.create('', 0, 0, 0, 0)
-  // TODO mock file system instead
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.writeFile':
-        return null
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  FileSystem.writeFile.mockImplementation(() => {})
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExplorer.newFile(state)
@@ -3020,16 +3005,8 @@ test('removeDirent - first', async () => {
     minLineY: 0,
     maxLineY: 100,
   }
-  // TODO mock file system instead
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.remove':
-        return null
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  FileSystem.remove.mockImplementation(() => {})
   // @ts-ignore
   RendererProcess.invoke.mockImplementation((method, ...params) => {
     switch (params[1]) {
@@ -3088,16 +3065,8 @@ test('removeDirent - only folder', async () => {
     minLineY: 0,
     maxLineY: 100,
   }
-  // TODO mock file system instead
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.remove':
-        return null
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  FileSystem.remove.mockImplementation(() => {})
   // @ts-ignore
   RendererProcess.invoke.mockImplementation((method, ...params) => {
     switch (params[1]) {
@@ -3173,16 +3142,8 @@ test('removeDirent - expanded folder', async () => {
     minLineY: 0,
     maxLineY: 100,
   }
-  // TODO mock file system instead
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.remove':
-        return null
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  FileSystem.remove.mockImplementation(() => {})
   // @ts-ignore
   RendererProcess.invoke.mockImplementation((method, ...params) => {
     switch (params[1]) {
@@ -3260,14 +3221,7 @@ test('removeDirent - middle', async () => {
     maxLineY: 100,
   }
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.remove':
-        return null
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  FileSystem.remove.mockImplementation(() => {})
   // @ts-ignore
   RendererProcess.invoke.mockImplementation((method, ...params) => {
     switch (params[1]) {
@@ -3346,14 +3300,7 @@ test('removeDirent - last', async () => {
     maxLineY: 100,
   }
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.remove':
-        return null
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  FileSystem.remove.mockImplementation(() => {})
   // @ts-ignore
   RendererProcess.invoke.mockImplementation((method, ...params) => {
     switch (params[1]) {
@@ -3404,14 +3351,7 @@ test('removeDirent - no dirents left', async () => {
     maxLineY: 100,
   }
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.remove':
-        return null
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  FileSystem.remove.mockImplementation(() => {})
   // @ts-ignore
   RendererProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
@@ -3986,25 +3926,18 @@ test('expandAll', async () => {
     ],
   }
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.readDirWithFileTypes':
-        const path = params[0]
-        switch (path) {
-          case '/folder-1':
-          case '/folder-2':
-          case '/folder-3':
-            return [
-              { name: 'a.txt', type: 'file' },
-              { name: 'b.txt', type: 'file' },
-              { name: 'c.txt', type: 'file' },
-            ]
-          default:
-            throw new Error('unexpected folder')
-        }
-
+  FileSystem.readDirWithFileTypes.mockImplementation((path) => {
+    switch (path) {
+      case '/folder-1':
+      case '/folder-2':
+      case '/folder-3':
+        return [
+          { name: 'a.txt', type: 'file' },
+          { name: 'b.txt', type: 'file' },
+          { name: 'c.txt', type: 'file' },
+        ]
       default:
-        throw new Error('unexpected message')
+        throw new Error('unexpected folder')
     }
   })
   expect(await ViewletExplorer.expandAll(state)).toMatchObject({
@@ -4297,29 +4230,25 @@ test('event - workspace change', async () => {
     ...ViewletExplorer.create(),
   }
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.readDirWithFileTypes':
-        return [
-          {
-            name: 'file 1',
-            type: 'file',
-          },
-          {
-            name: 'file 2',
-            type: 'file',
-          },
-          {
-            name: 'file 3',
-            type: 'file',
-          },
-        ]
-      case 'FileSystem.getPathSeparator':
-        return '/'
-      default:
-        console.log({ method })
-        throw new Error('unexpected message')
-    }
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    return [
+      {
+        name: 'file 1',
+        type: 'file',
+      },
+      {
+        name: 'file 2',
+        type: 'file',
+      },
+      {
+        name: 'file 3',
+        type: 'file',
+      },
+    ]
+  })
+  // @ts-ignore
+  FileSystem.getPathSeparator.mockImplementation(() => {
+    return '/'
   })
   Workspace.state.workspacePath = '/test'
   const newState = await ViewletExplorer.handleWorkspaceChange(state)
@@ -4414,16 +4343,13 @@ test('updateRoot - root changes while reading directories', async () => {
     }
   })
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.readDirWithFileTypes':
-        return [
-          {
-            name: 'folder-1',
-            type: 'directory',
-          },
-        ]
-    }
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    return [
+      {
+        name: 'folder-1',
+        type: 'directory',
+      },
+    ]
   })
   expect(await ViewletExplorer.updateRoot()).toBe(state2)
 })
@@ -4449,18 +4375,13 @@ test('updateRoot - new folder', async () => {
     }
   })
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'FileSystem.readDirWithFileTypes':
-        return [
-          {
-            name: 'folder-1',
-            type: 'directory',
-          },
-        ]
-      default:
-        throw new Error('unexpected method')
-    }
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    return [
+      {
+        name: 'folder-1',
+        type: 'directory',
+      },
+    ]
   })
   expect(await ViewletExplorer.updateRoot()).toMatchObject({
     dirents: [
