@@ -9,7 +9,7 @@ test('getMenuEntries', () => {
     label: 'New File',
   })
   expect(menuEntries).toContainEqual({
-    command: 1492,
+    command: 'Dialog.openFolder',
     flags: 0,
     id: 'openFolder',
     label: 'Open Folder',
