@@ -267,7 +267,7 @@ test.skip('open - cursor changes to row below', async () => {
     invalidStartIndex: 0,
   }
   await EditorCompletion.open(editor)
-  await EditorCommandCursorDown.editorCursorsDown(editor)
+  await EditorCommandCursorDown.editorCursorDown(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,

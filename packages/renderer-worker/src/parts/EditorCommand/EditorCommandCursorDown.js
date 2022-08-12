@@ -21,7 +21,7 @@ const getNewSelections = (selections) => {
   return EditorSelection.map(selections, moveSelectionDown)
 }
 
-export const editorCursorsDown = (editor) => {
+export const editorCursorDown = (editor) => {
   const selections = editor.selections
   const newSelections = getNewSelections(selections)
   return Editor.scheduleSelections(editor, newSelections)
