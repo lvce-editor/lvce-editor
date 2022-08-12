@@ -22,7 +22,9 @@ const RendererWorker = await import(
   '../src/parts/RendererWorker/RendererWorker.js'
 )
 
-const QuickPick = await import('../src/parts/Viewlet/ViewletQuickPick.js')
+const QuickPick = await import(
+  '../src/parts/ViewletQuickPick/ViewletQuickPick.js'
+)
 
 test('create', () => {
   const state = QuickPick.create('>')

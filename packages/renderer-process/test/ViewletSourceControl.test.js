@@ -23,7 +23,7 @@ const RendererWorker = await import(
 )
 
 const ViewletSourceControl = await import(
-  '../src/parts/Viewlet/ViewletSourceControl.js'
+  '../src/parts/ViewletSourceControl/ViewletSourceControl.js'
 )
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 

@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletOutput from '../src/parts/Viewlet/ViewletOutput.js'
+import * as ViewletOutput from '../src/parts/ViewletOutput/ViewletOutput.js'
 import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
 
 const getSimpleList = (state) => {

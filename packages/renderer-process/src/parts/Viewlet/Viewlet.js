@@ -12,21 +12,21 @@ const get = (id) => {
     case 'Explorer':
       return import('../ViewletExplorer/ViewletExplorer.js')
     case 'Run and Debug':
-      return import('./ViewletRunAndDebug.js')
+      return import('../ViewletRunAndDebug/ViewletRunAndDebug.js')
     case 'Search':
       return import('../ViewletSearch/ViewletSearch.js')
     case 'Source Control':
-      return import('./ViewletSourceControl.js')
+      return import('../ViewletSourceControl/ViewletSourceControl.js')
     case 'Terminal':
       return import('../ViewletTerminal/ViewletTerminal.js')
     case 'Extensions':
-      return import('./ViewletExtensions.js')
+      return import('../ViewletExtensions/ViewletExtensions.js')
     case 'Debug Console':
       return import('./ViewletDebugConsole.js')
     case 'Output':
-      return import('./ViewletOutput.js')
+      return import('../ViewletOutput/ViewletOutput.js')
     case 'Problems':
-      return import('./ViewletProblems.js')
+      return import('../ViewletProblems/ViewletProblems.js')
     case 'Empty':
       return import('./ViewletEmpty.js')
     case 'EditorText':
@@ -36,29 +36,29 @@ const get = (id) => {
     case 'EditorImage':
       return import('./ViewletEditorImage.js')
     case 'Clock':
-      return import('./ViewletClock.js')
+      return import('../ViewletClock/ViewletClock.js')
     case 'SideBar':
       return import('../ViewletSideBar/ViewletSideBar.js')
     case 'Panel':
-      return import('./ViewletPanel.js')
+      return import('../ViewletPanel/ViewletPanel.js')
     case 'ActivityBar':
       return import('../ViewletActivityBar/ViewletActivityBar.js')
     case 'ImagePreview':
       return import('../ImagePreview/ImagePreview.js')
     case 'QuickPick':
-      return import('./ViewletQuickPick.js')
+      return import('../ViewletQuickPick/ViewletQuickPick.js')
     case 'StatusBar':
       return import('../ViewletStatusBar/ViewletStatusBar.js')
     case 'TitleBar':
       return import('../ViewletTitleBar/ViewletTitleBar.js')
     case 'Main':
-      return import('./ViewletMain.js')
+      return import('../ViewletMain/ViewletMain.js')
     case 'EditorCompletion':
-      return import('./ViewletEditorCompletion.js')
+      return import('../ViewletEditorCompletion/ViewletEditorCompletion.js')
     case 'References':
-      return import('./ViewletReferences.js')
+      return import('../ViewletReferences/ViewletReferences.js')
     case 'Implementations':
-      return import('./ViewletImplementations.js')
+      return import('../ViewletImplementations/ViewletImplementations.js')
     default:
       throw new Error(`unknown viewlet ${id}`)
   }
