@@ -28,7 +28,7 @@ export const getMenuEntries = () => {
       id: 'openFolder',
       label: 'Open Folder',
       flags: /* None */ 0,
-      command: 1492,
+      command: 'Dialog.openFolder',
     },
     {
       id: 'openRecent',
