@@ -1,5 +1,4 @@
 import * as Command from '../Command/Command.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 
 export const name = 'Panel'
@@ -21,17 +20,18 @@ export const loadContent = async (state) => {
     ...state,
     views: ['Problems', 'Output', 'Debug Console', 'Terminal'],
     currentViewlet: cachedViewlet,
+    selectedIndex: 0,
   }
 }
 
 export const contentLoaded = async (state) => {
-  await RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'Panel',
-    /* method */ 'setTabs',
-    /* tabs */ state.views
-  )
-  await openViewlet(state, state.currentViewlet)
+  // await RendererProcess.invoke(
+  //   /* Viewlet.send */ 'Viewlet.send',
+  //   /* id */ 'Panel',
+  //   /* method */ 'setTabs',
+  //   /* tabs */ state.views
+  // )
+  // await openViewlet(state, state.currentViewlet)
 }
 
 export const dispose = (state) => {
@@ -73,17 +73,50 @@ export const openViewlet = async (state, id) => {
   await ViewletManager.load(child)
 }
 
-export const tabsHandleClick = async (state, index) => {
+export const selectIndex = async (state, index) => {
   console.log({ index })
   await openViewlet(state, state.views[index])
-  const oldSelectedIndex = state.selectedIndex
+  return {
+    ...state,
+    selectedIndex: index,
+  }
+}
 
-  state.selectedIndex = index
-  RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'Panel',
-    /* method */ 'selectTab',
-    /* oldSelectedIndex */ oldSelectedIndex,
-    /* newSelectedIndex */ index
-  )
+export const hasFunctionalRender = true
+
+const renderTabs = {
+  isEqual(oldState, newState) {
+    return oldState.views === newState.views
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'Panel',
+      /* method */ 'setTabs',
+      /* tabs */ newState.views,
+    ]
+  },
+}
+
+const renderSelectedIndex = {
+  isEqual(oldState, newState) {
+    return oldState.selectedIndex === newState.selectedIndex
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'Panel',
+      /* method */ 'setSelectedIndex',
+      /* unFocusIndex */ oldState.selectedIndex,
+      /* focusIndex */ newState.selectedIndex,
+    ]
+  },
+}
+
+export const render = [renderTabs, renderSelectedIndex]
+
+export const hasFunctionalResize = true
+
+export const resize = (state, dimensions) => {
+  return state
 }

@@ -2,13 +2,13 @@ import * as Assert from '../Assert/Assert.js'
 import * as Layout from '../Layout/Layout.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
-const create$PanelTab = (label) => {
+const create$PanelTab = (label, index) => {
   const $PanelTab = document.createElement('div')
   $PanelTab.className = 'PanelTab'
   // @ts-ignore
   $PanelTab.role = 'tab'
-  $PanelTab.tabIndex = -1
   $PanelTab.textContent = label
+  $PanelTab.id = `PanelTab-${index + 1}`
   return $PanelTab
 }
 
@@ -26,7 +26,7 @@ const panelTabsHandleClick = (event) => {
     case 'PanelTab': {
       const index = getNodeIndex($Target)
       RendererWorker.send(
-        /* Panel.tabsHandleClick */ 'Panel.tabsHandleClick',
+        /* Panel.selectIndex */ 'Panel.selectIndex',
         /* index */ index
       )
       break
@@ -42,6 +42,7 @@ export const create = () => {
   // @ts-ignore
   $PanelTabs.role = 'tablist'
   $PanelTabs.onmousedown = panelTabsHandleClick
+  $PanelTabs.tabIndex = -1
   const $PanelHeader = document.createElement('div')
   $PanelHeader.id = 'PanelHeader'
   $PanelHeader.append($PanelTabs)
@@ -60,7 +61,6 @@ export const create = () => {
 }
 
 export const setTabs = (state, tabs) => {
-  console.log({ tabs })
   state.$PanelTabs.append(...tabs.map(create$PanelTab))
 }
 
@@ -102,16 +102,15 @@ export const dispose = (state) => {
   }
 }
 
-export const selectTab = (state, oldSelectedIndex, newSelectedIndex) => {
+export const setSelectedIndex = (state, oldIndex, newIndex) => {
   const { $PanelTabs } = state
-  if (oldSelectedIndex !== -1) {
-    const $PanelTab = $PanelTabs.children[oldSelectedIndex]
+  if (oldIndex !== -1) {
+    const $PanelTab = $PanelTabs.children[oldIndex]
     $PanelTab.removeAttribute('aria-selected')
-    $PanelTab.tabIndex = -1
   }
-  if (newSelectedIndex !== -1) {
-    const $PanelTab = $PanelTabs.children[newSelectedIndex]
+  if (newIndex !== -1) {
+    const $PanelTab = $PanelTabs.children[newIndex]
     $PanelTab.ariaSelected = true
-    $PanelTab.tabIndex = 0
+    $PanelTabs.setAttribute('aria-activedescendant', $PanelTab.id)
   }
 }
