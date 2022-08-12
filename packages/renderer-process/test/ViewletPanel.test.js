@@ -64,7 +64,7 @@ test('event - mousedown - first tab clicked', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Panel.tabsHandleClick', 0)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Panel.selectIndex', 0)
 })
 
 test('event - mousedown - no tab clicked', () => {
@@ -99,7 +99,7 @@ test('accessibility - PanelTabs should have role tablist', () => {
   expect(state.$PanelTabs.getAttribute('role')).toBe('tablist')
 })
 
-test('accessibility - PanelTab should have role tab and tabindex 0', () => {
+test('accessibility - PanelTab should have role tab', () => {
   const state = ViewletPanel.create()
   ViewletPanel.setTabs(state, [
     'Problems',
@@ -109,5 +109,18 @@ test('accessibility - PanelTab should have role tab and tabindex 0', () => {
   ])
   const $PanelTabProblems = state.$PanelTabs.children[0]
   expect($PanelTabProblems.getAttribute('role')).toBe('tab')
-  expect($PanelTabProblems.getAttribute('tabindex')).toBe('-1')
+})
+
+test('setSelectedIndex', () => {
+  const state = ViewletPanel.create()
+  ViewletPanel.setTabs(state, [
+    'Problems',
+    'Output',
+    'Debug Console',
+    'Terminal',
+  ])
+  ViewletPanel.setSelectedIndex(state, -1, 0)
+  expect(state.$PanelTabs.getAttribute('aria-activedescendant')).toBe(
+    'PanelTab-1'
+  )
 })
