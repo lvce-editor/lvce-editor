@@ -104,11 +104,10 @@ export const setSelectedIndex = (state, oldIndex, newIndex) => {
   const { $PanelTabs } = state
   if (oldIndex !== -1) {
     const $PanelTab = $PanelTabs.children[oldIndex]
-    $PanelTab.classList.remove('Selected')
+    $PanelTab.removeAttribute('aria-selected')
   }
   if (newIndex !== -1) {
     const $PanelTab = $PanelTabs.children[newIndex]
-    // $PanelTab.classList.add('Selected')
     $PanelTab.ariaSelected = true
     $PanelTabs.setAttribute('aria-activedescendant', $PanelTab.id)
   }

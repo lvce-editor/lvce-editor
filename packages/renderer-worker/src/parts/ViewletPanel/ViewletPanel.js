@@ -76,7 +76,6 @@ export const openViewlet = async (state, id) => {
 export const selectIndex = async (state, index) => {
   console.log({ index })
   await openViewlet(state, state.views[index])
-  state.selectedIndex = index
   return {
     ...state,
     selectedIndex: index,
