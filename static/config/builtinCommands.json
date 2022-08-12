@@ -305,7 +305,7 @@
     "label": "Editor: Move Line Up"
   },
   {
-    "id": "file.openFolder",
+    "id": "Dialog.openFolder",
     "label": "File: Open Folder"
   },
   {
