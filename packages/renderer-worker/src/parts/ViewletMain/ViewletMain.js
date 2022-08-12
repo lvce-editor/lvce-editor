@@ -5,6 +5,7 @@ import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
@@ -314,7 +315,7 @@ export const closeAllEditors = (state) => {
   state.focusedIndex = -1
   state.selectedIndex = -1
   // TODO should call dispose method, but only in renderer-worker
-  ViewletState.remove('EditorText')
+  ViewletStates.remove('EditorText')
 }
 
 export const dispose = () => {}
