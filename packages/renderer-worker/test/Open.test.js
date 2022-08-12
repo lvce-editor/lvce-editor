@@ -61,7 +61,7 @@ test('openNativeFolder - error', async () => {
     }
   })
   await expect(Open.openNativeFolder('abc')).rejects.toThrowError(
-    new Error('x is not a function')
+    new Error('Failed to open folder abc: TypeError: x is not a function')
   )
 })
 
@@ -71,7 +71,9 @@ test('openUrl - error', async () => {
     throw new TypeError('x is not a function')
   })
   await expect(Open.openUrl('test://test.txt')).rejects.toThrowError(
-    new TypeError('x is not a function')
+    new Error(
+      'Failed to open url test://test.txt: TypeError: x is not a function'
+    )
   )
 })
 
