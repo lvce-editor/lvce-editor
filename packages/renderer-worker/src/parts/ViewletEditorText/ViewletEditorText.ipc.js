@@ -1,17 +1,12 @@
 import * as EditorBraceCompletion from '../EditorCommand/EditorCommandBraceCompletion.js'
 import * as EditorCompletion from '../EditorCommand/EditorCommandCompletion.js'
-import * as EditorHandleMouseMove from '../EditorCommand/EditorCommandHandleMouseMove.js'
-import * as EditorHandleMouseMoveWithAltKey from '../EditorCommand/EditorCommandHandleMouseMoveWithAltKey.js'
 import * as EditorHandleBeforeInputFromContentEditable from '../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.js'
 import * as EditorHandleNativeSelectionChange from '../EditorCommand/EditorCommandHandleNativeSelectionChange.js'
-import * as EditorHandleScrollBarClick from '../EditorCommand/EditorCommandHandleScrollBarClick.js'
-import * as EditorHandleScrollBarMove from '../EditorCommand/EditorCommandHandleScrollBarMove.js'
 import * as EditorHandleTab from '../EditorCommand/EditorCommandHandleTab.js'
 import * as EditorHandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.js'
 import * as EditorHandleTouchMove from '../EditorCommand/EditorCommandHandleTouchMove.js'
 import * as EditorHandleTouchStart from '../EditorCommand/EditorCommandHandleTouchStart.js'
 import * as EditorHandleTripleClick from '../EditorCommand/EditorCommandHandleTripleClick.js'
-import * as EditorInsertLineBreak from '../EditorCommand/EditorCommandInsertLineBreak.js'
 import * as EditorMoveLineDown from '../EditorCommand/EditorCommandMoveLineDown.js'
 import * as EditorMoveLineUp from '../EditorCommand/EditorCommandMoveLineUp.js'
 import * as EditorMoveRectangleSelection from '../EditorCommand/EditorCommandMoveRectangleSelection.js'
@@ -20,7 +15,6 @@ import * as EditorMoveSelection from '../EditorCommand/EditorCommandMoveSelectio
 import * as EditorMoveSelectionPx from '../EditorCommand/EditorCommandMoveSelectionPx.js'
 import * as EditorPaste from '../EditorCommand/EditorCommandPaste.js'
 import * as EditorPasteText from '../EditorCommand/EditorCommandPasteText.js'
-import * as EditorSelectAllOccurrences from '../EditorCommand/EditorCommandSelectAllOccurrences.js'
 import * as EditorSelectCharacterLeft from '../EditorCommand/EditorCommandSelectCharacterLeft.js'
 import * as EditorSelectCharacterRight from '../EditorCommand/EditorCommandSelectCharacterRight.js'
 import * as EditorSelectInsideString from '../EditorCommand/EditorCommandSelectInsideString.js'
@@ -85,13 +79,26 @@ const Imports = {
   GoToDefinition:()=>import('../EditorCommand/EditorCommandGoToDefinition.js'),
   GoToTypeDefinition:()=>import('../EditorCommand/EditorCommandGoToTypeDefinition.js'),
   HandleDoubleClick:()=>import('../EditorCommand/EditorCommandHandleDoubleClick.js'),
+  HandleMouseMove:()=>import('../EditorCommand/EditorCommandHandleMouseMove.js'),
+  HandleMouseMoveWithAltKey:()=>import('../EditorCommand/EditorCommandHandleMouseMoveWithAltKey.js'),
+  HandleScrollBarClick:()=>import('../EditorCommand/EditorCommandHandleScrollBarMove.js'),
+  HandleScrollBarMove:()=>import('../EditorCommand/EditorCommandHandleScrollBarClick.js'),
   HandleSingleClick:()=>import('../EditorCommand/EditorCommandHandleSingleClick.js'),
+  HandleTouchEnd:()=>import('../EditorCommand/EditorCommandHandleTouchEnd.js'),
+  HandleTouchMove:()=>import('../EditorCommand/EditorCommandHandleTouchMove.js'),
+  HandleTripleClick:()=>import('../EditorCommand/EditorCommandHandleTripleClick.js'),
   IndentLess :()=>import('../EditorCommand/EditorCommandIndentLess.js'),
   IndentMore:()=>import('../EditorCommand/EditorCommandIndentMore.js'),
+  InsertLineBreak:()=>import('../EditorCommand/EditorCommandInsertLineBreak.js'),
+  MoveLineDown:()=>import('../EditorCommand/EditorCommandMoveLineDown.js'),
+  MoveLineUp:()=>import('../EditorCommand/EditorCommandMoveLineUp.js'),
+  Paste:()=>import('../EditorCommand/EditorCommandPaste.js'),
+  PasteText:()=>import('../EditorCommand/EditorCommandPasteText.js'),
   Save:()=>import('../EditorCommand/EditorCommandSave.js'),
   SelectAll:()=>import('../EditorCommand/EditorCommandSelectAll.js'),
   SelectWordLeft:()=>import('../EditorCommand/EditorCommandSelectWordLeft.js'),
   SelectWordRight:()=>import('../EditorCommand/EditorCommandSelectWordRight.js'),
+  SelectAllOccurrences:()=>import('../EditorCommand/EditorCommandSelectAllOccurrences.js'),
 }
 
 // prettier-ignore
@@ -135,11 +142,11 @@ export const Commands = {
   'Editor.handleBeforeInputFromContentEditable': Viewlet.wrapViewletCommand('EditorText', EditorHandleBeforeInputFromContentEditable.handleBeforeInputFromContentEditable),
   'Editor.handleContextMenu': lazyCommand(Imports.ContextMenu, 'editorHandleContextMenu'),
   'Editor.handleDoubleClick': lazyCommand(Imports.HandleDoubleClick, 'editorHandleDoubleClick'),
-  'Editor.handleMouseMove': Viewlet.wrapViewletCommand('EditorText', EditorHandleMouseMove.editorHandleMouseMove),
-  'Editor.handleMouseMoveWithAltKey': Viewlet.wrapViewletCommand('EditorText', EditorHandleMouseMoveWithAltKey.editorHandleMouseMoveWithAltKey),
+  'Editor.handleMouseMove': lazyCommand(Imports.HandleMouseMove, 'editorHandleMouseMove'),
+  'Editor.handleMouseMoveWithAltKey': lazyCommand(Imports.HandleMouseMoveWithAltKey, 'editorHandleMouseMoveWithAltKey'),
   'Editor.handleNativeSelectionChange': Viewlet.wrapViewletCommand('EditorText', EditorHandleNativeSelectionChange.editorHandleNativeSelectionChange),
-  'Editor.handleScrollBarClick': Viewlet.wrapViewletCommand('EditorText', EditorHandleScrollBarClick.editorHandleScrollBarClick),
-  'Editor.handleScrollBarMove': Viewlet.wrapViewletCommand('EditorText', EditorHandleScrollBarMove.editorHandleScrollBarMove),
+  'Editor.handleScrollBarClick': lazyCommand(Imports.HandleScrollBarClick, 'editorHandleScrollBarClick'),
+  'Editor.handleScrollBarMove': lazyCommand(Imports.HandleScrollBarMove, 'editorHandleScrollBarMove'),
   'Editor.handleSingleClick': lazyCommand(Imports.HandleSingleClick, 'editorHandleSingleClick'),
   'Editor.handleTab': Viewlet.wrapViewletCommand('EditorText', EditorHandleTab.editorHandleTab),
   'Editor.handleTouchEnd': Viewlet.wrapViewletCommand('EditorText', EditorHandleTouchEnd.editorHandleTouchEnd),
@@ -148,7 +155,7 @@ export const Commands = {
   'Editor.handleTripleClick': Viewlet.wrapViewletCommand('EditorText', EditorHandleTripleClick.editorHandleTripleClick),
   'Editor.indentLess': lazyCommand(Imports.IndentLess, 'editorIndentLess'),
   'Editor.indentMore': lazyCommand(Imports.IndentMore, 'editorIndentMore'),
-  'Editor.insertLineBreak': Viewlet.wrapViewletCommand('EditorText', EditorInsertLineBreak.editorInsertLineBreak),
+  'Editor.insertLineBreak': lazyCommand(Imports.InsertLineBreak, 'editorInsertLineBreak'),
   'Editor.moveLineDown': Viewlet.wrapViewletCommand('EditorText', EditorMoveLineDown.editorMoveLineDown),
   'Editor.moveLineUp': Viewlet.wrapViewletCommand('EditorText', EditorMoveLineUp.editorMoveLineUp),
   'Editor.moveRectangleSelection': Viewlet.wrapViewletCommand('EditorText', EditorMoveRectangleSelection.editorMoveRectangleSelection),
@@ -161,7 +168,7 @@ export const Commands = {
   'Editor.pasteText': Viewlet.wrapViewletCommand('EditorText', EditorPasteText.editorPasteText),
   'Editor.save': lazyCommand(Imports.Save, 'editorSave'),
   'Editor.selectAll': lazyCommand(Imports.SelectAll, 'editorSelectAll'),
-  'Editor.selectAllOccurrences': Viewlet.wrapViewletCommand('EditorText', EditorSelectAllOccurrences.editorSelectAllOccurrences),
+  'Editor.selectAllOccurrences': lazyCommand(Imports.SelectAllOccurrences, 'editorSelectAllOccurrences'),
   'Editor.selectCharacterLeft': Viewlet.wrapViewletCommand('EditorText', EditorSelectCharacterLeft.editorSelectCharacterLeft),
   'Editor.selectCharacterRight': Viewlet.wrapViewletCommand('EditorText', EditorSelectCharacterRight.editorSelectCharacterRight),
   'Editor.selectInsideString': Viewlet.wrapViewletCommand('EditorText', EditorSelectInsideString.editorSelectInsideString),
