@@ -4,7 +4,6 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js' // TODO should not import shared process -> use command.execute instead (maybe)
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
 // TODO viewlet should only have create and refresh functions
@@ -1159,21 +1158,6 @@ export const handleBlur = (state) => {
   }
 }
 
-const getParentFolders = (root, uri, pathSeparator) => {
-  let index = -1
-  const relativePath = uri.slice(root.length)
-  const parts = relativePath.split(pathSeparator)
-
-  // const parentFolders = []
-  // while ((index = relativePath.indexOf(pathSeparator)) !== -1) {
-  //   relativePath = relativePath.slice(index)
-  //   parentFolders.push(`${root}${pathSeparator}${relativePath}`)
-  // }
-  // return parentFolders
-}
-
-// getParentFolders('/test', '/test/abc/index.js')
-
 const getIndex = (dirents, uri) => {
   for (let i = 0; i < dirents.length; i++) {
     const dirent = dirents[i]
@@ -1184,31 +1168,55 @@ const getIndex = (dirents, uri) => {
   return -1
 }
 
-const revealItemHidden = async (state, uri) => {
-  const { root, pathSeparator } = state
-  const relativePath = uri.slice(root.length)
-  const parts = relativePath.split(pathSeparator).slice(0, -1)
-  const newDirents = []
-  for (let i = 0; i < parts.length; i++) {
-    const part = parts[i]
-    const partPath = `${root}${pathSeparator}${part}`
-    console.log({ partPath, part })
-    const childDirents = await getChildDirents(root, pathSeparator, {
-      depth: 0,
-      path: partPath,
-    })
-    newDirents.push(...childDirents)
-    // const dirents = await FileSystem.readDirWithFileTypes(partPath)
-    console.log({ part, childDirents })
+const getPathParts = (root, uri, pathSeparator) => {
+  const parts = []
+  let index = root.length - 1
+  let depth = 0
+  while ((index = uri.indexOf('/', index + 1)) !== -1) {
+    console.log({ index, uri, root })
+    const partUri = uri.slice(0, index)
+    parts.push({ path: partUri, depth: depth++, root, pathSeparator })
   }
-  const mergedDirents = mergeDirents(state.dirents, newDirents)
+  return parts
+}
 
-  console.log({ relativePath })
-  // TODO
-  console.log({ uri })
+const getPathPartsToReveal = (root, pathParts, dirents) => {
+  for (let i = 0; i < pathParts.length; i++) {
+    const pathPart = pathParts[i]
+    const index = getIndex(dirents, pathPart.uri)
+    if (index === -1) {
+      continue
+    }
+    return pathParts.slice(i)
+  }
+  return pathParts
+}
+
+const getPathPartChildren = (pathPart) => {
+  const children = getChildDirents(
+    pathPart.root,
+    pathPart.pathSeparator,
+    pathPart
+  )
+  return children
+}
+
+// TODO maybe just insert items into explorer and refresh whole explorer
+const revealItemHidden = async (state, uri) => {
+  const { root, pathSeparator, dirents } = state
+  const pathParts = getPathParts(root, uri, pathSeparator)
+  const pathPartsToReveal = getPathPartsToReveal(root, pathParts, dirents)
+  const pathPartsChildren = await Promise.all(
+    pathPartsToReveal.map(getPathPartChildren)
+  )
+  const pathPartsChildrenFlat = pathPartsChildren.flat(1)
+  const mergedDirents = [...dirents, ...pathPartsChildrenFlat]
+  const index = getIndex(mergedDirents, uri)
   return {
     ...state,
     dirents: mergedDirents,
+    focused: true,
+    focusedIndex: index,
   }
 }
 

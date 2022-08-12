@@ -4462,7 +4462,7 @@ test('openContainingFolder', async () => {
   expect(Command.execute).toHaveBeenCalledWith('Open.openNativeFolder', '/test')
 })
 
-test('revealItem - error - not found', async () => {
+test.skip('revealItem - error - not found', async () => {
   const state = {
     ...ViewletExplorer.create(),
     focusedIndex: 0,
@@ -4483,7 +4483,7 @@ test('revealItem - error - not found', async () => {
   ).rejects.toThrowError('File not found: /test/index.js')
 })
 
-test.skip('revealItem - one level deep', async () => {
+test('revealItem - two levels deep', async () => {
   const state = {
     ...ViewletExplorer.create(),
     focusedIndex: 0,
@@ -4499,7 +4499,7 @@ test.skip('revealItem - one level deep', async () => {
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
     switch (uri) {
-      case '/test/':
+      case '/test':
         return [{ name: 'a', type: 'folder' }]
       case '/test/a':
         return [{ name: 'b.txt', type: 'file' }]
@@ -4518,18 +4518,20 @@ test.skip('revealItem - one level deep', async () => {
         path: '/test/a',
         posInSet: 1,
         setSize: 1,
-        type: 'directory',
+        type: 'folder',
       },
       {
         depth: 2,
         icon: '',
         name: 'b.txt',
-        path: '/test/b.txt',
+        path: '/test/a/b.txt',
         posInSet: 1,
         setSize: 1,
         type: 'file',
       },
     ],
+    focused: true,
+    focusedIndex: 1,
   })
 })
 
