@@ -4441,3 +4441,23 @@ test('event - issue with blur event after context menu event', async () => {
   const state3 = await ViewletExplorer.handleBlur(state2)
   expect(state3).toMatchObject({ focusedIndex: 0, focused: false })
 })
+
+test('openContainingFolder', async () => {
+  const state1 = {
+    ...ViewletExplorer.create('', 0, 0, 0, 0),
+    root: '/test',
+  }
+
+  // @ts-ignore
+  Command.execute.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Open.openNativeFolder':
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ViewletExplorer.openContainingFolder(state1)
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith('Open.openNativeFolder', '/test')
+})
