@@ -4,7 +4,6 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js' // TODO should not import shared process -> use command.execute instead (maybe)
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
 // TODO viewlet should only have create and refresh functions
@@ -1157,6 +1156,187 @@ export const handleBlur = (state) => {
     ...state,
     focused: false,
   }
+}
+
+const getIndex = (dirents, uri) => {
+  for (let i = 0; i < dirents.length; i++) {
+    const dirent = dirents[i]
+    if (dirent.path === uri) {
+      return i
+    }
+  }
+  return -1
+}
+
+const getPathParts = (root, uri, pathSeparator) => {
+  const parts = []
+  let index = root.length - 1
+  let depth = 0
+  while ((index = uri.indexOf('/', index + 1)) !== -1) {
+    console.log({ index, uri, root })
+    const partUri = uri.slice(0, index)
+    parts.push({ path: partUri, depth: depth++, root, pathSeparator })
+  }
+  return parts
+}
+
+const getPathPartsToReveal = (root, pathParts, dirents) => {
+  for (let i = 0; i < pathParts.length; i++) {
+    const pathPart = pathParts[i]
+    const index = getIndex(dirents, pathPart.uri)
+    if (index === -1) {
+      continue
+    }
+    return pathParts.slice(i)
+  }
+  return pathParts
+}
+
+const getPathPartChildren = (pathPart) => {
+  const children = getChildDirents(
+    pathPart.root,
+    pathPart.pathSeparator,
+    pathPart
+  )
+  return children
+}
+
+const mergeVisibleWithHiddenItems = (visibleItems, hiddenItems) => {
+  const hiddenItemRoot = hiddenItems[0].path
+  const merged = [...hiddenItems]
+  const seen = Object.create(null)
+  const unique = []
+  for (const item of merged) {
+    if (seen[item.path]) {
+      continue
+    }
+    seen[item.path] = true
+    unique.push(item)
+  }
+  const ordered = []
+
+  // depth one
+  //   let depth=1
+  //   while(true){
+  //     for(const item of unique){
+  //       if(item.depth===depth){
+  //         ordered.push(item)
+  //       }
+  //     }
+  // break
+  //   }
+  // const getChildren = (path) => {
+  //   const children = []
+  //   for (const item of unique) {
+  //     if (item.path.startsWith(path) && item.path !== path) {
+  //       ordered.push(item)
+  //     }
+  //   }
+  //   return children
+  // }
+  // for (const item of unique) {
+  //   for (const potentialChild of unique) {
+  //     if (
+  //       potentialChild.path.startsWith(item.path) &&
+  //       potentialChild.path !== item.path
+  //     ) {
+  //       ordered.push(potentialChild)
+  //     }
+  //   }
+  // }
+  // const refreshedRoots = Object.create(null)
+  // for (const hiddenItem of hiddenItems) {
+  //   const parent = hiddenItem.path.slice(0, hiddenItem.path.lastIndexOf('/'))
+  //   refreshedRoots[parent] = true
+  // }
+  // const mergedDirents = []
+  // for(const v)
+  // console.log({ hiddenItems })
+  // for (const visibleItem of visibleItems) {
+  //   console.log({ visibleItem, hiddenItemRoot, hiddenItems })
+  //   if (visibleItem.path === hiddenItemRoot) {
+  //     // TODO update aria posinset and aria setsize
+  //     mergedDirents.push(...hiddenItems)
+  //   } else {
+  //     for (const hiddenItem of hiddenItems) {
+  //       if (hiddenItem.path === visibleItem.path) {
+  //         continue
+  //       }
+  //     }
+  //     mergedDirents.push(visibleItem)
+  //   }
+  // }
+  console.log({ unique })
+
+  return unique
+}
+
+const orderDirents = (dirents) => {
+  if (dirents.length === 0) {
+    return dirents
+  }
+  // const parentMap = Object.create(null)
+  // for(const dirent of dirents){
+  //   const parentPath = dirent.slice(0, dirent.lastIndexOf('/'))
+  //   parentMap[parentPath]||=[]
+  //   parentMap[parentPath].push(dirent)
+  // }
+  const withDeepChildren = (parent) => {
+    const children = []
+    for (const dirent of dirents) {
+      if (
+        dirent.depth === parent.depth + 1 &&
+        dirent.path.startsWith(parent.path)
+      ) {
+        children.push(dirent)
+      }
+    }
+    return [parent, ...children]
+  }
+  const topLevelDirents = dirents.filter(isTopLevel)
+
+  const ordered = topLevelDirents.flatMap(withDeepChildren)
+  return ordered
+}
+
+// TODO maybe just insert items into explorer and refresh whole explorer
+const revealItemHidden = async (state, uri) => {
+  const { root, pathSeparator, dirents } = state
+  const pathParts = getPathParts(root, uri, pathSeparator)
+  const pathPartsToReveal = getPathPartsToReveal(root, pathParts, dirents)
+  const pathPartsChildren = await Promise.all(
+    pathPartsToReveal.map(getPathPartChildren)
+  )
+  const pathPartsChildrenFlat = pathPartsChildren.flat(1)
+  const orderedPathParts = orderDirents(pathPartsChildrenFlat)
+  console.log({ orderedPathParts })
+  const mergedDirents = mergeVisibleWithHiddenItems(dirents, orderedPathParts)
+  const index = getIndex(mergedDirents, uri)
+  return {
+    ...state,
+    dirents: mergedDirents,
+    focused: true,
+    focusedIndex: index,
+  }
+}
+
+const revealItemVisible = (state, index) => {
+  return {
+    ...state,
+    focused: true,
+    focusedIndex: index,
+  }
+}
+
+export const revealItem = async (state, uri) => {
+  Assert.object(state)
+  Assert.string(uri)
+  const dirents = state.dirents
+  const index = getIndex(dirents, uri)
+  if (index === -1) {
+    return revealItemHidden(state, uri)
+  }
+  return revealItemVisible(state, index)
 }
 
 export const shouldApplyNewState = (newState, fn) => {

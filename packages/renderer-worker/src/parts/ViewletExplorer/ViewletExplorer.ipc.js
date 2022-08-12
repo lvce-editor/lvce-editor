@@ -34,6 +34,7 @@ export const Commands = {
   'Explorer.openContainingFolder': Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.openContainingFolder),
   'Explorer.removeDirent':         Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.removeDirent),
   'Explorer.renameDirent':         Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.renameDirent),
+  'Explorer.revealItem':           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.revealItem),
   'Explorer.scrollDown':           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.scrollDown),
   'Explorer.scrollUp':             Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.scrollUp),
   'Explorer.setDeltaY':            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.setDeltaY),
