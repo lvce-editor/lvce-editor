@@ -1,6 +1,6 @@
 import * as MenuEntriesTab from '../src/parts/MenuEntries/MenuEntriesTab.js'
 
-test('getMenuEntries', () => {
+test.skip('getMenuEntries', () => {
   const menuEntries = MenuEntriesTab.getMenuEntries()
   expect(menuEntries).toContainEqual({
     command: 'Main.closeFocusedTab',
