@@ -4,7 +4,7 @@
 import { jest } from '@jest/globals'
 import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
 import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
-import * as ViewletExtensions from '../src/parts/Viewlet/ViewletExtensions.js'
+import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
 
 const isLeaf = (node) => {
   return node.childElementCount === 0

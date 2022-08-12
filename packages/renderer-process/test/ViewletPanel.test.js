@@ -22,7 +22,7 @@ const RendererWorker = await import(
   '../src/parts/RendererWorker/RendererWorker.js'
 )
 
-const ViewletPanel = await import('../src/parts/Viewlet/ViewletPanel.js')
+const ViewletPanel = await import('../src/parts/ViewletPanel/ViewletPanel.js')
 const Layout = await import('../src/parts/Layout/Layout.js')
 
 // TODO side effect here is bad

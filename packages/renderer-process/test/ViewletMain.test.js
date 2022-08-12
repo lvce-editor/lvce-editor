@@ -22,7 +22,7 @@ const RendererWorker = await import(
   '../src/parts/RendererWorker/RendererWorker.js'
 )
 
-const Main = await import('../src/parts/Viewlet/ViewletMain.js')
+const Main = await import('../src/parts/ViewletMain/ViewletMain.js')
 const Layout = await import('../src/parts/Layout/Layout.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 

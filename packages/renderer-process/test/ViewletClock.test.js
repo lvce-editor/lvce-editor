@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletClock from '../src/parts/Viewlet/ViewletClock.js'
+import * as ViewletClock from '../src/parts/ViewletClock/ViewletClock.js'
 
 test('name', () => {
   expect(ViewletClock.name).toBe('Clock')
