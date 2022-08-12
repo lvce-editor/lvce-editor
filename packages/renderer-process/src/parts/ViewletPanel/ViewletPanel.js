@@ -2,11 +2,12 @@ import * as Assert from '../Assert/Assert.js'
 import * as Layout from '../Layout/Layout.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
-const create$PanelTab = (label) => {
+const create$PanelTab = (label, index) => {
   const $PanelTab = document.createElement('div')
   $PanelTab.className = 'PanelTab'
   $PanelTab.setAttribute('role', 'tab')
   $PanelTab.textContent = label
+  $PanelTab.id = `PanelTab-${index + 1}`
   return $PanelTab
 }
 
