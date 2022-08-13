@@ -148,7 +148,7 @@ export const exists = async (path) => {
 }
 
 /**
- * @param {import('fs').Dirent} dirent
+ * @param {import('fs').Dirent|import('fs').StatsBase} dirent
  */
 const getType = (dirent) => {
   if (dirent.isFile()) {
@@ -246,6 +246,7 @@ export const getRealPath = async (path) => {
   try {
     return await fs.realpath(path)
   } catch (error) {
+    // @ts-ignore
     if (error && error instanceof globalThis.Error && error.code === 'ENOENT') {
       let content
       try {
@@ -257,6 +258,12 @@ export const getRealPath = async (path) => {
     }
     throw new VError(error, `Failed to resolve real path for ${path}`)
   }
+}
+
+export const stat = async (path) => {
+  const stats = await fs.stat(path)
+  const type = getType(stats)
+  return type
 }
 
 // getRealPath('/home/simon/Documents/levivilet/lvce-editor/node_modules/.bin/abc') //?

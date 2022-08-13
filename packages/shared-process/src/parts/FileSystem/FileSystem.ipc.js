@@ -26,5 +26,6 @@ export const Commands = {
   'FileSystem.readFile': FileSystem.readFile,
   'FileSystem.remove': FileSystem.remove,
   'FileSystem.rename': FileSystem.rename,
+  'FileSystem.stat': FileSystem.stat,
   'FileSystem.writeFile': FileSystem.writeFile,
 }

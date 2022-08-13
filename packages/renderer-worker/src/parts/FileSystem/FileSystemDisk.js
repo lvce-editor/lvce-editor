@@ -76,3 +76,10 @@ export const getRealPath = (path) => {
     /* path */ path
   )
 }
+
+export const stat = (path) => {
+  return SharedProcess.invoke(
+    /* FileSystem.stat */ 'FileSystem.stat',
+    /* path */ path
+  )
+}
