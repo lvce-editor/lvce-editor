@@ -147,6 +147,9 @@ export const exists = async (path) => {
   }
 }
 
+/**
+ * @param {import('fs').Dirent} dirent
+ */
 const getType = (dirent) => {
   if (dirent.isFile()) {
     return 'file'
@@ -154,9 +157,24 @@ const getType = (dirent) => {
   if (dirent.isDirectory()) {
     return 'directory'
   }
+  if (dirent.isSymbolicLink()) {
+    return 'symlink'
+  }
+  if (dirent.isSocket()) {
+    return 'socket'
+  }
+  if (dirent.isBlockDevice()) {
+    return 'block-device'
+  }
+  if (dirent.isCharacterDevice()) {
+    return 'character-device'
+  }
   return 'unknown'
 }
 
+/**
+ * @param {import('fs').Dirent} dirent
+ */
 const toPrettyDirent = (dirent) => {
   return {
     name: dirent.name,
