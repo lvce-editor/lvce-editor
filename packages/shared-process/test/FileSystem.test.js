@@ -8,7 +8,7 @@ beforeEach(() => {
 
 jest.unstable_mockModule('node:fs/promises', () => {
   return {
-    copy: jest.fn(() => {
+    cp: jest.fn(() => {
       throw new Error('not implemented')
     }),
     mkdir: jest.fn(() => {
@@ -34,9 +34,16 @@ jest.unstable_mockModule('node:fs/promises', () => {
     }),
   }
 })
+jest.unstable_mockModule('../src/parts/Trash/Trash.js', () => {
+  return {
+    trash: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
 
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
-
+const Trash = await import('../src/parts/Trash/Trash.js')
 const fs = await import('node:fs/promises')
 
 test('copy - file', async () => {
@@ -44,7 +51,9 @@ test('copy - file', async () => {
   fs.cp.mockImplementation(() => {})
   await FileSystem.copy('/test-1/a.txt', '/test-2/a.txt')
   expect(fs.cp).toHaveBeenCalledTimes(1)
-  expect(fs.cp).toHaveBeenCalledWith('')
+  expect(fs.cp).toHaveBeenCalledWith('/test-1/a.txt', '/test-2/a.txt', {
+    recursive: true,
+  })
 })
 
 test('copy - error - source does not exist', async () => {
@@ -64,7 +73,9 @@ test('copy - error - source does not exist', async () => {
 test('copy - to self', async () => {
   // @ts-ignore
   fs.cp.mockImplementation((source) => {
-    throw new Error(`ENOENT: no such file or directory, lstat '${source}'`)
+    throw new Error(
+      `Invalid src or dest: cp returned EINVAL (src and dest cannot be the same)`
+    )
   })
   await expect(
     FileSystem.copy('/test/a.txt', '/test/a.txt')
@@ -80,7 +91,7 @@ test('createFile', async () => {
   fs.writeFile.mockImplementation(() => {})
   await FileSystem.createFile('/test/a.txt')
   expect(fs.writeFile).toHaveBeenCalledTimes(1)
-  expect(fs.writeFile).toHaveBeenCalledWith('')
+  expect(fs.writeFile).toHaveBeenCalledWith('/test/a.txt', '', { flag: 'wx' })
 })
 
 test('createFile - should throw error if file already exists', async () => {
@@ -96,9 +107,9 @@ test('createFile - should throw error if file already exists', async () => {
 test('create folder', async () => {
   // @ts-ignore
   fs.mkdir.mockImplementation(() => {})
-  await FileSystem.createFolder('/test/a')
+  await FileSystem.createFolder('/test/a', {})
   expect(fs.mkdir).toHaveBeenCalledTimes(1)
-  expect(fs.mkdir).toHaveBeenCalledWith('/test/a')
+  expect(fs.mkdir).toHaveBeenCalledWith('/test/a', {})
 })
 
 test('create folder - should fail if folder already exists', async () => {
@@ -201,17 +212,19 @@ test('ensureFile - created parent folders recursively', async () => {
 })
 
 test('remove', async () => {
-  const tmpDir = await getTmpDir()
-  const testFile = join(tmpDir, 'file-to-be-removed.txt')
-  await fs.promises.writeFile(testFile, '')
-  await FileSystem.remove(testFile)
-  expect(fs.existsSync(testFile)).toBe(false)
+  // @ts-ignore
+  Trash.trash.mockImplementation(() => {})
+  await FileSystem.remove('/test/file-to-be-removed.txt')
+  expect(Trash.trash).toHaveBeenCalledTimes(1)
+  expect(Trash.trash).toHaveBeenCalledWith('/test/file-to-be-removed.txt')
 })
 
 test('remove - non-existing file', async () => {
-  const tmpDir = await getTmpDir()
-  const testFile = join(tmpDir, 'non-existing.txt')
-  await FileSystem.remove(testFile)
+  // @ts-ignore
+  Trash.trash.mockImplementation(() => {})
+  await FileSystem.remove('/test/non-existing.txt')
+  expect(Trash.trash).toHaveBeenCalledTimes(1)
+  expect(Trash.trash).toHaveBeenCalledWith('/test/non-existing.txt')
 })
 
 test('rename', async () => {
