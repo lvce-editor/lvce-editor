@@ -7,7 +7,6 @@ import * as Path from '../Path/Path.js'
 import * as Trash from '../Trash/Trash.js'
 import * as Platform from '../Platform/Platform.js'
 import VError from 'verror'
-import { realpath, readlink } from 'node:fs/promises'
 
 export const state = {
   watcherMap: Object.create(null),
@@ -245,11 +244,11 @@ export const getPathSeparator = () => {
 
 export const getRealPath = async (path) => {
   try {
-    return await realpath(path)
+    return await fs.realpath(path)
   } catch (error) {
     if (error && error instanceof globalThis.Error && error.code === 'ENOENT') {
       try {
-        const content = await readlink(path)
+        const content = await fs.readlink(path)
         throw new VError(`Broken symbolic link: File not found ${content}`)
       } catch (error) {
         throw new VError(error, `Failed to resolve real path for ${path}`)
