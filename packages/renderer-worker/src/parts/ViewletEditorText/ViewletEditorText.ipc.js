@@ -2,21 +2,6 @@ import * as EditorBraceCompletion from '../EditorCommand/EditorCommandBraceCompl
 import * as EditorCompletion from '../EditorCommand/EditorCommandCompletion.js'
 import * as EditorHandleBeforeInputFromContentEditable from '../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.js'
 import * as EditorHandleNativeSelectionChange from '../EditorCommand/EditorCommandHandleNativeSelectionChange.js'
-import * as EditorHandleTab from '../EditorCommand/EditorCommandHandleTab.js'
-import * as EditorHandleTouchEnd from '../EditorCommand/EditorCommandHandleTouchEnd.js'
-import * as EditorHandleTouchMove from '../EditorCommand/EditorCommandHandleTouchMove.js'
-import * as EditorHandleTouchStart from '../EditorCommand/EditorCommandHandleTouchStart.js'
-import * as EditorHandleTripleClick from '../EditorCommand/EditorCommandHandleTripleClick.js'
-import * as EditorMoveLineDown from '../EditorCommand/EditorCommandMoveLineDown.js'
-import * as EditorMoveLineUp from '../EditorCommand/EditorCommandMoveLineUp.js'
-import * as EditorMoveRectangleSelection from '../EditorCommand/EditorCommandMoveRectangleSelection.js'
-import * as EditorMoveRectangleSelectionPx from '../EditorCommand/EditorCommandMoveRectangleSelectionPx.js'
-import * as EditorMoveSelection from '../EditorCommand/EditorCommandMoveSelection.js'
-import * as EditorMoveSelectionPx from '../EditorCommand/EditorCommandMoveSelectionPx.js'
-import * as EditorPaste from '../EditorCommand/EditorCommandPaste.js'
-import * as EditorPasteText from '../EditorCommand/EditorCommandPasteText.js'
-import * as EditorSelectCharacterLeft from '../EditorCommand/EditorCommandSelectCharacterLeft.js'
-import * as EditorSelectCharacterRight from '../EditorCommand/EditorCommandSelectCharacterRight.js'
 import * as EditorSelectInsideString from '../EditorCommand/EditorCommandSelectInsideString.js'
 import * as EditorSelectLine from '../EditorCommand/EditorCommandSelectLine.js'
 import * as EditorSelectNextOccurrence from '../EditorCommand/EditorCommandSelectNextOccurrence.js'
@@ -84,21 +69,29 @@ const Imports = {
   HandleScrollBarClick:()=>import('../EditorCommand/EditorCommandHandleScrollBarMove.js'),
   HandleScrollBarMove:()=>import('../EditorCommand/EditorCommandHandleScrollBarClick.js'),
   HandleSingleClick:()=>import('../EditorCommand/EditorCommandHandleSingleClick.js'),
+  HandleTab:()=>import('../EditorCommand/EditorCommandHandleTab.js'),
   HandleTouchEnd:()=>import('../EditorCommand/EditorCommandHandleTouchEnd.js'),
   HandleTouchMove:()=>import('../EditorCommand/EditorCommandHandleTouchMove.js'),
+  HandleTouchStart:()=>import('../EditorCommand/EditorCommandHandleTouchStart.js'),
   HandleTripleClick:()=>import('../EditorCommand/EditorCommandHandleTripleClick.js'),
   IndentLess :()=>import('../EditorCommand/EditorCommandIndentLess.js'),
   IndentMore:()=>import('../EditorCommand/EditorCommandIndentMore.js'),
   InsertLineBreak:()=>import('../EditorCommand/EditorCommandInsertLineBreak.js'),
   MoveLineDown:()=>import('../EditorCommand/EditorCommandMoveLineDown.js'),
   MoveLineUp:()=>import('../EditorCommand/EditorCommandMoveLineUp.js'),
+  MoveRectangleSelection:()=>import('../EditorCommand/EditorCommandMoveRectangleSelection.js'),
+  MoveRectangleSelectionPx:()=>import('../EditorCommand/EditorCommandMoveRectangleSelectionPx.js'),
   Paste:()=>import('../EditorCommand/EditorCommandPaste.js'),
   PasteText:()=>import('../EditorCommand/EditorCommandPasteText.js'),
   Save:()=>import('../EditorCommand/EditorCommandSave.js'),
   SelectAll:()=>import('../EditorCommand/EditorCommandSelectAll.js'),
+  SelectAllOccurrences:()=>import('../EditorCommand/EditorCommandSelectAllOccurrences.js'),
   SelectWordLeft:()=>import('../EditorCommand/EditorCommandSelectWordLeft.js'),
   SelectWordRight:()=>import('../EditorCommand/EditorCommandSelectWordRight.js'),
-  SelectAllOccurrences:()=>import('../EditorCommand/EditorCommandSelectAllOccurrences.js'),
+  MoveSelectionPx:()=>import('../EditorCommand/EditorCommandMoveSelectionPx.js'),
+  MoveSelection:()=>import('../EditorCommand/EditorCommandMoveSelection.js'),
+  SelectCharacterLeft:()=>import('../EditorCommand/EditorCommandSelectCharacterLeft.js'),
+  SelectCharacterRight:()=>import('../EditorCommand/EditorCommandSelectCharacterRight.js'),
 }
 
 // prettier-ignore
@@ -148,29 +141,29 @@ export const Commands = {
   'Editor.handleScrollBarClick': lazyCommand(Imports.HandleScrollBarClick, 'editorHandleScrollBarClick'),
   'Editor.handleScrollBarMove': lazyCommand(Imports.HandleScrollBarMove, 'editorHandleScrollBarMove'),
   'Editor.handleSingleClick': lazyCommand(Imports.HandleSingleClick, 'editorHandleSingleClick'),
-  'Editor.handleTab': Viewlet.wrapViewletCommand('EditorText', EditorHandleTab.editorHandleTab),
-  'Editor.handleTouchEnd': Viewlet.wrapViewletCommand('EditorText', EditorHandleTouchEnd.editorHandleTouchEnd),
-  'Editor.handleTouchMove': Viewlet.wrapViewletCommand('EditorText', EditorHandleTouchMove.editorHandleTouchMove),
-  'Editor.handleTouchStart': Viewlet.wrapViewletCommand('EditorText', EditorHandleTouchStart.editorHandleTouchStart),
-  'Editor.handleTripleClick': Viewlet.wrapViewletCommand('EditorText', EditorHandleTripleClick.editorHandleTripleClick),
+  'Editor.handleTab': lazyCommand(Imports.HandleTab, 'editorHandleTab'),
+  'Editor.handleTouchEnd': lazyCommand(Imports.HandleTouchEnd, 'editorHandleTouchEnd'),
+  'Editor.handleTouchMove': lazyCommand(Imports.HandleTouchMove, 'editorHandleTouchMove'),
+  'Editor.handleTouchStart': lazyCommand(Imports.HandleTouchStart, 'editorHandleTouchstart'),
+  'Editor.handleTripleClick': lazyCommand(Imports.HandleTripleClick, 'editorHandleTripleClick'),
   'Editor.indentLess': lazyCommand(Imports.IndentLess, 'editorIndentLess'),
   'Editor.indentMore': lazyCommand(Imports.IndentMore, 'editorIndentMore'),
   'Editor.insertLineBreak': lazyCommand(Imports.InsertLineBreak, 'editorInsertLineBreak'),
-  'Editor.moveLineDown': Viewlet.wrapViewletCommand('EditorText', EditorMoveLineDown.editorMoveLineDown),
-  'Editor.moveLineUp': Viewlet.wrapViewletCommand('EditorText', EditorMoveLineUp.editorMoveLineUp),
-  'Editor.moveRectangleSelection': Viewlet.wrapViewletCommand('EditorText', EditorMoveRectangleSelection.editorMoveRectangleSelection),
-  'Editor.moveRectangleSelectionPx': Viewlet.wrapViewletCommand('EditorText', EditorMoveRectangleSelectionPx.editorMoveRectangleSelectionPx),
-  'Editor.moveSelection': Viewlet.wrapViewletCommand('EditorText', EditorMoveSelection.editorMoveSelection),
-  'Editor.moveSelectionPx': Viewlet.wrapViewletCommand('EditorText', EditorMoveSelectionPx.editorMoveSelectionPx),
+  'Editor.moveLineDown': lazyCommand(Imports.MoveLineDown, 'editorMoveLineDown'),
+  'Editor.moveLineUp': lazyCommand(Imports.MoveLineUp, 'editorMoveLineUp'),
+  'Editor.moveRectangleSelection': lazyCommand(Imports.MoveRectangleSelection, 'editorMoveRectangleSelection'),
+  'Editor.moveRectangleSelectionPx': lazyCommand(Imports.MoveRectangleSelectionPx, 'editorMoveRectangleSelectionPx'),
+  'Editor.moveSelection': lazyCommand(Imports.MoveSelection, 'editorMoveSelection'),
+  'Editor.moveSelectionPx': lazyCommand(Imports.MoveSelectionPx, 'editorMoveSelectionPx'),
   'Editor.openCompletion': Viewlet.wrapViewletCommand('EditorText', EditorCompletion.open),
   'Editor.openCompletionFromType': Viewlet.wrapViewletCommand('EditorText', EditorCompletion.openFromType),
-  'Editor.paste': Viewlet.wrapViewletCommand('EditorText', EditorPaste.editorPaste),
-  'Editor.pasteText': Viewlet.wrapViewletCommand('EditorText', EditorPasteText.editorPasteText),
+  'Editor.paste': lazyCommand(Imports.Paste, 'editorPaste'),
+  'Editor.pasteText': lazyCommand(Imports.PasteText, 'editorPasteText'),
   'Editor.save': lazyCommand(Imports.Save, 'editorSave'),
   'Editor.selectAll': lazyCommand(Imports.SelectAll, 'editorSelectAll'),
   'Editor.selectAllOccurrences': lazyCommand(Imports.SelectAllOccurrences, 'editorSelectAllOccurrences'),
-  'Editor.selectCharacterLeft': Viewlet.wrapViewletCommand('EditorText', EditorSelectCharacterLeft.editorSelectCharacterLeft),
-  'Editor.selectCharacterRight': Viewlet.wrapViewletCommand('EditorText', EditorSelectCharacterRight.editorSelectCharacterRight),
+  'Editor.selectCharacterLeft': lazyCommand(Imports.SelectCharacterLeft, 'editorSelectCharacterLeft'),
+  'Editor.selectCharacterRight': lazyCommand(Imports.SelectCharacterRight, 'editorSelectCharacterRight'),
   'Editor.selectInsideString': Viewlet.wrapViewletCommand('EditorText', EditorSelectInsideString.editorSelectInsideString),
   'Editor.selectLine': Viewlet.wrapViewletCommand('EditorText', EditorSelectLine.editorSelectLine),
   'Editor.selectNextOccurrence': Viewlet.wrapViewletCommand('EditorText', EditorSelectNextOccurrence.editorSelectNextOccurrence),
