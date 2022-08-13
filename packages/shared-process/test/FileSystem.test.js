@@ -1,61 +1,89 @@
-import * as fs from 'node:fs'
-import { mkdtemp, writeFile } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { setTimeout } from 'node:timers/promises'
-import * as FileSystem from '../src/parts/FileSystem/FileSystem.js'
+import { jest } from '@jest/globals'
 
-const getTmpDir = () => {
-  return mkdtemp(join(tmpdir(), 'foo-'))
-}
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('node:fs/promises', () => {
+  return {
+    readFile: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    readDirWithFileTypes: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    readlink: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    realpath: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    copy: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    writeFile: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
+
+const fs = await import('node:fs/promises')
 
 test('copy - file', async () => {
-  const tmpDir1 = await getTmpDir()
-  const source = join(tmpDir1, 'a.txt')
-  await writeFile(source, 'a')
-  const tmpDir2 = await getTmpDir()
-  const target = join(tmpDir2, 'a.txt')
-  await FileSystem.copy(source, target)
-  expect(await fs.promises.readFile(target, 'utf8')).toBe('a')
+  // @ts-ignore
+  fs.cp.mockImplementation(() => {})
+  await FileSystem.copy('/test-1/a.txt', '/test-2/a.txt')
+  expect(fs.cp).toHaveBeenCalledTimes(1)
+  expect(fs.cp).toHaveBeenCalledWith('')
 })
 
 test('copy - error - source does not exist', async () => {
-  const tmpDir1 = await getTmpDir()
-  const source = join(tmpDir1, 'a.txt')
-  const tmpDir2 = await getTmpDir()
-  const target = join(tmpDir2, 'a.txt')
-  await expect(FileSystem.copy(source, target)).rejects.toThrowError(
+  // @ts-ignore
+  fs.cp.mockImplementation((source) => {
+    throw new Error(`ENOENT: no such file or directory, lstat '${source}'`)
+  })
+  await expect(
+    FileSystem.copy('/test-1/a.txt', '/test-2/a.txt')
+  ).rejects.toThrowError(
     new Error(
-      `Failed to copy "${source}" to "${target}": ENOENT: no such file or directory, lstat '${source}'`
+      `Failed to copy "/test-1/a.txt" to "/test-2/a.txt": ENOENT: no such file or directory, lstat '/test-1/a.txt'`
     )
   )
 })
 
 test('copy - to self', async () => {
-  const tmpDir1 = await getTmpDir()
-  const source = join(tmpDir1, 'a.txt')
-  await writeFile(source, 'a')
-  const target = source
-  await expect(FileSystem.copy(source, target)).rejects.toThrowError(
+  // @ts-ignore
+  fs.cp.mockImplementation((source) => {
+    throw new Error(`ENOENT: no such file or directory, lstat '${source}'`)
+  })
+  await expect(
+    FileSystem.copy('/test/a.txt', '/test/a.txt')
+  ).rejects.toThrowError(
     new Error(
-      `Failed to copy "${source}" to "${target}": src and dest cannot be the same`
+      `Failed to copy "/test/a.txt" to "/test/a.txt": src and dest cannot be the same`
     )
   )
 })
 
 test('createFile', async () => {
-  const tmpDir = await getTmpDir()
-  const testFile = join(tmpDir, 'a.txt')
-  await FileSystem.createFile(testFile)
-  expect(await fs.promises.readFile(testFile, 'utf8')).toBe('')
+  // @ts-ignore
+  fs.writeFile.mockImplementation(() => {})
+  await FileSystem.createFile('/test/a.txt')
+  expect(fs.writeFile).toHaveBeenCalledTimes(1)
+  expect(fs.writeFile).toHaveBeenCalledWith('')
 })
 
 test('createFile - should throw error if file already exists', async () => {
-  const tmpDir = await getTmpDir()
-  const testFile = join(tmpDir, 'a.txt')
-  await fs.promises.writeFile(testFile, 'abc')
-  expect(FileSystem.createFile(testFile)).rejects.toThrowError(
-    `Failed to create file "${testFile}": EEXIST: file already exists, open '${testFile}'`
+  // @ts-ignore
+  fs.writeFile.mockImplementation((path) => {
+    throw new Error(`EEXIST: file already exists, open '${path}'`)
+  })
+  expect(FileSystem.createFile('/test/a.txt')).rejects.toThrowError(
+    `Failed to create file "/test/a.txt": EEXIST: file already exists, open '/test/a.txt'`
   )
 })
 
@@ -178,11 +206,14 @@ test('rename', async () => {
 })
 
 test('rename - non existing old path', async () => {
-  const tmpDir = await getTmpDir()
-  const oldPath = join(tmpDir, 'non-existing.txt')
-  const newPath = join(tmpDir, 'file-has-been-moved.txt')
-  await expect(FileSystem.rename(oldPath, newPath)).rejects.toThrow(
-    `Failed to rename "${oldPath}" to "${newPath}": ENOENT`
+  // @ts-ignore
+  fs.rename.mockImplementation(() => {
+    throw new Error('ENOENT')
+  })
+  await expect(
+    FileSystem.rename('/test/non-existing.txt', '/test/file-has-been-moved.txt')
+  ).rejects.toThrow(
+    `Failed to rename "test/non-existing.txt" to "/test/file-has-been-moved.txt": ENOENT`
   )
 })
 

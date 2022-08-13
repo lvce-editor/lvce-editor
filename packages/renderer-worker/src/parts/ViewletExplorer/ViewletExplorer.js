@@ -819,6 +819,7 @@ export const scrollDown = () => {}
 
 const handleClickSymLink = async (state, dirent, index) => {
   const realPath = await FileSystem.getRealPath(dirent.path)
+  console.log({ realPath })
   return state
 }
 

@@ -7,7 +7,7 @@ import * as Path from '../Path/Path.js'
 import * as Trash from '../Trash/Trash.js'
 import * as Platform from '../Platform/Platform.js'
 import VError from 'verror'
-import { realpath } from 'node:fs/promises'
+import { realpath, readlink } from 'node:fs/promises'
 
 export const state = {
   watcherMap: Object.create(null),
@@ -247,10 +247,19 @@ export const getRealPath = async (path) => {
   try {
     return await realpath(path)
   } catch (error) {
+    if (error && error instanceof globalThis.Error && error.code === 'ENOENT') {
+      try {
+        const content = await readlink(path)
+        throw new VError(`Broken symbolic link: File not found ${content}`)
+      } catch (error) {
+        throw new VError(error, `Failed to resolve real path for ${path}`)
+      }
+    }
     throw new VError(error, `Failed to resolve real path for ${path}`)
   }
 }
 
+// getRealPath('/home/simon/Documents/levivilet/lvce-editor/node_modules/.bin/abc') //?
 // export const unwatch = (id) => {
 //   state.watchers[id].close()
 //   delete state.watchers[id]
