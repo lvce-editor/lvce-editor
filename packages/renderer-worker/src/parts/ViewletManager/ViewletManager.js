@@ -138,7 +138,7 @@ export const load = async (viewlet, focus = false) => {
       }
     }
     state = ViewletState.ModuleLoaded
-    const viewletState = module.create(
+    const initialViewletState = module.create(
       viewlet.id,
       viewlet.uri,
       viewlet.left,
@@ -147,9 +147,16 @@ export const load = async (viewlet, focus = false) => {
       viewlet.height
     )
 
+    const viewletState = initialViewletState
     const oldVersion =
       viewletState.version === undefined ? undefined : ++viewletState.version
-    let newState = await module.loadContent(viewletState)
+    let newState = await module.loadContent(
+      viewletState,
+      viewlet.top,
+      viewlet.left,
+      viewlet.width,
+      viewlet.height
+    )
     if (viewletState.version !== oldVersion) {
       newState = viewletState
       console.log('version mismatch')
@@ -199,8 +206,8 @@ export const load = async (viewlet, focus = false) => {
       let commands = []
       if (Array.isArray(module.render)) {
         for (const item of module.render) {
-          if (!item.isEqual(viewletState, newState)) {
-            commands.push(item.apply(viewletState, newState))
+          if (!item.isEqual(initialViewletState, newState)) {
+            commands.push(item.apply(initialViewletState, newState))
           }
         }
       } else {

@@ -51,6 +51,8 @@ export const create = () => {
   const $Panel = Layout.state.$Panel
   $Panel.append($PanelHeader)
   $Panel.ariaLabel = 'Panel'
+
+  Layout.state.$Workbench.append($PanelHeader)
   return {
     $Panel,
     $PanelTabs,
@@ -73,7 +75,7 @@ export const appendViewlet = (state, name, $Viewlet) => {
   if (state.$PanelContent) {
     state.$PanelContent.replaceWith($Viewlet)
   } else {
-    state.$Panel.append($Viewlet)
+    Layout.state.$Workbench.append($Viewlet)
   }
   state.$PanelContent = $Viewlet
 }
@@ -112,5 +114,29 @@ export const setSelectedIndex = (state, oldIndex, newIndex) => {
     const $PanelTab = $PanelTabs.children[newIndex]
     $PanelTab.ariaSelected = true
     $PanelTabs.setAttribute('aria-activedescendant', $PanelTab.id)
+  }
+}
+
+export const setDimensions = (
+  state,
+  headerTop,
+  headerLeft,
+  headerWidth,
+  headerHeight,
+  contentTop,
+  contentLeft,
+  contentWidth,
+  contentHeight
+) => {
+  const { $PanelHeader, $PanelContent } = state
+  $PanelHeader.style.left = `${headerLeft}px`
+  $PanelHeader.style.top = `${headerTop}px`
+  $PanelHeader.style.width = `${headerWidth}px`
+  $PanelHeader.style.height = `${headerHeight}px`
+  if ($PanelContent) {
+    $PanelContent.style.left = `${contentLeft}px`
+    $PanelContent.style.top = `${contentTop}px`
+    $PanelContent.style.width = `${contentWidth}px`
+    $PanelContent.style.height = `${contentHeight}px`
   }
 }

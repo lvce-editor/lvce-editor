@@ -1,5 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
+import * as ViewletPanelHeader from '../ViewletPanelHeader/ViewletPanelHeader.js'
 
 export const name = 'Panel'
 
@@ -11,16 +12,26 @@ export const create = () => {
     disposed: false,
     focusedIndex: -1,
     selectedIndex: -1,
+    top: 0,
+    left: 0,
+    width: 0,
+    height: 0,
   }
 }
 
-export const loadContent = async (state) => {
+export const loadContent = async (state, top, left, width, height) => {
+  console.log({ top, left, width, height })
   const cachedViewlet = await getCachedViewlet()
+
   return {
     ...state,
     views: ['Problems', 'Output', 'Debug Console', 'Terminal'],
     currentViewlet: cachedViewlet,
     selectedIndex: 0,
+    top,
+    left,
+    width,
+    height,
   }
 }
 
@@ -76,47 +87,51 @@ export const openViewlet = async (state, id) => {
 export const selectIndex = async (state, index) => {
   console.log({ index })
   await openViewlet(state, state.views[index])
-  return {
-    ...state,
-    selectedIndex: index,
-  }
+  return ViewletPanelHeader.selectIndex(state, index)
 }
 
 export const hasFunctionalRender = true
 
-const renderTabs = {
+const renderDimensions = {
   isEqual(oldState, newState) {
-    return oldState.views === newState.views
+    return (
+      oldState.width === newState.width &&
+      oldState.height === newState.height &&
+      oldState.top === newState.top
+    )
   },
   apply(oldState, newState) {
+    const headerHeight = 35
+    const headerWidth = newState.width
+    const headerLeft = newState.left
+    const headerTop = newState.top
+    const contentHeight = newState.height - headerHeight
+    const contentWidth = newState.width
+    const contentLeft = newState.left
+    const contentTop = newState.top + headerHeight
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Panel',
-      /* method */ 'setTabs',
-      /* tabs */ newState.views,
+      /* method */ 'setDimensions',
+      /* headerTop */ headerTop,
+      /* headerLeft */ headerLeft,
+      /* headerWidth */ headerWidth,
+      /* headerHeight */ headerHeight,
+      /* contentTop */ contentTop,
+      /* contentLeft */ contentLeft,
+      /* contentWidth */ contentWidth,
+      /* contentHeight */ contentHeight,
     ]
   },
 }
 
-const renderSelectedIndex = {
-  isEqual(oldState, newState) {
-    return oldState.selectedIndex === newState.selectedIndex
-  },
-  apply(oldState, newState) {
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Panel',
-      /* method */ 'setSelectedIndex',
-      /* unFocusIndex */ oldState.selectedIndex,
-      /* focusIndex */ newState.selectedIndex,
-    ]
-  },
-}
-
-export const render = [renderTabs, renderSelectedIndex]
+export const render = [...ViewletPanelHeader.render, renderDimensions]
 
 export const hasFunctionalResize = true
 
 export const resize = (state, dimensions) => {
-  return state
+  return {
+    ...state,
+    ...dimensions,
+  }
 }

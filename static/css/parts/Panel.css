@@ -7,6 +7,8 @@
 
 #PanelHeader {
   contain: strict;
+  height: 35px;
+  position: fixed;
 }
 
 #PanelTabs {

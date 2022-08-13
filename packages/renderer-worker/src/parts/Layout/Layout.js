@@ -231,7 +231,7 @@ const hide = async (key, id) => {
 }
 
 const toggle = async (key, id) => {
-  await (state[key] ? hide(key, id) : show(key, id));
+  await (state[key] ? hide(key, id) : show(key, id))
 }
 
 // TODO replace with one method in renderer process: setSideBarVisibility(true|false)
@@ -377,46 +377,59 @@ export const handleSashPointerDown = (id) => {
   console.log({ id })
 }
 
+const handleSashPointerMoveSideBar = (x, y) => {
+  const newSideBarWidth = state.windowWidth - state.activityBarWidth - x
+  if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH / 2) {
+    state.sideBarVisible = false
+    state.mainWidth = state.windowWidth - state.activityBarWidth
+  } else if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH) {
+    state.sideBarVisible = true
+    state.sideBarWidth = SIDE_BAR_MIN_WIDTH
+    state.mainWidth =
+      state.windowWidth - state.activityBarWidth - SIDE_BAR_MIN_WIDTH
+    state.sideBarLeft =
+      state.windowWidth - state.activityBarWidth - SIDE_BAR_MIN_WIDTH
+  } else {
+    state.sideBarVisible = true
+    state.mainWidth = x
+    state.sideBarLeft = x
+    state.sideBarWidth = newSideBarWidth
+  }
+}
+
+const handleSashPointerMovePanel = (x, y) => {
+  const newPanelHeight = state.windowHeight - state.statusBarHeight - y
+  if (newPanelHeight < PANEL_MIN_HEIGHT / 2) {
+    state.panelVisible = false
+    state.mainHeight =
+      state.windowHeight - state.statusBarHeight - state.titleBarHeight
+  } else if (newPanelHeight <= PANEL_MIN_HEIGHT) {
+    state.panelVisible = true
+    state.panelHeight = PANEL_MIN_HEIGHT
+    state.mainHeight =
+      state.windowHeight - state.activityBarHeight - PANEL_MIN_HEIGHT
+  } else {
+    state.panelVisible = true
+    state.mainHeight = y - state.titleBarHeight
+    state.panelTop = y
+    state.panelHeight = state.windowHeight - state.statusBarHeight - y
+  }
+}
+
 // TODO make this functional
 export const handleSashPointerMove = async (x, y) => {
   if (state.sashId === 'SideBar') {
-    const newSideBarWidth = state.windowWidth - state.activityBarWidth - x
-    if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH / 2) {
-      state.sideBarVisible = false
-      state.mainWidth = state.windowWidth - state.activityBarWidth
-    } else if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH) {
-      state.sideBarVisible = true
-      state.sideBarWidth = SIDE_BAR_MIN_WIDTH
-      state.mainWidth =
-        state.windowWidth - state.activityBarWidth - SIDE_BAR_MIN_WIDTH
-      state.sideBarLeft =
-        state.windowWidth - state.activityBarWidth - SIDE_BAR_MIN_WIDTH
-    } else {
-      state.sideBarVisible = true
-      state.mainWidth = x
-      state.sideBarLeft = x
-      state.sideBarWidth = newSideBarWidth
-    }
+    handleSashPointerMoveSideBar(x, y)
   } else if (state.sashId === 'Panel') {
-    const newPanelHeight = state.windowHeight - state.statusBarHeight - y
-    if (newPanelHeight < PANEL_MIN_HEIGHT / 2) {
-      state.panelVisible = false
-      state.mainHeight =
-        state.windowHeight - state.statusBarHeight - state.titleBarHeight
-    } else if (newPanelHeight <= PANEL_MIN_HEIGHT) {
-      state.panelVisible = true
-      state.panelHeight = PANEL_MIN_HEIGHT
-      state.mainHeight =
-        state.windowHeight - state.activityBarHeight - PANEL_MIN_HEIGHT
-    } else {
-      state.panelVisible = true
-      state.mainHeight = y - state.titleBarHeight
-      state.panelTop = y
-      state.panelHeight = state.windowHeight - state.statusBarHeight - y
-    }
+    handleSashPointerMovePanel(x, y)
   }
-
   await updateLayout(state)
+}
+
+const resizeInstance = (id) => {
+  const dimensions = getDimensions(state, id)
+  console.log('resize instance', id, dimensions)
+  return Viewlet.resize(id, dimensions)
 }
 
 // TODO a bit unnecessary to send the same layout very often, but it avoids keeping state in renderer process
@@ -427,11 +440,15 @@ export const handleResize = async (bounds) => {
     /* Layout.update */ 'Layout.update',
     /* points */ points
   )
-  const ids = ['Main', 'ActivityBar', 'SideBar', 'TitleBar', 'StatusBar']
-  const resizeInstance = (id) => {
-    const dimensions = getDimensions(state, id)
-    return Viewlet.resize(id, dimensions)
-  }
+  const ids = [
+    'Main',
+    'ActivityBar',
+    'SideBar',
+    'TitleBar',
+    'StatusBar',
+    'Panel',
+  ]
+
   const commands = ids.flatMap(resizeInstance)
   if (commands.length === 0) {
     return
