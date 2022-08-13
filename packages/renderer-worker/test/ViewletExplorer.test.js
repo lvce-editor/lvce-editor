@@ -54,6 +54,9 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
     getPathSeparator: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    getRealPath: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
 
@@ -4815,6 +4818,12 @@ test('revealItem - already visible', async () => {
   })
 })
 
+// TODO add more tests for
+// - opening symlink file
+// - symlink stat error
+// - symlink target is unsupported type
+// - clicking on symlink
+// - expanding symlink folder
 test('handleArrowRight - symlink - error', async () => {
   const state = {
     root: '/home/test-user/test-path',
