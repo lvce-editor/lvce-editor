@@ -767,6 +767,13 @@ export const focusIndex = (state, index) => {
   }
 }
 
+export const focus = (state) => {
+  return {
+    ...state,
+    focused: true,
+  }
+}
+
 export const focusNext = (state) => {
   if (state.focusedIndex === state.dirents.length - 1) {
     return state
