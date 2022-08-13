@@ -364,3 +364,45 @@ test.skip('watch - rename', async () => {
 test('getPathSeparator', () => {
   expect(FileSystem.getPathSeparator()).toEqual(expect.any(String))
 })
+
+test('getRealPath', async () => {
+  // @ts-ignore
+  fs.realpath.mockImplementation(() => {
+    return '/test/b.txt'
+  })
+  expect(await FileSystem.getRealPath('/test/a.txt')).toBe('/test/b.txt')
+})
+
+test('getRealPath - error - broken symlink - file not found', async () => {
+  // @ts-ignore
+  fs.realpath.mockImplementation((source) => {
+    const error = new Error(`ENOENT`)
+    // @ts-ignore
+    error.code = 'ENOENT'
+    throw error
+  })
+  // @ts-ignore
+  fs.readlink.mockImplementation(() => {
+    return '/test/non-existing.txt'
+  })
+  await expect(FileSystem.getRealPath('/test-1/a.txt')).rejects.toThrowError(
+    new Error(`Broken symbolic link: File not found /test/non-existing.txt`)
+  )
+})
+
+test('getRealPath - error - broken symlink and error with readlink', async () => {
+  // @ts-ignore
+  fs.realpath.mockImplementation((source) => {
+    const error = new Error(`ENOENT`)
+    // @ts-ignore
+    error.code = 'ENOENT'
+    throw error
+  })
+  // @ts-ignore
+  fs.readlink.mockImplementation(() => {
+    throw new TypeError('x is not a function')
+  })
+  await expect(FileSystem.getRealPath('/test-1/a.txt')).rejects.toThrowError(
+    new Error(`Failed to resolve real path for /test-1/a.txt: ENOENT`)
+  )
+})

@@ -247,12 +247,13 @@ export const getRealPath = async (path) => {
     return await fs.realpath(path)
   } catch (error) {
     if (error && error instanceof globalThis.Error && error.code === 'ENOENT') {
+      let content
       try {
-        const content = await fs.readlink(path)
-        throw new VError(`Broken symbolic link: File not found ${content}`)
-      } catch (error) {
+        content = await fs.readlink(path)
+      } catch {
         throw new VError(error, `Failed to resolve real path for ${path}`)
       }
+      throw new VError(`Broken symbolic link: File not found ${content}`)
     }
     throw new VError(error, `Failed to resolve real path for ${path}`)
   }
