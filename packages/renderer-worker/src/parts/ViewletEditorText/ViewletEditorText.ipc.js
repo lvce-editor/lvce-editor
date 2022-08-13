@@ -2,12 +2,6 @@ import * as EditorBraceCompletion from '../EditorCommand/EditorCommandBraceCompl
 import * as EditorCompletion from '../EditorCommand/EditorCommandCompletion.js'
 import * as EditorHandleBeforeInputFromContentEditable from '../EditorCommand/EditorCommandHandleNativeBeforeInputFromContentEditable.js'
 import * as EditorHandleNativeSelectionChange from '../EditorCommand/EditorCommandHandleNativeSelectionChange.js'
-import * as EditorMoveSelection from '../EditorCommand/EditorCommandMoveSelection.js'
-import * as EditorMoveSelectionPx from '../EditorCommand/EditorCommandMoveSelectionPx.js'
-import * as EditorPaste from '../EditorCommand/EditorCommandPaste.js'
-import * as EditorPasteText from '../EditorCommand/EditorCommandPasteText.js'
-import * as EditorSelectCharacterLeft from '../EditorCommand/EditorCommandSelectCharacterLeft.js'
-import * as EditorSelectCharacterRight from '../EditorCommand/EditorCommandSelectCharacterRight.js'
 import * as EditorSelectInsideString from '../EditorCommand/EditorCommandSelectInsideString.js'
 import * as EditorSelectLine from '../EditorCommand/EditorCommandSelectLine.js'
 import * as EditorSelectNextOccurrence from '../EditorCommand/EditorCommandSelectNextOccurrence.js'
@@ -94,6 +88,10 @@ const Imports = {
   SelectAllOccurrences:()=>import('../EditorCommand/EditorCommandSelectAllOccurrences.js'),
   SelectWordLeft:()=>import('../EditorCommand/EditorCommandSelectWordLeft.js'),
   SelectWordRight:()=>import('../EditorCommand/EditorCommandSelectWordRight.js'),
+  MoveSelectionPx:()=>import('../EditorCommand/EditorCommandMoveSelectionPx.js'),
+  MoveSelection:()=>import('../EditorCommand/EditorCommandMoveSelection.js'),
+  SelectCharacterLeft:()=>import('../EditorCommand/EditorCommandSelectCharacterLeft.js'),
+  SelectCharacterRight:()=>import('../EditorCommand/EditorCommandSelectCharacterRight.js'),
 }
 
 // prettier-ignore
@@ -155,17 +153,17 @@ export const Commands = {
   'Editor.moveLineUp': lazyCommand(Imports.MoveLineUp, 'editorMoveLineUp'),
   'Editor.moveRectangleSelection': lazyCommand(Imports.MoveRectangleSelection, 'editorMoveRectangleSelection'),
   'Editor.moveRectangleSelectionPx': lazyCommand(Imports.MoveRectangleSelectionPx, 'editorMoveRectangleSelectionPx'),
-  'Editor.moveSelection': Viewlet.wrapViewletCommand('EditorText', EditorMoveSelection.editorMoveSelection),
-  'Editor.moveSelectionPx': Viewlet.wrapViewletCommand('EditorText', EditorMoveSelectionPx.editorMoveSelectionPx),
+  'Editor.moveSelection': lazyCommand(Imports.MoveSelection, 'editorMoveSelection'),
+  'Editor.moveSelectionPx': lazyCommand(Imports.MoveSelectionPx, 'editorMoveSelectionPx'),
   'Editor.openCompletion': Viewlet.wrapViewletCommand('EditorText', EditorCompletion.open),
   'Editor.openCompletionFromType': Viewlet.wrapViewletCommand('EditorText', EditorCompletion.openFromType),
-  'Editor.paste': Viewlet.wrapViewletCommand('EditorText', EditorPaste.editorPaste),
-  'Editor.pasteText': Viewlet.wrapViewletCommand('EditorText', EditorPasteText.editorPasteText),
+  'Editor.paste': lazyCommand(Imports.Paste, 'editorPaste'),
+  'Editor.pasteText': lazyCommand(Imports.PasteText, 'editorPasteText'),
   'Editor.save': lazyCommand(Imports.Save, 'editorSave'),
   'Editor.selectAll': lazyCommand(Imports.SelectAll, 'editorSelectAll'),
   'Editor.selectAllOccurrences': lazyCommand(Imports.SelectAllOccurrences, 'editorSelectAllOccurrences'),
-  'Editor.selectCharacterLeft': Viewlet.wrapViewletCommand('EditorText', EditorSelectCharacterLeft.editorSelectCharacterLeft),
-  'Editor.selectCharacterRight': Viewlet.wrapViewletCommand('EditorText', EditorSelectCharacterRight.editorSelectCharacterRight),
+  'Editor.selectCharacterLeft': lazyCommand(Imports.SelectCharacterLeft, 'editorSelectCharacterLeft'),
+  'Editor.selectCharacterRight': lazyCommand(Imports.SelectCharacterRight, 'editorSelectCharacterRight'),
   'Editor.selectInsideString': Viewlet.wrapViewletCommand('EditorText', EditorSelectInsideString.editorSelectInsideString),
   'Editor.selectLine': Viewlet.wrapViewletCommand('EditorText', EditorSelectLine.editorSelectLine),
   'Editor.selectNextOccurrence': Viewlet.wrapViewletCommand('EditorText', EditorSelectNextOccurrence.editorSelectNextOccurrence),
