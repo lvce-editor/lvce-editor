@@ -817,6 +817,11 @@ export const scrollUp = () => {}
 export const scrollDown = () => {}
 // export const handleBlur=()=>{}
 
+const handleClickSymLink = async (state, dirent, index) => {
+  const realPath = await FileSystem.getRealPath(dirent.path)
+  return state
+}
+
 export const handleArrowRight = async (state) => {
   if (state.focusedIndex === -1) {
     return state
@@ -836,6 +841,8 @@ export const handleArrowRight = async (state) => {
         return focusIndex(state, state.focusedIndex + 1)
       }
       break
+    case 'symlink':
+      return handleClickSymLink(state, dirent, state.focusedIndex)
     default:
       throw new Error(`unsupported file type ${dirent.type}`)
   }

@@ -7,6 +7,7 @@ import * as Path from '../Path/Path.js'
 import * as Trash from '../Trash/Trash.js'
 import * as Platform from '../Platform/Platform.js'
 import VError from 'verror'
+import { realpath } from 'node:fs/promises'
 
 export const state = {
   watcherMap: Object.create(null),
@@ -240,6 +241,14 @@ export const watch = (path, options) => {
 
 export const getPathSeparator = () => {
   return Platform.getPathSeparator()
+}
+
+export const getRealPath = async (path) => {
+  try {
+    return await realpath(path)
+  } catch (error) {
+    throw new VError(error, `Failed to resolve real path for ${path}`)
+  }
 }
 
 // export const unwatch = (id) => {

@@ -4814,3 +4814,31 @@ test('revealItem - already visible', async () => {
     ],
   })
 })
+
+test('handleArrowRight - symlink - error', async () => {
+  const state = {
+    root: '/home/test-user/test-path',
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    dirents: [
+      {
+        depth: 1,
+        posInSet: 1,
+        setSize: 1,
+        name: 'index.css',
+        path: '/index.css',
+        type: 'symlink',
+      },
+    ],
+  }
+  // @ts-ignore
+  FileSystem.getRealPath.mockImplementation(() => {
+    throw new TypeError('x is not a function')
+  })
+  await expect(ViewletExplorer.handleArrowRight(state)).rejects.toThrowError(
+    new TypeError('x is not a function')
+  )
+})
