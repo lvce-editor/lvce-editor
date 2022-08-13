@@ -36,7 +36,7 @@ test.skip('base components', () => {
 test('show', async () => {
   // TODO this should be different
   // TODO check attributes on elements
-  Layout.show({
+  Layout.showPlaceHolder({
     'SideBar.visible': false,
     'SideBar.width': 100,
     'SideBar.position': 'left',
@@ -64,7 +64,7 @@ test('update', () => {
 test('handleResize', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
-  Layout.show({
+  Layout.showPlaceHolder({
     'SideBar.visible': false,
     'SideBar.width': 100,
     'SideBar.position': 'left',
@@ -90,7 +90,7 @@ test('handleResize', () => {
 test('event - move sash', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
-  Layout.show({
+  Layout.showPlaceHolder({
     'SideBar.visible': true,
     'SideBar.width': 100,
     'SideBar.position': 'left',

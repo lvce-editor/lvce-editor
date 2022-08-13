@@ -53,7 +53,7 @@ const getVisibleActivityBarItems = (state) => {
   return visibleItems
 }
 
-export const create = (id, uri, left, top, width, height) => {
+export const create = (id, uri) => {
   return {
     // TODO declarative event api is good, but need to bind
     // listeners to state somehow
@@ -67,10 +67,10 @@ export const create = (id, uri, left, top, width, height) => {
     activityBarItems: [],
     focusedIndex: -1,
     selectedIndex: -1,
-    left,
-    top,
-    width,
-    height,
+    left: 0,
+    top: 0,
+    width: 0,
+    height: 0,
   }
 }
 
@@ -123,7 +123,7 @@ const getActivityBarItems = () => {
   ]
 }
 
-export const loadContent = async (state) => {
+export const loadContent = async (state, top, left, width, height) => {
   const activityBarItems = getActivityBarItems()
   const sideBar = ViewletStates.getInstance('SideBar')
   const viewletId =
@@ -133,6 +133,10 @@ export const loadContent = async (state) => {
     ...state,
     selectedIndex,
     activityBarItems,
+    top,
+    left,
+    width,
+    height,
   }
 }
 
@@ -387,6 +391,32 @@ const renderFocusedIndex = {
   },
 }
 
-export const render = [renderActivityBarItems, renderFocusedIndex]
+const renderDimensions = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.width === newState.width &&
+      oldState.height === newState.height &&
+      oldState.top === newState.top &&
+      oldState.left === newState.left
+    )
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'ActivityBar',
+      /* method */ 'setDimensions',
+      /* top */ newState.top,
+      /* left */ newState.left,
+      /* width */ newState.width,
+      /* height */ newState.height,
+    ]
+  },
+}
+
+export const render = [
+  renderActivityBarItems,
+  renderFocusedIndex,
+  renderDimensions,
+]
 
 export const hasFunctionalRender = true

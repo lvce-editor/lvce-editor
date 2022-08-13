@@ -1,6 +1,7 @@
 import * as Layout from '../Layout/Layout.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Dimensions from '../Dimensions/Dimensions.js'
 
 const getIconClassName = (icon) => {
   switch (icon) {
@@ -102,8 +103,7 @@ const clearNode = (node) => {
 }
 
 export const setItems = (state, statusBarItemsLeft, statusBarItemsRight) => {
-  const $StatusBarItemsLeft = state.$StatusBarItemsLeft
-  const $StatusBarItemsRight = state.$StatusBarItemsRight
+  const { $StatusBarItemsLeft, $StatusBarItemsRight } = state
   clearNode($StatusBarItemsLeft)
   clearNode($StatusBarItemsRight)
   $StatusBarItemsLeft.append(...statusBarItemsLeft.map(create$StatusBarItem))
@@ -112,5 +112,11 @@ export const setItems = (state, statusBarItemsLeft, statusBarItemsRight) => {
 
 export const focus = (state) => {
   Assert.object(state)
-  state.$StatusBar.focus()
+  const { $StatusBar } = state
+  $StatusBar.focus()
+}
+
+export const setDimensions = (state, top, left, width, height) => {
+  const { $StatusBar } = state
+  Dimensions.setDimensions($StatusBar, top, left, width, height)
 }

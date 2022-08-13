@@ -3,6 +3,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as Layout from '../Layout/Layout.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as Dimensions from '../Dimensions/Dimensions.js'
 
 // TODO set aria-selected false when sidebar is collapsed
 
@@ -180,4 +181,9 @@ export const setBadgeCount = (state, index, count) => {
   $Badge.textContent = `${count}`
   // @ts-ignore
   $Item.append($Badge)
+}
+
+export const setDimensions = (state, top, left, width, height) => {
+  const { $ActivityBar } = state
+  Dimensions.setDimensions($ActivityBar, top, left, width, height)
 }

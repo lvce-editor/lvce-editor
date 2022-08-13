@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Layout from '../Layout/Layout.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as Dimensions from '../Dimensions/Dimensions.js'
 
 const create$PanelTab = (label, index) => {
   const $PanelTab = document.createElement('div')
@@ -48,13 +49,17 @@ export const create = () => {
   $PanelHeader.append($PanelTabs)
   // const $PanelContent = document.createElement('div')
   // $PanelContent.id = 'PanelContent'
-  const $Panel = Layout.state.$Panel
-  $Panel.append($PanelHeader)
-  $Panel.ariaLabel = 'Panel'
+  // const $Panel = Layout.state.$Panel
+  // $Panel.append($PanelHeader)
+  // $Panel.ariaLabel = 'Panel'
 
   Layout.state.$Workbench.append($PanelHeader)
+  if (Layout.state.$Panel) {
+    Layout.state.$Panel.remove()
+    Layout.state.$Panel = undefined
+  }
   return {
-    $Panel,
+    // $Panel,
     $PanelTabs,
     $PanelHeader,
     $PanelContent: undefined,
@@ -129,14 +134,20 @@ export const setDimensions = (
   contentHeight
 ) => {
   const { $PanelHeader, $PanelContent } = state
-  $PanelHeader.style.left = `${headerLeft}px`
-  $PanelHeader.style.top = `${headerTop}px`
-  $PanelHeader.style.width = `${headerWidth}px`
-  $PanelHeader.style.height = `${headerHeight}px`
+  Dimensions.setDimensions(
+    $PanelHeader,
+    headerTop,
+    headerLeft,
+    headerWidth,
+    headerHeight
+  )
   if ($PanelContent) {
-    $PanelContent.style.left = `${contentLeft}px`
-    $PanelContent.style.top = `${contentTop}px`
-    $PanelContent.style.width = `${contentWidth}px`
-    $PanelContent.style.height = `${contentHeight}px`
+    Dimensions.setDimensions(
+      $PanelContent,
+      contentTop,
+      contentLeft,
+      contentWidth,
+      contentHeight
+    )
   }
 }

@@ -11,7 +11,7 @@ export const __initialize__ = () => {
   // Command.register(1106, Layout.showActivityBar)
   // Command.register(1107, Layout.hideActivityBar)
   // Command.register(1108, Layout.toggleActivityBar)
-  Command.register('Layout.show', Layout.show)
+  Command.register('Layout.showPlaceHolder', Layout.showPlaceHolder)
   Command.register('Layout.hide', Layout.hide)
   Command.register('Layout.getBounds', Layout.getBounds)
 }

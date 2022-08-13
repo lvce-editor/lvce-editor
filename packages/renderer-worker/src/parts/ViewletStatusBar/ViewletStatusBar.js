@@ -6,6 +6,10 @@ export const create = () => {
   return {
     statusBarItemsLeft: [],
     statusBarItemsRight: [],
+    top: 0,
+    left: 0,
+    width: 0,
+    height: 0,
   }
 }
 
@@ -26,7 +30,7 @@ const toUiStatusBarItems = (statusBarItems) => {
   return statusBarItems.map(toUiStatusBarItems)
 }
 
-export const loadContent = async (state) => {
+export const loadContent = async (state, top, left, width, height) => {
   const extensionStatusBarItems =
     await ExtensionHostStatusBarItems.getStatusBarItems()
 
@@ -42,6 +46,10 @@ export const loadContent = async (state) => {
       // },
       ...uiStatusBarItems,
     ],
+    top,
+    left,
+    width,
+    height,
   }
 }
 
@@ -131,6 +139,28 @@ export const resize = (state, dimensions) => {
 
 export const hasFunctionalRender = true
 
+const renderDimensions = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.width === newState.width &&
+      oldState.height === newState.height &&
+      oldState.top === newState.top &&
+      oldState.width === newState.width
+    )
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'StatusBar',
+      /* method */ 'setDimensions',
+      /* top */ newState.top,
+      /* left */ newState.left,
+      /* width */ newState.width,
+      /* height */ newState.height,
+    ]
+  },
+}
+
 const renderItems = {
   isEqual(oldState, newState) {
     return (
@@ -149,4 +179,4 @@ const renderItems = {
   },
 }
 
-export const render = [renderItems]
+export const render = [renderItems, renderDimensions]

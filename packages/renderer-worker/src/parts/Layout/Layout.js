@@ -143,10 +143,6 @@ export const getPoints = (layout, bounds) => {
 export const updateLayout = async (layout) => {
   const points = getPoints(layout, state)
   Object.assign(state, points)
-  RendererProcess.invoke(
-    /* Layout.update */ 'Layout.update',
-    /* points */ points
-  )
   await Command.execute(
     /* LocalStorage.setJson */ 'LocalStorage.setJson',
     /* key */ 'layout',
@@ -357,7 +353,7 @@ export const hydrate = async (initData) => {
   const points = getPoints(initialLayout, windowBounds)
   Object.assign(state, points)
   await RendererProcess.invoke(
-    /* Layout.show */ 'Layout.show',
+    /* Layout.show */ 'Layout.showPlaceHolder',
     /* points */ points
   )
 }
@@ -436,10 +432,6 @@ const resizeInstance = (id) => {
 export const handleResize = async (bounds) => {
   const points = getPoints(state, bounds)
   Object.assign(state, points)
-  await RendererProcess.invoke(
-    /* Layout.update */ 'Layout.update',
-    /* points */ points
-  )
   const ids = [
     'Main',
     'ActivityBar',
@@ -453,8 +445,5 @@ export const handleResize = async (bounds) => {
   if (commands.length === 0) {
     return
   }
-  // TODO send the whole batch at once
-  for (const command of commands) {
-    RendererProcess.invoke(...command)
-  }
+  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
 }

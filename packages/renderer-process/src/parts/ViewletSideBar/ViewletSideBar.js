@@ -55,3 +55,5 @@ export const focus = async () => {
   // await
   console.log('todo focus sidebar')
 }
+
+export const setDimensions = (state, top, left, width, height) => {}

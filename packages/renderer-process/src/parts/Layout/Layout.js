@@ -70,10 +70,6 @@ export const update = (points) => {
     $SideBar.style.display = 'none'
   }
   if (points.statusBarVisible) {
-    $StatusBar.style.top = `${points.statusBarTop}px`
-    $StatusBar.style.left = `${points.statusBarLeft}px`
-    $StatusBar.style.width = `${points.statusBarWidth}px`
-    $StatusBar.style.height = `${points.statusBarHeight}px`
     $StatusBar.style.display = ''
   } else {
     $StatusBar.style.display = 'none'
@@ -194,7 +190,7 @@ const handleSashPointerDown = (event) => {
   )
 }
 
-export const show = (points) => {
+export const showPlaceHolder = (points) => {
   const $ActivityBar = document.createElement('div')
   $ActivityBar.id = 'ActivityBar'
 
