@@ -5,7 +5,7 @@ import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
-
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 export const create = (id, uri, left, top, width, height) => {
   return {
     currentViewletId: '',
@@ -157,4 +157,26 @@ export const resize = (state, dimensions) => {
     },
     commands,
   }
+}
+
+export const focus = async (state) => {
+  const { currentViewletId } = state
+  const currentViewlet = ViewletStates.getInstance(currentViewletId)
+  if (!currentViewlet) {
+    return state
+  }
+  await Command.execute(`${currentViewletId}.focus`)
+  // if (!currentViewlet.factory.focus) {
+  //   throw new Error(`missing focus function for ${currentViewletId}`)
+  // }
+  // const newState = currentViewlet.factory.focus(currentViewlet.state)
+  // const commands = ViewletManager.render(
+  //   currentViewlet.factory,
+  //   currentViewlet.state,
+  //   newState
+  // )
+  // currentViewlet.state = newState
+  // console.log({ commands })
+  return state
+  // console.log({ currentViewletId })
 }

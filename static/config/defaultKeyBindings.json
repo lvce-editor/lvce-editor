@@ -642,5 +642,13 @@
     "key": "Enter",
     "command": "Locations.selectCurrent",
     "when": "focus.locationList"
+  },
+  {
+    "key": "ctrl+0",
+    "command": "SideBar.focus"
+  },
+  {
+    "key": "ctrl+1",
+    "command": "Main.focus"
   }
 ]
