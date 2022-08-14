@@ -3,7 +3,11 @@ import * as CachePaths from '../CachePaths/CachePaths.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 
-export const bundleRendererWorkerCached = async ({ commitHash, platform }) => {
+export const bundleRendererWorkerCached = async ({
+  commitHash,
+  platform,
+  assetDir,
+}) => {
   const rendererWorkerCachePath = await CachePaths.getRendererWorkerCachePath()
   if (existsSync(rendererWorkerCachePath)) {
     console.info('[build step skipped] bundleRendererWorker')
@@ -19,6 +23,7 @@ export const bundleRendererWorkerCached = async ({ commitHash, platform }) => {
       cachePath: rendererWorkerCachePath,
       platform: platform,
       commitHash,
+      assetDir,
     })
     console.timeEnd('bundleRendererWorker')
   }

@@ -7,6 +7,7 @@ export const bundleRendererWorker = async ({
   cachePath,
   platform,
   commitHash,
+  assetDir,
 }) => {
   await Copy.copy({
     from: 'packages/renderer-worker/src',
@@ -49,12 +50,12 @@ export const bundleRendererWorker = async ({
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: `ASSET_DIR`,
-    replacement: `'/${commitHash}'`,
+    replacement: `'${assetDir}'`,
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/Tokenizer/Tokenizer.js`,
     occurrence: `/extensions`,
-    replacement: `/${commitHash}/extensions`,
+    replacement: `${assetDir}/extensions`,
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,

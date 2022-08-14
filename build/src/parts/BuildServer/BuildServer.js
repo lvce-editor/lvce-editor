@@ -866,6 +866,7 @@ const bundleRendererWorkerAndRendererProcessJs = async () => {
     await BundleRendererProcessCached.bundleRendererProcessCached({
       commitHash,
       platform: 'remote',
+      assetDir: `/${commitHash}`,
     })
 
   console.time('copyRendererProcessFiles')
@@ -880,6 +881,7 @@ const bundleRendererWorkerAndRendererProcessJs = async () => {
     await BundleRendererWorkerCached.bundleRendererWorkerCached({
       commitHash,
       platform: 'remote',
+      assetDir: `/${commitHash}`,
     })
 
   console.time('copyRendererWorkerFiles')

@@ -319,6 +319,7 @@ export const build = async () => {
     await BundleRendererProcessCached.bundleRendererProcessCached({
       commitHash,
       platform: 'electron',
+      assetDir: `../../../../..`,
     })
 
   console.time('copyRendererProcessFiles')
@@ -333,6 +334,7 @@ export const build = async () => {
     await BundleRendererWorkerCached.bundleRendererWorkerCached({
       commitHash,
       platform: 'electron',
+      assetDir: `../../../../..`,
     })
 
   console.time('copyRendererWorkerFiles')

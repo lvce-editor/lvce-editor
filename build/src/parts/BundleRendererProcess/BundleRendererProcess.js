@@ -7,6 +7,7 @@ export const bundleRendererProcess = async ({
   cachePath,
   commitHash,
   platform,
+  assetDir,
 }) => {
   await Copy.copy({
     from: 'packages/renderer-process/src',
@@ -29,7 +30,7 @@ export const bundleRendererProcess = async ({
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: `ASSET_DIR`,
-    replacement: `'/${commitHash}'`,
+    replacement: `'${assetDir}'`,
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,

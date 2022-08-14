@@ -3,7 +3,11 @@ import * as CachePaths from '../CachePaths/CachePaths.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
 
-export const bundleRendererProcessCached = async ({ commitHash, platform }) => {
+export const bundleRendererProcessCached = async ({
+  commitHash,
+  platform,
+  assetDir,
+}) => {
   const rendererProcessCachePath =
     await CachePaths.getRendererProcessCachePath()
   if (existsSync(rendererProcessCachePath)) {
@@ -20,6 +24,7 @@ export const bundleRendererProcessCached = async ({ commitHash, platform }) => {
       cachePath: rendererProcessCachePath,
       commitHash,
       platform,
+      assetDir,
     })
     console.timeEnd('bundleRendererProcess')
   }
