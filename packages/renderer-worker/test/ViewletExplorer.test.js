@@ -4925,3 +4925,49 @@ test('focusIndex - scroll down', () => {
     maxLineY: 2,
   })
 })
+
+test('handleClickCurrent', async () => {
+  const state = {
+    root: '/home/test-user/test-path',
+    focusedIndex: 1,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 1,
+    maxLineY: 2,
+    dirents: [
+      {
+        depth: 1,
+        index: 0,
+        languageId: 'unknown',
+        name: 'index.css',
+        path: '/index.css',
+        setSize: 2,
+        type: 'file',
+      },
+      {
+        depth: 1,
+        index: 1,
+        languageId: 'unknown',
+        name: 'index.html',
+        path: '/index.html',
+        setSize: 3,
+        type: 'file',
+      },
+      {
+        depth: 1,
+        index: 2,
+        languageId: 'unknown',
+        name: 'index.js',
+        path: '/index.js',
+        setSize: 3,
+        type: 'file',
+      },
+    ],
+  }
+  expect(await ViewletExplorer.handleClickCurrent(state)).toMatchObject({
+    focusedIndex: 1,
+    minLineY: 1,
+    maxLineY: 2,
+  })
+})

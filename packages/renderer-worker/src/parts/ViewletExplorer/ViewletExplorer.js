@@ -758,7 +758,7 @@ export const focusNone = (state) => {
 }
 
 export const handleClickCurrent = (state) => {
-  return handleClick(state, state.focusedIndex)
+  return handleClick(state, state.focusedIndex - state.minLineY)
 }
 
 export const focusIndex = (state, index) => {
@@ -1440,7 +1440,6 @@ const renderFocusedIndex = {
     const newFocusedIndex = newState.focused
       ? newState.focusedIndex - newState.minLineY
       : -2
-    console.log({ newFocusedIndex })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Explorer',
