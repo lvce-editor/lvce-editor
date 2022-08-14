@@ -13,7 +13,8 @@ import {
 
 const name = 'sample.tab-completion-provider'
 
-test('sample.tab-completion-provider', async () => {
+// TODO test is flaky https://github.com/lvce-editor/lvce-editor/runs/7821552259?check_suite_focus=true
+test.skip('sample.tab-completion-provider', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
