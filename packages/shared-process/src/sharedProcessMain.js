@@ -33,10 +33,6 @@ const handleUncaughtExceptionMonitor = (error, origin) => {
   process.exit(1)
 }
 
-const handleSigInt = () => {
-  console.info('[shared process] sigint')
-}
-
 const handleDisconnect = () => {
   console.info('[shared process] disconnected')
 }
@@ -53,7 +49,6 @@ const main = () => {
   console.log('[shared process] started')
   process.on('beforeExit', handleBeforeExit)
   process.on('disconnect', handleDisconnect)
-  process.on('SIGINT', handleSigInt)
   process.on('SIGTERM', handleSigTerm)
 
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
