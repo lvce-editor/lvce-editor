@@ -1,5 +1,7 @@
 import { existsSync } from 'fs'
 import * as BundleCss from '../BundleCss/BundleCss.js'
+import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
+import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Hash from '../Hash/Hash.js'
@@ -244,24 +246,6 @@ const copyCss = async ({ arch }) => {
   })
 }
 
-const getRendererProcessCacheHash = async () => {
-  const hash = await Hash.computeFolderHash('packages/renderer-process/src', [
-    'build/src/parts/BundleElectronApp/BundleElectronApp.js',
-    'build/src/parts/BundleJs/BundleJs.js',
-    'build/src/parts/BundleRendererProcess/BundleRendererProcess.js',
-  ])
-  return hash
-}
-
-const getRendererWorkerCacheHash = async () => {
-  const hash = await Hash.computeFolderHash('packages/renderer-worker/src', [
-    'build/src/parts/BundleElectronApp/BundleElectronApp.js',
-    'build/src/parts/BundleJs/BundleJs.js',
-    'build/src/parts/BundleRendererWorker/BundleRendererWorker.js',
-  ])
-  return hash
-}
-
 export const build = async () => {
   const arch = process.arch
   const dependencyCacheHash = await getDependencyCacheHash()
@@ -331,29 +315,12 @@ export const build = async () => {
   await copyCss({ arch })
   console.timeEnd('copyCss')
 
-  const rendererProcessCacheHash = await getRendererProcessCacheHash()
-  const rendererProcessCachePath = Path.join(
-    Path.absolute('build/.tmp/cachedSources/renderer-process'),
-    rendererProcessCacheHash
-  )
-
-  if (existsSync(rendererProcessCachePath)) {
-    console.info('[build step skipped] bundleRendererProcess')
-  } else {
-    console.time('bundleRendererProcess')
-    await Remove.remove(
-      Path.absolute('build/.tmp/cachedSources/renderer-process')
-    )
-    const BundleRendererProcess = await import(
-      '../BundleRendererProcess/BundleRendererProcess.js'
-    )
-    await BundleRendererProcess.bundleRendererProcess({
-      cachePath: rendererProcessCachePath,
-      arch,
+  const rendererProcessCachePath =
+    await BundleRendererProcessCached.bundleRendererProcessCached({
       commitHash,
+      platform: 'electron',
+      assetDir: `../../../../..`,
     })
-    console.timeEnd('bundleRendererProcess')
-  }
 
   console.time('copyRendererProcessFiles')
   await Copy.copy({
@@ -363,28 +330,12 @@ export const build = async () => {
   })
   console.timeEnd('copyRendererProcessFiles')
 
-  const rendererWorkerCacheHash = await getRendererWorkerCacheHash()
-  const rendererWorkerCachePath = Path.join(
-    Path.absolute('build/.tmp/cachedSources/renderer-worker'),
-    rendererWorkerCacheHash
-  )
-
-  if (existsSync(rendererWorkerCachePath)) {
-    console.info('[build step skipped] bundleRendererWorker')
-  } else {
-    console.time('bundleRendererWorker')
-    await Remove.remove(
-      Path.absolute('build/.tmp/cachedSources/renderer-worker')
-    )
-    const BundleRendererWorker = await import(
-      '../BundleRendererWorker/BundleRendererWorker.js'
-    )
-    await BundleRendererWorker.bundleRendererWorker({
-      cachePath: rendererWorkerCachePath,
-      arch,
+  const rendererWorkerCachePath =
+    await BundleRendererWorkerCached.bundleRendererWorkerCached({
+      commitHash,
+      platform: 'electron',
+      assetDir: `../../../../..`,
     })
-    console.timeEnd('bundleRendererWorker')
-  }
 
   console.time('copyRendererWorkerFiles')
   await Copy.copy({

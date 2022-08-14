@@ -1,6 +1,7 @@
 import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
-import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
+import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
+import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
@@ -859,80 +860,37 @@ const setVersions = async () => {
   }
 }
 
-const copyRendererWorkerAndRendererProcessJs = async () => {
-  const commitHash = await CommitHash.getCommitHash()
-  await Copy.copy({
-    from: 'packages/renderer-process/src',
-    to: `build/.tmp/server/server/static/${commitHash}/packages/renderer-process/src`,
-  })
-  await Copy.copy({
-    from: 'packages/renderer-worker/src',
-    to: `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker/src`,
-  })
-}
-
 const bundleRendererWorkerAndRendererProcessJs = async () => {
   const commitHash = await CommitHash.getCommitHash()
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(
-      `build/.tmp/server/server/static/${commitHash}/packages/renderer-process`
-    ),
-    from: 'src/rendererProcessMain.js',
-    platform: 'web',
-    codeSplitting: true,
-  })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(
-      `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker`
-    ),
-    from: 'src/rendererWorkerMain.js',
-    platform: 'webworker',
-    codeSplitting: false,
-  })
-}
+  const rendererProcessCachePath =
+    await BundleRendererProcessCached.bundleRendererProcessCached({
+      commitHash,
+      platform: 'remote',
+      assetDir: `/${commitHash}`,
+    })
 
-const applyJsOverrides = async () => {
-  const commitHash = await CommitHash.getCommitHash()
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
-    occurrence: `ASSET_DIR`,
-    replacement: `'/${commitHash}'`,
+  console.time('copyRendererProcessFiles')
+  await Copy.copy({
+    from: rendererProcessCachePath,
+    to: `build/.tmp/server/server/static/${commitHash}/packages/renderer-process`,
+    ignore: ['static'],
   })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
-    occurrence: `PLATFORM`,
-    replacement: "'remote'",
+  console.timeEnd('copyRendererProcessFiles')
+
+  const rendererWorkerCachePath =
+    await BundleRendererWorkerCached.bundleRendererWorkerCached({
+      commitHash,
+      platform: 'remote',
+      assetDir: `/${commitHash}`,
+    })
+
+  console.time('copyRendererWorkerFiles')
+  await Copy.copy({
+    from: rendererWorkerCachePath,
+    to: `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker`,
+    ignore: ['static'],
   })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js`,
-    occurrence: `export const platform = getPlatform() `,
-    replacement: "export const platform = 'remote'",
-  })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/${commitHash}/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js`,
-    occurrence: `/src/rendererWorkerMain.js`,
-    replacement: '/dist/rendererWorkerMain.js',
-  })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
-    occurrence: `ASSET_DIR`,
-    replacement: `'/${commitHash}'`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker/src/parts/Tokenizer/Tokenizer.js`,
-    occurrence: `/extensions`,
-    replacement: `/${commitHash}/extensions`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
-    occurrence: 'PLATFORM',
-    replacement: `'remote'`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker/src/parts/CacheStorage/CacheStorage.js`,
-    occurrence: `const CACHE_NAME = 'lvce-runtime'`,
-    replacement: `const CACHE_NAME = 'lvce-runtime-${commitHash}'`,
-  })
+  console.timeEnd('copyRendererWorkerFiles')
 }
 
 export const build = async () => {
@@ -947,14 +905,6 @@ export const build = async () => {
   console.time('copyStaticFiles')
   await copyStaticFiles()
   console.timeEnd('copyStaticFiles')
-
-  console.time('copyRendererWorkerAndRendererProcessJs')
-  await copyRendererWorkerAndRendererProcessJs()
-  console.timeEnd('copyRendererWorkerAndRendererProcessJs')
-
-  console.time('applyJsOverrides')
-  await applyJsOverrides()
-  console.timeEnd('applyJsOverrides')
 
   console.time('bundleRendererWorkerAndRendererProcessJs')
   await bundleRendererWorkerAndRendererProcessJs()

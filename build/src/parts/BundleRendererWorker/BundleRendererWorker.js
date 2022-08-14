@@ -3,7 +3,12 @@ import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
 
-export const bundleRendererWorker = async ({ cachePath, arch }) => {
+export const bundleRendererWorker = async ({
+  cachePath,
+  platform,
+  commitHash,
+  assetDir,
+}) => {
   await Copy.copy({
     from: 'packages/renderer-worker/src',
     to: Path.join(cachePath, 'src'),
@@ -40,7 +45,27 @@ export const bundleRendererWorker = async ({ cachePath, arch }) => {
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: 'PLATFORM',
-    replacement: `'electron'`,
+    replacement: `'${platform}'`,
+  })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: `ASSET_DIR`,
+    replacement: `'${assetDir}'`,
+  })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/Tokenizer/Tokenizer.js`,
+    occurrence: `/extensions`,
+    replacement: `${assetDir}/extensions`,
+  })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: 'PLATFORM',
+    replacement: `'remote'`,
+  })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/CacheStorage/CacheStorage.js`,
+    occurrence: `const CACHE_NAME = 'lvce-runtime'`,
+    replacement: `const CACHE_NAME = 'lvce-runtime-${commitHash}'`,
   })
   await BundleJs.bundleJs({
     cwd: cachePath,
