@@ -758,10 +758,29 @@ export const focusNone = (state) => {
 }
 
 export const handleClickCurrent = (state) => {
-  return handleClick(state, state.focusedIndex)
+  return handleClick(state, state.focusedIndex - state.minLineY)
 }
 
 export const focusIndex = (state, index) => {
+  if (index < state.minLineY) {
+    const diff = state.maxLineY - state.minLineY
+    return {
+      ...state,
+      focusedIndex: index,
+      focused: true,
+      minLineY: index,
+      maxLineY: index + diff,
+    }
+  } else if (index >= state.maxLineY) {
+    const diff = state.maxLineY - state.minLineY
+    return {
+      ...state,
+      focusedIndex: index,
+      focused: true,
+      minLineY: index + 1 - diff,
+      maxLineY: index + 1,
+    }
+  }
   return {
     ...state,
     focusedIndex: index,
@@ -1415,8 +1434,12 @@ const renderFocusedIndex = {
     )
   },
   apply(oldState, newState) {
-    const oldFocusedIndex = oldState.focused ? oldState.focusedIndex : -2
-    const newFocusedIndex = newState.focused ? newState.focusedIndex : -2
+    const oldFocusedIndex = oldState.focused
+      ? oldState.focusedIndex - oldState.minLineY
+      : -2
+    const newFocusedIndex = newState.focused
+      ? newState.focusedIndex - newState.minLineY
+      : -2
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Explorer',
