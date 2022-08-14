@@ -4,6 +4,7 @@ import * as Path from '../Path/Path.js'
 const getRendererProcessCacheHash = async () => {
   const hash = await Hash.computeFolderHash('packages/renderer-process/src', [
     'build/src/parts/BundleElectronApp/BundleElectronApp.js',
+    'build/src/parts/BuildServer/BuildServer.js',
     'build/src/parts/BundleJs/BundleJs.js',
     'build/src/parts/BundleRendererProcess/BundleRendererProcess.js',
   ])
@@ -22,6 +23,7 @@ export const getRendererProcessCachePath = async () => {
 const getRendererWorkerCacheHash = async () => {
   const hash = await Hash.computeFolderHash('packages/renderer-worker/src', [
     'build/src/parts/BundleElectronApp/BundleElectronApp.js',
+    'build/src/parts/BuildServer/BuildServer.js',
     'build/src/parts/BundleJs/BundleJs.js',
     'build/src/parts/BundleRendererWorker/BundleRendererWorker.js',
   ])

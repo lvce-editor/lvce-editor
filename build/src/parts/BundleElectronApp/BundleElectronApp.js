@@ -327,7 +327,8 @@ export const build = async () => {
     )
     await BundleRendererProcess.bundleRendererProcess({
       cachePath: rendererProcessCachePath,
-      arch,
+      commitHash,
+      platform: 'electron',
     })
     console.timeEnd('bundleRendererProcess')
   }
@@ -354,6 +355,7 @@ export const build = async () => {
     await BundleRendererWorker.bundleRendererWorker({
       cachePath: rendererWorkerCachePath,
       platform: 'electron',
+      commitHash,
     })
     console.timeEnd('bundleRendererWorker')
   }

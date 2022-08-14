@@ -3,7 +3,11 @@ import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
 
-export const bundleRendererProcess = async ({ cachePath }) => {
+export const bundleRendererProcess = async ({
+  cachePath,
+  commitHash,
+  platform,
+}) => {
   await Copy.copy({
     from: 'packages/renderer-process/src',
     to: Path.join(cachePath, 'src'),
@@ -21,6 +25,21 @@ export const bundleRendererProcess = async ({ cachePath }) => {
     path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: '/packages/renderer-worker/src/rendererWorkerMain.js',
     replacement: `/packages/renderer-worker/dist/rendererWorkerMain.js`,
+  })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: `ASSET_DIR`,
+    replacement: `'/${commitHash}'`,
+  })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence: `PLATFORM`,
+    replacement: `'${platform}'`,
+  })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/RendererWorker/RendererWorker.js`,
+    occurrence: `/src/rendererWorkerMain.js`,
+    replacement: '/dist/rendererWorkerMain.js',
   })
   await BundleJs.bundleJs({
     cwd: cachePath,
