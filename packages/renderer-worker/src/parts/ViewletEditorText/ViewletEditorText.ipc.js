@@ -1,13 +1,16 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const lazyCommand = (importFn, key) => {
-  const lazyCommand = async (...args) => {
+  const lazyCommand = async (editor, ...args) => {
     const module = await importFn()
     const fn = module[key]
+    // editor might have changed during import, need to apply function to latest editor
+    const latestEditor = ViewletStates.getState('EditorText')
     if (typeof fn !== 'function') {
       throw new Error(`Editor.${key} is not a function`)
     }
-    return fn(...args)
+    return fn(latestEditor, ...args)
   }
   return Viewlet.wrapViewletCommand('EditorText', lazyCommand)
 }
