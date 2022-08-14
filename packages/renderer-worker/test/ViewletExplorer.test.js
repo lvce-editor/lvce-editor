@@ -4814,3 +4814,37 @@ test('revealItem - already visible', async () => {
     ],
   })
 })
+
+test('focus', () => {
+  const state = {
+    root: '/test/test-path',
+    focusedIndex: 1,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    dirents: [
+      {
+        depth: 1,
+        index: 0,
+        languageId: 'unknown',
+        name: 'index.css',
+        path: '/index.css',
+        setSize: 2,
+        type: 'file',
+      },
+      {
+        depth: 1,
+        index: 1,
+        languageId: 'unknown',
+        name: 'index.html',
+        path: '/index.html',
+        setSize: 2,
+        type: 'file',
+      },
+    ],
+  }
+  expect(ViewletExplorer.focus(state)).toMatchObject({
+    focusedIndex: 1,
+    focused: true,
+  })
+})
