@@ -1,7 +1,7 @@
 import { readdir } from 'fs/promises'
-import { existsSync } from 'node:fs'
 import * as BundleCss from '../BundleCss/BundleCss.js'
-import * as CachePaths from '../CachePaths/CachePaths.js'
+import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
+import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
@@ -863,24 +863,10 @@ const setVersions = async () => {
 const bundleRendererWorkerAndRendererProcessJs = async () => {
   const commitHash = await CommitHash.getCommitHash()
   const rendererProcessCachePath =
-    await CachePaths.getRendererProcessCachePath()
-  if (existsSync(rendererProcessCachePath)) {
-    console.info('[build step skipped] bundleRendererProcess')
-  } else {
-    console.time('bundleRendererProcess')
-    await Remove.remove(
-      Path.absolute('build/.tmp/cachedSources/renderer-process')
-    )
-    const BundleRendererProcess = await import(
-      '../BundleRendererProcess/BundleRendererProcess.js'
-    )
-    await BundleRendererProcess.bundleRendererProcess({
-      cachePath: rendererProcessCachePath,
-      platform: 'remote',
+    await BundleRendererProcessCached.bundleRendererProcessCached({
       commitHash,
+      platform: 'remote',
     })
-    console.timeEnd('bundleRendererProcess')
-  }
 
   console.time('copyRendererProcessFiles')
   await Copy.copy({
@@ -890,24 +876,11 @@ const bundleRendererWorkerAndRendererProcessJs = async () => {
   })
   console.timeEnd('copyRendererProcessFiles')
 
-  const rendererWorkerCachePath = await CachePaths.getRendererWorkerCachePath()
-  if (existsSync(rendererWorkerCachePath)) {
-    console.info('[build step skipped] bundleRendererWorker')
-  } else {
-    console.time('bundleRendererWorker')
-    await Remove.remove(
-      Path.absolute('build/.tmp/cachedSources/renderer-worker')
-    )
-    const BundleRendererWorker = await import(
-      '../BundleRendererWorker/BundleRendererWorker.js'
-    )
-    await BundleRendererWorker.bundleRendererWorker({
-      cachePath: rendererWorkerCachePath,
-      platform: 'remote',
+  const rendererWorkerCachePath =
+    await BundleRendererWorkerCached.bundleRendererWorkerCached({
       commitHash,
+      platform: 'remote',
     })
-    console.timeEnd('bundleRendererWorker')
-  }
 
   console.time('copyRendererWorkerFiles')
   await Copy.copy({
