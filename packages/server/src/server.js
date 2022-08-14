@@ -25,6 +25,8 @@ if (!argv2) {
 
 const FOLDER = resolve(process.cwd(), argv2)
 
+const immutable = argv.includes('--immutable')
+
 const IS_WINDOWS = process.platform === 'win32'
 
 const textMimeType = {
@@ -62,9 +64,12 @@ const serveStatic = (root, skip = '') =>
       res.writeHead(304)
       return res.end()
     }
+    const cachingHeader =
+      immutable && root === STATIC ? 'public, max-age=31536000, immutable' : ''
     res.writeHead(200, {
       'Content-Type': textMimeType[extname(filePath)] || 'text/plain',
       Etag: etag,
+      'Cache-Control': cachingHeader,
       // enables access for performance.measureUserAgentSpecificMemory, see https://web.dev/monitor-total-page-memory-usage/
       'Cross-Origin-Embedder-Policy': 'require-corp',
       'Cross-Origin-Opener-Policy': 'same-origin',
@@ -290,10 +295,10 @@ const handleProcessExit = (code) => {
 }
 
 const handleSigInt = () => {
-  console.info(`[web] Process will exit because of sigint`)
+  console.info(`[server] Process will exit because of sigint`)
   app.close()
   if (state.sharedProcess && !state.sharedProcess.killed) {
-    state.sharedProcess.kill()
+    state.sharedProcess.kill('SIGINT')
     state.sharedProcess = undefined
   }
 }
@@ -303,12 +308,12 @@ const handleAppReady = () => {
     console.log('send ready')
     process.send('ready')
   } else {
-    console.info(`[web] listening on http://localhost:${PORT}`)
+    console.info(`[server] listening on http://localhost:${PORT}`)
   }
 }
 
 const handleUncaughtExceptionMonitor = (error, origin) => {
-  console.info('[web] Uncaught exception')
+  console.info('[server] Uncaught exception')
   console.info(error)
 }
 
