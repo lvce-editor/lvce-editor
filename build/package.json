@@ -23,14 +23,14 @@
   },
   "dependencies": {
     "bytes": "^3.1.2",
-    "esbuild": "^0.15.1",
+    "esbuild": "^0.15.2",
     "fs-extra": "^10.1.0",
     "got": "^12.3.1",
     "gzip-size": "^7.0.0",
     "minimist": "^1.2.6",
     "p-map": "^5.5.0",
     "pretty-bytes": "^6.0.0",
-    "rollup": "^2.77.3",
+    "rollup": "^2.78.0",
     "rollup-plugin-terser": "^7.0.2",
     "tar-fs": "^2.1.1",
     "verror": "^1.10.1"
