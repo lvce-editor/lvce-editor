@@ -13,7 +13,6 @@
   "license": "MIT",
   "dependencies": {
     "chokidar": "^3.5.3",
-    "clipboardy": "^3.0.0",
     "debug": "^4.3.4",
     "execa": "^6.1.0",
     "exit-hook": "^3.0.0",
