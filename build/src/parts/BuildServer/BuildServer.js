@@ -1,6 +1,7 @@
 import { readdir } from 'fs/promises'
+import { existsSync } from 'node:fs'
 import * as BundleCss from '../BundleCss/BundleCss.js'
-import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
+import * as CachePaths from '../CachePaths/CachePaths.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
@@ -873,22 +874,56 @@ const copyRendererWorkerAndRendererProcessJs = async () => {
 
 const bundleRendererWorkerAndRendererProcessJs = async () => {
   const commitHash = await CommitHash.getCommitHash()
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(
-      `build/.tmp/server/server/static/${commitHash}/packages/renderer-process`
-    ),
-    from: 'src/rendererProcessMain.js',
-    platform: 'web',
-    codeSplitting: true,
+  const rendererProcessCachePath =
+    await CachePaths.getRendererProcessCachePath()
+  if (existsSync(rendererProcessCachePath)) {
+    console.info('[build step skipped] bundleRendererProcess')
+  } else {
+    console.time('bundleRendererProcess')
+    await Remove.remove(
+      Path.absolute('build/.tmp/cachedSources/renderer-process')
+    )
+    const BundleRendererProcess = await import(
+      '../BundleRendererProcess/BundleRendererProcess.js'
+    )
+    await BundleRendererProcess.bundleRendererProcess({
+      cachePath: rendererProcessCachePath,
+    })
+    console.timeEnd('bundleRendererProcess')
+  }
+
+  console.time('copyRendererProcessFiles')
+  await Copy.copy({
+    from: rendererProcessCachePath,
+    to: `build/.tmp/server/server/static/${commitHash}/packages/renderer-process`,
+    ignore: ['static'],
   })
-  await BundleJs.bundleJs({
-    cwd: Path.absolute(
-      `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker`
-    ),
-    from: 'src/rendererWorkerMain.js',
-    platform: 'webworker',
-    codeSplitting: false,
+  console.timeEnd('copyRendererProcessFiles')
+
+  const rendererWorkerCachePath = await CachePaths.getRendererWorkerCachePath()
+  if (existsSync(rendererWorkerCachePath)) {
+    console.info('[build step skipped] bundleRendererWorker')
+  } else {
+    console.time('bundleRendererWorker')
+    await Remove.remove(
+      Path.absolute('build/.tmp/cachedSources/renderer-worker')
+    )
+    const BundleRendererWorker = await import(
+      '../BundleRendererWorker/BundleRendererWorker.js'
+    )
+    await BundleRendererWorker.bundleRendererWorker({
+      cachePath: rendererWorkerCachePath,
+    })
+    console.timeEnd('bundleRendererWorker')
+  }
+
+  console.time('copyRendererWorkerFiles')
+  await Copy.copy({
+    from: rendererWorkerCachePath,
+    to: `build/.tmp/server/server/static/${commitHash}/packages/renderer-worker`,
+    ignore: ['static'],
   })
+  console.timeEnd('copyRendererWorkerFiles')
 }
 
 const applyJsOverrides = async () => {

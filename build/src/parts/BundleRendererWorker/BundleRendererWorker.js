@@ -3,7 +3,7 @@ import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
 
-export const bundleRendererWorker = async ({ cachePath, arch }) => {
+export const bundleRendererWorker = async ({ cachePath }) => {
   await Copy.copy({
     from: 'packages/renderer-worker/src',
     to: Path.join(cachePath, 'src'),

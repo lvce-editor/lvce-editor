@@ -2,7 +2,6 @@ import { existsSync } from 'fs'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
-import * as Hash from '../Hash/Hash.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Product from '../Product/Product.js'
@@ -11,6 +10,7 @@ import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as CachePaths from '../CachePaths/CachePaths.js'
 
 const getDependencyCacheHash = async () => {
   const files = [
@@ -244,24 +244,6 @@ const copyCss = async ({ arch }) => {
   })
 }
 
-const getRendererProcessCacheHash = async () => {
-  const hash = await Hash.computeFolderHash('packages/renderer-process/src', [
-    'build/src/parts/BundleElectronApp/BundleElectronApp.js',
-    'build/src/parts/BundleJs/BundleJs.js',
-    'build/src/parts/BundleRendererProcess/BundleRendererProcess.js',
-  ])
-  return hash
-}
-
-const getRendererWorkerCacheHash = async () => {
-  const hash = await Hash.computeFolderHash('packages/renderer-worker/src', [
-    'build/src/parts/BundleElectronApp/BundleElectronApp.js',
-    'build/src/parts/BundleJs/BundleJs.js',
-    'build/src/parts/BundleRendererWorker/BundleRendererWorker.js',
-  ])
-  return hash
-}
-
 export const build = async () => {
   const arch = process.arch
   const dependencyCacheHash = await getDependencyCacheHash()
@@ -331,12 +313,8 @@ export const build = async () => {
   await copyCss({ arch })
   console.timeEnd('copyCss')
 
-  const rendererProcessCacheHash = await getRendererProcessCacheHash()
-  const rendererProcessCachePath = Path.join(
-    Path.absolute('build/.tmp/cachedSources/renderer-process'),
-    rendererProcessCacheHash
-  )
-
+  const rendererProcessCachePath =
+    await CachePaths.getRendererProcessCachePath()
   if (existsSync(rendererProcessCachePath)) {
     console.info('[build step skipped] bundleRendererProcess')
   } else {
@@ -350,7 +328,6 @@ export const build = async () => {
     await BundleRendererProcess.bundleRendererProcess({
       cachePath: rendererProcessCachePath,
       arch,
-      commitHash,
     })
     console.timeEnd('bundleRendererProcess')
   }
@@ -363,12 +340,7 @@ export const build = async () => {
   })
   console.timeEnd('copyRendererProcessFiles')
 
-  const rendererWorkerCacheHash = await getRendererWorkerCacheHash()
-  const rendererWorkerCachePath = Path.join(
-    Path.absolute('build/.tmp/cachedSources/renderer-worker'),
-    rendererWorkerCacheHash
-  )
-
+  const rendererWorkerCachePath = await CachePaths.getRendererWorkerCachePath()
   if (existsSync(rendererWorkerCachePath)) {
     console.info('[build step skipped] bundleRendererWorker')
   } else {
