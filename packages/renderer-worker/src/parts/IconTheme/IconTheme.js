@@ -15,6 +15,10 @@ export const state = {
   iconTheme: undefined,
 }
 
+const DEFAULT_FILE_ICON = '_file'
+const DEFAULT_FOLDER_ICON = '_folder'
+const DEFAULT_FOLDER_ICON_OPEN = '_folder_open'
+
 const getIconThemeJson = async (iconThemeId) => {
   if (Platform.getPlatform() === 'web') {
     const assetDir = Platform.getAssetDir()
@@ -56,7 +60,7 @@ export const getFileIcon = (file) => {
   if (extensionIcon) {
     return extensionIcon
   }
-  return '_file'
+  return DEFAULT_FILE_ICON
 }
 
 export const getFolderIcon = (folder) => {
@@ -68,7 +72,7 @@ export const getFolderIcon = (folder) => {
   if (folderIcon) {
     return folderIcon
   }
-  return '_folder'
+  return DEFAULT_FOLDER_ICON
 }
 
 const getFolderIconExpanded = (folder) => {
@@ -77,13 +81,13 @@ const getFolderIconExpanded = (folder) => {
     return ''
   }
   if (!iconTheme.folderNamesExpanded) {
-    return '_folder_open'
+    return DEFAULT_FOLDER_ICON_OPEN
   }
   const folderName = iconTheme.folderNamesExpanded[folder.name.toLowerCase()]
   if (folderName) {
     return folderName
   }
-  return '_folder_open'
+  return DEFAULT_FOLDER_ICON_OPEN
 }
 
 export const getIcon = (dirent) => {
@@ -96,6 +100,8 @@ export const getIcon = (dirent) => {
     case 'folder-expanded':
     case 'directory-expanded':
       return getFolderIconExpanded(dirent)
+    case 'symlink':
+      return DEFAULT_FILE_ICON
     default:
       console.warn(`unsupported type ${dirent.type}`)
       return ''

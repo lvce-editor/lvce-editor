@@ -133,3 +133,13 @@ test('getIcon - error - directory expanded not in definitions', () => {
     })
   ).toBe('_folder_open')
 })
+
+test('getIcon - symlink', () => {
+  IconTheme.state.iconTheme = {}
+  expect(
+    IconTheme.getIcon({
+      type: 'symlink',
+      name: 'a',
+    })
+  ).toBe('_file')
+})
