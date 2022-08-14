@@ -746,6 +746,8 @@ export const handleClick = async (state, index) => {
       return handleClickDirectoryExpanding(state, dirent, actualIndex)
     case 'directory-expanded':
       return handleClickDirectoryExpanded(state, dirent, actualIndex)
+    case 'symlink':
+      return handleClickSymLink(state, dirent, state.focusedIndex)
     default:
       break
   }
@@ -817,6 +819,27 @@ export const scrollUp = () => {}
 export const scrollDown = () => {}
 // export const handleBlur=()=>{}
 
+const handleClickSymLink = async (state, dirent, index) => {
+  const realPath = await FileSystem.getRealPath(dirent.path)
+  const type = await FileSystem.stat(realPath)
+  switch (type) {
+    case 'file':
+      return handleClickFile(state, dirent, index)
+    default:
+      throw new Error(`unsupported file type ${type}`)
+  }
+}
+
+const handleArrowRightDirectoryExpanded = (state, dirent) => {
+  if (state.focusedIndex === state.dirents.length - 1) {
+    return state
+  }
+  const nextDirent = state.dirents[state.focusedIndex + 1]
+  if (nextDirent.depth === dirent.depth + 1) {
+    return focusIndex(state, state.focusedIndex + 1)
+  }
+}
+
 export const handleArrowRight = async (state) => {
   if (state.focusedIndex === -1) {
     return state
@@ -828,14 +851,9 @@ export const handleArrowRight = async (state) => {
     case 'directory':
       return handleClickDirectory(state, dirent, state.focusedIndex)
     case 'directory-expanded':
-      if (state.focusedIndex === state.dirents.length - 1) {
-        return state
-      }
-      const nextDirent = state.dirents[state.focusedIndex + 1]
-      if (nextDirent.depth === dirent.depth + 1) {
-        return focusIndex(state, state.focusedIndex + 1)
-      }
-      break
+      return handleArrowRightDirectoryExpanded(state, dirent)
+    case 'symlink':
+      return handleClickSymLink(state, dirent, state.focusedIndex)
     default:
       throw new Error(`unsupported file type ${dirent.type}`)
   }

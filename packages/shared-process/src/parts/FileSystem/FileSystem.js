@@ -147,6 +147,9 @@ export const exists = async (path) => {
   }
 }
 
+/**
+ * @param {import('fs').Dirent|import('fs').StatsBase} dirent
+ */
 const getType = (dirent) => {
   if (dirent.isFile()) {
     return 'file'
@@ -154,9 +157,24 @@ const getType = (dirent) => {
   if (dirent.isDirectory()) {
     return 'directory'
   }
+  if (dirent.isSymbolicLink()) {
+    return 'symlink'
+  }
+  if (dirent.isSocket()) {
+    return 'socket'
+  }
+  if (dirent.isBlockDevice()) {
+    return 'block-device'
+  }
+  if (dirent.isCharacterDevice()) {
+    return 'character-device'
+  }
   return 'unknown'
 }
 
+/**
+ * @param {import('fs').Dirent} dirent
+ */
 const toPrettyDirent = (dirent) => {
   return {
     name: dirent.name,
@@ -224,6 +242,31 @@ export const getPathSeparator = () => {
   return Platform.getPathSeparator()
 }
 
+export const getRealPath = async (path) => {
+  try {
+    return await fs.realpath(path)
+  } catch (error) {
+    // @ts-ignore
+    if (error && error instanceof globalThis.Error && error.code === 'ENOENT') {
+      let content
+      try {
+        content = await fs.readlink(path)
+      } catch {
+        throw new VError(error, `Failed to resolve real path for ${path}`)
+      }
+      throw new VError(`Broken symbolic link: File not found ${content}`)
+    }
+    throw new VError(error, `Failed to resolve real path for ${path}`)
+  }
+}
+
+export const stat = async (path) => {
+  const stats = await fs.stat(path)
+  const type = getType(stats)
+  return type
+}
+
+// getRealPath('/home/simon/Documents/levivilet/lvce-editor/node_modules/.bin/abc') //?
 // export const unwatch = (id) => {
 //   state.watchers[id].close()
 //   delete state.watchers[id]

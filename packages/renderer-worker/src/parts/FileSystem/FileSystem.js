@@ -119,3 +119,17 @@ export const getPathSeparator = (uri) => {
   const fileSystem = getFileSystem(protocol)
   return fileSystem.getPathSeparator(protocol)
 }
+
+export const getRealPath = (uri) => {
+  const protocol = getProtocol(uri)
+  const path = getPath(protocol, uri)
+  const fileSystem = getFileSystem(protocol)
+  return fileSystem.getRealPath(path)
+}
+
+export const stat = (uri) => {
+  const protocol = getProtocol(uri)
+  const path = getPath(protocol, uri)
+  const fileSystem = getFileSystem(protocol)
+  return fileSystem.stat(path)
+}

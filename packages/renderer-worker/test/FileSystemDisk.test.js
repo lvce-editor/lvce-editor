@@ -274,3 +274,33 @@ test.skip('watch', async () => {
   // writeFile
   // FileSystem.unwatchAll()
 })
+
+test('getRealPath', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
+    switch (method) {
+      case 'FileSystem.getRealPath':
+        return '/test/real-path.txt'
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  expect(await FileSystemDisk.getRealPath('/test/some-file.txt')).toBe(
+    '/test/real-path.txt'
+  )
+})
+
+test('getRealPath - error', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(async (method, ...parameters) => {
+    switch (method) {
+      case 'FileSystem.mkdir':
+        throw new TypeError('x is not a function')
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await expect(FileSystemDisk.mkdir('/tmp/some-dir')).rejects.toThrowError(
+    new TypeError('x is not a function')
+  )
+})

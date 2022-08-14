@@ -1,95 +1,146 @@
-import * as fs from 'node:fs'
-import { mkdtemp, writeFile } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { setTimeout } from 'node:timers/promises'
-import * as FileSystem from '../src/parts/FileSystem/FileSystem.js'
+import { jest } from '@jest/globals'
 
-const getTmpDir = () => {
-  return mkdtemp(join(tmpdir(), 'foo-'))
-}
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('node:fs/promises', () => {
+  return {
+    cp: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    mkdir: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    readDirWithFileTypes: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    readFile: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    readlink: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    realpath: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    rename: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    writeFile: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+jest.unstable_mockModule('../src/parts/Trash/Trash.js', () => {
+  return {
+    trash: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
+const Trash = await import('../src/parts/Trash/Trash.js')
+const fs = await import('node:fs/promises')
 
 test('copy - file', async () => {
-  const tmpDir1 = await getTmpDir()
-  const source = join(tmpDir1, 'a.txt')
-  await writeFile(source, 'a')
-  const tmpDir2 = await getTmpDir()
-  const target = join(tmpDir2, 'a.txt')
-  await FileSystem.copy(source, target)
-  expect(await fs.promises.readFile(target, 'utf8')).toBe('a')
+  // @ts-ignore
+  fs.cp.mockImplementation(() => {})
+  await FileSystem.copy('/test-1/a.txt', '/test-2/a.txt')
+  expect(fs.cp).toHaveBeenCalledTimes(1)
+  expect(fs.cp).toHaveBeenCalledWith('/test-1/a.txt', '/test-2/a.txt', {
+    recursive: true,
+  })
 })
 
 test('copy - error - source does not exist', async () => {
-  const tmpDir1 = await getTmpDir()
-  const source = join(tmpDir1, 'a.txt')
-  const tmpDir2 = await getTmpDir()
-  const target = join(tmpDir2, 'a.txt')
-  await expect(FileSystem.copy(source, target)).rejects.toThrowError(
+  // @ts-ignore
+  fs.cp.mockImplementation((source) => {
+    throw new Error(`ENOENT: no such file or directory, lstat '${source}'`)
+  })
+  await expect(
+    FileSystem.copy('/test-1/a.txt', '/test-2/a.txt')
+  ).rejects.toThrowError(
     new Error(
-      `Failed to copy "${source}" to "${target}": ENOENT: no such file or directory, lstat '${source}'`
+      `Failed to copy "/test-1/a.txt" to "/test-2/a.txt": ENOENT: no such file or directory, lstat '/test-1/a.txt'`
     )
   )
 })
 
 test('copy - to self', async () => {
-  const tmpDir1 = await getTmpDir()
-  const source = join(tmpDir1, 'a.txt')
-  await writeFile(source, 'a')
-  const target = source
-  await expect(FileSystem.copy(source, target)).rejects.toThrowError(
+  // @ts-ignore
+  fs.cp.mockImplementation((source) => {
+    throw new Error(
+      `Invalid src or dest: cp returned EINVAL (src and dest cannot be the same)`
+    )
+  })
+  await expect(
+    FileSystem.copy('/test/a.txt', '/test/a.txt')
+  ).rejects.toThrowError(
     new Error(
-      `Failed to copy "${source}" to "${target}": src and dest cannot be the same`
+      `Failed to copy "/test/a.txt" to "/test/a.txt": src and dest cannot be the same`
     )
   )
 })
 
 test('createFile', async () => {
-  const tmpDir = await getTmpDir()
-  const testFile = join(tmpDir, 'a.txt')
-  await FileSystem.createFile(testFile)
-  expect(await fs.promises.readFile(testFile, 'utf8')).toBe('')
+  // @ts-ignore
+  fs.writeFile.mockImplementation(() => {})
+  await FileSystem.createFile('/test/a.txt')
+  expect(fs.writeFile).toHaveBeenCalledTimes(1)
+  expect(fs.writeFile).toHaveBeenCalledWith('/test/a.txt', '', { flag: 'wx' })
 })
 
 test('createFile - should throw error if file already exists', async () => {
-  const tmpDir = await getTmpDir()
-  const testFile = join(tmpDir, 'a.txt')
-  await fs.promises.writeFile(testFile, 'abc')
-  expect(FileSystem.createFile(testFile)).rejects.toThrowError(
-    `Failed to create file "${testFile}": EEXIST: file already exists, open '${testFile}'`
+  // @ts-ignore
+  fs.writeFile.mockImplementation((path) => {
+    throw new Error(`EEXIST: file already exists, open '${path}'`)
+  })
+  expect(FileSystem.createFile('/test/a.txt')).rejects.toThrowError(
+    `Failed to create file "/test/a.txt": EEXIST: file already exists, open '/test/a.txt'`
   )
 })
 
 test('create folder', async () => {
-  const tmpDir = await getTmpDir()
-  const testFolder = join(tmpDir, 'a')
-  await FileSystem.createFolder(testFolder)
-  expect(await fs.promises.readdir(tmpDir)).toEqual(['a'])
+  // @ts-ignore
+  fs.mkdir.mockImplementation(() => {})
+  await FileSystem.createFolder('/test/a', {})
+  expect(fs.mkdir).toHaveBeenCalledTimes(1)
+  expect(fs.mkdir).toHaveBeenCalledWith('/test/a', {})
 })
 
 test('create folder - should fail if folder already exists', async () => {
-  const tmpDir = await getTmpDir()
-  const testFolder = join(tmpDir, 'a')
-  await fs.promises.mkdir(testFolder)
-  expect(FileSystem.createFolder(testFolder)).rejects.toThrowError(
-    `Failed to create folder "${testFolder}": EEXIST: file already exists, mkdir '${testFolder}'`
+  // @ts-ignore
+  fs.mkdir.mockImplementation((path) => {
+    throw new Error(`EEXIST: file already exists, mkdir '${path}'`)
+  })
+  expect(FileSystem.createFolder('/test/a')).rejects.toThrowError(
+    `Failed to create folder "/test/a": EEXIST: file already exists, mkdir '/test/a'`
   )
 })
 
 // TODO test recursive create folder
 
 test('writeFile', async () => {
-  const tmpDir = await getTmpDir()
-  const testFile = join(tmpDir, 'writefile.txt')
-  expect(await FileSystem.exists(testFile)).toBe(false)
-  await FileSystem.writeFile(testFile, 'Hello World')
-  expect(await fs.promises.readFile(testFile, 'utf8')).toBe('Hello World')
+  // @ts-ignore
+  fs.writeFile.mockImplementation(() => {})
+  await FileSystem.writeFile('/test/a.txt', 'Hello World')
+  expect(fs.writeFile).toHaveBeenCalledTimes(1)
+  expect(fs.writeFile).toHaveBeenCalledWith('/test/a.txt', 'Hello World')
 })
 
 test('writeFile - nonexistent file', async () => {
-  const tmpDir = await getTmpDir()
-  const tmpFile = join(tmpDir, 'folder', 'non-existing-file.txt')
-  await expect(FileSystem.writeFile(tmpFile, 'Hello World')).rejects.toThrow(
-    `Failed to write to file "${tmpFile}": ENOENT`
+  // @ts-ignore
+  fs.writeFile.mockImplementation(() => {
+    throw new Error('ENOENT')
+  })
+  await expect(
+    FileSystem.writeFile('/test/non-existing-file.txt', 'Hello World')
+  ).rejects.toThrow(
+    `Failed to write to file "/test/non-existing-file.txt": ENOENT`
   )
 })
 
@@ -132,7 +183,7 @@ test.skip('writeFile - parallel write on same files works and is sequentialized'
   expect(fs.readFileSync(testFile, 'utf8')).toBe('Hello World 5')
 })
 
-test('writeFile (string, error handling)', async () => {
+test.skip('writeFile (string, error handling)', async () => {
   const tmpDir = await getTmpDir()
   const testFile = join(tmpDir, 'flushed.txt')
   fs.mkdirSync(testFile) // this will trigger an error later because testFile is now a directory!
@@ -146,53 +197,74 @@ test('writeFile (string, error handling)', async () => {
 })
 
 test('ensureFile - created parent folders recursively', async () => {
-  const tmpDir = await getTmpDir()
-  const testFile = join(tmpDir, 'a', 'b', 'c', 'd', 'writefile.txt')
-  expect(await FileSystem.exists(testFile)).toBe(false)
-  await FileSystem.ensureFile(testFile, 'Hello World')
-  expect(await fs.promises.readFile(testFile, 'utf8')).toBe('Hello World')
+  // @ts-ignore
+  fs.mkdir.mockImplementation(() => {})
+  // @ts-ignore
+  fs.writeFile.mockImplementation(() => {})
+  await FileSystem.ensureFile('/test/a/b/c/d/writefile.txt', 'Hello World')
+  expect(fs.mkdir).toHaveBeenCalledTimes(1)
+  expect(fs.mkdir).toHaveBeenCalledWith('/test/a/b/c/d', { recursive: true })
+  expect(fs.writeFile).toHaveBeenCalledTimes(1)
+  expect(fs.writeFile).toHaveBeenCalledWith(
+    '/test/a/b/c/d/writefile.txt',
+    'Hello World'
+  )
 })
 
 test('remove', async () => {
-  const tmpDir = await getTmpDir()
-  const testFile = join(tmpDir, 'file-to-be-removed.txt')
-  await fs.promises.writeFile(testFile, '')
-  await FileSystem.remove(testFile)
-  expect(fs.existsSync(testFile)).toBe(false)
+  // @ts-ignore
+  Trash.trash.mockImplementation(() => {})
+  await FileSystem.remove('/test/file-to-be-removed.txt')
+  expect(Trash.trash).toHaveBeenCalledTimes(1)
+  expect(Trash.trash).toHaveBeenCalledWith('/test/file-to-be-removed.txt')
 })
 
 test('remove - non-existing file', async () => {
-  const tmpDir = await getTmpDir()
-  const testFile = join(tmpDir, 'non-existing.txt')
-  await FileSystem.remove(testFile)
+  // @ts-ignore
+  Trash.trash.mockImplementation(() => {})
+  await FileSystem.remove('/test/non-existing.txt')
+  expect(Trash.trash).toHaveBeenCalledTimes(1)
+  expect(Trash.trash).toHaveBeenCalledWith('/test/non-existing.txt')
 })
 
 test('rename', async () => {
-  const tmpDir = await getTmpDir()
-  const oldPath = join(tmpDir, 'file-to-be-moved.txt')
-  const newPath = join(tmpDir, 'file-has-been-moved.txt')
-  await fs.promises.writeFile(oldPath, '')
-  await FileSystem.rename(oldPath, newPath)
-  expect(fs.existsSync(oldPath)).toBe(false)
-  expect(fs.existsSync(newPath)).toBe(true)
+  // @ts-ignore
+  fs.rename.mockImplementation(() => {})
+  await FileSystem.rename(
+    '/test/file-to-be-moved.txt',
+    '/test/file-has-been-moved.txt'
+  )
+  expect(fs.rename).toHaveBeenCalledTimes(1)
+  expect(fs.rename).toHaveBeenCalledWith(
+    '/test/file-to-be-moved.txt',
+    '/test/file-has-been-moved.txt'
+  )
 })
 
 test('rename - non existing old path', async () => {
-  const tmpDir = await getTmpDir()
-  const oldPath = join(tmpDir, 'non-existing.txt')
-  const newPath = join(tmpDir, 'file-has-been-moved.txt')
-  await expect(FileSystem.rename(oldPath, newPath)).rejects.toThrow(
-    `Failed to rename "${oldPath}" to "${newPath}": ENOENT`
+  // @ts-ignore
+  fs.rename.mockImplementation(() => {
+    throw new Error('ENOENT')
+  })
+  await expect(
+    FileSystem.rename('/test/non-existing.txt', '/test/file-has-been-moved.txt')
+  ).rejects.toThrow(
+    `Failed to rename "/test/non-existing.txt" to "/test/file-has-been-moved.txt": ENOENT`
   )
 })
 
 test('rename - new path in non-existing nested directory', async () => {
-  const tmpDir = await getTmpDir()
-  const oldPath = join(tmpDir, 'file-to-be-moved.txt')
-  const newPath = join(tmpDir, 'nested/nested/nested/file-has-been-moved.txt')
-  await fs.promises.writeFile(oldPath, '')
-  await expect(FileSystem.rename(oldPath, newPath)).rejects.toThrow(
-    `Failed to rename "${oldPath}" to "${newPath}": ENOENT:`
+  // @ts-ignore
+  fs.rename.mockImplementation(() => {
+    throw new Error('ENOENT')
+  })
+  await expect(
+    FileSystem.rename(
+      '/test/file-to-be-moved.txt',
+      '/test/nested/nested/nested/file-has-been-moved.txt'
+    )
+  ).rejects.toThrow(
+    `Failed to rename "/test/file-to-be-moved.txt" to "/test/nested/nested/nested/file-has-been-moved.txt": ENOENT`
   )
 })
 
@@ -291,4 +363,46 @@ test.skip('watch - rename', async () => {
 
 test('getPathSeparator', () => {
   expect(FileSystem.getPathSeparator()).toEqual(expect.any(String))
+})
+
+test('getRealPath', async () => {
+  // @ts-ignore
+  fs.realpath.mockImplementation(() => {
+    return '/test/b.txt'
+  })
+  expect(await FileSystem.getRealPath('/test/a.txt')).toBe('/test/b.txt')
+})
+
+test('getRealPath - error - broken symlink - file not found', async () => {
+  // @ts-ignore
+  fs.realpath.mockImplementation((source) => {
+    const error = new Error(`ENOENT`)
+    // @ts-ignore
+    error.code = 'ENOENT'
+    throw error
+  })
+  // @ts-ignore
+  fs.readlink.mockImplementation(() => {
+    return '/test/non-existing.txt'
+  })
+  await expect(FileSystem.getRealPath('/test-1/a.txt')).rejects.toThrowError(
+    new Error(`Broken symbolic link: File not found /test/non-existing.txt`)
+  )
+})
+
+test('getRealPath - error - broken symlink and error with readlink', async () => {
+  // @ts-ignore
+  fs.realpath.mockImplementation((source) => {
+    const error = new Error(`ENOENT`)
+    // @ts-ignore
+    error.code = 'ENOENT'
+    throw error
+  })
+  // @ts-ignore
+  fs.readlink.mockImplementation(() => {
+    throw new TypeError('x is not a function')
+  })
+  await expect(FileSystem.getRealPath('/test-1/a.txt')).rejects.toThrowError(
+    new Error(`Failed to resolve real path for /test-1/a.txt: ENOENT`)
+  )
 })

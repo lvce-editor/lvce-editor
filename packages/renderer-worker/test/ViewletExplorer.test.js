@@ -54,6 +54,9 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
     getPathSeparator: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    getRealPath: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
 
@@ -4815,36 +4818,36 @@ test('revealItem - already visible', async () => {
   })
 })
 
-test('focus', () => {
+// TODO add more tests for
+// - opening symlink file
+// - symlink stat error
+// - symlink target is unsupported type
+// - clicking on symlink
+// - expanding symlink folder
+test('handleArrowRight - symlink - error', async () => {
   const state = {
-    root: '/test/test-path',
-    focusedIndex: 1,
+    root: '/home/test-user/test-path',
+    focusedIndex: 0,
     top: 0,
     height: 600,
     deltaY: 0,
+    minLineY: 0,
     dirents: [
       {
         depth: 1,
-        index: 0,
-        languageId: 'unknown',
+        posInSet: 1,
+        setSize: 1,
         name: 'index.css',
         path: '/index.css',
-        setSize: 2,
-        type: 'file',
-      },
-      {
-        depth: 1,
-        index: 1,
-        languageId: 'unknown',
-        name: 'index.html',
-        path: '/index.html',
-        setSize: 2,
-        type: 'file',
+        type: 'symlink',
       },
     ],
   }
-  expect(ViewletExplorer.focus(state)).toMatchObject({
-    focusedIndex: 1,
-    focused: true,
+  // @ts-ignore
+  FileSystem.getRealPath.mockImplementation(() => {
+    throw new TypeError('x is not a function')
   })
+  await expect(ViewletExplorer.handleArrowRight(state)).rejects.toThrowError(
+    new TypeError('x is not a function')
+  )
 })

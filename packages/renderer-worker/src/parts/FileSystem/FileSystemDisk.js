@@ -69,3 +69,17 @@ export const getPathSeparator = () => {
     /* FileSystem.getPathSeparator */ 'FileSystem.getPathSeparator'
   )
 }
+
+export const getRealPath = (path) => {
+  return SharedProcess.invoke(
+    /* FileSystem.getRealPath */ 'FileSystem.getRealPath',
+    /* path */ path
+  )
+}
+
+export const stat = (path) => {
+  return SharedProcess.invoke(
+    /* FileSystem.stat */ 'FileSystem.stat',
+    /* path */ path
+  )
+}
