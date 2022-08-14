@@ -353,7 +353,7 @@ export const build = async () => {
     )
     await BundleRendererWorker.bundleRendererWorker({
       cachePath: rendererWorkerCachePath,
-      arch,
+      platform: 'electron',
     })
     console.timeEnd('bundleRendererWorker')
   }

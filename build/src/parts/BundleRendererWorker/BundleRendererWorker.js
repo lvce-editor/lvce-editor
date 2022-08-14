@@ -3,7 +3,7 @@ import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
 
-export const bundleRendererWorker = async ({ cachePath }) => {
+export const bundleRendererWorker = async ({ cachePath, platform }) => {
   await Copy.copy({
     from: 'packages/renderer-worker/src',
     to: Path.join(cachePath, 'src'),
@@ -40,7 +40,7 @@ export const bundleRendererWorker = async ({ cachePath }) => {
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: 'PLATFORM',
-    replacement: `'electron'`,
+    replacement: `'${platform}'`,
   })
   await BundleJs.bundleJs({
     cwd: cachePath,

@@ -913,6 +913,7 @@ const bundleRendererWorkerAndRendererProcessJs = async () => {
     )
     await BundleRendererWorker.bundleRendererWorker({
       cachePath: rendererWorkerCachePath,
+      platform: 'remote',
     })
     console.timeEnd('bundleRendererWorker')
   }
