@@ -8,7 +8,9 @@ export const bundleRendererWorkerCached = async ({
   platform,
   assetDir,
 }) => {
-  const rendererWorkerCachePath = await CachePaths.getRendererWorkerCachePath()
+  const rendererWorkerCachePath = await CachePaths.getRendererWorkerCachePath([
+    platform,
+  ])
   if (existsSync(rendererWorkerCachePath)) {
     console.info('[build step skipped] bundleRendererWorker')
   } else {

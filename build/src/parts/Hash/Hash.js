@@ -27,7 +27,11 @@ const walkFiles = async (folder, fn) => {
   }
 }
 
-export const computeFolderHash = async (folder, extraFiles = []) => {
+export const computeFolderHash = async (
+  folder,
+  extraFiles = [],
+  extraContents = []
+) => {
   try {
     const hash = createHash('sha1')
     const handleFilePath = async (filePath) => {
@@ -38,6 +42,9 @@ export const computeFolderHash = async (folder, extraFiles = []) => {
     for (const extraFile of extraFiles) {
       const content = await ReadFile.readFile(extraFile)
       hash.update(content)
+    }
+    for (const extraContent of extraContents) {
+      hash.update(extraContent)
     }
     return hash.digest('hex')
   } catch (error) {
