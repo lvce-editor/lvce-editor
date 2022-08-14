@@ -15,7 +15,9 @@ const ROOT = resolve(__dirname, '../../../')
 const STATIC = resolve(__dirname, '../../../static')
 const PORT = process.env.PORT || 3000
 
-let argv2 = process.argv[2]
+const argv = process.argv
+
+let argv2 = argv[2]
 
 if (!argv2) {
   argv2 = resolve(__dirname, '../../../playground')
@@ -268,11 +270,18 @@ const handleUpgrade = (request, socket) => {
 app.on('upgrade', handleUpgrade)
 
 app.on('error', (error) => {
-  console.error('[info: server error]', error)
+  // @ts-ignore
+  if (error && error.code === 'EADDRINUSE') {
+    console.error(
+      `[server] Error: port ${PORT} is already taken (possible solution: Run \`killall node\` to free up the port)`
+    )
+  } else {
+    console.error('[info: server error]', error)
+  }
 })
 
 const handleProcessExit = (code) => {
-  console.info(`[web] Process will exit with code ${code}`)
+  console.info(`[server] Process will exit with code ${code}`)
   app.close()
   if (state.sharedProcess && !state.sharedProcess.killed) {
     state.sharedProcess.kill()
