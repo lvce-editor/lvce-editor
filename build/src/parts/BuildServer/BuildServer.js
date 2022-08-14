@@ -285,6 +285,11 @@ const copyServerFiles = async () => {
     occurrence: `const ROOT = resolve(__dirname, '../../../')`,
     replacement: `const ROOT = resolve(__dirname, '../')`,
   })
+  await Replace.replace({
+    path: 'build/.tmp/server/server/src/server.js',
+    occurrence: `const immutable = argv.includes('--immutable')`,
+    replacement: `const immutable = true`,
+  })
   const content = `This project incorporates components from the projects listed below, that may have licenses
 differing from this project:
 
