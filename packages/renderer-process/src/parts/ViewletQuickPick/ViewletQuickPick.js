@@ -39,6 +39,25 @@ const getTargetIndex = ($Target) => {
   }
 }
 
+const handleWheel = (event) => {
+  switch (event.deltaMode) {
+    case event.DOM_DELTA_LINE:
+      RendererWorker.send(
+        /* QuickPick.handleWheel */ 'QuickPick.handleWheel',
+        /* deltaY */ event.deltaY
+      )
+      break
+    case event.DOM_DELTA_PIXEL:
+      RendererWorker.send(
+        /* QuickPick.handleWheel */ 'QuickPick.handleWheel',
+        /* deltaY */ event.deltaY
+      )
+      break
+    default:
+      break
+  }
+}
+
 const handleMouseDown = (event) => {
   event.preventDefault()
   const $Target = event.target
@@ -286,6 +305,7 @@ export const create = (value, visiblePicks, focusIndex) => {
   // @ts-ignore
   $QuickPickItems.role = 'listbox'
   $QuickPickItems.onmousedown = handleMouseDown
+  $QuickPickItems.addEventListener('wheel', handleWheel, { passive: true })
 
   // TODO this works well with nvda but not with windows narrator
   // probably a bug with windows narrator that doesn't support ariaRoleDescription

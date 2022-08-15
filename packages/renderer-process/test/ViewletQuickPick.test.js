@@ -134,6 +134,7 @@ test('event - mousedown - on focused item', () => {
       cancelable: true,
     })
   )
+  // expect(RendererWorker.send).toHaveBeenCalledTimes(1) // TODO
   expect(RendererWorker.send).toHaveBeenCalledWith('QuickPick.selectIndex', 0)
 })
 
@@ -184,12 +185,11 @@ test('event - input', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   $QuickPickInput.value = '>a'
-  $QuickPickInput.dispatchEvent(
-    new InputEvent('input', {
-      bubbles: true,
-      cancelable: true,
-    })
-  )
+  const event = new InputEvent('input', {
+    bubbles: true,
+    cancelable: true,
+  })
+  $QuickPickInput.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledWith(
     'QuickPick.handleInput',
     '>a'
@@ -249,4 +249,20 @@ test('accessibility - aria-activedescendant should point to quick pick item', ()
     'QuickPickItem-1'
   )
   expect(state.$QuickPickItems.children[0].id).toBe('QuickPickItem-1')
+})
+
+test('event - wheel', () => {
+  // @ts-ignore
+  RendererWorker.send.mockImplementation((x) => {
+    console.log(x)
+  })
+  const state = QuickPick.create('>')
+  const event = new WheelEvent('wheel', {
+    deltaY: 53,
+    deltaMode: WheelEvent.DOM_DELTA_LINE,
+  })
+  const { $QuickPickItems } = state
+  $QuickPickItems.dispatchEvent(event)
+  // expect(RendererWorker.send).toHaveBeenCalledTimes(1) // TODO
+  expect(RendererWorker.send).toHaveBeenCalledWith('QuickPick.handleWheel', 53)
 })

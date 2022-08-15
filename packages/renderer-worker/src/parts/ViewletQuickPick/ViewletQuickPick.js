@@ -31,7 +31,7 @@ export const create = (id, uri, top, left, width, height) => {
   return {
     state: QuickPickState.Default,
     picks: [],
-    filteredPicks: [],
+    items: [],
     recentPicks: [],
     recentPickIds: new Map(), // TODO use object.create(null) instead
     versionId: 0,
@@ -44,6 +44,9 @@ export const create = (id, uri, top, left, width, height) => {
     maxVisibleItems: 10,
     uri,
     cursorOffset: 0,
+    deltaY: 0,
+    itemHeight: 22,
+    height: 300,
   }
 }
 
@@ -66,7 +69,7 @@ const filterPicks = (state, picks, exclude, value) => {
     }
     // TODO also filtering for aliases might be expensive
     // TODO maybe only filter for aliases if prefix is longer than 4-5 characters
-    // otherwise both will be found anyway
+    // otherwise both will be found anywayf
     // e.g. "Relo" matches  "Window Reload"  and "Reload Window"
     // But "Reload Win" only matches "Reload Window"
     if (pick.aliases) {
@@ -78,39 +81,34 @@ const filterPicks = (state, picks, exclude, value) => {
     }
     return false
   }
-  const filteredPicks = picks.filter(filterPick)
-  return filteredPicks
+  const items = picks.filter(filterPick)
+  return items
 }
 
-const slicePicks = (filteredPicks) => {
-  return filteredPicks.slice(0, 10)
-}
-
-const toDisplayPicks = (picks) => {
-  const toDisplayPick = (pick, index) => {
-    return {
-      label: pick.label,
-      posInSet: index + 1,
-      setSize: picks.length,
-    }
+const getVisible = (items, minLineY, maxLineY) => {
+  const visibleItems = []
+  const setSize = items.length
+  for (let i = minLineY; i < maxLineY; i++) {
+    const item = items[i]
+    visibleItems.push({
+      label: item.label,
+      posInSet: i + 1,
+      setSize,
+    })
   }
-  return picks.map(toDisplayPick)
+  return visibleItems
 }
 
-const getVisiblePicks = (state, picks, filterValue) => {
+const getFilteredItems = (state, picks, filterValue) => {
   Assert.object(state)
   Assert.array(picks)
   Assert.string(filterValue)
-  const filteredPicks = filterPicks(
-    state,
-    picks,
-    state.recentPickIds,
-    filterValue
-  )
+  const items = filterPicks(state, picks, state.recentPickIds, filterValue)
+  return items
   // TODO avoid mutation
-  state.filteredPicks = filteredPicks
-  const slicedPicks = slicePicks(filteredPicks)
-  return toDisplayPicks(slicedPicks)
+  // state.items = items
+  // const slicedPicks = slicePicks(items)
+  // return toDisplayPicks(slicedPicks)
 }
 
 const getProvider = (uri) => {
@@ -167,7 +165,7 @@ export const loadContent = async (state) => {
     return
   }
   const filterValue = provider.getFilterValue(value)
-  const visiblePicks = getVisiblePicks(state, newPicks, filterValue)
+  const items = getFilteredItems(state, newPicks, filterValue)
   const placeholder = provider.getPlaceholder()
   const label = provider.getLabel()
   const minLineY = 0
@@ -178,7 +176,7 @@ export const loadContent = async (state) => {
   return {
     ...state,
     picks: newPicks,
-    visiblePicks,
+    items,
     focusedIndex: 0,
     state: QuickPickState.Finished,
     minLineY,
@@ -205,15 +203,20 @@ const getPick = (state, index) => {
   //   return state.recentPicks[index]
   // }
   // index -= state.recentPicks.length
-  if (index < state.filteredPicks.length) {
-    return state.filteredPicks[index]
+  if (index < state.items.length) {
+    return state.items[index]
   }
   console.warn('no pick matching index', index)
 }
 
 export const selectIndex = async (state, index, button = /* left */ 0) => {
-  const pick = getPick(state, index)
-  const selectPickResult = await state.provider.selectPick(pick, index, button)
+  const actualIndex = index + state.minLineY
+  const pick = getPick(state, actualIndex)
+  const selectPickResult = await state.provider.selectPick(
+    pick,
+    actualIndex,
+    button
+  )
   Assert.object(selectPickResult)
   Assert.string(selectPickResult.command)
   const { command } = selectPickResult
@@ -247,12 +250,12 @@ export const handleInput = async (state, value, cursorOffset) => {
   }
   const newPicks = await state.provider.getPicks(value)
   const filterValue = state.provider.getFilterValue(value)
-  const visiblePicks = getVisiblePicks(state, newPicks, filterValue)
+  const items = getFilteredItems(state, newPicks, filterValue)
   return {
     ...state,
     value,
     picks: newPicks,
-    visiblePicks,
+    items,
     focusedIndex: 0,
     cursorOffset,
   }
@@ -433,19 +436,16 @@ export const focusIndex = async (state, index) => {
   // @ts-ignore
   if (state.provider.focusPick) {
     // @ts-ignore
-    await state.provider.focusPick(state.filteredPicks[index])
+    await state.provider.focusPick(state.items[index])
   }
   if (index < state.minLineY) {
     const minLineY = index
     const maxLineY = Math.min(
       index + state.maxVisibleItems,
-      state.filteredPicks.length - 1
+      state.items.length - 1
     )
-    const slicedPicks = state.filteredPicks.slice(
-      state.minLineY,
-      state.maxLineY
-    )
-    const displayPicks = toDisplayPicks(slicedPicks)
+    const slicedPicks = state.items.slice(state.minLineY, state.maxLineY)
+    // const displayPicks = toDisplayPicks(slicedPicks)
     const relativeFocusIndex = index - state.minLineY
     const relativeUnFocusIndex = state.focusedIndex - state.minLineY
     // TODO need to scroll up
@@ -453,7 +453,7 @@ export const focusIndex = async (state, index) => {
       ...state,
       minLineY,
       maxLineY,
-      displayPicks,
+      // displayPicks,
       focusedIndex: index,
     }
   }
@@ -462,18 +462,15 @@ export const focusIndex = async (state, index) => {
     const minLineY = Math.max(0, index - state.maxVisibleItems)
     const maxLineY = Math.min(
       index + state.maxVisibleItems - 1,
-      state.filteredPicks.length - 1
+      state.items.length - 1
     )
-    const slicedPicks = state.filteredPicks.slice(
-      state.minLineY,
-      state.maxLineY
-    )
-    const displayPicks = toDisplayPicks(slicedPicks)
+    const slicedPicks = state.items.slice(state.minLineY, state.maxLineY)
+    // const displayPicks = toDisplayPicks(slicedPicks)
     const relativeFocusIndex = index - state.minLineY
     const relativeUnFocusIndex = state.focusedIndex - state.minLineY
     return {
       ...state,
-      displayPicks,
+      // displayPicks,
       minLineY,
       maxLineY,
       focusedIndex: index,
@@ -490,20 +487,49 @@ export const focusFirst = (state) => {
 }
 
 export const focusLast = (state) => {
-  return focusIndex(state, state.filteredPicks.length - 1)
+  return focusIndex(state, state.items.length - 1)
 }
 
 export const focusPrevious = (state) => {
   const previousIndex =
-    state.focusedIndex === 0
-      ? state.filteredPicks.length - 1
-      : state.focusedIndex - 1
+    state.focusedIndex === 0 ? state.items.length - 1 : state.focusedIndex - 1
   return focusIndex(state, previousIndex)
 }
 
 export const focusNext = (state) => {
-  const nextIndex = (state.focusedIndex + 1) % state.filteredPicks.length
+  const nextIndex = (state.focusedIndex + 1) % state.items.length
   return focusIndex(state, nextIndex)
+}
+
+export const setDeltaY = (state, deltaY) => {
+  Assert.object(state)
+  Assert.number(deltaY)
+  const { itemHeight, items, height } = state
+  const itemsLength = items.length
+  if (deltaY < 0) {
+    deltaY = 0
+  } else if (deltaY > itemsLength * itemHeight - height) {
+    deltaY = Math.max(itemsLength * itemHeight - height, 0)
+  }
+  if (state.deltaY === deltaY) {
+    return state
+  }
+  const minLineY = Math.round(deltaY / itemHeight)
+  const maxLineY = minLineY + Math.round(height / itemHeight)
+  Assert.number(minLineY)
+  Assert.number(maxLineY)
+  return {
+    ...state,
+    deltaY,
+    minLineY,
+    maxLineY,
+  }
+}
+
+export const handleWheel = (state, deltaY) => {
+  Assert.object(state)
+  Assert.number(deltaY)
+  return setDeltaY(state, state.deltaY + deltaY)
 }
 
 export const hasFunctionalRender = true
@@ -539,15 +565,23 @@ const renderCursorOffset = {
 
 const renderItems = {
   isEqual(oldState, newState) {
-    return oldState.visiblePicks === newState.visiblePicks
+    return (
+      oldState.items === newState.items &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY
+    )
   },
   apply(oldState, newState) {
-    // TODO compute visible picks here from filteredPicks and minLineY / maxLineY, maybe also do filtering here
+    const visibleItems = getVisible(
+      newState.items,
+      newState.minLineY,
+      newState.maxLineY
+    )
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'setVisiblePicks',
-      /* visiblePicks */ newState.visiblePicks,
+      /* visiblePicks */ visibleItems,
     ]
   },
 }
