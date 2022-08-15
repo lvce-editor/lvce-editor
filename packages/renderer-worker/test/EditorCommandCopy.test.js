@@ -30,18 +30,7 @@ test('editorCopy', async () => {
       columnIndex: 6,
     },
     completionTriggerCharacters: [],
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 3,
-          columnIndex: 6,
-        },
-      },
-    ],
+    selections: new Uint32Array([0, 0, 3, 6]),
     deltaY: 0,
     minLineY: 0,
     maxLineY: 3,
@@ -79,18 +68,7 @@ test('editorCopy - error from clipboard - document is not focused', async () => 
       columnIndex: 6,
     },
     completionTriggerCharacters: [],
-    selections: [
-      {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: 3,
-          columnIndex: 6,
-        },
-      },
-    ],
+    selections: new Uint32Array([0, 0, 3, 6]),
     deltaY: 0,
     minLineY: 0,
     maxLineY: 3,
@@ -107,7 +85,7 @@ test('editorCopy - error from clipboard - document is not focused', async () => 
     scrollBarHeight: 0,
     undoStack: [],
   }
-  expect(await EditorCopy.editorCopy(editor)).toBe(editor)
-  expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(new DOMException('Document is not focused.'))
+  await expect(EditorCopy.editorCopy(editor)).rejects.toThrowError(
+    new DOMException('Document is not focused.')
+  )
 })
