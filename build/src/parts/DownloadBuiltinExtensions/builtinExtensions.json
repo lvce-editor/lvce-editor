@@ -2,7 +2,7 @@
   {
     "name": "builtin.prettier",
     "repository": "github.com/lvce-editor/prettier",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-features-typescript",
@@ -12,7 +12,7 @@
   {
     "name": "builtin.language-features-css",
     "repository": "github.com/lvce-editor/language-features-css",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-javascript",

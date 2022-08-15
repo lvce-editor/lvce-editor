@@ -3,12 +3,12 @@ import { createReadStream, createWriteStream, existsSync } from 'node:fs'
 import { mkdir, rm } from 'node:fs/promises'
 import { pipeline } from 'node:stream/promises'
 import { createBrotliDecompress } from 'node:zlib'
+import pMap from 'p-map'
 import tar from 'tar-fs'
 import VError from 'verror'
+import * as Assert from '../Assert/Assert.js'
 import * as Path from '../Path/Path.js'
 import extensions from './builtinExtensions.json' assert { type: 'json' }
-import pMap from 'p-map'
-import * as Assert from '../Assert/Assert.js'
 
 const downloadUrl = async (url, outFile) => {
   try {
@@ -87,6 +87,8 @@ const printError = (error) => {
       'Response code 503 (Egress is over the account limit.)'
     )
   ) {
+    console.error(error.message)
+  } else if (error && error.message.includes('Response code 404')) {
     console.error(error.message)
   } else {
     console.error(error)
