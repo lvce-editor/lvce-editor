@@ -44,14 +44,40 @@ test('event - input', () => {
   const state = ViewletSearch.create()
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
-  state.$ViewletSearchInput.value = 'test search'
-  state.$ViewletSearchInput.dispatchEvent(
-    new Event('input', {
-      bubbles: true,
-      cancelable: true,
-    })
+  const { $ViewletSearchInput } = state
+  $ViewletSearchInput.value = 'test search'
+  const event = new Event('input', {
+    bubbles: true,
+    cancelable: true,
+  })
+  $ViewletSearchInput.dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'ViewletSearch.handleInput',
+    'test search'
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith(9444, 'test search')
+})
+test('event - click', () => {
+  const state = ViewletSearch.create()
+  ViewletSearch.setResults(state, [
+    {
+      name: './test.txt',
+      path: '/test/test.txt',
+    },
+  ])
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const { $SearchResults } = state
+  const event = new Event('mousedown', {
+    bubbles: true,
+    cancelable: true,
+  })
+  $SearchResults.children[0].dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'ViewletSearch.handleClick',
+    0
+  )
 })
 
 test('setResults - no results', () => {

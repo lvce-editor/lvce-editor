@@ -1,6 +1,48 @@
 import { jest } from '@jest/globals'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as ViewletSearch from '../src/parts/ViewletSearch/ViewletSearch.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererProcess/RendererProcess.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+jest.unstable_mockModule(
+  '../src/parts/FindInWorkspace/FindInWorkspace.js',
+  () => {
+    return {
+      findInWorkspace: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const ViewletSearch = await import(
+  '../src/parts/ViewletSearch/ViewletSearch.js'
+)
+const RendererProcess = await import(
+  '../src/parts/RendererProcess/RendererProcess.js'
+)
+const FindInWorkspace = await import(
+  '../src/parts/FindInWorkspace/FindInWorkspace.js'
+)
+const Command = await import('../src/parts/Command/Command.js')
 
 test('name', () => {
   expect(ViewletSearch.name).toBe('Search')
@@ -31,51 +73,46 @@ test.skip('dispose', () => {
   })
 })
 
-// TODO tests are interfering with each other
-test.skip('handleInput - empty results', async () => {
-  jest.unstable_mockModule(
-    '../src/parts/FindInWorkspace/FindInWorkspace.js',
-    () => {
-      return {
-        findInWorkspace() {
-          return []
-        },
-      }
-    }
-  )
+test('handleInput - empty results', async () => {
   const state = ViewletSearch.create()
-  RendererProcess.state.send = jest.fn()
-  await ViewletSearch.handleInput(state, 'test search')
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    'Viewlet.send',
-    'Search',
-    'setResults',
-    [],
-  ])
+  // @ts-ignore
+  FindInWorkspace.findInWorkspace.mockImplementation(() => {
+    return {
+      results: [],
+    }
+  })
+  expect(await ViewletSearch.handleInput(state, 'test search')).toMatchObject({
+    value: 'test search',
+    items: [],
+  })
 })
 
-// TODO tests are interfering with each other
-test.skip('handleInput - error', async () => {
-  jest.unstable_mockModule(
-    '../src/parts/FindInWorkspace/FindInWorkspace.js',
-    () => {
-      return {
-        findInWorkspace() {
-          throw new Error('could not load search results')
-        },
-      }
-    }
-  )
+test('handleInput - error', async () => {
+  // @ts-ignore
+  FindInWorkspace.findInWorkspace.mockImplementation(() => {
+    throw new Error('could not load search results')
+  })
   const state = ViewletSearch.create()
-  jest.spyOn(console, 'error').mockImplementation(() => {})
-  RendererProcess.state.send = jest.fn()
-  await ViewletSearch.handleInput(state, 'test search')
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    'Viewlet.send',
-    'Search',
-    'setError',
-    'Error: could not load search results',
-  ])
+  await expect(
+    ViewletSearch.handleInput(state, 'test search')
+  ).rejects.toThrowError(new Error('could not load search results'))
+})
+
+test('handleClick', async () => {
+  const state = {
+    ...ViewletSearch.create(),
+    items: [
+      {
+        name: './test.txt',
+        path: '/test/test.txt',
+      },
+    ],
+  }
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
+  expect(await ViewletSearch.handleClick(state, 0)).toBe(state)
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/test/test.txt')
 })
 
 test('resize', () => {
