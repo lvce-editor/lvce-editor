@@ -47,60 +47,56 @@ const getHttpErrorMessage = (error) => {
   return `${error.message}`
 }
 
-const getReleases = async (repository) => {
+const parseVersionFromUrl = (url) => {
+  if (!url.includes('releases/tag')) {
+    throw new Error(`cannot parse release version from url ${url}`)
+  }
+  const slashIndex = url.lastIndexOf('/')
+  const version = url.slice(slashIndex + 1)
+  if (version.startsWith('v')) {
+    return version.slice(1)
+  }
+  return version
+}
+
+const getLatestReleaseVersion = async (repository) => {
   try {
-    const json = await got(
-      `https://api.github.com/repos/${repository}/releases`
-    ).json()
-    return json
+    const json = await got.head(
+      `https://github.com/${repository}/releases/latest`
+    )
+    const finalUrl = json.url
+    const version = parseVersionFromUrl(finalUrl)
+    return version
   } catch (error) {
     if (error instanceof HTTPError) {
       const httpErrorMessage = getHttpErrorMessage(error)
       throw new VError(
-        `Failed to get releases for ${repository}: ${httpErrorMessage}`
+        `Failed to get latest release for ${repository}: ${httpErrorMessage}`
       )
     }
     // @ts-ignore
-    throw new VError(error, `Failed to get releases for ${repository}`)
+    throw new VError(error, `Failed to get latest release for ${repository}`)
   }
 }
 
-const getLatestRelease = (json) => {
-  if (json.length === 0) {
-    throw new Error('expected releases to have length of at least one')
-  }
-  const release = json[0]
-  const assets = release.assets
-  if (assets.length === 0) {
-    throw new Error('expected release assets to have length of at least one')
-  }
-  const asset = assets[0]
-  const browserDownloadUrl = asset['browser_download_url']
-  if (!browserDownloadUrl) {
-    throw new Error('expected browser download url to be defined')
-  }
-  return browserDownloadUrl
-}
-
-const equals = (arrayA, arrayB) => {
-  if (arrayA.length !== arrayB.length) {
-    return false
-  }
-  for (let i = 0; i < arrayA.length; i++) {
-    if (arrayA[i] !== arrayB[i]) {
-      return false
+const getDiffCount = (arrayA, arrayB) => {
+  const length = arrayA.length
+  let diffCount = 0
+  for (let i = 0; i < length; i++) {
+    if (arrayA[i].version !== arrayB[i].version) {
+      diffCount++
     }
   }
-  return true
+  return diffCount
 }
 
-const getNewBuiltinExtensions = (builtinExtensions, releases) => {
+const getNewBuiltinExtensions = (builtinExtensions, versions) => {
   const newBuiltinExtensions = []
   for (let i = 0; i < builtinExtensions.length; i++) {
     const extension = builtinExtensions[i]
     newBuiltinExtensions.push({
       ...extension,
-      path: releases[i],
+      version: versions[i],
     })
   }
   return newBuiltinExtensions
@@ -109,15 +105,17 @@ const getNewBuiltinExtensions = (builtinExtensions, releases) => {
 const updateBuiltinExtensions = async () => {
   const start = performance.now()
   const repositories = builtinExtensions.map(getName).map(getRepository)
-  const releases = await Promise.all(repositories.map(getReleases))
-  const latestReleases = releases.map(getLatestRelease)
+  const newVersions = await Promise.all(
+    repositories.map(getLatestReleaseVersion)
+  )
   const newBuiltinExtensions = getNewBuiltinExtensions(
     builtinExtensions,
-    latestReleases
+    newVersions
   )
   const end = performance.now()
   const duration = end - start
-  if (equals(builtinExtensions, newBuiltinExtensions)) {
+  const diffCount = getDiffCount(builtinExtensions, newBuiltinExtensions)
+  if (diffCount === 0) {
     console.info(`all releases are up to date in ${duration}ms`)
   } else {
     const builtinExtensionsPath = join(
@@ -130,10 +128,10 @@ const updateBuiltinExtensions = async () => {
     )
     await writeFile(
       builtinExtensionsPath,
-      JSON.stringify(newBuiltinExtensions, null, 2)
+      JSON.stringify(newBuiltinExtensions, null, 2) + '\n'
     )
     // TODO print which releases were updated
-    console.info(`updated releases in ${duration}ms`)
+    console.info(`updated ${diffCount} releases in ${duration}ms`)
   }
 }
 
