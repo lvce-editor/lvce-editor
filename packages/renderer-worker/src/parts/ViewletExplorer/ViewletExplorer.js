@@ -764,6 +764,13 @@ export const handleClickCurrent = (state) => {
 
 export const focusIndex = (state, index) => {
   if (index < state.minLineY) {
+    if (index < 0) {
+      return {
+        ...state,
+        focusedIndex: index,
+        focused: true,
+      }
+    }
     const diff = state.maxLineY - state.minLineY
     return {
       ...state,
