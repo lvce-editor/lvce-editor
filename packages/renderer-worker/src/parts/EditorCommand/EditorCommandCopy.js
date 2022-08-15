@@ -8,16 +8,24 @@ export const editorCopy = async (editor) => {
     // TODO copy line where cursor is
     return editor
   }
-  const selection = editor.selections[0]
-  const text = TextDocument.getSelectionText(editor, selection).join('\n')
-  console.log({ text })
-  try {
-    await Command.execute(
-      /* ClipBoard.writeText */ 'ClipBoard.writeText',
-      /* text */ text
-    )
-  } catch (error) {
-    console.warn(error)
+  const selectionStartRowIndex = editor.selections[0]
+  const selectionStartColumnIndex = editor.selections[1]
+  const selectionEndRowIndex = editor.selections[2]
+  const selectionEndColumnIndex = editor.selections[3]
+  const range = {
+    start: {
+      rowIndex: selectionStartRowIndex,
+      columnIndex: selectionStartColumnIndex,
+    },
+    end: {
+      rowIndex: selectionEndRowIndex,
+      columnIndex: selectionEndColumnIndex,
+    },
   }
+  const text = TextDocument.getSelectionText(editor, range).join('\n')
+  await Command.execute(
+    /* ClipBoard.writeText */ 'ClipBoard.writeText',
+    /* text */ text
+  )
   return editor
 }
