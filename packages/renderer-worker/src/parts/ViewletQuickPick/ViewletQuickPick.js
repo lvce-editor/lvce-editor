@@ -31,7 +31,7 @@ export const create = (id, uri, top, left, width, height) => {
   return {
     state: QuickPickState.Default,
     picks: [],
-    filteredPicks: [],
+    items: [],
     recentPicks: [],
     recentPickIds: new Map(), // TODO use object.create(null) instead
     versionId: 0,
@@ -78,12 +78,12 @@ const filterPicks = (state, picks, exclude, value) => {
     }
     return false
   }
-  const filteredPicks = picks.filter(filterPick)
-  return filteredPicks
+  const items = picks.filter(filterPick)
+  return items
 }
 
-const slicePicks = (filteredPicks) => {
-  return filteredPicks.slice(0, 10)
+const slicePicks = (items) => {
+  return items.slice(0, 10)
 }
 
 const toDisplayPicks = (picks) => {
@@ -101,15 +101,10 @@ const getVisiblePicks = (state, picks, filterValue) => {
   Assert.object(state)
   Assert.array(picks)
   Assert.string(filterValue)
-  const filteredPicks = filterPicks(
-    state,
-    picks,
-    state.recentPickIds,
-    filterValue
-  )
+  const items = filterPicks(state, picks, state.recentPickIds, filterValue)
   // TODO avoid mutation
-  state.filteredPicks = filteredPicks
-  const slicedPicks = slicePicks(filteredPicks)
+  state.items = items
+  const slicedPicks = slicePicks(items)
   return toDisplayPicks(slicedPicks)
 }
 
@@ -205,8 +200,8 @@ const getPick = (state, index) => {
   //   return state.recentPicks[index]
   // }
   // index -= state.recentPicks.length
-  if (index < state.filteredPicks.length) {
-    return state.filteredPicks[index]
+  if (index < state.items.length) {
+    return state.items[index]
   }
   console.warn('no pick matching index', index)
 }
@@ -433,18 +428,15 @@ export const focusIndex = async (state, index) => {
   // @ts-ignore
   if (state.provider.focusPick) {
     // @ts-ignore
-    await state.provider.focusPick(state.filteredPicks[index])
+    await state.provider.focusPick(state.items[index])
   }
   if (index < state.minLineY) {
     const minLineY = index
     const maxLineY = Math.min(
       index + state.maxVisibleItems,
-      state.filteredPicks.length - 1
+      state.items.length - 1
     )
-    const slicedPicks = state.filteredPicks.slice(
-      state.minLineY,
-      state.maxLineY
-    )
+    const slicedPicks = state.items.slice(state.minLineY, state.maxLineY)
     const displayPicks = toDisplayPicks(slicedPicks)
     const relativeFocusIndex = index - state.minLineY
     const relativeUnFocusIndex = state.focusedIndex - state.minLineY
@@ -462,12 +454,9 @@ export const focusIndex = async (state, index) => {
     const minLineY = Math.max(0, index - state.maxVisibleItems)
     const maxLineY = Math.min(
       index + state.maxVisibleItems - 1,
-      state.filteredPicks.length - 1
+      state.items.length - 1
     )
-    const slicedPicks = state.filteredPicks.slice(
-      state.minLineY,
-      state.maxLineY
-    )
+    const slicedPicks = state.items.slice(state.minLineY, state.maxLineY)
     const displayPicks = toDisplayPicks(slicedPicks)
     const relativeFocusIndex = index - state.minLineY
     const relativeUnFocusIndex = state.focusedIndex - state.minLineY
@@ -490,20 +479,43 @@ export const focusFirst = (state) => {
 }
 
 export const focusLast = (state) => {
-  return focusIndex(state, state.filteredPicks.length - 1)
+  return focusIndex(state, state.items.length - 1)
 }
 
 export const focusPrevious = (state) => {
   const previousIndex =
-    state.focusedIndex === 0
-      ? state.filteredPicks.length - 1
-      : state.focusedIndex - 1
+    state.focusedIndex === 0 ? state.items.length - 1 : state.focusedIndex - 1
   return focusIndex(state, previousIndex)
 }
 
 export const focusNext = (state) => {
-  const nextIndex = (state.focusedIndex + 1) % state.filteredPicks.length
+  const nextIndex = (state.focusedIndex + 1) % state.items.length
   return focusIndex(state, nextIndex)
+}
+
+export const setDeltaY = (state, deltaY) => {
+  const { itemHeight, height, items } = state
+  if (deltaY < 0) {
+    deltaY = 0
+  } else if (deltaY > items.length * itemHeight - height) {
+    deltaY = Math.max(items.length * itemHeight - height, 0)
+  }
+  if (state.deltaY === deltaY) {
+    return state
+  }
+  const minLineY = Math.round(deltaY / itemHeight)
+  const maxLineY = minLineY + Math.round(height / itemHeight)
+  return {
+    ...state,
+    deltaY,
+    minLineY,
+    maxLineY,
+  }
+}
+
+export const handleWheel = (state, deltaY) => {
+  console.log('quickpick wheel')
+  return setDeltaY(state, state.deltaY + deltaY)
 }
 
 export const hasFunctionalRender = true
@@ -542,7 +554,7 @@ const renderItems = {
     return oldState.visiblePicks === newState.visiblePicks
   },
   apply(oldState, newState) {
-    // TODO compute visible picks here from filteredPicks and minLineY / maxLineY, maybe also do filtering here
+    // TODO compute visible picks here from items and minLineY / maxLineY, maybe also do filtering here
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
