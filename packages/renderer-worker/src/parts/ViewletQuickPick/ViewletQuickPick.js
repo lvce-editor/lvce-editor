@@ -506,11 +506,9 @@ export const setDeltaY = (state, deltaY) => {
   Assert.number(deltaY)
   const { itemHeight, items, height } = state
   const itemsLength = items.length
-  console.log({ itemsLength, height, deltaY })
   if (deltaY < 0) {
     deltaY = 0
   } else if (deltaY > itemsLength * itemHeight - height) {
-    console.log('else if')
     deltaY = Math.max(itemsLength * itemHeight - height, 0)
   }
   if (state.deltaY === deltaY) {
@@ -520,7 +518,6 @@ export const setDeltaY = (state, deltaY) => {
   const maxLineY = minLineY + Math.round(height / itemHeight)
   Assert.number(minLineY)
   Assert.number(maxLineY)
-  console.log({ minLineY, maxLineY })
   return {
     ...state,
     deltaY,
@@ -580,8 +577,6 @@ const renderItems = {
       newState.minLineY,
       newState.maxLineY
     )
-    console.log({ visibleItems })
-    // TODO compute visible picks here from items and minLineY / maxLineY, maybe also do filtering here
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
