@@ -33,10 +33,8 @@ export const removeAdditionalFocus = (key) => {
 
 export const focus = ($Element, key) => {
   if ($Element === document.activeElement) {
-    console.log('focus return')
     return
   }
-  console.log(state.$PreviousFocusElement)
   state.$PreviousFocusElement = document.activeElement
   $Element.focus({ preventScroll: true })
   setFocus(key)
