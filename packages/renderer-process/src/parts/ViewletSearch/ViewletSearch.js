@@ -5,7 +5,10 @@ import * as Assert from '../Assert/Assert.js'
 const handleInput = (event) => {
   const $Target = event.target
   const value = $Target.value
-  RendererWorker.send(/* ViewletSearch.handleInput */ 9444, /* value */ value)
+  RendererWorker.send(
+    /* ViewletSearch.handleInput */ 'ViewletSearch.handleInput',
+    /* value */ value
+  )
 }
 
 const getNodeIndex = ($Node) => {
@@ -22,7 +25,7 @@ const handleClick = (event) => {
     case 'TreeItem':
       const index = getNodeIndex($Target)
       RendererWorker.send(
-        /* ViewletSearch.handleClick */ 9445,
+        /* ViewletSearch.handleClick */ 'ViewletSearch.handleClick',
         /* index */ index
       )
       break
@@ -43,7 +46,7 @@ export const create = () => {
   const $SearchResults = document.createElement('div')
   $SearchResults.className = 'SearchResults'
   // TODO onclick vs onmousedown, should be consistent in whole application
-  $SearchResults.onclick = handleClick
+  $SearchResults.onmousedown = handleClick
 
   const $SearchStatus = document.createElement('div')
   // @ts-ignore

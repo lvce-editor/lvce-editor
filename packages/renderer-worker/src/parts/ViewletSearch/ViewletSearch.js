@@ -2,6 +2,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Command from '../Command/Command.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as FindInWorkspace from '../FindInWorkspace/FindInWorkspace.js'
 
 // TODO maybe create should have a container as param like vscode?
 // maybe not?
@@ -105,10 +106,7 @@ export const handleInput = async (state, value) => {
   // TODO support cancellation
   // TODO handle error
   // TODO use command.execute or use module directly?
-  const results = await Command.execute(
-    /* FindInWorkspace.findInWorkspace */ 5200,
-    /* searchTerm */ value
-  )
+  const results = await FindInWorkspace.findInWorkspace(value)
   // TODO send results to renderer process
   // TODO use virtual list because there might be many results
   console.log({
@@ -122,18 +120,20 @@ export const handleInput = async (state, value) => {
   const displayResults = toDisplayResults(results.results)
   return {
     ...state,
-    searchResults: displayResults,
+    items: displayResults,
     fileCount: results.results.length, // TODO this is weird
+    value,
   }
 }
 
 export const handleClick = async (state, index) => {
-  const searchResult = state.searchResults[index]
+  const searchResult = state.items[index]
   console.log({ searchResult })
   await Command.execute(
     /* Main.openUri */ 'Main.openUri',
     /* uri */ searchResult.path
   )
+  return state
 }
 
 export const hasFunctionalResize = true
@@ -147,20 +147,21 @@ export const resize = (state, dimensions) => {
 
 export const hasFunctionalRender = true
 
-const renderResults = {
+const renderItems = {
   isEqual(oldState, newState) {
-    return oldState.searchResults === newState.searchResults
+    return oldState.items === newState.items
   },
   apply(oldState, newState) {
+    console.log(newState.items)
     return [
       /* viewletSend */ 'Viewlet.send',
       /* id */ 'Search',
       /* method */ 'setResults',
-      /* results */ newState.searchResults,
-      /* resultCount */ newState.searchResults.length,
+      /* results */ newState.items,
+      /* resultCount */ newState.items.length,
       /* fileCount */ newState.fileCount,
     ]
   },
 }
 
-export const render = [renderResults]
+export const render = [renderItems]
