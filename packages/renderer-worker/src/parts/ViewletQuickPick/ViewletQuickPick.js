@@ -444,16 +444,11 @@ export const focusIndex = async (state, index) => {
       index + state.maxVisibleItems,
       state.items.length - 1
     )
-    const slicedPicks = state.items.slice(state.minLineY, state.maxLineY)
-    // const displayPicks = toDisplayPicks(slicedPicks)
-    const relativeFocusIndex = index - state.minLineY
-    const relativeUnFocusIndex = state.focusedIndex - state.minLineY
     // TODO need to scroll up
     return {
       ...state,
       minLineY,
       maxLineY,
-      // displayPicks,
       focusedIndex: index,
     }
   }
@@ -464,13 +459,8 @@ export const focusIndex = async (state, index) => {
       index + state.maxVisibleItems - 1,
       state.items.length - 1
     )
-    const slicedPicks = state.items.slice(state.minLineY, state.maxLineY)
-    // const displayPicks = toDisplayPicks(slicedPicks)
-    const relativeFocusIndex = index - state.minLineY
-    const relativeUnFocusIndex = state.focusedIndex - state.minLineY
     return {
       ...state,
-      // displayPicks,
       minLineY,
       maxLineY,
       focusedIndex: index,
@@ -602,8 +592,8 @@ const renderFocusedIndex = {
 }
 
 export const render = [
-  renderFocusedIndex,
-  renderCursorOffset,
   renderItems,
   renderValue,
+  renderCursorOffset,
+  renderFocusedIndex,
 ]
