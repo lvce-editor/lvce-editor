@@ -13,8 +13,6 @@ import * as Workspace from '../Workspace/Workspace.js'
 // viewlet: creating | refreshing | done | disposed
 // TODO recycle viewlets (maybe)
 
-const ITEM_HEIGHT = 22 // TODO handle zoom
-
 export const name = 'Explorer'
 
 const getParentStartIndex = (dirents, index) => {
@@ -119,6 +117,7 @@ export const create = (id, uri, left, top, width, height) => {
     pathSeparator: '',
     version: 0,
     editingIndex: -1,
+    itemHeight: 22,
   }
 }
 
@@ -130,11 +129,12 @@ export const loadContent = async (state) => {
   const root = Workspace.state.workspacePath
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
   const dirents = await getTopLevelDirents(root, pathSeparator)
+  const { itemHeight, height } = state
   return {
     ...state,
     root,
     dirents,
-    maxLineY: Math.round(state.height / ITEM_HEIGHT),
+    maxLineY: Math.round(height / itemHeight),
     pathSeparator,
   }
 }
@@ -217,16 +217,17 @@ const getVisible = (state) => {
 }
 
 export const setDeltaY = (state, deltaY) => {
+  const { itemHeight, height, dirents } = state
   if (deltaY < 0) {
     deltaY = 0
-  } else if (deltaY > state.dirents.length * ITEM_HEIGHT - state.height) {
-    deltaY = Math.max(state.dirents.length * ITEM_HEIGHT - state.height, 0)
+  } else if (deltaY > dirents.length * itemHeight - height) {
+    deltaY = Math.max(dirents.length * itemHeight - height, 0)
   }
   if (state.deltaY === deltaY) {
     return state
   }
-  const minLineY = Math.round(deltaY / ITEM_HEIGHT)
-  const maxLineY = minLineY + Math.round(state.height / ITEM_HEIGHT)
+  const minLineY = Math.round(deltaY / itemHeight)
+  const maxLineY = minLineY + Math.round(height / itemHeight)
   return {
     ...state,
     deltaY,
@@ -967,13 +968,14 @@ export const handleMouseEnter = async (state, index) => {
     // TODO preload content maybe when it is a long hover
     return state
   }
-  const uri = `${state.root}${dirent.path}`
-  const top = state.top + index * ITEM_HEIGHT
-  const right = state.left
+  const { top, itemHeight, left, root } = state
+  const uri = `${root}${dirent.path}`
+  const newTop = top + index * itemHeight
+  const right = left
   await Command.execute(
     /* ImagePreview.show */ 9081,
     /* uri */ uri,
-    /* top */ top,
+    /* top */ newTop,
     /* right */ right
   )
 }
@@ -1126,7 +1128,8 @@ export const handlePaste = async (state) => {
 export const hasFunctionalResize = true
 
 export const resize = (state, dimensions) => {
-  const maxLineY = state.minLineY + Math.round(dimensions.height / ITEM_HEIGHT)
+  const { minLineY, itemHeight } = state
+  const maxLineY = minLineY + Math.round(dimensions.height / itemHeight)
   return {
     ...state,
     ...dimensions,
