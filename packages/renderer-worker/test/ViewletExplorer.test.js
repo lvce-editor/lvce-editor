@@ -4930,6 +4930,43 @@ test('focusIndex - scroll down', () => {
   })
 })
 
+test('focusIndex - focus container', () => {
+  const state = {
+    root: '/home/test-user/test-path',
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    maxLineY: 1,
+    dirents: [
+      {
+        depth: 1,
+        index: 0,
+        languageId: 'unknown',
+        name: 'index.css',
+        path: '/index.css',
+        setSize: 2,
+        type: 'file',
+      },
+      {
+        depth: 1,
+        index: 1,
+        languageId: 'unknown',
+        name: 'index.html',
+        path: '/index.html',
+        setSize: 2,
+        type: 'file',
+      },
+    ],
+  }
+  expect(ViewletExplorer.focusIndex(state, -1)).toMatchObject({
+    focusedIndex: -1,
+    minLineY: 0,
+    maxLineY: 1,
+  })
+})
+
 test('handleClickCurrent', async () => {
   const state = {
     root: '/home/test-user/test-path',
