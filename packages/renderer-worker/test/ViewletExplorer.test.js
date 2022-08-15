@@ -125,6 +125,7 @@ test('loadContent', async () => {
   expect(await ViewletExplorer.loadContent(state)).toEqual({
     deltaY: 0,
     version: 0,
+    itemHeight: 22,
     dirents: [
       {
         depth: 1,
@@ -2324,6 +2325,7 @@ test('focusLast - focus already at last', () => {
 
 test('handleWheel - up', () => {
   const state = {
+    ...ViewletExplorer.create(),
     root: '/home/test-user/test-path',
     focusedIndex: -1,
     top: 0,
@@ -2479,6 +2481,7 @@ test.skip('handleWheel - down', () => {
 
 test('handleWheel - down - already at bottom', () => {
   const state = {
+    ...ViewletExplorer.create(),
     root: '/home/test-user/test-path',
     focusedIndex: -1,
     top: 0,
@@ -2512,6 +2515,7 @@ test('handleWheel - down - already at bottom', () => {
 
 test('handleWheel - down - already at bottom but viewlet is larger than items can fit', () => {
   const state = {
+    ...ViewletExplorer.create(),
     root: '/home/test-user/test-path',
     focusedIndex: -1,
     top: 0,
