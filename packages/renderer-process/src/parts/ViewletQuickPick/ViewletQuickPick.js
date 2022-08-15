@@ -89,8 +89,11 @@ const handleBlur = (event) => {
 
 const create$QuickPickItem = () => {
   // TODO many quickPick items may not have description -> avoid creating description dom nodes if there is no description
+  const $QuickPickItemLabelText = document.createTextNode('')
+
   const $QuickPickItemLabel = document.createElement('div')
   $QuickPickItemLabel.className = 'QuickPickItemLabel'
+  $QuickPickItemLabel.append($QuickPickItemLabelText)
   // $QuickPickItemLabel.textContent = item.label || '<missing label>'
   // const $QuickPickItemDescription = document.createElement('div')
   // $QuickPickItemDescription.className = 'QuickPickItemDescription'
@@ -130,8 +133,7 @@ const create$QuickPickDescription = () => {
 }
 
 const render$QuickPickItemLabel = ($QuickPickItemLabel, quickPickItem) => {
-  // TODO don't use text content -> recycle text node instead: node.nodeValue='newtext'
-  $QuickPickItemLabel.textContent = quickPickItem.label
+  $QuickPickItemLabel.firstChild.nodeValue = quickPickItem.label
 }
 
 const render$QuickPickItemLess = ($QuickPickItem, quickPickItem) => {
