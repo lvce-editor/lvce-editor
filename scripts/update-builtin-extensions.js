@@ -36,6 +36,7 @@ const getReleases = async (repository) => {
 }
 
 const getLatestRelease = (json) => {
+  console.log({ json })
   if (json.length === 0) {
     throw new Error('expected releases to have length of at least one')
   }
