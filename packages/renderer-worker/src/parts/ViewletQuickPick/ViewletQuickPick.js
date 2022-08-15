@@ -209,8 +209,13 @@ const getPick = (state, index) => {
 }
 
 export const selectIndex = async (state, index, button = /* left */ 0) => {
-  const pick = getPick(state, index)
-  const selectPickResult = await state.provider.selectPick(pick, index, button)
+  const actualIndex = index + state.minLineY
+  const pick = getPick(state, actualIndex)
+  const selectPickResult = await state.provider.selectPick(
+    pick,
+    actualIndex,
+    button
+  )
   Assert.object(selectPickResult)
   Assert.string(selectPickResult.command)
   const { command } = selectPickResult
