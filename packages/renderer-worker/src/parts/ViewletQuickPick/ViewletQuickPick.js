@@ -46,6 +46,7 @@ export const create = (id, uri, top, left, width, height) => {
     cursorOffset: 0,
     deltaY: 0,
     itemHeight: 22,
+    height: 300,
   }
 }
 
@@ -503,9 +504,8 @@ export const focusNext = (state) => {
 export const setDeltaY = (state, deltaY) => {
   Assert.object(state)
   Assert.number(deltaY)
-  const { itemHeight, items } = state
+  const { itemHeight, items, height } = state
   const itemsLength = items.length
-  const height = 300
   console.log({ itemsLength, height, deltaY })
   if (deltaY < 0) {
     deltaY = 0

@@ -25,7 +25,7 @@ test('focusLast', async () => {
     ...ViewletQuickPick.create(),
     focusedIndex: 0,
     provider: {},
-    filteredPicks: [{ label: '1' }, { label: '2' }, { label: '3' }],
+    items: [{ label: '1' }, { label: '2' }, { label: '3' }],
   }
   expect(await ViewletQuickPick.focusLast(state)).toMatchObject({
     focusedIndex: 2,
@@ -49,7 +49,7 @@ test('focusNext', async () => {
     ...ViewletQuickPick.create(),
     focusedIndex: 0,
     provider: {},
-    filteredPicks: [{ label: '1' }, { label: '2' }, { label: '3' }],
+    items: [{ label: '1' }, { label: '2' }, { label: '3' }],
   }
   expect(await ViewletQuickPick.focusNext(state)).toMatchObject({
     focusedIndex: 1,
@@ -84,10 +84,10 @@ test('handleInput - different value', async () => {
         return value
       },
     },
-    filteredPicks: [{ label: '1' }, { label: '2' }, { label: '3' }],
+    items: [{ label: '1' }, { label: '2' }, { label: '3' }],
   }
   expect(await ViewletQuickPick.handleInput(state, 'abc')).toMatchObject({
-    filteredPicks: [],
+    items: [],
   })
   expect(state.provider.getPicks).toHaveBeenCalledTimes(1)
   expect(state.provider.getPicks).toHaveBeenCalledWith('abc')
@@ -281,5 +281,28 @@ test('handleBeforeInput - deleteWordForward', async () => {
   ).toMatchObject({
     value: '',
     cursorOffset: 0,
+  })
+})
+
+test('handleWheel - up', () => {
+  const state = {
+    ...ViewletQuickPick.create(),
+    itemHeight: 22,
+    minLineY: 0,
+    maxLineY: 2,
+    height: 22,
+    deltaY: 22,
+    items: [
+      {
+        label: 'index.css',
+      },
+      {
+        label: 'index.html',
+      },
+    ],
+  }
+  expect(ViewletQuickPick.handleWheel(state, -22)).toMatchObject({
+    minLineY: 0,
+    maxLineY: 1,
   })
 })
