@@ -270,7 +270,7 @@ test('event - wheel', () => {
 
 test('hideStatus', () => {
   const state = ViewletQuickPick.create()
-  ViewletQuickPick.showNoResults()
-  ViewletQuickPick.hideStatus()
+  ViewletQuickPick.showNoResults(state)
+  ViewletQuickPick.hideStatus(state)
   expect(state.$QuickPickStatus).toBeUndefined()
 })
