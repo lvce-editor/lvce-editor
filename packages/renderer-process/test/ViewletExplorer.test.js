@@ -488,13 +488,15 @@ test('event - contextmenu', () => {
       clientX: 50,
       clientY: 50,
       bubbles: true,
+      button: 2,
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledWith(
     'Explorer.handleContextMenu',
     50,
     50,
-    0
+    0,
+    2
   )
 })
 

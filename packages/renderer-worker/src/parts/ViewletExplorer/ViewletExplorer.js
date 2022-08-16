@@ -240,15 +240,20 @@ export const handleWheel = (state, deltaY) => {
   return setDeltaY(state, state.deltaY + deltaY)
 }
 
-export const handleContextMenu = async (state, x, y, index) => {
-  state.focusedIndex = index
+export const handleContextMenu = async (state, x, y, index, button) => {
+  if (button === -1) {
+    index = state.focusedIndex
+  }
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
     /* id */ 'explorer'
   )
-  return state
+  return {
+    ...state,
+    focusedIndex: index,
+  }
 }
 
 export const getFocusedDirent = (state) => {

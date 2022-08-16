@@ -455,14 +455,82 @@ test.skip('contentLoaded', async () => {
   )
 })
 
-test.skip('handleContextMenu', async () => {
+test('handleContextMenu', async () => {
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {})
+  Command.execute.mockImplementation(() => {})
   const state = ViewletExplorer.create()
-  await ViewletExplorer.handleContextMenu(state, 0, 0, -1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(null)
+  expect(
+    await ViewletExplorer.handleContextMenu(
+      state,
+      /* x */ 0,
+      /* y */ 0,
+      /* index */ -1,
+      /* button */ 2
+    )
+  ).toMatchObject({
+    focusedIndex: -1,
+  })
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'ContextMenu.show',
+    0,
+    0,
+    'explorer'
+  )
+})
+
+test('handleContextMenu - triggered via keyboard', async () => {
+  const state = {
+    ...ViewletExplorer.create(),
+    focusedIndex: 0,
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'file 1',
+        path: 'file 1',
+        posInSet: 1,
+        setSize: 3,
+        type: 'file',
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'file 2',
+        path: 'file 2',
+        posInSet: 2,
+        setSize: 3,
+        type: 'file',
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'file 3',
+        path: 'file 3',
+        posInSet: 3,
+        setSize: 3,
+        type: 'file',
+      },
+    ],
+  }
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
+  expect(
+    await ViewletExplorer.handleContextMenu(
+      state,
+      /* x */ 0,
+      /* y */ 0,
+      /* index */ -1,
+      /* button */ -1
+    )
+  ).toMatchObject({ focusedIndex: 0 })
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'ContextMenu.show',
+    0,
+    0,
+    'explorer'
+  )
 })
 
 // TODO should handle error gracefully
