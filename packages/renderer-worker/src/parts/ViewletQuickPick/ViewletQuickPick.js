@@ -240,8 +240,8 @@ export const selectIndex = async (state, index, button = /* left */ 0) => {
   // }
 }
 
-export const selectCurrentIndex = async (state) => {
-  await selectIndex(state, state.focusedIndex)
+export const selectCurrentIndex = (state) => {
+  return selectIndex(state, state.focusedIndex)
 }
 
 // TODO when user types letters -> no need to query provider again -> just filter existing results
