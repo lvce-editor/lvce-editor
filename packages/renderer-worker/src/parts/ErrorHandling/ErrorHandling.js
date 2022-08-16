@@ -56,9 +56,15 @@ export const printError = (error) => {
   }
 }
 
-// TODO state is not needed here but because jest doesn't support mocking for esm yet this is a workaround
 export const state = {
-  async handleError(error) {
+  /**
+   * @type {string[]}
+   */
+  seenWarnings: [],
+}
+
+export const handleError = async (error) => {
+  try {
     printError(error)
     const enhancedErrorMessage = enhanceErrorMessage(error)
     await Command.execute(
@@ -66,20 +72,6 @@ export const state = {
       /* type */ 'error',
       /* text */ enhancedErrorMessage.message
     )
-  },
-  async showErrorDialog(error) {
-    const enhancedErrorMessage = enhanceErrorMessage(error)
-    await Command.execute(
-      /* Dialog.showMessage */ 'Dialog.showMessage',
-      /* message */ enhancedErrorMessage
-    )
-  },
-  seenWarnings: [],
-}
-
-export const handleError = async (error) => {
-  try {
-    await state.handleError(error)
   } catch {
     // ignore
   }
@@ -87,7 +79,11 @@ export const handleError = async (error) => {
 
 export const showErrorDialog = async (error) => {
   try {
-    await state.showErrorDialog(error)
+    const enhancedErrorMessage = enhanceErrorMessage(error)
+    await Command.execute(
+      /* Dialog.showMessage */ 'Dialog.showMessage',
+      /* message */ enhancedErrorMessage
+    )
   } catch {
     // ignore
   }

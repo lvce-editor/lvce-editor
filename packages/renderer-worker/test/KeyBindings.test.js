@@ -185,7 +185,7 @@ test.skip('hydrate - use data from ajax when not available from cache storage bu
   ErrorHandling.handleError.mockImplementation(() => {})
 
   await KeyBindings.hydrate()
-  expect(ErrorHandling.state.handleError).toHaveBeenCalledWith(
+  expect(ErrorHandling.handleError).toHaveBeenCalledWith(
     new Error('Failed to load KeyBindings')
   )
 })
