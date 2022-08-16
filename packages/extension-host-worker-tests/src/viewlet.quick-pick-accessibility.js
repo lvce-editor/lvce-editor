@@ -9,12 +9,12 @@ import { QuickPick } from '../../renderer-worker/src/parts/TestFrameWorkComponen
 
 // open quick pick
 // nvda says:  "quick input, layout, toggle side bar, 1 of 92"
-// windows narrator says:  ""
+// windows narrator says:  "cap, scan, layout, toggle side bar, 1 of 92, selected"
 // orca says: ""
 
 // focus second item
 // nvda says:  "layout, toggle panel, 2 of 92"
-// windows narrator says:  ""
+// windows narrator says:  "layout, toggle panel, 2 of 92, selected"
 // orca says:  ""
 
 test('viewlet.quick-pick-no-results', async () => {
