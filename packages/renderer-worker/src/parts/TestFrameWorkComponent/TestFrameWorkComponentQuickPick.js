@@ -7,3 +7,7 @@ export const open = async () => {
 export const setValue = async (value) => {
   await Command.execute('QuickPick.handleInput', value, 0)
 }
+
+export const focusNext = async () => {
+  await Command.execute('QuickPick.focusNext')
+}
