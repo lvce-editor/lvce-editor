@@ -19,6 +19,7 @@ extensions/builtin.language-basics-json
 extensions/builtin.language-basics-plaintext
 extensions/builtin.language-features-html
 extensions/builtin.language-basics-typescript
+extensions/builtin.language-basics-docker
 
 
 *.tar.br
