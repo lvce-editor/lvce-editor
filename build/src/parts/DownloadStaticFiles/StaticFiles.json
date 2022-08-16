@@ -54,7 +54,7 @@
     ],
     "additionalFiles": [
       {
-        "path": "static/js/idb/width-async-ittr.js",
+        "path": "static/js/idb/with-async-ittr.js",
         "content": "export * from './index.js';\nimport './async-iterators.js';\n"
       }
     ]

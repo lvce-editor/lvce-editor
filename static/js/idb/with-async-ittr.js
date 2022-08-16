@@ -1,2 +1,2 @@
-export * from './build/index.js';
-import './build/async-iterators.js';
+export * from './index.js';
+import './async-iterators.js';
