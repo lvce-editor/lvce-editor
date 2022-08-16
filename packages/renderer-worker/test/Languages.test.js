@@ -108,5 +108,5 @@ test('getLanguageId - by file name', () => {
       fileNames: ['Dockerfile'],
     },
   ]
-  expect(Languages.getLanguageId('/test/Dockerfile')).toBe('dockerfile')
+  expect(Languages.getLanguageId('Dockerfile')).toBe('dockerfile')
 })

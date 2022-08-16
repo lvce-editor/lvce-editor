@@ -22,22 +22,21 @@ const getBaseName = (path) => {
   return '<unknown>'
 }
 
-export const getLanguageId = (path) => {
-  Assert.string(path)
-  const extension = path.slice(path.lastIndexOf('.'))
-  console.log(state.languages)
+export const getLanguageId = (fileName) => {
+  Assert.string(fileName)
+  const extension = fileName.slice(fileName.lastIndexOf('.'))
+  // console.log(state.languages)
   const { languages } = state
   for (const language of languages) {
     if (language.extensions && language.extensions.includes(extension)) {
       return language.id
     }
   }
-  const baseName = getBaseName(path)
   for (const language of languages) {
     if (
       language.fileNames &&
       Array.isArray(language.fileNames) &&
-      language.fileNames.includes(baseName)
+      language.fileNames.includes(fileName)
     ) {
       return language.id
     }
