@@ -5,6 +5,7 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Widget from '../Widget/Widget.js'
 import * as Assert from '../Assert/Assert.js'
+import * as AriaAlert from '../AriaAlert/AriaAlert.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -322,6 +323,7 @@ export const create = (value, visiblePicks, focusIndex) => {
     $QuickPick,
     $QuickPickInput,
     $QuickPickItems,
+    $QuickPickStatus: undefined,
   }
 }
 
@@ -329,11 +331,17 @@ export const setPicks = (state, visiblePicks) => {
   render$QuickPickItems(state.$QuickPickItems, visiblePicks)
 }
 
+const create$QuickPickStatus = () => {
+  const $QuickPickStatus = document.createElement('div')
+  // const te.$QuickPickStatus.role = 'status'
+  $QuickPickStatus.ariaLive = 'polite'
+  $QuickPickStatus.id = 'QuickPickStatus'
+  return $QuickPickStatus
+}
+
 export const showNoResults = (state, noResults, unfocusIndex) => {
-  console.log({ noResults })
-  updatePicks(state, [noResults], unfocusIndex)
-  Widget.append(state.$QuickPick)
-  Focus.focus(state.$QuickPickInput, 'quickPickInput')
+  setPicks(state, [])
+  AriaAlert.alert('No results')
 }
 
 // TODO QuickPick module is always loaded lazily -> can create $QuickPick eagerly (no state / less state laying around)

@@ -563,6 +563,13 @@ const renderItems = {
     )
   },
   apply(oldState, newState) {
+    if (newState.items.length === 0) {
+      return [
+        /* Viewlet.send */ 'Viewlet.send',
+        /* id */ 'QuickPick',
+        /* method */ 'showNoResults',
+      ]
+    }
     const visibleItems = getVisible(
       newState.items,
       newState.minLineY,
