@@ -5,16 +5,40 @@ import * as ExtensionHostLanguages from '../ExtensionHost/ExtensionHostLanguages
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 
 export const state = {
+  /**
+   * @type {any[]}
+   */
   languages: [],
   loadState: false,
   isHydrating: false,
 }
 
+const getBaseName = (path) => {
+  for (let i = path.length - 1; i >= 0; i--) {
+    if (path[i] === '/' || path[i] === '\\') {
+      return path.slice(i + 1)
+    }
+  }
+  return '<unknown>'
+}
+
 export const getLanguageId = (path) => {
   Assert.string(path)
   const extension = path.slice(path.lastIndexOf('.'))
-  for (const language of state.languages) {
+  console.log(state.languages)
+  const { languages } = state
+  for (const language of languages) {
     if (language.extensions && language.extensions.includes(extension)) {
+      return language.id
+    }
+  }
+  const baseName = getBaseName(path)
+  for (const language of languages) {
+    if (
+      language.fileNames &&
+      Array.isArray(language.fileNames) &&
+      language.fileNames.includes(baseName)
+    ) {
       return language.id
     }
   }
