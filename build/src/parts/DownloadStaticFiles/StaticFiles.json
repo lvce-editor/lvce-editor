@@ -1,0 +1,62 @@
+[
+  {
+    "name": "ky",
+    "version": "0.31.0",
+    "type": "javascript"
+  },
+  {
+    "name": "p-min-delay",
+    "version": "4.0.1",
+    "type": "javascript"
+  },
+  {
+    "name": "pretty-bytes",
+    "version": "6.0.0",
+    "type": "javascript"
+  },
+  {
+    "name": "js-base64",
+    "version": "3.7.2",
+    "type": "file",
+    "url": "https://unpkg.com/js-base64@3.7.2/base64.mjs"
+  },
+  {
+    "name": "blob-util",
+    "version": "2.0.2",
+    "type": "javascript"
+  },
+  {
+    "name": "termterm",
+    "version": "0.0.22",
+    "type": "javascript"
+  },
+  {
+    "name": "termterm",
+    "version": "0.0.22",
+    "type": "css",
+    "path": "css/termterm.css"
+  },
+  {
+    "name": "modern-normalize",
+    "version": "1.1.0",
+    "type": "css",
+    "path": "modern-normalize.css"
+  },
+  {
+    "name": "idb",
+    "version": "7.0.2",
+    "type": "file-collection",
+    "urls": [
+      "https://unpkg.com/idb@7.0.2/build/index.js",
+      "https://unpkg.com/idb@7.0.2/with-async-ittr.js",
+      "https://unpkg.com/idb@7.0.2/build/wrap-idb-value.js",
+      "https://unpkg.com/idb@7.0.2/build/async-iterators.js"
+    ],
+    "additionalFiles": [
+      {
+        "path": "static/js/idb/with-async-ittr.js",
+        "content": "export * from './index.js';\nimport './async-iterators.js';\n"
+      }
+    ]
+  }
+]
