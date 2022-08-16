@@ -15,6 +15,9 @@ download_dependencies(){
     NEW_IMPORT_PACKAGE_NAME=$(echo $line | sed -r 's/^import (.+) from "\/-\/(.+)@(.+)";/\2/' )
     NEW_IMPORT_HASH=$(echo $line | sed -r 's/^import (.+) from "\/-\/(.+)@(.+)";/\3/' )
     NEW_IMPORT_URL="https://cdn.skypack.dev/-/$NEW_IMPORT_PACKAGE_NAME@$NEW_IMPORT_HASH"
+    echo $NEW_IMPORT_PACKAGE_NAME
+    echo $NEW_IMPORT_HASH
+    echo $NEW_IMPORT_URL
     curl $NEW_IMPORT_URL > static/js/$NEW_IMPORT_PACKAGE_NAME.js
     sed -i "s~\/\-\/$NEW_IMPORT_PACKAGE_NAME@$NEW_IMPORT_HASH~\.\/$NEW_IMPORT_PACKAGE_NAME.js~" static/js/$PACKAGE_NAME.js
     download_dependencies $NEW_IMPORT_PACKAGE_NAME
@@ -26,6 +29,7 @@ download_pkg(){
   PACKAGE_VERSION=$2
   NEW_URL="https://cdn.skypack.dev$(curl https://cdn.skypack.dev/$PACKAGE_NAME@$PACKAGE_VERSION | grep "export \*" | sed -r "s/export \* from '(.*)';/\1/")"
   mkdir -p static/js
+  mkdir -p static/js/@babel
   curl $NEW_URL > static/js/$PACKAGE_NAME.js
   download_dependencies $PACKAGE_NAME
 }
@@ -42,6 +46,7 @@ download_file(){
   PACKAGE_NAME=$1
   URL=$2
   mkdir -p static/js
+  mkdir -p static/js/@babel
   curl $URL > static/js/$PACKAGE_NAME.js
 }
 
@@ -53,6 +58,7 @@ download_pkg "p-min-delay" "4.0.1"
 download_pkg "pretty-bytes" "6.0.0"
 download_file "js-base64" "https://unpkg.com/js-base64@3.7.2/base64.mjs"
 download_pkg "blob-util" "2.0.2"
+download_pkg "@babel/code-frame" "7.18.6"
 download_pkg "termterm" "0.0.22"
 download_css "termterm" "0.0.22" "css/termterm.css"
 download_css "modern-normalize" "1.1.0" "modern-normalize.css"
