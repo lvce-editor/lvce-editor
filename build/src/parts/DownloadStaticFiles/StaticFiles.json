@@ -15,6 +15,11 @@
     "type": "javascript"
   },
   {
+    "name": "@babel/code-frame",
+    "version": "7.18.6",
+    "type": "javascript"
+  },
+  {
     "name": "js-base64",
     "version": "3.7.2",
     "type": "file",
