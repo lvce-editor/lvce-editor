@@ -133,7 +133,7 @@
     "label": "Extensions: Open Cached Extensions Folder"
   },
   {
-    "id": "Focus.ActivityBar",
+    "id": "ActivityBar.focus",
     "label": "Focus: ActivityBar"
   },
   {
