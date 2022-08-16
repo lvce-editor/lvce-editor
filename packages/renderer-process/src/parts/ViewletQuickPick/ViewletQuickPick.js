@@ -234,18 +234,10 @@ const render$QuickPickItems = ($QuickPickItems, quickPickItems) => {
   }
 }
 
-export const updatePicks = (state, visiblePicks, unFocusIndex) => {
-  Assert.object(state)
-  Assert.array(visiblePicks)
-  Assert.number(unFocusIndex)
-  // TODO avoid copying on every keyboard input event
-  // const allPicks = [...slicedPicks]
-  // List.setItems(state.list, total, allPicks)
-  render$QuickPickItems(state.$QuickPickItems, visiblePicks)
-  focusIndex(state, unFocusIndex, 0) // TODO handle length zero
-}
-
 export const setVisiblePicks = (state, visiblePicks) => {
+  if (state.$QuickPickStatus) {
+    hideStatus(state)
+  }
   render$QuickPickItems(state.$QuickPickItems, visiblePicks)
 }
 
@@ -333,15 +325,26 @@ export const setPicks = (state, visiblePicks) => {
 
 const create$QuickPickStatus = () => {
   const $QuickPickStatus = document.createElement('div')
+  $QuickPickStatus.className = 'QuickPickStatus'
   // const te.$QuickPickStatus.role = 'status'
-  $QuickPickStatus.ariaLive = 'polite'
-  $QuickPickStatus.id = 'QuickPickStatus'
+  // $QuickPickStatus.ariaLive = 'polite'
+  // $QuickPickStatus.id = 'QuickPickStatus'
   return $QuickPickStatus
+}
+
+export const hideStatus = (state) => {
+  state.$QuickPickStatus.remove()
+  state.$QuickPickStatus = undefined
 }
 
 export const showNoResults = (state, noResults, unfocusIndex) => {
   setPicks(state, [])
   AriaAlert.alert('No results')
+  if (!state.$QuickPickStatus) {
+    state.$QuickPickStatus = create$QuickPickStatus()
+    state.$QuickPick.append(state.$QuickPickStatus)
+  }
+  state.$QuickPickStatus.textContent = 'No Results'
 }
 
 // TODO QuickPick module is always loaded lazily -> can create $QuickPick eagerly (no state / less state laying around)
