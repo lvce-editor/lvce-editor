@@ -141,11 +141,13 @@ const handleContextMenu = (event) => {
   const index = findIndex($Target)
   const x = event.clientX
   const y = event.clientY
+  const button = event.button
   RendererWorker.send(
     /* Explorer.handleContextMenu */ 'Explorer.handleContextMenu',
     /* x */ x,
     /* y */ y,
-    /* index */ index
+    /* index */ index,
+    /* button */ button
   )
 }
 
