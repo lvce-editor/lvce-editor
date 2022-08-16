@@ -88,7 +88,8 @@ const filterPicks = (state, picks, exclude, value) => {
 const getVisible = (items, minLineY, maxLineY) => {
   const visibleItems = []
   const setSize = items.length
-  for (let i = minLineY; i < maxLineY; i++) {
+  const max = Math.min(items.length, maxLineY)
+  for (let i = minLineY; i < max; i++) {
     const item = items[i]
     visibleItems.push({
       label: item.label,
