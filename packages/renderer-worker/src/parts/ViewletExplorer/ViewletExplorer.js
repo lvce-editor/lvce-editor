@@ -58,7 +58,13 @@ const compareDirent = (direntA, direntB) => {
   )
 }
 
-const toDisplayDirents = (root, pathSeparator, rawDirents, parentDirent) => {
+const toDisplayDirents = (
+  root,
+  pathSeparator,
+  rawDirents,
+  parentDirent,
+  startIndex
+) => {
   rawDirents.sort(compareDirent) // TODO maybe shouldn't mutate input argument, maybe sort after mapping
   // TODO figure out whether this uses too much memory (name,path -> redundant, depth could be computed on demand)
   const toDisplayDirent = (rawDirent, index) => {
@@ -73,15 +79,22 @@ const toDisplayDirents = (root, pathSeparator, rawDirents, parentDirent) => {
       type: rawDirent.type,
       path, // TODO storing absolute path might be too costly, could also store relative path here
       icon: IconTheme.getIcon(rawDirent),
+      index: startIndex + index,
     }
   }
   return rawDirents.map(toDisplayDirent)
 }
 
-const getChildDirents = async (root, pathSeparator, parentDirent) => {
+const getChildDirents = async (
+  root,
+  pathSeparator,
+  parentDirent,
+  startIndex
+) => {
   Assert.string(root)
   Assert.string(pathSeparator)
   Assert.object(parentDirent)
+  Assert.number(startIndex)
   // TODO use event/actor based code instead, this is impossible to cancel right now
   // also cancel updating when opening new folder
   // const dispose = state => state.pendingRequests.forEach(cancelRequest)
@@ -94,7 +107,8 @@ const getChildDirents = async (root, pathSeparator, parentDirent) => {
     root,
     pathSeparator,
     rawDirents,
-    parentDirent
+    parentDirent,
+    startIndex
   )
   return displayDirents
 }
@@ -161,11 +175,16 @@ const getTopLevelDirents = (root, pathSeparator) => {
   if (!root) {
     return []
   }
-  return getChildDirents(root, pathSeparator, {
-    depth: 0,
-    path: root,
-    type: 'directory',
-  })
+  return getChildDirents(
+    root,
+    pathSeparator,
+    {
+      depth: 0,
+      path: root,
+      type: 'directory',
+    },
+    0
+  )
 }
 
 // export const contentLoadedEffects = (state) => {

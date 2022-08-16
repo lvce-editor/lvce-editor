@@ -500,6 +500,75 @@ test('event - contextmenu', () => {
   )
 })
 
+test('event - contextmenu - triggered via keyboard', () => {
+  const state = ViewletExplorer.create()
+  ViewletExplorer.updateDirents(state, [
+    {
+      name: '.gitkeep',
+      depth: 1,
+      type: 'file',
+      path: '/.gitkeep',
+      setSize: 5,
+      posInSet: 1,
+      index: 0,
+    },
+    {
+      name: 'another-folder',
+      depth: 1,
+      type: 'directory',
+      path: '/another-folder',
+      setSize: 5,
+      posInSet: 2,
+      index: 1,
+    },
+    {
+      name: 'index.css',
+      depth: 1,
+      type: 'file',
+      path: '/index.css',
+      setSize: 5,
+      posInSet: 3,
+      index: 2,
+    },
+    {
+      name: 'index.html',
+      depth: 1,
+      type: 'file',
+      path: '/index.html',
+      setSize: 5,
+      posInSet: 4,
+      index: 3,
+    },
+    {
+      name: 'nested',
+      depth: 1,
+      type: 'directory',
+      path: '/nested',
+      setSize: 5,
+      posInSet: 5,
+      index: 4,
+    },
+  ])
+  ViewletExplorer.setFocusedIndex(state, -1, 1)
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  state.$Viewlet.dispatchEvent(
+    new MouseEvent('contextmenu', {
+      clientX: 50,
+      clientY: 50,
+      bubbles: true,
+      button: -1,
+    })
+  )
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Explorer.handleContextMenu',
+    50,
+    50,
+    -1,
+    -1
+  )
+})
+
 // TODO test expand/collapse
 
 // TODO test focus

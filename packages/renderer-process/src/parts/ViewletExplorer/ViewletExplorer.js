@@ -135,13 +135,27 @@ const handleDrop = async (event) => {
   // console.log(content)
 }
 
+const getContextMenuPosition = (event) => {
+  const x = event.clientX
+  const y = event.clientY
+  const button = event.button
+  if (button === -1) {
+    const $Target = event.target
+    console.log($Target.getAttribute('aria-activedescendant'))
+    // TODO
+  }
+  return {
+    x,
+    y,
+    button,
+  }
+}
+
 const handleContextMenu = (event) => {
   event.preventDefault()
   const $Target = event.target
   const index = findIndex($Target)
-  const x = event.clientX
-  const y = event.clientY
-  const button = event.button
+  const { x, y, button } = getContextMenuPosition(event)
   RendererWorker.send(
     /* Explorer.handleContextMenu */ 'Explorer.handleContextMenu',
     /* x */ x,
@@ -272,6 +286,7 @@ const render$Row = ($Row, rowInfo) => {
   $Row.ariaLevel = `${rowInfo.depth}`
   $Row.ariaPosInSet = `${rowInfo.posInSet}`
   $Row.ariaLabel = rowInfo.name
+  $Row.id = `ExplorerItem-${rowInfo.index}`
   $Row.ariaDescription = ''
   switch (rowInfo.type) {
     // TODO decide on directory vs folder
@@ -365,14 +380,17 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
   switch (newIndex) {
     case -2:
       $Viewlet.classList.remove('FocusOutline')
+      $Viewlet.removeAttribute('aria-activedescendant')
       break
     case -1:
       $Viewlet.classList.add('FocusOutline')
+      $Viewlet.removeAttribute('aria-activedescendant')
       $Viewlet.focus()
       break
     default:
       const $Dirent = $Viewlet.children[newIndex]
       $Dirent.classList.add('FocusOutline')
+      $Viewlet.setAttribute('aria-activedescendant', $Dirent.id)
       $Viewlet.focus()
       break
   }
