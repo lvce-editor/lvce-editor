@@ -128,7 +128,7 @@ const downloadStaticFileCollection = async (staticFile) => {
   Assert.array(staticFile.urls)
   const name = staticFile.name
   for (const url of staticFile.urls) {
-    const fileName = Path.baseName(url)
+    const fileName = Path.baseName(url).replace(/\.mjs$/, '.js')
     const outFile = Path.absolute(`static/js/${name}/${fileName}`)
     await downloadFile(url, outFile)
   }
