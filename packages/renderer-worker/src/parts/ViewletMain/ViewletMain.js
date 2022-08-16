@@ -66,10 +66,13 @@ const restoreEditors = async (state) => {
   //   Command.execute(/* Developer.openPerf */ 820)
   //   return
   // }
+  // @ts-ignore
   await openUri(state, restoredEditor.uri)
 }
 
 const handleTokenizeChange = (languageId) => {
+  // @ts-ignore
+
   const instances = ViewletState.getAllInstances()
   if (instances.EditorText) {
     const instance = instances.EditorText
@@ -171,6 +174,8 @@ const getRestoredEditors = async () => {
 
 export const loadContent = async (state) => {
   const editors = await getRestoredEditors()
+  // @ts-ignore
+
   LifeCycle.once(LifeCycle.PHASE_TWELVE, hydrateLazy)
   return {
     ...state,
@@ -208,6 +213,8 @@ export const contentLoaded = async (state) => {
     /* tabTitle */ tabTitle
   )
   // TODO race condition: Viewlet may have been resized before it has loaded
+  // @ts-ignore
+
   await ViewletManager.load(instance)
 }
 
@@ -231,6 +238,8 @@ export const openUri = async (state, uri) => {
         width,
         height
       )
+      // @ts-ignore
+
       await ViewletManager.load(instance)
       return
     }
@@ -259,6 +268,8 @@ export const openUri = async (state, uri) => {
     /* tabTitle */ tabTitle,
     /* oldActiveIndex */ oldActiveIndex
   )
+  // @ts-ignore
+
   return ViewletManager.load(instance)
 }
 
@@ -417,6 +428,7 @@ export const focusIndex = (state, index) => {
     /* unFocusIndex */ oldActiveIndex,
     /* focusIndex */ state.activeIndex
   )
+  // @ts-ignore
   return ViewletManager.load(viewlet)
 }
 
