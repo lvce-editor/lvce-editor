@@ -252,12 +252,13 @@ export const handleInput = async (state, value, cursorOffset) => {
   const newPicks = await state.provider.getPicks(value)
   const filterValue = state.provider.getFilterValue(value)
   const items = getFilteredItems(state, newPicks, filterValue)
+  const focusedIndex = items.length === 0 ? -1 : 0
   return {
     ...state,
     value,
     picks: newPicks,
     items,
-    focusedIndex: 0,
+    focusedIndex,
     cursorOffset,
   }
 }

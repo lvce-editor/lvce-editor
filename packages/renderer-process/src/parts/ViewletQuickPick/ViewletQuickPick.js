@@ -245,12 +245,16 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
   const { $QuickPickItems, $QuickPickInput } = state
   if (oldFocusedIndex !== -1) {
     const $OldItem = $QuickPickItems.children[oldFocusedIndex]
-    $OldItem.classList.remove('Focused')
+    if ($OldItem) {
+      $OldItem.classList.remove('Focused')
+    }
   }
   if (newFocusedIndex >= 0) {
     const $NewItem = $QuickPickItems.children[newFocusedIndex]
-    $NewItem.classList.add('Focused')
-    $QuickPickInput.setAttribute('aria-activedescendant', $NewItem.id)
+    if ($NewItem) {
+      $NewItem.classList.add('Focused')
+      $QuickPickInput.setAttribute('aria-activedescendant', $NewItem.id)
+    }
   }
 }
 
@@ -339,12 +343,14 @@ export const hideStatus = (state) => {
 
 export const showNoResults = (state, noResults, unfocusIndex) => {
   setPicks(state, [])
-  AriaAlert.alert('No results')
   if (!state.$QuickPickStatus) {
     state.$QuickPickStatus = create$QuickPickStatus()
     state.$QuickPick.append(state.$QuickPickStatus)
   }
   state.$QuickPickStatus.textContent = 'No Results'
+
+  // announce to screenreaders that there are no results
+  AriaAlert.alert('No results')
 }
 
 // TODO QuickPick module is always loaded lazily -> can create $QuickPick eagerly (no state / less state laying around)
