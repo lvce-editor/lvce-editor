@@ -17,8 +17,8 @@
   {
     "name": "js-base64",
     "version": "3.7.2",
-    "type": "file-collection",
-    "urls": ["https://unpkg.com/js-base64@3.7.2/base64.mjs"]
+    "type": "file",
+    "url": "https://unpkg.com/js-base64@3.7.2/base64.mjs"
   },
   {
     "name": "blob-util",

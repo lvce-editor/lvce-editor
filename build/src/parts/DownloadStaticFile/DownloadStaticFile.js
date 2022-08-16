@@ -124,6 +124,15 @@ const downloadStaticFileJs = async (staticFile) => {
   }
 }
 
+const downloadStaticFileFile = async (staticFile) => {
+  Assert.string(staticFile.url)
+  const name = staticFile.name
+  const url = staticFile.url
+  const fileName = `${name}.js`
+  const outFile = Path.absolute(`static/js/${fileName}`)
+  await downloadFile(url, outFile)
+}
+
 const downloadStaticFileCollection = async (staticFile) => {
   Assert.array(staticFile.urls)
   const name = staticFile.name
@@ -145,6 +154,8 @@ export const downloadStaticFile = async (staticFile) => {
       return downloadStaticFileJs(staticFile)
     case 'file-collection':
       return downloadStaticFileCollection(staticFile)
+    case 'file':
+      return downloadStaticFileFile(staticFile)
     default:
       throw new Error(`unsupported file type ${staticFile.type}`)
   }
