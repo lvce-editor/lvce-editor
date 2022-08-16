@@ -90,3 +90,23 @@ test.skip('hydrate', async () => {
     'ExtensionHost.getLanguages'
   )
 })
+
+test('getLanguageId - by extension', () => {
+  Languages.state.languages = [
+    {
+      id: 'plaintext',
+      extensions: ['.txt'],
+    },
+  ]
+  expect(Languages.getLanguageId('/test/index.txt')).toBe('plaintext')
+})
+
+test('getLanguageId - by file name', () => {
+  Languages.state.languages = [
+    {
+      id: 'dockerfile',
+      fileNames: ['Dockerfile'],
+    },
+  ]
+  expect(Languages.getLanguageId('Dockerfile')).toBe('dockerfile')
+})

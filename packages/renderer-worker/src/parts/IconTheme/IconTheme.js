@@ -5,6 +5,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import { VError } from '../VError/VError.js'
 
 const CACHE_KEY = '/icon-theme.css'
 
@@ -65,9 +66,11 @@ export const getFileIcon = (file) => {
 
 export const getFolderIcon = (folder) => {
   const iconTheme = state.iconTheme
+  // @ts-ignore
   if (!iconTheme || !iconTheme.folderNames) {
     return ''
   }
+  // @ts-ignore
   const folderIcon = iconTheme.folderNames[folder.name.toLowerCase()]
   if (folderIcon) {
     return folderIcon
@@ -80,9 +83,11 @@ const getFolderIconExpanded = (folder) => {
   if (!iconTheme) {
     return ''
   }
+  // @ts-ignore
   if (!iconTheme.folderNamesExpanded) {
     return DEFAULT_FOLDER_ICON_OPEN
   }
+  // @ts-ignore
   const folderName = iconTheme.folderNamesExpanded[folder.name.toLowerCase()]
   if (folderName) {
     return folderName
@@ -164,8 +169,6 @@ export const hydrate = async () => {
     // GlobalEventBus.addListener('dirents.update', handleDirentsUpdate)
     // GlobalEventBus.addListener('languages.changed', handleLanguagesUpdate)
   } catch (error) {
-    // TODO
-    console.info(`[info] ${error.message}`)
-    // console.error(error)
+    console.error(new VError(error, `Failed to load icon theme`))
   }
 }

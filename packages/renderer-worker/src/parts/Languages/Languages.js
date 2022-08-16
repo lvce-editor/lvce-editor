@@ -5,16 +5,30 @@ import * as ExtensionHostLanguages from '../ExtensionHost/ExtensionHostLanguages
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 
 export const state = {
+  /**
+   * @type {any[]}
+   */
   languages: [],
   loadState: false,
   isHydrating: false,
 }
 
-export const getLanguageId = (path) => {
-  Assert.string(path)
-  const extension = path.slice(path.lastIndexOf('.'))
-  for (const language of state.languages) {
+export const getLanguageId = (fileName) => {
+  Assert.string(fileName)
+  const extension = fileName.slice(fileName.lastIndexOf('.'))
+  // console.log(state.languages)
+  const { languages } = state
+  for (const language of languages) {
     if (language.extensions && language.extensions.includes(extension)) {
+      return language.id
+    }
+  }
+  for (const language of languages) {
+    if (
+      language.fileNames &&
+      Array.isArray(language.fileNames) &&
+      language.fileNames.includes(fileName)
+    ) {
       return language.id
     }
   }
@@ -61,7 +75,7 @@ export const waitForLoad = async () => {
   if (state.isHydrating) {
     await new Promise((resolve) => {
       const handleLanguageChange = (editor, languageId) => {
-        resolve()
+        resolve(undefined)
       }
       // TODO remove event listener when promise is resolved
       // TODO what if this event is never emitted (e.g. languages fail to load)
