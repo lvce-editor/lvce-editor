@@ -17,6 +17,11 @@ import { QuickPick } from '../../renderer-worker/src/parts/TestFrameWorkComponen
 // windows narrator says:  "layout, toggle panel, 2 of 92, selected"
 // orca says:  "layout, toggle panel"
 
+// no results
+// nvda says:  ""
+// windows narrator says:  ""
+// orca says:  "No results"
+
 test('viewlet.quick-pick-no-results', async () => {
   // act
   await QuickPick.open()
@@ -37,4 +42,12 @@ test('viewlet.quick-pick-no-results', async () => {
     'aria-activedescendant',
     'QuickPickItem-2'
   )
+
+  // act
+  await QuickPick.setValue('not-found')
+
+  // assert
+  const noResultMessage = Locator('.QuickPickStatus')
+  await expect(noResultMessage).toBeVisible()
+  await expect(noResultMessage).toHaveText('No Results')
 })
