@@ -30,6 +30,11 @@
     "version": "0.0.2"
   },
   {
+    "name": "builtin.language-basics-plaintext",
+    "repository": "github.com/lvce-editor/language-basics-plaintext",
+    "version": "0.0.1"
+  },
+  {
     "name": "builtin.language-basics-java",
     "repository": "github.com/lvce-editor/language-basics-java",
     "version": "0.0.1"
