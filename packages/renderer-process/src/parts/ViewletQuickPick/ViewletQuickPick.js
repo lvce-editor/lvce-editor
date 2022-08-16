@@ -288,8 +288,6 @@ export const create = (value, visiblePicks, focusIndex) => {
   $QuickPickInput.role = 'combobox'
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
   $QuickPickInput.ariaAutoComplete = 'list'
-  $QuickPickInput.setAttribute('aria-activedescendant', '')
-  $QuickPickInput.setAttribute('aria-activedescendant', 'QuickPickItem-1') // TODO only if list length is not zero
   $QuickPickInput.onblur = handleBlur
   $QuickPickInput.oninput = handleInput
   $QuickPickInput.addEventListener('beforeinput', handleBeforeInput)
@@ -316,11 +314,6 @@ export const create = (value, visiblePicks, focusIndex) => {
   $QuickPick.append($QuickPickHeader, $QuickPickItems)
   // $QuickPick.setAttribute('aria-modal', 'false') // TODO why is this
   $QuickPick.ariaLabel = 'Quick open'
-
-  // workaround for chrome bug (maybe?), role application is already on body but
-  // chrome sometimes uses role document
-  // @ts-ignore
-  document.body.role = 'application'
 
   Widget.append($QuickPick)
   Focus.focus($QuickPickInput, 'quickPickInput')
