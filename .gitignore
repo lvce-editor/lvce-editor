@@ -16,6 +16,7 @@ extensions/builtin.language-basics-dart
 extensions/builtin.language-basics-julia
 extensions/builtin.language-basics-cpp
 extensions/builtin.language-basics-json
+extensions/builtin.language-basics-plaintext
 extensions/builtin.language-features-html
 extensions/builtin.language-basics-typescript
 
