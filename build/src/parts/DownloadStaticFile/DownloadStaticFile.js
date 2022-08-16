@@ -141,6 +141,14 @@ const downloadStaticFileCollection = async (staticFile) => {
     const outFile = Path.absolute(`static/js/${name}/${fileName}`)
     await downloadFile(url, outFile)
   }
+  if (staticFile.additionalFiles) {
+    for (const additionalFile of staticFile.additionalFiles) {
+      Assert.string(additionalFile.path)
+      Assert.string(additionalFile.content)
+      const path = Path.absolute(additionalFile.path)
+      await writeFile(path, additionalFile.content)
+    }
+  }
 }
 
 export const downloadStaticFile = async (staticFile) => {

@@ -51,6 +51,12 @@
       "https://unpkg.com/idb@7.0.2/with-async-ittr.js",
       "https://unpkg.com/idb@7.0.2/build/wrap-idb-value.js",
       "https://unpkg.com/idb@7.0.2/build/async-iterators.js"
+    ],
+    "additionalFiles": [
+      {
+        "path": "static/js/idb/width-async-ittr.js",
+        "content": "export * from './index.js';\nimport './async-iterators.js';\n"
+      }
     ]
   }
 ]
