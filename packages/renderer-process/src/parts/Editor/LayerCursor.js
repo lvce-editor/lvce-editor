@@ -38,7 +38,7 @@ const render$Cursor = ($Cursor, $Texts, cursor) => {
 
 const render$CursorsLess = ($Cursors, $Texts, cursors) => {
   for (let i = 0; i < $Cursors.children.length; i++) {
-    render$Cursor($Cursors.children[i], cursors[i])
+    render$Cursor($Cursors.children[i], $Texts, cursors[i])
   }
   const fragment = document.createDocumentFragment()
   for (let i = $Cursors.children.length; i < cursors.length; i++) {
