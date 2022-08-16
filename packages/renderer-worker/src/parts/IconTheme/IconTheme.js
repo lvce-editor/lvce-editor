@@ -61,15 +61,6 @@ export const getFileIcon = (file) => {
   if (extensionIcon) {
     return extensionIcon
   }
-  if (file.name.includes('Docker')) {
-    console.log({
-      file,
-      languageId,
-      languages: Languages.state.languages,
-      ...iconTheme,
-    })
-    globalThis.Languages = Languages
-  }
   return DEFAULT_FILE_ICON
 }
 

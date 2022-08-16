@@ -13,15 +13,6 @@ export const state = {
   isHydrating: false,
 }
 
-const getBaseName = (path) => {
-  for (let i = path.length - 1; i >= 0; i--) {
-    if (path[i] === '/' || path[i] === '\\') {
-      return path.slice(i + 1)
-    }
-  }
-  return '<unknown>'
-}
-
 export const getLanguageId = (fileName) => {
   Assert.string(fileName)
   const extension = fileName.slice(fileName.lastIndexOf('.'))
@@ -84,7 +75,7 @@ export const waitForLoad = async () => {
   if (state.isHydrating) {
     await new Promise((resolve) => {
       const handleLanguageChange = (editor, languageId) => {
-        resolve()
+        resolve(undefined)
       }
       // TODO remove event listener when promise is resolved
       // TODO what if this event is never emitted (e.g. languages fail to load)
