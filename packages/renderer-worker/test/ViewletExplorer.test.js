@@ -4469,6 +4469,50 @@ test('openContainingFolder', async () => {
   expect(Command.execute).toHaveBeenCalledWith('Open.openNativeFolder', '/test')
 })
 
+test('openContainingFolder - nested', async () => {
+  const state1 = {
+    ...ViewletExplorer.create('', 0, 0, 0, 0),
+    root: '/test',
+    focusedIndex: 1,
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 1,
+        type: 'folder',
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'b.txt',
+        path: '/test/a/b.txt',
+        posInSet: 1,
+        setSize: 1,
+        type: 'file',
+      },
+    ],
+  }
+
+  // @ts-ignore
+  Command.execute.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Open.openNativeFolder':
+        break
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  await ViewletExplorer.openContainingFolder(state1)
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'Open.openNativeFolder',
+    '/test/a'
+  )
+})
+
 test.skip('revealItem - error - not found', async () => {
   const state = {
     ...ViewletExplorer.create(),

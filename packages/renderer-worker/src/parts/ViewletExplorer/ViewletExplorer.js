@@ -504,8 +504,21 @@ export const copyPath = async (state) => {
   await Command.execute(/* ClipBoard.writeText */ 241, /* text */ path)
 }
 
+const getContaingingFolder = (root, dirents, focusedIndex, pathSeparator) => {
+  if (focusedIndex < 0) {
+    return root
+  }
+  const dirent = dirents[focusedIndex]
+  const direntPath = dirent.path
+  const direntParentPath = direntPath.slice(0, -(dirent.name.length + 1))
+  const path = `${direntParentPath}`
+  return path
+}
+
 export const openContainingFolder = async (state) => {
-  await Command.execute('Open.openNativeFolder', /* path */ state.root)
+  const { focusedIndex, root, dirents, pathSeparator } = state
+  const path = getContaingingFolder(root, dirents, focusedIndex, pathSeparator)
+  await Command.execute('Open.openNativeFolder', /* path */ path)
   return state
 }
 
