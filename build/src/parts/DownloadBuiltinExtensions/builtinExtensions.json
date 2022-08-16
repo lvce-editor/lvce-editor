@@ -35,6 +35,11 @@
     "version": "0.0.1"
   },
   {
+    "name": "builtin.language-basics-docker",
+    "repository": "github.com/lvce-editor/language-basics-docker",
+    "version": "0.0.1"
+  },
+  {
     "name": "builtin.language-basics-java",
     "repository": "github.com/lvce-editor/language-basics-java",
     "version": "0.0.1"
