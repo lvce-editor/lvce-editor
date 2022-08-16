@@ -62,7 +62,7 @@ const TEMPLATE_TEST_HTML = `<!DOCTYPE html>
 </html>
 `
 
-const main = async () => {
+const createUiTestOverview = async () => {
   const dirents = await readdir(
     join(root, 'packages', 'extension-host-worker-tests', 'src')
   )
@@ -82,6 +82,26 @@ const main = async () => {
     const to = join(root, 'static', 'tests', `${name}.html`)
     const from = './_template.html'
     await symlink(from, to)
+  }
+}
+
+const main = async () => {
+  try {
+    await createUiTestOverview()
+  } catch (error) {
+    if (
+      error &&
+      error instanceof Error &&
+      error.message.includes('EPERM: operation not permitted, symlink') &&
+      process.platform === 'win32'
+    ) {
+      console.log(
+        `Failed to create symlinks ${error.message} (possible solution: run this script with a cmd with root access)`
+      )
+    } else {
+      console.error(error)
+    }
+    process.exit(1)
   }
 }
 
