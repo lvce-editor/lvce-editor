@@ -1,4 +1,8 @@
-import { test } from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
+import {
+  expect,
+  Locator,
+  test,
+} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
 import {
   Extension,
   FileSystem,
@@ -22,9 +26,6 @@ test('sample.text-search-provider-error', async () => {
   // act
   await Search.setValue('abc')
 
-  // assert
-  // TODO search viewlet should show error message
-  // await expect(overlayMessage).toHaveText(
-  // 'Failed to search provider: oops'
-  // )
+  const viewletSearch = Locator('.Viewlet[data-viewlet-id="Search"]')
+  await expect(viewletSearch).toHaveText('Error: oops')
 })
