@@ -94,7 +94,10 @@ const getIpc = () => {
     })
   }
   if (platform === 'electron') {
-    return IpcParent.create({ method: IpcParent.Methods.Electron })
+    return IpcParent.create({
+      method: IpcParent.Methods.Electron,
+      type: 'shared-process',
+    })
   }
   throw new Error('unsupported platform')
 }
