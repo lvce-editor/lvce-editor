@@ -6,11 +6,10 @@ import {
 import {
   Explorer,
   FileSystem,
-  KeyBoard,
   Workspace,
 } from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
 
-test.skip('viewlet.explorer-keyboard-navigation', async () => {
+test('viewlet.explorer-keyboard-navigation', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.mkdir(`${tmpDir}/a/b`)
@@ -30,7 +29,7 @@ test.skip('viewlet.explorer-keyboard-navigation', async () => {
   await expect(explorer).toHaveClass('FocusOutline')
 
   // act
-  await KeyBoard.press('ArrowDown')
+  await Explorer.focusNext()
 
   // assert
   const titleA = '/a'
@@ -38,7 +37,7 @@ test.skip('viewlet.explorer-keyboard-navigation', async () => {
   await expect(treeItemA).toHaveClass('FocusOutline')
 
   // act
-  await KeyBoard.press('Space')
+  await Explorer.clickCurrent()
 
   // assert
   const titleB = '/a/b'
@@ -47,13 +46,13 @@ test.skip('viewlet.explorer-keyboard-navigation', async () => {
   await expect(treeItemA).toHaveClass('FocusOutline')
 
   // act
-  await KeyBoard.press('ArrowDown')
+  await Explorer.focusNext()
 
   // assert
   await expect(treeItemB).toHaveClass('FocusOutline')
 
   // act
-  await KeyBoard.press('Enter')
+  await Explorer.clickCurrent()
 
   // assert
   const titleC = '/a/b/c.txt'
@@ -62,48 +61,48 @@ test.skip('viewlet.explorer-keyboard-navigation', async () => {
   await expect(treeItemB).toHaveClass('FocusOutline')
 
   // act
-  await KeyBoard.press('ArrowDown')
+  await Explorer.focusNext()
 
   // assert
   await expect(treeItemC).toHaveClass('FocusOutline')
 
   // act
-  await KeyBoard.press('Enter')
+  await Explorer.clickCurrent()
 
   // assert
   const editor = Locator('.Editor')
   await expect(editor).toHaveText('ccccc')
 
   // act
-  await KeyBoard.press('ArrowLeft')
+  await Explorer.handleArrowLeft()
 
   // assert
   await expect(treeItemB).toHaveClass('FocusOutline')
   await expect(treeItemC).toBeVisible()
 
   // act
-  await KeyBoard.press('ArrowLeft')
+  await Explorer.handleArrowLeft()
 
   // assert
   await expect(treeItemB).toHaveClass('FocusOutline')
-  await expect(treeItemC).not.toBeVisible()
+  await expect(treeItemC).toBeHidden()
 
   // act
-  await KeyBoard.press('ArrowLeft')
+  await Explorer.handleArrowLeft()
 
   // assert
   await expect(treeItemA).toHaveClass('FocusOutline')
   await expect(treeItemB).toBeVisible()
 
   // act
-  await KeyBoard.press('ArrowLeft')
+  await Explorer.handleArrowLeft()
 
   // assert
   await expect(treeItemA).toHaveClass('FocusOutline')
-  await expect(treeItemB).not.toBeVisible()
+  await expect(treeItemB).toBeHidden()
 
   // act
-  await KeyBoard.press('End')
+  await Explorer.focusLast()
 
   // assert
   const titleTest = '/test.txt'
@@ -111,19 +110,17 @@ test.skip('viewlet.explorer-keyboard-navigation', async () => {
   await expect(treeItemTestTxt).toHaveClass('FocusOutline')
 
   // act
-  await KeyBoard.press('Home')
+  await Explorer.focusFirst()
 
   // assert
   await expect(treeItemA).toHaveClass('FocusOutline')
 
   // act
-  await KeyBoard.press('Delete')
+  await Explorer.removeDirent()
 
   // assert
-  await expect(treeItemA).not.toBeVisible()
+  await expect(treeItemA).toBeHidden()
   const titleFolder1 = `/folder-1`
   const treeItemFolder1 = Locator(`.TreeItem[title$="${titleFolder1}"]`)
   await expect(treeItemFolder1).toHaveClass('FocusOutline')
-
-  // TODO test rename behavior
 })
