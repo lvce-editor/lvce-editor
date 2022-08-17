@@ -67,10 +67,11 @@ export const setValue = async (state, value) => {
   try {
     const scheme = 'xyz'
     const results = await TextSearch.textSearch(scheme, value)
-    console.log({ results })
+    const displayResults = toDisplayResults(results)
     return {
       ...state,
       value,
+      items: displayResults,
     }
   } catch (error) {
     return {
