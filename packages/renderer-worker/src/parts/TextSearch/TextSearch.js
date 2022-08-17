@@ -18,9 +18,11 @@ const getScheme = (root) => {
 }
 
 export const textSearch = async (root, query) => {
+  console.log({ root, query })
   Assert.string(root)
   Assert.string(query)
   const scheme = getScheme(root)
+  console.log({ scheme })
   const provider = await getProvider(scheme)
   const results = await provider.textSearch(scheme, root, query)
   return results

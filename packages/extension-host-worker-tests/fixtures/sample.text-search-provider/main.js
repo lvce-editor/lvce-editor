@@ -1,5 +1,5 @@
 const textSearchProvider = {
-  scheme: 'xyz',
+  scheme: 'memfs',
   provideTextSearchResults(query) {
     return [
       [

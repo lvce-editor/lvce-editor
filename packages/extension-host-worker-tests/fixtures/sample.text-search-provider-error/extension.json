@@ -1,10 +1,4 @@
 {
   "browser": "main.js",
-  "activation": ["onTextSearch:xyz"],
-  "languages": [
-    {
-      "id": "xyz",
-      "extensions": [".xyz"]
-    }
-  ]
+  "activation": ["onTextSearch:memfs"]
 }

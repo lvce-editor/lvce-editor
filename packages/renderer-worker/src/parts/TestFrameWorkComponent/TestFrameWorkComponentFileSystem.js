@@ -9,5 +9,5 @@ export const mkdir = async (path) => {
 }
 
 export const getTmpDir = async () => {
-  return 'memfs://'
+  return `memfs://`
 }
