@@ -1,8 +1,7 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as Assert from '../Assert/Assert.js'
-import * as Command from '../Command/Command.js'
+import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as QuickPickEveryThing from '../QuickPick/QuickPickEverything.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
@@ -47,7 +46,6 @@ export const create = (id, uri, top, left, width, height) => {
     deltaY: 0,
     itemHeight: 22,
     height: 300,
-    focused: false,
   }
 }
 
@@ -602,25 +600,9 @@ const renderFocusedIndex = {
   },
 }
 
-// const renderFocus = {
-//   isEqual(oldState, newState) {
-//     return oldState.focused === newState.focused
-//   },
-//   apply(oldState, newState) {
-//     if (newState.focused) {
-//       return [
-//         /* Viewlet.send */ 'Viewlet.send',
-//         /* id */ 'QuickPick',
-//         /* method */ 'focus',
-//       ]
-//     }
-//   },
-// }
-
 export const render = [
   renderItems,
   renderValue,
   renderCursorOffset,
   renderFocusedIndex,
-  // renderFocus,
 ]
