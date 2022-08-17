@@ -53,7 +53,7 @@ test('event - input', () => {
   $ViewletSearchInput.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'ViewletSearch.handleInput',
+    'Search.handleInput',
     'test search'
   )
 })
@@ -74,10 +74,7 @@ test('event - click', () => {
   })
   $SearchResults.children[0].dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'ViewletSearch.handleClick',
-    0
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('Search.handleClick', 0)
 })
 
 test('setResults - no results', () => {

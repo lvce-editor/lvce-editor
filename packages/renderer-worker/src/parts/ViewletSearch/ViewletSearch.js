@@ -65,8 +65,8 @@ export const setValue = async (state, value) => {
   // )
   // TODO
   try {
-    const scheme = 'xyz'
-    const results = await TextSearch.textSearch(scheme, value)
+    const root = Workspace.state.workspacePath
+    const results = await TextSearch.textSearch(root, value)
     const displayResults = toDisplayResults(results)
     return {
       ...state,
@@ -131,30 +131,18 @@ const toDisplayResults = (results) => {
   }
   return displayResults
 }
+// TODO implement virtual list, only send visible items to renderer process
+
+// TODO maybe rename to result.items and result.stats
+// TODO support streaming results
+// TODO support cancellation
+// TODO handle error
+// TODO use command.execute or use module directly?
+// TODO send results to renderer process
+// TODO use virtual list because there might be many results
 
 export const handleInput = async (state, value) => {
-  // TODO support streaming results
-  // TODO support cancellation
-  // TODO handle error
-  // TODO use command.execute or use module directly?
-  const results = await FindInWorkspace.findInWorkspace(value)
-  // TODO send results to renderer process
-  // TODO use virtual list because there might be many results
-  console.log({
-    value,
-    results,
-  })
-
-  // TODO implement virtual list, only send visible items to renderer process
-
-  // TODO maybe rename to result.items and result.stats
-  const displayResults = toDisplayResults(results.results)
-  return {
-    ...state,
-    items: displayResults,
-    fileCount: results.results.length, // TODO this is weird
-    value,
-  }
+  return setValue(state, value)
 }
 
 export const handleClick = async (state, index) => {

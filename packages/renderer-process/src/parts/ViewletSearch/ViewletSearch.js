@@ -6,7 +6,7 @@ const handleInput = (event) => {
   const $Target = event.target
   const value = $Target.value
   RendererWorker.send(
-    /* ViewletSearch.handleInput */ 'ViewletSearch.handleInput',
+    /* ViewletSearch.handleInput */ 'Search.handleInput',
     /* value */ value
   )
 }
@@ -25,7 +25,7 @@ const handleClick = (event) => {
     case 'TreeItem':
       const index = getNodeIndex($Target)
       RendererWorker.send(
-        /* ViewletSearch.handleClick */ 'ViewletSearch.handleClick',
+        /* Search.handleClick */ 'Search.handleClick',
         /* index */ index
       )
       break
