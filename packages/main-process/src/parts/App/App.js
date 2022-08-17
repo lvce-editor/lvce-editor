@@ -1,4 +1,4 @@
-const { spawn } = require('child_process')
+const { spawn, fork } = require('child_process')
 const { MessageChannel } = require('worker_threads')
 const { app } = require('electron')
 const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
@@ -40,14 +40,46 @@ const handleBeforeQuit = () => {
 // map windows to folders and ports
 // const windowConfigMap = new Map()
 
-/**
- * @param {import('electron').IpcMainEvent} event
- */
-const handlePort = async (event) => {
-  // console.log({ event })
-  // console.log('GOT PORT', event)
-  // event.sender.on('render-process-gone', listener)
+const handlePortForExtensionHost = async (event) => {
+  const extensionHostPath = Platform.getExtensionHostPath()
+  const start = Date.now()
+  const extensionHost = fork(extensionHostPath, ['--ipc-type=parent'], {
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      ELECTRON_RUN_AS_NODE: '1',
+    },
+  })
+  const end = Date.now()
+  const pid = extensionHost.pid
+  const forkTime = end - start
+  console.info(
+    `[main-process] Starting extension host with pid ${pid} (fork took ${forkTime} ms).`
+  )
+  const browserWindowPort = event.ports[0]
 
+  await new Promise((resolve, reject) => {
+    const handleFirstMessage = (event) => {
+      if (event === 'ready') {
+        resolve(undefined)
+      } else {
+        reject(new Error('unexpected first message'))
+      }
+    }
+    extensionHost.once('message', handleFirstMessage)
+  })
+  browserWindowPort.on('message', (event) => {
+    console.log({ event })
+    extensionHost.send(event.data)
+  })
+  extensionHost.on('message', (event) => {
+    console.log({ event })
+    browserWindowPort.postMessage(event)
+  })
+  browserWindowPort.start()
+}
+
+const handlePortForSharedProcess = async (event) => {
   const config = AppWindow.findById(event.sender.id)
   if (!config) {
     console.warn('port event - config expected')
@@ -89,6 +121,24 @@ const handlePort = async (event) => {
   //   browserWindowPort.postMessage(message)
   // })
   browserWindowPort.start()
+}
+/**
+ * @param {import('electron').IpcMainEvent} event
+ */
+const handlePort = async (event, data) => {
+  // console.log({ event })
+  // const data = event.
+  // console.log('GOT PORT', event)
+  console.log({ data })
+  // event.sender.on('render-process-gone', listener)
+  switch (data) {
+    case 'shared-process':
+      return handlePortForSharedProcess(event)
+    case 'extension-host':
+      return handlePortForExtensionHost(event)
+    default:
+      console.error(`[main-process] unexpected port type ${data}`)
+  }
 }
 
 const getFolder = (args) => {

@@ -9,6 +9,7 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as ExtensionHostManagementBrowser from './ExtensionHostManagementBrowser.js'
 import * as ExtensionHostManagementNode from './ExtensionHostManagementNode.js'
 import * as ExtensionHostManagementShared from './ExtensionHostManagementShared.js'
+import * as ExtensionHostManagementElectron from './ExtensionHostManagementElectron.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const state = {
@@ -24,8 +25,9 @@ const getExtensionHostManagementTypes = () => {
     case 'web':
       return [ExtensionHostManagementBrowser]
     case 'remote':
-    case 'electron':
       return [ExtensionHostManagementBrowser, ExtensionHostManagementNode]
+    case 'electron':
+      return [ExtensionHostManagementBrowser, ExtensionHostManagementElectron]
     default:
       throw new Error('unsupported platform')
   }

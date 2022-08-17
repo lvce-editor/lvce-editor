@@ -52,13 +52,25 @@ const shouldPrintError = (error) => {
   return true
 }
 
-// TODO pass ipc type via argv
-export const listen = async (InternalCommand) => {
-  const ipc = await Ipc.listen(Ipc.Methods.WebSocket)
-  if (!ipc) {
-    console.warn('[extension-host] cannot connect to parent process')
-    process.exit(20)
+const getIpcType = (argv) => {
+  if (argv.includes('--ipc-type=websocket')) {
+    return Ipc.Methods.WebSocket
   }
+  if (argv.includes('--ipc-type=parent')) {
+    return Ipc.Methods.ChildProcess
+  }
+  if (argv.includes('--ipc-type=worker')) {
+    return Ipc.Methods.Worker
+  }
+
+  throw new Error('[extension-host] unknown ipc type')
+}
+
+export const listen = async (InternalCommand) => {
+  const argv = process.argv.slice(2)
+  console.log({ argv })
+  const ipcType = getIpcType(argv)
+  const ipc = await Ipc.listen(ipcType)
   const handleMessage = async (message) => {
     console.log({ message })
     if (Array.isArray(message)) {

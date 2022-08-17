@@ -49,3 +49,23 @@ exports.getScheme = () => {
 exports.getSessionId = () => {
   return process.env.SESSION_ID || `persist:${exports.getScheme()}`
 }
+
+exports.getSharedProcessPath = () => {
+  return join(
+    Root.root,
+    'packages',
+    'shared-process',
+    'src',
+    'sharedProcessMain.js'
+  )
+}
+
+exports.getExtensionHostPath = () => {
+  return join(
+    Root.root,
+    'packages',
+    'extension-host',
+    'src',
+    'extensionHostMain.js'
+  )
+}

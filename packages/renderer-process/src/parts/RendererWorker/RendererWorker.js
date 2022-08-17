@@ -66,7 +66,14 @@ const handleMessageFromRendererWorker = async (event) => {
     Callback.resolve(message.id, message)
     return
   }
-  throw new JsonRpcError('unexpected message from renderer process')
+  if (message.method === 'get-port') {
+    const type = message.params[0]
+    const port = await getPort(type)
+    console.log({ port })
+    state.ipc.sendAndTransfer('port', [port])
+    return
+  }
+  throw new JsonRpcError('unexpected message from renderer worker')
 }
 
 const getIpc = async () => {
@@ -91,32 +98,39 @@ const getIpc = async () => {
   }
 }
 
+const getPort = (type) => {
+  return new Promise((resolve, reject) => {
+    const handleMessageFromWindow = (event) => {
+      const port = event.ports[0]
+      resolve(port)
+    }
+
+    // @ts-ignore
+    window.addEventListener('message', handleMessageFromWindow, {
+      once: true,
+    })
+    // @ts-ignore
+    window.myApi.ipcConnect(type)
+  })
+}
+
 export const hydrate = async (config) => {
   const ipc = await getIpc()
 
   // setup electron message port
   if (Platform.isElectron()) {
-    await new Promise((resolve, reject) => {
-      const handleIpcMessage = (event) => {
-        if (event.data !== 'get-port') {
-          reject(new Error('unexpected message from renderer worker'))
-          return
-        }
-        const handleMessageFromWindow = (event) => {
-          const port = event.ports[0]
-          ipc.sendAndTransfer('port', [port])
-          resolve()
-        }
-
-        // @ts-ignore
-        window.addEventListener('message', handleMessageFromWindow, {
-          once: true,
-        })
-        // @ts-ignore
-        window.myApi.ipcConnect()
+    const event = await new Promise((resolve, reject) => {
+      const handleIpcMessage = async (event) => {
+        resolve(event)
       }
       ipc.onmessage = handleIpcMessage
     })
+    if (event.data.method !== 'get-port') {
+      throw new Error('unexpected message from renderer worker')
+    }
+    const type = event.data.params[0]
+    const port = await getPort(type)
+    ipc.sendAndTransfer('port', [port])
   }
   ipc.onmessage = handleMessageFromRendererWorker
   state.ipc = ipc
@@ -179,7 +193,8 @@ export const invoke = async (method, ...params) => {
   if ('result' in responseMessage) {
     return responseMessage.result
   }
-  throw new JsonRpcError('unexpected message from renderer process')
+
+  throw new JsonRpcError('unexpected message from renderer worker')
 }
 
 export const sendAndTransfer = (message, transfer) => {

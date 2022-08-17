@@ -1,13 +1,16 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Assert from '../Assert/Assert.js'
 
-export const create = async (url, name) => {
+export const create = async (options) => {
+  const type = options.type
+  Assert.string(type)
   const originalOnMessage = RendererProcess.state.ipc.onmessage
   const port = await new Promise((resolve, reject) => {
     RendererProcess.state.ipc.onmessage = (event) => {
       const port = event.ports[0]
       resolve(port)
     }
-    RendererProcess.state.ipc.send('get-port')
+    RendererProcess.state.ipc.send({ method: 'get-port', params: [type] })
   })
   RendererProcess.state.ipc.onmessage = originalOnMessage
   let handleMessage

@@ -1,7 +1,8 @@
 export const listen = async (commandRegistry) => {
   if (!process.send) {
-    return undefined
+    throw new Error('process.send is not available')
   }
+  process.send('ready')
   return {
     send(message) {
       // @ts-ignore
