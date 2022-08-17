@@ -105,6 +105,9 @@ export const expect = (locator) => {
       )
     },
     async toBeVisible() {
+      if (this.negated) {
+        throw new Error(`use toBeHidden instead of not.toBeVisible`)
+      }
       return this.checkSingleElementCondition('toBeVisible', {})
     },
     async toHaveText(text) {
