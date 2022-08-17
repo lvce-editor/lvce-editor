@@ -1,9 +1,8 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Command from '../Command/Command.js'
-import * as Workspace from '../Workspace/Workspace.js'
-import * as FindInWorkspace from '../FindInWorkspace/FindInWorkspace.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 // TODO maybe create should have a container as param like vscode?
 // maybe not?
