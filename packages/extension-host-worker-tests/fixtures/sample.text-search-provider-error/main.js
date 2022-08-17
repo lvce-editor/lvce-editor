@@ -1,5 +1,5 @@
 const textSearchProvider = {
-  languageId: 'xyz',
+  scheme: 'xyz',
   provideTextSearchResults(query) {
     throw new Error('oops')
   },

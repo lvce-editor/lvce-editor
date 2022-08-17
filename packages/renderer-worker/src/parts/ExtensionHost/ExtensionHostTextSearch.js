@@ -9,7 +9,7 @@ export const executeTextSearchProvider = async (scheme, query) => {
   const result = await ExtensionHostShared.executeProviders({
     event: `onTextSearch:${scheme}`,
     method: 'ExtensionHostTextSearch.executeTextSearchProvider',
-    params: [query],
+    params: [scheme, query],
     noProviderFoundMessage: 'no text search providers found',
     noProviderFoundResult: [],
     combineResults,

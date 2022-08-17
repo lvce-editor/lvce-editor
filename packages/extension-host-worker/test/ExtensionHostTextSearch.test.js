@@ -1,20 +1,40 @@
 import * as ExtensionHostTextSearch from '../src/parts/ExtensionHostTextSearch/ExtensionHostTextSearch.js'
-import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 
 beforeEach(() => {
   ExtensionHostTextSearch.reset()
 })
-// TODO test when provider has wrong type or delivers wrong result
 
-// TODO should have better error message here
-test('registerTabCompletionProvider - no argument provided', () => {
-  TextDocument.setFiles([
-    { path: '/test.index.js', id: 1, languageId: 'javascript', content: '' },
-  ])
+test('registerTextSearchProvider - no argument provided', () => {
   expect(() =>
     ExtensionHostTextSearch.registerTextSearchProvider()
   ).toThrowError(
-    new Error("Cannot read properties of undefined (reading 'scheme')")
+    new Error(
+      'Failed to register text search provider: textSearchProvider is not defined'
+    )
+  )
+})
+
+test('registerTextSearchProvider - missing scheme', () => {
+  expect(() =>
+    ExtensionHostTextSearch.registerTextSearchProvider({
+      provideTextSearchResults(query) {},
+    })
+  ).toThrowError(
+    new Error(
+      'Failed to register text search provider: textSearchProvider is missing scheme'
+    )
+  )
+})
+
+test('registerTextSearchProvider - missing provideTextSearchResults function', () => {
+  expect(() =>
+    ExtensionHostTextSearch.registerTextSearchProvider({
+      provideTextSearchResults(query) {},
+    })
+  ).toThrowError(
+    new Error(
+      'Failed to register text search provider: textSearchProvider is missing scheme'
+    )
   )
 })
 
