@@ -131,7 +131,12 @@ const updateBuiltinExtensions = async () => {
       JSON.stringify(newBuiltinExtensions, null, 2) + '\n'
     )
     // TODO print which releases were updated
-    console.info(`updated ${diffCount} releases in ${duration}ms`)
+    if (diffCount === 1) {
+      console.info(`updated ${diffCount} release in ${duration}ms`)
+    } else {
+      console.info(`updated ${diffCount} releases in ${duration}ms`)
+    }
+    await import('../DownloadBuiltinExtensions/DownloadBuiltinExtensions.js')
   }
 }
 
