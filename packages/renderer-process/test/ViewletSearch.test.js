@@ -79,58 +79,39 @@ test('event - click', () => {
 
 test('setResults - no results', () => {
   const state = ViewletSearch.create()
-  ViewletSearch.setResults(state, [], 0, 0)
-  const $Status = state.$SearchStatus
-  expect($Status.textContent).toBe('No results found')
+  ViewletSearch.setResults(state, [])
+  expect(state.$SearchResults.children).toHaveLength(0)
 })
 
 test('setResults - one result in one file', () => {
   const state = ViewletSearch.create()
-  ViewletSearch.setResults(
-    state,
-    [
-      {
-        name: './result-1.txt',
-      },
-    ],
-    1,
-    1
-  )
-  const $Status = state.$SearchStatus
-  expect($Status.textContent).toBe('Found 1 result in 1 file')
+  ViewletSearch.setResults(state, [
+    {
+      name: './result-1.txt',
+    },
+  ])
+  expect(state.$SearchResults.children).toHaveLength(1)
 })
 
 test('setResults - multiple results in one file', () => {
   const state = ViewletSearch.create()
-  ViewletSearch.setResults(
-    state,
-    [
-      {
-        name: './result-1.txt',
-      },
-    ],
-    2,
-    1
-  )
-  const $Status = state.$SearchStatus
-  expect($Status.textContent).toBe('Found 2 results in 1 file')
+  ViewletSearch.setResults(state, [
+    {
+      name: './result-1.txt',
+    },
+  ])
+  expect(state.$SearchResults.children).toHaveLength(1)
 })
 
 test('setResults - multiple results in multiple files', () => {
   const state = ViewletSearch.create()
-  ViewletSearch.setResults(
-    state,
-    [
-      {
-        name: './result-1.txt',
-      },
-      {
-        name: './result-2.txt',
-      },
-    ],
-    2,
-    2
-  )
-  const $Status = state.$SearchStatus
-  expect($Status.textContent).toBe('Found 2 results in 2 files')
+  ViewletSearch.setResults(state, [
+    {
+      name: './result-1.txt',
+    },
+    {
+      name: './result-2.txt',
+    },
+  ])
+  expect(state.$SearchResults.children).toHaveLength(2)
 })
