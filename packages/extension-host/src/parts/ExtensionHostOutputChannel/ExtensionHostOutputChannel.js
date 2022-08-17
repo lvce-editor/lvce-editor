@@ -1,8 +1,7 @@
 import { createWriteStream, mkdirSync } from 'node:fs'
-import { mkdir } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
-import * as Platform from '../Platform/Platform.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Platform from '../Platform/Platform.js'
 
 export const state = {
   /**
@@ -55,7 +54,6 @@ export const registerOutputChannel = (outputChannel) => {
   outputChannel.path = outPath
   // TODO don't use mkdirSync here
   mkdirSync(dirname(outPath), { recursive: true })
-  console.log({ outPath })
   const writeStream = createWriteStream(outPath)
 
   const handleData = (data) => {
