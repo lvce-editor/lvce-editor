@@ -22,7 +22,7 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   {
     "name": "builtin.language-basics-css",
