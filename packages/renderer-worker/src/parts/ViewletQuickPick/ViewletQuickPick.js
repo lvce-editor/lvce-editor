@@ -184,6 +184,7 @@ export const loadContent = async (state) => {
     minLineY,
     maxLineY,
     value,
+    cursorOffset: value.length,
   }
 }
 
