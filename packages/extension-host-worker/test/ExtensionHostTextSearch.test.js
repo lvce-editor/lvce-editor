@@ -41,5 +41,23 @@ test('registerTextSearchProvider - missing provideTextSearchResults function', (
 test('executeTextSearchProvider - no provider found', async () => {
   await expect(
     ExtensionHostTextSearch.executeTextSearchProvider('xyz', 'abc')
-  ).rejects.toThrowError(new Error('no text search provider for xyz found'))
+  ).rejects.toThrowError(
+    new Error(
+      'Failed to execute text search provider: no text search provider for xyz found'
+    )
+  )
+})
+
+test('executeTextSearchProvider - error', async () => {
+  ExtensionHostTextSearch.registerTextSearchProvider({
+    scheme: 'xyz',
+    provideTextSearchResults(query) {
+      throw new TypeError('x is not a function')
+    },
+  })
+  await expect(
+    ExtensionHostTextSearch.executeTextSearchProvider('xyz', 'abc')
+  ).rejects.toThrowError(
+    new Error('Failed to execute text search provider: x is not a function')
+  )
 })

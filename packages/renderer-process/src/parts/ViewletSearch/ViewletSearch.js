@@ -177,8 +177,11 @@ export const setResults = (state, results, resultCount, fileResultCount) => {
   // TODO should recycle nodes when rendering only search results
   // maybe could also recycle node from noResults and vice versa
   const statusMessage = getStatusMessage(resultCount, fileResultCount)
-  state.$SearchStatus.textContent = statusMessage
   render$Rows(state.$SearchResults, results)
+}
+
+export const setMessage = (state, message) => {
+  state.$SearchStatus.textContent = message
 }
 
 export const dispose = () => {}

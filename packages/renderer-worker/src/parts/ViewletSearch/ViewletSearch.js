@@ -40,6 +40,19 @@ export const loadContent = async (state) => {
 
 export const contentLoaded = async () => {}
 
+const getStatusMessage = (resultCount, fileResultCount) => {
+  if (resultCount === 0) {
+    return 'No results found'
+  }
+  if (resultCount === 1 && fileResultCount === 1) {
+    return 'Found 1 result in 1 file'
+  }
+  if (fileResultCount === 1) {
+    return `Found ${resultCount} results in 1 file`
+  }
+  return `Found ${resultCount} results in ${fileResultCount} files`
+}
+
 // TODO
 export const setValue = async (state, value) => {
   // state.value = value
@@ -51,12 +64,19 @@ export const setValue = async (state, value) => {
   //   /* searchId */ state.searchId
   // )
   // TODO
-  const scheme = 'xyz'
-  const results = await TextSearch.textSearch(scheme, value)
-  console.log({ results })
-  return {
-    ...state,
-    value,
+  try {
+    const scheme = 'xyz'
+    const results = await TextSearch.textSearch(scheme, value)
+    console.log({ results })
+    return {
+      ...state,
+      value,
+    }
+  } catch (error) {
+    return {
+      ...state,
+      message: `${error}`,
+    }
   }
 }
 
@@ -174,4 +194,18 @@ const renderItems = {
   },
 }
 
-export const render = [renderItems]
+const renderMessage = {
+  isEqual(oldState, newState) {
+    return oldState.message === newState.message
+  },
+  apply(oldState, newState) {
+    return [
+      /* viewletSend */ 'Viewlet.send',
+      /* id */ 'Search',
+      /* method */ 'setMessage',
+      /* message */ newState.message,
+    ]
+  },
+}
+
+export const render = [renderItems, renderMessage]

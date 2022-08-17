@@ -19,12 +19,16 @@ export const registerTextSearchProvider = (textSearchProvider) => {
 }
 
 export const executeTextSearchProvider = async (scheme, query) => {
-  const textSearchProvider = state.textSearchProviders[scheme]
-  if (!textSearchProvider) {
-    throw new Error(`no text search provider for ${scheme} found`)
+  try {
+    const textSearchProvider = state.textSearchProviders[scheme]
+    if (!textSearchProvider) {
+      throw new Error(`no text search provider for ${scheme} found`)
+    }
+    const results = await textSearchProvider.provideTextSearchResults(query)
+    return results
+  } catch (error) {
+    throw new VError(error, `Failed to execute text search provider`)
   }
-  const results = await textSearchProvider.provideTextSearchResults(query)
-  return results
 }
 
 export const reset = () => {
