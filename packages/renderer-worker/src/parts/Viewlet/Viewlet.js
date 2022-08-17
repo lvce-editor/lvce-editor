@@ -121,39 +121,52 @@ export const replace = () => {}
 // should be faster
 export const wrapViewletCommand = (id, fn) => {
   const wrappedViewletCommand = async (...args) => {
-    // TODO get actual focused instance
-    const activeInstance = ViewletStates.getInstance(id)
-    if (!activeInstance) {
-      console.info(
-        `cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`
-      )
-      return
-    }
-    if (activeInstance.factory && activeInstance.factory.hasFunctionalRender) {
-      const oldState = activeInstance.state
-      const newState = await fn(oldState, ...args)
-      if (!newState) {
-        console.log({ fn })
-      }
-      Assert.object(newState)
-      // console.log({ fn, newState })
-      if (oldState === newState) {
+    try {
+      // TODO get actual focused instance
+      const activeInstance = ViewletStates.getInstance(id)
+      if (!activeInstance) {
+        console.info(
+          `cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`
+        )
         return
       }
-      const commands = ViewletManager.render(
-        activeInstance.factory,
-        oldState,
-        newState
-      )
-      ViewletStates.setState(id, newState)
+      if (
+        activeInstance.factory &&
+        activeInstance.factory.hasFunctionalRender
+      ) {
+        const oldState = activeInstance.state
+        const newState = await fn(oldState, ...args)
+        if (!newState) {
+          console.log({ fn })
+        }
+        Assert.object(newState)
+        // console.log({ fn, newState })
+        if (oldState === newState) {
+          return
+        }
+        const commands = ViewletManager.render(
+          activeInstance.factory,
+          oldState,
+          newState
+        )
+        ViewletStates.setState(id, newState)
+        await RendererProcess.invoke(
+          /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
+          /* commands */ commands
+        )
+      } else {
+        return fn(activeInstance.state, ...args)
+      }
+    } catch (error) {
       await RendererProcess.invoke(
-        /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
-        /* commands */ commands
+        /* viewlet.handleError */ 'Viewlet.handleError',
+        /* id */ id,
+        /* parentId */ '',
+        /* message */ `${error}`
       )
-    } else {
-      return fn(activeInstance.state, ...args)
     }
   }
+
   return wrappedViewletCommand
 }
 

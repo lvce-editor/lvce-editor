@@ -118,8 +118,6 @@ const loadModule = (moduleId) => {
       return import('../RecentlyOpened/RecentlyOpened.ipc.js')
     case MODULE_FILE_SYSTEM:
       return import('../FileSystem/FileSystem.ipc.js')
-    case MODULE_FIND_IN_WORKSPACE:
-      return import('../FindInWorkspace/FindInWorkspace.ipc.js')
     case MODULE_EDITOR_DIAGNOSTICS:
       return import('../EditorDiagnostics/EditorDiagnostics.ipc.js')
     case MODULE_EDITOR_RENAME:
@@ -333,8 +331,6 @@ const getModuleId = (commandId) => {
     case 'TitleBarMenuBar.handleKeyEscape':
     case 'TitleBarMenuBar.handleKeyArrowLeft':
       return MODULE_TITLE_BAR_MENU
-    case 'FindInWorkspace.findInWorkspace':
-      return MODULE_FIND_IN_WORKSPACE
     case 'RecentlyOpened.getRecentlyOpened':
     case 'RecentlyOpened.clearRecentlyOpened':
     case 'RecentlyOpened.addToRecentlyOpened':

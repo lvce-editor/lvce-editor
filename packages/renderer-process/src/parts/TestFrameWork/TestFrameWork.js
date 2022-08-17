@@ -16,6 +16,7 @@ const create$Overlay = () => {
   $TestOverlay.style.height = '20px'
   $TestOverlay.style.whiteSpace = 'nowrap'
   $TestOverlay.style.contain = 'strict'
+  $TestOverlay.style.userSelect = 'text'
   return $TestOverlay
 }
 

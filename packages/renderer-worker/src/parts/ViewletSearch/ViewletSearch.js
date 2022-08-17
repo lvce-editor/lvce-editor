@@ -1,8 +1,8 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Command from '../Command/Command.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as FindInWorkspace from '../FindInWorkspace/FindInWorkspace.js'
 
 // TODO maybe create should have a container as param like vscode?
 // maybe not?
@@ -39,15 +39,58 @@ export const loadContent = async (state) => {
 
 export const contentLoaded = async () => {}
 
-export const setValue = (state, value) => {
-  state.value = value
+const getStatusMessage = (resultCount, fileResultCount) => {
+  if (resultCount === 0) {
+    return 'No results found'
+  }
+  if (resultCount === 1 && fileResultCount === 1) {
+    return 'Found 1 result in 1 file'
+  }
+  if (fileResultCount === 1) {
+    return `Found ${resultCount} results in 1 file`
+  }
+  return `Found ${resultCount} results in ${fileResultCount} files`
+}
+
+const getResultCounts = (results) => {
+  let resultCount = 0
+  for (const result of results) {
+    resultCount += result.length - 1
+  }
+  return resultCount
+}
+
+// TODO
+export const setValue = async (state, value) => {
+  // state.value = value
   // TODO use Id module
-  state.searchId = Math.random()
-  SharedProcess.send(
-    /* Search.search */ 907771,
-    /* id */ state.id,
-    /* searchId */ state.searchId
-  )
+  // state.searchId = Math.random()
+  // SharedProcess.send(
+  //   /* Search.search */ 907771,
+  //   /* id */ state.id,
+  //   /* searchId */ state.searchId
+  // )
+  // TODO
+  try {
+    const root = Workspace.state.workspacePath
+    const results = await TextSearch.textSearch(root, value)
+    const displayResults = toDisplayResults(results)
+    const resultCount = getResultCounts(results)
+    const fileResultCount = results.length
+    const message = getStatusMessage(resultCount, fileResultCount)
+    return {
+      ...state,
+      value,
+      items: displayResults,
+      message,
+    }
+  } catch (error) {
+    return {
+      ...state,
+      message: `${error}`,
+      value,
+    }
+  }
 }
 
 export const handleResult = async (state, result) => {
@@ -100,30 +143,18 @@ const toDisplayResults = (results) => {
   }
   return displayResults
 }
+// TODO implement virtual list, only send visible items to renderer process
+
+// TODO maybe rename to result.items and result.stats
+// TODO support streaming results
+// TODO support cancellation
+// TODO handle error
+// TODO use command.execute or use module directly?
+// TODO send results to renderer process
+// TODO use virtual list because there might be many results
 
 export const handleInput = async (state, value) => {
-  // TODO support streaming results
-  // TODO support cancellation
-  // TODO handle error
-  // TODO use command.execute or use module directly?
-  const results = await FindInWorkspace.findInWorkspace(value)
-  // TODO send results to renderer process
-  // TODO use virtual list because there might be many results
-  console.log({
-    value,
-    results,
-  })
-
-  // TODO implement virtual list, only send visible items to renderer process
-
-  // TODO maybe rename to result.items and result.stats
-  const displayResults = toDisplayResults(results.results)
-  return {
-    ...state,
-    items: displayResults,
-    fileCount: results.results.length, // TODO this is weird
-    value,
-  }
+  return setValue(state, value)
 }
 
 export const handleClick = async (state, index) => {
@@ -164,4 +195,18 @@ const renderItems = {
   },
 }
 
-export const render = [renderItems]
+const renderMessage = {
+  isEqual(oldState, newState) {
+    return oldState.message === newState.message
+  },
+  apply(oldState, newState) {
+    return [
+      /* viewletSend */ 'Viewlet.send',
+      /* id */ 'Search',
+      /* method */ 'setMessage',
+      /* message */ newState.message,
+    ]
+  },
+}
+
+export const render = [renderItems, renderMessage]

@@ -43,6 +43,9 @@ export const querySelector = (selector) => {
   if (selector.startsWith('#')) {
     return querySelectorByCss(selector)
   }
+  if (selector.startsWith('[data')) {
+    return querySelectorByCss(selector)
+  }
   if (isElement(selector)) {
     return querySelectorByCss(selector)
   }
@@ -78,7 +81,9 @@ export const querySelectorWithOptions = (
     return element
   }
   if (nth === -1) {
-    throw new Error(`too many matching elements for ${selector}`)
+    throw new Error(
+      `too many matching elements for ${selector}, matching ${elements.length}`
+    )
   }
   const element = elements[nth]
   if (!element) {
