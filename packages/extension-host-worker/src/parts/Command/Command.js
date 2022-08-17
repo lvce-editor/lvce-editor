@@ -7,6 +7,7 @@ import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHost
 import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
+import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
 
 const getFn = (method) => {
   switch (method) {
@@ -32,6 +33,8 @@ const getFn = (method) => {
       return ExtensionHostBraceCompletion.executeBraceCompletionProvider
     case 'ExtensionHostTextDocument.syncIncremental':
       return TextDocument.syncIncremental
+    case 'ExtensionHostTextSearch.executeTextSearchProvider':
+      return ExtensionHostTextSearch.executeTextSearchProvider
     default:
       throw new Error(`method not found: ${method}`)
   }

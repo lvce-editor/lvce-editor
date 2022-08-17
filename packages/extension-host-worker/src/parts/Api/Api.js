@@ -7,6 +7,7 @@ import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHost
 import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
+import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
 
 // prettier-ignore
 export const createCommandMap = () => {
@@ -50,6 +51,10 @@ export const create = () => {
 
     // Text Document
     getTextFromTextDocument: TextDocument.getText,
+
+    // Text Search
+    registerTextSearchProvider: ExtensionHostTextSearch.registerTextSearchProvider,
+    executeTextSearchProvider: ExtensionHostTextSearch.executeTextSearchProvider,
 
     // Type Definition
     registerTypeDefinitionProvider: ExtensionHostTypeDefinition.registerTypeDefinitionProvider,

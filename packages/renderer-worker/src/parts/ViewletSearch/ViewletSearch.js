@@ -3,6 +3,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Command from '../Command/Command.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as FindInWorkspace from '../FindInWorkspace/FindInWorkspace.js'
+import * as TextSearch from '../TextSearch/TextSearch.js'
 
 // TODO maybe create should have a container as param like vscode?
 // maybe not?
@@ -40,8 +41,8 @@ export const loadContent = async (state) => {
 export const contentLoaded = async () => {}
 
 // TODO
-export const setValue = (state, value) => {
-  state.value = value
+export const setValue = async (state, value) => {
+  // state.value = value
   // TODO use Id module
   // state.searchId = Math.random()
   // SharedProcess.send(
@@ -49,7 +50,14 @@ export const setValue = (state, value) => {
   //   /* id */ state.id,
   //   /* searchId */ state.searchId
   // )
-  return state
+  // TODO
+  const scheme = 'xyz'
+  const results = await TextSearch.textSearch(scheme, value)
+  console.log({ results })
+  return {
+    ...state,
+    value,
+  }
 }
 
 export const handleResult = async (state, result) => {
