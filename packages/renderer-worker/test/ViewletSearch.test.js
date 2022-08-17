@@ -15,16 +15,13 @@ jest.unstable_mockModule(
   }
 )
 
-jest.unstable_mockModule(
-  '../src/parts/FindInWorkspace/FindInWorkspace.js',
-  () => {
-    return {
-      findInWorkspace: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/TextSearch/TextSearch.js', () => {
+  return {
+    textSearch: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
     execute: jest.fn(() => {
@@ -39,9 +36,7 @@ const ViewletSearch = await import(
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
-const FindInWorkspace = await import(
-  '../src/parts/FindInWorkspace/FindInWorkspace.js'
-)
+const TextSearch = await import('../src/parts/TextSearch/TextSearch.js')
 const Command = await import('../src/parts/Command/Command.js')
 
 test('name', () => {
@@ -76,26 +71,25 @@ test.skip('dispose', () => {
 test('handleInput - empty results', async () => {
   const state = ViewletSearch.create()
   // @ts-ignore
-  FindInWorkspace.findInWorkspace.mockImplementation(() => {
+  TextSearch.textSearch.mockImplementation(() => {
     return {
       results: [],
     }
   })
   expect(await ViewletSearch.handleInput(state, 'test search')).toMatchObject({
     value: 'test search',
-    items: [],
   })
 })
 
 test('handleInput - error', async () => {
   // @ts-ignore
-  FindInWorkspace.findInWorkspace.mockImplementation(() => {
+  TextSearch.textSearch.mockImplementation(() => {
     throw new Error('could not load search results')
   })
   const state = ViewletSearch.create()
-  await expect(
-    ViewletSearch.handleInput(state, 'test search')
-  ).rejects.toThrowError(new Error('could not load search results'))
+  expect(await ViewletSearch.handleInput(state, 'test search')).toMatchObject({
+    message: 'Error: could not load search results',
+  })
 })
 
 test('handleClick', async () => {

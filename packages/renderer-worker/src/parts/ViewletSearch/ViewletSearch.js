@@ -89,6 +89,7 @@ export const setValue = async (state, value) => {
     return {
       ...state,
       message: `${error}`,
+      value,
     }
   }
 }
