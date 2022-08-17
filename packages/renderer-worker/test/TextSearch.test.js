@@ -36,7 +36,7 @@ test('textSearch - extension search - error', async () => {
   ExtensionHostTextSearch.executeTextSearchProvider.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(TextSearch.textSearch('xyz', 'abc')).rejects.toThrowError(
+  await expect(TextSearch.textSearch('xyz://', 'abc')).rejects.toThrowError(
     new TypeError('x is not a function')
   )
 })
@@ -54,7 +54,7 @@ test('textSearch - extension search', async () => {
       ],
     ]
   })
-  expect(await TextSearch.textSearch('xyz', 'abc')).toEqual([
+  expect(await TextSearch.textSearch('xyz://', 'abc')).toEqual([
     [
       './index.txt',
       {
@@ -76,25 +76,27 @@ test('textSearch - file - error', async () => {
   SharedProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(
-    TextSearch.textSearch('file:///test', 'abc')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  await expect(TextSearch.textSearch('/test', 'abc')).rejects.toThrowError(
+    new TypeError('x is not a function')
+  )
 })
 
 test('textSearch - file', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(() => {
-    return [
-      [
-        './index.txt',
-        {
-          absoluteOffset: 208,
-          preview: '    <title>Document</title>\n',
-        },
+    return {
+      results: [
+        [
+          './index.txt',
+          {
+            absoluteOffset: 208,
+            preview: '    <title>Document</title>\n',
+          },
+        ],
       ],
-    ]
+    }
   })
-  expect(await TextSearch.textSearch('file:///test', 'abc')).toEqual([
+  expect(await TextSearch.textSearch('/test', 'abc')).toEqual([
     [
       './index.txt',
       {
@@ -106,7 +108,7 @@ test('textSearch - file', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
     'Search.search',
-    'file:///test',
+    '/test',
     'abc'
   )
 })
