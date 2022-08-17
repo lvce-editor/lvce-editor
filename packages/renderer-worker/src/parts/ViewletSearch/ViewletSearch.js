@@ -39,15 +39,17 @@ export const loadContent = async (state) => {
 
 export const contentLoaded = async () => {}
 
+// TODO
 export const setValue = (state, value) => {
   state.value = value
   // TODO use Id module
-  state.searchId = Math.random()
-  SharedProcess.send(
-    /* Search.search */ 907771,
-    /* id */ state.id,
-    /* searchId */ state.searchId
-  )
+  // state.searchId = Math.random()
+  // SharedProcess.send(
+  //   /* Search.search */ 907771,
+  //   /* id */ state.id,
+  //   /* searchId */ state.searchId
+  // )
+  return state
 }
 
 export const handleResult = async (state, result) => {
