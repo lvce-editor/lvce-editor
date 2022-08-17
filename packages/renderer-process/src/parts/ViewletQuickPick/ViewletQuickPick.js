@@ -258,6 +258,12 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
   }
 }
 
+export const focus = (state) => {
+  const { $QuickPickInput } = state
+  $QuickPickInput.focus()
+  Focus.setFocus('quickPickInput')
+}
+
 // TODO
 // - for windows narrator, ariaLabel works well
 // - for nvda ariaRoleDescription works better
@@ -278,7 +284,7 @@ const handleBeforeInput = (event) => {
   )
 }
 
-export const create = (value, visiblePicks, focusIndex) => {
+export const create = () => {
   const $QuickPickInput = InputBox.create()
   $QuickPickInput.setAttribute('aria-controls', 'QuickPickItems') // TODO use idl once supported
   // @ts-ignore
@@ -312,10 +318,8 @@ export const create = (value, visiblePicks, focusIndex) => {
   // $QuickPick.setAttribute('aria-modal', 'false') // TODO why is this
   $QuickPick.ariaLabel = 'Quick open'
 
-  Widget.append($QuickPick)
-  Focus.focus($QuickPickInput, 'quickPickInput')
-
   return {
+    $Viewlet: $QuickPick,
     $QuickPick,
     $QuickPickInput,
     $QuickPickItems,

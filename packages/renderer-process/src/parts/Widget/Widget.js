@@ -1,3 +1,4 @@
+// TODO this file is not needed when all elements are position fixed
 export const state = {
   isInDom: false,
   $PreviousFocusElement: undefined,

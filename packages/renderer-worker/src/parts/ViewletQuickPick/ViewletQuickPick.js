@@ -47,6 +47,7 @@ export const create = (id, uri, top, left, width, height) => {
     deltaY: 0,
     itemHeight: 22,
     height: 300,
+    focused: false,
   }
 }
 
@@ -600,9 +601,25 @@ const renderFocusedIndex = {
   },
 }
 
+// const renderFocus = {
+//   isEqual(oldState, newState) {
+//     return oldState.focused === newState.focused
+//   },
+//   apply(oldState, newState) {
+//     if (newState.focused) {
+//       return [
+//         /* Viewlet.send */ 'Viewlet.send',
+//         /* id */ 'QuickPick',
+//         /* method */ 'focus',
+//       ]
+//     }
+//   },
+// }
+
 export const render = [
   renderItems,
   renderValue,
   renderCursorOffset,
   renderFocusedIndex,
+  // renderFocus,
 ]

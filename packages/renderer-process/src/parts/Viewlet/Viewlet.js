@@ -80,6 +80,19 @@ export const load = async (id, ...args) => {
   }
 }
 
+export const create = (id) => {
+  const module = state.modules[id]
+  state.instances[id] = {
+    state: module.create(),
+    factory: module,
+  }
+}
+
+export const loadModule = async (id) => {
+  const module = await get(id)
+  state.modules[id] = module
+}
+
 export const invoke = (viewletId, method, ...args) => {
   const instance = state.instances[viewletId]
   if (!instance) {
@@ -222,5 +235,33 @@ export const appendViewlet = (parentId, childId, focus) => {
   )
   if (focus) {
     childInstance.factory.focus(childInstance.state)
+  }
+}
+
+export const executeCommands = (commands) => {
+  for (const [command, ...args] of commands) {
+    switch (command) {
+      case 'Viewlet.create':
+        create(...args)
+        break
+      case 'Viewlet.send':
+        invoke(...args)
+        break
+      case 'Viewlet.show':
+        show(...args)
+        break
+      default:
+        break
+    }
+  }
+}
+
+export const show = (id) => {
+  const instance = state.instances[id]
+  const $Viewlet = instance.state.$Viewlet
+  const $Workbench = document.getElementById('Workbench')
+  $Workbench.append($Viewlet)
+  if (instance.factory.focus) {
+    instance.factory.focus(instance.state)
   }
 }
