@@ -5,7 +5,6 @@ const getWsUrl = () => {
 }
 
 export const create = ({ protocol }) => {
-  debugger
   // TODO replace this during build
   const wsUrl = getWsUrl()
   const webSocket = new WebSocket(wsUrl, [protocol])

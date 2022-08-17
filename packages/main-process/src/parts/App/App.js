@@ -40,14 +40,13 @@ const handleBeforeQuit = () => {
 // map windows to folders and ports
 // const windowConfigMap = new Map()
 
-/**
- * @param {import('electron').IpcMainEvent} event
- */
-const handlePort = async (event) => {
-  // console.log({ event })
-  // console.log('GOT PORT', event)
-  // event.sender.on('render-process-gone', listener)
+const handlePortForExtensionHost = (event) => {
+  const sharedProcess = SharedProcess.state.sharedProcess
+  // TODO ask shared process to spawn extension host with this port
+  // or spawn extension host directly from here
+}
 
+const handlePortForSharedProcess = async (event) => {
   const config = AppWindow.findById(event.sender.id)
   if (!config) {
     console.warn('port event - config expected')
@@ -89,6 +88,24 @@ const handlePort = async (event) => {
   //   browserWindowPort.postMessage(message)
   // })
   browserWindowPort.start()
+}
+/**
+ * @param {import('electron').IpcMainEvent} event
+ */
+const handlePort = async (event, data) => {
+  // console.log({ event })
+  // const data = event.
+  // console.log('GOT PORT', event)
+  console.log({ data })
+  // event.sender.on('render-process-gone', listener)
+  switch (data) {
+    case 'shared-process':
+      return handlePortForSharedProcess(event)
+    case 'extension-host':
+      return handlePortForExtensionHost(event)
+    default:
+      console.error(`[main-process] unexpected port type ${data}`)
+  }
 }
 
 const getFolder = (args) => {

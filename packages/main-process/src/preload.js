@@ -1,11 +1,10 @@
-const {
-  ipcRenderer,
-  webFrame,
-  contextBridge,
-  MessageChannelMain,
-} = require('electron')
+const { ipcRenderer, contextBridge } = require('electron')
 
-const ipcConnect = () => {
+const ipcConnect = (type) => {
+  console.log({ type })
+  if (typeof type !== 'string') {
+    throw new Error('[preload] type must be of type string')
+  }
   // renderer.js ///////////////////////////////////////////////////////////////
   // MessagePorts are created in pairs. A connected pair of message ports is
   // called a channel.
@@ -18,7 +17,7 @@ const ipcConnect = () => {
 
   // Here we send the other end of the channel, port1, to the main process. It's
   // also possible to send MessagePorts to other frames, or to Web Workers, etc.
-  ipcRenderer.postMessage('port', null, [port1])
+  ipcRenderer.postMessage('port', type, [port1])
 
   window.postMessage('abc', '*', [port2])
 }

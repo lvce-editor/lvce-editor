@@ -67,7 +67,8 @@ const handleMessageFromRendererWorker = async (event) => {
     return
   }
   if (message.method === 'get-port') {
-    const port = await getPort()
+    const type = message.params[0]
+    const port = await getPort(type)
     console.log({ port })
     state.ipc.sendAndTransfer('port', [port])
     return
@@ -97,7 +98,7 @@ const getIpc = async () => {
   }
 }
 
-const getPort = () => {
+const getPort = (type) => {
   return new Promise((resolve, reject) => {
     const handleMessageFromWindow = (event) => {
       const port = event.ports[0]
@@ -109,7 +110,7 @@ const getPort = () => {
       once: true,
     })
     // @ts-ignore
-    window.myApi.ipcConnect()
+    window.myApi.ipcConnect(type)
   })
 }
 
@@ -118,16 +119,17 @@ export const hydrate = async (config) => {
 
   // setup electron message port
   if (Platform.isElectron()) {
-    await new Promise((resolve, reject) => {
+    const event = await new Promise((resolve, reject) => {
       const handleIpcMessage = async (event) => {
-        if (event.data.method !== 'get-port') {
-          reject(new Error('unexpected message from renderer worker'))
-        }
-        resolve()
+        resolve(event)
       }
       ipc.onmessage = handleIpcMessage
     })
-    const port = await getPort()
+    if (event.data.method !== 'get-port') {
+      throw new Error('unexpected message from renderer worker')
+    }
+    const type = event.data.params[0]
+    const port = await getPort(type)
     ipc.sendAndTransfer('port', [port])
   }
   ipc.onmessage = handleMessageFromRendererWorker
