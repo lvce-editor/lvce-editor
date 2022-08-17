@@ -53,6 +53,14 @@ const getStatusMessage = (resultCount, fileResultCount) => {
   return `Found ${resultCount} results in ${fileResultCount} files`
 }
 
+const getResultCounts = (results) => {
+  let resultCount = 0
+  for (const result of results) {
+    resultCount += result.length - 1
+  }
+  return resultCount
+}
+
 // TODO
 export const setValue = async (state, value) => {
   // state.value = value
@@ -68,10 +76,14 @@ export const setValue = async (state, value) => {
     const root = Workspace.state.workspacePath
     const results = await TextSearch.textSearch(root, value)
     const displayResults = toDisplayResults(results)
+    const resultCount = getResultCounts(results)
+    const fileResultCount = results.length
+    const message = getStatusMessage(resultCount, fileResultCount)
     return {
       ...state,
       value,
       items: displayResults,
+      message,
     }
   } catch (error) {
     return {
