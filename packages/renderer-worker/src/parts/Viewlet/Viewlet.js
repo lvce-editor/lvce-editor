@@ -214,12 +214,23 @@ export const getAllStates = () => {
 export const openWidget = async (id, ...args) => {
   console.log({ args })
   const type = args[0]
-  await ViewletManager.load({
+  const commands = await ViewletManager.load({
     getModule: ViewletManager.getModule,
     id,
     type: 0,
     uri: `quickPick://${type}`,
+    show: false,
+    focus: true,
   })
+  console.log({ commands })
+  await RendererProcess.invoke('Viewlet.executeCommands', commands)
+  // TODO commands should be like this
+  // viewlet.create quickpick
+  // quickpick.setItems
+  // quickpick.setFocusedIndex
+  // quickpick.setValue
+  // viewlet.show quickpick
+  //
 }
 
 export const closeWidget = async (id) => {

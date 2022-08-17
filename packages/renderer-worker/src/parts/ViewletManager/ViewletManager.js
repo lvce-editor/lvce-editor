@@ -161,10 +161,17 @@ export const load = async (viewlet, focus = false) => {
     }
     state = ViewletState.ContentLoaded
 
-    await RendererProcess.invoke(
-      /* Viewlet.load */ 'Viewlet.load',
-      /* id */ viewlet.id
-    )
+    if (viewlet.show === false) {
+      await RendererProcess.invoke(
+        /* Viewlet.load */ 'Viewlet.loadModule',
+        /* id */ viewlet.id
+      )
+    } else {
+      await RendererProcess.invoke(
+        /* Viewlet.load */ 'Viewlet.load',
+        /* id */ viewlet.id
+      )
+    }
     if (viewlet.disposed) {
       // TODO unload the module from renderer process
       return
@@ -205,6 +212,13 @@ export const load = async (viewlet, focus = false) => {
         }
       } else {
         commands = module.render(viewletState, newState)
+      }
+      if (viewlet.show === false) {
+        return [
+          ['Viewlet.create', viewlet.id],
+          ...commands,
+          ['Viewlet.show', viewlet.id],
+        ]
       }
       await RendererProcess.invoke(
         /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',

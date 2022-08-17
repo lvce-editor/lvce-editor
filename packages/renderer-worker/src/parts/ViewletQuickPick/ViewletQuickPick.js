@@ -1,8 +1,7 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as Assert from '../Assert/Assert.js'
-import * as Command from '../Command/Command.js'
+import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as QuickPickEveryThing from '../QuickPick/QuickPickEverything.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
@@ -183,6 +182,7 @@ export const loadContent = async (state) => {
     minLineY,
     maxLineY,
     value,
+    cursorOffset: value.length,
   }
 }
 
