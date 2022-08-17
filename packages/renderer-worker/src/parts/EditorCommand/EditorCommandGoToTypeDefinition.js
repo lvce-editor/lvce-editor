@@ -111,6 +111,7 @@ export const editorGoToTypeDefinition = async (editor, explicit = true) => {
     console.error(error)
 
     const displayErrorMessage = getTypeDefinitionErrorMessage(error)
+    // TODO avoid side effect here, try to find a way to make error handling more declarative
     await EditorShowMessage.editorShowMessage(
       /* editor */ editor,
       /* rowIndex */ rowIndex,

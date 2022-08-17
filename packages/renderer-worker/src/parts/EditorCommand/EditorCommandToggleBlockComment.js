@@ -27,8 +27,8 @@ export const editorToggleBlockComment = async (editor) => {
   if (!blockComment) {
     return editor
   }
-  const rowIndex = editor.cursor.rowIndex
-  const columnIndex = editor.cursor.columnIndex
+  const rowIndex = editor.selections[0]
+  const columnIndex = editor.selections[1]
   const line = TextDocument.getLine(editor, rowIndex)
   const numberOfLines = editor.lines.length
   let endRowIndex = rowIndex

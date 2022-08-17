@@ -93,9 +93,9 @@ export const editorToggleLineComment = async (editor) => {
   }
   // replaceSelections(editor, lineComment, 'editorToggleLineComment')
   const textDocument = editor
-  const rowIndex = editor.cursor.rowIndex
-  const line = TextDocument.getLine(textDocument, rowIndex)
-  const documentEdits = [getLineCommentEdit(rowIndex, line, lineComment)]
+  const cursorRowIndex = editor.selections[0]
+  const line = TextDocument.getLine(textDocument, cursorRowIndex)
+  const documentEdits = [getLineCommentEdit(cursorRowIndex, line, lineComment)]
   // TODO cursor edits should be computed automatically from document edits
   // console.log({ documentEdits })
   // const cursorEdits = Editor.moveCursors(editor, (editor, cursor) => {

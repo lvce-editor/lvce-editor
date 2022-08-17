@@ -1,12 +1,36 @@
 import { jest } from '@jest/globals'
-import * as EditorToggleComment from '../src/parts/EditorCommand/EditorCommandToggleComment.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
-import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
-import * as Languages from '../src/parts/Languages/Languages.js'
+import { editorShowMessage } from '../src/parts/EditorCommand/EditorCommandShowMessage.js'
 
-beforeAll(() => {
-  Languages.state.loaded = true
+beforeEach(() => {
+  jest.resetAllMocks()
 })
+
+jest.unstable_mockModule('../src/parts/Languages/Languages.js', () => {
+  return {
+    getLanguageConfiguration: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+jest.unstable_mockModule(
+  '../src/parts/EditorCommand/EditorCommandShowMessage.js',
+  () => {
+    return {
+      editorShowMessage: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const EditorToggleComment = await import(
+  '../src/parts/EditorCommand/EditorCommandToggleComment.js'
+)
+
+const Languages = await import('../src/parts/Languages/Languages.js')
+const EditorShowMessage = await import(
+  '../src/parts/EditorCommand/EditorCommandShowMessage.js'
+)
 
 const LANGUAGE_CONFIGURATION_JAVASCRIPT = {
   comments: {
@@ -27,118 +51,62 @@ const LANGUAGE_CONFIGURATION_HTML = {
   },
 }
 
-test.skip('comment line', async () => {
+test('comment line', async () => {
   const editor = {
     lines: ['const x = 1'],
     languageId: 'javascript',
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
-    tokenizer: TokenizePlainText,
+    selections: new Uint32Array([0, 0, 0, 0]),
     uri: '',
     undoStack: [],
   }
-  Languages.state.languages = [
-    {
-      id: 'javascript',
-      extensions: ['.js'],
-      tokenize: 'src/tokenizeJavaScript.js',
-      configuration: './languageConfiguration.json',
-    },
-  ]
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
-      case 'ExtensionHost.getLanguageConfiguration':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: LANGUAGE_CONFIGURATION_JAVASCRIPT,
-        })
-        break
-      default:
-        throw new Error('unexpected message')
-    }
+  // @ts-ignore
+  Languages.getLanguageConfiguration.mockImplementation(() => {
+    return LANGUAGE_CONFIGURATION_JAVASCRIPT
   })
   const newEditor = await EditorToggleComment.editorToggleComment(editor)
   expect(newEditor.lines).toEqual(['// const x = 1'])
-  expect(newEditor.cursor).toEqual({
-    rowIndex: 0,
-    columnIndex: 3,
-  })
+  expect(newEditor.selections).toEqual(new Uint32Array([0, 3, 0, 3]))
 })
 
-test.skip('uncomment line', async () => {
+test('uncomment line', async () => {
   const editor = {
     lines: ['// const x = 1'],
     languageId: 'javascript',
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 3,
-    },
-    tokenizer: TokenizePlainText,
+    selections: new Uint32Array([0, 3, 0, 3]),
     undoStack: [],
     uri: '',
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
-      case 'ExtensionHost.getLanguageConfiguration':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: LANGUAGE_CONFIGURATION_JAVASCRIPT,
-        })
-        break
-      default:
-        throw new Error('unexpected message')
-    }
+  // @ts-ignore
+  Languages.getLanguageConfiguration.mockImplementation(() => {
+    return LANGUAGE_CONFIGURATION_JAVASCRIPT
   })
   const newEditor = await EditorToggleComment.editorToggleComment(editor)
   expect(newEditor.lines).toEqual(['const x = 1'])
-  expect(newEditor.cursor).toEqual({
-    rowIndex: 0,
-    columnIndex: 0,
-  })
+  expect(newEditor.selections).toEqual(new Uint32Array([0, 0, 0, 0]))
 })
 
-test.skip('uncomment line, no space after comment', async () => {
+test('uncomment line, no space after comment', async () => {
   const editor = {
     lines: ['//const x = 1'],
     languageId: 'javascript',
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 3,
-    },
-    tokenizer: TokenizePlainText,
+    selections: new Uint32Array([0, 3, 0, 3]),
     undoStack: [],
     uri: '',
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
-      case 'ExtensionHost.getLanguageConfiguration':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: LANGUAGE_CONFIGURATION_JAVASCRIPT,
-        })
-        break
-      default:
-        throw new Error('unexpected message')
-    }
+
+  // @ts-ignore
+  Languages.getLanguageConfiguration.mockImplementation(() => {
+    return LANGUAGE_CONFIGURATION_JAVASCRIPT
   })
   const newEditor = await EditorToggleComment.editorToggleComment(editor)
   expect(newEditor).toMatchObject({
     lines: ['const x = 1'],
-    languageId: 'unknown',
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
+    languageId: 'javascript',
+    selections: new Uint32Array([0, 0, 0, 0]),
   })
 })
 
-test.skip('comment line with block comment - error block comment configuration is invalid', async () => {
-  SharedProcess.state.send = jest.fn()
+test.skip('comment line with block comment - error - block comment configuration is invalid', async () => {
   const editor = {
     lines: ['<h1></h1>'],
     languageId: 'html',
@@ -148,57 +116,57 @@ test.skip('comment line with block comment - error block comment configuration i
     },
     undoStack: [],
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
-      case 'ExtensionHost.getLanguageConfiguration':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: LANGUAGE_CONFIGURATION_HTML_INVALID,
-        })
-        break
-      default:
-        throw new Error('unexpected message')
-    }
+  // @ts-ignore
+  Languages.getLanguageConfiguration.mockImplementation(() => {
+    return LANGUAGE_CONFIGURATION_HTML_INVALID
   })
   const newEditor = await EditorToggleComment.editorToggleComment(editor)
   // TODO should not apply block comment in this case when it is invalid
   expect(newEditor.lines).toEqual(['undefined <h1></h1> -->'])
 })
 
+test('comment line - error - loading language configuration', async () => {
+  const editor = {
+    lines: ['const x = 1'],
+    languageId: 'javascript',
+    selections: new Uint32Array([0, 0, 0, 0]),
+    uri: '',
+    undoStack: [],
+  }
+  // @ts-ignore
+  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
+  // @ts-ignore
+  Languages.getLanguageConfiguration.mockImplementation(() => {
+    throw new TypeError('x is not a function')
+  })
+  expect(await EditorToggleComment.editorToggleComment(editor)).toBe(editor)
+  expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
+  expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
+    editor,
+    0,
+    0,
+    'TypeError: x is not a function',
+    true
+  )
+})
+
 test.skip('comment line with block comment', async () => {
-  SharedProcess.state.send = jest.fn()
   const editor = {
     lines: ['<h1></h1>'],
     languageId: 'html',
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
+    selections: new Uint32Array([0, 0, 0, 0]),
     undoStack: [],
     uri: '',
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
-      case 'ExtensionHost.getLanguageConfiguration':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: LANGUAGE_CONFIGURATION_HTML,
-        })
-        break
-      default:
-        throw new Error('unexpected message')
-    }
+  // @ts-ignore
+  Languages.getLanguageConfiguration.mockImplementation(() => {
+    return LANGUAGE_CONFIGURATION_HTML
   })
   const newEditor = await EditorToggleComment.editorToggleComment(editor)
   // TODO there should be a space after the comment
   expect(newEditor.lines).toEqual(['<!--<h1></h1>-->'])
-  expect(newEditor.cursor).toEqual({
-    rowIndex: 0,
-    // TODO adjust cursor index
-    columnIndex: 0,
-  })
+  // TODO adjust cursor index
+  expect(newEditor.selections).toEqual(new Uint32Array([0, 0, 0, 0]))
 })
 
 test.skip('uncomment line with block comment', async () => {
@@ -210,22 +178,12 @@ test.skip('uncomment line with block comment', async () => {
       columnIndex: 0,
     },
 
-    tokenizer: TokenizePlainText,
     uri: '',
     undoStack: [],
   }
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
-      case 'ExtensionHost.getLanguageConfiguration':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: LANGUAGE_CONFIGURATION_HTML,
-        })
-        break
-      default:
-        throw new Error('unexpected message')
-    }
+  // @ts-ignore
+  Languages.getLanguageConfiguration.mockImplementation(() => {
+    return LANGUAGE_CONFIGURATION_HTML
   })
   const newEditor = await EditorToggleComment.editorToggleComment(editor)
   expect(newEditor.lines).toEqual([' <h1></h1> '])
