@@ -3,18 +3,22 @@ import * as Platform from '../Platform/Platform.js'
 
 export const create = () => {
   const extensionHostPath = Platform.getExtensionHostPath()
-  const childProcess = ChildProcess.fork(extensionHostPath, {
-    execArgv: [
+  const childProcess = ChildProcess.fork(
+    extensionHostPath,
+    [
+      '--ipc-type=websocket',
       '--experimental-json-modules',
       '--max-old-space-size=60',
       '--enable-source-maps',
     ],
-    env: {
-      ...process.env,
-      LOGS_DIR: Platform.getLogsDir(),
-      CONFIG_DIR: Platform.getConfigDir(),
-    },
-  })
+    {
+      env: {
+        ...process.env,
+        LOGS_DIR: Platform.getLogsDir(),
+        CONFIG_DIR: Platform.getConfigDir(),
+      },
+    }
+  )
   return {
     on(event, listener) {
       switch (event) {

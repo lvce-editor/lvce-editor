@@ -3,6 +3,7 @@ const ChildProcess = require('../ChildProcess/ChildProcess.js')
 const Command = require('../Command/Command.js')
 const Path = require('../Path/Path.js')
 const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
+const Platform = require('../Platform/Platform.js')
 
 const state = (exports.state = {
   /**
@@ -141,17 +142,15 @@ exports.hydrate = async (env = {}) => {
   // console.log('env', process.env.ELECTRON_RUN_AS_NODE)
   // console.log(process.env)
   // TODO inherit stdout but listen to ready event
-  const sharedProcess = new Worker(
-    Path.absolute('packages/shared-process/src/sharedProcessMain.js'),
-    {
-      env: {
-        ...process.env,
-        ELECTRON_RUN_AS_NODE: '1', // TODO
-        ...env,
-      },
-      execArgv: ['--enable-source-maps'],
-    }
-  )
+  const sharedProcessPath = Platform.getSharedProcessPath()
+  const sharedProcess = new Worker(sharedProcessPath, {
+    env: {
+      ...process.env,
+      ELECTRON_RUN_AS_NODE: '1', // TODO
+      ...env,
+    },
+    execArgv: ['--enable-source-maps'],
+  })
   // TODO handle all possible errors from web server process
   sharedProcess.on('error', handleChildError)
   sharedProcess.on('message', handleChildMessage)

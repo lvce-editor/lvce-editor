@@ -26,9 +26,9 @@ const handleProcessExit = () => {
  * @param {NodeChildProcess.ForkOptions } options
  * @returns
  */
-export const fork = (path, options) => {
+export const fork = (path, argv, options) => {
   exitHook(handleProcessExit)
-  const childProcess = NodeChildProcess.fork(path, options)
+  const childProcess = NodeChildProcess.fork(path, argv, options)
 
   // childProcess.on('error', (error) => {
   //   onError(error)

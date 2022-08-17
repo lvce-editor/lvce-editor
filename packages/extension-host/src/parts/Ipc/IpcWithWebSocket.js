@@ -22,6 +22,7 @@ export const listen = async (processIpc) => {
       if (handle) {
         resolve({ message, handle })
       } else {
+        console.log({ message })
         reject(new VError('websocket expected'))
       }
     }

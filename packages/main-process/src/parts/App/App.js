@@ -1,4 +1,4 @@
-const { spawn } = require('child_process')
+const { spawn, fork } = require('child_process')
 const { MessageChannel } = require('worker_threads')
 const { app } = require('electron')
 const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
@@ -40,10 +40,43 @@ const handleBeforeQuit = () => {
 // map windows to folders and ports
 // const windowConfigMap = new Map()
 
-const handlePortForExtensionHost = (event) => {
-  const sharedProcess = SharedProcess.state.sharedProcess
-  // TODO ask shared process to spawn extension host with this port
-  // or spawn extension host directly from here
+const handlePortForExtensionHost = async (event) => {
+  const extensionHostPath = Platform.getExtensionHostPath()
+  const start = Date.now()
+  const extensionHost = fork(extensionHostPath, ['--ipc-type=parent'], {
+    stdio: 'inherit',
+    env: {
+      ...process.env,
+      ELECTRON_RUN_AS_NODE: '1',
+    },
+  })
+  const end = Date.now()
+  const pid = extensionHost.pid
+  const forkTime = end - start
+  console.info(
+    `[main-process] Starting extension host with pid ${pid} (fork took ${forkTime} ms).`
+  )
+  const browserWindowPort = event.ports[0]
+
+  await new Promise((resolve, reject) => {
+    const handleFirstMessage = (event) => {
+      if (event === 'ready') {
+        resolve(undefined)
+      } else {
+        reject(new Error('unexpected first message'))
+      }
+    }
+    extensionHost.once('message', handleFirstMessage)
+  })
+  browserWindowPort.on('message', (event) => {
+    console.log({ event })
+    extensionHost.send(event.data)
+  })
+  extensionHost.on('message', (event) => {
+    console.log({ event })
+    browserWindowPort.postMessage(event)
+  })
+  browserWindowPort.start()
 }
 
 const handlePortForSharedProcess = async (event) => {
