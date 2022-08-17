@@ -2,12 +2,16 @@ import * as Callback from '../Callback/Callback.js'
 import { JsonRpcError } from '../Errors/Errors.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
+/**
+ * @enum {number}
+ */
 export const Methods = {
   SharedProcess: 1,
   ModuleWebWorker: 2,
   WebSocket: 3,
   Messageport: 4,
   ReferencePort: 5,
+  Electron: 6,
 }
 
 const getModule = (method) => {
@@ -22,6 +26,8 @@ const getModule = (method) => {
       return import('./ExtensionHostIpcWithReferencePort.js')
     case Methods.Messageport:
       return import('./ExtensionHostIpcWithMessagePort.js')
+    case Methods.Electron:
+      return import('./ExtensionHostIpcWithElectron.js')
     default:
       throw new Error(`unexpected extension host type: ${method}`)
   }
@@ -46,12 +52,14 @@ const restoreError = (error) => {
     return restoredError
   }
   const restoredError = new Error(error.message)
-  if (error.data.stack) {
-    restoredError.stack = error.data.stack
-  }
-  if (error.data.codeFrame) {
-    // @ts-ignore
-    restoredError.codeFrame = error.data.codeFrame
+  if (error.data) {
+    if (error.data.stack) {
+      restoredError.stack = error.data.stack
+    }
+    if (error.data.codeFrame) {
+      // @ts-ignore
+      restoredError.codeFrame = error.data.codeFrame
+    }
   }
   return restoredError
 }
