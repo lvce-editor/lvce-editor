@@ -1,13 +1,4 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  FileSystem,
-  KeyBoard,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
+/// <reference path="../typings/types.d.ts" />
 
 test.skip('viewlet.explorer-delete-multiple-files', async () => {
   // arrange

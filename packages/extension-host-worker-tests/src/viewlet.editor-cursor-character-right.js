@@ -1,14 +1,4 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  Editor,
-  FileSystem,
-  Main,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
+/// <reference path="../typings/types.d.ts" />
 
 test('viewlet.editor-cursor-character-right', async () => {
   // arrange

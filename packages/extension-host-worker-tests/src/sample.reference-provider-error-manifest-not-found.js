@@ -44,3 +44,5 @@ test('sample.reference-provider-error-manifest-not-found', async () => {
 
   // TODO should show dialog with json stack trace
 })
+
+export {}

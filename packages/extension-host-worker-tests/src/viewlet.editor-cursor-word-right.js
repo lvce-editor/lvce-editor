@@ -1,14 +1,4 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  Editor,
-  FileSystem,
-  Main,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
+/// <reference path="../typings/types.d.ts" />
 
 // TODO test is broken in ci, not sure why https://github.com/lvce-editor/lvce-editor/runs/7692111020?check_suite_focus=true
 test.skip('viewlet.editor-cursor-word-right', async () => {

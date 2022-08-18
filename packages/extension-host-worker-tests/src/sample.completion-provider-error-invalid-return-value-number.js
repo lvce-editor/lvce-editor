@@ -1,15 +1,4 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  Editor,
-  Extension,
-  FileSystem,
-  Main,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
+/// <reference path="../typings/types.d.ts" />
 
 test('sample.completion-provider-error-invalid-return-value-number', async () => {
   const tmpDir = await FileSystem.getTmpDir()
@@ -38,3 +27,5 @@ test('sample.completion-provider-error-invalid-return-value-number', async () =>
     `Failed to execute completion provider: VError: invalid completion result: completion must be of type array but is 42`
   )
 })
+
+export {}

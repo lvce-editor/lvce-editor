@@ -1,15 +1,4 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  Editor,
-  Extension,
-  FileSystem,
-  Main,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
+/// <reference path="../typings/types.d.ts" />
 
 const name = 'sample.brace-completion-provider-error-spelling'
 
@@ -38,3 +27,5 @@ test.skip('sample.brace-completion-provider-error-spelling', async () => {
     'Error: Failed to activate extension sample.brace-completion-provider-error-spelling: TypeError: vscode.registerBraceCompletionProcider is not a function'
   )
 })
+
+export {}

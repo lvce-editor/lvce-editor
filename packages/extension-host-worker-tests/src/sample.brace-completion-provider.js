@@ -1,15 +1,4 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  Editor,
-  Extension,
-  FileSystem,
-  Main,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
+/// <reference path="../typings/types.d.ts" />
 
 const name = 'sample.brace-completion-provider'
 
@@ -32,3 +21,5 @@ test.skip('sample.brace-completion-provider', async () => {
   const editor = Locator('.Viewlet.Editor')
   await expect(editor).toHaveText(`{}`)
 })
+
+export {}

@@ -1,4 +1,6 @@
 import { VError } from '../VError/VError.js'
+import * as TestFrameWorkComponent from '../TestFrameWorkComponent/TestFrameWorkComponent.js'
+import * as TestFrameWork from '../TestFrameWork/TestFrameWork.js'
 
 export const state = {
   tests: [],
@@ -12,7 +14,15 @@ const importScript = async (url) => {
   }
 }
 
+const exposeGlobals = (global, object) => {
+  for (const [key, value] of Object.entries(object)) {
+    global[key] = value
+  }
+}
+
 export const execute = async (href) => {
+  exposeGlobals(globalThis, TestFrameWorkComponent)
+  exposeGlobals(globalThis, TestFrameWork)
   // TODO
   // 0. wait for page to be ready
   // 1. get script to import from renderer process (url or from html)

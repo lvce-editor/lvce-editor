@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "lib": ["esnext", "WebWorker", "DOM"],
+    "lib": ["esnext"],
     "checkJs": true,
     "module": "esnext",
     "target": "esnext",
@@ -14,5 +14,5 @@
     "strict": true,
     "noImplicitAny": false
   },
-  "include": ["src", "test"]
+  "include": ["src", "test", "typings/types.d.ts"]
 }

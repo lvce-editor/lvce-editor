@@ -1,16 +1,4 @@
-import {
-  expect,
-  test,
-  Locator,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  ContextMenu,
-  Editor,
-  Extension,
-  FileSystem,
-  Main,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
+/// <reference path="../typings/types.d.ts" />
 
 const name = 'sample.type-definition-provider-no-result'
 

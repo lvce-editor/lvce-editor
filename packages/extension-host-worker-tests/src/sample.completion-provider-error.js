@@ -1,15 +1,4 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  Editor,
-  Extension,
-  FileSystem,
-  Main,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
+/// <reference path="../typings/types.d.ts" />
 
 test('sample.completion-provider-error', async () => {
   // arrange
@@ -40,3 +29,5 @@ test('sample.completion-provider-error', async () => {
     'Failed to execute completion provider: oops'
   )
 })
+
+export {}
