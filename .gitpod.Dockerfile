@@ -15,7 +15,8 @@ RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
         libxrandr2 \
         libgbm1 \
         libatspi2.0-0 \
-        libwayland-client0   
+        libwayland-client0 \
+        fakeroot
 
 # Install nodeJs
 RUN bash -c ". .nvm/nvm.sh \
