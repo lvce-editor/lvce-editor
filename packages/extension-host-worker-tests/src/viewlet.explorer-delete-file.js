@@ -1,15 +1,3 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  ContextMenu,
-  Explorer,
-  FileSystem,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
-
 test('viewlet.explorer-delete-file', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()

@@ -1,17 +1,3 @@
-import {
-  expect,
-  test,
-  Locator,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  ContextMenu,
-  Editor,
-  Extension,
-  FileSystem,
-  Main,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
-
 const name = 'sample.reference-provider-error'
 
 test('sample.reference-provider-error', async () => {

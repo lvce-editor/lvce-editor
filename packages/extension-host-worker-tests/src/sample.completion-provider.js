@@ -1,16 +1,3 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  Editor,
-  Extension,
-  FileSystem,
-  Main,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
-
 test('sample.completion-provider', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
@@ -95,3 +82,5 @@ test('sample.completion-provider', async () => {
   // await page.keyboard.press('ArrowRight')
   // await expect(completions).toBeHidden()
 })
+
+export {}

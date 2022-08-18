@@ -1,16 +1,3 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  ContextMenu,
-  Explorer,
-  FileSystem,
-  KeyBoard,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
-
 // TODO test might be flaky https://github.com/lvce-editor/lvce-editor/runs/7490211933?check_suite_focus=true
 test('viewlet.explorer-create-file', async () => {
   // arrange

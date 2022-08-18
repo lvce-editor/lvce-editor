@@ -1,17 +1,3 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  Editor,
-  Extension,
-  FileSystem,
-  Main,
-  Workspace,
-  ContextMenu,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
-
 const name = 'sample.reference-provider-error-main-not-found'
 
 test('sample.reference-provider-error-manifest-not-found', async () => {
@@ -44,3 +30,5 @@ test('sample.reference-provider-error-manifest-not-found', async () => {
 
   // TODO should show dialog with json stack trace
 })
+
+export {}

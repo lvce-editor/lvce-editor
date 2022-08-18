@@ -1,16 +1,3 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  Extension,
-  FileSystem,
-  Search,
-  SideBar,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
-
 const name = 'sample.text-search-provider-error'
 
 test('sample.text-search-provider-error', async () => {

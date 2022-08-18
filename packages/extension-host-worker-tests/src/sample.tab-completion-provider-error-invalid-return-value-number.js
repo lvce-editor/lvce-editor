@@ -1,16 +1,3 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  Editor,
-  Extension,
-  FileSystem,
-  Main,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
-
 const name = 'sample.tab-completion-provider-error-invalid-return-value-number'
 
 test('sample.tab-completion-provider-error-invalid-return-value-number', async () => {

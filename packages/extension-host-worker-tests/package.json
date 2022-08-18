@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "e2e": "node src/_all.js",
-    "e2e:headless": "node src/_all.js --headless"
+    "e2e:headless": "node src/_all.js --headless",
+    "type-check": "tsc"
   },
   "keywords": [],
   "author": "",

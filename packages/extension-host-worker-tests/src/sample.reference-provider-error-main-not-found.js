@@ -1,17 +1,3 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  Editor,
-  Extension,
-  FileSystem,
-  Main,
-  Workspace,
-  ContextMenu,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
-
 const name = 'sample.reference-provider-error-main-not-found'
 
 test('sample.reference-provider-error-main-not-found', async () => {
@@ -49,3 +35,5 @@ test('sample.reference-provider-error-main-not-found', async () => {
     `Error: Failed to activate extension sample.reference-provider-error-main-not-found: TypeError: Failed to fetch dynamically imported module: ${mainUrl}`
   )
 })
+
+export {}

@@ -1,14 +1,3 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  Explorer,
-  FileSystem,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
-
 test('viewlet.explorer-keyboard-navigation', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()

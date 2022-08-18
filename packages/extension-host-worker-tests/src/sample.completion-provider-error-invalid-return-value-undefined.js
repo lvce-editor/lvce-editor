@@ -1,16 +1,3 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  Editor,
-  Extension,
-  FileSystem,
-  Main,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
-
 test('sample.completion-provider-error-invalid-return-value-undefined', async () => {
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -39,3 +26,5 @@ test('sample.completion-provider-error-invalid-return-value-undefined', async ()
     `Failed to execute completion provider: VError: invalid completion result: completion must be of type array but is undefined`
   )
 })
+
+export {}

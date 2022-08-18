@@ -1,14 +1,3 @@
-import {
-  expect,
-  Locator,
-  test,
-} from '../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js'
-import {
-  FileSystem,
-  KeyBoard,
-  Workspace,
-} from '../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
-
 test.skip('viewlet.explorer-delete-multiple-files', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
