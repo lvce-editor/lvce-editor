@@ -20,6 +20,11 @@
     "version": "0.0.1"
   },
   {
+    "name": "builtin.language-basics-yaml",
+    "repository": "github.com/lvce-editor/language-basics-yaml",
+    "version": "0.0.3"
+  },
+  {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
     "version": "0.0.2"
