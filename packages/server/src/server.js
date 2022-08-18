@@ -3,8 +3,13 @@
 import { sharedProcessPath } from '@lvce-editor/shared-process'
 import { ChildProcess, fork } from 'child_process'
 import { createReadStream } from 'fs'
-import { stat } from 'fs/promises'
-import { createServer } from 'http'
+import { readdir, stat } from 'fs/promises'
+import {
+  createServer,
+  IncomingMessage,
+  OutgoingMessage,
+  ServerResponse,
+} from 'http'
 import { dirname, extname, join, resolve } from 'path'
 import { pipeline } from 'stream/promises'
 import { fileURLToPath } from 'url'
@@ -137,15 +142,71 @@ const serveGitHub = async (req, res) => {
   }
 }
 
-const serveTests = async (req, res) => {
-  if (req.url.endsWith('.html')) {
+const getTestPath = () => {
+  if (process.env.TEST_PATH) {
+    const testPath = process.env.TEST_PATH
+    return join(process.cwd(), testPath)
+  }
+  return join(ROOT, 'packages', 'extension-host-worker-tests')
+}
+
+const generateTestOverviewHtml = (dirents) => {
+  const pre = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tests</title>
+  </head>
+  <body>
+    <h1>Tests</h1>
+    <p>Available Tests</p>
+    <ul>
+`
+  let middle = ``
+  // TODO properly escape name
+  for (const dirent of dirents) {
+    if (dirent.endsWith('.js') && !dirent.startsWith('_')) {
+      const name = dirent.slice(0, -'.js'.length)
+      middle += `      <li><a href="./${name}.html">${name}</a></li>
+`
+    }
+  }
+
+  const post = `    </ul>
+  </body>
+</html>
+`
+  return pre + middle + post
+}
+
+const createTestOverview = async () => {
+  const testPath = getTestPath()
+  const testPathSrc = join(testPath, 'src')
+  const dirents = await readdir(testPathSrc)
+  const testOverviewHtml = generateTestOverviewHtml(dirents)
+  return testOverviewHtml
+}
+
+/**
+ *
+ * @param {IncomingMessage} req
+ * @param {ServerResponse} res
+ */
+const serveTests = async (req, res, next) => {
+  if (req.url && req.url.endsWith('.html')) {
     try {
       await pipeline(createReadStream(join(ROOT, 'static', 'index.html')), res)
     } catch (error) {
       console.info('failed to send request', error)
     }
+  } else if (req.url === '/tests/') {
+    const testOverview = await createTestOverview()
+    res.statusCode = 300
+    res.end(testOverview)
   } else {
-    console.log(req.url)
+    next()
   }
 }
 
