@@ -183,7 +183,6 @@ const renderItems = {
     return oldState.items === newState.items
   },
   apply(oldState, newState) {
-    console.log(newState.items)
     return [
       /* viewletSend */ 'Viewlet.send',
       /* id */ 'Search',
