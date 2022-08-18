@@ -178,19 +178,20 @@ const getModuleId = (commandId) => {
       return MODULE_EXTENSION_MANAGEMENT
     case 'Search.search':
       return MODULE_SEARCH
-    case 'Platform.getConfigDir':
     case 'Platform.getAppDir':
-    case 'Platform.getHomeDir':
-    case 'Platform.getDataDir':
-    case 'Platform.getExtensionsPath':
     case 'Platform.getBuiltinExtensionsPath':
-    case 'Platform.getDisabledExtensionsPath':
     case 'Platform.getCachedExtensionsPath':
-    case 'Platform.getMarketplaceUrl':
-    case 'Platform.getLogsDir':
-    case 'Platform.getUserSettingsPath':
-    case 'Platform.getRecentlyOpenedPath':
     case 'Platform.getCacheDir':
+    case 'Platform.getConfigDir':
+    case 'Platform.getDataDir':
+    case 'Platform.getDisabledExtensionsPath':
+    case 'Platform.getExtensionsPath':
+    case 'Platform.getHomeDir':
+    case 'Platform.getLogsDir':
+    case 'Platform.getMarketplaceUrl':
+    case 'Platform.getRecentlyOpenedPath':
+    case 'Platform.getTestPath':
+    case 'Platform.getUserSettingsPath':
     case 'Platform.setEnvironmentVariables':
       return MODULE_PLATFORM
     case 'Terminal.create':

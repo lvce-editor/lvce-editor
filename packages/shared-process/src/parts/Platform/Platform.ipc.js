@@ -16,4 +16,5 @@ export const Commands = {
   'Platform.getRecentlyOpenedPath': Platform.getRecentlyOpenedPath,
   'Platform.getCacheDir': Platform.getCacheDir,
   'Platform.setEnvironmentVariables': Platform.setEnvironmentVariables,
+  'Platform.getTestPath': Platform.getTestPath,
 }

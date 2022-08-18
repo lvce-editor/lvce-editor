@@ -137,8 +137,21 @@ const serveGitHub = async (req, res) => {
   }
 }
 
+const serveTests = async (req, res) => {
+  if (req.url.endsWith('.html')) {
+    try {
+      await pipeline(createReadStream(join(ROOT, 'static', 'index.html')), res)
+    } catch (error) {
+      console.info('failed to send request', error)
+    }
+  } else {
+    console.log(req.url)
+  }
+}
+
 app.use('/github', serveGitHub, serve404())
 app.use('/remote', serveStatic('', '/remote'), serve404())
+app.use('/tests', serveTests, serve404())
 app.use('*', serveStatic(ROOT), serveStatic(STATIC), serve404())
 
 const state = {

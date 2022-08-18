@@ -60,3 +60,9 @@ export const getExtensions = async () => {
   const extensions = await getSharedProcessExtensions()
   return extensions
 }
+
+export const addNodeExtension = async (path) => {
+  // TODO add support for dynamically loading node extensions
+  // e.g. for testing multiple extensions
+  throw new Error('not implemented')
+}
