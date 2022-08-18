@@ -51,10 +51,10 @@ export const create = () => {
   const $SearchStatus = document.createElement('div')
   // @ts-ignore
   $SearchStatus.role = 'status'
+  $SearchStatus.className = 'ViewletSearchMessage'
 
   const $Viewlet = document.createElement('div')
   $Viewlet.dataset.viewletId = 'Search'
-  $Viewlet.tabIndex = -1
   $Viewlet.className = 'Viewlet'
   $Viewlet.append($ViewletSearchInput, $SearchStatus, $SearchResults)
 
@@ -150,25 +150,6 @@ const render$Rows = ($Rows, rowInfos) => {
   } else {
     render$RowsMore($Rows, rowInfos)
   }
-}
-
-const cleanNode = ($Node) => {
-  while ($Node.firstChild) {
-    $Node.firstChild.remove()
-  }
-}
-
-const getStatusMessage = (resultCount, fileResultCount) => {
-  if (resultCount === 0) {
-    return 'No results found'
-  }
-  if (resultCount === 1 && fileResultCount === 1) {
-    return 'Found 1 result in 1 file'
-  }
-  if (fileResultCount === 1) {
-    return `Found ${resultCount} results in 1 file`
-  }
-  return `Found ${resultCount} results in ${fileResultCount} files`
 }
 
 export const setResults = (state, results) => {
