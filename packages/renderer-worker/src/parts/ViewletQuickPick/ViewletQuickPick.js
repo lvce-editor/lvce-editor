@@ -193,6 +193,7 @@ export const dispose = (state) => {
 }
 
 export const handleBlur = async (state) => {
+  console.log('quickpick blur')
   await Viewlet.closeWidget('QuickPick')
   return state
 }

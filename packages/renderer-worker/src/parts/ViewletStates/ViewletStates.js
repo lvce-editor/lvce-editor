@@ -15,6 +15,10 @@ export const getInstance = (key) => {
   return state.instances[key]
 }
 
+export const hasInstance = (key) => {
+  return key in state.instances
+}
+
 export const remove = (key) => {
   delete state.instances[key]
 }

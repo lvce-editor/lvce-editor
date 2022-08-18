@@ -154,6 +154,7 @@ export const sendMultiple = (commands) => {
  * @deprecated
  */
 export const dispose = (id) => {
+  console.log('disposing', id)
   Assert.string(id)
   const instance = state.instances[id]
   if (!instance) {
@@ -239,6 +240,7 @@ export const appendViewlet = (parentId, childId, focus) => {
 }
 
 export const executeCommands = (commands) => {
+  console.log({ commands })
   for (const [command, ...args] of commands) {
     switch (command) {
       case 'Viewlet.create':
@@ -250,13 +252,17 @@ export const executeCommands = (commands) => {
       case 'Viewlet.show':
         show(...args)
         break
-      default:
+      case 'Viewlet.dispose':
+        dispose(...args)
         break
+      default:
+        throw new Error(`unknown command ${command}`)
     }
   }
 }
 
 export const show = (id) => {
+  console.log('show', id)
   const instance = state.instances[id]
   const $Viewlet = instance.state.$Viewlet
   const $Workbench = document.getElementById('Workbench')
