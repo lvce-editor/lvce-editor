@@ -1,5 +1,3 @@
-/// <reference path="../typings/types.d.ts" />
-
 test('viewlet.explorer-delete-file', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()

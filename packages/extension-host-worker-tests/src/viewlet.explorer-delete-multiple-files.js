@@ -1,5 +1,3 @@
-/// <reference path="../typings/types.d.ts" />
-
 test.skip('viewlet.explorer-delete-multiple-files', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()

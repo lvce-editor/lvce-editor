@@ -1,5 +1,3 @@
-/// <reference path="../typings/types.d.ts" />
-
 // TODO test is broken in ci, not sure why https://github.com/lvce-editor/lvce-editor/runs/7691685045?check_suite_focus=true
 test.skip('viewlet.editor-cursor-word-left', async () => {
   // arrange

@@ -1,5 +1,3 @@
-/// <reference path="../typings/types.d.ts" />
-
 const name = 'sample.tab-completion-provider-no-result'
 
 test('sample.tab-completion-provider-no-result', async () => {

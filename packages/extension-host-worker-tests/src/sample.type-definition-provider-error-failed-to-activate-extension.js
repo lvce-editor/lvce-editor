@@ -1,5 +1,3 @@
-/// <reference path="../typings/types.d.ts" />
-
 const name =
   'sample.type-definition-provider-error-failed-to-activate-extension'
 

@@ -1,5 +1,3 @@
-/// <reference path="../typings/types.d.ts" />
-
 // manual accessibility tests
 
 // explorer

@@ -1,5 +1,3 @@
-/// <reference path="../typings/types.d.ts" />
-
 const name = 'sample.brace-completion-provider-error-spelling'
 
 test.skip('sample.brace-completion-provider-error-spelling', async () => {

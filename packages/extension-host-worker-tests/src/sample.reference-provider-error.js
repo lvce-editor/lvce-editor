@@ -1,5 +1,3 @@
-/// <reference path="../typings/types.d.ts" />
-
 const name = 'sample.reference-provider-error'
 
 test('sample.reference-provider-error', async () => {

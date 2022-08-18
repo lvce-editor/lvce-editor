@@ -1,5 +1,3 @@
-/// <reference path="../typings/types.d.ts" />
-
 // TODO test might be flaky https://github.com/lvce-editor/lvce-editor/runs/7490211933?check_suite_focus=true
 test('viewlet.explorer-create-file', async () => {
   // arrange

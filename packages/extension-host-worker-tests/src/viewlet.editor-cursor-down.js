@@ -1,5 +1,3 @@
-/// <reference path="../typings/types.d.ts" />
-
 test('viewlet.editor-cursor-down', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()

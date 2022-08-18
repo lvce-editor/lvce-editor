@@ -1,5 +1,3 @@
-/// <reference path="../typings/types.d.ts" />
-
 test('sample.completion-provider', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()

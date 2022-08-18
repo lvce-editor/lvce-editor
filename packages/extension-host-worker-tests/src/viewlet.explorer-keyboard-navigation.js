@@ -1,5 +1,3 @@
-/// <reference path="../typings/types.d.ts" />
-
 test('viewlet.explorer-keyboard-navigation', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()

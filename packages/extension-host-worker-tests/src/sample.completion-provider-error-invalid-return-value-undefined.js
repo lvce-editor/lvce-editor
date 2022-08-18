@@ -1,5 +1,3 @@
-/// <reference path="../typings/types.d.ts" />
-
 test('sample.completion-provider-error-invalid-return-value-undefined', async () => {
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(

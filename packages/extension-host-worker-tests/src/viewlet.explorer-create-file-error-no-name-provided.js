@@ -1,5 +1,3 @@
-/// <reference path="../typings/types.d.ts" />
-
 // TODO test is flaky https://github.com/lvce-editor/lvce-editor/runs/7883530122?check_suite_focus=true
 test.skip('viewlet.explorer-create-file-error-no-name-provided', async () => {
   // arrange

@@ -1,5 +1,3 @@
-/// <reference path="../typings/types.d.ts" />
-
 const name = 'sample.type-definition-provider-no-result'
 
 test.skip('sample.type-definition-provider-no-result', async () => {
