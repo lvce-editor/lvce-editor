@@ -1,11 +1,9 @@
 /* Tries to implement the pattern for combobox with listbox popup https://www.w3.org/TR/wai-aria-1.2/#combobox */
 
+import * as AriaAlert from '../AriaAlert/AriaAlert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Widget from '../Widget/Widget.js'
-import * as Assert from '../Assert/Assert.js'
-import * as AriaAlert from '../AriaAlert/AriaAlert.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -93,13 +91,7 @@ const handleInput = (event) => {
     /* value */ $Target.value
   )
 }
-// TODO when blur hides quickpick automatically it doesn't necessarily need to be sent command to hide itself
 const handleBlur = (event) => {
-  // console.log(event)
-  // if (!event.relatedTarget) {
-  //   console.log('no related target')
-  //   return
-  // }
   RendererWorker.send(/* QuickPick.handleBlur */ 'QuickPick.handleBlur')
 }
 
@@ -363,10 +355,7 @@ export const showNoResults = (state, noResults, unfocusIndex) => {
 
 // TODO have common widgets container for all widgets (this, notifications, context menu)
 export const dispose = (state) => {
-  // TODO make hidden or remove, which is better?  -> remove less dom nodes in dom, hidden -> maybe less style recalculations when shown again
   state.$QuickPickInput.onblur = null
-  Widget.remove(state.$QuickPick)
-  Focus.focusPrevious()
 }
 
 export const setValue = (state, value) => {

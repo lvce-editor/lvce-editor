@@ -250,8 +250,11 @@ export const executeCommands = (commands) => {
       case 'Viewlet.show':
         show(...args)
         break
-      default:
+      case 'Viewlet.dispose':
+        dispose(...args)
         break
+      default:
+        throw new Error(`unknown command ${command}`)
     }
   }
 }
