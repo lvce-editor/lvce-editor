@@ -294,15 +294,6 @@ const handleProcessExit = (code) => {
   }
 }
 
-const handleSigInt = () => {
-  console.info(`[server] Process will exit because of sigint`)
-  app.close()
-  if (state.sharedProcess && !state.sharedProcess.killed) {
-    state.sharedProcess.kill('SIGINT')
-    state.sharedProcess = undefined
-  }
-}
-
 const handleAppReady = () => {
   if (process.send) {
     console.log('send ready')
@@ -320,7 +311,6 @@ const handleUncaughtExceptionMonitor = (error, origin) => {
 const main = () => {
   process.on('message', handleMessageFromParent)
   process.on('exit', handleProcessExit)
-  process.on('SIGINT', handleSigInt)
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
   app.listen(PORT, handleAppReady)
 }
