@@ -102,7 +102,7 @@
   {
     "name": "builtin.language-basics-cpp",
     "repository": "github.com/lvce-editor/language-basics-cpp",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   {
     "name": "builtin.language-features-html",
