@@ -355,7 +355,6 @@ export const showNoResults = (state, noResults, unfocusIndex) => {
 
 // TODO have common widgets container for all widgets (this, notifications, context menu)
 export const dispose = (state) => {
-  console.log('dispose quickpick')
   state.$QuickPickInput.onblur = null
 }
 

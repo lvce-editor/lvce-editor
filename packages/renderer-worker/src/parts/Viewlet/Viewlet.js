@@ -226,11 +226,6 @@ export const getAllStates = () => {
 
 export const openWidget = async (id, ...args) => {
   const hasInstance = ViewletStates.hasInstance(id)
-  console.log({
-    hasInstance,
-    id,
-    instances: { ...ViewletStates.getAllInstances() },
-  })
   const type = args[0]
   const commands = await ViewletManager.load({
     getModule: ViewletManager.getModule,
@@ -244,7 +239,6 @@ export const openWidget = async (id, ...args) => {
   if (hasInstance) {
     commands.unshift(['Viewlet.dispose', id])
   }
-  console.log({ commands })
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
   // TODO commands should be like this
   // viewlet.create quickpick
