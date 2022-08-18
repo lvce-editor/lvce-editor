@@ -31,13 +31,9 @@ test('comment with block comment', async () => {
   })
   const editor = {
     lines: ['  <body>', '    sample test', '  </body>'],
-    cursor: {
-      rowIndex: 1,
-      columnIndex: 15,
-    },
+    selections: new Uint32Array([1, 15, 1, 15]),
     languageId: 'html',
     lineCache: [],
-    selections: [],
     undoStack: [],
     uri: '',
   }
@@ -45,10 +41,8 @@ test('comment with block comment', async () => {
     await EditorToggleBlockComment.editorToggleBlockComment(editor)
   ).toMatchObject({
     lines: ['  <body>', '    <!--sample test-->', '  </body>'],
-    cursor: {
-      rowIndex: 1,
-      columnIndex: 15, // TODO should be at 22
-    },
+    // TODO should be at 22
+    selections: new Uint32Array([1, 15, 1, 15]),
   })
 })
 
@@ -63,12 +57,7 @@ test('uncomment block comment', async () => {
   })
   const editor = {
     lines: ['  <body>', '    <!--sample test-->', '  </body>'],
-    cursor: {
-      rowIndex: 1,
-      columnIndex: 22,
-    },
-    lineCache: [],
-    selections: [],
+    selections: new Uint32Array([1, 22, 1, 22]),
     undoStack: [],
     uri: '',
   }
@@ -76,10 +65,8 @@ test('uncomment block comment', async () => {
     await EditorToggleBlockComment.editorToggleBlockComment(editor)
   ).toMatchObject({
     lines: ['  <body>', '    sample test', '  </body>'],
-    cursor: {
-      rowIndex: 1,
-      columnIndex: 22, // TODO should be at 15
-    },
+    // TODO should be at 15
+    selections: new Uint32Array([1, 22, 1, 22]),
   })
 })
 
@@ -94,12 +81,8 @@ test('uncomment multiline block comment', async () => {
   })
   const editor = {
     lines: ['  <body>', '    <!--sample test', '-->', '  </body>'],
-    cursor: {
-      rowIndex: 1,
-      columnIndex: 20,
-    },
+    selections: new Uint32Array([1, 20, 1, 20]),
     lineCache: [],
-    selections: [],
     undoStack: [],
     uri: '',
   }
@@ -107,9 +90,6 @@ test('uncomment multiline block comment', async () => {
     await EditorToggleBlockComment.editorToggleBlockComment(editor)
   ).toMatchObject({
     lines: ['  <body>', '    sample test', '', '  </body>'],
-    cursor: {
-      rowIndex: 1,
-      columnIndex: 20,
-    },
+    selections: new Uint32Array([1, 20, 1, 20]),
   })
 })
