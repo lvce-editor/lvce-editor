@@ -21,6 +21,7 @@ extensions/builtin.language-features-html
 extensions/builtin.language-basics-typescript
 extensions/builtin.language-basics-docker
 extensions/builtin.language-basics-markdown
+extensions/builtin.language-basics-yaml
 
 
 *.tar.br
