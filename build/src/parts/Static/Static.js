@@ -1,3 +1,4 @@
+import { existsSync } from 'fs'
 import { readdir } from 'fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
@@ -107,6 +108,15 @@ const copyStaticFiles = async ({ pathPrefix }) => {
     <link rel="preload" href="${pathPrefix}/${commitHash}/icon-themes/vscode-icons.json" as="fetch" crossorigin>
   </head>`,
   })
+  if (pathPrefix) {
+    await Replace.replace({
+      path: `build/.tmp/dist/index.html`,
+      occurrence: '</title>',
+      replacement: `</title>
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">`,
+    })
+  }
+
   await Replace.replace({
     path: `build/.tmp/dist/index.html`,
     occurrence: '</body>',
@@ -252,10 +262,17 @@ const getAbsolutePath = (extensionName) => {
   return `extensions/${extensionName}/extension.json`
 }
 
+const exists = (path) => {
+  return existsSync(path)
+}
+
 const bundleLanguageJsonFiles = async ({ commitHash, pathPrefix }) => {
   const languageBasics = await getLanguageBasicsNames()
   const extensionPaths = languageBasics.map(getAbsolutePath)
-  const extensions = await Promise.all(extensionPaths.map(JsonFile.readJson))
+  const existingExtensionPaths = extensionPaths.filter(exists)
+  const extensions = await Promise.all(
+    existingExtensionPaths.map(JsonFile.readJson)
+  )
   const getLanguages = (extension) => {
     const getLanguage = (language) => {
       return {
