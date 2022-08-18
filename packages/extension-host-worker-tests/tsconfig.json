@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "rootDir": ".",
     "lib": ["esnext"],
     "checkJs": true,
     "module": "esnext",
