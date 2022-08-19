@@ -152,3 +152,7 @@ export const getTestPath = () => {
 export const getNodePath = () => {
   return SharedProcess.invoke(/* Platform.getNodePath */ 'Platform.getNodePath')
 }
+
+export const getTmpDir = () => {
+  return SharedProcess.invoke(/* Platform.getTmpDir */ 'Platform.getTmpDir')
+}

@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as Platform from '../Platform/Platform.js'
 
 export const writeFile = async (path, content) => {
   await Command.execute('FileSystem.writeFile', path, content)
@@ -8,8 +9,13 @@ export const mkdir = async (path) => {
   await Command.execute('FileSystem.mkdir', path)
 }
 
-export const getTmpDir = async () => {
-  return `memfs://`
+export const getTmpDir = async ({ scheme = 'memfs' } = {}) => {
+  switch (scheme) {
+    case 'memfs':
+      return 'memfs://'
+    default:
+      return Platform.getTmpDir()
+  }
 }
 
 export const chmod = async (uri, permissions) => {
