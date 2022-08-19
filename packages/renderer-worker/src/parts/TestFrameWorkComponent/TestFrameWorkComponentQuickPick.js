@@ -11,3 +11,7 @@ export const setValue = async (value) => {
 export const focusNext = async () => {
   await Command.execute('QuickPick.focusNext')
 }
+
+export const selectItem = async (label) => {
+  await Command.execute('QuickPick.selectItem', label)
+}

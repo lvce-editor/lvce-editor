@@ -1,11 +1,21 @@
 import * as ExtensionHostShared from './ExtensionHostShared.js'
+import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 
-export const getCommands = () => {
-  // TODO can use extensions that are already loaded
-  return ExtensionHostShared.execute({
-    method: 'ExtensionHost.getCommands',
-    params: [],
-  })
+const getCommandsFromExtension = (extension) => {
+  if (!extension || !extension.commands) {
+    return []
+  }
+  return extension.commands
+}
+
+const getCommandsFromExtensions = (extensions) => {
+  return extensions.flatMap(getCommandsFromExtension)
+}
+
+export const getCommands = async () => {
+  const extensions = await ExtensionMeta.getExtensions()
+  const commands = getCommandsFromExtensions(extensions)
+  return commands
 }
 
 // TODO add test for this

@@ -211,6 +211,24 @@ const getPick = (state, index) => {
   console.warn('no pick matching index', index)
 }
 
+const findLabelIndex = (items, label) => {
+  for (let i = 0; i < items.length; i++) {
+    if (items[i].label === label) {
+      return i
+    }
+  }
+  return -1
+}
+
+export const selectItem = (state, label) => {
+  Assert.string(label)
+  const index = findLabelIndex(state.items, label)
+  if (index === -1) {
+    return state
+  }
+  return selectIndex(state, index)
+}
+
 export const selectIndex = async (state, index, button = /* left */ 0) => {
   const actualIndex = index + state.minLineY
   const pick = getPick(state, actualIndex)

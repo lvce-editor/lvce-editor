@@ -8,6 +8,7 @@ import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/Exten
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
+import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 
 // prettier-ignore
 export const createCommandMap = () => {
@@ -28,6 +29,10 @@ export const create = () => {
     // Brace Completion
     registerBraceCompletionProvider:ExtensionHostBraceCompletion.registerBraceCompletionProvider,
     executeBraceCompletionProvider: ExtensionHostBraceCompletion.executeBraceCompletionProvider,
+
+    // Command
+    registerCommand: ExtensionHostCommand.registerCommand,
+    executeCommand: ExtensionHostCommand.executeCommand,
 
     // Completion
     registerCompletionProvider:ExtensionHostCompletion.registerCompletionProvider,
