@@ -12,6 +12,11 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lvce-editor/lvce-editor.git",
+    "directory": "packages/extension-host"
+  },
   "engines": {
     "node": ">=16"
   },
