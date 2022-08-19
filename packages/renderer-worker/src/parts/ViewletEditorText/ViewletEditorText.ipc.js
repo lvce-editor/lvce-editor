@@ -79,9 +79,11 @@ const Imports = {
   SelectAllOccurrences: () => import('../EditorCommand/EditorCommandSelectAllOccurrences.js'),
   SelectCharacterLeft: () => import('../EditorCommand/EditorCommandSelectCharacterLeft.js'),
   SelectCharacterRight: () => import('../EditorCommand/EditorCommandSelectCharacterRight.js'),
+  SelectDown: () => import('../EditorCommand/EditorCommandSelectDown.js'),
   SelectInsideString: () => import('../EditorCommand/EditorCommandSelectInsideString.js'),
   SelectLine: () => import('../EditorCommand/EditorCommandSelectLine.js'),
   SelectNextOccurrence: () => import('../EditorCommand/EditorCommandSelectNextOccurrence.js'),
+  SelectUp: () => import('../EditorCommand/EditorCommandSelectUp.js'),
   SelectWord: () => import('../EditorCommand/EditorCommandSelectWord.js'),
   SelectWordLeft: () => import('../EditorCommand/EditorCommandSelectWordLeft.js'),
   SelectWordRight: () => import('../EditorCommand/EditorCommandSelectWordRight.js'),
@@ -95,7 +97,6 @@ const Imports = {
   Type: () => import('../EditorCommand/EditorCommandType.js'),
   Undo: () => import('../EditorCommand/EditorCommandUndo.js'),
   UnIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
-  SelectUp: () => import('../EditorCommand/EditorCommandSelectUp.js'),
 }
 
 // prettier-ignore
@@ -168,6 +169,7 @@ export const Commands = {
   'Editor.selectAllOccurrences': lazyCommand(Imports.SelectAllOccurrences, 'editorSelectAllOccurrences'),
   'Editor.selectCharacterLeft': lazyCommand(Imports.SelectCharacterLeft, 'editorSelectCharacterLeft'),
   'Editor.selectCharacterRight': lazyCommand(Imports.SelectCharacterRight, 'editorSelectCharacterRight'),
+  'Editor.selectDown': lazyCommand(Imports.SelectDown, 'selectDown'),
   'Editor.selectInsideString': lazyCommand(Imports.SelectInsideString, 'editorSelectInsideString'),
   'Editor.selectLine': lazyCommand(Imports.SelectLine, 'editorSelectLine'),
   'Editor.selectNextOccurrence': lazyCommand(Imports.SelectNextOccurrence, 'editorSelectNextOccurrence'),
