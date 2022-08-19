@@ -281,6 +281,10 @@
     "label": "Editor: Toggle Comment"
   },
   {
+    "id": "Editor.selectUp",
+    "label": "Editor: Select Up"
+  },
+  {
     "id": "Editor.toggleBlockComment",
     "label": "Editor: Toggle Block Comment"
   },
