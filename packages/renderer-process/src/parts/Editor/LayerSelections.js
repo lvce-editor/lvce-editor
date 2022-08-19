@@ -1,4 +1,5 @@
 import * as Platform from '../Platform/Platform.js'
+import * as Assert from '../Assert/Assert.js'
 
 const create$Selection = () => {
   const $Selection = document.createElement('div')
@@ -7,6 +8,9 @@ const create$Selection = () => {
 }
 
 const render$Selection = ($Selection, selections, i) => {
+  Assert.object($Selection)
+  Assert.number(i)
+
   const top = selections[i * 4]
   const left = selections[i * 4 + 1]
   const width = selections[i * 4 + 2]
@@ -26,7 +30,7 @@ const render$SelectionsLess = (
   selectionCount
 ) => {
   for (let i = 0, j = 0; i < childCount; i++, j += 4) {
-    render$Selection($Selections.children[i], selections[i])
+    render$Selection($Selections.children[i], selections, i)
   }
   const fragment = document.createDocumentFragment()
   for (let i = childCount; i < selectionCount; i++) {
@@ -86,6 +90,5 @@ export const setSelections = (state, selections) => {
     renderSelectionsNative(state, selections)
     return
   }
-  console.log({ selections })
   render$Selections(state.$LayerSelections, selections)
 }

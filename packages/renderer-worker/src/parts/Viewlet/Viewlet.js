@@ -158,6 +158,7 @@ export const wrapViewletCommand = (id, fn) => {
         return fn(activeInstance.state, ...args)
       }
     } catch (error) {
+      console.error(error)
       await RendererProcess.invoke(
         /* viewlet.handleError */ 'Viewlet.handleError',
         /* id */ id,
