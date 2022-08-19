@@ -260,13 +260,17 @@ export const getRealPath = async (path) => {
   }
 }
 
+// TODO handle error
 export const stat = async (path) => {
   const stats = await fs.stat(path)
   const type = getType(stats)
   return type
 }
 
-// getRealPath('/home/simon/Documents/levivilet/lvce-editor/node_modules/.bin/abc') //?
+export const chmod = async (path, permissions) => {
+  await fs.chmod(path, permissions)
+}
+
 // export const unwatch = (id) => {
 //   state.watchers[id].close()
 //   delete state.watchers[id]

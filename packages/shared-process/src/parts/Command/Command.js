@@ -88,17 +88,18 @@ const getOrLoadModule = (moduleId) => {
 
 const getModuleId = (commandId) => {
   switch (commandId) {
-    case 'FileSystem.readFile':
-    case 'FileSystem.writeFile':
-    case 'FileSystem.readDirWithFileTypes':
-    case 'FileSystem.remove':
-    case 'FileSystem.mkdir':
+    case 'FileSystem.chmod':
+    case 'FileSystem.copy':
     case 'FileSystem.createFile':
     case 'FileSystem.createFolder':
-    case 'FileSystem.rename':
     case 'FileSystem.ensureFile':
-    case 'FileSystem.copy':
     case 'FileSystem.getPathSeparator':
+    case 'FileSystem.mkdir':
+    case 'FileSystem.readDirWithFileTypes':
+    case 'FileSystem.readFile':
+    case 'FileSystem.remove':
+    case 'FileSystem.rename':
+    case 'FileSystem.writeFile':
       return MODULE_FILE_SYSTEM
     case 'Workspace.resolveRoot':
     case 'Workspace.getHomeDir':
