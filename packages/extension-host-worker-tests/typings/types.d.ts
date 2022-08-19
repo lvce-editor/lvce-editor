@@ -54,6 +54,10 @@ declare const QuickPick: {
   readonly setValue: (value: string) => Promise<void>
 }
 
+declare const Platform: {
+  readonly getNodePath: () => Promise<string>
+}
+
 declare const SideBar: {
   readonly open: (id: string) => Promise<void>
 }

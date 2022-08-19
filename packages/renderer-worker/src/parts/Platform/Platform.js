@@ -148,3 +148,7 @@ export const getCacheName = () => {
 export const getTestPath = () => {
   return SharedProcess.invoke(/* Platform.getTestPath */ 'Platform.getTestPath')
 }
+
+export const getNodePath = () => {
+  return SharedProcess.invoke(/* Platform.getNodePath */ 'Platform.getNodePath')
+}
