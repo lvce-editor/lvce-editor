@@ -9,6 +9,11 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lvce-editor/lvce-editor.git",
+    "directory": "packages/server"
+  },
   "dependencies": {
     "@lvce-editor/shared-process": "file:../shared-process"
   }

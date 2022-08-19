@@ -11,6 +11,11 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lvce-editor/lvce-editor.git",
+    "directory": "packages/pty-host"
+  },
   "dependencies": {
     "debug": "^4.3.4",
     "verror": "^1.10.1"
