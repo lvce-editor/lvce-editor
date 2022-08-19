@@ -55,6 +55,7 @@ const getExtensionPicks = async () => {
   try {
     // TODO don't call this every time
     const extensionPicks = await ExtensionHostCommands.getCommands()
+    console.log({ extensionPicks })
     if (!extensionPicks) {
       return []
     }

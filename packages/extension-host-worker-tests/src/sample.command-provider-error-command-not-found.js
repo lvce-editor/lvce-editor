@@ -1,4 +1,4 @@
-const name = 'sample.command-provider-error'
+const name = 'sample.command-provider-error-command-not-found'
 
 test('sample.command-provider-error', async () => {
   // arrange
@@ -16,10 +16,8 @@ test('sample.command-provider-error', async () => {
   await expect(dialogErrorMessage).toBeVisible()
   // TODO better error message
   // TODO less obstrusive error message, maybe notification
-  // TODO should show stack trace
-  // TODO should show babel code frame
   await expect(dialogErrorMessage).toHaveText(
-    'Error: Failed to execute command: oops'
+    'Error: Failed to execute command: command xyz.sampleCommand not found'
   )
 })
 

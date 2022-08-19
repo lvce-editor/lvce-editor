@@ -1,7 +1,7 @@
 const sampleCommand = {
   id: 'xyz.sampleCommand',
-  execute() {
-    throw new Error('oops')
+  async execute() {
+    await vscode.showNotification('abc')
   },
 }
 
