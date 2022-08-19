@@ -15,6 +15,7 @@ const fileSystemWatch = (socket, id, path) => {
 
 // TODO separate ipc from code like in renderer worker
 export const Commands = {
+  'FileSystem.chmod': FileSystem.chmod,
   'FileSystem.copy': FileSystem.copy,
   'FileSystem.createFile': FileSystem.createFile,
   'FileSystem.createFolder': FileSystem.createFolder,
