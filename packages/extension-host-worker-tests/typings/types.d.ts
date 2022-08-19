@@ -7,20 +7,21 @@ declare const ContextMenu: {
 }
 
 declare const Editor: {
-  readonly setCursor: (rowIndex: number, columnIndex: number) => Promise<void>
-  readonly openCompletion: () => Promise<void>
-  readonly executeTabCompletion: () => Promise<void>
-  readonly openEditorContextMenu: () => Promise<void>
-  readonly executeBraceCompletion: (brace: string) => Promise<void>
-  readonly cursorUp: () => Promise<void>
+  readonly copyLineDown: () => Promise<void>
+  readonly cursorCharacterLeft: () => Promise<void>
+  readonly cursorCharacterRight: () => Promise<void>
   readonly cursorDown: () => Promise<void>
+  readonly cursorUp: () => Promise<void>
   readonly cursorWordLeft: () => Promise<void>
   readonly cursorWordRight: () => Promise<void>
-  readonly cursorCharacterRight: () => Promise<void>
-  readonly cursorCharacterLeft: () => Promise<void>
-  readonly copyLineDown: () => Promise<void>
+  readonly executeBraceCompletion: (brace: string) => Promise<void>
+  readonly executeTabCompletion: () => Promise<void>
   readonly goToDefinition: () => Promise<void>
   readonly goToTypeDefinition: () => Promise<void>
+  readonly openCompletion: () => Promise<void>
+  readonly openEditorContextMenu: () => Promise<void>
+  readonly setCursor: (rowIndex: number, columnIndex: number) => Promise<void>
+  readonly type: (text: string) => Promise<void>
 }
 
 declare const Explorer: {
