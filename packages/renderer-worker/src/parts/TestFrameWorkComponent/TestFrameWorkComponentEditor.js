@@ -55,3 +55,7 @@ export const goToDefinition = async () => {
 export const goToTypeDefinition = async () => {
   await Command.execute('Editor.goToTypeDefinition')
 }
+
+export const type = async (text) => {
+  await Command.execute('Editor.type')
+}
