@@ -1,18 +1,13 @@
 // based on https://github.com/microsoft/vscode/tree/1.64.2/src/vs/server/node/webClientServer.ts (License MIT)
 
 import { sharedProcessPath } from '@lvce-editor/shared-process'
-import { ChildProcess, fork } from 'child_process'
-import { createReadStream } from 'fs'
-import { readdir, stat } from 'fs/promises'
-import {
-  createServer,
-  IncomingMessage,
-  OutgoingMessage,
-  ServerResponse,
-} from 'http'
-import { dirname, extname, join, resolve } from 'path'
-import { pipeline } from 'stream/promises'
-import { fileURLToPath } from 'url'
+import { ChildProcess, fork } from 'node:child_process'
+import { createReadStream } from 'node:fs'
+import { readdir, stat } from 'node:fs/promises'
+import { createServer, IncomingMessage, ServerResponse } from 'node:http'
+import { dirname, extname, join, resolve } from 'node:path'
+import { pipeline } from 'node:stream/promises'
+import { fileURLToPath } from 'node:url'
 
 // @ts-ignore
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -23,6 +18,15 @@ const PORT = process.env.PORT || 3000
 const argv = process.argv
 
 let argv2 = argv[2]
+
+const argvSliced = argv.slice(2)
+for (const arg of argvSliced) {
+  if (arg.startsWith('--only-extension=')) {
+    process.env['ONLY_EXTENSION'] = arg.slice('--only-extension'.length)
+  } else if (arg.startsWith('--test-path=')) {
+    process.env['TEST_PATH'] = arg.slice('--test-path='.length)
+  }
+}
 
 if (!argv2) {
   argv2 = resolve(__dirname, '../../../playground')
@@ -181,9 +185,7 @@ const generateTestOverviewHtml = (dirents) => {
   return pre + middle + post
 }
 
-const createTestOverview = async () => {
-  const testPath = getTestPath()
-  const testPathSrc = join(testPath, 'src')
+const createTestOverview = async (testPathSrc) => {
   const dirents = await readdir(testPathSrc)
   const testOverviewHtml = generateTestOverviewHtml(dirents)
   return testOverviewHtml
@@ -200,14 +202,35 @@ const serveTests = async (req, res, next) => {
       await pipeline(createReadStream(join(ROOT, 'static', 'index.html')), res)
     } catch (error) {
       console.info('failed to send request', error)
+      res.statusCode = 500
+      // TODO escape error html
+      res.end(`${error}`)
     }
-  } else if (req.url === '/tests/') {
-    const testOverview = await createTestOverview()
-    res.statusCode = 300
-    res.end(testOverview)
-  } else {
-    next()
+    return
   }
+  if (req.url === '/tests/') {
+    const testPath = getTestPath()
+    const testPathSrc = join(testPath, 'src')
+
+    try {
+      const testOverview = await createTestOverview(testPathSrc)
+      res.statusCode = 300
+      res.end(testOverview)
+    } catch (error) {
+      // @ts-ignore
+      if (error && error.code === 'ENOENT') {
+        res.statusCode = 404
+        // TODO escape path for html
+        res.end(`No test files found at ${testPathSrc}`)
+        return
+      }
+      res.statusCode = 500
+      // TODO escape error html
+      res.end(`${error}`)
+    }
+    return
+  }
+  next()
 }
 
 app.use('/github', serveGitHub, serve404())
@@ -274,15 +297,18 @@ const launchSharedProcess = () => {
   state.sharedProcessState = /* launching */ 1
   delete process.env.ELECTRON_RUN_AS_NODE
 
-  const sharedProcess = fork(sharedProcessPath, {
-    stdio: 'inherit',
+  const sharedProcess = fork(
+    sharedProcessPath,
     // execArgv: ['--trace-deopt'],
-    execArgv: ['--enable-source-maps'],
-    env: {
-      ...process.env,
-      ELECTRON_RUN_AS_NODE: '1',
-    },
-  })
+    ['--enable-source-maps'],
+    {
+      stdio: 'inherit',
+      env: {
+        ...process.env,
+        ELECTRON_RUN_AS_NODE: '1', // TODO only needed when server is run inside electron app
+      },
+    }
+  )
   const handleFirstMessage = (message) => {
     state.sharedProcessState = /* on */ 2
     for (const listener of state.onSharedProcessReady) {
