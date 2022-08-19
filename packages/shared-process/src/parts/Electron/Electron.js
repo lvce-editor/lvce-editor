@@ -65,9 +65,10 @@ export const about = async () => {
   await invoke(/* About.open */ 'About.open')
 }
 
-export const showOpenDialog = async () => {
+export const showOpenDialog = async (title) => {
   const result = await invoke(
-    /* Dialog.showOpenDialog */ 'Dialog.showOpenDialog'
+    /* Dialog.showOpenDialog */ 'Dialog.showOpenDialog',
+    /* title */ title
   )
   return result
 }

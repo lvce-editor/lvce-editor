@@ -11,7 +11,8 @@ const enableElectronFreezeDesktopWorkaround = async () => {
   await setTimeout(140)
 }
 
-exports.showOpenDialog = async () => {
+exports.showOpenDialog = async (title) => {
+  Assert.string(title)
   const focusedWindow = Window.getFocusedWindow()
   if (!focusedWindow) {
     return
@@ -19,7 +20,7 @@ exports.showOpenDialog = async () => {
   await enableElectronFreezeDesktopWorkaround()
   const result = await Electron.dialog.showOpenDialog(focusedWindow, {
     properties: ['openDirectory', 'dontAddToRecent', 'showHiddenFiles'],
-    title: 'Open Folder',
+    title,
   })
   if (result.canceled || result.filePaths.length !== 1) {
     return
