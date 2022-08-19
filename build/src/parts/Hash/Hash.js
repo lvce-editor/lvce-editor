@@ -1,6 +1,5 @@
-import { createHash } from 'crypto'
-import { readdir } from 'fs/promises'
-import { join } from 'path'
+import { createHash } from 'node:crypto'
+import { join } from 'node:path'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 
 export const computeHash = (contents) => {

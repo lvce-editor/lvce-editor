@@ -1,9 +1,9 @@
-import { getTmpDir, root } from '../Shared/Shared.js'
-import { mkdir } from 'fs/promises'
-import { dirname, join } from 'path'
+import { mkdir } from 'node:fs/promises'
+import { dirname, join } from 'node:path'
 import cpy from 'cpy'
 import VError from 'verror'
 import execa from 'execa'
+import { getTmpDir, root } from '../Shared/Shared.js'
 
 const PACKAGE_EXTENSION_HOST = join(root, 'packages', 'extension-host')
 const PACKAGE_MAIN_PROCESS = join(root, 'packages', 'main-process')

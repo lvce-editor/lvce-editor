@@ -1,6 +1,6 @@
+import { existsSync } from 'node:fs'
+import { readdir } from 'node:fs/promises'
 import * as ElectronBuilder from 'electron-builder'
-import { existsSync } from 'fs'
-import { readdir } from 'fs/promises'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'

@@ -1,8 +1,8 @@
+import * as fs from 'node:fs/promises'
+import { tmpdir } from 'node:os'
+import { dirname, join } from 'node:path'
+import { fileURLToPath } from 'node:url'
 import { execa } from 'execa'
-import * as fs from 'fs/promises'
-import { tmpdir } from 'os'
-import { dirname, join } from 'path'
-import { fileURLToPath } from 'url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 

@@ -1,5 +1,13 @@
-import { existsSync } from 'fs'
-import { chmod, link, mkdir, rename, rm, symlink, writeFile } from 'fs/promises'
+import { existsSync } from 'node:fs'
+import {
+  chmod,
+  link,
+  mkdir,
+  rename,
+  rm,
+  symlink,
+  writeFile,
+} from 'node:fs/promises'
 import VError from 'verror'
 import * as Compress from '../Compress/Compress.js'
 import * as Copy from '../Copy/Copy.js'
@@ -49,7 +57,7 @@ const getInstalledSize = async (cwd) => {
     cwd,
     shell: true,
   })
-  const installedSize = parseInt(stdout)
+  const installedSize = Number.parseInt(stdout, 10)
   return installedSize
 }
 

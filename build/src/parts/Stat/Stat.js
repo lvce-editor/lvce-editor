@@ -1,4 +1,4 @@
-import * as fs from 'fs/promises'
+import * as fs from 'node:fs/promises'
 import { gzipSizeFromFile } from 'gzip-size'
 import * as Path from '../Path/Path.js'
 import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'

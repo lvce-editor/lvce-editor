@@ -1,5 +1,4 @@
-import * as fs from 'fs/promises'
-import VError from 'verror'
+import * as fs from 'node:fs/promises'
 import * as Path from '../Path/Path.js'
 
 /**
