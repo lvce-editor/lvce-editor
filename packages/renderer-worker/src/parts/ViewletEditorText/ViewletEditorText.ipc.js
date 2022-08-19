@@ -95,6 +95,7 @@ const Imports = {
   Type: () => import('../EditorCommand/EditorCommandType.js'),
   Undo: () => import('../EditorCommand/EditorCommandUndo.js'),
   UnIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
+  SelectUp: () => import('../EditorCommand/EditorCommandSelectUp.js'),
 }
 
 // prettier-ignore
@@ -170,6 +171,7 @@ export const Commands = {
   'Editor.selectInsideString': lazyCommand(Imports.SelectInsideString, 'editorSelectInsideString'),
   'Editor.selectLine': lazyCommand(Imports.SelectLine, 'editorSelectLine'),
   'Editor.selectNextOccurrence': lazyCommand(Imports.SelectNextOccurrence, 'editorSelectNextOccurrence'),
+  'Editor.selectUp': lazyCommand(Imports.SelectUp, 'selectUp'),
   'Editor.selectWord': lazyCommand(Imports.SelectWord, 'editorSelectWord'),
   'Editor.selectWordLeft': lazyCommand(Imports.SelectWordLeft, 'editorSelectWordLeft'),
   'Editor.selectWordRight': lazyCommand(Imports.SelectWordRight, 'editorSelectWordRight'),
@@ -182,7 +184,7 @@ export const Commands = {
   'Editor.toggleComment': lazyCommand(Imports.ToggleComment, 'editorToggleComment'),
   'Editor.type': lazyCommand(Imports.Type, 'editorType'),
   'Editor.undo': lazyCommand(Imports.Undo, 'editorUndo'),
-  'Editor.unindent': lazyCommand(Imports.UnIndent, 'editorUnindent'),
+  'Editor.unindent': lazyCommand(Imports.UnIndent, 'selectUp'),
     // TODO command to set cursor position
 }
 

@@ -18,9 +18,25 @@ const createLayerSelection = (childCount) => {
   return $LayerSelection
 }
 
+test('setSelections - renderSelectionsLess', () => {
+  const $LayerSelections = createLayerSelection(1)
+  const state = {
+    $LayerSelections,
+  }
+  const selections = new Uint32Array([
+    /* top */ 10, /* left */ 0, /* width */ 27, /* height */ 20 /*  */,
+    /* top */ 10, /* left */ 0, /* width */ 27, /* height */ 20,
+  ])
+  const spy = jest.spyOn(document, 'createElement')
+  LayerSelection.setSelections(state, selections)
+  expect(state.$LayerSelections.innerHTML).toBe(
+    '<div class="Selection" style="top: 10px; left: 0px; width: 27px; height: 20px;"></div><div class="EditorSelection" style="top: 10px; left: 0px; width: 27px; height: 20px;"></div>'
+  )
+  expect(spy).toHaveBeenCalledTimes(1)
+})
+
 test('setSelections - renderSelectionsEqual', () => {
   const $LayerSelections = createLayerSelection(1)
-  console.log($LayerSelections.innerHTML)
   const state = {
     $LayerSelections,
   }
