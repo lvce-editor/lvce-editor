@@ -24,7 +24,8 @@ export const openFolder = async () => {
     return
   }
   const folders = await SharedProcess.invoke(
-    /* Electron.showOpenDialog */ 'Electron.showOpenDialog'
+    /* Electron.showOpenDialog */ 'Electron.showOpenDialog',
+    /* title */ 'Open Folder'
   )
   if (!folders || folders.length === 0) {
     return
