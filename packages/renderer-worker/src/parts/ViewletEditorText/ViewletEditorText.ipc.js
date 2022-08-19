@@ -171,7 +171,7 @@ export const Commands = {
   'Editor.selectInsideString': lazyCommand(Imports.SelectInsideString, 'editorSelectInsideString'),
   'Editor.selectLine': lazyCommand(Imports.SelectLine, 'editorSelectLine'),
   'Editor.selectNextOccurrence': lazyCommand(Imports.SelectNextOccurrence, 'editorSelectNextOccurrence'),
-  'Editor.selectUp': lazyCommand(Imports.SelectUp, 'editorSelectUp'),
+  'Editor.selectUp': lazyCommand(Imports.SelectUp, 'selectUp'),
   'Editor.selectWord': lazyCommand(Imports.SelectWord, 'editorSelectWord'),
   'Editor.selectWordLeft': lazyCommand(Imports.SelectWordLeft, 'editorSelectWordLeft'),
   'Editor.selectWordRight': lazyCommand(Imports.SelectWordRight, 'editorSelectWordRight'),

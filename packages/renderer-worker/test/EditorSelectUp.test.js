@@ -17,3 +17,12 @@ test('selectUp - already at top', () => {
   const newEditor = EditorSelectUp.selectUp(editor)
   expect(newEditor.selections).toEqual(new Uint32Array([0, 0, 1, 0]))
 })
+
+test('selectUp - keep indent', () => {
+  const editor = {
+    lines: ['11', '22'],
+    selections: new Uint32Array([1, 1, 1, 1]),
+  }
+  const newEditor = EditorSelectUp.selectUp(editor)
+  expect(newEditor.selections).toEqual(new Uint32Array([0, 1, 1, 1]))
+})

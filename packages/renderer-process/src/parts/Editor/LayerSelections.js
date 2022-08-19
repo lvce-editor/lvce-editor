@@ -86,5 +86,6 @@ export const setSelections = (state, selections) => {
     renderSelectionsNative(state, selections)
     return
   }
+  console.log({ selections })
   render$Selections(state.$LayerSelections, selections)
 }
