@@ -650,5 +650,9 @@
   {
     "key": "ctrl+1",
     "command": "Main.focus"
+  },
+  {
+    "key": "shift+ArrowUp",
+    "command": "Editor.selectUp"
   }
 ]

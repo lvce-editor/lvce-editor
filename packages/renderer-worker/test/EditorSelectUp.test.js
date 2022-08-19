@@ -1,6 +1,6 @@
 import * as EditorSelectUp from '../src/parts/EditorCommand/EditorCommandSelectUp.js'
 
-test.skip('selectUp', () => {
+test('selectUp', () => {
   const editor = {
     lines: ['1', '2'],
     selections: new Uint32Array([1, 0, 1, 0]),
