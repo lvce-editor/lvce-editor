@@ -97,3 +97,9 @@ export const set = async (key, value) => {
   const content = Json.stringify(state)
   await FileSystem.writeFile('app://settings.json', content)
 }
+
+export const update = async (settings) => {
+  const newSettings = { ...state, settings }
+  const content = Json.stringify(newSettings)
+  await FileSystem.writeFile('app://settings.json', content)
+}
