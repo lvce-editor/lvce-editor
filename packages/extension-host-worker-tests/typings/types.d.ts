@@ -62,6 +62,10 @@ declare const Search: {
   readonly setValue: (value: string) => Promise<void>
 }
 
+declare const Settings: {
+  readonly update: (newSettings: any) => Promise<void>
+}
+
 declare const Workspace: {
   readonly setPath: (uri: string) => Promise<void>
 }
