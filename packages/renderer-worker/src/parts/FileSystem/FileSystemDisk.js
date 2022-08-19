@@ -83,3 +83,11 @@ export const stat = (path) => {
     /* path */ path
   )
 }
+
+export const chmod = (path, permissions) => {
+  return SharedProcess.invoke(
+    /* FileSystem.stat */ 'FileSystem.chmod',
+    /* path */ path,
+    /* permissions */ permissions
+  )
+}
