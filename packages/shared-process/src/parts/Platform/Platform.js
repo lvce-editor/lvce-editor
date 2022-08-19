@@ -134,3 +134,7 @@ export const getTestPath = () => {
 export const getNodePath = () => {
   return process.argv[0]
 }
+
+export const getTmpDir = () => {
+  return tmpdir()
+}
