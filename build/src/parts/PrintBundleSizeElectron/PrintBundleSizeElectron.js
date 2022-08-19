@@ -1,5 +1,5 @@
-import { readdir } from 'fs/promises'
-import { join } from 'path'
+import { readdir } from 'node:fs/promises'
+import { join } from 'node:path'
 import { exec } from '../Exec/Exec.js'
 import { root } from '../Root/Root.js'
 
@@ -15,7 +15,7 @@ const getSize = async (relativePath) => {
   })
   return {
     relativePath,
-    size: parseInt(stdout),
+    size: Number.parseInt(stdout, 10),
   }
 }
 

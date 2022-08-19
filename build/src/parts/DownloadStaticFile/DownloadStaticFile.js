@@ -1,7 +1,7 @@
 import { createWriteStream } from 'node:fs'
 import { readFile, rm, writeFile } from 'node:fs/promises'
-import got, { HTTPError } from 'got'
 import { pipeline } from 'node:stream/promises'
+import got, { HTTPError } from 'got'
 import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'

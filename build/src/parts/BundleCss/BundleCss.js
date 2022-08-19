@@ -1,5 +1,5 @@
-import { readdir, readFile } from 'fs/promises'
-import { join } from 'path'
+import { readdir, readFile } from 'node:fs/promises'
+import { join } from 'node:path'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
@@ -16,16 +16,16 @@ export const bundleCss = async ({ to, additionalCss = '' }) => {
     css += '\n\n'
   }
   const cssLibTermTerm = join(Root.root, 'static', 'lib-css', 'termterm.css')
-  css += await readFile(cssLibNormalize, 'utf-8')
+  css += await readFile(cssLibNormalize, 'utf8')
   css += '\n'
-  css += await readFile(cssLibTermTerm, 'utf-8')
+  css += await readFile(cssLibTermTerm, 'utf8')
   css += '\n'
   const cwd = join(Root.root, 'static', 'css', 'parts')
   const dirents = await readdir(cwd)
   dirents.sort().reverse()
   for (const dirent of dirents) {
     const absolutePath = join(cwd, dirent)
-    const content = await readFile(absolutePath, 'utf-8')
+    const content = await readFile(absolutePath, 'utf8')
     css += `/*************/\n`
     css += `/* ${dirent} */\n`
     css += `/*************/\n`

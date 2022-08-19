@@ -1,4 +1,4 @@
-import { rm } from 'fs/promises'
+import { rm } from 'node:fs/promises'
 import * as Path from '../Path/Path.js'
 
 export const remove = async (relativePath) => {

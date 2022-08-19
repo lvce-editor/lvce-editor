@@ -1,5 +1,5 @@
+import * as path from 'node:path'
 import * as Root from '../Root/Root.js'
-import * as path from 'path'
 
 export const absolute = (relativePath) => {
   if (isAbsolute(relativePath)) {
