@@ -11,6 +11,9 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
   "dependencies": {
     "chokidar": "^3.5.3",
     "debug": "^4.3.4",
