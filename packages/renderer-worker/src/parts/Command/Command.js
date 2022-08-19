@@ -198,6 +198,7 @@ const getModuleId = (commandId) => {
       return MODULE_EXTENSION_HOST_CORE
     case 'ExtensionMeta.addExtension':
     case 'ExtensionMeta.addWebExtension':
+    case 'ExtensionMeta.addNodeExtension':
       return MODULE_EXTENSION_META
     case 'Test.execute':
       return MODULE_TEST

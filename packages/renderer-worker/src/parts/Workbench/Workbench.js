@@ -16,6 +16,7 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 import * as InitData from '../InitData/InitData.js'
 import * as Command from '../Command/Command.js'
+import * as Platform from '../Platform/Platform.js'
 
 const handleUnhandledRejection = async (event) => {
   console.info(`[renderer-worker] Unhandled Rejection: ${event.reason}`)
@@ -140,8 +141,9 @@ export const startup = async (config) => {
   LifeCycle.mark(LifeCycle.Phase.Fifteen)
 
   if (Workspace.isTest()) {
+    const testPath = await Platform.getTestPath()
     const jsPath = initData.Location.href
-      .replace('/tests', '/packages/extension-host-worker-tests/src')
+      .replace('/tests', `${testPath}/src`)
       .replace(/\.html$/, '.js')
     await Command.execute('Test.execute', jsPath)
   } else {

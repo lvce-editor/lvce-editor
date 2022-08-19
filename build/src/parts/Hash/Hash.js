@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
+import { readdir } from 'node:fs/promises'
 import { join } from 'node:path'
-import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 
 export const computeHash = (contents) => {
@@ -16,7 +16,7 @@ export const computeHash = (contents) => {
 }
 
 const walkFiles = async (folder, fn) => {
-  const dirents = await ReadDir.readDir(folder)
+  const dirents = await readdir(folder, { withFileTypes: true })
   for (const dirent of dirents) {
     const absolutePath = join(folder, dirent.name)
     if (dirent.isFile()) {

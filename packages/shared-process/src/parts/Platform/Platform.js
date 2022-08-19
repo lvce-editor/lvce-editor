@@ -4,6 +4,7 @@ import { extensionHostPath } from '@lvce-editor/extension-host'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
 import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
+import { pathToFileURL } from 'node:url'
 
 export const getApplicationName = () => {
   return 'lvce-oss'
@@ -116,4 +117,16 @@ export const setEnvironmentVariables = (variables) => {
   for (const [key, value] of Object.entries(variables)) {
     process.env[key] = value
   }
+}
+
+export const getTestPath = () => {
+  if (process.env.TEST_PATH) {
+    const testPath =
+      '/remote' +
+      pathToFileURL(Path.join(process.cwd(), process.env.TEST_PATH))
+        .toString()
+        .slice(7)
+    return testPath
+  }
+  return '/packages/extension-host-worker-tests'
 }

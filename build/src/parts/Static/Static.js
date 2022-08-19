@@ -12,6 +12,7 @@ import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as Mkdir from '../Mkdir/Mkdir.js'
 
 const copyJs = async ({ commitHash }) => {
   await Copy.copy({
@@ -517,6 +518,35 @@ const bundleJs = async ({ commitHash }) => {
   })
 }
 
+const generateTestOverviewHtml = (dirents) => {
+  const pre = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tests</title>
+  </head>
+  <body>
+    <h1>Tests</h1>
+    <p>Available Tests</p>
+    <ul>
+`
+  let middle = ``
+  // TODO properly escape name
+  for (const dirent of dirents) {
+    const name = dirent.slice(0, -'.js'.length)
+    middle += `      <li><a href="./${name}.html">${name}</a></li>
+`
+  }
+
+  const post = `    </ul>
+  </body>
+</html>
+`
+  return pre + middle + post
+}
+
 const copyTestFiles = async ({ pathPrefix, commitHash }) => {
   await Copy.copy({
     from: 'packages/extension-host-worker-tests/src',
@@ -527,71 +557,29 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
     from: 'packages/extension-host-worker-tests/fixtures',
     to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`,
   })
-  await Copy.copy({
-    from: 'static/tests/_template.html',
-    to: `build/.tmp/dist/tests/_template.html`,
-  })
-  await Copy.copy({
-    from: 'static/tests/index.html',
-    to: `build/.tmp/dist/tests/index.html`,
-  })
-  const appCssPath = `${pathPrefix}/${commitHash}/css/App.css`
-  const rendererProcessPath = `${pathPrefix}/${commitHash}/packages/renderer-process/dist/rendererProcessMain.js`
-  const rendererWorkerPath = `${pathPrefix}/${commitHash}/packages/renderer-worker/dist/rendererWorkerMain.js`
-  await Replace.replace({
-    path: 'build/.tmp/dist/tests/_template.html',
-    occurrence: '/packages/renderer-process/src/rendererProcessMain.js',
-    replacement: rendererProcessPath,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/dist/tests/_template.html',
-    occurrence: '/packages/renderer-worker/src/rendererWorkerMain.js',
-    replacement: rendererWorkerPath,
-  })
-  await Replace.replace({
-    path: 'build/.tmp/dist/tests/_template.html',
-    occurrence: '/css/App.css',
-    replacement: appCssPath,
-  })
-  if (pathPrefix) {
-    await Replace.replace({
-      path: 'build/.tmp/dist/tests/_template.html',
-      occurrence: '/fonts/',
-      replacement: `${pathPrefix}/fonts/`,
-    })
-  }
-  const dirents = await ReadDir.readDir('static/tests')
-  for (const dirent of dirents) {
-    if (dirent.name === '_template.html' || dirent.name === 'index.html') {
-      continue
-    }
-    await Copy.copyFile({
-      from: 'build/.tmp/dist/tests/_template.html',
-      to: `build/.tmp/dist/tests/${dirent.name}`,
-    })
-  }
 
-  const rendererWorkerPathTestFrameWorkBefore = `../../renderer-worker/src/parts/TestFrameWork/TestFrameWork.js`
-  const rendererWorkerPathTestFrameWorkAfter = `../../renderer-worker/dist/TestFrameWork.js`
-  const rendererWorkerPathTestComponentBefore = `../../renderer-worker/src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js`
-  const rendererWorkerPathTestComponentAfter = `../../renderer-worker/dist/TestFrameWorkComponent.js`
-  for (const dirent of dirents) {
-    if (dirent.name === '_template.html' || dirent.name === 'index.html') {
-      continue
-    }
-    const name = dirent.name.replace('.html', '')
-    const direntPath = `build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/src/${name}.js`
-    await Replace.replace({
-      path: direntPath,
-      occurrence: rendererWorkerPathTestFrameWorkBefore,
-      replacement: rendererWorkerPathTestFrameWorkAfter,
-    })
-    await Replace.replace({
-      path: direntPath,
-      occurrence: rendererWorkerPathTestComponentBefore,
-      replacement: rendererWorkerPathTestComponentAfter,
+  const testFilesRaw = await ReadDir.readDir(
+    'packages/extension-host-worker-tests/src'
+  )
+  const getName = (dirent) => {
+    return dirent.name
+  }
+  const isTestFile = (file) => {
+    return file !== '_all.js'
+  }
+  const testFiles = testFilesRaw.map(getName).filter(isTestFile)
+  await Mkdir.mkdir(`build/.tmp/dist/${commitHash}/tests`)
+  for (const testFile of testFiles) {
+    await Copy.copyFile({
+      from: `build/.tmp/dist/index.html`,
+      to: `build/.tmp/dist/tests/${testFile}.html`,
     })
   }
+  const testOverviewHtml = generateTestOverviewHtml(testFiles)
+  await WriteFile.writeFile({
+    to: `build/.tmp/dist/tests/index.html`,
+    content: testOverviewHtml,
+  })
 }
 
 export const build = async () => {
@@ -638,13 +626,13 @@ export const build = async () => {
   await addNetlifyConfigFiles()
   Console.timeEnd('addNetlifyHeaders')
 
-  Console.time('addVersionFile')
-  await addVersionFile({ commitHash })
-  Console.timeEnd('addVersionFile')
-
   Console.time('copyTestFiles')
   await copyTestFiles({ pathPrefix, commitHash })
   Console.timeEnd('copyTestFiles')
+
+  Console.time('addVersionFile')
+  await addVersionFile({ commitHash })
+  Console.timeEnd('addVersionFile')
 
   // console.time('removeUnusedThings')
   // await removeUnusedThings()

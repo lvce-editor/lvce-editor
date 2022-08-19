@@ -12,19 +12,17 @@ const root = join(__dirname, '..', '..', '..')
 const SERVER_PATH = join(root, 'packages', 'server', 'src', 'server.js')
 
 const isTestFile = (dirent) => {
-  return (
-    dirent.endsWith('.html') &&
-    dirent !== 'index.html' &&
-    dirent !== '_template.html'
-  )
+  return dirent !== '_all.js'
 }
 
 const getRelativePath = (testFile) => {
-  return join(root, 'tests', testFile).slice(root.length)
+  return join(root, 'tests', testFile.replace('.js', '.html')).slice(
+    root.length
+  )
 }
 
 const getPaths = async () => {
-  const testsPath = join(root, 'static', 'tests')
+  const testsPath = join(root, 'packages', 'extension-host-worker-tests', 'src')
   const dirents = await readdir(testsPath)
   const testFiles = dirents.filter(isTestFile)
   return testFiles

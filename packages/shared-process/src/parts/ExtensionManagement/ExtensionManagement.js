@@ -26,6 +26,7 @@ export const state = {
       const onlyExtension = await getExtensionManifests([absolutePath])
       return [...builtinExtensions.filter(isLanguageBasics), ...onlyExtension]
     }
+
     const installedExtensions = await getInstalledExtensions()
     return [...builtinExtensions, ...installedExtensions]
   },

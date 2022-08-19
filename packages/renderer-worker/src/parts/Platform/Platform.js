@@ -144,3 +144,7 @@ export const getGithubApiUrl = () => {
 export const getCacheName = () => {
   return 'lvce-runtime'
 }
+
+export const getTestPath = () => {
+  return SharedProcess.invoke(/* Platform.getTestPath */ 'Platform.getTestPath')
+}
