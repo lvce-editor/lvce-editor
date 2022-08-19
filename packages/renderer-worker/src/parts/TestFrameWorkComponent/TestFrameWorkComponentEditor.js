@@ -47,3 +47,12 @@ export const cursorWordLeft = async () => {
 export const cursorWordRight = async () => {
   await Command.execute('Editor.cursorWordRight')
 }
+
+export const goToDefinition = async () => {
+  await Command.execute('Editor.goToDefinition')
+}
+}
+
+export const goToTypeDefinition = async () => {
+  await Command.execute('Editor.goToTypeDefinition')
+}

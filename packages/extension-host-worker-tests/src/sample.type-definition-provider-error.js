@@ -12,17 +12,15 @@ test('sample.type-definition-provider-error', async () => {
 add(1, 2)
     `
   )
-  // act
   await Workspace.setPath(tmpDir)
   await Extension.addWebExtension(
     new URL(`../fixtures/${name}`, import.meta.url).toString()
   )
-
-  // act
   await Main.openUri(`${tmpDir}/test.xyz`)
   await Editor.setCursor(0, 0)
-  await Editor.openEditorContextMenu()
-  await ContextMenu.selectItem('Go To Type Definition')
+
+  // act
+  await Editor.goToTypeDefinition()
 
   // assert
   const overlayMessage = Locator('.EditorOverlayMessage')
@@ -31,3 +29,5 @@ add(1, 2)
     'Error: Failed to execute type definition provider: oops'
   )
 })
+
+export {}
