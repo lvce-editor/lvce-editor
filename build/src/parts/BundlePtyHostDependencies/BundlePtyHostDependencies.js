@@ -20,10 +20,10 @@ export const bundlePtyHostDependencies = async ({
   electronVersion,
 }) => {
   if (typeof arch !== 'string') {
-    throw new Error('arch must be defined')
+    throw new TypeError('arch must be defined')
   }
   if (typeof electronVersion !== 'string') {
-    throw new Error('electron version must be defined')
+    throw new TypeError('electron version must be defined')
   }
   const ptyHostPath = Path.absolute('packages/pty-host')
   const packageJson = await JsonFile.readJson('packages/pty-host/package.json')

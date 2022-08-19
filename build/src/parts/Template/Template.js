@@ -1,4 +1,4 @@
-import { chmod } from 'fs/promises'
+import { chmod } from 'node:fs/promises'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 import * as Path from '../Path/Path.js'

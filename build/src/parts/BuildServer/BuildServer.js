@@ -1,4 +1,4 @@
-import { readdir } from 'fs/promises'
+import { readdir } from 'node:fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'

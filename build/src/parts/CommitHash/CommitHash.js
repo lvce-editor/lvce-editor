@@ -1,5 +1,5 @@
-import * as Exec from '../Exec/Exec.js'
 import VError from 'verror'
+import * as Exec from '../Exec/Exec.js'
 
 export const getCommitHash = async () => {
   try {

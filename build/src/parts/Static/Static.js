@@ -1,5 +1,5 @@
-import { existsSync } from 'fs'
-import { readdir } from 'fs/promises'
+import { existsSync } from 'node:fs'
+import { readdir } from 'node:fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'

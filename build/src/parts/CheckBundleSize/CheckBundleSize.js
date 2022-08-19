@@ -18,6 +18,7 @@ const computeResults = async (budget) => {
           `build/.tmp/dist/${commitHash}/packages/${packageName}/dist/${key}.js`
         )
       } catch (error) {
+        // @ts-ignore
         if (error && error.code === 'ENOENT') {
           warnings.push(`key ${key} not found in ${group}`)
         } else {

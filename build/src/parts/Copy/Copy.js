@@ -1,8 +1,8 @@
-import * as fs from 'fs/promises'
-import * as Path from '../Path/Path.js'
+import * as fs from 'node:fs/promises'
+import { join } from 'node:path'
 import fsExtra from 'fs-extra'
-import { join } from 'path'
 import VError from 'verror'
+import * as Path from '../Path/Path.js'
 
 /**
  * @param {{from:string, to:string, ignore?:string[]}} param0
@@ -11,15 +11,15 @@ export const copy = async ({ from, to, ignore = [] }) => {
   try {
     const absoluteFrom = Path.absolute(from)
     const absoluteTo = Path.absolute(to)
-    const absoluteIgnore = ignore.map((dirent) => {
+    const absoluteIgnore = new Set(ignore.map((dirent) => {
       return join(absoluteFrom, dirent)
-    })
+    }))
     await fsExtra.copy(absoluteFrom, absoluteTo, {
       recursive: true,
       overwrite: true,
       dereference: true,
       filter(dirent) {
-        return !absoluteIgnore.includes(dirent)
+        return !absoluteIgnore.has(dirent)
       },
     })
   } catch (error) {
