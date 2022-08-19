@@ -11,3 +11,7 @@ export const mkdir = async (path) => {
 export const getTmpDir = async () => {
   return `memfs://`
 }
+
+export const chmod = async (uri, permissions) => {
+  await Command.execute('FileSystem.chmod', uri, permissions)
+}

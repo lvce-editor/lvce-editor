@@ -108,3 +108,7 @@ export const readDirWithFileTypes = (uri) => {
   }
   return dirents
 }
+
+export const chmod = (path, permissions) => {
+  throw new Error('[memfs] chmod not implemented')
+}
