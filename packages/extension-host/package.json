@@ -12,6 +12,9 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "engines": {
+    "node": ">=16"
+  },
   "devDependencies": {
     "@types/babel__code-frame": "^7.0.3",
     "@types/lodash": "^4.14.182",
