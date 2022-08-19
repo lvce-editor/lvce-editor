@@ -19,6 +19,7 @@ const lazyCommand = (importFn, key) => {
 const Imports = {
   ApplyEdit: () => import('../EditorCommand/EditorCommandApplyEdit.js'),
   Blur: () => import('../EditorCommand/EditorCommandBlur.js'),
+  BraceCompletion:()=>import('../EditorCommand/EditorCommandBraceCompletion.js'),
   CancelSelection: () => import('../EditorCommand/EditorCommandCancelSelection.js'),
   ContextMenu:()=>import('../EditorCommand/EditorCommandHandleContextMenu.js'),
   CopyLineDown:()=>import('../EditorCommand/EditorCommandCopyLineDown.js'),
@@ -87,13 +88,13 @@ const Imports = {
   SetDecorations:()=>import('../EditorCommand/EditorCommandSetDecorations.js'),
   SetDeltaY:()=>import('../EditorCommand/EditorCommandSetDeltaY.js'),
   SetLanguageId:()=>import('../EditorCommand/EditorCommandSetLanguageId.js'),
+  SortLinesAscending:()=>import('../EditorCommand/EditorCommandSortLinesAscending.js'),
   TabCompletion:()=>import('../EditorCommand/EditorCommandTabCompletion.js'),
   ToggleBlockComment:()=>import('../EditorCommand/EditorCommandToggleBlockComment.js'),
   ToggleComment:()=>import('../EditorCommand/EditorCommandToggleComment.js'),
   Type:()=>import('../EditorCommand/EditorCommandType.js'),
   Undo:()=>import('../EditorCommand/EditorCommandUndo.js'),
   UnIndent:()=>import('../EditorCommand/EditorCommandUnindent.js'),
-  BraceCompletion:()=>import('../EditorCommand/EditorCommandBraceCompletion.js'),
 }
 
 // prettier-ignore
@@ -175,12 +176,13 @@ export const Commands = {
   'Editor.setDecorations': lazyCommand(Imports.SetDecorations, 'setDecorations'),
   'Editor.setDeltaY': lazyCommand(Imports.SetDeltaY, 'editorSetDeltaY'),
   'Editor.setLanguageId': lazyCommand(Imports.SetLanguageId, 'setLanguageId'),
+  'Editor.sortLinesAscending': lazyCommand(Imports.SortLinesAscending, 'sortLinesAscending'),
   'Editor.tabCompletion': lazyCommand(Imports.TabCompletion, 'editorTabCompletion'),
   'Editor.toggleBlockComment': lazyCommand(Imports.ToggleBlockComment, 'editorToggleBlockComment'),
   'Editor.toggleComment': lazyCommand(Imports.ToggleComment, 'editorToggleComment'),
   'Editor.type': lazyCommand(Imports.Type, 'editorType'),
   'Editor.undo': lazyCommand(Imports.Undo, 'editorUndo'),
-  'Editor.unindent': lazyCommand(Imports.UnIndent, 'editorUnindent')
+  'Editor.unindent': lazyCommand(Imports.UnIndent, 'editorUnindent'),
     // TODO command to set cursor position
   // TODO command copy line up/down
   // TODO command move line up/down
