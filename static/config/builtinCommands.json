@@ -273,6 +273,10 @@
     "aliases": ["Indent Less", "DeIndent"]
   },
   {
+    "id": "Editor.sortLinesAscending",
+    "label": "Editor: Sort Lines Ascending"
+  },
+  {
     "id": "Editor.toggleComment",
     "label": "Editor: Toggle Comment"
   },
