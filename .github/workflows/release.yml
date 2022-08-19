@@ -54,6 +54,8 @@ jobs:
       - name: npm ci
         run: npm ci
         if: steps.npm-cache.outputs.cache-hit != 'true'
+        env:
+          DOWNLOAD_BUILTIN_EXTENSIONS: 0
       - name: Compute builtin extensions cache key
         id: builtinExtensionsCacheKey
         run: echo "::set-output name=value::$(node build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)"
