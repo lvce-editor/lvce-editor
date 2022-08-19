@@ -1,0 +1,10 @@
+{
+  "main": "main.js",
+  "activation": "onCommand:command-provider-error.sampleCommand",
+  "commands": [
+    {
+      "id": "command-provider-error.sampleCommand",
+      "label": "Command Provider Error: Sample Command"
+    }
+  ]
+}

@@ -1,3 +1,7 @@
+declare const Command: {
+  readonly execute: (id: string, ...args: any[]) => Promise<void>
+}
+
 declare const ContextMenu: {
   readonly selectItem: (name: string) => Promise<void>
 }
