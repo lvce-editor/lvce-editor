@@ -14,6 +14,9 @@
     "url": "https://github.com/lvce-editor/lvce-editor.git",
     "directory": "packages/server"
   },
+  "engines": {
+    "node": ">=16"
+  },
   "dependencies": {
     "@lvce-editor/shared-process": "file:../shared-process"
   }

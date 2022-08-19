@@ -16,6 +16,9 @@
     "url": "https://github.com/lvce-editor/lvce-editor.git",
     "directory": "packages/pty-host"
   },
+  "engines": {
+    "node": ">=16"
+  },
   "dependencies": {
     "debug": "^4.3.4",
     "verror": "^1.10.1"

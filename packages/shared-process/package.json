@@ -16,6 +16,9 @@
     "url": "https://github.com/lvce-editor/lvce-editor.git",
     "directory": "packages/shared-process"
   },
+  "engines": {
+    "node": ">=16"
+  },
   "dependencies": {
     "chokidar": "^3.5.3",
     "debug": "^4.3.4",
