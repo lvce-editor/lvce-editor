@@ -130,3 +130,7 @@ export const getTestPath = () => {
   }
   return '/packages/extension-host-worker-tests'
 }
+
+export const getNodePath = () => {
+  return process.argv[0]
+}
