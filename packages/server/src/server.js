@@ -214,6 +214,7 @@ const serveTests = async (req, res, next) => {
 
     try {
       const testOverview = await createTestOverview(testPathSrc)
+      res.setHeader('Cache-Control', 'public, max-age=0, must-revalidate')
       res.statusCode = 300
       res.end(testOverview)
     } catch (error) {
