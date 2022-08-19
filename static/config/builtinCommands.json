@@ -285,6 +285,10 @@
     "label": "Editor: Select Up"
   },
   {
+    "id": "Editor.selectDown",
+    "label": "Editor: Select Down"
+  },
+  {
     "id": "Editor.toggleBlockComment",
     "label": "Editor: Toggle Block Comment"
   },

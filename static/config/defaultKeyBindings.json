@@ -654,5 +654,9 @@
   {
     "key": "shift+ArrowUp",
     "command": "Editor.selectUp"
+  },
+  {
+    "key": "shift+ArrowDown",
+    "command": "Editor.selectDown"
   }
 ]
