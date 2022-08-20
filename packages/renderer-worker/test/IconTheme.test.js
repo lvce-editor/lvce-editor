@@ -72,6 +72,22 @@ test('getIcon - match by file extension', () => {
   ).toBe('f_test')
 })
 
+test('getIcon - match by lowercase file extension', () => {
+  IconTheme.state.iconTheme = {
+    fileNames: {},
+    languageIds: {},
+    fileExtensions: {
+      test: 'f_test',
+    },
+  }
+  expect(
+    IconTheme.getIcon({
+      type: 'file',
+      name: 'abc.Test',
+    })
+  ).toBe('f_test')
+})
+
 test.skip('getIcon - match by file extension but icon theme has no fileNames property', () => {
   IconTheme.state.iconTheme = {
     fileExtensions: {
