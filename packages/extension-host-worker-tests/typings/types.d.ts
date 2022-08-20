@@ -16,6 +16,7 @@ declare const Editor: {
   readonly cursorWordRight: () => Promise<void>
   readonly executeBraceCompletion: (brace: string) => Promise<void>
   readonly executeTabCompletion: () => Promise<void>
+  readonly findAllReferences: () => Promise<void>
   readonly goToDefinition: () => Promise<void>
   readonly goToTypeDefinition: () => Promise<void>
   readonly openCompletion: () => Promise<void>

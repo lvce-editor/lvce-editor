@@ -17,8 +17,7 @@ test('sample.reference-provider-no-results', async () => {
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
   await Editor.setCursor(0, 0)
-  await Editor.openEditorContextMenu()
-  await ContextMenu.selectItem('Find all references')
+  await Editor.findAllReferences()
 
   // assert
   const viewletLocations = Locator('.Viewlet[data-viewlet-id="Locations"]')
@@ -27,3 +26,5 @@ test('sample.reference-provider-no-results', async () => {
   // TODO should display references as tree or list view
   await expect(viewletLocations).toHaveText(`No Results`)
 })
+
+export {}
