@@ -48,6 +48,7 @@ declare const FileSystem: {
   readonly writeFile: (uri: string, content: string) => Promise<void>
   readonly mkdir: (uri: string) => Promise<void>
   readonly chmod: (uri: string, permissions: string) => Promise<void>
+  readonly createExecutable: (content: string) => Promise<void>
 }
 
 declare const KeyBoard: {

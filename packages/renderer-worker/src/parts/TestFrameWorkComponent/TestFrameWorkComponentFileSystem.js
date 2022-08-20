@@ -21,3 +21,16 @@ export const getTmpDir = async ({ scheme = 'memfs' } = {}) => {
 export const chmod = async (uri, permissions) => {
   await Command.execute('FileSystem.chmod', uri, permissions)
 }
+
+export const createExecutable = async (content) => {
+  const tmpDir = await getTmpDir({ scheme: 'file' })
+  const nodePath = await Platform.getNodePath()
+  const gitPath = `${tmpDir}/git`
+  await writeFile(
+    gitPath,
+    `#!${nodePath}
+  ${content}`
+  )
+  await chmod(gitPath, '755')
+  return gitPath
+}
