@@ -16,8 +16,7 @@ test('sample.reference-provider-error', async () => {
   )
   await Main.openUri(`${tmpDir}/test.xyz`)
   await Editor.setCursor(0, 0)
-  await Editor.openEditorContextMenu()
-  await ContextMenu.selectItem('Find all references')
+  await Editor.findAllReferences()
 
   // assert
   const viewletLocations = Locator('.Viewlet[data-viewlet-id="Locations"]')

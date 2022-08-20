@@ -59,3 +59,7 @@ export const goToTypeDefinition = async () => {
 export const type = async (text) => {
   await Command.execute('Editor.type')
 }
+
+export const findAllReferences = async () => {
+  await Command.execute('SideBar.show', 'References', /* focus */ true)
+}
