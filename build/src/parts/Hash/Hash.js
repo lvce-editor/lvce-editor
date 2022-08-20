@@ -2,6 +2,7 @@ import { createHash } from 'node:crypto'
 import { readdir } from 'node:fs/promises'
 import { join } from 'node:path'
 import * as ReadFile from '../ReadFile/ReadFile.js'
+import * as Path from '../Path/Path.js'
 
 export const computeHash = (contents) => {
   const hash = createHash('sha1')
@@ -33,12 +34,13 @@ export const computeFolderHash = async (
   extraContents = []
 ) => {
   try {
+    const absolutePath = Path.absolute(folder)
     const hash = createHash('sha1')
     const handleFilePath = async (filePath) => {
       const content = await ReadFile.readFile(filePath)
       hash.update(content)
     }
-    await walkFiles(folder, handleFilePath)
+    await walkFiles(absolutePath, handleFilePath)
     for (const extraFile of extraFiles) {
       const content = await ReadFile.readFile(extraFile)
       hash.update(content)
