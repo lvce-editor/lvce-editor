@@ -444,7 +444,7 @@ export const create = () => {
   $EditorInput.setAttribute('wrap', 'off')
   $EditorInput.setAttribute('spellcheck', 'false')
   // @ts-ignore
-  $EditorInput.role= 'textbox'
+  $EditorInput.role = 'textbox'
   $EditorInput.onpaste = handlePaste
   // TODO where to best put listeners (side effects)
   $EditorInput.addEventListener('beforeinput', handleBeforeInput)
@@ -460,18 +460,7 @@ export const create = () => {
 
   const $LayerText = document.createElement('div')
   $LayerText.className = 'EditorRows'
-  if (Platform.isMobileOrTablet()) {
-    $LayerText.setAttribute('contenteditable', 'plaintext-only')
-    $LayerText.setAttribute('autocapitalize', 'off')
-    $LayerText.setAttribute('spellcheck', 'false')
-    $LayerText.setAttribute('autocorrect', 'off')
-    $LayerText.addEventListener('beforeinput', handleContentEditableBeforeInput)
-    // TODO remove listener once editor is disposed
-    // TODO why is there no selection change listener for the element?
-    document.addEventListener('selectionchange', handleNativeSelectionChange)
-  } else {
-    $LayerText.addEventListener('mousedown', handleMouseDown)
-  }
+  $LayerText.addEventListener('mousedown', handleMouseDown)
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
@@ -483,9 +472,7 @@ export const create = () => {
 
   const $ScrollBar = document.createElement('div')
   $ScrollBar.className = 'ScrollBar'
-  if (!Platform.isMobileOrTablet()) {
-    $ScrollBar.onmousedown = handleScrollBarMouseDown
-  }
+  $ScrollBar.onmousedown = handleScrollBarMouseDown
   $ScrollBar.append($ScrollBarThumb)
 
   // $EditorRows.addEventListener('mousemove', handleMouseMove, { passive: true })
@@ -518,16 +505,10 @@ export const create = () => {
   $Editor.className = 'Viewlet Editor'
   $Editor.dataset.viewletId = 'EditorText'
   // @ts-ignore
-  $Editor.role= 'code'
+  $Editor.role = 'code'
   $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBar)
-  if (Platform.isMobileOrTablet()) {
-    $Editor.addEventListener('touchstart', handleTouchStart, { passive: true })
-    $Editor.addEventListener('touchmove', handleTouchMove, { passive: true })
-    $Editor.addEventListener('touchend', handleTouchEnd)
-  } else {
-    $Editor.addEventListener('contextmenu', handleContextMenu)
-    $Editor.addEventListener('wheel', handleWheel, { passive: true })
-  }
+  $Editor.addEventListener('contextmenu', handleContextMenu)
+  $Editor.addEventListener('wheel', handleWheel, { passive: true })
   $Editor.addEventListener('mousemove', handleMouseMove, { passive: true })
   return {
     $LayerCursor,

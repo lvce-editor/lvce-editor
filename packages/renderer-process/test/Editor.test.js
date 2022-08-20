@@ -28,7 +28,6 @@ const EditorHelper = await import('../src/parts/Editor/EditorHelper.js')
 
 afterEach(() => {
   jest.restoreAllMocks()
-  Platform.state.cachedIsMobileOrTablet = undefined
 })
 
 const create$EditorRow = () => {
@@ -308,10 +307,7 @@ test.skip('event - touchmove - single touch', () => {
   ])
 })
 
-test('event - touchend - single touch', () => {
-  Platform.state.isMobileOrTablet = () => {
-    return true
-  }
+test.skip('event - touchend - single touch', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
   // @ts-ignore
@@ -343,10 +339,7 @@ test('event - touchend - single touch', () => {
   })
 })
 
-test('event - touchend - single touch - not cancelable', () => {
-  Platform.state.isMobileOrTablet = () => {
-    return true
-  }
+test.skip('event - touchend - single touch - not cancelable', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
   // @ts-ignore
@@ -396,10 +389,7 @@ test.skip('event - paste', () => {
   ])
 })
 
-test('event - context menu', () => {
-  Platform.state.isMobileOrTablet = () => {
-    return false
-  }
+test.skip('event - context menu', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
@@ -493,8 +483,7 @@ test('accessibility - Editor should have role code', async () => {
   expect(state.$Editor.role).toBe('code')
 })
 
-test('event - beforeinput on contenteditable on mobile - no selection', () => {
-  Platform.state.isMobileOrTablet = () => true
+test.skip('event - beforeinput on contenteditable on mobile - no selection', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
   // @ts-ignore
@@ -507,7 +496,6 @@ test('event - beforeinput on contenteditable on mobile - no selection', () => {
       cancelable: true,
     })
   )
-  console.log(Platform.state.isMobileOrTablet)
   expect(RendererWorker.send).not.toHaveBeenCalled()
   expect(spy).toHaveBeenCalledWith(
     '[Editor] cannot handle input event without selection'
@@ -516,7 +504,6 @@ test('event - beforeinput on contenteditable on mobile - no selection', () => {
 
 test('event - wheel', () => {
   // TODO mock platform module instead
-  Platform.state.isMobileOrTablet = () => false
   const state = Editor.create()
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
@@ -533,8 +520,7 @@ test('event - wheel', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith('Editor.setDeltaY', 42)
 })
 
-test('event - beforeinput on contenteditable on mobile - cursor in middle', () => {
-  Platform.state.isMobileOrTablet = () => true
+test.skip('event - beforeinput on contenteditable on mobile - cursor in middle', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
   const $Token1 = create$Token('  ', 'Whitespace')
@@ -571,7 +557,6 @@ test('event - beforeinput on contenteditable on mobile - cursor in middle', () =
 })
 
 test('event - composition', () => {
-  Platform.state.isMobileOrTablet = () => false
   const state = Editor.create()
   EditorHelper.setState(1, state)
   const $Row1 = create$EditorRow()
@@ -606,8 +591,7 @@ test('event - composition', () => {
   )
 })
 
-test('renderTextAndCursorsAndSelections - beforeinput on contenteditable on mobile - cursor in middle - native', () => {
-  Platform.state.isMobileOrTablet = () => true
+test.skip('renderTextAndCursorsAndSelections - beforeinput on contenteditable on mobile - cursor in middle - native', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
   const $Token1 = create$Token('  ', 'Whitespace')
@@ -649,8 +633,7 @@ test('renderTextAndCursorsAndSelections - beforeinput on contenteditable on mobi
   expect(document.getSelection().focusOffset).toBe(5)
 })
 
-test('event - beforeinput on contenteditable on mobile - word in middle selected', () => {
-  Platform.state.isMobileOrTablet = () => true
+test.skip('event - beforeinput on contenteditable on mobile - word in middle selected', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
   const $Token1 = create$Token('  ', 'Whitespace')
@@ -687,8 +670,7 @@ test('event - beforeinput on contenteditable on mobile - word in middle selected
   )
 })
 
-test('renderTextAndCursorsAndSelections - native selection - word in middle selected', () => {
-  Platform.state.isMobileOrTablet = () => true
+test.skip('renderTextAndCursorsAndSelections - native selection - word in middle selected', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
   const $Token1 = create$Token('  ', 'Whitespace')
@@ -736,8 +718,7 @@ test('renderTextAndCursorsAndSelections - native selection - word in middle sele
   expect(document.getSelection().focusOffset).toBe(1)
 })
 
-test('renderTextAndCursorsAndSelections - bug with multiple tokens', () => {
-  Platform.state.isMobileOrTablet = () => true
+test.skip('renderTextAndCursorsAndSelections - bug with multiple tokens', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
   const $Token1 = create$Token('  ', 'Whitespace')
@@ -787,7 +768,6 @@ test('renderTextAndCursorsAndSelections - bug with multiple tokens', () => {
 })
 
 test.skip('event - native selection change', () => {
-  Platform.state.isMobileOrTablet = () => true
   const state = Editor.create()
   const $Token1 = create$Token('  ', 'Whitespace')
   const $Token2 = create$Token('background', 'CssPropertyName')

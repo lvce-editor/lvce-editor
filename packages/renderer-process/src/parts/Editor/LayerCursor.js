@@ -121,9 +121,5 @@ const renderCursorsNative = (state, cursors) => {
 }
 
 export const setCursors = (state, cursors) => {
-  if (Platform.isMobileOrTablet()) {
-    renderCursorsNative(state, cursors)
-    return
-  }
   render$Cursors(state.$LayerCursor, state.$LayerText, cursors)
 }
