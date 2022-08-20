@@ -126,9 +126,14 @@ const startSynching = async (extensionHost) => {
     return extensionHost.ipc.invoke('Workspace.setWorkspacePath', workspacePath)
   }
 
+  const handlePreferencesChange = () => {
+    return extensionHost.ipc.invoke('Configuration.configurationChanged')
+  }
+
   console.log('workspace', Workspace.state.workspacePath)
 
   GlobalEventBus.addListener('workspace.change', handleWorkspaceChange)
+  GlobalEventBus.addListener('preferences.changed', handlePreferencesChange)
 
   const instances = ViewletStates.getAllInstances()
   const editorInstance = instances.EditorText
