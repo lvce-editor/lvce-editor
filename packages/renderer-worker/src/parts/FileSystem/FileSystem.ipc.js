@@ -1,8 +1,5 @@
 import * as FileSystem from './FileSystem.js'
 
-// TODO who calls this?
-// TODO how to return value?
-
 // prettier-ignore
 export const Commands = {
   'FileSystem.readFile': FileSystem.readFile,
@@ -10,6 +7,5 @@ export const Commands = {
   'FileSystem.readDirWithFileTypes': FileSystem.readDirWithFileTypes,
   'FileSystem.writeFile': FileSystem.writeFile,
   'FileSystem.mkdir': FileSystem.mkdir,
+  'FileSystem.chmod': FileSystem.chmod,
 }
-
-// TODO maybe no ipc needed for this module

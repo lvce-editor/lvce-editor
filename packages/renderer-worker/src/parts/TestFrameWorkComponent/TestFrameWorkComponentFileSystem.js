@@ -17,3 +17,7 @@ export const getTmpDir = async ({ scheme = 'memfs' } = {}) => {
       return Platform.getTmpDir()
   }
 }
+
+export const chmod = async (uri, permissions) => {
+  await Command.execute('FileSystem.chmod', uri, permissions)
+}

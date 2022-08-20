@@ -11,6 +11,7 @@ import * as ExtensionHostManagementNode from './ExtensionHostManagementNode.js'
 import * as ExtensionHostManagementShared from './ExtensionHostManagementShared.js'
 import * as ExtensionHostManagementElectron from './ExtensionHostManagementElectron.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 export const state = {
   /**
@@ -85,7 +86,7 @@ const getManagersWithExtensionsToActivate = (
   return managersToActivate
 }
 
-const startTextDocumentSyncing = async (extensionHost) => {
+const startSynching = async (extensionHost) => {
   const handleEditorCreate = (editor) => {
     const text = TextDocument.getText(editor)
     return extensionHost.ipc.invoke(
@@ -120,23 +121,35 @@ const startTextDocumentSyncing = async (extensionHost) => {
     handleEditorLanguageChange
   )
 
+  const handleWorkspaceChange = (workspacePath) => {
+    return extensionHost.ipc.invoke('Workspace.setWorkspacePath', workspacePath)
+  }
+
+  const handlePreferencesChange = () => {
+    return extensionHost.ipc.invoke('Configuration.configurationChanged')
+  }
+
+  GlobalEventBus.addListener('workspace.change', handleWorkspaceChange)
+  GlobalEventBus.addListener('preferences.changed', handlePreferencesChange)
+
   const instances = ViewletStates.getAllInstances()
   const editorInstance = instances.EditorText
   if (editorInstance) {
     await handleEditorCreate(editorInstance.state)
   }
+  await handleWorkspaceChange(Workspace.state.workspacePath)
   console.log('finish text document synching')
 }
 
 // TODO add tests for this
 export const activateByEvent = async (event) => {
+  console.log('activate by event', event)
   Assert.string(event)
   if (!Languages.hasLoaded()) {
     await Languages.waitForLoad()
   }
   // TODO should not query extensions multiple times
   const extensions = await ExtensionMeta.getExtensions()
-
   // TODO if many (more than two?) extensions cannot be loaded,
   // it shouldn't should that many error messages
   const extensionsWithError = getExtensionsWithError(extensions)
@@ -160,6 +173,8 @@ export const activateByEvent = async (event) => {
         managerWithExtensions.manager.name,
         managerWithExtensions.manager.ipc
       )
+    // TODO register text document change listener and sync text documents
+    await startSynching(extensionHost)
     Assert.object(extensionHost)
     for (const extension of managerWithExtensions.toActivate) {
       // TODO tell extension host to activate extension
@@ -167,8 +182,6 @@ export const activateByEvent = async (event) => {
         'ExtensionHostExtension.enableExtension',
         extension
       )
-      // TODO register text document change listener and sync text documents
-      await startTextDocumentSyncing(extensionHost)
     }
     extensionHosts.push(extensionHost)
   }

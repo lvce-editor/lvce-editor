@@ -4,6 +4,7 @@ import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostComm
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
 import * as ExtensionHostDiagnostic from '../ExtensionHostDiagnostic/ExtensionHostDiagnostic.js'
+import * as ExtensionHostExtension from '../ExtensionHostExtension/ExtensionHostExtension.js'
 import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
 import * as ExtensionHostHover from '../ExtensionHostHover/ExtensionHostHover.js'
@@ -20,15 +21,19 @@ import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/Exten
 import * as ExtensionHostTextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
-import * as ExtensionHostExtension from '../ExtensionHostExtension/ExtensionHostExtension.js'
+import * as ExtensionHostConfiguration from '../ExtensionHostConfiguration/ExtensionHostConfiguration.js'
 import * as Stats from '../Stats/Stats.js'
 
 const getFn = (id) => {
   switch (id) {
+    case 'Configuration.configurationChanged':
+      return ExtensionHostConfiguration.configurationChanged
     case 'Command.register':
       return ExtensionHostCommand.register
     case 'Command.execute':
     case 'executeCommand':
+    case 'ExtensionHostCommand.executeCommand':
+    case 'ExtensionHost.executeCommand':
       return ExtensionHostCommand.execute
     case 384:
     case 'Completion.execute':

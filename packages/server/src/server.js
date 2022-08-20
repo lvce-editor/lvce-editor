@@ -22,7 +22,7 @@ let argv2 = argv[2]
 const argvSliced = argv.slice(2)
 for (const arg of argvSliced) {
   if (arg.startsWith('--only-extension=')) {
-    process.env['ONLY_EXTENSION'] = arg.slice('--only-extension'.length)
+    process.env['ONLY_EXTENSION'] = arg.slice('--only-extension='.length)
   } else if (arg.startsWith('--test-path=')) {
     process.env['TEST_PATH'] = arg.slice('--test-path='.length)
   }

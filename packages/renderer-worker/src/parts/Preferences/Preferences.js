@@ -4,6 +4,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Json from '../Json/Json.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 
 export const state = Object.create(null)
 
@@ -99,7 +100,8 @@ export const set = async (key, value) => {
 }
 
 export const update = async (settings) => {
-  const newSettings = { ...state, settings }
+  const newSettings = { ...state, ...settings }
   const content = Json.stringify(newSettings)
   await FileSystem.writeFile('app://settings.json', content)
+  await GlobalEventBus.emitEvent('preferences.changed')
 }

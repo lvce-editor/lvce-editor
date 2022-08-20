@@ -10,6 +10,10 @@ export const state = {
   cachedConfiguration: undefined,
 }
 
+export const configurationChanged = () => {
+  state.cachedConfiguration = undefined
+}
+
 export const getConfiguration = (key) => {
   if (!state.cachedConfiguration) {
     const configDir = getConfigDir()
