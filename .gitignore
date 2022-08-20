@@ -1,27 +1,7 @@
-extensions/builtin.language-basics-html
-extensions/builtin.language-basics-java
-extensions/builtin.language-basics-python
-extensions/builtin.language-basics-go
-extensions/builtin.language-basics-shellscript
-extensions/builtin.language-basics-css
-extensions/builtin.language-basics-javascript
-extensions/builtin.language-basics-elixir
-extensions/builtin.language-features-css
-extensions/builtin.language-features-typescript
+extensions/builtin.language-basics*
+extensions/builtin.language-features*
 extensions/builtin.prettier
 extensions/builtin.vscode-icons
-extensions/builtin.language-basics-dotenv
-extensions/builtin.language-basics-kotlin
-extensions/builtin.language-basics-dart
-extensions/builtin.language-basics-julia
-extensions/builtin.language-basics-cpp
-extensions/builtin.language-basics-json
-extensions/builtin.language-basics-plaintext
-extensions/builtin.language-features-html
-extensions/builtin.language-basics-typescript
-extensions/builtin.language-basics-docker
-extensions/builtin.language-basics-markdown
-extensions/builtin.language-basics-yaml
 
 
 *.tar.br

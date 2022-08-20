@@ -115,6 +115,21 @@
     "version": "0.0.2"
   },
   {
+    "name": "builtin.language-basics-desktop",
+    "repository": "github.com/lvce-editor/language-basics-desktop",
+    "version": "0.0.2"
+  },
+  {
+    "name": "builtin.language-basics-xml",
+    "repository": "github.com/lvce-editor/language-basics-xml",
+    "version": "0.0.1"
+  },
+  {
+    "name": "builtin.language-basics-bat",
+    "repository": "github.com/lvce-editor/language-basics-bat",
+    "version": "0.0.1"
+  },
+  {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
     "version": "0.0.2"
