@@ -62,6 +62,7 @@ declare const QuickPick: {
   readonly focusNext: () => Promise<void>
   readonly open: () => Promise<void>
   readonly setValue: (value: string) => Promise<void>
+  readonly selectItem: (value: string) => Promise<void>
 }
 
 declare const Platform: {

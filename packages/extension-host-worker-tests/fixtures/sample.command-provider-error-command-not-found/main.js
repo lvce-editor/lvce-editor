@@ -1,5 +1,5 @@
 const sampleCommand = {
-  id: 'xyz.sampleCommand',
+  id: 'other-id',
   execute() {
     throw new Error('oops')
   },

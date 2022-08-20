@@ -23,7 +23,7 @@ test.only('showOpenDialog', async () => {
       filePaths: ['/test'],
     }
   })
-  expect(await Dialog.showOpenDialog()).toEqual(['/test'])
+  expect(await Dialog.showOpenDialog('Open Folder')).toEqual(['/test'])
   expect(electron.dialog.showOpenDialog).toHaveBeenCalledTimes(1)
   expect(electron.dialog.showOpenDialog).toHaveBeenCalledWith(
     {},
@@ -42,5 +42,5 @@ test('showOpenDialog - canceled', async () => {
       filePaths: [],
     }
   })
-  expect(await Dialog.showOpenDialog()).toBeUndefined()
+  expect(await Dialog.showOpenDialog('Open Folder')).toBeUndefined()
 })

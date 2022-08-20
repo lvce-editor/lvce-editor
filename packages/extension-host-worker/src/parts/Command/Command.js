@@ -8,6 +8,7 @@ import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/Exten
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
+import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 
 const getFn = (method) => {
   switch (method) {
@@ -35,8 +36,11 @@ const getFn = (method) => {
       return TextDocument.syncIncremental
     case 'ExtensionHostTextSearch.executeTextSearchProvider':
       return ExtensionHostTextSearch.executeTextSearchProvider
+    case 'ExtensionHostCommand.executeCommand':
+    case 'ExtensionHost.executeCommand':
+      return ExtensionHostCommand.executeCommand
     default:
-      throw new Error(`method not found: ${method}`)
+      throw new Error(`[extension-host-worker] method not found: ${method}`)
   }
 }
 
