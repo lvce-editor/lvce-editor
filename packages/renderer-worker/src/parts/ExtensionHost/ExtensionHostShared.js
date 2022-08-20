@@ -30,7 +30,6 @@ export const executeProvider = async ({
   noProviderFoundMessage,
 }) => {
   const extensionHosts = await ExtensionHostManagement.activateByEvent(event)
-  console.log({ event })
   if (extensionHosts.length === 0) {
     throw new Error(noProviderFoundMessage)
   }

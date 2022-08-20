@@ -87,7 +87,6 @@ const getManagersWithExtensionsToActivate = (
 }
 
 const startSynching = async (extensionHost) => {
-  console.log('start synching')
   const handleEditorCreate = (editor) => {
     const text = TextDocument.getText(editor)
     return extensionHost.ipc.invoke(
@@ -130,8 +129,6 @@ const startSynching = async (extensionHost) => {
     return extensionHost.ipc.invoke('Configuration.configurationChanged')
   }
 
-  console.log('workspace', Workspace.state.workspacePath)
-
   GlobalEventBus.addListener('workspace.change', handleWorkspaceChange)
   GlobalEventBus.addListener('preferences.changed', handlePreferencesChange)
 
@@ -153,7 +150,6 @@ export const activateByEvent = async (event) => {
   }
   // TODO should not query extensions multiple times
   const extensions = await ExtensionMeta.getExtensions()
-  console.log({ extensions })
   // TODO if many (more than two?) extensions cannot be loaded,
   // it shouldn't should that many error messages
   const extensionsWithError = getExtensionsWithError(extensions)

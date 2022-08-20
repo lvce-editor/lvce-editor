@@ -104,5 +104,4 @@ export const update = async (settings) => {
   const content = Json.stringify(newSettings)
   await FileSystem.writeFile('app://settings.json', content)
   await GlobalEventBus.emitEvent('preferences.changed')
-  // console.log('abc')
 }

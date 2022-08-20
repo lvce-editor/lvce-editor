@@ -15,7 +15,6 @@ export const configurationChanged = () => {
 }
 
 export const getConfiguration = (key) => {
-  console.log('get config', key)
   if (!state.cachedConfiguration) {
     const configDir = getConfigDir()
     if (!configDir) {
