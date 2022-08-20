@@ -47,3 +47,35 @@ test('get - error', () => {
   const Session = require('../src/parts/Session/Session.js')
   expect(() => Session.get()).toThrowError(new TypeError('x is not a function'))
 })
+
+test('permissionCheckHandler - allow clipboard api', () => {
+  /**
+   * @type {any }
+   */
+  let _permissionCheckHandler
+  const fakeSession = {
+    x: 42,
+    webRequest: {
+      onHeadersReceived() {},
+    },
+    protocol: {
+      registerFileProtocol() {},
+    },
+    setPermissionRequestHandler() {},
+    setPermissionCheckHandler(fn) {
+      _permissionCheckHandler = fn
+    },
+  }
+  jest.mock('electron', () => {
+    return {
+      session: {
+        fromPartition() {
+          return fakeSession
+        },
+      },
+    }
+  })
+  const Session = require('../src/parts/Session/Session.js')
+  Session.get()
+  expect(_permissionCheckHandler({}, 'clipboard-sanitized-write')).toBe(true)
+})

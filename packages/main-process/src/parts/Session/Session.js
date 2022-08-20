@@ -45,6 +45,11 @@ const handlePermissionRequest = (
 }
 
 const handlePermissionCheck = (webContents, permission, origin, details) => {
+  switch (permission) {
+    case 'clipboard-read':
+    case 'clipboard-sanitized-write':
+      return true
+  }
   return false
 }
 
