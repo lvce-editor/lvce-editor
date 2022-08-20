@@ -3,19 +3,9 @@ import * as Exec from '../Exec/Exec.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as NodeModulesIgnoredFiles from '../NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js'
 import * as Path from '../Path/Path.js'
+import VError from 'verror'
+import * as NpmDependencies from '../NpmDependencies/NpmDependencies.js'
 
-const getNpmDependenciesRaw = async (root) => {
-  const absoluteRoot = Path.absolute(root)
-  const { stdout } = await Exec.exec(
-    'npm',
-    ['list', '--omit=dev', '--all', '--json', '--long'],
-    {
-      cwd: absoluteRoot,
-    }
-  )
-  const json = JSON.parse(stdout)
-  return json
-}
 
 const walkDependencies = (object, fn) => {
   const shouldContinue = fn(object)
@@ -65,7 +55,7 @@ const getNpmDependencies = (rawDependencies) => {
 
 export const bundleSharedProcessDependencies = async ({ to }) => {
   const projectPath = Path.absolute('packages/shared-process')
-  const npmDependenciesRaw = await getNpmDependenciesRaw(projectPath)
+  const npmDependenciesRaw = await NpmDependencies.getNpmDependenciesRawJson(projectPath)
   const npmDependencies = getNpmDependencies(npmDependenciesRaw)
   const packageJson = await JsonFile.readJson(
     'packages/shared-process/package.json'
