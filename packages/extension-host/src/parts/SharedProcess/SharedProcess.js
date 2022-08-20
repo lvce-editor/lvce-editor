@@ -72,7 +72,6 @@ export const listen = async (InternalCommand) => {
   const ipcType = getIpcType(argv)
   const ipc = await Ipc.listen(ipcType)
   const handleMessage = async (message) => {
-    console.log({ message })
     if (Array.isArray(message)) {
       for (const subMessage of message) {
         handleMessage(subMessage)
