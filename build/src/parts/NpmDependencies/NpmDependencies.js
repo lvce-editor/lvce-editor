@@ -12,25 +12,70 @@ const getNodeVersionMajor = (nodeVersion) => {
   return match[0]
 }
 
-const getNpmDependenciesRaw = async (root) => {
-  const absoluteRoot = Path.absolute(root)
-  const nodeVersion = process.versions.node
-  const nodeVersionMajor = getNodeVersionMajor(nodeVersion)
-  if (nodeVersionMajor < 18) {
-    throw new VError(
-      `NodeJs Version >=18 is required but current Node version is ${nodeVersion}`
-    )
-  }
-  const { stdout } = await Exec.exec(
-    'npm',
-    ['list', '--omit=dev', '--parseable', '--all'],
-    {
-      cwd: absoluteRoot,
+const getElsProblemMessage = message => {
+  const lines = message.split('\n')
+  for (const line of lines) {
+    if (line.includes('npm ERR! invalid:')) {
+      return line
     }
-  )
-  const lines = stdout.split('\n')
-  return lines.slice(1)
+  }
+  return message
+
 }
+
+const getNpmDependenciesRaw = async (root) => {
+  try {
+    const absoluteRoot = Path.absolute(root)
+    const nodeVersion = process.versions.node
+    const nodeVersionMajor = getNodeVersionMajor(nodeVersion)
+    if (nodeVersionMajor < 18) {
+      throw new VError(
+        `NodeJs Version >=18 is required but current Node version is ${nodeVersion}`
+      )
+    }
+    const { stdout } = await Exec.exec(
+      'npm',
+      ['list', '--omit=dev', '--parseable', '--all'],
+      {
+        cwd: absoluteRoot,
+      }
+    )
+    const lines = stdout.split('\n')
+    return lines.slice(1)
+  } catch (error) {
+    if (error && error.message.includes('ELSPROBLEMS')) {
+      const message = getElsProblemMessage(error.message)
+      throw new VError(`Failed to get npm dependencies for ${root}: ${message}`)
+    }
+    // @ts-ignore
+    throw new VError(error, `Failed to get npm dependencies for ${root}`)
+  }
+}
+
+export const getNpmDependenciesRawJson = async (root) => {
+  try {
+
+    const absoluteRoot = Path.absolute(root)
+    const { stdout } = await Exec.exec(
+      'npm',
+      ['list', '--omit=dev', '--all', '--json', '--long'],
+      {
+        cwd: absoluteRoot,
+      }
+    )
+    const json = JSON.parse(stdout)
+    return json
+  } catch (error) {
+    if (error && error.message.includes('ELSPROBLEMS')) {
+      const message = getElsProblemMessage(error.message)
+      throw new VError(`Failed to get npm dependencies for ${root}: ${message}`)
+    }
+    // @ts-ignore
+    throw new VError(error, `Failed to get npm dependencies for ${root}`)
+
+  }
+}
+
 
 const isDependency = (path) => {
   if (path.endsWith('type-fest')) {
