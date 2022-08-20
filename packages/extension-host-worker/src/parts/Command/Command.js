@@ -9,6 +9,7 @@ import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDoc
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
+import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
 
 const getFn = (method) => {
   switch (method) {
@@ -39,6 +40,8 @@ const getFn = (method) => {
     case 'ExtensionHostCommand.executeCommand':
     case 'ExtensionHost.executeCommand':
       return ExtensionHostCommand.executeCommand
+    case 'Workspace.setWorkspacePath':
+      return ExtensionHostWorkspace.setWorkspacePath
     default:
       throw new Error(`[extension-host-worker] method not found: ${method}`)
   }
