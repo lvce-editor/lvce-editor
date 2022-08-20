@@ -29,8 +29,7 @@ const getNewSelections = (selections, lines, getDelta) => {
 }
 
 export const editorCursorHorizontalRight = (editor, getDelta) => {
-  const lines = editor.lines
-  const selections = editor.selections
+  const { lines, selections } = editor
   const newSelections = getNewSelections(selections, lines, getDelta)
   return Editor.scheduleSelections(editor, newSelections)
 }

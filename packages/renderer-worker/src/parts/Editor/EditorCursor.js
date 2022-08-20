@@ -41,19 +41,19 @@ const getTokenIndex = (lineCache, endColumnIndex) => {
 }
 
 export const getVisible = (editor) => {
-  if (Platform.isMobileOrTablet()) {
-    const visibleCursors = []
-    for (const selection of editor.selections) {
-      if (isInRange(selection.end, editor.minLineY, editor.maxLineY)) {
-        visibleCursors.push({
-          rowIndex: selection.end.rowIndex - editor.minLineY,
-          columnIndex: selection.end.columnIndex,
-        })
-      } else {
-      }
-    }
-    return visibleCursors
-  }
+  // if (Platform.isMobileOrTablet()) {
+  //   const visibleCursors = []
+  //   for (const selection of editor.selections) {
+  //     if (isInRange(selection.end, editor.minLineY, editor.maxLineY)) {
+  //       visibleCursors.push({
+  //         rowIndex: selection.end.rowIndex - editor.minLineY,
+  //         columnIndex: selection.end.columnIndex,
+  //       })
+  //     } else {
+  //     }
+  //   }
+  //   return visibleCursors
+  // }
   // TODO could use uint16array here
   // TODO handle case when text segmenter not supported
   const visibleCursors = []

@@ -1,21 +1,21 @@
-import * as TextSegmenter from '../TextSegmenter/TextSegmenter.js'
+// import * as TextSegmenter from '../TextSegmenter/TextSegmenter.js'
 
 export const characterLeft = (line, columnIndex) => {
-  if (!TextSegmenter.supported()) {
-    return 1
-  }
-  const segmenter = TextSegmenter.create()
-  const last = segmenter.at(line, columnIndex - 1)
-  return columnIndex - last.index
+  // if (!TextSegmenter.supported()) {
+  return 1
+  // }
+  // const segmenter = TextSegmenter.create()
+  // const last = segmenter.at(line, columnIndex - 1)
+  // return columnIndex - last.index
 }
 
 export const characterRight = (line, columnIndex) => {
-  if (!TextSegmenter.supported()) {
-    return 1
-  }
-  const segmenter = TextSegmenter.create()
-  const next = segmenter.at(line, columnIndex)
-  return next.segment.length
+  // if (!TextSegmenter.supported()) {
+  return 1
+  // }
+  // const segmenter = TextSegmenter.create()
+  // const next = segmenter.at(line, columnIndex)
+  // return next.segment.length
 }
 
 const isWhitespace = (char) => {

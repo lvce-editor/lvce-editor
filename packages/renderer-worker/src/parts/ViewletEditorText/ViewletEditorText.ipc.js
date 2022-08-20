@@ -1,9 +1,16 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
+const cachedModules = Object.create(null)
+
 const lazyCommand = (importFn, key) => {
   const lazyCommand = async (editor, ...args) => {
+    if (cachedModules[key]) {
+      const fn = cachedModules[key][key]
+      return fn(editor, ...args)
+    }
     const module = await importFn()
+    cachedModules[key] = module
     const fn = module[key]
     // editor might have changed during import, need to apply function to latest editor
     const latestEditor = ViewletStates.getState('EditorText')
