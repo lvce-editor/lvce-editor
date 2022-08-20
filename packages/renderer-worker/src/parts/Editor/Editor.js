@@ -3,7 +3,7 @@ import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Assert from '../Assert/Assert.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as EditorCursor from './EditorCursor.js'
+import * as EditorCursorAndSelection from './EditorCursorAndSelection.js'
 import * as EditorScrolling from './EditorScrolling.js'
 import * as EditorSelection from './EditorSelection.js'
 import * as EditorText from './EditorText.js'
@@ -70,32 +70,6 @@ export const renderText = (editor) => {
     /* lineHeight */ editor.rowHeight,
     /* letterSpacing */ editor.letterSpacing
   )
-}
-
-export const renderTextAndCursorAndSelectionsCommands = (editor) => {
-  Assert.object(editor)
-  const textInfos = EditorText.getVisible(editor)
-  const cursorInfos = EditorCursor.getVisible(editor)
-  const selectionInfos = EditorSelection.getVisible(editor)
-  const scrollBarHeight = editor.scrollBarHeight
-  const scrollBarY =
-    (editor.deltaY / editor.finalDeltaY) *
-    (editor.height - editor.scrollBarHeight)
-  return [
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'EditorText',
-    /* method */ 'renderTextAndCursorsAndSelections',
-    /* scrollBarY */ scrollBarY,
-    /* scrollBarHeight */ scrollBarHeight,
-    /* textInfos */ textInfos,
-    /* cursorInfos */ cursorInfos,
-    /* selectionInfos */ selectionInfos,
-  ]
-}
-
-export const renderTextAndCursorAndSelections = (editor) => {
-  const commands = renderTextAndCursorAndSelectionsCommands(editor)
-  RendererProcess.send(commands)
 }
 
 export const setTokenizer = (editor, tokenizer) => {
@@ -318,14 +292,14 @@ export const render = (oldState, newState) => {
   }
 
   if (oldState.selections !== newState.selections) {
-    const cursorInfos = EditorCursor.getVisible(newState)
-    const selectionInfos = EditorSelection.getVisible(newState)
+    const { cursors, selections } =
+      EditorCursorAndSelection.getVisible(newState)
     changes.push([
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'EditorText',
       /* method */ 'setSelections',
-      /* cursorInfos */ cursorInfos,
-      /* selectionInfos */ selectionInfos,
+      /* cursorInfos */ cursors,
+      /* selectionInfos */ selections,
     ])
   }
   if (

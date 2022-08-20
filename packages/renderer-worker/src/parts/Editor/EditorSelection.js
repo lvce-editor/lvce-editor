@@ -1,5 +1,4 @@
 import * as Assert from '../Assert/Assert.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
 const getSelectionFromChange = (change) => {
@@ -43,80 +42,4 @@ export const applyEdit = (editor, changes) => {
   const newSelections = EditorSelection.from(changes, getSelectionFromChange)
   // setSelections(editor, newSelections)
   return newSelections
-}
-
-// TODO visible selections could also be uint16array
-// [top1, left1, width1, height1, top2, left2, width2, height2...]
-
-export const getVisible = (editor) => {
-  const visibleSelections = []
-  // // TODO binary search
-
-  // // after
-  const selections = editor.selections
-  const minLineY = editor.minLineY
-  const maxLineY = editor.maxLineY
-  const rowHeight = editor.rowHeight
-  const columnWidth = editor.columnWidth
-  const lines = editor.lines
-  for (let i = 0; i < selections.length; i += 4) {
-    const selectionStartRow = selections[i]
-    const selectionStartColumn = selections[i + 1]
-    const selectionEndRow = selections[i + 2]
-    const selectionEndColumn = selections[i + 3]
-
-    if (selectionEndRow < minLineY) {
-      continue
-    }
-    if (selectionStartRow > maxLineY) {
-      break
-    }
-    if (
-      EditorSelection.isEmpty(
-        selectionStartRow,
-        selectionStartColumn,
-        selectionEndRow,
-        selectionEndColumn
-      )
-    ) {
-      continue
-    }
-    if (selectionStartRow === selectionEndRow) {
-      visibleSelections.push(
-        /* top */ (selectionStartRow - minLineY) * rowHeight,
-        /* left */ selectionStartColumn * columnWidth,
-        /* width */ (selectionEndColumn - selectionStartColumn) * columnWidth,
-        /* height */ rowHeight
-      )
-    } else {
-      if (selectionStartRow >= minLineY) {
-        visibleSelections.push(
-          /* top */ (selectionStartRow - minLineY) * rowHeight,
-          /*left */ selectionStartColumn * columnWidth,
-          /* width */ (lines[selectionStartRow].length - selectionStartColumn) *
-            columnWidth,
-          /* height */ rowHeight
-        )
-      }
-      const iMin = Math.max(selectionStartRow + 1, minLineY)
-      const iMax = Math.min(selectionEndRow, maxLineY)
-      for (let i = iMin; i < iMax; i++) {
-        visibleSelections.push(
-          /* top */ (i - minLineY) * rowHeight,
-          /* left */ 0,
-          /* width */ lines[i].length * columnWidth,
-          /* height */ rowHeight
-        )
-      }
-      if (selectionEndRow <= maxLineY) {
-        visibleSelections.push(
-          /* top */ (selectionEndRow - minLineY) * rowHeight,
-          /* left */ 0,
-          /* width */ selectionEndColumn * columnWidth,
-          /* height */ rowHeight
-        )
-      }
-    }
-  }
-  return new Uint32Array(visibleSelections)
 }

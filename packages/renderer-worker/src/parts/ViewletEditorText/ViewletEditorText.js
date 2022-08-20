@@ -157,7 +157,7 @@ export const resize = (state, dimensions) => {
     dimensions.height,
     state.columnWidth
   )
-  const commands = [Editor.renderTextAndCursorAndSelectionsCommands(newState)]
+  const commands = [Editor.render(state, newState)]
   return {
     newState,
     commands,

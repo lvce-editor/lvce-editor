@@ -555,9 +555,9 @@ export const renderTextAndCursors = (state, textInfos, cursorInfos) => {
   LayerCursor.setCursors(state, cursorInfos)
 }
 
-export const setSelections = (state, cursorInfos, selectionInfos) => {
-  LayerCursor.setCursors(state, cursorInfos)
-  LayerSelections.setSelections(state, selectionInfos)
+export const setSelections = (state, cursors, selections) => {
+  LayerCursor.setCursors(state, cursors)
+  LayerSelections.setSelections(state, selections)
 }
 
 export const renderTextAndCursorsAndSelections = (
