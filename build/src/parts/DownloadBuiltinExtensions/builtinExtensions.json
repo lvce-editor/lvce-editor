@@ -22,7 +22,7 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-html",
@@ -137,7 +137,7 @@
   {
     "name": "builtin.language-basics-powershell",
     "repository": "github.com/lvce-editor/language-basics-powershell",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-basics-typescript",
