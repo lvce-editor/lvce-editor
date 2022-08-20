@@ -138,3 +138,7 @@ export const getNodePath = () => {
 export const getTmpDir = () => {
   return tmpdir()
 }
+
+export const getOnlyExtensionPath = () => {
+  return process.env.ONLY_EXTENSION
+}

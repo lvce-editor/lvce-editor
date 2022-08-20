@@ -17,16 +17,35 @@ const isLanguageBasics = (extension) => {
   return false
 }
 
+const getEnabledExtensionWithOnlyExtension = (
+  builtinExtensions,
+  onlyExtension
+) => {
+  const extensions = []
+  for (const builtinExtension of builtinExtensions) {
+    if (builtinExtension.id === onlyExtension.id) {
+      continue
+    }
+    extensions.push(builtinExtension)
+  }
+  extensions.push(onlyExtension)
+  return extensions
+}
+
 export const state = {
   async getExtensions() {
     // TODO only read from env once
     const builtinExtensions = await getBuiltinExtensions()
-    if (process.env.ONLY_EXTENSION) {
-      const absolutePath = path.resolve(process.env.ONLY_EXTENSION)
-      const onlyExtension = await getExtensionManifests([absolutePath])
-      return [...builtinExtensions.filter(isLanguageBasics), ...onlyExtension]
+    const onlyExtensionPath = Platform.getOnlyExtensionPath()
+    if (onlyExtensionPath) {
+      const absolutePath = path.resolve(onlyExtensionPath)
+      const [onlyExtension] = await getExtensionManifests([absolutePath])
+      const enabledExtensions = getEnabledExtensionWithOnlyExtension(
+        builtinExtensions,
+        onlyExtension
+      )
+      return enabledExtensions
     }
-
     const installedExtensions = await getInstalledExtensions()
     return [...builtinExtensions, ...installedExtensions]
   },
