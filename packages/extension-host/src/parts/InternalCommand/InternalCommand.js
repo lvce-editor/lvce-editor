@@ -29,6 +29,8 @@ const getFn = (id) => {
       return ExtensionHostCommand.register
     case 'Command.execute':
     case 'executeCommand':
+    case 'ExtensionHostCommand.executeCommand':
+    case 'ExtensionHost.executeCommand':
       return ExtensionHostCommand.execute
     case 384:
     case 'Completion.execute':
