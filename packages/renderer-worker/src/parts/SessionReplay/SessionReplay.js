@@ -22,7 +22,6 @@ export const handleMessage = async (source, message) => {
   try {
     const sessionId = getSessionId()
     const timestamp = performance.now()
-    // console.log({ message, timestamp })
     await IndexedDb.saveValue(sessionId, {
       source,
       timestamp,
@@ -111,7 +110,6 @@ export const replaySession = async (sessionId) => {
 export const getEvents = async (sessionId) => {
   try {
     const timestamp = performance.now()
-    // console.log({ message, timestamp })
     const events = await IndexedDb.getValuesByIndexName(
       'session',
       'sessionId',
