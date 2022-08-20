@@ -17,6 +17,7 @@ import getPort from 'get-port'
 import { jest } from '@jest/globals'
 import tar from 'tar-fs'
 import VError from 'verror'
+import { writeJson } from '../src/parts/JsonFile/JsonFile.js'
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   getExtensionsPath: jest.fn(() => {
@@ -32,6 +33,9 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
     return marketplaceUrl
   }),
   getCachedExtensionsPath: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+  getOnlyExtensionPath: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))
@@ -372,6 +376,8 @@ test('getExtensions - error - invalid value - null', async () => {
   Platform.getBuiltinExtensionsPath.mockImplementation(() => tmpDir1)
   // @ts-ignore
   Platform.getExtensionsPath.mockImplementation(() => tmpDir2)
+  // @ts-ignore
+  Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       status: 'rejected',
@@ -392,6 +398,8 @@ test('getExtensions - error - invalid value - string', async () => {
   Platform.getBuiltinExtensionsPath.mockImplementation(() => tmpDir1)
   // @ts-ignore
   Platform.getExtensionsPath.mockImplementation(() => tmpDir2)
+  // @ts-ignore
+  Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       status: 'rejected',
@@ -412,6 +420,8 @@ test('getExtensions - error - invalid value - number', async () => {
   Platform.getBuiltinExtensionsPath.mockImplementation(() => tmpDir1)
   // @ts-ignore
   Platform.getExtensionsPath.mockImplementation(() => tmpDir2)
+  // @ts-ignore
+  Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       status: 'rejected',
@@ -432,6 +442,8 @@ test('getExtensions - error - invalid value - boolean', async () => {
   Platform.getBuiltinExtensionsPath.mockImplementation(() => tmpDir1)
   // @ts-ignore
   Platform.getDisabledExtensionsPath.mockImplementation(() => tmpDir2)
+  // @ts-ignore
+  Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       status: 'rejected',
@@ -453,6 +465,8 @@ test('getExtensions - error - invalid json', async () => {
   Platform.getBuiltinExtensionsPath.mockImplementation(() => tmpDir1)
   // @ts-ignore
   Platform.getExtensionsPath.mockImplementation(() => tmpDir2)
+  // @ts-ignore
+  Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       reason: new VError(
@@ -472,6 +486,8 @@ test('getExtensions - error - manifest not found', async () => {
   Platform.getBuiltinExtensionsPath.mockImplementation(() => tmpDir1)
   // @ts-ignore
   Platform.getExtensionsPath.mockImplementation(() => tmpDir2)
+  // @ts-ignore
+  Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   const manifestPath = join(tmpDir1, 'test-extension-1', 'extension.json')
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
@@ -480,6 +496,42 @@ test('getExtensions - error - manifest not found', async () => {
         `Failed to load extension "test-extension-1": Failed to load extension manifest: ENOENT: no such file or directory, open '${manifestPath}'`
       ),
       path: join(tmpDir1, 'test-extension-1'),
+    },
+  ])
+})
+
+test('getExtensions - with only extension and builtin extensions', async () => {
+  const tmpDir1 = await getTmpDir()
+  const tmpDir2 = await getTmpDir()
+  const tmpDir3 = await getTmpDir()
+  await mkdir(join(tmpDir1, 'test-extension-1'))
+  await writeJson(join(tmpDir1, 'test-extension-1', 'extension.json'), {
+    id: 'language-basics-xyz',
+  })
+  await writeJson(join(tmpDir3, 'extension.json'), {
+    id: 'language-basics-xyz',
+    languages: [
+      {
+        id: 'xyz',
+      },
+    ],
+  })
+  // @ts-ignore
+  Platform.getBuiltinExtensionsPath.mockImplementation(() => tmpDir1)
+  // @ts-ignore
+  Platform.getExtensionsPath.mockImplementation(() => tmpDir2)
+  // @ts-ignore
+  Platform.getOnlyExtensionPath.mockImplementation(() => tmpDir3)
+  expect(await ExtensionManagement.getExtensions()).toEqual([
+    {
+      id: 'language-basics-xyz',
+      languages: [
+        {
+          id: 'xyz',
+        },
+      ],
+      path: tmpDir3,
+      status: 'fulfilled',
     },
   ])
 })
