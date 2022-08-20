@@ -130,6 +130,11 @@
     "version": "0.0.1"
   },
   {
+    "name": "builtin.language-basics-toml",
+    "repository": "github.com/lvce-editor/language-basics-toml",
+    "version": "0.0.1"
+  },
+  {
     "name": "builtin.language-basics-powershell",
     "repository": "github.com/lvce-editor/language-basics-powershell",
     "version": "0.0.2"
