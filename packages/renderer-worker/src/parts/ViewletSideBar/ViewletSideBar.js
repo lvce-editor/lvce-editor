@@ -6,6 +6,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+
 export const create = (id, uri, left, top, width, height) => {
   return {
     currentViewletId: '',
