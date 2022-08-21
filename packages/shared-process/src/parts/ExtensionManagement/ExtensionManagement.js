@@ -32,40 +32,6 @@ const getEnabledExtensionWithOnlyExtension = (
   return extensions
 }
 
-export const state = {
-  async getExtensions() {
-    // TODO only read from env once
-    const builtinExtensions = await getBuiltinExtensions()
-    const onlyExtensionPath = Platform.getOnlyExtensionPath()
-    if (onlyExtensionPath) {
-      const absolutePath = path.resolve(onlyExtensionPath)
-      const [onlyExtension] = await getExtensionManifests([absolutePath])
-      const enabledExtensions = getEnabledExtensionWithOnlyExtension(
-        builtinExtensions,
-        onlyExtension
-      )
-      return enabledExtensions
-    }
-    const installedExtensions = await getInstalledExtensions()
-    return [...builtinExtensions, ...installedExtensions]
-  },
-  async getThemeExtensions() {
-    const builtinExtensionsPath = Platform.getBuiltinExtensionsPath()
-    const dirents = await readdir(builtinExtensionsPath)
-    const paths = []
-    for (const dirent of dirents) {
-      if (isTheme(dirent)) {
-        paths.push(getAbsoluteBuiltinExtensionPath(dirent))
-      }
-    }
-    if (process.env.ONLY_EXTENSION && isTheme(process.env.ONLY_EXTENSION)) {
-      paths.push(process.env.ONLY_EXTENSION)
-    }
-    const builtinExtensions = await getExtensionManifests(paths)
-    return builtinExtensions
-  },
-}
-
 export const install = async (id) => {
   // TODO this should be a stateless function, renderer-worker should have info on marketplace url
   // TODO use command.execute
@@ -301,7 +267,20 @@ export const getInstalledExtensions = async () => {
 }
 
 export const getExtensions = async () => {
-  return state.getExtensions()
+  // TODO only read from env once
+  const builtinExtensions = await getBuiltinExtensions()
+  const onlyExtensionPath = Platform.getOnlyExtensionPath()
+  if (onlyExtensionPath) {
+    const absolutePath = path.resolve(onlyExtensionPath)
+    const [onlyExtension] = await getExtensionManifests([absolutePath])
+    const enabledExtensions = getEnabledExtensionWithOnlyExtension(
+      builtinExtensions,
+      onlyExtension
+    )
+    return enabledExtensions
+  }
+  const installedExtensions = await getInstalledExtensions()
+  return [...builtinExtensions, ...installedExtensions]
 }
 
 const RE_THEME = /[a-z]+\.[a-z\-]*theme-[a-z\d\-]+$/
@@ -317,7 +296,20 @@ const getThemeExtensionsBuiltin = async () => {
 }
 
 export const getThemeExtensions = async () => {
-  return state.getThemeExtensions()
+  const builtinExtensionsPath = Platform.getBuiltinExtensionsPath()
+  const dirents = await readdir(builtinExtensionsPath)
+  const paths = []
+  for (const dirent of dirents) {
+    if (isTheme(dirent)) {
+      paths.push(getAbsoluteBuiltinExtensionPath(dirent))
+    }
+  }
+  const onlyExtensionPath = Platform.getOnlyExtensionPath()
+  if (onlyExtensionPath && isTheme(onlyExtensionPath)) {
+    paths.push(onlyExtensionPath)
+  }
+  const builtinExtensions = await getExtensionManifests(paths)
+  return builtinExtensions
 }
 
 export const getDisabledExtensions = async () => {
@@ -327,8 +319,9 @@ export const getDisabledExtensions = async () => {
 }
 
 export const getAllExtensions = async () => {
-  if (process.env.ONLY_EXTENSION) {
-    return getExtensionManifests([process.env.ONLY_EXTENSION])
+  const onlyExtensionPath = Platform.getOnlyExtensionPath()
+  if (onlyExtensionPath) {
+    return getExtensionManifests([onlyExtensionPath])
   }
   const t1 = performance.now()
   const [builtinExtensions, installedExtensions, disabledExtensions] =

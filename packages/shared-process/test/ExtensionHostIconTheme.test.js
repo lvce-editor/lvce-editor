@@ -1,17 +1,35 @@
 import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
-import * as ExtensionHostIconTheme from '../src/parts/ExtensionManagement/ExtensionManagementIconTheme.js'
-import * as ExtensionManagement from '../src/parts/ExtensionManagement/ExtensionManagement.js'
+import { jest } from '@jest/globals'
+
+jest.unstable_mockModule(
+  '../src/parts/ExtensionManagement/ExtensionManagement.js',
+  () => {
+    return {
+      getExtensions: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const ExtensionHostIconTheme = await import(
+  '../src/parts/ExtensionManagement/ExtensionManagementIconTheme.js'
+)
+const ExtensionManagement = await import(
+  '../src/parts/ExtensionManagement/ExtensionManagement.js'
+)
 
 const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 
 test('getIconTheme - not found', async () => {
-  ExtensionManagement.state.getExtensions = async () => {
+  // @ts-ignore
+  ExtensionManagement.getExtensions.mockImplementation(async () => {
     return []
-  }
+  })
   await expect(
     ExtensionHostIconTheme.getIconTheme('test-theme')
   ).rejects.toThrowError(
@@ -21,7 +39,8 @@ test('getIconTheme - not found', async () => {
 
 test('getIconTheme - wrong/invalid path', async () => {
   const tmpDir = await getTmpDir()
-  ExtensionManagement.state.getExtensions = async () => {
+  // @ts-ignore
+  ExtensionManagement.getExtensions.mockImplementation(async () => {
     return [
       {
         status: 'fulfilled',
@@ -36,7 +55,7 @@ test('getIconTheme - wrong/invalid path', async () => {
         path: tmpDir,
       },
     ]
-  }
+  })
   const iconThemeJsonPath = join(tmpDir, 'icon-theme.json')
   await expect(
     ExtensionHostIconTheme.getIconTheme('test')
@@ -47,7 +66,8 @@ test('getIconTheme - wrong/invalid path', async () => {
 
 test('getIconTheme - invalid json', async () => {
   const tmpDir = await getTmpDir()
-  ExtensionManagement.state.getExtensions = async () => {
+  // @ts-ignore
+  ExtensionManagement.getExtensions.mockImplementation(async () => {
     return [
       {
         status: 'fulfilled',
@@ -62,7 +82,7 @@ test('getIconTheme - invalid json', async () => {
         path: tmpDir,
       },
     ]
-  }
+  })
   const iconThemeJsonPath = join(tmpDir, 'icon-theme.json')
   await writeFile(iconThemeJsonPath, '{ 2 }')
   await expect(
