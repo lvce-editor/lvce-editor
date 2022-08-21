@@ -3,6 +3,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as I18nString from '../I18NString/I18NString.js'
 
 // TODO maybe create should have a container as param like vscode?
 // maybe not?
@@ -21,6 +22,13 @@ import * as Workspace from '../Workspace/Workspace.js'
 const SEARCH_ORDER_FILE_NAMES = 1
 
 export const name = 'Search'
+
+export const uiStrings = {
+  NoResults: 'No results found',
+  Oneresults: 'Found 1 result in 1 file',
+  ManyResultsInOneFile: `Found {PH1} results in 1 file`,
+  ManyResultsInManyFiles: `Found {PH1} results in {PH2} files`,
+}
 
 export const create = () => {
   return {
@@ -41,15 +49,20 @@ export const contentLoaded = async () => {}
 
 const getStatusMessage = (resultCount, fileResultCount) => {
   if (resultCount === 0) {
-    return 'No results found'
+    return I18nString.i18nString(uiStrings.NoResults)
   }
   if (resultCount === 1 && fileResultCount === 1) {
-    return 'Found 1 result in 1 file'
+    return I18nString.i18nString(uiStrings.Oneresults)
   }
   if (fileResultCount === 1) {
-    return `Found ${resultCount} results in 1 file`
+    return I18nString.i18nString(uiStrings.ManyResultsInOneFile, {
+      PH1: resultCount,
+    })
   }
-  return `Found ${resultCount} results in ${fileResultCount} files`
+  return I18nString.i18nString(uiStrings.ManyResultsInManyFiles, {
+    PH1: resultCount,
+    PH2: fileResultCount,
+  })
 }
 
 const getResultCounts = (results) => {
