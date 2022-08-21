@@ -292,11 +292,12 @@ const getModuleId = (commandId) => {
     case 'KeyBindings.handleKeyBinding':
     case 'KeyBindings.hydrate':
       return MODULE_KEY_BINDINGS
+    case 'Dialog.close':
+    case 'Dialog.handleClick':
+    case 'Dialog.openFile':
     case 'Dialog.openFolder':
     case 'Dialog.showAbout':
     case 'Dialog.showMessage':
-    case 'Dialog.close':
-    case 'Dialog.handleClick':
       return MODULE_DIALOG
     case 2133:
     case 'Viewlet.getAllStates':

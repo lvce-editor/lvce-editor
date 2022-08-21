@@ -52,11 +52,12 @@ test('about', async () => {
 
 test('showOpenDialog', async () => {
   Electron.state.invoke = jest.fn(async () => {})
-  await Electron.showOpenDialog('Open Folder')
+  await Electron.showOpenDialog('Open Folder', [])
   expect(Electron.state.invoke).toHaveBeenCalledTimes(1)
   expect(Electron.state.invoke).toBeCalledWith(
     'Dialog.showOpenDialog',
-    'Open Folder'
+    'Open Folder',
+    []
   )
 })
 

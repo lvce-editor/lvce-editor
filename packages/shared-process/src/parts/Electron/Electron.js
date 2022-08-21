@@ -65,10 +65,11 @@ export const about = async () => {
   await invoke(/* About.open */ 'About.open')
 }
 
-export const showOpenDialog = async (title) => {
+export const showOpenDialog = async (title, properties) => {
   const result = await invoke(
     /* Dialog.showOpenDialog */ 'Dialog.showOpenDialog',
-    /* title */ title
+    /* title */ title,
+    /* properties */ properties
   )
   return result
 }

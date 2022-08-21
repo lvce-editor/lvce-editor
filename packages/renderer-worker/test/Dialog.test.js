@@ -15,6 +15,13 @@ jest.unstable_mockModule(
     }
   }
 )
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
@@ -37,6 +44,7 @@ const RendererProcess = await import(
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
 )
+const Command = await import('../src/parts/Command/Command.js')
 const Platform = await import('../src/parts/Platform/Platform.js')
 const Dialog = await import('../src/parts/Dialog/Dialog.js')
 
@@ -147,4 +155,22 @@ test('close - web', async () => {
   await Dialog.close()
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(7836)
+})
+
+test('openFile', async () => {
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(() => {
+    return ['/test/some-file']
+  })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await Dialog.openFolder()
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith(
+    'Electron.showOpenDialog',
+    'Open Folder',
+    ['openDirectory', 'dontAddToRecent', 'showHiddenFiles']
+  )
 })

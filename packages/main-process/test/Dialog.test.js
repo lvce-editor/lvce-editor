@@ -23,7 +23,13 @@ test.only('showOpenDialog', async () => {
       filePaths: ['/test'],
     }
   })
-  expect(await Dialog.showOpenDialog('Open Folder')).toEqual(['/test'])
+  expect(
+    await Dialog.showOpenDialog('Open Folder', [
+      'openDirectory',
+      'dontAddToRecent',
+      'showHiddenFiles',
+    ])
+  ).toEqual(['/test'])
   expect(electron.dialog.showOpenDialog).toHaveBeenCalledTimes(1)
   expect(electron.dialog.showOpenDialog).toHaveBeenCalledWith(
     {},

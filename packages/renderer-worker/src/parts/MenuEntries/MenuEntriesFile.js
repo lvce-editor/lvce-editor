@@ -3,8 +3,8 @@ export const getMenuEntries = () => {
     {
       id: 'newFile',
       label: 'New File',
-      flags: /* Disabled */ 5,
-      command: /* TODO */ -1,
+      flags: /* None */ 0,
+      command: -1,
     },
     {
       id: 'newWindow',
@@ -21,8 +21,8 @@ export const getMenuEntries = () => {
     {
       id: 'openFile',
       label: 'Open File',
-      flags: /* Disabled */ 5,
-      command: /* TODO */ -1,
+      flags: /* None */ 0,
+      command: 'Dialog.openFile',
     },
     {
       id: 'openFolder',
