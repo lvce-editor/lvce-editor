@@ -38,15 +38,20 @@ const downloadExtension = async (extension) => {
     const cachedPath = Path.absolute(
       Path.join('build', '.tmp', `cachedExtensions`, cacheName)
     )
+    const outPath = Path.absolute(Path.join(`extensions`, extension.name))
     if (existsSync(cachedPath)) {
+      if (!existsSync(outPath)) {
+        // TODO check version of unpackaged extension and when it is different, unpack the new extension
+        await extract(
+          cachedPath,
+          Path.absolute(Path.join(`extensions`, extension.name))
+        )
+      }
       return
     }
     const url = `https://${extension.repository}/releases/download/v${extension.version}/${baseName}-v${extension.version}.tar.br`
     await downloadUrl(url, cachedPath)
-    await extract(
-      cachedPath,
-      Path.absolute(Path.join(`extensions`, extension.name))
-    )
+    await extract(cachedPath, outPath)
   } catch (error) {
     // @ts-ignore
     throw new VError(error, `Failed to download extension ${extension.name}`)
