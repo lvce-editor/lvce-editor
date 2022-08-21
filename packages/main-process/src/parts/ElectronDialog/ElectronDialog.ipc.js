@@ -1,4 +1,4 @@
-const Dialog = require('./Dialog.js')
+const Dialog = require('./ElectronDialog.js')
 
 exports.Commands = {
   'Dialog.showOpenDialog': Dialog.showOpenDialog,

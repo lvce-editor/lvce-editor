@@ -1,4 +1,4 @@
-const Electron = require('../Electron/Electron.js')
+const Electron = require('electron')
 
 const handleCliArgs = (parsedArgs) => {
   console.info('TODO print help')

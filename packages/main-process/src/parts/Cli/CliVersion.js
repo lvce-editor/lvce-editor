@@ -1,4 +1,4 @@
-const Electron = require('../Electron/Electron.js')
+const Electron = require('electron')
 const Platform = require('../Platform/Platform.js')
 
 const handleCliArgs = (parsedArgs) => {

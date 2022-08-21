@@ -1,5 +1,5 @@
-const Electron = require('../Electron/Electron.js')
-const Session = require('../Session/Session.js')
+const Electron = require('electron')
+const Session = require('../ElectronSession/ElectronSession.js')
 const Platform = require('../Platform/Platform.js')
 
 // const __dirname = dirname(fileURLToPath(import.meta.url))
