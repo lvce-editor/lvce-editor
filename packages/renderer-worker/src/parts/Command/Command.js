@@ -50,6 +50,7 @@ const MODULE_EXTENSION_META = 81
 const MODULE_TEST = 82
 const MODULE_TEST_FRAMEWORK = 83
 const MODULE_TEST_FRAMEWORK_COMPONENT = 84
+const MODULE_EXTENSIONS = 85
 
 export const state = {
   commands: Object.create(null),
@@ -156,6 +157,8 @@ const loadModule = (moduleId) => {
       return import('../TestFrameWork/TestFrameWork.js')
     case MODULE_TEST_FRAMEWORK_COMPONENT:
       return import('../TestFrameWorkComponent/TestFrameWorkComponent.js')
+    case MODULE_EXTENSIONS:
+      return import('../Extensions/Extensions.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }
@@ -200,6 +203,9 @@ const getModuleId = (commandId) => {
     case 'ExtensionMeta.addWebExtension':
     case 'ExtensionMeta.addNodeExtension':
       return MODULE_EXTENSION_META
+    case 'Extensions.openExtensionsFolder':
+    case 'Extensions.openCachedExtensionsFolder':
+      return MODULE_EXTENSIONS
     case 'Test.execute':
       return MODULE_TEST
     case 'ColorThemeFromJson.createColorThemeFromJson':
