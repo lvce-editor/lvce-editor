@@ -10,7 +10,8 @@ export const state = {
 }
 
 const getTokenizePath = (languageId) => {
-  return Languages.getTokenizeFunctionPath(languageId)
+  const tokenizePath = Languages.getTokenizeFunctionPath(languageId)
+  return tokenizePath
 }
 
 // TODO loadTokenizer should be invoked from renderer worker
