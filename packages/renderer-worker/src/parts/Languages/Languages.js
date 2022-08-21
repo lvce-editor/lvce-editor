@@ -99,7 +99,9 @@ const contributionPointExtensions = {
 const contributionPointTokenize = {
   key: 'tokenize',
   handle(value, languageId) {
-    state.tokenizerMap[languageId] = value
+    if (value) {
+      state.tokenizerMap[languageId] = value
+    }
   },
 }
 

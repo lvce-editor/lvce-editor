@@ -44,6 +44,7 @@ export const getFileIcon = (file) => {
   const iconTheme = state.iconTheme
   const fileNameLower = file.name.toLowerCase()
   if (!iconTheme) {
+    console.log('no icons theme', { file })
     return ''
   }
   const fileNameIcon = iconTheme.fileNames[fileNameLower]

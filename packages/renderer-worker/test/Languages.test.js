@@ -113,3 +113,16 @@ test('getLanguageId - by file name', async () => {
   ])
   expect(Languages.getLanguageId('Dockerfile')).toBe('dockerfile')
 })
+
+test("addLanguage - don't override tokenize path", async () => {
+  await Languages.addLanguages([
+    {
+      id: 'html',
+      tokenize: 'src/tokenizeHtml.js',
+    },
+    {
+      id: 'html',
+    },
+  ])
+  expect(Languages.state.tokenizerMap['html']).toBe('src/tokenizeHtml.js')
+})
