@@ -10,7 +10,7 @@ export const TokenMap = {
 }
 
 export const initialLineState = {
-  state: 0,
+  state: 1,
   tokens: [],
 }
 
@@ -25,7 +25,7 @@ export const tokenizeLine = (line) => {
     },
   ]
   return {
-    state: 0,
+    state: 1,
     tokens,
   }
 }
