@@ -37,6 +37,22 @@ export const openFolder = async () => {
   )
 }
 
+export const openFile = async () => {
+  if (Platform.getPlatform() === 'web') {
+    console.warn('open file - not implemented')
+    return
+  }
+  if (Platform.getPlatform() === 'remote') {
+    // TODO
+    console.warn('open file - not implemented')
+    return
+  }
+  const file = await SharedProcess.invoke(
+    /* Electron.showOpenDialog */ 'Electron.showOpenDialog',
+    /* title */ 'Open File'
+  )
+}
+
 export const showAbout = async () => {
   const platform = Platform.getPlatform()
   console.log({ platform })
