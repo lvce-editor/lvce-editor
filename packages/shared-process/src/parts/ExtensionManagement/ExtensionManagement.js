@@ -160,6 +160,8 @@ const isIncludedBuiltinExtension = (dirent) => {
   return !SKIPPED.includes(dirent)
 }
 
+// TODO pass builtin extensions path from renderer-worker
+// only negative: more messages sent between renderer-worker and shared process on startup
 const getBuiltinExtensionPaths = async () => {
   try {
     const builtinExtensionsPath = Platform.getBuiltinExtensionsPath()
