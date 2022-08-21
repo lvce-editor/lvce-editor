@@ -25,7 +25,8 @@ export const openFolder = async () => {
   }
   const folders = await SharedProcess.invoke(
     /* Electron.showOpenDialog */ 'Electron.showOpenDialog',
-    /* title */ 'Open Folder'
+    /* title */ 'Open Folder',
+    /* properties */ ['openDirectory', 'dontAddToRecent', 'showHiddenFiles']
   )
   if (!folders || folders.length === 0) {
     return
@@ -47,10 +48,13 @@ export const openFile = async () => {
     console.warn('open file - not implemented')
     return
   }
-  const file = await SharedProcess.invoke(
+  const [file] = await SharedProcess.invoke(
     /* Electron.showOpenDialog */ 'Electron.showOpenDialog',
-    /* title */ 'Open File'
+    /* title */ 'Open File',
+    /* properties */ ['openFile', 'dontAddToRecent', 'showHiddenFiles']
   )
+  await Command.execute('Main.openUri', file)
+  console.log({ file })
 }
 
 export const showAbout = async () => {
