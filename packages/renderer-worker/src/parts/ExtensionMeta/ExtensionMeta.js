@@ -44,7 +44,7 @@ export const addWebExtension = async (path) => {
       }
     }
   }
-  console.log({ manifest })
+  manifest.status = 'resolved'
   state.webExtensions.push(manifest)
   if (manifest.languages) {
     // TODO handle case when languages is not of type array
