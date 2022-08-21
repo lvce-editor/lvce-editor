@@ -44,6 +44,7 @@ export const getFileIcon = (file) => {
   const iconTheme = state.iconTheme
   const fileNameLower = file.name.toLowerCase()
   if (!iconTheme) {
+    console.log('no icons theme', { file })
     return ''
   }
   const fileNameIcon = iconTheme.fileNames[fileNameLower]
@@ -51,6 +52,7 @@ export const getFileIcon = (file) => {
     return fileNameIcon
   }
   const languageId = Languages.getLanguageId(fileNameLower)
+  console.log({ fileNameLower, languageId })
   const languageIcon = iconTheme.languageIds[languageId]
   if (languageIcon) {
     return languageIcon
