@@ -1,8 +1,5 @@
-const { fork, spawn } = require('child_process')
 const minimist = require('minimist')
 const Debug = require('../Debug/Debug.js')
-const Platform = require('../Platform/Platform.js')
-const Electron = require('../Electron/Electron.js')
 
 exports.parseCliArgs = (argv) => {
   const CLI_OPTIONS = {
@@ -47,20 +44,9 @@ const getModule = (parsedArgs) => {
 }
 
 exports.handleFastCliArgsMaybe = (parsedArgs) => {
-  if (parsedArgs.help) {
-    return handleHelp(parsedArgs)
-  }
-  if (parsedArgs.version) {
-    return handleVersion(parsedArgs)
-  }
-  if (parsedArgs.web) {
-    return handleWeb(parsedArgs)
-  }
-  if (parsedArgs['install']) {
-    return handleInstall(parsedArgs)
-  }
-  if (parsedArgs['built-in-self-test']) {
-    return handleBuiltinSelfTest(parsedArgs)
+  const module = getModule(parsedArgs)
+  if (module) {
+    return module.handleCliArgs(parsedArgs)
   }
   return false
 }

@@ -2,7 +2,7 @@ const { spawn } = require('child_process')
 const Platform = require('../Platform/Platform.js')
 const Electron = require('../Electron/Electron.js')
 
-const handleWeb = (parsedArgs) => {
+const handleCliArgs = (parsedArgs) => {
   const webPath = Platform.getWebPath()
   const child = spawn(process.argv[0], [webPath], {
     stdio: 'inherit',
@@ -17,4 +17,4 @@ const handleWeb = (parsedArgs) => {
   return true
 }
 
-exports.handleWeb = handleWeb
+exports.handleCliArgs = handleCliArgs

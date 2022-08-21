@@ -1,9 +1,9 @@
 const Electron = require('../Electron/Electron.js')
 
-const handleHelp = (parsedArgs) => {
+const handleCliArgs = (parsedArgs) => {
   console.info('TODO print help')
   Electron.app.exit(0)
   return true
 }
 
-exports.handleHelp = handleHelp
+exports.handleCliArgs = handleCliArgs

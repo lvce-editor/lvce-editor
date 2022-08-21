@@ -1,6 +1,6 @@
 const Electron = require('../Electron/Electron.js')
 
-const handleInstall = (parsedArgs) => {
+const handleCliArgs = (parsedArgs) => {
   const extension = parsedArgs._
   if (!extension) {
     console.info('extension is required')
@@ -11,4 +11,4 @@ const handleInstall = (parsedArgs) => {
   return true
 }
 
-exports.handleInstall = handleInstall
+exports.handleCliArgs = handleCliArgs

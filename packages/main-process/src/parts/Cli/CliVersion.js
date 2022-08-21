@@ -1,7 +1,7 @@
 const Electron = require('../Electron/Electron.js')
 const Platform = require('../Platform/Platform.js')
 
-const handleVersion = (parsedArgs) => {
+const handleCliArgs = (parsedArgs) => {
   const version = Platform.getVersion()
   const commit = Platform.getCommit()
   console.info(`${version}
@@ -10,4 +10,4 @@ ${commit}`)
   return true
 }
 
-exports.handleVersion = handleVersion
+exports.handleCliArgs = handleCliArgs
