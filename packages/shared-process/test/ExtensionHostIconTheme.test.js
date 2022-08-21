@@ -3,6 +3,10 @@ import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { jest } from '@jest/globals'
 
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
 jest.unstable_mockModule(
   '../src/parts/ExtensionManagement/ExtensionManagement.js',
   () => {
