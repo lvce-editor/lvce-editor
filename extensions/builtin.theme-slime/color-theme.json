@@ -200,6 +200,10 @@
     {
       "name": "StorageModifier",
       "foreground": "#AB9B67"
+    },
+    {
+      "name": "Heading",
+      "foreground": "#bf93b5"
     }
   ]
 }
