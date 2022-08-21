@@ -4,7 +4,7 @@ test('getMenuEntries', () => {
   const menuEntries = MenuEntriesFile.getMenuEntries()
   expect(menuEntries).toContainEqual({
     command: -1,
-    flags: 5,
+    flags: 0,
     id: 'newFile',
     label: 'New File',
   })
