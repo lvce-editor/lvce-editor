@@ -22,18 +22,6 @@ jest.unstable_mockModule(
   }
 )
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
-  getExtensionsPath: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
-  getBuiltinExtensionsPath: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
-  getOnlyExtensionPath: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
-}))
-
 const ExtensionHostColorTheme = await import(
   '../src/parts/ExtensionManagement/ExtensionManagementColorTheme.js'
 )
