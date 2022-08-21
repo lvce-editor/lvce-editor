@@ -19,6 +19,9 @@ const SharedProcess = await import(
 
 beforeEach(() => {
   Languages.state.loaded = false
+  Languages.state.fileNameMap = Object.create(null)
+  Languages.state.extensionMap = Object.create(null)
+  Languages.state.tokenizerMap = Object.create(null)
 })
 
 test('getLanguageConfiguration - error - languages must be loaded before requesting language configuration', async () => {
@@ -91,22 +94,22 @@ test.skip('hydrate', async () => {
   )
 })
 
-test('getLanguageId - by extension', () => {
-  Languages.state.languages = [
+test('getLanguageId - by extension', async () => {
+  await Languages.addLanguages([
     {
       id: 'plaintext',
       extensions: ['.txt'],
     },
-  ]
+  ])
   expect(Languages.getLanguageId('/test/index.txt')).toBe('plaintext')
 })
 
-test('getLanguageId - by file name', () => {
-  Languages.state.languages = [
+test('getLanguageId - by file name', async () => {
+  await Languages.addLanguages([
     {
       id: 'dockerfile',
       fileNames: ['Dockerfile'],
     },
-  ]
+  ])
   expect(Languages.getLanguageId('Dockerfile')).toBe('dockerfile')
 })

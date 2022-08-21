@@ -9,14 +9,8 @@ export const state = {
   pending: Object.create(null),
 }
 
-// TODO more dynamic: should come from extensions anywhere on file system
 const getTokenizePath = (languageId) => {
-  for (const language of Languages.state.languages) {
-    if (language.id === languageId && language.tokenize) {
-      return language.tokenize
-    }
-  }
-  return ''
+  return Languages.getTokenizeFunctionPath(languageId)
 }
 
 // TODO loadTokenizer should be invoked from renderer worker
