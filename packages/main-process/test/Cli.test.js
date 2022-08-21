@@ -21,38 +21,8 @@ test('parseCliArgs', () => {
     wait: false,
     'built-in-self-test': false,
     web: false,
+    install: false,
   })
-})
-
-test('handleFastCliArgsMaybe - version', () => {
-  const spy = jest.spyOn(console, 'info')
-  expect(
-    Cli.handleFastCliArgsMaybe({
-      _: ['/tmp/'],
-      help: false,
-      v: false,
-      version: true,
-      wait: false,
-      web: false,
-    })
-  ).toBe(true)
-  expect(spy).toHaveBeenCalledWith(`0.0.0-dev
-unknown commit`)
-})
-
-test('handleFastCliArgsMaybe - help', () => {
-  const spy = jest.spyOn(console, 'info')
-  expect(
-    Cli.handleFastCliArgsMaybe({
-      _: ['/tmp/'],
-      help: true,
-      v: false,
-      version: false,
-      wait: false,
-      web: false,
-    })
-  ).toBe(true)
-  expect(spy).toHaveBeenCalledWith('TODO print help')
 })
 
 test('handleFastCliArgsMaybe - nothing matches', () => {
