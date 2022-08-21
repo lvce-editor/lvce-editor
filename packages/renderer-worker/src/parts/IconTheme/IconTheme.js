@@ -7,8 +7,6 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
 
-const CACHE_KEY = '/icon-theme.css'
-
 export const state = {
   seenFiles: [],
   seenFolders: [],
@@ -44,19 +42,20 @@ const getExtension = (file) => {
 
 export const getFileIcon = (file) => {
   const iconTheme = state.iconTheme
+  const fileNameLower = file.name.toLowerCase()
   if (!iconTheme) {
     return ''
   }
-  const fileNameIcon = iconTheme.fileNames[file.name.toLowerCase()]
+  const fileNameIcon = iconTheme.fileNames[fileNameLower]
   if (fileNameIcon) {
     return fileNameIcon
   }
-  const languageId = Languages.getLanguageId(file.name)
+  const languageId = Languages.getLanguageId(fileNameLower)
   const languageIcon = iconTheme.languageIds[languageId]
   if (languageIcon) {
     return languageIcon
   }
-  const extension = getExtension(file.name)
+  const extension = getExtension(fileNameLower)
   const extensionIcon = iconTheme.fileExtensions[extension]
   if (extensionIcon) {
     return extensionIcon

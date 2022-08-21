@@ -62,6 +62,13 @@ export const hydrate = async () => {
 }
 
 export const addLanguages = async (languages) => {
+  for (const language of languages) {
+    if (language.id && language.fileExtensions) {
+      console.warn(
+        `[renderer-worker] unsupported property "fileExtensions" for language ${language.id}, use the property "extensions" instead`
+      )
+    }
+  }
   // @ts-ignore
   state.languages.push(...languages)
   await GlobalEventBus.emitEvent('languages.changed')
