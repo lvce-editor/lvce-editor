@@ -258,6 +258,8 @@ test('getAllExtensions', async () => {
   Platform.getBuiltinExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   Platform.getDisabledExtensionsPath.mockImplementation(() => tmpDir3)
+  // @ts-ignore
+  Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getAllExtensions()).toEqual([
     {
       status: 'fulfilled',
@@ -286,6 +288,8 @@ test('getAllExtensions - invalid extension.json', async () => {
   Platform.getBuiltinExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   Platform.getDisabledExtensionsPath.mockImplementation(() => tmpDir3)
+  // @ts-ignore
+  Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getAllExtensions()).toEqual([
     {
       path: join(tmpDir1, 'test-extension'),
