@@ -58,6 +58,74 @@ const getSharedProcessExtensions = () => {
   )
 }
 
+export const organizeExtensions = (extensions) => {
+  const rejected = []
+  const resolved = []
+  for (const extension of extensions) {
+    switch (extension.status) {
+      case 'resolved':
+        resolved.push(extension)
+        break
+      case 'rejected':
+        rejected.push(extension)
+        break
+      default:
+        break
+    }
+  }
+  return {
+    resolved,
+    rejected,
+  }
+}
+
+export const filterByMatchingEvent = (extensions, event) => {
+  const extensionsToActivate = []
+  for (const extension of extensions) {
+    // TODO handle error when extension.activation is not of type array (null or number or ...)
+    if (extension.activation && extension.activation.includes(event)) {
+      extensionsToActivate.push(extension)
+    }
+  }
+  return extensionsToActivate
+}
+
+const getCodeFrameFromError = (error) => {
+  if (error && error.jse_cause && error.jse_cause.codeFrame) {
+    return error.jse_cause.codeFrame
+  }
+  return ''
+}
+
+const getOriginalStackFromError = (error) => {
+  if (error && error.originalStack) {
+    return error.originalStack
+  }
+  return ''
+}
+
+const handleRejectedExtension = async (extension) => {
+  const message = extension.reason.message
+  if (
+    message.includes(`Failed to load extension manifest: ENOENT`) ||
+    message.includes(`Failed to load extension manifest: ENOTDIR`)
+  ) {
+    return
+  }
+  const codeFrame = getCodeFrameFromError(extension.reason)
+  const stack = getOriginalStackFromError(extension.reason)
+  await Command.execute(
+    /* Dialog.showMessage */ 'Dialog.showMessage',
+    /* error */ { message, codeFrame, stack }
+  )
+}
+
+export const handleRejectedExtensions = async (extensions) => {
+  for (const extension of extensions) {
+    await handleRejectedExtension(extension)
+  }
+}
+
 export const getExtensions = async () => {
   if (Platform.getPlatform() === 'web') {
     return state.webExtensions

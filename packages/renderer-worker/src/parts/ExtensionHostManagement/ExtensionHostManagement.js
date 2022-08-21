@@ -34,42 +34,6 @@ const getExtensionHostManagementTypes = () => {
   }
 }
 
-const getExtensionsToActivate = (extensions, event) => {
-  const extensionsToActivate = []
-  for (const extension of extensions) {
-    if (extension.activation && extension.activation.includes(event)) {
-      extensionsToActivate.push(extension)
-    }
-  }
-  return extensionsToActivate
-}
-
-const getExtensionsWithError = (extensions) => {
-  const extensionsWithError = []
-  for (const extension of extensions) {
-    if (extension.status === 'rejected') {
-      extensionsWithError.push(extension)
-    }
-  }
-  return extensionsWithError
-}
-
-const handleExtensionActivationError = async (extension) => {
-  const message = extension.reason.message
-  if (
-    message.includes(`Failed to load extension manifest: ENOENT`) ||
-    message.includes(`Failed to load extension manifest: ENOTDIR`)
-  ) {
-    return
-  }
-  const codeFrame = extension.reason.jse_cause.codeFrame
-  const stack = extension.reason.originalStack
-  await Command.execute(
-    /* Dialog.showMessage */ 'Dialog.showMessage',
-    /* error */ { message, codeFrame, stack }
-  )
-}
-
 const getManagersWithExtensionsToActivate = (
   extensionHostManagers,
   extensions
@@ -153,13 +117,14 @@ export const activateByEvent = async (event) => {
   }
   // TODO should not query extensions multiple times
   const extensions = await ExtensionMeta.getExtensions()
+  const { resolved, rejected } = ExtensionMeta.organizeExtensions(extensions)
   // TODO if many (more than two?) extensions cannot be loaded,
   // it shouldn't should that many error messages
-  const extensionsWithError = getExtensionsWithError(extensions)
-  for (const extension of extensionsWithError) {
-    await handleExtensionActivationError(extension)
-  }
-  const extensionsToActivate = getExtensionsToActivate(extensions, event)
+  await ExtensionMeta.handleRejectedExtensions(rejected)
+  const extensionsToActivate = ExtensionMeta.filterByMatchingEvent(
+    resolved,
+    event
+  )
   // TODO how to handle when multiple reference providers are registered for nodejs and webworker extension host?
   // what happens when all of them / some of them throw error?
   // what happens when some of them take very long to activate?
