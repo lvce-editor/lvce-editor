@@ -1,4 +1,4 @@
-const Developer = require('./Developer.js')
+const Developer = require('./ElectronDeveloper.js')
 
 // prettier-ignore
 exports.Commands =  {

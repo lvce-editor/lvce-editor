@@ -1,4 +1,4 @@
-const ProcessExplorer = require('./ProcessExplorer.js')
+const ProcessExplorer = require('./ElectronWindowProcessExplorer.js')
 
 // prettier-ignore
 exports.Commands =  {

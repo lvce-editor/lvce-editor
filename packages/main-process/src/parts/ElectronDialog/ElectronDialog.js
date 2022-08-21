@@ -1,5 +1,5 @@
-const Electron = require('../Electron/Electron.js')
-const Window = require('../Window/Window.js')
+const Electron = require('electron')
+const Window = require('../ElectronWindow/ElectronWindow.js')
 const Assert = require('../Assert/Assert.js')
 const Platform = require('../Platform/Platform.js')
 const { setTimeout } = require('timers/promises')

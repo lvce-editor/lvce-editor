@@ -3,7 +3,8 @@ beforeEach(() => {
 })
 
 afterEach(() => {
-  require('../src/parts/Session/Session.js').state.session = undefined
+  require('../src/parts/ElectronSession/ElectronSession.js').state.session =
+    undefined
 })
 
 test('get', () => {
@@ -27,7 +28,7 @@ test('get', () => {
       },
     }
   })
-  const Session = require('../src/parts/Session/Session.js')
+  const Session = require('../src/parts/ElectronSession/ElectronSession.js')
   expect(Session.state.session).toBeUndefined()
   expect(Session.get()).toBe(fakeSession)
   expect(Session.state.session).toBeDefined()
@@ -44,7 +45,7 @@ test('get - error', () => {
       },
     }
   })
-  const Session = require('../src/parts/Session/Session.js')
+  const Session = require('../src/parts/ElectronSession/ElectronSession.js')
   expect(() => Session.get()).toThrowError(new TypeError('x is not a function'))
 })
 
@@ -75,7 +76,7 @@ test('permissionCheckHandler - allow clipboard api', () => {
       },
     }
   })
-  const Session = require('../src/parts/Session/Session.js')
+  const Session = require('../src/parts/ElectronSession/ElectronSession.js')
   Session.get()
   expect(_permissionCheckHandler({}, 'clipboard-sanitized-write')).toBe(true)
 })

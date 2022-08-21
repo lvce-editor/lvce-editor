@@ -1,4 +1,4 @@
-const Window = require('./Window.js')
+const Window = require('./ElectronWindow.js')
 
 // prettier-ignore
 exports.Commands = {

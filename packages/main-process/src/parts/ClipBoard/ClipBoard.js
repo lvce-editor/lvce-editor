@@ -1,3 +1,3 @@
-const Electron = require('../Electron/Electron.js')
+const Electron = require('electron')
 
 // Electron.clipboard.read(format)
