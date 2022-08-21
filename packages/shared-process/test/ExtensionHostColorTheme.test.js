@@ -1,30 +1,30 @@
+import { jest } from '@jest/globals'
 import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
-import { jest } from '@jest/globals'
 import * as JsonFile from '../src/parts/JsonFile/JsonFile.js'
 
-afterEach(() => {
-  jest.restoreAllMocks()
+beforeEach(() => {
+  jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
-  getExtensionsPath: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
-  getBuiltinExtensionsPath: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
-  getOnlyExtensionPath: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
-}))
+jest.unstable_mockModule(
+  '../src/parts/ExtensionManagement/ExtensionManagement.js',
+  () => {
+    return {
+      getExtensions: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+      getThemeExtensions: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
 
 const ExtensionHostColorTheme = await import(
   '../src/parts/ExtensionManagement/ExtensionManagementColorTheme.js'
 )
-
-const Platform = await import('../src/parts/Platform/Platform.js')
 
 const ExtensionManagement = await import(
   '../src/parts/ExtensionManagement/ExtensionManagement.js'
@@ -35,23 +35,17 @@ const getTmpDir = () => {
 }
 
 test('getColorThemeNames - empty', async () => {
-  const tmpDir = await getTmpDir()
   // @ts-ignore
-  Platform.getExtensionsPath.mockImplementation(() => {
-    return tmpDir
+  ExtensionManagement.getExtensions.mockImplementation(() => {
+    return []
   })
-  // @ts-ignore
-  Platform.getBuiltinExtensionsPath.mockImplementation(() => {
-    return tmpDir
-  })
-  // @ts-ignore
-  Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   expect(await ExtensionHostColorTheme.getColorThemes()).toEqual([])
 })
 
 test.skip('getColorThemeJson - theme id contains number', async () => {
   const tmpDir = await getTmpDir()
-  ExtensionManagement.state.getThemeExtensions = async () => {
+  // @ts-ignore
+  ExtensionManagement.getThemeExtensions.mockImplementation(async () => {
     return [
       {
         status: 'fulfilled',
@@ -66,7 +60,7 @@ test.skip('getColorThemeJson - theme id contains number', async () => {
         path: join(tmpDir, 'builtin.theme-cobalt-2'),
       },
     ]
-  }
+  })
   const colorThemePath = join(
     tmpDir,
     'builtin.theme-cobalt2',
@@ -80,8 +74,20 @@ test.skip('getColorThemeJson - theme id contains number', async () => {
 test('getColorThemeJson - invalid json', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
-  Platform.getBuiltinExtensionsPath.mockImplementation(() => {
-    return tmpDir
+  ExtensionManagement.getThemeExtensions.mockImplementation(() => {
+    return [
+      {
+        id: 'builtin.test-theme',
+        colorThemes: [
+          {
+            id: 'test-theme',
+            label: 'Test Theme',
+            path: 'color-theme.json',
+          },
+        ],
+        path: join(tmpDir, 'builtin.theme-test'),
+      },
+    ]
   })
   await JsonFile.writeJson(
     join(tmpDir, 'builtin.theme-test', 'extension.json'),
@@ -109,8 +115,20 @@ test('getColorThemeJson - invalid json', async () => {
 test('getColorThemeJson - wrong/invalid path', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
-  Platform.getBuiltinExtensionsPath.mockImplementation(() => {
-    return tmpDir
+  ExtensionManagement.getThemeExtensions.mockImplementation(() => {
+    return [
+      {
+        id: 'builtin.theme-test',
+        colorThemes: [
+          {
+            id: 'test-theme',
+            label: 'Test Theme',
+            path: 'color-theme.json',
+          },
+        ],
+        path: join(tmpDir, 'builtin.theme-test'),
+      },
+    ]
   })
   await JsonFile.writeJson(
     join(tmpDir, 'builtin.theme-test', 'extension.json'),
@@ -135,7 +153,8 @@ test('getColorThemeJson - wrong/invalid path', async () => {
 })
 
 test('getColorThemes', async () => {
-  ExtensionManagement.state.getExtensions = async () => {
+  // @ts-ignore
+  ExtensionManagement.getExtensions.mockImplementation(async () => {
     return [
       {
         status: 'fulfilled',
@@ -150,7 +169,7 @@ test('getColorThemes', async () => {
         path: '/test',
       },
     ]
-  }
+  })
   expect(await ExtensionHostColorTheme.getColorThemes()).toEqual([
     {
       id: 'slime',
