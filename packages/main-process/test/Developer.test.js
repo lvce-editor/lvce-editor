@@ -1,4 +1,4 @@
-const Developer = require('../src/parts/Developer/Developer.js')
+const Developer = require('../src/parts/ElectronDeveloper/ElectronDeveloper.js')
 
 test('getPerformanceEntries', () => {
   // see https://github.com/facebook/jest/issues/11629

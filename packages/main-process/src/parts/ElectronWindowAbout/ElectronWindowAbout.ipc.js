@@ -1,4 +1,4 @@
-const About = require('./About.js')
+const About = require('./ElectronWindowAbout.js')
 
 exports.Commands = {
   'About.open': About.open,

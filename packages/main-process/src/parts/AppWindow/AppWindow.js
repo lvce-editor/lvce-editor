@@ -1,9 +1,9 @@
 const VError = require('verror')
-const Screen = require('../Screen/Screen.js')
-const Window = require('../Window/Window.js')
+const Screen = require('../ElectronScreen/ElectronScreen.js')
+const Window = require('../ElectronWindow/ElectronWindow.js')
 const Performance = require('../Performance/Performance.js')
 const LifeCycle = require('../LifeCycle/LifeCycle.js')
-const Session = require('../Session/Session.js')
+const Session = require('../ElectronSession/ElectronSession.js')
 const Platform = require('../Platform/Platform.js')
 
 exports.state = {

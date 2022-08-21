@@ -1,4 +1,4 @@
-const Electron = require('../Electron/Electron.js')
+const Electron = require('electron')
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
 

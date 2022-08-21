@@ -14,21 +14,21 @@ const pendingModules = Object.create(null)
 const loadModule = async (moduleId) => {
   switch (moduleId) {
     case MODULE_WINDOW:
-      return require('../Window/Window.ipc.js')
+      return require('../ElectronWindow/ElectronWindow.ipc.js')
     case MODULE_ABOUT:
-      return require('../About/About.ipc.js')
+      return require('../ElectronWindowAbout/ElectronWindowAbout.ipc.js')
     case MODULE_DIALOG:
-      return require('../Dialog/Dialog.ipc.js')
+      return require('../ElectronDialog/ElectronDialog.ipc.js')
     case MODULE_DEVELOPER:
-      return require('../Developer/Developer.ipc.js')
+      return require('../ElectronDeveloper/ElectronDeveloper.ipc.js')
     case MODULE_BEEP:
-      return require('../Beep/Beep.js')
+      return require('../ElectronBeep/ElectronBeep.js')
     case MODULE_APP_WINDOW:
       return require('../AppWindow/AppWindow.ipc.js')
     case MODULE_APP:
       return require('../App/App.ipc.js')
     case MODULE_PROCESS_EXPLORER:
-      return require('../ProcessExplorer/ProcessExplorer.ipc.js')
+      return require('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
     default:
       throw new Error('unknown module')
   }

@@ -11,7 +11,7 @@ jest.mock('electron', () => {
   }
 })
 
-const Dialog = require('../src/parts/Dialog/Dialog.js')
+const Dialog = require('../src/parts/ElectronDialog/ElectronDialog.js')
 
 const electron = require('electron')
 
