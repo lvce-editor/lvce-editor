@@ -52,7 +52,6 @@ export const getFileIcon = (file) => {
     return fileNameIcon
   }
   const languageId = Languages.getLanguageId(fileNameLower)
-  console.log({ fileNameLower, languageId })
   const languageIcon = iconTheme.languageIds[languageId]
   if (languageIcon) {
     return languageIcon
