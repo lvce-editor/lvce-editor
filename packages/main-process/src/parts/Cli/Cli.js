@@ -1,12 +1,16 @@
-const { fork, spawn } = require('child_process')
 const minimist = require('minimist')
 const Debug = require('../Debug/Debug.js')
-const Platform = require('../Platform/Platform.js')
-const Electron = require('../Electron/Electron.js')
 
 exports.parseCliArgs = (argv) => {
   const CLI_OPTIONS = {
-    boolean: ['version', 'help', 'wait', 'built-in-self-test', 'web'],
+    boolean: [
+      'version',
+      'help',
+      'wait',
+      'built-in-self-test',
+      'web',
+      'install',
+    ],
     alias: {
       version: 'v',
     },
@@ -20,46 +24,29 @@ exports.parseCliArgs = (argv) => {
   return parsedArgs
 }
 
-exports.handleFastCliArgsMaybe = (parsedArgs) => {
+const getModule = (parsedArgs) => {
   if (parsedArgs.help) {
-    console.info('TODO print help')
-    Electron.app.exit(0)
-    return true
+    return require('./CliHelp.js')
   }
   if (parsedArgs.version) {
-    const version = Platform.getVersion()
-    const commit = Platform.getCommit()
-    console.info(`${version}
-${commit}`)
-    Electron.app.exit(0)
-    return true
+    return require('./CliVersion.js')
   }
   if (parsedArgs.web) {
-    const webPath = Platform.getWebPath()
-    const child = spawn(process.argv[0], [webPath], {
-      stdio: 'inherit',
-      env: {
-        ...process.env,
-        ELECTRON_RUN_AS_NODE: '1',
-      },
-    })
-    child.on('exit', () => {
-      Electron.app.quit()
-    })
-    return true
+    return require('./CliWeb.js')
+  }
+  if (parsedArgs['install']) {
+    return require('./CliInstall.js')
   }
   if (parsedArgs['built-in-self-test']) {
-    const builtinSelfTestPath = Platform.getBuiltinSelfTestPath()
-    const child = fork(builtinSelfTestPath, {
-      stdio: 'inherit',
-      env: {
-        ...process.env,
-      },
-    })
-    child.on('exit', () => {
-      Electron.app.quit()
-    })
-    return true
+    return require('./CliBuiltinSelfTest.js')
+  }
+  return undefined
+}
+
+exports.handleFastCliArgsMaybe = (parsedArgs) => {
+  const module = getModule(parsedArgs)
+  if (module) {
+    return module.handleCliArgs(parsedArgs)
   }
   return false
 }
