@@ -56,7 +56,10 @@ const getExtensionsWithError = (extensions) => {
 
 const handleExtensionActivationError = async (extension) => {
   const message = extension.reason.message
-  if (message.includes(`Failed to load extension manifest: ENOENT`)) {
+  if (
+    message.includes(`Failed to load extension manifest: ENOENT`) ||
+    message.includes(`Failed to load extension manifest: ENOTDIR`)
+  ) {
     return
   }
   const codeFrame = extension.reason.jse_cause.codeFrame
