@@ -3,6 +3,8 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
 import * as Platform from '../Platform/Platform.js'
 
+export const name = 'command'
+
 export const getPlaceholder = () => {
   return 'Type the name of a command to run.'
 }
@@ -85,14 +87,11 @@ const selectPickBuiltin = async (item) => {
 }
 
 const selectPickExtension = async (item) => {
-  console.log('ext pick', item)
   const id = item.id.slice(4) // TODO lots of string allocation with 'ext.' find a better way to separate builtin commands from extension commands
   try {
     await ExtensionHostCommands.executeCommand(id)
   } catch (error) {
-    ErrorHandling.showErrorDialog(error)
-    // console.log({ error })
-    // console.error(error)
+    await ErrorHandling.showErrorDialog(error)
   }
 }
 
