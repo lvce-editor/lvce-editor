@@ -41,7 +41,13 @@ const handlePermissionRequest = (
   callback,
   details
 ) => {
-  callback(false)
+  switch (permission) {
+    case 'clipboard-read':
+    case 'clipboard-sanitized-write':
+      return callback(true)
+    default:
+      return callback(false)
+  }
 }
 
 const handlePermissionCheck = (webContents, permission, origin, details) => {
@@ -49,8 +55,9 @@ const handlePermissionCheck = (webContents, permission, origin, details) => {
     case 'clipboard-read':
     case 'clipboard-sanitized-write':
       return true
+    default:
+      return false
   }
-  return false
 }
 
 // TODO use Platform.getScheme() instead of Product.getTheme()
