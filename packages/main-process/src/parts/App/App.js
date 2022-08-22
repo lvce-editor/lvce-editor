@@ -2,7 +2,6 @@ const { spawn, fork } = require('child_process')
 const { MessageChannel } = require('worker_threads')
 const { app } = require('electron')
 const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
-const minimist = require('minimist')
 const Electron = require('electron')
 const Platform = require('../Platform/Platform.js')
 const SharedProcess = require('../SharedProcess/SharedProcess.js')
@@ -10,7 +9,6 @@ const Debug = require('../Debug/Debug.js')
 const LifeCycle = require('../LifeCycle/LifeCycle.js')
 const Performance = require('../Performance/Performance.js')
 const Cli = require('../Cli/Cli.js')
-const Session = require('../ElectronSession/ElectronSession.js')
 const AppWindow = require('../AppWindow/AppWindow.js')
 
 // TODO use Platform.getScheme() instead of Product.getTheme()
@@ -206,6 +204,16 @@ exports.hydrate = async () => {
     process.exit(0)
   }
 
+  // command line switches
+  if (parsedCliArgs.sandbox) {
+    Electron.app.enableSandbox()
+  } else {
+    // see https://github.com/microsoft/vscode/issues/151187#issuecomment-1221475319
+    if (Platform.isLinux()) {
+      app.commandLine.appendSwitch('--disable-gpu-sandbox')
+    }
+  }
+
   // protocol
   Electron.protocol.registerSchemesAsPrivileged([
     {
@@ -227,7 +235,6 @@ exports.hydrate = async () => {
   Electron.app.on('before-quit', handleBeforeQuit)
   // Electron.app.on('ready', handleAppReady)
   Electron.app.on('second-instance', handleSecondInstance)
-  Electron.app.enableSandbox()
   await Electron.app.whenReady()
   Performance.mark('code/appReady')
 
