@@ -5,7 +5,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 const searchFile = async (path, value) => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     return []
   }
   const files = await SharedProcess.invoke(

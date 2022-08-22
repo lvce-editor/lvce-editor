@@ -13,8 +13,8 @@ afterEach(() => {
 })
 
 test('parseCliArgs', () => {
-  expect(Cli.parseCliArgs(['/usr/lib/lvce-oss/lvce-oss', '/tmp/'])).toEqual({
-    _: ['/tmp/'],
+  expect(Cli.parseCliArgs(['/usr/lib/lvce-oss/lvce-oss', '/test/'])).toEqual({
+    _: ['/test/'],
     help: false,
     v: false,
     version: false,
@@ -22,6 +22,7 @@ test('parseCliArgs', () => {
     'built-in-self-test': false,
     web: false,
     install: false,
+    sandbox: false,
   })
 })
 

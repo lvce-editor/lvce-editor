@@ -127,10 +127,10 @@ export const handleRejectedExtensions = async (extensions) => {
 }
 
 export const getExtensions = async () => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     return state.webExtensions
   }
-  if (Platform.getPlatform() === 'remote') {
+  if (Platform.platform === 'remote') {
     const sharedProcessExtensions = await getSharedProcessExtensions()
     return [...sharedProcessExtensions, ...state.webExtensions]
   }

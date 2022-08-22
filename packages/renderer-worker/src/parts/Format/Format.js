@@ -37,7 +37,8 @@ const onDidSaveEditor = async (editor) => {
 }
 
 export const hydrate = async () => {
-  if (Platform.getPlatform() === 'web') {}
+  if (Platform.platform === 'web') {
+  }
   // TODO check preferences if format on save is enabled
   // EditorSave.onDidSave(onDidSaveEditor)
 }

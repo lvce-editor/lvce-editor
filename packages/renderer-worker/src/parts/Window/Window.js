@@ -4,38 +4,41 @@ import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const reload = async () => {
-  if (Platform.getPlatform() === 'web' || Platform.getPlatform() === 'remote') {
+  if (Platform.platform === 'web' || Platform.platform === 'remote') {
     await RendererProcess.invoke(/* windowReload */ 8080)
     return
   }
-  if (Platform.getPlatform() === 'electron') {
-    await ElectronWindow.reload()
+  if (Platform.platform === 'electron') {
+    // TODO should use invoke here
+    await SharedProcess.invoke(
+      /* Electron.windowReload */ 'Electron.windowReload'
+    )
   }
 }
 
 export const minimize = async () => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     return
   }
   await ElectronWindow.minimize()
 }
 
 export const maximize = async () => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     return
   }
   await ElectronWindow.maximize()
 }
 
 export const unmaximize = async () => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     return
   }
   await ElectronWindow.unmaximize()
 }
 
 export const close = async () => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     return
   }
   await ElectronWindow.close()
@@ -53,7 +56,7 @@ export const setTitle = async (title) => {
 }
 
 export const openNew = async () => {
-  if (Platform.getPlatform() === 'web' || Platform.getPlatform() === 'remote') {
+  if (Platform.platform === 'web' || Platform.platform === 'remote') {
     return
   }
   await ElectronWindow.openNew()

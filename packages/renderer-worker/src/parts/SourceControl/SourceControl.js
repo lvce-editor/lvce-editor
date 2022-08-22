@@ -26,7 +26,7 @@ export const updateDecorations = () => {
 }
 
 export const getBadgeCount = async () => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     return 0
   }
   const workspacePath = Workspace.getWorkspacePath()

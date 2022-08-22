@@ -1,7 +1,7 @@
 import * as Platform from '../Platform/Platform.js'
 
 export const getMenuEntries = () => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     return [
       {
         id: 'file',

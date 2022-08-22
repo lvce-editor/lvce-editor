@@ -4,7 +4,8 @@ const { tmpdir } = require('os')
 
 // TODO disable logging via environment variable, don't enable logging during tests
 
-const writeStream = createWriteStream(`${tmpdir()}/log-main-process.txt`)
+const logFile = `${tmpdir()}/log-main-process.txt`
+const writeStream = createWriteStream(logFile)
 const logger = new Console(writeStream)
 
 for (const method of ['log', 'info', 'warn', 'error']) {
@@ -14,3 +15,9 @@ for (const method of ['log', 'info', 'warn', 'error']) {
     logger[method](...args)
   }
 }
+
+const handleLogStreamError = (error) => {
+  console.error(`[main-process] log error ${error}`)
+}
+
+writeStream.on('error', handleLogStreamError)

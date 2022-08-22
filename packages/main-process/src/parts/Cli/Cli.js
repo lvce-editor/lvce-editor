@@ -10,9 +10,13 @@ exports.parseCliArgs = (argv) => {
       'built-in-self-test',
       'web',
       'install',
+      'sandbox',
     ],
     alias: {
       version: 'v',
+    },
+    default: {
+      sandbox: false,
     },
   }
   Debug.debug('[info] parsing argv')

@@ -8,7 +8,7 @@ import * as FileSystemDisk from './FileSystemDisk.js'
 export const readFileInternal = async (getPath) => {
   const path = await getPath()
   Assert.string(path)
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     const settingsJsonContent = await LocalStorage.getText(path)
     if (settingsJsonContent) {
       return settingsJsonContent
@@ -25,7 +25,7 @@ export const readFileInternal = async (getPath) => {
 export const writeFileInternal = async (getPath, content) => {
   const path = await getPath()
   Assert.string(path)
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     await Command.execute(
       /* LocalStorage.setText */ 6904,
       /* key */ path,

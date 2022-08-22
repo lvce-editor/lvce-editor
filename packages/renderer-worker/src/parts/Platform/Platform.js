@@ -81,7 +81,7 @@ export const getUserSettingsPath = () => {
 /**
  * @returns {'electron'|'remote'|'web'|'test'}
  */
-export const getPlatform = () => {
+const getPlatform = () => {
   // @ts-ignore
   if (typeof PLATFORM !== 'undefined') {
     // @ts-ignore
@@ -101,6 +101,8 @@ export const getPlatform = () => {
   }
   return 'remote'
 }
+
+export const platform = getPlatform()
 
 export const getAssetDir = () => {
   // @ts-ignore

@@ -48,7 +48,7 @@ const getFallbackColorTheme = async () => {
 // so that all validation is here (json parsing errors, invalid shape, ...)
 
 const getColorThemeJson = (colorThemeId) => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     return getColorThemeJsonFromStaticFolder(colorThemeId)
   }
   return getColorThemeJsonFromSharedProcess(colorThemeId)
@@ -76,7 +76,7 @@ const applyColorTheme = async (colorThemeId) => {
     const colorThemeJson = await getColorThemeJson(colorThemeId)
     const colorThemeCss = await getColorThemeCss(colorThemeId, colorThemeJson)
     await Css.setInlineStyle('ContributedColorTheme', colorThemeCss)
-    if (Platform.getPlatform() === 'web') {
+    if (Platform.platform === 'web') {
       const themeColor = getMetaThemeColor(colorThemeJson) || ''
       await Meta.setThemeColor(themeColor)
     }

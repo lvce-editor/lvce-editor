@@ -5,7 +5,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 const SERVICE_WORKER_URL = '/serviceWorker.js'
 
 export const hydrate = async () => {
-  if (Platform.getPlatform() === 'electron') {
+  if (Platform.platform === 'electron') {
     return
   }
   if (!Preferences.get('serviceWorker.enabled')) {
@@ -26,7 +26,7 @@ export const hydrate = async () => {
 }
 
 export const uninstall = async () => {
-  if (Platform.getPlatform() === 'electron') {
+  if (Platform.platform === 'electron') {
     return
   }
   try {
