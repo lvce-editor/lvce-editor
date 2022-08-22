@@ -21,7 +21,7 @@ export const state = {
 }
 
 const getExtensionHostManagementTypes = () => {
-  const platform = Platform.getPlatform()
+  const platform = Platform.platform
   switch (platform) {
     case 'web':
       return [ExtensionHostManagementBrowser]

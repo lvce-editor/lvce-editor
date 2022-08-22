@@ -72,7 +72,7 @@ const getExtensionPicks = async () => {
 // TODO send strings to renderer process only once for next occurrence send uint16array of ids of strings
 
 export const getPicks = async () => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     const builtinPicks = await getBuiltinPicks()
     return builtinPicks
   }

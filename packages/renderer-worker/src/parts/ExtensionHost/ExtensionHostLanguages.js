@@ -18,14 +18,14 @@ const getLanguagesFromStaticFolder = async () => {
 }
 
 export const getLanguages = () => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     return getLanguagesFromStaticFolder()
   }
   return getLanguagesFromExtensionHost()
 }
 
 export const getLanguageConfiguration = async (languageId) => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     console.warn('get language configuration not yet supported on web')
     return
   }

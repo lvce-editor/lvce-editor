@@ -92,7 +92,7 @@ const getResolvedRootFromRendererProcess = async (href) => {
       source: 'renderer-process',
     }
   }
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     const resolvedRoot = {
       path: 'web:///workspace',
       homeDir: '',
@@ -105,10 +105,10 @@ const getResolvedRootFromRendererProcess = async (href) => {
 }
 
 const getResolvedRoot = async (href) => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     return getResolvedRootFromRendererProcess(href)
   }
-  if (Platform.getPlatform() === 'remote') {
+  if (Platform.platform === 'remote') {
     const resolvedRootFromRendererProcess =
       await getResolvedRootFromRendererProcess(href)
     if (resolvedRootFromRendererProcess) {
@@ -138,7 +138,7 @@ const getPathName = (workspacePath) => {
 const onWorkspaceChange = async () => {
   const title = getTitle(state.workspacePath)
   await Window.setTitle(title)
-  if (Platform.getPlatform() === 'web' || Platform.getPlatform() === 'remote') {
+  if (Platform.platform === 'web' || Platform.platform === 'remote') {
     const pathName = getPathName(state.workspacePath)
     await Location.setPathName(pathName)
   }

@@ -3,7 +3,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 const getDiagnostics = async (editor) => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     console.info('diagnostics not yet implemented for web')
     return []
   }

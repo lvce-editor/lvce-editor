@@ -62,7 +62,7 @@ export const getBlobUrl = (path) => {
 }
 
 export const getPathSeparator = () => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     return '/'
   }
   return SharedProcess.invoke(

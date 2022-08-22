@@ -3,7 +3,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 const getColorThemeNames = async () => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     const assetDir = Platform.getAssetDir()
     const url = `${assetDir}/config/themes.json`
     return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
