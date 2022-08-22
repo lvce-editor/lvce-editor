@@ -206,6 +206,16 @@ exports.hydrate = async () => {
     process.exit(0)
   }
 
+  // command line switches
+  if (argv.includes('--no-sandbox')) {
+    // see https://github.com/microsoft/vscode/issues/151187#issuecomment-1221475319
+    if (Platform.isLinux()) {
+      app.commandLine.appendSwitch('--disable-gpu-sandbox')
+    }
+  } else {
+    Electron.app.enableSandbox()
+  }
+
   // protocol
   Electron.protocol.registerSchemesAsPrivileged([
     {
@@ -227,7 +237,6 @@ exports.hydrate = async () => {
   Electron.app.on('before-quit', handleBeforeQuit)
   // Electron.app.on('ready', handleAppReady)
   Electron.app.on('second-instance', handleSecondInstance)
-  Electron.app.enableSandbox()
   await Electron.app.whenReady()
   Performance.mark('code/appReady')
 
