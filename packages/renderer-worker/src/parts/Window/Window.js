@@ -1,6 +1,7 @@
+import * as ElectronApp from '../ElectronApp/ElectronApp.js'
+import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const reload = async () => {
   if (Platform.getPlatform() === 'web' || Platform.getPlatform() === 'remote') {
@@ -8,10 +9,7 @@ export const reload = async () => {
     return
   }
   if (Platform.getPlatform() === 'electron') {
-    // TODO should use invoke here
-    await SharedProcess.invoke(
-      /* Electron.windowReload */ 'Electron.windowReload'
-    )
+    await ElectronWindow.reload()
   }
 }
 
@@ -19,38 +17,32 @@ export const minimize = async () => {
   if (Platform.getPlatform() === 'web') {
     return
   }
-  await SharedProcess.invoke(
-    /* Electron.windowMinimize */ 'Electron.windowMinimize'
-  )
+  await ElectronWindow.minimize()
 }
 
 export const maximize = async () => {
   if (Platform.getPlatform() === 'web') {
     return
   }
-  await SharedProcess.invoke(
-    /* Electron.windowMaximize */ 'Electron.windowMaximize'
-  )
+  await ElectronWindow.maximize()
 }
 
 export const unmaximize = async () => {
   if (Platform.getPlatform() === 'web') {
     return
   }
-  await SharedProcess.invoke(
-    /* Electron.windowUnmaximize */ 'Electron.windowUnMaximize'
-  )
+  await ElectronWindow.unmaximize()
 }
 
 export const close = async () => {
   if (Platform.getPlatform() === 'web') {
     return
   }
-  await SharedProcess.invoke(/* Electron.windowClose */ 'Electron.windowClose')
+  await ElectronWindow.close()
 }
 
 export const exit = async () => {
-  await SharedProcess.invoke(/* Electron.exit */ 'Electron.exit')
+  await ElectronApp.exit()
 }
 
 export const setTitle = async (title) => {
@@ -64,7 +56,5 @@ export const openNew = async () => {
   if (Platform.getPlatform() === 'web' || Platform.getPlatform() === 'remote') {
     return
   }
-  await SharedProcess.invoke(
-    /* Electron.windowOpenNew */ 'Electron.windowOpenNew'
-  )
+  await ElectronWindow.openNew()
 }
