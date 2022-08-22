@@ -17,8 +17,7 @@ for (const method of ['log', 'info', 'warn', 'error']) {
 }
 
 const handleLogStreamError = (error) => {
-  console.error(`[main-process] log error`)
-  console.error(error)
+  console.error(`[main-process] log error ${error}`)
 }
 
 writeStream.on('error', handleLogStreamError)
