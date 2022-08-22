@@ -35,22 +35,7 @@ const handleHeadersReceived = (details, callback) => {
   }
 }
 
-const handlePermissionRequest = (
-  webContents,
-  permission,
-  callback,
-  details
-) => {
-  switch (permission) {
-    case 'clipboard-read':
-    case 'clipboard-sanitized-write':
-      return callback(true)
-    default:
-      return callback(false)
-  }
-}
-
-const handlePermissionCheck = (webContents, permission, origin, details) => {
+const isAllowedPermission = (permission) => {
   switch (permission) {
     case 'clipboard-read':
     case 'clipboard-sanitized-write':
@@ -58,6 +43,19 @@ const handlePermissionCheck = (webContents, permission, origin, details) => {
     default:
       return false
   }
+}
+
+const handlePermissionRequest = (
+  webContents,
+  permission,
+  callback,
+  details
+) => {
+  callback(isAllowedPermission(permission))
+}
+
+const handlePermissionCheck = (webContents, permission, origin, details) => {
+  return isAllowedPermission(permission)
 }
 
 // TODO use Platform.getScheme() instead of Product.getTheme()
