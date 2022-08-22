@@ -60,13 +60,13 @@ const getModuleId = (commandId) => {
   switch (commandId) {
     case 'App.exit':
       return MODULE_APP
-    case 'Window.minimize':
-    case 'Window.maximize':
-    case 'Window.toggleDevtools':
-    case 'Window.toggleDevtools':
-    case 'Window.unmaximize':
-    case 'Window.close':
-    case 'Window.reload':
+    case 'ElectronWindow.minimize':
+    case 'ElectronWindow.maximize':
+    case 'ElectronWindow.toggleDevtools':
+    case 'ElectronWindow.toggleDevtools':
+    case 'ElectronWindow.unmaximize':
+    case 'ElectronWindow.close':
+    case 'ElectronWindow.reload':
       return MODULE_WINDOW
     case 'Developer.getPerformanceEntries':
     case 'Developer.crashMainProcess':

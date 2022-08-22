@@ -9,10 +9,7 @@ export const reload = async () => {
     return
   }
   if (Platform.platform === 'electron') {
-    // TODO should use invoke here
-    await SharedProcess.invoke(
-      /* Electron.windowReload */ 'Electron.windowReload'
-    )
+    await ElectronWindow.reload()
   }
 }
 

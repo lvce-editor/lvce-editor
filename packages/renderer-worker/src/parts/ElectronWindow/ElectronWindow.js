@@ -1,23 +1,25 @@
+import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+
 export const reload = async () => {
-  throw new Error('not implemented')
+  return ElectronProcess.invoke('ElectronWindow.reload')
 }
 
 export const minimize = async () => {
-  throw new Error('not implemented')
+  return ElectronProcess.invoke('ElectronWindow.minimize')
 }
 
 export const unmaximize = async () => {
-  throw new Error('not implemented')
+  return ElectronProcess.invoke('ElectronWindow.unmaximize')
 }
 
 export const maximize = async () => {
-  throw new Error('not implemented')
+  return ElectronProcess.invoke('ElectronWindow.maximize')
 }
 
 export const close = async () => {
-  throw new Error('not implemented')
+  return ElectronProcess.invoke('ElectronWindow.close')
 }
 
 export const openNew = async () => {
-  throw new Error('not implemented')
+  return ElectronProcess.invoke('ElectronWindow.openNew')
 }

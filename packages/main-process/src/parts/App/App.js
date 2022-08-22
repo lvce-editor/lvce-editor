@@ -10,6 +10,7 @@ const LifeCycle = require('../LifeCycle/LifeCycle.js')
 const Performance = require('../Performance/Performance.js')
 const Cli = require('../Cli/Cli.js')
 const AppWindow = require('../AppWindow/AppWindow.js')
+const Command = require('../Command/Command.js')
 
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
@@ -120,6 +121,32 @@ const handlePortForSharedProcess = async (event) => {
   // })
   browserWindowPort.start()
 }
+
+const handlePortForMainProcess = (event) => {
+  const browserWindowPort = event.ports[0]
+  browserWindowPort.on('message', async (event) => {
+    const message = event.data
+    try {
+      const result = await Command.execute(message.method, ...message.params)
+      browserWindowPort.postMessage({
+        jsonrpc: '2.0',
+        id: message.id,
+        result,
+      })
+    } catch (error) {
+      console.log({ error })
+      browserWindowPort.postMessage({
+        jsonrpc: '2.0',
+        id: message.id,
+        error: {
+          message: `${error}`,
+        },
+      })
+    }
+  })
+  browserWindowPort.start()
+}
+
 /**
  * @param {import('electron').IpcMainEvent} event
  */
@@ -134,6 +161,8 @@ const handlePort = async (event, data) => {
       return handlePortForSharedProcess(event)
     case 'extension-host':
       return handlePortForExtensionHost(event)
+    case 'electron-process':
+      return handlePortForMainProcess(event)
     default:
       console.error(`[main-process] unexpected port type ${data}`)
   }
