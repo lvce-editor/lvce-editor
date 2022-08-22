@@ -101,10 +101,10 @@ const getIcon = (extension) => {
   if (!extension || !extension.path || !extension.icon) {
     return ''
   }
-  if (Platform.getPlatform() === 'remote') {
+  if (Platform.platform === 'remote') {
     return `/remote/${extension.path}/${extension.icon}` // TODO support windows paths
   }
-  if (Platform.getPlatform() === 'electron') {
+  if (Platform.platform === 'electron') {
     return `/remote/${extension.path}/${extension.icon}` // TODO support windows paths
   }
   return ''

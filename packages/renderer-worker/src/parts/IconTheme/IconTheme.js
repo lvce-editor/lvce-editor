@@ -19,7 +19,7 @@ const DEFAULT_FOLDER_ICON = '_folder'
 const DEFAULT_FOLDER_ICON_OPEN = '_folder_open'
 
 const getIconThemeJson = async (iconThemeId) => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     const assetDir = Platform.getAssetDir()
     const url = `${assetDir}/icon-themes/${iconThemeId}.json`
     const json = await Command.execute(
@@ -114,7 +114,7 @@ export const getIcon = (dirent) => {
 }
 
 const getBackgroundUrl = (extensionPath, value) => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     return `/file-icons/${value.slice(7)}`
   }
   // TODO what if the file in on linux and includes a backslash?

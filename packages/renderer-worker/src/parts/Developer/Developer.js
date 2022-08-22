@@ -131,7 +131,7 @@ const formatNodeTiming = (nodeStartupTiming) => {
 }
 
 const getNodeTiming = () => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     return undefined
   }
   return SharedProcess.invoke(/* command */ 'Developer.getNodeStartupTime')
@@ -217,7 +217,7 @@ const getMeasureEntries = () => {
 }
 
 const getElectronEntries = async () => {
-  if (Platform.getPlatform() === 'web' || Platform.getPlatform() === 'remote') {
+  if (Platform.platform === 'web' || Platform.platform === 'remote') {
     return undefined
   }
   const result = await SharedProcess.invoke(
@@ -234,13 +234,13 @@ export const getStartupPerformanceContent = async () => {
   //   LifeCycle.once(LifeCycle.PHASE_FIFTEEN, resolve)
   // )
   let nodeStartupTiming
-  if (Platform.getPlatform() !== 'web') {
+  if (Platform.platform !== 'web') {
     nodeStartupTiming = await getNodeTiming()
   }
   const measureEntries = getMeasureEntries()
   const webVitals = await getWebVitals()
   let electronEntries
-  if (Platform.getPlatform() === 'electron') {
+  if (Platform.platform === 'electron') {
     electronEntries = await getElectronEntries()
   }
   const text = formatStartupPerformance({
@@ -452,7 +452,7 @@ export const openExtensionsFolder = () => {
 
 export const openLogsFolder = async () => {
   // TODO only in electron or in remote when it is the same machine
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     return
   }
   const logsFolder = await Platform.getLogsDir()

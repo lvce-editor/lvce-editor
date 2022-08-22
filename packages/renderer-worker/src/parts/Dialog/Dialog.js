@@ -8,11 +8,11 @@ export const state = {
 }
 
 export const openFolder = async () => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     console.warn('open folder - not implemented')
     return
   }
-  if (Platform.getPlatform() === 'remote') {
+  if (Platform.platform === 'remote') {
     const path = await RendererProcess.invoke(
       /* Dialog.prompt */ 'Dialog.prompt',
       /* message */ 'Choose path:'
@@ -39,11 +39,11 @@ export const openFolder = async () => {
 }
 
 export const openFile = async () => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     console.warn('open file - not implemented')
     return
   }
-  if (Platform.getPlatform() === 'remote') {
+  if (Platform.platform === 'remote') {
     // TODO
     console.warn('open file - not implemented')
     return
@@ -58,7 +58,7 @@ export const openFile = async () => {
 }
 
 export const showAbout = async () => {
-  const platform = Platform.getPlatform()
+  const platform = Platform.platform
   console.log({ platform })
   if (platform === 'web' || platform === 'remote') {
     console.warn('show about - not implemented')
@@ -84,7 +84,7 @@ export const showMessage = async (message, options) => {
     options,
   }
 
-  if (Platform.getPlatform() === 'electron') {
+  if (Platform.platform === 'electron') {
     const index = await SharedProcess.invoke(
       /* Electron.showMessageBox */ 'Electron.showMessageBox',
       /* message */ message.message,

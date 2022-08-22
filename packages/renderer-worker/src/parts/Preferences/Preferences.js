@@ -25,7 +25,7 @@ export const openKeyBindingsJson = async () => {
 // TODO command for opening workspace settings
 
 const getPreferencesJson = async () => {
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     const cachedPreferences = await Command.execute(
       /* LocalStorage.getJson */ 'LocalStorage.getJson',
       /* key */ 'preferences'
@@ -86,7 +86,7 @@ export const get = (key) => {
 
 export const set = async (key, value) => {
   state[key] = value
-  if (Platform.getPlatform() === 'web') {
+  if (Platform.platform === 'web') {
     const preferences = { ...state, [key]: value }
     await Command.execute(
       /* LocalStorage.setJson */ 'LocalStorage.setJson',
