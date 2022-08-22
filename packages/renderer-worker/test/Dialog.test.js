@@ -32,9 +32,11 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
-    getPlatform: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
+    get platform() {
+      return jest.fn(() => {
+        throw new Error('not implemented')
+      })
+    },
   }
 })
 
@@ -69,7 +71,7 @@ test.skip('openFolder', async () => {
 
 test('showAbout - electron', async () => {
   // @ts-ignore
-  Platform.getPlatform.mockImplementation(() => {
+  Platform.platform.mockImplementation(() => {
     return 'electron'
   })
   // @ts-ignore
@@ -87,7 +89,7 @@ test('showAbout - electron', async () => {
 
 test('showMessage - web', async () => {
   // @ts-ignore
-  Platform.getPlatform.mockImplementation(() => {
+  Platform.platform.mockImplementation(() => {
     return 'web'
   })
   // @ts-ignore
@@ -114,7 +116,7 @@ test('showMessage - web', async () => {
 
 test('showMessage - electron', async () => {
   // @ts-ignore
-  Platform.getPlatform.mockImplementation(() => {
+  Platform.platform.mockImplementation(() => {
     return 'electron'
   })
   // @ts-ignore
@@ -137,7 +139,7 @@ test('showMessage - electron', async () => {
 
 test('close - web', async () => {
   // @ts-ignore
-  Platform.getPlatform.mockImplementation(() => {
+  Platform.platform.mockImplementation(() => {
     return 'web'
   })
   // @ts-ignore
