@@ -22,20 +22,26 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     }),
   }
 })
-jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
-  return {
-    invoke: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
+jest.unstable_mockModule(
+  '../src/parts/ElectronDialog/ElectronDialog.js',
+  () => {
+    return {
+      showOpenDialog: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+      showMessageBox: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
   }
-})
+)
+
+const mockPlatform = jest.fn()
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     get platform() {
-      return jest.fn(() => {
-        throw new Error('not implemented')
-      })
+      return mockPlatform()
     },
   }
 })
@@ -49,6 +55,9 @@ const SharedProcess = await import(
 const Command = await import('../src/parts/Command/Command.js')
 const Platform = await import('../src/parts/Platform/Platform.js')
 const Dialog = await import('../src/parts/Dialog/Dialog.js')
+const ElectronDialog = await import(
+  '../src/parts/ElectronDialog/ElectronDialog.js'
+)
 
 // TODO would need to test different platforms
 
@@ -114,15 +123,11 @@ test('showMessage - web', async () => {
   )
 })
 
-test('showMessage - electron', async () => {
+test.only('showMessage - electron', async () => {
   // @ts-ignore
-  Platform.platform.mockImplementation(() => {
-    return 'electron'
-  })
+  mockPlatform.mockReturnValue('electron')
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {
-    return null
-  })
+  ElectronDialog.showMessageBox.mockImplementation(() => {})
   await Dialog.showMessage(
     {
       message: 'Error: Oops',
@@ -135,6 +140,8 @@ test('showMessage - electron', async () => {
     message: { codeFrame: '', message: 'Error: Oops', stack: '' },
     options: [],
   })
+  expect(ElectronDialog.showMessageBox).toHaveBeenCalledTimes(1)
+  expect(ElectronDialog.showMessageBox).toHaveBeenCalledWith({})
 })
 
 test('close - web', async () => {
@@ -159,20 +166,24 @@ test('close - web', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledWith(7836)
 })
 
-test('openFile', async () => {
+test('openFile - electron', async () => {
+  // @ts-ignore
+  Platform.platform.mockImplementation(() => {
+    return 'electron'
+  })
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {
+  ElectronDialog.showOpenDialog.mockImplementation(() => {
     return ['/test/some-file']
   })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await Dialog.openFolder()
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'Electron.showOpenDialog',
-    'Open Folder',
-    ['openDirectory', 'dontAddToRecent', 'showHiddenFiles']
-  )
+  expect(ElectronDialog.showOpenDialog).toHaveBeenCalledTimes(1)
+  expect(ElectronDialog.showOpenDialog).toHaveBeenCalledWith('Open Folder', [
+    'openDirectory',
+    'dontAddToRecent',
+    'showHiddenFiles',
+  ])
 })

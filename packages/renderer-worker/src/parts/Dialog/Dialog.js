@@ -123,7 +123,10 @@ export const showMessage = async (message, options) => {
     options,
   }
 
+  console.log(Platform.platform)
+  console.log(Platform.platform === 'electron')
   if (Platform.platform === 'electron') {
+    console.log('is electron')
     const index = await ElectronDialog.showMessageBox(
       /* message */ message.message,
       /* buttons */ options

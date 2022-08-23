@@ -3,46 +3,123 @@ import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
-export const reload = async () => {
-  if (Platform.platform === 'web' || Platform.platform === 'remote') {
-    await RendererProcess.invoke(/* windowReload */ 8080)
-    return
+const reloadWeb = async () => {
+  await RendererProcess.invoke(/* windowReload */ 8080)
+}
+
+const reloadRemote = async () => {
+  await RendererProcess.invoke(/* windowReload */ 8080)
+}
+
+const reloadElectron = async () => {
+  await ElectronWindow.reload()
+}
+export const reload = () => {
+  switch (Platform.platform) {
+    case 'web':
+      return reloadWeb()
+    case 'remote':
+      return reloadRemote()
+    case 'electron':
+      return reloadElectron()
+    default:
+      return
   }
-  if (Platform.platform === 'electron') {
-    await ElectronWindow.reload()
-  }
+}
+
+const minimizeWeb = () => {}
+
+const minimizeRemote = () => {}
+
+const minimizeElectron = () => {
+  return ElectronWindow.minimize()
 }
 
 export const minimize = async () => {
-  if (Platform.platform === 'web') {
-    return
+  switch (Platform.platform) {
+    case 'web':
+      return minimizeWeb()
+    case 'remote':
+      return minimizeRemote()
+    case 'electron':
+      return minimizeElectron()
+    default:
+      return
   }
-  await ElectronWindow.minimize()
+}
+
+const maximizeWeb = () => {}
+const maximizeRemote = () => {}
+const maximizeElectron = () => {
+  return ElectronWindow.maximize()
 }
 
 export const maximize = async () => {
-  if (Platform.platform === 'web') {
-    return
+  switch (Platform.platform) {
+    case 'web':
+      return maximizeWeb()
+    case 'remote':
+      return maximizeRemote()
+    case 'electron':
+      return maximizeElectron()
+    default:
+      return
   }
-  await ElectronWindow.maximize()
 }
 
+const unmaximizeWeb = () => {}
+
+const unmaximizeRemote = () => {}
+
+const unmaximizeElectron = () => {}
+
 export const unmaximize = async () => {
-  if (Platform.platform === 'web') {
-    return
+  switch (Platform.platform) {
+    case 'web':
+      return unmaximizeWeb()
+    case 'remote':
+      return unmaximizeRemote()
+    case 'electron':
+      return unmaximizeElectron()
+    default:
+      return
   }
-  await ElectronWindow.unmaximize()
+}
+
+const closeWeb = () => {}
+const closeRemote = () => {}
+const closeElectron = () => {
+  return ElectronWindow.close()
 }
 
 export const close = async () => {
-  if (Platform.platform === 'web') {
-    return
+  switch (Platform.platform) {
+    case 'web':
+      return closeWeb()
+    case 'remote':
+      return closeRemote()
+    case 'electron':
+      return closeElectron()
+    default:
+      return
   }
-  await ElectronWindow.close()
 }
 
-export const exit = async () => {
-  await ElectronApp.exit()
+const exitWeb = () => {}
+const exitRemote = () => {}
+const exitElectron = () => {
+  return ElectronApp.exit()
+}
+
+export const exit = () => {
+  switch (Platform.platform) {
+    case 'web':
+      return exitWeb()
+    case 'remote':
+      return exitRemote()
+    case 'electron':
+      return exitElectron()
+  }
 }
 
 export const setTitle = async (title) => {
@@ -52,9 +129,21 @@ export const setTitle = async (title) => {
   )
 }
 
+const openNewWeb = () => {}
+const openNewRemote = () => {}
+const openNewElectron = () => {
+  return ElectronWindow.openNew()
+}
+
 export const openNew = async () => {
-  if (Platform.platform === 'web' || Platform.platform === 'remote') {
-    return
+  switch (Platform.platform) {
+    case 'web':
+      return openNewWeb()
+    case 'remote':
+      return openNewRemote()
+    case 'electron':
+      return openNewElectron()
+    default:
+      return
   }
-  await ElectronWindow.openNew()
 }
