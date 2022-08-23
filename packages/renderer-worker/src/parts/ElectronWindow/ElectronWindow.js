@@ -1,29 +1,29 @@
 import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
 
-export const reload = async () => {
+export const reload = () => {
   return ElectronProcess.invoke('ElectronWindow.reload')
 }
 
-export const minimize = async () => {
+export const minimize = () => {
   return ElectronProcess.invoke('ElectronWindow.minimize')
 }
 
-export const unmaximize = async () => {
+export const unmaximize = () => {
   return ElectronProcess.invoke('ElectronWindow.unmaximize')
 }
 
-export const maximize = async () => {
+export const maximize = () => {
   return ElectronProcess.invoke('ElectronWindow.maximize')
 }
 
-export const close = async () => {
+export const close = () => {
   return ElectronProcess.invoke('ElectronWindow.close')
 }
 
-export const openNew = async () => {
+export const openNew = () => {
   return ElectronProcess.invoke('ElectronWindow.openNew')
 }
 
-export const toggleDevtools = async () => {
+export const toggleDevtools = () => {
   return ElectronProcess.invoke('ElectronWindow.toggleDevtools')
 }
