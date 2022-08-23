@@ -87,19 +87,21 @@ export const handleMessageFromSharedProcess = async (message) => {
 }
 
 const getIpc = () => {
-  if (platform === 'web' || platform === 'remote') {
-    return IpcParent.create({
-      method: IpcParent.Methods.WebSocket,
-      protocol: 'lvce.shared-process',
-    })
+  switch (platform) {
+    case 'web':
+    case 'remote':
+      return IpcParent.create({
+        method: IpcParent.Methods.WebSocket,
+        protocol: 'lvce.shared-process',
+      })
+    case 'electron':
+      return IpcParent.create({
+        method: IpcParent.Methods.Electron,
+        type: 'shared-process',
+      })
+    default:
+      throw new Error('unsupported platform')
   }
-  if (platform === 'electron') {
-    return IpcParent.create({
-      method: IpcParent.Methods.Electron,
-      type: 'shared-process',
-    })
-  }
-  throw new Error('unsupported platform')
 }
 
 export const listen = async () => {

@@ -15,33 +15,38 @@ jest.unstable_mockModule(
   }
 )
 
-jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
-  return {
-    invoke: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  }
-})
-
-jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
-  return {
-    get platform() {
-      return jest.fn(() => {
+jest.unstable_mockModule(
+  '../src/parts/ElectronWindow/ElectronWindow.js',
+  () => {
+    return {
+      toggleDevtools: jest.fn(() => {
         throw new Error('not implemented')
-      })
-    },
+      }),
+      minimize: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+      maximize: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+      unmaximize: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+      close: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+      openNew: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
   }
-})
+)
 
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
+const ElectronWindow = await import(
+  '../src/parts/ElectronWindow/ElectronWindow.js'
 )
-const Platform = await import('../src/parts/Platform/Platform.js')
-
-const Window = await import('../src/parts/Window/Window.js')
 
 // TODO test for platform web and platform electron
 test.skip('reload', async () => {
@@ -52,58 +57,65 @@ test.skip('reload', async () => {
   expect(RendererProcess.invoke).toHaveBeenCalledWith(8080)
 })
 
-test('minimize', async () => {
-  // @ts-ignore
-  Platform.platform.mockImplementation(() => {
-    return 'remote'
+test('minimize - electron', async () => {
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+    return {
+      platform: 'electron',
+    }
   })
+  const Window = await import('../src/parts/Window/Window.js')
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {})
+  ElectronWindow.minimize.mockImplementation(() => {})
   await Window.minimize()
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Electron.windowMinimize')
+  expect(ElectronWindow.minimize).toHaveBeenCalledTimes(1)
 })
 
-test('maximize', async () => {
-  // @ts-ignore
-  Platform.platform.mockImplementation(() => {
-    return 'remote'
+test('maximize - electron', async () => {
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+    return {
+      platform: 'electron',
+    }
   })
+  const Window = await import('../src/parts/Window/Window.js')
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {})
+  ElectronWindow.maximize.mockImplementation(() => {})
   await Window.maximize()
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Electron.windowMaximize')
+  expect(ElectronWindow.maximize).toHaveBeenCalledTimes(1)
 })
 
-test('unmaximize', async () => {
-  // @ts-ignore
-  Platform.platform.mockImplementation(() => {
-    return 'remote'
+test('unmaximize - electron', async () => {
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+    return {
+      platform: 'electron',
+    }
   })
+  const Window = await import('../src/parts/Window/Window.js')
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {})
+  ElectronWindow.unmaximize.mockImplementation(() => {})
   await Window.unmaximize()
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Electron.windowUnMaximize')
+  expect(ElectronWindow.unmaximize).toHaveBeenCalledTimes(1)
 })
 
-test('close', async () => {
-  // @ts-ignore
-  Platform.platform.mockImplementation(() => {
-    return 'remote'
+test('close - electron', async () => {
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+    return {
+      platform: 'electron',
+    }
   })
+  const Window = await import('../src/parts/Window/Window.js')
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {})
+  ElectronWindow.close.mockImplementation(() => {})
   await Window.close()
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Electron.windowClose')
+  expect(ElectronWindow.close).toHaveBeenCalledTimes(1)
 })
 
 test('setTitle', async () => {
-  // @ts-ignore
-  Platform.platform.mockImplementation(() => {
-    return 'web'
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+    return {
+      platform: 'web',
+    }
   })
+  const Window = await import('../src/parts/Window/Window.js')
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await Window.setTitle('test')
@@ -123,15 +135,14 @@ test.skip('openNew - web', async () => {
 })
 
 test('openNew - electron', async () => {
-  // @ts-ignore
-  Platform.platform.mockImplementation(() => {
-    return 'electron'
+  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+    return {
+      platform: 'electron',
+    }
   })
+  const Window = await import('../src/parts/Window/Window.js')
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {
-    return null
-  })
+  ElectronWindow.openNew.mockImplementation(() => {})
   await Window.openNew()
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Electron.windowOpenNew')
+  expect(ElectronWindow.openNew).toHaveBeenCalledTimes(1)
 })

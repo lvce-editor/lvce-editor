@@ -4,6 +4,7 @@ import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Window from '../Window/Window.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const state = {
   workspacePath: '',
@@ -19,6 +20,7 @@ export const state = {
  * @param {string|undefined} path
  */
 export const setPath = async (path) => {
+  Assert.string(path)
   console.log('[workspace] set path', path)
   // TODO not in electron
   state.workspacePath = path
