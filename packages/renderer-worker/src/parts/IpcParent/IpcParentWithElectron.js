@@ -7,8 +7,12 @@ export const create = async (options) => {
   const originalOnMessage = RendererProcess.state.ipc.onmessage
   const port = await new Promise((resolve, reject) => {
     RendererProcess.state.ipc.onmessage = (event) => {
-      const port = event.ports[0]
-      resolve(port)
+      if (event.data === 'port') {
+        const port = event.ports[0]
+        resolve(port)
+      } else {
+        originalOnMessage(event)
+      }
     }
     RendererProcess.state.ipc.send({ method: 'get-port', params: [type] })
   })
