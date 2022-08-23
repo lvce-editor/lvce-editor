@@ -33,11 +33,40 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   }
 })
 
+jest.unstable_mockModule(
+  '../src/parts/ElectronWindow/ElectronWindow.js',
+  () => {
+    return {
+      toggleDevtools: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+      minimize: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+      maximize: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+      unmaximize: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+      close: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+      openNew: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
+)
+const ElectronWindow = await import(
+  '../src/parts/ElectronWindow/ElectronWindow.js'
 )
 const Platform = await import('../src/parts/Platform/Platform.js')
 
@@ -54,49 +83,30 @@ test.skip('reload', async () => {
 
 test('minimize', async () => {
   // @ts-ignore
-  Platform.platform.mockImplementation(() => {
-    return 'remote'
-  })
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {})
+  ElectronWindow.minimize.mockImplementation(() => {})
   await Window.minimize()
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Electron.windowMinimize')
+  expect(ElectronWindow.minimize).toHaveBeenCalledTimes(1)
 })
 
 test('maximize', async () => {
   // @ts-ignore
-  Platform.platform.mockImplementation(() => {
-    return 'remote'
-  })
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {})
+  ElectronWindow.maximize.mockImplementation(() => {})
   await Window.maximize()
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Electron.windowMaximize')
+  expect(ElectronWindow.maximize).toHaveBeenCalledTimes(1)
 })
 
 test('unmaximize', async () => {
   // @ts-ignore
-  Platform.platform.mockImplementation(() => {
-    return 'remote'
-  })
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {})
+  ElectronWindow.unmaximize.mockImplementation(() => {})
   await Window.unmaximize()
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Electron.windowUnMaximize')
+  expect(ElectronWindow.unmaximize).toHaveBeenCalledTimes(1)
 })
 
 test('close', async () => {
   // @ts-ignore
-  Platform.platform.mockImplementation(() => {
-    return 'remote'
-  })
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {})
+  ElectronWindow.close.mockImplementation(() => {})
   await Window.close()
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Electron.windowClose')
+  expect(ElectronWindow.close).toHaveBeenCalledTimes(1)
 })
 
 test('setTitle', async () => {
@@ -128,10 +138,7 @@ test('openNew - electron', async () => {
     return 'electron'
   })
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {
-    return null
-  })
+  ElectronWindow.openNew.mockImplementation(() => {})
   await Window.openNew()
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Electron.windowOpenNew')
+  expect(ElectronWindow.openNew).toHaveBeenCalledTimes(1)
 })

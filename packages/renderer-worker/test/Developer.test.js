@@ -38,12 +38,38 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
     }),
   }
 })
+jest.unstable_mockModule(
+  '../src/parts/ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.js',
+  () => {
+    return {
+      open: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+jest.unstable_mockModule(
+  '../src/parts/ElectronWindow/ElectronWindow.js',
+  () => {
+    return {
+      toggleDevtools: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
 
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
+)
+const ElectronWindowProcessExplorer = await import(
+  '../src/parts/ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.js'
+)
+const ElectronWindow = await import(
+  '../src/parts/ElectronWindow/ElectronWindow.js'
 )
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const Download = await import('../src/parts/Download/Download.js')
@@ -340,10 +366,9 @@ test('createSharedProcessHeapSnapshot', async () => {
 
 test('toggleDeveloperTools', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {})
+  ElectronWindow.toggleDevtools.mockImplementation(() => {})
   await Developer.toggleDeveloperTools()
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith('Electron.toggleDevtools')
+  expect(ElectronWindow.toggleDevtools).toHaveBeenCalledTimes(1)
 })
 
 // TODO test openConfigFolder error
@@ -425,30 +450,15 @@ test('openLogsFolder - error', async () => {
 
 test('open process explorer', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
-    switch (method) {
-      case 'Electron.openProcessExplorer':
-        return null
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+  ElectronWindowProcessExplorer.open.mockImplementation(() => {})
   await Developer.openProcessExplorer()
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'Electron.openProcessExplorer'
-  )
+  expect(ElectronWindowProcessExplorer.open).toHaveBeenCalledTimes(1)
 })
 
 test('open process explorer - error', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
-    switch (method) {
-      case 'Electron.openProcessExplorer':
-        throw new TypeError('x is not a function')
-      default:
-        throw new Error('unexpected message')
-    }
+  ElectronWindowProcessExplorer.open.mockImplementation(async () => {
+    throw new TypeError('x is not a function')
   })
   await expect(Developer.openProcessExplorer()).rejects.toThrowError(
     new TypeError('x is not a function')
