@@ -9,7 +9,7 @@ const ColorTheme = require('../ColorTheme/ColorTheme.js')
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
 
-exports.openProcessExplorer = async () => {
+exports.open = async () => {
   const processExplorerWindow = new BrowserWindow({
     width: 800,
     height: 500,

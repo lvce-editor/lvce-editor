@@ -5,6 +5,8 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
+import * as ElectronWindowProcessExplorer from '../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.js'
 
 const formatBytes = (bytes) => {
   return prettyBytes(bytes)
@@ -462,10 +464,8 @@ export const openLogsFolder = async () => {
   )
 }
 
-export const toggleDeveloperTools = async () => {
-  await SharedProcess.invoke(
-    /* Electron.toggleDevtools */ 'Electron.toggleDevtools'
-  )
+export const toggleDeveloperTools = () => {
+  return ElectronWindow.toggleDevtools()
 }
 
 export const showIconThemeCss = async () => {
@@ -539,10 +539,8 @@ export const openDataFolder = async () => {
 
 export const showMessageBox = () => {}
 
-export const openProcessExplorer = async () => {
-  await SharedProcess.invoke(
-    /* Electron.openProcessExplorer */ 'Electron.openProcessExplorer'
-  )
+export const openProcessExplorer = () => {
+  return ElectronWindowProcessExplorer.open()
 }
 
 export const downloadViewletState = async () => {

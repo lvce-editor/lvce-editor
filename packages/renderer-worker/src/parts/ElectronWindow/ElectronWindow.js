@@ -23,3 +23,7 @@ export const close = async () => {
 export const openNew = async () => {
   return ElectronProcess.invoke('ElectronWindow.openNew')
 }
+
+export const toggleDevtools = async () => {
+  return ElectronProcess.invoke('ElectronWindow.toggleDevtools')
+}

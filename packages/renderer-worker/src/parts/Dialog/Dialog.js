@@ -1,30 +1,30 @@
 import * as Command from '../Command/Command.js'
+import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
+import * as ElectronWindowAbout from '../ElectronWindowAbout/ElectronWindowAbout.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const state = {
   dialog: undefined,
 }
 
-export const openFolder = async () => {
-  if (Platform.platform === 'web') {
-    console.warn('open folder - not implemented')
-    return
-  }
-  if (Platform.platform === 'remote') {
-    const path = await RendererProcess.invoke(
-      /* Dialog.prompt */ 'Dialog.prompt',
-      /* message */ 'Choose path:'
-    )
-    await Command.execute(
-      /* Workspace.setPath */ 'Workspace.setPath',
-      /* path */ path
-    )
-    return
-  }
-  const folders = await SharedProcess.invoke(
-    /* Electron.showOpenDialog */ 'Electron.showOpenDialog',
+const openFolderWeb = () => {
+  console.warn('open folder - not implemented')
+}
+
+const openFolderRemote = async () => {
+  const path = await RendererProcess.invoke(
+    /* Dialog.prompt */ 'Dialog.prompt',
+    /* message */ 'Choose path:'
+  )
+  await Command.execute(
+    /* Workspace.setPath */ 'Workspace.setPath',
+    /* path */ path
+  )
+}
+
+const openFolderElectron = async () => {
+  const folders = await ElectronDialog.showOpenDialog(
     /* title */ 'Open Folder',
     /* properties */ ['openDirectory', 'dontAddToRecent', 'showHiddenFiles']
   )
@@ -38,33 +38,72 @@ export const openFolder = async () => {
   )
 }
 
-export const openFile = async () => {
-  if (Platform.platform === 'web') {
-    console.warn('open file - not implemented')
-    return
+export const openFolder = () => {
+  switch (Platform.platform) {
+    case 'web':
+      return openFolderWeb()
+    case 'remote':
+      return openFolderRemote()
+    case 'electron':
+      return openFolderElectron()
+    default:
+      return
   }
-  if (Platform.platform === 'remote') {
-    // TODO
-    console.warn('open file - not implemented')
-    return
-  }
-  const [file] = await SharedProcess.invoke(
-    /* Electron.showOpenDialog */ 'Electron.showOpenDialog',
-    /* title */ 'Open File',
-    /* properties */ ['openFile', 'dontAddToRecent', 'showHiddenFiles']
-  )
+}
+
+const openFileWeb = () => {
+  console.warn('open file - not implemented')
+}
+
+const openFileRemote = () => {
+  console.warn('open file - not implemented')
+}
+
+const openFileElectron = async () => {
+  const [file] = await ElectronDialog.showOpenDialog('Open File', [
+    'openFile',
+    'dontAddToRecent',
+    'showHiddenFiles',
+  ])
   await Command.execute('Main.openUri', file)
-  console.log({ file })
+}
+
+export const openFile = () => {
+  switch (Platform.platform) {
+    case 'web':
+      return openFileWeb()
+    case 'remote':
+      return openFileRemote()
+    case 'electron':
+      return openFileElectron()
+    default:
+      return
+  }
+}
+
+const showAboutWeb = () => {
+  console.warn('show about - not implemented')
+}
+
+const showAboutRemote = () => {
+  console.warn('show about - not implemented')
+}
+
+const showAboutElectron = async () => {
+  await ElectronWindowAbout.open()
 }
 
 export const showAbout = async () => {
-  const platform = Platform.platform
-  console.log({ platform })
-  if (platform === 'web' || platform === 'remote') {
-    console.warn('show about - not implemented')
-    return
+  switch (Platform.platform) {
+    case 'web':
+      return showAboutWeb()
+    case 'remote':
+      return showAboutRemote()
+    case 'electron':
+      return showAboutElectron()
+    default:
+      return
   }
-  await SharedProcess.invoke(/* Electron.about */ 'Electron.about')
 }
 
 export const showMessage = async (message, options) => {
@@ -85,8 +124,7 @@ export const showMessage = async (message, options) => {
   }
 
   if (Platform.platform === 'electron') {
-    const index = await SharedProcess.invoke(
-      /* Electron.showMessageBox */ 'Electron.showMessageBox',
+    const index = await ElectronDialog.showMessageBox(
       /* message */ message.message,
       /* buttons */ options
     )
