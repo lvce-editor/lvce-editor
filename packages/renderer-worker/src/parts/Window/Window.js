@@ -71,7 +71,9 @@ const unmaximizeWeb = () => {}
 
 const unmaximizeRemote = () => {}
 
-const unmaximizeElectron = () => {}
+const unmaximizeElectron = () => {
+  return ElectronWindow.unmaximize()
+}
 
 export const unmaximize = async () => {
   switch (Platform.platform) {

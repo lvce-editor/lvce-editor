@@ -36,13 +36,9 @@ jest.unstable_mockModule(
   }
 )
 
-const mockPlatform = jest.fn()
-
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
-    get platform() {
-      return mockPlatform()
-    },
+    platform: 'test',
   }
 })
 
@@ -53,7 +49,7 @@ const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
 )
 const Command = await import('../src/parts/Command/Command.js')
-const Platform = await import('../src/parts/Platform/Platform.js')
+const Platform = jest.requireMock('../src/plarts/Platform/Platform.js')
 const Dialog = await import('../src/parts/Dialog/Dialog.js')
 const ElectronDialog = await import(
   '../src/parts/ElectronDialog/ElectronDialog.js'
