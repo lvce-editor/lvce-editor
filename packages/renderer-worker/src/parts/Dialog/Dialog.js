@@ -123,10 +123,7 @@ export const showMessage = async (message, options) => {
     options,
   }
 
-  console.log(Platform.platform)
-  console.log(Platform.platform === 'electron')
   if (Platform.platform === 'electron') {
-    console.log('is electron')
     const index = await ElectronDialog.showMessageBox(
       /* message */ message.message,
       /* buttons */ options
@@ -137,8 +134,6 @@ export const showMessage = async (message, options) => {
       return
     }
     await handleClick(index)
-    // console.log({ result: index })
-    // state.dialog = undefined
   } else {
     await RendererProcess.invoke(
       /* Dialog.showErrorDialogWithOptions */ 'Dialog.showErrorDialogWithOptions',
@@ -162,7 +157,6 @@ export const handleClick = async (index) => {
   const dialog = state.dialog
   const option = dialog.options[index]
   // TODO handle case when index is out of bounds
-  console.log({ option })
   switch (option) {
     case 'Show Command Output':
       await close()

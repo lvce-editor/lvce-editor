@@ -2,62 +2,17 @@ import { jest } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
+  jest.resetModules()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
-  }
-)
-jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
-  return {
-    execute: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  }
-})
-jest.unstable_mockModule(
-  '../src/parts/ElectronDialog/ElectronDialog.js',
-  () => {
-    return {
-      showOpenDialog: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-      showMessageBox: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
-  }
-)
-jest.unstable_mockModule(
-  '../src/parts/ElectronWindowAbout/ElectronWindowAbout.js',
-  () => {
-    return {
-      open: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
-  }
-)
+// const SharedProcess = await import(
+//   '../src/parts/SharedProcess/SharedProcess.js'
+// )
+// const Command = await import('../src/parts/Command/Command.js')
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
-const Command = await import('../src/parts/Command/Command.js')
-const ElectronDialog = await import(
-  '../src/parts/ElectronDialog/ElectronDialog.js'
-)
-const ElectronWindowAbout = await import(
-  '../src/parts/ElectronWindowAbout/ElectronWindowAbout.js'
-)
+// const ElectronWindowAbout = await import(
+//   '../src/parts/ElectronWindowAbout/ElectronWindowAbout.js'
+// )
 
 // TODO would need to test different platforms
 
@@ -86,8 +41,17 @@ test('showAbout - electron', async () => {
       platform: 'electron',
     }
   })
-  // @ts-ignore
-  ElectronWindowAbout.open.mockImplementation(() => {})
+  jest.unstable_mockModule(
+    '../src/parts/ElectronWindowAbout/ElectronWindowAbout.js',
+    () => {
+      return {
+        open: jest.fn(() => {}),
+      }
+    }
+  )
+  const ElectronWindowAbout = await import(
+    '../src/parts/ElectronWindowAbout/ElectronWindowAbout.js'
+  )
   const Dialog = await import('../src/parts/Dialog/Dialog.js')
   await Dialog.showAbout()
   expect(ElectronWindowAbout.open).toHaveBeenCalledTimes(1)
@@ -103,8 +67,18 @@ test('showMessage - web', async () => {
       platform: 'web',
     }
   })
+  jest.unstable_mockModule(
+    '../src/parts/RendererProcess/RendererProcess.js',
+    () => {
+      return {
+        invoke: jest.fn(() => {}),
+      }
+    }
+  )
+  const RendererProcess = await import(
+    '../src/parts/RendererProcess/RendererProcess.js'
+  )
   const Dialog = await import('../src/parts/Dialog/Dialog.js')
-
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await Dialog.showMessage(
@@ -133,8 +107,18 @@ test('showMessage - electron', async () => {
       platform: 'electron',
     }
   })
+  jest.unstable_mockModule(
+    '../src/parts/ElectronDialog/ElectronDialog.js',
+    () => {
+      return {
+        showMessageBox: jest.fn(() => {}),
+      }
+    }
+  )
   const Dialog = await import('../src/parts/Dialog/Dialog.js')
-
+  const ElectronDialog = await import(
+    '../src/parts/ElectronDialog/ElectronDialog.js'
+  )
   // @ts-ignore
   ElectronDialog.showMessageBox.mockImplementation(() => {})
   await Dialog.showMessage(
@@ -159,10 +143,18 @@ test('close - web', async () => {
       platform: 'web',
     }
   })
+  jest.unstable_mockModule(
+    '../src/parts/RendererProcess/RendererProcess.js',
+    () => {
+      return {
+        invoke: jest.fn(),
+      }
+    }
+  )
+  const RendererProcess = await import(
+    '../src/parts/RendererProcess/RendererProcess.js'
+  )
   const Dialog = await import('../src/parts/Dialog/Dialog.js')
-
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
   await Dialog.showMessage(
     {
       message: 'Error: Oops',
@@ -184,17 +176,41 @@ test('openFile - electron', async () => {
       platform: 'electron',
     }
   })
-  // @ts-ignore
-  Command.execute.mockImplementation(() => {})
+  jest.unstable_mockModule(
+    '../src/parts/RendererProcess/RendererProcess.js',
+    () => {
+      return {
+        invoke: jest.fn(),
+      }
+    }
+  )
+  jest.unstable_mockModule(
+    '../src/parts/ElectronDialog/ElectronDialog.js',
+    () => {
+      return {
+        showOpenDialog: jest.fn(() => {
+          return ['/test/some-file']
+        }),
+        showMessageBox: jest.fn(() => {
+          throw new Error('not implemented')
+        }),
+      }
+    }
+  )
+  const RendererProcess = await import(
+    '../src/parts/RendererProcess/RendererProcess.js'
+  )
 
-  // @ts-ignore
-  ElectronDialog.showOpenDialog.mockImplementation(() => {
-    return ['/test/some-file']
+  jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+    return {
+      execute: jest.fn(),
+    }
   })
-  const Dialog = await import('../src/parts/Dialog/Dialog.js')
 
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
+  const ElectronDialog = await import(
+    '../src/parts/ElectronDialog/ElectronDialog.js'
+  )
+  const Dialog = await import('../src/parts/Dialog/Dialog.js')
   await Dialog.openFolder()
   expect(ElectronDialog.showOpenDialog).toHaveBeenCalledTimes(1)
   expect(ElectronDialog.showOpenDialog).toHaveBeenCalledWith('Open Folder', [
