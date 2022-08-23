@@ -15,6 +15,7 @@ const createIpc = async () => {
   })
 }
 
+// TODO race condition
 const getIpc = async () => {
   if (!state.ipc) {
     state.ipc = await createIpc()
