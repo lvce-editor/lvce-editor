@@ -107,7 +107,7 @@ const getOriginalStackFromError = (error) => {
 const handleRejectedExtension = async (extension) => {
   const message = extension.reason.message
   if (
-    message.includes(`Failed to load extension manifest: ENOENT`) ||
+    message.includes(`Failed to load extension manifest: File not found`) ||
     message.includes(`Failed to load extension manifest: ENOTDIR`)
   ) {
     return

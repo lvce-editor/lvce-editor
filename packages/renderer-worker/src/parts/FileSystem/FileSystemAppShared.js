@@ -40,7 +40,7 @@ export const writeFileInternal = async (getPath, content) => {
     // TODO error should just have enoent code that could be checked
 
     // @ts-ignore
-    if (error.message.includes('ENOENT')) {
+    if (error.message.includes('File not found')) {
       try {
         const dirname = Workspace.pathDirName(path)
         await FileSystemDisk.mkdir(dirname)
