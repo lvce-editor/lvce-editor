@@ -1,5 +1,6 @@
 import * as Error from '../Error/Error.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
+import * as Path from '../Path/Path.js'
 import * as ExtensionManagement from './ExtensionManagement.js'
 
 export const getIconTheme = async (iconThemeId) => {
@@ -12,7 +13,7 @@ export const getIconTheme = async (iconThemeId) => {
       if (iconTheme.id !== iconThemeId) {
         continue
       }
-      const absolutePath = `${extension.path}/${iconTheme.path}`
+      const absolutePath = Path.join(extension.path, iconTheme.path)
       try {
         const json = await ReadJson.readJson(absolutePath)
         return {
