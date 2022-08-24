@@ -8,6 +8,7 @@ const ipcConnect = (type) => {
   // renderer.js ///////////////////////////////////////////////////////////////
   // MessagePorts are created in pairs. A connected pair of message ports is
   // called a channel.
+  // @ts-ignore
   const channel = new MessageChannel()
 
   // The only difference between port1 and port2 is in how you use them. Messages
@@ -19,6 +20,7 @@ const ipcConnect = (type) => {
   // also possible to send MessagePorts to other frames, or to Web Workers, etc.
   ipcRenderer.postMessage('port', type, [port1])
 
+  // @ts-ignore
   window.postMessage('abc', '*', [port2])
 }
 

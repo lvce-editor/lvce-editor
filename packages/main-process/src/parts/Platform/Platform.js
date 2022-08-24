@@ -1,21 +1,13 @@
 const { join } = require('path')
 const Root = require('../Root/Root.js')
 
-exports.isLinux = () => {
-  return process.platform === 'linux'
-}
+exports.isLinux = process.platform === 'linux'
 
-exports.isMacOs = () => {
-  return process.platform === 'darwin'
-}
+exports.isMacOs = process.platform === 'darwin'
 
-exports.isWindows = () => {
-  return process.platform === 'win32'
-}
+exports.isWindows = process.platform === 'win32'
 
-exports.isProduction = () => {
-  return false
-}
+exports.isProduction = false
 
 exports.getBuiltinSelfTestPath = () => {
   return (
@@ -30,24 +22,16 @@ exports.getWebPath = () => {
   )
 }
 
-exports.getApplicationName = () => {
-  return 'lvce-oss'
-}
+exports.applicationName = 'lvce-oss'
 
-exports.getVersion = () => {
-  return '0.0.0-dev'
-}
+exports.version = '0.0.0-dev'
 
-exports.getCommit = () => {
-  return 'unknown commit'
-}
+exports.commit = 'unknown commit'
 
-exports.getScheme = () => {
-  return 'lvce-oss'
-}
+exports.scheme = 'lvce-oss'
 
 exports.getSessionId = () => {
-  return process.env.SESSION_ID || `persist:${exports.getScheme()}`
+  return process.env.SESSION_ID || `persist:${exports.scheme}`
 }
 
 exports.getSharedProcessPath = () => {

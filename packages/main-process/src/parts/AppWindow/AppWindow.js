@@ -30,7 +30,7 @@ const handleWindowClose = (event) => {
 const loadDefaultUrl = async (browserWindow) => {
   Performance.mark('code/willLoadUrl')
   try {
-    await browserWindow.loadURL(`${Platform.getScheme()}://-`)
+    await browserWindow.loadURL(`${Platform.scheme}://-`)
   } catch (error) {
     if (LifeCycle.isShutDown()) {
       console.info('error during shutdown', error)

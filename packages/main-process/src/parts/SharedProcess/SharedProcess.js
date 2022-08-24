@@ -134,8 +134,11 @@ exports.hydrate = async (env = {}) => {
   // })
 
   if (state.sharedProcess) {
+    // @ts-ignore
     state.sharedProcess.off('disconnect', handleChildDisconnect)
+    // @ts-ignore
     state.sharedProcess.off('exit', handleChildExit)
+    // @ts-ignore
     state.sharedProcess.terminate()
     state.sharedProcess = undefined
   }

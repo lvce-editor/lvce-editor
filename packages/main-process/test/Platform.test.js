@@ -1,15 +1,15 @@
 const Platform = require('../src/parts/Platform/Platform.js')
 
 test('isProduction', () => {
-  expect(typeof Platform.isProduction()).toBe('boolean')
+  expect(typeof Platform.isProduction).toBe('boolean')
 })
 
 test('isLinux', () => {
-  expect(typeof Platform.isLinux()).toBe('boolean')
+  expect(typeof Platform.isLinux).toBe('boolean')
 })
 
 test('isMacOs', () => {
-  expect(typeof Platform.isMacOs()).toBe('boolean')
+  expect(typeof Platform.isMacOs).toBe('boolean')
 })
 
 test('getBuiltinSelfTestPath', () => {
@@ -17,17 +17,17 @@ test('getBuiltinSelfTestPath', () => {
 })
 
 test('getApplicationName', () => {
-  expect(typeof Platform.getApplicationName()).toBe('string')
+  expect(typeof Platform.applicationName).toBe('string')
 })
 
 test('getVersion', () => {
-  expect(typeof Platform.getVersion()).toBe('string')
+  expect(typeof Platform.version).toBe('string')
 })
 
 test('getCommit', () => {
-  expect(typeof Platform.getCommit()).toBe('string')
+  expect(typeof Platform.commit).toBe('string')
 })
 
 test('getScheme', () => {
-  expect(typeof Platform.getScheme()).toBe('string')
+  expect(typeof Platform.scheme).toBe('string')
 })

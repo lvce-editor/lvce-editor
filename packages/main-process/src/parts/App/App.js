@@ -20,7 +20,7 @@ const Command = require('../Command/Command.js')
 
 const handleWindowAllClosed = () => {
   Debug.debug('[info] all windows closed')
-  if (!Platform.isMacOs()) {
+  if (!Platform.isMacOs) {
     Debug.debug('[info] quitting')
     Electron.app.quit()
   }
@@ -238,7 +238,7 @@ exports.hydrate = async () => {
     Electron.app.enableSandbox()
   } else {
     // see https://github.com/microsoft/vscode/issues/151187#issuecomment-1221475319
-    if (Platform.isLinux()) {
+    if (Platform.isLinux) {
       app.commandLine.appendSwitch('--disable-gpu-sandbox')
     }
   }
@@ -246,7 +246,7 @@ exports.hydrate = async () => {
   // protocol
   Electron.protocol.registerSchemesAsPrivileged([
     {
-      scheme: Platform.getScheme(),
+      scheme: Platform.scheme,
       privileges: {
         standard: true,
         secure: true,

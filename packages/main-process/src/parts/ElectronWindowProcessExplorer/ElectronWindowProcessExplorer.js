@@ -98,7 +98,7 @@ exports.open = async () => {
   await writeFile('/tmp/process-explorer-theme.css', processExplorerThemeCss)
   try {
     await processExplorerWindow.loadURL(
-      `${Platform.getScheme()}://-/packages/main-process/pages/process-explorer/process-explorer.html`
+      `${Platform.scheme}://-/packages/main-process/pages/process-explorer/process-explorer.html`
     )
   } catch (error) {
     throw new VError(
