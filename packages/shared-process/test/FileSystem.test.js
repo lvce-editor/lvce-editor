@@ -406,3 +406,20 @@ test('getRealPath - error - broken symlink and error with readlink', async () =>
     new Error(`Failed to resolve real path for /test-1/a.txt: ENOENT`)
   )
 })
+
+class NodeError extends Error {
+  constructor(code) {
+    super(code)
+    this.code = code
+  }
+}
+
+test('readFile - error - file not found', async () => {
+  // @ts-ignore
+  fs.readFile.mockImplementation(() => {
+    throw new NodeError('ENOENT')
+  })
+  await expect(
+    FileSystem.readFile('/test/non-existing.txt')
+  ).rejects.toThrowError(new Error(`File not found '/test/non-existing.txt'`))
+})

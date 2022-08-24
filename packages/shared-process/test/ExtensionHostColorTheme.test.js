@@ -148,7 +148,7 @@ test('getColorThemeJson - wrong/invalid path', async () => {
   await expect(
     ExtensionHostColorTheme.getColorThemeJson('test-theme')
   ).rejects.toThrowError(
-    `Failed to load color theme "test-theme": ENOENT: no such file or directory, open '${colorThemePath}'`
+    `Failed to load color theme "test-theme": File not found '${colorThemePath}'`
   )
 })
 

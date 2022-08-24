@@ -497,7 +497,7 @@ test('getExtensions - error - manifest not found', async () => {
     {
       status: 'rejected',
       reason: new VError(
-        `Failed to load extension "test-extension-1": Failed to load extension manifest: ENOENT: no such file or directory, open '${manifestPath}'`
+        `Failed to load extension "test-extension-1": Failed to load extension manifest: File not found '${manifestPath}'`
       ),
       path: join(tmpDir1, 'test-extension-1'),
     },
