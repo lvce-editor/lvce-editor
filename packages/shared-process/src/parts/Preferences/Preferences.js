@@ -11,7 +11,7 @@ export const getUserPreferences = async () => {
     try {
       json = await JsonFile.readJson(userSettingsPath)
     } catch (error) {
-      if (error && error.code === 'ENOENT') {
+      if (error && error.message.includes('File not found')) {
         return {}
       }
       throw error
