@@ -136,67 +136,39 @@ const copyMainProcessSources = async ({ arch }) => {
   })
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
-    occurrence: `exports.isProduction = () => {
-  return false
-}`,
-    replacement: `exports.isProduction = () => {
-  return true
-}`,
+    occurrence: `exports.isProduction = false`,
+    replacement: `exports.isProduction = true`,
   })
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
-    occurrence: `exports.getApplicationName = () => {
-  return 'lvce-oss'
-}`,
-    replacement: `exports.getApplicationName = () => {
-  return '${Product.nameLong}'
-}`,
+    occurrence: `exports.applicationName = 'lvce-oss'`,
+    replacement: `exports.applicationName = '${Product.nameLong}'`,
   })
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
-    occurrence: `exports.isLinux = () => {
-  return process.platform === 'linux'
-}`,
-    replacement: `exports.isLinux = () => {
-  return ${Platform.isLinux()}
-}`,
+    occurrence: `exports.isLinux = process.platform === 'linux'`,
+    replacement: `exports.isLinux = ${Platform.isLinux()}`,
   })
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
-    occurrence: `exports.isWindows = () => {
-  return process.platform === 'win32'
-}`,
-    replacement: `exports.isWindows = () => {
-  return ${Platform.isWindows()}
-}`,
+    occurrence: `exports.isWindows = process.platform === 'win32'`,
+    replacement: `exports.isWindows = ${Platform.isWindows()}`,
   })
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
-    occurrence: `exports.isMacOs = () => {
-  return process.platform === 'darwin'
-}`,
-    replacement: `exports.isMacOs = () => {
-  return ${Platform.isMacos()}
-}`,
+    occurrence: `exports.isMacOs = process.platform === 'darwin'`,
+    replacement: `exports.isMacOs = ${Platform.isMacos()}`,
   })
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
-    occurrence: `exports.getScheme = () => {
-  return 'lvce-oss'
-}`,
-    replacement: `exports.getScheme = () => {
-  return '${Product.applicationName}'
-}`,
+    occurrence: `exports.scheme = 'lvce-oss'`,
+    replacement: `exports.scheme = '${Product.applicationName}'`,
   })
   const commitHash = await CommitHash.getCommitHash()
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
-    occurrence: `exports.getCommit = () => {
-  return 'unknown commit'
-}`,
-    replacement: `exports.getCommit = () => {
-  return '${commitHash}'
-}`,
+    occurrence: `exports.commit = 'unknown commit'`,
+    replacement: `exports.commit = '${commitHash}'`,
   })
 }
 
