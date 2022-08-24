@@ -1,4 +1,5 @@
 const electron = require('electron')
+// @ts-ignore
 const WindowsProcessTree = require('windows-process-tree')
 const { VError } = require('verror')
 const ListProcessesWithMemoryUsage = require('../src/parts/ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsageWindows.js')
@@ -206,5 +207,6 @@ test('listProcessesWithMemoryUsage - error - rootPid not found', async () => {
   })
   await expect(
     ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(25666)
+    // @ts-ignore
   ).rejects.toThrowError(new VError('Root process 25666 not found'))
 })

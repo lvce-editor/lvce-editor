@@ -61,7 +61,7 @@ const handlePermissionCheck = (webContents, permission, origin, details) => {
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
 const getAbsolutePath = (requestUrl) => {
-  const scheme = Platform.getScheme()
+  const scheme = Platform.scheme
   // TODO remove if/else in prod (use replacement)
   if (requestUrl === `${scheme}://-/`) {
     return Path.join(Root.root, 'static', 'index-electron.html')
@@ -102,12 +102,12 @@ const handleRequest = (request, callback) => {
 const createSession = () => {
   const sessionId = Platform.getSessionId()
   const session = Electron.session.fromPartition(sessionId, {
-    cache: Platform.isProduction(),
+    cache: Platform.isProduction,
   })
   session.webRequest.onHeadersReceived(handleHeadersReceived)
   session.setPermissionRequestHandler(handlePermissionRequest)
   session.setPermissionCheckHandler(handlePermissionCheck)
-  session.protocol.registerFileProtocol(Platform.getScheme(), handleRequest)
+  session.protocol.registerFileProtocol(Platform.scheme, handleRequest)
   return session
 }
 

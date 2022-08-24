@@ -42,7 +42,7 @@ exports.showMessageBox = async (message, buttons) => {
   if (message.message) {
     message = message.message
   }
-  const appName = Platform.getApplicationName()
+  const appName = Platform.applicationName
   const result = await Electron.dialog.showMessageBox(focusedWindow, {
     type: 'error',
     message,

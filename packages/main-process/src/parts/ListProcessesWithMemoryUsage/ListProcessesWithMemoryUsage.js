@@ -1,7 +1,7 @@
 const Platform = require('../Platform/Platform.js')
 
 const getModule = () => {
-  if (Platform.isWindows()) {
+  if (Platform.isWindows) {
     return require('./ListProcessesWithMemoryUsageWindows.js')
   }
   return require('./ListProcessesWithMemoryUsageUnix.js')

@@ -1,5 +1,6 @@
 // listProcesses windows implementation based on https://github.com/microsoft/vscode/blob/c0769274fa136b45799edeccc0d0a2f645b75caf/src/vs/base/node/ps.ts (License MIT)
 
+// @ts-ignore
 const WindowsProcessTree = require('windows-process-tree')
 const { VError } = require('verror')
 const ListProcessGetName = require('../ListProcessGetName/ListProcessGetName.js')
