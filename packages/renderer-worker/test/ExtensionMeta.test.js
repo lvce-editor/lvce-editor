@@ -128,10 +128,9 @@ test('handleRejectedExtension - ignore ENOENT error', async () => {
         },
         jse_info: {},
         message:
-          'Failed to load extension "abc": Failed to load extension manifest: ENOENT: no such file or directory, open \'/test/abc/extension.json\'',
+          'Failed to load extension "abc": Failed to load extension manifest: File not found \'/test/abc/extension.json\'',
         code: 'E_LOADING_EXTENSION_MANIFEST_FAilED',
-        originalStack:
-          "Error: ENOENT: no such file or directory, open '/test/abc/extension.json'",
+        originalStack: "Error: File not found '/test/abc/extension.json'",
       },
     },
   ])

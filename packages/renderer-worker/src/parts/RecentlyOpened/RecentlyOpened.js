@@ -20,7 +20,7 @@ export const getRecentlyOpened = async () => {
     return parsed
   } catch (error) {
     // TODO should check for error.code
-    if (error.message.includes('ENOENT')) {
+    if (error.message.includes('File not found')) {
       // ignore
     } else if (error.message.includes('failed to parse json')) {
       // ignore

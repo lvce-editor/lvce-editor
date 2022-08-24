@@ -208,7 +208,7 @@ test('getLanguageConfiguration - error - language configuration not found', asyn
     ExtensionHostLanguages.getLanguageConfiguration('javascript')
   ).rejects.toThrowError(
     new Error(
-      `Failed to load language configuration for javascript: ENOENT: no such file or directory, open '${languageConfigurationPath}'`
+      `Failed to load language configuration for javascript: File not found '${languageConfigurationPath}'`
     )
   )
 })

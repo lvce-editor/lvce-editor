@@ -64,7 +64,7 @@ test('getIconTheme - wrong/invalid path', async () => {
   await expect(
     ExtensionHostIconTheme.getIconTheme('test')
   ).rejects.toThrowError(
-    `Failed to load icon theme "test": ENOENT: no such file or directory, open '${iconThemeJsonPath}'`
+    `Failed to load icon theme "test": File not found '${iconThemeJsonPath}'`
   )
 })
 

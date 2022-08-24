@@ -109,7 +109,7 @@ test('getAll - error', async () => {
     join(tmpDir, 'static', 'config', 'defaultSettings.json')
   )
   await expect(Preferences.getAll()).rejects.toThrowError(
-    /^Failed to get all preferences: Failed to load default preferences: ENOENT/
+    /^Failed to get all preferences: Failed to load default preferences: File not found/
   )
 })
 

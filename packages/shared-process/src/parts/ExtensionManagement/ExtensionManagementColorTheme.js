@@ -1,5 +1,6 @@
 import * as Error from '../Error/Error.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
+import * as Path from '../Path/Path.js'
 import * as ExtensionManagement from './ExtensionManagement.js'
 
 // TODO test this function
@@ -14,7 +15,7 @@ export const getColorThemeJson = async (colorThemeId) => {
       if (colorTheme.id !== colorThemeId) {
         continue
       }
-      const absolutePath = `${extension.path}/${colorTheme.path}`
+      const absolutePath = Path.join(extension.path, colorTheme.path)
       try {
         const json = await ReadJson.readJson(absolutePath)
         return json

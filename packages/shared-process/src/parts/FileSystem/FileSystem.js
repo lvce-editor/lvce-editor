@@ -36,11 +36,16 @@ export const copy = async (source, target) => {
   }
 }
 
+// TODO extensions should only be accessed once on startup
 export const readFile = async (path) => {
+  // console.info('[shared-process] read file', path)
   try {
     const content = await fs.readFile(path, 'utf8')
     return content
   } catch (error) {
+    if (error && error.code === 'ENOENT') {
+      throw new VError(`File not found '${path}'`)
+    }
     throw new Error.OperationalError({
       cause: error,
       code: 'E_FILE_SYSTEM_ERROR',
@@ -199,7 +204,7 @@ export const readDirWithFileTypes = async (path) => {
 
 export const mkdir = async (path) => {
   try {
-    await fs.mkdir(path)
+    await fs.mkdir(path, { recursive: true })
   } catch (error) {
     throw new Error.OperationalError({
       cause: error,
