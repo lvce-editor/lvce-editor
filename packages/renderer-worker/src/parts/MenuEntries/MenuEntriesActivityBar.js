@@ -1,5 +1,6 @@
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as I18nString from '../I18NString/I18NString.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 export const UiStrings = {
   Seperator: 'Separator',
@@ -11,7 +12,9 @@ const toContextMenuItem = (activityBarItem) => {
   return {
     label: activityBarItem.id,
     id: 8000, // TODO
-    flags: activityBarItem.enabled ? /* Checked */ 2 : /* Unchecked */ 3,
+    flags: activityBarItem.enabled
+      ? MenuItemFlags.Checked
+      : MenuItemFlags.Unchecked,
   }
 }
 
@@ -23,18 +26,18 @@ export const getMenuEntries = async () => {
     {
       id: 'separator',
       label: I18nString.i18nString(UiStrings.Seperator),
-      flags: /* Separator */ 1,
+      flags: MenuItemFlags.Separator,
     },
     {
       id: 'moveSideBarLeft',
       label: I18nString.i18nString(UiStrings.MoveSideBarLeft), // TODO should be dynamic
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
       command: /* TODO */ -1,
     },
     {
       id: 'hideActivityBar',
       label: I18nString.i18nString(UiStrings.HideActivityBar),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
       command: /* Layout.hideActivityBar */ 'Layout.hideActivityBar',
     },
   ]
