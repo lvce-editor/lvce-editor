@@ -80,7 +80,7 @@ const handleFocus = (event) => {
   }
   event.preventDefault()
   RendererWorker.send(
-    /* Explorer.handleClick */ 'Explorer.focusIndex',
+    /* Explorer.focusIndex */ 'Explorer.focusIndex',
     /* index */ index
   )
 }
