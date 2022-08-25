@@ -9,7 +9,6 @@ const isValid = (recentlyOpened) => {
 }
 
 const addToArrayUnique = (recentlyOpened, path) => {
-  console.log({ recentlyOpened })
   const index = recentlyOpened.indexOf(path)
   if (index === -1) {
     return [path, ...recentlyOpened]
@@ -24,15 +23,13 @@ const addToArrayUnique = (recentlyOpened, path) => {
 const getRecentlyOpened = async (recentlyOpenedPath) => {
   try {
     const content = await FileSystem.readFile(recentlyOpenedPath)
-    console.log({ content })
     const parsed = await Json.parse(content, recentlyOpenedPath)
     return parsed
   } catch (error) {
-    console.log({ error })
     // TODO should check for error.code
     if (error.message.includes('File not found')) {
       // ignore
-    } else if (error.message.includes('failed to parse json')) {
+    } else if (error.message.includes('Json Parsing Error')) {
       // ignore
     } else {
       throw new VError(error, `Failed to read recently opened`)
@@ -49,7 +46,6 @@ const setRecentlyOpened = async (recentlyOpenedPath, newRecentlyOpened) => {
 export const addPath = async (path) => {
   Assert.string(path)
   const recentlyOpenedPath = Platform.getRecentlyOpenedPath()
-  console.log({ recentlyOpenedPath })
   const parsed = await getRecentlyOpened(recentlyOpenedPath)
   const newRecentlyOpened = addToArrayUnique(parsed, path)
   await setRecentlyOpened(recentlyOpenedPath, newRecentlyOpened)
