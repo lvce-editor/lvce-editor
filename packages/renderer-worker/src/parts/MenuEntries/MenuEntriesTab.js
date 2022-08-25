@@ -1,4 +1,13 @@
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as I18nString from '../I18NString/I18NString.js'
+
+const UiStrings = {
+  Close: 'Close',
+  CloseOthers: 'Close Others',
+  CloseToTheRight: 'Close To The Right',
+  CloseAll: 'Close All',
+  RevealInExplorer: 'Reveal in Explorer',
+}
 
 // TODO should pass tab uri as argument or tab index
 export const getMenuEntries = () => {
@@ -8,31 +17,31 @@ export const getMenuEntries = () => {
   return [
     {
       id: 'tabClose',
-      label: 'Close',
+      label: I18nString.i18nString(UiStrings.Close),
       flags: /* None */ 0,
       command: 'Main.closeFocusedTab',
     },
     {
       id: 'tabCloseOthers',
-      label: 'Close Others',
+      label: I18nString.i18nString(UiStrings.CloseOthers),
       flags: /* None */ 0,
       command: 'Main.closeOthers',
     },
     {
       id: 'tabCloseToTheRight',
-      label: 'Close to the Right',
+      label: I18nString.i18nString(UiStrings.CloseToTheRight),
       flags: /* None */ 0,
       command: 'Main.closeTabsToTheRight',
     },
     {
       id: 'tabCloseAll',
-      label: 'Close All',
+      label: I18nString.i18nString(UiStrings.CloseAll),
       flags: /* None */ 0,
       command: /* TODO */ -1,
     },
     {
       id: 'revealInExplorer',
-      label: 'Reveal in Explorer',
+      label: I18nString.i18nString(UiStrings.RevealInExplorer),
       flags: /* None */ 0,
       command: 'Explorer.revealItem',
       args: [uri],
