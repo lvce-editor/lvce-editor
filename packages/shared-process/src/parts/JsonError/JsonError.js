@@ -1,4 +1,3 @@
-import fallback from 'json-parse-even-better-errors'
 import { codeFrameColumns } from '@babel/code-frame'
 import { LinesAndColumns } from 'lines-and-columns'
 
@@ -33,6 +32,14 @@ export const getError = (string, filePath) => {
         }
       }
     }
+    if (string.length === 0) {
+      return {
+        codeFrame: ``,
+        message: 'Json Parsing Error: Cannot parse empty string',
+        stack: `at ${filePath}`,
+      }
+    }
+
     if (error.message === 'Unexpected end of JSON input') {
       const lines = new LinesAndColumns(string)
       const index = string.length - 1
@@ -50,6 +57,10 @@ export const getError = (string, filePath) => {
         }
       }
     }
-    return {}
+    return {
+      codeFrame: ``,
+      message: 'Json Parsing Error',
+      stack: `at ${filePath}`,
+    }
   }
 }

@@ -1,6 +1,5 @@
 import * as JsonError from '../src/parts/JsonError/JsonError.js'
 
-// TODO test unexpected token ,
 // TODO test unexpected token ]
 // TODO test unexpected token {
 // TODO test unexpected token }
@@ -66,5 +65,61 @@ test('getError - unexpected comma', async () => {
 `
       .replace(/^\n/, '')
       .replace(/\n$/, ''),
+  })
+})
+
+test('getError - unterminated string', async () => {
+  expect(
+    JsonError.getError(
+      `[
+  "id
+]
+`,
+      '/test/file.json'
+    )
+  ).toEqual({
+    message: 'Json Parsing Error',
+    stack: 'at /test/file.json',
+    codeFrame: `
+  1 | [
+> 2 |   "id
+    |      ^
+  3 | ]
+  4 |
+`
+      .replace(/^\n/, '')
+      .replace(/\n$/, ''),
+  })
+})
+
+test.only('getError - unexpected quote', async () => {
+  expect(
+    JsonError.getError(
+      `[
+  "id""
+]
+`,
+      '/test/file.json'
+    )
+  ).toEqual({
+    message: 'Json Parsing Error',
+    stack: 'at /test/file.json',
+    codeFrame: `
+  1 | [
+> 2 |   "id""
+    |       ^
+  3 | ]
+  4 |
+`
+      .replace(/^\n/, '')
+      .replace(/\n$/, ''),
+  })
+})
+
+test('getError - empty string', async () => {
+  expect(JsonError.getError(``, '/test/file.json')).toEqual({
+    message: 'Json Parsing Error: Cannot parse empty string',
+    stack: 'at /test/file.json',
+    codeFrame: ``,
   })
 })
