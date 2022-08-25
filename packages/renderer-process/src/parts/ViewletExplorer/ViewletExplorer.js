@@ -165,7 +165,7 @@ const handleContextMenu = (event) => {
 }
 
 const handleMouseDown = (event) => {
-  if (event.button !== /* LeftClick */ 0) {
+  if (event.button !== MouseEventType.LeftClick) {
     return
   }
   const $Target = event.target
