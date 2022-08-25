@@ -461,7 +461,7 @@ test('handleContextMenu', async () => {
   Command.execute.mockImplementation(() => {})
   const state = ViewletExplorer.create()
   expect(
-    await ViewletExplorer.handleContextMenu(
+    await ViewletExplorer.handleContextMenuMouse(
       state,
       /* x */ 0,
       /* y */ 0,
@@ -484,6 +484,9 @@ test('handleContextMenu - triggered via keyboard', async () => {
   const state = {
     ...ViewletExplorer.create(),
     focusedIndex: 0,
+    left: 10,
+    top: 20,
+    itemHeight: 20,
     dirents: [
       {
         depth: 1,
@@ -517,19 +520,13 @@ test('handleContextMenu - triggered via keyboard', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   expect(
-    await ViewletExplorer.handleContextMenu(
-      state,
-      /* x */ 0,
-      /* y */ 0,
-      /* index */ -1,
-      /* button */ -1
-    )
-  ).toMatchObject({ focusedIndex: 0 })
+    await ViewletExplorer.handleContextMenuKeyboard(state, 2)
+  ).toMatchObject({ focusedIndex: 2 })
   expect(Command.execute).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenCalledWith(
     'ContextMenu.show',
-    0,
-    0,
+    10,
+    80,
     'explorer'
   )
 })
@@ -4513,7 +4510,7 @@ test('event - issue with blur event after context menu event', async () => {
     minLineY: 0,
     maxLineY: 100,
   }
-  const state2 = await ViewletExplorer.handleContextMenu(state, 0, 0, 0)
+  const state2 = await ViewletExplorer.handleContextMenuMouse(state, 0, 0, 0)
   const state3 = await ViewletExplorer.handleBlur(state2)
   expect(state3).toMatchObject({ focusedIndex: 0, focused: false })
 })
