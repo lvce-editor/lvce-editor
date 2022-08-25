@@ -3,6 +3,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as Layout from '../Layout/Layout.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
 
 // TODO set aria-selected false when sidebar is collapsed
 
@@ -31,12 +32,12 @@ const create$ActivityBarItem = (item) => {
     $ActivityBarItem.ariaKeyShortcuts = item.keyShortcuts
   }
   switch (item.flags) {
-    case /* Tab */ 1:
+    case ActivityBarItemFlags.Tab:
       // @ts-ignore
       $ActivityBarItem.role = 'tab'
       $ActivityBarItem.ariaSelected = 'false'
       break
-    case /* Button */ 2:
+    case ActivityBarItemFlags.Button:
       // @ts-ignore
       $ActivityBarItem.role = 'button'
       $ActivityBarItem.ariaHasPopup = 'true'

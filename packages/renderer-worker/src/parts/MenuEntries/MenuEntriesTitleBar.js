@@ -1,5 +1,6 @@
 import * as I18nString from '../I18NString/I18NString.js'
 import * as Platform from '../Platform/Platform.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 const UiStrings = {
   File: 'File',
@@ -17,27 +18,27 @@ const getMenuEntriesWeb = () => {
     {
       id: 'file',
       name: I18nString.i18nString(UiStrings.File),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
     {
       id: 'edit',
       name: I18nString.i18nString(UiStrings.Edit),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
     {
       id: 'selection',
       name: I18nString.i18nString(UiStrings.Selection),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
     {
       id: 'view',
       name: I18nString.i18nString(UiStrings.View),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
     {
       id: 'go',
       name: I18nString.i18nString(UiStrings.Go),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
   ]
 }
@@ -47,45 +48,45 @@ const getMenuEntriesRemote = () => {
     {
       id: 'file',
       name: I18nString.i18nString(UiStrings.File),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
     {
       id: 'edit',
       name: I18nString.i18nString(UiStrings.Edit),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
     {
       id: 'selection',
       name: I18nString.i18nString(UiStrings.Selection),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
     {
       id: 'view',
       name: I18nString.i18nString(UiStrings.View),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
     {
       id: 'go',
       name: I18nString.i18nString(UiStrings.Go),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
     {
       id: 'run',
       name: I18nString.i18nString(UiStrings.Run),
       keyboardShortCut: 'Alt+r',
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
     {
       id: 'terminal',
       name: I18nString.i18nString(UiStrings.Terminal),
       keyboardShortCut: 'Alt+t',
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
     {
       id: 'help',
       name: I18nString.i18nString(UiStrings.Help),
       keyboardShortCut: 'Alt+h',
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
   ]
 }

@@ -1,4 +1,5 @@
 import * as I18nString from '../I18NString/I18NString.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 export const UiStrings = {
   Enable: 'Enable',
@@ -12,25 +13,25 @@ export const getMenuEntries = () => {
     {
       id: 'enable',
       label: I18nString.i18nString(UiStrings.Enable),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
       command: -1,
     },
     {
       id: 'disable',
       label: I18nString.i18nString(UiStrings.Disable),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
       command: -1,
     },
     {
       id: 'uninstall',
       label: I18nString.i18nString(UiStrings.Disable),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
       command: -1,
     },
     {
       id: 'installAnotherVersion',
       label: I18nString.i18nString(UiStrings.InstallAnotherVersion),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
       command: -1,
     },
   ]

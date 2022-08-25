@@ -1,4 +1,5 @@
 import * as I18nString from '../I18NString/I18NString.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 export const UiStrings = {
   Settings: 'Settings',
@@ -12,25 +13,25 @@ export const getMenuEntries = () => {
     {
       id: 'settings',
       label: I18nString.i18nString(UiStrings.Settings),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
       command: 'Preferences.openSettingsJson',
     },
     {
       id: 'keyboardShortcuts',
       label: I18nString.i18nString(UiStrings.KeyboardShortcuts),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
       command: /* TODO */ -1,
     },
     {
       id: 'colorTheme',
       label: I18nString.i18nString(UiStrings.ColorTheme),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
       command: 'QuickPick.openColorTheme',
     },
     {
       id: 'checkForUpdates',
       label: I18nString.i18nString(UiStrings.CheckForUpdates),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
       command: /* TODO */ -1,
     },
   ]

@@ -3,6 +3,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Layout from '../Layout/Layout.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
 
 const ACTIVITY_BAR_ITEM_HEIGHT = 48
 
@@ -42,7 +43,7 @@ const getVisibleActivityBarItems = (state) => {
     id: 'Additional Views',
     icon: 'icons/ellipsis.svg',
     enabled: true,
-    flags: /* Button */ 2,
+    flags: ActivityBarItemFlags.Button,
     keyShortCuts: '',
   }
   const visibleItems = [
@@ -81,35 +82,35 @@ const getActivityBarItems = () => {
       id: 'Explorer',
       icon: 'icons/files.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+E',
     },
     {
       id: 'Search',
       icon: 'icons/search.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+F',
     },
     {
       id: 'Source Control',
       icon: 'icons/source-control.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+G',
     },
     {
       id: 'Run and Debug',
       icon: 'icons/debug-alt-2.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+D',
     },
     {
       id: 'Extensions',
       icon: 'icons/extensions.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+X',
     },
     // Bottom
@@ -117,7 +118,7 @@ const getActivityBarItems = () => {
       id: 'Settings',
       icon: 'icons/settings-gear.svg',
       enabled: true,
-      flags: /* Button */ 2,
+      flags: ActivityBarItemFlags.Button,
       keyShortcuts: '',
     },
   ]
@@ -171,39 +172,50 @@ const findIndex = (activityBarItems, id) => {
   return -1
 }
 
+const handleClickSettings = async (state, x, y, viewletId) => {
+  console.log('is settings')
+  await Command.execute(
+    /* ContextMenu.show */ 'ContextMenu.show',
+    /* x */ x,
+    /* y */ y,
+    /* id */ 'settings'
+  )
+  return state
+}
+
+const handleClickAdditionalViews = async (state, x, y, viewletId) => {
+  await Command.execute(
+    /* ContextMenu.show */ 'ContextMenu.show',
+    /* x */ x,
+    /* y */ y,
+    /* id */ 'activity-bar-additional-views'
+  )
+  return state
+}
+
+const handleClickOther = async (state, x, y, viewletId) => {
+  if (Layout.isSideBarVisible()) {
+    await Command.execute(
+      /* SideBar.showOrHideViewlet */ 'SideBar.showOrHideViewlet',
+      /* id */ viewletId
+    )
+  } else {
+    // TODO should show side bar with viewletId
+    await Layout.showSideBar()
+  }
+  return state
+}
+
 export const handleClick = async (state, index, x, y) => {
   const viewletId = state.activityBarItems[index].id
   switch (viewletId) {
     case 'Settings':
-      console.log('is settings')
-      await Command.execute(
-        /* ContextMenu.show */ 'ContextMenu.show',
-        /* x */ x,
-        /* y */ y,
-        /* id */ 'settings'
-      )
-      break
+      return handleClickSettings(state, x, y, viewletId)
     case 'Additional Views':
-      await Command.execute(
-        /* ContextMenu.show */ 'ContextMenu.show',
-        /* x */ x,
-        /* y */ y,
-        /* id */ 'activity-bar-additional-views'
-      )
-      break
+      return handleClickAdditionalViews(state, x, y, viewletId)
     default:
-      if (Layout.isSideBarVisible()) {
-        await Command.execute(
-          /* SideBar.showOrHideViewlet */ 'SideBar.showOrHideViewlet',
-          /* id */ viewletId
-        )
-      } else {
-        // TODO should show side bar with viewletId
-        await Layout.showSideBar()
-      }
-      break
+      return handleClickOther(state, x, y, viewletId)
   }
-  return state
 }
 
 export const handleSideBarViewletChange = async (state, id, ...args) => {
