@@ -1411,6 +1411,44 @@ export const revealItem = async (state, uri) => {
   return revealItemVisible(state, index)
 }
 
+export const expandRecursively = async (state) => {
+  const { dirents, focusedIndex, pathSeparator, root } = state
+  const dirent = dirents[focusedIndex]
+  if (dirent.type !== 'folder' && dirent.type !== 'directory') {
+    return state
+  }
+  // TODO this is very inefficient
+  const getChildDirentsRecursively = async (dirent) => {
+    switch (dirent.type) {
+      case 'file':
+        return [dirent]
+      case 'directory':
+      case 'folder':
+        const childDirents = await getChildDirents(root, pathSeparator, dirent)
+        const all = [dirent]
+        for (const childDirent of childDirents) {
+          const childAll = await getChildDirentsRecursively(childDirent)
+          all.push(...childAll)
+        }
+        return all
+      default:
+        return []
+    }
+  }
+  // TODO race condition: what if folder is being collapse while it is recursively expanding?
+  // TODO race condition: what if folder is being deleted while it is recursively expanding?
+  // TODO race condition: what if a new file/folder is created while the folder is recursively expanding?
+  const childDirents = await getChildDirentsRecursively(dirent)
+  const startIndex = focusedIndex
+  const endIndex = getParentEndIndex(dirents, focusedIndex)
+  const newDirents = [
+    ...dirents.slice(0, startIndex),
+    ...childDirents,
+    ...dirents.slice(endIndex),
+  ]
+  return { ...state, dirents: newDirents }
+}
+
 export const shouldApplyNewState = (newState, fn) => {
   if (newState.root !== Workspace.state.workspacePath) {
     console.log(
