@@ -1,13 +1,10 @@
-export const StorageType = {
-  LocalStorage: 1,
-  SessionStorage: 2,
-}
+import * as WebStorageType from '../WebStorageType/WebStorageType.js'
 
 const getStorage = (storageType) => {
   switch (storageType) {
-    case StorageType.LocalStorage:
+    case WebStorageType.LocalStorage:
       return localStorage
-    case StorageType.SessionStorage:
+    case WebStorageType.SessionStorage:
       return sessionStorage
     default:
       throw new Error(`unsupported storage type ${storageType}`)
