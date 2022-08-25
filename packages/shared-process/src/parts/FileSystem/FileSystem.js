@@ -7,6 +7,7 @@ import * as Trash from '../Trash/Trash.js'
 import * as Platform from '../Platform/Platform.js'
 import VError from 'verror'
 import { performance } from 'node:perf_hooks'
+import * as DirentType from '../DirentType/DirentType.js'
 
 export const state = {
   watcherMap: Object.create(null),
@@ -162,24 +163,24 @@ export const exists = async (path) => {
  */
 const getType = (dirent) => {
   if (dirent.isFile()) {
-    return 'file'
+    return DirentType.File
   }
   if (dirent.isDirectory()) {
-    return 'directory'
+    return DirentType.Direcory
   }
   if (dirent.isSymbolicLink()) {
-    return 'symlink'
+    return DirentType.Symlink
   }
   if (dirent.isSocket()) {
-    return 'socket'
+    return DirentType.Socket
   }
   if (dirent.isBlockDevice()) {
-    return 'block-device'
+    return DirentType.BlockDevice
   }
   if (dirent.isCharacterDevice()) {
-    return 'character-device'
+    return DirentType.CharacterDevice
   }
-  return 'unknown'
+  return DirentType.Unknown
 }
 
 /**
