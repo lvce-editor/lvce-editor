@@ -1,88 +1,104 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as I18nString from '../I18NString/I18NString.js'
+
+export const UiStrings = {
+  NewFile: 'New File',
+  NewFolder: 'New Folder',
+  OpenContainingFolder: 'Open Containing Folder',
+  OpenInIntegratedTerminal: 'Open in integrated Terminal',
+  Separator: 'Separator',
+  Cut: 'Cut',
+  Copy: 'Copy',
+  Paste: 'Paste',
+  CopyPath: 'Copy Path',
+  CopyRelativePath: 'Copy Relative Path',
+  Rename: 'Rename',
+  Delete: 'Delete',
+}
 
 const ALL_ENTRIES = [
   {
     id: 'newFile',
-    label: 'New File',
+    label: I18nString.i18nString(UiStrings.NewFile),
     flags: /* None */ 0,
     command: /* Explorer.newFile  */ 'Explorer.newFile',
   },
   {
     id: 'newFolder',
-    label: 'New Folder',
+    label: I18nString.i18nString(UiStrings.NewFolder),
     flags: /* None */ 0,
     command: /* Explorer.newFolder */ 'Explorer.newFolder',
   },
   {
     id: 'openContainingFolder',
-    label: 'Open Containing Folder',
+    label: I18nString.i18nString(UiStrings.OpenContainingFolder),
     flags: /* None */ 0,
     command:
       /*  Explorer.openContainingFolder */ 'Explorer.openContainingFolder',
   },
   {
     id: 'openInIntegratedTerminal',
-    label: 'Open in integrated Terminal',
+    label: I18nString.i18nString(UiStrings.OpenInIntegratedTerminal),
     flags: /* None */ 0,
     command: /* TODO */ -1,
   },
   {
     id: '',
-    label: '',
+    label: I18nString.i18nString(UiStrings.Separator),
     flags: /* Separator */ 1,
     command: /* None */ 0,
   },
   {
     id: 'cut',
-    label: 'Cut',
+    label: I18nString.i18nString(UiStrings.Cut),
     flags: /* None */ 0,
     command: /* TODO */ -1,
   },
   {
     id: 'copy',
-    label: 'Copy',
+    label: I18nString.i18nString(UiStrings.Copy),
     flags: /* None */ 0,
     command: /* Explorer.handleCopy */ 'Explorer.handleCopy',
   },
   {
     id: 'paste',
-    label: 'Paste',
+    label: I18nString.i18nString(UiStrings.Paste),
     flags: /* None */ 0,
     command: /* Explorer.handlePaste */ 'Explorer.handlePaste',
   },
   {
     id: '',
-    label: '',
+    label: I18nString.i18nString(UiStrings.Separator),
     flags: /* Separator */ 1,
     command: /* None */ 0,
   },
   {
     id: 'copyPath',
-    label: 'Copy Path',
+    label: I18nString.i18nString(UiStrings.CopyPath),
     flags: /* None */ 0,
     command: /* TODO */ -1,
   },
   {
     id: 'copyRelativePath',
-    label: 'Copy Relative Path',
+    label: I18nString.i18nString(UiStrings.CopyRelativePath),
     flags: /* None */ 0,
     command: /* TODO */ -1,
   },
   {
     id: '',
-    label: '',
+    label: I18nString.i18nString(UiStrings.Separator),
     flags: /* Separator */ 1,
     command: /* None */ 0,
   },
   {
     id: 'rename',
-    label: 'Rename',
+    label: I18nString.i18nString(UiStrings.Rename),
     flags: /* None */ 0,
     command: /* Explorer.renameDirent */ 'Explorer.renameDirent',
   },
   {
     id: 'delete',
-    label: 'Delete',
+    label: I18nString.i18nString(UiStrings.Delete),
     flags: /* None */ 0,
     command: /* Explorer.removeDirent */ 'Explorer.removeDirent',
   },
