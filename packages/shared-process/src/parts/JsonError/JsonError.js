@@ -9,58 +9,62 @@ const emptyError = {
   codeFrame: '',
 }
 
-export const getError = (string, filePath) => {
+export const getErrorPropsFromError = (error, string, filePath) => {
+  const indexMatch = error.message.match(/in JSON at position (\d+)/)
+  if (indexMatch && indexMatch.length > 0) {
+    const lines = new LinesAndColumns(string)
+    const index = Number(indexMatch[1])
+    const location = lines.locationForIndex(index)
+    if (location) {
+      const codeFrame = codeFrameColumns(
+        string,
+        { start: { line: location.line + 1, column: location.column + 1 } },
+        { highlightCode: false }
+      )
+      return {
+        codeFrame,
+        message: 'Json Parsing Error',
+        stack: `at ${filePath}`,
+      }
+    }
+  }
+  if (string.length === 0) {
+    return {
+      codeFrame: ``,
+      message: 'Json Parsing Error: Cannot parse empty string',
+      stack: `at ${filePath}`,
+    }
+  }
+
+  if (error.message === 'Unexpected end of JSON input') {
+    const lines = new LinesAndColumns(string)
+    const index = string.length - 1
+    const location = lines.locationForIndex(index)
+    if (location) {
+      const codeFrame = codeFrameColumns(
+        string,
+        { start: { line: location.line + 1, column: location.column + 1 } },
+        { highlightCode: false }
+      )
+      return {
+        codeFrame,
+        message: 'Json Parsing Error',
+        stack: `at ${filePath}`,
+      }
+    }
+  }
+  return {
+    codeFrame: ``,
+    message: 'Json Parsing Error',
+    stack: `at ${filePath}`,
+  }
+}
+
+export const getErrorProps = (string, filePath) => {
   try {
     JSON.parse(string)
     return emptyError
   } catch (error) {
-    const indexMatch = error.message.match(/in JSON at position (\d+)/)
-    if (indexMatch && indexMatch.length > 0) {
-      const lines = new LinesAndColumns(string)
-      const index = Number(indexMatch[1])
-      const location = lines.locationForIndex(index)
-      if (location) {
-        const codeFrame = codeFrameColumns(
-          string,
-          { start: { line: location.line + 1, column: location.column + 1 } },
-          { highlightCode: false }
-        )
-        return {
-          codeFrame,
-          message: 'Json Parsing Error',
-          stack: `at ${filePath}`,
-        }
-      }
-    }
-    if (string.length === 0) {
-      return {
-        codeFrame: ``,
-        message: 'Json Parsing Error: Cannot parse empty string',
-        stack: `at ${filePath}`,
-      }
-    }
-
-    if (error.message === 'Unexpected end of JSON input') {
-      const lines = new LinesAndColumns(string)
-      const index = string.length - 1
-      const location = lines.locationForIndex(index)
-      if (location) {
-        const codeFrame = codeFrameColumns(
-          string,
-          { start: { line: location.line + 1, column: location.column + 1 } },
-          { highlightCode: false }
-        )
-        return {
-          codeFrame,
-          message: 'Json Parsing Error',
-          stack: `at ${filePath}`,
-        }
-      }
-    }
-    return {
-      codeFrame: ``,
-      message: 'Json Parsing Error',
-      stack: `at ${filePath}`,
-    }
+    return getErrorPropsFromError(error, string, filePath)
   }
 }
