@@ -18,18 +18,38 @@ const createError = (string) => {
   }
 }
 
-test.only('parse - syntax error', async () => {
+// TODO test unexpected token ,
+// TODO test unexpected token ]
+// TODO test unexpected token {
+// TODO test unexpected token }
+// TODO test unexpected token "
+// TODO test unexpected token '
+// TODO test unexpected number
+// TODO test unexpected boolean
+// TODO test unexpected string
+// TODO test unexpected array
+// TODO test unexpected object
+
+test('parse - syntax error', async () => {
   expect(Json.getError('{ "x" 42 }', '/test/file.json')).toEqual({
-    message: ``,
-    codeFrame: ``,
-    stack: ``,
+    message: `Json Parsing Error`,
+    stack: `at /test/file.json`,
+    codeFrame: `
+> 1 | { \"x\" 42 }
+    |       ^
+`.trim(),
   })
 })
 
-test.skip('parse - unexpected end of json', async () => {
-  await expect(Json.parse('[', '/test/file.json')).rejects.toThrowError(
-    /^Unexpected end of JSON input while parsing/
-  )
+test('parse - unexpected end of json', async () => {
+  expect(Json.getError('[', '/test/file.json')).toEqual({
+    message: 'Json Parsing Error',
+    stack: 'at /test/file.json',
+    codeFrame: `
+> 1 | [
+    | ^
+`.trim(),
+  })
 })
 
 test.skip('stringify', () => {
