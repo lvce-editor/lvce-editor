@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as WebStorageType from '../src/parts/WebStorageType/WebStorageType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -26,10 +27,7 @@ test('getJson - localStorage - number', async () => {
     return '42'
   })
   expect(
-    await StorageBrowser.getJson(
-      StorageBrowser.StorageType.LocalStorage,
-      'item-1'
-    )
+    await StorageBrowser.getJson(WebStorageType.LocalStorage, 'item-1')
   ).toBe(42)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
@@ -45,11 +43,7 @@ test('getJson - localStorage - object', async () => {
     return '{}'
   })
   expect(
-    await StorageBrowser.getJson(
-      StorageBrowser.StorageType.LocalStorage,
-
-      'item-1'
-    )
+    await StorageBrowser.getJson(WebStorageType.LocalStorage, 'item-1')
   ).toEqual({})
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
@@ -65,10 +59,7 @@ test('getJson - localStorage - invalid json', async () => {
     return '{'
   })
   expect(
-    await StorageBrowser.getJson(
-      StorageBrowser.StorageType.LocalStorage,
-      'item-1'
-    )
+    await StorageBrowser.getJson(WebStorageType.LocalStorage, 'item-1')
   ).toBeUndefined()
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
@@ -81,11 +72,7 @@ test('getJson - localStorage - invalid json', async () => {
 test('setJson - localStorage', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  await StorageBrowser.setJson(
-    StorageBrowser.StorageType.LocalStorage,
-    'item-1',
-    43
-  )
+  await StorageBrowser.setJson(WebStorageType.LocalStorage, 'item-1', 43)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
     'StorageBrowser.setItem',
@@ -99,7 +86,7 @@ test('setJson - localStorage', async () => {
 test('clear - localStorage', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  await StorageBrowser.clear(StorageBrowser.StorageType.LocalStorage)
+  await StorageBrowser.clear(WebStorageType.LocalStorage)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith('StorageBrowser.clear', 1)
 })

@@ -1,23 +1,22 @@
 import * as WebStorage from '../WebStorage/WebStorage.js'
-
-const storageType = WebStorage.StorageType.SessionStorage
+import * as WebStorageType from '../WebStorageType/WebStorageType.js'
 
 export const clear = () => {
-  return WebStorage.clear(storageType)
+  return WebStorage.clear(WebStorageType.SessionStorage)
 }
 
 export const getText = (key) => {
-  return WebStorage.getText(storageType, key)
+  return WebStorage.getText(WebStorageType.SessionStorage, key)
 }
 
 export const getJson = (key) => {
-  return WebStorage.getJson(storageType, key)
+  return WebStorage.getJson(WebStorageType.SessionStorage, key)
 }
 
 export const setText = (key, value) => {
-  return WebStorage.setText(storageType, key, value)
+  return WebStorage.setText(WebStorageType.SessionStorage, key, value)
 }
 
 export const setJson = (key, value) => {
-  return WebStorage.setJson(storageType, key, value)
+  return WebStorage.setJson(WebStorageType.SessionStorage, key, value)
 }
