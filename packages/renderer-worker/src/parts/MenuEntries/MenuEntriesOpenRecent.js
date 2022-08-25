@@ -1,5 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as I18nString from '../I18NString/I18NString.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 export const UiStrings = {
   Separator: 'Separator',
@@ -12,7 +13,7 @@ const MAX_MENU_RECENT_ENTRIES = 10
 const toMenuItem = (folder) => {
   return {
     label: folder,
-    flags: /* None */ 0,
+    flags: MenuItemFlags.None,
     command: /* Workspace.setPath */ 'Workspace.setPath',
     args: [folder],
   }
@@ -33,24 +34,24 @@ export const getMenuEntries = async () => {
       id: 'separator',
       label: I18nString.i18nString(UiStrings.Separator),
       flags: /* Separator */ 1,
-      command: /* None */ 0,
+      command: MenuItemFlags.None,
     },
     {
       id: 'more',
       label: I18nString.i18nString(UiStrings.More),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
       command: /* TODO show quick picker with more recently opened */ -1,
     },
     {
       id: 'separator',
       label: I18nString.i18nString(UiStrings.More),
       flags: /* Separator */ 1,
-      command: /* None */ 0,
+      command: MenuItemFlags.None,
     },
     {
       id: 'clearRecentlyOpened',
       label: I18nString.i18nString(UiStrings.ClearRecentlyOpened),
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
       command: 'RecentlyOpened.clearRecentlyOpened',
     },
   ]
