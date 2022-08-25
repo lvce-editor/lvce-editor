@@ -91,7 +91,5 @@ test('getIconTheme - invalid json', async () => {
   await writeFile(iconThemeJsonPath, '{ 2 }')
   await expect(
     ExtensionHostIconTheme.getIconTheme('test')
-  ).rejects.toThrowError(
-    'Failed to load icon theme "test": Unexpected number in JSON at position 2 while parsing \'{ 2 }\''
-  )
+  ).rejects.toThrowError('Failed to load icon theme "test": Json Parsing Error')
 })
