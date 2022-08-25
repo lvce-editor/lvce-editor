@@ -1,9 +1,9 @@
 import { findIndex } from '../../shared/findIndex.js'
-import * as Main from '../Main/Main.js'
+import * as Command from '../Command/Command.js'
+import * as Context from '../Context/Context.js'
 import * as Renderer from '../Renderer/Renderer.js'
 import * as RendererTree from '../Renderer/RendererTree.js'
-import * as Context from '../Context/Context.js'
-import * as Command from '../Command/Command.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 
 // class Dirent {
 //   constructor(name, type) {
@@ -109,7 +109,7 @@ export const create = (props) => {
   }
 
   const handleMouseDown = async (event) => {
-    if (event.button !== 0) {
+    if (event.button !== MouseEventType.LeftClick) {
       return
     }
     const $Target = event.target
@@ -208,7 +208,7 @@ export const create = (props) => {
   $Viewlet.tabIndex = 0
   $Viewlet.dataset.viewletId = 'Explorer'
   // @ts-ignore
-  $Viewlet.role= 'tree'
+  $Viewlet.role = 'tree'
   $Viewlet.ariaLabel = 'Files Explorer'
   $Viewlet.addEventListener('keydown', handleKeyDown)
   $Viewlet.addEventListener('mousedown', handleMouseDown)

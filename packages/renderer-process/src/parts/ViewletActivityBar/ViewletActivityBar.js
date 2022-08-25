@@ -4,6 +4,7 @@ import * as Layout from '../Layout/Layout.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
+import * as MouseEventTypes from '../MouseEventType/MouseEventType.js'
 
 // TODO set aria-selected false when sidebar is collapsed
 
@@ -71,7 +72,7 @@ const getNodeIndex = ($Node) => {
 }
 
 const handleMousedown = (event) => {
-  if (event.button !== 0) {
+  if (event.button !== MouseEventTypes.LeftClick) {
     return
   }
   const $Item = get$ItemFromEvent(event)
