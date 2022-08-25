@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as MenuEntriesOpenRecent from '../src/parts/MenuEntries/MenuEntriesOpenRecent.js'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
 test.skip('getMenuEntries', async () => {
   // TODO jest unstable_mockModule doesn't seem to work anymore after upgrade from jest 27 to jest 28
@@ -17,12 +18,12 @@ test.skip('getMenuEntries', async () => {
   const menuEntries = await MenuEntriesOpenRecent.getMenuEntries()
   expect(menuEntries).toContainEqual({
     command: -1,
-    flags: 0,
+    flags: MenuItemFlags.None,
     label: '/workspace/folder-1',
   })
   expect(menuEntries).toContainEqual({
     command: -1,
-    flags: 0,
+    flags: MenuItemFlags.None,
     label: '/workspace/folder-2',
   })
 })
@@ -41,12 +42,12 @@ test.skip('getMenuEntries - error with recently opened', async () => {
   const menuEntries = await MenuEntriesOpenRecent.getMenuEntries()
   expect(menuEntries).toContainEqual({
     command: -1,
-    flags: 0,
+    flags: MenuItemFlags.None,
     label: '/workspace/folder-1',
   })
   expect(menuEntries).toContainEqual({
     command: -1,
-    flags: 0,
+    flags: MenuItemFlags.None,
     label: '/workspace/folder-2',
   })
 })
