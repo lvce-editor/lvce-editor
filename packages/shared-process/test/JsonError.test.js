@@ -17,7 +17,7 @@ test('getError - syntax error', async () => {
     message: `Json Parsing Error`,
     stack: `at /test/file.json`,
     codeFrame: `
-> 1 | { \"x\" 42 }
+> 1 | { "x" 42 }
     |       ^
 `.trim(),
   })
@@ -31,5 +31,40 @@ test('getError - unexpected end of json', async () => {
 > 1 | [
     | ^
 `.trim(),
+  })
+})
+
+test('getError - unexpected comma', async () => {
+  expect(
+    JsonError.getError(
+      `{
+  "id": "builtin.language-basics-go",
+  "name": "Language Basics Go",
+  "description": "Provides syntax highlighting and bracket matching in Go files.",
+  "languages": [
+    {,
+      "id": "go",
+      "extensions": [".go"],
+      "configuration": "./languageConfiguration.json"
+    }
+  ]
+}
+`,
+      '/test/file.json'
+    )
+  ).toEqual({
+    message: 'Json Parsing Error',
+    stack: 'at /test/file.json',
+    codeFrame: `
+  4 |   "description": "Provides syntax highlighting and bracket matching in Go files.",
+  5 |   "languages": [
+> 6 |     {,
+    |      ^
+  7 |       "id": "go",
+  8 |       "extensions": [".go"],
+  9 |       "configuration": "./languageConfiguration.json"
+`
+      .replace(/^\n/, '')
+      .replace(/\n$/, ''),
   })
 })
