@@ -4,6 +4,40 @@ import { LinesAndColumns } from 'lines-and-columns'
 
 // parsing error handling based on https://github.com/sindresorhus/parse-json/blob/main/index.js
 
+const emptyError = {
+  message: '',
+  stack: '',
+  codeFrame: '',
+}
+
+export const getError = (string, filePath) => {
+  try {
+    JSON.parse(string)
+    return emptyError
+  } catch (error) {
+    const indexMatch = error.message.match(/in JSON at position (\d+)/)
+    if (indexMatch && indexMatch.length > 0) {
+      const lines = new LinesAndColumns(string)
+      const index = Number(indexMatch[1])
+      const location = lines.locationForIndex(index)
+      if (location) {
+        const codeFrame = codeFrameColumns(
+          string,
+          { start: { line: location.line + 1, column: location.column + 1 } },
+          { highlightCode: true }
+        )
+        return {
+          codeFrame,
+          message: 'Json Parsing Error',
+          stack: ``,
+        }
+      }
+    }
+    console.log(error)
+    return {}
+  }
+}
+
 export const parse = async (string, filePath) => {
   try {
     try {
@@ -14,14 +48,13 @@ export const parse = async (string, filePath) => {
     }
   } catch (error) {
     error.message = error.message.replace(/\n/g, '')
-    const indexMatch = error.message.match(
-      /in JSON at position (\d+) while parsing/
-    )
+    const indexMatch = error.message.match(/in JSON at position (\d+)/)
     let topMessage = error.message
     let bottomMessage = error.message
     if (topMessage.startsWith('Unexpected token')) {
       topMessage = 'JSON parsing error:'
     }
+    // console.log({ topMessage })
     if (bottomMessage.includes('while parsing "{')) {
       bottomMessage = bottomMessage.slice(
         0,
@@ -33,6 +66,7 @@ export const parse = async (string, filePath) => {
     }
     bottomMessage = bottomMessage.trim()
     const jsonError = new Error(topMessage)
+    jsonError.message //?
     if (indexMatch && indexMatch.length > 0) {
       const lines = new LinesAndColumns(string)
       const index = Number(indexMatch[1])
@@ -48,18 +82,6 @@ export const parse = async (string, filePath) => {
     jsonError.stack = `${bottomMessage}\n    at ${filePath}`
     throw jsonError
   }
-
-  // try {
-  //   return JSON.parse(json)
-  // } catch (error) {
-  //   const parseJsonBetterErrors = await import('parse-json')
-  //   try {
-  //     return parseJsonBetterErrors.default(json, filePath)
-  //   } catch (error) {
-  //     console.log({ frame: error.codeFrame })
-  //     throw error
-  //   }
-  // }
 }
 
 export const stringify = (value) => {
