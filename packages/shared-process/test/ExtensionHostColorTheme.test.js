@@ -108,7 +108,7 @@ test('getColorThemeJson - invalid json', async () => {
   await expect(
     ExtensionHostColorTheme.getColorThemeJson('test-theme')
   ).rejects.toThrowError(
-    'Failed to load color theme "test-theme": Unexpected number in JSON at position 2 while parsing \'{ 1 }\''
+    'Failed to load color theme "test-theme": Json Parsing Error'
   )
 })
 

@@ -239,7 +239,7 @@ test('getLanguageConfiguration - error - language configuration has invalid json
     ExtensionHostLanguages.getLanguageConfiguration('javascript')
   ).rejects.toThrowError(
     new Error(
-      'Failed to load language configuration for javascript: Unexpected end of JSON input while parsing "{"'
+      'Failed to load language configuration for javascript: Json Parsing Error'
     )
   )
 })
