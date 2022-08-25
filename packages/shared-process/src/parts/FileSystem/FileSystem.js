@@ -36,9 +36,15 @@ export const copy = async (source, target) => {
   }
 }
 
+// get languages
+// get color theme json
+// get extensions (?)
+// get extensions (?)
+// get icon theme json
+
 // TODO extensions should only be accessed once on startup
 export const readFile = async (path) => {
-  // console.info('[shared-process] read file', path)
+  console.info('[shared-process] read file', path)
   try {
     const content = await fs.readFile(path, 'utf8')
     return content
