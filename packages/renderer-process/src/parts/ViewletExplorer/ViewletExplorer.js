@@ -3,6 +3,7 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
 import * as InputBox from '../InputBox/InputBox.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 
 export const name = 'Explorer'
 
@@ -152,7 +153,7 @@ const handleContextMenu = (event) => {
 }
 
 const handleMouseDown = (event) => {
-  if (event.button !== /* LeftClick */ 0) {
+  if (event.button !== MouseEventType.LeftClick) {
     return
   }
   const $Target = event.target
