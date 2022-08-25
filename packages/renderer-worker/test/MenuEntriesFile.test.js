@@ -1,22 +1,23 @@
 import * as MenuEntriesFile from '../src/parts/MenuEntries/MenuEntriesFile.js'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
 test('getMenuEntries', () => {
   const menuEntries = MenuEntriesFile.getMenuEntries()
   expect(menuEntries).toContainEqual({
     command: -1,
-    flags: 0,
+    flags: MenuItemFlags.None,
     id: 'newFile',
     label: 'New File',
   })
   expect(menuEntries).toContainEqual({
     command: 'Dialog.openFolder',
-    flags: 0,
+    flags: MenuItemFlags.None,
     id: 'openFolder',
     label: 'Open Folder',
   })
   expect(menuEntries).toContainEqual({
     command: 0,
-    flags: 4,
+    flags: MenuItemFlags.SubMenu,
     id: 'openRecent',
     label: 'Open Recent',
   })
