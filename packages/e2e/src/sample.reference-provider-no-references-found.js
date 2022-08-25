@@ -22,7 +22,7 @@ test.skip('sample.reference-provider-no-references-found', async () => {
   })
 
   const contextMenuItemFindAllReferences = page.locator('.MenuItem', {
-    hasText: 'Find all references',
+    hasText: 'Find All References',
   })
   await contextMenuItemFindAllReferences.click()
 
