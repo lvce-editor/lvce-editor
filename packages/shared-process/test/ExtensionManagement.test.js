@@ -294,7 +294,7 @@ test('getAllExtensions - invalid extension.json', async () => {
     {
       path: join(tmpDir1, 'test-extension'),
       reason: new VError(
-        'Failed to load extension "test-extension": Failed to load extension manifest: JSON parsing error:'
+        'Failed to load extension "test-extension": Failed to load extension manifest: Json Parsing Error'
       ),
       status: 'rejected',
     },
@@ -474,7 +474,7 @@ test('getExtensions - error - invalid json', async () => {
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       reason: new VError(
-        'Failed to load extension "test-extension-1": Failed to load extension manifest: Unexpected end of JSON input while parsing "{"'
+        'Failed to load extension "test-extension-1": Failed to load extension manifest: Json Parsing Error'
       ),
       status: 'rejected',
       path: join(tmpDir1, 'test-extension-1'),
