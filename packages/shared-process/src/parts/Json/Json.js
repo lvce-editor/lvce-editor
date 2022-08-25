@@ -42,7 +42,7 @@ export const parse = async (string, filePath) => {
       const codeFrame = codeFrameColumns(
         string,
         { start: { line: location.line + 1, column: location.column + 1 } },
-        { highlightCode: true }
+        { highlightCode: false }
       )
       jsonError.codeFrame = codeFrame
     }
