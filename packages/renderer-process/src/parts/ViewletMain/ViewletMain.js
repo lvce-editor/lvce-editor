@@ -2,6 +2,7 @@ import * as EditorGroup from '../EditorGroup/EditorGroup.js'
 import * as Layout from '../Layout/Layout.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 
 const handleDragOver = (event) => {
   event.preventDefault()
@@ -129,19 +130,19 @@ const handleTabCloseButtonMouseDown = (event, index) => {
 
 const handleTabMouseDown = (event, index) => {
   switch (event.button) {
-    case /* LeftClick */ 0:
+    case MouseEventType.LeftClick:
       RendererWorker.send(
         /* Main.handleTabClick */ 'Main.handleTabClick',
         /* index */ index
       )
       break
-    case /* MiddleClick */ 1:
+    case MouseEventType.MiddleClick:
       RendererWorker.send(
         /* Main.closeEditor */ 'Main.closeEditor',
         /* index */ index
       )
       break
-    case /* RightClick */ 2:
+    case MouseEventType.RightClick:
       break
     default:
       break

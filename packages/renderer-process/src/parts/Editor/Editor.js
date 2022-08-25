@@ -10,6 +10,7 @@ import * as LayerDiagnostics from './LayerDiagnostics.js'
 import * as LayerScrollBar from './LayerScrollBar.js'
 import * as LayerSelections from './LayerSelections.js'
 import * as LayerText3 from './LayerText.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
@@ -160,7 +161,7 @@ const handleTripleClick = (event, x, y, offset) => {
 }
 
 const isRightClick = (event) => {
-  return event.button === 2
+  return event.button === MouseEventType.RightClick
 }
 
 const getTextNodeOffset = (textNode) => {
