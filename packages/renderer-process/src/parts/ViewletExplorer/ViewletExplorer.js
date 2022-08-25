@@ -3,6 +3,7 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
 import * as InputBox from '../InputBox/InputBox.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 
 export const name = 'Explorer'
 
@@ -142,6 +143,18 @@ const handleContextMenu = (event) => {
   const x = event.clientX
   const y = event.clientY
   const button = event.button
+  console.log({ button, x, y, pageX: event.pageX, pageY: event.pageY, event })
+  if (event.button === MouseEventType.Keyboard) {
+    console.log('is keyboard')
+  }
+  // const a = document.createElement('div')
+  // a.style.position = 'fixed'
+  // a.style.background = 'red'
+  // a.style.height = '2px'
+  // a.style.width = '2px'
+  // a.style.left = x + 'px'
+  // a.style.top = y + 'px'
+  // document.body.append(a)
   RendererWorker.send(
     /* Explorer.handleContextMenu */ 'Explorer.handleContextMenu',
     /* x */ x,
