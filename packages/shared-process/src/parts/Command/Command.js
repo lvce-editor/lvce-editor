@@ -13,6 +13,7 @@ const MODULE_CLIPBOARD = 13
 const MODULE_TEXT_DOCUMENT = 14
 const MODULE_WEBSOCKET_SERVER = 16
 const MODULE_PLATFORM = 17
+const MODULE_RECENTLY_OPENED = 18
 
 const commands = Object.create(null)
 const invocables = Object.create(null)
@@ -51,6 +52,8 @@ const loadModule = (moduleId) => {
       return import('../WebSocketServer/WebSocketServer.ipc.js')
     case MODULE_PLATFORM:
       return import('../Platform/Platform.ipc.js')
+    case MODULE_RECENTLY_OPENED:
+      return import('../RecentlyOpened/RecentlyOpened.ipc.js')
     default:
       throw new Error(`unknown module ${moduleId}`)
   }
@@ -208,6 +211,8 @@ const getModuleId = (commandId) => {
     case 'OutputChannel.open':
     case 'OutputChannel.close':
       return MODULE_OUTPUT_CHANNEL
+    case 'RecentlyOpened.addPath':
+      return MODULE_RECENTLY_OPENED
     default:
       throw new Error(`[shared-process] command ${commandId} not found`)
   }

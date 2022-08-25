@@ -46,6 +46,13 @@ const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 const Trash = await import('../src/parts/Trash/Trash.js')
 const fs = await import('node:fs/promises')
 
+class NodeError extends Error {
+  constructor(code) {
+    super(code)
+    this.code = code
+  }
+}
+
 test('copy - file', async () => {
   // @ts-ignore
   fs.cp.mockImplementation(() => {})
@@ -406,13 +413,6 @@ test('getRealPath - error - broken symlink and error with readlink', async () =>
     new Error(`Failed to resolve real path for /test-1/a.txt: ENOENT`)
   )
 })
-
-class NodeError extends Error {
-  constructor(code) {
-    super(code)
-    this.code = code
-  }
-}
 
 test('readFile - error - file not found', async () => {
   // @ts-ignore
