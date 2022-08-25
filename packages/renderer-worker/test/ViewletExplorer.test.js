@@ -5124,3 +5124,98 @@ test('handleClickCurrent', async () => {
     maxLineY: 2,
   })
 })
+
+test('expandRecursively', async () => {
+  const state = {
+    ...ViewletExplorer.create(),
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    maxLineY: 20,
+    root: '/test',
+    pathSeparator: '/',
+    focused: true,
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 1,
+        type: 'directory',
+      },
+    ],
+  }
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test/a':
+        return [
+          {
+            name: 'b',
+            type: 'directory',
+          },
+        ]
+      case '/test/a/b':
+        return [
+          {
+            name: 'c',
+            type: 'directory',
+          },
+          {
+            name: 'd.txt',
+            type: 'file',
+          },
+        ]
+      case '/test/a/b/c':
+        return []
+      default:
+        throw new Error(`File not found ${uri}`)
+    }
+  })
+  expect(await ViewletExplorer.expandRecursively(state)).toMatchObject({
+    focused: true,
+    focusedIndex: 0,
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 1,
+        type: 'directory',
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'b',
+        path: '/test/a/b',
+        posInSet: 1,
+        setSize: 1,
+        type: 'directory',
+      },
+      {
+        depth: 3,
+        icon: '',
+        name: 'c',
+        path: '/test/a/b/c',
+        posInSet: 1,
+        setSize: 2,
+        type: 'directory',
+      },
+      {
+        depth: 3,
+        icon: '',
+        name: 'd.txt',
+        path: '/test/a/b/d.txt',
+        posInSet: 2,
+        setSize: 2,
+        type: 'file',
+      },
+    ],
+  })
+})

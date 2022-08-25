@@ -1411,6 +1411,43 @@ export const revealItem = async (state, uri) => {
   return revealItemVisible(state, index)
 }
 
+export const expandRecursively = async (state) => {
+  const { dirents, focusedIndex, pathSeparator, root } = state
+  const dirent = dirents[focusedIndex]
+  if (dirent.type !== 'folder' && dirent.type !== 'directory') {
+    return state
+  }
+  // TODO this is very inefficient
+  const getChildDirentsRecursively = async (dirent) => {
+    switch (dirent.type) {
+      case 'file':
+        return [dirent]
+      case 'directory':
+      case 'folder':
+        const childDirents = await getChildDirents(root, pathSeparator, dirent)
+        const all = [dirent]
+        for (const childDirent of childDirents) {
+          const childAll = await getChildDirentsRecursively(childDirent)
+          all.push(...childAll)
+        }
+        return all
+      default:
+        return []
+    }
+  }
+
+  const childDirents = await getChildDirentsRecursively(dirent)
+  // TODO insert correctly
+  const newDirents = childDirents
+  // console.log({ dirent, childDirents })
+  // TODO
+  // 1. get focused dirent
+  // 2. if it is not a folder, return
+  // 3. use `find` to get all dirent recursively or call readDirWithFileTypes very often
+  // 4. merge child dirents into explorer
+  return { ...state, dirents: newDirents }
+}
+
 export const shouldApplyNewState = (newState, fn) => {
   if (newState.root !== Workspace.state.workspacePath) {
     console.log(

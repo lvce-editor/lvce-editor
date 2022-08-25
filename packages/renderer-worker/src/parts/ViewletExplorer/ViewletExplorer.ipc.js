@@ -11,6 +11,7 @@ export const Commands = {
   'Explorer.copyPath':             Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.copyPath),
   'Explorer.copyRelativePath':     Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.copyRelativePath),
   'Explorer.expandAll':            Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.expandAll),
+  'Explorer.expandRecursively':    Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.expandRecursively),
   'Explorer.focus':                Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focus),
   'Explorer.focusFirst':           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusFirst),
   'Explorer.focusIndex':           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusIndex),

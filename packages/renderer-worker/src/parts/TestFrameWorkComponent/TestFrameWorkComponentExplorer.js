@@ -31,3 +31,7 @@ export const focusFirst = async () => {
 export const removeDirent = async () => {
   await Command.execute('Explorer.removeDirent')
 }
+
+export const expandRecursively = async () => {
+  await Command.execute('Explorer.expandRecursively')
+}
