@@ -11,7 +11,6 @@ const MODULE_PREFERENCES = 11
 const MODULE_NATIVE = 12
 const MODULE_CLIPBOARD = 13
 const MODULE_TEXT_DOCUMENT = 14
-const MODULE_ELECTRON = 15
 const MODULE_WEBSOCKET_SERVER = 16
 const MODULE_PLATFORM = 17
 
@@ -48,8 +47,6 @@ const loadModule = (moduleId) => {
       return import('../ClipBoard/ClipBoard.ipc.js')
     case MODULE_TEXT_DOCUMENT:
       return import('../TextDocument/TextDocument.ipc.js')
-    case MODULE_ELECTRON:
-      return import('../Electron/Electron.ipc.js')
     case MODULE_WEBSOCKET_SERVER:
       return import('../WebSocketServer/WebSocketServer.ipc.js')
     case MODULE_PLATFORM:
@@ -211,21 +208,6 @@ const getModuleId = (commandId) => {
     case 'OutputChannel.open':
     case 'OutputChannel.close':
       return MODULE_OUTPUT_CHANNEL
-    case 'Electron.toggleDevtools':
-    case 'Electron.windowMinimize':
-    case 'Electron.windowMaximize':
-    case 'Electron.windowUnmaximize':
-    case 'Electron.windowClose':
-    case 'Electron.about':
-    case 'Electron.showOpenDialog':
-    case 'Electron.windowReload':
-    case 'Electron.getPerformanceEntries':
-    case 'Electron.crashMainProcess':
-    case 'Electron.showMessageBox':
-    case 'Electron.windowOpenNew':
-    case 'Electron.exit':
-    case 'Electron.openProcessExplorer':
-      return MODULE_ELECTRON
     default:
       throw new Error(`[shared-process] command ${commandId} not found`)
   }
