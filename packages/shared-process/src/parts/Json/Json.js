@@ -34,6 +34,8 @@ export const parse = async (string, filePath) => {
     bottomMessage = bottomMessage.trim()
     const jsonError = new Error(topMessage)
     if (indexMatch && indexMatch.length > 0) {
+      console.log({ indexMatch })
+      console.log({ string })
       const lines = new LinesAndColumns(string)
       const index = Number(indexMatch[1])
       const location = lines.locationForIndex(index)

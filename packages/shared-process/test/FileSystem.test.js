@@ -407,13 +407,6 @@ test('getRealPath - error - broken symlink and error with readlink', async () =>
   )
 })
 
-class NodeError extends Error {
-  constructor(code) {
-    super(code)
-    this.code = code
-  }
-}
-
 test('readFile - error - file not found', async () => {
   // @ts-ignore
   fs.readFile.mockImplementation(() => {

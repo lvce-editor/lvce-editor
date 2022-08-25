@@ -2,6 +2,8 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Json from '../Json/Json.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Platform from '../Platform/Platform.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 // TODO maybe put this together with workspace
 
@@ -53,10 +55,26 @@ const getNewRecentlyOpened = (recentlyOpened, path) => {
   ]
 }
 
-export const addToRecentlyOpened = async (path) => {
+const addToRecentlyOpenedWeb = async (path) => {
   const recentlyOpened = await getRecentlyOpened()
   const newRecentlyOpened = getNewRecentlyOpened(recentlyOpened, path)
   await setRecentlyOpened(newRecentlyOpened)
+}
+
+const addToRecentlyOpenedRemote = async (path) => {
+  await SharedProcess.invoke('RecentlyOpened.addPath', path)
+}
+
+export const addToRecentlyOpened = async (path) => {
+  switch (Platform.platform) {
+    case 'electron':
+    case 'remote':
+      return addToRecentlyOpenedRemote(path)
+    case 'web':
+      return addToRecentlyOpenedWeb(path)
+    default:
+      return
+  }
 }
 
 const addWorkspacePathToRecentlyOpened = async () => {

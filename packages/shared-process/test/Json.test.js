@@ -4,11 +4,17 @@ test('parse', async () => {
   expect(await Json.parse('{ "x": 42 }')).toEqual({ x: 42 })
 })
 
-test('parse - syntax error', async () => {
+test.only('parse - syntax error', async () => {
   await expect(
-    Json.parse('{ "x" 42 }', '/test/some-file.txt')
+    Json.parse('{ "x" 42 }', '/test/file.json')
   ).rejects.toThrowError(
-    /^Unexpected number in JSON at position 6 while parsing/
+    /^Unexpected number in JSON at position 6 while parsingdewde/
+  )
+})
+
+test('parse - unexpected end of json', async () => {
+  await expect(Json.parse('[', '/test/file.json')).rejects.toThrowError(
+    /^Unexpected end of JSON input while parsing/
   )
 })
 
