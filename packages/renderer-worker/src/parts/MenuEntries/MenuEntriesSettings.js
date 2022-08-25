@@ -2,7 +2,7 @@ import * as I18nString from '../I18NString/I18NString.js'
 
 export const UiStrings = {
   Settings: 'Settings',
-  KeyboardShortcut: 'Keyboard Shortcut',
+  KeyboardShortcuts: 'Keyboard Shortcuts',
   ColorTheme: 'Color Theme',
   CheckForUpdates: 'Check For Updates',
 }
@@ -17,7 +17,7 @@ export const getMenuEntries = () => {
     },
     {
       id: 'keyboardShortcuts',
-      label: I18nString.i18nString(UiStrings.KeyboardShortcut),
+      label: I18nString.i18nString(UiStrings.KeyboardShortcuts),
       flags: /* None */ 0,
       command: /* TODO */ -1,
     },
