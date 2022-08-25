@@ -136,32 +136,47 @@ const handleDrop = async (event) => {
   // console.log(content)
 }
 
-const handleContextMenu = (event) => {
-  event.preventDefault()
+// TODO maybe use aria active descendant instead
+const getFocusedIndexFromFocusOutline = ($Viewlet) => {
+  for (let i = 0; i < $Viewlet.children.length; i++) {
+    const $Child = $Viewlet.children[i]
+    if ($Child.classList.contains('FocusOutline')) {
+      return i
+    }
+  }
+  return -1
+}
+
+const handleContextMenuMouse = (event) => {
   const $Target = event.target
-  const index = findIndex($Target)
   const x = event.clientX
   const y = event.clientY
-  const button = event.button
-  console.log({ button, x, y, pageX: event.pageX, pageY: event.pageY, event })
-  if (event.button === MouseEventType.Keyboard) {
-    console.log('is keyboard')
-  }
-  // const a = document.createElement('div')
-  // a.style.position = 'fixed'
-  // a.style.background = 'red'
-  // a.style.height = '2px'
-  // a.style.width = '2px'
-  // a.style.left = x + 'px'
-  // a.style.top = y + 'px'
-  // document.body.append(a)
+  const index = findIndex($Target)
   RendererWorker.send(
-    /* Explorer.handleContextMenu */ 'Explorer.handleContextMenu',
+    /* Explorer.handleContextMenuMouse */ 'Explorer.handleContextMenuMouse',
     /* x */ x,
     /* y */ y,
-    /* index */ index,
-    /* button */ button
+    /* index */ index
   )
+}
+
+const handleContextMenuKeyboard = (event) => {
+  const $Target = event.target
+  const index = getFocusedIndexFromFocusOutline($Target)
+  RendererWorker.send(
+    /* Explorer.handleContextMenuKeyboard */ 'Explorer.handleContextMenuKeyboard',
+    /* index */ index
+  )
+}
+
+const handleContextMenu = (event) => {
+  event.preventDefault()
+  switch (event.button) {
+    case MouseEventType.Keyboard:
+      return handleContextMenuKeyboard(event)
+    default:
+      return handleContextMenuMouse(event)
+  }
 }
 
 const handleMouseDown = (event) => {

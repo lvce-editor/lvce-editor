@@ -461,7 +461,7 @@ test('handleContextMenu', async () => {
   Command.execute.mockImplementation(() => {})
   const state = ViewletExplorer.create()
   expect(
-    await ViewletExplorer.handleContextMenu(
+    await ViewletExplorer.handleContextMenuMouse(
       state,
       /* x */ 0,
       /* y */ 0,
@@ -517,7 +517,7 @@ test('handleContextMenu - triggered via keyboard', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   expect(
-    await ViewletExplorer.handleContextMenu(
+    await ViewletExplorer.handleContextMenuMouse(
       state,
       /* x */ 0,
       /* y */ 0,
@@ -4513,7 +4513,7 @@ test('event - issue with blur event after context menu event', async () => {
     minLineY: 0,
     maxLineY: 100,
   }
-  const state2 = await ViewletExplorer.handleContextMenu(state, 0, 0, 0)
+  const state2 = await ViewletExplorer.handleContextMenuMouse(state, 0, 0, 0)
   const state3 = await ViewletExplorer.handleBlur(state2)
   expect(state3).toMatchObject({ focusedIndex: 0, focused: false })
 })

@@ -241,10 +241,22 @@ export const handleWheel = (state, deltaY) => {
   return setDeltaY(state, state.deltaY + deltaY)
 }
 
-export const handleContextMenu = async (state, x, y, index, button) => {
-  if (button === -1) {
-    index = state.focusedIndex
+export const handleContextMenuKeyboard = async (state, index) => {
+  const x = state.left
+  const y = state.top + (index - state.minLineY + 1) * state.itemHeight
+  await Command.execute(
+    /* ContextMenu.show */ 'ContextMenu.show',
+    /* x */ x,
+    /* y */ y,
+    /* id */ 'explorer'
+  )
+  return {
+    ...state,
+    focusedIndex: index,
   }
+}
+
+export const handleContextMenuMouse = async (state, x, y, index) => {
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
