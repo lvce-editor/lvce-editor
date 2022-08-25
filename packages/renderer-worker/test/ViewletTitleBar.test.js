@@ -14,6 +14,11 @@ jest.unstable_mockModule(
     }
   }
 )
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+  return {
+    platform: 'remote',
+  }
+})
 
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
