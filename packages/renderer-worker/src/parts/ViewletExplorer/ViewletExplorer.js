@@ -6,6 +6,7 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
+import * as DirentType from '../DirentType/DirentType.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -599,11 +600,10 @@ const acceptDirent = async (state, type) => {
   // TODO better handle error
   try {
     switch (type) {
-      case 'file':
+      case DirentType.File:
         await FileSystem.writeFile(absolutePath, '')
         break
-      case 'folder':
-      case 'directory':
+      case DirentType.Directory:
         await FileSystem.mkdir(absolutePath)
         break
       default:
@@ -666,11 +666,11 @@ const acceptDirent = async (state, type) => {
 
 // TODO much duplicate logic with acceptNewFolder
 export const acceptNewFile = (state) => {
-  return acceptDirent(state, 'file')
+  return acceptDirent(state, DirentType.File)
 }
 
 export const acceptNewFolder = (state) => {
-  return acceptDirent(state, 'directory')
+  return acceptDirent(state, DirentType.Directory)
 }
 
 // TODO much copy paste with newFIle command
@@ -755,17 +755,16 @@ export const handleClick = async (state, index) => {
   }
   // TODO dirent type should be numeric
   switch (dirent.type) {
-    case 'file':
+    case DirentType.File:
       return handleClickFile(state, dirent, actualIndex)
     // TODO decide on one name
-    case 'folder':
-    case 'directory':
+    case DirentType.Directory:
       return handleClickDirectory(state, dirent, actualIndex)
-    case 'directory-expanding':
+    case DirentType.DirectoryExpanding:
       return handleClickDirectoryExpanding(state, dirent, actualIndex)
-    case 'directory-expanded':
+    case DirentType.DirectoryExpanded:
       return handleClickDirectoryExpanded(state, dirent, actualIndex)
-    case 'symlink':
+    case DirentType.Symlink:
       return handleClickSymLink(state, dirent, state.focusedIndex)
     default:
       break
@@ -868,7 +867,7 @@ const handleClickSymLink = async (state, dirent, index) => {
   const realPath = await FileSystem.getRealPath(dirent.path)
   const type = await FileSystem.stat(realPath)
   switch (type) {
-    case 'file':
+    case DirentType.File:
       return handleClickFile(state, dirent, index)
     default:
       throw new Error(`unsupported file type ${type}`)
@@ -891,13 +890,13 @@ export const handleArrowRight = async (state) => {
   }
   const dirent = state.dirents[state.focusedIndex]
   switch (dirent.type) {
-    case 'file':
+    case DirentType.File:
       return state
-    case 'directory':
+    case DirentType.Directory:
       return handleClickDirectory(state, dirent, state.focusedIndex)
-    case 'directory-expanded':
+    case DirentType.DirectoryExpanded:
       return handleArrowRightDirectoryExpanded(state, dirent)
-    case 'symlink':
+    case DirentType.Symlink:
       return handleClickSymLink(state, dirent, state.focusedIndex)
     default:
       throw new Error(`unsupported file type ${dirent.type}`)
@@ -921,10 +920,10 @@ export const handleArrowLeft = (state) => {
   }
   const dirent = state.dirents[state.focusedIndex]
   switch (dirent.type) {
-    case 'directory':
-    case 'file':
+    case DirentType.Directory:
+    case DirentType.File:
       return focusParentFolder(state)
-    case 'directory-expanded':
+    case DirentType.DirectoryExpanded:
       return handleClickDirectoryExpanded(state, dirent, state.focusedIndex)
     default:
       // TODO handle expanding directory and cancel file system call to read child dirents
@@ -1414,16 +1413,18 @@ export const revealItem = async (state, uri) => {
 export const expandRecursively = async (state) => {
   const { dirents, focusedIndex, pathSeparator, root } = state
   const dirent = dirents[focusedIndex]
-  if (dirent.type !== 'folder' && dirent.type !== 'directory') {
+  if (
+    dirent.type !== DirentType.Directory &&
+    dirent.type !== DirentType.DirectoryExpanding
+  ) {
     return state
   }
   // TODO this is very inefficient
   const getChildDirentsRecursively = async (dirent) => {
     switch (dirent.type) {
-      case 'file':
+      case DirentType.File:
         return [dirent]
-      case 'directory':
-      case 'folder':
+      case DirentType.Directory:
         const childDirents = await getChildDirents(root, pathSeparator, dirent)
         const all = [dirent]
         for (const childDirent of childDirents) {

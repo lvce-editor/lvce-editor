@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
+import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -106,15 +107,15 @@ test('loadContent', async () => {
     return [
       {
         name: 'file 1',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         name: 'file 2',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         name: 'file 3',
-        type: 'file',
+        type: DirentType.File,
       },
     ]
   })
@@ -134,7 +135,7 @@ test('loadContent', async () => {
         path: '/test/file 1',
         posInSet: 1,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -143,7 +144,7 @@ test('loadContent', async () => {
         path: '/test/file 2',
         posInSet: 2,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -152,7 +153,7 @@ test('loadContent', async () => {
         path: '/test/file 3',
         posInSet: 3,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
     focusedIndex: -1,
@@ -181,15 +182,15 @@ test.skip('loadContent - race condition - workspace changes while loading after 
         return [
           {
             name: 'file 1',
-            type: 'file',
+            type: DirentType.File,
           },
           {
             name: 'file 2',
-            type: 'file',
+            type: DirentType.File,
           },
           {
             name: 'file 3',
-            type: 'file',
+            type: DirentType.File,
           },
         ]
       case 'FileSystem.getPathSeparator':
@@ -217,15 +218,15 @@ test.skip('loadContent - race condition - workspace changes while loading after 
         return [
           {
             name: 'file 1',
-            type: 'file',
+            type: DirentType.File,
           },
           {
             name: 'file 2',
-            type: 'file',
+            type: DirentType.File,
           },
           {
             name: 'file 3',
-            type: 'file',
+            type: DirentType.File,
           },
         ]
       case 'FileSystem.getPathSeparator':
@@ -255,7 +256,7 @@ test.skip('loadContent - race condition', async () => {
           return [
             {
               name: 'file 1',
-              type: 'file',
+              type: DirentType.File,
             },
           ]
         } else {
@@ -263,11 +264,11 @@ test.skip('loadContent - race condition', async () => {
           return [
             {
               name: 'file 1',
-              type: 'file',
+              type: DirentType.File,
             },
             {
               name: 'file 2',
-              type: 'file',
+              type: DirentType.File,
             },
           ]
         }
@@ -303,7 +304,7 @@ test.skip('loadContent - race condition', async () => {
         path: '/test/file 1',
         posInSet: 1,
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -312,7 +313,7 @@ test.skip('loadContent - race condition', async () => {
         path: '/test/file 2',
         posInSet: 2,
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
     ]
   )
@@ -387,7 +388,7 @@ test.skip('contentLoaded', async () => {
         path: 'file 1',
         posInSet: 1,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -396,7 +397,7 @@ test.skip('contentLoaded', async () => {
         path: 'file 2',
         posInSet: 2,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -405,7 +406,7 @@ test.skip('contentLoaded', async () => {
         path: 'file 3',
         posInSet: 3,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
     focusedIndex: 0,
@@ -431,7 +432,7 @@ test.skip('contentLoaded', async () => {
         path: 'file 1',
         posInSet: 1,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -440,7 +441,7 @@ test.skip('contentLoaded', async () => {
         path: 'file 2',
         posInSet: 2,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -449,7 +450,7 @@ test.skip('contentLoaded', async () => {
         path: 'file 3',
         posInSet: 3,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
     ]
   )
@@ -491,7 +492,7 @@ test('handleContextMenu - triggered via keyboard', async () => {
         path: 'file 1',
         posInSet: 1,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -500,7 +501,7 @@ test('handleContextMenu - triggered via keyboard', async () => {
         path: 'file 2',
         posInSet: 2,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -509,7 +510,7 @@ test('handleContextMenu - triggered via keyboard', async () => {
         path: 'file 3',
         posInSet: 3,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -571,17 +572,17 @@ test('handleClick - no element focused', async () => {
     dirents: [
       {
         name: 'index.css',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.css',
       },
       {
         name: 'index.html',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.html',
       },
       {
         name: 'test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
         path: '/test-folder',
       },
     ],
@@ -602,17 +603,17 @@ test('handleClick - file', async () => {
     dirents: [
       {
         name: 'index.css',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.css',
       },
       {
         name: 'index.html',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.html',
       },
       {
         name: 'test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
         path: '/test-folder',
       },
     ],
@@ -644,17 +645,17 @@ test('handleClick - file - error', async () => {
     dirents: [
       {
         name: 'index.css',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.css',
       },
       {
         name: 'index.html',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.html',
       },
       {
         name: 'test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
         path: '/test-folder',
       },
     ],
@@ -689,7 +690,7 @@ test('handleClick - directory', async () => {
     dirents: [
       {
         name: 'folder-1',
-        type: 'folder',
+        type: DirentType.Directory,
         path: '/folder-1',
         setSize: 3,
         posInSet: 1,
@@ -697,7 +698,7 @@ test('handleClick - directory', async () => {
       },
       {
         name: 'folder-2',
-        type: 'folder',
+        type: DirentType.Directory,
         path: '/folder-2',
         setSize: 3,
         posInSet: 2,
@@ -705,7 +706,7 @@ test('handleClick - directory', async () => {
       },
       {
         name: 'folder-3',
-        type: 'folder',
+        type: DirentType.Directory,
         path: '/folder-3',
         setSize: 3,
         posInSet: 3,
@@ -719,7 +720,7 @@ test('handleClick - directory', async () => {
   })
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
-    return [{ name: 'index.js', type: 'file' }]
+    return [{ name: 'index.js', type: DirentType.File }]
   })
   expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
     dirents: [
@@ -739,7 +740,7 @@ test('handleClick - directory', async () => {
         path: '/folder-1/index.js',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -747,7 +748,7 @@ test('handleClick - directory', async () => {
         path: '/folder-2',
         posInSet: 2,
         setSize: 3,
-        type: 'folder',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -755,7 +756,7 @@ test('handleClick - directory', async () => {
         path: '/folder-3',
         posInSet: 3,
         setSize: 3,
-        type: 'folder',
+        type: DirentType.Directory,
       },
     ],
   })
@@ -772,17 +773,17 @@ test('handleClick - directory-expanded - error', async () => {
     dirents: [
       {
         name: 'index.css',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.css',
       },
       {
         name: 'index.html',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.html',
       },
       {
         name: 'test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
         path: '/test-folder',
       },
     ],
@@ -813,7 +814,7 @@ test.skip('handleClick - directory-expanded - scrolled down', async () => {
     dirents: [
       {
         name: 'folder-1',
-        type: 'folder',
+        type: DirentType.Directory,
         path: '/folder-1',
         setSize: 2,
         posInSet: 1,
@@ -829,7 +830,7 @@ test.skip('handleClick - directory-expanded - scrolled down', async () => {
       },
       {
         name: 'a.txt',
-        type: 'file',
+        type: DirentType.File,
         path: '/folder-2/a.txt',
         setSize: 2,
         posInSet: 1,
@@ -837,7 +838,7 @@ test.skip('handleClick - directory-expanded - scrolled down', async () => {
       },
       {
         name: 'b.txt',
-        type: 'file',
+        type: DirentType.File,
         path: '/folder-2/b.txt',
         setSize: 2,
         posInSet: 2,
@@ -854,7 +855,7 @@ test.skip('handleClick - directory-expanded - scrolled down', async () => {
         path: '/folder-2',
         posInSet: 2,
         setSize: 2,
-        type: 'directory',
+        type: DirentType.Directory,
         icon: '',
       },
     ],
@@ -879,7 +880,7 @@ test('handleClick - collapsed folder', async () => {
         icon: '',
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -888,7 +889,7 @@ test('handleClick - collapsed folder', async () => {
         icon: '',
         name: 'index.html',
         path: '/index.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -897,7 +898,7 @@ test('handleClick - collapsed folder', async () => {
         icon: '',
         name: 'test-folder',
         path: '/test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
   }
@@ -907,7 +908,7 @@ test('handleClick - collapsed folder', async () => {
   })
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
-    return [{ name: 'index.js', type: 'file' }]
+    return [{ name: 'index.js', type: DirentType.File }]
   })
   expect(await ViewletExplorer.handleClick(state, 2)).toMatchObject({
     dirents: [
@@ -918,7 +919,7 @@ test('handleClick - collapsed folder', async () => {
         icon: '',
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -927,7 +928,7 @@ test('handleClick - collapsed folder', async () => {
         icon: '',
         name: 'index.html',
         path: '/index.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -945,7 +946,7 @@ test('handleClick - collapsed folder', async () => {
         icon: '',
         name: 'index.js',
         path: '/test-folder/index.js',
-        type: 'file',
+        type: DirentType.File,
       },
     ],
     focusedIndex: 2,
@@ -977,7 +978,7 @@ test.skip('handleClick - race condition - child folder is being expanded and par
         icon: '',
         name: 'folder-1',
         path: '/folder-1',
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 2,
@@ -986,7 +987,7 @@ test.skip('handleClick - race condition - child folder is being expanded and par
         icon: '',
         name: 'folder-2',
         path: '/folder-2',
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
   }
@@ -994,7 +995,7 @@ test.skip('handleClick - race condition - child folder is being expanded and par
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
       case 'FileSystem.readDirWithFileTypes':
-        return [{ name: 'index.js', type: 'file' }]
+        return [{ name: 'index.js', type: DirentType.File }]
       default:
         throw new Error('unexpected message')
     }
@@ -1018,7 +1019,7 @@ test.skip('handleClick - race condition - child folder is being expanded and par
         icon: '',
         name: 'parent-directory',
         path: '/parent-directory',
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ]
   )
@@ -1041,7 +1042,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         icon: '',
         name: 'folder-1',
         path: '/folder-1',
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -1050,7 +1051,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         icon: '',
         name: 'folder-2',
         path: '/folder-2',
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -1059,7 +1060,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         icon: '',
         name: 'folder-3',
         path: '/folder-3',
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
   }
@@ -1067,7 +1068,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
       case 'FileSystem.readDirWithFileTypes':
-        return [{ name: 'index.js', type: 'file' }]
+        return [{ name: 'index.js', type: DirentType.File }]
       default:
         throw new Error('unexpected message')
     }
@@ -1102,7 +1103,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         path: '/folder-1,index.js', // TODO
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1146,7 +1147,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         path: '/folder-1,index.js', // TODO
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1164,7 +1165,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         path: '/folder-2,index.js', // TODO
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1199,7 +1200,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         path: '/folder-1,index.js',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1217,7 +1218,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         path: '/folder-2,index.js',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1235,7 +1236,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         path: '/folder-3,index.js',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
     ]
   )
@@ -1257,7 +1258,7 @@ test('handleClick - expanded folder', async () => {
         languageId: 'unknown',
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1266,7 +1267,7 @@ test('handleClick - expanded folder', async () => {
         languageId: 'unknown',
         name: 'index.html',
         path: '/index.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1284,7 +1285,7 @@ test('handleClick - expanded folder', async () => {
         languageId: 'unknown',
         name: 'index.js',
         path: '/test-folder/index.js',
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -1297,7 +1298,7 @@ test('handleClick - expanded folder', async () => {
         languageId: 'unknown',
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1306,7 +1307,7 @@ test('handleClick - expanded folder', async () => {
         languageId: 'unknown',
         name: 'index.html',
         path: '/index.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1315,7 +1316,7 @@ test('handleClick - expanded folder', async () => {
         languageId: 'unknown',
         name: 'test-folder',
         path: '/test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
         icon: '',
       },
     ],
@@ -1332,17 +1333,17 @@ test('focusPrevious', () => {
     dirents: [
       {
         name: 'index.css',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.css',
       },
       {
         name: 'index.html',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.html',
       },
       {
         name: 'test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
         path: '/test-folder',
       },
     ],
@@ -1362,17 +1363,17 @@ test('focusPrevious - at start', async () => {
     dirents: [
       {
         name: 'index.css',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.css',
       },
       {
         name: 'index.html',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.html',
       },
       {
         name: 'test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
         path: '/test-folder',
       },
     ],
@@ -1395,17 +1396,17 @@ test('focusPrevious - when no focus', async () => {
     dirents: [
       {
         name: 'index.css',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.css',
       },
       {
         name: 'index.html',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.html',
       },
       {
         name: 'test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
         path: '/test-folder',
       },
     ],
@@ -1440,17 +1441,17 @@ test('focusNext', async () => {
     dirents: [
       {
         name: 'index.css',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.css',
       },
       {
         name: 'index.html',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.html',
       },
       {
         name: 'test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
         path: '/test-folder',
       },
     ],
@@ -1468,17 +1469,17 @@ test('focusNext - at end', async () => {
     dirents: [
       {
         name: 'index.css',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.css',
       },
       {
         name: 'index.html',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.html',
       },
       {
         name: 'test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
         path: '/test-folder',
       },
     ],
@@ -1499,17 +1500,17 @@ test('focusNext - when no focus', () => {
     dirents: [
       {
         name: 'index.css',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.css',
       },
       {
         name: 'index.html',
-        type: 'file',
+        type: DirentType.File,
         path: '/index.html',
       },
       {
         name: 'test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
         path: '/test-folder',
       },
     ],
@@ -1533,7 +1534,7 @@ test('handleArrowLeft - root file', async () => {
         setSize: 3,
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1541,7 +1542,7 @@ test('handleArrowLeft - root file', async () => {
         setSize: 3,
         name: 'index.html',
         path: '/index.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1557,7 +1558,7 @@ test('handleArrowLeft - root file', async () => {
         setSize: 1,
         name: 'index.js',
         path: '/test-folder/index.js',
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -1581,7 +1582,7 @@ test('handleArrowLeft - collapsed root folder', async () => {
         setSize: 3,
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1589,7 +1590,7 @@ test('handleArrowLeft - collapsed root folder', async () => {
         setSize: 3,
         name: 'index.html',
         path: '/index.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1597,7 +1598,7 @@ test('handleArrowLeft - collapsed root folder', async () => {
         setSize: 3,
         name: 'test-folder',
         path: '/test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
   }
@@ -1621,7 +1622,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
         setSize: 4,
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1629,7 +1630,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
         setSize: 4,
         name: 'index.html',
         path: '/index.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1661,7 +1662,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
         setSize: 2,
         name: 'c.html',
         path: '/test-folder/a/c.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -1669,7 +1670,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
         setSize: 2,
         name: 'd.html',
         path: '/test-folder/d.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1677,7 +1678,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
         setSize: 4,
         name: 'other-file.html',
         path: '/other-file.html',
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -1689,7 +1690,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
         setSize: 4,
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1697,7 +1698,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
         setSize: 4,
         name: 'index.html',
         path: '/index.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1705,7 +1706,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
         setSize: 4,
         name: 'test-folder',
         path: '/test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
         icon: '',
       },
       {
@@ -1714,7 +1715,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
         setSize: 4,
         name: 'other-file.html',
         path: '/other-file.html',
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   })
@@ -1734,7 +1735,7 @@ test('handleArrowLeft - nested file - first child', async () => {
         setSize: 3,
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1742,7 +1743,7 @@ test('handleArrowLeft - nested file - first child', async () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1758,7 +1759,7 @@ test('handleArrowLeft - nested file - first child', async () => {
         setSize: 1,
         name: 'index.js',
         path: '/test-folder/index.js',
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -1781,7 +1782,7 @@ test('handleArrowLeft - nested file - third child', async () => {
         setSize: 4,
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1789,7 +1790,7 @@ test('handleArrowLeft - nested file - third child', async () => {
         setSize: 4,
         name: 'index.html',
         path: '/index.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1805,7 +1806,7 @@ test('handleArrowLeft - nested file - third child', async () => {
         setSize: 3,
         name: 'a.html',
         path: '/test-folder/a.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -1813,7 +1814,7 @@ test('handleArrowLeft - nested file - third child', async () => {
         setSize: 3,
         name: 'folder-b',
         path: '/test-folder/folder-b',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 3,
@@ -1821,7 +1822,7 @@ test('handleArrowLeft - nested file - third child', async () => {
         setSize: 1,
         name: 'file-b-1.html',
         path: '/test-folder/folder-b/file-b-1.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -1829,7 +1830,7 @@ test('handleArrowLeft - nested file - third child', async () => {
         setSize: 3,
         name: 'c.html',
         path: '/test-folder/c.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1837,7 +1838,7 @@ test('handleArrowLeft - nested file - third child', async () => {
         setSize: 4,
         name: 'other-file.html',
         path: '/other-file.html',
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -1860,7 +1861,7 @@ test('handleArrowLeft - when no focus', async () => {
         setSize: 3,
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1868,7 +1869,7 @@ test('handleArrowLeft - when no focus', async () => {
         setSize: 3,
         name: 'index.html',
         path: '/index.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1901,7 +1902,7 @@ test('handleArrowRight - file', async () => {
         setSize: 3,
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1909,7 +1910,7 @@ test('handleArrowRight - file', async () => {
         setSize: 3,
         name: 'index.html',
         path: '/index.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -1925,7 +1926,7 @@ test('handleArrowRight - file', async () => {
         setSize: 1,
         name: 'index.js',
         path: '/test-folder/index.js',
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -1952,7 +1953,7 @@ test('handleArrowRight - collapsed folder', async () => {
         setSize: 3,
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
         icon: '',
       },
       {
@@ -1961,7 +1962,7 @@ test('handleArrowRight - collapsed folder', async () => {
         setSize: 3,
         name: 'index.html',
         path: '/index.html',
-        type: 'file',
+        type: DirentType.File,
         icon: '',
       },
       {
@@ -1970,7 +1971,7 @@ test('handleArrowRight - collapsed folder', async () => {
         setSize: 3,
         name: 'test-folder',
         path: '/test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
         icon: '',
       },
     ],
@@ -1981,7 +1982,7 @@ test('handleArrowRight - collapsed folder', async () => {
   })
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
-    return [{ name: 'index.js', type: 'file' }]
+    return [{ name: 'index.js', type: DirentType.File }]
   })
   expect(await ViewletExplorer.handleArrowRight(state)).toMatchObject({
     dirents: [
@@ -1991,7 +1992,7 @@ test('handleArrowRight - collapsed folder', async () => {
         setSize: 3,
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
         icon: '',
       },
       {
@@ -2000,7 +2001,7 @@ test('handleArrowRight - collapsed folder', async () => {
         setSize: 3,
         name: 'index.html',
         path: '/index.html',
-        type: 'file',
+        type: DirentType.File,
         icon: '',
       },
       {
@@ -2018,7 +2019,7 @@ test('handleArrowRight - collapsed folder', async () => {
         setSize: 1,
         name: 'index.js',
         path: '/test-folder/index.js',
-        type: 'file',
+        type: DirentType.File,
         icon: '',
       },
     ],
@@ -2041,7 +2042,7 @@ test('handleArrowRight - collapsed empty folder', async () => {
         setSize: 3,
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2049,7 +2050,7 @@ test('handleArrowRight - collapsed empty folder', async () => {
         setSize: 3,
         name: 'index.html',
         path: '/index.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2057,7 +2058,7 @@ test('handleArrowRight - collapsed empty folder', async () => {
         setSize: 3,
         name: 'test-folder',
         path: '/test-folder',
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
     pathSeparator: '/',
@@ -2078,7 +2079,7 @@ test('handleArrowRight - collapsed empty folder', async () => {
         setSize: 3,
         name: 'index.css',
         path: '/index.css',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2086,7 +2087,7 @@ test('handleArrowRight - collapsed empty folder', async () => {
         setSize: 3,
         name: 'index.html',
         path: '/index.html',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2117,7 +2118,7 @@ test('handleArrowRight - expanded folder', async () => {
         name: 'index.css',
         path: '/index.css',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2126,7 +2127,7 @@ test('handleArrowRight - expanded folder', async () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2144,7 +2145,7 @@ test('handleArrowRight - expanded folder', async () => {
         name: 'index.js',
         path: '/test-folder/index.js',
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -2168,7 +2169,7 @@ test('handleArrowRight - expanded empty folder', async () => {
         name: 'index.css',
         path: '/index.css',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2177,7 +2178,7 @@ test('handleArrowRight - expanded empty folder', async () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2208,7 +2209,7 @@ test('handleArrowRight - when no focus', async () => {
         name: 'index.css',
         path: '/index.css',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2217,7 +2218,7 @@ test('handleArrowRight - when no focus', async () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2235,7 +2236,7 @@ test('handleArrowRight - when no focus', async () => {
         name: 'index.js',
         path: '/test-folder/index.js',
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -2257,7 +2258,7 @@ test('focusFirst', () => {
         name: 'index.css',
         path: '/index.css',
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2266,7 +2267,7 @@ test('focusFirst', () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -2302,7 +2303,7 @@ test('focusFirst - focus already at first', () => {
         name: 'index.css',
         path: '/index.css',
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2311,7 +2312,7 @@ test('focusFirst - focus already at first', () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -2333,7 +2334,7 @@ test('focusLast', () => {
         name: 'index.css',
         path: '/index.css',
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2342,7 +2343,7 @@ test('focusLast', () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -2375,7 +2376,7 @@ test('focusLast - focus already at last', () => {
         name: 'index.css',
         path: '/index.css',
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2384,7 +2385,7 @@ test('focusLast - focus already at last', () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -2409,7 +2410,7 @@ test('handleWheel - up', () => {
         name: 'index.css',
         path: '/index.css',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2418,7 +2419,7 @@ test('handleWheel - up', () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -2436,7 +2437,7 @@ test('handleWheel - up', () => {
           name: 'index.css',
           path: '/index.css',
           setSize: 3,
-          type: 'file',
+          type: DirentType.File,
         },
       ],
     ],
@@ -2461,7 +2462,7 @@ test('handleWheel - up - already at top', () => {
         name: 'index.css',
         path: '/index.css',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2470,7 +2471,7 @@ test('handleWheel - up - already at top', () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -2495,7 +2496,7 @@ test.skip('handleWheel - down', () => {
         name: 'index.css',
         path: '/index.css',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2504,7 +2505,7 @@ test.skip('handleWheel - down', () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -2523,7 +2524,7 @@ test.skip('handleWheel - down', () => {
           name: 'index.css',
           path: '/index.css',
           setSize: 3,
-          type: 'file',
+          type: DirentType.File,
         },
       ],
     ],
@@ -2541,7 +2542,7 @@ test.skip('handleWheel - down', () => {
   //       name: 'index.html',
   //       path: '/index.html',
   //       setSize: 3,
-  //       type: 'file',
+  //       type: DirentType.File,
   //     },
   //   ]
   // )
@@ -2565,7 +2566,7 @@ test('handleWheel - down - already at bottom', () => {
         name: 'index.css',
         path: '/index.css',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2574,7 +2575,7 @@ test('handleWheel - down - already at bottom', () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -2599,7 +2600,7 @@ test('handleWheel - down - already at bottom but viewlet is larger than items ca
         name: 'index.css',
         path: '/index.css',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2608,7 +2609,7 @@ test('handleWheel - down - already at bottom but viewlet is larger than items ca
         name: 'index.html',
         path: '/index.html',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -2637,7 +2638,7 @@ test('handlePaste - copied gnome files', async () => {
     return [
       {
         name: 'some-file.txt',
-        type: 'file',
+        type: DirentType.File,
       },
     ]
   })
@@ -2667,7 +2668,7 @@ test('handlePaste - copied gnome files', async () => {
         path: '/testsome-file.txt',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   })
@@ -2805,7 +2806,7 @@ test.skip('newFile - root', async () => {
         path: '/new file',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   ])
@@ -2824,7 +2825,7 @@ test.skip('newFile - inside folder', async () => {
         path: '/test/folder-1',
         posInSet: 1,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -2833,7 +2834,7 @@ test.skip('newFile - inside folder', async () => {
         path: '/test/folder-2',
         posInSet: 2,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -2842,7 +2843,7 @@ test.skip('newFile - inside folder', async () => {
         path: '/test/folder-3',
         posInSet: 3,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
     width: 600,
@@ -2859,15 +2860,15 @@ test.skip('newFile - inside folder', async () => {
         return [
           {
             name: 'a.txt',
-            type: 'file',
+            type: DirentType.File,
           },
           {
             name: 'b.txt',
-            type: 'file',
+            type: DirentType.File,
           },
           {
             name: 'c.txt',
-            type: 'file',
+            type: DirentType.File,
           },
         ]
       default:
@@ -2899,7 +2900,7 @@ test.skip('newFile - inside folder', async () => {
         path: '/test/folder-1',
         posInSet: 1,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -2917,7 +2918,7 @@ test.skip('newFile - inside folder', async () => {
         path: '/test/folder-2/a.txt',
         posInSet: 1,
         setSize: 4,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -2926,7 +2927,7 @@ test.skip('newFile - inside folder', async () => {
         path: '/test/folder-2/b.txt',
         posInSet: 2,
         setSize: 4,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -2935,7 +2936,7 @@ test.skip('newFile - inside folder', async () => {
         path: '/test/folder-2/c.txt',
         posInSet: 3,
         setSize: 4,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -2944,7 +2945,7 @@ test.skip('newFile - inside folder', async () => {
         path: '/test/folder-2/created.txt',
         posInSet: 4,
         setSize: 4,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -2953,7 +2954,7 @@ test.skip('newFile - inside folder', async () => {
         path: '/test/folder-3',
         posInSet: 3,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
   })
@@ -3054,7 +3055,7 @@ test('removeDirent - first', async () => {
         path: '/test/folder-1',
         posInSet: 1,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -3063,7 +3064,7 @@ test('removeDirent - first', async () => {
         path: '/test/folder-2',
         posInSet: 2,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -3072,7 +3073,7 @@ test('removeDirent - first', async () => {
         path: '/test/folder-3',
         posInSet: 3,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
     width: 600,
@@ -3103,7 +3104,7 @@ test('removeDirent - first', async () => {
         path: '/test/folder-2',
         posInSet: 2, // TODO should be 1
         setSize: 3, // TODO should be 2
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -3112,7 +3113,7 @@ test('removeDirent - first', async () => {
         path: '/test/folder-3',
         posInSet: 3, // TODO should be 2
         setSize: 3, // TODO should be 2
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
     focusedIndex: 0,
@@ -3132,7 +3133,7 @@ test('removeDirent - only folder', async () => {
         path: '/test/folder-1',
         posInSet: 1,
         setSize: 1,
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
     width: 600,
@@ -3173,7 +3174,7 @@ test('removeDirent - expanded folder', async () => {
         path: '/test/folder-1',
         posInSet: 1,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 2,
@@ -3182,7 +3183,7 @@ test('removeDirent - expanded folder', async () => {
         path: '/test/folder-1/a.txt',
         posInSet: 1,
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -3191,7 +3192,7 @@ test('removeDirent - expanded folder', async () => {
         path: '/test/folder-1/b.txt',
         posInSet: 2,
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -3200,7 +3201,7 @@ test('removeDirent - expanded folder', async () => {
         path: '/test/folder-2',
         posInSet: 2,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -3209,7 +3210,7 @@ test('removeDirent - expanded folder', async () => {
         path: '/test/folder-3',
         posInSet: 3,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
     width: 600,
@@ -3240,7 +3241,7 @@ test('removeDirent - expanded folder', async () => {
         path: '/test/folder-2',
         posInSet: 2, // TODO should be 1
         setSize: 3, // TODO should be 2
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -3249,7 +3250,7 @@ test('removeDirent - expanded folder', async () => {
         path: '/test/folder-3',
         posInSet: 3, // TODO should be 2
         setSize: 3, // TODO should be 2
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
     focusedIndex: 0,
@@ -3269,7 +3270,7 @@ test('removeDirent - middle', async () => {
         path: '/test/folder-1',
         posInSet: 1,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -3278,7 +3279,7 @@ test('removeDirent - middle', async () => {
         path: '/test/folder-2',
         posInSet: 2,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -3287,7 +3288,7 @@ test('removeDirent - middle', async () => {
         path: '/test/folder-3',
         posInSet: 3,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
     width: 600,
@@ -3319,7 +3320,7 @@ test('removeDirent - middle', async () => {
         path: '/test/folder-1',
         posInSet: 1,
         setSize: 3, // TODO should be 2
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -3328,7 +3329,7 @@ test('removeDirent - middle', async () => {
         path: '/test/folder-3',
         posInSet: 3, // TODO should be 2
         setSize: 3, // TODO should be 2
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
     focusedIndex: 0,
@@ -3348,7 +3349,7 @@ test('removeDirent - last', async () => {
         path: '/test/folder-1',
         posInSet: 1,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -3357,7 +3358,7 @@ test('removeDirent - last', async () => {
         path: '/test/folder-2',
         posInSet: 2,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -3366,7 +3367,7 @@ test('removeDirent - last', async () => {
         path: '/test/folder-3',
         posInSet: 3,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
     width: 600,
@@ -3398,7 +3399,7 @@ test('removeDirent - last', async () => {
         path: '/test/folder-1',
         posInSet: 1,
         setSize: 3, // TODO should be 2
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -3407,7 +3408,7 @@ test('removeDirent - last', async () => {
         path: '/test/folder-2',
         posInSet: 2,
         setSize: 3, // TODO should be 2
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
     focusedIndex: 1,
@@ -3452,7 +3453,7 @@ test('resize - same height', () => {
         path: 'file 1',
         posInSet: 1,
         setSize: 4,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -3461,7 +3462,7 @@ test('resize - same height', () => {
         path: 'file 2',
         posInSet: 2,
         setSize: 4,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -3470,7 +3471,7 @@ test('resize - same height', () => {
         path: 'file 3',
         posInSet: 3,
         setSize: 4,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -3479,7 +3480,7 @@ test('resize - same height', () => {
         path: 'file 4',
         posInSet: 4,
         setSize: 4,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
     focusedIndex: 0,
@@ -3516,7 +3517,7 @@ test('computeRenamedDirents - file', () => {
           path: '/test/file 1',
           posInSet: 1,
           setSize: 1,
-          type: 'file',
+          type: DirentType.File,
         },
       ],
       0,
@@ -3532,7 +3533,7 @@ test('computeRenamedDirents - file', () => {
         path: '/test/file 2',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   })
@@ -3549,7 +3550,7 @@ test('computeRenamedDirents - file moves to the top', () => {
           path: '/test/b',
           posInSet: 1,
           setSize: 3,
-          type: 'file',
+          type: DirentType.File,
         },
         {
           depth: 1,
@@ -3558,7 +3559,7 @@ test('computeRenamedDirents - file moves to the top', () => {
           path: '/test/c',
           posInSet: 2,
           setSize: 3,
-          type: 'file',
+          type: DirentType.File,
         },
         {
           depth: 1,
@@ -3567,7 +3568,7 @@ test('computeRenamedDirents - file moves to the top', () => {
           path: '/test/d',
           posInSet: 3,
           setSize: 3,
-          type: 'file',
+          type: DirentType.File,
         },
       ],
       2,
@@ -3583,7 +3584,7 @@ test('computeRenamedDirents - file moves to the top', () => {
         path: '/test/a',
         posInSet: 1,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -3592,7 +3593,7 @@ test('computeRenamedDirents - file moves to the top', () => {
         path: '/test/b',
         posInSet: 2,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -3601,7 +3602,7 @@ test('computeRenamedDirents - file moves to the top', () => {
         path: '/test/c',
         posInSet: 3,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   })
@@ -3627,7 +3628,7 @@ test('computeRenamedDirents - file moves to the top - open directories are in be
           path: '/test/b/a',
           posInSet: 1,
           setSize: 1,
-          type: 'file',
+          type: DirentType.File,
         },
         {
           depth: 1,
@@ -3645,7 +3646,7 @@ test('computeRenamedDirents - file moves to the top - open directories are in be
           path: '/test/c/a',
           posInSet: 1,
           setSize: 1,
-          type: 'file',
+          type: DirentType.File,
         },
         {
           depth: 1,
@@ -3654,7 +3655,7 @@ test('computeRenamedDirents - file moves to the top - open directories are in be
           path: '/test/d',
           posInSet: 3,
           setSize: 3,
-          type: 'file',
+          type: DirentType.File,
         },
       ],
       4,
@@ -3670,7 +3671,7 @@ test('computeRenamedDirents - file moves to the top - open directories are in be
         path: '/test/a',
         posInSet: 1,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -3688,7 +3689,7 @@ test('computeRenamedDirents - file moves to the top - open directories are in be
         path: '/test/b/a',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -3706,7 +3707,7 @@ test('computeRenamedDirents - file moves to the top - open directories are in be
         path: '/test/c/a',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   })
@@ -3723,7 +3724,7 @@ test('computeRenamedDirents - file moves to the bottom', () => {
           path: '/test/a',
           posInSet: 1,
           setSize: 3,
-          type: 'file',
+          type: DirentType.File,
         },
         {
           depth: 1,
@@ -3732,7 +3733,7 @@ test('computeRenamedDirents - file moves to the bottom', () => {
           path: '/test/b',
           posInSet: 2,
           setSize: 3,
-          type: 'file',
+          type: DirentType.File,
         },
         {
           depth: 1,
@@ -3741,7 +3742,7 @@ test('computeRenamedDirents - file moves to the bottom', () => {
           path: '/test/c',
           posInSet: 3,
           setSize: 3,
-          type: 'file',
+          type: DirentType.File,
         },
       ],
       0,
@@ -3757,7 +3758,7 @@ test('computeRenamedDirents - file moves to the bottom', () => {
         path: '/test/b',
         posInSet: 1,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -3766,7 +3767,7 @@ test('computeRenamedDirents - file moves to the bottom', () => {
         path: '/test/c',
         posInSet: 2,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -3775,7 +3776,7 @@ test('computeRenamedDirents - file moves to the bottom', () => {
         path: '/test/d',
         posInSet: 3,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   })
@@ -3792,7 +3793,7 @@ test('computeRenamedDirents - file moves to the bottom - open directories are in
           path: '/test/a',
           posInSet: 1,
           setSize: 3,
-          type: 'file',
+          type: DirentType.File,
         },
         {
           depth: 1,
@@ -3810,7 +3811,7 @@ test('computeRenamedDirents - file moves to the bottom - open directories are in
           path: '/test/b/a',
           posInSet: 1,
           setSize: 1,
-          type: 'file',
+          type: DirentType.File,
         },
         {
           depth: 1,
@@ -3828,7 +3829,7 @@ test('computeRenamedDirents - file moves to the bottom - open directories are in
           path: '/test/c/a',
           posInSet: 1,
           setSize: 1,
-          type: 'file',
+          type: DirentType.File,
         },
       ],
       0,
@@ -3853,7 +3854,7 @@ test('computeRenamedDirents - file moves to the bottom - open directories are in
         path: '/test/b/a',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -3871,7 +3872,7 @@ test('computeRenamedDirents - file moves to the bottom - open directories are in
         path: '/test/c/a',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -3880,7 +3881,7 @@ test('computeRenamedDirents - file moves to the bottom - open directories are in
         path: '/test/d',
         posInSet: 3,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   })
@@ -3897,7 +3898,7 @@ test('computeRenamedDirents - directory', () => {
           path: '/test/folder-1',
           posInSet: 1,
           setSize: 1,
-          type: 'file',
+          type: DirentType.File,
         },
         {
           depth: 2,
@@ -3906,7 +3907,7 @@ test('computeRenamedDirents - directory', () => {
           path: '/test/folder-1/a',
           posInSet: 1,
           setSize: 2,
-          type: 'file',
+          type: DirentType.File,
         },
         {
           depth: 2,
@@ -3915,7 +3916,7 @@ test('computeRenamedDirents - directory', () => {
           path: '/test/folder-1/b',
           posInSet: 2,
           setSize: 2,
-          type: 'file',
+          type: DirentType.File,
         },
       ],
       0,
@@ -3931,7 +3932,7 @@ test('computeRenamedDirents - directory', () => {
         path: '/test/folder-2',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -3940,7 +3941,7 @@ test('computeRenamedDirents - directory', () => {
         path: '/test/folder-2/a',
         posInSet: 1,
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -3949,7 +3950,7 @@ test('computeRenamedDirents - directory', () => {
         path: '/test/folder-2/b',
         posInSet: 2,
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   })
@@ -3978,7 +3979,7 @@ test('expandAll', async () => {
         icon: '',
         name: 'folder-1',
         path: '/folder-1',
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -3987,7 +3988,7 @@ test('expandAll', async () => {
         icon: '',
         name: 'folder-2',
         path: '/folder-2',
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -3996,7 +3997,7 @@ test('expandAll', async () => {
         icon: '',
         name: 'folder-3',
         path: '/folder-3',
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
   }
@@ -4007,9 +4008,9 @@ test('expandAll', async () => {
       case '/folder-2':
       case '/folder-3':
         return [
-          { name: 'a.txt', type: 'file' },
-          { name: 'b.txt', type: 'file' },
-          { name: 'c.txt', type: 'file' },
+          { name: 'a.txt', type: DirentType.File },
+          { name: 'b.txt', type: DirentType.File },
+          { name: 'c.txt', type: DirentType.File },
         ]
       default:
         throw new Error('unexpected folder')
@@ -4033,7 +4034,7 @@ test('expandAll', async () => {
         path: '/folder-1/a.txt',
         posInSet: 1,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -4042,7 +4043,7 @@ test('expandAll', async () => {
         path: '/folder-1/b.txt',
         posInSet: 2,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -4051,7 +4052,7 @@ test('expandAll', async () => {
         path: '/folder-1/c.txt',
         posInSet: 3,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -4069,7 +4070,7 @@ test('expandAll', async () => {
         path: '/folder-2/a.txt',
         posInSet: 1,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -4078,7 +4079,7 @@ test('expandAll', async () => {
         path: '/folder-2/b.txt',
         posInSet: 2,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -4087,7 +4088,7 @@ test('expandAll', async () => {
         path: '/folder-2/c.txt',
         posInSet: 3,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -4105,7 +4106,7 @@ test('expandAll', async () => {
         path: '/folder-3/a.txt',
         posInSet: 1,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -4114,7 +4115,7 @@ test('expandAll', async () => {
         path: '/folder-3/b.txt',
         posInSet: 2,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -4123,7 +4124,7 @@ test('expandAll', async () => {
         path: '/folder-3/c.txt',
         posInSet: 3,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   })
@@ -4155,7 +4156,7 @@ test('collapseAll', () => {
         path: '/folder-1/a.txt',
         posInSet: 1,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -4164,7 +4165,7 @@ test('collapseAll', () => {
         path: '/folder-1/b.txt',
         posInSet: 2,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -4173,7 +4174,7 @@ test('collapseAll', () => {
         path: '/folder-1/c.txt',
         posInSet: 3,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -4191,7 +4192,7 @@ test('collapseAll', () => {
         path: '/folder-2/a.txt',
         posInSet: 1,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -4200,7 +4201,7 @@ test('collapseAll', () => {
         path: '/folder-2/b.txt',
         posInSet: 2,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -4209,7 +4210,7 @@ test('collapseAll', () => {
         path: '/folder-2/c.txt',
         posInSet: 3,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -4227,7 +4228,7 @@ test('collapseAll', () => {
         path: '/folder-3/a.txt',
         posInSet: 1,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -4236,7 +4237,7 @@ test('collapseAll', () => {
         path: '/folder-3/b.txt',
         posInSet: 2,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 2,
@@ -4245,7 +4246,7 @@ test('collapseAll', () => {
         path: '/folder-3/c.txt',
         posInSet: 3,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -4254,7 +4255,7 @@ test('collapseAll', () => {
         path: '/test.txt',
         posInSet: 4,
         setSize: 4,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -4267,7 +4268,7 @@ test('collapseAll', () => {
         path: '/folder-1',
         posInSet: 1,
         setSize: 4,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -4276,7 +4277,7 @@ test('collapseAll', () => {
         path: '/folder-2',
         posInSet: 2,
         setSize: 4,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -4285,7 +4286,7 @@ test('collapseAll', () => {
         path: '/folder-3',
         posInSet: 3,
         setSize: 4,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -4294,7 +4295,7 @@ test('collapseAll', () => {
         path: '/test.txt',
         posInSet: 4,
         setSize: 4,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   })
@@ -4309,15 +4310,15 @@ test('event - workspace change', async () => {
     return [
       {
         name: 'file 1',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         name: 'file 2',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         name: 'file 3',
-        type: 'file',
+        type: DirentType.File,
       },
     ]
   })
@@ -4336,7 +4337,7 @@ test('event - workspace change', async () => {
         path: '/test/file 1',
         posInSet: 1,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -4345,7 +4346,7 @@ test('event - workspace change', async () => {
         path: '/test/file 2',
         posInSet: 2,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -4354,7 +4355,7 @@ test('event - workspace change', async () => {
         path: '/test/file 3',
         posInSet: 3,
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   })
@@ -4422,7 +4423,7 @@ test('updateRoot - root changes while reading directories', async () => {
     return [
       {
         name: 'folder-1',
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ]
   })
@@ -4454,7 +4455,7 @@ test('updateRoot - new folder', async () => {
     return [
       {
         name: 'folder-1',
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ]
   })
@@ -4467,7 +4468,7 @@ test('updateRoot - new folder', async () => {
         path: '/testfolder-1', // TODO missing path separator here
         posInSet: 1,
         setSize: 1,
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
   })
@@ -4486,7 +4487,7 @@ test('event - issue with blur event after context menu event', async () => {
         path: '/test/folder-1',
         posInSet: 1,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -4495,7 +4496,7 @@ test('event - issue with blur event after context menu event', async () => {
         path: '/test/folder-2',
         posInSet: 2,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -4504,7 +4505,7 @@ test('event - issue with blur event after context menu event', async () => {
         path: '/test/folder-3',
         posInSet: 3,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
     width: 600,
@@ -4550,7 +4551,7 @@ test('openContainingFolder - nested', async () => {
         path: '/test/a',
         posInSet: 1,
         setSize: 1,
-        type: 'folder',
+        type: DirentType.Directory,
       },
       {
         depth: 2,
@@ -4559,7 +4560,7 @@ test('openContainingFolder - nested', async () => {
         path: '/test/a/b.txt',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -4619,9 +4620,9 @@ test('revealItem - two levels deep', async () => {
   FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
     switch (uri) {
       case '/test':
-        return [{ name: 'a', type: 'folder' }]
+        return [{ name: 'a', type: DirentType.Directory }]
       case '/test/a':
-        return [{ name: 'b.txt', type: 'file' }]
+        return [{ name: 'b.txt', type: DirentType.File }]
       default:
         throw new Error(`file not found ${uri}`)
     }
@@ -4637,7 +4638,7 @@ test('revealItem - two levels deep', async () => {
         path: '/test/a',
         posInSet: 1,
         setSize: 1,
-        type: 'folder',
+        type: DirentType.Directory,
       },
       {
         depth: 2,
@@ -4646,7 +4647,7 @@ test('revealItem - two levels deep', async () => {
         path: '/test/a/b.txt',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
     focused: true,
@@ -4673,7 +4674,7 @@ test('revealItem - insert into existing tree', async () => {
         path: '/test/folder-1',
         posInSet: 1,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -4682,7 +4683,7 @@ test('revealItem - insert into existing tree', async () => {
         path: '/test/folder-2',
         posInSet: 2,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -4691,7 +4692,7 @@ test('revealItem - insert into existing tree', async () => {
         path: '/test/folder-3',
         posInSet: 3,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
   }
@@ -4707,7 +4708,7 @@ test('revealItem - insert into existing tree', async () => {
             path: '/test/folder-1',
             posInSet: 1,
             setSize: 3,
-            type: 'directory',
+            type: DirentType.Directory,
           },
           {
             depth: 1,
@@ -4716,7 +4717,7 @@ test('revealItem - insert into existing tree', async () => {
             path: '/test/folder-2',
             posInSet: 2,
             setSize: 3,
-            type: 'directory',
+            type: DirentType.Directory,
           },
           {
             depth: 1,
@@ -4725,11 +4726,11 @@ test('revealItem - insert into existing tree', async () => {
             path: '/test/folder-3',
             posInSet: 3,
             setSize: 3,
-            type: 'directory',
+            type: DirentType.Directory,
           },
         ]
       case '/test/folder-1':
-        return [{ name: 'a.txt', type: 'file' }]
+        return [{ name: 'a.txt', type: DirentType.File }]
       default:
         throw new Error(`file not found ${uri}`)
     }
@@ -4745,7 +4746,7 @@ test('revealItem - insert into existing tree', async () => {
         path: '/test/folder-1',
         posInSet: 1,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 2,
@@ -4754,7 +4755,7 @@ test('revealItem - insert into existing tree', async () => {
         path: '/test/folder-1/a.txt',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -4763,7 +4764,7 @@ test('revealItem - insert into existing tree', async () => {
         path: '/test/folder-2',
         posInSet: 2,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -4772,7 +4773,7 @@ test('revealItem - insert into existing tree', async () => {
         path: '/test/folder-3',
         posInSet: 3,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
     focused: true,
@@ -4799,7 +4800,7 @@ test("revealItem - insert into existing tree - some sibling nodes don't exist an
         path: '/test/folder-1',
         posInSet: 1,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -4808,7 +4809,7 @@ test("revealItem - insert into existing tree - some sibling nodes don't exist an
         path: '/test/folder-2',
         posInSet: 2,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -4817,7 +4818,7 @@ test("revealItem - insert into existing tree - some sibling nodes don't exist an
         path: '/test/folder-3',
         posInSet: 3,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
   }
@@ -4833,11 +4834,11 @@ test("revealItem - insert into existing tree - some sibling nodes don't exist an
             path: '/test/folder-1',
             posInSet: 1,
             setSize: 1,
-            type: 'directory',
+            type: DirentType.Directory,
           },
         ]
       case '/test/folder-1':
-        return [{ name: 'a.txt', type: 'file' }]
+        return [{ name: 'a.txt', type: DirentType.File }]
       default:
         throw new Error(`file not found ${uri}`)
     }
@@ -4853,7 +4854,7 @@ test("revealItem - insert into existing tree - some sibling nodes don't exist an
         path: '/test/folder-1',
         posInSet: 1,
         setSize: 1,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 2,
@@ -4862,7 +4863,7 @@ test("revealItem - insert into existing tree - some sibling nodes don't exist an
         path: '/test/folder-1/a.txt',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
     focused: true,
@@ -4889,7 +4890,7 @@ test('revealItem - already visible', async () => {
         path: '/test/a',
         posInSet: 1,
         setSize: 1,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 2,
@@ -4898,7 +4899,7 @@ test('revealItem - already visible', async () => {
         path: '/test/a/b.txt',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -4919,7 +4920,7 @@ test('revealItem - already visible', async () => {
         path: '/test/a',
         posInSet: 1,
         setSize: 1,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 2,
@@ -4928,7 +4929,7 @@ test('revealItem - already visible', async () => {
         path: '/test/a/b.txt',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   })
@@ -4985,7 +4986,7 @@ test('focusIndex - scroll up', () => {
         name: 'index.css',
         path: '/index.css',
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -4994,7 +4995,7 @@ test('focusIndex - scroll up', () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -5022,7 +5023,7 @@ test('focusIndex - scroll down', () => {
         name: 'index.css',
         path: '/index.css',
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -5031,7 +5032,7 @@ test('focusIndex - scroll down', () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -5059,7 +5060,7 @@ test('focusIndex - focus container', () => {
         name: 'index.css',
         path: '/index.css',
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -5068,7 +5069,7 @@ test('focusIndex - focus container', () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -5096,7 +5097,7 @@ test('handleClickCurrent', async () => {
         name: 'index.css',
         path: '/index.css',
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -5105,7 +5106,7 @@ test('handleClickCurrent', async () => {
         name: 'index.html',
         path: '/index.html',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
       {
         depth: 1,
@@ -5114,7 +5115,7 @@ test('handleClickCurrent', async () => {
         name: 'index.js',
         path: '/index.js',
         setSize: 3,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   }
@@ -5145,7 +5146,7 @@ test('expandRecursively', async () => {
         path: '/test/a',
         posInSet: 1,
         setSize: 1,
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
   }
@@ -5156,18 +5157,18 @@ test('expandRecursively', async () => {
         return [
           {
             name: 'b',
-            type: 'directory',
+            type: DirentType.Directory,
           },
         ]
       case '/test/a/b':
         return [
           {
             name: 'c',
-            type: 'directory',
+            type: DirentType.Directory,
           },
           {
             name: 'd.txt',
-            type: 'file',
+            type: DirentType.File,
           },
         ]
       case '/test/a/b/c':
@@ -5187,7 +5188,7 @@ test('expandRecursively', async () => {
         path: '/test/a',
         posInSet: 1,
         setSize: 1,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 2,
@@ -5196,7 +5197,7 @@ test('expandRecursively', async () => {
         path: '/test/a/b',
         posInSet: 1,
         setSize: 1,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 3,
@@ -5205,7 +5206,7 @@ test('expandRecursively', async () => {
         path: '/test/a/b/c',
         posInSet: 1,
         setSize: 2,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 3,
@@ -5214,7 +5215,7 @@ test('expandRecursively', async () => {
         path: '/test/a/b/d.txt',
         posInSet: 2,
         setSize: 2,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   })
@@ -5240,7 +5241,7 @@ test('expandRecursively - merge with current items', async () => {
         path: '/test/a',
         posInSet: 1,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -5249,7 +5250,7 @@ test('expandRecursively - merge with current items', async () => {
         path: '/test/b',
         posInSet: 2,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -5258,7 +5259,7 @@ test('expandRecursively - merge with current items', async () => {
         path: '/test/c',
         posInSet: 3,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
   }
@@ -5269,14 +5270,14 @@ test('expandRecursively - merge with current items', async () => {
         return [
           {
             name: 'd',
-            type: 'directory',
+            type: DirentType.Directory,
           },
         ]
       case '/test/b/d':
         return [
           {
             name: 'e',
-            type: 'directory',
+            type: DirentType.Directory,
           },
         ]
       case '/test/b/d/e':
@@ -5296,7 +5297,7 @@ test('expandRecursively - merge with current items', async () => {
         path: '/test/a',
         posInSet: 1,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -5305,7 +5306,7 @@ test('expandRecursively - merge with current items', async () => {
         path: '/test/b',
         posInSet: 2,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 2,
@@ -5314,7 +5315,7 @@ test('expandRecursively - merge with current items', async () => {
         path: '/test/b/d',
         posInSet: 1,
         setSize: 1,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 3,
@@ -5323,7 +5324,7 @@ test('expandRecursively - merge with current items', async () => {
         path: '/test/b/d/e',
         posInSet: 1,
         setSize: 1,
-        type: 'directory',
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -5332,7 +5333,7 @@ test('expandRecursively - merge with current items', async () => {
         path: '/test/c',
         posInSet: 3,
         setSize: 3,
-        type: 'directory',
+        type: DirentType.Directory,
       },
     ],
   })
