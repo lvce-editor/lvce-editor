@@ -1435,16 +1435,17 @@ export const expandRecursively = async (state) => {
         return []
     }
   }
-
+  // TODO race condition: what if folder is being collapse while it is recursively expanding?
+  // TODO race condition: what if folder is being deleted while it is recursively expanding?
+  // TODO race condition: what if a new file/folder is created while the folder is recursively expanding?
   const childDirents = await getChildDirentsRecursively(dirent)
-  // TODO insert correctly
-  const newDirents = childDirents
-  // console.log({ dirent, childDirents })
-  // TODO
-  // 1. get focused dirent
-  // 2. if it is not a folder, return
-  // 3. use `find` to get all dirent recursively or call readDirWithFileTypes very often
-  // 4. merge child dirents into explorer
+  const startIndex = focusedIndex
+  const endIndex = getParentEndIndex(dirents, focusedIndex)
+  const newDirents = [
+    ...dirents.slice(0, startIndex),
+    ...childDirents,
+    ...dirents.slice(endIndex),
+  ]
   return { ...state, dirents: newDirents }
 }
 
