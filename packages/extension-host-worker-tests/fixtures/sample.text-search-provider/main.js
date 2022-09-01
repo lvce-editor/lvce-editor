@@ -7,7 +7,7 @@ const textSearchProvider = {
         [
           {
             absoluteOffset: 208,
-            preview: '    <title>Document</title>\n',
+            preview: '    <title>Document</title>',
           },
         ],
       ],
