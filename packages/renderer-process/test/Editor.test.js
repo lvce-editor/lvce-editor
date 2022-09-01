@@ -72,13 +72,6 @@ test('event - mousedown - left', () => {
   state.$LayerText.append($EditorRow)
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
-  // @ts-ignore
-  document.caretPositionFromPoint = () => {
-    return {
-      offsetNode: $Token.firstChild,
-      offset: 2,
-    }
-  }
   state.$LayerText.dispatchEvent(
     new MouseEvent('mousedown', { detail: 1, clientX: 8, clientY: 5 })
   )
@@ -86,8 +79,7 @@ test('event - mousedown - left', () => {
     'Editor.handleSingleClick',
     '',
     8,
-    5,
-    2
+    5
   )
 })
 
@@ -127,10 +119,6 @@ test('event - mousedown - left - out of viewport', () => {
   state.$LayerText.append($EditorRow)
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
-  // @ts-ignore
-  document.caretPositionFromPoint = () => {
-    return null
-  }
   state.$LayerText.dispatchEvent(
     new MouseEvent('mousedown', {
       detail: 1,
@@ -143,8 +131,7 @@ test('event - mousedown - left - out of viewport', () => {
     'Editor.handleSingleClick',
     '',
     -10,
-    -10,
-    0
+    -10
   )
 })
 
@@ -157,13 +144,6 @@ test('event - double click', () => {
   state.$LayerText.append($EditorRow)
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
-  // @ts-ignore
-  document.caretPositionFromPoint = () => {
-    return {
-      offsetNode: $Token.firstChild,
-      offset: 2,
-    }
-  }
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
   // @ts-ignore
@@ -174,8 +154,7 @@ test('event - double click', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith(
     'Editor.handleDoubleClick',
     8,
-    5,
-    2
+    5
   )
 })
 
@@ -222,21 +201,13 @@ test('event - triple click', () => {
   state.$LayerText.append($EditorRow)
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
-  // @ts-ignore
-  document.caretPositionFromPoint = () => {
-    return {
-      offsetNode: $Token.firstChild,
-      offset: 2,
-    }
-  }
   state.$LayerText.dispatchEvent(
     new MouseEvent('mousedown', { detail: 3, clientX: 8, clientY: 5 })
   )
   expect(RendererWorker.send).toHaveBeenCalledWith(
     'Editor.handleTripleClick',
     8,
-    5,
-    2
+    5
   )
 })
 
