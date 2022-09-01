@@ -1,16 +1,11 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Editor from '../Editor/Editor.js'
+import * as ModifierKey from '../ModifierKey/ModifierKey.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as EditorCursorSet from './EditorCommandCursorSet.js'
-import * as EditorPosition from './EditorCommandPosition.js'
-import * as EditorMoveSelection from './EditorCommandMoveSelection.js'
 import * as EditorGoToDefinition from './EditorCommandGoToDefinition.js'
-import * as EditorSelection from '../EditorSelection/EditorSelection.js'
-import * as Editor from '../Editor/Editor.js'
-
-const Modifier = {
-  Ctrl: 'ctrl',
-  Alt: 'alt',
-}
+import * as EditorMoveSelection from './EditorCommandMoveSelection.js'
+import * as EditorPosition from './EditorCommandPosition.js'
 
 const handleSingleClickWithAlt = async (editor, position) => {
   // TODO rectangular selection with alt click,
@@ -67,16 +62,16 @@ const handleSingleClickDefault = async (editor, position) => {
   )
 }
 
-export const editorHandleSingleClick = async (editor, modifier, x, y) => {
+export const editorHandleSingleClick = (editor, modifier, x, y, offset) => {
   Assert.object(editor)
   Assert.string(modifier)
   Assert.number(x)
   Assert.number(y)
   const position = EditorPosition.at(editor, x, y)
   switch (modifier) {
-    case Modifier.Alt:
+    case ModifierKey.Alt:
       return handleSingleClickWithAlt(editor, position)
-    case Modifier.Ctrl:
+    case ModifierKey.Ctrl:
       return handleSingleClickWithCtrl(editor, position)
     default:
       return handleSingleClickDefault(editor, position)

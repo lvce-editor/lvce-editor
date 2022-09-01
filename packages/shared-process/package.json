@@ -27,7 +27,7 @@
     "got": "^12.3.1",
     "is-object": "^1.0.2",
     "json-parse-even-better-errors": "^2.3.1",
-    "jsonc-parser": "^3.1.0",
+    "jsonc-parser": "^3.2.0",
     "lines-and-columns": "^2.0.3",
     "open": "^8.4.0",
     "p-queue": "^7.3.0",
