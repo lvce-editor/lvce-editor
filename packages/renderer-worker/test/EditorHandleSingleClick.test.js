@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ModifierKey from '../src/parts/ModifierKey/ModifierKey.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -75,7 +76,7 @@ test('editorHandleClick - with ctrl - add second cursor', async () => {
   expect(
     await EditorHandleSingleClick.editorHandleSingleClick(
       editor,
-      'ctrl',
+      ModifierKey.Ctrl,
       21,
       11,
       1
@@ -98,7 +99,7 @@ test('editorHandleClick - with ctrl - remove second cursor', async () => {
   expect(
     await EditorHandleSingleClick.editorHandleSingleClick(
       editor,
-      'ctrl',
+      ModifierKey.Ctrl,
       21,
       11,
       1
