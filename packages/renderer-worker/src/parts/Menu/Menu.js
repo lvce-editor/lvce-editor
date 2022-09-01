@@ -259,6 +259,21 @@ export const handleMouseEnter = async (
   }
 }
 
+export const handleMouseLeave = async () => {
+  const menu = state.menus[0]
+  if (menu.items.length === 0) {
+    return
+  }
+  const oldFocusedIndex = menu.focusedIndex
+  menu.focusedIndex = -1
+  await RendererProcess.invoke(
+    /* Menu.focusIndex */ 'Menu.focusIndex',
+    /* level */ menu.level,
+    /* oldFocusedIndex */ oldFocusedIndex,
+    /* newFocusedIndex */ -1
+  )
+}
+
 export const focusIndex = async (menu, index) => {
   if (menu.items.length === 0) {
     return

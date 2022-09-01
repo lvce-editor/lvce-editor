@@ -379,6 +379,57 @@ test('event - right click outside', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith('Menu.hide')
 })
 
+test('event - mouseleave - outside', () => {
+  Menu.showMenu(0, 0, 100, 250, [
+    {
+      label: 'item 1',
+      flags: 0,
+    },
+    {
+      label: 'item 2',
+      flags: 0,
+    },
+  ])
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const $Menu = Menu.state.$$Menus[0]
+  const $RelatedTarget = document.createElement('div')
+  $RelatedTarget.className = 'MenuItem'
+  $Menu.dispatchEvent(
+    new MouseEvent('mouseleave', {
+      bubbles: true,
+      cancelable: true,
+      relatedTarget: $RelatedTarget,
+    })
+  )
+  expect(RendererWorker.send).not.toHaveBeenCalled()
+})
+
+test('event - mouseleave - outside', () => {
+  Menu.showMenu(0, 0, 100, 250, [
+    {
+      label: 'item 1',
+      flags: 0,
+    },
+    {
+      label: 'item 2',
+      flags: 0,
+    },
+  ])
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const $Menu = Menu.state.$$Menus[0]
+  $Menu.dispatchEvent(
+    new MouseEvent('mouseleave', {
+      bubbles: true,
+      cancelable: true,
+      relatedTarget: document.createElement('div'),
+    })
+  )
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Menu.handleMouseLeave')
+})
+
 test('event - context menu', () => {
   Menu.showMenu(0, 0, 100, 250, [
     {
