@@ -1,3 +1,5 @@
+import * as Ajax from '../src/parts/Ajax/Ajax.js'
+
 beforeAll(() => {
   // @ts-ignore https://github.com/jsdom/jsdom/issues/1724
   globalThis.Response = class {
@@ -18,6 +20,7 @@ afterAll(() => {
 })
 
 // TODO how to test this? probably need mock server or mock service worker
+// TODO mock-service-worker does not support fetch, once it supports fetch, it should be possible to use mock service worker
 test('getJson', async () => {
   // Ajax.state.getJson = jest.fn(async () => {
   //   return {
@@ -56,4 +59,15 @@ test('getJson - error - too many requests', async () => {
   //     'Failed to request json from "https://example.com": API rate limit exceeded for 0.0.0.0. (But here\'s the good news: Authenticated requests get a higher rate limit. Check out the documentation for more details.)'
   //   )
   // )
+})
+
+test('getJson - error - cors', async () => {
+  globalThis.fetch = async () => {
+    throw new TypeError('Failed to fetch')
+  }
+  await expect(Ajax.getJson('https://example.com')).rejects.toThrowError(
+    new Error(
+      'Failed to request json from "https://example.com". Make sure that the server has CORS enabled'
+    )
+  )
 })
