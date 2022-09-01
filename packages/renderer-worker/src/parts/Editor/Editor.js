@@ -300,49 +300,62 @@ export const setText = (editor, text) => {
   }
 }
 
-export const render = (oldState, newState) => {
-  const changes = []
-  if (
-    oldState.lines !== newState.lines ||
-    oldState.tokenizer !== newState.tokenizer ||
-    oldState.minLineY !== newState.minLineY ||
-    oldState.decorations !== newState.decorations
-  ) {
+const renderLines = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.lines === newState.lines &&
+      oldState.tokenizer === newState.tokenizer &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.decorations === newState.decorations
+    )
+  },
+  apply(oldState, newState) {
     const textInfos = EditorText.getVisible(newState)
-    changes.push([
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'EditorText',
       /* method */ 'setText',
       /* textInfos */ textInfos,
-    ])
-  }
+    ]
+  },
+}
 
-  if (oldState.selections !== newState.selections) {
+const renderSelections = {
+  isEqual(oldState, newState) {
+    return oldState.selections === newState.selections
+  },
+  apply(oldState, newState) {
     const cursorInfos = EditorCursor.getVisible(newState)
     const selectionInfos = EditorSelection.getVisible(newState)
-    changes.push([
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'EditorText',
       /* method */ 'setSelections',
       /* cursorInfos */ cursorInfos,
       /* selectionInfos */ selectionInfos,
-    ])
-  }
-  if (
-    oldState.deltaY !== newState.deltaY ||
-    oldState.scrollBarHeight !== newState.scrollBarHeight
-  ) {
+    ]
+  },
+}
+
+const renderScrollBar = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.deltaY === newState.deltaY &&
+      oldState.scrollBarHeight === newState.scrollBarHeight
+    )
+  },
+  apply(oldState, newState) {
     const scrollBarY =
       (newState.deltaY / newState.finalDeltaY) *
       (newState.height - newState.scrollBarHeight)
-    changes.push([
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'EditorText',
       /* method */ 'setScrollBar',
       /* scrollBarY */ scrollBarY,
       /* scrollBarHeight */ newState.scrollBarHeight,
-    ])
-  }
-
-  return changes
+    ]
+  },
 }
+
+export const render = [renderLines, renderSelections, renderScrollBar]
