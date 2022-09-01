@@ -40,6 +40,9 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
     handleError: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    printError: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
 
