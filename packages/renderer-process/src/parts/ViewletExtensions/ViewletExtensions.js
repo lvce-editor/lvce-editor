@@ -62,11 +62,13 @@ const handleWheel = (event) => {
 
 const handleInput = (event) => {
   const $Target = event.target
+  const value = $Target.value
   RendererWorker.send(
-    /* ViewletExtensions.handleInput */ 863,
-    /* value */ $Target.value
+    /* ViewletExtensions.handleInput */ 'Extensions.handleInput',
+    /* value */ value
   )
   // TODO
+  // TODO use beforeinput event to set value and extension list items at the same time
   // state.$Viewlet.ariaBusy = 'true'
 }
 
