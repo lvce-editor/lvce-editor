@@ -1,15 +1,14 @@
 import * as Assert from '../Assert/Assert.js'
 
-export const at = (editor, x, y, offset) => {
+export const at = (editor, x, y) => {
   Assert.object(editor)
   Assert.number(x)
   Assert.number(y)
-  Assert.number(offset)
   const rowIndex = Math.max(
     Math.floor((y - editor.top + editor.deltaY) / editor.rowHeight),
     0
   )
-  const columnIndex = offset
+  const columnIndex = Math.max((x - editor.left) / editor.columnWidth, 0)
   return {
     rowIndex,
     columnIndex,

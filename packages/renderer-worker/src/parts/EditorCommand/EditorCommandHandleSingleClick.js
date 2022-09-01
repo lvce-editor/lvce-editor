@@ -67,19 +67,12 @@ const handleSingleClickDefault = async (editor, position) => {
   )
 }
 
-export const editorHandleSingleClick = async (
-  editor,
-  modifier,
-  x,
-  y,
-  offset
-) => {
+export const editorHandleSingleClick = async (editor, modifier, x, y) => {
   Assert.object(editor)
   Assert.string(modifier)
   Assert.number(x)
   Assert.number(y)
-  Assert.number(offset)
-  const position = EditorPosition.at(editor, x, y, offset)
+  const position = EditorPosition.at(editor, x, y)
   switch (modifier) {
     case Modifier.Alt:
       return handleSingleClickWithAlt(editor, position)

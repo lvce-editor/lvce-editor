@@ -124,39 +124,31 @@ const getModifier = (event) => {
   return ''
 }
 
-const handleSingleClick = (event, x, y, offset) => {
-  console.log('click', { x, y, offset })
+const handleSingleClick = (event, x, y) => {
   const modifier = getModifier(event)
   RendererWorker.send(
     /* Editor.handleSingleClick */ 'Editor.handleSingleClick',
     /* modifier */ modifier,
     /* x */ x,
-    /* y */ y,
-    /* offset */ offset
+    /* y */ y
   )
-  const $Target = event.target
-  // const $InputBox = $Target.closest('.Editor').firstElementChild
-  // $InputBox.focus()
-  // TODO this logic should be in renderer worker
   document.addEventListener('mousemove', handleSelectionMove, { passive: true })
   document.addEventListener('mouseup', handleSelectionDone)
 }
 
-const handleDoubleClick = (event, x, y, offset) => {
+const handleDoubleClick = (event, x, y) => {
   RendererWorker.send(
     /* Editor.handleDoubleClick */ 'Editor.handleDoubleClick',
     /* x */ x,
-    /* y */ y,
-    /* offset */ offset
+    /* y */ y
   )
 }
 
-const handleTripleClick = (event, x, y, offset) => {
+const handleTripleClick = (event, x, y) => {
   RendererWorker.send(
     /* Editor.handleTripleClick */ 'Editor.handleTripleClick',
     /* x */ x,
-    /* y */ y,
-    /* offset */ offset
+    /* y */ y
   )
 }
 
@@ -210,19 +202,18 @@ const handleMouseDown = (event) => {
     return
   }
   event.preventDefault()
-  const totalOffset = getTotalOffset(event)
   const x = event.clientX
   const y = event.clientY
   console.log('detail', event.detail)
   switch (event.detail) {
     case 1:
-      handleSingleClick(event, x, y, totalOffset)
+      handleSingleClick(event, x, y)
       break
     case 2:
-      handleDoubleClick(event, x, y, totalOffset)
+      handleDoubleClick(event, x, y)
       break
     case 3:
-      handleTripleClick(event, x, y, totalOffset)
+      handleTripleClick(event, x, y)
       break
     default:
       break
@@ -445,7 +436,7 @@ export const create = () => {
   $EditorInput.setAttribute('wrap', 'off')
   $EditorInput.setAttribute('spellcheck', 'false')
   // @ts-ignore
-  $EditorInput.role= 'textbox'
+  $EditorInput.role = 'textbox'
   $EditorInput.onpaste = handlePaste
   // TODO where to best put listeners (side effects)
   $EditorInput.addEventListener('beforeinput', handleBeforeInput)
@@ -519,7 +510,7 @@ export const create = () => {
   $Editor.className = 'Viewlet Editor'
   $Editor.dataset.viewletId = 'EditorText'
   // @ts-ignore
-  $Editor.role= 'code'
+  $Editor.role = 'code'
   $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBar)
   if (Platform.isMobileOrTablet()) {
     $Editor.addEventListener('touchstart', handleTouchStart, { passive: true })
