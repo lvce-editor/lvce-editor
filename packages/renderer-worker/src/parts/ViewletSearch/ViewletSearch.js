@@ -91,7 +91,6 @@ export const setValue = async (state, value) => {
     const resultCount = getResultCounts(results)
     const fileResultCount = results.length
     const message = getStatusMessage(resultCount, fileResultCount)
-    console.log({ results, displayResults })
     return {
       ...state,
       value,
@@ -174,7 +173,6 @@ export const handleInput = (state, value) => {
 
 export const handleClick = async (state, index) => {
   const searchResult = state.items[index]
-  console.log({ searchResult })
   await Command.execute(
     /* Main.openUri */ 'Main.openUri',
     /* uri */ searchResult.path
