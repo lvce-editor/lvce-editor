@@ -1,6 +1,6 @@
-const name = 'sample.text-search-provider-error'
+const name = 'sample.text-search-provider-error-previews-is-not-iterable'
 
-test('sample.text-search-provider-error', async () => {
+test('sample.text-search-provider-error-previews-is-not-iterable', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
 
@@ -16,9 +16,7 @@ test('sample.text-search-provider-error', async () => {
   // assert
   const viewletSearch = Locator('.Viewlet[data-viewlet-id="Search"]')
   const message = viewletSearch.locator('[role="status"]')
-  await expect(message).toHaveText(
-    'Error: Failed to execute text search provider: oops'
-  )
+  await expect(message).toHaveText('TypeError: previews is not iterable')
 })
 
 export {}

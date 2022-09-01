@@ -91,6 +91,7 @@ export const setValue = async (state, value) => {
     const resultCount = getResultCounts(results)
     const fileResultCount = results.length
     const message = getStatusMessage(resultCount, fileResultCount)
+    console.log({ results, displayResults })
     return {
       ...state,
       value,
@@ -125,6 +126,10 @@ const getPath = (result) => {
   return result[0]
 }
 
+const getPreviews = (result) => {
+  return result[1]
+}
+
 const compareResults = (resultA, resultB) => {
   const pathA = getPath(resultA)
   const pathB = getPath(resultB)
@@ -136,11 +141,20 @@ const toDisplayResults = (results) => {
   const displayResults = []
   for (const result of results) {
     const path = getPath(result)
+    const previews = getPreviews(result)
     const absolutePath = Workspace.getAbsolutePath(path)
     displayResults.push({
       path: absolutePath,
-      name: path,
+      type: 'file',
+      text: path,
     })
+    for (const preview of previews) {
+      displayResults.push({
+        path: '',
+        type: 'preview',
+        text: preview.preview,
+      })
+    }
   }
   return displayResults
 }
