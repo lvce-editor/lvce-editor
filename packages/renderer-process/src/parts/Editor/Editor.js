@@ -1,16 +1,16 @@
 // TODO so many things in this file
 
-import * as Focus from '../Focus/Focus.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Platform from '../Platform/Platform.js'
 import * as Assert from '../Assert/Assert.js'
-import * as EditorHelper from './EditorHelper.js'
+import * as Focus from '../Focus/Focus.js'
+import * as ModifierKey from '../ModifierKey/ModifierKey.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as Platform from '../Platform/Platform.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as LayerCursor from './LayerCursor.js'
 import * as LayerDiagnostics from './LayerDiagnostics.js'
 import * as LayerScrollBar from './LayerScrollBar.js'
 import * as LayerSelections from './LayerSelections.js'
 import * as LayerText3 from './LayerText.js'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
@@ -116,12 +116,12 @@ const handleSelectionDone = (event) => {
 
 const getModifier = (event) => {
   if (event.ctrlKey) {
-    return 'ctrl'
+    return ModifierKey.Ctrl
   }
   if (event.altKey) {
-    return 'alt'
+    return ModifierKey.Alt
   }
-  return ''
+  return ModifierKey.None
 }
 
 const handleSingleClick = (event, x, y, offset) => {
@@ -445,7 +445,7 @@ export const create = () => {
   $EditorInput.setAttribute('wrap', 'off')
   $EditorInput.setAttribute('spellcheck', 'false')
   // @ts-ignore
-  $EditorInput.role= 'textbox'
+  $EditorInput.role = 'textbox'
   $EditorInput.onpaste = handlePaste
   // TODO where to best put listeners (side effects)
   $EditorInput.addEventListener('beforeinput', handleBeforeInput)
@@ -519,7 +519,7 @@ export const create = () => {
   $Editor.className = 'Viewlet Editor'
   $Editor.dataset.viewletId = 'EditorText'
   // @ts-ignore
-  $Editor.role= 'code'
+  $Editor.role = 'code'
   $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBar)
   if (Platform.isMobileOrTablet()) {
     $Editor.addEventListener('touchstart', handleTouchStart, { passive: true })
