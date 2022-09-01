@@ -14,7 +14,7 @@ export const getJson = async (url, options = {}) => {
       error.message === 'Failed to fetch'
     ) {
       throw new Error(
-        `Failed to request json from "${url}". Make sure that the server has CORS enabled`,
+        `Failed to request json from "${url}". Make sure that the server is running and has CORS enabled`,
         {
           cause: error,
         }
@@ -53,7 +53,7 @@ export const getText = async (url, options = {}) => {
       error.message === 'Failed to fetch'
     ) {
       throw new Error(
-        `Failed to request text from "${url}". Make sure that the server has CORS enabled`,
+        `Failed to request text from "${url}". Make sure that the server is running and has CORS enabled`,
         {
           cause: error,
         }
