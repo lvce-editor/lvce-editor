@@ -67,7 +67,7 @@ test('getJson - error - cors', async () => {
   }
   await expect(Ajax.getJson('https://example.com')).rejects.toThrowError(
     new Error(
-      'Failed to request json from "https://example.com". Make sure that the server has CORS enabled'
+      'Failed to request json from "https://example.com". Make sure that the server is running and has CORS enabled'
     )
   )
 })
