@@ -1,9 +1,9 @@
 import * as Command from '../Command/Command.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as I18nString from '../I18NString/I18NString.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as I18nString from '../I18NString/I18NString.js'
+import * as Compare from '../Compare/Compare.js'
 
 // TODO maybe create should have a container as param like vscode?
 // maybe not?
@@ -106,18 +106,6 @@ export const setValue = async (state, value) => {
   }
 }
 
-export const handleResult = async (state, result) => {
-  if (result.version !== state.version) {
-    return
-  }
-  await RendererProcess.invoke(
-    /* viewletInvoke */ 'Viewlet.send',
-    /* id */ state.id,
-    /* method */ 'handleSearchResult',
-    /* result */ result
-  )
-}
-
 export const dispose = async (state) => {
   // TODO cancel pending search
   if (state.state === 'searching') {
@@ -140,7 +128,7 @@ const getPath = (result) => {
 const compareResults = (resultA, resultB) => {
   const pathA = getPath(resultA)
   const pathB = getPath(resultB)
-  return pathA.localeCompare(pathB)
+  return Compare.compareString(pathA, pathB)
 }
 
 const toDisplayResults = (results) => {
@@ -166,7 +154,7 @@ const toDisplayResults = (results) => {
 // TODO send results to renderer process
 // TODO use virtual list because there might be many results
 
-export const handleInput = async (state, value) => {
+export const handleInput = (state, value) => {
   return setValue(state, value)
 }
 

@@ -1,12 +1,13 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
+import * as Compare from '../Compare/Compare.js'
+import * as DirentType from '../DirentType/DirentType.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
-import * as DirentType from '../DirentType/DirentType.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -50,7 +51,7 @@ const compareDirentType = (direntA, direntB) => {
 }
 
 const compareDirentName = (direntA, direntB) => {
-  return direntA.name.localeCompare(direntB.name)
+  return Compare.compareString(direntA.name, direntB.name)
 }
 
 const compareDirent = (direntA, direntB) => {
