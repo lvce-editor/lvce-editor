@@ -4,49 +4,66 @@ export const toBeVisible = (locator) => {
   return `expected selector to be visible ${locator._selector}`
 }
 
-export const toHaveText = (locator, { text }) => {
-  const [element] = QuerySelector.querySelector(locator._selector)
-  if (!element) {
-    return `expected selector ${locator._selector} to have text "${text}" element was not found`
+const printLocator = (locator) => {
+  if (locator._nth) {
+    return `${locator._selector}:nth(${locator._nth})`
   }
-  return `expected selector ${locator._selector} to have text "${text}" but was "${element.textContent}"`
+  return `${locator._selector}`
+}
+
+export const toHaveText = (locator, { text }) => {
+  const element = QuerySelector.querySelectorWithOptions(locator._selector, {
+    nth: locator._nth,
+    hasText: locator._hasText,
+  })
+  const locatorString = printLocator(locator)
+  if (!element) {
+    return `expected selector ${locatorString} to have text "${text}" element was not found`
+  }
+  return `expected selector ${locatorString} to have text "${text}" but was "${element.textContent}"`
 }
 
 export const toHaveAttribute = (locator, { key, value }) => {
   const [element] = QuerySelector.querySelector(locator._selector)
+  const locatorString = printLocator(locator)
   if (!element) {
-    return `expected ${locator._selector} to have attribute ${key} ${value} but element was not found`
+    return `expected ${locatorString} to have attribute ${key} ${value} but element was not found`
   }
   const actual = element.getAttribute(key)
-  return `expected ${locator._selector} to have attribute ${key} ${value} but was ${actual}`
+  return `expected ${locatorString} to have attribute ${key} ${value} but was ${actual}`
 }
 
 export const toHaveCount = (locator, { count }) => {
-  return `expected ${locator._selector} to have count ${count}`
+  const locatorString = printLocator(locator)
+  return `expected ${locatorString} to have count ${count}`
 }
 
 export const toBeFocused = (locator) => {
-  return `expected ${locator._selector} to be focused`
+  const locatorString = printLocator(locator)
+  return `expected ${locatorString} to be focused`
 }
 
 export const toHaveClass = (locator, { className }) => {
   const [element] = QuerySelector.querySelector(locator._selector)
+  const locatorString = printLocator(locator)
   if (!element) {
-    return `expected ${locator._selector} to have class ${className} but element was not found`
+    return `expected ${locatorString} to have class ${className} but element was not found`
   }
-  return `expected ${locator._selector} to have class ${className}`
+  return `expected ${locatorString} to have class ${className}`
 }
 
 export const toBeHidden = (locator) => {
-  return `expected ${locator._selector} to be hidden`
+  const locatorString = printLocator(locator)
+  return `expected ${locatorString} to be hidden`
 }
 
 export const toHaveCss = (locator, { key, value }) => {
   const [element] = QuerySelector.querySelector(locator._selector)
+  const locatorString = printLocator(locator)
   if (!element) {
-    return `expected ${locator._selector} to have css ${key} ${value}`
+    return `expected ${locatorString} to have css ${key} ${value}`
   }
   const style = getComputedStyle(element)
   const actual = style[key]
-  return `expected ${locator._selector} to have css ${key} ${value} but was ${actual}`
+  return `expected ${locatorString} to have css ${key} ${value} but was ${actual}`
 }
