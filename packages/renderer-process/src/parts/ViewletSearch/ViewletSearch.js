@@ -86,7 +86,7 @@ const create$Row = () => {
 // TODO much duplication with explorer
 const render$Row = ($Row, rowInfo) => {
   $Row.textContent = rowInfo.text
-  $Row.title = rowInfo.path
+  $Row.title = rowInfo.title
   $Row.tabIndex = -1
   $Row.ariaSetSize = `${rowInfo.setSize}`
   $Row.ariaLevel = `${rowInfo.depth}`
