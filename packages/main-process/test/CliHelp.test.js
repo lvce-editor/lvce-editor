@@ -13,7 +13,11 @@ jest.mock('electron', () => {
 const CliHelp = require('../src/parts/Cli/CliHelp.js')
 
 test('handleCliArgs', async () => {
-  const spy = jest.spyOn(console, 'info')
+  const spy = jest.spyOn(console, 'info').mockImplementation()
   expect(CliHelp.handleCliArgs({})).toBe(true)
-  expect(spy).toHaveBeenCalledWith('TODO print help')
+  expect(spy).toHaveBeenCalledWith(`Lvce-OSS v0.0.0-dev
+
+Usage:
+  lvce-oss [path]
+`)
 })
