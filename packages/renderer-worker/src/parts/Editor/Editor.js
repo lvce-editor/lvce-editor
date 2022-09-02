@@ -323,7 +323,10 @@ const renderLines = {
 
 const renderSelections = {
   isEqual(oldState, newState) {
-    return oldState.selections === newState.selections
+    return (
+      oldState.selections === newState.selections &&
+      oldState.focused === newState.focused
+    )
   },
   apply(oldState, newState) {
     const cursorInfos = EditorCursor.getVisible(newState)
