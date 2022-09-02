@@ -1,3 +1,4 @@
+import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as IconTheme from '../src/parts/IconTheme/IconTheme.js'
 
 test('getIcon - match by lowerCase file name', () => {
@@ -8,7 +9,7 @@ test('getIcon - match by lowerCase file name', () => {
   }
   expect(
     IconTheme.getIcon({
-      type: 'file',
+      type: DirentType.File,
       name: 'license',
     })
   ).toBe('f_license')
@@ -22,7 +23,7 @@ test('getIcon - match by upperCase file name', () => {
   }
   expect(
     IconTheme.getIcon({
-      type: 'file',
+      type: DirentType.File,
       name: 'LICENSE',
     })
   ).toBe('f_license')
@@ -36,7 +37,7 @@ test('getIcon - match by lowerCase folder name', () => {
   }
   expect(
     IconTheme.getIcon({
-      type: 'folder',
+      type: DirentType.Directory,
       name: 'test',
     })
   ).toBe('fd_test')
@@ -50,7 +51,7 @@ test('getIcon - match by upperCase folder name', () => {
   }
   expect(
     IconTheme.getIcon({
-      type: 'folder',
+      type: DirentType.Directory,
       name: 'TEST',
     })
   ).toBe('fd_test')
@@ -66,7 +67,7 @@ test('getIcon - match by file extension', () => {
   }
   expect(
     IconTheme.getIcon({
-      type: 'file',
+      type: DirentType.File,
       name: 'abc.test',
     })
   ).toBe('f_test')
@@ -82,7 +83,7 @@ test('getIcon - match by lowercase file extension', () => {
   }
   expect(
     IconTheme.getIcon({
-      type: 'file',
+      type: DirentType.File,
       name: 'abc.Test',
     })
   ).toBe('f_test')
@@ -96,7 +97,7 @@ test.skip('getIcon - match by file extension but icon theme has no fileNames pro
   }
   expect(
     IconTheme.getIcon({
-      type: 'file',
+      type: DirentType.File,
       name: 'abc.test',
     })
   ).toBe('f_test')
@@ -110,7 +111,7 @@ test.skip('getIcon - match by file extension but icon theme has no languages pro
   }
   expect(
     IconTheme.getIcon({
-      type: 'file',
+      type: DirentType.File,
       name: 'abc.test',
     })
   ).toBe('f_test')
@@ -124,7 +125,7 @@ test('getIcon - match by folder name expanded', () => {
   }
   expect(
     IconTheme.getIcon({
-      type: 'directory-expanded',
+      type: DirentType.DirectoryExpanded
       name: 'api',
     })
   ).toBe('fd_api_open')
@@ -134,7 +135,7 @@ test('getIcon - error - directory not in definitions', () => {
   IconTheme.state.iconTheme = {}
   expect(
     IconTheme.getIcon({
-      type: 'directory',
+      type: DirentType.Directory
       name: 'api',
     })
   ).toBe('')
@@ -144,7 +145,7 @@ test('getIcon - error - directory expanded not in definitions', () => {
   IconTheme.state.iconTheme = {}
   expect(
     IconTheme.getIcon({
-      type: 'directory-expanded',
+      type: DirentType.DirectoryExpanded
       name: 'api',
     })
   ).toBe('_folder_open')
@@ -154,7 +155,7 @@ test('getIcon - symlink', () => {
   IconTheme.state.iconTheme = {}
   expect(
     IconTheme.getIcon({
-      type: 'symlink',
+      type: DirentType.Symlink
       name: 'a',
     })
   ).toBe('_file')

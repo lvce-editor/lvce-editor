@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as DirentType from '../DirentType/DirentType.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Platform from '../Platform/Platform.js'
@@ -97,15 +98,13 @@ const getFolderIconExpanded = (folder) => {
 
 export const getIcon = (dirent) => {
   switch (dirent.type) {
-    case 'file':
+    case DirentType.File:
       return getFileIcon(dirent)
-    case 'directory':
-    case 'folder':
+    case DirentType.Directory:
       return getFolderIcon(dirent)
-    case 'folder-expanded':
-    case 'directory-expanded':
+    case DirentType.DirectoryExpanded:
       return getFolderIconExpanded(dirent)
-    case 'symlink':
+    case DirentType.Symlink:
       return DEFAULT_FILE_ICON
     default:
       console.warn(`unsupported type ${dirent.type}`)
