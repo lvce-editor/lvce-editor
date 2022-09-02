@@ -33,7 +33,7 @@ export const getMenuEntries = async () => {
     {
       id: 'separator',
       label: I18nString.i18nString(UiStrings.Separator),
-      flags: /* Separator */ 1,
+      flags: MenuItemFlags.Separator,
       command: MenuItemFlags.None,
     },
     {
@@ -45,7 +45,7 @@ export const getMenuEntries = async () => {
     {
       id: 'separator',
       label: I18nString.i18nString(UiStrings.More),
-      flags: /* Separator */ 1,
+      flags: MenuItemFlags.Separator,
       command: MenuItemFlags.None,
     },
     {

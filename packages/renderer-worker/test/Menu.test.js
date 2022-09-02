@@ -1,6 +1,5 @@
 import { jest } from '@jest/globals'
-
-import * as Platform from '../src/parts/Platform/Platform.js'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -124,7 +123,7 @@ test('focusFirst - with disabled items and separators', async () => {
         {
           id: 'separator',
           label: 'Separator',
-          flags: /* Separator */ 1,
+          flags: MenuItemFlags.Separator,
           command: /* None */ 0,
         },
         {
@@ -214,7 +213,7 @@ test('focusLast - with disabled items and separators', async () => {
         {
           id: 'separator',
           label: 'Separator',
-          flags: /* Separator */ 1,
+          flags: MenuItemFlags.Separator,
           command: /* None */ 0,
         },
       ],
@@ -338,7 +337,7 @@ test('focusPrevious - with separator', async () => {
         {
           id: 'separator',
           name: 'Separator',
-          flags: /* Separator */ 1,
+          flags: MenuItemFlags.Separator,
           children: [],
         },
         {
@@ -376,7 +375,7 @@ test('focusPrevious - with disabled items and separators', async () => {
         {
           id: 'separator',
           label: 'Separator',
-          flags: /* Separator */ 1,
+          flags: MenuItemFlags.Separator,
           command: /* None */ 0,
         },
         {
@@ -427,7 +426,7 @@ test('focusPrevious - no focusable items', async () => {
         {
           id: 'separator',
           label: 'Separator',
-          flags: /* Separator */ 1,
+          flags: MenuItemFlags.Separator,
           command: /* None */ 0,
         },
       ],
@@ -504,7 +503,7 @@ test('focusNext - no focusable items', async () => {
         {
           id: 'separator',
           label: 'Separator',
-          flags: /* Separator */ 1,
+          flags: MenuItemFlags.Separator,
           command: /* None */ 0,
         },
       ],
@@ -537,7 +536,7 @@ test('focusNext - with disabled items and separators', async () => {
         {
           id: 'separator',
           label: 'Separator',
-          flags: /* Separator */ 1,
+          flags: MenuItemFlags.Separator,
           command: /* None */ 0,
         },
         {
@@ -634,7 +633,7 @@ test('focusNext - with separator', async () => {
         {
           id: 'separator',
           name: 'Separator',
-          flags: /* Separator */ 1,
+          flags: MenuItemFlags.Separator,
           children: [],
         },
         {
@@ -694,7 +693,7 @@ test.skip('focusIndexMouse - focusing submenu index should show submenu', async 
         {
           id: 'separator',
           name: 'Separator',
-          flags: /* Separator */ 1,
+          flags: MenuItemFlags.Separator,
         },
         {
           id: 'openRecent',
@@ -779,7 +778,7 @@ test('focusIndexMouse - focusing submenu index should do nothing when already fo
         {
           id: 'separator',
           name: 'Separator',
-          flags: /* Separator */ 1,
+          flags: MenuItemFlags.Separator,
         },
         {
           id: 'openRecent',
@@ -870,7 +869,7 @@ test('selectIndex - should do nothing when already focused', async () => {
         {
           id: 'separator',
           name: 'Separator',
-          flags: /* Separator */ 1,
+          flags: MenuItemFlags.Separator,
         },
         {
           id: 'openRecent',
@@ -948,7 +947,7 @@ test.skip('focusIndexMouse - focusing other index should hide submenu', async ()
         {
           id: 'separator',
           name: 'Separator',
-          flags: /* Separator */ 1,
+          flags: MenuItemFlags.Separator,
         },
         {
           id: 'openRecent',
