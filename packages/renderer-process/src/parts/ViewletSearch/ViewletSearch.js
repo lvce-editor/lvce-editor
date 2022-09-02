@@ -178,8 +178,9 @@ export const setResults = (state, results) => {
 }
 
 export const setMessage = (state, message) => {
+  const { $SearchStatus } = state
   // TODO recycle text node
-  state.$SearchStatus.textContent = message
+  $SearchStatus.textContent = message
 }
 
 export const dispose = () => {}
