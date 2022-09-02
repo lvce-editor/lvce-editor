@@ -1,7 +1,10 @@
 import * as TitleBarMenuBar from './TitleBarMenuBar.js'
+import * as MenuIpc from '../Menu/Menu.ipc.js'
 
 // prettier-ignore
 export const Commands = {
+  ...MenuIpc.Commands,
+
   'TitleBarMenuBar.toggleIndex': TitleBarMenuBar.toggleIndex,
   'TitleBarMenuBar.hydrate': TitleBarMenuBar.hydrate,
   'TitleBarMenuBar.focus': TitleBarMenuBar.focus,
@@ -19,4 +22,5 @@ export const Commands = {
   'TitleBarMenuBar.handleKeyEnter': TitleBarMenuBar.handleKeyEnter,
   'TitleBarMenuBar.handleKeyEscape': TitleBarMenuBar.handleKeyEscape,
   'TitleBarMenuBar.handleKeyArrowLeft': TitleBarMenuBar.handleKeyArrowLeft,
+
 }
