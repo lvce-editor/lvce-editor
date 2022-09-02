@@ -125,7 +125,7 @@ test('getIcon - match by folder name expanded', () => {
   }
   expect(
     IconTheme.getIcon({
-      type: DirentType.DirectoryExpanded
+      type: DirentType.DirectoryExpanded,
       name: 'api',
     })
   ).toBe('fd_api_open')
@@ -135,7 +135,7 @@ test('getIcon - error - directory not in definitions', () => {
   IconTheme.state.iconTheme = {}
   expect(
     IconTheme.getIcon({
-      type: DirentType.Directory
+      type: DirentType.Directory,
       name: 'api',
     })
   ).toBe('')
@@ -145,7 +145,7 @@ test('getIcon - error - directory expanded not in definitions', () => {
   IconTheme.state.iconTheme = {}
   expect(
     IconTheme.getIcon({
-      type: DirentType.DirectoryExpanded
+      type: DirentType.DirectoryExpanded,
       name: 'api',
     })
   ).toBe('_folder_open')
@@ -155,7 +155,7 @@ test('getIcon - symlink', () => {
   IconTheme.state.iconTheme = {}
   expect(
     IconTheme.getIcon({
-      type: DirentType.Symlink
+      type: DirentType.Symlink,
       name: 'a',
     })
   ).toBe('_file')
