@@ -4,6 +4,7 @@ import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
 export const name = 'Explorer'
 
@@ -236,13 +237,13 @@ const handleMouseLeave = (event) => {
 
 const handleWheel = (event) => {
   switch (event.deltaMode) {
-    case event.DOM_DELTA_LINE:
+    case WheelEventType.DomDeltaLine:
       RendererWorker.send(
         /* Explorer.handleWheel */ 'Explorer.handleWheel',
         /* deltaY */ event.deltaY
       )
       break
-    case event.DOM_DELTA_PIXEL:
+    case WheelEventType.DomDeltaPixel:
       RendererWorker.send(
         /* Explorer.handleWheel */ 'Explorer.handleWheel',
         /* deltaY */ event.deltaY
