@@ -88,6 +88,8 @@ test('hydrate - path changed in the meantime', async () => {
           path: '/tmp/some-folder',
           homeDir: '~',
         }
+      case 'FileSystem.getPathSeparator':
+        return '/'
       default:
         throw new Error('unexpected message')
     }
@@ -101,7 +103,7 @@ test('hydrate - path changed in the meantime', async () => {
   _resolve()
   await promise1
   expect(Workspace.state.workspacePath).toBe('/test')
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(2)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
 })
