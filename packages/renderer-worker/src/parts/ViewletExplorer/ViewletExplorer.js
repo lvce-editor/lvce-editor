@@ -512,7 +512,11 @@ export const copyRelativePath = async (state) => {
   const dirent = getFocusedDirent(state)
   const relativePath = dirent.path.slice(1)
   // TODO handle error
-  await Command.execute(/* ClipBoard.writeText */ 241, /* text */ relativePath)
+  await Command.execute(
+    /* ClipBoard.writeText */ 'ClipBoard.writeText',
+    /* text */ relativePath
+  )
+  return state
 }
 
 export const copyPath = async (state) => {
@@ -520,7 +524,11 @@ export const copyPath = async (state) => {
   // TODO windows paths
   // TODO handle error
   const path = dirent.path
-  await Command.execute(/* ClipBoard.writeText */ 241, /* text */ path)
+  await Command.execute(
+    /* ClipBoard.writeText */ 'ClipBoard.writeText',
+    /* text */ path
+  )
+  return state
 }
 
 const getContaingingFolder = (root, dirents, focusedIndex, pathSeparator) => {

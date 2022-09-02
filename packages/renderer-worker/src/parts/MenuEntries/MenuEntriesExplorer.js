@@ -59,13 +59,13 @@ const ALL_ENTRIES = [
     id: 'copy',
     label: I18nString.i18nString(UiStrings.Copy),
     flags: /* None */ 0,
-    command: /* Explorer.handleCopy */ 'Explorer.handleCopy',
+    command: 'Explorer.handleCopy',
   },
   {
     id: 'paste',
     label: I18nString.i18nString(UiStrings.Paste),
     flags: /* None */ 0,
-    command: /* Explorer.handlePaste */ 'Explorer.handlePaste',
+    command: 'Explorer.handlePaste',
   },
   {
     id: '',
@@ -77,13 +77,13 @@ const ALL_ENTRIES = [
     id: 'copyPath',
     label: I18nString.i18nString(UiStrings.CopyPath),
     flags: /* None */ 0,
-    command: /* TODO */ -1,
+    command: 'Explorer.copyPath',
   },
   {
     id: 'copyRelativePath',
     label: I18nString.i18nString(UiStrings.CopyRelativePath),
     flags: /* None */ 0,
-    command: /* TODO */ -1,
+    command: 'Explorer.copyRelativePath',
   },
   {
     id: '',
@@ -95,13 +95,13 @@ const ALL_ENTRIES = [
     id: 'rename',
     label: I18nString.i18nString(UiStrings.Rename),
     flags: /* None */ 0,
-    command: /* Explorer.renameDirent */ 'Explorer.renameDirent',
+    command: 'Explorer.renameDirent',
   },
   {
     id: 'delete',
     label: I18nString.i18nString(UiStrings.Delete),
     flags: /* None */ 0,
-    command: /* Explorer.removeDirent */ 'Explorer.removeDirent',
+    command: 'Explorer.removeDirent',
   },
 ]
 
