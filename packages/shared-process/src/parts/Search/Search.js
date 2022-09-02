@@ -22,6 +22,12 @@ const useNice = !Platform.isWindows()
 // TODO update client
 // TODO not always run nice, maybe configure nice via flag/options
 
+const ParsedLineType = {
+  Begin: 'begin',
+  Match: 'match',
+  Summary: 'summary',
+}
+
 export const search = async (searchDir, searchString) => {
   // TODO reject promise when ripgrep search fails
   return new Promise((resolve, reject) => {
@@ -61,18 +67,18 @@ export const search = async (searchDir, searchString) => {
       for (const line of lines) {
         const parsedLine = JSON.parse(line)
         switch (parsedLine.type) {
-          case 'begin': {
+          case ParsedLineType.Begin: {
             allSearchResults[parsedLine.data.path.text] = []
             break
           }
-          case 'match': {
+          case ParsedLineType.Match: {
             numberOfResults++
             allSearchResults[parsedLine.data.path.text].push(
               toSearchResult(parsedLine)
             )
             break
           }
-          case 'summary':
+          case ParsedLineType.Summary:
             stats = parsedLine.data
             break
           default:

@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -526,7 +527,7 @@ test('event - wheel', () => {
       deltaY: 42,
       bubbles: true,
       cancelable: true,
-      deltaMode: WheelEvent.DOM_DELTA_PIXEL,
+      deltaMode: WheelEventType.DomDeltaPixel,
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)

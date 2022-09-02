@@ -11,6 +11,7 @@ import * as LayerDiagnostics from './LayerDiagnostics.js'
 import * as LayerScrollBar from './LayerScrollBar.js'
 import * as LayerSelections from './LayerSelections.js'
 import * as LayerText3 from './LayerText.js'
+import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
@@ -250,18 +251,22 @@ const handleMouseMove = (event) => {
   // RendererWorker.send(/* Editor.handleMouseMove */ 389, /* x */ x, /* y */ y)
 }
 
+/**
+ *
+ * @param {WheelEvent} event
+ */
 const handleWheel = (event) => {
   // event.preventDefault()
   // const state = EditorHelper.getStateFromEvent(event)
   // TODO send editor id
   switch (event.deltaMode) {
-    case event.DOM_DELTA_LINE:
+    case WheelEventType.DomDeltaLine:
       RendererWorker.send(
         /* Editor.setDeltaY */ 'Editor.setDeltaY',
         /* value */ event.deltaY
       )
       break
-    case event.DOM_DELTA_PIXEL:
+    case WheelEventType.DomDeltaPixel:
       RendererWorker.send(
         /* Editor.setDeltaY */ 'Editor.setDeltaY',
         /* value */ event.deltaY
