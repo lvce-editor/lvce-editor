@@ -80,14 +80,22 @@ const create$Row = () => {
   // @ts-ignore
   $Row.role = 'treeitem'
   $Row.className = 'TreeItem'
+  const $LabelText = document.createTextNode('')
+  const $Label = document.createElement('div')
+  $Label.className = 'TreeItemLabel'
+  $Label.append($LabelText)
+  const $Icon = document.createElement('i')
+  $Row.append($Icon, $Label)
   return $Row
 }
 
 // TODO much duplication with explorer
 const render$Row = ($Row, rowInfo) => {
-  $Row.textContent = rowInfo.text
+  const $Icon = $Row.childNodes[0]
+  const $LabelText = $Row.childNodes[1].childNodes[0]
+  $Icon.className = `Icon${rowInfo.icon}`
+  $LabelText.data = rowInfo.text
   $Row.title = rowInfo.title
-  $Row.tabIndex = -1
   $Row.ariaSetSize = `${rowInfo.setSize}`
   $Row.ariaLevel = `${rowInfo.depth}`
   $Row.ariaPosInSet = `${rowInfo.posInSet}`

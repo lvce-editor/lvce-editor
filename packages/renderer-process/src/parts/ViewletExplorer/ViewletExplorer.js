@@ -291,8 +291,10 @@ const create$Row = () => {
 
 // TODO rename to renderDirent
 const render$Row = ($Row, rowInfo) => {
-  $Row.childNodes[0].className = `Icon${rowInfo.icon}`
-  $Row.childNodes[1].childNodes[0].data = rowInfo.name
+  const $Icon = $Row.childNodes[0]
+  const $LabelText = $Row.childNodes[1].childNodes[0]
+  $Icon.className = `Icon${rowInfo.icon}`
+  $LabelText.data = rowInfo.name
   $Row.title = rowInfo.path
   $Row.ariaSetSize = `${rowInfo.setSize}`
   // TODO bug with windows narrator

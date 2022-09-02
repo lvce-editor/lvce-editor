@@ -23,6 +23,8 @@
   text-overflow: ellipsis;
   overflow: hidden;
   display: inline-block;
+  /* width: 102px; */
+  width: calc(80%);
 }
 
 /* .TreeItem:focus {
@@ -31,13 +33,6 @@
 
 .TreeItem.Focused {
   background: rgba(59, 71, 66, 0.5);
-}
-
-/* TODO why need focused class when there is :focus ? */
-.Viewlet[data-viewlet-id='Explorer']:focus-within .TreeItem.Focused {
-  /* background: rgba(0, 0, 0, 0.3); */
-  /* background: rgba(59, 71, 66, 0.5); */
-  background: #515f59;
 }
 
 .TreeItem [class^='Icon']::before {
