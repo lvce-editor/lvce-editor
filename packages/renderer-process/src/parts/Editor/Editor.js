@@ -12,6 +12,7 @@ import * as LayerScrollBar from './LayerScrollBar.js'
 import * as LayerSelections from './LayerSelections.js'
 import * as LayerText3 from './LayerText.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as InputEventType from '../InputEventType/InputEventType.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
@@ -39,10 +40,14 @@ const handleBlur = (event) => {
   RendererWorker.send(/* EditorBlur.editorBlur */ 'Editor.blur')
 }
 
+/**
+ *
+ * @param {InputEvent} event
+ */
 const handleBeforeInput = (event) => {
   event.preventDefault()
   switch (event.inputType) {
-    case 'insertText':
+    case InputEventType.InsertText:
       RendererWorker.send(
         /* Editor.type */ 'Editor.type',
         /* text */ event.data
