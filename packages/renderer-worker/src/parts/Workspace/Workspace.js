@@ -1,10 +1,11 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Window from '../Window/Window.js'
-import * as Assert from '../Assert/Assert.js'
 
 export const state = {
   workspacePath: '',
@@ -23,7 +24,9 @@ export const setPath = async (path) => {
   Assert.string(path)
   console.log('[workspace] set path', path)
   // TODO not in electron
+  const pathSeparator = await FileSystem.getPathSeparator(path)
   state.workspacePath = path
+  state.pathSeparator = pathSeparator
   await onWorkspaceChange()
 }
 
@@ -192,6 +195,7 @@ export const getHomeDir = () => {
 // TODO this should be in FileSystem module
 export const pathBaseName = (path) => {
   const pathSeparator = state.pathSeparator
+  console.log({ pathSeparator })
   return path.slice(path.lastIndexOf(pathSeparator) + 1)
 }
 

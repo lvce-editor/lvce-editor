@@ -1,10 +1,11 @@
 import * as Command from '../Command/Command.js'
 import * as I18nString from '../I18NString/I18NString.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Compare from '../Compare/Compare.js'
-
+import * as Assert from '../Assert/Assert.js'
+import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as SearchResultType from '../SearchResultType/SearchResultType.js'
 // TODO maybe create should have a container as param like vscode?
 // maybe not?
 
@@ -88,6 +89,7 @@ export const setValue = async (state, value) => {
     const root = Workspace.state.workspacePath
     const results = await TextSearch.textSearch(root, value)
     const displayResults = toDisplayResults(results)
+    console.log({ results, displayResults })
     const resultCount = getResultCounts(results)
     const fileResultCount = results.length
     const message = getStatusMessage(resultCount, fileResultCount)
@@ -109,11 +111,7 @@ export const setValue = async (state, value) => {
 export const dispose = async (state) => {
   // TODO cancel pending search
   if (state.state === 'searching') {
-    // TODO this should be invoke
-    await SharedProcess.invoke(
-      /* Search.cancel */ 'Search.cancel',
-      /* searchId */ state.searchId
-    )
+    await TextSearch.cancel(state.searchId)
   }
   return {
     ...state,
@@ -142,16 +140,19 @@ const toDisplayResults = (results) => {
     const path = getPath(result)
     const previews = getPreviews(result)
     const absolutePath = Workspace.getAbsolutePath(path)
+    const baseName = Workspace.pathBaseName(path)
     displayResults.push({
-      path: absolutePath,
-      type: 'file',
-      text: path,
+      title: absolutePath,
+      type: SearchResultType.File,
+      text: baseName,
+      icon: IconTheme.getFileIcon({ name: baseName }),
     })
     for (const preview of previews) {
       displayResults.push({
-        path: '',
-        type: 'preview',
+        title: preview.preview,
+        type: SearchResultType.Preview,
         text: preview.preview,
+        icon: '',
       })
     }
   }
@@ -171,13 +172,51 @@ export const handleInput = (state, value) => {
   return setValue(state, value)
 }
 
-export const handleClick = async (state, index) => {
+const getFileIndex = (items, index) => {
+  console.log({ items })
+  for (let i = index; i >= 0; i--) {
+    const item = items[i]
+    if (item.type === SearchResultType.File) {
+      return i
+    }
+  }
+  return -1
+}
+
+const selectIndexFile = async (state, index) => {
   const searchResult = state.items[index]
-  await Command.execute(
-    /* Main.openUri */ 'Main.openUri',
-    /* uri */ searchResult.path
-  )
+  const path = searchResult.title
+  Assert.string(path)
+  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path)
   return state
+}
+
+const selectIndexPreview = async (state, index) => {
+  const fileIndex = getFileIndex(state.items, index)
+  if (fileIndex === -1) {
+    throw new Error('Search result is missing file')
+  }
+  const searchResult = state.items[fileIndex]
+  const path = searchResult.title
+  Assert.string(path)
+  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path)
+  return state
+}
+
+export const selectIndex = async (state, index) => {
+  const searchResult = state.items[index]
+  switch (searchResult.type) {
+    case SearchResultType.File:
+      return selectIndexFile(state, index)
+    case SearchResultType.Preview:
+      return selectIndexPreview(state, index)
+    default:
+      throw new Error(`unexpected search result type ${searchResult.type}`)
+  }
+}
+
+export const handleClick = async (state, index) => {
+  return selectIndex(state, index)
 }
 
 export const hasFunctionalResize = true

@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as SearchResultType from '../src/parts/SearchResultType/SearchResultType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -97,8 +98,9 @@ test('handleClick', async () => {
     ...ViewletSearch.create(),
     items: [
       {
-        name: './test.txt',
-        path: '/test/test.txt',
+        type: SearchResultType.File,
+        text: './test.txt',
+        title: '/test/test.txt',
       },
     ],
   }
