@@ -86,9 +86,5 @@ const renderSelectionsNative = (state, selections) => {
 }
 
 export const setSelections = (state, selections) => {
-  if (Platform.isMobileOrTablet()) {
-    renderSelectionsNative(state, selections)
-    return
-  }
   render$Selections(state.$LayerSelections, selections)
 }
