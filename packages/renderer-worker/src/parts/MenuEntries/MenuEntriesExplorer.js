@@ -1,5 +1,6 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as I18nString from '../I18NString/I18NString.js'
+import * as DirentType from '../DirentType/DirentType.js'
 
 export const UiStrings = {
   NewFile: 'New File',
@@ -119,17 +120,28 @@ const getFocusedDirent = () => {
   return explorerState.dirents[explorerState.focusedIndex]
 }
 
+const getMenuEntriesDirectory = () => {
+  return ALL_ENTRIES
+}
+const getMenuEntriesFile = () => {
+  return ALL_ENTRIES.filter(isFileEntry)
+}
+
+const getMenuEntriesDefault = () => {
+  return ALL_ENTRIES
+}
+
 export const getMenuEntries = () => {
   const focusedDirent = getFocusedDirent()
   if (!focusedDirent) {
     return ALL_ENTRIES
   }
   switch (focusedDirent.type) {
-    case 'directory':
-      return ALL_ENTRIES
-    case 'file':
-      return ALL_ENTRIES.filter(isFileEntry)
+    case DirentType.Directory:
+      return getMenuEntriesDirectory()
+    case DirentType.File:
+      return getMenuEntriesFile()
     default:
-      return ALL_ENTRIES
+      return getMenuEntriesDefault()
   }
 }
