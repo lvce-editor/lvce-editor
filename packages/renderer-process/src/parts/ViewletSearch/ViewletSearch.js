@@ -19,16 +19,25 @@ const getNodeIndex = ($Node) => {
   return index
 }
 
+const handleClickTreeItem = ($Target) => {
+  const index = getNodeIndex($Target)
+  RendererWorker.send(
+    /* Search.handleClick */ 'Search.handleClick',
+    /* index */ index
+  )
+}
+
+const handleClickTreeItemLabel = ($Target) => {
+  return handleClickTreeItem($Target.parentNode)
+}
+
 const handleClick = (event) => {
   const $Target = event.target
   switch ($Target.className) {
     case 'TreeItem':
-      const index = getNodeIndex($Target)
-      RendererWorker.send(
-        /* Search.handleClick */ 'Search.handleClick',
-        /* index */ index
-      )
-      break
+      return handleClickTreeItem($Target)
+    case 'TreeItemLabel':
+      return handleClickTreeItemLabel($Target)
     default:
       break
   }
