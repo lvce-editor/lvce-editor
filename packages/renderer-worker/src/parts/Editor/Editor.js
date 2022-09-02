@@ -364,6 +364,9 @@ const renderFocus = {
     return oldState.focused === newState.focused
   },
   apply(oldState, newState) {
+    if (!newState.focused) {
+      return []
+    }
     return [
       /* Viewlet.send */ 'Viewlet.invoke',
       /* id */ 'EditorText',
