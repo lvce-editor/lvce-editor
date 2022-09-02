@@ -16,6 +16,6 @@ test('sample.text-search-provider', async () => {
   // assert
   const results = Locator(`.Viewlet[data-viewlet-id="Search"] .TreeItem`)
   await expect(results).toHaveCount(2)
-  await expect(results.nth(0)).toHaveText('./index.txt')
+  await expect(results.nth(0)).toHaveText('index.txt')
   await expect(results.nth(1)).toHaveText('    <title>Document</title>')
 })
