@@ -1,6 +1,5 @@
 import * as Command from '../Command/Command.js'
 import * as I18nString from '../I18NString/I18NString.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Compare from '../Compare/Compare.js'
@@ -88,6 +87,7 @@ export const setValue = async (state, value) => {
     const root = Workspace.state.workspacePath
     const results = await TextSearch.textSearch(root, value)
     const displayResults = toDisplayResults(results)
+    console.log({ results, displayResults })
     const resultCount = getResultCounts(results)
     const fileResultCount = results.length
     const message = getStatusMessage(resultCount, fileResultCount)
@@ -109,11 +109,7 @@ export const setValue = async (state, value) => {
 export const dispose = async (state) => {
   // TODO cancel pending search
   if (state.state === 'searching') {
-    // TODO this should be invoke
-    await SharedProcess.invoke(
-      /* Search.cancel */ 'Search.cancel',
-      /* searchId */ state.searchId
-    )
+    await TextSearch.cancel(state.searchId)
   }
   return {
     ...state,
@@ -142,10 +138,11 @@ const toDisplayResults = (results) => {
     const path = getPath(result)
     const previews = getPreviews(result)
     const absolutePath = Workspace.getAbsolutePath(path)
+    const baseName = Workspace.pathBaseName(path)
     displayResults.push({
       path: absolutePath,
       type: 'file',
-      text: path,
+      text: baseName,
     })
     for (const preview of previews) {
       displayResults.push({
