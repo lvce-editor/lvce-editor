@@ -151,7 +151,7 @@ const handleContextMenuMouse = (event) => {
   const $Target = event.target
   const x = event.clientX
   const y = event.clientY
-  const index = findIndex($Target)
+  const index = findIndex($Target) // TODO index can be computed in renderer worker
   RendererWorker.send(
     /* Explorer.handleContextMenuMouse */ 'Explorer.handleContextMenuMouse',
     /* x */ x,
@@ -162,6 +162,7 @@ const handleContextMenuMouse = (event) => {
 
 const handleContextMenuKeyboard = (event) => {
   const $Target = event.target
+  // TODO index computation is not necessary because focused index is stored in renderer worker
   const index = getFocusedIndexFromFocusOutline($Target)
   RendererWorker.send(
     /* Explorer.handleContextMenuKeyboard */ 'Explorer.handleContextMenuKeyboard',

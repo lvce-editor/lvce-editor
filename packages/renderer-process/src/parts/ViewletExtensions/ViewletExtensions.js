@@ -3,6 +3,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 
 export const name = 'Extensions'
 
@@ -72,20 +73,35 @@ const handleInput = (event) => {
   // state.$Viewlet.ariaBusy = 'true'
 }
 
+const findIndex = ($Target) => {
+  if ($Target.className.includes('ExtensionListItem')) {
+    return FindIndex.findIndex($Target.parentNode, $Target)
+  }
+  if ($Target.classList.contains('Viewlet')) {
+    return -1
+  }
+  return findIndex($Target.parentNode)
+  // return -2
+}
+
+const handleContextMenuMouse = (event) => {
+  RendererWorker.send(
+    /* Extensions.handleContextMenu */ 'Extensions.handleContextMenu',
+    /* x */ event.clientX,
+    /* y */ event.clientY
+  )
+}
+
+const handleContextMenuKeyboard = (event) => {}
+
 const handleContextMenu = (event) => {
   event.preventDefault()
-  const $Target = event.target
-  // const index = FindIndex.findIndex(state.$Extensions, $Target)
-  // if (index === -1) {
-  //   return
-  // }
-  // const extension = state.extensions[index]
-  // RendererWorker.send(
-  //   /* Extensions.handleContextMenu */ 'Extensions.handleContextMenu',
-  //   /* x */ event.clientX,
-  //   /* y */ event.clientY,
-  //   /* extensionId */ extension.id
-  // )
+  switch (event.button) {
+    case MouseEventType.Keyboard:
+      return handleContextMenuKeyboard(event)
+    default:
+      return handleContextMenuMouse(event)
+  }
 }
 
 const getNodeIndex = ($Node) => {

@@ -549,14 +549,19 @@ export const handleDisable = async (state, id) => {
   )
 }
 
+const handleContextMenuMouse = (state, x, y) => {}
+
+const handleContextMenuIndex = (state, index) => {}
+
 // TODO pass index instead
-export const handleContextMenu = async (state, x, y, extensionId) => {
+export const handleContextMenu = async (state, x, y, index) => {
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
     /* id */ 'manageExtension'
   )
+  return state
 }
 
 export const openSuggest = async (state) => {
