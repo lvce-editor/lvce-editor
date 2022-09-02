@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -260,7 +261,7 @@ test('event - wheel', () => {
   const state = ViewletQuickPick.create('>')
   const event = new WheelEvent('wheel', {
     deltaY: 53,
-    deltaMode: WheelEvent.DOM_DELTA_LINE,
+    deltaMode: WheelEventType.DomDeltaLine,
   })
   const { $QuickPickItems } = state
   $QuickPickItems.dispatchEvent(event)
