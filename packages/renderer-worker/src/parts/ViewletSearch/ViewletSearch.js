@@ -5,6 +5,7 @@ import * as Workspace from '../Workspace/Workspace.js'
 import * as Compare from '../Compare/Compare.js'
 import * as Assert from '../Assert/Assert.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as SearchResultType from '../SearchResultType/SearchResultType.js'
 // TODO maybe create should have a container as param like vscode?
 // maybe not?
 
@@ -28,11 +29,6 @@ export const uiStrings = {
   Oneresults: 'Found 1 result in 1 file',
   ManyResultsInOneFile: `Found {PH1} results in 1 file`,
   ManyResultsInManyFiles: `Found {PH1} results in {PH2} files`,
-}
-
-const SearchResultType = {
-  Preview: 'preview',
-  File: 'file',
 }
 
 export const create = () => {
@@ -187,6 +183,14 @@ const getFileIndex = (items, index) => {
   return -1
 }
 
+const selectIndexFile = async (state, index) => {
+  const searchResult = state.items[index]
+  const path = searchResult.title
+  Assert.string(path)
+  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path)
+  return state
+}
+
 const selectIndexPreview = async (state, index) => {
   const fileIndex = getFileIndex(state.items, index)
   if (fileIndex === -1) {
@@ -196,10 +200,6 @@ const selectIndexPreview = async (state, index) => {
   const path = searchResult.title
   Assert.string(path)
   await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path)
-  return state
-}
-
-const selectIndexFile = (state, index) => {
   return state
 }
 
