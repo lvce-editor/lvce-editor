@@ -4,7 +4,7 @@ import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Compare from '../Compare/Compare.js'
 import * as Assert from '../Assert/Assert.js'
-
+import * as IconTheme from '../IconTheme/IconTheme.js'
 // TODO maybe create should have a container as param like vscode?
 // maybe not?
 
@@ -149,12 +149,14 @@ const toDisplayResults = (results) => {
       title: absolutePath,
       type: SearchResultType.File,
       text: baseName,
+      icon: IconTheme.getFileIcon({ name: baseName }),
     })
     for (const preview of previews) {
       displayResults.push({
         title: preview.preview,
         type: SearchResultType.Preview,
         text: preview.preview,
+        icon: '',
       })
     }
   }
