@@ -49,6 +49,7 @@ export const create = (id, uri, languageId, content) => {
     validLines: [],
     invalidStartIndex: 0,
     decorations: [],
+    focused: false,
   }
 }
 
@@ -358,4 +359,22 @@ const renderScrollBar = {
   },
 }
 
-export const render = [renderLines, renderSelections, renderScrollBar]
+const renderFocus = {
+  isEqual(oldState, newState) {
+    return oldState.focused === newState.focused
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.invoke',
+      /* id */ 'EditorText',
+      /* method */ 'focus',
+    ]
+  },
+}
+
+export const render = [
+  renderLines,
+  renderSelections,
+  renderScrollBar,
+  renderFocus,
+]
