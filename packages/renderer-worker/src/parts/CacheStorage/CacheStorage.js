@@ -1,4 +1,5 @@
 import * as Platform from '../Platform/Platform.js'
+import { VError } from '../VError/VError.js'
 
 const shouldIgnoreError = (error) => {
   // Firefox throws dom exception in private mode
@@ -41,10 +42,7 @@ export const getJson = async (key) => {
     if (shouldIgnoreError(error)) {
       return undefined
     }
-    throw new Error(`Failed to get json from cache "${key}"`, {
-      // @ts-ignore
-      cause: error,
-    })
+    throw new VError(error, `Failed to get json from cache "${key}"`)
   }
 }
 
@@ -60,10 +58,7 @@ export const getTextFromCache = async (key) => {
     if (shouldIgnoreError(error)) {
       return undefined
     }
-    throw new Error(`Failed to get text from cache "${key}"`, {
-      // @ts-ignore
-      cause: error,
-    })
+    throw new VError(error, `Failed to get text from cache "${key}"`)
   }
 }
 
@@ -102,10 +97,7 @@ export const setText = async (key, value, contentType) => {
     if (shouldIgnoreError(error)) {
       return undefined
     }
-    throw new Error(`Failed to put item into cache "${key}"`, {
-      // @ts-ignore
-      cause: error,
-    })
+    throw new VError(error, `Failed to put item into cache "${key}"`)
   }
 }
 
@@ -116,10 +108,7 @@ export const setJson = async (key, value) => {
     if (shouldIgnoreError(error)) {
       return
     }
-    throw new Error(`Failed to put json into cache "${key}"`, {
-      // @ts-ignore
-      cause: error,
-    })
+    throw new VError(error, `Failed to put json into cache "${key}"`)
   }
 }
 
@@ -134,9 +123,6 @@ export const clearCache = async () => {
     if (shouldIgnoreError(error)) {
       return
     }
-    throw new Error('Failed to clear cache', {
-      // @ts-ignore
-      cause: error,
-    })
+    throw new VError(error, 'Failed to clear cache')
   }
 }

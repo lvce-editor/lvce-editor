@@ -2,6 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import { VError } from '../VError/VError.js'
 
 const getKeyBindings = async () => {
   return Command.execute(
@@ -17,12 +18,7 @@ export const hydrate = async () => {
       /* keyBindings */ keyBindings
     )
   } catch (error) {
-    ErrorHandling.handleError(
-      // @ts-ignore
-      new Error('Failed to load KeyBindings', {
-        cause: error,
-      })
-    )
+    ErrorHandling.handleError(new VError(error, 'Failed to load KeyBindings'))
   }
 }
 
