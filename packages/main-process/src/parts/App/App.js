@@ -134,14 +134,28 @@ const handlePortForMainProcess = (event) => {
         result,
       })
     } catch (error) {
-      console.log({ error })
-      browserWindowPort.postMessage({
-        jsonrpc: '2.0',
-        id: message.id,
-        error: {
-          message: `${error}`,
-        },
-      })
+      if (
+        error &&
+        error instanceof Error &&
+        error.message &&
+        error.message.startsWith('method not found')
+      ) {
+        browserWindowPort.postMessage({
+          jsonrpc: '2.0',
+          id: message.id,
+          error: {
+            code: -32601,
+            message: error.message,
+            data: error.stack,
+          },
+        })
+      } else {
+        browserWindowPort.postMessage({
+          jsonrpc: '2.0',
+          id: message.id,
+          error,
+        })
+      }
     }
   })
   browserWindowPort.start()

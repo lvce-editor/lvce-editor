@@ -18,11 +18,7 @@ const createIpc = async () => {
 
 const handleMessage = (message) => {
   if ('id' in message) {
-    if ('result' in message) {
-      Callback.resolve(message.id, message.result)
-    } else if ('error' in message) {
-      Callback.reject(message.id, message.error)
-    }
+    Callback.resolve(message.id, message)
   }
 }
 
@@ -38,5 +34,13 @@ const getIpc = async () => {
 
 export const invoke = async (method, ...params) => {
   const ipc = await getIpc()
-  return JsonRpc.invoke(ipc, method, ...params)
+  const response = await JsonRpc.invoke(ipc, method, ...params)
+  if ('result' in response) {
+    return response.result
+  }
+  if ('error' in response) {
+    console.log(response)
+    throw new Error(response.error.message)
+  }
+  throw new Error('unexpected response')
 }

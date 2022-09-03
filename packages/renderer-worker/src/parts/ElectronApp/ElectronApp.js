@@ -1,3 +1,5 @@
+import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+
 export const exit = async () => {
-  throw new Error('not implemented')
+  return ElectronProcess.invoke('App.exit')
 }
