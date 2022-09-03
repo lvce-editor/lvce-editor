@@ -1,5 +1,7 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Json from '../Json/Json.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import { VError } from '../VError/VError.js'
 
 export const downloadFile = async (fileName, url) => {
   Assert.string(fileName)
@@ -14,17 +16,14 @@ export const downloadFile = async (fileName, url) => {
 export const downloadJson = async (json, fileName) => {
   let url = ''
   try {
-    const stringified = JSON.stringify(json, null, 2)
+    const stringified = Json.stringify(json)
     const blob = new Blob([stringified], {
       type: 'application/json',
     })
     url = URL.createObjectURL(blob)
     await downloadFile(fileName, url)
   } catch (error) {
-    throw new Error(`Failed to download ${fileName}`, {
-      // @ts-ignore
-      cause: error,
-    })
+    throw new VError(error, `Failed to download ${fileName}`)
   } finally {
     URL.revokeObjectURL(url)
   }

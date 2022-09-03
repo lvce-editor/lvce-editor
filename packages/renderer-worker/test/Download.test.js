@@ -62,7 +62,7 @@ test('downloadJson - error with download', async () => {
   })
 
   await expect(Download.downloadJson([], 'test.json')).rejects.toThrowError(
-    new Error('Failed to download test.json')
+    new Error('Failed to download test.json: TypeError: x is not a function')
   )
   expect(URL.revokeObjectURL).toHaveBeenCalledTimes(1)
   expect(URL.revokeObjectURL).toHaveBeenCalledWith('test://test-session.json')
