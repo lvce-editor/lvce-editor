@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import { VError } from '../src/parts/VError/VError.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -59,6 +60,8 @@ test('editorSave - error with fileSystem', async () => {
   await EditorSave.editorSave(editor)
   expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.handleError).toHaveBeenCalledWith(
-    new Error('Failed to save file "/tmp/some-file.txt"') // TODO test error.cause once available in jest
+    new VError(
+      'Failed to save file "/tmp/some-file.txt": TypeError: x is not a function'
+    ) // TODO test error.cause once available in jest
   )
 })
