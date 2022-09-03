@@ -270,7 +270,7 @@ export const openUri = async (state, uri) => {
   )
   // @ts-ignore
 
-  return ViewletManager.load(instance)
+  return ViewletManager.load(instance, true)
 }
 
 export const save = () => {
