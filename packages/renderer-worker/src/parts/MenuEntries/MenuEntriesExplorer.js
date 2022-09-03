@@ -88,7 +88,7 @@ const ALL_ENTRIES = [
   {
     id: '',
     label: I18nString.i18nString(UiStrings.Separator),
-    flags: MenuItemFlags.Separator
+    flags: MenuItemFlags.Separator,
     command: /* TODO */ -1,
   },
   {
