@@ -21,19 +21,29 @@ test('viewlet.quick-pick-no-results', async () => {
 
   // assert
   const quickPickInput = Locator('#QuickPick .InputBox')
+  const quickPickItems = Locator('.QuickPickItem')
   await expect(quickPickInput).toHaveAttribute('role', 'combobox')
   await expect(quickPickInput).toHaveAttribute(
     'aria-activedescendant',
-    'QuickPickItem-1'
+    'QuickPickItemActive'
+  )
+  await expect(quickPickItems.nth(0)).toHaveAttribute(
+    'id',
+    'QuickPickItemActive'
   )
 
   // act
   await QuickPick.focusNext()
 
   // assert
+  // TODO add toHaveId method to test framework
+  await expect(quickPickItems.nth(1)).toHaveAttribute(
+    'id',
+    'QuickPickItemActive'
+  )
   await expect(quickPickInput).toHaveAttribute(
     'aria-activedescendant',
-    'QuickPickItem-2'
+    'QuickPickItemActive'
   )
 
   // act

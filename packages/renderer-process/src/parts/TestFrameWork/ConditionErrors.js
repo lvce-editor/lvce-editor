@@ -24,7 +24,10 @@ export const toHaveText = (locator, { text }) => {
 }
 
 export const toHaveAttribute = (locator, { key, value }) => {
-  const [element] = QuerySelector.querySelector(locator._selector)
+  const element = QuerySelector.querySelectorWithOptions(locator._selector, {
+    nth: locator._nth,
+    hasText: locator._hasText,
+  })
   const locatorString = printLocator(locator)
   if (!element) {
     return `expected ${locatorString} to have attribute ${key} ${value} but element was not found`
