@@ -6,6 +6,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Assert from '../Assert/Assert.js'
 import { VError } from '../VError/VError.js'
+import * as Json from '../Json/Json.js'
 
 export const state = {
   sessionId: '',
@@ -56,8 +57,7 @@ export const replayCurrentSession = async () => {
 export const getSessionContent = async () => {
   const sessionId = state.sessionId
   const events = await getEvents(sessionId)
-  // TODO use JSON module for this
-  return JSON.stringify(events, null, 2) + '\n'
+  return Json.stringify(events)
 }
 
 const DONT_REPLAY = new Set(['Open.openUrl', 'Download.downloadFile'])
