@@ -15,7 +15,6 @@ export const getJson = async (url, options = {}) => {
       error.message === 'Failed to fetch'
     ) {
       throw new VError(
-        error,
         `Failed to request json from "${url}". Make sure that the server is running and has CORS enabled`
       )
     }
