@@ -1,15 +1,18 @@
 // TODO so many things in this file
 
-import * as Focus from '../Focus/Focus.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Platform from '../Platform/Platform.js'
 import * as Assert from '../Assert/Assert.js'
-import * as EditorHelper from './EditorHelper.js'
+import * as Focus from '../Focus/Focus.js'
+import * as ModifierKey from '../ModifierKey/ModifierKey.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as Platform from '../Platform/Platform.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as LayerCursor from './LayerCursor.js'
 import * as LayerDiagnostics from './LayerDiagnostics.js'
 import * as LayerScrollBar from './LayerScrollBar.js'
 import * as LayerSelections from './LayerSelections.js'
 import * as LayerText3 from './LayerText.js'
+import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as InputEventType from '../InputEventType/InputEventType.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
@@ -37,10 +40,14 @@ const handleBlur = (event) => {
   RendererWorker.send(/* EditorBlur.editorBlur */ 'Editor.blur')
 }
 
+/**
+ *
+ * @param {InputEvent} event
+ */
 const handleBeforeInput = (event) => {
   event.preventDefault()
   switch (event.inputType) {
-    case 'insertText':
+    case InputEventType.InsertText:
       RendererWorker.send(
         /* Editor.type */ 'Editor.type',
         /* text */ event.data
@@ -115,12 +122,12 @@ const handleSelectionDone = (event) => {
 
 const getModifier = (event) => {
   if (event.ctrlKey) {
-    return 'ctrl'
+    return ModifierKey.Ctrl
   }
   if (event.altKey) {
-    return 'alt'
+    return ModifierKey.Alt
   }
-  return ''
+  return ModifierKey.None
 }
 
 const handleSingleClick = (event, x, y, offset) => {
@@ -160,7 +167,7 @@ const handleTripleClick = (event, x, y, offset) => {
 }
 
 const isRightClick = (event) => {
-  return event.button === 2
+  return event.button === MouseEventType.RightClick
 }
 
 const getTextNodeOffset = (textNode) => {
@@ -249,18 +256,22 @@ const handleMouseMove = (event) => {
   // RendererWorker.send(/* Editor.handleMouseMove */ 389, /* x */ x, /* y */ y)
 }
 
+/**
+ *
+ * @param {WheelEvent} event
+ */
 const handleWheel = (event) => {
   // event.preventDefault()
   // const state = EditorHelper.getStateFromEvent(event)
   // TODO send editor id
   switch (event.deltaMode) {
-    case event.DOM_DELTA_LINE:
+    case WheelEventType.DomDeltaLine:
       RendererWorker.send(
         /* Editor.setDeltaY */ 'Editor.setDeltaY',
         /* value */ event.deltaY
       )
       break
-    case event.DOM_DELTA_PIXEL:
+    case WheelEventType.DomDeltaPixel:
       RendererWorker.send(
         /* Editor.setDeltaY */ 'Editor.setDeltaY',
         /* value */ event.deltaY
@@ -444,7 +455,7 @@ export const create = () => {
   $EditorInput.setAttribute('wrap', 'off')
   $EditorInput.setAttribute('spellcheck', 'false')
   // @ts-ignore
-  $EditorInput.role= 'textbox'
+  $EditorInput.role = 'textbox'
   $EditorInput.onpaste = handlePaste
   // TODO where to best put listeners (side effects)
   $EditorInput.addEventListener('beforeinput', handleBeforeInput)
@@ -460,18 +471,8 @@ export const create = () => {
 
   const $LayerText = document.createElement('div')
   $LayerText.className = 'EditorRows'
-  if (Platform.isMobileOrTablet()) {
-    $LayerText.setAttribute('contenteditable', 'plaintext-only')
-    $LayerText.setAttribute('autocapitalize', 'off')
-    $LayerText.setAttribute('spellcheck', 'false')
-    $LayerText.setAttribute('autocorrect', 'off')
-    $LayerText.addEventListener('beforeinput', handleContentEditableBeforeInput)
-    // TODO remove listener once editor is disposed
-    // TODO why is there no selection change listener for the element?
-    document.addEventListener('selectionchange', handleNativeSelectionChange)
-  } else {
-    $LayerText.addEventListener('mousedown', handleMouseDown)
-  }
+
+  $LayerText.addEventListener('mousedown', handleMouseDown)
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
@@ -483,9 +484,7 @@ export const create = () => {
 
   const $ScrollBar = document.createElement('div')
   $ScrollBar.className = 'ScrollBar'
-  if (!Platform.isMobileOrTablet()) {
-    $ScrollBar.onmousedown = handleScrollBarMouseDown
-  }
+  $ScrollBar.onmousedown = handleScrollBarMouseDown
   $ScrollBar.append($ScrollBarThumb)
 
   // $EditorRows.addEventListener('mousemove', handleMouseMove, { passive: true })
@@ -518,16 +517,10 @@ export const create = () => {
   $Editor.className = 'Viewlet Editor'
   $Editor.dataset.viewletId = 'EditorText'
   // @ts-ignore
-  $Editor.role= 'code'
+  $Editor.role = 'code'
   $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBar)
-  if (Platform.isMobileOrTablet()) {
-    $Editor.addEventListener('touchstart', handleTouchStart, { passive: true })
-    $Editor.addEventListener('touchmove', handleTouchMove, { passive: true })
-    $Editor.addEventListener('touchend', handleTouchEnd)
-  } else {
-    $Editor.addEventListener('contextmenu', handleContextMenu)
-    $Editor.addEventListener('wheel', handleWheel, { passive: true })
-  }
+  $Editor.addEventListener('contextmenu', handleContextMenu)
+  $Editor.addEventListener('wheel', handleWheel, { passive: true })
   $Editor.addEventListener('mousemove', handleMouseMove, { passive: true })
   return {
     $LayerCursor,

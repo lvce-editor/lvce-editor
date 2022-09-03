@@ -491,12 +491,50 @@ test('event - contextmenu', () => {
       button: 2,
     })
   )
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Explorer.handleContextMenu',
+    'Explorer.handleContextMenuMouse',
     50,
     50,
-    0,
-    2
+    0
+  )
+})
+
+test('event - contextmenu - activated via keyboard', () => {
+  const state = ViewletExplorer.create()
+  ViewletExplorer.updateDirents(state, [
+    {
+      name: 'index.css',
+      depth: 1,
+      type: 'file',
+      path: '/index.css',
+      setSize: 1,
+      posInSet: 1,
+    },
+  ])
+  ViewletExplorer.setFocusedIndex(state, -1, 0)
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  // @ts-ignore
+  state.$Viewlet.children[0].getBoundingClientRect = () => {
+    return {
+      x: 100,
+      y: 200,
+      height: 20,
+    }
+  }
+  state.$Viewlet.dispatchEvent(
+    new MouseEvent('contextmenu', {
+      clientX: 50,
+      clientY: 50,
+      bubbles: true,
+      button: -1,
+    })
+  )
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Explorer.handleContextMenuKeyboard',
+    0
   )
 })
 

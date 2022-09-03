@@ -2,9 +2,9 @@ import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js' // TODO use Command.execute instead
 import * as ExtensionsMarketplace from '../ExtensionMarketplace/ExtensionMarketplace.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Assert from '../Assert/Assert.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const ITEM_HEIGHT = 62
 
@@ -50,6 +50,7 @@ export const create = (id, uri, left, top, width, height) => {
     top,
     left,
     finalDeltaY: 2728,
+    error: '',
   }
 }
 
@@ -337,15 +338,11 @@ export const handleInput = async (state, value) => {
     // TODO handle out of order responses (a bit complicated)
     // for now just assume everything comes back in order
   } catch (error) {
-    ErrorHandling.handleError(error)
-    // console.error(error)
-    // TODO show error in viewlet
-    await RendererProcess.invoke(
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ 'Extensions',
-      /* method */ 'setError',
-      /* error */ `Failed to load extensions from marketplace: ${error}`
-    )
+    ErrorHandling.printError(error)
+    return {
+      ...state,
+      error: `Failed to load extensions from marketplace: ${error}`,
+    }
   }
 }
 
@@ -552,14 +549,19 @@ export const handleDisable = async (state, id) => {
   )
 }
 
+const handleContextMenuMouse = (state, x, y) => {}
+
+const handleContextMenuIndex = (state, index) => {}
+
 // TODO pass index instead
-export const handleContextMenu = async (state, x, y, extensionId) => {
+export const handleContextMenu = async (state, x, y, index) => {
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
     /* id */ 'manageExtension'
   )
+  return state
 }
 
 export const openSuggest = async (state) => {
@@ -791,10 +793,25 @@ const renderScrollBarY = {
   },
 }
 
+const renderError = {
+  isEqual(oldState, newState) {
+    return oldState.error === newState.error
+  },
+  apply(oldState, newState) {
+    return [
+      /* viewletSend */ 'Viewlet.send',
+      /* id */ 'Extensions',
+      /* method */ 'setError',
+      /* error */ newState.error,
+    ]
+  },
+}
+
 export const render = [
   renderHeight,
   renderFocusedIndex,
   renderScrollBarY,
   renderNegativeMargin,
   renderExtensions,
+  renderError,
 ]

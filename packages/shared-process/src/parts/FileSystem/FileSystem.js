@@ -1,12 +1,13 @@
 // TODO lazyload chokidar and trash (but doesn't work currently because of bug with jest)
 import * as fs from 'node:fs/promises'
 import * as os from 'node:os'
-import chokidar from 'chokidar'
 import * as Error from '../Error/Error.js'
 import * as Path from '../Path/Path.js'
 import * as Trash from '../Trash/Trash.js'
 import * as Platform from '../Platform/Platform.js'
 import VError from 'verror'
+import { performance } from 'node:perf_hooks'
+import * as DirentType from '../DirentType/DirentType.js'
 
 export const state = {
   watcherMap: Object.create(null),
@@ -46,7 +47,12 @@ export const copy = async (source, target) => {
 export const readFile = async (path) => {
   console.info('[shared-process] read file', path)
   try {
+    // const start = performance.now()
+    // console.time(`read ${path}`)
     const content = await fs.readFile(path, 'utf8')
+    // const end = performance.now()
+    // console.log('read', path, 'took', (end - start).toFixed(2), 'ms')
+    // console.timeEnd(`read ${path}`)
     return content
   } catch (error) {
     if (error && error.code === 'ENOENT') {
@@ -163,24 +169,24 @@ export const exists = async (path) => {
  */
 const getType = (dirent) => {
   if (dirent.isFile()) {
-    return 'file'
+    return DirentType.File
   }
   if (dirent.isDirectory()) {
-    return 'directory'
+    return DirentType.Direcory
   }
   if (dirent.isSymbolicLink()) {
-    return 'symlink'
+    return DirentType.Symlink
   }
   if (dirent.isSocket()) {
-    return 'socket'
+    return DirentType.Socket
   }
   if (dirent.isBlockDevice()) {
-    return 'block-device'
+    return DirentType.BlockDevice
   }
   if (dirent.isCharacterDevice()) {
-    return 'character-device'
+    return DirentType.CharacterDevice
   }
-  return 'unknown'
+  return DirentType.Unknown
 }
 
 /**
@@ -234,9 +240,9 @@ export const rename = async (oldPath, newPath) => {
   }
 }
 
-export const watch = (path, options) => {
+export const watch = async (path, options) => {
   // let state = 'loading'
-
+  const chokidar = await import('chokidar')
   const watcher = chokidar.watch(`${path}`, {
     ignoreInitial: true,
   })

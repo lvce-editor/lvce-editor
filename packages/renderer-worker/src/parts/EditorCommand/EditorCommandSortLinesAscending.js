@@ -1,13 +1,10 @@
-import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as Compare from '../Compare/Compare.js'
 import * as Editor from '../Editor/Editor.js'
-
-const compareLine = (a, b) => {
-  return a.localeCompare(b)
-}
+import * as TextDocument from '../TextDocument/TextDocument.js'
 
 const getSortedLines = (lines) => {
   const newLines = [...lines]
-  newLines.sort(compareLine)
+  newLines.sort(Compare.compareString)
   return newLines
 }
 

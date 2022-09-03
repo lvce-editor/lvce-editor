@@ -1,11 +1,6 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Json from '../Json/Json.js'
 
-export const StorageType = {
-  LocalStorage: 1,
-  SessionStorage: 2,
-}
-
 export const clear = async (storageType) => {
   await RendererProcess.invoke(
     /* StorageBrowser.clear */ 'StorageBrowser.clear',

@@ -1,78 +1,104 @@
+import * as I18nString from '../I18NString/I18NString.js'
 import * as Platform from '../Platform/Platform.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
-export const getMenuEntries = () => {
-  if (Platform.platform === 'web') {
-    return [
-      {
-        id: 'file',
-        name: 'File',
-        flags: /* None */ 0,
-      },
-      {
-        id: 'edit',
-        name: 'Edit',
-        flags: /* None */ 0,
-      },
-      {
-        id: 'selection',
-        name: 'Selection',
-        flags: /* None */ 0,
-      },
-      {
-        id: 'view',
-        name: 'View',
-        flags: /* None */ 0,
-      },
-      {
-        id: 'go',
-        name: 'Go',
-        flags: /* None */ 0,
-      },
-    ]
-  }
+const UiStrings = {
+  File: 'File',
+  Edit: 'Edit',
+  Selection: 'Selection',
+  View: 'View',
+  Go: 'Go',
+  Run: 'Run',
+  Terminal: 'Terminal',
+  Help: 'Help',
+}
+
+const getMenuEntriesWeb = () => {
   return [
     {
       id: 'file',
-      name: 'File',
-      flags: /* None */ 0,
+      name: I18nString.i18nString(UiStrings.File),
+      flags: MenuItemFlags.None,
     },
     {
       id: 'edit',
-      name: 'Edit',
-      flags: /* None */ 0,
+      name: I18nString.i18nString(UiStrings.Edit),
+      flags: MenuItemFlags.None,
     },
     {
       id: 'selection',
-      name: 'Selection',
-      flags: /* None */ 0,
+      name: I18nString.i18nString(UiStrings.Selection),
+      flags: MenuItemFlags.None,
     },
     {
       id: 'view',
-      name: 'View',
-      flags: /* None */ 0,
+      name: I18nString.i18nString(UiStrings.View),
+      flags: MenuItemFlags.None,
     },
     {
       id: 'go',
-      name: 'Go',
-      flags: /* None */ 0,
+      name: I18nString.i18nString(UiStrings.Go),
+      flags: MenuItemFlags.None,
+    },
+  ]
+}
+
+const getMenuEntriesRemote = () => {
+  return [
+    {
+      id: 'file',
+      name: I18nString.i18nString(UiStrings.File),
+      flags: MenuItemFlags.None,
+    },
+    {
+      id: 'edit',
+      name: I18nString.i18nString(UiStrings.Edit),
+      flags: MenuItemFlags.None,
+    },
+    {
+      id: 'selection',
+      name: I18nString.i18nString(UiStrings.Selection),
+      flags: MenuItemFlags.None,
+    },
+    {
+      id: 'view',
+      name: I18nString.i18nString(UiStrings.View),
+      flags: MenuItemFlags.None,
+    },
+    {
+      id: 'go',
+      name: I18nString.i18nString(UiStrings.Go),
+      flags: MenuItemFlags.None,
     },
     {
       id: 'run',
-      name: 'Run',
+      name: I18nString.i18nString(UiStrings.Run),
       keyboardShortCut: 'Alt+r',
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
     {
       id: 'terminal',
-      name: 'Terminal',
+      name: I18nString.i18nString(UiStrings.Terminal),
       keyboardShortCut: 'Alt+t',
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
     {
       id: 'help',
-      name: 'Help',
+      name: I18nString.i18nString(UiStrings.Help),
       keyboardShortCut: 'Alt+h',
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
   ]
+}
+
+export const getMenuEntries = () => {
+  switch (Platform.platform) {
+    case 'web':
+      return getMenuEntriesWeb()
+    case 'remote':
+    case 'electron':
+      return getMenuEntriesRemote()
+    default:
+      return []
+  }
 }

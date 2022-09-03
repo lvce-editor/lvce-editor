@@ -1,57 +1,71 @@
+import * as I18nString from '../I18NString/I18NString.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+
+export const UiStrings = {
+  Undo: 'Undo',
+  Redo: 'Redo',
+  Separator: 'Separator',
+  Cut: 'Cut',
+  Copy: 'Copy',
+  Paste: 'Paste',
+  ToggleLineComment: 'Toggle Line Comment',
+  ToggleBlockComment: 'Toggle Block Comment',
+}
+
 export const getMenuEntries = () => {
   return [
     {
       id: 'undo',
-      label: 'Undo',
-      flags: /* Disabled */ 5,
+      label: I18nString.i18nString(UiStrings.Undo),
+      flags: MenuItemFlags.Disabled,
       command: /* TODO */ -1,
     },
     {
       id: 'redo',
-      label: 'Redo',
-      flags: /* Disabled */ 5,
+      label: I18nString.i18nString(UiStrings.Redo),
+      flags: MenuItemFlags.Disabled,
       command: /* TODO */ -1,
     },
     {
       id: 'separator',
-      label: '',
-      flags: /* separator */ 1,
+      label: I18nString.i18nString(UiStrings.Separator),
+      flags: MenuItemFlags.Separator,
       command: /* TODO */ -1,
     },
     {
       id: 'cut',
-      label: 'Cut',
-      flags: /* None */ 0,
+      label: I18nString.i18nString(UiStrings.Cut),
+      flags: MenuItemFlags.None,
       command: /* Editor.cut */ 'Editor.cut',
     },
     {
       id: 'copy',
-      label: 'Copy',
-      flags: /* None */ 0,
+      label: I18nString.i18nString(UiStrings.Copy),
+      flags: MenuItemFlags.None,
       command: /* Editor.copy */ 'Editor.copy',
     },
     {
       id: 'paste',
-      label: 'Paste',
-      flags: /* None */ 0,
+      label: I18nString.i18nString(UiStrings.Paste),
+      flags: MenuItemFlags.None,
       command: /* Editor.paste */ 'Editor.paste',
     },
     {
       id: 'separator',
-      label: '',
-      flags: /* separator */ 1,
+      label: I18nString.i18nString(UiStrings.Separator),
+      flags: MenuItemFlags.None,
       command: /* TODO */ -1,
     },
     {
       id: 'toggle-line-comment',
-      label: 'Toggle Line Comment',
-      flags: /* None */ 0,
+      label: I18nString.i18nString(UiStrings.ToggleLineComment),
+      flags: MenuItemFlags.None,
       command: /* Editor.toggleLineComment */ 'Editor.toggleLineComment',
     },
     {
       id: 'toggle-block-comment',
-      label: 'Toggle Block Comment',
-      flags: /* None */ 0,
+      label: I18nString.i18nString(UiStrings.ToggleBlockComment),
+      flags: MenuItemFlags.None,
       command: /* Editor.toggleBlockComment */ 'Editor.toggleBlockComment',
     },
   ]

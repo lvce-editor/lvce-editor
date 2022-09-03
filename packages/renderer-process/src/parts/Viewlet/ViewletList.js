@@ -2,18 +2,19 @@ import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
 export const name = 'List'
 
 const handleWheel = (event) => {
   switch (event.deltaMode) {
-    case event.DOM_DELTA_LINE:
+    case WheelEventType.DomDeltaLine:
       RendererWorker.send(
         /* ViewletExtensions.handleWheel */ 873,
         /* deltaY */ event.deltaY
       )
       break
-    case event.DOM_DELTA_PIXEL:
+    case WheelEventType.DomDeltaPixel:
       RendererWorker.send(
         /* ViewletExtensions.handleWheel */ 873,
         /* deltaY */ event.deltaY

@@ -1,27 +1,37 @@
+import * as I18nString from '../I18NString/I18NString.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+
+export const UiStrings = {
+  Enable: 'Enable',
+  Disable: 'Disable',
+  Uninstall: 'Uninstall',
+  InstallAnotherVersion: 'Install Another Version',
+}
+
 export const getMenuEntries = () => {
   return [
     {
       id: 'enable',
-      label: 'Enable',
-      flags: /* None */ 0,
+      label: I18nString.i18nString(UiStrings.Enable),
+      flags: MenuItemFlags.None,
       command: -1,
     },
     {
       id: 'disable',
-      label: 'Disable',
-      flags: /* None */ 0,
+      label: I18nString.i18nString(UiStrings.Disable),
+      flags: MenuItemFlags.None,
       command: -1,
     },
     {
       id: 'uninstall',
-      label: 'Uninstall',
-      flags: /* None */ 0,
+      label: I18nString.i18nString(UiStrings.Disable),
+      flags: MenuItemFlags.None,
       command: -1,
     },
     {
       id: 'installAnotherVersion',
-      label: 'Install Another Version',
-      flags: /* None */ 0,
+      label: I18nString.i18nString(UiStrings.InstallAnotherVersion),
+      flags: MenuItemFlags.None,
       command: -1,
     },
   ]

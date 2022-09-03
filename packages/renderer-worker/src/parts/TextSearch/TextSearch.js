@@ -25,3 +25,11 @@ export const textSearch = async (root, query) => {
   const results = await provider.textSearch(scheme, root, query)
   return results
 }
+
+export const cancel = async (searchId) => {
+  // TODO
+  // await SharedProcess.invoke(
+  //   /* Search.cancel */ 'Search.cancel',
+  //   /* searchId */ state.searchId
+  // )
+}

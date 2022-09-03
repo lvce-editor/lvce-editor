@@ -262,6 +262,11 @@
     "when": "focus.Explorer"
   },
   {
+    "key": "alt+ArrowRight",
+    "command": "Explorer.expandRecursively",
+    "when": "focus.Explorer"
+  },
+  {
     "key": "ctrl+ArrowLeft",
     "command": "Explorer.collapseAll",
     "when": "focus.Explorer"

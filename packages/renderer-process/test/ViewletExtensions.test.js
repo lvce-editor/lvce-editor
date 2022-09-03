@@ -2,9 +2,30 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
-import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const ViewletExtensions = await import(
+  '../src/parts/ViewletExtensions/ViewletExtensions.js'
+)
+
+const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+const RendererWorker = await import(
+  '../src/parts/RendererWorker/RendererWorker.js'
+)
 
 const isLeaf = (node) => {
   return node.childElementCount === 0
@@ -103,26 +124,24 @@ test.skip('setExtensionState', () => {
   ViewletExtensions.setExtensionState(state, 'non-existing', 'installed')
 })
 
-test.skip('event -  input', () => {
+test('event -  input', () => {
   const state = ViewletExtensions.create()
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
-  state.$InputBox.value = 'abc'
-  state.$InputBox.dispatchEvent(
-    new Event('input', {
+  const { $InputBox } = state
+  $InputBox.value = 'abc'
+  $InputBox.dispatchEvent(
+    new InputEvent('input', {
       bubbles: true,
       cancelable: true,
     })
   )
-  expect(state.element.ariaBusy).toBe('true')
-  expect(RendererWorker.send).toHaveBeenCalledWith([
-    2133,
-    'Extensions',
-    'handleInput',
-    'abc',
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Extensions.handleInput',
+    'abc'
+  )
   ViewletExtensions.setExtensions(state, [])
-  expect(state.element.hasAttribute('aria-busy')).toBe(false)
 })
 
 // TODO

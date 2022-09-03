@@ -125,9 +125,11 @@ const handleMouseMove = (event) => {
 }
 
 const handleMouseLeave = (event) => {
-  // const x = event.clientX
-  // const y = event.clientY
-  // console.log('leave', { x, y })
+  const $RelatedTarget = event.relatedTarget
+  if ($RelatedTarget.classList.contains('MenuItem')) {
+    return
+  }
+  RendererWorker.send(/* Menu.handleMouseLeave */ 'Menu.handleMouseLeave')
 }
 
 // const handleBlur = (event) => {}
@@ -155,9 +157,9 @@ const create$Menu = () => {
   $Menu.addEventListener('mouseleave', handleMouseLeave, {
     capture: true,
   })
-  $Menu.addEventListener('mousemove', handleMouseMove, {
-    passive: true,
-  })
+  // $Menu.addEventListener('mousemove', handleMouseMove, {
+  //   passive: true,
+  // })
   $Menu.onkeydown = handleKeyDown
   $Menu.addEventListener('focusout', handleFocusOut)
   $Menu.oncontextmenu = handleContextMenu

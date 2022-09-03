@@ -3,8 +3,12 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
 import * as InputBox from '../InputBox/InputBox.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
 export const name = 'Explorer'
+
+const treeItemActiveId = 'TreeItemActive'
 
 // TODO put drop into separate module and use executeCommand to call it
 
@@ -80,7 +84,7 @@ const handleFocus = (event) => {
   }
   event.preventDefault()
   RendererWorker.send(
-    /* Explorer.handleClick */ 'Explorer.focusIndex',
+    /* Explorer.focusIndex */ 'Explorer.focusIndex',
     /* index */ index
   )
 }
@@ -135,24 +139,52 @@ const handleDrop = async (event) => {
   // console.log(content)
 }
 
-const handleContextMenu = (event) => {
-  event.preventDefault()
+// TODO maybe use aria active descendant instead
+const getFocusedIndexFromFocusOutline = ($Viewlet) => {
+  for (let i = 0; i < $Viewlet.children.length; i++) {
+    const $Child = $Viewlet.children[i]
+    if ($Child.classList.contains('FocusOutline')) {
+      return i
+    }
+  }
+  return -1
+}
+
+const handleContextMenuMouse = (event) => {
   const $Target = event.target
-  const index = findIndex($Target)
   const x = event.clientX
   const y = event.clientY
-  const button = event.button
+  const index = findIndex($Target) // TODO index can be computed in renderer worker
   RendererWorker.send(
-    /* Explorer.handleContextMenu */ 'Explorer.handleContextMenu',
+    /* Explorer.handleContextMenuMouse */ 'Explorer.handleContextMenuMouse',
     /* x */ x,
     /* y */ y,
-    /* index */ index,
-    /* button */ button
+    /* index */ index
   )
 }
 
+const handleContextMenuKeyboard = (event) => {
+  const $Target = event.target
+  // TODO index computation is not necessary because focused index is stored in renderer worker
+  const index = getFocusedIndexFromFocusOutline($Target)
+  RendererWorker.send(
+    /* Explorer.handleContextMenuKeyboard */ 'Explorer.handleContextMenuKeyboard',
+    /* index */ index
+  )
+}
+
+const handleContextMenu = (event) => {
+  event.preventDefault()
+  switch (event.button) {
+    case MouseEventType.Keyboard:
+      return handleContextMenuKeyboard(event)
+    default:
+      return handleContextMenuMouse(event)
+  }
+}
+
 const handleMouseDown = (event) => {
-  if (event.button !== /* LeftClick */ 0) {
+  if (event.button !== MouseEventType.LeftClick) {
     return
   }
   const $Target = event.target
@@ -208,13 +240,13 @@ const handleMouseLeave = (event) => {
 
 const handleWheel = (event) => {
   switch (event.deltaMode) {
-    case event.DOM_DELTA_LINE:
+    case WheelEventType.DomDeltaLine:
       RendererWorker.send(
         /* Explorer.handleWheel */ 'Explorer.handleWheel',
         /* deltaY */ event.deltaY
       )
       break
-    case event.DOM_DELTA_PIXEL:
+    case WheelEventType.DomDeltaPixel:
       RendererWorker.send(
         /* Explorer.handleWheel */ 'Explorer.handleWheel',
         /* deltaY */ event.deltaY
@@ -263,8 +295,10 @@ const create$Row = () => {
 
 // TODO rename to renderDirent
 const render$Row = ($Row, rowInfo) => {
-  $Row.childNodes[0].className = `Icon${rowInfo.icon}`
-  $Row.childNodes[1].childNodes[0].data = rowInfo.name
+  const $Icon = $Row.childNodes[0]
+  const $LabelText = $Row.childNodes[1].childNodes[0]
+  $Icon.className = `Icon${rowInfo.icon}`
+  $LabelText.data = rowInfo.name
   $Row.title = rowInfo.path
   $Row.ariaSetSize = `${rowInfo.setSize}`
   // TODO bug with windows narrator
@@ -359,21 +393,26 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
       const $Dirent = $Viewlet.children[oldIndex]
       if ($Dirent) {
         $Dirent.classList.remove('FocusOutline')
+        $Dirent.removeAttribute('id')
       }
       break
   }
   switch (newIndex) {
     case -2:
       $Viewlet.classList.remove('FocusOutline')
+      $Viewlet.removeAttribute('aria-activedescendant')
       break
     case -1:
       $Viewlet.classList.add('FocusOutline')
+      $Viewlet.removeAttribute('aria-activedescendant')
       $Viewlet.focus()
       break
     default:
       const $Dirent = $Viewlet.children[newIndex]
       $Dirent.classList.add('FocusOutline')
+      $Dirent.id = treeItemActiveId
       $Viewlet.focus()
+      $Viewlet.setAttribute('aria-activedescendant', treeItemActiveId)
       break
   }
 }

@@ -4,10 +4,12 @@ const textSearchProvider = {
     return [
       [
         './index.txt',
-        {
-          absoluteOffset: 208,
-          preview: '    <title>Document</title>\n',
-        },
+        [
+          {
+            absoluteOffset: 208,
+            preview: '    <title>Document</title>',
+          },
+        ],
       ],
     ]
   },

@@ -13,10 +13,12 @@ test('sample.text-search-provider-error', async () => {
   // act
   await Search.setValue('abc')
 
+  // assert
   const viewletSearch = Locator('.Viewlet[data-viewlet-id="Search"]')
-
   const message = viewletSearch.locator('[role="status"]')
   await expect(message).toHaveText(
     'Error: Failed to execute text search provider: oops'
   )
 })
+
+export {}

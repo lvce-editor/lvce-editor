@@ -13,7 +13,24 @@
   width: calc(100% - 36px);
 }
 
+.Viewlet[data-viewlet-id='Search'] {
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* flex-wrap: wrap; */
+}
+
+.Viewlet[data-viewlet-id='Search'] .InputBox {
+  /* flex: 1; */
+  height: 28px;
+  flex-shrink: 0;
+}
 .ViewletSearchMessage {
   color: rgba(156, 162, 160, 0.65);
   padding: 0 22px 8px;
+}
+
+.SearchResults {
+  overflow-y: auto;
+  /* flex: 1; */
+  height: 100%;
 }

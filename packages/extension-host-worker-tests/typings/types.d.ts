@@ -32,7 +32,7 @@ declare const Explorer: {
   readonly focusLast: () => Promise<void>
   readonly focusNext: () => Promise<void>
   readonly clickCurrent: () => Promise<void>
-
+  readonly expandRecursively: () => Promise<void>
   // TODO maybe rename this to collapse
   readonly handleArrowLeft: () => Promise<void>
 }

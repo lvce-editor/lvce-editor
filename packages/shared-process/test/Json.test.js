@@ -6,10 +6,8 @@ test('parse', async () => {
 
 test('parse - syntax error', async () => {
   await expect(
-    Json.parse('{ "x" 42 }', '/test/some-file.txt')
-  ).rejects.toThrowError(
-    /^Unexpected number in JSON at position 6 while parsing/
-  )
+    Json.parse('{ "x" 42 }', '/test/file.json')
+  ).rejects.toThrowError(new Error('Json Parsing Error'))
 })
 
 test('stringify', () => {

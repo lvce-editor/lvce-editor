@@ -195,7 +195,7 @@ export const setState = async (id, newState) => {
   const instance = ViewletStates.getInstance(id)
   if (instance && instance.factory && instance.factory.hasFunctionalRender) {
     const oldState = instance.state
-    const commands = instance.factory.render(oldState, newState)
+    const commands = ViewletManager.render(instance.factory, oldState, newState)
     instance.state = newState
     await RendererProcess.invoke(
       /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',

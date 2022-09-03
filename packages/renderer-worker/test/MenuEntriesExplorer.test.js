@@ -16,6 +16,12 @@ test('getMenuEntries - no focused dirent', async () => {
     id: 'newFile',
     label: 'New File',
   })
+  expect(menuEntries).toContainEqual({
+    command: 'Explorer.copyPath',
+    flags: 0,
+    id: 'copyPath',
+    label: 'Copy Path',
+  })
 })
 
 test('getMenuEntries - focused folder', async () => {

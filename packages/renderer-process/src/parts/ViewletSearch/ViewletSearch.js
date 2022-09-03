@@ -19,16 +19,25 @@ const getNodeIndex = ($Node) => {
   return index
 }
 
+const handleClickTreeItem = ($Target) => {
+  const index = getNodeIndex($Target)
+  RendererWorker.send(
+    /* Search.handleClick */ 'Search.handleClick',
+    /* index */ index
+  )
+}
+
+const handleClickTreeItemLabel = ($Target) => {
+  return handleClickTreeItem($Target.parentNode)
+}
+
 const handleClick = (event) => {
   const $Target = event.target
   switch ($Target.className) {
     case 'TreeItem':
-      const index = getNodeIndex($Target)
-      RendererWorker.send(
-        /* Search.handleClick */ 'Search.handleClick',
-        /* index */ index
-      )
-      break
+      return handleClickTreeItem($Target)
+    case 'TreeItemLabel':
+      return handleClickTreeItemLabel($Target)
     default:
       break
   }
@@ -80,14 +89,22 @@ const create$Row = () => {
   // @ts-ignore
   $Row.role = 'treeitem'
   $Row.className = 'TreeItem'
+  const $LabelText = document.createTextNode('')
+  const $Label = document.createElement('div')
+  $Label.className = 'TreeItemLabel'
+  $Label.append($LabelText)
+  const $Icon = document.createElement('i')
+  $Row.append($Icon, $Label)
   return $Row
 }
 
 // TODO much duplication with explorer
 const render$Row = ($Row, rowInfo) => {
-  $Row.textContent = rowInfo.name
-  $Row.title = rowInfo.path
-  $Row.tabIndex = -1
+  const $Icon = $Row.childNodes[0]
+  const $LabelText = $Row.childNodes[1].childNodes[0]
+  $Icon.className = `Icon${rowInfo.icon}`
+  $LabelText.data = rowInfo.text
+  $Row.title = rowInfo.title
   $Row.ariaSetSize = `${rowInfo.setSize}`
   $Row.ariaLevel = `${rowInfo.depth}`
   $Row.ariaPosInSet = `${rowInfo.posInSet}`
@@ -161,8 +178,9 @@ export const setResults = (state, results) => {
 }
 
 export const setMessage = (state, message) => {
+  const { $SearchStatus } = state
   // TODO recycle text node
-  state.$SearchStatus.textContent = message
+  $SearchStatus.textContent = message
 }
 
 export const dispose = () => {}

@@ -1,11 +1,19 @@
 import * as Command from '../Command/Command.js'
+import * as I18nString from '../I18NString/I18NString.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+
+export const UiStrings = {
+  Separator: 'Separator',
+  More: 'More ...',
+  ClearRecentlyOpened: 'More ...',
+}
 
 const MAX_MENU_RECENT_ENTRIES = 10
 
 const toMenuItem = (folder) => {
   return {
     label: folder,
-    flags: /* None */ 0,
+    flags: MenuItemFlags.None,
     command: /* Workspace.setPath */ 'Workspace.setPath',
     args: [folder],
   }
@@ -24,26 +32,26 @@ export const getMenuEntries = async () => {
     ...itemsToShow.map(toMenuItem),
     {
       id: 'separator',
-      label: 'Separator',
+      label: I18nString.i18nString(UiStrings.Separator),
       flags: /* Separator */ 1,
-      command: /* None */ 0,
+      command: MenuItemFlags.None,
     },
     {
       id: 'more',
-      label: 'More...',
-      flags: /* None */ 0,
+      label: I18nString.i18nString(UiStrings.More),
+      flags: MenuItemFlags.None,
       command: /* TODO show quick picker with more recently opened */ -1,
     },
     {
       id: 'separator',
-      label: 'Separator',
+      label: I18nString.i18nString(UiStrings.More),
       flags: /* Separator */ 1,
-      command: /* None */ 0,
+      command: MenuItemFlags.None,
     },
     {
       id: 'clearRecentlyOpened',
-      label: 'Clear Recently Opened',
-      flags: /* None */ 0,
+      label: I18nString.i18nString(UiStrings.ClearRecentlyOpened),
+      flags: MenuItemFlags.None,
       command: 'RecentlyOpened.clearRecentlyOpened',
     },
   ]

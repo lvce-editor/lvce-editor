@@ -1,4 +1,5 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 
 // TODO windows
 const getFileName = (uri) => {
@@ -27,10 +28,10 @@ const handleMouseDown = (event) => {
   // else if tab is not focused -> focus tab
   // else noop
   switch (event.button) {
-    case 0:
+    case MouseEventType.LeftClick:
       console.log('left click')
       break
-    case 1:
+    case MouseEventType.MiddleClick:
       RendererWorker.send(/* Main.closeEditor */ 'Main.closeFocusedEditor')
       break
     default:
@@ -49,7 +50,7 @@ export const create = () => {
 const create$Tab = () => {
   const $Tab = document.createElement('li')
   // @ts-ignore
-  $Tab.role ='tab'
+  $Tab.role = 'tab'
   $Tab.className = 'EditorTab'
   $Tab.ariaSelected = 'true'
   $Tab.tabIndex = 0

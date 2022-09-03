@@ -1,27 +1,37 @@
+import * as I18nString from '../I18NString/I18NString.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+
+export const UiStrings = {
+  Settings: 'Settings',
+  KeyboardShortcuts: 'Keyboard Shortcuts',
+  ColorTheme: 'Color Theme',
+  CheckForUpdates: 'Check For Updates',
+}
+
 export const getMenuEntries = () => {
   return [
     {
       id: 'settings',
-      label: 'Settings',
-      flags: /* None */ 0,
+      label: I18nString.i18nString(UiStrings.Settings),
+      flags: MenuItemFlags.None,
       command: 'Preferences.openSettingsJson',
     },
     {
       id: 'keyboardShortcuts',
-      label: 'Keyboard Shortcuts',
-      flags: /* None */ 0,
+      label: I18nString.i18nString(UiStrings.KeyboardShortcuts),
+      flags: MenuItemFlags.None,
       command: /* TODO */ -1,
     },
     {
       id: 'colorTheme',
-      label: 'Color Theme',
-      flags: /* None */ 0,
+      label: I18nString.i18nString(UiStrings.ColorTheme),
+      flags: MenuItemFlags.None,
       command: 'QuickPick.openColorTheme',
     },
     {
       id: 'checkForUpdates',
-      label: 'Check For Updates',
-      flags: /* None */ 0,
+      label: I18nString.i18nString(UiStrings.CheckForUpdates),
+      flags: MenuItemFlags.None,
       command: /* TODO */ -1,
     },
   ]

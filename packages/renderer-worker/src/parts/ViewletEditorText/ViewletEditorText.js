@@ -166,6 +166,4 @@ export const resize = (state, dimensions) => {
 
 export const hasFunctionalRender = true
 
-export const render = (oldState, newState) => {
-  return Editor.render(oldState, newState)
-}
+export const render = Editor.render

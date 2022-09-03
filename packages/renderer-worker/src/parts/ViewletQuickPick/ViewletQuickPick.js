@@ -3,6 +3,7 @@ import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as QuickPickEveryThing from '../QuickPick/QuickPickEverything.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as InputEventType from '../InputEventType/InputEventType.js'
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
 
@@ -396,23 +397,23 @@ const getNewValueDeleteWordForward = (value, selectionStart, selectionEnd) => {
 
 const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
   switch (inputType) {
-    case 'insertText':
+    case InputEventType.InsertText:
       return getNewValueInsertText(value, data, selectionStart, selectionEnd)
-    case 'deleteContentBackward':
+    case InputEventType.DeleteContentBackward:
       return getNewValueDeleteContentBackward(
         value,
         selectionStart,
         selectionEnd
       )
-    case 'deleteContentForward':
+    case InputEventType.DeleteContentForward:
       return getNewValueDeleteContentForward(
         value,
         selectionStart,
         selectionEnd
       )
-    case 'deleteWordForward':
+    case InputEventType.DeleteWordForward:
       return getNewValueDeleteWordForward(value, selectionStart, selectionEnd)
-    case 'deleteWordBackward':
+    case InputEventType.DeleteWordBackward:
       return getNewValueDeleteWordBackward(value, selectionStart, selectionEnd)
     default:
       throw new Error(`unsupported input type ${inputType}`)

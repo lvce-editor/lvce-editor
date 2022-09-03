@@ -126,3 +126,7 @@ test('readDirWithFileTypes - mixed content', () => {
     },
   ])
 })
+
+test('getPathSeparator', () => {
+  expect(FileSystemMemory.getPathSeparator()).toBe('/')
+})

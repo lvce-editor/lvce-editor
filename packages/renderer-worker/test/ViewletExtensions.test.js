@@ -40,6 +40,9 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
     handleError: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    printError: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
 
@@ -587,14 +590,10 @@ test('handleInput - error', async () => {
       'Failed to request json from "https://example.com/api/extensions/search": HTTPError: Request failed with status code 404 Not Found'
     )
   })
-  await ViewletExtensions.handleInput(state, 'test')
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Extensions',
-    'setError',
-    'Failed to load extensions from marketplace: Error: Failed to request json from "https://example.com/api/extensions/search": HTTPError: Request failed with status code 404 Not Found'
-  )
+  expect(await ViewletExtensions.handleInput(state, 'test')).toMatchObject({
+    error:
+      'Failed to load extensions from marketplace: Error: Failed to request json from "https://example.com/api/extensions/search": HTTPError: Request failed with status code 404 Not Found',
+  })
 })
 
 test.skip('handleInput - should encode uri in ajax requests', async () => {

@@ -1,5 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
+import * as Compare from '../Compare/Compare.js'
+import * as DirentType from '../DirentType/DirentType.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
@@ -49,7 +51,7 @@ const compareDirentType = (direntA, direntB) => {
 }
 
 const compareDirentName = (direntA, direntB) => {
-  return direntA.name.localeCompare(direntB.name)
+  return Compare.compareString(direntA.name, direntB.name)
 }
 
 const compareDirent = (direntA, direntB) => {
@@ -240,10 +242,22 @@ export const handleWheel = (state, deltaY) => {
   return setDeltaY(state, state.deltaY + deltaY)
 }
 
-export const handleContextMenu = async (state, x, y, index, button) => {
-  if (button === -1) {
-    index = state.focusedIndex
+export const handleContextMenuKeyboard = async (state, index) => {
+  const x = state.left
+  const y = state.top + (index - state.minLineY + 1) * state.itemHeight
+  await Command.execute(
+    /* ContextMenu.show */ 'ContextMenu.show',
+    /* x */ x,
+    /* y */ y,
+    /* id */ 'explorer'
+  )
+  return {
+    ...state,
+    focusedIndex: index,
   }
+}
+
+export const handleContextMenuMouse = async (state, x, y, index) => {
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
@@ -498,7 +512,11 @@ export const copyRelativePath = async (state) => {
   const dirent = getFocusedDirent(state)
   const relativePath = dirent.path.slice(1)
   // TODO handle error
-  await Command.execute(/* ClipBoard.writeText */ 241, /* text */ relativePath)
+  await Command.execute(
+    /* ClipBoard.writeText */ 'ClipBoard.writeText',
+    /* text */ relativePath
+  )
+  return state
 }
 
 export const copyPath = async (state) => {
@@ -506,7 +524,11 @@ export const copyPath = async (state) => {
   // TODO windows paths
   // TODO handle error
   const path = dirent.path
-  await Command.execute(/* ClipBoard.writeText */ 241, /* text */ path)
+  await Command.execute(
+    /* ClipBoard.writeText */ 'ClipBoard.writeText',
+    /* text */ path
+  )
+  return state
 }
 
 const getContaingingFolder = (root, dirents, focusedIndex, pathSeparator) => {
@@ -599,11 +621,10 @@ const acceptDirent = async (state, type) => {
   // TODO better handle error
   try {
     switch (type) {
-      case 'file':
+      case DirentType.File:
         await FileSystem.writeFile(absolutePath, '')
         break
-      case 'folder':
-      case 'directory':
+      case DirentType.Directory:
         await FileSystem.mkdir(absolutePath)
         break
       default:
@@ -666,11 +687,11 @@ const acceptDirent = async (state, type) => {
 
 // TODO much duplicate logic with acceptNewFolder
 export const acceptNewFile = (state) => {
-  return acceptDirent(state, 'file')
+  return acceptDirent(state, DirentType.File)
 }
 
 export const acceptNewFolder = (state) => {
-  return acceptDirent(state, 'directory')
+  return acceptDirent(state, DirentType.Directory)
 }
 
 // TODO much copy paste with newFIle command
@@ -755,17 +776,16 @@ export const handleClick = async (state, index) => {
   }
   // TODO dirent type should be numeric
   switch (dirent.type) {
-    case 'file':
+    case DirentType.File:
       return handleClickFile(state, dirent, actualIndex)
     // TODO decide on one name
-    case 'folder':
-    case 'directory':
+    case DirentType.Directory:
       return handleClickDirectory(state, dirent, actualIndex)
-    case 'directory-expanding':
+    case DirentType.DirectoryExpanding:
       return handleClickDirectoryExpanding(state, dirent, actualIndex)
-    case 'directory-expanded':
+    case DirentType.DirectoryExpanded:
       return handleClickDirectoryExpanded(state, dirent, actualIndex)
-    case 'symlink':
+    case DirentType.Symlink:
       return handleClickSymLink(state, dirent, state.focusedIndex)
     default:
       break
@@ -868,7 +888,7 @@ const handleClickSymLink = async (state, dirent, index) => {
   const realPath = await FileSystem.getRealPath(dirent.path)
   const type = await FileSystem.stat(realPath)
   switch (type) {
-    case 'file':
+    case DirentType.File:
       return handleClickFile(state, dirent, index)
     default:
       throw new Error(`unsupported file type ${type}`)
@@ -891,13 +911,13 @@ export const handleArrowRight = async (state) => {
   }
   const dirent = state.dirents[state.focusedIndex]
   switch (dirent.type) {
-    case 'file':
+    case DirentType.File:
       return state
-    case 'directory':
+    case DirentType.Directory:
       return handleClickDirectory(state, dirent, state.focusedIndex)
-    case 'directory-expanded':
+    case DirentType.DirectoryExpanded:
       return handleArrowRightDirectoryExpanded(state, dirent)
-    case 'symlink':
+    case DirentType.Symlink:
       return handleClickSymLink(state, dirent, state.focusedIndex)
     default:
       throw new Error(`unsupported file type ${dirent.type}`)
@@ -921,10 +941,10 @@ export const handleArrowLeft = (state) => {
   }
   const dirent = state.dirents[state.focusedIndex]
   switch (dirent.type) {
-    case 'directory':
-    case 'file':
+    case DirentType.Directory:
+    case DirentType.File:
       return focusParentFolder(state)
-    case 'directory-expanded':
+    case DirentType.DirectoryExpanded:
       return handleClickDirectoryExpanded(state, dirent, state.focusedIndex)
     default:
       // TODO handle expanding directory and cancel file system call to read child dirents
@@ -1409,6 +1429,46 @@ export const revealItem = async (state, uri) => {
     return revealItemHidden(state, uri)
   }
   return revealItemVisible(state, index)
+}
+
+export const expandRecursively = async (state) => {
+  const { dirents, focusedIndex, pathSeparator, root } = state
+  const dirent = dirents[focusedIndex]
+  if (
+    dirent.type !== DirentType.Directory &&
+    dirent.type !== DirentType.DirectoryExpanding
+  ) {
+    return state
+  }
+  // TODO this is very inefficient
+  const getChildDirentsRecursively = async (dirent) => {
+    switch (dirent.type) {
+      case DirentType.File:
+        return [dirent]
+      case DirentType.Directory:
+        const childDirents = await getChildDirents(root, pathSeparator, dirent)
+        const all = [dirent]
+        for (const childDirent of childDirents) {
+          const childAll = await getChildDirentsRecursively(childDirent)
+          all.push(...childAll)
+        }
+        return all
+      default:
+        return []
+    }
+  }
+  // TODO race condition: what if folder is being collapse while it is recursively expanding?
+  // TODO race condition: what if folder is being deleted while it is recursively expanding?
+  // TODO race condition: what if a new file/folder is created while the folder is recursively expanding?
+  const childDirents = await getChildDirentsRecursively(dirent)
+  const startIndex = focusedIndex
+  const endIndex = getParentEndIndex(dirents, focusedIndex)
+  const newDirents = [
+    ...dirents.slice(0, startIndex),
+    ...childDirents,
+    ...dirents.slice(endIndex),
+  ]
+  return { ...state, dirents: newDirents }
 }
 
 export const shouldApplyNewState = (newState, fn) => {

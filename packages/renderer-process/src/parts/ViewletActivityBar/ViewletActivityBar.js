@@ -3,6 +3,8 @@ import * as Focus from '../Focus/Focus.js'
 import * as Layout from '../Layout/Layout.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
+import * as MouseEventTypes from '../MouseEventType/MouseEventType.js'
 
 // TODO set aria-selected false when sidebar is collapsed
 
@@ -31,12 +33,12 @@ const create$ActivityBarItem = (item) => {
     $ActivityBarItem.ariaKeyShortcuts = item.keyShortcuts
   }
   switch (item.flags) {
-    case /* Tab */ 1:
+    case ActivityBarItemFlags.Tab:
       // @ts-ignore
       $ActivityBarItem.role = 'tab'
       $ActivityBarItem.ariaSelected = 'false'
       break
-    case /* Button */ 2:
+    case ActivityBarItemFlags.Button:
       // @ts-ignore
       $ActivityBarItem.role = 'button'
       $ActivityBarItem.ariaHasPopup = 'true'
@@ -70,7 +72,7 @@ const getNodeIndex = ($Node) => {
 }
 
 const handleMousedown = (event) => {
-  if (event.button !== 0) {
+  if (event.button !== MouseEventTypes.LeftClick) {
     return
   }
   const $Item = get$ItemFromEvent(event)

@@ -51,7 +51,7 @@ test.skip('sample.reference-provider-accessibility', async () => {
   })
 
   const contextMenuItemFindAllReferences = page.locator('.MenuItem', {
-    hasText: 'Find all references',
+    hasText: 'Find All References',
   })
   await contextMenuItemFindAllReferences.click()
 
