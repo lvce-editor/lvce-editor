@@ -1,10 +1,10 @@
+import got from 'got'
 import { createReadStream, createWriteStream } from 'node:fs'
 import { mkdir, rm } from 'node:fs/promises'
 import { pipeline } from 'node:stream/promises'
 import { createBrotliDecompress } from 'node:zlib'
-import got from 'got'
 import tar from 'tar-fs'
-import * as Error from '../Error/Error.js'
+import VError from 'verror'
 import * as Path from '../Path/Path.js'
 
 export const download = async (url, outFile) => {
@@ -14,12 +14,10 @@ export const download = async (url, outFile) => {
   } catch (error) {
     try {
       await rm(outFile)
-    } catch {}
-    throw new Error.OperationalError({
-      cause: error,
-      code: 'E_DOWNLOAD_FAILED',
-      message: `Failed to download "${url}"`,
-    })
+    } catch {
+      // ignore
+    }
+    throw new VError(error, `Failed to download "${url}"`)
   }
 }
 
