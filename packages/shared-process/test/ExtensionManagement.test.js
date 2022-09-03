@@ -263,12 +263,12 @@ test('getAllExtensions', async () => {
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getAllExtensions()).toEqual([
     {
-      status: 'fulfilled',
+      status: ExtensionManifestStatus.Resolved,
       id: 'builtin-extension',
       path: join(tmpDir2, 'builtin-extension'),
     },
     {
-      status: 'fulfilled',
+      status: ExtensionManifestStatus.Resolved,
       id: 'test-extension',
       path: join(tmpDir1, 'test-extension'),
     },
@@ -348,7 +348,7 @@ test.skip('getExtensions - empty object', async () => {
   Platform.getCachedExtensionsPath.mockImplementation(() => tmpDir3)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: 'fulfilled',
+      status: ExtensionManifestStatus.Resolved,
       path: join(tmpDir1, '/test-extension-1'),
     },
   ])
@@ -365,7 +365,7 @@ test.skip('getExtensions - error - invalid value - empty array', async () => {
   Platform.getExtensionsPath.mockImplementation(() => tmpDir2)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: 'fulfilled',
+      status: ExtensionManifestStatus.Resolved,
 
       path: join(tmpDir1, 'test-extension-1'),
     },
@@ -536,7 +536,7 @@ test('getExtensions - with only extension and builtin extensions', async () => {
         },
       ],
       path: tmpDir3,
-      status: 'fulfilled',
+      status: ExtensionManifestStatus.Resolved,
     },
   ])
 })

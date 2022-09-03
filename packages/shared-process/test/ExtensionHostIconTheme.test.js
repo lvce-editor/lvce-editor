@@ -2,6 +2,7 @@ import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { jest } from '@jest/globals'
+import * as ExtensionManifestStatus from '../src/parts/ExtensionManifestStatus/ExtensionManifestStatus.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -47,7 +48,7 @@ test('getIconTheme - wrong/invalid path', async () => {
   ExtensionManagement.getExtensions.mockImplementation(async () => {
     return [
       {
-        status: 'fulfilled',
+        status: Exten,
         id: 'builtin.theme-test',
         iconThemes: [
           {
@@ -74,7 +75,7 @@ test('getIconTheme - invalid json', async () => {
   ExtensionManagement.getExtensions.mockImplementation(async () => {
     return [
       {
-        status: 'fulfilled',
+        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.icon-theme-test',
         iconThemes: [
           {
