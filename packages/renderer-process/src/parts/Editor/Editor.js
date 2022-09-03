@@ -614,6 +614,9 @@ export const dispose = (state) => {}
 
 export const focus = (state) => {
   const { $EditorInput } = state
+  if (!$EditorInput.isConnected) {
+    console.warn('unmounted editor cannot be focused')
+  }
   $EditorInput.focus()
 }
 
