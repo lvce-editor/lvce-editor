@@ -49,7 +49,7 @@ export const create = (id, uri, languageId, content) => {
     validLines: [],
     invalidStartIndex: 0,
     decorations: [],
-    focused: true,
+    focused: false,
   }
 }
 
