@@ -614,7 +614,6 @@ export const dispose = (state) => {}
 
 export const focus = (state) => {
   const { $EditorInput } = state
-  console.log('focus editor')
   $EditorInput.focus()
 }
 
