@@ -2,6 +2,7 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import { VError } from '../VError/VError.js'
 
 export const editorSave = async (editor) => {
   const uri = editor.uri
@@ -10,9 +11,7 @@ export const editorSave = async (editor) => {
     await FileSystem.writeFile(uri, content)
   } catch (error) {
     // @ts-ignore
-    const betterError = new Error(`Failed to save file "${uri}"`, {
-      cause: error,
-    })
+    const betterError = new VError(error, `Failed to save file "${uri}"`)
     await ErrorHandling.handleError(betterError)
     return
   }

@@ -1,6 +1,7 @@
 // TODO high memory usage in idb because of transactionDoneMap
 
 import { openDB } from '../../../../../static/js/idb/with-async-ittr.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   databases: Object.create(null),
@@ -39,10 +40,7 @@ export const saveValue = async (storeId, value) => {
     const db = await getDbMemoized()
     await db.add('session', value)
   } catch (error) {
-    throw new Error('Failed to save value to indexed db', {
-      // @ts-ignore
-      cause: error,
-    })
+    throw new VError(error, 'Failed to save value to indexed db')
   }
 }
 
@@ -54,10 +52,7 @@ export const getValues = async (storeId) => {
     console.log({ objects })
     return objects
   } catch (error) {
-    throw new Error('Failed to get values from indexed db', {
-      // @ts-ignore
-      cause: error,
-    })
+    throw new VError(error, 'Failed to get values from indexed db')
   }
 }
 
