@@ -10,9 +10,12 @@ const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
 
 exports.open = async () => {
+  const colorThemeJson = await ColorTheme.getColorThemeJson()
+  const backgroundColor = colorThemeJson.MainBackground
   const processExplorerWindow = new BrowserWindow({
     width: 800,
     height: 500,
+    backgroundColor,
     webPreferences: {
       session: Session.get(),
       preload: Path.join(
@@ -93,7 +96,6 @@ exports.open = async () => {
   processExplorerWindow.once('close', handleClose)
 
   // TODO get actual process explorer theme css from somewhere
-  const colorThemeJson = await ColorTheme.getColorThemeJson()
   const processExplorerThemeCss = ColorTheme.toCss(colorThemeJson)
   await writeFile('/tmp/process-explorer-theme.css', processExplorerThemeCss)
   try {
