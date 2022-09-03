@@ -150,7 +150,7 @@ export const load = async (viewlet, focus = false) => {
     const oldVersion =
       viewletState.version === undefined ? undefined : ++viewletState.version
     let newState = await module.loadContent(viewletState)
-    if (focus) {
+    if (focus && module.focus) {
       newState = await module.focus(newState)
     }
     if (viewletState.version !== oldVersion) {
