@@ -8,7 +8,10 @@ export const editorBlur = (editor) => {
   // }
   // TODO save on blur
   // Command.execute(/* Main.save */ 89)
-  return editor
+  return {
+    ...editor,
+    focused: false,
+  }
 }
 
 export const registerListener = (fn) => {
