@@ -49,6 +49,7 @@ export const create = (id, uri, languageId, content) => {
     validLines: [],
     invalidStartIndex: 0,
     decorations: [],
+    focused: false,
   }
 }
 
@@ -322,7 +323,10 @@ const renderLines = {
 
 const renderSelections = {
   isEqual(oldState, newState) {
-    return oldState.selections === newState.selections
+    return (
+      oldState.selections === newState.selections &&
+      oldState.focused === newState.focused
+    )
   },
   apply(oldState, newState) {
     const cursorInfos = EditorCursor.getVisible(newState)
@@ -358,4 +362,25 @@ const renderScrollBar = {
   },
 }
 
-export const render = [renderLines, renderSelections, renderScrollBar]
+const renderFocus = {
+  isEqual(oldState, newState) {
+    return oldState.focused === newState.focused
+  },
+  apply(oldState, newState) {
+    if (!newState.focused) {
+      return []
+    }
+    return [
+      /* Viewlet.send */ 'Viewlet.invoke',
+      /* id */ 'EditorText',
+      /* method */ 'focus',
+    ]
+  },
+}
+
+export const render = [
+  renderLines,
+  renderSelections,
+  renderScrollBar,
+  renderFocus,
+]

@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -231,7 +232,7 @@ test('showMenu - with sub menu', () => {
       {
         id: 'separator',
         label: 'Separator',
-        flags: /* Separator */ 1,
+        flags: MenuItemFlags.Separator,
       },
       {
         id: 'openFile',
@@ -251,7 +252,7 @@ test('showMenu - with sub menu', () => {
       {
         id: 'separator',
         label: 'Separator',
-        flags: /* Separator */ 1,
+        flags: MenuItemFlags.Separator,
       },
       {
         id: 'exit',
@@ -271,7 +272,7 @@ test('showMenu - with sub menu', () => {
       {
         id: 'separator',
         label: 'Separator',
-        flags: /* Separator */ 1,
+        flags: MenuItemFlags.Separator,
       },
       {
         id: 'more',
@@ -281,7 +282,7 @@ test('showMenu - with sub menu', () => {
       {
         id: 'separator',
         label: 'Separator',
-        flags: /* Separator */ 1,
+        flags: MenuItemFlags.Separator,
       },
       {
         id: 'clearRecentlyOpened',

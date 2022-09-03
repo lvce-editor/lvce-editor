@@ -1,3 +1,4 @@
+import VError from 'verror'
 import * as Error from '../Error/Error.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
@@ -21,11 +22,7 @@ export const getIconTheme = async (iconThemeId) => {
           json,
         }
       } catch (error) {
-        throw new Error.OperationalError({
-          cause: error,
-          code: 'E_ICON_THEME_COULD_NOT_BE_LOADED',
-          message: `Failed to load icon theme "${iconThemeId}"`,
-        })
+        throw new VError(error, `Failed to load icon theme "${iconThemeId}"`)
       }
     }
   }

@@ -28,7 +28,7 @@ export const getMenuEntries = () => {
     {
       id: 'separator',
       label: I18nString.i18nString(UiStrings.Separator),
-      flags: /* Separator */ 1,
+      flags: MenuItemFlags.Separator,
       command: MenuItemFlags.None,
     },
     {

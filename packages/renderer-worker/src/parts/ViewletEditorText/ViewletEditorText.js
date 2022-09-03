@@ -167,3 +167,10 @@ export const resize = (state, dimensions) => {
 export const hasFunctionalRender = true
 
 export const render = Editor.render
+
+export const focus = (state) => {
+  return {
+    ...state,
+    focused: true,
+  }
+}

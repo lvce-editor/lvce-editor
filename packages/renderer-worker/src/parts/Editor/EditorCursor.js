@@ -41,6 +41,9 @@ const getTokenIndex = (lineCache, endColumnIndex) => {
 }
 
 export const getVisible = (editor) => {
+  if (!editor.focused) {
+    return []
+  }
   if (Platform.isMobileOrTablet()) {
     const visibleCursors = []
     for (const selection of editor.selections) {

@@ -7,6 +7,7 @@ test('resize - increase height', () => {
     minLineY: 0,
     maxLineY: 1,
     numberOfVisibleLines: 1,
+    focused: true,
   }
   const { newState, commands } = ViewletEditorText.resize(state, {
     top: 200,
@@ -56,6 +57,7 @@ test('resize - same height', () => {
     minLineY: 0,
     maxLineY: 3,
     numberOfVisibleLines: 3,
+    focused: true,
   }
   const { newState, commands } = ViewletEditorText.resize(state, {
     top: 200,
@@ -105,6 +107,7 @@ test('resize - reduce height', () => {
     maxLineY: 3,
     numberOfVisibleLines: 3,
     height: 60,
+    focused: true,
   }
   const { newState, commands } = ViewletEditorText.resize(state, {
     top: 200,

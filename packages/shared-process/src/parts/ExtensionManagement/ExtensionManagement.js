@@ -1,10 +1,9 @@
-import { mkdir, readdir, rename, rm } from 'node:fs/promises'
-import { performance } from 'node:perf_hooks'
-import path from 'node:path'
 import isObject from 'is-object'
+import { mkdir, readdir, rename, rm } from 'node:fs/promises'
+import path from 'node:path'
+import { performance } from 'node:perf_hooks'
 import VError from 'verror'
 import * as Debug from '../Debug/Debug.js'
-import * as Error from '../Error/Error.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
@@ -61,11 +60,7 @@ export const install = async (id) => {
     //   type: 'marketplace',
     // })
   } catch (error) {
-    throw new Error.OperationalError({
-      cause: error,
-      code: 'E_EXT_INSTALL_FAILED',
-      message: `Failed to install extension "${id}"`,
-    })
+    throw new VError(error, `Failed to install extension "${id}"`)
   }
 }
 
@@ -78,11 +73,7 @@ export const uninstall = async (id) => {
     // if (error.code === 'ENOENT') {
     //   return
     // }
-    throw new Error.OperationalError({
-      cause: error,
-      code: 'E_EXT_UNINSTALL_FAILED',
-      message: `Failed to uninstall extension "${id}"`,
-    })
+    throw new VError(error, `Failed to uninstall extension "${id}"`)
   }
 }
 
@@ -97,11 +88,7 @@ export const enable = async (id) => {
       Path.join(extensionsPath, id)
     )
   } catch (error) {
-    throw new Error.OperationalError({
-      cause: error,
-      message: `Failed to enable extension "${id}"`,
-      code: 'E_EXTENSION_ENABLING_FAILED',
-    })
+    throw new VError(error, `Failed to enable extension "${id}"`)
   }
 }
 
@@ -116,11 +103,7 @@ export const disable = async (id) => {
       Path.join(disabledExtensionsPath, id)
     )
   } catch (error) {
-    throw new Error.OperationalError({
-      cause: error,
-      code: 'E_EXTENSION_DISABLING_FAILED',
-      message: `Failed to disable extension ${id}`,
-    })
+    throw new VError(error, `Failed to disable extension ${id}`)
   }
 }
 
@@ -194,11 +177,7 @@ const getInstalledExtensionPaths = async () => {
       await mkdir(Platform.getExtensionsPath(), { recursive: true })
       return []
     }
-    throw new Error.OperationalError({
-      cause: error,
-      code: 'E_FAILED_TO_LOAD_INSTALLED_EXTENSIONS',
-      message: 'Failed to get installed extensions',
-    })
+    throw new VError(error, 'Failed to get installed extensions')
   }
 }
 
@@ -231,19 +210,12 @@ const getExtensionManifest = async (path) => {
     return {
       path,
       status: 'rejected',
-      reason: new Error.OperationalError({
-        cause: error,
-        code: 'E_LOADING_EXTENSION_MANIFEST_FAilED',
-        message: `Failed to load extension "${id}": Failed to load extension manifest`,
-        // @ts-ignore
-        stack: error.stack,
-      }),
+      reason: new VError(
+        error,
+        `Failed to load extension "${id}": Failed to load extension manifest`
+      ),
     }
   }
-}
-
-const isRejected = (promise) => {
-  return promise.status === 'rejected'
 }
 
 /**

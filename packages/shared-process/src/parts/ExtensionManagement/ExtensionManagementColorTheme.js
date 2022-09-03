@@ -1,3 +1,4 @@
+import VError from 'verror'
 import * as Error from '../Error/Error.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
@@ -20,11 +21,7 @@ export const getColorThemeJson = async (colorThemeId) => {
         const json = await ReadJson.readJson(absolutePath)
         return json
       } catch (error) {
-        throw new Error.OperationalError({
-          cause: error,
-          code: 'E_COLOR_THEME_COULD_NOT_BE_LOADED',
-          message: `Failed to load color theme "${colorThemeId}"`,
-        })
+        throw new VError(error, `Failed to load color theme "${colorThemeId}"`)
       }
     }
   }

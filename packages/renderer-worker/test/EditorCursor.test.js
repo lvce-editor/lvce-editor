@@ -91,6 +91,7 @@ test.only('getVisible - emoji - 👮🏽‍♀️', () => {
         ],
       },
     ],
+    focused: true,
   }
   expect(EditorCursor.getVisible(editor)).toEqual([
     {
