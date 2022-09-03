@@ -58,6 +58,7 @@ const getSharedProcessExtensions = () => {
   )
 }
 
+// TODO status fulfilled should be handled as resolved
 export const organizeExtensions = (extensions) => {
   const rejected = []
   const resolved = []
