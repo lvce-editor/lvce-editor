@@ -8,7 +8,7 @@ import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
 export const name = 'Explorer'
 
-const treeItemActiveId = 'TreeItemActive'
+const activeId = 'TreeItemActive'
 
 // TODO put drop into separate module and use executeCommand to call it
 
@@ -410,9 +410,9 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
     default:
       const $Dirent = $Viewlet.children[newIndex]
       $Dirent.classList.add('FocusOutline')
-      $Dirent.id = treeItemActiveId
+      $Dirent.id = activeId
       $Viewlet.focus()
-      $Viewlet.setAttribute('aria-activedescendant', treeItemActiveId)
+      $Viewlet.setAttribute('aria-activedescendant', activeId)
       break
   }
 }

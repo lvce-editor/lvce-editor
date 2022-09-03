@@ -50,7 +50,7 @@ test('create', () => {
   expect($QuickPickItemTwo.textContent).toBe('item 2')
 })
 
-test('focusIndex', () => {
+test('setFocusedIndex', () => {
   const state = ViewletQuickPick.create('>')
   ViewletQuickPick.setPicks(state, [
     {
@@ -64,7 +64,7 @@ test('focusIndex', () => {
       label: 'item 2',
     },
   ])
-  ViewletQuickPick.focusIndex(state, 0, 1)
+  ViewletQuickPick.setFocusedIndex(state, 0, 1)
   const $QuickPickItemOne = state.$QuickPickItems.children[0]
   const $QuickPickItemTwo = state.$QuickPickItems.children[1]
   expect($QuickPickItemOne.classList.contains('Focused')).toBe(false)
@@ -248,7 +248,7 @@ test('accessibility - aria-activedescendant should point to quick pick item', ()
   ])
   ViewletQuickPick.setFocusedIndex(state, -1, 0)
   expect(state.$QuickPickInput.getAttribute('aria-activedescendant')).toBe(
-    'QuickPickItem-1'
+    'QuickPickItemActive'
   )
   // expect(state.$QuickPickItems.children[0].id).toBe('QuickPickItem-1')
 })

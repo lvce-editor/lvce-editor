@@ -19,6 +19,8 @@ import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 // TODO accessibility issues with nvda: when pressing escape, it goes into different mode
 // but should just close quick-pick like vscode does
 
+const activeId = 'QuickPickItemActive'
+
 const getNodeIndex = ($Node) => {
   let index = 0
   while (($Node = $Node.previousElementSibling)) {
@@ -123,20 +125,6 @@ const create$QuickPickItem = () => {
   return $QuickPickItem
 }
 
-export const focusIndex = (state, oldIndex, newIndex) => {
-  if (oldIndex === newIndex) {
-    return
-  }
-  const $QuickPickItems = state.$QuickPickItems
-  if (oldIndex !== -1) {
-    const $OldItem = $QuickPickItems.children[oldIndex]
-    $OldItem.classList.remove('Focused')
-  }
-  const $NewItem = $QuickPickItems.children[newIndex]
-  $NewItem.classList.add('Focused')
-  state.$QuickPickInput.setAttribute('aria-activedescendant', $NewItem.id)
-}
-
 // TODO add test with show and slicedItems length is 0
 
 const create$QuickPickDescription = () => {
@@ -172,7 +160,6 @@ const render$QuickPickItemMore = ($QuickPickItem, quickPickItem) => {
 const render$QuickPickItem = ($QuickPickItem, quickPickItem) => {
   const lengthA = $QuickPickItem.children.length
   const lengthB = quickPickItem.description ? 2 : 1
-  $QuickPickItem.id = `QuickPickItem-${quickPickItem.posInSet}`
   $QuickPickItem.ariaPosInSet = `${quickPickItem.posInSet}` // TODO pass correct number as prop
   $QuickPickItem.ariaSetSize = `${quickPickItem.setSize}`
   if (lengthA < lengthB) {
@@ -236,17 +223,19 @@ export const setVisiblePicks = (state, visiblePicks) => {
 
 export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
   const { $QuickPickItems, $QuickPickInput } = state
-  if (oldFocusedIndex !== -1) {
+  if (oldFocusedIndex >= 0) {
     const $OldItem = $QuickPickItems.children[oldFocusedIndex]
     if ($OldItem) {
       $OldItem.classList.remove('Focused')
+      $OldItem.removeAttribute('id')
     }
   }
   if (newFocusedIndex >= 0) {
     const $NewItem = $QuickPickItems.children[newFocusedIndex]
     if ($NewItem) {
       $NewItem.classList.add('Focused')
-      $QuickPickInput.setAttribute('aria-activedescendant', $NewItem.id)
+      $NewItem.id = activeId
+      $QuickPickInput.setAttribute('aria-activedescendant', activeId)
     }
   }
 }
