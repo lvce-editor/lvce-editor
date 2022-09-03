@@ -8,6 +8,8 @@ import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
 export const name = 'Explorer'
 
+const treeItemActiveId = 'TreeItemActive'
+
 // TODO put drop into separate module and use executeCommand to call it
 
 // TODO drag and drop should be loaded on demand
@@ -391,21 +393,26 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
       const $Dirent = $Viewlet.children[oldIndex]
       if ($Dirent) {
         $Dirent.classList.remove('FocusOutline')
+        $Dirent.removeAttribute('id')
       }
       break
   }
   switch (newIndex) {
     case -2:
       $Viewlet.classList.remove('FocusOutline')
+      $Viewlet.removeAttribute('aria-activedescendant')
       break
     case -1:
       $Viewlet.classList.add('FocusOutline')
+      $Viewlet.removeAttribute('aria-activedescendant')
       $Viewlet.focus()
       break
     default:
       const $Dirent = $Viewlet.children[newIndex]
       $Dirent.classList.add('FocusOutline')
+      $Dirent.id = treeItemActiveId
       $Viewlet.focus()
+      $Viewlet.setAttribute('aria-activedescendant', treeItemActiveId)
       break
   }
 }

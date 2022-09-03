@@ -3,6 +3,7 @@ import * as Command from '../Command/Command.js'
 // TODO lazyload menuEntries and use Command.execute (maybe)
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as Layout from '../Layout/Layout.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 export const state = {
   /**
@@ -347,7 +348,13 @@ export const focusPrevious = async () => {
 }
 
 const canBeFocused = (item) => {
-  return item.flags !== /* Separator */ 1 && item.flags !== /* Disabled */ 5
+  switch (item.flags) {
+    case MenuItemFlags.Separator:
+    case MenuItemFlags.Disabled:
+      return false
+    default:
+      return true
+  }
 }
 
 const getIndexToFocusNext = (menu) => {

@@ -1,3 +1,5 @@
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+
 export const getIndexToFocusNextStartingAt = (items, startIndex) => {
   for (let i = startIndex; i < startIndex + items.length; i++) {
     const index = i % items.length
@@ -38,7 +40,10 @@ export const getIndexToFocusPrevious = (menu) => {
 }
 
 const canBeFocused = (item) => {
-  return item.flags !== /* Separator */ 1 && item.flags !== /* Disabled */ 5
+  return (
+    item.flags !== MenuItemFlags.Separator &&
+    item.flags !== MenuItemFlags.Disabled
+  )
 }
 
 export const getIndexToFocusNext = (menu) => {

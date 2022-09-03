@@ -17,6 +17,9 @@ const openFolderRemote = async () => {
     /* Dialog.prompt */ 'Dialog.prompt',
     /* message */ 'Choose path:'
   )
+  if (!path) {
+    return
+  }
   await Command.execute(
     /* Workspace.setPath */ 'Workspace.setPath',
     /* path */ path

@@ -2,6 +2,7 @@ import { jest } from '@jest/globals'
 import * as ContextMenu from '../src/parts/ContextMenu/ContextMenu.js'
 import * as Layout from '../src/parts/Layout/Layout.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
 beforeEach(() => {
   ContextMenu.state.menus = []
@@ -148,13 +149,13 @@ test.skip('focusFirst', () => {
         {
           id: 'item 1',
           label: 'Item 1',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
         {
           id: 'item 2',
           label: 'Item 2',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
       ],
@@ -179,13 +180,13 @@ test.skip('focusLast', () => {
         {
           id: 'item 1',
           label: 'Item 1',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
         {
           id: 'item 2',
           label: 'Item 2',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
       ],
@@ -209,19 +210,19 @@ test.skip('focusPrevious', () => {
         {
           id: 'item 1',
           label: 'Item 1',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
         {
           id: 'item 2',
           label: 'Item 2',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
         {
           id: 'item 3',
           label: 'Item 3',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
       ],
@@ -246,19 +247,19 @@ test.skip('focusPrevious - no focus', () => {
         {
           id: 'item 1',
           label: 'Item 1',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
         {
           id: 'item 2',
           label: 'Item 2',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
         {
           id: 'item 3',
           label: 'Item 3',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
       ],
@@ -283,19 +284,19 @@ test.skip('focusPrevious - at start', () => {
         {
           id: 'item 1',
           label: 'Item 1',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
         {
           id: 'item 2',
           label: 'Item 2',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
         {
           id: 'item 3',
           label: 'Item 3',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
       ],
@@ -320,25 +321,25 @@ test.skip('focusPrevious - with separator', () => {
         {
           id: 'item 1',
           label: 'Item 1',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
         {
           id: 'item 2',
           label: 'Item 2',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
         {
           id: '',
           label: '',
-          flags: /* Separator */ 1,
+          flags: MenuItemFlags.Separator,
           command: 0,
         },
         {
           id: 'item 3',
           label: 'Item 3',
-          flags: /* None */ 0,
+          flags: MenuItemFlags.None,
           command: 0,
         },
       ],
