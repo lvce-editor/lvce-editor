@@ -1,6 +1,7 @@
 import * as FindIndex from '../../shared/findIndex.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Widget from '../Widget/Widget.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 export const state = {
   $$Menus: [],
@@ -9,19 +10,19 @@ export const state = {
 const create$MenuItem = (item) => {
   const $MenuItem = document.createElement('li')
   switch (item.flags) {
-    case /* None */ 0:
+    case MenuItemFlags.None:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = 'menuitem'
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
       break
-    case /* Separator */ 1:
+    case MenuItemFlags.Separator:
       $MenuItem.className = 'MenuItemSeparator'
       // @ts-ignore
       $MenuItem.role = 'separator'
       break
-    case /* Checked */ 2:
+    case MenuItemFlags.Checked:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = 'menuitemcheckbox'
@@ -29,7 +30,7 @@ const create$MenuItem = (item) => {
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
       break
-    case /* UnChecked */ 3:
+    case MenuItemFlags.Unchecked:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = 'menuitemcheckbox'
@@ -37,7 +38,7 @@ const create$MenuItem = (item) => {
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
       break
-    case /* SubMenu */ 4:
+    case MenuItemFlags.SubMenu:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = 'menuitem'
@@ -46,7 +47,7 @@ const create$MenuItem = (item) => {
       $MenuItem.ariaHasPopup = 'true'
       $MenuItem.ariaExpanded = 'false'
       break
-    case /* Disabled */ 5:
+    case MenuItemFlags.Disabled:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = 'menuitem'

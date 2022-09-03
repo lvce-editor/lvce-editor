@@ -1,10 +1,11 @@
 import * as Command from '../Command/Command.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 const toContextMenuItem = (activityBarItem) => {
   return {
     label: activityBarItem.id,
     id: 8000, // TODO
-    flags: /* None */ 0,
+    flags: MenuItemFlags.None,
     command: -1,
   }
 }

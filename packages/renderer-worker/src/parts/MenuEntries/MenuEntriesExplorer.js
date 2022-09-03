@@ -1,6 +1,7 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 export const UiStrings = {
   NewFile: 'New File',
@@ -21,86 +22,85 @@ const ALL_ENTRIES = [
   {
     id: 'newFile',
     label: I18nString.i18nString(UiStrings.NewFile),
-    flags: /* None */ 0,
-    command: /* Explorer.newFile  */ 'Explorer.newFile',
+    flags: MenuItemFlags.None,
+    command: 'Explorer.newFile',
   },
   {
     id: 'newFolder',
     label: I18nString.i18nString(UiStrings.NewFolder),
-    flags: /* None */ 0,
-    command: /* Explorer.newFolder */ 'Explorer.newFolder',
+    flags: MenuItemFlags.None,
+    command: 'Explorer.newFolder',
   },
   {
     id: 'openContainingFolder',
     label: I18nString.i18nString(UiStrings.OpenContainingFolder),
-    flags: /* None */ 0,
-    command:
-      /*  Explorer.openContainingFolder */ 'Explorer.openContainingFolder',
+    flags: MenuItemFlags.None,
+    command: 'Explorer.openContainingFolder',
   },
   {
     id: 'openInIntegratedTerminal',
     label: I18nString.i18nString(UiStrings.OpenInIntegratedTerminal),
-    flags: /* None */ 0,
+    flags: MenuItemFlags.None,
     command: /* TODO */ -1,
   },
   {
     id: '',
     label: I18nString.i18nString(UiStrings.Separator),
-    flags: /* Separator */ 1,
-    command: /* None */ 0,
+    flags: MenuItemFlags.Separator,
+    command: /* TODO */ -1,
   },
   {
     id: 'cut',
     label: I18nString.i18nString(UiStrings.Cut),
-    flags: /* None */ 0,
+    flags: MenuItemFlags.None,
     command: /* TODO */ -1,
   },
   {
     id: 'copy',
     label: I18nString.i18nString(UiStrings.Copy),
-    flags: /* None */ 0,
+    flags: MenuItemFlags.None,
     command: 'Explorer.handleCopy',
   },
   {
     id: 'paste',
     label: I18nString.i18nString(UiStrings.Paste),
-    flags: /* None */ 0,
+    flags: MenuItemFlags.None,
     command: 'Explorer.handlePaste',
   },
   {
     id: '',
     label: I18nString.i18nString(UiStrings.Separator),
-    flags: /* Separator */ 1,
-    command: /* None */ 0,
+    flags: MenuItemFlags.Separator,
+    command: /* TODO */ -1,
   },
   {
     id: 'copyPath',
     label: I18nString.i18nString(UiStrings.CopyPath),
-    flags: /* None */ 0,
+    flags: MenuItemFlags.None,
     command: 'Explorer.copyPath',
   },
   {
     id: 'copyRelativePath',
     label: I18nString.i18nString(UiStrings.CopyRelativePath),
-    flags: /* None */ 0,
+    flags: MenuItemFlags.None,
     command: 'Explorer.copyRelativePath',
   },
   {
     id: '',
     label: I18nString.i18nString(UiStrings.Separator),
-    flags: /* Separator */ 1,
-    command: /* None */ 0,
+    flags: MenuItemFlags.Separator,
+    command: /* TODO */ -1,
   },
   {
     id: 'rename',
     label: I18nString.i18nString(UiStrings.Rename),
-    flags: /* None */ 0,
+    flags: MenuItemFlags.None,
     command: 'Explorer.renameDirent',
   },
   {
     id: 'delete',
     label: I18nString.i18nString(UiStrings.Delete),
-    flags: /* None */ 0,
+    flags: MenuItemFlags.None,
     command: 'Explorer.removeDirent',
   },
 ]
