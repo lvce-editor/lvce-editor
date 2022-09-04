@@ -59,6 +59,7 @@ const getOrLoadModule = (moduleId) => {
 const getModuleId = (commandId) => {
   switch (commandId) {
     case 'ElectronApp.exit':
+    case 'App.exit':
       return MODULE_APP
     case 'ElectronWindow.minimize':
     case 'ElectronWindow.maximize':
@@ -83,7 +84,7 @@ const getModuleId = (commandId) => {
     case 'ElectronBeep.beep':
       return MODULE_BEEP
     default:
-      throw new Error(`command ${commandId} not found`)
+      throw new Error(`method not found ${commandId}`)
   }
 }
 

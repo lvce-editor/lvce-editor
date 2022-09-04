@@ -4,6 +4,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Languages from '../Languages/Languages.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import { VError } from '../VError/VError.js'
+import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 
 export const state = {
   /**
@@ -44,7 +45,7 @@ export const addWebExtension = async (path) => {
       }
     }
   }
-  manifest.status = 'resolved'
+  manifest.status = ExtensionManifestStatus.Resolved
   state.webExtensions.push(manifest)
   if (manifest.languages) {
     // TODO handle case when languages is not of type array
@@ -58,15 +59,16 @@ const getSharedProcessExtensions = () => {
   )
 }
 
+// TODO status fulfilled should be handled as resolved
 export const organizeExtensions = (extensions) => {
   const rejected = []
   const resolved = []
   for (const extension of extensions) {
     switch (extension.status) {
-      case 'resolved':
+      case ExtensionManifestStatus.Resolved:
         resolved.push(extension)
         break
-      case 'rejected':
+      case ExtensionManifestStatus.Rejected:
         rejected.push(extension)
         break
       default:

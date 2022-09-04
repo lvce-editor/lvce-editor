@@ -3,6 +3,7 @@ import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import * as JsonFile from '../src/parts/JsonFile/JsonFile.js'
+import * as ExtensionManifestStatus from '../src/parts/ExtensionManifestStatus/ExtensionManifestStatus.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -48,7 +49,7 @@ test.skip('getColorThemeJson - theme id contains number', async () => {
   ExtensionManagement.getThemeExtensions.mockImplementation(async () => {
     return [
       {
-        status: 'fulfilled',
+        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.test-cobalt2',
         colorThemes: [
           {
@@ -157,7 +158,7 @@ test('getColorThemes', async () => {
   ExtensionManagement.getExtensions.mockImplementation(async () => {
     return [
       {
-        status: 'fulfilled',
+        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.theme-slime',
         colorThemes: [
           {

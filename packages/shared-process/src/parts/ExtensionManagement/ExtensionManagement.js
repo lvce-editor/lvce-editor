@@ -8,6 +8,7 @@ import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Queue from '../Queue/Queue.js'
+import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 
 const isLanguageBasics = (extension) => {
   if (extension && extension.id) {
@@ -203,13 +204,13 @@ const getExtensionManifest = async (path) => {
     return {
       ...json,
       path,
-      status: 'fulfilled',
+      status: ExtensionManifestStatus.Resolved,
     }
   } catch (error) {
     const id = inferExtensionId(path)
     return {
       path,
-      status: 'rejected',
+      status: ExtensionManifestStatus.Rejected,
       reason: new VError(
         error,
         `Failed to load extension "${id}": Failed to load extension manifest`
