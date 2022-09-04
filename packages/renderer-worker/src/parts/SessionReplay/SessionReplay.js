@@ -19,10 +19,9 @@ const getSessionId = () => {
   return state.sessionId
 }
 
-export const handleMessage = async (source, message) => {
+export const handleMessage = async (source, timestamp, message) => {
   try {
     const sessionId = getSessionId()
-    const timestamp = performance.now()
     await IndexedDb.saveValue(sessionId, {
       source,
       timestamp,
@@ -151,7 +150,8 @@ const wrapIpc = (ipc, name, getData) => {
   const wrappedIpc = {
     async send(message) {
       ipc.send(message)
-      await handleMessage(nameTo, message)
+      const timestamp = performance.now()
+      await handleMessage(nameTo, timestamp, message)
     },
     sendAndTransfer(message, transferables) {
       ipc.sendAndTransfer(message, transferables)
@@ -166,8 +166,10 @@ const wrapIpc = (ipc, name, getData) => {
   const originalOnMessage = wrappedIpc.onmessage
   wrappedIpc.onmessage = async (event) => {
     const message = getData(event)
+
+    const timestamp = performance.now()
     await originalOnMessage(event)
-    await handleMessage(nameFrom, message)
+    await handleMessage(nameFrom, timestamp, message)
   }
   return wrappedIpc
 }
