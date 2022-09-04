@@ -31,7 +31,7 @@ export const uiStrings = {
   ManyResultsInManyFiles: `Found {PH1} results in {PH2} files`,
 }
 
-export const create = () => {
+export const create = (id, uri, left, top, width, height) => {
   return {
     searchResults: [],
     stats: {},
@@ -39,6 +39,10 @@ export const create = () => {
     value: '',
     disposed: false,
     fileCount: 0,
+    left,
+    top,
+    width,
+    height,
   }
 }
 
@@ -217,8 +221,8 @@ export const selectIndex = async (state, index) => {
 
 export const handleContextMenuMouse = async (state) => {
   const index = 1
-  const x = 0 // TODO
-  const y = 0 // TODO
+  const x = state.left // TODO
+  const y = state.top // TODO
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
@@ -230,8 +234,8 @@ export const handleContextMenuMouse = async (state) => {
 
 export const handleContextMenuKeyboard = async (state) => {
   const index = 1
-  const x = 0 // TODO
-  const y = 0 // TODO
+  const x = state.left // TODO
+  const y = state.top // TODO
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
