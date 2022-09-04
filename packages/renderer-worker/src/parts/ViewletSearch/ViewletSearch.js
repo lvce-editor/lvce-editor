@@ -219,10 +219,8 @@ export const selectIndex = async (state, index) => {
   }
 }
 
-export const handleContextMenuMouse = async (state) => {
+export const handleContextMenuMouseAt = async (state, x, y) => {
   const index = 1
-  const x = state.left // TODO
-  const y = state.top // TODO
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,

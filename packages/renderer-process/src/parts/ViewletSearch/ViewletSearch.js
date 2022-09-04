@@ -55,7 +55,7 @@ const handleContextMenuMouse = (event) => {
   const x = event.clientX
   const y = event.clientY
   RendererWorker.send(
-    /* Search.handleContextMenuMouse */ 'Search.handleContextMenuMouse',
+    /* Search.handleContextMenuMouseAt */ 'Search.handleContextMenuMouseAt',
     /* x */ x,
     /* y */ y
   )

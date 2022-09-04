@@ -135,16 +135,18 @@ test('resize', () => {
   })
 })
 
-test('handleContextMenuMouse', async () => {
+test('handleContextMenuMouseAt', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   const state = { ...ViewletSearch.create(), top: 0, left: 0 }
-  expect(await ViewletSearch.handleContextMenuMouse(state)).toBe(state)
+  expect(await ViewletSearch.handleContextMenuMouseAt(state, 10, 10)).toBe(
+    state
+  )
   expect(Command.execute).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenCalledWith(
     'ContextMenu.show',
-    0,
-    0,
+    10,
+    10,
     'search'
   )
 })
