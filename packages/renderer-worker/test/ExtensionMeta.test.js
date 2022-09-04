@@ -79,7 +79,23 @@ test('organizeExtensions', () => {
         status: ExtensionManifestStatus.Rejected,
       },
     ],
-    resolved: [],
+    resolved: [
+      {
+        description:
+          'Provides syntax highlighting and bracket matching in CSS files.',
+        id: 'builtin.language-basics-css',
+        languages: [
+          {
+            extensions: ['.css'],
+            id: 'css',
+            tokenize: 'src/tokenizeCss.js',
+          },
+        ],
+        name: 'Language Basics CSS',
+        path: '/test/builtin.language-basics-css',
+        status: 'resolved',
+      },
+    ],
   })
 })
 
