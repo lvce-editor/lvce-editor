@@ -20,28 +20,35 @@ const getNodeIndex = ($Node) => {
   return index
 }
 
-const handleClickTreeItem = ($Target) => {
-  const index = getNodeIndex($Target)
+const getIndexTreeItem = ($Target) => {
+  return getNodeIndex($Target)
+}
+
+const getIndexTreeItemLabel = ($Target) => {
+  return getNodeIndex($Target.parentNode)
+}
+
+const getIndex = ($Target) => {
+  switch ($Target.className) {
+    case 'TreeItem':
+      return getIndexTreeItem($Target)
+    case 'TreeItemLabel':
+      return getIndexTreeItemLabel($Target)
+    default:
+      return -1
+  }
+}
+
+const handleClick = (event) => {
+  if (event.button === MouseEventType.RightClick) {
+    return
+  }
+  const $Target = event.target
+  const index = getIndex($Target)
   RendererWorker.send(
     /* Search.handleClick */ 'Search.handleClick',
     /* index */ index
   )
-}
-
-const handleClickTreeItemLabel = ($Target) => {
-  return handleClickTreeItem($Target.parentNode)
-}
-
-const handleClick = (event) => {
-  const $Target = event.target
-  switch ($Target.className) {
-    case 'TreeItem':
-      return handleClickTreeItem($Target)
-    case 'TreeItemLabel':
-      return handleClickTreeItemLabel($Target)
-    default:
-      break
-  }
 }
 
 const handleContextMenuMouse = (event) => {

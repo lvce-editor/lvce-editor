@@ -216,11 +216,29 @@ export const selectIndex = async (state, index) => {
 }
 
 export const handleContextMenuMouse = async (state) => {
-  throw new Error('not implemented')
+  const index = 1
+  const x = 0 // TODO
+  const y = 0 // TODO
+  await Command.execute(
+    /* ContextMenu.show */ 'ContextMenu.show',
+    /* x */ x,
+    /* y */ y,
+    /* id */ 'search'
+  )
+  return state
 }
 
 export const handleContextMenuKeyboard = async (state) => {
-  throw new Error('not implemented')
+  const index = 1
+  const x = 0 // TODO
+  const y = 0 // TODO
+  await Command.execute(
+    /* ContextMenu.show */ 'ContextMenu.show',
+    /* x */ x,
+    /* y */ y,
+    /* id */ 'search'
+  )
+  return state
 }
 
 export const handleClick = async (state, index) => {
