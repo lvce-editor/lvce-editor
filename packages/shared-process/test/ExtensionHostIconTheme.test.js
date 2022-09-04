@@ -48,7 +48,7 @@ test('getIconTheme - wrong/invalid path', async () => {
   ExtensionManagement.getExtensions.mockImplementation(async () => {
     return [
       {
-        status: Exten,
+        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.theme-test',
         iconThemes: [
           {
