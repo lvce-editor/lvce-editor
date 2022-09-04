@@ -268,6 +268,7 @@ export const handleContextMenuMouseAt = async (state, x, y) => {
   return {
     ...state,
     focusedIndex,
+    focused: false,
   }
 }
 
