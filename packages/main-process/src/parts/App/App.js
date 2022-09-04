@@ -161,6 +161,7 @@ const handlePortForMainProcess = (event) => {
   browserWindowPort.start()
 }
 
+exports.handlePortForMainProcess = handlePortForMainProcess
 /**
  * @param {import('electron').IpcMainEvent} event
  */

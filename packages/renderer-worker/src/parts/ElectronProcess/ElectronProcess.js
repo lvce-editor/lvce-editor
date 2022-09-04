@@ -1,6 +1,7 @@
+import * as Callback from '../Callback/Callback.js'
+import { JsonRpcError } from '../Errors/Errors.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as Callback from '../Callback/Callback.js'
 
 export const state = {
   /**
@@ -32,6 +33,29 @@ const getIpc = async () => {
   return state.ipc
 }
 
+const restoreError = (error) => {
+  if (error instanceof Error) {
+    return error
+  }
+  if (error.code && error.code === -32601) {
+    console.log('create json rpc error')
+    const restoredError = new JsonRpcError(error.message)
+    restoredError.stack = error.stack
+    return restoredError
+  }
+  const restoredError = new Error(error.message)
+  if (error.data) {
+    if (error.data.stack) {
+      restoredError.stack = error.data.stack
+    }
+    if (error.data.codeFrame) {
+      // @ts-ignore
+      restoredError.codeFrame = error.data.codeFrame
+    }
+  }
+  return restoredError
+}
+
 export const invoke = async (method, ...params) => {
   const ipc = await getIpc()
   const response = await JsonRpc.invoke(ipc, method, ...params)
@@ -39,8 +63,8 @@ export const invoke = async (method, ...params) => {
     return response.result
   }
   if ('error' in response) {
-    console.log(response)
-    throw new Error(response.error.message)
+    const restoredError = restoreError(response.error)
+    throw restoredError
   }
   throw new Error('unexpected response')
 }
