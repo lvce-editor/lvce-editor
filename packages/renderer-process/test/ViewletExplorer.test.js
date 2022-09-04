@@ -493,7 +493,7 @@ test('event - contextmenu', () => {
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Explorer.handleContextMenuMouse',
+    'Explorer.handleContextMenuMouseAt',
     50,
     50
   )
@@ -597,7 +597,7 @@ test('event - click', () => {
   $GitKeep.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Explorer.handleClick',
+    'Explorer.handleClickAt',
     50,
     50
   )
@@ -631,7 +631,7 @@ test('event - click on wrapper div', () => {
   state.$Viewlet.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Explorer.handleClick',
+    'Explorer.handleClickAt',
     50,
     50
   )
