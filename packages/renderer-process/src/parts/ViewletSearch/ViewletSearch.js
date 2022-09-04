@@ -1,6 +1,7 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Assert from '../Assert/Assert.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 
 const handleInput = (event) => {
   const $Target = event.target
@@ -43,6 +44,32 @@ const handleClick = (event) => {
   }
 }
 
+const handleContextMenuMouse = (event) => {
+  const x = event.clientX
+  const y = event.clientY
+  RendererWorker.send(
+    /* Search.handleContextMenuMouse */ 'Search.handleContextMenuMouse',
+    /* x */ x,
+    /* y */ y
+  )
+}
+
+const handleContextMenuKeyboard = (event) => {
+  RendererWorker.send(
+    /* Search.handleContextMenuKeyboard */ 'Search.handleContextMenuKeyboard'
+  )
+}
+
+const handleContextMenu = (event) => {
+  event.preventDefault()
+  switch (event.button) {
+    case MouseEventType.Keyboard:
+      return handleContextMenuKeyboard(event)
+    default:
+      return handleContextMenuMouse(event)
+  }
+}
+
 // TODO name export not necessary
 export const name = 'Search'
 
@@ -56,6 +83,7 @@ export const create = () => {
   $SearchResults.className = 'SearchResults'
   // TODO onclick vs onmousedown, should be consistent in whole application
   $SearchResults.onmousedown = handleClick
+  $SearchResults.oncontextmenu = handleContextMenu
 
   const $SearchStatus = document.createElement('div')
   // @ts-ignore

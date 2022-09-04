@@ -215,6 +215,14 @@ export const selectIndex = async (state, index) => {
   }
 }
 
+export const handleContextMenuMouse = async (state) => {
+  throw new Error('not implemented')
+}
+
+export const handleContextMenuKeyboard = async (state) => {
+  throw new Error('not implemented')
+}
+
 export const handleClick = async (state, index) => {
   return selectIndex(state, index)
 }

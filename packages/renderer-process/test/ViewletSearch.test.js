@@ -115,3 +115,27 @@ test('setResults - multiple results in multiple files', () => {
   ])
   expect(state.$SearchResults.children).toHaveLength(2)
 })
+
+test('event - contextmenu - activated via keyboard', () => {
+  const state = ViewletSearch.create()
+  ViewletSearch.setResults(state, [
+    {
+      name: './result-1.txt',
+    },
+  ])
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const event = new MouseEvent('contextmenu', {
+    clientX: 50,
+    clientY: 50,
+    bubbles: true,
+    button: -1,
+    cancelable: true,
+  })
+  state.$SearchResults.dispatchEvent(event)
+  expect(event.defaultPrevented).toBe(true)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Search.handleContextMenuKeyboard'
+  )
+})

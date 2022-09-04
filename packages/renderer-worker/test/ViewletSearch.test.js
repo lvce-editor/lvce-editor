@@ -133,3 +133,17 @@ test('resize', () => {
     fileCount: 0,
   })
 })
+
+test('handleContextMenuMouse', () => {
+  const state = ViewletSearch.create()
+  expect(ViewletSearch.handleContextMenuMouse(state)).rejects.toThrowError(
+    new Error('not implemented')
+  )
+})
+
+test('handleContextMenuKeyBoard', () => {
+  const state = ViewletSearch.create()
+  expect(ViewletSearch.handleContextMenuKeyboard(state)).rejects.toThrowError(
+    new Error('not implemented')
+  )
+})
