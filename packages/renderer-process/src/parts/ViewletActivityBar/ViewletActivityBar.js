@@ -92,9 +92,7 @@ const handleMousedown = (event) => {
   )
 }
 
-const handleContextMenu = (event) => {
-  event.preventDefault()
-  // TODO also move side bar position command
+const handleContextMenuMouse = (event) => {
   const x = event.clientX
   const y = event.clientY
   RendererWorker.send(
@@ -102,6 +100,22 @@ const handleContextMenu = (event) => {
     /* x */ x,
     /* y */ y
   )
+}
+
+const handleContextMenuKeyboard = (event) => {
+  RendererWorker.send(
+    /* ActivityBar.handleContextMenuKeyboard */ 'ActivityBar.handleContextMenuKeyboard'
+  )
+}
+
+const handleContextMenu = (event) => {
+  event.preventDefault()
+  switch (event.button) {
+    case MouseEventTypes.Keyboard:
+      return handleContextMenuKeyboard(event)
+    default:
+      return handleContextMenuMouse(event)
+  }
 }
 
 const handleBlur = () => {}
