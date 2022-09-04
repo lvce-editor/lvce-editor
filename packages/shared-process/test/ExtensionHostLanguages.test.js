@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os'
 import { dirname, join } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import * as JsonFile from '../src/parts/JsonFile/JsonFile.js'
-
+import * as ExtensionManifestStatus from '../src/parts/ExtensionManifestStatus/ExtensionManifestStatus.js'
 beforeEach(() => {
   jest.resetAllMocks()
 })
@@ -41,7 +41,7 @@ test('getLanguages', async () => {
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: 'fulfilled',
+        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.plaintext',
         languages: [
           {
@@ -74,7 +74,7 @@ test('getLanguages - error - property languages is not of type array', async () 
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: 'fulfilled',
+        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.plaintext',
         languages: {},
         path: tmpDir,
@@ -93,7 +93,7 @@ test('getLanguages - language without tokenize property', async () => {
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: 'fulfilled',
+        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.icon-theme-test',
         languages: [
           {
@@ -119,7 +119,7 @@ test('getLanguages - error - property tokenize is of type array', async () => {
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: 'fulfilled',
+        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.test',
         languages: [
           {
@@ -160,7 +160,7 @@ test('getLanguageConfiguration', async () => {
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: 'fulfilled',
+        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.javascript',
         languages: [
           {
@@ -189,7 +189,7 @@ test('getLanguageConfiguration - error - language configuration not found', asyn
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: 'fulfilled',
+        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.javascript',
         languages: [
           {
@@ -220,7 +220,7 @@ test('getLanguageConfiguration - error - language configuration has invalid json
   ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
-        status: 'fulfilled',
+        status: ExtensionManifestStatus.Resolved,
         id: 'builtin.javascript',
         languages: [
           {

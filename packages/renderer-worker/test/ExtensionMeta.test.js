@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ExtensionManifestStatus from '../src/parts/ExtensionManifestStatus/ExtensionManifestStatus.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -32,11 +33,11 @@ test('organizeExtensions', () => {
           },
         ],
         path: '/test/builtin.language-basics-css',
-        status: 'fulfilled',
+        status: ExtensionManifestStatus.Resolved,
       },
       {
         path: '/test/language-basics-markdown',
-        status: 'rejected',
+        status: ExtensionManifestStatus.Rejected,
         reason: {
           jse_shortmsg:
             'Failed to load extension "language-basics-markdown": Failed to load extension manifest',
@@ -75,10 +76,26 @@ test('organizeExtensions', () => {
           originalStack:
             "Error: ENOTDIR: not a directory, open '/test/language-basics-markdown/extension.json'",
         },
-        status: 'rejected',
+        status: ExtensionManifestStatus.Rejected,
       },
     ],
-    resolved: [],
+    resolved: [
+      {
+        description:
+          'Provides syntax highlighting and bracket matching in CSS files.',
+        id: 'builtin.language-basics-css',
+        languages: [
+          {
+            extensions: ['.css'],
+            id: 'css',
+            tokenize: 'src/tokenizeCss.js',
+          },
+        ],
+        name: 'Language Basics CSS',
+        path: '/test/builtin.language-basics-css',
+        status: 'resolved',
+      },
+    ],
   })
 })
 
@@ -88,7 +105,7 @@ test('handleRejectedExtension - ignore ENOTDIR error', async () => {
   await ExtensionMeta.handleRejectedExtensions([
     {
       path: '/test/language-basics-markdown',
-      status: 'rejected',
+      status: ExtensionManifestStatus.Rejected,
       reason: {
         jse_shortmsg:
           'Failed to load extension "language-basics-markdown": Failed to load extension manifest',
@@ -116,7 +133,7 @@ test('handleRejectedExtension - ignore ENOENT error', async () => {
   await ExtensionMeta.handleRejectedExtensions([
     {
       path: '/test/abc',
-      status: 'rejected',
+      status: ExtensionManifestStatus.Rejected,
       reason: {
         jse_shortmsg:
           'Failed to load extension "abc": Failed to load extension manifest',
@@ -143,7 +160,7 @@ test('handleRejectedExtension - show error message for other error', async () =>
   await ExtensionMeta.handleRejectedExtensions([
     {
       path: '/test/abc',
-      status: 'rejected',
+      status: ExtensionManifestStatus.Rejected,
       reason: {
         message: 'TypeError: x is not a function',
       },

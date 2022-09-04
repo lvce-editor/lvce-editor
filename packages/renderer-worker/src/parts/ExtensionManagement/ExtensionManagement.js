@@ -1,4 +1,5 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 
 export const install = (id) => {
   return SharedProcess.invoke(
@@ -35,7 +36,7 @@ export const getAllExtensions = async () => {
 }
 
 const isFulfilled = (result) => {
-  return result.status === 'fulfilled'
+  return result.status === ExtensionManifestStatus.Resolved
 }
 
 const getValue = (result) => {

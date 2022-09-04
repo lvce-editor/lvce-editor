@@ -18,6 +18,7 @@ import { jest } from '@jest/globals'
 import tar from 'tar-fs'
 import VError from 'verror'
 import { writeJson } from '../src/parts/JsonFile/JsonFile.js'
+import * as ExtensionManifestStatus from '../src/parts/ExtensionManifestStatus/ExtensionManifestStatus.js'
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   getExtensionsPath: jest.fn(() => {
@@ -262,12 +263,12 @@ test('getAllExtensions', async () => {
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getAllExtensions()).toEqual([
     {
-      status: 'fulfilled',
+      status: ExtensionManifestStatus.Resolved,
       id: 'builtin-extension',
       path: join(tmpDir2, 'builtin-extension'),
     },
     {
-      status: 'fulfilled',
+      status: ExtensionManifestStatus.Resolved,
       id: 'test-extension',
       path: join(tmpDir1, 'test-extension'),
     },
@@ -296,7 +297,7 @@ test('getAllExtensions - invalid extension.json', async () => {
       reason: new VError(
         'Failed to load extension "test-extension": Failed to load extension manifest: Json Parsing Error'
       ),
-      status: 'rejected',
+      status: ExtensionManifestStatus.Rejected,
     },
   ])
 })
@@ -347,7 +348,7 @@ test.skip('getExtensions - empty object', async () => {
   Platform.getCachedExtensionsPath.mockImplementation(() => tmpDir3)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: 'fulfilled',
+      status: ExtensionManifestStatus.Resolved,
       path: join(tmpDir1, '/test-extension-1'),
     },
   ])
@@ -364,7 +365,7 @@ test.skip('getExtensions - error - invalid value - empty array', async () => {
   Platform.getExtensionsPath.mockImplementation(() => tmpDir2)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: 'fulfilled',
+      status: ExtensionManifestStatus.Resolved,
 
       path: join(tmpDir1, 'test-extension-1'),
     },
@@ -384,7 +385,7 @@ test('getExtensions - error - invalid value - null', async () => {
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: 'rejected',
+      status: ExtensionManifestStatus.Rejected,
       reason: new VError(
         'Failed to load extension "test-extension-1": Failed to load extension manifest: Invalid manifest file: Not an JSON object.'
       ),
@@ -406,7 +407,7 @@ test('getExtensions - error - invalid value - string', async () => {
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: 'rejected',
+      status: ExtensionManifestStatus.Rejected,
       reason: new VError(
         'Failed to load extension "test-extension-1": Failed to load extension manifest: Invalid manifest file: Not an JSON object.'
       ),
@@ -428,7 +429,7 @@ test('getExtensions - error - invalid value - number', async () => {
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: 'rejected',
+      status: ExtensionManifestStatus.Rejected,
       reason: new VError(
         'Failed to load extension "test-extension-1": Failed to load extension manifest: Invalid manifest file: Not an JSON object.'
       ),
@@ -450,7 +451,7 @@ test('getExtensions - error - invalid value - boolean', async () => {
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: 'rejected',
+      status: ExtensionManifestStatus.Rejected,
       reason: new VError(
         'Failed to load extension "test-extension-1": Failed to load extension manifest: Invalid manifest file: Not an JSON object.'
       ),
@@ -476,7 +477,7 @@ test('getExtensions - error - invalid json', async () => {
       reason: new VError(
         'Failed to load extension "test-extension-1": Failed to load extension manifest: Json Parsing Error'
       ),
-      status: 'rejected',
+      status: ExtensionManifestStatus.Rejected,
       path: join(tmpDir1, 'test-extension-1'),
     },
   ])
@@ -495,7 +496,7 @@ test('getExtensions - error - manifest not found', async () => {
   const manifestPath = join(tmpDir1, 'test-extension-1', 'extension.json')
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
-      status: 'rejected',
+      status: ExtensionManifestStatus.Rejected,
       reason: new VError(
         `Failed to load extension "test-extension-1": Failed to load extension manifest: File not found '${manifestPath}'`
       ),
@@ -535,7 +536,7 @@ test('getExtensions - with only extension and builtin extensions', async () => {
         },
       ],
       path: tmpDir3,
-      status: 'fulfilled',
+      status: ExtensionManifestStatus.Resolved,
     },
   ])
 })
