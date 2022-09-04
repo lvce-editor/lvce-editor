@@ -242,22 +242,23 @@ export const handleWheel = (state, deltaY) => {
   return setDeltaY(state, state.deltaY + deltaY)
 }
 
-export const handleContextMenuKeyboard = async (state, index) => {
-  const x = state.left
-  const y = state.top + (index - state.minLineY + 1) * state.itemHeight
+export const handleContextMenuKeyboard = async (state) => {
+  const { focusedIndex, left, top, minLineY, itemHeight } = state
+  const x = left
+  const y = top + (focusedIndex - minLineY + 1) * itemHeight
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
     /* id */ 'explorer'
   )
-  return {
-    ...state,
-    focusedIndex: index,
-  }
+  return state
 }
 
-export const handleContextMenuMouse = async (state, x, y, index) => {
+export const handleContextMenuMouseAt = async (state, x, y) => {
+  Assert.number(x)
+  Assert.number(y)
+  const focusedIndex = getIndexFromPosition(state, x, y)
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
@@ -266,7 +267,7 @@ export const handleContextMenuMouse = async (state, x, y, index) => {
   )
   return {
     ...state,
-    focusedIndex: index,
+    focusedIndex,
   }
 }
 
@@ -792,6 +793,21 @@ export const handleClick = async (state, index) => {
   }
 }
 
+const getIndexFromPosition = (state, x, y) => {
+  const { top, minLineY, itemHeight, dirents } = state
+  const index = Math.floor((y - top) / itemHeight)
+  if (index > dirents.length) {
+    return -1
+  }
+  console.log({ index, y })
+  return index
+}
+
+export const handleClickAt = async (state, x, y) => {
+  const index = getIndexFromPosition(state, x, y)
+  return handleClick(state, index)
+}
+
 export const focusNone = (state) => {
   return focusIndex(state, -1)
 }
@@ -835,6 +851,9 @@ export const focusIndex = (state, index) => {
 }
 
 export const focus = (state) => {
+  if (state.focused) {
+    return state
+  }
   return {
     ...state,
     focused: true,
