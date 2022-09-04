@@ -138,7 +138,7 @@ test('resize', () => {
 test('handleContextMenuMouse', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
-  const state = ViewletSearch.create()
+  const state = { ...ViewletSearch.create(), top: 0, left: 0 }
   expect(await ViewletSearch.handleContextMenuMouse(state)).toBe(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenCalledWith(
@@ -152,7 +152,7 @@ test('handleContextMenuMouse', async () => {
 test('handleContextMenuKeyBoard', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
-  const state = ViewletSearch.create()
+  const state = { ...ViewletSearch.create(), top: 0, left: 0 }
   expect(await ViewletSearch.handleContextMenuKeyboard(state)).toBe(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenCalledWith(
