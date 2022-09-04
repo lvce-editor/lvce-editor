@@ -3,6 +3,7 @@ import * as SearchResultType from '../src/parts/SearchResultType/SearchResultTyp
 
 beforeEach(() => {
   jest.resetAllMocks()
+  jest.resetModules()
 })
 
 jest.unstable_mockModule(
@@ -134,16 +135,30 @@ test('resize', () => {
   })
 })
 
-test('handleContextMenuMouse', () => {
+test('handleContextMenuMouse', async () => {
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
   const state = ViewletSearch.create()
-  expect(ViewletSearch.handleContextMenuMouse(state)).rejects.toThrowError(
-    new Error('not implemented')
+  expect(await ViewletSearch.handleContextMenuMouse(state)).toBe(state)
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'ContextMenu.show',
+    0,
+    0,
+    'search'
   )
 })
 
-test('handleContextMenuKeyBoard', () => {
+test('handleContextMenuKeyBoard', async () => {
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
   const state = ViewletSearch.create()
-  expect(ViewletSearch.handleContextMenuKeyboard(state)).rejects.toThrowError(
-    new Error('not implemented')
+  expect(await ViewletSearch.handleContextMenuKeyboard(state)).toBe(state)
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'ContextMenu.show',
+    0,
+    0,
+    'search'
   )
 })
