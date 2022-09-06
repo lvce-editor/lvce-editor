@@ -1,3 +1,5 @@
+import * as DirentType from '../DirentType/DirentType.js'
+
 export const name = 'Memory'
 
 export const state = {
@@ -13,7 +15,7 @@ export const readFile = (uri) => {
   if (!dirent) {
     throw new Error(`File not found: ${uri}`)
   }
-  if (dirent.type !== 'file') {
+  if (dirent.type !== DirentType.File) {
     throw new Error('file is a directory')
   }
   return dirent.content
