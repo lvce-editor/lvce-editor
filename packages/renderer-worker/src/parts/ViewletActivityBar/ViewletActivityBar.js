@@ -51,6 +51,7 @@ const getVisibleActivityBarItems = (state) => {
 }
 
 export const create = (id, uri, left, top, width, height) => {
+  console.log({ left, top })
   return {
     // TODO declarative event api is good, but need to bind
     // listeners to state somehow
@@ -285,8 +286,9 @@ export const toggleActivityBarItem = async (state, item) => {
 
 export const handleContextMenuKeyboard = async (state) => {
   const { focusedIndex, top, itemHeight, left } = state
-  const x = top + focusedIndex * itemHeight
-  const y = left
+  const x = left
+  const y = top + focusedIndex * itemHeight
+  console.log({ x, y, top, focusedIndex })
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
