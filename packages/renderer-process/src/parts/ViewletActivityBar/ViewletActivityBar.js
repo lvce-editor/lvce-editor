@@ -96,7 +96,7 @@ const handleContextMenuMouse = (event) => {
   const x = event.clientX
   const y = event.clientY
   RendererWorker.send(
-    /* activityBarHandleContextMenu */ 'ActivityBar.handleContextMenu',
+    /* ActivityBar.handleContextMenuMouseAt */ 'ActivityBar.handleContextMenuMouseAt',
     /* x */ x,
     /* y */ y
   )

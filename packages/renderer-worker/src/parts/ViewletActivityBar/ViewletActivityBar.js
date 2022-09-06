@@ -5,8 +5,6 @@ import * as Layout from '../Layout/Layout.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
 
-const ACTIVITY_BAR_ITEM_HEIGHT = 48
-
 export const name = 'ActivityBar'
 
 // TODO rename viewlet parameter to something else (e.g. clicking settings opens context menu not settings viewlet)
@@ -18,9 +16,7 @@ export const name = 'ActivityBar'
 // TODO unregister listeners when hidden
 
 const getNumberOfVisibleItems = (state) => {
-  const numberOfVisibleItemsTop = Math.floor(
-    state.height / ACTIVITY_BAR_ITEM_HEIGHT
-  )
+  const numberOfVisibleItemsTop = Math.floor(state.height / state.itemHeight)
   return numberOfVisibleItemsTop
 }
 
@@ -72,6 +68,7 @@ export const create = (id, uri, left, top, width, height) => {
     top,
     width,
     height,
+    itemHeight: 48,
   }
 }
 
@@ -286,7 +283,20 @@ export const toggleActivityBarItem = async (state, item) => {
   )
 }
 
-export const handleContextMenu = async (state, x, y) => {
+export const handleContextMenuKeyboard = async (state) => {
+  const { focusedIndex, top, itemHeight, left } = state
+  const x = top + focusedIndex * itemHeight
+  const y = left
+  await Command.execute(
+    /* ContextMenu.show */ 'ContextMenu.show',
+    /* x */ x,
+    /* y */ y,
+    /* id */ 'activityBar'
+  )
+  return state
+}
+
+export const handleContextMenuMouseAt = async (state, x, y) => {
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
@@ -332,20 +342,18 @@ export const focusLast = (state) => {
 }
 
 const getPosition = (state, index) => {
-  if (index > state.activityBarItems.length - 2) {
+  const { top, left, activityBarItems, itemHeight, height } = state
+  if (index > activityBarItems.length - 2) {
     // at bottom
     return {
-      x: state.left,
-      y:
-        state.top +
-        state.height -
-        (state.activityBarItems.length - 1 - index) * ACTIVITY_BAR_ITEM_HEIGHT,
+      x: left,
+      y: top + height - (activityBarItems.length - 1 - index) * itemHeight,
     }
   }
   // at top
   return {
-    x: state.left,
-    y: state.top + index * ACTIVITY_BAR_ITEM_HEIGHT,
+    x: left,
+    y: top + index * itemHeight,
   }
 }
 

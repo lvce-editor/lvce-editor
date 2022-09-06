@@ -7,20 +7,14 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
 const ViewletActivityBar = await import(
   '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
 )
@@ -28,6 +22,7 @@ const ViewletActivityBar = await import(
 const ViewletManager = await import(
   '../src/parts/ViewletManager/ViewletManager.js'
 )
+const Command = await import('../src/parts/Command/Command.js')
 
 const ACTIVITY_BAR_ITEM_HEIGHT = 48
 
@@ -261,8 +256,8 @@ test.skip('contentLoaded - one items does not fit', async () => {
     ],
   }
   await ViewletActivityBar.contentLoaded(state)
-  expect(RendererProcess.state.send).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith([
     909090,
     expect.any(Number),
     'Viewlet.send',
@@ -408,67 +403,18 @@ test('render - two items do not fit', () => {
   ])
 })
 
-test.skip('handleContextMenu', async () => {
-  RendererProcess.state.send = jest.fn()
+test('handleContextMenuMouseAt', async () => {
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
   const state = ViewletActivityBar.create()
-  await ViewletActivityBar.handleContextMenu(state, 0, 0)
-  expect(RendererProcess.state.send).toHaveBeenCalledWith([
-    3028,
-    'ContextMenu',
-    -260,
-    -250,
-    250,
-    260,
-    [
-      {
-        flags: ActivityBarItemFlags.Button,
-        id: 8000,
-        label: 'Explorer',
-      },
-      {
-        flags: ActivityBarItemFlags.Button,
-        id: 8000,
-        label: 'Search',
-      },
-      {
-        flags: ActivityBarItemFlags.Button,
-        id: 8000,
-        label: 'Source Control',
-      },
-      {
-        flags: ActivityBarItemFlags.Button,
-        id: 8000,
-        label: 'Run and Debug',
-      },
-      {
-        flags: ActivityBarItemFlags.Button,
-        id: 8000,
-        label: 'Extensions',
-      },
-      {
-        flags: ActivityBarItemFlags.Button,
-        id: 8000,
-        label: 'Settings',
-      },
-      {
-        flags: ActivityBarItemFlags.Tab,
-        id: 'separator',
-        label: 'Separator',
-      },
-      {
-        command: -1,
-        flags: 0,
-        id: 'moveSideBarLeft',
-        label: 'Move Side Bar Left',
-      },
-      {
-        command: 1107,
-        flags: 0,
-        id: 'hideActivityBar',
-        label: 'Hide Activity Bar',
-      },
-    ],
-  ])
+  await ViewletActivityBar.handleContextMenuMouseAt(state, 0, 0)
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'ContextMenu.show',
+    0,
+    0,
+    'activityBar'
+  )
 })
 
 test('focus', async () => {
@@ -566,48 +512,20 @@ test('selectCurrent - settings', async () => {
     ],
   }
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
+  Command.execute.mockImplementation(() => {})
   await ViewletActivityBar.selectCurrent(state)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Menu.showMenu',
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'ContextMenu.show',
     750,
     408,
-    250,
-    132,
-    [
-      {
-        command: 'Preferences.openSettingsJson',
-        flags: 0,
-        id: 'settings',
-        label: 'Settings',
-      },
-      {
-        command: -1,
-        flags: 0,
-        id: 'keyboardShortcuts',
-        label: 'Keyboard Shortcuts',
-      },
-      {
-        command: 'QuickPick.openColorTheme', // TODO have arg instead
-        flags: 0,
-        id: 'colorTheme',
-        label: 'Color Theme',
-      },
-      {
-        command: -1,
-        flags: 0,
-        id: 'checkForUpdates',
-        label: 'Check For Updates',
-      },
-    ],
-    0,
-    -1,
-    true
+    'settings'
   )
 })
 
 test('selectCurrent - no item focused', async () => {
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
   const state = {
     ...ViewletActivityBar.create(),
     focusedIndex: -1,
@@ -659,10 +577,8 @@ test('selectCurrent - no item focused', async () => {
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
   await ViewletActivityBar.selectCurrent(state)
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(Command.execute).not.toHaveBeenCalled()
 })
 
 // TODO test when height is too low to show any activity bar items, e.g. height=10px
@@ -781,5 +697,6 @@ test('resize', () => {
     selectedIndex: -1,
     top: 150,
     width: 150,
+    itemHeight: 48,
   })
 })

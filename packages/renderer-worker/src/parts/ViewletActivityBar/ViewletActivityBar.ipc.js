@@ -5,7 +5,8 @@ import * as ActivityBar from './ViewletActivityBar.js'
 export const Commands = {
   'ActivityBar.toggleItem': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.toggleItem),
   'ActivityBar.handleClick': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.handleClick),
-  'ActivityBar.handleContextMenu': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.handleContextMenu),
+  'ActivityBar.handleContextMenuMouseAt': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.handleContextMenuMouseAt),
+  'ActivityBar.handleContextMenuKeyboard': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.handleContextMenuKeyboard),
   'ActivityBar.focus': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.focus),
   'ActivityBar.focusNext': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.focusNext),
   'ActivityBar.focusPrevious': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.focusPrevious),

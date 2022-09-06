@@ -271,7 +271,7 @@ test('event - handleClick - no item is clicked', () => {
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
-test('event - handleContextMenu', () => {
+test('event - contextmenu - activated via mouse', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   const state = ViewletActivityBar.create()
@@ -282,33 +282,49 @@ test('event - handleContextMenu', () => {
       enabled: true,
       flags: /* Tab */ 1,
     },
+  ])
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const event = new MouseEvent('contextmenu', {
+    bubbles: true,
+    clientX: 15,
+    clientY: 30,
+    cancelable: true,
+  })
+  state.$ActivityBar.children[0].dispatchEvent(event)
+  expect(event.defaultPrevented).toBe(true)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'ActivityBar.handleContextMenuMouseAt',
+    15,
+    30
+  )
+})
+
+test('event - contextmenu - activated via keyboard', () => {
+  const state = ViewletActivityBar.create()
+  ViewletActivityBar.setItems(state, [
     {
-      id: 'Search',
-      icon: './icons/search.svg',
+      id: 'Explorer',
+      icon: './icons/files.svg',
       enabled: true,
       flags: /* Tab */ 1,
-    },
-    {
-      id: 'Settings',
-      icon: './icons/settings-gear.svg',
-      enabled: true,
-      flags: /* Button */ 2,
     },
   ])
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
-  const $ActivityBarItemsTop = state.$ActivityBar.children[1]
-  $ActivityBarItemsTop.children[0].dispatchEvent(
-    new MouseEvent('contextmenu', {
-      bubbles: true,
-      clientX: 15,
-      clientY: 30,
-    })
-  )
+  const event = new MouseEvent('contextmenu', {
+    clientX: 50,
+    clientY: 50,
+    bubbles: true,
+    button: -1,
+    cancelable: true,
+  })
+  state.$ActivityBar.dispatchEvent(event)
+  expect(event.defaultPrevented).toBe(true)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'ActivityBar.handleContextMenu',
-    15,
-    30
+    'ActivityBar.handleContextMenuKeyboard'
   )
 })
 
