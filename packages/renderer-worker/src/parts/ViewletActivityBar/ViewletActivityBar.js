@@ -6,8 +6,6 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
 import * as I18nString from '../I18NString/I18NString.js'
 
-const ACTIVITY_BAR_ITEM_HEIGHT = 48
-
 /**
  * @enum {string}
  */
@@ -32,9 +30,8 @@ export const name = 'ActivityBar'
 // TODO unregister listeners when hidden
 
 const getNumberOfVisibleItems = (state) => {
-  const numberOfVisibleItemsTop = Math.floor(
-    state.height / ACTIVITY_BAR_ITEM_HEIGHT
-  )
+  const { height, itemHeight } = state
+  const numberOfVisibleItemsTop = Math.floor(height / itemHeight)
   return numberOfVisibleItemsTop
 }
 
@@ -87,6 +84,7 @@ export const create = (id, uri, left, top, width, height) => {
     top,
     width,
     height,
+    itemHeight: 48,
   }
 }
 
@@ -353,20 +351,18 @@ export const focusLast = (state) => {
 }
 
 const getPosition = (state, index) => {
-  if (index > state.activityBarItems.length - 2) {
+  const { activityBarItems, top, left, height, itemHeight } = state
+  if (index > activityBarItems.length - 2) {
     // at bottom
     return {
-      x: state.left,
-      y:
-        state.top +
-        state.height -
-        (state.activityBarItems.length - 1 - index) * ACTIVITY_BAR_ITEM_HEIGHT,
+      x: left,
+      y: top + height - (activityBarItems.length - 1 - index) * itemHeight,
     }
   }
   // at top
   return {
-    x: state.left,
-    y: state.top + index * ACTIVITY_BAR_ITEM_HEIGHT,
+    x: left,
+    y: top + index * itemHeight,
   }
 }
 
