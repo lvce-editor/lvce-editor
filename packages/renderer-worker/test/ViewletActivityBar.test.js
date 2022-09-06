@@ -17,6 +17,13 @@ jest.unstable_mockModule(
     }
   }
 )
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
 
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
@@ -24,6 +31,7 @@ const RendererProcess = await import(
 const ViewletActivityBar = await import(
   '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
 )
+const Command = await import('../src/parts/Command/Command.js')
 
 const ViewletManager = await import(
   '../src/parts/ViewletManager/ViewletManager.js'
@@ -343,7 +351,7 @@ test('render - two items do not fit', () => {
   const oldState = ViewletActivityBar.create()
   const newState = {
     ...oldState,
-    height: ACTIVITY_BAR_ITEM_HEIGHT * 5,
+    height: oldState.itemHeight * 5,
     activityBarItems: [
       // Top
       {
@@ -622,44 +630,14 @@ test('selectCurrent - settings', async () => {
     ],
   }
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
+  Command.execute.mockImplementation(() => {})
   await ViewletActivityBar.selectCurrent(state)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Menu.showMenu',
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'ContextMenu.show',
     750,
     408,
-    250,
-    132,
-    [
-      {
-        command: 'Preferences.openSettingsJson',
-        flags: 0,
-        id: 'settings',
-        label: 'Settings',
-      },
-      {
-        command: -1,
-        flags: 0,
-        id: 'keyboardShortcuts',
-        label: 'Keyboard Shortcuts',
-      },
-      {
-        command: 'QuickPick.openColorTheme', // TODO have arg instead
-        flags: 0,
-        id: 'colorTheme',
-        label: 'Color Theme',
-      },
-      {
-        command: -1,
-        flags: 0,
-        id: 'checkForUpdates',
-        label: 'Check For Updates',
-      },
-    ],
-    0,
-    -1,
-    true
+    'settings'
   )
 })
 
@@ -794,6 +772,7 @@ test('resize', () => {
     height: 150,
   })
   expect(newState).toEqual({
+    itemHeight: 48,
     activityBarItems: [
       {
         enabled: true,
