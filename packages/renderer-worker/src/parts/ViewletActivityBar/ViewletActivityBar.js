@@ -288,7 +288,6 @@ export const handleContextMenuKeyboard = async (state) => {
   const { focusedIndex, top, itemHeight, left } = state
   const x = left
   const y = top + focusedIndex * itemHeight
-  console.log({ x, y, top, focusedIndex })
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
