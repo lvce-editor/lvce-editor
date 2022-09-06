@@ -31,7 +31,7 @@ export const uiStrings = {
   ManyResultsInManyFiles: `Found {PH1} results in {PH2} files`,
 }
 
-export const create = () => {
+export const create = (id, uri, left, top, width, height) => {
   return {
     searchResults: [],
     stats: {},
@@ -39,6 +39,10 @@ export const create = () => {
     value: '',
     disposed: false,
     fileCount: 0,
+    left,
+    top,
+    width,
+    height,
   }
 }
 
@@ -213,6 +217,30 @@ export const selectIndex = async (state, index) => {
     default:
       throw new Error(`unexpected search result type ${searchResult.type}`)
   }
+}
+
+export const handleContextMenuMouseAt = async (state, x, y) => {
+  const index = 1
+  await Command.execute(
+    /* ContextMenu.show */ 'ContextMenu.show',
+    /* x */ x,
+    /* y */ y,
+    /* id */ 'search'
+  )
+  return state
+}
+
+export const handleContextMenuKeyboard = async (state) => {
+  const index = 1
+  const x = state.left // TODO
+  const y = state.top // TODO
+  await Command.execute(
+    /* ContextMenu.show */ 'ContextMenu.show',
+    /* x */ x,
+    /* y */ y,
+    /* id */ 'search'
+  )
+  return state
 }
 
 export const handleClick = async (state, index) => {

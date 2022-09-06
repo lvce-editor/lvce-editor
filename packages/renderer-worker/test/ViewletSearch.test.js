@@ -3,6 +3,7 @@ import * as SearchResultType from '../src/parts/SearchResultType/SearchResultTyp
 
 beforeEach(() => {
   jest.resetAllMocks()
+  jest.resetModules()
 })
 
 jest.unstable_mockModule(
@@ -132,4 +133,34 @@ test('resize', () => {
     width: 200,
     fileCount: 0,
   })
+})
+
+test('handleContextMenuMouseAt', async () => {
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
+  const state = { ...ViewletSearch.create(), top: 0, left: 0 }
+  expect(await ViewletSearch.handleContextMenuMouseAt(state, 10, 10)).toBe(
+    state
+  )
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'ContextMenu.show',
+    10,
+    10,
+    'search'
+  )
+})
+
+test('handleContextMenuKeyBoard', async () => {
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
+  const state = { ...ViewletSearch.create(), top: 0, left: 0 }
+  expect(await ViewletSearch.handleContextMenuKeyboard(state)).toBe(state)
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'ContextMenu.show',
+    0,
+    0,
+    'search'
+  )
 })

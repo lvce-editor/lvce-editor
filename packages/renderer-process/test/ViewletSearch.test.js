@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -114,4 +115,54 @@ test('setResults - multiple results in multiple files', () => {
     },
   ])
   expect(state.$SearchResults.children).toHaveLength(2)
+})
+
+test('event - contextmenu - activated via keyboard', () => {
+  const state = ViewletSearch.create()
+  ViewletSearch.setResults(state, [
+    {
+      name: './result-1.txt',
+    },
+  ])
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const event = new MouseEvent('contextmenu', {
+    clientX: 50,
+    clientY: 50,
+    bubbles: true,
+    button: -1,
+    cancelable: true,
+  })
+  state.$SearchResults.dispatchEvent(event)
+  expect(event.defaultPrevented).toBe(true)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Search.handleContextMenuKeyboard'
+  )
+})
+
+test('event - contextmenu - activated via mouse', () => {
+  const state = ViewletSearch.create()
+  ViewletSearch.setResults(state, [
+    {
+      name: './result-1.txt',
+    },
+  ])
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const event = new MouseEvent('contextmenu', {
+    clientX: 50,
+    clientY: 50,
+    bubbles: true,
+    button: MouseEventType.LeftClick,
+    cancelable: true,
+  })
+  state.$SearchResults.dispatchEvent(event)
+  expect(event.defaultPrevented).toBe(true)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Search.handleContextMenuMouseAt',
+    50,
+    50
+  )
 })
