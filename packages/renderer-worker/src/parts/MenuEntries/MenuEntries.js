@@ -34,6 +34,8 @@ const getModule = (id) => {
       return import('./MenuEntriesView.js')
     case 'activity-bar-additional-views':
       return import('./MenuEntriesActivityBarAdditionalViews.js')
+    case 'search':
+      return import('./MenuEntriesSearch.js')
     default:
       throw new Error(`module not found "${id}"`)
   }

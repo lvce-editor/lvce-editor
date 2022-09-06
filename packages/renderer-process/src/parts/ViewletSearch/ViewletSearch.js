@@ -1,6 +1,7 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Assert from '../Assert/Assert.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 
 const handleInput = (event) => {
   const $Target = event.target
@@ -19,27 +20,60 @@ const getNodeIndex = ($Node) => {
   return index
 }
 
-const handleClickTreeItem = ($Target) => {
-  const index = getNodeIndex($Target)
+const getIndexTreeItem = ($Target) => {
+  return getNodeIndex($Target)
+}
+
+const getIndexTreeItemLabel = ($Target) => {
+  return getNodeIndex($Target.parentNode)
+}
+
+const getIndex = ($Target) => {
+  switch ($Target.className) {
+    case 'TreeItem':
+      return getIndexTreeItem($Target)
+    case 'TreeItemLabel':
+      return getIndexTreeItemLabel($Target)
+    default:
+      return -1
+  }
+}
+
+const handleClick = (event) => {
+  if (event.button === MouseEventType.RightClick) {
+    return
+  }
+  const $Target = event.target
+  const index = getIndex($Target)
   RendererWorker.send(
     /* Search.handleClick */ 'Search.handleClick',
     /* index */ index
   )
 }
 
-const handleClickTreeItemLabel = ($Target) => {
-  return handleClickTreeItem($Target.parentNode)
+const handleContextMenuMouse = (event) => {
+  const x = event.clientX
+  const y = event.clientY
+  RendererWorker.send(
+    /* Search.handleContextMenuMouseAt */ 'Search.handleContextMenuMouseAt',
+    /* x */ x,
+    /* y */ y
+  )
 }
 
-const handleClick = (event) => {
-  const $Target = event.target
-  switch ($Target.className) {
-    case 'TreeItem':
-      return handleClickTreeItem($Target)
-    case 'TreeItemLabel':
-      return handleClickTreeItemLabel($Target)
+const handleContextMenuKeyboard = (event) => {
+  RendererWorker.send(
+    /* Search.handleContextMenuKeyboard */ 'Search.handleContextMenuKeyboard'
+  )
+}
+
+const handleContextMenu = (event) => {
+  event.preventDefault()
+  switch (event.button) {
+    case MouseEventType.Keyboard:
+      return handleContextMenuKeyboard(event)
     default:
-      break
+      return handleContextMenuMouse(event)
   }
 }
 
@@ -56,6 +90,7 @@ export const create = () => {
   $SearchResults.className = 'SearchResults'
   // TODO onclick vs onmousedown, should be consistent in whole application
   $SearchResults.onmousedown = handleClick
+  $SearchResults.oncontextmenu = handleContextMenu
 
   const $SearchStatus = document.createElement('div')
   // @ts-ignore
