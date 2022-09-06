@@ -5,6 +5,7 @@ import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js'
+import * as EditorCompletionType from '../EditorCompletionType/EditorCompletionType.js'
 
 export const create = (id, uri, top, left, width, height) => {
   console.log({ id, uri, top, left, width, height })
@@ -55,25 +56,18 @@ const getLabel = (item) => {
   return item.label
 }
 
+const EditorCompletionClassNames = {
+  [EditorCompletionType.Property]: 'IconProperty',
+  [EditorCompletionType.Value]: 'IconValue',
+  [EditorCompletionType.Function]: 'IconFunction',
+  [EditorCompletionType.Variable]: 'IconVariable',
+  [EditorCompletionType.Keyword]: 'IconKeyword',
+}
+
+const defaultClassName = 'IconDefault'
+
 const getIconClassName = (item) => {
-  switch (item.kind) {
-    case /* Property */ 1:
-      return 'IconProperty'
-    case /* Value */ 2:
-      return 'IconValue'
-    case /* Function */ 3:
-      return 'IconFunction'
-    case /* Variable */ 4:
-      return 'IconVariable'
-    case /* Keyword */ 5:
-      return 'IconKeyword'
-    case /* Folder */ 6:
-      return IconTheme.getFolderIcon({ name: item.label })
-    case /* File */ 7:
-      return IconTheme.getFileIcon({ name: item.label })
-    default:
-      return 'IconDefault'
-  }
+  return EditorCompletionClassNames[item.kind] || defaultClassName
 }
 
 const getVisibleItems = (filteredItems) => {
