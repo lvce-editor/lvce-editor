@@ -1,6 +1,7 @@
 import * as ActivityBar from '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
 import * as MenuEntriesActivityBar from '../src/parts/MenuEntries/MenuEntriesActivityBar.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
+import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActvityBarItemFlags.js'
 
 test.skip('getMenuEntries', async () => {
   ActivityBar.state.activityBarItems = [
@@ -8,19 +9,19 @@ test.skip('getMenuEntries', async () => {
       id: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Extensions',
       icon: './icons/extensions.svg',
       enabled: false,
-      flags: /* Tab */ 1,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: /* Button */ 2,
+      flags: ActivityBarItemFlags.Button,
     },
   ]
   const menuEntries = await MenuEntriesActivityBar.getMenuEntries()
