@@ -1,4 +1,5 @@
 import * as FileSystemMemory from '../src/parts/FileSystem/FileSystemMemory.js'
+import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
 beforeEach(() => {
   FileSystemMemory.state.files = Object.create(null)
@@ -6,7 +7,7 @@ beforeEach(() => {
 
 test('readFile', () => {
   FileSystemMemory.state.files['/test/file.txt'] = {
-    type: 'file',
+    type: DirentType.File,
     content: 'test content',
   }
   expect(FileSystemMemory.readFile('/test/file.txt')).toBe('test content')
@@ -16,16 +17,16 @@ test('writeFile', () => {
   FileSystemMemory.writeFile('/test/file.txt', 'test content')
   expect(FileSystemMemory.state.files).toEqual({
     '/': {
-      type: 'directory',
+      type: DirentType.Directory,
       content: '',
     },
     '/test/': {
-      type: 'directory',
+      type: DirentType.Directory,
       content: '',
     },
     '/test/file.txt': {
       content: 'test content',
-      type: 'file',
+      type: DirentType.File,
     },
   })
 })
@@ -33,22 +34,22 @@ test('writeFile', () => {
 test('readDirWithFileTypes - file', () => {
   FileSystemMemory.state.files = {
     '/': {
-      type: 'directory',
+      type: DirentType.Directory,
       content: '',
     },
     '/test/': {
-      type: 'directory',
+      type: DirentType.Directory,
       content: '',
     },
     '/test/file.txt': {
       content: 'test content',
-      type: 'file',
+      type: DirentType.File,
     },
   }
   expect(FileSystemMemory.readDirWithFileTypes('/test')).toEqual([
     {
       name: 'file.txt',
-      type: 'file',
+      type: DirentType.File,
     },
   ])
 })
@@ -56,22 +57,22 @@ test('readDirWithFileTypes - file', () => {
 test('readDirWithFileTypes - directory', () => {
   FileSystemMemory.state.files = {
     '/': {
-      type: 'directory',
+      type: DirentType.Directory,
       content: '',
     },
     '/test/': {
-      type: 'directory',
+      type: DirentType.Directory,
       content: '',
     },
     '/test/file.txt': {
       content: 'test content',
-      type: 'file',
+      type: DirentType.File,
     },
   }
   expect(FileSystemMemory.readDirWithFileTypes('/')).toEqual([
     {
       name: 'test',
-      type: 'directory',
+      type: DirentType.Directory,
     },
   ])
 })
@@ -79,50 +80,50 @@ test('readDirWithFileTypes - directory', () => {
 test('readDirWithFileTypes - mixed content', () => {
   FileSystemMemory.state.files = {
     '/': {
-      type: 'directory',
+      type: DirentType.Directory,
       content: '',
     },
     '/languages/': {
-      type: 'directory',
+      type: DirentType.Directory,
       content: '',
     },
     '/sample-folder/': {
-      type: 'directory',
+      type: DirentType.Directory,
       content: '',
     },
     '/test.txt': {
-      type: 'file',
+      type: DirentType.File,
       content: 'div',
     },
     '/languages/index.html': {
-      type: 'file',
+      type: DirentType.File,
       content: 'div',
     },
     '/sample-folder/a.txt': {
-      type: 'file',
+      type: DirentType.File,
       content: '',
     },
     '/sample-folder/b.txt': {
-      type: 'file',
+      type: DirentType.File,
       content: '',
     },
     '/sample-folder/c.txt': {
-      type: 'file',
+      type: DirentType.File,
       content: '',
     },
   }
   expect(FileSystemMemory.readDirWithFileTypes('/')).toEqual([
     {
       name: 'languages',
-      type: 'directory',
+      type: DirentType.Directory,
     },
     {
       name: 'sample-folder',
-      type: 'directory',
+      type: DirentType.Directory,
     },
     {
       name: 'test.txt',
-      type: 'file',
+      type: DirentType.File,
     },
   ])
 })
