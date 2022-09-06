@@ -44,6 +44,7 @@ test('loadContent', async () => {
   ViewletStates.set('SideBar', {
     state: {
       currentViewletId: 'Search',
+      title: 'Search',
     },
     factory: {},
   })
@@ -54,6 +55,7 @@ test('loadContent', async () => {
         flags: ActivityBarItemFlags.Tab,
         icon: 'icons/files.svg',
         id: 'Explorer',
+        title: 'Explorer',
         keyShortcuts: 'Control+Shift+E',
       },
       {
@@ -61,6 +63,7 @@ test('loadContent', async () => {
         flags: ActivityBarItemFlags.Tab,
         icon: 'icons/search.svg',
         id: 'Search',
+        title: 'Search',
         keyShortcuts: 'Control+Shift+F',
       },
       {
@@ -68,6 +71,7 @@ test('loadContent', async () => {
         flags: ActivityBarItemFlags.Tab,
         icon: 'icons/source-control.svg',
         id: 'Source Control',
+        title: 'Source Control',
         keyShortcuts: 'Control+Shift+G',
       },
       {
@@ -75,6 +79,7 @@ test('loadContent', async () => {
         flags: ActivityBarItemFlags.Tab,
         icon: 'icons/debug-alt-2.svg',
         id: 'Run and Debug',
+        title: 'Run and Debug',
         keyShortcuts: 'Control+Shift+D',
       },
       {
@@ -82,6 +87,7 @@ test('loadContent', async () => {
         flags: ActivityBarItemFlags.Tab,
         icon: 'icons/extensions.svg',
         id: 'Extensions',
+        title: 'Extensions',
         keyShortcuts: 'Control+Shift+X',
       },
       {
@@ -89,6 +95,7 @@ test('loadContent', async () => {
         flags: ActivityBarItemFlags.Button,
         icon: 'icons/settings-gear.svg',
         id: 'Settings',
+        title: 'Settings',
         keyShortcuts: '',
       },
     ],
@@ -111,6 +118,7 @@ test('render - all items fit but little space is remaining', async () => {
       // Top
       {
         id: 'Explorer',
+        title: 'Explorer',
         icon: 'icons/files.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -118,6 +126,7 @@ test('render - all items fit but little space is remaining', async () => {
       },
       {
         id: 'Search',
+        title: 'Search',
         icon: 'icons/search.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -125,6 +134,7 @@ test('render - all items fit but little space is remaining', async () => {
       },
       {
         id: 'Source Control',
+        title: 'Source Control',
         icon: 'icons/source-control.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -132,6 +142,7 @@ test('render - all items fit but little space is remaining', async () => {
       },
       {
         id: 'Run and Debug',
+        title: 'Run and Debug',
         icon: 'icons/debug-alt-2.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -139,6 +150,7 @@ test('render - all items fit but little space is remaining', async () => {
       },
       {
         id: 'Extensions',
+        title: 'Extensions',
         icon: 'icons/extensions.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -147,6 +159,7 @@ test('render - all items fit but little space is remaining', async () => {
       // Bottom
       {
         id: 'Settings',
+        title: 'Settings',
         icon: 'icons/settings-gear.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Button,
@@ -166,6 +179,7 @@ test('render - all items fit but little space is remaining', async () => {
           flags: ActivityBarItemFlags.Tab,
           icon: 'icons/files.svg',
           id: 'Explorer',
+          title: 'Explorer',
           keyShortcuts: 'Control+Shift+E',
         },
         {
@@ -173,6 +187,7 @@ test('render - all items fit but little space is remaining', async () => {
           flags: ActivityBarItemFlags.Tab,
           icon: 'icons/search.svg',
           id: 'Search',
+          title: 'Search',
           keyShortcuts: 'Control+Shift+F',
         },
         {
@@ -180,6 +195,7 @@ test('render - all items fit but little space is remaining', async () => {
           flags: ActivityBarItemFlags.Tab,
           icon: 'icons/source-control.svg',
           id: 'Source Control',
+          title: 'Source Control',
           keyShortcuts: 'Control+Shift+G',
         },
         {
@@ -187,6 +203,7 @@ test('render - all items fit but little space is remaining', async () => {
           flags: ActivityBarItemFlags.Tab,
           icon: 'icons/debug-alt-2.svg',
           id: 'Run and Debug',
+          title: 'Run and Debug',
           keyShortcuts: 'Control+Shift+D',
         },
         {
@@ -194,6 +211,7 @@ test('render - all items fit but little space is remaining', async () => {
           flags: ActivityBarItemFlags.Tab,
           icon: 'icons/extensions.svg',
           id: 'Extensions',
+          title: 'Extensions',
           keyShortcuts: 'Control+Shift+X',
         },
         {
@@ -201,6 +219,7 @@ test('render - all items fit but little space is remaining', async () => {
           flags: ActivityBarItemFlags.Button,
           icon: 'icons/settings-gear.svg',
           id: 'Settings',
+          title: 'Settings',
           keyShortcuts: '',
         },
       ],
@@ -217,6 +236,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       // Top
       {
         id: 'Explorer',
+        title: 'Explorer',
         icon: 'icons/files.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -224,6 +244,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       },
       {
         id: 'Search',
+        title: 'Search',
         icon: 'icons/search.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -231,6 +252,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       },
       {
         id: 'Source Control',
+        title: 'Source Control',
         icon: 'icons/source-control.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -238,6 +260,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       },
       {
         id: 'Run and Debug',
+        title: 'Run and Debug',
         icon: 'icons/debug-alt-2.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -245,6 +268,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       },
       {
         id: 'Extensions',
+        title: 'Extensions',
         icon: 'icons/extensions.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -253,6 +277,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       // Bottom
       {
         id: 'Settings',
+        title: 'Settings',
         icon: 'icons/settings-gear.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Button,
@@ -274,6 +299,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
         flags: ActivityBarItemFlags.Tab,
         icon: 'icons/files.svg',
         id: 'Explorer',
+        title: 'Explorer',
         keyShortcuts: 'Control+Shift+E',
       },
       {
@@ -281,6 +307,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
         flags: ActivityBarItemFlags.Tab,
         icon: 'icons/search.svg',
         id: 'Search',
+        title: 'Search',
         keyShortcuts: 'Control+Shift+F',
       },
       {
@@ -288,6 +315,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
         flags: ActivityBarItemFlags.Tab,
         icon: 'icons/source-control.svg',
         id: 'Source Control',
+        title: 'Source Control',
         keyShortcuts: 'Control+Shift+G',
       },
       {
@@ -295,6 +323,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
         flags: ActivityBarItemFlags.Button,
         icon: 'icons/ellipsis.svg',
         id: 'Additional Views',
+        title: 'Additional Views',
         keyShortCuts: '',
       },
       {
@@ -302,6 +331,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
         flags: ActivityBarItemFlags.Button,
         icon: 'icons/settings-gear.svg',
         id: 'Settings',
+        title: 'Settings',
         keyShortcuts: '',
       },
     ],
@@ -318,6 +348,7 @@ test('render - two items do not fit', () => {
       // Top
       {
         id: 'Explorer',
+        title: 'Explorer',
         icon: 'icons/files.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -325,6 +356,7 @@ test('render - two items do not fit', () => {
       },
       {
         id: 'Search',
+        title: 'Search',
         icon: 'icons/search.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -332,6 +364,7 @@ test('render - two items do not fit', () => {
       },
       {
         id: 'Source Control',
+        title: 'Source Control',
         icon: 'icons/source-control.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -339,6 +372,7 @@ test('render - two items do not fit', () => {
       },
       {
         id: 'Run and Debug',
+        title: 'Run and Debug',
         icon: 'icons/debug-alt-2.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -346,6 +380,7 @@ test('render - two items do not fit', () => {
       },
       {
         id: 'Extensions',
+        title: 'Extensions',
         icon: 'icons/extensions.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -354,6 +389,7 @@ test('render - two items do not fit', () => {
       // Bottom
       {
         id: 'Settings',
+        title: 'Settings',
         icon: 'icons/settings-gear.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Button,
@@ -373,6 +409,7 @@ test('render - two items do not fit', () => {
           flags: ActivityBarItemFlags.Tab,
           icon: 'icons/files.svg',
           id: 'Explorer',
+          title: 'Explorer',
           keyShortcuts: 'Control+Shift+E',
         },
         {
@@ -380,6 +417,7 @@ test('render - two items do not fit', () => {
           flags: ActivityBarItemFlags.Tab,
           icon: 'icons/search.svg',
           id: 'Search',
+          title: 'Search',
           keyShortcuts: 'Control+Shift+F',
         },
         {
@@ -387,6 +425,7 @@ test('render - two items do not fit', () => {
           flags: ActivityBarItemFlags.Tab,
           icon: 'icons/source-control.svg',
           id: 'Source Control',
+          title: 'Source Control',
           keyShortcuts: 'Control+Shift+G',
         },
         {
@@ -394,6 +433,7 @@ test('render - two items do not fit', () => {
           flags: ActivityBarItemFlags.Button,
           icon: 'icons/ellipsis.svg',
           id: 'Additional Views',
+          title: 'Additional Views',
           keyShortCuts: '',
         },
         {
@@ -401,6 +441,7 @@ test('render - two items do not fit', () => {
           flags: ActivityBarItemFlags.Button,
           icon: 'icons/settings-gear.svg',
           id: 'Settings',
+          title: 'Settings',
           keyShortcuts: '',
         },
       ],
@@ -423,48 +464,57 @@ test.skip('handleContextMenu', async () => {
       {
         flags: ActivityBarItemFlags.Button,
         id: 8000,
+        title: 8000,
         label: 'Explorer',
       },
       {
         flags: ActivityBarItemFlags.Button,
         id: 8000,
+        title: 8000,
         label: 'Search',
       },
       {
         flags: ActivityBarItemFlags.Button,
         id: 8000,
+        title: 8000,
         label: 'Source Control',
       },
       {
         flags: ActivityBarItemFlags.Button,
         id: 8000,
+        title: 8000,
         label: 'Run and Debug',
       },
       {
         flags: ActivityBarItemFlags.Button,
         id: 8000,
+        title: 8000,
         label: 'Extensions',
       },
       {
         flags: ActivityBarItemFlags.Button,
         id: 8000,
+        title: 8000,
         label: 'Settings',
       },
       {
         flags: ActivityBarItemFlags.Tab,
         id: 'separator',
+        title: 'separator',
         label: 'Separator',
       },
       {
         command: -1,
         flags: 0,
         id: 'moveSideBarLeft',
+        title: 'moveSideBarLeft',
         label: 'Move Side Bar Left',
       },
       {
         command: 1107,
         flags: 0,
         id: 'hideActivityBar',
+        title: 'hideActivityBar',
         label: 'Hide Activity Bar',
       },
     ],
@@ -522,6 +572,7 @@ test('selectCurrent - settings', async () => {
       // Top
       {
         id: 'Explorer',
+        title: 'Explorer',
         icon: 'icons/files.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -529,6 +580,7 @@ test('selectCurrent - settings', async () => {
       },
       {
         id: 'Search',
+        title: 'Search',
         icon: 'icons/search.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -536,6 +588,7 @@ test('selectCurrent - settings', async () => {
       },
       {
         id: 'Source Control',
+        title: 'Source Control',
         icon: 'icons/source-control.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -543,6 +596,7 @@ test('selectCurrent - settings', async () => {
       },
       {
         id: 'Run and Debug',
+        title: 'Run and Debug',
         icon: 'icons/debug-alt-2.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -550,6 +604,7 @@ test('selectCurrent - settings', async () => {
       },
       {
         id: 'Extensions',
+        title: 'Extensions',
         icon: 'icons/extensions.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -558,6 +613,7 @@ test('selectCurrent - settings', async () => {
       // Bottom
       {
         id: 'Settings',
+        title: 'Settings',
         icon: 'icons/settings-gear.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Button,
@@ -616,6 +672,7 @@ test('selectCurrent - no item focused', async () => {
       // Top
       {
         id: 'Explorer',
+        title: 'Explorer',
         icon: 'icons/files.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -623,6 +680,7 @@ test('selectCurrent - no item focused', async () => {
       },
       {
         id: 'Search',
+        title: 'Search',
         icon: 'icons/search.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -630,6 +688,7 @@ test('selectCurrent - no item focused', async () => {
       },
       {
         id: 'Source Control',
+        title: 'Source Control',
         icon: 'icons/source-control.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -637,6 +696,7 @@ test('selectCurrent - no item focused', async () => {
       },
       {
         id: 'Run and Debug',
+        title: 'Run and Debug',
         icon: 'icons/debug-alt-2.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -644,6 +704,7 @@ test('selectCurrent - no item focused', async () => {
       },
       {
         id: 'Extensions',
+        title: 'Extensions',
         icon: 'icons/extensions.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -652,6 +713,7 @@ test('selectCurrent - no item focused', async () => {
       // Bottom
       {
         id: 'Settings',
+        title: 'Settings',
         icon: 'icons/settings-gear.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Button,
@@ -676,6 +738,7 @@ test('resize', () => {
       // Top
       {
         id: 'Explorer',
+        title: 'Explorer',
         icon: 'icons/files.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -683,6 +746,7 @@ test('resize', () => {
       },
       {
         id: 'Search',
+        title: 'Search',
         icon: 'icons/search.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -690,6 +754,7 @@ test('resize', () => {
       },
       {
         id: 'Source Control',
+        title: 'Source Control',
         icon: 'icons/source-control.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -697,6 +762,7 @@ test('resize', () => {
       },
       {
         id: 'Run and Debug',
+        title: 'Run and Debug',
         icon: 'icons/debug-alt-2.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -704,6 +770,7 @@ test('resize', () => {
       },
       {
         id: 'Extensions',
+        title: 'Extensions',
         icon: 'icons/extensions.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
@@ -712,6 +779,7 @@ test('resize', () => {
       // Bottom
       {
         id: 'Settings',
+        title: 'Settings',
         icon: 'icons/settings-gear.svg',
         enabled: true,
         flags: ActivityBarItemFlags.Button,
@@ -732,6 +800,7 @@ test('resize', () => {
         flags: ActivityBarItemFlags.Tab,
         icon: 'icons/files.svg',
         id: 'Explorer',
+        title: 'Explorer',
         keyShortcuts: 'Control+Shift+E',
       },
       {
@@ -739,6 +808,7 @@ test('resize', () => {
         flags: ActivityBarItemFlags.Tab,
         icon: 'icons/search.svg',
         id: 'Search',
+        title: 'Search',
         keyShortcuts: 'Control+Shift+F',
       },
       {
@@ -746,6 +816,7 @@ test('resize', () => {
         flags: ActivityBarItemFlags.Tab,
         icon: 'icons/source-control.svg',
         id: 'Source Control',
+        title: 'Source Control',
         keyShortcuts: 'Control+Shift+G',
       },
       {
@@ -753,6 +824,7 @@ test('resize', () => {
         flags: ActivityBarItemFlags.Tab,
         icon: 'icons/debug-alt-2.svg',
         id: 'Run and Debug',
+        title: 'Run and Debug',
         keyShortcuts: 'Control+Shift+D',
       },
       {
@@ -760,6 +832,7 @@ test('resize', () => {
         flags: ActivityBarItemFlags.Tab,
         icon: 'icons/extensions.svg',
         id: 'Extensions',
+        title: 'Extensions',
         keyShortcuts: 'Control+Shift+X',
       },
       {
@@ -767,6 +840,7 @@ test('resize', () => {
         flags: ActivityBarItemFlags.Button,
         icon: 'icons/settings-gear.svg',
         id: 'Settings',
+        title: 'Settings',
         keyShortcuts: '',
       },
     ],
