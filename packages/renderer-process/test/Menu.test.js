@@ -44,17 +44,17 @@ test('showControlled', () => {
       },
       {
         label: '__Separator',
-        flags: 1,
+        flags: MenuItemFlags.Separator,
       },
       {
         id: 'item-2',
         label: 'item 2',
-        flags: 2,
+        flags: MenuItemFlags.Checked,
       },
       {
         id: 'item-3',
         label: 'item 3',
-        flags: 3,
+        flags: MenuItemFlags.Unchecked,
       },
     ],
     handleKeyDown() {},
@@ -85,17 +85,17 @@ test.skip('focus', () => {
       },
       {
         label: '__Separator',
-        flags: 1,
+        flags: MenuItemFlags.Separator,
       },
       {
         id: 'item-2',
         label: 'item 2',
-        flags: 2,
+        flags: MenuItemFlags.Checked,
       },
       {
         id: 'item-3',
         label: 'item 3',
-        flags: 3,
+        flags: MenuItemFlags.Unchecked,
       },
     ],
     handleKeyDown() {},
@@ -118,21 +118,21 @@ test('accessibility - Menu show have role menu', () => {
       {
         id: 'item-1',
         label: 'item 1',
-        flags: 0,
+        flags: MenuItemFlags.None,
       },
       {
         label: '__Separator',
-        flags: 1,
+        flags: MenuItemFlags.Separator,
       },
       {
         id: 'item-2',
         label: 'item 2',
-        flags: 2,
+        flags: MenuItemFlags.Checked,
       },
       {
         id: 'item-3',
         label: 'item 3',
-        flags: 3,
+        flags: MenuItemFlags.Unchecked,
       },
     ],
     handleKeyDown() {},
@@ -160,17 +160,17 @@ test('accessibility - MenuItem show have role menuitem or separator', () => {
       },
       {
         label: '__Separator',
-        flags: 1,
+        flags: MenuItemFlags.Separator,
       },
       {
         id: 'item-2',
         label: 'item 2',
-        flags: 2,
+        flags: MenuItemFlags.Checked,
       },
       {
         id: 'item-3',
         label: 'item 3',
-        flags: 3,
+        flags: MenuItemFlags.Unchecked,
       },
     ],
     handleKeyDown() {},
@@ -199,13 +199,13 @@ test('showMenu - error - item has missing label', () => {
   console.warn = jest.fn()
   Menu.showMenu(0, 0, 100, 250, [
     {
-      flags: 2,
+      flags: MenuItemFlags.Checked,
       label: undefined,
     },
   ])
   expect(console.warn).toHaveBeenCalledTimes(1)
   expect(console.warn).toHaveBeenCalledWith('menu item has missing label', {
-    flags: 2,
+    flags: MenuItemFlags.Checked,
     label: undefined,
   })
   const $Menu = Menu.state.$$Menus[0]
@@ -222,12 +222,12 @@ test('showMenu - with sub menu', () => {
       {
         id: 'newFile',
         label: 'New File',
-        flags: /* Disabled */ 5,
+        flags: MenuItemFlags.Disabled,
       },
       {
         id: 'newWindow',
         label: 'New Window',
-        flags: /* None */ 0,
+        flags: MenuItemFlags.None,
       },
       {
         id: 'separator',
@@ -237,17 +237,17 @@ test('showMenu - with sub menu', () => {
       {
         id: 'openFile',
         label: 'Open File',
-        flags: /* Disabled */ 5,
+        flags: MenuItemFlags.Disabled,
       },
       {
         id: 'openFolder',
         label: 'Open Folder',
-        flags: /* None */ 0,
+        flags: MenuItemFlags.None,
       },
       {
         id: 'openRecent',
         label: 'Open Recent',
-        flags: /* SubMenu */ 4,
+        flags: MenuItemFlags.SubMenu,
       },
       {
         id: 'separator',
@@ -257,7 +257,7 @@ test('showMenu - with sub menu', () => {
       {
         id: 'exit',
         label: 'Exit',
-        flags: /* None */ 0,
+        flags: MenuItemFlags.None,
       },
     ],
     0,
@@ -277,7 +277,7 @@ test('showMenu - with sub menu', () => {
       {
         id: 'more',
         label: 'More...',
-        flags: /* None */ 0,
+        flags: MenuItemFlags.None,
       },
       {
         id: 'separator',
@@ -287,7 +287,7 @@ test('showMenu - with sub menu', () => {
       {
         id: 'clearRecentlyOpened',
         label: 'Clear Recently Opened',
-        flags: /* None */ 0,
+        flags: MenuItemFlags.None,
       },
     ],
     1,
@@ -373,7 +373,7 @@ test('event - right click outside', () => {
     new MouseEvent('mousedown', {
       bubbles: true,
       cancelable: true,
-      button: 2,
+      button: MenuItemFlags.Checked,
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
