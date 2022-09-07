@@ -1,6 +1,6 @@
 const name = 'sample.type-definition-provider-no-result'
 
-test.skip('sample.type-definition-provider-no-result', async () => {
+test('sample.type-definition-provider-no-result', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(

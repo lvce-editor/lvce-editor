@@ -26,7 +26,7 @@ add(1, 2)
   const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
   await expect(overlayMessage).toHaveText(
-    'Error: Failed to execute type definition provider: oops'
+    'Error: Failed to execute definition provider: oops'
   )
 })
 

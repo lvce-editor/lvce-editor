@@ -38,16 +38,16 @@ const getNoLocationFoundMessage = () => {
 }
 
 const getErrorMessage = (error) => {
-  if (
-    error &&
-    error.message &&
-    error.message.startsWith('Failed to execute type definition provider: ')
-  ) {
-    return error.message.replace(
-      'Failed to execute type definition provider: ',
-      ''
-    )
-  }
+  // if (
+  //   error &&
+  //   error.message &&
+  //   error.message.startsWith('Failed to execute type definition provider: ')
+  // ) {
+  //   return error.message.replace(
+  //     'Failed to execute type definition provider: ',
+  //     ''
+  //   )
+  // }
   return `${error}`
 }
 

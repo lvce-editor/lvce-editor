@@ -32,13 +32,13 @@ const getNoLocationFoundMessage = () => {
 }
 
 const getErrorMessage = (error) => {
-  if (
-    error &&
-    error.message &&
-    error.message.startsWith('Failed to execute definition provider: ')
-  ) {
-    return error.message.replace('Failed to execute definition provider: ', '')
-  }
+  // if (
+  //   error &&
+  //   error.message &&
+  //   error.message.startsWith('Failed to execute definition provider: ')
+  // ) {
+  //   return error.message.replace('Failed to execute definition provider: ', '')
+  // }
   return `${error}`
 }
 
