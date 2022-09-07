@@ -1,3 +1,5 @@
+import * as CommandId from '../CommandId/CommandId.js'
+
 const MODULE_MAIN = 1
 const MODULE_NOTIFICATION = 2
 const MODULE_TEST = 3
@@ -107,15 +109,15 @@ const getModuleId = (commandId) => {
     case 'TestFrameWork.checkMultiElementCondition':
     case 'TestFrameWork.performKeyBoardAction':
       return MODULE_TEST_FRAME_WORK
-    case 'ClipBoard.readText':
-    case 'ClipBoard.writeText':
+    case CommandId.CLIP_BOARD_READ_TEXT:
+    case CommandId.CLIP_BOARD_WRITE_TEXT:
       return MODULE_CLIPBOARD
     case 'Developer.showState':
     case 'Developer.getMemoryUsage':
       return MODULE_DEVELOPER
-    case 'Download.downloadFile':
+    case CommandId.DOWNLOAD_DOWNLOAD_FILE:
       return MODULE_DOWNLOAD
-    case 'Open.openUrl':
+    case CommandId.OPEN_OPEN_URL:
       return MODULE_OPEN
     case 'InitData.getInitData':
       return MODULE_INIT_DATA
@@ -144,11 +146,10 @@ const getModuleId = (commandId) => {
     case 'Notification.dispose':
     case 'Notification.createWithOptions':
       return MODULE_NOTIFICATION
-    case 'Layout.update':
-    case 'Layout.hydrate':
-    case 'Layout.hide':
-    case 'Layout.getBounds':
-    case 'Layout.show':
+    case CommandId.LAYOUT_UPDATE:
+    case CommandId.LAYOUT_HIDE:
+    case CommandId.LAYOUT_GET_BOUNDS:
+    case CommandId.LAYOUT_SHOW:
       return MODULE_LAYOUT
     case 'Viewlet.refresh':
     case 'Viewlet.invoke':
@@ -160,7 +161,7 @@ const getModuleId = (commandId) => {
     case 'Viewlet.handleError':
     case 'Viewlet.sendMultiple':
       return MODULE_VIEWLET
-    case 'Audio.play':
+    case CommandId.AUDIO_PLAY:
       return MODULE_AUDIO
     case 'ImagePreview.create':
     case 'ImagePreview.dispose':
@@ -178,12 +179,12 @@ const getModuleId = (commandId) => {
     case 'EditorRename.finish':
     case 'EditorRename.dispose':
       return MODULE_EDITOR_RENAME
-    case 'Css.setInlineStyle':
+    case CommandId.CSS_SET_INLINE_STYLE:
       return MODULE_CSS
-    case 'Location.getPathName':
-    case 'Location.setPathName':
-    case 'Location.hydrate':
-    case 'Location.getHref':
+    case CommandId.LOCATION_GET_HREF:
+    case CommandId.LOCATION_GET_PATH_NAME:
+    case CommandId.LOCATION_HYDRATE:
+    case CommandId.LOCATION_SET_PATH_NAME:
       return MODULE_LOCATION
     case 'EditorHover.create':
       return MODULE_EDITOR_HOVER
@@ -194,10 +195,10 @@ const getModuleId = (commandId) => {
       return MODULE_PANEL
     case 33111:
       return MODULE_WORKBENCH
-    case 'Dialog.prompt':
-    case 'Dialog.alert':
-    case 'Dialog.showErrorDialogWithOptions':
-    case 'Dialog.close':
+    case CommandId.DIALOG_ALERT:
+    case CommandId.DIALOG_CLOSE:
+    case CommandId.DIALOG_PROMPT:
+    case CommandId.DIALOG_SHOW_ERROR_DIALOG_WITH_OPTIONS:
       return MODULE_DIALOG
     case 'Menu.showControlled':
     case 'Menu.hide':
@@ -208,22 +209,22 @@ const getModuleId = (commandId) => {
     case 'Menu.showContextMenu':
     case 'Menu.show':
       return MODULE_MENU
-    case 'Window.reload':
-    case 'Window.minimize':
-    case 'Window.maximize':
-    case 'Window.unmaximize':
-    case 'Window.close':
-    case 'Window.setTitle':
-    case 'Window.onVisibilityChange':
+    case CommandId.WINDOW_RELOAD:
+    case CommandId.WINDOW_MINIMIZE:
+    case CommandId.WINDOW_MAXIMIZE:
+    case CommandId.WINDOW_UNMAXIMIZE:
+    case CommandId.WINDOW_CLOSE:
+    case CommandId.WINDOW_SET_TITLE:
+    case CommandId.WINDOW_ON_VISIBILITY_CHANGE:
       return MODULE_WINDOW
-    case 'WebStorage.clear':
-    case 'WebStorage.getItem':
-    case 'WebStorage.setItem':
+    case CommandId.WEB_STORAGE_CLEAR:
+    case CommandId.WEB_STORAGE_GET_ITEM:
+    case CommandId.WEB_STORAGE_SET_ITEM:
       return MODULE_WEB_STORAGE
     case 'Meta.setThemeColor':
       return MODULE_META
-    case 'ServiceWorker.register':
-    case 'ServiceWorker.uninstall':
+    case CommandId.SERVICE_WORKER_REGISTER:
+    case CommandId.SERVICE_WORKER_UNINSTALL:
       return MODULE_SERVICE_WORKER
     default:
       throw new Error(`command ${commandId} not found`)
