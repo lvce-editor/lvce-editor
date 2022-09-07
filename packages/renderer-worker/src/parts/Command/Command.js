@@ -213,7 +213,7 @@ const getModuleId = (commandId) => {
     case 'ContextMenu.focusLast':
     case 'ContextMenu.ModuleId.Layout':
     case 'ContextMenu.focusPrevious':
-    case 'ContextMenu.ModuleId.Viewlet':
+    case 'ContextMenu.show':
     case 'ContextMenu.noop':
       return ModuleId.Workbench
     case 'Layout.showSideBar':
