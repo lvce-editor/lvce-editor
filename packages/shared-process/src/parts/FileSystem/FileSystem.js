@@ -6,6 +6,7 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Trash from '../Trash/Trash.js'
+import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
 
 export const state = {
   watcherMap: Object.create(null),
@@ -42,7 +43,7 @@ export const readFile = async (path) => {
     // console.timeEnd(`read ${path}`)
     return content
   } catch (error) {
-    if (error && error.code === 'ENOENT') {
+    if (error && error.code === FileSystemErrorCodes.ENOENT) {
       throw new VError(`File not found '${path}'`)
     }
     throw new VError(error, `Failed to read file "${path}"`)
@@ -55,6 +56,9 @@ export const writeFile = async (path, content) => {
     // Queue.add(`writeFile/${path}`, () =>
     await fs.writeFile(path, content)
   } catch (error) {
+    if (error && error.code === FileSystemErrorCodes.ENOENT) {
+      throw new VError(`File not found '${path}'`)
+    }
     throw new VError(error, `Failed to write to file "${path}"`)
   }
 }

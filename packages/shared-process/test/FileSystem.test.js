@@ -142,13 +142,11 @@ test('writeFile', async () => {
 test('writeFile - nonexistent file', async () => {
   // @ts-ignore
   fs.writeFile.mockImplementation(() => {
-    throw new Error('ENOENT')
+    throw new NodeError('ENOENT')
   })
   await expect(
     FileSystem.writeFile('/test/non-existing-file.txt', 'Hello World')
-  ).rejects.toThrow(
-    `Failed to write to file "/test/non-existing-file.txt": ENOENT`
-  )
+  ).rejects.toThrow(`File not found '/test/non-existing-file.txt'`)
 })
 
 test.skip('writeFile - parallel write on different files works', async () => {
