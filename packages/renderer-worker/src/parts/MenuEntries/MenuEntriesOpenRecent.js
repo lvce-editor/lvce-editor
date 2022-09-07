@@ -5,7 +5,7 @@ import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 export const UiStrings = {
   Separator: 'Separator',
   More: 'More ...',
-  ClearRecentlyOpened: 'More ...',
+  ClearRecentlyOpened: 'Clear Recently Opened',
 }
 
 const MAX_MENU_RECENT_ENTRIES = 10
