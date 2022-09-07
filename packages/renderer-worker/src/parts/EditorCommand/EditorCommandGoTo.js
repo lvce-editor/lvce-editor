@@ -2,6 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
+import * as EditorGetWordAt from './EditorCommandGetWordAt.js'
 
 export const goTo = async ({
   editor,
@@ -18,7 +19,8 @@ export const goTo = async ({
     if (!definition) {
       // TODO show popup that no definition was found
       // TODO if there was an error, show popup that go to definition resulted in an error
-      const message = getNoLocationFoundMessage()
+      const info = EditorGetWordAt.getWordAt(editor, rowIndex, columnIndex)
+      const message = getNoLocationFoundMessage(info)
       return EditorShowMessage.editorShowMessage(
         editor,
         rowIndex,

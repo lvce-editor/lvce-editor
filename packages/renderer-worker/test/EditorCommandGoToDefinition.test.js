@@ -18,6 +18,11 @@ jest.unstable_mockModule(
     }),
   })
 )
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
+  execute: jest.fn().mockImplementation(() => {
+    throw new Error('not implemented')
+  }),
+}))
 
 const ExtensionHostDefinition = await import(
   '../src/parts/ExtensionHost/ExtensionHostDefinition.js'
@@ -155,7 +160,7 @@ test('editorGoToDefinition - error - no definition provider found', async () => 
     editor,
     0,
     0,
-    'No definition provider found',
+    'Error: Failed to execute definition provider: No definition provider found',
     false
   )
   expect(spy).not.toHaveBeenCalled()
@@ -164,6 +169,33 @@ test('editorGoToDefinition - error - no definition provider found', async () => 
 test('editorGoToDefinition - no definition found', async () => {
   const editor = {
     lines: ['line 1', 'line 1'],
+    top: 0,
+    left: 0,
+    columnWidth: 8,
+    rowHeight: 20,
+    uri: '/test/index.ts',
+    selections: new Uint32Array([0, 0, 0, 0]),
+  }
+  // @ts-ignore
+  ExtensionHostDefinition.executeDefinitionProvider.mockImplementation(() => {
+    return undefined
+  })
+  // @ts-ignore
+  EditorShowMessage.editorShowMessage.mockImplementation(() => {})
+  await EditorGoToDefinition.editorGoToDefinition(editor)
+  expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
+  expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
+    editor,
+    0,
+    0,
+    `No definition found for 'line'`,
+    false
+  )
+})
+
+test('editorGoToDefinition - no definition found and no word at position', async () => {
+  const editor = {
+    lines: ['    ', ''],
     top: 0,
     left: 0,
     columnWidth: 8,
@@ -183,7 +215,7 @@ test('editorGoToDefinition - no definition found', async () => {
     editor,
     0,
     0,
-    'No definition found',
+    `No definition found`,
     false
   )
 })

@@ -5,6 +5,7 @@ import * as EditorGoTo from './EditorCommandGoTo.js'
 
 const UiStrings = {
   NoDefinitionFound: 'No definition found',
+  NoDefinitionFoundFor: `No definition found for '{PH1}'`,
 }
 
 // TODO race condition, check that editor hasn't been closed in the meantime
@@ -27,7 +28,12 @@ const getLocation = async (editor, rowIndex, columnIndex) => {
   return definition
 }
 
-const getNoLocationFoundMessage = () => {
+const getNoLocationFoundMessage = (info) => {
+  if (info.word) {
+    return I18nString.i18nString(UiStrings.NoDefinitionFoundFor, {
+      PH1: info.word,
+    })
+  }
   return I18nString.i18nString(UiStrings.NoDefinitionFound)
 }
 

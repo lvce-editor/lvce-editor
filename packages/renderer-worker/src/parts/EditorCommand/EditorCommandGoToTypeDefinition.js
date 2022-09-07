@@ -17,6 +17,7 @@ import * as EditorGoTo from './EditorCommandGoTo.js'
 
 const UiStrings = {
   NoTypeDefinitionFound: 'No type definition found',
+  NoTypeDefinitionFoundFor: `No type definition found for '{PH1}'`,
 }
 
 const getTypeDefinitionErrorMessage = (error) => {
@@ -33,7 +34,12 @@ const getLocation = async (editor, rowIndex, columnIndex) => {
   return definition
 }
 
-const getNoLocationFoundMessage = () => {
+const getNoLocationFoundMessage = (info) => {
+  if (info.word) {
+    return I18nString.i18nString(UiStrings.NoTypeDefinitionFoundFor, {
+      PH1: info.word,
+    })
+  }
   return I18nString.i18nString(UiStrings.NoTypeDefinitionFound)
 }
 
