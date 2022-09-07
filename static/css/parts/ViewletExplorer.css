@@ -23,8 +23,7 @@
   text-overflow: ellipsis;
   overflow: hidden;
   display: inline-block;
-  /* width: 102px; */
-  width: calc(80%);
+  white-space: nowrap;
 }
 
 /* .TreeItem:focus {
