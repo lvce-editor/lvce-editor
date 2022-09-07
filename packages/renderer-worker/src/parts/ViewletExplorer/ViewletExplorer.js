@@ -166,7 +166,7 @@ const getTopLevelDirents = (root, pathSeparator) => {
   return getChildDirents(root, pathSeparator, {
     depth: 0,
     path: root,
-    type: 'directory',
+    type: DirentType.Directory,
   })
 }
 
