@@ -1,15 +1,10 @@
 import * as Command from '../Command/Command.js'
 import * as Languages from '../Languages/Languages.js'
-import * as Platform from '../Platform/Platform.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as SearchFile from '../SearchFile/SearchFile.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 const searchFile = async (path, value) => {
-  if (Platform.platform === 'web') {
-    return []
-  }
-  const files = await SharedProcess.invoke(
-    /* SearchFile.searchFile */ 'SearchFile.searchFile',
+  const files = await SearchFile.searchFile(
     /* path */ path,
     /* searchTerm */ value
   )
