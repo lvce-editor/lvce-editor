@@ -1,11 +1,4 @@
-const MODULE_WINDOW = 1
-const MODULE_ELECTRON_WINDOW_ABOUT = 2
-const MODULE_DIALOG = 3
-const MODULE_DEVELOPER = 4
-const MODULE_BEEP = 5
-const MODULE_APP_WINDOW = 6
-const MODULE_APP = 7
-const MODULE_ELECTRON_WINDOW_PROCESS_EXPLORER = 8
+const ModuleId = require('../ModuleId/ModuleId.js')
 
 const commands = Object.create(null)
 
@@ -13,26 +6,27 @@ const pendingModules = Object.create(null)
 
 const loadModule = async (moduleId) => {
   switch (moduleId) {
-    case MODULE_WINDOW:
+    case ModuleId.Window:
       return require('../ElectronWindow/ElectronWindow.ipc.js')
-    case MODULE_ELECTRON_WINDOW_ABOUT:
+    case ModuleId.ElectronWindowAbout:
       return require('../ElectronWindowAbout/ElectronWindowAbout.ipc.js')
-    case MODULE_DIALOG:
+    case ModuleId.Dialog:
       return require('../ElectronDialog/ElectronDialog.ipc.js')
-    case MODULE_DEVELOPER:
+    case ModuleId.Developer:
       return require('../ElectronDeveloper/ElectronDeveloper.ipc.js')
-    case MODULE_BEEP:
+    case ModuleId.Beep:
       return require('../ElectronBeep/ElectronBeep.js')
-    case MODULE_APP_WINDOW:
+    case ModuleId.AppWindow:
       return require('../AppWindow/AppWindow.ipc.js')
-    case MODULE_APP:
+    case ModuleId.App:
       return require('../App/App.ipc.js')
-    case MODULE_ELECTRON_WINDOW_PROCESS_EXPLORER:
+    case ModuleId.ElectronWindowProcessExplorer:
       return require('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
     default:
       throw new Error('unknown module')
   }
 }
+
 const initializeModule = (module) => {
   if (typeof module.__initialize__ !== 'function') {
     if (module.Commands) {
@@ -60,7 +54,7 @@ const getModuleId = (commandId) => {
   switch (commandId) {
     case 'ElectronApp.exit':
     case 'App.exit':
-      return MODULE_APP
+      return ModuleId.App
     case 'ElectronWindow.minimize':
     case 'ElectronWindow.maximize':
     case 'ElectronWindow.toggleDevtools':
@@ -68,21 +62,21 @@ const getModuleId = (commandId) => {
     case 'ElectronWindow.unmaximize':
     case 'ElectronWindow.close':
     case 'ElectronWindow.reload':
-      return MODULE_WINDOW
+      return ModuleId.Window
     case 'ElectronDeveloper.getPerformanceEntries':
     case 'ElectronDeveloper.crashMainProcess':
-      return MODULE_DEVELOPER
+      return ModuleId.Developer
     case 'AppWindow.createAppWindow':
-      return MODULE_APP_WINDOW
+      return ModuleId.AppWindow
     case 'ElectronWindowProcessExplorer.open':
-      return MODULE_ELECTRON_WINDOW_PROCESS_EXPLORER
+      return ModuleId.ElectronWindowProcessExplorer
     case 'ElectronWindowAbout.open':
-      return MODULE_ELECTRON_WINDOW_ABOUT
+      return ModuleId.ElectronWindowAbout
     case 'ElectronDialog.showOpenDialog':
     case 'ElectronDialog.showMessageBox':
-      return MODULE_DIALOG
+      return ModuleId.Dialog
     case 'ElectronBeep.beep':
-      return MODULE_BEEP
+      return ModuleId.Beep
     default:
       throw new Error(`method not found ${commandId}`)
   }
