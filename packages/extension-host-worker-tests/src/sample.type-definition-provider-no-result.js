@@ -1,6 +1,6 @@
 const name = 'sample.type-definition-provider-no-result'
 
-test.skip('sample.type-definition-provider-no-result', async () => {
+test('sample.type-definition-provider-no-result', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -25,7 +25,9 @@ add(1, 2)
   // assert
   const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
-  await expect(overlayMessage).toHaveText('No type definition found')
+  await expect(overlayMessage).toHaveText(
+    `No type definition found for 'export'`
+  )
 })
 
 export {}

@@ -1,0 +1,10 @@
+{
+  "browser": "main.js",
+  "activation": ["onDefinition:xyz"],
+  "languages": [
+    {
+      "id": "xyz",
+      "extensions": [".xyz"]
+    }
+  ]
+}
