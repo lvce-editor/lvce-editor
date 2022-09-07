@@ -25,7 +25,9 @@ add(1, 2)
   // assert
   const overlayMessage = Locator('.EditorOverlayMessage')
   await expect(overlayMessage).toBeVisible()
-  await expect(overlayMessage).toHaveText('No type definition found')
+  await expect(overlayMessage).toHaveText(
+    `No type definition found for 'export'`
+  )
 })
 
 export {}
