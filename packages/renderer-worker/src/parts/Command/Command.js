@@ -1,56 +1,4 @@
-const MODULE_NOTIFICATION = 2
-const MODULE_WINDOW = 14
-const MODULE_CONTEXT_MENU = 16
-const MODULE_LAYOUT = 17
-const MODULE_VIEWLET = 18
-const MODULE_WORKBENCH = 19
-const MODULE_VIEWLET_QUICK_PICK = 21
-// TODO rename to widgetFind and group together with other widgets (contextMenu, hover, tooltip)
-const MODULE_FIND_WIDGET = 23
-const MODULE_PREFERENCES = 25
-const MODULE_DEVELOPER = 26
-const MODULE_KEY_BINDINGS = 29
-const MODULE_COLOR_PICKER = 33
-const MODULE_CLIP_BOARD = 36
-const MODULE_AJAX = 37
-const MODULE_FORMAT = 40
-const MODULE_COLOR_THEME = 41
-const MODULE_ICON_THEME = 42
-const MODULE_MENU = 43
-const MODULE_TITLE_BAR_MENU = 44
-const MODULE_ERROR_HANDLING = 45
-const MODULE_NAVIGATION = 46
-const MODULE_CACHE_STORAGE = 47
-const MODULE_LOCAL_STORAGE = 48
-const MODULE_SESSION_STORAGE = 49
-const MODULE_CALLBACK = 50
-const MODULE_DIALOG = 51
-const MODULE_COMMAND_INFO = 52
-const MODULE_WORKSPACE = 53
-const MODULE_COLOR_THEME_FROM_JSON = 54
-const MODULE_RECENTLY_OPENED = 55
-const MODULE_FILE_SYSTEM = 56
-const MODULE_FIND_IN_WORKSPACE = 57
-const MODULE_EDITOR_DIAGNOSTICS = 58
-const MODULE_EDITOR_RENAME = 60
-const MODULE_EDITOR_ERROR = 62
-const MODULE_KEY_BINDINGS_INITIAL = 63
-const MODULE_SAVE_STATE = 64
-const MODULE_SERVICE_WORKER = 66
-const MODULE_IMAGE_PREVIEW = 67
-const MODULE_BASE_64 = 68
-const MODULE_BLOB = 69
-const MODULE_OPEN = 70
-const MODULE_AUDIO = 71
-const MODULE_LISTENER = 73
-const MODULE_SESSION_REPLAY = 78
-const MODULE_DOWNLOAD = 79
-const MODULE_EXTENSION_HOST_CORE = 80
-const MODULE_EXTENSION_META = 81
-const MODULE_TEST = 82
-const MODULE_TEST_FRAMEWORK = 83
-const MODULE_TEST_FRAMEWORK_COMPONENT = 84
-const MODULE_EXTENSIONS = 85
+import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const state = {
   commands: Object.create(null),
@@ -59,105 +7,107 @@ export const state = {
 
 const loadModule = (moduleId) => {
   switch (moduleId) {
-    case MODULE_NOTIFICATION:
-      return import('../Notification/Notification.ipc.js')
-    case MODULE_WINDOW:
-      return import('../Window/Window.ipc.js')
-    case MODULE_CONTEXT_MENU:
+    case ModuleId.ContextMenu:
       return import('../ContextMenu/ContextMenu.ipc.js')
-    case MODULE_LAYOUT:
+    case ModuleId.Notification:
+      return import('../Notification/Notification.ipc.js')
+    case ModuleId.Window:
+      return import('../Window/Window.ipc.js')
+    case ModuleId.ContextMenu:
+      return import('../ContextMenu/ContextMenu.ipc.js')
+    case ModuleId.Layout:
       return import('../Layout/Layout.ipc.js')
-    case MODULE_VIEWLET:
+    case ModuleId.Viewlet:
       return import('../Viewlet/Viewlet.ipc.js')
-    case MODULE_WORKBENCH:
+    case ModuleId.Workbench:
       return import('../Workbench/Workbench.ipc.js')
-    case MODULE_VIEWLET_QUICK_PICK:
+    case ModuleId.ViewletQuickPick:
       return import('../ViewletQuickPick/ViewletQuickPick.ipc.js')
-    case MODULE_FIND_WIDGET:
+    case ModuleId.FindWidget:
       return import('../FindWidget/FindWidget.ipc.js')
-    case MODULE_PREFERENCES:
+    case ModuleId.Preferences:
       return import('../Preferences/Preferences.ipc.js')
-    case MODULE_DEVELOPER:
+    case ModuleId.Developer:
       return import('../Developer/Developer.ipc.js')
-    case MODULE_KEY_BINDINGS:
+    case ModuleId.KeyBindings:
       return import('../KeyBindings/KeyBindings.ipc.js')
-    case MODULE_COLOR_PICKER:
+    case ModuleId.ColorPicker:
       return import('../ColorPicker/ColorPicker.ipc.js')
-    case MODULE_CLIP_BOARD:
+    case ModuleId.ClipBoard:
       return import('../ClipBoard/ClipBoard.ipc.js')
-    case MODULE_AJAX:
+    case ModuleId.Ajax:
       return import('../Ajax/Ajax.ipc.js')
-    case MODULE_FORMAT:
+    case ModuleId.Format:
       return import('../Format/Format.ipc.js')
-    case MODULE_COLOR_THEME:
+    case ModuleId.ColorTheme:
       return import('../ColorTheme/ColorTheme.ipc.js')
-    case MODULE_ICON_THEME:
+    case ModuleId.IconTheme:
       return import('../IconTheme/IconTheme.ipc.js')
-    case MODULE_MENU:
+    case ModuleId.Menu:
       return import('../Menu/Menu.ipc.js')
-    case MODULE_TITLE_BAR_MENU:
+    case ModuleId.TitleBarMenu:
       return import('../TitleBarMenuBar/TitleBarMenuBar.ipc.js')
-    case MODULE_ERROR_HANDLING:
+    case ModuleId.ErrorHandling:
       return import('../ErrorHandling/ErrorHandling.ipc.js')
-    case MODULE_NAVIGATION:
+    case ModuleId.Navigatiom:
       return import('../Navigation/Navigation.ipc.js')
-    case MODULE_CACHE_STORAGE:
+    case ModuleId.CacheStorage:
       return import('../CacheStorage/CacheStorage.ipc.js')
-    case MODULE_LOCAL_STORAGE:
+    case ModuleId.LocalStorage:
       return import('../LocalStorage/LocalStorage.ipc.js')
-    case MODULE_SESSION_STORAGE:
+    case ModuleId.SessionStorage:
       return import('../SessionStorage/SessionStorage.ipc.js')
-    case MODULE_CALLBACK:
+    case ModuleId.Callback:
       return import('../Callback/Callback.ipc.js')
-    case MODULE_DIALOG:
+    case ModuleId.Dialog:
       return import('../Dialog/Dialog.ipc.js')
-    case MODULE_WORKSPACE:
+    case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case MODULE_COLOR_THEME_FROM_JSON:
+    case ModuleId.ColorThemeFromJson:
       return import('../ColorThemeFromJson/ColorThemeFromJson.ipc.js')
-    case MODULE_RECENTLY_OPENED:
+    case ModuleId.RecentlyOpened:
       return import('../RecentlyOpened/RecentlyOpened.ipc.js')
-    case MODULE_FILE_SYSTEM:
+    case ModuleId.FileSystem:
       return import('../FileSystem/FileSystem.ipc.js')
-    case MODULE_EDITOR_DIAGNOSTICS:
+    case ModuleId.EditorDiagnostics:
       return import('../EditorDiagnostics/EditorDiagnostics.ipc.js')
-    case MODULE_EDITOR_RENAME:
+    case ModuleId.EditorRename:
       return import('../EditorRename/EditorRename.ipc.js')
-    case MODULE_EDITOR_ERROR:
+    case ModuleId.EditorError:
       return import('../EditorError/EditorError.ipc.js')
-    case MODULE_KEY_BINDINGS_INITIAL:
+    case ModuleId.KeyBindingsInitial:
       return import('../KeyBindingsInitial/KeyBindingsInitial.ipc.js')
-    case MODULE_SAVE_STATE:
+    case ModuleId.SaveState:
       return import('../SaveState/SaveState.ipc.js')
-    case MODULE_SERVICE_WORKER:
+    case ModuleId.ServiceWorker:
       return import('../ServiceWorker/ServiceWorker.ipc.js')
-    case MODULE_IMAGE_PREVIEW:
+    case ModuleId.ImagePreview:
       return import('../ImagePreview/ImagePreview.ipc.js')
-    case MODULE_BASE_64:
+    case ModuleId.Base64:
       return import('../Base64/Base64.ipc.js')
-    case MODULE_BLOB:
+    case ModuleId.Blob:
       return import('../Blob/Blob.ipc.js')
-    case MODULE_OPEN:
+    case ModuleId.Open:
       return import('../Open/Open.ipc.js')
-    case MODULE_AUDIO:
+    case ModuleId.Audio:
       return import('../Audio/Audio.ipc.js')
-    case MODULE_LISTENER:
+    case ModuleId.Listener:
       return import('../Listener/Listener.ipc.js')
-    case MODULE_SESSION_REPLAY:
+    case ModuleId.SessionReplay:
       return import('../SessionReplay/SessionReplay.ipc.js')
-    case MODULE_DOWNLOAD:
+    case ModuleId.Download:
       return import('../Download/Download.ipc.js')
-    case MODULE_EXTENSION_HOST_CORE:
+    case ModuleId.ExtensionHostCode:
       return import('../ExtensionHost/ExtensionHostCore.ipc.js')
-    case MODULE_EXTENSION_META:
+    case ModuleId.ExtensionMeta:
       return import('../ExtensionMeta/ExtensionMeta.ipc.js')
-    case MODULE_TEST:
+    case ModuleId.Test:
       return import('../Test/Test.ipc.js')
-    case MODULE_TEST_FRAMEWORK:
+    case ModuleId.TestFramework:
       return import('../TestFrameWork/TestFrameWork.js')
-    case MODULE_TEST_FRAMEWORK_COMPONENT:
+    case ModuleId.TestFrameworkComponent:
       return import('../TestFrameWorkComponent/TestFrameWorkComponent.js')
-    case MODULE_EXTENSIONS:
+    case ModuleId.Extensions:
       return import('../Extensions/Extensions.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
@@ -190,43 +140,43 @@ const getOrLoadModule = (moduleId) => {
 const getModuleId = (commandId) => {
   switch (commandId) {
     case '001':
-      return MODULE_TEST_FRAMEWORK
+      return ModuleId.TestFramework
     case '002':
-      return MODULE_TEST_FRAMEWORK_COMPONENT
+      return ModuleId.TestFrameworkComponent
     case 'Download.downloadFile':
     case 'Download.downloadJson':
-      return MODULE_DOWNLOAD
+      return ModuleId.Download
     case 'ExtensionHost.startWebExtensionHost':
     case 'ExtensionHost.loadWebExtension':
-      return MODULE_EXTENSION_HOST_CORE
+      return ModuleId.ExtensionHostCode
     case 'ExtensionMeta.addExtension':
     case 'ExtensionMeta.addWebExtension':
     case 'ExtensionMeta.addNodeExtension':
-      return MODULE_EXTENSION_META
+      return ModuleId.ExtensionMeta
     case 'Extensions.openExtensionsFolder':
     case 'Extensions.openCachedExtensionsFolder':
-      return MODULE_EXTENSIONS
+      return ModuleId.Extensions
     case 'Test.execute':
-      return MODULE_TEST
+      return ModuleId.Test
     case 'ColorThemeFromJson.createColorThemeFromJson':
-      return MODULE_COLOR_THEME_FROM_JSON
+      return ModuleId.ColorThemeFromJson
     case 'ClipBoard.readText':
     case 'ClipBoard.writeText':
     case 'ClipBoard.writeNativeFiles':
     case 'ClipBoard.readNativeFiles':
-      return MODULE_CLIP_BOARD
+      return ModuleId.ClipBoard
     case 'Ajax.getJson':
     case 'Ajax.getText':
-      return MODULE_AJAX
+      return ModuleId.Ajax
     case 'ErrorHandling.handleError':
-      return MODULE_ERROR_HANDLING
+      return ModuleId.ErrorHandling
     case 'FileSystem.readFile':
     case 'FileSystem.remove':
     case 'FileSystem.readDirWithFileTypes':
     case 'FileSystem.writeFile':
     case 'FileSystem.mkdir':
     case 'FileSystem.getPathSeparator':
-      return MODULE_FILE_SYSTEM
+      return ModuleId.FileSystem
     case 'Developer.getStartupPerformanceContent':
     case 'Developer.getMemoryUsageContent':
     case 'Developer.startupPerformance':
@@ -249,12 +199,12 @@ const getModuleId = (commandId) => {
     case 'Developer.openCacheFolder':
     case 'Developer.openProcessExplorer':
     case 'Developer.downloadViewletState':
-      return MODULE_DEVELOPER
+      return ModuleId.Developer
     case 'Notification.create':
     case 'Notification.dispose':
     case 'Notification.showWithOptions':
     case 'Notification.handleClick':
-      return MODULE_NOTIFICATION
+      return ModuleId.Notification
     case 'ContextMenu.select':
     case 'ContextMenu.show':
     case 'ContextMenu.hide':
@@ -263,8 +213,9 @@ const getModuleId = (commandId) => {
     case 'ContextMenu.focusNext':
     case 'ContextMenu.focusPrevious':
     case 'ContextMenu.selectCurrent':
-    case 'ContextMenu.noop':
-      return MODULE_CONTEXT_MENU
+      return ModuleId.ContextMenu
+    case 'Workbench.unload':
+      return ModuleId.Workbench
     case 'Layout.showSideBar':
     case 'Layout.hideSideBar':
     case 'Layout.toggleSideBar':
@@ -279,49 +230,49 @@ const getModuleId = (commandId) => {
     case 'Layout.handleResize':
     case 'Layout.handleSashPointerMove':
     case 'Layout.handleSashPointerDown':
-      return MODULE_LAYOUT
+      return ModuleId.Layout
     case 'Preferences.openSettingsJson':
     case 'Preferences.openKeyBindingsJson':
     case 'Preferences.hydrate':
-      return MODULE_PREFERENCES
+      return ModuleId.Preferences
     case 'Open.openNativeFolder':
     case 'Open.openUrl':
-      return MODULE_OPEN
+      return ModuleId.Open
     case 'ColorPicker.open':
     case 'ColorPicker.close':
-      return MODULE_COLOR_PICKER
+      return ModuleId.ColorPicker
     case 'KeyBindings.handleKeyBinding':
     case 'KeyBindings.hydrate':
-      return MODULE_KEY_BINDINGS
+      return ModuleId.KeyBindings
     case 'Dialog.close':
     case 'Dialog.handleClick':
     case 'Dialog.openFile':
     case 'Dialog.openFolder':
     case 'Dialog.showAbout':
     case 'Dialog.showMessage':
-      return MODULE_DIALOG
+      return ModuleId.Dialog
     case 2133:
     case 'Viewlet.getAllStates':
     case 'Viewlet.openWidget':
-      return MODULE_VIEWLET
+      return ModuleId.Viewlet
     case 'IconTheme.getIconThemeCss':
     case 'IconTheme.hydrate':
     case 'IconTheme.addIcons':
-      return MODULE_ICON_THEME
+      return ModuleId.IconTheme
     case 'EditorRename.open':
     case 'EditorRename.finish':
     case 'EditorRename.abort':
-      return MODULE_EDITOR_RENAME
+      return ModuleId.EditorRename
     case 'Format.hydrate':
-      return MODULE_FORMAT
+      return ModuleId.Format
     case 3444:
-      return MODULE_LISTENER
+      return ModuleId.Listener
     case 3900:
-      return MODULE_EDITOR_ERROR
+      return ModuleId.EditorError
     case 'Blob.base64StringToBlob':
-      return MODULE_BLOB
+      return ModuleId.Blob
     case 'Audio.playBell':
-      return MODULE_AUDIO
+      return ModuleId.Audio
     case 'TitleBarMenuBar.toggleIndex':
     case 'TitleBarMenuBar.hydrate':
     case 'TitleBarMenuBar.focus':
@@ -339,15 +290,15 @@ const getModuleId = (commandId) => {
     case 'TitleBarMenuBar.handleKeyEnter':
     case 'TitleBarMenuBar.handleKeyEscape':
     case 'TitleBarMenuBar.handleKeyArrowLeft':
-      return MODULE_TITLE_BAR_MENU
+      return ModuleId.TitleBarMenu
     case 'RecentlyOpened.getRecentlyOpened':
     case 'RecentlyOpened.clearRecentlyOpened':
     case 'RecentlyOpened.addToRecentlyOpened':
     case 'RecentlyOpened.hydrate':
-      return MODULE_RECENTLY_OPENED
+      return ModuleId.RecentlyOpened
     case 'ColorTheme.hydrate':
     case 'ColorTheme.setColorTheme':
-      return MODULE_COLOR_THEME
+      return ModuleId.ColorTheme
 
     // TODO this should be in layout module
     case 'Navigation.focusPreviousPart':
@@ -358,27 +309,27 @@ const getModuleId = (commandId) => {
     case 'Navigation.focusSideBar':
     case 'Navigation.focusTitleBar':
     case 'Navigation.focusMain':
-      return MODULE_NAVIGATION
+      return ModuleId.Navigatiom
     case 'ServiceWorker.hydrate':
     case 'ServiceWorker.uninstall':
-      return MODULE_SERVICE_WORKER
+      return ModuleId.ServiceWorker
     case 'SaveState.hydrate':
     case 'SaveState.handleVisibilityChange':
-      return MODULE_SAVE_STATE
+      return ModuleId.SaveState
     case 'SessionStorage.clear':
     case 'SessionStorage.getJson':
-      return MODULE_SESSION_STORAGE
+      return ModuleId.SessionStorage
     case 'CacheStorage.clearCache':
     case 'CacheStorage.setJson':
     case 'CacheStorage.getJson':
-      return MODULE_CACHE_STORAGE
+      return ModuleId.CacheStorage
     case 'LocalStorage.clear':
     case 'LocalStorage.setJson':
     case 'LocalStorage.getJson':
     case 'LocalStorage.getText':
     case 'LocalStorage.setText':
     case 'LocalStorage.getItem':
-      return MODULE_LOCAL_STORAGE
+      return ModuleId.LocalStorage
     case 'Menu.show':
     case 'Menu.hide':
     case 'Menu.selectIndex':
@@ -389,13 +340,13 @@ const getModuleId = (commandId) => {
     case 'Menu.focusIndex':
     case 'Menu.handleMouseEnter':
     case 'Menu.selectItem':
-      return MODULE_MENU
+      return ModuleId.Menu
     case 'Workspace.setPath':
     case 'Workspace.hydrate':
     case 'Workspace.setUri':
-      return MODULE_WORKSPACE
+      return ModuleId.Workspace
     case 'Base64.decode':
-      return MODULE_BASE_64
+      return ModuleId.Base64
     case 'Window.reload':
     case 'Window.minimize':
     case 'Window.maximize':
@@ -404,17 +355,17 @@ const getModuleId = (commandId) => {
     case 'Window.makeScreenshot':
     case 'Window.openNew':
     case 'Window.exit':
-      return MODULE_WINDOW
+      return ModuleId.Window
     case 'EditorDiagnostics.hydrate':
-      return MODULE_EDITOR_DIAGNOSTICS
+      return ModuleId.EditorDiagnostics
     case 'KeyBindingsInitial.getKeyBindings':
-      return MODULE_KEY_BINDINGS_INITIAL
+      return ModuleId.KeyBindingsInitial
     case 'ImagePreview.show':
     case 'ImagePreview.hide':
-      return MODULE_IMAGE_PREVIEW
+      return ModuleId.ImagePreview
     case 'Callback.resolve':
     case 'Callback.reject':
-      return MODULE_CALLBACK
+      return ModuleId.Callback
     case 'QuickPick.selectCurrentIndex':
     case 'QuickPick.handleInput':
     case 'QuickPick.selectIndex':
@@ -423,16 +374,16 @@ const getModuleId = (commandId) => {
     case 'QuickPick.focusPrevious':
     case 'QuickPick.focusNext':
     case 'QuickPick.handleBlur':
-      return MODULE_VIEWLET_QUICK_PICK
+      return ModuleId.ViewletQuickPick
     case 'FindWidget.create':
     case 'FindWidget.dispose':
     case 'FindWidget.setValue':
-      return MODULE_FIND_WIDGET
+      return ModuleId.FindWidget
     case 'SessionReplay.downloadSession':
     case 'SessionReplay.replaySession':
     case 'SessionReplay.replayCurrentSession':
     case 'SessionReplay.openSession':
-      return MODULE_SESSION_REPLAY
+      return ModuleId.SessionReplay
     default:
       throw new Error(`[renderer-worker] command ${commandId} not found`)
   }
