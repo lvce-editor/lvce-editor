@@ -1,0 +1,16 @@
+export const FileSystem = 1
+export const Workspace = 2
+export const Terminal = 3
+export const Search = 5
+export const SearchFile = 6
+export const OutputChannel = 7
+export const Developer = 8
+export const ExtensionManagement = 9
+export const ExtensionHost = 10
+export const Preferences = 11
+export const Native = 12
+export const ClipBoard = 13
+export const TextDocument = 14
+export const WebSocketServer = 16
+export const Platform = 17
+export const RecentlyOpened = 18
