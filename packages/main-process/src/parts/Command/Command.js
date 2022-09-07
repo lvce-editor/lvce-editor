@@ -1,56 +1,23 @@
-const MODULE_WINDOW = 1
-const MODULE_ELECTRON_WINDOW_ABOUT = 2
-const MODULE_DIALOG = 3
-const MODULE_DEVELOPER = 4
-const MODULE_BEEP = 5
-const MODULE_APP_WINDOW = 6
-const MODULE_APP = 7
-const MODULE_ELECTRON_WINDOW_PROCESS_EXPLORER = 8
+const ModuleId = require('../ModuleId/ModuleId.js')
+const Module = require('../Module/Module.js')
 
 const commands = Object.create(null)
 
 const pendingModules = Object.create(null)
 
-const loadModule = async (moduleId) => {
-  switch (moduleId) {
-    case MODULE_WINDOW:
-      return require('../ElectronWindow/ElectronWindow.ipc.js')
-    case MODULE_ELECTRON_WINDOW_ABOUT:
-      return require('../ElectronWindowAbout/ElectronWindowAbout.ipc.js')
-    case MODULE_DIALOG:
-      return require('../ElectronDialog/ElectronDialog.ipc.js')
-    case MODULE_DEVELOPER:
-      return require('../ElectronDeveloper/ElectronDeveloper.ipc.js')
-    case MODULE_BEEP:
-      return require('../ElectronBeep/ElectronBeep.js')
-    case MODULE_APP_WINDOW:
-      return require('../AppWindow/AppWindow.ipc.js')
-    case MODULE_APP:
-      return require('../App/App.ipc.js')
-    case MODULE_ELECTRON_WINDOW_PROCESS_EXPLORER:
-      return require('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
-    default:
-      throw new Error('unknown module')
-  }
-}
 const initializeModule = (module) => {
-  if (typeof module.__initialize__ !== 'function') {
-    if (module.Commands) {
-      for (const [key, value] of Object.entries(module.Commands)) {
-        register(key, value)
-      }
-      return
+  if (module.Commands) {
+    for (const [key, value] of Object.entries(module.Commands)) {
+      register(key, value)
     }
-    throw new Error(
-      `module ${module.name} is missing an initialize function and commands`
-    )
+    return
   }
-  return module.__initialize__()
+  throw new Error(`module ${module.name} is missing commands`)
 }
 
 const getOrLoadModule = (moduleId) => {
   if (!pendingModules[moduleId]) {
-    const importPromise = loadModule(moduleId)
+    const importPromise = Module.load(moduleId)
     pendingModules[moduleId] = importPromise.then(initializeModule)
   }
   return pendingModules[moduleId]
@@ -60,7 +27,7 @@ const getModuleId = (commandId) => {
   switch (commandId) {
     case 'ElectronApp.exit':
     case 'App.exit':
-      return MODULE_APP
+      return ModuleId.App
     case 'ElectronWindow.minimize':
     case 'ElectronWindow.maximize':
     case 'ElectronWindow.toggleDevtools':
@@ -68,21 +35,21 @@ const getModuleId = (commandId) => {
     case 'ElectronWindow.unmaximize':
     case 'ElectronWindow.close':
     case 'ElectronWindow.reload':
-      return MODULE_WINDOW
+      return ModuleId.Window
     case 'ElectronDeveloper.getPerformanceEntries':
     case 'ElectronDeveloper.crashMainProcess':
-      return MODULE_DEVELOPER
+      return ModuleId.Developer
     case 'AppWindow.createAppWindow':
-      return MODULE_APP_WINDOW
+      return ModuleId.AppWindow
     case 'ElectronWindowProcessExplorer.open':
-      return MODULE_ELECTRON_WINDOW_PROCESS_EXPLORER
+      return ModuleId.ElectronWindowProcessExplorer
     case 'ElectronWindowAbout.open':
-      return MODULE_ELECTRON_WINDOW_ABOUT
+      return ModuleId.ElectronWindowAbout
     case 'ElectronDialog.showOpenDialog':
     case 'ElectronDialog.showMessageBox':
-      return MODULE_DIALOG
+      return ModuleId.Dialog
     case 'ElectronBeep.beep':
-      return MODULE_BEEP
+      return ModuleId.Beep
     default:
       throw new Error(`method not found ${commandId}`)
   }

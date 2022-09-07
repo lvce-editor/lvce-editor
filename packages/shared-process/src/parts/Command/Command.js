@@ -1,82 +1,23 @@
-const MODULE_FILE_SYSTEM = 1
-const MODULE_WORKSPACE = 2
-const MODULE_TERMINAL = 3
-const MODULE_SEARCH = 5
-const MODULE_SEARCH_FILE = 6
-const MODULE_OUTPUT_CHANNEL = 7
-const MODULE_DEVELOPER = 8
-const MODULE_EXTENSION_MANAGEMENT = 9
-const MODULE_EXTENSION_HOST = 10
-const MODULE_PREFERENCES = 11
-const MODULE_NATIVE = 12
-const MODULE_CLIPBOARD = 13
-const MODULE_TEXT_DOCUMENT = 14
-const MODULE_WEBSOCKET_SERVER = 16
-const MODULE_PLATFORM = 17
-const MODULE_RECENTLY_OPENED = 18
+import * as ModuleId from '../ModuleId/ModuleId.js'
+import * as Module from '../Module/Module.js'
 
 const commands = Object.create(null)
 const invocables = Object.create(null)
-
 const pendingModules = Object.create(null)
 
-const loadModule = (moduleId) => {
-  switch (moduleId) {
-    case MODULE_FILE_SYSTEM:
-      return import('../FileSystem/FileSystem.ipc.js')
-    case MODULE_WORKSPACE:
-      return import('../Workspace/Workspace.ipc.js')
-    case MODULE_TERMINAL:
-      return import('../Terminal/Terminal.ipc.js')
-    case MODULE_SEARCH:
-      return import('../Search/Search.ipc.js')
-    case MODULE_SEARCH_FILE:
-      return import('../SearchFile/SearchFile.ipc.js')
-    case MODULE_OUTPUT_CHANNEL:
-      return import('../OutputChannel/OutputChannel.ipc.js')
-    case MODULE_DEVELOPER:
-      return import('../Developer/Developer.ipc.js')
-    case MODULE_EXTENSION_MANAGEMENT:
-      return import('../ExtensionManagement/ExtensionManagement.ipc.js')
-    case MODULE_EXTENSION_HOST:
-      return import('../ExtensionHost/ExtensionHost.ipc.js')
-    case MODULE_PREFERENCES:
-      return import('../Preferences/Preferences.ipc.js')
-    case MODULE_NATIVE:
-      return import('../Native/Native.ipc.js')
-    case MODULE_CLIPBOARD:
-      return import('../ClipBoard/ClipBoard.ipc.js')
-    case MODULE_TEXT_DOCUMENT:
-      return import('../TextDocument/TextDocument.ipc.js')
-    case MODULE_WEBSOCKET_SERVER:
-      return import('../WebSocketServer/WebSocketServer.ipc.js')
-    case MODULE_PLATFORM:
-      return import('../Platform/Platform.ipc.js')
-    case MODULE_RECENTLY_OPENED:
-      return import('../RecentlyOpened/RecentlyOpened.ipc.js')
-    default:
-      throw new Error(`unknown module ${moduleId}`)
-  }
-}
-
 const initializeModule = (module) => {
-  if (typeof module.__initialize__ !== 'function') {
-    if (module.Commands) {
-      for (const [key, value] of Object.entries(module.Commands)) {
-        register(key, value)
-      }
-      return
+  if (module.Commands) {
+    for (const [key, value] of Object.entries(module.Commands)) {
+      register(key, value)
     }
-    throw new Error(
-      `module ${module.name} is missing an initialize function and commands`
-    )
+    return
   }
-  return module.__initialize__()
+  throw new Error(`module ${module.name} is missing commands`)
 }
 
 const getOrLoadModule = (moduleId) => {
   if (!pendingModules[moduleId]) {
-    const importPromise = loadModule(moduleId)
+    const importPromise = Module.load(moduleId)
     pendingModules[moduleId] = importPromise
       .then(initializeModule)
       .catch((error) => {
@@ -100,15 +41,15 @@ const getModuleId = (commandId) => {
     case 'FileSystem.remove':
     case 'FileSystem.rename':
     case 'FileSystem.writeFile':
-      return MODULE_FILE_SYSTEM
+      return ModuleId.FileSystem
     case 'Workspace.resolveRoot':
     case 'Workspace.getHomeDir':
-      return MODULE_WORKSPACE
+      return ModuleId.Workspace
     case 'Native.openFolder':
-      return MODULE_NATIVE
+      return ModuleId.Native
     case 'ClipBoard.readFiles':
     case 'ClipBoard.writeFiles':
-      return MODULE_CLIPBOARD
+      return ModuleId.ClipBoard
     case 'Developer.sharedProcessStartupPerformance':
     case 'Developer.sharedProcessMemoryUsage':
     case 'Developer.allocateMemory':
@@ -117,7 +58,7 @@ const getModuleId = (commandId) => {
     case 'Developer.createProfile':
     case 'Developer.getNodeStartupTiming':
     case 'Developer.getNodeStartupTime':
-      return MODULE_DEVELOPER
+      return ModuleId.Developer
     case 'ExtensionHost.executeTabCompletionProvider':
     case 'ExtensionHostLanguages.getLanguages':
     case 'ExtensionHostKeyBindings.getKeyBindings':
@@ -162,7 +103,7 @@ const getModuleId = (commandId) => {
     case 'ExtensionHostClosingTag.executeClosingTagProvider':
     case 'ExtensionHost.sourceControlGetChangedFiles':
     case 'ExtensionHostSemanticTokens.executeSemanticTokenProvider':
-      return MODULE_EXTENSION_HOST
+      return ModuleId.ExtensionHost
     case 'ExtensionHost.getColorThemeJson':
     case 'ExtensionHost.getColorThemeNames':
     case 'ExtensionHost.getColorThemes':
@@ -176,9 +117,9 @@ const getModuleId = (commandId) => {
     case 'ExtensionManagement.getExtensions':
     case 'ExtensionManagement.install':
     case 'ExtensionManagement.uninstall':
-      return MODULE_EXTENSION_MANAGEMENT
+      return ModuleId.ExtensionManagement
     case 'Search.search':
-      return MODULE_SEARCH
+      return ModuleId.Search
     case 'Platform.getAppDir':
     case 'Platform.getBuiltinExtensionsPath':
     case 'Platform.getCachedExtensionsPath':
@@ -194,25 +135,25 @@ const getModuleId = (commandId) => {
     case 'Platform.getTestPath':
     case 'Platform.getUserSettingsPath':
     case 'Platform.setEnvironmentVariables':
-      return MODULE_PLATFORM
+      return ModuleId.Platform
     case 'Terminal.create':
     case 'Terminal.dispose':
     case 'Terminal.write':
     case 'Terminal.resize':
-      return MODULE_TERMINAL
+      return ModuleId.Terminal
     case 'Preferences.getAll':
-      return MODULE_PREFERENCES
+      return ModuleId.Preferences
     case 4820:
-      return MODULE_TEXT_DOCUMENT
+      return ModuleId.TextDocument
     case 5621:
-      return MODULE_WEBSOCKET_SERVER
+      return ModuleId.WebSocketServer
     case 'SearchFile.searchFile':
-      return MODULE_SEARCH_FILE
+      return ModuleId.SearchFile
     case 'OutputChannel.open':
     case 'OutputChannel.close':
-      return MODULE_OUTPUT_CHANNEL
+      return ModuleId.OutputChannel
     case 'RecentlyOpened.addPath':
-      return MODULE_RECENTLY_OPENED
+      return ModuleId.RecentlyOpened
     default:
       throw new Error(`[shared-process] command ${commandId} not found`)
   }

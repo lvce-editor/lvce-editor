@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -56,7 +57,7 @@ test('updateDirents', () => {
     {
       name: '.gitkeep',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/.gitkeep',
       setSize: 5,
       posInSet: 1,
@@ -64,7 +65,7 @@ test('updateDirents', () => {
     {
       name: 'another-folder',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/another-folder',
       setSize: 5,
       posInSet: 2,
@@ -72,7 +73,7 @@ test('updateDirents', () => {
     {
       name: 'index.css',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.css',
       setSize: 5,
       posInSet: 3,
@@ -80,7 +81,7 @@ test('updateDirents', () => {
     {
       name: 'index.html',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.html',
       setSize: 5,
       posInSet: 4,
@@ -88,7 +89,7 @@ test('updateDirents', () => {
     {
       name: 'nested',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/nested',
       setSize: 5,
       posInSet: 5,
@@ -111,7 +112,7 @@ test('updateDirents', () => {
     {
       name: '.gitkeep',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/.gitkeep',
       setSize: 5,
       posInSet: 1,
@@ -119,7 +120,7 @@ test('updateDirents', () => {
     {
       name: 'another-folder',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/another-folder',
       setSize: 5,
       posInSet: 2,
@@ -127,7 +128,7 @@ test('updateDirents', () => {
     {
       name: 'index.css',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.css',
       setSize: 5,
       posInSet: 3,
@@ -135,7 +136,7 @@ test('updateDirents', () => {
     {
       name: 'index.html',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.html',
       setSize: 5,
       posInSet: 4,
@@ -143,7 +144,7 @@ test('updateDirents', () => {
     {
       name: 'nested',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/nested',
       setSize: 5,
       posInSet: 5,
@@ -153,7 +154,7 @@ test('updateDirents', () => {
     {
       name: '.gitkeep',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/.gitkeep',
       setSize: 5,
       posInSet: 1,
@@ -161,7 +162,7 @@ test('updateDirents', () => {
     {
       name: 'another-folder',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/another-folder',
       setSize: 5,
       posInSet: 2,
@@ -169,7 +170,7 @@ test('updateDirents', () => {
     {
       name: 'index.css',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.css',
       setSize: 5,
       posInSet: 3,
@@ -177,7 +178,7 @@ test('updateDirents', () => {
     {
       name: 'index.html',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.html',
       setSize: 5,
       posInSet: 4,
@@ -185,7 +186,7 @@ test('updateDirents', () => {
     {
       name: 'nested',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/nested',
       setSize: 5,
       posInSet: 5,
@@ -193,7 +194,7 @@ test('updateDirents', () => {
     {
       name: 'fileA.ts',
       depth: 2,
-      type: 'file',
+      type: DirentType.File,
       path: '/nested/fileA.ts',
       setSize: 4,
       posInSet: 1,
@@ -201,7 +202,7 @@ test('updateDirents', () => {
     {
       name: 'fileB.ts',
       depth: 2,
-      type: 'file',
+      type: DirentType.File,
       path: '/nested/fileB.ts',
       setSize: 4,
       posInSet: 2,
@@ -209,7 +210,7 @@ test('updateDirents', () => {
     {
       name: 'fileC.ts',
       depth: 2,
-      type: 'file',
+      type: DirentType.File,
       path: '/nested/fileC.ts',
       setSize: 4,
       posInSet: 3,
@@ -217,7 +218,7 @@ test('updateDirents', () => {
     {
       name: 'very',
       depth: 2,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/nested/very',
       setSize: 4,
       posInSet: 4,
@@ -243,7 +244,7 @@ test.skip('updateDirents - bug with icons', () => {
     {
       name: '.gitkeep',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/.gitkeep',
       setSize: 5,
       posInSet: 1,
@@ -251,7 +252,7 @@ test.skip('updateDirents - bug with icons', () => {
     {
       name: 'another-folder',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/another-folder',
       setSize: 5,
       posInSet: 2,
@@ -259,7 +260,7 @@ test.skip('updateDirents - bug with icons', () => {
     {
       name: 'index.css',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.css',
       setSize: 5,
       posInSet: 3,
@@ -267,7 +268,7 @@ test.skip('updateDirents - bug with icons', () => {
     {
       name: 'index.html',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.html',
       setSize: 5,
       posInSet: 4,
@@ -275,7 +276,7 @@ test.skip('updateDirents - bug with icons', () => {
     {
       name: 'nested',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/nested',
       setSize: 5,
       posInSet: 5,
@@ -285,7 +286,7 @@ test.skip('updateDirents - bug with icons', () => {
     {
       name: '.gitkeep',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/.gitkeep',
       setSize: 5,
       posInSet: 1,
@@ -293,7 +294,7 @@ test.skip('updateDirents - bug with icons', () => {
     {
       name: 'another-folder',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/another-folder',
       setSize: 5,
       posInSet: 2,
@@ -301,7 +302,7 @@ test.skip('updateDirents - bug with icons', () => {
     {
       name: 'index.css',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.css',
       setSize: 5,
       posInSet: 3,
@@ -309,7 +310,7 @@ test.skip('updateDirents - bug with icons', () => {
     {
       name: 'index.html',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.html',
       setSize: 5,
       posInSet: 4,
@@ -317,7 +318,7 @@ test.skip('updateDirents - bug with icons', () => {
     {
       name: 'nested',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/nested',
       setSize: 5,
       posInSet: 5,
@@ -325,7 +326,7 @@ test.skip('updateDirents - bug with icons', () => {
     {
       name: 'fileA.ts',
       depth: 2,
-      type: 'file',
+      type: DirentType.File,
       path: '/nested/fileA.ts',
       setSize: 4,
       posInSet: 1,
@@ -333,7 +334,7 @@ test.skip('updateDirents - bug with icons', () => {
     {
       name: 'fileB.ts',
       depth: 2,
-      type: 'file',
+      type: DirentType.File,
       path: '/nested/fileB.ts',
       setSize: 4,
       posInSet: 2,
@@ -341,7 +342,7 @@ test.skip('updateDirents - bug with icons', () => {
     {
       name: 'fileC.ts',
       depth: 2,
-      type: 'file',
+      type: DirentType.File,
       path: '/nested/fileC.ts',
       setSize: 4,
       posInSet: 3,
@@ -349,7 +350,7 @@ test.skip('updateDirents - bug with icons', () => {
     {
       name: 'very',
       depth: 2,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/nested/very',
       setSize: 4,
       posInSet: 4,
@@ -374,7 +375,7 @@ test('updateDirents - bug with folder attributes on files', () => {
     {
       name: 'file-1',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/file-1',
       setSize: 1,
       posInSet: 1,
@@ -386,7 +387,7 @@ test('updateDirents - bug with folder attributes on files', () => {
     {
       name: 'folder-1',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/folder-1',
       setSize: 1,
       posInSet: 1,
@@ -398,7 +399,7 @@ test('updateDirents - bug with folder attributes on files', () => {
     {
       name: 'file-1',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/file-1',
       setSize: 1,
       posInSet: 1,
@@ -414,7 +415,7 @@ test('focusIndex', () => {
     {
       name: 'index.css',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.css',
       setSize: 2,
       posInSet: 1,
@@ -422,7 +423,7 @@ test('focusIndex', () => {
     {
       name: 'index.html',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.html',
       setSize: 2,
       posInSet: 2,
@@ -441,7 +442,7 @@ test('event - contextmenu', () => {
     {
       name: '.gitkeep',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/.gitkeep',
       setSize: 5,
       posInSet: 1,
@@ -449,7 +450,7 @@ test('event - contextmenu', () => {
     {
       name: 'another-folder',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/another-folder',
       setSize: 5,
       posInSet: 2,
@@ -457,7 +458,7 @@ test('event - contextmenu', () => {
     {
       name: 'index.css',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.css',
       setSize: 5,
       posInSet: 3,
@@ -465,7 +466,7 @@ test('event - contextmenu', () => {
     {
       name: 'index.html',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.html',
       setSize: 5,
       posInSet: 4,
@@ -473,7 +474,7 @@ test('event - contextmenu', () => {
     {
       name: 'nested',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/nested',
       setSize: 5,
       posInSet: 5,
@@ -506,7 +507,7 @@ test('event - contextmenu - activated via keyboard', () => {
     {
       name: 'index.css',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.css',
       setSize: 1,
       posInSet: 1,
@@ -548,7 +549,7 @@ test('event - click', () => {
     {
       name: '.gitkeep',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/.gitkeep',
       setSize: 5,
       posInSet: 1,
@@ -556,7 +557,7 @@ test('event - click', () => {
     {
       name: 'another-folder',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/another-folder',
       setSize: 5,
       posInSet: 2,
@@ -564,7 +565,7 @@ test('event - click', () => {
     {
       name: 'index.css',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.css',
       setSize: 5,
       posInSet: 3,
@@ -572,7 +573,7 @@ test('event - click', () => {
     {
       name: 'index.html',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.html',
       setSize: 5,
       posInSet: 4,
@@ -580,7 +581,7 @@ test('event - click', () => {
     {
       name: 'nested',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/nested',
       setSize: 5,
       posInSet: 5,
@@ -608,13 +609,13 @@ test('event - click on wrapper div', () => {
     {
       name: 'index.css',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.css',
     },
     {
       name: 'index.html',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.html',
     },
   ])
@@ -638,31 +639,31 @@ test('event - right click', () => {
     {
       name: '.gitkeep',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/.gitkeep',
     },
     {
       name: 'another-folder',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/another-folder',
     },
     {
       name: 'index.css',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.css',
     },
     {
       name: 'index.html',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.html',
     },
     {
       name: 'nested',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/nested',
     },
   ])
@@ -685,31 +686,31 @@ test('event - blur', () => {
     {
       name: '.gitkeep',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/.gitkeep',
     },
     {
       name: 'another-folder',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/another-folder',
     },
     {
       name: 'index.css',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.css',
     },
     {
       name: 'index.html',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/index.html',
     },
     {
       name: 'nested',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/nested',
     },
   ])
@@ -736,7 +737,7 @@ test('accessibility - dirents should have ariaSetSize, ariaPosInSet, ariaLevel a
     {
       name: 'file-1',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/file-1',
       setSize: 2,
       posInSet: 1,
@@ -744,7 +745,7 @@ test('accessibility - dirents should have ariaSetSize, ariaPosInSet, ariaLevel a
     {
       name: 'folder-2',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/folder-2',
       setSize: 2,
       posInSet: 2,
@@ -777,7 +778,7 @@ test('showRenameInputBox', () => {
     {
       name: 'file-1',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/file-1',
       setSize: 2,
       posInSet: 1,
@@ -785,7 +786,7 @@ test('showRenameInputBox', () => {
     {
       name: 'folder-2',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/folder-2',
       setSize: 2,
       posInSet: 2,
@@ -808,7 +809,7 @@ test('hideRenameInputBox', () => {
     {
       name: 'file-1',
       depth: 1,
-      type: 'file',
+      type: DirentType.File,
       path: '/file-1',
       setSize: 2,
       posInSet: 1,
@@ -816,7 +817,7 @@ test('hideRenameInputBox', () => {
     {
       name: 'folder-2',
       depth: 1,
-      type: 'directory',
+      type: DirentType.Directory,
       path: '/folder-2',
       setSize: 2,
       posInSet: 2,
@@ -826,7 +827,7 @@ test('hideRenameInputBox', () => {
   ViewletExplorer.hideRenameBox(state, 0, {
     name: 'file-1',
     depth: 1,
-    type: 'file',
+    type: DirentType.File,
     path: '/file-1',
     setSize: 2,
     posInSet: 1,
