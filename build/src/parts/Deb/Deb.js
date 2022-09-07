@@ -202,11 +202,18 @@ const createDeb = async () => {
 }
 
 const printDebSize = async () => {
-  const debArch = 'amd64'
-  const size = await Stat.getFileSize(
-    `build/.tmp/linux/deb/${debArch}/deb/app.deb`
-  )
-  console.info(`deb size: ${size}`)
+  try {
+    const debArch = 'amd64'
+    const size = await Stat.getFileSize(
+      Path.absolute(
+        `build/.tmp/releases/${Product.applicationName}-${debArch}.deb`
+      )
+    )
+    console.info(`deb size: ${size}`)
+  } catch (error) {
+    // @ts-ignore
+    throw new VError(error, `Failed to print deb size`)
+  }
 }
 
 const isFakeRoot = () => {
