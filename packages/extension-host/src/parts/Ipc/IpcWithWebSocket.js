@@ -44,10 +44,6 @@ export const listen = async (processIpc) => {
       upgradeCallback
     )
   })
-  console.log('[extension host] got web socket')
-
-  console.log({ webSocket })
-
   return {
     send(message) {
       const stringifiedMessage = JSON.stringify(message)
