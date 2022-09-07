@@ -209,7 +209,7 @@ const getModuleId = (commandId) => {
     case 'ContextMenu.ModuleId.Window':
     case 'ContextMenu.hide':
     case 'ContextMenu.focusFirst':
-      ModuleId.ContextMenu
+      return ModuleId.ContextMenu
     case 'ContextMenu.focusLast':
     case 'ContextMenu.ModuleId.Layout':
     case 'ContextMenu.focusPrevious':
