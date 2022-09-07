@@ -47,37 +47,41 @@ const getPreferences = async () => {
 }
 
 export const hydrate = async () => {
-  // TODO should configuration be together with all other preferences (e.g. selecting color theme code is not needed on startup)
-  // TODO probably not all preferences need to be kept in memory
-  const preferences = await getPreferences()
-  Object.assign(state, preferences)
+  try {
+    // TODO should configuration be together with all other preferences (e.g. selecting color theme code is not needed on startup)
+    // TODO probably not all preferences need to be kept in memory
+    const preferences = await getPreferences()
+    Object.assign(state, preferences)
 
-  const styles = []
-  const fontSize = preferences['editor.fontSize']
-  if (fontSize) {
-    styles.push(`  --EditorFontSize: ${fontSize}px;`)
-  }
-  const fontFamily = preferences['editor.fontFamily']
-  if (fontFamily) {
-    styles.push(`  --EditorFontFamily: ${fontFamily};`)
-  }
-  const lineHeight = preferences['editor.lineHeight']
-  if (lineHeight) {
-    styles.push(`  --EditorLineHeight: ${lineHeight}px;`)
-  }
-  const letterSpacing = preferences['editor.letterSpacing']
-  if (letterSpacing) {
-    styles.push(`  --EditorLetterSpacing: ${letterSpacing}px;`)
-  }
-  const css = `:root {
+    const styles = []
+    const fontSize = preferences['editor.fontSize']
+    if (fontSize) {
+      styles.push(`  --EditorFontSize: ${fontSize}px;`)
+    }
+    const fontFamily = preferences['editor.fontFamily']
+    if (fontFamily) {
+      styles.push(`  --EditorFontFamily: ${fontFamily};`)
+    }
+    const lineHeight = preferences['editor.lineHeight']
+    if (lineHeight) {
+      styles.push(`  --EditorLineHeight: ${lineHeight}px;`)
+    }
+    const letterSpacing = preferences['editor.letterSpacing']
+    if (letterSpacing) {
+      styles.push(`  --EditorLetterSpacing: ${letterSpacing}px;`)
+    }
+    const css = `:root {
 ${styles.join('\n')}
 }`
-  // TODO make Css.setInlineStyle a separate module in renderer-worker
-  await RendererProcess.invoke(
-    /* Css.setInlineStyle */ 'Css.setInlineStyle',
-    /* id */ 'Settings',
-    /* css */ css
-  )
+    // TODO make Css.setInlineStyle a separate module in renderer-worker
+    await RendererProcess.invoke(
+      /* Css.setInlineStyle */ 'Css.setInlineStyle',
+      /* id */ 'Settings',
+      /* css */ css
+    )
+  } catch (error) {
+    console.error(error)
+  }
 }
 
 export const get = (key) => {
