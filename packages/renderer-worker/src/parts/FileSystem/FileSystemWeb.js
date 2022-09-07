@@ -1,3 +1,5 @@
+import * as DirentType from '../DirentType/DirentType.js'
+
 // TODO when it rejects, it should throw a custom error,
 // FileSystemError
 
@@ -261,7 +263,7 @@ const getDirent = (path, relativePath) => {
   const rest = path.slice(relativePath.length + 1)
   if (rest.includes('/')) {
     return {
-      type: 'directory',
+      type: DirentType.Directory,
       name: rest.slice(0, rest.indexOf('/')),
     }
   }

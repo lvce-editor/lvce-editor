@@ -1,5 +1,6 @@
 import * as MenuEntriesExplorer from '../src/parts/MenuEntries/MenuEntriesExplorer.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
+import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
 test('getMenuEntries - no focused dirent', async () => {
   ViewletStates.set('Explorer', {
@@ -32,7 +33,7 @@ test('getMenuEntries - focused folder', async () => {
         {
           name: 'sample-folder',
           depth: 1,
-          type: 'directory',
+          type: DirentType.Directory,
           path: '/sample-folder',
         },
       ],
