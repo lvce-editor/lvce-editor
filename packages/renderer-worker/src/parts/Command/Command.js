@@ -225,6 +225,7 @@ const getModuleId = (commandId) => {
     case 'FileSystem.readDirWithFileTypes':
     case 'FileSystem.writeFile':
     case 'FileSystem.mkdir':
+    case 'FileSystem.getPathSeparator':
       return MODULE_FILE_SYSTEM
     case 'Developer.getStartupPerformanceContent':
     case 'Developer.getMemoryUsageContent':

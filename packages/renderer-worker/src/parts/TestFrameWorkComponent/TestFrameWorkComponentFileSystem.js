@@ -36,9 +36,8 @@ export const createExecutable = async (content) => {
 }
 
 export const createExecutableFrom = async (path) => {
-  const pathSeparator = await Command.execute('FileSystem.getPathSeparator')
   const testPath = await Platform.getTestPath()
-  const absolutePath = testPath + pathSeparator + path
-  const content = await Command.execute('FileSystem.readFile', absolutePath)
+  const absolutePath = testPath + '/' + path
+  const content = await Command.execute('Ajax.getText', absolutePath)
   return createExecutable(content)
 }
