@@ -18,7 +18,7 @@ export const load = (moduleId) => {
     case ModuleId.KeyBindings: return import('../KeyBindings/KeyBindings.ipc.js')
     case ModuleId.Layout: return import('../Layout/Layout.ipc.js')
     case ModuleId.Location: return import('../Location/Location.ipc.js')
-    case ModuleId.Menu: return import('../Meta/Meta.ipc.js')
+    case ModuleId.Meta: return import('../Meta/Meta.ipc.js')
     case ModuleId.Menu: return import('../OldMenu/Menu.ipc.js')
     case ModuleId.Notification: return import('../Notification/Notification.ipc.js')
     case ModuleId.Open: return import('../Open/Open.ipc.js')
