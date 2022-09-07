@@ -11,7 +11,7 @@ test('sample.text-search-provider', async () => {
   await SideBar.open('Search')
 
   // act
-  await Search.setValue('abc')
+  await Search.setValue('Doc')
 
   // assert
   const results = Locator(`.Viewlet[data-viewlet-id="Search"] .TreeItem`)

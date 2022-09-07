@@ -8,6 +8,8 @@ const textSearchProvider = {
           {
             absoluteOffset: 208,
             preview: '    <title>Document</title>',
+            rangeStart: 11,
+            rangeEnd: 14,
           },
         ],
       ],

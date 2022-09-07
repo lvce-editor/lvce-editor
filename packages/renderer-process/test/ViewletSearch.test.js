@@ -98,7 +98,10 @@ test('setResults - multiple results in one file', () => {
   const state = ViewletSearch.create()
   ViewletSearch.setResults(state, [
     {
-      name: './result-1.txt',
+      text: './result-1.txt',
+    },
+    {
+      text: './result-2.txt',
     },
   ])
   expect(state.$SearchResults.children).toHaveLength(1)
@@ -108,10 +111,10 @@ test('setResults - multiple results in multiple files', () => {
   const state = ViewletSearch.create()
   ViewletSearch.setResults(state, [
     {
-      name: './result-1.txt',
+      text: './result-1.txt',
     },
     {
-      name: './result-2.txt',
+      text: './result-2.txt',
     },
   ])
   expect(state.$SearchResults.children).toHaveLength(2)
@@ -121,7 +124,7 @@ test('event - contextmenu - activated via keyboard', () => {
   const state = ViewletSearch.create()
   ViewletSearch.setResults(state, [
     {
-      name: './result-1.txt',
+      text: './result-1.txt',
     },
   ])
   // @ts-ignore

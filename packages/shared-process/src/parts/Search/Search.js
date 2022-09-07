@@ -58,8 +58,27 @@ export const search = async (searchDir, searchString) => {
     let buffer = ''
     let stats = {}
     let numberOfResults = 0
-    // TODO use pipeline / transform stream maybe
-    childProcess.stdout.on('data', (chunk) => {
+
+    const handleLineBegin = (parsedLine) => {
+      allSearchResults[parsedLine.data.path.text] = []
+    }
+
+    const handleLineMatch = (parsedLine) => {
+      console.log({
+        parsedLine: parsedLine.data,
+        sub: parsedLine.data.submatches,
+      })
+      numberOfResults++
+      allSearchResults[parsedLine.data.path.text].push(
+        toSearchResult(parsedLine)
+      )
+    }
+
+    const handleLineSummary = (parsedLine) => {
+      stats = parsedLine.data
+    }
+
+    const handleStdoutData = (chunk) => {
       buffer += chunk
       const lines = buffer.split('\n')
       // @ts-ignore
@@ -67,19 +86,14 @@ export const search = async (searchDir, searchString) => {
       for (const line of lines) {
         const parsedLine = JSON.parse(line)
         switch (parsedLine.type) {
-          case ParsedLineType.Begin: {
-            allSearchResults[parsedLine.data.path.text] = []
+          case ParsedLineType.Begin:
+            handleLineBegin(parsedLine)
             break
-          }
-          case ParsedLineType.Match: {
-            numberOfResults++
-            allSearchResults[parsedLine.data.path.text].push(
-              toSearchResult(parsedLine)
-            )
+          case ParsedLineType.Match:
+            handleLineMatch(parsedLine)
             break
-          }
           case ParsedLineType.Summary:
-            stats = parsedLine.data
+            handleLineSummary(parsedLine)
             break
           default:
             break
@@ -88,20 +102,25 @@ export const search = async (searchDir, searchString) => {
       if (numberOfResults > MAX_SEARCH_RESULTS) {
         childProcess.kill()
       }
-    })
-    childProcess.once('close', () => {
+    }
+    const handleClose = () => {
+      // console.log(JSON.stringify({ allSearchResults }, null, 2))
       resolve({
         results: Object.entries(allSearchResults),
         stats,
       })
-    })
-    childProcess.once('error', (error) => {
+    }
+    const handleError = (error) => {
       // TODO check type of error
       console.error(error)
       resolve({
         results: [],
         stats,
       })
-    })
+    }
+    // TODO use pipeline / transform stream maybe
+    childProcess.stdout.on('data', handleStdoutData)
+    childProcess.once('close', handleClose)
+    childProcess.once('error', handleError)
   })
 }

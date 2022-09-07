@@ -36,6 +36,7 @@ test('search', async () => {
           {
             absoluteOffset: 208,
             preview: '    <title>Document</title>\n',
+            subMatches: [],
           },
         ],
       ],

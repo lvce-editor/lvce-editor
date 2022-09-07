@@ -83,6 +83,62 @@ test('handleInput - empty results', async () => {
   })
 })
 
+test('handleInput - some results', async () => {
+  const state = ViewletSearch.create()
+  // @ts-ignore
+  TextSearch.textSearch.mockImplementation(() => {
+    return [
+      [
+        './packages/shared-process/tsconfig.json',
+        [
+          {
+            preview: '  "include": ["src", "test"]\n',
+            absoluteOffset: 465,
+          },
+        ],
+      ],
+      [
+        './README.md',
+        [
+          {
+            preview: 'npm test\n',
+            absoluteOffset: 122,
+          },
+        ],
+      ],
+    ]
+  })
+  expect(await ViewletSearch.handleInput(state, 'test search')).toMatchObject({
+    value: 'test search',
+    items: [
+      {
+        icon: '',
+        text: '',
+        title: '/packages/shared-process/tsconfig.json',
+        type: 'file',
+      },
+      {
+        icon: '',
+        text: '  "include": ["src", "test"]\n',
+        title: '  "include": ["src", "test"]\n',
+        type: 'preview',
+      },
+      {
+        icon: '',
+        text: '',
+        title: '/README.md',
+        type: 'file',
+      },
+      {
+        icon: '',
+        text: 'npm test\n',
+        title: 'npm test\n',
+        type: 'preview',
+      },
+    ],
+  })
+})
+
 test('handleInput - error', async () => {
   // @ts-ignore
   TextSearch.textSearch.mockImplementation(() => {

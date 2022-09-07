@@ -80,15 +80,6 @@ const getResultCounts = (results) => {
 
 // TODO
 export const setValue = async (state, value) => {
-  // state.value = value
-  // TODO use Id module
-  // state.searchId = Math.random()
-  // SharedProcess.send(
-  //   /* Search.search */ 907771,
-  //   /* id */ state.id,
-  //   /* searchId */ state.searchId
-  // )
-  // TODO
   try {
     const root = Workspace.state.workspacePath
     const results = await TextSearch.textSearch(root, value)
@@ -138,6 +129,7 @@ const compareResults = (resultA, resultB) => {
 }
 
 const toDisplayResults = (results) => {
+  console.log({ results })
   results.sort(compareResults)
   const displayResults = []
   for (const result of results) {
