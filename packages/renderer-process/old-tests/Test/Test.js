@@ -223,6 +223,6 @@ export const getTests = () => {
   ].map((fn) => fn.name)
 }
 
-export const __initialize__ = () => {
-  Command.register(909021, runTests)
+export const Commands = {
+  909021: runTests,
 }

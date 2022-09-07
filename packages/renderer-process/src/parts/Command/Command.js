@@ -6,12 +6,24 @@ export const state = {
   pendingModules: Object.create(null),
 }
 
+const initializeModule = (module) => {
+  if (module.Commands) {
+    for (const [key, value] of Object.entries(module.Commands)) {
+      register(key, value)
+    }
+    return
+  }
+  throw new Error(`module ${module.name} is missing commands`)
+}
+
 const getOrLoadModule = (moduleId) => {
   if (!state.pendingModules[moduleId]) {
     const importPromise = Module.load(moduleId)
-    state.pendingModules[moduleId] = importPromise.then((module) =>
-      module.__initialize__()
-    )
+    state.pendingModules[moduleId] = importPromise
+      .then(initializeModule)
+      .catch((error) => {
+        console.error(error)
+      })
   }
   return state.pendingModules[moduleId]
 }

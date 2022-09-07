@@ -1,17 +1,16 @@
-import * as Command from '../Command/Command.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
-export const __initialize__ = () => {
-  Command.register('Viewlet.refresh', Viewlet.refresh)
-  Command.register('Viewlet.invoke', Viewlet.invoke)
-  Command.register('Viewlet.send', Viewlet.invoke)
-  Command.register('Viewlet.focus', Viewlet.focus)
-  Command.register('Viewlet.dispose', Viewlet.dispose)
-  Command.register('Viewlet.appendViewlet', Viewlet.appendViewlet)
-  Command.register('Viewlet.load', Viewlet.load)
-  Command.register('Viewlet.handleError', Viewlet.handleError)
-  Command.register('Viewlet.sendMultiple', Viewlet.sendMultiple)
-  Command.register('Viewlet.loadModule', Viewlet.loadModule)
-  Command.register('Viewlet.show', Viewlet.show)
-  Command.register('Viewlet.executeCommands', Viewlet.executeCommands)
+export const Commands = {
+  'Viewlet.refresh': Viewlet.refresh,
+  'Viewlet.invoke': Viewlet.invoke,
+  'Viewlet.send': Viewlet.invoke,
+  'Viewlet.focus': Viewlet.focus,
+  'Viewlet.dispose': Viewlet.dispose,
+  'Viewlet.appendViewlet': Viewlet.appendViewlet,
+  'Viewlet.load': Viewlet.load,
+  'Viewlet.handleError': Viewlet.handleError,
+  'Viewlet.sendMultiple': Viewlet.sendMultiple,
+  'Viewlet.loadModule': Viewlet.loadModule,
+  'Viewlet.show': Viewlet.show,
+  'Viewlet.executeCommands': Viewlet.executeCommands,
 }

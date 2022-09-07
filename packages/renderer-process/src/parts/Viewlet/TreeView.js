@@ -1,9 +1,8 @@
 import { findIndex } from '../../shared/findIndex.js'
-import * as Command from '../Command/Command.js'
 import * as Context from '../Context/Context.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as Renderer from '../Renderer/Renderer.js'
 import * as RendererTree from '../Renderer/RendererTree.js'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 
 // class Dirent {
 //   constructor(name, type) {
@@ -289,9 +288,9 @@ const treeViewCollapseAll = () => {
   activeTreeView.collapseAll()
 }
 
-export const __initialize__ = () => {
-  Command.register(3000, treeViewFocusDown)
-  Command.register(3001, treeViewFocusUp)
-  Command.register(3002, treeViewCollapse)
-  Command.register(3003, treeViewCollapseAll)
+export const COmmands = {
+  3000: treeViewFocusDown,
+  3001: treeViewFocusUp,
+  3002: treeViewCollapse,
+  3003: treeViewCollapseAll,
 }
