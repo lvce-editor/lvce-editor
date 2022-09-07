@@ -34,3 +34,8 @@ export const createExecutable = async (content) => {
   await chmod(gitPath, '755')
   return gitPath
 }
+
+export const createExecutableFrom = async (path) => {
+  const content = await Command.execute('FileSystem.readFile', path)
+  return createExecutable(content)
+}
