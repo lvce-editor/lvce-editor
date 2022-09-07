@@ -87,19 +87,9 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
-      # - name: Build archive
-      #   shell: bash
-      #   run: |
-      #     staging="language-features-typescript-${{ needs.create-release.outputs.rg_version }}"
-      #     mv "extension.tar.br" "$staging.tar.br"
-      #     echo "ASSET=$staging.tar.br" >> $GITHUB_ENV
-
-      # - name: Upload release archive
-      #   uses: actions/upload-release-asset@v1.0.1
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     upload_url: ${{ needs.create-release.outputs.upload_url }}
-      #     asset_path: ${{ env.ASSET }}
-      #     asset_name: ${{ env.ASSET }}
-      #     asset_content_type: application/octet-stream
+      - name: Build
+        run: node build/bin/build.js --target=electron-deb --force --release
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: build/.tmp/linux/deb/amd64/deb/lvce-editor-amd64.deb
