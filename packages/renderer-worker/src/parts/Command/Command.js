@@ -7,6 +7,8 @@ export const state = {
 
 const loadModule = (moduleId) => {
   switch (moduleId) {
+    case ModuleId.ContextMenu:
+      return import('../ContextMenu/ContextMenu.ipc.js')
     case ModuleId.Notification:
       return import('../Notification/Notification.ipc.js')
     case ModuleId.Window:
