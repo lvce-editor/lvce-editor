@@ -206,15 +206,15 @@ const getModuleId = (commandId) => {
     case 'Notification.handleClick':
       return ModuleId.Notification
     case 'ContextMenu.select':
-    case 'ContextMenu.ModuleId.Window':
+    case 'ContextMenu.show':
     case 'ContextMenu.hide':
     case 'ContextMenu.focusFirst':
-      return ModuleId.ContextMenu
     case 'ContextMenu.focusLast':
-    case 'ContextMenu.ModuleId.Layout':
+    case 'ContextMenu.focusNext':
     case 'ContextMenu.focusPrevious':
-    case 'ContextMenu.show':
-    case 'ContextMenu.noop':
+    case 'ContextMenu.selectCurrent':
+      return ModuleId.ContextMenu
+    case 'Workbench.unload':
       return ModuleId.Workbench
     case 'Layout.showSideBar':
     case 'Layout.hideSideBar':
