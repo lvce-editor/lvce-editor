@@ -1,9 +1,7 @@
-import * as Command from '../Command/Command.js'
+import * as Assert from '../Assert/Assert.js'
+import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Terminal from '../Terminal/Terminal.js'
-import * as Context from '../Context/Context.js'
-import * as Focus from '../Focus/Focus.js'
-import * as Assert from '../Assert/Assert.js'
 
 // TODO support multiple terminals
 let globalTerminal
@@ -104,6 +102,6 @@ export const write = (data) => {
   Terminal.write(globalTerminal, data)
 }
 
-export const __initialize__ = () => {
-  Command.register(9922, write)
+export const Commands = {
+  9922: write,
 }
