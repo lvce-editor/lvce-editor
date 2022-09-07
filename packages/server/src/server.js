@@ -90,6 +90,12 @@ const serveStatic = (root, skip = '') =>
       if (error && error.code === 'ERR_STREAM_PREMATURE_CLOSE') {
         return
       }
+      // @ts-ignore
+      if (error && error.code === 'EISDIR') {
+        res.writeHead(404)
+        res.end()
+        return
+      }
       console.info('failed to send request', error)
       // TODO it is unclear how to handle errors here
     }
@@ -201,6 +207,12 @@ const serveTests = async (req, res, next) => {
     try {
       await pipeline(createReadStream(join(ROOT, 'static', 'index.html')), res)
     } catch (error) {
+      // @ts-ignore
+      if (error && error.code === 'EISDIR') {
+        res.statusCode = 404
+        res.end()
+        return
+      }
       console.info('failed to send request', error)
       res.statusCode = 500
       // TODO escape error html
