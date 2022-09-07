@@ -1,13 +1,5 @@
 import { existsSync } from 'node:fs'
-import {
-  chmod,
-  link,
-  mkdir,
-  rename,
-  rm,
-  symlink,
-  writeFile,
-} from 'node:fs/promises'
+import { chmod, rename, writeFile } from 'node:fs/promises'
 import VError from 'verror'
 import * as Compress from '../Compress/Compress.js'
 import * as Copy from '../Copy/Copy.js'
@@ -15,10 +7,9 @@ import * as Exec from '../Exec/Exec.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'
-import { readFile } from '../ReadFile/ReadFile.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Template from '../Template/Template.js'
-import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as Rename from '../Rename/Rename.js'
 
 const getDebPackageArch = (arch) => {
   switch (arch) {
@@ -191,14 +182,19 @@ const createDebianBinaryFile = async () => {
 }
 
 const createDeb = async () => {
-  const debArch = 'amd64'
-  const cwd = Path.absolute(`build/.tmp/linux/deb/${debArch}`)
-  await Mkdir.mkdir(`build/.tmp/linux/deb/${debArch}/deb`)
   try {
+    const debArch = 'amd64'
+    const cwd = Path.absolute(`build/.tmp/linux/deb/${debArch}`)
+    const releases = Path.absolute(`build/.tmp/releases`)
+    await Mkdir.mkdir(releases)
+    const appName = Product.applicationName
     await Compress.deb('control.tar.xz', 'data.tar.xz', {
       cwd,
     })
-    await rename(Path.join(cwd, 'app.deb'), Path.join(cwd, 'deb', 'app.deb'))
+    await Rename.rename({
+      from: Path.join(cwd, 'app.deb'),
+      to: Path.join(releases, `${appName}-${debArch}.deb`),
+    })
   } catch (error) {
     // @ts-ignore
     throw new VError(error, 'Failed to create deb')
