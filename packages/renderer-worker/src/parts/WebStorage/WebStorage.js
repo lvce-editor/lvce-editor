@@ -3,14 +3,14 @@ import * as Json from '../Json/Json.js'
 
 export const clear = async (storageType) => {
   await RendererProcess.invoke(
-    /* StorageBrowser.clear */ 'StorageBrowser.clear',
+    /* WebStorage.clear */ 'WebStorage.clear',
     /* StorageType */ storageType
   )
 }
 
 export const getText = async (storageType, key) => {
   const item = await RendererProcess.invoke(
-    /* StorageBrowser.getItem */ 'StorageBrowser.getItem',
+    /* WebStorage.getItem */ 'WebStorage.getItem',
     /* storageType */ storageType,
     /* key */ key
   )
@@ -31,7 +31,7 @@ export const getJson = async (storageType, key) => {
 
 export const setText = async (storageType, key, value) => {
   await RendererProcess.invoke(
-    /* StorageBrowser.setItem */ 'StorageBrowser.setItem',
+    /* WebStorage.setItem */ 'WebStorage.setItem',
     /* storageType */ storageType,
     /* key */ key,
     /* value */ value

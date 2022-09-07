@@ -216,9 +216,9 @@ const getModuleId = (commandId) => {
     case 'Window.setTitle':
     case 'Window.onVisibilityChange':
       return MODULE_WINDOW
-    case 'StorageBrowser.clear':
-    case 'StorageBrowser.getItem':
-    case 'StorageBrowser.setItem':
+    case 'WebStorage.clear':
+    case 'WebStorage.getItem':
+    case 'WebStorage.setItem':
       return MODULE_WEB_STORAGE
     case 'Meta.setThemeColor':
       return MODULE_META
