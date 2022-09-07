@@ -7,7 +7,7 @@ import { readdir, stat } from 'node:fs/promises'
 import { createServer, IncomingMessage, ServerResponse } from 'node:http'
 import { dirname, extname, join, resolve } from 'node:path'
 import { pipeline } from 'node:stream/promises'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, parse as parseUrl } from 'node:url'
 
 // @ts-ignore
 const __dirname = dirname(fileURLToPath(import.meta.url))
@@ -52,7 +52,9 @@ const getPath = (url) => {
 
 const serveStatic = (root, skip = '') =>
   async function serveStatic(req, res, next) {
-    let relativePath = getPath(req.url.slice(skip.length))
+    const parsedUrl = parseUrl(req.url)
+    const pathName = parsedUrl.pathname || ''
+    let relativePath = getPath(pathName.slice(skip.length))
     if (relativePath.endsWith('/')) {
       relativePath += 'index.html'
     }
@@ -203,7 +205,9 @@ const createTestOverview = async (testPathSrc) => {
  * @param {ServerResponse} res
  */
 const serveTests = async (req, res, next) => {
-  if (req.url && req.url.endsWith('.html')) {
+  const parsedUrl = parseUrl(req.url || '')
+  const pathName = parsedUrl.pathname || ''
+  if (pathName.endsWith('.html')) {
     try {
       await pipeline(createReadStream(join(ROOT, 'static', 'index.html')), res)
     } catch (error) {
@@ -220,7 +224,7 @@ const serveTests = async (req, res, next) => {
     }
     return
   }
-  if (req.url === '/tests/') {
+  if (pathName === '/tests/') {
     const testPath = getTestPath()
     const testPathSrc = join(testPath, 'src')
 
