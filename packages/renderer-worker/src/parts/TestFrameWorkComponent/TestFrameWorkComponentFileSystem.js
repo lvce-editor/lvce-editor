@@ -36,6 +36,9 @@ export const createExecutable = async (content) => {
 }
 
 export const createExecutableFrom = async (path) => {
-  const content = await Command.execute('FileSystem.readFile', path)
+  const pathSeparator = await Command.execute('FileSystem.getPathSeparator')
+  const testPath = await Platform.getTestPath()
+  const absolutePath = testPath + pathSeparator + path
+  const content = await Command.execute('FileSystem.readFile', absolutePath)
   return createExecutable(content)
 }
