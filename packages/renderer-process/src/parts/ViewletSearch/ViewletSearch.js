@@ -2,6 +2,7 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Assert from '../Assert/Assert.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as DirentType from '../DirentType/DirentType.js'
 
 const handleInput = (event) => {
   const $Target = event.target
@@ -147,16 +148,15 @@ const render$Row = ($Row, rowInfo) => {
   $Row.ariaDescription = ''
   switch (rowInfo.type) {
     // TODO type should be a number for efficiency
-    case 'directory':
-    case 'folder':
+    case DirentType.Directory:
       $Row.ariaExpanded = 'false'
       $Row.className = `TreeItem Icon${rowInfo.icon}`
       break
-    case 'directory-expanded':
+    case DirentType.DirectoryExpanded:
       $Row.className = `TreeItem Icon${rowInfo.icon}`
       $Row.ariaExpanded = 'true'
       break
-    case 'file':
+    case DirentType.File:
       $Row.ariaExpanded = undefined
       $Row.className = `TreeItem Icon${rowInfo.icon}`
       break
