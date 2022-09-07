@@ -35,19 +35,9 @@ beforeEach(() => {
 })
 
 test('editorGoToDefinition', async () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: ['line 1', 'line 2', 'line 3'],
-    cursor,
-    selection: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: new Uint32Array([0, 0, 0, 0]),
     lineCache: [],
     tokenizer: TokenizePlainText,
   }
@@ -73,23 +63,13 @@ test('editorGoToDefinition', async () => {
         throw new Error('unexpected message')
     }
   })
-  await EditorGoToDefinition.editorGoToDefinition(editor, cursor)
+  await EditorGoToDefinition.editorGoToDefinition(editor)
 })
 
 test('editorGoToDefinition - start offset is 0', async () => {
-  const cursor = {
-    rowIndex: 0,
-    columnIndex: 0,
-  }
   const editor = {
     lines: ['line 1', 'line 2', 'line 3'],
-    cursor,
-    selection: [
-      {
-        start: cursor,
-        end: cursor,
-      },
-    ],
+    selections: new Uint32Array([0, 0, 0, 0]),
     lineCache: [],
     tokenizer: TokenizePlainText,
   }
@@ -115,16 +95,13 @@ test('editorGoToDefinition - start offset is 0', async () => {
         throw new Error('unexpected message')
     }
   })
-  await EditorGoToDefinition.editorGoToDefinition(editor, cursor)
+  await EditorGoToDefinition.editorGoToDefinition(editor)
 })
 
 test('editorGoToDefinition - error', async () => {
   const editor = {
     lines: ['line 1', 'line 1'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
+    selections: new Uint32Array([0, 0, 0, 0]),
     top: 0,
     left: 0,
     columnWidth: 8,
@@ -142,8 +119,10 @@ test('editorGoToDefinition - error', async () => {
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
-    editor.cursor,
-    'TypeError: x is not a function'
+    0,
+    0,
+    'TypeError: x is not a function',
+    true
   )
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith(new TypeError('x is not a function'))
@@ -154,16 +133,12 @@ test('editorGoToDefinition - error', async () => {
 test('editorGoToDefinition - error - no definition provider found', async () => {
   const editor = {
     lines: ['line 1', 'line 1'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
     top: 0,
     left: 0,
     columnWidth: 8,
     rowHeight: 20,
     uri: '/tmp/index.ts',
-    selections: [],
+    selections: new Uint32Array([0, 0, 0, 0]),
   }
   // @ts-ignore
   ExtensionHostDefinition.executeDefinitionProvider.mockImplementation(() => {
@@ -178,8 +153,10 @@ test('editorGoToDefinition - error - no definition provider found', async () => 
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
-    editor.cursor,
-    'No definition provider found'
+    0,
+    0,
+    'No definition provider found',
+    false
   )
   expect(spy).not.toHaveBeenCalled()
 })
@@ -187,16 +164,12 @@ test('editorGoToDefinition - error - no definition provider found', async () => 
 test('editorGoToDefinition - no definition found', async () => {
   const editor = {
     lines: ['line 1', 'line 1'],
-    cursor: {
-      rowIndex: 0,
-      columnIndex: 0,
-    },
     top: 0,
     left: 0,
     columnWidth: 8,
     rowHeight: 20,
     uri: '/test/index.ts',
-    selections: [],
+    selections: new Uint32Array([0, 0]),
   }
   // @ts-ignore
   ExtensionHostDefinition.executeDefinitionProvider.mockImplementation(() => {
@@ -208,7 +181,9 @@ test('editorGoToDefinition - no definition found', async () => {
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
-    editor.cursor,
-    'No definition found'
+    0,
+    0,
+    'No definition found',
+    false
   )
 })
