@@ -16,7 +16,7 @@ test('getBuiltinSelfTestPath', () => {
   expect(typeof Platform.getBuiltinSelfTestPath()).toBe('string')
 })
 
-test('getApplicationName', () => {
+test('applicationName', () => {
   expect(typeof Platform.applicationName).toBe('string')
 })
 

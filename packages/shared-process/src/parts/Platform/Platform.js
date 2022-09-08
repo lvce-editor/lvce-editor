@@ -1,47 +1,29 @@
+import { extensionHostPath } from '@lvce-editor/extension-host'
 import { homedir, tmpdir } from 'node:os'
 import { sep } from 'node:path'
-import { extensionHostPath } from '@lvce-editor/extension-host'
+import { pathToFileURL } from 'node:url'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
 import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
-import { pathToFileURL } from 'node:url'
 
-export const getApplicationName = () => {
-  return 'lvce-oss'
-}
+export const applicationName = 'lvce-oss'
 
-export const isWindows = () => {
-  return process.platform === 'win32'
-}
+export const isWindows = process.platform === 'win32'
 
-export const isMacOs = () => {
-  return process.platform === 'darwin'
-}
+export const isMacOs = process.platform === 'darwin'
 
-// TODO pass which version when building: insiders|oss|normal
+export const dataDir = Path.join(xdgData || tmpdir(), applicationName)
 
-export const getDataDir = () => {
-  return Path.join(xdgData || tmpdir(), getApplicationName())
-}
+export const configDir = Path.join(xdgConfig || tmpdir(), applicationName)
 
-export const getConfigDir = () => {
-  return Path.join(xdgConfig || tmpdir(), getApplicationName())
-}
+export const cacheDir = Path.join(xdgCache || tmpdir(), applicationName)
 
-export const getCacheDir = () => {
-  return Path.join(xdgCache || tmpdir(), getApplicationName())
-}
+export const homeDir = isWindows ? '' : homedir()
 
-export const getHomeDir = () => {
-  return isWindows() ? '' : homedir()
-}
-
-export const getAppDir = () => {
-  return Root.root
-}
+export const appDir = Root.root
 
 export const getExtensionsPath = () => {
-  return Path.join(getDataDir(), 'extensions')
+  return Path.join(dataDir, 'extensions')
 }
 
 export const getBuiltinExtensionsPath = () => {
@@ -49,11 +31,11 @@ export const getBuiltinExtensionsPath = () => {
 }
 
 export const getDisabledExtensionsPath = () => {
-  return Path.join(getDataDir(), 'disabled-extensions')
+  return Path.join(dataDir, 'disabled-extensions')
 }
 
 export const getCachedExtensionsPath = () => {
-  return Path.join(getCacheDir(), 'cached-extensions')
+  return Path.join(cacheDir, 'cached-extensions')
 }
 
 export const getMarketplaceUrl = () => {
@@ -94,11 +76,11 @@ export const getStateDir = () => {
 }
 
 export const getLogsDir = () => {
-  return Path.join(xdgState || tmpdir(), getApplicationName(), 'logs')
+  return Path.join(xdgState || tmpdir(), applicationName, 'logs')
 }
 
 export const getUserSettingsPath = () => {
-  return Path.join(getConfigDir(), 'settings.json')
+  return Path.join(configDir, 'settings.json')
 }
 
 export const getExtensionHostPath = () => {
@@ -106,11 +88,11 @@ export const getExtensionHostPath = () => {
 }
 
 export const getRecentlyOpenedPath = () => {
-  return Path.join(getCacheDir(), 'recently-opened.json')
+  return Path.join(cacheDir, 'recently-opened.json')
 }
 
 export const getDefaultSettingsPath = () => {
-  return Path.join(getAppDir(), 'static', 'config', 'defaultSettings.json')
+  return Path.join(appDir, 'static', 'config', 'defaultSettings.json')
 }
 
 export const setEnvironmentVariables = (variables) => {

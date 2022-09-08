@@ -17,7 +17,7 @@ const toSearchResult = (parsedLine) => ({
 // remove workaround when ripgrep is fixed
 
 // TODO no function call at toplevel!
-const useNice = !Platform.isWindows()
+const useNice = !Platform.isWindows
 // TODO stats flag might not be necessary
 // TODO update client
 // TODO not always run nice, maybe configure nice via flag/options

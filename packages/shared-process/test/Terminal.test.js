@@ -8,7 +8,7 @@ afterEach(() => {
 })
 
 test.skip('Terminal', async () => {
-  if (Platform.isWindows()) {
+  if (Platform.isWindows) {
     // TODO add windows test
     return
   }
