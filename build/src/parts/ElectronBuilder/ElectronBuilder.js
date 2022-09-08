@@ -81,6 +81,23 @@ const getFinalFileName = (config) => {
   }
 }
 
+const getReleaseFileName = (config) => {
+  switch (config) {
+    case 'electron_builder_arch_linux':
+      return `${Product.applicationName}.pacman`
+    case 'electron_builder_deb':
+      return `${Product.applicationName}-amd64.deb`
+    case 'electron_builder_windows_exe':
+      return `${Product.applicationName}.exe`
+    case 'electron_builder_snap':
+      return `${Product.applicationName}.snap`
+    case 'electron_builder_mac':
+      return `${Product.applicationName}-amd64.dmg`
+    default:
+      throw new Error(`cannot get final file name for target ${config}`)
+  }
+}
+
 const printFinalSize = async () => {
   try {
     const size = await Stat.getFileSize(
@@ -106,9 +123,10 @@ const copyElectronResult = async () => {
 
 const renameReleaseFile = async (config) => {
   const finalFileName = getFinalFileName(config)
+  const releaseFileName = getReleaseFileName(config)
   await Rename.rename({
     from: finalFileName,
-    to: `build/.tmp/releases/${Product.applicationName}.snap`,
+    to: `build/.tmp/releases/${releaseFileName}`,
   })
 }
 
