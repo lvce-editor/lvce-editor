@@ -6,6 +6,10 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 const root = join(__dirname, '..')
 
+const sort = (array) => {
+  return [...array].sort()
+}
+
 const formatModuleIds = async (relativePath) => {
   const absolutePath = join(root, relativePath)
   const content = await readFile(absolutePath, 'utf8')
@@ -45,8 +49,12 @@ const formatCommands = async (absolutePath) => {
   const newLines = []
   let commandsIndex = -1
   for (let i = 0; i < lines.length; i++) {
-    newLines.push(lines[i])
-    if (lines[i].startsWith('export const Commands')) {
+    const line = lines[i]
+    newLines.push(line)
+    if (
+      line.startsWith('export const Commands') ||
+      line.startsWith('exports.Commands')
+    ) {
       commandsIndex = i
       break
     }
@@ -64,10 +72,10 @@ const formatCommands = async (absolutePath) => {
     }
   }
   if (commandsEndIndex === -1) {
-    throw new Error('Command end index not found')
+    return
   }
   const middleLines = lines.slice(commandsIndex + 1, commandsEndIndex)
-  const sortedLines = [...middleLines].sort()
+  const sortedLines = sort(middleLines)
   newLines.push(...sortedLines, ...lines.slice(commandsEndIndex))
   const newContent = newLines.join('\n')
   if (content !== newContent) {
@@ -99,14 +107,102 @@ const formatAllCommands = async () => {
   const allIpcFiles = await getIpcFiles(
     'packages/shared-process/src',
     'packages/renderer-process/src',
-    'packages/renderer-worker/src'
+    'packages/renderer-worker/src',
+    'packages/main-process/src'
   )
   for (const path of allIpcFiles) {
     await formatCommands(path)
   }
 }
 
+const formatModuleMap = async (absolutePath) => {
+  const content = await readFile(absolutePath, 'utf8')
+  const lines = content.split('\n')
+  const newLines = []
+  let i = 1
+  const State = {
+    Top: 0,
+    Switch: 1,
+    Case: 2,
+    Return: 3,
+    Default: 4,
+    Bottom: 5,
+  }
+  let state = State.Top
+  const moduleMap = Object.create(null)
+  let commandIds = []
+  outer: for (const line of lines) {
+    const trimmedLine = line.trimStart()
+    if (trimmedLine.startsWith('switch')) {
+      state = State.Switch
+    } else if (trimmedLine.startsWith('case')) {
+      state = State.Case
+    } else if (trimmedLine.startsWith('return')) {
+      state = State.Return
+    } else if (trimmedLine.startsWith('default')) {
+      state = State.Default
+    } else {
+      state = State.Top
+    }
+    switch (state) {
+      case State.Case:
+        const caseIndex = line.indexOf('case')
+        const commandId = line.slice(caseIndex + 'case'.length + 1, -1)
+        commandIds.push(commandId)
+        break
+      case State.Return:
+        const returnIndex = line.indexOf('return')
+        const moduleId = line.slice(returnIndex + 'return'.length + 1)
+        moduleMap[moduleId] = commandIds
+        commandIds = []
+        break
+      case State.Top:
+        newLines.push(line)
+        break
+      case State.Switch:
+        newLines.push(line)
+        break
+      case State.Default:
+        break outer
+      default:
+        break
+    }
+  }
+  const keys = Object.keys(moduleMap)
+  const sortedKeys = sort(keys)
+  for (const key of sortedKeys) {
+    const commandIds = moduleMap[key]
+    const sortedCommandsIds = sort(commandIds)
+    for (const commandId of sortedCommandsIds) {
+      newLines.push(`    case ${commandId}:`)
+    }
+    newLines.push(`      return ${key}`)
+  }
+  newLines.push(`    default:`)
+  newLines.push(`      throw new Error(\`command \${commandId} not found\`)`)
+  newLines.push(`  }`)
+  newLines.push(`}`)
+  newLines.push(``)
+  const newContent = newLines.join('\n')
+  if (content !== newContent) {
+    await writeFile(absolutePath, newContent)
+  }
+}
+
+const formatAllModuleMaps = async () => {
+  const moduleMapPaths = [
+    'packages/renderer-process/src/parts/ModuleMap/ModuleMap.js',
+    'packages/shared-process/src/parts/ModuleMap/ModuleMap.js',
+    'packages/renderer-worker/src/parts/ModuleMap/ModuleMap.js',
+  ]
+  for (const moduleMapPath of moduleMapPaths) {
+    const absolutePath = join(root, moduleMapPath)
+    await formatModuleMap(absolutePath)
+  }
+}
+
 const main = async () => {
+  await formatAllModuleMaps()
   await formatAllModuleIds()
   await formatAllCommands()
 }
