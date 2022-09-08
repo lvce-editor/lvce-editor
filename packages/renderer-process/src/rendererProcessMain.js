@@ -16,6 +16,7 @@ import * as M29 from './parts/ViewletTitleBar/ViewletTitleBar.js'
 import * as M30 from './parts/Window/Window.ipc.js'
 import * as RendererWorker from './parts/RendererWorker/RendererWorker.js'
 import * as Platform from './parts/Platform/Platform.js'
+import * as PlatformType from './parts/PlatformType/PlatformType.js'
 
 // hack so that rollup doesn't tree-shake out these modules
 globalThis.M = [
@@ -50,7 +51,7 @@ const main = async () => {
   onerror = handleError
   onunhandledrejection = handleUnhandledRejection
 
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     // disable prompt to download app as pwa
     // @ts-ignore
     window.onbeforeinstallprompt = (event) => {

@@ -1,3 +1,4 @@
+import * as PlatformType from '../PlatformType/PlatformType.js'
 /* istanbul ignore file */
 
 // TODO this should always be completely tree shaken out during build
@@ -12,16 +13,16 @@ const getPlatform = () => {
     return PLATFORM
   }
   if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
-    return 'remote'
+    return PlatformType.Remote
   }
   // @ts-ignore
   const userAgentData = navigator.userAgentData
   // TODO this is probably a bad check but electron doesn't deliver anything and
   // this will be tree shaken out anyway during build
   if (userAgentData && userAgentData.brands.length === 0) {
-    return 'electron'
+    return PlatformType.Electron
   }
-  return 'remote'
+  return PlatformType.Remote
 }
 
 export const platform = getPlatform()
