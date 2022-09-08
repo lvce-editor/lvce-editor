@@ -2,6 +2,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletExplorer from './ViewletExplorer.js'
 import * as LazyCommand from '../LazyCommand/LazyCommand.js'
 
+// prettier-ignore
 const Imports = {
   Focus: () => import('./ViewletExplorerFocus.js'),
   FocusFirst: () => import('./ViewletExplorerFocusFirst.js'),
@@ -10,6 +11,9 @@ const Imports = {
   FocusNext: () => import('./ViewletExplorerFocusNext.js'),
   FocusPrevious: () => import('./ViewletExplorerFocusPrevious.js'),
   FocusNone: () => import('./ViewletExplorerFocusNone.js'),
+  HandleContextMenuKeyboard: () => import('./ViewletExplorerHandleContextMenuKeyboard.js'),
+  HandleContextMenuMouseAt: ()=>import('./ViewletExplorerHandleContextMenuMouseAt.js'),
+
 }
 
 // prettier-ignore
@@ -37,8 +41,8 @@ export const Commands = {
   'Explorer.handleClick':               Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleClick),
   'Explorer.handleClickAt':             Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleClickAt),
   'Explorer.handleClickCurrent':        Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleClickCurrent),
-  'Explorer.handleContextMenuKeyboard': Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleContextMenuKeyboard),
-  'Explorer.handleContextMenuMouseAt':  Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleContextMenuMouseAt),
+  'Explorer.handleContextMenuKeyboard': LazyCommand.create('Explorer', Imports.HandleContextMenuKeyboard, 'handleContextMenuKeyboard'),
+  'Explorer.handleContextMenuMouseAt':  LazyCommand.create('Explorer', Imports.HandleContextMenuMouseAt, 'handleContextMenuMouseAt'),
   'Explorer.handleCopy':                Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleCopy),
   'Explorer.handleMouseEnter':          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleMouseEnter),
   'Explorer.handleMouseLeave':          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleMouseLeave),

@@ -456,83 +456,6 @@ test.skip('contentLoaded', async () => {
   )
 })
 
-test('handleContextMenuMouse', async () => {
-  // @ts-ignore
-  Command.execute.mockImplementation(() => {})
-  const state = {
-    ...ViewletExplorer.create(),
-    focusedIndex: -1,
-    top: 0,
-  }
-  expect(
-    await ViewletExplorer.handleContextMenuMouseAt(
-      state,
-      /* x */ 0,
-      /* y */ 100
-    )
-  ).toMatchObject({
-    focusedIndex: -1,
-  })
-  expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'ContextMenu.show',
-    0,
-    100,
-    'explorer'
-  )
-})
-
-test('handleContextMenu - triggered via keyboard', async () => {
-  const state = {
-    ...ViewletExplorer.create(),
-    focusedIndex: 2,
-    left: 10,
-    top: 20,
-    itemHeight: 20,
-    dirents: [
-      {
-        depth: 1,
-        icon: '',
-        name: 'file 1',
-        path: 'file 1',
-        posInSet: 1,
-        setSize: 3,
-        type: DirentType.File,
-      },
-      {
-        depth: 1,
-        icon: '',
-        name: 'file 2',
-        path: 'file 2',
-        posInSet: 2,
-        setSize: 3,
-        type: DirentType.File,
-      },
-      {
-        depth: 1,
-        icon: '',
-        name: 'file 3',
-        path: 'file 3',
-        posInSet: 3,
-        setSize: 3,
-        type: DirentType.File,
-      },
-    ],
-  }
-  // @ts-ignore
-  Command.execute.mockImplementation(() => {})
-  expect(await ViewletExplorer.handleContextMenuKeyboard(state)).toMatchObject({
-    focusedIndex: 2,
-  })
-  expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'ContextMenu.show',
-    10,
-    80,
-    'explorer'
-  )
-})
-
 // TODO should handle error gracefully
 test.skip('refresh - error', async () => {
   const state = ViewletExplorer.create()
@@ -4127,49 +4050,7 @@ test('updateRoot - new folder', async () => {
   })
 })
 
-test('event - issue with blur event after context menu event', async () => {
-  const state = {
-    ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
-    pathSeparator: '/',
-    focusedIndex: 2,
-    dirents: [
-      {
-        depth: 1,
-        icon: '',
-        name: 'folder-1',
-        path: '/test/folder-1',
-        posInSet: 1,
-        setSize: 3,
-        type: DirentType.Directory,
-      },
-      {
-        depth: 1,
-        icon: '',
-        name: 'folder-2',
-        path: '/test/folder-2',
-        posInSet: 2,
-        setSize: 3,
-        type: DirentType.Directory,
-      },
-      {
-        depth: 1,
-        icon: '',
-        name: 'folder-3',
-        path: '/test/folder-3',
-        posInSet: 3,
-        setSize: 3,
-        type: DirentType.Directory,
-      },
-    ],
-    width: 600,
-    height: 600,
-    minLineY: 0,
-    maxLineY: 100,
-  }
-  const state2 = await ViewletExplorer.handleContextMenuMouseAt(state, 0, 0)
-  const state3 = await ViewletExplorer.handleBlur(state2)
-  expect(state3).toMatchObject({ focusedIndex: 0, focused: false })
-})
+
 
 test('openContainingFolder', async () => {
   const state1 = {

@@ -9,6 +9,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
+import { getIndexFromPosition } from './ViewletExplorerShared.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -241,36 +242,6 @@ export const setDeltaY = (state, deltaY) => {
 
 export const handleWheel = (state, deltaY) => {
   return setDeltaY(state, state.deltaY + deltaY)
-}
-
-export const handleContextMenuKeyboard = async (state) => {
-  const { focusedIndex, left, top, minLineY, itemHeight } = state
-  const x = left
-  const y = top + (focusedIndex - minLineY + 1) * itemHeight
-  await Command.execute(
-    /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ x,
-    /* y */ y,
-    /* id */ 'explorer'
-  )
-  return state
-}
-
-export const handleContextMenuMouseAt = async (state, x, y) => {
-  Assert.number(x)
-  Assert.number(y)
-  const focusedIndex = getIndexFromPosition(state, x, y)
-  await Command.execute(
-    /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ x,
-    /* y */ y,
-    /* id */ 'explorer'
-  )
-  return {
-    ...state,
-    focusedIndex,
-    focused: false,
-  }
 }
 
 export const getFocusedDirent = (state) => {
@@ -795,19 +766,7 @@ export const handleClick = async (state, index) => {
   }
 }
 
-const getIndexFromPosition = (state, x, y) => {
-  const { top, itemHeight, dirents } = state
-  const index = Math.floor((y - top) / itemHeight)
-  if (index < 0) {
-    return 0
-  }
-  if (index > dirents.length) {
-    return -1
-  }
-  return index
-}
-
-export const handleClickAt = async (state, x, y) => {
+export const handleClickAt = (state, x, y) => {
   const index = getIndexFromPosition(state, x, y)
   return handleClick(state, index)
 }
