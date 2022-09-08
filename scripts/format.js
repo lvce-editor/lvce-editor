@@ -45,8 +45,12 @@ const formatCommands = async (absolutePath) => {
   const newLines = []
   let commandsIndex = -1
   for (let i = 0; i < lines.length; i++) {
-    newLines.push(lines[i])
-    if (lines[i].startsWith('export const Commands')) {
+    const line = lines[i]
+    newLines.push(line)
+    if (
+      line.startsWith('export const Commands') ||
+      line.startsWith('exports.Commands')
+    ) {
       commandsIndex = i
       break
     }
@@ -64,7 +68,7 @@ const formatCommands = async (absolutePath) => {
     }
   }
   if (commandsEndIndex === -1) {
-    throw new Error('Command end index not found')
+    return
   }
   const middleLines = lines.slice(commandsIndex + 1, commandsEndIndex)
   const sortedLines = [...middleLines].sort()
@@ -99,7 +103,8 @@ const formatAllCommands = async () => {
   const allIpcFiles = await getIpcFiles(
     'packages/shared-process/src',
     'packages/renderer-process/src',
-    'packages/renderer-worker/src'
+    'packages/renderer-worker/src',
+    'packages/main-process/src'
   )
   for (const path of allIpcFiles) {
     await formatCommands(path)
