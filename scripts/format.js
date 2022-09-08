@@ -192,6 +192,7 @@ const formatModuleMap = async (absolutePath) => {
 const formatAllModuleMaps = async () => {
   const moduleMapPaths = [
     'packages/renderer-process/src/parts/ModuleMap/ModuleMap.js',
+    'packages/shared-process/src/parts/ModuleMap/ModuleMap.js',
   ]
   for (const moduleMapPath of moduleMapPaths) {
     const absolutePath = join(root, moduleMapPath)
