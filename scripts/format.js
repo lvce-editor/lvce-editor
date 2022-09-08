@@ -1,4 +1,4 @@
-import { readFile, writeFile } from 'node:fs/promises'
+import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { dirname, join } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
@@ -39,8 +39,7 @@ const formatAllModuleIds = async () => {
   }
 }
 
-const formatCommands = async (relativePath) => {
-  const absolutePath = join(root, relativePath)
+const formatCommands = async (absolutePath) => {
   const content = await readFile(absolutePath, 'utf8')
   const lines = content.split('\n')
   const newLines = []
@@ -53,7 +52,8 @@ const formatCommands = async (relativePath) => {
     }
   }
   if (commandsIndex === -1) {
-    throw new Error('Command start index not found')
+    console.warn(`Command start index not found in ${absolutePath}`)
+    return
   }
   let commandsEndIndex = -1
   for (let i = commandsIndex; i < lines.length; i++) {
@@ -75,11 +75,32 @@ const formatCommands = async (relativePath) => {
   }
 }
 
+const getIpcFiles = async (...roots) => {
+  const allIpcFiles = []
+  const getIpcFilesInternal = async (root) => {
+    const dirents = await readdir(root, { withFileTypes: true })
+    for (const dirent of dirents) {
+      if (dirent.isDirectory()) {
+        const folderPath = join(root, dirent.name)
+        console.log({ folderPath })
+        await getIpcFilesInternal(folderPath)
+      } else if (dirent.isFile() && dirent.name.endsWith('.ipc.js')) {
+        allIpcFiles.push(join(root, dirent.name))
+      }
+    }
+  }
+  for (const relativePath of roots) {
+    const absoluteRoot = join(root, relativePath)
+    await getIpcFilesInternal(absoluteRoot)
+  }
+  return allIpcFiles
+}
+
 const formatAllCommands = async () => {
-  for (const relativePath of [
-    'packages/renderer-worker/src/parts/Window/Window.ipc.js',
-  ]) {
-    await formatCommands(relativePath)
+  const allIpcFiles = await getIpcFiles('packages/shared-process/src')
+  console.log({ allIpcFiles })
+  for (const path of allIpcFiles) {
+    await formatCommands(path)
   }
 }
 

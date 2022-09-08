@@ -40,6 +40,6 @@ const dispose = (socket, id) => {
 export const Commands = {
   'Terminal.create': create,
   'Terminal.dispose': dispose,
-  'Terminal.write': write,
   'Terminal.resize': resize,
+  'Terminal.write': write,
 }
