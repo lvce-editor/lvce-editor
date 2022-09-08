@@ -5,12 +5,12 @@ import * as ExtensionsMarketplace from '../ExtensionMarketplace/ExtensionMarketp
 import * as Platform from '../Platform/Platform.js'
 import * as Assert from '../Assert/Assert.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-
-export const ITEM_HEIGHT = 62
-
-const MINIMUM_SLIDER_SIZE = 20
-
-export const HEADER_HEIGHT = 35.94 // TODO improve this
+import {
+  getListHeight,
+  HEADER_HEIGHT,
+  ITEM_HEIGHT,
+  MINIMUM_SLIDER_SIZE,
+} from './ViewletExtensionsShared.js'
 
 const SUGGESTIONS = [
   '@builtin',
@@ -56,10 +56,6 @@ export const create = (id, uri, left, top, width, height) => {
 
 const getVisible = (state) => {
   return state.filteredExtensions.slice(state.minLineY, state.maxLineY)
-}
-
-const getListHeight = (state) => {
-  return state.height - HEADER_HEIGHT
 }
 
 export const loadContent = async (state) => {
@@ -346,102 +342,7 @@ export const handleInput = async (state, value) => {
   }
 }
 
-export const focusIndex = (state, index) => {
-  if (index === -1) {
-    return {
-      ...state,
-      focusedIndex: -1,
-    }
-  }
-  const listHeight = getListHeight(state)
-  if (index < state.minLineY + 1) {
-    // scroll up
-    const minLineY = index
-    const maxLineY = minLineY + Math.ceil(listHeight / ITEM_HEIGHT)
-    const negativeMargin = -minLineY * ITEM_HEIGHT
-    return {
-      ...state,
-      focusedIndex: index,
-      minLineY,
-      maxLineY,
-      negativeMargin,
-    }
-  }
-  if (index >= state.maxLineY - 1) {
-    //  scroll down
-    const maxLineY = index + 1
-    const minLineY = maxLineY - Math.ceil(listHeight / ITEM_HEIGHT)
-    const negativeMargin =
-      -minLineY * ITEM_HEIGHT + (listHeight % ITEM_HEIGHT) - ITEM_HEIGHT
-    return {
-      ...state,
-      focusedIndex: index,
-      minLineY,
-      maxLineY,
-      negativeMargin,
-    }
-  }
-  return {
-    ...state,
-    focusedIndex: index,
-  }
-}
-
 // TODO lazyload this
-export const handleClick = (state, index) => {
-  return focusIndex(state, index)
-}
-
-export const focusNext = (state) => {
-  if (state.focusedIndex === state.filteredExtensions.length - 1) {
-    return state
-  }
-  return focusIndex(state, state.focusedIndex + 1)
-}
-
-export const focusNextPage = (state) => {
-  if (state.focusedIndex === state.filteredExtensions.length - 1) {
-    return state
-  }
-  const indexNextPage = Math.min(
-    state.maxLineY + (state.maxLineY - state.minLineY) - 2,
-    state.filteredExtensions.length - 1
-  )
-  return focusIndex(state, indexNextPage)
-}
-
-export const focusPrevious = (state) => {
-  if (state.focusedIndex === 0 || state.focusedIndex === -1) {
-    return state
-  }
-  return focusIndex(state, state.focusedIndex - 1)
-}
-
-export const focusPreviousPage = (state) => {
-  if (state.focusedIndex === 0 || state.focusedIndex === -1) {
-    return state
-  }
-
-  const indexPreviousPage = Math.max(
-    state.minLineY - (state.maxLineY - state.minLineY) + 1,
-    0
-  )
-  return focusIndex(state, indexPreviousPage)
-}
-
-export const focusFirst = (state) => {
-  if (state.filteredExtensions.length === 0) {
-    return state
-  }
-  return focusIndex(state, 0)
-}
-
-export const focusLast = (state) => {
-  if (state.filteredExtensions.length === 0) {
-    return state
-  }
-  return focusIndex(state, state.filteredExtensions.length - 1)
-}
 
 // TODO show error / warning  when installment fails / times out
 export const handleInstall = async (state, id) => {

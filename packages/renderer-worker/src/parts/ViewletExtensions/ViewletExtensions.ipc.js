@@ -1,17 +1,29 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletExtensions from './ViewletExtensions.js'
+import * as LazyCommand from '../LazyCommand/LazyCommand.js'
+
+const Imports = {
+  FocusFirst: () => import('./ViewletExtensionsFocusFirst.js'),
+  FocusIndex: () => import('./ViewletExtensionsFocusIndex.js'),
+  FocusLast: () => import('./ViewletExtensionsFocusLast.js'),
+  FocusNext: () => import('./ViewletExtensionsFocusNext.js'),
+  FocusNextPage: () => import('./ViewletExtensionsFocusNextPage.js'),
+  FocusPrevious: () => import('./ViewletExtensionsFocusPrevious.js'),
+  FocusPreviousPage: () => import('./ViewletExtensionsFocusPreviousPage.js'),
+  HandleClick: () => import('./ViewletExtensionsHandleClick.js'),
+}
 
 // prettier-ignore
 export const Commands = {
   'Extensions.closeSuggest': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.closeSuggest),
-  'Extensions.focusFirst': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.focusFirst),
-  'Extensions.focusIndex': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.focusIndex),
-  'Extensions.focusLast': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.focusLast),
-  'Extensions.focusNext': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.focusNext),
-  'Extensions.focusNextPage': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.focusNextPage),
-  'Extensions.focusPrevious': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.focusPrevious),
-  'Extensions.focusPreviousPage': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.focusPreviousPage),
-  'Extensions.handleClick': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.handleClick),
+  'Extensions.focusFirst': LazyCommand.create('Extensions', Imports.FocusFirst, 'focusFirst'),
+  'Extensions.focusIndex': LazyCommand.create('Extensions', Imports.FocusIndex, 'focusIndex'),
+  'Extensions.focusLast': LazyCommand.create('Extensions', Imports.FocusLast, 'focusLast'),
+  'Extensions.focusNext': LazyCommand.create('Extensions', Imports.FocusNext, 'focusNext'),
+  'Extensions.focusNextPage': LazyCommand.create('Extensions', Imports.FocusNextPage, 'focusNextPage'),
+  'Extensions.focusPrevious': LazyCommand.create('Extensions', Imports.FocusPrevious, 'focusPrevious'),
+  'Extensions.focusPreviousPage': LazyCommand.create(Imports.FocusPreviousPage, 'focusPreviousPage'),
+  'Extensions.handleClick': LazyCommand.create('Extensions', Imports.HandleClick, 'handleClick'),
   'Extensions.handleContextMenu': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.handleContextMenu),
   'Extensions.handleInput': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.handleInput),
   'Extensions.handleInstall': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.handleInstall),
