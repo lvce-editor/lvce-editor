@@ -1,6 +1,7 @@
 import * as MenuEntriesExplorer from '../src/parts/MenuEntries/MenuEntriesExplorer.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
 test('getMenuEntries - no focused dirent', async () => {
   ViewletStates.set('Explorer', {
@@ -10,16 +11,16 @@ test('getMenuEntries - no focused dirent', async () => {
     },
     factory: {},
   })
-  const menuEntries = await MenuEntriesExplorer.getMenuEntries()
+  const menuEntries = MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({
     command: 'Explorer.newFile',
-    flags: 0,
+    flags: MenuItemFlags.None,
     id: 'newFile',
     label: 'New File',
   })
   expect(menuEntries).toContainEqual({
     command: 'Explorer.copyPath',
-    flags: 0,
+    flags: MenuItemFlags.RestoreFocus,
     id: 'copyPath',
     label: 'Copy Path',
   })
@@ -43,7 +44,7 @@ test('getMenuEntries - focused folder', async () => {
   const menuEntries = await MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({
     command: 'Explorer.newFile',
-    flags: 0,
+    flags: MenuItemFlags.None,
     id: 'newFile',
     label: 'New File',
   })
@@ -64,16 +65,16 @@ test('getMenuEntries - focused file', async () => {
     },
     factory: {},
   })
-  const menuEntries = await MenuEntriesExplorer.getMenuEntries()
+  const menuEntries = MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({
     command: 'Explorer.handleCopy',
-    flags: 0,
+    flags: MenuItemFlags.RestoreFocus,
     id: 'copy',
     label: 'Copy',
   })
   expect(menuEntries).not.toContainEqual({
     command: 'Explorer.newFile',
-    flags: 0,
+    flags: MenuItemFlags.None,
     id: 'newFile',
     label: 'New File',
   })
@@ -97,7 +98,7 @@ test('getMenuEntries - focused symlink', async () => {
   const menuEntries = await MenuEntriesExplorer.getMenuEntries()
   expect(menuEntries).toContainEqual({
     command: 'Explorer.newFile',
-    flags: 0,
+    flags: MenuItemFlags.None,
     id: 'newFile',
     label: 'New File',
   })
