@@ -1,6 +1,9 @@
 import * as Layout from './Layout.js'
 
 export const Commands = {
+  'Layout.getBounds': Layout.getBounds,
+  'Layout.hide': Layout.hide,
+  'Layout.show': Layout.show,
   'Layout.update': Layout.update,
   // Command.register(1101, Layout.hideSideBar)
   // Command.register(1102, Layout.toggleSideBar)
@@ -10,7 +13,4 @@ export const Commands = {
   // Command.register(1106, Layout.showActivityBar)
   // Command.register(1107, Layout.hideActivityBar)
   // Command.register(1108, Layout.toggleActivityBar)
-  'Layout.show': Layout.show,
-  'Layout.hide': Layout.hide,
-  'Layout.getBounds': Layout.getBounds,
 }
