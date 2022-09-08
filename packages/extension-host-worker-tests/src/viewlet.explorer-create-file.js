@@ -9,7 +9,8 @@ test('viewlet.explorer-create-file', async () => {
   await Workspace.setPath(tmpDir)
 
   // act
-  await Explorer.openContextMenu(-1)
+  await Explorer.focusIndex(-1)
+  await Explorer.openContextMenu()
   await ContextMenu.selectItem('New File')
 
   // assert

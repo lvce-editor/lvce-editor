@@ -8,7 +8,8 @@ test.skip('viewlet.explorer-create-file-error-no-name-provided', async () => {
 
   await Workspace.setPath(tmpDir)
 
-  await Explorer.openContextMenu(-1)
+  await Explorer.focusIndex(-1)
+  await Explorer.openContextMenu()
   await ContextMenu.selectItem('New File')
 
   const inputBox = Locator('input')

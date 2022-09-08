@@ -12,6 +12,10 @@ export const focusNext = async () => {
   await Command.execute('Explorer.focusNext')
 }
 
+export const focusIndex = async (index) => {
+  await Command.execute('Explorer.focusIndex', index)
+}
+
 export const clickCurrent = async () => {
   await Command.execute('Explorer.handleClickCurrent')
 }
