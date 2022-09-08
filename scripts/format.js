@@ -56,7 +56,7 @@ const formatCommands = async (absolutePath) => {
     return
   }
   let commandsEndIndex = -1
-  for (let i = commandsIndex; i < lines.length; i++) {
+  for (let i = commandsIndex + 1; i < lines.length; i++) {
     const line = lines[i]
     if (line.includes('}')) {
       commandsEndIndex = i
@@ -98,7 +98,8 @@ const getIpcFiles = async (...roots) => {
 const formatAllCommands = async () => {
   const allIpcFiles = await getIpcFiles(
     'packages/shared-process/src',
-    'packages/renderer-process/src'
+    'packages/renderer-process/src',
+    'packages/renderer-worker/src'
   )
   for (const path of allIpcFiles) {
     await formatCommands(path)

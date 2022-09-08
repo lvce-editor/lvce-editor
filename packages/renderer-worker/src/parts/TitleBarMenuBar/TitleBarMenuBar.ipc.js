@@ -3,24 +3,24 @@ import * as MenuIpc from '../Menu/Menu.ipc.js'
 
 // prettier-ignore
 export const Commands = {
-  ...MenuIpc.Commands,
 
-  'TitleBarMenuBar.toggleIndex': TitleBarMenuBar.toggleIndex,
-  'TitleBarMenuBar.hydrate': TitleBarMenuBar.hydrate,
+
+  'TitleBarMenuBar.closeMenu': TitleBarMenuBar.closeMenu,
   'TitleBarMenuBar.focus': TitleBarMenuBar.focus,
   'TitleBarMenuBar.focusIndex': TitleBarMenuBar.focusIndex,
-  'TitleBarMenuBar.focusPrevious': TitleBarMenuBar.focusPrevious,
   'TitleBarMenuBar.focusNext': TitleBarMenuBar.focusNext,
-  'TitleBarMenuBar.closeMenu': TitleBarMenuBar.closeMenu,
-  'TitleBarMenuBar.openMenu': TitleBarMenuBar.openMenu,
+  'TitleBarMenuBar.focusPrevious': TitleBarMenuBar.focusPrevious,
   'TitleBarMenuBar.handleKeyArrowDown': TitleBarMenuBar.handleKeyArrowDown,
-  'TitleBarMenuBar.handleKeyArrowUp': TitleBarMenuBar.handleKeyArrowUp,
+  'TitleBarMenuBar.handleKeyArrowLeft': TitleBarMenuBar.handleKeyArrowLeft,
   'TitleBarMenuBar.handleKeyArrowRight': TitleBarMenuBar.handleKeyArrowRight,
-  'TitleBarMenuBar.handleKeyHome': TitleBarMenuBar.handleKeyHome,
+  'TitleBarMenuBar.handleKeyArrowUp': TitleBarMenuBar.handleKeyArrowUp,
   'TitleBarMenuBar.handleKeyEnd': TitleBarMenuBar.handleKeyEnd,
-  'TitleBarMenuBar.handleKeySpace': TitleBarMenuBar.handleKeySpace,
   'TitleBarMenuBar.handleKeyEnter': TitleBarMenuBar.handleKeyEnter,
   'TitleBarMenuBar.handleKeyEscape': TitleBarMenuBar.handleKeyEscape,
-  'TitleBarMenuBar.handleKeyArrowLeft': TitleBarMenuBar.handleKeyArrowLeft,
-
+  'TitleBarMenuBar.handleKeyHome': TitleBarMenuBar.handleKeyHome,
+  'TitleBarMenuBar.handleKeySpace': TitleBarMenuBar.handleKeySpace,
+  'TitleBarMenuBar.hydrate': TitleBarMenuBar.hydrate,
+  'TitleBarMenuBar.openMenu': TitleBarMenuBar.openMenu,
+  'TitleBarMenuBar.toggleIndex': TitleBarMenuBar.toggleIndex,
+  ...MenuIpc.Commands,
 }
