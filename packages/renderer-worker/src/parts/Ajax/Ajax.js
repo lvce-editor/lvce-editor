@@ -45,7 +45,7 @@ export const getJsonLocal = (url) => {
 
 export const getText = async (url, options = {}) => {
   try {
-    return ky(url, options).text()
+    return await ky(url, options).text()
   } catch (error) {
     if (
       error &&

@@ -43,6 +43,6 @@ const close = (socket, id) => {
 }
 
 export const Commands = {
-  'OutputChannel.open': open,
   'OutputChannel.close': close,
+  'OutputChannel.open': open,
 }

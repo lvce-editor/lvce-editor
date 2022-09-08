@@ -166,7 +166,7 @@ const getTopLevelDirents = (root, pathSeparator) => {
   return getChildDirents(root, pathSeparator, {
     depth: 0,
     path: root,
-    type: 'directory',
+    type: DirentType.Directory,
   })
 }
 
@@ -557,7 +557,7 @@ const newDirent = async (state) => {
   const index = state.focusedIndex + 1
   if (focusedIndex >= 0) {
     const dirent = state.dirents[state.focusedIndex]
-    if (dirent.type === 'directory') {
+    if (dirent.type === DirentType.Directory) {
       // TODO handle error
       await handleClickDirectory(state, dirent, focusIndex)
     }
@@ -713,7 +713,7 @@ const handleClickFile = async (state, dirent, index) => {
 }
 
 const handleClickDirectory = async (state, dirent, index) => {
-  dirent.type = 'directory-expanding'
+  dirent.type = DirentType.DirectoryExpanding
   // TODO handle error
   const dirents = await getChildDirents(state.root, state.pathSeparator, dirent)
   const state2 = Viewlet.getState('Explorer')
@@ -729,7 +729,7 @@ const handleClickDirectory = async (state, dirent, index) => {
   // console.log(state.dirents[index] === dirent)
   const newDirents = [...state2.dirents]
   newDirents.splice(newIndex + 1, 0, ...dirents)
-  dirent.type = 'directory-expanded'
+  dirent.type = DirentType.DirectoryExpanded
   dirent.icon = IconTheme.getIcon(dirent)
   // TODO when focused index has changed while expanding, don't update it
   return {
@@ -740,7 +740,7 @@ const handleClickDirectory = async (state, dirent, index) => {
 }
 
 const handleClickDirectoryExpanding = async (state, dirent, index) => {
-  dirent.type = 'directory'
+  dirent.type = DirentType.Directory
   dirent.icon = IconTheme.getIcon(dirent)
   await RendererProcess.invoke(
     /* viewSend */ 'Viewlet.send',
@@ -753,7 +753,7 @@ const handleClickDirectoryExpanding = async (state, dirent, index) => {
 }
 
 const handleClickDirectoryExpanded = (state, dirent, index) => {
-  dirent.type = 'directory'
+  dirent.type = DirentType.Directory
   dirent.icon = IconTheme.getIcon(dirent)
   const endIndex = getParentEndIndex(state.dirents, index)
   const removeCount = endIndex - index - 1
@@ -1214,10 +1214,10 @@ export const expandAll = async (state) => {
   const newDirents = [...dirents]
   // TODO fetch child dirents in parallel
   for (const dirent of newDirents) {
-    if (dirent.depth === depth && dirent.type === 'directory') {
+    if (dirent.depth === depth && dirent.type === DirentType.Directory) {
       // TODO expand
       // TODO avoid mutating state here
-      dirent.type = 'directory-expanding'
+      dirent.type = DirentType.DirectoryExpanding
       // TODO handle error
       // TODO race condition
       const childDirents = await getChildDirents(
@@ -1231,7 +1231,7 @@ export const expandAll = async (state) => {
       }
       newDirents.splice(newIndex + 1, 0, ...childDirents)
       // TODO avoid mutating state here
-      dirent.type = 'directory-expanded'
+      dirent.type = DirentType.DirectoryExpanded
       // await expand(state, dirent.index)
     }
   }
@@ -1246,10 +1246,10 @@ const isTopLevel = (dirent) => {
 }
 
 const toCollapsedDirent = (dirent) => {
-  if (dirent.type === 'directory-expanded') {
+  if (dirent.type === DirentType.DirectoryExpanded) {
     return {
       ...dirent,
-      type: 'directory',
+      type: DirentType.Directory,
     }
   }
   return dirent

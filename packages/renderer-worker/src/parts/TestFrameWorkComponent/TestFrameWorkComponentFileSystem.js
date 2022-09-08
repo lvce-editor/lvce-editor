@@ -34,3 +34,10 @@ export const createExecutable = async (content) => {
   await chmod(gitPath, '755')
   return gitPath
 }
+
+export const createExecutableFrom = async (path) => {
+  const testPath = await Platform.getTestPath()
+  const absolutePath = testPath + '/' + path
+  const content = await Command.execute('Ajax.getText', absolutePath)
+  return createExecutable(content)
+}

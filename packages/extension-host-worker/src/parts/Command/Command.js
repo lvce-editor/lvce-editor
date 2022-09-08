@@ -42,6 +42,8 @@ const getFn = (method) => {
       return ExtensionHostCommand.executeCommand
     case 'Workspace.setWorkspacePath':
       return ExtensionHostWorkspace.setWorkspacePath
+    case 'ExtensionHostDefinition.executeDefinitionProvider':
+      return ExtensionHostDefinition.executeDefinitionProvider
     default:
       throw new Error(`[extension-host-worker] method not found: ${method}`)
   }

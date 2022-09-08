@@ -18,6 +18,11 @@ jest.unstable_mockModule(
     }),
   })
 )
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
+  execute: jest.fn().mockImplementation(() => {
+    throw new Error('not implemented')
+  }),
+}))
 
 const ExtensionHostTypeDefinition = await import(
   '../src/parts/ExtensionHost/ExtensionHostTypeDefinition.js'
@@ -195,7 +200,7 @@ test('editorGoToTypeDefinition - no type definition found', async () => {
     editor,
     0,
     0,
-    'No type definition found',
+    `No type definition found for 'line'`,
     false
   )
 })

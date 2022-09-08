@@ -4,8 +4,20 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Layout from '../Layout/Layout.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
+import * as I18nString from '../I18NString/I18NString.js'
 
-const ACTIVITY_BAR_ITEM_HEIGHT = 48
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  Explorer: 'Explorer',
+  Search: 'Search',
+  SourceControl: 'Source Control',
+  RunAndDebug: 'Run and Debug',
+  Extensions: 'Extensions',
+  Settings: 'Settings',
+  AdditionalViews: 'Additional Views',
+}
 
 export const name = 'ActivityBar'
 
@@ -18,9 +30,8 @@ export const name = 'ActivityBar'
 // TODO unregister listeners when hidden
 
 const getNumberOfVisibleItems = (state) => {
-  const numberOfVisibleItemsTop = Math.floor(
-    state.height / ACTIVITY_BAR_ITEM_HEIGHT
-  )
+  const { height, itemHeight } = state
+  const numberOfVisibleItemsTop = Math.floor(height / itemHeight)
   return numberOfVisibleItemsTop
 }
 
@@ -41,6 +52,7 @@ const getVisibleActivityBarItems = (state) => {
   }
   const showMoreItem = {
     id: 'Additional Views',
+    title: I18nString.i18nString(UiStrings.AdditionalViews),
     icon: 'icons/ellipsis.svg',
     enabled: true,
     flags: ActivityBarItemFlags.Button,
@@ -72,6 +84,7 @@ export const create = (id, uri, left, top, width, height) => {
     top,
     width,
     height,
+    itemHeight: 48,
   }
 }
 
@@ -80,6 +93,7 @@ const getActivityBarItems = () => {
     // Top
     {
       id: 'Explorer',
+      title: I18nString.i18nString(UiStrings.Explorer),
       icon: 'icons/files.svg',
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
@@ -87,6 +101,7 @@ const getActivityBarItems = () => {
     },
     {
       id: 'Search',
+      title: I18nString.i18nString(UiStrings.Search),
       icon: 'icons/search.svg',
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
@@ -94,6 +109,7 @@ const getActivityBarItems = () => {
     },
     {
       id: 'Source Control',
+      title: I18nString.i18nString(UiStrings.SourceControl),
       icon: 'icons/source-control.svg',
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
@@ -101,6 +117,7 @@ const getActivityBarItems = () => {
     },
     {
       id: 'Run and Debug',
+      title: I18nString.i18nString(UiStrings.RunAndDebug),
       icon: 'icons/debug-alt-2.svg',
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
@@ -108,6 +125,7 @@ const getActivityBarItems = () => {
     },
     {
       id: 'Extensions',
+      title: I18nString.i18nString(UiStrings.Extensions),
       icon: 'icons/extensions.svg',
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
@@ -116,6 +134,7 @@ const getActivityBarItems = () => {
     // Bottom
     {
       id: 'Settings',
+      title: I18nString.i18nString(UiStrings.Settings),
       icon: 'icons/settings-gear.svg',
       enabled: true,
       flags: ActivityBarItemFlags.Button,
@@ -332,20 +351,18 @@ export const focusLast = (state) => {
 }
 
 const getPosition = (state, index) => {
-  if (index > state.activityBarItems.length - 2) {
+  const { activityBarItems, top, left, height, itemHeight } = state
+  if (index > activityBarItems.length - 2) {
     // at bottom
     return {
-      x: state.left,
-      y:
-        state.top +
-        state.height -
-        (state.activityBarItems.length - 1 - index) * ACTIVITY_BAR_ITEM_HEIGHT,
+      x: left,
+      y: top + height - (activityBarItems.length - 1 - index) * itemHeight,
     }
   }
   // at top
   return {
-    x: state.left,
-    y: state.top + index * ACTIVITY_BAR_ITEM_HEIGHT,
+    x: left,
+    y: top + index * itemHeight,
   }
 }
 

@@ -7,20 +7,14 @@ import * as Product from '../Product/Product.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Template from '../Template/Template.js'
+import * as Rename from '../Rename/Rename.js'
 
 // TODO don't need to include whole node-pty module
 // TODO maybe don't need to include nan module
 // TODO don't need to include whole vscode-ripgrep-with-github-api-error-fix module (only path)
 
 const bundleElectronMaybe = async () => {
-  if (
-    existsSync(Path.absolute(`build/.tmp/bundle/electron-result`)) &&
-    existsSync(
-      Path.absolute(
-        `build/.tmp/bundle/electron-result/resources/app/packages/main-process/dist/mainProcessMain.js`
-      )
-    )
-  ) {
+  if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
     console.info('[electron build skipped]')
     return
   }
@@ -51,9 +45,10 @@ const copyElectronBuilderConfig = async (config) => {
 }
 
 const runElectronBuilder = async () => {
+  const debArch = 'amd64'
   await ElectronBuilder.build({
     projectDir: Path.absolute('build/.tmp/electron-builder'),
-    prepackaged: Path.absolute(`build/.tmp/bundle/electron-result`),
+    prepackaged: Path.absolute(`build/.tmp/linux/snap/${debArch}/app`),
     // win: ['portable'],
   })
 }
@@ -86,10 +81,11 @@ const getFinalFileName = (config) => {
   }
 }
 
-const printFinalSize = async (config) => {
+const printFinalSize = async () => {
   try {
-    const finalFileName = getFinalFileName(config)
-    const size = await Stat.getFileSize(finalFileName)
+    const size = await Stat.getFileSize(
+      `build/.tmp/releases/${Product.applicationName}.snap`
+    )
     console.info(`final size: ${size}`)
   } catch (error) {
     console.warn(error)
@@ -99,14 +95,31 @@ const printFinalSize = async (config) => {
   }
 }
 
+const copyElectronResult = async () => {
+  await bundleElectronMaybe()
+  const debArch = 'amd64'
+  await Copy.copy({
+    from: `build/.tmp/electron-bundle/x64`,
+    to: `build/.tmp/linux/snap/${debArch}/app`,
+  })
+}
+
+const renameReleaseFile = async (config) => {
+  const finalFileName = getFinalFileName(config)
+  await Rename.rename({
+    from: finalFileName,
+    to: `build/.tmp/releases/${Product.applicationName}.snap`,
+  })
+}
+
 export const build = async ({ config }) => {
   // workaround for https://github.com/electron-userland/electron-builder/issues/4594
   // @ts-ignore
   process.env.USE_HARD_LINKS = false
 
-  console.time('bundleElectronMaybe')
-  await bundleElectronMaybe()
-  console.timeEnd('bundleElectronMaybe')
+  console.time('copyElectronResult')
+  await copyElectronResult()
+  console.timeEnd('copyElectronResult')
 
   console.time('copyElectronBuilderConfig')
   await copyElectronBuilderConfig(config)
@@ -120,5 +133,9 @@ export const build = async ({ config }) => {
   await runElectronBuilder()
   console.timeEnd('runElectronBuilder')
 
-  await printFinalSize(config)
+  console.time('renameReleaseFile')
+  await renameReleaseFile(config)
+  console.timeEnd('renameReleaseFile')
+
+  await printFinalSize()
 }

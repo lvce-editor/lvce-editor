@@ -4,6 +4,7 @@ const { registerDefinitionProvider, executeDefinitionProvider, reset } =
   Registry.create({
     name: 'Definition',
     resultShape: {
+      allowUndefined: true,
       type: 'object',
       properties: {
         uri: {

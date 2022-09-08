@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as ActvityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActvityBarItemFlags.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -47,21 +48,24 @@ test('create', () => {
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
+      title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Search',
+      title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
+      title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: /* Button */ 2,
+      flags: ActvityBarItemFlags.Button,
     },
   ])
   expect(getSimpleList(state.$ActivityBar)).toEqual([
@@ -78,41 +82,47 @@ test('setItems', () => {
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
+      title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Search',
+      title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
+      title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: /* Button */ 2,
+      flags: ActvityBarItemFlags.Button,
     },
   ])
   ViewletActivityBar.setItems(state, [
     {
       id: 'Run and Debug',
+      title: 'Run and Debug',
       icon: './icons/debug-alt-2.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Extensions',
+      title: 'Extensions',
       icon: './icons/extensions.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
+      title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: /* Button */ 2,
+      flags: ActvityBarItemFlags.Button,
     },
   ])
   expect(getSimpleList(state.$ActivityBar)).toEqual([
@@ -127,21 +137,24 @@ test('setFocusedIndex', () => {
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
+      title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Search',
+      title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
+      title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: /* Button */ 2,
+      flags: ActvityBarItemFlags.Button,
     },
   ])
   ViewletActivityBar.setFocusedIndex(state, -1, 0)
@@ -157,21 +170,24 @@ test('event - handleClick - top', () => {
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
+      title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Search',
+      title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
+      title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: /* Button */ 2,
+      flags: ActvityBarItemFlags.Button,
     },
   ])
   ViewletActivityBar.setFocusedIndex(state, -1, 0)
@@ -200,21 +216,24 @@ test('event - handleClick - bottom', () => {
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
+      title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Search',
+      title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
+      title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: /* Button */ 2,
+      flags: ActvityBarItemFlags.Button,
     },
   ])
   // @ts-ignore
@@ -241,21 +260,24 @@ test('event - handleClick - no item is clicked', () => {
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
+      title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Search',
+      title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
+      title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: /* Button */ 2,
+      flags: ActvityBarItemFlags.Button,
     },
   ])
   // @ts-ignore
@@ -278,21 +300,24 @@ test('event - handleContextMenu', () => {
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
+      title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Search',
+      title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
+      title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: /* Button */ 2,
+      flags: ActvityBarItemFlags.Button,
     },
   ])
   // @ts-ignore
@@ -313,6 +338,7 @@ test('event - handleContextMenu', () => {
 })
 
 // TODO test interaction with sidebar
+// TODO test interaction with stitleebar
 
 // TODO test select and focus
 
@@ -323,22 +349,25 @@ test('accessibility - ActivityBarItem tab should have role tab and aria-keyshort
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
+      title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+X',
     },
     {
       id: 'Search',
+      title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
+      title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: /* Button */ 2,
+      flags: ActvityBarItemFlags.Button,
     },
   ])
   expect(state.$ActivityBar.firstChild.role).toBe('tab')
@@ -350,21 +379,24 @@ test('accessibility - ActivityBar should have role toolbar, ariaLabel and ariaOr
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
+      title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Search',
+      title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
+      title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: /* Button */ 2,
+      flags: ActvityBarItemFlags.Button,
     },
   ])
   expect(state.$ActivityBar.role).toBe('toolbar')
@@ -377,23 +409,26 @@ test('accessibility - ActivityBarItem button should have role button and ariaHas
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
+      title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
       keyShortcuts: 'Ctrl+Shift+X',
     },
     {
       id: 'Search',
+      title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
       keyShortcuts: 'Ctrl+Shift+F',
     },
     {
       id: 'Settings',
+      title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: /* Button */ 2,
+      flags: ActvityBarItemFlags.Button,
       keyShortcuts: '',
     },
   ])
@@ -406,23 +441,26 @@ test('accessibility - ActivityBarItems should have ariaKeyShortcuts if applicabl
   ViewletActivityBar.setItems(state, [
     {
       id: 'Explorer',
+      title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
       keyShortcuts: 'Ctrl+Shift+X',
     },
     {
       id: 'Search',
+      title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: /* Tab */ 1,
+      flags: ActvityBarItemFlags.Tab,
       keyShortcuts: 'Ctrl+Shift+F',
     },
     {
       id: 'Settings',
+      title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: /* Button */ 2,
+      flags: ActvityBarItemFlags.Button,
       keyShortcuts: '',
     },
   ])

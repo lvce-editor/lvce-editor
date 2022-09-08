@@ -1,5 +1,6 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 export { create as Locator } from './Locator.js'
+import * as Timestamp from '../Timestamp/Timestamp.js'
 
 export const getTmpDir = async () => {
   return `memfs://`
@@ -29,9 +30,9 @@ export const test = async (name, fn) => {
   let _duration
   try {
     await waitForReady()
-    _start = performance.now()
+    _start = Timestamp.now()
     await fn()
-    _end = performance.now()
+    _end = Timestamp.now()
     _duration = `${_end - _start}ms`
     console.info(`[test passed] ${name} in ${_duration}`)
   } catch (error) {

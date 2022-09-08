@@ -16,7 +16,7 @@ jest.unstable_mockModule(
   }
 )
 
-const StorageBrowser = await import('../src/parts/WebStorage/WebStorage.js')
+const WebStorage = await import('../src/parts/WebStorage/WebStorage.js')
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
@@ -26,12 +26,12 @@ test('getJson - localStorage - number', async () => {
   RendererProcess.invoke.mockImplementation(() => {
     return '42'
   })
-  expect(
-    await StorageBrowser.getJson(WebStorageType.LocalStorage, 'item-1')
-  ).toBe(42)
+  expect(await WebStorage.getJson(WebStorageType.LocalStorage, 'item-1')).toBe(
+    42
+  )
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'StorageBrowser.getItem',
+    'WebStorage.getItem',
     1,
     'item-1'
   )
@@ -43,11 +43,11 @@ test('getJson - localStorage - object', async () => {
     return '{}'
   })
   expect(
-    await StorageBrowser.getJson(WebStorageType.LocalStorage, 'item-1')
+    await WebStorage.getJson(WebStorageType.LocalStorage, 'item-1')
   ).toEqual({})
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'StorageBrowser.getItem',
+    'WebStorage.getItem',
     1,
     'item-1'
   )
@@ -59,11 +59,11 @@ test('getJson - localStorage - invalid json', async () => {
     return '{'
   })
   expect(
-    await StorageBrowser.getJson(WebStorageType.LocalStorage, 'item-1')
+    await WebStorage.getJson(WebStorageType.LocalStorage, 'item-1')
   ).toBeUndefined()
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'StorageBrowser.getItem',
+    'WebStorage.getItem',
     1,
     'item-1'
   )
@@ -72,10 +72,10 @@ test('getJson - localStorage - invalid json', async () => {
 test('setJson - localStorage', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  await StorageBrowser.setJson(WebStorageType.LocalStorage, 'item-1', 43)
+  await WebStorage.setJson(WebStorageType.LocalStorage, 'item-1', 43)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'StorageBrowser.setItem',
+    'WebStorage.setItem',
     1,
     'item-1',
     `43
@@ -86,7 +86,7 @@ test('setJson - localStorage', async () => {
 test('clear - localStorage', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  await StorageBrowser.clear(WebStorageType.LocalStorage)
+  await WebStorage.clear(WebStorageType.LocalStorage)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith('StorageBrowser.clear', 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('WebStorage.clear', 1)
 })

@@ -1,9 +1,8 @@
-import * as Command from '../Command/Command.js'
 import * as Location from './Location.js'
 
-export const __initialize__ = () => {
-  Command.register('Location.getHref', Location.getHref)
-  Command.register('Location.getPathName', Location.getPathName)
-  Command.register('Location.hydrate', Location.hydrate)
-  Command.register('Location.setPathName', Location.setPathName)
+export const Commands = {
+  'Location.getHref': Location.getHref,
+  'Location.getPathName': Location.getPathName,
+  'Location.hydrate': Location.hydrate,
+  'Location.setPathName': Location.setPathName,
 }

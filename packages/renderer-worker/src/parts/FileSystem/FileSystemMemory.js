@@ -1,3 +1,5 @@
+import * as DirentType from '../DirentType/DirentType.js'
+
 export const name = 'Memory'
 
 export const state = {
@@ -13,7 +15,7 @@ export const readFile = (uri) => {
   if (!dirent) {
     throw new Error(`File not found: ${uri}`)
   }
-  if (dirent.type !== 'file') {
+  if (dirent.type !== DirentType.File) {
     throw new Error('file is a directory')
   }
   return dirent.content
@@ -25,7 +27,7 @@ const ensureParentDir = (uri) => {
   while (endIndex >= 0) {
     const part = uri.slice(startIndex, endIndex + 1)
     state.files[part] = {
-      type: 'directory',
+      type: DirentType.Directory,
       content: '',
     }
     endIndex = uri.indexOf('/', endIndex + 1)
@@ -39,7 +41,7 @@ export const writeFile = (uri, content) => {
   } else {
     ensureParentDir(uri)
     state.files[uri] = {
-      type: 'file',
+      type: DirentType.File,
       content,
     }
   }
@@ -51,7 +53,7 @@ export const mkdir = (uri) => {
   }
   ensureParentDir(uri)
   state.files[uri] = {
-    type: 'directory',
+    type: DirentType.Directory,
     content: '',
   }
 }
@@ -80,7 +82,7 @@ export const readDirWithFileTypes = (uri) => {
   for (const [key, value] of Object.entries(state.files)) {
     if (key.startsWith(uri)) {
       switch (value.type) {
-        case 'directory':
+        case DirentType.Directory:
           if (
             !key.slice(0, -1).includes('/', uri.length) &&
             key !== `${uri}/` &&
@@ -92,14 +94,13 @@ export const readDirWithFileTypes = (uri) => {
             })
           }
           break
-        case 'file':
+        case DirentType.File:
           if (!key.includes('/', uri.length + 1)) {
             dirents.push({
               type: value.type,
               name: key.slice(uri.length),
             })
           }
-
           break
         default:
           break

@@ -7,6 +7,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Assert from '../Assert/Assert.js'
 import { VError } from '../VError/VError.js'
 import * as Json from '../Json/Json.js'
+import * as Timestamp from '../Timestamp/Timestamp.js'
 
 export const state = {
   sessionId: '',
@@ -108,7 +109,7 @@ export const replaySession = async (sessionId) => {
 
 export const getEvents = async (sessionId) => {
   try {
-    const timestamp = performance.now()
+    const timestamp = Timestamp.now()
     const events = await IndexedDb.getValuesByIndexName(
       'session',
       'sessionId',
@@ -150,7 +151,7 @@ const wrapIpc = (ipc, name, getData) => {
   const wrappedIpc = {
     async send(message) {
       ipc.send(message)
-      const timestamp = performance.now()
+      const timestamp = Timestamp.now()
       await handleMessage(nameTo, timestamp, message)
     },
     sendAndTransfer(message, transferables) {
@@ -166,8 +167,7 @@ const wrapIpc = (ipc, name, getData) => {
   const originalOnMessage = wrappedIpc.onmessage
   wrappedIpc.onmessage = async (event) => {
     const message = getData(event)
-
-    const timestamp = performance.now()
+    const timestamp = Timestamp.now()
     await originalOnMessage(event)
     await handleMessage(nameFrom, timestamp, message)
   }

@@ -63,8 +63,7 @@ jobs:
         id: builtin-extensions-cache
         with:
           path: extensions
-          key: ${{ runner.os }}-builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
-          restore-keys: ${{ runner.os }}-builtinExtensions-
+          key: builtinExtensions-${{ steps.builtinExtensionsCacheKey.outputs.value }}
       - name: Download Builtin Extensions
         run: node build/src/parts/DownloadBuiltinExtensions/DownloadBuiltinExtensions.js
         if: steps.builtin-extensions-cache.outputs.cache-hit != 'true'

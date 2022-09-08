@@ -1,8 +1,7 @@
-import * as Command from '../Command/Command.js'
-import * as StorageBrowser from './WebStorage.js'
+import * as WebStorage from './WebStorage.js'
 
-export const __initialize__ = () => {
-  Command.register('StorageBrowser.clear', StorageBrowser.clear)
-  Command.register('StorageBrowser.getItem', StorageBrowser.getItem)
-  Command.register('StorageBrowser.setItem', StorageBrowser.setItem)
+export const Commands = {
+  'WebStorage.clear': WebStorage.clear,
+  'WebStorage.getItem': WebStorage.getItem,
+  'WebStorage.setItem': WebStorage.setItem,
 }

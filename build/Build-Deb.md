@@ -11,7 +11,7 @@ node bin/build.js --target=electron-deb --force
 ## Try out
 
 ```sh
-sudo dpkg -i ./.tmp/linux/deb/amd64/deb/app.deb
+sudo dpkg -i ./.tmp/releases/lvce-oss-amd64.deb
 ```
 
 ## Troubleshooting

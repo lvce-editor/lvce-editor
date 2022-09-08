@@ -71,3 +71,14 @@ test('getJson - error - cors', async () => {
     )
   )
 })
+
+test('getText - error - cors', async () => {
+  globalThis.fetch = async () => {
+    throw new TypeError('Failed to fetch')
+  }
+  await expect(Ajax.getText('https://example.com')).rejects.toThrowError(
+    new Error(
+      'Failed to request text from "https://example.com". Make sure that the server is running and has CORS enabled: TypeError: Failed to fetch'
+    )
+  )
+})

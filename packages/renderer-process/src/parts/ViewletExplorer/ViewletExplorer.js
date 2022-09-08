@@ -4,6 +4,7 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as DirentType from '../DirentType/DirentType.js'
 
 export const name = 'Explorer'
 
@@ -276,17 +277,16 @@ const render$Row = ($Row, rowInfo) => {
   $Row.ariaDescription = ''
   switch (rowInfo.type) {
     // TODO decide on directory vs folder
-    case 'directory':
-    case 'folder':
+    case DirentType.Directory:
       $Row.ariaExpanded = 'false'
       break
-    case 'directory-expanding':
+    case DirentType.DirectoryExpanding:
       $Row.ariaExpanded = 'true' // TODO tree should be aria-busy then
       break
-    case 'directory-expanded':
+    case DirentType.DirectoryExpanded:
       $Row.ariaExpanded = 'true'
       break
-    case 'file':
+    case DirentType.File:
       $Row.ariaExpanded = undefined
       break
     default:

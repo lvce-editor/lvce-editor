@@ -11,5 +11,5 @@ node bin/build.js --target=electron-builder-snap
 ## Try out
 
 ```sh
-sudo snap install ./lvce-oss_0.0.1_amd64.snap --devmode
+sudo snap install ./.tmp/releases/lvce-oss.snap --devmode
 ```

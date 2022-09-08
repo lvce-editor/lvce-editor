@@ -8,4 +8,5 @@ export const Commands = {
   'FileSystem.writeFile': FileSystem.writeFile,
   'FileSystem.mkdir': FileSystem.mkdir,
   'FileSystem.chmod': FileSystem.chmod,
+  'FileSystem.getPathSeparator': FileSystem.getPathSeparator,
 }
