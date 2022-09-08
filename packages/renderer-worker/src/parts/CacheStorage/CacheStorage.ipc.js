@@ -4,6 +4,6 @@ import * as CacheStorage from './CacheStorage.js'
 
 export const Commands = {
   'CacheStorage.clearCache': CacheStorage.clearCache,
-  'CacheStorage.setJson': CacheStorage.setJson,
   'CacheStorage.getJson': CacheStorage.getJson,
+  'CacheStorage.setJson': CacheStorage.setJson,
 }
