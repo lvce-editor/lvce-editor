@@ -315,41 +315,6 @@ export const handleContextMenu = async (state, x, y) => {
   return state
 }
 
-export const focusIndex = (state, index) => {
-  return {
-    ...state,
-    focusedIndex: index,
-  }
-}
-
-export const focus = (state) => {
-  const indexToFocus = state.focusedIndex === -1 ? 0 : state.focusedIndex
-  return focusIndex(state, indexToFocus)
-}
-
-export const focusNext = (state) => {
-  // TODO can never be -1 -> always set when sidebar changes
-  if (state.focusedIndex === state.activityBarItems.length - 1) {
-    return state
-  }
-  return focusIndex(state, state.focusedIndex + 1)
-}
-
-export const focusPrevious = (state) => {
-  if (state.focusedIndex === 0) {
-    return state
-  }
-  return focusIndex(state, state.focusedIndex - 1)
-}
-
-export const focusFirst = (state) => {
-  return focusIndex(state, 0)
-}
-
-export const focusLast = (state) => {
-  return focusIndex(state, state.activityBarItems.length - 1)
-}
-
 const getPosition = (state, index) => {
   const { activityBarItems, top, left, height, itemHeight } = state
   if (index > activityBarItems.length - 2) {
@@ -419,3 +384,10 @@ const renderFocusedIndex = {
 export const render = [renderActivityBarItems, renderFocusedIndex]
 
 export const hasFunctionalRender = true
+
+export * from './ViewletActivityBarFocusIndex.js'
+export * from './ViewletActivityBarFocusFirst.js'
+export * from './ViewletActivityBarFocusLast.js'
+export * from './ViewletActivityBarFocusPrevious.js'
+export * from './ViewletActivityBarFocusNext.js'
+export * from './ViewletActivityBarFocus.js'
