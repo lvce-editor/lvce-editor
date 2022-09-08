@@ -1,13 +1,23 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ActivityBar from './ViewletActivityBar.js'
+import * as LazyCommand from '../LazyCommand/LazyCommand.js'
+
+const Imports = {
+  Focus: () => import('./ViewletActivityBarFocus.js'),
+  FocusFirst: () => import('./ViewletActivityBarFocusFirst.js'),
+  FocusIndex: () => import('./ViewletActivityBarFocusIndex.js'),
+  FocusLast: () => import('./ViewletActivityBarFocusLast.js'),
+  FocusNext: () => import('./ViewletActivityBarFocusNext.js'),
+  FocusPrevious: () => import('./ViewletActivityBarFocusPrevious.js'),
+}
 
 // prettier-ignore
 export const Commands = {
-  'ActivityBar.focus': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.focus),
-  'ActivityBar.focusFirst': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.focusFirst),
-  'ActivityBar.focusLast': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.focusLast),
-  'ActivityBar.focusNext': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.focusNext),
-  'ActivityBar.focusPrevious': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.focusPrevious),
+  'ActivityBar.focus': LazyCommand.create('ActivityBar', Imports.Focus, 'focus'),
+  'ActivityBar.focusFirst': LazyCommand.create('ActivityBar', Imports.FocusFirst, 'focusFirst'),
+  'ActivityBar.focusLast': LazyCommand.create('ActivityBar', Imports.FocusLast, 'focusLast'),
+  'ActivityBar.focusNext': LazyCommand.create('ActivityBar', Imports.FocusNext, 'focusNext'),
+  'ActivityBar.focusPrevious': LazyCommand.create('ActivityBar', Imports.FocusPrevious, 'focusPrevious'),
   'ActivityBar.getHiddenItems': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.getHiddenItems),
   'ActivityBar.getItems': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.getItems),
   'ActivityBar.handleClick': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.handleClick),
