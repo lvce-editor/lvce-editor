@@ -9,3 +9,5 @@ export const Checked = 2
 export const Unchecked = 3
 
 export const Disabled = 5
+
+export const RestoreFocus = 6

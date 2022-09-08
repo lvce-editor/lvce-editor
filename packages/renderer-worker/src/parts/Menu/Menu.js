@@ -157,7 +157,22 @@ const selectIndexNone = async (item) => {
     return
   }
   const args = item.args || []
-  await Promise.all([hide(), Command.execute(item.command, ...args)])
+  await Promise.all([
+    hide(/* restoreFocus */ false),
+    Command.execute(item.command, ...args),
+  ])
+}
+
+const selectIndexRestoreFocus = async (item) => {
+  if (!item.command) {
+    console.warn('item has missing command', item)
+    return
+  }
+  const args = item.args || []
+  await Promise.all([
+    hide(/* restoreFocus */ true),
+    Command.execute(item.command, ...args),
+  ])
 }
 
 const selectIndexSubMenu = async (menu, index) => {
@@ -176,6 +191,8 @@ export const selectIndex = async (level, index) => {
       return selectIndexNone(item)
     case MenuItemFlags.SubMenu:
       return selectIndexSubMenu(menu, index)
+    case MenuItemFlags.RestoreFocus:
+      return selectIndexRestoreFocus(item)
     default:
       break
   }
@@ -199,12 +216,15 @@ export const selectCurrent = async (level) => {
   await selectIndex(level, menu.focusedIndex)
 }
 
-export const hide = async () => {
+export const hide = async (restoreFocus = true) => {
   if (state.menus.length === 0) {
     return
   }
   state.menus = []
-  await RendererProcess.invoke(/* Menu.hide */ 'Menu.hide')
+  await RendererProcess.invoke(
+    /* Menu.hide */ 'Menu.hide',
+    /* restoreFocus */ restoreFocus
+  )
 }
 
 // TODO difference between focusing with mouse or keyboard
