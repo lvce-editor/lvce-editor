@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -70,37 +71,37 @@ test.skip('openMenu - when focusedIndex', async () => {
     [
       {
         command: -1,
-        flags: 5,
+        flags: MenuItemFlags.Disabled,
         id: 'newFile',
         label: 'New File',
       },
       {
         command: -1,
-        flags: 5,
+        flags: MenuItemFlags.Disabled,
         id: 'newWindow',
         label: 'New Window',
       },
       {
         command: 0,
-        flags: 1,
+        flags: MenuItemFlags.Separator,
         id: 'separator',
         label: 'Separator',
       },
       {
         command: -1,
-        flags: 5,
+        flags: MenuItemFlags.Disabled,
         id: 'openFile',
         label: 'Open File',
       },
       {
         command: 1492,
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'openFolder',
         label: 'Open Folder',
       },
       {
         command: 0,
-        flags: 4,
+        flags: MenuItemFlags.SubMenu,
         id: 'openRecent',
         label: 'Open Recent',
       },
@@ -201,37 +202,37 @@ test.skip('focusIndex - when open - when same index', async () => {
     [
       {
         command: -1,
-        flags: 5,
+        flags: MenuItemFlags.Disabled,
         id: 'newFile',
         label: 'New File',
       },
       {
         command: -1,
-        flags: 5,
+        flags: MenuItemFlags.Disabled,
         id: 'newWindow',
         label: 'New Window',
       },
       {
         command: 0,
-        flags: 1,
+        flags: MenuItemFlags.Separator,
         id: 'separator',
         label: 'Separator',
       },
       {
         command: -1,
-        flags: 5,
+        flags: MenuItemFlags.Disabled,
         id: 'openFile',
         label: 'Open File',
       },
       {
         command: 1492,
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'openFolder',
         label: 'Open Folder',
       },
       {
         command: 0,
-        flags: 4,
+        flags: MenuItemFlags.SubMenu,
         id: 'openRecent',
         label: 'Open Recent',
       },
@@ -277,37 +278,37 @@ test.skip('focusIndex - when open - when different index', async () => {
     [
       {
         command: -1,
-        flags: 5,
+        flags: MenuItemFlags.Disabled,
         id: 'undo',
         label: 'Undo',
       },
       {
         command: -1,
-        flags: 5,
+        flags: MenuItemFlags.Disabled,
         id: 'redo',
         label: 'Redo',
       },
       {
         command: -1,
-        flags: 1,
+        flags: MenuItemFlags.Separator,
         id: 'separator',
         label: '',
       },
       {
         command: 364,
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'cut',
         label: 'Cut',
       },
       {
         command: 365,
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'copy',
         label: 'Copy',
       },
       {
         command: 383,
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'paste',
         label: 'Paste',
       },
@@ -358,37 +359,37 @@ test.skip('focusIndex - when open - race condition', async () => {
     [
       {
         command: -1,
-        flags: 5,
+        flags: MenuItemFlags.Disabled,
         id: 'undo',
         label: 'Undo',
       },
       {
         command: -1,
-        flags: 5,
+        flags: MenuItemFlags.Disabled,
         id: 'redo',
         label: 'Redo',
       },
       {
         command: -1,
-        flags: 1,
+        flags: MenuItemFlags.Separator,
         id: 'separator',
         label: '',
       },
       {
         command: 364,
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'cut',
         label: 'Cut',
       },
       {
         command: 365,
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'copy',
         label: 'Copy',
       },
       {
         command: 383,
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'paste',
         label: 'Paste',
       },
@@ -627,17 +628,17 @@ test.skip('toggleIndex - when open - when different index', async () => {
     1,
     [
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'cut',
         label: 'Cut',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'copy',
         label: 'Copy',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'paste',
         label: 'Paste',
       },
@@ -668,12 +669,12 @@ test.skip('toggleIndex - when closed - when same index', async () => {
     0,
     [
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'newFile',
         label: 'New File',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'newWindow',
         label: 'New Window',
       },
@@ -704,17 +705,17 @@ test.skip('toggleIndex - when closed - when different index', async () => {
     1,
     [
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'cut',
         label: 'Cut',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'copy',
         label: 'Copy',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'paste',
         label: 'Paste',
       },
