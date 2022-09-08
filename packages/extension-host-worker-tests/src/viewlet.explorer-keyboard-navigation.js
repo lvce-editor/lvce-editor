@@ -7,14 +7,13 @@ test('viewlet.explorer-keyboard-navigation', async () => {
   await FileSystem.mkdir(`${tmpDir}/folder-2`)
   await FileSystem.mkdir(`${tmpDir}/folder-3`)
   await FileSystem.writeFile(`${tmpDir}/test.txt`, 'div')
-
   await Workspace.setPath(tmpDir)
 
   // act
-  const explorer = Locator('.Viewlet[data-viewlet-id="Explorer"]')
-  await explorer.click()
+  await Explorer.focusIndex(-1)
 
   // assert
+  const explorer = Locator('.Viewlet[data-viewlet-id="Explorer"]')
   await expect(explorer).toHaveClass('FocusOutline')
 
   // act

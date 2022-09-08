@@ -494,10 +494,9 @@ test('event - contextmenu', () => {
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Explorer.handleContextMenuMouse',
+    'Explorer.handleContextMenuMouseAt',
     50,
-    50,
-    0
+    50
   )
 })
 
@@ -534,8 +533,7 @@ test('event - contextmenu - activated via keyboard', () => {
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Explorer.handleContextMenuKeyboard',
-    0
+    'Explorer.handleContextMenuKeyboard'
   )
 })
 
@@ -599,7 +597,11 @@ test('event - click', () => {
   })
   $GitKeep.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleClick', 0)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Explorer.handleClickAt',
+    50,
+    50
+  )
   expect(event.defaultPrevented).toBe(false)
 })
 
@@ -621,16 +623,19 @@ test('event - click on wrapper div', () => {
   ])
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
-  state.$Viewlet.dispatchEvent(
-    new MouseEvent('mousedown', {
-      clientX: 50,
-      clientY: 50,
-      bubbles: true,
-      button: 0,
-    })
-  )
+  const event = new MouseEvent('mousedown', {
+    clientX: 50,
+    clientY: 50,
+    bubbles: true,
+    button: 0,
+  })
+  state.$Viewlet.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleClick', -1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Explorer.handleClickAt',
+    50,
+    50
+  )
 })
 
 test('event - right click', () => {

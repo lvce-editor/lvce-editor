@@ -12,6 +12,7 @@ export const create$MenuItem = (item) => {
   const $MenuItem = document.createElement('li')
   switch (item.flags) {
     case MenuItemFlags.None:
+    case MenuItemFlags.RestoreFocus:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
       $MenuItem.role = 'menuitem'

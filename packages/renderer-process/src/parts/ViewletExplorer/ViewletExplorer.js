@@ -1,9 +1,8 @@
-import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as InputBox from '../InputBox/InputBox.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as DirentType from '../DirentType/DirentType.js'
 
@@ -79,15 +78,8 @@ const handleFocus = (event) => {
   if ($Target.className === 'InputBox') {
     return
   }
-  const index = findIndex($Target)
-  if (index < 0) {
-    return
-  }
   event.preventDefault()
-  RendererWorker.send(
-    /* Explorer.focusIndex */ 'Explorer.focusIndex',
-    /* index */ index
-  )
+  RendererWorker.send(/* Explorer.focus */ 'Explorer.focus')
 }
 
 const handleBlur = (event) => {
@@ -152,25 +144,18 @@ const getFocusedIndexFromFocusOutline = ($Viewlet) => {
 }
 
 const handleContextMenuMouse = (event) => {
-  const $Target = event.target
   const x = event.clientX
   const y = event.clientY
-  const index = findIndex($Target) // TODO index can be computed in renderer worker
   RendererWorker.send(
-    /* Explorer.handleContextMenuMouse */ 'Explorer.handleContextMenuMouse',
+    /* Explorer.handleContextMenuMouseAt */ 'Explorer.handleContextMenuMouseAt',
     /* x */ x,
-    /* y */ y,
-    /* index */ index
+    /* y */ y
   )
 }
 
 const handleContextMenuKeyboard = (event) => {
-  const $Target = event.target
-  // TODO index computation is not necessary because focused index is stored in renderer worker
-  const index = getFocusedIndexFromFocusOutline($Target)
   RendererWorker.send(
-    /* Explorer.handleContextMenuKeyboard */ 'Explorer.handleContextMenuKeyboard',
-    /* index */ index
+    /* Explorer.handleContextMenuKeyboard */ 'Explorer.handleContextMenuKeyboard'
   )
 }
 
@@ -188,55 +173,37 @@ const handleMouseDown = (event) => {
   if (event.button !== MouseEventType.LeftClick) {
     return
   }
-  const $Target = event.target
-  const index = findIndex($Target)
-  if (index === -2) {
-    return
-  }
+  const x = event.clientX
+  const y = event.clientY
   RendererWorker.send(
-    /* Explorer.handleClick */ 'Explorer.handleClick',
-    /* index */ index
+    /* Explorer.handleClickAt */ 'Explorer.handleClickAt',
+    /* x */ x,
+    /* y */ y
   )
-}
-
-const findIndex = ($Target) => {
-  if (
-    $Target.className.includes('Icon') ||
-    $Target.className.includes('TreeItemLabel')
-  ) {
-    return FindIndex.findIndex($Target.parentNode.parentNode, $Target)
-  }
-  if ($Target.classList.contains('TreeItem')) {
-    return FindIndex.findIndex($Target.parentNode, $Target)
-  }
-  if ($Target.classList.contains('Viewlet')) {
-    return -1
-  }
-  return -2
 }
 
 const handleMouseEnter = (event) => {
-  const $Target = event.target
-  const index = findIndex($Target)
-  if (index === -1) {
-    return
-  }
-  RendererWorker.send(
-    /* Explorer.handleMouseEnter */ 'Explorer.handleMouseEnter',
-    /* index */ index
-  )
+  // const $Target = event.target
+  // const index = findIndex($Target)
+  // if (index === -1) {
+  //   return
+  // }
+  // RendererWorker.send(
+  //   /* Explorer.handleMouseEnter */ 'Explorer.handleMouseEnter',
+  //   /* index */ index
+  // )
 }
 
 const handleMouseLeave = (event) => {
-  const $Target = event.target
-  const index = findIndex($Target)
-  if (index === -1) {
-    return
-  }
-  RendererWorker.send(
-    /* Explorer.handleMouseLeave */ 'Explorer.handleMouseLeave',
-    /* index */ index
-  )
+  // const $Target = event.target
+  // const index = findIndex($Target)
+  // if (index === -1) {
+  //   return
+  // }
+  // RendererWorker.send(
+  //   /* Explorer.handleMouseLeave */ 'Explorer.handleMouseLeave',
+  //   /* index */ index
+  // )
 }
 
 const handleWheel = (event) => {

@@ -26,15 +26,17 @@ declare const Editor: {
 }
 
 declare const Explorer: {
-  readonly openContextMenu: (index: number) => Promise<void>
+  readonly openContextMenu: () => Promise<void>
   readonly removeDirent: () => Promise<void>
   readonly focusFirst: () => Promise<void>
   readonly focusLast: () => Promise<void>
   readonly focusNext: () => Promise<void>
+  readonly focusIndex: (index: number) => Promise<void>
   readonly clickCurrent: () => Promise<void>
   readonly expandRecursively: () => Promise<void>
   // TODO maybe rename this to collapse
   readonly handleArrowLeft: () => Promise<void>
+  readonly newFile: () => Promise<void>
 }
 
 declare const Extension: {

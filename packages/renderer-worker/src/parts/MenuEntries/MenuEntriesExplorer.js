@@ -34,7 +34,7 @@ const ALL_ENTRIES = [
   {
     id: 'openContainingFolder',
     label: I18nString.i18nString(UiStrings.OpenContainingFolder),
-    flags: MenuItemFlags.None,
+    flags: MenuItemFlags.RestoreFocus,
     command: 'Explorer.openContainingFolder',
   },
   {
@@ -52,13 +52,13 @@ const ALL_ENTRIES = [
   {
     id: 'cut',
     label: I18nString.i18nString(UiStrings.Cut),
-    flags: MenuItemFlags.None,
+    flags: MenuItemFlags.RestoreFocus,
     command: /* TODO */ -1,
   },
   {
     id: 'copy',
     label: I18nString.i18nString(UiStrings.Copy),
-    flags: MenuItemFlags.None,
+    flags: MenuItemFlags.RestoreFocus,
     command: 'Explorer.handleCopy',
   },
   {
@@ -76,13 +76,13 @@ const ALL_ENTRIES = [
   {
     id: 'copyPath',
     label: I18nString.i18nString(UiStrings.CopyPath),
-    flags: MenuItemFlags.None,
+    flags: MenuItemFlags.RestoreFocus,
     command: 'Explorer.copyPath',
   },
   {
     id: 'copyRelativePath',
     label: I18nString.i18nString(UiStrings.CopyRelativePath),
-    flags: MenuItemFlags.None,
+    flags: MenuItemFlags.RestoreFocus,
     command: 'Explorer.copyRelativePath',
   },
   {

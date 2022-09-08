@@ -12,6 +12,10 @@ export const focusNext = async () => {
   await Command.execute('Explorer.focusNext')
 }
 
+export const focusIndex = async (index) => {
+  await Command.execute('Explorer.focusIndex', index)
+}
+
 export const clickCurrent = async () => {
   await Command.execute('Explorer.handleClickCurrent')
 }
@@ -34,4 +38,8 @@ export const removeDirent = async () => {
 
 export const expandRecursively = async () => {
   await Command.execute('Explorer.expandRecursively')
+}
+
+export const newFile = async () => {
+  await Command.execute('Explorer.newFile')
 }
