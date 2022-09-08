@@ -12,7 +12,10 @@ export const getModuleId = (commandId) => {
     case 'Developer.getMemoryUsage':
     case 'Developer.showState':
       return ModuleId.Developer
-    case 'Meta.setThemeColor':
+    case 'Dialog.alert':
+    case 'Dialog.close':
+    case 'Dialog.prompt':
+    case 'Dialog.showErrorDialogWithOptions':
       return ModuleId.Dialog
     case 'Download.downloadFile':
       return ModuleId.Download
@@ -72,6 +75,8 @@ export const getModuleId = (commandId) => {
     case 'Menu.showMenu':
     case 'Menu.showSubMenu':
       return ModuleId.Menu
+    case 'Meta.setThemeColor':
+      return ModuleId.Meta
     case 'Notification.create':
     case 'Notification.createWithOptions':
     case 'Notification.dispose':
