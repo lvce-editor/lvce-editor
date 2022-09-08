@@ -9,6 +9,8 @@ const Imports = {
   FocusLast: () => import('./ViewletActivityBarFocusLast.js'),
   FocusNext: () => import('./ViewletActivityBarFocusNext.js'),
   FocusPrevious: () => import('./ViewletActivityBarFocusPrevious.js'),
+  SelectCurrent: () => import('./ViewletActivityBarSelectCurrent.js'),
+  HandleClick: () => import('./ViewletActivityBarHandleClick.js'),
 }
 
 // prettier-ignore
@@ -19,12 +21,11 @@ export const Commands = {
   'ActivityBar.focusNext': LazyCommand.create('ActivityBar', Imports.FocusNext, 'focusNext'),
   'ActivityBar.focusPrevious': LazyCommand.create('ActivityBar', Imports.FocusPrevious, 'focusPrevious'),
   'ActivityBar.getHiddenItems': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.getHiddenItems),
-  'ActivityBar.getItems': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.getItems),
-  'ActivityBar.handleClick': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.handleClick),
+  'ActivityBar.handleClick': LazyCommand.create('ActivityBar', Imports.HandleClick, 'handleClick'),
   'ActivityBar.handleContextMenu': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.handleContextMenu),
   'ActivityBar.handleSideBarHidden': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.handleSideBarHidden),
   'ActivityBar.handleSideBarViewletChange': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.handleSideBarViewletChange),
-  'ActivityBar.selectCurrent': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.selectCurrent),
+  'ActivityBar.selectCurrent': LazyCommand.create('ActivityBar',Imports.SelectCurrent, 'selectCurrent'),
   'ActivityBar.toggleItem': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.toggleItem),
   'ActivityBar.updateSourceControlCount': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.updateSourceControlCount),
 }
