@@ -4,8 +4,8 @@ import * as LocalStorage from './LocalStorage.js'
 
 export const Commands = {
   'LocalStorage.clear': LocalStorage.clear,
-  'LocalStorage.setJson': LocalStorage.setJson,
   'LocalStorage.getJson': LocalStorage.getJson,
   'LocalStorage.getText': LocalStorage.getText,
+  'LocalStorage.setJson': LocalStorage.setJson,
   'LocalStorage.setText': LocalStorage.setText,
 }

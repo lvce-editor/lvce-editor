@@ -101,6 +101,7 @@ const Imports = {
 
 // prettier-ignore
 export const Commands = {
+    // TODO command to set cursor position
   'Editor.applyEdit': lazyCommand(Imports.ApplyEdit, 'editorApplyEdit'),
   'Editor.blur': lazyCommand(Imports.Blur, 'editorBlur'), // TODO needed?
   'Editor.braceCompletion': lazyCommand(Imports.BraceCompletion, 'editorBraceCompletion'),
@@ -187,7 +188,6 @@ export const Commands = {
   'Editor.type': lazyCommand(Imports.Type, 'editorType'),
   'Editor.undo': lazyCommand(Imports.Undo, 'editorUndo'),
   'Editor.unindent': lazyCommand(Imports.UnIndent, 'selectUp'),
-    // TODO command to set cursor position
 }
 
 export * from './ViewletEditorText.js'

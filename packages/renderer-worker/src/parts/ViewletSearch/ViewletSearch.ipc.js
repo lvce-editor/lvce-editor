@@ -3,11 +3,11 @@ import * as ViewletSearch from './ViewletSearch.js'
 
 // prettier-ignore
 export const Commands = {
-  'Search.handleInput': Viewlet.wrapViewletCommand('Search', ViewletSearch.handleInput),
   'Search.handleClick': Viewlet.wrapViewletCommand('Search', ViewletSearch.handleClick),
-  'Search.setValue': Viewlet.wrapViewletCommand('Search', ViewletSearch.setValue),
-  'Search.handleContextMenuMouseAt': Viewlet.wrapViewletCommand('Search', ViewletSearch.handleContextMenuMouseAt),
   'Search.handleContextMenuKeyboard': Viewlet.wrapViewletCommand('Search', ViewletSearch.handleContextMenuKeyboard),
+  'Search.handleContextMenuMouseAt': Viewlet.wrapViewletCommand('Search', ViewletSearch.handleContextMenuMouseAt),
+  'Search.handleInput': Viewlet.wrapViewletCommand('Search', ViewletSearch.handleInput),
+  'Search.setValue': Viewlet.wrapViewletCommand('Search', ViewletSearch.setValue),
 }
 
 export * from './ViewletSearch.js'
