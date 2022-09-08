@@ -2,30 +2,20 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
   switch (commandId) {
-    case 'TestFrameWork.showOverlay':
-    case 'TestFrameWork.performAction':
-    case 'TestFrameWork.checkSingleElementCondition':
-    case 'TestFrameWork.checkMultiElementCondition':
-    case 'TestFrameWork.performKeyBoardAction':
-      return ModuleId.TestFrameWork
+    case 'Audio.play':
+      return ModuleId.Audio
     case 'ClipBoard.readText':
     case 'ClipBoard.writeText':
       return ModuleId.ClipBoard
-    case 'Developer.showState':
+    case 'Css.setInlineStyle':
+      return ModuleId.Css
     case 'Developer.getMemoryUsage':
+    case 'Developer.showState':
       return ModuleId.Developer
+    case 'Meta.setThemeColor':
+      return ModuleId.Dialog
     case 'Download.downloadFile':
       return ModuleId.Download
-    case 'Open.openUrl':
-      return ModuleId.Open
-    case 'InitData.getInitData':
-      return ModuleId.InitData
-    case 549:
-    case 550:
-    case 551:
-      return ModuleId.ViewService
-    case 'KeyBindings.hydrate':
-      return ModuleId.KeyBindings
     case 764:
     case 765:
     case 766:
@@ -41,90 +31,95 @@ export const getModuleId = (commandId) => {
     case 776:
     case 777:
       return ModuleId.EditorController
-    case 'Notification.create':
-    case 'Notification.dispose':
-    case 'Notification.createWithOptions':
-      return ModuleId.Notification
-    case 'Layout.update':
-    case 'Layout.hydrate':
-    case 'Layout.hide':
-    case 'Layout.getBounds':
-    case 'Layout.show':
-      return ModuleId.Layout
-    case 'Viewlet.refresh':
-    case 'Viewlet.invoke':
-    case 'Viewlet.send':
-    case 'Viewlet.focus':
-    case 'Viewlet.dispose':
-    case 'Viewlet.appendViewlet':
-    case 'Viewlet.load':
-    case 'Viewlet.handleError':
-    case 'Viewlet.sendMultiple':
-      return ModuleId.Viewlet
-    case 'Audio.play':
-      return ModuleId.Audio
-    case 'ImagePreview.create':
-    case 'ImagePreview.dispose':
-    case 'ImagePreview.update':
-    case 'ImagePreview.showError':
-      return ModuleId.ImagePreview
     case 'EditorError.create':
       return ModuleId.EditorError
+    case 'EditorHover.create':
+      return ModuleId.EditorHover
+    case 'EditorRename.create':
+    case 'EditorRename.dispose':
+    case 'EditorRename.finish':
+      return ModuleId.EditorRename
     case 'FindWidget.create':
     case 'FindWidget.dispose':
     case 'FindWidget.setResults':
       return ModuleId.FindWidget
-    case 'EditorRename.create':
-    case 'EditorRename.finish':
-    case 'EditorRename.dispose':
-      return ModuleId.EditorRename
-    case 'Css.setInlineStyle':
-      return ModuleId.Css
-    case 'Location.getPathName':
-    case 'Location.setPathName':
-    case 'Location.hydrate':
+    case 'ImagePreview.create':
+    case 'ImagePreview.dispose':
+    case 'ImagePreview.showError':
+    case 'ImagePreview.update':
+      return ModuleId.ImagePreview
+    case 'InitData.getInitData':
+      return ModuleId.InitData
+    case 'KeyBindings.hydrate':
+      return ModuleId.KeyBindings
+    case 'Layout.getBounds':
+    case 'Layout.hide':
+    case 'Layout.hydrate':
+    case 'Layout.show':
+    case 'Layout.update':
+      return ModuleId.Layout
     case 'Location.getHref':
+    case 'Location.getPathName':
+    case 'Location.hydrate':
+    case 'Location.setPathName':
       return ModuleId.Location
-    case 'EditorHover.create':
-      return ModuleId.EditorHover
+    case 'Menu.focusIndex':
+    case 'Menu.hide':
+    case 'Menu.hideSubMenu':
+    case 'Menu.show':
+    case 'Menu.showContextMenu':
+    case 'Menu.showControlled':
+    case 'Menu.showMenu':
+    case 'Menu.showSubMenu':
+      return ModuleId.Menu
+    case 'Notification.create':
+    case 'Notification.createWithOptions':
+    case 'Notification.dispose':
+      return ModuleId.Notification
+    case 'Open.openUrl':
+      return ModuleId.Open
     case 6661:
     case 6662:
     case 6663:
     case 6664:
       return ModuleId.Panel
-    case 33111:
-      return ModuleId.Workbench
-    case 'Dialog.prompt':
-    case 'Dialog.alert':
-    case 'Dialog.showErrorDialogWithOptions':
-    case 'Dialog.close':
-      return ModuleId.Dialog
-    case 'Menu.showControlled':
-    case 'Menu.hide':
-    case 'Menu.focusIndex':
-    case 'Menu.showSubMenu':
-    case 'Menu.hideSubMenu':
-    case 'Menu.showMenu':
-    case 'Menu.showContextMenu':
-    case 'Menu.show':
-      return ModuleId.Menu
-    case 'Window.reload':
-    case 'Window.minimize':
-    case 'Window.maximize':
-    case 'Window.unmaximize':
-    case 'Window.close':
-    case 'Window.setTitle':
-    case 'Window.onVisibilityChange':
-      return ModuleId.Window
+    case 'ServiceWorker.register':
+    case 'ServiceWorker.uninstall':
+      return ModuleId.ServiceWorker
+    case 'TestFrameWork.checkMultiElementCondition':
+    case 'TestFrameWork.checkSingleElementCondition':
+    case 'TestFrameWork.performAction':
+    case 'TestFrameWork.performKeyBoardAction':
+    case 'TestFrameWork.showOverlay':
+      return ModuleId.TestFrameWork
+    case 549:
+    case 550:
+    case 551:
+      return ModuleId.ViewService
+    case 'Viewlet.appendViewlet':
+    case 'Viewlet.dispose':
+    case 'Viewlet.focus':
+    case 'Viewlet.handleError':
+    case 'Viewlet.invoke':
+    case 'Viewlet.load':
+    case 'Viewlet.refresh':
+    case 'Viewlet.send':
+    case 'Viewlet.sendMultiple':
+      return ModuleId.Viewlet
     case 'WebStorage.clear':
     case 'WebStorage.getItem':
     case 'WebStorage.setItem':
       return ModuleId.WebStorage
-    case 'Meta.setThemeColor':
-      return ModuleId.Dialog
-    case 'ServiceWorker.register':
-    case 'ServiceWorker.uninstall':
-      return ModuleId.ServiceWorker
+    case 'Window.close':
+    case 'Window.maximize':
+    case 'Window.minimize':
+    case 'Window.onVisibilityChange':
+    case 'Window.reload':
+    case 'Window.setTitle':
+    case 'Window.unmaximize':
+      return ModuleId.Window
+    case 33111:
+      return ModuleId.Workbench
     default:
       throw new Error(`command ${commandId} not found`)
   }
