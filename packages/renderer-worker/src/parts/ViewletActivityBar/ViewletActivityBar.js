@@ -1,10 +1,9 @@
-import * as Command from '../Command/Command.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as Layout from '../Layout/Layout.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
+import * as Command from '../Command/Command.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as I18nString from '../I18NString/I18NString.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 /**
  * @enum {string}
@@ -191,52 +190,6 @@ const findIndex = (activityBarItems, id) => {
   return -1
 }
 
-const handleClickSettings = async (state, x, y, viewletId) => {
-  console.log('is settings')
-  await Command.execute(
-    /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ x,
-    /* y */ y,
-    /* id */ 'settings'
-  )
-  return state
-}
-
-const handleClickAdditionalViews = async (state, x, y, viewletId) => {
-  await Command.execute(
-    /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ x,
-    /* y */ y,
-    /* id */ 'activity-bar-additional-views'
-  )
-  return state
-}
-
-const handleClickOther = async (state, x, y, viewletId) => {
-  if (Layout.isSideBarVisible()) {
-    await Command.execute(
-      /* SideBar.showOrHideViewlet */ 'SideBar.showOrHideViewlet',
-      /* id */ viewletId
-    )
-  } else {
-    // TODO should show side bar with viewletId
-    await Layout.showSideBar()
-  }
-  return state
-}
-
-export const handleClick = async (state, index, x, y) => {
-  const viewletId = state.activityBarItems[index].id
-  switch (viewletId) {
-    case 'Settings':
-      return handleClickSettings(state, x, y, viewletId)
-    case 'Additional Views':
-      return handleClickAdditionalViews(state, x, y, viewletId)
-    default:
-      return handleClickOther(state, x, y, viewletId)
-  }
-}
-
 export const handleSideBarViewletChange = async (state, id, ...args) => {
   const index = findIndex(state.activityBarItems, id)
   const oldIndex = state.selectedIndex
@@ -313,30 +266,6 @@ export const handleContextMenu = async (state, x, y) => {
     /* id */ 'activityBar'
   )
   return state
-}
-
-const getPosition = (state, index) => {
-  const { activityBarItems, top, left, height, itemHeight } = state
-  if (index > activityBarItems.length - 2) {
-    // at bottom
-    return {
-      x: left,
-      y: top + height - (activityBarItems.length - 1 - index) * itemHeight,
-    }
-  }
-  // at top
-  return {
-    x: left,
-    y: top + index * itemHeight,
-  }
-}
-
-export const selectCurrent = async (state) => {
-  if (state.focusedIndex === -1) {
-    return
-  }
-  const position = getPosition(state, state.focusedIndex)
-  await handleClick(state, state.focusedIndex, position.x, position.y)
 }
 
 export const hasFunctionalResize = true
