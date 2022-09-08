@@ -1,27 +1,27 @@
 import * as Platform from '../src/parts/Platform/Platform.js'
 
 test('isWindows', () => {
-  expect(Platform.isWindows()).toEqual(expect.any(Boolean))
+  expect(Platform.isWindows).toEqual(expect.any(Boolean))
 })
 
 test('isMacOs', () => {
-  expect(Platform.isMacOs()).toEqual(expect.any(Boolean))
+  expect(Platform.isMacOs).toEqual(expect.any(Boolean))
 })
 
-test('getDataDir', () => {
-  expect(Platform.getDataDir()).toEqual(expect.any(String))
+test('dataDir', () => {
+  expect(Platform.dataDir).toEqual(expect.any(String))
 })
 
-test('getConfigDir', () => {
-  expect(Platform.getConfigDir()).toEqual(expect.any(String))
+test('configDir', () => {
+  expect(Platform.configDir).toEqual(expect.any(String))
 })
 
-test('getCacheDir', () => {
-  expect(Platform.getCacheDir()).toEqual(expect.any(String))
+test('cacheDir', () => {
+  expect(Platform.cacheDir).toEqual(expect.any(String))
 })
 
-test('getHomeDir', () => {
-  expect(Platform.getHomeDir()).toEqual(expect.any(String))
+test('homeDir', () => {
+  expect(Platform.homeDir).toEqual(expect.any(String))
 })
 
 test('getCachedExtensionsPath', () => {

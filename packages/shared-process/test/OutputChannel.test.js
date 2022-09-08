@@ -12,7 +12,7 @@ const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 
-if (Platform.isWindows()) {
+if (Platform.isWindows) {
   test.todo('output channel test')
 } else {
   test('writing to channel via stream', async () => {
