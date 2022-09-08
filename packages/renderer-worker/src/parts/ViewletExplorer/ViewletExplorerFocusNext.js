@@ -1,8 +1,9 @@
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
 
 export const focusNext = (state) => {
-  if (state.focusedIndex === state.dirents.length - 1) {
+  const { focusedIndex, dirents } = state
+  if (focusedIndex === dirents.length - 1) {
     return state
   }
-  return focusIndex(state, state.focusedIndex + 1)
+  return focusIndex(state, focusedIndex + 1)
 }
