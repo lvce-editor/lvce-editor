@@ -1,6 +1,7 @@
 import * as I18nString from '../I18NString/I18NString.js'
 import * as Platform from '../Platform/Platform.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 const UiStrings = {
   File: 'File',
@@ -93,10 +94,10 @@ const getMenuEntriesRemote = () => {
 
 export const getMenuEntries = () => {
   switch (Platform.platform) {
-    case 'web':
+    case PlatformType.Web:
       return getMenuEntriesWeb()
-    case 'remote':
-    case 'electron':
+    case PlatformType.Remote:
+    case PlatformType.Electron:
       return getMenuEntriesRemote()
     default:
       return []

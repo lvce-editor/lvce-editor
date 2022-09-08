@@ -1,5 +1,5 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-
+import * as PlatformType from '../PlatformType/PlatformType.js'
 /* istanbul ignore file */
 
 // TODO this should always be completely tree shaken out during build, maybe need to be marked as @__Pure for terser to work
@@ -70,7 +70,7 @@ export const getLogsDir = () => {
 }
 
 export const getUserSettingsPath = () => {
-  if (getPlatform() === 'web') {
+  if (getPlatform() === PlatformType.Web) {
     return 'settings'
   }
   return SharedProcess.invoke(
@@ -97,9 +97,9 @@ const getPlatform = () => {
     typeof navigator.appVersion !== 'undefined' &&
     navigator.appVersion.includes('Electron')
   ) {
-    return 'electron'
+    return PlatformType.Electron
   }
-  return 'remote'
+  return PlatformType.Remote
 }
 
 export const platform = getPlatform()
@@ -110,14 +110,14 @@ export const getAssetDir = () => {
     // @ts-ignore
     return ASSET_DIR
   }
-  if (getPlatform() === 'electron') {
+  if (getPlatform() === PlatformType.Electron) {
     return '../../../../..'
   }
   return ''
 }
 
 export const getRecentlyOpenedPath = () => {
-  if (getPlatform() === 'web') {
+  if (getPlatform() === PlatformType.Web) {
     return 'recently-opened'
   }
   return SharedProcess.invoke(

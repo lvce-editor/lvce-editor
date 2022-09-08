@@ -4,6 +4,8 @@ import * as Meta from '../Meta/Meta.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
+
 // TODO by default color theme should come from local storage, session storage, cache storage, indexeddb or blob url -> fast initial load
 // actual color theme can be computed after workbench has loaded (most times will be the same and doesn't need to be computed)
 
@@ -48,7 +50,7 @@ const getFallbackColorTheme = async () => {
 // so that all validation is here (json parsing errors, invalid shape, ...)
 
 const getColorThemeJson = (colorThemeId) => {
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     return getColorThemeJsonFromStaticFolder(colorThemeId)
   }
   return getColorThemeJsonFromSharedProcess(colorThemeId)
@@ -76,7 +78,7 @@ const applyColorTheme = async (colorThemeId) => {
     const colorThemeJson = await getColorThemeJson(colorThemeId)
     const colorThemeCss = await getColorThemeCss(colorThemeId, colorThemeJson)
     await Css.setInlineStyle('ContributedColorTheme', colorThemeCss)
-    if (Platform.platform === 'web') {
+    if (Platform.platform === PlatformType.Web) {
       const themeColor = getMetaThemeColor(colorThemeJson) || ''
       await Meta.setThemeColor(themeColor)
     }

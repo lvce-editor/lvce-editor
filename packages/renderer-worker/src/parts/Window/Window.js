@@ -2,6 +2,7 @@ import * as ElectronApp from '../ElectronApp/ElectronApp.js'
 import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 const reloadWeb = async () => {
   await RendererProcess.invoke(/* windowReload */ 8080)
@@ -16,11 +17,11 @@ const reloadElectron = async () => {
 }
 export const reload = () => {
   switch (Platform.platform) {
-    case 'web':
+    case PlatformType.Web:
       return reloadWeb()
-    case 'remote':
+    case PlatformType.Remote:
       return reloadRemote()
-    case 'electron':
+    case PlatformType.Electron:
       return reloadElectron()
     default:
       return
@@ -37,11 +38,11 @@ const minimizeElectron = () => {
 
 export const minimize = async () => {
   switch (Platform.platform) {
-    case 'web':
+    case PlatformType.Web:
       return minimizeWeb()
-    case 'remote':
+    case PlatformType.Remote:
       return minimizeRemote()
-    case 'electron':
+    case PlatformType.Electron:
       return minimizeElectron()
     default:
       return
@@ -56,11 +57,11 @@ const maximizeElectron = () => {
 
 export const maximize = async () => {
   switch (Platform.platform) {
-    case 'web':
+    case PlatformType.Web:
       return maximizeWeb()
-    case 'remote':
+    case PlatformType.Remote:
       return maximizeRemote()
-    case 'electron':
+    case PlatformType.Electron:
       return maximizeElectron()
     default:
       return
@@ -77,11 +78,11 @@ const unmaximizeElectron = () => {
 
 export const unmaximize = async () => {
   switch (Platform.platform) {
-    case 'web':
+    case PlatformType.Web:
       return unmaximizeWeb()
-    case 'remote':
+    case PlatformType.Remote:
       return unmaximizeRemote()
-    case 'electron':
+    case PlatformType.Electron:
       return unmaximizeElectron()
     default:
       return
@@ -96,11 +97,11 @@ const closeElectron = () => {
 
 export const close = async () => {
   switch (Platform.platform) {
-    case 'web':
+    case PlatformType.Web:
       return closeWeb()
-    case 'remote':
+    case PlatformType.Remote:
       return closeRemote()
-    case 'electron':
+    case PlatformType.Electron:
       return closeElectron()
     default:
       return
@@ -115,11 +116,11 @@ const exitElectron = () => {
 
 export const exit = () => {
   switch (Platform.platform) {
-    case 'web':
+    case PlatformType.Web:
       return exitWeb()
-    case 'remote':
+    case PlatformType.Remote:
       return exitRemote()
-    case 'electron':
+    case PlatformType.Electron:
       return exitElectron()
   }
 }
@@ -139,11 +140,11 @@ const openNewElectron = () => {
 
 export const openNew = async () => {
   switch (Platform.platform) {
-    case 'web':
+    case PlatformType.Web:
       return openNewWeb()
-    case 'remote':
+    case PlatformType.Remote:
       return openNewRemote()
-    case 'electron':
+    case PlatformType.Electron:
       return openNewElectron()
     default:
       return

@@ -1,9 +1,10 @@
 import * as ExtensionHostDiagnostics from '../ExtensionHost/ExtensionHostDiagnostic.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 const getDiagnostics = async (editor) => {
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     console.info('diagnostics not yet implemented for web')
     return []
   }

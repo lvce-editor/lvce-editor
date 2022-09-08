@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -38,7 +39,7 @@ test.skip('openFolder', async () => {
 test('showAbout - electron', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
-      platform: 'electron',
+      platform: PlatformType.Electron,
     }
   })
   jest.unstable_mockModule(
@@ -64,7 +65,7 @@ test('showAbout - electron', async () => {
 test('showMessage - web', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
-      platform: 'web',
+      platform: PlatformType.Web,
     }
   })
   jest.unstable_mockModule(
@@ -140,7 +141,7 @@ test('showMessage - electron', async () => {
 test('close - web', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     return {
-      platform: 'web',
+      platform: PlatformType.Web,
     }
   })
   jest.unstable_mockModule(

@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 const getLanguagesFromExtensionHost = async () => {
   // TODO handle error
@@ -18,14 +19,14 @@ const getLanguagesFromStaticFolder = async () => {
 }
 
 export const getLanguages = () => {
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     return getLanguagesFromStaticFolder()
   }
   return getLanguagesFromExtensionHost()
 }
 
 export const getLanguageConfiguration = async (languageId) => {
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     console.warn('get language configuration not yet supported on web')
     return
   }

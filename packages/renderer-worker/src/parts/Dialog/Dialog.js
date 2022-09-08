@@ -3,6 +3,7 @@ import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
 import * as ElectronWindowAbout from '../ElectronWindowAbout/ElectronWindowAbout.js'
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const state = {
   dialog: undefined,
@@ -43,11 +44,11 @@ const openFolderElectron = async () => {
 
 export const openFolder = () => {
   switch (Platform.platform) {
-    case 'web':
+    case PlatformType.Web:
       return openFolderWeb()
-    case 'remote':
+    case PlatformType.Remote:
       return openFolderRemote()
-    case 'electron':
+    case PlatformType.Electron:
       return openFolderElectron()
     default:
       return
@@ -73,11 +74,11 @@ const openFileElectron = async () => {
 
 export const openFile = () => {
   switch (Platform.platform) {
-    case 'web':
+    case PlatformType.Web:
       return openFileWeb()
-    case 'remote':
+    case PlatformType.Remote:
       return openFileRemote()
-    case 'electron':
+    case PlatformType.Electron:
       return openFileElectron()
     default:
       return

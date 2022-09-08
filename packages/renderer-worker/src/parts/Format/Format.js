@@ -1,6 +1,7 @@
 import * as Editor from '../Editor/Editor.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 // TODO format should be executed in parallel with saving
 // -> fast save, no need to wait for formatting
@@ -37,7 +38,7 @@ const onDidSaveEditor = async (editor) => {
 }
 
 export const hydrate = async () => {
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
   }
   // TODO check preferences if format on save is enabled
   // EditorSave.onDidSave(onDidSaveEditor)

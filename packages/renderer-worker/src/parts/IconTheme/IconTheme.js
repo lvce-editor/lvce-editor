@@ -7,6 +7,7 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const state = {
   seenFiles: [],
@@ -23,7 +24,7 @@ const DEFAULT_FOLDER_ICON = '_folder'
 const DEFAULT_FOLDER_ICON_OPEN = '_folder_open'
 
 const getIconThemeJson = async (iconThemeId) => {
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     const assetDir = Platform.getAssetDir()
     const url = `${assetDir}/icon-themes/${iconThemeId}.json`
     const json = await Command.execute(
@@ -116,7 +117,7 @@ export const getIcon = (dirent) => {
 }
 
 const getBackgroundUrl = (extensionPath, value) => {
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     return `/file-icons/${value.slice(7)}`
   }
   // TODO what if the file in on linux and includes a backslash?
