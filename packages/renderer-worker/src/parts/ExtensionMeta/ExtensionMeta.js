@@ -5,6 +5,7 @@ import * as Languages from '../Languages/Languages.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import { VError } from '../VError/VError.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const state = {
   /**
@@ -129,10 +130,10 @@ export const handleRejectedExtensions = async (extensions) => {
 }
 
 export const getExtensions = async () => {
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     return state.webExtensions
   }
-  if (Platform.platform === 'remote') {
+  if (Platform.platform === PlatformType.Remote) {
     const sharedProcessExtensions = await getSharedProcessExtensions()
     return [...sharedProcessExtensions, ...state.webExtensions]
   }

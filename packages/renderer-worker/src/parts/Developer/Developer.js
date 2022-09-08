@@ -7,6 +7,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
 import * as ElectronWindowProcessExplorer from '../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 const formatBytes = (bytes) => {
   return prettyBytes(bytes)
@@ -133,7 +134,7 @@ const formatNodeTiming = (nodeStartupTiming) => {
 }
 
 const getNodeTiming = () => {
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     return undefined
   }
   return SharedProcess.invoke(/* command */ 'Developer.getNodeStartupTime')
@@ -219,7 +220,10 @@ const getMeasureEntries = () => {
 }
 
 const getElectronEntries = async () => {
-  if (Platform.platform === 'web' || Platform.platform === 'remote') {
+  if (
+    Platform.platform === PlatformType.Web ||
+    Platform.platform === PlatformType.Remote
+  ) {
     return undefined
   }
   const result = await SharedProcess.invoke(
@@ -236,7 +240,7 @@ export const getStartupPerformanceContent = async () => {
   //   LifeCycle.once(LifeCycle.PHASE_FIFTEEN, resolve)
   // )
   let nodeStartupTiming
-  if (Platform.platform !== 'web') {
+  if (Platform.platform !== PlatformType.Web) {
     nodeStartupTiming = await getNodeTiming()
   }
   const measureEntries = getMeasureEntries()
@@ -454,7 +458,7 @@ export const openExtensionsFolder = () => {
 
 export const openLogsFolder = async () => {
   // TODO only in electron or in remote when it is the same machine
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     return
   }
   const logsFolder = await Platform.getLogsDir()

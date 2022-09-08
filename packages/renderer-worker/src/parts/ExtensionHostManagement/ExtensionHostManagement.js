@@ -12,6 +12,7 @@ import * as ExtensionHostManagementShared from './ExtensionHostManagementShared.
 import * as ExtensionHostManagementElectron from './ExtensionHostManagementElectron.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const state = {
   /**
@@ -23,11 +24,11 @@ export const state = {
 const getExtensionHostManagementTypes = () => {
   const platform = Platform.platform
   switch (platform) {
-    case 'web':
+    case PlatformType.Web:
       return [ExtensionHostManagementBrowser]
-    case 'remote':
+    case PlatformType.Remote:
       return [ExtensionHostManagementBrowser, ExtensionHostManagementNode]
-    case 'electron':
+    case PlatformType.Electron:
       return [ExtensionHostManagementBrowser, ExtensionHostManagementElectron]
     default:
       throw new Error('unsupported platform')

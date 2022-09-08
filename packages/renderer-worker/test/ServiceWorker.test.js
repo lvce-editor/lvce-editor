@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as Preferences from '../src/parts/Preferences/Preferences.js'
+import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -35,7 +36,7 @@ const ServiceWorker = await import(
 test('hydrate', async () => {
   // @ts-ignore
   Platform.getPlatform.mockImplementation(() => {
-    return 'web'
+    return PlatformType.Web
   })
   Preferences.state['serviceWorker.enabled'] = true
   // @ts-ignore
@@ -51,7 +52,7 @@ test('hydrate', async () => {
 test('uninstall', async () => {
   // @ts-ignore
   Platform.getPlatform.mockImplementation(() => {
-    return 'web'
+    return PlatformType.Web
   })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})

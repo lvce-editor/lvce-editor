@@ -4,11 +4,12 @@ import * as Workspace from '../Workspace/Workspace.js'
 import * as Assert from '../Assert/Assert.js'
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 import * as FileSystemDisk from './FileSystemDisk.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const readFileInternal = async (getPath) => {
   const path = await getPath()
   Assert.string(path)
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     const settingsJsonContent = await LocalStorage.getText(path)
     if (settingsJsonContent) {
       return settingsJsonContent
@@ -25,7 +26,7 @@ export const readFileInternal = async (getPath) => {
 export const writeFileInternal = async (getPath, content) => {
   const path = await getPath()
   Assert.string(path)
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     await Command.execute(
       /* LocalStorage.setText */ 6904,
       /* key */ path,
