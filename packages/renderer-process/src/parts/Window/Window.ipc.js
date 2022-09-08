@@ -1,11 +1,11 @@
 import * as Window from './Window.js'
 
 export const Commands = {
-  'Window.reload': Window.reload,
-  'Window.minimize': Window.minimize,
-  'Window.maximize': Window.maximize,
-  'Window.unmaximize': Window.unmaximize,
   'Window.close': Window.close,
-  'Window.setTitle': Window.setTitle,
+  'Window.maximize': Window.maximize,
+  'Window.minimize': Window.minimize,
   'Window.onVisibilityChange': Window.onVisibilityChange,
+  'Window.reload': Window.reload,
+  'Window.setTitle': Window.setTitle,
+  'Window.unmaximize': Window.unmaximize,
 }

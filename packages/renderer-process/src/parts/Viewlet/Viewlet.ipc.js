@@ -1,16 +1,16 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
 export const Commands = {
-  'Viewlet.refresh': Viewlet.refresh,
-  'Viewlet.invoke': Viewlet.invoke,
-  'Viewlet.send': Viewlet.invoke,
-  'Viewlet.focus': Viewlet.focus,
-  'Viewlet.dispose': Viewlet.dispose,
   'Viewlet.appendViewlet': Viewlet.appendViewlet,
-  'Viewlet.load': Viewlet.load,
-  'Viewlet.handleError': Viewlet.handleError,
-  'Viewlet.sendMultiple': Viewlet.sendMultiple,
-  'Viewlet.loadModule': Viewlet.loadModule,
-  'Viewlet.show': Viewlet.show,
+  'Viewlet.dispose': Viewlet.dispose,
   'Viewlet.executeCommands': Viewlet.executeCommands,
+  'Viewlet.focus': Viewlet.focus,
+  'Viewlet.handleError': Viewlet.handleError,
+  'Viewlet.invoke': Viewlet.invoke,
+  'Viewlet.load': Viewlet.load,
+  'Viewlet.loadModule': Viewlet.loadModule,
+  'Viewlet.refresh': Viewlet.refresh,
+  'Viewlet.send': Viewlet.invoke,
+  'Viewlet.sendMultiple': Viewlet.sendMultiple,
+  'Viewlet.show': Viewlet.show,
 }

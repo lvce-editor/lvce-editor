@@ -82,7 +82,6 @@ const getIpcFiles = async (...roots) => {
     for (const dirent of dirents) {
       if (dirent.isDirectory()) {
         const folderPath = join(root, dirent.name)
-        console.log({ folderPath })
         await getIpcFilesInternal(folderPath)
       } else if (dirent.isFile() && dirent.name.endsWith('.ipc.js')) {
         allIpcFiles.push(join(root, dirent.name))
@@ -97,8 +96,10 @@ const getIpcFiles = async (...roots) => {
 }
 
 const formatAllCommands = async () => {
-  const allIpcFiles = await getIpcFiles('packages/shared-process/src')
-  console.log({ allIpcFiles })
+  const allIpcFiles = await getIpcFiles(
+    'packages/shared-process/src',
+    'packages/renderer-process/src'
+  )
   for (const path of allIpcFiles) {
     await formatCommands(path)
   }
