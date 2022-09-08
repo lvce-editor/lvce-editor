@@ -8,6 +8,7 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
+import { focusIndex } from './ViewletExplorerFocusIndex.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -811,94 +812,8 @@ export const handleClickAt = async (state, x, y) => {
   return handleClick(state, index)
 }
 
-export const focusNone = (state) => {
-  return focusIndex(state, -1)
-}
-
 export const handleClickCurrent = (state) => {
   return handleClick(state, state.focusedIndex - state.minLineY)
-}
-
-export const focusIndex = (state, index) => {
-  if (index < state.minLineY) {
-    if (index < 0) {
-      return {
-        ...state,
-        focusedIndex: index,
-        focused: true,
-      }
-    }
-    const diff = state.maxLineY - state.minLineY
-    return {
-      ...state,
-      focusedIndex: index,
-      focused: true,
-      minLineY: index,
-      maxLineY: index + diff,
-    }
-  } else if (index >= state.maxLineY) {
-    const diff = state.maxLineY - state.minLineY
-    return {
-      ...state,
-      focusedIndex: index,
-      focused: true,
-      minLineY: index + 1 - diff,
-      maxLineY: index + 1,
-    }
-  }
-  return {
-    ...state,
-    focusedIndex: index,
-    focused: true,
-  }
-}
-
-export const focus = (state) => {
-  if (state.focused) {
-    return state
-  }
-  return {
-    ...state,
-    focused: true,
-  }
-}
-
-export const focusNext = (state) => {
-  if (state.focusedIndex === state.dirents.length - 1) {
-    return state
-  }
-  return focusIndex(state, state.focusedIndex + 1)
-}
-
-export const focusPrevious = (state) => {
-  switch (state.focusedIndex) {
-    case -1:
-      if (state.dirents.length === 0) {
-        return state
-      }
-      return focusIndex(state, state.dirents.length - 1)
-    case 0:
-      return state
-    default:
-      return focusIndex(state, state.focusedIndex - 1)
-  }
-}
-
-export const focusFirst = (state) => {
-  if (state.dirents.length === 0 || state.focusedIndex === 0) {
-    return state
-  }
-  return focusIndex(state, 0)
-}
-
-export const focusLast = (state) => {
-  if (
-    state.dirents.length === 0 ||
-    state.focusedIndex === state.dirents.length - 1
-  ) {
-    return state
-  }
-  return focusIndex(state, state.dirents.length - 1)
 }
 
 export const scrollUp = () => {}

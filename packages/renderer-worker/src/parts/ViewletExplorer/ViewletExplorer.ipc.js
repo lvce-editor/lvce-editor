@@ -1,5 +1,16 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletExplorer from './ViewletExplorer.js'
+import * as LazyCommand from '../LazyCommand/LazyCommand.js'
+
+const Imports = {
+  Focus: () => import('./ViewletExplorerFocus.js'),
+  FocusFirst: () => import('./ViewletExplorerFocusFirst.js'),
+  FocusIndex: () => import('./ViewletExplorerFocusIndex.js'),
+  FocusLast: () => import('./ViewletExplorerFocusLast.js'),
+  FocusNext: () => import('./ViewletExplorerFocusNext.js'),
+  FocusPrevious: () => import('./ViewletExplorerFocusPrevious.js'),
+  FocusNone: () => import('./ViewletExplorerFocusNone.js'),
+}
 
 // prettier-ignore
 export const Commands = {
@@ -12,13 +23,13 @@ export const Commands = {
   'Explorer.copyRelativePath':          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.copyRelativePath),
   'Explorer.expandAll':                 Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.expandAll),
   'Explorer.expandRecursively':         Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.expandRecursively),
-  'Explorer.focus':                     Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focus),
-  'Explorer.focusFirst':                Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusFirst),
-  'Explorer.focusIndex':                Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusIndex),
-  'Explorer.focusLast':                 Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusLast),
-  'Explorer.focusNext':                 Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusNext),
-  'Explorer.focusNone':                 Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusNone),
-  'Explorer.focusPrevious':             Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.focusPrevious),
+  'Explorer.focus':                     LazyCommand.create('Explorer', Imports.Focus, 'focus'),
+  'Explorer.focusFirst':                LazyCommand.create('Explorer', Imports.FocusFirst, 'focusFirst'),
+  'Explorer.focusIndex':                LazyCommand.create('Explorer', Imports.FocusIndex, 'focusIndex'),
+  'Explorer.focusLast':                 LazyCommand.create('Explorer', Imports.FocusLast, 'focusLast'),
+  'Explorer.focusNext':                 LazyCommand.create('Explorer', Imports.FocusNext, 'focusNext'),
+  'Explorer.focusNone':                 LazyCommand.create('Explorer', Imports.FocusNone, 'focusNone'),
+  'Explorer.focusPrevious':             LazyCommand.create('Explorer', Imports.FocusPrevious, 'focusPrevious'),
   'Explorer.getFocusedDirent':          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.getFocusedDirent),
   'Explorer.handleArrowLeft':           Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleArrowLeft),
   'Explorer.handleArrowRight':          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleArrowRight),
