@@ -820,7 +820,6 @@ export const handleClickCurrent = (state) => {
 }
 
 export const focusIndex = (state, index) => {
-  console.log('expl', 'focus', index)
   if (index < state.minLineY) {
     if (index < 0) {
       return {
@@ -1551,10 +1550,6 @@ const renderFocusedIndex = {
     const newFocusedIndex = newState.focused
       ? newState.focusedIndex - newState.minLineY
       : -2
-    console.log('render focus', oldFocusedIndex, newFocusedIndex)
-    if (oldFocusedIndex !== newFocusedIndex) {
-      console.log({ oldState, newState })
-    }
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Explorer',
