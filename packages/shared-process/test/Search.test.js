@@ -12,11 +12,15 @@ const fixPath = (path) => {
   return path.replaceAll('/', sep)
 }
 
-test('search', async () => {
-  const tmpDir = await getTmpDir()
-  await writeFile(
-    join(tmpDir, 'index.html'),
-    `<!DOCTYPE html>
+const TIMEOUT_LONG = 10_000
+
+test(
+  'search',
+  async () => {
+    const tmpDir = await getTmpDir()
+    await writeFile(
+      join(tmpDir, 'index.html'),
+      `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -27,19 +31,21 @@ test('search', async () => {
   <body></body>
 </html>
 `
-  )
-  expect(await Search.search(tmpDir, 'Document')).toEqual({
-    results: [
-      [
-        fixPath('./index.html'),
+    )
+    expect(await Search.search(tmpDir, 'Document')).toEqual({
+      results: [
         [
-          {
-            absoluteOffset: 208,
-            preview: '    <title>Document</title>\n',
-          },
+          fixPath('./index.html'),
+          [
+            {
+              absoluteOffset: 208,
+              preview: '    <title>Document</title>\n',
+            },
+          ],
         ],
       ],
-    ],
-    stats: expect.any(Object),
-  })
-})
+      stats: expect.any(Object),
+    })
+  },
+  TIMEOUT_LONG
+)
