@@ -1,8 +1,8 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Command from '../Command/Command.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 // TODO lazyload menuEntries and use Command.execute (maybe)
-import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as Layout from '../Layout/Layout.js'
+import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 export const state = {
@@ -151,26 +151,31 @@ export const showSubMenu = async (level, index) => {
   await showSubMenuAtEnter(level, index, -1, -1)
 }
 
+const selectIndexNone = async (item) => {
+  if (!item.command) {
+    console.warn('item has missing command', item)
+    return
+  }
+  const args = item.args || []
+  await Promise.all([hide(), Command.execute(item.command, ...args)])
+}
+
+const selectIndexSubMenu = async (menu, index) => {
+  if (menu.focusedIndex === index) {
+    return
+  }
+  await showSubMenu(menu.level, menu.focusedIndex)
+}
+
 export const selectIndex = async (level, index) => {
   const menu = state.menus[level]
   menu.focusedIndex = index
   const item = menu.items[menu.focusedIndex]
-  console.log('[menu] select index', item)
   switch (item.flags) {
-    case /* None */ 0:
-      if (!item.command) {
-        console.warn('item has missing command', item)
-        return
-      }
-      const args = item.args || []
-      await Promise.all([hide(), Command.execute(item.command, ...args)])
-      break
-    case /* SubMenu */ 4:
-      if (menu.focusedIndex === index) {
-        return
-      }
-      await showSubMenu(menu.level, menu.focusedIndex)
-      break
+    case MenuItemFlags.None:
+      return selectIndexNone(item)
+    case MenuItemFlags.SubMenu:
+      return selectIndexSubMenu(menu, index)
     default:
       break
   }
