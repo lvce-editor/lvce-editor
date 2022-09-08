@@ -12,7 +12,7 @@ const getNodeVersionMajor = (nodeVersion) => {
   return match[0]
 }
 
-const getElsProblemMessage = message => {
+const getElsProblemMessage = (message) => {
   const lines = message.split('\n')
   for (const line of lines) {
     if (line.includes('npm ERR! invalid:')) {
@@ -20,7 +20,10 @@ const getElsProblemMessage = message => {
     }
   }
   return message
+}
 
+const trimLine = (line) => {
+  return line.trim()
 }
 
 const getNpmDependenciesRaw = async (root) => {
@@ -40,7 +43,7 @@ const getNpmDependenciesRaw = async (root) => {
         cwd: absoluteRoot,
       }
     )
-    const lines = stdout.split('\n')
+    const lines = stdout.split('\n').map(trimLine)
     return lines.slice(1)
   } catch (error) {
     if (error && error.message.includes('ELSPROBLEMS')) {
@@ -54,7 +57,6 @@ const getNpmDependenciesRaw = async (root) => {
 
 export const getNpmDependenciesRawJson = async (root) => {
   try {
-
     const absoluteRoot = Path.absolute(root)
     const { stdout } = await Exec.exec(
       'npm',
@@ -72,10 +74,8 @@ export const getNpmDependenciesRawJson = async (root) => {
     }
     // @ts-ignore
     throw new VError(error, `Failed to get npm dependencies for ${root}`)
-
   }
 }
-
 
 const isDependency = (path) => {
   if (path.endsWith('type-fest')) {

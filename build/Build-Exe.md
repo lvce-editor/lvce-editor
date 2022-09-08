@@ -9,9 +9,9 @@ Visual Studio and Visual Studio build tools must be installed.
 ## Build
 
 ```sh
-node bin/build.js --target=electron-builder-windows-exe
+node bin/build.js --target=electron-builder-windows-exe --force
 ```
 
 ## Try out
 
-Install the exe at `.tmp/electron-builder/dist/lvce-oss Setup 0.0.1.exe`
+Install the exe at `.tmp/releases/lvce-oss.exe`
