@@ -381,6 +381,10 @@
     "label": "Explorer: Expand All"
   },
   {
+    "id": "Explorer.expandRecursively",
+    "label": "Explorer: Expand Recursively"
+  },
+  {
     "id": "SessionReplay.replayCurrentSession",
     "label": "SessionReplay: Replay Current Session"
   },

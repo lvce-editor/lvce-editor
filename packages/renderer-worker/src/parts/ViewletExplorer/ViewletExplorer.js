@@ -1455,7 +1455,14 @@ export const revealItem = async (state, uri) => {
 
 export const expandRecursively = async (state) => {
   const { dirents, focusedIndex, pathSeparator, root } = state
-  const dirent = dirents[focusedIndex]
+  const dirent =
+    focusedIndex < 0
+      ? {
+          type: DirentType.Directory,
+          path: root,
+          depth: 0,
+        }
+      : dirents[focusedIndex]
   if (
     dirent.type !== DirentType.Directory &&
     dirent.type !== DirentType.DirectoryExpanding
@@ -1484,13 +1491,19 @@ export const expandRecursively = async (state) => {
   // TODO race condition: what if a new file/folder is created while the folder is recursively expanding?
   const childDirents = await getChildDirentsRecursively(dirent)
   const startIndex = focusedIndex
-  const endIndex = getParentEndIndex(dirents, focusedIndex)
-  const newDirents = [
-    ...dirents.slice(0, startIndex),
-    ...childDirents,
-    ...dirents.slice(endIndex),
-  ]
-  return { ...state, dirents: newDirents }
+  if (focusedIndex >= 0) {
+    const endIndex = getParentEndIndex(dirents, focusedIndex)
+    const newDirents = [
+      ...dirents.slice(0, startIndex),
+      ...childDirents,
+      ...dirents.slice(endIndex),
+    ]
+    return { ...state, dirents: newDirents }
+  }
+  return {
+    ...state,
+    dirents: childDirents.slice(1),
+  }
 }
 
 export const shouldApplyNewState = (newState, fn) => {
