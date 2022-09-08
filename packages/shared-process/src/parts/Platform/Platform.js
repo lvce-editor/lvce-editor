@@ -124,3 +124,23 @@ export const getTmpDir = () => {
 export const getOnlyExtensionPath = () => {
   return process.env.ONLY_EXTENSION
 }
+
+export const getAppDir = () => {
+  return appDir
+}
+
+export const getCacheDir = () => {
+  return cacheDir
+}
+
+export const getConfigDir = () => {
+  return configDir
+}
+
+export const getDataDir = () => {
+  return dataDir
+}
+
+export const getHomeDir = () => {
+  return homeDir
+}
