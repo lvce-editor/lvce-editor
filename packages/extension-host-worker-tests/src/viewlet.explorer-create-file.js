@@ -12,7 +12,6 @@ test('viewlet.explorer-create-file', async () => {
   await Explorer.focusIndex(-1)
   await Explorer.openContextMenu()
   await ContextMenu.selectItem('New File')
-
   // assert
   const inputBox = Locator('input')
   await expect(inputBox).toBeVisible()
@@ -20,7 +19,7 @@ test('viewlet.explorer-create-file', async () => {
 
   // act
   await inputBox.type('created.txt')
-  await KeyBoard.press('Enter')
+  await KeyBoard.press('Enter') // TODO use command instead
 
   // assert
   const newFile = Locator('text=created.txt')

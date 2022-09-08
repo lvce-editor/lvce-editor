@@ -39,3 +39,7 @@ export const removeDirent = async () => {
 export const expandRecursively = async () => {
   await Command.execute('Explorer.expandRecursively')
 }
+
+export const newFile = async () => {
+  await Command.execute('Explorer.newFile')
+}

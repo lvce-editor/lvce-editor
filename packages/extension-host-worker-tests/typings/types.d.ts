@@ -36,6 +36,7 @@ declare const Explorer: {
   readonly expandRecursively: () => Promise<void>
   // TODO maybe rename this to collapse
   readonly handleArrowLeft: () => Promise<void>
+  readonly newFile: () => Promise<void>
 }
 
 declare const Extension: {
