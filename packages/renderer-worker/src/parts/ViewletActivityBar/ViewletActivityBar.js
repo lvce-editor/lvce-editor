@@ -384,10 +384,3 @@ const renderFocusedIndex = {
 export const render = [renderActivityBarItems, renderFocusedIndex]
 
 export const hasFunctionalRender = true
-
-export * from './ViewletActivityBarFocusIndex.js'
-export * from './ViewletActivityBarFocusFirst.js'
-export * from './ViewletActivityBarFocusLast.js'
-export * from './ViewletActivityBarFocusPrevious.js'
-export * from './ViewletActivityBarFocusNext.js'
-export * from './ViewletActivityBarFocus.js'
