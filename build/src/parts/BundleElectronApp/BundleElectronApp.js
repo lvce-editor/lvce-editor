@@ -13,6 +13,7 @@ import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as Tag from '../Tag/Tag.js'
 
 const getDependencyCacheHash = async () => {
   const files = [
@@ -169,6 +170,12 @@ const copyMainProcessSources = async ({ arch }) => {
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
     occurrence: `exports.commit = 'unknown commit'`,
     replacement: `exports.commit = '${commitHash}'`,
+  })
+  const version = await Tag.getGitTag()
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
+    occurrence: `exports.version = '0.0.0-dev'`,
+    replacement: `exports.version = '${version}'`,
   })
 }
 
