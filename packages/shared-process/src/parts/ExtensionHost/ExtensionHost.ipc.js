@@ -6,17 +6,17 @@ import * as ExtensionHostKeyBindings from './ExtensionHostKeyBindings.js'
 // prettier-ignore
 export const Commands = {
 
-  'ExtensionHost.getCommands': ExtensionHostCommand.getCommandsIpc,
-  'ExtensionHostKeyBindings.getKeyBindings': ExtensionHostKeyBindings.getKeyBindings,
-  'ExtensionHost.start': ExtensionHost.start,
-  'ExtensionHost.dispose': ExtensionHost.dispose,
-  'ExtensionHost.send': ExtensionHost.send,
 
+  'ExtensionHost.dispose': ExtensionHost.dispose,
+  'ExtensionHost.getCommands': ExtensionHostCommand.getCommandsIpc,
+  'ExtensionHost.send': ExtensionHost.send,
+  'ExtensionHost.start': ExtensionHost.start,
+  'ExtensionHostCompletion.execute': ExtensionHost.forward,
   'ExtensionHostExtension.activate': ExtensionHost.forward,
   'ExtensionHostExtension.disable': ExtensionHost.forward,
+  'ExtensionHostKeyBindings.getKeyBindings': ExtensionHostKeyBindings.getKeyBindings,
   'ExtensionHostSemanticTokens.executeSemanticTokenProvider': ExtensionHost.forward,
   'ExtensionHostTextDocument.setLanguageId': ExtensionHost.forward,
-  'ExtensionHostTextDocument.syncIncremental': ExtensionHost.forward,
   'ExtensionHostTextDocument.syncFull': ExtensionHost.forward,
-  'ExtensionHostCompletion.execute': ExtensionHost.forward,
+  'ExtensionHostTextDocument.syncIncremental': ExtensionHost.forward,
 }
