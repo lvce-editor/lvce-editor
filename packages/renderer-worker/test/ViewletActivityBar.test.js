@@ -529,43 +529,6 @@ test.skip('handleContextMenu', async () => {
   ])
 })
 
-test('focus', async () => {
-  const state = ViewletActivityBar.create()
-  expect(ViewletActivityBar.focus(state)).toMatchObject({
-    focusedIndex: 0,
-  })
-})
-
-test('focusNext', () => {
-  const state = {
-    ...ViewletActivityBar.create(),
-    focusedIndex: 0,
-  }
-  expect(ViewletActivityBar.focusNext(state)).toMatchObject({
-    focusedIndex: 1,
-  })
-})
-
-test('focusFirst', async () => {
-  const state = {
-    ...ViewletActivityBar.create(),
-    focusedIndex: 2,
-  }
-  expect(ViewletActivityBar.focusFirst(state)).toMatchObject({
-    focusedIndex: 0,
-  })
-})
-
-test('focusPrevious', () => {
-  const state = {
-    ...ViewletActivityBar.create(),
-    focusedIndex: 1,
-  }
-  expect(ViewletActivityBar.focusPrevious(state)).toMatchObject({
-    focusedIndex: 0,
-  })
-})
-
 test('selectCurrent - settings', async () => {
   // TODO mock menu instead
   Layout.state.windowWidth = 1000
