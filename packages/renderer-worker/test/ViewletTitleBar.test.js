@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -42,44 +43,44 @@ test('loadContent', async () => {
     disposed: false,
     titleBarEntries: [
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'file',
         name: 'File',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'edit',
         name: 'Edit',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'selection',
         name: 'Selection',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'view',
         name: 'View',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'go',
         name: 'Go',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'run',
         keyboardShortCut: 'Alt+r',
         name: 'Run',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'terminal',
         keyboardShortCut: 'Alt+t',
         name: 'Terminal',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'help',
         keyboardShortCut: 'Alt+h',
         name: 'Help',
@@ -93,44 +94,44 @@ test('contentLoaded', async () => {
     ...ViewletTitleBar.create(),
     titleBarEntries: [
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'file',
         name: 'File',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'edit',
         name: 'Edit',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'selection',
         name: 'Selection',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'view',
         name: 'View',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'go',
         name: 'Go',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'run',
         keyboardShortCut: 'Alt+r',
         name: 'Run',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'terminal',
         keyboardShortCut: 'Alt+t',
         name: 'Terminal',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'help',
         keyboardShortCut: 'Alt+h',
         name: 'Help',
@@ -147,44 +148,44 @@ test('contentLoaded', async () => {
     'menuSetEntries',
     [
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'file',
         name: 'File',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'edit',
         name: 'Edit',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'selection',
         name: 'Selection',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'view',
         name: 'View',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'go',
         name: 'Go',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'run',
         keyboardShortCut: 'Alt+r',
         name: 'Run',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'terminal',
         keyboardShortCut: 'Alt+t',
         name: 'Terminal',
       },
       {
-        flags: 0,
+        flags: MenuItemFlags.None,
         id: 'help',
         keyboardShortCut: 'Alt+h',
         name: 'Help',
