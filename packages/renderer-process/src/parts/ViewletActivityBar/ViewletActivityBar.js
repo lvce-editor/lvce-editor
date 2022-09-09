@@ -1,10 +1,9 @@
+import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Layout from '../Layout/Layout.js'
 import * as Platform from '../Platform/Platform.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
-import * as MouseEventTypes from '../MouseEventType/MouseEventType.js'
+import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
 
 // TODO set aria-selected false when sidebar is collapsed
 
@@ -51,61 +50,6 @@ const create$ActivityBarItem = (item) => {
   return $ActivityBarItem
 }
 
-const get$ItemFromEvent = (event) => {
-  const $Target = event.target
-  switch ($Target.className) {
-    case 'ActivityBarItemIcon':
-      return $Target.parentNode
-    case 'ActivityBarItem':
-      return $Target
-    default:
-      return undefined
-  }
-}
-
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
-const handleMousedown = (event) => {
-  if (event.button !== MouseEventTypes.LeftClick) {
-    return
-  }
-  const $Item = get$ItemFromEvent(event)
-  if (!$Item) {
-    return
-  }
-  event.preventDefault()
-  event.stopPropagation()
-  const index = getNodeIndex($Item)
-  const x = event.clientX
-  const y = event.clientY
-  RendererWorker.send(
-    /* ActivityBar.handleClick */ 'ActivityBar.handleClick',
-    /* index */ index,
-    /* x */ x,
-    /* y */ y
-  )
-}
-
-const handleContextMenu = (event) => {
-  event.preventDefault()
-  // TODO also move side bar position command
-  const x = event.clientX
-  const y = event.clientY
-  RendererWorker.send(
-    /* activityBarHandleContextMenu */ 'ActivityBar.handleContextMenu',
-    /* x */ x,
-    /* y */ y
-  )
-}
-
-const handleBlur = () => {}
-
 export const name = 'ActivityBar'
 
 export const create = () => {
@@ -114,10 +58,13 @@ export const create = () => {
   $ActivityBar.ariaLabel = 'Activity Bar'
   $ActivityBar.ariaOrientation = 'vertical'
   // $ActivityBar.append(...activityBarItems.map(create$ActivityBarItem))
-  $ActivityBar.onmousedown = handleMousedown
-  $ActivityBar.oncontextmenu = handleContextMenu
-  $ActivityBar.onblur = handleBlur
-  $ActivityBar.addEventListener('focusin', handleFocusIn)
+  $ActivityBar.onmousedown = ViewletActivityBarEvents.handleMousedown
+  $ActivityBar.oncontextmenu = ViewletActivityBarEvents.handleContextMenu
+  $ActivityBar.onblur = ViewletActivityBarEvents.handleBlur
+  $ActivityBar.addEventListener(
+    'focusin',
+    ViewletActivityBarEvents.handleFocusIn
+  )
   // $ActivityBar.children[focusedIndex].tabIndex = 0
   return {
     $ActivityBar,
@@ -134,10 +81,6 @@ export const setItems = (state, activityBarItems) => {
     $ActivityBar.firstChild.remove()
   }
   $ActivityBar.append(...activityBarItems.map(create$ActivityBarItem))
-}
-
-const handleFocusIn = () => {
-  Focus.setFocus('activityBar')
 }
 
 export const selectIndex = (state, oldIndex, newIndex) => {
