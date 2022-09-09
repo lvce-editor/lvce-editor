@@ -22,12 +22,32 @@ const ElectronShell = await import(
   '../src/parts/ElectronShell/ElectronShell.js'
 )
 
+test('beep - error', async () => {
+  // @ts-ignore
+  ElectronProcess.invoke.mockImplementation(() => {
+    throw new TypeError('x is not a function')
+  })
+  await expect(ElectronShell.beep()).rejects.toThrowError(
+    new TypeError('x is not a function')
+  )
+})
+
 test('beep', async () => {
   // @ts-ignore
   ElectronProcess.invoke.mockImplementation(() => {})
   await ElectronShell.beep()
   expect(ElectronProcess.invoke).toHaveBeenCalledTimes(1)
   expect(ElectronProcess.invoke).toHaveBeenCalledWith('ElectronShell.beep')
+})
+
+test('showItemInFolder - error', async () => {
+  // @ts-ignore
+  ElectronProcess.invoke.mockImplementation(() => {
+    throw new TypeError('x is not a function')
+  })
+  await expect(
+    ElectronShell.showItemInFolder('/test/file.txt')
+  ).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('showItemInFolder', async () => {
