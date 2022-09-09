@@ -30,6 +30,10 @@ exports.getModuleId = (commandId) => {
     case 'ElectronShell.beep':
     case 'ElectronShell.showItemInFolder':
       return ModuleId.ElectronShell
+    case 'ElectronSafeStorage.isEncryptionAvailable':
+    case 'ElectronSafeStorage.encryptString':
+    case 'ElectronSafeStorage.decryptString':
+      return ModuleId.ElectronSafeStorage
     default:
       throw new Error(`method not found ${commandId}`)
   }

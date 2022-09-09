@@ -1,4 +1,6 @@
-const Cli = require('../src/parts/Cli/Cli.js')
+beforeEach(() => {
+  jest.resetAllMocks()
+})
 
 jest.mock('electron', () => {
   return {
@@ -8,9 +10,7 @@ jest.mock('electron', () => {
   }
 })
 
-afterEach(() => {
-  jest.restoreAllMocks()
-})
+const Cli = require('../src/parts/Cli/Cli.js')
 
 test('parseCliArgs', () => {
   expect(Cli.parseCliArgs(['/usr/lib/lvce-oss/lvce-oss', '/test/'])).toEqual({

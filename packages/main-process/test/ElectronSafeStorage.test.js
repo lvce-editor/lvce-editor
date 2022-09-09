@@ -1,3 +1,7 @@
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
 jest.mock('electron', () => {
   return {
     safeStorage: {
@@ -23,9 +27,11 @@ test('isEncryptionAvailable - error', () => {
 
 test('isEncryptionAvailable', () => {
   // @ts-ignore
-  electron.safeStorage.isEncryptionAvailable.mockImplementation(() => {})
+  electron.safeStorage.isEncryptionAvailable.mockImplementation(() => {
+    return true
+  })
   expect(ElectronSafeStorage.isEncryptionAvailable()).toBe(true)
-  expect(electron.safeStorage.isEncryptionAvailable()).toHaveBeenCalledTimes(1)
+  expect(electron.safeStorage.isEncryptionAvailable).toHaveBeenCalledTimes(1)
 })
 
 test('encryptString - error', () => {
