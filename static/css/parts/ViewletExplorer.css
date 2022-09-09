@@ -30,7 +30,7 @@
   background: rgba(59, 71, 66, 0.5);
 } */
 
-.TreeItem.Focused {
+#TreeItemActive {
   background: rgba(59, 71, 66, 0.5);
 }
 
