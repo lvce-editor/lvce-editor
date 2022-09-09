@@ -89,6 +89,29 @@ test('setPicks - less picks', () => {
   expect(state.$QuickPickItems.children).toHaveLength(0)
 })
 
+test('setPicks - with icons', () => {
+  const state = ViewletQuickPick.create()
+  ViewletQuickPick.setPicks(state, [
+    {
+      posInSet: 1,
+      setSize: 2,
+      label: 'file-1.txt',
+      icon: '_file',
+    },
+    {
+      posInSet: 2,
+      setSize: 2,
+      label: 'file-2.txt',
+      icon: '_file',
+    },
+  ])
+  const { $QuickPickItems } = state
+  expect($QuickPickItems.children).toHaveLength(2)
+  expect($QuickPickItems.children[0].innerHTML).toBe(
+    '<div class="QuickPickItemLabel">file-1.txt</div>'
+  )
+})
+
 test.skip('event - mousedown', () => {
   const state = ViewletQuickPick.create()
   ViewletQuickPick.setPicks(state, [
