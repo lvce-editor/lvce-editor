@@ -1,10 +1,6 @@
-import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
-import * as Layout from '../Layout/Layout.js'
-import * as Platform from '../Platform/Platform.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
 import * as MouseEventTypes from '../MouseEventType/MouseEventType.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 const get$ItemFromEvent = (event) => {
   const $Target = event.target
