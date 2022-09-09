@@ -109,19 +109,14 @@ const create$QuickPickItem = () => {
   const $QuickPickItemLabel = document.createElement('div')
   $QuickPickItemLabel.className = 'QuickPickItemLabel'
   $QuickPickItemLabel.append($QuickPickItemLabelText)
-  // $QuickPickItemLabel.textContent = item.label || '<missing label>'
-  // const $QuickPickItemDescription = document.createElement('div')
-  // $QuickPickItemDescription.className = 'QuickPickItemDescription'
-  // $QuickPickItemDescription.textContent = item.description
+
+  const $QuickPickItemIcon = document.createElement('i')
+  $QuickPickItemIcon.className = 'Icon'
   const $QuickPickItem = document.createElement('div') // TODO ul/li would be better for structure but might be slower
   $QuickPickItem.className = 'QuickPickItem'
   // @ts-ignore
   $QuickPickItem.role = 'option'
-  // $QuickPickItem.id = `QuickPickItem-${index}`
-  // $QuickPickItem.dataset.index = index
-  // $QuickPickItem.ariaPosInSet = `${index + 1}`
-  // $QuickPickItem.ariaSetSize = `${total}`
-  $QuickPickItem.append($QuickPickItemLabel)
+  $QuickPickItem.append($QuickPickItemIcon, $QuickPickItemLabel)
   return $QuickPickItem
 }
 
@@ -133,10 +128,6 @@ const create$QuickPickDescription = () => {
   return $QuickPickItemDescription
 }
 
-const render$QuickPickItemLabel = ($QuickPickItemLabel, quickPickItem) => {
-  $QuickPickItemLabel.firstChild.nodeValue = quickPickItem.label
-}
-
 const render$QuickPickItemLess = ($QuickPickItem, quickPickItem) => {
   render$QuickPickItemLabel($QuickPickItem.firstChild, quickPickItem)
   const $QuickPickItemDescription = create$QuickPickDescription()
@@ -145,11 +136,17 @@ const render$QuickPickItemLess = ($QuickPickItem, quickPickItem) => {
   $QuickPickItem.append($QuickPickItemDescription)
 }
 
+const render$QuickPickItemLabel = ($QuickPickItem, quickPickItem) => {
+  $QuickPickItem.children[1].firstChild.nodeValue = quickPickItem.label
+}
+
+const render$QuickPickItemIcon = ($QuickPickItem, quickPickItem) => {
+  $QuickPickItem.children[0].className = `Icon${quickPickItem.icon}`
+}
+
 const render$QuickPickItemEqual = ($QuickPickItem, quickPickItem) => {
-  render$QuickPickItemLabel($QuickPickItem.firstChild, quickPickItem)
-  if (quickPickItem.description) {
-    // render$QuickPickItemDescription($QuickPickItem.children[1], quickPickItem)
-  }
+  render$QuickPickItemLabel($QuickPickItem, quickPickItem)
+  render$QuickPickItemIcon($QuickPickItem, quickPickItem)
 }
 
 const render$QuickPickItemMore = ($QuickPickItem, quickPickItem) => {
@@ -158,17 +155,21 @@ const render$QuickPickItemMore = ($QuickPickItem, quickPickItem) => {
 }
 
 const render$QuickPickItem = ($QuickPickItem, quickPickItem) => {
-  const lengthA = $QuickPickItem.children.length
-  const lengthB = quickPickItem.description ? 2 : 1
+  const oldQuickPickItem = $QuickPickItem.quickPickItem || {}
+
+  // const lengthA = $QuickPickItem.children.length
+  // const lengthB = quickPickItem.icon ? 2 : 1
   $QuickPickItem.ariaPosInSet = `${quickPickItem.posInSet}` // TODO pass correct number as prop
   $QuickPickItem.ariaSetSize = `${quickPickItem.setSize}`
-  if (lengthA < lengthB) {
-    render$QuickPickItemLess($QuickPickItem, quickPickItem)
-  } else if (lengthA === lengthB) {
-    render$QuickPickItemEqual($QuickPickItem, quickPickItem)
-  } else {
-    render$QuickPickItemMore($QuickPickItem, quickPickItem)
-  }
+  // console.log($QuickPickItem.quickPickItem)
+  $QuickPickItem.quickPickItem = quickPickItem
+  // if (lengthA < lengthB) {
+  // render$QuickPickItemLess($QuickPickItem, quickPickItem)
+  // } else if (lengthA === lengthB) {
+  render$QuickPickItemEqual($QuickPickItem, quickPickItem)
+  // } else {
+  //   render$QuickPickItemMore($QuickPickItem, quickPickItem)
+  // }
 }
 
 const render$QuickPickItemsLess = ($QuickPickItems, quickPickItems) => {

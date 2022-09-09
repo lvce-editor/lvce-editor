@@ -93,6 +93,7 @@ const getVisible = (items, minLineY, maxLineY) => {
     const item = items[i]
     visibleItems.push({
       label: item.label,
+      icon: item.icon,
       posInSet: i + 1,
       setSize,
     })
@@ -574,6 +575,25 @@ const renderCursorOffset = {
       /* cursorOffset */ newState.cursorOffset,
     ]
   },
+}
+
+const getItemDomChanges = (oldState, newState) => {
+  const oldItems = oldState.items
+  const newItems = newState.items
+  const length = oldItems.length
+  const domChanges = []
+  for (let i = 0; i < length; i++) {
+    const oldItem = oldItems[i]
+    const newItem = newItems[i]
+    if (oldItem.icon && !newItem.icon) {
+      domChanges.push({
+        command: 'addIcon',
+        icon: newItem.icon,
+        index: i,
+      })
+    }
+  }
+  return domChanges
 }
 
 const renderItems = {
