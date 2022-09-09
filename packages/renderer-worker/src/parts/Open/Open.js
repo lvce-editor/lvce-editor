@@ -3,6 +3,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { VError } from '../VError/VError.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as ElectronShell from '../ElectronShell/ElectronShell.js'
 
 const openNativeFolderWeb = (absolutePath) => {
   throw new Error('not implemented')
@@ -19,7 +20,9 @@ const openNativeFolderRemote = async (absolutePath) => {
   }
 }
 
-const openNativeFolderElectron = async (absolutePath) => {}
+const openNativeFolderElectron = async (absolutePath) => {
+  await ElectronShell.showItemInFolder(absolutePath)
+}
 
 export const openNativeFolder = async (absolutePath) => {
   switch (Platform.platform) {
