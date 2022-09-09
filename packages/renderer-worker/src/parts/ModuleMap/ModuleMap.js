@@ -2,7 +2,6 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
   switch (commandId) {
-
     // TODO this should be in layout module
     case 'Ajax.getJson':
     case 'Ajax.getText':
@@ -247,6 +246,9 @@ export const getModuleId = (commandId) => {
     case 'Workspace.setPath':
     case 'Workspace.setUri':
       return ModuleId.Workspace
+    case 'ContentTracing.start':
+    case 'ContentTracing.stop':
+      return ModuleId.ContentTracing
     default:
       throw new Error(`command ${commandId} not found`)
   }

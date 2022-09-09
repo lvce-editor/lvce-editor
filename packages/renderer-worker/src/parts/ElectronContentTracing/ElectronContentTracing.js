@@ -1,7 +1,10 @@
 import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
 
-export const startRecording = () => {
-  return ElectronProcess.invoke('ElectronContentTracing.startRecording')
+export const startRecording = (options) => {
+  return ElectronProcess.invoke(
+    'ElectronContentTracing.startRecording',
+    options
+  )
 }
 
 /**
