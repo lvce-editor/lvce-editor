@@ -1,6 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
-import * as Compare from '../Compare/Compare.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
@@ -9,7 +8,13 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
-import { getIndexFromPosition } from './ViewletExplorerShared.js'
+import {
+  compareDirent,
+  getChildDirents,
+  getIndexFromPosition,
+  getParentEndIndex,
+  getParentStartIndex,
+} from './ViewletExplorerShared.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -18,90 +23,6 @@ import { getIndexFromPosition } from './ViewletExplorerShared.js'
 // TODO recycle viewlets (maybe)
 
 export const name = 'Explorer'
-
-const getParentStartIndex = (dirents, index) => {
-  const dirent = dirents[index]
-  let startIndex = index - 1
-  while (startIndex >= 0 && dirents[startIndex].depth >= dirent.depth) {
-    startIndex--
-  }
-  return startIndex
-}
-
-const getParentEndIndex = (dirents, index) => {
-  const dirent = dirents[index]
-  let endIndex = index + 1
-  while (endIndex < dirents.length && dirents[endIndex].depth > dirent.depth) {
-    endIndex++
-  }
-  return endIndex
-}
-
-const priorityMapFoldersFirst = {
-  folder: 1,
-  directory: 1,
-  file: 0,
-  unknown: 0,
-  socket: 0,
-}
-
-const compareDirentType = (direntA, direntB) => {
-  return (
-    priorityMapFoldersFirst[direntB.type] -
-    priorityMapFoldersFirst[direntA.type]
-  )
-}
-
-const compareDirentName = (direntA, direntB) => {
-  return Compare.compareString(direntA.name, direntB.name)
-}
-
-const compareDirent = (direntA, direntB) => {
-  return (
-    compareDirentType(direntA, direntB) || compareDirentName(direntA, direntB)
-  )
-}
-
-const toDisplayDirents = (root, pathSeparator, rawDirents, parentDirent) => {
-  rawDirents.sort(compareDirent) // TODO maybe shouldn't mutate input argument, maybe sort after mapping
-  // TODO figure out whether this uses too much memory (name,path -> redundant, depth could be computed on demand)
-  const toDisplayDirent = (rawDirent, index) => {
-    const path = parentDirent.path
-      ? [parentDirent.path, rawDirent.name].join(pathSeparator)
-      : [root, rawDirent.name].join(pathSeparator)
-    return {
-      name: rawDirent.name,
-      posInSet: index + 1,
-      setSize: rawDirents.length,
-      depth: parentDirent.depth + 1,
-      type: rawDirent.type,
-      path, // TODO storing absolute path might be too costly, could also store relative path here
-      icon: IconTheme.getIcon(rawDirent),
-    }
-  }
-  return rawDirents.map(toDisplayDirent)
-}
-
-const getChildDirents = async (root, pathSeparator, parentDirent) => {
-  Assert.string(root)
-  Assert.string(pathSeparator)
-  Assert.object(parentDirent)
-  // TODO use event/actor based code instead, this is impossible to cancel right now
-  // also cancel updating when opening new folder
-  // const dispose = state => state.pendingRequests.forEach(cancelRequest)
-  // TODO should use FileSystem directly in this case because it is globally available anyway
-  // and more typesafe than Command.execute
-  // and more performant
-  const uri = parentDirent.path
-  const rawDirents = await FileSystem.readDirWithFileTypes(uri)
-  const displayDirents = toDisplayDirents(
-    root,
-    pathSeparator,
-    rawDirents,
-    parentDirent
-  )
-  return displayDirents
-}
 
 // TODO instead of root string, there should be a root dirent
 
@@ -1325,59 +1246,6 @@ export const revealItem = async (state, uri) => {
     return revealItemHidden(state, uri)
   }
   return revealItemVisible(state, index)
-}
-
-export const expandRecursively = async (state) => {
-  const { dirents, focusedIndex, pathSeparator, root } = state
-  const dirent =
-    focusedIndex < 0
-      ? {
-          type: DirentType.Directory,
-          path: root,
-          depth: 0,
-        }
-      : dirents[focusedIndex]
-  if (
-    dirent.type !== DirentType.Directory &&
-    dirent.type !== DirentType.DirectoryExpanding
-  ) {
-    return state
-  }
-  // TODO this is very inefficient
-  const getChildDirentsRecursively = async (dirent) => {
-    switch (dirent.type) {
-      case DirentType.File:
-        return [dirent]
-      case DirentType.Directory:
-        const childDirents = await getChildDirents(root, pathSeparator, dirent)
-        const all = [dirent]
-        for (const childDirent of childDirents) {
-          const childAll = await getChildDirentsRecursively(childDirent)
-          all.push(...childAll)
-        }
-        return all
-      default:
-        return []
-    }
-  }
-  // TODO race condition: what if folder is being collapse while it is recursively expanding?
-  // TODO race condition: what if folder is being deleted while it is recursively expanding?
-  // TODO race condition: what if a new file/folder is created while the folder is recursively expanding?
-  const childDirents = await getChildDirentsRecursively(dirent)
-  const startIndex = focusedIndex
-  if (focusedIndex >= 0) {
-    const endIndex = getParentEndIndex(dirents, focusedIndex)
-    const newDirents = [
-      ...dirents.slice(0, startIndex),
-      ...childDirents,
-      ...dirents.slice(endIndex),
-    ]
-    return { ...state, dirents: newDirents }
-  }
-  return {
-    ...state,
-    dirents: childDirents.slice(1),
-  }
 }
 
 export const shouldApplyNewState = (newState, fn) => {

@@ -13,6 +13,7 @@ const Imports = {
   FocusNone: () => import('./ViewletExplorerFocusNone.js'),
   HandleContextMenuKeyboard: () => import('./ViewletExplorerHandleContextMenuKeyboard.js'),
   HandleContextMenuMouseAt: ()=>import('./ViewletExplorerHandleContextMenuMouseAt.js'),
+  ExpandRecursively: () => import('./ViewletExplorerExpandRecursively.js'),
 
 }
 
@@ -26,7 +27,7 @@ export const Commands = {
   'Explorer.copyPath':                  Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.copyPath),
   'Explorer.copyRelativePath':          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.copyRelativePath),
   'Explorer.expandAll':                 Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.expandAll),
-  'Explorer.expandRecursively':         Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.expandRecursively),
+  'Explorer.expandRecursively':         LazyCommand.create('Explorer', Imports.ExpandRecursively, 'expandRecursively'),
   'Explorer.focus':                     LazyCommand.create('Explorer', Imports.Focus, 'focus'),
   'Explorer.focusFirst':                LazyCommand.create('Explorer', Imports.FocusFirst, 'focusFirst'),
   'Explorer.focusIndex':                LazyCommand.create('Explorer', Imports.FocusIndex, 'focusIndex'),
