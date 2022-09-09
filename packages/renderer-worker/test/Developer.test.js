@@ -58,6 +58,19 @@ jest.unstable_mockModule(
     }
   }
 )
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+  return {
+    platform: 'remote',
+    getLogsDir: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    getConfigPath: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const Platform = await import('../src/parts/Platform/Platform.js')
 
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
@@ -379,11 +392,13 @@ test('openConfigFolder', async () => {
     switch (method) {
       case 'Native.openFolder':
         return null
-      case 'Platform.getConfigDir':
-        return '/test/config-folder'
       default:
         throw new Error('unexpected message')
     }
+  })
+  // @ts-ignore
+  Platform.getConfigPath.mockImplementation(() => {
+    return '/test/config-folder'
   })
   await Developer.openConfigFolder()
   expect(SharedProcess.invoke).toHaveBeenLastCalledWith(
@@ -418,11 +433,13 @@ test('openLogsFolder', async () => {
     switch (method) {
       case 'Native.openFolder':
         return null
-      case 'Platform.getLogsDir':
-        return '~/.local/state/app-name'
       default:
         throw new Error('unexpected message')
     }
+  })
+  // @ts-ignore
+  Platform.getLogsDir.mockImplementation(() => {
+    return '~/.local/state/app-name'
   })
   await Developer.openLogsFolder()
   expect(SharedProcess.invoke).toHaveBeenLastCalledWith(
@@ -442,6 +459,10 @@ test('openLogsFolder - error', async () => {
       default:
         throw new Error('unexpected message')
     }
+  })
+  // @ts-ignore
+  Platform.getLogsDir.mockImplementation(() => {
+    throw new TypeError('x is not a function')
   })
   await expect(Developer.openLogsFolder()).rejects.toThrowError(
     new TypeError('x is not a function')

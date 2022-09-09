@@ -6,3 +6,4 @@ exports.Dialog = 5
 exports.ElectronWindowAbout = 6
 exports.ElectronWindowProcessExplorer = 7
 exports.Window = 8
+exports.ElectronShell = 9
