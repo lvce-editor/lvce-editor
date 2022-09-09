@@ -148,3 +148,8 @@
   width: 16px;
   height: 22px;
 }
+
+/* TODO remove icon from dom when it is not needed */
+.Iconundefined {
+  display: none;
+}
