@@ -219,4 +219,13 @@ export const startup = async (config) => {
     'code/willLoadIconTheme',
     'code/didLoadIconTheme'
   )
+
+  const ElectronContentTracing = await import(
+    '../ElectronContentTracing/ElectronContentTracing.js'
+  )
+  await ElectronContentTracing.startRecording({
+    included_categories: ['*'],
+  })
+  const path = await ElectronContentTracing.stopRecording()
+  console.log({ path })
 }

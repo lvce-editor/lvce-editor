@@ -104,6 +104,8 @@ export const load = (moduleId) => {
       return import('../TestFrameWorkComponent/TestFrameWorkComponent.js')
     case ModuleId.Extensions:
       return import('../Extensions/Extensions.ipc.js')
+    case ModuleId.ContentTracing:
+      return import('../ContentTracing/ContentTracing.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }
