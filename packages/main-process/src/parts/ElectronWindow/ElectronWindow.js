@@ -1,6 +1,7 @@
 const Electron = require('electron')
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
+const Platform = require('../Platform/Platform.js')
 
 exports.wrapWindowCommand = (fn) => () => {
   const browserWindow = Electron.BrowserWindow.getFocusedWindow()
@@ -58,6 +59,26 @@ exports.getFocusedWindow = () => {
 
 /**
  *
+ * @returns {{
+ *       titleBarStyle?: import('electron').BrowserWindowConstructorOptions ['titleBarStyle'],
+ *       titleBarOverlay?: import('electron').BrowserWindowConstructorOptions['titleBarOverlay']}}
+ */
+const getTitleBarOptions = (windowControlsOverlayEnabled) => {
+  if (windowControlsOverlayEnabled) {
+    return {
+      titleBarStyle: 'hidden',
+      titleBarOverlay: {
+        color: '#1e2324',
+        symbolColor: '#74b1be',
+        height: 29,
+      },
+    }
+  }
+  return {}
+}
+
+/**
+ *
  * @param {{
  * x:number, y:number, width:number, height:number, menu?:boolean, background?:string, session?:import('electron').Session}} param0
  */
@@ -71,12 +92,15 @@ exports.create = ({
   background = '#ffffff',
   session = undefined,
 }) => {
+  const windowControlsOverlayEnabled = Platform.isWindows
+  const titleBarOptions = getTitleBarOptions(windowControlsOverlayEnabled)
   const browserWindow = new Electron.BrowserWindow({
     x,
     y,
     width,
     height,
     autoHideMenuBar: true,
+    ...titleBarOptions,
     webPreferences: {
       enableWebSQL: false,
       spellcheck: false,
