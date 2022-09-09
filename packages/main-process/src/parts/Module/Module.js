@@ -24,6 +24,8 @@ exports.load = async (moduleId) => {
       return require('../ElectronPowerSaveBlocker/ElectronPowerSaveBlocker.ipc.js')
     case ModuleId.ElectronSafeStorage:
       return require('../ElectronSafeStorage/ElectronSafeStorage.ipc.js')
+    case ModuleId.ElectronContentTracing:
+      return require('../ElectronContentTracing/ElectronContentTracing.ipc.js')
     case ModuleId.ElectronNetLog:
       return require('../ElectronNetLog/ElectronNetLog.ipc.js')
     default:

@@ -9,4 +9,5 @@ exports.Window = 8
 exports.ElectronShell = 9
 exports.ElectronPowerSaveBlocker = 10
 exports.ElectronSafeStorage = 11
-exports.ElectronNetLog = 12
+exports.ElectronContentTracing = 12
+exports.ElectronNetLog = 13

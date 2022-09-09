@@ -37,6 +37,9 @@ exports.getModuleId = (commandId) => {
     case 'ElectronSafeStorage.encryptString':
     case 'ElectronSafeStorage.decryptString':
       return ModuleId.ElectronSafeStorage
+    case 'ElectronContentTracing.startRecording':
+    case 'ElectronContentTracing.stopRecording':
+      return ModuleId.ElectronContentTracing
     case 'ElectronNetLog.startLogging':
     case 'ElectronNetLog.stopLogging':
       return ModuleId.ElectronNetLog
