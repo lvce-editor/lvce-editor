@@ -7,4 +7,5 @@ exports.ElectronWindowAbout = 6
 exports.ElectronWindowProcessExplorer = 7
 exports.Window = 8
 exports.ElectronShell = 9
+exports.ElectronPowerSaveBlocker = 10
 exports.ElectronSafeStorage = 11
