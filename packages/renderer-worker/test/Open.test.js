@@ -11,6 +11,11 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
     }),
   }
 })
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+  return {
+    platform: 'remote',
+  }
+})
 
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
