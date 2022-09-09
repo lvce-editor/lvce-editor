@@ -86,7 +86,7 @@
   color: var(--ListHoverForeground);
 }
 
-.QuickPickItem.Focused {
+#QuickPickItemActive {
   color: var(--ListActiveSelectionForeground);
   background: var(--ListActiveSelectionBackground);
 }

@@ -67,8 +67,8 @@ test('setFocusedIndex', () => {
   ViewletQuickPick.setFocusedIndex(state, 0, 1)
   const $QuickPickItemOne = state.$QuickPickItems.children[0]
   const $QuickPickItemTwo = state.$QuickPickItems.children[1]
-  expect($QuickPickItemOne.classList.contains('Focused')).toBe(false)
-  expect($QuickPickItemTwo.classList.contains('Focused')).toBe(true)
+  expect($QuickPickItemOne.id).toBe('')
+  expect($QuickPickItemTwo.id).toBe('QuickPickItemActive')
 })
 
 test('setPicks - less picks', () => {

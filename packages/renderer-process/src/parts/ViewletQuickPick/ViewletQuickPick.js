@@ -226,14 +226,12 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
   if (oldFocusedIndex >= 0) {
     const $OldItem = $QuickPickItems.children[oldFocusedIndex]
     if ($OldItem) {
-      $OldItem.classList.remove('Focused')
       $OldItem.removeAttribute('id')
     }
   }
   if (newFocusedIndex >= 0) {
     const $NewItem = $QuickPickItems.children[newFocusedIndex]
     if ($NewItem) {
-      $NewItem.classList.add('Focused')
       $NewItem.id = activeId
       $QuickPickInput.setAttribute('aria-activedescendant', activeId)
     }
