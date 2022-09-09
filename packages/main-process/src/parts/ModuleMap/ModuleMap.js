@@ -27,6 +27,9 @@ exports.getModuleId = (commandId) => {
       return ModuleId.Dialog
     case 'ElectronBeep.beep':
       return ModuleId.Beep
+    case 'ElectronShell.beep':
+    case 'ElectronShell.showItemInFolder':
+      return ModuleId.ElectronShell
     default:
       throw new Error(`method not found ${commandId}`)
   }
