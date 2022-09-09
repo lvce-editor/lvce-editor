@@ -346,3 +346,8 @@ export const setCursorOffset = (state, cursorOffset) => {
   $QuickPickInput.selectionStart = cursorOffset
   $QuickPickInput.selectionEnd = cursorOffset
 }
+
+export const setItemsHeight = (state, itemsHeight) => {
+  const { $QuickPickItems } = state
+  $QuickPickItems.style.height = `${itemsHeight}px`
+}

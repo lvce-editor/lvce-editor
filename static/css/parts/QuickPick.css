@@ -38,14 +38,13 @@
 
 #QuickPickItems {
   outline: 0;
-  overflow-y: auto;
   /* height: 200px; */
   max-height: 220px;
-  /* TODO not sure if that makes anything faster here */
   margin: 0;
   padding: 0;
+  /* TODO not sure if that makes anything faster here */
   overflow: hidden;
-  /* contain: layout style paint; */
+  contain: strict;
 }
 
 .ScrollWrapper {

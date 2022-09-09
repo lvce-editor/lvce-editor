@@ -641,9 +641,25 @@ const renderFocusedIndex = {
   },
 }
 
+const renderHeight = {
+  isEqual(oldState, newState) {
+    return oldState.items.length === newState.items.length
+  },
+  apply(oldState, newState) {
+    const height = newState.items.length * newState.itemHeight
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'QuickPick',
+      /* method */ 'setItemsHeight',
+      /* height */ height,
+    ]
+  },
+}
+
 export const render = [
   renderItems,
   renderValue,
   renderCursorOffset,
   renderFocusedIndex,
+  renderHeight,
 ]
