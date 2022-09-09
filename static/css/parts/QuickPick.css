@@ -140,7 +140,7 @@
   background-position: 0;
 }
 
-.QuickPickItem [class^='Icon']::before {
+.QuickPickItem [class^='Icon'] {
   content: ' ';
   contain: strict;
   pointer-events: none;
