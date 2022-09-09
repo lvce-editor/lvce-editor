@@ -1,28 +1,35 @@
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
 jest.mock('electron', () => {
   return {
-    shell: {
-      showItemInFolder: jest.fn(),
-      beep: jest.fn(),
+    powerSaveBlocker: {
+      start: jest.fn(),
+      stop: jest.fn(),
     },
   }
 })
 
-const ElectronShell = require('../src/parts/ElectronShell/ElectronShell.js')
-
 const electron = require('electron')
+const ElectronPowerSaveBlocker = require('../src/parts/ElectronPowerSaveBlocker/ElectronPowerSaveBlocker.js')
 
-test('showItemInFolder', () => {
+test('start', () => {
   // @ts-ignore
-  electron.shell.showItemInFolder.mockImplementation(() => {})
-  ElectronShell.showItemInFolder('/test/file.txt')
-  expect(electron.shell.showItemInFolder).toHaveBeenCalledTimes(1)
-  expect(electron.shell.showItemInFolder).toHaveBeenCalledWith('/test/file.txt')
+  electron.powerSaveBlocker.start.mockImplementation(() => {
+    return 1
+  })
+  expect(ElectronPowerSaveBlocker.start('prevent-app-suspension')).toBe(1)
+  expect(electron.powerSaveBlocker.start).toHaveBeenCalledTimes(1)
+  expect(electron.powerSaveBlocker.start).toHaveBeenCalledWith(
+    'prevent-app-suspension'
+  )
 })
 
-test('beep', () => {
+test('stop', () => {
   // @ts-ignore
-  electron.shell.beep.mockImplementation(() => {})
-  ElectronShell.beep()
-  expect(electron.shell.beep).toHaveBeenCalledTimes(1)
-  expect(electron.shell.beep).toHaveBeenCalledWith()
+  electron.powerSaveBlocker.stop.mockImplementation(() => {})
+  ElectronPowerSaveBlocker.stop(1)
+  expect(electron.powerSaveBlocker.stop).toHaveBeenCalledTimes(1)
+  expect(electron.powerSaveBlocker.stop).toHaveBeenCalledWith(1)
 })
