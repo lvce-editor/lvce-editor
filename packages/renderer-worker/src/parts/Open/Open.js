@@ -1,8 +1,14 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { VError } from '../VError/VError.js'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
-export const openNativeFolder = async (absolutePath) => {
+const openNativeFolderWeb = (absolutePath) => {
+  throw new Error('not implemented')
+}
+
+const openNativeFolderRemote = async (absolutePath) => {
   try {
     await SharedProcess.invoke(
       /* Native.openFolder */ 'Native.openFolder',
@@ -10,6 +16,21 @@ export const openNativeFolder = async (absolutePath) => {
     )
   } catch (error) {
     throw new VError(error, `Failed to open folder ${absolutePath}`)
+  }
+}
+
+const openNativeFolderElectron = async (absolutePath) => {}
+
+export const openNativeFolder = async (absolutePath) => {
+  switch (Platform.platform) {
+    case PlatformType.Web:
+      return openNativeFolderWeb(absolutePath)
+    case PlatformType.Remote:
+      return openNativeFolderRemote(absolutePath)
+    case PlatformType.Electron:
+      return openNativeFolderElectron(absolutePath)
+    default:
+      return
   }
 }
 
