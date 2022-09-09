@@ -28,7 +28,7 @@ const ViewletQuickPick = await import(
 )
 
 test('create', () => {
-  const state = ViewletQuickPick.create('>')
+  const state = ViewletQuickPick.create()
   ViewletQuickPick.setValue(state, '>')
   ViewletQuickPick.setPicks(state, [
     {
@@ -51,7 +51,7 @@ test('create', () => {
 })
 
 test('setFocusedIndex', () => {
-  const state = ViewletQuickPick.create('>')
+  const state = ViewletQuickPick.create()
   ViewletQuickPick.setPicks(state, [
     {
       posInSet: 1,
@@ -72,7 +72,7 @@ test('setFocusedIndex', () => {
 })
 
 test('setPicks - less picks', () => {
-  const state = ViewletQuickPick.create('>')
+  const state = ViewletQuickPick.create()
   ViewletQuickPick.setPicks(state, [
     {
       posInSet: 1,
@@ -90,7 +90,7 @@ test('setPicks - less picks', () => {
 })
 
 test.skip('event - mousedown', () => {
-  const state = ViewletQuickPick.create('>')
+  const state = ViewletQuickPick.create()
   ViewletQuickPick.setPicks(state, [
     {
       posInSet: 1,
@@ -117,7 +117,7 @@ test.skip('event - mousedown', () => {
 })
 
 test('event - mousedown - on focused item', () => {
-  const state = ViewletQuickPick.create('>')
+  const state = ViewletQuickPick.create()
   ViewletQuickPick.setPicks(state, [
     {
       posInSet: 1,
@@ -140,7 +140,7 @@ test('event - mousedown - on focused item', () => {
 })
 
 test.skip('event - beforeinput', () => {
-  const state = ViewletQuickPick.create('>')
+  const state = ViewletQuickPick.create()
   ViewletQuickPick.setPicks(state, [
     {
       posInSet: 1,
@@ -170,18 +170,7 @@ test.skip('event - beforeinput', () => {
 })
 
 test('event - input', () => {
-  const state = ViewletQuickPick.create('>', [
-    {
-      posInSet: 1,
-      setSize: 2,
-      label: 'item 1',
-    },
-    {
-      posInSet: 2,
-      setSize: 2,
-      label: 'item 2',
-    },
-  ])
+  const state = ViewletQuickPick.create()
   const $QuickPickInput = state.$QuickPickInput
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
@@ -198,23 +187,12 @@ test('event - input', () => {
 })
 
 test('accessibility - QuickPick should have aria label', () => {
-  const state = ViewletQuickPick.create('>', [
-    {
-      posInSet: 1,
-      setSize: 2,
-      label: 'item 1',
-    },
-    {
-      posInSet: 2,
-      setSize: 2,
-      label: 'item 2',
-    },
-  ])
+  const state = ViewletQuickPick.create()
   expect(state.$QuickPick.ariaLabel).toBe('Quick open')
 })
 
 test('accessibility - QuickPickInput should have aria label', () => {
-  const state = ViewletQuickPick.create('>')
+  const state = ViewletQuickPick.create()
   ViewletQuickPick.setPicks(state, [
     {
       posInSet: 1,
@@ -233,7 +211,7 @@ test('accessibility - QuickPickInput should have aria label', () => {
 })
 
 test('accessibility - aria-activedescendant should point to quick pick item', () => {
-  const state = ViewletQuickPick.create('>')
+  const state = ViewletQuickPick.create()
   ViewletQuickPick.setPicks(state, [
     {
       posInSet: 1,
@@ -258,7 +236,7 @@ test('event - wheel', () => {
   RendererWorker.send.mockImplementation((x) => {
     console.log(x)
   })
-  const state = ViewletQuickPick.create('>')
+  const state = ViewletQuickPick.create()
   const event = new WheelEvent('wheel', {
     deltaY: 53,
     deltaMode: WheelEventType.DomDeltaLine,
