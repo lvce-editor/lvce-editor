@@ -8,3 +8,4 @@ exports.ElectronWindowProcessExplorer = 7
 exports.Window = 8
 exports.ElectronShell = 9
 exports.ElectronSafeStorage = 11
+exports.ElectronNetLog = 12

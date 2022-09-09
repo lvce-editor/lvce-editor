@@ -22,6 +22,8 @@ exports.load = async (moduleId) => {
       return require('../ElectronShell/ElectronShell.ipc.js')
     case ModuleId.ElectronSafeStorage:
       return require('../ElectronSafeStorage/ElectronSafeStorage.ipc.js')
+    case ModuleId.ElectronNetLog:
+      return require('../ElectronNetLog/ElectronNetLog.ipc.js')
     default:
       throw new Error('unknown module')
   }

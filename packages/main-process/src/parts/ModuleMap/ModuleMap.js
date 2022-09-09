@@ -34,6 +34,9 @@ exports.getModuleId = (commandId) => {
     case 'ElectronSafeStorage.encryptString':
     case 'ElectronSafeStorage.decryptString':
       return ModuleId.ElectronSafeStorage
+    case 'ElectronNetLog.startLogging':
+    case 'ElectronNetLog.stopLogging':
+      return ModuleId.ElectronNetLog
     default:
       throw new Error(`method not found ${commandId}`)
   }
