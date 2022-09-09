@@ -1,3 +1,7 @@
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
 jest.mock('electron', () => {
   return {
     shell: {

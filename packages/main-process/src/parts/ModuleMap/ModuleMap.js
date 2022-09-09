@@ -33,6 +33,10 @@ exports.getModuleId = (commandId) => {
     case 'ElectronPowerSaveBlocker.start':
     case 'ElectronPowerSaveBlocker.stop':
       return ModuleId.ElectronPowerSaveBlocker
+    case 'ElectronSafeStorage.isEncryptionAvailable':
+    case 'ElectronSafeStorage.encryptString':
+    case 'ElectronSafeStorage.decryptString':
+      return ModuleId.ElectronSafeStorage
     default:
       throw new Error(`method not found ${commandId}`)
   }
