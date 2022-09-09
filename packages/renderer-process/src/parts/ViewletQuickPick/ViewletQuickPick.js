@@ -155,21 +155,10 @@ const render$QuickPickItemMore = ($QuickPickItem, quickPickItem) => {
 }
 
 const render$QuickPickItem = ($QuickPickItem, quickPickItem) => {
-  const oldQuickPickItem = $QuickPickItem.quickPickItem || {}
-
-  // const lengthA = $QuickPickItem.children.length
-  // const lengthB = quickPickItem.icon ? 2 : 1
   $QuickPickItem.ariaPosInSet = `${quickPickItem.posInSet}` // TODO pass correct number as prop
   $QuickPickItem.ariaSetSize = `${quickPickItem.setSize}`
-  // console.log($QuickPickItem.quickPickItem)
   $QuickPickItem.quickPickItem = quickPickItem
-  // if (lengthA < lengthB) {
-  // render$QuickPickItemLess($QuickPickItem, quickPickItem)
-  // } else if (lengthA === lengthB) {
   render$QuickPickItemEqual($QuickPickItem, quickPickItem)
-  // } else {
-  //   render$QuickPickItemMore($QuickPickItem, quickPickItem)
-  // }
 }
 
 const render$QuickPickItemsLess = ($QuickPickItems, quickPickItems) => {
