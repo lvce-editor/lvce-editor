@@ -40,6 +40,9 @@ exports.getModuleId = (commandId) => {
     case 'ElectronContentTracing.startRecording':
     case 'ElectronContentTracing.stopRecording':
       return ModuleId.ElectronContentTracing
+    case 'ElectronNetLog.startLogging':
+    case 'ElectronNetLog.stopLogging':
+      return ModuleId.ElectronNetLog
     default:
       throw new Error(`method not found ${commandId}`)
   }
