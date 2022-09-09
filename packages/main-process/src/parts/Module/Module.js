@@ -20,6 +20,8 @@ exports.load = async (moduleId) => {
       return require('../ElectronWindow/ElectronWindow.ipc.js')
     case ModuleId.ElectronShell:
       return require('../ElectronShell/ElectronShell.ipc.js')
+    case ModuleId.ElectronPowerSaveBlocker:
+      return require('../ElectronPowerSaveBlocker/ElectronPowerSaveBlocker.ipc.js')
     default:
       throw new Error('unknown module')
   }

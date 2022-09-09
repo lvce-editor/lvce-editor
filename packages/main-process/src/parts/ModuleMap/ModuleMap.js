@@ -30,6 +30,9 @@ exports.getModuleId = (commandId) => {
     case 'ElectronShell.beep':
     case 'ElectronShell.showItemInFolder':
       return ModuleId.ElectronShell
+    case 'ElectronPowerSaveBlocker.start':
+    case 'ElectronPowerSaveBlocker.stop':
+      return ModuleId.ElectronPowerSaveBlocker
     default:
       throw new Error(`method not found ${commandId}`)
   }
