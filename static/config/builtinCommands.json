@@ -395,5 +395,13 @@
   {
     "id": "SessionReplay.openSession",
     "label": "SessionReplay: Open Session"
+  },
+  {
+    "id": "ContentTracing.start",
+    "label": "Developer: Start Content Tracing"
+  },
+  {
+    "id": "ContentTracing.stop",
+    "label": "Developer: Stop Content Tracing"
   }
 ]

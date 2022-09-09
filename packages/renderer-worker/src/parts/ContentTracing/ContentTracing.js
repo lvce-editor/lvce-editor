@@ -1,6 +1,7 @@
 import * as ElectronContentTracing from '../ElectronContentTracing/ElectronContentTracing.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as Open from '../Open/Open.js'
 
 export const start = async () => {
   if (Platform.platform !== PlatformType.Electron) {
@@ -16,5 +17,6 @@ export const stop = async () => {
     throw new Error('content tracing is only supported in electron')
   }
   const path = await ElectronContentTracing.stopRecording()
-  console.log({ path })
+  await Open.openNativeFolder(path)
+  // console.log({ path })
 }
