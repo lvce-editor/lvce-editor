@@ -34,7 +34,7 @@
   background: rgba(59, 71, 66, 0.5);
 }
 
-.TreeItem [class^='Icon']::before {
+.TreeItem [class^='Icon'] {
   content: ' ';
   contain: strict;
   pointer-events: none;

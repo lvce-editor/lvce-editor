@@ -1,12 +1,13 @@
 import { jest } from '@jest/globals'
+import { Command } from '../src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+jest.unstable_mockModule('../src/parts/SearchFile/SearchFile.js', () => {
   return {
-    invoke: jest.fn(() => {
+    searchFile: jest.fn(() => {
       throw new Error('not implemented')
     }),
   }
@@ -19,11 +20,26 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
     }),
   }
 })
+jest.unstable_mockModule('../src/parts/IconTheme/IconTheme.js', () => {
+  return {
+    getFileIcon: jest.fn(),
+  }
+})
+
+jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => {
+  return {
+    state: {
+      workspacePath: '/test',
+    },
+    pathBaseName(path) {
+      return path.slice(path.lastIndexOf('/') + 1)
+    },
+  }
+})
 
 const QuickPickFile = await import('../src/parts/QuickPick/QuickPickFile.js')
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
+const SearchFile = await import('../src/parts/SearchFile/SearchFile.js')
+const IconTheme = await import('../src/parts/IconTheme/IconTheme.js')
 
 test('name', () => {
   expect(QuickPickFile.name).toBe('file')
@@ -49,14 +65,57 @@ test('getNoResults', () => {
 })
 
 test('getPicks', async () => {
-  await expect(QuickPickFile.getPicks()).resolves.toEqual([])
+  // @ts-ignore
+  SearchFile.searchFile.mockImplementation(() => {
+    return ['/test/file-1.txt', '/test/file-2.txt', '/test/file-3.txt']
+  })
+  // @ts-ignore
+  IconTheme.getFileIcon.mockImplementation(() => {
+    return '_file'
+  })
+  expect(await QuickPickFile.getPicks('/test/file.txt')).toEqual([
+    {
+      icon: '_file',
+      label: '/test/file-1.txt',
+    },
+    {
+      icon: '_file',
+      label: '/test/file-2.txt',
+    },
+    {
+      icon: '_file',
+      label: '/test/file-3.txt',
+    },
+  ])
+  expect(SearchFile.searchFile).toHaveBeenCalledTimes(1)
+  expect(SearchFile.searchFile).toHaveBeenCalledWith('/test', '/test/file.txt')
+  expect(IconTheme.getFileIcon).toHaveBeenCalledTimes(3)
+  expect(IconTheme.getFileIcon).toHaveBeenNthCalledWith(1, {
+    name: 'file-1.txt',
+  })
 })
 
-test('selectPick', async () => {
+test('getPicks - empty', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    return 'sample text'
+  SearchFile.searchFile.mockImplementation(() => {
+    return []
   })
+  expect(await QuickPickFile.getPicks('/test/file.txt')).toEqual([])
+})
+
+test('getPicks - error', async () => {
+  // @ts-ignore
+  SearchFile.searchFile.mockImplementation(() => {
+    throw new TypeError('x is not a function')
+  })
+  await expect(QuickPickFile.getPicks('/test/file.txt')).rejects.toThrowError(
+    new TypeError('x is not a function')
+  )
+})
+
+test.skip('selectPick', async () => {
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
   expect(
     await QuickPickFile.selectPick({
       label: 'test-file-1.txt',
@@ -64,4 +123,9 @@ test('selectPick', async () => {
   ).toEqual({
     command: 'hide',
   })
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'Main.openUri',
+    'test-file-1.txt'
+  )
 })
