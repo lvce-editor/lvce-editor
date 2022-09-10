@@ -138,6 +138,12 @@ export const expect = (locator) => {
         className,
       })
     },
+    async toHaveId(id) {
+      Assert.string(id, 'id must be of type string')
+      return await this.checkSingleElementCondition('toHaveId', {
+        id,
+      })
+    },
     async toHaveCount(count) {
       Assert.number(count, 'count must be of type string')
       return this.checkMultiElementCondition('toHaveCount', { count })

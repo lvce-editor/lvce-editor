@@ -17,7 +17,8 @@
   border-color: var(--FocusOutline);
 }
 
-.FocusOutline {
+.FocusOutline,
+#TreeItemActive {
   outline: var(--FocusOutline);
   outline-offset: -1px;
   outline-style: solid;
