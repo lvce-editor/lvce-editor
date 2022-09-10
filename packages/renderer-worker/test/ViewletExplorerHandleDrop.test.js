@@ -21,7 +21,7 @@ const ViewletExplorer = await import(
   '../src/parts/ViewletExplorer/ViewletExplorer.js'
 )
 
-test('handleDrop', async () => {
+test('handleDrop - single file', async () => {
   // @ts-ignore
   FileSystem.copy.mockImplementation(() => {})
   const state = {
@@ -47,6 +47,80 @@ test('handleDrop', async () => {
     dirents: [
       {
         path: '/test/file.txt',
+      },
+    ],
+  })
+  expect(FileSystem.copy).toHaveBeenCalledTimes(1)
+  expect(FileSystem.copy).toHaveBeenCalledWith(
+    '/source/file.txt',
+    '/test/file.txt'
+  )
+})
+
+test('handleDrop - single file - merge with existing files', async () => {
+  // @ts-ignore
+  FileSystem.copy.mockImplementation(() => {})
+  const state = {
+    ...ViewletExplorer.create(),
+    root: '/test',
+    focusedIndex: 1,
+    dirents: [
+      {
+        depth: 1,
+        posInSet: 1,
+        setSize: 2,
+        name: 'file-1.txt',
+        path: '/test/file-1.txt',
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        posInSet: 2,
+        setSize: 2,
+        name: 'file-3.txt',
+        path: '/test/file-3.txt',
+        type: DirentType.File,
+      },
+    ],
+    pathSeparator: '/',
+  }
+  expect(
+    await ViewletExplorerHandleDrop.handleDrop(state, [
+      {
+        lastModified: 1662556917899,
+        lastModifiedDate: new Date(),
+        name: 'file-2.txt',
+        path: '/source/file-2.txt',
+        size: 4,
+        type: 'text/plain',
+        webkitRelativePath: '',
+      },
+    ])
+  ).toMatchObject({
+    dirents: [
+      {
+        depth: 1,
+        posInSet: 1,
+        setSize: 3,
+        name: 'file-1.txt',
+        path: '/test/file-1.txt',
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        posInSet: 2,
+        setSize: 3,
+        name: 'file-2.txt',
+        path: '/test/file-2.txt',
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        posInSet: 3,
+        setSize: 3,
+        name: 'file-3.txt',
+        path: '/test/file-3.txt',
+        type: DirentType.File,
       },
     ],
   })
