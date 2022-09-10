@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as ViewletIframe from '../src/parts/Viewlet/ViewletIframe.js'
+import * as ViewletIframe from '../src/parts/ViewletIframe/ViewletIframe.js'
 import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
 import * as Layout from '../src/parts/Layout/Layout.js'
 

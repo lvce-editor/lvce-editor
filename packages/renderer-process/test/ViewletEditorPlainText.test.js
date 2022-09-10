@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletEditorPlainText from '../src/parts/Viewlet/ViewletEditorPlainText.js'
+import * as ViewletEditorPlainText from '../src/parts/ViewletEditorPlainText/ViewletEditorPlainText.js'
 
 test('name', () => {
   expect(ViewletEditorPlainText.name).toBe('EditorPlainText')

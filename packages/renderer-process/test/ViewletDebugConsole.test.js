@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as ViewletDebugConsole from '../src/parts/Viewlet/ViewletDebugConsole.js'
+import * as ViewletDebugConsole from '../src/parts/ViewletDebugConsole/ViewletDebugConsole.js'
 import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
 
 test('name', () => {
