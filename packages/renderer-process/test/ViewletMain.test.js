@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -28,7 +29,7 @@ const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 
 beforeEach(async () => {
   Layout.state.$Main = document.createElement('div')
-  await Viewlet.load('EditorPlainText')
+  await Viewlet.load(ViewletModuleId.EditorPlainText)
   // Main.state.$MainContent = undefined
   // Main.state.$MainTabs = undefined
 })
