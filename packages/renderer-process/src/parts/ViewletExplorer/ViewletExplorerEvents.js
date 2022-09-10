@@ -87,6 +87,9 @@ export const handleBlur = (event) => {
  * @param {DragEvent} event
  */
 export const handleDragOver = (event) => {
+  event.dataTransfer.effectAllowed = 'copyMove'
+  console.log(event.dataTransfer.dropEffect)
+  event.dataTransfer.dropEffect = 'copy'
   event.preventDefault()
   // state.element.classList.add('DropTarget')
 }
@@ -113,6 +116,7 @@ export const handleDrop = async (event) => {
   console.log('[explorer] drop', event)
   // state.element.classList.remove('DropTarget')
   event.preventDefault()
+  event.stopPropagation()
   const { files, dropEffect } = event.dataTransfer
   console.log({ files, dropEffect })
   RendererWorker.send('Explorer.handleDrop', files)

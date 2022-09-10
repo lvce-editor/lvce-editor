@@ -403,8 +403,6 @@ test('event - drop', () => {
   const $File1 = state.$Viewlet.children[0]
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const event = new DragEvent('drop', {
     bubbles: true,
     cancelable: true,
@@ -424,7 +422,8 @@ test('event - drop', () => {
       ],
     },
   })
-  console.log(globalThis.FileList)
+  const stopProgationSpy = jest.spyOn(event, 'stopPropagation')
   $File1.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
+  expect(stopProgationSpy).toHaveBeenCalled()
 })
