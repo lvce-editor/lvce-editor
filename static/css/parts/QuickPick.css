@@ -38,14 +38,13 @@
 
 #QuickPickItems {
   outline: 0;
-  overflow-y: auto;
   /* height: 200px; */
   max-height: 220px;
-  /* TODO not sure if that makes anything faster here */
   margin: 0;
   padding: 0;
+  /* TODO not sure if that makes anything faster here */
   overflow: hidden;
-  /* contain: layout style paint; */
+  contain: strict;
 }
 
 .ScrollWrapper {
@@ -86,7 +85,7 @@
   color: var(--ListHoverForeground);
 }
 
-.QuickPickItem.Focused {
+#QuickPickItemActive {
   color: var(--ListActiveSelectionForeground);
   background: var(--ListActiveSelectionBackground);
 }
@@ -138,4 +137,19 @@
   background-size: cover;
   background-size: 16px;
   background-position: 0;
+}
+
+.QuickPickItem [class^='Icon'] {
+  contain: strict;
+  pointer-events: none;
+  background-size: 16px;
+  background-position: 0;
+  background-repeat: no-repeat;
+  width: 16px;
+  height: 22px;
+}
+
+/* TODO remove icon from dom when it is not needed */
+.Iconundefined {
+  display: none;
 }

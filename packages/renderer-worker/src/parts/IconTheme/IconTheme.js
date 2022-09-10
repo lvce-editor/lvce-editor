@@ -8,6 +8,7 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as DefaultIcon from '../DefaultIcon/DefaultIcon.js'
 
 export const state = {
   seenFiles: [],
@@ -18,10 +19,6 @@ export const state = {
    */
   iconTheme: undefined,
 }
-
-const DEFAULT_FILE_ICON = '_file'
-const DEFAULT_FOLDER_ICON = '_folder'
-const DEFAULT_FOLDER_ICON_OPEN = '_folder_open'
 
 const getIconThemeJson = async (iconThemeId) => {
   if (Platform.platform === PlatformType.Web) {
@@ -66,7 +63,7 @@ export const getFileIcon = (file) => {
   if (extensionIcon) {
     return extensionIcon
   }
-  return DEFAULT_FILE_ICON
+  return DefaultIcon.File
 }
 
 export const getFolderIcon = (folder) => {
@@ -80,7 +77,7 @@ export const getFolderIcon = (folder) => {
   if (folderIcon) {
     return folderIcon
   }
-  return DEFAULT_FOLDER_ICON
+  return DefaultIcon.Folder
 }
 
 const getFolderIconExpanded = (folder) => {
@@ -90,14 +87,14 @@ const getFolderIconExpanded = (folder) => {
   }
   // @ts-ignore
   if (!iconTheme.folderNamesExpanded) {
-    return DEFAULT_FOLDER_ICON_OPEN
+    return DefaultIcon.FolderOpen
   }
   // @ts-ignore
   const folderName = iconTheme.folderNamesExpanded[folder.name.toLowerCase()]
   if (folderName) {
     return folderName
   }
-  return DEFAULT_FOLDER_ICON_OPEN
+  return DefaultIcon.FolderOpen
 }
 
 export const getIcon = (dirent) => {
@@ -109,10 +106,10 @@ export const getIcon = (dirent) => {
     case DirentType.DirectoryExpanded:
       return getFolderIconExpanded(dirent)
     case DirentType.Symlink:
-      return DEFAULT_FILE_ICON
+      return DefaultIcon.File
     default:
       console.warn(`unsupported type ${dirent.type}`)
-      return ''
+      return DefaultIcon.None
   }
 }
 
@@ -132,9 +129,7 @@ const getIconThemeCss2 = (iconTheme) => {
   const rules = []
   for (const [key, value] of Object.entries(iconTheme.json.iconDefinitions)) {
     const backgroundUrl = getBackgroundUrl(iconTheme.extensionPath, value)
-    rules.push(
-      `.Icon${key}::before { background-image: url(${backgroundUrl}) }`
-    )
+    rules.push(`.Icon${key} { background-image: url(${backgroundUrl}) }`)
   }
   const rulesCss = rules.join('\n')
   return rulesCss

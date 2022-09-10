@@ -1,10 +1,7 @@
 import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
-import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 
 export const name = 'Extensions'
 
@@ -35,45 +32,6 @@ const getIconSrc = (extension) => {
   return DEFAULT_ICON_SRC
 }
 
-const handleIconError = (event) => {
-  const $Target = event.target
-  if ($Target.src.endsWith(DEFAULT_ICON_SRC)) {
-    return
-  }
-  $Target.src = DEFAULT_ICON_SRC
-}
-
-const handleWheel = (event) => {
-  switch (event.deltaMode) {
-    case WheelEventType.DomDeltaLine:
-      RendererWorker.send(
-        /* ViewletExtensions.handleWheel */ 'Extensions.handleWheel',
-        /* deltaY */ event.deltaY
-      )
-      break
-    case WheelEventType.DomDeltaPixel:
-      RendererWorker.send(
-        /* ViewletExtensions.handleWheel */ 'Extensions.handleWheel',
-        /* deltaY */ event.deltaY
-      )
-      break
-    default:
-      break
-  }
-}
-
-const handleInput = (event) => {
-  const $Target = event.target
-  const value = $Target.value
-  RendererWorker.send(
-    /* ViewletExtensions.handleInput */ 'Extensions.handleInput',
-    /* value */ value
-  )
-  // TODO
-  // TODO use beforeinput event to set value and extension list items at the same time
-  // state.$Viewlet.ariaBusy = 'true'
-}
-
 const findIndex = ($Target) => {
   if ($Target.className.includes('ExtensionListItem')) {
     return FindIndex.findIndex($Target.parentNode, $Target)
@@ -85,111 +43,11 @@ const findIndex = ($Target) => {
   // return -2
 }
 
-const handleContextMenuMouse = (event) => {
-  RendererWorker.send(
-    /* Extensions.handleContextMenu */ 'Extensions.handleContextMenu',
-    /* x */ event.clientX,
-    /* y */ event.clientY
-  )
-}
-
-const handleContextMenuKeyboard = (event) => {}
-
-const handleContextMenu = (event) => {
-  event.preventDefault()
-  switch (event.button) {
-    case MouseEventType.Keyboard:
-      return handleContextMenuKeyboard(event)
-    default:
-      return handleContextMenuMouse(event)
-  }
-}
-
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
-const handleClick = (event) => {
-  const $Target = event.target
-  console.log($Target)
-  switch ($Target.className) {
-    case 'Extension': {
-      const index = getNodeIndex($Target)
-      RendererWorker.send(
-        /* Extensions.handleClick */ 'Extensions.handleClick',
-        /* index */ index
-      )
-      break
-    }
-    case 'ExtensionName':
-    case 'ExtensionDescription':
-    case 'ExtensionFooter': {
-      const index = getNodeIndex($Target.parentNode.parentNode)
-      RendererWorker.send(
-        /* Extensions.handleClick */ 'Extensions.handleClick',
-        /* index */ index
-      )
-      break
-    }
-    case 'ExtensionAuthorName': {
-      const index = getNodeIndex($Target.parentNode.parentNode.parentNode)
-      RendererWorker.send(
-        /* Extensions.handleClick */ 'Extensions.handleClick',
-        /* index */ index
-      )
-      break
-    }
-    default:
-      break
-  }
-}
-
-const handleFocus = (event) => {
-  const $Target = event.target
-  $Target.classList.add('FocusOutline')
-  // TODO maybe have one focus listener inside Viewlet.js instead of each viewlet
-  Focus.setFocus('Extensions')
-
-  // RendererWorker.send(/* ViewletExtensions.focusIndex */ 868, /* index */ -1)
-}
-
-const handleScrollBarMouseDown = (event) => {
-  const $Target = event.target
-  if ($Target.className === 'ScrollBarThumb') {
-    window.addEventListener('mousemove', handleScrollBarThumbMouseMove)
-    window.addEventListener('mouseup', handleScrollBarThumbMouseUp)
-  } else {
-    const y = event.clientY
-    console.log({ y })
-    RendererWorker.send(
-      /* ViewletExtensions.handleScrollBarClick */ 'Extensions.handleScrollBarClick',
-      /* y */ y
-    )
-  }
-}
-
-const handleScrollBarThumbMouseMove = (event) => {
-  const y = event.clientY
-  RendererWorker.send(
-    /* ViewletExtensions.handleScrollBarMouseMove */ 'Extensions.handleScrollBarMove',
-    /* y */ y
-  )
-}
-
-const handleScrollBarThumbMouseUp = () => {
-  window.removeEventListener('mousemove', handleScrollBarThumbMouseMove)
-  window.removeEventListener('mouseup', handleScrollBarThumbMouseUp)
-}
-
 export const create = () => {
   const $InputBox = InputBox.create()
   $InputBox.type = 'search'
   $InputBox.placeholder = 'Search Extensions in Marketplace'
-  $InputBox.oninput = handleInput
+  $InputBox.oninput = ViewletExtensionsEvents.handleInput
   const $ExtensionHeader = document.createElement('div')
   $ExtensionHeader.className = 'ExtensionHeader'
   $ExtensionHeader.append($InputBox)
@@ -200,16 +58,16 @@ export const create = () => {
   $ExtensionList.ariaLabel = 'Extensions'
   // @ts-ignore
   $ExtensionList.role = 'list'
-  $ExtensionList.oncontextmenu = handleContextMenu
-  $ExtensionList.onclick = handleClick
-  $ExtensionList.onfocus = handleFocus
+  $ExtensionList.oncontextmenu = ViewletExtensionsEvents.handleContextMenu
+  $ExtensionList.onclick = ViewletExtensionsEvents.handleClick
+  $ExtensionList.onfocus = ViewletExtensionsEvents.handleFocus
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
 
   const $ScrollBar = document.createElement('div')
   $ScrollBar.className = 'ScrollBarSmall'
-  $ScrollBar.onmousedown = handleScrollBarMouseDown
+  $ScrollBar.onmousedown = ViewletExtensionsEvents.handleScrollBarMouseDown
   $ScrollBar.append($ScrollBarThumb)
 
   const $ExtensionListWrapper = document.createElement('div')
@@ -222,7 +80,9 @@ export const create = () => {
   $Viewlet.ariaBusy = 'true'
   $Viewlet.ariaLive = 'polite'
   $Viewlet.append($ExtensionHeader, $ExtensionListWrapper)
-  $Viewlet.addEventListener('wheel', handleWheel, { passive: true })
+  $Viewlet.addEventListener('wheel', ViewletExtensionsEvents.handleWheel, {
+    passive: true,
+  })
 
   return {
     $Viewlet,
@@ -331,7 +191,7 @@ const create$Extension = () => {
 
   const icon = document.createElement('img')
   icon.className = 'ExtensionIcon'
-  icon.onerror = handleIconError
+  icon.onerror = ViewletExtensionsEvents.handleIconError
   const buttonManage = document.createElement('button')
   buttonManage.className = 'ExtensionManage'
   // switch (extension.state) {

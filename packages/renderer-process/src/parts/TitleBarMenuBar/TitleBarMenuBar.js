@@ -1,7 +1,7 @@
-import * as Menu from '../OldMenu/Menu.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Widget from '../Widget/Widget.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Menu from '../OldMenu/Menu.js'
+import * as Widget from '../Widget/Widget.js'
+import * as TitleBarMenuBarEvents from './TitleBarMenuBarEvents.js'
 
 // TODO set proper tabIndex 0 to focused item https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-1/menubar-1.html
 
@@ -73,36 +73,6 @@ export const getMenuEntryBounds = (state, index) => {
   }
 }
 
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
-const getIndex = ($Target) => {
-  switch ($Target.className) {
-    case 'TitleBarTopLevelEntry':
-      return getNodeIndex($Target)
-    default:
-      return -1
-  }
-}
-
-const handleClick = (event) => {
-  const $Target = event.target
-  const index = getIndex($Target)
-  if (index === -1) {
-    return
-  }
-  // event.preventDefault()
-  RendererWorker.send(
-    /* TitleBarMenu.toggleIndex */ 'TitleBarMenuBar.toggleIndex',
-    /* index */ index
-  )
-}
-
 export const focusIndex = (state, unFocusIndex, index) => {
   Assert.object(state)
   Assert.number(unFocusIndex)
@@ -115,22 +85,6 @@ export const focusIndex = (state, unFocusIndex, index) => {
     $TitleBarMenu.children[unFocusIndex].removeAttribute('aria-owns')
   }
   $TitleBarMenu.children[index].focus()
-}
-
-const handleMouseEnter = (event) => {
-  const $Target = event.target
-  const index = getIndex($Target)
-  if (index === -1) {
-    return
-  }
-  const enterX = event.clientX
-  const enterY = event.clientY
-  RendererWorker.send(
-    /* TitleBarMenu.focusIndex */ 'TitleBarMenuBar.focusIndex',
-    /* index */ index,
-    /* enterX */ enterX,
-    /* enterY */ enterY
-  )
 }
 
 // TODO the focus variable is confusing: false means keep focus in menubar, true means focus the menu
@@ -159,9 +113,13 @@ export const openMenu = (
   Assert.number(width)
   Assert.number(height)
   // TODO this code is very unclean
-  state.$TitleBarMenu.addEventListener('mouseenter', handleMouseEnter, {
-    capture: true,
-  })
+  state.$TitleBarMenu.addEventListener(
+    'mouseenter',
+    TitleBarMenuBarEvents.handleMouseEnter,
+    {
+      capture: true,
+    }
+  )
   if (unFocusIndex !== -1) {
     state.$TitleBarMenu.children[unFocusIndex].ariaExpanded = 'false'
     state.$TitleBarMenu.children[unFocusIndex].removeAttribute('aria-owns')
@@ -175,8 +133,8 @@ export const openMenu = (
     width,
     height,
     items: menuItems,
-    handleKeyDown,
-    handleFocusOut,
+    handleKeyDown: TitleBarMenuBarEvents.handleKeyDown,
+    handleFocusOut: TitleBarMenuBarEvents.handleFocusOut,
     $Parent: state.$TitleBarMenu.children[index],
     level,
   })
@@ -198,101 +156,12 @@ export const closeMenu = (state, unFocusIndex, index) => {
     state.$TitleBarMenu.children[index].focus()
   }
   Menu.hide(/* restoreFocus */ false)
-  state.$TitleBarMenu.removeEventListener('mouseenter', handleMouseEnter, {
-    capture: true,
-  })
-}
-
-// TODO should only have the one listener in KeyBindings.js
-const handleKeyDown = (event) => {
-  switch (event.key) {
-    case 'ArrowDown':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenu.handleKeyArrowDown */ 'TitleBarMenu.handleKeyArrowDown'
-      )
-      break
-    case 'ArrowUp':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenu.handleKeyArrowUp */ 'TitleBarMenu.handleKeyArrowUp'
-      )
-      break
-    case 'ArrowRight':
-      console.log('arrow right')
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenu.handleKeyArrowRight */ 'TitleBarMenu.handleKeyArrowRight'
-      )
-      break
-    case 'ArrowLeft':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenu.handleKeyArrowLeft */ 'TitleBarMenu.handleKeyArrowLeft'
-      )
-      break
-    case 'Enter':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenu.handleKeyEnter */ 'TitleBarMenu.handleKeyEnter'
-      )
-      break
-    case ' ':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenu.handleKeySpace */ 'TitleBarMenu.handleKeySpace'
-      )
-      break
-    case 'Home':
-    case 'PageUp':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenu.handleKeyHome */ 'TitleBarMenu.handleKeyHome'
-      )
-      break
-    case 'End':
-    case 'PageDown':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenu.handleKeyEnd */ 'TitleBarMenu.handleKeyEnd'
-      )
-      break
-    case 'Escape':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenu.handleKeyEscape */ 'TitleBarMenu.handleKeyEscape'
-      )
-      break
-    default:
-      break
-  }
-}
-
-const isInsideTitleBarMenu = ($Element) => {
-  return (
-    $Element.classList.contains('MenuItem') ||
-    $Element.classList.contains('Menu')
-  )
-}
-
-const handleFocusOut = (event) => {
-  const $ActiveElement = event.relatedTarget
-  if ($ActiveElement && isInsideTitleBarMenu($ActiveElement)) {
-    console.log('RETURN')
-    return
-  }
-  RendererWorker.send(
-    /* TitleBarMenu.closeMenu */ 'TitleBarMenuBar.closeMenu',
-    /* keepFocus */ false
+  state.$TitleBarMenu.removeEventListener(
+    'mouseenter',
+    TitleBarMenuBarEvents.handleMouseEnter,
+    {
+      capture: true,
+    }
   )
 }
 
@@ -301,10 +170,13 @@ export const create = () => {
   $TitleBarMenu.id = 'TitleBarMenu'
   // @ts-ignore
   $TitleBarMenu.role = 'menubar'
-  $TitleBarMenu.onkeydown = handleKeyDown
+  $TitleBarMenu.onkeydown = TitleBarMenuBarEvents.handleKeyDown
   // TODO could have one mousedown listener on titlebar that delegates to titlebarMenu if necessary
-  $TitleBarMenu.onmousedown = handleClick
-  $TitleBarMenu.addEventListener('focusout', handleFocusOut)
+  $TitleBarMenu.onmousedown = TitleBarMenuBarEvents.handleClick
+  $TitleBarMenu.addEventListener(
+    'focusout',
+    TitleBarMenuBarEvents.handleFocusOut
+  )
   return $TitleBarMenu
 }
 

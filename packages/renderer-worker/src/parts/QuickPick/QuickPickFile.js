@@ -1,5 +1,5 @@
 import * as Command from '../Command/Command.js'
-import * as Languages from '../Languages/Languages.js'
+import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as SearchFile from '../SearchFile/SearchFile.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
@@ -15,13 +15,16 @@ const openUri = (path) => {
   return Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path)
 }
 
+const getIcon = (file) => {
+  const baseName = Workspace.pathBaseName(file)
+  return IconTheme.getFileIcon({ name: baseName })
+}
+
 const toPick = (file) => {
+  const icon = getIcon(file)
   return {
     label: file,
-    dataset: {
-      // TODO compute language id lazily on demand inside renderer process (don't compute for hidden items)
-      languageId: Languages.getLanguageId(file),
-    },
+    icon,
   }
 }
 

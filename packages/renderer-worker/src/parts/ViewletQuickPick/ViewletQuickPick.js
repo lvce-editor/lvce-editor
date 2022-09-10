@@ -93,6 +93,7 @@ const getVisible = (items, minLineY, maxLineY) => {
     const item = items[i]
     visibleItems.push({
       label: item.label,
+      icon: item.icon,
       posInSet: i + 1,
       setSize,
     })
@@ -576,6 +577,25 @@ const renderCursorOffset = {
   },
 }
 
+const getItemDomChanges = (oldState, newState) => {
+  const oldItems = oldState.items
+  const newItems = newState.items
+  const length = oldItems.length
+  const domChanges = []
+  for (let i = 0; i < length; i++) {
+    const oldItem = oldItems[i]
+    const newItem = newItems[i]
+    if (oldItem.icon && !newItem.icon) {
+      domChanges.push({
+        command: 'addIcon',
+        icon: newItem.icon,
+        index: i,
+      })
+    }
+  }
+  return domChanges
+}
+
 const renderItems = {
   isEqual(oldState, newState) {
     return (
@@ -621,9 +641,25 @@ const renderFocusedIndex = {
   },
 }
 
+const renderHeight = {
+  isEqual(oldState, newState) {
+    return oldState.items.length === newState.items.length
+  },
+  apply(oldState, newState) {
+    const height = newState.items.length * newState.itemHeight
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'QuickPick',
+      /* method */ 'setItemsHeight',
+      /* height */ height,
+    ]
+  },
+}
+
 export const render = [
   renderItems,
   renderValue,
   renderCursorOffset,
   renderFocusedIndex,
+  renderHeight,
 ]
