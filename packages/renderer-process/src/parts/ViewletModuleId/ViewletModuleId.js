@@ -45,3 +45,5 @@ export const EditorCompletion = 'EditorCompletion'
 export const References = 'References'
 
 export const Implementations = 'Implementations'
+
+export const EditorPlainText = 'EditorPlainText'

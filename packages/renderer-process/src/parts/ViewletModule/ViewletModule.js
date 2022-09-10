@@ -50,6 +50,8 @@ export const load = (moduleId) => {
       return import('../ViewletReferences/ViewletReferences.js')
     case ViewletModuleId.Implementations:
       return import('../ViewletImplementations/ViewletImplementations.js')
+    case ViewletModuleId.EditorPlainText:
+      return import('../Viewlet/ViewletEditorPlainText.js')
     default:
       throw new Error('unknown module')
   }
