@@ -15,8 +15,8 @@ jobs:
     timeout-minutes: 15
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: '0'
+      - run: |
+          git fetch --no-tags --prune --depth=1 origin +refs/heads/main:refs/remotes/origin/main
       - uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
@@ -34,7 +34,7 @@ jobs:
         if: steps.npm-cache.outputs.cache-hit != 'true'
         env:
           DOWNLOAD_BUILTIN_EXTENSIONS: 0
-      - run: npx lerna run test --since main
+      - run: npx lerna run test --since origin/main
       - name: install playwright dependencies
         working-directory: ./packages/e2e
         run: npx playwright install chromium
