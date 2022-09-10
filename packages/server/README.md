@@ -1,7 +1,7 @@
-# web
+# @lvce-editor/server
 
-The web process is a nodejs process that runs
+The server process is a nodejs process that
 
-- `web` runs a static file server that serves the html, css and javascript to the browser
-- `web` can accept WebSocket connections, it sends the WebSocket connection to `shared-process`
-- `web` spawns the `shared-process`
+- runs a static file server that serves the html, css and javascript to the browser
+- can accept WebSocket connections, it sends the WebSocket connection to `shared-process`
+- spawns the `shared-process`
