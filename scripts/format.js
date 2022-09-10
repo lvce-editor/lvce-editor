@@ -276,7 +276,12 @@ const formatModuleFile = async (absolutePath) => {
 }
 
 const formatAllModuleFiles = async () => {
-  const moduleFiles = ['packages/shared-process/src/parts/Module/Module.js']
+  const moduleFiles = [
+    'packages/shared-process/src/parts/Module/Module.js',
+    'packages/main-process/src/parts/Module/Module.js',
+    'packages/renderer-process/src/parts/Module/Module.js',
+    'packages/renderer-worker/src/parts/Module/Module.js',
+  ]
   for (const moduleFile of moduleFiles) {
     const absolutePath = join(root, moduleFile)
     await formatModuleFile(absolutePath)
