@@ -456,18 +456,17 @@ export const handleBeforeInput = (
 // })
 
 export const focusIndex = async (state, index) => {
+  const { provider, maxVisibleItems, items, minLineY, maxLineY } = state
+  console.log('focus', index, minLineY, maxLineY)
   // TODO get types working
   // @ts-ignore
-  if (state.provider.focusPick) {
+  if (provider.focusPick) {
     // @ts-ignore
-    await state.provider.focusPick(state.items[index])
+    await provider.focusPick(items[index])
   }
-  if (index < state.minLineY) {
+  if (index < minLineY + 1) {
     const minLineY = index
-    const maxLineY = Math.min(
-      index + state.maxVisibleItems,
-      state.items.length - 1
-    )
+    const maxLineY = Math.min(index + maxVisibleItems, items.length - 1)
     // TODO need to scroll up
     return {
       ...state,
@@ -476,13 +475,11 @@ export const focusIndex = async (state, index) => {
       focusedIndex: index,
     }
   }
-  if (index > state.maxLineY) {
+  if (index >= maxLineY - 1) {
     // TODO need to scroll down
-    const minLineY = Math.max(0, index - state.maxVisibleItems)
-    const maxLineY = Math.min(
-      index + state.maxVisibleItems - 1,
-      state.items.length - 1
-    )
+    const maxLineY = index + 1
+    const minLineY = maxLineY - maxVisibleItems
+    console.log('scroll down', { index, maxLineY, maxVisibleItems, minLineY })
     return {
       ...state,
       minLineY,
@@ -612,11 +609,14 @@ const renderItems = {
         /* method */ 'showNoResults',
       ]
     }
+    console.log('minLineY', newState.minLineY)
+    console.log('maxLineY', newState.maxLineY)
     const visibleItems = getVisible(
       newState.items,
       newState.minLineY,
       newState.maxLineY
     )
+    console.log({ visibleItems, items: newState.items })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
@@ -631,12 +631,15 @@ const renderFocusedIndex = {
     return oldState.focusedIndex === newState.focusedIndex
   },
   apply(oldState, newState) {
+    const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
+    const newFocusedIndex = newState.focusedIndex - newState.minLineY
+    console.log('focus', oldState.focusedIndex, newState.focusedIndex)
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'setFocusedIndex',
-      /* oldFocusedIndex */ oldState.focusedIndex,
-      /* newFocusedIndex */ newState.focusedIndex,
+      /* oldFocusedIndex */ oldFocusedIndex,
+      /* newFocusedIndex */ newFocusedIndex,
     ]
   },
 }
