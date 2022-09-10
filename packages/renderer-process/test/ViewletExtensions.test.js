@@ -3,29 +3,9 @@
  */
 import { jest } from '@jest/globals'
 
-beforeEach(() => {
-  jest.resetAllMocks()
-})
+import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
 
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
-  }
-)
-
-const ViewletExtensions = await import(
-  '../src/parts/ViewletExtensions/ViewletExtensions.js'
-)
-
-const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
+import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
 
 const isLeaf = (node) => {
   return node.childElementCount === 0
@@ -122,132 +102,6 @@ test.skip('setExtensionState', () => {
   // @ts-ignore
   expect(state.$Extensions.children[1].dataset.state).toBe('uninstalled')
   ViewletExtensions.setExtensionState(state, 'non-existing', 'installed')
-})
-
-test('event -  input', () => {
-  const state = ViewletExtensions.create()
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
-  const { $InputBox } = state
-  $InputBox.value = 'abc'
-  $InputBox.dispatchEvent(
-    new InputEvent('input', {
-      bubbles: true,
-      cancelable: true,
-    })
-  )
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Extensions.handleInput',
-    'abc'
-  )
-  ViewletExtensions.setExtensions(state, [])
-})
-
-// TODO
-test.skip('user clicks install', () => {
-  const state = ViewletExtensions.create()
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
-  ViewletExtensions.setExtensions(state, [
-    {
-      id: 'test-author.test=extension-1',
-      name: 'Test Extension 1',
-      state: 'uninstalled',
-    },
-  ])
-  state.$Extensions.children[0]
-    // @ts-ignore
-    .querySelector('.ExtensionManage')
-    .dispatchEvent(
-      new Event('click', {
-        bubbles: true,
-        cancelable: true,
-      })
-    )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
-    1,
-    2133,
-    'Extensions',
-    'handleInstall',
-    'test-author.test=extension-1',
-  ])
-})
-
-test.skip('user clicks while installing', () => {
-  const state = ViewletExtensions.create()
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
-  ViewletExtensions.setExtensions(state, [
-    {
-      id: 'test-author.test=extension-1',
-      name: 'Test Extension 1',
-      state: 'installing',
-    },
-  ])
-  state.$Extensions.children[0]
-    // @ts-ignore
-    .querySelector('.ExtensionManage')
-    .dispatchEvent(
-      new Event('click', {
-        bubbles: true,
-        cancelable: true,
-      })
-    )
-  expect(RendererWorker.send).not.toHaveBeenCalled()
-})
-
-test.skip('event - click - somewhere else', () => {
-  const state = ViewletExtensions.create()
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
-  ViewletExtensions.setExtensions(state, [
-    {
-      id: 'test-author.test=extension-1',
-      name: 'Test Extension 1',
-      state: 'uninstalled',
-    },
-  ])
-  state.$Extensions.children[0].dispatchEvent(
-    new Event('click', {
-      bubbles: true,
-      cancelable: true,
-    })
-  )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
-    867,
-    'test-author.test=extension-1',
-  ])
-})
-
-// TODO
-test.skip('user clicks uninstall', () => {
-  const state = ViewletExtensions.create()
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
-  ViewletExtensions.setExtensions(state, [
-    {
-      id: 'test-author.test-extension-1',
-      name: 'Test Extension 1',
-      state: 'installed',
-    },
-  ])
-  state.$Extensions.children[0]
-    // @ts-ignore
-    .querySelector('.ExtensionManage')
-    .dispatchEvent(
-      new Event('click', {
-        bubbles: true,
-        cancelable: true,
-      })
-    )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
-    1,
-    2133,
-    'Extensions',
-    'handleUninstall',
-    'test-author.test-extension-1',
-  ])
 })
 
 test('dispose', () => {
