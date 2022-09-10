@@ -4,9 +4,7 @@
 import { jest } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
-beforeEach(() => {
-  jest.resetAllMocks()
-
+beforeAll(() => {
   // Workaround for drag event not being implemented in jsdom https://github.com/jsdom/jsdom/issues/2913
   // @ts-ignore
   globalThis.DragEvent = class extends Event {
@@ -16,6 +14,10 @@ beforeEach(() => {
       this.dataTransfer.setData = this.dataTransfer.setData || (() => {})
     }
   }
+})
+
+beforeEach(() => {
+  jest.resetAllMocks()
 })
 
 jest.unstable_mockModule(
@@ -372,12 +374,6 @@ test('event - dragStart', () => {
     clientX: 50,
     clientY: 50,
     bubbles: true,
-    // @ts-ignore
-    dataTransfer: {
-      effectAllowed: 'all',
-      dropEffect: 'copy',
-      setData: jest.fn(),
-    },
   })
   const spy = jest.spyOn(event.dataTransfer, 'setData')
   $GitKeep.dispatchEvent(event)
