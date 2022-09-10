@@ -7,6 +7,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as EditorBlur from './EditorCommandBlur.js'
 import * as EditorPosition from './EditorCommandPosition.js'
 import * as ViewletState from '../ViewletStates/ViewletStates.js'
+import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 
 const handleBlur = () => {
   close()
@@ -93,7 +94,7 @@ const handleCursorChange = (anyEditor, cursorChange) => {
 export const open = async (editor, openingReason = 1) => {
   console.log('open editor completion')
   const viewlet = ViewletManager.create(
-    ViewletManager.getModule,
+    ViewletModule.load,
     'EditorCompletion',
     'Widget',
     'builtin://',

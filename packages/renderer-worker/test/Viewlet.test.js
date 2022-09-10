@@ -60,7 +60,7 @@ test('openWidget - once', async () => {
   expect(ViewletManager.load).toHaveBeenCalledTimes(1)
   expect(ViewletManager.load).toHaveBeenCalledWith({
     focus: true,
-    getModule: undefined,
+    getModule: expect.any(Function),
     id: 'QuickPick',
     show: false,
     type: 0,
@@ -82,7 +82,7 @@ test('openWidget - should not open again when already open', async () => {
   expect(ViewletManager.load).toHaveBeenCalledTimes(2)
   expect(ViewletManager.load).toHaveBeenNthCalledWith(1, {
     focus: true,
-    getModule: undefined,
+    getModule: expect.any(Function),
     id: 'QuickPick',
     show: false,
     type: 0,
@@ -90,7 +90,7 @@ test('openWidget - should not open again when already open', async () => {
   })
   expect(ViewletManager.load).toHaveBeenNthCalledWith(2, {
     focus: true,
-    getModule: undefined,
+    getModule: expect.any(Function),
     id: 'QuickPick',
     show: false,
     type: 0,
