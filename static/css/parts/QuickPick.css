@@ -38,11 +38,8 @@
 
 #QuickPickItems {
   outline: 0;
-  /* height: 200px; */
-  max-height: 220px;
   margin: 0;
   padding: 0;
-  /* TODO not sure if that makes anything faster here */
   overflow: hidden;
   contain: strict;
 }
