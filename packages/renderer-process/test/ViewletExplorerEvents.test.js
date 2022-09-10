@@ -337,50 +337,69 @@ test('event - dragStart', () => {
   const state = ViewletExplorer.create()
   ViewletExplorer.updateDirents(state, [
     {
-      name: '.gitkeep',
+      name: 'file-1.txt',
       depth: 1,
+      setSize: 1,
       type: DirentType.File,
-      path: '/.gitkeep',
-    },
-    {
-      name: 'another-folder',
-      depth: 1,
-      type: DirentType.Directory,
-      path: '/another-folder',
-    },
-    {
-      name: 'index.css',
-      depth: 1,
-      type: DirentType.File,
-      path: '/index.css',
-    },
-    {
-      name: 'index.html',
-      depth: 1,
-      type: DirentType.File,
-      path: '/index.html',
-    },
-    {
-      name: 'nested',
-      depth: 1,
-      type: DirentType.Directory,
-      path: '/nested',
+      path: '/test/file-1.txt',
     },
   ])
-  const $GitKeep = state.$Viewlet.children[0]
+  const $File1 = state.$Viewlet.children[0]
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   const event = new DragEvent('dragstart', {
-    clientX: 50,
-    clientY: 50,
     bubbles: true,
   })
   const spy = jest.spyOn(event.dataTransfer, 'setData')
-  $GitKeep.dispatchEvent(event)
+  $File1.dispatchEvent(event)
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith(
     'text/uri-list',
     'https://example.com/foobar'
   )
   expect(event.dataTransfer.effectAllowed).toBe('move')
+})
+
+test('event - dragOver', () => {
+  const state = ViewletExplorer.create()
+  ViewletExplorer.updateDirents(state, [
+    {
+      name: 'file-1.txt',
+      depth: 1,
+      setSize: 1,
+      type: DirentType.File,
+      path: '/test/file-1.txt',
+    },
+  ])
+  const $File1 = state.$Viewlet.children[0]
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const event = new DragEvent('dragover', {
+    bubbles: true,
+    cancelable: true,
+  })
+  $File1.dispatchEvent(event)
+  expect(event.defaultPrevented).toBe(true)
+})
+
+test('event - drop', () => {
+  const state = ViewletExplorer.create()
+  ViewletExplorer.updateDirents(state, [
+    {
+      name: 'file-1.txt',
+      depth: 1,
+      setSize: 1,
+      type: DirentType.File,
+      path: '/test/file-1.txt',
+    },
+  ])
+  const $File1 = state.$Viewlet.children[0]
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const event = new DragEvent('drop', {
+    bubbles: true,
+    cancelable: true,
+  })
+  $File1.dispatchEvent(event)
+  expect(event.defaultPrevented).toBe(true)
 })

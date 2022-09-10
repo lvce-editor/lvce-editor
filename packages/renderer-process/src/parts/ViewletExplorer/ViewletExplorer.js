@@ -32,10 +32,10 @@ export const create = () => {
   $Viewlet.addEventListener('wheel', ViewletExplorerEvents.handleWheel, {
     passive: true,
   })
-  $Viewlet.addEventListener('drop', ViewletExplorerEvents.handleDrop)
-  // $Viewlet.addEventListener('focus', ViewletExplorerEvents.handleFocus)
-  $Viewlet.addEventListener('blur', ViewletExplorerEvents.handleBlur)
+  $Viewlet.onblur = ViewletExplorerEvents.handleBlur
   $Viewlet.ondragstart = ViewletExplorerEvents.handleDragStart
+  $Viewlet.ondragover = ViewletExplorerEvents.handleDragOver
+  $Viewlet.ondrop = ViewletExplorerEvents.handleDrop
   return {
     $Viewlet,
   }
