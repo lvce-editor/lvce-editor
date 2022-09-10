@@ -10,8 +10,12 @@ beforeAll(() => {
   globalThis.DragEvent = class extends Event {
     constructor(type, options) {
       super(type, options)
-      this.dataTransfer = options.dataTransfer || {}
-      this.dataTransfer.setData = this.dataTransfer.setData || (() => {})
+      // @ts-ignore
+      this.dataTransfer ||= {}
+      // @ts-ignore
+      this.dataTransfer.setData ||= () => {}
+      // @ts-ignore
+      this.dataTransfer.items ||= []
     }
   }
 })
@@ -37,6 +41,9 @@ const RendererWorker = await import(
 
 const ViewletExplorer = await import(
   '../src/parts/ViewletExplorer/ViewletExplorer.js'
+)
+const ViewletExplorerEvents = await import(
+  '../src/parts/ViewletExplorer/ViewletExplorerEvents.js'
 )
 
 test('event - contextmenu', () => {
@@ -357,7 +364,7 @@ test('event - dragStart', () => {
     'text/uri-list',
     'https://example.com/foobar'
   )
-  expect(event.dataTransfer.effectAllowed).toBe('move')
+  expect(event.dataTransfer.effectAllowed).toBe('copyMove')
 })
 
 test('event - dragOver', () => {
@@ -396,10 +403,28 @@ test('event - drop', () => {
   const $File1 = state.$Viewlet.children[0]
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const event = new DragEvent('drop', {
     bubbles: true,
     cancelable: true,
+    // @ts-ignore
+    dataTransfer: {
+      files: [
+        {
+          lastModified: 0,
+          // @ts-ignore
+          lastModifiedDate: new Date(),
+          name: 'file.json',
+          path: '/test/file.json',
+          size: 756705,
+          type: 'application/json',
+          webkitRelativePath: '',
+        },
+      ],
+    },
   })
+  console.log(globalThis.FileList)
   $File1.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
 })

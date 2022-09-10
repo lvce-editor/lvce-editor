@@ -7,9 +7,11 @@ import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
 // TODO drag and drop should be loaded on demand
 const getAllEntries = async (dataTransfer) => {
+  console.log({ dataTransfer })
   const topLevelEntries = Array.from(dataTransfer.items).map((item) =>
     item.webkitGetAsEntry()
   )
+  console.log({ topLevelEntries })
   const allEntries = await new Promise((resolve, reject) => {
     const result = []
     let finished = 0
@@ -62,6 +64,7 @@ const getAllEntries = async (dataTransfer) => {
 
     handleEntries(topLevelEntries)
   })
+  console.log('promise finished')
   return allEntries
 }
 
@@ -94,7 +97,7 @@ export const handleDragOver = (event) => {
 export const handleDragStart = (event) => {
   console.log('call setData')
   // event.dataTransfer.dropEffect = 'copy'
-  event.dataTransfer.effectAllowed = 'move'
+  event.dataTransfer.effectAllowed = 'copyMove'
   // event.dataTransfer.setData('DownloadURL', '/tmp/some-file.txt')
   // event.preventDefault()
   event.dataTransfer.setData('text/uri-list', 'https://example.com/foobar')
@@ -102,15 +105,22 @@ export const handleDragStart = (event) => {
   // event.dataTransfer.setData('text/plain', 'abc')
 }
 
+/**
+ *
+ * @param {DragEvent} event
+ */
 export const handleDrop = async (event) => {
   console.log('[explorer] drop', event)
   // state.element.classList.remove('DropTarget')
   event.preventDefault()
-  const allEntries = await getAllEntries(event.dataTransfer)
-  const firstEntry = allEntries[0]
-  if (!firstEntry) {
-    return console.warn('no entries')
-  }
+  const { files } = event.dataTransfer
+  console.log({ files })
+  RendererWorker.send('Explorer.handleDrop', files)
+  // const allEntries = await getAllEntries(event.dataTransfer)
+  // const firstEntry = allEntries[0]
+  // if (!firstEntry) {
+  //   return console.warn('no entries')
+  // }
   // const reader = new FileReader()
   // reader.onload = (event) => {
   //   console.log(reader.result)
