@@ -32,7 +32,7 @@ jobs:
         if: steps.npm-cache.outputs.cache-hit != 'true'
         env:
           DOWNLOAD_BUILTIN_EXTENSIONS: 0
-      - run: npm test
+      - run: npx lerna run test --since main
       - name: install playwright dependencies
         working-directory: ./packages/e2e
         run: npx playwright install chromium
