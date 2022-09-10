@@ -112,7 +112,7 @@ test('expandRecursively', async () => {
         path: '/test/a',
         posInSet: 1,
         setSize: 1,
-        type: DirentType.Directory, // TODO should be directory-expanded
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -121,7 +121,7 @@ test('expandRecursively', async () => {
         path: '/test/a/b',
         posInSet: 1,
         setSize: 1,
-        type: DirentType.Directory,
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 3,
@@ -130,7 +130,7 @@ test('expandRecursively', async () => {
         path: '/test/a/b/c',
         posInSet: 1,
         setSize: 2,
-        type: DirentType.Directory,
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 3,
@@ -223,7 +223,7 @@ test('expandRecursively - merge with current items', async () => {
         path: '/test/a',
         posInSet: 1,
         setSize: 3,
-        type: DirentType.Directory,
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 1,
@@ -232,7 +232,7 @@ test('expandRecursively - merge with current items', async () => {
         path: '/test/b',
         posInSet: 2,
         setSize: 3,
-        type: DirentType.Directory,
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -241,7 +241,7 @@ test('expandRecursively - merge with current items', async () => {
         path: '/test/b/d',
         posInSet: 1,
         setSize: 1,
-        type: DirentType.Directory,
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 3,
@@ -250,7 +250,7 @@ test('expandRecursively - merge with current items', async () => {
         path: '/test/b/d/e',
         posInSet: 1,
         setSize: 1,
-        type: DirentType.Directory,
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 1,
@@ -259,7 +259,7 @@ test('expandRecursively - merge with current items', async () => {
         path: '/test/c',
         posInSet: 3,
         setSize: 3,
-        type: DirentType.Directory,
+        type: DirentType.DirectoryExpanded,
       },
     ],
   })
@@ -337,7 +337,7 @@ test('expandRecursively - no dirent focused', async () => {
         path: '/test/a',
         posInSet: 1,
         setSize: 1,
-        type: DirentType.Directory,
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -346,7 +346,7 @@ test('expandRecursively - no dirent focused', async () => {
         path: '/test/a/b',
         posInSet: 1,
         setSize: 1,
-        type: DirentType.Directory,
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 3,
@@ -355,7 +355,7 @@ test('expandRecursively - no dirent focused', async () => {
         path: '/test/a/b/c',
         posInSet: 1,
         setSize: 2,
-        type: DirentType.Directory,
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 3,
