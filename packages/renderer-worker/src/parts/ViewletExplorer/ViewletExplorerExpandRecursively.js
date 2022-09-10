@@ -1,6 +1,16 @@
 import * as DirentType from '../DirentType/DirentType.js'
 import { getChildDirents, getParentEndIndex } from './ViewletExplorerShared.js'
 
+const makeExpanded = (dirent) => {
+  if (dirent.type === DirentType.Directory) {
+    return {
+      ...dirent,
+      type: DirentType.DirectoryExpanded,
+    }
+  }
+  return dirent
+}
+
 export const expandRecursively = async (state) => {
   const { dirents, focusedIndex, pathSeparator, root } = state
   const dirent =
@@ -24,7 +34,7 @@ export const expandRecursively = async (state) => {
         return [dirent]
       case DirentType.Directory:
         const childDirents = await getChildDirents(root, pathSeparator, dirent)
-        const all = [dirent]
+        const all = [makeExpanded(dirent)]
         for (const childDirent of childDirents) {
           const childAll = await getChildDirentsRecursively(childDirent)
           all.push(...childAll)
