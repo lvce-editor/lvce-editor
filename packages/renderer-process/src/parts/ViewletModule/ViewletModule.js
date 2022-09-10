@@ -15,17 +15,17 @@ export const load = (moduleId) => {
     case ViewletModuleId.Extensions:
       return import('../ViewletExtensions/ViewletExtensions.js')
     case ViewletModuleId.DebugConsole:
-      return import('../Viewlet/ViewletDebugConsole.js')
+      return import('../ViewletDebugConsole/ViewletDebugConsole.js')
     case ViewletModuleId.Output:
       return import('../ViewletOutput/ViewletOutput.js')
     case ViewletModuleId.Problems:
       return import('../ViewletProblems/ViewletProblems.js')
     case ViewletModuleId.Empty:
-      return import('../Viewlet/ViewletEmpty.js')
+      return import('../ViewletEmpty/ViewletEmpty.js')
     case ViewletModuleId.EditorText:
-      return import('../Viewlet/ViewletEditorText.js')
+      return import('../ViewletEditorText/ViewletEditorText.js')
     case ViewletModuleId.EditorImage:
-      return import('../Viewlet/ViewletEditorImage.js')
+      return import('../ViewletEditorImage/ViewletEditorImage.js')
     case ViewletModuleId.Clock:
       return import('../ViewletClock/ViewletClock.js')
     case ViewletModuleId.SideBar:
@@ -51,7 +51,7 @@ export const load = (moduleId) => {
     case ViewletModuleId.Implementations:
       return import('../ViewletImplementations/ViewletImplementations.js')
     case ViewletModuleId.EditorPlainText:
-      return import('../Viewlet/ViewletEditorPlainText.js')
+      return import('../ViewletEditorPlainText/ViewletEditorPlainText.js')
     default:
       throw new Error('unknown module')
   }
