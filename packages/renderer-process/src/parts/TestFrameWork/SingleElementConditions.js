@@ -22,6 +22,10 @@ export const toHaveClass = (element, { className }) => {
   return element.classList.contains(className)
 }
 
+export const toHaveId = (element, { id }) => {
+  return element.id === id
+}
+
 export const toHaveCss = (element, { key, value }) => {
   const style = getComputedStyle(element)
   return style[key] === value

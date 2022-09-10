@@ -22,7 +22,7 @@ test('viewlet.explorer-keyboard-navigation', async () => {
   // assert
   const titleA = '/a'
   const treeItemA = Locator(`.TreeItem[title$="${titleA}"]`)
-  await expect(treeItemA).toHaveClass('FocusOutline')
+  await expect(treeItemA).toHaveId('TreeItemActive')
 
   // act
   await Explorer.clickCurrent()
@@ -31,13 +31,13 @@ test('viewlet.explorer-keyboard-navigation', async () => {
   const titleB = '/a/b'
   const treeItemB = Locator(`.TreeItem[title$="${titleB}"]`)
   await expect(treeItemB).toBeVisible()
-  await expect(treeItemA).toHaveClass('FocusOutline')
+  await expect(treeItemA).toHaveId('TreeItemActive')
 
   // act
   await Explorer.focusNext()
 
   // assert
-  await expect(treeItemB).toHaveClass('FocusOutline')
+  await expect(treeItemB).toHaveId('TreeItemActive')
 
   // act
   await Explorer.clickCurrent()
@@ -46,13 +46,13 @@ test('viewlet.explorer-keyboard-navigation', async () => {
   const titleC = '/a/b/c.txt'
   const treeItemC = Locator(`.TreeItem[title$="${titleC}"]`)
   await expect(treeItemC).toBeVisible()
-  await expect(treeItemB).toHaveClass('FocusOutline')
+  await expect(treeItemB).toHaveId('TreeItemActive')
 
   // act
   await Explorer.focusNext()
 
   // assert
-  await expect(treeItemC).toHaveClass('FocusOutline')
+  await expect(treeItemC).toHaveId('TreeItemActive')
 
   // act
   await Explorer.clickCurrent()
@@ -65,28 +65,28 @@ test('viewlet.explorer-keyboard-navigation', async () => {
   await Explorer.handleArrowLeft()
 
   // assert
-  await expect(treeItemB).toHaveClass('FocusOutline')
+  await expect(treeItemB).toHaveId('TreeItemActive')
   await expect(treeItemC).toBeVisible()
 
   // act
   await Explorer.handleArrowLeft()
 
   // assert
-  await expect(treeItemB).toHaveClass('FocusOutline')
+  await expect(treeItemB).toHaveId('TreeItemActive')
   await expect(treeItemC).toBeHidden()
 
   // act
   await Explorer.handleArrowLeft()
 
   // assert
-  await expect(treeItemA).toHaveClass('FocusOutline')
+  await expect(treeItemA).toHaveId('TreeItemActive')
   await expect(treeItemB).toBeVisible()
 
   // act
   await Explorer.handleArrowLeft()
 
   // assert
-  await expect(treeItemA).toHaveClass('FocusOutline')
+  await expect(treeItemA).toHaveId('TreeItemActive')
   await expect(treeItemB).toBeHidden()
 
   // act
@@ -95,13 +95,13 @@ test('viewlet.explorer-keyboard-navigation', async () => {
   // assert
   const titleTest = '/test.txt'
   const treeItemTestTxt = Locator(`.TreeItem[title$="${titleTest}"]`)
-  await expect(treeItemTestTxt).toHaveClass('FocusOutline')
+  await expect(treeItemTestTxt).toHaveId('TreeItemActive')
 
   // act
   await Explorer.focusFirst()
 
   // assert
-  await expect(treeItemA).toHaveClass('FocusOutline')
+  await expect(treeItemA).toHaveId('TreeItemActive')
 
   // act
   await Explorer.removeDirent()
@@ -110,5 +110,5 @@ test('viewlet.explorer-keyboard-navigation', async () => {
   await expect(treeItemA).toBeHidden()
   const titleFolder1 = `/folder-1`
   const treeItemFolder1 = Locator(`.TreeItem[title$="${titleFolder1}"]`)
-  await expect(treeItemFolder1).toHaveClass('FocusOutline')
+  await expect(treeItemFolder1).toHaveId('TreeItemActive')
 })
