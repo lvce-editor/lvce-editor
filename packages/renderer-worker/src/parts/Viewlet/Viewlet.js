@@ -4,6 +4,7 @@ import * as Command from '../Command/Command.js'
 import * as Assert from '../Assert/Assert.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 
 /**
  * @deprecated
@@ -216,7 +217,7 @@ export const openWidget = async (id, ...args) => {
   const hasInstance = ViewletStates.hasInstance(id)
   const type = args[0]
   const commands = await ViewletManager.load({
-    getModule: ViewletManager.getModule,
+    getModule: ViewletModule.load,
     id,
     type: 0,
     uri: `quickPick://${type}`,

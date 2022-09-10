@@ -8,7 +8,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as Workspace from '../Workspace/Workspace.js'
-
+import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
 // interface Editor {
@@ -193,7 +193,7 @@ export const contentLoaded = async (state) => {
   const width = state.width
   const height = state.height - TAB_HEIGHT
   const instance = ViewletManager.create(
-    ViewletManager.getModule,
+    ViewletModule.load,
     id,
     'Main',
     editor.uri,
@@ -229,7 +229,7 @@ export const openUri = async (state, uri) => {
   for (const editor of state.editors) {
     if (editor.uri === uri) {
       const instance = ViewletManager.create(
-        ViewletManager.getModule,
+        ViewletModule.load,
         id,
         'Main',
         uri,
@@ -245,7 +245,7 @@ export const openUri = async (state, uri) => {
     }
   }
   const instance = ViewletManager.create(
-    ViewletManager.getModule,
+    ViewletModule.load,
     id,
     'Main',
     uri,
@@ -410,7 +410,7 @@ export const focusIndex = (state, index) => {
   const height = state.height - TAB_HEIGHT
 
   const viewlet = ViewletManager.create(
-    ViewletManager.getModule,
+    ViewletModule.load,
     id,
     'Main',
     editor.uri,
