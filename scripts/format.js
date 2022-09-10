@@ -43,6 +43,44 @@ const formatAllModuleIds = async () => {
   }
 }
 
+const formatViewletModuleIds = async (relativePath) => {
+  const absolutePath = join(root, relativePath)
+  const content = await readFile(absolutePath, 'utf8')
+  const lines = content.split('\n')
+  const map = Object.create(null)
+  for (const line of lines) {
+    if (line.includes('export const ')) {
+      const equalSignIndex = line.indexOf('=')
+      const stringStartIndex = line.indexOf("'", equalSignIndex)
+      const stringEndIndex = line.indexOf("'", stringStartIndex + 1)
+      const key = line.slice('export const '.length, equalSignIndex).trim()
+      const value = line.slice(stringStartIndex, stringEndIndex + 1)
+      map[key] = value
+    }
+  }
+  const keys = Object.keys(map)
+  const sortedKeys = sort(keys)
+  const newLines = []
+  for (const key of sortedKeys) {
+    const value = map[key]
+    newLines.push(`export const ${key} = ${value}\n`)
+  }
+  const newContent = newLines.join('\n')
+  if (content !== newContent) {
+    await writeFile(absolutePath, newContent)
+  }
+}
+
+const formatAllViewletModuleIds = async () => {
+  const allViewletModuleIdFiles = [
+    'packages/renderer-worker/src/parts/ViewletModuleId/ViewletModuleId.js',
+    'packages/renderer-process/src/parts/ViewletModuleId/ViewletModuleId.js',
+  ]
+  for (const path of allViewletModuleIdFiles) {
+    await formatViewletModuleIds(path)
+  }
+}
+
 const formatCommands = async (absolutePath) => {
   const content = await readFile(absolutePath, 'utf8')
   const lines = content.split('\n')
@@ -289,6 +327,7 @@ const formatAllModuleFiles = async () => {
 }
 
 const main = async () => {
+  await formatAllViewletModuleIds()
   await formatAllModuleFiles()
   await formatAllModuleMaps()
   await formatAllModuleIds()
