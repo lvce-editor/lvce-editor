@@ -113,8 +113,8 @@ export const handleDrop = async (event) => {
   console.log('[explorer] drop', event)
   // state.element.classList.remove('DropTarget')
   event.preventDefault()
-  const { files } = event.dataTransfer
-  console.log({ files })
+  const { files, dropEffect } = event.dataTransfer
+  console.log({ files, dropEffect })
   RendererWorker.send('Explorer.handleDrop', files)
   // const allEntries = await getAllEntries(event.dataTransfer)
   // const firstEntry = allEntries[0]

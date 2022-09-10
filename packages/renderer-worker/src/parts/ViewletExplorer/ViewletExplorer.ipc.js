@@ -14,6 +14,7 @@ const Imports = {
   HandleContextMenuKeyboard: () => import('./ViewletExplorerHandleContextMenuKeyboard.js'),
   HandleContextMenuMouseAt: ()=>import('./ViewletExplorerHandleContextMenuMouseAt.js'),
   ExpandRecursively: () => import('./ViewletExplorerExpandRecursively.js'),
+  HandleDrop: () => import('./ViewletExplorerHandleDrop.js'),
 
 }
 
@@ -45,6 +46,7 @@ export const Commands = {
   'Explorer.handleContextMenuKeyboard': LazyCommand.create('Explorer', Imports.HandleContextMenuKeyboard, 'handleContextMenuKeyboard'),
   'Explorer.handleContextMenuMouseAt':  LazyCommand.create('Explorer', Imports.HandleContextMenuMouseAt, 'handleContextMenuMouseAt'),
   'Explorer.handleCopy':                Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleCopy),
+  'Explorer.handleDrop':                LazyCommand.create('Explorer', Imports.HandleDrop, 'handleDrop'),
   'Explorer.handleMouseEnter':          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleMouseEnter),
   'Explorer.handleMouseLeave':          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleMouseLeave),
   'Explorer.handlePaste':               Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handlePaste),
