@@ -6,6 +6,16 @@ import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
+
+  // Workaround for drag event not being implemented in jsdom https://github.com/jsdom/jsdom/issues/2913
+  // @ts-ignore
+  globalThis.DragEvent = class extends Event {
+    constructor(type, options) {
+      super(type, options)
+      this.dataTransfer = options.dataTransfer || {}
+      this.dataTransfer.setData = this.dataTransfer.setData || (() => {})
+    }
+  }
 })
 
 jest.unstable_mockModule(
@@ -26,10 +36,6 @@ const RendererWorker = await import(
 const ViewletExplorer = await import(
   '../src/parts/ViewletExplorer/ViewletExplorer.js'
 )
-
-const getSimpleList = (state) => {
-  return Array.from(state.$Viewlet.children).map((node) => node.textContent)
-}
 
 test('event - contextmenu', () => {
   const state = ViewletExplorer.create()
@@ -323,4 +329,62 @@ test('event - blur', () => {
   $GitKeep.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleBlur')
+})
+
+test('event - dragStart', () => {
+  const state = ViewletExplorer.create()
+  ViewletExplorer.updateDirents(state, [
+    {
+      name: '.gitkeep',
+      depth: 1,
+      type: DirentType.File,
+      path: '/.gitkeep',
+    },
+    {
+      name: 'another-folder',
+      depth: 1,
+      type: DirentType.Directory,
+      path: '/another-folder',
+    },
+    {
+      name: 'index.css',
+      depth: 1,
+      type: DirentType.File,
+      path: '/index.css',
+    },
+    {
+      name: 'index.html',
+      depth: 1,
+      type: DirentType.File,
+      path: '/index.html',
+    },
+    {
+      name: 'nested',
+      depth: 1,
+      type: DirentType.Directory,
+      path: '/nested',
+    },
+  ])
+  const $GitKeep = state.$Viewlet.children[0]
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const event = new DragEvent('dragstart', {
+    clientX: 50,
+    clientY: 50,
+    bubbles: true,
+    // @ts-ignore
+    dataTransfer: {
+      effectAllowed: 'all',
+      dropEffect: 'copy',
+      setData: jest.fn(),
+    },
+  })
+  const spy = jest.spyOn(event.dataTransfer, 'setData')
+  $GitKeep.dispatchEvent(event)
+  expect(spy).toHaveBeenCalledTimes(1)
+  expect(spy).toHaveBeenCalledWith(
+    'text/uri-list',
+    'https://example.com/foobar'
+  )
+  expect(event.dataTransfer.effectAllowed).toBe('move')
 })

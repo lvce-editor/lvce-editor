@@ -35,6 +35,7 @@ export const create = () => {
   $Viewlet.addEventListener('drop', ViewletExplorerEvents.handleDrop)
   // $Viewlet.addEventListener('focus', ViewletExplorerEvents.handleFocus)
   $Viewlet.addEventListener('blur', ViewletExplorerEvents.handleBlur)
+  $Viewlet.ondragstart = ViewletExplorerEvents.handleDragStart
   return {
     $Viewlet,
   }
@@ -45,6 +46,7 @@ const create$Row = () => {
   // @ts-ignore
   $Row.role = 'treeitem'
   $Row.className = 'TreeItem'
+  $Row.draggable = true
   const $LabelText = document.createTextNode('')
   const $Label = document.createElement('div')
   $Label.className = 'TreeItemLabel'

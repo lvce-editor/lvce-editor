@@ -79,13 +79,22 @@ export const handleBlur = (event) => {
   RendererWorker.send(/* Explorer.handleBlur */ 'Explorer.handleBlur')
 }
 
+/**
+ *
+ * @param {DragEvent} event
+ */
 export const handleDragOver = (event) => {
   event.preventDefault()
   // state.element.classList.add('DropTarget')
 }
 
+/**
+ * @param {DragEvent} event
+ */
 export const handleDragStart = (event) => {
-  event.dataTransfer.dropEffect = 'copy'
+  console.log('call setData')
+  // event.dataTransfer.dropEffect = 'copy'
+  event.dataTransfer.effectAllowed = 'move'
   // event.dataTransfer.setData('DownloadURL', '/tmp/some-file.txt')
   // event.preventDefault()
   event.dataTransfer.setData('text/uri-list', 'https://example.com/foobar')
@@ -94,6 +103,7 @@ export const handleDragStart = (event) => {
 }
 
 export const handleDrop = async (event) => {
+  console.log('[explorer] drop', event)
   // state.element.classList.remove('DropTarget')
   event.preventDefault()
   const allEntries = await getAllEntries(event.dataTransfer)
