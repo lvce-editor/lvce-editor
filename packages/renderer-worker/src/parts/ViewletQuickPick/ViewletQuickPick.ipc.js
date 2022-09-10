@@ -7,6 +7,7 @@ export const Commands = {
   'QuickPick.focusLast': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.focusLast),
   'QuickPick.focusNext': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.focusNext),
   'QuickPick.focusPrevious': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.focusPrevious),
+  'QuickPick.focusIndex': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.focusIndex),
   'QuickPick.handleBeforeInput': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.handleBeforeInput),
   'QuickPick.handleBlur': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.handleBlur),
   'QuickPick.handleInput': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.handleInput),
