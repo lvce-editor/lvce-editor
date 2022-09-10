@@ -1,10 +1,7 @@
-import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
-import * as InputBox from '../InputBox/InputBox.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
-import * as DirentType from '../DirentType/DirentType.js'
 
 // TODO put drop into separate module and use executeCommand to call it
 
