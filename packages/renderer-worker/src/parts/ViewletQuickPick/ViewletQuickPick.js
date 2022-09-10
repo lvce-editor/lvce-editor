@@ -646,7 +646,8 @@ const renderHeight = {
     return oldState.items.length === newState.items.length
   },
   apply(oldState, newState) {
-    const height = newState.items.length * newState.itemHeight
+    const itemCount = newState.maxLineY - newState.minLineY
+    const height = itemCount * newState.itemHeight
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
