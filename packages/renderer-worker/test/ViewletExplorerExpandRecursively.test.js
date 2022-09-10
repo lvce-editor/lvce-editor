@@ -223,7 +223,7 @@ test('expandRecursively - merge with current items', async () => {
         path: '/test/a',
         posInSet: 1,
         setSize: 3,
-        type: DirentType.DirectoryExpanded,
+        type: DirentType.Directory,
       },
       {
         depth: 1,
@@ -259,7 +259,7 @@ test('expandRecursively - merge with current items', async () => {
         path: '/test/c',
         posInSet: 3,
         setSize: 3,
-        type: DirentType.DirectoryExpanded,
+        type: DirentType.Directory,
       },
     ],
   })
