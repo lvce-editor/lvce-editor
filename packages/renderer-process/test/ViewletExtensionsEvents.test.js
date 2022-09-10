@@ -22,28 +22,9 @@ const ViewletExtensions = await import(
   '../src/parts/ViewletExtensions/ViewletExtensions.js'
 )
 
-const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const RendererWorker = await import(
   '../src/parts/RendererWorker/RendererWorker.js'
 )
-
-const isLeaf = (node) => {
-  return node.childElementCount === 0
-}
-
-const getTextContent = (node) => {
-  return node.textContent
-}
-
-const getSimpleList = (state) => {
-  return Array.from(state.$ExtensionList.children).map((node) => {
-    const children = node.querySelectorAll('*')
-    return Array.from(children)
-      .filter(isLeaf)
-      .map(getTextContent)
-      .filter(Boolean)
-  })
-}
 
 beforeEach(() => {
   jest.restoreAllMocks()
