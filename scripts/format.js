@@ -74,6 +74,7 @@ const formatViewletModuleIds = async (relativePath) => {
 const formatAllViewletModuleIds = async () => {
   const allViewletModuleIdFiles = [
     'packages/renderer-worker/src/parts/ViewletModuleId/ViewletModuleId.js',
+    'packages/renderer-process/src/parts/ViewletModuleId/ViewletModuleId.js',
   ]
   for (const path of allViewletModuleIdFiles) {
     await formatViewletModuleIds(path)
