@@ -1,67 +1,11 @@
 import * as Assert from '../Assert/Assert.js'
+import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 
 export const state = {
   instances: Object.create(null),
   currentSideBarView: undefined,
   currentPanelView: undefined,
   modules: Object.create(null),
-}
-
-const get = (id) => {
-  switch (id) {
-    case 'Explorer':
-      return import('../ViewletExplorer/ViewletExplorer.js')
-    case 'Run and Debug':
-      return import('../ViewletRunAndDebug/ViewletRunAndDebug.js')
-    case 'Search':
-      return import('../ViewletSearch/ViewletSearch.js')
-    case 'Source Control':
-      return import('../ViewletSourceControl/ViewletSourceControl.js')
-    case 'Terminal':
-      return import('../ViewletTerminal/ViewletTerminal.js')
-    case 'Extensions':
-      return import('../ViewletExtensions/ViewletExtensions.js')
-    case 'Debug Console':
-      return import('./ViewletDebugConsole.js')
-    case 'Output':
-      return import('../ViewletOutput/ViewletOutput.js')
-    case 'Problems':
-      return import('../ViewletProblems/ViewletProblems.js')
-    case 'Empty':
-      return import('./ViewletEmpty.js')
-    case 'EditorText':
-      return import('./ViewletEditorText.js')
-    case 'EditorPlainText':
-      return import('./ViewletEditorPlainText.js')
-    case 'EditorImage':
-      return import('./ViewletEditorImage.js')
-    case 'Clock':
-      return import('../ViewletClock/ViewletClock.js')
-    case 'SideBar':
-      return import('../ViewletSideBar/ViewletSideBar.js')
-    case 'Panel':
-      return import('../ViewletPanel/ViewletPanel.js')
-    case 'ActivityBar':
-      return import('../ViewletActivityBar/ViewletActivityBar.js')
-    case 'ImagePreview':
-      return import('../ImagePreview/ImagePreview.js')
-    case 'QuickPick':
-      return import('../ViewletQuickPick/ViewletQuickPick.js')
-    case 'StatusBar':
-      return import('../ViewletStatusBar/ViewletStatusBar.js')
-    case 'TitleBar':
-      return import('../ViewletTitleBar/ViewletTitleBar.js')
-    case 'Main':
-      return import('../ViewletMain/ViewletMain.js')
-    case 'EditorCompletion':
-      return import('../ViewletEditorCompletion/ViewletEditorCompletion.js')
-    case 'References':
-      return import('../ViewletReferences/ViewletReferences.js')
-    case 'Implementations':
-      return import('../ViewletImplementations/ViewletImplementations.js')
-    default:
-      throw new Error(`unknown viewlet ${id}`)
-  }
 }
 
 export const mount = ($Parent, state) => {
@@ -72,7 +16,7 @@ export const mount = ($Parent, state) => {
 }
 
 export const load = async (id, ...args) => {
-  const module = await get(id)
+  const module = await ViewletModule.load(id)
   state.modules[id] = module
   state.instances[id] = {
     state: module.create(...args),
@@ -89,7 +33,7 @@ export const create = (id) => {
 }
 
 export const loadModule = async (id) => {
-  const module = await get(id)
+  const module = await ViewletModule.load(id)
   state.modules[id] = module
 }
 

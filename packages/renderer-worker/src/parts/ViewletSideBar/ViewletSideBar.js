@@ -6,6 +6,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 
 export const create = (id, uri, left, top, width, height) => {
   return {
@@ -98,7 +99,7 @@ export const openViewlet = async (state, id, focus = false) => {
   const childDimensions = getContentDimensions(state)
   // TODO race condition (check if disposed after created)
   const viewlet = ViewletManager.create(
-    ViewletManager.getModule,
+    ViewletModule.load,
     id,
     'SideBar',
     'builtin://',

@@ -1,5 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
+import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 
 export const name = 'Panel'
 
@@ -61,7 +62,7 @@ export const openViewlet = async (state, id) => {
   // TODO current viewlet should be disposed if it exists
   state.currentId = id
   const child = ViewletManager.create(
-    ViewletManager.getModule,
+    ViewletModule.load,
     id,
     'Panel',
     '',

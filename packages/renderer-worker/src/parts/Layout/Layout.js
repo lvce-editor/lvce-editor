@@ -2,7 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
-
+import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 // TODO where to force rendering of contents (need to call sidebar.openViewlet somewhere)
 
 export const state = {
@@ -210,7 +210,7 @@ const show = async (key, id) => {
   })
   const dimensions = getDimensions(state, id)
   const instance = ViewletManager.create(
-    ViewletManager.getModule,
+    ViewletModule.load,
     id,
     '',
     'builtin://',
@@ -231,7 +231,7 @@ const hide = async (key, id) => {
 }
 
 const toggle = async (key, id) => {
-  await (state[key] ? hide(key, id) : show(key, id));
+  await (state[key] ? hide(key, id) : show(key, id))
 }
 
 // TODO replace with one method in renderer process: setSideBarVisibility(true|false)

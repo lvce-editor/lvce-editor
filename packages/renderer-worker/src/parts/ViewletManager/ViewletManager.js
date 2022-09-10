@@ -4,6 +4,7 @@ import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Command from '../Command/Command.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 
 const ViewletState = {
   Default: 0,
@@ -12,64 +13,6 @@ const ViewletState = {
   RendererProcessViewletLoaded: 3,
   ContentRendered: 4,
   Appended: 5,
-}
-
-export const getModule = (id) => {
-  console.assert(typeof id === 'string')
-  switch (id) {
-    // TODO use numeric identifier instead
-    case 'Explorer':
-      return import('../ViewletExplorer/ViewletExplorer.ipc.js')
-    case 'Run and Debug':
-      return import('../ViewletRunAndDebug/ViewletRunAndDebug.ipc.js')
-    case 'Search':
-      return import('../ViewletSearch/ViewletSearch.ipc.js')
-    case 'Source Control':
-      return import('../ViewletSourceControl/ViewletSourceControl.ipc.js')
-    case 'Terminal':
-      return import('../ViewletTerminal/ViewletTerminal.ipc.js')
-    case 'Debug Console':
-      return import('../ViewletDebugConsole/ViewletDebugConsole.ipc.js')
-    case 'Extensions':
-      return import('../ViewletExtensions/ViewletExtensions.ipc.js')
-    case 'Output':
-      return import('../ViewletOutput/ViewletOutput.ipc.js')
-    case 'Problems':
-      return import('../ViewletProblems/ViewletProblems.ipc.js')
-    case 'Noop':
-      return import('../ViewletNoop/ViewletNoop.ipc.js')
-    case 'EditorText':
-      return import('../ViewletEditorText/ViewletEditorText.ipc.js')
-    case 'EditorPlainText':
-      return import('../ViewletEditorPlainText/ViewletEditorPlainText.js')
-    case 'EditorImage':
-      return import('../ViewletEditorImage/ViewletEditorImage.ipc.js')
-    case 'Clock':
-      return import('../ViewletClock/ViewletClock.ipc.js')
-    case 'ActivityBar':
-      return import('../ViewletActivityBar/ViewletActivityBar.ipc.js')
-    case 'Panel':
-      return import('../ViewletPanel/ViewletPanel.ipc.js')
-    case 'SideBar':
-      return import('../ViewletSideBar/ViewletSideBar.ipc.js')
-    case 'TitleBar':
-      return import('../ViewletTitleBar/ViewletTitleBar.ipc.js')
-    case 'StatusBar':
-      return import('../ViewletStatusBar/ViewletStatusBar.ipc.js')
-    case 'Main':
-      return import('../ViewletMain/ViewletMain.ipc.js')
-    case 'EditorCompletion':
-      return import('../ViewletEditorCompletion/ViewletEditorCompletion.ipc.js')
-    case 'References':
-      return import('../ViewletReferences/ViewletReferences.ipc.js')
-    case 'Implementations':
-      return import('../ViewletImplementations/ViewletImplementations.ipc.js')
-    case 'QuickPick':
-      return import('../ViewletQuickPick/ViewletQuickPick.ipc.js')
-    default:
-      // TODO use ErrorHandling.handleError instead
-      throw new Error(`unknown viewlet: "${id}", ${id === 'Output'}`)
-  }
 }
 
 /**

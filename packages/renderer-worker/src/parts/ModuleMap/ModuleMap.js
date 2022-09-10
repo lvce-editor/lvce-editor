@@ -32,6 +32,9 @@ export const getModuleId = (commandId) => {
       return ModuleId.ColorTheme
     case 'ColorThemeFromJson.createColorThemeFromJson':
       return ModuleId.ColorThemeFromJson
+    case 'ContentTracing.start':
+    case 'ContentTracing.stop':
+      return ModuleId.ContentTracing
     case 'ContextMenu.focusFirst':
     case 'ContextMenu.focusLast':
     case 'ContextMenu.focusNext':
@@ -246,9 +249,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace.setPath':
     case 'Workspace.setUri':
       return ModuleId.Workspace
-    case 'ContentTracing.start':
-    case 'ContentTracing.stop':
-      return ModuleId.ContentTracing
     default:
       throw new Error(`command ${commandId} not found`)
   }

@@ -55,6 +55,15 @@ export const toHaveClass = (locator, { className }) => {
   return `expected ${locatorString} to have class ${className}`
 }
 
+export const toHaveId = (locator, { id }) => {
+  const [element] = QuerySelector.querySelector(locator._selector)
+  const locatorString = printLocator(locator)
+  if (!element) {
+    return `expected ${locatorString} to have id ${id} but element was not found`
+  }
+  return `expected ${locatorString} to have id ${id}`
+}
+
 export const toBeHidden = (locator) => {
   const locatorString = printLocator(locator)
   return `expected ${locatorString} to be hidden`

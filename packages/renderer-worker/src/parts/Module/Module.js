@@ -2,111 +2,109 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const load = (moduleId) => {
   switch (moduleId) {
-    case ModuleId.ContextMenu:
-      return import('../ContextMenu/ContextMenu.ipc.js')
-    case ModuleId.Notification:
-      return import('../Notification/Notification.ipc.js')
-    case ModuleId.Window:
-      return import('../Window/Window.ipc.js')
-    case ModuleId.ContextMenu:
-      return import('../ContextMenu/ContextMenu.ipc.js')
-    case ModuleId.Layout:
-      return import('../Layout/Layout.ipc.js')
-    case ModuleId.Viewlet:
-      return import('../Viewlet/Viewlet.ipc.js')
-    case ModuleId.Workbench:
-      return import('../Workbench/Workbench.ipc.js')
-    case ModuleId.ViewletQuickPick:
-      return import('../ViewletQuickPick/ViewletQuickPick.ipc.js')
-    case ModuleId.FindWidget:
-      return import('../FindWidget/FindWidget.ipc.js')
-    case ModuleId.Preferences:
-      return import('../Preferences/Preferences.ipc.js')
-    case ModuleId.Developer:
-      return import('../Developer/Developer.ipc.js')
-    case ModuleId.KeyBindings:
-      return import('../KeyBindings/KeyBindings.ipc.js')
-    case ModuleId.ColorPicker:
-      return import('../ColorPicker/ColorPicker.ipc.js')
-    case ModuleId.ClipBoard:
-      return import('../ClipBoard/ClipBoard.ipc.js')
     case ModuleId.Ajax:
       return import('../Ajax/Ajax.ipc.js')
-    case ModuleId.Format:
-      return import('../Format/Format.ipc.js')
-    case ModuleId.ColorTheme:
-      return import('../ColorTheme/ColorTheme.ipc.js')
-    case ModuleId.IconTheme:
-      return import('../IconTheme/IconTheme.ipc.js')
-    case ModuleId.Menu:
-      return import('../Menu/Menu.ipc.js')
-    case ModuleId.TitleBarMenu:
-      return import('../TitleBarMenuBar/TitleBarMenuBar.ipc.js')
-    case ModuleId.ErrorHandling:
-      return import('../ErrorHandling/ErrorHandling.ipc.js')
-    case ModuleId.Navigatiom:
-      return import('../Navigation/Navigation.ipc.js')
-    case ModuleId.CacheStorage:
-      return import('../CacheStorage/CacheStorage.ipc.js')
-    case ModuleId.LocalStorage:
-      return import('../LocalStorage/LocalStorage.ipc.js')
-    case ModuleId.SessionStorage:
-      return import('../SessionStorage/SessionStorage.ipc.js')
-    case ModuleId.Callback:
-      return import('../Callback/Callback.ipc.js')
-    case ModuleId.Dialog:
-      return import('../Dialog/Dialog.ipc.js')
-    case ModuleId.Workspace:
-      return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.ColorThemeFromJson:
-      return import('../ColorThemeFromJson/ColorThemeFromJson.ipc.js')
-    case ModuleId.RecentlyOpened:
-      return import('../RecentlyOpened/RecentlyOpened.ipc.js')
-    case ModuleId.FileSystem:
-      return import('../FileSystem/FileSystem.ipc.js')
-    case ModuleId.EditorDiagnostics:
-      return import('../EditorDiagnostics/EditorDiagnostics.ipc.js')
-    case ModuleId.EditorRename:
-      return import('../EditorRename/EditorRename.ipc.js')
-    case ModuleId.EditorError:
-      return import('../EditorError/EditorError.ipc.js')
-    case ModuleId.KeyBindingsInitial:
-      return import('../KeyBindingsInitial/KeyBindingsInitial.ipc.js')
-    case ModuleId.SaveState:
-      return import('../SaveState/SaveState.ipc.js')
-    case ModuleId.ServiceWorker:
-      return import('../ServiceWorker/ServiceWorker.ipc.js')
-    case ModuleId.ImagePreview:
-      return import('../ImagePreview/ImagePreview.ipc.js')
+    case ModuleId.Audio:
+      return import('../Audio/Audio.ipc.js')
     case ModuleId.Base64:
       return import('../Base64/Base64.ipc.js')
     case ModuleId.Blob:
       return import('../Blob/Blob.ipc.js')
-    case ModuleId.Open:
-      return import('../Open/Open.ipc.js')
-    case ModuleId.Audio:
-      return import('../Audio/Audio.ipc.js')
-    case ModuleId.Listener:
-      return import('../Listener/Listener.ipc.js')
-    case ModuleId.SessionReplay:
-      return import('../SessionReplay/SessionReplay.ipc.js')
+    case ModuleId.CacheStorage:
+      return import('../CacheStorage/CacheStorage.ipc.js')
+    case ModuleId.Callback:
+      return import('../Callback/Callback.ipc.js')
+    case ModuleId.ClipBoard:
+      return import('../ClipBoard/ClipBoard.ipc.js')
+    case ModuleId.ColorPicker:
+      return import('../ColorPicker/ColorPicker.ipc.js')
+    case ModuleId.ColorTheme:
+      return import('../ColorTheme/ColorTheme.ipc.js')
+    case ModuleId.ColorThemeFromJson:
+      return import('../ColorThemeFromJson/ColorThemeFromJson.ipc.js')
+    case ModuleId.ContentTracing:
+      return import('../ContentTracing/ContentTracing.ipc.js')
+    case ModuleId.ContextMenu:
+      return import('../ContextMenu/ContextMenu.ipc.js')
+    case ModuleId.Developer:
+      return import('../Developer/Developer.ipc.js')
+    case ModuleId.Dialog:
+      return import('../Dialog/Dialog.ipc.js')
     case ModuleId.Download:
       return import('../Download/Download.ipc.js')
+    case ModuleId.EditorDiagnostics:
+      return import('../EditorDiagnostics/EditorDiagnostics.ipc.js')
+    case ModuleId.EditorError:
+      return import('../EditorError/EditorError.ipc.js')
+    case ModuleId.EditorRename:
+      return import('../EditorRename/EditorRename.ipc.js')
+    case ModuleId.ErrorHandling:
+      return import('../ErrorHandling/ErrorHandling.ipc.js')
     case ModuleId.ExtensionHostCode:
       return import('../ExtensionHost/ExtensionHostCore.ipc.js')
     case ModuleId.ExtensionMeta:
       return import('../ExtensionMeta/ExtensionMeta.ipc.js')
+    case ModuleId.Extensions:
+      return import('../Extensions/Extensions.ipc.js')
+    case ModuleId.FileSystem:
+      return import('../FileSystem/FileSystem.ipc.js')
+    case ModuleId.FindWidget:
+      return import('../FindWidget/FindWidget.ipc.js')
+    case ModuleId.Format:
+      return import('../Format/Format.ipc.js')
+    case ModuleId.IconTheme:
+      return import('../IconTheme/IconTheme.ipc.js')
+    case ModuleId.ImagePreview:
+      return import('../ImagePreview/ImagePreview.ipc.js')
+    case ModuleId.KeyBindings:
+      return import('../KeyBindings/KeyBindings.ipc.js')
+    case ModuleId.KeyBindingsInitial:
+      return import('../KeyBindingsInitial/KeyBindingsInitial.ipc.js')
+    case ModuleId.Layout:
+      return import('../Layout/Layout.ipc.js')
+    case ModuleId.Listener:
+      return import('../Listener/Listener.ipc.js')
+    case ModuleId.LocalStorage:
+      return import('../LocalStorage/LocalStorage.ipc.js')
+    case ModuleId.Menu:
+      return import('../Menu/Menu.ipc.js')
+    case ModuleId.Navigatiom:
+      return import('../Navigation/Navigation.ipc.js')
+    case ModuleId.Notification:
+      return import('../Notification/Notification.ipc.js')
+    case ModuleId.Open:
+      return import('../Open/Open.ipc.js')
+    case ModuleId.Preferences:
+      return import('../Preferences/Preferences.ipc.js')
+    case ModuleId.RecentlyOpened:
+      return import('../RecentlyOpened/RecentlyOpened.ipc.js')
+    case ModuleId.SaveState:
+      return import('../SaveState/SaveState.ipc.js')
+    case ModuleId.ServiceWorker:
+      return import('../ServiceWorker/ServiceWorker.ipc.js')
+    case ModuleId.SessionReplay:
+      return import('../SessionReplay/SessionReplay.ipc.js')
+    case ModuleId.SessionStorage:
+      return import('../SessionStorage/SessionStorage.ipc.js')
     case ModuleId.Test:
       return import('../Test/Test.ipc.js')
     case ModuleId.TestFramework:
       return import('../TestFrameWork/TestFrameWork.js')
     case ModuleId.TestFrameworkComponent:
       return import('../TestFrameWorkComponent/TestFrameWorkComponent.js')
-    case ModuleId.Extensions:
-      return import('../Extensions/Extensions.ipc.js')
-    case ModuleId.ContentTracing:
-      return import('../ContentTracing/ContentTracing.ipc.js')
+    case ModuleId.TitleBarMenu:
+      return import('../TitleBarMenuBar/TitleBarMenuBar.ipc.js')
+    case ModuleId.Viewlet:
+      return import('../Viewlet/Viewlet.ipc.js')
+    case ModuleId.ViewletQuickPick:
+      return import('../ViewletQuickPick/ViewletQuickPick.ipc.js')
+    case ModuleId.Window:
+      return import('../Window/Window.ipc.js')
+    case ModuleId.Workbench:
+      return import('../Workbench/Workbench.ipc.js')
+    case ModuleId.Workspace:
+      return import('../Workspace/Workspace.ipc.js')
     default:
-      throw new Error(`unknown module "${moduleId}"`)
+      throw new Error(`module ${moduleId} not found`)
   }
 }
