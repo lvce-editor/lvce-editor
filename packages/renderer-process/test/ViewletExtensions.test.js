@@ -314,9 +314,9 @@ test('setFocusedIndex - move focus down by one', () => {
   const $ExtensionOne = state.$ExtensionList.children[0]
   expect($ExtensionOne.className).not.toContain('Focused')
   const $ExtensionTwo = state.$ExtensionList.children[1]
-  expect($ExtensionTwo.className).toContain('Focused')
+  expect($ExtensionTwo.id).toBe('ExtensionActive')
   expect(state.$ExtensionList.getAttribute('aria-activedescendant')).toBe(
-    $ExtensionTwo.id
+    'ExtensionActive'
   )
 })
 

@@ -103,7 +103,7 @@
   background: rgba(64, 92, 80, 0.2);
 }
 
-.ExtensionListItem.Focused {
+#ExtensionActive {
   /* background: rgba(64, 92, 80, 0.2); */
   background: #515f59;
   color: white;

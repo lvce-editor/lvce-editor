@@ -5,6 +5,8 @@ import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 
 export const name = 'Extensions'
 
+const activeId = 'ExtensionActive'
+
 // TODO vscode uninstall behaviour is better -> more subtle uninstall -> no cta for uninstalling
 
 const DEFAULT_ICON_SRC = '/icons/extensionDefaultIcon.png'
@@ -100,20 +102,17 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
   Assert.number(oldFocusedIndex)
   Assert.number(newFocusedIndex)
   const { $ExtensionList } = state
-  if (oldFocusedIndex !== -1) {
-    console.log($ExtensionList)
-    $ExtensionList.children[oldFocusedIndex].classList.remove('Focused')
+  if (oldFocusedIndex === -1) {
+    $ExtensionList.classList.remove('FocusOutline')
+  } else {
+    $ExtensionList.children[oldFocusedIndex].removeAttribute('id')
   }
   if (newFocusedIndex === -1) {
     $ExtensionList.removeAttribute('aria-activedescendant')
     $ExtensionList.classList.add('FocusOutline')
   } else {
-    $ExtensionList.setAttribute(
-      'aria-activedescendant',
-      $ExtensionList.children[newFocusedIndex].id
-    )
-    $ExtensionList.classList.remove('FocusOutline')
-    $ExtensionList.children[newFocusedIndex].classList.add('Focused')
+    $ExtensionList.children[newFocusedIndex].id = activeId
+    $ExtensionList.setAttribute('aria-activedescendant', activeId)
   }
 }
 
@@ -151,7 +150,6 @@ const render$Extension = ($Extension, extension) => {
 
   $Extension.ariaPosInSet = extension.posInSet
   $Extension.ariaSetSize = extension.setSize
-  $Extension.id = `Extension-${extension.posInSet}`
   $Extension.dataset.state = extension.state
   $Extension.dataset.id = extension.id
   $Extension.style.top = `${extension.top}px`
