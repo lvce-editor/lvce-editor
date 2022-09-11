@@ -117,6 +117,7 @@ exports.create = ({
       session,
       additionalArguments: ['--lvce-window-kind'],
     },
+
     backgroundColor: background,
     show: false,
   })
