@@ -67,6 +67,10 @@ exports.createAppWindow = async (parsedArgs, workingDirectory) => {
   await loadDefaultUrl(window)
 }
 
+exports.openNew = () => {
+  return exports.createAppWindow([], '')
+}
+
 exports.findById = (id) => {
   for (const window of this.state.windows) {
     if (window.id === id) {

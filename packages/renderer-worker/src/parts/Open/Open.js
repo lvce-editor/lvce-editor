@@ -11,3 +11,5 @@ export const openUrl = async (url) => {
     throw new VError(error, `Failed to open url ${url}`)
   }
 }
+
+export const openNewWindowWithQueryParameters = async () => {}

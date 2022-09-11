@@ -69,6 +69,7 @@ const getAbsolutePath = (requestUrl) => {
   ) {
     return Path.join(Root.root, 'static', 'index-electron.html')
   }
+  console.log({ requestUrl })
   if (requestUrl.startsWith(`${scheme}://-/packages`)) {
     return Path.join(Root.root, requestUrl.slice(scheme.length + 4))
   }
