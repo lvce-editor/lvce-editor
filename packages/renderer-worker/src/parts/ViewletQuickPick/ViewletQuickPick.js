@@ -1,7 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as QuickPickEveryThing from '../QuickPick/QuickPickEverything.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as InputEventType from '../InputEventType/InputEventType.js'
 // TODO send open signal to renderer process before items are ready
@@ -155,17 +154,6 @@ export const loadContent = async (state) => {
   const provider = await getProvider(uri)
   const newPicks = await provider.getPicks(value)
   Assert.array(newPicks)
-  if (newPicks.length === 0) {
-    const noResults = await provider.getNoResults()
-    RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'QuickPick',
-      /* method */ 'showNoResults',
-      /* noResults */ noResults,
-      /* unfocusIndex */ state.focusedIndex
-    )
-    return
-  }
   const filterValue = provider.getFilterValue(value)
   const items = getFilteredItems(state, newPicks, filterValue)
   const placeholder = provider.getPlaceholder()
