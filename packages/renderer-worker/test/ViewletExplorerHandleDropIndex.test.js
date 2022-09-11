@@ -125,6 +125,6 @@ test('handleDrop - single file - into folder', async () => {
   expect(FileSystem.copy).toHaveBeenCalledTimes(1)
   expect(FileSystem.copy).toHaveBeenCalledWith(
     '/source/file-2.txt',
-    '/test/file-2.txt'
+    '/test/a/file-2.txt'
   )
 })
