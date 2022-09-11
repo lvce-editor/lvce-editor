@@ -65,7 +65,7 @@ body {
 }
 
 /* TODO droptarget css can be lazy loaded and should be in main.css */
-#Main.DropTarget::before {
+/* #Main.DropTarget::before {
   content: '';
   position: absolute;
   top: 0;
@@ -74,7 +74,7 @@ body {
   height: 100%;
   background: rgba(0, 0, 90, 0.5);
   z-index: 1;
-}
+} */
 
 #SideBar {
   /* TODO width and height are set via javascript, this might not be necessary */
