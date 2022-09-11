@@ -43,6 +43,7 @@ export const create = (id, uri, left, top, width, height) => {
     version: 0,
     editingIndex: -1,
     itemHeight: 22,
+    dropTargets: [],
   }
 }
 
@@ -1315,4 +1316,19 @@ const renderFocusedIndex = {
   },
 }
 
-export const render = [renderItems, renderFocusedIndex]
+const renderDropTargets = {
+  isEqual(oldState, newState) {
+    return oldState.dropTargets === newState.dropTargets
+  },
+  apply(oldState, newState) {
+    ;[
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'Explorer',
+      /* method */ 'setDropTargets',
+      /* oldDropTargets */ oldState.dropTargets,
+      /* newDropTargets */ newState.dropTargets,
+    ]
+  },
+}
+
+export const render = [renderItems, renderDropTargets, renderFocusedIndex]

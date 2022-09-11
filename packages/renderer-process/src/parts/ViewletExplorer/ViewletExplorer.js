@@ -240,3 +240,7 @@ export const hideRenameBox = (state, index, dirent) => {
   // $Dirent.focus()
   return $InputBox.value
 }
+
+export const setDropTargets = (state, oldDropTargets, newDropTargets) => {
+  console.log({ oldDropTargets, newDropTargets })
+}
