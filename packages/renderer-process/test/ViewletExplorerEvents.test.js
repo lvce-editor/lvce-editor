@@ -11,11 +11,12 @@ beforeAll(() => {
     constructor(type, options) {
       super(type, options)
       // @ts-ignore
-      this.dataTransfer ||= {}
+      this.dataTransfer = options.dataTransfer || {}
       // @ts-ignore
       this.dataTransfer.setData ||= () => {}
       // @ts-ignore
       this.dataTransfer.items ||= []
+      this.dataTransfer.files ||= []
       this.clientX = options.clientX ?? 0
       this.clientY = options.clientY ?? 0
     }
@@ -415,6 +416,7 @@ test('event - drop', () => {
   const $File1 = state.$Viewlet.children[0]
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
+  const modifiedDate = new Date()
   const event = new DragEvent('drop', {
     bubbles: true,
     cancelable: true,
@@ -424,7 +426,7 @@ test('event - drop', () => {
         {
           lastModified: 0,
           // @ts-ignore
-          lastModifiedDate: new Date(),
+          lastModifiedDate: modifiedDate,
           name: 'file.json',
           path: '/test/file.json',
           size: 756705,
@@ -438,4 +440,21 @@ test('event - drop', () => {
   $File1.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(stopProgationSpy).toHaveBeenCalled()
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Explorer.handleDrop',
+    0,
+    0,
+    [
+      {
+        lastModified: 0,
+        lastModifiedDate: modifiedDate,
+        name: 'file.json',
+        path: '/test/file.json',
+        size: 756705,
+        type: 'application/json',
+        webkitRelativePath: '',
+      },
+    ]
+  )
 })

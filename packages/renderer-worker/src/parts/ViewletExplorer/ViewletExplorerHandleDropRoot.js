@@ -1,10 +1,6 @@
-import * as FileSystem from '../FileSystem/FileSystem.js'
-import {
-  getChildDirents,
-  getIndexFromPosition,
-} from './ViewletExplorerShared.js'
 import * as DirentType from '../DirentType/DirentType.js'
-import { handleDropIndex } from './ViewletExplorerHandleDropIndex.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
+import { getChildDirents } from './ViewletExplorerShared.js'
 
 const mergeDirents = (oldDirents, newDirents) => {
   const mergedDirents = []
@@ -55,7 +51,7 @@ const copyFiles = async (root, pathSeparator, files) => {
   return pathsToRefresh
 }
 
-const handleDropRoot = async (state, files) => {
+export const handleDropRoot = async (state, files) => {
   const { root, pathSeparator, dirents } = state
   const pathsToRefresh = await copyFiles(root, pathSeparator, files)
   const pathToRefresh = pathsToRefresh[0] // TODO support multiple paths to refresh
@@ -70,15 +66,5 @@ const handleDropRoot = async (state, files) => {
     ...state,
     dirents: mergedDirents,
     dropTargets: [],
-  }
-}
-
-export const handleDrop = (state, x, y, files) => {
-  const index = getIndexFromPosition(state, x, y)
-  switch (index) {
-    case -1:
-      return handleDropRoot(state, files)
-    default:
-      return handleDropIndex(state, index, files)
   }
 }

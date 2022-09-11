@@ -114,14 +114,14 @@ export const handleDragStart = (event) => {
  *
  * @param {DragEvent} event
  */
-export const handleDrop = async (event) => {
+export const handleDrop = (event) => {
   console.log('[explorer] drop', event)
   // state.element.classList.remove('DropTarget')
   event.preventDefault()
   event.stopPropagation()
   const { files, dropEffect } = event.dataTransfer
-  console.log({ files, dropEffect })
-  RendererWorker.send('Explorer.handleDrop', files)
+  const { clientX, clientY } = event
+  RendererWorker.send('Explorer.handleDrop', clientX, clientY, files)
   // const allEntries = await getAllEntries(event.dataTransfer)
   // const firstEntry = allEntries[0]
   // if (!firstEntry) {
