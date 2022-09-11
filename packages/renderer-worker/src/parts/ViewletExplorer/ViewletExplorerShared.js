@@ -10,7 +10,7 @@ export const getIndexFromPosition = (state, x, y) => {
   if (index < 0) {
     return 0
   }
-  if (index > dirents.length) {
+  if (index >= dirents.length) {
     return -1
   }
   return index

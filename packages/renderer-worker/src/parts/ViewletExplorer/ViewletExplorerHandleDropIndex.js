@@ -1,11 +1,10 @@
 import {
   getChildDirents,
   getParentStartIndex,
-  mergeDirents,
 } from './ViewletExplorerShared.js'
-
 import * as DirentType from '../DirentType/DirentType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import { handleDropRoot } from './ViewletExplorerHandleDropRoot.js'
 
 const handleDropIntoFolder = async (state, dirent, index, files) => {
   console.log({ dirent, files })
@@ -31,7 +30,17 @@ const handleDropIntoFolder = async (state, dirent, index, files) => {
   return {
     ...state,
     dirents: mergedDirents,
+    dropTargets: [],
   }
+}
+
+const handleDropIntoFile = (state, dirent, index, files) => {
+  const { dirents } = state
+  const parentIndex = getParentStartIndex(dirents, index)
+  if (parentIndex === -1) {
+    return handleDropRoot(state, files)
+  }
+  return handleDropIndex(parentIndex)
 }
 
 export const handleDropIndex = (state, index, files) => {
@@ -43,6 +52,8 @@ export const handleDropIndex = (state, index, files) => {
   switch (dirent.type) {
     case DirentType.Directory:
       return handleDropIntoFolder(state, dirent, index, files)
+    case DirentType.File:
+      return handleDropIntoFile(state, dirent, index, files)
     default:
       return state
   }
