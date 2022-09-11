@@ -64,7 +64,6 @@ const getAllEntries = async (dataTransfer) => {
 
     handleEntries(topLevelEntries)
   })
-  console.log('promise finished')
   return allEntries
 }
 
@@ -100,8 +99,6 @@ export const handleDragOver = (event) => {
  * @param {DragEvent} event
  */
 export const handleDragStart = (event) => {
-  console.log('call setData')
-  // event.dataTransfer.dropEffect = 'copy'
   event.dataTransfer.effectAllowed = 'copyMove'
   // event.dataTransfer.setData('DownloadURL', '/tmp/some-file.txt')
   // event.preventDefault()
