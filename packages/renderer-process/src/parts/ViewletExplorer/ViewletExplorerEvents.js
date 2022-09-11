@@ -7,11 +7,9 @@ import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
 // TODO drag and drop should be loaded on demand
 const getAllEntries = async (dataTransfer) => {
-  console.log({ dataTransfer })
   const topLevelEntries = Array.from(dataTransfer.items).map((item) =>
     item.webkitGetAsEntry()
   )
-  console.log({ topLevelEntries })
   const allEntries = await new Promise((resolve, reject) => {
     const result = []
     let finished = 0
