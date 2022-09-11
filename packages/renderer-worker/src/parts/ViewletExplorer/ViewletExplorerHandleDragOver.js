@@ -5,7 +5,6 @@ export const handleDragOver = (state, x, y) => {
   Assert.number(x)
   Assert.number(y)
   const index = getIndexFromPosition(state, x, y)
-  console.log('explorer drag over', { index })
   const dropTargets = [index]
   return {
     ...state,
