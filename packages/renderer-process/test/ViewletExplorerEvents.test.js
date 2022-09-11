@@ -16,6 +16,8 @@ beforeAll(() => {
       this.dataTransfer.setData ||= () => {}
       // @ts-ignore
       this.dataTransfer.items ||= []
+      this.clientX = options.clientX ?? 0
+      this.clientY = options.clientY ?? 0
     }
   }
 })
@@ -367,7 +369,9 @@ test('event - dragStart', () => {
   expect(event.dataTransfer.effectAllowed).toBe('copyMove')
 })
 
-test('event - dragOver', () => {
+test('event - dragover', () => {
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletExplorer.create()
   ViewletExplorer.updateDirents(state, [
     {
@@ -384,9 +388,17 @@ test('event - dragOver', () => {
   const event = new DragEvent('dragover', {
     bubbles: true,
     cancelable: true,
+    clientX: 10,
+    clientY: 20,
   })
   $File1.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Explorer.handleDragOver',
+    10,
+    20
+  )
 })
 
 test('event - drop', () => {
