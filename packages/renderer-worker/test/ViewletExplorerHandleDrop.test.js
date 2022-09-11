@@ -10,6 +10,9 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
     copy: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    readDirWithFileTypes: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
 
@@ -24,6 +27,20 @@ const ViewletExplorer = await import(
 test('handleDrop - single file', async () => {
   // @ts-ignore
   FileSystem.copy.mockImplementation(() => {})
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test':
+        return [
+          {
+            name: 'file.txt',
+            type: DirentType.File,
+          },
+        ]
+      default:
+        throw new Error(`file not found ${uri}`)
+    }
+  })
   const state = {
     ...ViewletExplorer.create(),
     root: '/test',
@@ -60,6 +77,28 @@ test('handleDrop - single file', async () => {
 test('handleDrop - single file - merge with existing files', async () => {
   // @ts-ignore
   FileSystem.copy.mockImplementation(() => {})
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test':
+        return [
+          {
+            name: 'file-1.txt',
+            type: DirentType.File,
+          },
+          {
+            name: 'file-2.txt',
+            type: DirentType.File,
+          },
+          {
+            name: 'file-3.txt',
+            type: DirentType.File,
+          },
+        ]
+      default:
+        throw new Error(`file not found ${uri}`)
+    }
+  })
   const state = {
     ...ViewletExplorer.create(),
     root: '/test',
@@ -126,8 +165,8 @@ test('handleDrop - single file - merge with existing files', async () => {
   })
   expect(FileSystem.copy).toHaveBeenCalledTimes(1)
   expect(FileSystem.copy).toHaveBeenCalledWith(
-    '/source/file.txt',
-    '/test/file.txt'
+    '/source/file-2.txt',
+    '/test/file-2.txt'
   )
 })
 
