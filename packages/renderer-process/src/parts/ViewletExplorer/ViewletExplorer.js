@@ -32,9 +32,10 @@ export const create = () => {
   $Viewlet.addEventListener('wheel', ViewletExplorerEvents.handleWheel, {
     passive: true,
   })
-  $Viewlet.addEventListener('drop', ViewletExplorerEvents.handleDrop)
-  // $Viewlet.addEventListener('focus', ViewletExplorerEvents.handleFocus)
-  $Viewlet.addEventListener('blur', ViewletExplorerEvents.handleBlur)
+  $Viewlet.onblur = ViewletExplorerEvents.handleBlur
+  $Viewlet.ondragstart = ViewletExplorerEvents.handleDragStart
+  $Viewlet.ondragover = ViewletExplorerEvents.handleDragOver
+  $Viewlet.ondrop = ViewletExplorerEvents.handleDrop
   return {
     $Viewlet,
   }
@@ -45,6 +46,7 @@ const create$Row = () => {
   // @ts-ignore
   $Row.role = 'treeitem'
   $Row.className = 'TreeItem'
+  $Row.draggable = true
   const $LabelText = document.createTextNode('')
   const $Label = document.createElement('div')
   $Label.className = 'TreeItemLabel'
@@ -237,4 +239,22 @@ export const hideRenameBox = (state, index, dirent) => {
   $InputBox.replaceWith($Dirent)
   // $Dirent.focus()
   return $InputBox.value
+}
+
+export const setDropTargets = (state, oldDropTargets, newDropTargets) => {
+  const { $Viewlet } = state
+  for (const oldIndex of oldDropTargets) {
+    if (oldIndex === -1) {
+      $Viewlet.classList.remove('DropTarget')
+    } else {
+      $Viewlet.children[oldIndex].classList.remove('DropTarget')
+    }
+  }
+  for (const newIndex of newDropTargets) {
+    if (newIndex === -1) {
+      $Viewlet.classList.add('DropTarget')
+    } else {
+      $Viewlet.children[newIndex].classList.add('DropTarget')
+    }
+  }
 }

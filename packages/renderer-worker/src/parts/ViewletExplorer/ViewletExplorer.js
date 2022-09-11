@@ -14,6 +14,7 @@ import {
   getIndexFromPosition,
   getParentEndIndex,
   getParentStartIndex,
+  mergeDirents,
 } from './ViewletExplorerShared.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
@@ -43,6 +44,7 @@ export const create = (id, uri, left, top, width, height) => {
     version: 0,
     editingIndex: -1,
     itemHeight: 22,
+    dropTargets: [],
   }
 }
 
@@ -659,7 +661,7 @@ const handleClickDirectoryExpanded = (state, dirent, index) => {
   }
 }
 
-export const handleClick = async (state, index) => {
+export const handleClick = (state, index) => {
   if (index === -1) {
     return focusIndex(state, -1)
   }
@@ -882,22 +884,6 @@ export const handleCopy = async (state) => {
 const handlePasteNone = (state, nativeFiles) => {
   console.info('[ViewletExplorer/handlePaste] no paths detected')
   return state
-}
-
-const mergeDirents = (oldDirents, newDirents) => {
-  const merged = []
-  let oldIndex = 0
-  for (const newDirent of newDirents) {
-    merged.push(newDirent)
-    for (let i = oldIndex; i < oldDirents.length; i++) {
-      if (oldDirents[i].path === newDirent.path) {
-        // TOOD copy children of old dirent
-        oldIndex = i
-        break
-      }
-    }
-  }
-  return merged
 }
 
 // TODO add lots of tests for this
@@ -1315,4 +1301,19 @@ const renderFocusedIndex = {
   },
 }
 
-export const render = [renderItems, renderFocusedIndex]
+const renderDropTargets = {
+  isEqual(oldState, newState) {
+    return oldState.dropTargets === newState.dropTargets
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'Explorer',
+      /* method */ 'setDropTargets',
+      /* oldDropTargets */ oldState.dropTargets,
+      /* newDropTargets */ newState.dropTargets,
+    ]
+  },
+}
+
+export const render = [renderItems, renderDropTargets, renderFocusedIndex]

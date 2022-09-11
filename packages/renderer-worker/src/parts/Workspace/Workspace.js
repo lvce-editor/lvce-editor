@@ -22,7 +22,6 @@ export const state = {
  */
 export const setPath = async (path) => {
   Assert.string(path)
-  console.log('[workspace] set path', path)
   // TODO not in electron
   const pathSeparator = await FileSystem.getPathSeparator(path)
   state.workspacePath = path
@@ -172,7 +171,6 @@ export const hydrate = async ({ href }) => {
   state.pathSeparator = resolvedRoot.pathSeparator
   state.workspaceUri = resolvedRoot.uri
   state.source = resolvedRoot.source
-  console.log({ state })
   await onWorkspaceChange()
 }
 

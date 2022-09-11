@@ -171,9 +171,10 @@ export const getModuleId = (commandId) => {
     case 'Notification.handleClick':
     case 'Notification.showWithOptions':
       return ModuleId.Notification
-    case 'Open.openNativeFolder':
     case 'Open.openUrl':
       return ModuleId.Open
+    case 'OpenNativeFolder.openNativeFolder':
+      return ModuleId.OpenNativeFolder
     case 'Preferences.hydrate':
     case 'Preferences.openKeyBindingsJson':
     case 'Preferences.openSettingsJson':

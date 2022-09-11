@@ -4,16 +4,18 @@ import * as LazyCommand from '../LazyCommand/LazyCommand.js'
 
 // prettier-ignore
 const Imports = {
+  ExpandRecursively: () => import('./ViewletExplorerExpandRecursively.js'),
   Focus: () => import('./ViewletExplorerFocus.js'),
   FocusFirst: () => import('./ViewletExplorerFocusFirst.js'),
   FocusIndex: () => import('./ViewletExplorerFocusIndex.js'),
   FocusLast: () => import('./ViewletExplorerFocusLast.js'),
   FocusNext: () => import('./ViewletExplorerFocusNext.js'),
-  FocusPrevious: () => import('./ViewletExplorerFocusPrevious.js'),
   FocusNone: () => import('./ViewletExplorerFocusNone.js'),
+  FocusPrevious: () => import('./ViewletExplorerFocusPrevious.js'),
   HandleContextMenuKeyboard: () => import('./ViewletExplorerHandleContextMenuKeyboard.js'),
   HandleContextMenuMouseAt: ()=>import('./ViewletExplorerHandleContextMenuMouseAt.js'),
-  ExpandRecursively: () => import('./ViewletExplorerExpandRecursively.js'),
+  HandleDragOver: () => import('./ViewletExplorerHandleDragOver.js'),
+  HandleDrop: () => import('./ViewletExplorerHandleDrop.js'),
 
 }
 
@@ -45,6 +47,8 @@ export const Commands = {
   'Explorer.handleContextMenuKeyboard': LazyCommand.create('Explorer', Imports.HandleContextMenuKeyboard, 'handleContextMenuKeyboard'),
   'Explorer.handleContextMenuMouseAt':  LazyCommand.create('Explorer', Imports.HandleContextMenuMouseAt, 'handleContextMenuMouseAt'),
   'Explorer.handleCopy':                Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleCopy),
+  'Explorer.handleDragOver':            LazyCommand.create('Explorer', Imports.HandleDragOver, 'handleDragOver'),
+  'Explorer.handleDrop':                LazyCommand.create('Explorer', Imports.HandleDrop, 'handleDrop'),
   'Explorer.handleMouseEnter':          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleMouseEnter),
   'Explorer.handleMouseLeave':          Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleMouseLeave),
   'Explorer.handlePaste':               Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handlePaste),

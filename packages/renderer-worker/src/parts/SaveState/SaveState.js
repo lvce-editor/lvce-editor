@@ -22,7 +22,6 @@ const getStateToSave = () => {
 }
 
 export const handleVisibilityChange = async (visibilityState) => {
-  console.log('[renderer worker] visibility changed to', visibilityState)
   if (visibilityState === 'hidden') {
     const stateToSave = getStateToSave()
     await Promise.all([

@@ -140,3 +140,7 @@
 .TreeItem[aria-level='20'] {
   padding-left: 20rem;
 }
+
+.DropTarget {
+  background: rgba(0, 0, 90, 0.5);
+}

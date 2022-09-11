@@ -463,7 +463,7 @@ export const openLogsFolder = async () => {
   }
   const logsFolder = await Platform.getLogsDir()
   await Command.execute(
-    /* Open.openNativeFolder */ 'Open.openNativeFolder',
+    /* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder',
     /* path */ logsFolder
   )
 }
@@ -518,7 +518,7 @@ export const editors = {
 export const openConfigFolder = async () => {
   const configFolder = await Platform.getConfigPath()
   await Command.execute(
-    /* Open.openNativeFolder */ 'Open.openNativeFolder',
+    /* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder',
     /* path */ configFolder
   )
 }
@@ -536,7 +536,7 @@ export const openDataFolder = async () => {
     /* Platform.getDataDir */ 'Platform.getDataDir'
   )
   await Command.execute(
-    /* Open.openNativeFolder */ 'Open.openNativeFolder',
+    /* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder',
     /* path */ dataFolder
   )
 }
