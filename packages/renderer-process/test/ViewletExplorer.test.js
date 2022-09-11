@@ -528,3 +528,16 @@ test('hideRenameInputBox', () => {
   const $File1 = state.$Viewlet.children[0]
   expect($File1.textContent).toBe('file-1')
 })
+
+test('setDropTargets - mark outer as drop target', () => {
+  const state = ViewletExplorer.create()
+  ViewletExplorer.setDropTargets(state, [], [-1])
+  expect(state.$Viewlet.classList.contains('DropTarget')).toBe(true)
+})
+
+test('setDropTargets - remove outer as drop target', () => {
+  const state = ViewletExplorer.create()
+  ViewletExplorer.setDropTargets(state, [], [-1])
+  ViewletExplorer.setDropTargets(state, [-1], [])
+  expect(state.$Viewlet.classList.contains('DropTarget')).toBe(false)
+})

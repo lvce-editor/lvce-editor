@@ -1321,7 +1321,7 @@ const renderDropTargets = {
     return oldState.dropTargets === newState.dropTargets
   },
   apply(oldState, newState) {
-    ;[
+    return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Explorer',
       /* method */ 'setDropTargets',

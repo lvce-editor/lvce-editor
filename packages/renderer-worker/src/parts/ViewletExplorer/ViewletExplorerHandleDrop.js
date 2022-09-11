@@ -33,5 +33,6 @@ export const handleDrop = async (state, files) => {
   return {
     ...state,
     dirents: newDirents,
+    dropTargets: [],
   }
 }

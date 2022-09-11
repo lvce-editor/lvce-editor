@@ -243,4 +243,10 @@ export const hideRenameBox = (state, index, dirent) => {
 
 export const setDropTargets = (state, oldDropTargets, newDropTargets) => {
   console.log({ oldDropTargets, newDropTargets })
+  const { $Viewlet } = state
+  if (newDropTargets[0] === -1) {
+    $Viewlet.classList.add('DropTarget')
+  } else {
+    $Viewlet.classList.remove('DropTarget')
+  }
 }
