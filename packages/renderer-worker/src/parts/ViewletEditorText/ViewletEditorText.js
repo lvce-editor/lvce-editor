@@ -39,7 +39,6 @@ export const name = 'EditorText'
 
 // TODO uri?
 export const create = (id, uri, left, top, width, height) => {
-  console.log({ id })
   const instanceId = Id.create()
   const state = Editor.create(instanceId, uri, 'unknown', '')
   const newState = Editor.setBounds(state, top, left, height, COLUMN_WIDTH)
@@ -143,7 +142,6 @@ const handleLanguagesChanged = async () => {
   )
 
   const newEditor = instances.EditorText.state
-  console.log({ newEditor })
 
   GlobalEventBus.emitEvent('editor.languageChange', newEditor, newLanguageId)
   // console.log({ state })

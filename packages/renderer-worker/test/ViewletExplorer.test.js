@@ -127,6 +127,7 @@ test('loadContent', async () => {
     deltaY: 0,
     version: 0,
     itemHeight: 22,
+    dropTargets: [],
     dirents: [
       {
         depth: 1,

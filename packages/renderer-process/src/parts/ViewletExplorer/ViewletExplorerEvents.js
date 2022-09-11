@@ -79,13 +79,25 @@ export const handleBlur = (event) => {
   RendererWorker.send(/* Explorer.handleBlur */ 'Explorer.handleBlur')
 }
 
+/**
+ *
+ * @param {DragEvent} event
+ */
 export const handleDragOver = (event) => {
+  event.dataTransfer.effectAllowed = 'copyMove'
+  // console.log('dragover', event)
+  event.dataTransfer.dropEffect = 'copy'
   event.preventDefault()
+  const { clientX, clientY } = event
+  RendererWorker.send('Explorer.handleDragOver', clientX, clientY)
   // state.element.classList.add('DropTarget')
 }
 
+/**
+ * @param {DragEvent} event
+ */
 export const handleDragStart = (event) => {
-  event.dataTransfer.dropEffect = 'copy'
+  event.dataTransfer.effectAllowed = 'copyMove'
   // event.dataTransfer.setData('DownloadURL', '/tmp/some-file.txt')
   // event.preventDefault()
   event.dataTransfer.setData('text/uri-list', 'https://example.com/foobar')
@@ -93,36 +105,16 @@ export const handleDragStart = (event) => {
   // event.dataTransfer.setData('text/plain', 'abc')
 }
 
-export const handleDrop = async (event) => {
-  // state.element.classList.remove('DropTarget')
+/**
+ *
+ * @param {DragEvent} event
+ */
+export const handleDrop = (event) => {
   event.preventDefault()
-  const allEntries = await getAllEntries(event.dataTransfer)
-  const firstEntry = allEntries[0]
-  if (!firstEntry) {
-    return console.warn('no entries')
-  }
-  // const reader = new FileReader()
-  // reader.onload = (event) => {
-  //   console.log(reader.result)
-  // }
-  // const text = reader.readAsArrayBuffer(firstEntry)
-  // console.log(allEntries)
-  // const content = await new Promise((resolve, reject) => {
-  //   const reader = new FileReader()
-  //   reader.onload = (event) => {
-  //     console.log(event)
-  //     resolve(reader.result)
-  //   }
-  //   reader.onerror = (event) => {
-  //     reject(event)
-  //   }
-  //   reader.readAsArrayBuffer(firstEntry.file)
-  // })
-  // RendererWorker.send()
-  // const content = await firstEntry.file.text()
-  // console.log(event.dataTransfer)
-
-  // console.log(content)
+  event.stopPropagation()
+  const { files, dropEffect } = event.dataTransfer
+  const { clientX, clientY } = event
+  RendererWorker.send('Explorer.handleDrop', clientX, clientY, files)
 }
 
 const handleContextMenuMouse = (event) => {

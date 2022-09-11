@@ -111,7 +111,6 @@ const startSynching = async (extensionHost) => {
 
 // TODO add tests for this
 export const activateByEvent = async (event) => {
-  console.log('activate by event', event)
   Assert.string(event)
   if (!Languages.hasLoaded()) {
     await Languages.waitForLoad()

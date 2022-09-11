@@ -4,6 +4,25 @@
 import { jest } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
+beforeAll(() => {
+  // Workaround for drag event not being implemented in jsdom https://github.com/jsdom/jsdom/issues/2913
+  // @ts-ignore
+  globalThis.DragEvent = class extends Event {
+    constructor(type, options) {
+      super(type, options)
+      // @ts-ignore
+      this.dataTransfer = options.dataTransfer || {}
+      // @ts-ignore
+      this.dataTransfer.setData ||= () => {}
+      // @ts-ignore
+      this.dataTransfer.items ||= []
+      this.dataTransfer.files ||= []
+      this.clientX = options.clientX ?? 0
+      this.clientY = options.clientY ?? 0
+    }
+  }
+})
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
@@ -26,10 +45,9 @@ const RendererWorker = await import(
 const ViewletExplorer = await import(
   '../src/parts/ViewletExplorer/ViewletExplorer.js'
 )
-
-const getSimpleList = (state) => {
-  return Array.from(state.$Viewlet.children).map((node) => node.textContent)
-}
+const ViewletExplorerEvents = await import(
+  '../src/parts/ViewletExplorer/ViewletExplorerEvents.js'
+)
 
 test('event - contextmenu', () => {
   const state = ViewletExplorer.create()
@@ -323,4 +341,120 @@ test('event - blur', () => {
   $GitKeep.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith('Explorer.handleBlur')
+})
+
+test('event - dragStart', () => {
+  const state = ViewletExplorer.create()
+  ViewletExplorer.updateDirents(state, [
+    {
+      name: 'file-1.txt',
+      depth: 1,
+      setSize: 1,
+      type: DirentType.File,
+      path: '/test/file-1.txt',
+    },
+  ])
+  const $File1 = state.$Viewlet.children[0]
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const event = new DragEvent('dragstart', {
+    bubbles: true,
+  })
+  const spy = jest.spyOn(event.dataTransfer, 'setData')
+  $File1.dispatchEvent(event)
+  expect(spy).toHaveBeenCalledTimes(1)
+  expect(spy).toHaveBeenCalledWith(
+    'text/uri-list',
+    'https://example.com/foobar'
+  )
+  expect(event.dataTransfer.effectAllowed).toBe('copyMove')
+})
+
+test('event - dragover', () => {
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const state = ViewletExplorer.create()
+  ViewletExplorer.updateDirents(state, [
+    {
+      name: 'file-1.txt',
+      depth: 1,
+      setSize: 1,
+      type: DirentType.File,
+      path: '/test/file-1.txt',
+    },
+  ])
+  const $File1 = state.$Viewlet.children[0]
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const event = new DragEvent('dragover', {
+    bubbles: true,
+    cancelable: true,
+    clientX: 10,
+    clientY: 20,
+  })
+  $File1.dispatchEvent(event)
+  expect(event.defaultPrevented).toBe(true)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Explorer.handleDragOver',
+    10,
+    20
+  )
+})
+
+test('event - drop', () => {
+  const state = ViewletExplorer.create()
+  ViewletExplorer.updateDirents(state, [
+    {
+      name: 'file-1.txt',
+      depth: 1,
+      setSize: 1,
+      type: DirentType.File,
+      path: '/test/file-1.txt',
+    },
+  ])
+  const $File1 = state.$Viewlet.children[0]
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const modifiedDate = new Date()
+  const event = new DragEvent('drop', {
+    bubbles: true,
+    cancelable: true,
+    // @ts-ignore
+    dataTransfer: {
+      files: [
+        {
+          lastModified: 0,
+          // @ts-ignore
+          lastModifiedDate: modifiedDate,
+          name: 'file.json',
+          path: '/test/file.json',
+          size: 756705,
+          type: 'application/json',
+          webkitRelativePath: '',
+        },
+      ],
+    },
+  })
+  const stopProgationSpy = jest.spyOn(event, 'stopPropagation')
+  $File1.dispatchEvent(event)
+  expect(event.defaultPrevented).toBe(true)
+  expect(stopProgationSpy).toHaveBeenCalled()
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Explorer.handleDrop',
+    0,
+    0,
+    [
+      {
+        lastModified: 0,
+        lastModifiedDate: modifiedDate,
+        name: 'file.json',
+        path: '/test/file.json',
+        size: 756705,
+        type: 'application/json',
+        webkitRelativePath: '',
+      },
+    ]
+  )
 })

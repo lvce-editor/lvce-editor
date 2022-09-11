@@ -10,7 +10,7 @@ export const getIndexFromPosition = (state, x, y) => {
   if (index < 0) {
     return 0
   }
-  if (index > dirents.length) {
+  if (index >= dirents.length) {
     return -1
   }
   return index
@@ -97,4 +97,20 @@ export const getChildDirents = async (root, pathSeparator, parentDirent) => {
     parentDirent
   )
   return displayDirents
+}
+
+export const mergeDirents = (oldDirents, newDirents) => {
+  const merged = []
+  let oldIndex = 0
+  for (const newDirent of newDirents) {
+    merged.push(newDirent)
+    for (let i = oldIndex; i < oldDirents.length; i++) {
+      if (oldDirents[i].path === newDirent.path) {
+        // TOOD copy children of old dirent
+        oldIndex = i
+        break
+      }
+    }
+  }
+  return merged
 }
