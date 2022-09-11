@@ -14,6 +14,7 @@ import {
   getIndexFromPosition,
   getParentEndIndex,
   getParentStartIndex,
+  mergeDirents,
 } from './ViewletExplorerShared.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js

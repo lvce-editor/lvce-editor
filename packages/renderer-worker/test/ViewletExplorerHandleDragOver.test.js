@@ -11,7 +11,7 @@ const ViewletExplorer = await import(
   '../src/parts/ViewletExplorer/ViewletExplorer.js'
 )
 
-test.skip('handleDragOver - outer', () => {
+test('handleDragOver - outer', () => {
   const state = {
     ...ViewletExplorer.create(),
     root: '/test',
@@ -27,7 +27,7 @@ test.skip('handleDragOver - outer', () => {
   expect(newState.dropTargets).toEqual([-1])
 })
 
-test('handleDragOver - first index', () => {
+test.skip('handleDragOver - first index', () => {
   const state = {
     ...ViewletExplorer.create(),
     root: '/test',
@@ -55,7 +55,7 @@ test('handleDragOver - should return same state if drop targets are equal', () =
     left: 0,
     minLineY: 0,
     maxLineY: 0,
-    dropTargets: [0],
+    dropTargets: [-1],
   }
   expect(ViewletExplorerHandleDragOver.handleDragOver(state, 0, 0)).toBe(state)
 })
