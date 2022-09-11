@@ -662,7 +662,6 @@ const handleClickDirectoryExpanded = (state, dirent, index) => {
 }
 
 export const handleClick = (state, index) => {
-  console.log('explorer handle click', index)
   if (index === -1) {
     return focusIndex(state, -1)
   }
