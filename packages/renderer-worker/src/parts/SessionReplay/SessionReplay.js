@@ -69,6 +69,9 @@ export const replaySession = async (sessionId) => {
   RendererProcess.state.ipc.send = () => {}
   RendererProcess.state.ipc.onmessage = (event) => {
     const data = event.data
+    if (typeof data === 'string') {
+      return
+    }
     if ('result' in data) {
       callbacks[data.id].resolve(data.result)
     } else if ('error' in data) {
