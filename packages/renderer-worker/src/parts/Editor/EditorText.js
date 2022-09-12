@@ -1,27 +1,5 @@
 import * as TextDocument from '../TextDocument/TextDocument.js'
-
-/**
- *
- * @param {(line:string, lineState)=>any} tokenizeLine
- * @param {string} line
- * @param {any} lineState
- * @returns
- */
-const safeTokenizeLine = (tokenizeLine, line, lineState) => {
-  try {
-    lineState = tokenizeLine(line, lineState)
-    if (!lineState || !lineState.tokens || !lineState.state) {
-      throw new Error('invalid tokenization result')
-    }
-  } catch (error) {
-    console.error(error)
-    return {
-      tokens: [{ length: line.length, type: 0 }],
-      lineState,
-    }
-  }
-  return lineState
-}
+import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
 
 // const getTokens = (editor) => {
 //   const tokens = []
@@ -86,13 +64,20 @@ const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
       .slice(startLineIndex + 1, endLineIndex + 1)
       .map(getTokensFromCache)
   }
+  const hasArrayReturn = editor.tokenizer.hasArrayReturn
+
   const tokenizeLine = editor.tokenizer.tokenizeLine
   if (startLineIndex <= invalidStartIndex) {
     for (let i = invalidStartIndex; i < endLineIndex; i++) {
       const lineState =
         i === 0 ? editor.tokenizer.initialLineState : editor.lineCache[i]
       const line = editor.lines[i]
-      const result = safeTokenizeLine(tokenizeLine, line, lineState)
+      const result = SafeTokenizeLine.safeTokenizeLine(
+        tokenizeLine,
+        line,
+        lineState,
+        hasArrayReturn
+      )
       // TODO if lineCacheEnd matches the one before, skip tokenizing lines after
       lineCache[i + 1] = result
     }
@@ -105,13 +90,23 @@ const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
   for (let i = invalidStartIndex; i < startLineIndex; i++) {
     const lineState = editor.lineCache[i]
     const line = editor.lines[i]
-    const result = safeTokenizeLine(tokenizeLine, line, lineState)
+    const result = SafeTokenizeLine.safeTokenizeLine(
+      tokenizeLine,
+      line,
+      lineState,
+      hasArrayReturn
+    )
     lineCache[i + 1] = result
   }
   for (let i = startLineIndex; i < endLineIndex; i++) {
     const lineState = editor.lineCache[i]
     const line = editor.lines[i]
-    const result = safeTokenizeLine(tokenizeLine, line, lineState)
+    const result = SafeTokenizeLine.safeTokenizeLine(
+      tokenizeLine,
+      line,
+      lineState,
+      hasArrayReturn
+    )
     lineCache[i + 1] = result
     editor.invalidStartIndex = endLineIndex
   }
@@ -227,7 +222,9 @@ const getLineInfo = (line, tokens, decorations, TokenMap, lineOffset) => {
   }
 
   // console.log({ tokens, decorations })
-  for (const token of tokens) {
+  for (let i = 0; i < tokens.length; i += 2) {
+    const tokenType = tokens[i]
+    const tokenLength = tokens[i + 1]
     const decorationOffset = decorations[decorationIndex]
     let extraClassName = ''
     if (
@@ -246,10 +243,10 @@ const getLineInfo = (line, tokens, decorations, TokenMap, lineOffset) => {
       extraClassName = getDecorationClassName(decorationType)
     }
 
-    end += token.length
+    end += tokenLength
     const text = line.slice(start, end)
     const className = `Token ${
-      extraClassName || TokenMap[token.type] || 'Unknown'
+      extraClassName || TokenMap[tokenType] || 'Unknown'
     }`
     lineInfo.push(text, className)
     start = end

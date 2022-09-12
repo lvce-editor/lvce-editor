@@ -23,8 +23,9 @@ const getTokenIndex = (lineCache, endColumnIndex) => {
   }
   Assert.number(endColumnIndex)
   let offset = 0
-  for (let i = 0; i < lineCache.tokens.length; i++) {
-    const newOffset = offset + lineCache.tokens[i].length
+  for (let i = 0; i < lineCache.tokens.length; i += 2) {
+    const tokenLength = lineCache.tokens[i + 1]
+    const newOffset = offset + tokenLength
     if (newOffset >= endColumnIndex) {
       return {
         index: i,
