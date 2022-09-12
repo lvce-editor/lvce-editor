@@ -58,3 +58,31 @@ test('downloadSession', async () => {
     'session-2020-01-01T00:00:00.000Z.json'
   )
 })
+
+test('getEvents - error with indexeddb', async () => {
+  // @ts-ignore
+  IndexedDb.getValuesByIndexName.mockImplementation(() => {
+    throw new DOMException(
+      `Failed to execute 'index' on 'IDBObjectStore': The specified index was not found.`
+    )
+  })
+  await expect(SessionReplay.getEvents(``)).rejects.toThrowError(
+    new Error(
+      "failed to get session replay events: Error: Failed to execute 'index' on 'IDBObjectStore': The specified index was not found."
+    )
+  )
+})
+
+test('getEvents', async () => {
+  // @ts-ignore
+  IndexedDb.getValuesByIndexName.mockImplementation(() => {
+    return []
+  })
+  expect(await SessionReplay.getEvents(`test`)).toEqual([])
+  expect(IndexedDb.getValuesByIndexName).toHaveBeenCalledTimes(1)
+  expect(IndexedDb.getValuesByIndexName).toHaveBeenCalledWith(
+    'session',
+    'sessionId',
+    'test'
+  )
+})
