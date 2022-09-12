@@ -1,44 +1,5 @@
 import * as TextDocument from '../TextDocument/TextDocument.js'
-
-const flattenTokensArray = (tokens) => {
-  const flattened = []
-  for (const token of tokens) {
-    flattened.push(token.type, token.length)
-  }
-  return flattened
-}
-
-/**
- *
- * @param {(line:string, lineState)=>any} tokenizeLine
- * @param {string} line
- * @param {any} lineState
- * @returns
- */
-export const safeTokenizeLine = (
-  tokenizeLine,
-  line,
-  lineState,
-  hasArrayReturn
-) => {
-  try {
-    lineState = tokenizeLine(line, lineState)
-    if (!lineState || !lineState.tokens || !lineState.state) {
-      throw new Error('invalid tokenization result')
-    }
-  } catch (error) {
-    console.error(error)
-    return {
-      tokens: [/* type */ 0, /* length */ line.length],
-      lineState,
-    }
-  }
-  if (!hasArrayReturn) {
-    // workaround for old tokenizers
-    lineState.tokens = flattenTokensArray(lineState.tokens)
-  }
-  return lineState
-}
+import * as SafeTokenizeLine from '../SafeTokenizeLine/SafeTokenizeLine.js'
 
 // const getTokens = (editor) => {
 //   const tokens = []
@@ -111,7 +72,7 @@ const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
       const lineState =
         i === 0 ? editor.tokenizer.initialLineState : editor.lineCache[i]
       const line = editor.lines[i]
-      const result = safeTokenizeLine(
+      const result = SafeTokenizeLine.safeTokenizeLine(
         tokenizeLine,
         line,
         lineState,
@@ -129,7 +90,7 @@ const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
   for (let i = invalidStartIndex; i < startLineIndex; i++) {
     const lineState = editor.lineCache[i]
     const line = editor.lines[i]
-    const result = safeTokenizeLine(
+    const result = SafeTokenizeLine.safeTokenizeLine(
       tokenizeLine,
       line,
       lineState,
@@ -140,7 +101,7 @@ const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
   for (let i = startLineIndex; i < endLineIndex; i++) {
     const lineState = editor.lineCache[i]
     const line = editor.lines[i]
-    const result = safeTokenizeLine(
+    const result = SafeTokenizeLine.safeTokenizeLine(
       tokenizeLine,
       line,
       lineState,
