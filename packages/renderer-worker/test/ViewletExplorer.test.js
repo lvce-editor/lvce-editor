@@ -685,9 +685,9 @@ test('handleClick - directory', async () => {
   })
 })
 
-test('handleClick - directory-expanded - error', async () => {
+test('handleClick - directory-expanded', async () => {
   const state = {
-    root: '/home/test-user/test-path',
+    root: '/test',
     focusedIndex: -1,
     top: 0,
     height: 600,
@@ -695,36 +695,44 @@ test('handleClick - directory-expanded - error', async () => {
     minLineY: 0,
     dirents: [
       {
+        name: 'test/folder',
+        type: DirentType.DirectoryExpanded,
+        path: '/test/folder',
+        depth: 1,
+        setSize: 1,
+        posInSet: 1,
+      },
+      {
         name: 'index.css',
         type: DirentType.File,
-        path: '/index.css',
+        path: '/test/folder/index.css',
+        depth: 2,
+        setSize: 2,
+        posInSet: 1,
       },
       {
         name: 'index.html',
         type: DirentType.File,
-        path: '/index.html',
-      },
-      {
-        name: 'test-folder',
-        type: DirentType.Directory,
-        path: '/test-folder',
+        path: '/test/folder/index.html',
+        depth: 2,
+        setSize: 2,
+        posInSet: 2,
       },
     ],
   }
-  // @ts-ignore
-  Command.execute.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'Main.openUri':
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
   expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
     focusedIndex: 0,
+    dirents: [
+      {
+        name: 'test/folder',
+        type: DirentType.Directory,
+        path: '/test/folder',
+        depth: 1,
+        setSize: 1,
+        posInSet: 1,
+      },
+    ],
   })
-  expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/index.css')
 })
 
 test.skip('handleClick - directory-expanded - scrolled down', async () => {
