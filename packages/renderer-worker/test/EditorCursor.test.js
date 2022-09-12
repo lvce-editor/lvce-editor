@@ -83,12 +83,7 @@ test.only('getVisible - emoji - 👮🏽‍♀️', () => {
       {
         stack: [],
         state: 0,
-        tokens: [
-          {
-            type: 1,
-            length: '👮🏽‍♀️'.length,
-          },
-        ],
+        tokens: [/* type */ 1, /* length */ '👮🏽‍♀️'.length],
       },
     ],
     focused: true,
