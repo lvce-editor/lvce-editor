@@ -1,5 +1,13 @@
 import * as TextDocument from '../TextDocument/TextDocument.js'
 
+const flattenTokensArray = (tokens) => {
+  const flattened = []
+  for (const token of tokens) {
+    flattened.push(token.type, token.length)
+  }
+  return flattened
+}
+
 /**
  *
  * @param {(line:string, lineState)=>any} tokenizeLine
@@ -7,7 +15,7 @@ import * as TextDocument from '../TextDocument/TextDocument.js'
  * @param {any} lineState
  * @returns
  */
-const safeTokenizeLine = (tokenizeLine, line, lineState) => {
+const safeTokenizeLine = (tokenizeLine, line, lineState, hasArrayReturn) => {
   try {
     lineState = tokenizeLine(line, lineState)
     if (!lineState || !lineState.tokens || !lineState.state) {
@@ -19,6 +27,10 @@ const safeTokenizeLine = (tokenizeLine, line, lineState) => {
       tokens: [{ length: line.length, type: 0 }],
       lineState,
     }
+  }
+  if (!hasArrayReturn) {
+    // workaround for old tokenizers
+    lineState.tokens = flattenTokensArray(lineState.tokens)
   }
   return lineState
 }
@@ -86,13 +98,20 @@ const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
       .slice(startLineIndex + 1, endLineIndex + 1)
       .map(getTokensFromCache)
   }
+  const hasArrayReturn = editor.tokenizer.hasArrayReturn
+
   const tokenizeLine = editor.tokenizer.tokenizeLine
   if (startLineIndex <= invalidStartIndex) {
     for (let i = invalidStartIndex; i < endLineIndex; i++) {
       const lineState =
         i === 0 ? editor.tokenizer.initialLineState : editor.lineCache[i]
       const line = editor.lines[i]
-      const result = safeTokenizeLine(tokenizeLine, line, lineState)
+      const result = safeTokenizeLine(
+        tokenizeLine,
+        line,
+        lineState,
+        hasArrayReturn
+      )
       // TODO if lineCacheEnd matches the one before, skip tokenizing lines after
       lineCache[i + 1] = result
     }
@@ -105,13 +124,23 @@ const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
   for (let i = invalidStartIndex; i < startLineIndex; i++) {
     const lineState = editor.lineCache[i]
     const line = editor.lines[i]
-    const result = safeTokenizeLine(tokenizeLine, line, lineState)
+    const result = safeTokenizeLine(
+      tokenizeLine,
+      line,
+      lineState,
+      hasArrayReturn
+    )
     lineCache[i + 1] = result
   }
   for (let i = startLineIndex; i < endLineIndex; i++) {
     const lineState = editor.lineCache[i]
     const line = editor.lines[i]
-    const result = safeTokenizeLine(tokenizeLine, line, lineState)
+    const result = safeTokenizeLine(
+      tokenizeLine,
+      line,
+      lineState,
+      hasArrayReturn
+    )
     lineCache[i + 1] = result
     editor.invalidStartIndex = endLineIndex
   }
