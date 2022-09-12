@@ -100,7 +100,8 @@ exports.create = ({
     width,
     height,
     autoHideMenuBar: true,
-    ...titleBarOptions,
+    titleBarStyle: 'hidden',
+    frame: false,
     webPreferences: {
       enableWebSQL: false,
       spellcheck: false,
@@ -117,7 +118,6 @@ exports.create = ({
       session,
       additionalArguments: ['--lvce-window-kind'],
     },
-
     backgroundColor: background,
     show: false,
   })
