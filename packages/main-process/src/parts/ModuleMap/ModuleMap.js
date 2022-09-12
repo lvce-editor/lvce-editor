@@ -17,6 +17,7 @@ exports.getModuleId = (commandId) => {
     case 'ElectronDeveloper.crashMainProcess':
       return ModuleId.Developer
     case 'AppWindow.createAppWindow':
+    case 'AppWindow.openNew':
       return ModuleId.AppWindow
     case 'ElectronWindowProcessExplorer.open':
       return ModuleId.ElectronWindowProcessExplorer

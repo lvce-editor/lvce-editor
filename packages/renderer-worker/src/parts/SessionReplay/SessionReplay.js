@@ -69,6 +69,9 @@ export const replaySession = async (sessionId) => {
   RendererProcess.state.ipc.send = () => {}
   RendererProcess.state.ipc.onmessage = (event) => {
     const data = event.data
+    if (typeof data === 'string') {
+      return
+    }
     if ('result' in data) {
       callbacks[data.id].resolve(data.result)
     } else if ('error' in data) {
@@ -117,10 +120,7 @@ export const getEvents = async (sessionId) => {
     )
     return events
   } catch (error) {
-    ErrorHandling.handleError(error)
-    // console.info(`failed to get events from indexeddb: ${error}`)
-    // ignore
-    return []
+    throw new VError(error, `failed to get session replay events`)
   }
 }
 

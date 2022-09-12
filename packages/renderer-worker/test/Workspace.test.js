@@ -64,12 +64,12 @@ test('hydrate', async () => {
   })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  await Workspace.hydrate({ href: '' })
+  await Workspace.hydrate({ href: 'http://localhost:3000' })
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot')
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
-    2,
+    1,
     'Window.setTitle',
     '/tmp/some-folder'
   )
@@ -96,7 +96,7 @@ test('hydrate - path changed in the meantime', async () => {
   })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  const promise1 = Workspace.hydrate({ href: '' })
+  const promise1 = Workspace.hydrate({ href: 'http://localhost:3000' })
   const promise2 = Workspace.setPath('/test')
   await promise2
   await setTimeout(0)
@@ -105,7 +105,7 @@ test('hydrate - path changed in the meantime', async () => {
   expect(Workspace.state.workspacePath).toBe('/test')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(2)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot')
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
 })
 
 test('hydrate - error', async () => {
@@ -121,9 +121,9 @@ test('hydrate - error', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   // TODO should handle error gracefully
-  await expect(Workspace.hydrate({ href: '' })).rejects.toThrowError(
-    new Error('x is not a function')
-  )
+  await expect(
+    Workspace.hydrate({ href: 'http://localhost:3000' })
+  ).rejects.toThrowError(new Error('x is not a function'))
 })
 
 test.skip('setPath', async () => {

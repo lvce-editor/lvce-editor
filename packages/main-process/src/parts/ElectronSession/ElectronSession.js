@@ -63,7 +63,10 @@ const handlePermissionCheck = (webContents, permission, origin, details) => {
 const getAbsolutePath = (requestUrl) => {
   const scheme = Platform.scheme
   // TODO remove if/else in prod (use replacement)
-  if (requestUrl === `${scheme}://-/`) {
+  if (
+    requestUrl === `${scheme}://-/` ||
+    requestUrl.startsWith(`${scheme}://-/?`)
+  ) {
     return Path.join(Root.root, 'static', 'index-electron.html')
   }
   if (requestUrl.startsWith(`${scheme}://-/packages`)) {

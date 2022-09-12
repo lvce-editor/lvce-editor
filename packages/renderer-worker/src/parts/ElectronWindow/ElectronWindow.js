@@ -20,8 +20,8 @@ export const close = () => {
   return ElectronProcess.invoke('ElectronWindow.close')
 }
 
-export const openNew = () => {
-  return ElectronProcess.invoke('ElectronWindow.openNew')
+export const openNew = (url) => {
+  return ElectronProcess.invoke('AppWindow.openNew', url)
 }
 
 export const toggleDevtools = () => {

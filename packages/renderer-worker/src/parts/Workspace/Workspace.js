@@ -6,6 +6,7 @@ import * as Location from '../Location/Location.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Window from '../Window/Window.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const state = {
   workspacePath: '',
@@ -108,23 +109,22 @@ const getResolvedRootFromRendererProcess = async (href) => {
   return undefined
 }
 
-const getResolvedRoot = async (href) => {
-  if (Platform.platform === 'web') {
-    return getResolvedRootFromRendererProcess(href)
-  }
-  if (Platform.platform === 'remote') {
-    const resolvedRootFromRendererProcess =
-      await getResolvedRootFromRendererProcess(href)
-    if (resolvedRootFromRendererProcess) {
-      return resolvedRootFromRendererProcess
-    }
-  }
-  const resolvedRootFromSessionStorage =
-    await getResolveRootFromSessionStorage()
-  if (resolvedRootFromSessionStorage) {
-    return resolvedRootFromSessionStorage
+const getResolveRootRemote = async (href) => {
+  const resolvedRootFromRendererProcess =
+    await getResolvedRootFromRendererProcess(href)
+  if (resolvedRootFromRendererProcess) {
+    return resolvedRootFromRendererProcess
   }
   return getResolvedRootFromSharedProcess()
+}
+
+const getResolvedRoot = async (href) => {
+  switch (Platform.platform) {
+    case PlatformType.Web:
+      return getResolvedRootFromRendererProcess(href)
+    default:
+      return getResolveRootRemote(href)
+  }
 }
 
 const getTitle = (workspacePath) => {

@@ -27,10 +27,10 @@ const handleWindowClose = (event) => {
   exports.state.windows.splice(index, 1)
 }
 
-const loadDefaultUrl = async (browserWindow) => {
+const loadUrl = async (browserWindow, url) => {
   Performance.mark('code/willLoadUrl')
   try {
-    await browserWindow.loadURL(`${Platform.scheme}://-`)
+    await browserWindow.loadURL(url)
   } catch (error) {
     if (LifeCycle.isShutDown()) {
       console.info('error during shutdown', error)
@@ -38,15 +38,21 @@ const loadDefaultUrl = async (browserWindow) => {
       throw new VError(
         // @ts-ignore
         error,
-        `Failed to load window url (phase ${LifeCycle.getPhase()})`
+        `Failed to load window url "${url}"`
       )
     }
   }
   Performance.mark('code/didLoadUrl')
 }
 
+const defaultUrl = `${Platform.scheme}://-`
+
 // TODO avoid mixing BrowserWindow, childprocess and various lifecycle methods in one file -> separate concerns
-exports.createAppWindow = async (parsedArgs, workingDirectory) => {
+exports.createAppWindow = async (
+  parsedArgs,
+  workingDirectory,
+  url = defaultUrl
+) => {
   const session = Session.get()
   const window = Window.create({
     y: 0,
@@ -64,7 +70,11 @@ exports.createAppWindow = async (parsedArgs, workingDirectory) => {
     workingDirectory,
     id: window.id,
   })
-  await loadDefaultUrl(window)
+  await loadUrl(window, url)
+}
+
+exports.openNew = (url) => {
+  return exports.createAppWindow([], '', url)
 }
 
 exports.findById = (id) => {
