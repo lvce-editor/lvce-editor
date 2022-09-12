@@ -15,7 +15,12 @@ const flattenTokensArray = (tokens) => {
  * @param {any} lineState
  * @returns
  */
-const safeTokenizeLine = (tokenizeLine, line, lineState, hasArrayReturn) => {
+export const safeTokenizeLine = (
+  tokenizeLine,
+  line,
+  lineState,
+  hasArrayReturn
+) => {
   try {
     lineState = tokenizeLine(line, lineState)
     if (!lineState || !lineState.tokens || !lineState.state) {
@@ -24,7 +29,7 @@ const safeTokenizeLine = (tokenizeLine, line, lineState, hasArrayReturn) => {
   } catch (error) {
     console.error(error)
     return {
-      tokens: [{ length: line.length, type: 0 }],
+      tokens: [/* type */ 0, /* length */ line.length],
       lineState,
     }
   }
@@ -256,7 +261,9 @@ const getLineInfo = (line, tokens, decorations, TokenMap, lineOffset) => {
   }
 
   // console.log({ tokens, decorations })
-  for (const token of tokens) {
+  for (let i = 0; i < tokens.length; i += 2) {
+    const tokenType = tokens[i]
+    const tokenLength = tokens[i + 1]
     const decorationOffset = decorations[decorationIndex]
     let extraClassName = ''
     if (
@@ -275,10 +282,10 @@ const getLineInfo = (line, tokens, decorations, TokenMap, lineOffset) => {
       extraClassName = getDecorationClassName(decorationType)
     }
 
-    end += token.length
+    end += tokenLength
     const text = line.slice(start, end)
     const className = `Token ${
-      extraClassName || TokenMap[token.type] || 'Unknown'
+      extraClassName || TokenMap[tokenType] || 'Unknown'
     }`
     lineInfo.push(text, className)
     start = end
