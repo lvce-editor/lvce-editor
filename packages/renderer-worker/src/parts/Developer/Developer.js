@@ -526,7 +526,7 @@ export const openConfigFolder = async () => {
 export const openCacheFolder = async () => {
   const cacheFolder = await Platform.getCachePath()
   await Command.execute(
-    /* Open.openNativeFolder */ 'Open.openNativeFolder',
+    /* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder',
     /* path */ cacheFolder
   )
 }

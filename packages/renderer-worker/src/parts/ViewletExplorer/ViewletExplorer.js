@@ -442,7 +442,7 @@ const getContaingingFolder = (root, dirents, focusedIndex, pathSeparator) => {
 export const openContainingFolder = async (state) => {
   const { focusedIndex, root, dirents, pathSeparator } = state
   const path = getContaingingFolder(root, dirents, focusedIndex, pathSeparator)
-  await Command.execute('Open.openNativeFolder', /* path */ path)
+  await Command.execute('OpenNativeFolder.openNativeFolder', /* path */ path)
   return state
 }
 

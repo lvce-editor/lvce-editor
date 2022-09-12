@@ -19,11 +19,14 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     platform: PlatformType.Electron,
   }
 })
-jest.unstable_mockModule('../src/parts/Open/Open.js', () => {
-  return {
-    openNativeFolder: jest.fn(),
+jest.unstable_mockModule(
+  '../src/parts/OpenNativeFolder/OpenNativeFolder.js',
+  () => {
+    return {
+      openNativeFolder: jest.fn(),
+    }
   }
-})
+)
 
 const ContentTracing = await import(
   '../src/parts/ContentTracing/ContentTracing.js'
@@ -31,7 +34,9 @@ const ContentTracing = await import(
 const ElectronContentTracing = await import(
   '../src/parts/ElectronContentTracing/ElectronContentTracing.js'
 )
-const Open = await import('../src/parts/Open/Open.js')
+const OpenNativeFolder = await import(
+  '../src/parts/OpenNativeFolder/OpenNativeFolder.js'
+)
 
 test('start', async () => {
   // @ts-ignore
@@ -49,9 +54,11 @@ test('stop', async () => {
     return '/test/records.txt'
   })
   // @ts-ignore
-  Open.openNativeFolder.mockImplementation(() => {})
+  OpenNativeFolder.openNativeFolder.mockImplementation(() => {})
   await ContentTracing.stop()
   expect(ElectronContentTracing.stopRecording).toHaveBeenCalledTimes(1)
-  expect(Open.openNativeFolder).toHaveBeenCalledTimes(1)
-  expect(Open.openNativeFolder).toHaveBeenCalledWith('/test/records.txt')
+  expect(OpenNativeFolder.openNativeFolder).toHaveBeenCalledTimes(1)
+  expect(OpenNativeFolder.openNativeFolder).toHaveBeenCalledWith(
+    '/test/records.txt'
+  )
 })
