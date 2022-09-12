@@ -5,7 +5,6 @@ const Performance = require('../Performance/Performance.js')
 const LifeCycle = require('../LifeCycle/LifeCycle.js')
 const Session = require('../ElectronSession/ElectronSession.js')
 const Platform = require('../Platform/Platform.js')
-const Assert = require('../Assert/Assert.js')
 
 exports.state = {
   /**
@@ -75,8 +74,6 @@ exports.createAppWindow = async (
 }
 
 exports.openNew = (url) => {
-  // Assert.string(url)
-  // console.log({ url })
   return exports.createAppWindow([], '', url)
 }
 
