@@ -4068,7 +4068,7 @@ test('openContainingFolder', async () => {
   // @ts-ignore
   Command.execute.mockImplementation((method, ...params) => {
     switch (method) {
-      case 'Open.openNativeFolder':
+      case 'OpenNativeFolder.openNativeFolder':
         break
       default:
         throw new Error('unexpected message')
@@ -4076,7 +4076,10 @@ test('openContainingFolder', async () => {
   })
   await ViewletExplorer.openContainingFolder(state1)
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith('Open.openNativeFolder', '/test')
+  expect(Command.execute).toHaveBeenCalledWith(
+    'OpenNativeFolder.openNativeFolder',
+    '/test'
+  )
 })
 
 test('openContainingFolder - nested', async () => {
@@ -4109,7 +4112,7 @@ test('openContainingFolder - nested', async () => {
   // @ts-ignore
   Command.execute.mockImplementation((method, ...params) => {
     switch (method) {
-      case 'Open.openNativeFolder':
+      case 'OpenNativeFolder.openNativeFolder':
         break
       default:
         throw new Error('unexpected message')
@@ -4118,7 +4121,7 @@ test('openContainingFolder - nested', async () => {
   await ViewletExplorer.openContainingFolder(state1)
   expect(Command.execute).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenCalledWith(
-    'Open.openNativeFolder',
+    'OpenNativeFolder.openNativeFolder',
     '/test/a'
   )
 })
