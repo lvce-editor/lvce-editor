@@ -12,7 +12,7 @@ export const isMobileOrTablet = () => {
   }
   // @ts-ignore
   const userAgentData = navigator.userAgentData
-  if (userAgentData && userAgentData.mobile) {
+  if (userAgentData && typeof userAgentData.mobile !== 'undefined') {
     return true
   }
   // copied from https://stackoverflow.com/questions/11381673/detecting-a-mobile-browser
