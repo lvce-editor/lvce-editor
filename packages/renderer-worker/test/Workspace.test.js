@@ -67,9 +67,9 @@ test('hydrate', async () => {
   await Workspace.hydrate({ href: 'http://localhost:3000' })
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot')
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
-    1,
+    2,
     'Window.setTitle',
     '/tmp/some-folder'
   )
@@ -105,7 +105,7 @@ test('hydrate - path changed in the meantime', async () => {
   expect(Workspace.state.workspacePath).toBe('/test')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(2)
   expect(SharedProcess.invoke).toHaveBeenCalledWith('Workspace.resolveRoot')
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
 })
 
 test('hydrate - error', async () => {

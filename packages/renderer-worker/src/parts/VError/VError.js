@@ -6,6 +6,9 @@ const getCombinedMessage = (error, message) => {
 }
 
 const mergeStacks = (parent, child) => {
+  if (!child) {
+    return parent
+  }
   let i = 1
   const childLines = child.split('\n')
   const parentLines = parent.split('\n')

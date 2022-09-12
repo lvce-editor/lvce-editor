@@ -109,12 +109,18 @@ const getResolvedRootFromRendererProcess = async (href) => {
   return undefined
 }
 
-const getResolveRootRemote = async (href) => {
+const getResolvedRootRemote = async (href) => {
   const resolvedRootFromRendererProcess =
     await getResolvedRootFromRendererProcess(href)
   if (resolvedRootFromRendererProcess) {
     return resolvedRootFromRendererProcess
   }
+  const resolvedRootFromSessionStorage =
+    await getResolveRootFromSessionStorage()
+  if (resolvedRootFromSessionStorage) {
+    return resolvedRootFromSessionStorage
+  }
+  console.log('esle')
   return getResolvedRootFromSharedProcess()
 }
 
@@ -123,7 +129,7 @@ const getResolvedRoot = async (href) => {
     case PlatformType.Web:
       return getResolvedRootFromRendererProcess(href)
     default:
-      return getResolveRootRemote(href)
+      return getResolvedRootRemote(href)
   }
 }
 
