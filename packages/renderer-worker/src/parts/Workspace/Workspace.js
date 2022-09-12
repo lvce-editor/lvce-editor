@@ -71,7 +71,6 @@ export const isTest = () => {
 
 const getResolvedRootFromRendererProcess = async (href) => {
   const url = new URL(href)
-  console.log(url)
   if (url.searchParams.has('replayId')) {
     const replayId = url.searchParams.get('replayId')
     await Command.execute(

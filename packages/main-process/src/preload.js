@@ -1,7 +1,5 @@
 const { ipcRenderer, contextBridge } = require('electron')
 
-console.log(process.argv)
-
 const ipcConnect = (type) => {
   if (typeof type !== 'string') {
     throw new Error('[preload] type must be of type string')
