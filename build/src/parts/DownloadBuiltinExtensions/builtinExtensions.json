@@ -27,17 +27,17 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "0.0.6"
+    "version": "0.0.7"
   },
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-css",
     "repository": "github.com/lvce-editor/language-basics-css",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-basics-plaintext",
@@ -52,7 +52,7 @@
   {
     "name": "builtin.language-basics-docker",
     "repository": "github.com/lvce-editor/language-basics-docker",
-    "version": "0.0.5"
+    "version": "0.0.6"
   },
   {
     "name": "builtin.language-basics-java",
@@ -127,12 +127,12 @@
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "0.0.4"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.language-basics-desktop",
     "repository": "github.com/lvce-editor/language-basics-desktop",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-basics-xml",
