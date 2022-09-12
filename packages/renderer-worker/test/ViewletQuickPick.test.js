@@ -1,5 +1,10 @@
 import * as ViewletQuickPick from '../src/parts/ViewletQuickPick/ViewletQuickPick.js'
 import { jest } from '@jest/globals'
+import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
+
+const render = (oldState, newState) => {
+  return ViewletManager.render(ViewletQuickPick, oldState, newState)
+}
 
 test('name', () => {
   expect(ViewletQuickPick.name).toBe('QuickPick')
@@ -340,4 +345,41 @@ test('handleWheel - up', () => {
     minLineY: 0,
     maxLineY: 1,
   })
+})
+
+test('render - set correct height', () => {
+  const oldState = {
+    ...ViewletQuickPick.create(),
+    itemHeight: 22,
+    height: 22,
+    deltaY: 22,
+    items: [],
+    minLineY: 0,
+    maxLineY: 10,
+  }
+  const newState = {
+    ...oldState,
+    items: [
+      {
+        label: 'index.css',
+      },
+    ],
+  }
+  expect(render(oldState, newState)).toEqual([
+    [
+      'Viewlet.send',
+      'QuickPick',
+      'setVisiblePicks',
+      [
+        {
+          icon: undefined,
+          label: 'index.css',
+          posInSet: 1,
+          setSize: 1,
+        },
+      ],
+    ],
+    ['Viewlet.send', 'QuickPick', 'setCursorOffset', 0],
+    ['Viewlet.send', 'QuickPick', 'setItemsHeight', 22],
+  ])
 })
