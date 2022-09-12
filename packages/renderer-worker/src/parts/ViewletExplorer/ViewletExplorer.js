@@ -637,14 +637,10 @@ const handleClickDirectory = async (state, dirent, index) => {
 const handleClickDirectoryExpanding = async (state, dirent, index) => {
   dirent.type = DirentType.Directory
   dirent.icon = IconTheme.getIcon(dirent)
-  await RendererProcess.invoke(
-    /* viewSend */ 'Viewlet.send',
-    /* id */ 'Explorer',
-    /* method */ 'collapse',
-    /* index */ index,
-    /* removeCount */ 0
-  )
-  return state
+  return {
+    ...state,
+    focusedIndex: index,
+  }
 }
 
 const handleClickDirectoryExpanded = (state, dirent, index) => {
@@ -658,6 +654,7 @@ const handleClickDirectoryExpanded = (state, dirent, index) => {
   return {
     ...state,
     dirents: newDirents,
+    focusedIndex: index,
   }
 }
 
@@ -666,6 +663,7 @@ export const handleClick = (state, index) => {
     return focusIndex(state, -1)
   }
   const actualIndex = index + state.minLineY
+  console.log('actual index', actualIndex)
   const dirent = state.dirents[actualIndex]
   if (!dirent) {
     console.warn(`[explorer] dirent at index ${actualIndex} not found`, state)
