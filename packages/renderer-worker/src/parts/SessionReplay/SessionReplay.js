@@ -117,10 +117,7 @@ export const getEvents = async (sessionId) => {
     )
     return events
   } catch (error) {
-    ErrorHandling.handleError(error)
-    // console.info(`failed to get events from indexeddb: ${error}`)
-    // ignore
-    return []
+    throw new VError(error, `failed to get session replay events`)
   }
 }
 
