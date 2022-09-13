@@ -53,15 +53,15 @@ export const getFileIcon = (file) => {
   if (fileNameIcon) {
     return fileNameIcon
   }
-  const languageId = Languages.getLanguageId(fileNameLower)
-  const languageIcon = iconTheme.languageIds[languageId]
-  if (languageIcon) {
-    return languageIcon
-  }
   const extension = getExtension(fileNameLower)
   const extensionIcon = iconTheme.fileExtensions[extension]
   if (extensionIcon) {
     return extensionIcon
+  }
+  const languageId = Languages.getLanguageId(fileNameLower)
+  const languageIcon = iconTheme.languageIds[languageId]
+  if (languageIcon) {
+    return languageIcon
   }
   return DefaultIcon.File
 }
