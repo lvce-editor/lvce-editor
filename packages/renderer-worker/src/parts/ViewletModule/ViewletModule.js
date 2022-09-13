@@ -23,7 +23,7 @@ export const load = (moduleId) => {
     case ViewletModuleId.Noop:
       return import('../ViewletNoop/ViewletNoop.ipc.js')
     case ViewletModuleId.EditorText:
-      return import('../ViewletEditorText/ViewletEditorText.ipc.js')
+      return import('../ViewletEditor/ViewletEditor.ipc.js')
     case ViewletModuleId.EditorPlainText:
       return import('../ViewletEditorPlainText/ViewletEditorPlainText.ipc.js')
     case ViewletModuleId.EditorImage:
