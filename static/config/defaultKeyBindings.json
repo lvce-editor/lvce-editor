@@ -343,7 +343,7 @@
   },
   {
     "key": "Space",
-    "command": "Explorer.handleClickCurrent",
+    "command": "Explorer.handleClickCurrentButKeepFocus",
     "when": "focus.Explorer"
   },
   {
