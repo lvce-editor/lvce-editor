@@ -554,7 +554,11 @@ test('handleClick - file', async () => {
     focusedIndex: 0,
   })
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/index.css')
+  expect(Command.execute).toHaveBeenCalledWith(
+    'Main.openUri',
+    '/index.css',
+    true
+  )
 })
 
 test('handleClick - file - error', async () => {
@@ -596,7 +600,47 @@ test('handleClick - file - error', async () => {
     focusedIndex: 0,
   })
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/index.css')
+  expect(Command.execute).toHaveBeenCalledWith(
+    'Main.openUri',
+    '/index.css',
+    true
+  )
+})
+
+test('handleClickCurrentButKeepFocus - file', async () => {
+  const state = {
+    root: '/home/test-user/test-path',
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    dirents: [
+      {
+        name: 'index.css',
+        type: DirentType.File,
+        path: '/test/index.css',
+      },
+    ],
+  }
+  // @ts-ignore
+  Command.execute.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Main.openUri':
+        break
+      default:
+        throw new Error('unexpected method')
+    }
+  })
+  expect(await ViewletExplorer.handleClickCurrentButKeepFocus(state)).toEqual(
+    state
+  )
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'Main.openUri',
+    '/test/index.css',
+    false
+  )
 })
 
 // TODO test error

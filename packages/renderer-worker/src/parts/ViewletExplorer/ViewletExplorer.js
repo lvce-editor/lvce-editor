@@ -596,10 +596,11 @@ export const newFolder = async (state) => {
   return newDirent(state)
 }
 
-const handleClickFile = async (state, dirent, index) => {
+const handleClickFile = async (state, dirent, index, keepFocus = false) => {
   await Command.execute(
     /* Main.openAbsolutePath */ 'Main.openUri',
-    /* absolutePath */ dirent.path
+    /* absolutePath */ dirent.path,
+    /* focus */ !keepFocus
   )
   return {
     ...state,
@@ -658,7 +659,7 @@ const handleClickDirectoryExpanded = (state, dirent, index) => {
   }
 }
 
-export const handleClick = (state, index) => {
+export const handleClick = (state, index, keepFocus = false) => {
   if (index === -1) {
     return focusIndex(state, -1)
   }
@@ -672,7 +673,7 @@ export const handleClick = (state, index) => {
   // TODO dirent type should be numeric
   switch (dirent.type) {
     case DirentType.File:
-      return handleClickFile(state, dirent, actualIndex)
+      return handleClickFile(state, dirent, actualIndex, keepFocus)
     // TODO decide on one name
     case DirentType.Directory:
       return handleClickDirectory(state, dirent, actualIndex)
@@ -694,6 +695,14 @@ export const handleClickAt = (state, x, y) => {
 
 export const handleClickCurrent = (state) => {
   return handleClick(state, state.focusedIndex - state.minLineY)
+}
+
+export const handleClickCurrentButKeepFocus = (state) => {
+  return handleClick(
+    state,
+    state.focusedIndex - state.minLineY,
+    /* keepFocus */ true
+  )
 }
 
 export const scrollUp = () => {}
