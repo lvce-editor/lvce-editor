@@ -28,7 +28,7 @@ const getTokenIndex = (lineCache, endColumnIndex) => {
     const newOffset = offset + tokenLength
     if (newOffset >= endColumnIndex) {
       return {
-        index: i,
+        index: i / 2,
         offset: endColumnIndex - offset,
       }
     }
