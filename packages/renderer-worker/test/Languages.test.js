@@ -104,6 +104,16 @@ test('getLanguageId - by extension', async () => {
   expect(Languages.getLanguageId('/test/index.txt')).toBe('plaintext')
 })
 
+test('getLanguageId - by second file extension', async () => {
+  await Languages.addLanguages([
+    {
+      id: 'json',
+      extensions: ['.js.map'],
+    },
+  ])
+  expect(Languages.getLanguageId('/test/index.js.map')).toBe('json')
+})
+
 test('getLanguageId - by file name', async () => {
   await Languages.addLanguages([
     {
