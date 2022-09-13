@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
-import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActvityBarItemFlags.js'
-import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
+import * as ActivityBarItemFlags from '../../src/parts/ActivityBarItemFlags/ActvityBarItemFlags.js'
+import * as ViewletStates from '../../src/parts/ViewletStates/ViewletStates.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -25,14 +25,14 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
 })
 
 const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
+  '../../src/parts/RendererProcess/RendererProcess.js'
 )
 const ViewletActivityBar = await import(
-  '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
+  '../../src/parts/ViewletActivityBar/ViewletActivityBar.js'
 )
 
 const ViewletManager = await import(
-  '../src/parts/ViewletManager/ViewletManager.js'
+  '../../src/parts/ViewletManager/ViewletManager.js'
 )
 
 const ACTIVITY_BAR_ITEM_HEIGHT = 48

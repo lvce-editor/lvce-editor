@@ -1,8 +1,8 @@
 import { jest } from '@jest/globals'
-import * as Editor from '../src/parts/Editor/Editor.js'
+import * as Editor from '../../src/parts/Editor/Editor.js'
 import * as EditorCompletion from '../src/parts/EditorCommand/EditorCommandCompletion.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
+import * as RendererProcess from '../../src/parts/RendererProcess/RendererProcess.js'
+import * as SharedProcess from '../../src/parts/SharedProcess/SharedProcess.js'
 import * as EditorBlur from '../src/parts/EditorCommand/EditorCommandBlur.js'
 
 // TODO naming: show/hide vs open/close

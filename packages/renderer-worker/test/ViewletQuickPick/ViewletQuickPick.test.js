@@ -1,6 +1,6 @@
-import * as ViewletQuickPick from '../src/parts/ViewletQuickPick/ViewletQuickPick.js'
+import * as ViewletQuickPick from '../../src/parts/ViewletQuickPick/ViewletQuickPick.js'
 import { jest } from '@jest/globals'
-import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
+import * as ViewletManager from '../../src/parts/ViewletManager/ViewletManager.js'
 
 const render = (oldState, newState) => {
   return ViewletManager.render(ViewletQuickPick, oldState, newState)

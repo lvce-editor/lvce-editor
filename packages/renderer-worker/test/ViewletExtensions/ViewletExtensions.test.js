@@ -47,22 +47,22 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
 })
 
 const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
+  '../../src/parts/RendererProcess/RendererProcess.js'
 )
 const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
+  '../../src/parts/SharedProcess/SharedProcess.js'
 )
-const Ajax = await import('../src/parts/Ajax/Ajax.js')
+const Ajax = await import('../../src/parts/Ajax/Ajax.js')
 
 const ViewletExtensions = await import(
-  '../src/parts/ViewletExtensions/ViewletExtensions.js'
+  '../../src/parts/ViewletExtensions/ViewletExtensions.js'
 )
 const ErrorHandling = await import(
-  '../src/parts/ErrorHandling/ErrorHandling.js'
+  '../../src/parts/ErrorHandling/ErrorHandling.js'
 )
 
 const ViewletManager = await import(
-  '../src/parts/ViewletManager/ViewletManager.js'
+  '../../src/parts/ViewletManager/ViewletManager.js'
 )
 
 const render = (oldState, newState) => {

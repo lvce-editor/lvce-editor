@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
-import * as DirentType from '../src/parts/DirentType/DirentType.js'
-import { CancelationError } from '../src/parts/Errors/CancelationError.js'
+import * as DirentType from '../../src/parts/DirentType/DirentType.js'
+import { CancelationError } from '../../src/parts/Errors/CancelationError.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -62,26 +62,26 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
 })
 
 const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
+  '../../src/parts/RendererProcess/RendererProcess.js'
 )
 
-const Workspace = await import('../src/parts/Workspace/Workspace.js')
+const Workspace = await import('../../src/parts/Workspace/Workspace.js')
 
 const ViewletExplorer = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorer.js'
+  '../../src/parts/ViewletExplorer/ViewletExplorer.js'
 )
 
 const GlobalEventBus = await import(
-  '../src/parts/GlobalEventBus/GlobalEventBus.js'
+  '../../src/parts/GlobalEventBus/GlobalEventBus.js'
 )
 
-const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
+const Viewlet = await import('../../src/parts/Viewlet/Viewlet.js')
 
 const ViewletManager = await import(
-  '../src/parts/ViewletManager/ViewletManager.js'
+  '../../src/parts/ViewletManager/ViewletManager.js'
 )
-const Command = await import('../src/parts/Command/Command.js')
-const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
+const Command = await import('../../src/parts/Command/Command.js')
+const FileSystem = await import('../../src/parts/FileSystem/FileSystem.js')
 
 const render = (oldState, newState) => {
   return ViewletManager.render(ViewletExplorer, oldState, newState)
