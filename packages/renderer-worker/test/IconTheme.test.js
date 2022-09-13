@@ -1,5 +1,16 @@
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
-import * as IconTheme from '../src/parts/IconTheme/IconTheme.js'
+import { jest } from '@jest/globals'
+
+jest.unstable_mockModule('../src/parts/Languages/Languages.js', () => {
+  return {
+    getLanguageId: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const IconTheme = await import('../src/parts/IconTheme/IconTheme.js')
+const Languages = await import('../src/parts/Languages/Languages.js')
 
 test('getIcon - match by lowerCase file name', () => {
   IconTheme.state.iconTheme = {
@@ -159,4 +170,29 @@ test('getIcon - symlink', () => {
       name: 'a',
     })
   ).toBe('_file')
+})
+
+test('getIcon - file extension should have priority over language id', () => {
+  // @ts-ignore
+  Languages.getLanguageId.mockImplementation(() => {
+    return 'xml'
+  })
+  IconTheme.state.iconTheme = {
+    folderNames: {
+      test: 'fd_test',
+    },
+    languageIds: {
+      xml: 'f_xml',
+    },
+    fileNames: {},
+    fileExtensions: {
+      svg: 'f_svg',
+    },
+  }
+  expect(
+    IconTheme.getIcon({
+      type: DirentType.File,
+      name: '/test/file.svg',
+    })
+  ).toBe('f_svg')
 })
