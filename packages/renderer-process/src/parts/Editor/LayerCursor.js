@@ -1,5 +1,3 @@
-import * as Platform from '../Platform/Platform.js'
-
 const create$Cursor = () => {
   const $Cursor = document.createElement('div')
   $Cursor.className = 'EditorCursor'
@@ -121,5 +119,6 @@ const renderCursorsNative = (state, cursors) => {
 }
 
 export const setCursors = (state, cursors) => {
+  console.log({ cursors })
   render$Cursors(state.$LayerCursor, state.$LayerText, cursors)
 }

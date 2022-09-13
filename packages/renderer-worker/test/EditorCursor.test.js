@@ -17,6 +17,7 @@ const EditorCursor = await import('../src/parts/Editor/EditorCursor.js')
 beforeEach(() => {
   jest.resetAllMocks()
 })
+
 test('getVisible - desktop', () => {
   // @ts-ignore
   Platform.isMobileOrTablet.mockImplementation(() => {
@@ -30,17 +31,70 @@ test('getVisible - desktop', () => {
     left: 5,
     rowHeight: 10,
     columnWidth: 8,
+    focused: true,
+    lineCache: [
+      {
+        state: 1,
+        tokens: [
+          {
+            type: 0,
+            length: 13,
+          },
+        ],
+      },
+    ],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
   expect(EditorCursor.getVisible(editor)).toEqual([
     {
-      left: 0,
+      leftIndex: -1,
+      remainingOffset: -1,
       top: 0,
+      topIndex: 0,
     },
   ])
 })
 
-test('getVisible - native', () => {
+test('getVisible - cursor in middle of token', () => {
+  // @ts-ignore
+  Platform.isMobileOrTablet.mockImplementation(() => {
+    return false
+  })
+  const editor = {
+    lines: [''],
+    minLineY: 0,
+    maxLineY: 10,
+    top: 10,
+    left: 5,
+    rowHeight: 10,
+    columnWidth: 8,
+    focused: true,
+    lineCache: [
+      null,
+      {
+        state: 1,
+        tokens: [
+          /* type */ 0, /* length */ 1,
+
+          /* type */ 0, /* length */ 4,
+
+          /* type */ 4, /* length */ 4,
+        ],
+      },
+    ],
+    selections: EditorSelection.fromRange(0, 7, 0, 7),
+  }
+  expect(EditorCursor.getVisible(editor)).toEqual([
+    {
+      leftIndex: 2,
+      remainingOffset: 2,
+      top: 0,
+      topIndex: 0,
+    },
+  ])
+})
+
+test.skip('getVisible - native', () => {
   // @ts-ignore
   Platform.isMobileOrTablet.mockImplementation(() => {
     return true
@@ -63,7 +117,7 @@ test('getVisible - native', () => {
   ])
 })
 
-test.only('getVisible - emoji - 👮🏽‍♀️', () => {
+test('getVisible - emoji - 👮🏽‍♀️', () => {
   // @ts-ignore
   Platform.isMobileOrTablet.mockImplementation(() => {
     return false
