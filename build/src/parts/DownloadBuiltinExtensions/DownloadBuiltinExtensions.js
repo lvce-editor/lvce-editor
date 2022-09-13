@@ -88,12 +88,8 @@ const printError = (error) => {
   if (
     error &&
     error instanceof Error &&
-    error.message.includes(
-      'Response code 503 (Egress is over the account limit.)'
-    )
+    error.message.includes('Response code ')
   ) {
-    console.error(error.message)
-  } else if (error && error.message.includes('Response code 404')) {
     console.error(error.message)
   } else {
     console.error(error)
