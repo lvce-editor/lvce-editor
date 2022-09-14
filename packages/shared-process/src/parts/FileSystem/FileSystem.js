@@ -7,6 +7,7 @@ import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Trash from '../Trash/Trash.js'
 import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
+import { FileNotFoundError } from '../Error/FileNotFoundError.js'
 
 export const state = {
   watcherMap: Object.create(null),
@@ -44,7 +45,7 @@ export const readFile = async (path) => {
     return content
   } catch (error) {
     if (error && error.code === FileSystemErrorCodes.ENOENT) {
-      throw new VError(`File not found '${path}'`)
+      throw new FileNotFoundError(path)
     }
     throw new VError(error, `Failed to read file "${path}"`)
   }
@@ -57,7 +58,7 @@ export const writeFile = async (path, content) => {
     await fs.writeFile(path, content)
   } catch (error) {
     if (error && error.code === FileSystemErrorCodes.ENOENT) {
-      throw new VError(`File not found '${path}'`)
+      throw new FileNotFoundError(path)
     }
     throw new VError(error, `Failed to write to file "${path}"`)
   }
@@ -210,7 +211,11 @@ export const getRealPath = async (path) => {
     return await fs.realpath(path)
   } catch (error) {
     // @ts-ignore
-    if (error && error instanceof globalThis.Error && error.code === 'ENOENT') {
+    if (
+      error &&
+      error instanceof globalThis.Error &&
+      error.code === FileSystemErrorCodes.ENOENT
+    ) {
       let content
       try {
         content = await fs.readlink(path)
