@@ -1,13 +1,13 @@
 import prettyBytes from '../../../../../static/js/pretty-bytes.js'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
+import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as ProcessExplorer from '../ProcessExplorer/ProcessExplorer.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
-import * as ElectronWindowProcessExplorer from '../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
 
 const formatBytes = (bytes) => {
   return prettyBytes(bytes)
@@ -543,27 +543,8 @@ export const openDataFolder = async () => {
 
 export const showMessageBox = () => {}
 
-const openProcessExplorerElectron = () => {
-  return ElectronWindowProcessExplorer.open()
-}
-
-const openProcessExplorerRemote = () => {
-  throw new Error('not implemented')
-}
-
-const openProcessExplorerWeb = () => {
-  throw new Error('not implemented')
-}
-
 export const openProcessExplorer = () => {
-  switch (Platform.platform) {
-    case PlatformType.Electron:
-      return openProcessExplorerElectron()
-    case PlatformType.Remote:
-      return openProcessExplorerRemote()
-    case PlatformType.Web:
-      return openProcessExplorerWeb()
-  }
+  return ProcessExplorer.open()
 }
 
 export const downloadViewletState = async () => {
