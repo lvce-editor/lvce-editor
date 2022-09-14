@@ -16,6 +16,9 @@ export const close = () => {
 
 export const open = (url, target, features) => {
   const browserWindow = window.open(url, target, features)
+  setInterval(() => {
+    browserWindow.postMessage('abc' + Math.random(), '*')
+  }, 1000)
 }
 
 export const setTitle = (title) => {
