@@ -150,3 +150,7 @@ export const openNew = async () => {
       return
   }
 }
+
+export const open = (url, target, features) => {
+  return RendererProcess.invoke('Window.open', url, target, features)
+}

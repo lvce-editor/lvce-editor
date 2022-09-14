@@ -14,6 +14,10 @@ export const close = () => {
   // window.close()
 }
 
+export const open = (url, target, features) => {
+  const browserWindow = window.open(url, target, features)
+}
+
 export const setTitle = (title) => {
   document.title = title
 }

@@ -8,4 +8,5 @@ export const Commands = {
   'Window.reload': Window.reload,
   'Window.setTitle': Window.setTitle,
   'Window.unmaximize': Window.unmaximize,
+  'Window.open': Window.open,
 }

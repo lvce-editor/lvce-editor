@@ -1,26 +1,16 @@
 import * as ElectronWindowProcessExplorer from '../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-
-const openProcessExplorerElectron = () => {
-  return ElectronWindowProcessExplorer.open()
-}
-
-const openProcessExplorerRemote = () => {
-  throw new Error('not implemented')
-}
-
-const openProcessExplorerWeb = () => {
-  throw new Error('not implemented')
-}
+import * as ProcessExplorerRemote from './ProcessExplorerRemote.js'
+import * as ProcessExplorerWeb from './ProcessExplorerWeb.js'
 
 export const open = () => {
   switch (Platform.platform) {
     case PlatformType.Electron:
-      return openProcessExplorerElectron()
+      return ElectronWindowProcessExplorer.open()
     case PlatformType.Remote:
-      return openProcessExplorerRemote()
+      return ProcessExplorerRemote.open()
     case PlatformType.Web:
-      return openProcessExplorerWeb()
+      return ProcessExplorerWeb.open()
   }
 }

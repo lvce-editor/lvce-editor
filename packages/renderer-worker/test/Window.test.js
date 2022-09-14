@@ -146,3 +146,29 @@ test('openNew - electron', async () => {
   await Window.openNew()
   expect(ElectronWindow.openNew).toHaveBeenCalledTimes(1)
 })
+
+test('open - error', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {
+    throw new TypeError('x is not a function')
+  })
+  const Window = await import('../src/parts/Window/Window.js')
+  // @ts-ignore
+  await expect(
+    Window.open('http://localhost:3000', '_blank', '')
+  ).rejects.toThrowError(new TypeError('x is not a function'))
+})
+
+test('open - error', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  const Window = await import('../src/parts/Window/Window.js')
+  await Window.open('http://localhost:3000', '_blank', '')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Window.open',
+    'http://localhost:3000',
+    '_blank',
+    ''
+  )
+})
