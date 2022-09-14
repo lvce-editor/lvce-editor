@@ -543,8 +543,27 @@ export const openDataFolder = async () => {
 
 export const showMessageBox = () => {}
 
-export const openProcessExplorer = () => {
+const openProcessExplorerElectron = () => {
   return ElectronWindowProcessExplorer.open()
+}
+
+const openProcessExplorerRemote = () => {
+  throw new Error('not implemented')
+}
+
+const openProcessExplorerWeb = () => {
+  throw new Error('not implemented')
+}
+
+export const openProcessExplorer = () => {
+  switch (Platform.platform) {
+    case PlatformType.Electron:
+      return openProcessExplorerElectron()
+    case PlatformType.Remote:
+      return openProcessExplorerRemote()
+    case PlatformType.Web:
+      return openProcessExplorerWeb()
+  }
 }
 
 export const downloadViewletState = async () => {
