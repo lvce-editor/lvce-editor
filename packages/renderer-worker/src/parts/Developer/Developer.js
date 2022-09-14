@@ -273,7 +273,6 @@ const formatNodeMemoryUsage = (memoryUsage) => {
 }
 
 const formatRendererWorkerData = ({
-  memory,
   userAgentSpecificMemory,
   sent,
   received,
@@ -297,16 +296,6 @@ const formatRendererWorkerData = ({
       }
     }
     content += toMarkdownTable(header, rows)
-  } else if (memory) {
-    const header = ['Name', 'Value']
-    const rows = [
-      ['jsHeapSizeLimit', PrettyBytes.formatBytes(memory.jsHeapSizeLimit)],
-      ['Total JS HeapSize', PrettyBytes.formatBytes(memory.totalJSHeapSize)],
-      ['Used JS HeapSize', PrettyBytes.formatBytes(memory.usedJSHeapSize)],
-      ['Sent', PrettyBytes.formatBytes(sent)],
-      ['Received', PrettyBytes.formatBytes(received)],
-    ]
-    content += toMarkdownTable(header, rows)
   }
   return content
 }
@@ -324,30 +313,18 @@ const formatRendererProcessData = ({ memoryUsage }) => {
   return toMarkdownTable(header, rows)
 }
 
-const getRendererWorkerMemoryUsage = async () => {
-  let userAgentSpecificMemory
-  // @ts-ignore
-  if (performance && performance.measureUserAgentSpecificMemory) {
-    console.log('measure it')
-    // @ts-ignore
-    userAgentSpecificMemory = await performance.measureUserAgentSpecificMemory()
-  }
-  console.log({ userAgentSpecificMemory })
-  return {
-    userAgentSpecificMemory,
-  }
-}
-
 const getSharedProcessMemoryUsage = () => {
   return SharedProcess.invoke(
     /* Developer.sharedProcessMemoryUsage */ 'Developer.sharedProcessMemoryUsage'
   )
 }
 
-const getRendererProcessMemoryUsage = () => {
-  return RendererProcess.invoke(
-    /* Developer.getMemoryUsage */ 'Developer.getMemoryUsage'
-  )
+const getPerformanceMemory = () => {
+  return RendererProcess.invoke('Performance.getMemory')
+}
+
+const getPerformanceUserAgentSpecificMemory = () => {
+  return RendererProcess.invoke('Performance.measureUserAgentSpecificMemory')
 }
 
 // TODO handle case when renderer process and renderer worker are same process communicating via messagePort
@@ -356,22 +333,21 @@ export const getMemoryUsageContent = async () => {
   const formattedSharedProcessMemoryUsage = formatNodeMemoryUsage(
     sharedProcessMemoryUsage
   )
-  const rendererWorkerMemoryUsage = await getRendererWorkerMemoryUsage()
+  const userAgentSpecificMemory = await getPerformanceUserAgentSpecificMemory()
   const totalSent = SharedProcess.state.totalSent
   const totalReceived = SharedProcess.state.totalReceived
   const formattedRendererWorkerMemoryUsage = formatRendererWorkerData({
-    memory: rendererWorkerMemoryUsage.memory,
-    userAgentSpecificMemory: rendererWorkerMemoryUsage.userAgentSpecificMemory,
+    userAgentSpecificMemory,
     sent: totalSent,
     received: totalReceived,
   })
-  const rendererProcessMemoryUsage = await getRendererProcessMemoryUsage()
+  const rendererProcessMemoryUsage = await getPerformanceMemory()
   const formattedRendererProcessMemoryUsage = formatRendererProcessData({
     memoryUsage: rendererProcessMemoryUsage,
   })
 
   const isWorker = typeof WorkerGlobalScope !== 'undefined'
-  console.log({ isWorker, rendererWorkerMemoryUsage })
+  console.log({ isWorker, rendererWorkerMemoryUsage: userAgentSpecificMemory })
   const text = isWorker
     ? `## Shared Process
 
