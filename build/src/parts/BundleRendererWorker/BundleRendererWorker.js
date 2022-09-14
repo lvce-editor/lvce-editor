@@ -44,18 +44,13 @@ export const bundleRendererWorker = async ({
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
-    occurrence: 'PLATFORM',
-    replacement: `'${platform}'`,
-  })
-  await Replace.replace({
-    path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: `ASSET_DIR`,
     replacement: `'${assetDir}'`,
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: 'export const platform = getPlatform()',
-    replacement: `export const platform = 'remote'`,
+    replacement: `export const platform = '${platform}'`,
   })
   // await Replace.replace({
   //   path: `${cachePath}/src/parts/CacheStorage/CacheStorage.js`,

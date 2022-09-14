@@ -70,7 +70,7 @@ export const getLogsDir = () => {
 }
 
 export const getUserSettingsPath = () => {
-  if (getPlatform() === PlatformType.Web) {
+  if (platform === PlatformType.Web) {
     return 'settings'
   }
   return SharedProcess.invoke(
@@ -110,14 +110,14 @@ export const getAssetDir = () => {
     // @ts-ignore
     return ASSET_DIR
   }
-  if (getPlatform() === PlatformType.Electron) {
+  if (platform === PlatformType.Electron) {
     return '../../../../..'
   }
   return ''
 }
 
 export const getRecentlyOpenedPath = () => {
-  if (getPlatform() === PlatformType.Web) {
+  if (platform === PlatformType.Web) {
     return 'recently-opened'
   }
   return SharedProcess.invoke(
