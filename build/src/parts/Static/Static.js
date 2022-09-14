@@ -313,6 +313,11 @@ const applyJsOverrides = async ({ pathPrefix, commitHash }) => {
     replacement: '/dist/rendererWorkerMain.js',
   })
   await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
+    occurrence: '/packages/extension-host-worker-tests',
+    replacement: `/${commitHash}/packages/extension-host-worker-tests`,
+  })
+  await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,
     occurrence: `await SharedProcess.listen()`,
     replacement: ``,
@@ -328,11 +333,6 @@ const applyJsOverrides = async ({ pathPrefix, commitHash }) => {
     replacement: `'${pathPrefix}/${commitHash}'`,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Tokenizer/Tokenizer.js`,
-    occurrence: `/extensions`,
-    replacement: `${pathPrefix}/${commitHash}/extensions`,
-  })
-  await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
     occurrence: 'PLATFORM',
     replacement: `'web'`,
@@ -342,16 +342,6 @@ const applyJsOverrides = async ({ pathPrefix, commitHash }) => {
     occurrence:
       '/packages/extension-host-worker/src/extensionHostWorkerMain.js',
     replacement: `${pathPrefix}/${commitHash}/packages/extension-host-worker/dist/extensionHostWorkerMain.js`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/CacheStorage/CacheStorage.js`,
-    occurrence: `const CACHE_NAME = 'lvce-runtime'`,
-    replacement: `const CACHE_NAME = 'lvce-runtime-${commitHash}'`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,
-    occurrence: `/packages/extension-host-worker-tests/src`,
-    replacement: `/${commitHash}/packages/extension-host-worker-tests/src`,
   })
   // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
   await Replace.replace({
@@ -535,7 +525,7 @@ const generateTestOverviewHtml = (dirents) => {
   let middle = ``
   // TODO properly escape name
   for (const dirent of dirents) {
-    const name = dirent.slice(0, -'.js'.length)
+    const name = dirent
     middle += `      <li><a href="./${name}.html">${name}</a></li>
 `
   }
@@ -545,6 +535,17 @@ const generateTestOverviewHtml = (dirents) => {
 </html>
 `
   return pre + middle + post
+}
+
+const getName = (dirent) => {
+  return dirent.name.slice(0, -'.js'.length)
+}
+const isTestFile = (file) => {
+  return file !== '_all.js'
+}
+
+const getTestFiles = (testFilesRaw) => {
+  return testFilesRaw.map(getName).filter(isTestFile)
 }
 
 const copyTestFiles = async ({ pathPrefix, commitHash }) => {
@@ -561,13 +562,7 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
   const testFilesRaw = await ReadDir.readDir(
     'packages/extension-host-worker-tests/src'
   )
-  const getName = (dirent) => {
-    return dirent.name
-  }
-  const isTestFile = (file) => {
-    return file !== '_all.js'
-  }
-  const testFiles = testFilesRaw.map(getName).filter(isTestFile)
+  const testFiles = getTestFiles(testFilesRaw)
   await Mkdir.mkdir(`build/.tmp/dist/${commitHash}/tests`)
   for (const testFile of testFiles) {
     await Copy.copyFile({
