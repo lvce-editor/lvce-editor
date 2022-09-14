@@ -1,14 +1,14 @@
 import * as Command from '../Command/Command.js'
+import * as DefaultIcon from '../DefaultIcon/DefaultIcon.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as DefaultIcon from '../DefaultIcon/DefaultIcon.js'
 
 export const state = {
   seenFiles: [],
@@ -43,10 +43,9 @@ const getExtension = (file) => {
 }
 
 export const getFileIcon = (file) => {
-  const iconTheme = state.iconTheme
+  const { iconTheme } = state
   const fileNameLower = file.name.toLowerCase()
   if (!iconTheme) {
-    console.log('no icons theme', { file })
     return ''
   }
   const fileNameIcon = iconTheme.fileNames[fileNameLower]

@@ -120,7 +120,6 @@ const getResolvedRootRemote = async (href) => {
   if (resolvedRootFromSessionStorage) {
     return resolvedRootFromSessionStorage
   }
-  console.log('esle')
   return getResolvedRootFromSharedProcess()
 }
 
