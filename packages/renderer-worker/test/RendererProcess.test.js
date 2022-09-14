@@ -62,3 +62,5 @@ test('invoke - error', async () => {
     at Module.invoke`
   )
 })
+
+export {}

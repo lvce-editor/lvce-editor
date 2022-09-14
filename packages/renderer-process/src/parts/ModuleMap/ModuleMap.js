@@ -126,6 +126,9 @@ export const getModuleId = (commandId) => {
       return ModuleId.Window
     case 33111:
       return ModuleId.Workbench
+    case 'ChildWindow.open':
+    case 'ChildWindow.postMessage':
+      return ModuleId.ChildWIndow
     default:
       throw new Error(`command ${commandId} not found`)
   }
