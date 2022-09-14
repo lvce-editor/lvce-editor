@@ -1,5 +1,7 @@
+import { dirname } from 'path'
 import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
+import { FileNotFoundError } from '../Error/FileNotFoundError.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Json from '../Json/Json.js'
 import * as Platform from '../Platform/Platform.js'
@@ -40,13 +42,26 @@ const getRecentlyOpened = async (recentlyOpenedPath) => {
 
 const setRecentlyOpened = async (recentlyOpenedPath, newRecentlyOpened) => {
   const stringified = Json.stringify(newRecentlyOpened)
-  await FileSystem.writeFile(recentlyOpenedPath, stringified)
+  try {
+    await FileSystem.writeFile(recentlyOpenedPath, stringified)
+  } catch (error) {
+    if (error && error instanceof FileNotFoundError) {
+      await FileSystem.mkdir(dirname(recentlyOpenedPath))
+      await FileSystem.writeFile(recentlyOpenedPath, stringified)
+      return
+    }
+    throw error
+  }
 }
 
 export const addPath = async (path) => {
-  Assert.string(path)
-  const recentlyOpenedPath = Platform.getRecentlyOpenedPath()
-  const parsed = await getRecentlyOpened(recentlyOpenedPath)
-  const newRecentlyOpened = addToArrayUnique(parsed, path)
-  await setRecentlyOpened(recentlyOpenedPath, newRecentlyOpened)
+  try {
+    Assert.string(path)
+    const recentlyOpenedPath = Platform.getRecentlyOpenedPath()
+    const parsed = await getRecentlyOpened(recentlyOpenedPath)
+    const newRecentlyOpened = addToArrayUnique(parsed, path)
+    await setRecentlyOpened(recentlyOpenedPath, newRecentlyOpened)
+  } catch (error) {
+    throw new VError(error, `Failed to add path to recently opened`)
+  }
 }

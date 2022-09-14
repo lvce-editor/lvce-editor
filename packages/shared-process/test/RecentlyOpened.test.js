@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import { FileNotFoundError } from '../src/parts/Error/FileNotFoundError.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -96,7 +97,43 @@ test('addPath - error - permission denied', async () => {
     RecentlyOpened.addPath('/test/new-path.txt')
   ).rejects.toThrowError(
     new Error(
-      'Failed to read recently opened: Failed to read file "/test/recently-opened.json": EPERM'
+      'Failed to add path to recently opened: Failed to read recently opened: Failed to read file "/test/recently-opened.json": EPERM'
     )
+  )
+})
+
+test('addPath - error - writeFile - parent folder does not exist', async () => {
+  // @ts-ignore
+  fs.readFile.mockImplementation(() => {
+    return `[]`
+  })
+  let i = 0
+  // @ts-ignore
+  fs.writeFile.mockImplementation((path) => {
+    if (i++ === 0) {
+      throw new NodeError('ENOENT')
+    }
+  })
+  // @ts-ignore
+  fs.mkdir.mockImplementation((path) => {})
+  await RecentlyOpened.addPath('/test/new-path.txt')
+  expect(fs.writeFile).toHaveBeenCalledTimes(2)
+  expect(fs.mkdir).toHaveBeenCalledTimes(1)
+  expect(fs.writeFile).toHaveBeenNthCalledWith(
+    1,
+    '/test/recently-opened.json',
+    `[
+  \"/test/new-path.txt\"
+]
+`
+  )
+  expect(fs.mkdir).toHaveBeenCalledWith('/test', { recursive: true })
+  expect(fs.writeFile).toHaveBeenNthCalledWith(
+    2,
+    '/test/recently-opened.json',
+    `[
+  \"/test/new-path.txt\"
+]
+`
   )
 })
