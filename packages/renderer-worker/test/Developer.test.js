@@ -38,16 +38,7 @@ jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
     }),
   }
 })
-jest.unstable_mockModule(
-  '../src/parts/ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.js',
-  () => {
-    return {
-      open: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
-  }
-)
+
 jest.unstable_mockModule(
   '../src/parts/ElectronWindow/ElectronWindow.js',
   () => {
@@ -69,17 +60,27 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     }),
   }
 })
+jest.unstable_mockModule(
+  '../src/parts/ProcessExplorer/ProcessExplorer.js',
+  () => {
+    return {
+      open: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
 
 const Platform = await import('../src/parts/Platform/Platform.js')
+const ProcessExplorer = await import(
+  '../src/parts/ProcessExplorer/ProcessExplorer.js'
+)
 
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
-)
-const ElectronWindowProcessExplorer = await import(
-  '../src/parts/ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.js'
 )
 const ElectronWindow = await import(
   '../src/parts/ElectronWindow/ElectronWindow.js'
@@ -471,14 +472,14 @@ test('openLogsFolder - error', async () => {
 
 test('open process explorer', async () => {
   // @ts-ignore
-  ElectronWindowProcessExplorer.open.mockImplementation(() => {})
+  ProcessExplorer.open.mockImplementation(() => {})
   await Developer.openProcessExplorer()
-  expect(ElectronWindowProcessExplorer.open).toHaveBeenCalledTimes(1)
+  expect(ProcessExplorer.open).toHaveBeenCalledTimes(1)
 })
 
 test('open process explorer - error', async () => {
   // @ts-ignore
-  ElectronWindowProcessExplorer.open.mockImplementation(async () => {
+  ProcessExplorer.open.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(Developer.openProcessExplorer()).rejects.toThrowError(
