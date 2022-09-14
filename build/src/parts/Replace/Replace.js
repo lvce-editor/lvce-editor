@@ -4,6 +4,9 @@ import * as WriteFile from '../WriteFile/WriteFile.js'
 export const replace = async ({ path, occurrence, replacement }) => {
   try {
     const content = await ReadFile.readFile(path)
+    if (!content.includes(occurrence)) {
+      throw new Error(`occurrence not found ${occurrence}`)
+    }
     const newContent = content.replaceAll(occurrence, replacement)
     await WriteFile.writeFile({
       to: path,

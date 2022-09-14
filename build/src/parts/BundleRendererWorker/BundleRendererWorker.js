@@ -53,20 +53,15 @@ export const bundleRendererWorker = async ({
     replacement: `'${assetDir}'`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Tokenizer/Tokenizer.js`,
-    occurrence: `/extensions`,
-    replacement: `${assetDir}/extensions`,
-  })
-  await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
-    occurrence: 'PLATFORM',
-    replacement: `'remote'`,
+    occurrence: 'export const platform = getPlatform()',
+    replacement: `export const platform = 'remote'`,
   })
-  await Replace.replace({
-    path: `${cachePath}/src/parts/CacheStorage/CacheStorage.js`,
-    occurrence: `const CACHE_NAME = 'lvce-runtime'`,
-    replacement: `const CACHE_NAME = 'lvce-runtime-${commitHash}'`,
-  })
+  // await Replace.replace({
+  //   path: `${cachePath}/src/parts/CacheStorage/CacheStorage.js`,
+  //   occurrence: `const CACHE_NAME = 'lvce-runtime'`,
+  //   replacement: `const CACHE_NAME = 'lvce-runtime-${commitHash}'`,
+  // })
   await BundleJs.bundleJs({
     cwd: cachePath,
     from: `./src/rendererWorkerMain.js`,

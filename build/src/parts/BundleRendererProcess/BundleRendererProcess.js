@@ -37,11 +37,11 @@ export const bundleRendererProcess = async ({
     occurrence: `PLATFORM`,
     replacement: `'${platform}'`,
   })
-  await Replace.replace({
-    path: `${cachePath}/src/parts/RendererWorker/RendererWorker.js`,
-    occurrence: `/src/rendererWorkerMain.js`,
-    replacement: '/dist/rendererWorkerMain.js',
-  })
+  // await Replace.replace({
+  //   path: `${cachePath}/src/parts/RendererWorker/RendererWorker.js`,
+  //   occurrence: `/src/rendererWorkerMain.js`,
+  //   replacement: '/dist/rendererWorkerMain.js',
+  // })
   await BundleJs.bundleJs({
     cwd: cachePath,
     from: `./src/rendererProcessMain.js`,
