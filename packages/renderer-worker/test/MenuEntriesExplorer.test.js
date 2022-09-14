@@ -3,7 +3,7 @@ import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
-test('getMenuEntries - no focused dirent', async () => {
+test('getMenuEntries - no focused dirent', () => {
   ViewletStates.set('Explorer', {
     state: {
       focusedIndex: -1,
@@ -12,21 +12,22 @@ test('getMenuEntries - no focused dirent', async () => {
     factory: {},
   })
   const menuEntries = MenuEntriesExplorer.getMenuEntries()
-  expect(menuEntries).toContainEqual({
-    command: 'Explorer.newFile',
-    flags: MenuItemFlags.None,
-    id: 'newFile',
-    label: 'New File',
-  })
-  expect(menuEntries).toContainEqual({
-    command: 'Explorer.copyPath',
-    flags: MenuItemFlags.RestoreFocus,
-    id: 'copyPath',
-    label: 'Copy Path',
-  })
+  expect(menuEntries).toContainEqual(
+    expect.objectContaining({
+      label: 'New File',
+      flags: MenuItemFlags.None,
+    })
+  )
+  expect(menuEntries).toContainEqual(
+    expect.objectContaining({
+      label: 'Copy Path',
+
+      flags: MenuItemFlags.RestoreFocus,
+    })
+  )
 })
 
-test('getMenuEntries - focused folder', async () => {
+test('getMenuEntries - focused folder', () => {
   ViewletStates.set('Explorer', {
     state: {
       focusedIndex: 0,
@@ -41,16 +42,17 @@ test('getMenuEntries - focused folder', async () => {
     },
     factory: {},
   })
-  const menuEntries = await MenuEntriesExplorer.getMenuEntries()
-  expect(menuEntries).toContainEqual({
-    command: 'Explorer.newFile',
-    flags: MenuItemFlags.None,
-    id: 'newFile',
-    label: 'New File',
-  })
+  const menuEntries = MenuEntriesExplorer.getMenuEntries()
+  expect(menuEntries).toContainEqual(
+    expect.objectContaining({
+      label: 'New File',
+
+      flags: MenuItemFlags.None,
+    })
+  )
 })
 
-test('getMenuEntries - focused file', async () => {
+test('getMenuEntries - focused file', () => {
   ViewletStates.set('Explorer', {
     state: {
       focusedIndex: 0,
@@ -66,21 +68,21 @@ test('getMenuEntries - focused file', async () => {
     factory: {},
   })
   const menuEntries = MenuEntriesExplorer.getMenuEntries()
-  expect(menuEntries).toContainEqual({
-    command: 'Explorer.handleCopy',
-    flags: MenuItemFlags.RestoreFocus,
-    id: 'copy',
-    label: 'Copy',
-  })
-  expect(menuEntries).not.toContainEqual({
-    command: 'Explorer.newFile',
-    flags: MenuItemFlags.None,
-    id: 'newFile',
-    label: 'New File',
-  })
+  expect(menuEntries).toContainEqual(
+    expect.objectContaining({
+      label: 'Copy',
+      flags: MenuItemFlags.RestoreFocus,
+    })
+  )
+  expect(menuEntries).not.toContainEqual(
+    expect.objectContaining({
+      label: 'New File',
+      flags: MenuItemFlags.None,
+    })
+  )
 })
 
-test('getMenuEntries - focused symlink', async () => {
+test('getMenuEntries - focused symlink', () => {
   ViewletStates.set('Explorer', {
     state: {
       focusedIndex: 0,
@@ -95,11 +97,41 @@ test('getMenuEntries - focused symlink', async () => {
     },
     factory: {},
   })
-  const menuEntries = await MenuEntriesExplorer.getMenuEntries()
-  expect(menuEntries).toContainEqual({
-    command: 'Explorer.newFile',
-    flags: MenuItemFlags.None,
-    id: 'newFile',
-    label: 'New File',
+  const menuEntries = MenuEntriesExplorer.getMenuEntries()
+  expect(menuEntries).toContainEqual(
+    expect.objectContaining({
+      label: 'New File',
+      flags: MenuItemFlags.None,
+    })
+  )
+})
+
+test('getMenuEntries - root', () => {
+  ViewletStates.set('Explorer', {
+    state: {
+      focusedIndex: -1,
+      dirents: [
+        {
+          name: 'link',
+          depth: 1,
+          type: 'symlink',
+          path: '/link',
+        },
+      ],
+    },
+    factory: {},
   })
+  const menuEntries = MenuEntriesExplorer.getMenuEntries()
+  expect(menuEntries).toContainEqual(
+    expect.objectContaining({
+      label: 'New File',
+      flags: MenuItemFlags.None,
+    })
+  )
+  expect(menuEntries).not.toContainEqual(
+    expect.objectContaining({
+      label: 'Copy',
+      flags: MenuItemFlags.RestoreFocus,
+    })
+  )
 })
