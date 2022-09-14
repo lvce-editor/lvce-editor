@@ -1,7 +1,7 @@
-import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as I18nString from '../I18NString/I18NString.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 
 export const UiStrings = {
   NewFile: 'New File',
@@ -18,96 +18,106 @@ export const UiStrings = {
   Delete: 'Delete',
 }
 
-const ALL_ENTRIES = [
-  {
-    id: 'newFile',
-    label: I18nString.i18nString(UiStrings.NewFile),
-    flags: MenuItemFlags.None,
-    command: 'Explorer.newFile',
-  },
-  {
-    id: 'newFolder',
-    label: I18nString.i18nString(UiStrings.NewFolder),
-    flags: MenuItemFlags.None,
-    command: 'Explorer.newFolder',
-  },
-  {
-    id: 'openContainingFolder',
-    label: I18nString.i18nString(UiStrings.OpenContainingFolder),
-    flags: MenuItemFlags.RestoreFocus,
-    command: 'Explorer.openContainingFolder',
-  },
-  {
-    id: 'openInIntegratedTerminal',
-    label: I18nString.i18nString(UiStrings.OpenInIntegratedTerminal),
-    flags: MenuItemFlags.None,
-    command: /* TODO */ -1,
-  },
-  {
-    id: '',
-    label: I18nString.i18nString(UiStrings.Separator),
-    flags: MenuItemFlags.Separator,
-    command: /* TODO */ -1,
-  },
-  {
-    id: 'cut',
-    label: I18nString.i18nString(UiStrings.Cut),
-    flags: MenuItemFlags.RestoreFocus,
-    command: /* TODO */ -1,
-  },
-  {
-    id: 'copy',
-    label: I18nString.i18nString(UiStrings.Copy),
-    flags: MenuItemFlags.RestoreFocus,
-    command: 'Explorer.handleCopy',
-  },
-  {
-    id: 'paste',
-    label: I18nString.i18nString(UiStrings.Paste),
-    flags: MenuItemFlags.None,
-    command: 'Explorer.handlePaste',
-  },
-  {
-    id: '',
-    label: I18nString.i18nString(UiStrings.Separator),
-    flags: MenuItemFlags.Separator,
-    command: /* TODO */ -1,
-  },
-  {
-    id: 'copyPath',
-    label: I18nString.i18nString(UiStrings.CopyPath),
-    flags: MenuItemFlags.RestoreFocus,
-    command: 'Explorer.copyPath',
-  },
-  {
-    id: 'copyRelativePath',
-    label: I18nString.i18nString(UiStrings.CopyRelativePath),
-    flags: MenuItemFlags.RestoreFocus,
-    command: 'Explorer.copyRelativePath',
-  },
-  {
-    id: '',
-    label: I18nString.i18nString(UiStrings.Separator),
-    flags: MenuItemFlags.Separator,
-    command: /* TODO */ -1,
-  },
-  {
-    id: 'rename',
-    label: I18nString.i18nString(UiStrings.Rename),
-    flags: MenuItemFlags.None,
-    command: 'Explorer.renameDirent',
-  },
-  {
-    id: 'delete',
-    label: I18nString.i18nString(UiStrings.Delete),
-    flags: MenuItemFlags.None,
-    command: 'Explorer.removeDirent',
-  },
-]
-
-const isFileEntry = (entry) => {
-  return entry.id !== 'newFile' && entry.id !== 'newFolder'
+const menuEntryNewFile = {
+  id: 'newFile',
+  label: I18nString.i18nString(UiStrings.NewFile),
+  flags: MenuItemFlags.None,
+  command: 'Explorer.newFile',
 }
+
+const menuEntryNewFolder = {
+  id: 'newFolder',
+  label: I18nString.i18nString(UiStrings.NewFolder),
+  flags: MenuItemFlags.None,
+  command: 'Explorer.newFolder',
+}
+
+const menuEntryOpenContainingFolder = {
+  id: 'openContainingFolder',
+  label: I18nString.i18nString(UiStrings.OpenContainingFolder),
+  flags: MenuItemFlags.RestoreFocus,
+  command: 'Explorer.openContainingFolder',
+}
+
+const menuEntryOpenInIntegratedTerminal = {
+  id: 'openInIntegratedTerminal',
+  label: I18nString.i18nString(UiStrings.OpenInIntegratedTerminal),
+  flags: MenuItemFlags.None,
+  command: /* TODO */ -1,
+}
+
+const menuEntrySeparator = {
+  id: '',
+  label: I18nString.i18nString(UiStrings.Separator),
+  flags: MenuItemFlags.Separator,
+  command: /* TODO */ -1,
+}
+
+const menuEntryCut = {
+  id: 'cut',
+  label: I18nString.i18nString(UiStrings.Cut),
+  flags: MenuItemFlags.RestoreFocus,
+  command: /* TODO */ -1,
+}
+
+const menuEntryCopy = {
+  id: 'copy',
+  label: I18nString.i18nString(UiStrings.Copy),
+  flags: MenuItemFlags.RestoreFocus,
+  command: 'Explorer.handleCopy',
+}
+
+const menuEntryPaste = {
+  id: 'paste',
+  label: I18nString.i18nString(UiStrings.Paste),
+  flags: MenuItemFlags.None,
+  command: 'Explorer.handlePaste',
+}
+
+const menuEntryCopyPath = {
+  id: 'copyPath',
+  label: I18nString.i18nString(UiStrings.CopyPath),
+  flags: MenuItemFlags.RestoreFocus,
+  command: 'Explorer.copyPath',
+}
+
+const menuEntryCopyRelativePath = {
+  id: 'copyRelativePath',
+  label: I18nString.i18nString(UiStrings.CopyRelativePath),
+  flags: MenuItemFlags.RestoreFocus,
+  command: 'Explorer.copyRelativePath',
+}
+
+const menuEntryRename = {
+  id: 'rename',
+  label: I18nString.i18nString(UiStrings.Rename),
+  flags: MenuItemFlags.None,
+  command: 'Explorer.renameDirent',
+}
+
+const menuEntryDelete = {
+  id: 'delete',
+  label: I18nString.i18nString(UiStrings.Delete),
+  flags: MenuItemFlags.None,
+  command: 'Explorer.removeDirent',
+}
+
+const ALL_ENTRIES = [
+  menuEntryNewFile,
+  menuEntryNewFolder,
+  menuEntryOpenContainingFolder,
+  menuEntryOpenInIntegratedTerminal,
+  menuEntrySeparator,
+  menuEntryCut,
+  menuEntryCopy,
+  menuEntryPaste,
+  menuEntrySeparator,
+  menuEntryCopyPath,
+  menuEntryCopyRelativePath,
+  menuEntrySeparator,
+  menuEntryRename,
+  menuEntryDelete,
+]
 
 // TODO there are two possible ways of getting the focused dirent of explorer
 // 1. directly access state of explorer (bad because it directly accesses state of another component)
@@ -124,17 +134,44 @@ const getMenuEntriesDirectory = () => {
   return ALL_ENTRIES
 }
 const getMenuEntriesFile = () => {
-  return ALL_ENTRIES.filter(isFileEntry)
+  return [
+    menuEntryOpenContainingFolder,
+    menuEntryOpenInIntegratedTerminal,
+    menuEntrySeparator,
+    menuEntryCut,
+    menuEntryCopy,
+    menuEntryPaste,
+    menuEntrySeparator,
+    menuEntryCopyPath,
+    menuEntryCopyRelativePath,
+    menuEntrySeparator,
+    menuEntryRename,
+    menuEntryDelete,
+  ]
 }
 
 const getMenuEntriesDefault = () => {
   return ALL_ENTRIES
 }
 
+const getMenuEntriesRoot = () => {
+  return [
+    menuEntryNewFile,
+    menuEntryNewFolder,
+    menuEntryOpenContainingFolder,
+    menuEntryOpenInIntegratedTerminal,
+    menuEntrySeparator,
+    menuEntryPaste,
+    menuEntrySeparator,
+    menuEntryCopyPath,
+    menuEntryCopyRelativePath,
+  ]
+}
+
 export const getMenuEntries = () => {
   const focusedDirent = getFocusedDirent()
   if (!focusedDirent) {
-    return ALL_ENTRIES
+    return getMenuEntriesRoot()
   }
   switch (focusedDirent.type) {
     case DirentType.Directory:
