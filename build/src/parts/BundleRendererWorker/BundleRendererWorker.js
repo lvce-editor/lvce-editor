@@ -18,7 +18,7 @@ export const bundleRendererWorker = async ({
     to: Path.join(cachePath, 'static', 'js'),
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/Developer/Developer.js`,
+    path: `${cachePath}/src/parts/PrettyBytes/PrettyBytes.js`,
     occurrence: `../../../../../static/js/pretty-bytes.js`,
     replacement: `../../../static/js/pretty-bytes.js`,
   })
