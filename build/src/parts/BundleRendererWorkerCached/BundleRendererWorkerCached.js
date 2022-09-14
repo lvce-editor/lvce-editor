@@ -23,7 +23,7 @@ export const bundleRendererWorkerCached = async ({
     )
     await BundleRendererWorker.bundleRendererWorker({
       cachePath: rendererWorkerCachePath,
-      platform: platform,
+      platform,
       commitHash,
       assetDir,
     })

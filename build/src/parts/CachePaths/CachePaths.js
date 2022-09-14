@@ -8,7 +8,9 @@ const getRendererProcessCacheHash = async (extraContents) => {
       'build/src/parts/BundleElectronApp/BundleElectronApp.js',
       'build/src/parts/BuildServer/BuildServer.js',
       'build/src/parts/BundleJs/BundleJs.js',
+      'build/src/parts/CachePaths/CachePaths.js',
       'build/src/parts/BundleRendererProcess/BundleRendererProcess.js',
+      'build/src/parts/BundleRendererProcessCached/BundleRendererProcessCached.js',
     ],
     extraContents
   )
@@ -33,7 +35,9 @@ const getRendererWorkerCacheHash = async (extraContents) => {
       'build/src/parts/BundleElectronApp/BundleElectronApp.js',
       'build/src/parts/BuildServer/BuildServer.js',
       'build/src/parts/BundleJs/BundleJs.js',
+      'build/src/parts/CachePaths/CachePaths.js',
       'build/src/parts/BundleRendererWorker/BundleRendererWorker.js',
+      'build/src/parts/BundleRendererWorkerCached/BundleRendererWorkerCached.js',
     ],
     extraContents
   )
