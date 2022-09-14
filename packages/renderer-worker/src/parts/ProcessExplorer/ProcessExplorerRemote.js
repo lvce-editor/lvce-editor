@@ -8,10 +8,13 @@ export const state = {
 }
 
 export const open = async () => {
-  console.log('open remote')
   const windowId = await Window.open(
     '/process-explorer/index.html',
     '_blank',
     params
   )
+  const memory = performance.memory
+  setInterval(async () => {
+    await Window.postMessage(windowId, 'abc' + Math.random())
+  }, 1000)
 }
