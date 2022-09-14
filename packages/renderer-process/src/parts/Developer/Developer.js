@@ -54,19 +54,3 @@ export const showState = async () => {
   }
   console.info(state)
 }
-
-// TODO use performance.measureUserAgentSpecificMemory() instead
-// since performance.memory is deprecated
-
-export const getMemoryUsage = (callbackId) => {
-  // @ts-ignore
-  const memory = performance.memory
-  if (!memory) {
-    return undefined
-  }
-  return {
-    jsHeapSizeLimit: memory.jsHeapSizeLimit,
-    totalJSHeapSize: memory.totalJSHeapSize,
-    usedJSHeapSize: memory.usedJSHeapSize,
-  }
-}

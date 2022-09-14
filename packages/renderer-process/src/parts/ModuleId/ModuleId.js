@@ -28,3 +28,4 @@ export const ViewService = 27
 export const WebStorage = 28
 export const Window = 29
 export const Workbench = 30
+export const Performance = 31

@@ -327,19 +327,14 @@ const formatRendererProcessData = ({ memoryUsage }) => {
 
 const getRendererWorkerMemoryUsage = async () => {
   let userAgentSpecificMemory
-  let memory
-  // @ts-ignore
-  if (performance && performance.memory) {
-    // @ts-ignore
-    memory = performance.memory
-  }
   // @ts-ignore
   if (performance && performance.measureUserAgentSpecificMemory) {
+    console.log('measure it')
     // @ts-ignore
     userAgentSpecificMemory = await performance.measureUserAgentSpecificMemory()
   }
+  console.log({ userAgentSpecificMemory })
   return {
-    memory,
     userAgentSpecificMemory,
   }
 }
@@ -350,16 +345,9 @@ const getSharedProcessMemoryUsage = () => {
   )
 }
 
-const getRendererProcessMemoryUsage = async () => {
-  const memoryUsage = await RendererProcess.invoke(
-    /* Developer.getMemoryUsage */ 284
-  )
-  return memoryUsage
-}
-
-const getExtensionHostMemoryUsage = async () => {
-  return SharedProcess.invoke(
-    /* ExtensionHost.getMemoryUsage */ 'ExtensionHost.getMemoryUsage'
+const getRendererProcessMemoryUsage = () => {
+  return RendererProcess.invoke(
+    /* Developer.getMemoryUsage */ 'Developer.getMemoryUsage'
   )
 }
 
@@ -368,10 +356,6 @@ export const getMemoryUsageContent = async () => {
   const sharedProcessMemoryUsage = await getSharedProcessMemoryUsage()
   const formattedSharedProcessMemoryUsage = formatNodeMemoryUsage(
     sharedProcessMemoryUsage
-  )
-  const extensionHostMemoryUsage = await getExtensionHostMemoryUsage()
-  const formattedExtensionHostMemoryUsage = formatNodeMemoryUsage(
-    extensionHostMemoryUsage
   )
   const rendererWorkerMemoryUsage = await getRendererWorkerMemoryUsage()
   const totalSent = SharedProcess.state.totalSent
@@ -388,14 +372,12 @@ export const getMemoryUsageContent = async () => {
   })
 
   const isWorker = typeof WorkerGlobalScope !== 'undefined'
+  console.log({ isWorker, rendererWorkerMemoryUsage })
   const text = isWorker
     ? `## Shared Process
 
 ${formattedSharedProcessMemoryUsage}
 
-## Extension Host
-
-${formattedExtensionHostMemoryUsage}
 
 ## Renderer Worker
 
@@ -413,31 +395,26 @@ ${formattedRendererWorkerMemoryUsage}
 
 ${formattedSharedProcessMemoryUsage}
 
-## Extension Host
-
-${formattedExtensionHostMemoryUsage}
-
-
 `
   return text
 }
 
-export const showMemoryUsage = async () => {
-  await Command.execute(
+export const showMemoryUsage = () => {
+  return Command.execute(
     /* Main.openUri */ 'Main.openUri',
     /* uri */ 'app://memory-usage'
   )
 }
 
 // TODO not sure if this function is useful
-export const allocateMemoryInSharedProcess = async () => {
-  await SharedProcess.invoke(
+export const allocateMemoryInSharedProcess = () => {
+  return SharedProcess.invoke(
     /* Developer.allocateMemoryInSharedProcess */ 'Developer.allocateMemoryInSharedProcess'
   )
 }
 
-export const crashSharedProcess = async () => {
-  await SharedProcess.invoke(
+export const crashSharedProcess = () => {
+  return SharedProcess.invoke(
     /* Developer.crashSharedProcess */ 'Developer.crashSharedProcess'
   )
 }
@@ -446,8 +423,8 @@ export const crashRendererProcess = () => {}
 
 export const crashRendererWorker = () => {}
 
-export const crashMainProcess = async () => {
-  await SharedProcess.invoke(
+export const crashMainProcess = () => {
+  return SharedProcess.invoke(
     /* Electron.crashMainProcess */ 'Electron.crashMainProcess'
   )
 }
