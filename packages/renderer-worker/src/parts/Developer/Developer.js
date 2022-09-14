@@ -1,4 +1,3 @@
-import prettyBytes from '../../../../../static/js/pretty-bytes.js'
 import * as ColorTheme from '../ColorTheme/ColorTheme.js'
 import * as Command from '../Command/Command.js'
 import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
@@ -8,10 +7,7 @@ import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as ProcessExplorer from '../ProcessExplorer/ProcessExplorer.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-
-const formatBytes = (bytes) => {
-  return prettyBytes(bytes)
-}
+import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
 
 // TODO vscode's version of this is shorter
 // if it is a bottleneck, check performance of this function (not very optimized now)
@@ -271,7 +267,7 @@ const formatNodeMemoryUsage = (memoryUsage) => {
   }
   const header = ['Name', 'Memory']
   const rows = Object.entries(memoryUsage).map(([key, value]) => {
-    return [key, formatBytes(value)]
+    return [key, PrettyBytes.formatBytes(value)]
   })
   return toMarkdownTable(header, rows)
 }
@@ -287,25 +283,28 @@ const formatRendererWorkerData = ({
     const header = ['Name', 'Value']
     const rows = []
     if (userAgentSpecificMemory.bytes) {
-      rows.push(['Bytes', formatBytes(userAgentSpecificMemory.bytes)])
+      rows.push([
+        'Bytes',
+        PrettyBytes.formatBytes(userAgentSpecificMemory.bytes),
+      ])
     }
     if (userAgentSpecificMemory.breakdown) {
       for (const item of userAgentSpecificMemory.breakdown) {
         if (!item.bytes) {
           continue
         }
-        rows.push([item.types[0] || 'n/a', formatBytes(item.bytes)])
+        rows.push([item.types[0] || 'n/a', PrettyBytes.formatBytes(item.bytes)])
       }
     }
     content += toMarkdownTable(header, rows)
   } else if (memory) {
     const header = ['Name', 'Value']
     const rows = [
-      ['jsHeapSizeLimit', formatBytes(memory.jsHeapSizeLimit)],
-      ['Total JS HeapSize', formatBytes(memory.totalJSHeapSize)],
-      ['Used JS HeapSize', formatBytes(memory.usedJSHeapSize)],
-      ['Sent', formatBytes(sent)],
-      ['Received', formatBytes(received)],
+      ['jsHeapSizeLimit', PrettyBytes.formatBytes(memory.jsHeapSizeLimit)],
+      ['Total JS HeapSize', PrettyBytes.formatBytes(memory.totalJSHeapSize)],
+      ['Used JS HeapSize', PrettyBytes.formatBytes(memory.usedJSHeapSize)],
+      ['Sent', PrettyBytes.formatBytes(sent)],
+      ['Received', PrettyBytes.formatBytes(received)],
     ]
     content += toMarkdownTable(header, rows)
   }
@@ -318,9 +317,9 @@ const formatRendererProcessData = ({ memoryUsage }) => {
   }
   const header = ['Name', 'Value']
   const rows = [
-    ['jsHeapSizeLimit', formatBytes(memoryUsage.jsHeapSizeLimit)],
-    ['Total JS HeapSize', formatBytes(memoryUsage.totalJSHeapSize)],
-    ['Used JS HeapSize', formatBytes(memoryUsage.usedJSHeapSize)],
+    ['jsHeapSizeLimit', PrettyBytes.formatBytes(memoryUsage.jsHeapSizeLimit)],
+    ['Total JS HeapSize', PrettyBytes.formatBytes(memoryUsage.totalJSHeapSize)],
+    ['Used JS HeapSize', PrettyBytes.formatBytes(memoryUsage.usedJSHeapSize)],
   ]
   return toMarkdownTable(header, rows)
 }
