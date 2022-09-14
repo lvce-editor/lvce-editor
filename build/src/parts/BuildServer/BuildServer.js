@@ -237,7 +237,7 @@ const copySharedProcessFiles = async () => {
   })
   await Replace.replace({
     path: 'build/.tmp/server/shared-process/src/parts/Platform/Platform.js',
-    occurrence: `Path.join(getAppDir(), 'static', 'config', 'defaultSettings.json')`,
+    occurrence: `Path.join(appDir, 'static', 'config', 'defaultSettings.json')`,
     replacement: `Path.join(Root.root, 'config', 'defaultSettings.json')`,
   })
   await Replace.replace({
