@@ -2,13 +2,13 @@ const Electron = require('electron')
 const Window = require('../ElectronWindow/ElectronWindow.js')
 const Assert = require('../Assert/Assert.js')
 const Platform = require('../Platform/Platform.js')
-const { setTimeout } = require('timers/promises')
+const Timout = require('../Timeout/Timeout.js')
 
 /**
  * artificial timeout to work around electron bug https://github.com/electron/electron/issues/31449
  */
 const enableElectronFreezeDesktopWorkaround = async () => {
-  await setTimeout(140)
+  await Timout.setTimeout(140)
 }
 
 exports.showOpenDialog = async (title, properties) => {
