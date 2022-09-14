@@ -3,15 +3,14 @@ import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as QuickPickEveryThing from '../QuickPick/QuickPickEverything.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as InputEventType from '../InputEventType/InputEventType.js'
+import * as QuickPickModule from '../QuickPickModule/QuickPickModule.js'
+
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
 
 // TODO cache quick pick items -> don't send every time from renderer worker to renderer process
 // maybe cache by id opening commands -> has all commands cached
 // when filtering -> sends all indices (uint16Array) to renderer process instead of filtered/sorted command objects
-
-const RECENT_PICKS_MAX_SIZE = 3
-const ITEM_HEIGHT = 22
 
 // state:
 // 1. default
@@ -112,33 +111,6 @@ const getFilteredItems = (state, picks, filterValue) => {
   // return toDisplayPicks(slicedPicks)
 }
 
-const getProvider = (uri) => {
-  switch (uri) {
-    case 'quickPick://commandPalette':
-      return import('../QuickPick/QuickPickCommand.js')
-    case 'quickPick://file':
-      return import('../QuickPick/QuickPickFile.js')
-    case 'quickPick://everything':
-      return import('../QuickPick/QuickPickEverything.js')
-    case 'quickPick://noop':
-      return import('../QuickPick/QuickPickNoop.js')
-    case 'quickPick://number':
-      return import('../QuickPick/QuickPickNumber.js')
-    case 'quickPick://recent':
-      return import('../QuickPick/QuickPickOpenRecent.js')
-    case 'quickPick://color-theme':
-      return import('../QuickPick/QuickPickColorTheme.js')
-    case 'quickPick://symbol':
-      return import('../QuickPick/QuickPickSymbol.js')
-    case 'quickPick://view':
-      return import('../QuickPick/QuickPickView.js')
-    case 'quickPick://workspace-symbol':
-      return import('../QuickPick/QuickPickWorkspaceSymbol.js')
-    default:
-      throw new Error(`unsupported quick pick type: ${uri}`)
-  }
-}
-
 const getDefaultValue = (uri) => {
   switch (uri) {
     case 'quickPick://everything':
@@ -151,7 +123,7 @@ const getDefaultValue = (uri) => {
 export const loadContent = async (state) => {
   const uri = state.uri
   const value = getDefaultValue(uri)
-  const provider = await getProvider(uri)
+  const provider = await QuickPickModule.load(uri)
   const newPicks = await provider.getPicks(value)
   Assert.array(newPicks)
   const filterValue = provider.getFilterValue(value)
@@ -540,14 +512,11 @@ const renderItems = {
         /* method */ 'showNoResults',
       ]
     }
-    console.log('minLineY', newState.minLineY)
-    console.log('maxLineY', newState.maxLineY)
     const visibleItems = getVisible(
       newState.items,
       newState.minLineY,
       newState.maxLineY
     )
-    console.log({ visibleItems, items: newState.items })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
