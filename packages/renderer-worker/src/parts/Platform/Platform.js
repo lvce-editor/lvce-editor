@@ -147,8 +147,22 @@ export const getCacheName = () => {
   return 'lvce-runtime'
 }
 
-export const getTestPath = () => {
+const getTestPathRemote = () => {
   return SharedProcess.invoke(/* Platform.getTestPath */ 'Platform.getTestPath')
+}
+
+const getTestPathWeb = () => {
+  return '/packages/extension-host-worker-tests'
+}
+
+export const getTestPath = () => {
+  switch (platform) {
+    case PlatformType.Electron:
+    case PlatformType.Remote:
+      return getTestPathRemote()
+    case PlatformType.Web:
+      return getTestPathWeb()
+  }
 }
 
 export const getNodePath = () => {
