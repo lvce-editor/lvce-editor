@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as MouseEventTypes from '../src/parts/MouseEventType/MouseEventType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -102,6 +103,43 @@ test('event - click on menu item', () => {
   )
 })
 
+test('event - richt click on menu item', () => {
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const titleBarMenuEntries = [
+    {
+      id: 'file',
+      name: 'File',
+      children: [],
+    },
+    {
+      id: 'edit',
+      name: 'Edit',
+      children: [],
+    },
+    {
+      id: 'selection',
+      name: 'Selection',
+      children: [],
+    },
+  ]
+  const $TitleBarMenuBar = TitleBarMenuBar.create()
+  const state = {
+    $TitleBarMenu: $TitleBarMenuBar,
+  }
+  TitleBarMenuBar.setEntries(state, titleBarMenuEntries)
+  const event = new MouseEvent('mousedown', {
+    clientX: 27,
+    clientY: 28,
+    bubbles: true,
+    cancelable: true,
+    button: MouseEventTypes.RightClick,
+  })
+  state.$TitleBarMenu.children[1].dispatchEvent(event)
+  expect(event.defaultPrevented).toBe(false)
+  expect(RendererWorker.send).not.toHaveBeenCalled()
+})
+
 test.skip('event - key - ArrowDown', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
@@ -122,7 +160,7 @@ test.skip('event - key - ArrowDown', () => {
       children: [],
     },
   ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create(titleBarMenuEntries)
+  const $TitleBarMenuBar = TitleBarMenuBar.create()
   $TitleBarMenuBar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowDown',
@@ -151,7 +189,7 @@ test.skip('event - key - ArrowUp', () => {
       children: [],
     },
   ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create(titleBarMenuEntries)
+  const $TitleBarMenuBar = TitleBarMenuBar.create()
   $TitleBarMenuBar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowUp',
@@ -180,7 +218,7 @@ test.skip('event - key - Enter', () => {
       children: [],
     },
   ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create(titleBarMenuEntries)
+  const $TitleBarMenuBar = TitleBarMenuBar.create()
   $TitleBarMenuBar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Enter',
@@ -209,7 +247,7 @@ test.skip('event - key - Space', () => {
       children: [],
     },
   ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create(titleBarMenuEntries)
+  const $TitleBarMenuBar = TitleBarMenuBar.create()
   $TitleBarMenuBar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: ' ',
@@ -238,7 +276,7 @@ test.skip('event - key - Home', () => {
       children: [],
     },
   ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create(titleBarMenuEntries)
+  const $TitleBarMenuBar = TitleBarMenuBar.create()
   $TitleBarMenuBar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Home',
@@ -267,7 +305,7 @@ test.skip('event - key - End', () => {
       children: [],
     },
   ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create(titleBarMenuEntries)
+  const $TitleBarMenuBar = TitleBarMenuBar.create()
   $TitleBarMenuBar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'End',
@@ -296,7 +334,7 @@ test.skip('event - key - Escape', () => {
       children: [],
     },
   ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create(titleBarMenuEntries)
+  const $TitleBarMenuBar = TitleBarMenuBar.create()
   $TitleBarMenuBar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Escape',
