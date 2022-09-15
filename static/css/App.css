@@ -41,6 +41,7 @@
 @import './parts/BackDrop.css';
 @import './parts/Animation.css';
 @import './parts/ViewletReferences.css';
+@import './parts/ViewletKeyBindings.css';
 
 /* focus css (can be overridden by components) */
 @import './parts/Focus.css';

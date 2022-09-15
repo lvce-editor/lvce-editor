@@ -5,10 +5,12 @@ import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
-import * as Workspace from '../Workspace/Workspace.js'
+import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Workspace from '../Workspace/Workspace.js'
+
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
 // interface Editor {
@@ -217,13 +219,6 @@ export const contentLoaded = async (state) => {
   await ViewletManager.load(instance)
 }
 
-const getId = (uri) => {
-  if (uri.endsWith('.png')) {
-    return 'EditorImage'
-  }
-  return 'EditorText'
-}
-
 export const openUri = async (state, uri, focus = true) => {
   Assert.object(state)
   Assert.string(uri)
@@ -231,7 +226,7 @@ export const openUri = async (state, uri, focus = true) => {
   const left = state.left
   const width = state.width
   const height = state.height - TAB_HEIGHT
-  const id = getId(uri)
+  const id = ViewletMap.getId(uri)
 
   for (const editor of state.editors) {
     if (editor.uri === uri) {

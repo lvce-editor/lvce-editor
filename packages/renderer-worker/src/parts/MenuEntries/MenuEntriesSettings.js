@@ -8,6 +8,8 @@ export const UiStrings = {
   CheckForUpdates: 'Check For Updates',
 }
 
+const keyBindingsUri = 'app://keybindings'
+
 export const getMenuEntries = () => {
   return [
     {
@@ -20,7 +22,8 @@ export const getMenuEntries = () => {
       id: 'keyboardShortcuts',
       label: I18nString.i18nString(UiStrings.KeyboardShortcuts),
       flags: MenuItemFlags.None,
-      command: /* TODO */ -1,
+      command: 'Main.openUri',
+      args: [keyBindingsUri],
     },
     {
       id: 'colorTheme',
