@@ -1,4 +1,5 @@
 import { focusIndex } from './ViewletExplorerFocusIndex.js'
+import * as Arrays from '../Arrays/Arrays.js'
 
 export const focusPrevious = (state) => {
   const { focusedIndex, dirents } = state
@@ -7,7 +8,7 @@ export const focusPrevious = (state) => {
       if (dirents.length === 0) {
         return state
       }
-      return focusIndex(state, dirents.length - 1)
+      return focusIndex(state, Arrays.lastIndex(dirents))
     case 0:
       return state
     default:

@@ -10,6 +10,7 @@ import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Arrays from '../Arrays/Arrays.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -42,17 +43,18 @@ const COLUMN_WIDTH = 9 // TODO compute this automatically once
 //   readonly type: 'video'
 // }
 
-const getMainEditor = (state) => {
+const getMainEditors = (state) => {
   if (
     !state ||
     !state.instances ||
-    !state.instances.EditorText ||
-    !state.instances.EditorText.state
+    !state.instances.Main ||
+    !state.instances.Main.state ||
+    !state.instances.Main.state.editors
   ) {
-    return undefined
+    return []
   }
   // TODO check that type is string (else runtime error occurs and page is blank)
-  return state.instances.EditorText.state
+  return state.instances.Main.state.editors.slice(-1)
 }
 
 const restoreEditors = async (state) => {
@@ -157,7 +159,6 @@ const findEditorWithUri = (editors, uri) => {
 }
 
 const TAB_HEIGHT = 35
-const id = 'EditorText'
 
 const getRestoredEditors = async () => {
   if (Workspace.isTest()) {
@@ -167,15 +168,13 @@ const getRestoredEditors = async () => {
     /* LocalStorage.getJson */ 'LocalStorage.getJson',
     /* key */ 'stateToSave'
   )
-  const restoredEditor = getMainEditor(savedState)
-  if (!restoredEditor) {
-    return []
-  }
-  return [restoredEditor]
+  const restoredEditors = getMainEditors(savedState)
+  return restoredEditors
 }
 
 export const loadContent = async (state) => {
   const editors = await getRestoredEditors()
+  console.log({ editors })
   // @ts-ignore
 
   LifeCycle.once(LifeCycle.PHASE_TWELVE, hydrateLazy)
@@ -189,11 +188,12 @@ export const contentLoaded = async (state) => {
   if (state.editors.length === 0) {
     return
   }
-  const editor = state.editors[0]
+  const editor = Arrays.last(state.editors)
   const top = state.top + TAB_HEIGHT
   const left = state.left
   const width = state.width
   const height = state.height - TAB_HEIGHT
+  const id = ViewletMap.getId(editor.uri)
   const instance = ViewletManager.create(
     ViewletModule.load,
     id,
@@ -334,7 +334,9 @@ export const closeAllEditors = (state) => {
 export const dispose = () => {}
 
 export const closeEditor = async (state, index) => {
+  console.log('close', index, 'of', state.editors)
   if (state.editors.length === 1) {
+    console.log('close all')
     closeAllEditors(state)
     return
   }
@@ -344,9 +346,11 @@ export const closeEditor = async (state, index) => {
   const height = state.height
   if (index === state.activeIndex) {
     const oldActiveIndex = state.activeIndex
+    const oldEditor = state.editors[index]
     state.editors.splice(index, 1)
     const newActiveIndex = index === 0 ? index : index - 1
-    Viewlet.dispose('EditorText')
+    const id = ViewletMap.getId(oldEditor.uri)
+    Viewlet.dispose(id)
     state.activeIndex = newActiveIndex
     state.focusedIndex = newActiveIndex
     // const instance = Viewlet.create(id, 'uri', left, top, width, height)
@@ -362,7 +366,7 @@ export const closeEditor = async (state, index) => {
     //   columnWidth: COLUMN_WIDTH,
     // })
     await RendererProcess.invoke(
-      /* Main.closeOneTab */ 2164,
+      /* Main.closeOneTab */ 'Main.closeOneTab',
       /* closeIndex */ oldActiveIndex,
       /* focusIndex */ newActiveIndex
     )
@@ -410,6 +414,7 @@ export const focusIndex = (state, index) => {
   const left = state.left
   const width = state.width
   const height = state.height - TAB_HEIGHT
+  const id = ViewletMap.getId(editor.uri)
 
   const viewlet = ViewletManager.create(
     ViewletModule.load,
