@@ -177,7 +177,7 @@ export const appendViewlet = (parentId, childId, focus) => {
     childInstance.factory.name,
     childInstance.state.$Viewlet
   )
-  if (focus) {
+  if (focus && childInstance.factory.focus) {
     childInstance.factory.focus(childInstance.state)
   }
 }

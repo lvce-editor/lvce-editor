@@ -217,6 +217,13 @@ export const contentLoaded = async (state) => {
   await ViewletManager.load(instance)
 }
 
+const getId = (uri) => {
+  if (uri.endsWith('.png')) {
+    return 'EditorImage'
+  }
+  return 'EditorText'
+}
+
 export const openUri = async (state, uri, focus = true) => {
   Assert.object(state)
   Assert.string(uri)
@@ -224,9 +231,11 @@ export const openUri = async (state, uri, focus = true) => {
   const left = state.left
   const width = state.width
   const height = state.height - TAB_HEIGHT
+  const id = getId(uri)
 
   for (const editor of state.editors) {
     if (editor.uri === uri) {
+      // TODO if the editor is already open, nothing needs to be done
       const instance = ViewletManager.create(
         ViewletModule.load,
         id,
@@ -262,7 +271,6 @@ export const openUri = async (state, uri, focus = true) => {
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'openViewlet',
-    /* id */ id,
     /* tabLabel */ tabLabel,
     /* tabTitle */ tabTitle,
     /* oldActiveIndex */ oldActiveIndex
