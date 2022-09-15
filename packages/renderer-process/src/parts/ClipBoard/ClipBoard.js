@@ -1,4 +1,3 @@
-import { VError } from '../VError/VError.js'
 import * as Assert from '../Assert/Assert.js'
 
 export const readText = async () => {
