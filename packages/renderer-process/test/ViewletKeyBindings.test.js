@@ -20,15 +20,10 @@ test('setKeyBindings', () => {
       when: 'focus.editorCompletions',
     },
   ])
-  const { $Viewlet } = state
-  expect($Viewlet.textContent).toBe(`[
-  {
-    \"key\": \"Enter\",
-    \"command\": \"EditorCompletion.selectCurrent\",
-    \"when\": \"focus.editorCompletions\"
-  }
-]
-`)
+  const { $KeyBindingsTableBody } = state
+  expect($KeyBindingsTableBody.innerHTML).toBe(
+    `<tr><td>EditorCompletion.selectCurrent</td><td><kbd>Enter</kbd></td><td>focus.editorCompletions</td></tr>`
+  )
 })
 
 test.skip('setKeyBindings - error - keyBindings is not of type array', () => {
