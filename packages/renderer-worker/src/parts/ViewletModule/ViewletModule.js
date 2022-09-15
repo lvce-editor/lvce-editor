@@ -51,7 +51,7 @@ export const load = (moduleId) => {
     case ViewletModuleId.QuickPick:
       return import('../ViewletQuickPick/ViewletQuickPick.ipc.js')
     case ViewletModuleId.KeyBindings:
-      return import('../ViewletKeyBindings/ViewletKeyBindings.js')
+      return import('../ViewletKeyBindings/ViewletKeyBindings.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }
