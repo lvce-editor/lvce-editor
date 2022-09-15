@@ -1,8 +1,13 @@
 .Viewlet[data-viewlet-id='KeyBindings'] {
   color: white;
-  white-space: pre;
-  overflow-y: auto;
-  user-select: text;
+}
+
+.KeyBindingsHeader {
+  height: 50px;
+  contain: strict;
+  display: grid;
+  place-items: center;
+  padding: 0 15px;
 }
 
 kbd {
@@ -20,9 +25,26 @@ kbd {
   margin: 0 2px;
 }
 
+.TableRow {
+  height: 24px;
+  contain: strict;
+}
+
 .KeyBinding {
   color: rgb(204, 204, 204);
   display: flex;
   align-items: center;
   line-height: 10px;
+}
+
+.KeyBindingsTable {
+  width: 100%;
+  table-layout: fixed;
+  padding: 0 15px;
+}
+
+.KeyBindingsTableBody {
+  white-space: pre;
+  overflow-y: auto;
+  user-select: text;
 }

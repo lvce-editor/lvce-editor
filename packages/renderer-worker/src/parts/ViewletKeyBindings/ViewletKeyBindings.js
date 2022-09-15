@@ -1,84 +1,110 @@
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
+import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
+import * as FilterKeyBindings from '../FilterKeyBindings/FilterKeyBindings.js'
 
 export const name = 'KeyBindings'
 
-export const create = () => {
+export const create = (id, uri, left, top, width, height) => {
   return {
     parsedKeyBindings: [],
     filteredKeyBindings: [],
+    minLineY: 0,
+    maxLineY: 0,
+    maxVisibleItems: 0,
+    rowHeight: 24,
+    deltaY: 0,
+    top,
+    left,
+    width,
+    height,
   }
-}
-
-const parseKey = (rawKey) => {
-  const parts = rawKey.split('+')
-  let isCtrl = false
-  let isShift = false
-  let key = ''
-  for (const part of parts) {
-    switch (part) {
-      case 'shift':
-        isShift = true
-        break
-      case 'ctrl':
-        isCtrl = true
-      default:
-        key = part
-        break
-    }
-  }
-  return {
-    key,
-    isCtrl,
-    isShift,
-  }
-}
-
-const parseKeyBinding = (keyBinding) => {
-  return {
-    ...keyBinding,
-    rawKey: keyBinding.key,
-    ...parseKey(keyBinding.key),
-  }
-}
-
-const parseKeyBindings = (keyBindings) => {
-  return keyBindings.map(parseKeyBinding)
 }
 
 export const loadContent = async (state) => {
+  const { height, rowHeight } = state
   const keyBindings = await KeyBindingsInitial.getKeyBindings()
-  const parsedKeyBindings = parseKeyBindings(keyBindings)
-  console.log({ parsedKeyBindings })
+  const parsedKeyBindings = ParseKeyBindings.parseKeyBindings(keyBindings)
+  const filteredKeyBindings = parsedKeyBindings
+  const searchHeaderHeight = 50
+  const tableHeaderHeight = 24
+  const maxVisibleItems = Math.floor(
+    (height - searchHeaderHeight - tableHeaderHeight) / rowHeight
+  )
+  const maxLineY = Math.min(filteredKeyBindings.length, maxVisibleItems)
   return {
     ...state,
     parsedKeyBindings,
-    filteredKeyBindings: parsedKeyBindings,
+    filteredKeyBindings,
+    maxLineY,
+    maxVisibleItems,
   }
-}
-
-const getFilteredKeyBindings = (keyBindings, value) => {
-  const filteredKeyBindings = []
-  for (const keyBinding of keyBindings) {
-    if (keyBinding.command.includes(value) || keyBinding.key.includes(value)) {
-      filteredKeyBindings.push(keyBinding)
-    }
-  }
-  return filteredKeyBindings
 }
 
 export const handleInput = (state, value) => {
-  const { parsedKeyBindings } = state
-  const filteredKeyBindings = getFilteredKeyBindings(parsedKeyBindings, value)
+  const { parsedKeyBindings, maxVisibleItems } = state
+  const filteredKeyBindings = FilterKeyBindings.getFilteredKeyBindings(
+    parsedKeyBindings,
+    value
+  )
+  const maxLineY = Math.min(filteredKeyBindings.length, maxVisibleItems)
   return {
     ...state,
     value,
     filteredKeyBindings,
+    maxLineY,
   }
+}
+
+export const setDeltaY = (state, deltaY) => {
+  const { maxVisibleItems, rowHeight, filteredKeyBindings } = state
+  const tableHeight = maxVisibleItems * rowHeight
+  const minDeltaY = 0
+  const maxDeltaY = Math.max(
+    filteredKeyBindings.length * rowHeight - tableHeight,
+    0
+  )
+  if (deltaY < minDeltaY) {
+    deltaY = minDeltaY
+  } else if (deltaY > maxDeltaY) {
+    deltaY = Math.max(maxDeltaY)
+  }
+  const minLineY = Math.floor(deltaY / rowHeight)
+  const maxLineY = minLineY + Math.round(tableHeight / rowHeight)
+  return {
+    ...state,
+    deltaY,
+    minLineY,
+    maxLineY,
+  }
+}
+
+export const handleWheel = (state, deltaY) => {
+  return setDeltaY(state, state.deltaY + deltaY)
 }
 
 export const hasFunctionalRender = true
 
 const renderKeyBindings = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.filteredKeyBindings === newState.filteredKeyBindings &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY
+    )
+  },
+  apply(oldState, newState) {
+    const { filteredKeyBindings, minLineY, maxLineY } = newState
+    const displayKeyBindings = filteredKeyBindings.slice(minLineY, maxLineY)
+    return [
+      /* viewletSend */ 'Viewlet.send',
+      /* id */ 'KeyBindings',
+      /* method */ 'setKeyBindings',
+      /* keyBindings */ displayKeyBindings,
+    ]
+  },
+}
+
+const renderTableBodyHeight = {
   isEqual(oldState, newState) {
     return oldState.filteredKeyBindings === newState.filteredKeyBindings
   },
@@ -86,10 +112,10 @@ const renderKeyBindings = {
     return [
       /* viewletSend */ 'Viewlet.send',
       /* id */ 'KeyBindings',
-      /* method */ 'setKeyBindings',
-      /* error */ newState.filteredKeyBindings,
+      /* method */ 'setTbodyHeight',
+      /* height */ 0,
     ]
   },
 }
 
-export const render = [renderKeyBindings]
+export const render = [renderKeyBindings, renderTableBodyHeight]

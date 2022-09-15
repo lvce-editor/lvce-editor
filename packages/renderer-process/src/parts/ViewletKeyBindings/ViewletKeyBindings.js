@@ -31,6 +31,12 @@ export const create = () => {
   $KeyBindingsTableHead.append($KeyBindingsTableHeadRow)
 
   const $KeyBindingsTableBody = document.createElement('tbody')
+  $KeyBindingsTableBody.className = 'KeyBindingsTableBody'
+  $KeyBindingsTableBody.addEventListener(
+    'wheel',
+    ViewletkeyBindingsEvents.handleWheel,
+    { passive: true }
+  )
 
   const $KeyBindingsTable = document.createElement('table')
   $KeyBindingsTable.className = 'KeyBindingsTable'
@@ -80,6 +86,7 @@ export const setKeyBindings = (state, keyBindings) => {
     $TdWhen.textContent = keyBinding.when
 
     const $Row = document.createElement('tr')
+    $Row.className = 'TableRow'
     $Row.append($TdCommand, $TdKeyBinding, $TdWhen)
     $KeyBindingsTableBody.append($Row)
   }
