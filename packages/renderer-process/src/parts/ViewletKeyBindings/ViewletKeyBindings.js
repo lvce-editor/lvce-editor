@@ -64,9 +64,11 @@ export const setKeyBindings = (state, keyBindings) => {
   $KeyBindingsTableBody.textContent = ''
   for (const keyBinding of keyBindings) {
     const $TdCommand = document.createElement('td')
+    $TdCommand.className = 'KeyBindingsTableCell'
     $TdCommand.textContent = keyBinding.command
 
     const $TdKeyBinding = document.createElement('td')
+    $TdKeyBinding.className = 'KeyBindingsTableCell'
     if (keyBinding.isShift) {
       const $KbdShift = document.createElement('kbd')
       $KbdShift.textContent = 'Shift'
@@ -82,9 +84,9 @@ export const setKeyBindings = (state, keyBindings) => {
     const $KbdKey = document.createElement('kbd')
     $KbdKey.textContent = keyBinding.key
     $TdKeyBinding.append($KbdKey, $KbdKey)
-    $TdKeyBinding.className = 'KeyBinding'
 
     const $TdWhen = document.createElement('td')
+    $TdWhen.className = 'KeyBindingsTableCell'
     $TdWhen.textContent = keyBinding.when
 
     const $Row = document.createElement('tr')

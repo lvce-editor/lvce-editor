@@ -48,3 +48,8 @@ kbd {
   height: 24px;
   contain: strict;
 }
+
+.KeyBindingsTableCell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
