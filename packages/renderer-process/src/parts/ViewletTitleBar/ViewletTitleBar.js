@@ -1,6 +1,7 @@
 import * as Layout from '../Layout/Layout.js'
 import * as TitleBarMenu from '../TitleBarMenuBar/TitleBarMenuBar.js'
 import * as Assert from '../Assert/Assert.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 export const create = () => {
   const $TitleBarMenu = TitleBarMenu.create()
@@ -31,3 +32,33 @@ export const menuOpen = TitleBarMenu.openMenu
 export const menuClose = TitleBarMenu.closeMenu
 
 export const menuGetEntryBounds = TitleBarMenu.getMenuEntryBounds
+
+/**
+ *
+ * @param {MouseEvent} event
+ */
+const handleTitleBarButtonsClick = (event) => {
+  const { clientX, clientY } = event
+  RendererWorker.send('TitleBar.handleTitleBarButtonsClick', clientX, clientY)
+}
+
+export const setButtons = (state, buttons) => {
+  const { $TitleBar } = state
+  if (buttons.length > 0) {
+    const $TitleBarButtons = document.createElement('div')
+    // TODO wrapper div isn't actually necessary
+    $TitleBarButtons.id = 'TitleBarButtons'
+    for (const button of buttons) {
+      const $Icon = document.createElement('i')
+      $Icon.className = `MaskIcon${button.icon}`
+      const $TitleBarButton = document.createElement('button')
+      $TitleBarButton.className = 'TitleBarButton'
+      $TitleBarButton.id = `TitleBarButton${button.id}`
+      $TitleBarButton.ariaLabel = button.label
+      $TitleBarButton.append($Icon)
+      $TitleBarButtons.append($TitleBarButton)
+    }
+    $TitleBarButtons.onmousedown = handleTitleBarButtonsClick
+    $TitleBar.append($TitleBarButtons)
+  }
+}
