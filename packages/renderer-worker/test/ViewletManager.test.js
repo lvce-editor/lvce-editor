@@ -181,7 +181,7 @@ test('load - error - loadContent method throws error', async () => {
   )
 })
 
-test('load - error - no contentLoaded method', async () => {
+test('load - error - contentLoaded is not of type function', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   const getModule = async () => {
@@ -194,6 +194,7 @@ test('load - error - no contentLoaded method', async () => {
           ...state,
         }
       },
+      contentLoaded: 1,
     }
   }
   const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)

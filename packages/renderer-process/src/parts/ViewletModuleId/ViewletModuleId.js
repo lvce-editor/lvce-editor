@@ -47,3 +47,5 @@ export const StatusBar = 'StatusBar'
 export const Terminal = 'Terminal'
 
 export const TitleBar = 'TitleBar'
+
+export const KeyBindings = 'KeyBindings'
