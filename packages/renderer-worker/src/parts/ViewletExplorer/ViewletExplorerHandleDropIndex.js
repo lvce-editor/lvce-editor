@@ -7,7 +7,6 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import { handleDropRoot } from './ViewletExplorerHandleDropRoot.js'
 
 const handleDropIntoFolder = async (state, dirent, index, files) => {
-  console.log({ dirent, files })
   const { pathSeparator, root, dirents } = state
   for (const file of files) {
     const from = file.path

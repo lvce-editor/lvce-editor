@@ -26,7 +26,6 @@ export const editorTabCompletion = async (editor) => {
     // TODO get tab completion for each cursor
     const tabCompletion = await getTabCompletion(editor)
     if (!tabCompletion) {
-      console.log({ tabCompletion })
       return editor
     }
     return EditorSnippet.editorSnippet(editor, tabCompletion)

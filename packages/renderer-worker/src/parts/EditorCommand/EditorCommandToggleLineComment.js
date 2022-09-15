@@ -85,8 +85,6 @@ const getLineCommentEdit = (rowIndex, line, lineComment) => {
 }
 
 export const editorToggleLineComment = async (editor) => {
-  console.log('TOGGLE COMMENT')
-
   const lineComment = await getLineComment(editor)
   if (!lineComment) {
     return editor

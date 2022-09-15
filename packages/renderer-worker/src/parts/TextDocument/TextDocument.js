@@ -67,7 +67,6 @@ export const applyEdits = (textDocument, changes) => {
           endRowIndex >= newLines.length
             ? ''
             : newLines[endRowIndex].slice(endColumnIndex)
-        console.log({ before, after })
         Arrays.splice(newLines, startRowIndex, deleted.length, [before + after])
       } else {
         const before =
@@ -78,7 +77,6 @@ export const applyEdits = (textDocument, changes) => {
           (endRowIndex >= newLines.length
             ? ''
             : newLines[endRowIndex].slice(endColumnIndex))
-        console.log({ before, after })
         Arrays.splice(newLines, startRowIndex, deleted.length, [
           before,
           ...middle,

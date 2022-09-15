@@ -185,7 +185,6 @@ const findLabelIndex = (items, label) => {
 export const selectItem = (state, label) => {
   Assert.string(label)
   const index = findLabelIndex(state.items, label)
-  console.log({ index })
   if (index === -1) {
     return state
   }
