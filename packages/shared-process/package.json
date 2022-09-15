@@ -44,7 +44,7 @@
   "optionalDependencies": {
     "electron-clipboard-ex": "^1.3.3",
     "keytar": "^7.9.0",
-    "vscode-ripgrep-with-github-api-error-fix": "^2.4.1"
+    "vscode-ripgrep-with-github-api-error-fix": "^2.5.0"
   },
   "devDependencies": {
     "@types/debug": "^4.1.7",

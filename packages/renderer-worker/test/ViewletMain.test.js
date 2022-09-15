@@ -124,7 +124,6 @@ test('openUri - no editors exist', async () => {
     'Viewlet.send',
     'Main',
     'openViewlet',
-    'EditorText',
     '',
     '/tmp/file-1.txt',
     -1
@@ -176,7 +175,6 @@ test('openUri - different editor exists', async () => {
     'Viewlet.send',
     'Main',
     'openViewlet',
-    'EditorText',
     '',
     '/tmp/file-2.txt',
     0

@@ -4,13 +4,18 @@ export const create = (id, uri, left, top, width, height) => {
   return {
     src: '',
     disposed: false,
+    top,
+    left,
+    width,
+    height,
+    uri,
   }
 }
 
-export const loadContent = async (state) => {
+export const loadContent = async (state, ...args) => {
   return {
     ...state,
-    src: 'abc',
+    src: state.uri,
   }
 }
 
