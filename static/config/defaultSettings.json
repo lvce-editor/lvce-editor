@@ -7,13 +7,15 @@
 
   "extensions.autoUpdate": true,
 
+  "sessionReplay.enabled": true,
+
   "serviceWorker.enabled": false,
+
+  "window.titleBarStyle": "native",
 
   "workbench.colorTheme": "slime",
   "workbench.iconTheme": "vscode-icons",
   "workbench.activityBar.visible": true,
   "workbench.sideBar.visible": true,
-  "workbench.saveStateOnVisibilityChange": false,
-
-  "sessionReplay.enabled": true
+  "workbench.saveStateOnVisibilityChange": false
 }

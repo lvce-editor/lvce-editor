@@ -2,6 +2,7 @@ import * as TitleBarMenuBar from '../TitleBarMenuBar/TitleBarMenuBar.js'
 import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as Preferences from '../Preferences/Preferences.js'
 
 export const name = 'TitleBar'
 
@@ -28,11 +29,14 @@ const getTitleBarButtonsRemote = () => {
 }
 
 const getTitleBarButtonsElectron = () => {
-  return [
-    { label: 'Minimize', icon: 'Minimize', id: 'Minimize' },
-    { label: 'Maximize', icon: 'Maximize', id: 'Maximize' },
-    { label: 'Close', icon: 'Close', id: 'Close' },
-  ]
+  if (Preferences.get('window.titleBarStyle') === 'custom') {
+    return [
+      { label: 'Minimize', icon: 'Minimize', id: 'Minimize' },
+      { label: 'Maximize', icon: 'Maximize', id: 'Maximize' },
+      { label: 'Close', icon: 'Close', id: 'Close' },
+    ]
+  }
+  return []
 }
 
 const getTitleBarButtons = () => {
