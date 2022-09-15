@@ -16,10 +16,10 @@ const getPosition = (state, index) => {
   }
 }
 
-export const selectCurrent = async (state) => {
+export const selectCurrent = (state) => {
   if (state.focusedIndex === -1) {
     return
   }
   const position = getPosition(state, state.focusedIndex)
-  await handleClick(state, state.focusedIndex, position.x, position.y)
+  return handleClick(state, state.focusedIndex, position.x, position.y)
 }
