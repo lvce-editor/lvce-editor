@@ -51,30 +51,6 @@ export const create = () => {
   }
 }
 
-const parseKey = (rawKey) => {
-  const parts = rawKey.split('+')
-  let isCtrl = false
-  let isShift = false
-  let key = ''
-  for (const part of parts) {
-    switch (part) {
-      case 'shift':
-        isShift = true
-        break
-      case 'ctrl':
-        isCtrl = true
-      default:
-        key = part
-        break
-    }
-  }
-  return {
-    key,
-    isCtrl,
-    isShift,
-  }
-}
-
 export const setKeyBindings = (state, keyBindings) => {
   const { $KeyBindingsTableBody } = state
   $KeyBindingsTableBody.textContent = ''
@@ -83,23 +59,22 @@ export const setKeyBindings = (state, keyBindings) => {
     $TdCommand.textContent = keyBinding.command
 
     const $TdKeyBinding = document.createElement('td')
-    const parsedKey = parseKey(keyBinding.key)
-    if (parsedKey.isShift) {
+    if (keyBinding.isShift) {
       const $KbdShift = document.createElement('kbd')
       $KbdShift.textContent = 'Shift'
       const $KbdSeparator = document.createTextNode('+')
       $TdKeyBinding.append($KbdShift, $KbdSeparator)
     }
-    if (parsedKey.isCtrl) {
+    if (keyBinding.isCtrl) {
       const $KbdCtrl = document.createElement('kbd')
       $KbdCtrl.textContent = 'Ctrl'
       const $KbdSeparator = document.createTextNode('+')
       $TdKeyBinding.append($KbdCtrl, $KbdSeparator)
     }
-
     const $KbdKey = document.createElement('kbd')
-    $KbdKey.textContent = parsedKey.key
+    $KbdKey.textContent = keyBinding.key
     $TdKeyBinding.append($KbdKey, $KbdKey)
+    $TdKeyBinding.className = 'KeyBinding'
 
     const $TdWhen = document.createElement('td')
     $TdWhen.textContent = keyBinding.when

@@ -15,6 +15,9 @@ test('setKeyBindings', () => {
   const state = ViewletKeyBindings.create()
   ViewletKeyBindings.setKeyBindings(state, [
     {
+      rawKey: 'Enter',
+      isCtrl: false,
+      isShift: false,
       key: 'Enter',
       command: 'EditorCompletion.selectCurrent',
       when: 'focus.editorCompletions',
@@ -22,7 +25,7 @@ test('setKeyBindings', () => {
   ])
   const { $KeyBindingsTableBody } = state
   expect($KeyBindingsTableBody.innerHTML).toBe(
-    `<tr><td>EditorCompletion.selectCurrent</td><td><kbd>Enter</kbd></td><td>focus.editorCompletions</td></tr>`
+    '<tr><td>EditorCompletion.selectCurrent</td><td class="KeyBinding"><kbd>Enter</kbd></td><td>focus.editorCompletions</td></tr>'
   )
 })
 
