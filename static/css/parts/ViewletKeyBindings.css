@@ -1,3 +1,6 @@
 .Viewlet[data-viewlet-id='KeyBindings'] {
   color: white;
+  white-space: pre;
+  overflow-y: auto;
+  user-select: text;
 }

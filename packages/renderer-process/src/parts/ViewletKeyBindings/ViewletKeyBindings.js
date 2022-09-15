@@ -9,10 +9,13 @@ export const create = () => {
   $Viewlet.className = 'Viewlet'
   $Viewlet.dataset.viewletId = 'KeyBindings'
 
-  $Viewlet.textContent = 'TODO: implement keybindings editor'
-
   return {
     $Viewlet,
     $InputBox,
   }
+}
+
+export const setKeyBindings = (state, keyBindings) => {
+  const { $Viewlet } = state
+  $Viewlet.textContent = JSON.stringify(keyBindings, null, 2) + '\n'
 }

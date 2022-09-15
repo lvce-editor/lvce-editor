@@ -144,7 +144,7 @@ export const load = async (viewlet, focus = false) => {
       })
     }
 
-    if (viewletState !== newState) {
+    if (viewletState !== newState && module.contentLoaded) {
       await module.contentLoaded(newState)
     }
 
