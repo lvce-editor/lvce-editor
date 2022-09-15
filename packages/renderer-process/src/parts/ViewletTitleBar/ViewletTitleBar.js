@@ -31,3 +31,29 @@ export const menuOpen = TitleBarMenu.openMenu
 export const menuClose = TitleBarMenu.closeMenu
 
 export const menuGetEntryBounds = TitleBarMenu.getMenuEntryBounds
+
+/**
+ *
+ * @param {MouseEvent} event
+ */
+const handleTitleBarButtonsClick = (event) => {
+  console.log(event)
+}
+
+export const setButtons = (state, buttons) => {
+  const { $TitleBar } = state
+  const $TitleBarButtons = document.createElement('div')
+  // TODO wrapper div isn't actually necessary
+  $TitleBarButtons.id = 'TitleBarButtons'
+  for (const button of buttons) {
+    const $Icon = document.createElement('i')
+    $Icon.className = `MaskIcon${button.icon}`
+    const $TitleBarButton = document.createElement('button')
+    $TitleBarButton.className = 'TitleBarButton'
+    $TitleBarButton.ariaLabel = button.label
+    $TitleBarButton.append($Icon)
+    $TitleBarButtons.append($TitleBarButton)
+  }
+  $TitleBarButtons.onmousedown = handleTitleBarButtonsClick
+  $TitleBar.append($TitleBarButtons)
+}

@@ -37,3 +37,27 @@
 :focus {
   border: 2px solid green;
 } */
+
+#TitleBarButtons {
+  margin-left: auto;
+  contain: content;
+}
+
+.TitleBarButton {
+  width: 46px;
+  contain: strict;
+  height: 100%;
+}
+
+.MaskIconMinimize {
+  content: '';
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: currentColor;
+  -webkit-mask: url(/packages/renderer-process/assets/icons/chrome-minimize.svg)
+    50% 50% / 16px no-repeat;
+}

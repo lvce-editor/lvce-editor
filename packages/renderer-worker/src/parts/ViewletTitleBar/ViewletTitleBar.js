@@ -6,14 +6,21 @@ export const create = () => {
   return {
     disposed: false,
     titleBarEntries: [],
+    titleBarButtons: [],
   }
 }
 
 export const loadContent = async (state) => {
   const titleBarEntries = await TitleBarMenuBar.getEntries()
+  const titleBarButtons = [
+    { label: 'Minimize', icon: 'Minimize' },
+    { label: 'Maximize', icon: 'Maximize' },
+    { label: 'Close', icon: 'Close' },
+  ]
   return {
     ...state,
     titleBarEntries,
+    titleBarButtons,
   }
 }
 
@@ -55,4 +62,18 @@ const renderTitleBarEntries = {
   },
 }
 
-export const render = [renderTitleBarEntries]
+const renderTitleBarButtons = {
+  isEqual(oldState, newState) {
+    return oldState.titleBarButtons === newState.titleBarButtons
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'TitleBar',
+      /* method */ 'setButtons',
+      /* titleBarEntries */ newState.titleBarButtons,
+    ]
+  },
+}
+
+export const render = [renderTitleBarEntries, renderTitleBarButtons]
