@@ -20,13 +20,18 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     platform: 'remote',
   }
 })
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
 const ViewletTitleBar = await import(
   '../src/parts/ViewletTitleBar/ViewletTitleBar.js'
 )
+const Command = await import('../src/parts/Command/Command.js')
 
 test('name', () => {
   expect(ViewletTitleBar.name).toBe('TitleBar')
@@ -39,8 +44,7 @@ test('create', () => {
 
 test('loadContent', async () => {
   const state = ViewletTitleBar.create()
-  expect(await ViewletTitleBar.loadContent(state)).toEqual({
-    disposed: false,
+  expect(await ViewletTitleBar.loadContent(state)).toMatchObject({
     titleBarEntries: [
       {
         flags: MenuItemFlags.None,
@@ -91,9 +95,8 @@ test('loadContent', async () => {
 
 test('dispose', () => {
   const state = ViewletTitleBar.create()
-  expect(ViewletTitleBar.dispose(state)).toEqual({
+  expect(ViewletTitleBar.dispose(state)).toMatchObject({
     disposed: true,
-    titleBarEntries: [],
   })
 })
 
@@ -110,7 +113,47 @@ test('resize', () => {
     height: 200,
     left: 200,
     titleBarEntries: [],
+    titleBarButtons: [],
     top: 200,
     width: 200,
   })
+})
+
+test('handleTitleBarButtonsClick - minimize', async () => {
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
+  const state = {
+    ...ViewletTitleBar.create(),
+    width: 900,
+    left: 0,
+  }
+  await ViewletTitleBar.handleTitleBarButtonsClick(state, 800, 0)
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith('ElectronWindow.minimize')
+})
+
+test('handleTitleBarButtonsClick - toggleMaximize', async () => {
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
+  const state = {
+    ...ViewletTitleBar.create(),
+    width: 900,
+    left: 0,
+  }
+  await ViewletTitleBar.handleTitleBarButtonsClick(state, 850, 0)
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith('ElectronWindow.maximize')
+})
+
+test('handleTitleBarButtonsClick - close', async () => {
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
+  const state = {
+    ...ViewletTitleBar.create(),
+    width: 900,
+    left: 0,
+  }
+  await ViewletTitleBar.handleTitleBarButtonsClick(state, 900, 0)
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith('ElectronWindow.close')
 })
