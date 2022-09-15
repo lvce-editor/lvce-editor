@@ -15,7 +15,6 @@ const enhanceErrorMessage = (error) => {
     error = error.cause
     message += `: ${error}`
   }
-  console.log({ error })
   return {
     message,
     stack: error.originalStack,
