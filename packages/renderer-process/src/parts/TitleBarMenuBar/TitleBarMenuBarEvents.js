@@ -1,4 +1,5 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as MouseEventTypes from '../MouseEventType/MouseEventType.js'
 
 const isInsideTitleBarMenu = ($Element) => {
   return (
@@ -127,6 +128,9 @@ const getIndex = ($Target) => {
 }
 
 export const handleClick = (event) => {
+  if (event.button !== MouseEventTypes.LeftClick) {
+    return
+  }
   const $Target = event.target
   const index = getIndex($Target)
   if (index === -1) {
