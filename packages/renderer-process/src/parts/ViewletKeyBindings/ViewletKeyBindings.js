@@ -21,6 +21,7 @@ export const create = () => {
   $KeyBindingsTableHeadRowColumnWhen.textContent = 'When'
 
   const $KeyBindingsTableHeadRow = document.createElement('tr')
+  $KeyBindingsTableHeadRow.className = 'KeyBindingsTableRow'
   $KeyBindingsTableHeadRow.append(
     $KeyBindingsTableHeadRowColumnCommand,
     $KeyBindingsTableHeadRowColumnKey,
@@ -28,6 +29,7 @@ export const create = () => {
   )
 
   const $KeyBindingsTableHead = document.createElement('thead')
+  $KeyBindingsTableHead.className = 'KeyBindingsTableHead'
   $KeyBindingsTableHead.append($KeyBindingsTableHeadRow)
 
   const $KeyBindingsTableBody = document.createElement('tbody')
@@ -86,7 +88,7 @@ export const setKeyBindings = (state, keyBindings) => {
     $TdWhen.textContent = keyBinding.when
 
     const $Row = document.createElement('tr')
-    $Row.className = 'TableRow'
+    $Row.className = 'KeyBindingsTableRow'
     $Row.append($TdCommand, $TdKeyBinding, $TdWhen)
     $KeyBindingsTableBody.append($Row)
   }

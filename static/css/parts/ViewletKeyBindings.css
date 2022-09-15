@@ -25,11 +25,6 @@ kbd {
   margin: 0 2px;
 }
 
-.TableRow {
-  height: 24px;
-  contain: strict;
-}
-
 .KeyBinding {
   color: rgb(204, 204, 204);
   display: flex;
@@ -47,4 +42,9 @@ kbd {
   white-space: pre;
   overflow-y: auto;
   user-select: text;
+}
+
+.KeyBindingsTableRow {
+  height: 24px;
+  contain: strict;
 }
