@@ -25,7 +25,7 @@ test('setKeyBindings', () => {
   ])
   const { $KeyBindingsTableBody } = state
   expect($KeyBindingsTableBody.innerHTML).toBe(
-    '<tr><td>EditorCompletion.selectCurrent</td><td class="KeyBinding"><kbd>Enter</kbd></td><td>focus.editorCompletions</td></tr>'
+    '<tr class="KeyBindingsTableRow"><td class="KeyBindingsTableCell">EditorCompletion.selectCurrent</td><td class="KeyBindingsTableCell"><kbd>Enter</kbd></td><td class="KeyBindingsTableCell">focus.editorCompletions</td></tr>'
   )
 })
 

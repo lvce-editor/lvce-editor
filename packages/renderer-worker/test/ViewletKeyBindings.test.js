@@ -89,3 +89,96 @@ test('handleInput - filter key bindings', async () => {
     ],
   })
 })
+
+test('setDeltaY - scroll up - already at top', () => {
+  const state = {
+    ...ViewletKeyBindings.create(),
+    parsedKeyBindings: [
+      {
+        rawKey: 'Enter',
+        isCtrl: false,
+        isShift: false,
+        key: 'Enter',
+        command: 'EditorCompletion.selectCurrent',
+        when: 'focus.editorCompletions',
+      },
+    ],
+    minLineY: 0,
+    maxLineY: 1,
+    maxVisibleItems: 1,
+  }
+  expect(ViewletKeyBindings.setDeltaY(state, 0)).toMatchObject({
+    minLineY: 0,
+    maxLineY: 1,
+  })
+})
+
+test('setDeltaY - scroll up - by one row', () => {
+  const state = {
+    ...ViewletKeyBindings.create(),
+    filteredKeyBindings: [
+      {
+        rawKey: 'Enter',
+        isCtrl: false,
+        isShift: false,
+        key: 'Enter',
+        command: 'EditorCompletion.selectCurrent',
+        when: 'focus.editorCompletions',
+      },
+      {
+        rawKey: 'Enter',
+        isCtrl: false,
+        isShift: false,
+        key: 'Enter',
+        command: 'EditorCompletion.selectCurrent',
+        when: 'focus.editorCompletions',
+      },
+    ],
+    minLineY: 1,
+    maxLineY: 2,
+    maxVisibleItems: 1,
+  }
+  expect(ViewletKeyBindings.setDeltaY(state, 0)).toMatchObject({
+    minLineY: 0,
+    maxLineY: 1,
+  })
+})
+
+test('setDeltaY - scroll up - by two rows', () => {
+  const state = {
+    ...ViewletKeyBindings.create(),
+    filteredKeyBindings: [
+      {
+        rawKey: 'Enter',
+        isCtrl: false,
+        isShift: false,
+        key: 'Enter',
+        command: 'EditorCompletion.selectCurrent',
+        when: 'focus.editorCompletions',
+      },
+      {
+        rawKey: 'Enter',
+        isCtrl: false,
+        isShift: false,
+        key: 'Enter',
+        command: 'EditorCompletion.selectCurrent',
+        when: 'focus.editorCompletions',
+      },
+      {
+        rawKey: 'Enter',
+        isCtrl: false,
+        isShift: false,
+        key: 'Enter',
+        command: 'EditorCompletion.selectCurrent',
+        when: 'focus.editorCompletions',
+      },
+    ],
+    minLineY: 2,
+    maxLineY: 3,
+    maxVisibleItems: 1,
+  }
+  expect(ViewletKeyBindings.setDeltaY(state, 0)).toMatchObject({
+    minLineY: 0,
+    maxLineY: 1,
+  })
+})
