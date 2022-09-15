@@ -40,7 +40,6 @@ export const editorShowMessage = async (
 
   if (!isError) {
     const handleTimeout = () => {
-      console.log('ran timeout fn')
       editorHideMessage(editor)
     }
 
