@@ -150,15 +150,12 @@ const render$Row = ($Row, rowInfo) => {
     // TODO type should be a number for efficiency
     case DirentType.Directory:
       $Row.ariaExpanded = 'false'
-      $Row.className = `TreeItem Icon${rowInfo.icon}`
       break
     case DirentType.DirectoryExpanded:
-      $Row.className = `TreeItem Icon${rowInfo.icon}`
       $Row.ariaExpanded = 'true'
       break
     case DirentType.File:
       $Row.ariaExpanded = undefined
-      $Row.className = `TreeItem Icon${rowInfo.icon}`
       break
     default:
       break
