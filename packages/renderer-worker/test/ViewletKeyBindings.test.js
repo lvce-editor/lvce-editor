@@ -43,8 +43,11 @@ test('loadContent', async () => {
   })
   const state = ViewletKeyBindings.create()
   expect(await ViewletKeyBindings.loadContent(state)).toMatchObject({
-    keyBindings: [
+    parsedKeyBindings: [
       {
+        rawKey: 'Enter',
+        isCtrl: false,
+        isShift: false,
         key: 'Enter',
         command: 'EditorCompletion.selectCurrent',
         when: 'focus.editorCompletions',
@@ -56,13 +59,19 @@ test('loadContent', async () => {
 test('handleInput - filter key bindings', async () => {
   const state = {
     ...ViewletKeyBindings.create(),
-    keyBindings: [
+    parsedKeyBindings: [
       {
+        rawKey: 'Enter',
+        isCtrl: false,
+        isShift: false,
         key: 'Enter',
         command: 'EditorCompletion.selectCurrent',
         when: 'focus.editorCompletions',
       },
       {
+        rawKey: 'Enter',
+        isCtrl: false,
+        isShift: false,
         key: 'Enter',
         command: 'abc',
         when: 'focus.editorCompletions',

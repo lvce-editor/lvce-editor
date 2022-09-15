@@ -4,17 +4,55 @@ export const name = 'KeyBindings'
 
 export const create = () => {
   return {
-    keyBindings: [],
+    parsedKeyBindings: [],
     filteredKeyBindings: [],
   }
 }
 
+const parseKey = (rawKey) => {
+  const parts = rawKey.split('+')
+  let isCtrl = false
+  let isShift = false
+  let key = ''
+  for (const part of parts) {
+    switch (part) {
+      case 'shift':
+        isShift = true
+        break
+      case 'ctrl':
+        isCtrl = true
+      default:
+        key = part
+        break
+    }
+  }
+  return {
+    key,
+    isCtrl,
+    isShift,
+  }
+}
+
+const parseKeyBinding = (keyBinding) => {
+  return {
+    ...keyBinding,
+    rawKey: keyBinding.key,
+    ...parseKey(keyBinding.key),
+  }
+}
+
+const parseKeyBindings = (keyBindings) => {
+  return keyBindings.map(parseKeyBinding)
+}
+
 export const loadContent = async (state) => {
   const keyBindings = await KeyBindingsInitial.getKeyBindings()
+  const parsedKeyBindings = parseKeyBindings(keyBindings)
+  console.log({ parsedKeyBindings })
   return {
     ...state,
-    keyBindings,
-    filteredKeyBindings: keyBindings,
+    parsedKeyBindings,
+    filteredKeyBindings: parsedKeyBindings,
   }
 }
 
@@ -29,8 +67,8 @@ const getFilteredKeyBindings = (keyBindings, value) => {
 }
 
 export const handleInput = (state, value) => {
-  const { keyBindings } = state
-  const filteredKeyBindings = getFilteredKeyBindings(keyBindings, value)
+  const { parsedKeyBindings } = state
+  const filteredKeyBindings = getFilteredKeyBindings(parsedKeyBindings, value)
   return {
     ...state,
     value,
