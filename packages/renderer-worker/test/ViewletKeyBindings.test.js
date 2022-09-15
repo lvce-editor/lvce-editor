@@ -52,3 +52,31 @@ test('loadContent', async () => {
     ],
   })
 })
+
+test('handleInput - filter key bindings', async () => {
+  const state = {
+    ...ViewletKeyBindings.create(),
+    keyBindings: [
+      {
+        key: 'Enter',
+        command: 'EditorCompletion.selectCurrent',
+        when: 'focus.editorCompletions',
+      },
+      {
+        key: 'Enter',
+        command: 'abc',
+        when: 'focus.editorCompletions',
+      },
+    ],
+  }
+  expect(ViewletKeyBindings.handleInput(state, 'abc')).toMatchObject({
+    value: 'abc',
+    filteredKeyBindings: [
+      {
+        key: 'Enter',
+        command: 'abc',
+        when: 'focus.editorCompletions',
+      },
+    ],
+  })
+})
