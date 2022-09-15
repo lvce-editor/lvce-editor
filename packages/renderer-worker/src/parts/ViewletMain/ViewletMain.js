@@ -208,7 +208,6 @@ export const contentLoaded = async (state) => {
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'openViewlet',
-    /* id */ id,
     /* tabLabel */ tabLabel,
     /* tabTitle */ tabTitle
   )

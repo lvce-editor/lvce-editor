@@ -186,7 +186,7 @@ const handleTabsContextMenu = (event) => {
   )
 }
 
-export const openViewlet = (state, id, tabLabel, tabTitle, oldActiveIndex) => {
+export const openViewlet = (state, tabLabel, tabTitle, oldActiveIndex) => {
   const $Tab = document.createElement('div')
   $Tab.className = 'MainTab'
   $Tab.textContent = tabLabel
