@@ -1,4 +1,5 @@
 import * as InputBox from '../InputBox/InputBox.js'
+import * as ViewletkeyBindingsEvents from './ViewletKeyBindingsEvents.js'
 
 export const name = 'KeyBindings'
 
@@ -6,6 +7,7 @@ export const create = () => {
   const $InputBox = InputBox.create()
   $InputBox.type = 'search'
   $InputBox.placeholder = 'Search Key Bindings' // TODO placeholder string should come from renderer worker
+  $InputBox.oninput = ViewletkeyBindingsEvents.handleInput
 
   const $KeyBindingsHeader = document.createElement('div')
   $KeyBindingsHeader.className = 'KeyBindingsHeader'
@@ -55,10 +57,18 @@ export const setKeyBindings = (state, keyBindings) => {
   for (const keyBinding of keyBindings) {
     const $TdCommand = document.createElement('td')
     $TdCommand.textContent = keyBinding.command
+
     const $TdKeyBinding = document.createElement('td')
-    $TdKeyBinding.textContent = keyBinding.key
+    const keys = keyBinding.key.split('+')
+    for (const key of keys) {
+      const $Kbd = document.createElement('kbd')
+      $Kbd.textContent = key
+      const $Text = document.createTextNode('+')
+      $TdKeyBinding.append($Kbd, $Text)
+    }
     const $TdWhen = document.createElement('td')
     $TdWhen.textContent = keyBinding.when
+
     const $Row = document.createElement('tr')
     $Row.append($TdCommand, $TdKeyBinding, $TdWhen)
     $KeyBindingsTableBody.append($Row)
