@@ -45,12 +45,21 @@
 
 .TitleBarButton {
   width: 46px;
-  contain: strict;
   height: 100%;
+  contain: strict;
+  background: transparent;
+  border: none;
 }
 
-.MaskIconMinimize {
-  content: '';
+.TitleBarButton:hover {
+  background-color: hsla(0, 0%, 100%, 0.1);
+}
+
+#TitleBarButtonClose:hover {
+  background-color: rgba(232, 17, 35, 0.9);
+}
+
+[class^='MaskIcon'] {
   display: block;
   position: absolute;
   top: 0;
@@ -58,6 +67,18 @@
   bottom: 0;
   right: 0;
   background: currentColor;
-  -webkit-mask: url(/packages/renderer-process/assets/icons/chrome-minimize.svg)
-    50% 50% / 16px no-repeat;
+  color: var(--TitleBarForeground, rgb(204, 204, 204));
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 16px;
+  -webkit-mask-position: 50% 50%;
+}
+
+.MaskIconMinimize {
+  -webkit-mask-image: url(/static/icons/chrome-minimize.svg);
+}
+.MaskIconMaximize {
+  -webkit-mask-image: url(/static/icons/chrome-maximize.svg);
+}
+.MaskIconClose {
+  -webkit-mask-image: url(/static/icons/chrome-close.svg);
 }

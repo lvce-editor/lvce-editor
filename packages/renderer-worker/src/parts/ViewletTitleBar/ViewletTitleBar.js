@@ -1,21 +1,28 @@
 import * as TitleBarMenuBar from '../TitleBarMenuBar/TitleBarMenuBar.js'
+import * as Command from '../Command/Command.js'
 
 export const name = 'TitleBar'
 
-export const create = () => {
+const TITLE_BAR_BUTTON_WIDTH = 46
+
+export const create = (id, uri, top, left, width, height) => {
   return {
     disposed: false,
     titleBarEntries: [],
     titleBarButtons: [],
+    top,
+    left,
+    width,
+    height,
   }
 }
 
 export const loadContent = async (state) => {
   const titleBarEntries = await TitleBarMenuBar.getEntries()
   const titleBarButtons = [
-    { label: 'Minimize', icon: 'Minimize' },
-    { label: 'Maximize', icon: 'Maximize' },
-    { label: 'Close', icon: 'Close' },
+    { label: 'Minimize', icon: 'Minimize', id: 'Minimize' },
+    { label: 'Maximize', icon: 'Maximize', id: 'Maximize' },
+    { label: 'Close', icon: 'Close', id: 'Close' },
   ]
   return {
     ...state,
@@ -28,6 +35,34 @@ export const contentLoaded = (state) => {}
 
 export const focus = async () => {
   await TitleBarMenuBar.focus()
+}
+
+const handleTitleBarClickMinimize = async (state) => {
+  await Command.execute('ElectronWindow.minimize')
+  return state
+}
+
+const handleTitleBarClickClose = async (state) => {
+  await Command.execute('ElectronWindow.close')
+  return state
+}
+
+const handleTitleBarClickToggleMaximize = async (state) => {
+  // TODO need command for toggleMaximize
+  await Command.execute('ElectronWindow.maximize')
+  return state
+}
+
+export const handleTitleBarButtonsClick = (state, x, y) => {
+  const { width, left } = state
+  const offsetRight = width + left - x
+  if (offsetRight >= TITLE_BAR_BUTTON_WIDTH * 2) {
+    return handleTitleBarClickMinimize(state)
+  }
+  if (offsetRight > TITLE_BAR_BUTTON_WIDTH * 1) {
+    return handleTitleBarClickToggleMaximize(state)
+  }
+  return handleTitleBarClickClose(state)
 }
 
 export const dispose = (state) => {

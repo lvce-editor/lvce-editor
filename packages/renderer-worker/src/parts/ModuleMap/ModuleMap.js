@@ -250,6 +250,12 @@ export const getModuleId = (commandId) => {
     case 'Workspace.setPath':
     case 'Workspace.setUri':
       return ModuleId.Workspace
+    case 'ElectronWindow.close':
+    case 'ElectronWindow.minimize':
+    case 'ElectronWindow.unmaximize':
+    case 'ElectronWindow.maximize':
+    case 'ElectronWindow.toggleDevtools':
+      return ModuleId.ElectronWindow
     default:
       throw new Error(`command ${commandId} not found`)
   }

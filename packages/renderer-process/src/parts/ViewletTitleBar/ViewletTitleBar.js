@@ -1,6 +1,7 @@
 import * as Layout from '../Layout/Layout.js'
 import * as TitleBarMenu from '../TitleBarMenuBar/TitleBarMenuBar.js'
 import * as Assert from '../Assert/Assert.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 export const create = () => {
   const $TitleBarMenu = TitleBarMenu.create()
@@ -37,7 +38,8 @@ export const menuGetEntryBounds = TitleBarMenu.getMenuEntryBounds
  * @param {MouseEvent} event
  */
 const handleTitleBarButtonsClick = (event) => {
-  console.log(event)
+  const { clientX, clientY } = event
+  RendererWorker.send('TitleBar.handleTitleBarButtonsClick', clientX, clientY)
 }
 
 export const setButtons = (state, buttons) => {
@@ -50,6 +52,7 @@ export const setButtons = (state, buttons) => {
     $Icon.className = `MaskIcon${button.icon}`
     const $TitleBarButton = document.createElement('button')
     $TitleBarButton.className = 'TitleBarButton'
+    $TitleBarButton.id = `TitleBarButton${button.id}`
     $TitleBarButton.ariaLabel = button.label
     $TitleBarButton.append($Icon)
     $TitleBarButtons.append($TitleBarButton)
