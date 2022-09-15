@@ -90,7 +90,7 @@ test('selectCurrent - settings', async () => {
   }
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
-  await ViewletActivityBarSelectCurrent.selectCurrent(state)
+  expect(await ViewletActivityBarSelectCurrent.selectCurrent(state)).toBe(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenCalledWith(
     'ContextMenu.show',
