@@ -64,9 +64,13 @@ test('loadContent - one restored editor', async () => {
   RendererProcess.invoke.mockImplementation(() => {
     return JSON.stringify({
       instances: {
-        EditorText: {
+        Main: {
           state: {
-            uri: '/test/some-file.txt',
+            editors: [
+              {
+                uri: '/test/some-file.txt',
+              },
+            ],
           },
         },
       },

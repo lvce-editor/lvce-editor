@@ -201,7 +201,10 @@ export const openViewlet = (state, tabLabel, tabTitle, oldActiveIndex) => {
   $Tab.append($TabCloseButton)
 
   if (oldActiveIndex !== -1 && state.$MainTabs) {
-    state.$MainTabs.children[oldActiveIndex].ariaSelected = 'false'
+    const $OldTab = state.$MainTabs.children[oldActiveIndex]
+    if ($OldTab) {
+      $OldTab.ariaSelected = 'false'
+    }
   }
 
   if (!state.$MainTabs) {

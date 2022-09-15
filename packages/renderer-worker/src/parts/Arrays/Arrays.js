@@ -23,3 +23,21 @@ export const splice = (array, start, deleteCount, newItems) => {
   insertInto(array, start, newItems)
   return result
 }
+
+export const last = (array) => {
+  return array[array.length - 1]
+}
+
+export const first = (array) => {
+  return array[0]
+}
+
+// TODO use this function more often
+export const firstIndex = (array) => {
+  return 0
+}
+
+// TODO use this function more often
+export const lastIndex = (array) => {
+  return array.length - 1
+}

@@ -1,5 +1,6 @@
 import { focusIndex } from './ViewletActivityBarFocusIndex.js'
+import * as Arrays from '../Arrays/Arrays.js'
 
 export const focusLast = (state) => {
-  return focusIndex(state, state.activityBarItems.length - 1)
+  return focusIndex(state, Arrays.lastIndex(state.activityBarItems))
 }
