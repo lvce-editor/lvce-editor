@@ -1,5 +1,4 @@
 import * as TitleBarMenuBar from '../TitleBarMenuBar/TitleBarMenuBar.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const name = 'TitleBar'
 
@@ -18,14 +17,7 @@ export const loadContent = async (state) => {
   }
 }
 
-export const contentLoaded = async (state) => {
-  await RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'TitleBar',
-    /* method */ 'menuSetEntries',
-    /* titleBarEntries */ state.titleBarEntries
-  )
-}
+export const contentLoaded = (state) => {}
 
 export const focus = async () => {
   await TitleBarMenuBar.focus()
@@ -38,12 +30,29 @@ export const dispose = (state) => {
   }
 }
 
+export const hasFunctionalResize = true
+
 export const resize = (state, dimensions) => {
   return {
-    newState: {
-      ...state,
-      ...dimensions,
-    },
-    commands: [],
+    ...state,
+    ...dimensions,
   }
 }
+
+export const hasFunctionalRender = true
+
+const renderTitleBarEntries = {
+  isEqual(oldState, newState) {
+    return oldState.titleBarEntries === newState.titleBarEntries
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'TitleBar',
+      /* method */ 'menuSetEntries',
+      /* titleBarEntries */ newState.titleBarEntries,
+    ]
+  },
+}
+
+export const render = [renderTitleBarEntries]
