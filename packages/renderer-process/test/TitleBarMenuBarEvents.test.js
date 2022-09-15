@@ -140,7 +140,7 @@ test('event - richt click on menu item', () => {
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
-test.skip('event - key - ArrowDown', () => {
+test('event - key - ArrowDown', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
@@ -166,10 +166,13 @@ test.skip('event - key - ArrowDown', () => {
       key: 'ArrowDown',
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([4618])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'TitleBarMenuBar.handleKeyArrowDown'
+  )
 })
 
-test.skip('event - key - ArrowUp', () => {
+test('event - key - ArrowUp', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
@@ -195,10 +198,13 @@ test.skip('event - key - ArrowUp', () => {
       key: 'ArrowUp',
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([4619])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'TitleBarMenuBar.handleKeyArrowUp'
+  )
 })
 
-test.skip('event - key - Enter', () => {
+test('event - key - Enter', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
@@ -224,10 +230,13 @@ test.skip('event - key - Enter', () => {
       key: 'Enter',
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([4624])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'TitleBarMenuBar.handleKeyEnter'
+  )
 })
 
-test.skip('event - key - Space', () => {
+test('event - key - Space', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
@@ -253,10 +262,12 @@ test.skip('event - key - Space', () => {
       key: ' ',
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([4623])
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'TitleBarMenuBar.handleKeySpace'
+  )
 })
 
-test.skip('event - key - Home', () => {
+test('event - key - Home', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
@@ -282,10 +293,12 @@ test.skip('event - key - Home', () => {
       key: 'Home',
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([4621])
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'TitleBarMenuBar.handleKeyHome'
+  )
 })
 
-test.skip('event - key - End', () => {
+test('event - key - End', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
@@ -311,10 +324,12 @@ test.skip('event - key - End', () => {
       key: 'End',
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([4622])
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'TitleBarMenuBar.handleKeyEnd'
+  )
 })
 
-test.skip('event - key - Escape', () => {
+test('event - key - Escape', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
@@ -340,7 +355,10 @@ test.skip('event - key - Escape', () => {
       key: 'Escape',
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([4625])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'TitleBarMenuBar.handleKeyEscape'
+  )
 })
 
 // TODO test pageup/pagedown

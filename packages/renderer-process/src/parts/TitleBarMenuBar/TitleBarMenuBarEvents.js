@@ -15,7 +15,7 @@ export const handleFocusOut = (event) => {
     return
   }
   RendererWorker.send(
-    /* TitleBarMenu.closeMenu */ 'TitleBarMenuBar.closeMenu',
+    /* TitleBarMenuBar.closeMenu */ 'TitleBarMenuBar.closeMenu',
     /* keepFocus */ false
   )
 }
@@ -27,14 +27,14 @@ export const handleKeyDown = (event) => {
       event.preventDefault()
       event.stopPropagation()
       RendererWorker.send(
-        /* TitleBarMenu.handleKeyArrowDown */ 'TitleBarMenu.handleKeyArrowDown'
+        /* TitleBarMenuBar.handleKeyArrowDown */ 'TitleBarMenuBar.handleKeyArrowDown'
       )
       break
     case 'ArrowUp':
       event.preventDefault()
       event.stopPropagation()
       RendererWorker.send(
-        /* TitleBarMenu.handleKeyArrowUp */ 'TitleBarMenu.handleKeyArrowUp'
+        /* TitleBarMenuBar.handleKeyArrowUp */ 'TitleBarMenuBar.handleKeyArrowUp'
       )
       break
     case 'ArrowRight':
@@ -42,28 +42,28 @@ export const handleKeyDown = (event) => {
       event.preventDefault()
       event.stopPropagation()
       RendererWorker.send(
-        /* TitleBarMenu.handleKeyArrowRight */ 'TitleBarMenu.handleKeyArrowRight'
+        /* TitleBarMenuBar.handleKeyArrowRight */ 'TitleBarMenuBar.handleKeyArrowRight'
       )
       break
     case 'ArrowLeft':
       event.preventDefault()
       event.stopPropagation()
       RendererWorker.send(
-        /* TitleBarMenu.handleKeyArrowLeft */ 'TitleBarMenu.handleKeyArrowLeft'
+        /* TitleBarMenuBar.handleKeyArrowLeft */ 'TitleBarMenuBar.handleKeyArrowLeft'
       )
       break
     case 'Enter':
       event.preventDefault()
       event.stopPropagation()
       RendererWorker.send(
-        /* TitleBarMenu.handleKeyEnter */ 'TitleBarMenu.handleKeyEnter'
+        /* TitleBarMenuBar.handleKeyEnter */ 'TitleBarMenuBar.handleKeyEnter'
       )
       break
     case ' ':
       event.preventDefault()
       event.stopPropagation()
       RendererWorker.send(
-        /* TitleBarMenu.handleKeySpace */ 'TitleBarMenu.handleKeySpace'
+        /* TitleBarMenuBar.handleKeySpace */ 'TitleBarMenuBar.handleKeySpace'
       )
       break
     case 'Home':
@@ -71,7 +71,7 @@ export const handleKeyDown = (event) => {
       event.preventDefault()
       event.stopPropagation()
       RendererWorker.send(
-        /* TitleBarMenu.handleKeyHome */ 'TitleBarMenu.handleKeyHome'
+        /* TitleBarMenuBar.handleKeyHome */ 'TitleBarMenuBar.handleKeyHome'
       )
       break
     case 'End':
@@ -79,14 +79,14 @@ export const handleKeyDown = (event) => {
       event.preventDefault()
       event.stopPropagation()
       RendererWorker.send(
-        /* TitleBarMenu.handleKeyEnd */ 'TitleBarMenu.handleKeyEnd'
+        /* TitleBarMenuBar.handleKeyEnd */ 'TitleBarMenuBar.handleKeyEnd'
       )
       break
     case 'Escape':
       event.preventDefault()
       event.stopPropagation()
       RendererWorker.send(
-        /* TitleBarMenu.handleKeyEscape */ 'TitleBarMenu.handleKeyEscape'
+        /* TitleBarMenuBar.handleKeyEscape */ 'TitleBarMenuBar.handleKeyEscape'
       )
       break
     default:
@@ -103,7 +103,7 @@ export const handleMouseEnter = (event) => {
   const enterX = event.clientX
   const enterY = event.clientY
   RendererWorker.send(
-    /* TitleBarMenu.focusIndex */ 'TitleBarMenuBar.focusIndex',
+    /* TitleBarMenuBar.focusIndex */ 'TitleBarMenuBar.focusIndex',
     /* index */ index,
     /* enterX */ enterX,
     /* enterY */ enterY
@@ -138,7 +138,7 @@ export const handleClick = (event) => {
   }
   // event.preventDefault()
   RendererWorker.send(
-    /* TitleBarMenu.toggleIndex */ 'TitleBarMenuBar.toggleIndex',
+    /* TitleBarMenuBar.toggleIndex */ 'TitleBarMenuBar.toggleIndex',
     /* index */ index
   )
 }

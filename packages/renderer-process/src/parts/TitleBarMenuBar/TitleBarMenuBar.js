@@ -73,18 +73,18 @@ export const getMenuEntryBounds = (state, index) => {
   }
 }
 
-export const focusIndex = (state, unFocusIndex, index) => {
+export const focusIndex = (state, unFocusIndex, focusIndex) => {
   Assert.object(state)
   Assert.number(unFocusIndex)
   Assert.number(focusIndex)
-  console.log('FOCUS ONE')
-  console.log({ unFocusIndex, index })
   const $TitleBarMenu = state.$TitleBarMenu
   if (unFocusIndex !== -1) {
     $TitleBarMenu.children[unFocusIndex].ariaExpanded = 'false'
     $TitleBarMenu.children[unFocusIndex].removeAttribute('aria-owns')
   }
-  $TitleBarMenu.children[index].focus()
+  if (focusIndex !== -1) {
+    $TitleBarMenu.children[focusIndex].focus()
+  }
 }
 
 // TODO the focus variable is confusing: false means keep focus in menubar, true means focus the menu
