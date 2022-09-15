@@ -112,7 +112,9 @@ export const focusIndex = async (index) => {
     await openMenuAtIndex(index, /* focus */ false)
   } else {
     await RendererProcess.invoke(
-      /* TitleBarMenuBar.focusIndex */ 1371,
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'TitleBar',
+      /* menuFocusIndex */ 'menuFocusIndex',
       /* unFocusIndex */ state.focusedIndex,
       /* index */ index
     )

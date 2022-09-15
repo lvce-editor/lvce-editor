@@ -3,8 +3,6 @@ import * as MenuIpc from '../Menu/Menu.ipc.js'
 
 // prettier-ignore
 export const Commands = {
-
-
   'TitleBarMenuBar.closeMenu': TitleBarMenuBar.closeMenu,
   'TitleBarMenuBar.focus': TitleBarMenuBar.focus,
   'TitleBarMenuBar.focusIndex': TitleBarMenuBar.focusIndex,

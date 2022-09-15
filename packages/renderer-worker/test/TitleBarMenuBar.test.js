@@ -420,7 +420,13 @@ test('focusIndex - when closed - when same index', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusIndex(0)
   expect(TitleBarMenu.state.focusedIndex).toBe(0)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 0, 0)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Viewlet.send',
+    'TitleBar',
+    'menuFocusIndex',
+    0,
+    0
+  )
 })
 
 test('focusIndex - when closed - when different index', async () => {
@@ -440,7 +446,13 @@ test('focusIndex - when closed - when different index', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusIndex(1)
   expect(TitleBarMenu.state.focusedIndex).toBe(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 0, 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Viewlet.send',
+    'TitleBar',
+    'menuFocusIndex',
+    0,
+    1
+  )
 })
 
 test('focus', async () => {
@@ -459,7 +471,13 @@ test('focus', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focus()
   expect(TitleBarMenu.state.focusedIndex).toBe(0)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 42, 0)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Viewlet.send',
+    'TitleBar',
+    'menuFocusIndex',
+    42,
+    0
+  )
 })
 
 test('focusPrevious', async () => {
@@ -482,7 +500,13 @@ test('focusPrevious', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusPrevious()
   expect(TitleBarMenu.state.focusedIndex).toBe(0)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 1, 0)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Viewlet.send',
+    'TitleBar',
+    'menuFocusIndex',
+    1,
+    0
+  )
 })
 
 test('focusPrevious - at start', async () => {
@@ -505,7 +529,13 @@ test('focusPrevious - at start', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusPrevious()
   expect(TitleBarMenu.state.focusedIndex).toBe(2)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 0, 2)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Viewlet.send',
+    'TitleBar',
+    'menuFocusIndex',
+    0,
+    2
+  )
 })
 
 test('focusNext', async () => {
@@ -528,7 +558,13 @@ test('focusNext', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusNext()
   expect(TitleBarMenu.state.focusedIndex).toBe(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 0, 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Viewlet.send',
+    'TitleBar',
+    'menuFocusIndex',
+    0,
+    1
+  )
 })
 
 test.skip('focusNext - with disabled items', async () => {
@@ -554,7 +590,12 @@ test.skip('focusNext - with disabled items', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusNext()
   expect(TitleBarMenu.state.focusedIndex).toBe(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Viewlet.send',
+    'TitleBar',
+    'menuFocusIndex',
+    1
+  )
 })
 
 test('focusNext - at end', async () => {
@@ -577,7 +618,13 @@ test('focusNext - at end', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await TitleBarMenu.focusNext()
   expect(TitleBarMenu.state.focusedIndex).toBe(0)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(1371, 2, 0)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Viewlet.send',
+    'TitleBar',
+    'menuFocusIndex',
+    2,
+    0
+  )
 })
 
 test('toggleIndex - when open - when same index', async () => {
