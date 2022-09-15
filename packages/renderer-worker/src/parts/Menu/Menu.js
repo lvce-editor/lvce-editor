@@ -322,7 +322,6 @@ export const getIndexToFocusNextStartingAt = (items, startIndex) => {
       return index
     }
   }
-  console.log({ startIndex, items })
   return -1
 }
 
@@ -332,7 +331,6 @@ export const focusFirst = async () => {
     return
   }
   const indexToFocus = getIndexToFocusNextStartingAt(menu.items, 0)
-  console.log({ first: indexToFocus })
   await focusIndex(menu, indexToFocus)
 }
 

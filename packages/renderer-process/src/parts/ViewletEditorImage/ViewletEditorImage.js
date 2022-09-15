@@ -15,10 +15,9 @@ export const create = () => {
   }
 }
 
-export const dispose = (state) => {}
-
-export const refresh = (state, context) => {
-  Assert.object(state)
-  Assert.string(context.src)
-  state.$Image.src = context.src
+export const setSrc = (state, src) => {
+  const { $Image } = state
+  $Image.src = src
 }
+
+export const dispose = (state) => {}

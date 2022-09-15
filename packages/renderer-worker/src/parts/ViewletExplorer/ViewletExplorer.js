@@ -664,7 +664,6 @@ export const handleClick = (state, index, keepFocus = false) => {
     return focusIndex(state, -1)
   }
   const actualIndex = index + state.minLineY
-  console.log('actual index', actualIndex)
   const dirent = state.dirents[actualIndex]
   if (!dirent) {
     console.warn(`[explorer] dirent at index ${actualIndex} not found`, state)
@@ -1075,7 +1074,6 @@ const getPathParts = (root, uri, pathSeparator) => {
   let index = root.length - 1
   let depth = 0
   while ((index = uri.indexOf('/', index + 1)) !== -1) {
-    console.log({ index, uri, root })
     const partUri = uri.slice(0, index)
     parts.push({ path: partUri, depth: depth++, root, pathSeparator })
   }
@@ -1168,7 +1166,6 @@ const mergeVisibleWithHiddenItems = (visibleItems, hiddenItems) => {
   //     mergedDirents.push(visibleItem)
   //   }
   // }
-  console.log({ unique })
 
   return unique
 }
@@ -1211,7 +1208,6 @@ const revealItemHidden = async (state, uri) => {
   )
   const pathPartsChildrenFlat = pathPartsChildren.flat(1)
   const orderedPathParts = orderDirents(pathPartsChildrenFlat)
-  console.log({ orderedPathParts })
   const mergedDirents = mergeVisibleWithHiddenItems(dirents, orderedPathParts)
   const index = getIndex(mergedDirents, uri)
   return {

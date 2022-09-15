@@ -19,7 +19,5 @@ test('dispose', () => {
 
 test('refresh', () => {
   const state = ViewletEditorImage.create()
-  ViewletEditorImage.refresh(state, {
-    src: '/tmp/some-file.png',
-  })
+  ViewletEditorImage.setSrc(state, '/tmp/some-file.png')
 })

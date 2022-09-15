@@ -168,7 +168,6 @@ export const scheduleDocumentAndCursorsSelections = (editor, changes) => {
     ...editor,
     lines: newLines,
   }
-  console.log({ partialNewEditor })
   const newSelections = EditorSelection.applyEdit(partialNewEditor, changes)
   // TODO should separate rendering from business logic somehow
   // currently hard to test because need to mock editor height, top, left,

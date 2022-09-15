@@ -2,7 +2,6 @@ import * as Command from '../Command/Command.js'
 import * as Layout from '../Layout/Layout.js'
 
 const handleClickSettings = async (state, x, y, viewletId) => {
-  console.log('is settings')
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,

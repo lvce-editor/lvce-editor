@@ -7,9 +7,7 @@ export const getIndexToFocusNextStartingAt = (items, startIndex) => {
     if (canBeFocused(item)) {
       return index
     }
-    console.log({ index, item })
   }
-  console.log({ startIndex, items })
   return -1
 }
 

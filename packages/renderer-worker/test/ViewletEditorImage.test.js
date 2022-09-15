@@ -18,9 +18,12 @@ test('create', () => {
 })
 
 test('loadContent', async () => {
-  const state = ViewletEditorImage.create()
+  const state = {
+    ...ViewletEditorImage.create(),
+    uri: 'test://image.png',
+  }
   expect(await ViewletEditorImage.loadContent(state)).toMatchObject({
-    src: 'abc',
+    src: 'test://image.png',
   })
 })
 

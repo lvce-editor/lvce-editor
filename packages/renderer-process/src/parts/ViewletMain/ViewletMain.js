@@ -152,7 +152,6 @@ const handleTabMouseDown = (event, index) => {
 const handleTabsMouseDown = (event) => {
   const $Target = event.target
   const index = getIndex($Target)
-  console.log({ index })
   if (index === -1) {
     return
   }
