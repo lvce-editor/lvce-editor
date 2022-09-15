@@ -44,19 +44,21 @@ const handleTitleBarButtonsClick = (event) => {
 
 export const setButtons = (state, buttons) => {
   const { $TitleBar } = state
-  const $TitleBarButtons = document.createElement('div')
-  // TODO wrapper div isn't actually necessary
-  $TitleBarButtons.id = 'TitleBarButtons'
-  for (const button of buttons) {
-    const $Icon = document.createElement('i')
-    $Icon.className = `MaskIcon${button.icon}`
-    const $TitleBarButton = document.createElement('button')
-    $TitleBarButton.className = 'TitleBarButton'
-    $TitleBarButton.id = `TitleBarButton${button.id}`
-    $TitleBarButton.ariaLabel = button.label
-    $TitleBarButton.append($Icon)
-    $TitleBarButtons.append($TitleBarButton)
+  if (buttons.length > 0) {
+    const $TitleBarButtons = document.createElement('div')
+    // TODO wrapper div isn't actually necessary
+    $TitleBarButtons.id = 'TitleBarButtons'
+    for (const button of buttons) {
+      const $Icon = document.createElement('i')
+      $Icon.className = `MaskIcon${button.icon}`
+      const $TitleBarButton = document.createElement('button')
+      $TitleBarButton.className = 'TitleBarButton'
+      $TitleBarButton.id = `TitleBarButton${button.id}`
+      $TitleBarButton.ariaLabel = button.label
+      $TitleBarButton.append($Icon)
+      $TitleBarButtons.append($TitleBarButton)
+    }
+    $TitleBarButtons.onmousedown = handleTitleBarButtonsClick
+    $TitleBar.append($TitleBarButtons)
   }
-  $TitleBarButtons.onmousedown = handleTitleBarButtonsClick
-  $TitleBar.append($TitleBarButtons)
 }
