@@ -105,6 +105,9 @@ const getVisible = (filteredKeyBindings, minLineY, maxLineY) => {
 
 export const hasFunctionalRender = true
 
+/**
+ * @enum {number}
+ */
 const DomFlags = {
   Element: 1,
   TextNode: 2,
@@ -159,24 +162,23 @@ const getKeyBindingCellChildren = (keyBinding) => {
         props: {
           className: ClassNames.Key,
         },
-        children: [
-          {
-            flags: DomFlags.TextNode,
-            type: DomElements.Text,
-            props: {
-              text: 'Ctrl',
-            },
-            children: emptyChildren,
-          },
-        ],
+        childCount: 1,
       },
       {
-        flags: DomFlags.Text,
+        flags: DomFlags.TextNode,
+        type: DomElements.Text,
+        props: {
+          text: 'Ctrl',
+        },
+        childCount: 0,
+      },
+      {
+        flags: DomFlags.TextNode,
         type: DomElements.Text,
         props: {
           text: '+',
         },
-        children: emptyChildren,
+        childCount: 0,
       }
     )
   }
@@ -188,184 +190,185 @@ const getKeyBindingCellChildren = (keyBinding) => {
         props: {
           className: ClassNames.Key,
         },
-        children: [
-          {
-            flags: DomFlags.TextNode,
-            type: DomElements.Text,
-            props: {
-              text: 'Ctrl',
-            },
-            children: emptyChildren,
-          },
-        ],
+        childCount: 1,
       },
-      {
-        flags: DomFlags.Text,
-        type: DomElements.Text,
-        props: {
-          text: '+',
-        },
-        children: emptyChildren,
-      }
-    )
-  }
-  children.push({
-    flags: DomFlags.Element,
-    type: DomElements.Kbd,
-    props: {
-      className: ClassNames.Key,
-    },
-    children: [
       {
         flags: DomFlags.TextNode,
         type: DomElements.Text,
         props: {
-          text: keyBinding.key,
+          text: 'Ctrl',
         },
-        children: emptyChildren,
+        childCount: 1,
       },
-    ],
-  })
+      {
+        flags: DomFlags.TextNode,
+        type: DomElements.Text,
+        props: {
+          text: '+',
+        },
+        childCount: 0,
+      }
+    )
+  }
+  children.push(
+    {
+      flags: DomFlags.Element,
+      type: DomElements.Kbd,
+      props: {
+        className: ClassNames.Key,
+      },
+      childCount: 1,
+    },
+    {
+      flags: DomFlags.TextNode,
+      type: DomElements.Text,
+      props: {
+        text: keyBinding.key,
+      },
+      childCount: 0,
+    }
+  )
   return children
 }
 
 const getTableRowDom = (keyBinding) => {
-  return {
-    flags: DomFlags.Element,
-    type: DomElements.Tr,
-    props: {
-      ariaRowIndex: keyBinding.rowIndex,
-      className: ClassNames.KeyBindingsTableRow,
+  const keyBindingsCellChildren = getKeyBindingCellChildren(keyBinding)
+  return [
+    {
+      flags: DomFlags.Element,
+      type: DomElements.Tr,
+      props: {
+        ariaRowIndex: keyBinding.rowIndex,
+        className: ClassNames.KeyBindingsTableRow,
+      },
+      childCount: 3,
     },
-    children: [
-      {
-        flags: DomFlags.Element,
-        type: DomElements.Td,
-        props: {
-          className: ClassNames.KeyBindingsTableCell,
-        },
-        children: [
-          {
-            flags: DomFlags.TextNode,
-            type: DomElements.Text,
-            props: {
-              text: keyBinding.command,
-            },
-            children: emptyChildren,
-          },
-        ],
+    {
+      flags: DomFlags.Element,
+      type: DomElements.Td,
+      props: {
+        className: ClassNames.KeyBindingsTableCell,
       },
-      {
-        flags: DomFlags.Element,
-        type: DomElements.Td,
-        props: {
-          className: ClassNames.KeyBindingsTableCell,
-        },
-        children: getKeyBindingCellChildren(keyBinding),
+      childCount: 1,
+    },
+    {
+      flags: DomFlags.TextNode,
+      type: DomElements.Text,
+      props: {
+        text: keyBinding.command,
       },
-      {
-        flags: DomFlags.Element,
-        type: DomElements.Td,
-        props: {
-          className: ClassNames.KeyBindingsTableCell,
-        },
-        children: [
-          {
-            flags: DomFlags.TextNode,
-            type: DomElements.Text,
-            props: {
-              text: keyBinding.when,
-            },
-            children: emptyChildren,
-          },
-        ],
+      childCount: 0,
+    },
+    {
+      flags: DomFlags.Element,
+      type: DomElements.Td,
+      props: {
+        className: ClassNames.KeyBindingsTableCell,
       },
-    ],
-  }
+      childCount: 1111,
+    },
+    ...getKeyBindingCellChildren(keyBinding),
+    {
+      flags: DomFlags.Element,
+      type: DomElements.Td,
+      props: {
+        className: ClassNames.KeyBindingsTableCell,
+      },
+      childCount: 1,
+    },
+    {
+      flags: DomFlags.TextNode,
+      type: DomElements.Text,
+      props: {
+        text: keyBinding.when,
+      },
+      childCount: 0,
+    },
+  ]
 }
 
 const getTableHeadDom = () => {
-  return {
-    flags: DomFlags.Element,
-    type: DomElements.THead,
-    props: {
-      className: ClassNames.KeyBindingsTableHead,
-    },
-    children: [
-      {
-        flags: DomFlags.Element,
-        type: DomElements.Tr,
-        props: {
-          className: ClassNames.KeyBindingsTableRow,
-          ariaRowIndex: 1,
-        },
-        children: [
-          {
-            flags: DomFlags.Element,
-            type: DomElements.Th,
-            props: {
-              className: ClassNames.KeyBindingsTableCell,
-            },
-            children: [
-              {
-                flags: DomFlags.TextNode,
-                type: DomElements.Text,
-                props: {
-                  text: UiStrings.Command,
-                },
-                children: emptyChildren,
-              },
-            ],
-          },
-          {
-            flags: DomFlags.Element,
-            type: DomElements.Th,
-            props: {
-              className: ClassNames.KeyBindingsTableCell,
-            },
-            children: [
-              {
-                flags: DomFlags.TextNode,
-                type: DomElements.Text,
-                props: {
-                  text: UiStrings.Key,
-                },
-                children: emptyChildren,
-              },
-            ],
-          },
-          {
-            flags: DomFlags.Element,
-            type: DomElements.Th,
-            props: {
-              className: ClassNames.KeyBindingsTableCell,
-            },
-            children: [
-              {
-                flags: DomFlags.TextNode,
-                type: DomElements.Text,
-                props: {
-                  text: UiStrings.When,
-                },
-                children: emptyChildren,
-              },
-            ],
-          },
-        ],
+  return [
+    {
+      flags: DomFlags.Element,
+      type: DomElements.THead,
+      props: {
+        className: ClassNames.KeyBindingsTableHead,
       },
-    ],
-  }
+      childCount: 3,
+    },
+    {
+      flags: DomFlags.Element,
+      type: DomElements.Tr,
+      props: {
+        className: ClassNames.KeyBindingsTableRow,
+        ariaRowIndex: 1,
+      },
+      childCount: 2,
+    },
+    {
+      flags: DomFlags.Element,
+      type: DomElements.Th,
+      props: {
+        className: ClassNames.KeyBindingsTableCell,
+      },
+      childCount: 1,
+    },
+    {
+      flags: DomFlags.TextNode,
+      type: DomElements.Text,
+      props: {
+        text: UiStrings.Command,
+      },
+      childCount: 0,
+    },
+    {
+      flags: DomFlags.Element,
+      type: DomElements.Th,
+      props: {
+        className: ClassNames.KeyBindingsTableCell,
+      },
+      childCount: 1,
+    },
+    {
+      flags: DomFlags.TextNode,
+      type: DomElements.Text,
+      props: {
+        text: UiStrings.Key,
+      },
+      childCount: 0,
+    },
+    {
+      flags: DomFlags.Element,
+      type: DomElements.Th,
+      props: {
+        className: ClassNames.KeyBindingsTableCell,
+      },
+      childCount: 1,
+    },
+    {
+      flags: DomFlags.TextNode,
+      type: DomElements.Text,
+      props: {
+        text: UiStrings.When,
+      },
+      childCount: 0,
+    },
+  ]
 }
 
 const getTableBodyDom = (displayKeyBindings) => {
-  return {
-    flags: DomFlags.Element,
-    type: DomElements.TBody,
-    props: {
-      className: ClassNames.KeyBindingsTableBody,
+  return [
+    {
+      flags: DomFlags.Element,
+      type: DomElements.TBody,
+      props: {
+        className: ClassNames.KeyBindingsTableBody,
+      },
+      childCount: displayKeyBindings.length,
     },
-    children: displayKeyBindings.map(getTableRowDom),
-  }
+    ...displayKeyBindings.flatMap(getTableRowDom),
+  ]
 }
 
 const getTableDom = (filteredKeyBindings, displayKeyBindings) => {
@@ -378,8 +381,10 @@ const getTableDom = (filteredKeyBindings, displayKeyBindings) => {
         ariaLabel: UiStrings.KeyBindings,
         ariaRowCount: filteredKeyBindings.length,
       },
-      children: [getTableHeadDom(), getTableBodyDom(displayKeyBindings)],
+      childCount: 2,
     },
+    ...getTableHeadDom(),
+    ...getTableBodyDom(displayKeyBindings),
   ]
   return tableDom
 }
@@ -401,6 +406,7 @@ const renderKeyBindings = {
     )
     // TODO do dom diffing for faster incremental updates, e.g. when scrolling
     const tableDom = getTableDom(filteredKeyBindings, displayKeyBindings)
+    // console.log({ tableDom })
     return [
       /* viewletSend */ 'Viewlet.send',
       /* id */ 'KeyBindings',

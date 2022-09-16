@@ -69,13 +69,28 @@ const renderDom = (element) => {
 
 const renderDomElementFragment = (elements) => {
   const $Fragment = document.createDocumentFragment()
-  for (const element of elements) {
-    if (element) {
-      const $Element = renderDom(element)
-      $Fragment.append($Element)
+  for (let i = 0; i < elements.length; i++) {
+    const element = elements[i]
+    switch (element.flags) {
+      case DomFlags.TextNode:
+        $Fragment.append(renderDomTextNode(element))
+        break
+      case DomFlags.Element:
+        $Fragment.append(renderDomElement(element))
+        break
     }
   }
-  return $Fragment
+  // const $Elements=[]
+  // for(const element of elements)
+  console.log({ elements })
+  // const $Fragment = document.createDocumentFragment()
+  // for (const element of elements) {
+  //   if (element) {
+  //     const $Element = renderDom(element)
+  //     $Fragment.append($Element)
+  //   }
+  // }
+  // return $Fragment
 }
 
 const replaceChildren = ($Element, $NewChildren) => {
