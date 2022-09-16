@@ -165,14 +165,12 @@ const renderDomElementFragment = (elements) => {
   return $Fragment
 }
 
-const clearNode = ($Element) => {
-  const $Fragment = document.createDocumentFragment()
-  $Fragment.append(...[...$Element.children])
+const replaceChildren = ($Element, $NewChildren) => {
+  $Element.replaceChildren($NewChildren)
 }
 
 export const setTableDom = (state, dom) => {
   const { $KeyBindingsTableBody } = state
-  clearNode($KeyBindingsTableBody)
   const $Fragment = renderDomElementFragment(dom)
-  $KeyBindingsTableBody.append($Fragment)
+  replaceChildren($KeyBindingsTableBody, $Fragment)
 }
