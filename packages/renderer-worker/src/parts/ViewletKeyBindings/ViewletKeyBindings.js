@@ -128,13 +128,12 @@ const UiStrings = {
   Key: 'Key',
 }
 
-const emptyChildren = []
-const emptyProps = {}
-
+// TODO needing childCount variable everywhere can be error prone
 const getKeyBindingCellChildren = (keyBinding) => {
-  // TODO might need to return childCount as well
   const children = []
+  let childCount = 0
   if (keyBinding.isCtrl) {
+    childCount += 2
     children.push(
       {
         type: VirtualDomElements.Kbd,
@@ -160,6 +159,7 @@ const getKeyBindingCellChildren = (keyBinding) => {
     )
   }
   if (keyBinding.isShift) {
+    childCount += 2
     children.push(
       {
         type: VirtualDomElements.Kbd,
@@ -184,6 +184,7 @@ const getKeyBindingCellChildren = (keyBinding) => {
       }
     )
   }
+  childCount++
   children.push(
     {
       type: VirtualDomElements.Kbd,
@@ -200,12 +201,17 @@ const getKeyBindingCellChildren = (keyBinding) => {
       childCount: 0,
     }
   )
-  return children
+  return { children, childCount }
+}
+
+const tableCellProps = {
+  className: ClassNames.KeyBindingsTableCell,
 }
 
 const getTableRowDom = (keyBinding) => {
-  const keyBindingsCellChildren = getKeyBindingCellChildren(keyBinding)
+  const { children, childCount } = getKeyBindingCellChildren(keyBinding)
   // console.log({ keyBindingsCellChildren })
+
   return [
     {
       type: VirtualDomElements.Tr,
@@ -217,9 +223,7 @@ const getTableRowDom = (keyBinding) => {
     },
     {
       type: VirtualDomElements.Td,
-      props: {
-        className: ClassNames.KeyBindingsTableCell,
-      },
+      props: tableCellProps,
       childCount: 1,
     },
     {
@@ -234,14 +238,12 @@ const getTableRowDom = (keyBinding) => {
       props: {
         className: ClassNames.KeyBindingsTableCell,
       },
-      childCount: keyBindingsCellChildren.length,
+      childCount: childCount,
     },
-    ...keyBindingsCellChildren,
+    ...children,
     {
       type: VirtualDomElements.Td,
-      props: {
-        className: ClassNames.KeyBindingsTableCell,
-      },
+      props: tableCellProps,
       childCount: 1,
     },
     {
@@ -273,9 +275,7 @@ const getTableHeadDom = () => {
     },
     {
       type: VirtualDomElements.Th,
-      props: {
-        className: ClassNames.KeyBindingsTableCell,
-      },
+      props: tableCellProps,
       childCount: 1,
     },
     {
@@ -287,9 +287,7 @@ const getTableHeadDom = () => {
     },
     {
       type: VirtualDomElements.Th,
-      props: {
-        className: ClassNames.KeyBindingsTableCell,
-      },
+      props: tableCellProps,
       childCount: 1,
     },
     {
@@ -301,9 +299,7 @@ const getTableHeadDom = () => {
     },
     {
       type: VirtualDomElements.Th,
-      props: {
-        className: ClassNames.KeyBindingsTableCell,
-      },
+      props: tableCellProps,
       childCount: 1,
     },
     {
