@@ -1,0 +1,10 @@
+export const Div = 1
+export const H1 = 2
+export const Kbd = 3
+export const Table = 4
+export const TBody = 5
+export const Td = 6
+export const Text = 7
+export const Th = 8
+export const THead = 9
+export const Tr = 10

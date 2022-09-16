@@ -10,7 +10,7 @@
   padding: 0 15px;
 }
 
-kbd {
+.Key {
   background-color: rgba(128, 128, 128, 0.17);
   border-color: rgba(51, 51, 51, 0.6) rgba(51, 51, 51, 0.6)
     rgba(68, 68, 68, 0.6);
@@ -23,6 +23,7 @@ kbd {
   font-size: 11px;
   padding: 3px 5px;
   margin: 0 2px;
+  contain: content;
 }
 
 .KeyBinding {
@@ -36,12 +37,14 @@ kbd {
   width: 100%;
   table-layout: fixed;
   padding: 0 15px;
+  contain: content;
 }
 
 .KeyBindingsTableBody {
   white-space: pre;
   overflow-y: auto;
   user-select: text;
+  contain: content;
 }
 
 .KeyBindingsTableRow {
@@ -52,4 +55,5 @@ kbd {
 .KeyBindingsTableCell {
   overflow: hidden;
   text-overflow: ellipsis;
+  contain: content;
 }
