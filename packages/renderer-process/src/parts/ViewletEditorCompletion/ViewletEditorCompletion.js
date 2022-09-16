@@ -52,7 +52,7 @@ export const create = () => {
   $Viewlet.dataset.viewletId = name
   $Viewlet.id = 'Completions'
   // @ts-ignore
-  $Viewlet.role= 'listbox'
+  $Viewlet.role = 'listbox'
   $Viewlet.ariaLabel = 'Suggest'
   $Viewlet.onmousedown = handleMousedown
   return {
@@ -71,9 +71,6 @@ export const setPosition = (state, x, y) => {
 export const setItems = (state, items, reason, focusedIndex) => {
   console.log('COMPLETION SHOW', items)
   const { $Viewlet } = state
-  while ($Viewlet.firstChild) {
-    $Viewlet.firstChild.remove()
-  }
   Focus.setAdditionalFocus('editorCompletions')
   if (items.length === 0) {
     if (reason === /* automatically */ 0) {
@@ -84,7 +81,7 @@ export const setItems = (state, items, reason, focusedIndex) => {
     return
   }
   // TODO recycle nodes
-  $Viewlet.append(...items.map(create$CompletionItem))
+  $Viewlet.replaceChildren(...items.map(create$CompletionItem))
   Widget.append($Viewlet)
   focusIndex(state, 0, 0)
   // TODO set right aria attributes on $EditorInput
