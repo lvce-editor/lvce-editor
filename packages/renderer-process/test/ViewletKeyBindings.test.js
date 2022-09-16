@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import * as ViewletKeyBindings from '../src/parts/ViewletKeyBindings/ViewletKeyBindings.js'
+import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 
 test('name', () => {
   expect(ViewletKeyBindings.name).toBe('KeyBindings')
@@ -11,27 +12,27 @@ test('create', () => {
   expect(ViewletKeyBindings.create()).toBeDefined()
 })
 
-test('setKeyBindings', () => {
+test('setTableDom', () => {
   const state = ViewletKeyBindings.create()
-  ViewletKeyBindings.setKeyBindings(state, [
+  ViewletKeyBindings.setTableDom(state, [
     {
-      rawKey: 'Enter',
-      isCtrl: false,
-      isShift: false,
-      key: 'Enter',
-      command: 'EditorCompletion.selectCurrent',
-      when: 'focus.editorCompletions',
+      type: VirtualDomElements.Table,
+      props: {},
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.THead,
+      props: {},
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.TBody,
+      props: {},
+      childCount: 0,
     },
   ])
-  const { $KeyBindingsTableBody } = state
-  expect($KeyBindingsTableBody.innerHTML).toBe(
-    '<tr class="KeyBindingsTableRow"><td class="KeyBindingsTableCell">EditorCompletion.selectCurrent</td><td class="KeyBindingsTableCell"><kbd>Enter</kbd></td><td class="KeyBindingsTableCell">focus.editorCompletions</td></tr>'
-  )
-})
-
-test.skip('setKeyBindings - error - keyBindings is not of type array', () => {
-  const state = ViewletKeyBindings.create()
-  expect(() => ViewletKeyBindings.setKeyBindings(state, 'abc')).toThrowError(
-    new TypeError('abc')
+  const { $KeyBindingsTableWrapper } = state
+  expect($KeyBindingsTableWrapper.innerHTML).toBe(
+    '<table><thead></thead><tbody></tbody></table>'
   )
 })
