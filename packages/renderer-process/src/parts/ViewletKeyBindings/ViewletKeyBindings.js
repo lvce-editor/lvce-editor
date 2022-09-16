@@ -22,6 +22,7 @@ export const create = () => {
 
   const $KeyBindingsTableHeadRow = document.createElement('tr')
   $KeyBindingsTableHeadRow.className = 'KeyBindingsTableRow'
+  $KeyBindingsTableHeadRow.ariaRowIndex = '1'
   $KeyBindingsTableHeadRow.append(
     $KeyBindingsTableHeadRowColumnCommand,
     $KeyBindingsTableHeadRowColumnKey,
@@ -59,6 +60,11 @@ export const create = () => {
   }
 }
 
+export const setRowCount = (state, rowCount) => {
+  const { $KeyBindingsTable } = state
+  $KeyBindingsTable.ariaRowCount = rowCount
+}
+
 export const setKeyBindings = (state, keyBindings) => {
   const { $KeyBindingsTableBody } = state
   $KeyBindingsTableBody.textContent = ''
@@ -91,6 +97,7 @@ export const setKeyBindings = (state, keyBindings) => {
 
     const $Row = document.createElement('tr')
     $Row.className = 'KeyBindingsTableRow'
+    $Row.ariaRowIndex = keyBinding.rowIndex
     $Row.append($TdCommand, $TdKeyBinding, $TdWhen)
     $KeyBindingsTableBody.append($Row)
   }

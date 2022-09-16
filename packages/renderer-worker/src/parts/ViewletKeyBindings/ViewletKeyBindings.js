@@ -1,3 +1,7 @@
+// Based on VS Code's KeyBindings Editor (License MIT):
+// see https://github.com/microsoft/vscode/blob/6a5e3aad96929a7d35e09ed8d22e87a72bd16ff6/src/vs/workbench/services/preferences/browser/keybindingsEditorModel.ts
+// see https://github.com/microsoft/vscode/blob/6a5e3aad96929a7d35e09ed8d22e87a72bd16ff6/src/vs/workbench/contrib/preferences/browser/keybindingsEditor.ts
+
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
 import * as FilterKeyBindings from '../FilterKeyBindings/FilterKeyBindings.js'
@@ -82,6 +86,23 @@ export const handleWheel = (state, deltaY) => {
   return setDeltaY(state, state.deltaY + deltaY)
 }
 
+const getVisible = (filteredKeyBindings, minLineY, maxLineY) => {
+  const visibleKeyBindings = []
+  const slicedKeyBindings = filteredKeyBindings.slice(minLineY, maxLineY)
+  for (let i = 0; i < slicedKeyBindings.length; i++) {
+    const slicedKeyBinding = slicedKeyBindings[i]
+    visibleKeyBindings.push({
+      rowIndex: minLineY + i + 2,
+      isCtrl: slicedKeyBinding.isCtrl,
+      isShift: slicedKeyBinding.isShift,
+      key: slicedKeyBinding.key,
+      when: slicedKeyBinding.when,
+      command: slicedKeyBinding.command,
+    })
+  }
+  return visibleKeyBindings
+}
+
 export const hasFunctionalRender = true
 
 const renderKeyBindings = {
@@ -94,7 +115,11 @@ const renderKeyBindings = {
   },
   apply(oldState, newState) {
     const { filteredKeyBindings, minLineY, maxLineY } = newState
-    const displayKeyBindings = filteredKeyBindings.slice(minLineY, maxLineY)
+    const displayKeyBindings = getVisible(
+      filteredKeyBindings,
+      minLineY,
+      maxLineY
+    )
     return [
       /* viewletSend */ 'Viewlet.send',
       /* id */ 'KeyBindings',
@@ -118,4 +143,22 @@ const renderTableBodyHeight = {
   },
 }
 
-export const render = [renderKeyBindings, renderTableBodyHeight]
+const renderRowCount = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.filteredKeyBindings.length ===
+      newState.filteredKeyBindings.length
+    )
+  },
+  apply(oldState, newState) {
+    const rowCount = newState.filteredKeyBindings.length + 1 // one extra because of table header row
+    return [
+      /* viewletSend */ 'Viewlet.send',
+      /* id */ 'KeyBindings',
+      /* method */ 'setRowCount',
+      /* rowCount */ rowCount,
+    ]
+  },
+}
+
+export const render = [renderKeyBindings, renderTableBodyHeight, renderRowCount]
