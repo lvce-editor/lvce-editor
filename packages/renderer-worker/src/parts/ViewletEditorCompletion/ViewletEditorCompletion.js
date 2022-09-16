@@ -1,11 +1,10 @@
 import * as Command from '../Command/Command.js'
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
+import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js'
+import * as EditorCompletionMap from '../EditorCompletionMap/EditorCompletionMap.js'
 import * as ExtensionHostCompletion from '../ExtensionHost/ExtensionHostCompletion.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as IconTheme from '../IconTheme/IconTheme.js'
-import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js'
-import * as EditorCompletionType from '../EditorCompletionType/EditorCompletionType.js'
 
 export const create = (id, uri, top, left, width, height) => {
   console.log({ id, uri, top, left, width, height })
@@ -56,26 +55,12 @@ const getLabel = (item) => {
   return item.label
 }
 
-const EditorCompletionClassNames = {
-  [EditorCompletionType.Property]: 'IconProperty',
-  [EditorCompletionType.Value]: 'IconValue',
-  [EditorCompletionType.Function]: 'IconFunction',
-  [EditorCompletionType.Variable]: 'IconVariable',
-  [EditorCompletionType.Keyword]: 'IconKeyword',
-}
-
-const defaultClassName = 'IconDefault'
-
-const getIconClassName = (item) => {
-  return EditorCompletionClassNames[item.kind] || defaultClassName
-}
-
 const getVisibleItems = (filteredItems) => {
   const visibleItems = []
   for (const filteredItem of filteredItems) {
     visibleItems.push({
       label: getLabel(filteredItem),
-      icon: getIconClassName(filteredItem),
+      icon: EditorCompletionMap.getIconClassName(filteredItem),
     })
   }
   return visibleItems

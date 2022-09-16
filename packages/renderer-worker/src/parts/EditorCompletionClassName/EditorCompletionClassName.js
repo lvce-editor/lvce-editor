@@ -1,0 +1,6 @@
+export const IconProperty = 'IconProperty'
+export const IconValue = 'IconValue'
+export const IconFunction = 'IconFunction'
+export const IconVariable = 'IconVariable'
+export const IconKeyword = 'IconKeyword'
+export const IconDefault = 'IconDefault'
