@@ -401,7 +401,6 @@ const renderKeyBindings = {
     )
     // TODO do dom diffing for faster incremental updates, e.g. when scrolling
     const tableDom = getTableDom(filteredKeyBindings, displayKeyBindings)
-    console.log({ tableDom })
     return [
       /* viewletSend */ 'Viewlet.send',
       /* id */ 'KeyBindings',
