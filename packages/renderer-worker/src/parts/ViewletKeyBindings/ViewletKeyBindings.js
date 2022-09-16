@@ -114,24 +114,112 @@ const DomElements = {
   Tr: 'tr',
   Td: 'td',
   Text: 'text',
+  Kbd: 'kbd',
+}
+
+const ClassNames = {
+  KeyBindingsTableRow: 'KeyBindingsTableRow',
+  KeyBindingsTableCell: 'KeyBindingsTableCell',
+  Key: 'Key',
 }
 
 const emptyChildren = []
+const emptyProps = {}
+
+const getKeyBindingCellChildren = (keyBinding) => {
+  const children = []
+  if (keyBinding.isCtrl) {
+    children.push(
+      {
+        flags: DomFlags.Element,
+        type: DomElements.Kbd,
+        props: {
+          className: ClassNames.Key,
+        },
+        children: [
+          {
+            flags: DomFlags.TextNode,
+            type: DomElements.Text,
+            props: {
+              text: 'Ctrl',
+            },
+            children: emptyChildren,
+          },
+        ],
+      },
+      {
+        flags: DomFlags.Text,
+        type: DomElements.Text,
+        props: {
+          text: '+',
+        },
+        children: emptyChildren,
+      }
+    )
+  }
+  if (keyBinding.isShift) {
+    children.push(
+      {
+        flags: DomFlags.Element,
+        type: DomElements.Kbd,
+        props: {
+          className: ClassNames.Key,
+        },
+        children: [
+          {
+            flags: DomFlags.TextNode,
+            type: DomElements.Text,
+            props: {
+              text: 'Ctrl',
+            },
+            children: emptyChildren,
+          },
+        ],
+      },
+      {
+        flags: DomFlags.Text,
+        type: DomElements.Text,
+        props: {
+          text: '+',
+        },
+        children: emptyChildren,
+      }
+    )
+  }
+  children.push({
+    flags: DomFlags.Element,
+    type: DomElements.Kbd,
+    props: {
+      className: ClassNames.Key,
+    },
+    children: [
+      {
+        flags: DomFlags.TextNode,
+        type: DomElements.Text,
+        props: {
+          text: keyBinding.key,
+        },
+        children: emptyChildren,
+      },
+    ],
+  })
+  return children
+}
 
 const getTableRowDom = (keyBinding) => {
   return {
     flags: DomFlags.Element,
     type: DomElements.Tr,
     props: {
-      ariaRowIndex: 1,
-      className: 'KeyBindingsTableRow',
+      ariaRowIndex: keyBinding.rowIndex,
+      className: ClassNames.KeyBindingsTableRow,
     },
     children: [
       {
         flags: DomFlags.Element,
         type: DomElements.Td,
         props: {
-          className: 'KeyBindingsTableCell',
+          className: ClassNames.KeyBindingsTableCell,
         },
         children: [
           {
@@ -148,24 +236,15 @@ const getTableRowDom = (keyBinding) => {
         flags: DomFlags.Element,
         type: DomElements.Td,
         props: {
-          className: 'KeyBindingsTableCell',
+          className: ClassNames.KeyBindingsTableCell,
         },
-        children: [
-          {
-            flags: DomFlags.TextNode,
-            type: DomElements.Text,
-            props: {
-              text: keyBinding.key,
-            },
-            children: emptyChildren,
-          },
-        ],
+        children: getKeyBindingCellChildren(keyBinding),
       },
       {
         flags: DomFlags.Element,
         type: DomElements.Td,
         props: {
-          className: 'KeyBindingsTableCell',
+          className: ClassNames.KeyBindingsTableCell,
         },
         children: [
           {

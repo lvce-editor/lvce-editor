@@ -127,7 +127,7 @@ const renderDomTextNode = (element) => {
 
 const setProps = ($Element, props) => {
   for (const [key, value] of Object.entries(props)) {
-    $Element.setAttribute(key, value)
+    $Element[key] = value
   }
 }
 
