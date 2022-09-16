@@ -9,10 +9,7 @@ export const state = {
 }
 
 export const mount = ($Parent, state) => {
-  while ($Parent.firstChild) {
-    $Parent.firstChild.remove()
-  }
-  $Parent.append(state.$Viewlet)
+  $Parent.replaceChildren(state.$Viewlet)
 }
 
 export const load = async (id, ...args) => {
