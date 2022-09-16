@@ -65,9 +65,14 @@ export const setRowCount = (state, rowCount) => {
   $KeyBindingsTable.ariaRowCount = rowCount
 }
 
-export const setKeyBindings = (state, keyBindings) => {
-  const { $KeyBindingsTableBody } = state
-  $KeyBindingsTableBody.textContent = ''
+const render$Row = ($Row, keyBinding) => {}
+
+const render$RowsLess = ($TableBody, keyBindings) => {}
+
+const render$RowsEqual = ($TableBody, keyBindings) => {}
+
+const render$RowsMore = ($TableBody, keyBindings) => {
+  // $KeyBindingsTableBody.textContent = ''
   for (const keyBinding of keyBindings) {
     const $TdCommand = document.createElement('td')
     $TdCommand.className = 'KeyBindingsTableCell'
@@ -101,4 +106,73 @@ export const setKeyBindings = (state, keyBindings) => {
     $Row.append($TdCommand, $TdKeyBinding, $TdWhen)
     $KeyBindingsTableBody.append($Row)
   }
+}
+
+export const setKeyBindings = (state, keyBindings) => {
+  const { $KeyBindingsTableBody } = state
+  const childCount = $KeyBindingsTableBody.children.length
+  const keyBindingsCount = keyBindings.length
+  if (childCount < keyBindingsCount) {
+    return render$RowsLess($KeyBindingsTableBody, keyBindings)
+  }
+  if (childCount === keyBindingsCount) {
+    return render$RowsEqual($KeyBindingsTableBody, keyBindings)
+  }
+  return render$RowsMore($KeyBindingsTableBody, keyBindings)
+}
+
+const renderDomTextNode = (element) => {
+  return document.createTextNode(element.props.text)
+}
+
+const setProps = ($Element, props) => {
+  for (const [key, value] of Object.entries(props)) {
+    $Element.setAttribute(key, value)
+  }
+}
+
+const renderDomElement = (element) => {
+  const { type, children, props } = element
+  const $Element = document.createElement(type)
+  setProps($Element, props)
+  const $Child = renderDomElementFragment(children)
+  $Element.append($Child)
+  return $Element
+}
+
+const DomFlags = {
+  Element: 1,
+  TextNode: 2,
+}
+
+const renderDom = (element) => {
+  switch (element.flags) {
+    case DomFlags.TextNode:
+      return renderDomTextNode(element)
+    case DomFlags.Element:
+      return renderDomElement(element)
+  }
+}
+
+const renderDomElementFragment = (elements) => {
+  const $Fragment = document.createDocumentFragment()
+  for (const element of elements) {
+    if (element) {
+      const $Element = renderDom(element)
+      $Fragment.append($Element)
+    }
+  }
+  return $Fragment
+}
+
+const clearNode = ($Element) => {
+  const $Fragment = document.createDocumentFragment()
+  $Fragment.append(...[...$Element.children])
+}
+
+export const setTableDom = (state, dom) => {
+  const { $KeyBindingsTableBody } = state
+  clearNode($KeyBindingsTableBody)
+  const $Fragment = renderDomElementFragment(dom)
+  $KeyBindingsTableBody.append($Fragment)
 }

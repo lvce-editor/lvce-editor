@@ -105,6 +105,88 @@ const getVisible = (filteredKeyBindings, minLineY, maxLineY) => {
 
 export const hasFunctionalRender = true
 
+const DomFlags = {
+  Element: 1,
+  TextNode: 2,
+}
+
+const DomElements = {
+  Tr: 'tr',
+  Td: 'td',
+  Text: 'text',
+}
+
+const emptyChildren = []
+
+const getTableRowDom = (keyBinding) => {
+  return {
+    flags: DomFlags.Element,
+    type: DomElements.Tr,
+    props: {
+      ariaRowIndex: 1,
+      className: 'KeyBindingsTableRow',
+    },
+    children: [
+      {
+        flags: DomFlags.Element,
+        type: DomElements.Td,
+        props: {
+          className: 'KeyBindingsTableCell',
+        },
+        children: [
+          {
+            flags: DomFlags.TextNode,
+            type: DomElements.Text,
+            props: {
+              text: keyBinding.command,
+            },
+            children: emptyChildren,
+          },
+        ],
+      },
+      {
+        flags: DomFlags.Element,
+        type: DomElements.Td,
+        props: {
+          className: 'KeyBindingsTableCell',
+        },
+        children: [
+          {
+            flags: DomFlags.TextNode,
+            type: DomElements.Text,
+            props: {
+              text: keyBinding.key,
+            },
+            children: emptyChildren,
+          },
+        ],
+      },
+      {
+        flags: DomFlags.Element,
+        type: DomElements.Td,
+        props: {
+          className: 'KeyBindingsTableCell',
+        },
+        children: [
+          {
+            flags: DomFlags.TextNode,
+            type: DomElements.Text,
+            props: {
+              text: keyBinding.when,
+            },
+            children: emptyChildren,
+          },
+        ],
+      },
+    ],
+  }
+}
+
+const getTableDom = (displayKeyBindings) => {
+  const tableDom = displayKeyBindings.map(getTableRowDom)
+  return tableDom
+}
+
 const renderKeyBindings = {
   isEqual(oldState, newState) {
     return (
@@ -120,11 +202,13 @@ const renderKeyBindings = {
       minLineY,
       maxLineY
     )
+    // TODO do dom diffing for faster incremental updates, e.g. when scrolling
+    const tableDom = getTableDom(displayKeyBindings)
     return [
       /* viewletSend */ 'Viewlet.send',
       /* id */ 'KeyBindings',
-      /* method */ 'setKeyBindings',
-      /* keyBindings */ displayKeyBindings,
+      /* method */ 'setTableDom',
+      /* tableDom */ tableDom,
     ]
   },
 }

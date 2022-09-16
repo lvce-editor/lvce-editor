@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -21,6 +22,10 @@ const ViewletKeyBindings = await import(
 const KeyBindingsInitial = await import(
   '../src/parts/KeyBindingsInitial/KeyBindingsInitial.js'
 )
+
+const render = (oldState, newState) => {
+  return ViewletManager.render(ViewletKeyBindings, oldState, newState)
+}
 
 test('name', () => {
   expect(ViewletKeyBindings.name).toBe('KeyBindings')
@@ -181,4 +186,78 @@ test('setDeltaY - scroll up - by two rows', () => {
     minLineY: 0,
     maxLineY: 1,
   })
+})
+
+test('render - add one keybinding', () => {
+  const oldState = {
+    ...ViewletKeyBindings.create(),
+    filteredKeyBindings: [],
+    minLineY: 2,
+    maxLineY: 3,
+    maxVisibleItems: 1,
+  }
+  const newState = {
+    ...oldState,
+    filteredKeyBindings: [
+      {
+        rawKey: 'Enter',
+        isCtrl: false,
+        isShift: false,
+        key: 'Enter',
+        command: 'EditorCompletion.selectCurrent',
+        when: 'focus.editorCompletions',
+      },
+    ],
+  }
+  expect(render(oldState, newState)).toEqual([
+    'addTableDom',
+    [
+      {
+        type: 'tr',
+        ariaRowIndex: 1,
+        className: 'KeyBindingsTableRow',
+        children: [
+          {
+            type: 'td',
+            className: 'KeyBindingsTableCell',
+            children: ['EditorCompletion.selectCurrent'],
+          },
+          {
+            type: 'td',
+            className: 'KeyBindingsTableCell',
+            children: ['Enter'],
+          },
+          {
+            type: 'td',
+            className: 'KeyBindingsTableCell',
+            children: ['focus.editorCompletion'],
+          },
+        ],
+      },
+    ],
+  ])
+})
+
+test('render - remove one keybinding', () => {
+  const oldState = {
+    ...ViewletKeyBindings.create(),
+    filteredKeyBindings: [
+      {
+        rawKey: 'Enter',
+        isCtrl: false,
+        isShift: false,
+        key: 'Enter',
+        command: 'EditorCompletion.selectCurrent',
+        when: 'focus.editorCompletions',
+      },
+    ],
+    minLineY: 2,
+    maxLineY: 3,
+    maxVisibleItems: 1,
+  }
+  const newState = {
+    ...oldState,
+    filteredKeyBindings: [],
+  }
+  expect(render(oldState, newState)).toEqual(['removeTableDom', 1])
 })
