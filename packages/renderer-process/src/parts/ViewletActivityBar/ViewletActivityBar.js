@@ -77,10 +77,7 @@ export const setItems = (state, activityBarItems) => {
   Assert.object(state)
   Assert.array(activityBarItems)
   const $ActivityBar = state.$ActivityBar
-  while ($ActivityBar.firstChild) {
-    $ActivityBar.firstChild.remove()
-  }
-  $ActivityBar.append(...activityBarItems.map(create$ActivityBarItem))
+  $ActivityBar.replaceChildren(...activityBarItems.map(create$ActivityBarItem))
 }
 
 export const selectIndex = (state, oldIndex, newIndex) => {
