@@ -21,6 +21,7 @@ const UiStrings = {
   Command: 'Command',
   When: 'When',
   Key: 'Key',
+  EmptyString: '',
 }
 
 const kbd = h(
@@ -70,7 +71,7 @@ const getTableRowDom = (keyBinding) => {
     h(VirtualDomElements.Td, tableCellProps, childCount),
     ...children,
     tableCell,
-    text(keyBinding.when),
+    text(keyBinding.when || UiStrings.EmptyString),
   ]
 }
 
