@@ -14,7 +14,7 @@ export const create = () => {
   $KeyBindingsHeader.className = 'KeyBindingsHeader'
   $KeyBindingsHeader.append($InputBox)
 
-  const $KeyBindingsTableWrapper = document.createElement('table')
+  const $KeyBindingsTableWrapper = document.createElement('div')
   $KeyBindingsTableWrapper.className = 'KeyBindingsTableWrapper'
   $KeyBindingsTableWrapper.addEventListener(
     'wheel',
@@ -44,5 +44,5 @@ export const setTableDom = (state, dom) => {
   console.log(dom)
   const $Root = VirtualDom.render(dom)
   console.log($Root)
-  replaceChildren($KeyBindingsTableWrapper, $Root.children)
+  replaceChildren($KeyBindingsTableWrapper, $Root.firstChild)
 }

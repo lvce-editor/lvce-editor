@@ -275,7 +275,7 @@ const getTableHeadDom = () => {
       props: {
         className: ClassNames.KeyBindingsTableHead,
       },
-      childCount: 3,
+      childCount: 1,
     },
     {
       flags: VirtualDomFlags.Element,
@@ -284,7 +284,7 @@ const getTableHeadDom = () => {
         className: ClassNames.KeyBindingsTableRow,
         ariaRowIndex: 1,
       },
-      childCount: 2,
+      childCount: 3,
     },
     {
       flags: VirtualDomFlags.Element,
