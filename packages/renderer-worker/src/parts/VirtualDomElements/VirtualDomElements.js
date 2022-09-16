@@ -1,12 +1,10 @@
-// TODO this could be a number enum for more efficiency
-
-export const Div = 'div'
-export const H1 = 'h1'
-export const Kbd = 'kbd'
-export const Table = 'table'
-export const TBody = 'tbody'
-export const Td = 'td'
-export const Text = 'text'
-export const Th = 'th'
-export const THead = 'thead'
-export const Tr = 'tr'
+export const Div = 1
+export const H1 = 2
+export const Kbd = 3
+export const Table = 4
+export const TBody = 5
+export const Td = 6
+export const Text = 7
+export const Th = 8
+export const THead = 9
+export const Tr = 10

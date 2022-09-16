@@ -6,7 +6,6 @@ import * as FilterKeyBindings from '../FilterKeyBindings/FilterKeyBindings.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import * as VirtualDomFlags from '../VirtualDomFlags/VirtualDomFlags.js'
 
 export const name = 'KeyBindings'
 
@@ -133,11 +132,11 @@ const emptyChildren = []
 const emptyProps = {}
 
 const getKeyBindingCellChildren = (keyBinding) => {
+  // TODO might need to return childCount as well
   const children = []
   if (keyBinding.isCtrl) {
     children.push(
       {
-        flags: VirtualDomFlags.Element,
         type: VirtualDomElements.Kbd,
         props: {
           className: ClassNames.Key,
@@ -145,7 +144,6 @@ const getKeyBindingCellChildren = (keyBinding) => {
         childCount: 1,
       },
       {
-        flags: VirtualDomFlags.TextNode,
         type: VirtualDomElements.Text,
         props: {
           text: 'Ctrl',
@@ -153,7 +151,6 @@ const getKeyBindingCellChildren = (keyBinding) => {
         childCount: 0,
       },
       {
-        flags: VirtualDomFlags.TextNode,
         type: VirtualDomElements.Text,
         props: {
           text: '+',
@@ -165,7 +162,6 @@ const getKeyBindingCellChildren = (keyBinding) => {
   if (keyBinding.isShift) {
     children.push(
       {
-        flags: VirtualDomFlags.Element,
         type: VirtualDomElements.Kbd,
         props: {
           className: ClassNames.Key,
@@ -173,7 +169,6 @@ const getKeyBindingCellChildren = (keyBinding) => {
         childCount: 1,
       },
       {
-        flags: VirtualDomFlags.TextNode,
         type: VirtualDomElements.Text,
         props: {
           text: 'Ctrl',
@@ -181,7 +176,6 @@ const getKeyBindingCellChildren = (keyBinding) => {
         childCount: 0,
       },
       {
-        flags: VirtualDomFlags.TextNode,
         type: VirtualDomElements.Text,
         props: {
           text: '+',
@@ -192,7 +186,6 @@ const getKeyBindingCellChildren = (keyBinding) => {
   }
   children.push(
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Kbd,
       props: {
         className: ClassNames.Key,
@@ -200,7 +193,6 @@ const getKeyBindingCellChildren = (keyBinding) => {
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.TextNode,
       type: VirtualDomElements.Text,
       props: {
         text: keyBinding.key,
@@ -213,9 +205,9 @@ const getKeyBindingCellChildren = (keyBinding) => {
 
 const getTableRowDom = (keyBinding) => {
   const keyBindingsCellChildren = getKeyBindingCellChildren(keyBinding)
+  // console.log({ keyBindingsCellChildren })
   return [
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Tr,
       props: {
         ariaRowIndex: keyBinding.rowIndex,
@@ -224,7 +216,6 @@ const getTableRowDom = (keyBinding) => {
       childCount: 3,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Td,
       props: {
         className: ClassNames.KeyBindingsTableCell,
@@ -232,7 +223,6 @@ const getTableRowDom = (keyBinding) => {
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.TextNode,
       type: VirtualDomElements.Text,
       props: {
         text: keyBinding.command,
@@ -240,7 +230,6 @@ const getTableRowDom = (keyBinding) => {
       childCount: 0,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Td,
       props: {
         className: ClassNames.KeyBindingsTableCell,
@@ -249,7 +238,6 @@ const getTableRowDom = (keyBinding) => {
     },
     ...keyBindingsCellChildren,
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Td,
       props: {
         className: ClassNames.KeyBindingsTableCell,
@@ -257,7 +245,6 @@ const getTableRowDom = (keyBinding) => {
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.TextNode,
       type: VirtualDomElements.Text,
       props: {
         text: keyBinding.when,
@@ -270,7 +257,6 @@ const getTableRowDom = (keyBinding) => {
 const getTableHeadDom = () => {
   return [
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.THead,
       props: {
         className: ClassNames.KeyBindingsTableHead,
@@ -278,7 +264,6 @@ const getTableHeadDom = () => {
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Tr,
       props: {
         className: ClassNames.KeyBindingsTableRow,
@@ -287,7 +272,6 @@ const getTableHeadDom = () => {
       childCount: 3,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Th,
       props: {
         className: ClassNames.KeyBindingsTableCell,
@@ -295,7 +279,6 @@ const getTableHeadDom = () => {
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.TextNode,
       type: VirtualDomElements.Text,
       props: {
         text: UiStrings.Command,
@@ -303,7 +286,6 @@ const getTableHeadDom = () => {
       childCount: 0,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Th,
       props: {
         className: ClassNames.KeyBindingsTableCell,
@@ -311,7 +293,6 @@ const getTableHeadDom = () => {
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.TextNode,
       type: VirtualDomElements.Text,
       props: {
         text: UiStrings.Key,
@@ -319,7 +300,6 @@ const getTableHeadDom = () => {
       childCount: 0,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Th,
       props: {
         className: ClassNames.KeyBindingsTableCell,
@@ -327,7 +307,6 @@ const getTableHeadDom = () => {
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.TextNode,
       type: VirtualDomElements.Text,
       props: {
         text: UiStrings.When,
@@ -340,7 +319,6 @@ const getTableHeadDom = () => {
 const getTableBodyDom = (displayKeyBindings) => {
   return [
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.TBody,
       props: {
         className: ClassNames.KeyBindingsTableBody,
@@ -354,7 +332,6 @@ const getTableBodyDom = (displayKeyBindings) => {
 const getTableDom = (filteredKeyBindings, displayKeyBindings) => {
   const tableDom = [
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Table,
       props: {
         className: ClassNames.KeyBindingsTable,
@@ -385,7 +362,9 @@ const renderKeyBindings = {
       maxLineY
     )
     // TODO do dom diffing for faster incremental updates, e.g. when scrolling
+    console.time('tableDom')
     const tableDom = getTableDom(filteredKeyBindings, displayKeyBindings)
+    console.timeEnd('tableDom')
     // console.log({ tableDom })
     return [
       /* viewletSend */ 'Viewlet.send',

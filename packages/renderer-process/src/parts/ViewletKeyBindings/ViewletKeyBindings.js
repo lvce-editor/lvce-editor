@@ -41,8 +41,8 @@ const replaceChildren = ($Element, $NewChildren) => {
 
 export const setTableDom = (state, dom) => {
   const { $KeyBindingsTableWrapper } = state
-  console.log(dom)
+  // console.log(dom)
   const $Root = VirtualDom.render(dom)
-  console.log($Root)
+  // console.log($Root)
   replaceChildren($KeyBindingsTableWrapper, $Root.firstChild)
 }

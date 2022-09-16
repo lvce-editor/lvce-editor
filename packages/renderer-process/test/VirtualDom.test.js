@@ -2,13 +2,11 @@
  * @jest-environment jsdom
  */
 import * as VirtualDom from '../src/parts/VirtualDom/VirtualDom.js'
-import * as VirtualDomFlags from '../src/parts/VirtualDomFlags/VirtualDomFlags.js'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 
 test('render - single tag', () => {
   const dom = VirtualDom.render([
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.H1,
       props: {},
       childCount: 0,
@@ -20,7 +18,6 @@ test('render - single tag', () => {
 test('render - single text node', () => {
   const dom = VirtualDom.render([
     {
-      flags: VirtualDomFlags.TextNode,
       type: VirtualDomElements.Text,
       props: {
         text: 'test',
@@ -34,19 +31,16 @@ test('render - single text node', () => {
 test('render - multiple element nodes', () => {
   const dom = VirtualDom.render([
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Table,
       props: {},
       childCount: 2,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.THead,
       props: {},
       childCount: 0,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.TBody,
       props: {},
       childCount: 0,
@@ -58,19 +52,16 @@ test('render - multiple element nodes', () => {
 test('render - nesting level 2', () => {
   const dom = VirtualDom.render([
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 0,
@@ -82,25 +73,21 @@ test('render - nesting level 2', () => {
 test('render - nesting level 3', () => {
   const dom = VirtualDom.render([
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 0,
@@ -112,31 +99,26 @@ test('render - nesting level 3', () => {
 test('render - nesting level 4', () => {
   const dom = VirtualDom.render([
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 0,
@@ -150,37 +132,31 @@ test('render - nesting level 4', () => {
 test('render - nesting level 5', () => {
   const dom = VirtualDom.render([
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 0,
@@ -194,19 +170,16 @@ test('render - nesting level 5', () => {
 test('render - trailing text node', () => {
   const dom = VirtualDom.render([
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 2,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Div,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.TextNode,
       type: VirtualDomElements.Text,
       props: {
         text: 'abc',
@@ -214,7 +187,6 @@ test('render - trailing text node', () => {
       childCount: 0,
     },
     {
-      flags: VirtualDomFlags.TextNode,
       type: VirtualDomElements.Text,
       props: {
         text: 'def',
@@ -228,19 +200,16 @@ test('render - trailing text node', () => {
 test('render - element with element children and text children', () => {
   const dom = VirtualDom.render([
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Td,
       props: {},
       childCount: 3,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Kbd,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.TextNode,
       type: VirtualDomElements.Text,
       props: {
         text: 'Ctrl',
@@ -248,7 +217,6 @@ test('render - element with element children and text children', () => {
       childCount: 0,
     },
     {
-      flags: VirtualDomFlags.TextNode,
       type: VirtualDomElements.Text,
       props: {
         text: '+',
@@ -256,13 +224,11 @@ test('render - element with element children and text children', () => {
       childCount: 0,
     },
     {
-      flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Kbd,
       props: {},
       childCount: 1,
     },
     {
-      flags: VirtualDomFlags.TextNode,
       type: VirtualDomElements.Text,
       props: {
         text: 'P',
