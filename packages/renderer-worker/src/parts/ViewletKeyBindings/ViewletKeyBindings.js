@@ -178,7 +178,7 @@ const getKeyBindingCellChildren = (keyBinding) => {
         props: {
           text: 'Ctrl',
         },
-        childCount: 1,
+        childCount: 0,
       },
       {
         flags: VirtualDomFlags.TextNode,
@@ -245,9 +245,9 @@ const getTableRowDom = (keyBinding) => {
       props: {
         className: ClassNames.KeyBindingsTableCell,
       },
-      childCount: 1111,
+      childCount: keyBindingsCellChildren.length,
     },
-    ...getKeyBindingCellChildren(keyBinding),
+    ...keyBindingsCellChildren,
     {
       flags: VirtualDomFlags.Element,
       type: VirtualDomElements.Td,

@@ -44,5 +44,5 @@ export const setTableDom = (state, dom) => {
   console.log(dom)
   const $Root = VirtualDom.render(dom)
   console.log($Root)
-  // replaceChildren($KeyBindingsTableWrapper, $Root)
+  replaceChildren($KeyBindingsTableWrapper, $Root.children)
 }

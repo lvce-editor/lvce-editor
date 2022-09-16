@@ -33,7 +33,7 @@ const renderElement = (element) => {
  * @param {any[]} elements
  * @returns
  */
-export const renderInternal2 = ($Parent, elements, startIndex) => {
+export const renderInternal2 = ($Parent, elements) => {
   const max = elements.length - 1
   let stack = []
   for (let i = max; i >= 0; i--) {
@@ -54,6 +54,6 @@ export const renderInternal2 = ($Parent, elements, startIndex) => {
  */
 export const render = (elements) => {
   const $Root = document.createElement('div')
-  renderInternal2($Root, elements, 0)
+  renderInternal2($Root, elements)
   return $Root
 }
