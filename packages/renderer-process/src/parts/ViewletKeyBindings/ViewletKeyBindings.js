@@ -13,112 +13,25 @@ export const create = () => {
   $KeyBindingsHeader.className = 'KeyBindingsHeader'
   $KeyBindingsHeader.append($InputBox)
 
-  const $KeyBindingsTableHeadRowColumnCommand = document.createElement('th')
-  $KeyBindingsTableHeadRowColumnCommand.textContent = 'Command'
-  const $KeyBindingsTableHeadRowColumnKey = document.createElement('th')
-  $KeyBindingsTableHeadRowColumnKey.textContent = 'Key'
-  const $KeyBindingsTableHeadRowColumnWhen = document.createElement('th')
-  $KeyBindingsTableHeadRowColumnWhen.textContent = 'When'
-
-  const $KeyBindingsTableHeadRow = document.createElement('tr')
-  $KeyBindingsTableHeadRow.className = 'KeyBindingsTableRow'
-  $KeyBindingsTableHeadRow.ariaRowIndex = '1'
-  $KeyBindingsTableHeadRow.append(
-    $KeyBindingsTableHeadRowColumnCommand,
-    $KeyBindingsTableHeadRowColumnKey,
-    $KeyBindingsTableHeadRowColumnWhen
-  )
-
-  const $KeyBindingsTableHead = document.createElement('thead')
-  $KeyBindingsTableHead.className = 'KeyBindingsTableHead'
-  $KeyBindingsTableHead.append($KeyBindingsTableHeadRow)
-
-  const $KeyBindingsTableBody = document.createElement('tbody')
-  $KeyBindingsTableBody.className = 'KeyBindingsTableBody'
-  $KeyBindingsTableBody.addEventListener(
+  const $KeyBindingsTableWrapper = document.createElement('table')
+  $KeyBindingsTableWrapper.className = 'KeyBindingsTableWrapper'
+  $KeyBindingsTableWrapper.addEventListener(
     'wheel',
     ViewletkeyBindingsEvents.handleWheel,
     { passive: true }
   )
 
-  const $KeyBindingsTable = document.createElement('table')
-  $KeyBindingsTable.className = 'KeyBindingsTable'
-  $KeyBindingsTable.ariaLabel = 'KeyBindings'
-  $KeyBindingsTable.append($KeyBindingsTableHead, $KeyBindingsTableBody)
-
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet'
   $Viewlet.dataset.viewletId = 'KeyBindings'
-  $Viewlet.append($KeyBindingsHeader, $KeyBindingsTable)
+  $Viewlet.append($KeyBindingsHeader, $KeyBindingsTableWrapper)
 
   return {
     $Viewlet,
     $InputBox,
     $KeyBindingsHeader,
-    $KeyBindingsTable,
-    $KeyBindingsTableBody,
+    $KeyBindingsTableWrapper,
   }
-}
-
-export const setRowCount = (state, rowCount) => {
-  const { $KeyBindingsTable } = state
-  $KeyBindingsTable.ariaRowCount = rowCount
-}
-
-const render$Row = ($Row, keyBinding) => {}
-
-const render$RowsLess = ($TableBody, keyBindings) => {}
-
-const render$RowsEqual = ($TableBody, keyBindings) => {}
-
-const render$RowsMore = ($TableBody, keyBindings) => {
-  // $KeyBindingsTableBody.textContent = ''
-  for (const keyBinding of keyBindings) {
-    const $TdCommand = document.createElement('td')
-    $TdCommand.className = 'KeyBindingsTableCell'
-    $TdCommand.textContent = keyBinding.command
-
-    const $TdKeyBinding = document.createElement('td')
-    $TdKeyBinding.className = 'KeyBindingsTableCell'
-    if (keyBinding.isShift) {
-      const $KbdShift = document.createElement('kbd')
-      $KbdShift.textContent = 'Shift'
-      const $KbdSeparator = document.createTextNode('+')
-      $TdKeyBinding.append($KbdShift, $KbdSeparator)
-    }
-    if (keyBinding.isCtrl) {
-      const $KbdCtrl = document.createElement('kbd')
-      $KbdCtrl.textContent = 'Ctrl'
-      const $KbdSeparator = document.createTextNode('+')
-      $TdKeyBinding.append($KbdCtrl, $KbdSeparator)
-    }
-    const $KbdKey = document.createElement('kbd')
-    $KbdKey.textContent = keyBinding.key
-    $TdKeyBinding.append($KbdKey, $KbdKey)
-
-    const $TdWhen = document.createElement('td')
-    $TdWhen.className = 'KeyBindingsTableCell'
-    $TdWhen.textContent = keyBinding.when
-
-    const $Row = document.createElement('tr')
-    $Row.className = 'KeyBindingsTableRow'
-    $Row.ariaRowIndex = keyBinding.rowIndex
-    $Row.append($TdCommand, $TdKeyBinding, $TdWhen)
-    $KeyBindingsTableBody.append($Row)
-  }
-}
-
-export const setKeyBindings = (state, keyBindings) => {
-  const { $KeyBindingsTableBody } = state
-  const childCount = $KeyBindingsTableBody.children.length
-  const keyBindingsCount = keyBindings.length
-  if (childCount < keyBindingsCount) {
-    return render$RowsLess($KeyBindingsTableBody, keyBindings)
-  }
-  if (childCount === keyBindingsCount) {
-    return render$RowsEqual($KeyBindingsTableBody, keyBindings)
-  }
-  return render$RowsMore($KeyBindingsTableBody, keyBindings)
 }
 
 const renderDomTextNode = (element) => {
@@ -170,7 +83,7 @@ const replaceChildren = ($Element, $NewChildren) => {
 }
 
 export const setTableDom = (state, dom) => {
-  const { $KeyBindingsTableBody } = state
+  const { $KeyBindingsTableWrapper } = state
   const $Fragment = renderDomElementFragment(dom)
-  replaceChildren($KeyBindingsTableBody, $Fragment)
+  replaceChildren($KeyBindingsTableWrapper, $Fragment)
 }

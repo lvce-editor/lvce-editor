@@ -110,16 +110,39 @@ const DomFlags = {
   TextNode: 2,
 }
 
+/**
+ * @enum {string}
+ */
 const DomElements = {
   Tr: 'tr',
   Td: 'td',
+  Th: 'th',
   Text: 'text',
   Kbd: 'kbd',
+  Table: 'table',
+  THead: 'thead',
+  TBody: 'tbody',
 }
 
+/**
+ * @enum {string}
+ */
 const ClassNames = {
   KeyBindingsTableRow: 'KeyBindingsTableRow',
   KeyBindingsTableCell: 'KeyBindingsTableCell',
+  Key: 'Key',
+  KeyBindingsTable: 'KeyBindingsTable',
+  KeyBindingsTableHead: 'KeyBindingsTableHead',
+  KeyBindingsTableBody: 'KeyBindingsTableBody',
+}
+
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  KeyBindings: 'KeyBindings',
+  Command: 'Command',
+  When: 'When',
   Key: 'Key',
 }
 
@@ -261,8 +284,103 @@ const getTableRowDom = (keyBinding) => {
   }
 }
 
-const getTableDom = (displayKeyBindings) => {
-  const tableDom = displayKeyBindings.map(getTableRowDom)
+const getTableHeadDom = () => {
+  return {
+    flags: DomFlags.Element,
+    type: DomElements.THead,
+    props: {
+      className: ClassNames.KeyBindingsTableHead,
+    },
+    children: [
+      {
+        flags: DomFlags.Element,
+        type: DomElements.Tr,
+        props: {
+          className: ClassNames.KeyBindingsTableRow,
+          ariaRowIndex: 1,
+        },
+        children: [
+          {
+            flags: DomFlags.Element,
+            type: DomElements.Th,
+            props: {
+              className: ClassNames.KeyBindingsTableCell,
+            },
+            children: [
+              {
+                flags: DomFlags.TextNode,
+                type: DomElements.Text,
+                props: {
+                  text: UiStrings.Command,
+                },
+                children: emptyChildren,
+              },
+            ],
+          },
+          {
+            flags: DomFlags.Element,
+            type: DomElements.Th,
+            props: {
+              className: ClassNames.KeyBindingsTableCell,
+            },
+            children: [
+              {
+                flags: DomFlags.TextNode,
+                type: DomElements.Text,
+                props: {
+                  text: UiStrings.Key,
+                },
+                children: emptyChildren,
+              },
+            ],
+          },
+          {
+            flags: DomFlags.Element,
+            type: DomElements.Th,
+            props: {
+              className: ClassNames.KeyBindingsTableCell,
+            },
+            children: [
+              {
+                flags: DomFlags.TextNode,
+                type: DomElements.Text,
+                props: {
+                  text: UiStrings.When,
+                },
+                children: emptyChildren,
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  }
+}
+
+const getTableBodyDom = (displayKeyBindings) => {
+  return {
+    flags: DomFlags.Element,
+    type: DomElements.TBody,
+    props: {
+      className: ClassNames.KeyBindingsTableBody,
+    },
+    children: displayKeyBindings.map(getTableRowDom),
+  }
+}
+
+const getTableDom = (filteredKeyBindings, displayKeyBindings) => {
+  const tableDom = [
+    {
+      flags: DomFlags.Element,
+      type: DomElements.Table,
+      props: {
+        className: ClassNames.KeyBindingsTable,
+        ariaLabel: UiStrings.KeyBindings,
+        ariaRowCount: filteredKeyBindings.length,
+      },
+      children: [getTableHeadDom(), getTableBodyDom(displayKeyBindings)],
+    },
+  ]
   return tableDom
 }
 
@@ -282,7 +400,8 @@ const renderKeyBindings = {
       maxLineY
     )
     // TODO do dom diffing for faster incremental updates, e.g. when scrolling
-    const tableDom = getTableDom(displayKeyBindings)
+    const tableDom = getTableDom(filteredKeyBindings, displayKeyBindings)
+    console.log({ tableDom })
     return [
       /* viewletSend */ 'Viewlet.send',
       /* id */ 'KeyBindings',
@@ -292,36 +411,4 @@ const renderKeyBindings = {
   },
 }
 
-const renderTableBodyHeight = {
-  isEqual(oldState, newState) {
-    return oldState.filteredKeyBindings === newState.filteredKeyBindings
-  },
-  apply(oldState, newState) {
-    return [
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ 'KeyBindings',
-      /* method */ 'setTbodyHeight',
-      /* height */ 0,
-    ]
-  },
-}
-
-const renderRowCount = {
-  isEqual(oldState, newState) {
-    return (
-      oldState.filteredKeyBindings.length ===
-      newState.filteredKeyBindings.length
-    )
-  },
-  apply(oldState, newState) {
-    const rowCount = newState.filteredKeyBindings.length + 1 // one extra because of table header row
-    return [
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ 'KeyBindings',
-      /* method */ 'setRowCount',
-      /* rowCount */ rowCount,
-    ]
-  },
-}
-
-export const render = [renderKeyBindings, renderTableBodyHeight, renderRowCount]
+export const render = [renderKeyBindings]
