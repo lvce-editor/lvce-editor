@@ -30,9 +30,7 @@ export const create = () => {
 
 export const dispose = (state) => {
   Assert.object(state)
-  while (state.$SideBar.firstChild) {
-    state.$SideBar.firstChild.remove()
-  }
+  state.$SideBar.replaceChildren()
 }
 
 export const appendViewlet = (state, name, $Viewlet) => {
