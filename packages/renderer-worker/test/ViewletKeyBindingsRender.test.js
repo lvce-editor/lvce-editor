@@ -6,7 +6,7 @@ const render = (oldState, newState) => {
   return ViewletManager.render(ViewletKeyBindings, oldState, newState)
 }
 
-test.skip('render - add one keybinding', () => {
+test('render - add one keybinding', () => {
   const oldState = {
     ...ViewletKeyBindings.create(),
     filteredKeyBindings: [],
@@ -27,7 +27,88 @@ test.skip('render - add one keybinding', () => {
       },
     ],
   }
-  expect(render(oldState, newState)).toEqual(['addTableDom'])
+  expect(render(oldState, newState)).toEqual([
+    [
+      'Viewlet.send',
+      'KeyBindings',
+      'setTableDom',
+      [
+        {
+          childCount: 2,
+          props: {
+            ariaLabel: 'KeyBindings',
+            ariaRowCount: 1,
+            className: 'KeyBindingsTable',
+          },
+          type: VirtualDomElements.Table,
+        },
+        {
+          childCount: 1,
+          props: {
+            className: 'KeyBindingsTableHead',
+          },
+          type: VirtualDomElements.THead,
+        },
+        {
+          childCount: 3,
+          props: {
+            ariaRowIndex: 1,
+            className: 'KeyBindingsTableRow',
+          },
+          type: VirtualDomElements.Tr,
+        },
+        {
+          childCount: 1,
+          props: {
+            className: 'KeyBindingsTableCell',
+          },
+          type: VirtualDomElements.Th,
+        },
+        {
+          childCount: 0,
+          props: {
+            text: 'Command',
+          },
+          type: VirtualDomElements.Text,
+        },
+        {
+          childCount: 1,
+          props: {
+            className: 'KeyBindingsTableCell',
+          },
+          type: VirtualDomElements.Th,
+        },
+        {
+          childCount: 0,
+          props: {
+            text: 'Key',
+          },
+          type: VirtualDomElements.Text,
+        },
+        {
+          childCount: 1,
+          props: {
+            className: 'KeyBindingsTableCell',
+          },
+          type: VirtualDomElements.Th,
+        },
+        {
+          childCount: 0,
+          props: {
+            text: 'When',
+          },
+          type: VirtualDomElements.Text,
+        },
+        {
+          childCount: 0,
+          props: {
+            className: 'KeyBindingsTableBody',
+          },
+          type: VirtualDomElements.TBody,
+        },
+      ],
+    ],
+  ])
 })
 
 test('render - remove one keybinding', () => {
