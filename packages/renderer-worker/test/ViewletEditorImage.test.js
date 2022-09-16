@@ -1,4 +1,15 @@
+/**
+ * @jest-environment jsdom
+ */
 import * as ViewletEditorImage from '../src/parts/ViewletEditorImage/ViewletEditorImage.js'
+
+beforeAll(() => {
+  // workaround for jsdom not supporting DOMMatrixReadonly
+  // @ts-ignore
+  globalThis.DOMMatrixReadOnly = class {
+    constructor() {}
+  }
+})
 
 const ViewletManager = await import(
   '../src/parts/ViewletManager/ViewletManager.js'
