@@ -276,7 +276,7 @@ const render$Extensions = ($ExtensionList, extensions) => {
 
 export const setNegativeMargin = (state, negativeMargin) => {
   const { $ExtensionList } = state
-  $ExtensionList.style.top = `${negativeMargin}px`
+  $ExtensionList.style.translate = `0 ${negativeMargin}px`
   // Assert.number(negativeMargin)
   // const { $NegativeMargin } = state
   // $NegativeMargin.style.marginTop = `${negativeMargin}px`
@@ -344,6 +344,6 @@ export const handleError = (state, message) => {
 
 export const setScrollBar = (state, scrollBarY, scrollBarHeight) => {
   const { $ScrollBarThumb } = state
-  $ScrollBarThumb.style.top = `${scrollBarY}px`
-  $ScrollBarThumb.style.height = `${scrollBarHeight}px`
+  // $ScrollBarThumb.style.top = `${scrollBarY}px`
+  // $ScrollBarThumb.style.height = `${scrollBarHeight}px`
 }
