@@ -190,3 +190,85 @@ test('render - nesting level 5', () => {
     '<div><div><div><div><div><div></div></div></div></div></div></div>'
   )
 })
+
+test('render - trailing text node', () => {
+  const dom = VirtualDom.render([
+    {
+      flags: VirtualDomFlags.Element,
+      type: VirtualDomElements.Div,
+      props: {},
+      childCount: 2,
+    },
+    {
+      flags: VirtualDomFlags.Element,
+      type: VirtualDomElements.Div,
+      props: {},
+      childCount: 1,
+    },
+    {
+      flags: VirtualDomFlags.TextNode,
+      type: VirtualDomElements.Text,
+      props: {
+        text: 'abc',
+      },
+      childCount: 0,
+    },
+    {
+      flags: VirtualDomFlags.TextNode,
+      type: VirtualDomElements.Text,
+      props: {
+        text: 'def',
+      },
+      childCount: 0,
+    },
+  ])
+  expect(dom.innerHTML).toBe('<div><div>abc</div>def</div>')
+})
+
+test('render - element with element children and text children', () => {
+  const dom = VirtualDom.render([
+    {
+      flags: VirtualDomFlags.Element,
+      type: VirtualDomElements.Td,
+      props: {},
+      childCount: 3,
+    },
+    {
+      flags: VirtualDomFlags.Element,
+      type: VirtualDomElements.Kbd,
+      props: {},
+      childCount: 1,
+    },
+    {
+      flags: VirtualDomFlags.TextNode,
+      type: VirtualDomElements.Text,
+      props: {
+        text: 'Ctrl',
+      },
+      childCount: 0,
+    },
+    {
+      flags: VirtualDomFlags.TextNode,
+      type: VirtualDomElements.Text,
+      props: {
+        text: '+',
+      },
+      childCount: 0,
+    },
+    {
+      flags: VirtualDomFlags.Element,
+      type: VirtualDomElements.Kbd,
+      props: {},
+      childCount: 1,
+    },
+    {
+      flags: VirtualDomFlags.TextNode,
+      type: VirtualDomElements.Text,
+      props: {
+        text: 'P',
+      },
+      childCount: 0,
+    },
+  ])
+  expect(dom.innerHTML).toBe('<td><kbd>Ctrl</kbd>+<kbd>P</kbd></td>')
+})

@@ -40,8 +40,8 @@ export const renderInternal2 = ($Parent, elements, startIndex) => {
     const element = elements[i]
     const $Element = renderElement(element)
     if (element.childCount > 0) {
-      $Element.append(...stack)
-      stack = []
+      $Element.append(...stack.slice(0, element.childCount))
+      stack = stack.slice(element.childCount)
     }
     stack.unshift($Element)
   }
