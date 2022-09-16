@@ -6,8 +6,8 @@ const renderDomTextNode = (element) => {
 }
 
 const setProps = ($Element, props) => {
-  for (const [key, value] of Object.entries(props)) {
-    $Element[key] = value
+  for (const key in props) {
+    $Element[key] = props[key]
   }
 }
 
