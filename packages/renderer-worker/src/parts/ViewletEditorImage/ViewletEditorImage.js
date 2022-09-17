@@ -55,7 +55,14 @@ export const handlePointerMove = (state, x, y) => {
   const { pointerOffsetX, pointerOffsetY, domMatrix } = state
   const deltaX = x - pointerOffsetX
   const deltaY = y - pointerOffsetY
-  const newDomMatrix = domMatrix.translate(deltaX, deltaY)
+  const newDomMatrix = new DOMMatrix([
+    domMatrix.a,
+    domMatrix.b,
+    domMatrix.c,
+    domMatrix.d,
+    domMatrix.e + deltaX,
+    domMatrix.f + deltaY,
+  ])
   return {
     ...state,
     pointerOffsetX: x,

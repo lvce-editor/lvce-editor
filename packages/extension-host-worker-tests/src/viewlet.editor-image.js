@@ -53,6 +53,6 @@ test('viewlet.editor-image', async () => {
   // assert
   await expect(imageWrapper).toHaveCSS(
     'transform',
-    'matrix(1.13, 0, 0, 1.13, 1.13, 7.15)'
+    'matrix(1.13, 0, 0, 1.13, 1, 7.15)'
   )
 })
