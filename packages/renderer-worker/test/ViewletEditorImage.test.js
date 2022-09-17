@@ -45,6 +45,17 @@ beforeAll(() => {
       return this
     }
 
+    translate(deltaX, deltaY) {
+      return new DOMMatrix([
+        this.a,
+        this.b,
+        this.c,
+        this.d,
+        this.e + deltaX,
+        this.f + deltaY,
+      ])
+    }
+
     scaleSelf(scaleX = 1, scaleY = scaleX) {
       this.a *= scaleX
       this.d *= scaleY
@@ -142,6 +153,16 @@ test('handlePointerMove - move down', () => {
   expect(newState.domMatrix.f).toBe(10)
 })
 
+test('handlePointerMove - move right after zoom', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    domMatrix: new DOMMatrix([2, 0, 0, 2, 0, 0]),
+  }
+  const newState = ViewletEditorImage.handlePointerMove(state, 10, 20)
+  expect(newState.domMatrix.e).toBe(10)
+  expect(newState.domMatrix.f).toBe(20)
+})
+
 test('handlePointerDown', () => {
   const state = ViewletEditorImage.create()
   const newState = ViewletEditorImage.handlePointerDown(state, 10, 20)
@@ -216,6 +237,23 @@ test('handleWheel - zoom in at bottom right - should move image to top left', ()
   expect(newState.domMatrix.d).toBe(1.13)
   expect(newState.domMatrix.e).toBe(-12.999999999999986)
   expect(newState.domMatrix.f).toBe(-12.999999999999986)
+})
+
+test('handleWheel - zoom into the middle', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    top: 0,
+    left: 0,
+    width: 100,
+    height: 100,
+  }
+  const newState = ViewletEditorImage.handleWheel(state, 50, 50, 0, -26)
+  expect(newState.domMatrix.a).toBe(1.13)
+  expect(newState.domMatrix.b).toBe(0)
+  expect(newState.domMatrix.c).toBe(0)
+  expect(newState.domMatrix.d).toBe(1.13)
+  expect(newState.domMatrix.e).toBe(-6.499999999999993)
+  expect(newState.domMatrix.f).toBe(-6.499999999999993)
 })
 
 test.skip('handleWheel - zoom out', () => {

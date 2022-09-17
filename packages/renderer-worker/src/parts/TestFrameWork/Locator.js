@@ -68,3 +68,7 @@ Locator.prototype.type = async function (text) {
   const options = { text }
   return performAction(this, 'type', options)
 }
+
+Locator.prototype.dispatchEvent = async function (type, init) {
+  return performAction(this, 'dispatchEvent', { type, init })
+}
