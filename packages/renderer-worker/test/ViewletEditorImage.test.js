@@ -170,7 +170,7 @@ test('handleWheel - zoom in', () => {
   expect(newState.domMatrix.f).toBe(0)
 })
 
-test.skip('handleWheel - zoom in twice', () => {
+test('handleWheel - zoom in twice', () => {
   const state = {
     ...ViewletEditorImage.create(),
     top: 0,

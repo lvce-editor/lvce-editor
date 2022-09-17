@@ -64,13 +64,17 @@ export const handlePointerMove = (state, x, y) => {
   }
 }
 
-const getNewZoom = (zoom, zoomFactor, minZoom, maxZoom, deltaY) => {
+const getNewZoom = (zoom, currentZoomFactor, minZoom, maxZoom) => {
+  const newZoom = zoom * currentZoomFactor
+  return Clamp.clamp(newZoom, minZoom, maxZoom)
+}
+
+const getCurrentZoomFactor = (zoomFactor, deltaY) => {
   const direction = deltaY < 0 ? 'up' : 'down'
   const normalizedDeltaY = 1 + Math.abs(deltaY) / zoomFactor
   const currentZoomFactor =
     direction === 'up' ? normalizedDeltaY : 1 / normalizedDeltaY
-  const newZoom = zoom * currentZoomFactor
-  return Clamp.clamp(newZoom, minZoom, maxZoom)
+  return currentZoomFactor
 }
 
 export const handleWheel = (state, x, y, deltaX, deltaY) => {
@@ -81,24 +85,12 @@ export const handleWheel = (state, x, y, deltaX, deltaY) => {
   const relativeX = x - left
   const relativeY = y - top
   const { domMatrix, zoomFactor, minZoom, maxZoom } = state
-  const zoom = domMatrix.a
-  const newZoom = getNewZoom(zoom, zoomFactor, minZoom, maxZoom, deltaY)
+  const currentZoomFactor = getCurrentZoomFactor(zoomFactor, deltaY)
   const newDomMatrix = new DOMMatrix()
     .translateSelf(relativeX, relativeY)
-    .scaleSelf(newZoom)
+    .scaleSelf(currentZoomFactor)
     .translateSelf(-relativeX, -relativeY)
     .multiplySelf(domMatrix)
-  console.log({
-    x,
-    y,
-    deltaX,
-    deltaY,
-    newA: newDomMatrix.a,
-    newZoom,
-    oldZoom: zoom,
-    oldA: domMatrix.a,
-  })
-
   return {
     ...state,
     domMatrix: newDomMatrix,
