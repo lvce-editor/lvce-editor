@@ -32,4 +32,27 @@ test('viewlet.editor-image', async () => {
     'transform',
     'matrix(1.13, 0, 0, 1.13, 0, 7.15)'
   )
+
+  // act
+  await viewletImage.dispatchEvent('pointerdown', {
+    clientX: 0,
+    clientY: 0,
+    bubbles: true,
+  })
+  await viewletImage.dispatchEvent('pointermove', {
+    clientX: 1,
+    clientY: 0,
+    bubbles: true,
+  })
+  await viewletImage.dispatchEvent('pointerup', {
+    clientX: 0,
+    clientY: 0,
+    bubbles: true,
+  })
+
+  // assert
+  await expect(imageWraper).toHaveCSS(
+    'transform',
+    'matrix(1.13, 0, 0, 1.13, 1.13, 7.15)'
+  )
 })
