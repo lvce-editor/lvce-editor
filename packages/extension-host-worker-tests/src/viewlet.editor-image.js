@@ -27,8 +27,8 @@ test('viewlet.editor-image', async () => {
   })
 
   // assert
-  const imageWraper = Locator('.ImageWrapper')
-  await expect(imageWraper).toHaveCSS(
+  const imageWrapper = Locator('.ImageWrapper')
+  await expect(imageWrapper).toHaveCSS(
     'transform',
     'matrix(1.13, 0, 0, 1.13, 0, 7.15)'
   )
@@ -51,7 +51,7 @@ test('viewlet.editor-image', async () => {
   })
 
   // assert
-  await expect(imageWraper).toHaveCSS(
+  await expect(imageWrapper).toHaveCSS(
     'transform',
     'matrix(1.13, 0, 0, 1.13, 1.13, 7.15)'
   )
