@@ -33,6 +33,42 @@ export const isMobileOrTablet = () => {
   return check
 }
 
+const getIsChrome = () => {
+  if (typeof navigator === 'undefined') {
+    return false
+  }
+  if (
+    // @ts-ignore
+    navigator.userAgentData &&
+    // @ts-ignore
+    navigator.userAgentData.brands
+  ) {
+    // @ts-ignore
+    return navigator.userAgentData.brands.includes('Chromium')
+  }
+  return false
+}
+
+export const isChrome = getIsChrome()
+
+const getIsFirefox = () => {
+  if (typeof navigator === 'undefined') {
+    return false
+  }
+  if (
+    // @ts-ignore
+    navigator.userAgentData &&
+    // @ts-ignore
+    navigator.userAgentData.brands
+  ) {
+    // @ts-ignore
+    return navigator.userAgentData.brands.includes('Firefox')
+  }
+  return navigator.userAgent.toLowerCase().indexOf('firefox') > -1
+}
+
+export const isFirefox = getIsFirefox()
+
 export const getExtensionsPath = () => {
   return SharedProcess.invoke(
     /* Platform.getExtensionsPath */ 'Platform.getExtensionsPath'
