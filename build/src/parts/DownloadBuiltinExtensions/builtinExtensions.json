@@ -17,7 +17,7 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   {
     "name": "builtin.language-basics-perl",
@@ -27,7 +27,7 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "0.0.8"
+    "version": "0.0.12"
   },
   {
     "name": "builtin.language-basics-html",
@@ -47,7 +47,7 @@
   {
     "name": "builtin.language-basics-gitattributes",
     "repository": "github.com/lvce-editor/language-basics-gitattributes",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   {
     "name": "builtin.language-basics-markdown",
@@ -67,7 +67,7 @@
   {
     "name": "builtin.language-basics-shellscript",
     "repository": "github.com/lvce-editor/language-basics-shellscript",
-    "version": "0.0.4"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.language-basics-python",
@@ -112,7 +112,7 @@
   {
     "name": "builtin.language-basics-editorconfig",
     "repository": "github.com/lvce-editor/language-basics-editorconfig",
-    "version": "0.0.1"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-basics-cpp",
@@ -132,7 +132,7 @@
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "0.0.5"
+    "version": "0.0.6"
   },
   {
     "name": "builtin.language-basics-desktop",
