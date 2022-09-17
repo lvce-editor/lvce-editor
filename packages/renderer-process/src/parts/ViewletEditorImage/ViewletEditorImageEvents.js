@@ -4,7 +4,7 @@ const pointerMoveOptions = {
   passive: true,
 }
 
-const state = {
+export const state = {
   pointerDownCount: 0,
 }
 

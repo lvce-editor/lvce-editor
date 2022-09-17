@@ -24,6 +24,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   jest.resetAllMocks()
+  ViewletEditorImageEvents.state.pointerDownCount = 0
 })
 
 jest.unstable_mockModule(
