@@ -34,8 +34,15 @@ export const isMobileOrTablet = () => {
 }
 
 const getIsChrome = () => {
-  // @ts-ignore
-  if (navigator && navigator.userAgentData && navigator.userAgentData.brands) {
+  if (typeof navigator === 'undefined') {
+    return false
+  }
+  if (
+    // @ts-ignore
+    navigator.userAgentData &&
+    // @ts-ignore
+    navigator.userAgentData.brands
+  ) {
     // @ts-ignore
     return navigator.userAgentData.brands.includes('Chromium')
   }
@@ -45,8 +52,15 @@ const getIsChrome = () => {
 export const isChrome = getIsChrome()
 
 const getIsFirefox = () => {
-  // @ts-ignore
-  if (navigator && navigator.userAgentData && navigator.userAgentData.brands) {
+  if (typeof navigator === 'undefined') {
+    return false
+  }
+  if (
+    // @ts-ignore
+    navigator.userAgentData &&
+    // @ts-ignore
+    navigator.userAgentData.brands
+  ) {
     // @ts-ignore
     return navigator.userAgentData.brands.includes('Firefox')
   }
