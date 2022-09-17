@@ -40,16 +40,19 @@ beforeAll(() => {
     }
 
     translateSelf(deltaX = 0, deltaY = 0) {
-      this.e += deltaX
-      this.f += deltaY
+      this.e += deltaX * this.a
+      this.f += deltaY * this.d
       return this
     }
 
     scaleSelf(scaleX = 1, scaleY = scaleX) {
-      console.log({ scaleX, scaleY })
       this.a *= scaleX
       this.d *= scaleY
       return this
+      // const newA = this.a * scaleX
+      // const newD = this.d * scaleY
+      // const scaleMatrix = new DOMMatrix([newA, 0, 0, newD, 0, 0])
+      // return this.multiplySelf(scaleMatrix)
     }
 
     multiplySelf(domMatrix) {
@@ -153,7 +156,11 @@ test('handleWheel - no zoom', () => {
 })
 
 test('handleWheel - zoom in', () => {
-  const state = ViewletEditorImage.create()
+  const state = {
+    ...ViewletEditorImage.create(),
+    top: 0,
+    left: 0,
+  }
   const newState = ViewletEditorImage.handleWheel(state, 0, 0, 0, -26)
   expect(newState.zoom).toBe(1.13)
   expect(newState.domMatrix.a).toBe(1.13)
@@ -164,8 +171,24 @@ test('handleWheel - zoom in', () => {
   expect(newState.domMatrix.f).toBe(0)
 })
 
-test('handleWheel - zoom out', () => {
-  const state = ViewletEditorImage.create()
+test('handleWheel - zoom in - top left', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    top: 0,
+    left: 0,
+  }
+  const newState = ViewletEditorImage.handleWheel(state, 14, 11, 0, -26)
+  expect(newState.zoom).toBe(1.13)
+  expect(newState.domMatrix.a).toBe(1.13)
+  expect(newState.domMatrix.b).toBe(0)
+  expect(newState.domMatrix.c).toBe(0)
+  expect(newState.domMatrix.d).toBe(1.13)
+  expect(newState.domMatrix.e).toBe(-1.8199999999999985)
+  expect(newState.domMatrix.f).toBe(-1.4299999999999997)
+})
+
+test.skip('handleWheel - zoom out', () => {
+  const state = { ...ViewletEditorImage.create(), top: 0, left: 0 }
   const newState = ViewletEditorImage.handleWheel(state, 0, 0, 0, 13)
   expect(newState.zoom).toBe(0.9389671361502347)
   expect(newState.domMatrix.a).toBe(0.9389671361502347)

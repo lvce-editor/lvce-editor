@@ -77,15 +77,20 @@ export const handleWheel = (state, x, y, deltaX, deltaY) => {
   if (deltaY === 0) {
     return state
   }
-  console.log({ x, y, deltaX, deltaY })
+  const { top, left } = state
+  const relativeX = x - left
+  const relativeY = y - top
   const { zoom, domMatrix, zoomFactor } = state
   const newZoom = getNewZoom(zoom, zoomFactor, deltaY)
-  console.log({ zoom, newZoom })
+  console.log({ zoom, newZoom, relativeX, relativeY })
   const newDomMatrix = new DOMMatrix()
-    .translateSelf(x, y)
+    .translateSelf(relativeX, relativeY)
     .scaleSelf(newZoom)
-    .translateSelf(-x, -y)
+    .translateSelf(-relativeX, -relativeY)
     .multiplySelf(domMatrix)
+
+  console.log(new DOMMatrix().translateSelf(10, 20))
+  console.log({ newDomMatrix })
   return {
     ...state,
     zoom: newZoom,
@@ -121,7 +126,7 @@ const renderTransform = {
   },
   apply(oldState, newState) {
     const transform = stringifyDomMatrix(newState.domMatrix)
-    // console.log({ transform })
+    console.log({ transform })
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'EditorImage',
