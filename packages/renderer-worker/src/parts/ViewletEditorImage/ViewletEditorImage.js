@@ -14,6 +14,10 @@ export const create = (id, uri, left, top, width, height) => {
     domMatrix: new DOMMatrixReadOnly(),
     pointerOffsetX: 0,
     pointerOffsetY: 0,
+    zoom: 1,
+    minZoom: 0.1,
+    maxZoom: 2 ** 15, // max value that doesn't result in degradation
+    zoomFactor: 200,
   }
 }
 
@@ -60,6 +64,35 @@ export const handlePointerMove = (state, x, y) => {
   }
 }
 
+const getNewZoom = (zoom, zoomFactor, deltaY) => {
+  const direction = deltaY < 0 ? 'up' : 'down'
+  const normalizedDeltaY = 1 + Math.abs(deltaY) / zoomFactor
+  const currentZoomFactor =
+    direction === 'up' ? normalizedDeltaY : 1 / normalizedDeltaY
+  const newZoom = zoom * currentZoomFactor
+  return newZoom
+}
+
+export const handleWheel = (state, x, y, deltaX, deltaY) => {
+  if (deltaY === 0) {
+    return state
+  }
+  console.log({ x, y, deltaX, deltaY })
+  const { zoom, domMatrix, zoomFactor } = state
+  const newZoom = getNewZoom(zoom, zoomFactor, deltaY)
+  console.log({ zoom, newZoom })
+  const newDomMatrix = new DOMMatrix()
+    .translateSelf(x, y)
+    .scaleSelf(newZoom)
+    .translateSelf(-x, -y)
+    .multiplySelf(domMatrix)
+  return {
+    ...state,
+    zoom: newZoom,
+    domMatrix: newDomMatrix,
+  }
+}
+
 export const hasFunctionalRender = true
 
 const renderSrc = {
@@ -88,6 +121,7 @@ const renderTransform = {
   },
   apply(oldState, newState) {
     const transform = stringifyDomMatrix(newState.domMatrix)
+    // console.log({ transform })
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'EditorImage',

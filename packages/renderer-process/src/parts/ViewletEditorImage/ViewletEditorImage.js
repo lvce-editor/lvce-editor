@@ -12,6 +12,9 @@ export const create = () => {
   $Viewlet.dataset.viewletId = 'EditorImage'
   $Viewlet.append($Image)
   $Viewlet.onpointerdown = ViewletEditorImageEvents.handlePointerDown
+  $Viewlet.addEventListener('wheel', ViewletEditorImageEvents.handleWheel, {
+    passive: true,
+  })
   return {
     $Viewlet,
     $Image,
@@ -28,4 +31,13 @@ export const setSrc = (state, src) => {
   $Image.src = src
 }
 
-export const dispose = (state) => {}
+export const dispose = (state) => {
+  window.removeEventListener(
+    'pointerup',
+    ViewletEditorImageEvents.handlePointerUp
+  )
+  window.removeEventListener(
+    'pointermove',
+    ViewletEditorImageEvents.handlePointerMove
+  )
+}
