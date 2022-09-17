@@ -81,9 +81,9 @@ export const handleWheel = (state, x, y, deltaX, deltaY) => {
   if (deltaY === 0) {
     return state
   }
-  const { top, left, width, height } = state
-  const relativeX = x - left - width / 2
-  const relativeY = y - top - height / 2
+  const { top, left } = state
+  const relativeX = x - left
+  const relativeY = y - top
   const { domMatrix, zoomFactor, minZoom, maxZoom } = state
   const currentZoomFactor = getCurrentZoomFactor(zoomFactor, deltaY)
   const newDomMatrix = new DOMMatrix()
