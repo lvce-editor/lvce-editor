@@ -218,6 +218,23 @@ test('handleWheel - zoom in at bottom right - should move image to top left', ()
   expect(newState.domMatrix.f).toBe(-12.999999999999986)
 })
 
+test('handleWheel - zoom into the middle', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    top: 0,
+    left: 0,
+    width: 100,
+    height: 100,
+  }
+  const newState = ViewletEditorImage.handleWheel(state, 50, 50, 0, -26)
+  expect(newState.domMatrix.a).toBe(1.13)
+  expect(newState.domMatrix.b).toBe(0)
+  expect(newState.domMatrix.c).toBe(0)
+  expect(newState.domMatrix.d).toBe(1.13)
+  expect(newState.domMatrix.e).toBe(-6.499999999999993)
+  expect(newState.domMatrix.f).toBe(-6.499999999999993)
+})
+
 test.skip('handleWheel - zoom out', () => {
   const state = { ...ViewletEditorImage.create(), top: 0, left: 0 }
   const newState = ViewletEditorImage.handleWheel(state, 0, 0, 0, 13)
