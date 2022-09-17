@@ -1,4 +1,3 @@
-import * as Assert from '../Assert/Assert.js'
 import * as ViewletEditorImageEvents from './ViewletEditorImageEvents.js'
 
 export const name = 'EditorImage'
@@ -13,7 +12,6 @@ export const create = () => {
   $Viewlet.dataset.viewletId = 'EditorImage'
   $Viewlet.append($Image)
   $Viewlet.onpointerdown = ViewletEditorImageEvents.handlePointerDown
-  $Viewlet.onpointerup = ViewletEditorImageEvents.handlePointerUp
   return {
     $Viewlet,
     $Image,

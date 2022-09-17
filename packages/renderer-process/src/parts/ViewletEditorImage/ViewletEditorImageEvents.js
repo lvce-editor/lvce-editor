@@ -6,16 +6,17 @@ export const handlePointerMove = (event) => {
 }
 
 export const handlePointerUp = (event) => {
-  const { target } = event
-  const $Viewlet = target.closest('.Viewlet')
-  $Viewlet.removeEventListener('pointermove', handlePointerMove, {
+  window.removeEventListener('pointermove', handlePointerMove, {
+    // @ts-ignore
     passive: true,
   })
+  window.removeEventListener('pointerup', handlePointerUp)
 }
 
 export const handlePointerDown = (event) => {
-  const { clientX, clientY, target } = event
-  const $Viewlet = target.closest('.Viewlet')
-  $Viewlet.addEventListener('pointermove', handlePointerMove, { passive: true })
+  const { clientX, clientY } = event
+  // TODO dispose window event listener when widget is removed
+  window.addEventListener('pointermove', handlePointerMove, { passive: true })
+  window.addEventListener('pointerup', handlePointerUp)
   RendererWorker.send('EditorImage.handlePointerDown', clientX, clientY)
 }
