@@ -125,7 +125,6 @@ const renderTransform = {
   },
   apply(oldState, newState) {
     const transform = stringifyDomMatrix(newState.domMatrix)
-    console.log({ transform })
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'EditorImage',

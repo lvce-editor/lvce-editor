@@ -7,10 +7,14 @@ export const create = () => {
   $Image.className = 'ViewletImage'
   $Image.draggable = false
 
+  const $ImageWrapper = document.createElement('div')
+  $ImageWrapper.className = 'ImageWrapper'
+  $ImageWrapper.append($Image)
+
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet'
   $Viewlet.dataset.viewletId = 'EditorImage'
-  $Viewlet.append($Image)
+  $Viewlet.append($ImageWrapper)
   $Viewlet.onpointerdown = ViewletEditorImageEvents.handlePointerDown
   $Viewlet.addEventListener('wheel', ViewletEditorImageEvents.handleWheel, {
     passive: true,
@@ -18,12 +22,13 @@ export const create = () => {
   return {
     $Viewlet,
     $Image,
+    $ImageWrapper,
   }
 }
 
 export const setTransform = (state, transform) => {
-  const { $Image } = state
-  $Image.style.transform = transform
+  const { $ImageWrapper } = state
+  $ImageWrapper.style.transform = transform
 }
 
 export const setSrc = (state, src) => {

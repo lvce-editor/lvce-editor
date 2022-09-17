@@ -9,3 +9,9 @@
   margin: 0 auto;
   display: block;
 }
+
+.ImageWrapper {
+  width: 100%;
+  height: 100%;
+  contain: strict;
+}

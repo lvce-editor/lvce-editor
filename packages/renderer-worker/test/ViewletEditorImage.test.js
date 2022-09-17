@@ -186,7 +186,7 @@ test('handleWheel - zoom in twice', () => {
   expect(newState.domMatrix.f).toBe(0)
 })
 
-test('handleWheel - zoom in - top left', () => {
+test('handleWheel - zoom in at top left - should move image to bottom right', () => {
   const state = {
     ...ViewletEditorImage.create(),
     top: 0,
@@ -199,6 +199,23 @@ test('handleWheel - zoom in - top left', () => {
   expect(newState.domMatrix.d).toBe(1.13)
   expect(newState.domMatrix.e).toBe(-1.8199999999999985)
   expect(newState.domMatrix.f).toBe(-1.4299999999999997)
+})
+
+test('handleWheel - zoom in at bottom right - should move image to top left', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    top: 0,
+    left: 0,
+    width: 100,
+    height: 100,
+  }
+  const newState = ViewletEditorImage.handleWheel(state, 100, 100, 0, -26)
+  expect(newState.domMatrix.a).toBe(1.13)
+  expect(newState.domMatrix.b).toBe(0)
+  expect(newState.domMatrix.c).toBe(0)
+  expect(newState.domMatrix.d).toBe(1.13)
+  expect(newState.domMatrix.e).toBe(-12.999999999999986)
+  expect(newState.domMatrix.f).toBe(-12.999999999999986)
 })
 
 test.skip('handleWheel - zoom out', () => {
