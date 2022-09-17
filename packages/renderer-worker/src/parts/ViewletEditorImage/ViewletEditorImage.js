@@ -12,7 +12,7 @@ export const create = (id, uri, left, top, width, height) => {
     width,
     height,
     uri,
-    domMatrix: new DOMMatrixReadOnly(),
+    domMatrix: new DOMMatrix(),
     pointerOffsetX: 0,
     pointerOffsetY: 0,
     minZoom: 0.1,

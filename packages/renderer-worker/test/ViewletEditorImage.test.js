@@ -22,8 +22,8 @@ beforeAll(() => {
         this.b,
         this.c,
         this.d,
-        this.e + deltaX,
-        this.f + deltaY,
+        this.e + this.a * deltaX,
+        this.f + this.d * deltaY,
       ])
     }
   }
@@ -51,8 +51,8 @@ beforeAll(() => {
         this.b,
         this.c,
         this.d,
-        this.e + deltaX,
-        this.f + deltaY,
+        this.e + this.a * deltaX,
+        this.f + this.d * deltaY,
       ])
     }
 
@@ -60,10 +60,6 @@ beforeAll(() => {
       this.a *= scaleX
       this.d *= scaleY
       return this
-      // const newA = this.a * scaleX
-      // const newD = this.d * scaleY
-      // const scaleMatrix = new DOMMatrix([newA, 0, 0, newD, 0, 0])
-      // return this.multiplySelf(scaleMatrix)
     }
 
     multiplySelf(domMatrix) {
