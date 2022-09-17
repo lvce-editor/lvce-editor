@@ -27,7 +27,6 @@ export const handlePointerMove = (event) => {
 export const handlePointerUp = (event) => {
   const { pointerId, clientX, clientY } = event
   state.pointerDownCount--
-  console.log('down', state.pointerDownCount)
   if (state.pointerDownCount === 0) {
     // @ts-ignore
     window.removeEventListener(
@@ -51,7 +50,6 @@ export const handlePointerUp = (event) => {
 export const handlePointerDown = (event) => {
   const { pointerId, clientX, clientY } = event
   state.pointerDownCount++
-  console.log('down', state.pointerDownCount)
   if (state.pointerDownCount === 1) {
     window.addEventListener(
       'pointermove',

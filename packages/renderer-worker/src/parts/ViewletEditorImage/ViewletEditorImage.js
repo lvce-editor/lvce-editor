@@ -72,14 +72,12 @@ export const handlePointerMove = (state, pointerId, x, y) => {
     previousDiff,
     touchZoomFactor,
   } = state
-  console.log({ pointerId, eventCache })
   const index = eventCache.findIndex((event) => event.pointerId === pointerId)
   // TODO avoid mutation
   eventCache[index] = { pointerId, x, y }
 
   if (eventCache.length === 2) {
     const currentDiff = distance(eventCache[0], eventCache[1])
-    console.log({ currentDiff, previousDiff })
     if (previousDiff > 0) {
       if (currentDiff > previousDiff) {
         const newDomMatrix = new DOMMatrix([
@@ -90,7 +88,6 @@ export const handlePointerMove = (state, pointerId, x, y) => {
           domMatrix.e,
           domMatrix.f,
         ])
-        console.log('zoom in')
         return {
           ...state,
           previousDiff: currentDiff,
