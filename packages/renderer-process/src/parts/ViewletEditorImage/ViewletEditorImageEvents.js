@@ -1,5 +1,9 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
+const pointerMoveOptions = {
+  passive: true,
+}
+
 /**
  * @param {PointerEvent} event
  */
@@ -13,9 +17,11 @@ export const handlePointerMove = (event) => {
  */
 export const handlePointerUp = (event) => {
   // @ts-ignore
-  window.removeEventListener('pointermove', handlePointerMove, {
-    passive: true,
-  })
+  window.removeEventListener(
+    'pointermove',
+    handlePointerMove,
+    pointerMoveOptions
+  )
   window.removeEventListener('pointerup', handlePointerUp)
 }
 
@@ -24,7 +30,7 @@ export const handlePointerUp = (event) => {
  */
 export const handlePointerDown = (event) => {
   const { clientX, clientY } = event
-  window.addEventListener('pointermove', handlePointerMove, { passive: true })
+  window.addEventListener('pointermove', handlePointerMove, pointerMoveOptions)
   window.addEventListener('pointerup', handlePointerUp)
   RendererWorker.send('EditorImage.handlePointerDown', clientX, clientY)
 }
@@ -41,4 +47,12 @@ export const handleWheel = (event) => {
     deltaX,
     deltaY
   )
+}
+
+/**
+ *
+ * @param {MouseEvent} event
+ */
+export const handleContextMenu = (event) => {
+  event.preventDefault()
 }

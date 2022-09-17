@@ -1,5 +1,6 @@
 .Viewlet[data-viewlet-id='EditorImage'] {
   cursor: grab;
+  touch-action: none;
 }
 
 .ViewletImage {
