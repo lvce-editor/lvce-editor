@@ -44,3 +44,22 @@ export const keyDown = (element, options) => {
 export const keyUp = (element, options) => {
   keyboardEvent(element, 'keyup', options)
 }
+
+const getEventClass = (eventType) => {
+  switch (eventType) {
+    case 'wheel':
+      return WheelEvent
+    case 'pointerdown':
+    case 'pointerup':
+    case 'pointermove':
+      return PointerEvent
+    default:
+      return Event
+  }
+}
+
+export const dispatchEvent = (element, options) => {
+  const eventClass = getEventClass(options.type)
+  const event = new eventClass(options.type, options.init)
+  element.dispatchEvent(event)
+}

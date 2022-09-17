@@ -45,6 +45,17 @@ beforeAll(() => {
       return this
     }
 
+    translate(deltaX, deltaY) {
+      return new DOMMatrix([
+        this.a,
+        this.b,
+        this.c,
+        this.d,
+        this.e + deltaX,
+        this.f + deltaY,
+      ])
+    }
+
     scaleSelf(scaleX = 1, scaleY = scaleX) {
       this.a *= scaleX
       this.d *= scaleY
@@ -140,6 +151,16 @@ test('handlePointerMove - move down', () => {
   const state = ViewletEditorImage.create()
   const newState = ViewletEditorImage.handlePointerMove(state, 0, 10)
   expect(newState.domMatrix.f).toBe(10)
+})
+
+test('handlePointerMove - move right after zoom', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    domMatrix: new DOMMatrix([2, 0, 0, 2, 0, 0]),
+  }
+  const newState = ViewletEditorImage.handlePointerMove(state, 10, 20)
+  expect(newState.domMatrix.e).toBe(10)
+  expect(newState.domMatrix.f).toBe(20)
 })
 
 test('handlePointerDown', () => {
