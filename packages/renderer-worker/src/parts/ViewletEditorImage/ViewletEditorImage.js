@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Clamp from '../Clamp/Clamp.js'
 
 export const name = 'EditorImage'
 
@@ -14,7 +15,6 @@ export const create = (id, uri, left, top, width, height) => {
     domMatrix: new DOMMatrixReadOnly(),
     pointerOffsetX: 0,
     pointerOffsetY: 0,
-    zoom: 1,
     minZoom: 0.1,
     maxZoom: 2 ** 15, // max value that doesn't result in degradation
     zoomFactor: 200,
@@ -64,13 +64,13 @@ export const handlePointerMove = (state, x, y) => {
   }
 }
 
-const getNewZoom = (zoom, zoomFactor, deltaY) => {
+const getNewZoom = (zoom, zoomFactor, minZoom, maxZoom, deltaY) => {
   const direction = deltaY < 0 ? 'up' : 'down'
   const normalizedDeltaY = 1 + Math.abs(deltaY) / zoomFactor
   const currentZoomFactor =
     direction === 'up' ? normalizedDeltaY : 1 / normalizedDeltaY
   const newZoom = zoom * currentZoomFactor
-  return newZoom
+  return Clamp.clamp(newZoom, minZoom, maxZoom)
 }
 
 export const handleWheel = (state, x, y, deltaX, deltaY) => {
@@ -80,20 +80,27 @@ export const handleWheel = (state, x, y, deltaX, deltaY) => {
   const { top, left } = state
   const relativeX = x - left
   const relativeY = y - top
-  const { zoom, domMatrix, zoomFactor } = state
-  const newZoom = getNewZoom(zoom, zoomFactor, deltaY)
-  console.log({ zoom, newZoom, relativeX, relativeY })
+  const { domMatrix, zoomFactor, minZoom, maxZoom } = state
+  const zoom = domMatrix.a
+  const newZoom = getNewZoom(zoom, zoomFactor, minZoom, maxZoom, deltaY)
   const newDomMatrix = new DOMMatrix()
     .translateSelf(relativeX, relativeY)
     .scaleSelf(newZoom)
     .translateSelf(-relativeX, -relativeY)
     .multiplySelf(domMatrix)
+  console.log({
+    x,
+    y,
+    deltaX,
+    deltaY,
+    newA: newDomMatrix.a,
+    newZoom,
+    oldZoom: zoom,
+    oldA: domMatrix.a,
+  })
 
-  console.log(new DOMMatrix().translateSelf(10, 20))
-  console.log({ newDomMatrix })
   return {
     ...state,
-    zoom: newZoom,
     domMatrix: newDomMatrix,
   }
 }

@@ -162,11 +162,26 @@ test('handleWheel - zoom in', () => {
     left: 0,
   }
   const newState = ViewletEditorImage.handleWheel(state, 0, 0, 0, -26)
-  expect(newState.zoom).toBe(1.13)
   expect(newState.domMatrix.a).toBe(1.13)
   expect(newState.domMatrix.b).toBe(0)
   expect(newState.domMatrix.c).toBe(0)
   expect(newState.domMatrix.d).toBe(1.13)
+  expect(newState.domMatrix.e).toBe(0)
+  expect(newState.domMatrix.f).toBe(0)
+})
+
+test.skip('handleWheel - zoom in twice', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    top: 0,
+    left: 0,
+    domMatrix: new DOMMatrix([1.13, 0, 0, 1.13, 0, 0]),
+  }
+  const newState = ViewletEditorImage.handleWheel(state, 0, 0, 0, -26)
+  expect(newState.domMatrix.a).toBe(1.2768999999999997)
+  expect(newState.domMatrix.b).toBe(0)
+  expect(newState.domMatrix.c).toBe(0)
+  expect(newState.domMatrix.d).toBe(1.2768999999999997)
   expect(newState.domMatrix.e).toBe(0)
   expect(newState.domMatrix.f).toBe(0)
 })
@@ -178,7 +193,6 @@ test('handleWheel - zoom in - top left', () => {
     left: 0,
   }
   const newState = ViewletEditorImage.handleWheel(state, 14, 11, 0, -26)
-  expect(newState.zoom).toBe(1.13)
   expect(newState.domMatrix.a).toBe(1.13)
   expect(newState.domMatrix.b).toBe(0)
   expect(newState.domMatrix.c).toBe(0)
