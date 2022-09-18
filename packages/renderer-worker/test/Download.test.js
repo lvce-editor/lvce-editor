@@ -18,10 +18,22 @@ jest.unstable_mockModule(
   }
 )
 
+jest.unstable_mockModule('../src/parts/Url/Url.js', () => {
+  return {
+    createObjectUrl: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    revokeObjectUrl: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
 const Download = await import('../src/parts/Download/Download.js')
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
+const Url = await import('../src/parts/Url/Url.js')
 
 test('downloadFile - error', async () => {
   // @ts-ignore
@@ -54,8 +66,10 @@ test('downloadFile', async () => {
 })
 
 test('downloadJson - error with download', async () => {
-  URL.createObjectURL = jest.fn(() => 'test://test-session.json')
-  URL.revokeObjectURL = jest.fn()
+  // @ts-ignore
+  Url.createObjectUrl.mockImplementation(() => 'test://test-session.json')
+  // @ts-ignore
+  Url.revokeObjectUrl.mockImplementation(() => {})
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {
     throw new TypeError('x is not a function')
@@ -64,16 +78,17 @@ test('downloadJson - error with download', async () => {
   await expect(Download.downloadJson([], 'test.json')).rejects.toThrowError(
     new Error('Failed to download test.json: TypeError: x is not a function')
   )
-  expect(URL.revokeObjectURL).toHaveBeenCalledTimes(1)
-  expect(URL.revokeObjectURL).toHaveBeenCalledWith('test://test-session.json')
+  expect(Url.revokeObjectUrl).toHaveBeenCalledTimes(1)
+  expect(Url.revokeObjectUrl).toHaveBeenCalledWith('test://test-session.json')
 })
 
 test('downloadJson', async () => {
-  URL.createObjectURL = jest.fn(() => 'test://test-session.json')
-  URL.revokeObjectURL = jest.fn()
+  // @ts-ignore
+  Url.createObjectUrl.mockImplementation(() => 'test://test-session.json')
+  // @ts-ignore
+  Url.revokeObjectUrl.mockImplementation(() => {})
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-
   await Download.downloadJson([], 'test.json')
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
@@ -81,6 +96,6 @@ test('downloadJson', async () => {
     'test.json',
     'test://test-session.json'
   )
-  expect(URL.revokeObjectURL).toHaveBeenCalledTimes(1)
-  expect(URL.revokeObjectURL).toHaveBeenCalledWith('test://test-session.json')
+  expect(Url.revokeObjectUrl).toHaveBeenCalledTimes(1)
+  expect(Url.revokeObjectUrl).toHaveBeenCalledWith('test://test-session.json')
 })

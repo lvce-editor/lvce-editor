@@ -100,10 +100,10 @@ test('create', () => {
 test('loadContent', async () => {
   const state = {
     ...ViewletEditorImage.create(),
-    uri: 'test://image.png',
+    uri: '/test/image.png',
   }
   expect(await ViewletEditorImage.loadContent(state)).toMatchObject({
-    src: 'test://image.png',
+    src: '/remote/test/image.png',
   })
 })
 
@@ -121,7 +121,7 @@ test('render', () => {
     src: '/test/image.png',
   }
   expect(render(oldState, newState)).toEqual([
-    ['Viewlet.send', 'EditorImage', 'setSrc', '/remote/test/image.png'],
+    ['Viewlet.send', 'EditorImage', 'setSrc', '/test/image.png'],
   ])
 })
 

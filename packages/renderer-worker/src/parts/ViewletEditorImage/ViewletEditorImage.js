@@ -1,5 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as Command from '../Command/Command.js'
 
 export const name = 'EditorImage'
 
@@ -24,10 +26,37 @@ export const create = (id, uri, left, top, width, height) => {
   }
 }
 
+// TODO move getMimeType to separate module
+// TODO add support for other image types: png, jpg, jpeg, avif, webp, etc.
+const getMimeType = (uri) => {
+  if (uri.endsWith('.svg')) {
+    return 'image/svg+xml'
+  }
+  return ''
+}
+
+// TODO revoke object url when disposed
 export const loadContent = async (state, ...args) => {
+  const { uri } = state
+  const protocol = FileSystem.getProtocol(uri)
+  if (protocol === '') {
+    const src = `/remote${uri}`
+    return {
+      ...state,
+      src,
+    }
+  }
+  const content = await FileSystem.readFile(uri)
+  const mimeType = getMimeType(uri)
+  const blob = await Command.execute(
+    'Blob.binaryStringToBlob',
+    content,
+    mimeType
+  )
+  const dataUrl = await Command.execute('Url.createObjectUrl', blob)
   return {
     ...state,
-    src: state.uri,
+    src: dataUrl,
   }
 }
 
@@ -152,6 +181,7 @@ const getNewZoom = (zoom, currentZoomFactor, minZoom, maxZoom) => {
 }
 
 const getCurrentZoomFactor = (zoomFactor, deltaY) => {
+  // TODO use enum for direction
   const direction = deltaY < 0 ? 'up' : 'down'
   const normalizedDeltaY = 1 + Math.abs(deltaY) / zoomFactor
   const currentZoomFactor =
@@ -190,7 +220,7 @@ const renderSrc = {
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'EditorImage',
       /* method */ 'setSrc',
-      /* src */ `/remote${newState.src}`,
+      /* src */ newState.src,
     ]
   },
 }

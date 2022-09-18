@@ -55,3 +55,4 @@ export const Workspace = 53
 export const ContentTracing = 55
 export const OpenNativeFolder = 56
 export const ElectronWindow = 57
+export const Url = 58

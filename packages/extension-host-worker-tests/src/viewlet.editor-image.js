@@ -1,8 +1,6 @@
 test('viewlet.editor-image', async () => {
   // arrange
-  const tmpDir = await FileSystem.getTmpDir({
-    scheme: 'file',
-  })
+  const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
     `${tmpDir}/file1.svg`,
     `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="50" cy="50" r="50" fill="blue"/></svg>`
