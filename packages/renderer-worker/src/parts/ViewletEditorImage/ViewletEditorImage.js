@@ -96,7 +96,7 @@ export const handlePointerDown = (state, pointerId, x, y) => {
 const distance = (point1, point2) => {
   var dx = point1.x - point2.x
   var dy = point1.y - point2.y
-  return Math.sqrt(dx * dy + dy * dy)
+  return Math.sqrt(dx * dx + dy * dy)
 }
 
 const getPointerEventIndex = (eventCache, pointerId) => {
@@ -111,7 +111,13 @@ const zoomTo = (
   relativeY,
   previousDiff
 ) => {
+  if (currentZoomFactor > 1) {
+    console.log('zoom in', currentZoomFactor)
+  } else if (currentZoomFactor < 1) {
+    console.log('zoom out', currentZoomFactor)
+  }
   const { domMatrix } = state
+  console.log('current zoom', domMatrix.a)
   const newDomMatrix = new DOMMatrix()
     .translateSelf(relativeX, relativeY)
     .scaleSelf(currentZoomFactor)
@@ -124,11 +130,10 @@ const zoomTo = (
   }
 }
 
-const getCurrentZoomFactorPinch = (previousDiff, currentDiff, zoomFactor) => {
-  const delta = currentDiff - previousDiff
+const getCurrentZoomFactorPinch = (zoomFactor, delta) => {
   const sign = Math.sign(delta)
   const normalizedDelta = delta / zoomFactor
-  const currentZoomFactor = 1 + sign * normalizedDelta
+  const currentZoomFactor = 1 + normalizedDelta
   return currentZoomFactor
 }
 
@@ -164,22 +169,14 @@ export const handlePointerMove = (state, pointerId, x, y) => {
     ...eventCache.slice(index + 1),
   ]
   if (eventCache.length === 2) {
-    console.log('two pointers down')
+    // console.log('two pointers down')
     const currentDiff = distance(newEventCache[0], newEventCache[1])
-    if (previousDiff > 0) {
-      const relativeX = (newEventCache[0].x + newEventCache[1].x) / 2 - left
-      const relativeY = (newEventCache[0].y + newEventCache[1].y) / 2 - top
-      const currentZoomFactor = getCurrentZoomFactorPinch(
-        previousDiff,
-        currentDiff,
-        touchZoomFactor
-      )
-      return zoomTo(state, currentZoomFactor, relativeX, relativeY, currentDiff)
-    }
-    return {
-      ...state,
-      previousDiff: currentDiff,
-    }
+    const relativeX = (newEventCache[0].x + newEventCache[1].x) / 2 - left
+    const relativeY = (newEventCache[0].y + newEventCache[1].y) / 2 - top
+    const delta = currentDiff - previousDiff
+    console.log({ delta, newEventCache, currentDiff, previousDiff })
+    const currentZoomFactor = getCurrentZoomFactorPinch(touchZoomFactor, delta)
+    return zoomTo(state, currentZoomFactor, relativeX, relativeY, currentDiff)
   }
   const deltaX = x - pointerOffsetX
   const deltaY = y - pointerOffsetY

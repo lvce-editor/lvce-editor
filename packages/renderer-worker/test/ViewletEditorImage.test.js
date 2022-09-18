@@ -175,6 +175,64 @@ test('handlePointerMove - move right after zoom', () => {
   expect(newState.domMatrix.f).toBe(20)
 })
 
+test('handlePointerMove - pinch zoom in', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    top: 0,
+    left: 0,
+    pointerDownCount: 1,
+    eventCache: [
+      {
+        pointerId: 0,
+        x: 0,
+        y: 0,
+      },
+      {
+        pointerId: 1,
+        x: 0,
+        y: 0,
+      },
+    ],
+  }
+  const newState = ViewletEditorImage.handlePointerMove(state, 1, 10, 20)
+  expect(newState.domMatrix.a).toBe(1.0244948974278318)
+  expect(newState.domMatrix.d).toBe(1.0244948974278318)
+  expect(newState.domMatrix.e).toBe(-0.12247448713915965)
+  expect(newState.domMatrix.f).toBe(-0.2449489742783193)
+  expect(newState.previousDiff).toBe(24.49489742783178)
+})
+
+test('handlePointerMove - pinch zoom out', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    top: 0,
+    left: 0,
+    pointerDownCount: 1,
+    domMatrix: new DOMMatrix([
+      1.0244948974278318, 0, 0, 1.0244948974278318, -0.12247448713915965,
+      -0.2449489742783193,
+    ]),
+    previousDiff: 24.49489742783178,
+    eventCache: [
+      {
+        pointerId: 0,
+        x: 0,
+        y: 0,
+      },
+      {
+        pointerId: 1,
+        x: 10,
+        y: 20,
+      },
+    ],
+  }
+  const newState = ViewletEditorImage.handlePointerMove(state, 1, 0, 0)
+  expect(newState.domMatrix.a).toBeCloseTo(1)
+  expect(newState.domMatrix.d).toBeCloseTo(1)
+  expect(newState.domMatrix.e).toBe(0)
+  expect(newState.domMatrix.f).toBe(0)
+})
+
 test('handlePointerDown', () => {
   const state = ViewletEditorImage.create()
   const newState = ViewletEditorImage.handlePointerDown(state, 0, 10, 20)
