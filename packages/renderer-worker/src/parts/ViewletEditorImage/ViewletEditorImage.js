@@ -20,7 +20,7 @@ export const create = (id, uri, left, top, width, height) => {
     minZoom: 0.1,
     maxZoom: 2 ** 15, // max value that doesn't result in degradation
     zoomFactor: 200,
-    touchZoomFactor: 1.015,
+    touchZoomFactor: 1.01,
     eventCache: [],
     previousDiff: 0,
     pointerDownCount: 0,
@@ -96,7 +96,31 @@ export const handlePointerDown = (state, pointerId, x, y) => {
 const distance = (point1, point2) => {
   var dx = point1.x - point2.x
   var dy = point1.y - point2.y
-  return Math.sqrt(dx * dx + dy * dy)
+  return dx * dy + dy * dy
+}
+
+const getPointerEventIndex = (eventCache, pointerId) => {
+  // TODO avoid anonymous function
+  return eventCache.findIndex((event) => event.pointerId === pointerId)
+}
+
+const zoomTo = (
+  state,
+  currentZoomFactor,
+  relativeX,
+  relativeY,
+  previousDiff
+) => {
+  const { domMatrix } = state
+  const newDomMatrix = new DOMMatrix()
+    .translateSelf(relativeX, relativeY)
+    .scaleSelf(currentZoomFactor)
+    .translateSelf(-relativeX, -relativeY)
+    .multiplySelf(domMatrix)
+  return {
+    ...state,
+    domMatrix: newDomMatrix,
+  }
 }
 
 export const handlePointerMove = (state, pointerId, x, y) => {
@@ -111,46 +135,35 @@ export const handlePointerMove = (state, pointerId, x, y) => {
     previousDiff,
     touchZoomFactor,
     pointerDownCount,
+    top,
+    left,
   } = state
   if (pointerDownCount === 0) {
     return state
   }
-  const index = eventCache.findIndex((event) => event.pointerId === pointerId)
-  // TODO avoid mutation
-  eventCache[index] = { pointerId, x, y }
-
+  const index = getPointerEventIndex(eventCache, pointerId)
+  const newEventCache = [
+    ...eventCache.slice(0, index),
+    { pointerId, x, y },
+    ...eventCache.slice(index + 1),
+  ]
   if (eventCache.length === 2) {
-    const currentDiff = distance(eventCache[0], eventCache[1])
+    console.log('two pointers down')
+    const currentDiff = distance(newEventCache[0], newEventCache[1])
     if (previousDiff > 0) {
+      const relativeX = (newEventCache[0].x + newEventCache[1].x) / 2 - left
+      const relativeY = (newEventCache[0].y + newEventCache[1].y) / 2 - top
       if (currentDiff > previousDiff) {
-        const newDomMatrix = new DOMMatrix([
-          (domMatrix.a *= touchZoomFactor),
-          domMatrix.b,
-          domMatrix.c,
-          (domMatrix.d *= touchZoomFactor),
-          domMatrix.e,
-          domMatrix.f,
-        ])
-        return {
-          ...state,
-          previousDiff: currentDiff,
-          domMatrix: newDomMatrix,
-        }
+        return zoomTo(state, touchZoomFactor, relativeX, relativeY, currentDiff)
       }
       if (currentDiff < previousDiff) {
-        const newDomMatrix = new DOMMatrix([
-          (domMatrix.a /= touchZoomFactor),
-          domMatrix.b,
-          domMatrix.c,
-          (domMatrix.d /= touchZoomFactor),
-          domMatrix.e,
-          domMatrix.f,
-        ])
-        return {
-          ...state,
-          previousDiff: currentDiff,
-          domMatrix: newDomMatrix,
-        }
+        return zoomTo(
+          state,
+          1 / touchZoomFactor,
+          relativeX,
+          relativeY,
+          currentDiff
+        )
       }
     }
     return {
@@ -173,12 +186,13 @@ export const handlePointerMove = (state, pointerId, x, y) => {
     pointerOffsetX: x,
     pointerOffsetY: y,
     domMatrix: newDomMatrix,
+    previousDiff: 0,
   }
 }
 
 export const handlePointerUp = (state, pointerId, x, y) => {
   const { eventCache, pointerDownCount } = state
-  const index = eventCache.findIndex((event) => event.pointerId === pointerId)
+  const index = getPointerEventIndex(eventCache, pointerId)
   const newEventCache = [
     ...eventCache.slice(0, index),
     ...eventCache.slice(index + 1),
@@ -188,6 +202,7 @@ export const handlePointerUp = (state, pointerId, x, y) => {
     ...state,
     eventCache: newEventCache,
     pointerDownCount: newPointerDownCount,
+    previousDiff: 0,
   }
 }
 
@@ -214,15 +229,7 @@ export const handleWheel = (state, x, y, deltaX, deltaY) => {
   const relativeY = y - top
   const { domMatrix, zoomFactor, minZoom, maxZoom } = state
   const currentZoomFactor = getCurrentZoomFactor(zoomFactor, deltaY)
-  const newDomMatrix = new DOMMatrix()
-    .translateSelf(relativeX, relativeY)
-    .scaleSelf(currentZoomFactor)
-    .translateSelf(-relativeX, -relativeY)
-    .multiplySelf(domMatrix)
-  return {
-    ...state,
-    domMatrix: newDomMatrix,
-  }
+  return zoomTo(state, currentZoomFactor, relativeX, relativeY, 0)
 }
 
 export const hasFunctionalRender = true

@@ -33,7 +33,6 @@ export const handlePointerUp = (event) => {
  */
 export const handlePointerDown = (event) => {
   const { pointerId, clientX, clientY, target, button } = event
-  console.log({ button })
   // @ts-ignore
   target.setPointerCapture(pointerId)
   RendererWorker.send(
