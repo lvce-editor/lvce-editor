@@ -53,6 +53,7 @@ export const handlePointerUp = (event) => {
  */
 export const handlePointerDown = (event) => {
   const { pointerId, clientX, clientY, target } = event
+  console.log(event)
   // @ts-ignore
   target.setPointerCapture(pointerId)
   state.pointerDownCount++
