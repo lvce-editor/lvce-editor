@@ -87,7 +87,7 @@
   {
     "name": "builtin.vscode-icons",
     "repository": "github.com/lvce-editor/vscode-icons",
-    "version": "0.0.4"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.language-basics-dotenv",
