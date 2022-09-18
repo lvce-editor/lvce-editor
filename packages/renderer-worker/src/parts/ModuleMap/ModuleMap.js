@@ -165,6 +165,9 @@ export const getModuleId = (commandId) => {
     case 'Menu.selectItem':
     case 'Menu.show':
       return ModuleId.Menu
+    case 'Mime.getMediaMimeType':
+    case 'Mime.getTextMime':
+      return ModuleId.Mime
     case 'Navigation.focusActivityBar':
     case 'Navigation.focusMain':
     case 'Navigation.focusNextPart':

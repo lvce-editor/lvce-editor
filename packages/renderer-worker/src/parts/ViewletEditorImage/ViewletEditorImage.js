@@ -2,7 +2,6 @@ import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as Mime from '../Mime/Mime.js'
 
 export const name = 'EditorImage'
 
@@ -27,19 +26,17 @@ export const create = (id, uri, left, top, width, height) => {
   }
 }
 
-// TODO revoke object url when disposed
-export const loadContent = async (state, ...args) => {
-  const { uri } = state
-  const protocol = FileSystem.getProtocol(uri)
-  if (protocol === '') {
-    const src = `/remote${uri}`
-    return {
-      ...state,
-      src,
-    }
+const loadContentRemote = (state, uri) => {
+  const src = `/remote${uri}`
+  return {
+    ...state,
+    src,
   }
+}
+
+const loadContentWithBlobUrl = async (state, uri) => {
   const content = await FileSystem.readFile(uri)
-  const mimeType = Mime.getMediaMimeType(uri)
+  const mimeType = await Command.execute('Mime.getMediaMimeType', uri)
   const blob = await Command.execute(
     'Blob.binaryStringToBlob',
     content,
@@ -52,9 +49,27 @@ export const loadContent = async (state, ...args) => {
   }
 }
 
+const canUseRemoteLoading = (uri) => {
+  const protocol = FileSystem.getProtocol(uri)
+  return protocol === ''
+}
+
+// TODO revoke object url when disposed
+export const loadContent = async (state, ...args) => {
+  const { uri } = state
+  if (canUseRemoteLoading(uri)) {
+    return loadContentRemote(state, uri)
+  }
+  return loadContentWithBlobUrl(state, uri)
+}
+
 export const contentLoaded = async (state) => {}
 
-export const dispose = (state) => {
+export const dispose = async (state) => {
+  const { src } = state
+  if (src.startsWith('blob:')) {
+    await Command.execute('Url.revokeObjectUrl', src)
+  }
   return {
     ...state,
     disposed: true,

@@ -318,17 +318,24 @@ export const closeActiveEditor = (state) => {
   }
 }
 
-export const closeAllEditors = (state) => {
+const getId = (editor) => {
+  return ViewletMap.getId(editor.uri)
+}
+
+export const closeAllEditors = async (state) => {
   RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'dispose'
   )
+  const ids = state.editors.map(getId)
   state.editors = []
   state.focusedIndex = -1
   state.selectedIndex = -1
   // TODO should call dispose method, but only in renderer-worker
-  ViewletStates.remove('EditorText')
+  for (const id of ids) {
+    await ViewletStates.dispose(id)
+  }
 }
 
 export const dispose = () => {}
