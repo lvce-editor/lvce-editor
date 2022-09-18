@@ -41,11 +41,12 @@ export const mkdir = (path) => {
   )
 }
 
-export const writeFile = async (path, content) => {
+export const writeFile = async (path, content, encoding) => {
   await SharedProcess.invoke(
     /* FileSystem.writeFile */ 'FileSystem.writeFile',
     /* path */ path,
-    /* content */ content
+    /* content */ content,
+    /* encoding */ encoding
   )
 }
 

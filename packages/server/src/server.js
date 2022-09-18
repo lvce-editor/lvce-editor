@@ -44,6 +44,14 @@ const textMimeType = {
   '.json': 'application/json',
   '.css': 'text/css',
   '.svg': 'image/svg+xml',
+  '.avif': 'image/avif',
+  '.woff': 'application/font-woff',
+  '.png': 'image/png',
+  '.jpe': 'image/jpg',
+  '.ico': 'image/x-icon',
+  '.jpeg': 'image/jpg',
+  '.jpg': 'image/jpg',
+  '.webp': 'image/webp',
 }
 
 const getPath = (url) => {

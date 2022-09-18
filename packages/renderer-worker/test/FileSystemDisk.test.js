@@ -186,12 +186,13 @@ test('writeFile', async () => {
         throw new Error('unexpected message')
     }
   })
-  await FileSystemDisk.writeFile('/tmp/some-file.txt', 'sample text')
+  await FileSystemDisk.writeFile('/tmp/some-file.txt', 'sample text', 'utf8')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
     'FileSystem.writeFile',
     '/tmp/some-file.txt',
-    'sample text'
+    'sample text',
+    'utf8'
   )
 })
 

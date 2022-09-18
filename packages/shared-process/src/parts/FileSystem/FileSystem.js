@@ -51,11 +51,17 @@ export const readFile = async (path) => {
   }
 }
 
-export const writeFile = async (path, content) => {
+/**
+ *
+ * @param {string} path
+ * @param {string} content
+ * @param {BufferEncoding} encoding
+ */
+export const writeFile = async (path, content, encoding = 'utf8') => {
   try {
     // queue would be more correct for concurrent writes but also slower
     // Queue.add(`writeFile/${path}`, () =>
-    await fs.writeFile(path, content)
+    await fs.writeFile(path, content, encoding)
   } catch (error) {
     if (error && error.code === FileSystemErrorCodes.ENOENT) {
       throw new FileNotFoundError(path)
@@ -214,6 +220,7 @@ export const getRealPath = async (path) => {
     if (
       error &&
       error instanceof globalThis.Error &&
+      // @ts-ignore
       error.code === FileSystemErrorCodes.ENOENT
     ) {
       let content

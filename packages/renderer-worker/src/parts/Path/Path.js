@@ -3,3 +3,7 @@ export const fileExtension = (uri) => {
   const extension = uri.slice(extensionIndex)
   return extension
 }
+
+export const join = (pathSeparator, ...parts) => {
+  return parts.join(pathSeparator)
+}

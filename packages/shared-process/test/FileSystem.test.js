@@ -136,7 +136,11 @@ test('writeFile', async () => {
   fs.writeFile.mockImplementation(() => {})
   await FileSystem.writeFile('/test/a.txt', 'Hello World')
   expect(fs.writeFile).toHaveBeenCalledTimes(1)
-  expect(fs.writeFile).toHaveBeenCalledWith('/test/a.txt', 'Hello World')
+  expect(fs.writeFile).toHaveBeenCalledWith(
+    '/test/a.txt',
+    'Hello World',
+    'utf8'
+  )
 })
 
 test('writeFile - nonexistent file', async () => {

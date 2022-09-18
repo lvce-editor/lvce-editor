@@ -44,6 +44,8 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
 const RecentlyOpened = await import(
   '../src/parts/RecentlyOpened/RecentlyOpened.js'
 )
+
+// TODO mock FileSystem module instead
 const fs = await import('node:fs/promises')
 
 class NodeError extends Error {
@@ -84,7 +86,8 @@ test('addPath - error - recently opened file has invalid json', async () => {
     `[
   \"/test/new-path.txt\"
 ]
-`
+`,
+    'utf8'
   )
 })
 
@@ -125,7 +128,8 @@ test('addPath - error - writeFile - parent folder does not exist', async () => {
     `[
   \"/test/new-path.txt\"
 ]
-`
+`,
+    'utf8'
   )
   expect(fs.mkdir).toHaveBeenCalledWith('/test', { recursive: true })
   expect(fs.writeFile).toHaveBeenNthCalledWith(
@@ -134,6 +138,7 @@ test('addPath - error - writeFile - parent folder does not exist', async () => {
     `[
   \"/test/new-path.txt\"
 ]
-`
+`,
+    'utf8'
   )
 })
