@@ -20,7 +20,7 @@ export const create = (id, uri, left, top, width, height) => {
     minZoom: 0.1,
     maxZoom: 2 ** 15, // max value that doesn't result in degradation
     zoomFactor: 200,
-    touchZoomFactor: 1.01,
+    touchZoomFactor: 1000,
     eventCache: [],
     previousDiff: 0,
     pointerDownCount: 0,
@@ -96,7 +96,7 @@ export const handlePointerDown = (state, pointerId, x, y) => {
 const distance = (point1, point2) => {
   var dx = point1.x - point2.x
   var dy = point1.y - point2.y
-  return dx * dy + dy * dy
+  return Math.sqrt(dx * dy + dy * dy)
 }
 
 const getPointerEventIndex = (eventCache, pointerId) => {
@@ -120,7 +120,23 @@ const zoomTo = (
   return {
     ...state,
     domMatrix: newDomMatrix,
+    previousDiff,
   }
+}
+
+const getCurrentZoomFactorPinch = (previousDiff, currentDiff, zoomFactor) => {
+  const delta = currentDiff - previousDiff
+  const sign = Math.sign(delta)
+  const normalizedDelta = delta / zoomFactor
+  const currentZoomFactor = 1 + sign * normalizedDelta
+  return currentZoomFactor
+}
+
+const getCurrentZoomFactorWheel = (zoomFactor, deltaY) => {
+  const sign = Math.sign(deltaY)
+  const normalizedDeltaY = deltaY / zoomFactor
+  const currentZoomFactor = 1 + sign * normalizedDeltaY
+  return currentZoomFactor
 }
 
 export const handlePointerMove = (state, pointerId, x, y) => {
@@ -153,18 +169,12 @@ export const handlePointerMove = (state, pointerId, x, y) => {
     if (previousDiff > 0) {
       const relativeX = (newEventCache[0].x + newEventCache[1].x) / 2 - left
       const relativeY = (newEventCache[0].y + newEventCache[1].y) / 2 - top
-      if (currentDiff > previousDiff) {
-        return zoomTo(state, touchZoomFactor, relativeX, relativeY, currentDiff)
-      }
-      if (currentDiff < previousDiff) {
-        return zoomTo(
-          state,
-          1 / touchZoomFactor,
-          relativeX,
-          relativeY,
-          currentDiff
-        )
-      }
+      const currentZoomFactor = getCurrentZoomFactorPinch(
+        previousDiff,
+        currentDiff,
+        touchZoomFactor
+      )
+      return zoomTo(state, currentZoomFactor, relativeX, relativeY, currentDiff)
     }
     return {
       ...state,
@@ -211,15 +221,6 @@ const getNewZoom = (zoom, currentZoomFactor, minZoom, maxZoom) => {
   return Clamp.clamp(newZoom, minZoom, maxZoom)
 }
 
-const getCurrentZoomFactor = (zoomFactor, deltaY) => {
-  // TODO use enum for direction
-  const direction = deltaY < 0 ? 'up' : 'down'
-  const normalizedDeltaY = 1 + Math.abs(deltaY) / zoomFactor
-  const currentZoomFactor =
-    direction === 'up' ? normalizedDeltaY : 1 / normalizedDeltaY
-  return currentZoomFactor
-}
-
 export const handleWheel = (state, x, y, deltaX, deltaY) => {
   if (deltaY === 0) {
     return state
@@ -228,7 +229,7 @@ export const handleWheel = (state, x, y, deltaX, deltaY) => {
   const relativeX = x - left
   const relativeY = y - top
   const { domMatrix, zoomFactor, minZoom, maxZoom } = state
-  const currentZoomFactor = getCurrentZoomFactor(zoomFactor, deltaY)
+  const currentZoomFactor = getCurrentZoomFactorWheel(zoomFactor, deltaY)
   return zoomTo(state, currentZoomFactor, relativeX, relativeY, 0)
 }
 
