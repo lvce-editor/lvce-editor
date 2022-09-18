@@ -167,7 +167,8 @@ test('writeFile', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
     'FileSystem.writeFile',
     '/tmp/some-file.txt',
-    'sample text'
+    'sample text',
+    'utf8'
   )
 })
 

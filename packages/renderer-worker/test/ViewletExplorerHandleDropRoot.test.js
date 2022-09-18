@@ -15,6 +15,11 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
     }),
   }
 })
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+  return {
+    platform: 'electron',
+  }
+})
 
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 const ViewletExplorerHandleDropRoot = await import(
