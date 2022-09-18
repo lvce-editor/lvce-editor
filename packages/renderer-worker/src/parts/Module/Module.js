@@ -38,6 +38,8 @@ export const load = (moduleId) => {
       return import('../EditorError/EditorError.ipc.js')
     case ModuleId.EditorRename:
       return import('../EditorRename/EditorRename.ipc.js')
+    case ModuleId.ElectronWindow:
+      return import('../ElectronWindow/ElectronWindow.ipc.js')
     case ModuleId.ErrorHandling:
       return import('../ErrorHandling/ErrorHandling.ipc.js')
     case ModuleId.ExtensionHostCode:
@@ -96,6 +98,8 @@ export const load = (moduleId) => {
       return import('../TestFrameWorkComponent/TestFrameWorkComponent.js')
     case ModuleId.TitleBarMenu:
       return import('../TitleBarMenuBar/TitleBarMenuBar.ipc.js')
+    case ModuleId.Url:
+      return import('../Url/Url.ipc.js')
     case ModuleId.Viewlet:
       return import('../Viewlet/Viewlet.ipc.js')
     case ModuleId.ViewletQuickPick:
@@ -106,10 +110,6 @@ export const load = (moduleId) => {
       return import('../Workbench/Workbench.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.ElectronWindow:
-      return import('../ElectronWindow/ElectronWindow.ipc.js')
-    case ModuleId.Url:
-      return import('../Url/Url.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

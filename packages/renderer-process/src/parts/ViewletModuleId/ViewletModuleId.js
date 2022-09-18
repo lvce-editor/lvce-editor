@@ -22,6 +22,8 @@ export const ImagePreview = 'ImagePreview'
 
 export const Implementations = 'Implementations'
 
+export const KeyBindings = 'KeyBindings'
+
 export const Main = 'Main'
 
 export const Output = 'Output'
@@ -47,5 +49,3 @@ export const StatusBar = 'StatusBar'
 export const Terminal = 'Terminal'
 
 export const TitleBar = 'TitleBar'
-
-export const KeyBindings = 'KeyBindings'

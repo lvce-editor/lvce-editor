@@ -8,8 +8,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Ajax
     case 'Audio.playBell':
       return ModuleId.Audio
-    case 'Base64.encode':
     case 'Base64.decode':
+    case 'Base64.encode':
       return ModuleId.Base64
     case 'Blob.base64StringToBlob':
     case 'Blob.binaryStringToBlob':
@@ -87,6 +87,12 @@ export const getModuleId = (commandId) => {
     case 'EditorRename.finish':
     case 'EditorRename.open':
       return ModuleId.EditorRename
+    case 'ElectronWindow.close':
+    case 'ElectronWindow.maximize':
+    case 'ElectronWindow.minimize':
+    case 'ElectronWindow.toggleDevtools':
+    case 'ElectronWindow.unmaximize':
+      return ModuleId.ElectronWindow
     case 'ErrorHandling.handleError':
       return ModuleId.ErrorHandling
     case 'ExtensionHost.loadWebExtension':
@@ -224,6 +230,9 @@ export const getModuleId = (commandId) => {
     case 'TitleBarMenuBar.openMenu':
     case 'TitleBarMenuBar.toggleIndex':
       return ModuleId.TitleBarMenu
+    case 'Url.createObjectUrl':
+    case 'Url.revokeObjectUrl':
+      return ModuleId.Url
     case 'Viewlet.getAllStates':
     case 'Viewlet.openWidget':
     case 2133:
@@ -252,15 +261,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace.setPath':
     case 'Workspace.setUri':
       return ModuleId.Workspace
-    case 'ElectronWindow.close':
-    case 'ElectronWindow.minimize':
-    case 'ElectronWindow.unmaximize':
-    case 'ElectronWindow.maximize':
-    case 'ElectronWindow.toggleDevtools':
-      return ModuleId.ElectronWindow
-    case 'Url.revokeObjectUrl':
-    case 'Url.createObjectUrl':
-      return ModuleId.Url
     default:
       throw new Error(`command ${commandId} not found`)
   }
