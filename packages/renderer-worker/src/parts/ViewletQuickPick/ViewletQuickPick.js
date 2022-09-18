@@ -375,6 +375,8 @@ const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
       return getNewValueDeleteWordForward(value, selectionStart, selectionEnd)
     case InputEventType.DeleteWordBackward:
       return getNewValueDeleteWordBackward(value, selectionStart, selectionEnd)
+    case InputEventType.InsertLineBreak:
+      return value
     default:
       throw new Error(`unsupported input type ${inputType}`)
   }
