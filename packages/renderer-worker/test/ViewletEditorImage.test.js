@@ -127,25 +127,25 @@ test('render', () => {
 
 test('handlePointerMove - move left', () => {
   const state = ViewletEditorImage.create()
-  const newState = ViewletEditorImage.handlePointerMove(state, -10, 0)
+  const newState = ViewletEditorImage.handlePointerMove(state, 0, -10, 0)
   expect(newState.domMatrix.e).toBe(-10)
 })
 
 test('handlePointerMove - move right', () => {
   const state = ViewletEditorImage.create()
-  const newState = ViewletEditorImage.handlePointerMove(state, 10, 0)
+  const newState = ViewletEditorImage.handlePointerMove(state, 0, 10, 0)
   expect(newState.domMatrix.e).toBe(10)
 })
 
 test('handlePointerMove - move up', () => {
   const state = ViewletEditorImage.create()
-  const newState = ViewletEditorImage.handlePointerMove(state, 0, -10)
+  const newState = ViewletEditorImage.handlePointerMove(state, 0, 0, -10)
   expect(newState.domMatrix.f).toBe(-10)
 })
 
 test('handlePointerMove - move down', () => {
   const state = ViewletEditorImage.create()
-  const newState = ViewletEditorImage.handlePointerMove(state, 0, 10)
+  const newState = ViewletEditorImage.handlePointerMove(state, 0, 0, 10)
   expect(newState.domMatrix.f).toBe(10)
 })
 
@@ -154,14 +154,14 @@ test('handlePointerMove - move right after zoom', () => {
     ...ViewletEditorImage.create(),
     domMatrix: new DOMMatrix([2, 0, 0, 2, 0, 0]),
   }
-  const newState = ViewletEditorImage.handlePointerMove(state, 10, 20)
+  const newState = ViewletEditorImage.handlePointerMove(state, 0, 10, 20)
   expect(newState.domMatrix.e).toBe(10)
   expect(newState.domMatrix.f).toBe(20)
 })
 
 test('handlePointerDown', () => {
   const state = ViewletEditorImage.create()
-  const newState = ViewletEditorImage.handlePointerDown(state, 10, 20)
+  const newState = ViewletEditorImage.handlePointerDown(state, 0, 10, 20)
   expect(newState.pointerOffsetX).toBe(10)
   expect(newState.pointerOffsetY).toBe(20)
 })

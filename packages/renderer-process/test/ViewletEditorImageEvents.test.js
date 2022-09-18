@@ -11,6 +11,7 @@ beforeAll(() => {
       super(type, init)
       this.clientX = init.clientX
       this.clientY = init.clientY
+      this.pointerId = init.pointerId
     }
   }
 
@@ -23,6 +24,7 @@ beforeAll(() => {
 
 beforeEach(() => {
   jest.resetAllMocks()
+  ViewletEditorImageEvents.state.pointerDownCount = 0
 })
 
 jest.unstable_mockModule(
@@ -55,11 +57,13 @@ test('event - pointerdown', () => {
     bubbles: true,
     clientX: 10,
     clientY: 20,
+    pointerId: 0,
   })
   $Viewlet.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
     'EditorImage.handlePointerDown',
+    0,
     10,
     20
   )
@@ -74,24 +78,28 @@ test('event - pointermove after pointerdown', () => {
     bubbles: true,
     clientX: 10,
     clientY: 20,
+    pointerId: 0,
   })
   $Viewlet.dispatchEvent(pointerDownEvent)
   const pointerMoveEvent = new PointerEvent('pointermove', {
     bubbles: true,
     clientX: 30,
     clientY: 40,
+    pointerId: 0,
   })
   window.dispatchEvent(pointerMoveEvent)
   expect(RendererWorker.send).toHaveBeenCalledTimes(2)
   expect(RendererWorker.send).toHaveBeenNthCalledWith(
     1,
     'EditorImage.handlePointerDown',
+    0,
     10,
     20
   )
   expect(RendererWorker.send).toHaveBeenNthCalledWith(
     2,
     'EditorImage.handlePointerMove',
+    0,
     30,
     40
   )
@@ -108,6 +116,7 @@ test('event - pointerup after pointerdown', () => {
     bubbles: true,
     clientX: 10,
     clientY: 20,
+    pointerId: 0,
   })
   $Viewlet.dispatchEvent(pointerDownEvent)
   expect(spy1).toHaveBeenCalledTimes(2)
@@ -126,6 +135,7 @@ test('event - pointerup after pointerdown', () => {
     bubbles: true,
     clientX: 10,
     clientY: 20,
+    pointerId: 0,
   })
   window.dispatchEvent(pointerUpEvent)
   expect(spy2).toHaveBeenCalledTimes(2)

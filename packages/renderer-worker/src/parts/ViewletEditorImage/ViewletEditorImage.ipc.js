@@ -5,6 +5,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 export const Commands = {
   'EditorImage.handlePointerDown': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handlePointerDown),
   'EditorImage.handlePointerMove': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handlePointerMove),
+  'EditorImage.handlePointerUp': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handlePointerUp),
   'EditorImage.handleWheel': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handleWheel),
 }
 

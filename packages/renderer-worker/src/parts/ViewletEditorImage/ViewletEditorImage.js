@@ -18,6 +18,9 @@ export const create = (id, uri, left, top, width, height) => {
     minZoom: 0.1,
     maxZoom: 2 ** 15, // max value that doesn't result in degradation
     zoomFactor: 200,
+    touchZoomFactor: 1.015,
+    eventCache: [],
+    previousDiff: 0,
   }
 }
 
@@ -37,22 +40,81 @@ export const dispose = (state) => {
   }
 }
 
-export const handlePointerDown = (state, x, y) => {
+export const handlePointerDown = (state, pointerId, x, y) => {
   Assert.object(state)
   Assert.number(x)
   Assert.number(y)
+  const { eventCache } = state
+  const newEventCache = [...eventCache, { pointerId, x, y }]
   return {
     ...state,
     pointerOffsetX: x,
     pointerOffsetY: y,
+    eventCache: newEventCache,
   }
 }
 
-export const handlePointerMove = (state, x, y) => {
+const distance = (point1, point2) => {
+  var dx = point1.x - point2.x
+  var dy = point1.y - point2.y
+  return Math.sqrt(dx * dx + dy * dy)
+}
+
+export const handlePointerMove = (state, pointerId, x, y) => {
   Assert.object(state)
   Assert.number(x)
   Assert.number(y)
-  const { pointerOffsetX, pointerOffsetY, domMatrix } = state
+  const {
+    pointerOffsetX,
+    pointerOffsetY,
+    domMatrix,
+    eventCache,
+    previousDiff,
+    touchZoomFactor,
+  } = state
+  const index = eventCache.findIndex((event) => event.pointerId === pointerId)
+  // TODO avoid mutation
+  eventCache[index] = { pointerId, x, y }
+
+  if (eventCache.length === 2) {
+    const currentDiff = distance(eventCache[0], eventCache[1])
+    if (previousDiff > 0) {
+      if (currentDiff > previousDiff) {
+        const newDomMatrix = new DOMMatrix([
+          (domMatrix.a *= touchZoomFactor),
+          domMatrix.b,
+          domMatrix.c,
+          (domMatrix.d *= touchZoomFactor),
+          domMatrix.e,
+          domMatrix.f,
+        ])
+        return {
+          ...state,
+          previousDiff: currentDiff,
+          domMatrix: newDomMatrix,
+        }
+      }
+      if (currentDiff < previousDiff) {
+        const newDomMatrix = new DOMMatrix([
+          (domMatrix.a /= touchZoomFactor),
+          domMatrix.b,
+          domMatrix.c,
+          (domMatrix.d /= touchZoomFactor),
+          domMatrix.e,
+          domMatrix.f,
+        ])
+        return {
+          ...state,
+          previousDiff: currentDiff,
+          domMatrix: newDomMatrix,
+        }
+      }
+    }
+    return {
+      ...state,
+      previousDiff: currentDiff,
+    }
+  }
   const deltaX = x - pointerOffsetX
   const deltaY = y - pointerOffsetY
   const newDomMatrix = new DOMMatrix([
@@ -68,6 +130,19 @@ export const handlePointerMove = (state, x, y) => {
     pointerOffsetX: x,
     pointerOffsetY: y,
     domMatrix: newDomMatrix,
+  }
+}
+
+export const handlePointerUp = (state, pointerId, x, y) => {
+  const { eventCache } = state
+  const index = eventCache.findIndex((event) => event.pointerId === pointerId)
+  const newEventCache = [
+    ...eventCache.slice(0, index),
+    ...eventCache.slice(index + 1),
+  ]
+  return {
+    ...state,
+    eventCache: newEventCache,
   }
 }
 
