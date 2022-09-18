@@ -1,13 +1,5 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
-const pointerMoveOptions = {
-  passive: true,
-}
-
-export const state = {
-  pointerDownCount: 0,
-}
-
 /**
  * @param {PointerEvent} event
  */
@@ -25,17 +17,9 @@ export const handlePointerMove = (event) => {
  * @param {PointerEvent} event
  */
 export const handlePointerUp = (event) => {
-  const { pointerId, clientX, clientY } = event
-  state.pointerDownCount--
-  if (state.pointerDownCount === 0) {
-    // @ts-ignore
-    window.removeEventListener(
-      'pointermove',
-      handlePointerMove,
-      pointerMoveOptions
-    )
-    window.removeEventListener('pointerup', handlePointerUp)
-  }
+  const { pointerId, clientX, clientY, target } = event
+  // @ts-ignore
+  target.releasePointerCapture(pointerId)
   RendererWorker.send(
     'EditorImage.handlePointerUp',
     pointerId,
@@ -48,16 +32,10 @@ export const handlePointerUp = (event) => {
  * @param {PointerEvent} event
  */
 export const handlePointerDown = (event) => {
-  const { pointerId, clientX, clientY } = event
-  state.pointerDownCount++
-  if (state.pointerDownCount === 1) {
-    window.addEventListener(
-      'pointermove',
-      handlePointerMove,
-      pointerMoveOptions
-    )
-    window.addEventListener('pointerup', handlePointerUp)
-  }
+  const { pointerId, clientX, clientY, target, button } = event
+  console.log({ button })
+  // @ts-ignore
+  target.setPointerCapture(pointerId)
   RendererWorker.send(
     'EditorImage.handlePointerDown',
     pointerId,

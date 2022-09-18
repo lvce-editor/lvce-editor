@@ -128,6 +128,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Window
     case 33111:
       return ModuleId.Workbench
+    case 'Eval.evalCode':
+      return ModuleId.Eval
     default:
       throw new Error(`command ${commandId} not found`)
   }

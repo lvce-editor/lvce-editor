@@ -16,6 +16,17 @@ export const create = () => {
   $Viewlet.dataset.viewletId = 'EditorImage'
   $Viewlet.append($ImageWrapper)
   $Viewlet.onpointerdown = ViewletEditorImageEvents.handlePointerDown
+  $Viewlet.onpointerup = ViewletEditorImageEvents.handlePointerUp
+  // TODO maybe set pointer move handle once pointer down is called
+  // but that would require keeping track of how many pointers are down
+  // and removing the listener when pointerDownCount === 0
+  // TODO not sure whether this event listener should be passive or not
+  // doesn't seem to make a difference
+  $Viewlet.addEventListener(
+    'pointermove',
+    ViewletEditorImageEvents.handlePointerMove,
+    { passive: true }
+  )
   $Viewlet.oncontextmenu = ViewletEditorImageEvents.handleContextMenu
   $Viewlet.addEventListener('wheel', ViewletEditorImageEvents.handleWheel, {
     passive: true,
@@ -37,13 +48,4 @@ export const setSrc = (state, src) => {
   $Image.src = src
 }
 
-export const dispose = (state) => {
-  window.removeEventListener(
-    'pointerup',
-    ViewletEditorImageEvents.handlePointerUp
-  )
-  window.removeEventListener(
-    'pointermove',
-    ViewletEditorImageEvents.handlePointerMove
-  )
-}
+export const dispose = (state) => {}
