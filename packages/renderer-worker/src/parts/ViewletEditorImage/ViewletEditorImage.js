@@ -39,7 +39,7 @@ export const loadContent = async (state, ...args) => {
     }
   }
   const content = await FileSystem.readFile(uri)
-  const mimeType = Mime.getMimeType(uri)
+  const mimeType = Mime.getMediaMimeType(uri)
   const blob = await Command.execute(
     'Blob.binaryStringToBlob',
     content,
