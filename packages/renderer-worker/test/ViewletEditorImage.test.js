@@ -107,9 +107,12 @@ test('loadContent', async () => {
   })
 })
 
-test('dispose', () => {
-  const state = ViewletEditorImage.create()
-  expect(ViewletEditorImage.dispose(state)).toMatchObject({
+test('dispose', async () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    uri: '/test/image.png',
+  }
+  expect(await ViewletEditorImage.dispose(state)).toMatchObject({
     disposed: true,
   })
 })

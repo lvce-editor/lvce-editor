@@ -23,6 +23,14 @@ export const remove = (key) => {
   delete state.instances[key]
 }
 
+export const dispose = async (key) => {
+  const instance = state.instances[key]
+  delete state.instances[key]
+  if (instance.factory.dispose) {
+    await instance.factory.dispose(instance.state)
+  }
+}
+
 export const getAllInstances = () => {
   return state.instances
 }
