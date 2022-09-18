@@ -28,7 +28,7 @@ export const writeFileInternal = async (getPath, content) => {
   Assert.string(path)
   if (Platform.platform === PlatformType.Web) {
     await Command.execute(
-      /* LocalStorage.setText */ 6904,
+      /* LocalStorage.setText */ 'LocalStorage.setText',
       /* key */ path,
       /* value */ content
     )
