@@ -76,11 +76,11 @@ export const mkdir = async (uri) => {
   await fileSystem.mkdir(path)
 }
 
-export const writeFile = async (uri, content) => {
+export const writeFile = async (uri, content, encoding = 'utf8') => {
   const protocol = getProtocol(uri)
   const path = getPath(protocol, uri)
   const fileSystem = getFileSystem(protocol)
-  await fileSystem.writeFile(path, content)
+  await fileSystem.writeFile(path, content, encoding)
 }
 
 export const readDirWithFileTypes = (uri) => {

@@ -51,11 +51,11 @@ export const readFile = async (path) => {
   }
 }
 
-export const writeFile = async (path, content) => {
+export const writeFile = async (path, content, encoding) => {
   try {
     // queue would be more correct for concurrent writes but also slower
     // Queue.add(`writeFile/${path}`, () =>
-    await fs.writeFile(path, content)
+    await fs.writeFile(path, content, encoding)
   } catch (error) {
     if (error && error.code === FileSystemErrorCodes.ENOENT) {
       throw new FileNotFoundError(path)

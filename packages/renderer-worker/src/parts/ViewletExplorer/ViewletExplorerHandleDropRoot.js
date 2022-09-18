@@ -45,7 +45,7 @@ const getFileContent = async (file) => {
       resolve(fileContent)
     }
     fileReader.onload = handleLoad
-    fileReader.readAsText(file)
+    fileReader.readAsBinaryString(file)
   })
   return content
 }
@@ -55,7 +55,7 @@ const handleDropRootDefault = async (state, files) => {
   for (const file of files) {
     const content = await getFileContent(file)
     const to = Path.join(pathSeparator, root, file.name)
-    await FileSystem.writeFile(to, content)
+    await FileSystem.writeFile(to, content, 'binary')
   }
   const mergedDirents = await getMergedDirents(root, pathSeparator, dirents)
   return {
