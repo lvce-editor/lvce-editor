@@ -27,12 +27,14 @@ export const handlePointerMove = (event) => {
  */
 export const handlePointerUp = (event) => {
   const { pointerId, clientX, clientY, target } = event
+  // @ts-ignore
   target.releasePointerCapture(pointerId)
   state.pointerDownCount--
   if (state.pointerDownCount === 0) {
     // @ts-ignore
     target.removeEventListener(
       'pointermove',
+      // @ts-ignore
       handlePointerMove,
       pointerMoveOptions
     )
@@ -51,11 +53,14 @@ export const handlePointerUp = (event) => {
  */
 export const handlePointerDown = (event) => {
   const { pointerId, clientX, clientY, target } = event
+  // @ts-ignore
   target.setPointerCapture(pointerId)
   state.pointerDownCount++
+  console.log('downcount', state.pointerDownCount)
   if (state.pointerDownCount === 1) {
     target.addEventListener(
       'pointermove',
+      // @ts-ignore
       handlePointerMove,
       pointerMoveOptions
     )
@@ -72,6 +77,7 @@ export const handlePointerDown = (event) => {
  * @param {WheelEvent} event
  */
 export const handleWheel = (event) => {
+  console.log('handle wheel')
   const { clientX, clientY, deltaX, deltaY } = event
   RendererWorker.send(
     'EditorImage.handleWheel',
