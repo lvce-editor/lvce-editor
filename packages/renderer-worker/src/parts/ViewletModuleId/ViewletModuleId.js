@@ -18,6 +18,8 @@ export const Extensions = 'Extensions'
 
 export const Implementations = 'Implementations'
 
+export const KeyBindings = 'KeyBindings'
+
 export const Main = 'Main'
 
 export const Noop = 'Noop'
@@ -45,5 +47,3 @@ export const StatusBar = 'StatusBar'
 export const Terminal = 'Terminal'
 
 export const TitleBar = 'TitleBar'
-
-export const KeyBindings = 'KeyBindings'
