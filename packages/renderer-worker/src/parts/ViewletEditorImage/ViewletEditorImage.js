@@ -35,6 +35,7 @@ const getMimeType = (uri) => {
   return ''
 }
 
+// TODO revoke object url when disposed
 export const loadContent = async (state, ...args) => {
   const { uri } = state
   const protocol = FileSystem.getProtocol(uri)
