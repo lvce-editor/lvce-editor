@@ -4,6 +4,7 @@ const pointerMoveOptions = {
   passive: true,
 }
 
+// TODO figure out if it is possible to remove state from here
 export const state = {
   pointerDownCount: 0,
 }
@@ -25,16 +26,17 @@ export const handlePointerMove = (event) => {
  * @param {PointerEvent} event
  */
 export const handlePointerUp = (event) => {
-  const { pointerId, clientX, clientY } = event
+  const { pointerId, clientX, clientY, target } = event
+  target.releasePointerCapture(pointerId)
   state.pointerDownCount--
   if (state.pointerDownCount === 0) {
     // @ts-ignore
-    window.removeEventListener(
+    target.removeEventListener(
       'pointermove',
       handlePointerMove,
       pointerMoveOptions
     )
-    window.removeEventListener('pointerup', handlePointerUp)
+    // f.removeEventListener('pointerup', handlePointerUp)
   }
   RendererWorker.send(
     'EditorImage.handlePointerUp',
@@ -48,15 +50,15 @@ export const handlePointerUp = (event) => {
  * @param {PointerEvent} event
  */
 export const handlePointerDown = (event) => {
-  const { pointerId, clientX, clientY } = event
+  const { pointerId, clientX, clientY, target } = event
+  target.setPointerCapture(pointerId)
   state.pointerDownCount++
   if (state.pointerDownCount === 1) {
-    window.addEventListener(
+    target.addEventListener(
       'pointermove',
       handlePointerMove,
       pointerMoveOptions
     )
-    window.addEventListener('pointerup', handlePointerUp)
   }
   RendererWorker.send(
     'EditorImage.handlePointerDown',

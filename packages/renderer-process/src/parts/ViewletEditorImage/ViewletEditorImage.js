@@ -16,6 +16,7 @@ export const create = () => {
   $Viewlet.dataset.viewletId = 'EditorImage'
   $Viewlet.append($ImageWrapper)
   $Viewlet.onpointerdown = ViewletEditorImageEvents.handlePointerDown
+  $Viewlet.onpointerup = ViewletEditorImageEvents.handlePointerUp
   $Viewlet.oncontextmenu = ViewletEditorImageEvents.handleContextMenu
   $Viewlet.addEventListener('wheel', ViewletEditorImageEvents.handleWheel, {
     passive: true,
