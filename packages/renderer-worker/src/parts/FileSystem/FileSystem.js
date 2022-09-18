@@ -14,7 +14,7 @@ import * as FileSystemMemory from './FileSystemMemory.js'
 
 const RE_PROTOCOL = /^([a-z]+):\/\//
 
-const getProtocol = (uri) => {
+export const getProtocol = (uri) => {
   const protocolMatch = uri.match(RE_PROTOCOL)
   if (protocolMatch) {
     return protocolMatch[1]

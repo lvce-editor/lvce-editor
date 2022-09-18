@@ -202,9 +202,15 @@ export const getTestPath = () => {
 }
 
 export const getNodePath = () => {
+  if (platform === PlatformType.Web) {
+    throw new Error('not implemented in web')
+  }
   return SharedProcess.invoke(/* Platform.getNodePath */ 'Platform.getNodePath')
 }
 
 export const getTmpDir = () => {
+  if (platform === PlatformType.Web) {
+    throw new Error('not implemented in web')
+  }
   return SharedProcess.invoke(/* Platform.getTmpDir */ 'Platform.getTmpDir')
 }

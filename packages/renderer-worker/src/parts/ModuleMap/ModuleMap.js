@@ -8,9 +8,11 @@ export const getModuleId = (commandId) => {
       return ModuleId.Ajax
     case 'Audio.playBell':
       return ModuleId.Audio
+    case 'Base64.encode':
     case 'Base64.decode':
       return ModuleId.Base64
     case 'Blob.base64StringToBlob':
+    case 'Blob.binaryStringToBlob':
       return ModuleId.Blob
     case 'CacheStorage.clearCache':
     case 'CacheStorage.getJson':
@@ -256,6 +258,9 @@ export const getModuleId = (commandId) => {
     case 'ElectronWindow.maximize':
     case 'ElectronWindow.toggleDevtools':
       return ModuleId.ElectronWindow
+    case 'Url.revokeObjectUrl':
+    case 'Url.createObjectUrl':
+      return ModuleId.Url
     default:
       throw new Error(`command ${commandId} not found`)
   }
