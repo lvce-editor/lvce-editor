@@ -20,7 +20,6 @@ export const handlePointerUp = (event) => {
   const { pointerId, clientX, clientY, target } = event
   // @ts-ignore
   target.releasePointerCapture(pointerId)
-
   RendererWorker.send(
     'EditorImage.handlePointerUp',
     pointerId,
@@ -33,10 +32,10 @@ export const handlePointerUp = (event) => {
  * @param {PointerEvent} event
  */
 export const handlePointerDown = (event) => {
-  const { pointerId, clientX, clientY, target } = event
+  const { pointerId, clientX, clientY, target, button } = event
+  console.log({ button })
   // @ts-ignore
   target.setPointerCapture(pointerId)
-
   RendererWorker.send(
     'EditorImage.handlePointerDown',
     pointerId,

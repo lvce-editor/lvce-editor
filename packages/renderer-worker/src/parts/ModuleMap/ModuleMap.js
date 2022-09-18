@@ -95,6 +95,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronWindow
     case 'ErrorHandling.handleError':
       return ModuleId.ErrorHandling
+    case 'Eval.evalInRendererProcess':
+      return ModuleId.Eval
     case 'ExtensionHost.loadWebExtension':
     case 'ExtensionHost.startWebExtensionHost':
       return ModuleId.ExtensionHostCode

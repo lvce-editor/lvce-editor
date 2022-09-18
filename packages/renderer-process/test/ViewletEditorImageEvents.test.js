@@ -76,6 +76,35 @@ test('event - pointerdown', () => {
   )
 })
 
+test.skip('event - pointerdown - error - no active pointer with the given id is found', () => {
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const spy = jest
+    // @ts-ignore
+    .spyOn(HTMLElement.prototype, 'setPointerCapture')
+    .mockImplementation(() => {
+      throw new Error(
+        `DOMException: Failed to execute 'setPointerCapture' on 'Element': No active pointer with the given id is found.`
+      )
+    })
+  const state = ViewletEditorImage.create()
+  const { $Viewlet } = state
+  const event = new PointerEvent('pointerdown', {
+    bubbles: true,
+    clientX: 10,
+    clientY: 20,
+    pointerId: 0,
+  })
+  $Viewlet.dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'EditorImage.handlePointerDown',
+    0,
+    10,
+    20
+  )
+})
+
 test('event - pointermove after pointerdown', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
@@ -128,6 +157,7 @@ test('event - pointerup after pointerdown', () => {
     clientY: 20,
     pointerId: 0,
   })
+  // @ts-ignore
   $Viewlet.dispatchEvent(pointerDownEvent)
   expect(spy1).not.toHaveBeenCalled()
   expect(spy3).toHaveBeenCalledTimes(1)

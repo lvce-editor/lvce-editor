@@ -31,6 +31,16 @@ test('viewlet.editor-image', async () => {
     'matrix(1.13, 0, 0, 1.13, 0, 7.15)'
   )
 
+  // workaround for not being setPointerCapture() not working on
+  // synthetic events
+  await Eval.evalInRendererProcess(`
+globalThis._originalSetPointerCapture = Element.prototype.setPointerCapture
+globalThis._originalReleasePointerCapture = Element.prototype.releasePointerCapture
+
+Element.prototype.setPointerCapture = () => {}
+Element.prototype.releasePointerCapture = () => {}
+`)
+
   // act
   await viewletImage.dispatchEvent('pointerdown', {
     clientX: 0,
@@ -53,4 +63,9 @@ test('viewlet.editor-image', async () => {
     'transform',
     'matrix(1.13, 0, 0, 1.13, 1, 7.15)'
   )
+
+  await Eval.evalInRendererProcess(`
+Element.prototype.setPointerCapture = globalThis._originalSetPointerCapture
+Element.prototype.releasePointerCapture = globalThis._originalReleasePointerCapture
+`)
 })

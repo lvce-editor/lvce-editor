@@ -42,6 +42,8 @@ export const load = (moduleId) => {
       return import('../ElectronWindow/ElectronWindow.ipc.js')
     case ModuleId.ErrorHandling:
       return import('../ErrorHandling/ErrorHandling.ipc.js')
+    case ModuleId.Eval:
+      return import('../Eval/Eval.ipc.js')
     case ModuleId.ExtensionHostCode:
       return import('../ExtensionHost/ExtensionHostCore.ipc.js')
     case ModuleId.ExtensionMeta:
@@ -70,6 +72,8 @@ export const load = (moduleId) => {
       return import('../LocalStorage/LocalStorage.ipc.js')
     case ModuleId.Menu:
       return import('../Menu/Menu.ipc.js')
+    case ModuleId.Mime:
+      return import('../Mime/Mime.ipc.js')
     case ModuleId.Navigatiom:
       return import('../Navigation/Navigation.ipc.js')
     case ModuleId.Notification:
@@ -110,8 +114,6 @@ export const load = (moduleId) => {
       return import('../Workbench/Workbench.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.Mime:
-      return import('../Mime/Mime.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

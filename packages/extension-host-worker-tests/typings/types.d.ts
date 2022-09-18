@@ -99,6 +99,10 @@ declare const Main: {
   readonly openUri: (uri: string) => Promise<void>
 }
 
+declare const Eval: {
+  readonly evalInRendererProcess: (code: string) => Promise<void>
+}
+
 declare const expect: (locator: any) => {
   readonly toBeFocused: () => Promise<void>
   readonly toBeHidden: () => Promise<void>
