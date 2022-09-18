@@ -6,8 +6,6 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 export const handlePointerMove = (event) => {
   const { pointerId, clientX, clientY } = event
   console.log('pointer move', { pointerId, clientX, clientY })
-  const coalescedEvents = event.getCoalescedEvents()
-  console.log({ coalescedEvents })
   RendererWorker.send(
     'EditorImage.handlePointerMove',
     pointerId,

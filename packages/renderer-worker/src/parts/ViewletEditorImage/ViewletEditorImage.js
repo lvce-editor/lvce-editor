@@ -81,15 +81,17 @@ export const handlePointerDown = (state, pointerId, x, y) => {
   Assert.object(state)
   Assert.number(x)
   Assert.number(y)
-  const { eventCache, pointerDownCount } = state
+  const { eventCache, pointerDownCount, previousDiff } = state
   const newEventCache = [...eventCache, { pointerId, x, y }]
   const newPointerDownCount = pointerDownCount + 1
+  const currentDiff = newPointerDownCount===2 ?  distance(newEventCache[0], newEventCache[1]):previousDiff
   return {
     ...state,
     pointerOffsetX: x,
     pointerOffsetY: y,
     eventCache: newEventCache,
     pointerDownCount: newPointerDownCount,
+    previousDiff:currentDiff
   }
 }
 
@@ -134,6 +136,7 @@ const getCurrentZoomFactorPinch = (zoomFactor, delta) => {
   const sign = Math.sign(delta)
   const normalizedDelta = delta / zoomFactor
   const currentZoomFactor = 1 + normalizedDelta
+  console.log({normalizedDelta, currentZoomFactor, zoomFactor, delta})
   return currentZoomFactor
 }
 
@@ -173,7 +176,7 @@ export const handlePointerMove = (state, pointerId, x, y) => {
     const currentDiff = distance(newEventCache[0], newEventCache[1])
     const relativeX = (newEventCache[0].x + newEventCache[1].x) / 2 - left
     const relativeY = (newEventCache[0].y + newEventCache[1].y) / 2 - top
-    const delta = currentDiff - previousDiff
+    const delta = currentDiff / previousDiff
     console.log({ delta, newEventCache, currentDiff, previousDiff })
     const currentZoomFactor = getCurrentZoomFactorPinch(touchZoomFactor, delta)
     return zoomTo(state, currentZoomFactor, relativeX, relativeY, currentDiff)
