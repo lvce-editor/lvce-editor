@@ -32,7 +32,6 @@ beforeAll(() => {
 
 beforeEach(() => {
   jest.resetAllMocks()
-  ViewletEditorImageEvents.state.pointerDownCount = 0
 })
 
 jest.unstable_mockModule(
@@ -118,7 +117,6 @@ test('event - pointerup after pointerdown', () => {
   RendererWorker.send.mockImplementation(() => {})
   const state = ViewletEditorImage.create()
   const spy1 = jest.spyOn(HTMLElement.prototype, 'addEventListener')
-  const spy2 = jest.spyOn(HTMLElement.prototype, 'removeEventListener')
   // @ts-ignore
   const spy3 = jest.spyOn(HTMLElement.prototype, 'setPointerCapture')
   // @ts-ignore
@@ -131,13 +129,7 @@ test('event - pointerup after pointerdown', () => {
     pointerId: 0,
   })
   $Viewlet.dispatchEvent(pointerDownEvent)
-  expect(spy1).toHaveBeenCalledTimes(1)
-  expect(spy1).toHaveBeenNthCalledWith(
-    1,
-    'pointermove',
-    ViewletEditorImageEvents.handlePointerMove,
-    { passive: true }
-  )
+  expect(spy1).not.toHaveBeenCalled()
   expect(spy3).toHaveBeenCalledTimes(1)
   expect(spy3).toHaveBeenCalledWith(0)
   const pointerUpEvent = new PointerEvent('pointerup', {
@@ -147,18 +139,6 @@ test('event - pointerup after pointerdown', () => {
     pointerId: 0,
   })
   $Viewlet.dispatchEvent(pointerUpEvent)
-  // expect(spy2).toHaveBeenCalledTimes(2)
-  // expect(spy2).toHaveBeenNthCalledWith(
-  //   1,
-  //   'pointermove',
-  //   ViewletEditorImageEvents.handlePointerMove,
-  //   { passive: true }
-  // )
-  // expect(spy2).toHaveBeenNthCalledWith(
-  //   2,
-  //   'pointerup',
-  //   ViewletEditorImageEvents.handlePointerUp
-  // )
   expect(spy4).toHaveBeenCalledTimes(1)
   expect(spy4).toHaveBeenCalledWith(0)
 })
@@ -184,22 +164,5 @@ test.skip('event - wheel', () => {
     20,
     30,
     40
-  )
-})
-
-test('dispose', () => {
-  const state = ViewletEditorImage.create()
-  const spy = jest.spyOn(window, 'removeEventListener')
-  ViewletEditorImage.dispose(state)
-  expect(spy).toHaveBeenCalledTimes(2)
-  expect(spy).toHaveBeenNthCalledWith(
-    1,
-    'pointerup',
-    ViewletEditorImageEvents.handlePointerUp
-  )
-  expect(spy).toHaveBeenNthCalledWith(
-    2,
-    'pointermove',
-    ViewletEditorImageEvents.handlePointerMove
   )
 })
