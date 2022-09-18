@@ -23,6 +23,7 @@ export const create = (id, uri, left, top, width, height) => {
     touchZoomFactor: 1.015,
     eventCache: [],
     previousDiff: 0,
+    pointerDownCount: 0,
   }
 }
 
@@ -80,13 +81,15 @@ export const handlePointerDown = (state, pointerId, x, y) => {
   Assert.object(state)
   Assert.number(x)
   Assert.number(y)
-  const { eventCache } = state
+  const { eventCache, pointerDownCount } = state
   const newEventCache = [...eventCache, { pointerId, x, y }]
+  const newPointerDownCount = pointerDownCount + 1
   return {
     ...state,
     pointerOffsetX: x,
     pointerOffsetY: y,
     eventCache: newEventCache,
+    pointerDownCount: newPointerDownCount,
   }
 }
 
@@ -107,7 +110,11 @@ export const handlePointerMove = (state, pointerId, x, y) => {
     eventCache,
     previousDiff,
     touchZoomFactor,
+    pointerDownCount,
   } = state
+  if (pointerDownCount === 0) {
+    return state
+  }
   const index = eventCache.findIndex((event) => event.pointerId === pointerId)
   // TODO avoid mutation
   eventCache[index] = { pointerId, x, y }
@@ -170,15 +177,17 @@ export const handlePointerMove = (state, pointerId, x, y) => {
 }
 
 export const handlePointerUp = (state, pointerId, x, y) => {
-  const { eventCache } = state
+  const { eventCache, pointerDownCount } = state
   const index = eventCache.findIndex((event) => event.pointerId === pointerId)
   const newEventCache = [
     ...eventCache.slice(0, index),
     ...eventCache.slice(index + 1),
   ]
+  const newPointerDownCount = pointerDownCount - 1
   return {
     ...state,
     eventCache: newEventCache,
+    pointerDownCount: newPointerDownCount,
   }
 }
 
