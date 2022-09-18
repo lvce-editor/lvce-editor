@@ -46,7 +46,6 @@ export const loadContent = async (state, ...args) => {
     }
   }
   const content = await FileSystem.readFile(uri)
-  // const encoded = await Command.execute('Base64.encode', content)
   const mimeType = getMimeType(uri)
   const blob = await Command.execute(
     'Blob.binaryStringToBlob',
