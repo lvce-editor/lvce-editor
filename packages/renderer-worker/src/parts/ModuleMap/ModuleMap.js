@@ -13,6 +13,7 @@ export const getModuleId = (commandId) => {
       return ModuleId.Base64
     case 'Blob.base64StringToBlob':
     case 'Blob.binaryStringToBlob':
+    case 'Blob.blobToBinaryString':
       return ModuleId.Blob
     case 'CacheStorage.clearCache':
     case 'CacheStorage.getJson':

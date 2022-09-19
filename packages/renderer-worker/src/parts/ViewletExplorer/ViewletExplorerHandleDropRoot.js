@@ -3,6 +3,7 @@ import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import { getChildDirents } from './ViewletExplorerShared.js'
+import * as Command from '../Command/Command.js'
 
 const mergeDirents = (oldDirents, newDirents) => {
   return newDirents
@@ -37,23 +38,10 @@ const handleDropRootElectron = async (state, files) => {
   }
 }
 
-const getFileContent = async (file) => {
-  const fileReader = new FileReader()
-  const content = await new Promise((resolve, reject) => {
-    const handleLoad = (event) => {
-      const fileContent = event.target.result
-      resolve(fileContent)
-    }
-    fileReader.onload = handleLoad
-    fileReader.readAsBinaryString(file)
-  })
-  return content
-}
-
 const handleDropRootDefault = async (state, files) => {
   const { root, pathSeparator, dirents } = state
   for (const file of files) {
-    const content = await getFileContent(file)
+    const content = await Command.execute('Blob.blobToBinaryString', file)
     const to = Path.join(pathSeparator, root, file.name)
     await FileSystem.writeFile(to, content, 'binary')
   }
