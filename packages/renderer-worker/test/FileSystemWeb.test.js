@@ -1,6 +1,13 @@
 import * as FileSystemWeb from '../src/parts/FileSystem/FileSystemWeb.js'
 
+beforeEach(() => {
+  FileSystemWeb.state.files = Object.create(null)
+})
+
 test('readFile', async () => {
+  FileSystemWeb.state.files['/languages/index.dart'] = `void main() {
+  print('Hello, World!');
+}`
   expect(
     await FileSystemWeb.readFile('/workspace/languages/index.dart')
   ).toEqual(
@@ -23,4 +30,9 @@ test('rename', async () => {
 
 test('getPathSeparator', () => {
   expect(FileSystemWeb.getPathSeparator()).toBe('/')
+})
+
+test('writeFile', async () => {
+  await FileSystemWeb.writeFile('/workspace/file.txt', 'test')
+  expect(FileSystemWeb.state.files).toEqual({ '/file.txt': 'test' })
 })
