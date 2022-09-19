@@ -3,6 +3,33 @@
  */
 import { jest } from '@jest/globals'
 
+beforeAll(() => {
+  // workaround for jsdom not supporting pointer events
+  // @ts-ignore
+  globalThis.PointerEvent = class extends Event {
+    constructor(type, init) {
+      super(type, init)
+      this.clientX = init.clientX
+      this.clientY = init.clientY
+      this.pointerId = init.pointerId
+    }
+  }
+
+  HTMLElement.prototype.setPointerCapture = () => {}
+  HTMLElement.prototype.releasePointerCapture = () => {}
+
+  Object.defineProperty(HTMLElement.prototype, 'onpointerdown', {
+    set(fn) {
+      this.addEventListener('pointerdown', fn)
+    },
+  })
+  Object.defineProperty(HTMLElement.prototype, 'onpointerup', {
+    set(fn) {
+      this.addEventListener('pointerup', fn)
+    },
+  })
+})
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
@@ -90,6 +117,9 @@ test('handleResize', () => {
 test('event - move sash', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
+  const spy1 = jest.spyOn(HTMLElement.prototype, 'setPointerCapture')
+  // @ts-ignore
+  const spy2 = jest.spyOn(HTMLElement.prototype, 'releasePointerCapture')
   Layout.show({
     'SideBar.visible': true,
     'SideBar.width': 100,
@@ -101,23 +131,34 @@ test('event - move sash', () => {
     'StatusBar.visible': false,
   })
 
-  const pointerDownEvent = new MouseEvent('pointerdown', {
+  const pointerDownEvent = new PointerEvent('pointerdown', {
     bubbles: true,
+    clientX: 0,
+    clientY: 0,
+    pointerId: 1,
   })
-  const pointerMoveEvent = new MouseEvent('pointermove', {
+  const pointerMoveEvent = new PointerEvent('pointermove', {
     bubbles: true,
+    clientX: 0,
+    clientY: 0,
+    pointerId: 1,
   })
-  const pointerUpEvent = new MouseEvent('pointerup', {
+  const pointerUpEvent = new PointerEvent('pointerup', {
     bubbles: true,
+    clientX: 0,
+    clientY: 0,
+    pointerId: 1,
   })
   const $SashSideBar = Layout.state.$SashSideBar
   $SashSideBar.dispatchEvent(pointerDownEvent)
-  const $Style = document.getElementById('SashStyle')
-  expect($Style).toBeDefined()
-  expect($Style.isConnected).toBe(true)
+  expect(spy1).toHaveBeenCalledTimes(1)
+  expect(spy1).toHaveBeenCalledWith(1)
+
   $SashSideBar.dispatchEvent(pointerMoveEvent)
   $SashSideBar.dispatchEvent(pointerUpEvent)
-  expect($Style.isConnected).toBe(false)
+  expect(spy2).toHaveBeenCalledTimes(1)
+  expect(spy2).toHaveBeenCalledWith(1)
+
   expect(RendererWorker.send).toHaveBeenCalledTimes(2)
   expect(RendererWorker.send).toHaveBeenNthCalledWith(
     1,
