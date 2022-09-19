@@ -21,6 +21,9 @@ jest.unstable_mockModule(
       requestPermission: jest.fn(() => {
         throw new Error('not implemented')
       }),
+      queryPermission: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
     }
   }
 )
@@ -86,9 +89,7 @@ test('readDirWithFileTypes - error', async () => {
   await expect(
     FileSystemHtml.readDirWithFileTypes('test-folder')
   ).rejects.toThrowError(
-    new Error(
-      'failed to read dir with file types: TypeError: x is not a function'
-    )
+    new Error('failed to read directory: TypeError: x is not a function')
   )
 })
 
@@ -128,21 +129,22 @@ test('readDirWithFileTypes - not allowed - fallback succeeds', async () => {
           ]
         }
       },
-      queryPermission() {
-        switch (i++) {
-          case 0:
-            return FileHandlePermissionType.Prompt
-          case 1:
-            return FileHandlePermissionType.Granted
-          default:
-            return FileHandlePermissionType.Denied
-        }
-      },
     }
   })
   // @ts-ignore
   FileSystemHandle.requestPermission.mockImplementation(() => {
     return FileHandlePermissionType.Granted
+  })
+  // @ts-ignore
+  FileSystemHandle.queryPermission.mockImplementation(() => {
+    switch (i++) {
+      case 0:
+        return FileHandlePermissionType.Prompt
+      case 1:
+        return FileHandlePermissionType.Granted
+      default:
+        return FileHandlePermissionType.Denied
+    }
   })
   expect(await FileSystemHtml.readDirWithFileTypes('test-folder')).toEqual([
     {
@@ -179,21 +181,22 @@ test('readDirWithFileTypes - not allowed - fallback fails', async () => {
           throw new TypeError('x is not a function')
         }
       },
-      queryPermission() {
-        switch (i++) {
-          case 0:
-            return FileHandlePermissionType.Prompt
-          case 1:
-            return FileHandlePermissionType.Granted
-          default:
-            return FileHandlePermissionType.Denied
-        }
-      },
     }
   })
   // @ts-ignore
   FileSystemHandle.requestPermission.mockImplementation(() => {
     return FileHandlePermissionType.Granted
+  })
+  // @ts-ignore
+  FileSystemHandle.queryPermission.mockImplementation(() => {
+    switch (i++) {
+      case 0:
+        return FileHandlePermissionType.Prompt
+      case 1:
+        return FileHandlePermissionType.Granted
+      default:
+        return FileHandlePermissionType.Denied
+    }
   })
   await expect(
     FileSystemHtml.readDirWithFileTypes('test-folder')
