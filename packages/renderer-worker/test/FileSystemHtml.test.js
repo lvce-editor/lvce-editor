@@ -21,6 +21,12 @@ jest.unstable_mockModule(
       requestPermission: jest.fn(() => {
         throw new Error('not implemented')
       }),
+      queryPermission: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+      getDirents: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
     }
   }
 )
@@ -60,6 +66,20 @@ test('readDirWithFileTypes', async () => {
       },
     }
   })
+  // @ts-ignore
+  FileSystemHandle.getDirents.mockImplementation(() => {
+    return [
+      {
+        name: 'file-1.txt',
+        type: FileHandleType.File,
+      },
+
+      {
+        name: 'folder-2',
+        type: FileHandleType.Directory,
+      },
+    ]
+  })
   expect(await FileSystemHtml.readDirWithFileTypes('test-folder')).toEqual([
     {
       type: DirentType.File,
@@ -78,17 +98,17 @@ test('readDirWithFileTypes - error', async () => {
     return {
       kind: FileHandleType.Directory,
       name: 'test-folder',
-      async *[Symbol.asyncIterator]() {
-        throw new TypeError('x is not a function')
-      },
+      async *[Symbol.asyncIterator]() {},
     }
+  })
+  // @ts-ignore
+  FileSystemHandle.getDirents.mockImplementation(() => {
+    throw new TypeError('x is not a function')
   })
   await expect(
     FileSystemHtml.readDirWithFileTypes('test-folder')
   ).rejects.toThrowError(
-    new Error(
-      'failed to read dir with file types: TypeError: x is not a function'
-    )
+    new Error('failed to read directory: TypeError: x is not a function')
   )
 })
 
@@ -108,41 +128,40 @@ test('readDirWithFileTypes - not allowed - fallback succeeds', async () => {
     return {
       kind: FileHandleType.Directory,
       name: 'test-folder',
-      async *[Symbol.asyncIterator]() {
-        if (j++ === 0) {
-          throw new NotAllowedError()
-        } else {
-          yield [
-            'file-1.txt',
-            {
-              name: 'file-1.txt',
-              kind: FileHandleType.File,
-            },
-          ]
-          yield [
-            'folder-2',
-            {
-              name: 'file-2',
-              kind: FileHandleType.Directory,
-            },
-          ]
-        }
-      },
-      queryPermission() {
-        switch (i++) {
-          case 0:
-            return FileHandlePermissionType.Prompt
-          case 1:
-            return FileHandlePermissionType.Granted
-          default:
-            return FileHandlePermissionType.Denied
-        }
-      },
+      async *[Symbol.asyncIterator]() {},
     }
   })
   // @ts-ignore
   FileSystemHandle.requestPermission.mockImplementation(() => {
     return FileHandlePermissionType.Granted
+  })
+  // @ts-ignore
+  FileSystemHandle.queryPermission.mockImplementation(() => {
+    switch (i++) {
+      case 0:
+        return FileHandlePermissionType.Prompt
+      case 1:
+        return FileHandlePermissionType.Granted
+      default:
+        return FileHandlePermissionType.Denied
+    }
+  })
+  // @ts-ignore
+  FileSystemHandle.getDirents.mockImplementation(() => {
+    if (j++ === 0) {
+      throw new NotAllowedError()
+    } else {
+      return [
+        {
+          name: 'file-1.txt',
+          type: FileHandleType.File,
+        },
+        {
+          name: 'folder-2',
+          type: FileHandleType.Directory,
+        },
+      ]
+    }
   })
   expect(await FileSystemHtml.readDirWithFileTypes('test-folder')).toEqual([
     {
@@ -172,28 +191,30 @@ test('readDirWithFileTypes - not allowed - fallback fails', async () => {
     return {
       kind: FileHandleType.Directory,
       name: 'test-folder',
-      async *[Symbol.asyncIterator]() {
-        if (j++ === 0) {
-          throw new NotAllowedError()
-        } else {
-          throw new TypeError('x is not a function')
-        }
-      },
-      queryPermission() {
-        switch (i++) {
-          case 0:
-            return FileHandlePermissionType.Prompt
-          case 1:
-            return FileHandlePermissionType.Granted
-          default:
-            return FileHandlePermissionType.Denied
-        }
-      },
     }
   })
   // @ts-ignore
   FileSystemHandle.requestPermission.mockImplementation(() => {
     return FileHandlePermissionType.Granted
+  })
+  // @ts-ignore
+  FileSystemHandle.queryPermission.mockImplementation(() => {
+    switch (i++) {
+      case 0:
+        return FileHandlePermissionType.Prompt
+      case 1:
+        return FileHandlePermissionType.Granted
+      default:
+        return FileHandlePermissionType.Denied
+    }
+  })
+  // @ts-ignore
+  FileSystemHandle.getDirents.mockImplementation(() => {
+    if (j++ === 0) {
+      throw new NotAllowedError()
+    } else {
+      throw new TypeError('x is not a function')
+    }
   })
   await expect(
     FileSystemHtml.readDirWithFileTypes('test-folder')
