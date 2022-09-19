@@ -262,4 +262,19 @@ const renderTransform = {
   },
 }
 
-export const render = [renderSrc, renderTransform]
+const renderCursor = {
+  isEqual(oldState, newState) {
+    return oldState.eventCache.length === newState.eventCache.length
+  },
+  apply(oldState, newState) {
+    const isDragging = newState.eventCache.length > 0
+    return [
+      /* Viewlet.invoke */ 'Viewlet.send',
+      /* id */ 'EditorImage',
+      /* method */ 'setDragging',
+      /* isDragging */ isDragging,
+    ]
+  },
+}
+
+export const render = [renderSrc, renderTransform, renderCursor]

@@ -1,4 +1,4 @@
-.Viewlet[data-viewlet-id='EditorImage'] {
+[data-viewlet-id='EditorImage'] {
   cursor: grab;
   touch-action: none;
 }
@@ -16,4 +16,9 @@
   height: 100%;
   contain: strict;
   transform-origin: top left;
+}
+
+
+.Dragging {
+  cursor: grabbing ;
 }
