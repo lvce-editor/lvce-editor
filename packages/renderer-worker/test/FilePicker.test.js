@@ -32,7 +32,7 @@ test('showDirectoryPicker - error', async () => {
 
 test('showDirectoryPicker - error - canceled', async () => {
   // @ts-ignore
-  window.showDirectoryPicker.mockImplementation(async () => {
+  RendererProcess.invoke.mockImplementation(async () => {
     throw new Error('The user aborted a request.')
   })
   await expect(FilePicker.showDirectoryPicker()).rejects.toThrowError(
