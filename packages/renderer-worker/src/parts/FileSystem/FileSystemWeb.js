@@ -5,19 +5,23 @@ import * as DirentType from '../DirentType/DirentType.js'
 
 export const name = 'Web'
 
-const files = Object.create(null)
+export const state = {
+  watchers: Object.create(null),
+  saveListeners: [],
+  files: Object.create(null),
+}
 
-files['/.gitkeep'] = ''
+state.files['/.gitkeep'] = ''
 
-files['/languages/index.dart'] = `void main() {
+state.files['/languages/index.dart'] = `void main() {
   print('Hello, World!');
 }`
 
-files['/languages/index.js'] = `const add = (a, b) => {
+state.files['/languages/index.js'] = `const add = (a, b) => {
   return a + b;
 }`
 
-files['/languages/scrolling.txt'] = `line 1
+state.files['/languages/scrolling.txt'] = `line 1
 line 2
 line 3
 line 4
@@ -119,9 +123,9 @@ line 99
 line 100
 `
 
-files['/languages/index.html'] = '<h1 class="abc">hello world</h1>'
+state.files['/languages/index.html'] = '<h1 class="abc">hello world</h1>'
 
-files['/languages/index.css'] = `h1 {
+state.files['/languages/index.css'] = `h1 {
   font-size: 24px;
 }
 
@@ -142,7 +146,7 @@ files['/languages/index.css'] = `h1 {
 }
 `
 
-files['/languages/index.ex'] = `defmodule RealWorld do
+state.files['/languages/index.ex'] = `defmodule RealWorld do
   @moduledoc """
   RealWorld keeps the contexts that define your domain
   and business logic.
@@ -151,7 +155,7 @@ files['/languages/index.ex'] = `defmodule RealWorld do
   """
 end`
 
-files['/languages/index.jl'] = `function mandelbrot(a)
+state.files['/languages/index.jl'] = `function mandelbrot(a)
 z = 0
 for i=1:50
 z = z^2 + a
@@ -166,7 +170,7 @@ end
 println()
 end`
 
-files['/languages/index.perl'] = `#!/usr/bin/perl
+state.files['/languages/index.perl'] = `#!/usr/bin/perl
 #
 # The traditional first program.
 
@@ -177,17 +181,17 @@ use warnings;
 # Print a message.
 print "Hello, World!\n";`
 
-files['/languages/index.kt'] = `fun main(args : Array<String>) {
+state.files['/languages/index.kt'] = `fun main(args : Array<String>) {
   println("Hello, World!")
 }`
 
-files['/languages/index.java'] = `class HelloWorld {
+state.files['/languages/index.java'] = `class HelloWorld {
   public static void main(String[] args) {
       System.out.println("Hello, World!");
   }
 }`
 
-files['/languages/index.cpp'] = `using namespace std;
+state.files['/languages/index.cpp'] = `using namespace std;
 
 template <class ANYTYPE>
 void thing(int a, Blah other_thing, double c=10, ANYTYPE f) {
@@ -207,16 +211,11 @@ int main(char arg_num, char** vargs) {
     #error I should be able to write single quotes in here: Don't make errors
 }`
 
-files['/languages/index.env'] = 'KEY=42'
+state.files['/languages/index.env'] = 'KEY=42'
 
-files['/sample-folder/a.txt'] = ''
-files['/sample-folder/b.txt'] = ''
-files['/sample-folder/c.txt'] = ''
-
-export const state = {
-  watchers: Object.create(null),
-  saveListeners: [],
-}
+state.files['/sample-folder/a.txt'] = ''
+state.files['/sample-folder/b.txt'] = ''
+state.files['/sample-folder/c.txt'] = ''
 
 const getName = (path) => {
   return path.slice(path.lastIndexOf('/') + 1)
@@ -228,7 +227,7 @@ const getRelativePath = (path) => {
 
 export const readFile = async (path) => {
   const relativePath = getRelativePath(path)
-  const file = files[relativePath]
+  const file = state.files[relativePath]
   if (file === undefined) {
     throw new Error('file not found')
   }
@@ -256,7 +255,8 @@ export const createFolder = async (path) => {
 }
 
 export const writeFile = async (path, content) => {
-  throw new Error('not implemented')
+  const relativePath = getRelativePath(path)
+  state.files[relativePath] = content
 }
 
 const getDirent = (path, relativePath) => {
@@ -276,7 +276,7 @@ const getDirent = (path, relativePath) => {
 export const readDirWithFileTypes = (path) => {
   const relativePath = getRelativePath(path)
   const dirents = []
-  for (const key in files) {
+  for (const key in state.files) {
     if (key.startsWith(relativePath)) {
       const dirent = getDirent(key, relativePath)
       if (!dirents.some((otherDirent) => otherDirent.name === dirent.name)) {
