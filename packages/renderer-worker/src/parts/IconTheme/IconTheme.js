@@ -20,16 +20,20 @@ export const state = {
   iconTheme: undefined,
 }
 
+const getIconThemeUrl = (iconThemeId) => {
+  return `/extensions/builtin.${iconThemeId}/icon-theme.json`
+}
+
 const getIconThemeJson = async (iconThemeId) => {
   if (Platform.platform === PlatformType.Web) {
-    const assetDir = Platform.getAssetDir()
-    const url = `${assetDir}/icon-themes/${iconThemeId}.json`
+    const url = getIconThemeUrl(iconThemeId)
     const json = await Command.execute(
       /* Ajax.getJson */ 'Ajax.getJson',
       /* url */ url
     )
     return {
       json,
+      extensionPath: `/extensions/builtin.${iconThemeId}`,
     }
   }
   return SharedProcess.invoke(
@@ -114,7 +118,7 @@ export const getIcon = (dirent) => {
 
 const getBackgroundUrl = (extensionPath, value) => {
   if (Platform.platform === PlatformType.Web) {
-    return `/file-icons/${value.slice(7)}`
+    return `${extensionPath}${value}`
   }
   // TODO what if the file in on linux and includes a backslash?
   if (extensionPath.includes('\\')) {
@@ -126,8 +130,10 @@ const getBackgroundUrl = (extensionPath, value) => {
 
 const getIconThemeCss2 = (iconTheme) => {
   const rules = []
-  for (const [key, value] of Object.entries(iconTheme.json.iconDefinitions)) {
-    const backgroundUrl = getBackgroundUrl(iconTheme.extensionPath, value)
+  const iconDefinitions = iconTheme.json.iconDefinitions
+  const extensionPath = iconTheme.extensionPath
+  for (const [key, value] of Object.entries(iconDefinitions)) {
+    const backgroundUrl = getBackgroundUrl(extensionPath, value)
     rules.push(`.Icon${key} { background-image: url(${backgroundUrl}) }`)
   }
   const rulesCss = rules.join('\n')
