@@ -8,6 +8,7 @@ import * as ProcessExplorer from '../ProcessExplorer/ProcessExplorer.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
+import * as ElectronDeveloper from '../ElectronDeveloper/ElectronDeveloper.js'
 
 // TODO vscode's version of this is shorter
 // if it is a bottleneck, check performance of this function (not very optimized now)
@@ -222,9 +223,7 @@ const getElectronEntries = async () => {
   ) {
     return undefined
   }
-  const result = await SharedProcess.invoke(
-    /* Electron.getPerformanceEntries */ 'Electron.getPerformanceEntries'
-  )
+  const result = await ElectronDeveloper.getPerformanceEntries()
   return result
 }
 
