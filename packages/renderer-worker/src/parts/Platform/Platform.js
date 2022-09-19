@@ -126,6 +126,9 @@ const getPlatform = () => {
   if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
     return 'test'
   }
+  if (typeof location !== 'undefined' && location.search === '?web') {
+    return PlatformType.Web
+  }
 
   // TODO don't use window here -> want to run renderer-worker as webworker
   if (

@@ -5,6 +5,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import { VError } from '../VError/VError.js'
 
 // TODO by default color theme should come from local storage, session storage, cache storage, indexeddb or blob url -> fast initial load
 // actual color theme can be computed after workbench has loaded (most times will be the same and doesn't need to be computed)
@@ -83,7 +84,7 @@ const applyColorTheme = async (colorThemeId) => {
       await Meta.setThemeColor(themeColor)
     }
   } catch (error) {
-    throw new Error(`Failed to apply color theme "${colorThemeId}": ${error}`)
+    throw new VError(error, `Failed to apply color theme "${colorThemeId}"`)
   }
 }
 
