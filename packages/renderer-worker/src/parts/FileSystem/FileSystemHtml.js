@@ -1,3 +1,4 @@
+import * as Arrays from '../Arrays/Arrays.js'
 import * as Command from '../Command/Command.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as FileHandleType from '../FileHandleType/FileHandleType.js'
@@ -13,16 +14,20 @@ const getDirentType = (fileHandle) => {
   }
 }
 
+const getDirent = ([name, child]) => {
+  const type = getDirentType(child)
+  return {
+    name,
+    type,
+  }
+}
+
 export const readDirWithFileTypes = async (uri) => {
   console.log(uri)
   // TODO convert uri to file handle path, get file handle from indexeddb
   // if file handle does not exist, throw error
   const handle = await Command.execute('FileHandle.getHandle', uri)
-  const children = []
-  for await (const [name, child] of handle) {
-    const type = getDirentType(child)
-    children.push({ name, type })
-  }
+  const children = await Arrays.fromAsync(handle, getDirent)
   return children
 }
 
