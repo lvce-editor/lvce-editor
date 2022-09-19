@@ -9,7 +9,9 @@ export const state = {
   dialog: undefined,
 }
 
-const openFolderWeb = () => {
+const openFolderWeb = async () => {
+  const result = await Command.execute('FilePicker.showDirectoryPicker')
+  console.log({ result })
   console.warn('open folder - not implemented')
 }
 

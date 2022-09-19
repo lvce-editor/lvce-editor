@@ -50,6 +50,8 @@ export const load = (moduleId) => {
       return import('../ExtensionMeta/ExtensionMeta.ipc.js')
     case ModuleId.Extensions:
       return import('../Extensions/Extensions.ipc.js')
+    case ModuleId.FilePicker:
+      return import('../FilePicker/FilePicker.ipc.js')
     case ModuleId.FileSystem:
       return import('../FileSystem/FileSystem.ipc.js')
     case ModuleId.FindWidget:

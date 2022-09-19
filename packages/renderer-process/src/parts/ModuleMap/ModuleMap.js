@@ -42,6 +42,12 @@ export const getModuleId = (commandId) => {
     case 'EditorRename.dispose':
     case 'EditorRename.finish':
       return ModuleId.EditorRename
+    case 'Eval.evalCode':
+      return ModuleId.Eval
+    case 'FilePicker.showDirectoryPicker':
+    case 'FilePicker.showFilePicker':
+    case 'FilePicker.showSaveFilePicker':
+      return ModuleId.FilePicker
     case 'FindWidget.create':
     case 'FindWidget.dispose':
     case 'FindWidget.setResults':
@@ -128,8 +134,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Window
     case 33111:
       return ModuleId.Workbench
-    case 'Eval.evalCode':
-      return ModuleId.Eval
     default:
       throw new Error(`command ${commandId} not found`)
   }

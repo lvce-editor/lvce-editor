@@ -20,6 +20,10 @@ export const load = (moduleId) => {
       return import('../EditorHover/EditorHover.ipc.js')
     case ModuleId.EditorRename:
       return import('../EditorRename/EditorRename.ipc.js')
+    case ModuleId.Eval:
+      return import('../Eval/Eval.ipc.js')
+    case ModuleId.FilePicker:
+      return import('../FilePicker/FilePicker.ipc.js')
     case ModuleId.FindWidget:
       return import('../FindWidget/FindWidget.ipc.js')
     case ModuleId.ImagePreview:
@@ -52,8 +56,6 @@ export const load = (moduleId) => {
       return import('../WebStorage/WebStorage.ipc.js')
     case ModuleId.Window:
       return import('../Window/Window.ipc.js')
-    case ModuleId.Eval:
-      return import('../Eval/Eval.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

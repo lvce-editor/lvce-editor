@@ -108,6 +108,10 @@ export const getModuleId = (commandId) => {
     case 'Extensions.openCachedExtensionsFolder':
     case 'Extensions.openExtensionsFolder':
       return ModuleId.Extensions
+    case 'FilePicker.showDirectoryPicker':
+    case 'FilePicker.showFilePicker':
+    case 'FilePicker.showSaveFilePicker':
+      return ModuleId.FilePicker
     case 'FileSystem.getPathSeparator':
     case 'FileSystem.mkdir':
     case 'FileSystem.readDirWithFileTypes':
