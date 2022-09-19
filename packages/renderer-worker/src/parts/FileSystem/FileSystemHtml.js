@@ -5,8 +5,8 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as FileHandlePermissionType from '../FileHandlePermissionType/FileHandlePermissionType.js'
 import * as FileHandleType from '../FileHandleType/FileHandleType.js'
 import * as FileSystemHandle from '../FileSystemHandle/FileSystemHandle.js'
-import { VError } from '../VError/VError.js'
 import * as Path from '../Path/Path.js'
+import { VError } from '../VError/VError.js'
 
 const pathSeparator = '/'
 
@@ -34,6 +34,11 @@ const getDirents = async (handle) => {
   return children
 }
 
+const getHandle = async (uri) => {
+  const handle = await Command.execute('FileHandle.getHandle', uri)
+  return handle
+}
+
 const readDirWithFileTypesFallbackPrompt = async (handle) => {
   const permissionTypeNow = await FileSystemHandle.requestPermission(handle, {
     mode: 'readwrite',
@@ -51,7 +56,7 @@ const readDirWithFileTypesFallbackPrompt = async (handle) => {
 }
 
 const readDirWithFileTypesFallback = async (uri) => {
-  const handle = await Command.execute('FileHandle.getHandle', uri)
+  const handle = await getHandle(uri)
   const permissionType = await handle.queryPermission({ mode: 'readwrite' })
   switch (permissionType) {
     case FileHandlePermissionType.Granted:
@@ -69,7 +74,7 @@ export const readDirWithFileTypes = async (uri) => {
   try {
     // TODO convert uri to file handle path, get file handle from indexeddb
     // if file handle does not exist, throw error
-    const handle = await Command.execute('FileHandle.getHandle', uri)
+    const handle = await getHandle(uri)
     const children = await getDirents(handle)
     return children
   } catch (error) {
@@ -81,7 +86,7 @@ export const readDirWithFileTypes = async (uri) => {
 }
 
 const getDirectoryHandle = async (uri) => {
-  const handle = await Command.execute('FileHandle.getHandle', uri)
+  const handle = await getHandle(uri)
   if (handle) {
     return handle
   }
@@ -93,7 +98,7 @@ const getDirectoryHandle = async (uri) => {
 }
 
 const getFileHandle = async (uri) => {
-  const handle = await Command.execute('FileHandle.getHandle', uri)
+  const handle = await getHandle(uri)
   if (handle) {
     return handle
   }
