@@ -151,41 +151,26 @@ const getSashId = ($Target) => {
 }
 
 const handleSashPointerMove = (event) => {
-  const x = event.clientX
-  const y = event.clientY
+  const { clientX, clientY } = event
   RendererWorker.send(
     /* Layout.handleSashPointerMove */ 'Layout.handleSashPointerMove',
-    /* x */ x,
-    /* y */ y
+    /* x */ clientX,
+    /* y */ clientY
   )
 }
 
-const handleSashPointerUp = () => {
-  document.body.style.removeProperty('cursor')
-  window.removeEventListener('pointermove', handleSashPointerMove)
-  window.removeEventListener('pointerup', handleSashPointerUp)
-  const $Style = document.getElementById('SashStyle')
-  // @ts-ignore
-  $Style.remove()
+const handleSashPointerUp = (event) => {
+  const { target, pointerId } = event
+  target.releasePointerCapture(pointerId)
+  target.removeEventListener('pointermove', handleSashPointerMove)
+  target.removeEventListener('pointerup', handleSashPointerUp)
 }
 
 const handleSashPointerDown = (event) => {
-  // TODO maybe add a class to body instead?
-  const $Style = document.createElement('style')
-  $Style.id = 'SashStyle'
-  $Style.textContent = `* {
-  cursor: col-resize !important;
-  pointer-events: none;
-}
-
-.SashVertical {
-  pointer-events: all;
-}
-.
-`
-  document.head.append($Style)
-  window.addEventListener('pointermove', handleSashPointerMove)
-  window.addEventListener('pointerup', handleSashPointerUp)
+  const { target, pointerId } = event
+  target.setPointerCapture(pointerId)
+  target.addEventListener('pointermove', handleSashPointerMove)
+  target.addEventListener('pointerup', handleSashPointerUp)
   const $Target = event.target
   const id = getSashId($Target)
   RendererWorker.send(
