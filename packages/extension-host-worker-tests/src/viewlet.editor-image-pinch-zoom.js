@@ -61,7 +61,7 @@ Element.prototype.releasePointerCapture = () => {}
   const imageWrapper = Locator('.ImageWrapper')
   await expect(imageWrapper).toHaveCSS(
     'transform',
-    'matrix(1.01414, 0, 0, 1.01414, -0.0707107, 0.707107)'
+    'matrix(1.07071, 0, 0, 1.07071, -0.353553, 3.53553)'
   )
 
   // act
@@ -99,7 +99,7 @@ Element.prototype.releasePointerCapture = () => {}
   // assert
   await expect(imageWrapper).toHaveCSS(
     'transform',
-    'matrix(0.9998, 0, 0, 0.9998, -0.0697107, -0.0807107)'
+    'matrix(0.995, 0, 0, 0.995, -0.328553, -0.603553)'
   )
 
   await Eval.evalInRendererProcess(`

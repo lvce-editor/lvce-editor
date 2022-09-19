@@ -20,7 +20,7 @@ export const create = (id, uri, left, top, width, height) => {
     minZoom: 0.1,
     maxZoom: 2 ** 15, // max value that doesn't result in degradation
     zoomFactor: 200,
-    touchZoomFactor: 1000,
+    touchZoomFactor: 200,
     maxTouchZoomFactor: 1.5,
     eventCache: [],
     previousDiff: 0,
@@ -142,7 +142,7 @@ const getCurrentZoomFactorPinch = (
   const delta = diff / touchZoomFactor
   // const sign = Math.sign(delta)
   // const normalizedDelta = delta / touchZoomFactor
-  const currentZoomFactor = 1 + delta
+  const currentZoomFactor = delta
   return currentZoomFactor
 }
 
