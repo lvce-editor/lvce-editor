@@ -31,3 +31,4 @@ export const Workbench = 30
 export const Performance = 31
 export const Eval = 32
 export const FilePicker = 33
+export const FileSystemHandle = 34
