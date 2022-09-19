@@ -1,8 +1,10 @@
 import ky, { HTTPError } from '../../../../../static/js/ky.js'
 import { VError } from '../VError/VError.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const getJson = async (url, options = {}) => {
   try {
+    Assert.string(url)
     // cannot use ky(url).json() because it sets "accept: application/json"
     // which doesn't work with preload, see
     // https://stackoverflow.com/questions/41655955/why-are-preload-link-not-working-for-json-requests#answer-48645748
