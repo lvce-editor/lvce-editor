@@ -1,6 +1,7 @@
 import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
 export const name = 'Disk'
 
@@ -65,7 +66,7 @@ export const getBlobUrl = (path) => {
 
 export const getPathSeparator = () => {
   if (Platform.platform === PlatformType.Web) {
-    return '/'
+    return PathSeparatorType.Slash
   }
   return SharedProcess.invoke(
     /* FileSystem.getPathSeparator */ 'FileSystem.getPathSeparator'

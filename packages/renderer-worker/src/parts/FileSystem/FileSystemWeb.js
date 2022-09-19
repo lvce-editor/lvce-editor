@@ -1,4 +1,5 @@
 import * as DirentType from '../DirentType/DirentType.js'
+import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
 // TODO when it rejects, it should throw a custom error,
 // FileSystemError
@@ -218,7 +219,7 @@ state.files['/sample-folder/b.txt'] = ''
 state.files['/sample-folder/c.txt'] = ''
 
 const getName = (path) => {
-  return path.slice(path.lastIndexOf('/') + 1)
+  return path.slice(path.lastIndexOf(PathSeparatorType.Slash) + 1)
 }
 
 const getRelativePath = (path) => {
@@ -261,10 +262,10 @@ export const writeFile = async (path, content) => {
 
 const getDirent = (path, relativePath) => {
   const rest = path.slice(relativePath.length + 1)
-  if (rest.includes('/')) {
+  if (rest.includes(PathSeparatorType.Slash)) {
     return {
       type: DirentType.Directory,
-      name: rest.slice(0, rest.indexOf('/')),
+      name: rest.slice(0, rest.indexOf(PathSeparatorType.Slash)),
     }
   }
   return {
@@ -305,7 +306,7 @@ export const onDidSave = (listener) => {
 }
 
 export const getPathSeparator = () => {
-  return '/'
+  return PathSeparatorType.Slash
 }
 
 export const canBeRestored = true

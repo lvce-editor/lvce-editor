@@ -16,6 +16,7 @@ import {
   getParentStartIndex,
   mergeDirents,
 } from './ViewletExplorerShared.js'
+import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -40,7 +41,7 @@ export const create = (id, uri, left, top, width, height) => {
     deltaY: 0,
     minLineY: 0,
     maxLineY: 0,
-    pathSeparator: '',
+    pathSeparator: PathSeparatorType.Slash,
     version: 0,
     editingIndex: -1,
     itemHeight: 22,
