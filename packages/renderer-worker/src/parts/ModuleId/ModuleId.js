@@ -58,3 +58,4 @@ export const ElectronWindow = 57
 export const Url = 58
 export const Mime = 59
 export const Eval = 60
+export const FilePicker = 61
