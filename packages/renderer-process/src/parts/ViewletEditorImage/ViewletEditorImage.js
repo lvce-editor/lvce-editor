@@ -48,4 +48,10 @@ export const setSrc = (state, src) => {
   $Image.src = src
 }
 
+export const setDragging = (state, isDragging) => {
+  console.log('set dragging', isDragging)
+  const { $Viewlet } = state
+  $Viewlet.classList.toggle('Dragging', isDragging)
+}
+
 export const dispose = (state) => {}
