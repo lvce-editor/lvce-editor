@@ -34,9 +34,12 @@ const getColorThemeJsonFromSharedProcess = async (colorThemeId) => {
   )
 }
 
+const getColorThemeUrlWeb = (colorThemeId) => {
+  return `/extensions/builtin.theme-${colorThemeId}/color-theme.json`
+}
+
 const getColorThemeJsonFromStaticFolder = (colorThemeId) => {
-  const assetDir = Platform.getAssetDir()
-  const url = `/extensions/builtin.theme-${colorThemeId}/color-theme.json`
+  const url = getColorThemeUrlWeb(colorThemeId)
   // TODO handle error ?
   return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
 }
