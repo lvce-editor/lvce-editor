@@ -11,3 +11,7 @@ export const writeFile = (content) => {
     content
   )
 }
+
+export const readJson = () => {}
+
+export const writeJson = (json) => {}

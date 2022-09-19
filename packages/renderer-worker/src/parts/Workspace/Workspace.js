@@ -26,7 +26,10 @@ export const setPath = async (path) => {
   Assert.string(path)
   // TODO not in electron
   const pathSeparator = await FileSystem.getPathSeparator(path)
+  // @ts-ignore
   state.workspacePath = path
+  // @ts-ignore
+  state.workspaceUri = path
   state.pathSeparator = pathSeparator
   await onWorkspaceChange()
 }
@@ -98,6 +101,11 @@ const getResolvedRootFromRendererProcess = async (href) => {
       source: 'renderer-process',
     }
   }
+  const resolvedRootFromSessionStorage =
+    await getResolveRootFromSessionStorage()
+  if (resolvedRootFromSessionStorage) {
+    return resolvedRootFromSessionStorage
+  }
   if (Platform.platform === 'web') {
     const resolvedRoot = {
       path: 'web:///workspace',
@@ -115,11 +123,6 @@ const getResolvedRootRemote = async (href) => {
     await getResolvedRootFromRendererProcess(href)
   if (resolvedRootFromRendererProcess) {
     return resolvedRootFromRendererProcess
-  }
-  const resolvedRootFromSessionStorage =
-    await getResolveRootFromSessionStorage()
-  if (resolvedRootFromSessionStorage) {
-    return resolvedRootFromSessionStorage
   }
   return getResolvedRootFromSharedProcess()
 }
@@ -169,6 +172,9 @@ export const hydrate = async ({ href }) => {
   // TODO why is this if statement here?
   if (state.homeDir !== resolvedRoot.homeDir) {
     state.homeDir = resolvedRoot.homeDir
+  }
+  if (!FileSystem.canBeRestored(resolvedRoot.path)) {
+    return
   }
   // TODO how to check that path from renderer process is valid?
   // TODO also need to check whether it is a folder or file

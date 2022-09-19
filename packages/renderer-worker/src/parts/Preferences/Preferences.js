@@ -5,6 +5,7 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Json from '../Json/Json.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const state = Object.create(null)
 
@@ -25,10 +26,10 @@ export const openKeyBindingsJson = async () => {
 // TODO command for opening workspace settings
 
 const getPreferencesJson = async () => {
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     const cachedPreferences = await Command.execute(
       /* LocalStorage.getJson */ 'LocalStorage.getJson',
-      /* key */ 'preferences'
+      /* key */ 'settings'
     )
     if (cachedPreferences) {
       return cachedPreferences

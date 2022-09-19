@@ -108,10 +108,10 @@ export const getModuleId = (commandId) => {
     case 'Extensions.openCachedExtensionsFolder':
     case 'Extensions.openExtensionsFolder':
       return ModuleId.Extensions
-    case 'FileHandle.addHandle':
-    case 'FileHandle.getHandle':
-    case 'FileHandle.removeHandle':
-      return ModuleId.FileHandle
+    case 'PersistentFileHandle.addHandle':
+    case 'PersistentFileHandle.getHandle':
+    case 'PersistentFileHandle.removeHandle':
+      return ModuleId.PersistentFileHandle
     case 'FilePicker.showDirectoryPicker':
     case 'FilePicker.showFilePicker':
     case 'FilePicker.showSaveFilePicker':

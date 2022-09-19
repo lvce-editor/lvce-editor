@@ -308,3 +308,5 @@ export const onDidSave = (listener) => {
 export const getPathSeparator = () => {
   return PathSeparatorType.Slash
 }
+
+export const canBeRestored = true

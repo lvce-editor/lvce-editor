@@ -6,3 +6,5 @@ export const BrowserErrorNames = {
 export const isNotAllowedError = (error) => {
   return error && error.name === BrowserErrorNames.NotAllowedError
 }
+
+// export const isUserActivationError
