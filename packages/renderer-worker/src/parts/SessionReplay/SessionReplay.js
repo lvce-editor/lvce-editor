@@ -40,6 +40,12 @@ export const handleMessage = async (source, timestamp, message) => {
   }
 }
 
+const addSearchParam = (href, key, value) => {
+  const parsedUrl = new URL(href)
+  parsedUrl.searchParams.set('replayId', state.sessionId)
+  return parsedUrl.toString()
+}
+
 export const replayCurrentSession = async () => {
   if (!state.sessionId) {
     throw new VError(`session replay is disabled in settings`)
@@ -50,7 +56,7 @@ export const replayCurrentSession = async () => {
   // 3. replay ui with commands from indexeddb
 
   const href = await Location.getHref()
-  const replayUrl = `${href}?replayId=${state.sessionId}`
+  const replayUrl = addSearchParam(href, 'replayId', state.sessionId)
   await Command.execute('Open.openUrl', /* url */ replayUrl)
 }
 
