@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
+import * as PathSeparatorType from '../src/parts/PathSeparatorType/PathSeparatorType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -166,7 +167,7 @@ test('loadContent', async () => {
     minLineY: 0,
     root: '/test',
     top: undefined,
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     editingIndex: -1,
   })
 })
@@ -653,7 +654,7 @@ test('handleClick - directory', async () => {
     height: 600,
     deltaY: 0,
     minLineY: 0,
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     dirents: [
       {
         name: 'folder-1',
@@ -846,7 +847,7 @@ test('handleClick - collapsed folder', async () => {
     height: 600,
     deltaY: 0,
     minLineY: 0,
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     dirents: [
       {
         depth: 1,
@@ -1723,7 +1724,7 @@ test('handleArrowRight - collapsed folder', async () => {
     height: 600,
     deltaY: 0,
     minLineY: 0,
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     dirents: [
       {
         depth: 1,
@@ -1839,7 +1840,7 @@ test('handleArrowRight - collapsed empty folder', async () => {
         type: DirentType.Directory,
       },
     ],
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
   }
   // @ts-ignore
   Viewlet.getState.mockImplementation(() => {
@@ -2394,7 +2395,7 @@ test.skip('event - workspace change', async () => {
 test.skip('newFile - root', async () => {
   const state = {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     width: 600,
     height: 600,
     minLineY: 0,
@@ -2444,7 +2445,7 @@ test.skip('newFile - root', async () => {
 test.skip('newFile - inside folder', async () => {
   const state = {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     focusedIndex: 1,
     dirents: [
       {
@@ -2674,7 +2675,7 @@ test.skip('newFile - race condition', () => {
 test('removeDirent - first', async () => {
   const state = {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     focusedIndex: 0,
     dirents: [
       {
@@ -2752,7 +2753,7 @@ test('removeDirent - first', async () => {
 test('removeDirent - only folder', async () => {
   const state = {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     focusedIndex: 0,
     dirents: [
       {
@@ -2793,7 +2794,7 @@ test('removeDirent - only folder', async () => {
 test('removeDirent - expanded folder', async () => {
   const state = {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     focusedIndex: 0,
     dirents: [
       {
@@ -2889,7 +2890,7 @@ test('removeDirent - expanded folder', async () => {
 test('removeDirent - middle', async () => {
   const state = {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     focusedIndex: 1,
     dirents: [
       {
@@ -2968,7 +2969,7 @@ test('removeDirent - middle', async () => {
 test('removeDirent - last', async () => {
   const state = {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     focusedIndex: 2,
     dirents: [
       {
@@ -3047,7 +3048,7 @@ test('removeDirent - last', async () => {
 test('removeDirent - no dirents left', async () => {
   const state = {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     focusedIndex: -1,
     dirents: [],
     width: 600,
@@ -3599,7 +3600,7 @@ test('expandAll', async () => {
     height: 600,
     deltaY: 0,
     minLineY: 0,
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     dirents: [
       {
         depth: 1,
@@ -4201,7 +4202,7 @@ test('revealItem - two levels deep', async () => {
     minLineY: 0,
     maxLineY: 20,
     root: '/test',
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     dirents: [],
   }
   // @ts-ignore
@@ -4253,7 +4254,7 @@ test('revealItem - insert into existing tree', async () => {
     minLineY: 0,
     maxLineY: 20,
     root: '/test',
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     dirents: [
       {
         depth: 1,
@@ -4379,7 +4380,7 @@ test("revealItem - insert into existing tree - some sibling nodes don't exist an
     minLineY: 0,
     maxLineY: 20,
     root: '/test',
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     dirents: [
       {
         depth: 1,
@@ -4469,7 +4470,7 @@ test('revealItem - already visible', async () => {
     minLineY: 0,
     maxLineY: 20,
     root: '/test',
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     dirents: [
       {
         depth: 1,

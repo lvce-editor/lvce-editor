@@ -1,5 +1,6 @@
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import { jest } from '@jest/globals'
+import * as PathSeparatorType from '../src/parts/PathSeparatorType/PathSeparatorType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -58,7 +59,7 @@ test('expandRecursively', async () => {
     minLineY: 0,
     maxLineY: 20,
     root: '/test',
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     focused: true,
     dirents: [
       {
@@ -155,7 +156,7 @@ test('expandRecursively - merge with current items', async () => {
     minLineY: 0,
     maxLineY: 20,
     root: '/test',
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     focused: true,
     dirents: [
       {
@@ -275,7 +276,7 @@ test('expandRecursively - no dirent focused', async () => {
     minLineY: 0,
     maxLineY: 20,
     root: '/test',
-    pathSeparator: '/',
+    pathSeparator: PathSeparatorType.Slash,
     focused: true,
     dirents: [
       {

@@ -7,6 +7,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Window from '../Window/Window.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
 export const state = {
   workspacePath: '',
@@ -84,7 +85,7 @@ const getResolvedRootFromRendererProcess = async (href) => {
     return {
       path: href,
       homeDir: '',
-      pathSeparator: '/',
+      pathSeparator: PathSeparatorType.Slash,
       source: 'test',
     }
   }
@@ -93,7 +94,7 @@ const getResolvedRootFromRendererProcess = async (href) => {
     return {
       path,
       homeDir: '',
-      pathSeparator: '/',
+      pathSeparator: PathSeparatorType.Slash,
       source: 'renderer-process',
     }
   }
@@ -101,7 +102,7 @@ const getResolvedRootFromRendererProcess = async (href) => {
     const resolvedRoot = {
       path: 'web:///workspace',
       homeDir: '',
-      pathSeparator: '/',
+      pathSeparator: PathSeparatorType.Slash,
       source: 'renderer-process',
     }
     return resolvedRoot
