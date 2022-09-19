@@ -18,24 +18,10 @@ import * as InitData from '../InitData/InitData.js'
 import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
 
-const handleUnhandledRejection = async (event) => {
-  console.info(`[renderer-worker] Unhandled Rejection: ${event.reason}`)
-  try {
-    await ErrorHandling.handleError(event.reason)
-  } catch {}
-}
-
-const handleError = async (event) => {
-  console.info(`[renderer-worker] Unhandled Error: ${event}`)
-  try {
-    await ErrorHandling.handleError(event.reason)
-  } catch {}
-}
-
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
 export const startup = async (config) => {
-  onunhandledrejection = handleUnhandledRejection
-  onerror = handleError
+  onunhandledrejection = ErrorHandling.handleUnhandledRejection
+  onerror = ErrorHandling.handleUnhandledError
   LifeCycle.mark(LifeCycle.Phase.Zero)
 
   Performance.mark('willStartupWorkbench')

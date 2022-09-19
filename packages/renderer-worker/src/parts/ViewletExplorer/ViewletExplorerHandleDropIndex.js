@@ -50,6 +50,7 @@ export const handleDropIndex = (state, index, files) => {
   // TODO if it is a symlink, read symlink and determine if file can be dropped
   switch (dirent.type) {
     case DirentType.Directory:
+    case DirentType.DirectoryExpanded:
       return handleDropIntoFolder(state, dirent, index, files)
     case DirentType.File:
       return handleDropIntoFile(state, dirent, index, files)
