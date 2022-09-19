@@ -67,3 +67,26 @@ export const getValuesByIndexName = async (storeId, indexName, only) => {
   }
   return objects
 }
+
+const getHandleDb = async () => {
+  // @ts-ignore
+  const db = await openDB('handle', state.dbVersion, {
+    async upgrade(db, oldVersion) {
+      if (!db.objectStoreNames.contains('file-handles-store')) {
+        const objectStore = await db.createObjectStore('file-handles-store', {})
+      }
+    },
+  })
+  return db
+}
+
+export const addHandle = async (handle) => {
+  const handleDb = await getHandleDb()
+  await handleDb.put('file-handles-store', handle, handle.name)
+}
+
+export const getHandle = async (name) => {
+  const handleDb = await getHandleDb()
+  const handle = await handleDb.get('file-handles-store', name)
+  return handle
+}

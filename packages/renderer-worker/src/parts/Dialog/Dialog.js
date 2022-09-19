@@ -4,15 +4,33 @@ import * as ElectronWindowAbout from '../ElectronWindowAbout/ElectronWindowAbout
 import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   dialog: undefined,
 }
 
+const isAbortError = (error) => {
+  if (error && error.message === 'The user aborted a request.') {
+    return true
+  }
+  return false
+}
+
 const openFolderWeb = async () => {
-  const result = await Command.execute('FilePicker.showDirectoryPicker')
-  console.log({ result })
-  console.warn('open folder - not implemented')
+  try {
+    const result = await Command.execute('FilePicker.showDirectoryPicker', {
+      startIn: 'pictures',
+      mode: 'readwrite',
+    })
+    await Command.execute('FileHandle.addHandle', result)
+    await Command.execute('Workspace.setPath', `html://${result.name}`)
+  } catch (error) {
+    if (isAbortError(error)) {
+      return
+    }
+    throw new VError(error, `Failed to open folder`)
+  }
 }
 
 const openFolderRemote = async () => {

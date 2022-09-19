@@ -36,6 +36,7 @@ const formatModuleIds = async (relativePath) => {
 const formatAllModuleIds = async () => {
   for (const relativePath of [
     'packages/renderer-process/src/parts/ModuleId/ModuleId.js',
+    'packages/renderer-worker/src/parts/ModuleId/ModuleId.js',
     'packages/shared-process/src/parts/ModuleId/ModuleId.js',
     'packages/main-process/src/parts/ModuleId/ModuleId.js',
   ]) {

@@ -108,6 +108,10 @@ export const getModuleId = (commandId) => {
     case 'Extensions.openCachedExtensionsFolder':
     case 'Extensions.openExtensionsFolder':
       return ModuleId.Extensions
+    case 'FileHandle.addHandle':
+    case 'FileHandle.getHandle':
+    case 'FileHandle.removeHandle':
+      return ModuleId.FileHandle
     case 'FilePicker.showDirectoryPicker':
     case 'FilePicker.showFilePicker':
     case 'FilePicker.showSaveFilePicker':
@@ -132,6 +136,9 @@ export const getModuleId = (commandId) => {
     case 'ImagePreview.hide':
     case 'ImagePreview.show':
       return ModuleId.ImagePreview
+    case 'IndexedDb.addHandle':
+    case 'IndexedDb.getHandle':
+      return ModuleId.IndexedDb
     case 'KeyBindings.handleKeyBinding':
     case 'KeyBindings.hydrate':
       return ModuleId.KeyBindings
