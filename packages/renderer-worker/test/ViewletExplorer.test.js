@@ -2295,7 +2295,7 @@ test('handlePaste - copied gnome files', async () => {
         depth: 1,
         icon: '',
         name: 'some-file.txt',
-        path: '/testsome-file.txt',
+        path: '/test/some-file.txt',
         posInSet: 1,
         setSize: 1,
         type: DirentType.File,
@@ -4095,7 +4095,7 @@ test('updateRoot - new folder', async () => {
         depth: 1,
         icon: '',
         name: 'folder-1',
-        path: '/testfolder-1', // TODO missing path separator here
+        path: '/test/folder-1',
         posInSet: 1,
         setSize: 1,
         type: DirentType.Directory,
