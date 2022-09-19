@@ -102,6 +102,6 @@ export const isElectron = () => {
 
 export const getRendererWorkerUrl = () => {
   const assetDir = getAssetDir()
-  const urlRendererWorker = `${assetDir}/packages/renderer-worker/src/rendererWorkerMain.js`
+  const urlRendererWorker = `${assetDir}/packages/renderer-worker/src/rendererWorkerMain.js${location.search}`
   return urlRendererWorker
 }
