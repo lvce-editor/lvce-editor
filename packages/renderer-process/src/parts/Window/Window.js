@@ -32,20 +32,23 @@ export const onVisibilityChange = () => {
     console.log('timeout done')
   }
   // document.addEventListener('visibilitychange', handleVisibilityChange)
-  const handleBeforeUnload = async () => {
+
+  const sendVisibilityChangeHint = () => {
     RendererWorker.send(
       /* SaveState.handleVisibilityChange */ 'SaveState.handleVisibilityChange',
       /* visibilityState */ 'hidden'
     )
-    // setTimeout(() => {
-    //   console.log('in timeout 1')
-    // }, 3)
-    // await new Promise((resolve, reject) => {
-    //   setTimeout(resolve, 100)
-    // })
-    // console.log('timeout done')
+  }
+
+  const handleBeforeUnload = () => {
+    sendVisibilityChangeHint()
+  }
+  const handlePointerLeave = () => {
+    sendVisibilityChangeHint()
   }
   window.addEventListener('beforeunload', handleBeforeUnload)
+
+  document.addEventListener('pointerleave', handlePointerLeave)
   // document.addEventListener('visibilitychange', handleVisibilityChange)
 
   // const handlePageHide = () => {

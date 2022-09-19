@@ -59,5 +59,5 @@ export const Url = 57
 export const Mime = 58
 export const Eval = 59
 export const FilePicker = 60
-export const FileHandle = 61
+export const PersistentFileHandle = 61
 export const IndexedDb = 62

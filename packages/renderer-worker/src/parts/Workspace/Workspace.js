@@ -25,7 +25,10 @@ export const setPath = async (path) => {
   Assert.string(path)
   // TODO not in electron
   const pathSeparator = await FileSystem.getPathSeparator(path)
+  // @ts-ignore
   state.workspacePath = path
+  // @ts-ignore
+  state.workspaceUri = path
   state.pathSeparator = pathSeparator
   await onWorkspaceChange()
 }
@@ -97,6 +100,11 @@ const getResolvedRootFromRendererProcess = async (href) => {
       source: 'renderer-process',
     }
   }
+  const resolvedRootFromSessionStorage =
+    await getResolveRootFromSessionStorage()
+  if (resolvedRootFromSessionStorage) {
+    return resolvedRootFromSessionStorage
+  }
   if (Platform.platform === 'web') {
     const resolvedRoot = {
       path: 'web:///workspace',
@@ -114,11 +122,6 @@ const getResolvedRootRemote = async (href) => {
     await getResolvedRootFromRendererProcess(href)
   if (resolvedRootFromRendererProcess) {
     return resolvedRootFromRendererProcess
-  }
-  const resolvedRootFromSessionStorage =
-    await getResolveRootFromSessionStorage()
-  if (resolvedRootFromSessionStorage) {
-    return resolvedRootFromSessionStorage
   }
   return getResolvedRootFromSharedProcess()
 }

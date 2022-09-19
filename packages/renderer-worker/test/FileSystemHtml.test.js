@@ -218,7 +218,64 @@ test('readDirWithFileTypes - not allowed - fallback fails', async () => {
   })
   await expect(
     FileSystemHtml.readDirWithFileTypes('test-folder')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+  ).rejects.toThrowError(
+    new TypeError('failed to read directory: TypeError: x is not a function')
+  )
+})
+
+test('readDirWithFileTypes - error - user activation required', async () => {
+  class NotAllowedError extends Error {
+    constructor() {
+      super(
+        'The request is not allowed by the user agent or the platform in the current context.'
+      )
+      this.name = 'NotAllowedError'
+    }
+  }
+  class UserActivationRequiredError extends Error {
+    constructor() {
+      super('User activation is required to request permissions.')
+    }
+  }
+  let i = 0
+  let j = 0
+  // @ts-ignore
+  Command.execute.mockImplementation(async (method, ...parameters) => {
+    return {
+      kind: FileHandleType.Directory,
+      name: 'test-folder',
+    }
+  })
+  // @ts-ignore
+  FileSystemHandle.requestPermission.mockImplementation(() => {
+    return FileHandlePermissionType.Granted
+  })
+  // @ts-ignore
+  FileSystemHandle.queryPermission.mockImplementation(() => {
+    switch (i++) {
+      case 0:
+        return FileHandlePermissionType.Prompt
+      case 1:
+        return FileHandlePermissionType.Granted
+      default:
+        return FileHandlePermissionType.Denied
+    }
+  })
+  // @ts-ignore
+  FileSystemHandle.getDirents.mockImplementation(() => {
+    if (j++ === 0) {
+      throw new NotAllowedError()
+    } else {
+      throw new UserActivationRequiredError()
+    }
+  })
+  await expect(
+    FileSystemHtml.readDirWithFileTypes('test-folder')
+  ).rejects.toThrowError(
+    new TypeError(
+      'failed to read directory: Error: User activation is required to request permissions.'
+    )
+  )
 })
 
 test.skip('writeFile - not allowed', async () => {

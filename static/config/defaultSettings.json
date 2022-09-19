@@ -11,7 +11,7 @@
 
   "serviceWorker.enabled": false,
 
-  "window.titleBarStyle": "native",
+  "window.titleBarStyle": "custom",
 
   "workbench.colorTheme": "slime",
   "workbench.iconTheme": "vscode-icons",

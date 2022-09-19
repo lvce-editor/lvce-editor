@@ -8,6 +8,8 @@ import { VError } from '../VError/VError.js'
 const pathSeparator = '/'
 
 const readDirWithFileTypesFallbackPrompt = async (handle) => {
+  // TODO cannot prompt without user activation, else error occurs
+  // maybe need to show
   const permissionTypeNow = await FileSystemHandle.requestPermission(handle, {
     mode: 'readwrite',
   })
@@ -24,19 +26,23 @@ const readDirWithFileTypesFallbackPrompt = async (handle) => {
 }
 
 const readDirWithFileTypesFallback = async (uri) => {
-  const handle = await PersistenFileHandle.getHandle(uri)
-  const permissionType = await FileSystemHandle.queryPermission(handle, {
-    mode: 'readwrite',
-  })
-  switch (permissionType) {
-    case FileHandlePermissionType.Granted:
-      throw new VError(`failed to read dir with file types`)
-    case FileHandlePermissionType.Prompt:
-      return readDirWithFileTypesFallbackPrompt(handle)
-    case FileHandlePermissionType.Denied:
-      return []
-    default:
-      return []
+  try {
+    const handle = await PersistenFileHandle.getHandle(uri)
+    const permissionType = await FileSystemHandle.queryPermission(handle, {
+      mode: 'readwrite',
+    })
+    switch (permissionType) {
+      case FileHandlePermissionType.Granted:
+        throw new VError(`invalid state`)
+      case FileHandlePermissionType.Prompt:
+        return await readDirWithFileTypesFallbackPrompt(handle)
+      case FileHandlePermissionType.Denied:
+        return []
+      default:
+        return []
+    }
+  } catch (error) {
+    throw new VError(error, `failed to read directory`)
   }
 }
 

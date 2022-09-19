@@ -22,6 +22,7 @@ const getStateToSave = () => {
 }
 
 export const handleVisibilityChange = async (visibilityState) => {
+  console.log('visibility changed', Workspace.state.workspaceUri)
   if (visibilityState === 'hidden') {
     const stateToSave = getStateToSave()
     await Promise.all([
@@ -40,5 +41,6 @@ export const hydrate = async () => {
     )
     return
   }
+  console.info('[info] saving state on visibility change')
   await RendererProcess.invoke('Window.onVisibilityChange')
 }
