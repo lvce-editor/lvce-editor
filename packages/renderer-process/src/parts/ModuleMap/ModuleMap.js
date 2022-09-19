@@ -48,6 +48,8 @@ export const getModuleId = (commandId) => {
     case 'FilePicker.showFilePicker':
     case 'FilePicker.showSaveFilePicker':
       return ModuleId.FilePicker
+    case 'FileSystemHandle.requestPermission':
+      return ModuleId.FileSystemHandle
     case 'FindWidget.create':
     case 'FindWidget.dispose':
     case 'FindWidget.setResults':

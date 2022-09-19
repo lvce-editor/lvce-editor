@@ -24,6 +24,8 @@ export const load = (moduleId) => {
       return import('../Eval/Eval.ipc.js')
     case ModuleId.FilePicker:
       return import('../FilePicker/FilePicker.ipc.js')
+    case ModuleId.FileSystemHandle:
+      return import('../FileSystemHandle/FileSystemHandle.ipc.js')
     case ModuleId.FindWidget:
       return import('../FindWidget/FindWidget.ipc.js')
     case ModuleId.ImagePreview:
