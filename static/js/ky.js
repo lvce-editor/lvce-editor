@@ -88,8 +88,23 @@ const deepMerge = (...sources) => {
   }
   return returnValue;
 };
+const supportsStreams = (() => {
+  let duplexAccessed = false;
+  let hasContentType = false;
+  const supportsReadableStream = typeof globalThis.ReadableStream === "function";
+  if (supportsReadableStream) {
+    hasContentType = new globalThis.Request("https://a.com", {
+      body: new globalThis.ReadableStream(),
+      method: "POST",
+      get duplex() {
+        duplexAccessed = true;
+        return "half";
+      }
+    }).headers.has("Content-Type");
+  }
+  return duplexAccessed && !hasContentType;
+})();
 const supportsAbortController = typeof globalThis.AbortController === "function";
-const supportsStreams = typeof globalThis.ReadableStream === "function";
 const supportsFormData = typeof globalThis.FormData === "function";
 const requestMethods = ["get", "post", "put", "patch", "head", "delete"];
 const responseTypes = {
@@ -218,6 +233,9 @@ class Ky {
       this._options.signal = this.abortController.signal;
     }
     this.request = new globalThis.Request(this._input, this._options);
+    if (supportsStreams) {
+      this.request.duplex = "half";
+    }
     if (this._options.searchParams) {
       const textSearchParams = typeof this._options.searchParams === "string" ? this._options.searchParams.replace(/^\?/, "") : new URLSearchParams(this._options.searchParams).toString();
       const searchParams = "?" + textSearchParams;
@@ -363,6 +381,16 @@ class Ky {
   _stream(response, onDownloadProgress) {
     const totalBytes = Number(response.headers.get("content-length")) || 0;
     let transferredBytes = 0;
+    if (response.status === 204) {
+      if (onDownloadProgress) {
+        onDownloadProgress({percent: 1, totalBytes, transferredBytes}, new Uint8Array());
+      }
+      return new globalThis.Response(null, {
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers
+      });
+    }
     return new globalThis.Response(new globalThis.ReadableStream({
       async start(controller) {
         const reader = response.body.getReader();
