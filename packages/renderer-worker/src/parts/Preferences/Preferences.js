@@ -31,7 +31,6 @@ const getPreferencesJson = async () => {
       /* LocalStorage.getJson */ 'LocalStorage.getJson',
       /* key */ 'settings'
     )
-    console.log({ cachedPreferences })
     if (cachedPreferences) {
       return cachedPreferences
     }
