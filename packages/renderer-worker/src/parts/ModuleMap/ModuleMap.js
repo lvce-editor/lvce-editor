@@ -271,6 +271,13 @@ export const getModuleId = (commandId) => {
     case 'Workspace.setPath':
     case 'Workspace.setUri':
       return ModuleId.Workspace
+    case 'FileHandle.addHandle':
+    case 'FileHandle.removeHandle':
+    case 'FileHandle.getHandle':
+      return ModuleId.FileHandle
+    case 'IndexedDb.addHandle':
+    case 'IndexedDb.getHandle':
+      return ModuleId.IndexedDb
     default:
       throw new Error(`command ${commandId} not found`)
   }

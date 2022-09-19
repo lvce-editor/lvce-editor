@@ -7,6 +7,7 @@ import * as FileSystemGitHub from './FileSystemGitHub.js'
 import * as FileSystemWeb from './FileSystemWeb.js'
 import * as FileSystemData from './FileSystemData.js'
 import * as FileSystemMemory from './FileSystemMemory.js'
+import * as FileSystemHtml from './FileSystemHtml.js'
 // TODO when it rejects, it should throw a custom error,
 // FileSystemError
 
@@ -33,6 +34,7 @@ state.fileSystems.github = FileSystemGitHub
 state.fileSystems.web = FileSystemWeb
 state.fileSystems.data = FileSystemData
 state.fileSystems.memfs = FileSystemMemory
+state.fileSystems.html = FileSystemHtml
 
 const getFileSystem = (protocol) => {
   return state.fileSystems[protocol] || FileSystemDisk
