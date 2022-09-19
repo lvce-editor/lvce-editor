@@ -2,12 +2,13 @@
 
 import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
 const encodeFilePath = (filePath) => {
   return filePath
-    .split('/')
+    .split(PathSeparatorType.Slash)
     .map((segment) => encodeURIComponent(segment))
-    .join('/')
+    .join(PathSeparatorType.Slash)
 }
 
 export const readGitHubFile = async (owner, repo, fileSha) => {

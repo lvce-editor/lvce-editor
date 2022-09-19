@@ -1,5 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
 export const writeFile = async (path, content) => {
   await Command.execute('FileSystem.writeFile', path, content)
@@ -37,7 +38,7 @@ export const createExecutable = async (content) => {
 
 export const createExecutableFrom = async (path) => {
   const testPath = await Platform.getTestPath()
-  const absolutePath = testPath + '/' + path
+  const absolutePath = testPath + PathSeparatorType.Slash + path
   const content = await Command.execute('Ajax.getText', absolutePath)
   return createExecutable(content)
 }

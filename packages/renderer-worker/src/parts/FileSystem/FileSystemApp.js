@@ -1,3 +1,5 @@
+import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
+
 export const name = 'App'
 
 const getModule = (uri) => {
@@ -44,5 +46,5 @@ export const mkdir = async (path) => {
 }
 
 export const getPathSeparator = () => {
-  return '/'
+  return PathSeparatorType.Slash
 }

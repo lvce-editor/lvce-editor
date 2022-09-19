@@ -1,4 +1,5 @@
 import * as DirentType from '../DirentType/DirentType.js'
+import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
 export const name = 'Memory'
 
@@ -23,14 +24,14 @@ export const readFile = (uri) => {
 
 const ensureParentDir = (uri) => {
   const startIndex = 0
-  let endIndex = uri.indexOf('/')
+  let endIndex = uri.indexOf(PathSeparatorType.Slash)
   while (endIndex >= 0) {
     const part = uri.slice(startIndex, endIndex + 1)
     state.files[part] = {
       type: DirentType.Directory,
       content: '',
     }
-    endIndex = uri.indexOf('/', endIndex + 1)
+    endIndex = uri.indexOf(PathSeparatorType.Slash, endIndex + 1)
   }
 }
 
@@ -48,8 +49,8 @@ export const writeFile = (uri, content) => {
 }
 
 export const mkdir = (uri) => {
-  if (!uri.endsWith('/')) {
-    uri += '/'
+  if (!uri.endsWith(PathSeparatorType.Slash)) {
+    uri += PathSeparatorType.Slash
   }
   ensureParentDir(uri)
   state.files[uri] = {
@@ -59,7 +60,7 @@ export const mkdir = (uri) => {
 }
 
 export const getPathSeparator = () => {
-  return '/'
+  return PathSeparatorType.Slash
 }
 
 export const remove = (uri) => {
@@ -75,8 +76,8 @@ export const remove = (uri) => {
 }
 
 export const readDirWithFileTypes = (uri) => {
-  if (!uri.endsWith('/')) {
-    uri += '/'
+  if (!uri.endsWith(PathSeparatorType.Slash)) {
+    uri += PathSeparatorType.Slash
   }
   const dirents = []
   for (const [key, value] of Object.entries(state.files)) {
@@ -84,7 +85,7 @@ export const readDirWithFileTypes = (uri) => {
       switch (value.type) {
         case DirentType.Directory:
           if (
-            !key.slice(0, -1).includes('/', uri.length) &&
+            !key.slice(0, -1).includes(PathSeparatorType.Slash, uri.length) &&
             key !== `${uri}/` &&
             key !== uri
           ) {
@@ -95,7 +96,7 @@ export const readDirWithFileTypes = (uri) => {
           }
           break
         case DirentType.File:
-          if (!key.includes('/', uri.length + 1)) {
+          if (!key.includes(PathSeparatorType.Slash, uri.length + 1)) {
             dirents.push({
               type: value.type,
               name: key.slice(uri.length),
