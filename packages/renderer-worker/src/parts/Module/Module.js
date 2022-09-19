@@ -50,6 +50,8 @@ export const load = (moduleId) => {
       return import('../ExtensionMeta/ExtensionMeta.ipc.js')
     case ModuleId.Extensions:
       return import('../Extensions/Extensions.ipc.js')
+    case ModuleId.FileHandle:
+      return import('../FileHandle/FileHandle.ipc.js')
     case ModuleId.FilePicker:
       return import('../FilePicker/FilePicker.ipc.js')
     case ModuleId.FileSystem:
@@ -62,6 +64,8 @@ export const load = (moduleId) => {
       return import('../IconTheme/IconTheme.ipc.js')
     case ModuleId.ImagePreview:
       return import('../ImagePreview/ImagePreview.ipc.js')
+    case ModuleId.IndexedDb:
+      return import('../IndexedDb/IndexedDb.ipc.js')
     case ModuleId.KeyBindings:
       return import('../KeyBindings/KeyBindings.ipc.js')
     case ModuleId.KeyBindingsInitial:
@@ -116,10 +120,6 @@ export const load = (moduleId) => {
       return import('../Workbench/Workbench.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.FileHandle:
-      return import('../FileHandle/FileHandle.ipc.js')
-    case ModuleId.IndexedDb:
-      return import('../IndexedDb/IndexedDb.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
