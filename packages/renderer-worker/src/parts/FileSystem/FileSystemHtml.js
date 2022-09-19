@@ -57,7 +57,9 @@ const readDirWithFileTypesFallbackPrompt = async (handle) => {
 
 const readDirWithFileTypesFallback = async (uri) => {
   const handle = await getHandle(uri)
-  const permissionType = await handle.queryPermission({ mode: 'readwrite' })
+  const permissionType = await FileSystemHandle.queryPermission(handle, {
+    mode: 'readwrite',
+  })
   switch (permissionType) {
     case FileHandlePermissionType.Granted:
       throw new VError(`failed to read dir with file types`)
@@ -81,7 +83,7 @@ export const readDirWithFileTypes = async (uri) => {
     if (BrowserErrorTypes.isNotAllowedError(error)) {
       return readDirWithFileTypesFallback(uri)
     }
-    throw new VError(error, `failed to read dir with file types`)
+    throw new VError(error, `failed to read directory`)
   }
 }
 
@@ -118,7 +120,7 @@ export const readFile = async (uri) => {
     if (!handle) {
       throw new VError(`File not found ${uri}`)
     }
-    const file = await handle.getFile()
+    const file = await FileSystemHandle.getFile(handle)
     const text = await file.text()
     return text
   } catch (error) {
@@ -132,9 +134,7 @@ export const writeFile = async (uri, content) => {
     if (!handle) {
       throw new VError(`File not found ${uri}`)
     }
-    const writable = await handle.createWritable()
-    await writable.write(content)
-    await writable.close()
+    await FileSystemHandle.write(handle, content)
   } catch (error) {
     throw new VError(error, `Failed to save file`)
   }

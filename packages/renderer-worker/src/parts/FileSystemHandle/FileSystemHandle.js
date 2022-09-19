@@ -11,3 +11,17 @@ export const requestPermission = async (handle, options) => {
   )
   return permissionTypeNow
 }
+
+export const queryPermission = async (handle, options) => {
+  return handle.queryPermission(options)
+}
+
+export const getFile = (handle) => {
+  return handle.getFile()
+}
+
+export const write = async (handle, content) => {
+  const writable = await handle.createWritable()
+  await writable.write(content)
+  await writable.close()
+}
