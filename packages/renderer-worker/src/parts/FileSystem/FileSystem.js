@@ -142,3 +142,9 @@ export const chmod = (uri, permissions) => {
   const fileSystem = getFileSystem(protocol)
   return fileSystem.chmod(path, permissions)
 }
+
+export const canBeRestored = (uri) => {
+  const protocol = getProtocol(uri)
+  const fileSystem = getFileSystem(protocol)
+  return fileSystem.canBeRestored
+}

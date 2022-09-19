@@ -172,6 +172,9 @@ export const hydrate = async ({ href }) => {
   if (state.homeDir !== resolvedRoot.homeDir) {
     state.homeDir = resolvedRoot.homeDir
   }
+  if (!FileSystem.canBeRestored(resolvedRoot.path)) {
+    return
+  }
   // TODO how to check that path from renderer process is valid?
   // TODO also need to check whether it is a folder or file
   state.workspacePath = resolvedRoot.path

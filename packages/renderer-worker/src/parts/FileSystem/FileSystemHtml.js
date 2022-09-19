@@ -117,3 +117,6 @@ export const writeFile = async (uri, content) => {
 export const getPathSeparator = () => {
   return pathSeparator
 }
+
+// not possible because FileHandle permissions are on preserved on reload
+export const canBeRestored = false

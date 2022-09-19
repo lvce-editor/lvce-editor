@@ -93,3 +93,5 @@ export const chmod = (path, permissions) => {
     /* permissions */ permissions
   )
 }
+
+export const canBeRestored = true

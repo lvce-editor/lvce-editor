@@ -11,6 +11,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Arrays from '../Arrays/Arrays.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -43,6 +44,10 @@ const COLUMN_WIDTH = 9 // TODO compute this automatically once
 //   readonly type: 'video'
 // }
 
+const canBeRestored = (editor) => {
+  return FileSystem.canBeRestored(editor.uri)
+}
+
 const getMainEditors = (state) => {
   if (
     !state ||
@@ -54,7 +59,7 @@ const getMainEditors = (state) => {
     return []
   }
   // TODO check that type is string (else runtime error occurs and page is blank)
-  return state.instances.Main.state.editors.slice(-1)
+  return state.instances.Main.state.editors.filter(canBeRestored).slice(-1)
 }
 
 const restoreEditors = async (state) => {

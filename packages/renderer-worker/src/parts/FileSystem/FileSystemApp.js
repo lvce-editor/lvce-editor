@@ -46,3 +46,5 @@ export const mkdir = async (path) => {
 export const getPathSeparator = () => {
   return '/'
 }
+
+export const canBeRestored = true
