@@ -51,7 +51,7 @@ export const load = (moduleId) => {
     case ModuleId.Extensions:
       return import('../Extensions/Extensions.ipc.js')
     case ModuleId.FileHandle:
-      return import('../FileHandle/FileHandle.ipc.js')
+      return import('../PersistentFileHandle/PersistentFileHandle.ipc.js')
     case ModuleId.FilePicker:
       return import('../FilePicker/FilePicker.ipc.js')
     case ModuleId.FileSystem:
