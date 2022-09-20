@@ -108,6 +108,6 @@ test('getMenuEntries - view', async () => {
 
 test('getMenuEntries - invalid id', async () => {
   await expect(MenuEntries.getMenuEntries(-1)).rejects.toThrowError(
-    'module not found "non-existing"'
+    'module not found "-1"'
   )
 })
