@@ -1,28 +1,18 @@
 import * as Platform from '../Platform/Platform.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as SearchFileRemote from '../SearchFileRemote/SearchFileRemote.js'
+import * as SearchFileWeb from '../SearchFileWeb/SearchFileWeb.js'
 
-const searchFileWeb = (path, value) => {
-  // TODO
-  return []
-}
-
-const searchFileRemote = async (path, value) => {
-  const files = await SharedProcess.invoke(
-    /* SearchFile.searchFile */ 'SearchFile.searchFile',
-    /* path */ path,
-    /* searchTerm */ value
-  )
-  return files
-}
-
-export const searchFile = async (path, value) => {
+const getModule = () => {
   switch (Platform.platform) {
-    case 'web':
-      return searchFileWeb(path, value)
-    case 'electron':
-    case 'remote':
-      return searchFileRemote(path, value)
+    case PlatformType.Web:
+      return SearchFileWeb
     default:
-      return []
+      return SearchFileRemote
   }
+}
+
+export const searchFile = (path, value) => {
+  const module = getModule()
+  return module.searchFile(path, value)
 }
