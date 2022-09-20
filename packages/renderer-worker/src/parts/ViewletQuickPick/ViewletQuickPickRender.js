@@ -1,5 +1,6 @@
 import {
   div,
+  i,
   kbd,
   table,
   tbody,
@@ -47,14 +48,42 @@ const UiStrings = {
 }
 
 const QuickPickItem = (item) => {
+  let childCount = 0
+  const children = []
+  if (item.icon) {
+    childCount++
+    children.push(
+      i(
+        {
+          className: `Icon${item.icon}`,
+        },
+        0
+      )
+    )
+  }
+  if (item.label) {
+    childCount++
+    children.push(
+      div(
+        {
+          className: ClassNames.Label,
+        },
+        1
+      ),
+      text(item.label)
+    )
+  }
   return [
     div(
       {
         className: ClassNames.QuickPickItem,
+        role: Roles.Option,
+        ariaPosInSet: item.posInSet,
+        ariaSetSize: item.setSize,
       },
-      1
+      childCount
     ),
-    text(item.label),
+    ...children,
   ]
 }
 
@@ -126,7 +155,6 @@ const renderFocusedIndex = {
   apply(oldState, newState) {
     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
     const newFocusedIndex = newState.focusedIndex - newState.minLineY
-    console.log('focus', oldState.focusedIndex, newState.focusedIndex)
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
