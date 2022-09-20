@@ -1,7 +1,6 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
 import * as I18nString from '../I18NString/I18NString.js'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import { h } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import { div } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 /**
  * @enum {string}
@@ -117,9 +116,8 @@ const getActivityBarItemProps = (item) => {
 const getActivityBarItemDom = (item) => {
   const activityBarItemProps = getActivityBarItemProps(item)
   return [
-    h(VirtualDomElements.Div, activityBarItemProps, 1),
-    h(
-      VirtualDomElements.Div,
+    div(activityBarItemProps, 1),
+    div(
       {
         className: ClassNames.ActivityBarItemIcon,
         style: `-webkit-mask-image: url("${item.icon}")`,
@@ -154,8 +152,7 @@ const getDomItems = (items, focusedIndex, selectedIndex) => {
 const getActivityBarDom = (domItems) => {
   const itemsLength = domItems.length
   return [
-    h(
-      VirtualDomElements.Div,
+    div(
       {
         id: Ids.ActivityBar,
         role: Roles.ToolBar,
