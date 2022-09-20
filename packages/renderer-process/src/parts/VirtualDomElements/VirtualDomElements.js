@@ -8,3 +8,4 @@ export const Text = 7
 export const Th = 8
 export const THead = 9
 export const Tr = 10
+export const Input = 11
