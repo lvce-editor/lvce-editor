@@ -29,8 +29,8 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
   }
 })
 
-const QuickPickCommand = await import(
-  '../src/parts/QuickPickEntries/QuickPickEntriesCommand.js/index.js'
+const QuickPickEntriesCommand = await import(
+  '../src/parts/QuickPickEntriesCommand/QuickPickEntriesCommand.js'
 )
 
 const ExtensionHostCommands = await import(
@@ -42,16 +42,16 @@ const ErrorHandling = await import(
 const Command = await import('../src/parts/Command/Command.js')
 
 test('name', () => {
-  expect(QuickPickCommand.name).toBe('command')
+  expect(QuickPickEntriesCommand.name).toBe('command')
 })
 
 test('getPlaceholder', () => {
-  expect(QuickPickCommand.getPlaceholder()).toBeDefined()
+  expect(QuickPickEntriesCommand.getPlaceholder()).toBeDefined()
 })
 
 test.skip('getHelpEntries', () => {
   // @ts-ignore
-  expect(QuickPickCommand.getHelpEntries()).toEqual([
+  expect(QuickPickEntriesCommand.getHelpEntries()).toEqual([
     {
       category: 'global commands',
       description: 'Go to file',
@@ -60,7 +60,7 @@ test.skip('getHelpEntries', () => {
 })
 
 test('getNoResults', () => {
-  expect(QuickPickCommand.getNoResults()).toEqual({
+  expect(QuickPickEntriesCommand.getNoResults()).toEqual({
     label: 'No matching results',
   })
 })
@@ -70,14 +70,14 @@ test('getPicks', async () => {
   Command.execute.mockImplementation(() => {
     return []
   })
-  await expect(QuickPickCommand.getPicks()).resolves.toEqual([])
+  await expect(QuickPickEntriesCommand.getPicks()).resolves.toEqual([])
 })
 
 test('selectPick', async () => {
   // @ts-ignore
   ExtensionHostCommands.executeCommand.mockImplementation(() => {})
   expect(
-    await QuickPickCommand.selectPick({
+    await QuickPickEntriesCommand.selectPick({
       id: 'ext.xyz',
       label: 'xyz',
     })
@@ -96,7 +96,7 @@ test('selectPick - error - selected item has no id', async () => {
   // @ts-ignore
   ErrorHandling.showErrorDialog.mockImplementation(() => {})
 
-  await expect(QuickPickCommand.selectPick({})).rejects.toThrowError(
+  await expect(QuickPickEntriesCommand.selectPick({})).rejects.toThrowError(
     new TypeError(`Cannot read properties of undefined (reading 'startsWith')`)
   )
 })
@@ -110,7 +110,7 @@ test('selectPick - error', async () => {
   ErrorHandling.showErrorDialog.mockImplementation(() => {})
 
   expect(
-    await QuickPickCommand.selectPick({
+    await QuickPickEntriesCommand.selectPick({
       id: 'ext.xyz',
       label: 'xyz',
     })

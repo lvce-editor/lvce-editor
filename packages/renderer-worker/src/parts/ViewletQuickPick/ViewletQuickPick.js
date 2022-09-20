@@ -1,9 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
-import * as QuickPickEveryThing from '../QuickPickEntries/QuickPickEntriesEverything.js/index.js.js'
+import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js/index.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as InputEventType from '../InputEventType/InputEventType.js'
-import * as QuickPickModule from '../QuickPickModule/QuickPickModule.js'
+import * as QuickPickModule from '../QuickPickEntries/QuickPickEntries.js'
 
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
