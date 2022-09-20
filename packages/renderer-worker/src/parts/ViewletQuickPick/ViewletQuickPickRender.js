@@ -113,7 +113,7 @@ const renderItems = {
     return [
       /* viewletSend */ 'Viewlet.send',
       /* id */ 'QuickPick',
-      /* method */ 'setItemsDom',
+      /* method */ 'setDom',
       /* tableDom */ dom,
     ]
   },

@@ -431,4 +431,4 @@ export const handleWheel = (state, deltaY) => {
   return setDeltaY(state, state.deltaY + deltaY)
 }
 
-export * from './quickpickRender.js'
+export * from './ViewletQuickPickRender.js'

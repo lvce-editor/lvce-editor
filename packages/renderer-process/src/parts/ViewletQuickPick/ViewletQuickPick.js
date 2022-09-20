@@ -5,6 +5,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -250,4 +251,10 @@ export const setCursorOffset = (state, cursorOffset) => {
 export const setItemsHeight = (state, itemsHeight) => {
   const { $QuickPickItems } = state
   $QuickPickItems.style.height = `${itemsHeight}px`
+}
+
+export const setDom = (state, dom) => {
+  const { $QuickPickItems } = state
+  const $Root = VirtualDom.render(dom)
+  $QuickPickItems.replaceChildren($Root.firstChild)
 }
