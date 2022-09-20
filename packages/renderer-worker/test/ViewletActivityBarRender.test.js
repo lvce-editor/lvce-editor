@@ -434,3 +434,40 @@ test('accessibility - ActivityBarItem tab should have role tab and aria-keyshort
   expect(dom[1].props.role).toBe('tab')
   expect(dom[1].props.ariaKeyShortcuts).toBe('Control+Shift+X')
 })
+
+// TODO move test to renderer worker
+test('accessibility - ActivityBar should have role toolbar, ariaLabel and ariaOrientation', () => {
+  const oldState = { ...ViewletActivityBar.create(), height: 6000 }
+  const newState = {
+    ...oldState,
+    activityBarItems: [
+      {
+        id: 'Explorer',
+        title: 'Explorer',
+        icon: './icons/files.svg',
+        enabled: true,
+        flags: ActivityBarItemFlags.Tab,
+      },
+      {
+        id: 'Search',
+        title: 'Search',
+        icon: './icons/search.svg',
+        enabled: true,
+        flags: ActivityBarItemFlags.Tab,
+      },
+      {
+        id: 'Settings',
+        title: 'Settings',
+        icon: './icons/settings-gear.svg',
+        enabled: true,
+        flags: ActivityBarItemFlags.Button,
+      },
+    ],
+  }
+  const changes = render(oldState, newState)
+  const dom = changes[0][3]
+  const $ActivityBar = dom[0]
+  expect($ActivityBar.props.role).toBe('toolbar')
+  expect($ActivityBar.props.ariaLabel).toBe('Activity Bar')
+  expect($ActivityBar.props.ariaOrientation).toBe('vertical')
+})

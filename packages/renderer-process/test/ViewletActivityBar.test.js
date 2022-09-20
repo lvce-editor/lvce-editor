@@ -146,37 +146,6 @@ test.skip('setFocusedIndex', () => {
 // TODO test aria attributes
 
 // TODO move test to renderer worker
-test.skip('accessibility - ActivityBar should have role toolbar, ariaLabel and ariaOrientation', () => {
-  const state = ViewletActivityBar.create()
-  ViewletActivityBar.setItems(state, [
-    {
-      id: 'Explorer',
-      title: 'Explorer',
-      icon: './icons/files.svg',
-      enabled: true,
-      flags: ActvityBarItemFlags.Tab,
-    },
-    {
-      id: 'Search',
-      title: 'Search',
-      icon: './icons/search.svg',
-      enabled: true,
-      flags: ActvityBarItemFlags.Tab,
-    },
-    {
-      id: 'Settings',
-      title: 'Settings',
-      icon: './icons/settings-gear.svg',
-      enabled: true,
-      flags: ActvityBarItemFlags.Button,
-    },
-  ])
-  expect(state.$ActivityBar.role).toBe('toolbar')
-  expect(state.$ActivityBar.ariaLabel).toBe('Activity Bar')
-  expect(state.$ActivityBar.ariaOrientation).toBe('vertical')
-})
-
-// TODO move test to renderer worker
 test.skip('accessibility - ActivityBarItem button should have role button and ariaHasPopup', () => {
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(state, [
