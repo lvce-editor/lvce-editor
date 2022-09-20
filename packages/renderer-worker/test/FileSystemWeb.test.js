@@ -17,7 +17,7 @@ test('readFile', async () => {
 test('readFile - error', async () => {
   await expect(
     FileSystemWeb.readFile('/languages/index.dart')
-  ).rejects.toThrowError(new Error('file not found'))
+  ).rejects.toThrowError(new Error('file not found /languages/index.dart'))
 })
 
 test('rename', async () => {
