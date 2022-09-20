@@ -102,14 +102,6 @@ const handleBlur = (event) => {
 // 1. methods
 // 2. functions inside functions
 
-const ClassNames = {
-  Label: 'Label',
-  QuickPickItem: 'QuickPickItem',
-  Icon: 'Icon',
-  QuickPickItemDescription: 'QuickPickItemDescription',
-  QuickPickStatus: 'QuickPickStatus',
-}
-
 const Ids = {
   QuickPickHeader: 'QuickPickHeader',
   QuickPickItems: 'QuickPickItems',
@@ -122,114 +114,7 @@ const Roles = {
   Option: 'option',
 }
 
-const create$QuickPickItem = () => {
-  // TODO many quickPick items may not have description -> avoid creating description dom nodes if there is no description
-  const $QuickPickItemLabelText = document.createTextNode('')
-
-  const $QuickPickItemLabel = document.createElement('div')
-  $QuickPickItemLabel.className = ClassNames.Label
-  $QuickPickItemLabel.append($QuickPickItemLabelText)
-
-  const $QuickPickItemIcon = document.createElement('i')
-  $QuickPickItemIcon.className = ClassNames.Icon
-  const $QuickPickItem = document.createElement('div') // TODO ul/li would be better for structure but might be slower
-  $QuickPickItem.className = ClassNames.QuickPickItem
-  // @ts-ignore
-  $QuickPickItem.role = Roles.Option
-  $QuickPickItem.append($QuickPickItemIcon, $QuickPickItemLabel)
-  return $QuickPickItem
-}
-
 // TODO add test with show and slicedItems length is 0
-
-const create$QuickPickDescription = () => {
-  const $QuickPickItemDescription = document.createElement('div')
-  $QuickPickItemDescription.className = ClassNames.QuickPickItemDescription
-  return $QuickPickItemDescription
-}
-
-const render$QuickPickItemLess = ($QuickPickItem, quickPickItem) => {
-  render$QuickPickItemLabel($QuickPickItem.firstChild, quickPickItem)
-  const $QuickPickItemDescription = create$QuickPickDescription()
-  // render$QuickPickItemDescription($QuickPickItemDescription, quickPickItem)
-
-  $QuickPickItem.append($QuickPickItemDescription)
-}
-
-const render$QuickPickItemLabel = ($QuickPickItem, quickPickItem) => {
-  $QuickPickItem.children[1].firstChild.nodeValue = quickPickItem.label
-}
-
-const render$QuickPickItemIcon = ($QuickPickItem, quickPickItem) => {
-  $QuickPickItem.children[0].className = `Icon${quickPickItem.icon}`
-}
-
-const render$QuickPickItemEqual = ($QuickPickItem, quickPickItem) => {
-  render$QuickPickItemLabel($QuickPickItem, quickPickItem)
-  render$QuickPickItemIcon($QuickPickItem, quickPickItem)
-}
-
-const render$QuickPickItemMore = ($QuickPickItem, quickPickItem) => {
-  render$QuickPickItemLabel($QuickPickItem.firstChild, quickPickItem)
-  $QuickPickItem.lastChild.remove()
-}
-
-const render$QuickPickItem = ($QuickPickItem, quickPickItem) => {
-  $QuickPickItem.ariaPosInSet = `${quickPickItem.posInSet}` // TODO pass correct number as prop
-  $QuickPickItem.ariaSetSize = `${quickPickItem.setSize}`
-  $QuickPickItem.quickPickItem = quickPickItem
-  render$QuickPickItemEqual($QuickPickItem, quickPickItem)
-}
-
-const render$QuickPickItemsLess = ($QuickPickItems, quickPickItems) => {
-  for (let i = 0; i < $QuickPickItems.children.length; i++) {
-    render$QuickPickItem($QuickPickItems.children[i], quickPickItems[i])
-  }
-  const fragment = document.createDocumentFragment()
-  for (
-    let i = $QuickPickItems.children.length;
-    i < quickPickItems.length;
-    i++
-  ) {
-    const $QuickPickItem = create$QuickPickItem()
-    render$QuickPickItem($QuickPickItem, quickPickItems[i])
-    fragment.append($QuickPickItem)
-  }
-  $QuickPickItems.append(fragment)
-}
-
-const render$QuickPickItemsEqual = ($QuickPickItems, quickPickItems) => {
-  for (let i = 0; i < quickPickItems.length; i++) {
-    render$QuickPickItem($QuickPickItems.children[i], quickPickItems[i])
-  }
-}
-
-const render$QuickPickItemsMore = ($QuickPickItems, quickPickItems) => {
-  for (let i = 0; i < quickPickItems.length; i++) {
-    render$QuickPickItem($QuickPickItems.children[i], quickPickItems[i])
-  }
-  const diff = $QuickPickItems.children.length - quickPickItems.length
-  for (let i = 0; i < diff; i++) {
-    $QuickPickItems.lastChild.remove()
-  }
-}
-
-const render$QuickPickItems = ($QuickPickItems, quickPickItems) => {
-  if ($QuickPickItems.children.length < quickPickItems.length) {
-    render$QuickPickItemsLess($QuickPickItems, quickPickItems)
-  } else if ($QuickPickItems.children.length === quickPickItems.length) {
-    render$QuickPickItemsEqual($QuickPickItems, quickPickItems)
-  } else {
-    render$QuickPickItemsMore($QuickPickItems, quickPickItems)
-  }
-}
-
-export const setVisiblePicks = (state, visiblePicks) => {
-  if (state.$QuickPickStatus) {
-    hideStatus(state)
-  }
-  render$QuickPickItems(state.$QuickPickItems, visiblePicks)
-}
 
 export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
   const { $QuickPickItems, $QuickPickInput } = state
@@ -317,10 +202,6 @@ export const create = () => {
   }
 }
 
-export const setPicks = (state, visiblePicks) => {
-  render$QuickPickItems(state.$QuickPickItems, visiblePicks)
-}
-
 const create$QuickPickStatus = () => {
   const $QuickPickStatus = document.createElement('div')
   $QuickPickStatus.className = 'QuickPickStatus'
@@ -336,7 +217,6 @@ export const hideStatus = (state) => {
 }
 
 export const showNoResults = (state, noResults, unfocusIndex) => {
-  setPicks(state, [])
   if (!state.$QuickPickStatus) {
     state.$QuickPickStatus = create$QuickPickStatus()
     state.$QuickPick.append(state.$QuickPickStatus)
