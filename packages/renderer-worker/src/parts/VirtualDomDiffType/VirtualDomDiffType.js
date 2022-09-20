@@ -1,3 +1,7 @@
 export const AttributeSet = 1
 
 export const AttributeRemove = 2
+
+export const ElementAdd = 3
+
+export const ElementRemove = 4

@@ -26,7 +26,7 @@ const patchProps = (changes, oldProps, newProps) => {
     if (next !== prev) {
       return changes.push({
         path: 0,
-        type: VirtualDomDiffType.AttributeSet,
+        operation: VirtualDomDiffType.AttributeSet,
         key,
         value: next,
       })
@@ -36,20 +36,43 @@ const patchProps = (changes, oldProps, newProps) => {
     if (!(key in newProps)) {
       changes.push({
         path: 0,
-        type: VirtualDomDiffType.AttributeRemove,
+        operation: VirtualDomDiffType.AttributeRemove,
         key,
       })
     }
   }
 }
 
+const unMountChildren = (changes, count) => {
+  changes.push({
+    operation: VirtualDomDiffType.ElementRemove,
+    count,
+  })
+}
+
+const mountChildren = (changes, newDom, commonLength, count) => {
+  for (let i = 0; i < count; i++) {
+    changes.push({
+      operation: VirtualDomDiffType.ElementAdd,
+      ...newDom[i + commonLength],
+    })
+  }
+}
+
 export const diff = (oldDom, newDom) => {
   const changes = []
-  const length = oldDom.length
-  for (let i = 0; i < length; i++) {
+  const oldLength = oldDom.length
+  const newLength = newDom.length
+  const commonLength = Math.min(oldLength, newLength)
+  for (let i = 0; i < commonLength; i++) {
     const oldNode = oldDom[i]
     const newNode = newDom[i]
     patchProps(changes, oldNode.props, newNode.props)
+  }
+  if (oldLength > newLength) {
+    unMountChildren(changes, oldLength - newLength)
+  } else {
+    mountChildren(changes, newDom, commonLength, newLength - oldLength)
   }
   return changes
 }
