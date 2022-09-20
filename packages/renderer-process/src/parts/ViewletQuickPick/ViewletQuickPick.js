@@ -102,20 +102,40 @@ const handleBlur = (event) => {
 // 1. methods
 // 2. functions inside functions
 
+const ClassNames = {
+  Label: 'Label',
+  QuickPickItem: 'QuickPickItem',
+  Icon: 'Icon',
+  QuickPickItemDescription: 'QuickPickItemDescription',
+  QuickPickStatus: 'QuickPickStatus',
+}
+
+const Ids = {
+  QuickPickHeader: 'QuickPickHeader',
+  QuickPickItems: 'QuickPickItems',
+  QuickPick: 'QuickPick',
+}
+
+const Roles = {
+  ListBox: 'listbox',
+  ComboBox: 'combobox',
+  Option: 'option',
+}
+
 const create$QuickPickItem = () => {
   // TODO many quickPick items may not have description -> avoid creating description dom nodes if there is no description
   const $QuickPickItemLabelText = document.createTextNode('')
 
   const $QuickPickItemLabel = document.createElement('div')
-  $QuickPickItemLabel.className = 'QuickPickItemLabel'
+  $QuickPickItemLabel.className = ClassNames.Label
   $QuickPickItemLabel.append($QuickPickItemLabelText)
 
   const $QuickPickItemIcon = document.createElement('i')
-  $QuickPickItemIcon.className = 'Icon'
+  $QuickPickItemIcon.className = ClassNames.Icon
   const $QuickPickItem = document.createElement('div') // TODO ul/li would be better for structure but might be slower
-  $QuickPickItem.className = 'QuickPickItem'
+  $QuickPickItem.className = ClassNames.QuickPickItem
   // @ts-ignore
-  $QuickPickItem.role = 'option'
+  $QuickPickItem.role = Roles.Option
   $QuickPickItem.append($QuickPickItemIcon, $QuickPickItemLabel)
   return $QuickPickItem
 }
@@ -124,7 +144,7 @@ const create$QuickPickItem = () => {
 
 const create$QuickPickDescription = () => {
   const $QuickPickItemDescription = document.createElement('div')
-  $QuickPickItemDescription.className = 'QuickPickItemDescription'
+  $QuickPickItemDescription.className = ClassNames.QuickPickItemDescription
   return $QuickPickItemDescription
 }
 
@@ -256,9 +276,9 @@ const handleBeforeInput = (event) => {
 
 export const create = () => {
   const $QuickPickInput = InputBox.create()
-  $QuickPickInput.setAttribute('aria-controls', 'QuickPickItems') // TODO use idl once supported
+  $QuickPickInput.setAttribute('aria-controls', Ids.QuickPickItems) // TODO use idl once supported
   // @ts-ignore
-  $QuickPickInput.role = 'combobox'
+  $QuickPickInput.role = Roles.ComboBox
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
   $QuickPickInput.ariaAutoComplete = 'list'
   $QuickPickInput.onblur = handleBlur
@@ -267,13 +287,13 @@ export const create = () => {
   $QuickPickInput.ariaExpanded = 'true'
 
   const $QuickPickHeader = document.createElement('div')
-  $QuickPickHeader.id = 'QuickPickHeader'
+  $QuickPickHeader.id = Ids.QuickPickHeader
   $QuickPickHeader.append($QuickPickInput)
 
   const $QuickPickItems = document.createElement('div')
-  $QuickPickItems.id = 'QuickPickItems'
+  $QuickPickItems.id = Ids.QuickPickItems
   // @ts-ignore
-  $QuickPickItems.role = 'listbox'
+  $QuickPickItems.role = Roles.ListBox
   $QuickPickItems.onmousedown = handleMouseDown
   $QuickPickItems.addEventListener('wheel', handleWheel, { passive: true })
 
@@ -282,7 +302,7 @@ export const create = () => {
   $QuickPickItems.ariaRoleDescription = 'Quick Input'
 
   const $QuickPick = document.createElement('div')
-  $QuickPick.id = 'QuickPick'
+  $QuickPick.id = Ids.QuickPick
   // $QuickPick.role= 'dialog'
   $QuickPick.append($QuickPickHeader, $QuickPickItems)
   // $QuickPick.setAttribute('aria-modal', 'false') // TODO why is this
