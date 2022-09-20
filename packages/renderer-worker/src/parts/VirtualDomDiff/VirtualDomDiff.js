@@ -1,31 +1,12 @@
 import * as VirtualDomDiffType from '../VirtualDomDiffType/VirtualDomDiffType.js'
 
-const isEqualProps = (oldProps, newProps) => {
-  for (const key in newProps) {
-    const next = newProps[key]
-    const prev = oldProps[key]
-    if (next !== prev) {
-      return false
-    }
-  }
-  for (const key in oldProps) {
-  }
-  const oldKeys = Object.keys(oldProps)
-}
-
-const isEqualElement = (oldNode, newNode) => {
-  return oldNode.type === newNode.type
-}
-
-const patchChildren = (oldDom, newDom, i, j) => {}
-
-const patchProps = (changes, oldProps, newProps) => {
+const patchProps = (changes, i, oldProps, newProps) => {
   for (const key in newProps) {
     const next = newProps[key]
     const prev = oldProps[key]
     if (next !== prev) {
       return changes.push({
-        path: 0,
+        path: i,
         operation: VirtualDomDiffType.AttributeSet,
         key,
         value: next,
@@ -35,7 +16,7 @@ const patchProps = (changes, oldProps, newProps) => {
   for (const key in oldProps) {
     if (!(key in newProps)) {
       changes.push({
-        path: 0,
+        path: i,
         operation: VirtualDomDiffType.AttributeRemove,
         key,
       })
@@ -64,10 +45,17 @@ export const diff = (oldDom, newDom) => {
   const oldLength = oldDom.length
   const newLength = newDom.length
   const commonLength = Math.min(oldLength, newLength)
+  // let oldIndex = 0
+  // let newIndex = 0
   for (let i = 0; i < commonLength; i++) {
     const oldNode = oldDom[i]
     const newNode = newDom[i]
-    patchProps(changes, oldNode.props, newNode.props)
+    // if (oldNode.childCount !== newNode.childCount) {
+    //   // TODO diff children
+    // }
+    // oldIndex += oldNode.childCount
+    // newIndex += newNode.childCount
+    patchProps(changes, i, oldNode.props, newNode.props)
   }
   if (oldLength > newLength) {
     unMountChildren(changes, oldLength - newLength)

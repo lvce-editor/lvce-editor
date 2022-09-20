@@ -10,6 +10,7 @@ import {
   thead,
   tr,
 } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as VirtualDomDiff from '../VirtualDomDiff/VirtualDomDiff.js'
 
 /**
  * @enum {string}
@@ -141,6 +142,17 @@ const renderItems = {
       newState.focusedIndex
     )
     const dom = QuickPickItems(visibleItems)
+
+    const oldDom = QuickPickItems(
+      getVisible(
+        oldState.items,
+        oldState.minLineY,
+        oldState.maxLineY,
+        oldState.focusedIndex
+      )
+    )
+    const changes = VirtualDomDiff.diff(oldDom, dom)
+    console.log({ oldDom, dom, changes })
     return [
       /* viewletSend */ 'Viewlet.send',
       /* id */ 'QuickPick',

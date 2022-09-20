@@ -112,6 +112,33 @@ test('diff - one element added with child', () => {
   ])
 })
 
+test('diff - one element added - at start of element', () => {
+  expect(
+    VirtualDomDiff.diff(
+      [div({}, 2), text('b'), text('c')],
+      [div({}, 3), text('a'), text('b'), text('c')]
+    )
+  ).toEqual([])
+})
+
+test('diff - one element added - between elements', () => {
+  expect(
+    VirtualDomDiff.diff(
+      [div({}, 2), text('a'), text('c')],
+      [div({}, 3), text('a'), text('b'), text('c')]
+    )
+  ).toEqual([])
+})
+
+test('diff - one element added - at end of element', () => {
+  expect(
+    VirtualDomDiff.diff(
+      [div({}, 2), text('a'), text('b')],
+      [div({}, 3), text('a'), text('b'), text('c')]
+    )
+  ).toEqual([])
+})
+
 test('diff - two elements added', () => {
   expect(VirtualDomDiff.diff([], [div({}, 0), div({}, 0)])).toEqual([
     {
