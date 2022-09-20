@@ -38,17 +38,11 @@ export const getTokenizeFunctionPath = (languageId) => {
   return state.tokenizerMap[languageId] || ''
 }
 
-const getLanguages = () => {
-  // TODO handle error
-
-  return ExtensionHostLanguages.getLanguages()
-}
-
 export const hydrate = async () => {
   state.isHydrating = true
   // TODO handle error
   // TODO main parts should have nothing todo with shared process -> only sub components
-  const languages = await getLanguages()
+  const languages = await ExtensionHostLanguages.getLanguages()
   // TODO avoid side effect here, but how?
   await addLanguages(languages)
   state.loaded = true
@@ -143,18 +137,18 @@ export const hasLoaded = () => {
 }
 
 export const waitForLoad = async () => {
-  if (state.isHydrating) {
-    await new Promise((resolve) => {
-      const handleLanguageChange = (editor, languageId) => {
-        resolve(undefined)
-      }
-      // TODO remove event listener when promise is resolved
-      // TODO what if this event is never emitted (e.g. languages fail to load)
-      GlobalEventBus.addListener('languages.changed', handleLanguageChange)
-    })
-  } else {
-    await hydrate()
-  }
+  // if (state.isHydrating) {
+  await new Promise((resolve) => {
+    const handleLanguageChange = (editor, languageId) => {
+      resolve(undefined)
+    }
+    // TODO remove event listener when promise is resolved
+    // TODO what if this event is never emitted (e.g. languages fail to load)
+    GlobalEventBus.addListener('languages.changed', handleLanguageChange)
+  })
+  // } else {
+  //   await hydrate()
+  // }
 }
 
 export const getLanguageConfiguration = async (editor) => {
