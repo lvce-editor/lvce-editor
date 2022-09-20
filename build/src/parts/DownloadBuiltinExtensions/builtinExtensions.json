@@ -20,6 +20,11 @@
     "version": "0.0.2"
   },
   {
+    "name": "builtin.language-basics-nvmrc",
+    "repository": "github.com/lvce-editor/language-basics-nvmrc",
+    "version": "0.0.1"
+  },
+  {
     "name": "builtin.language-basics-perl",
     "repository": "github.com/lvce-editor/language-basics-perl",
     "version": "0.0.1"
