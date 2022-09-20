@@ -29,6 +29,7 @@ const Ids = {
   QuickPickHeader: 'QuickPickHeader',
   QuickPickItems: 'QuickPickItems',
   QuickPick: 'QuickPick',
+  QuickPickItemActive: 'QuickPickItemActive',
 }
 
 /**
@@ -73,18 +74,16 @@ const QuickPickItem = (item) => {
       text(item.label)
     )
   }
-  return [
-    div(
-      {
-        className: ClassNames.QuickPickItem,
-        role: Roles.Option,
-        ariaPosInSet: item.posInSet,
-        ariaSetSize: item.setSize,
-      },
-      childCount
-    ),
-    ...children,
-  ]
+  const props = {
+    className: ClassNames.QuickPickItem,
+    role: Roles.Option,
+    ariaPosInSet: item.posInSet,
+    ariaSetSize: item.setSize,
+  }
+  if (item.focused) {
+    props.id = Ids.QuickPickItemActive
+  }
+  return [div(props, childCount), ...children]
 }
 
 const QuickPickItems = (items) => {
@@ -101,7 +100,7 @@ const QuickPickItems = (items) => {
   ]
 }
 
-const getVisible = (items, minLineY, maxLineY) => {
+const getVisible = (items, minLineY, maxLineY, focusedIndex) => {
   const visibleItems = []
   const setSize = items.length
   const max = Math.min(items.length, maxLineY)
@@ -112,6 +111,7 @@ const getVisible = (items, minLineY, maxLineY) => {
       icon: item.icon,
       posInSet: i + 1,
       setSize,
+      focused: i === focusedIndex,
     })
   }
   return visibleItems
@@ -122,7 +122,8 @@ const renderItems = {
     return (
       oldState.filteredKeyBindings === newState.filteredKeyBindings &&
       oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY
+      oldState.maxLineY === newState.maxLineY &&
+      oldState.focusedIndex === newState.focusedIndex
     )
   },
   apply(oldState, newState) {
@@ -136,7 +137,8 @@ const renderItems = {
     const visibleItems = getVisible(
       newState.items,
       newState.minLineY,
-      newState.maxLineY
+      newState.maxLineY,
+      newState.focusedIndex
     )
     const dom = QuickPickItems(visibleItems)
     return [
@@ -148,22 +150,22 @@ const renderItems = {
   },
 }
 
-const renderFocusedIndex = {
-  isEqual(oldState, newState) {
-    return oldState.focusedIndex === newState.focusedIndex
-  },
-  apply(oldState, newState) {
-    const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
-    const newFocusedIndex = newState.focusedIndex - newState.minLineY
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'QuickPick',
-      /* method */ 'setFocusedIndex',
-      /* oldFocusedIndex */ oldFocusedIndex,
-      /* newFocusedIndex */ newFocusedIndex,
-    ]
-  },
-}
+// const renderFocusedIndex = {
+//   isEqual(oldState, newState) {
+//     return oldState.focusedIndex === newState.focusedIndex
+//   },
+//   apply(oldState, newState) {
+//     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
+//     const newFocusedIndex = newState.focusedIndex - newState.minLineY
+//     return [
+//       /* Viewlet.send */ 'Viewlet.send',
+//       /* id */ 'QuickPick',
+//       /* method */ 'setFocusedIndex',
+//       /* oldFocusedIndex */ oldFocusedIndex,
+//       /* newFocusedIndex */ newFocusedIndex,
+//     ]
+//   },
+// }
 
 const renderHeight = {
   isEqual(oldState, newState) {
@@ -217,6 +219,6 @@ export const render = [
   renderItems,
   renderValue,
   renderCursorOffset,
-  renderFocusedIndex,
+  // renderFocusedIndex,
   renderHeight,
 ]

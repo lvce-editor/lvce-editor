@@ -256,5 +256,6 @@ export const setItemsHeight = (state, itemsHeight) => {
 export const setDom = (state, dom) => {
   const { $QuickPickItems } = state
   const $Root = VirtualDom.render(dom)
-  $QuickPickItems.replaceChildren($Root.firstChild)
+  // @ts-ignore
+  $QuickPickItems.replaceChildren(...$Root.firstChild.children)
 }
