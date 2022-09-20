@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as SearchResultType from '../src/parts/SearchResultType/SearchResultType.js'
+import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -147,7 +148,7 @@ test('handleContextMenuMouseAt', async () => {
     'ContextMenu.show',
     10,
     10,
-    'search'
+    MenuEntryId.Search
   )
 })
 
@@ -161,6 +162,6 @@ test('handleContextMenuKeyBoard', async () => {
     'ContextMenu.show',
     0,
     0,
-    'search'
+    MenuEntryId.Search
   )
 })

@@ -2,6 +2,7 @@
 import * as Menu from '../Menu/Menu.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 export const state = {
   /**
@@ -16,7 +17,7 @@ export const state = {
 // TODO only compute once if is electron and filter out during build process
 
 export const getEntries = async () => {
-  state.titleBarEntries = await MenuEntries.getMenuEntries('titleBar')
+  state.titleBarEntries = await MenuEntries.getMenuEntries(MenuEntryId.TitleBar)
   return state.titleBarEntries
 }
 

@@ -12,6 +12,7 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Arrays from '../Arrays/Arrays.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -407,7 +408,7 @@ export const handleTabContextMenu = async (state, index, x, y) => {
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
-    /* id */ 'tab'
+    /* id */ MenuEntryId.Tab
   )
 }
 

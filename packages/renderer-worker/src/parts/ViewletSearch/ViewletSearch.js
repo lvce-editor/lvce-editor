@@ -6,6 +6,7 @@ import * as Compare from '../Compare/Compare.js'
 import * as Assert from '../Assert/Assert.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as SearchResultType from '../SearchResultType/SearchResultType.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 // TODO maybe create should have a container as param like vscode?
 // maybe not?
 
@@ -225,7 +226,7 @@ export const handleContextMenuMouseAt = async (state, x, y) => {
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
-    /* id */ 'search'
+    /* id */ MenuEntryId.Search
   )
   return state
 }
@@ -238,7 +239,7 @@ export const handleContextMenuKeyboard = async (state) => {
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
-    /* id */ 'search'
+    /* id */ MenuEntryId.Search
   )
   return state
 }

@@ -222,15 +222,14 @@ const getName = (path) => {
   return path.slice(path.lastIndexOf(PathSeparatorType.Slash) + 1)
 }
 
-const getRelativePath = (path) => {
-  return path.slice('/workspace'.length)
-}
+// const getRelativePath = (path) => {
+//   return path.slice('/workspace'.length)
+// }
 
 export const readFile = async (path) => {
-  const relativePath = getRelativePath(path)
-  const file = state.files[relativePath]
+  const file = state.files[path]
   if (file === undefined) {
-    throw new Error('file not found')
+    throw new Error(`file not found ${path}`)
   }
   return file
 }
@@ -256,8 +255,7 @@ export const createFolder = async (path) => {
 }
 
 export const writeFile = async (path, content) => {
-  const relativePath = getRelativePath(path)
-  state.files[relativePath] = content
+  state.files[path] = content
 }
 
 const getDirent = (path, relativePath) => {
@@ -275,16 +273,16 @@ const getDirent = (path, relativePath) => {
 }
 
 export const readDirWithFileTypes = (path) => {
-  const relativePath = getRelativePath(path)
   const dirents = []
   for (const key in state.files) {
-    if (key.startsWith(relativePath)) {
-      const dirent = getDirent(key, relativePath)
+    if (key.startsWith(path)) {
+      const dirent = getDirent(key, path)
       if (!dirents.some((otherDirent) => otherDirent.name === dirent.name)) {
         dirents.push(dirent)
       }
     }
   }
+  console.log({ path, dirents })
   return dirents
 }
 

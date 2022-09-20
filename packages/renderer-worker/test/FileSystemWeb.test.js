@@ -8,9 +8,7 @@ test('readFile', async () => {
   FileSystemWeb.state.files['/languages/index.dart'] = `void main() {
   print('Hello, World!');
 }`
-  expect(
-    await FileSystemWeb.readFile('/workspace/languages/index.dart')
-  ).toEqual(
+  expect(await FileSystemWeb.readFile('/languages/index.dart')).toEqual(
     `void main() {
   print('Hello, World!');
 }`
@@ -19,7 +17,7 @@ test('readFile', async () => {
 test('readFile - error', async () => {
   await expect(
     FileSystemWeb.readFile('/languages/index.dart')
-  ).rejects.toThrowError(new Error('file not found'))
+  ).rejects.toThrowError(new Error('file not found /languages/index.dart'))
 })
 
 test('rename', async () => {
@@ -33,6 +31,6 @@ test('getPathSeparator', () => {
 })
 
 test('writeFile', async () => {
-  await FileSystemWeb.writeFile('/workspace/file.txt', 'test')
+  await FileSystemWeb.writeFile('/file.txt', 'test')
   expect(FileSystemWeb.state.files).toEqual({ '/file.txt': 'test' })
 })

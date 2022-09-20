@@ -1,4 +1,5 @@
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
+import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 import { jest } from '@jest/globals'
 
 beforeEach(() => {
@@ -72,6 +73,6 @@ test('handleContextMenuKeyboard', async () => {
     'ContextMenu.show',
     10,
     80,
-    'explorer'
+    MenuEntryId.Explorer
   )
 })

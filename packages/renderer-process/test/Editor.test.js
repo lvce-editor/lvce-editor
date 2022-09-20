@@ -3,6 +3,7 @@
  */
 import { jest } from '@jest/globals'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
+import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -418,7 +419,7 @@ test('event - context menu', () => {
     'ContextMenu.show',
     15,
     30,
-    'editor'
+    MenuEntryId.Editor
   )
 })
 
