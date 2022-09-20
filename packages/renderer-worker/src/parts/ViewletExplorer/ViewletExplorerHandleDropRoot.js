@@ -38,13 +38,17 @@ const handleDropRootElectron = async (state, files) => {
   }
 }
 
-const handleDropRootDefault = async (state, files) => {
-  const { root, pathSeparator, dirents } = state
+const uploadFiles = async (root, pathSeparator, files) => {
   for (const file of files) {
     const content = await Command.execute('Blob.blobToBinaryString', file)
     const to = Path.join(pathSeparator, root, file.name)
     await FileSystem.writeFile(to, content, 'binary')
   }
+}
+
+const handleDropRootDefault = async (state, files) => {
+  const { root, pathSeparator, dirents } = state
+  await uploadFiles(root, pathSeparator, files)
   const mergedDirents = await getMergedDirents(root, pathSeparator, dirents)
   return {
     ...state,
