@@ -277,39 +277,4 @@ export const resize = (state, dimensions) => {
   }
 }
 
-const renderActivityBarItems = {
-  isEqual(oldState, newState) {
-    return (
-      oldState.activityBarItems === newState.activityBarItems &&
-      oldState.height === newState.height
-    )
-  },
-  apply(oldState, newState) {
-    const visibleItems = getVisibleActivityBarItems(newState)
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'ActivityBar',
-      /* method */ 'setItems',
-      /* items */ visibleItems,
-    ]
-  },
-}
-
-const renderFocusedIndex = {
-  isEqual(oldState, newState) {
-    return oldState.focusedIndex === newState.focusedIndex
-  },
-  apply(oldState, newState) {
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'ActivityBar',
-      /* method */ 'setFocusedIndex',
-      /* unFocusIndex */ oldState.focusedIndex,
-      /* focusIndex */ newState.focusedIndex,
-    ]
-  },
-}
-
-export const render = [renderActivityBarItems, renderFocusedIndex]
-
-export const hasFunctionalRender = true
+export * from './ViewletActivityBarRender.js'
