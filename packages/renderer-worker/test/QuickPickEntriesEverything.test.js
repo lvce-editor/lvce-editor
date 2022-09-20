@@ -20,8 +20,8 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   }
 })
 
-const QuickPickEverything = await import(
-  '../src/parts/QuickPick/QuickPickEverything.js'
+const QuickPickEntriesEverything = await import(
+  '../src/parts/QuickPickEntriesEverything/QuickPickEntriesEverything.js'
 )
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
@@ -66,18 +66,18 @@ const mockProvider = {
 }
 
 test('name', () => {
-  expect(QuickPickEverything.name).toBe('everything')
+  expect(QuickPickEntriesEverything.name).toBe('everything')
 })
 
 test('getPlaceholder', () => {
   // TODO fix tsc
   // @ts-ignore
-  QuickPickEverything.state.provider = mockProvider
-  expect(QuickPickEverything.getPlaceholder()).toBe('mock placeholder')
+  QuickPickEntriesEverything.state.provider = mockProvider
+  expect(QuickPickEntriesEverything.getPlaceholder()).toBe('mock placeholder')
 })
 
 test('getHelpEntries', () => {
-  expect(QuickPickEverything.getHelpEntries()).toEqual([
+  expect(QuickPickEntriesEverything.getHelpEntries()).toEqual([
     {
       category: 'mock commands',
       description: 'mock help entry',
@@ -86,16 +86,17 @@ test('getHelpEntries', () => {
 })
 
 test('getNoResults', () => {
-  expect(QuickPickEverything.getNoResults()).toEqual({
+  expect(QuickPickEntriesEverything.getNoResults()).toEqual({
     label: 'mock no result',
   })
 })
 
 test('getPicks', async () => {
-  await expect(QuickPickEverything.getPicks('')).resolves.toEqual([])
+  await expect(QuickPickEntriesEverything.getPicks('')).resolves.toEqual([])
 })
 
 test('selectPick', async () => {
+  // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
       case 101:
@@ -105,7 +106,7 @@ test('selectPick', async () => {
     }
   })
   expect(
-    await QuickPickEverything.selectPick({
+    await QuickPickEntriesEverything.selectPick({
       label: 'test-file-1.txt',
     })
   ).toEqual({

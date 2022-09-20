@@ -37,20 +37,22 @@ jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => {
   }
 })
 
-const QuickPickFile = await import('../src/parts/QuickPick/QuickPickFile.js')
+const QuickPickEntriesFile = await import(
+  '../src/parts/QuickPickEntriesFile/QuickPickEntriesFile.js'
+)
 const SearchFile = await import('../src/parts/SearchFile/SearchFile.js')
 const IconTheme = await import('../src/parts/IconTheme/IconTheme.js')
 
 test('name', () => {
-  expect(QuickPickFile.name).toBe('file')
+  expect(QuickPickEntriesFile.name).toBe('file')
 })
 
 test('getPlaceholder', () => {
-  expect(QuickPickFile.getPlaceholder()).toBe('')
+  expect(QuickPickEntriesFile.getPlaceholder()).toBe('')
 })
 
 test('getHelpEntries', () => {
-  expect(QuickPickFile.getHelpEntries()).toEqual([
+  expect(QuickPickEntriesFile.getHelpEntries()).toEqual([
     {
       category: 'global commands',
       description: 'Go to file',
@@ -59,7 +61,7 @@ test('getHelpEntries', () => {
 })
 
 test('getNoResults', () => {
-  expect(QuickPickFile.getNoResults()).toEqual({
+  expect(QuickPickEntriesFile.getNoResults()).toEqual({
     label: 'No matching results',
   })
 })
@@ -73,7 +75,7 @@ test('getPicks', async () => {
   IconTheme.getFileIcon.mockImplementation(() => {
     return '_file'
   })
-  expect(await QuickPickFile.getPicks('/test/file.txt')).toEqual([
+  expect(await QuickPickEntriesFile.getPicks('/test/file.txt')).toEqual([
     {
       icon: '_file',
       label: '/test/file-1.txt',
@@ -100,7 +102,7 @@ test('getPicks - empty', async () => {
   SearchFile.searchFile.mockImplementation(() => {
     return []
   })
-  expect(await QuickPickFile.getPicks('/test/file.txt')).toEqual([])
+  expect(await QuickPickEntriesFile.getPicks('/test/file.txt')).toEqual([])
 })
 
 test('getPicks - error', async () => {
@@ -108,16 +110,16 @@ test('getPicks - error', async () => {
   SearchFile.searchFile.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(QuickPickFile.getPicks('/test/file.txt')).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(
+    QuickPickEntriesFile.getPicks('/test/file.txt')
+  ).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test.skip('selectPick', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   expect(
-    await QuickPickFile.selectPick({
+    await QuickPickEntriesFile.selectPick({
       label: 'test-file-1.txt',
     })
   ).toEqual({

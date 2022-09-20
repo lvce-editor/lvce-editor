@@ -1,25 +1,25 @@
-import * as QuickPickNumber from '../src/parts/QuickPick/QuickPickNumber.js'
+import * as QuickPickEntriesNumber from '../src/parts/QuickPickEntriesNumber/QuickPickEntriesNumber.js'
 
 test('name', () => {
-  expect(QuickPickNumber.name).toBe('number')
+  expect(QuickPickEntriesNumber.name).toBe('number')
 })
 
 test('getPlaceholder', () => {
-  expect(QuickPickNumber.getPlaceholder()).toBe('')
+  expect(QuickPickEntriesNumber.getPlaceholder()).toBe('')
 })
 
 test('getHelpEntries', () => {
-  expect(QuickPickNumber.getHelpEntries()).toEqual([])
+  expect(QuickPickEntriesNumber.getHelpEntries()).toEqual([])
 })
 
 test('getNoResults', () => {
-  expect(QuickPickNumber.getNoResults()).toEqual({
+  expect(QuickPickEntriesNumber.getNoResults()).toEqual({
     label: 'No matching results',
   })
 })
 
 test('getPicks', async () => {
-  expect(await QuickPickNumber.getPicks()).toEqual([
+  expect(await QuickPickEntriesNumber.getPicks()).toEqual([
     {
       label: '1',
     },
@@ -54,7 +54,7 @@ test('getPicks', async () => {
 })
 
 test('selectPick', async () => {
-  expect(await QuickPickNumber.selectPick({ label: '1' })).toEqual({
+  expect(await QuickPickEntriesNumber.selectPick({ label: '1' })).toEqual({
     command: 'hide',
   })
 })
