@@ -1,6 +1,5 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
 import * as Command from '../Command/Command.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
@@ -41,28 +40,6 @@ export const getHiddenItems = (state) => {
     return []
   }
   return state.activityBarItems.slice(numberOfVisibleItems - 2, -1)
-}
-
-const getVisibleActivityBarItems = (state) => {
-  const numberOfVisibleItems = getNumberOfVisibleItems(state)
-  const items = state.activityBarItems
-  if (numberOfVisibleItems >= items.length) {
-    return items
-  }
-  const showMoreItem = {
-    id: 'Additional Views',
-    title: I18nString.i18nString(UiStrings.AdditionalViews),
-    icon: 'icons/ellipsis.svg',
-    enabled: true,
-    flags: ActivityBarItemFlags.Button,
-    keyShortCuts: '',
-  }
-  const visibleItems = [
-    ...items.slice(0, numberOfVisibleItems - 2),
-    showMoreItem,
-    items.at(-1),
-  ]
-  return visibleItems
 }
 
 export const create = (id, uri, left, top, width, height) => {
@@ -157,29 +134,9 @@ export const loadContent = async (state) => {
 
 export const contentLoaded = async (state) => {}
 
-export const contentLoadedEffects = (state) => {
-  // TODO
-  GlobalEventBus.addListener(
-    'SourceControl.changeBadgeCount',
-    updateSourceControlCount
-  )
-  GlobalEventBus.addListener('Layout.hideSideBar', handleSideBarHidden)
-  GlobalEventBus.addListener('SideBar.viewletChange', (id) =>
-    handleSideBarViewletChange(state, id)
-  )
-}
+export const contentLoadedEffects = (state) => {}
 
-export const dispose = () => {
-  GlobalEventBus.removeListener(
-    'SourceControl.changeBadgeCount',
-    updateSourceControlCount
-  )
-  GlobalEventBus.removeListener('Layout.hideSideBar', handleSideBarHidden)
-  GlobalEventBus.removeListener(
-    'SideBar.viewletChange',
-    handleSideBarViewletChange
-  )
-}
+export const dispose = () => {}
 
 const findIndex = (activityBarItems, id) => {
   for (let i = 0; i < activityBarItems.length; i++) {
@@ -190,29 +147,20 @@ const findIndex = (activityBarItems, id) => {
   return -1
 }
 
-export const handleSideBarViewletChange = async (state, id, ...args) => {
-  const index = findIndex(state.activityBarItems, id)
-  const oldIndex = state.selectedIndex
-  state.selectedIndex = index
-  await RendererProcess.invoke(
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'ActivityBar',
-    /* method */ 'selectIndex',
-    /* oldIndex */ oldIndex,
-    /* newIndex */ index
-  )
+export const handleSideBarViewletChange = (state, id, ...args) => {
+  const { activityBarItems } = state
+  const index = findIndex(activityBarItems, id)
+  return {
+    ...state,
+    selectedIndex: index,
+  }
 }
 
-export const handleSideBarHidden = async (state) => {
-  const oldIndex = state.focusedIndex
-  state.focusedIndex = -1
-  await RendererProcess.invoke(
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'ActivityBar',
-    /* method */ 'selectIndex',
-    /* oldIndex */ oldIndex,
-    /* newIndex */ -1
-  )
+export const handleSideBarHidden = (state) => {
+  return {
+    ...state,
+    focusedIndex: -1,
+  }
 }
 
 export const updateSourceControlCount = async (state, count) => {
@@ -276,5 +224,7 @@ export const resize = (state, dimensions) => {
     ...dimensions,
   }
 }
+
+export const shouldApplyNewState = () => true
 
 export * from './ViewletActivityBarRender.js'

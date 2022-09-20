@@ -95,7 +95,7 @@ const getActivityBarItemProps = (item) => {
         title: item.id,
         tabindex: -1,
         role: Roles.Tab,
-        ariaSelected: false,
+        ariaSelected: item.selected,
       }
     case ActivityBarItemFlags.Button:
       return {
@@ -104,7 +104,7 @@ const getActivityBarItemProps = (item) => {
         title: item.id,
         tabindex: -1,
         role: Roles.Button,
-        ariaSelected: false,
+        ariaSelected: item.selected,
         ariaHasPopup: true,
       }
     default:
@@ -127,8 +127,30 @@ const getActivityBarItemDom = (item) => {
   ]
 }
 
-const getActivityBarDom = (items) => {
-  const itemsLength = items.length
+const getDomItems = (items, focusedIndex, selectedIndex) => {
+  const domItems = []
+  for (const item of items) {
+    domItems.push({
+      flags: item.flags,
+      icon: item.icon,
+      id: item.id,
+      keyShortcuts: item.keyShortCuts,
+      title: item.title,
+      selected: false,
+      focused: false,
+    })
+  }
+  if (focusedIndex !== -1) {
+    domItems[focusedIndex].focused = true
+  }
+  if (selectedIndex !== -1) {
+    domItems[selectedIndex].selected = true
+  }
+  return domItems
+}
+
+const getActivityBarDom = (domItems) => {
+  const itemsLength = domItems.length
   return [
     h(
       VirtualDomElements.Div,
@@ -140,7 +162,7 @@ const getActivityBarDom = (items) => {
       },
       itemsLength
     ),
-    ...items.flatMap(getActivityBarItemDom),
+    ...domItems.flatMap(getActivityBarItemDom),
   ]
 }
 
@@ -148,12 +170,18 @@ const renderActivityBarItems = {
   isEqual(oldState, newState) {
     return (
       oldState.activityBarItems === newState.activityBarItems &&
+      oldState.focusedIndex === newState.focusedIndex &&
+      oldState.selectedIndex === newState.selectedIndex &&
       oldState.height === newState.height
     )
   },
   apply(oldState, newState) {
     const visibleItems = getVisibleActivityBarItems(newState)
-    const dom = getActivityBarDom(visibleItems)
+    const { focusedIndex, selectedIndex } = newState
+    console.log('selected', selectedIndex)
+    const domItems = getDomItems(visibleItems, focusedIndex, selectedIndex)
+    const dom = getActivityBarDom(domItems)
+    console.log({ domItems })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'ActivityBar',

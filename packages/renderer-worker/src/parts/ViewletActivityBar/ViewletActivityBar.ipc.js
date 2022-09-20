@@ -13,6 +13,8 @@ const Imports = {
   HandleClick: () => import('./ViewletActivityBarHandleClick.js'),
 }
 
+// TODO automatically wrap every exported command here in viewlet command
+
 // prettier-ignore
 export const Commands = {
   'ActivityBar.focus': LazyCommand.create('ActivityBar', Imports.Focus, 'focus'),
@@ -28,6 +30,12 @@ export const Commands = {
   'ActivityBar.selectCurrent': LazyCommand.create('ActivityBar',Imports.SelectCurrent, 'selectCurrent'),
   'ActivityBar.toggleItem': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.toggleItem),
   'ActivityBar.updateSourceControlCount': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.updateSourceControlCount),
+}
+
+export const events = {
+  'SourceControl.changeBadgeCount': ActivityBar.updateSourceControlCount,
+  'Layout.hideSideBar': ActivityBar.handleSideBarHidden,
+  'SideBar.viewletChange': ActivityBar.handleSideBarViewletChange,
 }
 
 export * from './ViewletActivityBar.js'

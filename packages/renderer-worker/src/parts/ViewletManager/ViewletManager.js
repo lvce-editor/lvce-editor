@@ -208,9 +208,9 @@ export const load = async (viewlet, focus = false) => {
     if (module.events) {
       // TODO remove event listeners when viewlet is disposed
       for (const [key, value] of Object.entries(module.events)) {
-        const handleUpdate = async () => {
+        const handleUpdate = async (...args) => {
           const instance = ViewletStates.getInstance(viewlet.id)
-          const newState = await value(instance.state)
+          const newState = await value(instance.state, ...args)
           if (!module.shouldApplyNewState(newState)) {
             console.log('[viewlet manager] return', newState)
 
