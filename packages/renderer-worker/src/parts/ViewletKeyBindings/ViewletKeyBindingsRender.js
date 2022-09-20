@@ -1,5 +1,13 @@
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
-import { text, h } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import {
+  kbd,
+  table,
+  tbody,
+  td,
+  text,
+  th,
+  thead,
+  tr,
+} from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 /**
  * @enum {string}
@@ -11,6 +19,7 @@ const ClassNames = {
   KeyBindingsTable: 'KeyBindingsTable',
   KeyBindingsTableHead: 'KeyBindingsTableHead',
   KeyBindingsTableBody: 'KeyBindingsTableBody',
+  KeyBindingsHeader: 'KeyBindingsHeader',
 }
 
 /**
@@ -22,10 +31,10 @@ const UiStrings = {
   When: 'When',
   Key: 'Key',
   EmptyString: '',
+  SearchKeyBindings: 'Search Key Bindings',
 }
 
-const kbd = h(
-  VirtualDomElements.Kbd,
+const kbdDom = kbd(
   {
     className: ClassNames.Key,
   },
@@ -38,14 +47,14 @@ const getKeyBindingCellChildren = (keyBinding) => {
   let childCount = 0
   if (keyBinding.isCtrl) {
     childCount += 2
-    children.push(kbd, text('Ctrl'), text('+'))
+    children.push(kbdDom, text('Ctrl'), text('+'))
   }
   if (keyBinding.isShift) {
     childCount += 2
-    children.push(kbd, text('Shift'), text('+'))
+    children.push(kbdDom, text('Shift'), text('+'))
   }
   childCount++
-  children.push(kbd, text(keyBinding.key))
+  children.push(kbdDom, text(keyBinding.key))
   return { children, childCount }
 }
 
@@ -53,13 +62,12 @@ const tableCellProps = {
   className: ClassNames.KeyBindingsTableCell,
 }
 
-const tableCell = h(VirtualDomElements.Td, tableCellProps, 1)
+const tableCell = td(tableCellProps, 1)
 
 const getTableRowDom = (keyBinding) => {
   const { children, childCount } = getKeyBindingCellChildren(keyBinding)
   return [
-    h(
-      VirtualDomElements.Tr,
+    tr(
       {
         ariaRowIndex: keyBinding.rowIndex,
         className: ClassNames.KeyBindingsTableRow,
@@ -68,23 +76,21 @@ const getTableRowDom = (keyBinding) => {
     ),
     tableCell,
     text(keyBinding.command),
-    h(VirtualDomElements.Td, tableCellProps, childCount),
+    td(tableCellProps, childCount),
     ...children,
     tableCell,
     text(keyBinding.when || UiStrings.EmptyString),
   ]
 }
 
-const tableHead = h(
-  VirtualDomElements.THead,
+const tableHead = thead(
   {
     className: ClassNames.KeyBindingsTableHead,
   },
   1
 )
 
-const tableHeadRow = h(
-  VirtualDomElements.Tr,
+const tableHeadRow = tr(
   {
     className: ClassNames.KeyBindingsTableRow,
     ariaRowIndex: 1,
@@ -92,7 +98,7 @@ const tableHeadRow = h(
   3
 )
 
-const tableHeading = h(VirtualDomElements.Th, tableCellProps, 1)
+const tableHeading = th(tableCellProps, 1)
 
 const tableHeadDom = [
   tableHead,
@@ -107,8 +113,7 @@ const tableHeadDom = [
 
 const getTableBodyDom = (displayKeyBindings) => {
   return [
-    h(
-      VirtualDomElements.TBody,
+    tbody(
       {
         className: ClassNames.KeyBindingsTableBody,
       },
@@ -120,8 +125,7 @@ const getTableBodyDom = (displayKeyBindings) => {
 
 const getTableDom = (filteredKeyBindings, displayKeyBindings) => {
   const tableDom = [
-    h(
-      VirtualDomElements.Table,
+    table(
       {
         className: ClassNames.KeyBindingsTable,
         ariaLabel: UiStrings.KeyBindings,
@@ -151,6 +155,23 @@ const getVisible = (filteredKeyBindings, minLineY, maxLineY) => {
   }
   return visibleKeyBindings
 }
+
+// const getDom = () => {
+//   return [
+//     div({}, 2),
+//     div({ className: ClassNames.KeyBindingsHeader }, 1),
+//     input(
+//       {
+//         type: 'search',
+//         placeholder: UiStrings.SearchKeyBindings,
+//         on: {
+//           input: 'ViewletKeyBindings.handleInput',
+//         },
+//       },
+//       0
+//     ),
+//   ]
+// }
 
 const renderKeyBindings = {
   isEqual(oldState, newState) {

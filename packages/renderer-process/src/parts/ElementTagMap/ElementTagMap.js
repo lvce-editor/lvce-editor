@@ -21,6 +21,8 @@ export const getElementTag = (type) => {
       return ElementTag.THead
     case VirtualDomElements.Tr:
       return ElementTag.Tr
+    case VirtualDomElements.Input:
+      return ElementTag.Input
     default:
       throw new Error(`element tag not found ${type}`)
   }
