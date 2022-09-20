@@ -17,6 +17,7 @@ import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 import * as InitData from '../InitData/InitData.js'
 import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
+import * as Languages from '../Languages/Languages.js'
 
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
 export const startup = async (config) => {
@@ -80,6 +81,10 @@ export const startup = async (config) => {
     await Layout.showSideBar()
   }
   Performance.mark('code/didLoadSideBar')
+
+  Performance.mark('code/willLoadLanguages')
+  await Languages.hydrate()
+  Performance.mark('code/didLoadLanguages')
 
   LifeCycle.mark(LifeCycle.Phase.Eight)
 

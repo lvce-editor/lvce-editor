@@ -94,8 +94,6 @@ const handleTokenizeChange = (languageId) => {
 }
 
 const hydrateLazy = async () => {
-  // TODO main should not know about languages
-  await Languages.hydrate()
   // TODO this should be in extension host
   await Command.execute(
     /* EditorDiagnostics.hydrate */ 'EditorDiagnostics.hydrate'

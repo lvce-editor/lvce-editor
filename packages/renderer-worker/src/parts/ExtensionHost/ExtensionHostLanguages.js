@@ -1,38 +1,35 @@
-import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import { VError } from '../VError/VError.js'
+import * as ExtensionHostLanguagesNode from './ExtensionHostLanguagesNode.js'
+import * as ExtensionHostLanguagesWeb from './ExtensionHostLanguagesWeb.js'
 
-const getLanguagesFromExtensionHost = async () => {
-  // TODO handle error
-  const languages = await SharedProcess.invoke(
-    /* ExtensionHost.getLanguages */ 'ExtensionHost.getLanguages'
-  )
-  return languages
-}
-
-const getLanguagesFromStaticFolder = async () => {
-  const assetDir = Platform.getAssetDir()
-  const url = `${assetDir}/config/languages.json`
-  // TODO handle error ?
-  return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
-}
-
-export const getLanguages = () => {
-  if (Platform.platform === PlatformType.Web) {
-    return getLanguagesFromStaticFolder()
+export const getLanguages = async () => {
+  try {
+    switch (Platform.platform) {
+      case PlatformType.Web:
+        return await ExtensionHostLanguagesWeb.getLanguages()
+      default:
+        return await ExtensionHostLanguagesNode.getLanguages()
+    }
+  } catch (error) {
+    throw new VError(error, `Failed to load languages`)
   }
-  return getLanguagesFromExtensionHost()
 }
 
 export const getLanguageConfiguration = async (languageId) => {
-  if (Platform.platform === PlatformType.Web) {
-    console.warn('get language configuration not yet supported on web')
-    return
+  try {
+    switch (Platform.platform) {
+      case PlatformType.Web:
+        return await ExtensionHostLanguagesWeb.getLanguageConfiguration(
+          languageId
+        )
+      default:
+        return await ExtensionHostLanguagesNode.getLanguageConfiguration(
+          languageId
+        )
+    }
+  } catch (error) {
+    throw new VError(error, `Failed to load language configuration`)
   }
-  const languageConfiguration = await SharedProcess.invoke(
-    /* ExtensionHost.getLanguageConfiguration */ 'ExtensionHost.getLanguageConfiguration',
-    /* languageId */ languageId
-  )
-  return languageConfiguration
 }
