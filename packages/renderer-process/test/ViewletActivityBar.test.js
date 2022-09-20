@@ -145,39 +145,6 @@ test.skip('setFocusedIndex', () => {
 
 // TODO test aria attributes
 
-// TODO move test to renderer worker
-test.skip('accessibility - ActivityBarItem button should have role button and ariaHasPopup', () => {
-  const state = ViewletActivityBar.create()
-  ViewletActivityBar.setItems(state, [
-    {
-      id: 'Explorer',
-      title: 'Explorer',
-      icon: './icons/files.svg',
-      enabled: true,
-      flags: ActvityBarItemFlags.Tab,
-      keyShortcuts: 'Ctrl+Shift+X',
-    },
-    {
-      id: 'Search',
-      title: 'Search',
-      icon: './icons/search.svg',
-      enabled: true,
-      flags: ActvityBarItemFlags.Tab,
-      keyShortcuts: 'Ctrl+Shift+F',
-    },
-    {
-      id: 'Settings',
-      title: 'Settings',
-      icon: './icons/settings-gear.svg',
-      enabled: true,
-      flags: ActvityBarItemFlags.Button,
-      keyShortcuts: '',
-    },
-  ])
-  expect(state.$ActivityBar.lastChild.role).toBe('button')
-  expect(state.$ActivityBar.lastChild.ariaHasPopup).toBe('true')
-})
-
 // TODO move this test to renderer worker or add e2e test for this
 test.skip('accessibility - ActivityBarItems should have ariaKeyShortcuts if applicable', () => {
   const state = ViewletActivityBar.create()

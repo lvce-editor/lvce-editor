@@ -471,3 +471,44 @@ test('accessibility - ActivityBar should have role toolbar, ariaLabel and ariaOr
   expect($ActivityBar.props.ariaLabel).toBe('Activity Bar')
   expect($ActivityBar.props.ariaOrientation).toBe('vertical')
 })
+
+test('accessibility - ActivityBarItem button should have role button and ariaHasPopup', () => {
+  const oldState = {
+    ...ViewletActivityBar.create(),
+    height: 6000,
+  }
+  const newState = {
+    ...oldState,
+    activityBarItems: [
+      {
+        id: 'Explorer',
+        title: 'Explorer',
+        icon: './icons/files.svg',
+        enabled: true,
+        flags: ActivityBarItemFlags.Tab,
+        keyShortcuts: 'Ctrl+Shift+X',
+      },
+      {
+        id: 'Search',
+        title: 'Search',
+        icon: './icons/search.svg',
+        enabled: true,
+        flags: ActivityBarItemFlags.Tab,
+        keyShortcuts: 'Ctrl+Shift+F',
+      },
+      {
+        id: 'Settings',
+        title: 'Settings',
+        icon: './icons/settings-gear.svg',
+        enabled: true,
+        flags: ActivityBarItemFlags.Button,
+        keyShortcuts: '',
+      },
+    ],
+  }
+  const changes = render(oldState, newState)
+  const dom = changes[0][3]
+  const $LastChild = dom[dom.length - 2]
+  expect($LastChild.props.role).toBe('button')
+  expect($LastChild.props.ariaHasPopup).toBe(true)
+})
