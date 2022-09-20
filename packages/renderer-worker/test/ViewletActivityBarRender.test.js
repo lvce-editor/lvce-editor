@@ -91,6 +91,7 @@ test('render - two items do not fit', () => {
             role: 'tab',
             tabindex: -1,
             title: 'Explorer',
+            ariaKeyShortcuts: 'Control+Shift+E',
           },
           type: VirtualDomElements.Div,
         },
@@ -111,6 +112,7 @@ test('render - two items do not fit', () => {
             role: 'tab',
             tabindex: -1,
             title: 'Search',
+            ariaKeyShortcuts: 'Control+Shift+F',
           },
           type: VirtualDomElements.Div,
         },
@@ -131,6 +133,7 @@ test('render - two items do not fit', () => {
             role: 'tab',
             tabindex: -1,
             title: 'Source Control',
+            ariaKeyShortcuts: 'Control+Shift+G',
           },
           type: VirtualDomElements.Div,
         },
@@ -152,6 +155,7 @@ test('render - two items do not fit', () => {
             role: 'button',
             tabindex: -1,
             title: 'Additional Views',
+            ariaKeyShortcuts: undefined,
           },
           type: VirtualDomElements.Div,
         },
@@ -173,6 +177,7 @@ test('render - two items do not fit', () => {
             role: 'button',
             tabindex: -1,
             title: 'Settings',
+            ariaKeyShortcuts: '',
           },
           type: VirtualDomElements.Div,
         },
@@ -272,6 +277,7 @@ test('render - all items fit but little space is remaining', () => {
             role: 'tab',
             tabindex: -1,
             title: 'Explorer',
+            ariaKeyShortcuts: 'Control+Shift+E',
           },
           type: VirtualDomElements.Div,
         },
@@ -292,6 +298,7 @@ test('render - all items fit but little space is remaining', () => {
             role: 'tab',
             tabindex: -1,
             title: 'Search',
+            ariaKeyShortcuts: 'Control+Shift+F',
           },
           type: VirtualDomElements.Div,
         },
@@ -312,6 +319,7 @@ test('render - all items fit but little space is remaining', () => {
             role: 'tab',
             tabindex: -1,
             title: 'Source Control',
+            ariaKeyShortcuts: 'Control+Shift+G',
           },
           type: VirtualDomElements.Div,
         },
@@ -332,6 +340,7 @@ test('render - all items fit but little space is remaining', () => {
             role: 'tab',
             tabindex: -1,
             title: 'Run and Debug',
+            ariaKeyShortcuts: 'Control+Shift+D',
           },
           type: VirtualDomElements.Div,
         },
@@ -352,6 +361,7 @@ test('render - all items fit but little space is remaining', () => {
             role: 'tab',
             tabindex: -1,
             title: 'Extensions',
+            ariaKeyShortcuts: 'Control+Shift+X',
           },
           type: VirtualDomElements.Div,
         },
@@ -373,6 +383,7 @@ test('render - all items fit but little space is remaining', () => {
             role: 'button',
             tabindex: -1,
             title: 'Settings',
+            ariaKeyShortcuts: '',
           },
           type: VirtualDomElements.Div,
         },
@@ -387,4 +398,39 @@ test('render - all items fit but little space is remaining', () => {
       ],
     ],
   ])
+})
+
+test('accessibility - ActivityBarItem tab should have role tab and aria-keyshortcuts', () => {
+  const oldState = { ...ViewletActivityBar.create(), height: 6000 }
+  const newState = {
+    ...oldState,
+    activityBarItems: [
+      {
+        id: 'Explorer',
+        title: 'Explorer',
+        icon: './icons/files.svg',
+        enabled: true,
+        flags: ActivityBarItemFlags.Tab,
+        keyShortcuts: 'Control+Shift+X',
+      },
+      {
+        id: 'Search',
+        title: 'Search',
+        icon: './icons/search.svg',
+        enabled: true,
+        flags: ActivityBarItemFlags.Tab,
+      },
+      {
+        id: 'Settings',
+        title: 'Settings',
+        icon: './icons/settings-gear.svg',
+        enabled: true,
+        flags: ActivityBarItemFlags.Button,
+      },
+    ],
+  }
+  const changes = render(oldState, newState)
+  const dom = changes[0][3]
+  expect(dom[1].props.role).toBe('tab')
+  expect(dom[1].props.ariaKeyShortcuts).toBe('Control+Shift+X')
 })

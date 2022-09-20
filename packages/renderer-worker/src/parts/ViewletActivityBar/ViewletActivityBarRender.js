@@ -96,6 +96,7 @@ const getActivityBarItemProps = (item) => {
         tabindex: -1,
         role: Roles.Tab,
         ariaSelected: item.selected,
+        ariaKeyShortcuts: item.keyShortcuts,
       }
     case ActivityBarItemFlags.Button:
       return {
@@ -106,6 +107,7 @@ const getActivityBarItemProps = (item) => {
         role: Roles.Button,
         ariaSelected: item.selected,
         ariaHasPopup: true,
+        ariaKeyShortcuts: item.keyShortcuts,
       }
     default:
       return {}
@@ -134,7 +136,7 @@ const getDomItems = (items, focusedIndex, selectedIndex) => {
       flags: item.flags,
       icon: item.icon,
       id: item.id,
-      keyShortcuts: item.keyShortCuts,
+      keyShortcuts: item.keyShortcuts,
       title: item.title,
       selected: false,
       focused: false,
@@ -178,10 +180,8 @@ const renderActivityBarItems = {
   apply(oldState, newState) {
     const visibleItems = getVisibleActivityBarItems(newState)
     const { focusedIndex, selectedIndex } = newState
-    console.log('selected', selectedIndex)
     const domItems = getDomItems(visibleItems, focusedIndex, selectedIndex)
     const dom = getActivityBarDom(domItems)
-    console.log({ domItems })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'ActivityBar',
