@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
-import * as QuickPickEveryThing from '../QuickPick/QuickPickEverything.js'
+import * as QuickPickEveryThing from '../QuickPickEntries/QuickPickEntriesEverything.js/index.js.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as InputEventType from '../InputEventType/InputEventType.js'
 import * as QuickPickModule from '../QuickPickModule/QuickPickModule.js'

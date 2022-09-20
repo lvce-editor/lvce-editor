@@ -3,11 +3,13 @@ import * as QuickPickModuleId from '../QuickPickModuleId/QuickPickModuleId.js'
 export const load = (moduleId) => {
   switch (moduleId) {
     case QuickPickModuleId.CommandPalette:
-      return import('../QuickPick/QuickPickCommand.js')
+      return import('../QuickPickEntries/QuickPickEntriesCommand.js/index.js')
     case QuickPickModuleId.File:
-      return import('../QuickPick/QuickPickFile.js')
+      return import('../QuickPickEntries/QuickPickEntriesFile.js')
     case QuickPickModuleId.EveryThing:
-      return import('../QuickPick/QuickPickEverything.js')
+      return import(
+        '../QuickPickEntries/QuickPickEntriesEverything.js/index.js.js'
+      )
     case QuickPickModuleId.Noop:
       return import('../QuickPick/QuickPickNoop.js')
     case QuickPickModuleId.Number:
@@ -15,9 +17,9 @@ export const load = (moduleId) => {
     case QuickPickModuleId.Recent:
       return import('../QuickPick/QuickPickOpenRecent.js')
     case QuickPickModuleId.ColorTheme:
-      return import('../QuickPick/QuickPickColorTheme.js')
+      return import('../QuickPickEntries/QuickPickEntriesColorTheme.js')
     case QuickPickModuleId.Symbol:
-      return import('../QuickPick/QuickPickSymbol.js')
+      return import('../QuickPickEntries/QuickPickEntriesSymbol.js/index.js')
     case QuickPickModuleId.View:
       return import('../QuickPick/QuickPickView.js')
     case QuickPickModuleId.WorkspaceSymbol:

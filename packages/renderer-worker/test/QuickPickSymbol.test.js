@@ -1,4 +1,4 @@
-import * as QuickPickSymbol from '../src/parts/QuickPick/QuickPickSymbol.js'
+import * as QuickPickSymbol from '../src/parts/QuickPickEntries/QuickPickEntriesSymbol.js/index.js'
 
 test('name', () => {
   expect(QuickPickSymbol.name).toBe('symbol')

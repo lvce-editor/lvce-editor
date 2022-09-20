@@ -21,7 +21,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
 })
 
 const QuickPickEverything = await import(
-  '../src/parts/QuickPick/QuickPickEverything.js'
+  '../src/parts/QuickPickEntries/QuickPickEntriesEverything.js/index.js.js'
 )
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'

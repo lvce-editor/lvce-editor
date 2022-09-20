@@ -37,7 +37,9 @@ jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => {
   }
 })
 
-const QuickPickFile = await import('../src/parts/QuickPick/QuickPickFile.js')
+const QuickPickFile = await import(
+  '../src/parts/QuickPickEntries/QuickPickEntriesFile.js'
+)
 const SearchFile = await import('../src/parts/SearchFile/SearchFile.js')
 const IconTheme = await import('../src/parts/IconTheme/IconTheme.js')
 

@@ -23,7 +23,7 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
 })
 
 const QuickPickColorTheme = await import(
-  '../src/parts/QuickPick/QuickPickColorTheme.js'
+  '../src/parts/QuickPickEntries/QuickPickEntriesColorTheme.js'
 )
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'

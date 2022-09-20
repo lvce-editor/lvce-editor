@@ -30,7 +30,7 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
 })
 
 const QuickPickCommand = await import(
-  '../src/parts/QuickPick/QuickPickCommand.js'
+  '../src/parts/QuickPickEntries/QuickPickEntriesCommand.js/index.js'
 )
 
 const ExtensionHostCommands = await import(
