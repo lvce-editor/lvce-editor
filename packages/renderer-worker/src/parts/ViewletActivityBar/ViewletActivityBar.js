@@ -4,6 +4,7 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 /**
  * @enum {string}
@@ -263,7 +264,7 @@ export const handleContextMenu = async (state, x, y) => {
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
-    /* id */ 'activityBar'
+    /* id */ MenuEntryId.ActivityBar
   )
   return state
 }

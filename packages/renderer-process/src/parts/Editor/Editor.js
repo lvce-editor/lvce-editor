@@ -13,7 +13,7 @@ import * as LayerSelections from './LayerSelections.js'
 import * as LayerText3 from './LayerText.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as InputEventType from '../InputEventType/InputEventType.js'
-
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
 // TODO tree shake out mobile support when targeting electron -> less code -> less event listeners -> less memory -> less cpu
@@ -26,7 +26,7 @@ const handleContextMenu = (event) => {
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
-    /* id */ 'editor'
+    /* id */ MenuEntryId.Editor
   )
 }
 

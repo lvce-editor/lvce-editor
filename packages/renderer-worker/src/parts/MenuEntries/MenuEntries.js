@@ -1,40 +1,42 @@
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+
 const getModule = (id) => {
   switch (id) {
-    case 'activityBar':
+    case MenuEntryId.ActivityBar:
       return import('./MenuEntriesActivityBar.js')
-    case 'edit':
+    case MenuEntryId.Edit:
       return import('./MenuEntriesEdit.js')
-    case 'editor':
+    case MenuEntryId.Editor:
       return import('./MenuEntriesEditor.js')
-    case 'explorer':
+    case MenuEntryId.Explorer:
       return import('./MenuEntriesExplorer.js')
-    case 'file':
+    case MenuEntryId.File:
       return import('./MenuEntriesFile.js')
-    case 'go':
+    case MenuEntryId.Go:
       return import('./MenuEntriesGo.js')
-    case 'help':
+    case MenuEntryId.Help:
       return import('./MenuEntriesHelp.js')
-    case 'manageExtension':
+    case MenuEntryId.ManageExtension:
       return import('./MenuEntriesManageExtension.js')
-    case 'openRecent':
+    case MenuEntryId.OpenRecent:
       return import('./MenuEntriesOpenRecent.js')
-    case 'run':
+    case MenuEntryId.Run:
       return import('./MenuEntriesRun.js')
-    case 'selection':
+    case MenuEntryId.Selection:
       return import('./MenuEntriesSelection.js')
-    case 'settings':
+    case MenuEntryId.Settings:
       return import('./MenuEntriesSettings.js')
-    case 'tab':
+    case MenuEntryId.Tab:
       return import('./MenuEntriesTab.js')
-    case 'terminal':
+    case MenuEntryId.Terminal:
       return import('./MenuEntriesTerminal.js')
-    case 'titleBar':
+    case MenuEntryId.TitleBar:
       return import('./MenuEntriesTitleBar.js')
-    case 'view':
+    case MenuEntryId.View:
       return import('./MenuEntriesView.js')
-    case 'activity-bar-additional-views':
+    case MenuEntryId.ActivityBarAdditionalViews:
       return import('./MenuEntriesActivityBarAdditionalViews.js')
-    case 'search':
+    case MenuEntryId.Search:
       return import('./MenuEntriesSearch.js')
     default:
       throw new Error(`module not found "${id}"`)

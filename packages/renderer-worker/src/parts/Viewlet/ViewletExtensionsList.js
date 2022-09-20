@@ -5,7 +5,7 @@ import * as ExtensionsMarketplace from '../ExtensionMarketplace/ExtensionMarketp
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Assert from '../Assert/Assert.js'
-
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 export const ITEM_HEIGHT = 62
 
 const MINIMUM_SLIDER_SIZE = 20
@@ -378,7 +378,7 @@ export const handleContextMenu = async (state, x, y, extensionId) => {
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
-    /* id */ 'manageExtension'
+    /* id */ MenuEntryId.ManageExtension
   )
 }
 
