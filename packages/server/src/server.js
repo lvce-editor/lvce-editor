@@ -323,14 +323,13 @@ const serveConfig = async (req, res, next) => {
     res.end(JSON.stringify(languagesJson, null, 2))
     return
   }
-  if (pathName === '/config/defaultKeyBindings.json') {
-    return sendFile(
-      join(ROOT, 'static', 'config', 'defaultKeyBindings.json'),
-      res
-    )
-  }
-  if (pathName === '/config/builtinCommands.json') {
-    return sendFile(join(ROOT, 'static', 'config', 'builtinCommands.json'), res)
+  switch (pathName) {
+    case '/config/defaultKeyBindings.json':
+    case '/config/builtinCommands.json':
+    case '/config/defaultSettings.json':
+      return sendFile(join(ROOT, 'static', pathName), res)
+    default:
+      break
   }
   next()
 }

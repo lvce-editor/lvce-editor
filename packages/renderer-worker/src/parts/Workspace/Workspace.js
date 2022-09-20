@@ -108,7 +108,7 @@ const getResolvedRootFromRendererProcess = async (href) => {
   }
   if (Platform.platform === 'web') {
     const resolvedRoot = {
-      path: 'web:///workspace',
+      path: 'web://',
       homeDir: '',
       pathSeparator: PathSeparatorType.Slash,
       source: 'renderer-process',
