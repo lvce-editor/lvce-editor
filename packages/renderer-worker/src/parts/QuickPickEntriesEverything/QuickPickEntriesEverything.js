@@ -1,4 +1,4 @@
-import * as QuickPickNoop from './QuickPickNoop.js'
+import * as QuickPickNoop from '../QuickPickEntriesNoop/QuickPickNoop.js'
 
 // TODO cache quick pick items -> don't send every time from renderer worker to renderer process
 // maybe cache by id opening commands -> has all commands cached
@@ -65,17 +65,19 @@ const getQuickPickProvider = (prefix) => {
   // TODO or could check first letter char code (less comparisons)
   switch (prefix) {
     case '>':
-      return import('./QuickPickCommand.js')
+      return import('../QuickPickEntriesCommand/QuickPickEntriesCommand.js')
     case '@':
-      return import('./QuickPickSymbol.js')
+      return import('../QuickPickEntriesSymbol/QuickPickEntriesSymbol.js')
     case '#':
-      return import('./QuickPickWorkspaceSymbol.js')
+      return import(
+        '../QuickPickEntriesWorkspaceSymbol/QuickPickEntriesWorkspaceSymbol.js'
+      )
     case ':':
-      return import('./QuickPickGoToLine.js')
+      return import('../QuickPickEntriesGoToLine/QuickPickEntriesGoToLine.js')
     case 'view':
-      return import('./QuickPickView.js')
+      return import('../QuickPickEntriesView/QuickPickEntriesView.js')
     default:
-      return import('./QuickPickFile.js')
+      return import('../QuickPickEntriesFile/QuickPickEntriesFile.js')
   }
 }
 

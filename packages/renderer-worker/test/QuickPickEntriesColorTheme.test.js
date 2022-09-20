@@ -22,15 +22,15 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
-const QuickPickColorTheme = await import(
-  '../src/parts/QuickPick/QuickPickColorTheme.js'
+const QuickPickEntriesColorTheme = await import(
+  '../src/parts/QuickPickEntriesColorTheme/QuickPickEntriesColorTheme.js'
 )
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
 )
 
 test('getPlaceholder', () => {
-  expect(QuickPickColorTheme.getPlaceholder()).toBe('Select Color Theme')
+  expect(QuickPickEntriesColorTheme.getPlaceholder()).toBe('Select Color Theme')
 })
 
 test('getPicks', async () => {
@@ -43,7 +43,7 @@ test('getPicks', async () => {
         throw new Error('unexpected message')
     }
   })
-  expect(await QuickPickColorTheme.getPicks()).toEqual([
+  expect(await QuickPickEntriesColorTheme.getPicks()).toEqual([
     {
       label: 'monokai',
     },
@@ -74,14 +74,14 @@ test.skip('getPicks - error', async () => {
         throw new Error('unexpected message')
     }
   })
-  await expect(QuickPickColorTheme.getPicks()).rejects.toThrowError(
+  await expect(QuickPickEntriesColorTheme.getPicks()).rejects.toThrowError(
     new Error('Color theme "undefined" not found in extensions folder')
   )
 })
 
 test.skip('selectPick', () => {
   expect(
-    QuickPickColorTheme.selectPick({
+    QuickPickEntriesColorTheme.selectPick({
       label: 'slime',
     })
   ).rejects.toThrowError(
@@ -91,7 +91,7 @@ test.skip('selectPick', () => {
 
 test.skip('selectPick - error', async () => {
   expect(
-    await QuickPickColorTheme.selectPick({
+    await QuickPickEntriesColorTheme.selectPick({
       label: 'slime',
     })
   ).toEqual({
@@ -100,7 +100,7 @@ test.skip('selectPick - error', async () => {
 })
 
 test('getNoResults', () => {
-  expect(QuickPickColorTheme.getNoResults()).toEqual({
+  expect(QuickPickEntriesColorTheme.getNoResults()).toEqual({
     label: 'No matching color themes found',
   })
 })

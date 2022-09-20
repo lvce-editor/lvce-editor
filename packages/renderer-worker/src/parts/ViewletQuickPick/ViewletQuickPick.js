@@ -1,8 +1,8 @@
 import * as Assert from '../Assert/Assert.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as InputEventType from '../InputEventType/InputEventType.js'
-import * as QuickPickEveryThing from '../QuickPick/QuickPickEverything.js'
-import * as QuickPickModule from '../QuickPickModule/QuickPickModule.js'
+import * as QuickPickEntriesEverything from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
+import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
 // TODO send open signal to renderer process before items are ready
@@ -33,7 +33,7 @@ export const create = (id, uri, top, left, width, height) => {
     recentPicks: [],
     recentPickIds: new Map(), // TODO use object.create(null) instead
     versionId: 0,
-    provider: QuickPickEveryThing, // TODO make this dynamic again
+    provider: QuickPickEntriesEverything, // TODO make this dynamic again
     focusedIndex: -1,
     warned: [],
     visiblePicks: [],
@@ -107,7 +107,7 @@ const getDefaultValue = (uri) => {
 export const loadContent = async (state) => {
   const uri = state.uri
   const value = getDefaultValue(uri)
-  const provider = await QuickPickModule.load(uri)
+  const provider = await QuickPickEntries.load(uri)
   const newPicks = await provider.getPicks(value)
   Assert.array(newPicks)
   const filterValue = provider.getFilterValue(value)
