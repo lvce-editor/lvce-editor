@@ -296,6 +296,24 @@ const getLanguagesJson = async () => {
   return languages
 }
 
+const sendFile = async (path, res) => {
+  try {
+    await pipeline(createReadStream(path), res)
+  } catch (error) {
+    // @ts-ignore
+    if (error && error.code === 'EISDIR') {
+      res.statusCode = 404
+      res.end()
+      return
+    }
+    console.info('failed to send request', error)
+    res.statusCode = 500
+    // TODO escape error html
+    res.end(`${error}`)
+  }
+  return
+}
+
 const serveConfig = async (req, res, next) => {
   const parsedUrl = parseUrl(req.url || '')
   const pathName = parsedUrl.pathname || ''
@@ -306,26 +324,13 @@ const serveConfig = async (req, res, next) => {
     return
   }
   if (pathName === '/config/defaultKeyBindings.json') {
-    try {
-      await pipeline(
-        createReadStream(
-          join(ROOT, 'static', 'config', 'defaultKeyBindings.json')
-        ),
-        res
-      )
-    } catch (error) {
-      // @ts-ignore
-      if (error && error.code === 'EISDIR') {
-        res.statusCode = 404
-        res.end()
-        return
-      }
-      console.info('failed to send request', error)
-      res.statusCode = 500
-      // TODO escape error html
-      res.end(`${error}`)
-    }
-    return
+    return sendFile(
+      join(ROOT, 'static', 'config', 'defaultKeyBindings.json'),
+      res
+    )
+  }
+  if (pathName === '/config/builtinCommands.json') {
+    return sendFile(join(ROOT, 'static', 'config', 'builtinCommands.json'), res)
   }
   next()
 }
