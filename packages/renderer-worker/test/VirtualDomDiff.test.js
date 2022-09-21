@@ -306,3 +306,16 @@ test('diff - change text', () => {
     },
   ])
 })
+
+test('diff - remove one element', () => {
+  const oldDom = [div({}, 0)]
+  const newDom = []
+  const changes = VirtualDomDiff.diff(oldDom, newDom)
+  expect(changes).toEqual([
+    {
+      index: 0,
+      operation: VirtualDomDiffType.ElementsRemove,
+      count: 1,
+    },
+  ])
+})

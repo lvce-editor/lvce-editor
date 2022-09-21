@@ -24,9 +24,10 @@ const patchProps = (changes, i, oldProps, newProps) => {
   }
 }
 
-const unMountChildren = (changes, count) => {
+const unMountChildren = (changes, i, count) => {
   changes.push({
-    operation: VirtualDomDiffType.ElementRemove,
+    index: i,
+    operation: VirtualDomDiffType.ElementsRemove,
     count,
   })
 }
@@ -56,7 +57,7 @@ export const diff = (oldDom, newDom) => {
     patchProps(changes, i, oldNode.props, newNode.props)
   }
   if (oldLength > newLength) {
-    unMountChildren(changes, oldLength - newLength)
+    unMountChildren(changes, commonLength, oldLength - newLength)
   } else if (newLength > oldLength) {
     mountChildren(changes, newDom, commonLength, newLength - oldLength)
   }
