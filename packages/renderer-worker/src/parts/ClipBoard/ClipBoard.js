@@ -53,3 +53,11 @@ export const readNativeFiles = async () => {
     throw new VError(error, 'Failed to read files from native clipboard')
   }
 }
+
+export const writeImage = async (blob) => {
+  try {
+    return await RendererProcess.invoke('ClipBoard.writeImage', blob)
+  } catch (error) {
+    throw new VError(error, 'Failed to write image to clipboard')
+  }
+}

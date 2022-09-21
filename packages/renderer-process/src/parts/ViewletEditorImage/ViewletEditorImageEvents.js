@@ -1,4 +1,5 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 
 /**
  * @param {PointerEvent} event
@@ -33,7 +34,9 @@ export const handlePointerUp = (event) => {
  */
 export const handlePointerDown = (event) => {
   const { pointerId, clientX, clientY, target, button } = event
-  console.log({ button })
+  if (button !== MouseEventType.LeftClick) {
+    return
+  }
   // @ts-ignore
   target.setPointerCapture(pointerId)
   RendererWorker.send(
@@ -64,4 +67,6 @@ export const handleWheel = (event) => {
  */
 export const handleContextMenu = (event) => {
   event.preventDefault()
+  const { clientX, clientY } = event
+  RendererWorker.send('EditorImage.handleContextMenu', clientX, clientY)
 }

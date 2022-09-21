@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 export const name = 'EditorImage'
 
@@ -223,6 +224,25 @@ export const handleWheel = (state, x, y, deltaX, deltaY) => {
     ...state,
     domMatrix: newDomMatrix,
   }
+}
+
+export const handleContextMenu = async (state, x, y) => {
+  await Command.execute(
+    /* ContextMenu.show */ 'ContextMenu.show',
+    /* x */ x,
+    /* y */ y,
+    /* id */ MenuEntryId.EditorImage
+  )
+  return state
+}
+
+export const copyImage = async (state) => {
+  const blob = await Command.execute('Ajax.getBlob', state.src)
+  // TODO use clipboard api to copy file
+  await Command.execute('ClipBoard.writeImage', blob)
+  console.log('copy', state.src)
+  // console.log('copy')
+  return state
 }
 
 export const hasFunctionalRender = true

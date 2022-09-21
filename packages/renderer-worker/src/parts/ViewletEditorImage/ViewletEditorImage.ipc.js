@@ -7,6 +7,8 @@ export const Commands = {
   'EditorImage.handlePointerMove': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handlePointerMove),
   'EditorImage.handlePointerUp': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handlePointerUp),
   'EditorImage.handleWheel': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handleWheel),
+  'EditorImage.handleContextMenu': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handleContextMenu),
+  'EditorImage.copyImage': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.copyImage),
 }
 
 export * from './ViewletEditorImage.js'
