@@ -179,6 +179,9 @@ export const handlePointerMove = (state, pointerId, x, y) => {
 
 export const handlePointerUp = (state, pointerId, x, y) => {
   const { eventCache, pointerDownCount } = state
+  if (pointerDownCount === 0) {
+    return state
+  }
   const index = eventCache.findIndex((event) => event.pointerId === pointerId)
   const newEventCache = [
     ...eventCache.slice(0, index),
