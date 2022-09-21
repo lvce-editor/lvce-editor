@@ -1,6 +1,10 @@
 import * as VirtualDomDiff from '../src/parts/VirtualDomDiff/VirtualDomDiff.js'
 import * as VirtualDomDiffType from '../src/parts/VirtualDomDiffType/VirtualDomDiffType.js'
-import { div, text } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
+import {
+  div,
+  i,
+  text,
+} from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 
 test('diff - no changes', () => {
@@ -314,8 +318,84 @@ test('diff - remove one element', () => {
   expect(changes).toEqual([
     {
       index: 0,
+      operation: VirtualDomDiffType.ElementRemoveAll,
+    },
+  ])
+})
+
+test('diff - remove one element with child', () => {
+  const oldDom = [div({}, 1), div({}, 0)]
+  const newDom = []
+  const changes = VirtualDomDiff.diff(oldDom, newDom)
+  expect(changes).toEqual([
+    {
+      index: 0,
+      operation: VirtualDomDiffType.ElementRemoveAll,
+    },
+  ])
+})
+
+test('diff - remove one element and keep one', () => {
+  const oldDom = [div({}, 0), div({}, 0)]
+  const newDom = [div({}, 0)]
+  const changes = VirtualDomDiff.diff(oldDom, newDom)
+  expect(changes).toEqual([
+    {
+      index: 1,
       operation: VirtualDomDiffType.ElementsRemove,
-      count: 1,
+      keepCount: 1,
+    },
+  ])
+})
+
+test('diff - remove one element with child and keep one', () => {
+  const oldDom = [div({}, 1), div({}, 0), div({}, 1), div({}, 0)]
+  const newDom = [div({}, 1), div({}, 0)]
+  const changes = VirtualDomDiff.diff(oldDom, newDom)
+  expect(changes).toEqual([
+    {
+      index: 2,
+      operation: VirtualDomDiffType.ElementsRemove,
+      keepCount: 1,
+    },
+  ])
+})
+
+test.skip('diff - remove multiple elements', () => {
+  const oldDom = [
+    div(
+      {
+        id: 'QuickPickItems',
+      },
+      3
+    ),
+    div(
+      {
+        className: 'QuickPickItem',
+      },
+      2
+    ),
+    i(
+      {
+        className: 'Icon',
+      },
+      0
+    ),
+    div(
+      {
+        className: 'Label',
+      },
+      1
+    ),
+    text('item 1'),
+  ]
+  const newDom = [div({}, 1), div({}, 0)]
+  const changes = VirtualDomDiff.diff(oldDom, newDom)
+  expect(changes).toEqual([
+    {
+      index: 2,
+      operation: VirtualDomDiffType.ElementsRemove,
+      keepCount: 1,
     },
   ])
 })

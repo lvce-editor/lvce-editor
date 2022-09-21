@@ -117,6 +117,7 @@ const renderQuickPickItemsDom = (state) => {
     state.maxLineY,
     state.focusedIndex
   )
+  console.log({ visibleItems })
   const dom = QuickPickItems(visibleItems)
   return dom
 }
@@ -186,6 +187,7 @@ const renderQuickPickItemsFn = {
     const oldDom = renderQuickPickItemsDom(oldState)
     const newDom = renderQuickPickItemsDom(newState)
     const patchList = VirtualDomDiff.diff(oldDom, newDom)
+    console.log({ oldDom, newDom })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',

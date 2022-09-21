@@ -9,3 +9,5 @@ export const ElementRemove = 4
 export const ElementsAdd = 5
 
 export const ElementsRemove = 6
+
+export const ElementRemoveAll = 7

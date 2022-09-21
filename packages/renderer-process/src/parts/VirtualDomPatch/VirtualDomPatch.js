@@ -18,7 +18,9 @@ const patchAttributeSet = ($Node, patch) => {
 }
 
 const patchElementsRemove = ($Node, patch) => {
-  $Node.replaceChildren()
+  const $Parent = $Node.parentNode
+  const $NewChildren = [...$Parent.children].slice(0, patch.keepCount)
+  $Parent.replaceChildren(...$NewChildren)
 }
 
 export const patch = ($Root, patches) => {
