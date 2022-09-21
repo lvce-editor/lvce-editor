@@ -1,9 +1,9 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import { VError } from '../VError/VError.js'
 import * as Assert from '../Assert/Assert.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import { VError } from '../VError/VError.js'
 
 export const readText = async () => {
   try {
@@ -59,5 +59,13 @@ export const readNativeFiles = async () => {
     return await SharedProcess.invoke(/* command */ 'ClipBoard.readFiles')
   } catch (error) {
     throw new VError(error, 'Failed to read files from native clipboard')
+  }
+}
+
+export const writeImage = async (blob) => {
+  try {
+    return await RendererProcess.invoke('ClipBoard.writeImage', blob)
+  } catch (error) {
+    throw new VError(error, 'Failed to write image to clipboard')
   }
 }

@@ -5,6 +5,7 @@ export const getModuleId = (commandId) => {
     // TODO this should be in layout module
     case 'Ajax.getJson':
     case 'Ajax.getText':
+    case 'Ajax.getBlob':
       return ModuleId.Ajax
     case 'Audio.playBell':
       return ModuleId.Audio
@@ -26,6 +27,7 @@ export const getModuleId = (commandId) => {
     case 'ClipBoard.readText':
     case 'ClipBoard.writeNativeFiles':
     case 'ClipBoard.writeText':
+    case 'ClipBoard.writeImage':
       return ModuleId.ClipBoard
     case 'ColorPicker.close':
     case 'ColorPicker.open':

@@ -11,6 +11,7 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
     }),
   }
 })
+
 jest.unstable_mockModule(
   '../src/parts/RendererProcess/RendererProcess.js',
   () => {
@@ -159,4 +160,48 @@ test('writeNativeFiles', async () => {
     'copy',
     ['/test/my-folder']
   )
+})
+
+test('writeImage - error', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    throw new TypeError('x is not a function')
+  })
+  await expect(
+    ClipBoard.writeImage({
+      type: 'image/avif',
+    })
+  ).rejects.toThrowError(
+    new Error(
+      'Failed to write image to clipboard: TypeError: x is not a function'
+    )
+  )
+})
+
+test('writeImage - error - format not supported', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {
+    throw new Error('Type image/avif not supported on write.')
+  })
+  await expect(
+    ClipBoard.writeImage({
+      type: 'image/avif',
+    })
+  ).rejects.toThrowError(
+    new Error(
+      'Failed to write image to clipboard: Error: Type image/avif not supported on write.'
+    )
+  )
+})
+
+test('writeImage', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await ClipBoard.writeImage({
+    type: 'image/avif',
+  })
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('ClipBoard.writeImage', {
+    type: 'image/avif',
+  })
 })
