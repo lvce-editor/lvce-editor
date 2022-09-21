@@ -400,11 +400,45 @@ test('diff - remove multiple elements', () => {
   <div class="Label">1</div>
 </div>
 `)
-
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
       index: 4,
+      operation: VirtualDomDiffType.ElementsRemove,
+      keepCount: 1,
+    },
+  ])
+})
+
+test('diff - remove multiple elements from parent', () => {
+  const oldDom = html(`
+<div id="QuickPickItems">
+  <div class="QuickPickItem">
+    <i class="icon"></i>
+    <div class="Label">1</div>
+  </div>
+  <div class="QuickPickItem">
+    <i class="icon"></i>
+    <div class="Label">2</div>
+  </div>
+  <div class="QuickPickItem">
+    <i class="icon"></i>
+    <div class="Label">3</div>
+  </div>
+</div>
+`)
+  const newDom = html(`
+<div id="QuickPickItems">
+  <div class="QuickPickItem">
+    <i class="icon"></i>
+    <div class="Label">1</div>
+  </div>
+</div>
+`)
+  const changes = VirtualDomDiff.diff(oldDom, newDom)
+  expect(changes).toEqual([
+    {
+      index: 5,
       operation: VirtualDomDiffType.ElementsRemove,
       keepCount: 1,
     },

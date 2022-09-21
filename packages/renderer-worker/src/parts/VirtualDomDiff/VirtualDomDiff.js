@@ -36,6 +36,10 @@ const unMountChildren = (changes, commonLength, oldLength, oldDom) => {
       const node = oldDom[i]
       total -= node.childCount
       total++
+      if (total < 0) {
+        total += node.childCount
+        break
+      }
     }
     changes.push({
       index: commonLength,
