@@ -1,16 +1,5 @@
-import {
-  div,
-  i,
-  kbd,
-  table,
-  tbody,
-  td,
-  text,
-  th,
-  thead,
-  tr,
-} from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as VirtualDomDiff from '../VirtualDomDiff/VirtualDomDiff.js'
+import { div, i, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 /**
  * @enum {string}
