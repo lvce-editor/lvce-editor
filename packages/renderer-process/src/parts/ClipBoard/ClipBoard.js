@@ -10,6 +10,5 @@ export const writeText = async (text) => {
 }
 
 export const writeImage = async (blob) => {
-  console.log('blob', blob)
   await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })])
 }
