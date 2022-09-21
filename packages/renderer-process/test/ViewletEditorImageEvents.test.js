@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
@@ -12,6 +13,7 @@ beforeAll(() => {
       this.clientX = init.clientX
       this.clientY = init.clientY
       this.pointerId = init.pointerId
+      this.button = init.button
     }
   }
 
@@ -65,6 +67,7 @@ test('event - pointerdown', () => {
     clientX: 10,
     clientY: 20,
     pointerId: 0,
+    button: MouseEventType.LeftClick,
   })
   $Viewlet.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
@@ -115,6 +118,7 @@ test('event - pointermove after pointerdown', () => {
     clientX: 10,
     clientY: 20,
     pointerId: 0,
+    button: MouseEventType.LeftClick,
   })
   $Viewlet.dispatchEvent(pointerDownEvent)
   const pointerMoveEvent = new PointerEvent('pointermove', {
@@ -122,6 +126,7 @@ test('event - pointermove after pointerdown', () => {
     clientX: 30,
     clientY: 40,
     pointerId: 0,
+    button: MouseEventType.LeftClick,
   })
   $Viewlet.dispatchEvent(pointerMoveEvent)
   expect(RendererWorker.send).toHaveBeenCalledTimes(2)
@@ -156,6 +161,7 @@ test('event - pointerup after pointerdown', () => {
     clientX: 10,
     clientY: 20,
     pointerId: 0,
+    button: MouseEventType.LeftClick,
   })
   // @ts-ignore
   $Viewlet.dispatchEvent(pointerDownEvent)
@@ -167,6 +173,7 @@ test('event - pointerup after pointerdown', () => {
     clientX: 10,
     clientY: 20,
     pointerId: 0,
+    button: MouseEventType.LeftClick,
   })
   $Viewlet.dispatchEvent(pointerUpEvent)
   expect(spy4).toHaveBeenCalledTimes(1)
