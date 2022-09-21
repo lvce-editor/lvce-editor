@@ -236,15 +236,6 @@ export const handleContextMenu = async (state, x, y) => {
   return state
 }
 
-export const copyImage = async (state) => {
-  const blob = await Command.execute('Ajax.getBlob', state.src)
-  // TODO use clipboard api to copy file
-  await Command.execute('ClipBoard.writeImage', blob)
-  console.log('copy', state.src)
-  // console.log('copy')
-  return state
-}
-
 export const hasFunctionalRender = true
 
 const renderSrc = {
