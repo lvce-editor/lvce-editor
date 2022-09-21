@@ -1,3 +1,10 @@
+/**
+ * @enum {string}
+ */
+export const UiStrings = {
+  NoResults: 'No Results',
+}
+
 export const name = 'noop'
 
 export const getPlaceholder = () => {
@@ -9,7 +16,7 @@ export const getHelpEntries = () => {
 }
 
 export const getNoResults = () => {
-  return 'No Results'
+  return UiStrings.NoResults
 }
 
 export const getPicks = async (value) => {
