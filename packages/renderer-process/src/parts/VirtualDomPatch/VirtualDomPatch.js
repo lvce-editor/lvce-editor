@@ -17,6 +17,10 @@ const patchAttributeSet = ($Node, patch) => {
   }
 }
 
+const patchElementsRemove = ($Node, patch) => {
+  $Node.replaceChildren()
+}
+
 export const patch = ($Root, patches) => {
   const iter = document.createNodeIterator($Root, NodeFilter.SHOW_ALL)
   let $Node
@@ -35,8 +39,11 @@ export const patch = ($Root, patches) => {
       case VirtualDomDiffType.AttributeSet:
         patchAttributeSet($Node, patch)
         break
-      default:
+      case VirtualDomDiffType.ElementsRemove:
+        patchElementsRemove($Node, patch)
         break
+      default:
+        throw new Error(`unsupported patch type ${patch.operation}`)
     }
     // console.log('after', $Node.innerHTML, patch)
   }

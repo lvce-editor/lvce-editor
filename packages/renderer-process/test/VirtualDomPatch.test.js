@@ -202,3 +202,23 @@ test.skip('patch - change text', () => {
   VirtualDomPatch.patch($Root, patches)
   expect($Root.innerHTML).toBe('hello world')
 })
+
+test('patch - remove one element', () => {
+  const oldDom = [
+    {
+      type: VirtualDomElements.Div,
+      props: {},
+      childCount: 0,
+    },
+  ]
+  const patches = [
+    {
+      index: 0,
+      operation: VirtualDomDiffType.ElementsRemove,
+      count: 1,
+    },
+  ]
+  const $Root = VirtualDom.render(oldDom)
+  VirtualDomPatch.patch($Root, patches)
+  expect($Root.innerHTML).toBe(``)
+})
