@@ -49,6 +49,8 @@ export const focus = (state) => {
 export const create = () => {
   const $QuickPickInput = InputBox.create()
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
+  // @ts-ignore
+  $QuickPickInput.role = 'combobox'
 
   $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
   $QuickPickInput.oninput = ViewletQuickPickEvents.handleInput
@@ -81,6 +83,7 @@ export const create = () => {
     $QuickPick,
     $QuickPickItems,
     $QuickPickInput,
+    $QuickPickStatus: undefined,
   }
 }
 
@@ -109,4 +112,8 @@ export const setValue = (state, value) => {
   $QuickPickInput.value = value
 }
 
-export const setFocusedIndex = (state, index) => {}
+export const setFocusedIndex = (state, index) => {
+  const { $QuickPickInput, $QuickPickItems } = state
+  $QuickPickInput.setAttribute('aria-activedescendant', `QuickPickItemActive`)
+  // console.log({ index })
+}
