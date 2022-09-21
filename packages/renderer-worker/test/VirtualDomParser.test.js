@@ -1,5 +1,5 @@
-import * as VirtualDomParser from '../src/parts/VirtualDomParser/VirtualDomParser.js'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
+import * as VirtualDomParser from '../src/parts/VirtualDomParser/VirtualDomParser.js'
 
 test('parse - empty', () => {
   const dom = VirtualDomParser.parse('')

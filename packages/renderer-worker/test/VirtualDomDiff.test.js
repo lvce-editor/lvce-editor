@@ -1,11 +1,11 @@
 import * as VirtualDomDiff from '../src/parts/VirtualDomDiff/VirtualDomDiff.js'
 import * as VirtualDomDiffType from '../src/parts/VirtualDomDiffType/VirtualDomDiffType.js'
+import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 import {
   div,
   i,
   text,
 } from '../src/parts/VirtualDomHelpers/VirtualDomHelpers.js'
-import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 import * as VirtualDomParser from '../src/parts/VirtualDomParser/VirtualDomParser.js'
 
 const html = (string) => {
