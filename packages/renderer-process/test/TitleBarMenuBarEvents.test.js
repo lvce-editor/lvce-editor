@@ -3,6 +3,7 @@
  */
 import { jest } from '@jest/globals'
 import * as MouseEventTypes from '../src/parts/MouseEventType/MouseEventType.js'
+import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -32,17 +33,17 @@ test('event - click on menu', () => {
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
-      id: 'file',
+      id: MenuEntryId.File,
       name: 'File',
       children: [],
     },
     {
-      id: 'edit',
+      id: MenuEntryId.Edit,
       name: 'Edit',
       children: [],
     },
     {
-      id: 'selection',
+      id: MenuEntryId.Selection,
       name: 'Selection',
       children: [],
     },
@@ -68,17 +69,17 @@ test('event - click on menu item', () => {
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
-      id: 'file',
+      id: MenuEntryId.File,
       name: 'File',
       children: [],
     },
     {
-      id: 'edit',
+      id: MenuEntryId.Edit,
       name: 'Edit',
       children: [],
     },
     {
-      id: 'selection',
+      id: MenuEntryId.Selection,
       name: 'Selection',
       children: [],
     },
@@ -108,17 +109,17 @@ test('event - richt click on menu item', () => {
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
-      id: 'file',
+      id: MenuEntryId.File,
       name: 'File',
       children: [],
     },
     {
-      id: 'edit',
+      id: MenuEntryId.Edit,
       name: 'Edit',
       children: [],
     },
     {
-      id: 'selection',
+      id: MenuEntryId.Selection,
       name: 'Selection',
       children: [],
     },
@@ -145,17 +146,17 @@ test('event - key - ArrowDown', () => {
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
-      id: 'file',
+      id: MenuEntryId.File,
       name: 'File',
       children: [],
     },
     {
-      id: 'edit',
+      id: MenuEntryId.Edit,
       name: 'Edit',
       children: [],
     },
     {
-      id: 'selection',
+      id: MenuEntryId.Selection,
       name: 'Selection',
       children: [],
     },
@@ -177,17 +178,17 @@ test('event - key - ArrowUp', () => {
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
-      id: 'file',
+      id: MenuEntryId.File,
       name: 'File',
       children: [],
     },
     {
-      id: 'edit',
+      id: MenuEntryId.Edit,
       name: 'Edit',
       children: [],
     },
     {
-      id: 'selection',
+      id: MenuEntryId.Selection,
       name: 'Selection',
       children: [],
     },
@@ -209,17 +210,17 @@ test('event - key - Enter', () => {
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
-      id: 'file',
+      id: MenuEntryId.File,
       name: 'File',
       children: [],
     },
     {
-      id: 'edit',
+      id: MenuEntryId.Edit,
       name: 'Edit',
       children: [],
     },
     {
-      id: 'selection',
+      id: MenuEntryId.Selection,
       name: 'Selection',
       children: [],
     },
@@ -241,17 +242,17 @@ test('event - key - Space', () => {
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
-      id: 'file',
+      id: MenuEntryId.File,
       name: 'File',
       children: [],
     },
     {
-      id: 'edit',
+      id: MenuEntryId.Edit,
       name: 'Edit',
       children: [],
     },
     {
-      id: 'selection',
+      id: MenuEntryId.Selection,
       name: 'Selection',
       children: [],
     },
@@ -272,17 +273,17 @@ test('event - key - Home', () => {
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
-      id: 'file',
+      id: MenuEntryId.File,
       name: 'File',
       children: [],
     },
     {
-      id: 'edit',
+      id: MenuEntryId.Edit,
       name: 'Edit',
       children: [],
     },
     {
-      id: 'selection',
+      id: MenuEntryId.Selection,
       name: 'Selection',
       children: [],
     },
@@ -303,17 +304,17 @@ test('event - key - End', () => {
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
-      id: 'file',
+      id: MenuEntryId.File,
       name: 'File',
       children: [],
     },
     {
-      id: 'edit',
+      id: MenuEntryId.Edit,
       name: 'Edit',
       children: [],
     },
     {
-      id: 'selection',
+      id: MenuEntryId.Selection,
       name: 'Selection',
       children: [],
     },
@@ -334,17 +335,17 @@ test('event - key - Escape', () => {
   RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
-      id: 'file',
+      id: MenuEntryId.File,
       name: 'File',
       children: [],
     },
     {
-      id: 'edit',
+      id: MenuEntryId.Edit,
       name: 'Edit',
       children: [],
     },
     {
-      id: 'selection',
+      id: MenuEntryId.Selection,
       name: 'Selection',
       children: [],
     },

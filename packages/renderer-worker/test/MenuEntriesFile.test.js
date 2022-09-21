@@ -1,5 +1,6 @@
 import * as MenuEntriesFile from '../src/parts/MenuEntries/MenuEntriesFile.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
+import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 
 test('getMenuEntries', () => {
   const menuEntries = MenuEntriesFile.getMenuEntries()
@@ -18,7 +19,7 @@ test('getMenuEntries', () => {
   expect(menuEntries).toContainEqual({
     command: 0,
     flags: MenuItemFlags.SubMenu,
-    id: 'openRecent',
+    id: MenuEntryId.OpenRecent,
     label: 'Open Recent',
   })
 })
