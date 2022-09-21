@@ -27,6 +27,8 @@ const getType = (text) => {
   switch (text) {
     case 'div':
       return VirtualDomElements.Div
+    case 'i':
+      return VirtualDomElements.I
     default:
       throw new Error('unknown html tag')
   }
@@ -72,13 +74,15 @@ export const parse = (string) => {
     props: {},
     childCount: 0,
   }
-  let parentNode = {
-    type: 0,
-    props: {},
-    childCount: 0,
-  }
+
   let attributeName = ''
-  const stack = []
+  const stack = [
+    {
+      type: 0,
+      props: {},
+      childCount: 0,
+    },
+  ]
   while (i < string.length) {
     const part = string.slice(i)
     switch (state) {
@@ -88,6 +92,7 @@ export const parse = (string) => {
         } else if ((next = part.match(RE_TEXT_CONTENT))) {
           const trimmed = next[0].trim()
           if (trimmed) {
+            const parentNode = stack.at(-1)
             parentNode.childCount++
             dom.push({
               type: VirtualDomElements.Text,
@@ -106,13 +111,13 @@ export const parse = (string) => {
         if ((next = part.match(RE_TEXT))) {
           state = State.InsideTag
           const type = getType(next[0])
+          const parentNode = stack.at(-1)
           parentNode.childCount++
           node = {
             type,
             props: {},
             childCount: 0,
           }
-          parentNode = node
           dom.push(node)
         } else if ((next = part.match(RE_SLASH))) {
           state = State.AfterOpeningAngleBracketAfterSlash
@@ -128,6 +133,7 @@ export const parse = (string) => {
           attributeName = getAttributeName(next[0])
         } else if ((next = part.match(RE_CLOSING_ANGLE_BRACKET))) {
           state = State.TopLevelContent
+          stack.push(node)
         } else {
           throw new Error('no')
         }
@@ -137,12 +143,7 @@ export const parse = (string) => {
           state = State.AfterOpeningAngleBracketAfterSlash
         } else if ((next = part.match(RE_CLOSING_ANGLE_BRACKET))) {
           state = State.TopLevelContent
-          node = parentNode
-          parentNode = {
-            type: 0,
-            props: {},
-            childCount: 0,
-          }
+          stack.pop()
         } else {
           throw new Error('no')
         }
@@ -179,5 +180,3 @@ export const parse = (string) => {
   }
   return dom
 }
-
-const dom = parse(`<div>hello world</div>`) //?

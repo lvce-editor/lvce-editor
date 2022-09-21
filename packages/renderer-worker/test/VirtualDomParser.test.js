@@ -155,3 +155,38 @@ test('parse - element with text', () => {
     },
   ])
 })
+
+test('parse - element with multiple children', () => {
+  const dom = VirtualDomParser.parse(`<div class="QuickPickItem">
+  <i class="Icon"></i>
+  <div class="Label">1</div>
+</div>`)
+  expect(dom).toEqual([
+    {
+      type: VirtualDomElements.Div,
+      props: {
+        className: 'QuickPickItem',
+      },
+      childCount: 2,
+    },
+    {
+      type: VirtualDomElements.I,
+      props: {
+        className: 'Icon',
+      },
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      props: { className: 'Label' },
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Text,
+      props: {
+        text: '1',
+      },
+      childCount: 0,
+    },
+  ])
+})

@@ -379,39 +379,32 @@ test('diff - remove one element with child and keep one', () => {
   ])
 })
 
-test.skip('diff - remove multiple elements', () => {
-  const oldDom = [
-    div(
-      {
-        id: 'QuickPickItems',
-      },
-      3
-    ),
-    div(
-      {
-        className: 'QuickPickItem',
-      },
-      2
-    ),
-    i(
-      {
-        className: 'Icon',
-      },
-      0
-    ),
-    div(
-      {
-        className: 'Label',
-      },
-      1
-    ),
-    text('item 1'),
-  ]
-  const newDom = [div({}, 1), div({}, 0)]
+test('diff - remove multiple elements', () => {
+  const oldDom = html(`
+<div class="QuickPickItem">
+  <i class="icon"></i>
+  <div class="Label">1</div>
+</div>
+<div class="QuickPickItem">
+  <i class="icon"></i>
+  <div class="Label">2</div>
+</div>
+<div class="QuickPickItem">
+  <i class="icon"></i>
+  <div class="Label">3</div>
+</div>
+`)
+  const newDom = html(`
+<div class="QuickPickItem">
+  <i class="icon"></i>
+  <div class="Label">1</div>
+</div>
+`)
+
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
-      index: 2,
+      index: 4,
       operation: VirtualDomDiffType.ElementsRemove,
       keepCount: 1,
     },
