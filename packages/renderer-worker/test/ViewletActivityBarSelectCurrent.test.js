@@ -1,6 +1,7 @@
 import * as Layout from '../src/parts/Layout/Layout.js'
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActvityBarItemFlags.js'
 import { jest } from '@jest/globals'
+import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 
 const ACTIVITY_BAR_ITEM_HEIGHT = 48
 
@@ -96,7 +97,7 @@ test('selectCurrent - settings', async () => {
     'ContextMenu.show',
     750,
     408,
-    'settings'
+    MenuEntryId.Settings
   )
 })
 

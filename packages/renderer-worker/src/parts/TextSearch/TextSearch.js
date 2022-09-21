@@ -1,26 +1,22 @@
 import * as Assert from '../Assert/Assert.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
 
 const getProvider = (scheme) => {
+  console.log({ scheme })
   switch (scheme) {
-    case 'file':
+    case '':
       return import('./TextSearchNode.js')
+    case 'web':
+      return import('./TextSearchWeb.js')
     default:
       return import('./TextSearchExtension.js')
   }
 }
 
-const getScheme = (root) => {
-  const colonSlashSlashIndex = root.indexOf('://')
-  if (colonSlashSlashIndex === -1) {
-    return 'file'
-  }
-  return root.slice(0, colonSlashSlashIndex)
-}
-
 export const textSearch = async (root, query) => {
   Assert.string(root)
   Assert.string(query)
-  const scheme = getScheme(root)
+  const scheme = FileSystem.getProtocol(root)
   const provider = await getProvider(scheme)
   const results = await provider.textSearch(scheme, root, query)
   return results

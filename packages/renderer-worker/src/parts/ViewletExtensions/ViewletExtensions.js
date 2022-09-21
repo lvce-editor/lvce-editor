@@ -11,7 +11,7 @@ import {
   ITEM_HEIGHT,
   MINIMUM_SLIDER_SIZE,
 } from './ViewletExtensionsShared.js'
-
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 const SUGGESTIONS = [
   '@builtin',
   '@disabled',
@@ -460,7 +460,7 @@ export const handleContextMenu = async (state, x, y, index) => {
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
-    /* id */ 'manageExtension'
+    /* id */ MenuEntryId.ManageExtension
   )
   return state
 }

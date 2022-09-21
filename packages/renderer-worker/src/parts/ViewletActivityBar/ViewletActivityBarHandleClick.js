@@ -1,12 +1,13 @@
 import * as Command from '../Command/Command.js'
 import * as Layout from '../Layout/Layout.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 const handleClickSettings = async (state, x, y, viewletId) => {
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
-    /* id */ 'settings'
+    /* id */ MenuEntryId.Settings
   )
   return state
 }
@@ -16,7 +17,7 @@ const handleClickAdditionalViews = async (state, x, y, viewletId) => {
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
-    /* id */ 'activity-bar-additional-views'
+    /* id */ MenuEntryId.ActivityBarAdditionalViews
   )
   return state
 }

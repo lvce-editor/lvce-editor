@@ -3,7 +3,7 @@
 import { sharedProcessPath } from '@lvce-editor/shared-process'
 import { ChildProcess, fork } from 'node:child_process'
 import { createReadStream } from 'node:fs'
-import { readdir, stat } from 'node:fs/promises'
+import { readdir, readFile, stat } from 'node:fs/promises'
 import { createServer, IncomingMessage, ServerResponse } from 'node:http'
 import { dirname, extname, join, resolve } from 'node:path'
 import { pipeline } from 'node:stream/promises'
@@ -255,12 +255,89 @@ const serveTests = async (req, res, next) => {
     }
     return
   }
+
+  next()
+}
+
+const getAbsolutePath = (extensionName) => {
+  return join(ROOT, 'extensions', extensionName, 'extension.json')
+}
+
+const isLanguageBasics = (name) => {
+  return name.startsWith('builtin.language-basics')
+}
+
+const readJson = async (path) => {
+  const content = await readFile(path, 'utf8')
+  return JSON.parse(content)
+}
+
+const combineLanguages = (extensions) => {
+  const languages = []
+  for (const extension of extensions) {
+    if (extension.languages) {
+      for (const language of extension.languages) {
+        languages.push({
+          ...language,
+          tokenize: `/extensions/${extension.id}/${language.tokenize}`,
+        })
+      }
+    }
+  }
+  return languages
+}
+
+const getLanguagesJson = async () => {
+  const extensionNames = await readdir(join(ROOT, 'extensions'))
+  const languageBasics = extensionNames.filter(isLanguageBasics)
+  const extensionPaths = languageBasics.map(getAbsolutePath)
+  const extensions = await Promise.all(extensionPaths.map(readJson))
+  const languages = combineLanguages(extensions)
+  return languages
+}
+
+const sendFile = async (path, res) => {
+  try {
+    await pipeline(createReadStream(path), res)
+  } catch (error) {
+    // @ts-ignore
+    if (error && error.code === 'EISDIR') {
+      res.statusCode = 404
+      res.end()
+      return
+    }
+    console.info('failed to send request', error)
+    res.statusCode = 500
+    // TODO escape error html
+    res.end(`${error}`)
+  }
+  return
+}
+
+const serveConfig = async (req, res, next) => {
+  const parsedUrl = parseUrl(req.url || '')
+  const pathName = parsedUrl.pathname || ''
+  if (pathName === '/config/languages.json') {
+    const languagesJson = await getLanguagesJson()
+    res.statusCode = 200
+    res.end(JSON.stringify(languagesJson, null, 2))
+    return
+  }
+  switch (pathName) {
+    case '/config/defaultKeyBindings.json':
+    case '/config/builtinCommands.json':
+    case '/config/defaultSettings.json':
+      return sendFile(join(ROOT, 'static', pathName), res)
+    default:
+      break
+  }
   next()
 }
 
 app.use('/github', serveGitHub, serve404())
 app.use('/remote', serveStatic('', '/remote'), serve404())
 app.use('/tests', serveTests, serve404())
+app.use('/config', serveConfig, serve404())
 app.use('*', serveStatic(ROOT), serveStatic(STATIC), serve404())
 
 const state = {

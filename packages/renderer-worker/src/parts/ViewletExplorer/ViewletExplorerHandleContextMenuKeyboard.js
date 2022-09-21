@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 export const handleContextMenuKeyboard = async (state) => {
   const { focusedIndex, left, top, minLineY, itemHeight } = state
@@ -8,7 +9,7 @@ export const handleContextMenuKeyboard = async (state) => {
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
     /* y */ y,
-    /* id */ 'explorer'
+    /* id */ MenuEntryId.Explorer
   )
   return state
 }

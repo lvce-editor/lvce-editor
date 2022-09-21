@@ -2,6 +2,9 @@ import * as Command from '../Command/Command.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
+/**
+ * @enum {string}
+ */
 export const UiStrings = {
   Separator: 'Separator',
   More: 'More ...',

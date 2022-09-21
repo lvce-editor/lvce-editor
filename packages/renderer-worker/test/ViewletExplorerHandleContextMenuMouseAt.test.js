@@ -1,4 +1,5 @@
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
+import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 import { jest } from '@jest/globals'
 
 beforeEach(() => {
@@ -43,7 +44,7 @@ test('handleContextMenuMouse', async () => {
     'ContextMenu.show',
     0,
     100,
-    'explorer'
+    MenuEntryId.Explorer
   )
 })
 
