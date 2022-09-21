@@ -114,3 +114,14 @@ export const mergeDirents = (oldDirents, newDirents) => {
   }
   return merged
 }
+
+export const getTopLevelDirents = (root, pathSeparator) => {
+  if (!root) {
+    return []
+  }
+  return getChildDirents(root, pathSeparator, {
+    depth: 0,
+    path: root,
+    type: DirentType.Directory,
+  })
+}

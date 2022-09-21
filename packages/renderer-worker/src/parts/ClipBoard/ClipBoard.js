@@ -2,6 +2,8 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
 import * as Assert from '../Assert/Assert.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 export const readText = async () => {
   try {
@@ -36,6 +38,9 @@ export const writeText = async (text) => {
 
 export const writeNativeFiles = async (type, files) => {
   try {
+    if (Platform.platform === PlatformType.Web) {
+      throw new Error('not supported')
+    }
     await SharedProcess.invoke(
       /* command */ 'ClipBoard.writeFiles',
       /* type */ type,
@@ -48,6 +53,9 @@ export const writeNativeFiles = async (type, files) => {
 
 export const readNativeFiles = async () => {
   try {
+    if (Platform.platform === PlatformType.Web) {
+      throw new Error('not supported')
+    }
     return await SharedProcess.invoke(/* command */ 'ClipBoard.readFiles')
   } catch (error) {
     throw new VError(error, 'Failed to read files from native clipboard')
