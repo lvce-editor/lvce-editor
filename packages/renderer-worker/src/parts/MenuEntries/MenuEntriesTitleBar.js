@@ -2,6 +2,7 @@ import * as I18nString from '../I18NString/I18NString.js'
 import * as Platform from '../Platform/Platform.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 const UiStrings = {
   File: 'File',
@@ -17,27 +18,27 @@ const UiStrings = {
 const getMenuEntriesWeb = () => {
   return [
     {
-      id: 'file',
+      id: MenuEntryId.File,
       name: I18nString.i18nString(UiStrings.File),
       flags: MenuItemFlags.None,
     },
     {
-      id: 'edit',
+      id: MenuEntryId.Edit,
       name: I18nString.i18nString(UiStrings.Edit),
       flags: MenuItemFlags.None,
     },
     {
-      id: 'selection',
+      id: MenuEntryId.Selection,
       name: I18nString.i18nString(UiStrings.Selection),
       flags: MenuItemFlags.None,
     },
     {
-      id: 'view',
+      id: MenuEntryId.View,
       name: I18nString.i18nString(UiStrings.View),
       flags: MenuItemFlags.None,
     },
     {
-      id: 'go',
+      id: MenuEntryId.Go,
       name: I18nString.i18nString(UiStrings.Go),
       flags: MenuItemFlags.None,
     },
@@ -47,44 +48,44 @@ const getMenuEntriesWeb = () => {
 const getMenuEntriesRemote = () => {
   return [
     {
-      id: 'file',
+      id: MenuEntryId.File,
       name: I18nString.i18nString(UiStrings.File),
       flags: MenuItemFlags.None,
     },
     {
-      id: 'edit',
+      id: MenuEntryId.Edit,
       name: I18nString.i18nString(UiStrings.Edit),
       flags: MenuItemFlags.None,
     },
     {
-      id: 'selection',
+      id: MenuEntryId.Selection,
       name: I18nString.i18nString(UiStrings.Selection),
       flags: MenuItemFlags.None,
     },
     {
-      id: 'view',
+      id: MenuEntryId.View,
       name: I18nString.i18nString(UiStrings.View),
       flags: MenuItemFlags.None,
     },
     {
-      id: 'go',
+      id: MenuEntryId.Go,
       name: I18nString.i18nString(UiStrings.Go),
       flags: MenuItemFlags.None,
     },
     {
-      id: 'run',
+      id: MenuEntryId.Run,
       name: I18nString.i18nString(UiStrings.Run),
       keyboardShortCut: 'Alt+r',
       flags: MenuItemFlags.None,
     },
     {
-      id: 'terminal',
+      id: MenuEntryId.Terminal,
       name: I18nString.i18nString(UiStrings.Terminal),
       keyboardShortCut: 'Alt+t',
       flags: MenuItemFlags.None,
     },
     {
-      id: 'help',
+      id: MenuEntryId.Help,
       name: I18nString.i18nString(UiStrings.Help),
       keyboardShortCut: 'Alt+h',
       flags: MenuItemFlags.None,
