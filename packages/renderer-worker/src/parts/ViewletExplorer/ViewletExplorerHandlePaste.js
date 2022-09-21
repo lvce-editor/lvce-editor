@@ -3,6 +3,7 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import { getBaseName } from '../Path/Path.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import { updateRoot } from './ViewletExplorerUpdateRoot.js'
+import * as Path from '../Path/Path.js'
 
 const handlePasteNone = (state, nativeFiles) => {
   console.info('[ViewletExplorer/handlePaste] no paths detected')
@@ -15,10 +16,11 @@ const handlePasteCopy = async (state, nativeFiles) => {
   // TODO handle pasting files into hardlink
   // TODO what if folder is big and it takes a long time
   for (const source of nativeFiles.files) {
-    const target = `${state.root}${state.pathSeparator}${getBaseName(
-      source,
-      state.pathSeparator
-    )}`
+    const target = Path.join(
+      state.pathSeperator,
+      state.root,
+      getBaseName(state.pathSeparator, source)
+    )
     await FileSystem.copy(source, target)
   }
   const stateNow = Viewlet.getState('Explorer')
@@ -31,7 +33,10 @@ const handlePasteCopy = async (state, nativeFiles) => {
 
 const handlePasteCut = async (state, nativeFiles) => {
   for (const source of nativeFiles.files) {
-    const target = `${state.root}${state.pathSeparator}${getBaseName(source)}`
+    const target = `${state.root}${state.pathSeparator}${getBaseName(
+      state.pathSeparator,
+      source
+    )}`
     await FileSystem.rename(source, target)
   }
   return state
