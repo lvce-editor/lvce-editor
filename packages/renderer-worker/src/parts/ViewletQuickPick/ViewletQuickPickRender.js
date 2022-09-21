@@ -195,4 +195,32 @@ const renderQuickPickItemsFn = {
   },
 }
 
-export const render = [renderQuickPickItemsFn]
+const renderValue = {
+  isEqual(oldState, newState) {
+    return false
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'QuickPick',
+      /* method */ 'setValue',
+      /* value */ newState.value,
+    ]
+  },
+}
+
+const renderFocus = {
+  isEqual(oldState, newState) {
+    return oldState.focusedIndex === newState.focusedIndex
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'QuickPick',
+      /* method */ 'setFocusedIndex',
+      /* focused */ newState.focusedIndex,
+    ]
+  },
+}
+
+export const render = [renderQuickPickItemsFn, renderValue, renderFocus]

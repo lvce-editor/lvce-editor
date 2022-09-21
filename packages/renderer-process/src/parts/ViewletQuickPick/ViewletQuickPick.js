@@ -1,10 +1,9 @@
 /* Tries to implement the pattern for combobox with listbox popup https://www.w3.org/TR/wai-aria-1.2/#combobox */
 
 import * as InputBox from '../InputBox/InputBox.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as VirtualDomPatch from '../VirtualDomPatch/VirtualDomPatch.js'
-import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
+import * as Focus from '../Focus/Focus.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -38,9 +37,9 @@ import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
 // TODO add test with show and slicedItems length is 0
 
 export const focus = (state) => {
-  // const { $QuickPickInput } = state
-  // $QuickPickInput.focus()
-  // Focus.setFocus('quickPickInput')
+  const { $QuickPickInput } = state
+  $QuickPickInput.focus()
+  Focus.setFocus('quickPickInput')
 }
 
 // TODO
@@ -79,6 +78,7 @@ export const create = () => {
     $Viewlet: $QuickPick,
     $QuickPick,
     $QuickPickItems,
+    $QuickPickInput,
   }
 }
 
@@ -92,12 +92,19 @@ export const dispose = (state) => {
 }
 
 export const setCursorOffset = (state, cursorOffset) => {
-  // const { $QuickPickInput } = state
-  // $QuickPickInput.selectionStart = cursorOffset
-  // $QuickPickInput.selectionEnd = cursorOffset
+  const { $QuickPickInput } = state
+  $QuickPickInput.selectionStart = cursorOffset
+  $QuickPickInput.selectionEnd = cursorOffset
 }
 
 export const setDom = (state, patchList) => {
   const { $QuickPickItems } = state
   VirtualDomPatch.patch($QuickPickItems, patchList)
 }
+
+export const setValue = (state, value) => {
+  const { $QuickPickInput } = state
+  $QuickPickInput.value = value
+}
+
+export const setFocusedIndex = (state, index) => {}
