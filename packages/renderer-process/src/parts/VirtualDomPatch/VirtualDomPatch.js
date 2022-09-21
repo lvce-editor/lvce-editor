@@ -10,7 +10,11 @@ const patchAttributeRemove = ($Node, patch) => {
 }
 
 const patchAttributeSet = ($Node, patch) => {
-  $Node.setAttribute(patch.key, patch.value)
+  if (patch.key === 'text') {
+    $Node.nodeValue = patch.value
+  } else {
+    $Node.setAttribute(patch.key, patch.value)
+  }
 }
 
 export const patch = ($Root, patches) => {

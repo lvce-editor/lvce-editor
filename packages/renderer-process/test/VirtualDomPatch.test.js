@@ -113,7 +113,7 @@ test('patch - one attribute removed, one attribute added', () => {
   )
 })
 
-test('diff - with children, one attribute removed, one attribute added', () => {
+test('patch - with children, one attribute removed, one attribute added', () => {
   const oldDom = [
     {
       type: VirtualDomElements.Div,
@@ -163,12 +163,12 @@ test('diff - with children, one attribute removed, one attribute added', () => {
     {
       index: 1,
       key: 'id',
-      operation: 2,
+      operation: VirtualDomDiffType.AttributeRemove,
     },
     {
       index: 4,
       key: 'id',
-      operation: 1,
+      operation: VirtualDomDiffType.AttributeSet,
       value: 'QuickPickItemActive',
     },
   ]
@@ -177,4 +177,28 @@ test('diff - with children, one attribute removed, one attribute added', () => {
   expect($Root.innerHTML).toBe(
     '<div class="QuickPickItem"><div class="QuickPickItemLabel">1</div></div><div class="QuickPickItem" id="QuickPickItemActive"><div class="QuickPickItemLabel">2</div></div>'
   )
+})
+
+// TODO maybe there should be a special patch type for setting text
+test.skip('patch - change text', () => {
+  const oldDom = [
+    {
+      type: VirtualDomElements.Text,
+      props: {
+        text: 'hello',
+      },
+      childCount: 0,
+    },
+  ]
+  const patches = [
+    {
+      index: 1,
+      operation: VirtualDomDiffType.AttributeSet,
+      key: 'text',
+      value: 'hello world',
+    },
+  ]
+  const $Root = VirtualDom.render(oldDom)
+  VirtualDomPatch.patch($Root, patches)
+  expect($Root.innerHTML).toBe('hello world')
 })

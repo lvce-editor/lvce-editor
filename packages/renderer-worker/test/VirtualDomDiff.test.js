@@ -292,3 +292,17 @@ test('diff - with children, one attribute removed, one attribute added', () => {
     },
   ])
 })
+
+test('diff - change text', () => {
+  const oldDom = [text('hello')]
+  const newDom = [text('hello world')]
+  const changes = VirtualDomDiff.diff(oldDom, newDom)
+  expect(changes).toEqual([
+    {
+      index: 0,
+      operation: VirtualDomDiffType.AttributeSet,
+      key: 'text',
+      value: 'hello world',
+    },
+  ])
+})
