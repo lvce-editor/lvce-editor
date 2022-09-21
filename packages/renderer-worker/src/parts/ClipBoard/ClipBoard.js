@@ -1,7 +1,7 @@
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import { VError } from '../VError/VError.js'
 import * as Assert from '../Assert/Assert.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import { VError } from '../VError/VError.js'
 
 export const readText = async () => {
   try {
