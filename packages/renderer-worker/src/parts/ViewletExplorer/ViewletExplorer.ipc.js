@@ -16,6 +16,7 @@ const Imports = {
   HandleContextMenuMouseAt: ()=>import('./ViewletExplorerHandleContextMenuMouseAt.js'),
   HandleDragOver: () => import('./ViewletExplorerHandleDragOver.js'),
   HandleDrop: () => import('./ViewletExplorerHandleDrop.js'),
+  HandlePaste: () => import('./ViewletExplorerHandlePaste.js'),
 
 }
 
@@ -52,7 +53,7 @@ export const Commands = {
   'Explorer.handleDrop':                     LazyCommand.create('Explorer', Imports.HandleDrop, 'handleDrop'),
   'Explorer.handleMouseEnter':               Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleMouseEnter),
   'Explorer.handleMouseLeave':               Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleMouseLeave),
-  'Explorer.handlePaste':                    Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handlePaste),
+  'Explorer.handlePaste':                    LazyCommand.create('Explorer', Imports.HandlePaste, 'handlePaste'),
   'Explorer.handleWheel':                    Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.handleWheel),
   'Explorer.newFile':                        Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.newFile),
   'Explorer.newFolder':                      Viewlet.wrapViewletCommand('Explorer', ViewletExplorer.newFolder),
