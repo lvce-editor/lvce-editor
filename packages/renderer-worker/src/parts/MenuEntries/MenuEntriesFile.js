@@ -1,5 +1,6 @@
 import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 export const UiStrings = {
   NewFile: 'New File',
@@ -44,7 +45,7 @@ export const getMenuEntries = () => {
       command: 'Dialog.openFolder',
     },
     {
-      id: 'openRecent',
+      id: MenuEntryId.OpenRecent,
       label: I18nString.i18nString(UiStrings.OpenRecent),
       flags: MenuItemFlags.SubMenu,
       command: MenuItemFlags.None,
