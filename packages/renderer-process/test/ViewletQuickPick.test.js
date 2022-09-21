@@ -264,7 +264,7 @@ test('event - wheel', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith('QuickPick.handleWheel', 53)
 })
 
-test('hideStatus', () => {
+test.skip('hideStatus', () => {
   const state = ViewletQuickPick.create()
   ViewletQuickPick.showNoResults(state)
   ViewletQuickPick.hideStatus(state)

@@ -48,6 +48,7 @@ export const focus = (state) => {
 
 export const create = () => {
   const $QuickPickInput = InputBox.create()
+  $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
 
   $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
   $QuickPickInput.oninput = ViewletQuickPickEvents.handleInput
@@ -71,6 +72,7 @@ export const create = () => {
   // probably a bug with windows narrator that doesn't support ariaRoleDescription
 
   const $QuickPick = document.createElement('div')
+  $QuickPick.ariaLabel = 'Quick open'
   $QuickPick.id = 'QuickPick'
   $QuickPick.append($QuickPickHeader, $QuickPickItems)
 
