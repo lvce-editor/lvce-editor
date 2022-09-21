@@ -288,3 +288,24 @@ test('render - set correct height', () => {
     ['Viewlet.send', 'QuickPick', 'setItemsHeight', 22],
   ])
 })
+
+test.skip('accessibility - aria-activedescendant should point to quick pick item', () => {
+  const state = ViewletQuickPick.create()
+  ViewletQuickPick.setPicks(state, [
+    {
+      posInSet: 1,
+      setSize: 2,
+      label: 'item 1',
+    },
+    {
+      posInSet: 2,
+      setSize: 2,
+      label: 'item 2',
+    },
+  ])
+  ViewletQuickPick.setFocusedIndex(state, -1, 0)
+  expect(state.$QuickPickInput.getAttribute('aria-activedescendant')).toBe(
+    'QuickPickItemActive'
+  )
+  // expect(state.$QuickPickItems.children[0].id).toBe('QuickPickItem-1')
+})
