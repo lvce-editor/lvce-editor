@@ -48,28 +48,37 @@ export const focus = (state) => {
 // - for nvda ariaRoleDescription works better
 
 export const create = () => {
-  // const $QuickPickInput = InputBox.create()
+  const $QuickPickInput = InputBox.create()
 
-  // $QuickPickInput.onblur = handleBlur
-  // $QuickPickInput.oninput = handleInput
-  // $QuickPickInput.addEventListener('beforeinput', handleBeforeInput)
+  $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
+  $QuickPickInput.oninput = ViewletQuickPickEvents.handleInput
+  $QuickPickInput.addEventListener(
+    'beforeinput',
+    ViewletQuickPickEvents.handleBeforeInput
+  )
 
-  // const $QuickPickHeader = document.createElement('div')
-  // $QuickPickHeader.append($QuickPickInput)
+  const $QuickPickHeader = document.createElement('div')
+  $QuickPickHeader.append($QuickPickInput)
 
-  // const $QuickPickItems = document.createElement('div')
-  // $QuickPickItems.onmousedown = handleMouseDown
-  // $QuickPickItems.addEventListener('wheel', handleWheel, { passive: true })
+  const $QuickPickItems = document.createElement('div')
+  $QuickPickItems.onmousedown = ViewletQuickPickEvents.handleMouseDown
+  $QuickPickItems.addEventListener(
+    'wheel',
+    ViewletQuickPickEvents.handleWheel,
+    { passive: true }
+  )
 
   // TODO this works well with nvda but not with windows narrator
   // probably a bug with windows narrator that doesn't support ariaRoleDescription
 
   const $QuickPick = document.createElement('div')
-  // $QuickPick.append($QuickPickHeader, $QuickPickItems)
+  $QuickPick.id = 'QuickPick'
+  $QuickPick.append($QuickPickHeader, $QuickPickItems)
 
   return {
     $Viewlet: $QuickPick,
     $QuickPick,
+    $QuickPickItems,
   }
 }
 
@@ -89,6 +98,6 @@ export const setCursorOffset = (state, cursorOffset) => {
 }
 
 export const setDom = (state, patchList) => {
-  const { $QuickPick } = state
-  VirtualDomPatch.patch($QuickPick, patchList)
+  const { $QuickPickItems } = state
+  VirtualDomPatch.patch($QuickPickItems, patchList)
 }

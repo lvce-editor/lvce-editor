@@ -5,6 +5,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as VirtualDomDiff from '../VirtualDomDiff/VirtualDomDiff.js'
 
 /**
  * @deprecated
@@ -151,6 +152,24 @@ export const wrapViewletCommand = (id, fn) => {
         /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
         /* commands */ commands
       )
+    } else if (activeInstance.factory && activeInstance.factory.hasVirtualDom) {
+      const oldState = activeInstance.state
+      const newState = await fn(oldState, ...args)
+      Assert.object(newState)
+      if (oldState === newState) {
+        return
+      }
+      const oldDom = oldState.dom || []
+      const newDom = activeInstance.factory.renderDom(newState)
+      const patchList = VirtualDomDiff.diff(oldDom, newDom)
+      await RendererProcess.invoke(
+        /* Viewlet.send */ 'Viewlet.send',
+        /* id */ activeInstance.factory.id,
+        /* command */ 'setDom',
+        /* patchList */ patchList
+      )
+      ViewletStates.setState(id, newState)
+      ViewletStates.setDom(id, newDom)
     } else {
       return fn(activeInstance.state, ...args)
     }

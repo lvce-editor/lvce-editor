@@ -156,28 +156,9 @@ const renderQuickPickDom = (state) => {
   ]
 }
 
-const renderDom = {
-  isEqual(oldState, newState) {
-    return (
-      oldState.items === newState.items &&
-      oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY &&
-      oldState.focusedIndex === newState.focusedIndex
-    )
-  },
-  apply(oldState, newState) {
-    const oldDom = renderQuickPickDom(oldState)
-    const newDom = renderQuickPickDom(newState)
-    const changes = VirtualDomDiff.diff(oldDom, newDom)
-
-    console.log({ oldDom, newDom })
-    return [
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ 'QuickPick',
-      /* method */ 'setDom',
-      /* changes */ changes,
-    ]
-  },
+export const renderDom = (state) => {
+  const dom = renderQuickPickItemsDom(state)
+  return dom
 }
 
 export const hasFunctionalRender = true
@@ -197,4 +178,21 @@ const renderCursorOffset = {
   },
 }
 
-export const render = [renderDom]
+const renderQuickPickItemsFn = {
+  isEqual(oldState, newState) {
+    return false
+  },
+  apply(oldState, newState) {
+    const oldDom = renderQuickPickItemsDom(oldState)
+    const newDom = renderQuickPickItemsDom(newState)
+    const patchList = VirtualDomDiff.diff(oldDom, newDom)
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'QuickPick',
+      /* method */ 'setDom',
+      /* patchList */ patchList,
+    ]
+  },
+}
+
+export const render = [renderQuickPickItemsFn]

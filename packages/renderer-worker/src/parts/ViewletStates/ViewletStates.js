@@ -45,6 +45,16 @@ export const setState = (key, newState) => {
   instance.state = newState
 }
 
+export const setDom = (key, dom) => {
+  const instance = getInstance(key)
+  instance.dom = dom
+}
+
+export const getDom = (key) => {
+  const instance = getInstance(key)
+  return instance.dom
+}
+
 export const reset = () => {
   state.instances = Object.create(null)
 }
