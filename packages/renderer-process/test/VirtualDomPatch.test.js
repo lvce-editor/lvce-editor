@@ -78,7 +78,7 @@ test('patch - add two elements', () => {
   expect($Root.innerHTML).toBe(`<div></div><div></div>`)
 })
 
-test('patch -  one attribute removed, one attribute added', () => {
+test('patch - one attribute removed, one attribute added', () => {
   const oldDom = [
     {
       type: VirtualDomElements.Div,
@@ -97,13 +97,13 @@ test('patch -  one attribute removed, one attribute added', () => {
     {
       operation: VirtualDomDiffType.AttributeRemove,
       key: 'id',
-      index: 0,
+      index: 1,
     },
     {
       operation: VirtualDomDiffType.AttributeSet,
       key: 'id',
       value: 'QuickPickItemActive',
-      index: 1,
+      index: 2,
     },
   ]
   const $Root = VirtualDom.render(oldDom)
@@ -161,12 +161,12 @@ test('diff - with children, one attribute removed, one attribute added', () => {
   ]
   const patches = [
     {
-      index: 0,
+      index: 1,
       key: 'id',
       operation: 2,
     },
     {
-      index: 3,
+      index: 4,
       key: 'id',
       operation: 1,
       value: 'QuickPickItemActive',

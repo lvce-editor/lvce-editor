@@ -16,7 +16,7 @@ const patchAttributeSet = ($Node, patch) => {
 export const patch = ($Root, patches) => {
   const iter = document.createNodeIterator($Root, NodeFilter.SHOW_ALL)
   let $Node
-  let i = -1
+  let i = 0
   for (const patch of patches) {
     do {
       $Node = iter.nextNode()
