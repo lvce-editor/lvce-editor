@@ -1,3 +1,10 @@
+/**
+ * @enum {string}
+ */
+export const UiStrings = {
+  NoSymbolFound: 'No symbol found',
+}
+
 export const name = 'symbol'
 
 export const getPlaceholder = () => {
@@ -10,7 +17,7 @@ export const getHelpEntries = () => {
 
 export const getNoResults = () => {
   return {
-    label: 'No symbol found',
+    label: UiStrings.NoSymbolFound,
   }
 }
 

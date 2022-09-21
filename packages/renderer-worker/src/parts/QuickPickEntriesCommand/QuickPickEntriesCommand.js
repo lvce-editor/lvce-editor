@@ -2,17 +2,27 @@ import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
+
+/**
+ * @enum {string}
+ */
+export const UiStrings = {
+  TypeNameOfCommandToRun: 'Type the name of a command to run.',
+  ShowAndRunCommands: 'Show And Run Commands',
+  NoMatchingResults: 'No matching results',
+}
 
 export const name = 'command'
 
 export const getPlaceholder = () => {
-  return 'Type the name of a command to run.'
+  return UiStrings.TypeNameOfCommandToRun
 }
 
 export const helpEntries = () => {
   return [
     {
-      description: 'Show And Run Commands',
+      description: UiStrings.ShowAndRunCommands,
       category: 'global commands',
     },
   ]
@@ -24,7 +34,7 @@ export const getLabel = () => {
 
 export const getNoResults = () => {
   return {
-    label: 'No matching results',
+    label: UiStrings.NoMatchingResults,
   }
 }
 
@@ -72,7 +82,7 @@ const getExtensionPicks = async () => {
 // TODO send strings to renderer process only once for next occurrence send uint16array of ids of strings
 
 export const getPicks = async () => {
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     const builtinPicks = await getBuiltinPicks()
     return builtinPicks
   }

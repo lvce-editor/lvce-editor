@@ -1,7 +1,15 @@
 // TODO probably not needed
 
+/**
+ * @enum {string}
+ */
+export const UiStrings = {
+  TypeTheNameOfAViewToOpen:
+    'Type the name of a view, output channel or terminal to open.',
+}
+
 export const getPlaceholder = () => {
-  return 'Type the name of a view, output channel or terminal to open.'
+  return UiStrings.TypeTheNameOfAViewToOpen
 }
 
 export const getHelpEntries = () => {

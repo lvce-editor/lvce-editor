@@ -1,3 +1,10 @@
+/**
+ * @enum {string}
+ */
+export const UiStrings = {
+  NoMatchingResults: 'No matching results',
+}
+
 export const name = 'number'
 
 export const getPlaceholder = () => {
@@ -10,7 +17,7 @@ export const getHelpEntries = () => {
 
 export const getNoResults = () => {
   return {
-    label: 'No matching results',
+    label: UiStrings.NoMatchingResults,
   }
 }
 
