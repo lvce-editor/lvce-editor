@@ -103,26 +103,40 @@ test('diff - one element added with child', () => {
   ])
 })
 
-test.skip('diff - one element added - at start of element', () => {
-  const oldDom = html('<div>bc</div>')
-  const newDom = html(`<div>abc</div>`)
+test('diff - one element added - at start of element', () => {
+  const oldDom = html(`
+<div>
+  <div>b</div>
+  <div>c</div>
+</div>`)
+  const newDom = html(`
+<div>
+  <div>a</div>
+  <div>b</div>
+  <div>c</div>
+</div>`)
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
       operation: VirtualDomDiffType.AttributeSet,
-      index: 1,
+      index: 2,
       key: 'text',
       value: 'a',
     },
     {
       operation: VirtualDomDiffType.AttributeSet,
-      index: 2,
+      index: 4,
       key: 'text',
       value: 'b',
     },
     {
       operation: VirtualDomDiffType.ElementsAdd,
       newDom: [
+        {
+          type: VirtualDomElements.Div,
+          props: {},
+          childCount: 1,
+        },
         {
           childCount: 0,
           props: {
@@ -135,20 +149,34 @@ test.skip('diff - one element added - at start of element', () => {
   ])
 })
 
-test.skip('diff - one element added - between elements', () => {
-  const oldDom = html(`<div>ac</div>`)
-  const newDom = html(`<div>abc</div>`)
+test('diff - one element added - between elements', () => {
+  const oldDom = html(`
+<div>
+  <div>a</div>
+  <div>c</div>
+</div>`)
+  const newDom = html(`
+<div>
+  <div>a</div>
+  <div>b</div>
+  <div>c</div>
+</div>`)
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
       operation: VirtualDomDiffType.AttributeSet,
-      index: 2,
+      index: 4,
       key: 'text',
       value: 'b',
     },
     {
       operation: VirtualDomDiffType.ElementsAdd,
       newDom: [
+        {
+          childCount: 1,
+          type: VirtualDomElements.Div,
+          props: {},
+        },
         {
           childCount: 0,
           props: {
@@ -161,16 +189,43 @@ test.skip('diff - one element added - between elements', () => {
   ])
 })
 
-test.skip('diff - one element added - at end of element', () => {
-  const oldDom = html(`<div>ab</div>`)
-  const newDom = html('<div>abc</div>')
+test('diff - one element added - at end of element', () => {
+  const oldDom = html(`
+<div>
+  <div>a</div>
+  <div>b</div>
+</div>`)
+  const newDom = html(`
+<div>
+  <div>a</div>
+  <div>b</div>
+  <div>c</div>
+</div>`)
   const changes = VirtualDomDiff.diff(oldDom, newDom)
-  expect(changes).toEqual([])
+  expect(changes).toEqual([
+    {
+      operation: VirtualDomDiffType.ElementsAdd,
+      newDom: [
+        {
+          childCount: 1,
+          type: VirtualDomElements.Div,
+          props: {},
+        },
+        {
+          childCount: 0,
+          props: {
+            text: 'c',
+          },
+          type: VirtualDomElements.Text,
+        },
+      ],
+    },
+  ])
 })
 
-test.skip('diff - two elements added', () => {
+test('diff - two elements added', () => {
   const oldDom = html(``)
-  const newDom = html(`<div></div>`)
+  const newDom = html(`<div></div><div></div>`)
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
@@ -191,7 +246,7 @@ test.skip('diff - two elements added', () => {
   ])
 })
 
-test.skip('diff - one attribute removed, one attribute added', () => {
+test('diff - one attribute removed, one attribute added', () => {
   const oldDom = html(`
 <div id="QuickPickItemActive"></div>
 <div></div>
@@ -216,7 +271,7 @@ test.skip('diff - one attribute removed, one attribute added', () => {
   ])
 })
 
-test.skip('diff - with children, one attribute removed, one attribute added', () => {
+test('diff - with children, one attribute removed, one attribute added', () => {
   const oldDom = html(`
 <div id="QuickPickItemActive" class="QuickPickItem">
   <div class="Label">1</div>
@@ -300,7 +355,7 @@ test('diff - remove one element and keep one', () => {
   ])
 })
 
-test.skip('diff - remove one element with child and keep one', () => {
+test('diff - remove one element with child and keep one', () => {
   const oldDom = html(`
 <div>
   <div></div>

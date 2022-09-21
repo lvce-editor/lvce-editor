@@ -86,14 +86,17 @@ export const parse = (string) => {
         if ((next = part.match(RE_OPENING_ANGLE_BRACKET))) {
           state = State.AfterOpeningAngleBracket
         } else if ((next = part.match(RE_TEXT_CONTENT))) {
-          parentNode.childCount++
-          dom.push({
-            type: VirtualDomElements.Text,
-            props: {
-              text: getText(next[0]),
-            },
-            childCount: 0,
-          })
+          const trimmed = next[0].trim()
+          if (trimmed) {
+            parentNode.childCount++
+            dom.push({
+              type: VirtualDomElements.Text,
+              props: {
+                text: getText(next[0]),
+              },
+              childCount: 0,
+            })
+          }
           state = State.TopLevelContent
         } else {
           throw new Error('no')
