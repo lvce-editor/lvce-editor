@@ -30,7 +30,7 @@ export const getMenuEntries = () => {
       id: 'separator',
       label: I18nString.i18nString(UiStrings.Separator),
       flags: MenuItemFlags.Separator,
-      command: MenuItemFlags.None,
+      command: '',
     },
     {
       id: 'openFile',
@@ -48,19 +48,19 @@ export const getMenuEntries = () => {
       id: MenuEntryId.OpenRecent,
       label: I18nString.i18nString(UiStrings.OpenRecent),
       flags: MenuItemFlags.SubMenu,
-      command: MenuItemFlags.None,
+      command: '',
     },
     {
       id: 'separator',
       label: I18nString.i18nString(UiStrings.Separator),
       flags: MenuItemFlags.Separator,
-      command: MenuItemFlags.None,
+      command: '',
     },
     {
       id: 'exit',
       label: I18nString.i18nString(UiStrings.Exit),
       flags: MenuItemFlags.None,
-      command: /* Window.exit */ 'Window.exit',
+      command: 'Window.exit',
     },
   ]
 }

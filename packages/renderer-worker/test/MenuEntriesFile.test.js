@@ -17,7 +17,7 @@ test('getMenuEntries', () => {
     label: 'Open Folder',
   })
   expect(menuEntries).toContainEqual({
-    command: 0,
+    command: '',
     flags: MenuItemFlags.SubMenu,
     id: MenuEntryId.OpenRecent,
     label: 'Open Recent',

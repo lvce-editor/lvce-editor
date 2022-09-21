@@ -43,7 +43,8 @@ export const getMenuEntries = async () => {
       id: 'more',
       label: I18nString.i18nString(UiStrings.More),
       flags: MenuItemFlags.None,
-      command: /* TODO show quick picker with more recently opened */ -1,
+      command: 'Viewlet.openWidget',
+      args: ['QuickPick', 'recent'],
     },
     {
       id: 'separator',
