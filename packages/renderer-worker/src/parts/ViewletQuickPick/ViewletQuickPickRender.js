@@ -152,12 +152,12 @@ const renderItems = {
       )
     )
     const changes = VirtualDomDiff.diff(oldDom, dom)
-    console.log({ oldDom, dom, changes })
+    // console.log({ oldDom, dom, changes })
     return [
       /* viewletSend */ 'Viewlet.send',
       /* id */ 'QuickPick',
       /* method */ 'setDom',
-      /* tableDom */ dom,
+      /* changes */ changes,
     ]
   },
 }

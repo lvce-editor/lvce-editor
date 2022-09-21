@@ -33,12 +33,10 @@ const unMountChildren = (changes, count) => {
 }
 
 const mountChildren = (changes, newDom, commonLength, count) => {
-  for (let i = 0; i < count; i++) {
-    changes.push({
-      operation: VirtualDomDiffType.ElementAdd,
-      ...newDom[i + commonLength],
-    })
-  }
+  changes.push({
+    operation: VirtualDomDiffType.ElementsAdd,
+    newDom: newDom.slice(commonLength, commonLength + count),
+  })
 }
 
 export const diff = (oldDom, newDom) => {

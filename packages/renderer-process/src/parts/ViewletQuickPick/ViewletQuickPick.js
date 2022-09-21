@@ -6,6 +6,7 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as VirtualDomPatch from '../VirtualDomPatch/VirtualDomPatch.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -253,9 +254,17 @@ export const setItemsHeight = (state, itemsHeight) => {
   $QuickPickItems.style.height = `${itemsHeight}px`
 }
 
-export const setDom = (state, dom) => {
+const listNodes = (root) => {
+  const iter = document.createNodeIterator(root, NodeFilter.SHOW_ALL)
+  const list = []
+  let node
+  while ((node = iter.nextNode())) {
+    list.push(node)
+  }
+  return list
+}
+
+export const setDom = (state, patchList) => {
   const { $QuickPickItems } = state
-  const $Root = VirtualDom.render(dom)
-  // @ts-ignore
-  $QuickPickItems.replaceChildren(...$Root.firstChild.children)
+  VirtualDomPatch.patch($QuickPickItems, patchList)
 }
