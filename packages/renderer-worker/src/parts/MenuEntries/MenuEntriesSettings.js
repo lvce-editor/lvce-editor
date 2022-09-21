@@ -1,6 +1,9 @@
 import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
+/**
+ * @enum {string}
+ */
 export const UiStrings = {
   Settings: 'Settings',
   KeyboardShortcuts: 'Keyboard Shortcuts',
@@ -29,7 +32,8 @@ export const getMenuEntries = () => {
       id: 'colorTheme',
       label: I18nString.i18nString(UiStrings.ColorTheme),
       flags: MenuItemFlags.None,
-      command: 'QuickPick.openColorTheme',
+      command: 'Viewlet.openWidget',
+      args: ['QuickPick', 'color-theme'],
     },
     {
       id: 'checkForUpdates',

@@ -62,3 +62,11 @@ export const getText = async (url, options = {}) => {
     throw new VError(error, `Failed to request text from "${url}"`)
   }
 }
+
+export const getBlob = async (url, options = {}) => {
+  try {
+    return await ky(url, options).blob()
+  } catch (error) {
+    throw new VError(error, `Failed to request blob from "${url}"`)
+  }
+}

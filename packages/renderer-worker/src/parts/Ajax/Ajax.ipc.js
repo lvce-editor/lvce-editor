@@ -5,4 +5,5 @@ import * as Ajax from './Ajax.js'
 export const Commands = {
   'Ajax.getJson': Ajax.getJson,
   'Ajax.getText': Ajax.getText,
+  'Ajax.getBlob': Ajax.getBlob,
 }

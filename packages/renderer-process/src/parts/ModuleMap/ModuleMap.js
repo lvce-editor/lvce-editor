@@ -6,6 +6,7 @@ export const getModuleId = (commandId) => {
       return ModuleId.Audio
     case 'ClipBoard.readText':
     case 'ClipBoard.writeText':
+    case 'ClipBoard.writeImage':
       return ModuleId.ClipBoard
     case 'Css.setInlineStyle':
       return ModuleId.Css

@@ -8,3 +8,7 @@ export const writeText = async (text) => {
   Assert.string(text)
   await navigator.clipboard.writeText(text)
 }
+
+export const writeImage = async (blob) => {
+  await navigator.clipboard.write([new ClipboardItem({ [blob.type]: blob })])
+}

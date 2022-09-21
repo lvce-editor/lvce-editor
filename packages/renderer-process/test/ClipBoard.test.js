@@ -1,5 +1,13 @@
 import { jest } from '@jest/globals'
 
+beforeAll(() => {
+  globalThis.ClipboardItem = class {
+    constructor(options) {
+      this.options = options
+    }
+  }
+})
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
@@ -82,4 +90,43 @@ test('writeText - error', async () => {
   await expect(ClipBoard.writeText('abc')).rejects.toThrowError(
     new Error('not allowed')
   )
+})
+
+test('writeText - error - format not supported', async () => {
+  globalThis.navigator = {
+    // @ts-ignore
+    clipboard: {
+      async write() {
+        throw new Error('Type image/avif not supported on write.')
+      },
+    },
+  }
+
+  await expect(
+    ClipBoard.writeImage({
+      type: 'image/avif',
+    })
+  ).rejects.toThrowError(new Error('Type image/avif not supported on write.'))
+})
+
+test('writeText', async () => {
+  globalThis.navigator = {
+    clipboard: {
+      // @ts-ignore
+      write: jest.fn(),
+    },
+  }
+  const blob = {
+    type: 'image/png',
+  }
+  await ClipBoard.writeImage(blob)
+  // @ts-ignore
+  expect(globalThis.navigator.clipboard.write).toHaveBeenCalledTimes(1)
+  // @ts-ignore
+  expect(globalThis.navigator.clipboard.write).toHaveBeenCalledWith([
+    new ClipboardItem({
+      // @ts-ignore
+      'image/png': blob,
+    }),
+  ])
 })

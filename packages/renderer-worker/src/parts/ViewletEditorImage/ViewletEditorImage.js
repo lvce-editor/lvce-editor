@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 export const name = 'EditorImage'
 
@@ -223,6 +224,16 @@ export const handleWheel = (state, x, y, deltaX, deltaY) => {
     ...state,
     domMatrix: newDomMatrix,
   }
+}
+
+export const handleContextMenu = async (state, x, y) => {
+  await Command.execute(
+    /* ContextMenu.show */ 'ContextMenu.show',
+    /* x */ x,
+    /* y */ y,
+    /* id */ MenuEntryId.EditorImage
+  )
+  return state
 }
 
 export const hasFunctionalRender = true

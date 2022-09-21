@@ -201,9 +201,10 @@
     "label": "Developer: Open Data Folder"
   },
   {
-    "id": "Preferences.selectColorTheme",
+    "id": "Viewlet.openWidget",
     "label": "Preferences: Color Theme",
-    "aliases": ["Select Color Theme", "Switch Color Theme", "Theme Color"]
+    "aliases": ["Select Color Theme", "Switch Color Theme", "Theme Color"],
+    "args": ["QuickPick", "color-theme"]
   },
   {
     "id": "Developer.measureLatencyBetweenExtensionHostAndSharedProcess",

@@ -191,7 +191,7 @@ export const selectIndex = async (state, index, button = /* left */ 0) => {
       await Viewlet.closeWidget('QuickPick')
       return state
     default:
-      break
+      return state
   }
 
   // TODO recent picks should be per provider
