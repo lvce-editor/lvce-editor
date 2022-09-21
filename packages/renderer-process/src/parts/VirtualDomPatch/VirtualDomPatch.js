@@ -13,7 +13,7 @@ const patchAttributeSet = ($Node, patch) => {
   if (patch.key === 'text') {
     $Node.nodeValue = patch.value
   } else {
-    $Node.setAttribute(patch.key, patch.value)
+    $Node[patch.key] = patch.value
   }
 }
 
