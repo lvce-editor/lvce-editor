@@ -228,3 +228,67 @@ test('diff - one attribute removed, one attribute added', () => {
     },
   ])
 })
+
+test('diff - with children, one attribute removed, one attribute added', () => {
+  const oldDom = [
+    div({ id: 'QuickPickItemActive', className: 'QuickPickItem' }, 1),
+    div(
+      {
+        className: 'QuickPickItemLabel',
+      },
+      1
+    ),
+    text('1'),
+    div(
+      {
+        className: 'QuickPickItem',
+      },
+      1
+    ),
+    div(
+      {
+        className: 'QuickPickItemLabel',
+      },
+      1
+    ),
+    text('2'),
+  ]
+  const newDom = [
+    div({ className: 'QuickPickItem' }, 1),
+    div(
+      {
+        className: 'QuickPickItemLabel',
+      },
+      1
+    ),
+    text('1'),
+    div(
+      {
+        className: 'QuickPickItem',
+        id: 'QuickPickItemActive',
+      },
+      1
+    ),
+    div(
+      {
+        className: 'QuickPickItemLabel',
+      },
+      1
+    ),
+    text('2'),
+  ]
+  const changes = VirtualDomDiff.diff(oldDom, newDom)
+  expect(changes).toEqual([
+    {
+      index: 0,
+      key: 'id',
+      operation: 2,
+    },
+    {
+      index: 3,
+      key: 'id',
+      operation: 1,
+      value: 'QuickPickItemActive',
+    },
+  ])
+})

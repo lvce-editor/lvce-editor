@@ -5,30 +5,35 @@ const patchMountElements = ($Root, patch) => {
   VirtualDom.renderInternal($Root, patch.newDom)
 }
 
-const patchAttributeRemove = ($Root, patch) => {
-  const $Child = $Root.children[patch.index]
-  $Child.removeAttribute(patch.key)
+const patchAttributeRemove = ($Node, patch) => {
+  $Node.removeAttribute(patch.key)
 }
 
-const patchAttributeSet = ($Root, patch) => {
-  const $Child = $Root.children[patch.index]
-  $Child.setAttribute(patch.key, patch.value)
+const patchAttributeSet = ($Node, patch) => {
+  $Node.setAttribute(patch.key, patch.value)
 }
 
 export const patch = ($Root, patches) => {
+  const iter = document.createNodeIterator($Root, NodeFilter.SHOW_ALL)
+  let $Node
+  let i = -1
   for (const patch of patches) {
+    do {
+      $Node = iter.nextNode()
+    } while (i++ < patch.index)
     switch (patch.operation) {
       case VirtualDomDiffType.ElementsAdd:
-        patchMountElements($Root, patch)
+        patchMountElements($Node, patch)
         break
       case VirtualDomDiffType.AttributeRemove:
-        patchAttributeRemove($Root, patch)
+        patchAttributeRemove($Node, patch)
         break
       case VirtualDomDiffType.AttributeSet:
-        patchAttributeSet($Root, patch)
+        patchAttributeSet($Node, patch)
         break
       default:
         break
     }
+    // console.log('after', $Node.innerHTML, patch)
   }
 }

@@ -11,6 +11,7 @@ test('patch - add one element', () => {
   const patches = [
     {
       operation: VirtualDomDiffType.ElementsAdd,
+      index: -1,
       newDom: [
         {
           type: VirtualDomElements.Div,
@@ -30,6 +31,7 @@ test('patch - add one element with child', () => {
   const patches = [
     {
       operation: VirtualDomDiffType.ElementsAdd,
+      index: -1,
       newDom: [
         {
           type: VirtualDomElements.Div,
@@ -56,6 +58,7 @@ test('patch - add two elements', () => {
   const patches = [
     {
       operation: VirtualDomDiffType.ElementsAdd,
+      index: -1,
       newDom: [
         {
           type: VirtualDomElements.Div,
@@ -107,5 +110,71 @@ test('patch -  one attribute removed, one attribute added', () => {
   VirtualDomPatch.patch($Root, patches)
   expect($Root.innerHTML).toBe(
     `<div></div><div id="QuickPickItemActive"></div>`
+  )
+})
+
+test('diff - with children, one attribute removed, one attribute added', () => {
+  const oldDom = [
+    {
+      type: VirtualDomElements.Div,
+      props: {
+        id: 'QuickPickItemActive',
+        className: 'QuickPickItem',
+      },
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      props: {
+        className: 'QuickPickItemLabel',
+      },
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Text,
+      props: {
+        text: '1',
+      },
+      childCount: 0,
+    },
+    {
+      type: VirtualDomElements.Div,
+      props: {
+        className: 'QuickPickItem',
+      },
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Div,
+      props: {
+        className: 'QuickPickItemLabel',
+      },
+      childCount: 1,
+    },
+    {
+      type: VirtualDomElements.Text,
+      props: {
+        text: '2',
+      },
+      childCount: 0,
+    },
+  ]
+  const patches = [
+    {
+      index: 0,
+      key: 'id',
+      operation: 2,
+    },
+    {
+      index: 3,
+      key: 'id',
+      operation: 1,
+      value: 'QuickPickItemActive',
+    },
+  ]
+  const $Root = VirtualDom.render(oldDom)
+  VirtualDomPatch.patch($Root, patches)
+  expect($Root.innerHTML).toBe(
+    '<div class="QuickPickItem"><div class="QuickPickItemLabel">1</div></div><div class="QuickPickItem" id="QuickPickItemActive"><div class="QuickPickItemLabel">2</div></div>'
   )
 })
