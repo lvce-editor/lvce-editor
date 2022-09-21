@@ -49,6 +49,7 @@ export const getPickLabel = (colorThemeName) => {
 
 export const getPicks = async (searchValue) => {
   const colorThemeNames = await getColorThemeNames()
+  console.log({ colorThemeNames })
   const picks = colorThemeNames.map(toPick)
   return picks
 }

@@ -91,9 +91,25 @@ export const getPicks = async () => {
   return [...builtinPicks, ...extensionPicks]
 }
 
+const shouldHide = (item) => {
+  if (item.id === 'Viewlet.openWidget' && item.args[0] === 'QuickPick') {
+    return false
+  }
+  return true
+}
+
 const selectPickBuiltin = async (item) => {
+  const args = item.args || []
   // TODO ids should be all numbers for efficiency -> also directly can call command
-  await Command.execute(item.id)
+  await Command.execute(item.id, ...args)
+  if (shouldHide(item)) {
+    return {
+      command: 'hide',
+    }
+  }
+  return {
+    command: '',
+  }
 }
 
 const selectPickExtension = async (item) => {
@@ -103,17 +119,16 @@ const selectPickExtension = async (item) => {
   } catch (error) {
     await ErrorHandling.showErrorDialog(error)
   }
-}
-
-export const selectPick = async (item) => {
-  if (item.id.startsWith('ext.')) {
-    await selectPickExtension(item)
-  } else {
-    await selectPickBuiltin(item)
-  }
   return {
     command: 'hide',
   }
+}
+
+export const selectPick = (item) => {
+  if (item.id.startsWith('ext.')) {
+    return selectPickExtension(item)
+  }
+  return selectPickBuiltin(item)
 }
 
 export const getFilterValue = (value) => {
