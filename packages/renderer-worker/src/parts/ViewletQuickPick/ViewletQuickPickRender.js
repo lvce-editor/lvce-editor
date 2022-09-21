@@ -1,5 +1,5 @@
 import * as VirtualDomDiff from '../VirtualDomDiff/VirtualDomDiff.js'
-import { div, i, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import { div, i, input, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 /**
  * @enum {string}
@@ -10,6 +10,7 @@ const ClassNames = {
   Icon: 'Icon',
   QuickPickItemDescription: 'QuickPickItemDescription',
   QuickPickStatus: 'QuickPickStatus',
+  InputBox: 'InputBox',
 }
 
 /**
@@ -36,6 +37,8 @@ const Roles = {
  */
 const UiStrings = {
   QuickInput: 'Quick Input',
+  TypeTheNameOfACommandToRun: 'Type the name of a command to run.',
+  QuickOpen: 'Quick open',
 }
 
 const QuickPickItem = (item) => {
@@ -107,7 +110,53 @@ const getVisible = (items, minLineY, maxLineY, focusedIndex) => {
   return visibleItems
 }
 
-const renderItems = {
+const renderQuickPickItemsDom = (state) => {
+  const visibleItems = getVisible(
+    state.items,
+    state.minLineY,
+    state.maxLineY,
+    state.focusedIndex
+  )
+  const dom = QuickPickItems(visibleItems)
+  return dom
+}
+
+const renderQuickPickDom = (state) => {
+  return [
+    div(
+      {
+        id: Ids.QuickPick,
+        ariaLabel: UiStrings.QuickOpen,
+      },
+      2
+    ),
+    div(
+      {
+        id: Ids.QuickPickHeader,
+      },
+      1
+    ),
+    input(
+      {
+        className: ClassNames.InputBox,
+        spellcheck: false,
+        autocaptialize: 'off',
+        type: 'text',
+        autocorrect: 'off',
+        ariaControls: 'QuickPickItems',
+        role: 'combobox',
+        ariaLabel: UiStrings.TypeTheNameOfACommandToRun,
+        ariaAutocomplete: 'list',
+        ariaExpanded: true,
+        value: state.value,
+      },
+      0
+    ),
+    ...renderQuickPickItemsDom(state),
+  ]
+}
+
+const renderDom = {
   isEqual(oldState, newState) {
     return (
       oldState.items === newState.items &&
@@ -117,32 +166,11 @@ const renderItems = {
     )
   },
   apply(oldState, newState) {
-    if (newState.items.length === 0) {
-      return [
-        /* Viewlet.send */ 'Viewlet.send',
-        /* id */ 'QuickPick',
-        /* method */ 'showNoResults',
-      ]
-    }
-    const visibleItems = getVisible(
-      newState.items,
-      newState.minLineY,
-      newState.maxLineY,
-      newState.focusedIndex
-    )
-    const dom = QuickPickItems(visibleItems)
+    const oldDom = renderQuickPickDom(oldState)
+    const newDom = renderQuickPickDom(newState)
+    const changes = VirtualDomDiff.diff(oldDom, newDom)
 
-    const oldDom = QuickPickItems(
-      getVisible(
-        oldState.items,
-        oldState.minLineY,
-        oldState.maxLineY,
-        oldState.focusedIndex
-      )
-    )
-    const changes = VirtualDomDiff.diff(oldDom, dom)
-    console.log({ changes })
-    // console.log({ oldDom, dom, changes })
+    console.log({ oldDom, newDom })
     return [
       /* viewletSend */ 'Viewlet.send',
       /* id */ 'QuickPick',
@@ -152,55 +180,7 @@ const renderItems = {
   },
 }
 
-// const renderFocusedIndex = {
-//   isEqual(oldState, newState) {
-//     return oldState.focusedIndex === newState.focusedIndex
-//   },
-//   apply(oldState, newState) {
-//     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
-//     const newFocusedIndex = newState.focusedIndex - newState.minLineY
-//     return [
-//       /* Viewlet.send */ 'Viewlet.send',
-//       /* id */ 'QuickPick',
-//       /* method */ 'setFocusedIndex',
-//       /* oldFocusedIndex */ oldFocusedIndex,
-//       /* newFocusedIndex */ newFocusedIndex,
-//     ]
-//   },
-// }
-
-const renderHeight = {
-  isEqual(oldState, newState) {
-    return oldState.items.length === newState.items.length
-  },
-  apply(oldState, newState) {
-    const maxLineY = Math.min(newState.maxLineY, newState.items.length)
-    const itemCount = maxLineY - newState.minLineY
-    const height = itemCount * newState.itemHeight
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'QuickPick',
-      /* method */ 'setItemsHeight',
-      /* height */ height,
-    ]
-  },
-}
-
 export const hasFunctionalRender = true
-
-const renderValue = {
-  isEqual(oldState, newState) {
-    return oldState.value === newState.value
-  },
-  apply(oldState, newState) {
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'QuickPick',
-      /* method */ 'setValue',
-      /* value */ newState.value,
-    ]
-  },
-}
 
 const renderCursorOffset = {
   isEqual(oldState, newState) {
@@ -217,10 +197,4 @@ const renderCursorOffset = {
   },
 }
 
-export const render = [
-  renderItems,
-  renderValue,
-  renderCursorOffset,
-  // renderFocusedIndex,
-  renderHeight,
-]
+export const render = [renderDom]
