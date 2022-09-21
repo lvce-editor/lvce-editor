@@ -1,5 +1,13 @@
 // import * as ViewService from '../ViewService/ViewService.js'
 
+/**
+ * @enum {string}
+ */
+
+export const UiStrings = {
+  NoWorkspaceSymbolsFound: 'no workspace symbols found',
+}
+
 export const name = 'workspace-symbol'
 
 export const getPlaceholder = () => {
@@ -12,7 +20,7 @@ export const getHelpEntries = () => {
 
 export const getNoResults = () => {
   return {
-    label: 'no workspace symbols found',
+    label: UiStrings.NoWorkspaceSymbolsFound,
   }
 }
 

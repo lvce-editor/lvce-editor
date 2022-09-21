@@ -1,9 +1,18 @@
 import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
+/**
+ * @enum {string}
+ */
+export const UiStrings = {
+  NoMatchingColorThemesFound: 'No matching color themes found',
+  SelectColorTheme: 'Select Color Theme',
+}
+
 const getColorThemeNames = async () => {
-  if (Platform.platform === 'web') {
+  if (Platform.platform === PlatformType.Web) {
     const assetDir = Platform.getAssetDir()
     const url = `${assetDir}/config/themes.json`
     return Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
@@ -21,11 +30,11 @@ const setColorTheme = (id) => {
 }
 
 export const getPlaceholder = () => {
-  return 'Select Color Theme'
+  return UiStrings.SelectColorTheme
 }
 
 export const getLabel = () => {
-  return 'Select Color Theme'
+  return UiStrings.SelectColorTheme
 }
 
 const toPick = (colorThemeName) => {
@@ -61,6 +70,6 @@ export const getFilterValue = (value) => {
 
 export const getNoResults = () => {
   return {
-    label: 'No matching color themes found',
+    label: UiStrings.NoMatchingColorThemesFound,
   }
 }

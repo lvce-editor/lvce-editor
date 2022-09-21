@@ -3,6 +3,9 @@ import * as I18nString from '../I18NString/I18NString.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorGoTo from './EditorCommandGoTo.js'
 
+/**
+ * @enum {string}
+ */
 const UiStrings = {
   NoDefinitionFound: 'No definition found',
   NoDefinitionFoundFor: `No definition found for '{PH1}'`,

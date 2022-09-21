@@ -1,5 +1,14 @@
 import * as Command from '../Command/Command.js'
 
+/**
+ * @enum {string}
+ */
+export const UiStrings = {
+  SelectToOpen: 'Select to open',
+  OpenRecent: 'Open Recent',
+  NoRecentlyOpenedFoldersFound: 'No recently opened folders found',
+}
+
 const getRecentlyOpened = () => {
   return Command.execute(
     /* RecentlyOpened.getRecentlyOpened */ 'RecentlyOpened.getRecentlyOpened'
@@ -14,11 +23,11 @@ const openWorkspaceFolder = (uri) => {
 }
 
 export const getPlaceholder = () => {
-  return 'Select to open'
+  return UiStrings.SelectToOpen
 }
 
 export const getLabel = () => {
-  return 'Open Recent'
+  return UiStrings.OpenRecent
 }
 
 export const getHelpEntries = () => {
@@ -27,7 +36,7 @@ export const getHelpEntries = () => {
 
 export const getNoResults = () => {
   return {
-    label: 'No recently opened folders found',
+    label: UiStrings.NoRecentlyOpenedFoldersFound,
   }
 }
 

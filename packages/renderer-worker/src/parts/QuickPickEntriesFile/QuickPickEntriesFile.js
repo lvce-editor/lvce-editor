@@ -3,6 +3,15 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as SearchFile from '../SearchFile/SearchFile.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  Files: 'Files',
+  NoMatchingResults: 'No matching results',
+  GoToFile: 'Go to file',
+}
+
 const searchFile = async (path, value) => {
   const files = await SearchFile.searchFile(
     /* path */ path,
@@ -35,14 +44,14 @@ export const getPlaceholder = () => {
 }
 
 export const getLabel = () => {
-  return 'Files'
+  return UiStrings.Files
 }
 
 // TODO help entries should not be here
 export const getHelpEntries = () => {
   return [
     {
-      description: 'Go to file',
+      description: UiStrings.GoToFile,
       category: 'global commands',
     },
   ]
@@ -50,7 +59,7 @@ export const getHelpEntries = () => {
 
 export const getNoResults = () => {
   return {
-    label: 'No matching results',
+    label: UiStrings.NoMatchingResults,
   }
 }
 
