@@ -9,12 +9,12 @@ const Imports = {
 
 // prettier-ignore
 export const Commands = {
+  'EditorImage.copyImage': LazyCommand.create('EditorImage', Imports.CopyImage, 'copyImage'),
+  'EditorImage.handleContextMenu': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handleContextMenu),
   'EditorImage.handlePointerDown': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handlePointerDown),
   'EditorImage.handlePointerMove': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handlePointerMove),
   'EditorImage.handlePointerUp': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handlePointerUp),
   'EditorImage.handleWheel': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handleWheel),
-  'EditorImage.handleContextMenu': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handleContextMenu),
-  'EditorImage.copyImage': LazyCommand.create('EditorImage', Imports.CopyImage, 'copyImage'),
 }
 
 export * from './ViewletEditorImage.js'

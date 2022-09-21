@@ -50,8 +50,6 @@ export const load = (moduleId) => {
       return import('../ExtensionMeta/ExtensionMeta.ipc.js')
     case ModuleId.Extensions:
       return import('../Extensions/Extensions.ipc.js')
-    case ModuleId.PersistentFileHandle:
-      return import('../PersistentFileHandle/PersistentFileHandle.ipc.js')
     case ModuleId.FilePicker:
       return import('../FilePicker/FilePicker.ipc.js')
     case ModuleId.FileSystem:
@@ -88,6 +86,8 @@ export const load = (moduleId) => {
       return import('../Open/Open.ipc.js')
     case ModuleId.OpenNativeFolder:
       return import('../OpenNativeFolder/OpenNativeFolder.ipc.js')
+    case ModuleId.PersistentFileHandle:
+      return import('../PersistentFileHandle/PersistentFileHandle.ipc.js')
     case ModuleId.Preferences:
       return import('../Preferences/Preferences.ipc.js')
     case ModuleId.RecentlyOpened:
