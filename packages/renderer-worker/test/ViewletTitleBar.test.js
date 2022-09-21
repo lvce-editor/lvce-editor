@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
+import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -48,44 +49,44 @@ test('loadContent', async () => {
     titleBarEntries: [
       {
         flags: MenuItemFlags.None,
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
         flags: MenuItemFlags.None,
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
       {
         flags: MenuItemFlags.None,
-        id: 'selection',
+        id: MenuEntryId.Selection,
         name: 'Selection',
       },
       {
         flags: MenuItemFlags.None,
-        id: 'view',
+        id: MenuEntryId.View,
         name: 'View',
       },
       {
         flags: MenuItemFlags.None,
-        id: 'go',
+        id: MenuEntryId.Go,
         name: 'Go',
       },
       {
         flags: MenuItemFlags.None,
-        id: 'run',
+        id: MenuEntryId.Run,
         keyboardShortCut: 'Alt+r',
         name: 'Run',
       },
       {
         flags: MenuItemFlags.None,
-        id: 'terminal',
+        id: MenuEntryId.Terminal,
         keyboardShortCut: 'Alt+t',
         name: 'Terminal',
       },
       {
         flags: MenuItemFlags.None,
-        id: 'help',
+        id: MenuEntryId.Help,
         keyboardShortCut: 'Alt+h',
         name: 'Help',
       },
