@@ -1,4 +1,5 @@
 import * as VirtualDomDiffType from '../VirtualDomDiffType/VirtualDomDiffType.js'
+import { div, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 const patchProps = (changes, i, oldProps, newProps) => {
   for (const key in newProps) {
