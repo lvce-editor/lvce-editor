@@ -7,7 +7,7 @@ const patchProps = (changes, i, oldProps, newProps) => {
     const prev = oldProps[key]
     if (next !== prev) {
       return changes.push({
-        path: i,
+        index: i,
         operation: VirtualDomDiffType.AttributeSet,
         key,
         value: next,
@@ -17,7 +17,7 @@ const patchProps = (changes, i, oldProps, newProps) => {
   for (const key in oldProps) {
     if (!(key in newProps)) {
       changes.push({
-        path: i,
+        index: i,
         operation: VirtualDomDiffType.AttributeRemove,
         key,
       })
@@ -58,7 +58,7 @@ export const diff = (oldDom, newDom) => {
   }
   if (oldLength > newLength) {
     unMountChildren(changes, oldLength - newLength)
-  } else {
+  } else if (newLength > oldLength) {
     mountChildren(changes, newDom, commonLength, newLength - oldLength)
   }
   return changes

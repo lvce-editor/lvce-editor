@@ -23,7 +23,7 @@ test('diff - one attribute added', () => {
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
-      path: 0,
+      index: 0,
       operation: VirtualDomDiffType.AttributeSet,
       key: 'ariaSelected',
       value: true,
@@ -51,7 +51,7 @@ test('diff - one attribute changed', () => {
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
-      path: 0,
+      index: 0,
       operation: VirtualDomDiffType.AttributeSet,
       key: 'ariaSelected',
       value: true,
@@ -72,7 +72,7 @@ test('diff - one attribute removed', () => {
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
-      path: 0,
+      index: 0,
       operation: VirtualDomDiffType.AttributeRemove,
       key: 'ariaSelected',
     },
@@ -85,10 +85,14 @@ test('diff - one element added', () => {
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
-      operation: VirtualDomDiffType.ElementAdd,
-      type: VirtualDomElements.Div,
-      props: {},
-      childCount: 0,
+      operation: VirtualDomDiffType.ElementsAdd,
+      newDom: [
+        {
+          type: VirtualDomElements.Div,
+          props: {},
+          childCount: 0,
+        },
+      ],
     },
   ])
 })
@@ -99,18 +103,21 @@ test('diff - one element added with child', () => {
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
-      operation: VirtualDomDiffType.ElementAdd,
-      type: VirtualDomElements.Div,
-      props: {},
-      childCount: 1,
-    },
-    {
-      operation: VirtualDomDiffType.ElementAdd,
-      type: VirtualDomElements.Text,
-      props: {
-        text: 'hello world',
-      },
-      childCount: 0,
+      operation: VirtualDomDiffType.ElementsAdd,
+      newDom: [
+        {
+          type: VirtualDomElements.Div,
+          props: {},
+          childCount: 1,
+        },
+        {
+          type: VirtualDomElements.Text,
+          props: {
+            text: 'hello world',
+          },
+          childCount: 0,
+        },
+      ],
     },
   ])
 })
@@ -121,24 +128,28 @@ test('diff - one element added - at start of element', () => {
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
+      operation: VirtualDomDiffType.AttributeSet,
+      index: 1,
       key: 'text',
-      operation: 1,
-      path: 1,
       value: 'a',
     },
     {
+      operation: VirtualDomDiffType.AttributeSet,
+      index: 2,
       key: 'text',
-      operation: 1,
-      path: 2,
       value: 'b',
     },
     {
-      childCount: 0,
-      operation: 3,
-      props: {
-        text: 'c',
-      },
-      type: 7,
+      operation: VirtualDomDiffType.ElementsAdd,
+      newDom: [
+        {
+          childCount: 0,
+          props: {
+            text: 'c',
+          },
+          type: VirtualDomElements.Text,
+        },
+      ],
     },
   ])
 })
@@ -149,18 +160,22 @@ test('diff - one element added - between elements', () => {
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
+      operation: VirtualDomDiffType.AttributeSet,
+      index: 2,
       key: 'text',
-      operation: 1,
-      path: 2,
       value: 'b',
     },
     {
-      childCount: 0,
-      operation: 3,
-      props: {
-        text: 'c',
-      },
-      type: 7,
+      operation: VirtualDomDiffType.ElementsAdd,
+      newDom: [
+        {
+          childCount: 0,
+          props: {
+            text: 'c',
+          },
+          type: VirtualDomElements.Text,
+        },
+      ],
     },
   ])
 })
@@ -178,16 +193,38 @@ test('diff - two elements added', () => {
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
-      operation: VirtualDomDiffType.ElementAdd,
-      type: VirtualDomElements.Div,
-      props: {},
-      childCount: 0,
+      operation: VirtualDomDiffType.ElementsAdd,
+      newDom: [
+        {
+          type: VirtualDomElements.Div,
+          props: {},
+          childCount: 0,
+        },
+        {
+          type: VirtualDomElements.Div,
+          props: {},
+          childCount: 0,
+        },
+      ],
+    },
+  ])
+})
+
+test('diff - one attribute removed, one attribute added', () => {
+  const oldDom = [div({ id: 'QuickPickItemActive' }, 0), div({}, 0)]
+  const newDom = [div({}, 0), div({ id: 'QuickPickItemActive' }, 0)]
+  const changes = VirtualDomDiff.diff(oldDom, newDom)
+  expect(changes).toEqual([
+    {
+      operation: VirtualDomDiffType.AttributeRemove,
+      key: 'id',
+      index: 0,
     },
     {
-      operation: VirtualDomDiffType.ElementAdd,
-      type: VirtualDomElements.Div,
-      props: {},
-      childCount: 0,
+      operation: VirtualDomDiffType.AttributeSet,
+      key: 'id',
+      value: 'QuickPickItemActive',
+      index: 1,
     },
   ])
 })
