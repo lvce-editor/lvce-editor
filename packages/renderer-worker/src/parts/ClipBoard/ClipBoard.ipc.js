@@ -5,4 +5,5 @@ export const Commands = {
   'ClipBoard.readText': ClipBoard.readText,
   'ClipBoard.writeNativeFiles': ClipBoard.writeNativeFiles,
   'ClipBoard.writeText': ClipBoard.writeText,
+  'ClipBoard.writeImage': ClipBoard.writeImage,
 }

@@ -38,6 +38,8 @@ const getModule = (id) => {
       return import('./MenuEntriesActivityBarAdditionalViews.js')
     case MenuEntryId.Search:
       return import('./MenuEntriesSearch.js')
+    case MenuEntryId.EditorImage:
+      return import('./MenuEntriesEditorImage.js')
     default:
       throw new Error(`module not found "${id}"`)
   }

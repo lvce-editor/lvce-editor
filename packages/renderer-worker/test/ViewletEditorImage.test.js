@@ -279,3 +279,21 @@ test.skip('handleWheel - zoom out', () => {
   expect(newState.domMatrix.e).toBe(0)
   expect(newState.domMatrix.f).toBe(0)
 })
+
+test('copyImage', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    top: 0,
+    left: 0,
+    width: 100,
+    height: 100,
+    src: '/test/file.png',
+  }
+  const newState = ViewletEditorImage.handleWheel(state, 50, 50, 0, -26)
+  expect(newState.domMatrix.a).toBe(1.13)
+  expect(newState.domMatrix.b).toBe(0)
+  expect(newState.domMatrix.c).toBe(0)
+  expect(newState.domMatrix.d).toBe(1.13)
+  expect(newState.domMatrix.e).toBe(-6.499999999999993)
+  expect(newState.domMatrix.f).toBe(-6.499999999999993)
+})
