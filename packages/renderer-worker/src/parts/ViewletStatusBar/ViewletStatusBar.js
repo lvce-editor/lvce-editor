@@ -54,15 +54,15 @@ export const updateStatusBarItems = async (state) => {
 
 export const contentLoadedEffects = (state) => {
   // TODO dispose listener
-  const handleChange = async () => {
-    if (state.disposed) {
-      return
-    }
-    await updateStatusBarItems(state)
-    console.log('status bar items changed')
-  }
-  // maybe return cleanup function from here like react hooks
-  ExtensionHostStatusBarItems.onChange(handleChange)
+  // const handleChange = async () => {
+  //   if (state.disposed) {
+  //     return
+  //   }
+  //   await updateStatusBarItems(state)
+  //   console.log('status bar items changed')
+  // }
+  // // maybe return cleanup function from here like react hooks
+  // ExtensionHostStatusBarItems.onChange(handleChange)
 }
 
 const updateArray = (items, newItem) => {

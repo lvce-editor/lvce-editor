@@ -15,6 +15,10 @@ const getBuiltinOutputChannels = () => {
       name: 'Main',
       file: '/tmp/log-main.txt',
     },
+    {
+      name: 'Shared Process',
+      file: '/tmp/log-shared-process.txt',
+    },
   ]
 }
 
