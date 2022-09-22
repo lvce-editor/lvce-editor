@@ -31,9 +31,7 @@ jest.unstable_mockModule(
   '../src/parts/RendererWorker/RendererWorker.js',
   () => {
     return {
-      send: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
+      send: jest.fn(() => {}),
     }
   }
 )
@@ -95,8 +93,6 @@ test('event - contextmenu', () => {
   ])
   // @ts-ignore
   const $GitKeep = state.$Viewlet.children[0]
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   $GitKeep.dispatchEvent(
     new MouseEvent('contextmenu', {
       clientX: 50,
@@ -126,8 +122,6 @@ test('event - contextmenu - activated via keyboard', () => {
     },
   ])
   ViewletExplorer.setFocusedIndex(state, -1, 0)
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   // @ts-ignore
   state.$Viewlet.children[0].getBoundingClientRect = () => {
     return {
@@ -199,8 +193,6 @@ test('event - click', () => {
     },
   ])
   const $GitKeep = state.$Viewlet.children[0]
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('mousedown', {
     clientX: 50,
     clientY: 50,
@@ -234,8 +226,6 @@ test('event - click on wrapper div', () => {
       path: '/index.html',
     },
   ])
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('mousedown', {
     clientX: 50,
     clientY: 50,
@@ -286,8 +276,6 @@ test('event - right click', () => {
     },
   ])
   const $GitKeep = state.$Viewlet.children[0]
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('mousedown', {
     clientX: 50,
     clientY: 50,
@@ -333,8 +321,6 @@ test('event - blur', () => {
     },
   ])
   const $GitKeep = state.$Viewlet.children[0]
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const event = new FocusEvent('blur', {
     bubbles: true,
   })
@@ -355,8 +341,6 @@ test('event - dragStart', () => {
     },
   ])
   const $File1 = state.$Viewlet.children[0]
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const event = new DragEvent('dragstart', {
     bubbles: true,
   })
@@ -371,8 +355,6 @@ test('event - dragStart', () => {
 })
 
 test('event - dragover', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletExplorer.create()
   ViewletExplorer.updateDirents(state, [
     {
@@ -384,8 +366,6 @@ test('event - dragover', () => {
     },
   ])
   const $File1 = state.$Viewlet.children[0]
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const event = new DragEvent('dragover', {
     bubbles: true,
     cancelable: true,
@@ -414,8 +394,6 @@ test('event - drop', () => {
     },
   ])
   const $File1 = state.$Viewlet.children[0]
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const modifiedDate = new Date()
   const event = new DragEvent('drop', {
     bubbles: true,
