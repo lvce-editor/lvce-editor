@@ -61,3 +61,4 @@ export const Eval = 59
 export const FilePicker = 60
 export const PersistentFileHandle = 61
 export const IndexedDb = 62
+export const Chrome = 63

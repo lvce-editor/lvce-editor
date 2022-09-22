@@ -280,6 +280,12 @@ export const getModuleId = (commandId) => {
     case 'Workspace.setPath':
     case 'Workspace.setUri':
       return ModuleId.Workspace
+    case 'Chrome.close':
+    case 'Chrome.exit':
+    case 'Chrome.maximize':
+    case 'Chrome.minimize':
+    case 'Chrome.unmaximize':
+      return ModuleId.Chrome
     default:
       throw new Error(`command ${commandId} not found`)
   }
