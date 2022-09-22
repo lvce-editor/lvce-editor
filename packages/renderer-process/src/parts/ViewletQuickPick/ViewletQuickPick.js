@@ -51,7 +51,6 @@ export const create = () => {
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
   // @ts-ignore
   $QuickPickInput.role = 'combobox'
-
   $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
   $QuickPickInput.oninput = ViewletQuickPickEvents.handleInput
   $QuickPickInput.addEventListener(
@@ -101,30 +100,13 @@ export const dispose = (state) => {
   state.$QuickPickInput.onblur = null
 }
 
-export const setDom = (state, patchList) => {
-  const { $QuickPickItems } = state
-  VirtualDomPatch.patch($QuickPickItems, patchList)
-}
-
-export const setValue = (state, value) => {
-  const { $QuickPickInput } = state
-  $QuickPickInput.value = value
-}
-
-// TODO use applyPatch function for this
-export const setFocusedIndex = (state, index) => {
-  const { $QuickPickInput, $QuickPickItems } = state
-  $QuickPickInput.setAttribute('aria-activedescendant', `QuickPickItemActive`)
-  // console.log({ index })
-}
-
-export const applyPatch = (state, patch) => {
-  const { $Viewlet } = state
-  const $Node = $Viewlet.querySelector('#' + patch.id)
+const applyPatch = (state, patch) => {
+  const $Node = state['$' + patch.id]
   VirtualDomPatch.patchElement($Node, patch)
 }
 
 export const applyPatches = (state, patches) => {
+  console.log(patches)
   for (const patch of patches) {
     applyPatch(state, patch)
   }

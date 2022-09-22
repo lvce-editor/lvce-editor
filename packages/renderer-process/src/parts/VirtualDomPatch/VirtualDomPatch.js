@@ -39,6 +39,8 @@ const getFn = (operation) => {
       return VirtualDomPatchFunctions.setAriaActiveDescendant
     case VirtualDomDiffType.RemoveAriaActiveDescendant:
       return VirtualDomPatchFunctions.removeAriaActiveDescendant
+    case VirtualDomDiffType.TextSetNthNth:
+      return VirtualDomPatchFunctions.textSetNthNth
     default:
       throw new Error(`unsupported patch type ${operation}`)
   }

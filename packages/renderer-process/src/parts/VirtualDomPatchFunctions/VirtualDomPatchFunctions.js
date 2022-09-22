@@ -95,3 +95,12 @@ export const setAriaActiveDescendant = ($Node, patch) => {
 export const removeAriaActiveDescendant = ($Node, patch) => {
   $Node.removeAttribute('aria-activedescendant')
 }
+
+export const textSet = ($Node, patch) => {
+  $Node.nodeValue = patch.value
+}
+
+export const textSetNthNth = ($Node, patch) => {
+  const $Child = $Node.children[patch.n0].children[patch.n1]
+  textSet($Child, patch)
+}

@@ -1,5 +1,5 @@
-import { div, i, input, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as VirtualDomDiffType from '../VirtualDomDiffType/VirtualDomDiffType.js'
+import { div, i, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 /**
  * @enum {string}
@@ -74,9 +74,6 @@ const renderQuickPickItem = (item) => {
     ariaPosInSet: item.posInSet,
     ariaSetSize: item.setSize,
   }
-  if (item.focused) {
-    props.id = Ids.QuickPickItemActive
-  }
   return [div(props, childCount), ...children]
 }
 
@@ -105,7 +102,6 @@ const getVisible = (items, minLineY, maxLineY, focusedIndex) => {
       icon: item.icon,
       posInSet: i + 1,
       setSize,
-      focused: i === focusedIndex,
     })
   }
   return visibleItems
@@ -120,41 +116,6 @@ const renderQuickPickItemsDom = (state) => {
   )
   const dom = QuickPickItems(visibleItems)
   return dom
-}
-
-const renderQuickPickDom = (state) => {
-  return [
-    div(
-      {
-        id: Ids.QuickPick,
-        ariaLabel: UiStrings.QuickOpen,
-      },
-      2
-    ),
-    div(
-      {
-        id: Ids.QuickPickHeader,
-      },
-      1
-    ),
-    input(
-      {
-        className: ClassNames.InputBox,
-        spellcheck: false,
-        autocaptialize: 'off',
-        type: 'text',
-        autocorrect: 'off',
-        ariaControls: 'QuickPickItems',
-        role: 'combobox',
-        ariaLabel: UiStrings.TypeTheNameOfACommandToRun,
-        ariaAutocomplete: 'list',
-        ariaExpanded: true,
-        value: state.value,
-      },
-      0
-    ),
-    ...renderQuickPickItemsDom(state),
-  ]
 }
 
 export const renderDom = (state) => {
@@ -203,7 +164,7 @@ const getPatchList = (oldState, newState) => {
   const commonLength = Math.min(oldVisibleItems.length, newVisibleItems.length)
   if (oldVisibleItems.length > newVisibleItems.length) {
     changes.push({
-      index: 0,
+      id: Ids.QuickPickItems,
       operation: VirtualDomDiffType.ElementsRemove,
       keepCount: newVisibleItems.length,
     })
@@ -212,9 +173,9 @@ const getPatchList = (oldState, newState) => {
       .slice(commonLength)
       .flatMap(renderQuickPickItem)
     changes.push({
-      index: 0,
       operation: VirtualDomDiffType.ElementsAdd,
       newDom,
+      id: Ids.QuickPickItems,
     })
   }
   for (let elementIndex = 0; elementIndex < commonLength; elementIndex++) {
@@ -226,6 +187,7 @@ const getPatchList = (oldState, newState) => {
           // change icon
           changes.push({
             operation: VirtualDomDiffType.SetSrcNthNth,
+            id: Ids.QuickPickItems,
             value: newElement.icon,
             n0: elementIndex,
             n1: 0,
@@ -234,6 +196,7 @@ const getPatchList = (oldState, newState) => {
           // remove icon
           changes.push({
             operation: VirtualDomDiffType.ElementRemoveNthNth,
+            id: Ids.QuickPickItems,
             n0: elementIndex,
             n1: 0,
           })
@@ -258,7 +221,7 @@ const getPatchList = (oldState, newState) => {
       // change text
       changes.push({
         operation: VirtualDomDiffType.TextSetNthNth,
-        key: 'text',
+        id: Ids.QuickPickItems,
         value: newElement.label,
         n0: elementIndex,
         n1: 1, // TODO
@@ -274,13 +237,13 @@ const renderQuickPickItemsFn = {
     return false
   },
   apply(oldState, newState) {
-    const patchList = getPatchList(oldState, newState)
+    const patches = getPatchList(oldState, newState)
     // console.log({ patchList, oldState, newState })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
-      /* method */ 'setDom',
-      /* patchList */ patchList,
+      /* method */ 'applyPatches',
+      /* patches */ patches,
     ]
   },
 }
@@ -355,16 +318,18 @@ const renderHeight = {
     const maxLineY = Math.min(newState.maxLineY, newState.items.length)
     const itemCount = maxLineY - newState.minLineY
     const height = itemCount * newState.itemHeight
-    const patch = {
-      operation: VirtualDomDiffType.SetHeight,
-      value: height,
-      id: Ids.QuickPickItems,
-    }
+    const patches = [
+      {
+        operation: VirtualDomDiffType.SetHeight,
+        value: height,
+        id: Ids.QuickPickItems,
+      },
+    ]
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
-      /* method */ 'applyPatch',
-      /* patch */ patch,
+      /* method */ 'applyPatches',
+      /* patch */ patches,
     ]
   },
 }
