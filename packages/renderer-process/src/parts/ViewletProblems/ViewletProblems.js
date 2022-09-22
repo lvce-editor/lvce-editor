@@ -1,19 +1,14 @@
 import * as Assert from '../Assert/Assert.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ViewletProblemsEvents from './ViewletProblemsEvents.js'
 
 export const name = 'Problems'
-
-const handleMouseDown = (event) => {
-  event.preventDefault()
-  RendererWorker.send(/* ViewletProblems.focusIndex */ 7550, /* index */ -1)
-}
 
 export const create = (problemsCount) => {
   const $Viewlet = document.createElement('div')
   $Viewlet.dataset.viewletId = 'Problems'
   $Viewlet.className = 'Viewlet'
   $Viewlet.tabIndex = 0
-  $Viewlet.onmousedown = handleMouseDown
+  $Viewlet.onmousedown = ViewletProblemsEvents.handleMouseDown
   return {
     $Viewlet,
   }
@@ -42,5 +37,6 @@ export const setProblems = (state, problems) => {
 }
 
 export const focus = (state) => {
-  state.$Viewlet.focus()
+  const { $Viewlet } = state
+  $Viewlet.focus()
 }
