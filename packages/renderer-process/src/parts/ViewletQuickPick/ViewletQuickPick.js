@@ -4,7 +4,7 @@ import * as AriaAlert from '../AriaAlert/AriaAlert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
 
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
@@ -21,87 +21,13 @@ import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
 const activeId = 'QuickPickItemActive'
 
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
-const getTargetIndex = ($Target) => {
-  switch ($Target.className) {
-    case 'QuickPickItem':
-    case 'QuickPickItem Focused':
-      return getNodeIndex($Target)
-    case 'QuickPickItemLabel':
-      return getNodeIndex($Target.parentNode)
-    default:
-      return -1
-  }
-}
-
-const handleWheel = (event) => {
-  switch (event.deltaMode) {
-    case WheelEventType.DomDeltaLine:
-      RendererWorker.send(
-        /* QuickPick.handleWheel */ 'QuickPick.handleWheel',
-        /* deltaY */ event.deltaY
-      )
-      break
-    case WheelEventType.DomDeltaPixel:
-      RendererWorker.send(
-        /* QuickPick.handleWheel */ 'QuickPick.handleWheel',
-        /* deltaY */ event.deltaY
-      )
-      break
-    default:
-      break
-  }
-}
-
-const handleMouseDown = (event) => {
-  event.preventDefault()
-  const $Target = event.target
-  const index = getTargetIndex($Target)
-  if (index === -1) {
-    return
-  }
-  // console.log('button', event.button)
-  // console.log({ index })
-  RendererWorker.send(
-    /* QuickPick.selectIndex */ 'QuickPick.selectIndex',
-    /* index */ index
-  )
-}
-
-// TODO beforeinput event should prevent input event maybe
-// const handleBeforeInput = (event) => {
-//   if (!event.data) {
-//     return
-//   }
-//   const value = event.target.value + event.data
-//   RendererWorker.send(
-//     /* quickPickHandleInput */ 'QuickPick.handleInput',
-//     /* value */ value,
-//   )
-// }
-
-const handleInput = (event) => {
-  const $Target = event.target
-  RendererWorker.send(
-    /* quickPickHandleInput */ 'QuickPick.handleInput',
-    /* value */ $Target.value
-  )
-}
-const handleBlur = (event) => {
-  RendererWorker.send(/* QuickPick.handleBlur */ 'QuickPick.handleBlur')
-}
-
 // TODO forbidden:
 // 1. methods
 // 2. functions inside functions
 
+/**
+ * @enum {string}
+ */
 const ClassNames = {
   Label: 'Label',
   QuickPickItem: 'QuickPickItem',
@@ -110,12 +36,18 @@ const ClassNames = {
   QuickPickStatus: 'QuickPickStatus',
 }
 
+/**
+ * @enum {string}
+ */
 const Ids = {
   QuickPickHeader: 'QuickPickHeader',
   QuickPickItems: 'QuickPickItems',
   QuickPick: 'QuickPick',
 }
 
+/**
+ * @enum {string}
+ */
 const Roles = {
   ListBox: 'listbox',
   ComboBox: 'combobox',
@@ -281,8 +213,8 @@ export const create = () => {
   $QuickPickInput.role = Roles.ComboBox
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
   $QuickPickInput.ariaAutoComplete = 'list'
-  $QuickPickInput.onblur = handleBlur
-  $QuickPickInput.oninput = handleInput
+  $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
+  $QuickPickInput.oninput = ViewletQuickPickEvents.handleInput
   $QuickPickInput.addEventListener('beforeinput', handleBeforeInput)
   $QuickPickInput.ariaExpanded = 'true'
 
@@ -294,8 +226,12 @@ export const create = () => {
   $QuickPickItems.id = Ids.QuickPickItems
   // @ts-ignore
   $QuickPickItems.role = Roles.ListBox
-  $QuickPickItems.onmousedown = handleMouseDown
-  $QuickPickItems.addEventListener('wheel', handleWheel, { passive: true })
+  $QuickPickItems.onmousedown = ViewletQuickPickEvents.handleMouseDown
+  $QuickPickItems.addEventListener(
+    'wheel',
+    ViewletQuickPickEvents.handleWheel,
+    { passive: true }
+  )
 
   // TODO this works well with nvda but not with windows narrator
   // probably a bug with windows narrator that doesn't support ariaRoleDescription
