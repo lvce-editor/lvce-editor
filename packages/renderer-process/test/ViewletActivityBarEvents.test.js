@@ -14,9 +14,7 @@ jest.unstable_mockModule(
   '../src/parts/RendererWorker/RendererWorker.js',
   () => {
     return {
-      send: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
+      send: jest.fn(),
     }
   }
 )
@@ -34,8 +32,6 @@ const getTitle = ($Element) => {
 }
 
 test('event - handleClick - top', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(state, [
     {
@@ -61,8 +57,6 @@ test('event - handleClick - top', () => {
     },
   ])
   ViewletActivityBar.setFocusedIndex(state, -1, 0)
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('mousedown', {
     bubbles: true,
     clientX: 15,
@@ -80,8 +74,6 @@ test('event - handleClick - top', () => {
 })
 
 test('event - handleClick - bottom', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(state, [
     {
@@ -106,8 +98,6 @@ test('event - handleClick - bottom', () => {
       flags: ActvityBarItemFlags.Button,
     },
   ])
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   state.$ActivityBar.lastChild.dispatchEvent(
     new MouseEvent('mousedown', {
       bubbles: true,
@@ -124,8 +114,6 @@ test('event - handleClick - bottom', () => {
 })
 
 test('event - handleClick - no item is clicked', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(state, [
     {
@@ -150,8 +138,6 @@ test('event - handleClick - no item is clicked', () => {
       flags: ActvityBarItemFlags.Button,
     },
   ])
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('mousedown', {
     bubbles: true,
     clientX: 15,
@@ -164,8 +150,6 @@ test('event - handleClick - no item is clicked', () => {
 })
 
 test('event - handleContextMenu', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(state, [
     {
@@ -190,8 +174,6 @@ test('event - handleContextMenu', () => {
       flags: ActvityBarItemFlags.Button,
     },
   ])
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const $ActivityBarItemsTop = state.$ActivityBar.children[1]
   $ActivityBarItemsTop.children[0].dispatchEvent(
     new MouseEvent('contextmenu', {
