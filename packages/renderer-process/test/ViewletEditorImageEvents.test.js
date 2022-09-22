@@ -40,9 +40,7 @@ jest.unstable_mockModule(
   '../src/parts/RendererWorker/RendererWorker.js',
   () => {
     return {
-      send: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
+      send: jest.fn(() => {}),
     }
   }
 )
@@ -58,8 +56,6 @@ const RendererWorker = await import(
 )
 
 test('event - pointerdown', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletEditorImage.create()
   const { $Viewlet } = state
   const event = new PointerEvent('pointerdown', {
@@ -80,8 +76,6 @@ test('event - pointerdown', () => {
 })
 
 test.skip('event - pointerdown - error - no active pointer with the given id is found', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const spy = jest
     // @ts-ignore
     .spyOn(HTMLElement.prototype, 'setPointerCapture')
@@ -109,8 +103,6 @@ test.skip('event - pointerdown - error - no active pointer with the given id is 
 })
 
 test('event - pointermove after pointerdown', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletEditorImage.create()
   const { $Viewlet } = state
   const pointerDownEvent = new PointerEvent('pointerdown', {
@@ -147,8 +139,6 @@ test('event - pointermove after pointerdown', () => {
 })
 
 test('event - pointerup after pointerdown', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletEditorImage.create()
   const spy1 = jest.spyOn(HTMLElement.prototype, 'addEventListener')
   // @ts-ignore
@@ -182,8 +172,6 @@ test('event - pointerup after pointerdown', () => {
 
 // TODO some other test causes this test to fail
 test.skip('event - wheel', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletEditorImage.create()
   const { $Image } = state
   const event = new WheelEvent('wheel', {
