@@ -20,11 +20,7 @@ export const attributeRemove = ($Node, patch) => {
 }
 
 export const attributeSet = ($Node, patch) => {
-  if (patch.key === 'text') {
-    $Node.nodeValue = patch.value
-  } else {
-    $Node[patch.key] = patch.value
-  }
+  $Node[patch.key] = patch.value
 }
 
 export const elementsRemove = ($Node, patch) => {
