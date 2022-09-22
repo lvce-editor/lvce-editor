@@ -11,9 +11,7 @@ jest.unstable_mockModule(
   '../src/parts/RendererWorker/RendererWorker.js',
   () => {
     return {
-      send: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
+      send: jest.fn(() => {}),
     }
   }
 )
@@ -28,8 +26,6 @@ const ViewletProblems = await import(
 
 test('event - mousedown', () => {
   const state = ViewletProblems.create()
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const event = new MouseEvent('mousedown', {
     bubbles: true,
     clientX: 15,
