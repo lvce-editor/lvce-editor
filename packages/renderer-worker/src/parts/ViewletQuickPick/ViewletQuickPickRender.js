@@ -226,59 +226,53 @@ const getPatchList = (oldState, newState) => {
       newDom,
     })
   }
-
-  let nodeIndex = 0
   for (let elementIndex = 0; elementIndex < commonLength; elementIndex++) {
-    nodeIndex++ // item div
     const oldElement = oldVisibleItems[elementIndex]
     const newElement = newVisibleItems[elementIndex]
-
     if (oldElement.icon !== newElement.icon) {
       if (oldElement.icon) {
         if (newElement.icon) {
           // change icon
           changes.push({
-            index: nodeIndex,
-            operation: VirtualDomDiffType.SetSrc,
+            operation: VirtualDomDiffType.SetSrcNthNth,
             value: newElement.icon,
+            n0: elementIndex,
+            n1: 0,
           })
         } else {
           // remove icon
           changes.push({
-            index: nodeIndex,
-            operation: VirtualDomDiffType.ElementRemove,
+            operation: VirtualDomDiffType.ElementRemoveNthNth,
+            n0: elementIndex,
+            n1: 0,
           })
         }
       } else {
         // add icon
         changes.push({
-          index: nodeIndex,
-          operation: VirtualDomDiffType.ElementAdd,
-          newDom: [
-            i(
-              {
-                className: ClassNames.Icon,
-              },
-              0
-            ),
-          ],
+          operation: VirtualDomDiffType.ElementInsertBeforeNthNth,
+          node: i(
+            {
+              className: ClassNames.Icon,
+            },
+            0
+          ),
+          index: 0,
+          n0: elementIndex,
+          n1: 0,
         })
       }
     }
-    if (oldElement.icon) {
-      nodeIndex++
-    }
     if (oldElement.label !== newElement.label) {
+      // change text
       changes.push({
-        index: nodeIndex,
-        operation: VirtualDomDiffType.AttributeSet,
+        operation: VirtualDomDiffType.TextSetNthNth,
         key: 'text',
         value: newElement.label,
+        n0: elementIndex,
+        n1: 1, // TODO
       })
-      // change text
     }
-
-    nodeIndex += 3 //  label div, text
   }
 
   return changes
@@ -338,7 +332,7 @@ const renderFocusedIndex = {
       patches.push({
         operation: VirtualDomDiffType.RemoveIdNth,
         id: Ids.QuickPickItems,
-        index: oldState.focusedIndex,
+        index: oldState.focusedIndex - oldState.minLineY,
       })
     }
     if (newState.focusedIndex !== -1) {
@@ -346,7 +340,7 @@ const renderFocusedIndex = {
         operation: VirtualDomDiffType.SetElementIdNth,
         value: Ids.QuickPickItemActive,
         id: Ids.QuickPickItems,
-        index: newState.focusedIndex,
+        index: newState.focusedIndex - newState.minLineY,
       })
     }
     return [

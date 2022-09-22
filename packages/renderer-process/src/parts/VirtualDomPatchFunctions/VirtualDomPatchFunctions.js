@@ -1,7 +1,18 @@
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as VirtualDomElement from '../VirtualDomElement/VirtualDomElement.js'
 
 export const elementsAdd = ($Root, patch) => {
   VirtualDom.renderInternal($Root, patch.newDom)
+}
+
+export const elementInsertBefore = ($Node, patch) => {
+  const $Child = VirtualDomElement.render(patch.node)
+  $Node.insertBefore($Child, $Node.children[patch.index])
+}
+
+export const elementInsertBeforeNthNth = ($Node, patch) => {
+  const $Child = $Node.children[patch.n0].children[patch.n1]
+  elementInsertBefore($Child, patch)
 }
 
 export const attributeRemove = ($Node, patch) => {
@@ -65,6 +76,11 @@ export const setValue = ($Node, patch) => {
 
 export const setSrc = ($Node, patch) => {
   $Node.src = patch.value
+}
+
+export const setSrcNthNth = ($Node, patch) => {
+  const $Child = $Node.children[patch.n0].children[patch.n1]
+  setSrc($Child, patch)
 }
 
 export const setCursorOffset = ($Node, patch) => {

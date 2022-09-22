@@ -19,6 +19,7 @@ export const renderInternal = ($Parent, elements) => {
   }
   $Parent.append(...stack)
 }
+
 /**
  *
  * @param {any[]} elements

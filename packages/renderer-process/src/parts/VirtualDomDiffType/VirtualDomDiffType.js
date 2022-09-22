@@ -33,3 +33,11 @@ export const SetValue = 16
 export const SetSrc = 17
 
 export const SetCursorOffset = 18
+
+export const SetSrcNthNth = 19
+
+export const ElementRemoveNthNth = 20
+
+export const ElementInsertBeforeNthNth = 21
+
+export const TextSetNthNth = 22
