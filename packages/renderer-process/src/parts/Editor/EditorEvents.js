@@ -13,12 +13,11 @@ import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
 export const handleContextMenu = (event) => {
   event.preventDefault()
-  const x = event.clientX
-  const y = event.clientY
+  const { clientX, clientY } = event
   RendererWorker.send(
     /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ x,
-    /* y */ y,
+    /* x */ clientX,
+    /* y */ clientY,
     /* id */ MenuEntryId.Editor
   )
 }
@@ -233,7 +232,7 @@ export const handleMouseDown = (event) => {
 
 // disabled for now because of constant cpu usage on mousemove
 // bad for performance
-export const handleMouseMove = (event) => {
+export const handlePointerMove = (event) => {
   const x = event.clientX
   const y = event.clientY
   if (event.altKey) {
@@ -254,20 +253,21 @@ export const handleMouseMove = (event) => {
  * @param {WheelEvent} event
  */
 export const handleWheel = (event) => {
+  const { deltaMode, deltaY } = event
   // event.preventDefault()
   // const state = EditorHelper.getStateFromEvent(event)
   // TODO send editor id
-  switch (event.deltaMode) {
+  switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
       RendererWorker.send(
         /* Editor.setDeltaY */ 'Editor.setDeltaY',
-        /* value */ event.deltaY
+        /* value */ deltaY
       )
       break
     case WheelEventType.DomDeltaPixel:
       RendererWorker.send(
         /* Editor.setDeltaY */ 'Editor.setDeltaY',
-        /* value */ event.deltaY
+        /* value */ deltaY
       )
       break
     default:
@@ -281,22 +281,28 @@ export const handlePaste = (event) => {
   RendererWorker.send(/* Editor.paste */ 'Editor.paste', /* text */ text)
 }
 
-export const handleScrollBarThumbMouseMove = (event) => {
-  const y = event.clientY
+export const handleScrollBarThumbPointerMove = (event) => {
+  const { clientY } = event
   RendererWorker.send(
     /* Editor.handleScrollBarMouseMove */ 'Editor.handleScrollBarMove',
-    /* y */ y
+    /* y */ clientY
   )
 }
 
-export const handleScrollBarThumbMouseUp = () => {
-  window.removeEventListener('mousemove', handleScrollBarThumbMouseMove)
-  window.removeEventListener('mouseup', handleScrollBarThumbMouseUp)
+export const handleScrollBarThumbPointerUp = (event) => {
+  const { target, pointerId } = event
+  target.releasePointerCapture(pointerId)
+  target.removeEventListener('pointermove', handleScrollBarThumbPointerMove)
+  target.removeEventListener('pointerup', handleScrollBarThumbPointerUp)
 }
 
-export const handleScrollBarThumbMouseDown = (event) => {
-  window.addEventListener('mousemove', handleScrollBarThumbMouseMove)
-  window.addEventListener('mouseup', handleScrollBarThumbMouseUp)
+export const handleScrollBarThumbPointerDown = (event) => {
+  const { target, pointerId } = event
+  target.setPointerCapture(pointerId)
+  target.addEventListener('pointermove', handleScrollBarThumbPointerMove, {
+    passive: false,
+  })
+  target.addEventListener('pointerup', handleScrollBarThumbPointerUp)
 }
 
 export const handleScrollBarMouseDown = (event) => {
