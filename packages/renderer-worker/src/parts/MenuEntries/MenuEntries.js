@@ -1,45 +1,46 @@
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
+// prettier-ignore
 const getModule = (id) => {
   switch (id) {
     case MenuEntryId.ActivityBar:
-      return import('./MenuEntriesActivityBar.js')
+      return import('../MenuEntriesActivityBar/MenuEntriesActivityBar.js')
     case MenuEntryId.Edit:
-      return import('./MenuEntriesEdit.js')
+      return import('../MenuEntriesEdit/MenuEntriesEdit.js')
     case MenuEntryId.Editor:
-      return import('./MenuEntriesEditor.js')
+      return import('../MenuEntriesEditor/MenuEntriesEditor.js')
     case MenuEntryId.Explorer:
-      return import('./MenuEntriesExplorer.js')
+      return import('../MenuEntriesExplorer/MenuEntriesExplorer.js')
     case MenuEntryId.File:
-      return import('./MenuEntriesFile.js')
+      return import('../MenuEntriesFile/MenuEntriesFile.js')
     case MenuEntryId.Go:
-      return import('./MenuEntriesGo.js')
+      return import('../MenuEntriesGo/MenuEntriesGo.js')
     case MenuEntryId.Help:
-      return import('./MenuEntriesHelp.js')
+      return import('../MenuEntriesHelp/MenuEntriesHelp.js')
     case MenuEntryId.ManageExtension:
-      return import('./MenuEntriesManageExtension.js')
+      return import('../MenuEntriesManageExtension/MenuEntriesManageExtension.js')
     case MenuEntryId.OpenRecent:
-      return import('./MenuEntriesOpenRecent.js')
+      return import('../MenuEntriesOpenRecent/MenuEntriesOpenRecent.js')
     case MenuEntryId.Run:
-      return import('./MenuEntriesRun.js')
+      return import('../MenuEntriesRun/MenuEntriesRun.js')
     case MenuEntryId.Selection:
-      return import('./MenuEntriesSelection.js')
+      return import('../MenuEntriesSelection/MenuEntriesSelection.js')
     case MenuEntryId.Settings:
-      return import('./MenuEntriesSettings.js')
+      return import('../MenuEntriesSettings/MenuEntriesSettings.js')
     case MenuEntryId.Tab:
-      return import('./MenuEntriesTab.js')
+      return import('../MenuEntriesTab/MenuEntriesTab.js')
     case MenuEntryId.Terminal:
-      return import('./MenuEntriesTerminal.js')
+      return import('../MenuEntriesTerminal/MenuEntriesTerminal.js')
     case MenuEntryId.TitleBar:
-      return import('./MenuEntriesTitleBar.js')
+      return import('../MenuEntriesTitleBar/MenuEntriesTitleBar.js')
     case MenuEntryId.View:
-      return import('./MenuEntriesView.js')
+      return import('../MenuEntriesView/MenuEntriesView.js')
     case MenuEntryId.ActivityBarAdditionalViews:
-      return import('./MenuEntriesActivityBarAdditionalViews.js')
+      return import('../MenuEntriesActivityBarAdditionalViews/MenuEntriesActivityBarAdditionalViews.js')
     case MenuEntryId.Search:
-      return import('./MenuEntriesSearch.js')
+      return import('../MenuEntriesSearch/MenuEntriesSearch.js')
     case MenuEntryId.EditorImage:
-      return import('./MenuEntriesEditorImage.js')
+      return import('../MenuEntriesEditorImage/MenuEntriesEditorImage.js')
     default:
       throw new Error(`module not found "${id}"`)
   }

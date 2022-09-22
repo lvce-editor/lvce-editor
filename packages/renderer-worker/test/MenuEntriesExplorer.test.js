@@ -1,4 +1,4 @@
-import * as MenuEntriesExplorer from '../src/parts/MenuEntries/MenuEntriesExplorer.js'
+import * as MenuEntriesExplorer from '../src/parts/MenuEntriesExplorer/MenuEntriesExplorer.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'

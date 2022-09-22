@@ -1,4 +1,4 @@
-import * as MenuEntriesView from '../src/parts/MenuEntries/MenuEntriesView.js'
+import * as MenuEntriesView from '../src/parts/MenuEntriesView/MenuEntriesView.js'
 
 test('getMenuEntries', () => {
   const menuEntries = MenuEntriesView.getMenuEntries()

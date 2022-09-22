@@ -1,4 +1,4 @@
-import * as MenuEntriesTerminal from '../src/parts/MenuEntries/MenuEntriesTerminal.js'
+import * as MenuEntriesTerminal from '../src/parts/MenuEntriesTerminal/MenuEntriesTerminal.js'
 
 test('getMenuEntries', () => {
   const menuEntries = MenuEntriesTerminal.getMenuEntries()

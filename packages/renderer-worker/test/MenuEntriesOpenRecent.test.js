@@ -15,7 +15,7 @@ jest.unstable_mockModule(
 )
 
 const MenuEntriesOpenRecent = await import(
-  '../src/parts/MenuEntries/MenuEntriesOpenRecent.js'
+  '../src/parts/MenuEntriesOpenRecent/MenuEntriesOpenRecent.js'
 )
 const RecentlyOpened = await import(
   '../src/parts/RecentlyOpened/RecentlyOpened.js'

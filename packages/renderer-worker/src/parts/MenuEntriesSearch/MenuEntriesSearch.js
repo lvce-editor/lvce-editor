@@ -2,7 +2,7 @@ import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 /**
- * @enum {}
+ * @enum {string}
  */
 export const UiStrings = {
   CopyPath: 'Copy Path',

@@ -1,5 +1,5 @@
 import * as Layout from '../src/parts/Layout/Layout.js'
-import * as MenuEntriesActivityBarAdditionalViews from '../src/parts/MenuEntries/MenuEntriesActivityBarAdditionalViews.js'
+import * as MenuEntriesActivityBarAdditionalViews from '../src/parts/MenuEntriesActivityBarAdditionalViews/MenuEntriesActivityBarAdditionalViews.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
 const ACTIVITY_BAR_ITEM_HEIGHT = 48
