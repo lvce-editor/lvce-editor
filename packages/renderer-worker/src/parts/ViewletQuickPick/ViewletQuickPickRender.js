@@ -1,4 +1,3 @@
-import * as VirtualDomDiff from '../VirtualDomDiff/VirtualDomDiff.js'
 import { div, i, input, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as VirtualDomDiffType from '../VirtualDomDiffType/VirtualDomDiffType.js'
 
@@ -90,7 +89,7 @@ const QuickPickItems = (items) => {
       },
       items.length
     ),
-    ...items.flatMap(QuickPickItem),
+    ...items.flatMap(renderQuickPickItem),
   ]
 }
 
@@ -187,10 +186,10 @@ const getPatchList = (oldState, newState) => {
     oldState.focusedIndex
   )
   const newVisibleItems = getVisible(
-    oldState.items,
-    oldState.minLineY,
-    oldState.maxLineY,
-    oldState.focusedIndex
+    newState.items,
+    newState.minLineY,
+    newState.maxLineY,
+    newState.focusedIndex
   )
   const changes = []
   const commonLength = Math.min(oldVisibleItems.length, newVisibleItems.length)
@@ -201,7 +200,9 @@ const getPatchList = (oldState, newState) => {
       keepCount: newVisibleItems.length,
     })
   } else if (newVisibleItems.length > oldVisibleItems.length) {
-    const newDom = newVisibleItems.slice(commonLength).map(renderQuickPickItem)
+    const newDom = newVisibleItems
+      .slice(commonLength)
+      .flatMap(renderQuickPickItem)
     changes.push({
       index: 0,
       operation: VirtualDomDiffType.ElementsAdd,
@@ -223,6 +224,12 @@ const getPatchList = (oldState, newState) => {
       }
     }
     if (oldElement.label !== newElement.label) {
+      changes.push({
+        index: 0,
+        operation: VirtualDomDiffType.AttributeSet,
+        key: 'text',
+        value: newElement.label,
+      })
       // change text
     }
   }
@@ -234,6 +241,7 @@ const getPatchList = (oldState, newState) => {
       // TODO set active item id
     }
   }
+  return changes
 }
 
 const renderQuickPickItemsFn = {
@@ -241,10 +249,8 @@ const renderQuickPickItemsFn = {
     return false
   },
   apply(oldState, newState) {
-    const oldDom = renderQuickPickItemsDom(oldState)
-    const newDom = renderQuickPickItemsDom(newState)
-    const patchList = VirtualDomDiff.diff(oldDom, newDom)
-    console.log({ oldDom, newDom, patchList })
+    const patchList = getPatchList(oldState, newState)
+    console.log({ patchList })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',

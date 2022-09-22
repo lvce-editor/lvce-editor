@@ -1,10 +1,10 @@
 import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
-export const h = (type, props, children) => {
+export const h = (type, props, childCount) => {
   return {
     type,
     props,
-    children,
+    childCount,
   }
 }
 
@@ -14,46 +14,46 @@ export const text = (data) => {
     {
       text: data,
     },
-    []
+    0
   )
 }
 
-export const div = (props, children) => {
-  return h(VirtualDomElements.Div, props, children)
+export const div = (props, childCount) => {
+  return h(VirtualDomElements.Div, props, childCount)
 }
 
-export const tr = (props, children) => {
-  return h(VirtualDomElements.Tr, props, children)
+export const tr = (props, childCount) => {
+  return h(VirtualDomElements.Tr, props, childCount)
 }
 
-export const kbd = (props, children) => {
-  return h(VirtualDomElements.Kbd, props, children)
+export const kbd = (props, childCount) => {
+  return h(VirtualDomElements.Kbd, props, childCount)
 }
 
-export const td = (props, children) => {
-  return h(VirtualDomElements.Td, props, children)
+export const td = (props, childCount) => {
+  return h(VirtualDomElements.Td, props, childCount)
 }
 
-export const input = (props, children) => {
-  return h(VirtualDomElements.Input, props, children)
+export const input = (props, childCount) => {
+  return h(VirtualDomElements.Input, props, childCount)
 }
 
-export const thead = (props, children) => {
-  return h(VirtualDomElements.THead, props, children)
+export const thead = (props, childCount) => {
+  return h(VirtualDomElements.THead, props, childCount)
 }
 
-export const tbody = (props, children) => {
-  return h(VirtualDomElements.TBody, props, children)
+export const tbody = (props, childCount) => {
+  return h(VirtualDomElements.TBody, props, childCount)
 }
 
-export const th = (props, children) => {
-  return h(VirtualDomElements.Th, props, children)
+export const th = (props, childCount) => {
+  return h(VirtualDomElements.Th, props, childCount)
 }
 
-export const table = (props, children) => {
-  return h(VirtualDomElements.Table, props, children)
+export const table = (props, childCount) => {
+  return h(VirtualDomElements.Table, props, childCount)
 }
 
-export const i = (props, children) => {
-  return h(VirtualDomElements.I, props, children)
+export const i = (props, childCount) => {
+  return h(VirtualDomElements.I, props, childCount)
 }
