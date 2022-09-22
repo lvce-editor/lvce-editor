@@ -126,7 +126,6 @@ export const loadContent = async (state) => {
   const uri = state.uri
   const value = getDefaultValue(uri)
   const provider = await QuickPickEntries.load(uri)
-  console.log('provider is', provider.name)
   const newPicks = await provider.getPicks(value)
   Assert.array(newPicks)
   const filterValue = provider.getFilterValue(value)
@@ -451,8 +450,8 @@ export const handleWheel = (state, deltaY) => {
 export const handleClickAt = (state, x, y) => {
   const { top, headerHeight, itemHeight } = state
   const relativeY = y - top - headerHeight
-  const index = Math.ceil(relativeY / itemHeight)
-  console.log({ index })
+  const index = Math.floor(relativeY / itemHeight)
+  console.log({ index, relativeY, itemHeight })
   return selectIndex(state, index)
 }
 

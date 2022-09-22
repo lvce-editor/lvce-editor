@@ -1,6 +1,21 @@
-import * as ViewletQuickPick from '../src/parts/ViewletQuickPick/ViewletQuickPick.js'
 import { jest } from '@jest/globals'
-import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
+  return {
+    closeWidget: jest.fn(() => {}),
+  }
+})
+
+const ViewletQuickPick = await import(
+  '../src/parts/ViewletQuickPick/ViewletQuickPick.js'
+)
+const ViewletManager = await import(
+  '../src/parts/ViewletManager/ViewletManager.js'
+)
 
 const render = (oldState, newState) => {
   return ViewletManager.render(ViewletQuickPick, oldState, newState)
@@ -263,6 +278,50 @@ test('handleWheel - up', () => {
     minLineY: 0,
     maxLineY: 1,
   })
+})
+
+test('handleClickAt - first item', async () => {
+  const provider = {
+    selectPick: jest.fn(() => {
+      return {
+        command: 'hide',
+      }
+    }),
+    getPicks() {
+      return []
+    },
+    getFilterValue(value) {
+      return value
+    },
+  }
+  const state = {
+    ...ViewletQuickPick.create(),
+    itemHeight: 22,
+    minLineY: 0,
+    maxLineY: 2,
+    height: 22,
+    deltaY: 22,
+    items: [
+      {
+        label: 'index.css',
+      },
+      {
+        label: 'index.html',
+      },
+    ],
+    provider,
+    top: 0,
+    headerHeight: 0,
+  }
+  await ViewletQuickPick.handleClickAt(state, 0, 13)
+  expect(provider.selectPick).toHaveBeenCalledTimes(1)
+  expect(provider.selectPick).toHaveBeenCalledWith(
+    {
+      label: 'index.css',
+    },
+    0,
+    0
+  )
 })
 
 test('render - set correct height', () => {
