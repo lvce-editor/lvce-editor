@@ -24,6 +24,32 @@ const patchElementsRemove = ($Node, patch) => {
   $Parent.replaceChildren(...$NewChildren)
 }
 
+const patchElementStyle = ($Node, patch) => {
+  $Node.style[patch.key] = patch.value
+}
+
+export const patchElement = ($Node, patch) => {
+  switch (patch.operation) {
+    case VirtualDomDiffType.ElementsAdd:
+      patchMountElements($Node, patch)
+      break
+    case VirtualDomDiffType.AttributeRemove:
+      patchAttributeRemove($Node, patch)
+      break
+    case VirtualDomDiffType.AttributeSet:
+      patchAttributeSet($Node, patch)
+      break
+    case VirtualDomDiffType.ElementsRemove:
+      patchElementsRemove($Node, patch)
+      break
+    case VirtualDomDiffType.ElementIdSetStyle:
+      patchElementStyle($Node, patch)
+      break
+    default:
+      throw new Error(`unsupported patch type ${patch.operation}`)
+  }
+}
+
 export const patch = ($Root, patches) => {
   const iter = document.createNodeIterator($Root, NodeFilter.SHOW_ALL)
   let $Node
@@ -32,22 +58,7 @@ export const patch = ($Root, patches) => {
     do {
       $Node = iter.nextNode()
     } while (i++ < patch.index)
-    switch (patch.operation) {
-      case VirtualDomDiffType.ElementsAdd:
-        patchMountElements($Node, patch)
-        break
-      case VirtualDomDiffType.AttributeRemove:
-        patchAttributeRemove($Node, patch)
-        break
-      case VirtualDomDiffType.AttributeSet:
-        patchAttributeSet($Node, patch)
-        break
-      case VirtualDomDiffType.ElementsRemove:
-        patchElementsRemove($Node, patch)
-        break
-      default:
-        throw new Error(`unsupported patch type ${patch.operation}`)
-    }
+    patchElement($Node, patch)
     // console.log('after', $Node.innerHTML, patch)
   }
 }

@@ -321,4 +321,29 @@ const renderFocus = {
   },
 }
 
-export const render = [renderQuickPickItemsFn, renderValue, renderFocus]
+const renderHeight = {
+  isEqual(oldState, newState) {
+    return oldState.items.length === newState.items.length
+  },
+  apply(oldState, newState) {
+    const patch = {
+      operation: VirtualDomDiffType.ElementIdSetStyle,
+      key: 'height',
+      value: '100px',
+      id: Ids.QuickPickItems,
+    }
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'QuickPick',
+      /* method */ 'applyPatch',
+      /* patch */ patch,
+    ]
+  },
+}
+
+export const render = [
+  renderQuickPickItemsFn,
+  renderValue,
+  renderHeight,
+  renderFocus,
+]

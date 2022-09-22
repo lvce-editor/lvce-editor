@@ -122,3 +122,11 @@ export const setFocusedIndex = (state, index) => {
   $QuickPickInput.setAttribute('aria-activedescendant', `QuickPickItemActive`)
   // console.log({ index })
 }
+
+export const applyPatch = (state, patch) => {
+  const { $Viewlet } = state
+  console.log({ $Viewlet })
+  const $Node = $Viewlet.querySelector('#' + patch.id)
+  console.log({ patch, $Node })
+  VirtualDomPatch.patchElement($Node, patch)
+}
