@@ -14,11 +14,13 @@ export const create = () => {
 }
 
 export const refresh = (state, context) => {
-  state.$Viewlet.textContent = 'Debug Console - Not implemented'
+  const { $Viewlet } = state
+  $Viewlet.textContent = 'Debug Console - Not implemented'
 }
 
 export const focus = (state) => {
-  state.$Input.focus()
+  const { $Input } = state
+  $Input.focus()
 }
 
 export const dispose = (state) => {}
