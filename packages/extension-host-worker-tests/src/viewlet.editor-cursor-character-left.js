@@ -16,5 +16,5 @@ test('viewlet.editor-cursor-character-left', async () => {
   await Editor.cursorCharacterLeft()
 
   // assert
-  await expect(cursor).toHaveCSS('left', '1px')
+  await expect(cursor).toHaveCSS('left', '0px')
 })
