@@ -60,7 +60,6 @@ export const getNoResults = () => {
 }
 
 export const getPicks = async (searchValue) => {
-  console.log('get picks file')
   const workspace = Workspace.state.workspacePath
   if (!workspace) {
     return []
@@ -73,7 +72,6 @@ export const getPicks = async (searchValue) => {
 export const selectPick = async (item) => {
   const workspace = Workspace.state.workspacePath
   const absolutePath = `${workspace}/${item.label}`
-  console.log({ absolutePath })
   await Command.execute(
     /* Main.openUri */ 'Main.openUri',
     /* uri */ absolutePath
