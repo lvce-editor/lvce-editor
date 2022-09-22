@@ -45,6 +45,10 @@ const getFn = (operation) => {
       return VirtualDomPatchFunctions.elementRemoveNthNth
     case VirtualDomDiffType.SetClassNameNthNth:
       return VirtualDomPatchFunctions.setClassNameNthNth
+    case VirtualDomDiffType.SetSetSizeNth:
+      return VirtualDomPatchFunctions.setSetSizeNth
+    case VirtualDomDiffType.SetPosInSetNth:
+      return VirtualDomPatchFunctions.setPosInSetNth
     default:
       throw new Error(`unsupported patch type ${operation}`)
   }

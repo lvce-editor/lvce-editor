@@ -47,3 +47,7 @@ export const SetAriaActiveDescendant = 23
 export const RemoveAriaActiveDescendant = 24
 
 export const SetClassNameNthNth = 25
+
+export const SetSetSizeNth = 26
+
+export const SetPosInSetNth = 27

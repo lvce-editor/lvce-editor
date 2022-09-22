@@ -116,3 +116,21 @@ export const setClassNameNthNth = ($Node, patch) => {
   const $Child = $Node.children[patch.n0].children[patch.n1]
   setClassName($Child, patch)
 }
+
+const setSetSize = ($Node, patch) => {
+  $Node.ariaSetSize = patch.value
+}
+
+export const setSetSizeNth = ($Node, patch) => {
+  const $Child = $Node.children[patch.n0]
+  setSetSize($Child, patch)
+}
+
+const setPosInSet = ($Node, patch) => {
+  $Node.ariaPosInset = patch.value
+}
+
+export const setPosInSetNth = ($Node, patch) => {
+  const $Child = $Node.children[patch.n0]
+  setPosInSet($Child, patch)
+}

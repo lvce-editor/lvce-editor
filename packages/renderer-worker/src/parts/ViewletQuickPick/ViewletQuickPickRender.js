@@ -227,6 +227,24 @@ const getPatchList = (oldState, newState) => {
         n1: newElement.icon ? 1 : 0,
       })
     }
+    if (oldElement.setSize !== newElement.setSize) {
+      // change setSize
+      changes.push({
+        operation: VirtualDomDiffType.SetSetSizeNth,
+        id: Ids.QuickPickItems,
+        value: newElement.setSize,
+        n0: elementIndex,
+      })
+    }
+    if (oldElement.posInSet !== newElement.posInSet) {
+      // change setSize
+      changes.push({
+        operation: VirtualDomDiffType.SetPosInSetNth,
+        id: Ids.QuickPickItems,
+        value: newElement.setSize,
+        n0: elementIndex,
+      })
+    }
   }
 
   return changes
