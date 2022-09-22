@@ -58,10 +58,7 @@ export const create = () => {
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
-  $ScrollBarThumb.addEventListener(
-    'mousedown',
-    EditorEvents.handleScrollBarThumbMouseDown
-  )
+  $ScrollBarThumb.onpointerdown = EditorEvents.handleScrollBarThumbPointerDown
 
   // TODO only create $ScrollBarDiagnostics lazily when there are actually diagnostics
   const $ScrollBarDiagnostics = document.createElement('div')
@@ -106,7 +103,7 @@ export const create = () => {
   $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBar)
   $Editor.addEventListener('contextmenu', EditorEvents.handleContextMenu)
   $Editor.addEventListener('wheel', EditorEvents.handleWheel, { passive: true })
-  $Editor.addEventListener('mousemove', EditorEvents.handleMouseMove, {
+  $Editor.addEventListener('mousemove', EditorEvents.handlePointerMove, {
     passive: true,
   })
   return {

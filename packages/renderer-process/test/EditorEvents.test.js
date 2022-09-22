@@ -4,6 +4,35 @@
 import { jest } from '@jest/globals'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
+import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
+
+beforeAll(() => {
+  // workaround for jsdom not supporting pointer events
+  // @ts-ignore
+  globalThis.PointerEvent = class extends Event {
+    constructor(type, init) {
+      super(type, init)
+      this.clientX = init.clientX
+      this.clientY = init.clientY
+      this.pointerId = init.pointerId
+      this.button = init.button
+    }
+  }
+
+  HTMLElement.prototype.setPointerCapture = () => {}
+  HTMLElement.prototype.releasePointerCapture = () => {}
+
+  Object.defineProperty(HTMLElement.prototype, 'onpointerdown', {
+    set(fn) {
+      this.addEventListener('pointerdown', fn)
+    },
+  })
+  Object.defineProperty(HTMLElement.prototype, 'onpointerup', {
+    set(fn) {
+      this.addEventListener('pointerup', fn)
+    },
+  })
+})
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -25,6 +54,7 @@ const RendererWorker = await import(
 )
 
 const Editor = await import('../src/parts/Editor/Editor.js')
+const EditorEvents = await import('../src/parts/Editor/EditorEvents.js')
 const Platform = await import('../src/parts/Platform/Platform.js')
 const EditorHelper = await import('../src/parts/Editor/EditorHelper.js')
 
@@ -442,6 +472,107 @@ test('event - wheel', () => {
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith('Editor.setDeltaY', 42)
+})
+
+test('event - pointerdown - on scroll bar thumb', () => {
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const state = Editor.create()
+  const { $ScrollBarThumb } = state
+  const event = new PointerEvent('pointerdown', {
+    bubbles: true,
+    clientX: 10,
+    clientY: 20,
+    pointerId: 0,
+    button: MouseEventType.LeftClick,
+  })
+  $ScrollBarThumb.dispatchEvent(event)
+  expect(RendererWorker.send).not.toHaveBeenCalled()
+})
+
+test('event - pointermove after pointerdown - on scroll bar thumb', () => {
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const state = Editor.create()
+  const { $ScrollBarThumb } = state
+  const pointerDownEvent = new PointerEvent('pointerdown', {
+    bubbles: true,
+    clientX: 10,
+    clientY: 20,
+    pointerId: 0,
+    button: MouseEventType.LeftClick,
+  })
+  $ScrollBarThumb.dispatchEvent(pointerDownEvent)
+  const pointerMoveEvent = new PointerEvent('pointermove', {
+    bubbles: true,
+    clientX: 30,
+    clientY: 40,
+    pointerId: 0,
+    button: MouseEventType.LeftClick,
+  })
+  $ScrollBarThumb.dispatchEvent(pointerMoveEvent)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(
+    1,
+    'Editor.handleScrollBarMove',
+    40
+  )
+})
+
+test('event - pointerup after pointerdown - on scroll bar thumb', () => {
+  // @ts-ignore
+  RendererWorker.send.mockImplementation(() => {})
+  const state = Editor.create()
+  const spy1 = jest.spyOn(HTMLElement.prototype, 'addEventListener')
+  const spy2 = jest.spyOn(HTMLElement.prototype, 'removeEventListener')
+  // @ts-ignore
+  const spy3 = jest.spyOn(HTMLElement.prototype, 'setPointerCapture')
+  // @ts-ignore
+  const spy4 = jest.spyOn(HTMLElement.prototype, 'releasePointerCapture')
+  const { $ScrollBarThumb } = state
+  const pointerDownEvent = new PointerEvent('pointerdown', {
+    bubbles: true,
+    clientX: 10,
+    clientY: 20,
+    pointerId: 0,
+    button: MouseEventType.LeftClick,
+  })
+  $ScrollBarThumb.dispatchEvent(pointerDownEvent)
+  expect(spy1).toHaveBeenCalledTimes(2)
+  expect(spy1).toHaveBeenNthCalledWith(
+    1,
+    'pointermove',
+    EditorEvents.handleScrollBarThumbPointerMove,
+    { passive: false }
+  )
+  expect(spy1).toHaveBeenNthCalledWith(
+    2,
+    'pointerup',
+    EditorEvents.handleScrollBarThumbPointerUp
+  )
+  expect(spy3).toHaveBeenCalledTimes(1)
+  expect(spy3).toHaveBeenCalledWith(0)
+  const pointerUpEvent = new PointerEvent('pointerup', {
+    bubbles: true,
+    clientX: 10,
+    clientY: 20,
+    pointerId: 0,
+    button: MouseEventType.LeftClick,
+  })
+  $ScrollBarThumb.dispatchEvent(pointerUpEvent)
+  expect(spy4).toHaveBeenCalledTimes(1)
+  expect(spy4).toHaveBeenCalledWith(0)
+  expect(spy2).toHaveBeenCalledTimes(2)
+  expect(spy2).toHaveBeenNthCalledWith(
+    1,
+    'pointermove',
+    EditorEvents.handleScrollBarThumbPointerMove
+  )
+  expect(spy2).toHaveBeenNthCalledWith(
+    2,
+    'pointerup',
+    EditorEvents.handleScrollBarThumbPointerUp
+  )
 })
 
 test.skip('event - beforeinput on contenteditable on mobile - cursor in middle', () => {
