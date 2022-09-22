@@ -31,3 +31,5 @@ export const SetHeight = 15
 export const SetValue = 16
 
 export const SetSrc = 17
+
+export const SetCursorOffset = 18

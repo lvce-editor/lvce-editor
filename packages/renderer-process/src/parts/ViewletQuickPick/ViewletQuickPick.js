@@ -101,12 +101,6 @@ export const dispose = (state) => {
   state.$QuickPickInput.onblur = null
 }
 
-export const setCursorOffset = (state, cursorOffset) => {
-  const { $QuickPickInput } = state
-  $QuickPickInput.selectionStart = cursorOffset
-  $QuickPickInput.selectionEnd = cursorOffset
-}
-
 export const setDom = (state, patchList) => {
   const { $QuickPickItems } = state
   console.log({ patchList })

@@ -29,6 +29,8 @@ const getFn = (operation) => {
       return VirtualDomPatchFunctions.setValue
     case VirtualDomDiffType.SetSrc:
       return VirtualDomPatchFunctions.setSrc
+    case VirtualDomDiffType.SetCursorOffset:
+      return VirtualDomPatchFunctions.setCursorOffset
     default:
       throw new Error(`unsupported patch type ${operation}`)
   }

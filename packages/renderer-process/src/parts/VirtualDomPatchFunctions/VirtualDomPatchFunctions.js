@@ -66,3 +66,8 @@ export const setValue = ($Node, patch) => {
 export const setSrc = ($Node, patch) => {
   $Node.src = patch.value
 }
+
+export const setCursorOffset = ($Node, patch) => {
+  $Node.selectionStart = patch.value
+  $Node.selectionEnd = patch.value
+}

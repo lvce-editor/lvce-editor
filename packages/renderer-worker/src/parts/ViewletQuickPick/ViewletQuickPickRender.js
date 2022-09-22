@@ -170,11 +170,18 @@ const renderCursorOffset = {
       newState.cursorOffset === newState.value.length
   },
   apply(oldState, newState) {
+    const patches = [
+      {
+        id: Ids.QuickPickInput,
+        operation: VirtualDomDiffType.SetCursorOffset,
+        value: newState.cursorOffset,
+      },
+    ]
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
-      /* method */ 'setCursorOffset',
-      /* cursorOffset */ newState.cursorOffset,
+      /* method */ 'applyPatches',
+      /* patches */ patches,
     ]
   },
 }
@@ -378,4 +385,5 @@ export const render = [
   renderValue,
   renderHeight,
   renderFocusedIndex,
+  renderCursorOffset,
 ]
