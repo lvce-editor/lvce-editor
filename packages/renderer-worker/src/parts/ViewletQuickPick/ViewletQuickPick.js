@@ -126,6 +126,7 @@ export const loadContent = async (state) => {
   const uri = state.uri
   const value = getDefaultValue(uri)
   const provider = await QuickPickEntries.load(uri)
+  console.log('provider is', provider.name)
   const newPicks = await provider.getPicks(value)
   Assert.array(newPicks)
   const filterValue = provider.getFilterValue(value)

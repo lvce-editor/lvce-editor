@@ -84,7 +84,9 @@ export const getPicks = async (value) => {
     state.prefix = prefix
     // @ts-ignore
     state.provider = await getQuickPickProvider(prefix)
+    console.log('set provider', state.provider)
   }
+  console.log('get picks here')
   // TODO this line is a bit duplicated with getFilterValue
   const slicedValue = value.slice(prefix.length)
   const picks = await state.provider.getPicks(slicedValue)

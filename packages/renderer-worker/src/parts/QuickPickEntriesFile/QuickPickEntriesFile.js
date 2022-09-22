@@ -60,6 +60,7 @@ export const getNoResults = () => {
 }
 
 export const getPicks = async (searchValue) => {
+  console.log('get picks file')
   const workspace = Workspace.state.workspacePath
   if (!workspace) {
     return []

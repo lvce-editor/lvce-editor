@@ -4,10 +4,9 @@ import * as QuickPickEntryId from '../QuickPickEntryId/QuickPickEntryId.js'
 export const load = (moduleId) => {
   switch (moduleId) {
     case QuickPickEntryId.CommandPalette:
-      return import('../QuickPickEntriesCommand/QuickPickEntriesCommand.js')
     case QuickPickEntryId.File:
-      return import('../QuickPickEntriesFile/QuickPickEntriesFile.js')
     case QuickPickEntryId.EveryThing:
+    case QuickPickEntryId.WorkspaceSymbol:
       return import('../QuickPickEntriesEverything/QuickPickEntriesEverything.js')
     case QuickPickEntryId.Noop:
       return import('../QuickPickEntriesNoop/QuickPickNoop.js')
@@ -21,8 +20,6 @@ export const load = (moduleId) => {
       return import('../QuickPickEntriesSymbol/QuickPickEntriesSymbol.js')
     case QuickPickEntryId.View:
       return import('../QuickPickEntriesView/QuickPickEntriesView.js')
-    case QuickPickEntryId.WorkspaceSymbol:
-      return import('../QuickPickEntriesWorkspaceSymbol/QuickPickEntriesWorkspaceSymbol.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }
