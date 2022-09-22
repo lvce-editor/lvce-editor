@@ -11,9 +11,7 @@ jest.unstable_mockModule(
   '../src/parts/RendererWorker/RendererWorker.js',
   () => {
     return {
-      send: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
+      send: jest.fn(),
     }
   }
 )
@@ -32,8 +30,6 @@ beforeEach(() => {
 
 test('event -  input', () => {
   const state = ViewletExtensions.create()
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const { $InputBox } = state
   $InputBox.value = 'abc'
   $InputBox.dispatchEvent(
@@ -53,8 +49,6 @@ test('event -  input', () => {
 // TODO
 test.skip('user clicks install', () => {
   const state = ViewletExtensions.create()
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   ViewletExtensions.setExtensions(state, [
     {
       id: 'test-author.test=extension-1',
@@ -82,8 +76,6 @@ test.skip('user clicks install', () => {
 
 test.skip('user clicks while installing', () => {
   const state = ViewletExtensions.create()
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   ViewletExtensions.setExtensions(state, [
     {
       id: 'test-author.test=extension-1',
@@ -105,8 +97,6 @@ test.skip('user clicks while installing', () => {
 
 test.skip('event - click - somewhere else', () => {
   const state = ViewletExtensions.create()
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   ViewletExtensions.setExtensions(state, [
     {
       id: 'test-author.test=extension-1',
@@ -129,8 +119,6 @@ test.skip('event - click - somewhere else', () => {
 // TODO
 test.skip('user clicks uninstall', () => {
   const state = ViewletExtensions.create()
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   ViewletExtensions.setExtensions(state, [
     {
       id: 'test-author.test-extension-1',
