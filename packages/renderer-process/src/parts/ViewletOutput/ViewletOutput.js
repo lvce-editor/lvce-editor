@@ -1,6 +1,7 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Assert from '../Assert/Assert.js'
+import * as ViewletOutputEvents from './ViewletOutputEvents.js'
 
 const create$Option = (option) => {
   const $Option = document.createElement('option')
@@ -12,21 +13,10 @@ const create$Option = (option) => {
 // TODO name export not necessary
 export const name = 'Output'
 
-const handleChange = (event) => {
-  const $Target = event.target
-  const value = $Target.value
-  RendererWorker.send(
-    /* viewletSend */ 'Viewlet.send',
-    /* ViewletId */ 'Output',
-    /* method */ 'setOutputChannel',
-    /* option */ value
-  )
-}
-
 export const create = () => {
   const $ViewletOutputSelect = document.createElement('select')
   $ViewletOutputSelect.className = 'ViewletOutputSelect'
-  $ViewletOutputSelect.onchange = handleChange
+  $ViewletOutputSelect.onchange = ViewletOutputEvents.handleChange
   $ViewletOutputSelect.ariaLabel = 'Select a log'
   const $ViewletOutputContent = document.createElement('div')
   $ViewletOutputContent.className = 'OutputContent'
