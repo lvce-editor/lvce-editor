@@ -23,7 +23,18 @@ const waitForReady = async () => {
   // throw new Error(`Main element not found`)
 }
 
+const printError = (error) => {
+  if (error && error.constructor.name === 'AssertionError') {
+    console.error(error.message)
+  } else {
+    console.error(error)
+  }
+}
+
 export const test = async (name, fn) => {
+  Object.defineProperty(fn, 'name', {
+    value: `test/${name}`,
+  })
   let _error
   let _start
   let _end
@@ -39,7 +50,7 @@ export const test = async (name, fn) => {
     console.log({ error })
     _error = error.message
     error.message = `Test failed: ${name}: ${error.message}`
-    console.error(error)
+    printError(error)
   }
   let state
   let background
