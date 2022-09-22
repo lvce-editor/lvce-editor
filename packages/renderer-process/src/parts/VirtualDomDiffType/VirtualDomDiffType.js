@@ -38,7 +38,7 @@ export const SetSrcNthNth = 19
 
 export const ElementRemoveNthNth = 20
 
-export const ElementInsertBeforeNthNth = 21
+export const ElementInsertBeforeNth = 21
 
 export const TextSetNthNth = 22
 

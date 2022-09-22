@@ -10,9 +10,11 @@ export const elementInsertBefore = ($Node, patch) => {
   $Node.insertBefore($Child, $Node.children[patch.index])
 }
 
-export const elementInsertBeforeNthNth = ($Node, patch) => {
-  const $Child = $Node.children[patch.n0].children[patch.n1]
+export const elementInsertBeforeNth = ($Node, patch) => {
+  const $Child = $Node.children[patch.n0]
   elementInsertBefore($Child, patch)
+  // console.log({ $Child, patch })
+  // debugger
 }
 
 export const attributeRemove = ($Node, patch) => {

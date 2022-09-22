@@ -33,8 +33,8 @@ const getFn = (operation) => {
       return VirtualDomPatchFunctions.setCursorOffset
     case VirtualDomDiffType.SetSrcNthNth:
       return VirtualDomPatchFunctions.setSrcNthNth
-    case VirtualDomDiffType.ElementInsertBeforeNthNth:
-      return VirtualDomPatchFunctions.elementInsertBeforeNthNth
+    case VirtualDomDiffType.ElementInsertBeforeNth:
+      return VirtualDomPatchFunctions.elementInsertBeforeNth
     case VirtualDomDiffType.SetAriaActiveDescendant:
       return VirtualDomPatchFunctions.setAriaActiveDescendant
     case VirtualDomDiffType.RemoveAriaActiveDescendant:

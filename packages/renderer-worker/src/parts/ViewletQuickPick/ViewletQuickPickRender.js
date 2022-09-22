@@ -204,16 +204,16 @@ const getPatchList = (oldState, newState) => {
       } else {
         // add icon
         changes.push({
-          operation: VirtualDomDiffType.ElementInsertBeforeNthNth,
+          operation: VirtualDomDiffType.ElementInsertBeforeNth,
           node: i(
             {
-              className: ClassNames.Icon,
+              className: `Icon${newElement.icon}`,
             },
             0
           ),
+          id: Ids.QuickPickItems,
           index: 0,
           n0: elementIndex,
-          n1: 0,
         })
       }
     }
