@@ -1,6 +1,6 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as ExtensionHostOutputChannel from '../ExtensionHost/ExtensionHostOutput.js'
+import * as OutputChannels from '../OutputChannels/OutputChannels.js'
 
 export const name = 'Output'
 
@@ -13,34 +13,21 @@ export const create = () => {
   }
 }
 
-const toExtensionHostOption = (outputChannel) => {
-  return {
-    name: outputChannel.id,
-    file: outputChannel.path,
-  }
-}
-
 export const loadContent = async (state) => {
   // TODO get list of outputChannels from extension host
 
-  const channels = await ExtensionHostOutputChannel.getOutputChannels()
-  const options = [
-    {
-      name: 'Main',
-      file: '/tmp/log-main.txt',
-    },
-    ...channels.map(toExtensionHostOption),
-  ]
+  const channels = await OutputChannels.getOutputChannels()
+
   const selectedIndex = 0
   // TODO duplicate send here
   await SharedProcess.invoke(
     /* OutputChannel.open */ 'OutputChannel.open',
     /* id */ 0,
-    /* path */ options[selectedIndex].file
+    /* path */ channels[selectedIndex].file
   )
   return {
     ...state,
-    options,
+    options: channels,
     selectedIndex,
   }
 }

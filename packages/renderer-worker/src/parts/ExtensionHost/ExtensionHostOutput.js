@@ -1,12 +1,13 @@
-import * as Platform from '../Platform/Platform.js'
-import * as ExtensionHost from '../ExtensionHost/ExtensionHostCore.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as ExtensionHostShared from './ExtensionHostShared.js'
+
+const combineResults = (results) => {
+  return results.flat(1)
+}
 
 export const getOutputChannels = () => {
-  if (Platform.platform === PlatformType.Web) {
-    return []
-  }
-  return ExtensionHost.invoke(
-    /* ExtensionHostOutput.getOutputChannels */ 'ExtensionHostOutput.getOutputChannels'
-  )
+  return ExtensionHostShared.execute({
+    method: 'ExtensionHostOutput.getOutputChannels',
+    params: [],
+    combineResults,
+  })
 }

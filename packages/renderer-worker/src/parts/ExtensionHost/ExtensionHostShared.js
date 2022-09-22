@@ -41,9 +41,12 @@ export const executeProvider = async ({
   return results[0]
 }
 
-export const execute = async ({ method, params }) => {
+export const execute = async ({ method, params, combineResults }) => {
   const extensionHosts = ExtensionHostManagement.getExtensionHosts()
+  const results = []
   for (const extensionHost of extensionHosts) {
     const result = await extensionHost.ipc.invoke(method, ...params)
+    results.push(result)
   }
+  return combineResults(results)
 }
