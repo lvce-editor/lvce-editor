@@ -8,17 +8,18 @@ export const handleInput = (event) => {
 }
 
 export const handleWheel = (event) => {
-  switch (event.deltaMode) {
+  const { deltaMode, deltaY } = event
+  switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
       RendererWorker.send(
         /* ViewletKeyBindings.handleWheel */ 'KeyBindings.handleWheel',
-        /* deltaY */ event.deltaY
+        /* deltaY */ deltaY
       )
       break
     case WheelEventType.DomDeltaPixel:
       RendererWorker.send(
         /* ViewletKeyBindings.handleWheel */ 'KeyBindings.handleWheel',
-        /* deltaY */ event.deltaY
+        /* deltaY */ deltaY
       )
       break
     default:

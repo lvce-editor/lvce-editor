@@ -96,14 +96,10 @@ const MOUSE_LOCS_TRACKED = 3
  * @param {MouseEvent} event
  */
 const handleMouseEnter = (event) => {
-  const $Target = event.target
+  const { target, clientX, clientY, timeStamp } = event
   // @ts-ignore
-  const $Menu = $Target.closest('.Menu')
-  const x = event.clientX
-  const y = event.clientY
-  const timeStamp = event.timeStamp
-
-  const index = FindIndex.findIndex($Menu, $Target)
+  const $Menu = target.closest('.Menu')
+  const index = FindIndex.findIndex($Menu, target)
   if (index === -1) {
     return
   }
@@ -112,8 +108,8 @@ const handleMouseEnter = (event) => {
     /* Menu.handleMouseEnter */ 'Menu.handleMouseEnter',
     /* level */ level,
     /* index */ index,
-    /* x */ x,
-    /* y */ y,
+    /* x */ clientX,
+    /* y */ clientY,
     /* timeStamp */ timeStamp
   )
 }
