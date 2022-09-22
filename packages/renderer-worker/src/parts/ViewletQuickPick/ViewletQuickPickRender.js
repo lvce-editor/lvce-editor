@@ -224,7 +224,7 @@ const getPatchList = (oldState, newState) => {
         id: Ids.QuickPickItems,
         value: newElement.label,
         n0: elementIndex,
-        n1: 1, // TODO
+        n1: oldElement.icon ? 1 : 0,
       })
     }
   }

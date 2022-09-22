@@ -60,13 +60,14 @@ export const create = () => {
   $QuickPickInput.id = 'QuickPickInput'
 
   const $QuickPickHeader = document.createElement('div')
+  $QuickPickHeader.id = 'QuickPickHeader'
   $QuickPickHeader.append($QuickPickInput)
 
   const $QuickPickItems = document.createElement('div')
+  $QuickPickItems.id = 'QuickPickItems'
   // @ts-ignore
   $QuickPickItems.role = 'listbox'
   $QuickPickItems.ariaRoleDescription = 'Quick Input'
-  $QuickPickItems.id = 'QuickPickItems'
   $QuickPickItems.onmousedown = ViewletQuickPickEvents.handleMouseDown
   $QuickPickItems.addEventListener(
     'wheel',

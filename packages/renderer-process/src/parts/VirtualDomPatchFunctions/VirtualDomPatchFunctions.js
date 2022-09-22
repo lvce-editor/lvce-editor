@@ -28,10 +28,8 @@ export const attributeSet = ($Node, patch) => {
 }
 
 export const elementsRemove = ($Node, patch) => {
-  const $Parent = $Node.parentNode
-  const $NewChildren = [...$Parent.children].slice(0, patch.keepCount)
-  console.log({ $Node, patch })
-  $Parent.replaceChildren(...$NewChildren)
+  const $NewChildren = [...$Node.children].slice(0, patch.keepCount)
+  $Node.replaceChildren(...$NewChildren)
 }
 
 export const elementIdSetStyle = ($Node, patch) => {
