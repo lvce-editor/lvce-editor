@@ -5,8 +5,8 @@ export const getModuleId = (commandId) => {
     case 'Audio.play':
       return ModuleId.Audio
     case 'ClipBoard.readText':
-    case 'ClipBoard.writeText':
     case 'ClipBoard.writeImage':
+    case 'ClipBoard.writeText':
       return ModuleId.ClipBoard
     case 'Css.setInlineStyle':
       return ModuleId.Css

@@ -3,9 +3,9 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 export const getModuleId = (commandId) => {
   switch (commandId) {
     // TODO this should be in layout module
+    case 'Ajax.getBlob':
     case 'Ajax.getJson':
     case 'Ajax.getText':
-    case 'Ajax.getBlob':
       return ModuleId.Ajax
     case 'Audio.playBell':
       return ModuleId.Audio
@@ -25,9 +25,9 @@ export const getModuleId = (commandId) => {
       return ModuleId.Callback
     case 'ClipBoard.readNativeFiles':
     case 'ClipBoard.readText':
+    case 'ClipBoard.writeImage':
     case 'ClipBoard.writeNativeFiles':
     case 'ClipBoard.writeText':
-    case 'ClipBoard.writeImage':
       return ModuleId.ClipBoard
     case 'ColorPicker.close':
     case 'ColorPicker.open':
@@ -110,10 +110,6 @@ export const getModuleId = (commandId) => {
     case 'Extensions.openCachedExtensionsFolder':
     case 'Extensions.openExtensionsFolder':
       return ModuleId.Extensions
-    case 'PersistentFileHandle.addHandle':
-    case 'PersistentFileHandle.getHandle':
-    case 'PersistentFileHandle.removeHandle':
-      return ModuleId.PersistentFileHandle
     case 'FilePicker.showDirectoryPicker':
     case 'FilePicker.showFilePicker':
     case 'FilePicker.showSaveFilePicker':
@@ -202,6 +198,10 @@ export const getModuleId = (commandId) => {
       return ModuleId.Open
     case 'OpenNativeFolder.openNativeFolder':
       return ModuleId.OpenNativeFolder
+    case 'PersistentFileHandle.addHandle':
+    case 'PersistentFileHandle.getHandle':
+    case 'PersistentFileHandle.removeHandle':
+      return ModuleId.PersistentFileHandle
     case 'Preferences.hydrate':
     case 'Preferences.openKeyBindingsJson':
     case 'Preferences.openSettingsJson':

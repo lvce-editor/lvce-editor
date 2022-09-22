@@ -18,7 +18,10 @@ export const handlePointerMove = (event) => {
  * @param {PointerEvent} event
  */
 export const handlePointerUp = (event) => {
-  const { pointerId, clientX, clientY, target } = event
+  const { pointerId, clientX, clientY, target, button } = event
+  if (button !== MouseEventType.LeftClick) {
+    return
+  }
   // @ts-ignore
   target.releasePointerCapture(pointerId)
   RendererWorker.send(
