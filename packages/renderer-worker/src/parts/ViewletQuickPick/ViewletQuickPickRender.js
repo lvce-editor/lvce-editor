@@ -182,7 +182,6 @@ const getPatchList = (oldState, newState) => {
     const oldElement = oldVisibleItems[elementIndex]
     const newElement = newVisibleItems[elementIndex]
     if (oldElement.icon !== newElement.icon) {
-      console.log('icon change', oldElement.icon, newElement.icon)
       if (oldElement.icon) {
         if (newElement.icon) {
           // change icon
@@ -239,7 +238,6 @@ const renderQuickPickItemsFn = {
   },
   apply(oldState, newState) {
     const patches = getPatchList(oldState, newState)
-    // console.log({ patchList, oldState, newState })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
