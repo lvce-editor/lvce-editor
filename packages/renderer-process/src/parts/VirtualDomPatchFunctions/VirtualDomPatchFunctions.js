@@ -13,8 +13,6 @@ export const elementInsertBefore = ($Node, patch) => {
 export const elementInsertBeforeNth = ($Node, patch) => {
   const $Child = $Node.children[patch.n0]
   elementInsertBefore($Child, patch)
-  // console.log({ $Child, patch })
-  // debugger
 }
 
 export const attributeRemove = ($Node, patch) => {
@@ -102,7 +100,6 @@ export const textSet = ($Node, patch) => {
 
 export const textSetNthNth = ($Node, patch) => {
   const $Child = $Node.children[patch.n0].children[patch.n1]
-  console.log({ $Child, patch })
   textSet($Child, patch)
 }
 
