@@ -100,6 +100,13 @@ export const performKeyBoardAction = (fnName, options) => {
   fn(options)
 }
 
+class AssertionError extends Error {
+  constructor(message) {
+    super(message)
+    this.name = 'AssertionError'
+  }
+}
+
 export const checkSingleElementCondition = async (locator, fnName, options) => {
   const startTime = Time.getTimeStamp()
   const endTime = startTime + maxTimeout
@@ -120,7 +127,7 @@ export const checkSingleElementCondition = async (locator, fnName, options) => {
     currentTime = Time.getTimeStamp()
   }
   const message = ConditionErrors[fn.name](locator, options)
-  throw new Error(message)
+  throw new AssertionError(message)
 }
 
 export const checkMultiElementCondition = async (locator, fnName, options) => {
@@ -138,5 +145,5 @@ export const checkMultiElementCondition = async (locator, fnName, options) => {
     currentTime = Time.getTimeStamp()
   }
   const message = ConditionErrors[fn.name](locator, options)
-  throw new Error(message)
+  throw new AssertionError(message)
 }
