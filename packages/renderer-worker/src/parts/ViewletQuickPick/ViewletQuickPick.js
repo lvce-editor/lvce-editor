@@ -157,7 +157,6 @@ export const dispose = (state) => {
 }
 
 export const handleBlur = async (state) => {
-  console.log('quickpick blur')
   await Viewlet.closeWidget('QuickPick')
   return state
 }
@@ -197,7 +196,6 @@ export const selectIndex = async (state, index, button = /* left */ 0) => {
   const { minLineY, provider, items } = state
   const actualIndex = index + minLineY
   const pick = getPick(items, actualIndex)
-  console.log({ pick, provider })
   const selectPickResult = await provider.selectPick(pick, actualIndex, button)
   Assert.object(selectPickResult)
   Assert.string(selectPickResult.command)
@@ -451,7 +449,6 @@ export const handleClickAt = (state, x, y) => {
   const { top, headerHeight, itemHeight } = state
   const relativeY = y - top - headerHeight
   const index = Math.floor(relativeY / itemHeight)
-  console.log({ index, relativeY, itemHeight })
   return selectIndex(state, index)
 }
 
@@ -542,7 +539,6 @@ const renderFocusedIndex = {
   apply(oldState, newState) {
     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
     const newFocusedIndex = newState.focusedIndex - newState.minLineY
-    console.log('focus', oldState.focusedIndex, newState.focusedIndex)
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
