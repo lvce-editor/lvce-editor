@@ -117,6 +117,7 @@ export const setValue = (state, value) => {
   $QuickPickInput.value = value
 }
 
+// TODO use applyPatch function for this
 export const setFocusedIndex = (state, index) => {
   const { $QuickPickInput, $QuickPickItems } = state
   $QuickPickInput.setAttribute('aria-activedescendant', `QuickPickItemActive`)
@@ -125,8 +126,6 @@ export const setFocusedIndex = (state, index) => {
 
 export const applyPatch = (state, patch) => {
   const { $Viewlet } = state
-  console.log({ $Viewlet })
   const $Node = $Viewlet.querySelector('#' + patch.id)
-  console.log({ patch, $Node })
   VirtualDomPatch.patchElement($Node, patch)
 }

@@ -326,10 +326,14 @@ const renderHeight = {
     return oldState.items.length === newState.items.length
   },
   apply(oldState, newState) {
+    const maxLineY = Math.min(newState.maxLineY, newState.items.length)
+    const itemCount = maxLineY - newState.minLineY
+    const height = itemCount * newState.itemHeight
+    const heightPx = `${height}px`
     const patch = {
       operation: VirtualDomDiffType.ElementIdSetStyle,
       key: 'height',
-      value: '100px',
+      value: heightPx,
       id: Ids.QuickPickItems,
     }
     return [
