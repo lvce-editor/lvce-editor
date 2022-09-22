@@ -1,12 +1,13 @@
 import * as Window from './Window.js'
+import * as Chrome from '../Chrome/Chrome.js'
 
 export const Commands = {
-  'Window.close': Window.close,
-  'Window.exit': Window.exit,
+  'Window.close': Chrome.close,
+  'Window.exit': Chrome.exit,
   'Window.makeScreenshot': Window.makeScreenshot,
-  'Window.maximize': Window.maximize,
-  'Window.minimize': Window.minimize,
-  'Window.openNew': Window.openNew,
+  'Window.maximize': Chrome.maximize,
+  'Window.minimize': Chrome.minimize,
+  'Window.openNew': Chrome.openNew,
   'Window.reload': Window.reload,
-  'Window.unmaximize': Window.unmaximize,
+  'Window.unmaximize': Chrome.unmaximize,
 }
