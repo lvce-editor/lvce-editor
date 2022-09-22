@@ -58,6 +58,7 @@ export const create = () => {
     'beforeinput',
     ViewletQuickPickEvents.handleBeforeInput
   )
+  $QuickPickInput.id = 'QuickPickInput'
 
   const $QuickPickHeader = document.createElement('div')
   $QuickPickHeader.append($QuickPickInput)
@@ -128,4 +129,10 @@ export const applyPatch = (state, patch) => {
   const { $Viewlet } = state
   const $Node = $Viewlet.querySelector('#' + patch.id)
   VirtualDomPatch.patchElement($Node, patch)
+}
+
+export const applyPatches = (state, patches) => {
+  for (const patch of patches) {
+    applyPatch(state, patch)
+  }
 }

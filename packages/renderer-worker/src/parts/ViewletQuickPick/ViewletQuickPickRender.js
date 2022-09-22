@@ -21,6 +21,7 @@ const Ids = {
   QuickPickItems: 'QuickPickItems',
   QuickPick: 'QuickPick',
   QuickPickItemActive: 'QuickPickItemActive',
+  QuickPickInput: 'QuickPickInput',
 }
 
 /**
@@ -307,16 +308,39 @@ const renderValue = {
   },
 }
 
-const renderFocus = {
+const renderFocusedIndex = {
   isEqual(oldState, newState) {
     return oldState.focusedIndex === newState.focusedIndex
   },
   apply(oldState, newState) {
+    const patches = []
+    if (oldState.focusedIndex === -1) {
+      patches.push({
+        operation: VirtualDomDiffType.AttributeSet,
+        key: 'ariaActivedecsendant',
+        value: Ids.QuickPickItemActive,
+        id: Ids.QuickPickInput,
+      })
+    } else {
+      patches.push({
+        operation: VirtualDomDiffType.RemoveIdNth,
+        id: Ids.QuickPickItems,
+        index: oldState.focusedIndex,
+      })
+    }
+    if (newState.focusedIndex !== -1) {
+      patches.push({
+        operation: VirtualDomDiffType.SetElementIdNth,
+        value: Ids.QuickPickItemActive,
+        id: Ids.QuickPickItems,
+        index: newState.focusedIndex,
+      })
+    }
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
-      /* method */ 'setFocusedIndex',
-      /* focused */ newState.focusedIndex,
+      /* method */ 'applyPatches',
+      /* patches */ patches,
     ]
   },
 }
@@ -329,11 +353,9 @@ const renderHeight = {
     const maxLineY = Math.min(newState.maxLineY, newState.items.length)
     const itemCount = maxLineY - newState.minLineY
     const height = itemCount * newState.itemHeight
-    const heightPx = `${height}px`
     const patch = {
-      operation: VirtualDomDiffType.ElementIdSetStyle,
-      key: 'height',
-      value: heightPx,
+      operation: VirtualDomDiffType.SetHeight,
+      value: height,
       id: Ids.QuickPickItems,
     }
     return [
@@ -349,5 +371,5 @@ export const render = [
   renderQuickPickItemsFn,
   renderValue,
   renderHeight,
-  renderFocus,
+  renderFocusedIndex,
 ]

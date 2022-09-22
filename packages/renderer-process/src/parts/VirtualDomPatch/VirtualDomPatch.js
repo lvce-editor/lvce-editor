@@ -1,53 +1,38 @@
 import * as VirtualDomDiffType from '../VirtualDomDiffType/VirtualDomDiffType.js'
-import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+import * as VirtualDomPatchFunctions from '../VirtualDomPatchFunctions/VirtualDomPatchFunctions.js'
 
-const patchMountElements = ($Root, patch) => {
-  VirtualDom.renderInternal($Root, patch.newDom)
-}
-
-const patchAttributeRemove = ($Node, patch) => {
-  $Node.removeAttribute(patch.key)
-}
-
-const patchAttributeSet = ($Node, patch) => {
-  if (patch.key === 'text') {
-    $Node.nodeValue = patch.value
-  } else {
-    $Node[patch.key] = patch.value
+const getFn = (operation) => {
+  switch (operation) {
+    case VirtualDomDiffType.ElementsAdd:
+      return VirtualDomPatchFunctions.elementsAdd
+    case VirtualDomDiffType.AttributeRemove:
+      return VirtualDomPatchFunctions.attributeRemove
+    case VirtualDomDiffType.AttributeSet:
+      return VirtualDomPatchFunctions.attributeSet
+    case VirtualDomDiffType.ElementsRemove:
+      return VirtualDomPatchFunctions.elementsRemove
+    case VirtualDomDiffType.ElementIdSetStyle:
+      return VirtualDomPatchFunctions.elementIdSetStyle
+    case VirtualDomDiffType.AttributeRemoveNth:
+      return VirtualDomPatchFunctions.attributeRemoveNth
+    case VirtualDomDiffType.SetElementId:
+      return VirtualDomPatchFunctions.setElementId
+    case VirtualDomDiffType.SetElementIdNth:
+      return VirtualDomPatchFunctions.setElementIdNth
+    case VirtualDomDiffType.RemoveId:
+      return VirtualDomPatchFunctions.removeId
+    case VirtualDomDiffType.RemoveIdNth:
+      return VirtualDomPatchFunctions.removeIdNth
+    case VirtualDomDiffType.SetHeight:
+      return VirtualDomPatchFunctions.setHeight
+    default:
+      throw new Error(`unsupported patch type ${operation}`)
   }
-}
-
-const patchElementsRemove = ($Node, patch) => {
-  const $Parent = $Node.parentNode
-  const $NewChildren = [...$Parent.children].slice(0, patch.keepCount)
-  console.log({ $Node, patch })
-  $Parent.replaceChildren(...$NewChildren)
-}
-
-const patchElementStyle = ($Node, patch) => {
-  $Node.style[patch.key] = patch.value
 }
 
 export const patchElement = ($Node, patch) => {
-  switch (patch.operation) {
-    case VirtualDomDiffType.ElementsAdd:
-      patchMountElements($Node, patch)
-      break
-    case VirtualDomDiffType.AttributeRemove:
-      patchAttributeRemove($Node, patch)
-      break
-    case VirtualDomDiffType.AttributeSet:
-      patchAttributeSet($Node, patch)
-      break
-    case VirtualDomDiffType.ElementsRemove:
-      patchElementsRemove($Node, patch)
-      break
-    case VirtualDomDiffType.ElementIdSetStyle:
-      patchElementStyle($Node, patch)
-      break
-    default:
-      throw new Error(`unsupported patch type ${patch.operation}`)
-  }
+  const fn = getFn(patch.operation)
+  fn($Node, patch)
 }
 
 export const patch = ($Root, patches) => {
