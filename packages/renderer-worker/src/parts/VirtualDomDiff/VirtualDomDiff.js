@@ -50,7 +50,18 @@ const unMountChildren = (changes, commonLength, oldLength, oldDom) => {
 }
 
 const mountChildren = (changes, newDom, commonLength, count) => {
-  changes.push({
+  const index = 0
+  let insertIndex = -1
+  for (let i = 0; i < changes.length; i++) {
+    const change = changes[i]
+    console.log({ changes, change })
+    if (change.index > index) {
+      insertIndex = i
+      break
+    }
+  }
+  changes.splice(insertIndex, 0, {
+    index,
     operation: VirtualDomDiffType.ElementsAdd,
     newDom: newDom.slice(commonLength, commonLength + count),
   })

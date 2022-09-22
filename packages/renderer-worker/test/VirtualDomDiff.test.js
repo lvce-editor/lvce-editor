@@ -66,6 +66,7 @@ test('diff - one element added', () => {
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
+      index: 0,
       operation: VirtualDomDiffType.ElementsAdd,
       newDom: [
         {
@@ -84,6 +85,7 @@ test('diff - one element added with child', () => {
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
+      index: 0,
       operation: VirtualDomDiffType.ElementsAdd,
       newDom: [
         {
@@ -118,18 +120,7 @@ test('diff - one element added - at start of element', () => {
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
-      operation: VirtualDomDiffType.AttributeSet,
-      index: 2,
-      key: 'text',
-      value: 'a',
-    },
-    {
-      operation: VirtualDomDiffType.AttributeSet,
-      index: 4,
-      key: 'text',
-      value: 'b',
-    },
-    {
+      index: 0,
       operation: VirtualDomDiffType.ElementsAdd,
       newDom: [
         {
@@ -145,6 +136,18 @@ test('diff - one element added - at start of element', () => {
           type: VirtualDomElements.Text,
         },
       ],
+    },
+    {
+      operation: VirtualDomDiffType.AttributeSet,
+      index: 2,
+      key: 'text',
+      value: 'a',
+    },
+    {
+      operation: VirtualDomDiffType.AttributeSet,
+      index: 4,
+      key: 'text',
+      value: 'b',
     },
   ])
 })
@@ -164,12 +167,7 @@ test('diff - one element added - between elements', () => {
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
-      operation: VirtualDomDiffType.AttributeSet,
-      index: 4,
-      key: 'text',
-      value: 'b',
-    },
-    {
+      index: 0,
       operation: VirtualDomDiffType.ElementsAdd,
       newDom: [
         {
@@ -185,6 +183,12 @@ test('diff - one element added - between elements', () => {
           type: VirtualDomElements.Text,
         },
       ],
+    },
+    {
+      operation: VirtualDomDiffType.AttributeSet,
+      index: 4,
+      key: 'text',
+      value: 'b',
     },
   ])
 })
@@ -204,6 +208,7 @@ test('diff - one element added - at end of element', () => {
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
+      index: 0,
       operation: VirtualDomDiffType.ElementsAdd,
       newDom: [
         {
@@ -229,6 +234,7 @@ test('diff - two elements added', () => {
   const changes = VirtualDomDiff.diff(oldDom, newDom)
   expect(changes).toEqual([
     {
+      index: 0,
       operation: VirtualDomDiffType.ElementsAdd,
       newDom: [
         {
@@ -441,6 +447,104 @@ test('diff - remove multiple elements from parent', () => {
       index: 5,
       operation: VirtualDomDiffType.ElementsRemove,
       keepCount: 1,
+    },
+  ])
+})
+
+test('diff - change attributes and add elements', () => {
+  const oldDom = html(`
+<div id="QuickPickItems">
+  <div class="QuickPickItem">
+    <i class="icon"></i>
+    <div class="Label">1</div>
+  </div>
+</div>
+`)
+  const newDom = html(`
+<div id="QuickPickItems">
+  <div class="QuickPickItem">
+    <i class="icon"></i>
+    <div class="Label">0</div>
+  </div>
+  <div class="QuickPickItem">
+    <i class="icon"></i>
+    <div class="Label">1</div>
+  </div>
+  <div class="QuickPickItem">
+    <i class="icon"></i>
+    <div class="Label">2</div>
+  </div>
+</div>
+`)
+  const changes = VirtualDomDiff.diff(oldDom, newDom)
+  expect(changes).toEqual([
+    {
+      operation: VirtualDomDiffType.ElementsAdd,
+      index: 0,
+      newDom: [
+        {
+          childCount: 2,
+          props: {
+            className: 'QuickPickItem',
+          },
+          type: VirtualDomElements.Div,
+        },
+        {
+          childCount: 0,
+          props: {
+            className: 'icon',
+          },
+          type: VirtualDomElements.I,
+        },
+        {
+          childCount: 1,
+          props: {
+            className: 'Label',
+          },
+          type: VirtualDomElements.Div,
+        },
+        {
+          childCount: 0,
+          props: {
+            text: '1',
+          },
+          type: VirtualDomElements.Text,
+        },
+        {
+          childCount: 2,
+          props: {
+            className: 'QuickPickItem',
+          },
+          type: VirtualDomElements.Div,
+        },
+        {
+          childCount: 0,
+          props: {
+            className: 'icon',
+          },
+          type: VirtualDomElements.I,
+        },
+        {
+          childCount: 1,
+          props: {
+            className: 'Label',
+          },
+          type: VirtualDomElements.Div,
+        },
+        {
+          childCount: 0,
+          props: {
+            text: '2',
+          },
+          type: VirtualDomElements.Text,
+        },
+      ],
+    },
+    {
+      index: 4,
+      key: 'text',
+      operation: VirtualDomDiffType.AttributeSet,
+      value: '0',
     },
   ])
 })
