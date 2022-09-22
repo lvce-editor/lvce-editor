@@ -32,7 +32,7 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "0.0.13"
+    "version": "0.0.15"
   },
   {
     "name": "builtin.language-basics-html",
@@ -47,7 +47,7 @@
   {
     "name": "builtin.language-basics-plaintext",
     "repository": "github.com/lvce-editor/language-basics-plaintext",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-basics-gitattributes",
