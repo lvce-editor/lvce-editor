@@ -57,16 +57,11 @@ export const handleWheel = (event) => {
 
 export const handleMouseDown = (event) => {
   event.preventDefault()
-  const $Target = event.target
-  const index = getTargetIndex($Target)
-  if (index === -1) {
-    return
-  }
-  // console.log('button', event.button)
-  // console.log({ index })
+  const { clientX, clientY } = event
   RendererWorker.send(
-    /* QuickPick.selectIndex */ 'QuickPick.selectIndex',
-    /* index */ index
+    /* QuickPick.selectIndex */ 'QuickPick.handleClickAt',
+    /* x */ clientX,
+    /* y */ clientY
   )
 }
 

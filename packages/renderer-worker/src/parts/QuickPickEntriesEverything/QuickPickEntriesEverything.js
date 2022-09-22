@@ -1,4 +1,5 @@
 import * as QuickPickNoop from '../QuickPickEntriesNoop/QuickPickNoop.js'
+import * as QuickPickPrefix from '../QuickPIckPrefix/QuickPickPrefix.js'
 
 // TODO cache quick pick items -> don't send every time from renderer worker to renderer process
 // maybe cache by id opening commands -> has all commands cached
@@ -6,12 +7,7 @@ import * as QuickPickNoop from '../QuickPickEntriesNoop/QuickPickNoop.js'
 
 const RECENT_PICKS_MAX_SIZE = 3
 
-// const PROVIDER_NOOP = 0
-// const PROVIDER_COMMAND = 1
-// const PROVIDER_SYMBOL = 2
-// const PROVIDER_WORKSPACE_SYMBOL = 3
-// const PROVIDER_GO_TO_LINE = 4
-// const PROVIDER_VIEW = 5
+// TODO avoid global variable
 
 export const state = {
   // providerId: PROVIDER_NOOP,
@@ -41,22 +37,22 @@ export const getNoResults = () => {
 }
 
 const getPrefix = (value) => {
-  if (value.startsWith('>')) {
-    return '>'
+  if (value.startsWith(QuickPickPrefix.Command)) {
+    return QuickPickPrefix.Command
   }
-  if (value.startsWith('@')) {
-    return '@'
+  if (value.startsWith(QuickPickPrefix.Symbol)) {
+    return QuickPickPrefix.Symbol
   }
-  if (value.startsWith('#')) {
-    return '#'
+  if (value.startsWith(QuickPickPrefix.WorkspaceSymbol)) {
+    return QuickPickPrefix.WorkspaceSymbol
   }
-  if (value.startsWith(':')) {
-    return ':'
+  if (value.startsWith(QuickPickPrefix.GoToLine)) {
+    return QuickPickPrefix.GoToLine
   }
-  if (value.startsWith('view ')) {
-    return 'view '
+  if (value.startsWith(QuickPickPrefix.View)) {
+    return QuickPickPrefix.View
   }
-  return ''
+  return QuickPickPrefix.None
 }
 
 const getQuickPickProvider = (prefix) => {
@@ -64,17 +60,17 @@ const getQuickPickProvider = (prefix) => {
   // TODO could use regex to extract prefix
   // TODO or could check first letter char code (less comparisons)
   switch (prefix) {
-    case '>':
+    case QuickPickPrefix.Command:
       return import('../QuickPickEntriesCommand/QuickPickEntriesCommand.js')
-    case '@':
+    case QuickPickPrefix.Symbol:
       return import('../QuickPickEntriesSymbol/QuickPickEntriesSymbol.js')
-    case '#':
+    case QuickPickPrefix.WorkspaceSymbol:
       return import(
         '../QuickPickEntriesWorkspaceSymbol/QuickPickEntriesWorkspaceSymbol.js'
       )
-    case ':':
+    case QuickPickPrefix.GoToLine:
       return import('../QuickPickEntriesGoToLine/QuickPickEntriesGoToLine.js')
-    case 'view':
+    case QuickPickPrefix.View:
       return import('../QuickPickEntriesView/QuickPickEntriesView.js')
     default:
       return import('../QuickPickEntriesFile/QuickPickEntriesFile.js')
@@ -107,7 +103,9 @@ const getPick = (state, index) => {
 }
 
 export const selectPick = (item) => {
-  return state.provider.selectPick(item)
+  const { provider } = state
+  console.log('select pick', provider)
+  return provider.selectPick(item)
 }
 
 export const openCommandPalette = () => {

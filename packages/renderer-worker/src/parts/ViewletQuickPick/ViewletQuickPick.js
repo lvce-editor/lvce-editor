@@ -3,7 +3,7 @@ import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as InputEventType from '../InputEventType/InputEventType.js'
-import * as QuickPickModule from '../QuickPickEntries/QuickPickEntries.js'
+import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
@@ -45,6 +45,8 @@ export const create = (id, uri, top, left, width, height) => {
     deltaY: 0,
     itemHeight: 22,
     height: 300,
+    headerHeight: 30,
+    top: 50,
   }
 }
 
@@ -123,7 +125,7 @@ const getDefaultValue = (uri) => {
 export const loadContent = async (state) => {
   const uri = state.uri
   const value = getDefaultValue(uri)
-  const provider = await QuickPickModule.load(uri)
+  const provider = await QuickPickEntries.load(uri)
   const newPicks = await provider.getPicks(value)
   Assert.array(newPicks)
   const filterValue = provider.getFilterValue(value)
@@ -160,15 +162,15 @@ export const handleBlur = async (state) => {
   return state
 }
 
-const getPick = (state, index) => {
-  Assert.object(state)
+const getPick = (items, index) => {
+  Assert.array(items)
   Assert.number(index)
   // if (index < state.recentPicks.length) {
   //   return state.recentPicks[index]
   // }
   // index -= state.recentPicks.length
-  if (index < state.items.length) {
-    return state.items[index]
+  if (index < items.length) {
+    return items[index]
   }
   console.warn('no pick matching index', index)
 }
@@ -192,13 +194,11 @@ export const selectItem = (state, label) => {
 }
 
 export const selectIndex = async (state, index, button = /* left */ 0) => {
-  const actualIndex = index + state.minLineY
-  const pick = getPick(state, actualIndex)
-  const selectPickResult = await state.provider.selectPick(
-    pick,
-    actualIndex,
-    button
-  )
+  const { minLineY, provider, items } = state
+  const actualIndex = index + minLineY
+  const pick = getPick(items, actualIndex)
+  console.log({ pick, provider })
+  const selectPickResult = await provider.selectPick(pick, actualIndex, button)
   Assert.object(selectPickResult)
   Assert.string(selectPickResult.command)
   const { command } = selectPickResult
@@ -445,6 +445,14 @@ export const handleWheel = (state, deltaY) => {
   Assert.object(state)
   Assert.number(deltaY)
   return setDeltaY(state, state.deltaY + deltaY)
+}
+
+export const handleClickAt = (state, x, y) => {
+  const { top, headerHeight, itemHeight } = state
+  const relativeY = y - top - headerHeight
+  const index = Math.ceil(relativeY / itemHeight)
+  console.log({ index })
+  return selectIndex(state, index)
 }
 
 export const hasFunctionalRender = true

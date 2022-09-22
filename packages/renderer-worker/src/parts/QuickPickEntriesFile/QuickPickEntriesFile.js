@@ -20,10 +20,6 @@ const searchFile = async (path, value) => {
   return files
 }
 
-const openUri = (path) => {
-  return Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path)
-}
-
 const getIcon = (file) => {
   const baseName = Workspace.pathBaseName(file)
   return IconTheme.getFileIcon({ name: baseName })
@@ -76,7 +72,11 @@ export const getPicks = async (searchValue) => {
 export const selectPick = async (item) => {
   const workspace = Workspace.state.workspacePath
   const absolutePath = `${workspace}/${item.label}`
-  await openUri(absolutePath)
+  console.log({ absolutePath })
+  await Command.execute(
+    /* Main.openUri */ 'Main.openUri',
+    /* uri */ absolutePath
+  )
   return {
     command: 'hide',
   }

@@ -25,6 +25,7 @@ export const Commands = {
   'QuickPick.selectCurrentIndex': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.selectCurrentIndex),
   'QuickPick.selectIndex': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.selectIndex),
   'QuickPick.selectItem': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.selectItem),
+  'QuickPick.handleClickAt': Viewlet.wrapViewletCommand('QuickPick', ViewletQuickPick.handleClickAt),
 }
 
 export * from './ViewletQuickPick.js'
