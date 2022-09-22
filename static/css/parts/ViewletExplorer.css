@@ -19,13 +19,6 @@
   display: flex;
 }
 
-.Label {
-  text-overflow: ellipsis;
-  overflow: hidden;
-  display: inline-block;
-  white-space: nowrap;
-}
-
 /* .TreeItem:focus {
   background: rgba(59, 71, 66, 0.5);
 } */
