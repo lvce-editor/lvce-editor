@@ -45,3 +45,5 @@ export const TextSetNthNth = 22
 export const SetAriaActiveDescendant = 23
 
 export const RemoveAriaActiveDescendant = 24
+
+export const SetClassNameNthNth = 25

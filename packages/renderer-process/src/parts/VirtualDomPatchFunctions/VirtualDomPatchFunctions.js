@@ -107,3 +107,12 @@ export const elementRemoveNthNth = ($Node, patch) => {
   const $Child = $Node.children[patch.n0].children[patch.n1]
   elementRemove($Child, patch)
 }
+
+const setClassName = ($Node, patch) => {
+  $Node.className = patch.value
+}
+
+export const setClassNameNthNth = ($Node, patch) => {
+  const $Child = $Node.children[patch.n0].children[patch.n1]
+  setClassName($Child, patch)
+}

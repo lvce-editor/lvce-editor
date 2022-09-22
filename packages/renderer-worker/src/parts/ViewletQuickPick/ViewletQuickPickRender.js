@@ -182,13 +182,14 @@ const getPatchList = (oldState, newState) => {
     const oldElement = oldVisibleItems[elementIndex]
     const newElement = newVisibleItems[elementIndex]
     if (oldElement.icon !== newElement.icon) {
+      console.log('icon change', oldElement.icon, newElement.icon)
       if (oldElement.icon) {
         if (newElement.icon) {
           // change icon
           changes.push({
-            operation: VirtualDomDiffType.SetSrcNthNth,
+            operation: VirtualDomDiffType.SetClassNameNthNth,
             id: Ids.QuickPickItems,
-            value: newElement.icon,
+            value: `Icon${newElement.icon}`,
             n0: elementIndex,
             n1: 0,
           })
