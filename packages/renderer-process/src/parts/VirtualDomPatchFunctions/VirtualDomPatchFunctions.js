@@ -95,10 +95,20 @@ export const removeAriaActiveDescendant = ($Node, patch) => {
 }
 
 export const textSet = ($Node, patch) => {
-  $Node.nodeValue = patch.value
+  $Node.firstChild.nodeValue = patch.value
 }
 
 export const textSetNthNth = ($Node, patch) => {
   const $Child = $Node.children[patch.n0].children[patch.n1]
+  console.log({ $Child, patch })
   textSet($Child, patch)
+}
+
+const elementRemove = ($Node, patch) => {
+  $Node.remove()
+}
+
+export const elementRemoveNthNth = ($Node, patch) => {
+  const $Child = $Node.children[patch.n0].children[patch.n1]
+  elementRemove($Child, patch)
 }

@@ -107,7 +107,7 @@ const applyPatch = (state, patch) => {
 }
 
 export const applyPatches = (state, patches) => {
-  console.log(patches)
+  console.log({ patches })
   for (const patch of patches) {
     applyPatch(state, patch)
   }
