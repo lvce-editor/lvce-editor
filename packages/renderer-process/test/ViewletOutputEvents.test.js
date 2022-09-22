@@ -11,9 +11,7 @@ jest.unstable_mockModule(
   '../src/parts/RendererWorker/RendererWorker.js',
   () => {
     return {
-      send: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
+      send: jest.fn(() => {}),
     }
   }
 )
@@ -27,8 +25,6 @@ const ViewletOutput = await import(
 )
 
 test('event - change', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletOutput.create()
   ViewletOutput.setOptions(state, [
     {
