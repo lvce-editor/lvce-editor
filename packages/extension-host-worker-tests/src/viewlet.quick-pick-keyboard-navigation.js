@@ -1,6 +1,7 @@
 test('viewlet.explorer-keyboard-navigation', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
+  await FileSystem.writeFile(`${tmpDir}/file.txt`, '')
   await Workspace.setPath(tmpDir)
 
   // act
@@ -35,4 +36,7 @@ test('viewlet.explorer-keyboard-navigation', async () => {
   // act
   await QuickPick.focusNext()
   await expect(quickPickItems.nth(9)).toHaveId('QuickPickItemActive')
+
+  // act
+  await QuickPick.setValue('')
 })
