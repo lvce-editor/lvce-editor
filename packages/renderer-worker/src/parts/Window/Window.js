@@ -4,17 +4,18 @@ import * as Platform from '../Platform/Platform.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 
-const reloadWeb = async () => {
-  await RendererProcess.invoke(/* windowReload */ 8080)
+const reloadWeb = () => {
+  return RendererProcess.invoke('Window.reload')
 }
 
-const reloadRemote = async () => {
-  await RendererProcess.invoke(/* windowReload */ 8080)
+const reloadRemote = () => {
+  return RendererProcess.invoke('Window.reload')
 }
 
 const reloadElectron = async () => {
-  await ElectronWindow.reload()
+  return ElectronWindow.reload()
 }
+
 export const reload = () => {
   switch (Platform.platform) {
     case PlatformType.Web:
