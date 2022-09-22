@@ -12,9 +12,7 @@ jest.unstable_mockModule(
   '../src/parts/RendererWorker/RendererWorker.js',
   () => {
     return {
-      send: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
+      send: jest.fn(),
     }
   }
 )
@@ -42,8 +40,6 @@ test.skip('event - mousedown', () => {
     },
   ])
   const $QuickPickItemTwo = state.$QuickPickItems.children[1]
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   $QuickPickItemTwo.dispatchEvent(
     new MouseEvent('mousedown', {
       bubbles: true,
@@ -65,16 +61,17 @@ test('event - mousedown - on focused item', () => {
   ])
   ViewletQuickPick.setFocusedIndex(state, 0, -1)
   const $QuickPickItemOne = state.$QuickPickItems.children[0]
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
-  $QuickPickItemOne.dispatchEvent(
-    new MouseEvent('mousedown', {
-      bubbles: true,
-      cancelable: true,
-    })
+  const event = new MouseEvent('mousedown', {
+    bubbles: true,
+    cancelable: true,
+  })
+  $QuickPickItemOne.dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'QuickPick.handleClickAt',
+    0,
+    0
   )
-  // expect(RendererWorker.send).toHaveBeenCalledTimes(1) // TODO
-  expect(RendererWorker.send).toHaveBeenCalledWith('QuickPick.selectIndex', 0)
 })
 
 test.skip('event - beforeinput', () => {
@@ -92,8 +89,6 @@ test.skip('event - beforeinput', () => {
     },
   ])
   const $QuickPickInput = state.$QuickPickInput
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   $QuickPickInput.dispatchEvent(
     new InputEvent('beforeinput', {
       bubbles: true,
@@ -110,8 +105,6 @@ test.skip('event - beforeinput', () => {
 test('event - input', () => {
   const state = ViewletQuickPick.create()
   const $QuickPickInput = state.$QuickPickInput
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   $QuickPickInput.value = '>a'
   const event = new InputEvent('input', {
     bubbles: true,
@@ -125,10 +118,6 @@ test('event - input', () => {
 })
 
 test('event - wheel', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation((x) => {
-    console.log(x)
-  })
   const state = ViewletQuickPick.create()
   const event = new WheelEvent('wheel', {
     deltaY: 53,
