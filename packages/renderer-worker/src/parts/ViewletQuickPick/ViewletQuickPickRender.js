@@ -1,5 +1,6 @@
 import * as VirtualDomDiff from '../VirtualDomDiff/VirtualDomDiff.js'
 import { div, i, input, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as VirtualDomDiffType from '../VirtualDomDiffType/VirtualDomDiffType.js'
 
 /**
  * @enum {string}
@@ -41,7 +42,7 @@ const UiStrings = {
   QuickOpen: 'Quick open',
 }
 
-const QuickPickItem = (item) => {
+const renderQuickPickItem = (item) => {
   let childCount = 0
   const children = []
   if (item.icon) {
@@ -178,6 +179,63 @@ const renderCursorOffset = {
   },
 }
 
+const getPatchList = (oldState, newState) => {
+  const oldVisibleItems = getVisible(
+    oldState.items,
+    oldState.minLineY,
+    oldState.maxLineY,
+    oldState.focusedIndex
+  )
+  const newVisibleItems = getVisible(
+    oldState.items,
+    oldState.minLineY,
+    oldState.maxLineY,
+    oldState.focusedIndex
+  )
+  const changes = []
+  const commonLength = Math.min(oldVisibleItems.length, newVisibleItems.length)
+  if (oldVisibleItems.length > newVisibleItems.length) {
+    changes.push({
+      index: 0,
+      operation: VirtualDomDiffType.ElementsRemove,
+      keepCount: newVisibleItems.length,
+    })
+  } else if (newVisibleItems.length > oldVisibleItems.length) {
+    const newDom = newVisibleItems.slice(commonLength).map(renderQuickPickItem)
+    changes.push({
+      index: 0,
+      operation: VirtualDomDiffType.ElementsAdd,
+      newDom,
+    })
+  }
+  for (let i = 0; i < commonLength; i++) {
+    const oldElement = oldVisibleItems[i]
+    const newElement = newVisibleItems[i]
+    if (oldElement.icon !== newElement.icon) {
+      if (oldElement.icon) {
+        if (newElement.icon) {
+          // change icon
+        } else {
+          // remove icon
+        }
+      } else {
+        // add icon
+      }
+    }
+    if (oldElement.label !== newElement.label) {
+      // change text
+    }
+  }
+  if (oldState.focusedIndex !== newState.focusedIndex) {
+    if (oldState.focusedIndex !== -1) {
+      // TODO remove activeItem id
+    }
+    if (newState.focusedIndex !== -1) {
+      // TODO set active item id
+    }
+  }
+}
+
 const renderQuickPickItemsFn = {
   isEqual(oldState, newState) {
     return false
@@ -186,6 +244,7 @@ const renderQuickPickItemsFn = {
     const oldDom = renderQuickPickItemsDom(oldState)
     const newDom = renderQuickPickItemsDom(newState)
     const patchList = VirtualDomDiff.diff(oldDom, newDom)
+    console.log({ oldDom, newDom, patchList })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',

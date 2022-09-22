@@ -27,6 +27,8 @@ const getType = (text) => {
   switch (text) {
     case 'div':
       return VirtualDomElements.Div
+    case 'root':
+      return VirtualDomElements.Root
     case 'i':
       return VirtualDomElements.I
     default:

@@ -104,6 +104,7 @@ export const setCursorOffset = (state, cursorOffset) => {
 
 export const setDom = (state, patchList) => {
   const { $QuickPickItems } = state
+  console.log({ patchList })
   VirtualDomPatch.patch($QuickPickItems, patchList)
 }
 

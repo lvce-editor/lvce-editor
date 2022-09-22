@@ -10,3 +10,4 @@ export const THead = 9
 export const Tr = 10
 export const Input = 11
 export const I = 12
+export const Root = 13

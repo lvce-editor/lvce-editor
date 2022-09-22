@@ -548,3 +548,30 @@ test('diff - change attributes and add elements', () => {
     },
   ])
 })
+
+test('diff - remove all elements from parent', () => {
+  const oldDom = html(`
+<div id="QuickPickItems">
+  <div class="QuickPickItem">
+    <i class="icon"></i>
+    <div class="Label">1</div>
+  </div>
+  <div class="QuickPickItem">
+    <i class="icon"></i>
+    <div class="Label">2</div>
+  </div>
+  <div class="QuickPickItem">
+    <i class="icon"></i>
+    <div class="Label">3</div>
+  </div>
+</div>`)
+  const newDom = html(`<div id="QuickPickItems"></div>`)
+  const changes = VirtualDomDiff.diff(oldDom, newDom)
+  expect(changes).toEqual([
+    {
+      index: 1,
+      operation: VirtualDomDiffType.ElementsRemove,
+      keepCount: 0,
+    },
+  ])
+})
