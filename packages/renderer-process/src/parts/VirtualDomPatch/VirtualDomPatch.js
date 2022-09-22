@@ -20,6 +20,7 @@ const patchAttributeSet = ($Node, patch) => {
 const patchElementsRemove = ($Node, patch) => {
   const $Parent = $Node.parentNode
   const $NewChildren = [...$Parent.children].slice(0, patch.keepCount)
+  console.log({ $Node, patch })
   $Parent.replaceChildren(...$NewChildren)
 }
 

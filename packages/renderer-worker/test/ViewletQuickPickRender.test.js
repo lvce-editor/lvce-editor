@@ -64,6 +64,46 @@ test('render - add one item', () => {
   ])
 })
 
+test('render - remove one item and keep one', () => {
+  const oldState = {
+    ...ViewletQuickPick.create(),
+    minLineY: 0,
+    maxLineY: 10,
+    items: [
+      {
+        label: 'item 1',
+      },
+      {
+        label: 'item 2',
+      },
+    ],
+  }
+  const newState = {
+    ...oldState,
+    items: [
+      {
+        label: 'item 1',
+      },
+    ],
+  }
+  const changes = render(oldState, newState)
+  expect(changes).toEqual([
+    [
+      'Viewlet.send',
+      'QuickPick',
+      'setDom',
+      [
+        {
+          index: 0,
+          operation: VirtualDomDiffType.ElementsRemove,
+          keepCount: 1,
+        },
+      ],
+    ],
+    ['Viewlet.send', 'QuickPick', 'setValue', undefined],
+  ])
+})
+
 test('render - change label of one element', () => {
   const oldState = {
     ...ViewletQuickPick.create(),
@@ -92,10 +132,89 @@ test('render - change label of one element', () => {
       'setDom',
       [
         {
-          index: 0,
+          index: 1,
           key: 'text',
           operation: VirtualDomDiffType.AttributeSet,
           value: 'item 2',
+        },
+      ],
+    ],
+    ['Viewlet.send', 'QuickPick', 'setValue', undefined],
+  ])
+})
+
+test('render - change icon of one element', () => {
+  const oldState = {
+    ...ViewletQuickPick.create(),
+    items: [
+      {
+        label: 'item 1',
+        icon: 'f_css',
+      },
+    ],
+    minLineY: 0,
+    maxLineY: 10,
+  }
+  const newState = {
+    ...oldState,
+    items: [
+      {
+        label: 'item 1',
+        icon: 'f_html',
+      },
+    ],
+  }
+
+  const changes = render(oldState, newState)
+  expect(changes).toEqual([
+    [
+      'Viewlet.send',
+      'QuickPick',
+      'setDom',
+      [
+        {
+          index: 1,
+          operation: VirtualDomDiffType.AttributeSet,
+          key: 'src',
+          value: 'f_html',
+        },
+      ],
+    ],
+    ['Viewlet.send', 'QuickPick', 'setValue', undefined],
+  ])
+})
+
+test('render - remove icon of one element', () => {
+  const oldState = {
+    ...ViewletQuickPick.create(),
+    items: [
+      {
+        label: 'item 1',
+        icon: 'f_css',
+      },
+    ],
+    minLineY: 0,
+    maxLineY: 10,
+  }
+  const newState = {
+    ...oldState,
+    items: [
+      {
+        label: 'item 1',
+      },
+    ],
+  }
+
+  const changes = render(oldState, newState)
+  expect(changes).toEqual([
+    [
+      'Viewlet.send',
+      'QuickPick',
+      'setDom',
+      [
+        {
+          index: 1,
+          operation: VirtualDomDiffType.ElementRemove,
         },
       ],
     ],

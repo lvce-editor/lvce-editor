@@ -193,6 +193,15 @@ const getPatchList = (oldState, newState) => {
   )
   const changes = []
   const commonLength = Math.min(oldVisibleItems.length, newVisibleItems.length)
+  // if (oldVisibleItems.length !== newVisibleItems.length) {
+  //   console.log('set height')
+  //   changes.push({
+  //     index: 0,
+  //     operation: VirtualDomDiffType.AttributeSet,
+  //     key: 'style',
+  //     value: 'height: 100px',
+  //   })
+  // }
   if (oldVisibleItems.length > newVisibleItems.length) {
     changes.push({
       index: 0,
@@ -209,38 +218,62 @@ const getPatchList = (oldState, newState) => {
       newDom,
     })
   }
-  for (let i = 0; i < commonLength; i++) {
-    const oldElement = oldVisibleItems[i]
-    const newElement = newVisibleItems[i]
+
+  let nodeIndex = 0
+  for (let elementIndex = 0; elementIndex < commonLength; elementIndex++) {
+    nodeIndex++ // item div
+    const oldElement = oldVisibleItems[elementIndex]
+    const newElement = newVisibleItems[elementIndex]
+
     if (oldElement.icon !== newElement.icon) {
       if (oldElement.icon) {
         if (newElement.icon) {
           // change icon
+          changes.push({
+            index: nodeIndex,
+            operation: VirtualDomDiffType.AttributeSet,
+            key: 'src',
+            value: newElement.icon,
+          })
         } else {
           // remove icon
+          changes.push({
+            index: nodeIndex,
+            operation: VirtualDomDiffType.ElementRemove,
+          })
         }
       } else {
         // add icon
+        changes.push({
+          index: nodeIndex,
+          operation: VirtualDomDiffType.ElementAdd,
+          newDom: [
+            i(
+              {
+                className: ClassNames.Icon,
+              },
+              0
+            ),
+          ],
+        })
       }
+    }
+    if (oldElement.icon) {
+      nodeIndex++
     }
     if (oldElement.label !== newElement.label) {
       changes.push({
-        index: 0,
+        index: nodeIndex,
         operation: VirtualDomDiffType.AttributeSet,
         key: 'text',
         value: newElement.label,
       })
       // change text
     }
+
+    nodeIndex += 3 //  label div, text
   }
-  if (oldState.focusedIndex !== newState.focusedIndex) {
-    if (oldState.focusedIndex !== -1) {
-      // TODO remove activeItem id
-    }
-    if (newState.focusedIndex !== -1) {
-      // TODO set active item id
-    }
-  }
+
   return changes
 }
 
@@ -250,7 +283,7 @@ const renderQuickPickItemsFn = {
   },
   apply(oldState, newState) {
     const patchList = getPatchList(oldState, newState)
-    console.log({ patchList })
+    console.log({ patchList, oldState, newState })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
