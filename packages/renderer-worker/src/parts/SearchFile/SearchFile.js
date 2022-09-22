@@ -1,18 +1,16 @@
-import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as SearchFileRemote from '../SearchFileRemote/SearchFileRemote.js'
-import * as SearchFileWeb from '../SearchFileWeb/SearchFileWeb.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
 
-const getModule = () => {
-  switch (Platform.platform) {
-    case PlatformType.Web:
-      return SearchFileWeb
+const getModule = (protocol) => {
+  switch (protocol) {
+    case 'memfs':
+      return import('../SearchFileWeb/SearchFileWeb.js')
     default:
-      return SearchFileRemote
+      return import('../SearchFileRemote/SearchFileRemote.js')
   }
 }
 
-export const searchFile = (path, value) => {
-  const module = getModule()
+export const searchFile = async (path, value) => {
+  const protocol = FileSystem.getProtocol(path)
+  const module = await getModule(protocol)
   return module.searchFile(path, value)
 }
