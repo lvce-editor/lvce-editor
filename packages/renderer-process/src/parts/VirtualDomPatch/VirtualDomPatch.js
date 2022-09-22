@@ -35,6 +35,10 @@ const getFn = (operation) => {
       return VirtualDomPatchFunctions.setSrcNthNth
     case VirtualDomDiffType.ElementInsertBeforeNthNth:
       return VirtualDomPatchFunctions.elementInsertBeforeNthNth
+    case VirtualDomDiffType.SetAriaActiveDescendant:
+      return VirtualDomPatchFunctions.setAriaActiveDescendant
+    case VirtualDomDiffType.RemoveAriaActiveDescendant:
+      return VirtualDomPatchFunctions.removeAriaActiveDescendant
     default:
       throw new Error(`unsupported patch type ${operation}`)
   }

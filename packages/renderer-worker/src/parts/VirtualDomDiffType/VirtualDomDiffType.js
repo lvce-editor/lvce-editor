@@ -41,3 +41,7 @@ export const ElementRemoveNthNth = 20
 export const ElementInsertBeforeNthNth = 21
 
 export const TextSetNthNth = 22
+
+export const SetAriaActiveDescendant = 23
+
+export const RemoveAriaActiveDescendant = 24

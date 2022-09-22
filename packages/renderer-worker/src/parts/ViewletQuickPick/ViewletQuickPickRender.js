@@ -201,15 +201,6 @@ const getPatchList = (oldState, newState) => {
   )
   const changes = []
   const commonLength = Math.min(oldVisibleItems.length, newVisibleItems.length)
-  // if (oldVisibleItems.length !== newVisibleItems.length) {
-  //   console.log('set height')
-  //   changes.push({
-  //     index: 0,
-  //     operation: VirtualDomDiffType.AttributeSet,
-  //     key: 'style',
-  //     value: 'height: 100px',
-  //   })
-  // }
   if (oldVisibleItems.length > newVisibleItems.length) {
     changes.push({
       index: 0,
@@ -284,7 +275,7 @@ const renderQuickPickItemsFn = {
   },
   apply(oldState, newState) {
     const patchList = getPatchList(oldState, newState)
-    console.log({ patchList, oldState, newState })
+    // console.log({ patchList, oldState, newState })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
@@ -323,8 +314,7 @@ const renderFocusedIndex = {
     const patches = []
     if (oldState.focusedIndex === -1) {
       patches.push({
-        operation: VirtualDomDiffType.AttributeSet,
-        key: 'ariaActivedecsendant',
+        operation: VirtualDomDiffType.SetAriaActiveDescendant,
         value: Ids.QuickPickItemActive,
         id: Ids.QuickPickInput,
       })
@@ -335,7 +325,12 @@ const renderFocusedIndex = {
         index: oldState.focusedIndex - oldState.minLineY,
       })
     }
-    if (newState.focusedIndex !== -1) {
+    if (newState.focusedIndex === -1) {
+      patches.push({
+        operation: VirtualDomDiffType.RemoveAriaActiveDescendant,
+        id: Ids.QuickPickInput,
+      })
+    } else {
       patches.push({
         operation: VirtualDomDiffType.SetElementIdNth,
         value: Ids.QuickPickItemActive,

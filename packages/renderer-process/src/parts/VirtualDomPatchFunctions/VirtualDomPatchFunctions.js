@@ -87,3 +87,11 @@ export const setCursorOffset = ($Node, patch) => {
   $Node.selectionStart = patch.value
   $Node.selectionEnd = patch.value
 }
+
+export const setAriaActiveDescendant = ($Node, patch) => {
+  $Node.setAttribute('aria-activedescendant', patch.value)
+}
+
+export const removeAriaActiveDescendant = ($Node, patch) => {
+  $Node.removeAttribute('aria-activedescendant')
+}

@@ -103,7 +103,6 @@ export const dispose = (state) => {
 
 export const setDom = (state, patchList) => {
   const { $QuickPickItems } = state
-  console.log({ patchList })
   VirtualDomPatch.patch($QuickPickItems, patchList)
 }
 
