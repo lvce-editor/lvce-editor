@@ -1,4 +1,4 @@
-import * as MenuEntriesGo from '../src/parts/MenuEntries/MenuEntriesGo.js'
+import * as MenuEntriesGo from '../src/parts/MenuEntriesGo/MenuEntriesGo.js'
 
 test('getMenuEntries', () => {
   const menuEntries = MenuEntriesGo.getMenuEntries()

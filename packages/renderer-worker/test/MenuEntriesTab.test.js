@@ -1,4 +1,4 @@
-import * as MenuEntriesTab from '../src/parts/MenuEntries/MenuEntriesTab.js'
+import * as MenuEntriesTab from '../src/parts/MenuEntriesTab/MenuEntriesTab.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
 test.skip('getMenuEntries', () => {

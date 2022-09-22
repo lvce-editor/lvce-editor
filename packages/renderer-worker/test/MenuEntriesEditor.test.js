@@ -1,4 +1,4 @@
-import * as MenuEntriesEditor from '../src/parts/MenuEntries/MenuEntriesEditor.js'
+import * as MenuEntriesEditor from '../src/parts/MenuEntriesEditor/MenuEntriesEditor.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
 test('getMenuEntries', () => {
