@@ -8,10 +8,10 @@ const DEFAULT_ICON_LANGUAGE_BASICS = '/icons/language-icon.svg'
 const DEFAULT_ICON_THEME = '/icons/theme-icon.png'
 
 export const handleScrollBarThumbMouseMove = (event) => {
-  const y = event.clientY
+  const { clientY } = event
   RendererWorker.send(
     /* ViewletExtensions.handleScrollBarMouseMove */ 'Extensions.handleScrollBarMove',
-    /* y */ y
+    /* y */ clientY
   )
 }
 
