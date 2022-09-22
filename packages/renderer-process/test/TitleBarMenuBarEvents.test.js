@@ -13,9 +13,7 @@ jest.unstable_mockModule(
   '../src/parts/RendererWorker/RendererWorker.js',
   () => {
     return {
-      send: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
+      send: jest.fn(),
     }
   }
 )
@@ -29,8 +27,6 @@ const TitleBarMenuBar = await import(
 )
 
 test('event - click on menu', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: MenuEntryId.File,
@@ -65,8 +61,6 @@ test('event - click on menu', () => {
 })
 
 test('event - click on menu item', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: MenuEntryId.File,
@@ -105,8 +99,6 @@ test('event - click on menu item', () => {
 })
 
 test('event - richt click on menu item', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: MenuEntryId.File,
@@ -142,8 +134,6 @@ test('event - richt click on menu item', () => {
 })
 
 test('event - key - ArrowDown', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: MenuEntryId.File,
@@ -174,8 +164,6 @@ test('event - key - ArrowDown', () => {
 })
 
 test('event - key - ArrowUp', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: MenuEntryId.File,
@@ -206,8 +194,6 @@ test('event - key - ArrowUp', () => {
 })
 
 test('event - key - Enter', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: MenuEntryId.File,
@@ -238,8 +224,6 @@ test('event - key - Enter', () => {
 })
 
 test('event - key - Space', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: MenuEntryId.File,
@@ -269,8 +253,6 @@ test('event - key - Space', () => {
 })
 
 test('event - key - Home', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: MenuEntryId.File,
@@ -300,8 +282,6 @@ test('event - key - Home', () => {
 })
 
 test('event - key - End', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: MenuEntryId.File,
@@ -331,8 +311,6 @@ test('event - key - End', () => {
 })
 
 test('event - key - Escape', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const titleBarMenuEntries = [
     {
       id: MenuEntryId.File,
