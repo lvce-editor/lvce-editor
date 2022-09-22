@@ -232,8 +232,7 @@ const getPatchList = (oldState, newState) => {
           // change icon
           changes.push({
             index: nodeIndex,
-            operation: VirtualDomDiffType.AttributeSet,
-            key: 'src',
+            operation: VirtualDomDiffType.SetSrc,
             value: newElement.icon,
           })
         } else {
@@ -296,14 +295,21 @@ const renderQuickPickItemsFn = {
 
 const renderValue = {
   isEqual(oldState, newState) {
-    return false
+    return oldState.value === newState.value
   },
   apply(oldState, newState) {
+    const patches = [
+      {
+        id: Ids.QuickPickInput,
+        operation: VirtualDomDiffType.SetValue,
+        value: newState.value,
+      },
+    ]
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
-      /* method */ 'setValue',
-      /* value */ newState.value,
+      /* method */ 'applyPatches',
+      /* patches */ patches,
     ]
   },
 }

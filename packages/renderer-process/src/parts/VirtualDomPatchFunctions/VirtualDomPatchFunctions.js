@@ -58,3 +58,11 @@ export const removeIdNth = ($Node, patch) => {
 export const setHeight = ($Node, patch) => {
   $Node.style.height = `${patch.value}px`
 }
+
+export const setValue = ($Node, patch) => {
+  $Node.value = patch.value
+}
+
+export const setSrc = ($Node, patch) => {
+  $Node.src = patch.value
+}

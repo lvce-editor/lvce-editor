@@ -27,3 +27,7 @@ export const RemoveId = 13
 export const RemoveIdNth = 14
 
 export const SetHeight = 15
+
+export const SetValue = 16
+
+export const SetSrc = 17
