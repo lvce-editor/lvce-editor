@@ -17,7 +17,7 @@ const toMenuItem = (folder) => {
   return {
     label: folder,
     flags: MenuItemFlags.None,
-    command: /* Workspace.setPath */ 'Workspace.setPath',
+    command: 'Workspace.setPath',
     args: [folder],
   }
 }
@@ -31,14 +31,16 @@ const getRecentlyOpened = () => {
 export const getMenuEntries = async () => {
   const allItems = await getRecentlyOpened()
   const itemsToShow = allItems.slice(0, MAX_MENU_RECENT_ENTRIES)
-  return [
-    ...itemsToShow.map(toMenuItem),
-    {
+  const items = []
+  if (itemsToShow.length > 0) {
+    items.push(...itemsToShow.map(toMenuItem), {
       id: 'separator',
       label: I18nString.i18nString(UiStrings.Separator),
       flags: MenuItemFlags.Separator,
       command: MenuItemFlags.None,
-    },
+    })
+  }
+  items.push(
     {
       id: 'more',
       label: I18nString.i18nString(UiStrings.More),
@@ -57,6 +59,7 @@ export const getMenuEntries = async () => {
       label: I18nString.i18nString(UiStrings.ClearRecentlyOpened),
       flags: MenuItemFlags.None,
       command: 'RecentlyOpened.clearRecentlyOpened',
-    },
-  ]
+    }
+  )
+  return items
 }
