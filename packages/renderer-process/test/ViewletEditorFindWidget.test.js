@@ -4,7 +4,7 @@
 import * as ViewletEditorFindWidget from '../src/parts/ViewletEditorFindWidget/ViewletEditorFindWidget.js'
 
 test('name', () => {
-  expect(ViewletEditorFindWidget.name).toBe('ViewletEditorFindWidget')
+  expect(ViewletEditorFindWidget.name).toBe('EditorFindWidget')
 })
 
 test('create', () => {
