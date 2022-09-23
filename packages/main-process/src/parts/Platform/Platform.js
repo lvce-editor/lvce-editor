@@ -1,5 +1,6 @@
 const { join } = require('path')
 const Root = require('../Root/Root.js')
+const { tmpdir, homedir } = require('node:os')
 
 exports.isLinux = process.platform === 'linux'
 
@@ -8,6 +9,18 @@ exports.isMacOs = process.platform === 'darwin'
 exports.isWindows = process.platform === 'win32'
 
 exports.isProduction = false
+
+const homeDirectory = homedir()
+
+const { env } = process
+
+exports.applicationName = 'lvce-oss'
+
+const xdgConfig =
+  env.XDG_CONFIG_HOME ||
+  (homeDirectory ? join(homeDirectory, '.config') : undefined)
+
+const configDir = join(xdgConfig || tmpdir(), exports.applicationName)
 
 exports.getBuiltinSelfTestPath = () => {
   return (
@@ -21,8 +34,6 @@ exports.getWebPath = () => {
     process.env.WEB_PATH || join(Root.root, 'packages', 'web', 'src', 'web.js')
   )
 }
-
-exports.applicationName = 'lvce-oss'
 
 exports.version = '0.0.0-dev'
 
@@ -54,4 +65,12 @@ exports.getExtensionHostPath = () => {
     'src',
     'extensionHostMain.js'
   )
+}
+
+exports.getDefaultSettingsPath = () => {
+  return join(Root.root, 'static', 'config', 'defaultSettings.json')
+}
+
+exports.getUserSettingsPath = () => {
+  return join(configDir, 'settings.json')
 }

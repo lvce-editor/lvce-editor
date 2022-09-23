@@ -41,6 +41,7 @@
 #TitleBarButtons {
   margin-left: auto;
   contain: content;
+  app-region: no-drag;
 }
 
 .TitleBarButton {
