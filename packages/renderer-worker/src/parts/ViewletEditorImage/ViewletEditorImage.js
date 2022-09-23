@@ -229,16 +229,6 @@ export const handleWheel = (state, x, y, deltaX, deltaY) => {
   }
 }
 
-export const handleContextMenu = async (state, x, y) => {
-  await Command.execute(
-    /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ x,
-    /* y */ y,
-    /* id */ MenuEntryId.EditorImage
-  )
-  return state
-}
-
 export const hasFunctionalRender = true
 
 const renderSrc = {
