@@ -36,7 +36,8 @@ export const install = async (id) => {
   // TODO this should be a stateless function, renderer-worker should have info on marketplace url
   // TODO use command.execute
   try {
-    const { download, extract } = await import('../Download/Download.js')
+    const { download } = await import('../Download/Download.js')
+    const { extract } = await import('../Extract/Extract.js')
     const marketplaceUrl = Platform.getMarketplaceUrl()
     Debug.debug(`ExtensionManagement#install ${id}`)
     const cachedExtensionsPath = Platform.getCachedExtensionsPath()

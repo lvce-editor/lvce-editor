@@ -37,22 +37,37 @@ const handleDisconnect = () => {
   console.info('[shared process] disconnected')
 }
 
-const handleBeforeExit = () => {
-  console.info('[shared process] will exit now')
-}
+// const handleBeforeExit = () => {
+//   console.info('[shared process] will exit now')
+// }
 
 const handleSigTerm = () => {
   console.info('[shared-process] sigterm')
 }
 
-const main = () => {
+const main = async () => {
+  const argv = process.argv.slice(2)
+  const argv0 = argv[0]
+  if (argv0 === 'install') {
+    const module = await import('./parts/CliInstall/CliInstall.js')
+    try {
+      await module.handleCliArgs(argv)
+    } catch (error) {
+      console.error(error)
+      process.exit(1)
+    }
+    return
+    // TODO install extension
+  }
   console.log('[shared process] started')
-  process.on('beforeExit', handleBeforeExit)
+  // process.on('beforeExit', handleBeforeExit)
   process.on('disconnect', handleDisconnect)
   process.on('SIGTERM', handleSigTerm)
 
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
   ParentIpc.listen()
+
+  console.log(process.argv)
   // ExtensionHost.start() // TODO start on demand, e.g. not when extensions should be disabled
 }
 
