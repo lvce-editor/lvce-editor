@@ -209,7 +209,7 @@ test('install should fail when the server sends an invalid compressed object', a
   await expect(
     ExtensionManagement.install('test-author.test-extension')
   ).rejects.toThrowError(
-    /^Failed to install extension "test-author.test-extension": unexpected end of file/
+    /^Failed to install extension "test-author.test-extension": Failed to extract .* unexpected end of file/
   )
 })
 
