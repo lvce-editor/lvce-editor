@@ -98,3 +98,20 @@ test('list - error - manifest version is of type array', async () => {
 
 // TODO test extension.json is of type folder
 // TODO test extension.json is of type symlink
+
+test('list', async () => {
+  // @ts-ignore
+  fs.readdir.mockImplementation(() => {
+    return ['/test/extensions/extension-1']
+  })
+  // @ts-ignore
+  fs.readFile.mockImplementation(() => {
+    return '{ "id": "extension-1", "version": "0.0.1" }'
+  })
+  expect(await ExtensionList.list()).toEqual([
+    {
+      id: 'extension-1',
+      version: '0.0.1',
+    },
+  ])
+})

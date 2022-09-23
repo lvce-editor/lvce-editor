@@ -1,6 +1,7 @@
 import * as ExtensionList from '../ExtensionList/ExtensionList.js'
+import * as Json from '../Json/Json.js'
 
-export const handleCliArgs = async (argv) => {
+export const handleCliArgs = async (argv, console) => {
   const extensions = await ExtensionList.list()
-  process.stdout.write(JSON.stringify(extensions, null, 2))
+  console.info(Json.stringify(extensions))
 }
