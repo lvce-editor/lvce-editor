@@ -47,12 +47,6 @@ test('handleCliArgs', async () => {
   }
   await CliList.handleCliArgs([], console)
   expect(console.info).toHaveBeenCalledTimes(1)
-  expect(console.info).toHaveBeenCalledWith(`[
-  {
-    \"id\": \"extension-1\",
-    \"version\": \"0.0.1\"
-  }
-]
-`)
+  expect(console.info).toHaveBeenCalledWith(`extension-1: 0.0.1`)
   expect(console.error).not.toHaveBeenCalled()
 })

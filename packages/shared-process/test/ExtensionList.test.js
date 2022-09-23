@@ -21,8 +21,8 @@ const ExtensionList = await import(
 const fs = await import('node:fs/promises')
 
 class NodeError extends Error {
-  constructor(code) {
-    super(code)
+  constructor(code, message = code) {
+    super(message)
     this.code = code
   }
 }
@@ -65,7 +65,7 @@ test('list - error - manifest json is null', async () => {
 test('list - error - manifest json has no id null', async () => {
   // @ts-ignore
   fs.readdir.mockImplementation(() => {
-    return ['/test/extensions/extension-1']
+    return ['extension-1']
   })
   // @ts-ignore
   fs.readFile.mockImplementation(() => {
@@ -82,7 +82,7 @@ test('list - error - manifest json has no id null', async () => {
 test('list - error - manifest version is of type array', async () => {
   // @ts-ignore
   fs.readdir.mockImplementation(() => {
-    return ['/test/extensions/extension-1']
+    return ['extension-1']
   })
   // @ts-ignore
   fs.readFile.mockImplementation(() => {
@@ -91,6 +91,30 @@ test('list - error - manifest version is of type array', async () => {
   expect(await ExtensionList.list()).toEqual([
     {
       id: 'extension-1',
+      version: 'n/a',
+    },
+  ])
+})
+
+test('list - error - manifest is a directory', async () => {
+  // @ts-ignore
+  fs.readdir.mockImplementation(() => {
+    return ['extension-1', 'extension-2']
+  })
+  // @ts-ignore
+  fs.readFile.mockImplementation((path) => {
+    switch (path) {
+      case '/test/extensions/extension-1/extension.json':
+        throw new NodeError('EISDIR')
+      case '/test/extensions/extension-2/extension.json':
+        return '{}'
+      default:
+        throw new NodeError('ENOENT')
+    }
+  })
+  expect(await ExtensionList.list()).toEqual([
+    {
+      id: 'extension-2',
       version: 'n/a',
     },
   ])

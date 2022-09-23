@@ -6,7 +6,7 @@ import * as JsonFile from '../JsonFile/JsonFile.js'
 
 const extensionPath = Platform.getExtensionsPath()
 
-const getExtensionManifestPath = (dirent) => {
+const getAbsolutePath = (dirent) => {
   return join(extensionPath, dirent)
 }
 
@@ -24,9 +24,10 @@ const getManifestId = (json, jsonPath) => {
   return basename(jsonPath)
 }
 
-const getManifestInfo = async (manifestPath) => {
+const getManifestInfo = async (extensionPath) => {
+  const manifestPath = join(extensionPath, 'extension.json')
   const json = await JsonFile.readJson(manifestPath)
-  const id = getManifestId(json, manifestPath)
+  const id = getManifestId(json, extensionPath)
   const version = getManifestVersion(json)
   return {
     id,
@@ -34,16 +35,27 @@ const getManifestInfo = async (manifestPath) => {
   }
 }
 
+const isFulfilled = (result) => {
+  return result.status === 'fulfilled'
+}
+
+const getValue = (result) => {
+  return result.value
+}
+
 const getManifestInfos = async (manifestPaths) => {
-  const manifestInfos = await Promise.all(manifestPaths.map(getManifestInfo))
-  return manifestInfos
+  const manifestInfos = await Promise.allSettled(
+    manifestPaths.map(getManifestInfo)
+  )
+  const results = manifestInfos.filter(isFulfilled).map(getValue)
+  return results
 }
 
 export const list = async () => {
   try {
     const dirents = await readdir(extensionPath)
-    const extensionManifestPaths = dirents.map(getExtensionManifestPath)
-    const infos = await getManifestInfos(extensionManifestPaths)
+    const extensionPaths = dirents.map(getAbsolutePath)
+    const infos = await getManifestInfos(extensionPaths)
     return infos
   } catch (error) {
     if (error && error.code === 'ENOENT') {
