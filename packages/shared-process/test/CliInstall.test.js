@@ -19,10 +19,11 @@ const ExtensionInstall = await import(
 )
 
 test('handleCliArgs - error - missing extension argument', async () => {
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  await CliInstall.handleCliArgs(['install'])
-  expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith('extension argument is required')
+  const console = {
+    info: jest.fn(),
+    error: jest.fn(),
+  }
+  await CliInstall.handleCliArgs(['install'], console)
 })
 
 test('handleCliArgs - error - decompression error', async () => {

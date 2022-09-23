@@ -41,6 +41,9 @@ const getModule = (parsedArgs) => {
   if (arg0 === 'install') {
     return require('../CliInstall/CliInstall.js')
   }
+  if (arg0 === 'list') {
+    return require('../CliList/CliList.js')
+  }
   if (parsedArgs['built-in-self-test']) {
     return require('../CliBuiltinSelfTest/CliBuiltinSelfTest.js')
   }

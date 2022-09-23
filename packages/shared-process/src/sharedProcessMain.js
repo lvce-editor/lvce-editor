@@ -45,20 +45,17 @@ const handleSigTerm = () => {
   console.info('[shared-process] sigterm')
 }
 
+const knownCliArgs = ['install', 'list']
+
 const main = async () => {
   const argv = process.argv.slice(2)
   const argv0 = argv[0]
-  if (argv0 === 'install') {
-    const module = await import('./parts/CliInstall/CliInstall.js')
-    try {
-      await module.handleCliArgs(argv)
-    } catch (error) {
-      console.error(error)
-      process.exit(1)
-    }
+  if (knownCliArgs.includes(argv0)) {
+    const module = await import('./parts/Cli/Cli.js')
+    await module.handleCliArgs(argv, console, process)
     return
-    // TODO install extension
   }
+
   console.log('[shared process] started')
   // process.on('beforeExit', handleBeforeExit)
   process.on('disconnect', handleDisconnect)

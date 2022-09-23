@@ -1,6 +1,6 @@
 import * as ExtensionInstall from '../ExtensionInstall/ExtensionInstall.js'
 
-export const handleCliArgs = async (argv) => {
+export const handleCliArgs = async (argv, console) => {
   const extension = argv[1]
   if (!extension) {
     console.error('extension argument is required')
