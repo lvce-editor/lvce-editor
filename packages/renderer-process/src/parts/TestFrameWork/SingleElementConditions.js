@@ -5,6 +5,10 @@ export const toBeVisible = (element) => {
   return element.isConnected
 }
 
+export const toHaveValue = (element, { value }) => {
+  return element.value === value
+}
+
 export const toHaveText = (element, { text }) => {
   return element.textContent === text
 }

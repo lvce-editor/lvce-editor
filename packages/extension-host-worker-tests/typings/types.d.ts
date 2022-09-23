@@ -21,7 +21,9 @@ declare const Editor: {
   readonly goToTypeDefinition: () => Promise<void>
   readonly openCompletion: () => Promise<void>
   readonly openEditorContextMenu: () => Promise<void>
+  readonly openFindWidget: () => Promise<void>
   readonly setCursor: (rowIndex: number, columnIndex: number) => Promise<void>
+  readonly setSelections: (selections: Uint32Array) => Promise<void>
   readonly type: (text: string) => Promise<void>
 }
 

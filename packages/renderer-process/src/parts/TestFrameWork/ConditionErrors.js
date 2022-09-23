@@ -4,6 +4,10 @@ export const toBeVisible = (locator) => {
   return `expected selector to be visible ${locator._selector}`
 }
 
+export const toHaveValue = (locator, { value }) => {
+  return `expected selector ${locator._selector} to have value ${value}`
+}
+
 const printLocator = (locator) => {
   if (locator._nth) {
     return `${locator._selector}:nth(${locator._nth})`

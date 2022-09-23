@@ -63,3 +63,11 @@ export const type = async (text) => {
 export const findAllReferences = async () => {
   await Command.execute('SideBar.show', 'References', /* focus */ true)
 }
+
+export const setSelections = async (selections) => {
+  await Command.execute('Editor.setSelections', selections)
+}
+
+export const openFindWidget = async () => {
+  await Command.execute('Editor.openFind')
+}
