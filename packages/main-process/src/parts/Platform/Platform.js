@@ -10,17 +10,17 @@ exports.isWindows = process.platform === 'win32'
 
 exports.isProduction = false
 
-const applicationName = 'lvce-oss'
-
 const homeDirectory = homedir()
 
 const { env } = process
+
+exports.applicationName = 'lvce-oss'
 
 const xdgConfig =
   env.XDG_CONFIG_HOME ||
   (homeDirectory ? join(homeDirectory, '.config') : undefined)
 
-const configDir = join(xdgConfig || tmpdir(), applicationName)
+const configDir = join(xdgConfig || tmpdir(), exports.applicationName)
 
 exports.getBuiltinSelfTestPath = () => {
   return (
@@ -34,8 +34,6 @@ exports.getWebPath = () => {
     process.env.WEB_PATH || join(Root.root, 'packages', 'web', 'src', 'web.js')
   )
 }
-
-exports.applicationName = 'lvce-oss'
 
 exports.version = '0.0.0-dev'
 
