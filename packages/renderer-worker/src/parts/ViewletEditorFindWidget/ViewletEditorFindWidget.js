@@ -1,6 +1,6 @@
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
-export const name = 'EditorFind'
+export const name = 'EditorFindWidget'
 
 export const create = () => {
   return {}
@@ -16,7 +16,6 @@ export const getPosition = () => {
       height: 0,
     }
   }
-  console.log(editor)
   const left = editor.left + editor.width - 100
   const top = editor.top + 10
   const width = 80
@@ -30,12 +29,17 @@ export const getPosition = () => {
 }
 
 export const loadContent = (state) => {
-  return state
+  return {
+    ...state,
+  }
 }
 
 export const handleInput = (state, value) => {
   // TODO get focused editor
   // highlight locations that match value
+  const editor = ViewletStates.getState('EditorText')
+  const lines = editor.lines
+  console.log({ lines })
   return state
 }
 

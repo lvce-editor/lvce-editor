@@ -32,7 +32,7 @@ test('event - input', () => {
   $InputBox.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'ViewletEditorFindWidget.handleInput',
+    'EditorFindWidget.handleInput',
     'abc'
   )
 })

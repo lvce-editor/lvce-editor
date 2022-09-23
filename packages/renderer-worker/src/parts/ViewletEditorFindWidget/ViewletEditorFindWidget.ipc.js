@@ -3,7 +3,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 
 // prettier-ignore
 export const Commands = {
-  'EditorFindWidget.handleInput': Viewlet.wrapViewletCommand('EditorFind', ViewletEditorFindWidget.handleInput),
+  'EditorFindWidget.handleInput': Viewlet.wrapViewletCommand('EditorFindWidget', ViewletEditorFindWidget.handleInput),
 }
 
 export * from './ViewletEditorFindWidget.js'

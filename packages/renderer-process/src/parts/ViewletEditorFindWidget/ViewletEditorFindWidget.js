@@ -17,3 +17,8 @@ export const create = () => {
     $InputBox,
   }
 }
+
+export const focus = (state) => {
+  const { $InputBox } = state
+  $InputBox.focus()
+}
