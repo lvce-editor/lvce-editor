@@ -8,10 +8,11 @@ import { createServer, IncomingMessage, ServerResponse } from 'node:http'
 import { dirname, extname, join, resolve } from 'node:path'
 import { pipeline } from 'node:stream/promises'
 import { fileURLToPath, parse as parseUrl } from 'node:url'
+import * as Root from './parts/Root/Root.js'
 
 // @ts-ignore
 const __dirname = dirname(fileURLToPath(import.meta.url))
-const ROOT = resolve(__dirname, '../../../')
+const ROOT = Root.root
 const STATIC = resolve(__dirname, '../../../static')
 const PORT = process.env.PORT || 3000
 
@@ -328,6 +329,15 @@ const serveConfig = async (req, res, next) => {
     case '/config/builtinCommands.json':
     case '/config/defaultSettings.json':
       return sendFile(join(ROOT, 'static', pathName), res)
+    case '/config/theme.css':
+      const SendTheme = await import('./parts/SendTheme/SendTheme.js')
+      return SendTheme.sendTheme(req, res)
+    case '/config/icon-theme.css':
+      const SendIconTheme = await import(
+        './parts/SendIconTheme/SendIconTheme.js'
+      )
+      return SendIconTheme.sendIconThemeCss(req, res)
+
     default:
       break
   }

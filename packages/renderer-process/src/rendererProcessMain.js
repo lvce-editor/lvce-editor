@@ -1,5 +1,4 @@
 // files that should be in initial chunk
-import * as M1 from '../src/parts/Css/Css.ipc.js'
 import * as M2 from '../src/parts/Layout/Layout.ipc.js'
 import * as M4 from '../src/parts/Editor/Editor.js'
 import * as M5 from '../src/parts/Focus/Focus.js'
@@ -19,23 +18,7 @@ import * as Platform from './parts/Platform/Platform.js'
 import * as PlatformType from './parts/PlatformType/PlatformType.js'
 
 // hack so that rollup doesn't tree-shake out these modules
-globalThis.M = [
-  M1,
-  M2,
-  M4,
-  M5,
-  M6,
-  M7,
-  M13,
-  M14,
-  M18,
-  M22,
-  M26,
-  M27,
-  M28,
-  M29,
-  M30,
-]
+globalThis.M = [M2, M4, M5, M6, M7, M13, M14, M18, M22, M26, M27, M28, M29, M30]
 
 const handleError = (error) => {
   console.info(`[renderer-process] Unhandled Error: ${error}`)

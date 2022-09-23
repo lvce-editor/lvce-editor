@@ -1,23 +1,21 @@
-import * as ColorTheme from '../ColorTheme/ColorTheme.js'
-import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as Command from '../Command/Command.js'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as InitData from '../InitData/InitData.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
+import * as Languages from '../Languages/Languages.js'
 import * as Layout from '../Layout/Layout.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
+import * as Location from '../Location/Location.js'
 import * as Performance from '../Performance/Performance.js'
+import * as Platform from '../Platform/Platform.js'
 import * as Preferences from '../Preferences/Preferences.js'
+import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as ServiceWorker from '../ServiceWorker/ServiceWorker.js'
+import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as RecentlyOpened from '../RecentlyOpened/RecentlyOpened.js'
-import * as Location from '../Location/Location.js'
-import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as SessionReplay from '../SessionReplay/SessionReplay.js'
-import * as InitData from '../InitData/InitData.js'
-import * as Command from '../Command/Command.js'
-import * as Platform from '../Platform/Platform.js'
-import * as Languages from '../Languages/Languages.js'
 
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
 export const startup = async (config) => {
@@ -51,10 +49,6 @@ export const startup = async (config) => {
   Performance.mark('code/didOpenWorkspace')
 
   LifeCycle.mark(LifeCycle.Phase.Three)
-
-  Performance.mark('code/willLoadColorTheme')
-  await ColorTheme.hydrate()
-  Performance.mark('code/didLoadColorTheme')
 
   LifeCycle.mark(LifeCycle.Phase.Four)
 
@@ -111,11 +105,6 @@ export const startup = async (config) => {
   Performance.mark('code/didLoadStatusBar')
 
   LifeCycle.mark(LifeCycle.Phase.Eleven)
-
-  Performance.mark('code/willLoadIconTheme')
-  // TODO check preferences if icon theme is enabled
-  await IconTheme.hydrate()
-  Performance.mark('code/didLoadIconTheme')
 
   LifeCycle.mark(LifeCycle.Phase.Twelve)
 
@@ -199,15 +188,5 @@ export const startup = async (config) => {
     'code/loadPreferences',
     'code/willLoadPreferences',
     'code/didLoadPreferences'
-  )
-  Performance.measure(
-    'code/loadColorTheme',
-    'code/willLoadColorTheme',
-    'code/didLoadColorTheme'
-  )
-  Performance.measure(
-    'code/loadIconTheme',
-    'code/willLoadIconTheme',
-    'code/didLoadIconTheme'
   )
 }
