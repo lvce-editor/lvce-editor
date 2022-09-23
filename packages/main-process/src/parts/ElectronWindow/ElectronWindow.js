@@ -80,7 +80,17 @@ const getTitleBarOptions = (windowControlsOverlayEnabled) => {
 /**
  *
  * @param {{
- * x:number, y:number, width:number, height:number, menu?:boolean, background?:string, session?:import('electron').Session}} param0
+ *  x:number,
+ *  y:number,
+ *  width:number,
+ *  height:number,
+ *  menu?:boolean,
+ *  background?:string,
+ *  session?:import('electron').Session,
+ *  titleBarStyle?:any,
+ *  titleBarOverlay?:any,
+ *  frame?:boolean
+ * }} param0
  */
 exports.create = ({
   x,
@@ -91,16 +101,21 @@ exports.create = ({
   menu = false,
   background = '#ffffff',
   session = undefined,
+  titleBarStyle,
+  titleBarOverlay,
+  frame,
 }) => {
-  const windowControlsOverlayEnabled = Platform.isWindows
-  const titleBarOptions = getTitleBarOptions(windowControlsOverlayEnabled)
+  // const windowControlsOverlayEnabled = Platform.isWindows
+  // const titleBarOptions = getTitleBarOptions(windowControlsOverlayEnabled)
   const browserWindow = new Electron.BrowserWindow({
     x,
     y,
     width,
     height,
     autoHideMenuBar: true,
-    ...titleBarOptions,
+    titleBarStyle: 'hidden',
+    titleBarOverlay,
+    frame,
     webPreferences: {
       enableWebSQL: false,
       spellcheck: false,

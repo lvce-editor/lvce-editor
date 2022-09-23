@@ -5,6 +5,7 @@ const Performance = require('../Performance/Performance.js')
 const LifeCycle = require('../LifeCycle/LifeCycle.js')
 const Session = require('../ElectronSession/ElectronSession.js')
 const Platform = require('../Platform/Platform.js')
+const Preferences = require('../Preferences/Preferences.js')
 
 exports.state = {
   /**
@@ -53,6 +54,13 @@ exports.createAppWindow = async (
   workingDirectory,
   url = defaultUrl
 ) => {
+  const preferences = await Preferences.load()
+  const titleBarPreference = Preferences.get(
+    preferences,
+    'window.titleBarStyle'
+  )
+  const frame = titleBarPreference === 'custom' ? false : true
+  const titleBarStyle = titleBarPreference === 'custom' ? 'hidden' : undefined
   const session = Session.get()
   const window = Window.create({
     y: 0,
@@ -62,6 +70,8 @@ exports.createAppWindow = async (
     menu: true,
     background: '#1e2324',
     session,
+    titleBarStyle,
+    frame,
   })
   window.on('close', handleWindowClose)
   exports.state.windows.push({
