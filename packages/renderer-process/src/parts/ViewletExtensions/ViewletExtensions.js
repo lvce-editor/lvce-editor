@@ -69,7 +69,7 @@ export const create = () => {
 
   const $ScrollBar = document.createElement('div')
   $ScrollBar.className = 'ScrollBarSmall'
-  $ScrollBar.onmousedown = ViewletExtensionsEvents.handleScrollBarMouseDown
+  $ScrollBar.onpointerdown = ViewletExtensionsEvents.handleScrollBarPointerDown
   $ScrollBar.append($ScrollBarThumb)
 
   const $ExtensionListWrapper = document.createElement('div')

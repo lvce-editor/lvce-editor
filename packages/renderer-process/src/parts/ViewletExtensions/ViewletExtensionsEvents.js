@@ -7,7 +7,7 @@ const DEFAULT_ICON_SRC = '/icons/extensionDefaultIcon.png'
 const DEFAULT_ICON_LANGUAGE_BASICS = '/icons/language-icon.svg'
 const DEFAULT_ICON_THEME = '/icons/theme-icon.png'
 
-export const handleScrollBarThumbMouseMove = (event) => {
+export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
   RendererWorker.send(
     /* ViewletExtensions.handleScrollBarMouseMove */ 'Extensions.handleScrollBarMove',
@@ -15,16 +15,16 @@ export const handleScrollBarThumbMouseMove = (event) => {
   )
 }
 
-export const handleScrollBarThumbMouseUp = () => {
-  window.removeEventListener('mousemove', handleScrollBarThumbMouseMove)
-  window.removeEventListener('mouseup', handleScrollBarThumbMouseUp)
+export const handleScrollBarThumbPointerUp = () => {
+  window.removeEventListener('pointermove', handleScrollBarThumbPointerMove)
+  window.removeEventListener('pointerup', handleScrollBarThumbPointerUp)
 }
 
-export const handleScrollBarMouseDown = (event) => {
+export const handleScrollBarPointerDown = (event) => {
   const $Target = event.target
   if ($Target.className === 'ScrollBarThumb') {
-    window.addEventListener('mousemove', handleScrollBarThumbMouseMove)
-    window.addEventListener('mouseup', handleScrollBarThumbMouseUp)
+    window.addEventListener('pointermove', handleScrollBarThumbPointerMove)
+    window.addEventListener('pointerup', handleScrollBarThumbPointerUp)
   } else {
     const y = event.clientY
     console.log({ y })
