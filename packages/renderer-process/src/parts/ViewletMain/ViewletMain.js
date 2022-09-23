@@ -1,28 +1,14 @@
 import * as EditorGroup from '../EditorGroup/EditorGroup.js'
 import * as Layout from '../Layout/Layout.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
-
-const handleDragOver = (event) => {
-  event.preventDefault()
-  Layout.state.$Main.classList.add('DropTarget')
-}
-
-const handleDrop = async (event) => {
-  console.log('[main] drop')
-  event.preventDefault()
-  Layout.state.$Main.classList.remove('DropTarget')
-  RendererWorker.send(/* handleDrop */ 'Main.handleDrop')
-}
+import * as ViewletMainEvents from './ViewletMainEvents.js'
 
 const create$MainTabs = () => {
   const $MainTabs = document.createElement('div')
   $MainTabs.className = 'MainTabs'
   // @ts-ignore
   $MainTabs.role = 'tablist'
-  $MainTabs.onmousedown = handleTabsMouseDown
-  $MainTabs.oncontextmenu = handleTabsContextMenu
+  $MainTabs.onmousedown = ViewletMainEvents.handleTabsMouseDown
+  $MainTabs.oncontextmenu = ViewletMainEvents.handleTabsContextMenu
   // TODO race condition: what if tab has already been closed?
   return $MainTabs
 }
@@ -30,8 +16,8 @@ const create$MainTabs = () => {
 // TODO Main should not be bound to Editor -> Lazy load Editor
 export const create = () => {
   const $Main = Layout.state.$Main
-  $Main.ondrop = handleDrop
-  $Main.ondragover = handleDragOver
+  $Main.ondrop = ViewletMainEvents.handleDrop
+  $Main.ondragover = ViewletMainEvents.handleDragOver
 
   // const $MainContent = document.createElement('div')
   // $MainContent.id = 'MainContent'
@@ -100,89 +86,6 @@ export const closeViewletAndTab = (state, index) => {
 
 export const focus = () => {
   console.log('todo focus main')
-}
-
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
-const getIndex = ($Target) => {
-  switch ($Target.className) {
-    case 'EditorTabCloseButton':
-      return getNodeIndex($Target.parentNode)
-    case 'MainTab':
-      return getNodeIndex($Target)
-    default:
-      return -1
-  }
-}
-
-const handleTabCloseButtonMouseDown = (event, index) => {
-  RendererWorker.send(
-    /* Main.closeEditor */ 'Main.closeEditor',
-    /* index */ index
-  )
-}
-
-const handleTabMouseDown = (event, index) => {
-  switch (event.button) {
-    case MouseEventType.LeftClick:
-      RendererWorker.send(
-        /* Main.handleTabClick */ 'Main.handleTabClick',
-        /* index */ index
-      )
-      break
-    case MouseEventType.MiddleClick:
-      RendererWorker.send(
-        /* Main.closeEditor */ 'Main.closeEditor',
-        /* index */ index
-      )
-      break
-    case MouseEventType.RightClick:
-      break
-    default:
-      break
-  }
-}
-
-const handleTabsMouseDown = (event) => {
-  const $Target = event.target
-  const index = getIndex($Target)
-  if (index === -1) {
-    return
-  }
-  event.preventDefault()
-  switch ($Target.className) {
-    case 'EditorTabCloseButton':
-      handleTabCloseButtonMouseDown(event, index)
-      break
-    case 'MainTab':
-      handleTabMouseDown(event, index)
-      break
-    default:
-      break
-  }
-}
-
-const handleTabsContextMenu = (event) => {
-  const $Target = event.target
-  const index = getIndex($Target)
-  if (index === -1) {
-    return
-  }
-  event.preventDefault()
-  const x = event.clientX
-  const y = event.clientY
-  RendererWorker.send(
-    /* Main.handleTabContextMenu */ 'Main.handleTabContextMenu',
-    /* index */ index,
-    /* x */ x,
-    /* y */ y
-  )
 }
 
 export const openViewlet = (state, tabLabel, tabTitle, oldActiveIndex) => {
