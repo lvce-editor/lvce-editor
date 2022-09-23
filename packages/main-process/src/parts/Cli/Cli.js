@@ -30,19 +30,19 @@ exports.parseCliArgs = (argv) => {
 
 const getModule = (parsedArgs) => {
   if (parsedArgs.help) {
-    return require('./CliHelp.js')
+    return require('../CliHelp/CliHelp.js')
   }
   if (parsedArgs.version) {
-    return require('./CliVersion.js')
+    return require('../CliVersion/CliVersion.js')
   }
   if (parsedArgs.web) {
-    return require('./CliWeb.js')
+    return require('../CliWeb/CliWeb.js')
   }
   if (parsedArgs['install']) {
-    return require('./CliInstall.js')
+    return require('../CliInstall/CliInstall.js')
   }
   if (parsedArgs['built-in-self-test']) {
-    return require('./CliBuiltinSelfTest.js')
+    return require('../CliBuiltinSelfTest/CliBuiltinSelfTest.js')
   }
   return undefined
 }
