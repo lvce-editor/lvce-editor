@@ -64,7 +64,6 @@ const main = async () => {
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
   ParentIpc.listen()
 
-  console.log(process.argv)
   // ExtensionHost.start() // TODO start on demand, e.g. not when extensions should be disabled
 }
 

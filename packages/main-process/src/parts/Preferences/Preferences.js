@@ -22,7 +22,6 @@ const load = async () => {
   const userSettingsPath = Platform.getUserSettingsPath()
   const defaultSettings = await readSettings(defaultSettingsPath)
   const userSettings = await readSettings(userSettingsPath)
-  console.log({ userSettings })
   const mergedSettings = { ...defaultSettings, ...userSettings }
   return mergedSettings
 }

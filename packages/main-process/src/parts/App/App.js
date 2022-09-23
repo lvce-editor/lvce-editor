@@ -166,11 +166,6 @@ exports.handlePortForMainProcess = handlePortForMainProcess
  * @param {import('electron').IpcMainEvent} event
  */
 const handlePort = async (event, data) => {
-  // console.log({ event })
-  // const data = event.
-  // console.log('GOT PORT', event)
-  console.log({ data })
-  // event.sender.on('render-process-gone', listener)
   switch (data) {
     case 'shared-process':
       return handlePortForSharedProcess(event)
