@@ -20,6 +20,12 @@
     "when": "focus.editorCompletions"
   },
   {
+    "key": "Escape",
+    "command": "Viewlet.closeWidget",
+    "when": "focus.EditorFindWidget",
+    "args": ["EditorFindWidget"]
+  },
+  {
     "key": "ctrl+ArrowRight",
     "command": "Editor.cursorWordRight",
     "when": "focus.EditorText"

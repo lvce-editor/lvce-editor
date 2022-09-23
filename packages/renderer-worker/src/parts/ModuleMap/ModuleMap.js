@@ -254,6 +254,7 @@ export const getModuleId = (commandId) => {
       return ModuleId.Url
     case 'Viewlet.getAllStates':
     case 'Viewlet.openWidget':
+    case 'Viewlet.closeWidget':
     case 2133:
       return ModuleId.Viewlet
     case 'QuickPick.focusFirst':
