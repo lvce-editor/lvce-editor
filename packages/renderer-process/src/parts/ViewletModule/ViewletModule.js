@@ -54,6 +54,8 @@ export const load = (moduleId) => {
       return import('../ViewletEditorPlainText/ViewletEditorPlainText.js')
     case ViewletModuleId.KeyBindings:
       return import('../ViewletKeyBindings/ViewletKeyBindings.js')
+    case ViewletModuleId.EditorFindWidget:
+      return import('../ViewletEditorFindWidget/ViewletEditorFindWidget.js')
     default:
       throw new Error('unknown module')
   }

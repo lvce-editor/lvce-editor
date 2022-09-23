@@ -254,17 +254,9 @@ export const getModuleId = (commandId) => {
       return ModuleId.Url
     case 'Viewlet.getAllStates':
     case 'Viewlet.openWidget':
+    case 'Viewlet.closeWidget':
     case 2133:
       return ModuleId.Viewlet
-    case 'QuickPick.focusFirst':
-    case 'QuickPick.focusLast':
-    case 'QuickPick.focusNext':
-    case 'QuickPick.focusPrevious':
-    case 'QuickPick.handleBlur':
-    case 'QuickPick.handleInput':
-    case 'QuickPick.selectCurrentIndex':
-    case 'QuickPick.selectIndex':
-      return ModuleId.ViewletQuickPick
     case 'Window.close':
     case 'Window.exit':
     case 'Window.makeScreenshot':

@@ -81,13 +81,27 @@ export const load = async (viewlet, focus = false) => {
       }
     }
     state = ViewletState.ModuleLoaded
+
+    let left = viewlet.left
+    let top = viewlet.top
+    let width = viewlet.width
+    let height = viewlet.height
+    if (module.getPosition) {
+      const position = module.getPosition()
+      left = position.left
+      top = position.top
+      width = position.width
+      height = position.height
+      console.log({ position })
+    }
+
     const viewletState = module.create(
       viewlet.id,
       viewlet.uri,
-      viewlet.left,
-      viewlet.top,
-      viewlet.width,
-      viewlet.height
+      left,
+      top,
+      width,
+      height
     )
 
     const oldVersion =
@@ -160,11 +174,22 @@ export const load = async (viewlet, focus = false) => {
         commands = module.render(viewletState, newState)
       }
       if (viewlet.show === false) {
-        return [
+        const allCommands = [
           ['Viewlet.create', viewlet.id],
           ...commands,
           ['Viewlet.show', viewlet.id],
         ]
+        if (module.getPosition) {
+          allCommands.splice(1, 0, [
+            'Viewlet.setBounds',
+            viewlet.id,
+            left,
+            top,
+            width,
+            height,
+          ])
+        }
+        return allCommands
       }
       await RendererProcess.invoke(
         /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',

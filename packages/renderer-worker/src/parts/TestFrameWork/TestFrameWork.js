@@ -126,6 +126,10 @@ export const expect = (locator) => {
       Assert.string(text, 'text must be of type string')
       return this.checkSingleElementCondition('toHaveText', { text })
     },
+    async toHaveValue(value) {
+      Assert.string(value, 'value must be of type string')
+      return this.checkSingleElementCondition('toHaveValue', { value })
+    },
     async toBeFocused() {
       return this.checkSingleElementCondition('toBeFocused')
     },

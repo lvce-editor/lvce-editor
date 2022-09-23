@@ -21,7 +21,9 @@ declare const Editor: {
   readonly goToTypeDefinition: () => Promise<void>
   readonly openCompletion: () => Promise<void>
   readonly openEditorContextMenu: () => Promise<void>
+  readonly openFindWidget: () => Promise<void>
   readonly setCursor: (rowIndex: number, columnIndex: number) => Promise<void>
+  readonly setSelections: (selections: Uint32Array) => Promise<void>
   readonly type: (text: string) => Promise<void>
 }
 
@@ -41,6 +43,10 @@ declare const Explorer: {
 
 declare const Extension: {
   readonly addWebExtension: (uri: string) => Promise<void>
+}
+
+declare const EditorFindWidget: {
+  readonly focusNext: () => Promise<void>
 }
 
 declare const FileSystem: {
@@ -113,6 +119,7 @@ declare const expect: (locator: any) => {
   readonly toHaveCSS: (key: string, value: string) => Promise<void>
   readonly toHaveId: (id: string) => Promise<void>
   readonly toHaveText: (text: string) => Promise<void>
+  readonly toHaveValue: (value: string) => Promise<void>
 }
 
 declare const Locator: (selector: string) => any

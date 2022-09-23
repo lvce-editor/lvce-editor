@@ -20,6 +20,12 @@
     "when": "focus.editorCompletions"
   },
   {
+    "key": "Escape",
+    "command": "Viewlet.closeWidget",
+    "when": "focus.EditorFindWidget",
+    "args": ["EditorFindWidget"]
+  },
+  {
     "key": "ctrl+ArrowRight",
     "command": "Editor.cursorWordRight",
     "when": "focus.EditorText"
@@ -663,5 +669,14 @@
   {
     "key": "shift+ArrowDown",
     "command": "Editor.selectDown"
+  },
+  {
+    "key": "ctrl+f",
+    "command": "Editor.openFind"
+  },
+  {
+    "key": "Enter",
+    "command": "EditorFindWidget.focusNext",
+    "when": "focus.EditorFindWidget"
   }
 ]

@@ -55,7 +55,9 @@ test.skip('setState - shouldApplyNewState returns false', () => {
 
 test('openWidget - once', async () => {
   // @ts-ignore
-  ViewletManager.load.mockImplementation(() => {})
+  ViewletManager.load.mockImplementation(() => {
+    return []
+  })
   await Viewlet.openWidget('QuickPick', ['everything'])
   expect(ViewletManager.load).toHaveBeenCalledTimes(1)
   expect(ViewletManager.load).toHaveBeenCalledWith({

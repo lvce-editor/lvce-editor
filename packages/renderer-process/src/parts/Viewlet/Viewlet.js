@@ -194,6 +194,9 @@ export const executeCommands = (commands) => {
       case 'Viewlet.dispose':
         dispose(...args)
         break
+      case 'Viewlet.setBounds':
+        setBounds(...args)
+        break
       default:
         throw new Error(`unknown command ${command}`)
     }
@@ -208,4 +211,13 @@ export const show = (id) => {
   if (instance.factory.focus) {
     instance.factory.focus(instance.state)
   }
+}
+
+export const setBounds = (id, left, top, width, height) => {
+  const instance = state.instances[id]
+  const $Viewlet = instance.state.$Viewlet
+  $Viewlet.style.left = `${left}px`
+  $Viewlet.style.top = `${top}px`
+  $Viewlet.style.width = `${width}px`
+  $Viewlet.style.height = `${height}px`
 }

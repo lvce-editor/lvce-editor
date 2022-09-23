@@ -52,6 +52,8 @@ export const load = (moduleId) => {
       return import('../ViewletQuickPick/ViewletQuickPick.ipc.js')
     case ViewletModuleId.KeyBindings:
       return import('../ViewletKeyBindings/ViewletKeyBindings.ipc.js')
+    case ViewletModuleId.EditorFindWidget:
+      return import('../ViewletEditorFindWidget/ViewletEditorFindWidget.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }
