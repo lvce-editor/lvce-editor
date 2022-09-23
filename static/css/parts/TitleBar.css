@@ -72,6 +72,7 @@
   -webkit-mask-repeat: no-repeat;
   -webkit-mask-size: 16px;
   -webkit-mask-position: 50% 50%;
+  pointer-events: none;
 }
 
 .MaskIconMinimize {

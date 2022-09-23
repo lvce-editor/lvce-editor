@@ -36,3 +36,44 @@ test('event - input', () => {
     'abc'
   )
 })
+
+test('event - click on focusPrevious', () => {
+  const state = ViewletEditorFindWidget.create()
+  const { $ButtonFocusPrevious } = state
+  const event = new MouseEvent('click', {
+    bubbles: true,
+    cancelable: true,
+  })
+  $ButtonFocusPrevious.dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'EditorFindWidget.focusPrevious'
+  )
+})
+
+test('event - click on focusNext', () => {
+  const state = ViewletEditorFindWidget.create()
+  const { $ButtonFocusNext } = state
+  const event = new MouseEvent('click', {
+    bubbles: true,
+    cancelable: true,
+  })
+  $ButtonFocusNext.dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('EditorFindWidget.focusNext')
+})
+
+test('event - click on close', () => {
+  const state = ViewletEditorFindWidget.create()
+  const { $ButtonClose } = state
+  const event = new MouseEvent('click', {
+    bubbles: true,
+    cancelable: true,
+  })
+  $ButtonClose.dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Viewlet.closeWidget',
+    'EditorFindWidget'
+  )
+})
