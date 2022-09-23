@@ -22,3 +22,8 @@ export const focus = (state) => {
   const { $InputBox } = state
   $InputBox.focus()
 }
+
+export const setValue = (state, value) => {
+  const { $InputBox } = state
+  $InputBox.value = value
+}

@@ -3,7 +3,9 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 export const name = 'EditorFindWidget'
 
 export const create = () => {
-  return {}
+  return {
+    value: '',
+  }
 }
 
 export const getPosition = () => {
@@ -29,8 +31,20 @@ export const getPosition = () => {
 }
 
 export const loadContent = (state) => {
+  const editor = ViewletStates.getState('EditorText')
+  if (!editor) {
+    return state
+  }
+  const { selections, lines } = editor
+  const startRowIndex = selections[0]
+  const startColumnIndex = selections[1]
+  const endRowIndex = selections[2]
+  const endColumnIndex = selections[3]
+  const line = lines[startRowIndex]
+  const value = line.slice(startColumnIndex, endColumnIndex)
   return {
     ...state,
+    value,
   }
 }
 
@@ -40,9 +54,26 @@ export const handleInput = (state, value) => {
   const editor = ViewletStates.getState('EditorText')
   const lines = editor.lines
   console.log({ lines })
-  return state
+  return {
+    ...state,
+    value,
+  }
 }
 
 export const hasFunctionalRender = true
 
-export const render = []
+const renderValue = {
+  isEqual(oldState, newState) {
+    return oldState.value === newState.value
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.invoke */ 'Viewlet.send',
+      /* id */ 'EditorFindWidget',
+      /* method */ 'setValue',
+      /* value */ newState.value,
+    ]
+  },
+}
+
+export const render = [renderValue]
