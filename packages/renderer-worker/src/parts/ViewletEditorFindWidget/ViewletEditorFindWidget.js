@@ -8,12 +8,24 @@ export const create = () => {
 
 export const getPosition = () => {
   const editor = ViewletStates.getState('EditorText')
-  console.log({ editor })
+  if (!editor) {
+    return {
+      top: 0,
+      left: 0,
+      width: 0,
+      height: 0,
+    }
+  }
+  console.log(editor)
+  const left = editor.left + editor.width - 100
+  const top = editor.top + 10
+  const width = 80
+  const height = 30
   return {
-    top: 0,
-    left: 0,
-    width: 80,
-    height: 80,
+    top,
+    left,
+    width,
+    height,
   }
 }
 

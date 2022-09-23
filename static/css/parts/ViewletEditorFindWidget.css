@@ -1,4 +1,4 @@
 .Viewlet[data-viewlet-id='EditorFindWidget'] {
-  background: orangered;
+  background: var(--ActivityBarBackground);
   z-index: 1;
 }

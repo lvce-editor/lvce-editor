@@ -48,6 +48,7 @@ export const create = (id, uri, left, top, width, height) => {
     uri,
     rowHeight: 20,
     languageId,
+    width,
   }
 }
 
