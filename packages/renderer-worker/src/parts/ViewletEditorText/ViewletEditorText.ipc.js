@@ -32,6 +32,8 @@ const Imports = {
   EditorCompletion: () => import('../EditorCommand/EditorCommandCompletion.js'),
   EditorComposition: () => import('../EditorCommand/EditorCommandComposition.js'),
   EditorCopy: () => import('../EditorCommand/EditorCommandCopy.js'),
+  EditorFind: () => import('../EditorCommand/EditorCommandOpenFind.js'),
+  EditorSetSelections: () => import('../EditorCommand/EditorCommandSetSelections.js'),
   Format: () => import('../EditorCommand/EditorCommandFormat.js'),
   GoToDefinition: () => import('../EditorCommand/EditorCommandGoToDefinition.js'),
   GoToTypeDefinition: () => import('../EditorCommand/EditorCommandGoToTypeDefinition.js'),
@@ -82,7 +84,6 @@ const Imports = {
   Type: () => import('../EditorCommand/EditorCommandType.js'),
   Undo: () => import('../EditorCommand/EditorCommandUndo.js'),
   UnIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
-  EditorFind: () => import('../EditorCommand/EditorCommandOpenFind.js'),
 }
 
 // prettier-ignore
@@ -168,6 +169,7 @@ export const Commands = {
   'Editor.setDecorations': LazyCommand.create('EditorText', Imports.SetDecorations, 'setDecorations'),
   'Editor.setDeltaY': LazyCommand.create('EditorText', Imports.SetDeltaY, 'editorSetDeltaY'),
   'Editor.setLanguageId': LazyCommand.create('EditorText', Imports.SetLanguageId, 'setLanguageId'),
+  'Editor.setSelections': LazyCommand.create('EditorText', Imports.EditorSetSelections, 'setSelections'),
   'Editor.sortLinesAscending': LazyCommand.create('EditorText', Imports.SortLinesAscending, 'sortLinesAscending'),
   'Editor.tabCompletion': LazyCommand.create('EditorText', Imports.TabCompletion, 'editorTabCompletion'),
   'Editor.toggleBlockComment': LazyCommand.create('EditorText', Imports.ToggleBlockComment, 'editorToggleBlockComment'),

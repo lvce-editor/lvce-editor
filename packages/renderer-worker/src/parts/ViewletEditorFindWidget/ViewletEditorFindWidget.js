@@ -1,5 +1,6 @@
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as TextDocumentSearch from '../TextDocumentSearch/TextDocumentSearch.js'
+import * as Command from '../Command/Command.js'
 
 export const name = 'EditorFindWidget'
 
@@ -76,7 +77,7 @@ export const handleInput = (state, value) => {
   }
 }
 
-export const focusNext = (state) => {
+export const focusNext = async (state) => {
   const { value } = state
   const editor = ViewletStates.getState('EditorText')
   const { lines, selections } = editor
@@ -96,7 +97,10 @@ export const focusNext = (state) => {
     nextMatch.rowIndex,
     nextMatch.columnIndex + value.length,
   ])
-  // TODO set editor selection and reveal position
+  // TODO set selections synchronously and render input match index,
+  // input value and new selections at the same time
+  await Command.execute('Editor.setSelections', newSelections)
+  // TODO reveal new position in editor
   return {
     ...state,
   }
