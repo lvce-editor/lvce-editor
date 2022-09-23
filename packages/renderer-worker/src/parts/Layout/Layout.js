@@ -3,6 +3,9 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
+
 // TODO where to force rendering of contents (need to call sidebar.openViewlet somewhere)
 
 export const state = {
@@ -56,10 +59,19 @@ const clamp = (min, max, value) => {
   return value
 }
 
+const getDefaultTitleBarHeight = () => {
+  switch (Platform.platform) {
+    case PlatformType.Electron:
+      return 28
+    default:
+      return 20
+  }
+}
+
 export const getPoints = (layout, bounds) => {
   const windowWidth = bounds.windowWidth
   const windowHeight = bounds.windowHeight
-  const titleBarHeight = bounds.titleBarHeight || 20
+  const titleBarHeight = bounds.titleBarHeight || getDefaultTitleBarHeight()
 
   const activityBarVisible = layout.activityBarVisible
   const panelVisible = layout.panelVisible
