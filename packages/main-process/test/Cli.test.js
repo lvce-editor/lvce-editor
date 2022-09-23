@@ -21,7 +21,6 @@ test('parseCliArgs', () => {
     wait: false,
     'built-in-self-test': false,
     web: false,
-    install: false,
     sandbox: false,
   })
 })
