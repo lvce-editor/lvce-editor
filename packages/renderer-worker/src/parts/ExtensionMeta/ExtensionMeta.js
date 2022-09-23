@@ -111,7 +111,7 @@ const handleRejectedExtension = async (extension) => {
   const message = extension.reason.message
   if (
     message.includes(`Failed to load extension manifest: File not found`) ||
-    message.includes(`Failed to load extension manifest: ENOTDIR`)
+    message.includes(`ENOTDIR`)
   ) {
     return
   }
