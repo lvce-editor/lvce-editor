@@ -68,8 +68,7 @@ export const handleInput = (state, value) => {
   const endRowIndex = selections[2]
   const endColumnIndex = selections[3]
   const matches = TextDocumentSearch.findMatches(lines, value)
-  const totalMatches = matches.length
-  console.log({ matches })
+  const totalMatches = matches.length / 2
   return {
     ...state,
     value,
@@ -98,7 +97,6 @@ export const focusNext = (state) => {
     nextMatch.columnIndex + value.length,
   ])
   // TODO set editor selection and reveal position
-  console.log({ lines, nextMatch, newSelections })
   return {
     ...state,
   }

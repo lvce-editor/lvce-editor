@@ -67,3 +67,18 @@ test('handleInput', () => {
     value: 'abc',
   })
 })
+
+test('handleInput - adjust totalMatches', () => {
+  // @ts-ignore
+  ViewletStates.getState.mockImplementation(() => {
+    return {
+      lines: ['line 1', 'line 2'],
+      selections: new Uint32Array([0, 0, 0, 4]),
+    }
+  })
+  const state = ViewletEditorFindWidget.create()
+  expect(ViewletEditorFindWidget.handleInput(state, 'line 1')).toMatchObject({
+    value: 'line 1',
+    totalMatches: 1,
+  })
+})
