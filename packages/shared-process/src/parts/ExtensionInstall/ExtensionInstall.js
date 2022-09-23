@@ -1,4 +1,4 @@
-import { readFile, rename } from 'fs/promises'
+import { readFile, rename, rm } from 'fs/promises'
 import { join } from 'path'
 import VError from 'verror'
 import * as Download from '../Download/Download.js'
@@ -36,6 +36,7 @@ export const install = async (input) => {
       throw new Error('missing id in extension manifest')
     }
     const outDir = join(extensionsPath, id)
+    await rm(outDir, { recursive: true, force: true })
     await rename(tmpDir, outDir)
   } catch (error) {
     throw new VError(error, `Failed to install "${input}"`)
