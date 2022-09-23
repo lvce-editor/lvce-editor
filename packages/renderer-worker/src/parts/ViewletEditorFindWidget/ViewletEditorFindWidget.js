@@ -36,6 +36,10 @@ export const getPosition = () => {
   }
 }
 
+const getMatchCount = (matches) => {
+  return matches.length / 2
+}
+
 export const loadContent = (state) => {
   const editor = ViewletStates.getState('EditorText')
   if (!editor) {
@@ -49,7 +53,7 @@ export const loadContent = (state) => {
   const line = lines[startRowIndex]
   const value = line.slice(startColumnIndex, endColumnIndex)
   const matches = TextDocumentSearch.findMatches(lines, value)
-  const totalMatches = matches.length
+  const totalMatches = getMatchCount(matches)
 
   return {
     ...state,
@@ -69,7 +73,7 @@ export const handleInput = (state, value) => {
   const endRowIndex = selections[2]
   const endColumnIndex = selections[3]
   const matches = TextDocumentSearch.findMatches(lines, value)
-  const totalMatches = matches.length / 2
+  const totalMatches = getMatchCount(matches)
   return {
     ...state,
     value,

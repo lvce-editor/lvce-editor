@@ -45,6 +45,10 @@ declare const Extension: {
   readonly addWebExtension: (uri: string) => Promise<void>
 }
 
+declare const EditorFindWidget: {
+  readonly focusNext: () => Promise<void>
+}
+
 declare const FileSystem: {
   readonly getTmpDir: (options?: {
     scheme?: 'memfs' | 'file'
@@ -115,6 +119,7 @@ declare const expect: (locator: any) => {
   readonly toHaveCSS: (key: string, value: string) => Promise<void>
   readonly toHaveId: (id: string) => Promise<void>
   readonly toHaveText: (text: string) => Promise<void>
+  readonly toHaveValue: (value: string) => Promise<void>
 }
 
 declare const Locator: (selector: string) => any

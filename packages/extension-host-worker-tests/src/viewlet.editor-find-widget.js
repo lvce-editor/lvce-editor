@@ -27,5 +27,8 @@ content 2`
   await EditorFindWidget.focusNext()
 
   // assert
-  // TODO check that selection has changed
+  await expect(findWidgetMatchCount).toHaveText('2 of 2')
+  const editorSelection = Locator('.EditorSelection')
+  await expect(editorSelection).toHaveCSS('top', '20px')
+  await expect(editorSelection).toHaveCSS('width', '63px')
 })
