@@ -1,10 +1,13 @@
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as TextDocumentSearch from '../TextDocumentSearch/TextDocumentSearch.js'
 
 export const name = 'EditorFindWidget'
 
 export const create = () => {
   return {
     value: '',
+    matchIndex: 0,
+    totalMatches: 0,
   }
 }
 
@@ -18,10 +21,12 @@ export const getPosition = () => {
       height: 0,
     }
   }
-  const left = editor.left + editor.width - 100
-  const top = editor.top + 10
-  const width = 80
+  const width = 200
   const height = 30
+  const paddingTop = 10
+  const paddingRight = 20
+  const left = editor.left + editor.width - width - paddingRight
+  const top = editor.top + paddingTop
   return {
     top,
     left,
@@ -42,9 +47,14 @@ export const loadContent = (state) => {
   const endColumnIndex = selections[3]
   const line = lines[startRowIndex]
   const value = line.slice(startColumnIndex, endColumnIndex)
+  const matches = TextDocumentSearch.findMatches(lines, value)
+  const totalMatches = matches.length
+
   return {
     ...state,
     value,
+    matchIndex: 1,
+    totalMatches,
   }
 }
 
@@ -52,11 +62,45 @@ export const handleInput = (state, value) => {
   // TODO get focused editor
   // highlight locations that match value
   const editor = ViewletStates.getState('EditorText')
-  const lines = editor.lines
-  console.log({ lines })
+  const { lines, selections } = editor
+  const startRowIndex = selections[0]
+  const startColumnIndex = selections[1]
+  const endRowIndex = selections[2]
+  const endColumnIndex = selections[3]
+  const matches = TextDocumentSearch.findMatches(lines, value)
+  const totalMatches = matches.length
+  console.log({ matches })
   return {
     ...state,
     value,
+    totalMatches,
+  }
+}
+
+export const focusNext = (state) => {
+  const { value } = state
+  const editor = ViewletStates.getState('EditorText')
+  const { lines, selections } = editor
+  const startRowIndex = selections[0]
+  const startColumnIndex = selections[1]
+  const endRowIndex = selections[2]
+  const endColumnIndex = selections[3]
+  // TODO find next match and highlight it
+  const nextMatch = TextDocumentSearch.findNextMatch(
+    lines,
+    value,
+    startRowIndex + 1
+  )
+  const newSelections = new Uint32Array([
+    nextMatch.rowIndex,
+    nextMatch.columnIndex,
+    nextMatch.rowIndex,
+    nextMatch.columnIndex + value.length,
+  ])
+  // TODO set editor selection and reveal position
+  console.log({ lines, nextMatch, newSelections })
+  return {
+    ...state,
   }
 }
 
@@ -76,4 +120,22 @@ const renderValue = {
   },
 }
 
-export const render = [renderValue]
+const renderMatchCount = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.matchIndex === newState.matchIndex &&
+      oldState.totalMatches === newState.totalMatches
+    )
+  },
+  apply(oldState, newState) {
+    const matchCountText = `${newState.matchIndex} of ${newState.totalMatches}`
+    return [
+      /* Viewlet.invoke */ 'Viewlet.send',
+      /* id */ 'EditorFindWidget',
+      /* method */ 'setMatchCountText',
+      /* value */ matchCountText,
+    ]
+  },
+}
+
+export const render = [renderValue, renderMatchCount]

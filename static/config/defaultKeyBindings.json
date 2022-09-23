@@ -667,5 +667,10 @@
   {
     "key": "ctrl+f",
     "command": "Editor.openFind"
+  },
+  {
+    "key": "Enter",
+    "command": "EditorFindWidget.focusNext",
+    "when": "focus.EditorFindWidget"
   }
 ]

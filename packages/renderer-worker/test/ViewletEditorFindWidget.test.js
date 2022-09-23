@@ -35,7 +35,7 @@ test('getPosition', () => {
 
 test('loadContent', async () => {
   const state = ViewletEditorFindWidget.create()
-  expect(await ViewletEditorFindWidget.loadContent(state)).toEqual({
+  expect(await ViewletEditorFindWidget.loadContent(state)).toMatchObject({
     value: '',
   })
 })
@@ -49,7 +49,7 @@ test('loadContent - initial value from editor selection', async () => {
     }
   })
   const state = ViewletEditorFindWidget.create()
-  expect(await ViewletEditorFindWidget.loadContent(state)).toEqual({
+  expect(await ViewletEditorFindWidget.loadContent(state)).toMatchObject({
     value: 'line',
   })
 })
@@ -63,7 +63,7 @@ test('handleInput', () => {
     }
   })
   const state = ViewletEditorFindWidget.create()
-  expect(ViewletEditorFindWidget.handleInput(state, 'abc')).toEqual({
+  expect(ViewletEditorFindWidget.handleInput(state, 'abc')).toMatchObject({
     value: 'abc',
   })
 })

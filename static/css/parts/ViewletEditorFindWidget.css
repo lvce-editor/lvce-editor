@@ -2,4 +2,11 @@
   background: var(--ActivityBarBackground);
   z-index: 1;
   color: wheat;
+  display: flex;
+}
+
+.EditorFindWidgetMatchCount {
+  width: 130px;
+  white-space: nowrap;
+  flex-shrink: 0;
 }
