@@ -1,8 +1,3 @@
-// TODO lazyload these files
-import * as IpcParentWithMessagePort from './IpcParentWithMessagePort.js'
-import * as IpcParentWithModuleWorker from './IpcParentWithModuleWorker.js'
-import * as IpcParentWithReferencePort from './IpcParentWithReferencePort.js'
-
 /* istanbul ignore file */
 
 export const Methods = {
@@ -16,15 +11,21 @@ export const Methods = {
  */
 const METHOD_PREFERRED = Methods.ModuleWorker
 
-export const create = async ({ method, ...options }) => {
+const getModule = () => {
   switch (METHOD_PREFERRED) {
     case Methods.ModuleWorker:
-      return IpcParentWithModuleWorker.create(options)
+      return import('./IpcParentWithModuleWorker.js')
     case Methods.MessagePort:
-      return IpcParentWithMessagePort.create(options)
+      return import('./IpcParentWithMessagePort.js')
     case Methods.ReferencePort:
-      return IpcParentWithReferencePort.create(options)
+      return import('./IpcParentWithReferencePort.js')
     default:
       throw new Error('unknown method')
   }
+}
+
+export const create = async ({ method, ...options }) => {
+  const module = await getModule()
+  // @ts-ignore
+  return module.create(options)
 }
