@@ -1,4 +1,3 @@
-import * as Command from '../Command/Command.js'
 import * as Viewlet from './Viewlet.js'
 
 export const Commands = {
