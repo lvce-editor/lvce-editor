@@ -6,6 +6,7 @@ import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
  */
 export const UiStrings = {
   Copy: 'Copy',
+  CopyPath: 'Copy Path',
 }
 
 export const getMenuEntries = () => {
@@ -15,6 +16,12 @@ export const getMenuEntries = () => {
       label: I18nString.i18nString(UiStrings.Copy),
       flags: MenuItemFlags.None,
       command: 'EditorImage.copyImage',
+    },
+    {
+      id: 'copyToClipBoard',
+      label: I18nString.i18nString(UiStrings.CopyPath),
+      flags: MenuItemFlags.None,
+      command: 'EditorImage.copyPath',
     },
   ]
 }
