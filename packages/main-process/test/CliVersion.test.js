@@ -17,7 +17,7 @@ jest.mock('../src/parts/Platform/Platform.js', () => {
   }
 })
 
-const CliVersion = require('../src/parts/Cli/CliVersion.js')
+const CliVersion = require('../src/parts/CliVersion/CliVersion.js')
 
 test('handleCliArgs', async () => {
   const spy = jest.spyOn(console, 'info').mockImplementation()

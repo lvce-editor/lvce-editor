@@ -10,7 +10,7 @@ jest.mock('electron', () => {
   }
 })
 
-const CliHelp = require('../src/parts/Cli/CliHelp.js')
+const CliHelp = require('../src/parts/CliHelp/CliHelp.js')
 
 test('handleCliArgs', async () => {
   const spy = jest.spyOn(console, 'info').mockImplementation()
