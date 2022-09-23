@@ -23,9 +23,9 @@ export const install = async (input) => {
     const outFile = join(cachedExtensionsPath, 'installed-extension.tar.br')
     const outDir = join(extensionsPath, 'installed-extension')
     // const tmpFile = await TmpFile.getTmpFile()
-    await Download.download(url, outDir)
+    await Download.download(url, outFile)
     // const tmpDir = await TmpFile.getTmpDir()
-    await Extract.extract(outDir, outFile)
+    await Extract.extract(outDir, outDir)
   } catch (error) {
     throw new VError(error, `Failed to install "${input}"`)
   }
