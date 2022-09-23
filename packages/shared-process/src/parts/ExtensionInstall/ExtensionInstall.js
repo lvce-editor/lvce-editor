@@ -25,7 +25,7 @@ export const install = async (input) => {
     // const tmpFile = await TmpFile.getTmpFile()
     await Download.download(url, outFile)
     // const tmpDir = await TmpFile.getTmpDir()
-    await Extract.extract(outDir, outDir)
+    await Extract.extract(outFile, outDir)
   } catch (error) {
     throw new VError(error, `Failed to install "${input}"`)
   }

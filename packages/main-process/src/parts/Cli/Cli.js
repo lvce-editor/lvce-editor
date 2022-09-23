@@ -28,7 +28,6 @@ exports.parseCliArgs = (argv) => {
 }
 
 const getModule = (parsedArgs) => {
-  console.log({ parsedArgs })
   const arg0 = parsedArgs._[0]
   if (parsedArgs.help) {
     return require('../CliHelp/CliHelp.js')

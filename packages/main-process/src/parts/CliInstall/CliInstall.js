@@ -1,11 +1,9 @@
 const Electron = require('electron')
-const SharedProcess = require('../SharedProcess/SharedProcess.js')
 const Platform = require('../Platform/Platform.js')
 const { Worker } = require('worker_threads')
 
 const handleCliArgs = async (parsedArgs) => {
   const extension = parsedArgs._
-  console.log({ extension })
   const sharedProcessPath = Platform.getSharedProcessPath()
   const process = new Worker(sharedProcessPath, {
     argv: parsedArgs._,
