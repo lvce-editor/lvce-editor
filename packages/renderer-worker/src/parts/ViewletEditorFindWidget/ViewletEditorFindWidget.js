@@ -77,8 +77,9 @@ export const handleInput = (state, value) => {
   }
 }
 
+// TODO this function should be synchronous
 export const focusNext = async (state) => {
-  const { value } = state
+  const { value, matchIndex } = state
   const editor = ViewletStates.getState('EditorText')
   const { lines, selections } = editor
   const startRowIndex = selections[0]
@@ -103,6 +104,7 @@ export const focusNext = async (state) => {
   // TODO reveal new position in editor
   return {
     ...state,
+    matchIndex: matchIndex + 1,
   }
 }
 
