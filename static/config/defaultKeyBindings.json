@@ -663,5 +663,9 @@
   {
     "key": "shift+ArrowDown",
     "command": "Editor.selectDown"
+  },
+  {
+    "key": "ctrl+f",
+    "command": "Editor.openFind"
   }
 ]
