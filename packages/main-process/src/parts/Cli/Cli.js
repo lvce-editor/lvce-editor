@@ -9,7 +9,6 @@ exports.parseCliArgs = (argv) => {
       'wait',
       'built-in-self-test',
       'web',
-      'install',
       'sandbox',
     ],
     alias: {
@@ -29,6 +28,8 @@ exports.parseCliArgs = (argv) => {
 }
 
 const getModule = (parsedArgs) => {
+  console.log({ parsedArgs })
+  const arg0 = parsedArgs._[0]
   if (parsedArgs.help) {
     return require('../CliHelp/CliHelp.js')
   }
@@ -38,7 +39,7 @@ const getModule = (parsedArgs) => {
   if (parsedArgs.web) {
     return require('../CliWeb/CliWeb.js')
   }
-  if (parsedArgs['install']) {
+  if (arg0 === 'install') {
     return require('../CliInstall/CliInstall.js')
   }
   if (parsedArgs['built-in-self-test']) {

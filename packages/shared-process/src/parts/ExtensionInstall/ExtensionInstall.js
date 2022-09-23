@@ -9,6 +9,9 @@ const getUrl = (input) => {
   if (slashCount === 2) {
     return `https://github.com/${input}`
   }
+  if (input.startsWith('https://')) {
+    return input
+  }
   throw new Error(`Failed to parse url`)
 }
 
