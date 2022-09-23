@@ -67,6 +67,7 @@ export const create = () => {
   const $ScrollBar = document.createElement('div')
   $ScrollBar.className = 'ScrollBar'
   $ScrollBar.onmousedown = EditorEvents.handleScrollBarMouseDown
+  $ScrollBar.oncontextmenu = EditorEvents.handleScrollBarContextMenu
   $ScrollBar.append($ScrollBarThumb)
 
   // $EditorRows.addEventListener('mousemove', handleMouseMove, { passive: true })

@@ -84,8 +84,6 @@ test('event - mousedown - left', () => {
   $EditorRow.append($Token)
   state.$LayerText.append($EditorRow)
   // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
-  // @ts-ignore
   document.caretPositionFromPoint = () => {
     return {
       offsetNode: $Token.firstChild,
@@ -112,8 +110,6 @@ test('event - mousedown - right', () => {
   $EditorRow.append($Token)
   state.$LayerText.append($EditorRow)
   // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
-  // @ts-ignore
   document.caretPositionFromPoint = () => {
     return {
       offsetNode: $Token.firstChild,
@@ -138,8 +134,6 @@ test('event - mousedown - left - out of viewport', () => {
   const $EditorRow = document.createElement('div')
   $EditorRow.append($Token)
   state.$LayerText.append($EditorRow)
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   // @ts-ignore
   document.caretPositionFromPoint = () => {
     return null
@@ -169,8 +163,6 @@ test('event - double click', () => {
   $EditorRow.append($Token)
   state.$LayerText.append($EditorRow)
   // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
-  // @ts-ignore
   document.caretPositionFromPoint = () => {
     return {
       offsetNode: $Token.firstChild,
@@ -179,8 +171,6 @@ test('event - double click', () => {
   }
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new MouseEvent('mousedown', { detail: 2, clientX: 8, clientY: 5 })
   )
@@ -202,8 +192,6 @@ test.skip('event - double click and move mouse to create selection', () => {
   state.$LayerText.dispatchEvent(
     new MouseEvent('mousedown', { detail: 2, clientX: 10, clientY: 5 })
   )
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   document.dispatchEvent(
     new MouseEvent('mousemove', { clientX: 15, clientY: 5 })
   )
@@ -234,8 +222,6 @@ test('event - triple click', () => {
   $EditorRow.append($Token)
   state.$LayerText.append($EditorRow)
   // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
-  // @ts-ignore
   document.caretPositionFromPoint = () => {
     return {
       offsetNode: $Token.firstChild,
@@ -256,8 +242,6 @@ test('event - triple click', () => {
 test.skip('event - touchstart - single touch', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new TouchEvent('touchstart', {
       touches: [
@@ -290,8 +274,6 @@ test.skip('event - touchstart - single touch', () => {
 test.skip('event - touchmove - single touch', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new TouchEvent('touchmove', {
       touches: [
@@ -327,8 +309,6 @@ test.skip('event - touchend - single touch', () => {
   }
   const state = Editor.create()
   EditorHelper.setState(1, state)
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const event = new TouchEvent('touchend', {
     touches: [
       // @ts-ignore https://github.com/jsdom/jsdom/issues/2152
@@ -362,8 +342,6 @@ test.skip('event - touchend - single touch - not cancelable', () => {
   }
   const state = Editor.create()
   EditorHelper.setState(1, state)
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const event = new TouchEvent('touchend', {
     touches: [
       // @ts-ignore https://github.com/jsdom/jsdom/issues/2152
@@ -399,8 +377,6 @@ test.skip('event - paste', () => {
   Editor.setTextDocument(state, {
     lines: ['file1 content'],
   })
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   state.$EditorInput.dispatchEvent(new Event('paste', { bubbles: true }))
   expect(RendererWorker.send).toHaveBeenCalledWith([
     'Editor.handleSingleClick',
@@ -416,8 +392,6 @@ test('event - context menu', () => {
   const state = Editor.create()
   EditorHelper.setState(1, state)
   document.body.append(state.$Editor)
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new MouseEvent('contextmenu', {
       bubbles: true,
@@ -438,8 +412,6 @@ test.skip('event - beforeinput on contenteditable on mobile - no selection', () 
   Platform.state.isMobileOrTablet = () => true
   const state = Editor.create()
   EditorHelper.setState(1, state)
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new InputEvent('beforeinput', {
@@ -459,8 +431,6 @@ test('event - wheel', () => {
   // TODO mock platform module instead
   Platform.state.isMobileOrTablet = () => false
   const state = Editor.create()
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   state.$ScrollBarThumb.dispatchEvent(
     new WheelEvent('wheel', {
       deltaX: 1,
@@ -475,8 +445,6 @@ test('event - wheel', () => {
 })
 
 test('event - pointerdown - on scroll bar thumb', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const state = Editor.create()
   const { $ScrollBarThumb } = state
   const event = new PointerEvent('pointerdown', {
@@ -491,8 +459,6 @@ test('event - pointerdown - on scroll bar thumb', () => {
 })
 
 test('event - pointermove after pointerdown - on scroll bar thumb', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const state = Editor.create()
   const { $ScrollBarThumb } = state
   const pointerDownEvent = new PointerEvent('pointerdown', {
@@ -520,8 +486,6 @@ test('event - pointermove after pointerdown - on scroll bar thumb', () => {
 })
 
 test('event - pointerup after pointerdown - on scroll bar thumb', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const state = Editor.create()
   const spy1 = jest.spyOn(HTMLElement.prototype, 'addEventListener')
   const spy2 = jest.spyOn(HTMLElement.prototype, 'removeEventListener')
@@ -575,6 +539,21 @@ test('event - pointerup after pointerdown - on scroll bar thumb', () => {
   )
 })
 
+test('event - context menu - on scroll bar', () => {
+  const state = Editor.create()
+  const { $ScrollBarThumb } = state
+  const event = new MouseEvent('contextmenu', {
+    bubbles: true,
+    cancelable: true,
+    clientX: 10,
+    clientY: 20,
+    button: MouseEventType.LeftClick,
+  })
+  $ScrollBarThumb.dispatchEvent(event)
+  expect(event.defaultPrevented).toBe(true)
+  expect(RendererWorker.send).not.toHaveBeenCalled()
+})
+
 test.skip('event - beforeinput on contenteditable on mobile - cursor in middle', () => {
   Platform.state.isMobileOrTablet = () => true
   const state = Editor.create()
@@ -591,8 +570,6 @@ test.skip('event - beforeinput on contenteditable on mobile - cursor in middle',
   range.setStart($Token2.firstChild, 4)
   document.getSelection().removeAllRanges()
   document.getSelection().addRange(range)
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new InputEvent('beforeinput', {
       data: 'a',
@@ -619,8 +596,6 @@ test('event - composition', () => {
   const $Row1 = create$EditorRow()
   state.$LayerText.append($Row1)
   document.body.append(state.$Editor)
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   state.$EditorInput.dispatchEvent(
     new CompositionEvent('compositionstart', {
       data: 'a',
@@ -665,8 +640,6 @@ test.skip('event - beforeinput on contenteditable on mobile - word in middle sel
   range.setEnd($Token2.firstChild, 10)
   document.getSelection().removeAllRanges()
   document.getSelection().addRange(range)
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new InputEvent('beforeinput', {
       data: 'a',
@@ -707,8 +680,6 @@ test.skip('event - native selection change', () => {
   range.setEnd($Token3.firstChild, 1)
   document.getSelection().removeAllRanges()
   document.getSelection().addRange(range)
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   state.$LayerText.dispatchEvent(
     new InputEvent('selectionchange', {
       bubbles: true,

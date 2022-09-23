@@ -306,11 +306,17 @@ export const handleScrollBarThumbPointerDown = (event) => {
 }
 
 export const handleScrollBarMouseDown = (event) => {
+  event.preventDefault()
   const y = event.clientY
   RendererWorker.send(
     /* EditorHandleScrollBarClick.editorHandleScrollBarClick */ 'Editor.handleScrollBarClick',
     /* y */ y
   )
+}
+
+export const handleScrollBarContextMenu = (event) => {
+  event.preventDefault()
+  event.stopPropagation()
 }
 
 const toSimpleTouch = (touch) => {
