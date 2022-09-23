@@ -224,6 +224,9 @@ export const openWidget = async (id, ...args) => {
     show: false,
     focus: true,
   })
+  if (!commands) {
+    throw new Error('expected commands to be of type array')
+  }
 
   if (hasInstance) {
     commands.unshift(['Viewlet.dispose', id])

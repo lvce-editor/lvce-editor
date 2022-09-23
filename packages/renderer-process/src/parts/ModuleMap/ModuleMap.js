@@ -122,6 +122,7 @@ export const getModuleId = (commandId) => {
     case 'Viewlet.refresh':
     case 'Viewlet.send':
     case 'Viewlet.sendMultiple':
+    case 'Viewlet.setBounds':
       return ModuleId.Viewlet
     case 'WebStorage.clear':
     case 'WebStorage.getItem':

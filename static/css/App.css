@@ -44,6 +44,7 @@
 @import './parts/ViewletKeyBindings.css';
 @import './parts/ViewletEditorImage.css';
 @import './parts/Label.css';
+@import './parts/ViewletEditorFindWidget.css';
 
 /* focus css (can be overridden by components) */
 @import './parts/Focus.css';

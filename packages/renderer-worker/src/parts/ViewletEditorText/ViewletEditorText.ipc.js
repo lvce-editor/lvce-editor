@@ -82,6 +82,7 @@ const Imports = {
   Type: () => import('../EditorCommand/EditorCommandType.js'),
   Undo: () => import('../EditorCommand/EditorCommandUndo.js'),
   UnIndent: () => import('../EditorCommand/EditorCommandUnindent.js'),
+  EditorFind: () => import('../EditorCommand/EditorCommandOpenFind.js'),
 }
 
 // prettier-ignore
@@ -148,6 +149,7 @@ export const Commands = {
   'Editor.moveSelectionPx': LazyCommand.create('EditorText', Imports.MoveSelectionPx, 'editorMoveSelectionPx'),
   'Editor.openCompletion': LazyCommand.create('EditorText', Imports.EditorCompletion, 'open'),
   'Editor.openCompletionFromType': LazyCommand.create('EditorText', Imports.EditorCompletion, 'openFromType'),
+  'Editor.openFind': LazyCommand.create('EditorText', Imports.EditorFind, 'openFind'),
   'Editor.paste': LazyCommand.create('EditorText', Imports.Paste, 'editorPaste'),
   'Editor.pasteText': LazyCommand.create('EditorText', Imports.PasteText, 'editorPasteText'),
   'Editor.save': LazyCommand.create('EditorText', Imports.Save, 'editorSave'),

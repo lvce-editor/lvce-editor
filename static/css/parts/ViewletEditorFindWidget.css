@@ -1,0 +1,4 @@
+.Viewlet[data-viewlet-id='EditorFindWidget'] {
+  background: orangered;
+  z-index: 1;
+}

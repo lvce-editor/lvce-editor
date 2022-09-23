@@ -8,9 +8,9 @@ export const create = () => {
   const $InputBox = InputBox.create()
   $InputBox.oninput = ViewletEditorFindWidgetEvents.handleInput
 
-  const $Viewlet = document.createElement('ul')
+  const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet'
-  $Viewlet.id = 'FindWidget'
+  $Viewlet.dataset.viewletId = 'EditorFindWidget'
   $Viewlet.append($InputBox)
   return {
     $Viewlet,

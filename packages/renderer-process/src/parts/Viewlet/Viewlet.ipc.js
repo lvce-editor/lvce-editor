@@ -13,4 +13,5 @@ export const Commands = {
   'Viewlet.send': Viewlet.invoke,
   'Viewlet.sendMultiple': Viewlet.sendMultiple,
   'Viewlet.show': Viewlet.show,
+  'Viewlet.setBounds': Viewlet.setBounds,
 }
