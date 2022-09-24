@@ -9,6 +9,7 @@ export const create = () => {
     value: '',
     matchIndex: 0,
     totalMatches: 0,
+    ariaAnnouncement: '',
   }
 }
 
@@ -177,4 +178,24 @@ const renderMatchCount = {
   },
 }
 
-export const render = [renderValue, renderMatchCount]
+const getAriaLabel = (state) => {
+  return `${state.matchIndex} of ${state.totalMatches} found for ${state.value}`
+}
+
+const renderAriaAnnouncement = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.ariaAnnouncement === newState.ariaAnnouncement &&
+      oldState.matchIndex === newState.matchIndex &&
+      oldState.totalMatches === newState.totalMatches &&
+      oldState.value === newState.value
+    )
+  },
+  apply(oldState, newState) {
+    console.log('render aria announcement')
+    const ariaLabel = getAriaLabel(newState)
+    return [/* Viewlet.invoke */ 'Viewlet.ariaAnnounce', /* text */ ariaLabel]
+  },
+}
+
+export const render = [renderValue, renderMatchCount, renderAriaAnnouncement]

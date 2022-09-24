@@ -84,10 +84,15 @@ export const send = (viewletId, method, ...args) => {
   }
 }
 
+// TODO this code is bad
 export const sendMultiple = (commands) => {
   for (const command of commands) {
     const [_, viewletId, method, ...args] = command
-    invoke(viewletId, method, ...args)
+    if (_ === 'Viewlet.ariaAnnounce') {
+      ariaAnnounce(viewletId)
+    } else {
+      invoke(viewletId, method, ...args)
+    }
   }
 }
 
@@ -179,6 +184,11 @@ export const appendViewlet = (parentId, childId, focus) => {
   }
 }
 
+const ariaAnnounce = async (message) => {
+  const AriaAlert = await import('../AriaAlert/AriaAlert.js')
+  AriaAlert.alert(message)
+}
+
 export const executeCommands = (commands) => {
   for (const [command, ...args] of commands) {
     switch (command) {
@@ -196,6 +206,9 @@ export const executeCommands = (commands) => {
         break
       case 'Viewlet.setBounds':
         setBounds(...args)
+        break
+      case 'Viewlet.ariaAnnounce':
+        ariaAnnounce(...args)
         break
       default:
         throw new Error(`unknown command ${command}`)
