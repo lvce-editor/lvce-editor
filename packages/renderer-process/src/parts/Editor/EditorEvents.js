@@ -123,7 +123,6 @@ const getModifier = (event) => {
 }
 
 export const handleSingleClick = (event, x, y, offset) => {
-  console.log('click', { x, y, offset })
   const modifier = getModifier(event)
   RendererWorker.send(
     /* Editor.handleSingleClick */ 'Editor.handleSingleClick',
@@ -211,7 +210,6 @@ export const handleMouseDown = (event) => {
   const totalOffset = getTotalOffset(event)
   const x = event.clientX
   const y = event.clientY
-  console.log('detail', event.detail)
   switch (event.detail) {
     case 1:
       handleSingleClick(event, x, y, totalOffset)

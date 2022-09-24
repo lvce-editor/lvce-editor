@@ -24,3 +24,7 @@
 .EditorFindWidgetButton:hover {
   background-color: hsla(0, 0%, 100%, 0.1);
 }
+
+.EditorFindWidgetButton:focus-visible {
+  outline: 1px solid green;
+}
