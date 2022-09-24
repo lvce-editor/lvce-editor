@@ -6,7 +6,7 @@ import * as Extract from '../Extract/Extract.js'
 import * as Platform from '../Platform/Platform.js'
 import * as TmpFile from '../TmpFile/TmpFile.js'
 
-export const install = async (url) => {
+export const install = async ({ url }) => {
   try {
     // TODO cache extension tar br file, probably by url <cachedExtensions>/user/repo/releases/<tag>/<fileName>
     // const cachedExtensionsPath = Platform.getCachedExtensionsPath()
