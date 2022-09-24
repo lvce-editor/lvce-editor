@@ -678,5 +678,15 @@
     "key": "Enter",
     "command": "EditorFindWidget.focusNext",
     "when": "focus.EditorFindWidget"
+  },
+  {
+    "key": "shift+F4",
+    "command": "EditorFindWidget.focusPrevious",
+    "when": "focus.EditorFindWidget"
+  },
+  {
+    "key": "F4",
+    "command": "EditorFindWidget.focusNext",
+    "when": "focus.EditorFindWidget"
   }
 ]

@@ -15,3 +15,12 @@ test('findMatches - two results', () => {
     TextDocumentSearch.findMatches(['line 1', 'not match', 'line 3'], 'line')
   ).toEqual(new Uint32Array([0, 0, 2, 0]))
 })
+
+test('findPreviousMatch', () => {
+  expect(
+    TextDocumentSearch.findPreviousMatch(['line 1', 'not match', 'line 3'], 2)
+  ).toEqual({
+    rowIndex: 0,
+    columnIndex: 0,
+  })
+})
