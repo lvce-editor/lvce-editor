@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import { RequestError } from 'got'
 
 afterEach(() => {
   jest.resetAllMocks()
@@ -26,6 +27,11 @@ jest.unstable_mockModule('got', () => ({
   default: {
     stream: jest.fn(),
   },
+  RequestError: class extends Error {
+    constructor(message) {
+      super(message)
+    }
+  },
 }))
 
 const Download = await import('../src/parts/Download/Download.js')
@@ -44,6 +50,19 @@ test('download - error - EISDIR', async () => {
     new Error(
       `Failed to download "https://example/file.txt": EISDIR: illegal operation on a directory, open '/test'`
     )
+  )
+})
+
+test('download - error - socket hang up', async () => {
+  // @ts-ignore
+  fsPromises.mkdir.mockImplementation((path) => {
+    // @ts-ignore
+    throw new RequestError(`socket hang up`, {}, {})
+  })
+  await expect(
+    Download.download('https://example/file.txt', '/test/folder')
+  ).rejects.toThrowError(
+    new Error(`Failed to download "https://example/file.txt": socket hang up`)
   )
 })
 
