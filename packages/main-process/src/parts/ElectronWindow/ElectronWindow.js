@@ -2,6 +2,8 @@ const Electron = require('electron')
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
 const Platform = require('../Platform/Platform.js')
+const Preferences = require('../Preferences/Preferences.js')
+const Clamp = require('../Clamp/Clamp.js')
 
 exports.wrapWindowCommand = (fn) => () => {
   const browserWindow = Electron.BrowserWindow.getFocusedWindow()
@@ -146,20 +148,59 @@ exports.create = ({
   return browserWindow
 }
 
-/**
- * @param {Electron.BrowserWindow} browserWindow
- */
-exports.zoomIn = (browserWindow) => {
-  // TODO write updated zoom level to user preferences
-  const newZoomFactor = browserWindow.webContents.getZoomFactor() + 0.5
+const setZoom = async (
+  browserWindow,
+  getDelta,
+  getMinZoomLevel,
+  getMaxZoomLevel
+) => {
+  const delta = getDelta()
+  const minZoomLevel = getMinZoomLevel()
+  const maxZoomLevel = getMaxZoomLevel()
+  const currentZoomLevel = browserWindow.webContents.getZoomFactor()
+  const newZoomFactor = Clamp.clamp(
+    currentZoomLevel + delta,
+    minZoomLevel,
+    maxZoomLevel
+  )
+  if (newZoomFactor === currentZoomLevel) {
+    return
+  }
   browserWindow.webContents.setZoomFactor(newZoomFactor)
+  await Preferences.update('window.zoomLevel', newZoomFactor)
+}
+
+const getMinZoomLevel = () => {
+  return 0.6
+}
+
+const getMaxZoomLevel = () => {
+  return 2
+}
+
+const getZoomInDelta = () => {
+  return 0.5
+}
+
+const getZoomOutDelta = () => {
+  return -0.5
 }
 
 /**
  * @param {Electron.BrowserWindow} browserWindow
  */
-exports.zoomOut = (browserWindow) => {
-  // TODO write updated zoom level to user preferences
-  const newZoomFactor = browserWindow.webContents.getZoomFactor() - 0.5
-  browserWindow.webContents.setZoomFactor(newZoomFactor)
+exports.zoomIn = async (browserWindow) => {
+  await setZoom(browserWindow, getZoomInDelta, getMinZoomLevel, getMaxZoomLevel)
+}
+
+/**
+ * @param {Electron.BrowserWindow} browserWindow
+ */
+exports.zoomOut = async (browserWindow) => {
+  await setZoom(
+    browserWindow,
+    getZoomOutDelta,
+    getMinZoomLevel,
+    getMaxZoomLevel
+  )
 }
