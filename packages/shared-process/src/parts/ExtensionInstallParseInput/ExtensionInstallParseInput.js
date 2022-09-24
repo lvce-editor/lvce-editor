@@ -4,28 +4,56 @@ export const InstallType = {
   ParsingError: 3,
 }
 
-const parseUrl = (input) => {
-  if (input.startsWith('https://github.com')) {
-    const parts = input.split('/')
-    const slashCount = parts.length
-    if (slashCount === 5) {
-      const user = parts[3]
-      const repo = parts[4]
+const parseUrlGithub = (input) => {
+  const parts = input.split('/')
+  const slashCount = parts.length
+  if (slashCount === 5) {
+    const user = parts[3]
+    const repo = parts[4]
+    return {
+      type: InstallType.GithubRepository,
+      options: {
+        user,
+        repo,
+        branch: 'HEAD',
+      },
+    }
+  }
+  if (slashCount === 7) {
+    const user = parts[3]
+    const repo = parts[4]
+    const type = parts[5]
+    const commit = parts[6]
+    if (type === 'tree') {
       return {
         type: InstallType.GithubRepository,
         options: {
           user,
           repo,
-          branch: 'HEAD',
+          branch: commit,
         },
       }
     }
-    return {
-      type: InstallType.ParsingError,
-      options: {
-        message: 'Failed to parse github url',
-      },
+    if (type === 'pull') {
+      return {
+        type: InstallType.ParsingError,
+        options: {
+          message: 'Cannot download from Pull Request',
+        },
+      }
     }
+  }
+  return {
+    type: InstallType.ParsingError,
+    options: {
+      message: 'Failed to parse github url',
+    },
+  }
+}
+
+const parseUrl = (input) => {
+  if (input.startsWith('https://github.com')) {
+    return parseUrlGithub(input)
   }
   if (input.endsWith('.tar.br')) {
     return {
