@@ -688,5 +688,13 @@
     "key": "F4",
     "command": "EditorFindWidget.focusNext",
     "when": "focus.EditorFindWidget"
+  },
+  {
+    "key": "ctrl+=",
+    "command": "Window.zoomIn"
+  },
+  {
+    "key": "ctrl+-",
+    "command": "Window.zoomOut"
   }
 ]

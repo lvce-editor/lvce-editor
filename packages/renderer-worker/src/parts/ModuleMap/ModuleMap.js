@@ -95,6 +95,8 @@ export const getModuleId = (commandId) => {
     case 'ElectronWindow.minimize':
     case 'ElectronWindow.toggleDevtools':
     case 'ElectronWindow.unmaximize':
+    case 'ElectronWindow.zoomIn':
+    case 'ElectronWindow.zoomOut':
       return ModuleId.ElectronWindow
     case 'ErrorHandling.handleError':
       return ModuleId.ErrorHandling
@@ -265,6 +267,8 @@ export const getModuleId = (commandId) => {
     case 'Window.openNew':
     case 'Window.reload':
     case 'Window.unmaximize':
+    case 'Window.zoomIn':
+    case 'Window.zoomOut':
       return ModuleId.Window
     case 'Workbench.unload':
       return ModuleId.Workbench

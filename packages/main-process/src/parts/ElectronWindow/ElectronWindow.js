@@ -90,6 +90,7 @@ const getTitleBarOptions = (windowControlsOverlayEnabled) => {
  *  titleBarStyle?:any,
  *  titleBarOverlay?:any,
  *  frame?:boolean
+ *  zoomFactor?:number
  * }} param0
  */
 exports.create = ({
@@ -104,6 +105,7 @@ exports.create = ({
   titleBarStyle,
   titleBarOverlay,
   frame,
+  zoomFactor,
 }) => {
   // const windowControlsOverlayEnabled = Platform.isWindows
   // const titleBarOptions = getTitleBarOptions(windowControlsOverlayEnabled)
@@ -131,6 +133,7 @@ exports.create = ({
       ),
       session,
       additionalArguments: ['--lvce-window-kind'],
+      zoomFactor,
     },
 
     backgroundColor: background,
@@ -141,4 +144,22 @@ exports.create = ({
   }
   browserWindow.once('ready-to-show', handleReadyToShow)
   return browserWindow
+}
+
+/**
+ * @param {Electron.BrowserWindow} browserWindow
+ */
+exports.zoomIn = (browserWindow) => {
+  // TODO write updated zoom level to user preferences
+  const newZoomFactor = browserWindow.webContents.getZoomFactor() + 0.5
+  browserWindow.webContents.setZoomFactor(newZoomFactor)
+}
+
+/**
+ * @param {Electron.BrowserWindow} browserWindow
+ */
+exports.zoomOut = (browserWindow) => {
+  // TODO write updated zoom level to user preferences
+  const newZoomFactor = browserWindow.webContents.getZoomFactor() - 0.5
+  browserWindow.webContents.setZoomFactor(newZoomFactor)
 }

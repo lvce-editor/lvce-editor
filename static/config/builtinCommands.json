@@ -404,5 +404,17 @@
   {
     "id": "ContentTracing.stop",
     "label": "Developer: Stop Content Tracing"
+  },
+  {
+    "id": "Window.zoomIn",
+    "label": "Window: Zoom In"
+  },
+  {
+    "id": "Window.zoomOut",
+    "label": "Window: Zoom Out"
+  },
+  {
+    "id": "Window.zoomReset",
+    "label": "Window: Reset Zoom"
   }
 ]

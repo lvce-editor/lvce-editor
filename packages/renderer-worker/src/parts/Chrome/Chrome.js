@@ -29,7 +29,7 @@ export const unmaximize = () => {
   }
 }
 
-export const close = async () => {
+export const close = () => {
   switch (Platform.platform) {
     case PlatformType.Electron:
       return Command.execute('ElectronWindow.close')
@@ -47,10 +47,28 @@ export const exit = () => {
   }
 }
 
-export const openNew = async () => {
+export const openNew = () => {
   switch (Platform.platform) {
     case PlatformType.Electron:
       return Command.execute('ElectronWindow.openNew')
+    default:
+      throw new Error('not implemented')
+  }
+}
+
+export const zoomIn = () => {
+  switch (Platform.platform) {
+    case PlatformType.Electron:
+      return Command.execute('ElectronWindow.zoomIn')
+    default:
+      throw new Error('not implemented')
+  }
+}
+
+export const zoomOut = () => {
+  switch (Platform.platform) {
+    case PlatformType.Electron:
+      return Command.execute('ElectronWindow.zoomOut')
     default:
       throw new Error('not implemented')
   }
