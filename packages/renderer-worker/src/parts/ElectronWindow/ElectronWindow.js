@@ -27,3 +27,11 @@ export const openNew = (url) => {
 export const toggleDevtools = () => {
   return ElectronProcess.invoke('ElectronWindow.toggleDevtools')
 }
+
+export const zoomIn = () => {
+  return ElectronProcess.invoke('ElectronWindow.zoomIn')
+}
+
+export const zoomOut = () => {
+  return ElectronProcess.invoke('ElectronWindow.zoomOut')
+}

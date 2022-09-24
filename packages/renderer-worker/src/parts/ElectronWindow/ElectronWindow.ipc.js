@@ -6,4 +6,6 @@ export const Commands = {
   'ElectronWindow.minimize': ElectronWindow.minimize,
   'ElectronWindow.toggleDevtools': ElectronWindow.toggleDevtools,
   'ElectronWindow.unmaximize': ElectronWindow.unmaximize,
+  'ElectronWindow.zoomIn': ElectronWindow.zoomIn,
+  'ElectronWindow.zoomOut': ElectronWindow.zoomOut,
 }

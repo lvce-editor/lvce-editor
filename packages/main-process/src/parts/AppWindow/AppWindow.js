@@ -61,6 +61,8 @@ exports.createAppWindow = async (
   )
   const frame = titleBarPreference === 'custom' ? false : true
   const titleBarStyle = titleBarPreference === 'custom' ? 'hidden' : undefined
+  const zoomLevelPreference = Preferences.get(preferences, 'window.zoomLevel')
+  const zoomFactor = zoomLevelPreference
   const session = Session.get()
   const window = Window.create({
     y: 0,
@@ -72,6 +74,7 @@ exports.createAppWindow = async (
     session,
     titleBarStyle,
     frame,
+    zoomFactor,
   })
   window.on('close', handleWindowClose)
   exports.state.windows.push({
