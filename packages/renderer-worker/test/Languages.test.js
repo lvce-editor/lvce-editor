@@ -114,6 +114,16 @@ test('getLanguageId - by second file extension', async () => {
   expect(Languages.getLanguageId('/test/index.js.map')).toBe('json')
 })
 
+test('getLanguageId - by PascalCase file extension', async () => {
+  await Languages.addLanguages([
+    {
+      id: 'dockerfile',
+      extensions: ['.dockerfile'],
+    },
+  ])
+  expect(Languages.getLanguageId('/test/test.Dockerfile')).toBe('dockerfile')
+})
+
 test('getLanguageId - by file name', async () => {
   await Languages.addLanguages([
     {
