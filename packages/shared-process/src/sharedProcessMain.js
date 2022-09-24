@@ -45,7 +45,7 @@ const handleSigTerm = () => {
   console.info('[shared-process] sigterm')
 }
 
-const knownCliArgs = ['install', 'list']
+const knownCliArgs = ['install', 'list', 'link']
 
 const main = async () => {
   const argv = process.argv.slice(2)

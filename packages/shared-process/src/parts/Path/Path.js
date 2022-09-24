@@ -15,3 +15,7 @@ export const join = (...parts) => {
 export const dirname = (path) => {
   return NodePath.dirname(path)
 }
+
+export const basename = (path) => {
+  return NodePath.basename(path)
+}

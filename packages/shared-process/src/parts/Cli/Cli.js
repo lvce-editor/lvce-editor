@@ -4,6 +4,8 @@ const getModule = (argv0) => {
       return import('../CliInstall/CliInstall.js')
     case 'list':
       return import('../CliList/CliList.js')
+    case 'link':
+      return import('../CliLink/CliLink.js')
     default:
       throw new Error('command not found')
   }
