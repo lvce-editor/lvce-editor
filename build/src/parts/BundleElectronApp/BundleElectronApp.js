@@ -139,7 +139,7 @@ const copyMainProcessSources = async ({ arch }) => {
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
     occurrence: `exports.applicationName = 'lvce-oss'`,
-    replacement: `exports.applicationName = '${Product.nameLong}'`,
+    replacement: `exports.applicationName = '${Product.applicationName}'`,
   })
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,

@@ -7,8 +7,6 @@ export const comment =
 
 export const applicationName = 'lvce-oss'
 
-export const win32MutextName = 'lvceoss'
-
 export const licenseName = 'MIT'
 
 export const licenseUrl =
