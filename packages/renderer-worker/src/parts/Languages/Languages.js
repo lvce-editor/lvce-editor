@@ -17,11 +17,12 @@ export const getLanguageId = (fileName) => {
   // TODO this is inefficient for icon theme, as file extension is computed twice
   const extensionIndex = fileName.lastIndexOf('.')
   const extension = fileName.slice(extensionIndex)
-  const fileNameLower = fileName.toLowerCase()
+  const extensionLower = extension.toLowerCase()
   const { extensionMap, fileNameMap } = state
-  if (extensionMap[extension]) {
-    return extensionMap[extension]
+  if (extensionMap[extensionLower]) {
+    return extensionMap[extensionLower]
   }
+  const fileNameLower = fileName.toLowerCase()
   const secondExtensionIndex = fileName.lastIndexOf('.', extensionIndex - 1)
   const secondExtension = fileName.slice(secondExtensionIndex)
   if (secondExtensionIndex !== -1 && extensionMap[secondExtension]) {
