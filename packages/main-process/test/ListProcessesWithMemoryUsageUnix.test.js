@@ -1,21 +1,24 @@
-const childProcess = require('child_process')
-const fsPromises = require('fs/promises')
+const childProcess = require('node:child_process')
+const fsPromises = require('node:fs/promises')
 const electron = require('electron')
 const ListProcessesWithMemoryUsage = require('../src/parts/ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsageUnix.js')
 
 beforeEach(() => {
-  jest.restoreAllMocks()
-  jest.resetModules()
   jest.resetAllMocks()
 })
 
-jest.mock('child_process', () => ({
+jest.mock('node:child_process', () => ({
   execFile: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))
+jest.mock('node:path', () => ({
+  join: (...parts) => {
+    return parts.join('/')
+  },
+}))
 
-jest.mock('fs/promises', () => ({
+jest.mock('node:fs/promises', () => ({
   readFile: jest.fn(() => {
     throw new Error('not implemented')
   }),
@@ -30,6 +33,13 @@ jest.mock('electron', () => {
     },
   }
 })
+
+class NodeError extends Error {
+  constructor(code, message = code) {
+    super(code + ':' + message)
+    this.code = code
+  }
+}
 
 test('listProcessesWithMemoryUsage', async () => {
   // @ts-ignore
@@ -176,6 +186,43 @@ test('listProcessesWithMemoryUsage - detect chrome devtools', async () => {
       name: 'main',
       pid: 25666,
       ppid: 24775,
+    },
+  ])
+})
+
+test('listProcessesWithMemoryUsage - error - ESRCH', async () => {
+  // @ts-ignore
+  childProcess.execFile.mockImplementation((command, args, callback) => {
+    callback(null, {
+      stdout: `1       0  0.0  0.1 /sbin/init splash
+2127    1442  0.0  0.2 /usr/libexec/gsd-keyboard
+2130    1442  0.0  0.2 /usr/libexec/gsd-media-keys
+`,
+    })
+  })
+  // @ts-ignore
+  fsPromises.readFile.mockImplementation((path) => {
+    switch (path) {
+      case '/proc/2127/statm':
+        throw new NodeError('ESRCH', 'no such process, read')
+      default:
+        return '41700 2023 1199 224 0 5027 0'
+    }
+  })
+  // @ts-ignore
+  electron.BrowserWindow.getAllWindows.mockImplementation(() => {
+    return []
+  })
+  expect(
+    await ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(1442)
+  ).toEqual([
+    {
+      cmd: '/usr/libexec/gsd-media-keys',
+      depth: 1,
+      memory: 3375104,
+      name: '<unknown> /usr/libexec/gsd-media-keys',
+      pid: 2130,
+      ppid: 1442,
     },
   ])
 })

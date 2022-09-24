@@ -1,6 +1,6 @@
-const { join } = require('path')
-const childProcess = require('child_process')
-const { readFile } = require('fs/promises')
+const { join } = require('node:path')
+const childProcess = require('node:child_process')
+const { readFile } = require('node:fs/promises')
 const util = require('util')
 const { VError } = require('verror')
 const Assert = require('../Assert/Assert.js')
@@ -59,7 +59,7 @@ const getAccurateMemoryUsage = async (pid) => {
       content = await readFile(filePath, 'utf-8')
     } catch (error) {
       // @ts-ignore
-      if (error && error.code === 'ENOENT') {
+      if (error && (error.code === 'ENOENT' || error.code === 'ESRCH')) {
         return -1
       }
       throw error
