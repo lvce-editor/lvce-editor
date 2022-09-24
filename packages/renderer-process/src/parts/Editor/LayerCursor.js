@@ -119,6 +119,5 @@ const renderCursorsNative = (state, cursors) => {
 }
 
 export const setCursors = (state, cursors) => {
-  console.log({ cursors })
   render$Cursors(state.$LayerCursor, state.$LayerText, cursors)
 }

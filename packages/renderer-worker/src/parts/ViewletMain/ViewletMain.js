@@ -178,7 +178,6 @@ const getRestoredEditors = async () => {
 
 export const loadContent = async (state) => {
   const editors = await getRestoredEditors()
-  console.log({ editors })
   // @ts-ignore
 
   LifeCycle.once(LifeCycle.PHASE_TWELVE, hydrateLazy)

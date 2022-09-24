@@ -92,7 +92,6 @@ export const load = async (viewlet, focus = false) => {
       top = position.top
       width = position.width
       height = position.height
-      console.log({ position })
     }
 
     const viewletState = module.create(

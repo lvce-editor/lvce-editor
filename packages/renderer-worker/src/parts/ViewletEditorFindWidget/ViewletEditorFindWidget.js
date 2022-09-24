@@ -192,7 +192,6 @@ const renderAriaAnnouncement = {
     )
   },
   apply(oldState, newState) {
-    console.log('render aria announcement')
     const ariaLabel = getAriaLabel(newState)
     return [/* Viewlet.invoke */ 'Viewlet.ariaAnnounce', /* text */ ariaLabel]
   },
