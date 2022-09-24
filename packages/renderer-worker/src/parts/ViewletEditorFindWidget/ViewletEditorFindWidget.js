@@ -112,6 +112,37 @@ export const focusNext = async (state) => {
   }
 }
 
+// TODO should be synchronous
+export const focusPrevious = async (state) => {
+  const { value, matchIndex } = state
+  const editor = ViewletStates.getState('EditorText')
+  const { lines, selections } = editor
+  const startRowIndex = selections[0]
+  const startColumnIndex = selections[1]
+  const endRowIndex = selections[2]
+  const endColumnIndex = selections[3]
+  // TODO find next match and highlight it
+  const nextMatch = TextDocumentSearch.findPreviousMatch(
+    lines,
+    value,
+    startRowIndex - 1
+  )
+  const newSelections = new Uint32Array([
+    nextMatch.rowIndex,
+    nextMatch.columnIndex,
+    nextMatch.rowIndex,
+    nextMatch.columnIndex + value.length,
+  ])
+  // TODO set selections synchronously and render input match index,
+  // input value and new selections at the same time
+  await Command.execute('Editor.setSelections', newSelections)
+  // TODO reveal new position in editor
+  return {
+    ...state,
+    matchIndex: matchIndex - 1,
+  }
+}
+
 export const hasFunctionalRender = true
 
 const renderValue = {
