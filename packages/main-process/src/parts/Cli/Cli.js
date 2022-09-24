@@ -44,6 +44,9 @@ const getModule = (parsedArgs) => {
   if (arg0 === 'list') {
     return require('../CliForwardToSharedProcess/CliForwardToSharedProcess.js')
   }
+  if (arg0 === 'link') {
+    return require('../CliForwardToSharedProcess/CliForwardToSharedProcess.js')
+  }
   if (parsedArgs['built-in-self-test']) {
     return require('../CliBuiltinSelfTest/CliBuiltinSelfTest.js')
   }

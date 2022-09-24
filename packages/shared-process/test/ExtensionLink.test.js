@@ -24,11 +24,23 @@ const SymLink = await import('../src/parts/SymLink/SymLink.js')
 const ExtensionLink = await import(
   '../src/parts/ExtensionLink/ExtensionLink.js'
 )
+const Platform = await import('../src/parts/Platform/Platform.js')
 
-test.skip('link', async () => {
+test('link', async () => {
   // @ts-ignore
   SymLink.createSymLink.mockImplementation(() => {})
+  // @ts-ignore
+  Platform.getExtensionsPath.mockImplementation(() => {
+    return '/test/extensions'
+  })
   await ExtensionLink.link('/test/my-extension')
   expect(SymLink.createSymLink).toHaveBeenCalledTimes(1)
-  expect(SymLink.createSymLink).toHaveBeenCalledWith('/test/from')
+  expect(SymLink.createSymLink).toHaveBeenCalledWith(
+    '/test/my-extension',
+    '/test/extensions/my-extension'
+  )
 })
+
+// TODO handle ENOENT error when extension folder does not exist
+
+// TODO handl ENOENT error when specified path does not exist
