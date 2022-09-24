@@ -59,7 +59,7 @@ const getAccurateMemoryUsage = async (pid) => {
       content = await readFile(filePath, 'utf-8')
     } catch (error) {
       // @ts-ignore
-      if (error && error.code === 'ENOENT') {
+      if (error && (error.code === 'ENOENT' || error.code === 'ESRCH')) {
         return -1
       }
       throw error
