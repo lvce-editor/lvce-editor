@@ -39,10 +39,10 @@ const getModule = (parsedArgs) => {
     return require('../CliWeb/CliWeb.js')
   }
   if (arg0 === 'install') {
-    return require('../CliInstall/CliInstall.js')
+    return require('../CliForwardToSharedProcess/CliForwardToSharedProcess.js')
   }
   if (arg0 === 'list') {
-    return require('../CliList/CliList.js')
+    return require('../CliForwardToSharedProcess/CliForwardToSharedProcess.js')
   }
   if (parsedArgs['built-in-self-test']) {
     return require('../CliBuiltinSelfTest/CliBuiltinSelfTest.js')
