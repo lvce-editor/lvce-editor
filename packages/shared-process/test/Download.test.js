@@ -62,9 +62,7 @@ test('download - error - socket hang up', async () => {
   await expect(
     Download.download('https://example/file.txt', '/test/folder')
   ).rejects.toThrowError(
-    new Error(
-      `Failed to download "https://example/file.txt": EISDIR: illegal operation on a directory, open '/test'`
-    )
+    new Error(`Failed to download "https://example/file.txt": socket hang up`)
   )
 })
 
