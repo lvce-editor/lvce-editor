@@ -1,5 +1,5 @@
-const childProcess = require('child_process')
-const fsPromises = require('fs/promises')
+const childProcess = require('node:child_process')
+const fsPromises = require('node:fs/promises')
 const electron = require('electron')
 const ListProcessesWithMemoryUsage = require('../src/parts/ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsageUnix.js')
 
@@ -7,13 +7,18 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.mock('child_process', () => ({
+jest.mock('node:child_process', () => ({
   execFile: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))
+jest.mock('node:path', () => ({
+  join: (...parts) => {
+    return parts.join('/')
+  },
+}))
 
-jest.mock('fs/promises', () => ({
+jest.mock('node:fs/promises', () => ({
   readFile: jest.fn(() => {
     throw new Error('not implemented')
   }),
