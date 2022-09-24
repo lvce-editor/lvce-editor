@@ -20,6 +20,17 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/Path/Path.js', () => {
+  return {
+    join: (a, b) => {
+      return a + '/' + b
+    },
+    basename: (path) => {
+      return path.slice(path.lastIndexOf('/') + 1)
+    },
+  }
+})
+
 const SymLink = await import('../src/parts/SymLink/SymLink.js')
 const ExtensionLink = await import(
   '../src/parts/ExtensionLink/ExtensionLink.js'
