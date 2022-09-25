@@ -32,6 +32,9 @@ jest.unstable_mockModule('node:fs/promises', () => {
     writeFile: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    rm: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
 jest.unstable_mockModule('../src/parts/Trash/Trash.js', () => {
@@ -265,13 +268,20 @@ test('rename - error - non existing old path', async () => {
 test('rename - error - EXDEV', async () => {
   // @ts-ignore
   fs.rename.mockImplementation(() => {
-    throw new Error('ENOENT')
+    throw new Error('EXDEV')
   })
-  await expect(
-    FileSystem.rename('/test/non-existing.txt', '/test/file-has-been-moved.txt')
-  ).rejects.toThrow(
-    `Failed to rename "/test/non-existing.txt" to "/test/file-has-been-moved.txt": ENOENT`
+  // @ts-ignore
+  fs.cp.mockImplementation(() => {})
+  // @ts-ignore
+  fs.rm.mockImplementation(() => {})
+  await FileSystem.rename(
+    '/test/non-existing.txt',
+    '/test/file-has-been-moved.txt'
   )
+  expect(fs.cp).toHaveBeenCalledTimes(1)
+  expect(fs.cp).toHaveBeenCalledWith('')
+  expect(fs.rm).toHaveBeenCalledTimes(1)
+  expect(fs.rm).toHaveBeenCalledWith('')
 })
 
 test('rename - error - new path in non-existing nested directory', async () => {

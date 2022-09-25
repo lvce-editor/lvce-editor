@@ -189,6 +189,9 @@ export const rename = async (oldPath, newPath) => {
   try {
     await fs.rename(oldPath, newPath)
   } catch (error) {
+    if (error && error.code === FileSystemErrorCodes.EXDEV) {
+      // TODO cp and then rm the old file/folder
+    }
     throw new VError(error, `Failed to rename "${oldPath}" to "${newPath}"`)
   }
 }
