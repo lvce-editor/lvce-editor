@@ -100,11 +100,9 @@ const getReleaseFileName = (config) => {
   }
 }
 
-const printFinalSize = async () => {
+const printFinalSize = async (releaseFilePath) => {
   try {
-    const size = await Stat.getFileSize(
-      `build/.tmp/releases/${Product.applicationName}.snap`
-    )
+    const size = await Stat.getFileSize(releaseFilePath)
     console.info(`final size: ${size}`)
   } catch (error) {
     console.warn(error)
@@ -126,10 +124,12 @@ const copyElectronResult = async () => {
 const renameReleaseFile = async (config) => {
   const finalFileName = getFinalFileName(config)
   const releaseFileName = getReleaseFileName(config)
+  const releaseFilePath = `build/.tmp/releases/${releaseFileName}`
   await Rename.rename({
     from: finalFileName,
-    to: `build/.tmp/releases/${releaseFileName}`,
+    to: releaseFilePath,
   })
+  return releaseFilePath
 }
 
 export const build = async ({ config }) => {
@@ -154,8 +154,8 @@ export const build = async ({ config }) => {
   console.timeEnd('runElectronBuilder')
 
   console.time('renameReleaseFile')
-  await renameReleaseFile(config)
+  const releaseFilePath = await renameReleaseFile(config)
   console.timeEnd('renameReleaseFile')
 
-  await printFinalSize()
+  await printFinalSize(releaseFilePath)
 }
