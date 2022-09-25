@@ -15,6 +15,13 @@ jest.unstable_mockModule('node:fs/promises', () => {
 const fs = await import('node:fs/promises')
 const SymLink = await import('../src/parts/SymLink/SymLink.js')
 
+class NodeError extends Error {
+  constructor(code) {
+    super(code)
+    this.code = code
+  }
+}
+
 test('createSymLink - error', async () => {
   // @ts-ignore
   fs.symlink.mockImplementation(async () => {
@@ -27,6 +34,16 @@ test('createSymLink - error', async () => {
       'Failed to create symbolic link from /test/from to /test/to: x is not a function'
     )
   )
+})
+
+test('createSymLink - error - EEXIST', async () => {
+  // @ts-ignore
+  fs.symlink.mockImplementation(async () => {
+    throw new NodeError('EEXIST')
+  })
+  await expect(
+    SymLink.createSymLink('/test/from', '/test/to')
+  ).rejects.toHaveProperty('code', 'EEXIST')
 })
 
 test('createSymLink', async () => {
