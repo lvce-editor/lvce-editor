@@ -131,9 +131,12 @@ export const addLanguage = (language) => {
     return
   }
   // TODO could use object destructuing here
+  // TODO maybe map the other way around from language keys to contribution points
   for (const contributionPoint of contributionPoints) {
     const value = language[contributionPoint.key]
-    contributionPoint.handle(value, languageId)
+    if (value) {
+      contributionPoint.handle(value, languageId)
+    }
   }
 }
 
