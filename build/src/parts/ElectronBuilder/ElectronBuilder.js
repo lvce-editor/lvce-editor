@@ -33,13 +33,12 @@ const getElectronVersion = async () => {
   return parsedVersion
 }
 
-const copyElectronBuilderConfig = async (config) => {
+const copyElectronBuilderConfig = async (config, version) => {
   const electronVersion = await getElectronVersion()
-  const tag = await Tag.getGitTag()
   await Template.write(config, 'build/.tmp/electron-builder/package.json', {
     '@@NAME@@': Product.applicationName,
     '@@AUTHOR@@': Product.linuxMaintainer,
-    '@@VERSION@@': tag,
+    '@@VERSION@@': version,
     '@@HOMEPAGE@@': Product.homePage,
     '@@ELECTRON_VERSION@@': electronVersion,
     '@@NAME_LONG@@': Product.nameLong,
@@ -66,18 +65,18 @@ const copyBuildResources = async () => {
   })
 }
 
-const getFinalFileName = (config) => {
+const getFinalFileName = (config, version) => {
   switch (config) {
     case 'electron_builder_arch_linux':
-      return `build/.tmp/electron-builder/dist/${Product.applicationName}-0.0.1.pacman`
+      return `build/.tmp/electron-builder/dist/${Product.applicationName}-${version}.pacman`
     case 'electron_builder_deb':
-      return `build/.tmp/electron-builder/dist/${Product.applicationName}_0.0.1_amd64.deb`
+      return `build/.tmp/electron-builder/dist/${Product.applicationName}_${version}_amd64.deb`
     case 'electron_builder_windows_exe':
-      return `build/.tmp/electron-builder/dist/${Product.applicationName} Setup 0.0.1.exe`
+      return `build/.tmp/electron-builder/dist/${Product.applicationName} Setup ${version}.exe`
     case 'electron_builder_snap':
-      return `build/.tmp/electron-builder/dist/${Product.applicationName}_0.0.1_amd64.snap`
+      return `build/.tmp/electron-builder/dist/${Product.applicationName}_${version}_amd64.snap`
     case 'electron_builder_mac':
-      return `build/.tmp/electron-builder/dist/${Product.applicationName}_0.0.1_amd64.dmg`
+      return `build/.tmp/electron-builder/dist/${Product.applicationName}_${version}_amd64.dmg`
     default:
       throw new Error(`cannot get final file name for target ${config}`)
   }
@@ -121,8 +120,8 @@ const copyElectronResult = async () => {
   })
 }
 
-const renameReleaseFile = async (config) => {
-  const finalFileName = getFinalFileName(config)
+const renameReleaseFile = async (config, version) => {
+  const finalFileName = getFinalFileName(config, version)
   const releaseFileName = getReleaseFileName(config)
   const releaseFilePath = `build/.tmp/releases/${releaseFileName}`
   await Rename.rename({
@@ -136,13 +135,14 @@ export const build = async ({ config }) => {
   // workaround for https://github.com/electron-userland/electron-builder/issues/4594
   // @ts-ignore
   process.env.USE_HARD_LINKS = false
+  const version = await Tag.getGitTag()
 
   console.time('copyElectronResult')
   await copyElectronResult()
   console.timeEnd('copyElectronResult')
 
   console.time('copyElectronBuilderConfig')
-  await copyElectronBuilderConfig(config)
+  await copyElectronBuilderConfig(config, version)
   console.timeEnd('copyElectronBuilderConfig')
 
   console.time('copyBuildResources')
@@ -154,7 +154,7 @@ export const build = async ({ config }) => {
   console.timeEnd('runElectronBuilder')
 
   console.time('renameReleaseFile')
-  const releaseFilePath = await renameReleaseFile(config)
+  const releaseFilePath = await renameReleaseFile(config, version)
   console.timeEnd('renameReleaseFile')
 
   await printFinalSize(releaseFilePath)
