@@ -32,11 +32,20 @@ jest.unstable_mockModule('../src/parts/Path/Path.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
+  return {
+    remove: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
 const SymLink = await import('../src/parts/SymLink/SymLink.js')
 const ExtensionLink = await import(
   '../src/parts/ExtensionLink/ExtensionLink.js'
 )
 const Platform = await import('../src/parts/Platform/Platform.js')
+const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
 class NodeError extends Error {
   constructor(code) {
@@ -64,7 +73,7 @@ test('link', async () => {
 
 // TODO handl ENOENT error when specified path does not exist
 
-test.skip('link - error - symlink already exists', async () => {
+test('link - error - symlink already exists', async () => {
   let i = 0
   // @ts-ignore
   SymLink.createSymLink.mockImplementation(() => {
@@ -87,6 +96,10 @@ test.skip('link - error - symlink already exists', async () => {
   expect(SymLink.createSymLink).toHaveBeenNthCalledWith(
     2,
     '/test/my-extension',
+    '/test/extensions/my-extension'
+  )
+  expect(FileSystem.remove).toHaveBeenCalledTimes(1)
+  expect(FileSystem.remove).toHaveBeenCalledWith(
     '/test/extensions/my-extension'
   )
 })
