@@ -37,7 +37,7 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "0.0.4"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.language-basics-css",
@@ -62,7 +62,7 @@
   {
     "name": "builtin.language-basics-docker",
     "repository": "github.com/lvce-editor/language-basics-docker",
-    "version": "0.0.6"
+    "version": "0.0.7"
   },
   {
     "name": "builtin.language-basics-java",
@@ -157,7 +157,7 @@
   {
     "name": "builtin.language-basics-toml",
     "repository": "github.com/lvce-editor/language-basics-toml",
-    "version": "0.0.3"
+    "version": "0.0.6"
   },
   {
     "name": "builtin.language-basics-powershell",
