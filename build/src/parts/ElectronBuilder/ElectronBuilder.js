@@ -35,7 +35,7 @@ const getElectronVersion = async () => {
 
 const copyElectronBuilderConfig = async (config) => {
   const electronVersion = await getElectronVersion()
-  const tag = await Tag.getTag()
+  const tag = await Tag.getGitTag()
   await Template.write(config, 'build/.tmp/electron-builder/package.json', {
     '@@NAME@@': Product.applicationName,
     '@@AUTHOR@@': Product.linuxMaintainer,
