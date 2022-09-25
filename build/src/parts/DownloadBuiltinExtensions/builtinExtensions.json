@@ -85,6 +85,11 @@
     "version": "0.0.2"
   },
   {
+    "name": "builtin.language-basics-rust",
+    "repository": "github.com/lvce-editor/language-basics-rust",
+    "version": "0.0.1"
+  },
+  {
     "name": "builtin.language-basics-elixir",
     "repository": "github.com/lvce-editor/language-basics-elixir",
     "version": "0.0.1"
