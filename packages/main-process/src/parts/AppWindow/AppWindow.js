@@ -63,6 +63,17 @@ exports.createAppWindow = async (
   const titleBarStyle = titleBarPreference === 'custom' ? 'hidden' : undefined
   const zoomLevelPreference = Preferences.get(preferences, 'window.zoomLevel')
   const zoomFactor = zoomLevelPreference
+  const windowControlsOverlayPreference =
+    Platform.isWindows &&
+    Preferences.get(preferences, 'window.controlsOverlay.enabled')
+  const titleBarOverlay = windowControlsOverlayPreference
+    ? {
+        color: '#1e2324',
+        symbolColor: '#74b1be',
+        height: 29,
+      }
+    : undefined
+  // const titleBarOptions = getTitleBarOptions(windowControlsOverlayEnabled)
   const session = Session.get()
   const window = Window.create({
     y: 0,
@@ -75,6 +86,7 @@ exports.createAppWindow = async (
     titleBarStyle,
     frame,
     zoomFactor,
+    titleBarOverlay,
   })
   window.on('close', handleWindowClose)
   exports.state.windows.push({

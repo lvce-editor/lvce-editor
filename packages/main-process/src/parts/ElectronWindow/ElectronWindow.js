@@ -61,26 +61,6 @@ exports.getFocusedWindow = () => {
 
 /**
  *
- * @returns {{
- *       titleBarStyle?: import('electron').BrowserWindowConstructorOptions ['titleBarStyle'],
- *       titleBarOverlay?: import('electron').BrowserWindowConstructorOptions['titleBarOverlay']}}
- */
-const getTitleBarOptions = (windowControlsOverlayEnabled) => {
-  if (windowControlsOverlayEnabled) {
-    return {
-      titleBarStyle: 'hidden',
-      titleBarOverlay: {
-        color: '#1e2324',
-        symbolColor: '#74b1be',
-        height: 29,
-      },
-    }
-  }
-  return {}
-}
-
-/**
- *
  * @param {{
  *  x:number,
  *  y:number,
@@ -117,7 +97,7 @@ exports.create = ({
     width,
     height,
     autoHideMenuBar: true,
-    titleBarStyle: 'hidden',
+    titleBarStyle,
     titleBarOverlay,
     frame,
     webPreferences: {
@@ -137,7 +117,6 @@ exports.create = ({
       additionalArguments: ['--lvce-window-kind'],
       zoomFactor,
     },
-
     backgroundColor: background,
     show: false,
   })
