@@ -185,10 +185,22 @@ export const mkdir = async (path) => {
   }
 }
 
+const fallbackRename = async (oldPath, newPath) => {
+  try {
+    await fs.cp(oldPath, newPath, { recursive: true })
+    await fs.rm(oldPath, { recursive: true })
+  } catch (error) {
+    throw new VError(error, `Failed to rename "${oldPath}" to "${newPath}"`)
+  }
+}
+
 export const rename = async (oldPath, newPath) => {
   try {
     await fs.rename(oldPath, newPath)
   } catch (error) {
+    if (error && error.code === FileSystemErrorCodes.EXDEV) {
+      return fallbackRename(oldPath, newPath)
+    }
     throw new VError(error, `Failed to rename "${oldPath}" to "${newPath}"`)
   }
 }
