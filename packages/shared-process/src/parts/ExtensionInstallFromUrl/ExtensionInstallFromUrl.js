@@ -15,7 +15,7 @@ export const install = async ({ url }) => {
     const tmpFile = await TmpFile.getTmpFile()
     await Download.download(url, tmpFile)
     const tmpDir = await TmpFile.getTmpDir()
-    await Extract.extract(tmpFile, tmpDir)
+    await Extract.extractTarBr(tmpFile, tmpDir)
     const manifestPath = join(tmpDir, 'extension.json')
     const manifestContent = await readFile(manifestPath, 'utf8')
     const manifestJson = JSON.parse(manifestContent)

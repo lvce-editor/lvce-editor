@@ -1,21 +1,38 @@
+import { existsSync } from 'node:fs'
 import VError from 'verror'
-import * as DownloadAndExtract from '../DownloadAndExtract/DownloadAndExtract.js'
+import * as Download from '../Download/Download.js'
+import * as Extract from '../Extract/Extract.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
-import * as TmpFile from '../TmpFile/TmpFile.js'
+import * as DownloadAndExtract from '../DownloadAndExtract/DownloadAndExtract.js'
 
 export const install = async ({ user, repo, branch, outDir = '/tmp' }) => {
+  console.time('install')
   try {
     const url = `https://codeload.github.com/${user}/${repo}/tar.gz/${branch}`
-    const tmpDir = await TmpFile.getTmpDir()
-    await DownloadAndExtract.downloadAndExtractTarGz({
-      url,
-      outDir: tmpDir,
+    const cachedExtensionsPath = Platform.getCachedExtensionsPath()
+    const cachedExtensionPath = Path.join(
+      cachedExtensionsPath,
+      `github-${user}-${repo}-${branch}`
+    )
+    console.log({ url })
+    const cachedExtensionTarGzPath = Path.join(
+      cachedExtensionsPath,
+      `github-${user}-${repo}-${branch}.tar.gz`
+    )
+    if (!existsSync(cachedExtensionTarGzPath)) {
+      await Download.download(url, cachedExtensionTarGzPath)
+    }
+    console.time('extract')
+    await Extract.extractTarGz({
+      inFile: cachedExtensionTarGzPath,
+      outDir: cachedExtensionPath,
       strip: 1,
     })
+    console.timeEnd('extract')
     const extensionsPath = Platform.getExtensionsPath()
-    const manifestPath = Path.join(tmpDir, 'extension.json')
+    const manifestPath = Path.join(cachedExtensionPath, 'extension.json')
     const manifestContent = await FileSystem.readFile(manifestPath)
     const manifestJson = JSON.parse(manifestContent)
     const id = manifestJson.id
@@ -24,8 +41,9 @@ export const install = async ({ user, repo, branch, outDir = '/tmp' }) => {
     }
     const outDir = Path.join(extensionsPath, id)
     await FileSystem.remove(outDir)
-    await FileSystem.rename(tmpDir, outDir)
+    await FileSystem.rename(cachedExtensionPath, outDir)
   } catch (error) {
     throw new VError(error, `Failed to install ${user}/${repo}`)
   }
+  console.timeEnd('install')
 }

@@ -37,7 +37,7 @@ export const install = async (id) => {
   // TODO use command.execute
   try {
     const { download } = await import('../Download/Download.js')
-    const { extract } = await import('../Extract/Extract.js')
+    const { extractTarBr: extract } = await import('../Extract/Extract.js')
     const marketplaceUrl = Platform.getMarketplaceUrl()
     Debug.debug(`ExtensionManagement#install ${id}`)
     const cachedExtensionsPath = Platform.getCachedExtensionsPath()

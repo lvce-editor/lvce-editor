@@ -48,7 +48,7 @@ test('extract - error - EISDIR', async () => {
     throw new Error(`EISDIR: illegal operation on a directory, read`)
   })
   await expect(
-    Extract.extract('/test/folder', '/test/folder')
+    Extract.extractTarBr('/test/folder', '/test/folder')
   ).rejects.toThrowError(
     new Error(
       `Failed to extract /test/folder: EISDIR: illegal operation on a directory, read`
@@ -63,7 +63,7 @@ test('extract', async () => {
   fs.createReadStream.mockImplementation((path) => {})
   // @ts-ignore
   tar.extract.mockImplementation(() => {})
-  await Extract.extract('/test/file', '/test/folder')
+  await Extract.extractTarBr('/test/file', '/test/folder')
   expect(fsPromises.mkdir).toHaveBeenCalledTimes(1)
   expect(fsPromises.mkdir).toHaveBeenCalledWith('/test/folder', {
     recursive: true,

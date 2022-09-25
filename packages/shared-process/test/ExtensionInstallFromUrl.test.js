@@ -42,7 +42,7 @@ test('install - error with download', async () => {
     throw new Error(`Failed to download `)
   })
   // @ts-ignore
-  Extract.extract.mockImplementation(() => {})
+  Extract.extractTarBr.mockImplementation(() => {})
   await expect(
     ExtensionInstallFromUrl.install({
       url: 'https://example.com',
@@ -56,7 +56,7 @@ test('install - error with extraction', async () => {
   // @ts-ignore
   Download.download.mockImplementation(() => {})
   // @ts-ignore
-  Extract.extract.mockImplementation((url) => {
+  Extract.extractTarBr.mockImplementation((url) => {
     throw new Error(`Failed to extract file ${url}`)
   })
   await expect(
