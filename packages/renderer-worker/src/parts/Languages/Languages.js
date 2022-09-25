@@ -31,6 +31,7 @@ export const getLanguageId = (fileName) => {
   if (fileNameMap[fileNameLower]) {
     return fileNameMap[fileNameLower]
   }
+  console.log({ fileName, fileNameLower, fileNameMap })
   return 'unknown'
 }
 
@@ -55,7 +56,7 @@ const contributionPointFileExtensions = {
   handle(value, languageId) {
     if (value) {
       console.warn(
-        `[renderer-worker] unsupported property "fileExtensions" for language ${language.id}, use the property "extensions" instead`
+        `[renderer-worker] unsupported property "fileExtensions" for language ${languageId}, use the property "extensions" instead`
       )
     }
   },
@@ -77,6 +78,15 @@ const contributionPointFileNames = {
       }
       state.fileNameMap
     }
+  },
+}
+const contributionPointFileNamesLower = {
+  key: 'filenames',
+  handle(value, languageId) {
+    console.warn(
+      `Please use "fileNames" instead of "filenames" for language ${languageId}`
+    )
+    contributionPointFileNames.handle(value, languageId)
   },
 }
 
@@ -110,10 +120,11 @@ const contributionPoints = [
   contributionPointFileExtensions,
   contributionPointExtensions,
   contributionPointFileNames,
+  contributionPointFileNamesLower,
   contributionPointTokenize,
 ]
 
-const addLanguage = (language) => {
+export const addLanguage = (language) => {
   const languageId = language.id
   if (!languageId) {
     console.warn(`[renderer-worker] language is missing id`, language)

@@ -146,3 +146,16 @@ test("addLanguage - don't override tokenize path", async () => {
   ])
   expect(Languages.state.tokenizerMap['html']).toBe('src/tokenizeHtml.js')
 })
+
+test('addLanguage - error - lower case filename property', () => {
+  const spy = jest.spyOn(console, 'warn')
+  Languages.addLanguage({
+    id: 'test',
+    filenames: ['Test'],
+  })
+  expect(spy).toHaveBeenCalledTimes(1)
+  expect(spy).toHaveBeenCalledWith(
+    'Please use "fileNames" instead of "filenames" for language test'
+  )
+  expect(Languages.state.fileNameMap).toEqual({ test: 'test' })
+})
