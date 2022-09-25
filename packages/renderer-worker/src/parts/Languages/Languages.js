@@ -1,6 +1,7 @@
 // TODO merge all of this with extension host languages module
 
 import * as Assert from '../Assert/Assert.js'
+import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as ExtensionHostLanguages from '../ExtensionHost/ExtensionHostLanguages.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 
@@ -10,6 +11,10 @@ export const state = {
   fileNameMap: Object.create(null),
   extensionMap: Object.create(null),
   tokenizerMap: Object.create(null),
+  /**
+   * @type {string[]}
+   */
+  hasWarned: [],
 }
 
 export const getLanguageId = (fileName) => {
@@ -79,12 +84,46 @@ const contributionPointFileNames = {
     }
   },
 }
+
+const warnFileNames = (languageId, language) => {
+  if (state.hasWarned.includes(languageId)) {
+    return
+  }
+  state.hasWarned.push(languageId)
+  const code = JSON.stringify(language, null, 2)
+  const lines = code.split('\n')
+  let rowIndex = 0
+  let columnIndex = 0
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i]
+    const fileNamesIndex = line.indexOf('filenames')
+    if (fileNamesIndex !== -1) {
+      rowIndex = i
+      columnIndex = fileNamesIndex
+      break
+    }
+  }
+  const codeFrame = CodeFrameColumns.create(code, {
+    start: {
+      line: rowIndex + 1,
+      column: columnIndex + 1,
+    },
+    end: {
+      line: rowIndex + 1,
+      column: columnIndex + 'filenames'.length + 1,
+    },
+  })
+  console.warn(
+    `Please use "fileNames" instead of "filenames" for language ${languageId}
+${codeFrame}
+`
+  )
+}
+
 const contributionPointFileNamesLower = {
   key: 'filenames',
-  handle(value, languageId) {
-    console.warn(
-      `Please use "fileNames" instead of "filenames" for language ${languageId}`
-    )
+  handle(value, languageId, language) {
+    warnFileNames(languageId, language)
     contributionPointFileNames.handle(value, languageId)
   },
 }
@@ -134,7 +173,7 @@ export const addLanguage = (language) => {
   for (const contributionPoint of contributionPoints) {
     const value = language[contributionPoint.key]
     if (value) {
-      contributionPoint.handle(value, languageId)
+      contributionPoint.handle(value, languageId, language)
     }
   }
 }
