@@ -61,6 +61,7 @@ const handlePermissionCheck = (webContents, permission, origin, details) => {
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
 const getAbsolutePath = (requestUrl) => {
+  const pathName = new URL(requestUrl).pathname
   const scheme = Platform.scheme
   // TODO remove if/else in prod (use replacement)
   if (
@@ -70,19 +71,19 @@ const getAbsolutePath = (requestUrl) => {
     return Path.join(Root.root, 'static', 'index-electron.html')
   }
   if (requestUrl.startsWith(`${scheme}://-/packages`)) {
-    return Path.join(Root.root, requestUrl.slice(scheme.length + 4))
+    return Path.join(Root.root, pathName)
   }
   if (requestUrl.startsWith(`${scheme}://-/static`)) {
-    return Path.join(Root.root, requestUrl.slice(scheme.length + 4))
+    return Path.join(Root.root, pathName)
   }
   if (requestUrl.startsWith(`${scheme}://-/extensions`)) {
-    return Path.join(Root.root, requestUrl.slice(scheme.length + 4))
+    return Path.join(Root.root, pathName)
   }
   // TODO maybe have a separate protocol for remote, e.g. vscode has vscode-remote
   if (requestUrl.startsWith(`${scheme}://-/remote`)) {
     return requestUrl.slice(scheme.length + 4 + '/remote'.length)
   }
-  return Path.join(Root.root, 'static', requestUrl.slice(scheme.length + 4))
+  return Path.join(Root.root, 'static', pathName)
 }
 /**
  *
