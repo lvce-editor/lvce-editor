@@ -2,7 +2,7 @@
 
 import * as CodeFrameColumns from '../src/parts/CodeFrameColumns/CodeFrameColumns.js'
 
-test.only('basic usage', () => {
+test('basic usage', () => {
   const rawLines = ['class Foo {', '  constructor()', '};'].join('\n')
   expect(
     CodeFrameColumns.create(rawLines, {
@@ -21,13 +21,6 @@ test.only('basic usage', () => {
   )
 })
 
-test('optional column number', () => {
-  const rawLines = ['class Foo {', '  constructor()', '};'].join('\n')
-  expect(CodeFrameColumns.create(rawLines, 2, null)).toEqual(
-    ['  1 | class Foo {', '> 2 |   constructor()', '  3 | };'].join('\n')
-  )
-})
-
 test('maximum context lines and padding', () => {
   const rawLines = [
     '/**',
@@ -42,7 +35,14 @@ test('maximum context lines and padding', () => {
     '  return a + b',
     '}',
   ].join('\n')
-  expect(CodeFrameColumns.create(rawLines, 7, 2)).toEqual(
+  expect(
+    CodeFrameColumns.create(rawLines, {
+      start: {
+        line: 7,
+        column: 2,
+      },
+    })
+  ).toEqual(
     [
       '   5 |  * @param b Number',
       '   6 |  * @returns Number',
@@ -69,7 +69,14 @@ test('no unnecessary padding due to one-off errors', () => {
     '  return a + b',
     '}',
   ].join('\n')
-  expect(CodeFrameColumns.create(rawLines, 6, 2)).toEqual(
+  expect(
+    CodeFrameColumns.create(rawLines, {
+      start: {
+        line: 6,
+        column: 2,
+      },
+    })
+  ).toEqual(
     [
       '  4 |  * @param a Number',
       '  5 |  * @param b Number',
@@ -88,59 +95,17 @@ test('tabs', () => {
     '\t  \t\t    constructor\t(\t)',
     '\t};',
   ].join('\n')
-  expect(CodeFrameColumns.create(rawLines, 2, 25)).toEqual(
+  expect(
+    CodeFrameColumns.create(rawLines, {
+      start: { line: 2, column: 25 },
+    })
+  ).toEqual(
     [
       '  1 | \tclass Foo {',
       '> 2 | \t  \t\t    constructor\t(\t)',
       '    | \t  \t\t               \t \t ^',
       '  3 | \t};',
     ].join('\n')
-  )
-})
-
-test('opts.highlightCode', () => {
-  const rawLines = "console.log('babel')"
-  const result = CodeFrameColumns.create(rawLines, 1, 9)
-  expect(result).toEqual(
-    ["> 1 | console.log('babel')", '    |         ^'].join('\n')
-  )
-})
-
-test('opts.highlightCode with multiple columns and lines', () => {
-  // prettier-ignore
-  const rawLines = [
-      "function a(b, c) {",
-      "  return b + c;",
-      "}"
-    ].join("\n");
-
-  const result = CodeFrameColumns.create(
-    rawLines,
-    {
-      start: {
-        line: 1,
-        column: 1,
-      },
-      end: {
-        line: 3,
-        column: 1,
-      },
-    },
-    {
-      highlightCode: true,
-      message: 'Message about things',
-    }
-  )
-  expect(result).toEqual(
-    // prettier-ignore
-    [
-        "> 1 | function a(b, c) {",
-        "    | ^^^^^^^^^^^^^^^^^^",
-        "> 2 |   return b + c;",
-        "    | ^^^^^^^^^^^^^^^",
-        "> 3 | }",
-        "    | ^ Message about things",
-      ].join('\n')
   )
 })
 
@@ -158,7 +123,15 @@ test('opts.linesAbove', () => {
     '  return a + b',
     '}',
   ].join('\n')
-  expect(CodeFrameColumns.create(rawLines, 7, 2, { linesAbove: 1 })).toEqual(
+  expect(
+    CodeFrameColumns.create(
+      rawLines,
+      {
+        start: { line: 7, column: 2 },
+      },
+      { linesAbove: 1 }
+    )
+  ).toEqual(
     [
       '   6 |  * @returns Number',
       '>  7 |  */',
@@ -184,7 +157,18 @@ test('opts.linesBelow', () => {
     '  return a + b',
     '}',
   ].join('\n')
-  expect(CodeFrameColumns.create(rawLines, 7, 2, { linesBelow: 1 })).toEqual(
+  expect(
+    CodeFrameColumns.create(
+      rawLines,
+      {
+        start: {
+          line: 7,
+          column: 2,
+        },
+      },
+      { linesBelow: 1 }
+    )
+  ).toEqual(
     [
       '  5 |  * @param b Number',
       '  6 |  * @returns Number',
@@ -210,7 +194,11 @@ test('opts.linesAbove and opts.linesBelow', () => {
     '}',
   ].join('\n')
   expect(
-    CodeFrameColumns.create(rawLines, 7, 2, { linesAbove: 1, linesBelow: 1 })
+    CodeFrameColumns.create(
+      rawLines,
+      { start: { line: 7, column: 2 } },
+      { linesAbove: 1, linesBelow: 1 }
+    )
   ).toEqual(
     ['  6 |  * @returns Number', '> 7 |  */', '    |  ^', '  8 |'].join('\n')
   )
@@ -264,36 +252,6 @@ test('opts.linesBelow single line', () => {
       { linesAbove: 0, linesBelow: 0 }
     )
   ).toEqual(['> 2 |   constructor() {'].join('\n'))
-})
-
-test('jsx', () => {
-  const gutter = chalk.grey
-  const yellow = chalk.yellow
-
-  const rawLines = ['<div />'].join('\n')
-
-  expect(
-    JSON.stringify(
-      CodeFrameColumns.create(rawLines, 0, null, {
-        linesAbove: 1,
-        linesBelow: 1,
-        forceColor: true,
-      })
-    )
-  ).toEqual(
-    JSON.stringify(
-      chalk.reset(
-        ' ' +
-          gutter(' 1 |') +
-          ' ' +
-          yellow('<') +
-          yellow('div') +
-          ' ' +
-          yellow('/') +
-          yellow('>')
-      )
-    )
-  )
 })
 
 test('basic usage, new API', () => {

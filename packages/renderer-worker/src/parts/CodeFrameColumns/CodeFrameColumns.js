@@ -10,7 +10,6 @@ const NEWLINE = /\n/
  * Extract what lines should be marked and highlighted.
  */
 const getMarkerLines = (loc, source, opts) => {
-  console.log({ loc })
   const startLoc = {
     column: 0,
     line: -1,
