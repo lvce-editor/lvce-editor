@@ -27,15 +27,6 @@ jest.unstable_mockModule('../src/parts/Path/Path.js', () => ({
   }),
 }))
 
-jest.unstable_mockModule('../src/parts/TmpFile/TmpFile.js', () => ({
-  getTmpFile: () => {
-    return '/test/tmp-file'
-  },
-  getTmpDir: () => {
-    return '/test/tmp-dir'
-  },
-}))
-
 jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => ({
   readFile: jest.fn(() => {
     throw new Error('not implemented')
@@ -168,17 +159,17 @@ test('install', async () => {
   })
   expect(DownloadAndExtract.downloadAndExtractTarGz).toHaveBeenCalledTimes(1)
   expect(DownloadAndExtract.downloadAndExtractTarGz).toHaveBeenCalledWith({
-    outDir: '/test/tmp-dir',
+    outDir: '/test/cached-extensions/github-user-repo-HEAD',
     strip: 1,
     url: 'https://codeload.github.com/user/repo/tar.gz/HEAD',
   })
   expect(FileSystem.readFile).toHaveBeenCalledTimes(1)
   expect(FileSystem.readFile).toHaveBeenCalledWith(
-    `/test/tmp-dir/extension.json`
+    `/test/cached-extensions/github-user-repo-HEAD/extension.json`
   )
   expect(FileSystem.rename).toHaveBeenCalledTimes(1)
   expect(FileSystem.rename).toHaveBeenCalledWith(
-    '/test/tmp-dir',
+    '/test/cached-extensions/github-user-repo-HEAD',
     '/test/extensions/test.test-extension'
   )
 })

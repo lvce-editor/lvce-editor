@@ -16,10 +16,11 @@ jest.unstable_mockModule('../src/parts/Download/Download.js', () => ({
 }))
 
 jest.unstable_mockModule('../src/parts/Extract/Extract.js', () => ({
-  extract: jest.fn(() => {
+  extractTarBr: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))
+
 jest.unstable_mockModule('../src/parts/TmpFile/TmpFile.js', () => ({
   getTmpFile: jest.fn(() => {
     return '/test/tmp-file'
