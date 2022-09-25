@@ -27,6 +27,9 @@ jest.unstable_mockModule('node:zlib', () => ({
   createBrotliDecompress: jest.fn(() => {
     throw new Error('not implemented')
   }),
+  createGunzip: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
 }))
 jest.unstable_mockModule('node:stream/promises', () => ({
   pipeline: jest.fn(() => {
