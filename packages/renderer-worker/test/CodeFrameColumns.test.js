@@ -1,10 +1,17 @@
 // based on https://github.com/babel/babel/blob/6be6e04f396f03feace4431f709564a8d842163a/packages/babel-code-frame/test/index.js (License MIT)
-import chalk from 'chalk'
-import stripAnsi from 'strip-ansi'
 
-test('basic usage', function () {
+import * as CodeFrameColumns from '../src/parts/CodeFrameColumns/CodeFrameColumns.js'
+
+test.only('basic usage', () => {
   const rawLines = ['class Foo {', '  constructor()', '};'].join('\n')
-  expect(codeFrame(rawLines, 2, 16)).toEqual(
+  expect(
+    CodeFrameColumns.create(rawLines, {
+      start: {
+        line: 2,
+        column: 16,
+      },
+    })
+  ).toEqual(
     [
       '  1 | class Foo {',
       '> 2 |   constructor()',
@@ -14,14 +21,14 @@ test('basic usage', function () {
   )
 })
 
-test('optional column number', function () {
+test('optional column number', () => {
   const rawLines = ['class Foo {', '  constructor()', '};'].join('\n')
-  expect(codeFrame(rawLines, 2, null)).toEqual(
+  expect(CodeFrameColumns.create(rawLines, 2, null)).toEqual(
     ['  1 | class Foo {', '> 2 |   constructor()', '  3 | };'].join('\n')
   )
 })
 
-test('maximum context lines and padding', function () {
+test('maximum context lines and padding', () => {
   const rawLines = [
     '/**',
     ' * Sums two numbers.',
@@ -35,7 +42,7 @@ test('maximum context lines and padding', function () {
     '  return a + b',
     '}',
   ].join('\n')
-  expect(codeFrame(rawLines, 7, 2)).toEqual(
+  expect(CodeFrameColumns.create(rawLines, 7, 2)).toEqual(
     [
       '   5 |  * @param b Number',
       '   6 |  * @returns Number',
@@ -48,7 +55,7 @@ test('maximum context lines and padding', function () {
   )
 })
 
-test('no unnecessary padding due to one-off errors', function () {
+test('no unnecessary padding due to one-off errors', () => {
   const rawLines = [
     '/**',
     ' * Sums two numbers.',
@@ -62,7 +69,7 @@ test('no unnecessary padding due to one-off errors', function () {
     '  return a + b',
     '}',
   ].join('\n')
-  expect(codeFrame(rawLines, 6, 2)).toEqual(
+  expect(CodeFrameColumns.create(rawLines, 6, 2)).toEqual(
     [
       '  4 |  * @param a Number',
       '  5 |  * @param b Number',
@@ -75,13 +82,13 @@ test('no unnecessary padding due to one-off errors', function () {
   )
 })
 
-test('tabs', function () {
+test('tabs', () => {
   const rawLines = [
     '\tclass Foo {',
     '\t  \t\t    constructor\t(\t)',
     '\t};',
   ].join('\n')
-  expect(codeFrame(rawLines, 2, 25)).toEqual(
+  expect(CodeFrameColumns.create(rawLines, 2, 25)).toEqual(
     [
       '  1 | \tclass Foo {',
       '> 2 | \t  \t\t    constructor\t(\t)',
@@ -91,17 +98,15 @@ test('tabs', function () {
   )
 })
 
-test('opts.highlightCode', function () {
+test('opts.highlightCode', () => {
   const rawLines = "console.log('babel')"
-  const result = codeFrame(rawLines, 1, 9, { highlightCode: true })
-  const stripped = stripAnsi(result)
-  expect(result.length).toBeGreaterThan(stripped.length)
-  expect(stripped).toEqual(
+  const result = CodeFrameColumns.create(rawLines, 1, 9)
+  expect(result).toEqual(
     ["> 1 | console.log('babel')", '    |         ^'].join('\n')
   )
 })
 
-test('opts.highlightCode with multiple columns and lines', function () {
+test('opts.highlightCode with multiple columns and lines', () => {
   // prettier-ignore
   const rawLines = [
       "function a(b, c) {",
@@ -109,7 +114,7 @@ test('opts.highlightCode with multiple columns and lines', function () {
       "}"
     ].join("\n");
 
-  const result = codeFrameColumns(
+  const result = CodeFrameColumns.create(
     rawLines,
     {
       start: {
@@ -126,8 +131,7 @@ test('opts.highlightCode with multiple columns and lines', function () {
       message: 'Message about things',
     }
   )
-  const stripped = stripAnsi(result)
-  expect(stripped).toEqual(
+  expect(result).toEqual(
     // prettier-ignore
     [
         "> 1 | function a(b, c) {",
@@ -140,7 +144,7 @@ test('opts.highlightCode with multiple columns and lines', function () {
   )
 })
 
-test('opts.linesAbove', function () {
+test('opts.linesAbove', () => {
   const rawLines = [
     '/**',
     ' * Sums two numbers.',
@@ -154,7 +158,7 @@ test('opts.linesAbove', function () {
     '  return a + b',
     '}',
   ].join('\n')
-  expect(codeFrame(rawLines, 7, 2, { linesAbove: 1 })).toEqual(
+  expect(CodeFrameColumns.create(rawLines, 7, 2, { linesAbove: 1 })).toEqual(
     [
       '   6 |  * @returns Number',
       '>  7 |  */',
@@ -166,7 +170,7 @@ test('opts.linesAbove', function () {
   )
 })
 
-test('opts.linesBelow', function () {
+test('opts.linesBelow', () => {
   const rawLines = [
     '/**',
     ' * Sums two numbers.',
@@ -180,7 +184,7 @@ test('opts.linesBelow', function () {
     '  return a + b',
     '}',
   ].join('\n')
-  expect(codeFrame(rawLines, 7, 2, { linesBelow: 1 })).toEqual(
+  expect(CodeFrameColumns.create(rawLines, 7, 2, { linesBelow: 1 })).toEqual(
     [
       '  5 |  * @param b Number',
       '  6 |  * @returns Number',
@@ -191,7 +195,7 @@ test('opts.linesBelow', function () {
   )
 })
 
-test('opts.linesAbove and opts.linesBelow', function () {
+test('opts.linesAbove and opts.linesBelow', () => {
   const rawLines = [
     '/**',
     ' * Sums two numbers.',
@@ -205,12 +209,14 @@ test('opts.linesAbove and opts.linesBelow', function () {
     '  return a + b',
     '}',
   ].join('\n')
-  expect(codeFrame(rawLines, 7, 2, { linesAbove: 1, linesBelow: 1 })).toEqual(
+  expect(
+    CodeFrameColumns.create(rawLines, 7, 2, { linesAbove: 1, linesBelow: 1 })
+  ).toEqual(
     ['  6 |  * @returns Number', '> 7 |  */', '    |  ^', '  8 |'].join('\n')
   )
 })
 
-test('opts.linesAbove no lines above', function () {
+test('opts.linesAbove no lines above', () => {
   const rawLines = [
     'class Foo {',
     '  constructor() {',
@@ -219,7 +225,7 @@ test('opts.linesAbove no lines above', function () {
     '};',
   ].join('\n')
   expect(
-    codeFrameColumns(rawLines, { start: { line: 2 } }, { linesAbove: 0 })
+    CodeFrameColumns.create(rawLines, { start: { line: 2 } }, { linesAbove: 0 })
   ).toEqual(
     [
       '> 2 |   constructor() {',
@@ -230,7 +236,7 @@ test('opts.linesAbove no lines above', function () {
   )
 })
 
-test('opts.linesBelow no lines below', function () {
+test('opts.linesBelow no lines below', () => {
   const rawLines = [
     'class Foo {',
     '  constructor() {',
@@ -239,11 +245,11 @@ test('opts.linesBelow no lines below', function () {
     '};',
   ].join('\n')
   expect(
-    codeFrameColumns(rawLines, { start: { line: 2 } }, { linesBelow: 0 })
+    CodeFrameColumns.create(rawLines, { start: { line: 2 } }, { linesBelow: 0 })
   ).toEqual(['  1 | class Foo {', '> 2 |   constructor() {'].join('\n'))
 })
 
-test('opts.linesBelow single line', function () {
+test('opts.linesBelow single line', () => {
   const rawLines = [
     'class Foo {',
     '  constructor() {',
@@ -252,7 +258,7 @@ test('opts.linesBelow single line', function () {
     '};',
   ].join('\n')
   expect(
-    codeFrameColumns(
+    CodeFrameColumns.create(
       rawLines,
       { start: { line: 2 } },
       { linesAbove: 0, linesBelow: 0 }
@@ -260,29 +266,7 @@ test('opts.linesBelow single line', function () {
   ).toEqual(['> 2 |   constructor() {'].join('\n'))
 })
 
-test('opts.forceColor', function () {
-  const marker = chalk.red.bold
-  const gutter = chalk.grey
-
-  const rawLines = ['', '', '', ''].join('\n')
-  expect(
-    codeFrame(rawLines, 3, null, {
-      linesAbove: 1,
-      linesBelow: 1,
-      forceColor: true,
-    })
-  ).toEqual(
-    chalk.reset(
-      [
-        ' ' + gutter(' 2 |'),
-        marker('>') + gutter(' 3 |'),
-        ' ' + gutter(' 4 |'),
-      ].join('\n')
-    )
-  )
-})
-
-test('jsx', function () {
+test('jsx', () => {
   const gutter = chalk.grey
   const yellow = chalk.yellow
 
@@ -290,7 +274,7 @@ test('jsx', function () {
 
   expect(
     JSON.stringify(
-      codeFrame(rawLines, 0, null, {
+      CodeFrameColumns.create(rawLines, 0, null, {
         linesAbove: 1,
         linesBelow: 1,
         forceColor: true,
@@ -312,10 +296,10 @@ test('jsx', function () {
   )
 })
 
-test('basic usage, new API', function () {
+test('basic usage, new API', () => {
   const rawLines = ['class Foo {', '  constructor()', '};'].join('\n')
   expect(
-    codeFrameColumns(rawLines, { start: { line: 2, column: 16 } })
+    CodeFrameColumns.create(rawLines, { start: { line: 2, column: 16 } })
   ).toEqual(
     [
       '  1 | class Foo {',
@@ -326,10 +310,10 @@ test('basic usage, new API', function () {
   )
 })
 
-test('mark multiple columns', function () {
+test('mark multiple columns', () => {
   const rawLines = ['class Foo {', '  constructor()', '};'].join('\n')
   expect(
-    codeFrameColumns(rawLines, {
+    CodeFrameColumns.create(rawLines, {
       start: { line: 2, column: 3 },
       end: { line: 2, column: 16 },
     })
@@ -343,10 +327,10 @@ test('mark multiple columns', function () {
   )
 })
 
-test('mark multiple columns across lines', function () {
+test('mark multiple columns across lines', () => {
   const rawLines = ['class Foo {', '  constructor() {', '  }', '};'].join('\n')
   expect(
-    codeFrameColumns(rawLines, {
+    CodeFrameColumns.create(rawLines, {
       start: { line: 2, column: 17 },
       end: { line: 3, column: 3 },
     })
@@ -362,7 +346,7 @@ test('mark multiple columns across lines', function () {
   )
 })
 
-test('mark multiple columns across multiple lines', function () {
+test('mark multiple columns across multiple lines', () => {
   const rawLines = [
     'class Foo {',
     '  constructor() {',
@@ -371,7 +355,7 @@ test('mark multiple columns across multiple lines', function () {
     '};',
   ].join('\n')
   expect(
-    codeFrameColumns(rawLines, {
+    CodeFrameColumns.create(rawLines, {
       start: { line: 2, column: 17 },
       end: { line: 4, column: 3 },
     })
@@ -389,7 +373,7 @@ test('mark multiple columns across multiple lines', function () {
   )
 })
 
-test('mark across multiple lines without columns', function () {
+test('mark across multiple lines without columns', () => {
   const rawLines = [
     'class Foo {',
     '  constructor() {',
@@ -398,7 +382,7 @@ test('mark across multiple lines without columns', function () {
     '};',
   ].join('\n')
   expect(
-    codeFrameColumns(rawLines, { start: { line: 2 }, end: { line: 4 } })
+    CodeFrameColumns.create(rawLines, { start: { line: 2 }, end: { line: 4 } })
   ).toEqual(
     [
       '  1 | class Foo {',
@@ -410,10 +394,10 @@ test('mark across multiple lines without columns', function () {
   )
 })
 
-test('opts.message', function () {
+test('opts.message', () => {
   const rawLines = ['class Foo {', '  constructor()', '};'].join('\n')
   expect(
-    codeFrameColumns(
+    CodeFrameColumns.create(
       rawLines,
       { start: { line: 2, column: 16 } },
       {
@@ -430,10 +414,10 @@ test('opts.message', function () {
   )
 })
 
-test('opts.message without column', function () {
+test('opts.message without column', () => {
   const rawLines = ['class Foo {', '  constructor()', '};'].join('\n')
   expect(
-    codeFrameColumns(
+    CodeFrameColumns.create(
       rawLines,
       { start: { line: 2 } },
       {
@@ -450,7 +434,7 @@ test('opts.message without column', function () {
   )
 })
 
-test('opts.message with multiple lines', function () {
+test('opts.message with multiple lines', () => {
   const rawLines = [
     'class Foo {',
     '  constructor() {',
@@ -459,7 +443,7 @@ test('opts.message with multiple lines', function () {
     '};',
   ].join('\n')
   expect(
-    codeFrameColumns(
+    CodeFrameColumns.create(
       rawLines,
       {
         start: { line: 2, column: 17 },
@@ -483,7 +467,7 @@ test('opts.message with multiple lines', function () {
   )
 })
 
-test('opts.message with multiple lines without columns', function () {
+test('opts.message with multiple lines without columns', () => {
   const rawLines = [
     'class Foo {',
     '  constructor() {',
@@ -492,7 +476,7 @@ test('opts.message with multiple lines without columns', function () {
     '};',
   ].join('\n')
   expect(
-    codeFrameColumns(
+    CodeFrameColumns.create(
       rawLines,
       { start: { line: 2 }, end: { line: 4 } },
       {
