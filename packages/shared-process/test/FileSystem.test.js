@@ -268,7 +268,7 @@ test('rename - error - non existing old path', async () => {
 test('rename - error - EXDEV', async () => {
   // @ts-ignore
   fs.rename.mockImplementation(() => {
-    throw new Error('EXDEV')
+    throw new NodeError('EXDEV')
   })
   // @ts-ignore
   fs.cp.mockImplementation(() => {})
@@ -279,9 +279,15 @@ test('rename - error - EXDEV', async () => {
     '/test/file-has-been-moved.txt'
   )
   expect(fs.cp).toHaveBeenCalledTimes(1)
-  expect(fs.cp).toHaveBeenCalledWith('')
+  expect(fs.cp).toHaveBeenCalledWith(
+    '/test/non-existing.txt',
+    '/test/file-has-been-moved.txt',
+    { recursive: true }
+  )
   expect(fs.rm).toHaveBeenCalledTimes(1)
-  expect(fs.rm).toHaveBeenCalledWith('')
+  expect(fs.rm).toHaveBeenCalledWith('/test/non-existing.txt', {
+    recursive: true,
+  })
 })
 
 test('rename - error - new path in non-existing nested directory', async () => {
