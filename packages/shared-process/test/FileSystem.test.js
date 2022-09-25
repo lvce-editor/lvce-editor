@@ -1,6 +1,6 @@
+import { jest } from '@jest/globals'
 import { join } from 'node:path'
 import { setTimeout } from 'node:timers/promises'
-import { jest } from '@jest/globals'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -250,7 +250,7 @@ test('rename', async () => {
   )
 })
 
-test('rename - non existing old path', async () => {
+test('rename - error - non existing old path', async () => {
   // @ts-ignore
   fs.rename.mockImplementation(() => {
     throw new Error('ENOENT')
@@ -262,7 +262,19 @@ test('rename - non existing old path', async () => {
   )
 })
 
-test('rename - new path in non-existing nested directory', async () => {
+test('rename - error - EXDEV', async () => {
+  // @ts-ignore
+  fs.rename.mockImplementation(() => {
+    throw new Error('ENOENT')
+  })
+  await expect(
+    FileSystem.rename('/test/non-existing.txt', '/test/file-has-been-moved.txt')
+  ).rejects.toThrow(
+    `Failed to rename "/test/non-existing.txt" to "/test/file-has-been-moved.txt": ENOENT`
+  )
+})
+
+test('rename - error - new path in non-existing nested directory', async () => {
   // @ts-ignore
   fs.rename.mockImplementation(() => {
     throw new Error('ENOENT')
@@ -385,10 +397,7 @@ test('getRealPath', async () => {
 test('getRealPath - error - broken symlink - file not found', async () => {
   // @ts-ignore
   fs.realpath.mockImplementation((source) => {
-    const error = new Error(`ENOENT`)
-    // @ts-ignore
-    error.code = 'ENOENT'
-    throw error
+    throw new NodeError('ENOENT')
   })
   // @ts-ignore
   fs.readlink.mockImplementation(() => {
@@ -402,10 +411,7 @@ test('getRealPath - error - broken symlink - file not found', async () => {
 test('getRealPath - error - broken symlink and error with readlink', async () => {
   // @ts-ignore
   fs.realpath.mockImplementation((source) => {
-    const error = new Error(`ENOENT`)
-    // @ts-ignore
-    error.code = 'ENOENT'
-    throw error
+    throw new NodeError('ENOENT')
   })
   // @ts-ignore
   fs.readlink.mockImplementation(() => {
