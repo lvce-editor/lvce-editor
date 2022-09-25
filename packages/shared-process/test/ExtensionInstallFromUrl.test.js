@@ -16,10 +16,11 @@ jest.unstable_mockModule('../src/parts/Download/Download.js', () => ({
 }))
 
 jest.unstable_mockModule('../src/parts/Extract/Extract.js', () => ({
-  extract: jest.fn(() => {
+  extractTarBr: jest.fn(() => {
     throw new Error('not implemented')
   }),
 }))
+
 jest.unstable_mockModule('../src/parts/TmpFile/TmpFile.js', () => ({
   getTmpFile: jest.fn(() => {
     return '/test/tmp-file'
@@ -42,7 +43,7 @@ test('install - error with download', async () => {
     throw new Error(`Failed to download `)
   })
   // @ts-ignore
-  Extract.extract.mockImplementation(() => {})
+  Extract.extractTarBr.mockImplementation(() => {})
   await expect(
     ExtensionInstallFromUrl.install({
       url: 'https://example.com',
@@ -56,7 +57,7 @@ test('install - error with extraction', async () => {
   // @ts-ignore
   Download.download.mockImplementation(() => {})
   // @ts-ignore
-  Extract.extract.mockImplementation((url) => {
+  Extract.extractTarBr.mockImplementation((url) => {
     throw new Error(`Failed to extract file ${url}`)
   })
   await expect(
