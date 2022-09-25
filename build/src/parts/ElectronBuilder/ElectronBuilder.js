@@ -8,6 +8,7 @@ import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Template from '../Template/Template.js'
 import * as Rename from '../Rename/Rename.js'
+import * as Tag from '../Tag/Tag.js'
 
 // TODO don't need to include whole node-pty module
 // TODO maybe don't need to include nan module
@@ -34,10 +35,11 @@ const getElectronVersion = async () => {
 
 const copyElectronBuilderConfig = async (config) => {
   const electronVersion = await getElectronVersion()
+  const tag = await Tag.getTag()
   await Template.write(config, 'build/.tmp/electron-builder/package.json', {
     '@@NAME@@': Product.applicationName,
     '@@AUTHOR@@': Product.linuxMaintainer,
-    '@@VERSION@@': Product.version,
+    '@@VERSION@@': tag,
     '@@HOMEPAGE@@': Product.homePage,
     '@@ELECTRON_VERSION@@': electronVersion,
     '@@NAME_LONG@@': Product.nameLong,

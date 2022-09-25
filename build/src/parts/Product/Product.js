@@ -24,8 +24,6 @@ export const descriptionLongLinux = ['']
 
 // TODO
 
-export const version = '0.0.1'
-
 // TODO
 export const repoUrl = 'https://github.com/lvce-editor/lvce-editor'
 
