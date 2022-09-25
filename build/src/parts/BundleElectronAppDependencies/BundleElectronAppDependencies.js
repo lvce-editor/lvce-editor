@@ -124,13 +124,14 @@ const getElectronVersion = async () => {
 }
 
 const addRootPackageJson = async ({ cachePath }) => {
+  const tag = await Tag.getGitTag()
   await JsonFile.writeJson({
     to: `${cachePath}/package.json`,
     value: {
       main: 'packages/main-process/src/mainProcessMain.js',
       name: Product.applicationName,
       productName: Product.nameLong,
-      version: Product.version,
+      version: tag,
     },
   })
 }

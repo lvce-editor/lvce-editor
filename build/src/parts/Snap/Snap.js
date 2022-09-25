@@ -3,6 +3,7 @@ import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'
 import * as Template from '../Template/Template.js'
 import * as Copy from '../Copy/Copy.js'
+import * as Tag from '../Tag/Tag.js'
 
 // TODO get rid of no-sandbox somehow https://github.com/electron/electron/issues/17972
 
@@ -17,12 +18,13 @@ const getSnapArch = (arch) => {
 
 const copyMetaFiles = async (arch) => {
   const snapArch = getSnapArch(arch)
+  const tag = await Tag.getGitTag()
   await Template.write(
     'linux_snapcraft_yaml',
     `build/.tmp/linux/snap/${arch}/snap/snapcraft.yaml`,
     {
       '@@NAME@@': Product.applicationName,
-      '@@VERSION@@': Product.version,
+      '@@VERSION@@': tag,
       '@@ARCHITECTURE@@': snapArch,
       '@@SUMMARY@@': Product.linuxSummary,
       '@@SOURCE_CODE@@': Product.repoUrl,
@@ -201,8 +203,9 @@ const createSnap = async (arch) => {
 const printSnapSize = async (arch) => {
   const Stat = await import('../Stat/Stat.js')
   const snapArch = getSnapArch(arch)
+  const tag = await Tag.getGitTag()
   const size = await Stat.getFileSize(
-    `build/.tmp/linux/snap/${arch}/${Product.applicationName}_${Product.version}_${snapArch}.snap`
+    `build/.tmp/linux/snap/${arch}/${Product.applicationName}_${tag}_${snapArch}.snap`
   )
   console.info(`snap size: ${size}`)
 }

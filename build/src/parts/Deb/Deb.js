@@ -10,6 +10,7 @@ import * as Product from '../Product/Product.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Template from '../Template/Template.js'
 import * as Rename from '../Rename/Rename.js'
+import * as Tag from '../Tag/Tag.js'
 
 const getDebPackageArch = (arch) => {
   switch (arch) {
@@ -88,12 +89,13 @@ const copyMetaFiles = async () => {
   const installedSize = await getInstalledSize(
     Path.absolute(`build/.tmp/linux/deb/${debArch}/app`)
   )
+  const tag = await Tag.getGitTag()
   await Template.write(
     'debian_control',
     `build/.tmp/linux/deb/${debArch}/DEBIAN/control`,
     {
       '@@NAME@@': Product.applicationName,
-      '@@VERSION@@': Product.version,
+      '@@VERSION@@': tag,
       '@@ARCHITECTURE@@': debArch,
       '@@INSTALLED_SIZE@@': `${installedSize}`,
       '@@HOMEPAGE@@': Product.homePage,
