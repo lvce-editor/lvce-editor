@@ -31,7 +31,6 @@ export const getLanguageId = (fileName) => {
   if (fileNameMap[fileNameLower]) {
     return fileNameMap[fileNameLower]
   }
-  console.log({ fileName, fileNameLower, fileNameMap })
   return 'unknown'
 }
 

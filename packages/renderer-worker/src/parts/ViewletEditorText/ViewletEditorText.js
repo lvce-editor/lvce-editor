@@ -4,12 +4,13 @@ import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSema
 // import * as ExtensionHostTextDocument from '../ExtensionHost/ExtensionHostTextDocument.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
-import * as Id from '../Id/Id.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -42,7 +43,8 @@ export const create = (id, uri, left, top, width, height) => {
   const instanceId = Id.create()
   const state = Editor.create(instanceId, uri, 'unknown', '')
   const newState = Editor.setBounds(state, top, left, height, COLUMN_WIDTH)
-  const languageId = Languages.getLanguageId(uri)
+  const fileName = Workspace.pathBaseName(state.uri)
+  const languageId = Languages.getLanguageId(fileName)
   return {
     ...newState,
     uri,
@@ -56,7 +58,8 @@ export const loadContent = async (state) => {
   const rowHeight = Preferences.get('editor.lineHeight') || 20
   const fontSize = Preferences.get('editor.fontSize') || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
   const letterSpacing = Preferences.get('editor.letterSpacing') || 0.5
-  const languageId = Languages.getLanguageId(state.uri)
+  const fileName = Workspace.pathBaseName(state.uri)
+  const languageId = Languages.getLanguageId(fileName)
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const content = await getContent(state.uri)
   const newState = Editor.setText(state, content)
@@ -109,7 +112,8 @@ export const contentLoadedEffects = async (state) => {
   GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
   GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
   GlobalEventBus.addListener('editor.change', handleEditorChange)
-  const newLanguageId = Languages.getLanguageId(state.uri)
+  const fileName = Workspace.pathBaseName(state.uri)
+  const newLanguageId = Languages.getLanguageId(fileName)
   await Command.execute(
     /* Editor.setLanguageId */ 'Editor.setLanguageId',
     /* languageId */ newLanguageId
@@ -128,7 +132,8 @@ const handleLanguagesChanged = async () => {
     return
   }
   const state = instance.state
-  const newLanguageId = Languages.getLanguageId(state.uri)
+  const fileName = Workspace.pathBaseName(state.uri)
+  const newLanguageId = Languages.getLanguageId(fileName)
   state.languageId = newLanguageId
   // await ExtensionHostTextDocument.handleEditorLanguageChange(state)
   // if (state.languageId === newLanguageId) {
