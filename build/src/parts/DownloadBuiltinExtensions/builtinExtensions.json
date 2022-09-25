@@ -142,7 +142,7 @@
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "0.0.6"
+    "version": "0.0.7"
   },
   {
     "name": "builtin.language-basics-desktop",
@@ -162,7 +162,7 @@
   {
     "name": "builtin.language-basics-toml",
     "repository": "github.com/lvce-editor/language-basics-toml",
-    "version": "0.0.6"
+    "version": "0.0.7"
   },
   {
     "name": "builtin.language-basics-powershell",
