@@ -1,32 +1,39 @@
-import { existsSync } from 'node:fs'
 import VError from 'verror'
 import * as Download from '../Download/Download.js'
 import * as Extract from '../Extract/Extract.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
-import * as DownloadAndExtract from '../DownloadAndExtract/DownloadAndExtract.js'
 
 export const install = async ({ user, repo, branch, outDir = '/tmp' }) => {
   console.time('install')
   try {
-    const url = `https://codeload.github.com/${user}/${repo}/tar.gz/${branch}`
     const cachedExtensionsPath = Platform.getCachedExtensionsPath()
+    const getCachePath = (etag) => {
+      const cacheKey = `github-${user}-${repo}-${etag.slice(3, -1)}.tar.gz`
+      const cacheKeyPath = Path.join(cachedExtensionsPath, cacheKey)
+      console.log({ cacheKeyPath })
+      return cacheKeyPath
+    }
+
+    const url = `https://codeload.github.com/${user}/${repo}/tar.gz/${branch}`
+
+    console.log({ url })
+    console.time('request')
+    const { cachePath, fromCache, etag } = await Download.downloadCached({
+      url,
+      getCachePath,
+    })
+
     const cachedExtensionPath = Path.join(
       cachedExtensionsPath,
-      `github-${user}-${repo}-${branch}`
+      `github-${user}-${repo}-${etag.slice(3)}`
     )
-    console.log({ url })
-    const cachedExtensionTarGzPath = Path.join(
-      cachedExtensionsPath,
-      `github-${user}-${repo}-${branch}.tar.gz`
-    )
-    if (!existsSync(cachedExtensionTarGzPath)) {
-      await Download.download(url, cachedExtensionTarGzPath)
-    }
+    console.timeEnd('request')
+    console.log({ fromCache, cachePath })
     console.time('extract')
     await Extract.extractTarGz({
-      inFile: cachedExtensionTarGzPath,
+      inFile: cachePath,
       outDir: cachedExtensionPath,
       strip: 1,
     })
