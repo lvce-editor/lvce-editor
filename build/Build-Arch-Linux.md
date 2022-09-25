@@ -11,7 +11,7 @@ sudo apt install -y libarchive-tools
 ## Build
 
 ```sh
-node bin/build.js --target=electron-builder-arch-linux
+node bin/build.js --target=electron-builder-arch-linux --force
 ```
 
 ## Try out

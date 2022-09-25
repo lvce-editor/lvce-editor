@@ -5,7 +5,7 @@ Generate a `.snap` file that can be installed with the `snap` package manager.
 ## Build
 
 ```sh
-node bin/build.js --target=electron-builder-snap
+node bin/build.js --target=electron-builder-snap --force
 ```
 
 ## Try out
