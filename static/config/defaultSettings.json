@@ -13,6 +13,7 @@
 
   "window.titleBarStyle": "native",
   "window.zoomLevel": 0.5,
+  "window.controlsOverlay.enabled": true,
 
   "workbench.colorTheme": "slime",
   "workbench.iconTheme": "vscode-icons",
