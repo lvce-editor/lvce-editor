@@ -16,10 +16,7 @@ const getPlatform = () => {
     return PlatformType.Remote
   }
   // @ts-ignore
-  const userAgentData = navigator.userAgentData
-  // TODO this is probably a bad check but electron doesn't deliver anything and
-  // this will be tree shaken out anyway during build
-  if (userAgentData && userAgentData.brands.length === 0) {
+  if (typeof myApi !== 'undefined') {
     return PlatformType.Electron
   }
   return PlatformType.Remote
@@ -100,8 +97,19 @@ export const isElectron = () => {
   return state.isElectron()
 }
 
+const getQueryParams = () => {
+  if (isElectron()) {
+    if (location.search) {
+      return location.search + '&platform=electron'
+    }
+    return '?platform=electron'
+  }
+  return location.search
+}
+
 export const getRendererWorkerUrl = () => {
   const assetDir = getAssetDir()
-  const urlRendererWorker = `${assetDir}/packages/renderer-worker/src/rendererWorkerMain.js${location.search}`
+  const queryParams = getQueryParams()
+  const urlRendererWorker = `${assetDir}/packages/renderer-worker/src/rendererWorkerMain.js${queryParams}`
   return urlRendererWorker
 }

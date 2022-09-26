@@ -129,12 +129,9 @@ const getPlatform = () => {
   if (typeof location !== 'undefined' && location.search === '?web') {
     return PlatformType.Web
   }
-
-  // TODO don't use window here -> want to run renderer-worker as webworker
   if (
-    typeof navigator !== 'undefined' &&
-    typeof navigator.appVersion !== 'undefined' &&
-    navigator.appVersion.includes('Electron')
+    typeof location !== 'undefined' &&
+    location.search.includes('platform=electron')
   ) {
     return PlatformType.Electron
   }
