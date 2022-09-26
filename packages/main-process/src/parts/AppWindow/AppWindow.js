@@ -62,7 +62,7 @@ exports.createAppWindow = async (
   const frame = titleBarPreference === 'custom' ? false : true
   const titleBarStyle = titleBarPreference === 'custom' ? 'hidden' : undefined
   const zoomLevelPreference = Preferences.get(preferences, 'window.zoomLevel')
-  const zoomFactor = zoomLevelPreference
+  const zoomLevel = zoomLevelPreference
   const windowControlsOverlayPreference =
     Platform.isWindows &&
     Preferences.get(preferences, 'window.controlsOverlay.enabled')
@@ -73,7 +73,6 @@ exports.createAppWindow = async (
         height: 29,
       }
     : undefined
-  // const titleBarOptions = getTitleBarOptions(windowControlsOverlayEnabled)
   const session = Session.get()
   const window = Window.create({
     y: 0,
@@ -85,7 +84,7 @@ exports.createAppWindow = async (
     session,
     titleBarStyle,
     frame,
-    zoomFactor,
+    zoomLevel,
     titleBarOverlay,
   })
   window.on('close', handleWindowClose)
