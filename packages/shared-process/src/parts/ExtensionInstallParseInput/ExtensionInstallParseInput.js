@@ -1,8 +1,5 @@
-export const InstallType = {
-  Url: 1,
-  GithubRepository: 2,
-  ParsingError: 3,
-}
+import * as ExtensionInstallType from '../ExtensionInstallType/ExtensionInstallType.js'
+import * as Path from '../Path/Path.js'
 
 const parseUrlGithub = (input) => {
   const parts = input.split('/')
@@ -11,7 +8,7 @@ const parseUrlGithub = (input) => {
     const user = parts[3]
     const repo = parts[4]
     return {
-      type: InstallType.GithubRepository,
+      type: ExtensionInstallType.GithubRepository,
       options: {
         user,
         repo,
@@ -26,7 +23,7 @@ const parseUrlGithub = (input) => {
     const commit = parts[6]
     if (type === 'tree') {
       return {
-        type: InstallType.GithubRepository,
+        type: ExtensionInstallType.GithubRepository,
         options: {
           user,
           repo,
@@ -36,7 +33,7 @@ const parseUrlGithub = (input) => {
     }
     if (type === 'pull') {
       return {
-        type: InstallType.ParsingError,
+        type: ExtensionInstallType.ParsingError,
         options: {
           message: 'Cannot download from Pull Request',
         },
@@ -44,7 +41,7 @@ const parseUrlGithub = (input) => {
     }
   }
   return {
-    type: InstallType.ParsingError,
+    type: ExtensionInstallType.ParsingError,
     options: {
       message: 'Failed to parse github url',
     },
@@ -57,16 +54,25 @@ const parseUrl = (input) => {
   }
   if (input.endsWith('.tar.br')) {
     return {
-      type: InstallType.Url,
+      type: ExtensionInstallType.Url,
       options: {
         url: input,
       },
     }
   }
   return {
-    type: InstallType.ParsingError,
+    type: ExtensionInstallType.ParsingError,
     options: {
       message: 'Failed to parse url',
+    },
+  }
+}
+
+const parseFile = (input) => {
+  return {
+    type: ExtensionInstallType.File,
+    options: {
+      path: input,
     },
   }
 }
@@ -75,8 +81,14 @@ export const parse = (input) => {
   if (input.startsWith('https://')) {
     return parseUrl(input)
   }
+  if (input.startsWith('.')) {
+    return parseFile(input)
+  }
+  if (Path.isAbsolute(input)) {
+    return parseFile(input)
+  }
   return {
-    type: InstallType.ParsingError,
+    type: ExtensionInstallType.ParsingError,
     options: {
       message: 'Failed to parse input',
     },
