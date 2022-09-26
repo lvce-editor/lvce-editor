@@ -37,6 +37,17 @@ export const getDefaultPreferences = async () => {
 // TODO efficiently load preferences -> first load cached preferences
 //                                   -> on idle check preferences
 
+const getOverrides = () => {
+  const argvSliced = process.argv.slice(2)
+  const overrides = {}
+  for (const argv of argvSliced) {
+    console.log({ argv })
+    if (argv.startsWith('--theme=')) {
+      overrides['workbench.colorTheme'] = argv.slice('--theme='.length)
+    }
+  }
+  return overrides
+}
 // TODO compare with timestamp/hash that preferences are fresh
 export const getAll = async () => {
   try {
@@ -50,8 +61,13 @@ export const getAll = async () => {
     // }
     const defaultPreferences = await getDefaultPreferences()
     const userPreferences = await getUserPreferences()
+    const overrides = getOverrides()
     // TODO separate backend and frontend preferences, ui only needs frontend preferences
-    const preferences = { ...defaultPreferences, ...userPreferences }
+    const preferences = {
+      ...defaultPreferences,
+      ...userPreferences,
+      ...overrides,
+    }
     // try {
     //   await mkdir(dirname(CACHED_SETTINGS_PATH), { recursive: true })
     //   await writeFile(

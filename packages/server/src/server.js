@@ -15,7 +15,7 @@ const ROOT = resolve(__dirname, '../../../')
 const STATIC = resolve(__dirname, '../../../static')
 const PORT = process.env.PORT || 3000
 
-const argv = process.argv
+const { argv } = process
 
 let argv2 = argv[2]
 
@@ -402,7 +402,7 @@ const launchSharedProcess = () => {
   const sharedProcess = fork(
     sharedProcessPath,
     // execArgv: ['--trace-deopt'],
-    ['--enable-source-maps'],
+    ['--enable-source-maps', ...argvSliced],
     {
       stdio: 'inherit',
       env: {
