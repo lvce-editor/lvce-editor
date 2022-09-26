@@ -24,7 +24,7 @@ const getColorThemeNames = async () => {
 
 const setColorTheme = (id) => {
   return Command.execute(
-    /* ColorTheme.setColorTheme */ 5611,
+    /* ColorTheme.setColorTheme */ 'ColorTheme.setColorTheme',
     /* colorThemeId */ id
   )
 }
@@ -61,6 +61,7 @@ export const selectPick = async (item) => {
 }
 
 export const focusPick = async (item) => {
+  console.log('focus pick', item)
   await setColorTheme(/* colorThemeId */ item.label)
 }
 
