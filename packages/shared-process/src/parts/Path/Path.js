@@ -23,3 +23,7 @@ export const basename = (path) => {
 export const resolve = (path) => {
   return NodePath.resolve(path)
 }
+
+export const isAbsolute = (path) => {
+  return NodePath.isAbsolute(path)
+}

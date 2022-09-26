@@ -1,4 +1,5 @@
 import * as ExtensionInstallType from '../ExtensionInstallType/ExtensionInstallType.js'
+import * as Path from '../Path/Path.js'
 
 const parseUrlGithub = (input) => {
   const parts = input.split('/')
@@ -81,6 +82,9 @@ export const parse = (input) => {
     return parseUrl(input)
   }
   if (input.startsWith('.')) {
+    return parseFile(input)
+  }
+  if (Path.isAbsolute(input)) {
     return parseFile(input)
   }
   return {

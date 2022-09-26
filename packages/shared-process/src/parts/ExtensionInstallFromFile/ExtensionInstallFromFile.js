@@ -1,22 +1,27 @@
 import VError from 'verror'
-import * as DownloadAndExtract from '../DownloadAndExtract/DownloadAndExtract.js'
+import * as Assert from '../Assert/Assert.js'
+import * as Extract from '../Extract/Extract.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 
+const getCachedExtensionFolderName = (path) => {
+  const baseName = Path.basename(path)
+  if (baseName.endsWith('.tar.br')) {
+    return 'file-' + baseName.slice(0, -'.tar.br'.length)
+  }
+  return `file-${baseName}`
+}
+
 export const install = async ({ path }) => {
   try {
     const cachedExtensionsPath = Platform.getCachedExtensionsPath()
-    const url = `https://codeload.github.com/${user}/${repo}/tar.gz/${branch}`
+    const cachedExtensionFolderName = getCachedExtensionFolderName(path)
     const cachedExtensionPath = Path.join(
       cachedExtensionsPath,
-      `github-${user}-${repo}-${branch}`
+      cachedExtensionFolderName
     )
-    await DownloadAndExtract.downloadAndExtractTarGz({
-      url,
-      outDir: cachedExtensionPath,
-      strip: 1,
-    })
+    await Extract.extractTarBr(path, cachedExtensionPath)
     const extensionsPath = Platform.getExtensionsPath()
     const manifestPath = Path.join(cachedExtensionPath, 'extension.json')
     const manifestContent = await FileSystem.readFile(manifestPath)
@@ -29,6 +34,6 @@ export const install = async ({ path }) => {
     await FileSystem.remove(outDir)
     await FileSystem.rename(cachedExtensionPath, outDir)
   } catch (error) {
-    throw new VError(error, `Failed to install ${user}/${repo}`)
+    throw new VError(error, `Failed to install ${path}`)
   }
 }

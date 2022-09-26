@@ -81,3 +81,14 @@ test('parse - install from relative path', () => {
     },
   })
 })
+
+test('parse - install from absolute path', () => {
+  expect(
+    ExtensionInstallParseInput.parse('/test/files/extension.tar.br')
+  ).toEqual({
+    type: ExtensionInstallType.File,
+    options: {
+      path: '/test/files/extension.tar.br',
+    },
+  })
+})
