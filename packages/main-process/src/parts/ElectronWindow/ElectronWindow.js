@@ -72,7 +72,7 @@ exports.getFocusedWindow = () => {
  *  titleBarStyle?:any,
  *  titleBarOverlay?:any,
  *  frame?:boolean
- *  zoomFactor?:number
+ *  zoomLevel?:number
  * }} param0
  */
 exports.create = ({
@@ -87,7 +87,7 @@ exports.create = ({
   titleBarStyle,
   titleBarOverlay,
   frame,
-  zoomFactor,
+  zoomLevel = 0,
 }) => {
   // const windowControlsOverlayEnabled = Platform.isWindows
   // const titleBarOptions = getTitleBarOptions(windowControlsOverlayEnabled)
@@ -115,18 +115,28 @@ exports.create = ({
       ),
       session,
       additionalArguments: ['--lvce-window-kind'],
-      zoomFactor,
     },
     backgroundColor: background,
     show: false,
   })
   const handleReadyToShow = () => {
+    // due to electron bug, zoom level needs to be set here,
+    // cannot be set when creating the browser window
+    browserWindow.webContents.setZoomLevel(zoomLevel)
     browserWindow.show()
   }
   browserWindow.once('ready-to-show', handleReadyToShow)
   return browserWindow
 }
 
+/**
+ *
+ * @param {Electron.BrowserWindow} browserWindow
+ * @param {*} getDelta
+ * @param {*} getMinZoomLevel
+ * @param {*} getMaxZoomLevel
+ * @returns
+ */
 const setZoom = async (
   browserWindow,
   getDelta,
@@ -136,7 +146,7 @@ const setZoom = async (
   const delta = getDelta()
   const minZoomLevel = getMinZoomLevel()
   const maxZoomLevel = getMaxZoomLevel()
-  const currentZoomLevel = browserWindow.webContents.getZoomFactor()
+  const currentZoomLevel = browserWindow.webContents.getZoomLevel()
   const newZoomFactor = Clamp.clamp(
     currentZoomLevel + delta,
     minZoomLevel,
@@ -145,24 +155,24 @@ const setZoom = async (
   if (newZoomFactor === currentZoomLevel) {
     return
   }
-  browserWindow.webContents.setZoomFactor(newZoomFactor)
+  browserWindow.webContents.setZoomLevel(newZoomFactor)
   await Preferences.update('window.zoomLevel', newZoomFactor)
 }
 
 const getMinZoomLevel = () => {
-  return 0.6
+  return -3
 }
 
 const getMaxZoomLevel = () => {
-  return 2
+  return 3
 }
 
 const getZoomInDelta = () => {
-  return 0.5
+  return 0.2
 }
 
 const getZoomOutDelta = () => {
-  return -0.5
+  return -0.2
 }
 
 /**
