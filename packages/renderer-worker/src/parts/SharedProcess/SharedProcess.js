@@ -3,13 +3,13 @@ import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 
 // TODO duplicate code with platform module
 /**
  * @returns {'electron'|'remote'|'web'|'test'}
  */
 const getPlatform = () => {
-  // TODO maybe use import.meta.env.PLATFORM
   // @ts-ignore
   if (typeof PLATFORM !== 'undefined') {
     // @ts-ignore
@@ -18,14 +18,16 @@ const getPlatform = () => {
   if (typeof process !== 'undefined' && process.env.NODE_ENV === 'test') {
     return 'test'
   }
-  if (
-    typeof navigator !== 'undefined' &&
-    typeof navigator.appVersion !== 'undefined' &&
-    navigator.appVersion.includes('Electron')
-  ) {
-    return 'electron'
+  if (typeof location !== 'undefined' && location.search === '?web') {
+    return PlatformType.Web
   }
-  return 'remote'
+  if (
+    typeof location !== 'undefined' &&
+    location.search.includes('platform=electron')
+  ) {
+    return PlatformType.Electron
+  }
+  return PlatformType.Remote
 }
 
 const platform = getPlatform() // TODO tree-shake this out in production
