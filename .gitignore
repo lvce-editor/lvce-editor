@@ -1,7 +1,5 @@
-extensions/builtin.language-basics*
-extensions/builtin.language-features*
-extensions/builtin.prettier
-extensions/builtin.vscode-icons
+extensions
+!extensions/builtin.theme-slime
 
 
 *.tar.br

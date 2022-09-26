@@ -173,5 +173,20 @@
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
     "version": "0.0.2"
+  },
+  {
+    "name": "builtin.theme-monokai",
+    "repository": "github.com/lvce-editor/theme-monokai",
+    "version": "0.0.1"
+  },
+  {
+    "name": "builtin.theme-high-contrast",
+    "repository": "github.com/lvce-editor/theme-high-contrast",
+    "version": "0.0.1"
+  },
+  {
+    "name": "builtin.theme-palenight",
+    "repository": "github.com/lvce-editor/theme-palenight",
+    "version": "0.0.1"
   }
 ]
