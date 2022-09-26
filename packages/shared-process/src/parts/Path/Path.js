@@ -19,3 +19,7 @@ export const dirname = (path) => {
 export const basename = (path) => {
   return NodePath.basename(path)
 }
+
+export const resolve = (path) => {
+  return NodePath.resolve(path)
+}
