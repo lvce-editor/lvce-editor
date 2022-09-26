@@ -188,5 +188,10 @@
     "name": "builtin.theme-palenight",
     "repository": "github.com/lvce-editor/theme-palenight",
     "version": "0.0.2"
+  },
+  {
+    "name": "builtin.theme-ayu",
+    "repository": "github.com/lvce-editor/theme-ayu",
+    "version": "0.0.1"
   }
 ]
