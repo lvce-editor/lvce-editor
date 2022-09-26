@@ -259,7 +259,7 @@ export const getExtensions = async () => {
   return [...builtinExtensions, ...installedExtensions]
 }
 
-const RE_THEME = /[a-z]+\.[a-z\-]*theme-[a-z\d\-]+$/
+const RE_THEME = /theme-[a-z\d\-]+$/
 const isTheme = (extensionId) => {
   return RE_THEME.test(extensionId)
 }
