@@ -54,7 +54,16 @@ const getPathSeparator = (root) => {
   return FileSystem.getPathSeparator(root)
 }
 
-export const loadContent = async (state) => {
+const restoreExpandedState = (savedState, dirents) => {
+  // TODO read all opened folders in parallel
+  // ignore ENOENT errors
+  // ignore ENOTDIR errors
+  // merge all dirents
+  // restore scroll location
+}
+
+export const loadContent = async (state, savedState) => {
+  console.log({ explorer: savedState })
   const root = Workspace.state.workspacePath
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
   const dirents = await getTopLevelDirents(root, pathSeparator)

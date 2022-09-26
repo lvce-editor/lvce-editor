@@ -1,10 +1,10 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Command from '../Command/Command.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as Command from '../Command/Command.js'
+import * as LocalStorage from '../LocalStorage/LocalStorage.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 
 const ViewletState = {
   Default: 0,
@@ -51,13 +51,25 @@ export const create = (
   }
 }
 
+const getInstanceSavedState = (savedState, id) => {
+  if (
+    savedState &&
+    savedState.instances &&
+    savedState.instances[id] &&
+    savedState.instances[id].state
+  ) {
+    return savedState.instances[id].state
+  }
+  return undefined
+}
+
 // TODO add lots of unit tests for this
 /**
  *
  * @param {{getModule:()=>any, type:number, id:string, disposed:boolean }} viewlet
  * @returns
  */
-export const load = async (viewlet, focus = false) => {
+export const load = async (viewlet, focus = false, restore = false) => {
   // console.time(`load/${viewlet.id}`)
   if (viewlet.type !== 0) {
     console.log('viewlet must be empty')
@@ -105,7 +117,12 @@ export const load = async (viewlet, focus = false) => {
 
     const oldVersion =
       viewletState.version === undefined ? undefined : ++viewletState.version
-    let newState = await module.loadContent(viewletState)
+    let instanceSavedState
+    if (restore) {
+      const stateToSave = await LocalStorage.getJson('stateToSave')
+      instanceSavedState = getInstanceSavedState(stateToSave, viewlet.id)
+    }
+    let newState = await module.loadContent(viewletState, instanceSavedState)
     if (focus && module.focus) {
       newState = await module.focus(newState)
     }

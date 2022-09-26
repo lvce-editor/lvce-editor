@@ -28,15 +28,12 @@ export const create = (id, uri, left, top, width, height) => {
   }
 }
 
-const loadContentRemote = (state, uri) => {
+const getSrcRemote = (uri) => {
   const src = `/remote${uri}`
-  return {
-    ...state,
-    src,
-  }
+  return src
 }
 
-const loadContentWithBlobUrl = async (state, uri) => {
+const getSrcWithBlobUrl = async (uri) => {
   const content = await FileSystem.readFile(uri)
   const mimeType = await Command.execute('Mime.getMediaMimeType', uri)
   const blob = await Command.execute(
@@ -45,10 +42,7 @@ const loadContentWithBlobUrl = async (state, uri) => {
     mimeType
   )
   const dataUrl = await Command.execute('Url.createObjectUrl', blob)
-  return {
-    ...state,
-    src: dataUrl,
-  }
+  return dataUrl
 }
 
 const canUseRemoteLoading = (uri) => {
@@ -56,13 +50,22 @@ const canUseRemoteLoading = (uri) => {
   return protocol === ''
 }
 
-// TODO revoke object url when disposed
-export const loadContent = async (state, ...args) => {
-  const { uri } = state
+const getSrc = (uri) => {
   if (canUseRemoteLoading(uri)) {
-    return loadContentRemote(state, uri)
+    return getSrcRemote(uri)
   }
-  return loadContentWithBlobUrl(state, uri)
+  return getSrcWithBlobUrl(uri)
+}
+
+// TODO revoke object url when disposed
+export const loadContent = async (state, savedState) => {
+  console.log({ savedState })
+  const { uri } = state
+  const src = await getSrc(uri)
+  return {
+    ...state,
+    src,
+  }
 }
 
 export const contentLoaded = async (state) => {}

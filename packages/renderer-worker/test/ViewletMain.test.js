@@ -45,14 +45,8 @@ test('create', () => {
 })
 
 test('loadContent - no restored editors', async () => {
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {
-    return {
-      instances: {},
-    }
-  })
   const state = ViewletMain.create()
-  expect(await ViewletMain.loadContent(state)).toEqual({
+  expect(await ViewletMain.loadContent(state, {})).toEqual({
     activeIndex: -1,
     editors: [],
     focusedIndex: -1,
@@ -60,43 +54,22 @@ test('loadContent - no restored editors', async () => {
 })
 
 test('loadContent - one restored editor', async () => {
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {
-    return JSON.stringify({
-      instances: {
-        Main: {
-          state: {
-            editors: [
-              {
-                uri: '/test/some-file.txt',
-              },
-            ],
-          },
-        },
-      },
-    })
-  })
   const state = ViewletMain.create()
-  expect(await ViewletMain.loadContent(state)).toEqual({
+  expect(
+    await ViewletMain.loadContent(state, {
+      editors: [
+        {
+          uri: '/test/some-file.txt',
+        },
+      ],
+    })
+  ).toEqual({
     activeIndex: -1,
     editors: [
       {
         uri: '/test/some-file.txt',
       },
     ],
-    focusedIndex: -1,
-  })
-})
-
-test('loadContent - no restored editors from invalid json', async () => {
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {
-    return '{'
-  })
-  const state = ViewletMain.create()
-  expect(await ViewletMain.loadContent(state)).toEqual({
-    activeIndex: -1,
-    editors: [],
     focusedIndex: -1,
   })
 })
