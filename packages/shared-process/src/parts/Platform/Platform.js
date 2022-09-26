@@ -1,6 +1,6 @@
 import { extensionHostPath } from '@lvce-editor/extension-host'
 import { homedir, tmpdir } from 'node:os'
-import { sep } from 'node:path'
+import { resolve, sep } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
 import * as Path from '../Path/Path.js'
@@ -94,7 +94,6 @@ export const getRecentlyOpenedPath = () => {
 export const getDefaultSettingsPath = () => {
   return Path.join(appDir, 'static', 'config', 'defaultSettings.json')
 }
-
 export const setEnvironmentVariables = (variables) => {
   for (const [key, value] of Object.entries(variables)) {
     process.env[key] = value
@@ -122,7 +121,11 @@ export const getTmpDir = () => {
 }
 
 export const getOnlyExtensionPath = () => {
-  return process.env.ONLY_EXTENSION
+  const onlyExtensionPath = process.env.ONLY_EXTENSION
+  if (onlyExtensionPath) {
+    return resolve(onlyExtensionPath)
+  }
+  return ''
 }
 
 export const getAppDir = () => {
