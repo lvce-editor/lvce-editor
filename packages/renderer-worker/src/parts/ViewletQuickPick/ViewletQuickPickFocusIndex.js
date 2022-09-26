@@ -1,6 +1,5 @@
 export const focusIndex = async (state, index) => {
   const { provider, maxVisibleItems, items, minLineY, maxLineY } = state
-  console.log('focus', index, minLineY, maxLineY)
   // TODO get types working
   // @ts-ignore
   if (provider.focusPick) {
