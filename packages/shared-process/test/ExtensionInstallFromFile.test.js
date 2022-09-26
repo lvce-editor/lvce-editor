@@ -99,11 +99,10 @@ test('install', async () => {
     path: './extension.tar.br',
   })
   expect(Extract.extractTarBr).toHaveBeenCalledTimes(1)
-  expect(Extract.extractTarBr).toHaveBeenCalledWith({
-    inFile: './extension.tar.br',
-    outDir: '/test/cached-extensions/file-extension',
-    strip: 1,
-  })
+  expect(Extract.extractTarBr).toHaveBeenCalledWith(
+    './extension.tar.br',
+    '/test/cached-extensions/file-extension'
+  )
   expect(FileSystem.readFile).toHaveBeenCalledTimes(1)
   expect(FileSystem.readFile).toHaveBeenCalledWith(
     '/test/cached-extensions/file-extension/extension.json'
