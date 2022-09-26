@@ -68,7 +68,6 @@ const getIpcType = (argv) => {
 
 export const listen = async (InternalCommand) => {
   const argv = process.argv.slice(2)
-  console.log({ argv })
   const ipcType = getIpcType(argv)
   const ipc = await Ipc.listen(ipcType)
   const handleMessage = async (message) => {

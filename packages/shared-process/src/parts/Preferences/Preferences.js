@@ -41,7 +41,6 @@ const getOverrides = () => {
   const argvSliced = process.argv.slice(2)
   const overrides = {}
   for (const argv of argvSliced) {
-    console.log({ argv })
     if (argv.startsWith('--theme=')) {
       overrides['workbench.colorTheme'] = argv.slice('--theme='.length)
     }
