@@ -1,8 +1,8 @@
-import * as Platform from '../Platform/Platform.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js'
-import * as Path from '../Path/Path.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as MarkDown from '../Markdown/Markdown.js'
+import * as Path from '../Path/Path.js'
+import * as SanitizeHtml from '../SanitizeHtml/SanitizeHtml.js'
 
 export const name = 'ExtensionDetail'
 
@@ -27,15 +27,12 @@ export const loadContent = async (state) => {
   const extension = await ExtensionManagement.getExtension(id)
   const readmeContent = await loadReadmeContent(extension.path)
   const readmeHtml = MarkDown.toHtml(readmeContent)
-  console.log({ readmeHtml })
-  // const extensionsPath = Platform.getExtensionsPath()
-  // const builtinExtensionsPath = Platform.getBuiltinExtensionsPath()
-
-  console.log({ state })
+  const sanitzedReadmeHtml = await SanitizeHtml.sanitizeHtml(readmeHtml)
+  console.log({ sanitzedReadmeHtml })
   return {
     ...state,
     name: id,
-    readmeHtml,
+    sanitzedReadmeHtml,
   }
 }
 
@@ -57,14 +54,14 @@ const renderName = {
 
 const renderReadme = {
   isEqual(oldState, newState) {
-    return oldState.readmeHtml === newState.readmeHtml
+    return oldState.sanitzedReadmeHtml === newState.sanitzedReadmeHtml
   },
   apply(pldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'ExtensionDetail',
       /* method */ 'setReadmeHtml',
-      /* html */ newState.readmeHtml,
+      /* html */ newState.sanitzedReadmeHtml,
     ]
   },
 }
