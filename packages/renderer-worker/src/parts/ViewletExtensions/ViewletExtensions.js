@@ -73,7 +73,7 @@ export const loadContent = async (state) => {
   const contentHeight = viewObjects.length * ITEM_HEIGHT
   const scrollBarHeight = getScrollBarHeight(state.height, contentHeight)
 
-  console.log({ scrollBarHeight })
+  console.log({ extensions })
   return {
     ...state,
     extensions,

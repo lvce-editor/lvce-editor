@@ -35,6 +35,16 @@ export const getAllExtensions = async () => {
   )
 }
 
+export const getExtension = async (id) => {
+  const allExtensions = await getAllExtensions()
+  for (const extension of allExtensions) {
+    if (extension.id === id) {
+      return extension
+    }
+  }
+  return undefined
+}
+
 const isFulfilled = (result) => {
   return result.status === ExtensionManifestStatus.Resolved
 }
