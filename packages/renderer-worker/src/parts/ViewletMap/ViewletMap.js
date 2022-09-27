@@ -1,14 +1,15 @@
 import * as Path from '../Path/Path.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const mapExtToEditorType = {
-  '.png': 'EditorImage',
-  '.svg': 'EditorImage',
-  '.avif': 'EditorImage',
-  '.gif': 'EditorImage',
-  '.ico': 'EditorImage',
-  '.webp': 'EditorImage',
-  '.jpg': 'EditorImage',
-  '.jpeg': 'EditorImage',
+  '.png': ViewletModuleId.EditorImage,
+  '.svg': ViewletModuleId.EditorImage,
+  '.avif': ViewletModuleId.EditorImage,
+  '.gif': ViewletModuleId.EditorImage,
+  '.ico': ViewletModuleId.EditorImage,
+  '.webp': ViewletModuleId.EditorImage,
+  '.jpg': ViewletModuleId.EditorImage,
+  '.jpeg': ViewletModuleId.EditorImage,
 }
 
 export const getId = (uri) => {
@@ -18,7 +19,10 @@ export const getId = (uri) => {
     return type
   }
   if (uri === 'app://keybindings') {
-    return 'KeyBindings'
+    return ViewletModuleId.KeyBindings
   }
-  return 'EditorText'
+  if (uri.startsWith('extension-detail://')) {
+    return ViewletModuleId.ExtensionDetail
+  }
+  return ViewletModuleId.EditorText
 }
