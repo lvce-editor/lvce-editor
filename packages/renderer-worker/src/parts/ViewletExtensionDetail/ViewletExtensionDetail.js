@@ -23,6 +23,7 @@ const DEFAULT_ICON_SRC = '/icons/extensionDefaultIcon.png'
 const DEFAULT_ICON_LANGUAGE_BASICS = '/icons/language-icon.svg'
 const DEFAULT_ICON_THEME = '/icons/theme-icon.png'
 
+// TODO duplicate code with viewletExtensions
 const getIconSrc = (extension) => {
   if (extension.icon) {
     return extension.icon
@@ -36,6 +37,16 @@ const getIconSrc = (extension) => {
   return DEFAULT_ICON_SRC
 }
 
+const getName = (extension) => {
+  if (extension.name && typeof extension.name === 'string') {
+    return extension.name
+  }
+  if (extension.id && typeof extension.id === 'string') {
+    return extension.id
+  }
+  return '<unknown>'
+}
+
 // TODO when there are multiple extension with the same id,
 // probably need to pass extension location from extensions viewlet
 export const loadContent = async (state) => {
@@ -46,11 +57,12 @@ export const loadContent = async (state) => {
   const readmeHtml = MarkDown.toHtml(readmeContent)
   const sanitzedReadmeHtml = await SanitizeHtml.sanitizeHtml(readmeHtml)
   const iconSrc = getIconSrc(extension)
+  const name = getName(extension)
   return {
     ...state,
-    name: id,
     sanitzedReadmeHtml,
     iconSrc,
+    name,
   }
 }
 
