@@ -5,6 +5,10 @@
 .ExtensionDetailMain {
   width: 80%;
   margin: 0 auto;
+  contain: strict;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .ExtensionDetailHeader {
@@ -14,6 +18,7 @@
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 1rem;
+  flex-shrink: 0;
   /* place-items: center; */
 }
 

@@ -3,12 +3,14 @@ export const name = 'ExtensionDetail'
 export const create = () => {
   const $NameText = document.createTextNode('')
 
-  const $Name = document.createElement('div')
+  const $Name = document.createElement('h3')
   $Name.className = 'ExtensionDetailName'
   $Name.append($NameText)
 
-  const $ReadmeHtml = document.createElement('h3')
+  const $ReadmeHtml = document.createElement('div')
   $ReadmeHtml.className = 'Markdown'
+  // @ts-ignore
+  $ReadmeHtml.role = 'document'
 
   const $ExtensionDetailIcon = document.createElement('img')
   $ExtensionDetailIcon.className = 'ExtensionDetailIcon'
