@@ -107,7 +107,9 @@ const createDirents = (
   for (let i = 0; i < expandedDirentPaths.length; i++) {
     const path = expandedDirentPaths[i]
     const children = expandedDirentChildren[i]
-    map[path] = children
+    if (children.status === 'fulfilled') {
+      map[path] = children.value
+    }
   }
   const rootChildrenLength = rootChildren.length
   for (let i = 0; i < rootChildrenLength; i++) {
@@ -149,13 +151,18 @@ const restoreExpandedState = async (savedState, root, pathSeparator) => {
   if (!savedState || !savedState.dirents) {
     return await getTopLevelDirents(root, pathSeparator)
   }
+  console.log('filter them')
   const expandedDirents = savedState.dirents.filter(isExpandedDirectory)
+  console.log('map them')
   const expandedDirentPaths = expandedDirents.map(getPath)
-  const expandedDirentChildren = await Promise.all(
+  console.log('read them')
+  console.log({ expandedDirentPaths })
+  const expandedDirentChildren = await Promise.allSettled(
     expandedDirentPaths.map(FileSystem.readDirWithFileTypes)
   )
+  console.log({ expandedDirentChildren })
   const savedRoot = savedState.root
-  const rootChildren = FileSystem.readDirWithFileTypes(savedRoot)
+  const rootChildren = await FileSystem.readDirWithFileTypes(savedRoot)
   const dirents = createDirents(
     savedRoot,
     rootChildren,
@@ -163,6 +170,10 @@ const restoreExpandedState = async (savedState, root, pathSeparator) => {
     expandedDirentChildren
   )
   console.log({
+    savedRoot,
+    rootChildren,
+    expandedDirentPaths,
+    expandedDirentChildren,
     dirents,
   })
   // console.l/og({ expandedDirents })

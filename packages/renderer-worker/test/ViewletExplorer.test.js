@@ -84,6 +84,13 @@ const ViewletManager = await import(
 const Command = await import('../src/parts/Command/Command.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
+class NodeError extends Error {
+  constructor(code) {
+    super(code)
+    this.code = code
+  }
+}
+
 const render = (oldState, newState) => {
   return ViewletManager.render(ViewletExplorer, oldState, newState)
 }
@@ -244,6 +251,169 @@ test('loadContent - restore from saved state', async () => {
         posInSet: 2,
         setSize: 2,
         type: DirentType.File,
+      },
+    ],
+  })
+})
+
+test('loadContent - restore from saved state - no saved state exists', async () => {
+  const state = ViewletExplorer.create()
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test':
+        return [
+          {
+            name: 'a',
+            type: DirentType.Directory,
+          },
+          {
+            name: 'b.txt',
+            type: DirentType.File,
+          },
+        ]
+      default:
+        throw new Error('file not found')
+    }
+  })
+
+  const savedState = undefined
+  expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 2,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'b.txt',
+        path: '/test/b.txt',
+        posInSet: 2,
+        setSize: 2,
+        type: DirentType.File,
+      },
+    ],
+  })
+})
+
+test('loadContent - restore from saved state - error - ENOENT for child folder', async () => {
+  const state = ViewletExplorer.create()
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation(async (uri) => {
+    switch (uri) {
+      case '/test':
+        return [
+          {
+            name: 'a',
+            type: DirentType.Directory,
+          },
+          {
+            name: 'b',
+            type: DirentType.Directory,
+          },
+        ]
+      case '/test/a':
+        return [
+          {
+            name: 'c',
+            type: DirentType.Directory,
+          },
+        ]
+      case '/test/b':
+        return [
+          {
+            name: 'd',
+            type: DirentType.Directory,
+          },
+        ]
+      case '/test/a/c':
+        throw new NodeError('ENOENT')
+      case '/test/b/d':
+        return [
+          {
+            name: 'f',
+            type: DirentType.Directory,
+          },
+        ]
+      default:
+        console.log({ uri })
+        throw new Error('file not found')
+    }
+  })
+
+  const savedState = {
+    root: '/test',
+    dirents: [
+      {
+        path: '/test/a',
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        path: '/test/c',
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        path: '/test/b',
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        path: '/test/b/d',
+        type: DirentType.DirectoryExpanded,
+      },
+    ],
+  }
+  expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 2,
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'c',
+        path: '/test/a/c',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'b',
+        path: '/test/b',
+        posInSet: 2,
+        setSize: 2,
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'd',
+        path: '/test/b/d',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 3,
+        icon: '',
+        name: 'f',
+        path: '/test/b/d/f',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.Directory,
       },
     ],
   })
