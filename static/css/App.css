@@ -46,6 +46,7 @@
 @import './parts/Label.css';
 @import './parts/ViewletEditorFindWidget.css';
 @import './parts/ViewletExtensionDetail.css';
+@import './parts/Markdown.css';
 
 /* focus css (can be overridden by components) */
 @import './parts/Focus.css';

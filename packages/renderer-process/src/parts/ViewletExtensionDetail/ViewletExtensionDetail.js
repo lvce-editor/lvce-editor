@@ -7,7 +7,7 @@ export const create = () => {
   $Name.append($NameText)
 
   const $ReadmeHtml = document.createElement('div')
-  $ReadmeHtml.className = 'ReadmeHtml'
+  $ReadmeHtml.className = 'Markdown'
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet'
