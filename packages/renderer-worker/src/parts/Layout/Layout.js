@@ -239,6 +239,7 @@ const hide = async (key, id) => {
     ...state,
     [key]: false,
   })
+  await Command.execute('SaveState.handleVisibilityChange', 'hidden')
   await Viewlet.dispose(id)
 }
 
