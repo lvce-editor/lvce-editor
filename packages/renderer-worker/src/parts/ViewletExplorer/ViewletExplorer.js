@@ -96,12 +96,7 @@ const getSavedChildDirents = (map, path, depth) => {
   return dirents
 }
 
-const createDirents = (
-  root,
-  rootChildren,
-  expandedDirentPaths,
-  expandedDirentChildren
-) => {
+const createDirents = (root, expandedDirentPaths, expandedDirentChildren) => {
   const dirents = []
   const map = Object.create(null)
   for (let i = 0; i < expandedDirentPaths.length; i++) {
@@ -111,34 +106,7 @@ const createDirents = (
       map[path] = children.value
     }
   }
-  const rootChildrenLength = rootChildren.length
-  for (let i = 0; i < rootChildrenLength; i++) {
-    const rootChild = rootChildren[i]
-    const { name, type } = rootChild
-    const rootChildPath = root + '/' + name
-    if (type === DirentType.Directory && rootChildPath in map) {
-      dirents.push({
-        path: rootChildPath,
-        depth: 1,
-        setSize: rootChildrenLength,
-        posInSet: i + 1,
-        icon: '',
-        name: rootChild.name,
-        type: DirentType.DirectoryExpanded,
-      })
-      dirents.push(...getSavedChildDirents(map, rootChildPath, 2))
-    } else {
-      dirents.push({
-        path: rootChildPath,
-        depth: 1,
-        setSize: rootChildrenLength,
-        posInSet: i + 1,
-        icon: '',
-        name: rootChild.name,
-        type,
-      })
-    }
-  }
+  dirents.push(...getSavedChildDirents(map, root, 1))
   return dirents
 }
 
@@ -151,40 +119,24 @@ const restoreExpandedState = async (savedState, root, pathSeparator) => {
   if (!savedState || !savedState.dirents) {
     return await getTopLevelDirents(root, pathSeparator)
   }
-  console.log('filter them')
   const expandedDirents = savedState.dirents.filter(isExpandedDirectory)
-  console.log('map them')
-  const expandedDirentPaths = expandedDirents.map(getPath)
-  console.log('read them')
-  console.log({ expandedDirentPaths })
+  const expandedDirentPaths = [root, ...expandedDirents.map(getPath)]
   const expandedDirentChildren = await Promise.allSettled(
     expandedDirentPaths.map(FileSystem.readDirWithFileTypes)
   )
-  console.log({ expandedDirentChildren })
   const savedRoot = savedState.root
-  const rootChildren = await FileSystem.readDirWithFileTypes(savedRoot)
   const dirents = createDirents(
     savedRoot,
-    rootChildren,
     expandedDirentPaths,
     expandedDirentChildren
   )
-  console.log({
-    savedRoot,
-    rootChildren,
-    expandedDirentPaths,
-    expandedDirentChildren,
-    dirents,
-  })
-  // console.l/og({ expandedDirents })
   return dirents
 }
 
 export const loadContent = async (state, savedState) => {
-  console.log({ explorer: savedState })
   const root = Workspace.state.workspacePath
+  // TODO path separator could be restored from saved state
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
-  // const dirents = await getTopLevelDirents(root, pathSeparator)
   const restoredDirents = await restoreExpandedState(
     savedState,
     root,
