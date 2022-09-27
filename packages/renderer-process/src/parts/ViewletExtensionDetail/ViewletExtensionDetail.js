@@ -30,6 +30,7 @@ export const create = () => {
     $Name,
     $NameText,
     $ReadmeHtml,
+    $ExtensionDetailIcon,
   }
 }
 
@@ -38,8 +39,13 @@ export const setName = (state, name) => {
   $NameText.nodeValue = name
 }
 
-// TODO sanitize html
-export const setReadmeHtml = (state, html) => {
+export const setReadmeHtml = (state, sanitizedHtml) => {
   const { $ReadmeHtml } = state
-  $ReadmeHtml.innerHTML = html
+  $ReadmeHtml.innerHTML = sanitizedHtml
+}
+
+export const setIconSrc = (state, src) => {
+  const { $ExtensionDetailIcon } = state
+  // TODO handle error and load fallback icon
+  $ExtensionDetailIcon.src = src
 }
