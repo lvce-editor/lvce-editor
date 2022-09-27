@@ -17,6 +17,7 @@ import {
   getParentStartIndex,
   getTopLevelDirents,
 } from './ViewletExplorerShared.js'
+import * as PromiseStatus from '../PromiseStatus/PromiseStatus.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -103,7 +104,7 @@ const createDirents = (root, expandedDirentPaths, expandedDirentChildren) => {
   for (let i = 0; i < expandedDirentPaths.length; i++) {
     const path = expandedDirentPaths[i]
     const children = expandedDirentChildren[i]
-    if (children.status === 'fulfilled') {
+    if (children.status === PromiseStatus.Fulfilled) {
       map[path] = children.value
     }
   }
@@ -125,7 +126,6 @@ const restoreExpandedState = async (savedState, root, pathSeparator) => {
   const expandedDirentChildren = await Promise.allSettled(
     expandedDirentPaths.map(FileSystem.readDirWithFileTypes)
   )
-  console.log({ expandedDirentChildren })
   const savedRoot = savedState.root
   const dirents = createDirents(
     savedRoot,
