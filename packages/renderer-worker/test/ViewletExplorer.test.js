@@ -197,6 +197,7 @@ test.only('loadContent - restore from saved state', async () => {
   })
 
   const savedState = {
+    root: '/test',
     dirents: [
       {
         path: '/test/a',

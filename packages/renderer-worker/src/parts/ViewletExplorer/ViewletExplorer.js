@@ -4,6 +4,7 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
@@ -15,9 +16,7 @@ import {
   getParentEndIndex,
   getParentStartIndex,
   getTopLevelDirents,
-  mergeDirents,
 } from './ViewletExplorerShared.js'
-import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -62,7 +61,86 @@ const getPath = (dirent) => {
   return dirent.path
 }
 
-const restoreExpandedState = async (savedState, dirents) => {
+const getSavedChildDirents = (map, path, depth) => {
+  const children = map[path]
+  const dirents = []
+  const childrenLength = children.length
+  for (let i = 0; i < childrenLength; i++) {
+    const child = children[i]
+    const { name, type } = child
+    const childPath = path + '/' + name
+
+    if (child.type === DirentType.Directory && childPath in map) {
+      dirents.push({
+        depth,
+        posInSet: i + 1,
+        setSize: childrenLength,
+        icon: '',
+        name,
+        path: childPath,
+        type: DirentType.DirectoryExpanded,
+      })
+      dirents.push(...getSavedChildDirents(map, childPath, depth + 1))
+    } else {
+      dirents.push({
+        depth,
+        posInSet: i + 1,
+        setSize: childrenLength,
+        icon: '',
+        name,
+        path: childPath,
+        type,
+      })
+    }
+  }
+  return dirents
+}
+
+const createDirents = (
+  root,
+  rootChildren,
+  expandedDirentPaths,
+  expandedDirentChildren
+) => {
+  const dirents = []
+  const map = Object.create(null)
+  for (let i = 0; i < expandedDirentPaths.length; i++) {
+    const path = expandedDirentPaths[i]
+    const children = expandedDirentChildren[i]
+    map[path] = children
+  }
+  const rootChildrenLength = rootChildren.length
+  for (let i = 0; i < rootChildrenLength; i++) {
+    const rootChild = rootChildren[i]
+    const { name, type } = rootChild
+    const rootChildPath = root + '/' + name
+    if (type === DirentType.Directory && rootChildPath in map) {
+      dirents.push({
+        path: rootChildPath,
+        depth: 1,
+        setSize: rootChildrenLength,
+        posInSet: i + 1,
+        icon: '',
+        name: rootChild.name,
+        type: DirentType.DirectoryExpanded,
+      })
+      dirents.push(...getSavedChildDirents(map, rootChildPath, 2))
+    } else {
+      dirents.push({
+        path: rootChildPath,
+        depth: 1,
+        setSize: rootChildrenLength,
+        posInSet: i + 1,
+        icon: '',
+        name: rootChild.name,
+        type,
+      })
+    }
+  }
+  return dirents
+}
+
+const restoreExpandedState = async (savedState) => {
   // TODO read all opened folders in parallel
   // ignore ENOENT errors
   // ignore ENOTDIR errors
@@ -76,21 +154,32 @@ const restoreExpandedState = async (savedState, dirents) => {
   const expandedDirentChildren = await Promise.all(
     expandedDirentPaths.map(FileSystem.readDirWithFileTypes)
   )
-  console.log({ expandedDirentChildren: expandedDirentChildren[0] })
-  console.log({ expandedDirents })
+  const savedRoot = savedState.root
+  const rootChildren = FileSystem.readDirWithFileTypes(savedRoot)
+  const dirents = createDirents(
+    savedRoot,
+    rootChildren,
+    expandedDirentPaths,
+    expandedDirentChildren
+  )
+  console.log({
+    dirents,
+  })
+  // console.l/og({ expandedDirents })
+  return dirents
 }
 
 export const loadContent = async (state, savedState) => {
   console.log({ explorer: savedState })
   const root = Workspace.state.workspacePath
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
-  const dirents = await getTopLevelDirents(root, pathSeparator)
-  const restoredDirents = restoreExpandedState(savedState)
+  // const dirents = await getTopLevelDirents(root, pathSeparator)
+  const restoredDirents = await restoreExpandedState(savedState)
   const { itemHeight, height } = state
   return {
     ...state,
     root,
-    dirents,
+    dirents: restoredDirents,
     maxLineY: Math.round(height / itemHeight),
     pathSeparator,
   }
