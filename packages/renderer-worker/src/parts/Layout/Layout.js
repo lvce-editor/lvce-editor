@@ -5,7 +5,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-
+import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 // TODO where to force rendering of contents (need to call sidebar.openViewlet somewhere)
 
 export const state = {
@@ -231,7 +231,7 @@ const show = async (key, id) => {
     dimensions.width,
     dimensions.height
   )
-  return ViewletManager.load(instance)
+  return ViewletManager.load(instance, /* focus */ false, /* restore */ true)
 }
 
 const hide = async (key, id) => {
@@ -239,6 +239,7 @@ const hide = async (key, id) => {
     ...state,
     [key]: false,
   })
+  await Command.execute('SaveState.handleVisibilityChange', 'hidden')
   await Viewlet.dispose(id)
 }
 

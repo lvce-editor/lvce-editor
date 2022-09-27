@@ -4,6 +4,7 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
@@ -15,9 +16,7 @@ import {
   getParentEndIndex,
   getParentStartIndex,
   getTopLevelDirents,
-  mergeDirents,
 } from './ViewletExplorerShared.js'
-import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -54,15 +53,102 @@ const getPathSeparator = (root) => {
   return FileSystem.getPathSeparator(root)
 }
 
-export const loadContent = async (state) => {
+const isExpandedDirectory = (dirent) => {
+  return dirent.type === DirentType.DirectoryExpanded
+}
+
+const getPath = (dirent) => {
+  return dirent.path
+}
+
+const getSavedChildDirents = (map, path, depth) => {
+  const children = map[path]
+  const dirents = []
+  children.sort(compareDirent)
+  const childrenLength = children.length
+  for (let i = 0; i < childrenLength; i++) {
+    const child = children[i]
+    const { name, type } = child
+    const childPath = path + '/' + name
+
+    if (child.type === DirentType.Directory && childPath in map) {
+      dirents.push({
+        depth,
+        posInSet: i + 1,
+        setSize: childrenLength,
+        icon: IconTheme.getFolderIcon({ name }),
+        name,
+        path: childPath,
+        type: DirentType.DirectoryExpanded,
+      })
+      dirents.push(...getSavedChildDirents(map, childPath, depth + 1))
+    } else {
+      dirents.push({
+        depth,
+        posInSet: i + 1,
+        setSize: childrenLength,
+        icon: IconTheme.getIcon({ type, name }),
+        name,
+        path: childPath,
+        type,
+      })
+    }
+  }
+  return dirents
+}
+
+const createDirents = (root, expandedDirentPaths, expandedDirentChildren) => {
+  const dirents = []
+  const map = Object.create(null)
+  for (let i = 0; i < expandedDirentPaths.length; i++) {
+    const path = expandedDirentPaths[i]
+    const children = expandedDirentChildren[i]
+    if (children.status === 'fulfilled') {
+      map[path] = children.value
+    }
+  }
+  dirents.push(...getSavedChildDirents(map, root, 1))
+  return dirents
+}
+
+const restoreExpandedState = async (savedState, root, pathSeparator) => {
+  // TODO read all opened folders in parallel
+  // ignore ENOENT errors
+  // ignore ENOTDIR errors
+  // merge all dirents
+  // restore scroll location
+  if (!savedState || !savedState.dirents) {
+    return await getTopLevelDirents(root, pathSeparator)
+  }
+  const expandedDirents = savedState.dirents.filter(isExpandedDirectory)
+  const expandedDirentPaths = [root, ...expandedDirents.map(getPath)]
+  const expandedDirentChildren = await Promise.allSettled(
+    expandedDirentPaths.map(FileSystem.readDirWithFileTypes)
+  )
+  console.log({ expandedDirentChildren })
+  const savedRoot = savedState.root
+  const dirents = createDirents(
+    savedRoot,
+    expandedDirentPaths,
+    expandedDirentChildren
+  )
+  return dirents
+}
+
+export const loadContent = async (state, savedState) => {
   const root = Workspace.state.workspacePath
+  // TODO path separator could be restored from saved state
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
-  const dirents = await getTopLevelDirents(root, pathSeparator)
+  const restoredDirents = await restoreExpandedState(
+    savedState,
+    root,
+    pathSeparator
+  )
   const { itemHeight, height } = state
   return {
     ...state,
     root,
-    dirents,
+    dirents: restoredDirents,
     maxLineY: Math.round(height / itemHeight),
     pathSeparator,
   }

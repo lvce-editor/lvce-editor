@@ -1,7 +1,9 @@
+import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
-import * as Languages from '../Languages/Languages.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
@@ -10,9 +12,6 @@ import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as Arrays from '../Arrays/Arrays.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -50,17 +49,11 @@ const canBeRestored = (editor) => {
 }
 
 const getMainEditors = (state) => {
-  if (
-    !state ||
-    !state.instances ||
-    !state.instances.Main ||
-    !state.instances.Main.state ||
-    !state.instances.Main.state.editors
-  ) {
-    return []
+  if (state && state.editors) {
+    // TODO check that type is string (else runtime error occurs and page is blank)
+    return state.editors.filter(canBeRestored).slice(-1)
   }
-  // TODO check that type is string (else runtime error occurs and page is blank)
-  return state.instances.Main.state.editors.filter(canBeRestored).slice(-1)
+  return []
 }
 
 const restoreEditors = async (state) => {
@@ -164,22 +157,18 @@ const findEditorWithUri = (editors, uri) => {
 
 const TAB_HEIGHT = 35
 
-const getRestoredEditors = async () => {
+const getRestoredEditors = async (savedState) => {
   if (Workspace.isTest()) {
     return []
   }
-  const savedState = await Command.execute(
-    /* LocalStorage.getJson */ 'LocalStorage.getJson',
-    /* key */ 'stateToSave'
-  )
   const restoredEditors = getMainEditors(savedState)
   return restoredEditors
 }
 
-export const loadContent = async (state) => {
-  const editors = await getRestoredEditors()
+export const loadContent = async (state, savedState) => {
+  // TODO get restored editors from saved state
+  const editors = await getRestoredEditors(savedState)
   // @ts-ignore
-
   LifeCycle.once(LifeCycle.PHASE_TWELVE, hydrateLazy)
   return {
     ...state,

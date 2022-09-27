@@ -7,6 +7,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 
 export const create = (id, uri, left, top, width, height) => {
   return {
@@ -18,17 +19,33 @@ export const create = (id, uri, left, top, width, height) => {
   }
 }
 
-export const loadContent = async (state) => {
-  const currentViewletId = await getSideBarViewlet()
+const getSavedViewletId = (savedState) => {
+  if (savedState && savedState.currentViewletId) {
+    return savedState.currentViewletId
+  }
+  return 'Explorer'
+}
+
+export const loadContent = async (state, savedState) => {
+  const savedViewletId = getSavedViewletId(savedState)
   return {
     ...state,
-    currentViewletId,
+    currentViewletId: savedViewletId,
   }
 }
 
 export const loadContentEffects = () => {
   LifeCycle.once(LifeCycle.PHASE_TWELVE, hydrateLazy)
   GlobalEventBus.addListener('Layout.hideSideBar', handleSideBarClose)
+}
+
+// TODO
+export const loadChildren = () => {
+  return [
+    {
+      id: 'Explorer',
+    },
+  ]
 }
 
 export const contentLoaded = async (state) => {
@@ -126,7 +143,7 @@ export const openViewlet = async (state, id, focus = false) => {
   // await Viewlet.refresh(id)
   // TODO add keybinding to title
   // @ts-ignore
-  await ViewletManager.load(viewlet, focus)
+  await ViewletManager.load(viewlet, focus, /* restore */ true)
 }
 
 const handleSideBarClose = (state) => {

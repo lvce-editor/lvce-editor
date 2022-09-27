@@ -53,9 +53,9 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
     readDirWithFileTypes: jest.fn(() => {
       throw new Error('not implemented')
     }),
-    getPathSeparator: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
+    getPathSeparator: () => {
+      return '/'
+    },
     getRealPath: jest.fn(() => {
       throw new Error('not implemented')
     }),
@@ -83,6 +83,13 @@ const ViewletManager = await import(
 )
 const Command = await import('../src/parts/Command/Command.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
+
+class NodeError extends Error {
+  constructor(code) {
+    super(code)
+    this.code = code
+  }
+}
 
 const render = (oldState, newState) => {
   return ViewletManager.render(ViewletExplorer, oldState, newState)
@@ -119,10 +126,6 @@ test('loadContent', async () => {
         type: DirentType.File,
       },
     ]
-  })
-  // @ts-ignore
-  FileSystem.getPathSeparator.mockImplementation(() => {
-    return '/'
   })
   expect(await ViewletExplorer.loadContent(state)).toEqual({
     deltaY: 0,
@@ -169,6 +172,337 @@ test('loadContent', async () => {
     top: undefined,
     pathSeparator: PathSeparatorType.Slash,
     editingIndex: -1,
+  })
+})
+
+// TODO handle ENOENT error
+// TODO handle ENOTDIR error
+
+test('loadContent - restore from saved state', async () => {
+  const state = ViewletExplorer.create()
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test':
+        return [
+          {
+            name: 'a',
+            type: DirentType.Directory,
+          },
+          {
+            name: 'b.txt',
+            type: DirentType.File,
+          },
+        ]
+      case '/test/a':
+        return [
+          {
+            name: 'c',
+            type: DirentType.Directory,
+          },
+        ]
+      default:
+        throw new Error('file not found')
+    }
+  })
+
+  const savedState = {
+    root: '/test',
+    dirents: [
+      {
+        path: '/test/a',
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        path: '/test/a/c',
+        type: DirentType.Directory,
+      },
+      {
+        path: '/test/b.txt',
+        type: DirentType.File,
+      },
+    ],
+  }
+  expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 2,
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'c',
+        path: '/test/a/c',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'b.txt',
+        path: '/test/b.txt',
+        posInSet: 2,
+        setSize: 2,
+        type: DirentType.File,
+      },
+    ],
+  })
+})
+
+test('loadContent - restore from saved state - sort dirents', async () => {
+  const state = ViewletExplorer.create()
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test':
+        return [
+          {
+            name: 'b',
+            type: DirentType.Directory,
+          },
+          {
+            name: 'a',
+            type: DirentType.Directory,
+          },
+        ]
+      case '/test/a':
+        return [
+          {
+            name: 'd',
+            type: DirentType.Directory,
+          },
+          {
+            name: 'c',
+            type: DirentType.Directory,
+          },
+        ]
+      default:
+        throw new Error('file not found')
+    }
+  })
+
+  const savedState = {
+    root: '/test',
+    dirents: [
+      {
+        path: '/test/b',
+        type: DirentType.Directory,
+      },
+      {
+        path: '/test/a',
+        type: DirentType.DirectoryExpanded,
+      },
+    ],
+  }
+  expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 2,
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'c',
+        path: '/test/a/c',
+        posInSet: 1,
+        setSize: 2,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'd',
+        path: '/test/a/d',
+        posInSet: 2,
+        setSize: 2,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'b',
+        path: '/test/b',
+        posInSet: 2,
+        setSize: 2,
+        type: DirentType.Directory,
+      },
+    ],
+  })
+})
+
+test('loadContent - restore from saved state - no saved state exists', async () => {
+  const state = ViewletExplorer.create()
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test':
+        return [
+          {
+            name: 'a',
+            type: DirentType.Directory,
+          },
+          {
+            name: 'b.txt',
+            type: DirentType.File,
+          },
+        ]
+      default:
+        throw new Error('file not found')
+    }
+  })
+
+  const savedState = undefined
+  expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 2,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'b.txt',
+        path: '/test/b.txt',
+        posInSet: 2,
+        setSize: 2,
+        type: DirentType.File,
+      },
+    ],
+  })
+})
+
+test('loadContent - restore from saved state - error - ENOENT for child folder', async () => {
+  const state = ViewletExplorer.create()
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation(async (uri) => {
+    switch (uri) {
+      case '/test':
+        return [
+          {
+            name: 'a',
+            type: DirentType.Directory,
+          },
+          {
+            name: 'b',
+            type: DirentType.Directory,
+          },
+        ]
+      case '/test/a':
+        return [
+          {
+            name: 'c',
+            type: DirentType.Directory,
+          },
+        ]
+      case '/test/b':
+        return [
+          {
+            name: 'd',
+            type: DirentType.Directory,
+          },
+        ]
+      case '/test/a/c':
+        throw new NodeError('ENOENT')
+      case '/test/b/d':
+        return [
+          {
+            name: 'f',
+            type: DirentType.Directory,
+          },
+        ]
+      default:
+        console.log({ uri })
+        throw new Error('file not found')
+    }
+  })
+
+  const savedState = {
+    root: '/test',
+    dirents: [
+      {
+        path: '/test/a',
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        path: '/test/c',
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        path: '/test/b',
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        path: '/test/b/d',
+        type: DirentType.DirectoryExpanded,
+      },
+    ],
+  }
+  expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 2,
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'c',
+        path: '/test/a/c',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'b',
+        path: '/test/b',
+        posInSet: 2,
+        setSize: 2,
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'd',
+        path: '/test/b/d',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 3,
+        icon: '',
+        name: 'f',
+        path: '/test/b/d/f',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.Directory,
+      },
+    ],
   })
 })
 
@@ -326,10 +660,7 @@ test('loadContent - error - typeError', async () => {
   Workspace.state.workspacePath = '/test'
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  // @ts-ignore
-  FileSystem.getPathSeparator.mockImplementation(() => {
-    return '/'
-  })
+
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     throw new TypeError('x is not a function')
@@ -348,10 +679,7 @@ test('loadContent - error - syntaxError', async () => {
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     throw new SyntaxError('unexpected token x')
   })
-  // @ts-ignore
-  FileSystem.getPathSeparator.mockImplementation(() => {
-    return '/'
-  })
+
   await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(
     new SyntaxError('unexpected token x')
   )
@@ -365,10 +693,7 @@ test('loadContent - error - command not found', async () => {
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     throw new Error('command -1 not found')
   })
-  // @ts-ignore
-  FileSystem.getPathSeparator.mockImplementation(() => {
-    return '/'
-  })
+
   await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(
     new Error('command -1 not found')
   )
@@ -3834,10 +4159,7 @@ test('event - workspace change', async () => {
       },
     ]
   })
-  // @ts-ignore
-  FileSystem.getPathSeparator.mockImplementation(() => {
-    return '/'
-  })
+
   Workspace.state.workspacePath = '/test'
   const newState = await ViewletExplorer.handleWorkspaceChange(state)
   expect(newState).toMatchObject({

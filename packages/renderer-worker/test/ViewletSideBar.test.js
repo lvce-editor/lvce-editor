@@ -70,3 +70,13 @@ test('resize', () => {
     width: 200,
   })
 })
+
+test('loadContent - get viewlet id from savedState', async () => {
+  const state = ViewletSideBar.create()
+  const newState = await ViewletSideBar.loadContent(state, {
+    currentViewletId: 'Test',
+  })
+  expect(newState).toMatchObject({
+    currentViewletId: 'Test',
+  })
+})
