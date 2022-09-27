@@ -168,7 +168,10 @@ test('loadContent', async () => {
   })
 })
 
-test.only('loadContent - restore from saved state', async () => {
+// TODO handle ENOENT error
+// TODO handle ENOTDIR error
+
+test('loadContent - restore from saved state', async () => {
   const state = ViewletExplorer.create()
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation((uri) => {

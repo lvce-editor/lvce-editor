@@ -140,14 +140,14 @@ const createDirents = (
   return dirents
 }
 
-const restoreExpandedState = async (savedState) => {
+const restoreExpandedState = async (savedState, root, pathSeparator) => {
   // TODO read all opened folders in parallel
   // ignore ENOENT errors
   // ignore ENOTDIR errors
   // merge all dirents
   // restore scroll location
   if (!savedState || !savedState.dirents) {
-    return []
+    return await getTopLevelDirents(root, pathSeparator)
   }
   const expandedDirents = savedState.dirents.filter(isExpandedDirectory)
   const expandedDirentPaths = expandedDirents.map(getPath)
@@ -174,7 +174,11 @@ export const loadContent = async (state, savedState) => {
   const root = Workspace.state.workspacePath
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
   // const dirents = await getTopLevelDirents(root, pathSeparator)
-  const restoredDirents = await restoreExpandedState(savedState)
+  const restoredDirents = await restoreExpandedState(
+    savedState,
+    root,
+    pathSeparator
+  )
   const { itemHeight, height } = state
   return {
     ...state,
