@@ -1,7 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as DefaultIcon from '../DefaultIcon/DefaultIcon.js'
 import * as DirentType from '../DirentType/DirentType.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -9,6 +8,8 @@ import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const state = {
   seenFiles: [],
@@ -160,17 +161,22 @@ export const hydrate = async () => {
     const iconTheme = await getIconThemeJson(iconThemeId)
     state.iconTheme = iconTheme.json
     state.extensionPath = iconTheme.extensionPath
-
     const iconThemeCss = getIconThemeCss2(iconTheme)
+
+    const instances = ViewletStates.getAllInstances()
+    // TODO have one recalculate style and one paint
+    for (const [key, value] of Object.entries(instances)) {
+      const { factory, state } = value
+      if (factory.handleIconThemeChange) {
+        const newState = factory.handleIconThemeChange(state)
+        await Viewlet.setState(factory.name, newState)
+      }
+    }
     await RendererProcess.invoke(
       /* Css.setInlineStyle */ 'Css.setInlineStyle',
       /* id */ 'ContributedIconTheme',
       /* css */ iconThemeCss
     )
-
-    await GlobalEventBus.emitEvent('iconTheme.change')
-    // GlobalEventBus.addListener('dirents.update', handleDirentsUpdate)
-    // GlobalEventBus.addListener('languages.changed', handleLanguagesUpdate)
   } catch (error) {
     console.error(new VError(error, `Failed to load icon theme`))
   }
