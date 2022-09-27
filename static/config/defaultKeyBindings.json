@@ -627,7 +627,8 @@
   },
   {
     "key": "ctrl+shift+r",
-    "command": "file.openRecent"
+    "command": "Viewlet.openWidget",
+    "args": ["QuickPick", "recent"]
   },
   {
     "key": "ArrowDown",
