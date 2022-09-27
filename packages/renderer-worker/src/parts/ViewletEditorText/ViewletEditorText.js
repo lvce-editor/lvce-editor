@@ -3,7 +3,6 @@ import * as Editor from '../Editor/Editor.js'
 import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
 // import * as ExtensionHostTextDocument from '../ExtensionHost/ExtensionHostTextDocument.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -109,9 +108,9 @@ const handleEditorChange = async (editor, changes) => {
 export const contentLoadedEffects = async (state) => {
   // TODO dispose listener
   // TODO don't like side effect here, where to put it?
-  GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
-  GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
-  GlobalEventBus.addListener('editor.change', handleEditorChange)
+  // GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
+  // GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
+  // GlobalEventBus.addListener('editor.change', handleEditorChange)
   const fileName = Workspace.pathBaseName(state.uri)
   const newLanguageId = Languages.getLanguageId(fileName)
   await Command.execute(
@@ -121,17 +120,10 @@ export const contentLoadedEffects = async (state) => {
   // await ExtensionHostTextDocument.handleEditorCreate(state)
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(state)
-  GlobalEventBus.emitEvent('editor.create', state)
+  // GlobalEventBus.emitEvent('editor.create', state)
 }
 
-const handleLanguagesChanged = async () => {
-  const instances = ViewletStates.getAllInstances()
-  const instance = instances.EditorText
-  if (!instance) {
-    console.log('no text editor')
-    return
-  }
-  const state = instance.state
+export const handleLanguagesChanged = async (state) => {
   const fileName = Workspace.pathBaseName(state.uri)
   const newLanguageId = Languages.getLanguageId(fileName)
   state.languageId = newLanguageId
@@ -146,11 +138,6 @@ const handleLanguagesChanged = async () => {
     /* Editor.setLanguageId */ 'Editor.setLanguageId',
     /* languageId */ newLanguageId
   )
-
-  const newEditor = instances.EditorText.state
-
-  GlobalEventBus.emitEvent('editor.languageChange', newEditor, newLanguageId)
-  // console.log({ state })
 }
 
 export const resize = (state, dimensions) => {

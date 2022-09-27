@@ -4,6 +4,8 @@ import * as Assert from '../Assert/Assert.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as ExtensionHostLanguages from '../ExtensionHost/ExtensionHostLanguages.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const state = {
   loadState: false,
@@ -182,7 +184,14 @@ export const addLanguages = async (languages) => {
   for (const language of languages) {
     addLanguage(language)
   }
-  await GlobalEventBus.emitEvent('languages.changed')
+  const instances = ViewletStates.getAllInstances()
+  for (const [key, value] of Object.entries(instances)) {
+    const { state, factory } = value
+    if (factory.handleLanguageChange) {
+      const newState = factory.handleLanguagesChange(state)
+      await Viewlet.setState(factory.name, newState)
+    }
+  }
 }
 
 export const hasLoaded = () => {
