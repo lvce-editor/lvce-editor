@@ -88,7 +88,10 @@ test('load - race condition', async () => {
   await promise
   expect(mockModule.create).toHaveBeenCalledTimes(1)
   expect(mockModule.loadContent).toHaveBeenCalledTimes(1)
-  expect(mockModule.loadContent).toHaveBeenCalledWith({ x: 0, version: 11 })
+  expect(mockModule.loadContent).toHaveBeenCalledWith(
+    { x: 0, version: 11 },
+    undefined
+  )
   expect(mockModule.contentLoaded).not.toHaveBeenCalled()
 })
 
@@ -261,7 +264,10 @@ test('load - canceled', async () => {
   await ViewletManager.load(state)
   expect(mockModule.create).toHaveBeenCalledTimes(1)
   expect(mockModule.loadContent).toHaveBeenCalledTimes(1)
-  expect(mockModule.loadContent).toHaveBeenCalledWith({ x: 0, version: 1 })
+  expect(mockModule.loadContent).toHaveBeenCalledWith(
+    { x: 0, version: 1 },
+    undefined
+  )
   expect(mockModule.contentLoaded).not.toHaveBeenCalled()
   expect(ViewletStates.getInstance('test')).toBeUndefined()
 })
