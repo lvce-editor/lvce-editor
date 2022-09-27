@@ -2,6 +2,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js'
 import * as Path from '../Path/Path.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as MarkDown from '../Markdown/Markdown.js'
 
 export const name = 'ExtensionDetail'
 
@@ -25,7 +26,8 @@ export const loadContent = async (state) => {
   const id = uri.slice('extension-detail://'.length)
   const extension = await ExtensionManagement.getExtension(id)
   const readmeContent = await loadReadmeContent(extension.path)
-  console.log({ readmeContent })
+  const readmeHtml = MarkDown.toHtml(readmeContent)
+  console.log({ readmeHtml })
   // const extensionsPath = Platform.getExtensionsPath()
   // const builtinExtensionsPath = Platform.getBuiltinExtensionsPath()
 
@@ -33,6 +35,7 @@ export const loadContent = async (state) => {
   return {
     ...state,
     name: id,
+    readmeHtml,
   }
 }
 
@@ -52,4 +55,18 @@ const renderName = {
   },
 }
 
-export const render = [renderName]
+const renderReadme = {
+  isEqual(oldState, newState) {
+    return oldState.readmeHtml === newState.readmeHtml
+  },
+  apply(pldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'ExtensionDetail',
+      /* method */ 'setReadmeHtml',
+      /* html */ newState.readmeHtml,
+    ]
+  },
+}
+
+export const render = [renderName, renderReadme]
