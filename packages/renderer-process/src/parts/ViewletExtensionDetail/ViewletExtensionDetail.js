@@ -3,16 +3,28 @@ export const name = 'ExtensionDetail'
 export const create = () => {
   const $NameText = document.createTextNode('')
 
-  const $Name = document.createElement('h1')
+  const $Name = document.createElement('div')
+  $Name.className = 'ExtensionDetailName'
   $Name.append($NameText)
 
-  const $ReadmeHtml = document.createElement('div')
+  const $ReadmeHtml = document.createElement('h3')
   $ReadmeHtml.className = 'Markdown'
+
+  const $ExtensionDetailIcon = document.createElement('img')
+  $ExtensionDetailIcon.className = 'ExtensionDetailIcon'
+
+  const $ExtensionDetailHeader = document.createElement('div')
+  $ExtensionDetailHeader.className = 'ExtensionDetailHeader'
+  $ExtensionDetailHeader.append($ExtensionDetailIcon, $Name)
+
+  const $ExtensionDetailMain = document.createElement('div')
+  $ExtensionDetailMain.className = 'ExtensionDetailMain'
+  $ExtensionDetailMain.append($ExtensionDetailHeader, $ReadmeHtml)
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet'
   $Viewlet.dataset.viewletId = 'ExtensionDetail'
-  $Viewlet.append($Name, $ReadmeHtml)
+  $Viewlet.append($ExtensionDetailMain)
   return {
     $Viewlet,
     $Name,

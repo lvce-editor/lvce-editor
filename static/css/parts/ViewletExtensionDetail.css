@@ -2,5 +2,27 @@
   color: white;
 }
 
-.ReadmeHtml {
+.ExtensionDetailMain {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.ExtensionDetailHeader {
+  height: 180px;
+  width: 100%;
+  contain: strict;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  /* place-items: center; */
+}
+
+.ExtensionDetailName {
+  font-size: 30px;
+}
+
+.ExtensionDetailIcon {
+  width: 150px;
+  height: 150px;
+  contain: strict;
 }
