@@ -102,7 +102,7 @@
   {
     "name": "builtin.language-basics-dotenv",
     "repository": "github.com/lvce-editor/language-basics-dotenv",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   {
     "name": "builtin.language-basics-kotlin",
@@ -142,7 +142,7 @@
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "0.0.7"
+    "version": "0.0.8"
   },
   {
     "name": "builtin.language-basics-desktop",

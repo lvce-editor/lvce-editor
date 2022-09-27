@@ -66,6 +66,10 @@
       "foreground": "#82A2B4"
     },
     {
+      "name": "JsonPropertyValueString",
+      "foreground": "#82A2B4"
+    },
+    {
       "name": "Import",
       "foreground": "#82A2B4"
     },
