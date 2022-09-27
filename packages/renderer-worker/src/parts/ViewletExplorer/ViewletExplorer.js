@@ -54,12 +54,30 @@ const getPathSeparator = (root) => {
   return FileSystem.getPathSeparator(root)
 }
 
-const restoreExpandedState = (savedState, dirents) => {
+const isExpandedDirectory = (dirent) => {
+  return dirent.type === DirentType.DirectoryExpanded
+}
+
+const getPath = (dirent) => {
+  return dirent.path
+}
+
+const restoreExpandedState = async (savedState, dirents) => {
   // TODO read all opened folders in parallel
   // ignore ENOENT errors
   // ignore ENOTDIR errors
   // merge all dirents
   // restore scroll location
+  if (!savedState || !savedState.dirents) {
+    return []
+  }
+  const expandedDirents = savedState.dirents.filter(isExpandedDirectory)
+  const expandedDirentPaths = expandedDirents.map(getPath)
+  const expandedDirentChildren = await Promise.all(
+    expandedDirentPaths.map(FileSystem.readDirWithFileTypes)
+  )
+  console.log({ expandedDirentChildren: expandedDirentChildren[0] })
+  console.log({ expandedDirents })
 }
 
 export const loadContent = async (state, savedState) => {
@@ -67,6 +85,7 @@ export const loadContent = async (state, savedState) => {
   const root = Workspace.state.workspacePath
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
   const dirents = await getTopLevelDirents(root, pathSeparator)
+  const restoredDirents = restoreExpandedState(savedState)
   const { itemHeight, height } = state
   return {
     ...state,

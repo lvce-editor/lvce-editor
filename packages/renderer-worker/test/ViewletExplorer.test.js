@@ -53,9 +53,9 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
     readDirWithFileTypes: jest.fn(() => {
       throw new Error('not implemented')
     }),
-    getPathSeparator: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
+    getPathSeparator: () => {
+      return '/'
+    },
     getRealPath: jest.fn(() => {
       throw new Error('not implemented')
     }),
@@ -120,10 +120,6 @@ test('loadContent', async () => {
       },
     ]
   })
-  // @ts-ignore
-  FileSystem.getPathSeparator.mockImplementation(() => {
-    return '/'
-  })
   expect(await ViewletExplorer.loadContent(state)).toEqual({
     deltaY: 0,
     version: 0,
@@ -169,6 +165,83 @@ test('loadContent', async () => {
     top: undefined,
     pathSeparator: PathSeparatorType.Slash,
     editingIndex: -1,
+  })
+})
+
+test.only('loadContent - restore from saved state', async () => {
+  const state = ViewletExplorer.create()
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test':
+        return [
+          {
+            name: 'a',
+            type: DirentType.Directory,
+          },
+          {
+            name: 'b.txt',
+            type: DirentType.File,
+          },
+        ]
+      case '/test/a':
+        return [
+          {
+            name: 'c',
+            type: DirentType.Directory,
+          },
+        ]
+      default:
+        throw new Error('file not found')
+    }
+  })
+
+  const savedState = {
+    dirents: [
+      {
+        path: '/test/a',
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        path: '/test/a/c',
+        type: DirentType.Directory,
+      },
+      {
+        path: '/test/b.txt',
+        type: DirentType.File,
+      },
+    ],
+  }
+  expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 2,
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'c',
+        path: '/test/a/c',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'b.txt',
+        path: '/test/b.txt',
+        posInSet: 2,
+        setSize: 2,
+        type: DirentType.File,
+      },
+    ],
   })
 })
 
@@ -326,10 +399,7 @@ test('loadContent - error - typeError', async () => {
   Workspace.state.workspacePath = '/test'
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-  // @ts-ignore
-  FileSystem.getPathSeparator.mockImplementation(() => {
-    return '/'
-  })
+
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     throw new TypeError('x is not a function')
@@ -348,10 +418,7 @@ test('loadContent - error - syntaxError', async () => {
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     throw new SyntaxError('unexpected token x')
   })
-  // @ts-ignore
-  FileSystem.getPathSeparator.mockImplementation(() => {
-    return '/'
-  })
+
   await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(
     new SyntaxError('unexpected token x')
   )
@@ -365,10 +432,7 @@ test('loadContent - error - command not found', async () => {
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     throw new Error('command -1 not found')
   })
-  // @ts-ignore
-  FileSystem.getPathSeparator.mockImplementation(() => {
-    return '/'
-  })
+
   await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(
     new Error('command -1 not found')
   )
@@ -3834,10 +3898,7 @@ test('event - workspace change', async () => {
       },
     ]
   })
-  // @ts-ignore
-  FileSystem.getPathSeparator.mockImplementation(() => {
-    return '/'
-  })
+
   Workspace.state.workspacePath = '/test'
   const newState = await ViewletExplorer.handleWorkspaceChange(state)
   expect(newState).toMatchObject({
