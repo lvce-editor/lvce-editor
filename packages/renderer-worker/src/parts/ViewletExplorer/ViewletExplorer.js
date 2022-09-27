@@ -64,6 +64,7 @@ const getPath = (dirent) => {
 const getSavedChildDirents = (map, path, depth) => {
   const children = map[path]
   const dirents = []
+  children.sort(compareDirent)
   const childrenLength = children.length
   for (let i = 0; i < childrenLength; i++) {
     const child = children[i]
@@ -124,6 +125,7 @@ const restoreExpandedState = async (savedState, root, pathSeparator) => {
   const expandedDirentChildren = await Promise.allSettled(
     expandedDirentPaths.map(FileSystem.readDirWithFileTypes)
   )
+  console.log({ expandedDirentChildren })
   const savedRoot = savedState.root
   const dirents = createDirents(
     savedRoot,

@@ -256,6 +256,93 @@ test('loadContent - restore from saved state', async () => {
   })
 })
 
+test('loadContent - restore from saved state - sort dirents', async () => {
+  const state = ViewletExplorer.create()
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test':
+        return [
+          {
+            name: 'b',
+            type: DirentType.Directory,
+          },
+          {
+            name: 'a',
+            type: DirentType.Directory,
+          },
+        ]
+      case '/test/a':
+        return [
+          {
+            name: 'd',
+            type: DirentType.Directory,
+          },
+          {
+            name: 'c',
+            type: DirentType.Directory,
+          },
+        ]
+      default:
+        throw new Error('file not found')
+    }
+  })
+
+  const savedState = {
+    root: '/test',
+    dirents: [
+      {
+        path: '/test/b',
+        type: DirentType.Directory,
+      },
+      {
+        path: '/test/a',
+        type: DirentType.DirectoryExpanded,
+      },
+    ],
+  }
+  expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
+    dirents: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 2,
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'c',
+        path: '/test/a/c',
+        posInSet: 1,
+        setSize: 2,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'd',
+        path: '/test/a/d',
+        posInSet: 2,
+        setSize: 2,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'b',
+        path: '/test/b',
+        posInSet: 2,
+        setSize: 2,
+        type: DirentType.Directory,
+      },
+    ],
+  })
+})
+
 test('loadContent - restore from saved state - no saved state exists', async () => {
   const state = ViewletExplorer.create()
   // @ts-ignore
