@@ -1,15 +1,19 @@
 export const name = 'ExtensionDetail'
 
-export const create = () => {
+export const create = (id, uri) => {
   return {
     name: '',
+    uri,
   }
 }
 
 export const loadContent = (state) => {
+  const { uri } = state
+  const id = uri.slice('extension-detail://'.length)
+  console.log({ state })
   return {
     ...state,
-    name: 'TODO display name here',
+    name: id,
   }
 }
 
