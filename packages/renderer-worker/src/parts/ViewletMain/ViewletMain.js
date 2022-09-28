@@ -208,7 +208,7 @@ export const contentLoaded = async (state) => {
   // TODO race condition: Viewlet may have been resized before it has loaded
   // @ts-ignore
 
-  await ViewletManager.load(instance)
+  await ViewletManager.load(instance, /* focus */ false, /* restore */ true)
 }
 
 export const openUri = async (state, uri, focus = true) => {

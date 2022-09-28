@@ -54,7 +54,14 @@ export const create = (id, uri, left, top, width, height) => {
   }
 }
 
-export const loadContent = async (state) => {
+export const saveState = (state) => {
+  return {
+    selections: [...Array.from(state.selections)],
+  }
+}
+
+export const loadContent = async (state, savedState) => {
+  console.log({ savedState })
   const rowHeight = Preferences.get('editor.lineHeight') || 20
   const fontSize = Preferences.get('editor.fontSize') || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
   const letterSpacing = Preferences.get('editor.letterSpacing') || 0.5
