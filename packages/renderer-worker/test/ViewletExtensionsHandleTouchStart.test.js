@@ -3,7 +3,7 @@ import * as ViewletExtensionsHandleTouchStart from '../src/parts/ViewletExtensio
 
 test('handleTouchStart - empty changed touches array', () => {
   const state = ViewletExtensions.create()
-  expect(ViewletExtensionsHandleTouchStart.handleTouchStart(state, [])).toBe(
+  expect(ViewletExtensionsHandleTouchStart.handleTouchStart(state, 0, [])).toBe(
     state
   )
 })

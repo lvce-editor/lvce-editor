@@ -1,10 +1,6 @@
-import * as Command from '../Command/Command.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import { setDeltaY } from './ViewletExtensions.js'
-import * as Ease from '../Ease/Ease.js'
-
-const easingFunction = Ease.linear
 
 const applyInertia = async (touchDifference) => {
   let inertia = touchDifference
