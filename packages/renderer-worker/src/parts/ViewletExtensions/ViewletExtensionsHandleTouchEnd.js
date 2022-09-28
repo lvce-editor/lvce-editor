@@ -1,6 +1,7 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import { setDeltaY } from './ViewletExtensions.js'
+import * as Timeout from '../Timeout/Timeout.js'
 
 const applyInertia = async (touchDifference) => {
   let inertia = touchDifference
@@ -8,7 +9,7 @@ const applyInertia = async (touchDifference) => {
   while (Math.abs(inertia) > 1.5) {
     console.log({ inertia })
     inertia /= 1.03
-    await new Promise((r) => setTimeout(r, 10))
+    await Timeout.sleep(10)
     const newState = ViewletStates.getState('Extensions')
     if (!newState) {
       break
