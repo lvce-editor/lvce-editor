@@ -78,7 +78,6 @@ const getSavedFocus = (savedState) => {
 }
 
 export const loadContent = async (state, savedState) => {
-  console.log({ savedState })
   const rowHeight = Preferences.get('editor.lineHeight') || 20
   const fontSize = Preferences.get('editor.fontSize') || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
   const letterSpacing = Preferences.get('editor.letterSpacing') || 0.5
@@ -89,7 +88,6 @@ export const loadContent = async (state, savedState) => {
   const newState = Editor.setText(state, content)
   const savedSelections = getSavedSelections(savedState)
   const savedFocus = getSavedFocus(savedState)
-  console.log({ savedSelections })
   return {
     ...newState,
     rowHeight,
