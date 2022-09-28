@@ -120,7 +120,7 @@ test('resize', () => {
   })
 })
 
-test('handleTitleBarButtonsClick - minimize', async () => {
+test('handleTitleBarClickMinimize', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   const state = {
@@ -128,12 +128,12 @@ test('handleTitleBarButtonsClick - minimize', async () => {
     width: 900,
     left: 0,
   }
-  await ViewletTitleBar.handleTitleBarButtonsClick(state, 800, 0)
+  await ViewletTitleBar.handleTitleBarClickMinimize(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenCalledWith('ElectronWindow.minimize')
 })
 
-test('handleTitleBarButtonsClick - toggleMaximize', async () => {
+test('handleTitleBarClickToggleMaximize', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   const state = {
@@ -141,12 +141,12 @@ test('handleTitleBarButtonsClick - toggleMaximize', async () => {
     width: 900,
     left: 0,
   }
-  await ViewletTitleBar.handleTitleBarButtonsClick(state, 850, 0)
+  await ViewletTitleBar.handleTitleBarClickToggleMaximize(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenCalledWith('ElectronWindow.maximize')
 })
 
-test('handleTitleBarButtonsClick - close', async () => {
+test('handleTitleBarClickClose', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   const state = {
@@ -154,7 +154,7 @@ test('handleTitleBarButtonsClick - close', async () => {
     width: 900,
     left: 0,
   }
-  await ViewletTitleBar.handleTitleBarButtonsClick(state, 900, 0)
+  await ViewletTitleBar.handleTitleBarClickClose(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenCalledWith('ElectronWindow.close')
 })
