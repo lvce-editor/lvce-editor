@@ -31,6 +31,16 @@
     "type": "javascript"
   },
   {
+    "name": "marked",
+    "version": "4.1.0",
+    "type": "javascript"
+  },
+  {
+    "name": "dompurify",
+    "version": "2.4.0",
+    "type": "javascript"
+  },
+  {
     "name": "termterm",
     "version": "0.0.22",
     "type": "css",

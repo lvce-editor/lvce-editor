@@ -1,0 +1,34 @@
+[data-viewlet-id='ExtensionDetail'] {
+  color: white;
+  user-select: text;
+}
+
+.ExtensionDetailMain {
+  width: 80%;
+  margin: 0 auto;
+  contain: strict;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.ExtensionDetailHeader {
+  height: 180px;
+  width: 100%;
+  contain: strict;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 1rem;
+  flex-shrink: 0;
+  /* place-items: center; */
+}
+
+.ExtensionDetailName {
+  font-size: 30px;
+}
+
+.ExtensionDetailIcon {
+  width: 150px;
+  height: 150px;
+  contain: strict;
+}

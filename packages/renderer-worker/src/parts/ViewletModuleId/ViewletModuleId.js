@@ -49,3 +49,5 @@ export const Terminal = 'Terminal'
 export const TitleBar = 'TitleBar'
 
 export const EditorFindWidget = 'EditorFindWidget'
+
+export const ExtensionDetail = 'ExtensionDetail'
