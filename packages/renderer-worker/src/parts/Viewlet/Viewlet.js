@@ -143,9 +143,6 @@ export const wrapViewletCommand = (id, fn) => {
       }
       console.trace('viewlet', oldState.deltaY, '->', newState.deltaY)
       console.log('at', fn.name)
-      if (newState.deltaY < oldState.deltaY) {
-        debugger
-      }
       const commands = ViewletManager.render(
         activeInstance.factory,
         oldState,
@@ -164,33 +161,7 @@ export const wrapViewletCommand = (id, fn) => {
   return wrappedViewletCommand
 }
 
-export const resize = (id, dimensions) => {
-  const instance = ViewletStates.getInstance(id)
-  if (!instance || !instance.factory || !instance.factory.resize) {
-    console.warn('cannot resize', id)
-    return []
-  }
-  const oldState = instance.state
-  let newState
-  let commands
-  if (instance.factory.hasFunctionalResize) {
-    newState = instance.factory.resize(oldState, dimensions)
-    if ('newState' in newState) {
-      throw new Error(
-        `functional resize not supported in ${instance.factory.name}`
-      )
-    }
-    commands = ViewletManager.render(instance.factory, instance.state, newState)
-  } else {
-    const result = instance.factory.resize(oldState, dimensions)
-    newState = result.newState
-    commands = result.commands
-  }
-  Assert.object(newState)
-  Assert.array(commands)
-  ViewletStates.setState(id, newState)
-  return commands
-}
+export const resize = (id, dimensions) => {}
 
 export const getState = (id) => {
   const instance = ViewletStates.getInstance(id)
