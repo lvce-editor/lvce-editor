@@ -54,7 +54,30 @@ export const create = (id, uri, left, top, width, height) => {
   }
 }
 
-export const loadContent = async (state) => {
+export const saveState = (state) => {
+  return {
+    state: {
+      selections: [...Array.from(state.selections)],
+      focused: state.focused,
+    },
+  }
+}
+
+const getSavedSelections = (savedState) => {
+  if (savedState && savedState.selections) {
+    return new Uint32Array(savedState.selections)
+  }
+  return new Uint32Array([0, 0, 0, 0])
+}
+
+const getSavedFocus = (savedState) => {
+  if (savedState && savedState.focused) {
+    return true
+  }
+  return false
+}
+
+export const loadContent = async (state, savedState) => {
   const rowHeight = Preferences.get('editor.lineHeight') || 20
   const fontSize = Preferences.get('editor.fontSize') || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
   const letterSpacing = Preferences.get('editor.letterSpacing') || 0.5
@@ -63,12 +86,16 @@ export const loadContent = async (state) => {
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const content = await getContent(state.uri)
   const newState = Editor.setText(state, content)
+  const savedSelections = getSavedSelections(savedState)
+  const savedFocus = getSavedFocus(savedState)
   return {
     ...newState,
     rowHeight,
     fontSize,
     letterSpacing,
     tokenizer,
+    selections: savedSelections,
+    focused: savedFocus,
   }
 }
 
