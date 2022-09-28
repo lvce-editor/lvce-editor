@@ -66,32 +66,20 @@ export const focus = async () => {
   await TitleBarMenuBar.focus()
 }
 
-const handleTitleBarClickMinimize = async (state) => {
+export const handleTitleBarClickMinimize = async (state) => {
   await Command.execute('ElectronWindow.minimize')
   return state
 }
 
-const handleTitleBarClickClose = async (state) => {
+export const handleTitleBarClickClose = async (state) => {
   await Command.execute('ElectronWindow.close')
   return state
 }
 
-const handleTitleBarClickToggleMaximize = async (state) => {
+export const handleTitleBarClickToggleMaximize = async (state) => {
   // TODO need command for toggleMaximize
   await Command.execute('ElectronWindow.maximize')
   return state
-}
-
-export const handleTitleBarButtonsClick = (state, x, y) => {
-  const { width, left } = state
-  const offsetRight = width + left - x
-  if (offsetRight >= TITLE_BAR_BUTTON_WIDTH * 2) {
-    return handleTitleBarClickMinimize(state)
-  }
-  if (offsetRight > TITLE_BAR_BUTTON_WIDTH * 1) {
-    return handleTitleBarClickToggleMaximize(state)
-  }
-  return handleTitleBarClickClose(state)
 }
 
 export const dispose = (state) => {

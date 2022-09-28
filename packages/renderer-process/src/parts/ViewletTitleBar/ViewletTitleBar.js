@@ -33,13 +33,39 @@ export const menuClose = TitleBarMenu.closeMenu
 
 export const menuGetEntryBounds = TitleBarMenu.getMenuEntryBounds
 
+const handleTitleBarButtonClickMinmize = () => {
+  RendererWorker.send('TitleBar.handleTitleBarButtonClickMinimize')
+}
+
+const handleTitleBarButtonClickToggleMaximize = () => {
+  RendererWorker.send('TitleBar.handleTitleBarButtonClickToggleMaximize')
+}
+
+const handleTitleBarButtonClickClose = () => {
+  RendererWorker.send('TitleBar.handleTitleBarButtonClickClose')
+}
+
 /**
  *
  * @param {MouseEvent} event
  */
 const handleTitleBarButtonsClick = (event) => {
-  const { clientX, clientY } = event
-  RendererWorker.send('TitleBar.handleTitleBarButtonsClick', clientX, clientY)
+  const { target } = event
+  // @ts-ignore
+  const { id } = target
+  switch (id) {
+    case 'TitleBarButtonMinimize':
+      handleTitleBarButtonClickMinmize()
+      break
+    case 'TitleBarButtonClickToggleMaximize':
+      handleTitleBarButtonClickToggleMaximize()
+      break
+    case 'TitleBarButtonClose':
+      handleTitleBarButtonClickClose()
+      break
+    default:
+      break
+  }
 }
 
 export const setButtons = (state, buttons) => {
