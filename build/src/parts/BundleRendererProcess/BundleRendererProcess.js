@@ -23,6 +23,11 @@ export const bundleRendererProcess = async ({
     replacement: `../../../static/js/termterm.js`,
   })
   await Replace.replace({
+    path: `${cachePath}/src/parts/SanitizeHtml/SanitzeHtml.js`,
+    occurrence: `../../../../../static/`,
+    replacement: `../../../static/`,
+  })
+  await Replace.replace({
     path: `${cachePath}/src/parts/Platform/Platform.js`,
     occurrence: '/packages/renderer-worker/src/rendererWorkerMain.js',
     replacement: `/packages/renderer-worker/dist/rendererWorkerMain.js`,

@@ -29,13 +29,18 @@ export const bundleRendererWorker = async ({
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/Base64/Base64.js`,
-    occurrence: `../../../../../static/js/js-base64.js`,
-    replacement: `../../../static/js/js-base64.js`,
+    occurrence: `../../../../../static/`,
+    replacement: `../../../static/`,
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/Ajax/Ajax.js`,
-    occurrence: `../../../../../static/js/ky.js`,
-    replacement: `../../../static/js/ky.js`,
+    occurrence: `../../../../../static/`,
+    replacement: `../../../static/`,
+  })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/Markdown/Markdown.js`,
+    occurrence: `../../../../../static/`,
+    replacement: `../../../static/`,
   })
   await Replace.replace({
     path: `${cachePath}/src/parts/IndexedDb/IndexedDb.js`,
