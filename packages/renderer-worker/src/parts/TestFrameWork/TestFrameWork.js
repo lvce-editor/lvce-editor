@@ -1,6 +1,7 @@
+import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-export { create as Locator } from './Locator.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
+export { create as Locator } from './Locator.js'
 
 export const getTmpDir = async () => {
   return `memfs://`
@@ -32,9 +33,7 @@ const printError = (error) => {
 }
 
 export const test = async (name, fn) => {
-  Object.defineProperty(fn, 'name', {
-    value: `test/${name}`,
-  })
+  NameAnonymousFunction.nameAnonymousFunction(fn, `test/${name}`)
   let _error
   let _start
   let _end
