@@ -119,6 +119,7 @@ exports.create = ({
     backgroundColor: background,
     show: false,
   })
+  browserWindow.webContents.openDevTools()
   const handleReadyToShow = () => {
     // due to electron bug, zoom level needs to be set here,
     // cannot be set when creating the browser window

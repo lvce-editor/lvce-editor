@@ -83,6 +83,7 @@ export const replaySession = async (sessionId) => {
     } else if ('error' in data) {
       callbacks[data.id].reject(data.error)
     } else if ('method' in data) {
+      console.log({ data })
       // ignore
     } else {
       throw new Error('unexpected message from renderer worker')
