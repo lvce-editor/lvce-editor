@@ -64,6 +64,9 @@ const getPath = (dirent) => {
 
 const getSavedChildDirents = (map, path, depth) => {
   const children = map[path]
+  if (!children) {
+    return []
+  }
   const dirents = []
   children.sort(compareDirent)
   const childrenLength = children.length
