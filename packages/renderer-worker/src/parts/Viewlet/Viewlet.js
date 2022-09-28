@@ -141,8 +141,6 @@ export const wrapViewletCommand = (id, fn) => {
       if (oldState === newState) {
         return
       }
-      console.trace('viewlet', oldState.deltaY, '->', newState.deltaY)
-      console.log('at', fn.name)
       const commands = ViewletManager.render(
         activeInstance.factory,
         oldState,
