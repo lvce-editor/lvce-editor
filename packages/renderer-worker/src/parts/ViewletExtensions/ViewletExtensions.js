@@ -53,6 +53,8 @@ export const create = (id, uri, left, top, width, height) => {
     finalDeltaY: 2728,
     error: '',
     touchOffsetY: 0,
+    touchTimeStamp: 0,
+    touchDifference: 0,
   }
 }
 
@@ -75,7 +77,6 @@ export const loadContent = async (state) => {
   const contentHeight = viewObjects.length * ITEM_HEIGHT
   const scrollBarHeight = getScrollBarHeight(state.height, contentHeight)
 
-  console.log({ extensions })
   return {
     ...state,
     extensions,
@@ -570,10 +571,8 @@ const getNewPercent = (state, relativeY) => {
 
 export const handleScrollBarMove = (state, y) => {
   const relativeY = y - state.top - HEADER_HEIGHT - state.handleOffset
-  console.log('handle offset', state.handleOffset)
   const newPercent = getNewPercent(state, relativeY)
   const newDeltaY = newPercent * state.finalDeltaY
-  console.log({ relativeY, newPercent, newDeltaY })
   return setDeltaY(state, newDeltaY)
 }
 
@@ -596,12 +595,6 @@ const getNewDeltaPercent = (state, relativeY) => {
 export const handleScrollBarClick = (state, y) => {
   const relativeY = y - state.top - HEADER_HEIGHT
   const newPercent = getNewDeltaPercent(state, relativeY)
-  console.log({
-    relativeY,
-    top: state.top,
-    headerHeight: HEADER_HEIGHT,
-    newPercent,
-  })
   const newDeltaY = newPercent * state.finalDeltaY
 
   return {

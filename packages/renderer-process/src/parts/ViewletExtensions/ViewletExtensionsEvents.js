@@ -166,18 +166,26 @@ const toArray = (touchList) => {
  * @param {TouchEvent} event
  */
 export const handleTouchMove = (event) => {
-  const { changedTouches } = event
+  const { changedTouches, timeStamp } = event
   const changedTouchesArray = toArray(changedTouches)
-  RendererWorker.send('Extensions.handleTouchMove', changedTouchesArray)
+  RendererWorker.send(
+    'Extensions.handleTouchMove',
+    timeStamp,
+    changedTouchesArray
+  )
 }
 
 /**
  * @param {TouchEvent} event
  */
 export const handleTouchStart = (event) => {
-  const { changedTouches } = event
+  const { changedTouches, timeStamp } = event
   const changedTouchesArray = toArray(changedTouches)
-  RendererWorker.send('Extensions.handleTouchStart', changedTouchesArray)
+  RendererWorker.send(
+    'Extensions.handleTouchStart',
+    timeStamp,
+    changedTouchesArray
+  )
 }
 
 /**

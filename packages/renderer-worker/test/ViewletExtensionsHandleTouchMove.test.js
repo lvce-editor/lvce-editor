@@ -4,7 +4,7 @@ import { ITEM_HEIGHT } from '../src/parts/ViewletExtensions/ViewletExtensionsSha
 
 test('handleTouchMove - empty touches array', () => {
   const state = ViewletExtensions.create()
-  expect(ViewletExtensionsHandleTouchMove.handleTouchMove(state, [])).toBe(
+  expect(ViewletExtensionsHandleTouchMove.handleTouchMove(state, 0, [])).toBe(
     state
   )
 })
@@ -16,7 +16,7 @@ test('handleTouchMove - scroll up', () => {
     filteredExtensions: [1, 2, 3],
     deltaY: 10,
   }
-  const newState = ViewletExtensionsHandleTouchMove.handleTouchMove(state, [
+  const newState = ViewletExtensionsHandleTouchMove.handleTouchMove(state, 0, [
     { clientX: 10, clientY: -10, identifier: 0 },
   ])
   expect(newState.touchOffsetY).toBe(-10)

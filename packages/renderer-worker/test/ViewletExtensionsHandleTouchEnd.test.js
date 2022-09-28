@@ -1,7 +1,7 @@
 import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
 import * as ViewletExtensionsHandleTouchEnd from '../src/parts/ViewletExtensions/ViewletExtensionsHandleTouchEnd.js'
 
-test('handleTouchEnd', () => {
+test('handleTouchEnd - empty touches array', () => {
   const state = ViewletExtensions.create()
-  expect(ViewletExtensionsHandleTouchEnd.handleTouchEnd(state)).toBe(state)
+  expect(ViewletExtensionsHandleTouchEnd.handleTouchEnd(state, [])).toBe(state)
 })
