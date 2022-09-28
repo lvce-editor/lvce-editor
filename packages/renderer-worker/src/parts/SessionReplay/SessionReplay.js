@@ -67,6 +67,7 @@ export const getSessionContent = async () => {
 }
 
 const DONT_REPLAY = new Set(['Open.openUrl', 'Download.downloadFile'])
+const EXECUTE = new Set(['TitleBar.handleTitleBarButtonsClick'])
 
 export const replaySession = async (sessionId) => {
   const events = await getEvents(sessionId)
