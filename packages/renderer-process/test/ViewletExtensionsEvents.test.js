@@ -24,6 +24,18 @@ const RendererWorker = await import(
   '../src/parts/RendererWorker/RendererWorker.js'
 )
 
+beforeAll(() => {
+  // workaround for jsdom not supporting Touch constructor
+  // @ts-ignore
+  globalThis.Touch = class {
+    constructor(init) {
+      this.clientX = init.clientX
+      this.clientY = init.clientY
+      this.identifier = init.identifier
+    }
+  }
+})
+
 beforeEach(() => {
   jest.restoreAllMocks()
 })
@@ -196,11 +208,20 @@ test('event -  touchstart', () => {
   const event = new TouchEvent('touchstart', {
     bubbles: true,
     cancelable: true,
+    changedTouches: [
+      new Touch({
+        identifier: 0,
+        clientX: 10,
+        clientY: 10,
+        target: $ExtensionList,
+      }),
+    ],
   })
   $ExtensionList.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Extensions.handleTouchStart'
+    'Extensions.handleTouchStart',
+    [{ clientX: 10, clientY: 10, identifier: 0 }]
   )
 })
 
@@ -210,10 +231,21 @@ test('event -  touchmove', () => {
   const event = new TouchEvent('touchmove', {
     bubbles: true,
     cancelable: true,
+    changedTouches: [
+      new Touch({
+        identifier: 0,
+        clientX: 10,
+        clientY: 10,
+        target: $ExtensionList,
+      }),
+    ],
   })
   $ExtensionList.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleTouchMove')
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Extensions.handleTouchMove',
+    [{ clientX: 10, clientY: 10, identifier: 0 }]
+  )
 })
 
 test('event -  touchend', () => {
@@ -222,8 +254,19 @@ test('event -  touchend', () => {
   const event = new TouchEvent('touchend', {
     bubbles: true,
     cancelable: true,
+    changedTouches: [
+      new Touch({
+        identifier: 0,
+        clientX: 10,
+        clientY: 10,
+        target: $ExtensionList,
+      }),
+    ],
   })
   $ExtensionList.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleTouchEnd')
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Extensions.handleTouchEnd',
+    [{ clientX: 10, clientY: 10, identifier: 0 }]
+  )
 })
