@@ -1,3 +1,4 @@
+import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
@@ -12,5 +13,6 @@ export const create = (moduleName, importFn, key) => {
     }
     return fn(latestEditor, ...args)
   }
+  NameAnonymousFunction.nameAnonymousFunction(lazyCommand, `lazy/${key}`)
   return Viewlet.wrapViewletCommand(moduleName, lazyCommand)
 }
