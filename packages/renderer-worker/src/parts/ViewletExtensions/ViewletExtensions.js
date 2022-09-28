@@ -53,6 +53,8 @@ export const create = (id, uri, left, top, width, height) => {
     finalDeltaY: 2728,
     error: '',
     touchOffsetY: 0,
+    touchTimeStamp: 0,
+    touchDifference: 0,
   }
 }
 
@@ -682,6 +684,7 @@ const renderScrollBarY = {
     return oldState.deltaY === newState.deltaY
   },
   apply(oldState, newState) {
+    console.log('deltay', newState.deltaY)
     const scrollBarY =
       (newState.deltaY / newState.finalDeltaY) *
       (newState.height - newState.scrollBarHeight)

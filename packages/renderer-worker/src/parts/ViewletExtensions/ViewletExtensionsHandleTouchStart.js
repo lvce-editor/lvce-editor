@@ -1,4 +1,8 @@
-export const handleTouchStart = (state, touches) => {
+import * as Assert from '../Assert/Assert.js'
+
+export const handleTouchStart = (state, timeStamp, touches) => {
+  Assert.number(timeStamp)
+  Assert.array(touches)
   if (touches.length === 0) {
     return state
   }
