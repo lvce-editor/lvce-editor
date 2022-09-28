@@ -168,7 +168,6 @@ const toArray = (touchList) => {
 export const handleTouchMove = (event) => {
   const { changedTouches, timeStamp } = event
   const changedTouchesArray = toArray(changedTouches)
-  console.log({ changedTouches, changedTouchesArray })
   RendererWorker.send(
     'Extensions.handleTouchMove',
     timeStamp,

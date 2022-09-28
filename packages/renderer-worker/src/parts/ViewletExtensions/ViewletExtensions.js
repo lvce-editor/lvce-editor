@@ -77,7 +77,6 @@ export const loadContent = async (state) => {
   const contentHeight = viewObjects.length * ITEM_HEIGHT
   const scrollBarHeight = getScrollBarHeight(state.height, contentHeight)
 
-  console.log({ extensions })
   return {
     ...state,
     extensions,
@@ -533,7 +532,6 @@ export const setDeltaY = (state, deltaY) => {
   if (state.deltaY === deltaY) {
     return state
   }
-  console.trace('set', deltaY)
   // TODO when it only moves by one px, extensions don't need to be rerendered, only negative margin
   const minLineY = Math.floor(deltaY / ITEM_HEIGHT)
   const maxLineY = minLineY + Math.round(listHeight / ITEM_HEIGHT)
@@ -573,10 +571,8 @@ const getNewPercent = (state, relativeY) => {
 
 export const handleScrollBarMove = (state, y) => {
   const relativeY = y - state.top - HEADER_HEIGHT - state.handleOffset
-  console.log('handle offset', state.handleOffset)
   const newPercent = getNewPercent(state, relativeY)
   const newDeltaY = newPercent * state.finalDeltaY
-  console.log({ relativeY, newPercent, newDeltaY })
   return setDeltaY(state, newDeltaY)
 }
 
@@ -599,12 +595,6 @@ const getNewDeltaPercent = (state, relativeY) => {
 export const handleScrollBarClick = (state, y) => {
   const relativeY = y - state.top - HEADER_HEIGHT
   const newPercent = getNewDeltaPercent(state, relativeY)
-  console.log({
-    relativeY,
-    top: state.top,
-    headerHeight: HEADER_HEIGHT,
-    newPercent,
-  })
   const newDeltaY = newPercent * state.finalDeltaY
 
   return {
@@ -685,7 +675,6 @@ const renderScrollBarY = {
     return oldState.deltaY === newState.deltaY
   },
   apply(oldState, newState) {
-    console.log('deltay', newState.deltaY)
     const scrollBarY =
       (newState.deltaY / newState.finalDeltaY) *
       (newState.height - newState.scrollBarHeight)
