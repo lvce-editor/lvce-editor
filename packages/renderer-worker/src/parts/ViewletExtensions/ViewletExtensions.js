@@ -533,6 +533,7 @@ export const setDeltaY = (state, deltaY) => {
   if (state.deltaY === deltaY) {
     return state
   }
+  console.trace('set', deltaY)
   // TODO when it only moves by one px, extensions don't need to be rerendered, only negative margin
   const minLineY = Math.floor(deltaY / ITEM_HEIGHT)
   const maxLineY = minLineY + Math.round(listHeight / ITEM_HEIGHT)

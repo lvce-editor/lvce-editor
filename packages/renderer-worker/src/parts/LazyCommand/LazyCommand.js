@@ -12,5 +12,8 @@ export const create = (moduleName, importFn, key) => {
     }
     return fn(latestEditor, ...args)
   }
+  Object.defineProperty(lazyCommand, 'name', {
+    value: `lazy/${key}`,
+  })
   return Viewlet.wrapViewletCommand(moduleName, lazyCommand)
 }
