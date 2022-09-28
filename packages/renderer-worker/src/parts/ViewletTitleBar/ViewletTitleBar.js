@@ -32,7 +32,7 @@ const getTitleBarButtonsElectron = () => {
   if (Preferences.get('window.titleBarStyle') === 'custom') {
     return [
       { label: 'Minimize', icon: 'Minimize', id: 'Minimize' },
-      { label: 'Maximize', icon: 'Maximize', id: 'Maximize' },
+      { label: 'Maximize', icon: 'Maximize', id: 'ToggleMaximize' },
       { label: 'Close', icon: 'Close', id: 'Close' },
     ]
   }

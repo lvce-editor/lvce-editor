@@ -1,7 +1,6 @@
 import * as Layout from '../Layout/Layout.js'
-import * as TitleBarMenu from '../TitleBarMenuBar/TitleBarMenuBar.js'
-import * as Assert from '../Assert/Assert.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as TitleBarMenu from '../TitleBarMenuBar/TitleBarMenuBar.js'
 
 export const create = () => {
   const $TitleBarMenu = TitleBarMenu.create()
@@ -57,7 +56,7 @@ const handleTitleBarButtonsClick = (event) => {
     case 'TitleBarButtonMinimize':
       handleTitleBarButtonClickMinmize()
       break
-    case 'TitleBarButtonClickToggleMaximize':
+    case 'TitleBarButtonToggleMaximize':
       handleTitleBarButtonClickToggleMaximize()
       break
     case 'TitleBarButtonClose':
