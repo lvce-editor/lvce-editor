@@ -221,6 +221,7 @@ test('event -  touchstart', () => {
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
     'Extensions.handleTouchStart',
+    expect.any(Number),
     [{ clientX: 10, clientY: 10, identifier: 0 }]
   )
 })
@@ -244,6 +245,7 @@ test('event -  touchmove', () => {
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
     'Extensions.handleTouchMove',
+    expect.any(Number),
     [{ clientX: 10, clientY: 10, identifier: 0 }]
   )
 })
