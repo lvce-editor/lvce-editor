@@ -65,27 +65,26 @@ export const create = () => {
   $ExtensionList.onfocus = ViewletExtensionsEvents.handleFocus
   $ExtensionList.onscroll = ViewletExtensionsEvents.handleScroll
   $ExtensionList.addEventListener(
-    'touchmove',
-    ViewletExtensionsEvents.handleTouchMove,
-    {
-      passive: false,
-    }
-  )
-  $ExtensionList.addEventListener(
     'touchstart',
     ViewletExtensionsEvents.handleTouchStart,
     {
-      passive: false,
+      passive: true,
+    }
+  )
+  $ExtensionList.addEventListener(
+    'touchmove',
+    ViewletExtensionsEvents.handleTouchMove,
+    {
+      passive: true,
     }
   )
   $ExtensionList.addEventListener(
     'touchend',
     ViewletExtensionsEvents.handleTouchEnd,
     {
-      passive: false,
+      passive: true,
     }
   )
-  // $ExtensionList.addEventListener('touch ', listener)
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'

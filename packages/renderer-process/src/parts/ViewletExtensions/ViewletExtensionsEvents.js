@@ -166,8 +166,6 @@ const toArray = (touchList) => {
  * @param {TouchEvent} event
  */
 export const handleTouchMove = (event) => {
-  event.preventDefault()
-  event.stopPropagation()
   const { changedTouches } = event
   const changedTouchesArray = toArray(changedTouches)
   RendererWorker.send('Extensions.handleTouchMove', changedTouchesArray)
@@ -177,8 +175,6 @@ export const handleTouchMove = (event) => {
  * @param {TouchEvent} event
  */
 export const handleTouchStart = (event) => {
-  event.preventDefault()
-  event.stopPropagation()
   const { changedTouches } = event
   const changedTouchesArray = toArray(changedTouches)
   RendererWorker.send('Extensions.handleTouchStart', changedTouchesArray)
@@ -188,8 +184,6 @@ export const handleTouchStart = (event) => {
  * @param {TouchEvent} event
  */
 export const handleTouchEnd = (event) => {
-  event.preventDefault()
-  event.stopPropagation()
   const { changedTouches } = event
   const changedTouchesArray = toArray(changedTouches)
   RendererWorker.send('Extensions.handleTouchEnd', changedTouchesArray)
