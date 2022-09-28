@@ -20,7 +20,7 @@ const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
 )
 
-test('sanitzeHtml', async () => {
+test('sanitizeHtml', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {
     return '<h1>hello world</h1>'

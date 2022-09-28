@@ -23,7 +23,7 @@ export const bundleRendererProcess = async ({
     replacement: `../../../static/js/termterm.js`,
   })
   await Replace.replace({
-    path: `${cachePath}/src/parts/SanitizeHtml/SanitzeHtml.js`,
+    path: `${cachePath}/src/parts/SanitizeHtml/SanitizeHtml.js`,
     occurrence: `../../../../../static/`,
     replacement: `../../../static/`,
   })

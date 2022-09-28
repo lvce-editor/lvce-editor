@@ -55,12 +55,12 @@ export const loadContent = async (state) => {
   const extension = await ExtensionManagement.getExtension(id)
   const readmeContent = await loadReadmeContent(extension.path)
   const readmeHtml = MarkDown.toHtml(readmeContent)
-  const sanitzedReadmeHtml = await SanitizeHtml.sanitizeHtml(readmeHtml)
+  const sanitizedReadmeHtml = await SanitizeHtml.sanitizeHtml(readmeHtml)
   const iconSrc = getIconSrc(extension)
   const name = getName(extension)
   return {
     ...state,
-    sanitzedReadmeHtml,
+    sanitizedReadmeHtml,
     iconSrc,
     name,
   }
@@ -84,14 +84,14 @@ const renderName = {
 
 const renderReadme = {
   isEqual(oldState, newState) {
-    return oldState.sanitzedReadmeHtml === newState.sanitzedReadmeHtml
+    return oldState.sanitizedReadmeHtml === newState.sanitizedReadmeHtml
   },
   apply(pldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'ExtensionDetail',
       /* method */ 'setReadmeHtml',
-      /* sanizedHtml */ newState.sanitzedReadmeHtml,
+      /* sanizedHtml */ newState.sanitizedReadmeHtml,
     ]
   },
 }
