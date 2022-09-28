@@ -189,3 +189,41 @@ test('icon - error - endless loop bug', () => {
   expect($FirstIcon.src).toBe('http://localhost/icons/extensionDefaultIcon.png')
   expect(spy).toHaveBeenCalledTimes(1)
 })
+
+test('event -  touchstart', () => {
+  const state = ViewletExtensions.create()
+  const { $ExtensionList } = state
+  const event = new TouchEvent('touchstart', {
+    bubbles: true,
+    cancelable: true,
+  })
+  $ExtensionList.dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Extensions.handleTouchStart'
+  )
+})
+
+test('event -  touchmove', () => {
+  const state = ViewletExtensions.create()
+  const { $ExtensionList } = state
+  const event = new TouchEvent('touchmove', {
+    bubbles: true,
+    cancelable: true,
+  })
+  $ExtensionList.dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleTouchMove')
+})
+
+test('event -  touchend', () => {
+  const state = ViewletExtensions.create()
+  const { $ExtensionList } = state
+  const event = new TouchEvent('touchend', {
+    bubbles: true,
+    cancelable: true,
+  })
+  $ExtensionList.dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleTouchEnd')
+})

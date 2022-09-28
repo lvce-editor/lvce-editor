@@ -140,3 +140,57 @@ export const handleIconError = (event) => {
   }
   $Target.src = DEFAULT_ICON_SRC
 }
+
+export const handleScroll = (event) => {
+  console.log(event)
+}
+
+/**
+ *
+ * @param {TouchList} touchList
+ */
+const toArray = (touchList) => {
+  const touchArray = []
+  // @ts-ignore
+  for (const item of touchList) {
+    touchArray.push({
+      clientX: item.clientX,
+      clientY: item.clientY,
+      identifier: item.identifier,
+    })
+  }
+  return touchArray
+}
+
+/**
+ * @param {TouchEvent} event
+ */
+export const handleTouchMove = (event) => {
+  event.preventDefault()
+  event.stopPropagation()
+  const { changedTouches } = event
+  const changedTouchesArray = toArray(changedTouches)
+  RendererWorker.send('Extensions.handleTouchMove', changedTouchesArray)
+}
+
+/**
+ * @param {TouchEvent} event
+ */
+export const handleTouchStart = (event) => {
+  event.preventDefault()
+  event.stopPropagation()
+  const { changedTouches } = event
+  const changedTouchesArray = toArray(changedTouches)
+  RendererWorker.send('Extensions.handleTouchStart', changedTouchesArray)
+}
+
+/**
+ * @param {TouchEvent} event
+ */
+export const handleTouchEnd = (event) => {
+  event.preventDefault()
+  event.stopPropagation()
+  const { changedTouches } = event
+  const changedTouchesArray = toArray(changedTouches)
+  RendererWorker.send('Extensions.handleTouchEnd', changedTouchesArray)
+}

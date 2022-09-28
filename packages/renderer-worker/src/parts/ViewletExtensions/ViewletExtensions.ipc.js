@@ -11,6 +11,9 @@ const Imports = {
   FocusPrevious: () => import('./ViewletExtensionsFocusPrevious.js'),
   FocusPreviousPage: () => import('./ViewletExtensionsFocusPreviousPage.js'),
   HandleClick: () => import('./ViewletExtensionsHandleClick.js'),
+  HandleTouchStart: () => import('./ViewletExtensionsHandleTouchStart.js'),
+  HandleTouchEnd: () => import('./ViewletExtensionsHandleTouchEnd.js'),
+  HandleTouchMove: () => import('./ViewletExtensionsHandleTouchMove.js'),
 }
 
 // prettier-ignore
@@ -29,6 +32,9 @@ export const Commands = {
   'Extensions.handleInstall': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.handleInstall),
   'Extensions.handleScrollBarClick': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.handleScrollBarClick),
   'Extensions.handleScrollBarMove': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.handleScrollBarMove),
+  'Extensions.handleTouchEnd':LazyCommand.create('Extensions', Imports.HandleTouchEnd, 'handleTouchEnd'),
+  'Extensions.handleTouchMove':LazyCommand.create('Extensions', Imports.HandleTouchMove, 'handleTouchMove'),
+  'Extensions.handleTouchStart': LazyCommand.create('Extensions', Imports.HandleTouchStart, 'handleTouchStart'),
   'Extensions.handleUninstall': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.handleUninstall),
   'Extensions.handleWheel': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.handleWheel),
   'Extensions.openSuggest': Viewlet.wrapViewletCommand('Extensions', ViewletExtensions.openSuggest),
