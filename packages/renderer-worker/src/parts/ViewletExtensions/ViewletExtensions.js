@@ -12,6 +12,7 @@ import {
   MINIMUM_SLIDER_SIZE,
 } from './ViewletExtensionsShared.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+
 const SUGGESTIONS = [
   '@builtin',
   '@disabled',
@@ -51,6 +52,7 @@ export const create = (id, uri, left, top, width, height) => {
     left,
     finalDeltaY: 2728,
     error: '',
+    touchOffsetY: 0,
   }
 }
 
@@ -512,7 +514,6 @@ export const resize = (state, dimensions) => {
 }
 
 export const setDeltaY = (state, deltaY) => {
-  console.log({ deltaY })
   Assert.object(state)
   Assert.number(deltaY)
   const listHeight = getListHeight(state)
