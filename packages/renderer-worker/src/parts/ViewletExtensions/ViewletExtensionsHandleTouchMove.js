@@ -14,7 +14,6 @@ export const handleTouchMove = (state, timeStamp, touches) => {
   const touchDifference = newTouchOffsetY - touchOffsetY
   const newDeltaY = deltaY - touchDifference
   const timeDifference = timeStamp - touchTimeStamp
-  console.log({ diff: touchDifference, timeDifference })
   return {
     ...setDeltaY(state, newDeltaY),
     touchOffsetY: newTouchOffsetY,

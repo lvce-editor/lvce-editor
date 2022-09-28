@@ -7,7 +7,6 @@ const applyInertia = async (touchDifference) => {
   let inertia = touchDifference
   let i = 0
   while (Math.abs(inertia) > 1.5) {
-    console.log({ inertia })
     inertia /= 1.03
     await Timeout.sleep(10)
     const newState = ViewletStates.getState('Extensions')
@@ -17,7 +16,6 @@ const applyInertia = async (touchDifference) => {
     const newDeltaY = newState.deltaY - inertia
     await Viewlet.setState('Extensions', setDeltaY(newState, newDeltaY))
   }
-  console.log('return from inertia')
 }
 
 export const handleTouchEnd = (state, touches) => {
