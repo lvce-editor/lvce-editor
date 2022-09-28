@@ -6,11 +6,24 @@ import * as SessionStorage from '../SessionStorage/SessionStorage.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
+const serializeInstance = (instance) => {
+  if (instance && instance.factory && instance.factory.saveState) {
+    return instance.factory.saveState(instance.state)
+  }
+  return instance
+}
+
+const mapObject = (object, fn) => {
+  const mapFn = ([key, value]) => [key, fn(value)]
+  return Object.fromEntries(Object.entries(object).map(mapFn))
+}
+
 const getStateToSave = () => {
   const instances = ViewletStates.getAllInstances()
+  const savedInstances = mapObject(instances, serializeInstance)
   // const mainEditors = Main.state.editors
   return {
-    instances,
+    instances: savedInstances,
     mainEditors: [],
     workspace: {
       path: Workspace.state.workspacePath,
