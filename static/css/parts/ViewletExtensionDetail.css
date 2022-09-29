@@ -25,6 +25,9 @@
 
 .ExtensionDetailName {
   font-size: 30px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .ExtensionDetailIcon {
