@@ -33,11 +33,7 @@ export const acceptInput = async (state, text) => {
 }
 
 const getChangedFiles = async () => {
-  console.info('get changed files')
   const changedFiles = await ExtensionHostSourceControl.getChangedFiles()
-
-  console.log({ changedFiles })
-
   return {
     index: [],
     merge: [],
@@ -49,7 +45,6 @@ const getChangedFiles = async () => {
 
 export const loadContent = async (state) => {
   const changedFiles = await getChangedFiles()
-  console.log({ changedFiles })
   return {
     ...state,
     index: changedFiles.index,
