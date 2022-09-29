@@ -180,8 +180,8 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
 }
 
 export const focus = (state) => {
-  const { $QuickPickInput } = state
-  $QuickPickInput.focus()
+  const { $HiddenInput } = state
+  $HiddenInput.focus()
   Focus.setFocus('quickPickInput')
 }
 
@@ -190,6 +190,8 @@ export const focus = (state) => {
 // - for nvda ariaRoleDescription works better
 
 export const create = () => {
+  const $HiddenInput = document.createElement('input')
+  $HiddenInput.className = 'EditorInput'
   const $QuickPickInputText = document.createElement('div')
   const $QuickPickInputCursor = document.createElement('div')
   $QuickPickInputCursor.className = 'EditorCursor'
@@ -200,10 +202,10 @@ export const create = () => {
   $QuickPickInput.role = Roles.ComboBox
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
   $QuickPickInput.ariaAutoComplete = 'list'
-  $QuickPickInput.contentEditable = 'plaintext-only'
+  // $QuickPickInput.contentEditable = 'plaintext-only'
   // $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
   // $QuickPickInput.oninput = ViewletQuickPickEvents.handleInput
-  $QuickPickInput.addEventListener(
+  $HiddenInput.addEventListener(
     'beforeinput',
     ViewletQuickPickEvents.handleBeforeInput
   )
@@ -212,7 +214,7 @@ export const create = () => {
 
   const $QuickPickHeader = document.createElement('div')
   $QuickPickHeader.id = Ids.QuickPickHeader
-  $QuickPickHeader.append($QuickPickInput)
+  $QuickPickHeader.append($QuickPickInput, $HiddenInput)
 
   const $QuickPickItems = document.createElement('div')
   $QuickPickItems.id = Ids.QuickPickItems
@@ -244,6 +246,7 @@ export const create = () => {
     $QuickPickStatus: undefined,
     $QuickPickInputText,
     $QuickPickInputCursor,
+    $HiddenInput,
   }
 }
 
