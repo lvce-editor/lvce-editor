@@ -140,4 +140,9 @@ export const setMessage = (state, message) => {
   $SearchStatus.textContent = message
 }
 
+export const setValue = (state, value) => {
+  const { $ViewletSearchInput } = state
+  $ViewletSearchInput.value = value
+}
+
 export const dispose = () => {}

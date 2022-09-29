@@ -47,7 +47,18 @@ export const create = (id, uri, left, top, width, height) => {
   }
 }
 
-export const loadContent = async (state) => {
+const getSavedValue = (savedState) => {
+  if (savedState && savedState.value) {
+    return savedState.value
+  }
+  return ''
+}
+
+export const loadContent = async (state, savedState) => {
+  const savedValue = getSavedValue(savedState)
+  if (savedValue) {
+    return setValue(state, savedValue)
+  }
   return state
 }
 
@@ -289,4 +300,18 @@ const renderMessage = {
   },
 }
 
-export const render = [renderItems, renderMessage]
+const renderValue = {
+  isEqual(oldState, newState) {
+    return oldState.value === newState.value
+  },
+  apply(oldState, newState) {
+    return [
+      /* viewletSend */ 'Viewlet.send',
+      /* id */ 'Search',
+      /* method */ 'setValue',
+      /* value */ newState.value,
+    ]
+  },
+}
+
+export const render = [renderItems, renderMessage, renderValue]
