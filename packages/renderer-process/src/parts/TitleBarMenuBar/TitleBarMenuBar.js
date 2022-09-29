@@ -65,7 +65,8 @@ const create$TopLevelEntry = (item) => {
 }
 
 export const getMenuEntryBounds = (state, index) => {
-  const $MenuEntry = state.$TitleBarMenu.children[index]
+  const { $TitleBarMenu } = state
+  const $MenuEntry = $TitleBarMenu.children[index]
   const rect = $MenuEntry.getBoundingClientRect()
   return {
     left: rect.left,
@@ -77,7 +78,7 @@ export const focusIndex = (state, unFocusIndex, focusIndex) => {
   Assert.object(state)
   Assert.number(unFocusIndex)
   Assert.number(focusIndex)
-  const $TitleBarMenu = state.$TitleBarMenu
+  const { $TitleBarMenu } = state
   if (unFocusIndex !== -1) {
     $TitleBarMenu.children[unFocusIndex].ariaExpanded = 'false'
     $TitleBarMenu.children[unFocusIndex].removeAttribute('aria-owns')
@@ -112,8 +113,9 @@ export const openMenu = (
   Assert.number(y)
   Assert.number(width)
   Assert.number(height)
+  const { $TitleBarMenu } = state
   // TODO this code is very unclean
-  state.$TitleBarMenu.addEventListener(
+  $TitleBarMenu.addEventListener(
     'mouseenter',
     TitleBarMenuBarEvents.handleMouseEnter,
     {
@@ -121,10 +123,10 @@ export const openMenu = (
     }
   )
   if (unFocusIndex !== -1) {
-    state.$TitleBarMenu.children[unFocusIndex].ariaExpanded = 'false'
-    state.$TitleBarMenu.children[unFocusIndex].removeAttribute('aria-owns')
+    $TitleBarMenu.children[unFocusIndex].ariaExpanded = 'false'
+    $TitleBarMenu.children[unFocusIndex].removeAttribute('aria-owns')
   }
-  state.$TitleBarMenu.children[index].ariaExpanded = 'true'
+  $TitleBarMenu.children[index].ariaExpanded = 'true'
   const $$Menus = Menu.state.$$Menus
   Menu.state.$$Menus = []
   Menu.showControlled({
@@ -148,15 +150,16 @@ export const openMenu = (
 
 // TODO there need to be two variants of closeMenu: one just closes menu, another close menu and focuses top level entry
 export const closeMenu = (state, unFocusIndex, index) => {
+  const { $TitleBarMenu } = state
   if (unFocusIndex !== -1) {
-    state.$TitleBarMenu.children[unFocusIndex].ariaExpanded = 'false'
-    state.$TitleBarMenu.children[unFocusIndex].removeAttribute('aria-owns')
+    $TitleBarMenu.children[unFocusIndex].ariaExpanded = 'false'
+    $TitleBarMenu.children[unFocusIndex].removeAttribute('aria-owns')
   }
   if (index !== -1) {
     state.$TitleBarMenu.children[index].focus()
   }
   Menu.hide(/* restoreFocus */ false)
-  state.$TitleBarMenu.removeEventListener(
+  $TitleBarMenu.removeEventListener(
     'mouseenter',
     TitleBarMenuBarEvents.handleMouseEnter,
     {
@@ -181,6 +184,6 @@ export const create = () => {
 }
 
 export const setEntries = (state, titleBarEntries) => {
-  const $TitleBarMenu = state.$TitleBarMenu
+  const { $TitleBarMenu } = state
   $TitleBarMenu.append(...titleBarEntries.map(create$TopLevelEntry))
 }
