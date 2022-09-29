@@ -179,7 +179,10 @@ test('loadContent', async () => {
 // TODO handle ENOTDIR error
 
 test('loadContent - restore from saved state', async () => {
-  const state = ViewletExplorer.create()
+  const state = {
+    ...ViewletExplorer.create(),
+    root: '/test',
+  }
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
     switch (uri) {
@@ -208,20 +211,7 @@ test('loadContent - restore from saved state', async () => {
 
   const savedState = {
     root: '/test',
-    dirents: [
-      {
-        path: '/test/a',
-        type: DirentType.DirectoryExpanded,
-      },
-      {
-        path: '/test/a/c',
-        type: DirentType.Directory,
-      },
-      {
-        path: '/test/b.txt',
-        type: DirentType.File,
-      },
-    ],
+    expandedPaths: ['/test/a'],
   }
   expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
     dirents: [
@@ -290,16 +280,7 @@ test('loadContent - restore from saved state - sort dirents', async () => {
 
   const savedState = {
     root: '/test',
-    dirents: [
-      {
-        path: '/test/b',
-        type: DirentType.Directory,
-      },
-      {
-        path: '/test/a',
-        type: DirentType.DirectoryExpanded,
-      },
-    ],
+    expandedPaths: ['/test/a'],
   }
   expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
     dirents: [
@@ -436,24 +417,7 @@ test('loadContent - restore from saved state - error - ENOENT for child folder',
 
   const savedState = {
     root: '/test',
-    dirents: [
-      {
-        path: '/test/a',
-        type: DirentType.DirectoryExpanded,
-      },
-      {
-        path: '/test/c',
-        type: DirentType.DirectoryExpanded,
-      },
-      {
-        path: '/test/b',
-        type: DirentType.DirectoryExpanded,
-      },
-      {
-        path: '/test/b/d',
-        type: DirentType.DirectoryExpanded,
-      },
-    ],
+    expandedPaths: ['/test/a', '/test/a/c', '/test/b', '/test/b/d'],
   }
   expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
     dirents: [
