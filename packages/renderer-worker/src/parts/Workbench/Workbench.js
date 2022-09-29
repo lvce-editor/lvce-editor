@@ -83,15 +83,15 @@ export const startup = async (config) => {
 
   LifeCycle.mark(LifeCycle.Phase.Seven)
 
+  Performance.mark('code/willLoadLanguages')
+  await Languages.hydrate()
+  Performance.mark('code/didLoadLanguages')
+
   Performance.mark('code/willLoadSideBar')
   if (Layout.state.sideBarVisible) {
     await Layout.showSideBar()
   }
   Performance.mark('code/didLoadSideBar')
-
-  Performance.mark('code/willLoadLanguages')
-  await Languages.hydrate()
-  Performance.mark('code/didLoadLanguages')
 
   LifeCycle.mark(LifeCycle.Phase.Eight)
 
