@@ -324,7 +324,8 @@ const renderSelections = {
   isEqual(oldState, newState) {
     return (
       oldState.selections === newState.selections &&
-      oldState.focused === newState.focused
+      oldState.focused === newState.focused &&
+      oldState.minLineY === newState.minLineY
     )
   },
   apply(oldState, newState) {
