@@ -56,10 +56,8 @@ export const create = (id, uri, left, top, width, height) => {
 
 export const saveState = (state) => {
   return {
-    state: {
-      selections: [...Array.from(state.selections)],
-      focused: state.focused,
-    },
+    selections: [...Array.from(state.selections)],
+    focused: state.focused,
   }
 }
 
