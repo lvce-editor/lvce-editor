@@ -1,9 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
+import * as BeforeInput from '../BeforeInput/BeforeInput.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
+import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as InputEventType from '../InputEventType/InputEventType.js'
-import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
@@ -128,9 +128,11 @@ export const loadContent = async (state) => {
   const provider = await QuickPickEntries.load(uri)
   const newPicks = await provider.getPicks(value)
   Assert.array(newPicks)
+  // @ts-ignore
   const filterValue = provider.getFilterValue(value)
   const items = getFilteredItems(state, newPicks, filterValue)
   const placeholder = provider.getPlaceholder()
+  // @ts-ignore
   const label = provider.getLabel()
   const minLineY = 0
   const maxLineY = Math.min(
@@ -226,7 +228,6 @@ export const selectCurrentIndex = (state) => {
 
 // TODO when user types letters -> no need to query provider again -> just filter existing results
 export const handleInput = async (state, newValue, cursorOffset) => {
-  console.log('handle input')
   if (state.value === newValue) {
     return state
   }
@@ -244,144 +245,6 @@ export const handleInput = async (state, newValue, cursorOffset) => {
   }
 }
 
-const getNewValueInsertText = (value, data, selectionStart, selectionEnd) => {
-  if (selectionStart === value.length) {
-    const newValue = value + data
-    return {
-      newValue,
-      cursorOffset: newValue.length,
-    }
-  }
-  const before = value.slice(0, selectionStart)
-  const after = value.slice(selectionEnd)
-  const newValue = before + data + after
-  return {
-    newValue,
-    cursorOffset: selectionStart + data.length,
-  }
-}
-
-const getNewValueDeleteContentBackward = (
-  value,
-  selectionStart,
-  selectionEnd
-) => {
-  const after = value.slice(selectionEnd)
-  if (selectionStart === selectionEnd) {
-    const before = value.slice(0, selectionStart - 1)
-    const newValue = before + after
-    return {
-      newValue,
-      cursorOffset: before.length,
-    }
-  }
-  const before = value.slice(0, selectionStart)
-  const newValue = before + after
-  return {
-    newValue,
-    cursorOffset: selectionStart,
-  }
-}
-
-const RE_ALPHA_NUMERIC = /[a-z\d]/i
-
-const isAlphaNumeric = (character) => {
-  return RE_ALPHA_NUMERIC.test(character)
-}
-
-const getNewValueDeleteWordBackward = (value, selectionStart, selectionEnd) => {
-  const after = value.slice(selectionEnd)
-  if (selectionStart === selectionEnd) {
-    let startIndex = Math.max(selectionStart - 1, 0)
-    while (startIndex > 0 && isAlphaNumeric(value[startIndex])) {
-      startIndex--
-    }
-    const before = value.slice(0, startIndex)
-    const newValue = before + after
-    return {
-      newValue,
-      cursorOffset: before.length,
-    }
-  }
-  const before = value.slice(0, selectionStart)
-  const newValue = before + after
-  return {
-    newValue,
-    cursorOffset: selectionStart,
-  }
-}
-
-const getNewValueDeleteContentForward = (
-  value,
-  selectionStart,
-  selectionEnd
-) => {
-  const before = value.slice(0, selectionStart)
-  if (selectionStart === selectionEnd) {
-    const after = value.slice(selectionEnd + 1)
-    const newValue = before + after
-    return {
-      newValue,
-      cursorOffset: selectionStart,
-    }
-  }
-  const after = value.slice(selectionEnd)
-  const newValue = before + after
-  return {
-    newValue,
-    cursorOffset: selectionStart,
-  }
-}
-
-const getNewValueDeleteWordForward = (value, selectionStart, selectionEnd) => {
-  const before = value.slice(0, selectionStart)
-  if (selectionStart === selectionEnd) {
-    let startIndex = Math.min(selectionStart + 1, value.length - 1)
-    while (startIndex < value.length && isAlphaNumeric(value[startIndex])) {
-      startIndex++
-    }
-    const after = value.slice(startIndex)
-    const newValue = before + after
-    return {
-      newValue,
-      cursorOffset: before.length,
-    }
-  }
-  const after = value.slice(selectionEnd)
-  const newValue = before + after
-  return {
-    newValue,
-    cursorOffset: selectionStart,
-  }
-}
-
-const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
-  switch (inputType) {
-    case InputEventType.InsertText:
-      return getNewValueInsertText(value, data, selectionStart, selectionEnd)
-    case InputEventType.DeleteContentBackward:
-      return getNewValueDeleteContentBackward(
-        value,
-        selectionStart,
-        selectionEnd
-      )
-    case InputEventType.DeleteContentForward:
-      return getNewValueDeleteContentForward(
-        value,
-        selectionStart,
-        selectionEnd
-      )
-    case InputEventType.DeleteWordForward:
-      return getNewValueDeleteWordForward(value, selectionStart, selectionEnd)
-    case InputEventType.DeleteWordBackward:
-      return getNewValueDeleteWordBackward(value, selectionStart, selectionEnd)
-    case InputEventType.InsertLineBreak:
-      return value
-    default:
-      throw new Error(`unsupported input type ${inputType}`)
-  }
-}
-
 export const handleBeforeInput = (
   state,
   inputType,
@@ -392,8 +255,9 @@ export const handleBeforeInput = (
   Assert.string(inputType)
   Assert.number(selectionStart)
   Assert.number(selectionEnd)
-  const { newValue, cursorOffset } = getNewValue(
-    state.value,
+  const { value } = state
+  const { newValue, cursorOffset } = BeforeInput.getNewValue(
+    value,
     inputType,
     data,
     selectionStart,

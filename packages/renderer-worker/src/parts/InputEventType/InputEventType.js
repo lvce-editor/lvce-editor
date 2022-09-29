@@ -9,3 +9,5 @@ export const DeleteWordForward = 'deleteWordForward'
 export const DeleteWordBackward = 'deleteWordBackward'
 
 export const InsertLineBreak = 'insertLineBreak'
+
+export const InsertCompositionText = 'insertCompositionText'

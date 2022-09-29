@@ -197,7 +197,6 @@ export const create = () => {
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
   $QuickPickInput.ariaAutoComplete = 'list'
   $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
-  $QuickPickInput.oninput = ViewletQuickPickEvents.handleInput
   $QuickPickInput.addEventListener(
     'beforeinput',
     ViewletQuickPickEvents.handleBeforeInput
