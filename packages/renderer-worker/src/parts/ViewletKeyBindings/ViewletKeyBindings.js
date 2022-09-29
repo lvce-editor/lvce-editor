@@ -5,7 +5,6 @@
 import * as FilterKeyBindings from '../FilterKeyBindings/FilterKeyBindings.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
-import * as VirtualDomElements from '../VirtualDomElements/VirtualDomElements.js'
 
 export const name = 'KeyBindings'
 
@@ -22,18 +21,51 @@ export const create = (id, uri, left, top, width, height) => {
     left,
     width,
     height,
+    value: '',
   }
 }
 
-export const loadContent = async (state) => {
+export const saveState = (state) => {
+  const { value } = state
+  return {
+    value,
+  }
+}
+
+const getSavedValue = (savedState) => {
+  if (savedState && savedState.value) {
+    return savedState.value
+  }
+  return ''
+}
+
+const getMaxVisibleItems = (
+  height,
+  searchHeaderHeight,
+  tableHeaderHeight,
+  rowHeight
+) => {
+  return Math.floor(
+    (height - searchHeaderHeight - tableHeaderHeight) / rowHeight
+  )
+}
+
+export const loadContent = async (state, savedState) => {
   const { height, rowHeight } = state
   const keyBindings = await KeyBindingsInitial.getKeyBindings()
   const parsedKeyBindings = ParseKeyBindings.parseKeyBindings(keyBindings)
-  const filteredKeyBindings = parsedKeyBindings
   const searchHeaderHeight = 50
   const tableHeaderHeight = 24
-  const maxVisibleItems = Math.floor(
-    (height - searchHeaderHeight - tableHeaderHeight) / rowHeight
+  const maxVisibleItems = getMaxVisibleItems(
+    height,
+    searchHeaderHeight,
+    tableHeaderHeight,
+    rowHeight
+  )
+  const savedValue = getSavedValue(savedState)
+  const filteredKeyBindings = FilterKeyBindings.getFilteredKeyBindings(
+    parsedKeyBindings,
+    savedValue
   )
   const maxLineY = Math.min(filteredKeyBindings.length, maxVisibleItems)
   return {
@@ -42,6 +74,7 @@ export const loadContent = async (state) => {
     filteredKeyBindings,
     maxLineY,
     maxVisibleItems,
+    value: savedValue,
   }
 }
 

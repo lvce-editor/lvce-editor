@@ -41,3 +41,8 @@ export const setTableDom = (state, dom) => {
   const $Root = VirtualDom.render(dom)
   $KeyBindingsTableWrapper.replaceChildren($Root.firstChild)
 }
+
+export const setValue = (state, value) => {
+  const { $InputBox } = state
+  $InputBox.value = value
+}

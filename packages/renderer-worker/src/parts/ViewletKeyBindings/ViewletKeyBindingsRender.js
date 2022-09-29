@@ -202,4 +202,18 @@ const renderKeyBindings = {
   },
 }
 
-export const render = [renderKeyBindings]
+const renderValue = {
+  isEqual(oldState, newState) {
+    return oldState.value === newState.value
+  },
+  apply(oldState, newState) {
+    return [
+      /* viewletSend */ 'Viewlet.send',
+      /* id */ 'KeyBindings',
+      /* method */ 'setValue',
+      /* setValue */ newState.value,
+    ]
+  },
+}
+
+export const render = [renderKeyBindings, renderValue]
