@@ -115,7 +115,7 @@ export const load = async (viewlet, focus = false, restore = false) => {
       viewletState.version === undefined ? undefined : ++viewletState.version
     let instanceSavedState
     if (restore) {
-      const stateToSave = SaveState.getSavedState()
+      const stateToSave = await SaveState.getSavedState()
       instanceSavedState = getInstanceSavedState(stateToSave, viewlet.id)
     }
     let newState = await module.loadContent(viewletState, instanceSavedState)
