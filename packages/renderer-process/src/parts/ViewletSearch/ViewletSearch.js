@@ -10,7 +10,15 @@ export const create = () => {
   const $ViewletSearchInput = InputBox.create()
   $ViewletSearchInput.placeholder = 'Search'
   $ViewletSearchInput.oninput = ViewletSearchEvents.handleInput
-  $ViewletSearchInput.className = 'InputBox ViewletSearchInput'
+
+  const $SearchStatus = document.createElement('div')
+  // @ts-ignore
+  $SearchStatus.role = 'status'
+  $SearchStatus.className = 'ViewletSearchMessage'
+
+  const $SearchHeader = document.createElement('div')
+  $SearchHeader.className = 'SearchHeader'
+  $SearchHeader.append($ViewletSearchInput, $SearchStatus)
 
   const $SearchResults = document.createElement('div')
   $SearchResults.className = 'SearchResults'
@@ -18,15 +26,10 @@ export const create = () => {
   $SearchResults.onmousedown = ViewletSearchEvents.handleClick
   $SearchResults.oncontextmenu = ViewletSearchEvents.handleContextMenu
 
-  const $SearchStatus = document.createElement('div')
-  // @ts-ignore
-  $SearchStatus.role = 'status'
-  $SearchStatus.className = 'ViewletSearchMessage'
-
   const $Viewlet = document.createElement('div')
   $Viewlet.dataset.viewletId = 'Search'
   $Viewlet.className = 'Viewlet'
-  $Viewlet.append($ViewletSearchInput, $SearchStatus, $SearchResults)
+  $Viewlet.append($SearchHeader, $SearchResults)
 
   return {
     $Viewlet,
