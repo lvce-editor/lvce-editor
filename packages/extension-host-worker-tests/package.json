@@ -13,7 +13,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@playwright/test": "^1.26.0",
+    "@playwright/test": "^1.26.1",
     "@types/node": "^18.7.23"
   },
   "xo": {
