@@ -57,7 +57,7 @@ export const hydrate = async () => {
   await RendererProcess.invoke('Window.onVisibilityChange')
 }
 
-export const getSavedState = async () => {
+export const getSavedState = () => {
   if (Workspace.isTest()) {
     return undefined
   }
