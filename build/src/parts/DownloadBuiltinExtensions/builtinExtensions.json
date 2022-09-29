@@ -193,5 +193,10 @@
     "name": "builtin.theme-ayu",
     "repository": "github.com/lvce-editor/theme-ayu",
     "version": "0.0.1"
+  },
+  {
+    "name": "builtin.theme-atom-one-dark",
+    "repository": "github.com/lvce-editor/theme-atom-one-dark",
+    "version": "0.0.1"
   }
 ]
