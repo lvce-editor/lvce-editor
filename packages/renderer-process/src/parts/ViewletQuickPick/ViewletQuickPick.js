@@ -190,19 +190,25 @@ export const focus = (state) => {
 // - for nvda ariaRoleDescription works better
 
 export const create = () => {
-  const $QuickPickInput = InputBox.create()
+  const $QuickPickInputText = document.createElement('div')
+  const $QuickPickInputCursor = document.createElement('div')
+  $QuickPickInputCursor.className = 'EditorCursor'
+  // $QuickPickInputCursor
+  const $QuickPickInput = document.createElement('div')
   $QuickPickInput.setAttribute('aria-controls', Ids.QuickPickItems) // TODO use idl once supported
   // @ts-ignore
   $QuickPickInput.role = Roles.ComboBox
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
   $QuickPickInput.ariaAutoComplete = 'list'
-  $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
-  $QuickPickInput.oninput = ViewletQuickPickEvents.handleInput
+  $QuickPickInput.contentEditable = 'plaintext-only'
+  // $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
+  // $QuickPickInput.oninput = ViewletQuickPickEvents.handleInput
   $QuickPickInput.addEventListener(
     'beforeinput',
     ViewletQuickPickEvents.handleBeforeInput
   )
   $QuickPickInput.ariaExpanded = 'true'
+  $QuickPickInput.append($QuickPickInputText, $QuickPickInputCursor)
 
   const $QuickPickHeader = document.createElement('div')
   $QuickPickHeader.id = Ids.QuickPickHeader
@@ -236,6 +242,8 @@ export const create = () => {
     $QuickPickInput,
     $QuickPickItems,
     $QuickPickStatus: undefined,
+    $QuickPickInputText,
+    $QuickPickInputCursor,
   }
 }
 
@@ -279,14 +287,13 @@ export const dispose = (state) => {
 }
 
 export const setValue = (state, value) => {
-  const { $QuickPickInput } = state
-  $QuickPickInput.value = value
+  const { $QuickPickInputText } = state
+  $QuickPickInputText.textContent = value
 }
 
 export const setCursorOffset = (state, cursorOffset) => {
-  const { $QuickPickInput } = state
-  $QuickPickInput.selectionStart = cursorOffset
-  $QuickPickInput.selectionEnd = cursorOffset
+  const { $QuickPickInputCursor } = state
+  $QuickPickInputCursor.style.left = `${cursorOffset * 9}px`
 }
 
 export const setItemsHeight = (state, itemsHeight) => {

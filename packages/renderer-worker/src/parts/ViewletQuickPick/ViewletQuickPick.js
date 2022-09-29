@@ -382,16 +382,11 @@ const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
   }
 }
 
-export const handleBeforeInput = (
-  state,
-  inputType,
-  data,
-  selectionStart,
-  selectionEnd
-) => {
+export const handleBeforeInput = (state, inputType, data) => {
   Assert.string(inputType)
-  Assert.number(selectionStart)
-  Assert.number(selectionEnd)
+  const { value } = state
+  const selectionStart = value.length
+  const selectionEnd = selectionStart
   const { newValue, cursorOffset } = getNewValue(
     state.value,
     inputType,
