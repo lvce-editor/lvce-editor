@@ -9,6 +9,7 @@ import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDoc
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
+import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.js'
 
 // prettier-ignore
 export const createCommandMap = () => {
@@ -43,12 +44,15 @@ export const create = () => {
     executeDefinitionProvider: ExtensionHostDefinition.executeDefinitionProvider,
 
     // Implementation
-    registerImplementationProvider:ExtensionHostImplementation.registerImplementationProvider,
-    executeImplementationProvider:ExtensionHostImplementation.executeImplementationProvider,
+    registerImplementationProvider: ExtensionHostImplementation.registerImplementationProvider,
+    executeImplementationProvider: ExtensionHostImplementation.executeImplementationProvider,
 
     // Reference
-    registerReferenceProvider:ExtensionHostReference.registerReferenceProvider,
-    executeReferenceProvider:ExtensionHostReference.executeReferenceProvider,
+    registerReferenceProvider: ExtensionHostReference.registerReferenceProvider,
+    executeReferenceProvider: ExtensionHostReference.executeReferenceProvider,
+
+    // Source Control
+    registerSourceControlProvider: ExtensionHostSourceControl.registerSourceControlProvider,
 
     // Tab Completion
     registerTabCompletionProvider: ExtensionHostTabCompletion.registerTabCompletionProvider,

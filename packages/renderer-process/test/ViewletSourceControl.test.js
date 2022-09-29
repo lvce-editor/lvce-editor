@@ -46,16 +46,14 @@ test('create', () => {
 
 test('setChangedFiles', () => {
   const state = ViewletSourceControl.create()
-  ViewletSourceControl.setChangedFiles(state, {
-    workingTree: [
-      {
-        file: '/tmp/file-1',
-      },
-      {
-        file: '/tmp/file-2',
-      },
-    ],
-  })
+  ViewletSourceControl.setChangedFiles(state, [
+    {
+      file: '/tmp/file-1',
+    },
+    {
+      file: '/tmp/file-2',
+    },
+  ])
   expect(getSimpleList(state)).toEqual(['file-1', 'file-2'])
 })
 
@@ -70,16 +68,14 @@ test('event - click', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   const state = ViewletSourceControl.create()
-  ViewletSourceControl.setChangedFiles(state, {
-    workingTree: [
-      {
-        file: '/tmp/file-1',
-      },
-      {
-        file: '/tmp/file-2',
-      },
-    ],
-  })
+  ViewletSourceControl.setChangedFiles(state, [
+    {
+      file: '/tmp/file-1',
+    },
+    {
+      file: '/tmp/file-2',
+    },
+  ])
   state.$ViewletTree.children[0].dispatchEvent(
     new Event('click', {
       bubbles: true,
