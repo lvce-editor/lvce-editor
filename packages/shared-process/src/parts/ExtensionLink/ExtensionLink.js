@@ -7,6 +7,10 @@ import * as SymLink from '../SymLink/SymLink.js'
 
 const linkFallBack = async (path) => {
   try {
+    const manifestPath = Path.join(path, 'extension.json')
+    if (!(await FileSystem.exists(manifestPath))) {
+      throw new Error('no extension manifest found')
+    }
     const extensionsPath = Platform.getExtensionsPath()
     const baseName = Path.basename(path)
     const to = Path.join(extensionsPath, baseName)
@@ -19,6 +23,10 @@ const linkFallBack = async (path) => {
 
 export const link = async (path) => {
   try {
+    const manifestPath = Path.join(path, 'extension.json')
+    if (!(await FileSystem.exists(manifestPath))) {
+      throw new Error('no extension manifest found')
+    }
     const extensionsPath = Platform.getExtensionsPath()
     const baseName = Path.basename(path)
     const to = Path.join(extensionsPath, baseName)
