@@ -102,6 +102,7 @@ const getFn = (id) => {
       return ExtensionHostSourceControl.getBadgeCount
     case 'SourceControl.getModifiedFiles':
     case 'getSourceControlChangedFiles':
+    case 'ExtensionHost.sourceControlGetChangedFiles':
       return ExtensionHostSourceControl.sourceControlGetModifiedFiles
     case 412:
     case 'SourceControl.acceptInput':
