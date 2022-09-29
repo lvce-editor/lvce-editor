@@ -29,43 +29,6 @@ test('create', () => {
   expect(ViewletQuickPick.create()).toBeDefined()
 })
 
-test('handleInput - same value', async () => {
-  const state = {
-    ...ViewletQuickPick.create(),
-    value: 'test',
-    focusedIndex: 0,
-    provider: {
-      getPicks: jest.fn(() => []),
-      getFilterValue(value) {
-        return value
-      },
-    },
-    filteredPicks: [{ label: '1' }, { label: '2' }, { label: '3' }],
-  }
-  expect(await ViewletQuickPick.handleInput(state, 'test')).toBe(state)
-  expect(state.provider.getPicks).not.toHaveBeenCalled()
-})
-
-test('handleInput - different value', async () => {
-  const state = {
-    ...ViewletQuickPick.create(),
-    value: 'test',
-    focusedIndex: 0,
-    provider: {
-      getPicks: jest.fn(() => []),
-      getFilterValue(value) {
-        return value
-      },
-    },
-    items: [{ label: '1' }, { label: '2' }, { label: '3' }],
-  }
-  expect(await ViewletQuickPick.handleInput(state, 'abc')).toMatchObject({
-    items: [],
-  })
-  expect(state.provider.getPicks).toHaveBeenCalledTimes(1)
-  expect(state.provider.getPicks).toHaveBeenCalledWith('abc')
-})
-
 test('handleBeforeInput - insertText - at end', async () => {
   const state = {
     ...ViewletQuickPick.create(),
