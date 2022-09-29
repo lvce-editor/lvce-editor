@@ -1,6 +1,6 @@
 import * as Layout from '../Layout/Layout.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as TitleBarMenu from '../TitleBarMenuBar/TitleBarMenuBar.js'
+import * as ViewletTitleBarEvents from './ViewletTitleBarEvents.js'
 
 export const create = () => {
   const $TitleBarMenu = TitleBarMenu.create()
@@ -32,41 +32,6 @@ export const menuClose = TitleBarMenu.closeMenu
 
 export const menuGetEntryBounds = TitleBarMenu.getMenuEntryBounds
 
-const handleTitleBarButtonClickMinmize = () => {
-  RendererWorker.send('TitleBar.handleTitleBarButtonClickMinimize')
-}
-
-const handleTitleBarButtonClickToggleMaximize = () => {
-  RendererWorker.send('TitleBar.handleTitleBarButtonClickToggleMaximize')
-}
-
-const handleTitleBarButtonClickClose = () => {
-  RendererWorker.send('TitleBar.handleTitleBarButtonClickClose')
-}
-
-/**
- *
- * @param {MouseEvent} event
- */
-const handleTitleBarButtonsClick = (event) => {
-  const { target } = event
-  // @ts-ignore
-  const { id } = target
-  switch (id) {
-    case 'TitleBarButtonMinimize':
-      handleTitleBarButtonClickMinmize()
-      break
-    case 'TitleBarButtonToggleMaximize':
-      handleTitleBarButtonClickToggleMaximize()
-      break
-    case 'TitleBarButtonClose':
-      handleTitleBarButtonClickClose()
-      break
-    default:
-      break
-  }
-}
-
 export const setButtons = (state, buttons) => {
   const { $TitleBar } = state
   if (buttons.length > 0) {
@@ -83,7 +48,8 @@ export const setButtons = (state, buttons) => {
       $TitleBarButton.append($Icon)
       $TitleBarButtons.append($TitleBarButton)
     }
-    $TitleBarButtons.onmousedown = handleTitleBarButtonsClick
+    $TitleBarButtons.onmousedown =
+      ViewletTitleBarEvents.handleTitleBarButtonsClick
     $TitleBar.append($TitleBarButtons)
   }
 }
