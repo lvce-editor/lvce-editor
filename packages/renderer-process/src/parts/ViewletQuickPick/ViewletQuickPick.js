@@ -3,7 +3,6 @@
 import * as AriaAlert from '../AriaAlert/AriaAlert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
 
 // TODO use another virtual list that just appends elements and
@@ -190,22 +189,6 @@ export const focus = (state) => {
 // - for windows narrator, ariaLabel works well
 // - for nvda ariaRoleDescription works better
 
-const handleBeforeInput = (event) => {
-  event.preventDefault()
-  const $Target = event.target
-  const selectionStart = $Target.selectionStart
-  const selectionEnd = $Target.selectionEnd
-  const inputType = event.inputType
-  const data = event.data
-  RendererWorker.send(
-    'QuickPick.handleBeforeInput',
-    /* inputType */ inputType,
-    /* data */ data,
-    /* selectionStart */ selectionStart,
-    /* selectionEnd */ selectionEnd
-  )
-}
-
 export const create = () => {
   const $QuickPickInput = InputBox.create()
   $QuickPickInput.setAttribute('aria-controls', Ids.QuickPickItems) // TODO use idl once supported
@@ -215,7 +198,10 @@ export const create = () => {
   $QuickPickInput.ariaAutoComplete = 'list'
   $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
   $QuickPickInput.oninput = ViewletQuickPickEvents.handleInput
-  $QuickPickInput.addEventListener('beforeinput', handleBeforeInput)
+  $QuickPickInput.addEventListener(
+    'beforeinput',
+    ViewletQuickPickEvents.handleBeforeInput
+  )
   $QuickPickInput.ariaExpanded = 'true'
 
   const $QuickPickHeader = document.createElement('div')
