@@ -102,21 +102,6 @@ test.skip('event - beforeinput', () => {
   ])
 })
 
-test('event - input', () => {
-  const state = ViewletQuickPick.create()
-  const $QuickPickInput = state.$QuickPickInput
-  $QuickPickInput.value = '>a'
-  const event = new InputEvent('input', {
-    bubbles: true,
-    cancelable: true,
-  })
-  $QuickPickInput.dispatchEvent(event)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'QuickPick.handleInput',
-    '>a'
-  )
-})
-
 test('event - wheel', () => {
   const state = ViewletQuickPick.create()
   const event = new WheelEvent('wheel', {
