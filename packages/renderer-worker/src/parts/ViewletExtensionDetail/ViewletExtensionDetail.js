@@ -1,3 +1,4 @@
+import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as MarkDown from '../Markdown/Markdown.js'
@@ -26,7 +27,7 @@ const DEFAULT_ICON_THEME = '/icons/theme-icon.png'
 // TODO duplicate code with viewletExtensions
 const getIconSrc = (extension) => {
   if (extension.icon) {
-    return extension.icon
+    return ExtensionDisplay.getIcon(extension)
   }
   if (extension.name && extension.name.startsWith('Language Basics')) {
     return DEFAULT_ICON_LANGUAGE_BASICS
@@ -35,16 +36,6 @@ const getIconSrc = (extension) => {
     return DEFAULT_ICON_THEME
   }
   return DEFAULT_ICON_SRC
-}
-
-const getName = (extension) => {
-  if (extension.name && typeof extension.name === 'string') {
-    return extension.name
-  }
-  if (extension.id && typeof extension.id === 'string') {
-    return extension.id
-  }
-  return '<unknown>'
 }
 
 // TODO when there are multiple extension with the same id,
@@ -57,7 +48,7 @@ export const loadContent = async (state) => {
   const readmeHtml = MarkDown.toHtml(readmeContent)
   const sanitizedReadmeHtml = await SanitizeHtml.sanitizeHtml(readmeHtml)
   const iconSrc = getIconSrc(extension)
-  const name = getName(extension)
+  const name = ExtensionDisplay.getName(extension)
   return {
     ...state,
     sanitizedReadmeHtml,
