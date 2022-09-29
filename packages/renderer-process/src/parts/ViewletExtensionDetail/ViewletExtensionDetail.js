@@ -14,6 +14,8 @@ export const create = () => {
 
   const $ExtensionDetailIcon = document.createElement('img')
   $ExtensionDetailIcon.className = 'ExtensionDetailIcon'
+  $ExtensionDetailIcon.alt = ''
+  $ExtensionDetailIcon.draggable = false
 
   const $ExtensionDetailHeader = document.createElement('div')
   $ExtensionDetailHeader.className = 'ExtensionDetailHeader'
