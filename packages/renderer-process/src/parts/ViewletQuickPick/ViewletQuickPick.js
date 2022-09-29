@@ -283,7 +283,6 @@ export const setValue = (state, value) => {
 }
 
 export const setCursorOffset = (state, cursorOffset) => {
-  console.log('set cursor offset', cursorOffset)
   const { $QuickPickInput } = state
   $QuickPickInput.selectionStart = cursorOffset
   $QuickPickInput.selectionEnd = cursorOffset

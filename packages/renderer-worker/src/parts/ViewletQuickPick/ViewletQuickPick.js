@@ -228,7 +228,6 @@ export const selectCurrentIndex = (state) => {
 
 // TODO when user types letters -> no need to query provider again -> just filter existing results
 const handleInput = async (state, newValue, cursorOffset) => {
-  console.log('handle input')
   if (state.value === newValue) {
     return state
   }
@@ -264,7 +263,6 @@ export const handleBeforeInput = (
     selectionStart,
     selectionEnd
   )
-  console.log({ newValue, cursorOffset, selectionStart, selectionEnd })
   return handleInput(state, newValue, cursorOffset)
 }
 
