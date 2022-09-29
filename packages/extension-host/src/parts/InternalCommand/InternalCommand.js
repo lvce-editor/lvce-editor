@@ -2,6 +2,7 @@ import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/E
 import * as ExtensionHostClosingTag from '../ExtensionHostClosingTag/ExtensionHostClosingTag.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
+import * as ExtensionHostConfiguration from '../ExtensionHostConfiguration/ExtensionHostConfiguration.js'
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
 import * as ExtensionHostDiagnostic from '../ExtensionHostDiagnostic/ExtensionHostDiagnostic.js'
 import * as ExtensionHostExtension from '../ExtensionHostExtension/ExtensionHostExtension.js'
@@ -21,7 +22,6 @@ import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/Exten
 import * as ExtensionHostTextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
-import * as ExtensionHostConfiguration from '../ExtensionHostConfiguration/ExtensionHostConfiguration.js'
 import * as Stats from '../Stats/Stats.js'
 
 const getFn = (id) => {
@@ -125,8 +125,10 @@ const getFn = (id) => {
     case 'Workspace.setWorkspacePath':
       return ExtensionHostWorkspace.setWorkspaceFolder
     case 'StatusBar.getStatusBarItems':
+    case 'ExtensionHost.getStatusBarItems':
       return ExtensionHostStatusBar.getStatusBarItems
     case 'StatusBar.registerChangeListener':
+    case 'ExtensionHostStatusBar.registerChangeListener':
       return ExtensionHostStatusBar.registerChangeListener
     case 'ExtensionHostQuickPick.handleQuickPickResult':
       return ExtensionHostQuickPick.handleQuickPickResult

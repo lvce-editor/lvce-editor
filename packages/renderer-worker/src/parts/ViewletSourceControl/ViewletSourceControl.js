@@ -49,6 +49,7 @@ const getChangedFiles = async () => {
 
 export const loadContent = async (state) => {
   const changedFiles = await getChangedFiles()
+  console.log({ changedFiles })
   return {
     ...state,
     index: changedFiles.index,
@@ -59,15 +60,7 @@ export const loadContent = async (state) => {
   }
 }
 
-export const contentLoaded = async (state) => {
-  // TODO
-  // await RendererProcess.invoke(
-  //   /* Viewlet.send */ 'Viewlet.send',
-  //   /* id */ 'Source Control',
-  //   /* method */ 'setChangedFiles',
-  //   /* changedFiles */ state.changedFiles
-  // )
-}
+export const contentLoaded = async (state) => {}
 
 export const handleClick = async (state, index) => {
   const item = state.workingTree[index]
@@ -108,4 +101,18 @@ const renderValue = {
   },
 }
 
-export const render = [renderValue]
+const renderChangeFiles = {
+  isEqual(oldState, newState) {
+    return oldState.workingTree === newState.workingTree
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'Source Control',
+      /* method */ 'setChangedFiles',
+      /* changedFiles */ newState.workingTree,
+    ]
+  },
+}
+
+export const render = [renderValue, renderChangeFiles]

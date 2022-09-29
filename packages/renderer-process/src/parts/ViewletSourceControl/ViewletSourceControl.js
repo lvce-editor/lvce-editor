@@ -66,12 +66,12 @@ export const create = () => {
 
 export const dispose = () => {}
 
-export const setChangedFiles = (state, changedFiles) => {
+export const setChangedFiles = (state, workingTree) => {
   Assert.object(state)
-  Assert.array(changedFiles.workingTree)
+  Assert.array(workingTree)
   // console.log({context: changedFiles})
-  console.log({ changedFiles })
-  const $$Entries = changedFiles.workingTree.map(create$Item)
+  console.log({ changedFiles: workingTree })
+  const $$Entries = workingTree.map(create$Item)
   state.$ViewletTree.append(...$$Entries)
 }
 
