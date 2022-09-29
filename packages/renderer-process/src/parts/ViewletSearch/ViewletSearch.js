@@ -1,82 +1,7 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as InputBox from '../InputBox/InputBox.js'
 import * as Assert from '../Assert/Assert.js'
-import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as DirentType from '../DirentType/DirentType.js'
-
-const handleInput = (event) => {
-  const $Target = event.target
-  const value = $Target.value
-  RendererWorker.send(
-    /* ViewletSearch.handleInput */ 'Search.handleInput',
-    /* value */ value
-  )
-}
-
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
-const getIndexTreeItem = ($Target) => {
-  return getNodeIndex($Target)
-}
-
-const getIndexTreeItemLabel = ($Target) => {
-  return getNodeIndex($Target.parentNode)
-}
-
-const getIndex = ($Target) => {
-  switch ($Target.className) {
-    case 'TreeItem':
-      return getIndexTreeItem($Target)
-    case 'TreeItemLabel':
-      return getIndexTreeItemLabel($Target)
-    default:
-      return -1
-  }
-}
-
-const handleClick = (event) => {
-  if (event.button === MouseEventType.RightClick) {
-    return
-  }
-  const $Target = event.target
-  const index = getIndex($Target)
-  RendererWorker.send(
-    /* Search.handleClick */ 'Search.handleClick',
-    /* index */ index
-  )
-}
-
-const handleContextMenuMouse = (event) => {
-  const x = event.clientX
-  const y = event.clientY
-  RendererWorker.send(
-    /* Search.handleContextMenuMouseAt */ 'Search.handleContextMenuMouseAt',
-    /* x */ x,
-    /* y */ y
-  )
-}
-
-const handleContextMenuKeyboard = (event) => {
-  RendererWorker.send(
-    /* Search.handleContextMenuKeyboard */ 'Search.handleContextMenuKeyboard'
-  )
-}
-
-const handleContextMenu = (event) => {
-  event.preventDefault()
-  switch (event.button) {
-    case MouseEventType.Keyboard:
-      return handleContextMenuKeyboard(event)
-    default:
-      return handleContextMenuMouse(event)
-  }
-}
+import * as InputBox from '../InputBox/InputBox.js'
+import * as ViewletSearchEvents from './ViewletSearchEvents.js'
 
 // TODO name export not necessary
 export const name = 'Search'
@@ -84,14 +9,14 @@ export const name = 'Search'
 export const create = () => {
   const $ViewletSearchInput = InputBox.create()
   $ViewletSearchInput.placeholder = 'Search'
-  $ViewletSearchInput.oninput = handleInput
+  $ViewletSearchInput.oninput = ViewletSearchEvents.handleInput
   $ViewletSearchInput.className = 'InputBox ViewletSearchInput'
 
   const $SearchResults = document.createElement('div')
   $SearchResults.className = 'SearchResults'
   // TODO onclick vs onmousedown, should be consistent in whole application
-  $SearchResults.onmousedown = handleClick
-  $SearchResults.oncontextmenu = handleContextMenu
+  $SearchResults.onmousedown = ViewletSearchEvents.handleClick
+  $SearchResults.oncontextmenu = ViewletSearchEvents.handleContextMenu
 
   const $SearchStatus = document.createElement('div')
   // @ts-ignore
