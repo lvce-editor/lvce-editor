@@ -1,4 +1,3 @@
-// import * as Main from '../Main/Main.js'
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
@@ -10,7 +9,7 @@ const serializeInstance = (instance) => {
   if (instance && instance.factory && instance.factory.saveState) {
     return instance.factory.saveState(instance.state)
   }
-  return instance
+  return instance.state
 }
 
 const mapObject = (object, fn) => {
@@ -21,7 +20,6 @@ const mapObject = (object, fn) => {
 const getStateToSave = () => {
   const instances = ViewletStates.getAllInstances()
   const savedInstances = mapObject(instances, serializeInstance)
-  // const mainEditors = Main.state.editors
   return {
     instances: savedInstances,
     mainEditors: [],

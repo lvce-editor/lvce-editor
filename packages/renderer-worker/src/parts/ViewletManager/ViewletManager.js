@@ -52,13 +52,8 @@ export const create = (
 }
 
 const getInstanceSavedState = (savedState, id) => {
-  if (
-    savedState &&
-    savedState.instances &&
-    savedState.instances[id] &&
-    savedState.instances[id].state
-  ) {
-    return savedState.instances[id].state
+  if (savedState && savedState.instances && savedState.instances[id]) {
+    return savedState.instances[id]
   }
   return undefined
 }
