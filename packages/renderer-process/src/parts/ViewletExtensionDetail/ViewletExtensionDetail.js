@@ -1,3 +1,5 @@
+import * as ViewletExtensionDetailEvents from './ViewletExtensionDetailEvents.js'
+
 export const name = 'ExtensionDetail'
 
 export const create = () => {
@@ -16,6 +18,7 @@ export const create = () => {
   $ExtensionDetailIcon.className = 'ExtensionDetailIcon'
   $ExtensionDetailIcon.alt = ''
   $ExtensionDetailIcon.draggable = false
+  $ExtensionDetailIcon.onerror = ViewletExtensionDetailEvents.handleIconError
 
   const $ExtensionDetailHeader = document.createElement('div')
   $ExtensionDetailHeader.className = 'ExtensionDetailHeader'

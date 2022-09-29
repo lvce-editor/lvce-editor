@@ -66,6 +66,17 @@ export const loadContent = async (state) => {
   }
 }
 
+export const handleIconError = (state) => {
+  const { iconSrc } = state
+  if (iconSrc === DEFAULT_ICON_SRC) {
+    return state
+  }
+  return {
+    ...state,
+    iconSrc: DEFAULT_ICON_SRC,
+  }
+}
+
 export const hasFunctionalRender = true
 
 const renderName = {
