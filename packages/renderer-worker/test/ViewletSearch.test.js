@@ -71,6 +71,23 @@ test.skip('dispose', () => {
   })
 })
 
+test('loadContent - restore value', async () => {
+  const state = ViewletSearch.create()
+  // @ts-ignore
+  TextSearch.textSearch.mockImplementation(() => {
+    return {
+      results: [],
+    }
+  })
+  expect(
+    await ViewletSearch.loadContent(state, {
+      value: 'test search',
+    })
+  ).toMatchObject({
+    value: 'test search',
+  })
+})
+
 test('handleInput - empty results', async () => {
   const state = ViewletSearch.create()
   // @ts-ignore
