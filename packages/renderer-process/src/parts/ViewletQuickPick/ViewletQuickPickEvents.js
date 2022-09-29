@@ -95,11 +95,8 @@ export const handleBlur = (event) => {
 
 export const handleBeforeInput = (event) => {
   event.preventDefault()
-  const $Target = event.target
-  const selectionStart = $Target.selectionStart
-  const selectionEnd = $Target.selectionEnd
-  const inputType = event.inputType
-  const data = event.data
+  const { target, inputType, data } = event
+  const { selectionStart, selectionEnd } = target
   RendererWorker.send(
     'QuickPick.handleBeforeInput',
     /* inputType */ inputType,

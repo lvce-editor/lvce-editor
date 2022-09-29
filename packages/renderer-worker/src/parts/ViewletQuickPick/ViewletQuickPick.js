@@ -1,9 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
-import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as InputEventType from '../InputEventType/InputEventType.js'
 import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
+import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
@@ -355,6 +355,13 @@ const getNewValueDeleteWordForward = (value, selectionStart, selectionEnd) => {
   }
 }
 
+const getNewValueInsertCompositionText = (value) => {
+  return {
+    newValue: value,
+    cursorOffset: value.length - 1,
+  }
+}
+
 const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
   switch (inputType) {
     case InputEventType.InsertText:
@@ -377,6 +384,8 @@ const getNewValue = (value, inputType, data, selectionStart, selectionEnd) => {
       return getNewValueDeleteWordBackward(value, selectionStart, selectionEnd)
     case InputEventType.InsertLineBreak:
       return value
+    case InputEventType.InsertCompositionText:
+      return getNewValueInsertCompositionText(value)
     default:
       throw new Error(`unsupported input type ${inputType}`)
   }
@@ -392,8 +401,9 @@ export const handleBeforeInput = (
   Assert.string(inputType)
   Assert.number(selectionStart)
   Assert.number(selectionEnd)
+  const { value } = state
   const { newValue, cursorOffset } = getNewValue(
-    state.value,
+    value,
     inputType,
     data,
     selectionStart,
