@@ -1,9 +1,10 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js' // TODO use Command.execute instead
 import * as ExtensionsMarketplace from '../ExtensionMarketplace/ExtensionMarketplace.js'
-import * as Platform from '../Platform/Platform.js'
-import * as Assert from '../Assert/Assert.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import {
   getListHeight,
@@ -11,7 +12,6 @@ import {
   ITEM_HEIGHT,
   MINIMUM_SLIDER_SIZE,
 } from './ViewletExtensionsShared.js'
-import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 const SUGGESTIONS = [
   '@builtin',
@@ -107,77 +107,17 @@ export const contentLoaded = async (state) => {
   // )
 }
 
-const RE_PUBLISHER = /^[a-z\d\-]+/
-
-// TODO handle case when extension is of type number|array|null|string
-const getPublisher = (extension) => {
-  if (!extension || !extension.id) {
-    return 'n/a'
-  }
-  // TODO handle case when id is not of type string -> should not crash application
-  const match = extension.id.match(RE_PUBLISHER)
-  if (!match) {
-    return 'n/a'
-  }
-  return match[0]
-}
-
-// TODO all icon related logic should be here, not in renderer process
-const getIcon = (extension) => {
-  if (!extension || !extension.path || !extension.icon) {
-    return ''
-  }
-  if (Platform.platform === 'remote') {
-    return `/remote/${extension.path}/${extension.icon}` // TODO support windows paths
-  }
-  if (Platform.platform === 'electron') {
-    return `/remote/${extension.path}/${extension.icon}` // TODO support windows paths
-  }
-  return ''
-}
-
-const getName = (extension) => {
-  if (extension && extension.name) {
-    return extension.name
-  }
-  if (extension && extension.id) {
-    return extension.id
-  }
-  return 'n/a'
-}
-
-const getVersion = (extension) => {
-  if (!extension || !extension.version) {
-    return 'n/a'
-  }
-  return extension.version
-}
-
-const getDescription = (extension) => {
-  if (!extension || !extension.description) {
-    return 'n/a'
-  }
-  return extension.description
-}
-
-const getId = (extension) => {
-  if (!extension || !extension.id) {
-    return 'n/a'
-  }
-  return extension.id
-}
-
 const toInstalledViewObject = (extension) => {
   return {
-    name: getName(extension),
-    publisher: getPublisher(extension),
-    version: getVersion(extension),
-    description: getDescription(extension),
+    name: ExtensionDisplay.getName(extension),
+    publisher: ExtensionDisplay.getPublisher(extension),
+    version: ExtensionDisplay.getVersion(extension),
+    description: ExtensionDisplay.getDescription(extension),
     // TODO type field: builtin|marketplace|external
     // TODO should be status
     state: 'installed',
-    id: getId(extension),
-    icon: getIcon(extension),
+    id: ExtensionDisplay.getId(extension),
+    icon: ExtensionDisplay.getIcon(extension),
   }
 }
 
