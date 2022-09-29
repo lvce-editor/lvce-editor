@@ -1,5 +1,9 @@
+:root {
+  --KeyBindingsEditorColor: #e1e2de;
+}
+
 .Viewlet[data-viewlet-id='KeyBindings'] {
-  color: white;
+  color: var(--KeyBindingsEditorColor);
 }
 
 .KeyBindingsHeader {
