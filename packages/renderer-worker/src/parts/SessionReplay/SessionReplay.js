@@ -72,8 +72,9 @@ export const replaySession = async (sessionId) => {
   const events = await getEvents(sessionId)
   const originalIpc = RendererProcess.state.ipc
   const originalSend = originalIpc.send
-  RendererProcess.state.ipc.send = () => {}
-  RendererProcess.state.ipc.onmessage = (event) => {
+  const originalOnMessage = originalIpc.onmessage
+  const wrappedSend = () => {}
+  const wrappedOnMessage = async (event) => {
     const data = event.data
     if (typeof data === 'string') {
       return
@@ -83,11 +84,37 @@ export const replaySession = async (sessionId) => {
     } else if ('error' in data) {
       callbacks[data.id].reject(data.error)
     } else if ('method' in data) {
-      // ignore
+      switch (data.method) {
+        case 'TitleBar.handleTitleBarButtonClickClose':
+          RendererProcess.state.ipc.onmessage = originalOnMessage
+          RendererProcess.state.ipc.send = originalSend
+          await Command.execute('ElectronWindow.close')
+          RendererProcess.state.ipc.onmessage = wrappedOnMessage
+          RendererProcess.state.ipc.send = wrappedSend
+          break
+        case 'TitleBar.handleTitleBarButtonClickMinimize':
+          RendererProcess.state.ipc.onmessage = originalOnMessage
+          RendererProcess.state.ipc.send = originalSend
+          await Command.execute('ElectronWindow.minimize')
+          RendererProcess.state.ipc.onmessage = wrappedOnMessage
+          RendererProcess.state.ipc.send = wrappedSend
+          break
+        case 'TitleBar.handleTitleBarButtonClickToggleMaximize':
+          RendererProcess.state.ipc.onmessage = originalOnMessage
+          RendererProcess.state.ipc.send = originalSend
+          await Command.execute('ElectronWindow.maximize')
+          RendererProcess.state.ipc.onmessage = wrappedOnMessage
+          RendererProcess.state.ipc.send = wrappedSend
+          break
+        default:
+          break
+      }
     } else {
       throw new Error('unexpected message from renderer worker')
     }
   }
+  RendererProcess.state.ipc.send = wrappedSend
+  RendererProcess.state.ipc.onmessage = wrappedOnMessage
   const callbacks = Object.create(null)
   const invoke = (event) => {
     return new Promise((resolve, reject) => {

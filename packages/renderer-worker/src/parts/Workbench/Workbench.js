@@ -33,6 +33,13 @@ export const startup = async (config) => {
 
   const initData = await InitData.getInitData()
 
+  if (initData.Location.href.includes('?replayId')) {
+    const url = new URL(initData.Location.href)
+    const replayId = url.searchParams.get('replayId')
+    await SessionReplay.replaySession(replayId)
+    return
+  }
+
   Performance.mark('code/willLoadPreferences')
   await Preferences.hydrate()
   Performance.mark('code/didLoadPreferences')
