@@ -197,7 +197,6 @@ export const create = () => {
   $QuickPickInput.ariaLabel = 'Type the name of a command to run.'
   $QuickPickInput.ariaAutoComplete = 'list'
   $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
-  $QuickPickInput.oninput = ViewletQuickPickEvents.handleInput
   $QuickPickInput.addEventListener(
     'beforeinput',
     ViewletQuickPickEvents.handleBeforeInput
@@ -284,6 +283,7 @@ export const setValue = (state, value) => {
 }
 
 export const setCursorOffset = (state, cursorOffset) => {
+  console.log('set cursor offset', cursorOffset)
   const { $QuickPickInput } = state
   $QuickPickInput.selectionStart = cursorOffset
   $QuickPickInput.selectionEnd = cursorOffset
