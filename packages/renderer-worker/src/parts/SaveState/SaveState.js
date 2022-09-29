@@ -33,6 +33,9 @@ const getStateToSave = () => {
 }
 
 export const handleVisibilityChange = async (visibilityState) => {
+  if (Workspace.isTest()) {
+    return
+  }
   if (visibilityState === 'hidden') {
     const stateToSave = getStateToSave()
     await Promise.all([
@@ -52,4 +55,11 @@ export const hydrate = async () => {
     return
   }
   await RendererProcess.invoke('Window.onVisibilityChange')
+}
+
+export const getSavedState = async () => {
+  if (Workspace.isTest()) {
+    return undefined
+  }
+  return LocalStorage.getJson('stateToSave')
 }
