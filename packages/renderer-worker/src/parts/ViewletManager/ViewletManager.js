@@ -5,6 +5,7 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as SaveState from '../SaveState/SaveState.js'
 
 const ViewletState = {
   Default: 0,
@@ -114,7 +115,7 @@ export const load = async (viewlet, focus = false, restore = false) => {
       viewletState.version === undefined ? undefined : ++viewletState.version
     let instanceSavedState
     if (restore) {
-      const stateToSave = await LocalStorage.getJson('stateToSave')
+      const stateToSave = SaveState.getSavedState()
       instanceSavedState = getInstanceSavedState(stateToSave, viewlet.id)
     }
     let newState = await module.loadContent(viewletState, instanceSavedState)
