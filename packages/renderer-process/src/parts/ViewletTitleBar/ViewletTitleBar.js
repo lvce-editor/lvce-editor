@@ -8,5 +8,6 @@ export const create = () => {
   $TitleBar.role = 'contentinfo'
   return {
     $TitleBar,
+    $Viewlet: $TitleBar,
   }
 }
