@@ -61,7 +61,7 @@ test('expandRecursively', async () => {
     root: '/test',
     pathSeparator: PathSeparatorType.Slash,
     focused: true,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -105,7 +105,7 @@ test('expandRecursively', async () => {
   ).toMatchObject({
     focused: true,
     focusedIndex: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -158,7 +158,7 @@ test('expandRecursively - merge with current items', async () => {
     root: '/test',
     pathSeparator: PathSeparatorType.Slash,
     focused: true,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -216,7 +216,7 @@ test('expandRecursively - merge with current items', async () => {
   ).toMatchObject({
     focused: true,
     focusedIndex: 1,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -278,7 +278,7 @@ test('expandRecursively - no dirent focused', async () => {
     root: '/test',
     pathSeparator: PathSeparatorType.Slash,
     focused: true,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -330,7 +330,7 @@ test('expandRecursively - no dirent focused', async () => {
   ).toMatchObject({
     focused: true,
     focusedIndex: -1,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',

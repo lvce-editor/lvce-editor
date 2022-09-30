@@ -12,7 +12,7 @@ const makeExpanded = (dirent) => {
 }
 
 export const expandRecursively = async (state) => {
-  const { dirents, focusedIndex, pathSeparator, root } = state
+  const { items, focusedIndex, pathSeparator, root } = state
   const dirent =
     focusedIndex < 0
       ? {
@@ -20,7 +20,7 @@ export const expandRecursively = async (state) => {
           path: root,
           depth: 0,
         }
-      : dirents[focusedIndex]
+      : items[focusedIndex]
   if (
     dirent.type !== DirentType.Directory &&
     dirent.type !== DirentType.DirectoryExpanding
@@ -50,16 +50,16 @@ export const expandRecursively = async (state) => {
   const childDirents = await getChildDirentsRecursively(dirent)
   const startIndex = focusedIndex
   if (focusedIndex >= 0) {
-    const endIndex = getParentEndIndex(dirents, focusedIndex)
+    const endIndex = getParentEndIndex(items, focusedIndex)
     const newDirents = [
-      ...dirents.slice(0, startIndex),
+      ...items.slice(0, startIndex),
       ...childDirents,
-      ...dirents.slice(endIndex),
+      ...items.slice(endIndex),
     ]
-    return { ...state, dirents: newDirents }
+    return { ...state, items: newDirents }
   }
   return {
     ...state,
-    dirents: childDirents.slice(1),
+    items: childDirents.slice(1),
   }
 }

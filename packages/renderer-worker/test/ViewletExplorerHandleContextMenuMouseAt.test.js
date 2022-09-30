@@ -53,7 +53,7 @@ test('event - issue with blur event after context menu event', async () => {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
     pathSeparator: '/',
     focusedIndex: 2,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',

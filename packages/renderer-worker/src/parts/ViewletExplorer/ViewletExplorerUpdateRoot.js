@@ -17,10 +17,10 @@ export const updateRoot = async () => {
   if (state2.disposed || state2.root !== state1.root) {
     return state2
   }
-  const newDirents = mergeDirents(state2.dirents, topLevelDirents)
+  const newDirents = mergeDirents(state2.items, topLevelDirents)
   const state3 = {
     ...state2,
-    dirents: newDirents,
+    items: newDirents,
   }
   return state3
 }

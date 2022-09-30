@@ -127,7 +127,7 @@ const getFocusedDirent = () => {
   if (!explorerState || explorerState.focusedIndex < 0) {
     return undefined
   }
-  return explorerState.dirents[explorerState.focusedIndex]
+  return explorerState.items[explorerState.focusedIndex]
 }
 
 const getMenuEntriesDirectory = () => {

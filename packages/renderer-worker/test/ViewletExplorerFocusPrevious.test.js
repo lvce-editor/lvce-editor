@@ -8,7 +8,7 @@ test('focusPrevious', () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         name: 'index.css',
         type: DirentType.File,
@@ -38,7 +38,7 @@ test('focusPrevious - at start', () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         name: 'index.css',
         type: DirentType.File,
@@ -68,7 +68,7 @@ test('focusPrevious - when no focus', () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         name: 'index.css',
         type: DirentType.File,
@@ -98,7 +98,7 @@ test('focusPrevious - when no focus and no dirents', () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [],
+    items: [],
   }
   expect(ViewletExplorerFocusPrevious.focusPrevious(state)).toMatchObject({
     focusedIndex: -1,

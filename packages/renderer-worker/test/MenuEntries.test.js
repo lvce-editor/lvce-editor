@@ -27,7 +27,7 @@ test('getMenuEntries - explorer', async () => {
   ViewletStates.set('Explorer', {
     state: {
       focusedIndex: -1,
-      dirents: [],
+      items: [],
     },
     factory: {},
   })

@@ -126,7 +126,7 @@ test('handlePaste - copied gnome files', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   expect(await ViewletExplorerHandlePaste.handlePaste(state1)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',

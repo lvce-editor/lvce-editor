@@ -5,12 +5,12 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 
 export const getIndexFromPosition = (state, x, y) => {
-  const { top, itemHeight, dirents } = state
+  const { top, itemHeight, items } = state
   const index = Math.floor((y - top) / itemHeight)
   if (index < 0) {
     return 0
   }
-  if (index >= dirents.length) {
+  if (index >= items.length) {
     return -1
   }
   return index

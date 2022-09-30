@@ -177,7 +177,7 @@ test('updateRoot - new folder', async () => {
     ]
   })
   expect(await ViewletExplorerUpdateRoot.updateRoot()).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',

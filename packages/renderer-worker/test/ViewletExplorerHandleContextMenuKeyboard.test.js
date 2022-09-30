@@ -29,7 +29,7 @@ test('handleContextMenuKeyboard', async () => {
     left: 10,
     top: 20,
     itemHeight: 20,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',

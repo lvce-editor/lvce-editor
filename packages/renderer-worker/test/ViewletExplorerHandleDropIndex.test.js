@@ -56,7 +56,7 @@ test('handleDrop - single file - into folder', async () => {
     ...ViewletExplorer.create(),
     root: '/test',
     focusedIndex: 1,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -93,7 +93,7 @@ test('handleDrop - single file - into folder', async () => {
       },
     ]
   )
-  expect(newState.dirents).toEqual([
+  expect(newState.items).toEqual([
     {
       depth: 1,
       posInSet: 1,

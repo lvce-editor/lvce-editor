@@ -50,7 +50,7 @@ test('handleDrop - single file', async () => {
     ...ViewletExplorer.create(),
     root: '/test',
     focusedIndex: 1,
-    dirents: [],
+    items: [],
     pathSeparator: '/',
   }
   expect(
@@ -66,7 +66,7 @@ test('handleDrop - single file', async () => {
       },
     ])
   ).toMatchObject({
-    dirents: [
+    items: [
       {
         path: '/test/file.txt',
       },
@@ -108,7 +108,7 @@ test('handleDrop - single file - merge with existing files', async () => {
     ...ViewletExplorer.create(),
     root: '/test',
     focusedIndex: 1,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -141,7 +141,7 @@ test('handleDrop - single file - merge with existing files', async () => {
       },
     ])
   ).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -183,7 +183,7 @@ test('handleDrop - error', async () => {
   const state = {
     root: '/test',
     focusedIndex: 1,
-    dirents: [],
+    items: [],
   }
   await expect(
     ViewletExplorerHandleDropRoot.handleDropRoot(state, [
