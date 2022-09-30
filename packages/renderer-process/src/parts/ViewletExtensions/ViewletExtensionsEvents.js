@@ -72,18 +72,21 @@ const handlePointerDownExtensionAuthorName = ($Target) => {
 }
 
 export const handlePointerDown = (event) => {
-  const $Target = event.target
-  switch ($Target.className) {
+  const { target, button } = event
+  if (button !== MouseEventType.LeftClick) {
+    return
+  }
+  switch (target.className) {
     case 'ExtensionListItem':
-      handlePointerDownExtension($Target)
+      handlePointerDownExtension(target)
       break
     case 'ExtensionName':
     case 'ExtensionDescription':
     case 'ExtensionFooter':
-      handlePointerDownExtensionDetail($Target)
+      handlePointerDownExtensionDetail(target)
       break
     case 'ExtensionAuthorName':
-      handlePointerDownExtensionAuthorName($Target)
+      handlePointerDownExtensionAuthorName(target)
       break
     default:
       break

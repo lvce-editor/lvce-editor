@@ -85,7 +85,6 @@
 .ExtensionListItem {
   text-decoration: none;
   padding: 0 1rem;
-  cursor: pointer;
   display: flex;
   gap: 14px;
   height: 62px;

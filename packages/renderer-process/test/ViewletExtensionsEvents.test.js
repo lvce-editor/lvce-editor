@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting pointer events
@@ -147,6 +148,7 @@ test('event - click - on extension', () => {
     new PointerEvent('pointerdown', {
       bubbles: true,
       cancelable: true,
+      button: MouseEventType.LeftClick,
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
