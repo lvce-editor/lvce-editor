@@ -298,7 +298,7 @@ test('getAllExtensions - invalid extension.json', async () => {
     {
       path: join(tmpDir1, 'test-extension'),
       reason: new VError(
-        'Failed to load extension "test-extension": Failed to load extension manifest: Json Parsing Error'
+        'Failed to load extension manifest for test-extension: Json Parsing Error'
       ),
       status: ExtensionManifestStatus.Rejected,
     },
@@ -392,7 +392,7 @@ test('getExtensions - error - invalid value - null', async () => {
     {
       status: ExtensionManifestStatus.Rejected,
       reason: new VError(
-        'Failed to load extension "test-extension-1": Failed to load extension manifest: Invalid manifest file: Not an JSON object.'
+        'Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'
       ),
       path: join(tmpDir1, 'test-extension-1'),
     },
@@ -416,7 +416,7 @@ test('getExtensions - error - invalid value - string', async () => {
     {
       status: ExtensionManifestStatus.Rejected,
       reason: new VError(
-        'Failed to load extension "test-extension-1": Failed to load extension manifest: Invalid manifest file: Not an JSON object.'
+        'Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'
       ),
       path: join(tmpDir1, 'test-extension-1'),
     },
@@ -440,7 +440,7 @@ test('getExtensions - error - invalid value - number', async () => {
     {
       status: ExtensionManifestStatus.Rejected,
       reason: new VError(
-        'Failed to load extension "test-extension-1": Failed to load extension manifest: Invalid manifest file: Not an JSON object.'
+        'Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'
       ),
       path: join(tmpDir1, 'test-extension-1'),
     },
@@ -464,7 +464,7 @@ test('getExtensions - error - invalid value - boolean', async () => {
     {
       status: ExtensionManifestStatus.Rejected,
       reason: new VError(
-        'Failed to load extension "test-extension-1": Failed to load extension manifest: Invalid manifest file: Not an JSON object.'
+        'Failed to load extension manifest for test-extension-1: Invalid manifest file: Not an JSON object.'
       ),
       path: join(tmpDir1, 'test-extension-1'),
     },
@@ -488,7 +488,7 @@ test('getExtensions - error - invalid json', async () => {
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       reason: new VError(
-        'Failed to load extension "test-extension-1": Failed to load extension manifest: Json Parsing Error'
+        'Failed to load extension manifest for test-extension-1: Json Parsing Error'
       ),
       status: ExtensionManifestStatus.Rejected,
       path: join(tmpDir1, 'test-extension-1'),

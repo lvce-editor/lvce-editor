@@ -112,12 +112,14 @@ test('link - error - symlink already exists', async () => {
   )
 })
 
-test.only('link - error - no manifest file found', async () => {
+test('link - error - no manifest file found', async () => {
   // @ts-ignore
   FileSystem.readFile.mockImplementation((uri) => {
     throw new FileNotFoundError(uri)
   })
   await expect(ExtensionLink.link('/test/my-extension')).rejects.toThrowError(
-    new Error('Failed to link extension: no extension manifest found')
+    new Error(
+      "Failed to link extension: Failed to load extension manifest for my-extension: File not found '/test/my-extension/extension.json'"
+    )
   )
 })

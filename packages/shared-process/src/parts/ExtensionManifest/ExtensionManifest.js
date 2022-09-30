@@ -33,10 +33,15 @@ export const get = async (path) => {
     const id = inferExtensionId(path)
     const enhancedError = new VError(
       error,
-      `Failed to load extension "${id}": Failed to load extension manifest`
+      `Failed to load extension manifest for ${id}`
     )
-    // @ts-ignore
-    enhancedError.code = error.code
+    if (error.code === FileSystemErrorCodes.ENOENT) {
+      // @ts-ignore
+      enhancedError.code = FileSystemErrorCodes.E_MANIFEST_NOT_FOUND
+    } else {
+      // @ts-ignore
+      enhancedError.code = error.code
+    }
     return {
       path,
       status: ExtensionManifestStatus.Rejected,
