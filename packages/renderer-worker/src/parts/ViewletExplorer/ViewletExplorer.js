@@ -138,8 +138,8 @@ const restoreExpandedState = async (savedState, root, pathSeparator) => {
 }
 
 export const saveState = (state) => {
-  const { dirents, root } = state
-  const expandedPaths = dirents.filter(isExpandedDirectory).map(getPath)
+  const { items, root } = state
+  const expandedPaths = items.filter(isExpandedDirectory).map(getPath)
   return {
     expandedPaths,
     root,
