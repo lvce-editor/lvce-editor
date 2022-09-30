@@ -2,8 +2,8 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as MouseEventTypes from '../src/parts/MouseEventType/MouseEventType.js'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
+import * as MouseEventTypes from '../src/parts/MouseEventType/MouseEventType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -22,12 +22,13 @@ const RendererWorker = await import(
   '../src/parts/RendererWorker/RendererWorker.js'
 )
 
-const TitleBarMenuBar = await import(
-  '../src/parts/TitleBarMenuBar/TitleBarMenuBar.js'
+const ViewletTitleBarMenuBar = await import(
+  '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
 )
 
 test('event - click on menu', () => {
-  const titleBarMenuEntries = [
+  const state = ViewletTitleBarMenuBar.create()
+  ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: MenuEntryId.File,
       name: 'File',
@@ -43,25 +44,22 @@ test('event - click on menu', () => {
       name: 'Selection',
       children: [],
     },
-  ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create()
-  const state = {
-    $TitleBarMenu: $TitleBarMenuBar,
-  }
-  TitleBarMenuBar.setEntries(state, titleBarMenuEntries)
+  ])
   const event = new MouseEvent('mousedown', {
     clientX: 27,
     clientY: 28,
     bubbles: true,
     cancelable: true,
   })
-  state.$TitleBarMenu.dispatchEvent(event)
+  const { $TitleBarMenuBar } = state
+  $TitleBarMenuBar.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('event - click on menu item', () => {
-  const titleBarMenuEntries = [
+  const state = ViewletTitleBarMenuBar.create()
+  ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: MenuEntryId.File,
       name: 'File',
@@ -77,19 +75,15 @@ test('event - click on menu item', () => {
       name: 'Selection',
       children: [],
     },
-  ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create()
-  const state = {
-    $TitleBarMenu: $TitleBarMenuBar,
-  }
-  TitleBarMenuBar.setEntries(state, titleBarMenuEntries)
+  ])
+  const { $TitleBarMenuBar } = state
   const event = new MouseEvent('mousedown', {
     clientX: 27,
     clientY: 28,
     bubbles: true,
     cancelable: true,
   })
-  state.$TitleBarMenu.children[1].dispatchEvent(event)
+  $TitleBarMenuBar.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
@@ -99,7 +93,8 @@ test('event - click on menu item', () => {
 })
 
 test('event - richt click on menu item', () => {
-  const titleBarMenuEntries = [
+  const state = ViewletTitleBarMenuBar.create()
+  ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: MenuEntryId.File,
       name: 'File',
@@ -115,12 +110,8 @@ test('event - richt click on menu item', () => {
       name: 'Selection',
       children: [],
     },
-  ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create()
-  const state = {
-    $TitleBarMenu: $TitleBarMenuBar,
-  }
-  TitleBarMenuBar.setEntries(state, titleBarMenuEntries)
+  ])
+  const { $TitleBarMenuBar } = state
   const event = new MouseEvent('mousedown', {
     clientX: 27,
     clientY: 28,
@@ -128,13 +119,14 @@ test('event - richt click on menu item', () => {
     cancelable: true,
     button: MouseEventTypes.RightClick,
   })
-  state.$TitleBarMenu.children[1].dispatchEvent(event)
+  $TitleBarMenuBar.children[1].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(false)
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
 test('event - key - ArrowDown', () => {
-  const titleBarMenuEntries = [
+  const state = ViewletTitleBarMenuBar.create()
+  ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: MenuEntryId.File,
       name: 'File',
@@ -150,8 +142,8 @@ test('event - key - ArrowDown', () => {
       name: 'Selection',
       children: [],
     },
-  ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create()
+  ])
+  const { $TitleBarMenuBar } = state
   $TitleBarMenuBar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowDown',
@@ -164,7 +156,8 @@ test('event - key - ArrowDown', () => {
 })
 
 test('event - key - ArrowUp', () => {
-  const titleBarMenuEntries = [
+  const state = ViewletTitleBarMenuBar.create()
+  ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: MenuEntryId.File,
       name: 'File',
@@ -180,8 +173,8 @@ test('event - key - ArrowUp', () => {
       name: 'Selection',
       children: [],
     },
-  ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create()
+  ])
+  const { $TitleBarMenuBar } = state
   $TitleBarMenuBar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'ArrowUp',
@@ -194,7 +187,8 @@ test('event - key - ArrowUp', () => {
 })
 
 test('event - key - Enter', () => {
-  const titleBarMenuEntries = [
+  const state = ViewletTitleBarMenuBar.create()
+  ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: MenuEntryId.File,
       name: 'File',
@@ -210,8 +204,8 @@ test('event - key - Enter', () => {
       name: 'Selection',
       children: [],
     },
-  ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create()
+  ])
+  const { $TitleBarMenuBar } = state
   $TitleBarMenuBar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Enter',
@@ -224,7 +218,8 @@ test('event - key - Enter', () => {
 })
 
 test('event - key - Space', () => {
-  const titleBarMenuEntries = [
+  const state = ViewletTitleBarMenuBar.create()
+  ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: MenuEntryId.File,
       name: 'File',
@@ -240,8 +235,8 @@ test('event - key - Space', () => {
       name: 'Selection',
       children: [],
     },
-  ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create()
+  ])
+  const { $TitleBarMenuBar } = state
   $TitleBarMenuBar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: ' ',
@@ -253,7 +248,8 @@ test('event - key - Space', () => {
 })
 
 test('event - key - Home', () => {
-  const titleBarMenuEntries = [
+  const state = ViewletTitleBarMenuBar.create()
+  ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: MenuEntryId.File,
       name: 'File',
@@ -269,8 +265,8 @@ test('event - key - Home', () => {
       name: 'Selection',
       children: [],
     },
-  ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create()
+  ])
+  const { $TitleBarMenuBar } = state
   $TitleBarMenuBar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Home',
@@ -282,7 +278,8 @@ test('event - key - Home', () => {
 })
 
 test('event - key - End', () => {
-  const titleBarMenuEntries = [
+  const state = ViewletTitleBarMenuBar.create()
+  ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: MenuEntryId.File,
       name: 'File',
@@ -298,8 +295,8 @@ test('event - key - End', () => {
       name: 'Selection',
       children: [],
     },
-  ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create()
+  ])
+  const { $TitleBarMenuBar } = state
   $TitleBarMenuBar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'End',
@@ -311,7 +308,8 @@ test('event - key - End', () => {
 })
 
 test('event - key - Escape', () => {
-  const titleBarMenuEntries = [
+  const state = ViewletTitleBarMenuBar.create()
+  ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: MenuEntryId.File,
       name: 'File',
@@ -327,8 +325,8 @@ test('event - key - Escape', () => {
       name: 'Selection',
       children: [],
     },
-  ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create()
+  ])
+  const { $TitleBarMenuBar } = state
   $TitleBarMenuBar.dispatchEvent(
     new KeyboardEvent('keydown', {
       key: 'Escape',

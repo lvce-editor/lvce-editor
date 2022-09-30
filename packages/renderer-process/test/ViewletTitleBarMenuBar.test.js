@@ -3,18 +3,24 @@
  */
 
 import * as Menu from '../src/parts/OldMenu/Menu.js'
-import * as TitleBarMenuBar from '../src/parts/TitleBarMenuBar/TitleBarMenuBar.js'
+import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
 
 const getTextContent = (node) => {
   return node.innerHTML
 }
 
-const getSimpleList = ($TitleBarMenuBar) => {
-  return Array.from($TitleBarMenuBar.children).map(getTextContent)
+const getSimpleList = ($ViewletTitleBarMenuBar) => {
+  return Array.from($ViewletTitleBarMenuBar.children).map(getTextContent)
 }
 
-test.skip('create', async () => {
-  const titleBarMenuEntries = [
+test('create', async () => {
+  const state = ViewletTitleBarMenuBar.create()
+  expect(state).toBeDefined()
+})
+
+test('setEntries', () => {
+  const state = ViewletTitleBarMenuBar.create()
+  ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: 'file',
       name: 'File',
@@ -30,8 +36,8 @@ test.skip('create', async () => {
       name: 'Selection',
       children: [],
     },
-  ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create(titleBarMenuEntries)
+  ])
+  const { $TitleBarMenuBar } = state
   expect(getSimpleList($TitleBarMenuBar)).toEqual(['File', 'Edit', 'Selection'])
 })
 
@@ -39,30 +45,16 @@ test.skip('create', async () => {
 
 // TODO test mouse enter (with index)
 
-test.skip('accessibility - TitleBarMenuBar should have role menubar', () => {
-  const titleBarMenuEntries = [
-    {
-      id: 'file',
-      name: 'File',
-      children: [],
-    },
-    {
-      id: 'edit',
-      name: 'Edit',
-      children: [],
-    },
-    {
-      id: 'selection',
-      name: 'Selection',
-      children: [],
-    },
-  ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create(titleBarMenuEntries)
-  expect($TitleBarMenuBar.getAttribute('role')).toBe('menubar')
+test('accessibility - ViewletTitleBarMenuBar should have role menubar', () => {
+  const state = ViewletTitleBarMenuBar.create()
+  const { $TitleBarMenuBar } = state
+  // @ts-ignore
+  expect($TitleBarMenuBar.role).toBe('menubar')
 })
 
-test.skip('accessibility - TitleBarTopLevelEntry should have role menuitem and aria-haspopup and aria-expanded', () => {
-  const titleBarMenuEntries = [
+test('accessibility - TitleBarTopLevelEntry should have role menuitem and aria-haspopup and aria-expanded', () => {
+  const state = ViewletTitleBarMenuBar.create()
+  ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: 'file',
       name: 'File',
@@ -78,10 +70,13 @@ test.skip('accessibility - TitleBarTopLevelEntry should have role menuitem and a
       name: 'Selection',
       children: [],
     },
-  ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create(titleBarMenuEntries)
-  expect($TitleBarMenuBar.firstChild.getAttribute('role')).toBe('menuitem')
+  ])
+  const { $TitleBarMenuBar } = state
+  // @ts-ignore
+  expect($TitleBarMenuBar.firstChild.role).toBe('menuitem')
+  // @ts-ignore
   expect($TitleBarMenuBar.firstChild.ariaExpanded).toBe('false')
+  // @ts-ignore
   expect($TitleBarMenuBar.firstChild.ariaHasPopup).toBe('true')
 })
 
@@ -117,11 +112,14 @@ test.skip('openMenu - focus on menuBar', () => {
       flags: /* None */ 0,
     },
   ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create(titleBarMenuEntries)
-  document.body.append($TitleBarMenuBar)
-  $TitleBarMenuBar.firstChild.focus()
-  TitleBarMenuBar.openMenu(-1, 1, 0, menuItems, false)
-  expect(document.activeElement).toBe($TitleBarMenuBar.children[1])
+  const $ViewletTitleBarMenuBar =
+    // @ts-ignore
+    ViewletTitleBarMenuBar.create(titleBarMenuEntries)
+  // @ts-ignore
+  document.body.append($ViewletTitleBarMenuBar)
+  $ViewletTitleBarMenuBar.firstChild.focus()
+  ViewletTitleBarMenuBar.openMenu(-1, 1, 0, menuItems, false)
+  expect(document.activeElement).toBe($ViewletTitleBarMenuBar.children[1])
 })
 
 test.skip('openMenu - focus on menu', () => {
@@ -154,9 +152,13 @@ test.skip('openMenu - focus on menu', () => {
       flags: /* None */ 0,
     },
   ]
-  const $TitleBarMenuBar = TitleBarMenuBar.create(titleBarMenuEntries)
-  document.body.append($TitleBarMenuBar)
-  $TitleBarMenuBar.firstChild.focus()
-  TitleBarMenuBar.openMenu(1, 0, menuItems, true)
+  const $ViewletTitleBarMenuBar =
+    // @ts-ignore
+
+    ViewletTitleBarMenuBar.create(titleBarMenuEntries)
+  // @ts-ignore
+  document.body.append($ViewletTitleBarMenuBar)
+  $ViewletTitleBarMenuBar.firstChild.focus()
+  ViewletTitleBarMenuBar.openMenu(1, 0, menuItems, true)
   expect(document.activeElement).toBe(Menu.state.$$Menus[0].firstChild)
 })

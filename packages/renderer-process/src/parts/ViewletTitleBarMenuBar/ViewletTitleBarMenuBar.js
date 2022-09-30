@@ -1,7 +1,32 @@
 import * as Assert from '../Assert/Assert.js'
+import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
 import * as Menu from '../OldMenu/Menu.js'
 import * as Widget from '../Widget/Widget.js'
-import * as TitleBarMenuBarEvents from './TitleBarMenuBarEvents.js'
+
+export const create = () => {
+  const $TitleBarMenuBar = document.createElement('ul')
+  $TitleBarMenuBar.id = 'TitleBarMenuBar'
+  // @ts-ignore
+  $TitleBarMenuBar.role = 'menubar'
+  $TitleBarMenuBar.onkeydown = ViewletTitleBarMenuBarEvents.handleKeyDown
+  $TitleBarMenuBar.onmousedown = ViewletTitleBarMenuBarEvents.handleClick
+  $TitleBarMenuBar.addEventListener(
+    'focusout',
+    ViewletTitleBarMenuBarEvents.handleFocusOut
+  )
+
+  return {
+    $Viewlet: $TitleBarMenuBar,
+    $TitleBarMenuBar,
+  }
+}
+
+export const dispose = (state) => {}
+
+export const focus = (state) => {
+  const { $TitleBarMenuBar } = state
+  $TitleBarMenuBar.firstChild.focus()
+}
 
 // TODO set proper tabIndex 0 to focused item https://www.w3.org/TR/wai-aria-practices/examples/menubar/menubar-1/menubar-1.html
 
@@ -74,7 +99,7 @@ export const getMenuEntryBounds = (state, index) => {
   }
 }
 
-export const focusIndex = (state, unFocusIndex, focusIndex) => {
+export const setFocusIndex = (state, unFocusIndex, focusIndex) => {
   Assert.object(state)
   Assert.number(unFocusIndex)
   Assert.number(focusIndex)
@@ -117,7 +142,7 @@ export const openMenu = (
   // TODO this code is very unclean
   $TitleBarMenu.addEventListener(
     'mouseenter',
-    TitleBarMenuBarEvents.handleMouseEnter,
+    ViewletTitleBarMenuBarEvents.handleMouseEnter,
     {
       capture: true,
     }
@@ -135,8 +160,8 @@ export const openMenu = (
     width,
     height,
     items: menuItems,
-    handleKeyDown: TitleBarMenuBarEvents.handleKeyDown,
-    handleFocusOut: TitleBarMenuBarEvents.handleFocusOut,
+    handleKeyDown: ViewletTitleBarMenuBarEvents.handleKeyDown,
+    handleFocusOut: ViewletTitleBarMenuBarEvents.handleFocusOut,
     $Parent: state.$TitleBarMenu.children[index],
     level,
   })
@@ -161,29 +186,14 @@ export const closeMenu = (state, unFocusIndex, index) => {
   Menu.hide(/* restoreFocus */ false)
   $TitleBarMenu.removeEventListener(
     'mouseenter',
-    TitleBarMenuBarEvents.handleMouseEnter,
+    ViewletTitleBarMenuBarEvents.handleMouseEnter,
     {
       capture: true,
     }
   )
 }
 
-export const create = () => {
-  const $TitleBarMenu = document.createElement('ul')
-  $TitleBarMenu.id = 'TitleBarMenu'
-  // @ts-ignore
-  $TitleBarMenu.role = 'menubar'
-  $TitleBarMenu.onkeydown = TitleBarMenuBarEvents.handleKeyDown
-  // TODO could have one mousedown listener on titlebar that delegates to titlebarMenu if necessary
-  $TitleBarMenu.onmousedown = TitleBarMenuBarEvents.handleClick
-  $TitleBarMenu.addEventListener(
-    'focusout',
-    TitleBarMenuBarEvents.handleFocusOut
-  )
-  return $TitleBarMenu
-}
-
 export const setEntries = (state, titleBarEntries) => {
-  const { $TitleBarMenu } = state
-  $TitleBarMenu.append(...titleBarEntries.map(create$TopLevelEntry))
+  const { $TitleBarMenuBar } = state
+  $TitleBarMenuBar.append(...titleBarEntries.map(create$TopLevelEntry))
 }
