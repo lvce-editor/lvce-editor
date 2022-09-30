@@ -40,6 +40,7 @@ const getCompletions = async (editor) => {
     editor,
     offset
   )
+  console.log({ completions })
   return completions
 }
 
@@ -208,7 +209,7 @@ const getVisibleItems = (filteredItems, minLineY, maxLineY) => {
     const filteredItem = filteredItems[i]
     visibleItems.push({
       label: getLabel(filteredItem),
-      icon: EditorCompletionMap.getIconClassName(filteredItem),
+      icon: EditorCompletionMap.getIcon(filteredItem),
     })
   }
   return visibleItems

@@ -9,12 +9,16 @@ const create$CompletionItem = (item, index) => {
   $CompletionItemText.className = 'Label'
   $CompletionItemText.textContent = item.label
 
+  const $Icon = document.createElement('div')
+  $Icon.className = 'ColoredMaskIcon'
+  $Icon.style.webkitMaskImage = `url('${item.icon}')`
+
   const $CompletionItem = document.createElement('div')
   // @ts-ignore
   $CompletionItem.role = 'option'
   $CompletionItem.id = `CompletionItem-${index}`
   $CompletionItem.className = `EditorCompletionItem`
-  $CompletionItem.append($CompletionItemText)
+  $CompletionItem.append($Icon, $CompletionItemText)
   return $CompletionItem
 }
 

@@ -9,59 +9,25 @@
 
 .EditorCompletionItem {
   height: 28px;
-  padding: 0 28px;
+  width: 100%;
   display: flex;
   align-items: center;
   white-space: nowrap;
-  cursor: pointer;
   contain: strict;
+  gap: 5px;
 }
 
-.EditorCompletionItem:before {
-  content: '';
+[class^='ColoredMaskIcon'] {
   width: 20px;
   height: 20px;
-  /* background: darkcyan; */
   contain: strict;
-  content: '';
-  position: absolute;
-  inset: 0;
-  /* -webkit-mask-image: url(/icons/icon-close.svg); */
-  /* -webkit-mask-repeat: no-repeat; */
-  /* mask-repeat: no-repeat; */
-  /* -webkit-mask-position: center; */
-  /* mask-position: center; */
-  /* -webkit-mask-size: 100%; */
-  /* mask-size: 100%; */
-}
-
-.IconProperty::before {
-  -webkit-mask-image: url(/icons/symbol-property.svg);
-  background: #c5c5c5;
-}
-
-.IconValue::before {
-  -webkit-mask-image: url(/icons/symbol-enum.svg);
-  background: #ee9d28;
-}
-
-.IconVariable::before {
-  -webkit-mask-image: url(/icons/symbol-variable.svg);
-  background: #75beff;
-}
-
-.IconFunction::before {
-  -webkit-mask-image: url(/icons/symbol-method.svg);
-  background: #b180d7;
-}
-
-.IconKeyword::before {
-  -webkit-mask-image: url(/icons/symbol-keyword.svg);
-  background: #c5c5c5;
-}
-
-.EditorCompletionItem:hover {
-  background: rgba(64, 92, 80, 0.2);
+  display: block;
+  background: currentColor;
+  color: var(--TitleBarForeground, rgb(204, 204, 204));
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 16px;
+  -webkit-mask-position: 50% 50%;
+  pointer-events: none;
 }
 
 .EditorCompletionItem.Focused {
