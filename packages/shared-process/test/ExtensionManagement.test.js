@@ -386,6 +386,8 @@ test('getExtensions - error - invalid value - null', async () => {
   Platform.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
+  // @ts-ignore
+  Platform.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       status: ExtensionManifestStatus.Rejected,
@@ -408,6 +410,8 @@ test('getExtensions - error - invalid value - string', async () => {
   Platform.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
+  // @ts-ignore
+  Platform.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       status: ExtensionManifestStatus.Rejected,
@@ -430,6 +434,8 @@ test('getExtensions - error - invalid value - number', async () => {
   Platform.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
+  // @ts-ignore
+  Platform.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       status: ExtensionManifestStatus.Rejected,
@@ -452,6 +458,8 @@ test('getExtensions - error - invalid value - boolean', async () => {
   Platform.getDisabledExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
+  // @ts-ignore
+  Platform.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       status: ExtensionManifestStatus.Rejected,
@@ -475,6 +483,8 @@ test('getExtensions - error - invalid json', async () => {
   Platform.getExtensionsPath.mockImplementation(() => tmpDir2)
   // @ts-ignore
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
+  // @ts-ignore
+  Platform.getLinkedExtensionsPath.mockImplementation(() => undefined)
   expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       reason: new VError(
