@@ -1,7 +1,7 @@
 import * as EditorCompletionType from '../EditorCompletionType/EditorCompletionType.js'
 import * as EditorCompletionClassName from '../EditorCompletionClassName/EditorCompletionClassName.js'
 
-export const getIconClassName = (item) => {
+export const getIcon = (item) => {
   switch (item.kind) {
     case EditorCompletionType.Property:
       return EditorCompletionClassName.IconProperty
