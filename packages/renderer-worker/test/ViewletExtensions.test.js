@@ -86,6 +86,8 @@ test('loadContent', async () => {
     width: 200,
     height: 200,
     maxLineY: 10,
+    itemHeight: 62,
+    top: 0,
   }
   // @ts-ignore
   Ajax.getJson.mockImplementation(() => {

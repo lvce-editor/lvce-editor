@@ -1,6 +1,5 @@
 import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
 import * as ViewletExtensionsFocusNextPage from '../src/parts/ViewletExtensions/ViewletExtensionsFocusNextPage.js'
-import { ITEM_HEIGHT } from '../src/parts/ViewletExtensions/ViewletExtensionsShared.js'
 
 test('focusNextPage - scroll down one full page', () => {
   const state = {
@@ -46,7 +45,8 @@ test('focusNextPage - scroll down one full page', () => {
     minLineY: 0,
     maxLineY: 3,
     focusedIndex: 0,
-    height: ITEM_HEIGHT * 3,
+    itemHeight: 62,
+    height: 62 * 3,
   }
   expect(ViewletExtensionsFocusNextPage.focusNextPage(state)).toMatchObject({
     minLineY: 2,
@@ -99,7 +99,8 @@ test('focusNextPage - scroll down half a page', () => {
     minLineY: 3,
     maxLineY: 6,
     focusedIndex: 4,
-    height: ITEM_HEIGHT * 3,
+    itemHeight: 62,
+    height: 62 * 3,
   }
   expect(ViewletExtensionsFocusNextPage.focusNextPage(state)).toMatchObject({
     minLineY: 3,
