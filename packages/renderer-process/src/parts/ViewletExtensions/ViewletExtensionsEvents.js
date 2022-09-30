@@ -47,46 +47,55 @@ const getNodeIndex = ($Node) => {
   return index
 }
 
-export const handleClick = (event) => {
+const handlePointerDownExtension = ($Target) => {
+  const index = getNodeIndex($Target)
+  RendererWorker.send(
+    /* Extensions.handleClick */ 'Extensions.handleClick',
+    /* index */ index
+  )
+}
+
+const handlePointerDownExtensionDetail = ($Target) => {
+  const index = getNodeIndex($Target.parentNode.parentNode)
+  RendererWorker.send(
+    /* Extensions.handleClick */ 'Extensions.handleClick',
+    /* index */ index
+  )
+}
+
+const handlePointerDownExtensionAuthorName = ($Target) => {
+  const index = getNodeIndex($Target.parentNode.parentNode.parentNode)
+  RendererWorker.send(
+    /* Extensions.handleClick */ 'Extensions.handleClick',
+    /* index */ index
+  )
+}
+
+export const handlePointerDown = (event) => {
   const $Target = event.target
-  console.log($Target)
   switch ($Target.className) {
-    case 'Extension': {
-      const index = getNodeIndex($Target)
-      RendererWorker.send(
-        /* Extensions.handleClick */ 'Extensions.handleClick',
-        /* index */ index
-      )
+    case 'Extension':
+      handlePointerDownExtension($Target)
       break
-    }
     case 'ExtensionName':
     case 'ExtensionDescription':
-    case 'ExtensionFooter': {
-      const index = getNodeIndex($Target.parentNode.parentNode)
-      RendererWorker.send(
-        /* Extensions.handleClick */ 'Extensions.handleClick',
-        /* index */ index
-      )
+    case 'ExtensionFooter':
+      handlePointerDownExtensionDetail($Target)
       break
-    }
-    case 'ExtensionAuthorName': {
-      const index = getNodeIndex($Target.parentNode.parentNode.parentNode)
-      RendererWorker.send(
-        /* Extensions.handleClick */ 'Extensions.handleClick',
-        /* index */ index
-      )
+    case 'ExtensionAuthorName':
+      handlePointerDownExtensionAuthorName($Target)
       break
-    }
     default:
       break
   }
 }
 
 const handleContextMenuMouse = (event) => {
+  const { clientX, clientY } = event
   RendererWorker.send(
     /* Extensions.handleContextMenu */ 'Extensions.handleContextMenu',
-    /* x */ event.clientX,
-    /* y */ event.clientY
+    /* x */ clientX,
+    /* y */ clientY
   )
 }
 
