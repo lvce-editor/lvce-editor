@@ -162,21 +162,24 @@ export const focusFirst = (state) => {
 }
 
 export const focusLast = (state) => {
-  return focusIndex(state, state.completionItems.length - 1)
+  const { filteredItems } = state
+  return focusIndex(state, filteredItems.length - 1)
 }
 
 export const focusPrevious = (state) => {
-  if (state.focusedIndex === 0) {
+  const { focusedIndex } = state
+  if (focusedIndex === 0) {
     return focusLast(state)
   }
-  return focusIndex(state, state.focusedIndex - 1)
+  return focusIndex(state, focusedIndex - 1)
 }
 
 export const focusNext = (state) => {
-  if (state.focusedIndex === state.completionItems.length - 1) {
+  const { focusedIndex, filteredItems } = state
+  if (focusedIndex === filteredItems.length - 1) {
     return focusFirst(state)
   }
-  return focusIndex(state, state.focusedIndex + 1)
+  return focusIndex(state, focusedIndex + 1)
 }
 
 export const dispose = (state) => {
