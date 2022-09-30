@@ -6,7 +6,7 @@ import { FileSystemError } from '../Error/FileSystemError.js'
 
 export const createSymLink = async (target, path) => {
   try {
-    await mkdir(dirname(target), { recursive: true })
+    await mkdir(dirname(path), { recursive: true })
     await symlink(target, path)
   } catch (error) {
     throw new FileSystemError(

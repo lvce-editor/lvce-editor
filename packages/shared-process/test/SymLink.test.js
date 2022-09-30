@@ -61,4 +61,6 @@ test('createSymLink', async () => {
   await SymLink.createSymLink('/test/from', '/test/to')
   expect(fs.symlink).toHaveBeenCalledTimes(1)
   expect(fs.symlink).toHaveBeenCalledWith('/test/from', '/test/to')
+  expect(fs.mkdir).toHaveBeenCalledTimes(1)
+  expect(fs.mkdir).toHaveBeenCalledWith('/test', { recursive: true })
 })
