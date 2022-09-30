@@ -24,6 +24,9 @@ export const create = (id, uri, top, left, width, height) => {
     minLineY: 0,
     maxLineY: 0,
     itemHeight: 28,
+    width: 150,
+    height: 150,
+    deltaY: 0,
   }
 }
 
@@ -66,7 +69,6 @@ export const loadContent = async (state) => {
   const left = EditorPosition.x(editor, rowIndex, columnIndex)
   const top = EditorPosition.y(editor, rowIndex, columnIndex)
   const newMaxLineY = Math.min(filteredItems.length, 8)
-  console.log({ items, filteredItems })
   return {
     ...state,
     items,
@@ -245,9 +247,7 @@ const renderBounds = {
     )
   },
   apply(oldState, newState) {
-    const { left, top, itemHeight } = newState
-    const width = 150
-    const height = 150
+    const { left, top, width, height } = newState
     return [
       /* Viewlet.send */ 'Viewlet.setBounds',
       /* id */ 'EditorCompletion',
@@ -260,3 +260,5 @@ const renderBounds = {
 }
 
 export const render = [renderItems, renderPosition, renderBounds]
+
+export * from '../VirtualList/VirtualList.js'

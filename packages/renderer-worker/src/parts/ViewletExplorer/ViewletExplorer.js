@@ -231,6 +231,7 @@ const getVisible = (state) => {
   return state.dirents.slice(state.minLineY, state.maxLineY)
 }
 
+// TODO rename dirents to items, then can use virtual list component directly
 export const setDeltaY = (state, deltaY) => {
   const { itemHeight, height, dirents } = state
   if (deltaY < 0) {

@@ -28,6 +28,13 @@ export const create = () => {
   $Viewlet.role = 'listbox'
   $Viewlet.ariaLabel = 'Suggest'
   $Viewlet.onmousedown = ViewletEditorCompletionEvents.handleMousedown
+  $Viewlet.addEventListener(
+    'wheel',
+    ViewletEditorCompletionEvents.handleWheel,
+    {
+      passive: true,
+    }
+  )
   return {
     $Viewlet,
   }
