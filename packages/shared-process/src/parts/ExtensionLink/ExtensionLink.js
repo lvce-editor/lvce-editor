@@ -17,6 +17,7 @@ const linkFallBack = async (path) => {
     await FileSystem.remove(to)
     await SymLink.createSymLink(path, to)
   } catch (error) {
+    console.log({ error })
     throw new VError(error, `Failed to link extension`)
   }
 }

@@ -3,6 +3,8 @@ import * as FileSystemErrorCodes from '../src/parts/FileSystemErrorCodes/FileSys
 
 beforeEach(() => {
   jest.resetAllMocks()
+
+  // jest.resetModules()
 })
 
 jest.unstable_mockModule('../src/parts/SymLink/SymLink', () => {
@@ -15,9 +17,9 @@ jest.unstable_mockModule('../src/parts/SymLink/SymLink', () => {
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
-    getExtensionsPath: jest.fn(() => {
-      return '/test/extensions'
-    }),
+    getLinkedExtensionsPath: () => {
+      return '/test/linked-extensions'
+    },
   }
 })
 
@@ -47,7 +49,6 @@ const SymLink = await import('../src/parts/SymLink/SymLink.js')
 const ExtensionLink = await import(
   '../src/parts/ExtensionLink/ExtensionLink.js'
 )
-const Platform = await import('../src/parts/Platform/Platform.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
 class NodeError extends Error {
@@ -61,10 +62,6 @@ test('link', async () => {
   // @ts-ignore
   SymLink.createSymLink.mockImplementation(() => {})
   // @ts-ignore
-  Platform.getExtensionsPath.mockImplementation(() => {
-    return '/test/extensions'
-  })
-  // @ts-ignore
   FileSystem.exists.mockImplementation(() => {
     return true
   })
@@ -72,7 +69,7 @@ test('link', async () => {
   expect(SymLink.createSymLink).toHaveBeenCalledTimes(1)
   expect(SymLink.createSymLink).toHaveBeenCalledWith(
     '/test/my-extension',
-    '/test/extensions/my-extension'
+    '/test/linked-extensions/my-extension'
   )
 })
 
@@ -90,9 +87,7 @@ test('link - error - symlink already exists', async () => {
     }
   })
   // @ts-ignore
-  Platform.getExtensionsPath.mockImplementation(() => {
-    return '/test/extensions'
-  })
+  FileSystem.remove.mockImplementation(() => {})
   // @ts-ignore
   FileSystem.exists.mockImplementation(() => {
     return true
@@ -102,16 +97,16 @@ test('link - error - symlink already exists', async () => {
   expect(SymLink.createSymLink).toHaveBeenNthCalledWith(
     1,
     '/test/my-extension',
-    '/test/extensions/my-extension'
+    '/test/linked-extensions/my-extension'
   )
   expect(SymLink.createSymLink).toHaveBeenNthCalledWith(
     2,
     '/test/my-extension',
-    '/test/extensions/my-extension'
+    '/test/linked-extensions/my-extension'
   )
   expect(FileSystem.remove).toHaveBeenCalledTimes(1)
   expect(FileSystem.remove).toHaveBeenCalledWith(
-    '/test/extensions/my-extension'
+    '/test/linked-extensions/my-extension'
   )
 })
 
@@ -120,7 +115,6 @@ test('link - error - no manifest file found', async () => {
   FileSystem.exists.mockImplementation(() => {
     return false
   })
-
   await expect(ExtensionLink.link('/test/my-extension')).rejects.toThrowError(
     new Error('Failed to link extension: no extension manifest found')
   )

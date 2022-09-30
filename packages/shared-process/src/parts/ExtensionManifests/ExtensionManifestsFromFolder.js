@@ -14,6 +14,9 @@ const toAbsolutePaths = (path, dirents) => {
 
 export const getExtensionManifests = async (path) => {
   try {
+    if (!path) {
+      return []
+    }
     const dirents = await FileSystem.readDir(path)
     const absolutePaths = toAbsolutePaths(path, dirents)
     const manifests = await Promise.all(
