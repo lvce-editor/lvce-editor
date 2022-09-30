@@ -1,6 +1,5 @@
 import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
 import * as ViewletExtensionsHandleTouchMove from '../src/parts/ViewletExtensions/ViewletExtensionsHandleTouchMove.js'
-import { ITEM_HEIGHT } from '../src/parts/ViewletExtensions/ViewletExtensionsShared.js'
 
 test('handleTouchMove - empty touches array', () => {
   const state = ViewletExtensions.create()
@@ -12,7 +11,8 @@ test('handleTouchMove - empty touches array', () => {
 test('handleTouchMove - scroll up', () => {
   const state = {
     ...ViewletExtensions.create(),
-    height: ITEM_HEIGHT,
+    itemHeight: 62,
+    height: 62,
     filteredExtensions: [1, 2, 3],
     deltaY: 10,
   }

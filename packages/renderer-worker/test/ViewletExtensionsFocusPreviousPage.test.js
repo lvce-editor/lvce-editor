@@ -1,6 +1,5 @@
 import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
 import * as ViewletExtensionsFocusPreviousPage from '../src/parts/ViewletExtensions/ViewletExtensionsFocusPreviousPage.js'
-import { ITEM_HEIGHT } from '../src/parts/ViewletExtensions/ViewletExtensionsShared.js'
 
 test('focusPreviousPage - already at start', () => {
   const state = {
@@ -70,7 +69,8 @@ test('focusPreviousPage - scroll up one full page', () => {
     focusedIndex: 3,
     minLineY: 3,
     maxLineY: 6,
-    height: ITEM_HEIGHT * 3,
+    itemHeight: 62,
+    height: 62 * 3,
   }
   expect(
     ViewletExtensionsFocusPreviousPage.focusPreviousPage(state)
@@ -125,7 +125,8 @@ test('focusPreviousPage - scroll up half a page', () => {
     focusedIndex: 1,
     minLineY: 1,
     maxLineY: 4,
-    height: ITEM_HEIGHT * 3,
+    itemHeight: 62,
+    height: 62 * 3,
   }
   expect(
     ViewletExtensionsFocusPreviousPage.focusPreviousPage(state)

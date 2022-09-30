@@ -9,7 +9,6 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import {
   getListHeight,
   HEADER_HEIGHT,
-  ITEM_HEIGHT,
   MINIMUM_SLIDER_SIZE,
 } from './ViewletExtensionsShared.js'
 
@@ -55,6 +54,7 @@ export const create = (id, uri, left, top, width, height) => {
     touchOffsetY: 0,
     touchTimeStamp: 0,
     touchDifference: 0,
+    itemHeight: 62,
   }
 }
 
@@ -63,6 +63,7 @@ const getVisible = (state) => {
 }
 
 export const loadContent = async (state) => {
+  const { itemHeight, height } = state
   // TODO just get local extensions on demand (not when query string is already different)
 
   // TODO get installed extensions from extension host
@@ -70,18 +71,19 @@ export const loadContent = async (state) => {
   const extensions = await ExtensionManagement.getAllExtensions()
   const viewObjects = filterExtensions(
     extensions.map(toInstalledViewObject),
-    state.parsedValue
+    state.parsedValue,
+    itemHeight
   )
 
   const listHeight = getListHeight(state)
-  const contentHeight = viewObjects.length * ITEM_HEIGHT
-  const scrollBarHeight = getScrollBarHeight(state.height, contentHeight)
+  const contentHeight = viewObjects.length * itemHeight
+  const scrollBarHeight = getScrollBarHeight(height, contentHeight)
 
   return {
     ...state,
     extensions,
     filteredExtensions: viewObjects,
-    maxLineY: Math.round(listHeight / ITEM_HEIGHT),
+    maxLineY: Math.round(listHeight / itemHeight),
     scrollBarHeight,
   }
 }
@@ -191,7 +193,7 @@ const matchesParsedValue = (extension, parsedValue) => {
   return false
 }
 
-const filterExtensions = (extensions, parsedValue) => {
+const filterExtensions = (extensions, parsedValue, itemHeight) => {
   const filteredExtensions = []
   for (const extension of extensions) {
     if (matchesParsedValue(extension, parsedValue)) {
@@ -202,7 +204,7 @@ const filterExtensions = (extensions, parsedValue) => {
   for (let i = 0; i < filteredExtensions.length; i++) {
     filteredExtensions[i].setSize = filteredExtensions.length
     filteredExtensions[i].posInSet = i + 1
-    filteredExtensions[i].top = i * ITEM_HEIGHT
+    filteredExtensions[i].top = i * itemHeight
   }
   return filteredExtensions
 }
@@ -252,6 +254,7 @@ export const handleInput = async (state, value) => {
   try {
     // TODO make this functional somehow
     state.searchValue = value
+    const { itemHeight } = state
     // TODO cancel ongoing requests
     // TODO handle errors
     const parsedValue = parseValue(value)
@@ -264,7 +267,11 @@ export const handleInput = async (state, value) => {
     if (state.searchValue !== value) {
       return state
     }
-    const filteredExtensions = filterExtensions(extensions, parsedValue)
+    const filteredExtensions = filterExtensions(
+      extensions,
+      parsedValue,
+      itemHeight
+    )
     const displayExtensions = toDisplayExtensions(filteredExtensions)
     return {
       ...state,
@@ -444,9 +451,10 @@ export const toggleSuggest = async (state) => {
 export const hasFunctionalResize = true
 
 export const resize = (state, dimensions) => {
+  const { itemHeight, minLineY } = state
   // TODO should just return new state, render function can take old state and new state and return render commands
   const listHeight = getListHeight(dimensions)
-  const maxLineY = state.minLineY + Math.ceil(listHeight / ITEM_HEIGHT)
+  const maxLineY = minLineY + Math.ceil(listHeight / itemHeight)
   return {
     ...state,
     ...dimensions,
@@ -458,23 +466,18 @@ export const setDeltaY = (state, deltaY) => {
   Assert.object(state)
   Assert.number(deltaY)
   const listHeight = getListHeight(state)
+  const { itemHeight, filteredExtensions } = state
   if (deltaY < 0) {
     deltaY = 0
-  } else if (
-    deltaY >
-    state.filteredExtensions.length * ITEM_HEIGHT - listHeight
-  ) {
-    deltaY = Math.max(
-      state.filteredExtensions.length * ITEM_HEIGHT - listHeight,
-      0
-    )
+  } else if (deltaY > filteredExtensions.length * itemHeight - listHeight) {
+    deltaY = Math.max(filteredExtensions.length * itemHeight - listHeight, 0)
   }
   if (state.deltaY === deltaY) {
     return state
   }
   // TODO when it only moves by one px, extensions don't need to be rerendered, only negative margin
-  const minLineY = Math.floor(deltaY / ITEM_HEIGHT)
-  const maxLineY = minLineY + Math.round(listHeight / ITEM_HEIGHT)
+  const minLineY = Math.floor(deltaY / itemHeight)
+  const maxLineY = minLineY + Math.round(listHeight / itemHeight)
   const negativeMargin = -Math.round(deltaY)
   return {
     ...state,
@@ -571,7 +574,8 @@ const renderHeight = {
     )
   },
   apply(oldState, newState) {
-    const contentHeight = newState.filteredExtensions.length * ITEM_HEIGHT
+    const { itemHeight } = newState
+    const contentHeight = newState.filteredExtensions.length * itemHeight
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',
