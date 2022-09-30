@@ -3,12 +3,12 @@
 // focus input
 // nvda says: "search key bindings, edit, results will update as you type, blank"
 // windows narrator says: ""
-// orca says: ""
+// orca says: "search key bindings, entry, results will update as you type"
 
 // No results
 // nvda says: "no results"
 // windows narrator says: ""
-// orca says: ""
+// orca says: "no results found"
 
 test('viewlet.keybindings', async () => {
   // act
