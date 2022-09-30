@@ -1,39 +1,8 @@
 import * as Focus from '../Focus/Focus.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Widget from '../Widget/Widget.js'
+import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
 
 export const name = 'EditorCompletion'
-
-// TODO technically, editorCompletions could also be a viewlet so that
-// all state is managed by viewlet and this module is completely functional
-
-const getNodeIndex = ($Node) => {
-  let index = 0
-  while (($Node = $Node.previousElementSibling)) {
-    index++
-  }
-  return index
-}
-
-const getIndex = ($Target) => {
-  if ($Target.classList.contains('EditorCompletionItem')) {
-    return getNodeIndex($Target)
-  }
-  return -1
-}
-
-const handleMousedown = (event) => {
-  event.preventDefault()
-  const $Target = event.target
-  const index = getIndex($Target)
-  if (index === -1) {
-    return
-  }
-  RendererWorker.send(
-    /* ViewletEditorCompletion.selectIndex */ 'EditorCompletion.selectIndex',
-    /* index */ index
-  )
-}
 
 const create$CompletionItem = (item, index) => {
   const $CompletionItem = document.createElement('li')
@@ -54,7 +23,7 @@ export const create = () => {
   // @ts-ignore
   $Viewlet.role = 'listbox'
   $Viewlet.ariaLabel = 'Suggest'
-  $Viewlet.onmousedown = handleMousedown
+  $Viewlet.onmousedown = ViewletEditorCompletionEvents.handleMousedown
   return {
     $Viewlet,
   }
