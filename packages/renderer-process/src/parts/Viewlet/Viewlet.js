@@ -89,6 +89,8 @@ export const sendMultiple = (commands) => {
     const [_, viewletId, method, ...args] = command
     if (_ === 'Viewlet.ariaAnnounce') {
       ariaAnnounce(viewletId)
+    } else if (_ === 'Viewlet.setBounds') {
+      setBounds(viewletId, method, ...args)
     } else {
       invoke(viewletId, method, ...args)
     }

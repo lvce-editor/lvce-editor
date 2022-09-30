@@ -1,19 +1,9 @@
 #Completions {
-  top: 0;
-  left: 0;
-  position: absolute;
   background: var(--ContextMenuBackground);
   color: white;
   box-shadow: rgb(0, 0, 0) 0px 2px 4px;
   user-select: none;
-  width: 150px;
-  margin: 0;
-  /* padding: 0.5rem 0; */
   font-size: 13px;
-  height: 150px;
-  padding: 0;
-  overflow-y: auto;
-  /* z-index: 1; */
   pointer-events: all;
 }
 
@@ -23,9 +13,7 @@
   display: flex;
   align-items: center;
   white-space: nowrap;
-  list-style: none;
   cursor: pointer;
-  position: relative;
   contain: strict;
 }
 
