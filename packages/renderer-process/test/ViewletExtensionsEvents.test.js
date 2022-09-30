@@ -15,6 +15,16 @@ beforeAll(() => {
       this.button = init.button
     }
   }
+  Object.defineProperty(HTMLElement.prototype, 'onpointerdown', {
+    set(fn) {
+      this.addEventListener('pointerdown', fn)
+    },
+  })
+  Object.defineProperty(HTMLElement.prototype, 'onpointerup', {
+    set(fn) {
+      this.addEventListener('pointerup', fn)
+    },
+  })
 })
 
 beforeEach(() => {
@@ -83,6 +93,7 @@ test.skip('event - click on install', () => {
     },
   ])
   const { $ExtensionList } = state
+  console.log($ExtensionList.innerHTML)
   $ExtensionList.children[0]
     // @ts-ignore
     .querySelector('.ExtensionManage')
@@ -122,7 +133,7 @@ test.skip('user clicks while installing', () => {
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
-test.skip('event - click - somewhere else', () => {
+test('event - click - on extension', () => {
   const state = ViewletExtensions.create()
   ViewletExtensions.setExtensions(state, [
     {
@@ -138,10 +149,8 @@ test.skip('event - click - somewhere else', () => {
       cancelable: true,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
-    867,
-    'test-author.test=extension-1',
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleClick', 0)
 })
 
 // TODO
@@ -218,7 +227,7 @@ test('icon - error - endless loop bug', () => {
   expect(spy).toHaveBeenCalledTimes(1)
 })
 
-test('event -  touchstart', () => {
+test('event - touchstart', () => {
   const state = ViewletExtensions.create()
   const { $ExtensionList } = state
   const event = new TouchEvent('touchstart', {
@@ -242,7 +251,7 @@ test('event -  touchstart', () => {
   )
 })
 
-test('event -  touchmove', () => {
+test('event - touchmove', () => {
   const state = ViewletExtensions.create()
   const { $ExtensionList } = state
   const event = new TouchEvent('touchmove', {
@@ -266,7 +275,7 @@ test('event -  touchmove', () => {
   )
 })
 
-test('event -  touchend', () => {
+test('event - touchend', () => {
   const state = ViewletExtensions.create()
   const { $ExtensionList } = state
   const event = new TouchEvent('touchend', {

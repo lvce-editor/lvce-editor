@@ -73,9 +73,8 @@ const handlePointerDownExtensionAuthorName = ($Target) => {
 
 export const handlePointerDown = (event) => {
   const $Target = event.target
-  console.log($Target.className)
   switch ($Target.className) {
-    case 'Extension':
+    case 'ExtensionListItem':
       handlePointerDownExtension($Target)
       break
     case 'ExtensionName':
