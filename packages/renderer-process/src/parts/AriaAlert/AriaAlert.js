@@ -21,6 +21,9 @@ const setMessage = ($Old, $New, message) => {
 }
 
 export const alert = (message) => {
+  if (!message) {
+    return
+  }
   if (!state.$AriaMessages) {
     state.$AriaAlert1 = create$AriaAlert()
     state.$AriaAlert2 = create$AriaAlert()

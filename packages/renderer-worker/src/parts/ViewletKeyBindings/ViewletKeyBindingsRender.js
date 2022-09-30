@@ -216,4 +216,21 @@ const renderValue = {
   },
 }
 
-export const render = [renderKeyBindings, renderValue]
+const renderNoResults = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.value === newState.value &&
+      newState.filteredKeyBindings.length === 0
+    )
+  },
+  apply(oldState, newState) {
+    const message =
+      newState.filteredKeyBindings.length === 0 ? 'No Results found' : ''
+    return [
+      /* Viewlet.ariaAnnounce */ 'Viewlet.ariaAnnounce',
+      /* message */ message,
+    ]
+  },
+}
+
+export const render = [renderKeyBindings, renderValue, renderNoResults]

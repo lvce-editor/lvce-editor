@@ -8,6 +8,8 @@ export const create = () => {
   const $InputBox = InputBox.create()
   $InputBox.type = 'search'
   $InputBox.placeholder = 'Search Key Bindings' // TODO placeholder string should come from renderer worker
+  // @ts-ignore
+  $InputBox.ariaDescription = 'Results will update as you type'
   $InputBox.oninput = ViewletkeyBindingsEvents.handleInput
 
   const $KeyBindingsHeader = document.createElement('div')
