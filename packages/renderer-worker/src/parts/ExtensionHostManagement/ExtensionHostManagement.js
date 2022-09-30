@@ -19,6 +19,7 @@ export const state = {
    * @type {any[]}
    */
   extensionHosts: [],
+  cachedActivationEvents: Object.create(null),
 }
 
 const getExtensionHostManagementTypes = () => {
@@ -106,12 +107,9 @@ const startSynching = async (extensionHost) => {
     await handleEditorCreate(editorInstance.state)
   }
   await handleWorkspaceChange(Workspace.state.workspacePath)
-  console.log('finish text document synching')
 }
 
-// TODO add tests for this
-export const activateByEvent = async (event) => {
-  Assert.string(event)
+const actuallyActivateByEvent = async (event) => {
   if (!Languages.hasLoaded()) {
     await Languages.waitForLoad()
   }
@@ -159,6 +157,15 @@ export const activateByEvent = async (event) => {
   // TODO support querying completion items from multiple extension hosts
   // e.g. completion items from node extension host and word based completions from web worker extension host
   return extensionHosts
+}
+
+// TODO add tests for this
+export const activateByEvent = async (event) => {
+  Assert.string(event)
+  if (!(event in state.cachedActivationEvents)) {
+    state.cachedActivationEvents[event] = actuallyActivateByEvent(event)
+  }
+  return state.cachedActivationEvents[event]
 }
 
 export const getExtensionHosts = () => {
