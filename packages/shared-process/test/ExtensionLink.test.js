@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import { FileNotFoundError } from '../src/parts/Error/FileNotFoundError.js'
 import * as FileSystemErrorCodes from '../src/parts/FileSystemErrorCodes/FileSystemErrorCodes.js'
 
 beforeEach(() => {
@@ -111,10 +112,10 @@ test('link - error - symlink already exists', async () => {
   )
 })
 
-test('link - error - no manifest file found', async () => {
+test.only('link - error - no manifest file found', async () => {
   // @ts-ignore
-  FileSystem.readFile.mockImplementation(() => {
-    throw new NodeError('ENOENT')
+  FileSystem.readFile.mockImplementation((uri) => {
+    throw new FileNotFoundError(uri)
   })
   await expect(ExtensionLink.link('/test/my-extension')).rejects.toThrowError(
     new Error('Failed to link extension: no extension manifest found')

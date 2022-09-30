@@ -1,12 +1,11 @@
-import * as Platform from '../Platform/Platform.js'
 import * as Command from '../Command/Command.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as Languages from '../Languages/Languages.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import { VError } from '../VError/VError.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
+import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
+import * as Languages from '../Languages/Languages.js'
+import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
-
+import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import { VError } from '../VError/VError.js'
 export const state = {
   /**
    * @type {any[]}
@@ -108,15 +107,16 @@ const getOriginalStackFromError = (error) => {
 }
 
 const handleRejectedExtension = async (extension) => {
-  const message = extension.reason.message
+  const { reason } = extension
+  const { message, code } = reason
   if (
-    message.includes(`Failed to load extension manifest: File not found`) ||
-    message.includes(`ENOTDIR`)
+    code === FileSystemErrorCodes.ENOENT ||
+    code === FileSystemErrorCodes.ENOTDIR
   ) {
     return
   }
-  const codeFrame = getCodeFrameFromError(extension.reason)
-  const stack = getOriginalStackFromError(extension.reason)
+  const codeFrame = getCodeFrameFromError(reason)
+  const stack = getOriginalStackFromError(reason)
   await Command.execute(
     /* Dialog.showMessage */ 'Dialog.showMessage',
     /* error */ { message, codeFrame, stack }
