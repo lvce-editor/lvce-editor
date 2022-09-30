@@ -119,6 +119,39 @@ export const load = async (viewlet, focus = false, restore = false) => {
       instanceSavedState = getInstanceSavedState(stateToSave, viewlet.id)
     }
     let newState = await module.loadContent(viewletState, instanceSavedState)
+
+    if (module.getChildren) {
+      const children = module.getChildren(newState)
+      const childModules = await Promise.all(
+        children.map((child) => child.id).map(viewlet.getModule)
+      )
+
+      for (const childModule of childModules) {
+        await RendererProcess.invoke(
+          /* Viewlet.load */ 'Viewlet.loadModule',
+          /* id */ childModule.name
+        )
+        if (childModule.Commands) {
+          for (const [key, value] of Object.entries(module.Commands)) {
+            Command.register(key, value)
+          }
+        }
+      }
+
+      const extraCommands = []
+      for (const childModule of childModules) {
+        const childState = childModule.create()
+        const newState = await childModule.loadContent(childState)
+        const childInstance = {
+          state: newState,
+          factory: childModule,
+        }
+        ViewletStates.set(childModule.name, childInstance)
+        const commands = childModule.render(childState, newState)
+        extraCommands.push(...commands)
+      }
+      console.log({ states: ViewletStates.getAllInstances() })
+    }
     if (focus && module.focus) {
       newState = await module.focus(newState)
     }

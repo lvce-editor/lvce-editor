@@ -53,3 +53,7 @@ export const TitleBar = 'TitleBar'
 export const EditorFindWidget = 'EditorFindWidget'
 
 export const ExtensionDetail = 'ExtensionDetail'
+
+export const TitleBarMenuBar = 'TitleBarMenuBar'
+
+export const TitleBarButtons = 'TitleBarButtons'
