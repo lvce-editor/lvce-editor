@@ -38,13 +38,12 @@ const getModule = (parsedArgs) => {
   if (parsedArgs.web) {
     return require('../CliWeb/CliWeb.js')
   }
-  if (arg0 === 'install') {
-    return require('../CliForwardToSharedProcess/CliForwardToSharedProcess.js')
-  }
-  if (arg0 === 'list') {
-    return require('../CliForwardToSharedProcess/CliForwardToSharedProcess.js')
-  }
-  if (arg0 === 'link') {
+  if (
+    arg0 === 'install' ||
+    arg0 === 'list' ||
+    arg0 === 'link' ||
+    arg0 === 'unlink'
+  ) {
     return require('../CliForwardToSharedProcess/CliForwardToSharedProcess.js')
   }
   if (parsedArgs['built-in-self-test']) {
