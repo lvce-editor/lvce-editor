@@ -177,7 +177,7 @@
   {
     "name": "builtin.theme-monokai",
     "repository": "github.com/lvce-editor/theme-monokai",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.theme-high-contrast",
@@ -192,11 +192,11 @@
   {
     "name": "builtin.theme-ayu",
     "repository": "github.com/lvce-editor/theme-ayu",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   {
     "name": "builtin.theme-atom-one-dark",
     "repository": "github.com/lvce-editor/theme-atom-one-dark",
-    "version": "0.0.1"
+    "version": "0.0.2"
   }
 ]
