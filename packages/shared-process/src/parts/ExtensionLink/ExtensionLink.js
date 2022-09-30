@@ -11,9 +11,9 @@ const linkFallBack = async (path) => {
     if (!(await FileSystem.exists(manifestPath))) {
       throw new Error('no extension manifest found')
     }
-    const extensionsPath = Platform.getExtensionsPath()
+    const linkedExtensionsPath = Platform.getLinkedExtensionsPath()
     const baseName = Path.basename(path)
-    const to = Path.join(extensionsPath, baseName)
+    const to = Path.join(linkedExtensionsPath, baseName)
     await FileSystem.remove(to)
     await SymLink.createSymLink(path, to)
   } catch (error) {
@@ -27,9 +27,9 @@ export const link = async (path) => {
     if (!(await FileSystem.exists(manifestPath))) {
       throw new Error('no extension manifest found')
     }
-    const extensionsPath = Platform.getExtensionsPath()
+    const linkedExtensionsPath = Platform.getLinkedExtensionsPath()
     const baseName = Path.basename(path)
-    const to = Path.join(extensionsPath, baseName)
+    const to = Path.join(linkedExtensionsPath, baseName)
     await SymLink.createSymLink(path, to)
   } catch (error) {
     if (error && error.code === FileSystemErrorCodes.EEXIST) {

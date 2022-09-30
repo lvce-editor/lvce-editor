@@ -38,6 +38,10 @@ export const getCachedExtensionsPath = () => {
   return Path.join(cacheDir, 'cached-extensions')
 }
 
+export const getLinkedExtensionsPath = () => {
+  return Path.join(dataDir, 'linked-extensions')
+}
+
 export const getMarketplaceUrl = () => {
   return (
     process.env.LVCE_MARKETPLACE_URL ||
