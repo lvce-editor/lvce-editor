@@ -105,22 +105,19 @@ test('list - error - manifest version is of type array', async () => {
   ])
 })
 
-// TODO test fails on windows
-test.skip('list - error - manifest is a directory', async () => {
+test('list - error - manifest is a directory', async () => {
   // @ts-ignore
-  fs.readdir.mockImplementation(() => {
-    return ['extension-1', 'extension-2']
-  })
-  // @ts-ignore
-  fs.readFile.mockImplementation((path) => {
-    switch (path) {
-      case '/test/extensions/extension-1/extension.json':
-        throw new NodeError('EISDIR')
-      case '/test/extensions/extension-2/extension.json':
-        return '{}'
-      default:
-        throw new NodeError('ENOENT')
-    }
+  ExtensionManifests.getAll.mockImplementation(() => {
+    return [
+      {
+        status: ExtensionManifestStatus.Rejected,
+        reason: new NodeError('EISDIR'),
+      },
+      {
+        status: ExtensionManifestStatus.Resolved,
+        path: '/test/extensions/extension-2',
+      },
+    ]
   })
   expect(await ExtensionList.list()).toEqual([
     {
