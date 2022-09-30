@@ -3,6 +3,7 @@ import VError from 'verror'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
+import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
 
 const RE_EXTENSION_FRAGMENT = /.+(\/|\\)(.+)$/
 
@@ -30,6 +31,13 @@ export const get = async (path) => {
     }
   } catch (error) {
     const id = inferExtensionId(path)
+    if (error.code === FileSystemErrorCodes.ENOENT) {
+      return {
+        path,
+        status: ExtensionManifestStatus.Rejected,
+        reason: new VError(`no extension manifest found`),
+      }
+    }
     return {
       path,
       status: ExtensionManifestStatus.Rejected,

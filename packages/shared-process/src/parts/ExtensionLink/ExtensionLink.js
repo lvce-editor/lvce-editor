@@ -1,4 +1,6 @@
 import VError from 'verror'
+import * as ExtensionManifest from '../ExtensionManifest/ExtensionManifest.js'
+import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
 import * as Path from '../Path/Path.js'
@@ -7,13 +9,13 @@ import * as SymLink from '../SymLink/SymLink.js'
 
 const linkFallBack = async (path) => {
   try {
-    const manifestPath = Path.join(path, 'extension.json')
-    if (!(await FileSystem.exists(manifestPath))) {
-      throw new Error('no extension manifest found')
+    const manifest = await ExtensionManifest.get(path)
+    if (manifest.status === ExtensionManifestStatus.Rejected) {
+      throw manifest.reason
     }
     const linkedExtensionsPath = Platform.getLinkedExtensionsPath()
-    const baseName = Path.basename(path)
-    const to = Path.join(linkedExtensionsPath, baseName)
+    // @ts-ignore
+    const to = Path.join(linkedExtensionsPath, manifest.id)
     await FileSystem.remove(to)
     await SymLink.createSymLink(path, to)
   } catch (error) {
@@ -24,13 +26,13 @@ const linkFallBack = async (path) => {
 
 export const link = async (path) => {
   try {
-    const manifestPath = Path.join(path, 'extension.json')
-    if (!(await FileSystem.exists(manifestPath))) {
-      throw new Error('no extension manifest found')
+    const manifest = await ExtensionManifest.get(path)
+    if (manifest.status === ExtensionManifestStatus.Rejected) {
+      throw manifest.reason
     }
     const linkedExtensionsPath = Platform.getLinkedExtensionsPath()
-    const baseName = Path.basename(path)
-    const to = Path.join(linkedExtensionsPath, baseName)
+    // @ts-ignore
+    const to = Path.join(linkedExtensionsPath, manifest.id)
     await SymLink.createSymLink(path, to)
   } catch (error) {
     if (error && error.code === FileSystemErrorCodes.EEXIST) {
