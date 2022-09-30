@@ -29,7 +29,10 @@ const getTitleBarButtonsRemote = () => {
 }
 
 const getTitleBarButtonsElectron = () => {
-  if (Preferences.get('window.titleBarStyle') === 'custom') {
+  if (
+    Preferences.get('window.titleBarStyle') === 'custom' &&
+    !Preferences.get('window.controlsOverlay.enabled')
+  ) {
     return [
       { label: 'Minimize', icon: 'Minimize', id: 'Minimize' },
       { label: 'Maximize', icon: 'Maximize', id: 'ToggleMaximize' },
