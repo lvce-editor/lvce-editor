@@ -220,28 +220,6 @@ export const getExtensions = async () => {
   ])
 }
 
-export const getThemeExtensions = async () => {
-  const manifests = await ExtensionManifests.getAll([
-    {
-      type: ExtensionManifestInputType.Folder,
-      path: Platform.getBuiltinExtensionsPath(),
-    },
-    {
-      type: ExtensionManifestInputType.Folder,
-      path: Platform.getLinkedExtensionsPath(),
-    },
-    {
-      type: ExtensionManifestInputType.Folder,
-      path: Platform.getExtensionsPath(),
-    },
-    {
-      type: ExtensionManifestInputType.OnlyExtension,
-      path: Platform.getOnlyExtensionPath(),
-    },
-  ])
-  return manifests
-}
-
 export const getDisabledExtensions = async () => {
   return ExtensionManifests.getAll([
     {
