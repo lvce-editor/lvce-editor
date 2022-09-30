@@ -4,7 +4,7 @@ import * as ViewletEditorCompletion from '../src/parts/ViewletEditorCompletion/V
 
 test('focusIndex', () => {
   const state = {
-    completionItems: [
+    filteredItems: [
       {
         label: 'item 1',
       },
@@ -24,7 +24,7 @@ test('focusIndex', () => {
 
 test('focusFirst', () => {
   const state = {
-    completionItems: [
+    filteredItems: [
       {
         label: 'item 1',
       },
@@ -44,7 +44,7 @@ test('focusFirst', () => {
 
 test('focusLast', () => {
   const state = {
-    completionItems: [
+    filteredItems: [
       {
         label: 'item 1',
       },
@@ -64,7 +64,7 @@ test('focusLast', () => {
 
 test('focusPrevious', () => {
   const state = {
-    completionItems: [
+    filteredItems: [
       {
         label: 'item 1',
       },
@@ -84,7 +84,7 @@ test('focusPrevious', () => {
 
 test('focusPrevious - at start', () => {
   const state = {
-    completionItems: [
+    filteredItems: [
       {
         label: 'item 1',
       },
@@ -104,7 +104,7 @@ test('focusPrevious - at start', () => {
 
 test('focusNext', () => {
   const state = {
-    completionItems: [
+    filteredItems: [
       {
         label: 'item 1',
       },
@@ -124,7 +124,7 @@ test('focusNext', () => {
 
 test('focusNext - at end', () => {
   const state = {
-    completionItems: [
+    filteredItems: [
       {
         label: 'item 1',
       },

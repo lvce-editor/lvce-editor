@@ -62,7 +62,7 @@ export const setItems = (state, items, reason, focusedIndex) => {
   // TODO recycle nodes
   $Viewlet.replaceChildren(...items.map(create$CompletionItem))
   Widget.append($Viewlet)
-  focusIndex(state, 0, 0)
+  setFocusedIndex(state, 0, 0)
   // TODO set right aria attributes on $EditorInput
 }
 
@@ -74,7 +74,7 @@ export const dispose = (state) => {
 
 // TODO should pass maybe oldIndex to be removed
 // but keeping $ActiveItem in state also works
-export const focusIndex = (state, oldIndex, newIndex) => {
+export const setFocusedIndex = (state, oldIndex, newIndex) => {
   const $Viewlet = state.$Viewlet
   if (oldIndex !== -1) {
     const $OldItem = $Viewlet.children[oldIndex]
