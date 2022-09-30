@@ -1,10 +1,9 @@
 import { jest } from '@jest/globals'
+import { FileNotFoundError } from '../src/parts/Error/FileNotFoundError.js'
 import * as FileSystemErrorCodes from '../src/parts/FileSystemErrorCodes/FileSystemErrorCodes.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
-
-  // jest.resetModules()
 })
 
 jest.unstable_mockModule('../src/parts/SymLink/SymLink', () => {
@@ -42,6 +41,9 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
     exists: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    readFile: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
 
@@ -62,8 +64,8 @@ test('link', async () => {
   // @ts-ignore
   SymLink.createSymLink.mockImplementation(() => {})
   // @ts-ignore
-  FileSystem.exists.mockImplementation(() => {
-    return true
+  FileSystem.readFile.mockImplementation(() => {
+    return '{ "id": "my-extension" }'
   })
   await ExtensionLink.link('/test/my-extension')
   expect(SymLink.createSymLink).toHaveBeenCalledTimes(1)
@@ -89,8 +91,8 @@ test('link - error - symlink already exists', async () => {
   // @ts-ignore
   FileSystem.remove.mockImplementation(() => {})
   // @ts-ignore
-  FileSystem.exists.mockImplementation(() => {
-    return true
+  FileSystem.readFile.mockImplementation(() => {
+    return '{ "id": "my-extension" }'
   })
   await ExtensionLink.link('/test/my-extension')
   expect(SymLink.createSymLink).toHaveBeenCalledTimes(2)
@@ -112,10 +114,12 @@ test('link - error - symlink already exists', async () => {
 
 test('link - error - no manifest file found', async () => {
   // @ts-ignore
-  FileSystem.exists.mockImplementation(() => {
-    return false
+  FileSystem.readFile.mockImplementation((uri) => {
+    throw new FileNotFoundError(uri)
   })
   await expect(ExtensionLink.link('/test/my-extension')).rejects.toThrowError(
-    new Error('Failed to link extension: no extension manifest found')
+    new Error(
+      "Failed to link extension: Failed to load extension manifest for my-extension: File not found '/test/my-extension/extension.json'"
+    )
   )
 })

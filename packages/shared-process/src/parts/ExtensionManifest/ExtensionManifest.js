@@ -3,6 +3,7 @@ import VError from 'verror'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
+import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
 
 const RE_EXTENSION_FRAGMENT = /.+(\/|\\)(.+)$/
 
@@ -30,13 +31,21 @@ export const get = async (path) => {
     }
   } catch (error) {
     const id = inferExtensionId(path)
+    const enhancedError = new VError(
+      error,
+      `Failed to load extension manifest for ${id}`
+    )
+    if (error.code === FileSystemErrorCodes.ENOENT) {
+      // @ts-ignore
+      enhancedError.code = FileSystemErrorCodes.E_MANIFEST_NOT_FOUND
+    } else {
+      // @ts-ignore
+      enhancedError.code = error.code
+    }
     return {
       path,
       status: ExtensionManifestStatus.Rejected,
-      reason: new VError(
-        error,
-        `Failed to load extension "${id}": Failed to load extension manifest`
-      ),
+      reason: enhancedError,
     }
   }
 }
