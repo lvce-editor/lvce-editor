@@ -8,7 +8,7 @@ test('focusNext', () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         name: 'index.css',
         type: DirentType.File,
@@ -38,7 +38,7 @@ test('focusNext - when no focus', () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         name: 'index.css',
         type: DirentType.File,
@@ -68,7 +68,7 @@ test('focusNext - at end', () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         name: 'index.css',
         type: DirentType.File,

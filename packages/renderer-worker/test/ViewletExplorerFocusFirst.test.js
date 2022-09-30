@@ -8,7 +8,7 @@ test('focusFirst', () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,
@@ -41,7 +41,7 @@ test('focusFirst - no dirents', () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [],
+    items: [],
   }
   expect(ViewletExplorerFocusFirst.focusFirst(state)).toBe(state)
 })
@@ -53,7 +53,7 @@ test('focusFirst - focus already at first', () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,

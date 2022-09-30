@@ -7,7 +7,7 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import { handleDropRoot } from './ViewletExplorerHandleDropRoot.js'
 
 const handleDropIntoFolder = async (state, dirent, index, files) => {
-  const { pathSeparator, root, dirents } = state
+  const { pathSeparator, root, items } = state
   for (const file of files) {
     const from = file.path
     const to = dirent.path + pathSeparator + file.name
@@ -19,23 +19,23 @@ const handleDropIntoFolder = async (state, dirent, index, files) => {
   const startIndex = index + 1
   const endIndex = index + 2
   const mergedDirents = [
-    ...dirents.slice(0, startIndex),
+    ...items.slice(0, startIndex),
     ...childDirents,
-    ...dirents.slice(endIndex),
+    ...items.slice(endIndex),
   ]
 
   // const mergedDirents = mergeDirents(dirents, childDirents)
   console.log({ childDirents })
   return {
     ...state,
-    dirents: mergedDirents,
+    items: mergedDirents,
     dropTargets: [],
   }
 }
 
 const handleDropIntoFile = (state, dirent, index, files) => {
-  const { dirents } = state
-  const parentIndex = getParentStartIndex(dirents, index)
+  const { items } = state
+  const parentIndex = getParentStartIndex(items, index)
   if (parentIndex === -1) {
     return handleDropRoot(state, files)
   }
@@ -43,8 +43,8 @@ const handleDropIntoFile = (state, dirent, index, files) => {
 }
 
 export const handleDropIndex = (state, index, files) => {
-  const { dirents } = state
-  const dirent = dirents[index]
+  const { items } = state
+  const dirent = items[index]
   // TODO if it is a file, drop into the folder of the file
   // TODO if it is a folder, drop into the folder
   // TODO if it is a symlink, read symlink and determine if file can be dropped

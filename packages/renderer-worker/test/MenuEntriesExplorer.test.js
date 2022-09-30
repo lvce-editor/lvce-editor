@@ -7,7 +7,7 @@ test('getMenuEntries - no focused dirent', () => {
   ViewletStates.set('Explorer', {
     state: {
       focusedIndex: -1,
-      dirents: [],
+      items: [],
     },
     factory: {},
   })
@@ -31,7 +31,7 @@ test('getMenuEntries - focused folder', () => {
   ViewletStates.set('Explorer', {
     state: {
       focusedIndex: 0,
-      dirents: [
+      items: [
         {
           name: 'sample-folder',
           depth: 1,
@@ -56,7 +56,7 @@ test('getMenuEntries - focused file', () => {
   ViewletStates.set('Explorer', {
     state: {
       focusedIndex: 0,
-      dirents: [
+      items: [
         {
           name: 'sample-file',
           depth: 1,
@@ -86,7 +86,7 @@ test('getMenuEntries - focused symlink', () => {
   ViewletStates.set('Explorer', {
     state: {
       focusedIndex: 0,
-      dirents: [
+      items: [
         {
           name: 'link',
           depth: 1,
@@ -110,7 +110,7 @@ test('getMenuEntries - root', () => {
   ViewletStates.set('Explorer', {
     state: {
       focusedIndex: -1,
-      dirents: [
+      items: [
         {
           name: 'link',
           depth: 1,

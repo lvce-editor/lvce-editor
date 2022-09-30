@@ -132,7 +132,7 @@ test('loadContent', async () => {
     version: 0,
     itemHeight: 22,
     dropTargets: [],
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -214,7 +214,7 @@ test('loadContent - restore from saved state', async () => {
     expandedPaths: ['/test/a'],
   }
   expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -283,7 +283,7 @@ test('loadContent - restore from saved state - sort dirents', async () => {
     expandedPaths: ['/test/a'],
   }
   expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -347,7 +347,7 @@ test('loadContent - restore from saved state - no saved state exists', async () 
 
   const savedState = undefined
   expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -420,7 +420,7 @@ test('loadContent - restore from saved state - error - ENOENT for child folder',
     expandedPaths: ['/test/a', '/test/a/c', '/test/b', '/test/b/d'],
   }
   expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -671,7 +671,7 @@ test.skip('contentLoaded', async () => {
   const state = {
     ...ViewletExplorer.create(),
     deltaY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -782,7 +782,7 @@ test('handleClick - no element focused', async () => {
     height: 600,
     deltaY: 0,
     minLineY: 0,
-    dirents: [
+    items: [
       {
         name: 'index.css',
         type: DirentType.File,
@@ -813,7 +813,7 @@ test('handleClick - file', async () => {
     height: 600,
     deltaY: 0,
     minLineY: 0,
-    dirents: [
+    items: [
       {
         name: 'index.css',
         type: DirentType.File,
@@ -859,7 +859,7 @@ test('handleClick - file - error', async () => {
     height: 600,
     deltaY: 0,
     minLineY: 0,
-    dirents: [
+    items: [
       {
         name: 'index.css',
         type: DirentType.File,
@@ -905,7 +905,7 @@ test('handleClickCurrentButKeepFocus - file', async () => {
     height: 600,
     deltaY: 0,
     minLineY: 0,
-    dirents: [
+    items: [
       {
         name: 'index.css',
         type: DirentType.File,
@@ -944,7 +944,7 @@ test('handleClick - directory', async () => {
     deltaY: 0,
     minLineY: 0,
     pathSeparator: PathSeparatorType.Slash,
-    dirents: [
+    items: [
       {
         name: 'folder-1',
         type: DirentType.Directory,
@@ -980,7 +980,7 @@ test('handleClick - directory', async () => {
     return [{ name: 'index.js', type: DirentType.File }]
   })
   expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -1027,7 +1027,7 @@ test('handleClick - directory-expanded', async () => {
     height: 600,
     deltaY: 0,
     minLineY: 0,
-    dirents: [
+    items: [
       {
         name: 'test/folder',
         type: DirentType.DirectoryExpanded,
@@ -1056,7 +1056,7 @@ test('handleClick - directory-expanded', async () => {
   }
   expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
     focusedIndex: 0,
-    dirents: [
+    items: [
       {
         name: 'test/folder',
         type: DirentType.Directory,
@@ -1076,7 +1076,7 @@ test.skip('handleClick - directory-expanded - scrolled down', async () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         name: 'folder-1',
         type: DirentType.Directory,
@@ -1113,7 +1113,7 @@ test.skip('handleClick - directory-expanded - scrolled down', async () => {
     minLineY: 1,
   }
   expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         name: 'folder-2',
@@ -1137,7 +1137,7 @@ test('handleClick - collapsed folder', async () => {
     deltaY: 0,
     minLineY: 0,
     pathSeparator: PathSeparatorType.Slash,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -1176,7 +1176,7 @@ test('handleClick - collapsed folder', async () => {
     return [{ name: 'index.js', type: DirentType.File }]
   })
   expect(await ViewletExplorer.handleClick(state, 2)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -1226,7 +1226,7 @@ test.skip('handleClick - race condition - child folder is being expanded and par
     height: 600,
     deltaY: 0,
     minLineY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -1299,7 +1299,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
     height: 600,
     deltaY: 0,
     minLineY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -1515,7 +1515,7 @@ test('handleClick - expanded folder', async () => {
     height: 600,
     deltaY: 0,
     minLineY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -1555,7 +1555,7 @@ test('handleClick - expanded folder', async () => {
     ],
   }
   expect(await ViewletExplorer.handleClick(state, 2)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -1595,7 +1595,7 @@ test('handleArrowLeft - root file', async () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -1643,7 +1643,7 @@ test('handleArrowLeft - collapsed root folder', async () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -1683,7 +1683,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -1751,7 +1751,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
     ],
   }
   expect(ViewletExplorer.handleArrowLeft(state)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -1796,7 +1796,7 @@ test('handleArrowLeft - nested file - first child', async () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -1843,7 +1843,7 @@ test('handleArrowLeft - nested file - third child', async () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -1922,7 +1922,7 @@ test('handleArrowLeft - when no focus', async () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -1963,7 +1963,7 @@ test('handleArrowRight - file', async () => {
     height: 600,
     deltaY: 0,
     minLineY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -2014,7 +2014,7 @@ test('handleArrowRight - collapsed folder', async () => {
     deltaY: 0,
     minLineY: 0,
     pathSeparator: PathSeparatorType.Slash,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -2053,7 +2053,7 @@ test('handleArrowRight - collapsed folder', async () => {
     return [{ name: 'index.js', type: DirentType.File }]
   })
   expect(await ViewletExplorer.handleArrowRight(state)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -2103,7 +2103,7 @@ test('handleArrowRight - collapsed empty folder', async () => {
     height: 600,
     deltaY: 0,
     minLineY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -2140,7 +2140,7 @@ test('handleArrowRight - collapsed empty folder', async () => {
     return []
   })
   expect(await ViewletExplorer.handleArrowRight(state)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -2178,7 +2178,7 @@ test('handleArrowRight - expanded folder', async () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,
@@ -2229,7 +2229,7 @@ test('handleArrowRight - expanded empty folder', async () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,
@@ -2269,7 +2269,7 @@ test('handleArrowRight - when no focus', async () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,
@@ -2321,7 +2321,7 @@ test('handleWheel - up', () => {
     deltaY: 22,
     minLineY: 0,
     maxLineY: 2,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,
@@ -2373,7 +2373,7 @@ test('handleWheel - up - already at top', () => {
     deltaY: 0,
     minLineY: 0,
     maxLineY: 2,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,
@@ -2407,7 +2407,7 @@ test.skip('handleWheel - down', () => {
     deltaY: 0,
     minLineY: 0,
     maxLineY: 2,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,
@@ -2477,7 +2477,7 @@ test('handleWheel - down - already at bottom', () => {
     deltaY: 0,
     minLineY: 0,
     maxLineY: 2,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,
@@ -2511,7 +2511,7 @@ test('handleWheel - down - already at bottom but viewlet is larger than items ca
     deltaY: 0,
     minLineY: 0,
     maxLineY: 18,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,
@@ -2618,7 +2618,7 @@ test.skip('newFile - inside folder', async () => {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
     pathSeparator: PathSeparatorType.Slash,
     focusedIndex: 1,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -2693,7 +2693,7 @@ test.skip('newFile - inside folder', async () => {
 
   await ViewletExplorer.newFile(state)
   expect(await ViewletExplorer.acceptNewFile(state)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -2848,7 +2848,7 @@ test('removeDirent - first', async () => {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
     pathSeparator: PathSeparatorType.Slash,
     focusedIndex: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -2897,7 +2897,7 @@ test('removeDirent - first', async () => {
     }
   })
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -2926,7 +2926,7 @@ test('removeDirent - only folder', async () => {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
     pathSeparator: PathSeparatorType.Slash,
     focusedIndex: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -2957,7 +2957,7 @@ test('removeDirent - only folder', async () => {
     }
   })
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
-    dirents: [],
+    items: [],
     focusedIndex: -1,
   })
 })
@@ -2967,7 +2967,7 @@ test('removeDirent - expanded folder', async () => {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
     pathSeparator: PathSeparatorType.Slash,
     focusedIndex: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -3034,7 +3034,7 @@ test('removeDirent - expanded folder', async () => {
     }
   })
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -3063,7 +3063,7 @@ test('removeDirent - middle', async () => {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
     pathSeparator: PathSeparatorType.Slash,
     focusedIndex: 1,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -3113,7 +3113,7 @@ test('removeDirent - middle', async () => {
     }
   })
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -3142,7 +3142,7 @@ test('removeDirent - last', async () => {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
     pathSeparator: PathSeparatorType.Slash,
     focusedIndex: 2,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -3192,7 +3192,7 @@ test('removeDirent - last', async () => {
     }
   })
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -3221,7 +3221,7 @@ test('removeDirent - no dirents left', async () => {
     ...ViewletExplorer.create('', '/test', 0, 0, 0, 0),
     pathSeparator: PathSeparatorType.Slash,
     focusedIndex: -1,
-    dirents: [],
+    items: [],
     width: 600,
     height: 600,
     minLineY: 0,
@@ -3246,7 +3246,7 @@ test('resize - same height', () => {
   const state = {
     ...ViewletExplorer.create(0, '', 0, 0, 20, 20),
     deltaY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -3772,7 +3772,7 @@ test('expandAll', async () => {
     deltaY: 0,
     minLineY: 0,
     pathSeparator: PathSeparatorType.Slash,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -3818,7 +3818,7 @@ test('expandAll', async () => {
     }
   })
   expect(await ViewletExplorer.expandAll(state)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -3940,7 +3940,7 @@ test('collapseAll', () => {
     deltaY: 0,
     minLineY: 0,
     maxLineY: 20,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -4061,7 +4061,7 @@ test('collapseAll', () => {
     ],
   }
   expect(ViewletExplorer.collapseAll(state)).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -4127,7 +4127,7 @@ test('event - workspace change', async () => {
   Workspace.state.workspacePath = '/test'
   const newState = await ViewletExplorer.handleWorkspaceChange(state)
   expect(newState).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -4187,7 +4187,7 @@ test('openContainingFolder - nested', async () => {
     ...ViewletExplorer.create('', 0, 0, 0, 0),
     root: '/test',
     focusedIndex: 1,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -4236,7 +4236,7 @@ test.skip('revealItem - error - not found', async () => {
     minLineY: 0,
     maxLineY: 20,
     root: '/test',
-    dirents: [],
+    items: [],
   }
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
@@ -4258,7 +4258,7 @@ test('revealItem - two levels deep', async () => {
     maxLineY: 20,
     root: '/test',
     pathSeparator: PathSeparatorType.Slash,
-    dirents: [],
+    items: [],
   }
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
@@ -4274,7 +4274,7 @@ test('revealItem - two levels deep', async () => {
   expect(
     await ViewletExplorer.revealItem(state, '/test/a/b.txt')
   ).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -4310,7 +4310,7 @@ test('revealItem - insert into existing tree', async () => {
     maxLineY: 20,
     root: '/test',
     pathSeparator: PathSeparatorType.Slash,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -4382,7 +4382,7 @@ test('revealItem - insert into existing tree', async () => {
   expect(
     await ViewletExplorer.revealItem(state, '/test/folder-1/a.txt')
   ).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -4436,7 +4436,7 @@ test("revealItem - insert into existing tree - some sibling nodes don't exist an
     maxLineY: 20,
     root: '/test',
     pathSeparator: PathSeparatorType.Slash,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -4490,7 +4490,7 @@ test("revealItem - insert into existing tree - some sibling nodes don't exist an
   expect(
     await ViewletExplorer.revealItem(state, '/test/folder-1/a.txt')
   ).toMatchObject({
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -4526,7 +4526,7 @@ test('revealItem - already visible', async () => {
     maxLineY: 20,
     root: '/test',
     pathSeparator: PathSeparatorType.Slash,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -4556,7 +4556,7 @@ test('revealItem - already visible', async () => {
   ).toMatchObject({
     focused: true,
     focusedIndex: 1,
-    dirents: [
+    items: [
       {
         depth: 1,
         icon: '',
@@ -4593,7 +4593,7 @@ test('handleArrowRight - symlink - error', async () => {
     height: 600,
     deltaY: 0,
     minLineY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         posInSet: 1,
@@ -4622,7 +4622,7 @@ test('handleClickCurrent', async () => {
     deltaY: 0,
     minLineY: 1,
     maxLineY: 2,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,

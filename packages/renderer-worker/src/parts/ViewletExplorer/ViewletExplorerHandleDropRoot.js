@@ -28,12 +28,12 @@ const getMergedDirents = async (root, pathSeparator, dirents) => {
 }
 
 const handleDropRootElectron = async (state, files) => {
-  const { root, pathSeparator, dirents } = state
+  const { root, pathSeparator, items } = state
   await copyFilesElectron(root, pathSeparator, files)
-  const mergedDirents = await getMergedDirents(root, pathSeparator, dirents)
+  const mergedDirents = await getMergedDirents(root, pathSeparator, items)
   return {
     ...state,
-    dirents: mergedDirents,
+    items: mergedDirents,
     dropTargets: [],
   }
 }
@@ -47,12 +47,12 @@ const uploadFiles = async (root, pathSeparator, files) => {
 }
 
 const handleDropRootDefault = async (state, files) => {
-  const { root, pathSeparator, dirents } = state
+  const { root, pathSeparator, items } = state
   await uploadFiles(root, pathSeparator, files)
-  const mergedDirents = await getMergedDirents(root, pathSeparator, dirents)
+  const mergedDirents = await getMergedDirents(root, pathSeparator, items)
   return {
     ...state,
-    dirents: mergedDirents,
+    items: mergedDirents,
     dropTargets: [],
   }
 }

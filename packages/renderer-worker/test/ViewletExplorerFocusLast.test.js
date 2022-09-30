@@ -9,7 +9,7 @@ test('focusLast', () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,
@@ -40,7 +40,7 @@ test('focusLast - no dirents', () => {
     ...ViewletExplorer.create(),
     root: '/home/test-user/test-path',
     focusedIndex: -1,
-    dirents: [],
+    items: [],
   }
   expect(ViewletExplorerFocusLast.focusLast(state)).toMatchObject({
     focusedIndex: -1,
@@ -51,7 +51,7 @@ test('focusLast - focus already at last', () => {
   const state = {
     root: '/home/test-user/test-path',
     focusedIndex: 1,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,

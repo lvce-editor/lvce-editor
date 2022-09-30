@@ -10,7 +10,7 @@ test('focusIndex - scroll up', () => {
     deltaY: 0,
     minLineY: 1,
     maxLineY: 2,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,
@@ -47,7 +47,7 @@ test('focusIndex - scroll down', () => {
     deltaY: 0,
     minLineY: 0,
     maxLineY: 1,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,
@@ -84,7 +84,7 @@ test('focusIndex - focus container', () => {
     deltaY: 0,
     minLineY: 0,
     maxLineY: 1,
-    dirents: [
+    items: [
       {
         depth: 1,
         index: 0,

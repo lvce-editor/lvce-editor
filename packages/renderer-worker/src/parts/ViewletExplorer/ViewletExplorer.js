@@ -32,7 +32,7 @@ export const name = 'Explorer'
 export const create = (id, uri, left, top, width, height) => {
   return {
     root: '',
-    dirents: [],
+    items: [],
     focusedIndex: -1,
     focused: false,
     hoverIndex: -1,
@@ -159,7 +159,7 @@ export const loadContent = async (state, savedState) => {
   return {
     ...state,
     root,
-    dirents: restoredDirents,
+    items: restoredDirents,
     maxLineY: Math.round(height / itemHeight),
     pathSeparator,
   }
@@ -170,10 +170,10 @@ const updateIcon = (dirent) => {
 }
 
 export const updateIcons = (state) => {
-  const newDirents = state.dirents.map(updateIcon)
+  const newDirents = state.items.map(updateIcon)
   return {
     ...state,
-    dirents: newDirents,
+    items: newDirents,
   }
 }
 
@@ -185,7 +185,7 @@ export const contentLoaded = async (state) => {
 
 // export const contentLoadedEffects = (state) => {
 //   // TODO why is this event emitted?
-//   GlobalEventBus.emitEvent('dirents.update', state.dirents)
+//   GlobalEventBus.emitEvent('dirents.update', state.items)
 
 //   // TODO create should not have side effects
 //   // TODO dispose listener when explorer is disposed
@@ -228,16 +228,16 @@ export const handleIconThemeChange = (state) => {
 }
 
 const getVisible = (state) => {
-  return state.dirents.slice(state.minLineY, state.maxLineY)
+  return state.items.slice(state.minLineY, state.maxLineY)
 }
 
 // TODO rename dirents to items, then can use virtual list component directly
 export const setDeltaY = (state, deltaY) => {
-  const { itemHeight, height, dirents } = state
+  const { itemHeight, height, items } = state
   if (deltaY < 0) {
     deltaY = 0
-  } else if (deltaY > dirents.length * itemHeight - height) {
-    deltaY = Math.max(dirents.length * itemHeight - height, 0)
+  } else if (deltaY > items.length * itemHeight - height) {
+    deltaY = Math.max(items.length * itemHeight - height, 0)
   }
   if (state.deltaY === deltaY) {
     return state
@@ -257,7 +257,7 @@ export const handleWheel = (state, deltaY) => {
 }
 
 export const getFocusedDirent = (state) => {
-  const dirent = state.dirents[state.focusedIndex]
+  const dirent = state.items[state.focusedIndex]
   return dirent
 }
 
@@ -288,16 +288,16 @@ export const removeDirent = async (state) => {
   }
   // TODO is it possible to make this more functional instead of mutating state?
   // maybe every function returns a new state?
-  const index = state.dirents.indexOf(dirent)
+  const index = state.items.indexOf(dirent)
   let deleteEnd = index + 1
 
-  for (; deleteEnd < state.dirents.length; deleteEnd++) {
-    if (state.dirents[deleteEnd].depth <= dirent.depth) {
+  for (; deleteEnd < state.items.length; deleteEnd++) {
+    if (state.items[deleteEnd].depth <= dirent.depth) {
       break
     }
   }
   const deleteCount = deleteEnd - index
-  const newDirents = [...state.dirents]
+  const newDirents = [...state.items]
   newDirents.splice(index, deleteCount)
   let indexToFocus = -1
 
@@ -312,7 +312,7 @@ export const removeDirent = async (state) => {
   }
   return {
     ...state,
-    dirents: newDirents,
+    items: newDirents,
     focusedIndex: indexToFocus,
   }
 }
@@ -330,7 +330,7 @@ const updateDirents = async (state) => {
 export const renameDirent = async (state) => {
   const index = state.focusedIndex
   state.editingIndex = index
-  const dirent = state.dirents[index]
+  const dirent = state.items[index]
   const name = dirent.name
   await RendererProcess.invoke(
     /* Viewlet.invoke */ 'Viewlet.send',
@@ -343,7 +343,7 @@ export const renameDirent = async (state) => {
 
 export const cancelRename = async (state) => {
   const index = state.editingIndex
-  const dirent = state.dirents[index]
+  const dirent = state.items[index]
   state.editingIndex = -1
   await RendererProcess.invoke(
     /* Viewlet.invoke */ 'Viewlet.send',
@@ -461,7 +461,7 @@ export const computeRenamedDirent = (dirents, index, newName) => {
 export const acceptRename = async (state) => {
   const index = state.editingIndex
   state.editingIndex = -1
-  const renamedDirent = state.dirents[index]
+  const renamedDirent = state.items[index]
   const newDirentName = await RendererProcess.invoke(
     /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'Explorer',
@@ -480,14 +480,14 @@ export const acceptRename = async (state) => {
     await ErrorHandling.showErrorDialog(error)
     return
   }
-  const { dirents } = state
+  const { items } = state
   const { newDirents, focusedIndex } = computeRenamedDirent(
-    dirents,
+    items,
     index,
     newDirentName
   )
   //  TODO move focused index
-  state.dirents = newDirents
+  state.items = newDirents
   await contentLoaded(state)
   await focusIndex(state, focusedIndex)
 
@@ -529,8 +529,8 @@ const getContaingingFolder = (root, dirents, focusedIndex, pathSeparator) => {
 }
 
 export const openContainingFolder = async (state) => {
-  const { focusedIndex, root, dirents, pathSeparator } = state
-  const path = getContaingingFolder(root, dirents, focusedIndex, pathSeparator)
+  const { focusedIndex, root, items, pathSeparator } = state
+  const path = getContaingingFolder(root, items, focusedIndex, pathSeparator)
   await Command.execute('OpenNativeFolder.openNativeFolder', /* path */ path)
   return state
 }
@@ -540,7 +540,7 @@ const newDirent = async (state) => {
   const focusedIndex = state.focusedIndex
   const index = state.focusedIndex + 1
   if (focusedIndex >= 0) {
-    const dirent = state.dirents[state.focusedIndex]
+    const dirent = state.items[state.focusedIndex]
     if (dirent.type === DirentType.Directory) {
       // TODO handle error
       await handleClickDirectory(state, dirent, focusIndex)
@@ -602,7 +602,7 @@ const acceptDirent = async (state, type) => {
     )
     return state
   }
-  const parentFolder = getParentFolder(state.dirents, focusedIndex, state.root)
+  const parentFolder = getParentFolder(state.items, focusedIndex, state.root)
   const absolutePath = [parentFolder, newFileName].join(state.pathSeparator)
   // TODO better handle error
   try {
@@ -622,7 +622,7 @@ const acceptDirent = async (state, type) => {
   }
   const parentDirent =
     focusedIndex >= 0
-      ? state.dirents[focusedIndex]
+      ? state.items[focusedIndex]
       : {
           depth: 0,
           path: state.root,
@@ -643,8 +643,8 @@ const acceptDirent = async (state, type) => {
   let posInSet = 1
   let setSize = 1
   let i = Math.max(state.focusedIndex, -1) + 1
-  for (; i < state.dirents.length; i++) {
-    const dirent = state.dirents[i]
+  for (; i < state.items.length; i++) {
+    const dirent = state.items[i]
     if (dirent.depth !== depth) {
       break
     }
@@ -662,12 +662,12 @@ const acceptDirent = async (state, type) => {
   }
   newDirent.setSize = setSize
   newDirent.posInSet = posInSet
-  state.dirents.splice(insertIndex + 1, 0, newDirent)
+  state.items.splice(insertIndex + 1, 0, newDirent)
 
-  const newDirents = [...state.dirents]
+  const newDirents = [...state.items]
   return {
     ...state,
-    dirents: newDirents,
+    items: newDirents,
   }
 }
 
@@ -706,20 +706,20 @@ const handleClickDirectory = async (state, dirent, index) => {
     return state
   }
   // TODO use Viewlet.getState here and check if it exists
-  const newIndex = state2.dirents.indexOf(dirent)
+  const newIndex = state2.items.indexOf(dirent)
   // TODO if viewlet is disposed or root has changed, return
   if (newIndex === -1) {
     return state
   }
-  // console.log(state.dirents[index] === dirent)
-  const newDirents = [...state2.dirents]
+  // console.log(state.items[index] === dirent)
+  const newDirents = [...state2.items]
   newDirents.splice(newIndex + 1, 0, ...dirents)
   dirent.type = DirentType.DirectoryExpanded
   dirent.icon = IconTheme.getIcon(dirent)
   // TODO when focused index has changed while expanding, don't update it
   return {
     ...state,
-    dirents: newDirents,
+    items: newDirents,
     focusedIndex: newIndex,
   }
 }
@@ -736,14 +736,14 @@ const handleClickDirectoryExpanding = async (state, dirent, index) => {
 const handleClickDirectoryExpanded = (state, dirent, index) => {
   dirent.type = DirentType.Directory
   dirent.icon = IconTheme.getIcon(dirent)
-  const endIndex = getParentEndIndex(state.dirents, index)
+  const endIndex = getParentEndIndex(state.items, index)
   const removeCount = endIndex - index - 1
   // TODO race conditions and side effects are everywhere
-  const newDirents = [...state.dirents]
+  const newDirents = [...state.items]
   newDirents.splice(index + 1, removeCount)
   return {
     ...state,
-    dirents: newDirents,
+    items: newDirents,
     focusedIndex: index,
   }
 }
@@ -753,7 +753,7 @@ export const handleClick = (state, index, keepFocus = false) => {
     return focusIndex(state, -1)
   }
   const actualIndex = index + state.minLineY
-  const dirent = state.dirents[actualIndex]
+  const dirent = state.items[actualIndex]
   if (!dirent) {
     console.warn(`[explorer] dirent at index ${actualIndex} not found`, state)
     return state
@@ -810,10 +810,10 @@ const handleClickSymLink = async (state, dirent, index) => {
 }
 
 const handleArrowRightDirectoryExpanded = (state, dirent) => {
-  if (state.focusedIndex === state.dirents.length - 1) {
+  if (state.focusedIndex === state.items.length - 1) {
     return state
   }
-  const nextDirent = state.dirents[state.focusedIndex + 1]
+  const nextDirent = state.items[state.focusedIndex + 1]
   if (nextDirent.depth === dirent.depth + 1) {
     return focusIndex(state, state.focusedIndex + 1)
   }
@@ -823,7 +823,7 @@ export const handleArrowRight = async (state) => {
   if (state.focusedIndex === -1) {
     return state
   }
-  const dirent = state.dirents[state.focusedIndex]
+  const dirent = state.items[state.focusedIndex]
   switch (dirent.type) {
     case DirentType.File:
       return state
@@ -839,10 +839,7 @@ export const handleArrowRight = async (state) => {
 }
 
 const focusParentFolder = (state) => {
-  const parentStartIndex = getParentStartIndex(
-    state.dirents,
-    state.focusedIndex
-  )
+  const parentStartIndex = getParentStartIndex(state.items, state.focusedIndex)
   if (parentStartIndex === -1) {
     return state
   }
@@ -853,7 +850,7 @@ export const handleArrowLeft = (state) => {
   if (state.focusedIndex === -1) {
     return state
   }
-  const dirent = state.dirents[state.focusedIndex]
+  const dirent = state.items[state.focusedIndex]
   switch (dirent.type) {
     case DirentType.Directory:
     case DirentType.File:
@@ -922,7 +919,7 @@ const isImage = (dirent) => {
 }
 
 export const handleMouseEnter = async (state, index) => {
-  const dirent = state.dirents[index]
+  const dirent = state.items[index]
   if (!isImage(dirent)) {
     // TODO preload content maybe when it is a long hover
     return state
@@ -989,13 +986,13 @@ export const resize = (state, dimensions) => {
 }
 
 export const expandAll = async (state) => {
-  const { dirents, focusedIndex } = state
+  const { items, focusedIndex } = state
   if (focusedIndex === -1) {
     return state
   }
-  const dirent = dirents[focusedIndex]
+  const dirent = items[focusedIndex]
   const depth = dirent.depth
-  const newDirents = [...dirents]
+  const newDirents = [...items]
   // TODO fetch child dirents in parallel
   for (const dirent of newDirents) {
     if (dirent.depth === depth && dirent.type === DirentType.Directory) {
@@ -1021,7 +1018,7 @@ export const expandAll = async (state) => {
   }
   return {
     ...state,
-    dirents: newDirents,
+    items: newDirents,
   }
 }
 
@@ -1040,10 +1037,11 @@ const toCollapsedDirent = (dirent) => {
 }
 
 export const collapseAll = (state) => {
-  const newDirents = state.dirents.filter(isTopLevel).map(toCollapsedDirent)
+  const { items } = state
+  const newDirents = items.filter(isTopLevel).map(toCollapsedDirent)
   return {
     ...state,
-    dirents: newDirents,
+    items: newDirents,
   }
 }
 
@@ -1197,19 +1195,19 @@ const orderDirents = (dirents) => {
 
 // TODO maybe just insert items into explorer and refresh whole explorer
 const revealItemHidden = async (state, uri) => {
-  const { root, pathSeparator, dirents } = state
+  const { root, pathSeparator, items } = state
   const pathParts = getPathParts(root, uri, pathSeparator)
-  const pathPartsToReveal = getPathPartsToReveal(root, pathParts, dirents)
+  const pathPartsToReveal = getPathPartsToReveal(root, pathParts, items)
   const pathPartsChildren = await Promise.all(
     pathPartsToReveal.map(getPathPartChildren)
   )
   const pathPartsChildrenFlat = pathPartsChildren.flat(1)
   const orderedPathParts = orderDirents(pathPartsChildrenFlat)
-  const mergedDirents = mergeVisibleWithHiddenItems(dirents, orderedPathParts)
+  const mergedDirents = mergeVisibleWithHiddenItems(items, orderedPathParts)
   const index = getIndex(mergedDirents, uri)
   return {
     ...state,
-    dirents: mergedDirents,
+    items: mergedDirents,
     focused: true,
     focusedIndex: index,
   }
@@ -1226,8 +1224,8 @@ const revealItemVisible = (state, index) => {
 export const revealItem = async (state, uri) => {
   Assert.object(state)
   Assert.string(uri)
-  const dirents = state.dirents
-  const index = getIndex(dirents, uri)
+  const { items } = state
+  const index = getIndex(items, uri)
   if (index === -1) {
     return revealItemHidden(state, uri)
   }
@@ -1255,7 +1253,7 @@ export const hasFunctionalRender = true
 const renderItems = {
   isEqual(oldState, newState) {
     return (
-      oldState.dirents === newState.dirents &&
+      oldState.items === newState.items &&
       oldState.minLineY === newState.minLineY &&
       oldState.maxLineY === newState.maxLineY
     )
@@ -1278,7 +1276,7 @@ const renderFocusedIndex = {
       oldState.focused === newState.focused &&
       // TODO rendering dirents should not override focus
       // when that issue is fixed, this can be removed
-      oldState.dirents === newState.dirents &&
+      oldState.items === newState.items &&
       oldState.minLineY === newState.minLineY &&
       oldState.maxLineY === newState.maxLineY
     )
