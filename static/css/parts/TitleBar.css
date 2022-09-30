@@ -78,7 +78,7 @@
 .MaskIconMinimize {
   -webkit-mask-image: url(/static/icons/chrome-minimize.svg);
 }
-.MaskIconMaximize {
+.MaskIconToggleMaximize {
   -webkit-mask-image: url(/static/icons/chrome-maximize.svg);
 }
 .MaskIconClose {
