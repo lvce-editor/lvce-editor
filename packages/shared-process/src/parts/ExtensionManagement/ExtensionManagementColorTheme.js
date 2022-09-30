@@ -7,7 +7,7 @@ import * as ExtensionManagement from './ExtensionManagement.js'
 // TODO test this function
 // TODO very similar with getIconTheme
 export const getColorThemeJson = async (colorThemeId) => {
-  const extensions = await ExtensionManagement.getThemeExtensions()
+  const extensions = await ExtensionManagement.getExtensions()
   for (const extension of extensions) {
     if (!extension.colorThemes) {
       continue
