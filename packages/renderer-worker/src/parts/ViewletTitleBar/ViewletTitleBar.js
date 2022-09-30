@@ -36,3 +36,9 @@ export const getChildren = (state) => {
 export const hasFunctionalRender = true
 
 export const render = []
+
+export const hasFunctionalResize = true
+
+export const resize = (state) => {
+  return state
+}
