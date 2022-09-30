@@ -61,7 +61,7 @@ export const create = () => {
   // @ts-ignore
   $ExtensionList.role = 'list'
   $ExtensionList.oncontextmenu = ViewletExtensionsEvents.handleContextMenu
-  $ExtensionList.onclick = ViewletExtensionsEvents.handleClick
+  $ExtensionList.onpointerdown = ViewletExtensionsEvents.handlePointerDown
   $ExtensionList.onfocus = ViewletExtensionsEvents.handleFocus
   $ExtensionList.onscroll = ViewletExtensionsEvents.handleScroll
   $ExtensionList.addEventListener(
