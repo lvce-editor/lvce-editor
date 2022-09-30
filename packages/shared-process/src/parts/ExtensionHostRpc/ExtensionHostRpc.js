@@ -4,7 +4,7 @@ import * as Timeout from '../Timeout/Timeout.js'
 
 // TODO maybe rename to extension host management for clarity
 
-const CONNECTION_TIMEOUT = 1000
+const CONNECTION_TIMEOUT = 3000
 
 export const create = async (ipc, socket) => {
   Assert.object(socket)
