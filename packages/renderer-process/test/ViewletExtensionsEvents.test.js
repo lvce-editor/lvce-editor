@@ -2,6 +2,31 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as MouseEventType from '../src/parts/MouseEventType/MouseEventType.js'
+
+beforeAll(() => {
+  // workaround for jsdom not supporting pointer events
+  // @ts-ignore
+  globalThis.PointerEvent = class extends Event {
+    constructor(type, init) {
+      super(type, init)
+      this.clientX = init.clientX
+      this.clientY = init.clientY
+      this.pointerId = init.pointerId
+      this.button = init.button
+    }
+  }
+  Object.defineProperty(HTMLElement.prototype, 'onpointerdown', {
+    set(fn) {
+      this.addEventListener('pointerdown', fn)
+    },
+  })
+  Object.defineProperty(HTMLElement.prototype, 'onpointerup', {
+    set(fn) {
+      this.addEventListener('pointerup', fn)
+    },
+  })
+})
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -59,7 +84,7 @@ test('event -  input', () => {
 })
 
 // TODO
-test.skip('user clicks install', () => {
+test.skip('event - click on install', () => {
   const state = ViewletExtensions.create()
   ViewletExtensions.setExtensions(state, [
     {
@@ -68,7 +93,9 @@ test.skip('user clicks install', () => {
       state: 'uninstalled',
     },
   ])
-  state.$Extensions.children[0]
+  const { $ExtensionList } = state
+  console.log($ExtensionList.innerHTML)
+  $ExtensionList.children[0]
     // @ts-ignore
     .querySelector('.ExtensionManage')
     .dispatchEvent(
@@ -107,7 +134,7 @@ test.skip('user clicks while installing', () => {
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
-test.skip('event - click - somewhere else', () => {
+test('event - click - on extension', () => {
   const state = ViewletExtensions.create()
   ViewletExtensions.setExtensions(state, [
     {
@@ -116,16 +143,16 @@ test.skip('event - click - somewhere else', () => {
       state: 'uninstalled',
     },
   ])
-  state.$Extensions.children[0].dispatchEvent(
-    new Event('click', {
+  const { $ExtensionList } = state
+  $ExtensionList.children[0].dispatchEvent(
+    new PointerEvent('pointerdown', {
       bubbles: true,
       cancelable: true,
+      button: MouseEventType.LeftClick,
     })
   )
-  expect(RendererWorker.send).toHaveBeenCalledWith([
-    867,
-    'test-author.test=extension-1',
-  ])
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith('Extensions.handleClick', 0)
 })
 
 // TODO
@@ -202,7 +229,7 @@ test('icon - error - endless loop bug', () => {
   expect(spy).toHaveBeenCalledTimes(1)
 })
 
-test('event -  touchstart', () => {
+test('event - touchstart', () => {
   const state = ViewletExtensions.create()
   const { $ExtensionList } = state
   const event = new TouchEvent('touchstart', {
@@ -226,7 +253,7 @@ test('event -  touchstart', () => {
   )
 })
 
-test('event -  touchmove', () => {
+test('event - touchmove', () => {
   const state = ViewletExtensions.create()
   const { $ExtensionList } = state
   const event = new TouchEvent('touchmove', {
@@ -250,7 +277,7 @@ test('event -  touchmove', () => {
   )
 })
 
-test('event -  touchend', () => {
+test('event - touchend', () => {
   const state = ViewletExtensions.create()
   const { $ExtensionList } = state
   const event = new TouchEvent('touchend', {
