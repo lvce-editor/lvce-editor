@@ -108,6 +108,7 @@ test('render - add one keybinding', () => {
         },
       ],
     ],
+    ['Viewlet.ariaAnnounce', ''],
   ])
 })
 
