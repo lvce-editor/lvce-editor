@@ -1,14 +1,12 @@
-import isObject from 'is-object'
 import { mkdir, readdir, rename, rm } from 'node:fs/promises'
-import path from 'node:path'
 import { performance } from 'node:perf_hooks'
 import VError from 'verror'
 import * as Debug from '../Debug/Debug.js'
-import * as ReadJson from '../JsonFile/JsonFile.js'
+import * as ExtensionManifestInputType from '../ExtensionManifestInputType/ExtensionManifestInputType.js'
+import * as ExtensionManifests from '../ExtensionManifests/ExtensionManifests.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Queue from '../Queue/Queue.js'
-import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 
 const isLanguageBasics = (extension) => {
   if (extension && extension.id) {
@@ -183,121 +181,85 @@ const getInstalledExtensionPaths = async () => {
   }
 }
 
-const RE_EXTENSION_FRAGMENT = /.+(\/|\\)(.+)$/
-
-const inferExtensionId = (absolutePath) => {
-  const match = absolutePath.match(RE_EXTENSION_FRAGMENT)
-  if (match) {
-    return match[2]
-  }
-  return ''
-}
-
-// TODO json parsing and error handling should happen in renderer process
-const getExtensionManifest = async (path) => {
-  try {
-    const absolutePath = Path.join(path, 'extension.json')
-    const json = await ReadJson.readJson(absolutePath)
-    if (!isObject(json)) {
-      // TODO should include stack of extension json file here
-      throw new VError('Invalid manifest file: Not an JSON object.')
-    }
-    return {
-      ...json,
-      path,
-      status: ExtensionManifestStatus.Resolved,
-    }
-  } catch (error) {
-    const id = inferExtensionId(path)
-    return {
-      path,
-      status: ExtensionManifestStatus.Rejected,
-      reason: new VError(
-        error,
-        `Failed to load extension "${id}": Failed to load extension manifest`
-      ),
-    }
-  }
-}
-
-/**
- * @param {string[]} paths
- */
-const getExtensionManifests = async (paths) => {
-  const allResults = await Promise.all(paths.map(getExtensionManifest))
-  return allResults
-}
-
 export const getBuiltinExtensions = async () => {
-  const builtinExtensionPaths = await getBuiltinExtensionPaths()
-  const builtinExtensions = await getExtensionManifests(builtinExtensionPaths)
-  return builtinExtensions
+  return ExtensionManifests.getAll([
+    {
+      type: ExtensionManifestInputType.Folder,
+      path: Platform.getBuiltinExtensionsPath(),
+    },
+  ])
 }
 
-export const getInstalledExtensions = async () => {
-  const installedExtensionPaths = await getInstalledExtensionPaths()
-  const installedExtensions = await getExtensionManifests(
-    installedExtensionPaths
-  )
-  return installedExtensions
+export const getInstalledExtensions = () => {
+  return ExtensionManifests.getAll([
+    {
+      type: ExtensionManifestInputType.Folder,
+      path: Platform.getExtensionsPath(),
+    },
+  ])
 }
 
 export const getExtensions = async () => {
-  // TODO only read from env once
-  const builtinExtensions = await getBuiltinExtensions()
-  const onlyExtensionPath = Platform.getOnlyExtensionPath()
-  if (onlyExtensionPath) {
-    const absolutePath = path.resolve(onlyExtensionPath)
-    const [onlyExtension] = await getExtensionManifests([absolutePath])
-    const enabledExtensions = getEnabledExtensionWithOnlyExtension(
-      builtinExtensions,
-      onlyExtension
-    )
-    return enabledExtensions
-  }
-  const installedExtensions = await getInstalledExtensions()
-  return [...builtinExtensions, ...installedExtensions]
-}
-
-const RE_THEME = /theme-[a-z\d\-]+$/
-const isTheme = (extensionId) => {
-  return RE_THEME.test(extensionId)
-}
-
-const getThemeExtensionsBuiltin = async () => {
-  const builtinExtensionsPath = Platform.getBuiltinExtensionsPath()
-  const dirents = await readdir(builtinExtensionsPath)
-  const filteredDirents = dirents.filter(isTheme)
-  const paths = filteredDirents.map(getAbsoluteBuiltinExtensionPath)
+  return ExtensionManifests.getAll([
+    {
+      type: ExtensionManifestInputType.OnlyExtension,
+      path: Platform.getOnlyExtensionPath(),
+    },
+    {
+      type: ExtensionManifestInputType.Folder,
+      path: Platform.getLinkedExtensionsPath(),
+    },
+    {
+      type: ExtensionManifestInputType.Folder,
+      path: Platform.getExtensionsPath(),
+    },
+    {
+      type: ExtensionManifestInputType.Folder,
+      path: Platform.getBuiltinExtensionsPath(),
+    },
+  ])
 }
 
 export const getThemeExtensions = async () => {
-  const builtinExtensionsPath = Platform.getBuiltinExtensionsPath()
-  const dirents = await readdir(builtinExtensionsPath)
-  const paths = []
-  for (const dirent of dirents) {
-    if (isTheme(dirent)) {
-      paths.push(getAbsoluteBuiltinExtensionPath(dirent))
-    }
-  }
-  const onlyExtensionPath = Platform.getOnlyExtensionPath()
-  if (onlyExtensionPath && isTheme(onlyExtensionPath)) {
-    paths.push(onlyExtensionPath)
-  }
-  const builtinExtensions = await getExtensionManifests(paths)
-  return builtinExtensions
+  const manifests = await ExtensionManifests.getAll([
+    {
+      type: ExtensionManifestInputType.Folder,
+      path: Platform.getBuiltinExtensionsPath(),
+    },
+    {
+      type: ExtensionManifestInputType.Folder,
+      path: Platform.getLinkedExtensionsPath(),
+    },
+    {
+      type: ExtensionManifestInputType.Folder,
+      path: Platform.getExtensionsPath(),
+    },
+    {
+      type: ExtensionManifestInputType.OnlyExtension,
+      path: Platform.getOnlyExtensionPath(),
+    },
+  ])
+  return manifests
 }
 
 export const getDisabledExtensions = async () => {
-  const disabledExtensionPaths = await getDisabledExtensionPaths()
-  const disabledExtensions = await getExtensionManifests(disabledExtensionPaths)
-  return disabledExtensions
+  return ExtensionManifests.getAll([
+    {
+      type: ExtensionManifestInputType.Folder,
+      path: Platform.getDisabledExtensionsPath(),
+    },
+  ])
 }
 
 export const getAllExtensions = async () => {
   const onlyExtensionPath = Platform.getOnlyExtensionPath()
   if (onlyExtensionPath) {
-    return getExtensionManifests([onlyExtensionPath])
+    return ExtensionManifests.getAll([
+      {
+        type: ExtensionManifestInputType.OnlyExtension,
+        path: onlyExtensionPath,
+      },
+    ])
   }
   const t1 = performance.now()
   const [builtinExtensions, installedExtensions, disabledExtensions] =

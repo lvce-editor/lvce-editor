@@ -9,6 +9,9 @@ jest.unstable_mockModule('node:fs/promises', () => {
     symlink: jest.fn(() => {
       throw new Error('not implemented')
     }),
+    mkdir: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
 })
 
@@ -27,6 +30,8 @@ test('createSymLink - error', async () => {
   fs.symlink.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
+  // @ts-ignore
+  fs.mkdir.mockImplementation(async () => {})
   await expect(
     SymLink.createSymLink('/test/from', '/test/to')
   ).rejects.toThrowError(
@@ -41,6 +46,8 @@ test('createSymLink - error - EEXIST', async () => {
   fs.symlink.mockImplementation(async () => {
     throw new NodeError('EEXIST')
   })
+  // @ts-ignore
+  fs.mkdir.mockImplementation(() => {})
   await expect(
     SymLink.createSymLink('/test/from', '/test/to')
   ).rejects.toHaveProperty('code', 'EEXIST')
@@ -49,7 +56,11 @@ test('createSymLink - error - EEXIST', async () => {
 test('createSymLink', async () => {
   // @ts-ignore
   fs.symlink.mockImplementation(() => {})
+  // @ts-ignore
+  fs.mkdir.mockImplementation(() => {})
   await SymLink.createSymLink('/test/from', '/test/to')
   expect(fs.symlink).toHaveBeenCalledTimes(1)
   expect(fs.symlink).toHaveBeenCalledWith('/test/from', '/test/to')
+  expect(fs.mkdir).toHaveBeenCalledTimes(1)
+  expect(fs.mkdir).toHaveBeenCalledWith('/test', { recursive: true })
 })

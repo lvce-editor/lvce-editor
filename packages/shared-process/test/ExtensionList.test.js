@@ -1,24 +1,33 @@
 import { jest } from '@jest/globals'
+import * as ExtensionManifestStatus from '../src/parts/ExtensionManifestStatus/ExtensionManifestStatus.js'
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   getExtensionsPath: jest.fn(() => {
     return '/test/extensions'
   }),
+  getLinkedExtensionsPath: jest.fn(() => {
+    return '/test/linked-extensions'
+  }),
+  getBuiltinExtensionsPath: jest.fn(() => {
+    return '/test/builtin-extensions'
+  }),
 }))
 
-jest.unstable_mockModule('node:fs/promises', () => ({
-  readdir: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
-  readFile: jest.fn(() => {
-    throw new Error('not implemented')
-  }),
-}))
+jest.unstable_mockModule(
+  '../src/parts/ExtensionManifests/ExtensionManifests',
+  () => ({
+    getAll: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  })
+)
 
 const ExtensionList = await import(
   '../src/parts/ExtensionList/ExtensionList.js'
 )
-const fs = await import('node:fs/promises')
+const ExtensionManifests = await import(
+  '../src/parts/ExtensionManifests/ExtensionManifests.js'
+)
 
 class NodeError extends Error {
   constructor(code, message = code) {
@@ -29,15 +38,15 @@ class NodeError extends Error {
 
 test('list - error - folder does not exist', async () => {
   // @ts-ignore
-  fs.readdir.mockImplementation(() => {
-    throw new NodeError('ENOENT')
+  ExtensionManifests.getAll.mockImplementation(() => {
+    return []
   })
   expect(await ExtensionList.list()).toEqual([])
 })
 
 test('list - error - permission denied', async () => {
   // @ts-ignore
-  fs.readdir.mockImplementation(() => {
+  ExtensionManifests.getAll.mockImplementation(() => {
     throw new NodeError('EPERM')
   })
   await expect(ExtensionList.list()).rejects.toThrowError(
@@ -45,15 +54,12 @@ test('list - error - permission denied', async () => {
   )
 })
 
-test('list - error - manifest json is null', async () => {
+test.skip('list - error - manifest json is null', async () => {
   // @ts-ignore
-  fs.readdir.mockImplementation(() => {
-    return ['/test/extensions/extension-1']
+  ExtensionManifests.getAll.mockImplementation(() => {
+    return [null]
   })
-  // @ts-ignore
-  fs.readFile.mockImplementation(() => {
-    return 'null'
-  })
+
   expect(await ExtensionList.list()).toEqual([
     {
       id: 'extension-1',
@@ -62,14 +68,15 @@ test('list - error - manifest json is null', async () => {
   ])
 })
 
-test('list - error - manifest json has no id null', async () => {
+test('list - error - manifest json has no id', async () => {
   // @ts-ignore
-  fs.readdir.mockImplementation(() => {
-    return ['extension-1']
-  })
-  // @ts-ignore
-  fs.readFile.mockImplementation(() => {
-    return '{}'
+  ExtensionManifests.getAll.mockImplementation(() => {
+    return [
+      {
+        status: ExtensionManifestStatus.Resolved,
+        path: '/test/extension-1',
+      },
+    ]
   })
   expect(await ExtensionList.list()).toEqual([
     {
@@ -81,12 +88,14 @@ test('list - error - manifest json has no id null', async () => {
 
 test('list - error - manifest version is of type array', async () => {
   // @ts-ignore
-  fs.readdir.mockImplementation(() => {
-    return ['extension-1']
-  })
-  // @ts-ignore
-  fs.readFile.mockImplementation(() => {
-    return '{ "version": [] }'
+  ExtensionManifests.getAll.mockImplementation(() => {
+    return [
+      {
+        version: [],
+        status: ExtensionManifestStatus.Resolved,
+        path: '/test/builtin-extensions/extension-1',
+      },
+    ]
   })
   expect(await ExtensionList.list()).toEqual([
     {
@@ -125,12 +134,14 @@ test.skip('list - error - manifest is a directory', async () => {
 
 test('list', async () => {
   // @ts-ignore
-  fs.readdir.mockImplementation(() => {
-    return ['/test/extensions/extension-1']
-  })
-  // @ts-ignore
-  fs.readFile.mockImplementation(() => {
-    return '{ "id": "extension-1", "version": "0.0.1" }'
+  ExtensionManifests.getAll.mockImplementation(() => {
+    return [
+      {
+        id: 'extension-1',
+        version: '0.0.1',
+        status: ExtensionManifestStatus.Resolved,
+      },
+    ]
   })
   expect(await ExtensionList.list()).toEqual([
     {

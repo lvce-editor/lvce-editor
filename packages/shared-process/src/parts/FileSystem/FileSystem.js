@@ -177,6 +177,18 @@ export const readDirWithFileTypes = async (path) => {
   }
 }
 
+export const readDir = async (path) => {
+  try {
+    const dirents = await fs.readdir(path)
+    return dirents
+  } catch (error) {
+    if (error && error.code === FileSystemErrorCodes.ENOENT) {
+      throw new FileNotFoundError(path)
+    }
+    throw new VError(error, `Failed to read directory "${path}"`)
+  }
+}
+
 export const mkdir = async (path) => {
   try {
     await fs.mkdir(path, { recursive: true })
