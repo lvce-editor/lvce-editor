@@ -1,4 +1,5 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
 const getNodeIndex = ($Node) => {
   let index = 0
@@ -26,4 +27,23 @@ export const handleMousedown = (event) => {
     /* ViewletEditorCompletion.selectIndex */ 'EditorCompletion.selectIndex',
     /* index */ index
   )
+}
+
+export const handleWheel = (event) => {
+  switch (event.deltaMode) {
+    case WheelEventType.DomDeltaLine:
+      RendererWorker.send(
+        /* EditorCompletion.handleWheel */ 'EditorCompletion.handleWheel',
+        /* deltaY */ event.deltaY
+      )
+      break
+    case WheelEventType.DomDeltaPixel:
+      RendererWorker.send(
+        /* EditorCompletion.handleWheel */ 'EditorCompletion.handleWheel',
+        /* deltaY */ event.deltaY
+      )
+      break
+    default:
+      break
+  }
 }

@@ -5,25 +5,36 @@ import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.
 export const name = 'EditorCompletion'
 
 const create$CompletionItem = (item, index) => {
-  const $CompletionItem = document.createElement('li')
-  $CompletionItem.textContent = item.label
+  const $CompletionItemText = document.createElement('div')
+  $CompletionItemText.className = 'Label'
+  $CompletionItemText.textContent = item.label
+
+  const $CompletionItem = document.createElement('div')
   // @ts-ignore
   $CompletionItem.role = 'option'
   $CompletionItem.id = `CompletionItem-${index}`
-  $CompletionItem.className = `EditorCompletionItem Icon${item.icon}`
+  $CompletionItem.className = `EditorCompletionItem`
+  $CompletionItem.append($CompletionItemText)
   return $CompletionItem
 }
 
 export const create = () => {
   // TODO recycle nodes
-  const $Viewlet = document.createElement('ul')
-  $Viewlet.className = 'Viewlet Completions'
+  const $Viewlet = document.createElement('div')
+  $Viewlet.className = 'Viewlet'
   $Viewlet.dataset.viewletId = name
   $Viewlet.id = 'Completions'
   // @ts-ignore
   $Viewlet.role = 'listbox'
   $Viewlet.ariaLabel = 'Suggest'
   $Viewlet.onmousedown = ViewletEditorCompletionEvents.handleMousedown
+  $Viewlet.addEventListener(
+    'wheel',
+    ViewletEditorCompletionEvents.handleWheel,
+    {
+      passive: true,
+    }
+  )
   return {
     $Viewlet,
   }
@@ -31,11 +42,6 @@ export const create = () => {
 
 // TODO show should be passed active cursor position
 // this would make this function easier to test as it would avoid dependency on globals of other files
-
-export const setPosition = (state, x, y) => {
-  const { $Viewlet } = state
-  $Viewlet.style.transform = `translate(${x}px, ${y}px)`
-}
 
 export const setItems = (state, items, reason, focusedIndex) => {
   console.log('COMPLETION SHOW', items)
@@ -54,11 +60,6 @@ export const setItems = (state, items, reason, focusedIndex) => {
   Widget.append($Viewlet)
   focusIndex(state, 0, 0)
   // TODO set right aria attributes on $EditorInput
-}
-
-export const move = (state, x, y) => {
-  const { $Viewlet } = state
-  $Viewlet.style.transform = `translate(${x}px, ${y}px)`
 }
 
 export const dispose = (state) => {

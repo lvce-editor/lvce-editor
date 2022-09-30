@@ -102,9 +102,3 @@ test('focusIndex - newIndex is negative', () => {
   expect($CompletionItemOne.classList.contains('Focused')).toBe(false)
   expect($CompletionItemTwo.classList.contains('Focused')).toBe(false)
 })
-
-test('move', () => {
-  const state = ViewletEditorCompletion.create()
-  ViewletEditorCompletion.move(state, 100, 200)
-  expect(state.$Viewlet.style.transform).toBe('translate(100px, 200px)')
-})

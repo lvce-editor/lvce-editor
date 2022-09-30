@@ -3,26 +3,30 @@ import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js'
 import * as EditorCompletionMap from '../EditorCompletionMap/EditorCompletionMap.js'
 import * as ExtensionHostCompletion from '../ExtensionHost/ExtensionHostCompletion.js'
+import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletionItems.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
 export const create = (id, uri, top, left, width, height) => {
-  console.log({ id, uri, top, left, width, height })
   return {
-    completionItems: [],
     focusedIndex: 0,
     isOpened: false,
     openingReason: 0,
     editor: undefined,
-    abortController: new AbortController(),
     rowIndex: 0,
     columnIndex: 0,
     leadingWord: '',
     loadingTimeout: -1,
-    filteredCompletionItems: [],
-    visibleItems: [],
-    x: 0,
-    y: 0,
+    filteredItems: [],
+    items: [],
+    left: 0,
+    top: 0,
+    minLineY: 0,
+    maxLineY: 0,
+    itemHeight: 28,
+    width: 150,
+    height: 150,
+    deltaY: 0,
   }
 }
 
@@ -39,32 +43,12 @@ const getCompletions = async (editor) => {
   return completions
 }
 
-const filterCompletionItems = (completionItems, word) => {
-  const includesWord = (completionItem) => {
-    return completionItem.label.includes(word)
-  }
-  const filteredCompletions = completionItems.filter(includesWord)
-  return filteredCompletions
-}
-
 const getEditor = () => {
   return Viewlet.getState('EditorText')
 }
 
 const getLabel = (item) => {
   return item.label
-}
-
-const getVisibleItems = (filteredItems) => {
-  const visibleItems = []
-  for (const filteredItem of filteredItems) {
-    visibleItems.push({
-      label: getLabel(filteredItem),
-      icon: EditorCompletionMap.getIconClassName(filteredItem),
-    })
-  }
-  return visibleItems
-  // for(const )
 }
 
 const getDisplayErrorMessage = (error) => {
@@ -78,21 +62,20 @@ const getDisplayErrorMessage = (error) => {
 
 export const loadContent = async (state) => {
   const editor = getEditor()
-  const completionItems = await getCompletions(editor)
-  const filteredCompletionItems = filterCompletionItems(completionItems, '')
+  const items = await getCompletions(editor)
+  const filteredItems = FilterCompletionItems.filterCompletionItems(items, '')
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]
-  const x = EditorPosition.x(editor, rowIndex, columnIndex)
-  const y = EditorPosition.y(editor, rowIndex, columnIndex)
-  const visibleItems = getVisibleItems(filteredCompletionItems)
-  console.log({ completionItems, filteredCompletionItems, visibleItems })
+  const left = EditorPosition.x(editor, rowIndex, columnIndex)
+  const top = EditorPosition.y(editor, rowIndex, columnIndex)
+  const newMaxLineY = Math.min(filteredItems.length, 8)
   return {
     ...state,
-    completionItems,
-    filteredCompletionItems,
-    visibleItems,
-    x,
-    y,
+    items,
+    filteredItems,
+    left,
+    top,
+    maxLineY: newMaxLineY,
   }
 }
 
@@ -132,13 +115,13 @@ export const contentLoaded = () => {
 export const handleSelectionChange = (state, selectionChanges) => {}
 
 export const advance = (state, word) => {
-  const filteredCompletionItems = filterCompletionItems(
-    state.completionItems,
+  const filteredItems = FilterCompletionItems.filterCompletionItems(
+    state.items,
     word
   )
   return {
     ...state,
-    filteredCompletionItems,
+    filteredItems,
   }
 }
 
@@ -162,7 +145,7 @@ const select = async (state, completionItem) => {
 }
 
 export const selectIndex = (state, index) => {
-  const completionItem = state.filteredCompletionItems[index]
+  const completionItem = state.filteredItems[index]
   return select(state, completionItem)
 }
 
@@ -219,19 +202,63 @@ const renderPosition = {
   },
 }
 
+const getVisibleItems = (filteredItems, minLineY, maxLineY) => {
+  const visibleItems = []
+  for (let i = minLineY; i < maxLineY; i++) {
+    const filteredItem = filteredItems[i]
+    visibleItems.push({
+      label: getLabel(filteredItem),
+      icon: EditorCompletionMap.getIconClassName(filteredItem),
+    })
+  }
+  return visibleItems
+}
+
 const renderItems = {
   isEqual(oldState, newState) {
-    return oldState.visibleItems === newState.visibleItems
+    return (
+      oldState.filteredItems === newState.filteredItems &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY
+    )
   },
   apply(oldState, newState) {
+    const visibleItems = getVisibleItems(
+      newState.filteredItems,
+      newState.minLineY,
+      newState.maxLineY
+    )
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'EditorCompletion',
       /* method */ 'setItems',
-      /* items */ newState.visibleItems,
+      /* items */ visibleItems,
       /* reason */ 1,
     ]
   },
 }
 
-export const render = [renderItems, renderPosition]
+const renderBounds = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.filteredItems === newState.filteredItems &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY
+    )
+  },
+  apply(oldState, newState) {
+    const { left, top, width, height } = newState
+    return [
+      /* Viewlet.send */ 'Viewlet.setBounds',
+      /* id */ 'EditorCompletion',
+      /* left */ left,
+      /* top */ top,
+      /* width */ width,
+      /* height */ height,
+    ]
+  },
+}
+
+export const render = [renderItems, renderPosition, renderBounds]
+
+export * from '../VirtualList/VirtualList.js'

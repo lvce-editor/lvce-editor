@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -72,4 +73,19 @@ test('event - click outside', () => {
     })
   )
   expect(RendererWorker.send).not.toHaveBeenCalled()
+})
+
+test('event - wheel', () => {
+  const state = ViewletEditorCompletion.create()
+  const event = new WheelEvent('wheel', {
+    deltaY: 53,
+    deltaMode: WheelEventType.DomDeltaLine,
+  })
+  const { $Viewlet } = state
+  $Viewlet.dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'EditorCompletion.handleWheel',
+    53
+  )
 })
