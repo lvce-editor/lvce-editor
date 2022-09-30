@@ -46,7 +46,7 @@ test('getColorThemeNames - empty', async () => {
 test.skip('getColorThemeJson - theme id contains number', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
-  ExtensionManagement.getThemeExtensions.mockImplementation(async () => {
+  ExtensionManagement.getExtensions.mockImplementation(async () => {
     return [
       {
         status: ExtensionManifestStatus.Resolved,
@@ -75,7 +75,7 @@ test.skip('getColorThemeJson - theme id contains number', async () => {
 test('getColorThemeJson - invalid json', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
-  ExtensionManagement.getThemeExtensions.mockImplementation(() => {
+  ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
         id: 'builtin.test-theme',
@@ -116,7 +116,7 @@ test('getColorThemeJson - invalid json', async () => {
 test('getColorThemeJson - wrong/invalid path', async () => {
   const tmpDir = await getTmpDir()
   // @ts-ignore
-  ExtensionManagement.getThemeExtensions.mockImplementation(() => {
+  ExtensionManagement.getExtensions.mockImplementation(() => {
     return [
       {
         id: 'builtin.theme-test',
