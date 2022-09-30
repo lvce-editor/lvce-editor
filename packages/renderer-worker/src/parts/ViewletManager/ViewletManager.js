@@ -161,13 +161,11 @@ export const load = async (viewlet, focus = false, restore = false) => {
           factory: childModule,
         }
         ViewletStates.set(childModule.name, childInstance)
-        console.log({ childModule })
         const commands = getRenderCommands(childModule, oldState, newState)
         extraCommands.push(['Viewlet.create', childModule.name])
         extraCommands.push(...commands)
         extraCommands.push(['Viewlet.append', viewlet.id, childModule.name])
       }
-      console.log({ states: ViewletStates.getAllInstances(), extraCommands })
     }
     if (focus && module.focus) {
       newState = await module.focus(newState)

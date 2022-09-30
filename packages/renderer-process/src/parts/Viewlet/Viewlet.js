@@ -85,7 +85,6 @@ export const send = (viewletId, method, ...args) => {
 
 // TODO this code is bad
 export const sendMultiple = (commands) => {
-  console.log({ commands })
   for (const command of commands) {
     const [_, viewletId, method, ...args] = command
     if (_ === 'Viewlet.ariaAnnounce') {
