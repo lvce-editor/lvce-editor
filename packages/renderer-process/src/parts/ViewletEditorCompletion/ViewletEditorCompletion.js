@@ -10,14 +10,14 @@ const create$CompletionItem = (item, index) => {
   // @ts-ignore
   $CompletionItem.role = 'option'
   $CompletionItem.id = `CompletionItem-${index}`
-  $CompletionItem.className = `EditorCompletionItem Icon${item.icon}`
+  $CompletionItem.className = `EditorCompletionItem`
   return $CompletionItem
 }
 
 export const create = () => {
   // TODO recycle nodes
   const $Viewlet = document.createElement('ul')
-  $Viewlet.className = 'Viewlet Completions'
+  $Viewlet.className = 'Viewlet'
   $Viewlet.dataset.viewletId = name
   $Viewlet.id = 'Completions'
   // @ts-ignore
@@ -34,7 +34,7 @@ export const create = () => {
 
 export const setPosition = (state, x, y) => {
   const { $Viewlet } = state
-  $Viewlet.style.transform = `translate(${x}px, ${y}px)`
+  $Viewlet.style.translate = `${x}px ${y}px`
 }
 
 export const setItems = (state, items, reason, focusedIndex) => {
