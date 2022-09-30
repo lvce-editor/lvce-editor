@@ -110,7 +110,7 @@ const handleRejectedExtension = async (extension) => {
   const { reason } = extension
   const { message, code } = reason
   if (
-    code === FileSystemErrorCodes.ENOENT ||
+    code === FileSystemErrorCodes.E_MANIFEST_NOT_FOUND ||
     code === FileSystemErrorCodes.ENOTDIR
   ) {
     return

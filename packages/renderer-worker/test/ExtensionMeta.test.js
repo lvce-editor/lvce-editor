@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as ExtensionManifestStatus from '../src/parts/ExtensionManifestStatus/ExtensionManifestStatus.js'
+import * as FileSystemErrorCodes from '../src/parts/FileSystemErrorCodes/FileSystemErrorCodes.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -43,7 +44,7 @@ test('organizeExtensions', () => {
             'Failed to load extension "language-basics-markdown": Failed to load extension manifest',
           jse_cause: {
             errno: -20,
-            code: 'ENOTDIR',
+            code: FileSystemErrorCodes.ENOTDIR,
             syscall: 'open',
             path: '/test/language-basics-markdown/extension.json',
           },
@@ -63,7 +64,7 @@ test('organizeExtensions', () => {
         reason: {
           code: 'E_LOADING_EXTENSION_MANIFEST_FAilED',
           jse_cause: {
-            code: 'ENOTDIR',
+            code: FileSystemErrorCodes.ENOTDIR,
             errno: -20,
             path: '/test/language-basics-markdown/extension.json',
             syscall: 'open',
@@ -111,14 +112,14 @@ test('handleRejectedExtension - ignore ENOTDIR error', async () => {
           'Failed to load extension "language-basics-markdown": Failed to load extension manifest',
         jse_cause: {
           errno: -20,
-          code: 'ENOTDIR',
+          code: FileSystemErrorCodes.ENOTDIR,
           syscall: 'open',
           path: '/test/language-basics-markdown/extension.json',
         },
         jse_info: {},
         message:
           'Failed to load extension "language-basics-markdown": Failed to load extension manifest: ENOTDIR: not a directory, open \'/test/language-basics-markdown/extension.json\'',
-        code: 'E_LOADING_EXTENSION_MANIFEST_FAilED',
+        code: FileSystemErrorCodes.ENOTDIR,
         originalStack:
           "Error: ENOTDIR: not a directory, open '/test/language-basics-markdown/extension.json'",
       },
@@ -127,7 +128,7 @@ test('handleRejectedExtension - ignore ENOTDIR error', async () => {
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
-test('handleRejectedExtension - ignore ENOENT error', async () => {
+test('handleRejectedExtension - ignore E_MANIFEST_NOT_FOUND error', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   await ExtensionMeta.handleRejectedExtensions([
@@ -139,14 +140,14 @@ test('handleRejectedExtension - ignore ENOENT error', async () => {
           'Failed to load extension "abc": Failed to load extension manifest',
         jse_cause: {
           errno: -2,
-          code: 'ENOENT',
+          code: FileSystemErrorCodes.E_MANIFEST_NOT_FOUND,
           syscall: 'open',
           path: '/test/abc/extension.json',
         },
         jse_info: {},
         message:
           'Failed to load extension "abc": Failed to load extension manifest: File not found \'/test/abc/extension.json\'',
-        code: 'E_LOADING_EXTENSION_MANIFEST_FAilED',
+        code: FileSystemErrorCodes.E_MANIFEST_NOT_FOUND,
         originalStack: "Error: File not found '/test/abc/extension.json'",
       },
     },
