@@ -3,6 +3,20 @@
  */
 import { jest } from '@jest/globals'
 
+beforeAll(() => {
+  // workaround for jsdom not supporting pointer events
+  // @ts-ignore
+  globalThis.PointerEvent = class extends Event {
+    constructor(type, init) {
+      super(type, init)
+      this.clientX = init.clientX
+      this.clientY = init.clientY
+      this.pointerId = init.pointerId
+      this.button = init.button
+    }
+  }
+})
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
@@ -59,7 +73,7 @@ test('event -  input', () => {
 })
 
 // TODO
-test.skip('user clicks install', () => {
+test.skip('event - click on install', () => {
   const state = ViewletExtensions.create()
   ViewletExtensions.setExtensions(state, [
     {
@@ -68,7 +82,8 @@ test.skip('user clicks install', () => {
       state: 'uninstalled',
     },
   ])
-  state.$Extensions.children[0]
+  const { $ExtensionList } = state
+  $ExtensionList.children[0]
     // @ts-ignore
     .querySelector('.ExtensionManage')
     .dispatchEvent(
@@ -116,8 +131,9 @@ test.skip('event - click - somewhere else', () => {
       state: 'uninstalled',
     },
   ])
-  state.$Extensions.children[0].dispatchEvent(
-    new Event('click', {
+  const { $ExtensionList } = state
+  $ExtensionList.children[0].dispatchEvent(
+    new PointerEvent('pointerdown', {
       bubbles: true,
       cancelable: true,
     })
