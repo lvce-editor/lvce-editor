@@ -202,8 +202,12 @@ export const getInstalledExtensions = () => {
 export const getExtensions = async () => {
   return ExtensionManifests.getAll([
     {
+      type: ExtensionManifestInputType.OnlyExtension,
+      path: Platform.getOnlyExtensionPath(),
+    },
+    {
       type: ExtensionManifestInputType.Folder,
-      path: Platform.getBuiltinExtensionsPath(),
+      path: Platform.getLinkedExtensionsPath(),
     },
     {
       type: ExtensionManifestInputType.Folder,
@@ -211,11 +215,7 @@ export const getExtensions = async () => {
     },
     {
       type: ExtensionManifestInputType.Folder,
-      path: Platform.getLinkedExtensionsPath(),
-    },
-    {
-      type: ExtensionManifestInputType.OnlyExtension,
-      path: Platform.getOnlyExtensionPath(),
+      path: Platform.getBuiltinExtensionsPath(),
     },
   ])
 }
