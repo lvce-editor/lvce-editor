@@ -263,6 +263,26 @@ const renderBounds = {
   },
 }
 
-export const render = [renderItems, renderPosition, renderBounds]
+const renderFocusedIndex = {
+  isEqual(oldState, newState) {
+    return oldState.focusedIndex === newState.focusedIndex
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'EditorCompletion',
+      /* method */ 'setFocusedIndex',
+      /* oldFocusedIndex */ oldState.focusedIndex,
+      /* newFocusedIndex */ newState.focusedIndex,
+    ]
+  },
+}
+
+export const render = [
+  renderItems,
+  renderPosition,
+  renderBounds,
+  renderFocusedIndex,
+]
 
 export * from '../VirtualList/VirtualList.js'
