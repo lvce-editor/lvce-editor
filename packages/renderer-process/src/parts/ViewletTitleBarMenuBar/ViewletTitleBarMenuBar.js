@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
 import * as Menu from '../OldMenu/Menu.js'
 import * as Widget from '../Widget/Widget.js'
+import * as MenuItem from '../MenuItem/MenuItem.js'
 
 export const create = () => {
   const $TitleBarMenuBar = document.createElement('ul')
@@ -18,6 +19,7 @@ export const create = () => {
   return {
     $Viewlet: $TitleBarMenuBar,
     $TitleBarMenuBar,
+    $$Menus: [],
   }
 }
 
@@ -196,4 +198,51 @@ export const closeMenu = (state, unFocusIndex, index) => {
 export const setEntries = (state, titleBarEntries) => {
   const { $TitleBarMenuBar } = state
   $TitleBarMenuBar.append(...titleBarEntries.map(create$TopLevelEntry))
+}
+
+const create$Menu = () => {
+  const $Menu = document.createElement('div')
+  $Menu.className = 'Menu'
+  // @ts-ignore
+  $Menu.role = 'menu'
+  $Menu.tabIndex = -1
+  // $ContextMenu.onmousedown = contextMenuHandleMouseDown
+  // TODO mousedown vs click? (click is usually better but mousedown is faster, why wait 100ms?)
+  // $Menu.addEventListener('mousedown', handleMouseDown)
+  // $Menu.addEventListener('mouseenter', handleMouseEnter, {
+  //   capture: true,
+  // })
+  // $Menu.addEventListener('mouseleave', handleMouseLeave, {
+  //   capture: true,
+  // })
+  // $Menu.addEventListener('mousemove', handleMouseMove, {
+  //   passive: true,
+  // })
+  // $Menu.onkeydown = handleKeyDown
+  // $Menu.addEventListener('focusout', handleFocusOut)
+  // $Menu.oncontextmenu = handleContextMenu
+  // $ContextMenu.onfocus = handleFocus
+  // $ContextMenu.onblur = handleBlur
+  return $Menu
+}
+
+// TODO recycle menus
+export const setMenus = (state, menus) => {
+  const { $$Menus } = state
+  for (const $Menu of $$Menus) {
+    Widget.remove($Menu)
+  }
+  const $$NewMenus = []
+  for (const menu of menus) {
+    const $Menu = create$Menu()
+    const { top, left, width, height } = menu
+    $Menu.style.width = `${width}px`
+    $Menu.style.height = `${height}px`
+    $Menu.style.top = `${top}px`
+    $Menu.style.left = `${left}px`
+    $Menu.append(...menu.items.map(MenuItem.create$MenuItem))
+    $$NewMenus.push($Menu)
+    Widget.append($Menu)
+  }
+  state.$$Menus = $$NewMenus
 }

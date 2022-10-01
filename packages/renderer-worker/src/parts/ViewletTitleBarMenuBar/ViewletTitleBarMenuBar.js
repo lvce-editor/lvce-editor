@@ -1,6 +1,7 @@
 // TODO menu should not be needed initially, only when item is selected and menu is opened
 import * as Menu from '../Menu/Menu.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuBarEntries.js'
 
@@ -10,6 +11,8 @@ export const create = () => {
   return {
     titleBarEntries: [],
     focusedIndex: -1,
+    isMenuOpen: false,
+    menus: [],
   }
 }
 
@@ -32,7 +35,6 @@ const openMenuAtIndex = async (state, index, shouldBeFocused) => {
   // 2. focus menu
   const id = state.titleBarEntries[index].id
   const items = await MenuEntries.getMenuEntries(id)
-  Menu.state.menus = []
   const bounds = await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'TitleBarMenuBar',
@@ -41,215 +43,224 @@ const openMenuAtIndex = async (state, index, shouldBeFocused) => {
   )
   // TODO race condition: another menu might already be open at this point
 
-  const x = bounds.left
-  const y = bounds.bottom
+  const left = bounds.left
+  const top = bounds.bottom
   const width = Menu.getMenuWidth()
   const height = Menu.getMenuHeight(items)
   const menuFocusedIndex = shouldBeFocused
     ? Menu.getIndexToFocusNextStartingAt(items, 0)
     : -1
-  const menu = Menu.addMenuInternal({
+  const menu = {
     id,
     items,
     focusedIndex: menuFocusedIndex,
-    level: Menu.state.menus.length,
-    x,
-    y,
-  })
-  RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'TitleBarMenuBar',
-    /* method */ 'openMenu',
-    /* unFocusIndex */ state.focusedIndex,
-    /* index */ index,
-    /* level */ menu.level,
-    /* menuItems */ menu.items,
-    /* menuFocusedIndex */ menuFocusedIndex,
-    /* focus */ shouldBeFocused,
-    /* x */ x,
-    /* y */ y,
-    /* width */ width,
-    /* height */ height
-  )
-  state.isMenuOpen = true
+    level: 0,
+    left,
+    top,
+    width,
+    height,
+  }
+  const menus = [menu]
+  console.log({ menus })
+  return {
+    ...state,
+    isMenuOpen: true,
+    focusedIndex: index,
+    menus,
+  }
 }
 
 /**
  * @param {boolean} focus
  */
-export const openMenu = async (state, focus) => {
+export const openMenu = (state, focus) => {
   if (state.focusedIndex === -1) {
-    return
+    return state
   }
-  await openMenuAtIndex(state, state.focusedIndex, focus)
+  return openMenuAtIndex(state, state.focusedIndex, focus)
 }
 
-export const closeMenu = async (state, keepFocus) => {
+export const closeMenu = (state, keepFocus) => {
   // TODO send to renderer process
   // 1. close menu
   // 2. focus top level entry
   const focusIndex = keepFocus ? state.focusedIndex : -1
-  // TODO use Viewlet.dispose instead
-  state.isMenuOpen = false
-  await RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'TitleBarMenuBar',
-    /* method */ 'closeMenu',
-    /* unFocusIndex */ state.focusedIndex,
-    /* focusIndex */ focusIndex
-  )
+  return {
+    ...state,
+    menus: [],
+    isMenuOpen: false,
+    focusIndex,
+  }
 }
 
-export const toggleMenu = async (state) => {
-  if (state.isMenuOpen) {
-    closeMenu(state, /* keepFocus */ true)
-  } else {
-    await openMenu(state, /* focus */ false)
+export const toggleMenu = (state) => {
+  const { isMenuOpen } = state
+  if (isMenuOpen) {
+    return closeMenu(state, /* keepFocus */ true)
   }
+  return openMenu(state, /* focus */ false)
 }
 
 export const focusIndex = async (state, index) => {
-  if (state.isMenuOpen) {
-    await openMenuAtIndex(state, index, /* focus */ false)
-  } else {
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'TitleBar',
-      /* menuFocusIndex */ 'menuFocusIndex',
-      /* unFocusIndex */ state.focusedIndex,
-      /* index */ index
-    )
+  const isMenuOpen = state
+  if (isMenuOpen) {
+    return openMenuAtIndex(state, index, /* focus */ false)
   }
-  state.focusedIndex = index
+  return {
+    ...state,
+    focusedIndex: index,
+  }
 }
 
 export const toggleIndex = async (state, index) => {
-  if (state.isMenuOpen && state.focusedIndex === index) {
-    closeMenu(state, /* keepFocus */ true)
-  } else {
-    await openMenuAtIndex(state, index, /* focus */ false)
+  const { isMenuOpen, focusedIndex } = state
+  if (isMenuOpen && focusedIndex === index) {
+    return closeMenu(state, /* keepFocus */ true)
   }
-  state.focusedIndex = index
+  return openMenuAtIndex(state, index, /* focus */ false)
 }
 
-export const focus = async (state) => {
-  await focusFirst(state)
+export const focus = (state) => {
+  return focusFirst(state)
 }
 
 const getIndexToFocusPreviousStartingAt = (items, index) => {
   return (index + items.length) % items.length
 }
 
-export const focusPrevious = async (state) => {
+export const focusPrevious = (state) => {
+  const { titleBarEntries, focusedIndex } = state
   const indexToFocus = getIndexToFocusPreviousStartingAt(
-    state.titleBarEntries,
-    state.focusedIndex - 1
+    titleBarEntries,
+    focusedIndex - 1
   )
-  await focusIndex(indexToFocus)
+  return focusIndex(state, indexToFocus)
 }
 
 const getIndexToFocusNextStartingAt = (items, index) => {
   return index % items.length
 }
 
-export const focusNext = async (state) => {
+export const focusNext = (state) => {
+  const { titleBarEntries, focusedIndex } = state
   const indexToFocus = getIndexToFocusNextStartingAt(
-    state.titleBarEntries,
-    state.focusedIndex + 1
+    titleBarEntries,
+    focusedIndex + 1
   )
-  await focusIndex(indexToFocus)
+  return focusIndex(state, indexToFocus)
 }
 
-export const focusFirst = async (state) => {
-  const indexToFocus = getIndexToFocusNextStartingAt(state.titleBarEntries, 0)
-  await focusIndex(state, indexToFocus)
+export const focusFirst = (state) => {
+  const { titleBarEntries } = state
+  const indexToFocus = getIndexToFocusNextStartingAt(titleBarEntries, 0)
+  return focusIndex(state, indexToFocus)
 }
 
-export const focusLast = async (state) => {
+export const focusLast = (state) => {
+  const { titleBarEntries } = state
   const indexToFocus = getIndexToFocusPreviousStartingAt(
-    state.titleBarEntries,
-    state.titleBarEntries.length - 1
+    titleBarEntries,
+    titleBarEntries.length - 1
   )
-  await focusIndex(indexToFocus)
+  return focusIndex(indexToFocus)
 }
 
-export const handleKeyArrowLeft = async (state) => {
-  if (state.isMenuOpen && Menu.state.menus.length > 1) {
-    return
+export const handleKeyArrowLeft = (state) => {
+  const { isMenuOpen, menus } = state
+  if (isMenuOpen && menus.length > 1) {
+    return state
   }
   // TODO menu collapse
-  await focusPrevious()
+  return focusPrevious(state)
 }
 
 export const handleKeyArrowUp = (state) => {
-  if (!state.isMenuOpen) {
-    return
+  const { isMenuOpen } = state
+  if (!isMenuOpen) {
+    return state
   }
-  Menu.focusPrevious()
+  // TODO
+  // Menu.focusPrevious()
+  return state
 }
 
-export const handleKeyArrowRight = async (state) => {
+export const handleKeyArrowRight = (state) => {
+  const { isMenuOpen, menus } = state
   console.log('arrow right')
-  if (state.isMenuOpen) {
+  if (isMenuOpen) {
     // if menu can open sub menu to the right -> do that
-    const menu = Menu.state.menus.at(-1)
+    const menu = menus.at(-1)
     const item = menu.items[menu.focusedIndex]
-    if (item.flags === /* SubMenu */ 4) {
-      await Menu.showSubMenu(Menu.state.menus.length - 1, menu.focusedIndex)
-      return
+    if (item.flags === MenuItemFlags.SubMenu) {
+      // TODO show sub menu
+      // await Menu.showSubMenu(Menu.state.menus.length - 1, menu.focusedIndex)
+      return state
     }
   }
-  await focusNext()
+  return focusNext(state)
 }
 
-export const handleKeyHome = async (state) => {
-  if (state.isMenuOpen) {
-    Menu.focusFirst()
-  } else {
-    await focusFirst()
+export const handleKeyHome = (state) => {
+  const { isMenuOpen } = state
+  if (isMenuOpen) {
+    // TODO
+    // Menu.focusFirst()
+    return state
   }
+  return focusFirst(state)
 }
 
 // TODO this is also use for pagedown -> maybe find a better name for this function
-export const handleKeyEnd = async (state) => {
-  if (state.isMenuOpen) {
-    Menu.focusLast()
-  } else {
-    await focusLast()
+export const handleKeyEnd = (state) => {
+  const { isMenuOpen } = state
+  if (isMenuOpen) {
+    // TODO
+    // Menu.focusLast()
+    return state
   }
+  return focusLast(state)
 }
 
 // TODO this is same as handle key enter -> merge the functions
-export const handleKeySpace = async (state) => {
-  if (state.isMenuOpen) {
-    await Menu.selectCurrent()
-  } else {
-    openMenu(state, /* focus */ true)
+export const handleKeySpace = (state) => {
+  const { isMenuOpen } = state
+  if (isMenuOpen) {
+    // TODO
+    // await Menu.selectCurrent()
+    return state
   }
+  return openMenu(state, /* focus */ true)
 }
 
-export const handleKeyEnter = async (state) => {
-  if (state.isMenuOpen) {
-    await Menu.selectCurrent()
-  } else {
-    openMenu(state, /* focus */ true)
+export const handleKeyEnter = (state) => {
+  const { isMenuOpen } = state
+  if (isMenuOpen) {
+    // TODO
+    // await Menu.selectCurrent()
+    return state
   }
+  return openMenu(state, /* focus */ true)
 }
 
 export const handleKeyEscape = (state) => {
-  if (!state.isMenuOpen) {
-    return
+  const { isMenuOpen } = state
+  if (!isMenuOpen) {
+    return state
   }
-  closeMenu(state, /* keepFocus */ true)
+  return closeMenu(state, /* keepFocus */ true)
 }
 
 export const handleKeyArrowDown = async (state) => {
-  if (state.isMenuOpen) {
-    Menu.focusNext()
-  } else {
-    await openMenu(state, /* focus */ true)
+  const { isMenuOpen } = state
+  if (isMenuOpen) {
+    // TODO
+    // Menu.focusNext()
+    return state
   }
+  return openMenu(state, /* focus */ true)
 }
+
+export const hasFunctionalRender = true
 
 const renderTitleBarEntries = {
   isEqual(oldState, newState) {
@@ -265,4 +276,34 @@ const renderTitleBarEntries = {
   },
 }
 
-export const render = [renderTitleBarEntries]
+const renderFocusedIndex = {
+  isEqual(oldState, newState) {
+    return oldState.focusedIndex === newState.focusedIndex
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'TitleBarMenuBar',
+      /* method */ 'setFocusedIndex',
+      /* oldFocusedIndex */ oldState.focusedIndex,
+      /* newfocusedIndex */ newState.focusedIndex,
+    ]
+  },
+}
+
+const renderMenus = {
+  isEqual(oldState, newState) {
+    return oldState.menus === newState.menus
+  },
+  apply(oldState, newState) {
+    console.log('send menus')
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'TitleBarMenuBar',
+      /* method */ 'setMenus',
+      /* menus */ newState.menus,
+    ]
+  },
+}
+
+export const render = [renderTitleBarEntries, renderFocusedIndex, renderMenus]
