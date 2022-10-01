@@ -3,7 +3,7 @@ import * as ViewletProblems from './ViewletProblems.js'
 
 // prettier-ignore
 export const Commands = {
-  'ViewletProblems.focusIndex': Viewlet.wrapViewletCommand('Problems', ViewletProblems.focusIndex),
+  'ViewletProblems.focusIndex': Viewlet.wrapViewletCommand(ViewletProblems.name, ViewletProblems.focusIndex),
 }
 
 export * from './ViewletProblems.js'

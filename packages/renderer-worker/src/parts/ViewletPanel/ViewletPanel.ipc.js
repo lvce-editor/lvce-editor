@@ -3,7 +3,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 
 // prettier-ignore
 export const Commands = {
-  'Panel.selectIndex': Viewlet.wrapViewletCommand('Panel', ViewletPanel.selectIndex)
+  'Panel.selectIndex': Viewlet.wrapViewletCommand(ViewletPanel.name, ViewletPanel.selectIndex)
 }
 
 export * from './ViewletPanel.js'

@@ -9,6 +9,8 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 
+export const name = 'SideBar'
+
 export const create = (id, uri, left, top, width, height) => {
   return {
     currentViewletId: '',
