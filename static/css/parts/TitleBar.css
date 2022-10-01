@@ -26,8 +26,7 @@
   padding: 0 5px;
 }
 
-.TitleBarTopLevelEntry[aria-expanded='true'],
-.TitleBarTopLevelEntry:focus,
+#TitleBarEntryActive,
 .TitleBarTopLevelEntry:hover {
   background: var(--TitleBarItemHoverForeground, rgba(255, 255, 255, 0.1));
 }

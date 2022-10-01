@@ -4,11 +4,14 @@ import * as Menu from '../OldMenu/Menu.js'
 import * as Widget from '../Widget/Widget.js'
 import * as MenuItem from '../MenuItem/MenuItem.js'
 
+const activeId = 'TitleBarEntryActive'
+
 export const create = () => {
   const $TitleBarMenuBar = document.createElement('div')
   $TitleBarMenuBar.id = 'TitleBarMenuBar'
   // @ts-ignore
   $TitleBarMenuBar.role = 'menubar'
+  $TitleBarMenuBar.tabIndex = 0
   $TitleBarMenuBar.onmousedown = ViewletTitleBarMenuBarEvents.handleClick
   $TitleBarMenuBar.addEventListener(
     'focusout',
@@ -80,7 +83,6 @@ export const focus = (state) => {
 const create$TopLevelEntry = (item) => {
   const $TitleBarTopLevelEntry = document.createElement('div')
   $TitleBarTopLevelEntry.className = 'TitleBarTopLevelEntry'
-  $TitleBarTopLevelEntry.tabIndex = -1
   $TitleBarTopLevelEntry.ariaHasPopup = 'true'
   $TitleBarTopLevelEntry.ariaExpanded = 'false'
   // @ts-ignore
@@ -89,7 +91,6 @@ const create$TopLevelEntry = (item) => {
     $TitleBarTopLevelEntry.ariaKeyShortcuts = item.keyboardShortCut
   }
   $TitleBarTopLevelEntry.textContent = item.name
-  $TitleBarTopLevelEntry.id = `MenuItem-${item.id}`
   return $TitleBarTopLevelEntry
 }
 
@@ -109,11 +110,16 @@ export const setFocusedIndex = (state, unFocusIndex, focusIndex) => {
   Assert.number(focusIndex)
   const { $TitleBarMenuBar } = state
   if (unFocusIndex !== -1) {
-    $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = 'false'
-    $TitleBarMenuBar.children[unFocusIndex].removeAttribute('aria-owns')
+    const $Child = $TitleBarMenuBar.children[unFocusIndex]
+    $Child.ariaExpanded = 'false'
+    $Child.removeAttribute('aria-owns')
+    $Child.removeAttribute('id')
   }
   if (focusIndex !== -1) {
-    $TitleBarMenuBar.children[focusIndex].focus()
+    const $Child = $TitleBarMenuBar.children[focusIndex]
+    $Child.id = activeId
+    $TitleBarMenuBar.focus()
+    $TitleBarMenuBar.setAttribute('aria-activedescendant', activeId)
   }
 }
 

@@ -55,14 +55,15 @@ const getIndex = ($Target) => {
 }
 
 export const handleClick = (event) => {
-  if (event.button !== MouseEventTypes.LeftClick) {
+  const { button, target } = event
+  if (button !== MouseEventTypes.LeftClick) {
     return
   }
-  const $Target = event.target
-  const index = getIndex($Target)
+  const index = getIndex(target)
   if (index === -1) {
     return
   }
+  console.log({ index })
   // event.preventDefault()
   RendererWorker.send(
     /* TitleBarMenuBar.toggleIndex */ 'TitleBarMenuBar.toggleIndex',
