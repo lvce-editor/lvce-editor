@@ -63,6 +63,7 @@ const openMenuAtIndex = async (state, index, shouldBeFocused) => {
     height,
   }
   const menus = [menu]
+  console.log({ index })
   return {
     ...state,
     isMenuOpen: true,
@@ -76,6 +77,7 @@ const openMenuAtIndex = async (state, index, shouldBeFocused) => {
  */
 export const openMenu = (state, focus) => {
   const { focusedIndex } = state
+  console.log({ focusedIndex })
   if (focusedIndex === -1) {
     return state
   }
@@ -84,15 +86,17 @@ export const openMenu = (state, focus) => {
 }
 
 export const closeMenu = (state, keepFocus) => {
+  const { focusedIndex } = state
   // TODO send to renderer process
   // 1. close menu
   // 2. focus top level entry
-  const focusIndex = keepFocus ? state.focusedIndex : -1
+  const newFocusedIndex = keepFocus ? focusedIndex : -1
+  console.log({ keepFocus, newFocusedIndex })
   return {
     ...state,
     menus: [],
     isMenuOpen: false,
-    focusIndex,
+    focusedIndex: newFocusedIndex,
   }
 }
 
@@ -250,6 +254,7 @@ export const handleKeyEscape = (state) => {
   if (!isMenuOpen) {
     return state
   }
+  console.log('handle key escape keep focus')
   return closeMenu(state, /* keepFocus */ true)
 }
 
@@ -283,9 +288,13 @@ const renderTitleBarEntries = {
 
 const renderFocusedIndex = {
   isEqual(oldState, newState) {
-    return oldState.focusedIndex === newState.focusedIndex
+    return (
+      oldState.focusedIndex === newState.focusedIndex &&
+      oldState.isMenuOpen === newState.isMenuOpen
+    )
   },
   apply(oldState, newState) {
+    console.log('render focused index', newState.focusedIndex)
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'TitleBarMenuBar',

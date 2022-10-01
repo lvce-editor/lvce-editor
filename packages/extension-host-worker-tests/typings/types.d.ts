@@ -142,7 +142,7 @@ declare const expect: (locator: any) => {
   readonly toHaveValue: (value: string) => Promise<void>
 }
 
-declare const Locator: (selector: string) => any
+declare const Locator: (selector: string, options?: any) => any
 
 declare const test: {
   (name: string, fn: () => Promise<void>): void

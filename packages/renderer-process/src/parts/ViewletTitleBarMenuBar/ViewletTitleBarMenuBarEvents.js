@@ -4,11 +4,13 @@ import * as MouseEventTypes from '../MouseEventType/MouseEventType.js'
 const isInsideTitleBarMenu = ($Element) => {
   return (
     $Element.classList.contains('MenuItem') ||
-    $Element.classList.contains('Menu')
+    $Element.classList.contains('Menu') ||
+    $Element.classList.contains('TitleBarTopLevelEntry')
   )
 }
 
 export const handleFocusOut = (event) => {
+  console.log('title bar focus out', event.relatedTarget)
   const $ActiveElement = event.relatedTarget
   if ($ActiveElement && isInsideTitleBarMenu($ActiveElement)) {
     console.log('RETURN')

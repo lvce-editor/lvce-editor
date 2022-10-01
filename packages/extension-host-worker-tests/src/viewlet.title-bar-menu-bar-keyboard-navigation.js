@@ -27,7 +27,9 @@ test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
   await TitleBarMenuBar.handleKeyArrowRight()
 
   // assert
-  const titleBarItemEdit = Locator('.TitleBarTopLevelEntry:text("Edit")')
+  const titleBarItemEdit = Locator('.TitleBarTopLevelEntry', {
+    hasText: 'Edit',
+  })
   await expect(titleBarItemEdit).toBeFocused()
 
   // act
@@ -35,14 +37,18 @@ test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
 
   // assert
   await expect(menu0).toBeVisible()
-  const menuItemCut = Locator('.MenuItem:text("Cut")')
+  const menuItemCut = Locator('.MenuItem', {
+    hasText: 'Cut',
+  })
   await expect(menuItemCut).toBeFocused()
 
   // act
   await TitleBarMenuBar.handleKeyEnd()
 
   // assert
-  const menuItemPaste = Locator('.MenuItem:text("Paste")')
+  const menuItemPaste = Locator('.MenuItem', {
+    hasText: 'Paste',
+  })
   await expect(menuItemPaste).toBeFocused()
 
   // act
