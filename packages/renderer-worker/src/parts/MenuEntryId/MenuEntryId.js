@@ -5,6 +5,7 @@ export const Edit = 2
 export const Editor = 3
 
 export const Explorer = 4
+
 export const File = 5
 
 export const Go = 6

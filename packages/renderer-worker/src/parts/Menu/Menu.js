@@ -14,7 +14,7 @@ export const state = {
   enterTimeout: -1,
 }
 
-const MENU_WIDTH = 150
+export const MENU_WIDTH = 150
 
 const CONTEXT_MENU_ITEM_HEIGHT = 28
 const CONTEXT_MENU_SEPARATOR_HEIGHT = 16

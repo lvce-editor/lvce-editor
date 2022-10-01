@@ -219,19 +219,32 @@ export const handleKeyArrowUp = (state) => {
   return ifElse(state, handleKeyArrowUpMenuOpen, handleKeyArrowUpMenuClosed)
 }
 
-const handleKeyArrowRightMenuOpen = (state) => {
+const handleKeyArrowRightMenuOpen = async (state) => {
   const { menus } = state
   // if menu can open sub menu to the right -> do that
   const menu = menus.at(-1)
-  const { items, focusedIndex } = menu
+  const { items, focusedIndex, left, top } = menu
   if (focusedIndex === -1) {
     return focusNext(state)
   }
   const item = items[focusedIndex]
   if (item.flags === MenuItemFlags.SubMenu) {
+    console.log({ top, left })
+    const subMenuEntries = await MenuEntries.getMenuEntries(item.id)
+    const subMenu = {
+      level: menus.length,
+      items: subMenuEntries,
+      focusedIndex: -1,
+      top: top + focusedIndex * 25,
+      left: left + Menu.MENU_WIDTH,
+    }
+    const newMenus = [...menus, subMenu]
     // TODO show sub menu
     // await Menu.showSubMenu(Menu.state.menus.length - 1, menu.focusedIndex)
-    return state
+    return {
+      ...state,
+      menus: newMenus,
+    }
   }
 }
 

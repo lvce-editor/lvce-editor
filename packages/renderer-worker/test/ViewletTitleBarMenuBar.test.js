@@ -19,6 +19,7 @@ jest.unstable_mockModule(
     }
   }
 )
+
 jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
   return {
     getMenuEntries: (id) => {
@@ -34,6 +35,11 @@ jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
               flags: MenuItemFlags.Disabled,
               id: 'newWindow',
               label: 'New Window',
+            },
+            {
+              flags: MenuItemFlags.SubMenu,
+              id: MenuEntryId.OpenRecent,
+              label: 'Open Recent',
             },
           ]
         case MenuEntryId.Edit:
@@ -51,6 +57,17 @@ jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
           ]
         case MenuEntryId.Selection:
           return []
+        case MenuEntryId.OpenRecent:
+          return [
+            {
+              flags: MenuItemFlags.None,
+              label: 'file-1.txt',
+            },
+            {
+              flags: MenuItemFlags.None,
+              label: 'file-2.txt',
+            },
+          ]
         default:
           throw new Error(`no menu entries found for ${id}`)
       }
@@ -117,6 +134,11 @@ test('openMenu - when focusedIndex', async () => {
             flags: MenuItemFlags.Disabled,
             id: 'newWindow',
             label: 'New Window',
+          },
+          {
+            flags: MenuItemFlags.SubMenu,
+            id: MenuEntryId.OpenRecent,
+            label: 'Open Recent',
           },
         ],
       },
@@ -200,6 +222,11 @@ test('focusIndex - when open - when same index', async () => {
             flags: MenuItemFlags.Disabled,
             id: 'newWindow',
             label: 'New Window',
+          },
+          {
+            flags: MenuItemFlags.SubMenu,
+            id: MenuEntryId.OpenRecent,
+            label: 'Open Recent',
           },
         ],
       },
@@ -445,6 +472,82 @@ test('handleKeyArrowUp - with menu open', async () => {
   })
 })
 
+test('handleKeyArrowRight - open sub menu', async () => {
+  const state = {
+    ...ViewletTitleBarMenuBar.create(),
+    focusedIndex: 0,
+    titleBarEntries: [
+      {
+        id: MenuEntryId.File,
+        name: 'File',
+      },
+      {
+        id: MenuEntryId.Edit,
+        name: 'Edit',
+      },
+      {
+        id: MenuEntryId.Selection,
+        name: 'Selection',
+      },
+    ],
+    isMenuOpen: true,
+    menus: [
+      {
+        level: 0,
+        focusedIndex: 1,
+        items: [
+          {
+            label: 'New File',
+            flags: MenuItemFlags.None,
+          },
+          {
+            label: 'Open Recent',
+            flags: MenuItemFlags.SubMenu,
+            id: MenuEntryId.OpenRecent,
+          },
+        ],
+        top: 0,
+        left: 0,
+      },
+    ],
+  }
+  expect(await ViewletTitleBarMenuBar.handleKeyArrowRight(state)).toMatchObject(
+    {
+      menus: [
+        {
+          level: 0,
+          focusedIndex: 1,
+          items: [
+            {
+              label: 'New File',
+              flags: MenuItemFlags.None,
+            },
+            {
+              label: 'Open Recent',
+              flags: MenuItemFlags.SubMenu,
+              id: MenuEntryId.OpenRecent,
+            },
+          ],
+        },
+        {
+          level: 1,
+          focusedIndex: -1,
+          items: [
+            {
+              label: 'file-1.txt',
+            },
+            {
+              label: 'file-2.txt',
+            },
+          ],
+          top: 25,
+          left: 150,
+        },
+      ],
+    }
+  )
+})
+
 test('focusNext', async () => {
   const state = {
     ...ViewletTitleBarMenuBar.create(),
@@ -636,6 +739,11 @@ test('toggleIndex - when closed - when same index', async () => {
             flags: MenuItemFlags.Disabled,
             id: 'newWindow',
             label: 'New Window',
+          },
+          {
+            flags: MenuItemFlags.SubMenu,
+            id: MenuEntryId.OpenRecent,
+            label: 'Open Recent',
           },
         ],
       },
