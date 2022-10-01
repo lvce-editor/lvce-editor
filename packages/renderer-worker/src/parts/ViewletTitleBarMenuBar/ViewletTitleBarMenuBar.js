@@ -133,7 +133,7 @@ export const toggleIndex = async (state, index) => {
 }
 
 export const focus = async (state) => {
-  await focusFirst()
+  await focusFirst(state)
 }
 
 const getIndexToFocusPreviousStartingAt = (items, index) => {
@@ -162,7 +162,7 @@ export const focusNext = async (state) => {
 
 export const focusFirst = async (state) => {
   const indexToFocus = getIndexToFocusNextStartingAt(state.titleBarEntries, 0)
-  await focusIndex(indexToFocus)
+  await focusIndex(state, indexToFocus)
 }
 
 export const focusLast = async (state) => {
