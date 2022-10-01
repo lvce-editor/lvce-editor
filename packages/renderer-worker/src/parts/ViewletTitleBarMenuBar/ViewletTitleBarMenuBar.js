@@ -202,22 +202,41 @@ export const handleKeyArrowRight = (state) => {
 }
 
 export const handleKeyHome = (state) => {
-  const { isMenuOpen } = state
+  const { isMenuOpen, menus } = state
   if (isMenuOpen) {
-    // TODO
-    // Menu.focusFirst()
-    return state
+    const menu = menus[0]
+    const newFocusedIndex = Menu.getIndexToFocusFirst(menu.items)
+    const newMenus = [
+      {
+        ...menu,
+        focusedIndex: newFocusedIndex,
+      },
+    ]
+    return {
+      ...state,
+      menus: newMenus,
+    }
   }
   return focusFirst(state)
 }
 
 // TODO this is also use for pagedown -> maybe find a better name for this function
 export const handleKeyEnd = (state) => {
-  const { isMenuOpen } = state
+  const { isMenuOpen, menus } = state
   if (isMenuOpen) {
-    // TODO
-    // Menu.focusLast()
-    return state
+    const menu = menus[0]
+    const newFocusedIndex = Menu.getIndexToFocusLast(menu.items)
+    const newMenus = [
+      {
+        ...menu,
+        focusedIndex: newFocusedIndex,
+      },
+    ]
+    console.log('key end', { newMenus })
+    return {
+      ...state,
+      menus: newMenus,
+    }
   }
   return focusLast(state)
 }
@@ -252,11 +271,21 @@ export const handleKeyEscape = (state) => {
 }
 
 export const handleKeyArrowDown = async (state) => {
-  const { isMenuOpen } = state
+  const { isMenuOpen, menus } = state
+  console.log('arrow down', { isMenuOpen })
   if (isMenuOpen) {
-    // TODO
-    // Menu.focusNext()
-    return state
+    const menu = menus[0]
+    const newFocusedIndex = Menu.getIndexToFocusNext(menu)
+    const newMenus = [
+      {
+        ...menu,
+        focusedIndex: newFocusedIndex,
+      },
+    ]
+    return {
+      ...state,
+      menus: newMenus,
+    }
   }
   return openMenu(state, /* focus */ true)
 }
@@ -300,6 +329,7 @@ const renderMenus = {
     return oldState.menus === newState.menus
   },
   apply(oldState, newState) {
+    console.log({ menus: newState.menus })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'TitleBarMenuBar',

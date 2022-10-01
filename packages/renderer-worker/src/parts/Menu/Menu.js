@@ -325,13 +325,21 @@ export const getIndexToFocusNextStartingAt = (items, startIndex) => {
   return -1
 }
 
+export const getIndexToFocusFirst = (items) => {
+  return getIndexToFocusNextStartingAt(items, 0)
+}
+
 export const focusFirst = async () => {
   const menu = getCurrentMenu()
   if (menu.items.length === 0) {
     return
   }
-  const indexToFocus = getIndexToFocusNextStartingAt(menu.items, 0)
+  const indexToFocus = getIndexToFocusFirst(menu.items)
   await focusIndex(menu, indexToFocus)
+}
+
+export const getIndexToFocusLast = (items) => {
+  return getIndexToFocusPreviousStartingAt(items, items.length - 1)
 }
 
 export const focusLast = async () => {
@@ -380,7 +388,7 @@ const canBeFocused = (item) => {
   }
 }
 
-const getIndexToFocusNext = (menu) => {
+export const getIndexToFocusNext = (menu) => {
   const startIndex = menu.focusedIndex + 1
   return getIndexToFocusNextStartingAt(menu.items, startIndex)
 }

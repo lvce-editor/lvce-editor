@@ -46,13 +46,15 @@ test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
   await TitleBarMenuBar.handleKeyEnd()
 
   // assert
-  const menuItemPaste = Locator('.MenuItem', {
-    hasText: 'Paste',
+  const menuItemToggleBlockComment = Locator('.MenuItem', {
+    hasText: 'Toggle Block Comment',
   })
-  await expect(menuItemPaste).toBeFocused()
+  await expect(menuItemToggleBlockComment).toBeFocused()
 
   // act
   await TitleBarMenuBar.handleKeyHome()
+
+  // assert
   await expect(menuItemCut).toBeFocused()
 
   // await page.keyboard.press('ArrowLeft')
