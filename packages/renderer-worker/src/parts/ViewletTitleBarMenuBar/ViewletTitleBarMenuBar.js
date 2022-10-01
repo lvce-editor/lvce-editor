@@ -164,7 +164,7 @@ export const focusLast = (state) => {
     titleBarEntries,
     titleBarEntries.length - 1
   )
-  return focusIndex(indexToFocus)
+  return focusIndex(state, indexToFocus)
 }
 
 const handleKeyArrowLeftMenuOpen = (state) => {
