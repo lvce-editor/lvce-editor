@@ -39,13 +39,11 @@ jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
         case MenuEntryId.Edit:
           return [
             {
-              command: -1,
               flags: MenuItemFlags.Disabled,
               id: 'undo',
               label: 'Undo',
             },
             {
-              command: -1,
               flags: MenuItemFlags.Disabled,
               id: 'redo',
               label: 'Redo',
@@ -232,13 +230,11 @@ test('focusIndex - when opening different index', async () => {
         level: 0,
         items: [
           {
-            command: -1,
             flags: MenuItemFlags.Disabled,
             id: 'undo',
             label: 'Undo',
           },
           {
-            command: -1,
             flags: MenuItemFlags.Disabled,
             id: 'redo',
             label: 'Redo',
@@ -272,13 +268,11 @@ test('focusIndex - when open - race condition', async () => {
         level: 0,
         items: [
           {
-            command: -1,
             flags: MenuItemFlags.Disabled,
             id: 'undo',
             label: 'Undo',
           },
           {
-            command: -1,
             flags: MenuItemFlags.Disabled,
             id: 'redo',
             label: 'Redo',
@@ -423,7 +417,7 @@ test('focusNext', async () => {
   })
 })
 
-test.skip('focusNext - with disabled items', async () => {
+test('focusNext - with disabled items', async () => {
   const state = {
     ...ViewletTitleBarMenuBar.create(),
     focusedIndex: 0,
@@ -496,7 +490,7 @@ test('toggleIndex - when open - when same index', async () => {
   })
 })
 
-test.skip('toggleIndex - when open - when different index', async () => {
+test('toggleIndex - when open - when different index', async () => {
   const state = {
     ...ViewletTitleBarMenuBar.create(),
     focusedIndex: 0,
@@ -512,7 +506,6 @@ test.skip('toggleIndex - when open - when different index', async () => {
       },
     ],
   }
-
   expect(await ViewletTitleBarMenuBar.toggleIndex(state, 1)).toMatchObject({
     focusedIndex: 1,
     menus: [
@@ -520,19 +513,14 @@ test.skip('toggleIndex - when open - when different index', async () => {
         level: 0,
         items: [
           {
-            flags: MenuItemFlags.None,
-            id: 'cut',
-            label: 'Cut',
+            flags: MenuItemFlags.Disabled,
+            id: 'undo',
+            label: 'Undo',
           },
           {
-            flags: MenuItemFlags.None,
-            id: 'copy',
-            label: 'Copy',
-          },
-          {
-            flags: MenuItemFlags.None,
-            id: 'paste',
-            label: 'Paste',
+            flags: MenuItemFlags.Disabled,
+            id: 'redo',
+            label: 'Redo',
           },
         ],
       },
@@ -540,7 +528,7 @@ test.skip('toggleIndex - when open - when different index', async () => {
   })
 })
 
-test.skip('toggleIndex - when closed - when same index', async () => {
+test('toggleIndex - when closed - when same index', async () => {
   const state = {
     ...ViewletTitleBarMenuBar.create(),
     focusedIndex: 0,
@@ -556,26 +544,30 @@ test.skip('toggleIndex - when closed - when same index', async () => {
       },
     ],
   }
-  expect(await ViewletTitleBarMenuBar.toggleIndex(0)).toMatchObject({
+  expect(await ViewletTitleBarMenuBar.toggleIndex(state, 0)).toMatchObject({
     focusedIndex: 0,
+    isMenuOpen: true,
     menus: [
-      [
-        {
-          flags: MenuItemFlags.None,
-          id: 'newFile',
-          label: 'New File',
-        },
-        {
-          flags: MenuItemFlags.None,
-          id: 'newWindow',
-          label: 'New Window',
-        },
-      ],
+      {
+        level: 0,
+        items: [
+          {
+            flags: MenuItemFlags.Disabled,
+            id: 'newFile',
+            label: 'New File',
+          },
+          {
+            flags: MenuItemFlags.Disabled,
+            id: 'newWindow',
+            label: 'New Window',
+          },
+        ],
+      },
     ],
   })
 })
 
-test.skip('toggleIndex - when closed - when different index', async () => {
+test('toggleIndex - when closed - when different index', async () => {
   const state = {
     ...ViewletTitleBarMenuBar.create(),
     focusedIndex: 0,
@@ -595,19 +587,19 @@ test.skip('toggleIndex - when closed - when different index', async () => {
     focusedIndex: 1,
     menus: [
       {
-        flags: MenuItemFlags.None,
-        id: 'cut',
-        label: 'Cut',
-      },
-      {
-        flags: MenuItemFlags.None,
-        id: 'copy',
-        label: 'Copy',
-      },
-      {
-        flags: MenuItemFlags.None,
-        id: 'paste',
-        label: 'Paste',
+        level: 0,
+        items: [
+          {
+            flags: MenuItemFlags.Disabled,
+            id: 'undo',
+            label: 'Undo',
+          },
+          {
+            flags: MenuItemFlags.Disabled,
+            id: 'redo',
+            label: 'Redo',
+          },
+        ],
       },
     ],
   })
