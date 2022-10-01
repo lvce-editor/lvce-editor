@@ -104,4 +104,9 @@ test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
     hasText: 'Open Recent',
   })
   await expect(menuItemOpenRecent).toBeFocused()
+
+  await TitleBarMenuBar.handleKeyArrowRight()
+
+  const menu1 = Locator('#Menu-1')
+  await expect(menu1).toBeVisible()
 })
