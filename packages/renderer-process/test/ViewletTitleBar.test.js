@@ -9,6 +9,7 @@ beforeAll(() => {
 })
 
 test('accessibility - title bar should have role of contentinfo', () => {
-  ViewletTitleBar.create()
-  expect(Layout.state.$TitleBar.getAttribute('role')).toBe('contentinfo')
+  const state = ViewletTitleBar.create()
+  const { $TitleBar } = state
+  expect($TitleBar.role).toBe('contentinfo')
 })
