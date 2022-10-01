@@ -17,7 +17,7 @@ export const state = {
 const MENU_WIDTH = 150
 
 const CONTEXT_MENU_ITEM_HEIGHT = 28
-const CONTEXT_MENU_SEPARATOR_HEIGHT = 6
+const CONTEXT_MENU_SEPARATOR_HEIGHT = 16
 const CONTEXT_MENU_PADDING = 20
 const CONTEXT_MENU_WIDTH = 250
 
@@ -29,7 +29,7 @@ export const getMenuHeight = (items) => {
   let height = CONTEXT_MENU_PADDING
   for (const item of items) {
     switch (item.flags) {
-      case /* ContextMenuItemSeparator */ 1:
+      case MenuItemFlags.Separator:
         height += CONTEXT_MENU_SEPARATOR_HEIGHT
         break
       default:
