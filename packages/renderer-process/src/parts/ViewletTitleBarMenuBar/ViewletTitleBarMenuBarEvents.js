@@ -22,18 +22,16 @@ export const handleFocusOut = (event) => {
 }
 
 export const handleMouseEnter = (event) => {
-  const $Target = event.target
-  const index = getIndex($Target)
+  const { target, clientX, clientY } = event
+  const index = getIndex(target)
   if (index === -1) {
     return
   }
-  const enterX = event.clientX
-  const enterY = event.clientY
   RendererWorker.send(
-    /* TitleBarMenuBar.focusIndex */ 'TitleBarMenuBar.focusIndex',
+    /* TitleBarMenuBar.focusIndex */ 'TitleBarMenuBar.handleMouseEnter',
     /* index */ index,
-    /* enterX */ enterX,
-    /* enterY */ enterY
+    /* enterX */ clientX,
+    /* enterY */ clientY
   )
 }
 

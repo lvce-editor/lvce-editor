@@ -249,6 +249,8 @@ export const setMenus = (state, menus) => {
     $Menu.style.left = `${left}px`
     $Menu.append(...menu.items.map(MenuItem.create$MenuItem))
     $Menu.id = `Menu-${level}`
+    if (focusedIndex !== -1) {
+    }
     $$NewMenus.push($Menu)
     Widget.append($Menu)
     if (focusedIndex !== -1) {

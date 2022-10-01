@@ -167,127 +167,193 @@ export const focusLast = (state) => {
   return focusIndex(indexToFocus)
 }
 
-export const handleKeyArrowLeft = (state) => {
-  const { isMenuOpen, menus } = state
-  if (isMenuOpen && menus.length > 1) {
+const handleKeyArrowLeftMenuOpen = (state) => {
+  const { menus } = state
+  if (menus.length > 1) {
+    // TODO menu collapse
     return state
   }
+  return focusPrevious(state)
+}
+
+const handleKeyArrowLeftMenuClosed = (state) => {
   // TODO menu collapse
   return focusPrevious(state)
 }
 
-export const handleKeyArrowUp = (state) => {
+const ifElse = (state, menuOpenFunction, menuClosedFunction) => {
   const { isMenuOpen } = state
-  if (!isMenuOpen) {
-    return state
+  if (isMenuOpen) {
+    return menuOpenFunction(state)
   }
+  return menuClosedFunction(state)
+}
+
+export const handleKeyArrowLeft = (state) => {
+  return ifElse(state, handleKeyArrowLeftMenuOpen, handleKeyArrowLeftMenuClosed)
+}
+
+const handleKeyArrowUpMenuOpen = (state) => {
   // TODO
   // Menu.focusPrevious()
   return state
 }
 
-export const handleKeyArrowRight = (state) => {
-  const { isMenuOpen, menus } = state
-  if (isMenuOpen) {
-    // if menu can open sub menu to the right -> do that
-    const menu = menus.at(-1)
-    const item = menu.items[menu.focusedIndex]
-    if (item.flags === MenuItemFlags.SubMenu) {
-      // TODO show sub menu
-      // await Menu.showSubMenu(Menu.state.menus.length - 1, menu.focusedIndex)
-      return state
-    }
-  }
-  return focusNext(state)
+const handleKeyArrowUpMenuClosed = (state) => {
+  return state
 }
 
-export const handleKeyHome = (state) => {
-  const { isMenuOpen, menus } = state
-  if (isMenuOpen) {
-    const menu = menus[0]
-    const newFocusedIndex = Menu.getIndexToFocusFirst(menu.items)
-    const newMenus = [
-      {
-        ...menu,
-        focusedIndex: newFocusedIndex,
-      },
-    ]
-    return {
-      ...state,
-      menus: newMenus,
-    }
-  }
-  return focusFirst(state)
+export const handleKeyArrowUp = (state) => {
+  return ifElse(state, handleKeyArrowUpMenuOpen, handleKeyArrowUpMenuClosed)
 }
+
+const handleKeyArrowRightMenuOpen = (state) => {
+  const { menus } = state
+  // if menu can open sub menu to the right -> do that
+  const menu = menus.at(-1)
+  const { items, focusedIndex } = menu
+  if (focusedIndex === -1) {
+    return focusNext(state)
+  }
+  const item = items[focusedIndex]
+  if (item.flags === MenuItemFlags.SubMenu) {
+    // TODO show sub menu
+    // await Menu.showSubMenu(Menu.state.menus.length - 1, menu.focusedIndex)
+    return state
+  }
+}
+
+const handleKeyArrowRightMenuClosed = focusNext
+
+export const handleKeyArrowRight = (state) => {
+  return ifElse(
+    state,
+    handleKeyArrowRightMenuOpen,
+    handleKeyArrowRightMenuClosed
+  )
+}
+
+const handleKeyHomeMenuOpen = (state) => {
+  const { menus } = state
+  const menu = menus[0]
+  const newFocusedIndex = Menu.getIndexToFocusFirst(menu.items)
+  const newMenus = [
+    {
+      ...menu,
+      focusedIndex: newFocusedIndex,
+    },
+  ]
+  return {
+    ...state,
+    menus: newMenus,
+  }
+}
+
+const handleKeyHomeMenuClosed = focusFirst
+
+export const handleKeyHome = (state) => {
+  return ifElse(state, handleKeyHomeMenuOpen, handleKeyHomeMenuClosed)
+}
+
+const handleKeyEndMenuOpen = (state) => {
+  const { menus } = state
+  const menu = menus[0]
+  const newFocusedIndex = Menu.getIndexToFocusLast(menu.items)
+  const newMenus = [
+    {
+      ...menu,
+      focusedIndex: newFocusedIndex,
+    },
+  ]
+  console.log('key end', { newMenus })
+  return {
+    ...state,
+    menus: newMenus,
+  }
+}
+
+const handleKeyEndMenuClosed = focusLast
 
 // TODO this is also use for pagedown -> maybe find a better name for this function
 export const handleKeyEnd = (state) => {
-  const { isMenuOpen, menus } = state
-  if (isMenuOpen) {
-    const menu = menus[0]
-    const newFocusedIndex = Menu.getIndexToFocusLast(menu.items)
-    const newMenus = [
-      {
-        ...menu,
-        focusedIndex: newFocusedIndex,
-      },
-    ]
-    console.log('key end', { newMenus })
-    return {
-      ...state,
-      menus: newMenus,
-    }
-  }
-  return focusLast(state)
+  return ifElse(state, handleKeyEndMenuOpen, handleKeyEndMenuClosed)
+}
+
+const handleKeySpaceMenuOpen = (state) => {
+  // TODO
+  // await Menu.selectCurrent()
+  return state
+}
+
+const handleKeySpaceMenuClosed = (state) => {
+  return openMenu(state, /* focus */ true)
 }
 
 // TODO this is same as handle key enter -> merge the functions
 export const handleKeySpace = (state) => {
-  const { isMenuOpen } = state
-  if (isMenuOpen) {
-    // TODO
-    // await Menu.selectCurrent()
-    return state
-  }
+  return ifElse(state, handleKeySpaceMenuOpen, handleKeySpaceMenuClosed)
+}
+
+const handleKeyEnterMenuOpen = (state) => {
+  // TODO
+  // await Menu.selectCurrent()
+  return state
+}
+
+const handleKeyEnterMenuClosed = (state) => {
   return openMenu(state, /* focus */ true)
 }
 
 export const handleKeyEnter = (state) => {
-  const { isMenuOpen } = state
-  if (isMenuOpen) {
-    // TODO
-    // await Menu.selectCurrent()
-    return state
-  }
-  return openMenu(state, /* focus */ true)
+  return ifElse(state, handleKeyEnterMenuOpen, handleKeyEnterMenuClosed)
 }
 
-export const handleKeyEscape = (state) => {
-  const { isMenuOpen } = state
-  if (!isMenuOpen) {
-    return state
-  }
+const handleKeyEscapeMenuOpen = (state) => {
   return closeMenu(state, /* keepFocus */ true)
 }
 
-export const handleKeyArrowDown = async (state) => {
-  const { isMenuOpen, menus } = state
-  console.log('arrow down', { isMenuOpen })
-  if (isMenuOpen) {
-    const menu = menus[0]
-    const newFocusedIndex = Menu.getIndexToFocusNext(menu)
-    const newMenus = [
-      {
-        ...menu,
-        focusedIndex: newFocusedIndex,
-      },
-    ]
-    return {
-      ...state,
-      menus: newMenus,
-    }
+const handleKeyEscapeMenuClosed = (state) => {
+  return state
+}
+
+export const handleKeyEscape = (state) => {
+  return ifElse(state, handleKeyEscapeMenuOpen, handleKeyEscapeMenuClosed)
+}
+
+const handleKeyArrowDownMenuOpen = (state) => {
+  const { menus } = state
+  const menu = menus[0]
+  const newFocusedIndex = Menu.getIndexToFocusNext(menu)
+  const newMenus = [
+    {
+      ...menu,
+      focusedIndex: newFocusedIndex,
+    },
+  ]
+  return {
+    ...state,
+    menus: newMenus,
   }
+}
+
+const handleKeyArrowDownMenuClosed = (state) => {
   return openMenu(state, /* focus */ true)
+}
+
+export const handleKeyArrowDown = (state) => {
+  return ifElse(state, handleKeyArrowDownMenuOpen, handleKeyArrowDownMenuClosed)
+}
+
+const handleMouseEnterMenuOpen = (state) => {
+  return state
+}
+
+const handleMouseEnterMenuClosed = (state) => {
+  return state
+}
+
+export const handleMouseEnter = (state) => {
+  return ifElse(state, handleMouseEnterMenuOpen, handleMouseEnterMenuClosed)
 }
 
 export const hasFunctionalRender = true
