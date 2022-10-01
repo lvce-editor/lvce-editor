@@ -70,6 +70,10 @@ const openMenuAtIndex = async (state, index, shouldBeFocused) => {
   }
 }
 
+const identity = (state) => {
+  return state
+}
+
 /**
  * @param {boolean} focus
  */
@@ -209,9 +213,7 @@ const handleKeyArrowUpMenuOpen = (state) => {
   }
 }
 
-const handleKeyArrowUpMenuClosed = (state) => {
-  return state
-}
+const handleKeyArrowUpMenuClosed = identity
 
 export const handleKeyArrowUp = (state) => {
   return ifElse(state, handleKeyArrowUpMenuOpen, handleKeyArrowUpMenuClosed)
@@ -275,7 +277,6 @@ const handleKeyEndMenuOpen = (state) => {
       focusedIndex: newFocusedIndex,
     },
   ]
-  console.log('key end', { newMenus })
   return {
     ...state,
     menus: newMenus,
@@ -322,9 +323,7 @@ const handleKeyEscapeMenuOpen = (state) => {
   return closeMenu(state, /* keepFocus */ true)
 }
 
-const handleKeyEscapeMenuClosed = (state) => {
-  return state
-}
+const handleKeyEscapeMenuClosed = identity
 
 export const handleKeyEscape = (state) => {
   return ifElse(state, handleKeyEscapeMenuOpen, handleKeyEscapeMenuClosed)
