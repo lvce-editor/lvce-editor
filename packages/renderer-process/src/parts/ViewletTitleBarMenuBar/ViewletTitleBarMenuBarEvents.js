@@ -21,14 +21,14 @@ export const handleFocusOut = (event) => {
   )
 }
 
-export const handleMouseEnter = (event) => {
+export const handleMouseOver = (event) => {
   const { target, clientX, clientY } = event
   const index = getIndex(target)
   if (index === -1) {
     return
   }
   RendererWorker.send(
-    /* TitleBarMenuBar.focusIndex */ 'TitleBarMenuBar.handleMouseEnter',
+    /* TitleBarMenuBar.focusIndex */ 'TitleBarMenuBar.handleMouseOver',
     /* index */ index,
     /* enterX */ clientX,
     /* enterY */ clientY
@@ -61,7 +61,6 @@ export const handleClick = (event) => {
   if (index === -1) {
     return
   }
-  console.log({ index })
   // event.preventDefault()
   RendererWorker.send(
     /* TitleBarMenuBar.toggleIndex */ 'TitleBarMenuBar.toggleIndex',

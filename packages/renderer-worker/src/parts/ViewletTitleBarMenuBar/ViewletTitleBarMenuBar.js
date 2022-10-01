@@ -344,16 +344,12 @@ export const handleKeyArrowDown = (state) => {
   return ifElse(state, handleKeyArrowDownMenuOpen, handleKeyArrowDownMenuClosed)
 }
 
-const handleMouseEnterMenuOpen = (state) => {
+export const handleMouseOver = (state, index) => {
+  const { isMenuOpen } = state
+  if (isMenuOpen) {
+    return focusIndex(state, index)
+  }
   return state
-}
-
-const handleMouseEnterMenuClosed = (state) => {
-  return state
-}
-
-export const handleMouseEnter = (state) => {
-  return ifElse(state, handleMouseEnterMenuOpen, handleMouseEnterMenuClosed)
 }
 
 export const hasFunctionalRender = true
@@ -395,7 +391,6 @@ const renderMenus = {
     return oldState.menus === newState.menus
   },
   apply(oldState, newState) {
-    console.log({ menus: newState.menus })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'TitleBarMenuBar',

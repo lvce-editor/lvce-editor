@@ -21,6 +21,7 @@ export const create = () => {
     'focusin',
     ViewletTitleBarMenuBarEvents.handleFocus
   )
+  $TitleBarMenuBar.onmouseover = ViewletTitleBarMenuBarEvents.handleMouseOver
 
   return {
     $Viewlet: $TitleBarMenuBar,
@@ -152,7 +153,7 @@ export const openMenu = (
   // TODO this code is very unclean
   $TitleBarMenuBar.addEventListener(
     'mouseenter',
-    ViewletTitleBarMenuBarEvents.handleMouseEnter,
+    ViewletTitleBarMenuBarEvents.handleMouseOver,
     {
       capture: true,
     }
@@ -195,7 +196,7 @@ export const closeMenu = (state, unFocusIndex, index) => {
   Menu.hide(/* restoreFocus */ false)
   $TitleBarMenuBar.removeEventListener(
     'mouseenter',
-    ViewletTitleBarMenuBarEvents.handleMouseEnter,
+    ViewletTitleBarMenuBarEvents.handleMouseOver,
     {
       capture: true,
     }
