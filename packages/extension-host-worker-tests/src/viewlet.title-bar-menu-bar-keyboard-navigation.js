@@ -105,8 +105,16 @@ test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
   })
   await expect(menuItemOpenRecent).toBeFocused()
 
+  // act
   await TitleBarMenuBar.handleKeyArrowRight()
 
+  // assert
   const menu1 = Locator('#Menu-1')
   await expect(menu1).toBeVisible()
+
+  // act
+  await TitleBarMenuBar.handleKeyArrowLeft()
+
+  // assert
+  await expect(menu1).toBeHidden()
 })

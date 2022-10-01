@@ -174,8 +174,11 @@ export const focusLast = (state) => {
 const handleKeyArrowLeftMenuOpen = (state) => {
   const { menus } = state
   if (menus.length > 1) {
-    // TODO menu collapse
-    return state
+    const newMenus = [...menus].slice(0, -1)
+    return {
+      ...state,
+      menus: newMenus,
+    }
   }
   return focusPrevious(state)
 }
