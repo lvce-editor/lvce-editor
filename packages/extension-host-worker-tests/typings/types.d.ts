@@ -110,6 +110,7 @@ declare const TitleBarMenuBar: {
   readonly handleKeyArrowRight: () => Promise<void>
   readonly handleKeyArrowUp: () => Promise<void>
   readonly handleKeyEnd: () => Promise<void>
+  readonly handleKeyEscape: () => Promise<void>
   readonly handleKeyHome: () => Promise<void>
   readonly handleKeySpace: () => Promise<void>
   readonly toggleIndex: (index: number) => Promise<void>

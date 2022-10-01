@@ -14,11 +14,11 @@ test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
   // assert
   const menu0 = Locator('#Menu-0')
   await expect(menu0).toBeVisible()
-  const menuItemOpenFolder = Locator('.MenuItem:text("Open Folder")')
-  await expect(menuItemOpenFolder).toBeFocused()
+  const menuItemNewFile = Locator('.MenuItem', { hasText: 'New File' })
+  await expect(menuItemNewFile).toBeFocused()
 
   // act
-  await TitleBarMenuBar.handleKeySpace()
+  await TitleBarMenuBar.handleKeyEscape()
 
   // assert
   await expect(titleBarItemFile).toBeFocused()

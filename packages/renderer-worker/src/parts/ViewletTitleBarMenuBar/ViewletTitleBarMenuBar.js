@@ -51,6 +51,7 @@ const openMenuAtIndex = async (state, index, shouldBeFocused) => {
   const menuFocusedIndex = shouldBeFocused
     ? Menu.getIndexToFocusNextStartingAt(items, 0)
     : -1
+  console.log({ shouldBeFocused })
   const menu = {
     id,
     items,
@@ -74,10 +75,12 @@ const openMenuAtIndex = async (state, index, shouldBeFocused) => {
  * @param {boolean} focus
  */
 export const openMenu = (state, focus) => {
-  if (state.focusedIndex === -1) {
+  const { focusedIndex } = state
+  if (focusedIndex === -1) {
     return state
   }
-  return openMenuAtIndex(state, state.focusedIndex, focus)
+  console.log({ focus })
+  return openMenuAtIndex(state, focusedIndex, focus)
 }
 
 export const closeMenu = (state, keepFocus) => {
@@ -102,7 +105,7 @@ export const toggleMenu = (state) => {
 }
 
 export const focusIndex = async (state, index) => {
-  const isMenuOpen = state
+  const { isMenuOpen } = state
   if (isMenuOpen) {
     return openMenuAtIndex(state, index, /* focus */ false)
   }
@@ -252,11 +255,13 @@ export const handleKeyEscape = (state) => {
 
 export const handleKeyArrowDown = async (state) => {
   const { isMenuOpen } = state
+  console.log('title bar arrow down', { isMenuOpen })
   if (isMenuOpen) {
     // TODO
     // Menu.focusNext()
     return state
   }
+  console.log('arrow down', 'focus true')
   return openMenu(state, /* focus */ true)
 }
 
@@ -293,6 +298,7 @@ const renderFocusedIndex = {
 
 const renderMenus = {
   isEqual(oldState, newState) {
+    console.log({ oldState, newState })
     return oldState.menus === newState.menus
   },
   apply(oldState, newState) {

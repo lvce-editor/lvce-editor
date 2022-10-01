@@ -29,6 +29,7 @@ export const focusPrevious = async () => {
 }
 
 export const handleKeyArrowDown = async () => {
+  console.log('arrow down')
   await Command.execute('TitleBarMenuBar.handleKeyArrowDown')
 }
 
@@ -53,6 +54,10 @@ export const handleKeyHome = async () => {
 }
 export const handleKeySpace = async () => {
   await Command.execute('TitleBarMenuBar.handleKeySpace')
+}
+
+export const handleKeyEscape = async () => {
+  await Command.execute('TitleBarMenuBar.handleKeyEscape')
 }
 
 export const toggleIndex = async (index) => {

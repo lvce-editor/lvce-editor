@@ -232,17 +232,25 @@ export const setMenus = (state, menus) => {
     Widget.remove($Menu)
   }
   const $$NewMenus = []
+  console.log({ menus })
   for (const menu of menus) {
     const $Menu = create$Menu()
-    const { top, left, width, height, level } = menu
+    const { top, left, width, height, level, focusedIndex } = menu
     $Menu.style.width = `${width}px`
     $Menu.style.height = `${height}px`
     $Menu.style.top = `${top}px`
     $Menu.style.left = `${left}px`
     $Menu.append(...menu.items.map(MenuItem.create$MenuItem))
+    console.log({ menu })
+
     $Menu.id = `Menu-${level}`
     $$NewMenus.push($Menu)
     Widget.append($Menu)
+    if (focusedIndex !== -1) {
+      const $Child = $Menu.children[focusedIndex]
+      // @ts-ignore
+      $Child.focus()
+    }
   }
   state.$$Menus = $$NewMenus
 }
