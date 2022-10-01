@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
+import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -9,12 +10,55 @@ jest.unstable_mockModule(
   '../src/parts/RendererProcess/RendererProcess.js',
   () => {
     return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
+      invoke: () => {
+        return {
+          left: 0,
+          bottom: 0,
+        }
+      },
     }
   }
 )
+jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
+  return {
+    getMenuEntries: (id) => {
+      switch (id) {
+        case MenuEntryId.File:
+          return [
+            {
+              flags: MenuItemFlags.Disabled,
+              id: 'newFile',
+              label: 'New File',
+            },
+            {
+              flags: MenuItemFlags.Disabled,
+              id: 'newWindow',
+              label: 'New Window',
+            },
+          ]
+        case MenuEntryId.Edit:
+          return [
+            {
+              command: -1,
+              flags: MenuItemFlags.Disabled,
+              id: 'undo',
+              label: 'Undo',
+            },
+            {
+              command: -1,
+              flags: MenuItemFlags.Disabled,
+              id: 'redo',
+              label: 'Redo',
+            },
+          ]
+        case MenuEntryId.Selection:
+          return []
+        default:
+          throw new Error(`no menu entries found for ${id}`)
+      }
+    },
+  }
+})
 
 const ViewletTitleBarMenuBar = await import(
   '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
@@ -26,17 +70,17 @@ test('openMenu - when no focusedIndex', async () => {
     focusedIndex: -1,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
     ],
   }
   expect(
-    await ViewletTitleBarMenu.openMenu(state, /* focus */ false)
+    await ViewletTitleBarMenuBar.openMenu(state, /* focus */ false)
   ).toMatchObject({
     isMenuOpen: false,
   })
@@ -48,66 +92,33 @@ test('openMenu - when focusedIndex', async () => {
     focusedIndex: 0,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {
-    return {
-      left: 168,
-      bottom: 0,
-    }
-  })
   expect(
     await ViewletTitleBarMenuBar.openMenu(state, /* focus */ true)
   ).toMatchObject({
     menus: [
       {
         level: 0,
-        x: 160,
-        y: 0,
+        left: 0,
+        top: 0,
         items: [
           {
-            command: -1,
             flags: MenuItemFlags.Disabled,
             id: 'newFile',
             label: 'New File',
           },
           {
-            command: -1,
             flags: MenuItemFlags.Disabled,
             id: 'newWindow',
             label: 'New Window',
-          },
-          {
-            command: 0,
-            flags: MenuItemFlags.Separator,
-            id: 'separator',
-            label: 'Separator',
-          },
-          {
-            command: -1,
-            flags: MenuItemFlags.Disabled,
-            id: 'openFile',
-            label: 'Open File',
-          },
-          {
-            command: 1492,
-            flags: MenuItemFlags.None,
-            id: 'openFolder',
-            label: 'Open Folder',
-          },
-          {
-            command: 0,
-            flags: MenuItemFlags.SubMenu,
-            id: 'openRecent',
-            label: 'Open Recent',
           },
         ],
       },
@@ -120,11 +131,11 @@ test("closeMenu - don't keep focus", () => {
     ...ViewletTitleBarMenuBar.create(),
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
     ],
@@ -142,11 +153,11 @@ test('closeMenu - keep focus', () => {
     ...ViewletTitleBarMenuBar.create(),
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
     ],
@@ -166,25 +177,16 @@ test('focusIndex - when open - when same index', async () => {
     focusedIndex: 0,
     isMenuOpen: true,
     titleBarEntries: [
-      [
-        {
-          id: 'file',
-          name: 'File',
-        },
-        {
-          id: 'edit',
-          name: 'Edit',
-        },
-      ],
+      {
+        id: MenuEntryId.File,
+        name: 'File',
+      },
+      {
+        id: MenuEntryId.Edit,
+        name: 'Edit',
+      },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {
-    return {
-      left: 168,
-      bottom: 0,
-    }
-  })
   expect(await ViewletTitleBarMenuBar.focusIndex(state, 0)).toMatchObject({
     focusedIndex: 0,
     menus: [
@@ -192,13 +194,11 @@ test('focusIndex - when open - when same index', async () => {
         level: 0,
         items: [
           {
-            command: -1,
             flags: MenuItemFlags.Disabled,
             id: 'newFile',
             label: 'New File',
           },
           {
-            command: -1,
             flags: MenuItemFlags.Disabled,
             id: 'newWindow',
             label: 'New Window',
@@ -216,11 +216,11 @@ test('focusIndex - when opening different index', async () => {
     isMenuOpen: true,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
     ],
@@ -249,29 +249,22 @@ test('focusIndex - when opening different index', async () => {
   })
 })
 
-test.skip('focusIndex - when open - race condition', async () => {
+test('focusIndex - when open - race condition', async () => {
   const state = {
     ...ViewletTitleBarMenuBar.create(),
     focusedIndex: 0,
     isMenuOpen: true,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {
-    return {
-      left: 168,
-      bottom: 0,
-    }
-  })
   expect(await ViewletTitleBarMenuBar.focusIndex(state, 1)).toMatchObject({
     focusedIndex: 1,
     menus: [
@@ -303,17 +296,15 @@ test('focusIndex - when closed - when same index', async () => {
     isMenuOpen: false,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
   expect(await ViewletTitleBarMenuBar.focusIndex(state, 0)).toMatchObject({
     focusedIndex: 0,
   })
@@ -326,17 +317,15 @@ test('focusIndex - when closed - when different index', async () => {
     isMenuOpen: false,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
   expect(await ViewletTitleBarMenuBar.focusIndex(state, 1)).toMatchObject({
     focusedIndex: 1,
   })
@@ -348,11 +337,11 @@ test('focus', async () => {
     focusedIndex: 42,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
     ],
@@ -368,15 +357,15 @@ test('focusPrevious', async () => {
     focusedIndex: 1,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
       {
-        id: 'selection',
+        id: MenuEntryId.Selection,
         name: 'Selection',
       },
     ],
@@ -392,20 +381,20 @@ test('focusPrevious - at start', async () => {
     focusedIndex: 0,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
       {
-        id: 'selection',
+        id: MenuEntryId.Selection,
         name: 'Selection',
       },
     ],
   }
-  expect(await ViewletTitleBarMenuBar.focusPrevious()).toMatchObject({
+  expect(await ViewletTitleBarMenuBar.focusPrevious(state)).toMatchObject({
     focusedIndex: 2,
   })
 })
@@ -416,15 +405,15 @@ test('focusNext', async () => {
     focusedIndex: 0,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
       {
-        id: 'selection',
+        id: MenuEntryId.Selection,
         name: 'Selection',
       },
     ],
@@ -440,17 +429,17 @@ test.skip('focusNext - with disabled items', async () => {
     focusedIndex: 0,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
         flags: MenuItemFlags.None,
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
         flags: MenuItemFlags.None,
       },
       {
-        id: 'selection',
+        id: MenuEntryId.Selection,
         name: 'Selection',
         flags: MenuItemFlags.None,
       },
@@ -467,15 +456,15 @@ test('focusNext - at end', async () => {
     focusedIndex: 2,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
       {
-        id: 'selection',
+        id: MenuEntryId.Selection,
         name: 'Selection',
       },
     ],
@@ -492,11 +481,11 @@ test('toggleIndex - when open - when same index', async () => {
     isMenuOpen: true,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
     ],
@@ -514,11 +503,11 @@ test.skip('toggleIndex - when open - when different index', async () => {
     isMenuOpen: true,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
     ],
@@ -558,11 +547,11 @@ test.skip('toggleIndex - when closed - when same index', async () => {
     isMenuOpen: false,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
     ],
@@ -593,11 +582,11 @@ test.skip('toggleIndex - when closed - when different index', async () => {
     isMenuOpen: false,
     titleBarEntries: [
       {
-        id: 'file',
+        id: MenuEntryId.File,
         name: 'File',
       },
       {
-        id: 'edit',
+        id: MenuEntryId.Edit,
         name: 'Edit',
       },
     ],

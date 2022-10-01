@@ -29,11 +29,12 @@ export const loadContent = async (state) => {
  * @param {boolean} shouldBeFocused
  */
 const openMenuAtIndex = async (state, index, shouldBeFocused) => {
+  const { titleBarEntries } = state
   // TODO race conditions
   // TODO send renderer process
   // 1. open menu, items to show
   // 2. focus menu
-  const id = state.titleBarEntries[index].id
+  const id = titleBarEntries[index].id
   const items = await MenuEntries.getMenuEntries(id)
   const bounds = await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
@@ -61,7 +62,6 @@ const openMenuAtIndex = async (state, index, shouldBeFocused) => {
     height,
   }
   const menus = [menu]
-  console.log({ menus })
   return {
     ...state,
     isMenuOpen: true,
