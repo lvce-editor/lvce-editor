@@ -9,11 +9,14 @@ export const create = () => {
   $TitleBarMenuBar.id = 'TitleBarMenuBar'
   // @ts-ignore
   $TitleBarMenuBar.role = 'menubar'
-  $TitleBarMenuBar.onkeydown = ViewletTitleBarMenuBarEvents.handleKeyDown
   $TitleBarMenuBar.onmousedown = ViewletTitleBarMenuBarEvents.handleClick
   $TitleBarMenuBar.addEventListener(
     'focusout',
     ViewletTitleBarMenuBarEvents.handleFocusOut
+  )
+  $TitleBarMenuBar.addEventListener(
+    'focusin',
+    ViewletTitleBarMenuBarEvents.handleFocus
   )
 
   return {
@@ -161,7 +164,6 @@ export const openMenu = (
     width,
     height,
     items: menuItems,
-    handleKeyDown: ViewletTitleBarMenuBarEvents.handleKeyDown,
     handleFocusOut: ViewletTitleBarMenuBarEvents.handleFocusOut,
     $Parent: $TitleBarMenuBar.children[index],
     level,
@@ -205,7 +207,6 @@ const create$Menu = () => {
   // @ts-ignore
   $Menu.role = 'menu'
   $Menu.tabIndex = -1
-  $Menu.onkeydown = ViewletTitleBarMenuBarEvents.handleKeyDown
   // $ContextMenu.onmousedown = contextMenuHandleMouseDown
   // TODO mousedown vs click? (click is usually better but mousedown is faster, why wait 100ms?)
   // $Menu.addEventListener('mousedown', handleMouseDown)

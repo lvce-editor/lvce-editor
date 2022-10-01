@@ -1,5 +1,6 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as MouseEventTypes from '../MouseEventType/MouseEventType.js'
+import * as Focus from '../Focus/Focus.js'
 
 const isInsideTitleBarMenu = ($Element) => {
   return (
@@ -18,81 +19,6 @@ export const handleFocusOut = (event) => {
     /* TitleBarMenuBar.closeMenu */ 'TitleBarMenuBar.closeMenu',
     /* keepFocus */ false
   )
-}
-
-// TODO should only have the one listener in KeyBindings.js
-export const handleKeyDown = (event) => {
-  const { key } = event
-  console.log({ key })
-  switch (key) {
-    case 'ArrowDown':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenuBar.handleKeyArrowDown */ 'TitleBarMenuBar.handleKeyArrowDown'
-      )
-      break
-    case 'ArrowUp':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenuBar.handleKeyArrowUp */ 'TitleBarMenuBar.handleKeyArrowUp'
-      )
-      break
-    case 'ArrowRight':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenuBar.handleKeyArrowRight */ 'TitleBarMenuBar.handleKeyArrowRight'
-      )
-      break
-    case 'ArrowLeft':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenuBar.handleKeyArrowLeft */ 'TitleBarMenuBar.handleKeyArrowLeft'
-      )
-      break
-    case 'Enter':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenuBar.handleKeyEnter */ 'TitleBarMenuBar.handleKeyEnter'
-      )
-      break
-    case ' ':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenuBar.handleKeySpace */ 'TitleBarMenuBar.handleKeySpace'
-      )
-      break
-    case 'Home':
-    case 'PageUp':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenuBar.handleKeyHome */ 'TitleBarMenuBar.handleKeyHome'
-      )
-      break
-    case 'End':
-    case 'PageDown':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenuBar.handleKeyEnd */ 'TitleBarMenuBar.handleKeyEnd'
-      )
-      break
-    case 'Escape':
-      event.preventDefault()
-      event.stopPropagation()
-      RendererWorker.send(
-        /* TitleBarMenuBar.handleKeyEscape */ 'TitleBarMenuBar.handleKeyEscape'
-      )
-      break
-    default:
-      break
-  }
 }
 
 export const handleMouseEnter = (event) => {
@@ -142,4 +68,8 @@ export const handleClick = (event) => {
     /* TitleBarMenuBar.toggleIndex */ 'TitleBarMenuBar.toggleIndex',
     /* index */ index
   )
+}
+
+export const handleFocus = () => {
+  Focus.setFocus('TitleBarMenuBar')
 }
