@@ -13,9 +13,7 @@ export const create = (id, uri, top, left, width, height) => {
 }
 
 export const loadContent = (state) => {
-  return {
-    ...state,
-  }
+  return state
 }
 
 export const getChildren = (state) => {
