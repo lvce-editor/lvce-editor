@@ -9,6 +9,7 @@ export const name = 'TitleBarMenuBar'
 export const create = () => {
   return {
     titleBarEntries: [],
+    focusedIndex: -1,
   }
 }
 
@@ -34,8 +35,8 @@ const openMenuAtIndex = async (state, index, shouldBeFocused) => {
   Menu.state.menus = []
   const bounds = await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'TitleBar',
-    /* method */ 'menuGetEntryBounds',
+    /* id */ 'TitleBarMenuBar',
+    /* method */ 'getMenuEntryBounds',
     /* index */ index
   )
   // TODO race condition: another menu might already be open at this point
@@ -57,8 +58,8 @@ const openMenuAtIndex = async (state, index, shouldBeFocused) => {
   })
   RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'TitleBar',
-    /* method */ 'menuOpen',
+    /* id */ 'TitleBarMenuBar',
+    /* method */ 'openMenu',
     /* unFocusIndex */ state.focusedIndex,
     /* index */ index,
     /* level */ menu.level,
@@ -92,8 +93,8 @@ export const closeMenu = async (state, keepFocus) => {
   state.isMenuOpen = false
   await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'TitleBar',
-    /* method */ 'menuClose',
+    /* id */ 'TitleBarMenuBar',
+    /* method */ 'closeMenu',
     /* unFocusIndex */ state.focusedIndex,
     /* focusIndex */ focusIndex
   )
@@ -101,7 +102,7 @@ export const closeMenu = async (state, keepFocus) => {
 
 export const toggleMenu = async (state) => {
   if (state.isMenuOpen) {
-    closeMenu(/* keepFocus */ true)
+    closeMenu(state, /* keepFocus */ true)
   } else {
     await openMenu(state, /* focus */ false)
   }
@@ -124,7 +125,7 @@ export const focusIndex = async (state, index) => {
 
 export const toggleIndex = async (state, index) => {
   if (state.isMenuOpen && state.focusedIndex === index) {
-    closeMenu(/* keepFocus */ true)
+    closeMenu(state, /* keepFocus */ true)
   } else {
     await openMenuAtIndex(state, index, /* focus */ false)
   }

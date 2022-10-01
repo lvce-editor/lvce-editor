@@ -90,8 +90,8 @@ const create$TopLevelEntry = (item) => {
 }
 
 export const getMenuEntryBounds = (state, index) => {
-  const { $TitleBarMenu } = state
-  const $MenuEntry = $TitleBarMenu.children[index]
+  const { $TitleBarMenuBar } = state
+  const $MenuEntry = $TitleBarMenuBar.children[index]
   const rect = $MenuEntry.getBoundingClientRect()
   return {
     left: rect.left,
@@ -138,9 +138,9 @@ export const openMenu = (
   Assert.number(y)
   Assert.number(width)
   Assert.number(height)
-  const { $TitleBarMenu } = state
+  const { $TitleBarMenuBar } = state
   // TODO this code is very unclean
-  $TitleBarMenu.addEventListener(
+  $TitleBarMenuBar.addEventListener(
     'mouseenter',
     ViewletTitleBarMenuBarEvents.handleMouseEnter,
     {
@@ -148,10 +148,10 @@ export const openMenu = (
     }
   )
   if (unFocusIndex !== -1) {
-    $TitleBarMenu.children[unFocusIndex].ariaExpanded = 'false'
-    $TitleBarMenu.children[unFocusIndex].removeAttribute('aria-owns')
+    $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = 'false'
+    $TitleBarMenuBar.children[unFocusIndex].removeAttribute('aria-owns')
   }
-  $TitleBarMenu.children[index].ariaExpanded = 'true'
+  $TitleBarMenuBar.children[index].ariaExpanded = 'true'
   const $$Menus = Menu.state.$$Menus
   Menu.state.$$Menus = []
   Menu.showControlled({
@@ -162,7 +162,7 @@ export const openMenu = (
     items: menuItems,
     handleKeyDown: ViewletTitleBarMenuBarEvents.handleKeyDown,
     handleFocusOut: ViewletTitleBarMenuBarEvents.handleFocusOut,
-    $Parent: state.$TitleBarMenu.children[index],
+    $Parent: $TitleBarMenuBar.children[index],
     level,
   })
   if (menuFocusedIndex !== -1) {
@@ -175,16 +175,16 @@ export const openMenu = (
 
 // TODO there need to be two variants of closeMenu: one just closes menu, another close menu and focuses top level entry
 export const closeMenu = (state, unFocusIndex, index) => {
-  const { $TitleBarMenu } = state
+  const { $TitleBarMenuBar } = state
   if (unFocusIndex !== -1) {
-    $TitleBarMenu.children[unFocusIndex].ariaExpanded = 'false'
-    $TitleBarMenu.children[unFocusIndex].removeAttribute('aria-owns')
+    $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = 'false'
+    $TitleBarMenuBar.children[unFocusIndex].removeAttribute('aria-owns')
   }
   if (index !== -1) {
-    state.$TitleBarMenu.children[index].focus()
+    $TitleBarMenuBar.children[index].focus()
   }
   Menu.hide(/* restoreFocus */ false)
-  $TitleBarMenu.removeEventListener(
+  $TitleBarMenuBar.removeEventListener(
     'mouseenter',
     ViewletTitleBarMenuBarEvents.handleMouseEnter,
     {

@@ -147,7 +147,7 @@ export const load = async (viewlet, focus = false, restore = false) => {
           /* id */ childModule.name
         )
         if (childModule.Commands) {
-          for (const [key, value] of Object.entries(module.Commands)) {
+          for (const [key, value] of Object.entries(childModule.Commands)) {
             Command.register(key, value)
           }
         }
