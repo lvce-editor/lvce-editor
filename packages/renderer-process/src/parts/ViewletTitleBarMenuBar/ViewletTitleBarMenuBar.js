@@ -5,7 +5,7 @@ import * as Widget from '../Widget/Widget.js'
 import * as MenuItem from '../MenuItem/MenuItem.js'
 
 export const create = () => {
-  const $TitleBarMenuBar = document.createElement('ul')
+  const $TitleBarMenuBar = document.createElement('div')
   $TitleBarMenuBar.id = 'TitleBarMenuBar'
   // @ts-ignore
   $TitleBarMenuBar.role = 'menubar'
@@ -75,7 +75,7 @@ export const focus = (state) => {
 // 0.19ms composite layers
 
 const create$TopLevelEntry = (item) => {
-  const $TitleBarTopLevelEntry = document.createElement('li')
+  const $TitleBarTopLevelEntry = document.createElement('div')
   $TitleBarTopLevelEntry.className = 'TitleBarTopLevelEntry'
   $TitleBarTopLevelEntry.tabIndex = -1
   $TitleBarTopLevelEntry.ariaHasPopup = 'true'
@@ -86,7 +86,6 @@ const create$TopLevelEntry = (item) => {
     $TitleBarTopLevelEntry.ariaKeyShortcuts = item.keyboardShortCut
   }
   $TitleBarTopLevelEntry.textContent = item.name
-  $TitleBarTopLevelEntry.dataset.id = item.id
   $TitleBarTopLevelEntry.id = `MenuItem-${item.id}`
   return $TitleBarTopLevelEntry
 }
@@ -101,17 +100,17 @@ export const getMenuEntryBounds = (state, index) => {
   }
 }
 
-export const setFocusIndex = (state, unFocusIndex, focusIndex) => {
+export const setFocusedIndex = (state, unFocusIndex, focusIndex) => {
   Assert.object(state)
   Assert.number(unFocusIndex)
   Assert.number(focusIndex)
-  const { $TitleBarMenu } = state
+  const { $TitleBarMenuBar } = state
   if (unFocusIndex !== -1) {
-    $TitleBarMenu.children[unFocusIndex].ariaExpanded = 'false'
-    $TitleBarMenu.children[unFocusIndex].removeAttribute('aria-owns')
+    $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = 'false'
+    $TitleBarMenuBar.children[unFocusIndex].removeAttribute('aria-owns')
   }
   if (focusIndex !== -1) {
-    $TitleBarMenu.children[focusIndex].focus()
+    $TitleBarMenuBar.children[focusIndex].focus()
   }
 }
 
@@ -235,12 +234,13 @@ export const setMenus = (state, menus) => {
   const $$NewMenus = []
   for (const menu of menus) {
     const $Menu = create$Menu()
-    const { top, left, width, height } = menu
+    const { top, left, width, height, level } = menu
     $Menu.style.width = `${width}px`
     $Menu.style.height = `${height}px`
     $Menu.style.top = `${top}px`
     $Menu.style.left = `${left}px`
     $Menu.append(...menu.items.map(MenuItem.create$MenuItem))
+    $Menu.id = `Menu-${level}`
     $$NewMenus.push($Menu)
     Widget.append($Menu)
   }

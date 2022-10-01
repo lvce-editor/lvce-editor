@@ -9,7 +9,7 @@ const getLabel = (item) => {
 }
 
 export const create$MenuItem = (item) => {
-  const $MenuItem = document.createElement('li')
+  const $MenuItem = document.createElement('div')
   switch (item.flags) {
     case MenuItemFlags.None:
     case MenuItemFlags.RestoreFocus:
