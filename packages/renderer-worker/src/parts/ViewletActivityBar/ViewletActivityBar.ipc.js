@@ -1,5 +1,5 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as ActivityBar from './ViewletActivityBar.js'
+import * as ViewletActivityBar from './ViewletActivityBar.js'
 import * as LazyCommand from '../LazyCommand/LazyCommand.js'
 
 const Imports = {
@@ -15,19 +15,19 @@ const Imports = {
 
 // prettier-ignore
 export const Commands = {
-  'ActivityBar.focus': LazyCommand.create('ActivityBar', Imports.Focus, 'focus'),
-  'ActivityBar.focusFirst': LazyCommand.create('ActivityBar', Imports.FocusFirst, 'focusFirst'),
-  'ActivityBar.focusLast': LazyCommand.create('ActivityBar', Imports.FocusLast, 'focusLast'),
-  'ActivityBar.focusNext': LazyCommand.create('ActivityBar', Imports.FocusNext, 'focusNext'),
-  'ActivityBar.focusPrevious': LazyCommand.create('ActivityBar', Imports.FocusPrevious, 'focusPrevious'),
-  'ActivityBar.getHiddenItems': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.getHiddenItems),
-  'ActivityBar.handleClick': LazyCommand.create('ActivityBar', Imports.HandleClick, 'handleClick'),
-  'ActivityBar.handleContextMenu': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.handleContextMenu),
-  'ActivityBar.handleSideBarHidden': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.handleSideBarHidden),
-  'ActivityBar.handleSideBarViewletChange': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.handleSideBarViewletChange),
-  'ActivityBar.selectCurrent': LazyCommand.create('ActivityBar',Imports.SelectCurrent, 'selectCurrent'),
-  'ActivityBar.toggleItem': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.toggleItem),
-  'ActivityBar.updateSourceControlCount': Viewlet.wrapViewletCommand('ActivityBar', ActivityBar.updateSourceControlCount),
+  'ActivityBar.focus': LazyCommand.create(ViewletActivityBar.name, Imports.Focus, 'focus'),
+  'ActivityBar.focusFirst': LazyCommand.create(ViewletActivityBar.name, Imports.FocusFirst, 'focusFirst'),
+  'ActivityBar.focusLast': LazyCommand.create(ViewletActivityBar.name, Imports.FocusLast, 'focusLast'),
+  'ActivityBar.focusNext': LazyCommand.create(ViewletActivityBar.name, Imports.FocusNext, 'focusNext'),
+  'ActivityBar.focusPrevious': LazyCommand.create(ViewletActivityBar.name, Imports.FocusPrevious, 'focusPrevious'),
+  'ActivityBar.getHiddenItems': Viewlet.wrapViewletCommand(ViewletActivityBar.name, ViewletActivityBar.getHiddenItems),
+  'ActivityBar.handleClick': LazyCommand.create(ViewletActivityBar.name, Imports.HandleClick, 'handleClick'),
+  'ActivityBar.handleContextMenu': Viewlet.wrapViewletCommand(ViewletActivityBar.name, ViewletActivityBar.handleContextMenu),
+  'ActivityBar.handleSideBarHidden': Viewlet.wrapViewletCommand(ViewletActivityBar.name, ViewletActivityBar.handleSideBarHidden),
+  'ActivityBar.handleSideBarViewletChange': Viewlet.wrapViewletCommand(ViewletActivityBar.name, ViewletActivityBar.handleSideBarViewletChange),
+  'ActivityBar.selectCurrent': LazyCommand.create(ViewletActivityBar.name,Imports.SelectCurrent, 'selectCurrent'),
+  'ActivityBar.toggleItem': Viewlet.wrapViewletCommand(ViewletActivityBar.name, ViewletActivityBar.toggleItem),
+  'ActivityBar.updateSourceControlCount': Viewlet.wrapViewletCommand(ViewletActivityBar.name, ViewletActivityBar.updateSourceControlCount),
 }
 
 export * from './ViewletActivityBar.js'
