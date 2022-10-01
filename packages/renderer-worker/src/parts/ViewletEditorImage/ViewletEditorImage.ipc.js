@@ -11,13 +11,13 @@ const Imports = {
 
 // prettier-ignore
 export const Commands = {
-  'EditorImage.copyImage': LazyCommand.create('EditorImage', Imports.CopyImage, 'copyImage'),
-  'EditorImage.handleContextMenu': LazyCommand.create('EditorImage', Imports.HandleContextMenu, 'handleContextMenu'),
-  'EditorImage.handlePointerDown': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handlePointerDown),
-  'EditorImage.handlePointerMove': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handlePointerMove),
-  'EditorImage.handlePointerUp': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handlePointerUp),
-  'EditorImage.handleWheel': Viewlet.wrapViewletCommand('EditorImage', ViewletEditorImage.handleWheel),
-  'EditorImage.copyPath': LazyCommand.create('EditorImage', Imports.CopyPath, 'copyPath'),
+  'EditorImage.copyImage': LazyCommand.create(ViewletEditorImage.name, Imports.CopyImage, 'copyImage'),
+  'EditorImage.handleContextMenu': LazyCommand.create(ViewletEditorImage.name, Imports.HandleContextMenu, 'handleContextMenu'),
+  'EditorImage.handlePointerDown': Viewlet.wrapViewletCommand(ViewletEditorImage.name, ViewletEditorImage.handlePointerDown),
+  'EditorImage.handlePointerMove': Viewlet.wrapViewletCommand(ViewletEditorImage.name, ViewletEditorImage.handlePointerMove),
+  'EditorImage.handlePointerUp': Viewlet.wrapViewletCommand(ViewletEditorImage.name, ViewletEditorImage.handlePointerUp),
+  'EditorImage.handleWheel': Viewlet.wrapViewletCommand(ViewletEditorImage.name, ViewletEditorImage.handleWheel),
+  'EditorImage.copyPath': LazyCommand.create(ViewletEditorImage.name, Imports.CopyPath, 'copyPath'),
 }
 
 export * from './ViewletEditorImage.js'

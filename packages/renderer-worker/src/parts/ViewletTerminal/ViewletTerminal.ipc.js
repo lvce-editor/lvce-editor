@@ -3,8 +3,8 @@ import * as ViewletTerminal from './ViewletTerminal.js'
 
 // prettier-ignore
 export const Commands = {
-  'Terminal.clear': Viewlet.wrapViewletCommand('Terminal', ViewletTerminal.clear),
-  'Terminal.write': Viewlet.wrapViewletCommand('Terminal', ViewletTerminal.write),
+  'Terminal.clear': Viewlet.wrapViewletCommand(ViewletTerminal.name, ViewletTerminal.clear),
+  'Terminal.write': Viewlet.wrapViewletCommand(ViewletTerminal.name, ViewletTerminal.write),
 }
 
 export * from './ViewletTerminal.js'

@@ -3,10 +3,10 @@ import * as ViewletSideBar from './ViewletSideBar.js'
 
 // prettier-ignore
 export const Commands =  {
-  'SideBar.focus': Viewlet.wrapViewletCommand('SideBar', ViewletSideBar.focus),
-  'SideBar.openViewlet': Viewlet.wrapViewletCommand('SideBar', ViewletSideBar.openViewlet),
-  'SideBar.show': Viewlet.wrapViewletCommand('SideBar', ViewletSideBar.openViewlet),
-  'SideBar.showOrHideViewlet': Viewlet.wrapViewletCommand('SideBar', ViewletSideBar.showOrHideViewlet),
+  'SideBar.focus': Viewlet.wrapViewletCommand(ViewletSideBar.name, ViewletSideBar.focus),
+  'SideBar.openViewlet': Viewlet.wrapViewletCommand(ViewletSideBar.name, ViewletSideBar.openViewlet),
+  'SideBar.show': Viewlet.wrapViewletCommand(ViewletSideBar.name, ViewletSideBar.openViewlet),
+  'SideBar.showOrHideViewlet': Viewlet.wrapViewletCommand(ViewletSideBar.name, ViewletSideBar.showOrHideViewlet),
 }
 
 export * from './ViewletSideBar.js'
