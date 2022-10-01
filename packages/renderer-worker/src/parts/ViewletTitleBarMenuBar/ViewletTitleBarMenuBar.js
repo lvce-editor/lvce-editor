@@ -194,9 +194,19 @@ export const handleKeyArrowLeft = (state) => {
 }
 
 const handleKeyArrowUpMenuOpen = (state) => {
-  // TODO
-  // Menu.focusPrevious()
-  return state
+  const { menus } = state
+  const menu = menus.at(-1)
+  const previousIndex = Menu.getIndexToFocusPrevious(menu)
+  const newMenus = [
+    {
+      ...menu,
+      focusedIndex: previousIndex,
+    },
+  ]
+  return {
+    ...state,
+    menus: newMenus,
+  }
 }
 
 const handleKeyArrowUpMenuClosed = (state) => {

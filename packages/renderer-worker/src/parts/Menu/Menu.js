@@ -352,7 +352,7 @@ export const focusLast = async () => {
 }
 
 // TODO this code seems a bit too complicated, maybe it can be simplified
-const getIndexToFocusPreviousStartingAt = (items, startIndex) => {
+export const getIndexToFocusPreviousStartingAt = (items, startIndex) => {
   for (let i = startIndex; i > startIndex - items.length; i--) {
     const index = (i + items.length) % items.length
     const item = items[index]
@@ -363,7 +363,7 @@ const getIndexToFocusPreviousStartingAt = (items, startIndex) => {
   return -1
 }
 
-const getIndexToFocusPrevious = (menu) => {
+export const getIndexToFocusPrevious = (menu) => {
   const startIndex =
     menu.focusedIndex === -1 ? menu.items.length - 1 : menu.focusedIndex - 1
   return getIndexToFocusPreviousStartingAt(menu.items, startIndex)

@@ -77,4 +77,31 @@ test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
     hasText: 'Help',
   })
   await expect(titleBarItemHelp).toHaveAttribute('id', 'TitleBarEntryActive')
+
+  // act
+  await TitleBarMenuBar.handleKeyArrowRight()
+
+  // assert
+  await expect(titleBarItemFile).toHaveAttribute('id', 'TitleBarEntryActive')
+
+  // act
+  await TitleBarMenuBar.handleKeyArrowDown()
+
+  // assert
+  await TitleBarMenuBar.handleKeyEnd()
+
+  // assert
+  const menuItemExit = Locator('.MenuItem', {
+    hasText: 'Exit',
+  })
+  await expect(menuItemExit).toBeFocused()
+
+  // act
+  await TitleBarMenuBar.handleKeyArrowUp()
+
+  // assert
+  const menuItemOpenRecent = Locator('.MenuItem', {
+    hasText: 'Open Recent',
+  })
+  await expect(menuItemOpenRecent).toBeFocused()
 })
