@@ -51,7 +51,6 @@ const openMenuAtIndex = async (state, index, shouldBeFocused) => {
   const menuFocusedIndex = shouldBeFocused
     ? Menu.getIndexToFocusNextStartingAt(items, 0)
     : -1
-  console.log({ shouldBeFocused })
   const menu = {
     id,
     items,
@@ -63,7 +62,6 @@ const openMenuAtIndex = async (state, index, shouldBeFocused) => {
     height,
   }
   const menus = [menu]
-  console.log({ index })
   return {
     ...state,
     isMenuOpen: true,
@@ -77,11 +75,9 @@ const openMenuAtIndex = async (state, index, shouldBeFocused) => {
  */
 export const openMenu = (state, focus) => {
   const { focusedIndex } = state
-  console.log({ focusedIndex })
   if (focusedIndex === -1) {
     return state
   }
-  console.log({ focus })
   return openMenuAtIndex(state, focusedIndex, focus)
 }
 
@@ -91,7 +87,6 @@ export const closeMenu = (state, keepFocus) => {
   // 1. close menu
   // 2. focus top level entry
   const newFocusedIndex = keepFocus ? focusedIndex : -1
-  console.log({ keepFocus, newFocusedIndex })
   return {
     ...state,
     menus: [],
@@ -193,7 +188,6 @@ export const handleKeyArrowUp = (state) => {
 
 export const handleKeyArrowRight = (state) => {
   const { isMenuOpen, menus } = state
-  console.log('arrow right')
   if (isMenuOpen) {
     // if menu can open sub menu to the right -> do that
     const menu = menus.at(-1)
@@ -254,19 +248,16 @@ export const handleKeyEscape = (state) => {
   if (!isMenuOpen) {
     return state
   }
-  console.log('handle key escape keep focus')
   return closeMenu(state, /* keepFocus */ true)
 }
 
 export const handleKeyArrowDown = async (state) => {
   const { isMenuOpen } = state
-  console.log('title bar arrow down', { isMenuOpen })
   if (isMenuOpen) {
     // TODO
     // Menu.focusNext()
     return state
   }
-  console.log('arrow down', 'focus true')
   return openMenu(state, /* focus */ true)
 }
 
@@ -294,7 +285,6 @@ const renderFocusedIndex = {
     )
   },
   apply(oldState, newState) {
-    console.log('render focused index', newState.focusedIndex)
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'TitleBarMenuBar',
@@ -307,11 +297,9 @@ const renderFocusedIndex = {
 
 const renderMenus = {
   isEqual(oldState, newState) {
-    console.log({ oldState, newState })
     return oldState.menus === newState.menus
   },
   apply(oldState, newState) {
-    console.log('send menus')
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'TitleBarMenuBar',

@@ -122,7 +122,6 @@ export const replace = () => {}
 // should be faster
 export const wrapViewletCommand = (id, fn) => {
   const wrappedViewletCommand = async (...args) => {
-    console.log({ id, args, name: fn.name })
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
     if (!activeInstance) {

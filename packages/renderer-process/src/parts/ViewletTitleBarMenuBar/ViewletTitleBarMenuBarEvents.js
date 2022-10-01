@@ -10,10 +10,8 @@ const isInsideTitleBarMenu = ($Element) => {
 }
 
 export const handleFocusOut = (event) => {
-  console.log('title bar focus out', event.relatedTarget)
   const $ActiveElement = event.relatedTarget
   if ($ActiveElement && isInsideTitleBarMenu($ActiveElement)) {
-    console.log('RETURN')
     return
   }
   RendererWorker.send(
@@ -24,7 +22,9 @@ export const handleFocusOut = (event) => {
 
 // TODO should only have the one listener in KeyBindings.js
 export const handleKeyDown = (event) => {
-  switch (event.key) {
+  const { key } = event
+  console.log({ key })
+  switch (key) {
     case 'ArrowDown':
       event.preventDefault()
       event.stopPropagation()
@@ -40,7 +40,6 @@ export const handleKeyDown = (event) => {
       )
       break
     case 'ArrowRight':
-      console.log('arrow right')
       event.preventDefault()
       event.stopPropagation()
       RendererWorker.send(

@@ -205,6 +205,7 @@ const create$Menu = () => {
   // @ts-ignore
   $Menu.role = 'menu'
   $Menu.tabIndex = -1
+  $Menu.onkeydown = ViewletTitleBarMenuBarEvents.handleKeyDown
   // $ContextMenu.onmousedown = contextMenuHandleMouseDown
   // TODO mousedown vs click? (click is usually better but mousedown is faster, why wait 100ms?)
   // $Menu.addEventListener('mousedown', handleMouseDown)
@@ -232,7 +233,6 @@ export const setMenus = (state, menus) => {
     Widget.remove($Menu)
   }
   const $$NewMenus = []
-  console.log({ menus })
   for (const menu of menus) {
     const $Menu = create$Menu()
     const { top, left, width, height, level, focusedIndex } = menu
@@ -241,8 +241,6 @@ export const setMenus = (state, menus) => {
     $Menu.style.top = `${top}px`
     $Menu.style.left = `${left}px`
     $Menu.append(...menu.items.map(MenuItem.create$MenuItem))
-    console.log({ menu })
-
     $Menu.id = `Menu-${level}`
     $$NewMenus.push($Menu)
     Widget.append($Menu)
