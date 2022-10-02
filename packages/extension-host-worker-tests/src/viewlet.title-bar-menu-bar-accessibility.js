@@ -6,9 +6,9 @@
 // orca says: "File collapsed, opens menu"
 
 // expand file menu
-// nvda says:  "References Tree View"
-// windows narrator says:  "References Tree"
-// orca says:  "References Tree"
+// nvda says: ""
+// windows narrator says: ""
+// orca says: "Expanded, menu, new file"
 
 test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
   // assert
@@ -51,6 +51,12 @@ test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
   await expect(titleBarItemFile).toHaveAttribute('id', 'TitleBarEntryActive')
   await expect(titleBarItemFile).toHaveAttribute('aria-expanded', 'false')
   await expect(titleBarItemFile).toHaveAttribute('aria-owns', null)
+
+  // act
+  await TitleBarMenuBar.handleKeyEnd()
+  await TitleBarMenuBar.handleKeyArrowUp()
+  const menuItemOpenRecent = Locator('.MenuItem', { hasText: 'Open Recent' })
+  await expect(menuItemOpenRecent).toBeFocused()
 
   // act
   await TitleBarMenuBar.handleKeyArrowRight()

@@ -211,6 +211,7 @@ const handleKeyArrowUpMenuOpen = (state) => {
   const menu = menus.at(-1)
   const previousIndex = Menu.getIndexToFocusPrevious(menu)
   const newMenus = [
+    ...menus.slice(0, menus.length - 1),
     {
       ...menu,
       focusedIndex: previousIndex,
@@ -243,7 +244,7 @@ const handleKeyArrowRightMenuOpen = async (state) => {
     const subMenu = {
       level: menus.length,
       items: subMenuEntries,
-      focusedIndex: -1,
+      focusedIndex: 0,
       top: top + focusedIndex * 25,
       left: left + Menu.MENU_WIDTH,
     }
@@ -255,6 +256,7 @@ const handleKeyArrowRightMenuOpen = async (state) => {
       menus: newMenus,
     }
   }
+  return focusNext(state)
 }
 
 const handleKeyArrowRightMenuClosed = focusNext
@@ -357,9 +359,10 @@ export const handleKeyEscape = (state) => {
 
 const handleKeyArrowDownMenuOpen = (state) => {
   const { menus } = state
-  const menu = menus[0]
+  const menu = menus.at(-1)
   const newFocusedIndex = Menu.getIndexToFocusNext(menu)
   const newMenus = [
+    ...menus.slice(0, -1),
     {
       ...menu,
       focusedIndex: newFocusedIndex,
