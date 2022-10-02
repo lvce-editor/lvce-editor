@@ -60,7 +60,6 @@ test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
   await expect(menuItemOpenRecent).toHaveAttribute('aria-expanded', 'true')
   await expect(menuItemOpenRecent).toHaveAttribute('aria-owns', 'Menu-1')
 
-  console.log('arrow left')
   // act
   await TitleBarMenuBar.handleKeyArrowLeft()
 

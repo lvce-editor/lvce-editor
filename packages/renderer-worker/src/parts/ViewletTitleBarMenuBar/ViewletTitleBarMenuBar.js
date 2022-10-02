@@ -244,7 +244,6 @@ const handleKeyArrowRightMenuOpen = async (state) => {
   }
   const item = items[focusedIndex]
   if (item.flags === MenuItemFlags.SubMenu) {
-    console.log({ top, left })
     const subMenuEntries = await MenuEntries.getMenuEntries(item.id)
     const subMenu = {
       level: menus.length,
