@@ -270,6 +270,9 @@ export const setMenus = (state, changes) => {
       if (focusedIndex !== -1) {
         const $Child = $Menu.children[focusedIndex]
         $Child.classList.add('Focused')
+        if (level === $$Menus.length - 1) {
+          $Child.focus()
+        }
       }
     } else if (type === 'closeMenus') {
       const keepCount = change[1]

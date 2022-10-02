@@ -73,6 +73,9 @@ export const handleMenuMouseOver = (event) => {
   const { target } = event
   const $Menu = target.closest('.Menu')
   const index = FindIndex.findIndex($Menu, target)
+  if (index === -1) {
+    return
+  }
   const { id } = $Menu
   const level = parseInt(id.slice(5))
   RendererWorker.send(

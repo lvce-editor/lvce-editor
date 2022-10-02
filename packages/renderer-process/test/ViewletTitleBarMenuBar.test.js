@@ -105,12 +105,12 @@ test.skip('openMenu - focus on menuBar', () => {
     {
       id: 'undo',
       name: 'Undo',
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
     {
       id: 'redo',
       name: 'Redo',
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
   ]
   const $ViewletTitleBarMenuBar =
@@ -145,12 +145,12 @@ test.skip('openMenu - focus on menu', () => {
     {
       id: 'undo',
       name: 'Undo',
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
     {
       id: 'redo',
       name: 'Redo',
-      flags: /* None */ 0,
+      flags: MenuItemFlags.None,
     },
   ]
   const $ViewletTitleBarMenuBar =

@@ -474,8 +474,10 @@ const renderMenus = {
     const commonLength = Math.min(oldLength, newLength)
     const changes = []
     for (let i = 0; i < commonLength; i++) {
-      if (oldMenus[i] !== newMenus[i]) {
-        changes.push([/* method */ 'updateMenu', /* newMenu */ newMenus[i]])
+      const oldMenu = oldMenus[i]
+      const newMenu = newMenus[i]
+      if (oldMenu !== newMenu) {
+        changes.push([/* method */ 'updateMenu', /* newMenu */ newMenu])
       }
     }
     const difference = newLength - oldLength
