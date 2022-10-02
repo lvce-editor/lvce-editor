@@ -23,6 +23,7 @@ export const Commands = {
   'TitleBarMenuBar.toggleIndex': Viewlet.wrapViewletCommand('TitleBarMenuBar', ViewletTitleBarMenuBar.toggleIndex),
   'TitleBarMenuBar.toggleMenu': Viewlet.wrapViewletCommand('TitleBarMenuBar', ViewletTitleBarMenuBar.toggleMenu),
   'TitleBarMenuBar.handleMenuMouseOver': Viewlet.wrapViewletCommand('TitleBarMenuBar', ViewletTitleBarMenuBar.handleMenuMouseOver),
+  'TitleBarMenuBar.handleMenuMouseDown': Viewlet.wrapViewletCommand('TitleBarMenuBar', ViewletTitleBarMenuBar.handleMenuMouseDown),
 }
 
 export * from './ViewletTitleBarMenuBar.js'

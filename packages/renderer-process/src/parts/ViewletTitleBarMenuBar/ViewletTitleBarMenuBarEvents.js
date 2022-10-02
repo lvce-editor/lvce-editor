@@ -69,17 +69,31 @@ export const handleClick = (event) => {
   )
 }
 
-export const handleMenuMouseOver = (event) => {
+const getLevelAndIndex = (event) => {
   const { target } = event
   const $Menu = target.closest('.Menu')
   const index = FindIndex.findIndex($Menu, target)
-  if (index === -1) {
-    return
-  }
   const { id } = $Menu
   const level = parseInt(id.slice(5))
+  return {
+    level,
+    index,
+  }
+}
+
+export const handleMenuMouseOver = (event) => {
+  const { level, index } = getLevelAndIndex(event)
   RendererWorker.send(
     /* TitleBarMenuBar.handleMenuMouseOver */ 'TitleBarMenuBar.handleMenuMouseOver',
+    /* level */ level,
+    /* index */ index
+  )
+}
+
+export const handleMenuMouseDown = (event) => {
+  const { level, index } = getLevelAndIndex(event)
+  RendererWorker.send(
+    /* TitleBarMenuBar.handleMenuMouseDown */ 'TitleBarMenuBar.handleMenuMouseDown',
     /* level */ level,
     /* index */ index
   )

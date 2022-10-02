@@ -243,6 +243,7 @@ export const setMenus = (state, changes) => {
       const menu = change[1]
       const $Menu = create$Menu()
       $Menu.onmouseover = ViewletTitleBarMenuBarEvents.handleMenuMouseOver
+      $Menu.onmousedown = ViewletTitleBarMenuBarEvents.handleMenuMouseDown
       const { top, left, width, height, level, focusedIndex } = menu
       $Menu.style.width = `${width}px`
       $Menu.style.height = `${height}px`

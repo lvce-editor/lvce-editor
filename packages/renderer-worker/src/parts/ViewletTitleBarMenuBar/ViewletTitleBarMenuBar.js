@@ -4,6 +4,7 @@ import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuBarEntries.js'
+import * as Command from '../Command/Command.js'
 
 export const name = 'TitleBarMenuBar'
 
@@ -395,7 +396,6 @@ export const handleMenuMouseOver = async (state, level, index) => {
   }
   const item = items[index]
   if (item.flags === MenuItemFlags.SubMenu) {
-    console.log()
     const item = items[index]
     const subMenuEntries = await MenuEntries.getMenuEntries(item.id)
     const subMenu = {
@@ -426,6 +426,66 @@ export const handleMenuMouseOver = async (state, level, index) => {
     ...state,
     menus: newMenus,
   }
+}
+
+const selectIndexNone = async (state, item) => {
+  const args = item.args || []
+  await Command.execute(item.command, ...args)
+  return {
+    ...state,
+    menus: [],
+    isMenuOpen: false,
+  }
+}
+
+const selectIndexRestoreFocus = async (state, item) => {
+  const args = item.args || []
+  await Command.execute(item.command, ...args)
+  return {
+    ...state,
+    menus: [],
+    isMenuOpen: false,
+  }
+}
+
+const selectIndexSubMenu = async (state, menu, index) => {
+  const { menus } = state
+  const { items, top, left, level } = menu
+  const item = items[index]
+  const subMenuEntries = await MenuEntries.getMenuEntries(item.id)
+  const subMenu = {
+    level: menus.length,
+    items: subMenuEntries,
+    focusedIndex: -1,
+    top: top + index * 25,
+    left: left + Menu.MENU_WIDTH,
+  }
+  const newParentMenu = {
+    ...menu,
+    focusedIndex: index,
+  }
+  const newMenus = [...menus.slice(0, level - 1), newParentMenu, subMenu]
+  return {
+    ...state,
+    menus: newMenus,
+  }
+}
+
+export const handleMenuMouseDown = (state, level, index) => {
+  const { menus } = state
+  const menu = menus[level]
+  const item = menu.items[index]
+  switch (item.flags) {
+    case MenuItemFlags.None:
+      return selectIndexNone(state, item)
+    case MenuItemFlags.SubMenu:
+      return selectIndexSubMenu(state, menu, index)
+    case MenuItemFlags.RestoreFocus:
+      return selectIndexRestoreFocus(state, item)
+    default:
+      break
+  }
+  return state
 }
 
 export const hasFunctionalRender = true
