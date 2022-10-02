@@ -266,13 +266,16 @@ export const setMenus = (state, changes) => {
       $Menu.style.height = `${height}px`
       $Menu.style.top = `${top}px`
       $Menu.style.left = `${left}px`
-      $Menu.replaceChildren(...items.map(MenuItem.create$MenuItem))
+      // TODO recycle menu item nodes
+      const $$Children = items.map(MenuItem.create$MenuItem)
       if (focusedIndex !== -1) {
-        const $Child = $Menu.children[focusedIndex]
+        const $Child = $$Children[focusedIndex]
         $Child.classList.add('Focused')
-        if (level === $$Menus.length - 1) {
-          $Child.focus()
-        }
+      }
+      $Menu.replaceChildren(...$$Children)
+      if (focusedIndex !== -1 && level === $$Menus.length - 1) {
+        const $Child = $Menu.children[focusedIndex]
+        $Child.focus()
       }
     } else if (type === 'closeMenus') {
       const keepCount = change[1]
