@@ -7,8 +7,6 @@ export const setText = Editor.setText
 
 export const setSelections = Editor.setSelections
 
-export const setLineNumbers = Editor.setLineNumbers
-
 export const handleError = (state, error) => {
   state.$Viewlet.textContent = error
 }
