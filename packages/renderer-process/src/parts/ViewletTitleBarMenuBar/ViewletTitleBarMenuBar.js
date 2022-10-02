@@ -272,6 +272,7 @@ export const setMenus = (state, changes) => {
     } else if (type === 'updateMenu') {
       const menu = change[1]
       const newLength = change[2]
+      const replaceItems = change[3]
       const { level, top, left, width, height, focusedIndex, items, expanded } =
         menu
       const $Menu = $$Menus[level]

@@ -402,6 +402,9 @@ export const handleMenuMouseOver = async (state, level, index) => {
   const { items, focusedIndex, top, left } = menu
   const item = items[index]
   if (focusedIndex === index) {
+    if (index === -1) {
+      return state
+    }
     if (item.flags === MenuItemFlags.SubMenu && level === menus.length - 2) {
       const subMenu = menus[level + 1]
       if (subMenu.focusedIndex !== -1) {
@@ -417,6 +420,19 @@ export const handleMenuMouseOver = async (state, level, index) => {
       }
     }
     return state
+  }
+  if (index === -1) {
+    const newMenus = [
+      ...menus.slice(0, level),
+      {
+        ...menu,
+        focusedIndex: -1,
+      },
+    ]
+    return {
+      ...state,
+      menus: newMenus,
+    }
   }
   if (item.flags === MenuItemFlags.SubMenu) {
     const item = items[index]
@@ -565,7 +581,7 @@ const renderMenus = {
         changes.push([
           /* method */ 'updateMenu',
           /* newMenu */ newMenu,
-          newLength,
+          /* newLength */ newLength,
         ])
       }
     }
