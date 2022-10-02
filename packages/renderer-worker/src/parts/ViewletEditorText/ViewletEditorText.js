@@ -54,42 +54,6 @@ export const create = (id, uri, left, top, width, height) => {
   }
 }
 
-// export const getChildren = (state) => {
-//   const { top, left, width, height } = state
-//   const gutterWidth = 20
-//   const contentLeft = left + gutterWidth
-//   return [
-//     {
-//       id: 'LayerText',
-//       top,
-//       left: contentLeft,
-//       width,
-//       height,
-//     },
-//     {
-//       id: 'LayerCursor',
-//       top,
-//       left: contentLeft,
-//       width,
-//       height,
-//     },
-//     {
-//       id: 'LayerSelection',
-//       top,
-//       left: contentLeft,
-//       width,
-//       height,
-//     },
-//     {
-//       id: 'LayerGutter',
-//       top,
-//       left,
-//       width: gutterWidth,
-//       height,
-//     },
-//   ]
-// }
-
 export const saveState = (state) => {
   return {
     selections: [...Array.from(state.selections)],
@@ -122,7 +86,6 @@ export const loadContent = async (state, savedState) => {
   const newState = Editor.setText(state, content)
   const savedSelections = getSavedSelections(savedState)
   const savedFocus = getSavedFocus(savedState)
-  const lineNumbers = Preferences.get('editor.lineNumbers')
   return {
     ...newState,
     rowHeight,
@@ -131,7 +94,6 @@ export const loadContent = async (state, savedState) => {
     tokenizer,
     selections: savedSelections,
     focused: savedFocus,
-    lineNumbers,
   }
 }
 
