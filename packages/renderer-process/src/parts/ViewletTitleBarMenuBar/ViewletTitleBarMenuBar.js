@@ -235,39 +235,49 @@ const create$Menu = () => {
 }
 
 // TODO recycle menus
-export const setMenus = (state, menus) => {
+export const setMenus = (state, changes) => {
   const { $$Menus } = state
-  for (const $Menu of $$Menus) {
-    Widget.remove($Menu)
-  }
-  const $$NewMenus = []
-  for (const menu of menus) {
-    const $Menu = create$Menu()
-    $Menu.onmouseover = ViewletTitleBarMenuBarEvents.handleMenuMouseOver
-    const { top, left, width, height, level, focusedIndex } = menu
-    $Menu.style.width = `${width}px`
-    $Menu.style.height = `${height}px`
-    $Menu.style.top = `${top}px`
-    $Menu.style.left = `${left}px`
-    $Menu.append(...menu.items.map(MenuItem.create$MenuItem))
-    $Menu.id = `Menu-${level}`
-    if (focusedIndex !== -1) {
+  for (const change of changes) {
+    const type = change[0]
+    if (type === 'addMenu') {
+      const menu = change[1]
+      const $Menu = create$Menu()
+      $Menu.onmouseover = ViewletTitleBarMenuBarEvents.handleMenuMouseOver
+      const { top, left, width, height, level, focusedIndex } = menu
+      $Menu.style.width = `${width}px`
+      $Menu.style.height = `${height}px`
+      $Menu.style.top = `${top}px`
+      $Menu.style.left = `${left}px`
+      $Menu.append(...menu.items.map(MenuItem.create$MenuItem))
+      $Menu.id = `Menu-${level}`
+      Widget.append($Menu)
+      if (focusedIndex !== -1) {
+        const $Child = $Menu.children[focusedIndex]
+        $Child.classList.add('Focused')
+        // @ts-ignore
+        $Child.focus()
+      }
+      $$Menus.push($Menu)
+    } else if (type === 'updateMenu') {
+      const menu = change[1]
+      const { level, top, left, width, height, focusedIndex } = menu
+      const $Menu = $$Menus[level]
+      $Menu.style.width = `${width}px`
+      $Menu.style.height = `${height}px`
+      $Menu.style.top = `${top}px`
+      $Menu.style.left = `${left}px`
+      if (focusedIndex !== -1) {
+        const $Child = $Menu.children[focusedIndex]
+        $Child.classList.add('Focused')
+      }
+      // TODO
+    } else if (type === 'closeMenus') {
+      const keepCount = change[1]
+      const $$ToDispose = $$Menus.slice(keepCount)
+      for (const $ToDispose of $$ToDispose) {
+        Widget.remove($ToDispose)
+      }
+      $$Menus.length = keepCount
     }
-    $$NewMenus.push($Menu)
   }
-  for (const $Menu of $$NewMenus) {
-    Widget.append($Menu)
-  }
-  if (menus.length > 0) {
-    const lastMenu = menus.at(-1)
-    const $LastMenu = $$NewMenus.at(-1)
-    const { focusedIndex } = lastMenu
-    if (focusedIndex !== -1) {
-      const $Child = $LastMenu.children[focusedIndex]
-      $Child.classList.add('Focused')
-      // @ts-ignore
-      $Child.focus()
-    }
-  }
-  state.$$Menus = $$NewMenus
 }

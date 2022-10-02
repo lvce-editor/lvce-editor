@@ -467,11 +467,28 @@ const renderMenus = {
     return oldState.menus === newState.menus
   },
   apply(oldState, newState) {
+    const oldMenus = oldState.menus
+    const newMenus = newState.menus
+    const oldLength = oldMenus.length
+    const newLength = newMenus.length
+    const commonLength = Math.min(oldLength, newLength)
+    const changes = []
+    for (let i = 0; i < commonLength; i++) {
+      if (oldMenus[i] !== newMenus[i]) {
+        changes.push([/* method */ 'updateMenu', /* newMenu */ newMenus[i]])
+      }
+    }
+    const difference = newLength - oldLength
+    if (difference > 0) {
+      changes.push(['addMenu', newMenus.at(-1)])
+    } else if (difference < 0) {
+      changes.push(['closeMenus', newLength])
+    }
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'TitleBarMenuBar',
       /* method */ 'setMenus',
-      /* menus */ newState.menus,
+      /* changes */ changes,
     ]
   },
 }
