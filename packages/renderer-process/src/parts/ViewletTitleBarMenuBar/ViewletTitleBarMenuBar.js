@@ -243,6 +243,7 @@ export const setMenus = (state, menus) => {
   const $$NewMenus = []
   for (const menu of menus) {
     const $Menu = create$Menu()
+    $Menu.onmouseover = ViewletTitleBarMenuBarEvents.handleMenuMouseOver
     const { top, left, width, height, level, focusedIndex } = menu
     $Menu.style.width = `${width}px`
     $Menu.style.height = `${height}px`
@@ -253,9 +254,17 @@ export const setMenus = (state, menus) => {
     if (focusedIndex !== -1) {
     }
     $$NewMenus.push($Menu)
+  }
+  for (const $Menu of $$NewMenus) {
     Widget.append($Menu)
+  }
+  if (menus.length > 0) {
+    const lastMenu = menus.at(-1)
+    const $LastMenu = $$NewMenus.at(-1)
+    const { focusedIndex } = lastMenu
     if (focusedIndex !== -1) {
-      const $Child = $Menu.children[focusedIndex]
+      const $Child = $LastMenu.children[focusedIndex]
+      $Child.classList.add('Focused')
       // @ts-ignore
       $Child.focus()
     }

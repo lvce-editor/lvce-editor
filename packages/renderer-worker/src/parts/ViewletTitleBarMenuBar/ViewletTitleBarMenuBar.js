@@ -386,6 +386,48 @@ export const handleMouseOver = (state, index) => {
   return state
 }
 
+export const handleMenuMouseOver = async (state, level, index) => {
+  const { menus } = state
+  const menu = menus[level]
+  const { items, focusedIndex, top, left } = menu
+  if (focusedIndex === index) {
+    return state
+  }
+  const item = items[index]
+  if (item.flags === MenuItemFlags.SubMenu) {
+    console.log()
+    const item = items[index]
+    const subMenuEntries = await MenuEntries.getMenuEntries(item.id)
+    const subMenu = {
+      level: menus.length,
+      items: subMenuEntries,
+      focusedIndex: -1,
+      top: top + index * 25,
+      left: left + Menu.MENU_WIDTH,
+    }
+    const newParentMenu = {
+      ...menu,
+      focusedIndex: index,
+    }
+    const newMenus = [...menus.slice(0, level - 1), newParentMenu, subMenu]
+    return {
+      ...state,
+      menus: newMenus,
+    }
+  }
+  const newMenus = [
+    ...menus.slice(0, level),
+    {
+      ...menu,
+      focusedIndex: index,
+    },
+  ]
+  return {
+    ...state,
+    menus: newMenus,
+  }
+}
+
 export const hasFunctionalRender = true
 
 const renderTitleBarEntries = {

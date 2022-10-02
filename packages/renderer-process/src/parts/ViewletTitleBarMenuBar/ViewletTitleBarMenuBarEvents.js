@@ -1,6 +1,7 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as MouseEventTypes from '../MouseEventType/MouseEventType.js'
 import * as Focus from '../Focus/Focus.js'
+import * as FindIndex from '../../shared/findIndex.js'
 
 const isInsideTitleBarMenu = ($Element) => {
   return (
@@ -64,6 +65,19 @@ export const handleClick = (event) => {
   // event.preventDefault()
   RendererWorker.send(
     /* TitleBarMenuBar.toggleIndex */ 'TitleBarMenuBar.toggleIndex',
+    /* index */ index
+  )
+}
+
+export const handleMenuMouseOver = (event) => {
+  const { target } = event
+  const $Menu = target.closest('.Menu')
+  const index = FindIndex.findIndex($Menu, target)
+  const { id } = $Menu
+  const level = parseInt(id.slice(5))
+  RendererWorker.send(
+    /* TitleBarMenuBar.handleMenuMouseOver */ 'TitleBarMenuBar.handleMenuMouseOver',
+    /* level */ level,
     /* index */ index
   )
 }
