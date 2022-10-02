@@ -531,7 +531,7 @@ test('handleKeyArrowRight - open sub menu', async () => {
         },
         {
           level: 1,
-          focusedIndex: -1,
+          focusedIndex: 0,
           items: [
             {
               label: 'file-1.txt',
@@ -1049,6 +1049,92 @@ test('handleMouseOverMenu - open sub menu', async () => {
             flags: MenuItemFlags.SubMenu,
             id: MenuEntryId.OpenRecent,
             label: 'Open Recent',
+          },
+        ],
+      },
+    ],
+  }
+  expect(
+    await ViewletTitleBarMenuBar.handleMenuMouseOver(state, 0, 2)
+  ).toMatchObject({
+    menus: [
+      {
+        level: 0,
+        focusedIndex: 2,
+        items: [
+          {
+            flags: MenuItemFlags.Disabled,
+            id: 'newFile',
+            label: 'New File',
+          },
+          {
+            flags: MenuItemFlags.Disabled,
+            id: 'newWindow',
+            label: 'New Window',
+          },
+          {
+            flags: MenuItemFlags.SubMenu,
+            id: MenuEntryId.OpenRecent,
+            label: 'Open Recent',
+          },
+        ],
+      },
+      {
+        level: 1,
+        focusedIndex: -1,
+        items: [
+          {
+            flags: MenuItemFlags.None,
+            label: 'file-1.txt',
+          },
+          {
+            flags: MenuItemFlags.None,
+            label: 'file-2.txt',
+          },
+        ],
+      },
+    ],
+  })
+})
+
+test('handleMouseOverMenu - unfocus sub menu', async () => {
+  const state = {
+    ...ViewletTitleBarMenuBar.create(),
+    focusedIndex: 0,
+    isMenuOpen: true,
+    menus: [
+      {
+        level: 0,
+        focusedIndex: 2,
+        items: [
+          {
+            flags: MenuItemFlags.Disabled,
+            id: 'newFile',
+            label: 'New File',
+          },
+          {
+            flags: MenuItemFlags.Disabled,
+            id: 'newWindow',
+            label: 'New Window',
+          },
+          {
+            flags: MenuItemFlags.SubMenu,
+            id: MenuEntryId.OpenRecent,
+            label: 'Open Recent',
+          },
+        ],
+      },
+      {
+        level: 1,
+        focusedIndex: 1,
+        items: [
+          {
+            flags: MenuItemFlags.None,
+            label: 'file-1.txt',
+          },
+          {
+            flags: MenuItemFlags.None,
+            label: 'file-2.txt',
           },
         ],
       },

@@ -290,9 +290,13 @@ export const setMenus = (state, changes) => {
         }
       }
       $Menu.replaceChildren(...$$Children)
-      if (focusedIndex !== -1 && level === newLength - 1) {
-        const $Child = $Menu.children[focusedIndex]
-        $Child.focus()
+      if (level === newLength - 1) {
+        if (focusedIndex === -1) {
+          $Menu.focus()
+        } else {
+          const $Child = $Menu.children[focusedIndex]
+          $Child.focus()
+        }
       }
     } else if (type === 'closeMenus') {
       const keepCount = change[1]

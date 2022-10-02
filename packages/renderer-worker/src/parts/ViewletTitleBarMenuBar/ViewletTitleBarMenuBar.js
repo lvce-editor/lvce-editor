@@ -400,10 +400,24 @@ export const handleMenuMouseOver = async (state, level, index) => {
   const { menus } = state
   const menu = menus[level]
   const { items, focusedIndex, top, left } = menu
+  const item = items[index]
   if (focusedIndex === index) {
+    if (item.flags === MenuItemFlags.SubMenu && level === menus.length - 2) {
+      const subMenu = menus[level + 1]
+      if (subMenu.focusedIndex !== -1) {
+        const newSubMenu = {
+          ...subMenu,
+          focusedIndex: -1,
+        }
+        const newMenus = [...menus.slice(0, -1), newSubMenu]
+        return {
+          ...state,
+          menus: newMenus,
+        }
+      }
+    }
     return state
   }
-  const item = items[index]
   if (item.flags === MenuItemFlags.SubMenu) {
     const item = items[index]
     const subMenuEntries = await MenuEntries.getMenuEntries(item.id)
