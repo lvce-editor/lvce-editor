@@ -4,7 +4,6 @@
   "editor.fontSize": 15,
   "editor.fontFamily": "'Fira Code'",
   "editor.lineHeight": 20,
-  "editor.lineNumbers": true,
 
   "extensions.autoUpdate": true,
 
