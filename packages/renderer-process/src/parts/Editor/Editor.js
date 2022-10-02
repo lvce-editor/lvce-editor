@@ -54,9 +54,6 @@ export const create = () => {
   const $LayerText = document.createElement('div')
   $LayerText.className = 'EditorRows'
 
-  const $LayerGutter = document.createElement('div')
-  $LayerGutter.className = 'EditorGutter'
-
   $LayerText.addEventListener('mousedown', EditorEvents.handleMouseDown)
 
   const $ScrollBarThumb = document.createElement('div')
@@ -93,7 +90,6 @@ export const create = () => {
   const $EditorLayers = document.createElement('div')
   $EditorLayers.className = 'EditorLayers'
   $EditorLayers.append(
-    $LayerGutter,
     $LayerSelections,
     $LayerText,
     $LayerCursor,
