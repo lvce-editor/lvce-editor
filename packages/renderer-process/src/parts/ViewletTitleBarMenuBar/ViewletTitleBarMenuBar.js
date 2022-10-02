@@ -260,17 +260,17 @@ export const setMenus = (state, changes) => {
       $$Menus.push($Menu)
     } else if (type === 'updateMenu') {
       const menu = change[1]
-      const { level, top, left, width, height, focusedIndex } = menu
+      const { level, top, left, width, height, focusedIndex, items } = menu
       const $Menu = $$Menus[level]
       $Menu.style.width = `${width}px`
       $Menu.style.height = `${height}px`
       $Menu.style.top = `${top}px`
       $Menu.style.left = `${left}px`
+      $Menu.replaceChildren(...items.map(MenuItem.create$MenuItem))
       if (focusedIndex !== -1) {
         const $Child = $Menu.children[focusedIndex]
         $Child.classList.add('Focused')
       }
-      // TODO
     } else if (type === 'closeMenus') {
       const keepCount = change[1]
       const $$ToDispose = $$Menus.slice(keepCount)
