@@ -518,6 +518,8 @@ const renderFocusedIndex = {
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldState.focusedIndex,
       /* newfocusedIndex */ newState.focusedIndex,
+      /* oldIsMenuOpen */ oldState.isMenuOpen,
+      /* newIsMenuOpen */ newState.isMenuOpen,
     ]
   },
 }

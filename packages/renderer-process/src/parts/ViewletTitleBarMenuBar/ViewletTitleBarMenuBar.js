@@ -105,7 +105,13 @@ export const getMenuEntryBounds = (state, index) => {
   }
 }
 
-export const setFocusedIndex = (state, unFocusIndex, focusIndex) => {
+export const setFocusedIndex = (
+  state,
+  unFocusIndex,
+  focusIndex,
+  oldIsMenuOpen,
+  newIsMenuOpen
+) => {
   Assert.object(state)
   Assert.number(unFocusIndex)
   Assert.number(focusIndex)
@@ -121,6 +127,10 @@ export const setFocusedIndex = (state, unFocusIndex, focusIndex) => {
     $Child.id = activeId
     $TitleBarMenuBar.focus()
     $TitleBarMenuBar.setAttribute('aria-activedescendant', activeId)
+    if (newIsMenuOpen) {
+      $Child.setAttribute('aria-owns', 'Menu-0')
+      $Child.ariaExpanded = 'true'
+    }
   }
 }
 
