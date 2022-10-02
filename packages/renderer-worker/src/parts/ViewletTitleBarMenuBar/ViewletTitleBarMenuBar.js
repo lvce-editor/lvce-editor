@@ -171,14 +171,19 @@ export const focusLast = (state) => {
   return focusIndex(state, indexToFocus)
 }
 
+const closeOneMenu = (state) => {
+  const { menus } = state
+  const newMenus = [...menus].slice(0, -1)
+  return {
+    ...state,
+    menus: newMenus,
+  }
+}
+
 const handleKeyArrowLeftMenuOpen = (state) => {
   const { menus } = state
   if (menus.length > 1) {
-    const newMenus = [...menus].slice(0, -1)
-    return {
-      ...state,
-      menus: newMenus,
-    }
+    return closeOneMenu(state)
   }
   return focusPrevious(state)
 }
@@ -336,6 +341,10 @@ export const handleKeyEnter = (state) => {
 }
 
 const handleKeyEscapeMenuOpen = (state) => {
+  const { menus } = state
+  if (menus.length > 1) {
+    return closeOneMenu(state)
+  }
   return closeMenu(state, /* keepFocus */ true)
 }
 
