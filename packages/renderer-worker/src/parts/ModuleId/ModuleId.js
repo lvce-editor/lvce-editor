@@ -46,7 +46,6 @@ export const SessionStorage = 44
 export const Test = 45
 export const TestFramework = 46
 export const TestFrameworkComponent = 47
-export const TitleBarMenu = 48
 export const Viewlet = 49
 export const ViewletQuickPick = 50
 export const Window = 51

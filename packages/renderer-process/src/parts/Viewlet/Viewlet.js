@@ -91,6 +91,10 @@ export const sendMultiple = (commands) => {
       ariaAnnounce(viewletId)
     } else if (_ === 'Viewlet.setBounds') {
       setBounds(viewletId, method, ...args)
+    } else if (_ === 'Viewlet.create') {
+      create(viewletId)
+    } else if (_ === 'Viewlet.append') {
+      append(viewletId, method)
     } else {
       invoke(viewletId, method, ...args)
     }
@@ -190,6 +194,14 @@ const ariaAnnounce = async (message) => {
   AriaAlert.alert(message)
 }
 
+const append = (parentId, childId) => {
+  const parentInstance = state.instances[parentId]
+  const $Parent = parentInstance.state.$Viewlet
+  const childInstance = state.instances[childId]
+  const $Child = childInstance.state.$Viewlet
+  $Parent.append($Child)
+}
+
 export const executeCommands = (commands) => {
   for (const [command, ...args] of commands) {
     switch (command) {
@@ -210,6 +222,9 @@ export const executeCommands = (commands) => {
         break
       case 'Viewlet.ariaAnnounce':
         ariaAnnounce(...args)
+        break
+      case 'Viewlet.append':
+        append(...args)
         break
       default:
         throw new Error(`unknown command ${command}`)

@@ -59,6 +59,19 @@ const getInstanceSavedState = (savedState, id) => {
   return undefined
 }
 
+const getRenderCommands = (module, oldState, newState) => {
+  if (Array.isArray(module.render)) {
+    const commands = []
+    for (const item of module.render) {
+      if (!item.isEqual(oldState, newState)) {
+        commands.push(item.apply(oldState, newState))
+      }
+    }
+    return commands
+  }
+  return module.render(oldState, newState)
+}
+
 // TODO add lots of unit tests for this
 /**
  *
@@ -119,6 +132,41 @@ export const load = async (viewlet, focus = false, restore = false) => {
       instanceSavedState = getInstanceSavedState(stateToSave, viewlet.id)
     }
     let newState = await module.loadContent(viewletState, instanceSavedState)
+
+    const extraCommands = []
+
+    if (module.getChildren) {
+      const children = module.getChildren(newState)
+      const childModules = await Promise.all(
+        children.map((child) => child.id).map(viewlet.getModule)
+      )
+
+      for (const childModule of childModules) {
+        await RendererProcess.invoke(
+          /* Viewlet.load */ 'Viewlet.loadModule',
+          /* id */ childModule.name
+        )
+        if (childModule.Commands) {
+          for (const [key, value] of Object.entries(childModule.Commands)) {
+            Command.register(key, value)
+          }
+        }
+      }
+
+      for (const childModule of childModules) {
+        const oldState = childModule.create()
+        const newState = await childModule.loadContent(oldState)
+        const childInstance = {
+          state: newState,
+          factory: childModule,
+        }
+        ViewletStates.set(childModule.name, childInstance)
+        const commands = getRenderCommands(childModule, oldState, newState)
+        extraCommands.push(['Viewlet.create', childModule.name])
+        extraCommands.push(...commands)
+        extraCommands.push(['Viewlet.append', viewlet.id, childModule.name])
+      }
+    }
     if (focus && module.focus) {
       newState = await module.focus(newState)
     }
@@ -175,20 +223,12 @@ export const load = async (viewlet, focus = false, restore = false) => {
     }
 
     if (module.hasFunctionalRender) {
-      let commands = []
-      if (Array.isArray(module.render)) {
-        for (const item of module.render) {
-          if (!item.isEqual(viewletState, newState)) {
-            commands.push(item.apply(viewletState, newState))
-          }
-        }
-      } else {
-        commands = module.render(viewletState, newState)
-      }
+      const commands = getRenderCommands(module, viewletState, newState)
       if (viewlet.show === false) {
         const allCommands = [
           ['Viewlet.create', viewlet.id],
           ...commands,
+          ...extraCommands,
           ['Viewlet.show', viewlet.id],
         ]
         if (module.getPosition) {
@@ -203,6 +243,8 @@ export const load = async (viewlet, focus = false, restore = false) => {
         }
         return allCommands
       }
+      // console.log('else', viewlet.id, { commands })
+      commands.push(...extraCommands)
       await RendererProcess.invoke(
         /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
         /* commands */ commands

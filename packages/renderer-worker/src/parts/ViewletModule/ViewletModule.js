@@ -56,6 +56,10 @@ export const load = (moduleId) => {
       return import('../ViewletEditorFindWidget/ViewletEditorFindWidget.ipc.js')
     case ViewletModuleId.ExtensionDetail:
       return import('../ViewletExtensionDetail/ViewletExtensionDetail.ipc.js')
+    case ViewletModuleId.TitleBarButtons:
+      return import('../ViewletTitleBarButtons/ViewletTitleBarButtons.ipc.js')
+    case ViewletModuleId.TitleBarMenuBar:
+      return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }

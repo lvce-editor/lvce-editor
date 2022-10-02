@@ -106,8 +106,6 @@ export const load = (moduleId) => {
       return import('../TestFrameWork/TestFrameWork.js')
     case ModuleId.TestFrameworkComponent:
       return import('../TestFrameWorkComponent/TestFrameWorkComponent.js')
-    case ModuleId.TitleBarMenu:
-      return import('../TitleBarMenuBar/TitleBarMenuBar.ipc.js')
     case ModuleId.Url:
       return import('../Url/Url.ipc.js')
     case ModuleId.Viewlet:

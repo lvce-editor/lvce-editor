@@ -233,24 +233,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.TestFramework
     case '002':
       return ModuleId.TestFrameworkComponent
-    case 'TitleBarMenuBar.closeMenu':
-    case 'TitleBarMenuBar.focus':
-    case 'TitleBarMenuBar.focusIndex':
-    case 'TitleBarMenuBar.focusNext':
-    case 'TitleBarMenuBar.focusPrevious':
-    case 'TitleBarMenuBar.handleKeyArrowDown':
-    case 'TitleBarMenuBar.handleKeyArrowLeft':
-    case 'TitleBarMenuBar.handleKeyArrowRight':
-    case 'TitleBarMenuBar.handleKeyArrowUp':
-    case 'TitleBarMenuBar.handleKeyEnd':
-    case 'TitleBarMenuBar.handleKeyEnter':
-    case 'TitleBarMenuBar.handleKeyEscape':
-    case 'TitleBarMenuBar.handleKeyHome':
-    case 'TitleBarMenuBar.handleKeySpace':
-    case 'TitleBarMenuBar.hydrate':
-    case 'TitleBarMenuBar.openMenu':
-    case 'TitleBarMenuBar.toggleIndex':
-      return ModuleId.TitleBarMenu
     case 'Url.createObjectUrl':
     case 'Url.revokeObjectUrl':
       return ModuleId.Url

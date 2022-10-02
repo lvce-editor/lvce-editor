@@ -9,8 +9,11 @@ export const toHaveValue = (locator, { value }) => {
 }
 
 const printLocator = (locator) => {
-  if (locator._nth) {
+  if (locator._nth !== -1) {
     return `${locator._selector}:nth(${locator._nth})`
+  }
+  if (locator._hasText) {
+    return `${locator._selector} "${locator._hasText}"`
   }
   return `${locator._selector}`
 }
@@ -45,9 +48,24 @@ export const toHaveCount = (locator, { count }) => {
   return `expected ${locatorString} to have count ${count}`
 }
 
+const stringifyElement = (element) => {
+  if (element.id) {
+    return `#${element.id}`
+  }
+  if (element.className) {
+    return `.${element.className}`
+  }
+  if (element === document.body) {
+    return 'document.body'
+  }
+  return element.tagName
+}
+
 export const toBeFocused = (locator) => {
   const locatorString = printLocator(locator)
-  return `expected ${locatorString} to be focused`
+  const activeElement = document.activeElement
+  const stringifiedActiveElement = stringifyElement(activeElement)
+  return `expected ${locatorString} to be focused but active element is ${stringifiedActiveElement}`
 }
 
 export const toHaveClass = (locator, { className }) => {
