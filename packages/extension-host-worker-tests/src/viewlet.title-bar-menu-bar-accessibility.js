@@ -1,3 +1,15 @@
+// manual accessibility tests
+
+// focus menu bar
+// nvda says: ""
+// windows narrator says: ""
+// orca says: "File collapsed, opens menu"
+
+// expand file menu
+// nvda says:  "References Tree View"
+// windows narrator says:  "References Tree"
+// orca says:  "References Tree"
+
 test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
   // assert
   const titleBarMenuBar = Locator('#TitleBarMenuBar')
