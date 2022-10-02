@@ -42,16 +42,13 @@ export const loadContentEffects = () => {
 }
 
 // TODO
-// export const getChildren = (state) => {
-//   return [
-//     {
-//       id: 'SideBarHeader',
-//     },
-//     {
-//       id: 'Explorer',
-//     },
-//   ]
-// }
+export const loadChildren = () => {
+  return [
+    {
+      id: 'Explorer',
+    },
+  ]
+}
 
 export const contentLoaded = async (state) => {
   if (state.currentViewletId) {
