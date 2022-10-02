@@ -271,7 +271,9 @@ export const setMenus = (state, changes) => {
       $$Menus.push($Menu)
     } else if (type === 'updateMenu') {
       const menu = change[1]
-      const { level, top, left, width, height, focusedIndex, items } = menu
+      const newLength = change[2]
+      const { level, top, left, width, height, focusedIndex, items, expanded } =
+        menu
       const $Menu = $$Menus[level]
       $Menu.style.width = `${width}px`
       $Menu.style.height = `${height}px`
@@ -282,9 +284,13 @@ export const setMenus = (state, changes) => {
       if (focusedIndex !== -1) {
         const $Child = $$Children[focusedIndex]
         $Child.classList.add('Focused')
+        if (expanded) {
+          $Child.ariaExpanded = true
+          $Child.setAttribute('aria-owns', `Menu-${level + 1}`)
+        }
       }
       $Menu.replaceChildren(...$$Children)
-      if (focusedIndex !== -1 && level === $$Menus.length - 1) {
+      if (focusedIndex !== -1 && level === newLength - 1) {
         const $Child = $Menu.children[focusedIndex]
         $Child.focus()
       }

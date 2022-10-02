@@ -45,14 +45,6 @@ test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
   await expect(menuItemNewFile).toBeFocused()
 
   // act
-  await TitleBarMenuBar.handleKeyEscape()
-
-  // assert
-  await expect(titleBarItemFile).toHaveAttribute('id', 'TitleBarEntryActive')
-  await expect(titleBarItemFile).toHaveAttribute('aria-expanded', 'false')
-  await expect(titleBarItemFile).toHaveAttribute('aria-owns', null)
-
-  // act
   await TitleBarMenuBar.handleKeyEnd()
   await TitleBarMenuBar.handleKeyArrowUp()
   const menuItemOpenRecent = Locator('.MenuItem', { hasText: 'Open Recent' })
@@ -62,8 +54,27 @@ test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
   await TitleBarMenuBar.handleKeyArrowRight()
 
   // assert
-  const titleBarItemEdit = Locator('.TitleBarTopLevelEntry', {
-    hasText: 'Edit',
-  })
-  await expect(titleBarItemEdit).toHaveAttribute('id', 'TitleBarEntryActive')
+  const menu1 = Locator('#Menu-1')
+  const menuItem1 = menu1.locator('.MenuItem.Focused')
+  await expect(menuItem1).toBeFocused()
+  await expect(menuItemOpenRecent).toHaveAttribute('aria-expanded', 'true')
+  await expect(menuItemOpenRecent).toHaveAttribute('aria-owns', 'Menu-1')
+
+  console.log('arrow left')
+  // act
+  await TitleBarMenuBar.handleKeyArrowLeft()
+
+  // assert
+  await expect(menuItemOpenRecent).toHaveAttribute('aria-expanded', 'false')
+  await expect(menuItemOpenRecent).toHaveAttribute('aria-owns', null)
+  await expect(menuItemOpenRecent).toBeFocused()
+
+  // act
+  await TitleBarMenuBar.handleKeyEscape()
+
+  // assert
+  await expect(titleBarMenuBar).toBeFocused()
+  await expect(titleBarItemFile).toHaveAttribute('id', 'TitleBarEntryActive')
+  await expect(titleBarItemFile).toHaveAttribute('aria-expanded', 'false')
+  await expect(titleBarItemFile).toHaveAttribute('aria-owns', null)
 })

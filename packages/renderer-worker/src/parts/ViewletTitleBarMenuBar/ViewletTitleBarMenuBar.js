@@ -174,7 +174,12 @@ export const focusLast = (state) => {
 
 const closeOneMenu = (state) => {
   const { menus } = state
-  const newMenus = [...menus].slice(0, -1)
+  const parentMenu = menus.at(-2)
+  const newParentMenu = {
+    ...parentMenu,
+    expanded: false,
+  }
+  const newMenus = [...menus.slice(0, -2), newParentMenu]
   return {
     ...state,
     menus: newMenus,
@@ -248,9 +253,11 @@ const handleKeyArrowRightMenuOpen = async (state) => {
       top: top + focusedIndex * 25,
       left: left + Menu.MENU_WIDTH,
     }
-    const newMenus = [...menus, subMenu]
-    // TODO show sub menu
-    // await Menu.showSubMenu(Menu.state.menus.length - 1, menu.focusedIndex)
+    const newParentMenu = {
+      ...menu,
+      expanded: true,
+    }
+    const newMenus = [...menus.slice(0, -1), newParentMenu, subMenu]
     return {
       ...state,
       menus: newMenus,
@@ -542,7 +549,11 @@ const renderMenus = {
       const oldMenu = oldMenus[i]
       const newMenu = newMenus[i]
       if (oldMenu !== newMenu) {
-        changes.push([/* method */ 'updateMenu', /* newMenu */ newMenu])
+        changes.push([
+          /* method */ 'updateMenu',
+          /* newMenu */ newMenu,
+          newLength,
+        ])
       }
     }
     const difference = newLength - oldLength
