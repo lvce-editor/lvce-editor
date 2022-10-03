@@ -6,36 +6,47 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js',
+  '../src/parts/ExtensionHost/ExtensionHostEditor.js',
   () => {
     return {
-      executeProviders: jest.fn(() => {
+      execute: jest.fn(() => {
         throw new Error('not implemented')
       }),
     }
   }
 )
+const ExtensionHostEditor = await import(
+  '../src/parts/ExtensionHost/ExtensionHostEditor.js'
+)
 
 const ExtensionHostDiagnostic = await import(
   '../src/parts/ExtensionHost/ExtensionHostDiagnostic.js'
 )
-const ExtensionHostShared = await import(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js'
-)
 
 test('executeDiagnosticProvider - no results', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     return []
   })
+  const editor = { id: 1 }
   expect(
-    await ExtensionHostDiagnostic.executeDiagnosticProvider({ id: 1 })
+    await ExtensionHostDiagnostic.executeDiagnosticProvider(editor)
   ).toEqual([])
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledWith({
+    args: [],
+    combineResults: expect.any(Function),
+    editor,
+    event: ExtensionHostActivationEvent.OnDiagnostic,
+    method: 'ExtensionHost.executeDiagnosticProvider',
+    noProviderFoundMessage: 'no diagnostic provider found',
+    noProviderResult: [],
+  })
 })
 
 test('executeDiagnosticProvider - error', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(
