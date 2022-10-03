@@ -79,6 +79,7 @@ const getSelectionEditsSingleLineWord = (lines, selections) => {
     }
   }
   let selectionIndex = 0
+  // TODO use text document search for this
   for (let i = 0; i <= rowIndex; i++) {
     const line = lines[i]
     let columnIndex = -word.length

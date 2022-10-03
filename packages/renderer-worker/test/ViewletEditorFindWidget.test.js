@@ -76,7 +76,7 @@ test('handleInput', () => {
   })
 })
 
-test('handleInput - adjust totalMatches', () => {
+test('handleInput - adjust matchCount', () => {
   // @ts-ignore
   ViewletStates.getState.mockImplementation(() => {
     return {
@@ -87,7 +87,7 @@ test('handleInput - adjust totalMatches', () => {
   const state = ViewletEditorFindWidget.create()
   expect(ViewletEditorFindWidget.handleInput(state, 'line 1')).toMatchObject({
     value: 'line 1',
-    totalMatches: 1,
+    matchCount: 1,
   })
 })
 
@@ -109,5 +109,57 @@ test('focusPrevious', async () => {
   expect(Command.execute).toHaveBeenCalledWith(
     'Editor.setSelections',
     new Uint32Array([1, 0, 1, 0])
+  )
+})
+
+test.skip('focusNext', async () => {
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
+  // @ts-ignore
+  ViewletStates.getState.mockImplementation(() => {
+    return {
+      lines: ['line 1', 'line 2'],
+      selections: new Uint32Array([0, 0, 0, 4]),
+    }
+  })
+  const state = {
+    ...ViewletEditorFindWidget.create(),
+    matchIndex: 0,
+    matchCount: 2,
+  }
+  expect(await ViewletEditorFindWidget.focusNext(state)).toMatchObject({
+    matchIndex: 1,
+    matchCount: 2,
+  })
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'Editor.setSelections',
+    new Uint32Array([1, 0, 1, 4])
+  )
+})
+
+test.skip('focusNext - at end', async () => {
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
+  // @ts-ignore
+  ViewletStates.getState.mockImplementation(() => {
+    return {
+      lines: ['line 1', 'line 2'],
+      selections: new Uint32Array([1, 0, 1, 4]),
+    }
+  })
+  const state = {
+    ...ViewletEditorFindWidget.create(),
+    matchIndex: 1,
+    matchCount: 2,
+  }
+  expect(await ViewletEditorFindWidget.focusNext(state)).toMatchObject({
+    matchIndex: 0,
+    matchCount: 2,
+  })
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'Editor.setSelections',
+    new Uint32Array([0, 0, 0, 4])
   )
 })
