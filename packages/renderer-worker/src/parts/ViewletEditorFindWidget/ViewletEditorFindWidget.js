@@ -33,7 +33,7 @@ export const getPosition = () => {
       height: 0,
     }
   }
-  const width = 200
+  const width = 300
   const height = 30
   const paddingTop = 10
   const paddingRight = 20
