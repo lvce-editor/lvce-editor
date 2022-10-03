@@ -1,16 +1,18 @@
-import * as ExtensionHostShared from './ExtensionHostShared.js'
+import * as ExtensionHostActivationEvent from '../ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
+import * as ExtensionHostEditor from './ExtensionHostEditor.js'
 
 const combineResults = (results) => {
   return results[0]
 }
 
 export const executeSemanticTokenProvider = (editor) => {
-  return ExtensionHostShared.executeProviders({
-    event: `onSemanticTokens:${editor.languageId}`,
+  return ExtensionHostEditor.execute({
+    editor,
+    event: ExtensionHostActivationEvent.OnSemanticTokens,
     method: 'ExtensionHostSemanticTokens.executeSemanticTokenProvider',
-    params: [editor.id],
+    args: [],
     noProviderFoundMessage: 'No Semantic Token Provider found',
-    noProviderFoundResult: [],
     combineResults,
+    noProviderFoundResult: [],
   })
 }

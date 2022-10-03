@@ -290,6 +290,9 @@ export const load = async (viewlet, focus = false, restore = false) => {
         const handleUpdate = async () => {
           const instance = ViewletStates.getInstance(viewlet.id)
           const newState = await value(instance.state)
+          if (!newState) {
+            throw new Error('newState must be defined')
+          }
           if (!module.shouldApplyNewState(newState)) {
             console.log('[viewlet manager] return', newState)
 

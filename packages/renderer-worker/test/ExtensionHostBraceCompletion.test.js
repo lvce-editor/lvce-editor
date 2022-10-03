@@ -1,30 +1,31 @@
 import { jest } from '@jest/globals'
+import * as ExtensionHostActivationEvent from '../src/parts/ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
 jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js',
+  '../src/parts/ExtensionHost/ExtensionHostEditor.js',
   () => {
     return {
-      executeProviders: jest.fn(() => {
+      execute: jest.fn(() => {
         throw new Error('not implemented')
       }),
     }
   }
 )
+const ExtensionHostEditor = await import(
+  '../src/parts/ExtensionHost/ExtensionHostEditor.js'
+)
 
 const ExtensionHostBraceCompletion = await import(
   '../src/parts/ExtensionHost/ExtensionHostBraceCompletion.js'
 )
-const ExtensionHostShared = await import(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js'
-)
 
 test('executeBraceCompletionProvider - no brace completion', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(() => {
+  ExtensionHostEditor.execute.mockImplementation(() => {
     return false
   })
   expect(
@@ -38,30 +39,32 @@ test('executeBraceCompletionProvider - no brace completion', async () => {
 
 test('executeBraceCompletionProvider - brace completion', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(() => {
+  ExtensionHostEditor.execute.mockImplementation(() => {
     return true
   })
+  const editor = { id: 1, uri: '', languageId: 'xyz' }
   expect(
     await ExtensionHostBraceCompletion.executeBraceCompletionProvider(
-      { id: 1, uri: '', languageId: 'xyz' },
+      editor,
       0,
       '{'
     )
   ).toBe(true)
-  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledTimes(1)
-  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledWith({
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledWith({
+    editor,
     combineResults: expect.any(Function),
-    event: 'onBraceCompletion:xyz',
+    event: ExtensionHostActivationEvent.OnBraceCompletion,
     method: 'ExtensionHostBraceCompletion.executeBraceCompletionProvider',
     noProviderFoundMessage: 'no brace completion providers found',
     noProviderFoundResult: undefined,
-    params: [1, 0, '{'],
+    args: [0, '{'],
   })
 })
 
 test('executeBraceCompletionProvider - error - BraceCompletionProvider throws error', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     throw new Error(
       'Failed to execute BraceCompletion provider: TypeError: x is not a function'
     )
@@ -81,7 +84,7 @@ test('executeBraceCompletionProvider - error - BraceCompletionProvider throws er
 
 test('executeBraceCompletionProvider - missing argument openingBrace', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(() => {
+  ExtensionHostEditor.execute.mockImplementation(() => {
     return true
   })
   expect(() =>

@@ -11,6 +11,7 @@ import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -20,7 +21,7 @@ const getContent = async (uri) => {
 }
 
 // TODO how to connect this function with tokenizer?
-const handleTokenizeChange = () => {
+export const handleTokenizeChange = () => {
   const instances = ViewletStates.getAllInstances()
   const instance = instances.EditorText
   if (!instance) {
@@ -45,6 +46,7 @@ export const create = (id, uri, left, top, width, height) => {
   const newState = Editor.setBounds(state, top, left, height, COLUMN_WIDTH)
   const fileName = Workspace.pathBaseName(state.uri)
   const languageId = Languages.getLanguageId(fileName)
+  console.log('CREATE EDITOR', uri)
   return {
     ...newState,
     uri,
@@ -76,13 +78,14 @@ const getSavedFocus = (savedState) => {
 }
 
 export const loadContent = async (state, savedState) => {
+  const { uri } = state
   const rowHeight = Preferences.get('editor.lineHeight') || 20
   const fontSize = Preferences.get('editor.fontSize') || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
   const letterSpacing = Preferences.get('editor.letterSpacing') || 0.5
-  const fileName = Workspace.pathBaseName(state.uri)
+  const fileName = Workspace.pathBaseName(uri)
+  const content = await getContent(uri)
   const languageId = Languages.getLanguageId(fileName)
   const tokenizer = Tokenizer.getTokenizer(languageId)
-  const content = await getContent(state.uri)
   const newState = Editor.setText(state, content)
   const savedSelections = getSavedSelections(savedState)
   const savedFocus = getSavedFocus(savedState)
@@ -125,18 +128,19 @@ const updateSemanticTokens = async (state) => {
   }
 }
 
-const handleEditorChange = async (editor, changes) => {
+export const handleEditorChange = async (editor, changes) => {
   // await ExtensionHostTextDocument.handleEditorChange(editor, changes)
   // TODO check if semantic highlighting is enabled in settings
   await updateSemanticTokens(editor)
+  return editor
 }
 
 export const contentLoadedEffects = async (state) => {
   // TODO dispose listener
   // TODO don't like side effect here, where to put it?
-  GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
-  GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
-  GlobalEventBus.addListener('editor.change', handleEditorChange)
+  // GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
+  // GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
+  // GlobalEventBus.addListener('editor.change', handleEditorChange)
   const fileName = Workspace.pathBaseName(state.uri)
   const newLanguageId = Languages.getLanguageId(fileName)
   await Command.execute(
@@ -149,33 +153,10 @@ export const contentLoadedEffects = async (state) => {
   GlobalEventBus.emitEvent('editor.create', state)
 }
 
-const handleLanguagesChanged = async () => {
-  const instances = ViewletStates.getAllInstances()
-  const instance = instances.EditorText
-  if (!instance) {
-    console.log('no text editor')
-    return
-  }
-  const state = instance.state
+export const handleLanguagesChanged = (state) => {
   const fileName = Workspace.pathBaseName(state.uri)
   const newLanguageId = Languages.getLanguageId(fileName)
-  state.languageId = newLanguageId
-  // await ExtensionHostTextDocument.handleEditorLanguageChange(state)
-  // if (state.languageId === newLanguageId) {
-  //   return
-  // }
-  // await Promise.all([
-  //   Editor.setLanguageId(state, newLanguageId),
-  // ])
-  await Command.execute(
-    /* Editor.setLanguageId */ 'Editor.setLanguageId',
-    /* languageId */ newLanguageId
-  )
-
-  const newEditor = instances.EditorText.state
-
-  GlobalEventBus.emitEvent('editor.languageChange', newEditor, newLanguageId)
-  // console.log({ state })
+  return EditorCommandSetLanguageId.setLanguageId(state, newLanguageId)
 }
 
 export const resize = (state, dimensions) => {
@@ -202,4 +183,8 @@ export const focus = (state) => {
     ...state,
     focused: true,
   }
+}
+
+export const shouldApplyNewState = (newState) => {
+  return true
 }

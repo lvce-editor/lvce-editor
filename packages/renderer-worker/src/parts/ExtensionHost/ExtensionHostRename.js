@@ -1,14 +1,16 @@
-import * as ExtensionHostShared from './ExtensionHostShared.js'
+import * as ExtensionHostActivationEvent from '../ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
+import * as ExtensionHostEditor from './ExtensionHostEditor.js'
 
 const combineResultsPrepareRename = (results) => {
   return results[0]
 }
 
 export const executePrepareRenameProvider = (editor, offset) => {
-  return ExtensionHostShared.executeProviders({
-    event: `onRename:${editor.languageId}`,
+  return ExtensionHostEditor.execute({
+    editor,
+    event: ExtensionHostActivationEvent.OnRename,
     method: 'ExtensionHostRename.executePrepareRename',
-    params: [editor.id, offset],
+    args: [offset],
     noProviderFoundMessage: 'No rename provider found',
     combineResults: combineResultsPrepareRename,
   })
@@ -19,10 +21,11 @@ const combineResultsRename = (results) => {
 }
 
 export const executeRenameProvider = (editor, offset, newName) => {
-  return ExtensionHostShared.executeProviders({
-    event: `onRename:${editor.languageId}`,
+  return ExtensionHostEditor.execute({
+    editor,
+    event: ExtensionHostActivationEvent.OnRename,
     method: 'ExtensionHostRename.executeRename',
-    params: [editor.id, offset, newName],
+    args: [offset, newName],
     noProviderFoundMessage: 'No rename provider found',
     combineResults: combineResultsPrepareRename,
   })

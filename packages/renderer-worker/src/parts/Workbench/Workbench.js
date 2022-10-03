@@ -69,6 +69,10 @@ export const startup = async (config) => {
   await Layout.hydrate(initData)
   Performance.mark('code/didShowLayout')
 
+  Performance.mark('code/willLoadLanguages')
+  await Languages.hydrate()
+  Performance.mark('code/didLoadLanguages')
+
   LifeCycle.mark(LifeCycle.Phase.Five)
 
   Performance.mark('code/willLoadMain')
@@ -82,10 +86,6 @@ export const startup = async (config) => {
   Performance.mark('code/didLoadKeyBindings')
 
   LifeCycle.mark(LifeCycle.Phase.Seven)
-
-  Performance.mark('code/willLoadLanguages')
-  await Languages.hydrate()
-  Performance.mark('code/didLoadLanguages')
 
   Performance.mark('code/willLoadSideBar')
   if (Layout.state.sideBarVisible) {

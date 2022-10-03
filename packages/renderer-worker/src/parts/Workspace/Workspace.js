@@ -196,8 +196,7 @@ export const getHomeDir = () => {
 
 // TODO this should be in FileSystem module
 export const pathBaseName = (path) => {
-  const pathSeparator = state.pathSeparator
-  return path.slice(path.lastIndexOf(pathSeparator) + 1)
+  return path.slice(path.lastIndexOf('/') + 1)
 }
 
 // TODO this should be in FileSystem module

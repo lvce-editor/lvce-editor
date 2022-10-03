@@ -1,18 +1,20 @@
 import * as Assert from '../Assert/Assert.js'
-import * as ExtensionHostShared from './ExtensionHostShared.js'
+import * as ExtensionHostActivationEvent from '../ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
+import * as ExtensionHostEditor from './ExtensionHostEditor.js'
 
 const combineResults = (results) => {
   return results[0]
 }
 
 export const executeReferenceProvider = async (editor, offset) => {
-  const result = await ExtensionHostShared.executeProviders({
-    event: `onReferences:${editor.languageId}`,
+  const result = await ExtensionHostEditor.execute({
+    editor,
+    event: ExtensionHostActivationEvent.OnReferences,
     method: 'ExtensionHostReferences.executeReferenceProvider',
-    params: [editor.id, offset],
+    args: [offset],
     noProviderFoundMessage: 'no reference providers found',
-    noProviderFoundResult: [],
     combineResults,
+    noProviderFoundResult: [],
   })
   Assert.array(result)
   console.log({ result })

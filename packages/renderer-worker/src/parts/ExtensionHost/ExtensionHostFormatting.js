@@ -1,10 +1,15 @@
-import * as ExtensionHostShared from './ExtensionHostShared.js'
+import * as ExtensionHostActivationEvent from '../ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
+import * as ExtensionHostEditor from './ExtensionHostEditor.js'
 
 export const executeFormattingProvider = (editor) => {
-  return ExtensionHostShared.executeProvider({
-    event: `onFormatting:${editor.languageId}`,
+  return ExtensionHostEditor.execute({
+    editor,
+    event: ExtensionHostActivationEvent.OnFormatting,
     method: 'ExtensionHostFormatting.executeFormattingProvider',
-    params: [editor.id],
+    args: [],
     noProviderFoundMessage: 'No formatting provider found',
+    combineResults() {
+      return []
+    },
   })
 }

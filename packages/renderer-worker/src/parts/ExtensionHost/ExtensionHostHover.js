@@ -1,14 +1,16 @@
-import * as ExtensionHostShared from './ExtensionHostShared.js'
+import * as ExtensionHostActivationEvent from '../ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
+import * as ExtensionHostEditor from './ExtensionHostEditor.js'
 
 const combineResults = (results) => {
   return results[0]
 }
 
 export const executeHoverProvider = (editor, offset) => {
-  return ExtensionHostShared.executeProviders({
-    event: `onHover:${editor.languageId}`,
+  return ExtensionHostEditor.execute({
+    event: ExtensionHostActivationEvent.OnHover,
+    editor,
     method: 'ExtensionHostHover.execute',
-    params: [editor.id, offset],
+    args: [offset],
     noProviderFoundMessage: 'No hover provider found',
     combineResults,
   })
