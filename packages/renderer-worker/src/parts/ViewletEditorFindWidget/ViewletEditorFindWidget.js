@@ -1,15 +1,25 @@
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as TextDocumentSearch from '../TextDocumentSearch/TextDocumentSearch.js'
 import * as Command from '../Command/Command.js'
+import * as I18nString from '../I18NString/I18NString.js'
+import * as TextDocumentSearch from '../TextDocumentSearch/TextDocumentSearch.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  MatchesFoundFor: `{PH1} of {PH2} found for {PH3}`,
+  MatchOf: `{PH1} of {PH2}`,
+}
 
 export const name = 'EditorFindWidget'
 
 export const create = () => {
   return {
     value: '',
-    matchIndex: 0,
-    totalMatches: 0,
     ariaAnnouncement: '',
+    matches: new Uint32Array(),
+    matchIndex: 0,
+    matchCount: 0,
   }
 }
 
@@ -23,7 +33,7 @@ export const getPosition = () => {
       height: 0,
     }
   }
-  const width = 200
+  const width = 300
   const height = 30
   const paddingTop = 10
   const paddingRight = 20
@@ -54,13 +64,13 @@ export const loadContent = (state) => {
   const line = lines[startRowIndex]
   const value = line.slice(startColumnIndex, endColumnIndex)
   const matches = TextDocumentSearch.findMatches(lines, value)
-  const totalMatches = getMatchCount(matches)
-
+  const matchCount = getMatchCount(matches)
   return {
     ...state,
     value,
-    matchIndex: 1,
-    totalMatches,
+    matches,
+    matchIndex: 0,
+    matchCount,
   }
 }
 
@@ -68,80 +78,65 @@ export const handleInput = (state, value) => {
   // TODO get focused editor
   // highlight locations that match value
   const editor = ViewletStates.getState('EditorText')
-  const { lines, selections } = editor
-  const startRowIndex = selections[0]
-  const startColumnIndex = selections[1]
-  const endRowIndex = selections[2]
-  const endColumnIndex = selections[3]
+  const { lines } = editor
   const matches = TextDocumentSearch.findMatches(lines, value)
-  const totalMatches = getMatchCount(matches)
+  const matchCount = getMatchCount(matches)
   return {
     ...state,
+    matches,
+    matchIndex: 0,
+    matchCount,
     value,
-    totalMatches,
   }
 }
 
 // TODO this function should be synchronous
-export const focusNext = async (state) => {
-  const { value, matchIndex } = state
-  const editor = ViewletStates.getState('EditorText')
-  const { lines, selections } = editor
-  const startRowIndex = selections[0]
-  const startColumnIndex = selections[1]
-  const endRowIndex = selections[2]
-  const endColumnIndex = selections[3]
+export const focusIndex = async (state, index) => {
+  const { value, matches, matchIndex } = state
+  if (index === matchIndex) {
+    return state
+  }
   // TODO find next match and highlight it
-  const nextMatch = TextDocumentSearch.findNextMatch(
-    lines,
-    value,
-    startRowIndex + 1
-  )
+  const matchRowIndex = matches[index * 2]
+  const matchColumnIndex = matches[index * 2 + 1]
   const newSelections = new Uint32Array([
-    nextMatch.rowIndex,
-    nextMatch.columnIndex,
-    nextMatch.rowIndex,
-    nextMatch.columnIndex + value.length,
+    matchRowIndex,
+    matchColumnIndex,
+    matchRowIndex,
+    matchColumnIndex + value.length,
   ])
   // TODO set selections synchronously and render input match index,
   // input value and new selections at the same time
   await Command.execute('Editor.setSelections', newSelections)
-  // TODO reveal new position in editor
   return {
     ...state,
-    matchIndex: matchIndex + 1,
+    matchIndex: index,
   }
 }
 
-// TODO should be synchronous
-export const focusPrevious = async (state) => {
-  const { value, matchIndex } = state
-  const editor = ViewletStates.getState('EditorText')
-  const { lines, selections } = editor
-  const startRowIndex = selections[0]
-  const startColumnIndex = selections[1]
-  const endRowIndex = selections[2]
-  const endColumnIndex = selections[3]
-  // TODO find next match and highlight it
-  const nextMatch = TextDocumentSearch.findPreviousMatch(
-    lines,
-    value,
-    startRowIndex - 1
-  )
-  const newSelections = new Uint32Array([
-    nextMatch.rowIndex,
-    nextMatch.columnIndex,
-    nextMatch.rowIndex,
-    nextMatch.columnIndex + value.length,
-  ])
-  // TODO set selections synchronously and render input match index,
-  // input value and new selections at the same time
-  await Command.execute('Editor.setSelections', newSelections)
-  // TODO reveal new position in editor
-  return {
-    ...state,
-    matchIndex: matchIndex - 1,
+export const focusFirst = (state) => {
+  return focusIndex(state, 0)
+}
+
+export const focusLast = (state) => {
+  const { matchCount } = state
+  return focusIndex(state, matchCount - 1)
+}
+
+export const focusNext = (state) => {
+  const { matchIndex, matchCount } = state
+  if (matchIndex === matchCount - 1) {
+    return focusFirst(state)
   }
+  return focusIndex(state, matchIndex + 1)
+}
+
+export const focusPrevious = (state) => {
+  const { matchIndex } = state
+  if (matchIndex === 0) {
+    return focusLast(state)
+  }
+  return focusIndex(state, matchIndex - 1)
 }
 
 export const hasFunctionalRender = true
@@ -164,11 +159,14 @@ const renderMatchCount = {
   isEqual(oldState, newState) {
     return (
       oldState.matchIndex === newState.matchIndex &&
-      oldState.totalMatches === newState.totalMatches
+      oldState.matchCount === newState.matchCount
     )
   },
   apply(oldState, newState) {
-    const matchCountText = `${newState.matchIndex} of ${newState.totalMatches}`
+    const matchCountText = I18nString.i18nString(UiStrings.MatchOf, {
+      PH1: newState.matchIndex + 1,
+      PH2: newState.matchCount,
+    })
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'EditorFindWidget',
@@ -179,7 +177,12 @@ const renderMatchCount = {
 }
 
 const getAriaLabel = (state) => {
-  return `${state.matchIndex} of ${state.totalMatches} found for ${state.value}`
+  const { matchIndex, matchCount, value } = state
+  return I18nString.i18nString(UiStrings.MatchesFoundFor, {
+    PH1: matchIndex,
+    PH2: matchCount,
+    PH3: value,
+  })
 }
 
 const renderAriaAnnouncement = {
@@ -187,7 +190,7 @@ const renderAriaAnnouncement = {
     return (
       oldState.ariaAnnouncement === newState.ariaAnnouncement &&
       oldState.matchIndex === newState.matchIndex &&
-      oldState.totalMatches === newState.totalMatches &&
+      oldState.matchCount === newState.matchCount &&
       oldState.value === newState.value
     )
   },

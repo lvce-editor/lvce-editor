@@ -10,10 +10,16 @@ test('findMatches - one result', () => {
   )
 })
 
-test('findMatches - two results', () => {
+test('findMatches - two results in two rows', () => {
   expect(
     TextDocumentSearch.findMatches(['line 1', 'not match', 'line 3'], 'line')
   ).toEqual(new Uint32Array([0, 0, 2, 0]))
+})
+
+test('findMatches - two results in one row', () => {
+  expect(TextDocumentSearch.findMatches(['line 1 line 2'], 'line')).toEqual(
+    new Uint32Array([0, 0, 0, 7])
+  )
 })
 
 test('findPreviousMatch', () => {

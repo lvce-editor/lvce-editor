@@ -1,11 +1,17 @@
 export const findMatches = (lines, searchString) => {
   const { length } = lines
   const matches = []
+  const searchStringLength = searchString.length
   for (let i = 0; i < length; i++) {
     const line = lines[i]
-    const index = line.indexOf(searchString)
-    if (index !== -1) {
-      matches.push(i, index)
+    let lastMatchIndex = -searchStringLength
+    while (
+      (lastMatchIndex = line.indexOf(
+        searchString,
+        lastMatchIndex + searchStringLength
+      )) !== -1
+    ) {
+      matches.push(i, lastMatchIndex)
     }
   }
   return new Uint32Array(matches)
