@@ -30,4 +30,5 @@
 
 .EditorFindWidgetButton:focus-visible {
   outline: 1px solid green;
+  outline-offset: -1px;
 }
