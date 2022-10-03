@@ -60,7 +60,7 @@ export const loadContent = (state) => {
     ...state,
     value,
     matches,
-    matchIndex: 1,
+    matchIndex: 0,
     matchCount,
   }
 }
