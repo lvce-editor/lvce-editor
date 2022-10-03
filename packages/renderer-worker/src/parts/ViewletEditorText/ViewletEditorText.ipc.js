@@ -1,4 +1,6 @@
 import * as LazyCommand from '../LazyCommand/LazyCommand.js'
+import * as ViewletEditorText from './ViewletEditorText.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 
 // prettier-ignore
 const Imports = {
@@ -177,6 +179,13 @@ export const Commands = {
   'Editor.type': LazyCommand.create('EditorText', Imports.Type, 'editorType'),
   'Editor.undo': LazyCommand.create('EditorText', Imports.Undo, 'editorUndo'),
   'Editor.unindent': LazyCommand.create('EditorText', Imports.UnIndent, 'selectUp'),
+}
+
+// prettier-ignore
+export const events = {
+  'languages.changed': ViewletEditorText.handleLanguagesChanged,
+  'editor.change': ViewletEditorText.handleEditorChange,
+  // 'tokenizer.changed': ViewletEditorText.handleTokenizeChange,
 }
 
 export * from './ViewletEditorText.js'
