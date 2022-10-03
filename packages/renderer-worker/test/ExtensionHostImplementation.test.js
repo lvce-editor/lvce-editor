@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ExtensionHostActivationEvent from '../src/parts/ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -24,28 +25,27 @@ const ExtensionHostImplementation = await import(
 
 test('executeImplementationProvider - no implementations found', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     return []
   })
+  const editor = { id: 1, languageId: 'test' }
   expect(
-    await ExtensionHostImplementation.executeImplementationProvider(
-      { id: 1, languageId: 'test' },
-      0
-    )
+    await ExtensionHostImplementation.executeImplementationProvider(editor, 0)
   ).toEqual([])
-  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledTimes(1)
-  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledWith({
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledWith({
+    editor,
+    event: ExtensionHostActivationEvent.OnImplementation,
     combineResults: expect.any(Function),
-    event: 'onImplementation:test',
     method: 'ExtensionHostImplementation.executeImplementationProvider',
     noProviderFoundMessage: 'No implementation provider found',
-    params: [1, 0],
+    args: [0],
   })
 })
 
 test('executeImplementationProvider - single implementation found', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     return [
       {
         uri: '/test/index.js',
@@ -72,7 +72,7 @@ test('executeImplementationProvider - single implementation found', async () => 
 
 test('executeImplementationProvider - error - implementationProvider throws error', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     throw new Error(
       'Failed to execute implementation provider: TypeError: x is not a function'
     )
