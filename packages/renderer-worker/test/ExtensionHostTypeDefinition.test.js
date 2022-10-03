@@ -5,26 +5,26 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js',
+  '../src/parts/ExtensionHost/ExtensionHostEditor.js',
   () => {
     return {
-      executeProviders: jest.fn(() => {
+      execute: jest.fn(() => {
         throw new Error('not implemented')
       }),
     }
   }
 )
+const ExtensionHostEditor = await import(
+  '../src/parts/ExtensionHost/ExtensionHostEditor.js'
+)
 
 const ExtensionHostTypeDefinition = await import(
   '../src/parts/ExtensionHost/ExtensionHostTypeDefinition.js'
 )
-const ExtensionHostShared = await import(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js'
-)
 
 test('executeTypeDefinitionProvider', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     return []
   })
   expect(
@@ -37,7 +37,7 @@ test('executeTypeDefinitionProvider', async () => {
 
 test('executeTypeDefinitionProvider - error', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(

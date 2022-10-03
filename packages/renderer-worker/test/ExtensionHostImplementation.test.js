@@ -5,21 +5,21 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js',
+  '../src/parts/ExtensionHost/ExtensionHostEditor.js',
   () => {
     return {
-      executeProviders: jest.fn(async () => {
+      execute: jest.fn(() => {
         throw new Error('not implemented')
       }),
     }
   }
 )
+const ExtensionHostEditor = await import(
+  '../src/parts/ExtensionHost/ExtensionHostEditor.js'
+)
 
 const ExtensionHostImplementation = await import(
   '../src/parts/ExtensionHost/ExtensionHostImplementation.js'
-)
-const ExtensionHostShared = await import(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js'
 )
 
 test('executeImplementationProvider - no implementations found', async () => {

@@ -15,12 +15,12 @@ jest.unstable_mockModule(
     }
   }
 )
+const ExtensionHostEditor = await import(
+  '../src/parts/ExtensionHost/ExtensionHostEditor.js'
+)
 
 const ExtensionHostHover = await import(
   '../src/parts/ExtensionHost/ExtensionHostHover.js'
-)
-const ExtensionHostEditor = await import(
-  '../src/parts/ExtensionHost/ExtensionHostEditor.js'
 )
 
 test('executeHoverProvider - no result', async () => {

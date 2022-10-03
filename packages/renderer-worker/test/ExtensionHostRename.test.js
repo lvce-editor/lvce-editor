@@ -1,51 +1,52 @@
 import { jest } from '@jest/globals'
+import * as ExtensionHostActivationEvent from '../src/parts/ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
 jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js',
+  '../src/parts/ExtensionHost/ExtensionHostEditor.js',
   () => {
     return {
-      executeProviders: jest.fn(() => {
+      execute: jest.fn(() => {
         throw new Error('not implemented')
       }),
     }
   }
 )
+const ExtensionHostEditor = await import(
+  '../src/parts/ExtensionHost/ExtensionHostEditor.js'
+)
 
 const ExtensionHostRename = await import(
   '../src/parts/ExtensionHost/ExtensionHostRename.js'
 )
-const ExtensionHostShared = await import(
-  '../src/parts/ExtensionHost/ExtensionHostShared.js'
-)
 
 test('executePrepareRenameProvider - no result', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     return []
   })
+  const editor = { id: 1, languageId: 'test' }
+
   expect(
-    await ExtensionHostRename.executePrepareRenameProvider(
-      { id: 1, languageId: 'test' },
-      0
-    )
+    await ExtensionHostRename.executePrepareRenameProvider(editor, 0)
   ).toEqual([])
-  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledTimes(1)
-  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledWith({
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledWith({
+    editor,
     combineResults: expect.any(Function),
-    event: 'onRename:test',
+    event: ExtensionHostActivationEvent.OnRename,
     method: 'ExtensionHostRename.executePrepareRename',
     noProviderFoundMessage: 'No rename provider found',
-    params: [1, 0],
+    args: [0],
   })
 })
 
 test('executePrepareRenameProvider - error', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(
@@ -55,7 +56,7 @@ test('executePrepareRenameProvider - error', async () => {
 
 test('executeRenameProvider - no result', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     return []
   })
   expect(await ExtensionHostRename.executeRenameProvider({ id: 1 }, 0)).toEqual(
@@ -65,7 +66,7 @@ test('executeRenameProvider - no result', async () => {
 
 test('executeRenameProvider - error', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(
