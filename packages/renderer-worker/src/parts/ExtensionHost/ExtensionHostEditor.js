@@ -15,6 +15,9 @@ export const execute = async ({
   // all editor requests, only downside would be that
   // loading languages takes ~6ms and that would slow down
   // loading editor content and showing editor by 6ms
+  // also extension manifests need to be read already
+  // because of color theme and languages and color
+  // theme could be cached in localStorage/IndexedDB
   if (!Languages.hasLoaded()) {
     await Languages.waitForLoad()
     const newEditor = ViewletStates.getState('EditorText')
