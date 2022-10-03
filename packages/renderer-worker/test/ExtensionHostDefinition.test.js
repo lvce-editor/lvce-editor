@@ -24,20 +24,28 @@ const ExtensionHostDefinition = await import(
 
 test('executeDefinitionProvider - no definition found', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     return []
   })
+  const editor = { id: 1, uri: '' }
+
   expect(
-    await ExtensionHostDefinition.executeDefinitionProvider(
-      { id: 1, uri: '' },
-      0
-    )
+    await ExtensionHostDefinition.executeDefinitionProvider(editor, 0)
   ).toEqual([])
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledWith({
+    args: [0],
+    combineResults: expect.any(Function),
+    editor,
+    event: ExtensionHostActivationEvent.OnDefinition,
+    method: 'ExtensionHostDefinition.executeDefinitionProvider',
+    noProviderFoundMessage: 'no definition provider found',
+  })
 })
 
 test('executeDefinitionProvider - error', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(
