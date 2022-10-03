@@ -1,14 +1,16 @@
-import * as ExtensionHostShared from './ExtensionHostShared.js'
+import * as ExtensionHostActivationEvent from '../ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
+import * as ExtensionHostEditor from './ExtensionHostEditor.js'
 
 const combineResults = (results) => {
   return results[0]
 }
 
 export const executeImplementationProvider = (editor, offset) => {
-  return ExtensionHostShared.executeProviders({
-    event: `onImplementation:${editor.languageId}`,
+  return ExtensionHostEditor.execute({
+    editor,
+    event: ExtensionHostActivationEvent.OnImplementation,
     method: 'ExtensionHostImplementation.executeImplementationProvider',
-    params: [editor.id, offset],
+    args: [offset],
     noProviderFoundMessage: 'No implementation provider found',
     combineResults,
   })

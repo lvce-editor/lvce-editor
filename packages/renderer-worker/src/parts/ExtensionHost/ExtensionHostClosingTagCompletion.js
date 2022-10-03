@@ -1,18 +1,17 @@
-import * as ExtensionHostShared from './ExtensionHostShared.js'
+import * as ExtensionHostActivationEvent from '../ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
+import * as ExtensionHostEditor from './ExtensionHostEditor.js'
 
 const combineResults = (results) => {
   return results[0]
 }
 
-export const executeClosingTagProvider = (
-  textDocument,
-  offset,
-  openingBrace
-) => {
-  return ExtensionHostShared.executeProviders({
-    event: `onClosingTag:${textDocument.languageId}`,
+export const executeClosingTagProvider = (editor, offset, openingBrace) => {
+  return ExtensionHostEditor.execute({
+    editor,
+    event: ExtensionHostActivationEvent.OnClosingTag,
     method: 'ExtensionHostClosingTag.executeClosingTagProvider',
-    params: [textDocument.id, offset, openingBrace],
+    args: [offset, openingBrace],
     combineResults,
+    noProviderFoundMessage: '',
   })
 }

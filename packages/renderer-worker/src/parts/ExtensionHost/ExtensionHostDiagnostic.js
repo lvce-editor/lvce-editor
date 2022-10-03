@@ -1,14 +1,16 @@
-import * as ExtensionHostShared from './ExtensionHostShared.js'
+import * as ExtensionHostActivationEvent from '../ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
+import * as ExtensionHostEditor from './ExtensionHostEditor.js'
 
 const combineResults = (results) => {
   return results[0]
 }
 
 export const executeDiagnosticProvider = (editor) => {
-  return ExtensionHostShared.executeProviders({
-    event: `onDiagnostic:${editor.languageId}`,
+  return ExtensionHostEditor.execute({
+    editor,
+    event: ExtensionHostActivationEvent.OnDiagnostic,
     method: 'ExtensionHost.executeDiagnosticProvider',
-    params: [editor.id],
+    args: [],
     noProviderFoundMessage: 'no diagnostic provider found',
     noProviderResult: [],
     combineResults,
