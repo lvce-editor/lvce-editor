@@ -14,6 +14,7 @@ export const executeReferenceProvider = async (editor, offset) => {
     args: [offset],
     noProviderFoundMessage: 'no reference providers found',
     combineResults,
+    noProviderFoundResult: [],
   })
   Assert.array(result)
   console.log({ result })

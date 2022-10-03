@@ -41,6 +41,7 @@ test('executeSemanticTokenProvider', async () => {
     event: ExtensionHostActivationEvent.OnSemanticTokens,
     method: 'ExtensionHostSemanticTokens.executeSemanticTokenProvider',
     noProviderFoundMessage: 'No Semantic Token Provider found',
+    noProviderFoundResult: [],
     args: [],
   })
 })

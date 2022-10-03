@@ -1,5 +1,10 @@
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 
+/**
+ *
+ * @param {any} param0
+ * @returns
+ */
 export const execute = ({
   editor,
   args,
@@ -7,6 +12,7 @@ export const execute = ({
   method,
   combineResults,
   noProviderFoundMessage,
+  noProviderFoundResult = undefined,
 }) => {
   return ExtensionHostShared.executeProviders({
     event: `${event}:${editor.languageId}`,
@@ -14,6 +20,6 @@ export const execute = ({
     params: [editor.id, ...args],
     noProviderFoundMessage,
     combineResults: combineResults,
-    noProviderFoundResult: [],
+    noProviderFoundResult,
   })
 }

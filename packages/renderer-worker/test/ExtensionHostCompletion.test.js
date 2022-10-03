@@ -40,6 +40,7 @@ test('executeCompletionProvider - no results', async () => {
     event: ExtensionHostActivationEvent.OnCompletion,
     method: 'ExtensionHostCompletion.execute',
     noProviderFoundMessage: 'no completion provider found',
+    noProviderFoundResult: [],
   })
 })
 

@@ -64,6 +64,7 @@ test('executeReferenceProvider - single reference found', async () => {
     event: ExtensionHostActivationEvent.OnReferences,
     method: 'ExtensionHostReferences.executeReferenceProvider',
     noProviderFoundMessage: 'no reference providers found',
+    noProviderFoundResult: [],
   })
 })
 

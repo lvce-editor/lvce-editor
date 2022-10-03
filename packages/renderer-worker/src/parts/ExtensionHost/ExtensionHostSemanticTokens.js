@@ -13,5 +13,6 @@ export const executeSemanticTokenProvider = (editor) => {
     args: [],
     noProviderFoundMessage: 'No Semantic Token Provider found',
     combineResults,
+    noProviderFoundResult: [],
   })
 }

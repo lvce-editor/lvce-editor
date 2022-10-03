@@ -12,6 +12,7 @@ export const executeTypeDefinitionProvider = (editor, offset) => {
     method: 'ExtensionHostTypeDefinition.executeTypeDefinitionProvider',
     args: [offset],
     noProviderFoundMessage: 'No type definition provider found',
+    noProviderFoundResult: undefined,
     combineResults,
   })
 }

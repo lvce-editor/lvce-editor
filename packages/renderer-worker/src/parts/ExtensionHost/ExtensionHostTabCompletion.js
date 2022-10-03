@@ -13,5 +13,6 @@ export const executeTabCompletionProvider = (editor, offset) => {
     args: [offset],
     noProviderFoundMessage: 'No tab completion provider found',
     combineResults,
+    noProviderFoundResult: undefined,
   })
 }

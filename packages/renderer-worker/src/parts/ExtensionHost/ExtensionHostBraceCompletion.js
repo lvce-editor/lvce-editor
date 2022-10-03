@@ -20,6 +20,7 @@ export const executeBraceCompletionProvider = (
     editor,
     args: [offset, openingBrace],
     noProviderFoundMessage: 'no brace completion providers found',
+    noProviderFoundResult: undefined,
     combineResults,
   })
 }

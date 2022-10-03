@@ -12,6 +12,7 @@ export const executeCompletionProvider = (editor, offset) => {
     method: 'ExtensionHostCompletion.execute',
     args: [offset],
     noProviderFoundMessage: 'no completion provider found',
+    noProviderFoundResult: [],
     combineResults,
   })
 }
