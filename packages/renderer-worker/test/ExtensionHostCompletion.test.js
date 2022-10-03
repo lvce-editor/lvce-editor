@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ExtensionHostActivationEvent from '../src/parts/ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -23,20 +24,28 @@ const ExtensionHostCompletion = await import(
 
 test('executeCompletionProvider - no results', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     return []
   })
+  const editor = { id: 1, uri: '' }
+
   expect(
-    await ExtensionHostCompletion.executeCompletionProvider(
-      { id: 1, uri: '' },
-      0
-    )
+    await ExtensionHostCompletion.executeCompletionProvider(editor, 0)
   ).toEqual([])
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledWith({
+    args: [0],
+    combineResults: expect.any(Function),
+    editor,
+    event: ExtensionHostActivationEvent.OnCompletion,
+    method: 'ExtensionHostCompletion.execute',
+    noProviderFoundMessage: 'no completion provider found',
+  })
 })
 
 test('executeCompletionProvider - error', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   const promise = ExtensionHostCompletion.executeCompletionProvider(
