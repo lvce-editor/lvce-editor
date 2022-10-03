@@ -87,9 +87,12 @@ export const handleInput = (state, value) => {
 
 export const focusIndex = async (state, index) => {
   const { value, matches, matchIndex } = state
+  if (index === matchIndex) {
+    return state
+  }
   // TODO find next match and highlight it
-  const matchRowIndex = matches[matchIndex * 2]
-  const matchColumnIndex = matches[matchIndex * 2 + 1]
+  const matchRowIndex = matches[index * 2]
+  const matchColumnIndex = matches[index * 2 + 1]
   const newSelections = new Uint32Array([
     matchRowIndex,
     matchColumnIndex,
@@ -156,7 +159,9 @@ const renderMatchCount = {
     )
   },
   apply(oldState, newState) {
-    const matchCountText = `${newState.matchIndex} of ${newState.matchCount}`
+    const matchCountText = `${newState.matchIndex + 1} of ${
+      newState.matchCount
+    }`
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'EditorFindWidget',

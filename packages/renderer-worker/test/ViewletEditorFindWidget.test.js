@@ -101,7 +101,12 @@ test('focusPrevious', async () => {
       selections: new Uint32Array([2, 0, 2, 4]),
     }
   })
-  const state = { ...ViewletEditorFindWidget.create(), matchIndex: 2 }
+  const state = {
+    ...ViewletEditorFindWidget.create(),
+    matchIndex: 2,
+    matchCount: 3,
+    matches: new Uint32Array([0, 0, 1, 0, 2, 0]),
+  }
   expect(await ViewletEditorFindWidget.focusPrevious(state)).toMatchObject({
     matchIndex: 1,
   })
@@ -112,7 +117,7 @@ test('focusPrevious', async () => {
   )
 })
 
-test.skip('focusNext', async () => {
+test('focusNext', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   // @ts-ignore
@@ -124,8 +129,10 @@ test.skip('focusNext', async () => {
   })
   const state = {
     ...ViewletEditorFindWidget.create(),
+    value: 'line',
     matchIndex: 0,
     matchCount: 2,
+    matches: new Uint32Array([0, 0, 1, 0]),
   }
   expect(await ViewletEditorFindWidget.focusNext(state)).toMatchObject({
     matchIndex: 1,
@@ -138,7 +145,28 @@ test.skip('focusNext', async () => {
   )
 })
 
-test.skip('focusNext - at end', async () => {
+test('focusNext - only one match', async () => {
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
+  // @ts-ignore
+  ViewletStates.getState.mockImplementation(() => {
+    return {
+      lines: ['line 1'],
+      selections: new Uint32Array([0, 0, 0, 4]),
+    }
+  })
+  const state = {
+    ...ViewletEditorFindWidget.create(),
+    value: 'line',
+    matchIndex: 0,
+    matchCount: 1,
+    matches: new Uint32Array([0, 0]),
+  }
+  expect(await ViewletEditorFindWidget.focusNext(state)).toBe(state)
+  expect(Command.execute).not.toHaveBeenCalled()
+})
+
+test('focusNext - at end', async () => {
   // @ts-ignore
   Command.execute.mockImplementation(() => {})
   // @ts-ignore
@@ -150,8 +178,10 @@ test.skip('focusNext - at end', async () => {
   })
   const state = {
     ...ViewletEditorFindWidget.create(),
+    value: 'line',
     matchIndex: 1,
     matchCount: 2,
+    matches: new Uint32Array([0, 0, 1, 0]),
   }
   expect(await ViewletEditorFindWidget.focusNext(state)).toMatchObject({
     matchIndex: 0,
