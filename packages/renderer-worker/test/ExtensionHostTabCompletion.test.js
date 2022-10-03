@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ExtensionHostActivationEvent from '../src/parts/ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -24,28 +25,28 @@ const ExtensionHostTabCompletion = await import(
 
 test('executeTabCompletionProvider - no tab completion', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(() => {
+  ExtensionHostEditor.execute.mockImplementation(() => {
     return undefined
   })
+  const editor = { id: 1, languageId: 'test' }
+
   expect(
-    await ExtensionHostTabCompletion.executeTabCompletionProvider(
-      { id: 1, languageId: 'test' },
-      0
-    )
+    await ExtensionHostTabCompletion.executeTabCompletionProvider(editor, 0)
   ).toBe(undefined)
-  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledTimes(1)
-  expect(ExtensionHostShared.executeProviders).toHaveBeenCalledWith({
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledWith({
+    editor,
     combineResults: expect.any(Function),
-    event: 'onTabCompletion:test',
+    event: ExtensionHostActivationEvent.OnTabCompletion,
     method: 'ExtensionHost.executeTabCompletionProvider',
     noProviderFoundMessage: 'No tab completion provider found',
-    params: [1, 0],
+    args: [0],
   })
 })
 
 test('executeTabCompletionProvider - tab completion', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(() => {
+  ExtensionHostEditor.execute.mockImplementation(() => {
     return {}
   })
   expect(
@@ -58,7 +59,7 @@ test('executeTabCompletionProvider - tab completion', async () => {
 
 test('executeTabCompletionProvider - error - tabCompletionProvider throws error', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(
