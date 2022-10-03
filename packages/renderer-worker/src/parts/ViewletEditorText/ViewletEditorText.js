@@ -185,6 +185,6 @@ export const focus = (state) => {
   }
 }
 
-export const shouldApplyNewState = () => {
+export const shouldApplyNewState = (newState) => {
   return true
 }
