@@ -1,6 +1,15 @@
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as TextDocumentSearch from '../TextDocumentSearch/TextDocumentSearch.js'
 import * as Command from '../Command/Command.js'
+import * as I18nString from '../I18NString/I18NString.js'
+import * as TextDocumentSearch from '../TextDocumentSearch/TextDocumentSearch.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  MatchesFoundFor: `{PH1} of {PH2} found for {PH3}`,
+  MatchOf: `{PH1} of {PH2}`,
+}
 
 export const name = 'EditorFindWidget'
 
@@ -69,11 +78,7 @@ export const handleInput = (state, value) => {
   // TODO get focused editor
   // highlight locations that match value
   const editor = ViewletStates.getState('EditorText')
-  const { lines, selections } = editor
-  const startRowIndex = selections[0]
-  const startColumnIndex = selections[1]
-  const endRowIndex = selections[2]
-  const endColumnIndex = selections[3]
+  const { lines } = editor
   const matches = TextDocumentSearch.findMatches(lines, value)
   const matchCount = getMatchCount(matches)
   return {
@@ -85,6 +90,7 @@ export const handleInput = (state, value) => {
   }
 }
 
+// TODO this function should be synchronous
 export const focusIndex = async (state, index) => {
   const { value, matches, matchIndex } = state
   if (index === matchIndex) {
@@ -117,7 +123,6 @@ export const focusLast = (state) => {
   return focusIndex(state, matchCount - 1)
 }
 
-// TODO this function should be synchronous
 export const focusNext = (state) => {
   const { matchIndex, matchCount } = state
   if (matchIndex === matchCount - 1) {
@@ -126,8 +131,7 @@ export const focusNext = (state) => {
   return focusIndex(state, matchIndex + 1)
 }
 
-// TODO should be synchronous
-export const focusPrevious = async (state) => {
+export const focusPrevious = (state) => {
   const { matchIndex } = state
   if (matchIndex === 0) {
     return focusLast(state)
@@ -159,9 +163,10 @@ const renderMatchCount = {
     )
   },
   apply(oldState, newState) {
-    const matchCountText = `${newState.matchIndex + 1} of ${
-      newState.matchCount
-    }`
+    const matchCountText = I18nString.i18nString(UiStrings.MatchOf, {
+      PH1: newState.matchIndex + 1,
+      PH2: newState.matchCount,
+    })
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'EditorFindWidget',
@@ -173,7 +178,11 @@ const renderMatchCount = {
 
 const getAriaLabel = (state) => {
   const { matchIndex, matchCount, value } = state
-  return `${matchIndex} of ${matchCount} found for ${value}`
+  return I18nString.i18nString(UiStrings.MatchesFoundFor, {
+    PH1: matchIndex,
+    PH2: matchCount,
+    PH3: value,
+  })
 }
 
 const renderAriaAnnouncement = {
