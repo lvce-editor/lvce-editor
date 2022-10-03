@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ExtensionHostActivationEvent from '../src/parts/ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
 
 beforeEach(() => {
   jest.resetAllMocks()

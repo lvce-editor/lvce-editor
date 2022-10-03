@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ExtensionHostActivationEvent from '../src/parts/ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -24,7 +25,7 @@ const ExtensionHostReference = await import(
 
 test('executeReferenceProvider - no references found', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(() => {
+  ExtensionHostEditor.execute.mockImplementation(() => {
     return []
   })
   expect(
@@ -34,7 +35,7 @@ test('executeReferenceProvider - no references found', async () => {
 
 test('executeReferenceProvider - single reference found', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(() => {
+  ExtensionHostEditor.execute.mockImplementation(() => {
     return [
       {
         uri: '/test/index.js',
@@ -44,8 +45,9 @@ test('executeReferenceProvider - single reference found', async () => {
       },
     ]
   })
+  const editor = { id: 1, uri: '' }
   expect(
-    await ExtensionHostReference.executeReferenceProvider({ id: 1, uri: '' }, 0)
+    await ExtensionHostReference.executeReferenceProvider(editor, 0)
   ).toEqual([
     {
       uri: '/test/index.js',
@@ -54,11 +56,20 @@ test('executeReferenceProvider - single reference found', async () => {
       endOffset: 0,
     },
   ])
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledTimes(1)
+  expect(ExtensionHostEditor.execute).toHaveBeenCalledWith({
+    args: [0],
+    combineResults: expect.any(Function),
+    editor,
+    event: ExtensionHostActivationEvent.OnReferences,
+    method: 'ExtensionHostReferences.executeReferenceProvider',
+    noProviderFoundMessage: 'no reference providers found',
+  })
 })
 
 test('executeReferenceProvider - error - referenceProvider throws error', async () => {
   // @ts-ignore
-  ExtensionHostShared.executeProviders.mockImplementation(async () => {
+  ExtensionHostEditor.execute.mockImplementation(async () => {
     throw new Error(
       'Failed to execute reference provider: TypeError: x is not a function'
     )
