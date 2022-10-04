@@ -263,9 +263,8 @@ const getLineInfosViewport = (
   minLineOffset
 ) => {
   const result = []
-  const lines = editor.lines
-  const TokenMap = editor.tokenizer.TokenMap
-  const decorations = editor.decorations
+  const { lines, tokenizer, decorations } = editor
+  const { TokenMap } = tokenizer
   let offset = minLineOffset
   for (let i = minLineY; i < maxLineY; i++) {
     const line = lines[i]
@@ -283,11 +282,8 @@ export const getVisible = (editor) => {
   // currently hard to test because need to mock editor height, top, left,
   // invalidStartIndex, lineCache, etc. just for testing editorType
   // editor.invalidStartIndex = changes[0].start.rowIndex
-  const minLineY = editor.minLineY
-  const maxLineY = Math.min(
-    editor.minLineY + editor.numberOfVisibleLines,
-    editor.lines.length
-  )
+  const { minLineY, numberOfVisibleLines, lines } = editor
+  const maxLineY = Math.min(minLineY + numberOfVisibleLines, lines.length)
   const tokens = getTokensViewport(editor, minLineY, maxLineY)
   const minLineOffset = TextDocument.offsetAt(editor, minLineY, 0)
   const textInfos = getLineInfosViewport(
