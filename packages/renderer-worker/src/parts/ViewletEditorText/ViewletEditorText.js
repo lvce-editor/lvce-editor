@@ -46,7 +46,6 @@ export const create = (id, uri, left, top, width, height) => {
   const newState = Editor.setBounds(state, top, left, height, COLUMN_WIDTH)
   const fileName = Workspace.pathBaseName(state.uri)
   const languageId = Languages.getLanguageId(fileName)
-  console.log('CREATE EDITOR', uri)
   return {
     ...newState,
     uri,
@@ -57,9 +56,11 @@ export const create = (id, uri, left, top, width, height) => {
 }
 
 export const saveState = (state) => {
+  const { selections, focused, deltaY, minLineY } = state
   return {
-    selections: [...Array.from(state.selections)],
-    focused: state.focused,
+    selections: [...Array.from(selections)],
+    focused,
+    deltaY,
   }
 }
 
@@ -77,6 +78,13 @@ const getSavedFocus = (savedState) => {
   return false
 }
 
+const getSavedDeltaY = (savedState) => {
+  if (savedState && savedState.deltaY) {
+    return savedState.deltaY
+  }
+  return 0
+}
+
 export const loadContent = async (state, savedState) => {
   const { uri } = state
   const rowHeight = Preferences.get('editor.lineHeight') || 20
@@ -86,17 +94,20 @@ export const loadContent = async (state, savedState) => {
   const content = await getContent(uri)
   const languageId = Languages.getLanguageId(fileName)
   const tokenizer = Tokenizer.getTokenizer(languageId)
-  const newState = Editor.setText(state, content)
+  const newState1 = Editor.setText(state, content)
   const savedSelections = getSavedSelections(savedState)
   const savedFocus = getSavedFocus(savedState)
+  const savedDeltaY = getSavedDeltaY(savedState)
+  const newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
   return {
-    ...newState,
+    ...newState2,
     rowHeight,
     fontSize,
     letterSpacing,
     tokenizer,
     selections: savedSelections,
     focused: savedFocus,
+    deltaY: savedDeltaY,
   }
 }
 

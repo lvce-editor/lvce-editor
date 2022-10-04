@@ -15,7 +15,6 @@ test('resize - increase height', () => {
     width: 200,
     height: 60,
   })
-  console.log(newState)
   expect(newState).toEqual(
     expect.objectContaining({
       minLineY: 0,
