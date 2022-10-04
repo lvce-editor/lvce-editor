@@ -46,7 +46,6 @@ export const create = (id, uri, left, top, width, height) => {
   const newState = Editor.setBounds(state, top, left, height, COLUMN_WIDTH)
   const fileName = Workspace.pathBaseName(state.uri)
   const languageId = Languages.getLanguageId(fileName)
-  console.log('CREATE EDITOR', uri)
   return {
     ...newState,
     uri,

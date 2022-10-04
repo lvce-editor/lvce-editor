@@ -59,36 +59,14 @@ const getTokensFromCache = (result) => {
 const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
   const invalidStartIndex = editor.invalidStartIndex
   const lineCache = editor.lineCache
-  if (endLineIndex <= invalidStartIndex) {
-    return lineCache
-      .slice(startLineIndex + 1, endLineIndex + 1)
-      .map(getTokensFromCache)
-  }
   const hasArrayReturn = editor.tokenizer.hasArrayReturn
-
+  const tokenizeStartIndex = Math.min(invalidStartIndex, startLineIndex)
+  const tokenizeEndIndex =
+    invalidStartIndex < endLineIndex ? endLineIndex : tokenizeStartIndex
   const tokenizeLine = editor.tokenizer.tokenizeLine
-  if (startLineIndex <= invalidStartIndex) {
-    for (let i = invalidStartIndex; i < endLineIndex; i++) {
-      const lineState =
-        i === 0 ? editor.tokenizer.initialLineState : editor.lineCache[i]
-      const line = editor.lines[i]
-      const result = SafeTokenizeLine.safeTokenizeLine(
-        tokenizeLine,
-        line,
-        lineState,
-        hasArrayReturn
-      )
-      // TODO if lineCacheEnd matches the one before, skip tokenizing lines after
-      lineCache[i + 1] = result
-    }
-    editor.invalidStartIndex = endLineIndex
-    return lineCache
-      .slice(startLineIndex + 1, endLineIndex + 1)
-      .map(getTokensFromCache)
-  }
-  // TODO combine for loops
-  for (let i = invalidStartIndex; i < startLineIndex; i++) {
-    const lineState = editor.lineCache[i]
+  for (let i = tokenizeStartIndex; i < tokenizeEndIndex; i++) {
+    const lineState =
+      i === 0 ? editor.tokenizer.initialLineState : editor.lineCache[i]
     const line = editor.lines[i]
     const result = SafeTokenizeLine.safeTokenizeLine(
       tokenizeLine,
@@ -96,20 +74,11 @@ const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
       lineState,
       hasArrayReturn
     )
+
+    // TODO if lineCacheEnd matches the one before, skip tokenizing lines after
     lineCache[i + 1] = result
   }
-  for (let i = startLineIndex; i < endLineIndex; i++) {
-    const lineState = editor.lineCache[i]
-    const line = editor.lines[i]
-    const result = SafeTokenizeLine.safeTokenizeLine(
-      tokenizeLine,
-      line,
-      lineState,
-      hasArrayReturn
-    )
-    lineCache[i + 1] = result
-    editor.invalidStartIndex = endLineIndex
-  }
+  editor.invalidStartIndex = Math.max(invalidStartIndex, tokenizeEndIndex)
   return lineCache
     .slice(startLineIndex + 1, endLineIndex + 1)
     .map(getTokensFromCache)
