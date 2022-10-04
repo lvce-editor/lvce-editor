@@ -34,16 +34,12 @@ export const editorHandleScrollBarClick = (editor, y) => {
   const currentScrollBarY =
     (editor.deltaY / editor.finalDeltaY) *
     (editor.height - editor.scrollBarHeight)
-  console.log({ scrollBarY: currentScrollBarY, relativeY })
   const diff = relativeY - currentScrollBarY
-  console.log({ diff })
   if (diff >= 0 && diff < editor.scrollBarHeight) {
     state.handleOffset = diff
-    console.log({ handleOffset: diff })
     return editor
   }
   const newPercent = getNewDeltaPercent(editor, relativeY)
-  console.log({ newPercent })
   // TODO
   state.handleOffset = editor.scrollBarHeight / 2
   // TODO when diff is greater, position scrollbar in the middle around cursor

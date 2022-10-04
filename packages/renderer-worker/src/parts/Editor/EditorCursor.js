@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Platform from '../Platform/Platform.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as Platform from '../Platform/Platform.js'
 
 export const applyEdits = (editor, cursor) => {
   // TODO multiple cursors
@@ -61,13 +61,14 @@ export const getVisible = (editor) => {
   // TODO could use uint16array here
   // TODO handle case when text segmenter not supported
   const visibleCursors = []
-  const selections = editor.selections
-  for (let i = 0; i < selections.length; i += 4) {
+  const { selections, minLineY, maxLineY, rowHeight } = editor
+  const selectionLength = selections.length
+  for (let i = 0; i < selectionLength; i += 4) {
     const selectionStartRow = selections[i]
     const selectionStartColumn = selections[i + 1]
     const selectionEndRow = selections[i + 2]
     const selectionEndColumn = selections[i + 3]
-    if (isInRange(selectionEndRow, editor.minLineY, editor.maxLineY)) {
+    if (isInRange(selectionEndRow, minLineY, maxLineY)) {
       const lineCache = editor.lineCache[selectionEndRow + 1]
       if (!lineCache) {
         console.log('line caches', editor, editor.lineCache)
@@ -75,8 +76,8 @@ export const getVisible = (editor) => {
       const tokenIndex = getTokenIndex(lineCache, selectionEndColumn)
       // TODO maybe don't allocate object here, push numbers to flat array instead
       visibleCursors.push({
-        top: (selectionEndRow - editor.minLineY) * editor.rowHeight,
-        topIndex: selectionEndRow - editor.minLineY,
+        top: (selectionEndRow - minLineY) * rowHeight,
+        topIndex: selectionEndRow - minLineY,
         leftIndex: tokenIndex.index,
         remainingOffset: tokenIndex.offset,
       })

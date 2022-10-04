@@ -76,7 +76,6 @@ export const dispose = (state) => {}
 export const setItems = (state, activityBarItems) => {
   Assert.object(state)
   Assert.array(activityBarItems)
-  console.log({ activityBarItems })
   const $ActivityBar = state.$ActivityBar
   $ActivityBar.replaceChildren(...activityBarItems.map(create$ActivityBarItem))
 }
