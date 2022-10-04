@@ -1,10 +1,10 @@
 import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as Icon from '../Icon/Icon.js'
 import * as MarkDown from '../Markdown/Markdown.js'
 import * as Path from '../Path/Path.js'
 import * as SanitizeHtml from '../SanitizeHtml/SanitizeHtml.js'
-import * as Icon from '../Icon/Icon.js'
 
 export const name = 'ExtensionDetail'
 
@@ -56,12 +56,12 @@ export const loadContent = async (state) => {
 
 export const handleIconError = (state) => {
   const { iconSrc } = state
-  if (iconSrc === DEFAULT_ICON_SRC) {
+  if (iconSrc === Icon.ExtensionDefaultIcon) {
     return state
   }
   return {
     ...state,
-    iconSrc: DEFAULT_ICON_SRC,
+    iconSrc: Icon.ExtensionDefaultIcon,
   }
 }
 
