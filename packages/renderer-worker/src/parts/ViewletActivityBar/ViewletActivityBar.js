@@ -5,6 +5,7 @@ import * as I18nString from '../I18NString/I18NString.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as Icon from '../Icon/Icon.js'
 
 /**
  * @enum {string}
@@ -53,7 +54,7 @@ const getVisibleActivityBarItems = (state) => {
   const showMoreItem = {
     id: 'Additional Views',
     title: I18nString.i18nString(UiStrings.AdditionalViews),
-    icon: 'icons/ellipsis.svg',
+    icon: Icon.Ellipsis,
     enabled: true,
     flags: ActivityBarItemFlags.Button,
     keyShortCuts: '',
@@ -94,7 +95,7 @@ const getActivityBarItems = () => {
     {
       id: 'Explorer',
       title: I18nString.i18nString(UiStrings.Explorer),
-      icon: 'icons/files.svg',
+      icon: Icon.Files,
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+E',
@@ -102,7 +103,7 @@ const getActivityBarItems = () => {
     {
       id: 'Search',
       title: I18nString.i18nString(UiStrings.Search),
-      icon: 'icons/search.svg',
+      icon: Icon.Search,
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+F',
@@ -110,7 +111,7 @@ const getActivityBarItems = () => {
     {
       id: 'Source Control',
       title: I18nString.i18nString(UiStrings.SourceControl),
-      icon: 'icons/source-control.svg',
+      icon: Icon.SourceControl,
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+G',
@@ -118,7 +119,7 @@ const getActivityBarItems = () => {
     {
       id: 'Run and Debug',
       title: I18nString.i18nString(UiStrings.RunAndDebug),
-      icon: 'icons/debug-alt-2.svg',
+      icon: Icon.DebugAlt2,
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+D',
@@ -126,7 +127,7 @@ const getActivityBarItems = () => {
     {
       id: 'Extensions',
       title: I18nString.i18nString(UiStrings.Extensions),
-      icon: 'icons/extensions.svg',
+      icon: Icon.Extensions,
       enabled: true,
       flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+X',
@@ -135,7 +136,7 @@ const getActivityBarItems = () => {
     {
       id: 'Settings',
       title: I18nString.i18nString(UiStrings.Settings),
-      icon: 'icons/settings-gear.svg',
+      icon: Icon.SettingsGear,
       enabled: true,
       flags: ActivityBarItemFlags.Button,
       keyShortcuts: '',

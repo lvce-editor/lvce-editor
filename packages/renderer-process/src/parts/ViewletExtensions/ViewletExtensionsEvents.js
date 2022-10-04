@@ -2,10 +2,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
-
-const DEFAULT_ICON_SRC = '/icons/extensionDefaultIcon.png'
-const DEFAULT_ICON_LANGUAGE_BASICS = '/icons/language-icon.svg'
-const DEFAULT_ICON_THEME = '/icons/theme-icon.png'
+import * as Icon from '../Icon/Icon.js'
 
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
@@ -147,10 +144,10 @@ export const handleInput = (event) => {
 
 export const handleIconError = (event) => {
   const $Target = event.target
-  if ($Target.src.endsWith(DEFAULT_ICON_SRC)) {
+  if ($Target.src.endsWith(Icon.ExtensionDefaultIcon)) {
     return
   }
-  $Target.src = DEFAULT_ICON_SRC
+  $Target.src = Icon.ExtensionDefaultIcon
 }
 
 export const handleScroll = (event) => {

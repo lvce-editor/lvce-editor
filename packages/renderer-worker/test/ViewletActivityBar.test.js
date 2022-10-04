@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals'
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActvityBarItemFlags.js'
 import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
+import * as Icon from '../src/parts/Icon/Icon.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -59,7 +60,7 @@ test('loadContent', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: 'icons/files.svg',
+        icon: Icon.Files,
         id: 'Explorer',
         title: 'Explorer',
         keyShortcuts: 'Control+Shift+E',
@@ -67,7 +68,7 @@ test('loadContent', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: 'icons/search.svg',
+        icon: Icon.Search,
         id: 'Search',
         title: 'Search',
         keyShortcuts: 'Control+Shift+F',
@@ -75,7 +76,7 @@ test('loadContent', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: 'icons/source-control.svg',
+        icon: Icon.SourceControl,
         id: 'Source Control',
         title: 'Source Control',
         keyShortcuts: 'Control+Shift+G',
@@ -83,7 +84,7 @@ test('loadContent', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: 'icons/debug-alt-2.svg',
+        icon: Icon.DebugAlt2,
         id: 'Run and Debug',
         title: 'Run and Debug',
         keyShortcuts: 'Control+Shift+D',
@@ -91,7 +92,7 @@ test('loadContent', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: 'icons/extensions.svg',
+        icon: Icon.Extensions,
         id: 'Extensions',
         title: 'Extensions',
         keyShortcuts: 'Control+Shift+X',
@@ -99,7 +100,7 @@ test('loadContent', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Button,
-        icon: 'icons/settings-gear.svg',
+        icon: Icon.SettingsGear,
         id: 'Settings',
         title: 'Settings',
         keyShortcuts: '',
@@ -125,7 +126,7 @@ test('render - all items fit but little space is remaining', async () => {
       {
         id: 'Explorer',
         title: 'Explorer',
-        icon: 'icons/files.svg',
+        icon: Icon.Files,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+E',
@@ -133,7 +134,7 @@ test('render - all items fit but little space is remaining', async () => {
       {
         id: 'Search',
         title: 'Search',
-        icon: 'icons/search.svg',
+        icon: Icon.Search,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+F',
@@ -141,7 +142,7 @@ test('render - all items fit but little space is remaining', async () => {
       {
         id: 'Source Control',
         title: 'Source Control',
-        icon: 'icons/source-control.svg',
+        icon: Icon.SourceControl,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+G',
@@ -149,7 +150,7 @@ test('render - all items fit but little space is remaining', async () => {
       {
         id: 'Run and Debug',
         title: 'Run and Debug',
-        icon: 'icons/debug-alt-2.svg',
+        icon: Icon.DebugAlt2,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+D',
@@ -157,7 +158,7 @@ test('render - all items fit but little space is remaining', async () => {
       {
         id: 'Extensions',
         title: 'Extensions',
-        icon: 'icons/extensions.svg',
+        icon: Icon.Extensions,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+X',
@@ -166,7 +167,7 @@ test('render - all items fit but little space is remaining', async () => {
       {
         id: 'Settings',
         title: 'Settings',
-        icon: 'icons/settings-gear.svg',
+        icon: Icon.SettingsGear,
         enabled: true,
         flags: ActivityBarItemFlags.Button,
         keyShortcuts: '',
@@ -183,7 +184,7 @@ test('render - all items fit but little space is remaining', async () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: 'icons/files.svg',
+          icon: Icon.Files,
           id: 'Explorer',
           title: 'Explorer',
           keyShortcuts: 'Control+Shift+E',
@@ -191,7 +192,7 @@ test('render - all items fit but little space is remaining', async () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: 'icons/search.svg',
+          icon: Icon.Search,
           id: 'Search',
           title: 'Search',
           keyShortcuts: 'Control+Shift+F',
@@ -199,7 +200,7 @@ test('render - all items fit but little space is remaining', async () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: 'icons/source-control.svg',
+          icon: Icon.SourceControl,
           id: 'Source Control',
           title: 'Source Control',
           keyShortcuts: 'Control+Shift+G',
@@ -207,7 +208,7 @@ test('render - all items fit but little space is remaining', async () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: 'icons/debug-alt-2.svg',
+          icon: Icon.DebugAlt2,
           id: 'Run and Debug',
           title: 'Run and Debug',
           keyShortcuts: 'Control+Shift+D',
@@ -215,7 +216,7 @@ test('render - all items fit but little space is remaining', async () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: 'icons/extensions.svg',
+          icon: Icon.Extensions,
           id: 'Extensions',
           title: 'Extensions',
           keyShortcuts: 'Control+Shift+X',
@@ -223,7 +224,7 @@ test('render - all items fit but little space is remaining', async () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Button,
-          icon: 'icons/settings-gear.svg',
+          icon: Icon.SettingsGear,
           id: 'Settings',
           title: 'Settings',
           keyShortcuts: '',
@@ -243,7 +244,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         id: 'Explorer',
         title: 'Explorer',
-        icon: 'icons/files.svg',
+        icon: Icon.Files,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+E',
@@ -251,7 +252,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         id: 'Search',
         title: 'Search',
-        icon: 'icons/search.svg',
+        icon: Icon.Search,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+F',
@@ -259,7 +260,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         id: 'Source Control',
         title: 'Source Control',
-        icon: 'icons/source-control.svg',
+        icon: Icon.SourceControl,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+G',
@@ -267,7 +268,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         id: 'Run and Debug',
         title: 'Run and Debug',
-        icon: 'icons/debug-alt-2.svg',
+        icon: Icon.DebugAlt2,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+D',
@@ -275,7 +276,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         id: 'Extensions',
         title: 'Extensions',
-        icon: 'icons/extensions.svg',
+        icon: Icon.Extensions,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+X',
@@ -284,7 +285,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         id: 'Settings',
         title: 'Settings',
-        icon: 'icons/settings-gear.svg',
+        icon: Icon.SettingsGear,
         enabled: true,
         flags: ActivityBarItemFlags.Button,
         keyShortcuts: '',
@@ -303,7 +304,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: 'icons/files.svg',
+        icon: Icon.Files,
         id: 'Explorer',
         title: 'Explorer',
         keyShortcuts: 'Control+Shift+E',
@@ -311,7 +312,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: 'icons/search.svg',
+        icon: Icon.Search,
         id: 'Search',
         title: 'Search',
         keyShortcuts: 'Control+Shift+F',
@@ -319,7 +320,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: 'icons/source-control.svg',
+        icon: Icon.SourceControl,
         id: 'Source Control',
         title: 'Source Control',
         keyShortcuts: 'Control+Shift+G',
@@ -327,7 +328,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Button,
-        icon: 'icons/ellipsis.svg',
+        icon: Icon.Ellipsis,
         id: 'Additional Views',
         title: 'Additional Views',
         keyShortCuts: '',
@@ -335,7 +336,7 @@ test.skip('contentLoaded - one items does not fit', async () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Button,
-        icon: 'icons/settings-gear.svg',
+        icon: Icon.SettingsGear,
         id: 'Settings',
         title: 'Settings',
         keyShortcuts: '',
@@ -355,7 +356,7 @@ test('render - two items do not fit', () => {
       {
         id: 'Explorer',
         title: 'Explorer',
-        icon: 'icons/files.svg',
+        icon: Icon.Files,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+E',
@@ -363,7 +364,7 @@ test('render - two items do not fit', () => {
       {
         id: 'Search',
         title: 'Search',
-        icon: 'icons/search.svg',
+        icon: Icon.Search,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+F',
@@ -371,7 +372,7 @@ test('render - two items do not fit', () => {
       {
         id: 'Source Control',
         title: 'Source Control',
-        icon: 'icons/source-control.svg',
+        icon: Icon.SourceControl,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+G',
@@ -379,7 +380,7 @@ test('render - two items do not fit', () => {
       {
         id: 'Run and Debug',
         title: 'Run and Debug',
-        icon: 'icons/debug-alt-2.svg',
+        icon: Icon.DebugAlt2,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+D',
@@ -387,7 +388,7 @@ test('render - two items do not fit', () => {
       {
         id: 'Extensions',
         title: 'Extensions',
-        icon: 'icons/extensions.svg',
+        icon: Icon.Extensions,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+X',
@@ -396,7 +397,7 @@ test('render - two items do not fit', () => {
       {
         id: 'Settings',
         title: 'Settings',
-        icon: 'icons/settings-gear.svg',
+        icon: Icon.SettingsGear,
         enabled: true,
         flags: ActivityBarItemFlags.Button,
         keyShortcuts: '',
@@ -413,7 +414,7 @@ test('render - two items do not fit', () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: 'icons/files.svg',
+          icon: Icon.Files,
           id: 'Explorer',
           title: 'Explorer',
           keyShortcuts: 'Control+Shift+E',
@@ -421,7 +422,7 @@ test('render - two items do not fit', () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: 'icons/search.svg',
+          icon: Icon.Search,
           id: 'Search',
           title: 'Search',
           keyShortcuts: 'Control+Shift+F',
@@ -429,7 +430,7 @@ test('render - two items do not fit', () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Tab,
-          icon: 'icons/source-control.svg',
+          icon: Icon.SourceControl,
           id: 'Source Control',
           title: 'Source Control',
           keyShortcuts: 'Control+Shift+G',
@@ -437,7 +438,7 @@ test('render - two items do not fit', () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Button,
-          icon: 'icons/ellipsis.svg',
+          icon: Icon.Ellipsis,
           id: 'Additional Views',
           title: 'Additional Views',
           keyShortCuts: '',
@@ -445,7 +446,7 @@ test('render - two items do not fit', () => {
         {
           enabled: true,
           flags: ActivityBarItemFlags.Button,
-          icon: 'icons/settings-gear.svg',
+          icon: Icon.SettingsGear,
           id: 'Settings',
           title: 'Settings',
           keyShortcuts: '',
@@ -539,7 +540,7 @@ test('resize', () => {
       {
         id: 'Explorer',
         title: 'Explorer',
-        icon: 'icons/files.svg',
+        icon: Icon.Files,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+E',
@@ -547,7 +548,7 @@ test('resize', () => {
       {
         id: 'Search',
         title: 'Search',
-        icon: 'icons/search.svg',
+        icon: Icon.Search,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+F',
@@ -555,7 +556,7 @@ test('resize', () => {
       {
         id: 'Source Control',
         title: 'Source Control',
-        icon: 'icons/source-control.svg',
+        icon: Icon.SourceControl,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+G',
@@ -563,7 +564,7 @@ test('resize', () => {
       {
         id: 'Run and Debug',
         title: 'Run and Debug',
-        icon: 'icons/debug-alt-2.svg',
+        icon: Icon.DebugAlt2,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+D',
@@ -571,7 +572,7 @@ test('resize', () => {
       {
         id: 'Extensions',
         title: 'Extensions',
-        icon: 'icons/extensions.svg',
+        icon: Icon.Extensions,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+X',
@@ -580,7 +581,7 @@ test('resize', () => {
       {
         id: 'Settings',
         title: 'Settings',
-        icon: 'icons/settings-gear.svg',
+        icon: Icon.SettingsGear,
         enabled: true,
         flags: ActivityBarItemFlags.Button,
         keyShortcuts: '',
@@ -599,7 +600,7 @@ test('resize', () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: 'icons/files.svg',
+        icon: Icon.Files,
         id: 'Explorer',
         title: 'Explorer',
         keyShortcuts: 'Control+Shift+E',
@@ -607,7 +608,7 @@ test('resize', () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: 'icons/search.svg',
+        icon: Icon.Search,
         id: 'Search',
         title: 'Search',
         keyShortcuts: 'Control+Shift+F',
@@ -615,7 +616,7 @@ test('resize', () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: 'icons/source-control.svg',
+        icon: Icon.SourceControl,
         id: 'Source Control',
         title: 'Source Control',
         keyShortcuts: 'Control+Shift+G',
@@ -623,7 +624,7 @@ test('resize', () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: 'icons/debug-alt-2.svg',
+        icon: Icon.DebugAlt2,
         id: 'Run and Debug',
         title: 'Run and Debug',
         keyShortcuts: 'Control+Shift+D',
@@ -631,7 +632,7 @@ test('resize', () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
-        icon: 'icons/extensions.svg',
+        icon: Icon.Extensions,
         id: 'Extensions',
         title: 'Extensions',
         keyShortcuts: 'Control+Shift+X',
@@ -639,7 +640,7 @@ test('resize', () => {
       {
         enabled: true,
         flags: ActivityBarItemFlags.Button,
-        icon: 'icons/settings-gear.svg',
+        icon: Icon.SettingsGear,
         id: 'Settings',
         title: 'Settings',
         keyShortcuts: '',

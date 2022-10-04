@@ -1,19 +1,19 @@
 import * as EditorCompletionType from '../EditorCompletionType/EditorCompletionType.js'
-import * as EditorCompletionClassName from '../EditorCompletionClassName/EditorCompletionClassName.js'
+import * as Icon from '../Icon/Icon.js'
 
 export const getIcon = (item) => {
   switch (item.kind) {
     case EditorCompletionType.Property:
-      return EditorCompletionClassName.IconProperty
+      return Icon.SymbolProperty
     case EditorCompletionType.Value:
-      return EditorCompletionClassName.IconValue
+      return Icon.SymbolValue
     case EditorCompletionType.Function:
-      return EditorCompletionClassName.IconFunction
+      return Icon.SymbolFunction
     case EditorCompletionType.Variable:
-      return EditorCompletionClassName.IconVariable
+      return Icon.SymbolVariable
     case EditorCompletionType.Keyword:
-      return EditorCompletionClassName.IconKeyword
+      return Icon.SymbolKeyword
     default:
-      return EditorCompletionClassName.IconDefault
+      return Icon.SymbolDefault
   }
 }

@@ -2,6 +2,7 @@ import * as Layout from '../src/parts/Layout/Layout.js'
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActvityBarItemFlags.js'
 import { jest } from '@jest/globals'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
+import * as Icon from '../src/parts/Icon/Icon.js'
 
 const ACTIVITY_BAR_ITEM_HEIGHT = 48
 
@@ -41,7 +42,7 @@ test('selectCurrent - settings', async () => {
       {
         id: 'Explorer',
         title: 'Explorer',
-        icon: 'icons/files.svg',
+        icon: Icon.Files,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+E',
@@ -49,7 +50,7 @@ test('selectCurrent - settings', async () => {
       {
         id: 'Search',
         title: 'Search',
-        icon: 'icons/search.svg',
+        icon: Icon.Search,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+F',
@@ -57,7 +58,7 @@ test('selectCurrent - settings', async () => {
       {
         id: 'Source Control',
         title: 'Source Control',
-        icon: 'icons/source-control.svg',
+        icon: Icon.SourceControl,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+G',
@@ -65,7 +66,7 @@ test('selectCurrent - settings', async () => {
       {
         id: 'Run and Debug',
         title: 'Run and Debug',
-        icon: 'icons/debug-alt-2.svg',
+        icon: Icon.DebugAlt2,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+D',
@@ -73,7 +74,7 @@ test('selectCurrent - settings', async () => {
       {
         id: 'Extensions',
         title: 'Extensions',
-        icon: 'icons/extensions.svg',
+        icon: Icon.Extensions,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+X',
@@ -82,7 +83,7 @@ test('selectCurrent - settings', async () => {
       {
         id: 'Settings',
         title: 'Settings',
-        icon: 'icons/settings-gear.svg',
+        icon: Icon.SettingsGear,
         enabled: true,
         flags: ActivityBarItemFlags.Button,
         keyShortcuts: '',
@@ -111,7 +112,7 @@ test('selectCurrent - no item focused', async () => {
       {
         id: 'Explorer',
         title: 'Explorer',
-        icon: 'icons/files.svg',
+        icon: Icon.Files,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+E',
@@ -119,7 +120,7 @@ test('selectCurrent - no item focused', async () => {
       {
         id: 'Search',
         title: 'Search',
-        icon: 'icons/search.svg',
+        icon: Icon.Search,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+F',
@@ -127,7 +128,7 @@ test('selectCurrent - no item focused', async () => {
       {
         id: 'Source Control',
         title: 'Source Control',
-        icon: 'icons/source-control.svg',
+        icon: Icon.SourceControl,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+G',
@@ -135,7 +136,7 @@ test('selectCurrent - no item focused', async () => {
       {
         id: 'Run and Debug',
         title: 'Run and Debug',
-        icon: 'icons/debug-alt-2.svg',
+        icon: Icon.DebugAlt2,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+D',
@@ -143,7 +144,7 @@ test('selectCurrent - no item focused', async () => {
       {
         id: 'Extensions',
         title: 'Extensions',
-        icon: 'icons/extensions.svg',
+        icon: Icon.Extensions,
         enabled: true,
         flags: ActivityBarItemFlags.Tab,
         keyShortcuts: 'Control+Shift+X',
@@ -152,7 +153,7 @@ test('selectCurrent - no item focused', async () => {
       {
         id: 'Settings',
         title: 'Settings',
-        icon: 'icons/settings-gear.svg',
+        icon: Icon.SettingsGear,
         enabled: true,
         flags: ActivityBarItemFlags.Button,
         keyShortcuts: '',
