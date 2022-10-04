@@ -1,6 +1,0 @@
-export const IconProperty = '/icons/symbol-property.svg'
-export const IconValue = '/icons/symbol-enum.svg'
-export const IconFunction = '/icons/symbol-method.svg'
-export const IconVariable = '/icons/symbol-variable.svg'
-export const IconKeyword = '/icons/symbol-keyword.svg'
-export const IconDefault = 'IconDefault'

@@ -1,6 +1,7 @@
 import * as InputBox from '../InputBox/InputBox.js'
 import * as ViewletEditorFindWidgetEvents from './ViewletEditorFindWidgetEvents.js'
 import * as Focus from '../Focus/Focus.js'
+import * as Icon from '../Icon/Icon.js'
 
 export const name = 'EditorFindWidget'
 
@@ -8,12 +9,6 @@ const UiStrings = {
   Close: 'Close',
   PreviousMatch: 'Previous Match',
   NextMatch: 'Next Match',
-}
-
-const Icons = {
-  Close: '/icons/icon-close.svg',
-  PreviousMatch: '/icons/arrow-up.svg',
-  NextMatch: '/icons/arrow-down.svg',
 }
 
 const create$Button = (label, icon) => {
@@ -45,12 +40,12 @@ export const create = () => {
   $MatchCount.className = 'EditorFindWidgetMatchCount'
   $MatchCount.append($MatchCountText)
 
-  const $ButtonFocusNext = create$Button(UiStrings.NextMatch, Icons.NextMatch)
+  const $ButtonFocusNext = create$Button(UiStrings.NextMatch, Icon.NextMatch)
   const $ButtonFocusPrevious = create$Button(
     UiStrings.PreviousMatch,
-    Icons.PreviousMatch
+    Icon.PreviousMatch
   )
-  const $ButtonClose = create$Button(UiStrings.Close, Icons.Close)
+  const $ButtonClose = create$Button(UiStrings.Close, Icon.Close)
 
   const $Viewlet = document.createElement('div')
   $Viewlet.onclick = ViewletEditorFindWidgetEvents.handleClick

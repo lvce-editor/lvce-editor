@@ -4,6 +4,7 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as MarkDown from '../Markdown/Markdown.js'
 import * as Path from '../Path/Path.js'
 import * as SanitizeHtml from '../SanitizeHtml/SanitizeHtml.js'
+import * as Icon from '../Icon/Icon.js'
 
 export const name = 'ExtensionDetail'
 
@@ -20,22 +21,18 @@ const loadReadmeContent = async (path) => {
   return readmeContent
 }
 
-const DEFAULT_ICON_SRC = '/icons/extensionDefaultIcon.png'
-const DEFAULT_ICON_LANGUAGE_BASICS = '/icons/language-icon.svg'
-const DEFAULT_ICON_THEME = '/icons/theme-icon.png'
-
 // TODO duplicate code with viewletExtensions
 const getIconSrc = (extension) => {
   if (extension.icon) {
     return ExtensionDisplay.getIcon(extension)
   }
   if (extension.name && extension.name.startsWith('Language Basics')) {
-    return DEFAULT_ICON_LANGUAGE_BASICS
+    return Icon.EXtensionLanguageBasics
   }
   if (extension.name && extension.name.endsWith(' Theme')) {
-    return DEFAULT_ICON_THEME
+    return Icon.ExtensionTheme
   }
-  return DEFAULT_ICON_SRC
+  return Icon.ExtensionDefaultIcon
 }
 
 // TODO when there are multiple extension with the same id,

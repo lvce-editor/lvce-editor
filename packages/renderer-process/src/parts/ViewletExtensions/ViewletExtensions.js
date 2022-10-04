@@ -1,5 +1,6 @@
 import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Icon from '../Icon/Icon.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 
@@ -8,10 +9,6 @@ export const name = 'Extensions'
 const activeId = 'ExtensionActive'
 
 // TODO vscode uninstall behaviour is better -> more subtle uninstall -> no cta for uninstalling
-
-const DEFAULT_ICON_SRC = '/icons/extensionDefaultIcon.png'
-const DEFAULT_ICON_LANGUAGE_BASICS = '/icons/language-icon.svg'
-const DEFAULT_ICON_THEME = '/icons/theme-icon.png'
 
 const create$ExtensionSuggestions = () => {
   const $ExtensionSuggestions = document.createElement('div')
@@ -26,12 +23,12 @@ const getIconSrc = (extension) => {
     return extension.icon
   }
   if (extension.name && extension.name.startsWith('Language Basics')) {
-    return DEFAULT_ICON_LANGUAGE_BASICS
+    return Icon.EXtensionLanguageBasics
   }
   if (extension.name && extension.name.endsWith(' Theme')) {
-    return DEFAULT_ICON_THEME
+    return Icon.ExtensionTheme
   }
-  return DEFAULT_ICON_SRC
+  return Icon.ExtensionDefaultIcon
 }
 
 const findIndex = ($Target) => {
