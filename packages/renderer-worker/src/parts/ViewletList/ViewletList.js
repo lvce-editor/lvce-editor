@@ -204,7 +204,6 @@ const getNewPercent = (state, relativeY) => {
 
 export const handleScrollBarMove = (state, y) => {
   const relativeY = y - state.top - state.handleOffset
-  console.log('handle offset', state.handleOffset)
   const newPercent = getNewPercent(state, relativeY)
   const newDeltaY = newPercent * state.finalDeltaY
   console.log({ relativeY, newPercent, newDeltaY })
