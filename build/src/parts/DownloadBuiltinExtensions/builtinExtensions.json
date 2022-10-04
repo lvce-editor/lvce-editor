@@ -32,7 +32,7 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "0.0.15"
+    "version": "0.0.16"
   },
   {
     "name": "builtin.language-basics-html",
@@ -62,7 +62,7 @@
   {
     "name": "builtin.language-basics-docker",
     "repository": "github.com/lvce-editor/language-basics-docker",
-    "version": "0.0.7"
+    "version": "0.0.8"
   },
   {
     "name": "builtin.language-basics-java",
