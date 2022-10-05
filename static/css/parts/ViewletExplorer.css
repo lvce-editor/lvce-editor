@@ -41,7 +41,7 @@
 }
 
 .TreeItem:hover {
-  background: rgba(64, 92, 80, 0.2);
+  background: var(--TreeItemHoverBackground, rgba(64, 92, 80, 0.2));
 }
 
 /* .TreeItem.Hover {
