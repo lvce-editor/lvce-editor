@@ -8,7 +8,6 @@ export const EditorController = 7
 export const EditorError = 8
 export const EditorHover = 9
 export const EditorRename = 10
-export const FindWidget = 11
 export const ImagePreview = 12
 export const InitData = 13
 export const KeyBindings = 14

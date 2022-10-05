@@ -23,7 +23,6 @@ export const ExtensionMeta = 21
 export const Extensions = 22
 export const FileSystem = 23
 export const FindInWorkspace = 24
-export const FindWidget = 25
 export const Format = 26
 export const IconTheme = 27
 export const ImagePreview = 28

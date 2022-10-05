@@ -94,17 +94,9 @@ export const dispose = async (state) => {
 export const openFindWidget = async (state) => {
   // TODO use command.execute instead
   // TODO no lazy import here
-  const FindWidget = await import('../FindWidget/FindWidget.js')
-  FindWidget.create()
 }
 
-export const closeFindWidget = async (state) => {
-  // const FindWidget = await import('../FindWidget/FindWidget.js')
-  // state
-  // if(state.findWidget){
-  // state.findWidget.dispose()
-  // }
-}
+export const closeFindWidget = async (state) => {}
 
 export const handleError = (state, error) => {
   console.error(error)
