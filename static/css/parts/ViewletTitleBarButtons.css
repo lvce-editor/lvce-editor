@@ -36,11 +36,11 @@
 }
 
 .MaskIconMinimize {
-  -webkit-mask-image: url(/static/icons/chrome-minimize.svg);
+  -webkit-mask-image: url(/icons/chrome-minimize.svg);
 }
 .MaskIconToggleMaximize {
-  -webkit-mask-image: url(/static/icons/chrome-maximize.svg);
+  -webkit-mask-image: url(/icons/chrome-maximize.svg);
 }
 .MaskIconClose {
-  -webkit-mask-image: url(/static/icons/chrome-close.svg);
+  -webkit-mask-image: url(/icons/chrome-close.svg);
 }
