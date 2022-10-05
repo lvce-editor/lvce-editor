@@ -6,6 +6,8 @@ export const DebugConsole = 'Debug Console'
 
 export const EditorCompletion = 'EditorCompletion'
 
+export const EditorFindWidget = 'EditorFindWidget'
+
 export const EditorImage = 'EditorImage'
 
 export const EditorPlainText = 'EditorPlainText'
@@ -13,6 +15,8 @@ export const EditorPlainText = 'EditorPlainText'
 export const EditorText = 'EditorText'
 
 export const Explorer = 'Explorer'
+
+export const ExtensionDetail = 'ExtensionDetail'
 
 export const Extensions = 'Extensions'
 
@@ -48,10 +52,6 @@ export const Terminal = 'Terminal'
 
 export const TitleBar = 'TitleBar'
 
-export const EditorFindWidget = 'EditorFindWidget'
-
-export const ExtensionDetail = 'ExtensionDetail'
+export const TitleBarButtons = 'TitleBarButtons'
 
 export const TitleBarMenuBar = 'TitleBarMenuBar'
-
-export const TitleBarButtons = 'TitleBarButtons'

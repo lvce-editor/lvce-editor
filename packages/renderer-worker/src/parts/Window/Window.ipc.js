@@ -8,8 +8,8 @@ export const Commands = {
   'Window.maximize': Chrome.maximize,
   'Window.minimize': Chrome.minimize,
   'Window.openNew': Chrome.openNew,
-  'Window.zoomIn': Chrome.zoomIn,
-  'Window.zoomOut': Chrome.zoomOut,
   'Window.reload': Window.reload,
   'Window.unmaximize': Chrome.unmaximize,
+  'Window.zoomIn': Chrome.zoomIn,
+  'Window.zoomOut': Chrome.zoomOut,
 }

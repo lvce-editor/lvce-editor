@@ -20,12 +20,12 @@ export const Commands = {
   'QuickPick.focusPrevious': LazyCommand.create(ViewletQuickPick.name, Imports.FocusPrevious, 'focusPrevious'),
   'QuickPick.handleBeforeInput': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.handleBeforeInput),
   'QuickPick.handleBlur': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.handleBlur),
+  'QuickPick.handleClickAt': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.handleClickAt),
   'QuickPick.handleInput': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.handleInput),
   'QuickPick.handleWheel': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.handleWheel),
   'QuickPick.selectCurrentIndex': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.selectCurrentIndex),
   'QuickPick.selectIndex': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.selectIndex),
   'QuickPick.selectItem': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.selectItem),
-  'QuickPick.handleClickAt': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.handleClickAt),
 }
 
 export * from './ViewletQuickPick.js'
