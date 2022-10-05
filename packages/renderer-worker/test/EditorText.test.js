@@ -1,3 +1,4 @@
+import { jest } from '@jest/globals'
 import * as EditorText from '../src/parts/Editor/EditorText.js'
 
 test('getVisible', () => {
@@ -749,4 +750,73 @@ test('getVisible - empty line cache and tokens below', () => {
     ['line 76', 'Token Text'],
     ['line 77', 'Token Text'],
   ])
+})
+
+test("getVisible - don't tokenize lines that have been tokenized already", () => {
+  const tokenizer = {
+    State: {
+      TopLevelContent: 1,
+    },
+    TokenMap: {
+      1: 'Text',
+    },
+    TokenType: {
+      Text: 1,
+    },
+    initialLineState: {
+      state: 1,
+    },
+    hasArrayReturn: true,
+    tokenizeLine: jest.fn((line, lineState) => {
+      return {
+        state: lineState.state,
+        tokens: [1, line.length],
+      }
+    }),
+  }
+  const editor = {
+    uri: '/test/file.txt',
+    languageId: 'plaintext',
+    lines: ['line 1', 'line 2', 'line 3', 'line 4'],
+    completionTriggerCharacters: [],
+    primarySelectionIndex: 0,
+    tokenizer,
+    selections: new Uint32Array([0, 0, 0, 0]),
+    id: 1,
+    deltaY: 1139.7169501781464,
+    minLineY: 2,
+    maxLineY: 4,
+    numberOfVisibleLines: 2,
+    undoStack: [],
+    lineCache: [
+      null,
+      {
+        state: 1,
+        tokens: [],
+      },
+      {
+        state: 1,
+        tokens: [],
+      },
+    ],
+    validLines: [],
+    invalidStartIndex: 2,
+    decorations: [],
+    focused: true,
+    width: 635,
+    scrollBarY: 242.1898519128561,
+  }
+  expect(EditorText.getVisible(editor)).toEqual([
+    ['line 3', 'Token Text'],
+    ['line 4', 'Token Text'],
+  ])
+  expect(tokenizer.tokenizeLine).toHaveBeenCalledTimes(2)
+  expect(tokenizer.tokenizeLine).toHaveBeenNthCalledWith(1, 'line 3', {
+    state: 1,
+    tokens: [],
+  })
+  expect(tokenizer.tokenizeLine).toHaveBeenNthCalledWith(2, 'line 4', {
+    state: 1,
+    tokens: [1, 6],
+  })
 })
