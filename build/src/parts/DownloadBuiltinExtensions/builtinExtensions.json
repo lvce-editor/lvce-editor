@@ -65,6 +65,11 @@
     "version": "0.0.8"
   },
   {
+    "name": "builtin.language-basics-coffeescript",
+    "repository": "github.com/lvce-editor/language-basics-coffeescript",
+    "version": "0.0.1"
+  },
+  {
     "name": "builtin.language-basics-java",
     "repository": "github.com/lvce-editor/language-basics-java",
     "version": "0.0.1"
