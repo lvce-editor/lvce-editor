@@ -32,7 +32,9 @@
 @import './parts/ViewletDebugConsole.css';
 @import './parts/Highlight.css';
 @import './parts/Main.css';
-@import './parts/TitleBar.css';
+@import './parts/ViewletTitleBar.css';
+@import './parts/ViewletTitleBarButtons.css';
+@import './parts/ViewletTitleBarMenuBar.css';
 @import './parts/Widgets.css';
 @import './parts/EditorHover.css';
 @import './parts/Mobile.css';
