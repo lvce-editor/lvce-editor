@@ -57,7 +57,7 @@
   {
     "name": "builtin.language-basics-markdown",
     "repository": "github.com/lvce-editor/language-basics-markdown",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-basics-docker",
@@ -197,6 +197,6 @@
   {
     "name": "builtin.theme-atom-one-dark",
     "repository": "github.com/lvce-editor/theme-atom-one-dark",
-    "version": "0.0.2"
+    "version": "0.0.4"
   }
 ]
