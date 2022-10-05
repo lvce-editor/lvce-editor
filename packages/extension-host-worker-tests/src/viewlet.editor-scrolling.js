@@ -7,31 +7,30 @@ test('viewlet.editor-scrolling', async () => {
   "annotations": {
     "list": [
       {
-        "builtIn": 1,
-        "datasource": "-- Grafana --",
-        "enable": true,
-        "hide": true,
-        "iconColor": "rgba(0, 211, 255, 1)",
-        "limit": 100,
-        "name": "Annotations & Alerts",
-        "showIn": 0,
-        "type": "dashboard"
+        "a": 1,
+        "b": 2,
+        "c": 3,
+        "d": 4,
+        "e": 5,
+        "f": 6,
+        "g": 7,
+        "h": 8,
+        "i": 9
       },
       {
-        "datasource": null,
-        "enable": true,
-        "expr": "resets(process_uptime_seconds{application=\\"$application\\", instance=\\"$instance\\"}[1m]) > 0",
-        "iconColor": "rgba(255, 96, 96, 1)",
-        "name": "Restart Detection",
-        "showIn": 0,
-        "step": "1m",
-        "tagKeys": "restart-tag",
-        "textFormat": "uptime reset",
-        "titleFormat": "Restart"
+        "a": 1,
+        "b": 2,
+        "c": 3,
+        "d": 4,
+        "e": 5,
+        "f": 6,
+        "g": 7,
+        "h": 8,
+        "i": 9
       }
     ]
   },
-  "description": "Che Server JVM",
+  "description": "",
   "editable": true
 }
 ` + '\n'.repeat(50)
@@ -45,5 +44,7 @@ test('viewlet.editor-scrolling', async () => {
 
   // act
   await Editor.setDeltaY(40)
+
+  // assert
   await expect(descriptionToken).toHaveClass('JsonPropertyName')
 })
