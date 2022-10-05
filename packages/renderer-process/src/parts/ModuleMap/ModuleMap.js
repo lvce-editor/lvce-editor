@@ -100,6 +100,8 @@ export const getModuleId = (commandId) => {
     case 'Performance.getMemory':
     case 'Performance.measureUserAgentSpecificMemory':
       return ModuleId.Performance
+    case 'SanitizeHtml.sanitizeHtml':
+      return ModuleId.SanitizeHtml
     case 'ServiceWorker.register':
     case 'ServiceWorker.uninstall':
       return ModuleId.ServiceWorker
@@ -138,8 +140,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Window
     case 33111:
       return ModuleId.Workbench
-    case 'SanitizeHtml.sanitizeHtml':
-      return ModuleId.SanitizeHtml
     default:
       throw new Error(`command ${commandId} not found`)
   }

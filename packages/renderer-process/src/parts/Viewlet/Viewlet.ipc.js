@@ -12,6 +12,6 @@ export const Commands = {
   'Viewlet.refresh': Viewlet.refresh,
   'Viewlet.send': Viewlet.invoke,
   'Viewlet.sendMultiple': Viewlet.sendMultiple,
-  'Viewlet.show': Viewlet.show,
   'Viewlet.setBounds': Viewlet.setBounds,
+  'Viewlet.show': Viewlet.show,
 }

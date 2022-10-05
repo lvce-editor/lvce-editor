@@ -17,9 +17,9 @@ export const Commands = {
   'Main.handleDrop': Viewlet.wrapViewletCommand(ViewletMain.name, ViewletMain.handleDrop),
   'Main.handleTabClick': Viewlet.wrapViewletCommand(ViewletMain.name, ViewletMain.handleTabClick),
   'Main.handleTabContextMenu': Viewlet.wrapViewletCommand(ViewletMain.name, ViewletMain.handleTabContextMenu),
-  // 'Main.hydrate': Viewlet.wrapViewletCommand(ViewletMain.name, ViewletMain.hydrate),
   'Main.openUri': Viewlet.wrapViewletCommand(ViewletMain.name, ViewletMain.openUri),
   'Main.save': Viewlet.wrapViewletCommand(ViewletMain.name, ViewletMain.save),
+  // 'Main.hydrate': Viewlet.wrapViewletCommand(ViewletMain.name, ViewletMain.hydrate),
 }
 
 export * from './ViewletMain.js'

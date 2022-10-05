@@ -23,6 +23,12 @@ export const getModuleId = (commandId) => {
     case 'Callback.reject':
     case 'Callback.resolve':
       return ModuleId.Callback
+    case 'Chrome.close':
+    case 'Chrome.exit':
+    case 'Chrome.maximize':
+    case 'Chrome.minimize':
+    case 'Chrome.unmaximize':
+      return ModuleId.Chrome
     case 'ClipBoard.readNativeFiles':
     case 'ClipBoard.readText':
     case 'ClipBoard.writeImage':
@@ -236,9 +242,9 @@ export const getModuleId = (commandId) => {
     case 'Url.createObjectUrl':
     case 'Url.revokeObjectUrl':
       return ModuleId.Url
+    case 'Viewlet.closeWidget':
     case 'Viewlet.getAllStates':
     case 'Viewlet.openWidget':
-    case 'Viewlet.closeWidget':
     case 2133:
       return ModuleId.Viewlet
     case 'Window.close':
@@ -258,12 +264,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace.setPath':
     case 'Workspace.setUri':
       return ModuleId.Workspace
-    case 'Chrome.close':
-    case 'Chrome.exit':
-    case 'Chrome.maximize':
-    case 'Chrome.minimize':
-    case 'Chrome.unmaximize':
-      return ModuleId.Chrome
     default:
       throw new Error(`command ${commandId} not found`)
   }

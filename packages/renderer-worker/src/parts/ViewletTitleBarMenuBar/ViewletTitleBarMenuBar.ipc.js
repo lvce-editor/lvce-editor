@@ -19,11 +19,11 @@ export const Commands = {
   'TitleBarMenuBar.handleKeyEscape': Viewlet.wrapViewletCommand('TitleBarMenuBar', ViewletTitleBarMenuBar.handleKeyEscape),
   'TitleBarMenuBar.handleKeyHome': Viewlet.wrapViewletCommand('TitleBarMenuBar', ViewletTitleBarMenuBar.handleKeyHome),
   'TitleBarMenuBar.handleKeySpace': Viewlet.wrapViewletCommand('TitleBarMenuBar', ViewletTitleBarMenuBar.handleKeySpace),
+  'TitleBarMenuBar.handleMenuMouseDown': Viewlet.wrapViewletCommand('TitleBarMenuBar', ViewletTitleBarMenuBar.handleMenuMouseDown),
+  'TitleBarMenuBar.handleMenuMouseOver': Viewlet.wrapViewletCommand('TitleBarMenuBar', ViewletTitleBarMenuBar.handleMenuMouseOver),
   'TitleBarMenuBar.handleMouseOver': Viewlet.wrapViewletCommand('TitleBarMenuBar', ViewletTitleBarMenuBar.handleMouseOver),
   'TitleBarMenuBar.toggleIndex': Viewlet.wrapViewletCommand('TitleBarMenuBar', ViewletTitleBarMenuBar.toggleIndex),
   'TitleBarMenuBar.toggleMenu': Viewlet.wrapViewletCommand('TitleBarMenuBar', ViewletTitleBarMenuBar.toggleMenu),
-  'TitleBarMenuBar.handleMenuMouseOver': Viewlet.wrapViewletCommand('TitleBarMenuBar', ViewletTitleBarMenuBar.handleMenuMouseOver),
-  'TitleBarMenuBar.handleMenuMouseDown': Viewlet.wrapViewletCommand('TitleBarMenuBar', ViewletTitleBarMenuBar.handleMenuMouseDown),
 }
 
 export * from './ViewletTitleBarMenuBar.js'
