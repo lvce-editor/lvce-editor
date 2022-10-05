@@ -1,8 +1,10 @@
+const name = 'viewlet.editor-scrolling'
+
 test('viewlet.editor-scrolling', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
-    `${tmpDir}/file1.json`,
+    `${tmpDir}/file1.xyz`,
     `{
   "annotations": {
     "list": [
@@ -36,7 +38,10 @@ test('viewlet.editor-scrolling', async () => {
 ` + '\n'.repeat(50)
   )
   await Workspace.setPath(tmpDir)
-  await Main.openUri(`${tmpDir}/file1.json`)
+  await Extension.addWebExtension(
+    new URL(`../fixtures/${name}`, import.meta.url).toString()
+  )
+  await Main.openUri(`${tmpDir}/file1.xyz`)
 
   // assert
   const descriptionToken = Locator('.Token', { hasText: 'description' })
