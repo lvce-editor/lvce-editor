@@ -75,6 +75,11 @@
     "version": "0.0.1"
   },
   {
+    "name": "builtin.language-basics-elm",
+    "repository": "github.com/lvce-editor/language-basics-elm",
+    "version": "0.0.1"
+  },
+  {
     "name": "builtin.language-basics-java",
     "repository": "github.com/lvce-editor/language-basics-java",
     "version": "0.0.1"
