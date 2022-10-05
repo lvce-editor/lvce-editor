@@ -96,16 +96,6 @@ const copyStaticFiles = async ({ pathPrefix }) => {
   }
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IconTheme/IconTheme.js`,
-    occurrence: `const getIconThemeUrl = (iconThemeId) => {
-  return \`/extensions/builtin.\${iconThemeId}/icon-theme.json\`
-}`,
-    replacement: `const getIconThemeUrl = (iconThemeId) => {
-  const assetDir = Platform.getAssetDir()
-  return \`\${assetDir}/icon-themes/\${iconThemeId}.json\`
-}`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IconTheme/IconTheme.js`,
     occurrence: `return \`\${extensionPath}\${value}\``,
     replacement: `return \`${pathPrefix}/file-icons/\${value.slice(7)}\``,
   })
