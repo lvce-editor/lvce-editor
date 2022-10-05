@@ -71,3 +71,7 @@ export const setSelections = async (selections) => {
 export const openFindWidget = async () => {
   await Command.execute('Editor.openFind')
 }
+
+export const setDeltaY = async (deltaY) => {
+  await Command.execute('Editor.setDeltaY', deltaY)
+}

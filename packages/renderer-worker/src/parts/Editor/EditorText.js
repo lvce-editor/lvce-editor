@@ -60,7 +60,7 @@ const getTokensViewport = (editor, startLineIndex, endLineIndex) => {
   const invalidStartIndex = editor.invalidStartIndex
   const lineCache = editor.lineCache
   const hasArrayReturn = editor.tokenizer.hasArrayReturn
-  const tokenizeStartIndex = Math.min(invalidStartIndex, startLineIndex)
+  const tokenizeStartIndex = invalidStartIndex
   const tokenizeEndIndex =
     invalidStartIndex < endLineIndex ? endLineIndex : tokenizeStartIndex
   const tokenizeLine = editor.tokenizer.tokenizeLine

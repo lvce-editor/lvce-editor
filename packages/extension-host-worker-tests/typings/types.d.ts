@@ -25,6 +25,7 @@ declare const Editor: {
   readonly setCursor: (rowIndex: number, columnIndex: number) => Promise<void>
   readonly setSelections: (selections: Uint32Array) => Promise<void>
   readonly type: (text: string) => Promise<void>
+  readonly setDeltaY: (deltaY: number) => Promise<void>
 }
 
 declare const Explorer: {

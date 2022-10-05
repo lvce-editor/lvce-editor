@@ -1,0 +1,9 @@
+{
+  "languages": [
+    {
+      "id": "xyz",
+      "extensions": [".xyz"],
+      "tokenize": "src/tokenizeXyz.js"
+    }
+  ]
+}
