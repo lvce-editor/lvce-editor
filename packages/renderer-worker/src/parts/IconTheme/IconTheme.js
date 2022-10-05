@@ -22,7 +22,8 @@ export const state = {
 }
 
 const getIconThemeUrl = (iconThemeId) => {
-  return `/extensions/builtin.${iconThemeId}/icon-theme.json`
+  const assetDir = Platform.getAssetDir()
+  return `${assetDir}/extensions/builtin.${iconThemeId}/icon-theme.json`
 }
 
 const getIconThemeJson = async (iconThemeId) => {
@@ -32,9 +33,10 @@ const getIconThemeJson = async (iconThemeId) => {
       /* Ajax.getJson */ 'Ajax.getJson',
       /* url */ url
     )
+    const assetDir = Platform.getAssetDir()
     return {
       json,
-      extensionPath: `/extensions/builtin.${iconThemeId}`,
+      extensionPath: `${assetDir}/extensions/builtin.${iconThemeId}`,
     }
   }
   return SharedProcess.invoke(
