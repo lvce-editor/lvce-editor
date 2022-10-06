@@ -202,7 +202,7 @@ test('accessibility - ActivityBar should have role toolbar, ariaLabel and ariaOr
     },
   ])
   expect(state.$ActivityBar.role).toBe('toolbar')
-  expect(state.$ActivityBar.ariaLabel).toBe('Activity Bar')
+  expect(state.$ActivityBar.ariaRoleDescription).toBe('Activity Bar')
   expect(state.$ActivityBar.ariaOrientation).toBe('vertical')
 })
 
