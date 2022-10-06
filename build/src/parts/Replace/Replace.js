@@ -1,3 +1,4 @@
+import VError from 'verror'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
@@ -13,9 +14,7 @@ export const replace = async ({ path, occurrence, replacement }) => {
       content: newContent,
     })
   } catch (error) {
-    throw new Error(`Failed to replace occurrence in ${path}`, {
-      // @ts-ignore
-      cause: error,
-    })
+    // @ts-ignore
+    throw new VError(error, `Failed to replace occurrence in ${path}`)
   }
 }

@@ -77,11 +77,6 @@ const copyStaticFiles = async ({ pathPrefix }) => {
     from: 'static/index.html',
     to: `build/.tmp/dist/index.html`,
   })
-  await Replace.replace({
-    path: `build/.tmp/dist/index.html`,
-    occurrence: '/config',
-    replacement: `${pathPrefix}/${commitHash}/config`,
-  })
   if (pathPrefix) {
     await Replace.replace({
       path: `build/.tmp/dist/index.html`,
