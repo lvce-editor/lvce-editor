@@ -62,11 +62,6 @@ const copyStaticFiles = async () => {
   })
   await Replace.replace({
     path: `build/.tmp/server/server/static/index.html`,
-    occurrence: '/config',
-    replacement: `/${commitHash}/config`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/index.html`,
     occurrence: '</head>',
     replacement: `  <link rel="preload" href="/${commitHash}/config/defaultSettings.json" as="fetch" crossorigin>
   </head>`,
