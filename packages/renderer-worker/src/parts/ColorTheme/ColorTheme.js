@@ -34,8 +34,7 @@ const getColorThemeJsonFromSharedProcess = async (colorThemeId) => {
 }
 
 const getColorThemeUrlWeb = (colorThemeId) => {
-  const assetDir = Platform.getAssetDir()
-  return `${assetDir}/extensions/builtin.theme-${colorThemeId}/color-theme.json`
+  return `/extensions/builtin.theme-${colorThemeId}/color-theme.json`
 }
 
 const getColorThemeJsonFromStaticFolder = (colorThemeId) => {
