@@ -1,6 +1,8 @@
 {
   "completions.loadingDelay": 1200,
 
+  "development.watchColorTheme": true,
+
   "editor.fontSize": 15,
   "editor.fontFamily": "'Fira Code'",
   "editor.lineHeight": 20,

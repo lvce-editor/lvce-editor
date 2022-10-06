@@ -9,6 +9,10 @@ import { VError } from '../VError/VError.js'
 // TODO by default color theme should come from local storage, session storage, cache storage, indexeddb or blob url -> fast initial load
 // actual color theme can be computed after workbench has loaded (most times will be the same and doesn't need to be computed)
 
+export const state = {
+  watchedTheme: '',
+}
+
 const FALLBACK_COLOR_THEME_ID = 'slime'
 
 const getColorThemeJsonFromSharedProcess = async (colorThemeId) => {
@@ -78,12 +82,19 @@ const getMetaThemeColor = (colorThemeJson) => {
 }
 const applyColorTheme = async (colorThemeId) => {
   try {
+    state.colorTheme = colorThemeId
     const colorThemeJson = await getColorThemeJson(colorThemeId)
     const colorThemeCss = await getColorThemeCss(colorThemeId, colorThemeJson)
     await Css.setInlineStyle('ContributedColorTheme', colorThemeCss)
     if (Platform.platform === PlatformType.Web) {
       const themeColor = getMetaThemeColor(colorThemeJson) || ''
       await Meta.setThemeColor(themeColor)
+    }
+    if (
+      Platform.platform !== PlatformType.Web &&
+      Preferences.get('development.watchColorTheme')
+    ) {
+      watch(colorThemeId)
     }
   } catch (error) {
     throw new VError(error, `Failed to apply color theme "${colorThemeId}"`)
@@ -94,6 +105,19 @@ export const setColorTheme = async (colorThemeId) => {
   await applyColorTheme(colorThemeId)
   // TODO should preferences throw errors or should it call handleError directly?
   await Preferences.set('workbench.colorTheme', colorThemeId)
+}
+
+export const watch = (id) => {
+  if (state.watchedTheme === id) {
+    return
+  }
+  state.watchedTheme = id
+  SharedProcess.send('ExtensionHost.watchColorTheme', id)
+}
+
+export const reload = async () => {
+  const colorThemeId = Preferences.get('workbench.colorTheme')
+  await applyColorTheme(colorThemeId)
 }
 
 // TODO test this, and also the error case

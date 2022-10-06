@@ -5,6 +5,7 @@ const METHODS_THAT_REQUIRE_SOCKET = new Set([
   'OutputChannel.open',
   'ExtensionHost.start',
   'ExtensionHost.send',
+  'ExtensionHost.watchColorTheme',
 ])
 
 export const requiresSocket = (method) => {
