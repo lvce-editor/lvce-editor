@@ -104,15 +104,6 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
     occurrence: `return \`\${extensionPath}\${value}\``,
     replacement: `return \`${pathPrefix}/file-icons/\${value.slice(7)}\``,
   })
-  await Replace.replace({
-    path: `build/.tmp/dist/index.html`,
-    occurrence: '</head>',
-    replacement: `  <link rel="preload" href="${pathPrefix}/${commitHash}/config/defaultSettings.json" as="fetch" crossorigin>
-    <link rel="preload" href="${pathPrefix}/${commitHash}/config/languages.json" as="fetch" crossorigin>
-    <link rel="preload" href="${pathPrefix}/${commitHash}/themes/slime.json" as="fetch" crossorigin>
-    <link rel="preload" href="${pathPrefix}/${commitHash}/icon-themes/vscode-icons.json" as="fetch" crossorigin>
-  </head>`,
-  })
   if (pathPrefix) {
     await Replace.replace({
       path: `build/.tmp/dist/index.html`,
