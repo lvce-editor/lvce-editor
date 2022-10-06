@@ -243,8 +243,8 @@ const copySharedProcessFiles = async () => {
   // TODO where should builtinExtension be located?
   const shouldBeCopied = (extensionName) => {
     return (
-      extensionName === 'builtin.theme-slime' ||
       extensionName === 'builtin.vscode-icons' ||
+      extensionName.startsWith('builtin.theme-') ||
       extensionName.startsWith('builtin.language-basics')
     )
   }
