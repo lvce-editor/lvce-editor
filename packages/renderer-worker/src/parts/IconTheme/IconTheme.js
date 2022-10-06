@@ -22,8 +22,7 @@ export const state = {
 }
 
 const getIconThemeUrl = (iconThemeId) => {
-  const assetDir = Platform.getAssetDir()
-  return `${assetDir}/extensions/builtin.${iconThemeId}/icon-theme.json`
+  return `/extensions/builtin.${iconThemeId}/icon-theme.json`
 }
 
 const getIconThemeJson = async (iconThemeId) => {
