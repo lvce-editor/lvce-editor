@@ -200,6 +200,11 @@
     "version": "0.0.1"
   },
   {
+    "name": "builtin.theme-gruvbox",
+    "repository": "github.com/lvce-editor/theme-gruvbox",
+    "version": "0.0.2"
+  },
+  {
     "name": "builtin.theme-high-contrast",
     "repository": "github.com/lvce-editor/theme-high-contrast",
     "version": "0.0.1"
