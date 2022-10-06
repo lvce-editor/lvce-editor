@@ -55,7 +55,7 @@ export const name = 'ActivityBar'
 export const create = () => {
   const $ActivityBar = Layout.state.$ActivityBar
   $ActivityBar.role = 'toolbar'
-  $ActivityBar.ariaLabel = 'Activity Bar'
+  $ActivityBar.ariaRoleDescription = 'Activity Bar'
   $ActivityBar.ariaOrientation = 'vertical'
   // $ActivityBar.append(...activityBarItems.map(create$ActivityBarItem))
   $ActivityBar.onmousedown = ViewletActivityBarEvents.handleMousedown

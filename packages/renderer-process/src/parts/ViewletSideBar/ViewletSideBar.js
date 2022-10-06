@@ -16,7 +16,8 @@ export const create = () => {
   // $SideBarContent.id = 'SideBarContent'
 
   const $SideBar = Layout.state.$SideBar
-  $SideBar.ariaLabel = 'Side Bar'
+  $SideBar.role = 'complementary'
+  $SideBar.ariaRoleDescription = 'Side Bar'
   $SideBar.append($SideBarTitleArea)
 
   return {
