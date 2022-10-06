@@ -232,7 +232,7 @@ preload()
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/css/App.css`,
     occurrence: `url(/icons/`,
-    replacement: `url(/${pathPrefix}${commitHash}/icons/`,
+    replacement: `url(${pathPrefix}/${commitHash}/icons/`,
   })
   await Copy.copy({
     from: 'static/icons',
