@@ -40,6 +40,9 @@ const handleDropRootElectron = async (state, files) => {
 
 const uploadFiles = async (root, pathSeparator, files) => {
   for (const file of files) {
+    if (file.size === 0 || file.size === 4096) {
+      throw new Error('folder upload is not yet supported')
+    }
     const content = await Command.execute('Blob.blobToBinaryString', file)
     const to = Path.join(pathSeparator, root, file.name)
     await FileSystem.writeFile(to, content, 'binary')
