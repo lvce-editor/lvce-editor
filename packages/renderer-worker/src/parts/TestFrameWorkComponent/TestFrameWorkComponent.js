@@ -1,3 +1,4 @@
+export * as ActivityBar from './TestFrameworkComponentActivityBar.js'
 export * as Command from './TestFrameWorkComponentCommand.js'
 export * as ContextMenu from './TestFrameWorkComponentContextMenu.js'
 export * as Editor from './TestFrameWorkComponentEditor.js'
