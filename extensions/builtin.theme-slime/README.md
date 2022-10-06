@@ -1,4 +1,4 @@
-# Theme Monokai
+# Theme Slime
 
 ## Credits
 
