@@ -57,6 +57,11 @@ jobs:
         run: npm run e2e:headless
         env:
           PLAYWRIGHT_BROWSERS_PATH: 0
+      - name: Build static site
+        if: matrix.os == 'ubuntu-22.04'
+        run: node build/bin/build.js --target=static --ignore-icon-theme
+        env:
+          PATH_PREFIX: /lvce-editor
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-22.04'
         run: node build/bin/build.js --target=electron-deb --force # --force workaround for issue with node-pty
