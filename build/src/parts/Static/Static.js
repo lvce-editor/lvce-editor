@@ -241,6 +241,11 @@ preload()
     occurrence: `url(/icons/`,
     replacement: `url(${pathPrefix}/${commitHash}/icons/`,
   })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/css/App.css`,
+    occurrence: `url(/fonts/`,
+    replacement: `url(${pathPrefix}/fonts/`,
+  })
   await Copy.copy({
     from: 'static/icons',
     to: `build/.tmp/dist/${commitHash}/icons`,
