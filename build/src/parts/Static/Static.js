@@ -6,13 +6,13 @@ import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
-import * as Mkdir from '../Mkdir/Mkdir.js'
 
 const copyJs = async ({ commitHash }) => {
   await Copy.copy({
@@ -29,7 +29,7 @@ const copyJs = async ({ commitHash }) => {
   })
 }
 
-const copyStaticFiles = async ({ pathPrefix }) => {
+const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
   const commitHash = await CommitHash.getCommitHash()
   await Copy.copy({
     from: 'static/config',
@@ -217,10 +217,12 @@ preload()
     occurrence: '/css',
     replacement: `${pathPrefix}/${commitHash}/css`,
   })
-  await Copy.copy({
-    from: 'extensions/builtin.vscode-icons/icons',
-    to: `build/.tmp/dist/file-icons`,
-  })
+  if (!ignoreIconTheme) {
+    await Copy.copy({
+      from: 'extensions/builtin.vscode-icons/icons',
+      to: `build/.tmp/dist/file-icons`,
+    })
+  }
   await BundleCss.bundleCss({
     to: `build/.tmp/dist/${commitHash}/css/App.css`,
   })
@@ -587,6 +589,7 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
 export const build = async () => {
   const commitHash = await CommitHash.getCommitHash()
   const pathPrefix = Platform.getPathPrefix()
+  const ignoreIconTheme = process.argv.includes('--ignore-icon-theme')
 
   Console.time('clean')
   await Remove.remove('build/.tmp/dist')
@@ -597,7 +600,7 @@ export const build = async () => {
   Console.timeEnd('copyJs')
 
   Console.time('copyStaticFiles')
-  await copyStaticFiles({ pathPrefix })
+  await copyStaticFiles({ pathPrefix, ignoreIconTheme })
   Console.timeEnd('copyStaticFiles')
 
   Console.time('applyJsOverrides')
@@ -612,9 +615,11 @@ export const build = async () => {
   await copyColorThemes({ commitHash })
   Console.timeEnd('copyColorThemes')
 
-  Console.time('copyIconThemes')
-  await copyIconThemes({ commitHash })
-  Console.timeEnd('copyIconThemes')
+  if (!ignoreIconTheme) {
+    Console.time('copyIconThemes')
+    await copyIconThemes({ commitHash })
+    Console.timeEnd('copyIconThemes')
+  }
 
   Console.time('bundleLanguageJsonFiles')
   await bundleLanguageJsonFiles({ commitHash, pathPrefix })
