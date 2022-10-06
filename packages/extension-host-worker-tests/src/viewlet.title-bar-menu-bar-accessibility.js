@@ -1,14 +1,19 @@
 // manual accessibility tests
 
 // focus menu bar
-// nvda says: ""
-// windows narrator says: ""
+// nvda says: "file, sub menu, 1 of 8"
+// windows narrator says: "file, menu item, collapsed, 1 of 8"
 // orca says: "File collapsed, opens menu"
 
 // expand file menu
-// nvda says: ""
-// windows narrator says: ""
+// nvda says: "new file, 1 of 6"
+// windows narrator says: "" ❌
 // orca says: "Expanded, menu, new file"
+
+// focus announcement when hovering over edit
+// nvda says: "edit"
+// windows narrator says: "" ❌
+// orca says: ""
 
 test('viewlet.title-bar-menu-bar-keyboard-navigation', async () => {
   // assert
