@@ -104,7 +104,7 @@
 
 #ExtensionActive {
   /* background: rgba(64, 92, 80, 0.2); */
-  background: #515f59;
+  background: var(--ExtensionListItemActive, #515f59);
   color: white;
 }
 
