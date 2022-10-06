@@ -40,6 +40,7 @@ export const getModuleId = (commandId) => {
       return ModuleId.ColorPicker
     case 'ColorTheme.hydrate':
     case 'ColorTheme.setColorTheme':
+    case 'ColorTheme.reload':
       return ModuleId.ColorTheme
     case 'ColorThemeFromJson.createColorThemeFromJson':
       return ModuleId.ColorThemeFromJson

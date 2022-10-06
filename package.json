@@ -47,7 +47,8 @@
       "**/distmin/**",
       "**/scripts/**",
       "**/node_modules/**",
-      "**/coverage/**"
+      "**/coverage/**",
+      "**/extensions/**"
     ],
     "exec": "node packages/server/bin/server.js"
   },

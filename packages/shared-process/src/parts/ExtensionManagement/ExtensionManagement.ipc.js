@@ -10,6 +10,7 @@ export const Commands = {
   'ExtensionHost.getIconThemeJson': ExtensionHostIconTheme.getIconTheme,
   'ExtensionHost.getLanguageConfiguration': ExtensionHostLanguages.getLanguageConfiguration,
   'ExtensionHost.getLanguages': ExtensionHostLanguages.getLanguages,
+  'ExtensionHost.watchColorTheme':ExtensionHostColorTheme.watch,
   'ExtensionManagement.disable': ExtensionManagement.disable,
   'ExtensionManagement.enable': ExtensionManagement.enable,
   'ExtensionManagement.getAllExtensions': ExtensionManagement.getAllExtensions,
