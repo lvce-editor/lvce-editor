@@ -5,10 +5,6 @@ export const name = 'ExtensionDetail'
 export const create = () => {
   const $NameText = document.createTextNode('')
 
-  const $Name = document.createElement('h3')
-  $Name.className = 'ExtensionDetailName'
-  $Name.append($NameText)
-
   const $ReadmeHtml = document.createElement('div')
   $ReadmeHtml.className = 'Markdown'
   // @ts-ignore
@@ -20,9 +16,23 @@ export const create = () => {
   $ExtensionDetailIcon.draggable = false
   $ExtensionDetailIcon.onerror = ViewletExtensionDetailEvents.handleIconError
 
+  const $Name = document.createElement('h3')
+  $Name.className = 'ExtensionDetailName'
+  $Name.append($NameText)
+
+  const $Description = document.createElement('div')
+  $Description.className = 'ExtensionDetailDescription'
+
+  const $ExtensionDetailHeaderDetails = document.createElement('div')
+  $ExtensionDetailHeaderDetails.className = 'ExtensionDetailHeaderDetails'
+  $ExtensionDetailHeaderDetails.append($Name, $Description)
+
   const $ExtensionDetailHeader = document.createElement('div')
   $ExtensionDetailHeader.className = 'ExtensionDetailHeader'
-  $ExtensionDetailHeader.append($ExtensionDetailIcon, $Name)
+  $ExtensionDetailHeader.append(
+    $ExtensionDetailIcon,
+    $ExtensionDetailHeaderDetails
+  )
 
   const $ExtensionDetailMain = document.createElement('div')
   $ExtensionDetailMain.className = 'ExtensionDetailMain'
@@ -38,6 +48,7 @@ export const create = () => {
     $NameText,
     $ReadmeHtml,
     $ExtensionDetailIcon,
+    $Description,
   }
 }
 
@@ -55,4 +66,9 @@ export const setIconSrc = (state, src) => {
   const { $ExtensionDetailIcon } = state
   // TODO handle error and load fallback icon
   $ExtensionDetailIcon.src = src
+}
+
+export const setDescription = (state, description) => {
+  const { $Description } = state
+  $Description.textContent = description
 }

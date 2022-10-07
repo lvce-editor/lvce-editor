@@ -45,12 +45,14 @@ export const loadContent = async (state) => {
   const readmeHtml = MarkDown.toHtml(readmeContent)
   const sanitizedReadmeHtml = await SanitizeHtml.sanitizeHtml(readmeHtml)
   const iconSrc = getIconSrc(extension)
+  const description = ExtensionDisplay.getDescription(extension)
   const name = ExtensionDisplay.getName(extension)
   return {
     ...state,
     sanitizedReadmeHtml,
     iconSrc,
     name,
+    description,
   }
 }
 
@@ -77,6 +79,20 @@ const renderName = {
       /* id */ 'ExtensionDetail',
       /* method */ 'setName',
       /* name */ newState.name,
+    ]
+  },
+}
+
+const renderDescription = {
+  isEqual(oldState, newState) {
+    return oldState.description === newState.description
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'ExtensionDetail',
+      /* method */ 'setDescription',
+      /* description */ newState.description,
     ]
   },
 }
@@ -109,4 +125,4 @@ const renderIcon = {
   },
 }
 
-export const render = [renderName, renderReadme, renderIcon]
+export const render = [renderName, renderReadme, renderDescription, renderIcon]
