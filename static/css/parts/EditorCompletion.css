@@ -1,20 +1,30 @@
 #Completions {
-  background: var(--ContextMenuBackground);
+  background: var(--CompletionListBackground, #282e2f);
   color: white;
-  box-shadow: rgb(0, 0, 0) 0px 2px 4px;
   user-select: none;
-  font-size: 13px;
+  font-size: 15px;
   pointer-events: all;
+  border: 1px solid;
+  border-color: var(--CompletionListBorder, #95a29d);
+  font-family: var(--EditorFontFamily);
 }
 
 .EditorCompletionItem {
-  height: 28px;
+  height: 20px;
   width: 100%;
   display: flex;
   align-items: center;
   white-space: nowrap;
   contain: strict;
   gap: 5px;
+}
+
+.EditorCompletionItem:hover {
+  background: var(--CompletionListItemHoverBackground, rgba(64, 92, 80, 0.2));
+}
+
+#CompletionListItemActive {
+  background: var(--CompletionListItemActiveBackground, #405c50);
 }
 
 [class^='ColoredMaskIcon'] {

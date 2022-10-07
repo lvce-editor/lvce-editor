@@ -23,8 +23,8 @@ export const create = (id, uri, top, left, width, height) => {
     top: 0,
     minLineY: 0,
     maxLineY: 0,
-    itemHeight: 28,
-    width: 150,
+    itemHeight: 20,
+    width: 250,
     height: 150,
     deltaY: 0,
   }

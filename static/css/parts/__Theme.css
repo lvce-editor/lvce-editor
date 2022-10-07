@@ -2,4 +2,5 @@
   /* TODO sizes is not theme */
   --EditorFontSize: 16px;
   --EditorLineHeight: 20px;
+  --EditorFontFamily: 'Fira Code', monospace;
 }
