@@ -246,7 +246,7 @@ test("uninstall should fail when extension doesn't exist", async () => {
 // TODO test for extension deactivation fails (in extension host)
 // TODO test for global unhandlederror/unhandledrejection (in extension host)
 
-test('getAllExtensions', async () => {
+test('getExtensions', async () => {
   const tmpDir1 = await getTmpDir()
   const manifestPath1 = join(tmpDir1, 'test-extension', 'extension.json')
   await mkdir(dirname(manifestPath1))
@@ -264,21 +264,23 @@ test('getAllExtensions', async () => {
   Platform.getDisabledExtensionsPath.mockImplementation(() => tmpDir3)
   // @ts-ignore
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
-  expect(await ExtensionManagement.getAllExtensions()).toEqual([
-    {
-      status: ExtensionManifestStatus.Resolved,
-      id: 'builtin-extension',
-      path: join(tmpDir2, 'builtin-extension'),
-    },
+  // @ts-ignore
+  Platform.getLinkedExtensionsPath.mockImplementation(() => undefined)
+  expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       status: ExtensionManifestStatus.Resolved,
       id: 'test-extension',
       path: join(tmpDir1, 'test-extension'),
     },
+    {
+      status: ExtensionManifestStatus.Resolved,
+      id: 'builtin-extension',
+      path: join(tmpDir2, 'builtin-extension'),
+    },
   ])
 })
 
-test('getAllExtensions - invalid extension.json', async () => {
+test('getExtensions - invalid extension.json', async () => {
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   const tmpDir1 = await getTmpDir()
   const manifestPath = join(tmpDir1, 'test-extension', 'extension.json')
@@ -294,7 +296,9 @@ test('getAllExtensions - invalid extension.json', async () => {
   Platform.getDisabledExtensionsPath.mockImplementation(() => tmpDir3)
   // @ts-ignore
   Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
-  expect(await ExtensionManagement.getAllExtensions()).toEqual([
+  // @ts-ignore
+  Platform.getLinkedExtensionsPath.mockImplementation(() => undefined)
+  expect(await ExtensionManagement.getExtensions()).toEqual([
     {
       path: join(tmpDir1, 'test-extension'),
       reason: new VError(

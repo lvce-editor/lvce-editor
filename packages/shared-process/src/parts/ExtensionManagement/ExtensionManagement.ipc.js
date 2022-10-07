@@ -13,7 +13,7 @@ export const Commands = {
   'ExtensionHost.watchColorTheme':ExtensionHostColorTheme.watch,
   'ExtensionManagement.disable': ExtensionManagement.disable,
   'ExtensionManagement.enable': ExtensionManagement.enable,
-  'ExtensionManagement.getAllExtensions': ExtensionManagement.getAllExtensions,
+  'ExtensionManagement.getAllExtensions': ExtensionManagement.getExtensions,
   'ExtensionManagement.getExtensions': ExtensionManagement.getExtensions,
   'ExtensionManagement.install': ExtensionManagement.install,
   'ExtensionManagement.uninstall': ExtensionManagement.uninstall,
