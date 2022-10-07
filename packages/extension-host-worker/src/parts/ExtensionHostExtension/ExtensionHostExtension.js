@@ -7,6 +7,10 @@ const getAbsolutePath = (path, relativePath, origin) => {
     }
     return new URL(relativePath, path + '/').toString()
   }
+  if (!path.startsWith('/')) {
+    path = '/' + path
+  }
+  console.log({ path })
   return new URL('/remote' + path + '/' + relativePath, origin).toString()
 }
 
