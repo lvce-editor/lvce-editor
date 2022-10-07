@@ -87,7 +87,7 @@
   {
     "name": "builtin.language-basics-shellscript",
     "repository": "github.com/lvce-editor/language-basics-shellscript",
-    "version": "0.0.5"
+    "version": "0.0.6"
   },
   {
     "name": "builtin.language-basics-python",
@@ -177,7 +177,17 @@
   {
     "name": "builtin.language-basics-toml",
     "repository": "github.com/lvce-editor/language-basics-toml",
-    "version": "0.0.7"
+    "version": "0.0.8"
+  },
+  {
+    "name": "builtin.language-basics-graphql",
+    "repository": "github.com/lvce-editor/language-basics-graphql",
+    "version": "0.0.1"
+  },
+  {
+    "name": "builtin.language-basics-r",
+    "repository": "github.com/lvce-editor/language-basics-r",
+    "version": "0.0.1"
   },
   {
     "name": "builtin.language-basics-powershell",
@@ -202,7 +212,7 @@
   {
     "name": "builtin.theme-gruvbox",
     "repository": "github.com/lvce-editor/theme-gruvbox",
-    "version": "0.0.2"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.theme-high-contrast",
