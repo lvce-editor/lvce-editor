@@ -6,7 +6,7 @@
   color: white;
   outline: none;
   border: none;
-  font-family: 'Fira Code', monospace;
+  font-family: var(--EditorFontFamily);
   position: relative;
   white-space: pre;
   font-size: var(--EditorFontSize);

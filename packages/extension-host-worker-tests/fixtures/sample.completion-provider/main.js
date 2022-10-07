@@ -3,17 +3,17 @@ const getCompletions = (text, offset) => {
     {
       label: 'Option A',
       snippet: `Option A`,
-      type: /*  */ 1,
+      kind: /*  */ 1,
     },
     {
       label: 'Option B',
       snippet: `Option B`,
-      type: /*  */ 2,
+      kind: /*  */ 2,
     },
     {
       label: 'Option C',
       snippet: `Option C`,
-      type: /*  */ 3,
+      kind: /*  */ 3,
     },
   ]
 }
