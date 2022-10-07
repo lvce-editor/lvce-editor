@@ -23,10 +23,6 @@
   background: var(--CompletionListItemHoverBackground, rgba(64, 92, 80, 0.2));
 }
 
-#CompletionListItemActive {
-  background: var(--CompletionListItemActiveBackground, #405c50);
-}
-
 [class^='ColoredMaskIcon'] {
   width: 20px;
   height: 20px;
@@ -40,8 +36,9 @@
   pointer-events: none;
 }
 
-.EditorCompletionItem.Focused {
-  background: #405c50;
+.EditorCompletionItem.Focused,
+#CompletionListItemActive {
+  background: var(--CompletionListItemActiveBackground, #405c50);
 }
 
 /* TODO maybe put this all into editor */
