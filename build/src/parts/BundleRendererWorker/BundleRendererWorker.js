@@ -57,11 +57,12 @@ export const bundleRendererWorker = async ({
     occurrence: 'export const platform = getPlatform()',
     replacement: `export const platform = '${platform}'`,
   })
-  // await Replace.replace({
-  //   path: `${cachePath}/src/parts/CacheStorage/CacheStorage.js`,
-  //   occurrence: `const CACHE_NAME = 'lvce-runtime'`,
-  //   replacement: `const CACHE_NAME = 'lvce-runtime-${commitHash}'`,
-  // })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/Platform/Platform.js`,
+    occurrence:
+      '/packages/extension-host-worker/src/extensionHostWorkerMain.js',
+    replacement: `/packages/extension-host-worker/dist/extensionHostWorkerMain.js`,
+  })
   await BundleJs.bundleJs({
     cwd: cachePath,
     from: `./src/rendererWorkerMain.js`,
