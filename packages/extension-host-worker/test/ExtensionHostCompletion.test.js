@@ -1,5 +1,6 @@
 import * as ExtensionHostCompletion from '../src/parts/ExtensionHostCompletion/ExtensionHostCompletion.js'
 import * as TextDocument from '../src/parts/ExtensionHostTextDocument/ExtensionHostTextDocument.js'
+import { jest } from '@jest/globals'
 
 test('registerCompletionProvider - no argument provided', () => {
   expect(() =>
@@ -10,22 +11,27 @@ test('registerCompletionProvider - no argument provided', () => {
 })
 
 test('executeCompletionProvider - when completion provider has no result', async () => {
-  TextDocument.setFiles([
-    {
-      id: 1,
-      path: '/tmp/some-file.txt',
-      languageId: 'unknown',
-      content: 'sample text',
-    },
-  ])
-  ExtensionHostCompletion.registerCompletionProvider({
+  const textDocument = {
+    id: 1,
+    path: '/tmp/some-file.txt',
     languageId: 'unknown',
-    provideCompletions(textDocument, offset) {
+    content: 'sample text',
+  }
+  TextDocument.setFiles([textDocument])
+  const completionProvider = {
+    languageId: 'unknown',
+    provideCompletions: jest.fn((textDocument, offset) => {
       return []
-    },
-  })
+    }),
+  }
+  ExtensionHostCompletion.registerCompletionProvider(completionProvider)
   expect(await ExtensionHostCompletion.executeCompletionProvider(1, 1)).toEqual(
     []
+  )
+  expect(completionProvider.provideCompletions).toHaveBeenCalledTimes(1)
+  expect(completionProvider.provideCompletions).toHaveBeenCalledWith(
+    textDocument,
+    1
   )
 })
 

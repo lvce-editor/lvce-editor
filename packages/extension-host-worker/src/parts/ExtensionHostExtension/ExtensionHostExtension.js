@@ -1,10 +1,13 @@
 import * as Assert from '../Assert/Assert.js'
 
-const getAbsolutePath = (path, relativePath) => {
-  if (path.endsWith('/')) {
-    return new URL(relativePath, path).toString()
+const getAbsolutePath = (path, relativePath, origin) => {
+  if (path.startsWith('http')) {
+    if (path.endsWith('/')) {
+      return new URL(relativePath, path).toString()
+    }
+    return new URL(relativePath, path + '/').toString()
   }
-  return new URL(relativePath, path + '/').toString()
+  return new URL('/remote' + path + '/' + relativePath, origin).toString()
 }
 
 const baseName = (path) => {
@@ -23,11 +26,15 @@ const getId = (extension) => {
 }
 
 export const activate = async (extension) => {
-  // console.log('activating ', path)
+  console.log('activating ', extension)
   try {
     Assert.string(extension.path)
     Assert.string(extension.browser)
-    const absolutePath = getAbsolutePath(extension.path, extension.browser)
+    const absolutePath = getAbsolutePath(
+      extension.path,
+      extension.browser,
+      location.origin
+    )
     const module = await import(absolutePath)
     await module.activate()
   } catch (error) {

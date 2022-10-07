@@ -69,7 +69,7 @@ export const create = ({ name, resultShape }) => {
             `No ${spacedOutName} provider found for ${textDocument.languageId}`
           )
         }
-        const result = await provider[methodName](textDocumentId, ...params)
+        const result = await provider[methodName](textDocument, ...params)
         const error = Validation.validate(result, resultShape)
         if (error) {
           const improvedError = improveValidationError(name, error)
