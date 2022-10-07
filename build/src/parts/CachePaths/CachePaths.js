@@ -54,3 +54,30 @@ export const getRendererWorkerCachePath = async (extraContents) => {
   )
   return rendererWorkerCachePath
 }
+
+const getExtensionHostWorkerCacheHash = async (extraContents) => {
+  const hash = await Hash.computeFolderHash(
+    'packages/extension-host-worker/src',
+    [
+      'build/src/parts/BundleElectronApp/BundleElectronApp.js',
+      'build/src/parts/BuildServer/BuildServer.js',
+      'build/src/parts/BundleJs/BundleJs.js',
+      'build/src/parts/CachePaths/CachePaths.js',
+      'build/src/parts/BundleRendererWorker/BundleRendererWorker.js',
+      'build/src/parts/BundleRendererWorkerCached/BundleRendererWorkerCached.js',
+    ],
+    extraContents
+  )
+  return hash
+}
+
+export const getExtensionHostWorkerCachePath = async (extraContents) => {
+  const extensionHostWorkerCacheHash = await getExtensionHostWorkerCacheHash(
+    extraContents
+  )
+  const extensionHostWorkerCachePath = Path.join(
+    Path.absolute('build/.tmp/cachedSources/extension-host-worker'),
+    extensionHostWorkerCacheHash
+  )
+  return extensionHostWorkerCachePath
+}
