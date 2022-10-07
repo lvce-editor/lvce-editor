@@ -9,7 +9,7 @@ const getModule = (argv0) => {
     case 'unlink':
       return import('../CliUnlink/CliUnlink.js')
     default:
-      throw new Error('command not found')
+      throw new Error(`command not found ${argv0}`)
   }
 }
 
