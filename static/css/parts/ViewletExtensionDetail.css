@@ -20,7 +20,11 @@
   grid-template-columns: auto 1fr;
   gap: 1rem;
   flex-shrink: 0;
-  /* place-items: center; */
+  padding: 20px 0;
+}
+
+.ExtensionDetailHeaderDetails {
+  overflow: hidden;
 }
 
 .ExtensionDetailName {
@@ -28,6 +32,14 @@
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;
+  margin: 0;
+}
+
+.ExtensionDetailDescription {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  margin-top: 10px;
 }
 
 .ExtensionDetailIcon {
