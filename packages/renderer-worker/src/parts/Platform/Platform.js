@@ -172,7 +172,8 @@ export const getCachePath = () => {
 }
 
 export const getExtensionHostWorkerUrl = () => {
-  return '/packages/extension-host-worker/src/extensionHostWorkerMain.js'
+  const assetDir = getAssetDir()
+  return `${assetDir}/packages/extension-host-worker/src/extensionHostWorkerMain.js`
 }
 
 export const getGithubApiUrl = () => {

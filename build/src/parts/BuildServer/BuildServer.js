@@ -2,6 +2,7 @@ import { readdir } from 'node:fs/promises'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
+import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
@@ -891,6 +892,20 @@ const bundleRendererWorkerAndRendererProcessJs = async () => {
     ignore: ['static'],
   })
   console.timeEnd('copyRendererWorkerFiles')
+
+  const extensionHostWorkerCachePath =
+    await BundleExtensionHostWorkerCached.bundleExtensionHostWorkerCached({
+      commitHash,
+      platform: 'remote',
+      assetDir: `/${commitHash}`,
+    })
+  console.time('copyExtensionHostWorkerFiles')
+  await Copy.copy({
+    from: extensionHostWorkerCachePath,
+    to: `build/.tmp/server/server/static/${commitHash}/packages/extension-host-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyExtensionHostWorkerFiles')
 }
 
 export const build = async () => {
