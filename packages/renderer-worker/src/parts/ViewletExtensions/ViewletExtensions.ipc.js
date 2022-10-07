@@ -2,6 +2,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletExtensions from './ViewletExtensions.js'
 import * as LazyCommand from '../LazyCommand/LazyCommand.js'
 
+// prettier-ignore
 const Imports = {
   FocusFirst: () => import('./ViewletExtensionsFocusFirst.js'),
   FocusIndex: () => import('./ViewletExtensionsFocusIndex.js'),
@@ -14,6 +15,8 @@ const Imports = {
   HandleTouchStart: () => import('./ViewletExtensionsHandleTouchStart.js'),
   HandleTouchEnd: () => import('./ViewletExtensionsHandleTouchEnd.js'),
   HandleTouchMove: () => import('./ViewletExtensionsHandleTouchMove.js'),
+  HandleClickCurrent: () => import('./ViewletExtensionsHandleClickCurrent.js'),
+  HandleClickCurrentButKeepFocus: () => import('./ViewletExtensionsHandleClickCurrentButKeepFocus.js'),
 }
 
 // prettier-ignore
@@ -27,6 +30,8 @@ export const Commands = {
   'Extensions.focusPrevious': LazyCommand.create(ViewletExtensions.name, Imports.FocusPrevious, 'focusPrevious'),
   'Extensions.focusPreviousPage': LazyCommand.create(Imports.FocusPreviousPage, 'focusPreviousPage'),
   'Extensions.handleClick': LazyCommand.create(ViewletExtensions.name, Imports.HandleClick, 'handleClick'),
+  'Extensions.handleClickCurrent': LazyCommand.create(ViewletExtensions.name, Imports.HandleClickCurrent, 'handleClickCurrent'),
+  'Extensions.handleClickCurrentButKeepFocus': LazyCommand.create(ViewletExtensions.name, Imports.HandleClickCurrentButKeepFocus, 'handleClickCurrentButKeepFocus'),
   'Extensions.handleContextMenu': Viewlet.wrapViewletCommand(ViewletExtensions.name, ViewletExtensions.handleContextMenu),
   'Extensions.handleInput': Viewlet.wrapViewletCommand(ViewletExtensions.name, ViewletExtensions.handleInput),
   'Extensions.handleInstall': Viewlet.wrapViewletCommand(ViewletExtensions.name, ViewletExtensions.handleInstall),

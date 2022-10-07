@@ -308,6 +308,16 @@
     "when": "focus.Extensions"
   },
   {
+    "key": "Space",
+    "command": "Extensions.handleClickCurrentButKeepFocus",
+    "when": "focus.Extensions"
+  },
+  {
+    "key": "Enter",
+    "command": "Extensions.handleClickCurrent",
+    "when": "focus.Extensions"
+  },
+  {
     "key": "ctrl+Space",
     "command": "Extensions.toggleSuggest",
     "when": "focus.Extensions"
