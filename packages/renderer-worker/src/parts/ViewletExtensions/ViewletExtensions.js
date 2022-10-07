@@ -59,7 +59,8 @@ export const create = (id, uri, left, top, width, height) => {
 }
 
 const getVisible = (state) => {
-  return state.filteredExtensions.slice(state.minLineY, state.maxLineY)
+  const { minLineY, maxLineY } = state
+  return state.filteredExtensions.slice(minLineY, maxLineY)
 }
 
 export const loadContent = async (state) => {
@@ -78,12 +79,12 @@ export const loadContent = async (state) => {
   const listHeight = getListHeight(state)
   const contentHeight = viewObjects.length * itemHeight
   const scrollBarHeight = getScrollBarHeight(height, contentHeight)
-
+  const maxLineY = Math.ceil(listHeight / itemHeight)
   return {
     ...state,
     extensions,
     filteredExtensions: viewObjects,
-    maxLineY: Math.round(listHeight / itemHeight),
+    maxLineY: maxLineY,
     scrollBarHeight,
   }
 }
@@ -477,7 +478,7 @@ export const setDeltaY = (state, deltaY) => {
   }
   // TODO when it only moves by one px, extensions don't need to be rerendered, only negative margin
   const minLineY = Math.floor(deltaY / itemHeight)
-  const maxLineY = minLineY + Math.round(listHeight / itemHeight)
+  const maxLineY = minLineY + Math.ceil(listHeight / itemHeight)
   const negativeMargin = -Math.round(deltaY)
   return {
     ...state,
@@ -558,6 +559,7 @@ const renderExtensions = {
   },
   apply(oldState, newState) {
     const visibleExtensions = getVisible(newState)
+    console.log({ visibleExtensions })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',
@@ -601,7 +603,10 @@ const renderNegativeMargin = {
 
 const renderFocusedIndex = {
   isEqual(oldState, newState) {
-    return oldState.focusedIndex === newState.focusedIndex
+    return (
+      oldState.focusedIndex === newState.focusedIndex &&
+      oldState.minLineY === newState.minLineY
+    )
   },
   apply(oldState, newState) {
     return [

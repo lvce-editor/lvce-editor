@@ -318,6 +318,60 @@ test('setFocusedIndex - move focus down by one', () => {
   )
 })
 
+test('setFocusedIndex - oldFocusedIndex out of range', () => {
+  const state = ViewletExtensions.create()
+  ViewletExtensions.setExtensions(state, [
+    {
+      name: 'Test Extension 1',
+      publisher: 'Test Author',
+      icon: '/not-found.png',
+      setSize: 2,
+      posInSet: 1,
+    },
+    {
+      name: 'Test Extension 2',
+      publisher: 'Test Author',
+      icon: '/not-found.png',
+      setSize: 2,
+      posInSet: 2,
+    },
+  ])
+  ViewletExtensions.setFocusedIndex(state, -10, 1)
+  const $ExtensionOne = state.$ExtensionList.children[0]
+  expect($ExtensionOne.className).not.toContain('Focused')
+  const $ExtensionTwo = state.$ExtensionList.children[1]
+  expect($ExtensionTwo.id).toBe('ExtensionActive')
+  expect(state.$ExtensionList.getAttribute('aria-activedescendant')).toBe(
+    'ExtensionActive'
+  )
+})
+
+test('setFocusedIndex - newFocusedIndex out of range', () => {
+  const state = ViewletExtensions.create()
+  ViewletExtensions.setExtensions(state, [
+    {
+      name: 'Test Extension 1',
+      publisher: 'Test Author',
+      icon: '/not-found.png',
+      setSize: 2,
+      posInSet: 1,
+    },
+    {
+      name: 'Test Extension 2',
+      publisher: 'Test Author',
+      icon: '/not-found.png',
+      setSize: 2,
+      posInSet: 2,
+    },
+  ])
+  ViewletExtensions.setFocusedIndex(state, 0, -10)
+  const $ExtensionOne = state.$ExtensionList.children[0]
+  expect($ExtensionOne.className).not.toContain('Focused')
+  const $ExtensionTwo = state.$ExtensionList.children[1]
+  expect($ExtensionTwo.id).toBe('')
+  expect(state.$ExtensionList.getAttribute('aria-activedescendant')).toBe(null)
+})
+
 test('setExtensions - renderExtensionsEqual', () => {
   const state = ViewletExtensions.create()
   ViewletExtensions.setExtensions(state, [

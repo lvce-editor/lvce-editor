@@ -121,15 +121,16 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
   Assert.number(oldFocusedIndex)
   Assert.number(newFocusedIndex)
   const { $ExtensionList } = state
+  const { length } = $ExtensionList.children
   if (oldFocusedIndex === -1) {
     $ExtensionList.classList.remove('FocusOutline')
-  } else {
+  } else if (oldFocusedIndex >= 0 && oldFocusedIndex < length) {
     $ExtensionList.children[oldFocusedIndex].removeAttribute('id')
   }
   if (newFocusedIndex === -1) {
     $ExtensionList.removeAttribute('aria-activedescendant')
     $ExtensionList.classList.add('FocusOutline')
-  } else {
+  } else if (newFocusedIndex >= 0 && newFocusedIndex < length) {
     $ExtensionList.children[newFocusedIndex].id = activeId
     $ExtensionList.setAttribute('aria-activedescendant', activeId)
   }
@@ -241,12 +242,13 @@ const create$Extension = () => {
     $ExtensionDetailDescription,
     $ExtensionFooter
   )
-  const $ExtensionListItem = document.createElement('article')
+  const $ExtensionListItem = document.createElement('div')
+  // @ts-ignore
+  $ExtensionListItem.role = 'article'
   $ExtensionListItem.ariaRoleDescription = 'Extension'
   $ExtensionListItem.className = 'ExtensionListItem'
   // @ts-ignore
   $ExtensionListItem.role = 'listitem'
-
   $ExtensionListItem.append(icon, $ExtensionDetail)
   return $ExtensionListItem
 }
