@@ -73,6 +73,16 @@ const handleMessageFromRendererWorker = async (event) => {
     state.ipc.sendAndTransfer('port', [port])
     return
   }
+  if (message.method === 'get-worker-port') {
+    const args = message.params[0]
+    const port = await IpcParent.create({
+      method: IpcParent.Methods.ModuleWorkerWithChromeDevtoolsBugWorkaround,
+      ...args,
+    })
+    console.log({ port })
+    // state.ipc.sendAndTransfer('worker-port', [port])
+    return
+  }
   throw new JsonRpcError('unexpected message from renderer worker')
 }
 

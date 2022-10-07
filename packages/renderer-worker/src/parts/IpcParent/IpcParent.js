@@ -4,6 +4,7 @@ export const Methods = {
   ModuleWorker: 3,
   ReferencePort: 4,
   WebSocket: 5,
+  ModuleWorkerWithChromeDevtoolsBugWorkaround: 6,
 }
 
 const getModule = (method) => {
@@ -18,6 +19,8 @@ const getModule = (method) => {
       return import('./IpcParentWithReferencePort.js')
     case Methods.WebSocket:
       return import('./IpcParentWithWebSocket.js')
+    case Methods.ModuleWorkerWithChromeDevtoolsBugWorkaround:
+      return import('./IpcParentModuleWorkerWithChromeDevtoolsBugWorkaround.js')
     default:
       throw new Error('unexpected ipc type')
   }

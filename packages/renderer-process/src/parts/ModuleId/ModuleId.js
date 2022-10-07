@@ -32,3 +32,4 @@ export const Eval = 31
 export const FilePicker = 32
 export const FileSystemHandle = 33
 export const SanitizeHtml = 34
+export const IpcParent = 35
