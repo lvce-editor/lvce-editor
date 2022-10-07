@@ -35,6 +35,10 @@ export const register = (commandId, listener) => {
   state.commands[commandId] = listener
 }
 
+export const registerMultitpe = (commands) => {
+  Object.assign(state.commands, commands)
+}
+
 const hasThrown = new Set()
 
 export const execute = (command, ...args) => {
