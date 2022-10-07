@@ -39,6 +39,7 @@
 .EditorCompletionItem.Focused,
 #CompletionListItemActive {
   background: var(--CompletionListItemActiveBackground, #405c50);
+  color: var(--CompletionListItemActiveForeground);
 }
 
 /* TODO maybe put this all into editor */
