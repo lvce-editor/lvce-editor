@@ -112,7 +112,7 @@
   {
     "name": "builtin.vscode-icons",
     "repository": "github.com/lvce-editor/vscode-icons",
-    "version": "0.0.6"
+    "version": "0.0.7"
   },
   {
     "name": "builtin.language-basics-dotenv",
@@ -202,12 +202,17 @@
   {
     "name": "builtin.theme-monokai",
     "repository": "github.com/lvce-editor/theme-monokai",
-    "version": "0.0.3"
+    "version": "0.0.5"
+  },
+  {
+    "name": "builtin.theme-material",
+    "repository": "github.com/lvce-editor/theme-material",
+    "version": "0.0.2"
   },
   {
     "name": "builtin.theme-cobalt2",
     "repository": "github.com/lvce-editor/theme-cobalt2",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   {
     "name": "builtin.theme-gruvbox",
@@ -222,7 +227,7 @@
   {
     "name": "builtin.theme-palenight",
     "repository": "github.com/lvce-editor/theme-palenight",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.theme-ayu",
@@ -232,6 +237,6 @@
   {
     "name": "builtin.theme-atom-one-dark",
     "repository": "github.com/lvce-editor/theme-atom-one-dark",
-    "version": "0.0.5"
+    "version": "0.0.6"
   }
 ]
