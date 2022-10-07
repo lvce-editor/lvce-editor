@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs'
 import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
+import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Hash from '../Hash/Hash.js'
@@ -319,6 +320,20 @@ export const build = async () => {
     ignore: ['static'],
   })
   console.timeEnd('copyRendererWorkerFiles')
+  const extensionHostWorkerCachePath =
+    await BundleExtensionHostWorkerCached.bundleExtensionHostWorkerCached({
+      commitHash,
+      platform: 'electron',
+      assetDir: `../../../../..`,
+    })
+
+  console.time('copyExtensionHostWorkerFiles')
+  await Copy.copy({
+    from: extensionHostWorkerCachePath,
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/extension-host-worker`,
+    ignore: ['static'],
+  })
+  console.timeEnd('copyExtensionHostWorkerFiles')
 
   console.time('copyPlaygroundFiles')
   await copyPlaygroundFiles({ arch })
