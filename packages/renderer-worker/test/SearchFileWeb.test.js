@@ -9,5 +9,5 @@ test('searchFile', async () => {
   FileSystemWeb.state.files = {
     '/file-1.txt': '',
   }
-  expect(await SearchFileWeb.searchFile('')).toEqual(['/file-1.txt'])
+  expect(await SearchFileWeb.searchFile('')).toEqual(['file-1.txt'])
 })
