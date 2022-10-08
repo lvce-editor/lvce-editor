@@ -13,6 +13,7 @@ import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as ReadJson from '../JsonFile/JsonFile.js'
 
 const copyJs = async ({ commitHash }) => {
   await Copy.copy({
@@ -383,6 +384,10 @@ const isTheme = (extensionName) => {
   return extensionName.startsWith('builtin.theme')
 }
 
+const isLanguageFeatures = (extensionName) => {
+  return extensionName.startsWith('builtin.language-features')
+}
+
 const getThemeName = (extensionName) => {
   return extensionName.slice('builtin.theme-'.length)
 }
@@ -400,6 +405,29 @@ const copyColorThemes = async ({ commitHash }) => {
   await JsonFile.writeJson({
     to: `build/.tmp/dist/${commitHash}/config/themes.json`,
     value: themes,
+  })
+}
+
+const copyWebExtensions = async ({ commitHash }) => {
+  const allExtension = await readdir(Path.absolute('extensions'))
+  const languageFeatures = allExtension.filter(isLanguageFeatures)
+  const webExtensions = []
+  for (const languageFeature of languageFeatures) {
+    const manifest = await JsonFile.readJson(
+      Path.absolute(`extensions/${languageFeature}/extension.json`)
+    )
+    if (!manifest.browser) {
+      continue
+    }
+    await Copy.copy({
+      from: `extensions/${languageFeature}`,
+      to: `build/.tmp/dist/${commitHash}/extensions/${languageFeature}`,
+    })
+    webExtensions.push(manifest)
+  }
+  await JsonFile.writeJson({
+    to: `build/.tmp/dist/${commitHash}/config/webExtensions.json`,
+    value: webExtensions,
   })
 }
 
@@ -534,6 +562,10 @@ export const build = async () => {
   Console.time('copyColorThemes')
   await copyColorThemes({ commitHash })
   Console.timeEnd('copyColorThemes')
+
+  Console.time('copyWebExtensions')
+  await copyWebExtensions({ commitHash })
+  Console.timeEnd('copyWebExtensions')
 
   if (!ignoreIconTheme) {
     Console.time('copyIconThemes')
