@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 
-const getAbsolutePath = (path, relativePath, origin) => {
+const getAbsolutePath = (isWeb, path, relativePath, origin) => {
   if (path.startsWith('http')) {
     if (path.endsWith('/')) {
       return new URL(relativePath, path).toString()
@@ -10,7 +10,9 @@ const getAbsolutePath = (path, relativePath, origin) => {
   if (!path.startsWith('/')) {
     path = '/' + path
   }
-  console.log({ path })
+  if (isWeb) {
+    return path + '/' + relativePath
+  }
   return new URL('/remote' + path + '/' + relativePath, origin).toString()
 }
 
@@ -35,6 +37,7 @@ export const activate = async (extension) => {
     Assert.string(extension.path)
     Assert.string(extension.browser)
     const absolutePath = getAbsolutePath(
+      extension.isWeb,
       extension.path,
       extension.browser,
       location.origin

@@ -8,7 +8,13 @@ export const readJson = async (path) => {
     return JSON.parse(content)
   } catch (error) {
     // @ts-ignore
-    throw new VError(error, `Failed to read json file ${path}`)
+    const wrappedError = new VError(error, `Failed to read json file ${path}`)
+    // @ts-ignore
+    if (error && error.code) {
+      // @ts-ignore
+      wrappedError.code = error.code
+    }
+    throw wrappedError
   }
 }
 
