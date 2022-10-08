@@ -87,6 +87,7 @@ export const organizeExtensions = (extensions) => {
         rejected.push(extension)
         break
       default:
+        resolved.push(extension)
         break
     }
   }

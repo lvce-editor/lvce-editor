@@ -271,7 +271,7 @@ const applyJsOverrides = async ({ pathPrefix, commitHash }) => {
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
     occurrence:
       '/packages/extension-host-worker/src/extensionHostWorkerMain.js',
-    replacement: `${pathPrefix}/${commitHash}/packages/extension-host-worker/dist/extensionHostWorkerMain.js`,
+    replacement: `${pathPrefix}/packages/extension-host-worker/dist/extensionHostWorkerMain.js`,
   })
   // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
   await Replace.replace({
@@ -423,7 +423,11 @@ const copyWebExtensions = async ({ commitHash }) => {
       from: `extensions/${languageFeature}`,
       to: `build/.tmp/dist/${commitHash}/extensions/${languageFeature}`,
     })
-    webExtensions.push(manifest)
+    webExtensions.push({
+      ...manifest,
+      path: `${commitHash}/extensions/${languageFeature}`,
+      isWeb: true,
+    })
   }
   await JsonFile.writeJson({
     to: `build/.tmp/dist/${commitHash}/config/webExtensions.json`,
