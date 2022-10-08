@@ -35,6 +35,13 @@ jest.unstable_mockModule(
     }
   }
 )
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+  return {
+    isElectron: () => {
+      return true
+    },
+  }
+})
 
 const RendererWorker = await import(
   '../src/parts/RendererWorker/RendererWorker.js'
