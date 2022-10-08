@@ -327,6 +327,7 @@ const serveConfig = async (req, res, next) => {
     case '/config/defaultKeyBindings.json':
     case '/config/builtinCommands.json':
     case '/config/defaultSettings.json':
+    case '/config/webExtensions.json':
       return sendFile(join(ROOT, 'static', pathName), res)
     default:
       break

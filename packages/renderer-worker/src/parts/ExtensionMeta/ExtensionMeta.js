@@ -6,6 +6,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
+
 export const state = {
   /**
    * @type {any[]}
@@ -57,6 +58,20 @@ const getSharedProcessExtensions = () => {
   return SharedProcess.invoke(
     /* ExtensionManagement.getExtensions */ 'ExtensionManagement.getExtensions'
   )
+}
+
+const getStaticWebExtensions = () => {
+  const webExtensionsUrl = Platform.getWebExtensionsUrl()
+  return Command.execute('Ajax.getJson', webExtensionsUrl)
+}
+
+const getWebExtensions = async () => {
+  try {
+    const staticWebExtensions = await getStaticWebExtensions()
+    return [...staticWebExtensions, ...state.webExtensions]
+  } catch {
+    return state.webExtensions
+  }
 }
 
 // TODO status fulfilled should be handled as resolved
@@ -131,11 +146,13 @@ export const handleRejectedExtensions = async (extensions) => {
 
 export const getExtensions = async () => {
   if (Platform.platform === PlatformType.Web) {
-    return state.webExtensions
+    const webExtensions = await getWebExtensions()
+    return webExtensions
   }
   if (Platform.platform === PlatformType.Remote) {
+    const webExtensions = await getWebExtensions()
     const sharedProcessExtensions = await getSharedProcessExtensions()
-    return [...sharedProcessExtensions, ...state.webExtensions]
+    return [...sharedProcessExtensions, webExtensions]
   }
   const extensions = await getSharedProcessExtensions()
   return extensions
