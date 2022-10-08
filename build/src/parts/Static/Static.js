@@ -267,12 +267,6 @@ const applyJsOverrides = async ({ pathPrefix, commitHash }) => {
     occurrence: 'PLATFORM',
     replacement: `'web'`,
   })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
-    occurrence:
-      '/packages/extension-host-worker/src/extensionHostWorkerMain.js',
-    replacement: `${pathPrefix}/packages/extension-host-worker/dist/extensionHostWorkerMain.js`,
-  })
   // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
   await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/extensionHostWorkerMain.js`,
