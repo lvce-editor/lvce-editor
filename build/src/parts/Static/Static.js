@@ -402,7 +402,7 @@ const copyColorThemes = async ({ commitHash }) => {
   })
 }
 
-const copyWebExtensions = async ({ commitHash }) => {
+const copyWebExtensions = async ({ commitHash, pathPrefix }) => {
   const allExtension = await readdir(Path.absolute('extensions'))
   const languageFeatures = allExtension.filter(isLanguageFeatures)
   const webExtensions = []
@@ -428,7 +428,7 @@ const copyWebExtensions = async ({ commitHash }) => {
     })
     webExtensions.push({
       ...manifest,
-      path: `${commitHash}/extensions/${languageFeature}`,
+      path: `${pathPrefix}/${commitHash}/extensions/${languageFeature}`,
       isWeb: true,
     })
   }
@@ -571,7 +571,7 @@ export const build = async () => {
   Console.timeEnd('copyColorThemes')
 
   Console.time('copyWebExtensions')
-  await copyWebExtensions({ commitHash })
+  await copyWebExtensions({ commitHash, pathPrefix })
   Console.timeEnd('copyWebExtensions')
 
   if (!ignoreIconTheme) {
