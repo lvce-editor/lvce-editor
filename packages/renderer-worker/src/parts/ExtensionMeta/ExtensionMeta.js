@@ -152,7 +152,7 @@ export const getExtensions = async () => {
   if (Platform.platform === PlatformType.Remote) {
     const webExtensions = await getWebExtensions()
     const sharedProcessExtensions = await getSharedProcessExtensions()
-    return [...sharedProcessExtensions, webExtensions]
+    return [...sharedProcessExtensions, ...webExtensions]
   }
   const extensions = await getSharedProcessExtensions()
   return extensions
