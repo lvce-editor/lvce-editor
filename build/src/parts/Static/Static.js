@@ -413,9 +413,18 @@ const copyWebExtensions = async ({ commitHash }) => {
   const languageFeatures = allExtension.filter(isLanguageFeatures)
   const webExtensions = []
   for (const languageFeature of languageFeatures) {
-    const manifest = await JsonFile.readJson(
-      Path.absolute(`extensions/${languageFeature}/extension.json`)
-    )
+    let manifest
+    try {
+      manifest = await JsonFile.readJson(
+        Path.absolute(`extensions/${languageFeature}/extension.json`)
+      )
+    } catch (error) {
+      // @ts-ignore
+      if (error && error.code === 'ENOENT') {
+        continue
+      }
+      throw error
+    }
     if (!manifest.browser) {
       continue
     }
