@@ -2,6 +2,7 @@ import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at star
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as Platform from '../Platform/Platform.js'
 
 // TODO put drop into separate module and use executeCommand to call it
 
@@ -105,16 +106,34 @@ export const handleDragStart = (event) => {
   // event.dataTransfer.setData('text/plain', 'abc')
 }
 
+const getHandle = async (item) => {
+  const entry = await item.getAsFileSystemHandle()
+  return entry
+}
+
+const getHandles = async (items) => {
+  const itemsArray = [...items]
+  const handles = await Promise.all(itemsArray.map(getHandle))
+  return handles
+}
+
 /**
  *
  * @param {DragEvent} event
  */
-export const handleDrop = (event) => {
+export const handleDrop = async (event) => {
   event.preventDefault()
   event.stopPropagation()
-  const { files, dropEffect } = event.dataTransfer
+  const { files, dropEffect, items } = event.dataTransfer
   const { clientX, clientY } = event
-  RendererWorker.send('Explorer.handleDrop', clientX, clientY, files)
+  if (Platform.isElectron()) {
+    RendererWorker.send('Explorer.handleDrop', clientX, clientY, files)
+  } else {
+    // unfortunately, DataTransferItem cannot be transferred to web worker
+    // therefore the file system handles are sent to the web worker
+    const handles = await getHandles(items)
+    RendererWorker.send('Explorer.handleDrop', clientX, clientY, handles)
+  }
 }
 
 const handleContextMenuMouse = (event) => {

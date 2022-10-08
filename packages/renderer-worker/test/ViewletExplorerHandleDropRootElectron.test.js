@@ -15,6 +15,16 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
     }),
   }
 })
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    copy: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    readDirWithFileTypes: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: 'electron',
@@ -22,8 +32,8 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
 })
 
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
-const ViewletExplorerHandleDropRoot = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorerHandleDropRoot.js'
+const ViewletExplorerHandleDropRootElectron = await import(
+  '../src/parts/ViewletExplorer/ViewletExplorerHandleDropRootElectron.js'
 )
 const ViewletExplorer = await import(
   '../src/parts/ViewletExplorer/ViewletExplorer.js'
@@ -54,7 +64,7 @@ test('handleDrop - single file', async () => {
     pathSeparator: '/',
   }
   expect(
-    await ViewletExplorerHandleDropRoot.handleDropRoot(state, [
+    await ViewletExplorerHandleDropRootElectron.handleDrop(state, [
       {
         lastModified: 0,
         lastModifiedDate: new Date(),
@@ -129,7 +139,7 @@ test('handleDrop - single file - merge with existing files', async () => {
     pathSeparator: '/',
   }
   expect(
-    await ViewletExplorerHandleDropRoot.handleDropRoot(state, [
+    await ViewletExplorerHandleDropRootElectron.handleDrop(state, [
       {
         lastModified: 0,
         lastModifiedDate: new Date(),
@@ -186,7 +196,7 @@ test('handleDrop - error', async () => {
     items: [],
   }
   await expect(
-    ViewletExplorerHandleDropRoot.handleDropRoot(state, [
+    ViewletExplorerHandleDropRootElectron.handleDrop(state, [
       {
         lastModified: 0,
         lastModifiedDate: new Date(),
