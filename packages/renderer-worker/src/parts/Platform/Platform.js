@@ -176,6 +176,11 @@ export const getExtensionHostWorkerUrl = () => {
   return `${assetDir}/packages/extension-host-worker/src/extensionHostWorkerMain.js`
 }
 
+export const getWebExtensionsUrl = () => {
+  const assetDir = getAssetDir()
+  return `${assetDir}/config/webExtensions.json`
+}
+
 export const getGithubApiUrl = () => {
   return `https://api.github.com`
 }
