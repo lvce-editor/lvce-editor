@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
-import * as Platform from '../Platform/Platform.js'
+import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
+import * as Platform from '../Platform/Platform.js'
 
 export const writeFile = async (path, content) => {
   await Command.execute('FileSystem.writeFile', path, content)
@@ -10,9 +11,9 @@ export const mkdir = async (path) => {
   await Command.execute('FileSystem.mkdir', path)
 }
 
-export const getTmpDir = async ({ scheme = 'memfs' } = {}) => {
+export const getTmpDir = async ({ scheme = FileSystemProtocol.Memfs } = {}) => {
   switch (scheme) {
-    case 'memfs':
+    case FileSystemProtocol.Memfs:
       return 'memfs://'
     default:
       return Platform.getTmpDir()

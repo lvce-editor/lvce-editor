@@ -1,9 +1,12 @@
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
 
 const getModule = (protocol) => {
   switch (protocol) {
-    case 'memfs':
+    case FileSystemProtocol.Web:
       return import('../SearchFileWeb/SearchFileWeb.js')
+    case FileSystemProtocol.Memfs:
+      return import('../SearchFileMemfs/SearchFileMemfs.js')
     default:
       return import('../SearchFileRemote/SearchFileRemote.js')
   }
