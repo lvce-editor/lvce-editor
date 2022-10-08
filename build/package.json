@@ -20,7 +20,7 @@
     "@types/fs-extra": "^9.0.13",
     "@types/tar-fs": "^2.0.1",
     "@types/verror": "^1.10.6",
-    "electron-builder": "^23.3.3",
+    "electron-builder": "^23.6.0",
     "electron-rebuild": "^3.2.9",
     "execa": "^6.1.0"
   },
