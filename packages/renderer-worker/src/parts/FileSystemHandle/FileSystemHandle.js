@@ -21,10 +21,13 @@ const getDirent = (handle) => {
   }
 }
 
-export const getDirents = async (handle) => {
+export const getChildHandles = async (handle) => {
   Assert.object(handle)
   const handles = await Arrays.fromAsync(handle.values())
-  console.log({ handles })
+  return handles
+}
+
+export const getDirents = (handles) => {
   const dirents = handles.map(getDirent)
   return dirents
 }
