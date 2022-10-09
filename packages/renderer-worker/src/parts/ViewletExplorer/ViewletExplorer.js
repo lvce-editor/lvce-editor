@@ -18,6 +18,7 @@ import {
   getTopLevelDirents,
 } from './ViewletExplorerShared.js'
 import * as PromiseStatus from '../PromiseStatus/PromiseStatus.js'
+import * as Preferences from '../Preferences/Preferences.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -47,6 +48,7 @@ export const create = (id, uri, left, top, width, height) => {
     editingIndex: -1,
     itemHeight: 22,
     dropTargets: [],
+    excluded: [],
   }
 }
 
@@ -62,16 +64,24 @@ const getPath = (dirent) => {
   return dirent.path
 }
 
-const getSavedChildDirents = (map, path, depth) => {
+const getSavedChildDirents = (map, path, depth, excluded) => {
   const children = map[path]
   if (!children) {
     return []
   }
   const dirents = []
   children.sort(compareDirent)
-  const childrenLength = children.length
-  for (let i = 0; i < childrenLength; i++) {
-    const child = children[i]
+  let j = 1
+  const visible = []
+  for (const child of children) {
+    if (excluded.includes(child.name)) {
+      continue
+    }
+    visible.push(child)
+  }
+  const visibleLength = visible.length
+  for (let i = 0; i < visibleLength; i++) {
+    const child = visible[i]
     const { name, type } = child
     const childPath = path + '/' + name
 
@@ -79,18 +89,18 @@ const getSavedChildDirents = (map, path, depth) => {
       dirents.push({
         depth,
         posInSet: i + 1,
-        setSize: childrenLength,
+        setSize: visibleLength,
         icon: IconTheme.getFolderIcon({ name }),
         name,
         path: childPath,
         type: DirentType.DirectoryExpanded,
       })
-      dirents.push(...getSavedChildDirents(map, childPath, depth + 1))
+      dirents.push(...getSavedChildDirents(map, childPath, depth + 1, excluded))
     } else {
       dirents.push({
         depth,
         posInSet: i + 1,
-        setSize: childrenLength,
+        setSize: visibleLength,
         icon: IconTheme.getIcon({ type, name }),
         name,
         path: childPath,
@@ -101,7 +111,12 @@ const getSavedChildDirents = (map, path, depth) => {
   return dirents
 }
 
-const createDirents = (root, expandedDirentPaths, expandedDirentChildren) => {
+const createDirents = (
+  root,
+  expandedDirentPaths,
+  expandedDirentChildren,
+  excluded
+) => {
   const dirents = []
   const map = Object.create(null)
   for (let i = 0; i < expandedDirentPaths.length; i++) {
@@ -111,18 +126,23 @@ const createDirents = (root, expandedDirentPaths, expandedDirentChildren) => {
       map[path] = children.value
     }
   }
-  dirents.push(...getSavedChildDirents(map, root, 1))
+  dirents.push(...getSavedChildDirents(map, root, 1, excluded))
   return dirents
 }
 
-const restoreExpandedState = async (savedState, root, pathSeparator) => {
+const restoreExpandedState = async (
+  savedState,
+  root,
+  pathSeparator,
+  excluded
+) => {
   // TODO read all opened folders in parallel
   // ignore ENOENT errors
   // ignore ENOTDIR errors
   // merge all dirents
   // restore scroll location
   if (!savedState || !savedState.expandedPaths) {
-    return await getTopLevelDirents(root, pathSeparator)
+    return await getTopLevelDirents(root, pathSeparator, excluded)
   }
   const expandedDirentPaths = [root, ...savedState.expandedPaths]
   const expandedDirentChildren = await Promise.allSettled(
@@ -132,7 +152,8 @@ const restoreExpandedState = async (savedState, root, pathSeparator) => {
   const dirents = createDirents(
     savedRoot,
     expandedDirentPaths,
-    expandedDirentChildren
+    expandedDirentChildren,
+    excluded
   )
   return dirents
 }
@@ -146,14 +167,27 @@ export const saveState = (state) => {
   }
 }
 
+const getExcluded = () => {
+  const excludedObject = Preferences.get('files.exclude') || {}
+  const excluded = []
+  for (const [key, value] of Object.entries(excludedObject)) {
+    if (value) {
+      excluded.push(key)
+    }
+  }
+  return excluded
+}
+
 export const loadContent = async (state, savedState) => {
   const root = state.root || Workspace.state.workspacePath
   // TODO path separator could be restored from saved state
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
+  const excluded = getExcluded()
   const restoredDirents = await restoreExpandedState(
     savedState,
     root,
-    pathSeparator
+    pathSeparator,
+    excluded
   )
   const { itemHeight, height } = state
   return {
@@ -162,6 +196,7 @@ export const loadContent = async (state, savedState) => {
     items: restoredDirents,
     maxLineY: Math.round(height / itemHeight),
     pathSeparator,
+    excluded,
   }
 }
 

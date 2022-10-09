@@ -40,7 +40,13 @@ export const compareDirent = (direntA, direntB) => {
   )
 }
 
-const toDisplayDirents = (root, pathSeparator, rawDirents, parentDirent) => {
+const toDisplayDirents = (
+  root,
+  pathSeparator,
+  rawDirents,
+  parentDirent,
+  excluded
+) => {
   rawDirents.sort(compareDirent) // TODO maybe shouldn't mutate input argument, maybe sort after mapping
   // TODO figure out whether this uses too much memory (name,path -> redundant, depth could be computed on demand)
   const toDisplayDirent = (rawDirent, index) => {
@@ -57,7 +63,16 @@ const toDisplayDirents = (root, pathSeparator, rawDirents, parentDirent) => {
       icon: IconTheme.getIcon(rawDirent),
     }
   }
-  return rawDirents.map(toDisplayDirent)
+  const result = []
+  let i = 0
+  for (const rawDirent of rawDirents) {
+    i++
+    if (excluded.includes(rawDirent.name)) {
+      continue
+    }
+    result.push(toDisplayDirent(rawDirent, i))
+  }
+  return result
 }
 
 export const getParentStartIndex = (dirents, index) => {
@@ -78,7 +93,12 @@ export const getParentEndIndex = (dirents, index) => {
   return endIndex
 }
 
-export const getChildDirents = async (root, pathSeparator, parentDirent) => {
+export const getChildDirents = async (
+  root,
+  pathSeparator,
+  parentDirent,
+  excluded = []
+) => {
   Assert.string(root)
   Assert.string(pathSeparator)
   Assert.object(parentDirent)
@@ -94,7 +114,8 @@ export const getChildDirents = async (root, pathSeparator, parentDirent) => {
     root,
     pathSeparator,
     rawDirents,
-    parentDirent
+    parentDirent,
+    excluded
   )
   return displayDirents
 }
@@ -115,13 +136,18 @@ export const mergeDirents = (oldDirents, newDirents) => {
   return merged
 }
 
-export const getTopLevelDirents = (root, pathSeparator) => {
+export const getTopLevelDirents = (root, pathSeparator, excluded) => {
   if (!root) {
     return []
   }
-  return getChildDirents(root, pathSeparator, {
-    depth: 0,
-    path: root,
-    type: DirentType.Directory,
-  })
+  return getChildDirents(
+    root,
+    pathSeparator,
+    {
+      depth: 0,
+      path: root,
+      type: DirentType.Directory,
+    },
+    excluded
+  )
 }
