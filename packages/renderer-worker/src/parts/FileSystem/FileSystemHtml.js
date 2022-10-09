@@ -51,6 +51,9 @@ export const readDirWithFileTypes = async (uri) => {
     // TODO convert uri to file handle path, get file handle from indexeddb
     // if file handle does not exist, throw error
     const handle = await PersistentFileHandle.getHandle(uri)
+    if (!handle) {
+      throw new Error(`File system handle not found for ${uri}`)
+    }
     const children = await FileSystemHandle.getDirents(handle)
     return children
   } catch (error) {

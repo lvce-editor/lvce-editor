@@ -2,6 +2,7 @@ import * as Arrays from '../Arrays/Arrays.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as FileHandleType from '../FileHandleType/FileHandleType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const requestPermission = async (handle, options) => {
   // query permission, but from renderer process
@@ -29,8 +30,8 @@ export const write = async (handle, content) => {
   await writable.close()
 }
 
-const getDirentType = (fileHandle) => {
-  switch (fileHandle.kind) {
+const getDirentType = (fileHandleKind) => {
+  switch (fileHandleKind) {
     case FileHandleType.Directory:
       return DirentType.Directory
     case FileHandleType.File:
@@ -40,8 +41,9 @@ const getDirentType = (fileHandle) => {
   }
 }
 
-const getDirent = ([name, child]) => {
-  const type = getDirentType(child)
+const getDirent = (handle) => {
+  const { name, kind } = handle
+  const type = getDirentType(kind)
   return {
     name,
     type,
@@ -49,8 +51,11 @@ const getDirent = ([name, child]) => {
 }
 
 export const getDirents = async (handle) => {
-  const children = await Arrays.fromAsync(handle, getDirent)
-  return children
+  Assert.object(handle)
+  const handles = await Arrays.fromAsync(handle.values())
+  console.log({ handles })
+  const dirents = handles.map(getDirent)
+  return dirents
 }
 
 export const getFileHandle = (handle, name) => {
