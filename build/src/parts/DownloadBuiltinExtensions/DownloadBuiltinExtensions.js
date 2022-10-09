@@ -81,11 +81,20 @@ const downloadExtensionAndLog = async (extension) => {
 const downloadExtensions = async (extensions) => {
   await pMap(extensions, downloadExtensionAndLog, {
     concurrency: 1,
+    stopOnError: false,
   })
 }
 
 const printError = (error) => {
-  if (
+  if (error && error.constructor.name === 'AggregateError') {
+    for (const subError of error.errors) {
+      if (subError.message.includes('Response code')) {
+        console.error(subError.message)
+      } else {
+        console.error(subError)
+      }
+    }
+  } else if (
     error &&
     error instanceof Error &&
     error.message.includes('Response code ')
