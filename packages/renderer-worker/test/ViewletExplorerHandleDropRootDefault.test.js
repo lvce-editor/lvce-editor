@@ -61,6 +61,7 @@ test('handleDrop - single folder', async () => {
   expect(Command.execute).toHaveBeenNthCalledWith(
     1,
     'PersistentFileHandle.addHandle',
+    'html://folder-1',
     { kind: 'directory', name: 'folder-1' }
   )
   expect(Command.execute).toHaveBeenNthCalledWith(

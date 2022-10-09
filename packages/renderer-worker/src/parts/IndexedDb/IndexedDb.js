@@ -80,13 +80,13 @@ const getHandleDb = async () => {
   return db
 }
 
-export const addHandle = async (handle) => {
+export const addHandle = async (uri, handle) => {
   const handleDb = await getHandleDb()
-  await handleDb.put('file-handles-store', handle, handle.name)
+  await handleDb.put('file-handles-store', handle, uri)
 }
 
-export const getHandle = async (name) => {
+export const getHandle = async (uri) => {
   const handleDb = await getHandleDb()
-  const handle = await handleDb.get('file-handles-store', name)
+  const handle = await handleDb.get('file-handles-store', uri)
   return handle
 }

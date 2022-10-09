@@ -1,21 +1,41 @@
 import * as BrowserErrorTypes from '../BrowserErrorTypes/BrowserErrorTypes.js'
+import * as FileHandleEditMode from '../FileHandleEditMode/FileHandleEditMode.js'
 import * as FileHandlePermissionType from '../FileHandlePermissionType/FileHandlePermissionType.js'
 import * as FileSystemHandle from '../FileSystemHandle/FileSystemHandle.js'
+import * as FileSytemHandlePermission from '../FileSystemHandlePermission/FileSystemHandlePermission.js'
 import * as Path from '../Path/Path.js'
-import * as PersistenFileHandle from '../PersistentFileHandle/PersistentFileHandle.js'
+import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHandle.js'
 import { VError } from '../VError/VError.js'
+import * as FileHandleTypeMap from '../FileHandleTypeMap/FileHandleTypeMap.js'
 
 const pathSeparator = '/'
 
-const readDirWithFileTypesFallbackPrompt = async (handle) => {
+const getDirent = (handle) => {
+  const { name, kind } = handle
+  const type = FileHandleTypeMap.getDirentType(kind)
+  return {
+    name,
+    type,
+  }
+}
+
+export const getDirents = (handles) => {
+  const dirents = handles.map(getDirent)
+  return dirents
+}
+
+const getChildHandlesFallbackPrompt = async (handle) => {
   // TODO cannot prompt without user activation, else error occurs
   // maybe need to show
-  const permissionTypeNow = await FileSystemHandle.requestPermission(handle, {
-    mode: 'readwrite',
-  })
+  const permissionTypeNow = await FileSytemHandlePermission.requestPermission(
+    handle,
+    {
+      mode: FileHandleEditMode.ReadWrite,
+    }
+  )
   switch (permissionTypeNow) {
     case FileHandlePermissionType.Granted:
-      return FileSystemHandle.getDirents(handle)
+      return FileSystemHandle.getChildHandles(handle)
     case FileHandlePermissionType.Prompt:
     case FileHandlePermissionType.Denied:
       // TODO maybe throw error in this case
@@ -25,24 +45,33 @@ const readDirWithFileTypesFallbackPrompt = async (handle) => {
   }
 }
 
-const readDirWithFileTypesFallback = async (uri) => {
-  try {
-    const handle = await PersistenFileHandle.getHandle(uri)
-    const permissionType = await FileSystemHandle.queryPermission(handle, {
-      mode: 'readwrite',
-    })
-    switch (permissionType) {
-      case FileHandlePermissionType.Granted:
-        throw new VError(`invalid state`)
-      case FileHandlePermissionType.Prompt:
-        return await readDirWithFileTypesFallbackPrompt(handle)
-      case FileHandlePermissionType.Denied:
-        return []
-      default:
-        return []
+const getChildHandlesFallback = async (handle) => {
+  const permissionType = await FileSytemHandlePermission.queryPermission(
+    handle,
+    {
+      mode: FileHandleEditMode.ReadWrite,
     }
+  )
+  switch (permissionType) {
+    case FileHandlePermissionType.Granted:
+      throw new VError(`invalid state`)
+    case FileHandlePermissionType.Prompt:
+      return await getChildHandlesFallbackPrompt(handle)
+    case FileHandlePermissionType.Denied:
+      return []
+    default:
+      return []
+  }
+}
+
+const getChildHandles = async (handle) => {
+  try {
+    return await FileSystemHandle.getChildHandles(handle)
   } catch (error) {
-    throw new VError(error, `failed to read directory`)
+    if (BrowserErrorTypes.isNotAllowedError(error)) {
+      return getChildHandlesFallback(handle)
+    }
+    throw new VError(error, `failed to get child handles`)
   }
 }
 
@@ -50,19 +79,21 @@ export const readDirWithFileTypes = async (uri) => {
   try {
     // TODO convert uri to file handle path, get file handle from indexeddb
     // if file handle does not exist, throw error
-    const handle = await PersistenFileHandle.getHandle(uri)
-    const children = await FileSystemHandle.getDirents(handle)
-    return children
-  } catch (error) {
-    if (BrowserErrorTypes.isNotAllowedError(error)) {
-      return readDirWithFileTypesFallback(uri)
+    const handle = await PersistentFileHandle.getHandle(uri)
+    if (!handle) {
+      throw new Error(`File system handle not found for ${uri}`)
     }
+    const childHandles = await getChildHandles(handle)
+    await PersistentFileHandle.addHandles(uri, childHandles)
+    const dirents = getDirents(childHandles)
+    return dirents
+  } catch (error) {
     throw new VError(error, `failed to read directory`)
   }
 }
 
 const getDirectoryHandle = async (uri) => {
-  const handle = await PersistenFileHandle.getHandle(uri)
+  const handle = await PersistentFileHandle.getHandle(uri)
   if (handle) {
     return handle
   }
@@ -74,7 +105,7 @@ const getDirectoryHandle = async (uri) => {
 }
 
 const getFileHandle = async (uri) => {
-  const handle = await PersistenFileHandle.getHandle(uri)
+  const handle = await PersistentFileHandle.getHandle(uri)
   if (handle) {
     return handle
   }

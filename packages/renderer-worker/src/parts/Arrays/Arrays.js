@@ -42,10 +42,10 @@ export const lastIndex = (array) => {
   return array.length - 1
 }
 
-export const fromAsync = async (asyncIterable, mapFn) => {
+export const fromAsync = async (asyncIterable) => {
   const children = []
   for await (const value of asyncIterable) {
-    children.push(mapFn(value))
+    children.push(value)
   }
   return children
 }
