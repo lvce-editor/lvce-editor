@@ -2,7 +2,7 @@ import * as BrowserErrorTypes from '../BrowserErrorTypes/BrowserErrorTypes.js'
 import * as FileHandlePermissionType from '../FileHandlePermissionType/FileHandlePermissionType.js'
 import * as FileSystemHandle from '../FileSystemHandle/FileSystemHandle.js'
 import * as Path from '../Path/Path.js'
-import * as PersistenFileHandle from '../PersistentFileHandle/PersistentFileHandle.js'
+import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHandle.js'
 import { VError } from '../VError/VError.js'
 
 const pathSeparator = '/'
@@ -27,7 +27,7 @@ const readDirWithFileTypesFallbackPrompt = async (handle) => {
 
 const readDirWithFileTypesFallback = async (uri) => {
   try {
-    const handle = await PersistenFileHandle.getHandle(uri)
+    const handle = await PersistentFileHandle.getHandle(uri)
     const permissionType = await FileSystemHandle.queryPermission(handle, {
       mode: 'readwrite',
     })
@@ -50,7 +50,7 @@ export const readDirWithFileTypes = async (uri) => {
   try {
     // TODO convert uri to file handle path, get file handle from indexeddb
     // if file handle does not exist, throw error
-    const handle = await PersistenFileHandle.getHandle(uri)
+    const handle = await PersistentFileHandle.getHandle(uri)
     const children = await FileSystemHandle.getDirents(handle)
     return children
   } catch (error) {
@@ -62,7 +62,7 @@ export const readDirWithFileTypes = async (uri) => {
 }
 
 const getDirectoryHandle = async (uri) => {
-  const handle = await PersistenFileHandle.getHandle(uri)
+  const handle = await PersistentFileHandle.getHandle(uri)
   if (handle) {
     return handle
   }
@@ -74,7 +74,7 @@ const getDirectoryHandle = async (uri) => {
 }
 
 const getFileHandle = async (uri) => {
-  const handle = await PersistenFileHandle.getHandle(uri)
+  const handle = await PersistentFileHandle.getHandle(uri)
   if (handle) {
     return handle
   }
