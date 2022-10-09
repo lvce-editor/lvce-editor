@@ -1,6 +1,8 @@
 import * as BrowserErrorTypes from '../BrowserErrorTypes/BrowserErrorTypes.js'
+import * as FileHandleEditMode from '../FileHandleEditMode/FileHandleEditMode.js'
 import * as FileHandlePermissionType from '../FileHandlePermissionType/FileHandlePermissionType.js'
 import * as FileSystemHandle from '../FileSystemHandle/FileSystemHandle.js'
+import * as FileSytemHandlePermission from '../FileSystemHandlePermission/FileSystemHandlePermission.js'
 import * as Path from '../Path/Path.js'
 import * as PersistentFileHandle from '../PersistentFileHandle/PersistentFileHandle.js'
 import { VError } from '../VError/VError.js'
@@ -10,9 +12,12 @@ const pathSeparator = '/'
 const readDirWithFileTypesFallbackPrompt = async (handle) => {
   // TODO cannot prompt without user activation, else error occurs
   // maybe need to show
-  const permissionTypeNow = await FileSystemHandle.requestPermission(handle, {
-    mode: 'readwrite',
-  })
+  const permissionTypeNow = await FileSytemHandlePermission.requestPermission(
+    handle,
+    {
+      mode: FileHandleEditMode.ReadWrite,
+    }
+  )
   switch (permissionTypeNow) {
     case FileHandlePermissionType.Granted:
       return FileSystemHandle.getDirents(handle)
@@ -28,9 +33,12 @@ const readDirWithFileTypesFallbackPrompt = async (handle) => {
 const readDirWithFileTypesFallback = async (uri) => {
   try {
     const handle = await PersistentFileHandle.getHandle(uri)
-    const permissionType = await FileSystemHandle.queryPermission(handle, {
-      mode: 'readwrite',
-    })
+    const permissionType = await FileSytemHandlePermission.queryPermission(
+      handle,
+      {
+        mode: FileHandleEditMode.ReadWrite,
+      }
+    )
     switch (permissionType) {
       case FileHandlePermissionType.Granted:
         throw new VError(`invalid state`)
