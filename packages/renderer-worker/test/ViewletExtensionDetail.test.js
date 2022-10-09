@@ -99,7 +99,9 @@ test('loadContent', async () => {
     '/test/test-extension/README.md'
   )
   expect(Markdown.toHtml).toHaveBeenCalledTimes(1)
-  expect(Markdown.toHtml).toHaveBeenCalledWith('# test extension')
+  expect(Markdown.toHtml).toHaveBeenCalledWith('# test extension', {
+    baseUrl: '/test/test-extension',
+  })
   expect(SanitizeHtml.sanitizeHtml).toHaveBeenCalledTimes(1)
   expect(SanitizeHtml.sanitizeHtml).toHaveBeenCalledWith(
     '<h1 id="test-extension">Test Extension</h1>'
