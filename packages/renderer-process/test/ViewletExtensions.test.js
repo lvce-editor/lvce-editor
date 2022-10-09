@@ -46,10 +46,12 @@ test('refresh', () => {
   ViewletExtensions.setExtensions(state, [
     {
       name: 'Test Extension 1',
+      description: 'n/a',
       publisher: 'Test Author',
     },
     {
       name: 'Test Extension 2',
+      description: 'n/a',
       publisher: 'Test Publisher',
     },
   ])
@@ -124,6 +126,7 @@ test('icon - fallback src', () => {
   ViewletExtensions.setExtensions(state, [
     {
       name: 'Test Extension 1',
+      icon: '/icons/extensionDefaultIcon.png',
       publisher: 'Test Author',
     },
     {
@@ -166,44 +169,40 @@ test('icon - error', () => {
 
 test('icon - error - endless loop bug', () => {
   const state = ViewletExtensions.create()
-  ViewletExtensions.setExtensions(
-    state,
-    [
-      {
-        name: 'Test Extension 1',
-        publisher: 'Test Author',
-        icon: '/not-found.png',
-      },
-    ],
-    0
-  )
+  ViewletExtensions.setExtensions(state, [
+    {
+      name: 'Test Extension 1',
+      publisher: 'Test Author',
+      icon: '/not-found.png',
+    },
+  ])
   const $ExtensionList = state.$ExtensionList
   const $FirstExtension = $ExtensionList.children[0]
   // @ts-ignore
   const $FirstIcon = $FirstExtension.querySelector('.ExtensionIcon')
+  // @ts-ignore
   const spy = jest.spyOn($FirstIcon, 'src', 'set')
+  // @ts-ignore
   expect($FirstIcon.src).toBe('http://localhost/not-found.png')
   $FirstIcon.dispatchEvent(new ErrorEvent('error', { bubbles: true }))
   expect(spy).toHaveBeenCalledTimes(1)
+  // @ts-ignore
   expect($FirstIcon.src).toBe('http://localhost/icons/extensionDefaultIcon.png')
   $FirstIcon.dispatchEvent(new ErrorEvent('error', { bubbles: true }))
+  // @ts-ignore
   expect($FirstIcon.src).toBe('http://localhost/icons/extensionDefaultIcon.png')
   expect(spy).toHaveBeenCalledTimes(1)
 })
 
 test('focus', () => {
   const state = ViewletExtensions.create()
-  ViewletExtensions.setExtensions(
-    state,
-    [
-      {
-        name: 'Test Extension 1',
-        publisher: 'Test Author',
-        icon: '/not-found.png',
-      },
-    ],
-    0
-  )
+  ViewletExtensions.setExtensions(state, [
+    {
+      name: 'Test Extension 1',
+      publisher: 'Test Author',
+      icon: '/not-found.png',
+    },
+  ])
   Viewlet.mount(document.body, state)
   ViewletExtensions.focus(state)
   expect(document.activeElement).toBe(state.$InputBox)
@@ -211,17 +210,13 @@ test('focus', () => {
 
 test('accessibility - InputBox should have placeholder', () => {
   const state = ViewletExtensions.create()
-  ViewletExtensions.setExtensions(
-    state,
-    [
-      {
-        name: 'Test Extension 1',
-        publisher: 'Test Author',
-        icon: '/not-found.png',
-      },
-    ],
-    0
-  )
+  ViewletExtensions.setExtensions(state, [
+    {
+      name: 'Test Extension 1',
+      publisher: 'Test Author',
+      icon: '/not-found.png',
+    },
+  ])
   expect(state.$InputBox.placeholder).toBe('Search Extensions in Marketplace')
   expect(state.$InputBox.ariaLabel).toBeUndefined()
 })
@@ -287,6 +282,7 @@ test('setExtensions - add one', () => {
   const $ExtensionName = $ExtensionOne.querySelector('.ExtensionName')
   const $ExtensionIcon = $ExtensionOne.querySelector('.ExtensionIcon')
   expect($ExtensionName.textContent).toBe('Test Extension 1')
+  // @ts-ignore
   expect($ExtensionIcon.src).toBe('http://localhost/images/logo.png')
 })
 
