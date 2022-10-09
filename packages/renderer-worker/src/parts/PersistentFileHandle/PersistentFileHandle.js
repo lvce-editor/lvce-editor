@@ -15,6 +15,19 @@ export const addHandle = async (uri, handle) => {
   }
 }
 
+export const addHandles = async (parentUri, childHandles) => {
+  const promises = []
+  for (const childHandle of childHandles) {
+    const childUri = parentUri + '/' + childHandle.name
+    if (childUri in state.handles) {
+      continue
+    }
+    state.handles[childUri] = childHandle
+    promises.push(addHandle(childUri, childHandle))
+  }
+  await Promise.all(promises)
+}
+
 export const removeHandle = () => {
   // TODO remove handle from state and from indexeddb
 }

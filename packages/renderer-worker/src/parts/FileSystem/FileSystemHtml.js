@@ -63,10 +63,7 @@ export const readDirWithFileTypes = async (uri) => {
       throw new Error(`File system handle not found for ${uri}`)
     }
     const childHandles = await FileSystemHandle.getChildHandles(handle)
-    for (const childHandle of childHandles) {
-      const childUri = uri + pathSeparator + childHandle.name
-      await PersistentFileHandle.addHandle(childUri, childHandle)
-    }
+    await PersistentFileHandle.addHandles(uri, childHandles)
     const dirents = FileSystemHandle.getDirents(childHandles)
     return dirents
   } catch (error) {
