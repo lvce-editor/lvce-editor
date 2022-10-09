@@ -1,6 +1,5 @@
 import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
-import * as Icon from '../Icon/Icon.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 
@@ -17,19 +16,6 @@ const create$ExtensionSuggestions = () => {
 }
 
 const create$ExtensionSuggestion = (item) => {}
-
-const getIconSrc = (extension) => {
-  if (extension.icon) {
-    return extension.icon
-  }
-  if (extension.name && extension.name.startsWith('Language Basics')) {
-    return Icon.EXtensionLanguageBasics
-  }
-  if (extension.name && extension.name.endsWith(' Theme')) {
-    return Icon.ExtensionTheme
-  }
-  return Icon.ExtensionDefaultIcon
-}
 
 const findIndex = ($Target) => {
   if ($Target.className.includes('ExtensionListItem')) {
@@ -166,7 +152,7 @@ const render$Extension = ($Extension, extension) => {
   const $ExtensionDetailName = $Extension.children[1].children[0]
   const $ExtensionDetailDescription = $Extension.children[1].children[1]
   const $ExtensionAuthorName = $Extension.children[1].children[2].children[0]
-  const $EXtensionIcon = $Extension.children[0]
+  const $ExtensionIcon = $Extension.children[0]
 
   $Extension.ariaPosInSet = extension.posInSet
   $Extension.ariaSetSize = extension.setSize
@@ -174,16 +160,10 @@ const render$Extension = ($Extension, extension) => {
   $Extension.dataset.id = extension.id
   $Extension.style.top = `${extension.top}px`
 
-  $ExtensionDetailName.firstChild.nodeValue =
-    extension.name || extension.id || 'n/a'
-
-  $ExtensionDetailDescription.firstChild.nodeValue =
-    extension.description || 'n/a'
-
-  $ExtensionAuthorName.firstChild.nodeValue =
-    extension.type === 'builtin' ? 'builtin' : extension.publisher || 'n/a'
-
-  $EXtensionIcon.src = getIconSrc(extension)
+  $ExtensionDetailName.firstChild.nodeValue = extension.name
+  $ExtensionDetailDescription.firstChild.nodeValue = extension.description
+  $ExtensionAuthorName.firstChild.nodeValue = extension.publisher
+  $ExtensionIcon.src = extension.icon
 }
 
 // TODO test that rendering and recycling text nodes works

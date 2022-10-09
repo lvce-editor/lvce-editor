@@ -1,8 +1,18 @@
+import * as Icon from '../Icon/Icon.js'
 import * as Platform from '../Platform/Platform.js'
 
 export const getIcon = (extension) => {
-  if (!extension || !extension.path || !extension.icon) {
-    return ''
+  if (!extension) {
+    return Icon.ExtensionDefaultIcon
+  }
+  if (!extension.path || !extension.icon) {
+    if (extension.name && extension.name.startsWith('Language Basics')) {
+      return Icon.EXtensionLanguageBasics
+    }
+    if (extension.name && extension.name.endsWith(' Theme')) {
+      return Icon.ExtensionTheme
+    }
+    return Icon.ExtensionDefaultIcon
   }
   if (Platform.platform === 'remote') {
     return `/remote/${extension.path}/${extension.icon}` // TODO support windows paths
