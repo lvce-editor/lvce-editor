@@ -237,6 +237,6 @@
   {
     "name": "builtin.theme-atom-one-dark",
     "repository": "github.com/lvce-editor/theme-atom-one-dark",
-    "version": "0.0.6"
+    "version": "0.0.7"
   }
 ]
