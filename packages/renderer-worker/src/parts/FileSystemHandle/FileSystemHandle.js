@@ -1,8 +1,7 @@
 import * as Arrays from '../Arrays/Arrays.js'
-import * as DirentType from '../DirentType/DirentType.js'
-import * as FileHandleType from '../FileHandleType/FileHandleType.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Assert from '../Assert/Assert.js'
+import * as FileHandleTypeMap from '../FileHandleTypeMap/FileHandleTypeMap.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const requestPermission = async (handle, options) => {
   // query permission, but from renderer process
@@ -30,20 +29,9 @@ export const write = async (handle, content) => {
   await writable.close()
 }
 
-const getDirentType = (fileHandleKind) => {
-  switch (fileHandleKind) {
-    case FileHandleType.Directory:
-      return DirentType.Directory
-    case FileHandleType.File:
-      return DirentType.File
-    default:
-      return DirentType.Unknown
-  }
-}
-
 const getDirent = (handle) => {
   const { name, kind } = handle
-  const type = getDirentType(kind)
+  const type = FileHandleTypeMap.getDirentType(kind)
   return {
     name,
     type,
