@@ -2,7 +2,6 @@ import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFla
 import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Layout from '../Layout/Layout.js'
-import * as Platform from '../Platform/Platform.js'
 import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
 
 // TODO set aria-selected false when sidebar is collapsed
@@ -18,10 +17,7 @@ const create$ActivityBarItemIcon = (icon) => {
 
 // TODO assetDir might not work with non-builtin extension icons
 const create$ActivityBarItem = (item) => {
-  const assetDir = Platform.getAssetDir()
-  const $ActivityBarItemIcon = create$ActivityBarItemIcon(
-    `${assetDir}${item.icon}`
-  )
+  const $ActivityBarItemIcon = create$ActivityBarItemIcon(`${item.icon}`)
   const $ActivityBarItem = document.createElement('div')
   $ActivityBarItem.className = 'ActivityBarItem'
   $ActivityBarItem.ariaLabel = '' // aria-label is determined by content  TODO is empty aria-label necessary or can it be left off?
