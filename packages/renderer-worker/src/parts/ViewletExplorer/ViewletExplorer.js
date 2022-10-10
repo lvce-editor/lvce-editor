@@ -71,7 +71,6 @@ const getSavedChildDirents = (map, path, depth, excluded) => {
   }
   const dirents = []
   children.sort(compareDirent)
-  let j = 1
   const visible = []
   for (const child of children) {
     if (excluded.includes(child.name)) {
@@ -84,7 +83,6 @@ const getSavedChildDirents = (map, path, depth, excluded) => {
     const child = visible[i]
     const { name, type } = child
     const childPath = path + '/' + name
-
     if (child.type === DirentType.Directory && childPath in map) {
       dirents.push({
         depth,

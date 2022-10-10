@@ -66,11 +66,11 @@ const toDisplayDirents = (
   const result = []
   let i = 0
   for (const rawDirent of rawDirents) {
-    i++
     if (excluded.includes(rawDirent.name)) {
       continue
     }
     result.push(toDisplayDirent(rawDirent, i))
+    i++
   }
   return result
 }

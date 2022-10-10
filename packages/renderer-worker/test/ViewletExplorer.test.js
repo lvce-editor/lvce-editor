@@ -172,6 +172,7 @@ test('loadContent', async () => {
     top: undefined,
     pathSeparator: PathSeparatorType.Slash,
     editingIndex: -1,
+    excluded: [],
   })
 })
 
