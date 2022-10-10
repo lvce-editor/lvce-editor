@@ -9,6 +9,14 @@
 
   "extensions.autoUpdate": true,
 
+  "files.exclude": {
+    ".git": true,
+    ".svn": true,
+    ".hg": true,
+    ".DS_Store": true,
+    "Thumbs.db": true
+  },
+
   "sessionReplay.enabled": true,
 
   "serviceWorker.enabled": false,
