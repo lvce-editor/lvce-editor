@@ -1,13 +1,16 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Clamp from '../Clamp/Clamp.js'
 
 export const at = (editor, x, y, offset) => {
   Assert.object(editor)
   Assert.number(x)
   Assert.number(y)
   Assert.number(offset)
-  const rowIndex = Math.max(
+  const { maxLineY } = editor
+  const rowIndex = Clamp.clamp(
     Math.floor((y - editor.top + editor.deltaY) / editor.rowHeight),
-    0
+    0,
+    maxLineY - 1
   )
   const columnIndex = offset
   return {

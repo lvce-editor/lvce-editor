@@ -70,6 +70,7 @@ export const editorHandleSingleClick = (editor, modifier, x, y, offset) => {
   Assert.number(y)
   Assert.number(offset)
   const position = EditorPosition.at(editor, x, y, offset)
+  console.log({ position })
   switch (modifier) {
     case ModifierKey.Alt:
       return handleSingleClickWithAlt(editor, position)

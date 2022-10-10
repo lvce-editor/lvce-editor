@@ -95,6 +95,7 @@ test('editorHandleClick - with ctrl - remove second cursor', async () => {
     rowHeight: 10,
     columnWidth: 8,
     deltaY: 0,
+    maxLineY: 100,
   }
   expect(
     await EditorHandleSingleClick.editorHandleSingleClick(
