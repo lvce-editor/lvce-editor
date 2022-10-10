@@ -4580,6 +4580,136 @@ test('revealItem - already visible', async () => {
   })
 })
 
+test('revealItem - scroll down', async () => {
+  const state = {
+    ...ViewletExplorer.create(),
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    maxLineY: 1,
+    root: '/test',
+    pathSeparator: PathSeparatorType.Slash,
+    items: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'b.txt',
+        path: '/test/a/b.txt',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.File,
+      },
+    ],
+  }
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    throw new Error(`file not found ${uri}`)
+  })
+  expect(
+    await ViewletExplorer.revealItem(state, '/test/a/b.txt')
+  ).toMatchObject({
+    focused: true,
+    focusedIndex: 1,
+    minLineY: 1,
+    maxLineY: 2,
+    items: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'b.txt',
+        path: '/test/a/b.txt',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.File,
+      },
+    ],
+  })
+})
+
+test('revealItem - scroll up', async () => {
+  const state = {
+    ...ViewletExplorer.create(),
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 1,
+    maxLineY: 2,
+    root: '/test',
+    pathSeparator: PathSeparatorType.Slash,
+    items: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'b.txt',
+        path: '/test/a/b.txt',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.File,
+      },
+    ],
+  }
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    throw new Error(`file not found ${uri}`)
+  })
+  expect(await ViewletExplorer.revealItem(state, '/test/a')).toMatchObject({
+    focused: true,
+    focusedIndex: 0,
+    minLineY: 0,
+    maxLineY: 1,
+    items: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'b.txt',
+        path: '/test/a/b.txt',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.File,
+      },
+    ],
+  })
+})
+
 // TODO add more tests for
 // - opening symlink file
 // - symlink stat error
