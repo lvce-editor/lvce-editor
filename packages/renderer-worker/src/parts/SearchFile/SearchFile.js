@@ -7,6 +7,8 @@ const getModule = (protocol) => {
       return import('../SearchFileWeb/SearchFileWeb.js')
     case FileSystemProtocol.Memfs:
       return import('../SearchFileMemfs/SearchFileMemfs.js')
+    case FileSystemProtocol.Fetch:
+      return import('../SearchFileWithFetch/SearchFileWithFetch.js')
     default:
       return import('../SearchFileRemote/SearchFileRemote.js')
   }
