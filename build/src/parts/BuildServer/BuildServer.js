@@ -13,8 +13,7 @@ import * as Replace from '../Replace/Replace.js'
 import * as Tag from '../Tag/Tag.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
-const copyStaticFiles = async () => {
-  const commitHash = await CommitHash.getCommitHash()
+const copyStaticFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: 'static/config',
     to: `build/.tmp/server/server/static/${commitHash}/config`,
@@ -260,8 +259,7 @@ const copySharedProcessFiles = async () => {
   }
 }
 
-const copyServerFiles = async () => {
-  const commitHash = await CommitHash.getCommitHash()
+const copyServerFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: 'packages/server',
     to: 'build/.tmp/server/server',
@@ -861,8 +859,7 @@ const setVersions = async () => {
   }
 }
 
-const bundleRendererWorkerAndRendererProcessJs = async () => {
-  const commitHash = await CommitHash.getCommitHash()
+const bundleRendererWorkerAndRendererProcessJs = async ({ commitHash }) => {
   const rendererProcessCachePath =
     await BundleRendererProcessCached.bundleRendererProcessCached({
       commitHash,
@@ -908,21 +905,30 @@ const bundleRendererWorkerAndRendererProcessJs = async () => {
   console.timeEnd('copyExtensionHostWorkerFiles')
 }
 
+const copyPlaygroundFiles = async ({ commitHash }) => {
+  await Copy.copy({
+    from: `build/files/playground-source`,
+    to: `build/.tmp/server/server/static/${commitHash}/playground`,
+  })
+}
+
 export const build = async () => {
+  const commitHash = await CommitHash.getCommitHash()
+
   Console.time('clean')
   await Remove.remove('build/.tmp/server')
   Console.timeEnd('clean')
 
   console.time('copyServerFiles')
-  await copyServerFiles()
+  await copyServerFiles({ commitHash })
   console.timeEnd('copyServerFiles')
 
   console.time('copyStaticFiles')
-  await copyStaticFiles()
+  await copyStaticFiles({ commitHash })
   console.timeEnd('copyStaticFiles')
 
   console.time('bundleRendererWorkerAndRendererProcessJs')
-  await bundleRendererWorkerAndRendererProcessJs()
+  await bundleRendererWorkerAndRendererProcessJs({ commitHash })
   console.timeEnd('bundleRendererWorkerAndRendererProcessJs')
 
   console.time('copySharedProcessFiles')
@@ -940,4 +946,8 @@ export const build = async () => {
   console.time('setVersions')
   await setVersions()
   console.timeEnd('setVersions')
+
+  console.time('copyPlaygroundFiles')
+  await copyPlaygroundFiles({ commitHash })
+  console.timeEnd('copyPlaygroundFiles')
 }
