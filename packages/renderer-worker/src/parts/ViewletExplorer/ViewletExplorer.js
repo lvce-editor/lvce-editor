@@ -178,7 +178,6 @@ const getExcluded = () => {
 
 export const loadContent = async (state, savedState) => {
   const root = state.root || Workspace.state.workspacePath
-  console.log({ root })
   // TODO path separator could be restored from saved state
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
   const excluded = getExcluded()
@@ -188,7 +187,6 @@ export const loadContent = async (state, savedState) => {
     pathSeparator,
     excluded
   )
-  console.log({ restoredDirents })
   const { itemHeight, height } = state
   return {
     ...state,
@@ -1228,9 +1226,31 @@ const orderDirents = (dirents) => {
   return ordered
 }
 
+const scrollInto = (index, minLineY, maxLineY) => {
+  const diff = maxLineY - minLineY
+  const smallerHalf = Math.floor(diff / 2)
+  const largerHalf = diff - smallerHalf
+  if (index < minLineY) {
+    return {
+      newMinLineY: index - smallerHalf,
+      newMaxLineY: index + largerHalf,
+    }
+  }
+  if (index >= maxLineY) {
+    return {
+      newMinLineY: index - smallerHalf,
+      newMaxLineY: index + largerHalf,
+    }
+  }
+  return {
+    newMinLineY: minLineY,
+    newMaxLineY: maxLineY,
+  }
+}
+
 // TODO maybe just insert items into explorer and refresh whole explorer
 const revealItemHidden = async (state, uri) => {
-  const { root, pathSeparator, items } = state
+  const { root, pathSeparator, items, minLineY, maxLineY } = state
   const pathParts = getPathParts(root, uri, pathSeparator)
   const pathPartsToReveal = getPathPartsToReveal(root, pathParts, items)
   const pathPartsChildren = await Promise.all(
@@ -1240,19 +1260,26 @@ const revealItemHidden = async (state, uri) => {
   const orderedPathParts = orderDirents(pathPartsChildrenFlat)
   const mergedDirents = mergeVisibleWithHiddenItems(items, orderedPathParts)
   const index = getIndex(mergedDirents, uri)
+  const { newMinLineY, newMaxLineY } = scrollInto(index, minLineY, maxLineY)
   return {
     ...state,
     items: mergedDirents,
     focused: true,
     focusedIndex: index,
+    minLineY: newMinLineY,
+    maxLineY: newMaxLineY,
   }
 }
 
 const revealItemVisible = (state, index) => {
+  const { minLineY, maxLineY } = state
+  const { newMinLineY, newMaxLineY } = scrollInto(index, minLineY, maxLineY)
   return {
     ...state,
     focused: true,
     focusedIndex: index,
+    minLineY: newMinLineY,
+    maxLineY: newMaxLineY,
   }
 }
 
