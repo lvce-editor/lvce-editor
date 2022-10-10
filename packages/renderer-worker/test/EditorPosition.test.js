@@ -29,3 +29,24 @@ test('y', () => {
   }
   expect(EditorPosition.y(editor, 0, 0)).toBe(20)
 })
+
+test('at - longer than editor content', () => {
+  const editor = {
+    lines: [''],
+    cursor: {
+      rowIndex: 0,
+      columnIndex: 0,
+    },
+    top: 0,
+    left: 0,
+    columnWidth: 8,
+    rowHeight: 20,
+    minLineY: 0,
+    maxLineY: 1,
+    deltaY: 0,
+  }
+  expect(EditorPosition.at(editor, 0, 40, 0)).toEqual({
+    rowIndex: 0,
+    columnIndex: 0,
+  })
+})
