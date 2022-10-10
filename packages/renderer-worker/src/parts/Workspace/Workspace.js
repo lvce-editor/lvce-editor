@@ -8,6 +8,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Window from '../Window/Window.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
+import * as Preferences from '../Preferences/Preferences.js'
 
 export const state = {
   workspacePath: '',
@@ -93,20 +94,23 @@ const getResolvedRootFromRendererProcess = async (href) => {
       source: 'renderer-process',
     }
   }
-  const resolvedRootFromSessionStorage =
-    await getResolveRootFromSessionStorage()
-  if (resolvedRootFromSessionStorage) {
-    return resolvedRootFromSessionStorage
-  }
+
   if (Platform.platform === 'web') {
+    const defaultWorkspace = Preferences.get('workspace.defaultWorkspace')
     const resolvedRoot = {
-      path: 'web://',
+      path: defaultWorkspace,
       homeDir: '',
       pathSeparator: PathSeparatorType.Slash,
       source: 'renderer-process',
     }
     return resolvedRoot
   }
+  const resolvedRootFromSessionStorage =
+    await getResolveRootFromSessionStorage()
+  if (resolvedRootFromSessionStorage) {
+    return resolvedRootFromSessionStorage
+  }
+
   return undefined
 }
 
