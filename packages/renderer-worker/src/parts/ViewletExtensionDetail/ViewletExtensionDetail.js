@@ -4,6 +4,8 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Icon from '../Icon/Icon.js'
 import * as MarkDown from '../Markdown/Markdown.js'
 import * as Path from '../Path/Path.js'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SanitizeHtml from '../SanitizeHtml/SanitizeHtml.js'
 
 export const name = 'ExtensionDetail'
@@ -35,6 +37,17 @@ const getIconSrc = (extension) => {
   return Icon.ExtensionDefaultIcon
 }
 
+const getBaseUrl = (extensionPath) => {
+  console.log({ platform: Platform.platform })
+  switch (Platform.platform) {
+    case PlatformType.Remote:
+    case PlatformType.Electron:
+      return `/remote` + extensionPath + '/'
+    default:
+      return extensionPath
+  }
+}
+
 // TODO when there are multiple extension with the same id,
 // probably need to pass extension location from extensions viewlet
 export const loadContent = async (state) => {
@@ -42,7 +55,10 @@ export const loadContent = async (state) => {
   const id = uri.slice('extension-detail://'.length)
   const extension = await ExtensionManagement.getExtension(id)
   const readmeContent = await loadReadmeContent(extension.path)
-  const readmeHtml = MarkDown.toHtml(readmeContent)
+  const baseUrl = getBaseUrl(extension.path)
+  const readmeHtml = MarkDown.toHtml(readmeContent, {
+    baseUrl,
+  })
   const sanitizedReadmeHtml = await SanitizeHtml.sanitizeHtml(readmeHtml)
   const iconSrc = getIconSrc(extension)
   const description = ExtensionDisplay.getDescription(extension)

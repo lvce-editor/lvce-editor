@@ -217,7 +217,12 @@
   {
     "name": "builtin.theme-gruvbox",
     "repository": "github.com/lvce-editor/theme-gruvbox",
-    "version": "0.0.5"
+    "version": "0.0.6"
+  },
+  {
+    "name": "builtin.theme-noctis-uva",
+    "repository": "github.com/lvce-editor/theme-noctis-uva",
+    "version": "0.0.2"
   },
   {
     "name": "builtin.theme-high-contrast",

@@ -541,6 +541,13 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
   })
 }
 
+const copyPlaygroundFiles = async ({ commitHash }) => {
+  await Copy.copy({
+    from: `build/files/playground-source`,
+    to: `build/.tmp/dist/${commitHash}/playground`,
+  })
+}
+
 export const build = async () => {
   const commitHash = await CommitHash.getCommitHash()
   const pathPrefix = Platform.getPathPrefix()
@@ -599,6 +606,10 @@ export const build = async () => {
   Console.time('addVersionFile')
   await addVersionFile({ commitHash })
   Console.timeEnd('addVersionFile')
+
+  Console.time('copyPlaygroundFiles')
+  await copyPlaygroundFiles({ commitHash })
+  Console.timeEnd('copyPlaygroundFiles')
 
   // console.time('removeUnusedThings')
   // await removeUnusedThings()

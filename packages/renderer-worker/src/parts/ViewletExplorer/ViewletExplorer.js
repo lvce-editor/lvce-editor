@@ -121,7 +121,7 @@ const restoreExpandedState = async (savedState, root, pathSeparator) => {
   // ignore ENOTDIR errors
   // merge all dirents
   // restore scroll location
-  if (!savedState || !savedState.expandedPaths) {
+  if (!savedState || !savedState.expandedPaths || savedState.root !== root) {
     return await getTopLevelDirents(root, pathSeparator)
   }
   const expandedDirentPaths = [root, ...savedState.expandedPaths]
@@ -148,6 +148,7 @@ export const saveState = (state) => {
 
 export const loadContent = async (state, savedState) => {
   const root = state.root || Workspace.state.workspacePath
+  console.log({ root })
   // TODO path separator could be restored from saved state
   const pathSeparator = await getPathSeparator(root) // TODO only load path separator once
   const restoredDirents = await restoreExpandedState(
@@ -155,6 +156,7 @@ export const loadContent = async (state, savedState) => {
     root,
     pathSeparator
   )
+  console.log({ restoredDirents })
   const { itemHeight, height } = state
   return {
     ...state,
