@@ -32,7 +32,7 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "0.0.17"
+    "version": "0.0.18"
   },
   {
     "name": "builtin.language-basics-html",
@@ -202,27 +202,27 @@
   {
     "name": "builtin.theme-monokai",
     "repository": "github.com/lvce-editor/theme-monokai",
-    "version": "0.0.5"
+    "version": "0.0.6"
   },
   {
     "name": "builtin.theme-material",
     "repository": "github.com/lvce-editor/theme-material",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.theme-cobalt2",
     "repository": "github.com/lvce-editor/theme-cobalt2",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.theme-gruvbox",
     "repository": "github.com/lvce-editor/theme-gruvbox",
-    "version": "0.0.6"
+    "version": "0.0.7"
   },
   {
     "name": "builtin.theme-noctis-uva",
     "repository": "github.com/lvce-editor/theme-noctis-uva",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.theme-high-contrast",
@@ -232,16 +232,16 @@
   {
     "name": "builtin.theme-palenight",
     "repository": "github.com/lvce-editor/theme-palenight",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.theme-ayu",
     "repository": "github.com/lvce-editor/theme-ayu",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.theme-atom-one-dark",
     "repository": "github.com/lvce-editor/theme-atom-one-dark",
-    "version": "0.0.7"
+    "version": "0.0.8"
   }
 ]
