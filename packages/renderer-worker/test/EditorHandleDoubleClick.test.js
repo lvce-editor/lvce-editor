@@ -13,6 +13,7 @@ test('editorHandleDoubleClick - with selection', () => {
     columnWidth: 8,
     tokenizer: TokenizePlainText,
     deltaY: 0,
+    maxLineY: 100,
   }
   expect(
     EditorHandleDoubleClick.editorHandleDoubleClick(editor, 21, 11, 4)
