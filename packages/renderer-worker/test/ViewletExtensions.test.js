@@ -26,6 +26,9 @@ jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
     getMarketPlaceUrl: jest.fn(() => {
       return 'https://example.com'
     }),
+    getAssetDir: () => {
+      return '/'
+    },
   }
 })
 jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
