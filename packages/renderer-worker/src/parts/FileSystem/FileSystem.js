@@ -5,6 +5,7 @@ import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js
 import * as FileSystemApp from './FileSystemApp.js'
 import * as FileSystemData from './FileSystemData.js'
 import * as FileSystemDisk from './FileSystemDisk.js'
+import * as FileSystemFetch from './FileSystemFetch.js'
 import * as FileSystemGitHub from './FileSystemGitHub.js'
 import * as FileSystemHtml from './FileSystemHtml.js'
 import * as FileSystemMemory from './FileSystemMemory.js'
@@ -37,6 +38,7 @@ state.fileSystems[FileSystemProtocol.Web] = FileSystemWeb
 state.fileSystems[FileSystemProtocol.Data] = FileSystemData
 state.fileSystems[FileSystemProtocol.Memfs] = FileSystemMemory
 state.fileSystems[FileSystemProtocol.Html] = FileSystemHtml
+state.fileSystems[FileSystemProtocol.Fetch] = FileSystemFetch
 
 const getFileSystem = (protocol) => {
   return state.fileSystems[protocol] || FileSystemDisk

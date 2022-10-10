@@ -11,3 +11,5 @@ export const Memfs = 'memfs'
 export const Html = 'html'
 
 export const ExtensionHost = 'extension-host'
+
+export const Fetch = 'fetch'
