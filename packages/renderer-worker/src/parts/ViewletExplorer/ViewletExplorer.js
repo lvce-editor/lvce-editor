@@ -1215,7 +1215,7 @@ const orderDirents = (dirents) => {
         dirent.depth === parent.depth + 1 &&
         dirent.path.startsWith(parent.path)
       ) {
-        children.push(dirent)
+        children.push(dirent, ...withDeepChildren(dirent))
       }
     }
     return [parent, ...children]
@@ -1260,6 +1260,9 @@ const revealItemHidden = async (state, uri) => {
   const orderedPathParts = orderDirents(pathPartsChildrenFlat)
   const mergedDirents = mergeVisibleWithHiddenItems(items, orderedPathParts)
   const index = getIndex(mergedDirents, uri)
+  if (index === -1) {
+    throw new Error(`File not found in explorer ${uri}`)
+  }
   const { newMinLineY, newMaxLineY } = scrollInto(index, minLineY, maxLineY)
   return {
     ...state,
