@@ -96,7 +96,6 @@ export const loadContent = async (state, savedState) => {
   const tokenizer = Tokenizer.getTokenizer(languageId)
   const newState1 = Editor.setText(state, content)
   const savedSelections = getSavedSelections(savedState)
-  const savedFocus = getSavedFocus(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
   const newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
   return {
@@ -106,7 +105,6 @@ export const loadContent = async (state, savedState) => {
     letterSpacing,
     tokenizer,
     selections: savedSelections,
-    focused: savedFocus,
     deltaY: savedDeltaY,
   }
 }
