@@ -208,6 +208,14 @@
     {
       "name": "Heading",
       "foreground": "#bf93b5"
+    },
+    {
+      "name": "YamlPropertyName",
+      "foreground": "#C9B567"
+    },
+    {
+      "name": "YamlPropertyValueString",
+      "foreground": "#8CAEC1"
     }
   ]
 }
