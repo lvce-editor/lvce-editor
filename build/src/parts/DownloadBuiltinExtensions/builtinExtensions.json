@@ -42,7 +42,7 @@
   {
     "name": "builtin.language-basics-css",
     "repository": "github.com/lvce-editor/language-basics-css",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-plaintext",
@@ -52,7 +52,7 @@
   {
     "name": "builtin.language-basics-gitattributes",
     "repository": "github.com/lvce-editor/language-basics-gitattributes",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-basics-markdown",
@@ -62,7 +62,7 @@
   {
     "name": "builtin.language-basics-docker",
     "repository": "github.com/lvce-editor/language-basics-docker",
-    "version": "0.0.8"
+    "version": "0.0.9"
   },
   {
     "name": "builtin.language-basics-coffeescript",
@@ -87,7 +87,7 @@
   {
     "name": "builtin.language-basics-shellscript",
     "repository": "github.com/lvce-editor/language-basics-shellscript",
-    "version": "0.0.6"
+    "version": "0.0.7"
   },
   {
     "name": "builtin.language-basics-python",
@@ -102,7 +102,7 @@
   {
     "name": "builtin.language-basics-rust",
     "repository": "github.com/lvce-editor/language-basics-rust",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   {
     "name": "builtin.language-basics-elixir",
@@ -122,7 +122,7 @@
   {
     "name": "builtin.language-basics-kotlin",
     "repository": "github.com/lvce-editor/language-basics-kotlin",
-    "version": "0.0.1"
+    "version": "0.0.2"
   },
   {
     "name": "builtin.language-basics-dart",
@@ -137,7 +137,7 @@
   {
     "name": "builtin.language-basics-editorconfig",
     "repository": "github.com/lvce-editor/language-basics-editorconfig",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-cpp",
@@ -147,7 +147,7 @@
   {
     "name": "builtin.language-basics-c",
     "repository": "github.com/lvce-editor/language-basics-c",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-features-html",
@@ -162,7 +162,7 @@
   {
     "name": "builtin.language-basics-desktop",
     "repository": "github.com/lvce-editor/language-basics-desktop",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-xml",
@@ -177,7 +177,7 @@
   {
     "name": "builtin.language-basics-toml",
     "repository": "github.com/lvce-editor/language-basics-toml",
-    "version": "0.0.8"
+    "version": "0.0.9"
   },
   {
     "name": "builtin.language-basics-graphql",
