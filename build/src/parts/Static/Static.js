@@ -543,7 +543,7 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
 
 const copyPlaygroundFiles = async ({ commitHash }) => {
   await Copy.copy({
-    from: `playground`,
+    from: `build/files/playground-source`,
     to: `build/.tmp/dist/${commitHash}/playground`,
   })
 }
