@@ -169,7 +169,7 @@ test('loadContent', async () => {
       {
         description:
           'Provides syntax highlighting and bracket matching in HTML files.',
-        icon: '',
+        icon: '//icons/language-icon.svg',
         id: 'builtin.language-basics-html',
         name: 'Language Basics HTML',
         publisher: 'builtin',
@@ -181,7 +181,7 @@ test('loadContent', async () => {
       },
       {
         description: 'Test Extension',
-        icon: '',
+        icon: '//icons/extensionDefaultIcon.png',
         id: 'test-author-2.test-extension',
         name: 'test-extension',
         publisher: 'test-author-2',
