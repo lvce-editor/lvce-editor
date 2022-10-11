@@ -39,8 +39,8 @@ export const getModuleId = (commandId) => {
     case 'ColorPicker.open':
       return ModuleId.ColorPicker
     case 'ColorTheme.hydrate':
-    case 'ColorTheme.setColorTheme':
     case 'ColorTheme.reload':
+    case 'ColorTheme.setColorTheme':
       return ModuleId.ColorTheme
     case 'ColorThemeFromJson.createColorThemeFromJson':
       return ModuleId.ColorThemeFromJson
