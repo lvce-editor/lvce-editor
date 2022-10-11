@@ -10,7 +10,6 @@ export const loadContent = (state) => {
   return {
     ...state,
     iframeSrc: 'https://example.com',
-    // iframeSrc: 'http://example.com',
     // iframeSrc: 'https://www.w3schools.com',
   }
 }

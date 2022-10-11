@@ -3,6 +3,7 @@ export const name = 'SimpleBrowser'
 export const create = () => {
   const $Iframe = document.createElement('iframe')
   $Iframe.className = 'SimpleBrowserIframe'
+  $Iframe.setAttribute('crossorigin', 'anonymous')
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet'

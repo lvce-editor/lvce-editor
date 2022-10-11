@@ -1,6 +1,8 @@
 const ContentSecurityPolicy = require('../ContentSecurityPolicy/ContentSecurityPolicy.js')
 const CrossOriginEmbedderPolicy = require('../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js')
 const CrossOriginOpenerPolicy = require('../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js')
+const AccessControlAllowOrigin = require('../AccessControlAllowOrigin/AccessControlAllowOrigin.js')
+const CrossOriginResourcePolicy = require('../CrossOriginResourcePolicy/CrossOriginResourcePolicy.js')
 const Electron = require('electron')
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
@@ -19,23 +21,41 @@ const state = {
  * @param {(headersReceivedResponse: import('electron').HeadersReceivedResponse)=>void} callback
  */
 const handleHeadersReceived = (details, callback) => {
-  console.log({ type: details.resourceType })
-
-  switch (details.resourceType) {
+  const { responseHeaders, resourceType } = details
+  if (responseHeaders) {
+    if (responseHeaders['X-Frame-Options']) {
+      delete responseHeaders['X-Frame-Options']
+    } else if (responseHeaders['x-frame-options']) {
+      delete responseHeaders['x-frame-options']
+    }
+  }
+  switch (resourceType) {
     case 'mainFrame':
+      callback({
+        responseHeaders: {
+          ...responseHeaders,
+          [ContentSecurityPolicy.key]: ContentSecurityPolicy.value,
+          [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
+          [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
+        },
+      })
+      break
     case 'subFrame':
       callback({
         responseHeaders: {
-          ...details.responseHeaders,
-          [ContentSecurityPolicy.key]: ContentSecurityPolicy.value,
+          ...responseHeaders,
           [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
-          // [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
+          [CrossOriginResourcePolicy.key]: CrossOriginResourcePolicy.value,
+          [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
         },
       })
       break
     default:
       callback({
-        responseHeaders: details.responseHeaders,
+        responseHeaders: {
+          ...responseHeaders,
+          [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
+        },
       })
       break
   }

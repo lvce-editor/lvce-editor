@@ -11,7 +11,7 @@ exports.value = [
   `script-src 'self'`,
   `style-src 'self' 'unsafe-inline'`,
   `font-src 'self' https:`,
-  `frame-src https://example.com/`,
+  `frame-src *`,
   `connect-src self`,
 ]
   .map(addSemicolon)
