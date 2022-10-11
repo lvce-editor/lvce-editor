@@ -106,13 +106,7 @@ exports.create = ({
       sandbox: true,
       contextIsolation: true,
       v8CacheOptions: 'bypassHeatCheck', // TODO this is what vscode uses, but it doesn't work properly in electron https://github.com/electron/electron/issues/27075
-      preload: Path.join(
-        Root.root,
-        'packages',
-        'main-process',
-        'src',
-        'preload.js'
-      ),
+      preload: Platform.getPreloadUrl(),
       session,
       additionalArguments: ['--lvce-window-kind'],
     },

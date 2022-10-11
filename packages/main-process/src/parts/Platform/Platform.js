@@ -74,3 +74,7 @@ exports.getDefaultSettingsPath = () => {
 exports.getUserSettingsPath = () => {
   return join(configDir, 'settings.json')
 }
+
+exports.getPreloadUrl = () => {
+  return join(Root.root, 'packages', 'main-process', 'src', 'preload.js')
+}

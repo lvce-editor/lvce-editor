@@ -20,3 +20,11 @@ export const resizeBrowserView = (left, top, width, height) => {
     height
   )
 }
+
+export const openDevtools = () => {
+  return ElectronProcess.invoke('ElectronBrowserView.openDevtools')
+}
+
+export const disposeBrowserView = () => {
+  return ElectronProcess.invoke('ElectronBrowserView.disposeBrowserView')
+}

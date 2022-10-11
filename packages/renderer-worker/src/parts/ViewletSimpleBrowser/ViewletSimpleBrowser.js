@@ -17,7 +17,8 @@ export const create = (id, uri, left, top, width, height) => {
 
 export const loadContent = async (state) => {
   const { top, left, width, height } = state
-  const iframeSrc = 'https://soundcloud.com'
+  const iframeSrc = 'https://example.com'
+  // need window width and window height as workaround for https://github.com/electron/electron/issues/15899
   await ElectronBrowserView.createBrowserView(
     iframeSrc,
     top,
@@ -42,6 +43,10 @@ const renderIframeSrc = {
   },
 }
 
+export const openDevtools = async () => {
+  await ElectronBrowserView.openDevtools()
+}
+
 export const hasFunctionalResize = true
 
 export const resize = (state, dimensions) => {
@@ -51,6 +56,11 @@ export const resize = (state, dimensions) => {
     ...state,
     ...dimensions,
   }
+}
+
+export const dispose = async (state) => {
+  await ElectronBrowserView.disposeBrowserView()
+  console.log('dispose browser view')
 }
 
 export const render = [renderIframeSrc]
