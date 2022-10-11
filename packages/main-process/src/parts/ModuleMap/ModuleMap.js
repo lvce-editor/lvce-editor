@@ -46,6 +46,9 @@ exports.getModuleId = (commandId) => {
     case 'ElectronNetLog.startLogging':
     case 'ElectronNetLog.stopLogging':
       return ModuleId.ElectronNetLog
+    case 'ElectronBrowserView.createBrowserView':
+    case 'ElectronBrowserView.disposeBrowserView':
+      return ModuleId.ElectronBrowserView
     default:
       throw new Error(`method not found ${commandId}`)
   }
