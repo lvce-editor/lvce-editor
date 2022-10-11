@@ -23,7 +23,7 @@ const handleHeadersReceived = (details, callback) => {
 
   switch (details.resourceType) {
     case 'mainFrame':
-      // default:
+    case 'subFrame':
       callback({
         responseHeaders: {
           ...details.responseHeaders,

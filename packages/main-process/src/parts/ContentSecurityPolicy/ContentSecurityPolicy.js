@@ -12,6 +12,7 @@ exports.value = [
   `style-src 'self' 'unsafe-inline'`,
   `font-src 'self' https:`,
   `frame-src https://example.com/`,
+  `connect-src self`,
 ]
   .map(addSemicolon)
   .join(' ')
