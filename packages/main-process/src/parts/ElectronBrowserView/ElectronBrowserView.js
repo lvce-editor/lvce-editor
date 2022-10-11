@@ -92,3 +92,57 @@ exports.openDevtools = () => {
   }
   view.webContents.openDevTools()
 }
+
+exports.createBrowserViewQuickPick = async (top, left, width, height) => {
+  const browserWindow = BrowserWindow.getFocusedWindow()
+  if (!browserWindow) {
+    return
+  }
+  const view = new BrowserView({
+    webPreferences: {
+      session: ElectronSession.get(),
+    },
+  })
+  browserWindow.addBrowserView(view)
+  view.setBounds({ x: left, y: top, width, height })
+  const quickPickUrl = `${Platform.scheme}://-/packages/main-process/pages/quickpick/quickpick.html`
+  const handleNavigate = () => {
+    browserWindow.removeBrowserView(view)
+  }
+  browserWindow.webContents.on('did-finish-load', handleNavigate)
+  await view.webContents.loadURL(quickPickUrl)
+  // view.webContents.openDevTools()
+}
+
+/**
+ *
+ * @param {*} views
+ * @returns {Electron.BrowserView|undefined}
+ */
+const getQuickPickView = (views) => {
+  for (const view of views) {
+    const url = view.webContents.getURL()
+    if (url.endsWith('quickpick.html')) {
+      return view
+    }
+  }
+  return undefined
+}
+
+exports.setQuickPickItems = (items) => {
+  const browserWindow = BrowserWindow.getFocusedWindow()
+  if (!browserWindow) {
+    return
+  }
+  const views = browserWindow.getBrowserViews()
+  const quickPickView = getQuickPickView(views)
+  if (!quickPickView) {
+    return
+  }
+  const itemsString = JSON.stringify(items, null, 2)
+  const javascript = `
+  const event = new CustomEvent('quickpick-set-items', { detail: ${itemsString} });
+  window.dispatchEvent(event)
+`
+  quickPickView.webContents.executeJavaScript(javascript)
+}

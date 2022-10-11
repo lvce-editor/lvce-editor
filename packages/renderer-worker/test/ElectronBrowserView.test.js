@@ -46,3 +46,14 @@ test('createBrowserView', async () => {
     0
   )
 })
+
+test('sendQuickPickItems', async () => {
+  // @ts-ignore
+  ElectronProcess.invoke.mockImplementation(() => {})
+  await ElectronBrowserView.sendQuickPickItems([])
+  expect(ElectronProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(ElectronProcess.invoke).toHaveBeenCalledWith(
+    'ElectronBrowserView.sendQuickPickItems',
+    []
+  )
+})

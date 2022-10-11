@@ -49,6 +49,8 @@ exports.getModuleId = (commandId) => {
     case 'ElectronBrowserView.createBrowserView':
     case 'ElectronBrowserView.disposeBrowserView':
     case 'ElectronBrowserView.resizeBrowserView':
+    case 'ElectronBrowserView.createBrowserViewQuickpick':
+    case 'ElectronBrowserView.setQuickPickItems':
       return ModuleId.ElectronBrowserView
     default:
       throw new Error(`method not found ${commandId}`)

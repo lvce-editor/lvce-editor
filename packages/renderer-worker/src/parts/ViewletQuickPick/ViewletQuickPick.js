@@ -4,6 +4,10 @@ import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as Platform from '../Platform/Platform.js'
+import * as Command from '../Command/Command.js'
+import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
+import * as Layout from '../Layout/Layout.js'
 
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
@@ -26,6 +30,13 @@ const QuickPickState = {
 export const name = 'QuickPick'
 
 export const create = (id, uri, top, left, width, height) => {
+  if (Math) {
+    const width = 600
+    const height = 300
+    const left = (Layout.state.windowWidth - width) / 2
+    const top = 50
+    ElectronBrowserView.createBrowserViewQuickPick(top, left, width, height)
+  }
   return {
     state: QuickPickState.Default,
     picks: [],
@@ -47,6 +58,7 @@ export const create = (id, uri, top, left, width, height) => {
     height: 300,
     headerHeight: 30,
     top: 50,
+    width: 600,
   }
 }
 
@@ -139,6 +151,7 @@ export const loadContent = async (state) => {
     minLineY + state.maxVisibleItems,
     newPicks.length - 1
   )
+
   return {
     ...state,
     picks: newPicks,
@@ -358,6 +371,11 @@ const renderItems = {
       newState.minLineY,
       newState.maxLineY
     )
+    console.log({ visibleItems })
+    if (Math) {
+      ElectronBrowserView.sendQuickPickItems(visibleItems)
+      return ['Viewlet.send', 'QuickPick', 'noop']
+    }
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',

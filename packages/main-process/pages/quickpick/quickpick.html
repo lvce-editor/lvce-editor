@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuickPick</title>
+    <style>
+      html,
+      body {
+        width: 100%;
+        overflow: hidden;
+      }
+
+      #QuickPickItems {
+        background: rgb(63, 63, 133);
+        color: white;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      const $Items = document.createElement('div')
+      $Items.id = 'QuickPickItems'
+
+      document.body.append($Items)
+
+      const create$Item = (item) => {
+        const $Item = document.createElement('div')
+        $Item.textContent = item.label
+        return $Item
+      }
+      const setItems = (items) => {
+        $Items.replaceChildren(...items.map(create$Item))
+      }
+      window.addEventListener('quickpick-set-items', (event) => {
+        setItems(event.detail)
+      })
+    </script>
+  </body>
+</html>
