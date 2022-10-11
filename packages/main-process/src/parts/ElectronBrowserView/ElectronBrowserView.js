@@ -104,14 +104,19 @@ exports.createBrowserViewQuickPick = async (top, left, width, height) => {
     },
   })
   browserWindow.addBrowserView(view)
+  console.log({ top, left, width, height })
   view.setBounds({ x: left, y: top, width, height })
   const quickPickUrl = `${Platform.scheme}://-/packages/main-process/pages/quickpick/quickpick.html`
   const handleNavigate = () => {
     browserWindow.removeBrowserView(view)
+    view.webContents.closeDevTools()
   }
   browserWindow.webContents.on('did-finish-load', handleNavigate)
   await view.webContents.loadURL(quickPickUrl)
-  // view.webContents.openDevTools()
+
+  view.webContents.openDevTools({
+    mode: 'detach',
+  })
 }
 
 /**
@@ -119,7 +124,7 @@ exports.createBrowserViewQuickPick = async (top, left, width, height) => {
  * @param {*} views
  * @returns {Electron.BrowserView|undefined}
  */
-const getQuickPickView = (views) => {
+const getQuickPickViewFromArray = (views) => {
   for (const view of views) {
     const url = view.webContents.getURL()
     if (url.endsWith('quickpick.html')) {
@@ -129,20 +134,32 @@ const getQuickPickView = (views) => {
   return undefined
 }
 
-exports.setQuickPickItems = (items) => {
+const getQuickPickView = () => {
   const browserWindow = BrowserWindow.getFocusedWindow()
   if (!browserWindow) {
     return
   }
   const views = browserWindow.getBrowserViews()
-  const quickPickView = getQuickPickView(views)
+  const quickPickView = getQuickPickViewFromArray(views)
+  return quickPickView
+}
+
+exports.setQuickPickItems = async (items) => {
+  const quickPickView = getQuickPickView()
   if (!quickPickView) {
     return
   }
   const itemsString = JSON.stringify(items, null, 2)
-  const javascript = `
-  const event = new CustomEvent('quickpick-set-items', { detail: ${itemsString} });
-  window.dispatchEvent(event)
-`
-  quickPickView.webContents.executeJavaScript(javascript)
+  const javascript = `globalThis['QuickPick.setItems'](${itemsString})`
+  await quickPickView.webContents.executeJavaScript(javascript)
+}
+
+exports.setQuickPickValue = async (value) => {
+  const quickPickView = getQuickPickView()
+  if (!quickPickView) {
+    return
+  }
+  const valueString = JSON.stringify(value)
+  const javascript = `globalThis['QuickPick.setValue'](${valueString})`
+  await quickPickView.webContents.executeJavaScript(javascript)
 }

@@ -1,13 +1,11 @@
 import * as Assert from '../Assert/Assert.js'
 import * as BeforeInput from '../BeforeInput/BeforeInput.js'
+import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
+import * as Layout from '../Layout/Layout.js'
 import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as Platform from '../Platform/Platform.js'
-import * as Command from '../Command/Command.js'
-import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
-import * as Layout from '../Layout/Layout.js'
 
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
@@ -307,6 +305,10 @@ const renderValue = {
     return oldState.value === newState.value
   },
   apply(oldState, newState) {
+    if (ElectronBrowserView.isOpen()) {
+      ElectronBrowserView.setQuickPickValue(newState.value)
+      return ['Viewlet.send', 'QuickPick', 'noop']
+    }
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
@@ -372,7 +374,7 @@ const renderItems = {
       newState.maxLineY
     )
     console.log({ visibleItems })
-    if (Math) {
+    if (ElectronBrowserView.isOpen()) {
       ElectronBrowserView.sendQuickPickItems(visibleItems)
       return ['Viewlet.send', 'QuickPick', 'noop']
     }

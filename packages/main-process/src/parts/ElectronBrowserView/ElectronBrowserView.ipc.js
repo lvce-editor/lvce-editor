@@ -7,4 +7,6 @@ exports.Commands = {
   'ElectronBrowserView.resizeBrowserView': ElectronBrowserView.resizeBrowserView,
   'ElectronBrowserView.createBrowserViewQuickPick': ElectronBrowserView.createBrowserViewQuickPick,
   'ElectronBrowserView.setQuickPickItems': ElectronBrowserView.setQuickPickItems,
+  'ElectronBrowserView.setQuickPickValue': ElectronBrowserView.setQuickPickValue,
+
 }
