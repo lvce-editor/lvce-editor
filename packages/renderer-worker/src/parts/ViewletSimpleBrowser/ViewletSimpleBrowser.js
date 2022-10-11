@@ -17,7 +17,7 @@ export const create = (id, uri, left, top, width, height) => {
 
 export const loadContent = async (state) => {
   const { top, left, width, height } = state
-  const iframeSrc = 'https://youtube.com'
+  const iframeSrc = 'https://soundcloud.com'
   await ElectronBrowserView.createBrowserView(
     iframeSrc,
     top,

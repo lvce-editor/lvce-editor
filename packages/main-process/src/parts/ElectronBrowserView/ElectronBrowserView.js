@@ -1,17 +1,26 @@
 const { BrowserView, BrowserWindow } = require('electron')
+const ElectronSessionForBrowserView = require('../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js')
 
 exports.createBrowserView = async (url, top, left, width, height) => {
-  console.log('todo create browser view')
   const browserWindow = BrowserWindow.getFocusedWindow()
   if (!browserWindow) {
     return
   }
-  const view = new BrowserView()
+  // TODO support multiple browser views in the future
+  if (browserWindow.getBrowserViews().length > 0) {
+    return
+  }
+  const view = new BrowserView({
+    webPreferences: {
+      session: ElectronSessionForBrowserView.getSession(),
+    },
+  })
+  view.webContents.setWindowOpenHandler(
+    ElectronSessionForBrowserView.handleWindowOpen
+  )
   browserWindow.addBrowserView(view)
   view.setBounds({ x: left, y: top, width, height })
-  view.webContents.toggleDevTools()
   await view.webContents.loadURL(url)
-  // browserWindow.brow
 }
 
 exports.resizeBrowserView = (top, left, width, height) => {
