@@ -7,9 +7,23 @@ exports.createBrowserView = async (url, top, left, width, height) => {
     return
   }
   const view = new BrowserView()
-  browserWindow.setBrowserView(view)
+  browserWindow.addBrowserView(view)
   view.setBounds({ x: left, y: top, width, height })
+  view.webContents.toggleDevTools()
   await view.webContents.loadURL(url)
+  // browserWindow.brow
+}
+
+exports.resizeBrowserView = (top, left, width, height) => {
+  const browserWindow = BrowserWindow.getFocusedWindow()
+  if (!browserWindow) {
+    return
+  }
+  const view = browserWindow.getBrowserView()
+  if (!view) {
+    return
+  }
+  view.setBounds({ x: left, y: top, width, height })
 }
 
 exports.disposeBrowserView = (id) => {

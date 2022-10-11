@@ -10,3 +10,13 @@ export const createBrowserView = (url, left, top, width, height) => {
     height
   )
 }
+
+export const resizeBrowserView = (left, top, width, height) => {
+  return ElectronProcess.invoke(
+    'ElectronBrowserView.resizeBrowserView',
+    left,
+    top,
+    width,
+    height
+  )
+}

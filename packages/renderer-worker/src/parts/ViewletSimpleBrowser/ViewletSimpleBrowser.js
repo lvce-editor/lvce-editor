@@ -17,7 +17,7 @@ export const create = (id, uri, left, top, width, height) => {
 
 export const loadContent = async (state) => {
   const { top, left, width, height } = state
-  const iframeSrc = 'https://example.com'
+  const iframeSrc = 'https://youtube.com'
   await ElectronBrowserView.createBrowserView(
     iframeSrc,
     top,
@@ -40,6 +40,17 @@ const renderIframeSrc = {
   apply(oldState, newState) {
     return ['Viewlet.send', 'SimpleBrowser', 'setIframeSrc', newState.iframeSrc]
   },
+}
+
+export const hasFunctionalResize = true
+
+export const resize = (state, dimensions) => {
+  const { left, top, width, height } = dimensions
+  ElectronBrowserView.resizeBrowserView(top, left, width, height)
+  return {
+    ...state,
+    ...dimensions,
+  }
 }
 
 export const render = [renderIframeSrc]
