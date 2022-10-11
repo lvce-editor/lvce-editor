@@ -3,6 +3,8 @@ const Platform = require('../Platform/Platform.js')
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
 const ContentSecurityPolicy = require('../ContentSecurityPolicy/ContentSecurityPolicy.js')
+const CrossOriginOpenerPolicy = require('../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js')
+const CrossOriginEmbedderPolicy = require('../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js')
 
 const state = {
   /**
@@ -17,13 +19,15 @@ const state = {
  * @param {(headersReceivedResponse: import('electron').HeadersReceivedResponse)=>void} callback
  */
 const handleHeadersReceived = (details, callback) => {
+  console.log({ details })
   switch (details.resourceType) {
     case 'mainFrame':
       callback({
         responseHeaders: {
           ...details.responseHeaders,
-          'Content-Security-Policy':
-            ContentSecurityPolicy.contentSecurityPolicy,
+          [ContentSecurityPolicy.key]: ContentSecurityPolicy.value,
+          [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
+          [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
         },
       })
       break
