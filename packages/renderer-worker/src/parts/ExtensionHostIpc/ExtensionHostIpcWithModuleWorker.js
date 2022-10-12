@@ -1,10 +1,11 @@
-import * as Platform from '../Platform/Platform.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as Platform from '../Platform/Platform.js'
 
 export const create = async () => {
   const extensionHostWorkerUrl = Platform.getExtensionHostWorkerUrl()
   return IpcParent.create({
-    method: IpcParent.Methods.ModuleWorker,
+    method: IpcParentType.ModuleWorker,
     url: extensionHostWorkerUrl,
     name: 'Extension Host',
   })

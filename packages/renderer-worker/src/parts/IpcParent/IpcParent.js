@@ -1,22 +1,16 @@
-export const Methods = {
-  Electron: 1,
-  MessagePort: 2,
-  ModuleWorker: 3,
-  ReferencePort: 4,
-  WebSocket: 5,
-}
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
 const getModule = (method) => {
   switch (method) {
-    case Methods.Electron:
+    case IpcParentType.Electron:
       return import('./IpcParentWithElectron.js')
-    case Methods.MessagePort:
+    case IpcParentType.MessagePort:
       return import('./IpcParentWithMessagePort.js')
-    case Methods.ModuleWorker:
+    case IpcParentType.ModuleWorker:
       return import('./IpcParentWithModuleWorker.js')
-    case Methods.ReferencePort:
+    case IpcParentType.ReferencePort:
       return import('./IpcParentWithReferencePort.js')
-    case Methods.WebSocket:
+    case IpcParentType.WebSocket:
       return import('./IpcParentWithWebSocket.js')
     default:
       throw new Error('unexpected ipc type')

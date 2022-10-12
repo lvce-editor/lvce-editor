@@ -1,6 +1,7 @@
 import * as Callback from '../Callback/Callback.js'
 import { JsonRpcError } from '../Errors/Errors.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 
 export const state = {
@@ -12,7 +13,7 @@ export const state = {
 
 const createIpc = async () => {
   return IpcParent.create({
-    method: IpcParent.Methods.Electron,
+    method: IpcParentType.Electron,
     type: 'electron-process',
   })
 }
