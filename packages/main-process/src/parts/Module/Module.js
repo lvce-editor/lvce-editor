@@ -8,6 +8,8 @@ exports.load = async (moduleId) => {
       return require('../AppWindow/AppWindow.ipc.js')
     case ModuleId.Beep:
       return require('../ElectronBeep/ElectronBeep.js')
+    case ModuleId.ElectronBrowserView:
+      return require('../ElectronBrowserView/ElectronBrowserView.ipc.js')
     case ModuleId.ElectronContentTracing:
       return require('../ElectronContentTracing/ElectronContentTracing.ipc.js')
     case ModuleId.Developer:
@@ -28,8 +30,6 @@ exports.load = async (moduleId) => {
       return require('../ElectronWindowAbout/ElectronWindowAbout.ipc.js')
     case ModuleId.ElectronWindowProcessExplorer:
       return require('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
-    case ModuleId.ElectronBrowserView:
-      return require('../ElectronBrowserView/ElectronBrowserView.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

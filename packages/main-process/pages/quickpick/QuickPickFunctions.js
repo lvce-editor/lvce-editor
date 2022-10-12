@@ -1,13 +1,6 @@
-const $QuickPickItems = document.getElementById('QuickPickItems')
-const $QuickPickInput = document.getElementById('QuickPickInput')
-const activeId = 'QuickPickItemActive'
+import { $QuickPickInput, $QuickPickItems } from './QuickPickElements.js'
 
-if (!$QuickPickInput || !($QuickPickInput instanceof HTMLInputElement)) {
-  throw new Error('missing quick pick input')
-}
-if (!$QuickPickItems) {
-  throw new Error('missing items')
-}
+const activeId = 'QuickPickItemActive'
 
 const create$Item = (item) => {
   const $QuickPickItemIcon = document.createElement('div')

@@ -1,33 +1,7 @@
 import * as QuickPickFunctions from './QuickPickFunctions.js'
-
-const handleBeforeInput = (event) => {
-  event.preventDefault()
-  const { target, inputType, data } = event
-  const { selectionStart, selectionEnd } = target
-  globalThis.electronApi.handleMessage(
-    /* method */ 'QuickPick.handleBeforeInput',
-    /* inputType */ inputType,
-    /* data */ data,
-    /* selectionStart */ selectionStart,
-    /* selectionEnd */ selectionEnd
-  )
-}
-
-const getPort = (type) => {
-  return new Promise((resolve, reject) => {
-    const handleMessageFromWindow = (event) => {
-      const port = event.ports[0]
-      resolve(port)
-    }
-
-    // @ts-ignore
-    window.addEventListener('message', handleMessageFromWindow, {
-      once: true,
-    })
-    // @ts-ignore
-    window.myApi.ipcConnect(type)
-  })
-}
+import * as QuickPickEvents from './QuickPickEvents.js'
+import * as QuickPickIpc from './QuickPickIpc.js'
+import { $QuickPickInput, $QuickPickItems } from './QuickPickElements.js'
 
 const executeCommand = (command) => {
   const _0 = command[0]
@@ -65,7 +39,11 @@ const handleMessage = (event) => {
 }
 
 const main = async () => {
-  const port = await getPort('quickpick-browserview')
+  $QuickPickInput.addEventListener(
+    'beforeinput',
+    QuickPickEvents.handleBeforeInput
+  )
+  const port = await QuickPickIpc.initialize()
   port.onmessage = handleMessage
 }
 

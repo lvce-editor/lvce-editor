@@ -245,6 +245,14 @@ const openElectronQuickPick = async (...args) => {
     method: 'executeCommands',
     params: commands,
   })
+  const handleMessage = async (event) => {
+    const { method, params } = event
+    const instance = ViewletStates.getInstance('QuickPick')
+    const oldState = instance.state
+    const newState = await instance.factory[method](oldState, ...params)
+    console.log({ newState, event })
+  }
+  ipc.onmessage = handleMessage
   console.log({ commands })
   // setInterval(() => {
   //   ipc.send({
