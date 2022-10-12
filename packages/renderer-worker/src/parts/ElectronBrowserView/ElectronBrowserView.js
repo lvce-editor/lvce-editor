@@ -45,18 +45,10 @@ export const createBrowserViewQuickPick = (top, left, width, height) => {
   )
 }
 
-export const sendQuickPickItems = (items) => {
-  return ElectronProcess.invoke('ElectronBrowserView.setQuickPickItems', items)
-}
-
 export const getOpenCount = () => {
   return state.openCount
 }
 
 export const isOpen = () => {
   return state.openCount > 0
-}
-
-export const setQuickPickValue = (value) => {
-  return ElectronProcess.invoke('ElectronBrowserView.setQuickPickValue', value)
 }

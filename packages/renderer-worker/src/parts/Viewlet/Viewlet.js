@@ -152,6 +152,7 @@ export const wrapViewletCommand = (id, fn) => {
         newState
       )
       ViewletStates.setState(id, newState)
+      // TODO make rpc function more flexible
       await RendererProcess.invoke(
         /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
         /* commands */ commands
@@ -218,28 +219,48 @@ export const getAllStates = () => {
   return states
 }
 
+const openElectronQuickPick = async (...args) => {
+  const id = 'QuickPick'
+  console.log('open custom quick pick widget', { id, args })
+  const width = 600
+  const height = 300
+  const left = (Layout.state.windowWidth - width) / 2
+  const top = 50
+  await ElectronBrowserView.createBrowserViewQuickPick(top, left, width, height)
+  const ipc = await IpcParent.create({
+    method: IpcParentType.Electron,
+    type: 'quickpick',
+  })
+  const type = args[0]
+  const commands = await ViewletManager.load({
+    getModule: ViewletModule.load,
+    id,
+    type: 0,
+    uri: `quickPick://${type}`,
+    show: false,
+    focus: true,
+  })
+  ipc.send({
+    jsonrpc: '2.0',
+    method: 'executeCommands',
+    params: commands,
+  })
+  console.log({ commands })
+  // setInterval(() => {
+  //   ipc.send({
+  //     jsonrpc: '2.0',
+  //     method: 'setValue',
+  //     params: ['hello world'],
+  //   })
+  // }, 1000)
+}
+
 export const openWidget = async (id, ...args) => {
   const hasInstance = ViewletStates.hasInstance(id)
   const type = args[0]
   if (ElectronBrowserView.isOpen() && id === 'QuickPick') {
-    console.log('open custom quick pick widget', { id, args })
-    const width = 600
-    const height = 300
-    const left = (Layout.state.windowWidth - width) / 2
-    const top = 50
-    ElectronBrowserView.createBrowserViewQuickPick(top, left, width, height)
-    const ipc = await IpcParent.create({
-      method: IpcParentType.Electron,
-      type: 'quickpick',
-    })
-    ipc.send({
-      jsonrpc: '2.0',
-      method: 'setValue',
-      params: ['hello world'],
-    })
-    return
+    return openElectronQuickPick(...args)
   }
-
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
     id,

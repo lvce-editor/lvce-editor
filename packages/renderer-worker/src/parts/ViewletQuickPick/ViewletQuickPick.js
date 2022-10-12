@@ -1,13 +1,10 @@
 import * as Assert from '../Assert/Assert.js'
 import * as BeforeInput from '../BeforeInput/BeforeInput.js'
-import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as Layout from '../Layout/Layout.js'
 import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
-import * as IpcParent from '../IpcParent/IpcParent.js'
 
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
@@ -30,13 +27,6 @@ const QuickPickState = {
 export const name = 'QuickPick'
 
 export const create = (id, uri, top, left, width, height) => {
-  if (Math) {
-    const width = 600
-    const height = 300
-    const left = (Layout.state.windowWidth - width) / 2
-    const top = 50
-    ElectronBrowserView.createBrowserViewQuickPick(top, left, width, height)
-  }
   return {
     state: QuickPickState.Default,
     picks: [],
@@ -151,12 +141,6 @@ export const loadContent = async (state) => {
     minLineY + state.maxVisibleItems,
     newPicks.length - 1
   )
-
-  const ipc = await IpcParent.create({
-    method: IpcParent.Methods.Electron,
-    type: 'quickpick',
-  })
-  console.log('got ipc', ipc)
   return {
     ...state,
     picks: newPicks,
@@ -168,7 +152,6 @@ export const loadContent = async (state) => {
     value,
     cursorOffset: value.length,
     provider,
-    ipc,
   }
 }
 
@@ -313,10 +296,6 @@ const renderValue = {
     return oldState.value === newState.value
   },
   apply(oldState, newState) {
-    if (ElectronBrowserView.isOpen()) {
-      ElectronBrowserView.setQuickPickValue(newState.value)
-      return ['Viewlet.send', 'QuickPick', 'noop']
-    }
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
@@ -381,11 +360,6 @@ const renderItems = {
       newState.minLineY,
       newState.maxLineY
     )
-    console.log({ visibleItems })
-    if (ElectronBrowserView.isOpen()) {
-      ElectronBrowserView.sendQuickPickItems(visibleItems)
-      return ['Viewlet.send', 'QuickPick', 'noop']
-    }
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'QuickPick',
