@@ -58,9 +58,25 @@ const getPort = (type) => {
   })
 }
 
+const getFn = (method) => {
+  switch (method) {
+    case 'setValue':
+      return setValue
+    default:
+      throw new Error('method not found')
+  }
+}
+
+const handleMessage = (event) => {
+  const message = event.data
+  const fn = getFn(message.method)
+  fn(...message.params)
+}
+
 const main = async () => {
   $QuickPickInput.focus()
   const port = await getPort('quickpick-browserview')
+  port.onmessage = handleMessage
   console.log({ port })
 }
 

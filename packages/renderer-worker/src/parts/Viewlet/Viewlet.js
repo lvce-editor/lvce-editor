@@ -9,6 +9,7 @@ import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFu
 import * as Layout from '../Layout/Layout.js'
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
 /**
  * @deprecated
@@ -228,8 +229,13 @@ export const openWidget = async (id, ...args) => {
     const top = 50
     ElectronBrowserView.createBrowserViewQuickPick(top, left, width, height)
     const ipc = await IpcParent.create({
-      method: IpcParent.Methods.Electron,
+      method: IpcParentType.Electron,
       type: 'quickpick',
+    })
+    ipc.send({
+      jsonrpc: '2.0',
+      method: 'setValue',
+      params: ['hello world'],
     })
     return
   }
