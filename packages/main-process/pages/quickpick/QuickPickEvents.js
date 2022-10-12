@@ -22,10 +22,21 @@ const getNodeIndex = ($Node) => {
   return index
 }
 
+const getItem = ($Target) => {
+  switch ($Target.className) {
+    case 'QuickPickItem':
+      return $Target
+    default:
+      return $Target.parentNode
+  }
+}
+
 export const handleMouseDown = (event) => {
   event.preventDefault()
-  const { clientX, clientY, target } = event
-  const index = getNodeIndex(target.parentNode)
+  const { target } = event
+  const $Item = getItem(target)
+  const index = getNodeIndex($Item)
+  console.log({ $Item, index })
   RendererWorker.send(
     /* selectIndex */ 'QuickPick.selectIndex',
     /* index */ index

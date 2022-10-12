@@ -128,9 +128,9 @@ exports.createBrowserViewQuickPick = async (top, left, width, height) => {
     }
     view.webContents.focus()
 
-    view.webContents.openDevTools({
-      mode: 'detach',
-    })
+    // view.webContents.openDevTools({
+    //   mode: 'detach',
+    // })
   } catch (error) {
     console.error(error)
     // @ts-ignore

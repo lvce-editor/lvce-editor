@@ -191,7 +191,6 @@ const openElectronQuickPick = async (...args) => {
   const top = 50
   const keyBindings = await KeyBindings.getKeyBindings()
   const quickPickKeyBindings = getQuickPickKeyBindings(keyBindings)
-  console.log({ quickPickKeyBindings })
   await ElectronBrowserView.createBrowserViewQuickPick(top, left, width, height)
   const ipc = await IpcParent.create({
     method: IpcParentType.Electron,
@@ -238,13 +237,16 @@ const openElectronQuickPick = async (...args) => {
     method: 'executeCommands',
     params: commands,
   })
-  console.log({ commands })
 }
 
 export const openWidget = async (id, ...args) => {
   const hasInstance = ViewletStates.hasInstance(id)
   const type = args[0]
   if (ElectronBrowserView.isOpen() && id === 'QuickPick') {
+    // TODO recycle quickpick instance
+    if (hasInstance) {
+      await closeWidgetElectronQuickPick()
+    }
     return openElectronQuickPick(...args)
   }
   const commands = await ViewletManager.load({
@@ -272,7 +274,7 @@ export const openWidget = async (id, ...args) => {
   //
 }
 
-const closeWidgetQuickPick = async () => {
+const closeWidgetElectronQuickPick = async () => {
   const id = 'QuickPick'
   ViewletStates.remove(id)
   await ElectronBrowserView.disposeBrowserViewQuickPick()
@@ -280,7 +282,7 @@ const closeWidgetQuickPick = async () => {
 
 export const closeWidget = async (id) => {
   if (ElectronBrowserView.isOpen() && id === 'QuickPick') {
-    return closeWidgetQuickPick()
+    return closeWidgetElectronQuickPick()
   }
   ViewletStates.remove(id)
   await RendererProcess.invoke(
