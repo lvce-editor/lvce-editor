@@ -12,12 +12,13 @@ const executeCommand = (command) => {
   }
   const args = command.slice(3)
   const fn = QuickPickFunctions[_2]
-  console.log({ command })
   fn(...args)
 }
 
 const executeCommands = (commands) => {
   for (const command of commands) {
+    console.log({ command })
+
     executeCommand(command)
   }
 }
@@ -33,7 +34,7 @@ const getFn = (method) => {
 
 const handleMessage = (event) => {
   const message = event.data
-  console.log({ message })
+  // console.log({ message })
   const fn = getFn(message.method)
   fn(message.params)
 }
@@ -44,6 +45,7 @@ const main = async () => {
     QuickPickEvents.handleBeforeInput
   )
   $QuickPickItems.onmousedown = QuickPickEvents.handleMouseDown
+  window.onkeydown = QuickPickEvents.handleKeyDown
   const port = await QuickPickIpc.initialize()
   port.onmessage = handleMessage
 }

@@ -22,13 +22,10 @@ const getPort = (type) => {
       const port = event.ports[0]
       resolve(port)
     }
-
     // @ts-ignore
     window.addEventListener('message', handleMessageFromWindow, {
       once: true,
     })
-    // @ts-ignore
-    window.myApi.ipcConnect(type)
   })
 }
 

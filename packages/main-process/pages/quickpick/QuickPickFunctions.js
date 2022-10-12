@@ -1,4 +1,5 @@
 import { $QuickPickInput, $QuickPickItems } from './QuickPickElements.js'
+import * as KeyBindings from './QuickPickKeyBindings.js'
 
 const activeId = 'QuickPickItemActive'
 
@@ -46,4 +47,8 @@ export const setFocusedIndex = (oldFocusedIndex, newFocusedIndex) => {
 
 export const setItemsHeight = () => {
   // not implemented
+}
+
+export const setKeyBindings = (keyBindings) => {
+  KeyBindings.setKeyBindings(keyBindings)
 }

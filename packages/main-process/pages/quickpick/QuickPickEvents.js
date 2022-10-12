@@ -1,11 +1,12 @@
 import * as RendererWorker from './QuickPickIpc.js'
+import * as KeyBindings from './QuickPickKeyBindings.js'
 
 export const handleBeforeInput = (event) => {
   event.preventDefault()
   const { target, inputType, data } = event
   const { selectionStart, selectionEnd } = target
   RendererWorker.send(
-    /* method */ 'handleBeforeInput',
+    /* method */ 'QuickPick.handleBeforeInput',
     /* inputType */ inputType,
     /* data */ data,
     /* selectionStart */ selectionStart,
@@ -25,5 +26,55 @@ export const handleMouseDown = (event) => {
   event.preventDefault()
   const { clientX, clientY, target } = event
   const index = getNodeIndex(target.parentNode)
-  RendererWorker.send(/* selectIndex */ 'selectIndex', /* index */ index)
+  RendererWorker.send(
+    /* selectIndex */ 'QuickPick.selectIndex',
+    /* index */ index
+  )
+}
+
+const getIdentifier = (event) => {
+  let identifier = ''
+  if (event.ctrlKey) {
+    identifier += 'ctrl+'
+  }
+  if (event.shiftKey) {
+    identifier += 'shift+'
+  }
+  if (event.altKey) {
+    identifier += 'alt+'
+  }
+  let key = event.key
+  if (key === ' ') {
+    key = 'Space'
+  }
+  if (key.length === 1) {
+    key = key.toLowerCase()
+  }
+  identifier += key
+  return identifier
+}
+
+const matchesIdentifier = (keyBinding, identifier) => {
+  return keyBinding.key === identifier
+}
+
+const getMatchingKeyBinding = (keyBindings, identifier) => {
+  for (const keyBinding of keyBindings) {
+    if (matchesIdentifier(keyBinding, identifier)) {
+      return keyBinding
+    }
+  }
+  return undefined
+}
+
+export const handleKeyDown = (event) => {
+  const keyBindings = KeyBindings.getKeyBindings()
+  const identifier = getIdentifier(event)
+  const matchingKeyBinding = getMatchingKeyBinding(keyBindings, identifier)
+  if (!matchingKeyBinding) {
+    return
+  }
+  event.preventDefault()
+  const { command } = matchingKeyBinding
+  RendererWorker.send(command)
 }

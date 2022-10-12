@@ -109,13 +109,9 @@ exports.createBrowserViewQuickPick = async (top, left, width, height) => {
       webPreferences: {
         session: ElectronSession.get(),
         preload: preloadUrl,
-        additionalArguments: [
-          `--webContents-id=${browserWindow.webContents.id}`,
-        ],
       },
     })
     browserWindow.addBrowserView(view)
-    console.log({ top, left, width, height })
     view.setBounds({ x: left, y: top, width, height })
     const quickPickUrl = `${Platform.scheme}://-/packages/main-process/pages/quickpick/quickpick.html`
     const handleNavigate = () => {
@@ -132,10 +128,9 @@ exports.createBrowserViewQuickPick = async (top, left, width, height) => {
     }
     view.webContents.focus()
 
-    // view.webContents.openDevTools({
-    //   // mode: 'detach',
-    //   mode: 'detach',
-    // })
+    view.webContents.openDevTools({
+      mode: 'detach',
+    })
   } catch (error) {
     console.error(error)
     // @ts-ignore

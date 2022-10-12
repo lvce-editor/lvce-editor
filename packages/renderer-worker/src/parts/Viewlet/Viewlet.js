@@ -1,15 +1,14 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as Command from '../Command/Command.js'
 import * as Assert from '../Assert/Assert.js'
-import * as ViewletManager from '../ViewletManager/ViewletManager.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
-import * as Layout from '../Layout/Layout.js'
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as Layout from '../Layout/Layout.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as ViewletManager from '../ViewletManager/ViewletManager.js'
+import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 
 /**
  * @deprecated
@@ -176,12 +175,23 @@ export const getAllStates = () => {
   return states
 }
 
+const isQuickPickKeyBinding = (keyBinding) => {
+  return keyBinding.when === 'focus.quickPickInput'
+}
+
+const getQuickPickKeyBindings = (keyBindings) => {
+  return keyBindings.filter(isQuickPickKeyBinding)
+}
+
 const openElectronQuickPick = async (...args) => {
   const id = 'QuickPick'
   const width = 600
   const height = 300
   const left = Math.round((Layout.state.windowWidth - width) / 2)
   const top = 50
+  const keyBindings = await KeyBindings.getKeyBindings()
+  const quickPickKeyBindings = getQuickPickKeyBindings(keyBindings)
+  console.log({ quickPickKeyBindings })
   await ElectronBrowserView.createBrowserViewQuickPick(top, left, width, height)
   const ipc = await IpcParent.create({
     method: IpcParentType.Electron,
@@ -201,7 +211,10 @@ const openElectronQuickPick = async (...args) => {
     const { method, params } = event
     const instance = ViewletStates.getInstance('QuickPick')
     const oldState = instance.state
-    const newState = await instance.factory[method](oldState, ...params)
+    const newState = await instance.factory.Commands[method](
+      oldState,
+      ...params
+    )
     const commands = ViewletManager.render(instance.factory, oldState, newState)
     ipc.send({
       jsonrpc: '2.0',
@@ -211,6 +224,12 @@ const openElectronQuickPick = async (...args) => {
     instance.state = newState
   }
   ipc.onmessage = handleMessage
+  commands.push([
+    'Viewlet.send',
+    'QuickPick',
+    'setKeyBindings',
+    quickPickKeyBindings,
+  ])
   ipc.send({
     jsonrpc: '2.0',
     method: 'executeCommands',
