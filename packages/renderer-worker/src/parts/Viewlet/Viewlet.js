@@ -1,14 +1,15 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
+import * as ElectronBrowserViewQuickPick from '../ElectronBrowserViewQuickPick/ElectronBrowserViewQuickPick.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Layout from '../Layout/Layout.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 
 /**
  * @deprecated
@@ -191,7 +192,12 @@ const openElectronQuickPick = async (...args) => {
   const top = 50
   const keyBindings = await KeyBindings.getKeyBindings()
   const quickPickKeyBindings = getQuickPickKeyBindings(keyBindings)
-  await ElectronBrowserView.createBrowserViewQuickPick(top, left, width, height)
+  await ElectronBrowserViewQuickPick.createBrowserViewQuickPick(
+    top,
+    left,
+    width,
+    height
+  )
   const ipc = await IpcParent.create({
     method: IpcParentType.Electron,
     type: 'quickpick',
@@ -201,6 +207,7 @@ const openElectronQuickPick = async (...args) => {
     getModule: ViewletModule.load,
     id,
     type: 0,
+    // @ts-ignore
     uri: `quickPick://${type}`,
     show: false,
     focus: true,
@@ -253,6 +260,7 @@ export const openWidget = async (id, ...args) => {
     getModule: ViewletModule.load,
     id,
     type: 0,
+    // @ts-ignore
     uri: `quickPick://${type}`,
     show: false,
     focus: true,
@@ -277,7 +285,7 @@ export const openWidget = async (id, ...args) => {
 const closeWidgetElectronQuickPick = async () => {
   const id = 'QuickPick'
   ViewletStates.remove(id)
-  await ElectronBrowserView.disposeBrowserViewQuickPick()
+  await ElectronBrowserViewQuickPick.disposeBrowserViewQuickPick()
 }
 
 export const closeWidget = async (id) => {

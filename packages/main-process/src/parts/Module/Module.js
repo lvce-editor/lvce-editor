@@ -10,6 +10,8 @@ exports.load = async (moduleId) => {
       return require('../ElectronBeep/ElectronBeep.js')
     case ModuleId.ElectronBrowserView:
       return require('../ElectronBrowserView/ElectronBrowserView.ipc.js')
+    case ModuleId.ElectronBrowserViewQuickPick:
+      return require('../ElectronBrowserViewQuickPick/ElectronBrowserViewQuickPick.ipc.js')
     case ModuleId.ElectronContentTracing:
       return require('../ElectronContentTracing/ElectronContentTracing.ipc.js')
     case ModuleId.Developer:

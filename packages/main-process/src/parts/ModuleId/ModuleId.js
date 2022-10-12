@@ -12,3 +12,4 @@ exports.ElectronSafeStorage = 11
 exports.ElectronContentTracing = 12
 exports.ElectronNetLog = 13
 exports.ElectronBrowserView = 14
+exports.ElectronBrowserViewQuickPick = 15

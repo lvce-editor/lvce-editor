@@ -35,22 +35,6 @@ export const disposeBrowserView = () => {
   return ElectronProcess.invoke('ElectronBrowserView.disposeBrowserView')
 }
 
-export const createBrowserViewQuickPick = (top, left, width, height) => {
-  return ElectronProcess.invoke(
-    'ElectronBrowserView.createBrowserViewQuickPick',
-    top,
-    left,
-    width,
-    height
-  )
-}
-
-export const disposeBrowserViewQuickPick = () => {
-  return ElectronProcess.invoke(
-    'ElectronBrowserView.disposeBrowserViewQuickPick'
-  )
-}
-
 export const getOpenCount = () => {
   return state.openCount
 }

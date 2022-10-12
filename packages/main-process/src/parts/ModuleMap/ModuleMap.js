@@ -54,6 +54,9 @@ exports.getModuleId = (commandId) => {
     case 'ElectronBrowserView.setQuickPickValue':
     case 'ElectronBrowserView.disposeBrowserViewQuickPick':
       return ModuleId.ElectronBrowserView
+    case 'ElectronBrowserViewQuickPick.createBrowserViewQuickPick':
+    case 'ElectronBrowserViewQuickPick.disposeBrowserViewQuickPick':
+      return ModuleId.ElectronBrowserViewQuickPick
     default:
       throw new Error(`method not found ${commandId}`)
   }
