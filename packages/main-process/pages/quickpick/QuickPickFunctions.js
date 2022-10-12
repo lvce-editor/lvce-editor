@@ -23,12 +23,12 @@ export const setValue = (value) => {
   $QuickPickInput.value = value
 }
 
-export const setCursorOffset = (state, cursorOffset) => {
+export const setCursorOffset = (cursorOffset) => {
   $QuickPickInput.selectionStart = cursorOffset
   $QuickPickInput.selectionEnd = cursorOffset
 }
 
-export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
+export const setFocusedIndex = (oldFocusedIndex, newFocusedIndex) => {
   if (oldFocusedIndex >= 0) {
     const $OldItem = $QuickPickItems.children[oldFocusedIndex]
     if ($OldItem) {

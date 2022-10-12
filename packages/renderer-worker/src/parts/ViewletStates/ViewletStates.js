@@ -41,6 +41,8 @@ export const getState = (key) => {
 }
 
 export const setState = (key, newState) => {
+  Assert.string(key)
+  Assert.object(newState)
   const instance = getInstance(key)
   instance.state = newState
 }

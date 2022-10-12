@@ -55,6 +55,29 @@ exports.disposeBrowserView = (id) => {
   browserWindow.removeBrowserView(view)
 }
 
+const getQuickPickView = () => {
+  const browserWindow = BrowserWindow.getFocusedWindow()
+  if (!browserWindow) {
+    return
+  }
+  const views = browserWindow.getBrowserViews()
+  const quickPickView = getQuickPickViewFromArray(views)
+  return quickPickView
+}
+
+exports.disposeBrowserViewQuickPick = () => {
+  const browserWindow = BrowserWindow.getFocusedWindow()
+  if (!browserWindow) {
+    return
+  }
+  const views = browserWindow.getBrowserViews()
+  const quickPickView = getQuickPickViewFromArray(views)
+  if (!quickPickView) {
+    return
+  }
+  browserWindow.removeBrowserView(quickPickView)
+}
+
 exports.openDevtools = () => {
   // const browserWindow = BrowserWindow.getFocusedWindow()
   // if (!browserWindow) {
@@ -133,14 +156,4 @@ const getQuickPickViewFromArray = (views) => {
     }
   }
   return undefined
-}
-
-const getQuickPickView = () => {
-  const browserWindow = BrowserWindow.getFocusedWindow()
-  if (!browserWindow) {
-    return
-  }
-  const views = browserWindow.getBrowserViews()
-  const quickPickView = getQuickPickViewFromArray(views)
-  return quickPickView
 }

@@ -178,10 +178,9 @@ export const getAllStates = () => {
 
 const openElectronQuickPick = async (...args) => {
   const id = 'QuickPick'
-  console.log('open custom quick pick widget', { id, args })
   const width = 600
   const height = 300
-  const left = (Layout.state.windowWidth - width) / 2
+  const left = Math.round((Layout.state.windowWidth - width) / 2)
   const top = 50
   await ElectronBrowserView.createBrowserViewQuickPick(top, left, width, height)
   const ipc = await IpcParent.create({
@@ -197,27 +196,27 @@ const openElectronQuickPick = async (...args) => {
     show: false,
     focus: true,
   })
-  ipc.send({
-    jsonrpc: '2.0',
-    method: 'executeCommands',
-    params: commands,
-  })
+
   const handleMessage = async (event) => {
     const { method, params } = event
     const instance = ViewletStates.getInstance('QuickPick')
     const oldState = instance.state
     const newState = await instance.factory[method](oldState, ...params)
-    console.log({ newState, event })
+    const commands = ViewletManager.render(instance.factory, oldState, newState)
+    ipc.send({
+      jsonrpc: '2.0',
+      method: 'executeCommands',
+      params: commands,
+    })
+    instance.state = newState
   }
   ipc.onmessage = handleMessage
+  ipc.send({
+    jsonrpc: '2.0',
+    method: 'executeCommands',
+    params: commands,
+  })
   console.log({ commands })
-  // setInterval(() => {
-  //   ipc.send({
-  //     jsonrpc: '2.0',
-  //     method: 'setValue',
-  //     params: ['hello world'],
-  //   })
-  // }, 1000)
 }
 
 export const openWidget = async (id, ...args) => {
@@ -251,7 +250,16 @@ export const openWidget = async (id, ...args) => {
   //
 }
 
+const closeWidgetQuickPick = async () => {
+  const id = 'QuickPick'
+  ViewletStates.remove(id)
+  await ElectronBrowserView.disposeBrowserViewQuickPick()
+}
+
 export const closeWidget = async (id) => {
+  if (ElectronBrowserView.isOpen() && id === 'QuickPick') {
+    return closeWidgetQuickPick()
+  }
   ViewletStates.remove(id)
   await RendererProcess.invoke(
     /* Viewlet.dispose */ 'Viewlet.dispose',

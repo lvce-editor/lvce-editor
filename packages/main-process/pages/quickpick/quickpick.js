@@ -43,6 +43,7 @@ const main = async () => {
     'beforeinput',
     QuickPickEvents.handleBeforeInput
   )
+  $QuickPickItems.onmousedown = QuickPickEvents.handleMouseDown
   const port = await QuickPickIpc.initialize()
   port.onmessage = handleMessage
 }
