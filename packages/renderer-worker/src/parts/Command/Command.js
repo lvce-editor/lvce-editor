@@ -35,7 +35,7 @@ export const register = (commandId, listener) => {
   state.commands[commandId] = listener
 }
 
-export const registerMultitpe = (commands) => {
+export const registerMultiple = (commands) => {
   Object.assign(state.commands, commands)
 }
 
