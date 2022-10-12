@@ -19,19 +19,6 @@ exports.disposeBrowserViewQuickPick = () => {
   browserWindow.removeBrowserView(quickPickView)
 }
 
-exports.openDevtools = () => {
-  // const browserWindow = BrowserWindow.getFocusedWindow()
-  // if (!browserWindow) {
-  //   return
-  // }
-  // const views = browserWindow.getBrowserViews()
-  // const view = views[0]
-  // if (!view) {
-  //   return
-  // }
-  // view.webContents.openDevTools()
-}
-
 exports.createBrowserViewQuickPick = async (top, left, width, height) => {
   try {
     const browserWindow = BrowserWindow.getFocusedWindow()
