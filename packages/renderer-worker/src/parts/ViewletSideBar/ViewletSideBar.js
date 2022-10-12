@@ -1,13 +1,12 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Layout from '../Layout/Layout.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
-import * as ViewletManager from '../ViewletManager/ViewletManager.js'
-import * as Assert from '../Assert/Assert.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as LocalStorage from '../LocalStorage/LocalStorage.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const name = 'SideBar'
 

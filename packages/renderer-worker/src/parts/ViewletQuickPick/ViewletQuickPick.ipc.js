@@ -1,5 +1,4 @@
 import * as ViewletQuickPick from './ViewletQuickPick.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as LazyCommand from '../LazyCommand/LazyCommand.js'
 
 // prettier-ignore
@@ -18,14 +17,14 @@ export const Commands = {
   'QuickPick.focusLast': LazyCommand.create(ViewletQuickPick.name, Imports.FocusLast, 'focusLast'),
   'QuickPick.focusNext': LazyCommand.create(ViewletQuickPick.name, Imports.FocusNext, 'focusNext'),
   'QuickPick.focusPrevious': LazyCommand.create(ViewletQuickPick.name, Imports.FocusPrevious, 'focusPrevious'),
-  'QuickPick.handleBeforeInput': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.handleBeforeInput),
-  'QuickPick.handleBlur': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.handleBlur),
-  'QuickPick.handleClickAt': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.handleClickAt),
-  'QuickPick.handleInput': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.handleInput),
-  'QuickPick.handleWheel': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.handleWheel),
-  'QuickPick.selectCurrentIndex': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.selectCurrentIndex),
-  'QuickPick.selectIndex': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.selectIndex),
-  'QuickPick.selectItem': Viewlet.wrapViewletCommand(ViewletQuickPick.name, ViewletQuickPick.selectItem),
+  'QuickPick.handleBeforeInput': ViewletQuickPick.handleBeforeInput,
+  'QuickPick.handleBlur': ViewletQuickPick.handleBlur,
+  'QuickPick.handleClickAt': ViewletQuickPick.handleClickAt,
+  'QuickPick.handleInput': ViewletQuickPick.handleInput,
+  'QuickPick.handleWheel': ViewletQuickPick.handleWheel,
+  'QuickPick.selectCurrentIndex': ViewletQuickPick.selectCurrentIndex,
+  'QuickPick.selectIndex': ViewletQuickPick.selectIndex,
+  'QuickPick.selectItem': ViewletQuickPick.selectItem,
 }
 
 export * from './ViewletQuickPick.js'

@@ -1,6 +1,5 @@
 import * as ExtensionHostImplementation from '../ExtensionHost/ExtensionHostImplementation.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletLocations from '../ViewletLocations/ViewletLocations.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
