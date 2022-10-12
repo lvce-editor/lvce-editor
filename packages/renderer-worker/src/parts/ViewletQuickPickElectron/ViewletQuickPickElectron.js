@@ -70,5 +70,3 @@ export const render = [
   renderFocusedIndex,
   renderHeight,
 ]
-
-export * from '../VirtualList/VirtualList.js'

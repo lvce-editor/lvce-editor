@@ -1,6 +1,13 @@
 const $Items = document.getElementById('QuickPickItems')
 const $QuickPickInput = document.getElementById('QuickPickInput')
 
+if (!$QuickPickInput || !($QuickPickInput instanceof HTMLInputElement)) {
+  throw new Error('missing quick pick input')
+}
+if (!$Items) {
+  throw new Error('missing items')
+}
+
 const create$Item = (item) => {
   const $QuickPickItemIcon = document.createElement('div')
   $QuickPickItemIcon.className = 'QuickPickItemIcon'
@@ -52,6 +59,7 @@ const getPort = (type) => {
 }
 
 const main = async () => {
+  $QuickPickInput.focus()
   const port = await getPort('quickpick-browserview')
   console.log({ port })
 }

@@ -5,6 +5,7 @@ const Platform = require('../Platform/Platform.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const Root = require('../Root/Root.js')
 const Path = require('../Path/Path.js')
+const PendingPorts = require('../PendingPorts/PendingPorts.js')
 
 exports.createBrowserView = async (url, top, left, width, height) => {
   const browserWindow = BrowserWindow.getFocusedWindow()
@@ -127,10 +128,16 @@ exports.createBrowserViewQuickPick = async (top, left, width, height) => {
   }
   browserWindow.webContents.on('did-finish-load', handleNavigate)
   await view.webContents.loadURL(quickPickUrl)
-
-  view.webContents.openDevTools({
-    mode: 'detach',
-  })
+  const pendingPort = PendingPorts.get('quickPick')
+  if (pendingPort) {
+    console.log('[main-process] send pending quickpick port')
+    view.webContents.postMessage('port', '', [pendingPort])
+    PendingPorts.delete('quickPick')
+  }
+  await view.webContents.focus()
+  // view.webContents.openDevTools({
+  //   mode: 'detach',
+  // })
 
   // const browserWindowState = AppWindowStates.findById(browserWindow.id)
   // const port = browserWindowState.port

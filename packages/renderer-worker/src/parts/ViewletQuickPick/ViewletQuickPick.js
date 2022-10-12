@@ -156,7 +156,7 @@ export const loadContent = async (state) => {
     method: IpcParent.Methods.Electron,
     type: 'quickpick',
   })
-  console.log('got ipc')
+  console.log('got ipc', ipc)
   return {
     ...state,
     picks: newPicks,
@@ -168,6 +168,7 @@ export const loadContent = async (state) => {
     value,
     cursorOffset: value.length,
     provider,
+    ipc,
   }
 }
 

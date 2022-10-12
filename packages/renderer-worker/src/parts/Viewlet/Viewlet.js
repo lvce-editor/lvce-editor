@@ -6,6 +6,9 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
+import * as Layout from '../Layout/Layout.js'
+import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
+import * as IpcParent from '../IpcParent/IpcParent.js'
 
 /**
  * @deprecated
@@ -125,7 +128,6 @@ export const wrapViewletCommand = (id, fn) => {
   const wrappedViewletCommand = async (...args) => {
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
-    console.log(ViewletStates.state)
     if (!activeInstance) {
       console.info(
         `cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`
@@ -218,6 +220,20 @@ export const getAllStates = () => {
 export const openWidget = async (id, ...args) => {
   const hasInstance = ViewletStates.hasInstance(id)
   const type = args[0]
+  if (ElectronBrowserView.isOpen() && id === 'QuickPick') {
+    console.log('open custom quick pick widget', { id, args })
+    const width = 600
+    const height = 300
+    const left = (Layout.state.windowWidth - width) / 2
+    const top = 50
+    ElectronBrowserView.createBrowserViewQuickPick(top, left, width, height)
+    const ipc = await IpcParent.create({
+      method: IpcParent.Methods.Electron,
+      type: 'quickpick',
+    })
+    return
+  }
+
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
     id,
