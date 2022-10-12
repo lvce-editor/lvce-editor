@@ -1,6 +1,5 @@
 import * as LazyCommand from '../LazyCommand/LazyCommand.js'
 import * as ViewletEditorText from './ViewletEditorText.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
 
 // prettier-ignore
 const Imports = {
