@@ -3,6 +3,7 @@ import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
 import { JsonRpcError } from '../Errors/Errors.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
+import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 
 export const state = {
   pendingMessages: [],
@@ -44,7 +45,7 @@ const handleMessageFromRendererProcess = async (event) => {
 }
 
 const getIpc = () => {
-  return IpcChild.listen({ method: IpcChild.Methods.Auto })
+  return IpcChild.listen({ method: IpcChildType.Auto() })
 }
 
 export const listen = async () => {

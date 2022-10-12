@@ -4,6 +4,7 @@ import * as Command from '../Command/Command.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 
 // TODO duplicate code with platform module
 /**
@@ -93,12 +94,12 @@ const getIpc = () => {
     case 'web':
     case 'remote':
       return IpcParent.create({
-        method: IpcParent.Methods.WebSocket,
+        method: IpcParentType.WebSocket,
         protocol: 'lvce.shared-process',
       })
     case 'electron':
       return IpcParent.create({
-        method: IpcParent.Methods.Electron,
+        method: IpcParentType.Electron,
         type: 'shared-process',
       })
     default:
