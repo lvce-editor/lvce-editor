@@ -1,4 +1,3 @@
-import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletActivityBar from './ViewletActivityBar.js'
 import * as LazyCommand from '../LazyCommand/LazyCommand.js'
 
@@ -20,14 +19,14 @@ export const Commands = {
   'ActivityBar.focusLast': LazyCommand.create(ViewletActivityBar.name, Imports.FocusLast, 'focusLast'),
   'ActivityBar.focusNext': LazyCommand.create(ViewletActivityBar.name, Imports.FocusNext, 'focusNext'),
   'ActivityBar.focusPrevious': LazyCommand.create(ViewletActivityBar.name, Imports.FocusPrevious, 'focusPrevious'),
-  'ActivityBar.getHiddenItems': Viewlet.wrapViewletCommand(ViewletActivityBar.name, ViewletActivityBar.getHiddenItems),
+  'ActivityBar.getHiddenItems': ViewletActivityBar.getHiddenItems,
   'ActivityBar.handleClick': LazyCommand.create(ViewletActivityBar.name, Imports.HandleClick, 'handleClick'),
-  'ActivityBar.handleContextMenu': Viewlet.wrapViewletCommand(ViewletActivityBar.name, ViewletActivityBar.handleContextMenu),
-  'ActivityBar.handleSideBarHidden': Viewlet.wrapViewletCommand(ViewletActivityBar.name, ViewletActivityBar.handleSideBarHidden),
-  'ActivityBar.handleSideBarViewletChange': Viewlet.wrapViewletCommand(ViewletActivityBar.name, ViewletActivityBar.handleSideBarViewletChange),
+  'ActivityBar.handleContextMenu':  ViewletActivityBar.handleContextMenu,
+  'ActivityBar.handleSideBarHidden': ViewletActivityBar.handleSideBarHidden,
+  'ActivityBar.handleSideBarViewletChange': ViewletActivityBar.handleSideBarViewletChange,
   'ActivityBar.selectCurrent': LazyCommand.create(ViewletActivityBar.name,Imports.SelectCurrent, 'selectCurrent'),
-  'ActivityBar.toggleItem': Viewlet.wrapViewletCommand(ViewletActivityBar.name, ViewletActivityBar.toggleItem),
-  'ActivityBar.updateSourceControlCount': Viewlet.wrapViewletCommand(ViewletActivityBar.name, ViewletActivityBar.updateSourceControlCount),
+  'ActivityBar.toggleItem': ViewletActivityBar.toggleItem,
+  'ActivityBar.updateSourceControlCount':  ViewletActivityBar.updateSourceControlCount,
 }
 
 export * from './ViewletActivityBar.js'

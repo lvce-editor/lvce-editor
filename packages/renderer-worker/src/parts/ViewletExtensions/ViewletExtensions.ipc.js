@@ -1,4 +1,3 @@
-import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletExtensions from './ViewletExtensions.js'
 import * as LazyCommand from '../LazyCommand/LazyCommand.js'
 
@@ -21,7 +20,7 @@ const Imports = {
 
 // prettier-ignore
 export const Commands = {
-  'Extensions.closeSuggest': Viewlet.wrapViewletCommand(ViewletExtensions.name, ViewletExtensions.closeSuggest),
+  'Extensions.closeSuggest': ViewletExtensions.closeSuggest,
   'Extensions.focusFirst': LazyCommand.create(ViewletExtensions.name, Imports.FocusFirst, 'focusFirst'),
   'Extensions.focusIndex': LazyCommand.create(ViewletExtensions.name, Imports.FocusIndex, 'focusIndex'),
   'Extensions.focusLast': LazyCommand.create(ViewletExtensions.name, Imports.FocusLast, 'focusLast'),
@@ -32,19 +31,19 @@ export const Commands = {
   'Extensions.handleClick': LazyCommand.create(ViewletExtensions.name, Imports.HandleClick, 'handleClick'),
   'Extensions.handleClickCurrent': LazyCommand.create(ViewletExtensions.name, Imports.HandleClickCurrent, 'handleClickCurrent'),
   'Extensions.handleClickCurrentButKeepFocus': LazyCommand.create(ViewletExtensions.name, Imports.HandleClickCurrentButKeepFocus, 'handleClickCurrentButKeepFocus'),
-  'Extensions.handleContextMenu': Viewlet.wrapViewletCommand(ViewletExtensions.name, ViewletExtensions.handleContextMenu),
-  'Extensions.handleInput': Viewlet.wrapViewletCommand(ViewletExtensions.name, ViewletExtensions.handleInput),
-  'Extensions.handleInstall': Viewlet.wrapViewletCommand(ViewletExtensions.name, ViewletExtensions.handleInstall),
-  'Extensions.handleScrollBarClick': Viewlet.wrapViewletCommand(ViewletExtensions.name, ViewletExtensions.handleScrollBarClick),
-  'Extensions.handleScrollBarMove': Viewlet.wrapViewletCommand(ViewletExtensions.name, ViewletExtensions.handleScrollBarMove),
+  'Extensions.handleContextMenu': ViewletExtensions.handleContextMenu,
+  'Extensions.handleInput': ViewletExtensions.handleInput,
+  'Extensions.handleInstall': ViewletExtensions.handleInstall,
+  'Extensions.handleScrollBarClick': ViewletExtensions.handleScrollBarClick,
+  'Extensions.handleScrollBarMove': ViewletExtensions.handleScrollBarMove,
   'Extensions.handleTouchEnd':LazyCommand.create(ViewletExtensions.name, Imports.HandleTouchEnd, 'handleTouchEnd'),
   'Extensions.handleTouchMove':LazyCommand.create(ViewletExtensions.name, Imports.HandleTouchMove, 'handleTouchMove'),
   'Extensions.handleTouchStart': LazyCommand.create(ViewletExtensions.name, Imports.HandleTouchStart, 'handleTouchStart'),
-  'Extensions.handleUninstall': Viewlet.wrapViewletCommand(ViewletExtensions.name, ViewletExtensions.handleUninstall),
-  'Extensions.handleWheel': Viewlet.wrapViewletCommand(ViewletExtensions.name, ViewletExtensions.handleWheel),
-  'Extensions.openSuggest': Viewlet.wrapViewletCommand(ViewletExtensions.name, ViewletExtensions.openSuggest),
-  'Extensions.setDeltaY': Viewlet.wrapViewletCommand(ViewletExtensions.name, ViewletExtensions.setDeltaY),
-  'Extensions.toggleSuggest': Viewlet.wrapViewletCommand(ViewletExtensions.name, ViewletExtensions.toggleSuggest),
+  'Extensions.handleUninstall': ViewletExtensions.handleUninstall,
+  'Extensions.handleWheel': ViewletExtensions.handleWheel,
+  'Extensions.openSuggest': ViewletExtensions.openSuggest,
+  'Extensions.setDeltaY': ViewletExtensions.setDeltaY,
+  'Extensions.toggleSuggest': ViewletExtensions.toggleSuggest,
 }
 
 export * from './ViewletExtensions.js'

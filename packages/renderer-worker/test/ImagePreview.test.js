@@ -1,7 +1,5 @@
 import { jest } from '@jest/globals'
 import * as FileSystem from '../src/parts/FileSystem/FileSystem.js'
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
-import * as Layout from '../src/parts/Layout/Layout.js'
 
 beforeEach(() => {
   jest.resetAllMocks()

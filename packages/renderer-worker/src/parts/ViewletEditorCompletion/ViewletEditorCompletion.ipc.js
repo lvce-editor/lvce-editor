@@ -1,15 +1,14 @@
-import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletEditorCompletion from './ViewletEditorCompletion.js'
 
 // prettier-ignore
 export const Commands = {
-  'EditorCompletion.dispose': Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.dispose),
-  'EditorCompletion.focusFirst': Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.focusFirst),
-  'EditorCompletion.focusLast': Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.focusLast),
-  'EditorCompletion.focusNext': Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.focusNext),
-  'EditorCompletion.focusPrevious': Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.focusPrevious),
-  'EditorCompletion.handleWheel': Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.handleWheel),
-  'EditorCompletion.selectIndex': Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.selectIndex),
+  'EditorCompletion.dispose':  ViewletEditorCompletion.dispose,
+  'EditorCompletion.focusFirst': ViewletEditorCompletion.focusFirst,
+  'EditorCompletion.focusLast':  ViewletEditorCompletion.focusLast,
+  'EditorCompletion.focusNext': ViewletEditorCompletion.focusNext,
+  'EditorCompletion.focusPrevious':  ViewletEditorCompletion.focusPrevious,
+  'EditorCompletion.handleWheel': ViewletEditorCompletion.handleWheel,
+  'EditorCompletion.selectIndex':  ViewletEditorCompletion.selectIndex,
   // 'EditorCompletion.selectCurrent': Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.selectCurrent),
 }
 

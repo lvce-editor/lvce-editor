@@ -2,10 +2,10 @@ import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as LocalStorage from '../LocalStorage/LocalStorage.js'
+import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as SaveState from '../SaveState/SaveState.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const ViewletState = {
   Default: 0,
@@ -14,6 +14,44 @@ const ViewletState = {
   RendererProcessViewletLoaded: 3,
   ContentRendered: 4,
   Appended: 5,
+}
+
+// TODO maybe wrapViewletCommand should accept module instead of id string
+// then check if instance.factory matches module -> only compare reference (int) instead of string
+// should be faster
+const wrapViewletCommand = (id, fn) => {
+  const wrappedViewletCommand = async (...args) => {
+    // TODO get actual focused instance
+    const activeInstance = ViewletStates.getInstance(id)
+    if (!activeInstance) {
+      console.info(
+        `cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`
+      )
+      return
+    }
+    if (activeInstance.factory && activeInstance.factory.hasFunctionalRender) {
+      const oldState = activeInstance.state
+      const newState = await fn(oldState, ...args)
+      if (!newState) {
+        console.log({ fn })
+      }
+      Assert.object(newState)
+      // console.log({ fn, newState })
+      if (oldState === newState) {
+        return
+      }
+      const commands = render(activeInstance.factory, oldState, newState)
+      ViewletStates.setState(id, newState)
+      await RendererProcess.invoke(
+        /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
+        /* commands */ commands
+      )
+    } else {
+      return fn(activeInstance.state, ...args)
+    }
+  }
+  NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, fn.name)
+  return wrappedViewletCommand
 }
 
 /**
@@ -72,6 +110,16 @@ const getRenderCommands = (module, oldState, newState) => {
   return module.render(oldState, newState)
 }
 
+const maybeRegisterWrappedCommands = (module) => {
+  if (!module.Commands) {
+    return
+  }
+  for (const [key, value] of Object.entries(module.Commands)) {
+    const wrappedCommand = wrapViewletCommand(module.name, value)
+    Command.register(key, wrappedCommand)
+  }
+}
+
 // TODO add lots of unit tests for this
 /**
  *
@@ -96,9 +144,7 @@ export const load = async (viewlet, focus = false, restore = false) => {
     if (viewlet.disposed) {
       return
     }
-    if (module.Commands) {
-      Command.registerMultiple(module.Commands)
-    }
+    maybeRegisterWrappedCommands(module)
     state = ViewletState.ModuleLoaded
 
     let left = viewlet.left
@@ -144,9 +190,7 @@ export const load = async (viewlet, focus = false, restore = false) => {
           /* Viewlet.load */ 'Viewlet.loadModule',
           /* id */ childModule.name
         )
-        if (childModule.Commands) {
-          Command.registerMultiple(childModule.Commands)
-        }
+        maybeRegisterWrappedCommands(childModule)
       }
 
       for (const childModule of childModules) {
