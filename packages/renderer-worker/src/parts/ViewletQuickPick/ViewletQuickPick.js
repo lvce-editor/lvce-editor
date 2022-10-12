@@ -6,6 +6,8 @@ import * as Layout from '../Layout/Layout.js'
 import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import * as IpcParent from '../IpcParent/IpcParent.js'
 
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
@@ -150,6 +152,11 @@ export const loadContent = async (state) => {
     newPicks.length - 1
   )
 
+  const ipc = await IpcParent.create({
+    method: IpcParent.Methods.Electron,
+    type: 'quickpick',
+  })
+  console.log('got ipc')
   return {
     ...state,
     picks: newPicks,

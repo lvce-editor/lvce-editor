@@ -35,15 +35,38 @@ const handleBeforeInput = (event) => {
   )
 }
 
-const exposeGlobals = (globals) => {
-  for (const [key, value] of Object.entries(globals)) {
-    globalThis[key] = value
-  }
+const getPort = (type) => {
+  return new Promise((resolve, reject) => {
+    const handleMessageFromWindow = (event) => {
+      const port = event.ports[0]
+      resolve(port)
+    }
+
+    // @ts-ignore
+    window.addEventListener('message', handleMessageFromWindow, {
+      once: true,
+    })
+    // @ts-ignore
+    window.myApi.ipcConnect(type)
+  })
 }
 
-$QuickPickInput.addEventListener('beforeinput', handleBeforeInput)
+const main = async () => {
+  const port = await getPort('quickpick-browserview')
+  console.log({ port })
+}
 
-exposeGlobals({
-  'QuickPick.setValue': setValue,
-  'QuickPick.setItems': setItems,
-})
+main()
+
+// const exposeGlobals = (globals) => {
+//   for (const [key, value] of Object.entries(globals)) {
+//     globalThis[key] = value
+//   }
+// }
+
+// $QuickPickInput.addEventListener('beforeinput', handleBeforeInput)
+
+// exposeGlobals({
+//   'QuickPick.setValue': setValue,
+//   'QuickPick.setItems': setItems,
+// })

@@ -114,6 +114,7 @@ exports.createBrowserViewQuickPick = async (top, left, width, height) => {
     webPreferences: {
       session: ElectronSession.get(),
       preload: preloadUrl,
+      additionalArguments: [`--webContents-id=${browserWindow.webContents.id}`],
     },
   })
   browserWindow.addBrowserView(view)
@@ -131,13 +132,13 @@ exports.createBrowserViewQuickPick = async (top, left, width, height) => {
     mode: 'detach',
   })
 
-  const browserWindowState = AppWindowStates.findById(browserWindow.id)
-  const port = browserWindowState.port
-  const handleMessage = (event, value) => {
-    console.log('handle message', value)
-    port.postMessage(value)
-  }
-  ipcMain.on('QuickPick.handleMessage', handleMessage)
+  // const browserWindowState = AppWindowStates.findById(browserWindow.id)
+  // const port = browserWindowState.port
+  // const handleMessage = (event, value) => {
+  //   console.log('handle message', value)
+  //   port.postMessage(value)
+  // }
+  // ipcMain.on('QuickPick.handleMessage', handleMessage)
 }
 
 /**
@@ -170,9 +171,9 @@ exports.setQuickPickItems = async (items) => {
   if (!quickPickView) {
     return
   }
-  const itemsString = JSON.stringify(items, null, 2)
-  const javascript = `globalThis['QuickPick.setItems'](${itemsString})`
-  await quickPickView.webContents.executeJavaScript(javascript)
+  // const itemsString = JSON.stringify(items, null, 2)
+  // const javascript = `globalThis['QuickPick.setItems'](${itemsString})`
+  // await quickPickView.webContents.executeJavaScript(javascript)
 }
 
 exports.setQuickPickValue = async (value) => {
@@ -180,7 +181,7 @@ exports.setQuickPickValue = async (value) => {
   if (!quickPickView) {
     return
   }
-  const valueString = JSON.stringify(value)
-  const javascript = `globalThis['QuickPick.setValue'](${valueString})`
-  await quickPickView.webContents.executeJavaScript(javascript)
+  //   const valueString = JSON.stringify(value)
+  //   const javascript = `globalThis['QuickPick.setValue'](${valueString})`
+  //   await quickPickView.webContents.executeJavaScript(javascript)
 }

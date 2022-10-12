@@ -168,6 +168,41 @@ const handlePortForMainProcess = (event) => {
 }
 
 exports.handlePortForMainProcess = handlePortForMainProcess
+
+/**
+ *
+ * @param {*} views
+ * @returns {Electron.BrowserView|undefined}
+ */
+const getQuickPickViewFromArray = (views) => {
+  for (const view of views) {
+    const url = view.webContents.getURL()
+    if (url.endsWith('quickpick.html')) {
+      return view
+    }
+  }
+  return undefined
+}
+
+const handlePortForQuickPick = (event) => {
+  const browserWindowPort = event.ports[0]
+  const browserWindow = Electron.BrowserWindow.getFocusedWindow()
+  if (!browserWindow) {
+    return
+  }
+  const views = browserWindow.getBrowserViews()
+  const quickPickview = getQuickPickViewFromArray(views)
+  if (!quickPickview) {
+    // TODO handle different quickpick view states
+    // disposed -> do nothing
+    // creating -> wait for creation, then post message
+    console.log('no quickpick view')
+    return
+  }
+  console.log('send port to quickpick')
+  quickPickview.webContents.postMessage('port', '', [browserWindowPort])
+}
+
 /**
  * @param {import('electron').IpcMainEvent} event
  */
@@ -179,6 +214,10 @@ const handlePort = async (event, data) => {
       return handlePortForExtensionHost(event)
     case 'electron-process':
       return handlePortForMainProcess(event)
+    case 'quickpick-browserview':
+      return handlePortFromQuickPick(event)
+    case 'quickpick':
+      return handlePortForQuickPick(event)
     default:
       console.error(`[main-process] unexpected port type ${data}`)
   }

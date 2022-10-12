@@ -1,12 +1,20 @@
 const { ipcRenderer, contextBridge } = require('electron')
 
-const handleMessage = (method, ...params) =>
-  ipcRenderer.send('QuickPick.handleMessage', {
-    jsonrpc: '2.0',
-    method,
-    params,
-  })
+const ipcConnect = (type) => {
+  // const channel = new MessageChannel()
+  // const { port1, port2 } = channel
+  // ipcRenderer.postMessage('port', type, [port1])
+  // // @ts-ignore
+  // window.postMessage('abc', '*', [port2])
+}
 
-contextBridge.exposeInMainWorld('electronApi', {
-  handleMessage,
+const handlePort = (event) => {
+  const port = event.ports[0]
+  console.log('[preload] got port', port)
+  window.postMessage('abc', '*', [port])
+}
+
+ipcRenderer.on('port', handlePort)
+contextBridge.exposeInMainWorld('myApi', {
+  ipcConnect,
 })
