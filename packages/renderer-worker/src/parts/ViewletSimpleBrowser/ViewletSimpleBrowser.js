@@ -1,6 +1,8 @@
 // based on vscode's simple browser by Microsoft (https://github.com/microsoft/vscode/blob/e8fe2d07d31f30698b9262dd5e1fcc59a85c6bb1/extensions/simple-browser/src/extension.ts, License MIT)
 
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
+import * as Preferences from '../Preferences/Preferences.js'
+import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 
 export const name = 'SimpleBrowser'
 
@@ -15,16 +17,27 @@ export const create = (id, uri, left, top, width, height) => {
   }
 }
 
+const isFallThroughKeyBinding = (keyBinding) => {
+  return !keyBinding.when
+}
+
+const getFallThroughKeyBindings = (keyBindings) => {
+  return keyBindings.filter(isFallThroughKeyBinding)
+}
+
 export const loadContent = async (state) => {
   const { top, left, width, height } = state
   const iframeSrc = 'https://example.com'
+  const keyBindings = await KeyBindings.getKeyBindings()
+  const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   // need window width and window height as workaround for https://github.com/electron/electron/issues/15899
   await ElectronBrowserView.createBrowserView(
     iframeSrc,
     top,
     left,
     width,
-    height
+    height,
+    fallThroughKeyBindings
   )
   return {
     ...state,

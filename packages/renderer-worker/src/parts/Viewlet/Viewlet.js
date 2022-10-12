@@ -249,7 +249,9 @@ const openElectronQuickPick = async (...args) => {
 export const openWidget = async (id, ...args) => {
   const hasInstance = ViewletStates.hasInstance(id)
   const type = args[0]
+  console.log('open quickpick 1')
   if (ElectronBrowserView.isOpen() && id === 'QuickPick') {
+    console.log('open quickpick 2')
     // TODO recycle quickpick instance
     if (hasInstance) {
       await closeWidgetElectronQuickPick()
@@ -286,6 +288,10 @@ const closeWidgetElectronQuickPick = async () => {
   const id = 'QuickPick'
   ViewletStates.remove(id)
   await ElectronBrowserViewQuickPick.disposeBrowserViewQuickPick()
+  // TODO restore focus to previously focused element
+  await RendererProcess.invoke('Viewlet.executeCommands', [
+    ['Viewlet.focusBody'],
+  ])
 }
 
 export const closeWidget = async (id) => {
@@ -297,4 +303,5 @@ export const closeWidget = async (id) => {
     /* Viewlet.dispose */ 'Viewlet.dispose',
     /* id */ id
   )
+  // TODO restore focus
 }

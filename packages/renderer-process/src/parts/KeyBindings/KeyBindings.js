@@ -14,6 +14,16 @@ const isAscii = (key) => {
   return RE_ASCII.test(key)
 }
 
+const normalizeKey = (key) => {
+  if (key === ' ') {
+    return 'Space'
+  }
+  if (key.length === 1) {
+    return key.toLowerCase()
+  }
+  return key
+}
+
 const getIdentifier = (event) => {
   let identifier = ''
   if (event.ctrlKey) {
@@ -25,13 +35,7 @@ const getIdentifier = (event) => {
   if (event.altKey) {
     identifier += 'alt+'
   }
-  let key = event.key
-  if (key === ' ') {
-    key = 'Space'
-  }
-  if (key.length === 1) {
-    key = key.toLowerCase()
-  }
+  const key = normalizeKey(event.key)
   identifier += key
   return identifier
 }

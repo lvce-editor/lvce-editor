@@ -118,6 +118,7 @@ export const getModuleId = (commandId) => {
     case 'Viewlet.appendViewlet':
     case 'Viewlet.dispose':
     case 'Viewlet.focus':
+    case 'Viewlet.focusBody':
     case 'Viewlet.handleError':
     case 'Viewlet.invoke':
     case 'Viewlet.load':

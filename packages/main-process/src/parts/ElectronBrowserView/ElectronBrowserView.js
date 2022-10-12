@@ -1,13 +1,43 @@
 const { BrowserView, BrowserWindow } = require('electron')
 const ElectronSessionForBrowserView = require('../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js')
-const ElectronSession = require('../ElectronSession/ElectronSession.js')
-const Platform = require('../Platform/Platform.js')
-const Root = require('../Root/Root.js')
-const Path = require('../Path/Path.js')
-const PendingPorts = require('../PendingPorts/PendingPorts.js')
-const { VError } = require('verror')
+const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 
-exports.createBrowserView = async (url, top, left, width, height) => {
+const normalizeKey = (key) => {
+  if (key === ' ') {
+    return 'Space'
+  }
+  if (key.length === 1) {
+    return key.toLowerCase()
+  }
+  return key
+}
+
+const getIdentifier = (input) => {
+  let identifier = ''
+  if (input.control) {
+    identifier += 'ctrl+'
+  }
+  if (input.shift) {
+    identifier += 'shift+'
+  }
+  if (input.alt) {
+    identifier += 'alt+'
+  }
+  if (input.meta) {
+    identifier += 'meta+'
+  }
+  identifier += normalizeKey(input.key)
+  return identifier
+}
+
+exports.createBrowserView = async (
+  url,
+  top,
+  left,
+  width,
+  height,
+  falltroughKeyBindings
+) => {
   const browserWindow = BrowserWindow.getFocusedWindow()
   if (!browserWindow) {
     return
@@ -27,6 +57,33 @@ exports.createBrowserView = async (url, top, left, width, height) => {
   browserWindow.addBrowserView(view)
   view.setBounds({ x: left, y: top, width, height })
   await view.webContents.loadURL(url)
+
+  /**
+   * @param {Electron.Event} event
+   * @param {Electron.Input} input
+   */
+  const handleBeforeInput = (event, input) => {
+    if (input.type !== 'keyDown') {
+      return
+    }
+    const state = AppWindowStates.findById(browserWindow.webContents.id)
+    const { port } = state
+    const identifier = getIdentifier(input)
+    for (const fallThroughKeyBinding of falltroughKeyBindings) {
+      if (fallThroughKeyBinding.key === identifier) {
+        event.preventDefault()
+        console.log({ identifier, fallThroughKeyBinding })
+        console.log('post message to port')
+        port.postMessage({
+          jsonrpc: '2.0',
+          method: fallThroughKeyBinding.command,
+          params: fallThroughKeyBinding.args || [],
+        })
+        return
+      }
+    }
+  }
+  view.webContents.on('before-input-event', handleBeforeInput)
 }
 
 exports.resizeBrowserView = (top, left, width, height) => {
