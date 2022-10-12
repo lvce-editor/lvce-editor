@@ -97,7 +97,7 @@ export const load = async (viewlet, focus = false, restore = false) => {
       return
     }
     if (module.Commands) {
-      Command.registerMultitpe(module.Commands)
+      Command.registerMultiple(module.Commands)
     }
     state = ViewletState.ModuleLoaded
 
@@ -145,7 +145,7 @@ export const load = async (viewlet, focus = false, restore = false) => {
           /* id */ childModule.name
         )
         if (childModule.Commands) {
-          Command.registerMultitpe(childModule.Commands)
+          Command.registerMultiple(childModule.Commands)
         }
       }
 
