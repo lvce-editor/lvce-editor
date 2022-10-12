@@ -209,8 +209,11 @@ const openElectronQuickPick = async (...args) => {
 
   const handleMessage = async (event) => {
     const { method, params } = event
-    const instance = ViewletStates.getInstance('QuickPick')
+    const instance = ViewletStates.getInstance(id)
     const oldState = instance.state
+    if (method === 'Viewlet.closeWidget') {
+      return closeWidget(id)
+    }
     const newState = await instance.factory.Commands[method](
       oldState,
       ...params
