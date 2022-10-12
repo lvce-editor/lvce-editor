@@ -1,13 +1,3 @@
-const VError = require('verror')
-const Screen = require('../ElectronScreen/ElectronScreen.js')
-const Window = require('../ElectronWindow/ElectronWindow.js')
-const Performance = require('../Performance/Performance.js')
-const LifeCycle = require('../LifeCycle/LifeCycle.js')
-const Session = require('../ElectronSession/ElectronSession.js')
-const Platform = require('../Platform/Platform.js')
-const Preferences = require('../Preferences/Preferences.js')
-const Electron = require('electron')
-
 exports.state = {
   /**
    * @type {any[]}

@@ -1,8 +1,10 @@
-const { BrowserView, BrowserWindow } = require('electron')
+const { BrowserView, BrowserWindow, ipcMain } = require('electron')
 const ElectronSessionForBrowserView = require('../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js')
 const ElectronSession = require('../ElectronSession/ElectronSession.js')
 const Platform = require('../Platform/Platform.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
+const Root = require('../Root/Root.js')
+const Path = require('../Path/Path.js')
 
 exports.createBrowserView = async (url, top, left, width, height) => {
   const browserWindow = BrowserWindow.getFocusedWindow()
@@ -93,14 +95,25 @@ exports.openDevtools = () => {
   view.webContents.openDevTools()
 }
 
+const handleMessage = () => {}
+
 exports.createBrowserViewQuickPick = async (top, left, width, height) => {
   const browserWindow = BrowserWindow.getFocusedWindow()
   if (!browserWindow) {
     return
   }
+  const preloadUrl = Path.join(
+    Root.root,
+    'packages',
+    'main-process',
+    'pages',
+    'quickpick',
+    'preload.js'
+  )
   const view = new BrowserView({
     webPreferences: {
       session: ElectronSession.get(),
+      preload: preloadUrl,
     },
   })
   browserWindow.addBrowserView(view)
@@ -117,6 +130,14 @@ exports.createBrowserViewQuickPick = async (top, left, width, height) => {
   view.webContents.openDevTools({
     mode: 'detach',
   })
+
+  const browserWindowState = AppWindowStates.findById(browserWindow.id)
+  const port = browserWindowState.port
+  const handleMessage = (event, value) => {
+    console.log('handle message', value)
+    port.postMessage(value)
+  }
+  ipcMain.on('QuickPick.handleMessage', handleMessage)
 }
 
 /**

@@ -101,6 +101,7 @@
         flex-direction: column;
       }
     </style>
+    <script type="module" src="quickpick.js"></script>
   </head>
   <body>
     <div id="QuickPick">
@@ -109,41 +110,5 @@
       </div>
       <div id="QuickPickItems"></div>
     </div>
-    <script>
-      const $Items = document.getElementById('QuickPickItems')
-      const $QuickPickInput = document.getElementById('QuickPickInput')
-
-      const create$Item = (item) => {
-        const $QuickPickItemIcon = document.createElement('div')
-        $QuickPickItemIcon.className = 'QuickPickItemIcon'
-        const $QuickPickItemLabel = document.createElement('div')
-        $QuickPickItemLabel.className = 'Label'
-        $QuickPickItemLabel.textContent = item.label
-
-        const $QuickPickItem = document.createElement('div')
-        $QuickPickItem.className = 'QuickPickItem'
-        $QuickPickItem.append($QuickPickItemIcon, $QuickPickItemLabel)
-
-        return $QuickPickItem
-      }
-      const setItems = (items) => {
-        $Items.replaceChildren(...items.map(create$Item))
-      }
-
-      const setValue = (value) => {
-        $QuickPickInput.value = value
-      }
-
-      const exposeGlobals = (globals) => {
-        for (const [key, value] of Object.entries(globals)) {
-          globalThis[key] = value
-        }
-      }
-
-      exposeGlobals({
-        'QuickPick.setValue': setValue,
-        'QuickPick.setItems': setItems,
-      })
-    </script>
   </body>
 </html>

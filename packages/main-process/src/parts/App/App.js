@@ -11,6 +11,7 @@ const Performance = require('../Performance/Performance.js')
 const Cli = require('../Cli/Cli.js')
 const AppWindow = require('../AppWindow/AppWindow.js')
 const Command = require('../Command/Command.js')
+const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
@@ -124,7 +125,11 @@ const handlePortForSharedProcess = async (event) => {
 
 const handlePortForMainProcess = (event) => {
   const browserWindowPort = event.ports[0]
-  browserWindowPort.on('message', async (event) => {
+  const id = event.sender.id
+  // console.log({ id })
+  const state = AppWindowStates.findById(id)
+  state.port = browserWindowPort
+  const handleMessage = async (event) => {
     const message = event.data
     try {
       const result = await Command.execute(message.method, ...message.params)
@@ -157,7 +162,8 @@ const handlePortForMainProcess = (event) => {
         })
       }
     }
-  })
+  }
+  browserWindowPort.on('message', handleMessage)
   browserWindowPort.start()
 }
 

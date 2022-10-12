@@ -125,6 +125,7 @@ export const wrapViewletCommand = (id, fn) => {
   const wrappedViewletCommand = async (...args) => {
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
+    console.log(ViewletStates.state)
     if (!activeInstance) {
       console.info(
         `cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`
