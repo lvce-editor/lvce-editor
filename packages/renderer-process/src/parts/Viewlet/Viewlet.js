@@ -202,11 +202,6 @@ const append = (parentId, childId) => {
   $Parent.append($Child)
 }
 
-const focusBody = () => {
-  console.log('focus body')
-  window.focus()
-}
-
 const getFn = (command) => {
   switch (command) {
     case 'Viewlet.create':
@@ -223,8 +218,6 @@ const getFn = (command) => {
       return ariaAnnounce
     case 'Viewlet.append':
       return append
-    case 'Viewlet.focusBody':
-      return focusBody
     default:
       throw new Error(`unknown command ${command}`)
   }

@@ -14,6 +14,7 @@ exports.getModuleId = (commandId) => {
     case 'ElectronWindow.reload':
     case 'ElectronWindow.zoomIn':
     case 'ElectronWindow.zoomOut':
+    case 'ElectronWindow.focus':
       return ModuleId.Window
     case 'ElectronDeveloper.getPerformanceEntries':
     case 'ElectronDeveloper.crashMainProcess':

@@ -187,3 +187,10 @@ exports.zoomOut = async (browserWindow) => {
     getMaxZoomLevel
   )
 }
+
+/**
+ * @param {Electron.BrowserWindow} browserWindow
+ */
+exports.focus = (browserWindow) => {
+  browserWindow.webContents.focus()
+}
