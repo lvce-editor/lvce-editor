@@ -31,7 +31,6 @@ const getIdentifier = (input) => {
 }
 
 exports.createBrowserView = async (
-  url,
   top,
   left,
   width,
@@ -56,7 +55,6 @@ exports.createBrowserView = async (
   )
   browserWindow.addBrowserView(view)
   view.setBounds({ x: left, y: top, width, height })
-  await view.webContents.loadURL(url)
 
   /**
    * @param {Electron.Event} event

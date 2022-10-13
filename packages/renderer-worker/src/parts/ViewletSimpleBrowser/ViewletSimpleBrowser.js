@@ -34,7 +34,6 @@ export const loadContent = async (state) => {
   const keyBindings = await KeyBindings.getKeyBindings()
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   await ElectronBrowserView.createBrowserView(
-    iframeSrc,
     top + headerHeight,
     left,
     width,
@@ -70,15 +69,14 @@ const renderIframeSrc = {
     return oldState.iframeSrc === newState.iframeSrc
   },
   apply(oldState, newState) {
-    if (oldState.iframeSrc !== '') {
-      ElectronBrowserViewFunctions.setIframeSrc(newState.iframeSrc)
-    }
+    ElectronBrowserViewFunctions.setIframeSrc(newState.iframeSrc)
     return ['Viewlet.send', 'SimpleBrowser', 'setIframeSrc', newState.iframeSrc]
   },
 }
 
-export const openDevtools = async () => {
+export const openDevtools = async (state) => {
   await ElectronBrowserViewFunctions.openDevtools()
+  return state
 }
 
 export const hasFunctionalResize = true

@@ -78,6 +78,8 @@ export const getModuleId = (commandId) => {
     case 'Developer.showStartupPerformance':
     case 'Developer.startupPerformance':
     case 'Developer.toggleDeveloperTools':
+    case 'Developer.installChromeExtensionIStillDontCareAboutCookies':
+    case 'Developer.installChromeExtensionUBlockOrigin':
       return ModuleId.Developer
     case 'Dialog.close':
     case 'Dialog.handleClick':
@@ -268,6 +270,9 @@ export const getModuleId = (commandId) => {
     case 'Workspace.setPath':
     case 'Workspace.setUri':
       return ModuleId.Workspace
+    case 'ChromeExtension.install':
+    case 'ChromeExtension.uninstall':
+      return ModuleId.ChromeExtension
     default:
       throw new Error(`command ${commandId} not found`)
   }

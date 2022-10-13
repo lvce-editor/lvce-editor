@@ -1,4 +1,3 @@
-import * as Command from '../Command/Command.js'
 import * as Developer from './Developer.js'
 
 // prettier-ignore
@@ -25,5 +24,7 @@ export const Commands={
   'Developer.showStartupPerformance': Developer.showStartupPerformance,
   'Developer.startupPerformance': Developer.showStartupPerformance,
   'Developer.toggleDeveloperTools': Developer.toggleDeveloperTools,
+  'Developer.installChromeExtensionUBlockOrigin': Developer.installChromeExtensionUBlockOrigin,
+  'Developer.installChromeExtensionIStillDontCareAboutCookies': Developer.installChromeExtensionIStillDontCareAboutCookies,
   // TODO certain commands are only available in electron -> treeshake them out
 }
