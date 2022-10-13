@@ -1,11 +1,12 @@
 import * as Command from '../Command/Command.js'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SashType from '../SashType/SashType.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as Platform from '../Platform/Platform.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
-import * as LocalStorage from '../LocalStorage/LocalStorage.js'
+
 // TODO where to force rendering of contents (need to call sidebar.openViewlet somewhere)
 
 export const state = {
@@ -390,46 +391,90 @@ export const handleSashPointerDown = (id) => {
   console.log({ id })
 }
 
-// TODO make this functional
-export const handleSashPointerMove = async (x, y) => {
-  if (state.sashId === 'SideBar') {
-    const newSideBarWidth = state.windowWidth - state.activityBarWidth - x
-    if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH / 2) {
-      state.sideBarVisible = false
-      state.mainWidth = state.windowWidth - state.activityBarWidth
-    } else if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH) {
-      state.sideBarVisible = true
-      state.sideBarWidth = SIDE_BAR_MIN_WIDTH
-      state.mainWidth =
-        state.windowWidth - state.activityBarWidth - SIDE_BAR_MIN_WIDTH
-      state.sideBarLeft =
-        state.windowWidth - state.activityBarWidth - SIDE_BAR_MIN_WIDTH
-    } else {
-      state.sideBarVisible = true
-      state.mainWidth = x
-      state.sideBarLeft = x
-      state.sideBarWidth = newSideBarWidth
-    }
-  } else if (state.sashId === 'Panel') {
-    const newPanelHeight = state.windowHeight - state.statusBarHeight - y
-    if (newPanelHeight < PANEL_MIN_HEIGHT / 2) {
-      state.panelVisible = false
-      state.mainHeight =
-        state.windowHeight - state.statusBarHeight - state.titleBarHeight
-    } else if (newPanelHeight <= PANEL_MIN_HEIGHT) {
-      state.panelVisible = true
-      state.panelHeight = PANEL_MIN_HEIGHT
-      state.mainHeight =
-        state.windowHeight - state.activityBarHeight - PANEL_MIN_HEIGHT
-    } else {
-      state.panelVisible = true
-      state.mainHeight = y - state.titleBarHeight
-      state.panelTop = y
-      state.panelHeight = state.windowHeight - state.statusBarHeight - y
+const getNewStatePointerMoveSideBar = (state, x, y) => {
+  const {
+    windowWidth,
+    activityBarWidth,
+    windowHeight,
+    statusBarHeight,
+    titleBarHeight,
+    activityBarHeight,
+  } = state
+  const newSideBarWidth = windowWidth - activityBarWidth - x
+  if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH / 2) {
+    return {
+      ...state,
+      sideBarVisible: false,
+      mainWidth: windowWidth - activityBarWidth,
     }
   }
+  if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH) {
+    return {
+      ...state,
+      sideBarWidth: SIDE_BAR_MIN_WIDTH,
+      mainWidth: windowWidth - state.activityBarWidth - SIDE_BAR_MIN_WIDTH,
+      sideBarLeft: windowWidth - activityBarWidth - SIDE_BAR_MIN_WIDTH,
+      sideBarVisible: true,
+    }
+  }
+  return {
+    ...state,
+    sideBarVisible: true,
+    mainWidth: x,
+    sideBarLeft: x,
+    sideBarWidth: newSideBarWidth,
+  }
+}
 
-  await updateLayout(state)
+const getNewStatePointerMovePanel = (state, x, y) => {
+  const {
+    windowWidth,
+    activityBarWidth,
+    windowHeight,
+    statusBarHeight,
+    titleBarHeight,
+    activityBarHeight,
+  } = state
+  const newPanelHeight = windowHeight - statusBarHeight - y
+  if (newPanelHeight < PANEL_MIN_HEIGHT / 2) {
+    return {
+      ...state,
+      panelVisible: false,
+      mainHeight: windowHeight - statusBarHeight - titleBarHeight,
+    }
+  }
+  if (newPanelHeight <= PANEL_MIN_HEIGHT) {
+    return {
+      ...state,
+      panelVisible: true,
+      panelHeight: PANEL_MIN_HEIGHT,
+      mainHeight: windowHeight - activityBarHeight - PANEL_MIN_HEIGHT,
+    }
+  }
+  return {
+    ...state,
+    panelVisible: true,
+    mainHeight: y - titleBarHeight,
+    panelTop: y,
+    panelHeight: windowHeight - statusBarHeight - y,
+  }
+}
+
+const getNewStatePointerMove = (state, x, y) => {
+  switch (state.sashId) {
+    case SashType.SideBar:
+      return getNewStatePointerMoveSideBar(state, x, y)
+    case SashType.Panel:
+      return getNewStatePointerMovePanel(state, x, y)
+    default:
+      throw new Error(`unsupported sash type ${state.sashId}`)
+  }
+}
+
+// TODO make this functional
+export const handleSashPointerMove = async (x, y) => {
+  const newState = getNewStatePointerMove(state, x, y)
+  await updateLayout(newState)
 }
 
 // TODO a bit unnecessary to send the same layout very often, but it avoids keeping state in renderer process
