@@ -1,7 +1,7 @@
 // based on vscode's simple browser by Microsoft (https://github.com/microsoft/vscode/blob/e8fe2d07d31f30698b9262dd5e1fcc59a85c6bb1/extensions/simple-browser/src/extension.ts, License MIT)
 
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
-import * as Preferences from '../Preferences/Preferences.js'
+import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 
 export const name = 'SimpleBrowser'
@@ -48,7 +48,6 @@ export const loadContent = async (state) => {
 }
 
 export const handleInput = (state, value) => {
-  console.log('handle input', value)
   // TODO maybe show autocomplete for urls like browsers do
   return {
     ...state,
@@ -71,13 +70,15 @@ const renderIframeSrc = {
     return oldState.iframeSrc === newState.iframeSrc
   },
   apply(oldState, newState) {
-    ElectronBrowserView.setIframeSrc(newState.iframeSrc)
+    if (oldState.iframeSrc !== '') {
+      ElectronBrowserViewFunctions.setIframeSrc(newState.iframeSrc)
+    }
     return ['Viewlet.send', 'SimpleBrowser', 'setIframeSrc', newState.iframeSrc]
   },
 }
 
 export const openDevtools = async () => {
-  await ElectronBrowserView.openDevtools()
+  await ElectronBrowserViewFunctions.openDevtools()
 }
 
 export const hasFunctionalResize = true
@@ -85,7 +86,7 @@ export const hasFunctionalResize = true
 export const resize = (state, dimensions) => {
   const { headerHeight } = state
   const { left, top, width, height } = dimensions
-  ElectronBrowserView.resizeBrowserView(
+  ElectronBrowserViewFunctions.resizeBrowserView(
     top + headerHeight,
     left,
     width,

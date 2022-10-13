@@ -4,6 +4,4 @@ const ElectronBrowserView = require('./ElectronBrowserView.js')
 exports.Commands = {
   'ElectronBrowserView.createBrowserView': ElectronBrowserView.createBrowserView,
   'ElectronBrowserView.disposeBrowserView': ElectronBrowserView.disposeBrowserView,
-  'ElectronBrowserView.resizeBrowserView': ElectronBrowserView.resizeBrowserView,
-  'ElectronBrowserView.setIframeSrc': ElectronBrowserView.setIframeSrc,
 }

@@ -49,16 +49,15 @@ exports.getModuleId = (commandId) => {
       return ModuleId.ElectronNetLog
     case 'ElectronBrowserView.createBrowserView':
     case 'ElectronBrowserView.disposeBrowserView':
-    case 'ElectronBrowserView.resizeBrowserView':
-    case 'ElectronBrowserView.createBrowserViewQuickpick':
-    case 'ElectronBrowserView.setQuickPickItems':
-    case 'ElectronBrowserView.setQuickPickValue':
-    case 'ElectronBrowserView.disposeBrowserViewQuickPick':
-    case 'ElectronBrowserView.setIframeSrc':
       return ModuleId.ElectronBrowserView
     case 'ElectronBrowserViewQuickPick.createBrowserViewQuickPick':
     case 'ElectronBrowserViewQuickPick.disposeBrowserViewQuickPick':
       return ModuleId.ElectronBrowserViewQuickPick
+    case 'ElectronBrowserViewFunctions.resizeBrowserView':
+    case 'ElectronBrowserViewFunctions.disposeBrowserView':
+    case 'ElectronBrowserViewFunctions.setIframeSrc':
+    case 'ElectronBrowserViewFunctions.openDevtools':
+      return ModuleId.ElectronBrowserViewFunctions
     default:
       throw new Error(`method not found ${commandId}`)
   }

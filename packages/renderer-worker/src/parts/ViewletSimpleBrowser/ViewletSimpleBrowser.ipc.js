@@ -2,9 +2,9 @@ import * as SimpleBrowser from './ViewletSimpleBrowser.js'
 
 // prettier-ignore
 export const Commands = {
-  'SimpleBrowser.openDevtools': SimpleBrowser.openDevtools,
-  'SimpleBrowser.handleInput': SimpleBrowser.handleInput,
   'SimpleBrowser.go': SimpleBrowser.go,
+  'SimpleBrowser.handleInput': SimpleBrowser.handleInput,
+  'SimpleBrowser.openDevtools': SimpleBrowser.openDevtools,
 }
 
 export * from './ViewletSimpleBrowser.js'
