@@ -14,6 +14,9 @@ export const create = (id, uri, left, top, width, height) => {
     left,
     width,
     height,
+    headerHeight: 30,
+    iframeSrc: '',
+    inputValue: '',
   }
 }
 
@@ -26,22 +29,38 @@ const getFallThroughKeyBindings = (keyBindings) => {
 }
 
 export const loadContent = async (state) => {
-  const { top, left, width, height } = state
+  const { top, left, width, height, headerHeight } = state
   const iframeSrc = 'https://example.com'
   const keyBindings = await KeyBindings.getKeyBindings()
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
-  // need window width and window height as workaround for https://github.com/electron/electron/issues/15899
   await ElectronBrowserView.createBrowserView(
     iframeSrc,
-    top,
+    top + headerHeight,
     left,
     width,
-    height,
+    height - headerHeight,
     fallThroughKeyBindings
   )
   return {
     ...state,
     iframeSrc,
+  }
+}
+
+export const handleInput = (state, value) => {
+  console.log('handle input', value)
+  // TODO maybe show autocomplete for urls like browsers do
+  return {
+    ...state,
+    inputValue: value,
+  }
+}
+
+export const go = (state) => {
+  const { inputValue } = state
+  return {
+    ...state,
+    iframeSrc: inputValue,
   }
 }
 
@@ -52,6 +71,7 @@ const renderIframeSrc = {
     return oldState.iframeSrc === newState.iframeSrc
   },
   apply(oldState, newState) {
+    ElectronBrowserView.setIframeSrc(newState.iframeSrc)
     return ['Viewlet.send', 'SimpleBrowser', 'setIframeSrc', newState.iframeSrc]
   },
 }
@@ -63,8 +83,14 @@ export const openDevtools = async () => {
 export const hasFunctionalResize = true
 
 export const resize = (state, dimensions) => {
+  const { headerHeight } = state
   const { left, top, width, height } = dimensions
-  ElectronBrowserView.resizeBrowserView(top, left, width, height)
+  ElectronBrowserView.resizeBrowserView(
+    top + headerHeight,
+    left,
+    width,
+    height - headerHeight
+  )
   return {
     ...state,
     ...dimensions,

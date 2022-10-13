@@ -1,23 +1,43 @@
+import * as InputBox from '../InputBox/InputBox.js'
+import * as Icon from '../Icon/Icon.js'
+import * as IconButton from '../IconButton/IconButton.js'
+import * as ViewletSimpleBrowserEvents from './ViewletSimpleBrowserEvents.js'
+
 export const name = 'SimpleBrowser'
 
 export const create = () => {
-  // const $Iframe = document.createElement('iframe')
-  // $Iframe.className = 'SimpleBrowserIframe'
-  // $Iframe.setAttribute('crossorigin', 'anonymous')
+  const $ButtonBack = IconButton.create$Button('Back', Icon.PreviousMatch)
+  const $ButtonForward = IconButton.create$Button('Forward', Icon.NextMatch)
+  const $ButtonReload = IconButton.create$Button('Reload', Icon.Close)
+
+  const $InputBox = InputBox.create()
+  $InputBox.type = 'url'
+  $InputBox.oninput = ViewletSimpleBrowserEvents.handleInput
+  $InputBox.enterKeyHint = 'go'
+  $InputBox.onfocus = ViewletSimpleBrowserEvents.handleFocus
+
+  const $SimpleBrowserHeader = document.createElement('div')
+  $SimpleBrowserHeader.className = 'SimpleBrowserHeader'
+  $SimpleBrowserHeader.append(
+    $ButtonBack,
+    $ButtonForward,
+    $ButtonReload,
+    $InputBox
+  )
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet'
   $Viewlet.dataset.viewletId = 'SimpleBrowser'
-  // $Viewlet.append($Iframe)
+  $Viewlet.append($SimpleBrowserHeader)
   return {
-    // $Iframe,
-    $Viewlet: $Viewlet,
+    $Viewlet,
+    $InputBox,
   }
 }
 
 export const setIframeSrc = (state, iframeSrc) => {
-  // const { $Iframe } = state
-  // $Iframe.src = iframeSrc
+  const { $InputBox } = state
+  $InputBox.value = iframeSrc
 }
 
 export const dispose = (state) => {}

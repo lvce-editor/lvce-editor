@@ -34,6 +34,10 @@ export const resizeBrowserView = (left, top, width, height) => {
   )
 }
 
+export const setIframeSrc = (iframeSrc) => {
+  return ElectronProcess.invoke('ElectronBrowserView.setIframeSrc', iframeSrc)
+}
+
 export const openDevtools = () => {
   return ElectronProcess.invoke('ElectronBrowserView.openDevtools')
 }

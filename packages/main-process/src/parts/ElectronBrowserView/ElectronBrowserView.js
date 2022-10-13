@@ -99,6 +99,19 @@ exports.resizeBrowserView = (top, left, width, height) => {
   view.setBounds({ x: left, y: top, width, height })
 }
 
+exports.setIframeSrc = async (iframeSrc) => {
+  const browserWindow = BrowserWindow.getFocusedWindow()
+  if (!browserWindow) {
+    return
+  }
+  const views = browserWindow.getBrowserViews()
+  const view = views[0]
+  if (!view) {
+    return
+  }
+  await view.webContents.loadURL(iframeSrc)
+}
+
 exports.disposeBrowserView = (id) => {
   const browserWindow = BrowserWindow.getFocusedWindow()
   if (!browserWindow) {

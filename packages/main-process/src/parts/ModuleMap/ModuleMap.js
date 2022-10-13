@@ -54,6 +54,7 @@ exports.getModuleId = (commandId) => {
     case 'ElectronBrowserView.setQuickPickItems':
     case 'ElectronBrowserView.setQuickPickValue':
     case 'ElectronBrowserView.disposeBrowserViewQuickPick':
+    case 'ElectronBrowserView.setIframeSrc':
       return ModuleId.ElectronBrowserView
     case 'ElectronBrowserViewQuickPick.createBrowserViewQuickPick':
     case 'ElectronBrowserViewQuickPick.disposeBrowserViewQuickPick':
