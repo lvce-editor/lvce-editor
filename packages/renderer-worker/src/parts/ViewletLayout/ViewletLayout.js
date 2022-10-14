@@ -1,5 +1,4 @@
 import * as Clamp from '../Clamp/Clamp.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SashType from '../SashType/SashType.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
@@ -277,14 +276,16 @@ const show = async (state, module) => {
   if (commands) {
     commands.push(['Viewlet.append', 'Layout', moduleId])
   }
-  await RendererProcess.invoke('Viewlet.executeCommands', commands || [])
   // TODO
   // - load that component
   // - if component is hidden now, return
   // - if component is still visible, render new component
   return {
-    ...state,
-    points: newPoints,
+    newState: {
+      ...state,
+      points: newPoints,
+    },
+    commands,
   }
 }
 
@@ -390,8 +391,9 @@ const loadIfVisible = async (state, module) => {
   const left = points[kLeft]
   const width = points[kWidth]
   const height = points[kHeight]
+  let commands = []
   if (visible) {
-    const commands = await ViewletManager.load({
+    commands = await ViewletManager.load({
       getModule: ViewletModule.load,
       id: moduleId,
       type: 0,
@@ -407,9 +409,11 @@ const loadIfVisible = async (state, module) => {
     if (commands) {
       commands.push(['Viewlet.append', 'Layout', moduleId])
     }
-    await RendererProcess.invoke('Viewlet.executeCommands', commands || [])
   }
-  return state
+  return {
+    newState: state,
+    commands,
+  }
 }
 
 export const loadMainIfVisible = (state) => {
@@ -568,10 +572,10 @@ export const handleSashPointerMove = (state, x, y) => {
       // TODO dispose side bar
     }
   }
-  // TODO avoid side effect here
-  // TODO render sashes together with viewlets
-  RendererProcess.invoke('Viewlet.executeCommands', commands)
-  return newState
+  return {
+    newState,
+    commands,
+  }
 }
 
 export const handleResize = (state, windowWidth, windowHeight) => {
@@ -582,12 +586,12 @@ export const handleResize = (state, windowWidth, windowHeight) => {
   getPoints(newPoints, newPoints)
   // TODO duplicate code with handleSashPointerMove
   const commands = getResizeCommands(points, newPoints)
-  // TODO avoid side effect here
-  // TODO render sashes together with viewlets
-  RendererProcess.invoke('Viewlet.executeCommands', commands)
   return {
-    ...state,
-    points: newPoints,
+    newState: {
+      ...state,
+      points: newPoints,
+    },
+    commands,
   }
 }
 
@@ -598,15 +602,18 @@ const handleSashDoubleClickPanel = (state) => {
     newPoints[kPanelHeight] = 200
     getPoints(newPoints, newPoints)
     const commands = getResizeCommands(points, newPoints)
-    // TODO avoid side effect here
-    // TODO render sashes together with viewlets
-    RendererProcess.invoke('Viewlet.executeCommands', commands)
     return {
-      ...state,
-      points: newPoints,
+      newState: {
+        ...state,
+        points: newPoints,
+      },
+      commands,
     }
   }
-  return state
+  return {
+    newState: state,
+    commands: [],
+  }
 }
 
 // TODO return commands and newState
@@ -617,15 +624,18 @@ const handleSashDoubleClickSideBar = (state) => {
     newPoints[kSideBarWidth] = 240
     getPoints(newPoints, newPoints)
     const commands = getResizeCommands(points, newPoints)
-    // TODO avoid side effect here
-    // TODO render sashes together with viewlets
-    RendererProcess.invoke('Viewlet.executeCommands', commands)
     return {
-      ...state,
-      points: newPoints,
+      newState: {
+        ...state,
+        points: newPoints,
+      },
+      commands,
     }
   }
-  return state
+  return {
+    newState: state,
+    commands: [],
+  }
 }
 
 export const handleSashDoubleClick = (state, sashId) => {

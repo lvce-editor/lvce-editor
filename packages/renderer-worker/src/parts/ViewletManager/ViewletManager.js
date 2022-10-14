@@ -54,6 +54,34 @@ const wrapViewletCommand = (id, fn) => {
   return wrappedViewletCommand
 }
 
+const wrapViewletCommandWithSideEffect = (id, fn) => {
+  const wrappedViewletCommand = async (...args) => {
+    // TODO get actual focused instance
+    const activeInstance = ViewletStates.getInstance(id)
+    if (!activeInstance) {
+      console.info(
+        `cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`
+      )
+      return
+    }
+    const oldState = activeInstance.state
+    const { newState, commands } = await fn(oldState, ...args)
+    Assert.object(newState)
+    // console.log({ fn, newState })
+    if (oldState !== newState) {
+      commands.push(...render(activeInstance.factory, oldState, newState))
+      ViewletStates.setState(id, newState)
+    }
+    console.log({ commands })
+    await RendererProcess.invoke(
+      /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
+      /* commands */ commands
+    )
+  }
+  NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, fn.name)
+  return wrappedViewletCommand
+}
+
 /**
  *
  * @param {()=>any} getModule
@@ -111,12 +139,20 @@ const getRenderCommands = (module, oldState, newState) => {
 }
 
 const maybeRegisterWrappedCommands = (module) => {
-  if (!module.Commands) {
-    return
+  if (module.Commands) {
+    for (const [key, value] of Object.entries(module.Commands)) {
+      const wrappedCommand = wrapViewletCommand(module.name, value)
+      Command.register(key, wrappedCommand)
+    }
   }
-  for (const [key, value] of Object.entries(module.Commands)) {
-    const wrappedCommand = wrapViewletCommand(module.name, value)
-    Command.register(key, wrappedCommand)
+  if (module.CommandsWithSideEffects) {
+    for (const [key, value] of Object.entries(module.CommandsWithSideEffects)) {
+      const wrappedCommand = wrapViewletCommandWithSideEffect(
+        module.name,
+        value
+      )
+      Command.register(key, wrappedCommand)
+    }
   }
 }
 
