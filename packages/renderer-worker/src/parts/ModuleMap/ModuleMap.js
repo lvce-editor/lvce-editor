@@ -130,10 +130,6 @@ export const getModuleId = (commandId) => {
     case 'FileSystem.remove':
     case 'FileSystem.writeFile':
       return ModuleId.FileSystem
-    case 'FindWidget.create':
-    case 'FindWidget.dispose':
-    case 'FindWidget.setValue':
-      return ModuleId.FindWidget
     case 'Format.hydrate':
       return ModuleId.Format
     case 'IconTheme.addIcons':

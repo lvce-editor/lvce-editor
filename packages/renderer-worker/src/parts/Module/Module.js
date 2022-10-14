@@ -68,8 +68,6 @@ export const load = (moduleId) => {
       return import('../KeyBindings/KeyBindings.ipc.js')
     case ModuleId.KeyBindingsInitial:
       return import('../KeyBindingsInitial/KeyBindingsInitial.ipc.js')
-    case ModuleId.Layout:
-      return import('../Layout/Layout.ipc.js')
     case ModuleId.Listener:
       return import('../Listener/Listener.ipc.js')
     case ModuleId.LocalStorage:
