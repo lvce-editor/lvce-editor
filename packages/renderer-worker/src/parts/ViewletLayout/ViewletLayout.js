@@ -110,6 +110,7 @@ export const getPoints = (state) => {
   }
   console.log({ p1, p2, p3, p4, p5, p6, p7, p8 })
   return {
+    ...state,
     [kActivityBarLeft]: p8,
     [kActivityBarTop]: p2,
     [kActivityBarWidth]: 48,
@@ -140,8 +141,6 @@ export const getPoints = (state) => {
     [kTitleBarWidth]: windowWidth,
     [kTitleBarHeight]: titleBarHeight,
     [kTitleBarVisible]: true,
-    [kWindowWidth]: windowWidth,
-    [kWindowHeight]: windowHeight,
   }
 }
 
@@ -426,10 +425,94 @@ export const loadTitleBarIfVisible = (state) => {
 }
 
 export const handleSashPointerDown = (state, sashId) => {
+  console.log({ sashId })
   return {
     ...state,
     [kSashId]: sashId,
   }
+}
+
+const getNewStatePointerMoveSideBar = (state, x, y) => {
+  const {
+    [kWindowWidth]: windowWidth,
+    [kActivityBarWidth]: activityBarWidth,
+    [kSideBarMinWidth]: sideBarMinWidth,
+  } = state
+  const newSideBarWidth = windowWidth - activityBarWidth - x
+  if (newSideBarWidth <= sideBarMinWidth / 2) {
+    return {
+      ...state,
+      sideBarVisible: false,
+      mainWidth: windowWidth - activityBarWidth,
+    }
+  }
+  if (newSideBarWidth <= sideBarMinWidth) {
+    return {
+      ...state,
+      sideBarWidth: sideBarMinWidth,
+      mainWidth: windowWidth - state.activityBarWidth - sideBarMinWidth,
+      sideBarLeft: windowWidth - activityBarWidth - sideBarMinWidth,
+      sideBarVisible: true,
+    }
+  }
+  return {
+    ...state,
+    sideBarVisible: true,
+    mainWidth: x,
+    sideBarLeft: x,
+    sideBarWidth: newSideBarWidth,
+  }
+}
+
+const getNewStatePointerMovePanel = (state, x, y) => {
+  const {
+    [kWindowHeight]: windowHeight,
+    [kStatusBarHeight]: statusBarHeight,
+    [kTitleBarHeight]: titleBarHeight,
+    [kActivityBarHeight]: activityBarHeight,
+    [kPanelMinHeight]: panelMinHeight,
+  } = state
+  const newPanelHeight = windowHeight - statusBarHeight - y
+  if (newPanelHeight < panelMinHeight / 2) {
+    return {
+      ...state,
+      panelVisible: false,
+      mainHeight: windowHeight - statusBarHeight - titleBarHeight,
+    }
+  }
+  if (newPanelHeight <= panelMinHeight) {
+    return {
+      ...state,
+      panelVisible: true,
+      panelHeight: panelMinHeight,
+      mainHeight: windowHeight - activityBarHeight - panelMinHeight,
+    }
+  }
+  return {
+    ...state,
+    panelVisible: true,
+    mainHeight: y - titleBarHeight,
+    panelTop: y,
+    panelHeight: windowHeight - statusBarHeight - y,
+  }
+}
+
+const getNewStatePointerMove = (state, x, y) => {
+  switch (state[kSashId]) {
+    case SashType.SideBar:
+      return getNewStatePointerMoveSideBar(state, x, y)
+    case SashType.Panel:
+      return getNewStatePointerMovePanel(state, x, y)
+    default:
+      throw new Error(`unsupported sash type ${state[kSashId]}`)
+  }
+}
+
+export const handleSashPointerMove = (state, x, y) => {
+  const newState = getNewStatePointerMove(state, x, y)
+  const newState2 = getPoints(newState)
+  // TODO resize commands, resize viewlets recursively
+  return newState2
 }
 
 export const hasFunctionalRender = true
