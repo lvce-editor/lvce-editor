@@ -19,7 +19,7 @@
 @import './parts/ViewletExtensions.css';
 @import './parts/MonacoList.css';
 @import './parts/Panel.css';
-@import './parts/Layout.css';
+@import './parts/ViewletLayout.css';
 @import './parts/Viewlet.css';
 @import './parts/ViewletOutput.css';
 @import './parts/ContextMenu.css';

@@ -202,6 +202,15 @@ const append = (parentId, childId) => {
   $Parent.append($Child)
 }
 
+const appendToBody = (childId) => {
+  const $Parent = document.body
+  const childInstance = state.instances[childId]
+  const $Child = childInstance.state.$Viewlet
+  console.log({ childId, $Child })
+  $Parent.append($Child)
+  console.log(document.body.innerHTML)
+}
+
 export const executeCommands = (commands) => {
   for (const [command, ...args] of commands) {
     switch (command) {
@@ -225,6 +234,9 @@ export const executeCommands = (commands) => {
         break
       case 'Viewlet.append':
         append(...args)
+        break
+      case 'Viewlet.appendToBody':
+        appendToBody(...args)
         break
       default:
         throw new Error(`unknown command ${command}`)

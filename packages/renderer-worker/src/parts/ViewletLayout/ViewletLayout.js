@@ -48,6 +48,8 @@ const kTitleBarHeight = 'titleBarHeight'
 const kWindowWidth = 'windowWidth'
 const kWindowHeight = 'windowHeight'
 
+const kSashId = 'sashId'
+
 export const name = 'Layout'
 
 export const getPoints = (state) => {
@@ -177,7 +179,7 @@ export const create = () => {
     [kTitleBarVisible]: false,
     [kWindowWidth]: 0,
     [kWindowHeight]: 0,
-    sashId: SashType.None,
+    [kSashId]: SashType.None,
   }
 }
 
@@ -345,9 +347,10 @@ const loadIfVisible = async (
       width,
       height,
     })
-    console.log({ commands })
+    commands.push(['Viewlet.append', 'Layout', moduleId])
     await RendererProcess.invoke('Viewlet.executeCommands', commands)
   }
+  return state
 }
 
 export const loadMainIfVisible = (state) => {
@@ -421,3 +424,51 @@ export const loadTitleBarIfVisible = (state) => {
     ViewletModuleId.TitleBar
   )
 }
+
+export const handleSashPointerDown = (state, sashId) => {
+  return {
+    ...state,
+    [kSashId]: sashId,
+  }
+}
+
+export const hasFunctionalRender = true
+
+const renderSashes = {
+  isEqual(oldState, newState) {
+    return false
+  },
+  apply(oldState, newState) {
+    const {
+      sideBarLeft,
+      sideBarTop,
+      sideBarHeight,
+      panelTop,
+      panelLeft,
+      panelWidth,
+    } = newState
+    return [
+      'Viewlet.send',
+      'Layout',
+      'setSashes',
+      {
+        id: 'SashSideBar',
+        top: sideBarTop,
+        left: sideBarLeft,
+        width: 2,
+        height: sideBarHeight,
+        direction: 'horizontal',
+      },
+      {
+        id: 'SashPanel',
+        top: panelTop,
+        left: panelLeft,
+        width: panelWidth,
+        height: 2,
+        direction: 'vertical',
+      },
+    ]
+  },
+}
+
+export const render = [renderSashes]

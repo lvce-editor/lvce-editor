@@ -26,6 +26,8 @@ export const Commands = {
   'Layout.toggleSideBar': ViewletLayout.toggleSideBar,
   'Layout.toggleStatusBar': ViewletLayout.toggleStatusBar,
   'Layout.toggleTitleBar': ViewletLayout.toggleTitleBar,
+  'Layout.handleSashPointerDown': ViewletLayout.handleSashPointerDown,
+  'Layout.handleSashPointerMove': ViewletLayout.handleSashPointerMove,
 }
 
 export * from './ViewletLayout.js'
