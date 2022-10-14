@@ -335,8 +335,10 @@ const loadIfVisible = async (
       width,
       height,
     })
-    commands.push(['Viewlet.append', 'Layout', moduleId])
-    await RendererProcess.invoke('Viewlet.executeCommands', commands)
+    if (commands) {
+      commands.push(['Viewlet.append', 'Layout', moduleId])
+    }
+    await RendererProcess.invoke('Viewlet.executeCommands', commands || [])
   }
   return state
 }
@@ -559,6 +561,18 @@ export const handleSashPointerMove = (state, x, y) => {
   // TODO avoid side effect here
   // TODO render sashes together with viewlets
   RendererProcess.invoke('Viewlet.executeCommands', commands)
+  return {
+    ...state,
+    points: newPoints,
+  }
+}
+
+export const handleResize = (state, windowWidth, windowHeight) => {
+  const { points } = state
+  const newPoints = new Uint16Array(points)
+  newPoints[kWindowWidth] = windowWidth
+  newPoints[kWindowHeight] = windowHeight
+  getPoints(newPoints, newPoints)
   return {
     ...state,
     points: newPoints,

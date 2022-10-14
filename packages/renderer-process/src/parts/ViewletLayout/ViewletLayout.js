@@ -21,6 +21,8 @@ export const create = () => {
   $Viewlet.dataset.viewletId = 'Layout'
   $Viewlet.append($SashSideBar, $SashPanel)
 
+  window.addEventListener('resize', ViewletLayoutEvents.handleResize)
+
   return {
     $Viewlet,
     $SashSideBar,

@@ -28,6 +28,8 @@ export const Implementations = 'Implementations'
 
 export const KeyBindings = 'KeyBindings'
 
+export const Layout = 'Layout'
+
 export const Main = 'Main'
 
 export const Output = 'Output'
@@ -57,5 +59,3 @@ export const TitleBar = 'TitleBar'
 export const TitleBarButtons = 'TitleBarButtons'
 
 export const TitleBarMenuBar = 'TitleBarMenuBar'
-
-export const Layout = 'Layout'

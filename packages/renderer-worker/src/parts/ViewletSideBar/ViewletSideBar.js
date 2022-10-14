@@ -1,7 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as Layout from '../Layout/Layout.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
@@ -82,21 +81,21 @@ const hydrateLazy = () => () => {
 export const showOrHideViewlet = async (state, viewletId) => {
   Assert.object(state)
   Assert.string(viewletId)
-  if (Layout.isSideBarVisible()) {
-    // TODO don't depend on sidebar directly
-    if (state.currentViewletId === viewletId) {
-      await Layout.hideSideBar()
-    } else {
-      state.currentViewletId = viewletId
-      await openViewlet(state, viewletId)
-    }
-  } else {
-    console.log('show side bar')
-    state.currentViewletId = viewletId
-    // TODO race condition: what if sidebar should be hidden again
-    // while sidebar is opening?
-    await Layout.showSideBar()
-  }
+  // if (Layout.isSideBarVisible()) {
+  //   // TODO don't depend on sidebar directly
+  //   if (state.currentViewletId === viewletId) {
+  //     await Layout.hideSideBar()
+  //   } else {
+  //     state.currentViewletId = viewletId
+  //     await openViewlet(state, viewletId)
+  //   }
+  // } else {
+  //   console.log('show side bar')
+  //   state.currentViewletId = viewletId
+  //   // TODO race condition: what if sidebar should be hidden again
+  //   // while sidebar is opening?
+  //   await Layout.showSideBar()
+  // }
 }
 
 const getContentDimensions = (dimensions) => {

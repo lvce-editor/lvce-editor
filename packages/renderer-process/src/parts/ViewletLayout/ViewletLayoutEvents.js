@@ -38,3 +38,12 @@ export const handleSashPointerDown = (event) => {
     /* id */ id
   )
 }
+
+export const handleResize = () => {
+  const { innerWidth, innerHeight } = window
+  RendererWorker.send(
+    /* Layout.handleResize */ 'Layout.handleResize',
+    /* width */ innerWidth,
+    /* height */ innerHeight
+  )
+}

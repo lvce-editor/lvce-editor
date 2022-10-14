@@ -2,6 +2,9 @@ import * as ViewletLayout from './ViewletLayout.js'
 
 // prettier-ignore
 export const Commands = {
+  'Layout.handleResize': ViewletLayout.handleResize,
+  'Layout.handleSashPointerDown': ViewletLayout.handleSashPointerDown,
+  'Layout.handleSashPointerMove': ViewletLayout.handleSashPointerMove,
   'Layout.hideActivityBar': ViewletLayout.hideActivityBar,
   'Layout.hideMain': ViewletLayout.hideMain,
   'Layout.hidePanel': ViewletLayout.hidePanel,
@@ -26,8 +29,6 @@ export const Commands = {
   'Layout.toggleSideBar': ViewletLayout.toggleSideBar,
   'Layout.toggleStatusBar': ViewletLayout.toggleStatusBar,
   'Layout.toggleTitleBar': ViewletLayout.toggleTitleBar,
-  'Layout.handleSashPointerDown': ViewletLayout.handleSashPointerDown,
-  'Layout.handleSashPointerMove': ViewletLayout.handleSashPointerMove,
 }
 
 export * from './ViewletLayout.js'
