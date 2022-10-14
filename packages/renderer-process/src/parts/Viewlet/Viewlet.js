@@ -254,6 +254,9 @@ export const show = (id) => {
 
 export const setBounds = (id, left, top, width, height) => {
   const instance = state.instances[id]
+  if (!instance) {
+    return
+  }
   const $Viewlet = instance.state.$Viewlet
   $Viewlet.style.left = `${left}px`
   $Viewlet.style.top = `${top}px`

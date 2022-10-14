@@ -526,6 +526,13 @@ const getResizeCommands = (oldPoints, newPoints) => {
       kWidth: kStatusBarWidth,
       kHeight: kStatusBarHeight,
     },
+    {
+      id: ViewletModuleId.Panel,
+      kTop: kpanelTop,
+      kLeft: kPanelLeft,
+      kWidth: kPanelWidth,
+      kHeight: kPanelHeight,
+    },
   ]
   const commands = []
   for (const module of modules) {
@@ -569,13 +576,30 @@ export const handleSashPointerMove = (state, x, y) => {
   getPoints(newPoints, newPoints)
   // TODO resize commands, resize viewlets recursively
   const commands = getResizeCommands(points, newPoints)
-  // TODO avoid side effect here
-  // TODO render sashes together with viewlets
-  RendererProcess.invoke('Viewlet.executeCommands', commands)
-  return {
+  const newState = {
     ...state,
     points: newPoints,
   }
+  if (points[kPanelVisible] !== newPoints[kPanelVisible]) {
+    if (newPoints[kPanelVisible]) {
+      // TODO await promise
+      loadPanelIfVisible(newState)
+    } else {
+      // TODO dispose panel
+    }
+  }
+  if (points[kSideBarVisible] !== newPoints[kSideBarVisible]) {
+    if (newPoints[kSideBarVisible]) {
+      // TODO await promise
+      loadSideBarIfVisible(newState)
+    } else {
+      // TODO dispose side bar
+    }
+  }
+  // TODO avoid side effect here
+  // TODO render sashes together with viewlets
+  RendererProcess.invoke('Viewlet.executeCommands', commands)
+  return newState
 }
 
 export const handleResize = (state, windowWidth, windowHeight) => {

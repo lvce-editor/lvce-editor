@@ -48,11 +48,15 @@ export const create = () => {
   $PanelHeader.append($PanelTabs)
   // const $PanelContent = document.createElement('div')
   // $PanelContent.id = 'PanelContent'
-  const $Panel = Layout.state.$Panel
-  $Panel.append($PanelHeader)
-  $Panel.ariaLabel = 'Panel'
+  const $Viewlet = document.createElement('div')
+  $Viewlet.className = 'Viewlet'
+  $Viewlet.id = 'Panel'
+  $Viewlet.dataset.viewletId = 'Panel'
+  $Viewlet.append($PanelHeader)
+  $Viewlet.ariaLabel = 'Panel'
   return {
-    $Panel,
+    $Panel: $Viewlet,
+    $Viewlet,
     $PanelTabs,
     $PanelHeader,
     $PanelContent: undefined,
