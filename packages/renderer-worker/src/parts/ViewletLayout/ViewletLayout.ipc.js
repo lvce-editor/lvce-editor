@@ -3,6 +3,7 @@ import * as ViewletLayout from './ViewletLayout.js'
 // prettier-ignore
 export const Commands = {
   'Layout.handleResize': ViewletLayout.handleResize,
+  'Layout.handleSashDoubleClick': ViewletLayout.handleSashDoubleClick,
   'Layout.handleSashPointerDown': ViewletLayout.handleSashPointerDown,
   'Layout.handleSashPointerMove': ViewletLayout.handleSashPointerMove,
   'Layout.hideActivityBar': ViewletLayout.hideActivityBar,

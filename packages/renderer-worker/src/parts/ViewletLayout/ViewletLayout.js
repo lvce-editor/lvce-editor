@@ -1,10 +1,10 @@
 import * as Clamp from '../Clamp/Clamp.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SashType from '../SashType/SashType.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const kWindowWidth = 0
 const kWindowHeight = 1
@@ -588,6 +588,54 @@ export const handleResize = (state, windowWidth, windowHeight) => {
   return {
     ...state,
     points: newPoints,
+  }
+}
+
+const handleSashDoubleClickPanel = (state) => {
+  const { points } = state
+  if (points[kPanelVisible]) {
+    const newPoints = new Uint16Array(points)
+    newPoints[kPanelHeight] = 200
+    getPoints(newPoints, newPoints)
+    const commands = getResizeCommands(points, newPoints)
+    // TODO avoid side effect here
+    // TODO render sashes together with viewlets
+    RendererProcess.invoke('Viewlet.executeCommands', commands)
+    return {
+      ...state,
+      points: newPoints,
+    }
+  }
+  return state
+}
+
+// TODO return commands and newState
+const handleSashDoubleClickSideBar = (state) => {
+  const { points } = state
+  if (points[kSideBarVisible]) {
+    const newPoints = new Uint16Array(points)
+    newPoints[kSideBarWidth] = 240
+    getPoints(newPoints, newPoints)
+    const commands = getResizeCommands(points, newPoints)
+    // TODO avoid side effect here
+    // TODO render sashes together with viewlets
+    RendererProcess.invoke('Viewlet.executeCommands', commands)
+    return {
+      ...state,
+      points: newPoints,
+    }
+  }
+  return state
+}
+
+export const handleSashDoubleClick = (state, sashId) => {
+  switch (sashId) {
+    case SashType.Panel:
+      return handleSashDoubleClickPanel(state)
+    case SashType.SideBar:
+      return handleSashDoubleClickSideBar(state)
+    default:
+      throw new Error(`unsupported sash type ${sashId}`)
   }
 }
 

@@ -27,14 +27,22 @@ export const handleSashPointerUp = (event) => {
 }
 
 export const handleSashPointerDown = (event) => {
-  const { target, pointerId } = event
+  const { target, pointerId, detail } = event
   target.setPointerCapture(pointerId)
   target.addEventListener('pointermove', handleSashPointerMove)
   target.addEventListener('pointerup', handleSashPointerUp)
-  const $Target = event.target
-  const id = getSashId($Target)
+  const id = getSashId(target)
   RendererWorker.send(
     /* Layout.handleSashPointerDown */ 'Layout.handleSashPointerDown',
+    /* id */ id
+  )
+}
+
+export const handleSashDoubleClick = (event) => {
+  const { target } = event
+  const id = getSashId(target)
+  RendererWorker.send(
+    /* Layout.handleSashDoubleClick */ 'Layout.handleSashDoubleClick',
     /* id */ id
   )
 }
