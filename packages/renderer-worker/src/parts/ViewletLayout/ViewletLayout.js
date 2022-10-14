@@ -573,6 +573,11 @@ export const handleResize = (state, windowWidth, windowHeight) => {
   newPoints[kWindowWidth] = windowWidth
   newPoints[kWindowHeight] = windowHeight
   getPoints(newPoints, newPoints)
+  // TODO duplicate code with handleSashPointerMove
+  const commands = getResizeCommands(points, newPoints)
+  // TODO avoid side effect here
+  // TODO render sashes together with viewlets
+  RendererProcess.invoke('Viewlet.executeCommands', commands)
   return {
     ...state,
     points: newPoints,
