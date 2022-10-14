@@ -4,6 +4,8 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Layout from '../Layout/Layout.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const state = {
   /**
@@ -63,9 +65,9 @@ export const addRootMenuInternal = (menu) => {
 const getMenuBounds = (x, y, items) => {
   const menuWidth = CONTEXT_MENU_WIDTH
   const menuHeight = getMenuHeight(items)
-
-  const windowWidth = Layout.state.windowWidth
-  const windowHeight = Layout.state.windowHeight
+  const layoutState = ViewletStates.getState(ViewletModuleId.Layout)
+  const windowWidth = layoutState.points[0]
+  const windowHeight = layoutState.points[1]
   // TODO maybe only send labels and keybindings to ui (id not needed on ui)
   // TODO what about separators?
 
