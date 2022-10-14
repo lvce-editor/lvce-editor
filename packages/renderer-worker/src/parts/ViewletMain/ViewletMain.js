@@ -549,6 +549,7 @@ export const closeTabsLeft = async (state) => {
 }
 
 export const resize = (state, dimensions) => {
+  const { editors } = state
   const top = dimensions.top + TAB_HEIGHT
   const left = dimensions.left
   const width = dimensions.width
@@ -559,7 +560,10 @@ export const resize = (state, dimensions) => {
     width,
     height,
   }
-  const commands = Viewlet.resize('EditorText', childDimensions)
+  const commands =
+    editors.length > 0
+      ? Viewlet.resize(ViewletMap.getId(editors[0]), childDimensions)
+      : []
   return {
     newState: {
       ...state,
