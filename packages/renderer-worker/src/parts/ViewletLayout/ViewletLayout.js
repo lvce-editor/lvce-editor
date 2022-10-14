@@ -480,8 +480,10 @@ const getNewStatePointerMove = (sashId, points, x, y) => {
   }
 }
 
-const isEqual = (oldPoints, newPoints, kWidth, kHeight) => {
+const isEqual = (oldPoints, newPoints, kTop, kLeft, kWidth, kHeight) => {
   return (
+    oldPoints[kTop] === newPoints[kTop] &&
+    oldPoints[kLeft] === newPoints[kLeft] &&
     oldPoints[kWidth] === newPoints[kWidth] &&
     oldPoints[kHeight] === newPoints[kHeight]
   )
@@ -527,7 +529,16 @@ const getResizeCommands = (oldPoints, newPoints) => {
   ]
   const commands = []
   for (const module of modules) {
-    if (!isEqual(oldPoints, newPoints, module.kWidth, module.kHeight)) {
+    if (
+      !isEqual(
+        oldPoints,
+        newPoints,
+        module.kTop,
+        module.kLeft,
+        module.kWidth,
+        module.kHeight
+      )
+    ) {
       const newTop = newPoints[module.kTop]
       const newLeft = newPoints[module.kLeft]
       const newWidth = newPoints[module.kWidth]
