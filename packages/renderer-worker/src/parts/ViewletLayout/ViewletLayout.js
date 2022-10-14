@@ -118,7 +118,7 @@ export const getPoints = (source, destination) => {
   destination[kMainLeft] = p6
   destination[kMainTop] = p2
   destination[kMainWidth] = p7 - p6
-  destination[kMainHeight] = p4 - p3
+  destination[kMainHeight] = p3 - p2
   destination[kMainVisible] = 1
   destination[kPanelLeft] = p6
   destination[kpanelTop] = p3
@@ -173,12 +173,12 @@ export const loadContent = (state, savedState) => {
   newPoints[kSideBarMinWidth] = 170
   newPoints[kSideBarVisible] = 1
   newPoints[kSideBarWidth] = 240
-  newPoints[kWindowHeight] = windowHeight
-  newPoints[kWindowWidth] = windowWidth
+  newPoints[kStatusBarHeight] = 20
+  newPoints[kStatusBarVisible] = 1
   newPoints[kTitleBarHeight] = 20
   newPoints[kTitleBarVisible] = 1
-  newPoints[kStatusBarVisible] = 1
-  newPoints[kStatusBarHeight] = 20
+  newPoints[kWindowHeight] = windowHeight
+  newPoints[kWindowWidth] = windowWidth
   // TODO get side bar min width from preferences
   getPoints(newPoints, newPoints)
   return {
