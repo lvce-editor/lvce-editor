@@ -2,12 +2,12 @@ import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Layout from '../Layout/Layout.js'
-import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+
+const SIDE_BAR_TITLE_AREA_HEIGHT = 35
 
 export const name = 'SideBar'
 
@@ -18,6 +18,7 @@ export const create = (id, uri, left, top, width, height) => {
     top,
     width,
     height,
+    titleAreaHeight: SIDE_BAR_TITLE_AREA_HEIGHT,
   }
 }
 
@@ -42,10 +43,12 @@ export const loadContent = async (state, savedState) => {
 // }
 
 // TODO
-export const getChildren = () => {
+export const getChildren = (state) => {
+  const { top, left, width, height, titleAreaHeight, currentViewletId } = state
   return [
     {
-      id: ViewletModuleId.Explorer,
+      id: currentViewletId,
+      ...getContentDimensions(state),
     },
   ]
 }
@@ -74,8 +77,6 @@ const getSideBarViewlet = async () => {
 const hydrateLazy = () => () => {
   // TODO update file icons in explorer
 }
-
-const SIDE_BAR_TITLE_AREA_HEIGHT = 35
 
 // TODO add test for this
 export const showOrHideViewlet = async (state, viewletId) => {

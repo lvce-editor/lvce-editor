@@ -331,12 +331,12 @@ const loadIfVisible = async (
   const left = state[kLeft]
   const width = state[kWidth]
   const height = state[kHeight]
-  console.log('load', kVisible, visible, state)
   if (visible) {
     const commands = await ViewletManager.load({
       getModule: ViewletModule.load,
       id: moduleId,
       type: 0,
+      // @ts-ignore
       uri: '',
       show: false,
       focus: false,

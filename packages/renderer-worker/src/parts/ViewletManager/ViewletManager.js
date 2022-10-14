@@ -188,20 +188,22 @@ export const load = async (
 
     if (module.getChildren) {
       const children = module.getChildren(newState)
-      const childModules = await Promise.all(
-        children.map((child) => child.id).map(viewlet.getModule)
-      )
-
-      for (const childModule of childModules) {
+      for (const child of children) {
+        const childModule = await viewlet.getModule(child.id)
         await RendererProcess.invoke(
           /* Viewlet.load */ 'Viewlet.loadModule',
-          /* id */ childModule.name
+          /* id */ child.id
         )
         maybeRegisterWrappedCommands(childModule)
-      }
-
-      for (const childModule of childModules) {
-        const oldState = childModule.create()
+        // TODO get position of child module
+        const oldState = childModule.create(
+          '',
+          '',
+          child.left,
+          child.top,
+          child.width,
+          child.height
+        )
         const newState = await childModule.loadContent(oldState)
         const childInstance = {
           state: newState,
