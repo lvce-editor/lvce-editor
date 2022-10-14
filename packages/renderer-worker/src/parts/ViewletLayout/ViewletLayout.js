@@ -5,72 +5,71 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
-const kMainVisible = 'mainVisible'
-const kMainTop = 'mainTop'
-const kMainLeft = 'mainLeft'
-const kMainWidth = 'mainWidth'
-const kMainHeight = 'mainHeight'
+const kWindowWidth = 0
+const kWindowHeight = 1
 
-const kActivityBarVisible = 'activityBarVisible'
-const kActivityBarTop = 'activityBarTop'
-const kActivityBarLeft = 'activityBarLeft'
-const kActivityBarWidth = 'activityBarWidth'
-const kActivityBarHeight = 'activityBarHeight'
+const kMainVisible = 2
+const kMainTop = 3
+const kMainLeft = 4
+const kMainWidth = 5
+const kMainHeight = 6
 
-const kSideBarVisible = 'sideBarVisible'
-const kSideBarTop = 'sideBarTop'
-const kSideBarLeft = 'sideBarLeft'
-const kSideBarWidth = 'sideBarWidth'
-const kSideBarHeight = 'sideBarHeight'
-const kSideBarMinWidth = 'sideBarMinWidth'
-const kSideBarMaxWidth = 'sideBarMaxWidth'
+const kActivityBarVisible = 7
+const kActivityBarTop = 8
+const kActivityBarLeft = 9
+const kActivityBarWidth = 10
+const kActivityBarHeight = 11
 
-const kPanelVisible = 'panelVisible'
-const kpanelTop = 'panelTop'
-const kPanelLeft = 'panelLeft'
-const kPanelWidth = 'panelWidth'
-const kPanelHeight = 'panelHeight'
-const kPanelMinHeight = 'panelMinHeight'
-const kPanelMaxHeight = 'panelMaxHeight'
+const kSideBarVisible = 12
+const kSideBarTop = 13
+const kSideBarLeft = 14
+const kSideBarWidth = 15
+const kSideBarHeight = 16
+const kSideBarMinWidth = 17
+const kSideBarMaxWidth = 18
 
-const kStatusBarVisible = 'statusBarVisible'
-const kStatusBarTop = 'statusBarTop'
-const kStatusBarLeft = 'statusBarLeft'
-const kStatusBarWidth = 'statusBarWidth'
-const kStatusBarHeight = 'statusBarHeight'
+const kPanelVisible = 19
+const kpanelTop = 20
+const kPanelLeft = 21
+const kPanelWidth = 22
+const kPanelHeight = 23
+const kPanelMinHeight = 24
+const kPanelMaxHeight = 25
 
-const kTitleBarVisible = 'titleBarVisible'
-const kTitleBarTop = 'titleBarTop'
-const kTitleBarLeft = 'titleBarLeft'
-const kTitleBarWidth = 'titleBarWidth'
-const kTitleBarHeight = 'titleBarHeight'
+const kStatusBarVisible = 26
+const kStatusBarTop = 27
+const kStatusBarLeft = 28
+const kStatusBarWidth = 29
+const kStatusBarHeight = 30
 
-const kWindowWidth = 'windowWidth'
-const kWindowHeight = 'windowHeight'
+const kTitleBarVisible = 31
+const kTitleBarTop = 32
+const kTitleBarLeft = 33
+const kTitleBarWidth = 34
+const kTitleBarHeight = 35
+
+const kTotal = 36
 
 const kSashId = 'sashId'
 
 export const name = 'Layout'
 
-export const getPoints = (state) => {
-  const {
-    [kActivityBarVisible]: activityBarVisible,
-    [kPanelVisible]: panelVisible,
-    [kSideBarVisible]: sideBarVisible,
-    [kStatusBarVisible]: statusBarVisible,
-    [kTitleBarVisible]: titleBarVisible,
-    [kWindowWidth]: windowWidth,
-    [kWindowHeight]: windowHeight,
-    [kSideBarMinWidth]: sideBarMinWidth,
-    [kSideBarMaxWidth]: sideBarMaxWidth,
-    [kPanelMinHeight]: panelMinHeight,
-    [kPanelMaxHeight]: panelMaxHeight,
-    [kTitleBarHeight]: titleBarHeight,
-    [kPanelHeight]: panelHeight,
-    [kSideBarWidth]: sideBarWidth,
-  } = state
+export const getPoints = (source, destination) => {
+  const activityBarVisible = source[kActivityBarVisible]
+  const panelVisible = source[kPanelVisible]
+  const sideBarVisible = source[kSideBarVisible]
+  const statusBarVisible = source[kStatusBarVisible]
+  const titleBarVisible = source[kTitleBarVisible]
+  const windowWidth = source[kWindowWidth]
+  const windowHeight = source[kWindowHeight]
+  const sideBarMinWidth = source[kSideBarMinWidth]
+  const sideBarMaxWidth = source[kSideBarMaxWidth]
+  const panelMinHeight = source[kPanelMinHeight]
+  const panelMaxHeight = source[kPanelMaxHeight]
+  const titleBarHeight = source[kTitleBarHeight]
+  const sideBarWidth = source[kSideBarWidth]
+  const panelHeight = source[kPanelHeight]
 
-  console.log({ state })
   const newActivityBarWidth = 48 // TODO put magic numbers somewhere
   const newSideBarWidth = Clamp.clamp(
     sideBarWidth,
@@ -108,76 +107,41 @@ export const getPoints = (state) => {
   if (sideBarVisible) {
     p7 = p8 - newSideBarWidth
   }
-  console.log({ p1, p2, p3, p4, p5, p6, p7, p8 })
-  return {
-    ...state,
-    [kActivityBarLeft]: p8,
-    [kActivityBarTop]: p2,
-    [kActivityBarWidth]: 48,
-    [kActivityBarHeight]: p4 - p2,
-    [kActivityBarVisible]: activityBarVisible,
-    [kMainLeft]: p6,
-    [kMainTop]: p2,
-    [kMainWidth]: p7 - p6,
-    [kMainHeight]: p3 - p2,
-    [kMainVisible]: true,
-    [kPanelLeft]: p6,
-    [kpanelTop]: p3,
-    [kPanelWidth]: p8 - p6,
-    [kPanelHeight]: p4 - p3,
-    [kPanelVisible]: panelVisible,
-    [kSideBarLeft]: p7,
-    [kSideBarTop]: p2,
-    [kSideBarWidth]: p8 - p7,
-    [kSideBarHeight]: p3 - p2,
-    [kSideBarVisible]: sideBarVisible,
-    [kStatusBarLeft]: p1,
-    [kStatusBarTop]: p4,
-    [kStatusBarWidth]: windowWidth,
-    [kStatusBarHeight]: 20,
-    [kStatusBarVisible]: statusBarVisible,
-    [kTitleBarLeft]: p6,
-    [kTitleBarTop]: p1,
-    [kTitleBarWidth]: windowWidth,
-    [kTitleBarHeight]: titleBarHeight,
-    [kTitleBarVisible]: true,
-  }
+  destination[kActivityBarLeft] = p8
+  destination[kActivityBarTop] = p2
+  destination[kActivityBarWidth] = 48
+  destination[kActivityBarHeight] = p4 - p2
+  destination[kActivityBarVisible] = activityBarVisible
+  destination[kMainLeft] = p6
+  destination[kMainTop] = p2
+  destination[kMainWidth] = p7 - p6
+  destination[kMainHeight] = p4 - p3
+  destination[kMainVisible] = 1
+  destination[kPanelLeft] = p6
+  destination[kpanelTop] = p3
+  destination[kPanelWidth] = p8 - p6
+  destination[kPanelHeight] = p4 - p3
+  destination[kPanelVisible] = panelVisible
+  destination[kSideBarLeft] = p7
+  destination[kSideBarTop] = p2
+  destination[kSideBarWidth] = p8 - p7
+  destination[kSideBarHeight] = p3 - p2
+  destination[kSideBarVisible] = sideBarVisible
+  destination[kStatusBarLeft] = p1
+  destination[kStatusBarTop] = p4
+  destination[kStatusBarWidth] = windowWidth
+  destination[kStatusBarHeight] = 20
+  destination[kStatusBarVisible] = statusBarVisible
+  destination[kTitleBarLeft] = p6
+  destination[kTitleBarTop] = p1
+  destination[kTitleBarWidth] = windowWidth
+  destination[kTitleBarHeight] = titleBarHeight
+  destination[kTitleBarVisible] = titleBarVisible
 }
 
 export const create = () => {
   return {
-    [kActivityBarLeft]: 0,
-    [kActivityBarTop]: 0,
-    [kActivityBarWidth]: 0,
-    [kActivityBarHeight]: 0,
-    [kActivityBarVisible]: false,
-    [kMainLeft]: 0,
-    [kMainTop]: 0,
-    [kMainWidth]: 0,
-    [kMainHeight]: 0,
-    [kMainVisible]: false,
-    [kPanelLeft]: 0,
-    [kpanelTop]: 0,
-    [kPanelWidth]: 0,
-    [kPanelHeight]: 0,
-    [kPanelVisible]: false,
-    [kSideBarLeft]: 0,
-    [kSideBarTop]: 0,
-    [kSideBarWidth]: 0,
-    [kSideBarHeight]: 0,
-    [kSideBarVisible]: false,
-    [kStatusBarLeft]: 0,
-    [kStatusBarTop]: 0,
-    [kStatusBarWidth]: 0,
-    [kStatusBarHeight]: 0,
-    [kStatusBarVisible]: false,
-    [kTitleBarLeft]: 0,
-    [kTitleBarTop]: 0,
-    [kTitleBarWidth]: 0,
-    [kTitleBarHeight]: 0,
-    [kTitleBarVisible]: false,
-    [kWindowWidth]: 0,
-    [kWindowHeight]: 0,
+    points: new Uint16Array(kTotal),
     [kSashId]: SashType.None,
   }
 }
@@ -186,28 +150,29 @@ export const loadContent = (state, savedState) => {
   const { Layout } = savedState
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds
-  console.log({ savedState })
+  const { points } = state
+  const newPoints = new Uint16Array(points)
+  newPoints[kActivityBarVisible] = 1
+  newPoints[kActivityBarWidth] = 48
+  newPoints[kMainVisible] = 1
+  newPoints[kPanelHeight] = 160
+  newPoints[kPanelMaxHeight] = 600
+  newPoints[kPanelMinHeight] = 150
+  newPoints[kSideBarMaxWidth] = 9999999
+  newPoints[kSideBarMinWidth] = 170
+  newPoints[kSideBarVisible] = 1
+  newPoints[kSideBarWidth] = 240
+  newPoints[kWindowHeight] = windowHeight
+  newPoints[kWindowWidth] = windowWidth
+  newPoints[kTitleBarHeight] = 20
+  newPoints[kTitleBarVisible] = 1
+  newPoints[kStatusBarVisible] = 1
   // TODO get side bar min width from preferences
-  const newState = getPoints({
+  getPoints(newPoints, newPoints)
+  return {
     ...state,
-    [kActivityBarVisible]: true,
-    [kActivityBarWidth]: 48,
-    [kMainVisible]: true,
-    [kPanelHeight]: 160,
-    [kPanelMaxHeight]: 600,
-    [kPanelMinHeight]: 150,
-    [kSideBarMaxWidth]: Number.POSITIVE_INFINITY,
-    [kSideBarMinWidth]: 170,
-    [kSideBarVisible]: true,
-    [kSideBarWidth]: 240,
-    [kWindowHeight]: windowHeight,
-    [kWindowWidth]: windowWidth,
-    [kTitleBarHeight]: 20,
-    [kTitleBarVisible]: true,
-    [kStatusBarVisible]: true,
-  })
-  console.log({ newState })
-  return newState
+    points: newPoints,
+  }
 }
 
 const getDefaultTitleBarHeight = () => {
@@ -220,30 +185,40 @@ const getDefaultTitleBarHeight = () => {
 }
 
 const show = (state, key) => {
-  const newPoints = getPoints({
-    ...state,
-    [key]: true,
-  })
+  const { points } = state
+  const newPoints = new Uint16Array(points)
+  newPoints[key] = 1
+  getPoints(newPoints, newPoints)
   // TODO
   // - load that component
   // - if component is hidden now, return
   // - if component is still visible, render new component
-  return newPoints
+  return {
+    ...state,
+    points: newPoints,
+  }
 }
 
 const hide = (state, key) => {
-  return getPoints({
+  const { points } = state
+  const newPoints = new Uint16Array(points)
+  newPoints[key] = 0
+  getPoints(newPoints, newPoints)
+  return {
     ...state,
-    [key]: false,
-  })
+    points: newPoints,
+  }
 }
 
 const toggle = (state, key) => {
-  const newPoints = getPoints({
+  const { points } = state
+  const newPoints = new Uint16Array(points)
+  newPoints[key] = points[key] ? 0 : 1
+  getPoints(newPoints, newPoints)
+  return {
     ...state,
-    [key]: !state[key],
-  })
-  return newPoints
+    points: newPoints,
+  }
 }
 
 export const showSideBar = (state) => {
@@ -327,11 +302,12 @@ const loadIfVisible = async (
   kHeight,
   moduleId
 ) => {
-  const visible = state[kVisible]
-  const top = state[kTop]
-  const left = state[kLeft]
-  const width = state[kWidth]
-  const height = state[kHeight]
+  const { points } = state
+  const visible = points[kVisible]
+  const top = points[kTop]
+  const left = points[kLeft]
+  const width = points[kWidth]
+  const height = points[kHeight]
   if (visible) {
     const commands = await ViewletManager.load({
       getModule: ViewletModule.load,
@@ -425,7 +401,6 @@ export const loadTitleBarIfVisible = (state) => {
 }
 
 export const handleSashPointerDown = (state, sashId) => {
-  console.log({ sashId })
   return {
     ...state,
     [kSashId]: sashId,
@@ -433,68 +408,52 @@ export const handleSashPointerDown = (state, sashId) => {
 }
 
 const getNewStatePointerMoveSideBar = (state, x, y) => {
-  const {
-    [kWindowWidth]: windowWidth,
-    [kActivityBarWidth]: activityBarWidth,
-    [kSideBarMinWidth]: sideBarMinWidth,
-  } = state
+  const { points } = state
+  const windowWidth = points[kWindowWidth]
+  const activityBarWidth = points[kActivityBarWidth]
+  const sideBarMinWidth = points[kSideBarMinWidth]
   const newSideBarWidth = windowWidth - activityBarWidth - x
+  const newPoints = new Uint16Array(points)
   if (newSideBarWidth <= sideBarMinWidth / 2) {
-    return {
-      ...state,
-      sideBarVisible: false,
-      mainWidth: windowWidth - activityBarWidth,
-    }
+    newPoints[kSideBarVisible] = 0
+    newPoints[kMainWidth] = windowWidth - activityBarWidth
+  } else if (newSideBarWidth <= sideBarMinWidth) {
+    newPoints[kSideBarWidth] = sideBarMinWidth
+    newPoints[kMainWidth] = windowWidth - activityBarWidth - sideBarMinWidth
+    newPoints[kSideBarLeft] = windowWidth - activityBarWidth - sideBarMinWidth
+    newPoints[kSideBarVisible] = 1
+  } else {
+    newPoints[kSideBarVisible] = 1
+    newPoints[kMainWidth] = x
+    newPoints[kSideBarLeft] = x
+    newPoints[kSideBarWidth] = newSideBarWidth
   }
-  if (newSideBarWidth <= sideBarMinWidth) {
-    return {
-      ...state,
-      sideBarWidth: sideBarMinWidth,
-      mainWidth: windowWidth - state.activityBarWidth - sideBarMinWidth,
-      sideBarLeft: windowWidth - activityBarWidth - sideBarMinWidth,
-      sideBarVisible: true,
-    }
-  }
-  return {
-    ...state,
-    sideBarVisible: true,
-    mainWidth: x,
-    sideBarLeft: x,
-    sideBarWidth: newSideBarWidth,
-  }
+  return newPoints
 }
 
 const getNewStatePointerMovePanel = (state, x, y) => {
-  const {
-    [kWindowHeight]: windowHeight,
-    [kStatusBarHeight]: statusBarHeight,
-    [kTitleBarHeight]: titleBarHeight,
-    [kActivityBarHeight]: activityBarHeight,
-    [kPanelMinHeight]: panelMinHeight,
-  } = state
+  const { points } = state
+  const windowHeight = points[kWindowHeight]
+  const statusBarHeight = points[kStatusBarHeight]
+  const titleBarHeight = points[kTitleBarHeight]
+  const activityBarHeight = points[kActivityBarHeight]
+  const panelMinHeight = points[kPanelMinHeight]
   const newPanelHeight = windowHeight - statusBarHeight - y
+  const newPoints = new Uint16Array(points)
   if (newPanelHeight < panelMinHeight / 2) {
-    return {
-      ...state,
-      panelVisible: false,
-      mainHeight: windowHeight - statusBarHeight - titleBarHeight,
-    }
+    newPoints[kPanelVisible] = 0
+    newPoints[kMainHeight] = windowHeight - statusBarHeight - titleBarHeight
+  } else if (newPanelHeight <= panelMinHeight) {
+    newPoints[kPanelVisible] = 1
+    newPoints[kPanelHeight] = panelMinHeight
+    newPoints[kMainHeight] = windowHeight - activityBarHeight - panelMinHeight
+  } else {
+    newPoints[kPanelVisible] = 1
+    newPoints[kMainHeight] = y - titleBarHeight
+    newPoints[kpanelTop] = y
+    newPoints[kPanelHeight] = windowHeight - statusBarHeight - y
   }
-  if (newPanelHeight <= panelMinHeight) {
-    return {
-      ...state,
-      panelVisible: true,
-      panelHeight: panelMinHeight,
-      mainHeight: windowHeight - activityBarHeight - panelMinHeight,
-    }
-  }
-  return {
-    ...state,
-    panelVisible: true,
-    mainHeight: y - titleBarHeight,
-    panelTop: y,
-    panelHeight: windowHeight - statusBarHeight - y,
-  }
+  return newPoints
 }
 
 const getNewStatePointerMove = (state, x, y) => {
@@ -509,10 +468,13 @@ const getNewStatePointerMove = (state, x, y) => {
 }
 
 export const handleSashPointerMove = (state, x, y) => {
-  const newState = getNewStatePointerMove(state, x, y)
-  const newState2 = getPoints(newState)
+  const newPoints = getNewStatePointerMove(state, x, y)
+  getPoints(newPoints, newPoints)
   // TODO resize commands, resize viewlets recursively
-  return newState2
+  return {
+    ...state,
+    points: newPoints,
+  }
 }
 
 export const hasFunctionalRender = true
@@ -522,14 +484,13 @@ const renderSashes = {
     return false
   },
   apply(oldState, newState) {
-    const {
-      sideBarLeft,
-      sideBarTop,
-      sideBarHeight,
-      panelTop,
-      panelLeft,
-      panelWidth,
-    } = newState
+    const { points } = newState
+    const sideBarLeft = points[kSideBarLeft]
+    const sideBarTop = points[kSideBarTop]
+    const sideBarHeight = points[kSideBarHeight]
+    const panelTop = points[kpanelTop]
+    const panelLeft = points[kPanelLeft]
+    const panelWidth = points[kPanelWidth]
     return [
       'Viewlet.send',
       'Layout',
