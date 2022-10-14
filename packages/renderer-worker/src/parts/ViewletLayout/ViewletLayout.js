@@ -53,6 +53,60 @@ const kTotal = 36
 
 const kSashId = 'sashId'
 
+const mMain = {
+  moduleId: ViewletModuleId.Main,
+  kVisible: kMainVisible,
+  kTop: kMainTop,
+  kLeft: kMainLeft,
+  kWidth: kMainWidth,
+  kHeight: kMainHeight,
+}
+
+const mActivityBar = {
+  moduleId: ViewletModuleId.ActivityBar,
+  kVisible: kActivityBarVisible,
+  kTop: kActivityBarTop,
+  kLeft: kActivityBarLeft,
+  kWidth: kActivityBarWidth,
+  kHeight: kActivityBarHeight,
+}
+
+const mSideBar = {
+  moduleId: ViewletModuleId.SideBar,
+  kVisible: kSideBarVisible,
+  kTop: kSideBarTop,
+  kLeft: kSideBarLeft,
+  kWidth: kSideBarWidth,
+  kHeight: kSideBarHeight,
+}
+
+const mTitleBar = {
+  moduleId: ViewletModuleId.TitleBar,
+  kVisible: kTitleBarVisible,
+  kTop: kTitleBarTop,
+  kLeft: kTitleBarLeft,
+  kWidth: kTitleBarWidth,
+  kHeight: kTitleBarHeight,
+}
+
+const mStatusBar = {
+  moduleId: ViewletModuleId.StatusBar,
+  kVisible: kStatusBarVisible,
+  kTop: kStatusBarTop,
+  kLeft: kStatusBarLeft,
+  kWidth: kStatusBarWidth,
+  kHeight: kStatusBarHeight,
+}
+
+const mPanel = {
+  moduleId: ViewletModuleId.Panel,
+  kVisible: kPanelVisible,
+  kTop: kpanelTop,
+  kLeft: kPanelLeft,
+  kWidth: kPanelWidth,
+  kHeight: kPanelHeight,
+}
+
 export const name = 'Layout'
 
 export const getPoints = (source, destination) => {
@@ -197,11 +251,33 @@ const getDefaultTitleBarHeight = () => {
   // }
 }
 
-const show = (state, key) => {
+const show = async (state, module) => {
   const { points } = state
+  const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
   const newPoints = new Uint16Array(points)
-  newPoints[key] = 1
+  newPoints[kVisible] = 1
   getPoints(newPoints, newPoints)
+  const top = newPoints[kTop]
+  const left = newPoints[kLeft]
+  const width = newPoints[kWidth]
+  const height = newPoints[kHeight]
+  const commands = await ViewletManager.load({
+    getModule: ViewletModule.load,
+    id: moduleId,
+    type: 0,
+    // @ts-ignore
+    uri: '',
+    show: false,
+    focus: false,
+    top,
+    left,
+    width,
+    height,
+  })
+  if (commands) {
+    commands.push(['Viewlet.append', 'Layout', moduleId])
+  }
+  await RendererProcess.invoke('Viewlet.executeCommands', commands || [])
   // TODO
   // - load that component
   // - if component is hidden now, return
@@ -212,10 +288,11 @@ const show = (state, key) => {
   }
 }
 
-const hide = (state, key) => {
+const hide = (state, module) => {
   const { points } = state
+  const { kVisible } = module
   const newPoints = new Uint16Array(points)
-  newPoints[key] = 0
+  newPoints[kVisible] = 0
   getPoints(newPoints, newPoints)
   return {
     ...state,
@@ -223,99 +300,90 @@ const hide = (state, key) => {
   }
 }
 
-const toggle = (state, key) => {
+const toggle = (state, module) => {
   const { points } = state
-  const newPoints = new Uint16Array(points)
-  newPoints[key] = points[key] ? 0 : 1
-  getPoints(newPoints, newPoints)
-  return {
-    ...state,
-    points: newPoints,
+  const { kVisible } = module
+  if (points[kVisible]) {
+    return hide(state, module)
   }
+  return show(state, module)
 }
 
 export const showSideBar = (state) => {
-  return show(state, kSideBarVisible)
+  return show(state, mSideBar)
 }
 
 export const hideSideBar = (state) => {
-  return hide(state, kSideBarVisible)
+  return hide(state, mSideBar)
 }
 
 export const toggleSideBar = (state) => {
-  return toggle(state, kSideBarVisible)
+  return toggle(state, mSideBar)
 }
 
 export const showPanel = (state) => {
-  return show(state, kPanelVisible)
+  return show(state, mPanel)
 }
 
 export const hidePanel = (state) => {
-  return hide(state, kPanelVisible)
+  return hide(state, mPanel)
 }
 
 export const togglePanel = (state) => {
-  return toggle(state, kPanelVisible)
+  return toggle(state, mPanel)
 }
 
 export const showActivityBar = (state) => {
-  return show(state, kActivityBarVisible)
+  return show(state, mActivityBar)
 }
 
 export const hideActivityBar = (state) => {
-  return hide(state, kActivityBarVisible)
+  return hide(state, mActivityBar)
 }
 
 export const toggleActivityBar = (state) => {
-  return toggle(state, kActivityBarVisible)
+  return toggle(state, mActivityBar)
 }
 
 export const showStatusBar = (state) => {
-  return show(state, kStatusBarVisible)
+  return show(state, mStatusBar)
 }
 
 export const hideStatusBar = (state) => {
-  return hide(state, kStatusBarVisible)
+  return hide(state, mStatusBar)
 }
 
 export const toggleStatusBar = (state) => {
-  return toggle(state, kStatusBarVisible)
+  return toggle(state, mStatusBar)
 }
 
 export const showTitleBar = (state) => {
-  return show(state, kTitleBarVisible)
+  return show(state, mTitleBar)
 }
 
 export const hideTitleBar = (state) => {
-  return hide(state, kTitleBarVisible)
+  return hide(state, mTitleBar)
 }
 
 export const toggleTitleBar = (state) => {
-  return toggle(state, kTitleBarVisible)
+  return toggle(state, mTitleBar)
 }
 
 export const showMain = (state) => {
-  return show(state, kMainVisible)
+  return show(state, mMain)
 }
 
 export const hideMain = (state) => {
-  return hide(state, kMainVisible)
+  return hide(state, mMain)
 }
 
 export const toggleMain = (state) => {
-  return toggle(state, kMainVisible)
+  return toggle(state, mMain)
 }
 
-const loadIfVisible = async (
-  state,
-  kVisible,
-  kTop,
-  kLeft,
-  kWidth,
-  kHeight,
-  moduleId
-) => {
+const loadIfVisible = async (state, module) => {
   const { points } = state
+  const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
   const visible = points[kVisible]
   const top = points[kTop]
   const left = points[kLeft]
@@ -344,75 +412,27 @@ const loadIfVisible = async (
 }
 
 export const loadMainIfVisible = (state) => {
-  return loadIfVisible(
-    state,
-    kMainVisible,
-    kMainTop,
-    kMainLeft,
-    kMainWidth,
-    kMainHeight,
-    ViewletModuleId.Main
-  )
+  return loadIfVisible(state, mMain)
 }
 
 export const loadSideBarIfVisible = (state) => {
-  return loadIfVisible(
-    state,
-    kSideBarVisible,
-    kSideBarTop,
-    kSideBarLeft,
-    kSideBarWidth,
-    kSideBarHeight,
-    ViewletModuleId.SideBar
-  )
+  return loadIfVisible(state, mSideBar)
 }
 
 export const loadPanelIfVisible = (state) => {
-  return loadIfVisible(
-    state,
-    kPanelVisible,
-    kpanelTop,
-    kPanelLeft,
-    kPanelWidth,
-    kPanelHeight,
-    ViewletModuleId.Panel
-  )
+  return loadIfVisible(state, mPanel)
 }
 
 export const loadActivityBarIfVisible = (state) => {
-  return loadIfVisible(
-    state,
-    kActivityBarVisible,
-    kActivityBarTop,
-    kActivityBarLeft,
-    kMainWidth,
-    kActivityBarHeight,
-    ViewletModuleId.ActivityBar
-  )
+  return loadIfVisible(state, mActivityBar)
 }
 
 export const loadStatusBarIfVisible = (state) => {
-  return loadIfVisible(
-    state,
-    kStatusBarVisible,
-    kStatusBarTop,
-    kStatusBarLeft,
-    kStatusBarWidth,
-    kStatusBarHeight,
-    ViewletModuleId.StatusBar
-  )
+  return loadIfVisible(state, mStatusBar)
 }
 
 export const loadTitleBarIfVisible = (state) => {
-  return loadIfVisible(
-    state,
-    kTitleBarVisible,
-    kTitleBarTop,
-    kTitleBarLeft,
-    kTitleBarWidth,
-    kTitleBarHeight,
-    ViewletModuleId.TitleBar
-  )
+  return loadIfVisible(state, mTitleBar)
 }
 
 export const handleSashPointerDown = (state, sashId) => {
@@ -490,67 +510,16 @@ const isEqual = (oldPoints, newPoints, kTop, kLeft, kWidth, kHeight) => {
 }
 
 const getResizeCommands = (oldPoints, newPoints) => {
-  const modules = [
-    {
-      id: ViewletModuleId.Main,
-      kTop: kMainTop,
-      kLeft: kMainLeft,
-      kWidth: kMainWidth,
-      kHeight: kMainHeight,
-    },
-    {
-      id: ViewletModuleId.ActivityBar,
-      kTop: kActivityBarTop,
-      kLeft: kActivityBarLeft,
-      kWidth: kActivityBarWidth,
-      kHeight: kActivityBarHeight,
-    },
-    {
-      id: ViewletModuleId.SideBar,
-      kTop: kSideBarTop,
-      kLeft: kSideBarLeft,
-      kWidth: kSideBarWidth,
-      kHeight: kSideBarHeight,
-    },
-    {
-      id: ViewletModuleId.TitleBar,
-      kTop: kTitleBarTop,
-      kLeft: kTitleBarLeft,
-      kWidth: kTitleBarWidth,
-      kHeight: kTitleBarHeight,
-    },
-    {
-      id: ViewletModuleId.StatusBar,
-      kTop: kStatusBarTop,
-      kLeft: kStatusBarLeft,
-      kWidth: kStatusBarWidth,
-      kHeight: kStatusBarHeight,
-    },
-    {
-      id: ViewletModuleId.Panel,
-      kTop: kpanelTop,
-      kLeft: kPanelLeft,
-      kWidth: kPanelWidth,
-      kHeight: kPanelHeight,
-    },
-  ]
+  const modules = [mMain, mActivityBar, mSideBar, mTitleBar, mStatusBar, mPanel]
   const commands = []
   for (const module of modules) {
-    if (
-      !isEqual(
-        oldPoints,
-        newPoints,
-        module.kTop,
-        module.kLeft,
-        module.kWidth,
-        module.kHeight
-      )
-    ) {
-      const newTop = newPoints[module.kTop]
-      const newLeft = newPoints[module.kLeft]
-      const newWidth = newPoints[module.kWidth]
-      const newHeight = newPoints[module.kHeight]
-      const resizeCommands = Viewlet.resize(module.id, {
+    const { kTop, kLeft, kWidth, kHeight, moduleId } = module
+    if (!isEqual(oldPoints, newPoints, kTop, kLeft, kWidth, kHeight)) {
+      const newTop = newPoints[kTop]
+      const newLeft = newPoints[kLeft]
+      const newWidth = newPoints[kWidth]
+      const newHeight = newPoints[kHeight]
+      const resizeCommands = Viewlet.resize(moduleId, {
         top: newTop,
         left: newLeft,
         width: newWidth,
@@ -559,7 +528,7 @@ const getResizeCommands = (oldPoints, newPoints) => {
       commands.push(...resizeCommands)
       commands.push([
         'Viewlet.setBounds',
-        module.id,
+        moduleId,
         newLeft,
         newTop,
         newWidth,
@@ -583,7 +552,7 @@ export const handleSashPointerMove = (state, x, y) => {
   if (points[kPanelVisible] !== newPoints[kPanelVisible]) {
     if (newPoints[kPanelVisible]) {
       // TODO await promise
-      loadPanelIfVisible(newState)
+      showPanel(newState)
     } else {
       // TODO dispose panel
     }
@@ -591,7 +560,7 @@ export const handleSashPointerMove = (state, x, y) => {
   if (points[kSideBarVisible] !== newPoints[kSideBarVisible]) {
     if (newPoints[kSideBarVisible]) {
       // TODO await promise
-      loadSideBarIfVisible(newState)
+      showSideBar(newState)
     } else {
       // TODO dispose side bar
     }
