@@ -100,7 +100,10 @@ export const getPoints = (source, destination) => {
   if (statusBarVisible) {
     p4 = windowHeight - statusBarHeight
   }
-  p3 = panelVisible ? p4 - newPanelHeight : p4
+  p3 = p4
+  if (panelVisible) {
+    p4 -= newPanelHeight
+  }
   if (activityBarVisible) {
     p8 = windowWidth - activityBarWidth
   }
@@ -175,6 +178,7 @@ export const loadContent = (state, savedState) => {
   newPoints[kTitleBarHeight] = 20
   newPoints[kTitleBarVisible] = 1
   newPoints[kStatusBarVisible] = 1
+  newPoints[kStatusBarHeight] = 20
   // TODO get side bar min width from preferences
   getPoints(newPoints, newPoints)
   return {

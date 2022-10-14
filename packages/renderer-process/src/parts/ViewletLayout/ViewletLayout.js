@@ -16,6 +16,7 @@ export const create = () => {
   $SashPanel.onpointerdown = ViewletLayoutEvents.handleSashPointerDown
 
   const $Viewlet = document.createElement('div')
+  $Viewlet.id = 'Workbench'
   $Viewlet.className = 'Viewlet'
   $Viewlet.dataset.viewletId = 'Layout'
   $Viewlet.append($SashSideBar, $SashPanel)
