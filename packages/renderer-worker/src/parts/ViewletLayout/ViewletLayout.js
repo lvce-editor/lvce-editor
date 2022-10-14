@@ -288,12 +288,13 @@ const show = async (state, module) => {
   }
 }
 
-const hide = (state, module) => {
+const hide = async (state, module) => {
   const { points } = state
-  const { kVisible } = module
+  const { kVisible, moduleId } = module
   const newPoints = new Uint16Array(points)
   newPoints[kVisible] = 0
   getPoints(newPoints, newPoints)
+  await Viewlet.dispose(moduleId)
   return {
     ...state,
     points: newPoints,
@@ -554,6 +555,7 @@ export const handleSashPointerMove = (state, x, y) => {
       // TODO await promise
       showPanel(newState)
     } else {
+      hidePanel(newState)
       // TODO dispose panel
     }
   }
@@ -562,6 +564,7 @@ export const handleSashPointerMove = (state, x, y) => {
       // TODO await promise
       showSideBar(newState)
     } else {
+      hideSideBar(newState)
       // TODO dispose side bar
     }
   }
