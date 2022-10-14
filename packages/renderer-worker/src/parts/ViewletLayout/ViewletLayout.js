@@ -4,6 +4,7 @@ import * as SashType from '../SashType/SashType.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
 
 const kWindowWidth = 0
 const kWindowHeight = 1
@@ -419,8 +420,7 @@ export const handleSashPointerDown = (state, sashId) => {
   }
 }
 
-const getNewStatePointerMoveSideBar = (state, x, y) => {
-  const { points } = state
+const getNewStatePointerMoveSideBar = (points, x, y) => {
   const windowWidth = points[kWindowWidth]
   const activityBarWidth = points[kActivityBarWidth]
   const sideBarMinWidth = points[kSideBarMinWidth]
@@ -443,8 +443,7 @@ const getNewStatePointerMoveSideBar = (state, x, y) => {
   return newPoints
 }
 
-const getNewStatePointerMovePanel = (state, x, y) => {
-  const { points } = state
+const getNewStatePointerMovePanel = (points, x, y) => {
   const windowHeight = points[kWindowHeight]
   const statusBarHeight = points[kStatusBarHeight]
   const titleBarHeight = points[kTitleBarHeight]
@@ -468,21 +467,98 @@ const getNewStatePointerMovePanel = (state, x, y) => {
   return newPoints
 }
 
-const getNewStatePointerMove = (state, x, y) => {
-  switch (state[kSashId]) {
+const getNewStatePointerMove = (sashId, points, x, y) => {
+  switch (sashId) {
     case SashType.SideBar:
-      return getNewStatePointerMoveSideBar(state, x, y)
+      return getNewStatePointerMoveSideBar(points, x, y)
     case SashType.Panel:
-      return getNewStatePointerMovePanel(state, x, y)
+      return getNewStatePointerMovePanel(points, x, y)
     default:
-      throw new Error(`unsupported sash type ${state[kSashId]}`)
+      throw new Error(`unsupported sash type ${sashId}`)
   }
 }
 
+const isEqual = (oldPoints, newPoints, kWidth, kHeight) => {
+  return (
+    oldPoints[kWidth] === newPoints[kWidth] &&
+    oldPoints[kHeight] === newPoints[kHeight]
+  )
+}
+
+const getResizeCommands = (oldPoints, newPoints) => {
+  const modules = [
+    {
+      id: ViewletModuleId.Main,
+      kTop: kMainTop,
+      kLeft: kMainLeft,
+      kWidth: kMainWidth,
+      kHeight: kMainHeight,
+    },
+    {
+      id: ViewletModuleId.ActivityBar,
+      kTop: kActivityBarTop,
+      kLeft: kActivityBarLeft,
+      kWidth: kActivityBarWidth,
+      kHeight: kActivityBarHeight,
+    },
+    {
+      id: ViewletModuleId.SideBar,
+      kTop: kSideBarTop,
+      kLeft: kSideBarLeft,
+      kWidth: kSideBarWidth,
+      kHeight: kSideBarHeight,
+    },
+    {
+      id: ViewletModuleId.TitleBar,
+      kTop: kTitleBarTop,
+      kLeft: kTitleBarLeft,
+      kWidth: kTitleBarWidth,
+      kHeight: kTitleBarHeight,
+    },
+    {
+      id: ViewletModuleId.StatusBar,
+      kTop: kStatusBarTop,
+      kLeft: kStatusBarLeft,
+      kWidth: kStatusBarWidth,
+      kHeight: kStatusBarHeight,
+    },
+  ]
+  const commands = []
+  for (const module of modules) {
+    if (!isEqual(oldPoints, newPoints, module.kWidth, module.kHeight)) {
+      const newTop = newPoints[module.kTop]
+      const newLeft = newPoints[module.kLeft]
+      const newWidth = newPoints[module.kWidth]
+      const newHeight = newPoints[module.kHeight]
+      const resizeCommands = Viewlet.resize(module.id, {
+        top: newTop,
+        left: newLeft,
+        width: newWidth,
+        height: newHeight,
+      })
+      commands.push(...resizeCommands)
+      commands.push([
+        'Viewlet.setBounds',
+        module.id,
+        newLeft,
+        newTop,
+        newWidth,
+        newHeight,
+      ])
+    }
+  }
+  return commands
+}
+
 export const handleSashPointerMove = (state, x, y) => {
-  const newPoints = getNewStatePointerMove(state, x, y)
+  const { points, sashId } = state
+  const newPoints = getNewStatePointerMove(sashId, points, x, y)
   getPoints(newPoints, newPoints)
   // TODO resize commands, resize viewlets recursively
+  const commands = getResizeCommands(points, newPoints)
+  // TODO avoid side effect here
+  // TODO render sashes together with viewlets
+  RendererProcess.invoke('Viewlet.executeCommands', commands)
   return {
     ...state,
     points: newPoints,
