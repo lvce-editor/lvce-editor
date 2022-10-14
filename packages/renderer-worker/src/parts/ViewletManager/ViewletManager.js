@@ -280,7 +280,6 @@ export const load = async (
           ...extraCommands,
           // ['Viewlet.show', viewlet.id],
         ]
-        console.log({ left, top, width, height, id: viewlet.id })
         allCommands.splice(1, 0, [
           'Viewlet.setBounds',
           viewlet.id,

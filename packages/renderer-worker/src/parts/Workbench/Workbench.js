@@ -97,7 +97,6 @@ export const startup = async (config) => {
   commands.splice(1, 1)
   commands.push(['Viewlet.appendToBody', ViewletModuleId.Layout])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
-  console.log({ commands })
   // await Layout.hydrate(initData)
   Performance.mark('code/didShowLayout')
 

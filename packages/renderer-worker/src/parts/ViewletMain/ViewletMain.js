@@ -179,7 +179,6 @@ export const loadContent = async (state, savedState) => {
 
 export const getChildren = (state) => {
   const { editors } = state
-  console.log({ editors })
   if (editors.length === 0) {
     return []
   }

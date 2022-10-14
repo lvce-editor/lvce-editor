@@ -206,9 +206,7 @@ const appendToBody = (childId) => {
   const $Parent = document.body
   const childInstance = state.instances[childId]
   const $Child = childInstance.state.$Viewlet
-  console.log({ childId, $Child })
   $Parent.append($Child)
-  console.log(document.body.innerHTML)
 }
 
 export const executeCommands = (commands) => {
