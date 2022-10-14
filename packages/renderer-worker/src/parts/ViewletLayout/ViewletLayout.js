@@ -103,7 +103,7 @@ export const getPoints = (source, destination) => {
   }
   p3 = p4
   if (panelVisible) {
-    p4 -= newPanelHeight
+    p3 -= newPanelHeight
   }
   if (activityBarVisible) {
     p8 = windowWidth - activityBarWidth
