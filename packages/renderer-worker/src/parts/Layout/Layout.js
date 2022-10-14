@@ -6,6 +6,7 @@ import * as SashType from '../SashType/SashType.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 // TODO where to force rendering of contents (need to call sidebar.openViewlet somewhere)
 
@@ -169,42 +170,42 @@ export const updateLayout = async (layout) => {
 
 const getDimensions = (state, id) => {
   switch (id) {
-    case 'Main':
+    case ViewletModuleId.Main:
       return {
         top: state.mainTop,
         left: state.mainLeft,
         width: state.mainWidth,
         height: state.mainHeight,
       }
-    case 'SideBar':
+    case ViewletModuleId.SideBar:
       return {
         top: state.sideBarTop,
         left: state.sideBarLeft,
         width: state.sideBarWidth,
         height: state.sideBarHeight,
       }
-    case 'TitleBar':
+    case ViewletModuleId.TitleBar:
       return {
         top: state.titleBarTop,
         left: state.titleBarLeft,
         width: state.titleBarWidth,
         height: state.titleBarHeight,
       }
-    case 'Panel':
+    case ViewletModuleId.Panel:
       return {
         top: state.panelTop,
         left: state.panelLeft,
         width: state.panelWidth,
         height: state.panelHeight,
       }
-    case 'StatusBar':
+    case ViewletModuleId.StatusBar:
       return {
         top: state.statusBarTop,
         left: state.statusBarLeft,
         width: state.statusBarWidth,
         height: state.statusBarHeight,
       }
-    case 'ActivityBar':
+    case ViewletModuleId.ActivityBar:
       return {
         top: state.activityBarTop,
         left: state.activityBarLeft,
@@ -250,33 +251,33 @@ const toggle = async (key, id) => {
 
 // TODO replace with one method in renderer process: setSideBarVisibility(true|false)
 export const showSideBar = async () => {
-  await show('sideBarVisible', 'SideBar')
+  await show('sideBarVisible', ViewletModuleId.SideBar)
 }
 
 export const hideSideBar = async () => {
-  await hide('sideBarVisible', 'SideBar')
+  await hide('sideBarVisible', ViewletModuleId.SideBar)
 }
 
 export const toggleSideBar = async () => {
-  await toggle('sideBarVisible', 'SideBar')
+  await toggle('sideBarVisible', ViewletModuleId.SideBar)
 }
 
 // TODO replace with one method in renderer process: setPanelVisible(true|false)
 
 export const showPanel = async () => {
-  await show('panelVisible', 'Panel')
+  await show('panelVisible', ViewletModuleId.Panel)
 }
 
 export const hidePanel = async () => {
-  await hide('panelVisible', 'Panel')
+  await hide('panelVisible', ViewletModuleId.Panel)
 }
 
 export const togglePanel = async () => {
-  await toggle('panelVisible', 'Panel')
+  await toggle('panelVisible', ViewletModuleId.Panel)
 }
 
 export const showMain = async () => {
-  await show('mainVisible', 'Main')
+  await show('mainVisible', ViewletModuleId.Main)
 }
 
 export const togglePart = (partId) => {
@@ -314,39 +315,39 @@ export const isVisible = (partId) => {
 // TODO replace with one method in renderer process: setActivityBarVisible(true|false)
 
 export const showActivityBar = async () => {
-  await show('activityBarVisible', 'ActivityBar')
+  await show('activityBarVisible', ViewletModuleId.ActivityBar)
 }
 
 export const hideActivityBar = async () => {
-  await hide('activityBarVisible', 'ActivityBar')
+  await hide('activityBarVisible', ViewletModuleId.ActivityBar)
 }
 
 export const toggleActivityBar = async () => {
-  await toggle('activityBarVisible', 'ActivityBar')
+  await toggle('activityBarVisible', ViewletModuleId.ActivityBar)
 }
 
 export const showStatusBar = async () => {
-  await show('statusBarVisible', 'StatusBar')
+  await show('statusBarVisible', ViewletModuleId.StatusBar)
 }
 
 export const hideStatusBar = async () => {
-  await hide('statusBarVisible', 'StatusBar')
+  await hide('statusBarVisible', ViewletModuleId.StatusBar)
 }
 
 export const toggleStatusBar = async () => {
-  await toggle('statusBarVisible', 'StatusBar')
+  await toggle('statusBarVisible', ViewletModuleId.StatusBar)
 }
 
 export const showTitleBar = async () => {
-  await show('titleBarVisible', 'TitleBar')
+  await show('titleBarVisible', ViewletModuleId.TitleBar)
 }
 
 export const hideTitleBar = async () => {
-  await hide('titleBarVisible', 'TitleBar')
+  await hide('titleBarVisible', ViewletModuleId.TitleBar)
 }
 
 export const toggleTitleBar = async () => {
-  await toggle('titleBarVisible', 'TitleBar')
+  await toggle('titleBarVisible', ViewletModuleId.TitleBar)
 }
 
 const getBounds = async () => {
@@ -376,30 +377,13 @@ export const hydrate = async (initData) => {
   )
 }
 
-const isChild = (id) => {
-  return (
-    id === 'Main' ||
-    id === 'SideBar' ||
-    id === 'ActivityBar' ||
-    id === 'Panel' ||
-    id === 'TitleBar'
-  )
-}
-
 export const handleSashPointerDown = (id) => {
   state.sashId = id
   console.log({ id })
 }
 
 const getNewStatePointerMoveSideBar = (state, x, y) => {
-  const {
-    windowWidth,
-    activityBarWidth,
-    windowHeight,
-    statusBarHeight,
-    titleBarHeight,
-    activityBarHeight,
-  } = state
+  const { windowWidth, activityBarWidth } = state
   const newSideBarWidth = windowWidth - activityBarWidth - x
   if (newSideBarWidth <= SIDE_BAR_MIN_WIDTH / 2) {
     return {
@@ -427,14 +411,8 @@ const getNewStatePointerMoveSideBar = (state, x, y) => {
 }
 
 const getNewStatePointerMovePanel = (state, x, y) => {
-  const {
-    windowWidth,
-    activityBarWidth,
-    windowHeight,
-    statusBarHeight,
-    titleBarHeight,
-    activityBarHeight,
-  } = state
+  const { windowHeight, statusBarHeight, titleBarHeight, activityBarHeight } =
+    state
   const newPanelHeight = windowHeight - statusBarHeight - y
   if (newPanelHeight < PANEL_MIN_HEIGHT / 2) {
     return {
@@ -475,6 +453,27 @@ const getNewStatePointerMove = (state, x, y) => {
 export const handleSashPointerMove = async (x, y) => {
   const newState = getNewStatePointerMove(state, x, y)
   await updateLayout(newState)
+  const resizeCommands = getResizeCommands()
+  // TODO send the whole batch at once
+  for (const command of resizeCommands) {
+    RendererProcess.invoke(...command)
+  }
+}
+
+const getResizeCommands = () => {
+  const ids = [
+    ViewletModuleId.Main,
+    ViewletModuleId.ActivityBar,
+    ViewletModuleId.SideBar,
+    ViewletModuleId.TitleBar,
+    ViewletModuleId.StatusBar,
+  ]
+  const resizeInstance = (id) => {
+    const dimensions = getDimensions(state, id)
+    return Viewlet.resize(id, dimensions)
+  }
+  const commands = ids.flatMap(resizeInstance)
+  return commands
 }
 
 // TODO a bit unnecessary to send the same layout very often, but it avoids keeping state in renderer process
@@ -485,12 +484,7 @@ export const handleResize = async (bounds) => {
     /* Layout.update */ 'Layout.update',
     /* points */ points
   )
-  const ids = ['Main', 'ActivityBar', 'SideBar', 'TitleBar', 'StatusBar']
-  const resizeInstance = (id) => {
-    const dimensions = getDimensions(state, id)
-    return Viewlet.resize(id, dimensions)
-  }
-  const commands = ids.flatMap(resizeInstance)
+  const commands = getResizeCommands()
   if (commands.length === 0) {
     return
   }
