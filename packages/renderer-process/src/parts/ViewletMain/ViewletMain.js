@@ -1,5 +1,4 @@
 import * as EditorGroup from '../EditorGroup/EditorGroup.js'
-import * as Layout from '../Layout/Layout.js'
 import * as ViewletMainEvents from './ViewletMainEvents.js'
 
 const create$MainTabs = () => {
@@ -15,9 +14,12 @@ const create$MainTabs = () => {
 
 // TODO Main should not be bound to Editor -> Lazy load Editor
 export const create = () => {
-  const $Main = Layout.state.$Main
-  $Main.ondrop = ViewletMainEvents.handleDrop
-  $Main.ondragover = ViewletMainEvents.handleDragOver
+  const $Viewlet = document.createElement('div')
+  $Viewlet.id = 'Main'
+  $Viewlet.className = 'Viewlet'
+  $Viewlet.dataset.viewletId = 'Main'
+  $Viewlet.ondrop = ViewletMainEvents.handleDrop
+  $Viewlet.ondragover = ViewletMainEvents.handleDragOver
 
   // const $MainContent = document.createElement('div')
   // $MainContent.id = 'MainContent'
@@ -30,8 +32,8 @@ export const create = () => {
   // $Main.append($MainTabs, $MainContent)
 
   return {
-    $Viewlet: $Main,
-    $Main,
+    $Viewlet,
+    $Main: $Viewlet,
     $MainContent: undefined,
     $MainTabs: undefined,
   }
@@ -69,7 +71,7 @@ export const openEditor = async (state, id, uri, languageId) => {
 }
 
 export const closeAllViewlets = (state) => {
-  const $Main = Layout.state.$Main
+  const { $Main } = state
   while ($Main.firstChild) {
     $Main.firstChild.remove()
   }

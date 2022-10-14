@@ -62,6 +62,8 @@ export const load = (moduleId) => {
       return import('../ViewletTitleBarButtons/ViewletTitleBarButtons.js')
     case ViewletModuleId.TitleBarMenuBar:
       return import('../ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js')
+    case ViewletModuleId.Layout:
+      return import('../ViewletLayout/ViewletLayout.js')
     default:
       throw new Error('unknown module')
   }

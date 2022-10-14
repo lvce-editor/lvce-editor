@@ -10,5 +10,29 @@ test('create', () => {
 })
 
 test('showSideBar', () => {
-  const state = { ...ViewletLayout.create() }
+  const state = { ...ViewletLayout.create(), sideBarVisible: false }
+  expect(ViewletLayout.showSideBar(state)).toMatchObject({
+    sideBarVisible: true,
+  })
+})
+
+test('hideSideBar', () => {
+  const state = { ...ViewletLayout.create(), sideBarVisible: true }
+  expect(ViewletLayout.hideSideBar(state)).toMatchObject({
+    sideBarVisible: false,
+  })
+})
+
+test('toggleSideBar - show', () => {
+  const state = { ...ViewletLayout.create(), sideBarVisible: false }
+  expect(ViewletLayout.toggleSideBar(state)).toMatchObject({
+    sideBarVisible: true,
+  })
+})
+
+test('toggleSideBar - hide', () => {
+  const state = { ...ViewletLayout.create(), sideBarVisible: true }
+  expect(ViewletLayout.toggleSideBar(state)).toMatchObject({
+    sideBarVisible: false,
+  })
 })

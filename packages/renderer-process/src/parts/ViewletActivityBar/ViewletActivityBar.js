@@ -1,7 +1,6 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
-import * as Layout from '../Layout/Layout.js'
 import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
 
 // TODO set aria-selected false when sidebar is collapsed
@@ -49,21 +48,22 @@ const create$ActivityBarItem = (item) => {
 export const name = 'ActivityBar'
 
 export const create = () => {
-  const $ActivityBar = Layout.state.$ActivityBar
-  $ActivityBar.role = 'toolbar'
-  $ActivityBar.ariaRoleDescription = 'Activity Bar'
-  $ActivityBar.ariaOrientation = 'vertical'
-  // $ActivityBar.append(...activityBarItems.map(create$ActivityBarItem))
-  $ActivityBar.onmousedown = ViewletActivityBarEvents.handleMousedown
-  $ActivityBar.oncontextmenu = ViewletActivityBarEvents.handleContextMenu
-  $ActivityBar.onblur = ViewletActivityBarEvents.handleBlur
-  $ActivityBar.addEventListener(
-    'focusin',
-    ViewletActivityBarEvents.handleFocusIn
-  )
+  const $Viewlet = document.createElement('div')
+  $Viewlet.id = 'ActivityBar'
+  $Viewlet.dataset.viewletId = 'ActivityBar'
+  // @ts-ignore
+  $Viewlet.role = 'toolbar'
+  $Viewlet.ariaRoleDescription = 'Activity Bar'
+  $Viewlet.ariaOrientation = 'vertical'
+  // $Viewlet.append(...activityBarItems.map(create$ActivityBarItem))
+  $Viewlet.onmousedown = ViewletActivityBarEvents.handleMousedown
+  $Viewlet.oncontextmenu = ViewletActivityBarEvents.handleContextMenu
+  $Viewlet.onblur = ViewletActivityBarEvents.handleBlur
+  $Viewlet.addEventListener('focusin', ViewletActivityBarEvents.handleFocusIn)
   // $ActivityBar.children[focusedIndex].tabIndex = 0
   return {
-    $ActivityBar,
+    $ActivityBar: $Viewlet,
+    $Viewlet,
   }
 }
 

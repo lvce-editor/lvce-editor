@@ -1,10 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { jest } from '@jest/globals'
 import * as ViewletIframe from '../src/parts/ViewletIframe/ViewletIframe.js'
-import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
-import * as Layout from '../src/parts/Layout/Layout.js'
 
 // TODO find a good way to test html elements
 

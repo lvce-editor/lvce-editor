@@ -12,6 +12,7 @@ import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -174,6 +175,21 @@ export const loadContent = async (state, savedState) => {
     ...state,
     editors,
   }
+}
+
+export const getChildren = (state) => {
+  const { editors } = state
+  console.log({ editors })
+  if (editors.length === 0) {
+    return []
+  }
+  const editor = editors[0]
+  console.log({ editor })
+  return [
+    // {
+    //   id: ViewletModuleId.MainTabs,
+    // },
+  ]
 }
 
 export const contentLoaded = async (state) => {
@@ -552,3 +568,7 @@ export const resize = (state, dimensions) => {
     commands,
   }
 }
+
+export const hasFunctionalRender = true
+
+export const render = []

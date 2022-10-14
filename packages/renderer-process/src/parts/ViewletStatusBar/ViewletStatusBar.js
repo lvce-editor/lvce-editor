@@ -1,6 +1,5 @@
-import * as Layout from '../Layout/Layout.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Assert from '../Assert/Assert.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 const getIconClassName = (icon) => {
   switch (icon) {
@@ -81,15 +80,20 @@ export const create = (statusBarItemsLeft, statusBarItemsRight) => {
   const $StatusBarItemsRight = document.createElement('ul')
   $StatusBarItemsRight.id = 'StatusBarItemsRight'
 
-  const $StatusBar = Layout.state.$StatusBar
-  $StatusBar.onclick = handleClick
-  $StatusBar.tabIndex = 0
-  $StatusBar.role = 'status'
-  $StatusBar.ariaLive = 'off' // see https://github.com/microsoft/vscode/issues/94677
-  $StatusBar.append($StatusBarItemsLeft, $StatusBarItemsRight)
+  const $Viewlet = document.createElement('div')
+  $Viewlet.id = 'StatusBar'
+  $Viewlet.className = 'Viewlet'
+  $Viewlet.dataset.viewletId = 'StatusBar'
+  $Viewlet.onclick = handleClick
+  $Viewlet.tabIndex = 0
+  // @ts-ignore
+  $Viewlet.role = 'status'
+  $Viewlet.ariaLive = 'off' // see https://github.com/microsoft/vscode/issues/94677
+  $Viewlet.append($StatusBarItemsLeft, $StatusBarItemsRight)
 
   return {
-    $StatusBar,
+    $Viewlet,
+    $StatusBar: $Viewlet,
     $StatusBarItemsLeft,
     $StatusBarItemsRight,
   }

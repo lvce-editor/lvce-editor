@@ -1,11 +1,9 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as Command from '../Command/Command.js'
 import * as Assert from '../Assert/Assert.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 /**
  * @deprecated

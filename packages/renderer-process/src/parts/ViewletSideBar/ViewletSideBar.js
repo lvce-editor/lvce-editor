@@ -1,4 +1,3 @@
-import * as Layout from '../Layout/Layout.js'
 import * as Assert from '../Assert/Assert.js'
 
 export const create = () => {
@@ -15,13 +14,17 @@ export const create = () => {
   // const $SideBarContent = document.createElement('div')
   // $SideBarContent.id = 'SideBarContent'
 
-  const $SideBar = Layout.state.$SideBar
-  $SideBar.role = 'complementary'
-  $SideBar.ariaRoleDescription = 'Side Bar'
-  $SideBar.append($SideBarTitleArea)
+  const $Viewlet = document.createElement('div')
+  $Viewlet.className = 'Viewlet'
+  $Viewlet.id = 'SideBar'
+  // @ts-ignore
+  $Viewlet.role = 'complementary'
+  $Viewlet.ariaRoleDescription = 'Side Bar'
+  $Viewlet.append($SideBarTitleArea)
 
   return {
-    $SideBar,
+    $Viewlet,
+    $SideBar: $Viewlet,
     $SideBarTitleArea,
     $SideBarTitleAreaButtons,
     $SideBarContent: undefined,

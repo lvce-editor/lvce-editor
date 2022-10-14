@@ -151,21 +151,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.KeyBindings
     case 'KeyBindingsInitial.getKeyBindings':
       return ModuleId.KeyBindingsInitial
-    case 'Layout.handleResize':
-    case 'Layout.handleSashPointerDown':
-    case 'Layout.handleSashPointerMove':
-    case 'Layout.hide':
-    case 'Layout.hideActivityBar':
-    case 'Layout.hidePanel':
-    case 'Layout.hideSideBar':
-    case 'Layout.hydrate':
-    case 'Layout.showActivityBar':
-    case 'Layout.showPanel':
-    case 'Layout.showSideBar':
-    case 'Layout.toggleActivityBar':
-    case 'Layout.togglePanel':
-    case 'Layout.toggleSideBar':
-      return ModuleId.Layout
     case 3444:
       return ModuleId.Listener
     case 'LocalStorage.clear':

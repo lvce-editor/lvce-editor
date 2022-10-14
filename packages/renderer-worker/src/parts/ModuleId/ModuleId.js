@@ -28,7 +28,6 @@ export const IconTheme = 26
 export const ImagePreview = 27
 export const KeyBindings = 28
 export const KeyBindingsInitial = 29
-export const Layout = 30
 export const Listener = 31
 export const LocalStorage = 32
 export const Menu = 33

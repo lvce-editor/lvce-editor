@@ -2,12 +2,7 @@
  * @jest-environment jsdom
  */
 import * as ActvityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActvityBarItemFlags.js'
-import * as Layout from '../src/parts/Layout/Layout.js'
 import * as ViewletActivityBar from '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
-
-beforeEach(() => {
-  Layout.state.$ActivityBar = document.createElement('div')
-})
 
 const getTitle = ($Element) => {
   return $Element.title

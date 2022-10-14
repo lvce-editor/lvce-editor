@@ -126,7 +126,12 @@ const maybeRegisterWrappedCommands = (module) => {
  * @param {{getModule:()=>any, type:number, id:string, disposed:boolean }} viewlet
  * @returns
  */
-export const load = async (viewlet, focus = false, restore = false) => {
+export const load = async (
+  viewlet,
+  focus = false,
+  restore = false,
+  restoreState = undefined
+) => {
   // console.time(`load/${viewlet.id}`)
   if (viewlet.type !== 0) {
     console.log('viewlet must be empty')
@@ -174,6 +179,8 @@ export const load = async (viewlet, focus = false, restore = false) => {
     if (restore) {
       const stateToSave = await SaveState.getSavedState()
       instanceSavedState = getInstanceSavedState(stateToSave, viewlet.id)
+    } else if (restoreState) {
+      instanceSavedState = restoreState
     }
     let newState = await module.loadContent(viewletState, instanceSavedState)
 
@@ -271,16 +278,15 @@ export const load = async (viewlet, focus = false, restore = false) => {
           ...extraCommands,
           ['Viewlet.show', viewlet.id],
         ]
-        if (module.getPosition) {
-          allCommands.splice(1, 0, [
-            'Viewlet.setBounds',
-            viewlet.id,
-            left,
-            top,
-            width,
-            height,
-          ])
-        }
+        console.log({ left, top, width, height, id: viewlet.id })
+        allCommands.splice(1, 0, [
+          'Viewlet.setBounds',
+          viewlet.id,
+          left,
+          top,
+          width,
+          height,
+        ])
         return allCommands
       }
       // console.log('else', viewlet.id, { commands })

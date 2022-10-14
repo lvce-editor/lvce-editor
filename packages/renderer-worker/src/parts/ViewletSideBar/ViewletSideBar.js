@@ -7,6 +7,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const name = 'SideBar'
 
@@ -35,25 +36,25 @@ export const loadContent = async (state, savedState) => {
   }
 }
 
-export const loadContentEffects = () => {
-  LifeCycle.once(LifeCycle.PHASE_TWELVE, hydrateLazy)
-  GlobalEventBus.addListener('Layout.hideSideBar', handleSideBarClose)
-}
+// export const loadContentEffects = () => {
+//   LifeCycle.once(LifeCycle.PHASE_TWELVE, hydrateLazy)
+//   GlobalEventBus.addListener('Layout.hideSideBar', handleSideBarClose)
+// }
 
 // TODO
-export const loadChildren = () => {
+export const getChildren = () => {
   return [
     {
-      id: 'Explorer',
+      id: ViewletModuleId.Explorer,
     },
   ]
 }
 
-export const contentLoaded = async (state) => {
-  if (state.currentViewletId) {
-    await openViewlet(state, state.currentViewletId)
-  }
-}
+// export const contentLoaded = async (state) => {
+//   if (state.currentViewletId) {
+//     await openViewlet(state, state.currentViewletId)
+//   }
+// }
 
 const getSideBarViewlet = async () => {
   const cachedViewlet = await Command.execute(
@@ -200,3 +201,7 @@ export const focus = async (state) => {
   return state
   // console.log({ currentViewletId })
 }
+
+export const hasFunctionalRender = true
+
+export const render = []
