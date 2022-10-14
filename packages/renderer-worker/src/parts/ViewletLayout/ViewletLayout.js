@@ -69,8 +69,9 @@ export const getPoints = (source, destination) => {
   const titleBarHeight = source[kTitleBarHeight]
   const sideBarWidth = source[kSideBarWidth]
   const panelHeight = source[kPanelHeight]
+  const activityBarWidth = source[kActivityBarWidth]
+  const statusBarHeight = source[kStatusBarHeight]
 
-  const newActivityBarWidth = 48 // TODO put magic numbers somewhere
   const newSideBarWidth = Clamp.clamp(
     sideBarWidth,
     sideBarMinWidth,
@@ -82,7 +83,6 @@ export const getPoints = (source, destination) => {
     panelMinHeight,
     panelMaxHeight
   ) // TODO check that it is in bounds of window
-  const newStatusBarHeight = 20
 
   const p1 = /* Top */ 0
   let p2 = /* End of Title Bar */ 0
@@ -91,18 +91,18 @@ export const getPoints = (source, destination) => {
   const p5 = /* End of StatusBar */ windowHeight
 
   const p6 = /* Left */ 0
-  let p7 = /* End of Main */ windowWidth - newActivityBarWidth
+  let p7 = /* End of Main */ windowWidth - activityBarWidth
   let p8 = /* End of SideBar */ windowWidth
   const p9 = /* End of ActivityBar */ windowWidth
   if (titleBarVisible) {
     p2 = titleBarHeight
   }
   if (statusBarVisible) {
-    p4 = windowHeight - newStatusBarHeight
+    p4 = windowHeight - statusBarHeight
   }
   p3 = panelVisible ? p4 - newPanelHeight : p4
   if (activityBarVisible) {
-    p8 = windowWidth - newActivityBarWidth
+    p8 = windowWidth - activityBarWidth
   }
   if (sideBarVisible) {
     p7 = p8 - newSideBarWidth
@@ -143,6 +143,14 @@ export const create = () => {
   return {
     points: new Uint16Array(kTotal),
     [kSashId]: SashType.None,
+  }
+}
+
+export const saveState = (state) => {
+  const { points } = state
+  const pointsArray = [...points]
+  return {
+    points: pointsArray,
   }
 }
 
