@@ -23,6 +23,9 @@ export const load = async (id, ...args) => {
 
 export const create = (id) => {
   const module = state.modules[id]
+  if (state.instances[id] && state.instances[id].state.$Viewlet.isConnected) {
+    state.instances[id].state.$Viewlet.remove()
+  }
   state.instances[id] = {
     state: module.create(),
     factory: module,
@@ -86,8 +89,7 @@ export const send = (viewletId, method, ...args) => {
 const createPlaceHolder = (viewletId, parentId, top, left, width, height) => {
   const $PlaceHolder = document.createElement('div')
   $PlaceHolder.className = 'Viewlet'
-  $PlaceHolder.dataset.viewletId = 'PlaceHolder'
-  $PlaceHolder.style.background = 'orange'
+  $PlaceHolder.dataset.viewletId = viewletId
   $PlaceHolder.style.top = `${top}px`
   $PlaceHolder.style.left = `${left}px`
   $PlaceHolder.style.width = `${width}px`
