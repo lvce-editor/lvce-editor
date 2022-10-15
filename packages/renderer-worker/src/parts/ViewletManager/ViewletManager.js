@@ -72,7 +72,6 @@ const wrapViewletCommandWithSideEffect = (id, fn) => {
       commands.push(...render(activeInstance.factory, oldState, newState))
       ViewletStates.setState(id, newState)
     }
-    console.log({ commands })
     await RendererProcess.invoke(
       /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
       /* commands */ commands

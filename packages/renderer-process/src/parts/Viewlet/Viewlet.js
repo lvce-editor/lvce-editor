@@ -83,6 +83,25 @@ export const send = (viewletId, method, ...args) => {
   }
 }
 
+const createPlaceHolder = (viewletId, parentId, top, left, width, height) => {
+  const $PlaceHolder = document.createElement('div')
+  $PlaceHolder.className = 'Viewlet'
+  $PlaceHolder.dataset.viewletId = 'PlaceHolder'
+  $PlaceHolder.style.background = 'orange'
+  $PlaceHolder.style.top = `${top}px`
+  $PlaceHolder.style.left = `${left}px`
+  $PlaceHolder.style.width = `${width}px`
+  $PlaceHolder.style.height = `${height}px`
+  const parentInstance = state.instances[parentId]
+  const $Parent = parentInstance.state.$Viewlet
+  $Parent.append($PlaceHolder)
+  state.instances[viewletId] = {
+    state: {
+      $Viewlet: $PlaceHolder,
+    },
+  }
+}
+
 // TODO this code is bad
 export const sendMultiple = (commands) => {
   for (const command of commands) {
@@ -95,31 +114,33 @@ export const sendMultiple = (commands) => {
       create(viewletId)
     } else if (_ === 'Viewlet.append') {
       append(viewletId, method)
+    } else if (_ === 'Viewlet.dispose') {
+      dispose(viewletId)
+    } else if (_ === 'Viewlet.createPlaceholder') {
+      createPlaceHolder(viewletId, method, ...args)
     } else {
       invoke(viewletId, method, ...args)
     }
   }
 }
 
-/**
- * @deprecated
- */
 export const dispose = (id) => {
-  Assert.string(id)
-  const instance = state.instances[id]
-  if (!instance) {
-    console.warn(`viewlet instance ${id} not found and cannot be disposed`)
-    return
-  }
   try {
+    console.log('dispose', id)
+    Assert.string(id)
+    const instance = state.instances[id]
+    if (!instance) {
+      console.warn(`viewlet instance ${id} not found and cannot be disposed`)
+      return
+    }
     instance.factory.dispose(instance.state)
     if (instance.state.$Viewlet && instance.state.$Viewlet.isConnected) {
       instance.state.$Viewlet.remove()
     }
+    delete state.instances[id]
   } catch (error) {
-    console.error(error)
+    throw new Error(`Failed to dispose ${id}`)
   }
-  delete state.instances[id]
 }
 
 /**

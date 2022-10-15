@@ -111,6 +111,33 @@ export const dispose = async (id) => {
   await GlobalEventBus.emitEvent(`Viewlet.dispose.${id}`)
 }
 
+export const disposeFunctional = (id) => {
+  try {
+    if (!id) {
+      console.warn('no instance to dispose')
+      return []
+    }
+    const instance = ViewletStates.getInstance(id)
+    if (!instance) {
+      console.info('instance may already be disposed')
+      return []
+    }
+    // TODO status should have enum
+    instance.status = 'disposing'
+    if (!instance.factory) {
+      throw new Error(`${id} is missing a factory function`)
+    }
+    instance.factory.dispose(instance.state)
+    instance.status = 'disposed'
+    ViewletStates.remove(id)
+    return [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id]]
+  } catch (error) {
+    console.error(error)
+    // TODO use Error.cause once proper stack traces are supported by chrome
+    throw new Error(`Failed to dispose viewlet ${id}: ${error}`)
+  }
+}
+
 /**
  * @deprecated
  */

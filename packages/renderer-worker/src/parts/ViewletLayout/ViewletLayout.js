@@ -1,9 +1,11 @@
 import * as Clamp from '../Clamp/Clamp.js'
 import * as SashType from '../SashType/SashType.js'
+import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 const kWindowWidth = 0
 const kWindowHeight = 1
@@ -289,16 +291,19 @@ const show = async (state, module) => {
   }
 }
 
-const hide = async (state, module) => {
+const hide = (state, module) => {
   const { points } = state
   const { kVisible, moduleId } = module
   const newPoints = new Uint16Array(points)
   newPoints[kVisible] = 0
   getPoints(newPoints, newPoints)
-  await Viewlet.dispose(moduleId)
+  const commands = Viewlet.disposeFunctional(moduleId)
   return {
-    ...state,
-    points: newPoints,
+    newState: {
+      ...state,
+      points: newPoints,
+    },
+    commands,
   }
 }
 
@@ -544,37 +549,79 @@ const getResizeCommands = (oldPoints, newPoints) => {
   return commands
 }
 
+const showAsync = async (points, module) => {
+  try {
+    const commands = await ViewletManager.load({
+      getModule: ViewletModule.load,
+      id: module.moduleId,
+      type: 0,
+      // @ts-ignore
+      uri: '',
+      show: false,
+      focus: false,
+      top: points[module.kTop],
+      left: points[module.kLeft],
+      width: points[module.kWidth],
+      height: points[module.kHeight],
+    })
+    if (commands) {
+      commands.push(['Viewlet.append', 'Layout', module.moduleId])
+    }
+    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+    // TODO
+    // 2. load module
+    // 3. if module is still visible, replace placeholder with actual viewlet
+    // 4. else do nothing
+  } catch (error) {
+    throw new VError(error, `Failed to show ${module.moduleId}`)
+  }
+}
+
+const showPlaceHolder = (points, module) => {
+  return [
+    'Viewlet.createPlaceholder',
+    /* id */ module.moduleId,
+    /* parentId */ 'Layout',
+    /* top */ points[module.kTop],
+    /* left */ points[module.kLeft],
+    /* width */ points[module.kWidth],
+    /* height */ points[module.kHeight],
+  ]
+}
+
 export const handleSashPointerMove = (state, x, y) => {
   const { points, sashId } = state
   const newPoints = getNewStatePointerMove(sashId, points, x, y)
   getPoints(newPoints, newPoints)
   // TODO resize commands, resize viewlets recursively
-  const commands = getResizeCommands(points, newPoints)
+  const allCommands = getResizeCommands(points, newPoints)
   const newState = {
     ...state,
     points: newPoints,
   }
   if (points[kPanelVisible] !== newPoints[kPanelVisible]) {
     if (newPoints[kPanelVisible]) {
-      // TODO await promise
-      showPanel(newState)
+      showAsync(newPoints, mPanel) // TODO avoid side effect
+      const commands = showPlaceHolder(newPoints, mPanel)
+      allCommands.push(commands)
     } else {
-      hidePanel(newState)
-      // TODO dispose panel
+      const commands = Viewlet.disposeFunctional(ViewletModuleId.Panel)
+      allCommands.push(...commands)
     }
   }
   if (points[kSideBarVisible] !== newPoints[kSideBarVisible]) {
     if (newPoints[kSideBarVisible]) {
-      // TODO await promise
-      showSideBar(newState)
+      showAsync(newPoints, mPanel) // TODO avoid side effect
+      const commands = showPlaceHolder(newPoints, mSideBar)
+      allCommands.push(commands)
     } else {
-      hideSideBar(newState)
-      // TODO dispose side bar
+      const { commands } = hide(newState, mSideBar)
+      allCommands.push(...commands)
     }
   }
   return {
     newState,
-    commands,
+    commands: allCommands,
   }
 }
 
