@@ -24,11 +24,9 @@ const RendererWorker = await import(
 )
 
 const Main = await import('../src/parts/ViewletMain/ViewletMain.js')
-const Layout = await import('../src/parts/Layout/Layout.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 
 beforeEach(async () => {
-  Layout.state.$Main = document.createElement('div')
   await Viewlet.load(ViewletModuleId.EditorPlainText)
   // Main.state.$MainContent = undefined
   // Main.state.$MainTabs = undefined

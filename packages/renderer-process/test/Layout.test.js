@@ -60,7 +60,7 @@ test.skip('base components', () => {
   expect(Layout.state.$SideBar).toBeInstanceOf(HTMLElement)
 })
 
-test('show', async () => {
+test.skip('show', async () => {
   // TODO this should be different
   // TODO check attributes on elements
   Layout.show({
@@ -75,7 +75,7 @@ test('show', async () => {
   })
 })
 
-test('update', () => {
+test.skip('update', () => {
   Layout.update({
     'SideBar.visible': false,
     'SideBar.width': 100,
@@ -88,7 +88,7 @@ test('update', () => {
   })
 })
 
-test('handleResize', () => {
+test.skip('handleResize', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   Layout.show({
@@ -114,7 +114,7 @@ test('handleResize', () => {
   })
 })
 
-test('event - move sash', () => {
+test.skip('event - move sash', () => {
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
   const spy1 = jest.spyOn(HTMLElement.prototype, 'setPointerCapture')

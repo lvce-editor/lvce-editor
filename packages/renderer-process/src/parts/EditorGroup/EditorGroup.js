@@ -1,7 +1,6 @@
 import * as Editor from '../Editor/Editor.js'
 import * as EditorHelper from '../Editor/EditorHelper.js'
 import * as EditorTabs from '../EditorTab/EditorTab.js'
-import * as Layout from '../Layout/Layout.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 const handleEditorTabsContextMenu = (event) => {
@@ -23,7 +22,8 @@ export const create = () => {
 
   // TODO create should not have side effect of mounting
   // TODO this causes 2 times layout (when also calling add after)
-  Layout.state.$Main.append($EditorTabs, $Editors)
+  // TODO
+  // Layout.state.$Main.append($EditorTabs, $Editors)
   return {
     $EditorTabs,
     $Editors,

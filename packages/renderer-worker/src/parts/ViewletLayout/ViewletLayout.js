@@ -1,11 +1,11 @@
 import * as Clamp from '../Clamp/Clamp.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SashType from '../SashType/SashType.js'
 import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 const kWindowWidth = 0
 const kWindowHeight = 1
@@ -243,15 +243,6 @@ export const loadContent = (state, savedState) => {
   }
 }
 
-const getDefaultTitleBarHeight = () => {
-  // switch (Platform.platform) {
-  //   case PlatformType.Electron:
-  //     return 28
-  //   default:
-  //     return 20
-  // }
-}
-
 const show = async (state, module) => {
   const { points } = state
   const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
@@ -297,6 +288,7 @@ const hide = (state, module) => {
   const newPoints = new Uint16Array(points)
   newPoints[kVisible] = 0
   getPoints(newPoints, newPoints)
+  // TODO also resize other viewlets if necessary
   const commands = Viewlet.disposeFunctional(moduleId)
   return {
     newState: {

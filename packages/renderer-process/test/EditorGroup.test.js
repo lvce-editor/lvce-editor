@@ -2,11 +2,6 @@
  * @jest-environment jsdom
  */
 import * as EditorGroup from '../src/parts/EditorGroup/EditorGroup.js'
-import * as Layout from '../src/parts/Layout/Layout.js'
-
-beforeAll(() => {
-  Layout.state.$Main = document.createElement('div')
-})
 
 test('create', () => {
   const state = EditorGroup.create()
