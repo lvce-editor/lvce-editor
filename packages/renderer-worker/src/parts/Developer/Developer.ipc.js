@@ -1,7 +1,7 @@
 import * as Developer from './Developer.js'
 
 // prettier-ignore
-export const Commands={
+export const Commands = {
   'Developer.allocateMemoryInSharedProcess': Developer.allocateMemoryInSharedProcess,
   'Developer.clearCache': Developer.clearCache,
   'Developer.crashMainProcess': Developer.crashMainProcess,
@@ -24,7 +24,5 @@ export const Commands={
   'Developer.showStartupPerformance': Developer.showStartupPerformance,
   'Developer.startupPerformance': Developer.showStartupPerformance,
   'Developer.toggleDeveloperTools': Developer.toggleDeveloperTools,
-  'Developer.installChromeExtensionUBlockOrigin': Developer.installChromeExtensionUBlockOrigin,
-  'Developer.installChromeExtensionIStillDontCareAboutCookies': Developer.installChromeExtensionIStillDontCareAboutCookies,
   // TODO certain commands are only available in electron -> treeshake them out
 }

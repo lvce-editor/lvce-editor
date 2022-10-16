@@ -9,7 +9,6 @@ import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
 import * as ProcessExplorer from '../ProcessExplorer/ProcessExplorer.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as ChromeExtensionType from '../ChromeExtensionType/ChromeExtensionType.js'
 
 // TODO vscode's version of this is shorter
 // if it is a bottleneck, check performance of this function (not very optimized now)
@@ -505,19 +504,5 @@ export const downloadViewletState = async () => {
     'Download.downloadJson',
     /* json */ states,
     /* fileName */ 'viewlets.json'
-  )
-}
-
-export const installChromeExtensionUBlockOrigin = async () => {
-  await Command.execute(
-    'ChromeExtension.install',
-    ChromeExtensionType.UBlockOriginLight
-  )
-}
-
-export const installChromeExtensionIStillDontCareAboutCookies = async () => {
-  await Command.execute(
-    'ChromeExtension.install',
-    ChromeExtensionType.IStillDontCareAboutCookies
   )
 }
