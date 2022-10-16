@@ -727,7 +727,7 @@ const handleClickFile = async (state, dirent, index, keepFocus = false) => {
   return {
     ...state,
     focusedIndex: index,
-    focused: !keepFocus,
+    focused: keepFocus,
   }
 }
 

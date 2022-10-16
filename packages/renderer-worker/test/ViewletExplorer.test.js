@@ -900,6 +900,8 @@ test('handleClick - file - error', async () => {
 
 test('handleClickCurrentButKeepFocus - file', async () => {
   const state = {
+    ...ViewletExplorer.create(),
+    focused: true,
     root: '/home/test-user/test-path',
     focusedIndex: 0,
     top: 0,
