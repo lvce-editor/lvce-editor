@@ -53,6 +53,12 @@ export const appendViewlet = (state, name, $Viewlet) => {
   state.$SideBarContent = $Viewlet
 }
 
+export const setTitle = (state, name) => {
+  const { $SideBarTitleAreaTitle } = state
+  $SideBarTitleAreaTitle.name = name
+  $SideBarTitleAreaTitle.textContent = name
+}
+
 export const focus = async () => {
   // await
   console.log('todo focus sidebar')

@@ -125,7 +125,9 @@ export const openViewlet = async (state, id, focus = false) => {
   // // TODO add keybinding to title
   // // @ts-ignore
   // await ViewletManager.load(viewlet, focus, /* restore */ true)
-  return state
+  return {
+    ...state,
+  }
 }
 
 const handleSideBarClose = (state) => {
@@ -184,4 +186,18 @@ export const focus = async (state) => {
 
 export const hasFunctionalRender = true
 
-export const render = []
+const renderTitle = {
+  isEqual(oldState, newState) {
+    return false
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'SideBar',
+      /* method */ 'setTitle',
+      /* name */ newState.currentViewletId,
+    ]
+  },
+}
+
+export const render = [renderTitle]
