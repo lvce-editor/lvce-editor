@@ -416,5 +416,14 @@
   {
     "id": "Window.zoomReset",
     "label": "Window: Reset Zoom"
+  },
+  {
+    "id": "Main.openUri",
+    "label": "Simple Browser: Open",
+    "args": ["simple-browser://"]
+  },
+  {
+    "id": "SimpleBrowser.openDevtools",
+    "label": "Simple Browser: Open Dev Devtools"
   }
 ]

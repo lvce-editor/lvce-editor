@@ -32,5 +32,12 @@
   "workbench.sideBarLocation": "right",
   "workbench.saveStateOnVisibilityChange": false,
 
-  "workspace.defaultWorkspace": "fetch:///playground"
+  "workspace.defaultWorkspace": "fetch:///playground",
+
+  "keyBindings.fallTroughBrowserView": [
+    "ctrl+p",
+    "ctrl+shift+p",
+    "ctrl+b",
+    "ctrl+m"
+  ]
 }

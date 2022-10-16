@@ -292,3 +292,5 @@ export const setItemsHeight = (state, itemsHeight) => {
   const { $QuickPickItems } = state
   $QuickPickItems.style.height = `${itemsHeight}px`
 }
+
+export const noop = (state) => {}

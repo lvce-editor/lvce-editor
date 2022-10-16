@@ -1,8 +1,7 @@
-import * as Command from '../Command/Command.js'
 import * as Developer from './Developer.js'
 
 // prettier-ignore
-export const Commands={
+export const Commands = {
   'Developer.allocateMemoryInSharedProcess': Developer.allocateMemoryInSharedProcess,
   'Developer.clearCache': Developer.clearCache,
   'Developer.crashMainProcess': Developer.crashMainProcess,

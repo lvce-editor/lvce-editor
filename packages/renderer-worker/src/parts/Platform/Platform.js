@@ -205,3 +205,5 @@ export const getTmpDir = () => {
   }
   return SharedProcess.invoke(/* Platform.getTmpDir */ 'Platform.getTmpDir')
 }
+
+export const browserViewZindexWorkaroundEnabled = true

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>QuickPick</title>
+    <style>
+      :root {
+        --QuickPickBackground: rgb(40, 46, 47);
+        --FocusOutline: #3d5252;
+        --ListActiveSelectionBackground: #515f59;
+        --ListActiveSelectionForeground: #ffffff;
+        --ListHoverBackground: #405c5033;
+        --ListHoverForeground: #e0e0e0;
+        --ListForeground: rgb(156, 162, 160);
+      }
+      html,
+      body {
+        width: 100%;
+        overflow: hidden;
+        margin: 0;
+        cursor: default;
+      }
+
+      body {
+        font-family: system-ui, Ubuntu, Droid Sans, sans-serif;
+      }
+
+      #QuickPick {
+        padding: 0 1px 6px;
+        background: var(--QuickPickBackground);
+        color: var(--ListForeground);
+        box-sizing: border-box;
+        contain: content;
+        display: flex;
+        flex-direction: column;
+        row-gap: 4px;
+        pointer-events: all;
+        box-shadow: rgb(0 0 0 / 15%) 0px 0px 8px 2px;
+      }
+
+      #QuickPickHeader {
+        /* width: 100%; */
+        display: flex;
+        /* margin: 6px 6px 0; */
+        padding: 6px 6px 0;
+        /* contain: strict; */
+        height: 30px;
+        contain: strict;
+        /* margin-bottom: -2px; */
+      }
+
+      .QuickPickItem {
+        display: flex;
+        white-space: nowrap;
+        align-items: center;
+        width: 100%;
+        height: 22px;
+        font-size: 13px;
+        margin: 0;
+        padding: 0 6px;
+        contain: strict;
+        gap: 4px;
+      }
+
+      .QuickPickItem:hover {
+        background: var(--ListHoverBackground);
+        color: var(--ListHoverForeground);
+      }
+
+      #QuickPickItemActive {
+        color: var(--ListActiveSelectionForeground);
+        background: var(--ListActiveSelectionBackground);
+      }
+
+      .InputBox {
+        width: 100%;
+        margin: 0;
+        border: none;
+        outline: none;
+        flex: 1;
+        background: var(--InputBoxBackground);
+        border: 1px solid rgb(55, 65, 63);
+        padding: 4px;
+        color: var(--InputBoxForeground);
+        font-size: 13px;
+        contain: strict;
+      }
+
+      .Label {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: inline-block;
+        white-space: nowrap;
+      }
+
+      #QuickPickItems {
+        color: white;
+        display: flex;
+        flex-direction: column;
+      }
+    </style>
+    <script type="module" src="quickpick.js"></script>
+  </head>
+  <body>
+    <div id="QuickPick">
+      <div id="QuickPickHeader">
+        <input
+          type="text"
+          class="InputBox"
+          id="QuickPickInput"
+          spellcheck="false"
+          autofocus
+        />
+      </div>
+      <div id="QuickPickItems"></div>
+    </div>
+  </body>
+</html>

@@ -11,6 +11,8 @@ const Performance = require('../Performance/Performance.js')
 const Cli = require('../Cli/Cli.js')
 const AppWindow = require('../AppWindow/AppWindow.js')
 const Command = require('../Command/Command.js')
+const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
+const PendingPorts = require('../PendingPorts/PendingPorts.js')
 
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
@@ -124,7 +126,11 @@ const handlePortForSharedProcess = async (event) => {
 
 const handlePortForMainProcess = (event) => {
   const browserWindowPort = event.ports[0]
-  browserWindowPort.on('message', async (event) => {
+  const id = event.sender.id
+  // console.log({ id })
+  const state = AppWindowStates.findById(id)
+  state.port = browserWindowPort
+  const handleMessage = async (event) => {
     const message = event.data
     try {
       const result = await Command.execute(message.method, ...message.params)
@@ -157,11 +163,49 @@ const handlePortForMainProcess = (event) => {
         })
       }
     }
-  })
+  }
+  browserWindowPort.on('message', handleMessage)
   browserWindowPort.start()
 }
 
 exports.handlePortForMainProcess = handlePortForMainProcess
+
+/**
+ *
+ * @param {*} views
+ * @returns {Electron.BrowserView|undefined}
+ */
+const getQuickPickViewFromArray = (views) => {
+  for (const view of views) {
+    const url = view.webContents.getURL()
+    console.log({ url })
+    if (url.endsWith('quickpick.html')) {
+      return view
+    }
+  }
+  return undefined
+}
+
+const handlePortForQuickPick = (event) => {
+  const browserWindowPort = event.ports[0]
+  const browserWindow = Electron.BrowserWindow.getFocusedWindow()
+  if (!browserWindow) {
+    return
+  }
+  const views = browserWindow.getBrowserViews()
+  const quickPickview = getQuickPickViewFromArray(views)
+  if (!quickPickview) {
+    PendingPorts.add('quickPick', browserWindowPort)
+    // TODO handle different quickpick view states
+    // disposed -> do nothing
+    // creating -> wait for creation, then post message
+    console.log('no quickpick view', views)
+    return
+  }
+  console.log('send port to quickpick')
+  quickPickview.webContents.postMessage('port', '', [browserWindowPort])
+}
+
 /**
  * @param {import('electron').IpcMainEvent} event
  */
@@ -173,6 +217,10 @@ const handlePort = async (event, data) => {
       return handlePortForExtensionHost(event)
     case 'electron-process':
       return handlePortForMainProcess(event)
+    // case 'quickpick-browserview':
+    //   return handlePortFromQuickPick(event)
+    case 'quickpick':
+      return handlePortForQuickPick(event)
     default:
       console.error(`[main-process] unexpected port type ${data}`)
   }

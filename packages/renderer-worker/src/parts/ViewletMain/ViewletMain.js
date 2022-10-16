@@ -560,10 +560,12 @@ export const resize = (state, dimensions) => {
     width,
     height,
   }
-  const commands =
-    editors.length > 0
-      ? Viewlet.resize(ViewletMap.getId(editors[0]), childDimensions)
-      : []
+  const editor = editors[0]
+  let commands = []
+  if (editor) {
+    const id = ViewletMap.getId(editor.uri)
+    commands = Viewlet.resize(id, childDimensions)
+  }
   return {
     newState: {
       ...state,

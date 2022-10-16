@@ -262,36 +262,31 @@ const appendToBody = (childId) => {
   $Parent.append($Child)
 }
 
+const getFn = (command) => {
+  switch (command) {
+    case 'Viewlet.create':
+      return create
+    case 'Viewlet.send':
+      return invoke
+    case 'Viewlet.show':
+      return show
+    case 'Viewlet.dispose':
+      return dispose
+    case 'Viewlet.setBounds':
+      return setBounds
+    case 'Viewlet.ariaAnnounce':
+      return ariaAnnounce
+    case 'Viewlet.append':
+      return append
+    default:
+      throw new Error(`unknown command ${command}`)
+  }
+}
+
 export const executeCommands = (commands) => {
   for (const [command, ...args] of commands) {
-    switch (command) {
-      case 'Viewlet.create':
-        create(...args)
-        break
-      case 'Viewlet.send':
-        invoke(...args)
-        break
-      case 'Viewlet.show':
-        show(...args)
-        break
-      case 'Viewlet.dispose':
-        dispose(...args)
-        break
-      case 'Viewlet.setBounds':
-        setBounds(...args)
-        break
-      case 'Viewlet.ariaAnnounce':
-        ariaAnnounce(...args)
-        break
-      case 'Viewlet.append':
-        append(...args)
-        break
-      case 'Viewlet.appendToBody':
-        appendToBody(...args)
-        break
-      default:
-        throw new Error(`unknown command ${command}`)
-    }
+    const fn = getFn(command)
+    fn(...args)
   }
 }
 

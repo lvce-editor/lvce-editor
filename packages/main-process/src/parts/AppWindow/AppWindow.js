@@ -6,13 +6,7 @@ const LifeCycle = require('../LifeCycle/LifeCycle.js')
 const Session = require('../ElectronSession/ElectronSession.js')
 const Platform = require('../Platform/Platform.js')
 const Preferences = require('../Preferences/Preferences.js')
-
-exports.state = {
-  /**
-   * @type {any[]}
-   */
-  windows: [],
-}
+const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 
 // TODO impossible to test these methods
 // and ensure that there is no memory leak
@@ -21,11 +15,7 @@ exports.state = {
  */
 const handleWindowClose = (event) => {
   const id = event.sender.id
-  const index = exports.state.windows.findIndex((window) => window.id === id)
-  if (index === -1) {
-    throw new Error('expected window to be in windows array')
-  }
-  exports.state.windows.splice(index, 1)
+  AppWindowStates.remove(id)
 }
 
 const loadUrl = async (browserWindow, url) => {
@@ -88,7 +78,7 @@ exports.createAppWindow = async (
     titleBarOverlay,
   })
   window.on('close', handleWindowClose)
-  exports.state.windows.push({
+  AppWindowStates.add({
     window,
     parsedArgs,
     workingDirectory,
@@ -102,10 +92,5 @@ exports.openNew = (url) => {
 }
 
 exports.findById = (id) => {
-  for (const window of this.state.windows) {
-    if (window.id === id) {
-      return window
-    }
-  }
-  return undefined
+  return AppWindowStates.findById(id)
 }
