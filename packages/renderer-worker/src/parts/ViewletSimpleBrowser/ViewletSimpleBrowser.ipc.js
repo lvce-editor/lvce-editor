@@ -8,6 +8,7 @@ export const Commands = {
   'SimpleBrowser.reload': SimpleBrowser.reload,
   'SimpleBrowser.forward': SimpleBrowser.forward,
   'SimpleBrowser.backward': SimpleBrowser.backward,
+  'SimpleBrowser.handleWillNavigate': SimpleBrowser.handleWillNavigate,
 }
 
 export * from './ViewletSimpleBrowser.js'

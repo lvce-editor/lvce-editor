@@ -64,16 +64,6 @@ export const go = (state) => {
 
 export const hasFunctionalRender = true
 
-const renderIframeSrc = {
-  isEqual(oldState, newState) {
-    return oldState.iframeSrc === newState.iframeSrc
-  },
-  apply(oldState, newState) {
-    ElectronBrowserViewFunctions.setIframeSrc(newState.iframeSrc)
-    return ['Viewlet.send', 'SimpleBrowser', 'setIframeSrc', newState.iframeSrc]
-  },
-}
-
 export const openDevtools = async (state) => {
   await ElectronBrowserViewFunctions.openDevtools()
   return state
@@ -92,6 +82,13 @@ export const forward = async (state) => {
 export const backward = async (state) => {
   await ElectronBrowserViewFunctions.backward()
   return state
+}
+
+export const handleWillNavigate = (state, url) => {
+  return {
+    ...state,
+    iframeSrc: url,
+  }
 }
 
 export const hasFunctionalResize = true
@@ -114,6 +111,16 @@ export const resize = (state, dimensions) => {
 export const dispose = async (state) => {
   await ElectronBrowserView.disposeBrowserView()
   console.log('dispose browser view')
+}
+
+const renderIframeSrc = {
+  isEqual(oldState, newState) {
+    return oldState.iframeSrc === newState.iframeSrc
+  },
+  apply(oldState, newState) {
+    ElectronBrowserViewFunctions.setIframeSrc(newState.iframeSrc)
+    return ['Viewlet.send', 'SimpleBrowser', 'setIframeSrc', newState.iframeSrc]
+  },
 }
 
 export const render = [renderIframeSrc]

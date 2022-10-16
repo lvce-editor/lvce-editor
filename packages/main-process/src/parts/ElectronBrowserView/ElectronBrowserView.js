@@ -50,6 +50,28 @@ exports.createBrowserView = async (
       session: ElectronSessionForBrowserView.getSession(),
     },
   })
+
+  const getPort = () => {
+    const state = AppWindowStates.findById(browserWindow.webContents.id)
+    const { port } = state
+    return port
+  }
+
+  /**
+   * @param {Electron.Event} event
+   * @param {string} url
+   */
+  const handleWillNavigate = (event, url) => {
+    console.log({ url })
+    const port = getPort()
+    port.postMessage({
+      jsonrpc: '2.0',
+      method: 'SimpleBrowser.handleWillNavigate',
+      params: [url],
+    })
+  }
+
+  view.webContents.on('will-navigate', handleWillNavigate)
   view.webContents.setWindowOpenHandler(
     ElectronSessionForBrowserView.handleWindowOpen
   )
@@ -64,8 +86,7 @@ exports.createBrowserView = async (
     if (input.type !== 'keyDown') {
       return
     }
-    const state = AppWindowStates.findById(browserWindow.webContents.id)
-    const { port } = state
+    const port = getPort()
     const identifier = getIdentifier(input)
     for (const fallThroughKeyBinding of falltroughKeyBindings) {
       if (fallThroughKeyBinding.key === identifier) {
