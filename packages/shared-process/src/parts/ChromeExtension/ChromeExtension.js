@@ -16,12 +16,6 @@ const getExtensionPath = async (tmpDir) => {
 
 export const install = async (name, url) => {
   try {
-    // TODO
-    // figure out download url
-    // download extension
-    // extract extension
-    // figure out extension path
-    // move extension to extensions folder
     Assert.string(name)
     Assert.string(url)
     const cachedChromeExtensionsPath = Platform.getCachedExtensionsPath()
@@ -45,7 +39,6 @@ export const install = async (name, url) => {
 export const uninstall = async (name) => {
   try {
     Assert.string(name)
-
     // TODO
     // figure out extension path
     // remove file
