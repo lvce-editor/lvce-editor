@@ -40,6 +40,7 @@ export const loadContent = async (state) => {
     height - headerHeight,
     fallThroughKeyBindings
   )
+  await ElectronBrowserViewFunctions.setIframeSrc(iframeSrc)
   return {
     ...state,
     iframeSrc,
@@ -83,9 +84,10 @@ const toIframeSrc = (input) => {
   return createSearchUrl(input)
 }
 
-export const go = (state) => {
+export const go = async (state) => {
   const { inputValue } = state
   const iframeSrc = toIframeSrc(inputValue)
+  await ElectronBrowserViewFunctions.setIframeSrc(iframeSrc)
   return {
     ...state,
     iframeSrc,
@@ -148,7 +150,6 @@ const renderIframeSrc = {
     return oldState.iframeSrc === newState.iframeSrc
   },
   apply(oldState, newState) {
-    ElectronBrowserViewFunctions.setIframeSrc(newState.iframeSrc)
     return ['Viewlet.send', 'SimpleBrowser', 'setIframeSrc', newState.iframeSrc]
   },
 }
