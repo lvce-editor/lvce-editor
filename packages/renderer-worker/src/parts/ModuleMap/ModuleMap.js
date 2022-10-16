@@ -227,6 +227,7 @@ export const getModuleId = (commandId) => {
     case 'Viewlet.closeWidget':
     case 'Viewlet.getAllStates':
     case 'Viewlet.openWidget':
+    case 'Viewlet.focus':
     case 2133:
       return ModuleId.Viewlet
     case 'Window.close':

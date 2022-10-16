@@ -86,6 +86,8 @@ export const create = () => {
   $Viewlet.className = 'Viewlet'
   $Viewlet.ariaBusy = 'true'
   $Viewlet.ariaLive = 'polite'
+  // @ts-ignore
+  $Viewlet.role = 'none'
   $Viewlet.append($ExtensionHeader, $ExtensionListWrapper)
   $Viewlet.addEventListener('wheel', ViewletExtensionsEvents.handleWheel, {
     passive: true,

@@ -5,4 +5,5 @@ export const Commands = {
   'Viewlet.getAllStates': Viewlet.getAllStates,
   'Viewlet.openWidget': Viewlet.openWidget,
   2133: Viewlet.send,
+  'Viewlet.focus': Viewlet.focus,
 }

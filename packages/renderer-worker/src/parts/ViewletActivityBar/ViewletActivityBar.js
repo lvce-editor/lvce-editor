@@ -2,10 +2,10 @@ import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFla
 import * as Command from '../Command/Command.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as I18nString from '../I18NString/I18NString.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as Icon from '../Icon/Icon.js'
+import { focusIndex } from './ViewletActivityBarFocusIndex.js'
 
 /**
  * @enum {string}
@@ -81,6 +81,7 @@ export const create = (id, uri, left, top, width, height) => {
     activityBarItems: [],
     focusedIndex: -1,
     selectedIndex: -1,
+    focused: false,
     left,
     top,
     width,
@@ -192,29 +193,20 @@ const findIndex = (activityBarItems, id) => {
   return -1
 }
 
-export const handleSideBarViewletChange = async (state, id, ...args) => {
+export const handleSideBarViewletChange = (state, id, ...args) => {
   const index = findIndex(state.activityBarItems, id)
-  const oldIndex = state.selectedIndex
-  state.selectedIndex = index
-  await RendererProcess.invoke(
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'ActivityBar',
-    /* method */ 'selectIndex',
-    /* oldIndex */ oldIndex,
-    /* newIndex */ index
-  )
+  return {
+    ...state,
+    selectedIndex: index,
+  }
 }
 
-export const handleSideBarHidden = async (state) => {
-  const oldIndex = state.focusedIndex
-  state.focusedIndex = -1
-  await RendererProcess.invoke(
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'ActivityBar',
-    /* method */ 'selectIndex',
-    /* oldIndex */ oldIndex,
-    /* newIndex */ -1
-  )
+export const handleSideBarHidden = (state) => {
+  return {
+    ...state,
+    focusedIndex: -1,
+    selectedIndex: -1,
+  }
 }
 
 export const updateSourceControlCount = async (state, count) => {
@@ -227,13 +219,10 @@ export const updateSourceControlCount = async (state, count) => {
   if (index === -1) {
     return
   }
-  await RendererProcess.invoke(
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'ActivityBar',
-    /* method */ 'setBadgeCount',
-    /* index */ index,
-    /* count */ count
-  )
+  return {
+    ...state,
+    badgeCount: count,
+  }
 
   // TODO send count to renderer process (if activity bar is visible)
 }
@@ -251,13 +240,10 @@ export const toggleActivityBarItem = async (state, item) => {
     (activityBarItem) => activityBarItem.id === item.label
   )
   activityBarItem.enabled = !activityBarItem.enabled
-  await RendererProcess.invoke(
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'ActivityBar',
-    /* method */ 'setItems',
-    /* items */ state.activityBarItems.filter(isEnabled),
-    /* index */ state.selectedIndex
-  )
+  return {
+    ...state,
+    items: state.activityBarItems.filter(isEnabled),
+  }
 }
 
 export const handleContextMenu = async (state, x, y) => {
@@ -268,6 +254,19 @@ export const handleContextMenu = async (state, x, y) => {
     /* id */ MenuEntryId.ActivityBar
   )
   return state
+}
+
+export const handleBlur = (state) => {
+  return {
+    ...state,
+    focused: false,
+  }
+}
+
+export const focus = (state) => {
+  const { focusedIndex } = state
+  const indexToFocus = focusedIndex === -1 ? 0 : focusedIndex
+  return focusIndex(state, indexToFocus)
 }
 
 export const hasFunctionalResize = true
@@ -299,7 +298,10 @@ const renderActivityBarItems = {
 
 const renderFocusedIndex = {
   isEqual(oldState, newState) {
-    return oldState.focusedIndex === newState.focusedIndex
+    return (
+      oldState.focusedIndex === newState.focusedIndex &&
+      oldState.focused === newState.focused
+    )
   },
   apply(oldState, newState) {
     return [
@@ -308,10 +310,30 @@ const renderFocusedIndex = {
       /* method */ 'setFocusedIndex',
       /* unFocusIndex */ oldState.focusedIndex,
       /* focusIndex */ newState.focusedIndex,
+      /* focused */ newState.focused,
     ]
   },
 }
 
-export const render = [renderActivityBarItems, renderFocusedIndex]
+const renderSelectedIndex = {
+  isEqual(oldState, newState) {
+    return oldState.selectedIndex === newState.selectedIndex
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'ActivityBar',
+      /* method */ 'setSelectedIndex',
+      /* oldIndex */ oldState.selectedIndex,
+      /* newIndex */ newState.selectedIndex,
+    ]
+  },
+}
+
+export const render = [
+  renderActivityBarItems,
+  renderFocusedIndex,
+  renderSelectedIndex,
+]
 
 export const hasFunctionalRender = true

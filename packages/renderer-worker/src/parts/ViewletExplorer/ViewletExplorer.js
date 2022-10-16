@@ -727,10 +727,11 @@ const handleClickFile = async (state, dirent, index, keepFocus = false) => {
   return {
     ...state,
     focusedIndex: index,
+    focused: !keepFocus,
   }
 }
 
-const handleClickDirectory = async (state, dirent, index) => {
+const handleClickDirectory = async (state, dirent, index, keepFocus) => {
   dirent.type = DirentType.DirectoryExpanding
   // TODO handle error
   const dirents = await getChildDirents(state.root, state.pathSeparator, dirent)
@@ -754,19 +755,26 @@ const handleClickDirectory = async (state, dirent, index) => {
     ...state,
     items: newDirents,
     focusedIndex: newIndex,
+    focused: keepFocus,
   }
 }
 
-const handleClickDirectoryExpanding = async (state, dirent, index) => {
+const handleClickDirectoryExpanding = async (
+  state,
+  dirent,
+  index,
+  keepFocus
+) => {
   dirent.type = DirentType.Directory
   dirent.icon = IconTheme.getIcon(dirent)
   return {
     ...state,
     focusedIndex: index,
+    focused: keepFocus,
   }
 }
 
-const handleClickDirectoryExpanded = (state, dirent, index) => {
+const handleClickDirectoryExpanded = (state, dirent, index, keepFocus) => {
   dirent.type = DirentType.Directory
   dirent.icon = IconTheme.getIcon(dirent)
   const endIndex = getParentEndIndex(state.items, index)
@@ -778,6 +786,7 @@ const handleClickDirectoryExpanded = (state, dirent, index) => {
     ...state,
     items: newDirents,
     focusedIndex: index,
+    focused: keepFocus,
   }
 }
 
@@ -797,11 +806,16 @@ export const handleClick = (state, index, keepFocus = false) => {
       return handleClickFile(state, dirent, actualIndex, keepFocus)
     // TODO decide on one name
     case DirentType.Directory:
-      return handleClickDirectory(state, dirent, actualIndex)
+      return handleClickDirectory(state, dirent, actualIndex, keepFocus)
     case DirentType.DirectoryExpanding:
-      return handleClickDirectoryExpanding(state, dirent, actualIndex)
+      return handleClickDirectoryExpanding(
+        state,
+        dirent,
+        actualIndex,
+        keepFocus
+      )
     case DirentType.DirectoryExpanded:
-      return handleClickDirectoryExpanded(state, dirent, actualIndex)
+      return handleClickDirectoryExpanded(state, dirent, actualIndex, keepFocus)
     case DirentType.Symlink:
       return handleClickSymLink(state, dirent, state.focusedIndex)
     default:

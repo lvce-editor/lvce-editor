@@ -88,6 +88,7 @@ export const create = (statusBarItemsLeft, statusBarItemsRight) => {
   $Viewlet.tabIndex = 0
   // @ts-ignore
   $Viewlet.role = 'status'
+  $Viewlet.ariaRoleDescription = 'Status Bar'
   $Viewlet.ariaLive = 'off' // see https://github.com/microsoft/vscode/issues/94677
   $Viewlet.append($StatusBarItemsLeft, $StatusBarItemsRight)
 

@@ -2,6 +2,10 @@ import * as Assert from '../Assert/Assert.js'
 
 export const state = {
   instances: Object.create(null),
+  /**
+   * @type {any}
+   */
+  focusedInstance: undefined,
 }
 
 export const set = (key, value) => {
@@ -47,4 +51,12 @@ export const setState = (key, newState) => {
 
 export const reset = () => {
   state.instances = Object.create(null)
+}
+
+export const getFocusedInstance = () => {
+  return state.focusedInstance
+}
+
+export const setFocusedInstance = (state, instance) => {
+  state.focusedIndex = instance
 }

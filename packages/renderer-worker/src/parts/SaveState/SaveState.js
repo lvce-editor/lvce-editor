@@ -42,7 +42,7 @@ export const handleVisibilityChange = async (visibilityState) => {
       LocalStorage.setJson('stateToSave', stateToSave),
       SessionStorage.setJson('workspace', stateToSave.workspace),
     ])
-    console.log('[renderer worker] state was saved')
+    // console.log('[renderer worker] state was saved')
   }
 }
 

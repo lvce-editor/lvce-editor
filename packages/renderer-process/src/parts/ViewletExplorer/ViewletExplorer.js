@@ -33,9 +33,10 @@ export const create = () => {
     passive: true,
   })
   $Viewlet.onblur = ViewletExplorerEvents.handleBlur
-  $Viewlet.ondragstart = ViewletExplorerEvents.handleDragStart
   $Viewlet.ondragover = ViewletExplorerEvents.handleDragOver
+  $Viewlet.ondragstart = ViewletExplorerEvents.handleDragStart
   $Viewlet.ondrop = ViewletExplorerEvents.handleDrop
+  $Viewlet.onfocus = ViewletExplorerEvents.handleFocus
   return {
     $Viewlet,
   }

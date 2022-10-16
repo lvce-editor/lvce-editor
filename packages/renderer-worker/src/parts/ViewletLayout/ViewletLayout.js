@@ -201,6 +201,7 @@ export const getPoints = (source, destination) => {
 export const create = () => {
   return {
     points: new Uint16Array(kTotal),
+    sideBarViewletId: '',
     [kSashId]: SashType.None,
   }
 }
@@ -686,6 +687,11 @@ export const handleSashDoubleClick = (state, sashId) => {
     default:
       throw new Error(`unsupported sash type ${sashId}`)
   }
+}
+
+export const isSideBarVisible = (state) => {
+  const { points } = state
+  return points[kSideBarVisible]
 }
 
 export const hasFunctionalRender = true

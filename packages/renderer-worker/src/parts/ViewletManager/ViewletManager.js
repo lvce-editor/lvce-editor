@@ -315,14 +315,16 @@ export const load = async (
           ...extraCommands,
           // ['Viewlet.show', viewlet.id],
         ]
-        allCommands.splice(1, 0, [
-          'Viewlet.setBounds',
-          viewlet.id,
-          left,
-          top,
-          width,
-          height,
-        ])
+        if (viewlet.setBounds !== false) {
+          allCommands.splice(1, 0, [
+            'Viewlet.setBounds',
+            viewlet.id,
+            left,
+            top,
+            width,
+            height,
+          ])
+        }
         return allCommands
       }
       // console.log('else', viewlet.id, { commands })

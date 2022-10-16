@@ -5,15 +5,32 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
-/**
- * @deprecated
- */
-export const focus = (id) => {
-  // if(state.instances[id]){
-  // }
-  // console.log('focus', { id })
-  // // TODO open if it is not already open
-  // RendererProcess.send([/* viewletFocus */ 3027, /* id */ id])
+export const focus = async (id) => {
+  const instance = ViewletStates.getInstance(id)
+  if (!instance) {
+    return
+  }
+  const commands = []
+  if (instance && instance.factory.focus) {
+    const oldState = instance.state
+    const newState = instance.factory.focus(oldState)
+    commands.push(
+      ...ViewletManager.render(instance.factory, oldState, newState)
+    )
+  }
+  const oldInstance = ViewletStates.getFocusedInstance()
+  if (oldInstance) {
+    if (oldInstance && oldInstance.factory.handleBlur) {
+      const oldState = oldInstance.state
+      const newState = oldInstance.factory.handleBlur(oldState)
+      commands.push(
+        ...ViewletManager.render(oldInstance.factory, oldState, newState)
+      )
+    }
+  }
+  console.log({ commands })
+  ViewletStates.setFocusedInstance(instance)
+  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
 }
 // export const createOrFocus = async id=>{
 //   const instance = state.instances[id] || await create(id)
