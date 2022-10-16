@@ -64,17 +64,29 @@ const tableCellProps = {
 
 const tableCell = td(tableCellProps, 1)
 
+const getRowClassName = (isEven, selected) => {
+  let className = ''
+  if (isEven) {
+    className += 'KeyBindingsTableRowEven'
+  } else {
+    className += 'KeyBindingsTableRowOdd'
+  }
+  if (selected) {
+    className += ' KeyBindingsTableRowSelected'
+  }
+  return className
+}
+
 const getTableRowDom = (keyBinding) => {
   const { children, childCount } = getKeyBindingCellChildren(keyBinding)
-  const { rowIndex } = keyBinding
+  const { rowIndex, selected } = keyBinding
   const isEven = rowIndex % 2 === 0
+  const className = getRowClassName(isEven, selected)
   return [
     tr(
       {
         ariaRowIndex: keyBinding.rowIndex,
-        className: isEven
-          ? 'KeyBindingsTableRowEven'
-          : 'KeyBindingsTableRowOdd',
+        className,
       },
       3
     ),
@@ -144,7 +156,7 @@ const getTableDom = (filteredKeyBindings, displayKeyBindings) => {
   return tableDom
 }
 
-const getVisible = (filteredKeyBindings, minLineY, maxLineY) => {
+const getVisible = (filteredKeyBindings, minLineY, maxLineY, selectedIndex) => {
   const visibleKeyBindings = []
   const slicedKeyBindings = filteredKeyBindings.slice(minLineY, maxLineY)
   for (let i = 0; i < slicedKeyBindings.length; i++) {
@@ -156,6 +168,7 @@ const getVisible = (filteredKeyBindings, minLineY, maxLineY) => {
       key: slicedKeyBinding.key,
       when: slicedKeyBinding.when,
       command: slicedKeyBinding.command,
+      selected: i === selectedIndex,
     })
   }
   return visibleKeyBindings
@@ -183,15 +196,18 @@ const renderKeyBindings = {
     return (
       oldState.filteredKeyBindings === newState.filteredKeyBindings &&
       oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY
+      oldState.maxLineY === newState.maxLineY &&
+      oldState.selectedIndex === newState.selectedIndex &&
+      oldState.focusedIndex === newState.focusedIndex
     )
   },
   apply(oldState, newState) {
-    const { filteredKeyBindings, minLineY, maxLineY } = newState
+    const { filteredKeyBindings, minLineY, maxLineY, selectedIndex } = newState
     const displayKeyBindings = getVisible(
       filteredKeyBindings,
       minLineY,
-      maxLineY
+      maxLineY,
+      selectedIndex
     )
     // TODO do dom diffing for faster incremental updates, e.g. when scrolling
     // console.time('tableDom')

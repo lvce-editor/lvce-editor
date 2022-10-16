@@ -7,21 +7,54 @@ export const handleInput = (event) => {
   RendererWorker.send('KeyBindings.handleInput', value)
 }
 
+const getNodeIndex = ($Node) => {
+  let index = 0
+  while (($Node = $Node.previousElementSibling)) {
+    index++
+  }
+  return index
+}
+
+const getTableRowIndex = ($Target) => {
+  const { className } = $Target
+  switch (className) {
+    case 'KeyBindingsTableCell':
+      return getNodeIndex($Target.parentNode)
+    default:
+      return -1
+  }
+}
+
+export const handleTableClick = (event) => {
+  const { target } = event
+  const index = getTableRowIndex(target)
+  if (index === -1) {
+    return
+  }
+  RendererWorker.send('KeyBindings.handleClick', index)
+}
+
+const handleWheelDeltaLine = (deltaY) => {
+  RendererWorker.send(
+    /* ViewletKeyBindings.handleWheel */ 'KeyBindings.handleWheel',
+    /* deltaY */ deltaY
+  )
+}
+
+const handleWheelDeltaPixel = (deltaY) => {
+  RendererWorker.send(
+    /* ViewletKeyBindings.handleWheel */ 'KeyBindings.handleWheel',
+    /* deltaY */ deltaY
+  )
+}
+
 export const handleWheel = (event) => {
   const { deltaMode, deltaY } = event
   switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
-      RendererWorker.send(
-        /* ViewletKeyBindings.handleWheel */ 'KeyBindings.handleWheel',
-        /* deltaY */ deltaY
-      )
-      break
+      return handleWheelDeltaLine(deltaY)
     case WheelEventType.DomDeltaPixel:
-      RendererWorker.send(
-        /* ViewletKeyBindings.handleWheel */ 'KeyBindings.handleWheel',
-        /* deltaY */ deltaY
-      )
-      break
+      return handleWheelDeltaPixel(deltaY)
     default:
       break
   }
