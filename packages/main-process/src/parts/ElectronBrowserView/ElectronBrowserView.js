@@ -62,7 +62,6 @@ exports.createBrowserView = async (
    * @param {string} url
    */
   const handleWillNavigate = (event, url) => {
-    console.log({ url })
     const port = getPort()
     port.postMessage({
       jsonrpc: '2.0',
@@ -70,8 +69,8 @@ exports.createBrowserView = async (
       params: [url],
     })
   }
-
   view.webContents.on('will-navigate', handleWillNavigate)
+  view.webContents.on('did-navigate', handleWillNavigate)
   view.webContents.setWindowOpenHandler(
     ElectronSessionForBrowserView.handleWindowOpen
   )
