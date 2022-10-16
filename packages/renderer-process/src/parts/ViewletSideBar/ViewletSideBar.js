@@ -55,7 +55,7 @@ export const appendViewlet = (state, name, $Viewlet) => {
 
 export const setTitle = (state, name) => {
   const { $SideBarTitleAreaTitle } = state
-  $SideBarTitleAreaTitle.name = name
+  $SideBarTitleAreaTitle.title = name
   $SideBarTitleAreaTitle.textContent = name
 }
 
