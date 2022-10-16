@@ -1,16 +1,12 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
-import * as ElectronBrowserViewQuickPick from '../ElectronBrowserViewQuickPick/ElectronBrowserViewQuickPick.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as IpcParent from '../IpcParent/IpcParent.js'
-import * as IpcParentType from '../IpcParentType/IpcParentType.js'
-import * as KeyBindings from '../KeyBindings/KeyBindings.js'
-import * as Layout from '../Layout/Layout.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
+import * as ViewletElectron from './ViewletElectron.js'
 
 /**
  * @deprecated
@@ -177,85 +173,15 @@ export const getAllStates = () => {
   return states
 }
 
-const isQuickPickKeyBinding = (keyBinding) => {
-  return keyBinding.when === 'focus.quickPickInput'
-}
-
-const getQuickPickKeyBindings = (keyBindings) => {
-  return keyBindings.filter(isQuickPickKeyBinding)
-}
-
-const openElectronQuickPick = async (...args) => {
-  const id = 'QuickPick'
-  const width = 600
-  const height = 300
-  const left = Math.round((Layout.state.windowWidth - width) / 2)
-  const top = 50
-  const keyBindings = await KeyBindings.getKeyBindings()
-  const quickPickKeyBindings = getQuickPickKeyBindings(keyBindings)
-  await ElectronBrowserViewQuickPick.createBrowserViewQuickPick(
-    top,
-    left,
-    width,
-    height
-  )
-  const ipc = await IpcParent.create({
-    method: IpcParentType.Electron,
-    type: 'quickpick',
-  })
-  const type = args[0]
-  const commands = await ViewletManager.load({
-    getModule: ViewletModule.load,
-    id,
-    type: 0,
-    // @ts-ignore
-    uri: `quickPick://${type}`,
-    show: false,
-    focus: true,
-  })
-
-  const handleMessage = async (event) => {
-    const { method, params } = event
-    const instance = ViewletStates.getInstance(id)
-    const oldState = instance.state
-    if (method === 'Viewlet.closeWidget') {
-      return closeWidget(id)
-    }
-    const newState = await instance.factory.Commands[method](
-      oldState,
-      ...params
-    )
-    const commands = ViewletManager.render(instance.factory, oldState, newState)
-    ipc.send({
-      jsonrpc: '2.0',
-      method: 'executeCommands',
-      params: commands,
-    })
-    instance.state = newState
-  }
-  ipc.onmessage = handleMessage
-  commands.push([
-    'Viewlet.send',
-    'QuickPick',
-    'setKeyBindings',
-    quickPickKeyBindings,
-  ])
-  ipc.send({
-    jsonrpc: '2.0',
-    method: 'executeCommands',
-    params: commands,
-  })
-}
-
 export const openWidget = async (id, ...args) => {
   const hasInstance = ViewletStates.hasInstance(id)
   const type = args[0]
   if (ElectronBrowserView.isOpen() && id === 'QuickPick') {
     // TODO recycle quickpick instance
     if (hasInstance) {
-      await closeWidgetElectronQuickPick()
+      await ViewletElectron.closeWidgetElectronQuickPick()
     }
-    return openElectronQuickPick(...args)
+    return ViewletElectron.openElectronQuickPick(...args)
   }
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
@@ -283,17 +209,9 @@ export const openWidget = async (id, ...args) => {
   //
 }
 
-const closeWidgetElectronQuickPick = async () => {
-  const id = 'QuickPick'
-  ViewletStates.remove(id)
-  await ElectronBrowserViewQuickPick.disposeBrowserViewQuickPick()
-  // TODO restore focus to previously focused element
-  await ElectronWindow.focus()
-}
-
 export const closeWidget = async (id) => {
-  if (ElectronBrowserView.isOpen() && id === 'QuickPick') {
-    return closeWidgetElectronQuickPick()
+  if (ElectronBrowserView.isOpen() && id === ViewletModuleId.QuickPick) {
+    return ViewletElectron.closeWidgetElectronQuickPick()
   }
   ViewletStates.remove(id)
   await RendererProcess.invoke(
