@@ -35,3 +35,5 @@ export const ActivityBarAdditionalViews = 17
 export const Search = 18
 
 export const EditorImage = 19
+
+export const ExtensionDetailReadme = 20

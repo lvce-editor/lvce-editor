@@ -9,6 +9,8 @@ export const create = () => {
   $ReadmeHtml.className = 'Markdown'
   // @ts-ignore
   $ReadmeHtml.role = 'document'
+  $ReadmeHtml.oncontextmenu =
+    ViewletExtensionDetailEvents.handleReadmeContextMenu
 
   const $ExtensionDetailIcon = document.createElement('img')
   $ExtensionDetailIcon.className = 'ExtensionDetailIcon'

@@ -205,3 +205,21 @@ test('writeImage', async () => {
     type: 'image/avif',
   })
 })
+
+test('execCopy - error', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {
+    throw new TypeError('x is not a function')
+  })
+  await expect(ClipBoard.execCopy()).rejects.toThrowError(
+    new Error('Failed to copy selected text: TypeError: x is not a function')
+  )
+})
+
+test('execCopy', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await ClipBoard.execCopy()
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('ClipBoard.execCopy')
+})
