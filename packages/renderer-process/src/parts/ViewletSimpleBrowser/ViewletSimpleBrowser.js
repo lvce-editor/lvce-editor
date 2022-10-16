@@ -15,17 +15,16 @@ const UiStrings = {
 }
 
 export const create = () => {
-  const $ButtonBack = IconButton.create$Button(
-    UiStrings.Back,
-    Icon.PreviousMatch
-  )
+  const $ButtonBack = IconButton.create$Button(UiStrings.Back, Icon.ArrowLeft)
   $ButtonBack.onclick = ViewletSimpleBrowserEvents.handleClickBackward
+
   const $ButtonForward = IconButton.create$Button(
     UiStrings.Forward,
-    Icon.NextMatch
+    Icon.ArrowRight
   )
   $ButtonForward.onclick = ViewletSimpleBrowserEvents.handleClickForward
-  const $ButtonReload = IconButton.create$Button(UiStrings.Reload, Icon.Close)
+
+  const $ButtonReload = IconButton.create$Button(UiStrings.Reload, Icon.Refresh)
   $ButtonReload.onclick = ViewletSimpleBrowserEvents.handleClickReload
 
   const $InputBox = InputBox.create()
