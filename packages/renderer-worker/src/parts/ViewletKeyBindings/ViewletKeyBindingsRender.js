@@ -66,11 +66,15 @@ const tableCell = td(tableCellProps, 1)
 
 const getTableRowDom = (keyBinding) => {
   const { children, childCount } = getKeyBindingCellChildren(keyBinding)
+  const { rowIndex } = keyBinding
+  const isEven = rowIndex % 2 === 0
   return [
     tr(
       {
         ariaRowIndex: keyBinding.rowIndex,
-        className: ClassNames.KeyBindingsTableRow,
+        className: isEven
+          ? 'KeyBindingsTableRowEven'
+          : 'KeyBindingsTableRowOdd',
       },
       3
     ),
@@ -112,6 +116,7 @@ const tableHeadDom = [
 ]
 
 const getTableBodyDom = (displayKeyBindings) => {
+  console.log({ displayKeyBindings })
   return [
     tbody(
       {
