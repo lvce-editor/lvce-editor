@@ -29,11 +29,15 @@ export const getModuleId = (commandId) => {
     case 'Chrome.minimize':
     case 'Chrome.unmaximize':
       return ModuleId.Chrome
+    case 'ChromeExtension.install':
+    case 'ChromeExtension.uninstall':
+      return ModuleId.ChromeExtension
     case 'ClipBoard.readNativeFiles':
     case 'ClipBoard.readText':
     case 'ClipBoard.writeImage':
     case 'ClipBoard.writeNativeFiles':
     case 'ClipBoard.writeText':
+    case 'ClipBoard.execCopy':
       return ModuleId.ClipBoard
     case 'ColorPicker.close':
     case 'ColorPicker.open':
@@ -65,6 +69,8 @@ export const getModuleId = (commandId) => {
     case 'Developer.downloadViewletState':
     case 'Developer.getMemoryUsageContent':
     case 'Developer.getStartupPerformanceContent':
+    case 'Developer.installChromeExtensionIStillDontCareAboutCookies':
+    case 'Developer.installChromeExtensionUBlockOrigin':
     case 'Developer.openCacheFolder':
     case 'Developer.openConfigFolder':
     case 'Developer.openDataFolder':
@@ -78,8 +84,6 @@ export const getModuleId = (commandId) => {
     case 'Developer.showStartupPerformance':
     case 'Developer.startupPerformance':
     case 'Developer.toggleDeveloperTools':
-    case 'Developer.installChromeExtensionIStillDontCareAboutCookies':
-    case 'Developer.installChromeExtensionUBlockOrigin':
       return ModuleId.Developer
     case 'Dialog.close':
     case 'Dialog.handleClick':
@@ -270,9 +274,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace.setPath':
     case 'Workspace.setUri':
       return ModuleId.Workspace
-    case 'ChromeExtension.install':
-    case 'ChromeExtension.uninstall':
-      return ModuleId.ChromeExtension
     default:
       throw new Error(`command ${commandId} not found`)
   }

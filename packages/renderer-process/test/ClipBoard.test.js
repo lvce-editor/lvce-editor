@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals'
 
 beforeAll(() => {
+  // @ts-ignore
   globalThis.ClipboardItem = class {
     constructor(options) {
       this.options = options
@@ -129,4 +130,26 @@ test('writeText', async () => {
       'image/png': blob,
     }),
   ])
+})
+
+test('execCopy', async () => {
+  globalThis.navigator = {
+    clipboard: {
+      // @ts-ignore
+      writeText: jest.fn(),
+    },
+  }
+  // @ts-ignore
+  globalThis.getSelection = jest.fn(() => {
+    return {
+      toString() {
+        return 'abc'
+      },
+    }
+  })
+  await ClipBoard.execCopy()
+  // @ts-ignore
+  expect(globalThis.navigator.clipboard.writeText).toHaveBeenCalledTimes(1)
+  // @ts-ignore
+  expect(globalThis.navigator.clipboard.writeText).toHaveBeenCalledWith('abc')
 })

@@ -41,6 +41,8 @@ const getModule = (id) => {
       return import('../MenuEntriesSearch/MenuEntriesSearch.js')
     case MenuEntryId.EditorImage:
       return import('../MenuEntriesEditorImage/MenuEntriesEditorImage.js')
+    case MenuEntryId.ExtensionDetailReadme:
+      return import('../MenuEntriesExtensionDetailReadme/MenuEntriesExtensionDetailReadme.js')
     default:
       throw new Error(`module not found "${id}"`)
   }

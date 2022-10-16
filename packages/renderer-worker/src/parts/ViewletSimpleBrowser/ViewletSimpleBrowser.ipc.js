@@ -2,13 +2,13 @@ import * as SimpleBrowser from './ViewletSimpleBrowser.js'
 
 // prettier-ignore
 export const Commands = {
+  'SimpleBrowser.backward': SimpleBrowser.backward,
+  'SimpleBrowser.forward': SimpleBrowser.forward,
   'SimpleBrowser.go': SimpleBrowser.go,
   'SimpleBrowser.handleInput': SimpleBrowser.handleInput,
+  'SimpleBrowser.handleWillNavigate': SimpleBrowser.handleWillNavigate,
   'SimpleBrowser.openDevtools': SimpleBrowser.openDevtools,
   'SimpleBrowser.reload': SimpleBrowser.reload,
-  'SimpleBrowser.forward': SimpleBrowser.forward,
-  'SimpleBrowser.backward': SimpleBrowser.backward,
-  'SimpleBrowser.handleWillNavigate': SimpleBrowser.handleWillNavigate,
 }
 
 export * from './ViewletSimpleBrowser.js'
