@@ -86,7 +86,6 @@ export const handleInput = (event) => {
 }
 
 export const handleBlur = (event) => {
-  console.log('quickpick blur')
   RendererWorker.send(/* QuickPick.handleBlur */ 'QuickPick.handleBlur')
 }
 

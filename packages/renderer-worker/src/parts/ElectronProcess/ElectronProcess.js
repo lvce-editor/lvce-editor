@@ -1,9 +1,9 @@
 import * as Callback from '../Callback/Callback.js'
+import * as Command from '../Command/Command.js'
 import { JsonRpcError } from '../Errors/Errors.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as Command from '../Command/Command.js'
 
 export const state = {
   /**
