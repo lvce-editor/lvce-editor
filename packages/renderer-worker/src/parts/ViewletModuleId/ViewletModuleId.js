@@ -44,6 +44,8 @@ export const Search = 'Search'
 
 export const SideBar = 'SideBar'
 
+export const SimpleBrowser = 'SimpleBrowser'
+
 export const SourceControl = 'Source Control'
 
 export const StatusBar = 'StatusBar'

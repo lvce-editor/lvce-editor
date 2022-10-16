@@ -38,8 +38,16 @@ export const getCachedExtensionsPath = () => {
   return Path.join(cacheDir, 'cached-extensions')
 }
 
+export const getCachedChromeExtensionsPath = () => {
+  return Path.join(cacheDir, 'cached-electron-browser-view-chrome-extensions')
+}
+
 export const getLinkedExtensionsPath = () => {
   return Path.join(dataDir, 'linked-extensions')
+}
+
+export const getChromeExtensionsPath = () => {
+  return Path.join(dataDir, 'electron-browser-view-chrome-extensions')
 }
 
 export const getMarketplaceUrl = () => {

@@ -747,5 +747,10 @@
     "key": "Escape",
     "command": "TitleBarMenuBar.handleKeyEscape",
     "when": "focus.TitleBarMenuBar"
+  },
+  {
+    "key": "Enter",
+    "command": "SimpleBrowser.go",
+    "when": "focus.SimpleBrowserInput"
   }
 ]

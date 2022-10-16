@@ -14,6 +14,7 @@ exports.getModuleId = (commandId) => {
     case 'ElectronWindow.reload':
     case 'ElectronWindow.zoomIn':
     case 'ElectronWindow.zoomOut':
+    case 'ElectronWindow.focus':
       return ModuleId.Window
     case 'ElectronDeveloper.getPerformanceEntries':
     case 'ElectronDeveloper.crashMainProcess':
@@ -46,6 +47,20 @@ exports.getModuleId = (commandId) => {
     case 'ElectronNetLog.startLogging':
     case 'ElectronNetLog.stopLogging':
       return ModuleId.ElectronNetLog
+    case 'ElectronBrowserView.createBrowserView':
+    case 'ElectronBrowserView.disposeBrowserView':
+      return ModuleId.ElectronBrowserView
+    case 'ElectronBrowserViewQuickPick.createBrowserViewQuickPick':
+    case 'ElectronBrowserViewQuickPick.disposeBrowserViewQuickPick':
+      return ModuleId.ElectronBrowserViewQuickPick
+    case 'ElectronBrowserViewFunctions.resizeBrowserView':
+    case 'ElectronBrowserViewFunctions.disposeBrowserView':
+    case 'ElectronBrowserViewFunctions.setIframeSrc':
+    case 'ElectronBrowserViewFunctions.openDevtools':
+    case 'ElectronBrowserViewFunctions.forward':
+    case 'ElectronBrowserViewFunctions.reload':
+    case 'ElectronBrowserViewFunctions.backward':
+      return ModuleId.ElectronBrowserViewFunctions
     default:
       throw new Error(`method not found ${commandId}`)
   }

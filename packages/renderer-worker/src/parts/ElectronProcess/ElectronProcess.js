@@ -1,4 +1,5 @@
 import * as Callback from '../Callback/Callback.js'
+import * as Command from '../Command/Command.js'
 import { JsonRpcError } from '../Errors/Errors.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
@@ -18,9 +19,11 @@ const createIpc = async () => {
   })
 }
 
-const handleMessage = (message) => {
+const handleMessage = async (message) => {
   if ('id' in message) {
     Callback.resolve(message.id, message)
+  } else if ('method' in message) {
+    await Command.execute(message.method, ...message.params)
   }
 }
 

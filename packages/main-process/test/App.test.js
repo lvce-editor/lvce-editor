@@ -19,7 +19,7 @@ jest.mock('../src/parts/Command/Command.js', () => {
   }
 })
 
-test('handlePortForMainProcess - error - command not found', async () => {
+test.skip('handlePortForMainProcess - error - command not found', async () => {
   let _listener = async (message) => {}
   const port = {
     _listeners: Object.create(null),

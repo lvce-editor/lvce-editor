@@ -128,6 +128,9 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
+    case 'ChromeExtension.install':
+    case 'ChromeExtension.uninstall':
+      return ModuleId.ChromeExtension
     default:
       throw new Error(`command ${commandId} not found`)
   }

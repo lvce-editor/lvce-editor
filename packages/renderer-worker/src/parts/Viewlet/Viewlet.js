@@ -1,11 +1,12 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as Command from '../Command/Command.js'
 import * as Assert from '../Assert/Assert.js'
+import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
+import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletElectron from './ViewletElectron.js'
 
 /**
  * @deprecated
@@ -175,10 +176,18 @@ export const getAllStates = () => {
 export const openWidget = async (id, ...args) => {
   const hasInstance = ViewletStates.hasInstance(id)
   const type = args[0]
+  if (ElectronBrowserView.isOpen() && id === 'QuickPick') {
+    // TODO recycle quickpick instance
+    if (hasInstance) {
+      await ViewletElectron.closeWidgetElectronQuickPick()
+    }
+    return ViewletElectron.openElectronQuickPick(...args)
+  }
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
     id,
     type: 0,
+    // @ts-ignore
     uri: `quickPick://${type}`,
     show: false,
     focus: true,
@@ -201,9 +210,13 @@ export const openWidget = async (id, ...args) => {
 }
 
 export const closeWidget = async (id) => {
+  if (ElectronBrowserView.isOpen() && id === ViewletModuleId.QuickPick) {
+    return ViewletElectron.closeWidgetElectronQuickPick()
+  }
   ViewletStates.remove(id)
   await RendererProcess.invoke(
     /* Viewlet.dispose */ 'Viewlet.dispose',
     /* id */ id
   )
+  // TODO restore focus
 }

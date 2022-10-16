@@ -40,7 +40,6 @@ jest.unstable_mockModule('node:stream/promises', () => ({
 const Extract = await import('../src/parts/Extract/Extract.js')
 const fsPromises = await import('node:fs/promises')
 const fs = await import('node:fs')
-const streamPromises = await import('node:stream/promises')
 const { default: tar } = await import('tar-fs')
 
 test('extract - error - EISDIR', async () => {

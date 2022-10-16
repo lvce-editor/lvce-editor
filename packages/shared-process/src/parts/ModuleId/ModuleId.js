@@ -14,3 +14,4 @@ export const Terminal = 13
 export const TextDocument = 14
 export const WebSocketServer = 15
 export const Workspace = 16
+export const ChromeExtension = 17

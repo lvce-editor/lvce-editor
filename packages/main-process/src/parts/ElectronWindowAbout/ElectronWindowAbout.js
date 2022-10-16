@@ -36,10 +36,9 @@ exports.open = async () => {
     aboutWindow.show()
   }
   aboutWindow.once('ready-to-show', handleReadyToShow)
+  const aboutWindowUrl = `${Platform.scheme}://-/packages/main-process/pages/about/about.html`
   try {
-    await aboutWindow.loadURL(
-      `${Platform.scheme}://-/packages/main-process/pages/about/about.html`
-    )
+    await aboutWindow.loadURL(aboutWindowUrl)
   } catch (error) {
     console.warn('Failed to load about window')
     console.warn(error)

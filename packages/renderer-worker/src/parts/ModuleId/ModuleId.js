@@ -60,3 +60,5 @@ export const FilePicker = 58
 export const PersistentFileHandle = 59
 export const IndexedDb = 60
 export const Chrome = 61
+export const ElectronBrowserView = 62
+export const ChromeExtension = 63

@@ -22,6 +22,12 @@ const xdgConfig =
 
 const configDir = join(xdgConfig || tmpdir(), exports.applicationName)
 
+const xdgData =
+  env.XDG_DATA_HOME ||
+  (homeDirectory ? join(homeDirectory, '.local', 'share') : undefined)
+
+const dataDir = join(xdgData || tmpdir(), exports.applicationName)
+
 exports.getBuiltinSelfTestPath = () => {
   return (
     process.env.BUILTIN_SELF_TEST_PATH ||
@@ -73,4 +79,11 @@ exports.getDefaultSettingsPath = () => {
 
 exports.getUserSettingsPath = () => {
   return join(configDir, 'settings.json')
+}
+
+exports.getPreloadUrl = () => {
+  return join(Root.root, 'packages', 'main-process', 'src', 'preload.js')
+}
+exports.getChromeExtensionsPath = () => {
+  return join(dataDir, 'electron-browser-view-chrome-extensions')
 }

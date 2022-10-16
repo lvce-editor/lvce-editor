@@ -1,10 +1,9 @@
 import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
 
-const getKeyBindings = async () => {
+export const getKeyBindings = async () => {
   return Command.execute(
     /* KeyBindingsInitial.getKeyBindings */ 'KeyBindingsInitial.getKeyBindings'
   )

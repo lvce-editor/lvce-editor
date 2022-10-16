@@ -1,0 +1,16 @@
+.SimpleBrowserHeader {
+  height: 30px;
+  width: 100%;
+  contain: strict;
+  display: flex;
+}
+
+.SimpleBrowserHeader .InputBox {
+  color: white;
+}
+
+.SimpleBrowserIframe {
+  width: 100%;
+  height: 100%;
+  contain: strict;
+}

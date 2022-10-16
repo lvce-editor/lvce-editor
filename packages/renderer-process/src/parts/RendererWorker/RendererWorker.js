@@ -69,7 +69,6 @@ const handleMessageFromRendererWorker = async (event) => {
   if (message.method === 'get-port') {
     const type = message.params[0]
     const port = await getPort(type)
-    console.log({ port })
     state.ipc.sendAndTransfer('port', [port])
     return
   }

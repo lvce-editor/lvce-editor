@@ -3,6 +3,7 @@ const ElectronWindow = require('./ElectronWindow.js')
 // prettier-ignore
 exports.Commands = {
   'ElectronWindow.close': ElectronWindow.wrapWindowCommand(ElectronWindow.close),
+  'ElectronWindow.focus': ElectronWindow.wrapWindowCommand(ElectronWindow.focus),
   'ElectronWindow.maximize': ElectronWindow.wrapWindowCommand(ElectronWindow.maximize),
   'ElectronWindow.minimize': ElectronWindow.wrapWindowCommand(ElectronWindow.minimize),
   'ElectronWindow.reload': ElectronWindow.wrapWindowCommand(ElectronWindow.reload),
