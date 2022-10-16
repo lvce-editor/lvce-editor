@@ -54,11 +54,41 @@ export const handleInput = (state, value) => {
   }
 }
 
+const isValidHttpUrl = (string) => {
+  try {
+    const url = new URL(string)
+    return url.protocol === 'http:' || url.protocol === 'https:'
+  } catch {
+    return false
+  }
+}
+
+const createUrl = (baseUrl, params) => {
+  return baseUrl + '?' + new URLSearchParams(params).toString()
+}
+
+// TODO add preference option for search engine
+const createSearchUrl = (input) => {
+  const searchUrl = 'https://www.google.com/search'
+  const params = {
+    q: input,
+  }
+  return createUrl(searchUrl, params)
+}
+
+const toIframeSrc = (input) => {
+  if (isValidHttpUrl(input)) {
+    return input
+  }
+  return createSearchUrl(input)
+}
+
 export const go = (state) => {
   const { inputValue } = state
+  const iframeSrc = toIframeSrc(inputValue)
   return {
     ...state,
-    iframeSrc: inputValue,
+    iframeSrc,
   }
 }
 
