@@ -20,3 +20,15 @@ export const setIframeSrc = (iframeSrc) => {
 export const openDevtools = () => {
   return ElectronProcess.invoke('ElectronBrowserViewFunctions.openDevtools')
 }
+
+export const reload = () => {
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.reload')
+}
+
+export const forward = () => {
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.forward')
+}
+
+export const backward = () => {
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.backward')
+}

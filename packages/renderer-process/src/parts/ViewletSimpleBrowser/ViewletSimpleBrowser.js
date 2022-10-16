@@ -5,10 +5,28 @@ import * as ViewletSimpleBrowserEvents from './ViewletSimpleBrowserEvents.js'
 
 export const name = 'SimpleBrowser'
 
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  Back: 'Back',
+  Forward: 'Forward',
+  Reload: 'Reload',
+}
+
 export const create = () => {
-  const $ButtonBack = IconButton.create$Button('Back', Icon.PreviousMatch)
-  const $ButtonForward = IconButton.create$Button('Forward', Icon.NextMatch)
-  const $ButtonReload = IconButton.create$Button('Reload', Icon.Close)
+  const $ButtonBack = IconButton.create$Button(
+    UiStrings.Back,
+    Icon.PreviousMatch
+  )
+  $ButtonBack.onclick = ViewletSimpleBrowserEvents.handleClickBackward
+  const $ButtonForward = IconButton.create$Button(
+    UiStrings.Forward,
+    Icon.NextMatch
+  )
+  $ButtonForward.onclick = ViewletSimpleBrowserEvents.handleClickForward
+  const $ButtonReload = IconButton.create$Button(UiStrings.Reload, Icon.Close)
+  $ButtonReload.onclick = ViewletSimpleBrowserEvents.handleClickReload
 
   const $InputBox = InputBox.create()
   $InputBox.type = 'url'

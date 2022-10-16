@@ -79,6 +79,21 @@ export const openDevtools = async (state) => {
   return state
 }
 
+export const reload = async (state) => {
+  await ElectronBrowserViewFunctions.reload()
+  return state
+}
+
+export const forward = async (state) => {
+  await ElectronBrowserViewFunctions.forward()
+  return state
+}
+
+export const backward = async (state) => {
+  await ElectronBrowserViewFunctions.backward()
+  return state
+}
+
 export const hasFunctionalResize = true
 
 export const resize = (state, dimensions) => {

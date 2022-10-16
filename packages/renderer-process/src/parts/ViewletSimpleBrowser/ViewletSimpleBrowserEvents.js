@@ -7,8 +7,18 @@ export const handleInput = (event) => {
   RendererWorker.send('SimpleBrowser.handleInput', value)
 }
 
-export const handleClick = () => {}
-
 export const handleFocus = () => {
   Focus.setFocus('SimpleBrowserInput')
+}
+
+export const handleClickForward = () => {
+  RendererWorker.send('SimpleBrowser.forward')
+}
+
+export const handleClickBackward = () => {
+  RendererWorker.send('SimpleBrowser.backward')
+}
+
+export const handleClickReload = () => {
+  RendererWorker.send('SimpleBrowser.reload')
 }
