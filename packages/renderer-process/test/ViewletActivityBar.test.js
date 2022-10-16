@@ -128,7 +128,7 @@ test('setFocusedIndex', () => {
       flags: ActvityBarItemFlags.Button,
     },
   ])
-  ViewletActivityBar.setFocusedIndex(state, -1, 0)
+  ViewletActivityBar.setFocusedIndex(state, -1, 0, true)
   expect(
     state.$ActivityBar.children[0].classList.contains('FocusOutline')
   ).toBe(true)
