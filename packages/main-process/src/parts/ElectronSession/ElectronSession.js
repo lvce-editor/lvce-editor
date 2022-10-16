@@ -1,8 +1,6 @@
 const ContentSecurityPolicy = require('../ContentSecurityPolicy/ContentSecurityPolicy.js')
 const CrossOriginEmbedderPolicy = require('../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js')
 const CrossOriginOpenerPolicy = require('../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js')
-const AccessControlAllowOrigin = require('../AccessControlAllowOrigin/AccessControlAllowOrigin.js')
-const CrossOriginResourcePolicy = require('../CrossOriginResourcePolicy/CrossOriginResourcePolicy.js')
 const Electron = require('electron')
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
@@ -22,13 +20,6 @@ const state = {
  */
 const handleHeadersReceived = (details, callback) => {
   const { responseHeaders, resourceType } = details
-  if (responseHeaders) {
-    if (responseHeaders['X-Frame-Options']) {
-      delete responseHeaders['X-Frame-Options']
-    } else if (responseHeaders['x-frame-options']) {
-      delete responseHeaders['x-frame-options']
-    }
-  }
   switch (resourceType) {
     case 'mainFrame':
       callback({
@@ -45,7 +36,6 @@ const handleHeadersReceived = (details, callback) => {
         responseHeaders: {
           ...responseHeaders,
           [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
-          [CrossOriginResourcePolicy.key]: CrossOriginResourcePolicy.value,
           [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
         },
       })
