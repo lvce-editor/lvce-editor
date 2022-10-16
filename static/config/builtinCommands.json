@@ -425,13 +425,5 @@
   {
     "id": "SimpleBrowser.openDevtools",
     "label": "Simple Browser: Open Dev Devtools"
-  },
-  {
-    "id": "Developer.installChromeExtensionUBlockOrigin",
-    "label": "Developer: Install uBlock Origin Chrome Extension"
-  },
-  {
-    "id": "Developer.installChromeExtensionIStillDontCareAboutCookies",
-    "label": "Developer: Install I Still Don't Care About Cookies Chrome Extension"
   }
 ]
