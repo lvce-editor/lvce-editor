@@ -85,15 +85,6 @@ exports.createAppWindow = async (
     id: window.id,
   })
   await loadUrl(window, url)
-
-  // const view = new Electron.BrowserView()
-  // window.setBrowserView(view)
-  // view.setBounds({ x: 0, y: 0, width: 300, height: 300 })
-  // await view.webContents.loadURL('https://electronjs.org')
-
-  // setTimeout(() => {
-  //   window.removeBrowserView(view)
-  // }, 7000)
 }
 
 exports.openNew = (url) => {
