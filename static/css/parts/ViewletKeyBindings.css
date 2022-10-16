@@ -51,9 +51,18 @@
   contain: content;
 }
 
-.KeyBindingsTableRow {
+.KeyBindingsTableRowEven,
+.KeyBindingsTableRowOdd {
   height: 24px;
   contain: strict;
+}
+
+.KeyBindingsTableRowOdd {
+  background: rgba(156, 162, 160, 0.04);
+}
+
+.KeyBindingsTableRowSelected {
+  background: #515f59;
 }
 
 .KeyBindingsTableCell {
