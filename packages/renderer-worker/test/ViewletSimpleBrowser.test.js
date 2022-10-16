@@ -20,6 +20,9 @@ jest.unstable_mockModule(
       backward: jest.fn(() => {
         throw new Error('not implemented')
       }),
+      setIframeSrc: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
     }
   }
 )
@@ -57,6 +60,8 @@ test('create', () => {
 })
 
 test('loadContent', async () => {
+  // @ts-ignore
+  ElectronBrowserViewFunctions.setIframeSrc.mockImplementation(() => {})
   const state = ViewletSimpleBrowser.create()
   expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
     iframeSrc: 'https://example.com',
