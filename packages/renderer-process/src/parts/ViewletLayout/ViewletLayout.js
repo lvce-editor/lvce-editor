@@ -5,14 +5,14 @@ export const name = 'Layout'
 export const create = () => {
   // TODO use aria role splitter once supported https://github.com/w3c/aria/issues/1348
   const $SashSideBar = document.createElement('div')
-  $SashSideBar.className = 'SashVertical'
+  $SashSideBar.className = 'Viewlet SashVertical'
   $SashSideBar.id = 'SashSideBar'
   $SashSideBar.onpointerdown = ViewletLayoutEvents.handleSashPointerDown
   $SashSideBar.ondblclick = ViewletLayoutEvents.handleSashDoubleClick
 
   // TODO use aria role splitter once supported https://github.com/w3c/aria/issues/1348
   const $SashPanel = document.createElement('div')
-  $SashPanel.className = 'SashHorizontal'
+  $SashPanel.className = 'Viewlet SashHorizontal'
   $SashPanel.id = 'SashPanel'
   $SashPanel.onpointerdown = ViewletLayoutEvents.handleSashPointerDown
   $SashPanel.ondblclick = ViewletLayoutEvents.handleSashDoubleClick

@@ -49,8 +49,8 @@ export const create = () => {
   // const $PanelContent = document.createElement('div')
   // $PanelContent.id = 'PanelContent'
   const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet'
   $Viewlet.id = 'Panel'
+  $Viewlet.className = 'Viewlet'
   $Viewlet.dataset.viewletId = 'Panel'
   $Viewlet.append($PanelHeader)
   $Viewlet.ariaLabel = 'Panel'

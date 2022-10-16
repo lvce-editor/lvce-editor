@@ -217,12 +217,18 @@ const ariaAnnounce = async (message) => {
   AriaAlert.alert(message)
 }
 
-const append = (parentId, childId) => {
+const append = (parentId, childId, referenceId) => {
   const parentInstance = state.instances[parentId]
   const $Parent = parentInstance.state.$Viewlet
   const childInstance = state.instances[childId]
   const $Child = childInstance.state.$Viewlet
-  $Parent.append($Child)
+  if (referenceId) {
+    const referenceInstance = state.instances[referenceId]
+    const $ReferenceNode = referenceInstance.state.$Viewlet
+    $Parent.insertBefore($Child, $ReferenceNode)
+  } else {
+    $Parent.append($Child)
+  }
 }
 
 const appendToBody = (childId) => {

@@ -52,6 +52,7 @@ export const name = 'ActivityBar'
 export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.id = 'ActivityBar'
+  $Viewlet.className = 'Viewlet'
   $Viewlet.dataset.viewletId = 'ActivityBar'
   // @ts-ignore
   $Viewlet.role = 'toolbar'

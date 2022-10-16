@@ -15,8 +15,8 @@ export const create = () => {
   // $SideBarContent.id = 'SideBarContent'
 
   const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet'
   $Viewlet.id = 'SideBar'
+  $Viewlet.className = 'Viewlet'
   // @ts-ignore
   $Viewlet.role = 'complementary'
   $Viewlet.ariaRoleDescription = 'Side Bar'
