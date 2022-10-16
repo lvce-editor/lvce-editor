@@ -330,6 +330,7 @@ export const loadContent = (state, savedState) => {
   return {
     ...state,
     points: newPoints,
+    sideBarLocation,
   }
 }
 
@@ -472,19 +473,33 @@ export const toggleMain = (state) => {
   return toggle(state, mMain)
 }
 
-const getReferenceNode = (moduleId) => {
-  switch (moduleId) {
-    case ViewletModuleId.SideBar:
-      return ViewletModuleId.ActivityBar
-    case ViewletModuleId.TitleBar:
-      return '0'
-    default:
-      return ''
+const getReferenceNodes = (sideBarLocation) => {
+  if (sideBarLocation === SideBarLocationType.Left) {
+    return [
+      ViewletModuleId.TitleBar,
+      ViewletModuleId.ActivityBar,
+      'SashSideBar',
+      ViewletModuleId.SideBar,
+      ViewletModuleId.Main,
+      'SashPanel',
+      ViewletModuleId.Panel,
+      ViewletModuleId.StatusBar,
+    ]
   }
+  return [
+    ViewletModuleId.TitleBar,
+    ViewletModuleId.Main,
+    ViewletModuleId.SideBar,
+    'SashSideBar',
+    ViewletModuleId.ActivityBar,
+    'SashPanel',
+    ViewletModuleId.Panel,
+    ViewletModuleId.StatusBar,
+  ]
 }
 
 const loadIfVisible = async (state, module) => {
-  const { points } = state
+  const { points, sideBarLocation } = state
   const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
   const visible = points[kVisible]
   const top = points[kTop]
@@ -507,8 +522,8 @@ const loadIfVisible = async (state, module) => {
       height,
     })
     if (commands) {
-      const referenceId = getReferenceNode(moduleId)
-      commands.push(['Viewlet.append', 'Layout', moduleId, referenceId])
+      const referenceNodes = getReferenceNodes(sideBarLocation)
+      commands.push(['Viewlet.append', 'Layout', moduleId, referenceNodes])
     }
   }
   return {

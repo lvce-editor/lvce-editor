@@ -115,7 +115,7 @@ export const sendMultiple = (commands) => {
     } else if (_ === 'Viewlet.create') {
       create(viewletId)
     } else if (_ === 'Viewlet.append') {
-      append(viewletId, method)
+      append(viewletId, method, ...args)
     } else if (_ === 'Viewlet.dispose') {
       dispose(viewletId)
     } else if (_ === 'Viewlet.createPlaceholder') {
@@ -217,15 +217,39 @@ const ariaAnnounce = async (message) => {
   AriaAlert.alert(message)
 }
 
-const append = (parentId, childId, referenceId) => {
+const append = (parentId, childId, referenceNodes) => {
   const parentInstance = state.instances[parentId]
   const $Parent = parentInstance.state.$Viewlet
   const childInstance = state.instances[childId]
   const $Child = childInstance.state.$Viewlet
-  if (referenceId) {
-    const referenceInstance = state.instances[referenceId]
-    const $ReferenceNode = referenceInstance.state.$Viewlet
-    $Parent.insertBefore($Child, $ReferenceNode)
+  if (referenceNodes) {
+    // TODO this might be too inefficient
+    if (childId === referenceNodes[0]) {
+      $Parent.prepend($Child)
+      return
+    }
+    for (let i = 0; i < referenceNodes.length; i++) {
+      const id = referenceNodes[i]
+      if (id === childId) {
+        for (let j = i - 1; j >= 0; j--) {
+          const beforeId = referenceNodes[j]
+          if (state.instances[beforeId]) {
+            const $ReferenceNode = state.instances[beforeId].state.$Viewlet
+            $ReferenceNode.after($Child)
+            return
+          }
+        }
+        for (let j = i + 1; j < referenceNodes.length; j++) {
+          const afterId = referenceNodes[j]
+          if (state.instances[afterId]) {
+            const $ReferenceNode = state.instances[afterId].state.$Viewlet
+            $ReferenceNode.before($Child)
+            return
+          }
+        }
+      }
+    }
+    $Parent.append($Child)
   } else {
     $Parent.append($Child)
   }
