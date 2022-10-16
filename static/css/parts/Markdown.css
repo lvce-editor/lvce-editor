@@ -16,22 +16,6 @@
   line-height: 1.5;
   word-wrap: break-word;
   contain: content;
-  overflow-y: auto;
-}
-
-.Markdown::-webkit-scrollbar {
-  width: 10px;
-}
-
-.Markdown::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.Markdown::-webkit-scrollbar-thumb {
-  background: var(--EditorScrollBarBackground);
-}
-
-.Markdown::-webkit-scrollbar-thumb:hover {
 }
 
 .Markdown details,
