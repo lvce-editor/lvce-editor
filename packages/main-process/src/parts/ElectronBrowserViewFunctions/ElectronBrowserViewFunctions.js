@@ -32,3 +32,28 @@ exports.openDevtools = (view) => {
   // TODO return promise that resolves once devtools are actually open
   view.webContents.openDevTools()
 }
+/**
+ *
+ * @param {Electron.BrowserView} view
+ */
+exports.reload = (view) => {
+  // TODO return promise that resolves once devtools are actually open
+  view.webContents.reload()
+}
+/**
+ *
+ * @param {Electron.BrowserView} view
+ */
+exports.forward = (view) => {
+  // TODO return promise that resolves once devtools are actually open
+  view.webContents.goForward()
+}
+
+/**
+ *
+ * @param {Electron.BrowserView} view
+ */
+exports.backward = (view) => {
+  // TODO return promise that resolves once devtools are actually open
+  view.webContents.goBack()
+}

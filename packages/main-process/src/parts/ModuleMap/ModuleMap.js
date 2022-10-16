@@ -57,6 +57,9 @@ exports.getModuleId = (commandId) => {
     case 'ElectronBrowserViewFunctions.disposeBrowserView':
     case 'ElectronBrowserViewFunctions.setIframeSrc':
     case 'ElectronBrowserViewFunctions.openDevtools':
+    case 'ElectronBrowserViewFunctions.forward':
+    case 'ElectronBrowserViewFunctions.reload':
+    case 'ElectronBrowserViewFunctions.backward':
       return ModuleId.ElectronBrowserViewFunctions
     default:
       throw new Error(`method not found ${commandId}`)
