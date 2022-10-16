@@ -35,7 +35,7 @@ test('createBrowserView - error', async () => {
 test('createBrowserView', async () => {
   // @ts-ignore
   ElectronProcess.invoke.mockImplementation(() => {})
-  expect(await ElectronBrowserView.createBrowserView('', 0, 0, 0, 0)).toBe(1)
+  await ElectronBrowserView.createBrowserView('', 0, 0, 0, 0)
   expect(ElectronProcess.invoke).toHaveBeenCalledTimes(1)
   expect(ElectronProcess.invoke).toHaveBeenCalledWith(
     'ElectronBrowserView.createBrowserView',
@@ -44,16 +44,5 @@ test('createBrowserView', async () => {
     0,
     0,
     0
-  )
-})
-
-test('sendQuickPickItems', async () => {
-  // @ts-ignore
-  ElectronProcess.invoke.mockImplementation(() => {})
-  await ElectronBrowserView.sendQuickPickItems([])
-  expect(ElectronProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(ElectronProcess.invoke).toHaveBeenCalledWith(
-    'ElectronBrowserView.sendQuickPickItems',
-    []
   )
 })
