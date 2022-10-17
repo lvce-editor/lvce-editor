@@ -86,6 +86,10 @@
       "foreground": "#BEB558"
     },
     {
+      "name": "CssSelectorId",
+      "foreground": "#BE7C81"
+    },
+    {
       "name": "CssPropertyValue",
       "foreground": "#C0C0C3"
     },
