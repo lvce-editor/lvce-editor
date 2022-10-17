@@ -1,8 +1,8 @@
 import * as Focus from '../Focus/Focus.js'
+import * as Icon from '../Icon/Icon.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
-import * as Icon from '../Icon/Icon.js'
 
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
