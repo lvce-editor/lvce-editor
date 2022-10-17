@@ -4,6 +4,30 @@
 import { jest } from '@jest/globals'
 import * as WheelEventType from '../src/parts/WheelEventType/WheelEventType.js'
 
+beforeAll(() => {
+  // workaround for jsdom not supporting pointer events
+  // @ts-ignore
+  globalThis.PointerEvent = class extends Event {
+    constructor(type, init) {
+      super(type, init)
+      this.clientX = init.clientX
+      this.clientY = init.clientY
+      this.pointerId = init.pointerId
+      this.button = init.button
+    }
+  }
+  Object.defineProperty(HTMLElement.prototype, 'onpointerdown', {
+    set(fn) {
+      this.addEventListener('pointerdown', fn)
+    },
+  })
+  Object.defineProperty(HTMLElement.prototype, 'onpointerup', {
+    set(fn) {
+      this.addEventListener('pointerup', fn)
+    },
+  })
+})
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
@@ -50,7 +74,7 @@ test.skip('event - mousedown', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith(['QuickPick.selectIndex', 1])
 })
 
-test('event - mousedown - on focused item', () => {
+test('event - pointerdown - on focused item', () => {
   const state = ViewletQuickPick.create()
   ViewletQuickPick.setPicks(state, [
     {
@@ -60,8 +84,9 @@ test('event - mousedown - on focused item', () => {
     },
   ])
   ViewletQuickPick.setFocusedIndex(state, 0, -1)
-  const $QuickPickItemOne = state.$QuickPickItems.children[0]
-  const event = new MouseEvent('mousedown', {
+  const { $QuickPickItems } = state
+  const $QuickPickItemOne = $QuickPickItems.children[0]
+  const event = new MouseEvent('pointerdown', {
     bubbles: true,
     cancelable: true,
   })
