@@ -69,3 +69,11 @@ export const writeImage = async (blob) => {
     throw new VError(error, 'Failed to write image to clipboard')
   }
 }
+
+export const execCopy = async () => {
+  try {
+    return await RendererProcess.invoke('ClipBoard.execCopy')
+  } catch (error) {
+    throw new VError(error, 'Failed to copy selected text')
+  }
+}

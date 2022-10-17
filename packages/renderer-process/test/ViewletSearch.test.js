@@ -55,3 +55,15 @@ test('setResults - multiple results in multiple files', () => {
   ])
   expect(state.$SearchResults.children).toHaveLength(2)
 })
+
+test('accessibility - input box should have type search', () => {
+  const state = ViewletSearch.create()
+  const { $ViewletSearchInput } = state
+  expect($ViewletSearchInput.type).toBe('search')
+})
+
+test('accessibility - input box should have enterkeyhint search', () => {
+  const state = ViewletSearch.create()
+  const { $ViewletSearchInput } = state
+  expect($ViewletSearchInput.enterKeyHint).toBe('search')
+})

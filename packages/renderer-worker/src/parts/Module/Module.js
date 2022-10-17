@@ -16,6 +16,8 @@ export const load = (moduleId) => {
       return import('../Callback/Callback.ipc.js')
     case ModuleId.Chrome:
       return import('../Chrome/Chrome.ipc.js')
+    case ModuleId.ChromeExtension:
+      return import('../ChromeExtension/ChromeExtension.ipc.js')
     case ModuleId.ClipBoard:
       return import('../ClipBoard/ClipBoard.ipc.js')
     case ModuleId.ColorPicker:
@@ -118,8 +120,6 @@ export const load = (moduleId) => {
       return import('../Workbench/Workbench.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.ChromeExtension:
-      return import('../ChromeExtension/ChromeExtension.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

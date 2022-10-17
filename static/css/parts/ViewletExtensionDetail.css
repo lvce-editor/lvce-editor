@@ -1,15 +1,30 @@
 [data-viewlet-id='ExtensionDetail'] {
   color: white;
   user-select: text;
+  overflow-y: auto;
 }
 
 .ExtensionDetailMain {
   width: 80%;
   margin: 0 auto;
-  contain: strict;
-  height: 100%;
+  contain: content;
   display: flex;
   flex-direction: column;
+}
+
+[data-viewlet-id='ExtensionDetail']::-webkit-scrollbar {
+  width: 10px;
+}
+
+[data-viewlet-id='ExtensionDetail']::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-viewlet-id='ExtensionDetail']::-webkit-scrollbar-thumb {
+  background: var(--EditorScrollBarBackground);
+}
+
+[data-viewlet-id='ExtensionDetail']::-webkit-scrollbar-thumb:hover {
 }
 
 .ExtensionDetailHeader {

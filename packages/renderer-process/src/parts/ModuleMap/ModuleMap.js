@@ -4,6 +4,7 @@ export const getModuleId = (commandId) => {
   switch (commandId) {
     case 'Audio.play':
       return ModuleId.Audio
+    case 'ClipBoard.execCopy':
     case 'ClipBoard.readText':
     case 'ClipBoard.writeImage':
     case 'ClipBoard.writeText':

@@ -2,6 +2,9 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
   switch (commandId) {
+    case 'ChromeExtension.install':
+    case 'ChromeExtension.uninstall':
+      return ModuleId.ChromeExtension
     case 'ClipBoard.readFiles':
     case 'ClipBoard.writeFiles':
       return ModuleId.ClipBoard
@@ -128,9 +131,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
-    case 'ChromeExtension.install':
-    case 'ChromeExtension.uninstall':
-      return ModuleId.ChromeExtension
     default:
       throw new Error(`command ${commandId} not found`)
   }

@@ -1,8 +1,10 @@
+import * as Command from '../Command/Command.js'
 import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Icon from '../Icon/Icon.js'
 import * as MarkDown from '../Markdown/Markdown.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -81,6 +83,16 @@ export const handleIconError = (state) => {
     ...state,
     iconSrc: Icon.ExtensionDefaultIcon,
   }
+}
+
+export const handleReadmeContextMenu = async (state, x, y) => {
+  await Command.execute(
+    /* ContextMenu.show */ 'ContextMenu.show',
+    /* x */ x,
+    /* y */ y,
+    /* id */ MenuEntryId.ExtensionDetailReadme
+  )
+  return state
 }
 
 export const hasFunctionalRender = true

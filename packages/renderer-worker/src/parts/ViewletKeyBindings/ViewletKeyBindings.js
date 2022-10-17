@@ -22,6 +22,8 @@ export const create = (id, uri, left, top, width, height) => {
     width,
     height,
     value: '',
+    selectedIndex: -1,
+    focusedIndex: -1,
   }
 }
 
@@ -118,6 +120,16 @@ export const setDeltaY = (state, deltaY) => {
 
 export const handleWheel = (state, deltaY) => {
   return setDeltaY(state, state.deltaY + deltaY)
+}
+
+export const handleClick = (state, index) => {
+  const { minLineY } = state
+  const selectedIndex = minLineY + index
+  return {
+    ...state,
+    focusedIndex: selectedIndex,
+    selectedIndex,
+  }
 }
 
 export const hasFunctionalRender = true

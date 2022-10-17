@@ -1,5 +1,6 @@
 /* Tries to implement the pattern for combobox with listbox popup https://www.w3.org/TR/wai-aria-1.2/#combobox */
 
+import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
@@ -55,7 +56,14 @@ export const handleWheel = (event) => {
   }
 }
 
-export const handleMouseDown = (event) => {
+export const handlePointerDown = (event) => {
+  if (Platform.isMobile) {
+    // workaround to disable virtual keyboard automatically opening on android
+    // see https://stackoverflow.com/questions/48635501/how-to-hide-soft-keyboard-and-keep-input-on-focus#answer-53104238
+    const $Input = document.querySelector('#QuickPickHeader .InputBox')
+    // @ts-ignore
+    $Input.readOnly = true
+  }
   event.preventDefault()
   const { clientX, clientY } = event
   RendererWorker.send(

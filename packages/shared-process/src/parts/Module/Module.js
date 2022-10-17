@@ -2,6 +2,8 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const load = (moduleId) => {
   switch (moduleId) {
+    case ModuleId.ChromeExtension:
+      return import('../ChromeExtension/ChromeExtension.ipc.js')
     case ModuleId.ClipBoard:
       return import('../ClipBoard/ClipBoard.ipc.js')
     case ModuleId.Developer:
@@ -34,8 +36,6 @@ export const load = (moduleId) => {
       return import('../WebSocketServer/WebSocketServer.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.ChromeExtension:
-      return import('../ChromeExtension/ChromeExtension.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

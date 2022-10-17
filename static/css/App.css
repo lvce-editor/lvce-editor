@@ -5,21 +5,22 @@
 /* application css */
 @import './parts/__Theme.css';
 @import './parts/_Global.css';
-@import './parts/ActivityBar.css';
+@import './parts/ViewletActivityBar.css';
 @import './parts/EditorTabs.css';
 @import './parts/Dialog.css';
 @import './parts/Menu.css';
 @import './parts/Notification.css';
 @import './parts/ViewletExplorer.css';
 @import './parts/ViewletTerminal.css';
-@import './parts/StatusBar.css';
+@import './parts/ViewletStatusBar.css';
 @import './parts/ViewletSourceControl.css';
 @import './parts/SideBar.css';
 @import './parts/QuickPick.css';
 @import './parts/ViewletExtensions.css';
 @import './parts/MonacoList.css';
-@import './parts/Panel.css';
 @import './parts/ViewletLayout.css';
+@import './parts/ViewletPanel.css';
+@import './parts/Layout.css';
 @import './parts/Viewlet.css';
 @import './parts/ViewletOutput.css';
 @import './parts/ContextMenu.css';

@@ -171,7 +171,7 @@ end
 println()
 end`
 
-state.files['/languages/index.perl'] = `#!/usr/bin/perl
+state.files['/languages/index.pl'] = `#!/usr/bin/perl
 #
 # The traditional first program.
 

@@ -23,6 +23,7 @@ export const create = () => {
     ViewletkeyBindingsEvents.handleWheel,
     { passive: true }
   )
+  $KeyBindingsTableWrapper.onclick = ViewletkeyBindingsEvents.handleTableClick
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet'

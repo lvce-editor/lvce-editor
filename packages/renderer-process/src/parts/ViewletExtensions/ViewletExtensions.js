@@ -1,6 +1,7 @@
 import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
 import * as InputBox from '../InputBox/InputBox.js'
+import * as Platform from '../Platform/Platform.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 
 export const name = 'Extensions'
@@ -44,7 +45,11 @@ export const create = () => {
   // @ts-ignore
   $ExtensionList.role = 'list'
   $ExtensionList.oncontextmenu = ViewletExtensionsEvents.handleContextMenu
-  $ExtensionList.onpointerdown = ViewletExtensionsEvents.handlePointerDown
+  if (Platform.isMobile) {
+    $ExtensionList.onclick = ViewletExtensionsEvents.handlePointerDown
+  } else {
+    $ExtensionList.onpointerdown = ViewletExtensionsEvents.handlePointerDown
+  }
   $ExtensionList.onfocus = ViewletExtensionsEvents.handleFocus
   $ExtensionList.onscroll = ViewletExtensionsEvents.handleScroll
   $ExtensionList.addEventListener(

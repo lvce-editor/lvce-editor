@@ -1,3 +1,4 @@
 {
-  "type": "module"
+  "type": "module",
+  "name": "sample.command-provider-error"
 }
