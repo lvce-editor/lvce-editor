@@ -4,11 +4,11 @@ import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
-import * as Layout from '../Layout/Layout.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const isQuickPickKeyBinding = (keyBinding) => {
   return keyBinding.when === 'focus.quickPickInput'
@@ -22,7 +22,9 @@ export const openElectronQuickPick = async (...args) => {
   const id = 'QuickPick'
   const width = 600
   const height = 300
-  const left = Math.round((Layout.state.windowWidth - width) / 2)
+  const viewletLayout = ViewletStates.getState(ViewletModuleId.Layout)
+  const windowWidth = viewletLayout.points[0]
+  const left = Math.round((windowWidth - width) / 2)
   const top = 50
   const keyBindings = await KeyBindings.getKeyBindings()
   const quickPickKeyBindings = getQuickPickKeyBindings(keyBindings)
