@@ -278,6 +278,8 @@ const getFn = (command) => {
       return ariaAnnounce
     case 'Viewlet.append':
       return append
+    case 'Viewlet.appendToBody':
+      return appendToBody
     default:
       throw new Error(`unknown command ${command}`)
   }
