@@ -157,11 +157,14 @@ const restoreExpandedState = async (
 }
 
 export const saveState = (state) => {
-  const { items, root } = state
+  const { items, root, deltaY, minLineY, maxLineY } = state
   const expandedPaths = items.filter(isExpandedDirectory).map(getPath)
   return {
     expandedPaths,
     root,
+    minLineY,
+    maxLineY,
+    deltaY,
   }
 }
 
@@ -188,11 +191,25 @@ export const loadContent = async (state, savedState) => {
     excluded
   )
   const { itemHeight, height } = state
+  let minLineY = 0
+  if (savedState && typeof savedState.minLineY === 'number') {
+    minLineY = savedState.minLineY
+  }
+  let deltaY = 0
+  if (savedState && typeof savedState.deltaY === 'number') {
+    deltaY = savedState.deltaY
+  }
+  let maxLineY = Math.round(height / itemHeight)
+  if (savedState && typeof savedState.maxLineY === 'number') {
+    maxLineY = savedState.maxLineY
+  }
   return {
     ...state,
     root,
     items: restoredDirents,
-    maxLineY: Math.round(height / itemHeight),
+    minLineY,
+    deltaY,
+    maxLineY,
     pathSeparator,
     excluded,
   }
