@@ -10,6 +10,8 @@ export const create = () => {
   const $ViewletSearchInput = InputBox.create()
   $ViewletSearchInput.placeholder = 'Search'
   $ViewletSearchInput.oninput = ViewletSearchEvents.handleInput
+  $ViewletSearchInput.type = 'search'
+  $ViewletSearchInput.enterKeyHint = 'search'
 
   const $SearchStatus = document.createElement('div')
   // @ts-ignore
