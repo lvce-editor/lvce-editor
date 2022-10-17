@@ -1,3 +1,4 @@
 {
+  "name": "sample.command-provider-without-activation",
   "type": "module"
 }
