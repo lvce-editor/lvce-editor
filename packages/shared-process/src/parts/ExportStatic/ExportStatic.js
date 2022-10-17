@@ -10,6 +10,10 @@ const readExtensionManifest = (path) => {
   return { ...JSON.parse(content), path }
 }
 
+const getThemeName = (dirent) => {
+  return dirent.slice('builtin.theme-'.length)
+}
+
 /**
  *
  * @param {{root:string, pathPrefix:string  }} param0
@@ -25,13 +29,21 @@ export const exportStatic = async ({ root, pathPrefix }) => {
   const commitHash = dirents.find(isCommitHash) || ''
 
   const extensionJson = readExtensionManifest(join(root, 'extension.json'))
-  const name = extensionJson.id.slice('builtin.theme-'.length)
+  const colorThemeName = extensionJson.id.slice('builtin.theme-'.length)
+  const name = extensionJson.name || extensionJson.id || ''
+  const description = extensionJson.description || ''
   fs.rmSync(join(root, 'dist'), { recursive: true, force: true })
 
   fs.mkdirSync(path.join(root, 'dist'))
 
   fs.mkdirSync(
-    join(root, 'dist', commitHash, 'extensions', `builtin.theme-${name}`),
+    join(
+      root,
+      'dist',
+      commitHash,
+      'extensions',
+      `builtin.theme-${colorThemeName}`
+    ),
     {
       recursive: true,
     }
@@ -187,7 +199,7 @@ export const exportStatic = async ({ root, pathPrefix }) => {
   replaceSync(
     join(root, 'dist', commitHash, 'config', 'defaultSettings.json'),
     `"workbench.colorTheme": "slime"`,
-    `"workbench.colorTheme": "${name}"`
+    `"workbench.colorTheme": "${colorThemeName}"`
   )
   replaceSync(
     join(root, 'dist', commitHash, 'config', 'defaultSettings.json'),
@@ -267,10 +279,6 @@ export const exportStatic = async ({ root, pathPrefix }) => {
     )
   }
 
-  const getThemeName = (dirent) => {
-    return dirent.slice('builtin.theme-'.length)
-  }
-
   for (const themeDirent of themeDirents) {
     const themeId = getThemeName(themeDirent)
     cpSync(
@@ -312,7 +320,7 @@ export const exportStatic = async ({ root, pathPrefix }) => {
     return sorted
   }
 
-  const themeIds = mergeThemes(themeDirents.map(getThemeName), [name])
+  const themeIds = mergeThemes(themeDirents.map(getThemeName), [colorThemeName])
   writeJson(join(root, 'dist', commitHash, 'config', 'themes.json'), themeIds)
 
   for (const iconThemeDirent of iconThemeDirents) {
@@ -348,7 +356,7 @@ export const exportStatic = async ({ root, pathPrefix }) => {
 
   cpSync(
     join(root, 'color-theme.json'),
-    join(root, 'dist', commitHash, 'themes', `${name}.json`)
+    join(root, 'dist', commitHash, 'themes', `${colorThemeName}.json`)
   )
   replaceSync(
     join(root, 'dist', 'index.html'),
@@ -362,9 +370,34 @@ export const exportStatic = async ({ root, pathPrefix }) => {
   )
   replaceSync(
     join(root, 'dist', 'index.html'),
+    '<title>Code Editor</title>',
+    `<title>${name}</title>`
+  )
+  replaceSync(
+    join(root, 'dist', 'manifest.json'),
+    `"name": "Code Editor Web - OSS"`,
+    `"name": "${name}"`
+  )
+  replaceSync(
+    join(root, 'dist', 'manifest.json'),
+    `"short_name": "Web - OSS"`,
+    `"short_name": "${name}"`
+  )
+  replaceSync(
+    join(root, 'dist', 'manifest.json'),
+    `"description": "Web Code Editor."`,
+    `"description": "${description}"`
+  )
+  replaceSync(
+    join(root, 'dist', 'index.html'),
+    '<meta name="description" content="Online Code Editor" />',
+    `<meta name="description" content="${description}" />`
+  )
+  replaceSync(
+    join(root, 'dist', 'index.html'),
     '</title>',
     `</title>
-<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">`
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">`
   )
   replaceSync(
     join(root, 'dist', 'manifest.json'),
@@ -379,7 +412,7 @@ export const exportStatic = async ({ root, pathPrefix }) => {
       'dist',
       commitHash,
       'extensions',
-      `builtin.theme-${name}`,
+      `builtin.theme-${colorThemeName}`,
       'README.md'
     )
   )
@@ -390,7 +423,7 @@ export const exportStatic = async ({ root, pathPrefix }) => {
       'dist',
       commitHash,
       'extensions',
-      `builtin.theme-${name}`,
+      `builtin.theme-${colorThemeName}`,
       'extension.json'
     )
   )
@@ -401,7 +434,7 @@ export const exportStatic = async ({ root, pathPrefix }) => {
       'dist',
       commitHash,
       'extensions',
-      `builtin.theme-${name}`,
+      `builtin.theme-${colorThemeName}`,
       'color-theme.json'
     )
   )
