@@ -1,3 +1,4 @@
 {
-  "type":"module"
+  "name": "sample.command-never-resolves",
+  "type": "module"
 }
