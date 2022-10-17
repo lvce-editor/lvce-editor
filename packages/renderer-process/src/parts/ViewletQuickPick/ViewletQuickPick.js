@@ -3,6 +3,7 @@
 import * as AriaAlert from '../AriaAlert/AriaAlert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
+import * as Platform from '../Platform/Platform.js'
 import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
 
 // TODO use another virtual list that just appends elements and
@@ -179,9 +180,24 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
   }
 }
 
+const focusElement = ($Element) => {
+  if (Platform.isMobile) {
+    // workaround to disable virtual keyboard automatically opening on android
+    // see https://stackoverflow.com/questions/48635501/how-to-hide-soft-keyboard-and-keep-input-on-focus#answer-53104238
+    $Element.readOnly = true
+    $Element.focus()
+    const handleTimeout = () => {
+      $Element.readOnly = false
+    }
+    setTimeout(handleTimeout, 0)
+  } else {
+    $Element.focus()
+  }
+}
+
 export const focus = (state) => {
   const { $QuickPickInput } = state
-  $QuickPickInput.focus()
+  focusElement($QuickPickInput)
   Focus.setFocus('quickPickInput')
 }
 
@@ -211,7 +227,7 @@ export const create = () => {
   $QuickPickItems.id = Ids.QuickPickItems
   // @ts-ignore
   $QuickPickItems.role = Roles.ListBox
-  $QuickPickItems.onmousedown = ViewletQuickPickEvents.handleMouseDown
+  $QuickPickItems.onpointerdown = ViewletQuickPickEvents.handlePointerDown
   $QuickPickItems.addEventListener(
     'wheel',
     ViewletQuickPickEvents.handleWheel,
