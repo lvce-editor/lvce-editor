@@ -17,7 +17,7 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "0.0.2"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-nvmrc",
@@ -32,7 +32,7 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "0.0.18"
+    "version": "0.0.20"
   },
   {
     "name": "builtin.language-basics-html",
@@ -42,7 +42,7 @@
   {
     "name": "builtin.language-basics-css",
     "repository": "github.com/lvce-editor/language-basics-css",
-    "version": "0.0.4"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.language-basics-plaintext",
@@ -157,7 +157,7 @@
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "0.0.10"
+    "version": "0.0.12"
   },
   {
     "name": "builtin.language-basics-desktop",
