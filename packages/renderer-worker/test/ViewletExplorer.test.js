@@ -4850,3 +4850,43 @@ test('handleClickCurrent', async () => {
     maxLineY: 2,
   })
 })
+
+test('copyPath - when scrolled down', async () => {
+  const state = {
+    root: '/home/test-user/test-path',
+    focusedIndex: 0,
+    minLineY: 1,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    maxLineY: 2,
+    items: [
+      {
+        depth: 1,
+        index: 0,
+        languageId: 'unknown',
+        name: 'index.css',
+        path: '/index.css',
+        setSize: 2,
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        index: 1,
+        languageId: 'unknown',
+        name: 'index.html',
+        path: '/index.html',
+        setSize: 3,
+        type: DirentType.File,
+      },
+    ],
+  }
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
+  await ViewletExplorer.copyPath(state)
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'ClipBoard.writeText',
+    '/index.html'
+  )
+})
