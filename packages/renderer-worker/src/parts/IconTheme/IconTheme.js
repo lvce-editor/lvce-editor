@@ -77,8 +77,9 @@ export const getFolderIcon = (folder) => {
   if (!iconTheme || !iconTheme.folderNames) {
     return ''
   }
+  const folderNameLower = folder.name.toLowerCase()
   // @ts-ignore
-  const folderIcon = iconTheme.folderNames[folder.name.toLowerCase()]
+  const folderIcon = iconTheme.folderNames[folderNameLower]
   if (folderIcon) {
     return folderIcon
   }
