@@ -196,3 +196,24 @@ test('getIcon - file extension should have priority over language id', () => {
     })
   ).toBe('f_svg')
 })
+
+test('getIcon - symbolic link to file', () => {
+  // @ts-ignore
+  Languages.getLanguageId.mockImplementation(() => {
+    return ''
+  })
+  IconTheme.state.iconTheme = {
+    folderNames: {},
+    languageIds: {},
+    fileNames: {
+      '.nvmrc': 'f_nvmrc',
+    },
+    fileExtensions: {},
+  }
+  expect(
+    IconTheme.getIcon({
+      type: DirentType.SymlinkFile,
+      name: '.nvmrc',
+    })
+  ).toBe('f_nvmrc')
+})
