@@ -5,6 +5,8 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
+import * as Preferences from '../Preferences/Preferences.js'
+import * as PromiseStatus from '../PromiseStatus/PromiseStatus.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
@@ -12,13 +14,12 @@ import { focusIndex } from './ViewletExplorerFocusIndex.js'
 import {
   compareDirent,
   getChildDirents,
+  getChildDirentsRaw,
   getIndexFromPosition,
   getParentEndIndex,
   getParentStartIndex,
   getTopLevelDirents,
 } from './ViewletExplorerShared.js'
-import * as PromiseStatus from '../PromiseStatus/PromiseStatus.js'
-import * as Preferences from '../Preferences/Preferences.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -144,7 +145,7 @@ const restoreExpandedState = async (
   }
   const expandedDirentPaths = [root, ...savedState.expandedPaths]
   const expandedDirentChildren = await Promise.allSettled(
-    expandedDirentPaths.map(FileSystem.readDirWithFileTypes)
+    expandedDirentPaths.map(getChildDirentsRaw)
   )
   const savedRoot = savedState.root
   const dirents = createDirents(
@@ -809,12 +810,15 @@ export const handleClick = (state, index, keepFocus = false) => {
     console.warn(`[explorer] dirent at index ${actualIndex} not found`, state)
     return state
   }
+  const { type } = dirent
   // TODO dirent type should be numeric
-  switch (dirent.type) {
+  switch (type) {
     case DirentType.File:
+    case DirentType.SymlinkFile:
       return handleClickFile(state, dirent, actualIndex, keepFocus)
     // TODO decide on one name
     case DirentType.Directory:
+    case DirentType.SymlinkFolder:
       return handleClickDirectory(state, dirent, actualIndex)
     case DirentType.DirectoryExpanding:
       return handleClickDirectoryExpanding(state, dirent, actualIndex)
@@ -823,7 +827,7 @@ export const handleClick = (state, index, keepFocus = false) => {
     case DirentType.Symlink:
       return handleClickSymLink(state, dirent, state.focusedIndex)
     default:
-      break
+      throw new Error(`unsupported dirent type ${type}`)
   }
 }
 
@@ -877,8 +881,10 @@ export const handleArrowRight = async (state) => {
   const dirent = state.items[state.focusedIndex]
   switch (dirent.type) {
     case DirentType.File:
+    case DirentType.SymlinkFile:
       return state
     case DirentType.Directory:
+    case DirentType.SymlinkFolder:
       return handleClickDirectory(state, dirent, state.focusedIndex)
     case DirentType.DirectoryExpanded:
       return handleArrowRightDirectoryExpanded(state, dirent)

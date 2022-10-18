@@ -1,7 +1,8 @@
-import * as Compare from '../Compare/Compare.js'
 import * as Assert from '../Assert/Assert.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as Compare from '../Compare/Compare.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 
 export const getIndexFromPosition = (state, x, y) => {
@@ -18,7 +19,9 @@ export const getIndexFromPosition = (state, x, y) => {
 
 const priorityMapFoldersFirst = {
   [DirentType.Directory]: 1,
+  [DirentType.SymlinkFolder]: 1,
   [DirentType.File]: 0,
+  [DirentType.SymlinkFile]: 0,
   [DirentType.Unknown]: 0,
   [DirentType.Socket]: 0,
 }
@@ -93,6 +96,72 @@ export const getParentEndIndex = (dirents, index) => {
   return endIndex
 }
 
+const isSymbolicLink = (dirent) => {
+  return dirent.type === DirentType.Symlink
+}
+
+const hasSymbolicLinks = (rawDirents) => {
+  return rawDirents.some(isSymbolicLink)
+}
+
+const getSymlinkType = (type) => {
+  switch (type) {
+    case DirentType.File:
+      return DirentType.SymlinkFile
+    case DirentType.Directory:
+      return DirentType.SymlinkFolder
+    default:
+      return DirentType.Symlink
+  }
+}
+// TODO maybe resolving of symbolic links should happen in shared process?
+// so that there is less code and less work in the frontend
+const resolveSymbolicLink = async (uri, rawDirent) => {
+  try {
+    // TODO support windows paths
+    const absolutePath = uri + '/' + rawDirent.name
+    const type = await FileSystem.stat(absolutePath)
+    const symLinkType = getSymlinkType(type)
+    return {
+      name: rawDirent.name,
+      type: symLinkType,
+    }
+  } catch (error) {
+    // @ts-ignore
+    if (error && error.code === FileSystemErrorCodes.ENOENT) {
+      return {
+        name: rawDirent.name,
+        type: DirentType.SymlinkFile,
+      }
+    }
+    console.error(
+      `Failed to resolve symbolic link for ${rawDirent.name}: ${error}`
+    )
+    return rawDirent
+  }
+}
+
+const resolveSymbolicLinks = async (uri, rawDirents) => {
+  const resolvedDirents = []
+  for (const rawDirent of rawDirents) {
+    if (isSymbolicLink(rawDirent)) {
+      const resolvedDirent = await resolveSymbolicLink(uri, rawDirent)
+      resolvedDirents.push(resolvedDirent)
+    } else {
+      resolvedDirents.push(rawDirent)
+    }
+  }
+  return resolvedDirents
+}
+
+export const getChildDirentsRaw = async (uri) => {
+  const rawDirents = await FileSystem.readDirWithFileTypes(uri)
+  if (hasSymbolicLinks(rawDirents)) {
+    return resolveSymbolicLinks(uri, rawDirents)
+  }
+  return rawDirents
+}
+
 export const getChildDirents = async (
   root,
   pathSeparator,
@@ -109,7 +178,7 @@ export const getChildDirents = async (
   // and more typesafe than Command.execute
   // and more performant
   const uri = parentDirent.path
-  const rawDirents = await FileSystem.readDirWithFileTypes(uri)
+  const rawDirents = await getChildDirentsRaw(uri)
   const displayDirents = toDisplayDirents(
     root,
     pathSeparator,
