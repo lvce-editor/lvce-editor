@@ -81,7 +81,7 @@ const isCommitHash = (dirent) => {
  */
 const clean = async (root) => {
   await FileSystem.remove(Path.join(root, 'dist'))
-  await FileSystem.mkdir(Path.join(root, 'dist '))
+  await FileSystem.mkdir(Path.join(root, 'dist'))
 }
 
 /**
