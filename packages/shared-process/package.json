@@ -24,7 +24,7 @@
     "@lvce-editor/pty-host": "file:../pty-host",
     "debug": "^4.3.4",
     "execa": "^6.1.0",
-    "exit-hook": "^3.1.0",
+    "exit-hook": "^3.1.1",
     "got": "^12.5.2",
     "is-object": "^1.0.2",
     "lines-and-columns": "^2.0.3",
