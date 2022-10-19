@@ -588,6 +588,14 @@ const addExtension = async ({ root, commitHash, pathPrefix }) => {
  * @param {{root:string, pathPrefix:string  }} param0
  */
 export const exportStatic = async ({ root, pathPrefix }) => {
+  if (pathPrefix === 'auto') {
+    const extensionJson = await readExtensionManifest(
+      Path.join(root, 'extension.json')
+    )
+    const id = extensionJson.id
+    const [author, name] = id.split('.')
+    pathPrefix = `/${name}`
+  }
   const dirents = await FileSystem.readDir(
     Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static')
   )
