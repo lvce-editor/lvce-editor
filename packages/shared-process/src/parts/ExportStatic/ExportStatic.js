@@ -373,64 +373,7 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
   )
 }
 
-const addExtension = async ({
-  root,
-  commitHash,
-  colorThemeName,
-  name,
-  description,
-}) => {
-  await FileSystem.mkdir(
-    Path.join(
-      root,
-      'dist',
-      commitHash,
-      'extensions',
-      `builtin.theme-${colorThemeName}`
-    )
-  )
-  await FileSystem.copy(
-    Path.join(root, 'color-theme.json'),
-    Path.join(root, 'dist', commitHash, 'themes', `${colorThemeName}.json`)
-  )
-  await replace(
-    Path.join(root, 'dist', commitHash, 'config', 'defaultSettings.json'),
-    `"workbench.colorTheme": "slime"`,
-    `"workbench.colorTheme": "${colorThemeName}"`
-  )
-  await FileSystem.copyFile(
-    Path.join(root, 'README.md'),
-    Path.join(
-      root,
-      'dist',
-      commitHash,
-      'extensions',
-      `builtin.theme-${colorThemeName}`,
-      'README.md'
-    )
-  )
-  await FileSystem.copyFile(
-    Path.join(root, 'extension.json'),
-    Path.join(
-      root,
-      'dist',
-      commitHash,
-      'extensions',
-      `builtin.theme-${colorThemeName}`,
-      'extension.json'
-    )
-  )
-  await FileSystem.copyFile(
-    Path.join(root, 'color-theme.json'),
-    Path.join(
-      root,
-      'dist',
-      commitHash,
-      'extensions',
-      `builtin.theme-${colorThemeName}`,
-      'color-theme.json'
-    )
-  )
+const addExtensionSeo = async ({ root, name, description }) => {
   await replace(
     Path.join(root, 'dist', 'index.html'),
     '<title>Code Editor</title>',
@@ -456,14 +399,188 @@ const addExtension = async ({
     '<meta name="description" content="Online Code Editor" />',
     `<meta name="description" content="${description}" />`
   )
+}
+
+const getId = (object) => {
+  return object.id
+}
+
+const addExtensionThemes = async ({ root, extensionJson, commitHash }) => {
+  const colorThemes = extensionJson.colorThemes || []
+  if (colorThemes.length === 0) {
+    return
+  }
+  for (const colorTheme of colorThemes) {
+    const { id, path } = colorTheme
+    await FileSystem.mkdir(
+      Path.join(root, 'dist', commitHash, 'extensions', `builtin.theme-${id}`)
+    )
+    await FileSystem.copy(
+      Path.join(root, path),
+      Path.join(root, 'dist', commitHash, 'themes', `${id}.json`)
+    )
+    await replace(
+      Path.join(root, 'dist', commitHash, 'config', 'defaultSettings.json'),
+      `"workbench.colorTheme": "slime"`,
+      `"workbench.colorTheme": "${id}"`
+    )
+    await FileSystem.copyFile(
+      Path.join(root, 'README.md'),
+      Path.join(
+        root,
+        'dist',
+        commitHash,
+        'extensions',
+        `builtin.theme-${id}`,
+        'README.md'
+      )
+    )
+    await FileSystem.copyFile(
+      Path.join(root, 'extension.json'),
+      Path.join(
+        root,
+        'dist',
+        commitHash,
+        'extensions',
+        `builtin.theme-${id}`,
+        'extension.json'
+      )
+    )
+    await FileSystem.copyFile(
+      Path.join(root, 'color-theme.json'),
+      Path.join(
+        root,
+        'dist',
+        commitHash,
+        'extensions',
+        `builtin.theme-${id}`,
+        'color-theme.json'
+      )
+    )
+  }
   const themesJson = await JsonFile.readJson(
     Path.join(root, 'dist', commitHash, 'config', 'themes.json')
   )
-  const mergedThemes = mergeThemes(themesJson, [colorThemeName])
+  const ids = colorThemes.map(getId)
+  const mergedThemes = mergeThemes(themesJson, ids)
   await JsonFile.writeJson(
     Path.join(root, 'dist', commitHash, 'config', 'themes.json'),
     mergedThemes
   )
+}
+
+const compareId = (a, b) => {
+  return a.id.localeCompare(b.id)
+}
+
+const mergeLanguages = (languages, extensionLanguages) => {
+  const seen = []
+  const merged = []
+  for (const language of extensionLanguages) {
+    seen.push(language.id)
+    merged.push(language)
+  }
+  for (const language of languages) {
+    if (seen.includes(language.id)) {
+      continue
+    }
+    merged.push(language)
+  }
+  merged.sort(compareId)
+  return merged
+}
+
+const toPlaygroundFile = (file) => {
+  return `/playground/${file}`
+}
+
+const addExtensionLanguages = async ({
+  root,
+  extensionJson,
+  commitHash,
+  pathPrefix,
+}) => {
+  const languages = extensionJson.languages || []
+  if (languages.length === 0) {
+    return
+  }
+  const extensionId = extensionJson.id
+  await FileSystem.remove(
+    Path.join(root, 'dist', commitHash, 'extensions', extensionId)
+  )
+  await FileSystem.mkdir(
+    Path.join(root, 'dist', commitHash, 'extensions', extensionId)
+  )
+  await FileSystem.copyFile(
+    Path.join(root, 'README.md'),
+    Path.join(root, 'dist', commitHash, 'extensions', extensionId, 'README.md')
+  )
+  await FileSystem.copy(
+    Path.join(root, 'src'),
+    Path.join(root, 'dist', commitHash, 'extensions', extensionId, 'src')
+  )
+  await FileSystem.copyFile(
+    Path.join(root, 'extension.json'),
+    Path.join(
+      root,
+      'dist',
+      commitHash,
+      'extensions',
+      extensionId,
+      'extension.json'
+    )
+  )
+  const extensionLanguages = []
+  for (const language of languages) {
+    extensionLanguages.push({
+      ...language,
+      tokenize: `${pathPrefix}/${commitHash}/extensions/${extensionId}/${language.tokenize}`,
+    })
+  }
+  const builtinLanguages = await JsonFile.readJson(
+    Path.join(root, 'dist', commitHash, 'config', 'languages.json')
+  )
+  const mergedLanguages = mergeLanguages(builtinLanguages, extensionLanguages)
+  await JsonFile.writeJson(
+    Path.join(root, 'dist', commitHash, 'config', 'languages.json'),
+    mergedLanguages
+  )
+  await FileSystem.remove(Path.join(root, 'dist', commitHash, 'playground'))
+  await FileSystem.copy(
+    Path.join(root, 'test', 'cases'),
+    Path.join(root, 'dist', commitHash, 'playground')
+  )
+
+  const testFiles = await FileSystem.readDir(Path.join(root, 'test', 'cases'))
+  const fileMap = testFiles.map(toPlaygroundFile)
+  await JsonFile.writeJson(
+    Path.join(root, 'dist', commitHash, 'config', 'fileMap.json'),
+    fileMap
+  )
+}
+
+const addExtension = async ({ root, commitHash, pathPrefix }) => {
+  const extensionJson = await readExtensionManifest(
+    Path.join(root, 'extension.json')
+  )
+  const name = extensionJson.name || extensionJson.id || ''
+  const description = extensionJson.description || ''
+  await addExtensionSeo({
+    root,
+    name,
+    description,
+  })
+  await addExtensionThemes({
+    root,
+    commitHash,
+    extensionJson,
+  })
+  await addExtensionLanguages({
+    root,
+    commitHash,
+    extensionJson,
+    pathPrefix,
+  })
 }
 
 /**
@@ -475,12 +592,6 @@ export const exportStatic = async ({ root, pathPrefix }) => {
     Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static')
   )
   const commitHash = dirents.find(isCommitHash) || ''
-  const extensionJson = await readExtensionManifest(
-    Path.join(root, 'extension.json')
-  )
-  const colorThemeName = extensionJson.id.slice('builtin.theme-'.length)
-  const name = extensionJson.name || extensionJson.id || ''
-  const description = extensionJson.description || ''
 
   console.time('clean')
   await clean(root)
@@ -501,10 +612,8 @@ export const exportStatic = async ({ root, pathPrefix }) => {
   console.time('addExtension')
   await addExtension({
     root,
-    colorThemeName,
     commitHash,
-    description,
-    name,
+    pathPrefix,
   })
   console.timeEnd('addExtension')
 }
