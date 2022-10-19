@@ -1,7 +1,7 @@
 {
   "name": "@lvce-editor/extension-host",
   "version": "0.0.0-dev",
-  "description": "",
+  "description": "Extension host process",
   "main": "index.js",
   "type": "module",
   "scripts": {
