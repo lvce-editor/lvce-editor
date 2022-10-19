@@ -20,8 +20,8 @@ RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
 
 # Install nodeJs
 RUN bash -c ". .nvm/nvm.sh \
-    && nvm install 18.10.0 \
-    && nvm use 18.10.0 \
-    && nvm alias default 18.10.0"
+    && nvm install 18.11.0 \
+    && nvm use 18.11.0 \
+    && nvm alias default 18.11.0"
 
 RUN echo "nvm use default &>/dev/null" >> ~/.bashrc.d/51-nvm-fix

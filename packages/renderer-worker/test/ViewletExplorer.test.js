@@ -898,6 +898,73 @@ test('handleClick - file - error', async () => {
   )
 })
 
+test('handleClick - unsupported dirent type', async () => {
+  const state = {
+    root: '/test',
+    focusedIndex: -1,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    items: [
+      {
+        name: 'index.css',
+        type: 'abc',
+        path: '/index.css',
+      },
+    ],
+  }
+  // @ts-ignore
+  Command.execute.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Main.openUri':
+        break
+      default:
+        throw new Error('unexpected method')
+    }
+  })
+  expect(() => ViewletExplorer.handleClick(state, 0)).toThrowError(
+    new Error('unsupported dirent type abc')
+  )
+  expect(Command.execute).not.toHaveBeenCalled()
+})
+
+test('handleClick - symlink - file', async () => {
+  const state = {
+    root: '/test',
+    focusedIndex: -1,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    items: [
+      {
+        name: 'index.css',
+        type: DirentType.SymlinkFile,
+        path: '/index.css',
+      },
+    ],
+  }
+  // @ts-ignore
+  Command.execute.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Main.openUri':
+        break
+      default:
+        throw new Error('unexpected method')
+    }
+  })
+  expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
+    focusedIndex: 0,
+  })
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'Main.openUri',
+    '/index.css',
+    true
+  )
+})
+
 test('handleClickCurrentButKeepFocus - file', async () => {
   const state = {
     ...ViewletExplorer.create(),
@@ -1998,6 +2065,31 @@ test('handleArrowRight - file', async () => {
         name: 'index.js',
         path: '/test-folder/index.js',
         type: DirentType.File,
+      },
+    ],
+  }
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await ViewletExplorer.handleArrowRight(state)
+  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+})
+
+test('handleArrowRight - symlink - file', async () => {
+  const state = {
+    root: '/test',
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    items: [
+      {
+        depth: 1,
+        posInSet: 1,
+        setSize: 1,
+        name: 'index.css',
+        path: '/index.css',
+        type: DirentType.SymlinkFile,
       },
     ],
   }
@@ -4851,4 +4943,44 @@ test('handleClickCurrent', async () => {
     minLineY: 1,
     maxLineY: 2,
   })
+})
+
+test('copyPath - when scrolled down', async () => {
+  const state = {
+    root: '/home/test-user/test-path',
+    focusedIndex: 0,
+    minLineY: 1,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    maxLineY: 2,
+    items: [
+      {
+        depth: 1,
+        index: 0,
+        languageId: 'unknown',
+        name: 'index.css',
+        path: '/index.css',
+        setSize: 2,
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        index: 1,
+        languageId: 'unknown',
+        name: 'index.html',
+        path: '/index.html',
+        setSize: 3,
+        type: DirentType.File,
+      },
+    ],
+  }
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {})
+  await ViewletExplorer.copyPath(state)
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'ClipBoard.writeText',
+    '/index.html'
+  )
 })

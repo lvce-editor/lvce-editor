@@ -103,65 +103,45 @@ const distance = (point1, point2) => {
   return Math.hypot(dx + dy)
 }
 
-export const handlePointerMove = (state, pointerId, x, y) => {
-  Assert.object(state)
-  Assert.number(x)
-  Assert.number(y)
-  const {
-    pointerOffsetX,
-    pointerOffsetY,
-    domMatrix,
-    eventCache,
-    previousDiff,
-    touchZoomFactor,
-    pointerDownCount,
-  } = state
-  if (pointerDownCount === 0) {
-    return state
+const handleZoom = (state) => {
+  const { domMatrix, eventCache, previousDiff, touchZoomFactor } = state
+  const currentDiff = distance(eventCache[0], eventCache[1])
+  if (previousDiff > 0) {
+    if (currentDiff > previousDiff) {
+      const newDomMatrix = new DOMMatrix([
+        (domMatrix.a *= touchZoomFactor),
+        domMatrix.b,
+        domMatrix.c,
+        (domMatrix.d *= touchZoomFactor),
+        domMatrix.e,
+        domMatrix.f,
+      ])
+      return {
+        ...state,
+        previousDiff: currentDiff,
+        domMatrix: newDomMatrix,
+      }
+    }
+    if (currentDiff < previousDiff) {
+      const newDomMatrix = new DOMMatrix([
+        (domMatrix.a /= touchZoomFactor),
+        domMatrix.b,
+        domMatrix.c,
+        (domMatrix.d /= touchZoomFactor),
+        domMatrix.e,
+        domMatrix.f,
+      ])
+      return {
+        ...state,
+        previousDiff: currentDiff,
+        domMatrix: newDomMatrix,
+      }
+    }
   }
-  const index = eventCache.findIndex((event) => event.pointerId === pointerId)
-  // TODO avoid mutation
-  eventCache[index] = { pointerId, x, y }
+}
 
-  if (eventCache.length === 2) {
-    const currentDiff = distance(eventCache[0], eventCache[1])
-    if (previousDiff > 0) {
-      if (currentDiff > previousDiff) {
-        const newDomMatrix = new DOMMatrix([
-          (domMatrix.a *= touchZoomFactor),
-          domMatrix.b,
-          domMatrix.c,
-          (domMatrix.d *= touchZoomFactor),
-          domMatrix.e,
-          domMatrix.f,
-        ])
-        return {
-          ...state,
-          previousDiff: currentDiff,
-          domMatrix: newDomMatrix,
-        }
-      }
-      if (currentDiff < previousDiff) {
-        const newDomMatrix = new DOMMatrix([
-          (domMatrix.a /= touchZoomFactor),
-          domMatrix.b,
-          domMatrix.c,
-          (domMatrix.d /= touchZoomFactor),
-          domMatrix.e,
-          domMatrix.f,
-        ])
-        return {
-          ...state,
-          previousDiff: currentDiff,
-          domMatrix: newDomMatrix,
-        }
-      }
-    }
-    return {
-      ...state,
-      previousDiff: currentDiff,
-    }
-  }
+const handleMove = (state, x, y) => {
+  const { pointerOffsetX, pointerOffsetY, domMatrix } = state
   const deltaX = x - pointerOffsetX
   const deltaY = y - pointerOffsetY
   const newDomMatrix = new DOMMatrix([
@@ -180,16 +160,38 @@ export const handlePointerMove = (state, pointerId, x, y) => {
   }
 }
 
-export const handlePointerUp = (state, pointerId, x, y) => {
+export const handlePointerMove = (state, pointerId, x, y) => {
+  Assert.object(state)
+  Assert.number(x)
+  Assert.number(y)
   const { eventCache, pointerDownCount } = state
   if (pointerDownCount === 0) {
     return state
   }
   const index = eventCache.findIndex((event) => event.pointerId === pointerId)
+  // TODO avoid mutation
+  eventCache[index] = { pointerId, x, y }
+  if (eventCache.length === 2) {
+    return handleZoom(state)
+  }
+  return handleMove(state, x, y)
+}
+
+const removePointer = (eventCache, pointerId) => {
+  const index = eventCache.findIndex((event) => event.pointerId === pointerId)
   const newEventCache = [
     ...eventCache.slice(0, index),
     ...eventCache.slice(index + 1),
   ]
+  return newEventCache
+}
+
+export const handlePointerUp = (state, pointerId, x, y) => {
+  const { eventCache, pointerDownCount } = state
+  if (pointerDownCount === 0) {
+    return state
+  }
+  const newEventCache = removePointer(eventCache, pointerId)
   const newPointerDownCount = pointerDownCount - 1
   return {
     ...state,

@@ -132,6 +132,7 @@
   width: 14px;
   bottom: 0;
   contain: strict;
+  cursor: default;
 }
 
 .ScrollBarSmall {

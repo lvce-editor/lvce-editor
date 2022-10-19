@@ -26,7 +26,7 @@ jobs:
           node-version-file: '.nvmrc'
       - name: Compute node modules cache key
         id: nodeModulesCacheKey
-        run: echo "::set-output name=value::$(node build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js)"
+        run: echo "value=$(node build/src/parts/ComputeNodeModulesCacheKey/ComputeNodeModulesCacheKey.js)" >> $GITHUB_OUTPUT
       - uses: actions/cache@v3
         id: npm-cache
         if: matrix.os != 'windows-2022' # workaround for https://github.com/actions/cache/issues/728
@@ -40,7 +40,7 @@ jobs:
           DOWNLOAD_BUILTIN_EXTENSIONS: 0
       - name: Compute builtin extensions cache key
         id: builtinExtensionsCacheKey
-        run: echo "::set-output name=value::$(node build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)"
+        run: echo "value=$(node build/src/parts/ComputeBuiltinExtensionsCacheKey/ComputeBuiltinExtensionsCacheKey.js)" >> $GITHUB_OUTPUT
       - uses: actions/cache@v3
         id: builtin-extensions-cache
         with:

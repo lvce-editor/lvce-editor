@@ -77,8 +77,9 @@ export const getFolderIcon = (folder) => {
   if (!iconTheme || !iconTheme.folderNames) {
     return ''
   }
+  const folderNameLower = folder.name.toLowerCase()
   // @ts-ignore
-  const folderIcon = iconTheme.folderNames[folder.name.toLowerCase()]
+  const folderIcon = iconTheme.folderNames[folderNameLower]
   if (folderIcon) {
     return folderIcon
   }
@@ -105,8 +106,10 @@ const getFolderIconExpanded = (folder) => {
 export const getIcon = (dirent) => {
   switch (dirent.type) {
     case DirentType.File:
+    case DirentType.SymlinkFile:
       return getFileIcon(dirent)
     case DirentType.Directory:
+    case DirentType.SymlinkFolder:
       return getFolderIcon(dirent)
     case DirentType.DirectoryExpanded:
       return getFolderIconExpanded(dirent)

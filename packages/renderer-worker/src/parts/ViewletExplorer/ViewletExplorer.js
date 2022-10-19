@@ -5,6 +5,8 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
+import * as Preferences from '../Preferences/Preferences.js'
+import * as PromiseStatus from '../PromiseStatus/PromiseStatus.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as Workspace from '../Workspace/Workspace.js'
@@ -12,13 +14,12 @@ import { focusIndex } from './ViewletExplorerFocusIndex.js'
 import {
   compareDirent,
   getChildDirents,
+  getChildDirentsRaw,
   getIndexFromPosition,
   getParentEndIndex,
   getParentStartIndex,
   getTopLevelDirents,
 } from './ViewletExplorerShared.js'
-import * as PromiseStatus from '../PromiseStatus/PromiseStatus.js'
-import * as Preferences from '../Preferences/Preferences.js'
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
 // and  <viewlet>.ipc.js
@@ -144,7 +145,7 @@ const restoreExpandedState = async (
   }
   const expandedDirentPaths = [root, ...savedState.expandedPaths]
   const expandedDirentChildren = await Promise.allSettled(
-    expandedDirentPaths.map(FileSystem.readDirWithFileTypes)
+    expandedDirentPaths.map(getChildDirentsRaw)
   )
   const savedRoot = savedState.root
   const dirents = createDirents(
@@ -157,11 +158,14 @@ const restoreExpandedState = async (
 }
 
 export const saveState = (state) => {
-  const { items, root } = state
+  const { items, root, deltaY, minLineY, maxLineY } = state
   const expandedPaths = items.filter(isExpandedDirectory).map(getPath)
   return {
     expandedPaths,
     root,
+    minLineY,
+    maxLineY,
+    deltaY,
   }
 }
 
@@ -188,11 +192,25 @@ export const loadContent = async (state, savedState) => {
     excluded
   )
   const { itemHeight, height } = state
+  let minLineY = 0
+  if (savedState && typeof savedState.minLineY === 'number') {
+    minLineY = savedState.minLineY
+  }
+  let deltaY = 0
+  if (savedState && typeof savedState.deltaY === 'number') {
+    deltaY = savedState.deltaY
+  }
+  let maxLineY = Math.round(height / itemHeight)
+  if (savedState && typeof savedState.maxLineY === 'number') {
+    maxLineY = savedState.maxLineY
+  }
   return {
     ...state,
     root,
     items: restoredDirents,
-    maxLineY: Math.round(height / itemHeight),
+    minLineY,
+    deltaY,
+    maxLineY,
     pathSeparator,
     excluded,
   }
@@ -290,7 +308,8 @@ export const handleWheel = (state, deltaY) => {
 }
 
 export const getFocusedDirent = (state) => {
-  const dirent = state.items[state.focusedIndex]
+  const { focusedIndex, minLineY, items } = state
+  const dirent = items[focusedIndex + minLineY]
   return dirent
 }
 
@@ -800,12 +819,15 @@ export const handleClick = (state, index, keepFocus = false) => {
     console.warn(`[explorer] dirent at index ${actualIndex} not found`, state)
     return state
   }
+  const { type } = dirent
   // TODO dirent type should be numeric
-  switch (dirent.type) {
+  switch (type) {
     case DirentType.File:
+    case DirentType.SymlinkFile:
       return handleClickFile(state, dirent, actualIndex, keepFocus)
     // TODO decide on one name
     case DirentType.Directory:
+    case DirentType.SymlinkFolder:
       return handleClickDirectory(state, dirent, actualIndex, keepFocus)
     case DirentType.DirectoryExpanding:
       return handleClickDirectoryExpanding(
@@ -819,7 +841,7 @@ export const handleClick = (state, index, keepFocus = false) => {
     case DirentType.Symlink:
       return handleClickSymLink(state, dirent, state.focusedIndex)
     default:
-      break
+      throw new Error(`unsupported dirent type ${type}`)
   }
 }
 
@@ -873,8 +895,10 @@ export const handleArrowRight = async (state) => {
   const dirent = state.items[state.focusedIndex]
   switch (dirent.type) {
     case DirentType.File:
+    case DirentType.SymlinkFile:
       return state
     case DirentType.Directory:
+    case DirentType.SymlinkFolder:
       return handleClickDirectory(state, dirent, state.focusedIndex)
     case DirentType.DirectoryExpanded:
       return handleArrowRightDirectoryExpanded(state, dirent)

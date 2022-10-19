@@ -15,3 +15,7 @@ export const BlockDevice = 'block-device'
 export const CharacterDevice = 'character-device'
 
 export const Unknown = 'unknown'
+
+export const SymlinkFile = 'symlink-file'
+
+export const SymlinkFolder = 'symlink-folder'
