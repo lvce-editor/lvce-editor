@@ -1,7 +1,7 @@
 {
   "name": "@lvce-editor/shared-process",
   "version": "0.0.0-dev",
-  "description": "",
+  "description": "Utility package for @lvce-editor/server",
   "main": "index.js",
   "type": "module",
   "scripts": {

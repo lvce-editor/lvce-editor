@@ -1,7 +1,7 @@
 {
   "name": "@lvce-editor/server",
   "version": "0.0.0-dev",
-  "description": "",
+  "description": "Run LVCE Editor as a server.",
   "main": "index.js",
   "bin": "bin/server.js",
   "type": "module",
