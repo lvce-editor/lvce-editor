@@ -1,73 +1,102 @@
-import fs, { cpSync, readdirSync, readFileSync, writeFileSync } from 'fs'
-import path, { join } from 'path'
+import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as Path from '../Path/Path.js'
 
 // TODO
 // - implement this for syntax highlighting projects
 // - implement this for language features web extensions
 
-const readExtensionManifest = (path) => {
-  const content = readFileSync(path, 'utf8')
-  return { ...JSON.parse(content), path }
+const readExtensionManifest = async (path) => {
+  const json = await JsonFile.readJson(path)
+  return { ...json, path }
 }
 
 const getThemeName = (dirent) => {
   return dirent.slice('builtin.theme-'.length)
 }
 
+const replace = async (path, occurrence, replacement) => {
+  const oldContent = await FileSystem.readFile(path)
+  if (!oldContent.includes(occurrence)) {
+    throw new Error(`failed to replace occurrence ${occurrence}: Not found`)
+  }
+  // @ts-ignore
+  const newContent = oldContent.replaceAll(occurrence, replacement)
+  await FileSystem.writeFile(path, newContent)
+}
+
 /**
- *
- * @param {{root:string, pathPrefix:string  }} param0
+ * @param {string} dirent
  */
-export const exportStatic = async ({ root, pathPrefix }) => {
-  const dirents = readdirSync(
-    join(root, 'node_modules', '@lvce-editor', 'server', 'static')
-  )
-  const RE_COMMIT_HASH = /^[a-z\d]+$/
-  const isCommitHash = (dirent) => {
-    return dirent.length === 7 && dirent.match(RE_COMMIT_HASH)
+const isLanguageBasics = (dirent) => {
+  return dirent.startsWith('builtin.language-basics')
+}
+
+/**
+ * @param {string} dirent
+ */
+const isTheme = (dirent) => {
+  return dirent.startsWith('builtin.theme-')
+}
+
+/**
+ * @param {string} dirent
+ */
+const isIconTheme = (dirent) => {
+  return dirent === 'builtin.vscode-icons'
+}
+
+const compare = (a, b) => {
+  return a.localeCompare(b)
+}
+
+const toSorted = (objects, compare) => {
+  return [...objects].sort(compare)
+}
+
+const mergeThemes = (builtinThemes, extensionThemes) => {
+  const seen = []
+  const merged = []
+  for (const extensionTheme of extensionThemes) {
+    seen.push(extensionTheme)
+    merged.push(extensionTheme)
   }
-  const commitHash = dirents.find(isCommitHash) || ''
-
-  const extensionJson = readExtensionManifest(join(root, 'extension.json'))
-  const colorThemeName = extensionJson.id.slice('builtin.theme-'.length)
-  const name = extensionJson.name || extensionJson.id || ''
-  const description = extensionJson.description || ''
-  fs.rmSync(join(root, 'dist'), { recursive: true, force: true })
-
-  fs.mkdirSync(path.join(root, 'dist'))
-
-  fs.mkdirSync(
-    join(
-      root,
-      'dist',
-      commitHash,
-      'extensions',
-      `builtin.theme-${colorThemeName}`
-    ),
-    {
-      recursive: true,
+  for (const builtinTheme of builtinThemes) {
+    if (seen.includes(builtinTheme)) {
+      continue
     }
-  )
-  fs.cpSync(
-    join(root, 'node_modules', '@lvce-editor', 'server', 'static'),
-    join(root, 'dist'),
-    {
-      recursive: true,
-    }
-  )
-
-  const replaceSync = (path, occurrence, replacement) => {
-    const oldContent = readFileSync(path, 'utf8')
-    if (!oldContent.includes(occurrence)) {
-      throw new Error(`failed to replace occurrence ${occurrence}: Not found`)
-    }
-    // @ts-ignore
-    const newContent = oldContent.replaceAll(occurrence, replacement)
-    writeFileSync(path, newContent)
+    merged.push(builtinTheme)
   }
+  const sorted = toSorted(merged, compare)
+  return sorted
+}
 
-  replaceSync(
-    join(
+const RE_COMMIT_HASH = /^[a-z\d]+$/
+const isCommitHash = (dirent) => {
+  return dirent.length === 7 && dirent.match(RE_COMMIT_HASH)
+}
+
+/**
+ * @param {string} root
+ */
+const clean = async (root) => {
+  await FileSystem.remove(Path.join(root, 'dist'))
+  await FileSystem.mkdir(Path.join(root, 'dist '))
+}
+
+/**
+ * @param {string} root
+ */
+const copyStaticFiles = async (root, commitHash) => {
+  await FileSystem.copy(
+    Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static'),
+    Path.join(root, 'dist')
+  )
+}
+
+const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
+  await replace(
+    Path.join(
       root,
       'dist',
       commitHash,
@@ -79,8 +108,8 @@ export const exportStatic = async ({ root, pathPrefix }) => {
     'platform = getPlatform();',
     'platform = "web"'
   )
-  replaceSync(
-    join(
+  await replace(
+    Path.join(
       root,
       'dist',
       commitHash,
@@ -92,8 +121,8 @@ export const exportStatic = async ({ root, pathPrefix }) => {
     `return "/${commitHash}";`,
     `return "${pathPrefix}/${commitHash}";`
   )
-  replaceSync(
-    join(
+  await replace(
+    Path.join(
       root,
       'dist',
       commitHash,
@@ -105,8 +134,8 @@ export const exportStatic = async ({ root, pathPrefix }) => {
     'platform = getPlatform();',
     'platform = "web"'
   )
-  replaceSync(
-    join(
+  await replace(
+    Path.join(
       root,
       'dist',
       commitHash,
@@ -118,8 +147,8 @@ export const exportStatic = async ({ root, pathPrefix }) => {
     `platform2 = "remote";`,
     'platform2 = "web";'
   )
-  replaceSync(
-    join(
+  await replace(
+    Path.join(
       root,
       'dist',
       commitHash,
@@ -131,8 +160,8 @@ export const exportStatic = async ({ root, pathPrefix }) => {
     `return "/${commitHash}";`,
     `return "${pathPrefix}/${commitHash}";`
   )
-  replaceSync(
-    join(
+  await replace(
+    Path.join(
       root,
       'dist',
       commitHash,
@@ -149,8 +178,8 @@ export const exportStatic = async ({ root, pathPrefix }) => {
       return \`\${assetDir}/themes/\${colorThemeId}.json\`
     }`
   )
-  replaceSync(
-    join(
+  await replace(
+    Path.join(
       root,
       'dist',
       commitHash,
@@ -167,8 +196,8 @@ export const exportStatic = async ({ root, pathPrefix }) => {
       return \`\${assetDir}/icon-themes/\${iconThemeId}.json\`
     }`
   )
-  replaceSync(
-    join(
+  await replace(
+    Path.join(
       root,
       'dist',
       commitHash,
@@ -182,8 +211,8 @@ export const exportStatic = async ({ root, pathPrefix }) => {
   )
 
   // workaround for firefox bug
-  replaceSync(
-    join(
+  await replace(
+    Path.join(
       root,
       'dist',
       commitHash,
@@ -196,53 +225,27 @@ export const exportStatic = async ({ root, pathPrefix }) => {
     `export {}
 //# sourceMappingURL`
   )
-  replaceSync(
-    join(root, 'dist', commitHash, 'config', 'defaultSettings.json'),
-    `"workbench.colorTheme": "slime"`,
-    `"workbench.colorTheme": "${colorThemeName}"`
-  )
-  replaceSync(
-    join(root, 'dist', commitHash, 'config', 'defaultSettings.json'),
+
+  await replace(
+    Path.join(root, 'dist', commitHash, 'config', 'defaultSettings.json'),
     `"workbench.saveStateOnVisibilityChange": false`,
     `"workbench.saveStateOnVisibilityChange": true`
   )
 
-  const extensionDirents = readdirSync(
-    join(root, 'node_modules', '@lvce-editor', 'shared-process', 'extensions')
+  const extensionDirents = await FileSystem.readDir(
+    Path.join(
+      root,
+      'node_modules',
+      '@lvce-editor',
+      'shared-process',
+      'extensions'
+    )
   )
-
-  const isLanguageBasics = (dirent) => {
-    return dirent.startsWith('builtin.language-basics')
-  }
-
-  const isTheme = (dirent) => {
-    return dirent.startsWith('builtin.theme-')
-  }
-
-  const isIconTheme = (dirent) => {
-    return dirent === 'builtin.vscode-icons'
-  }
 
   const languageBasicsDirents = extensionDirents.filter(isLanguageBasics)
   const themeDirents = extensionDirents.filter(isTheme)
   const iconThemeDirents = extensionDirents.filter(isIconTheme)
 
-  const writeJson = (path, json) => {
-    const content = JSON.stringify(json, null, 2) + '\n'
-    writeFileSync(path, content)
-  }
-
-  const getManifestPath = (dirent) => {
-    return join(
-      root,
-      'node_modules',
-      '@lvce-editor',
-      'shared-process',
-      'extensions',
-      dirent,
-      'extension.json'
-    )
-  }
   const getLanguages = (extension) => {
     const languages = []
     for (const language of extension.languages || []) {
@@ -253,18 +256,33 @@ export const exportStatic = async ({ root, pathPrefix }) => {
     }
     return languages
   }
-  const languages = languageBasicsDirents
-    .map(getManifestPath)
-    .map(readExtensionManifest)
-    .flatMap(getLanguages)
-  writeJson(
-    join(root, 'dist', commitHash, 'config', 'languages.json'),
+
+  /**
+   * @param {string} dirent
+   */
+  const getManifestPath = (dirent) => {
+    return Path.join(
+      root,
+      'node_modules',
+      '@lvce-editor',
+      'shared-process',
+      'extensions',
+      dirent,
+      'extension.json'
+    )
+  }
+
+  const manifestPaths = languageBasicsDirents.map(getManifestPath)
+  const manifests = await Promise.all(manifestPaths.map(readExtensionManifest))
+  const languages = manifests.flatMap(getLanguages)
+  await JsonFile.writeJson(
+    Path.join(root, 'dist', commitHash, 'config', 'languages.json'),
     languages
   )
 
   for (const languageBasicsDirent of languageBasicsDirents) {
-    cpSync(
-      join(
+    await FileSystem.copy(
+      Path.join(
         root,
         'node_modules',
         '@lvce-editor',
@@ -272,17 +290,14 @@ export const exportStatic = async ({ root, pathPrefix }) => {
         'extensions',
         languageBasicsDirent
       ),
-      join(root, 'dist', commitHash, 'extensions', languageBasicsDirent),
-      {
-        recursive: true,
-      }
+      Path.join(root, 'dist', commitHash, 'extensions', languageBasicsDirent)
     )
   }
 
   for (const themeDirent of themeDirents) {
     const themeId = getThemeName(themeDirent)
-    cpSync(
-      join(
+    await FileSystem.copy(
+      Path.join(
         root,
         'node_modules',
         '@lvce-editor',
@@ -291,42 +306,20 @@ export const exportStatic = async ({ root, pathPrefix }) => {
         themeDirent,
         'color-theme.json'
       ),
-      join(root, 'dist', commitHash, 'themes', `${themeId}.json`)
+      Path.join(root, 'dist', commitHash, 'themes', `${themeId}.json`)
     )
   }
 
-  const compare = (a, b) => {
-    return a.localeCompare(b)
-  }
-
-  const toSorted = (objects, compare) => {
-    return [...objects].sort(compare)
-  }
-
-  const mergeThemes = (builtinThemes, extensionThemes) => {
-    const seen = []
-    const merged = []
-    for (const extensionTheme of extensionThemes) {
-      seen.push(extensionTheme)
-      merged.push(extensionTheme)
-    }
-    for (const builtinTheme of builtinThemes) {
-      if (seen.includes(builtinTheme)) {
-        continue
-      }
-      merged.push(builtinTheme)
-    }
-    const sorted = toSorted(merged, compare)
-    return sorted
-  }
-
-  const themeIds = mergeThemes(themeDirents.map(getThemeName), [colorThemeName])
-  writeJson(join(root, 'dist', commitHash, 'config', 'themes.json'), themeIds)
+  const themeIds = mergeThemes(themeDirents.map(getThemeName), [])
+  await JsonFile.writeJson(
+    Path.join(root, 'dist', commitHash, 'config', 'themes.json'),
+    themeIds
+  )
 
   for (const iconThemeDirent of iconThemeDirents) {
     const iconThemeId = iconThemeDirent.slice('builtin.'.length)
-    cpSync(
-      join(
+    await FileSystem.copy(
+      Path.join(
         root,
         'node_modules',
         '@lvce-editor',
@@ -335,10 +328,10 @@ export const exportStatic = async ({ root, pathPrefix }) => {
         iconThemeDirent,
         'icon-theme.json'
       ),
-      join(root, 'dist', commitHash, 'icon-themes', `${iconThemeId}.json`)
+      Path.join(root, 'dist', commitHash, 'icon-themes', `${iconThemeId}.json`)
     )
-    cpSync(
-      join(
+    await FileSystem.copy(
+      Path.join(
         root,
         'node_modules',
         '@lvce-editor',
@@ -347,67 +340,67 @@ export const exportStatic = async ({ root, pathPrefix }) => {
         iconThemeDirent,
         'icons'
       ),
-      join(root, 'dist', commitHash, 'file-icons'),
-      {
-        recursive: true,
-      }
+      Path.join(root, 'dist', commitHash, 'file-icons')
     )
   }
-
-  cpSync(
-    join(root, 'color-theme.json'),
-    join(root, 'dist', commitHash, 'themes', `${colorThemeName}.json`)
-  )
-  replaceSync(
-    join(root, 'dist', 'index.html'),
+  await replace(
+    Path.join(root, 'dist', 'index.html'),
     `/${commitHash}`,
     `${pathPrefix}/${commitHash}`
   )
-  replaceSync(
-    join(root, 'dist', 'index.html'),
+  await replace(
+    Path.join(root, 'dist', 'index.html'),
     `/manifest.json`,
     `${pathPrefix}/manifest.json`
   )
-  replaceSync(
-    join(root, 'dist', 'index.html'),
-    '<title>Code Editor</title>',
-    `<title>${name}</title>`
-  )
-  replaceSync(
-    join(root, 'dist', 'manifest.json'),
-    `"name": "Code Editor Web - OSS"`,
-    `"name": "${name}"`
-  )
-  replaceSync(
-    join(root, 'dist', 'manifest.json'),
-    `"short_name": "Web - OSS"`,
-    `"short_name": "${name}"`
-  )
-  replaceSync(
-    join(root, 'dist', 'manifest.json'),
-    `"description": "Web Code Editor."`,
-    `"description": "${description}"`
-  )
-  replaceSync(
-    join(root, 'dist', 'index.html'),
-    '<meta name="description" content="Online Code Editor" />',
-    `<meta name="description" content="${description}" />`
-  )
-  replaceSync(
-    join(root, 'dist', 'index.html'),
+
+  await replace(
+    Path.join(root, 'dist', 'index.html'),
     '</title>',
     `</title>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">`
   )
-  replaceSync(
-    join(root, 'dist', 'manifest.json'),
+  await replace(
+    Path.join(root, 'dist', 'manifest.json'),
     `/${commitHash}`,
     `${pathPrefix}/${commitHash}`
   )
 
-  fs.copyFileSync(
-    join(root, 'README.md'),
-    join(
+  await replace(
+    Path.join(root, 'dist', commitHash, 'css', 'App.css'),
+    `/${commitHash}`,
+    `${pathPrefix}/${commitHash}`
+  )
+}
+
+const addExtension = async ({
+  root,
+  commitHash,
+  colorThemeName,
+  name,
+  description,
+}) => {
+  await FileSystem.mkdir(
+    Path.join(
+      root,
+      'dist',
+      commitHash,
+      'extensions',
+      `builtin.theme-${colorThemeName}`
+    )
+  )
+  await FileSystem.copy(
+    Path.join(root, 'color-theme.json'),
+    Path.join(root, 'dist', commitHash, 'themes', `${colorThemeName}.json`)
+  )
+  await replace(
+    Path.join(root, 'dist', commitHash, 'config', 'defaultSettings.json'),
+    `"workbench.colorTheme": "slime"`,
+    `"workbench.colorTheme": "${colorThemeName}"`
+  )
+  await FileSystem.copyFile(
+    Path.join(root, 'README.md'),
+    Path.join(
       root,
       'dist',
       commitHash,
@@ -416,9 +409,9 @@ export const exportStatic = async ({ root, pathPrefix }) => {
       'README.md'
     )
   )
-  fs.copyFileSync(
-    join(root, 'extension.json'),
-    join(
+  await FileSystem.copyFile(
+    Path.join(root, 'extension.json'),
+    Path.join(
       root,
       'dist',
       commitHash,
@@ -427,9 +420,9 @@ export const exportStatic = async ({ root, pathPrefix }) => {
       'extension.json'
     )
   )
-  fs.copyFileSync(
-    join(root, 'color-theme.json'),
-    join(
+  await FileSystem.copyFile(
+    Path.join(root, 'color-theme.json'),
+    Path.join(
       root,
       'dist',
       commitHash,
@@ -438,10 +431,80 @@ export const exportStatic = async ({ root, pathPrefix }) => {
       'color-theme.json'
     )
   )
-
-  replaceSync(
-    join(root, 'dist', commitHash, 'css', 'App.css'),
-    `/${commitHash}`,
-    `${pathPrefix}/${commitHash}`
+  await replace(
+    Path.join(root, 'dist', 'index.html'),
+    '<title>Code Editor</title>',
+    `<title>${name}</title>`
   )
+  await replace(
+    Path.join(root, 'dist', 'manifest.json'),
+    `"name": "Code Editor Web - OSS"`,
+    `"name": "${name}"`
+  )
+  await replace(
+    Path.join(root, 'dist', 'manifest.json'),
+    `"short_name": "Web - OSS"`,
+    `"short_name": "${name}"`
+  )
+  await replace(
+    Path.join(root, 'dist', 'manifest.json'),
+    `"description": "Web Code Editor."`,
+    `"description": "${description}"`
+  )
+  await replace(
+    Path.join(root, 'dist', 'index.html'),
+    '<meta name="description" content="Online Code Editor" />',
+    `<meta name="description" content="${description}" />`
+  )
+  const themesJson = await JsonFile.readJson(
+    Path.join(root, 'dist', commitHash, 'config', 'themes.json')
+  )
+  const mergedThemes = mergeThemes(themesJson, [colorThemeName])
+  await JsonFile.writeJson(
+    Path.join(root, 'dist', commitHash, 'config', 'themes.json'),
+    mergedThemes
+  )
+}
+
+/**
+ *
+ * @param {{root:string, pathPrefix:string  }} param0
+ */
+export const exportStatic = async ({ root, pathPrefix }) => {
+  const dirents = await FileSystem.readDir(
+    Path.join(root, 'node_modules', '@lvce-editor', 'server', 'static')
+  )
+  const commitHash = dirents.find(isCommitHash) || ''
+  const extensionJson = await readExtensionManifest(
+    Path.join(root, 'extension.json')
+  )
+  const colorThemeName = extensionJson.id.slice('builtin.theme-'.length)
+  const name = extensionJson.name || extensionJson.id || ''
+  const description = extensionJson.description || ''
+
+  console.time('clean')
+  await clean(root)
+  console.timeEnd('clean')
+
+  console.time('copyStaticFiles')
+  await copyStaticFiles(root, commitHash)
+  console.timeEnd('copyStaticFiles')
+
+  console.time('applyOverrides')
+  await applyOverrides({
+    root,
+    commitHash,
+    pathPrefix,
+  })
+  console.timeEnd('applyOverrides')
+
+  console.time('addExtension')
+  await addExtension({
+    root,
+    colorThemeName,
+    commitHash,
+    description,
+    name,
+  })
+  console.timeEnd('addExtension')
 }

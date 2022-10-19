@@ -270,6 +270,21 @@ export const stat = async (path) => {
 export const chmod = async (path, permissions) => {
   await fs.chmod(path, permissions)
 }
+export const copyFile = async (from, to) => {
+  try {
+    await fs.copyFile(from, to)
+  } catch (error) {
+    throw new VError(error, `Failed to copy file from ${from} to ${to}`)
+  }
+}
+
+export const cp = async (from, to) => {
+  try {
+    await fs.cp(from, to, { recursive: true })
+  } catch (error) {
+    throw new VError(error, `Failed to copy folder from ${from} to ${to}`)
+  }
+}
 
 // export const unwatch = (id) => {
 //   state.watchers[id].close()
