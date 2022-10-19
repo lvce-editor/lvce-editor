@@ -121,7 +121,7 @@ const getIsMobile = () => {
   // @ts-ignore
   const userAgentData = navigator.userAgentData
   if (userAgentData && 'mobile' in userAgentData) {
-    userAgentData.mobile
+    return userAgentData.mobile
   }
   if (navigator.userAgent.includes('Android')) {
     return true

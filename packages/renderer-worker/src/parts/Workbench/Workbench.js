@@ -20,6 +20,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
@@ -95,6 +96,10 @@ export const startup = async (config) => {
     initData
   )
   commands.splice(1, 1)
+  const layoutModule = ViewletStates.getInstance(ViewletModuleId.Layout)
+  const placeholderCommands =
+    layoutModule.factory.getInitialPlaceholderCommands(layoutModule.state)
+  commands.push(...placeholderCommands)
   commands.push(['Viewlet.appendToBody', ViewletModuleId.Layout])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
   // await Layout.hydrate(initData)

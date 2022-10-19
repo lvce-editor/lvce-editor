@@ -86,7 +86,12 @@ export const send = (viewletId, method, ...args) => {
   }
 }
 
-const createPlaceHolder = (viewletId, parentId, top, left, width, height) => {
+const specialIds = ['TitleBar', 'SideBar', 'Main', 'ActivityBar', 'StatusBar']
+const isSpecial = (id) => {
+  return specialIds.includes(id)
+}
+
+const createPlaceholder = (viewletId, parentId, top, left, width, height) => {
   const $PlaceHolder = document.createElement('div')
   $PlaceHolder.className = 'Viewlet'
   $PlaceHolder.dataset.viewletId = viewletId
@@ -94,6 +99,9 @@ const createPlaceHolder = (viewletId, parentId, top, left, width, height) => {
   $PlaceHolder.style.left = `${left}px`
   $PlaceHolder.style.width = `${width}px`
   $PlaceHolder.style.height = `${height}px`
+  if (isSpecial(viewletId)) {
+    $PlaceHolder.id = viewletId
+  }
   const parentInstance = state.instances[parentId]
   const $Parent = parentInstance.state.$Viewlet
   $Parent.append($PlaceHolder)
@@ -119,7 +127,7 @@ export const sendMultiple = (commands) => {
     } else if (_ === 'Viewlet.dispose') {
       dispose(viewletId)
     } else if (_ === 'Viewlet.createPlaceholder') {
-      createPlaceHolder(viewletId, method, ...args)
+      createPlaceholder(viewletId, method, ...args)
     } else {
       invoke(viewletId, method, ...args)
     }
@@ -280,6 +288,8 @@ const getFn = (command) => {
       return append
     case 'Viewlet.appendToBody':
       return appendToBody
+    case 'Viewlet.createPlaceholder':
+      return createPlaceholder
     default:
       throw new Error(`unknown command ${command}`)
   }

@@ -812,6 +812,27 @@ export const isSideBarVisible = (state) => {
   return points[kSideBarVisible]
 }
 
+export const getInitialPlaceholderCommands = (state) => {
+  const { points } = state
+  const commands = []
+  const modules = [mTitleBar, mMain, mSideBar, mActivityBar, mPanel, mStatusBar]
+  for (const module of modules) {
+    const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
+    if (points[kVisible]) {
+      commands.push([
+        'Viewlet.createPlaceholder',
+        moduleId,
+        ViewletModuleId.Layout,
+        points[kTop],
+        points[kLeft],
+        points[kWidth],
+        points[kHeight],
+      ])
+    }
+  }
+  return commands
+}
+
 export const hasFunctionalRender = true
 
 const renderSashes = {
