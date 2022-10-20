@@ -405,7 +405,12 @@ const getId = (object) => {
   return object.id
 }
 
-const addExtensionThemes = async ({ root, extensionJson, commitHash }) => {
+const addExtensionThemes = async ({
+  root,
+  extensionPath,
+  extensionJson,
+  commitHash,
+}) => {
   const colorThemes = extensionJson.colorThemes || []
   if (colorThemes.length === 0) {
     return
@@ -416,7 +421,7 @@ const addExtensionThemes = async ({ root, extensionJson, commitHash }) => {
       Path.join(root, 'dist', commitHash, 'extensions', `builtin.theme-${id}`)
     )
     await FileSystem.copy(
-      Path.join(root, path),
+      Path.join(extensionPath, path),
       Path.join(root, 'dist', commitHash, 'themes', `${id}.json`)
     )
     await replace(
@@ -436,7 +441,7 @@ const addExtensionThemes = async ({ root, extensionJson, commitHash }) => {
       )
     )
     await FileSystem.copyFile(
-      Path.join(root, 'extension.json'),
+      Path.join(extensionPath, 'extension.json'),
       Path.join(
         root,
         'dist',
@@ -447,7 +452,7 @@ const addExtensionThemes = async ({ root, extensionJson, commitHash }) => {
       )
     )
     await FileSystem.copyFile(
-      Path.join(root, 'color-theme.json'),
+      Path.join(extensionPath, 'color-theme.json'),
       Path.join(
         root,
         'dist',
@@ -496,6 +501,7 @@ const toPlaygroundFile = (file) => {
 
 const addExtensionLanguages = async ({
   root,
+  extensionPath,
   extensionJson,
   commitHash,
   pathPrefix,
@@ -516,11 +522,11 @@ const addExtensionLanguages = async ({
     Path.join(root, 'dist', commitHash, 'extensions', extensionId, 'README.md')
   )
   await FileSystem.copy(
-    Path.join(root, 'src'),
+    Path.join(extensionPath, 'src'),
     Path.join(root, 'dist', commitHash, 'extensions', extensionId, 'src')
   )
   await FileSystem.copyFile(
-    Path.join(root, 'extension.json'),
+    Path.join(extensionPath, 'extension.json'),
     Path.join(
       root,
       'dist',
@@ -546,22 +552,66 @@ const addExtensionLanguages = async ({
     mergedLanguages
   )
   await FileSystem.remove(Path.join(root, 'dist', commitHash, 'playground'))
-  await FileSystem.copy(
-    Path.join(root, 'test', 'cases'),
-    Path.join(root, 'dist', commitHash, 'playground')
-  )
-
-  const testFiles = await FileSystem.readDir(Path.join(root, 'test', 'cases'))
-  const fileMap = testFiles.map(toPlaygroundFile)
-  await JsonFile.writeJson(
-    Path.join(root, 'dist', commitHash, 'config', 'fileMap.json'),
-    fileMap
-  )
+  if (await FileSystem.exists(Path.join(extensionPath, 'test', 'cases'))) {
+    await FileSystem.copy(
+      Path.join(extensionPath, 'test', 'cases'),
+      Path.join(root, 'dist', commitHash, 'playground')
+    )
+    const testFiles = await FileSystem.readDir(
+      Path.join(extensionPath, 'test', 'cases')
+    )
+    const fileMap = testFiles.map(toPlaygroundFile)
+    await JsonFile.writeJson(
+      Path.join(root, 'dist', commitHash, 'config', 'fileMap.json'),
+      fileMap
+    )
+  }
 }
 
-const addExtension = async ({ root, commitHash, pathPrefix }) => {
+const addExtensionWebExtension = async ({
+  root,
+  extensionPath,
+  commitHash,
+  extensionJson,
+  pathPrefix,
+}) => {
+  if (!extensionJson.browser) {
+    return
+  }
+  const webExtensions = [
+    {
+      ...extensionJson,
+      isWeb: true,
+      path: `${pathPrefix}/${commitHash}/extensions/${extensionJson.id}`,
+    },
+  ]
+  await JsonFile.writeJson(
+    Path.join(root, 'dist', commitHash, 'config', 'webExtensions.json'),
+    webExtensions
+  )
+  for (const dirent of ['src', 'extension.json']) {
+    await FileSystem.copy(
+      Path.join(extensionPath, dirent),
+      Path.join(
+        root,
+        'dist',
+        commitHash,
+        'extensions',
+        extensionJson.id,
+        dirent
+      )
+    )
+  }
+}
+
+const addExtension = async ({
+  root,
+  extensionPath,
+  commitHash,
+  pathPrefix,
+}) => {
   const extensionJson = await readExtensionManifest(
-    Path.join(root, 'extension.json')
+    Path.join(extensionPath, 'extension.json')
   )
   const name = extensionJson.name || extensionJson.id || ''
   const description = extensionJson.description || ''
@@ -574,9 +624,18 @@ const addExtension = async ({ root, commitHash, pathPrefix }) => {
     root,
     commitHash,
     extensionJson,
+    extensionPath,
   })
   await addExtensionLanguages({
     root,
+    extensionPath,
+    commitHash,
+    extensionJson,
+    pathPrefix,
+  })
+  await addExtensionWebExtension({
+    root,
+    extensionPath,
     commitHash,
     extensionJson,
     pathPrefix,
@@ -585,12 +644,12 @@ const addExtension = async ({ root, commitHash, pathPrefix }) => {
 
 /**
  *
- * @param {{root:string, pathPrefix:string  }} param0
+ * @param {{root:string, pathPrefix:string , extensionPath:string  }} param0
  */
-export const exportStatic = async ({ root, pathPrefix }) => {
+export const exportStatic = async ({ root, pathPrefix, extensionPath }) => {
   if (pathPrefix === 'auto') {
     const extensionJson = await readExtensionManifest(
-      Path.join(root, 'extension.json')
+      Path.join(extensionPath, 'extension.json')
     )
     const id = extensionJson.id
     const [author, name] = id.split('.')
@@ -619,9 +678,10 @@ export const exportStatic = async ({ root, pathPrefix }) => {
 
   console.time('addExtension')
   await addExtension({
-    root,
+    extensionPath,
     commitHash,
     pathPrefix,
+    root,
   })
   console.timeEnd('addExtension')
 }
