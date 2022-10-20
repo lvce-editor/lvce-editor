@@ -21,6 +21,7 @@ const ViewletState = {
 // should be faster
 const wrapViewletCommand = (id, fn) => {
   const wrappedViewletCommand = async (...args) => {
+    console.log('exec', id, fn.name, ...args)
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
     if (!activeInstance) {
@@ -155,6 +156,33 @@ const maybeRegisterWrappedCommands = (module) => {
   }
 }
 
+const maybeRegisterEvents = (module) => {
+  if (module.Events) {
+    // TODO remove event listeners when viewlet is disposed
+    for (const [key, value] of Object.entries(module.Events)) {
+      const handleUpdate = async () => {
+        const instance = ViewletStates.getInstance(module.name)
+        const newState = await value(instance.state)
+        if (!newState) {
+          throw new Error('newState must be defined')
+        }
+        if (!module.shouldApplyNewState(newState)) {
+          console.log('[viewlet manager] return', newState)
+
+          return
+        }
+        const commands = render(instance.factory, instance.state, newState)
+        instance.state = newState
+        await RendererProcess.invoke(
+          /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
+          /* commands */ commands
+        )
+      }
+      GlobalEventBus.addListener(key, handleUpdate)
+    }
+  }
+}
+
 // TODO add lots of unit tests for this
 /**
  *
@@ -185,6 +213,7 @@ export const load = async (
       return
     }
     maybeRegisterWrappedCommands(module)
+    maybeRegisterEvents(module)
     state = ViewletState.ModuleLoaded
 
     let left = viewlet.left
@@ -231,6 +260,7 @@ export const load = async (
           /* id */ child.id
         )
         maybeRegisterWrappedCommands(childModule)
+        maybeRegisterEvents(childModule)
         // TODO get position of child module
         const oldState = childModule.create(
           '',
@@ -368,31 +398,6 @@ export const load = async (
     //   }
     //   throw new Error('viewlet could not be updated')
     // }
-
-    if (module.events) {
-      // TODO remove event listeners when viewlet is disposed
-      for (const [key, value] of Object.entries(module.events)) {
-        const handleUpdate = async () => {
-          const instance = ViewletStates.getInstance(viewlet.id)
-          const newState = await value(instance.state)
-          if (!newState) {
-            throw new Error('newState must be defined')
-          }
-          if (!module.shouldApplyNewState(newState)) {
-            console.log('[viewlet manager] return', newState)
-
-            return
-          }
-          const commands = render(instance.factory, instance.state, newState)
-          instance.state = newState
-          await RendererProcess.invoke(
-            /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
-            /* commands */ commands
-          )
-        }
-        GlobalEventBus.addListener(key, handleUpdate)
-      }
-    }
 
     if (viewlet.disposed) {
       // TODO unload the module from renderer process

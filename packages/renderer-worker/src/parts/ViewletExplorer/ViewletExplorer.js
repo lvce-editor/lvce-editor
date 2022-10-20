@@ -1346,11 +1346,6 @@ export const shouldApplyNewState = (newState, fn) => {
   return true
 }
 
-export const events = {
-  'languages.changed': handleLanguagesChanged,
-  'workspace.change': handleWorkspaceChange,
-}
-
 export const hasFunctionalRender = true
 
 const renderItems = {

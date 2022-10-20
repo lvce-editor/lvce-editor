@@ -181,7 +181,7 @@ export const Commands = {
 }
 
 // prettier-ignore
-export const events = {
+export const Events = {
   'languages.changed': ViewletEditorText.handleLanguagesChanged,
   // 'editor.change': ViewletEditorText.handleEditorChange,
   // 'tokenizer.changed': ViewletEditorText.handleTokenizeChange,
