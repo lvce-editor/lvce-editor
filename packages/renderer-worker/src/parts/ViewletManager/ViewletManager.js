@@ -220,7 +220,6 @@ export const load = async (
     let width = viewlet.width
     let height = viewlet.height
     if (module.getPosition) {
-      console.log('has positional info')
       const position = module.getPosition()
       left = position.left
       top = position.top
