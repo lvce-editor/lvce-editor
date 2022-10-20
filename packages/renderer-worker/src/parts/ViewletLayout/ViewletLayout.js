@@ -1,13 +1,15 @@
 import * as Clamp from '../Clamp/Clamp.js'
+import * as Platform from '../Platform/Platform.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SashType from '../SashType/SashType.js'
+import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
-import * as Preferences from '../Preferences/Preferences.js'
 
 const kWindowWidth = 0
 const kWindowHeight = 1
@@ -112,6 +114,15 @@ const mPanel = {
 
 export const name = 'Layout'
 
+const getDefaultTitleBarHeight = () => {
+  switch (Platform.platform) {
+    case PlatformType.Electron:
+      return 28
+    default:
+      return 20
+  }
+}
+
 export const getPoints = (
   source,
   destination,
@@ -207,7 +218,7 @@ export const getPoints = (
     destination[kTitleBarLeft] = p6
     destination[kTitleBarTop] = p1
     destination[kTitleBarWidth] = windowWidth
-    destination[kTitleBarHeight] = titleBarHeight
+    destination[kTitleBarHeight] = getDefaultTitleBarHeight()
     destination[kTitleBarVisible] = titleBarVisible
   } else {
     const p1 = /* Top */ 0
