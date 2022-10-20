@@ -151,7 +151,7 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
     case -2:
       break
     case -1:
-      $Viewlet.classList.remove('FocusOutline')
+      $Viewlet.classList.remove(focusClassName)
       break
     default:
       const $Dirent = $Viewlet.children[oldIndex]
@@ -167,10 +167,12 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
       $Viewlet.removeAttribute('aria-activedescendant')
       break
     case -1:
-      $Viewlet.classList.add(focusClassName)
-      $Viewlet.removeAttribute('aria-activedescendant')
-      $Viewlet.focus()
-      Focus.setFocus('Explorer')
+      if (focused) {
+        $Viewlet.classList.add(focusClassName)
+        $Viewlet.removeAttribute('aria-activedescendant')
+        $Viewlet.focus()
+        Focus.setFocus('Explorer')
+      }
       break
     default:
       const $Dirent = $Viewlet.children[newIndex]

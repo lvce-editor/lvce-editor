@@ -72,7 +72,6 @@ export const handleFocus = (event) => {
   if (!isTrusted || target.className === 'InputBox') {
     return
   }
-  console.log({ isTrusted })
   RendererWorker.send('Explorer.focus')
 }
 

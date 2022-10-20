@@ -21,7 +21,6 @@ const ViewletState = {
 // should be faster
 const wrapViewletCommand = (id, fn) => {
   const wrappedViewletCommand = async (...args) => {
-    console.log('exec', id, fn.name, ...args)
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
     if (!activeInstance) {
