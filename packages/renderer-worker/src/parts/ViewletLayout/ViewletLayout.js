@@ -712,25 +712,18 @@ export const handleSashPointerMove = (state, x, y) => {
     ...state,
     points: newPoints,
   }
-  if (points[kPanelVisible] !== newPoints[kPanelVisible]) {
-    if (newPoints[kPanelVisible]) {
-      showAsync(newPoints, mPanel) // TODO avoid side effect
-      const commands = showPlaceholder(newPoints, mPanel)
-      console.log({ commands })
-      allCommands.push(commands)
-    } else {
-      const commands = Viewlet.disposeFunctional(ViewletModuleId.Panel)
-      allCommands.push(...commands)
-    }
-  }
-  if (points[kSideBarVisible] !== newPoints[kSideBarVisible]) {
-    if (newPoints[kSideBarVisible]) {
-      showAsync(newPoints, mPanel) // TODO avoid side effect
-      const commands = showPlaceholder(newPoints, mSideBar)
-      allCommands.push(commands)
-    } else {
-      const { commands } = hide(newState, mSideBar)
-      allCommands.push(...commands)
+  const modules = [mPanel, mSideBar]
+  for (const module of modules) {
+    const { kVisible, moduleId } = module
+    if (points[kVisible] !== newPoints[kVisible]) {
+      if (newPoints[kVisible]) {
+        showAsync(newPoints, module) // TODO avoid side effect
+        const commands = showPlaceholder(newPoints, module)
+        allCommands.push(commands)
+      } else {
+        const commands = Viewlet.disposeFunctional(moduleId)
+        allCommands.push(...commands)
+      }
     }
   }
   return {
