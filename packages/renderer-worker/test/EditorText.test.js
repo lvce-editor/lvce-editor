@@ -820,3 +820,78 @@ test("getVisible - don't tokenize lines that have been tokenized already", () =>
     tokens: [1, 6],
   })
 })
+
+test("getVisible - don't add too many tokens to line", () => {
+  const tokenizer = {
+    State: {
+      TopLevelContent: 1,
+    },
+    TokenMap: {
+      1: 'Text',
+      2: 'Special',
+    },
+    TokenType: {
+      Text: 1,
+    },
+    initialLineState: {
+      state: 1,
+    },
+    hasArrayReturn: true,
+    tokenizeLine: jest.fn((line, lineState) => {
+      const tokens = []
+      for (let i = 0; i < line.length; i++) {
+        tokens.push(2, 1)
+      }
+      return {
+        state: lineState.state,
+        tokens: tokens,
+      }
+    }),
+  }
+  const editor = {
+    uri: '/test/file.txt',
+    languageId: 'plaintext',
+    lines: ['line 1', 'line 2', 'line 3', 'line 4'],
+    completionTriggerCharacters: [],
+    primarySelectionIndex: 0,
+    tokenizer,
+    selections: new Uint32Array([0, 0, 0, 0]),
+    id: 1,
+    deltaY: 1139.7169501781464,
+    minLineY: 2,
+    maxLineY: 4,
+    numberOfVisibleLines: 2,
+    undoStack: [],
+    lineCache: [
+      null,
+      {
+        state: 1,
+        tokens: [],
+      },
+      {
+        state: 1,
+        tokens: [],
+      },
+    ],
+    validLines: [],
+    invalidStartIndex: 2,
+    decorations: [],
+    focused: true,
+    width: 635,
+    scrollBarY: 242.1898519128561,
+    maxTokensPerLine: 3,
+  }
+  expect(EditorText.getVisible(editor)).toEqual([
+    ['line 3', 'Token Text'],
+    ['line 4', 'Token Text'],
+  ])
+  expect(tokenizer.tokenizeLine).toHaveBeenCalledTimes(2)
+  expect(tokenizer.tokenizeLine).toHaveBeenNthCalledWith(1, 'line 3', {
+    state: 1,
+    tokens: [],
+  })
+  expect(tokenizer.tokenizeLine).toHaveBeenNthCalledWith(2, 'line 4', {
+    state: 1,
+    tokens: [2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1],
+  })
+})

@@ -178,7 +178,17 @@ const getDecorationClassName = (type) => {
   }
 }
 
-const getLineInfo = (line, tokens, decorations, TokenMap, lineOffset) => {
+const getLineInfo = (
+  line,
+  tokens,
+  decorations,
+  TokenMap,
+  lineOffset,
+  maxTokensPerLine
+) => {
+  if (tokens.length > maxTokensPerLine) {
+    return [line, 'Token Text']
+  }
   let start = 0
   let end = 0
   const lineInfo = []
@@ -229,7 +239,8 @@ const getLineInfosViewport = (
   tokens,
   minLineY,
   maxLineY,
-  minLineOffset
+  minLineOffset,
+  maxTokensPerLine
 ) => {
   const result = []
   const { lines, tokenizer, decorations } = editor
@@ -238,7 +249,14 @@ const getLineInfosViewport = (
   for (let i = minLineY; i < maxLineY; i++) {
     const line = lines[i]
     result.push(
-      getLineInfo(line, tokens[i - minLineY], decorations, TokenMap, offset)
+      getLineInfo(
+        line,
+        tokens[i - minLineY],
+        decorations,
+        TokenMap,
+        offset,
+        maxTokensPerLine
+      )
     )
     offset += line.length + 1
   }
@@ -252,6 +270,7 @@ export const getVisible = (editor) => {
   // invalidStartIndex, lineCache, etc. just for testing editorType
   // editor.invalidStartIndex = changes[0].start.rowIndex
   const { minLineY, numberOfVisibleLines, lines } = editor
+  const maxTokensPerLine = editor.maxTokensPerLine || 10_000
   const maxLineY = Math.min(minLineY + numberOfVisibleLines, lines.length)
   const tokens = getTokensViewport(editor, minLineY, maxLineY)
   const minLineOffset = TextDocument.offsetAt(editor, minLineY, 0)
@@ -260,7 +279,8 @@ export const getVisible = (editor) => {
     tokens,
     minLineY,
     maxLineY,
-    minLineOffset
+    minLineOffset,
+    maxTokensPerLine
   )
   return textInfos
 }
