@@ -255,7 +255,10 @@ export const openWidget = async (id, ...args) => {
 }
 
 export const closeWidget = async (id) => {
-  if (ElectronBrowserView.isOpen() && id === ViewletModuleId.QuickPick) {
+  if (
+    ElectronBrowserView.isOpen() &&
+    id === ViewletElectron.isQuickPickOpen()
+  ) {
     return ViewletElectron.closeWidgetElectronQuickPick()
   }
   ViewletStates.remove(id)
