@@ -167,6 +167,7 @@ const getRestoredEditors = async (savedState) => {
 }
 
 export const loadContent = async (state, savedState) => {
+  console.log({ savedState })
   // TODO get restored editors from saved state
   const editors = await getRestoredEditors(savedState)
   // @ts-ignore
@@ -191,6 +192,8 @@ export const getChildren = (state) => {
   ]
 }
 
+// TODO content loaded should return commands which
+// get picked up by viewletlayout and sent to renderer process
 export const contentLoaded = async (state) => {
   if (state.editors.length === 0) {
     return
@@ -213,17 +216,17 @@ export const contentLoaded = async (state) => {
   )
   const tabLabel = Workspace.pathBaseName(editor.uri)
   const tabTitle = getTabTitle(editor.uri)
-  RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'Main',
-    /* method */ 'openViewlet',
-    /* tabLabel */ tabLabel,
-    /* tabTitle */ tabTitle
-  )
+  // RendererProcess.invoke(
+  //   /* Viewlet.send */ 'Viewlet.send',
+  //   /* id */ 'Main',
+  //   /* method */ 'openViewlet',
+  //   /* tabLabel */ tabLabel,
+  //   /* tabTitle */ tabTitle
+  // )
   // TODO race condition: Viewlet may have been resized before it has loaded
   // @ts-ignore
 
-  await ViewletManager.load(instance, /* focus */ false, /* restore */ true)
+  // await ViewletManager.load(instance, /* focus */ false, /* restore */ true)
 }
 
 export const openUri = async (state, uri, focus = true) => {
