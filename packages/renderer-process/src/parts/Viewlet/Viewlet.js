@@ -136,6 +136,8 @@ export const sendMultiple = (commands) => {
       dispose(viewletId)
     } else if (_ === 'Viewlet.createPlaceholder') {
       createPlaceholder(viewletId, method, ...args)
+    } else if (_ === 'Viewlet.handleError') {
+      handleError(viewletId, method, ...args)
     } else {
       invoke(viewletId, method, ...args)
     }
@@ -144,7 +146,6 @@ export const sendMultiple = (commands) => {
 
 export const dispose = (id) => {
   try {
-    console.log('dispose', id)
     Assert.string(id)
     const instance = state.instances[id]
     if (!instance) {
@@ -175,6 +176,9 @@ export const handleError = (id, parentId, message) => {
     instance.factory.handleError(instance.state, message)
     return
   }
+  if (instance && instance.state.$Viewlet) {
+    instance.state.$Viewlet.textContent = `${message}`
+  }
   // TODO error should bubble up to until highest possible component
   const parentInstance = state.instances[parentId]
   if (
@@ -185,13 +189,6 @@ export const handleError = (id, parentId, message) => {
     parentInstance.factory.handleError(instance.state, message)
     console.log('parent instance', parentInstance)
     return
-  }
-  if (
-    instance &&
-    instance.state.$Viewlet &&
-    instance.state.$Viewlet.isConnected
-  ) {
-    instance.state.$Viewlet.textContent = `${message}`
   }
 }
 

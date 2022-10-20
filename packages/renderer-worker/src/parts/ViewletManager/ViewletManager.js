@@ -407,25 +407,28 @@ export const load = async (
       if (module && module.handleError) {
         return await module.handleError(error)
       }
+      const commands = []
       if (state < ViewletState.RendererProcessViewletLoaded) {
         await RendererProcess.invoke(
           /* Viewlet.load */ 'Viewlet.load',
           /* id */ viewlet.id
         )
       }
+      commands.push(['Viewlet.create', viewlet.id])
       if (state < ViewletState.Appended && viewlet.parentId) {
-        await RendererProcess.invoke(
+        commands.push([
           /* Viewlet.append */ 'Viewlet.appendViewlet',
           /* parentId */ viewlet.parentId,
-          /* id */ viewlet.id
-        )
+          /* id */ viewlet.id,
+        ])
       }
-      await RendererProcess.invoke(
+      commands.push([
         /* viewlet.handleError */ 'Viewlet.handleError',
         /* id */ viewlet.id,
         /* parentId */ viewlet.parentId,
-        /* message */ `${error}`
-      )
+        /* message */ `${error}`,
+      ])
+      return commands
     } catch (error) {
       console.error(error)
       // this is really bad

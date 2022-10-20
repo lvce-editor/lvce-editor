@@ -102,11 +102,9 @@ export const openViewlet = async (state, id, focus = false) => {
         oldState,
         newState
       )
-      console.log({ extraCommands })
       activityBar.state = newState
       commands.push(...extraCommands)
     }
-    console.log({ commands })
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
 
@@ -125,9 +123,7 @@ export const openViewlet = async (state, id, focus = false) => {
   // // TODO add keybinding to title
   // // @ts-ignore
   // await ViewletManager.load(viewlet, focus, /* restore */ true)
-  return {
-    ...state,
-  }
+  return { ...state }
 }
 
 const handleSideBarClose = (state) => {

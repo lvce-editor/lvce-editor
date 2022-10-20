@@ -12,10 +12,6 @@ export const listen = (ipc) => {
           result,
         })
       } catch (error) {
-        console.error(error)
-        if (error && error instanceof Error && error.cause) {
-          console.error(error.cause)
-        }
         if (
           error &&
           error instanceof Error &&
