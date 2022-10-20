@@ -175,7 +175,6 @@ export const focus = async (state) => {
   //   newState
   // )
   // currentViewlet.state = newState
-  // console.log({ commands })
   return state
   // console.log({ currentViewletId })
 }

@@ -31,7 +31,6 @@ export const focus = async (id) => {
       )
     }
   }
-  console.log({ commands })
   ViewletStates.setFocusedInstance(instance)
   await RendererProcess.invoke('Viewlet.sendMultiple', commands)
 }
@@ -245,7 +244,6 @@ export const openWidget = async (id, ...args) => {
   }
   commands.push(['Viewlet.append', 'Layout', id])
   commands.push(['Viewlet.focus', id])
-  console.log({ commands })
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
   // TODO commands should be like this
   // viewlet.create quickpick
