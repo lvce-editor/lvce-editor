@@ -220,7 +220,7 @@ export const getAllStates = () => {
 export const openWidget = async (id, ...args) => {
   const hasInstance = ViewletStates.hasInstance(id)
   const type = args[0]
-  if (ElectronBrowserView.isOpen() && id === 'QuickPick') {
+  if (ElectronBrowserView.isOpen() && id === ViewletModuleId.QuickPick) {
     // TODO recycle quickpick instance
     if (hasInstance) {
       await ViewletElectron.closeWidgetElectronQuickPick()
@@ -235,6 +235,7 @@ export const openWidget = async (id, ...args) => {
     uri: `quickPick://${type}`,
     show: false,
     focus: true,
+    getPosition: true,
   })
   if (!commands) {
     throw new Error('expected commands to be of type array')
@@ -243,6 +244,8 @@ export const openWidget = async (id, ...args) => {
   if (hasInstance) {
     commands.unshift(['Viewlet.dispose', id])
   }
+  commands.push(['Viewlet.append', 'Layout', id])
+  console.log({ commands })
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
   // TODO commands should be like this
   // viewlet.create quickpick

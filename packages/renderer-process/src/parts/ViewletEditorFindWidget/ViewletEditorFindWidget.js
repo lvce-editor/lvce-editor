@@ -37,6 +37,8 @@ export const create = () => {
   $Viewlet.onclick = ViewletEditorFindWidgetEvents.handleClick
   $Viewlet.className = 'Viewlet'
   $Viewlet.dataset.viewletId = 'EditorFindWidget'
+  // @ts-ignore
+  $Viewlet.role = 'group'
   $Viewlet.append(
     $InputBox,
     $MatchCount,
