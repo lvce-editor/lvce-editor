@@ -15,7 +15,7 @@ test.skip('openViewlet', async () => {
   const state = Main.create()
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   expect(Layout.state.$Main.innerHTML).toBe(
-    '<div class="MainTabs"><div class="MainTab" title="test://sample.txt">sample.txt</div></div><div id="MainContent"><div class="Viewlet" data-viewlet-id="EditorText">loading...</div></div>'
+    '<div class="MainTabs"><div class="MainTab" title="test://sample.txt">sample.txt</div></div><div id="MainContent"><div class="Viewlet">loading...</div></div>'
   )
 })
 
@@ -24,7 +24,7 @@ test.skip('openViewlet, openAnotherTab', () => {
   Main.openViewlet(state, 'EditorPlainText', 'sample.txt', 'test://sample.txt')
   Main.openAnotherTab('sample2.txt', 'test://sample2.txt', 0)
   expect(Layout.state.$Main.innerHTML).toBe(
-    '<div class="MainTabs"><div class="MainTab" title="test://sample.txt">sample.txt</div><div class="MainTab" title="test://sample2.txt">sample2.txt</div></div><div id="MainContent"><div class="Viewlet" data-viewlet-id="EditorText">loading...</div></div>'
+    '<div class="MainTabs"><div class="MainTab" title="test://sample.txt">sample.txt</div><div class="MainTab" title="test://sample2.txt">sample2.txt</div></div><div id="MainContent"><div class="Viewlet">loading...</div></div>'
   )
 })
 
@@ -35,7 +35,7 @@ test.skip('openViewlet, openAnotherTab, focusAnotherTab', () => {
   Main.openAnotherTab('sample3.txt', 'test://sample3.txt', 1)
   Main.focusAnotherTab(2, 0)
   expect(Layout.state.$Main.innerHTML).toBe(
-    '<div class="MainTabs"><div class="MainTab" title="test://sample.txt" aria-selected="true">sample.txt</div><div class="MainTab" title="test://sample2.txt">sample2.txt</div><div class="MainTab" title="test://sample3.txt">sample3.txt</div></div><div id="MainContent"><div class="Viewlet" data-viewlet-id="EditorText">loading...</div></div>'
+    '<div class="MainTabs"><div class="MainTab" title="test://sample.txt" aria-selected="true">sample.txt</div><div class="MainTab" title="test://sample2.txt">sample2.txt</div><div class="MainTab" title="test://sample3.txt">sample3.txt</div></div><div id="MainContent"><div class="Viewlet">loading...</div></div>'
   )
 })
 

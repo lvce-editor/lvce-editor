@@ -14,7 +14,7 @@ test.skip('viewlet.explorer-create-file-inside-folder-error-folder-was-removed',
     folder: tmpDir,
     name: '',
   })
-  const explorer = page.locator('.Viewlet[data-viewlet-id="Explorer"]')
+  const explorer = page.locator('.Explorer')
   const explorerFolder2 = explorer.locator('text=folder-2')
   await explorerFolder2.click({
     button: 'right',

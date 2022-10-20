@@ -205,7 +205,6 @@ export const create = (props) => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'ListItems Viewlet'
   $Viewlet.tabIndex = 0
-  $Viewlet.dataset.viewletId = 'Explorer'
   // @ts-ignore
   $Viewlet.role = 'tree'
   $Viewlet.ariaLabel = 'Files Explorer'

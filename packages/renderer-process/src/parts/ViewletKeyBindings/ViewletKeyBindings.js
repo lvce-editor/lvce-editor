@@ -26,8 +26,7 @@ export const create = () => {
   $KeyBindingsTableWrapper.onclick = ViewletkeyBindingsEvents.handleTableClick
 
   const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = 'KeyBindings'
+  $Viewlet.className = 'Viewlet KeyBindings'
   $Viewlet.append($KeyBindingsHeader, $KeyBindingsTableWrapper)
 
   return {

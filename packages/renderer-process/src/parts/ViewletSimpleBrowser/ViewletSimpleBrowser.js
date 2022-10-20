@@ -43,8 +43,7 @@ export const create = () => {
   )
 
   const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = 'SimpleBrowser'
+  $Viewlet.className = 'Viewlet SimpleBrowser'
   $Viewlet.append($SimpleBrowserHeader)
   return {
     $Viewlet,

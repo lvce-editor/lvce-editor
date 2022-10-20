@@ -40,7 +40,7 @@
   flex-shrink: 0;
 }
 
-.ActivityBarItem[data-viewlet-id='Settings'] {
+.ActivityBarItem[title='Settings'] {
   margin-top: auto;
 }
 

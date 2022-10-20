@@ -53,8 +53,7 @@ export const create = () => {
   $ViewletTree.className = 'ViewletTree'
   $ViewletTree.onclick = handleClick
   const $Viewlet = document.createElement('div')
-  $Viewlet.dataset.viewletId = 'SourceControl'
-  $Viewlet.className = 'Viewlet'
+  $Viewlet.className = 'Viewlet SourceControl'
   $Viewlet.tabIndex = 0
   $Viewlet.append($ViewSourceControlInput, $ViewletTree)
   return {

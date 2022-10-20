@@ -1,13 +1,12 @@
 /* progress bar based on the vscode progress bar https://github.com/microsoft/vscode/blob/main/src/vs/base/browser/ui/progressbar/progressbar.css */
 
-.Viewlet[data-viewlet-id='Extensions'] {
+.Extensions {
   padding-top: 5px;
   display: flex;
   flex-direction: column;
 }
 
-/* .Viewlet[data-viewlet='Extensions']::before, */
-.Viewlet[data-viewlet='Extensions'][aria-busy='true']::before {
+.Extensions[aria-busy='true']::before {
   content: '';
   position: absolute;
   display: block;

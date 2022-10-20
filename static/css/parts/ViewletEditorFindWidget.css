@@ -1,4 +1,4 @@
-[data-viewlet-id='EditorFindWidget'] {
+.EditorFindWidget {
   background: var(--ActivityBarBackground);
   z-index: 1;
   color: wheat;

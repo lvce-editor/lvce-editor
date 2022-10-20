@@ -4,8 +4,7 @@ export const name = 'Clock'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = name
+  $Viewlet.className = 'Viewlet Clock'
   return {
     $Viewlet,
   }

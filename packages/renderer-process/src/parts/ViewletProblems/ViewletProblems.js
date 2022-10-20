@@ -5,8 +5,7 @@ export const name = 'Problems'
 
 export const create = (problemsCount) => {
   const $Viewlet = document.createElement('div')
-  $Viewlet.dataset.viewletId = 'Problems'
-  $Viewlet.className = 'Viewlet'
+  $Viewlet.className = 'Viewlet Problems'
   $Viewlet.tabIndex = 0
   $Viewlet.onmousedown = ViewletProblemsEvents.handleMouseDown
   return {

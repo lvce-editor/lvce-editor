@@ -30,7 +30,7 @@ test.skip('viewlet.title-bar-open-folder', async () => {
   const dialogButtonOk = dialog.locator('text=ok')
   await dialogButtonOk.click()
   // }
-  const explorer = page.locator('.Viewlet[data-viewlet-id="Explorer"]')
+  const explorer = page.locator('.Explorer')
   const explorerItemFile = explorer.locator('text=file.txt')
   await expect(explorerItemFile).toBeVisible()
 })

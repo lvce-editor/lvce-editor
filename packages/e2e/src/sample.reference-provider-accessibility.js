@@ -55,7 +55,7 @@ test.skip('sample.reference-provider-accessibility', async () => {
   })
   await contextMenuItemFindAllReferences.click()
 
-  const viewletLocations = page.locator('.Viewlet[data-viewlet-id="Locations"]')
+  const viewletLocations = page.locator('.Locations')
   await expect(viewletLocations).toBeVisible()
 
   const viewletReferencesMessage = page.locator('.LocationsMessage')

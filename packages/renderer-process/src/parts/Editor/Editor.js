@@ -98,7 +98,6 @@ export const create = () => {
 
   const $Editor = document.createElement('div')
   $Editor.className = 'Viewlet Editor'
-  $Editor.dataset.viewletId = 'EditorText'
   // @ts-ignore
   $Editor.role = 'code'
   $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBar)

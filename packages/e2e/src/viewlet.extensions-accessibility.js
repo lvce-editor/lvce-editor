@@ -60,9 +60,7 @@ test.skip('viewlet.extensions-accessibility', async () => {
     },
     name: '',
   })
-  const activityBarItemExtensions = page.locator(
-    '[data-viewlet-id="Extensions"]'
-  )
+  const activityBarItemExtensions = page.locator('.Extensions')
   await activityBarItemExtensions.click()
   const extensionList = page.locator('.ExtensionList')
   // TODO
@@ -95,7 +93,7 @@ test.skip('viewlet.extensions-accessibility', async () => {
         break
     }
   })
-  const inputBox = page.locator('[data-viewlet-id="Extensions"] .InputBox')
+  const inputBox = page.locator('.Extensions .InputBox')
   expect(await inputBox.getAttribute('aria-label')).toBeNull()
   await expect(inputBox).toHaveAttribute('autocorrect', 'off')
   await expect(inputBox).toHaveAttribute('autocapitalize', 'off')

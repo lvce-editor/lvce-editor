@@ -31,9 +31,7 @@ test.skip('viewlet.extensions-keyboard-navigation', async () => {
     },
     name: '',
   })
-  const activityBarItemExtensions = page.locator(
-    '[data-viewlet-id="Extensions"]'
-  )
+  const activityBarItemExtensions = page.locator('.Extensions')
   await activityBarItemExtensions.click()
   const extensionList = page.locator('.ExtensionList')
   marketPlaceServer.get('/api/extensions/search', (req, res) => {
@@ -71,7 +69,7 @@ test.skip('viewlet.extensions-keyboard-navigation', async () => {
         break
     }
   })
-  const inputBox = page.locator('[data-viewlet-id="Extensions"] .InputBox')
+  const inputBox = page.locator('.Extensions .InputBox')
   await inputBox.type('test')
 
   const extension = extensionList.locator('.ExtensionListItem')

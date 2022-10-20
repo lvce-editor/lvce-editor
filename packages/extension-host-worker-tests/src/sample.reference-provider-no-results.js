@@ -20,7 +20,7 @@ test('sample.reference-provider-no-results', async () => {
   await Editor.findAllReferences()
 
   // assert
-  const viewletLocations = Locator('.Viewlet[data-viewlet-id="Locations"]')
+  const viewletLocations = Locator('.Locations')
   await expect(viewletLocations).toBeVisible()
 
   // TODO should display references as tree or list view

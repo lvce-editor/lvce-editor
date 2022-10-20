@@ -100,8 +100,7 @@ export const create = ({ create$ListItem, render$ListItem, handleClick }) => {
   $ScrollBar.append($ScrollBarThumb)
 
   const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = 'List'
+  $Viewlet.className = 'Viewlet List'
   $Viewlet.append($List, $ScrollBar)
   $Viewlet.addEventListener('wheel', handleWheel, { passive: true })
 

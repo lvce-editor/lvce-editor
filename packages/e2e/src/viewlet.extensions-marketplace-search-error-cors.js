@@ -31,9 +31,7 @@ test.skip('viewlet.extensions-marketplace-search-error-cors', async () => {
     },
     name: '',
   })
-  const activityBarItemExtensions = page.locator(
-    '.ActivityBarItem[data-viewlet-id="Extensions"]'
-  )
+  const activityBarItemExtensions = page.locator('.Extensions')
   await activityBarItemExtensions.click()
   marketPlaceServer.get('/api/extensions/search', (req, res) => {
     const query = req.params.q
@@ -45,9 +43,7 @@ test.skip('viewlet.extensions-marketplace-search-error-cors', async () => {
         break
     }
   })
-  const viewletExtensions = page.locator(
-    '.Viewlet[data-viewlet-id="Extensions"]'
-  )
+  const viewletExtensions = page.locator('.Extensions')
   const viewletExtensionsInputBox = viewletExtensions.locator('.InputBox')
   await viewletExtensionsInputBox.click()
   await viewletExtensionsInputBox.type('t')

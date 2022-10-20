@@ -20,7 +20,7 @@ test.skip('viewlet.explorer-expand-all', async () => {
     folder: tmpDir,
     name: '',
   })
-  const explorer = page.locator('.Viewlet[data-viewlet-id="Explorer"]')
+  const explorer = page.locator('.Explorer')
   await explorer.click()
 
   await expect(explorer).toBeFocused()

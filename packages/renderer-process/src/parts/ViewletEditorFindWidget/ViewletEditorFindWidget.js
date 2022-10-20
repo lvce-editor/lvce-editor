@@ -35,8 +35,7 @@ export const create = () => {
 
   const $Viewlet = document.createElement('div')
   $Viewlet.onclick = ViewletEditorFindWidgetEvents.handleClick
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = 'EditorFindWidget'
+  $Viewlet.className = 'Viewlet EditorFindWidget'
   // @ts-ignore
   $Viewlet.role = 'group'
   $Viewlet.append(

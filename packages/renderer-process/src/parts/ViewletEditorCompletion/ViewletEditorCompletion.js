@@ -25,8 +25,7 @@ const create$CompletionItem = (item, index) => {
 export const create = () => {
   // TODO recycle nodes
   const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = name
+  $Viewlet.className = 'Viewlet EditorCompletion'
   $Viewlet.id = 'Completions'
   // @ts-ignore
   $Viewlet.role = 'listbox'

@@ -41,8 +41,7 @@ export const create = () => {
   $ExtensionDetailMain.append($ExtensionDetailHeader, $ReadmeHtml)
 
   const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = 'ExtensionDetail'
+  $Viewlet.className = 'Viewlet ExtensionDetail'
   $Viewlet.append($ExtensionDetailMain)
   return {
     $Viewlet,

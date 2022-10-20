@@ -16,8 +16,7 @@ const create$MainTabs = () => {
 export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.id = 'Main'
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = 'Main'
+  $Viewlet.className = 'Viewlet Main'
   $Viewlet.ondrop = ViewletMainEvents.handleDrop
   $Viewlet.ondragover = ViewletMainEvents.handleDragOver
 

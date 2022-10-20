@@ -3,8 +3,7 @@ export const name = 'Debug Console'
 export const create = () => {
   const $Input = document.createElement('input')
   const $Viewlet = document.createElement('div')
-  $Viewlet.dataset.viewletId = 'DebugConsole'
-  $Viewlet.className = 'Viewlet'
+  $Viewlet.className = 'Viewlet DebugConsole'
   $Viewlet.textContent = 'Debug Console'
   $Viewlet.append($Input)
   return {

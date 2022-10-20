@@ -2,7 +2,7 @@
   --KeyBindingsEditorColor: #e1e2de;
 }
 
-.Viewlet[data-viewlet-id='KeyBindings'] {
+.KeyBindings {
   color: var(--KeyBindingsEditorColor);
 }
 

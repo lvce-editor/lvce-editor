@@ -23,9 +23,7 @@ const handleFocus = () => {
 
 export const create = (id) => {
   const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = 'Terminal'
-
+  $Viewlet.className = 'Viewlet Terminal'
   const terminal = Terminal.create({
     $Element: $Viewlet,
     handleInput,

@@ -24,7 +24,6 @@ const create$ActivityBarItem = (item) => {
   $ActivityBarItem.className = 'ActivityBarItem'
   $ActivityBarItem.ariaLabel = '' // aria-label is determined by content  TODO is empty aria-label necessary or can it be left off?
   $ActivityBarItem.title = item.title
-  $ActivityBarItem.dataset.viewletId = item.id
   if (item.keyShortcuts) {
     $ActivityBarItem.ariaKeyShortcuts = item.keyShortcuts
   }
@@ -52,8 +51,7 @@ export const name = 'ActivityBar'
 export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.id = 'ActivityBar'
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = 'ActivityBar'
+  $Viewlet.className = 'Viewlet ActivityBar'
   // @ts-ignore
   $Viewlet.role = 'toolbar'
   $Viewlet.ariaRoleDescription = 'Activity Bar'

@@ -14,7 +14,7 @@ test('sample.text-search-provider-error-previews-is-not-iterable', async () => {
   await Search.setValue('abc')
 
   // assert
-  const viewletSearch = Locator('.Viewlet[data-viewlet-id="Search"]')
+  const viewletSearch = Locator('.Search')
   const message = viewletSearch.locator('[role="status"]')
   await expect(message).toHaveText('TypeError: previews is not iterable')
 })

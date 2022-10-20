@@ -25,7 +25,7 @@ test.skip('sample.reference-provider-single-reference-found', async () => {
   })
   await contextMenuItemFindAllReferences.click()
 
-  const viewletLocations = page.locator('.Viewlet[data-viewlet-id="Locations"]')
+  const viewletLocations = page.locator('.Locations')
   await expect(viewletLocations).toBeVisible()
 
   const viewletLocationsMessage = page.locator('.LocationsMessage')

@@ -82,8 +82,7 @@ export const create = (statusBarItemsLeft, statusBarItemsRight) => {
 
   const $Viewlet = document.createElement('div')
   $Viewlet.id = 'StatusBar'
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = 'StatusBar'
+  $Viewlet.className = 'Viewlet StatusBar'
   $Viewlet.onclick = handleClick
   $Viewlet.tabIndex = 0
   // @ts-ignore

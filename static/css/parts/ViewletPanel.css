@@ -5,7 +5,7 @@
   background: var(--PanelBackground);
 }
 
-.Viewlet[data-viewlet-id='Panel'] {
+.Panel {
   background: var(--PanelBackground);
 }
 

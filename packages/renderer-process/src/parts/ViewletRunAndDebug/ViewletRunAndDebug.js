@@ -9,8 +9,7 @@ const handleMousedown = (event) => {
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
-  $Viewlet.dataset.viewletId = 'RunAndDebug'
-  $Viewlet.className = 'Viewlet'
+  $Viewlet.className = 'Viewlet RunAndDebug'
   $Viewlet.textContent = 'run and debug'
   $Viewlet.tabIndex = 0
   $Viewlet.addEventListener('mousedown', handleMousedown)

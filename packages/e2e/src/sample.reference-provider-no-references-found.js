@@ -26,7 +26,7 @@ test.skip('sample.reference-provider-no-references-found', async () => {
   })
   await contextMenuItemFindAllReferences.click()
 
-  const viewletLocations = page.locator('.Viewlet[data-viewlet-id="Locations"]')
+  const viewletLocations = page.locator('.Locations')
   await expect(viewletLocations).toBeVisible()
 
   // TODO should display references as tree or list view

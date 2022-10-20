@@ -1,4 +1,4 @@
-[data-viewlet-id='ExtensionDetail'] {
+.ExtensionDetail {
   color: white;
   user-select: text;
   overflow-y: auto;
@@ -12,19 +12,19 @@
   flex-direction: column;
 }
 
-[data-viewlet-id='ExtensionDetail']::-webkit-scrollbar {
+.ExtensionDetail::-webkit-scrollbar {
   width: 10px;
 }
 
-[data-viewlet-id='ExtensionDetail']::-webkit-scrollbar-track {
+.ExtensionDetail::-webkit-scrollbar-track {
   background: transparent;
 }
 
-[data-viewlet-id='ExtensionDetail']::-webkit-scrollbar-thumb {
+.ExtensionDetail::-webkit-scrollbar-thumb {
   background: var(--EditorScrollBarBackground);
 }
 
-[data-viewlet-id='ExtensionDetail']::-webkit-scrollbar-thumb:hover {
+.ExtensionDetail::-webkit-scrollbar-thumb:hover {
 }
 
 .ExtensionDetailHeader {

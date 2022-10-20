@@ -7,7 +7,7 @@ test.skip('viewlet.explorer-delete-multiple-files', async () => {
 
   await Workspace.setPath(tmpDir)
 
-  const explorer = Locator('.Viewlet[data-viewlet-id="Explorer"]')
+  const explorer = Locator('.Explorer')
   const file1 = explorer.locator('text=file1.txt')
   const file2 = explorer.locator('text=file2.txt')
   const file3 = explorer.locator('text=file3.txt')
