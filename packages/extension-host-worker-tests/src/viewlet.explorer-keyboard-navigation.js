@@ -13,7 +13,7 @@ test('viewlet.explorer-keyboard-navigation', async () => {
   await Explorer.focusIndex(-1)
 
   // assert
-  const explorer = Locator('.Viewlet[data-viewlet-id="Explorer"]')
+  const explorer = Locator('.Explorer')
   await expect(explorer).toHaveClass('FocusOutline')
 
   // act

@@ -57,7 +57,7 @@ test.skip('viewlet.title-bar-open-recent-add-folder-to-top-of-list', async () =>
   await expect(subMenuItemThree).toHaveText(tmpDir3)
   await subMenuItemThree.click()
 
-  const explorer = page.locator('.Viewlet[data-viewlet-id="Explorer"]')
+  const explorer = page.locator('.Explorer')
   const file3 = explorer.locator('text=file-3.txt')
   await expect(file3).toBeVisible()
   await expect(menus).toHaveCount(0)

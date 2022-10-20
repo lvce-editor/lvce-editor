@@ -12,8 +12,7 @@ export const create = () => {
   $ImageWrapper.append($Image)
 
   const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = 'EditorImage'
+  $Viewlet.className = 'Viewlet EditorImage'
   $Viewlet.append($ImageWrapper)
   $Viewlet.onpointerdown = ViewletEditorImageEvents.handlePointerDown
   $Viewlet.onpointerup = ViewletEditorImageEvents.handlePointerUp

@@ -11,9 +11,8 @@ const focusClassName = 'FocusOutline'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet'
+  $Viewlet.className = 'Viewlet Explorer'
   $Viewlet.tabIndex = 0
-  $Viewlet.dataset.viewletId = 'Explorer'
   // @ts-ignore
   $Viewlet.role = 'tree'
   $Viewlet.ariaLabel = 'Files Explorer'

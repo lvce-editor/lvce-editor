@@ -43,7 +43,7 @@ test.skip('viewlet.title-bar-open-recent', async () => {
   await expect(subMenuItemTwo).toHaveText(tmpDir2)
   await subMenuItemTwo.click()
 
-  const explorer = page.locator('.Viewlet[data-viewlet-id="Explorer"]')
+  const explorer = page.locator('.Explorer')
   const file2 = explorer.locator('text=file-2.txt')
   await expect(file2).toBeVisible()
   await expect(menus).toHaveCount(0)

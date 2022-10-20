@@ -1,4 +1,4 @@
-.Viewlet[data-viewlet-id='Output']:focus {
+.Output:focus {
   outline: 1px solid red;
   outline-offset: -1px;
 }

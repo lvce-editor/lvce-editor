@@ -14,9 +14,7 @@ content 2`
   await Editor.openFindWidget()
 
   // assert
-  const findWidgetInput = Locator(
-    '[data-viewlet-id="EditorFindWidget"] .InputBox'
-  )
+  const findWidgetInput = Locator('.EditorFindWidget .InputBox')
   await expect(findWidgetInput).toBeVisible()
   await expect(findWidgetInput).toHaveValue('content')
   const findWidgetMatchCount = Locator(`.EditorFindWidgetMatchCount`)

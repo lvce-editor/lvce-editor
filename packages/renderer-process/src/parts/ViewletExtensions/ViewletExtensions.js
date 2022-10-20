@@ -87,8 +87,7 @@ export const create = () => {
   $ExtensionListWrapper.append($ExtensionList, $ScrollBar)
 
   const $Viewlet = document.createElement('div')
-  $Viewlet.dataset.viewletId = 'Extensions'
-  $Viewlet.className = 'Viewlet'
+  $Viewlet.className = 'Viewlet Extensions'
   $Viewlet.ariaBusy = 'true'
   $Viewlet.ariaLive = 'polite'
   // @ts-ignore

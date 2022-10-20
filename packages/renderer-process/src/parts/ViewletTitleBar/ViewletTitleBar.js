@@ -3,8 +3,7 @@ export const create = () => {
   // TODO add tests for aria properties
   const $Viewlet = document.createElement('div')
   $Viewlet.id = 'TitleBar'
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = 'TitleBar'
+  $Viewlet.className = 'Viewlet TitleBar'
   $Viewlet.ariaLabel = 'Title Bar'
   // @ts-ignore
   $Viewlet.role = 'contentinfo'

@@ -11,7 +11,7 @@ test.skip('viewlet.explorer-create-file', async () => {
     folder: tmpDir,
     name: '',
   })
-  const explorer = page.locator('.Viewlet[data-viewlet-id="Explorer"]')
+  const explorer = page.locator('.Explorer')
   await explorer.click({
     button: 'right',
   })

@@ -20,7 +20,7 @@ test('sample.reference-provider-error-manifest-not-found', async () => {
   await Editor.findAllReferences()
 
   // TODO viewlet locations should still be visible
-  // const viewletLocations = page.locator('.Viewlet[data-viewlet-id="Locations"]')
+  // const viewletLocations = page.locator('.Locations')
   // await expect(viewletLocations).toBeVisible()
 
   // await expect(viewletLocations).toHaveText(

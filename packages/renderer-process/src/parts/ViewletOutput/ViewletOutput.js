@@ -25,9 +25,9 @@ export const create = () => {
   $ViewletOutputContent.tabIndex = 0
   const $ViewletOutputWidgets = document.createElement('div')
   $ViewletOutputWidgets.className = 'OutputWidgets'
+
   const $Viewlet = document.createElement('div')
-  $Viewlet.dataset.viewletId = 'Output'
-  $Viewlet.className = 'Viewlet ViewletOutput'
+  $Viewlet.className = 'Viewlet Output'
   $Viewlet.tabIndex = 0
   $Viewlet.append(
     $ViewletOutputSelect,

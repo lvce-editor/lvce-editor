@@ -50,8 +50,7 @@ export const create = () => {
   // $PanelContent.id = 'PanelContent'
   const $Viewlet = document.createElement('div')
   $Viewlet.id = 'Panel'
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = 'Panel'
+  $Viewlet.className = 'Viewlet Panel'
   $Viewlet.append($PanelHeader)
   $Viewlet.ariaLabel = 'Panel'
   return {

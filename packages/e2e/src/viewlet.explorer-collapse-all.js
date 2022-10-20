@@ -20,7 +20,7 @@ test.skip('viewlet.explorer-collapse-all', async () => {
     name: '',
   })
 
-  const explorer = page.locator('.Viewlet[data-viewlet-id="Explorer"]')
+  const explorer = page.locator('.Explorer')
   const folder1 = explorer.locator('.TreeItem[aria-expanded]', {
     hasText: 'folder-1',
   })

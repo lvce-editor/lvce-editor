@@ -31,9 +31,7 @@ test.skip('viewlet.extensions-marketplace-search-error-404', async () => {
     },
     name: '',
   })
-  const activityBarItemExtensions = page.locator(
-    '.ActivityBarItem[data-viewlet-id="Extensions"]'
-  )
+  const activityBarItemExtensions = page.locator('.Extensions')
   await activityBarItemExtensions.click()
   // await expect(viewletExtensions).toHaveText('No extensions found')
   marketPlaceServer.get('/api/extensions/search', (req, res) => {
@@ -45,9 +43,7 @@ test.skip('viewlet.extensions-marketplace-search-error-404', async () => {
         break
     }
   })
-  const viewletExtensions = page.locator(
-    '.Viewlet[data-viewlet-id="Extensions"]'
-  )
+  const viewletExtensions = page.locator('.Extensions')
 
   const viewletExtensionsInputBox = viewletExtensions.locator('.InputBox')
   await viewletExtensionsInputBox.click()

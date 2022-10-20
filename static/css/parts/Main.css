@@ -10,15 +10,15 @@
   flex: 1;
 }
 
-.Viewlet[data-viewlet-id='EditorText'] {
+.EditorText {
   color: white;
   white-space: pre;
 }
 
-.Viewlet[data-viewlet-id='EditorImage'] {
+.EditorImage {
   max-width: 100%;
 }
 
-.Viewlet[data-viewlet-id='Clock'] {
+.Clock {
   color: white;
 }

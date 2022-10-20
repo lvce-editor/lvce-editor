@@ -1,4 +1,4 @@
-.Viewlet[data-viewlet-id='Locations'] {
+.Locations {
   display: flex;
   flex-direction: column;
 }

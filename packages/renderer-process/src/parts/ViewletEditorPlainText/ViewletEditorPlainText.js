@@ -4,8 +4,7 @@ export const name = 'EditorPlainText'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = 'EditorText'
+  $Viewlet.className = 'Viewlet EditorText'
   $Viewlet.textContent = 'loading...'
   return {
     $Viewlet,

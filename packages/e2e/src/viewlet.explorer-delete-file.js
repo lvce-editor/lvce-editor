@@ -10,7 +10,7 @@ test.skip('viewlet.explorer-delete-file', async () => {
     folder: tmpDir,
     name: '',
   })
-  const explorer = page.locator('.Viewlet[data-viewlet-id="Explorer"]')
+  const explorer = page.locator('.Explorer')
   const file1 = explorer.locator('text=file1.txt')
   await file1.click({
     button: 'right',

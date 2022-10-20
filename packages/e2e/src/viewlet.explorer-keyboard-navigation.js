@@ -26,7 +26,7 @@ test.skip('viewlet.explorer-keyboard-navigation', async () => {
   await testTxt.click()
   const tokenText = page.locator('.Token.Text')
   await tokenText.click()
-  const explorer = page.locator('.Viewlet[data-viewlet-id="Explorer"]')
+  const explorer = page.locator('.Explorer')
   await explorer.click()
   await expect(explorer).toBeFocused()
 

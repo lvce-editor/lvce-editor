@@ -10,7 +10,7 @@ test.skip('viewlet.explorer-open-file-multiple-times', async () => {
     folder: tmpDir,
     name: '',
   })
-  const explorer = page.locator('.Viewlet[data-viewlet-id="Explorer"]')
+  const explorer = page.locator('.Explorer')
 
   const file2 = explorer.locator('text=file2.txt')
   await file2.click()

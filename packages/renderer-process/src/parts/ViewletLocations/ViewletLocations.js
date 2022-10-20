@@ -46,8 +46,7 @@ export const create = () => {
   $Locations.onmousedown = handleLocationsMouseDown
   $Locations.setAttribute('aria-described-by', 'LocationsMessage')
   const $Viewlet = document.createElement('div')
-  $Viewlet.className = 'Viewlet'
-  $Viewlet.dataset.viewletId = 'Locations' // TODO
+  $Viewlet.className = 'Viewlet Locations'
   $Viewlet.append($Message, $Locations)
   return {
     $Viewlet,

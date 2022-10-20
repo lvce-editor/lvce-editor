@@ -19,7 +19,7 @@ test('sample.reference-provider-error', async () => {
   await Editor.findAllReferences()
 
   // assert
-  const viewletLocations = Locator('.Viewlet[data-viewlet-id="Locations"]')
+  const viewletLocations = Locator('.Locations')
   await expect(viewletLocations).toBeVisible()
 
   // TODO should show part of stack trace maybe?
