@@ -14,8 +14,8 @@
 @import './parts/ViewletTerminal.css';
 @import './parts/ViewletStatusBar.css';
 @import './parts/ViewletSourceControl.css';
-@import './parts/SideBar.css';
-@import './parts/QuickPick.css';
+@import './parts/ViewletSideBar.css';
+@import './parts/ViewletQuickPick.css';
 @import './parts/ViewletExtensions.css';
 @import './parts/MonacoList.css';
 @import './parts/ViewletLayout.css';
@@ -24,7 +24,7 @@
 @import './parts/ViewletOutput.css';
 @import './parts/ContextMenu.css';
 @import './parts/Editor.css';
-@import './parts/EditorCompletion.css';
+@import './parts/ViewletEditorCompletion.css';
 @import './parts/InputBox.css';
 @import './parts/ViewletProblems.css';
 @import './parts/ViewletRunAndDebug.css';
