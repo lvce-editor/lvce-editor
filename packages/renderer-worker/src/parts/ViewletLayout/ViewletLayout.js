@@ -662,21 +662,22 @@ const getResizeCommands = (oldPoints, newPoints) => {
 
 const showAsync = async (points, module) => {
   try {
+    const { moduleId, kTop, kLeft, kWidth, kHeight } = module
     const commands = await ViewletManager.load({
       getModule: ViewletModule.load,
-      id: module.moduleId,
+      id: moduleId,
       type: 0,
       // @ts-ignore
       uri: '',
       show: false,
       focus: false,
-      top: points[module.kTop],
-      left: points[module.kLeft],
-      width: points[module.kWidth],
-      height: points[module.kHeight],
+      top: points[kTop],
+      left: points[kLeft],
+      width: points[kWidth],
+      height: points[kHeight],
     })
     if (commands) {
-      commands.push(['Viewlet.append', 'Layout', module.moduleId])
+      commands.push(['Viewlet.append', 'Layout', moduleId])
     }
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
     // TODO
@@ -688,15 +689,16 @@ const showAsync = async (points, module) => {
   }
 }
 
-const showPlaceHolder = (points, module) => {
+const showPlaceholder = (points, module) => {
+  const { moduleId, kTop, kLeft, kWidth, kHeight } = module
   return [
     'Viewlet.createPlaceholder',
-    /* id */ module.moduleId,
+    /* id */ moduleId,
     /* parentId */ 'Layout',
-    /* top */ points[module.kTop],
-    /* left */ points[module.kLeft],
-    /* width */ points[module.kWidth],
-    /* height */ points[module.kHeight],
+    /* top */ points[kTop],
+    /* left */ points[kLeft],
+    /* width */ points[kWidth],
+    /* height */ points[kHeight],
   ]
 }
 
@@ -713,7 +715,8 @@ export const handleSashPointerMove = (state, x, y) => {
   if (points[kPanelVisible] !== newPoints[kPanelVisible]) {
     if (newPoints[kPanelVisible]) {
       showAsync(newPoints, mPanel) // TODO avoid side effect
-      const commands = showPlaceHolder(newPoints, mPanel)
+      const commands = showPlaceholder(newPoints, mPanel)
+      console.log({ commands })
       allCommands.push(commands)
     } else {
       const commands = Viewlet.disposeFunctional(ViewletModuleId.Panel)
@@ -723,7 +726,7 @@ export const handleSashPointerMove = (state, x, y) => {
   if (points[kSideBarVisible] !== newPoints[kSideBarVisible]) {
     if (newPoints[kSideBarVisible]) {
       showAsync(newPoints, mPanel) // TODO avoid side effect
-      const commands = showPlaceHolder(newPoints, mSideBar)
+      const commands = showPlaceholder(newPoints, mSideBar)
       allCommands.push(commands)
     } else {
       const { commands } = hide(newState, mSideBar)

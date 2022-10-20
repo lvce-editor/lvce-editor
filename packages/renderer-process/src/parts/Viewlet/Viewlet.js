@@ -86,12 +86,21 @@ export const send = (viewletId, method, ...args) => {
   }
 }
 
-const specialIds = ['TitleBar', 'SideBar', 'Main', 'ActivityBar', 'StatusBar']
+const specialIds = [
+  'TitleBar',
+  'SideBar',
+  'Main',
+  'ActivityBar',
+  'StatusBar',
+  'Panel',
+]
+
 const isSpecial = (id) => {
   return specialIds.includes(id)
 }
 
 const createPlaceholder = (viewletId, parentId, top, left, width, height) => {
+  console.log({ viewletId, top, left, width, height })
   const $PlaceHolder = document.createElement('div')
   $PlaceHolder.className = 'Viewlet'
   $PlaceHolder.dataset.viewletId = viewletId
