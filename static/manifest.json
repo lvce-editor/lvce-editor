@@ -22,13 +22,5 @@
       "sizes": "512x512",
       "purpose": "any maskable"
     }
-  ],
-  "screenshots": [
-    {
-      "src": "images/screenshot.png",
-      "sizes": "1851x978",
-      "platform": "wide",
-      "label": "Edit code in your browser."
-    }
   ]
 }
