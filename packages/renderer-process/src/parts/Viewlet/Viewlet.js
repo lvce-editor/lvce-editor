@@ -23,6 +23,9 @@ export const load = async (id, ...args) => {
 
 export const create = (id) => {
   const module = state.modules[id]
+  if (state.instances[id] && state.instances[id].state.$Viewlet.isConnected) {
+    state.instances[id].state.$Viewlet.remove()
+  }
   state.instances[id] = {
     state: module.create(),
     factory: module,
@@ -83,6 +86,40 @@ export const send = (viewletId, method, ...args) => {
   }
 }
 
+const specialIds = [
+  'TitleBar',
+  'SideBar',
+  'Main',
+  'ActivityBar',
+  'StatusBar',
+  'Panel',
+]
+
+const isSpecial = (id) => {
+  return specialIds.includes(id)
+}
+
+const createPlaceholder = (viewletId, parentId, top, left, width, height) => {
+  const $PlaceHolder = document.createElement('div')
+  $PlaceHolder.className = 'Viewlet'
+  $PlaceHolder.dataset.viewletId = viewletId
+  $PlaceHolder.style.top = `${top}px`
+  $PlaceHolder.style.left = `${left}px`
+  $PlaceHolder.style.width = `${width}px`
+  $PlaceHolder.style.height = `${height}px`
+  if (isSpecial(viewletId)) {
+    $PlaceHolder.id = viewletId
+  }
+  const parentInstance = state.instances[parentId]
+  const $Parent = parentInstance.state.$Viewlet
+  $Parent.append($PlaceHolder)
+  state.instances[viewletId] = {
+    state: {
+      $Viewlet: $PlaceHolder,
+    },
+  }
+}
+
 // TODO this code is bad
 export const sendMultiple = (commands) => {
   for (const command of commands) {
@@ -94,32 +131,37 @@ export const sendMultiple = (commands) => {
     } else if (_ === 'Viewlet.create') {
       create(viewletId)
     } else if (_ === 'Viewlet.append') {
-      append(viewletId, method)
+      append(viewletId, method, ...args)
+    } else if (_ === 'Viewlet.dispose') {
+      dispose(viewletId)
+    } else if (_ === 'Viewlet.createPlaceholder') {
+      createPlaceholder(viewletId, method, ...args)
+    } else if (_ === 'Viewlet.handleError') {
+      handleError(viewletId, method, ...args)
+    } else if (_ === 'Viewlet.focus') {
+      focus(viewletId)
     } else {
       invoke(viewletId, method, ...args)
     }
   }
 }
 
-/**
- * @deprecated
- */
 export const dispose = (id) => {
-  Assert.string(id)
-  const instance = state.instances[id]
-  if (!instance) {
-    console.warn(`viewlet instance ${id} not found and cannot be disposed`)
-    return
-  }
   try {
+    Assert.string(id)
+    const instance = state.instances[id]
+    if (!instance) {
+      console.warn(`viewlet instance ${id} not found and cannot be disposed`)
+      return
+    }
     instance.factory.dispose(instance.state)
     if (instance.state.$Viewlet && instance.state.$Viewlet.isConnected) {
       instance.state.$Viewlet.remove()
     }
+    delete state.instances[id]
   } catch (error) {
-    console.error(error)
+    throw new Error(`Failed to dispose ${id}`)
   }
-  delete state.instances[id]
 }
 
 /**
@@ -136,6 +178,9 @@ export const handleError = (id, parentId, message) => {
     instance.factory.handleError(instance.state, message)
     return
   }
+  if (instance && instance.state.$Viewlet) {
+    instance.state.$Viewlet.textContent = `${message}`
+  }
   // TODO error should bubble up to until highest possible component
   const parentInstance = state.instances[parentId]
   if (
@@ -146,13 +191,6 @@ export const handleError = (id, parentId, message) => {
     parentInstance.factory.handleError(instance.state, message)
     console.log('parent instance', parentInstance)
     return
-  }
-  if (
-    instance &&
-    instance.state.$Viewlet &&
-    instance.state.$Viewlet.isConnected
-  ) {
-    instance.state.$Viewlet.textContent = `${message}`
   }
 }
 
@@ -194,9 +232,46 @@ const ariaAnnounce = async (message) => {
   AriaAlert.alert(message)
 }
 
-const append = (parentId, childId) => {
+const append = (parentId, childId, referenceNodes) => {
   const parentInstance = state.instances[parentId]
   const $Parent = parentInstance.state.$Viewlet
+  const childInstance = state.instances[childId]
+  const $Child = childInstance.state.$Viewlet
+  if (referenceNodes) {
+    // TODO this might be too inefficient
+    if (childId === referenceNodes[0]) {
+      $Parent.prepend($Child)
+      return
+    }
+    for (let i = 0; i < referenceNodes.length; i++) {
+      const id = referenceNodes[i]
+      if (id === childId) {
+        for (let j = i - 1; j >= 0; j--) {
+          const beforeId = referenceNodes[j]
+          if (state.instances[beforeId]) {
+            const $ReferenceNode = state.instances[beforeId].state.$Viewlet
+            $ReferenceNode.after($Child)
+            return
+          }
+        }
+        for (let j = i + 1; j < referenceNodes.length; j++) {
+          const afterId = referenceNodes[j]
+          if (state.instances[afterId]) {
+            const $ReferenceNode = state.instances[afterId].state.$Viewlet
+            $ReferenceNode.before($Child)
+            return
+          }
+        }
+      }
+    }
+    $Parent.append($Child)
+  } else {
+    $Parent.append($Child)
+  }
+}
+
+const appendToBody = (childId) => {
+  const $Parent = document.body
   const childInstance = state.instances[childId]
   const $Child = childInstance.state.$Viewlet
   $Parent.append($Child)
@@ -218,6 +293,12 @@ const getFn = (command) => {
       return ariaAnnounce
     case 'Viewlet.append':
       return append
+    case 'Viewlet.appendToBody':
+      return appendToBody
+    case 'Viewlet.createPlaceholder':
+      return createPlaceholder
+    case 'Viewlet.focus':
+      return focus
     default:
       throw new Error(`unknown command ${command}`)
   }
@@ -242,6 +323,9 @@ export const show = (id) => {
 
 export const setBounds = (id, left, top, width, height) => {
   const instance = state.instances[id]
+  if (!instance) {
+    return
+  }
   const $Viewlet = instance.state.$Viewlet
   $Viewlet.style.left = `${left}px`
   $Viewlet.style.top = `${top}px`

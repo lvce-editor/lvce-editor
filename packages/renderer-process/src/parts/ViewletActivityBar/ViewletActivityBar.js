@@ -1,13 +1,15 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
 import * as Assert from '../Assert/Assert.js'
-import * as Focus from '../Focus/Focus.js'
-import * as Layout from '../Layout/Layout.js'
 import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
+
+const activeId = 'ActivityBarItemActive'
 
 // TODO set aria-selected false when sidebar is collapsed
 
 const create$ActivityBarItemIcon = (icon) => {
   const $ActivityBarItemIcon = document.createElement('div')
+  // @ts-ignore
+  $ActivityBarItemIcon.role = 'none'
   $ActivityBarItemIcon.className = 'ActivityBarItemIcon'
   // @ts-ignore
   $ActivityBarItemIcon.style.maskImage = `url(${icon})`
@@ -22,7 +24,6 @@ const create$ActivityBarItem = (item) => {
   $ActivityBarItem.className = 'ActivityBarItem'
   $ActivityBarItem.ariaLabel = '' // aria-label is determined by content  TODO is empty aria-label necessary or can it be left off?
   $ActivityBarItem.title = item.title
-  $ActivityBarItem.tabIndex = -1
   $ActivityBarItem.dataset.viewletId = item.id
   if (item.keyShortcuts) {
     $ActivityBarItem.ariaKeyShortcuts = item.keyShortcuts
@@ -49,21 +50,25 @@ const create$ActivityBarItem = (item) => {
 export const name = 'ActivityBar'
 
 export const create = () => {
-  const $ActivityBar = Layout.state.$ActivityBar
-  $ActivityBar.role = 'toolbar'
-  $ActivityBar.ariaRoleDescription = 'Activity Bar'
-  $ActivityBar.ariaOrientation = 'vertical'
-  // $ActivityBar.append(...activityBarItems.map(create$ActivityBarItem))
-  $ActivityBar.onmousedown = ViewletActivityBarEvents.handleMousedown
-  $ActivityBar.oncontextmenu = ViewletActivityBarEvents.handleContextMenu
-  $ActivityBar.onblur = ViewletActivityBarEvents.handleBlur
-  $ActivityBar.addEventListener(
-    'focusin',
-    ViewletActivityBarEvents.handleFocusIn
-  )
+  const $Viewlet = document.createElement('div')
+  $Viewlet.id = 'ActivityBar'
+  $Viewlet.className = 'Viewlet'
+  $Viewlet.dataset.viewletId = 'ActivityBar'
+  // @ts-ignore
+  $Viewlet.role = 'toolbar'
+  $Viewlet.ariaRoleDescription = 'Activity Bar'
+  $Viewlet.ariaOrientation = 'vertical'
+  $Viewlet.tabIndex = 0
+  // $Viewlet.append(...activityBarItems.map(create$ActivityBarItem))
+  $Viewlet.onmousedown = ViewletActivityBarEvents.handleMousedown
+  $Viewlet.oncontextmenu = ViewletActivityBarEvents.handleContextMenu
+  // $Viewlet.addEventListener('focusout', ViewletActivityBarEvents.handleBlur)
+  $Viewlet.onfocus = ViewletActivityBarEvents.handleFocus
+  $Viewlet.onblur = ViewletActivityBarEvents.handleBlur
   // $ActivityBar.children[focusedIndex].tabIndex = 0
   return {
-    $ActivityBar,
+    $ActivityBar: $Viewlet,
+    $Viewlet,
   }
 }
 
@@ -76,37 +81,32 @@ export const setItems = (state, activityBarItems) => {
   $ActivityBar.replaceChildren(...activityBarItems.map(create$ActivityBarItem))
 }
 
-export const selectIndex = (state, oldIndex, newIndex) => {
-  if (oldIndex !== -1) {
-    const $OldItem = state.$ActivityBar.children[oldIndex]
-    $OldItem.ariaSelected = 'false'
-    if (newIndex !== -1) {
-      $OldItem.tabIndex = -1
-    }
-  }
-  if (newIndex !== -1) {
-    const $NewItem = state.$ActivityBar.children[newIndex]
-    $NewItem.ariaSelected = 'true'
-    $NewItem.tabIndex = 0
-  }
-}
-
-const focus$Item = ($Item) => {
-  Focus.focus($Item, 'activityBar')
-}
-
-export const setFocusedIndex = (state, oldIndex, newIndex) => {
+export const setSelectedIndex = (state, oldIndex, newIndex) => {
   const { $ActivityBar } = state
   if (oldIndex !== -1) {
     const $OldItem = $ActivityBar.children[oldIndex]
-    $OldItem.tabIndex = -1
+    $OldItem.ariaSelected = 'false'
+  }
+  if (newIndex !== -1) {
+    const $NewItem = $ActivityBar.children[newIndex]
+    $NewItem.ariaSelected = 'true'
+  }
+}
+
+export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
+  const { $ActivityBar } = state
+  if (oldIndex !== -1) {
+    const $OldItem = $ActivityBar.children[oldIndex]
+    $OldItem.removeAttribute('id')
     $OldItem.classList.remove('FocusOutline')
   }
   if (newIndex !== -1) {
     const $NewItem = $ActivityBar.children[newIndex]
-    $NewItem.tabIndex = 0
-    $NewItem.classList.add('FocusOutline')
-    focus$Item($NewItem)
+    $NewItem.id = activeId
+    $ActivityBar.setAttribute('aria-activedescendant', activeId)
+    if (focused) {
+      $NewItem.classList.add('FocusOutline')
+    }
   }
 }
 

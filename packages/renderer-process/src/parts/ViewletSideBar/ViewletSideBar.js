@@ -1,4 +1,3 @@
-import * as Layout from '../Layout/Layout.js'
 import * as Assert from '../Assert/Assert.js'
 
 export const create = () => {
@@ -15,13 +14,17 @@ export const create = () => {
   // const $SideBarContent = document.createElement('div')
   // $SideBarContent.id = 'SideBarContent'
 
-  const $SideBar = Layout.state.$SideBar
-  $SideBar.role = 'complementary'
-  $SideBar.ariaRoleDescription = 'Side Bar'
-  $SideBar.append($SideBarTitleArea)
+  const $Viewlet = document.createElement('div')
+  $Viewlet.id = 'SideBar'
+  $Viewlet.className = 'Viewlet'
+  // @ts-ignore
+  $Viewlet.role = 'complementary'
+  $Viewlet.ariaRoleDescription = 'Side Bar'
+  $Viewlet.append($SideBarTitleArea)
 
   return {
-    $SideBar,
+    $Viewlet,
+    $SideBar: $Viewlet,
     $SideBarTitleArea,
     $SideBarTitleAreaButtons,
     $SideBarContent: undefined,
@@ -48,6 +51,12 @@ export const appendViewlet = (state, name, $Viewlet) => {
     state.$SideBar.append($Viewlet)
   }
   state.$SideBarContent = $Viewlet
+}
+
+export const setTitle = (state, name) => {
+  const { $SideBarTitleAreaTitle } = state
+  $SideBarTitleAreaTitle.title = name
+  $SideBarTitleAreaTitle.textContent = name
 }
 
 export const focus = async () => {

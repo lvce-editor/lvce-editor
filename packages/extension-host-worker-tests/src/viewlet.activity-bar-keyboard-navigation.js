@@ -4,7 +4,7 @@ test('viewlet.activity-bar-keyboard-navigation', async () => {
 
   // assert
   const activityBarItemExplorer = Locator('.ActivityBarItem[title="Explorer"]')
-  await expect(activityBarItemExplorer).toBeFocused()
+  await expect(activityBarItemExplorer).toHaveClass('FocusOutline')
   const sideBarHeaderTitle = Locator('#SideBarTitleAreaTitle')
   await expect(sideBarHeaderTitle).toHaveText('Explorer')
 
@@ -13,7 +13,7 @@ test('viewlet.activity-bar-keyboard-navigation', async () => {
 
   // assert
   const activityBarItemSearch = Locator('.ActivityBarItem[title="Search"]')
-  await expect(activityBarItemSearch).toBeFocused()
+  await expect(activityBarItemSearch).toHaveClass('FocusOutline')
 
   // act
   await ActivityBar.selectCurrent()
@@ -27,7 +27,7 @@ test('viewlet.activity-bar-keyboard-navigation', async () => {
 
   // assert
   const activityBarItemSettings = Locator('.ActivityBarItem[title="Settings"]')
-  await expect(activityBarItemSettings).toBeFocused()
+  await expect(activityBarItemSettings).toHaveClass('FocusOutline')
 
   // act
   await ActivityBar.selectCurrent()
@@ -45,13 +45,13 @@ test('viewlet.activity-bar-keyboard-navigation', async () => {
   const activityBarItemExtensions = Locator(
     '.ActivityBarItem[title="Extensions"]'
   )
-  await expect(activityBarItemExtensions).toBeFocused()
+  await expect(activityBarItemExtensions).toHaveClass('FocusOutline')
 
   // act
   await ActivityBar.focusFirst()
 
   // assert
-  await expect(activityBarItemExplorer).toBeFocused()
+  await expect(activityBarItemExplorer).toHaveClass('FocusOutline')
 
   // act
   await ActivityBar.selectCurrent()

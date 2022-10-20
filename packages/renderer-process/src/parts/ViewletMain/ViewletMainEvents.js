@@ -1,8 +1,6 @@
-import * as EditorGroup from '../EditorGroup/EditorGroup.js'
 import * as Layout from '../Layout/Layout.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 export const handleDragOver = (event) => {
   event.preventDefault()

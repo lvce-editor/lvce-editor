@@ -1,12 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as Layout from '../src/parts/Layout/Layout.js'
 import * as ViewletStatusBar from '../src/parts/ViewletStatusBar/ViewletStatusBar.js'
-
-beforeEach(() => {
-  Layout.state.$StatusBar = document.createElement('div')
-})
 
 test.skip('create', () => {
   const state = ViewletStatusBar.create(
@@ -39,4 +34,10 @@ test.skip('accessibility - status bar should have role status, tabIndex 0,  aria
   expect(state.$StatusBar.ariaLabel).toBe('Status Bar')
   expect(state.$StatusBar.ariaLive).toBe('off')
   expect(state.$StatusBar.tabIndex).toBe(0)
+})
+
+test('accessibility - status bar should have aria role description attribute', () => {
+  const state = ViewletStatusBar.create([], [])
+  const { $Viewlet } = state
+  expect($Viewlet.ariaRoleDescription).toBe('Status Bar')
 })

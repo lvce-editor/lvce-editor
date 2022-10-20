@@ -1,12 +1,12 @@
-import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
-import * as Layout from '../Layout/Layout.js'
-import * as LifeCycle from '../LifeCycle/LifeCycle.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+
+const SIDE_BAR_TITLE_AREA_HEIGHT = 35
 
 export const name = 'SideBar'
 
@@ -17,6 +17,7 @@ export const create = (id, uri, left, top, width, height) => {
     top,
     width,
     height,
+    titleAreaHeight: SIDE_BAR_TITLE_AREA_HEIGHT,
   }
 }
 
@@ -35,66 +36,20 @@ export const loadContent = async (state, savedState) => {
   }
 }
 
-export const loadContentEffects = () => {
-  LifeCycle.once(LifeCycle.PHASE_TWELVE, hydrateLazy)
-  GlobalEventBus.addListener('Layout.hideSideBar', handleSideBarClose)
-}
+// export const loadContentEffects = () => {
+//   LifeCycle.once(LifeCycle.PHASE_TWELVE, hydrateLazy)
+//   GlobalEventBus.addListener('Layout.hideSideBar', handleSideBarClose)
+// }
 
 // TODO
-export const loadChildren = () => {
+export const getChildren = (state) => {
+  const { top, left, width, height, titleAreaHeight, currentViewletId } = state
   return [
     {
-      id: 'Explorer',
+      id: currentViewletId,
+      ...getContentDimensions(state),
     },
   ]
-}
-
-export const contentLoaded = async (state) => {
-  if (state.currentViewletId) {
-    await openViewlet(state, state.currentViewletId)
-  }
-}
-
-const getSideBarViewlet = async () => {
-  const cachedViewlet = await Command.execute(
-    /* LocalStorage.getJson */ 'LocalStorage.getJson',
-    /* key */ 'sideBarPanel'
-  )
-  if (cachedViewlet) {
-    return cachedViewlet
-  }
-
-  // TODO what if explorer has been deactivated
-  // probably need to check activity bar items
-  // but activity bar already has a dependency on sidebar
-  return 'Explorer'
-}
-
-const hydrateLazy = () => () => {
-  // TODO update file icons in explorer
-}
-
-const SIDE_BAR_TITLE_AREA_HEIGHT = 35
-
-// TODO add test for this
-export const showOrHideViewlet = async (state, viewletId) => {
-  Assert.object(state)
-  Assert.string(viewletId)
-  if (Layout.isSideBarVisible()) {
-    // TODO don't depend on sidebar directly
-    if (state.currentViewletId === viewletId) {
-      await Layout.hideSideBar()
-    } else {
-      state.currentViewletId = viewletId
-      await openViewlet(state, viewletId)
-    }
-  } else {
-    console.log('show side bar')
-    state.currentViewletId = viewletId
-    // TODO race condition: what if sidebar should be hidden again
-    // while sidebar is opening?
-    await Layout.showSideBar()
-  }
 }
 
 const getContentDimensions = (dimensions) => {
@@ -113,38 +68,62 @@ export const openViewlet = async (state, id, focus = false) => {
   //   console.log('dispose current viewlet', state.currentViewletId)
   //   Viewlet.dispose(state.currentViewletId)
   // }
-  // state.currentViewletId = id
+  const { currentViewletId } = state
+  state.currentViewletId = id
+
   const childDimensions = getContentDimensions(state)
-  // TODO race condition (check if disposed after created)
-  const viewlet = ViewletManager.create(
-    ViewletModule.load,
+
+  const commands = await ViewletManager.load({
+    getModule: ViewletModule.load,
     id,
-    'SideBar',
-    'builtin://',
-    childDimensions.left,
-    childDimensions.top,
-    childDimensions.width,
-    childDimensions.height
-  )
+    type: 0,
+    // @ts-ignore
+    uri: '',
+    show: false,
+    focus: false,
+    setBounds: false,
+    top: childDimensions.top,
+    left: childDimensions.left,
+    width: childDimensions.width,
+    height: childDimensions.height,
+  })
+  if (commands) {
+    commands.unshift(['Viewlet.dispose', currentViewletId])
+    commands.push(['Viewlet.append', ViewletModuleId.SideBar, id])
+    const activityBar = ViewletStates.getInstance(ViewletModuleId.ActivityBar)
+    if (activityBar) {
+      const oldState = activityBar.state
+      const newState = activityBar.factory.handleSideBarViewletChange(
+        oldState,
+        id
+      )
+      const extraCommands = ViewletManager.render(
+        activityBar.factory,
+        oldState,
+        newState
+      )
+      activityBar.state = newState
+      commands.push(...extraCommands)
+    }
+    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+  }
 
-  // if (state.currentViewletId !== id) {
-  //   console.log('return')
+  // // TODO race condition (check if disposed after created)
+  // const viewlet = ViewletManager.create(
+  //   ViewletModule.load,
+  //   id,
+  //   'SideBar',
+  //   'builtin://',
+  //   childDimensions.left,
+  //   childDimensions.top,
+  //   childDimensions.width,
+  //   childDimensions.height
+  // )
 
-  //   return
-  // }
-  // // TODO activity and sidebar changes should ideally be rendered at the same time
-  // // but this works for now
-  // RendererProcess.send([
-  //   /* Viewlet.appendViewlet */ 3029,
-  //   /* parentId */ 'SideBar',
-  //   /* childId */ id,
-  //   /* focus */ focus,
-  // ])
-  GlobalEventBus.emitEvent('SideBar.viewletChange', id)
-  // await Viewlet.refresh(id)
-  // TODO add keybinding to title
-  // @ts-ignore
-  await ViewletManager.load(viewlet, focus, /* restore */ true)
+  // // TODO add keybinding to title
+  // // @ts-ignore
+  // await ViewletManager.load(viewlet, focus, /* restore */ true)
+  return { ...state }
 }
 
 const handleSideBarClose = (state) => {
@@ -196,7 +175,24 @@ export const focus = async (state) => {
   //   newState
   // )
   // currentViewlet.state = newState
-  // console.log({ commands })
   return state
   // console.log({ currentViewletId })
 }
+
+export const hasFunctionalRender = true
+
+const renderTitle = {
+  isEqual(oldState, newState) {
+    return false
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'SideBar',
+      /* method */ 'setTitle',
+      /* name */ newState.currentViewletId,
+    ]
+  },
+}
+
+export const render = [renderTitle]

@@ -32,12 +32,12 @@ export const getModuleId = (commandId) => {
     case 'ChromeExtension.install':
     case 'ChromeExtension.uninstall':
       return ModuleId.ChromeExtension
+    case 'ClipBoard.execCopy':
     case 'ClipBoard.readNativeFiles':
     case 'ClipBoard.readText':
     case 'ClipBoard.writeImage':
     case 'ClipBoard.writeNativeFiles':
     case 'ClipBoard.writeText':
-    case 'ClipBoard.execCopy':
       return ModuleId.ClipBoard
     case 'ColorPicker.close':
     case 'ColorPicker.open':
@@ -139,10 +139,6 @@ export const getModuleId = (commandId) => {
     case 'FileSystem.remove':
     case 'FileSystem.writeFile':
       return ModuleId.FileSystem
-    case 'FindWidget.create':
-    case 'FindWidget.dispose':
-    case 'FindWidget.setValue':
-      return ModuleId.FindWidget
     case 'Format.hydrate':
       return ModuleId.Format
     case 'IconTheme.addIcons':
@@ -160,21 +156,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.KeyBindings
     case 'KeyBindingsInitial.getKeyBindings':
       return ModuleId.KeyBindingsInitial
-    case 'Layout.handleResize':
-    case 'Layout.handleSashPointerDown':
-    case 'Layout.handleSashPointerMove':
-    case 'Layout.hide':
-    case 'Layout.hideActivityBar':
-    case 'Layout.hidePanel':
-    case 'Layout.hideSideBar':
-    case 'Layout.hydrate':
-    case 'Layout.showActivityBar':
-    case 'Layout.showPanel':
-    case 'Layout.showSideBar':
-    case 'Layout.toggleActivityBar':
-    case 'Layout.togglePanel':
-    case 'Layout.toggleSideBar':
-      return ModuleId.Layout
     case 3444:
       return ModuleId.Listener
     case 'LocalStorage.clear':
@@ -253,6 +234,7 @@ export const getModuleId = (commandId) => {
     case 'Url.revokeObjectUrl':
       return ModuleId.Url
     case 'Viewlet.closeWidget':
+    case 'Viewlet.focus':
     case 'Viewlet.getAllStates':
     case 'Viewlet.openWidget':
     case 2133:

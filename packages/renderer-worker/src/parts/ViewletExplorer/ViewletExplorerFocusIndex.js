@@ -1,4 +1,5 @@
 export const focusIndex = (state, index) => {
+  const { minLineY, maxLineY } = state
   if (index < state.minLineY) {
     if (index < 0) {
       return {
@@ -7,7 +8,7 @@ export const focusIndex = (state, index) => {
         focused: true,
       }
     }
-    const diff = state.maxLineY - state.minLineY
+    const diff = maxLineY - minLineY
     return {
       ...state,
       focusedIndex: index,
@@ -15,8 +16,9 @@ export const focusIndex = (state, index) => {
       minLineY: index,
       maxLineY: index + diff,
     }
-  } else if (index >= state.maxLineY) {
-    const diff = state.maxLineY - state.minLineY
+  }
+  if (index >= maxLineY) {
+    const diff = maxLineY - minLineY
     return {
       ...state,
       focusedIndex: index,

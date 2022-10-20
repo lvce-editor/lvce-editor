@@ -2,11 +2,9 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as Layout from '../src/parts/Layout/Layout.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
-  Layout.state.$ActivityBar = document.createElement('div')
 })
 
 jest.unstable_mockModule(

@@ -24,6 +24,8 @@ export const Implementations = 'Implementations'
 
 export const KeyBindings = 'KeyBindings'
 
+export const Layout = 'Layout'
+
 export const Main = 'Main'
 
 export const Noop = 'Noop'

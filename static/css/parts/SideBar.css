@@ -3,6 +3,7 @@
   color: var(--SideBarForeground, white);
   display: flex;
   flex-direction: column;
+  position: absolute;
 }
 
 #SideBarTitleArea {

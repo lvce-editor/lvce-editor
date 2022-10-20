@@ -5,7 +5,6 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as InitData from '../InitData/InitData.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Languages from '../Languages/Languages.js'
-import * as Layout from '../Layout/Layout.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as Location from '../Location/Location.js'
 import * as Performance from '../Performance/Performance.js'
@@ -18,6 +17,10 @@ import * as SaveState from '../SaveState/SaveState.js'
 import * as ServiceWorker from '../ServiceWorker/ServiceWorker.js'
 import * as SessionReplay from '../SessionReplay/SessionReplay.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as ViewletManager from '../ViewletManager/ViewletManager.js'
+import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 // TODO lazyload parts one by one (Main, SideBar, ActivityBar, TitleBar, StatusBar)
@@ -69,7 +72,37 @@ export const startup = async (config) => {
   LifeCycle.mark(LifeCycle.Phase.Four)
 
   Performance.mark('code/willShowLayout')
-  await Layout.hydrate(initData)
+  const layout = ViewletManager.create(
+    ViewletModule.load,
+    ViewletModuleId.Layout,
+    '',
+    '',
+    0,
+    0,
+    0,
+    0
+  )
+  const commands = await ViewletManager.load(
+    {
+      getModule: ViewletModule.load,
+      id: ViewletModuleId.Layout,
+      type: 0,
+      uri: '',
+      show: false,
+      focus: false,
+    },
+    false,
+    false,
+    initData
+  )
+  commands.splice(1, 1)
+  const layoutModule = ViewletStates.getInstance(ViewletModuleId.Layout)
+  const placeholderCommands =
+    layoutModule.factory.getInitialPlaceholderCommands(layoutModule.state)
+  commands.push(...placeholderCommands)
+  commands.push(['Viewlet.appendToBody', ViewletModuleId.Layout])
+  await RendererProcess.invoke('Viewlet.executeCommands', commands)
+  // await Layout.hydrate(initData)
   Performance.mark('code/didShowLayout')
 
   Performance.mark('code/willLoadLanguages')
@@ -79,7 +112,7 @@ export const startup = async (config) => {
   LifeCycle.mark(LifeCycle.Phase.Five)
 
   Performance.mark('code/willLoadMain')
-  await Layout.showMain()
+  await Command.execute('Layout.loadMainIfVisible')
   Performance.mark('code/didLoadMain')
 
   LifeCycle.mark(LifeCycle.Phase.Six)
@@ -91,33 +124,25 @@ export const startup = async (config) => {
   LifeCycle.mark(LifeCycle.Phase.Seven)
 
   Performance.mark('code/willLoadSideBar')
-  if (Layout.state.sideBarVisible) {
-    await Layout.showSideBar()
-  }
+  await Command.execute('Layout.loadSideBarIfVisible')
   Performance.mark('code/didLoadSideBar')
 
   LifeCycle.mark(LifeCycle.Phase.Eight)
 
   Performance.mark('code/willLoadPanel')
-  if (Layout.state.panelVisible) {
-    await Layout.showPanel()
-  }
+  await Command.execute('Layout.loadPanelIfVisible')
   Performance.mark('code/didLoadPanel')
 
   LifeCycle.mark(LifeCycle.Phase.Nine)
 
   Performance.mark('code/willLoadActivityBar')
-  if (Layout.state.activityBarVisible) {
-    await Layout.showActivityBar()
-  }
+  await Command.execute('Layout.loadActivityBarIfVisible')
   Performance.mark('code/didLoadActivityBar')
 
   LifeCycle.mark(LifeCycle.Phase.Ten)
 
   Performance.mark('code/willLoadStatusBar')
-  if (Layout.state.statusBarVisible) {
-    await Layout.showStatusBar()
-  }
+  await Command.execute('Layout.loadStatusBarIfVisible')
   Performance.mark('code/didLoadStatusBar')
 
   LifeCycle.mark(LifeCycle.Phase.Eleven)
@@ -134,9 +159,7 @@ export const startup = async (config) => {
   LifeCycle.mark(LifeCycle.Phase.Fourteen)
 
   Performance.mark('code/willLoadTitleBar')
-  if (Layout.state.titleBarVisible) {
-    await Layout.showTitleBar()
-  }
+  await Command.execute('Layout.loadTitleBarIfVisible')
   Performance.mark('code/didLoadTitleBar')
 
   LifeCycle.mark(LifeCycle.Phase.Fifteen)

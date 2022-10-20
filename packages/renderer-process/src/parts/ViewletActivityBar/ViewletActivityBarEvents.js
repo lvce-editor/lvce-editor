@@ -55,8 +55,11 @@ export const handleContextMenu = (event) => {
   )
 }
 
-export const handleBlur = () => {}
+export const handleBlur = () => {
+  RendererWorker.send('ActivityBar.handleBlur')
+}
 
-export const handleFocusIn = () => {
+export const handleFocus = (event) => {
   Focus.setFocus('activityBar')
+  RendererWorker.send('ActivityBar.focus')
 }

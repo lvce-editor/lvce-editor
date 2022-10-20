@@ -657,5 +657,6 @@ test('resize', () => {
     selectedIndex: -1,
     top: 150,
     width: 150,
+    focused: false,
   })
 })

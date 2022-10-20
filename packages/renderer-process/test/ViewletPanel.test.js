@@ -23,12 +23,6 @@ const RendererWorker = await import(
 )
 
 const ViewletPanel = await import('../src/parts/ViewletPanel/ViewletPanel.js')
-const Layout = await import('../src/parts/Layout/Layout.js')
-
-// TODO side effect here is bad
-beforeAll(() => {
-  Layout.state.$Panel = document.createElement('div')
-})
 
 test('create', () => {
   const state = ViewletPanel.create()

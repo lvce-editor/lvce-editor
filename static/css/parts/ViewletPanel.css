@@ -5,6 +5,10 @@
   background: var(--PanelBackground);
 }
 
+.Viewlet[data-viewlet-id='Panel'] {
+  background: var(--PanelBackground);
+}
+
 #PanelHeader {
   contain: strict;
 }

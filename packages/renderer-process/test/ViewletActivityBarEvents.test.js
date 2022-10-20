@@ -3,11 +3,9 @@
  */
 import { jest } from '@jest/globals'
 import * as ActvityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActvityBarItemFlags.js'
-import * as Layout from '../src/parts/Layout/Layout.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
-  Layout.state.$ActivityBar = document.createElement('div')
 })
 
 jest.unstable_mockModule(
@@ -174,7 +172,8 @@ test('event - handleContextMenu', () => {
       flags: ActvityBarItemFlags.Button,
     },
   ])
-  const $ActivityBarItemsTop = state.$ActivityBar.children[1]
+  const { $ActivityBar } = state
+  const $ActivityBarItemsTop = $ActivityBar.children[1]
   $ActivityBarItemsTop.children[0].dispatchEvent(
     new MouseEvent('contextmenu', {
       bubbles: true,

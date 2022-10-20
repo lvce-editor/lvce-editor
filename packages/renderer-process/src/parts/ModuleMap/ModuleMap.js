@@ -123,6 +123,7 @@ export const getModuleId = (commandId) => {
     case 'Viewlet.handleError':
     case 'Viewlet.invoke':
     case 'Viewlet.load':
+    case 'Viewlet.loadModule':
     case 'Viewlet.refresh':
     case 'Viewlet.send':
     case 'Viewlet.sendMultiple':

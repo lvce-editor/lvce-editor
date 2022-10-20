@@ -1,10 +1,11 @@
-.Viewlet[data-viewlet-id='EditorFindWidget'] {
+[data-viewlet-id='EditorFindWidget'] {
   background: var(--ActivityBarBackground);
   z-index: 1;
   color: wheat;
   display: flex;
   align-items: center;
   padding: 0 4px;
+  position: absolute;
 }
 
 .EditorFindWidgetMatchCount {

@@ -1,7 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as BeforeInput from '../BeforeInput/BeforeInput.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
-import * as Layout from '../Layout/Layout.js'
 import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'

@@ -1,13 +1,15 @@
-import * as Layout from '../Layout/Layout.js'
-
 export const create = () => {
   // TODO set aria label for title bar menu
   // TODO add tests for aria properties
-  const $TitleBar = Layout.state.$TitleBar
-  $TitleBar.ariaLabel = 'Title Bar'
-  $TitleBar.role = 'contentinfo'
+  const $Viewlet = document.createElement('div')
+  $Viewlet.id = 'TitleBar'
+  $Viewlet.className = 'Viewlet'
+  $Viewlet.dataset.viewletId = 'TitleBar'
+  $Viewlet.ariaLabel = 'Title Bar'
+  // @ts-ignore
+  $Viewlet.role = 'contentinfo'
   return {
-    $TitleBar,
-    $Viewlet: $TitleBar,
+    $TitleBar: $Viewlet,
+    $Viewlet,
   }
 }

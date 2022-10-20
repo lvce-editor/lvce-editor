@@ -18,8 +18,8 @@
 @import './parts/QuickPick.css';
 @import './parts/ViewletExtensions.css';
 @import './parts/MonacoList.css';
+@import './parts/ViewletLayout.css';
 @import './parts/ViewletPanel.css';
-@import './parts/Layout.css';
 @import './parts/Viewlet.css';
 @import './parts/ViewletOutput.css';
 @import './parts/ContextMenu.css';

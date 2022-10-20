@@ -12,6 +12,7 @@ import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -176,6 +177,20 @@ export const loadContent = async (state, savedState) => {
   }
 }
 
+export const getChildren = (state) => {
+  const { editors } = state
+  if (editors.length === 0) {
+    return []
+  }
+  const editor = editors[0]
+  console.log({ editor })
+  return [
+    // {
+    //   id: ViewletModuleId.MainTabs,
+    // },
+  ]
+}
+
 export const contentLoaded = async (state) => {
   if (state.editors.length === 0) {
     return
@@ -264,7 +279,8 @@ export const openUri = async (state, uri, focus = true) => {
   )
   // @ts-ignore
 
-  return ViewletManager.load(instance, focus)
+  await ViewletManager.load(instance, focus)
+  return state
 }
 
 export const save = () => {
@@ -533,6 +549,7 @@ export const closeTabsLeft = async (state) => {
 }
 
 export const resize = (state, dimensions) => {
+  const { editors } = state
   const top = dimensions.top + TAB_HEIGHT
   const left = dimensions.left
   const width = dimensions.width
@@ -543,7 +560,7 @@ export const resize = (state, dimensions) => {
     width,
     height,
   }
-  const editor = state.editors[0]
+  const editor = editors[0]
   let commands = []
   if (editor) {
     const id = ViewletMap.getId(editor.uri)
@@ -557,3 +574,7 @@ export const resize = (state, dimensions) => {
     commands,
   }
 }
+
+export const hasFunctionalRender = true
+
+export const render = []

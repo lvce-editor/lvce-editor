@@ -2,10 +2,30 @@
  * @jest-environment jsdom
  */
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
-import * as ViewletExplorer from '../src/parts/ViewletExplorer/ViewletExplorer.js'
 
+/**
+ * @jest-environment jsdom
+ */
+import { jest } from '@jest/globals'
+
+jest.unstable_mockModule(
+  '../src/parts/RendererWorker/RendererWorker.js',
+  () => {
+    return {
+      send: jest.fn(),
+    }
+  }
+)
+
+const ViewletExplorer = await import(
+  '../src/parts/ViewletExplorer/ViewletExplorer.js'
+)
+
+const getTextContent = ($Node) => {
+  return $Node.textContent
+}
 const getSimpleList = (state) => {
-  return Array.from(state.$Viewlet.children).map((node) => node.textContent)
+  return Array.from(state.$Viewlet.children).map(getTextContent)
 }
 
 test('name', () => {
@@ -24,8 +44,9 @@ test('dispose', () => {
 
 test('handleError', () => {
   const state = ViewletExplorer.create()
+  const { $Viewlet } = state
   ViewletExplorer.handleError(state, 'Error: Oops')
-  expect(state.$Viewlet.textContent).toBe('Error: Oops')
+  expect($Viewlet.textContent).toBe('Error: Oops')
 })
 
 test('updateDirents', () => {
@@ -348,6 +369,7 @@ test.skip('updateDirents - bug with icons', () => {
 
 test('updateDirents - bug with folder attributes on files', () => {
   const state = ViewletExplorer.create()
+  const { $Viewlet } = state
   ViewletExplorer.updateDirents(state, [
     {
       name: 'file-1',
@@ -358,8 +380,8 @@ test('updateDirents - bug with folder attributes on files', () => {
       posInSet: 1,
     },
   ])
-  expect(state.$Viewlet.children[0].textContent).toBe('file-1')
-  expect(state.$Viewlet.children[0].ariaExpanded).not.toBeDefined()
+  expect($Viewlet.children[0].textContent).toBe('file-1')
+  expect($Viewlet.children[0].ariaExpanded).not.toBeDefined()
   ViewletExplorer.updateDirents(state, [
     {
       name: 'folder-1',
@@ -370,8 +392,8 @@ test('updateDirents - bug with folder attributes on files', () => {
       posInSet: 1,
     },
   ])
-  expect(state.$Viewlet.children[0].textContent).toBe('folder-1')
-  expect(state.$Viewlet.children[0].ariaExpanded).toBe('false')
+  expect($Viewlet.children[0].textContent).toBe('folder-1')
+  expect($Viewlet.children[0].ariaExpanded).toBe('false')
   ViewletExplorer.updateDirents(state, [
     {
       name: 'file-1',
@@ -382,12 +404,13 @@ test('updateDirents - bug with folder attributes on files', () => {
       posInSet: 1,
     },
   ])
-  expect(state.$Viewlet.children[0].textContent).toBe('file-1')
-  expect(state.$Viewlet.children[0].ariaExpanded).not.toBeDefined()
+  expect($Viewlet.children[0].textContent).toBe('file-1')
+  expect($Viewlet.children[0].ariaExpanded).not.toBeDefined()
 })
 
-test('focusIndex', () => {
+test('setFocusedIndex', () => {
   const state = ViewletExplorer.create()
+  const { $Viewlet } = state
   ViewletExplorer.updateDirents(state, [
     {
       name: 'index.css',
@@ -406,11 +429,11 @@ test('focusIndex', () => {
       posInSet: 2,
     },
   ])
-  document.body.append(state.$Viewlet)
+  document.body.append($Viewlet)
   ViewletExplorer.setFocusedIndex(state, -1, 0)
-  expect(document.activeElement).toBe(state.$Viewlet)
+  expect(document.activeElement).toBe($Viewlet)
   ViewletExplorer.setFocusedIndex(state, -1, 1)
-  expect(document.activeElement).toBe(state.$Viewlet)
+  expect(document.activeElement).toBe($Viewlet)
 })
 
 // TODO test expand/collapse
@@ -425,6 +448,7 @@ test('accessibility - viewlet should have role tree', () => {
 
 test('accessibility - dirents should have ariaSetSize, ariaPosInSet, ariaLevel and ariaDescription', () => {
   const state = ViewletExplorer.create()
+  const { $Viewlet } = state
   ViewletExplorer.updateDirents(state, [
     {
       name: 'file-1',
@@ -443,7 +467,7 @@ test('accessibility - dirents should have ariaSetSize, ariaPosInSet, ariaLevel a
       posInSet: 2,
     },
   ])
-  const $DirentOne = state.$Viewlet.children[0]
+  const $DirentOne = $Viewlet.children[0]
   expect($DirentOne.ariaExpanded).not.toBeDefined()
   expect($DirentOne.ariaPosInSet).toBe('1')
   expect($DirentOne.ariaSetSize).toBe('2')
@@ -452,7 +476,7 @@ test('accessibility - dirents should have ariaSetSize, ariaPosInSet, ariaLevel a
   // @ts-ignore
   expect($DirentOne.ariaDescription).toBe('')
 
-  const $DirentTwo = state.$Viewlet.children[1]
+  const $DirentTwo = $Viewlet.children[1]
   expect($DirentTwo.ariaExpanded).toBe('false')
   expect($DirentTwo.ariaPosInSet).toBe('2')
   expect($DirentTwo.ariaSetSize).toBe('2')
@@ -466,6 +490,7 @@ test('accessibility - dirents should have ariaSetSize, ariaPosInSet, ariaLevel a
 
 test('showRenameInputBox', () => {
   const state = ViewletExplorer.create()
+  const { $Viewlet } = state
   ViewletExplorer.updateDirents(state, [
     {
       name: 'file-1',
@@ -485,8 +510,8 @@ test('showRenameInputBox', () => {
     },
   ])
   ViewletExplorer.showRenameInputBox(state, 0, 'file-1')
-  expect(state.$Viewlet.children).toHaveLength(2)
-  const $InputBox = state.$Viewlet.children[0]
+  expect($Viewlet.children).toHaveLength(2)
+  const $InputBox = $Viewlet.children[0]
   // @ts-ignore
   const start = $InputBox.selectionStart
   // @ts-ignore
@@ -497,6 +522,7 @@ test('showRenameInputBox', () => {
 
 test('hideRenameInputBox', () => {
   const state = ViewletExplorer.create()
+  const { $Viewlet } = state
   ViewletExplorer.updateDirents(state, [
     {
       name: 'file-1',
@@ -524,7 +550,7 @@ test('hideRenameInputBox', () => {
     setSize: 2,
     posInSet: 1,
   })
-  expect(state.$Viewlet.children).toHaveLength(2)
+  expect($Viewlet.children).toHaveLength(2)
   const $File1 = state.$Viewlet.children[0]
   expect($File1.textContent).toBe('file-1')
 })
@@ -537,7 +563,8 @@ test('setDropTargets - mark outer as drop target', () => {
 
 test('setDropTargets - remove outer as drop target', () => {
   const state = ViewletExplorer.create()
+  const { $Viewlet } = state
   ViewletExplorer.setDropTargets(state, [], [-1])
   ViewletExplorer.setDropTargets(state, [-1], [])
-  expect(state.$Viewlet.classList.contains('DropTarget')).toBe(false)
+  expect($Viewlet.classList.contains('DropTarget')).toBe(false)
 })

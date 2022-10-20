@@ -30,3 +30,9 @@ test('accessibility - buttons should have aria label', () => {
   const { $ButtonClose } = state
   expect($ButtonClose.ariaLabel).toBe('Close')
 })
+test('accessibility - viewlet should have a role of group', () => {
+  const state = ViewletEditorFindWidget.create()
+  const { $Viewlet } = state
+  // @ts-ignore
+  expect($Viewlet.role).toBe('group')
+})

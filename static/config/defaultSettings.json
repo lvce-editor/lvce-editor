@@ -29,6 +29,7 @@
   "workbench.iconTheme": "vscode-icons",
   "workbench.activityBar.visible": true,
   "workbench.sideBar.visible": true,
+  "workbench.sideBarLocation": "right",
   "workbench.saveStateOnVisibilityChange": false,
 
   "workspace.defaultWorkspace": "fetch:///playground",

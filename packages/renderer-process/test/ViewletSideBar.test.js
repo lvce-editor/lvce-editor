@@ -1,36 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import { jest } from '@jest/globals'
-
-beforeEach(() => {
-  jest.resetAllMocks()
-})
-
-jest.unstable_mockModule(
-  '../src/parts/RendererWorker/RendererWorker.js',
-  () => {
-    return {
-      send: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
-  }
-)
-
-const RendererWorker = await import(
-  '../src/parts/RendererWorker/RendererWorker.js'
-)
-
-const ViewletSideBar = await import(
-  '../src/parts/ViewletSideBar/ViewletSideBar.js'
-)
-const Layout = await import('../src/parts/Layout/Layout.js')
-
-// TODO side effect here is bad
-beforeAll(() => {
-  Layout.state.$SideBar = document.createElement('div')
-})
+import * as ViewletSideBar from '../src/parts/ViewletSideBar/ViewletSideBar.js'
 
 test('create', () => {
   // TODO ideally sidebar and sidebar content html elements should be created and mounted
@@ -50,8 +21,6 @@ test('dispose', () => {
 })
 
 test('appendViewlet', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletSideBar.create()
   const $TestViewlet = document.createElement('div')
   $TestViewlet.id = 'TestViewlet'
@@ -63,8 +32,6 @@ test('appendViewlet', () => {
 })
 
 test('appendViewlet - a viewlet already exists', () => {
-  // @ts-ignore
-  RendererWorker.send.mockImplementation(() => {})
   const state = ViewletSideBar.create()
   const $TestViewlet1 = document.createElement('div')
   $TestViewlet1.id = 'TestViewlet1'

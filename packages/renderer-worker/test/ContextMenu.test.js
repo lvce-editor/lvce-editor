@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import * as ContextMenu from '../src/parts/ContextMenu/ContextMenu.js'
-import * as Layout from '../src/parts/Layout/Layout.js'
+// import * as Layout from '../src/parts/Layout/Layout.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 
@@ -10,8 +10,8 @@ beforeEach(() => {
 
 test.skip('showItems - top left', async () => {
   RendererProcess.state.send = jest.fn()
-  Layout.state.windowWidth = 1024
-  Layout.state.windowHeight = 768
+  // Layout.state.windowWidth = 1024
+  // Layout.state.windowHeight = 768
   ContextMenu.showItems(0, 0, [
     {
       id: 'copy',

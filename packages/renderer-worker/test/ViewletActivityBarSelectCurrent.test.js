@@ -1,4 +1,3 @@
-import * as Layout from '../src/parts/Layout/Layout.js'
 import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActvityBarItemFlags.js'
 import { jest } from '@jest/globals'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
@@ -29,8 +28,8 @@ const Command = await import('../src/parts/Command/Command.js')
 
 test('selectCurrent - settings', async () => {
   // TODO mock menu instead
-  Layout.state.windowWidth = 1000
-  Layout.state.windowHeight = 1000
+  // Layout.state.windowWidth = 1000
+  // Layout.state.windowHeight = 1000
   const state = {
     ...ViewletActivityBar.create(),
     focusedIndex: 5,

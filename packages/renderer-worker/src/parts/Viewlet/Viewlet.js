@@ -8,15 +8,31 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletElectron from './ViewletElectron.js'
 
-/**
- * @deprecated
- */
-export const focus = (id) => {
-  // if(state.instances[id]){
-  // }
-  // console.log('focus', { id })
-  // // TODO open if it is not already open
-  // RendererProcess.send([/* viewletFocus */ 3027, /* id */ id])
+export const focus = async (id) => {
+  const instance = ViewletStates.getInstance(id)
+  if (!instance) {
+    return
+  }
+  const commands = []
+  if (instance && instance.factory.focus) {
+    const oldState = instance.state
+    const newState = instance.factory.focus(oldState)
+    commands.push(
+      ...ViewletManager.render(instance.factory, oldState, newState)
+    )
+  }
+  const oldInstance = ViewletStates.getFocusedInstance()
+  if (oldInstance) {
+    if (oldInstance && oldInstance.factory.handleBlur) {
+      const oldState = oldInstance.state
+      const newState = oldInstance.factory.handleBlur(oldState)
+      commands.push(
+        ...ViewletManager.render(oldInstance.factory, oldState, newState)
+      )
+    }
+  }
+  ViewletStates.setFocusedInstance(instance)
+  await RendererProcess.invoke('Viewlet.sendMultiple', commands)
 }
 // export const createOrFocus = async id=>{
 //   const instance = state.instances[id] || await create(id)
@@ -114,6 +130,33 @@ export const dispose = async (id) => {
   await GlobalEventBus.emitEvent(`Viewlet.dispose.${id}`)
 }
 
+export const disposeFunctional = (id) => {
+  try {
+    if (!id) {
+      console.warn('no instance to dispose')
+      return []
+    }
+    const instance = ViewletStates.getInstance(id)
+    if (!instance) {
+      console.info('instance may already be disposed')
+      return []
+    }
+    // TODO status should have enum
+    instance.status = 'disposing'
+    if (!instance.factory) {
+      throw new Error(`${id} is missing a factory function`)
+    }
+    instance.factory.dispose(instance.state)
+    instance.status = 'disposed'
+    ViewletStates.remove(id)
+    return [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id]]
+  } catch (error) {
+    console.error(error)
+    // TODO use Error.cause once proper stack traces are supported by chrome
+    throw new Error(`Failed to dispose viewlet ${id}: ${error}`)
+  }
+}
+
 /**
  * @deprecated
  */
@@ -176,7 +219,7 @@ export const getAllStates = () => {
 export const openWidget = async (id, ...args) => {
   const hasInstance = ViewletStates.hasInstance(id)
   const type = args[0]
-  if (ElectronBrowserView.isOpen() && id === 'QuickPick') {
+  if (ElectronBrowserView.isOpen() && id === ViewletModuleId.QuickPick) {
     // TODO recycle quickpick instance
     if (hasInstance) {
       await ViewletElectron.closeWidgetElectronQuickPick()
@@ -199,6 +242,8 @@ export const openWidget = async (id, ...args) => {
   if (hasInstance) {
     commands.unshift(['Viewlet.dispose', id])
   }
+  commands.push(['Viewlet.append', 'Layout', id])
+  commands.push(['Viewlet.focus', id])
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
   // TODO commands should be like this
   // viewlet.create quickpick

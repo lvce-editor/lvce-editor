@@ -20,6 +20,7 @@ export const Commands = {
   'ActivityBar.focusNext': LazyCommand.create(ViewletActivityBar.name, Imports.FocusNext, 'focusNext'),
   'ActivityBar.focusPrevious': LazyCommand.create(ViewletActivityBar.name, Imports.FocusPrevious, 'focusPrevious'),
   'ActivityBar.getHiddenItems': ViewletActivityBar.getHiddenItems,
+  'ActivityBar.handleBlur':  ViewletActivityBar.handleBlur,
   'ActivityBar.handleClick': LazyCommand.create(ViewletActivityBar.name, Imports.HandleClick, 'handleClick'),
   'ActivityBar.handleContextMenu':  ViewletActivityBar.handleContextMenu,
   'ActivityBar.handleSideBarHidden': ViewletActivityBar.handleSideBarHidden,

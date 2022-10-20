@@ -67,17 +67,16 @@ const getAllEntries = async (dataTransfer) => {
 }
 
 export const handleFocus = (event) => {
+  const { target, isTrusted } = event
   Focus.setFocus('Explorer')
-  const $Target = event.target
-  if ($Target.className === 'InputBox') {
+  if (!isTrusted || target.className === 'InputBox') {
     return
   }
-  event.preventDefault()
-  RendererWorker.send(/* Explorer.focus */ 'Explorer.focus')
+  RendererWorker.send('Explorer.focus')
 }
 
 export const handleBlur = (event) => {
-  RendererWorker.send(/* Explorer.handleBlur */ 'Explorer.handleBlur')
+  RendererWorker.send('Explorer.handleBlur')
 }
 
 /**

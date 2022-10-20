@@ -746,10 +746,11 @@ const handleClickFile = async (state, dirent, index, keepFocus = false) => {
   return {
     ...state,
     focusedIndex: index,
+    focused: keepFocus,
   }
 }
 
-const handleClickDirectory = async (state, dirent, index) => {
+const handleClickDirectory = async (state, dirent, index, keepFocus) => {
   dirent.type = DirentType.DirectoryExpanding
   // TODO handle error
   const dirents = await getChildDirents(state.root, state.pathSeparator, dirent)
@@ -773,19 +774,26 @@ const handleClickDirectory = async (state, dirent, index) => {
     ...state,
     items: newDirents,
     focusedIndex: newIndex,
+    focused: keepFocus,
   }
 }
 
-const handleClickDirectoryExpanding = async (state, dirent, index) => {
+const handleClickDirectoryExpanding = async (
+  state,
+  dirent,
+  index,
+  keepFocus
+) => {
   dirent.type = DirentType.Directory
   dirent.icon = IconTheme.getIcon(dirent)
   return {
     ...state,
     focusedIndex: index,
+    focused: keepFocus,
   }
 }
 
-const handleClickDirectoryExpanded = (state, dirent, index) => {
+const handleClickDirectoryExpanded = (state, dirent, index, keepFocus) => {
   dirent.type = DirentType.Directory
   dirent.icon = IconTheme.getIcon(dirent)
   const endIndex = getParentEndIndex(state.items, index)
@@ -797,6 +805,7 @@ const handleClickDirectoryExpanded = (state, dirent, index) => {
     ...state,
     items: newDirents,
     focusedIndex: index,
+    focused: keepFocus,
   }
 }
 
@@ -819,11 +828,16 @@ export const handleClick = (state, index, keepFocus = false) => {
     // TODO decide on one name
     case DirentType.Directory:
     case DirentType.SymlinkFolder:
-      return handleClickDirectory(state, dirent, actualIndex)
+      return handleClickDirectory(state, dirent, actualIndex, keepFocus)
     case DirentType.DirectoryExpanding:
-      return handleClickDirectoryExpanding(state, dirent, actualIndex)
+      return handleClickDirectoryExpanding(
+        state,
+        dirent,
+        actualIndex,
+        keepFocus
+      )
     case DirentType.DirectoryExpanded:
-      return handleClickDirectoryExpanded(state, dirent, actualIndex)
+      return handleClickDirectoryExpanded(state, dirent, actualIndex, keepFocus)
     case DirentType.Symlink:
       return handleClickSymLink(state, dirent, state.focusedIndex)
     default:
@@ -1332,11 +1346,6 @@ export const shouldApplyNewState = (newState, fn) => {
   return true
 }
 
-export const events = {
-  'languages.changed': handleLanguagesChanged,
-  'workspace.change': handleWorkspaceChange,
-}
-
 export const hasFunctionalRender = true
 
 const renderItems = {
@@ -1371,18 +1380,15 @@ const renderFocusedIndex = {
     )
   },
   apply(oldState, newState) {
-    const oldFocusedIndex = oldState.focused
-      ? oldState.focusedIndex - oldState.minLineY
-      : -2
-    const newFocusedIndex = newState.focused
-      ? newState.focusedIndex - newState.minLineY
-      : -2
+    const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
+    const newFocusedIndex = newState.focusedIndex - newState.minLineY
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Explorer',
       /* method */ 'setFocusedIndex',
       /* oldindex */ oldFocusedIndex,
       /* newIndex */ newFocusedIndex,
+      /* focused */ newState.focused,
     ]
   },
 }

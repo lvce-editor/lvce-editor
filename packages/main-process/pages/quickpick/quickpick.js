@@ -17,8 +17,6 @@ const executeCommand = (command) => {
 
 const executeCommands = (commands) => {
   for (const command of commands) {
-    console.log({ command })
-
     executeCommand(command)
   }
 }

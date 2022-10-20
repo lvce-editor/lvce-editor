@@ -16,7 +16,11 @@ const Imports = {
   HandleDragOver: () => import('./ViewletExplorerHandleDragOver.js'),
   HandleDrop: () => import('./ViewletExplorerHandleDrop.js'),
   HandlePaste: () => import('./ViewletExplorerHandlePaste.js'),
+}
 
+export const Events = {
+  'languages.changed': ViewletExplorer.handleLanguagesChanged,
+  'workspace.change': ViewletExplorer.handleWorkspaceChange,
 }
 
 // prettier-ignore

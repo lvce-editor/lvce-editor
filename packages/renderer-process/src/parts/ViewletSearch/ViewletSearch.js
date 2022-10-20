@@ -29,8 +29,8 @@ export const create = () => {
   $SearchResults.oncontextmenu = ViewletSearchEvents.handleContextMenu
 
   const $Viewlet = document.createElement('div')
-  $Viewlet.dataset.viewletId = 'Search'
   $Viewlet.className = 'Viewlet'
+  $Viewlet.dataset.viewletId = 'Search'
   $Viewlet.append($SearchHeader, $SearchResults)
 
   return {

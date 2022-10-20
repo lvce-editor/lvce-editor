@@ -967,6 +967,8 @@ test('handleClick - symlink - file', async () => {
 
 test('handleClickCurrentButKeepFocus - file', async () => {
   const state = {
+    ...ViewletExplorer.create(),
+    focused: true,
     root: '/home/test-user/test-path',
     focusedIndex: 0,
     top: 0,
@@ -2453,7 +2455,7 @@ test('handleWheel - up', () => {
         },
       ],
     ],
-    ['Viewlet.send', 'Explorer', 'setFocusedIndex', -2, -2],
+    ['Viewlet.send', 'Explorer', 'setFocusedIndex', -1, -1, false],
   ])
 })
 

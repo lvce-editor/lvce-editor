@@ -54,6 +54,33 @@ const wrapViewletCommand = (id, fn) => {
   return wrappedViewletCommand
 }
 
+const wrapViewletCommandWithSideEffect = (id, fn) => {
+  const wrappedViewletCommand = async (...args) => {
+    // TODO get actual focused instance
+    const activeInstance = ViewletStates.getInstance(id)
+    if (!activeInstance) {
+      console.info(
+        `cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`
+      )
+      return
+    }
+    const oldState = activeInstance.state
+    const { newState, commands } = await fn(oldState, ...args)
+    Assert.object(newState)
+    // console.log({ fn, newState })
+    if (oldState !== newState) {
+      commands.push(...render(activeInstance.factory, oldState, newState))
+      ViewletStates.setState(id, newState)
+    }
+    await RendererProcess.invoke(
+      /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
+      /* commands */ commands
+    )
+  }
+  NameAnonymousFunction.nameAnonymousFunction(wrappedViewletCommand, fn.name)
+  return wrappedViewletCommand
+}
+
 /**
  *
  * @param {()=>any} getModule
@@ -111,12 +138,47 @@ const getRenderCommands = (module, oldState, newState) => {
 }
 
 const maybeRegisterWrappedCommands = (module) => {
-  if (!module.Commands) {
-    return
+  if (module.Commands) {
+    for (const [key, value] of Object.entries(module.Commands)) {
+      const wrappedCommand = wrapViewletCommand(module.name, value)
+      Command.register(key, wrappedCommand)
+    }
   }
-  for (const [key, value] of Object.entries(module.Commands)) {
-    const wrappedCommand = wrapViewletCommand(module.name, value)
-    Command.register(key, wrappedCommand)
+  if (module.CommandsWithSideEffects) {
+    for (const [key, value] of Object.entries(module.CommandsWithSideEffects)) {
+      const wrappedCommand = wrapViewletCommandWithSideEffect(
+        module.name,
+        value
+      )
+      Command.register(key, wrappedCommand)
+    }
+  }
+}
+
+const maybeRegisterEvents = (module) => {
+  if (module.Events) {
+    // TODO remove event listeners when viewlet is disposed
+    for (const [key, value] of Object.entries(module.Events)) {
+      const handleUpdate = async () => {
+        const instance = ViewletStates.getInstance(module.name)
+        const newState = await value(instance.state)
+        if (!newState) {
+          throw new Error('newState must be defined')
+        }
+        if (!module.shouldApplyNewState(newState)) {
+          console.log('[viewlet manager] return', newState)
+
+          return
+        }
+        const commands = render(instance.factory, instance.state, newState)
+        instance.state = newState
+        await RendererProcess.invoke(
+          /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
+          /* commands */ commands
+        )
+      }
+      GlobalEventBus.addListener(key, handleUpdate)
+    }
   }
 }
 
@@ -126,7 +188,12 @@ const maybeRegisterWrappedCommands = (module) => {
  * @param {{getModule:()=>any, type:number, id:string, disposed:boolean }} viewlet
  * @returns
  */
-export const load = async (viewlet, focus = false, restore = false) => {
+export const load = async (
+  viewlet,
+  focus = false,
+  restore = false,
+  restoreState = undefined
+) => {
   // console.time(`load/${viewlet.id}`)
   if (viewlet.type !== 0) {
     console.log('viewlet must be empty')
@@ -145,6 +212,7 @@ export const load = async (viewlet, focus = false, restore = false) => {
       return
     }
     maybeRegisterWrappedCommands(module)
+    maybeRegisterEvents(module)
     state = ViewletState.ModuleLoaded
 
     let left = viewlet.left
@@ -174,6 +242,8 @@ export const load = async (viewlet, focus = false, restore = false) => {
     if (restore) {
       const stateToSave = await SaveState.getSavedState()
       instanceSavedState = getInstanceSavedState(stateToSave, viewlet.id)
+    } else if (restoreState) {
+      instanceSavedState = restoreState
     }
     let newState = await module.loadContent(viewletState, instanceSavedState)
 
@@ -181,20 +251,23 @@ export const load = async (viewlet, focus = false, restore = false) => {
 
     if (module.getChildren) {
       const children = module.getChildren(newState)
-      const childModules = await Promise.all(
-        children.map((child) => child.id).map(viewlet.getModule)
-      )
-
-      for (const childModule of childModules) {
+      for (const child of children) {
+        const childModule = await viewlet.getModule(child.id)
         await RendererProcess.invoke(
           /* Viewlet.load */ 'Viewlet.loadModule',
-          /* id */ childModule.name
+          /* id */ child.id
         )
         maybeRegisterWrappedCommands(childModule)
-      }
-
-      for (const childModule of childModules) {
-        const oldState = childModule.create()
+        maybeRegisterEvents(childModule)
+        // TODO get position of child module
+        const oldState = childModule.create(
+          '',
+          '',
+          child.left,
+          child.top,
+          child.width,
+          child.height
+        )
         const newState = await childModule.loadContent(oldState)
         const childInstance = {
           state: newState,
@@ -269,9 +342,9 @@ export const load = async (viewlet, focus = false, restore = false) => {
           ['Viewlet.create', viewlet.id],
           ...commands,
           ...extraCommands,
-          ['Viewlet.show', viewlet.id],
+          // ['Viewlet.show', viewlet.id],
         ]
-        if (module.getPosition) {
+        if (viewlet.setBounds !== false) {
           allCommands.splice(1, 0, [
             'Viewlet.setBounds',
             viewlet.id,
@@ -324,31 +397,6 @@ export const load = async (viewlet, focus = false, restore = false) => {
     //   throw new Error('viewlet could not be updated')
     // }
 
-    if (module.events) {
-      // TODO remove event listeners when viewlet is disposed
-      for (const [key, value] of Object.entries(module.events)) {
-        const handleUpdate = async () => {
-          const instance = ViewletStates.getInstance(viewlet.id)
-          const newState = await value(instance.state)
-          if (!newState) {
-            throw new Error('newState must be defined')
-          }
-          if (!module.shouldApplyNewState(newState)) {
-            console.log('[viewlet manager] return', newState)
-
-            return
-          }
-          const commands = render(instance.factory, instance.state, newState)
-          instance.state = newState
-          await RendererProcess.invoke(
-            /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
-            /* commands */ commands
-          )
-        }
-        GlobalEventBus.addListener(key, handleUpdate)
-      }
-    }
-
     if (viewlet.disposed) {
       // TODO unload the module from renderer process
       return
@@ -363,25 +411,28 @@ export const load = async (viewlet, focus = false, restore = false) => {
       if (module && module.handleError) {
         return await module.handleError(error)
       }
+      const commands = []
       if (state < ViewletState.RendererProcessViewletLoaded) {
         await RendererProcess.invoke(
           /* Viewlet.load */ 'Viewlet.load',
           /* id */ viewlet.id
         )
       }
+      commands.push(['Viewlet.create', viewlet.id])
       if (state < ViewletState.Appended && viewlet.parentId) {
-        await RendererProcess.invoke(
+        commands.push([
           /* Viewlet.append */ 'Viewlet.appendViewlet',
           /* parentId */ viewlet.parentId,
-          /* id */ viewlet.id
-        )
+          /* id */ viewlet.id,
+        ])
       }
-      await RendererProcess.invoke(
+      commands.push([
         /* viewlet.handleError */ 'Viewlet.handleError',
         /* id */ viewlet.id,
         /* parentId */ viewlet.parentId,
-        /* message */ `${error}`
-      )
+        /* message */ `${error}`,
+      ])
+      return commands
     } catch (error) {
       console.error(error)
       // this is really bad
