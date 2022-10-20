@@ -22,6 +22,7 @@ beforeEach(() => {
   Languages.state.fileNameMap = Object.create(null)
   Languages.state.extensionMap = Object.create(null)
   Languages.state.tokenizerMap = Object.create(null)
+  Languages.state.firstLines = []
 })
 
 test('getLanguageConfiguration - error - languages must be loaded before requesting language configuration', async () => {
@@ -168,4 +169,16 @@ test('addLanguage - error - lower case filename property', () => {
 `
   )
   expect(Languages.state.fileNameMap).toEqual({ test: 'test' })
+})
+
+test('getLanguageByFirstLine', () => {
+  Languages.state.firstLines = [
+    {
+      regex: '^#!.*\\bnode',
+      languageId: 'javascript',
+    },
+  ]
+  expect(Languages.getLanguageIdByFirstLine('#!/usr/bin/env node')).toBe(
+    'javascript'
+  )
 })

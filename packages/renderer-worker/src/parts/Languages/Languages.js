@@ -12,6 +12,10 @@ export const state = {
   extensionMap: Object.create(null),
   tokenizerMap: Object.create(null),
   /**
+   * @type {any[]}
+   */
+  firstLines: [],
+  /**
    * @type {string[]}
    */
   hasWarned: [],
@@ -35,6 +39,18 @@ export const getLanguageId = (fileName) => {
   }
   if (fileNameMap[fileNameLower]) {
     return fileNameMap[fileNameLower]
+  }
+  return 'unknown'
+}
+
+export const getLanguageIdByFirstLine = (firstLine) => {
+  console.log('get by first line', { firstLine, state: state.firstLines })
+  for (const { regex, languageId } of state.firstLines) {
+    const actualRegex = new RegExp(regex)
+    if (actualRegex.test(firstLine)) {
+      console.log({ languageId })
+      return languageId
+    }
   }
   return 'unknown'
 }
@@ -82,6 +98,13 @@ const contributionPointFileNames = {
       }
       state.fileNameMap
     }
+  },
+}
+
+const contributionPointFirstLine = {
+  key: 'firstLine',
+  handle(value, languageId) {
+    state.firstLines.push({ regex: value, languageId })
   },
 }
 
@@ -160,6 +183,7 @@ const contributionPoints = [
   contributionPointFileNames,
   contributionPointFileNamesLower,
   contributionPointTokenize,
+  contributionPointFirstLine,
 ]
 
 export const addLanguage = (language) => {

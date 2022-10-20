@@ -1,10 +1,10 @@
 import { jest } from '@jest/globals'
-import { mkdir, mkdtemp, writeFile } from 'node:fs/promises'
+import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
-import { dirname, join } from 'node:path'
+import { join } from 'node:path'
 import { pathToFileURL } from 'node:url'
-import * as JsonFile from '../src/parts/JsonFile/JsonFile.js'
 import * as ExtensionManifestStatus from '../src/parts/ExtensionManifestStatus/ExtensionManifestStatus.js'
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
