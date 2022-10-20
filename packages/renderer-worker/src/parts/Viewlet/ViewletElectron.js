@@ -10,6 +10,10 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
+export const state = {
+  isQuickPickOpen: false,
+}
+
 const isQuickPickKeyBinding = (keyBinding) => {
   return keyBinding.when === 'focus.quickPickInput'
 }
@@ -18,8 +22,14 @@ const getQuickPickKeyBindings = (keyBindings) => {
   return keyBindings.filter(isQuickPickKeyBinding)
 }
 
+export const isQuickPickOpen = () => {
+  return state.isQuickPickOpen
+}
+
 export const openElectronQuickPick = async (...args) => {
-  const id = 'QuickPick'
+  // TODO avoid side effect
+  state.isQuickPickOpen = true
+  const id = ViewletModuleId.QuickPick
   const width = 600
   const height = 300
   const viewletLayout = ViewletStates.getState(ViewletModuleId.Layout)
@@ -119,7 +129,8 @@ export const openWidget = async (id, ...args) => {
 }
 
 export const closeWidgetElectronQuickPick = async () => {
-  const id = 'QuickPick'
+  const id = ViewletModuleId.QuickPick
+  state.isQuickPickOpen = false
   ViewletStates.remove(id)
   await ElectronBrowserViewQuickPick.disposeBrowserViewQuickPick()
   // TODO restore focus to previously focused element
