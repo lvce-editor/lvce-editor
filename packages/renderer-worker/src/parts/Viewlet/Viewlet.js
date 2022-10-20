@@ -245,6 +245,7 @@ export const openWidget = async (id, ...args) => {
     commands.unshift(['Viewlet.dispose', id])
   }
   commands.push(['Viewlet.append', 'Layout', id])
+  commands.push(['Viewlet.focus', id])
   console.log({ commands })
   await RendererProcess.invoke('Viewlet.executeCommands', commands)
   // TODO commands should be like this

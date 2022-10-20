@@ -138,6 +138,8 @@ export const sendMultiple = (commands) => {
       createPlaceholder(viewletId, method, ...args)
     } else if (_ === 'Viewlet.handleError') {
       handleError(viewletId, method, ...args)
+    } else if (_ === 'Viewlet.focus') {
+      focus(viewletId)
     } else {
       invoke(viewletId, method, ...args)
     }
@@ -295,6 +297,8 @@ const getFn = (command) => {
       return appendToBody
     case 'Viewlet.createPlaceholder':
       return createPlaceholder
+    case 'Viewlet.focus':
+      return focus
     default:
       throw new Error(`unknown command ${command}`)
   }
