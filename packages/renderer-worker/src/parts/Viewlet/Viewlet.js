@@ -235,7 +235,6 @@ export const openWidget = async (id, ...args) => {
     uri: `quickPick://${type}`,
     show: false,
     focus: true,
-    getPosition: true,
   })
   if (!commands) {
     throw new Error('expected commands to be of type array')

@@ -102,11 +102,18 @@ test('openWidget - should not open again when already open', async () => {
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     1,
     'Viewlet.executeCommands',
-    []
+    [
+      ['Viewlet.append', 'Layout', 'QuickPick'],
+      ['Viewlet.focus', 'QuickPick'],
+    ]
   )
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     2,
     'Viewlet.executeCommands',
-    [['Viewlet.dispose', 'QuickPick']]
+    [
+      ['Viewlet.dispose', 'QuickPick'],
+      ['Viewlet.append', 'Layout', 'QuickPick'],
+      ['Viewlet.focus', 'QuickPick'],
+    ]
   )
 })
