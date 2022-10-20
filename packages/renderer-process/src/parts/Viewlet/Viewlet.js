@@ -100,7 +100,6 @@ const isSpecial = (id) => {
 }
 
 const createPlaceholder = (viewletId, parentId, top, left, width, height) => {
-  console.log({ viewletId, top, left, width, height })
   const $PlaceHolder = document.createElement('div')
   $PlaceHolder.className = 'Viewlet'
   $PlaceHolder.dataset.viewletId = viewletId
