@@ -5,9 +5,12 @@ const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export const sharedProcessPath = join(__dirname, 'src', 'sharedProcessMain.js')
 
-export const exportStatic = async () => {
+export const exportStatic = async ({ extensionPath = process.cwd() } = {}) => {
   const fn = await import('./src/parts/ExportStatic/ExportStatic.js')
   const root = process.cwd()
+  if (extensionPath !== root) {
+    extensionPath = join(root, extensionPath)
+  }
   const pathPrefix = process.env.PATH_PREFIX || ''
-  await fn.exportStatic({ root, pathPrefix })
+  await fn.exportStatic({ root, pathPrefix, extensionPath })
 }
