@@ -2455,7 +2455,7 @@ test('handleWheel - up', () => {
         },
       ],
     ],
-    ['Viewlet.send', 'Explorer', 'setFocusedIndex', -2, -2],
+    ['Viewlet.send', 'Explorer', 'setFocusedIndex', -1, -1, false],
   ])
 })
 
