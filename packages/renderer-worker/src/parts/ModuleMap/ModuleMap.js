@@ -32,12 +32,12 @@ export const getModuleId = (commandId) => {
     case 'ChromeExtension.install':
     case 'ChromeExtension.uninstall':
       return ModuleId.ChromeExtension
+    case 'ClipBoard.execCopy':
     case 'ClipBoard.readNativeFiles':
     case 'ClipBoard.readText':
     case 'ClipBoard.writeImage':
     case 'ClipBoard.writeNativeFiles':
     case 'ClipBoard.writeText':
-    case 'ClipBoard.execCopy':
       return ModuleId.ClipBoard
     case 'ColorPicker.close':
     case 'ColorPicker.open':
@@ -234,9 +234,9 @@ export const getModuleId = (commandId) => {
     case 'Url.revokeObjectUrl':
       return ModuleId.Url
     case 'Viewlet.closeWidget':
+    case 'Viewlet.focus':
     case 'Viewlet.getAllStates':
     case 'Viewlet.openWidget':
-    case 'Viewlet.focus':
     case 2133:
       return ModuleId.Viewlet
     case 'Window.close':
