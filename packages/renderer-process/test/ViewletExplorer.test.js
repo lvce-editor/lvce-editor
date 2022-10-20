@@ -21,6 +21,10 @@ const ViewletExplorer = await import(
   '../src/parts/ViewletExplorer/ViewletExplorer.js'
 )
 
+beforeEach(() => {
+  document.body.textContent = ''
+})
+
 const getTextContent = ($Node) => {
   return $Node.textContent
 }
@@ -430,10 +434,38 @@ test('setFocusedIndex', () => {
     },
   ])
   document.body.append($Viewlet)
-  ViewletExplorer.setFocusedIndex(state, -1, 0)
+  ViewletExplorer.setFocusedIndex(state, -1, 0, true)
   expect(document.activeElement).toBe($Viewlet)
-  ViewletExplorer.setFocusedIndex(state, -1, 1)
+  ViewletExplorer.setFocusedIndex(state, -1, 1, true)
   expect(document.activeElement).toBe($Viewlet)
+})
+
+test('setFocusedIndex - no focus', () => {
+  const state = ViewletExplorer.create()
+  const { $Viewlet } = state
+  ViewletExplorer.updateDirents(state, [
+    {
+      name: 'index.css',
+      depth: 1,
+      type: DirentType.File,
+      path: '/index.css',
+      setSize: 2,
+      posInSet: 1,
+    },
+    {
+      name: 'index.html',
+      depth: 1,
+      type: DirentType.File,
+      path: '/index.html',
+      setSize: 2,
+      posInSet: 2,
+    },
+  ])
+  document.body.append($Viewlet)
+  ViewletExplorer.setFocusedIndex(state, -1, 0, false)
+  expect(document.activeElement).toBe(document.body)
+  ViewletExplorer.setFocusedIndex(state, -1, 1, false)
+  expect(document.activeElement).toBe(document.body)
 })
 
 // TODO test expand/collapse
