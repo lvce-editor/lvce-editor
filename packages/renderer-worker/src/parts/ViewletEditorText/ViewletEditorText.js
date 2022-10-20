@@ -2,6 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import * as ExtensionHostSemanticTokens from '../ExtensionHost/ExtensionHostSemanticTokens.js'
 // import * as ExtensionHostTextDocument from '../ExtensionHost/ExtensionHostTextDocument.js'
+import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Id from '../Id/Id.js'
@@ -11,7 +12,6 @@ import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as EditorCommandSetLanguageId from '../EditorCommand/EditorCommandSetLanguageId.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -85,16 +85,27 @@ const getSavedDeltaY = (savedState) => {
   return 0
 }
 
+const getLanguageId = (state) => {
+  const fileName = Workspace.pathBaseName(state.uri)
+  const languageId = Languages.getLanguageId(fileName)
+  if (languageId === 'unknown') {
+    console.log('try to get language from content', state)
+    const firstLine = state.lines[0] || ''
+    const languageIdFromContent = Languages.getLanguageIdByFirstLine(firstLine)
+    return languageIdFromContent
+  }
+  return languageId
+}
+
 export const loadContent = async (state, savedState) => {
   const { uri } = state
   const rowHeight = Preferences.get('editor.lineHeight') || 20
   const fontSize = Preferences.get('editor.fontSize') || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
   const letterSpacing = Preferences.get('editor.letterSpacing') || 0.5
-  const fileName = Workspace.pathBaseName(uri)
   const content = await getContent(uri)
-  const languageId = Languages.getLanguageId(fileName)
-  const tokenizer = Tokenizer.getTokenizer(languageId)
   const newState1 = Editor.setText(state, content)
+  const languageId = getLanguageId(newState1)
+  const tokenizer = Tokenizer.getTokenizer(languageId)
   const savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
   const newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
@@ -150,8 +161,7 @@ export const contentLoadedEffects = async (state) => {
   // GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
   // GlobalEventBus.addListener('tokenizer.changed', handleTokenizeChange)
   // GlobalEventBus.addListener('editor.change', handleEditorChange)
-  const fileName = Workspace.pathBaseName(state.uri)
-  const newLanguageId = Languages.getLanguageId(fileName)
+  const newLanguageId = getLanguageId(state)
   await Command.execute(
     /* Editor.setLanguageId */ 'Editor.setLanguageId',
     /* languageId */ newLanguageId
@@ -163,8 +173,7 @@ export const contentLoadedEffects = async (state) => {
 }
 
 export const handleLanguagesChanged = (state) => {
-  const fileName = Workspace.pathBaseName(state.uri)
-  const newLanguageId = Languages.getLanguageId(fileName)
+  const newLanguageId = getLanguageId(state)
   return EditorCommandSetLanguageId.setLanguageId(state, newLanguageId)
 }
 
