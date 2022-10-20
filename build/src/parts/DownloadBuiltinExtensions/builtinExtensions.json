@@ -32,7 +32,7 @@
   {
     "name": "builtin.language-basics-yaml",
     "repository": "github.com/lvce-editor/language-basics-yaml",
-    "version": "0.0.21"
+    "version": "0.0.22"
   },
   {
     "name": "builtin.language-basics-html",
@@ -87,7 +87,7 @@
   {
     "name": "builtin.language-basics-shellscript",
     "repository": "github.com/lvce-editor/language-basics-shellscript",
-    "version": "0.0.7"
+    "version": "0.0.8"
   },
   {
     "name": "builtin.language-basics-python",
@@ -98,6 +98,11 @@
     "name": "builtin.language-basics-go",
     "repository": "github.com/lvce-editor/language-basics-go",
     "version": "0.0.2"
+  },
+  {
+    "name": "builtin.language-basics-svelte",
+    "repository": "github.com/lvce-editor/language-basics-svelte",
+    "version": "0.0.1"
   },
   {
     "name": "builtin.language-basics-rust",
@@ -157,7 +162,7 @@
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "0.0.13"
+    "version": "0.0.14"
   },
   {
     "name": "builtin.language-basics-desktop",
