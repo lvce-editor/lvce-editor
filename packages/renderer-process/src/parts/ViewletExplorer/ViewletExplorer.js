@@ -7,6 +7,7 @@ import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
 export const name = 'Explorer'
 
 const activeId = 'TreeItemActive'
+const focusClassName = 'FocusOutline'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
@@ -141,7 +142,7 @@ export const updateDirents = (state, dirents) => {
   render$Rows(state.$Viewlet, dirents)
 }
 
-export const setFocusedIndex = (state, oldIndex, newIndex) => {
+export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
   Assert.object(state)
   Assert.number(oldIndex)
   Assert.number(newIndex)
@@ -155,17 +156,18 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
     default:
       const $Dirent = $Viewlet.children[oldIndex]
       if ($Dirent) {
+        $Dirent.classList.remove(focusClassName)
         $Dirent.removeAttribute('id')
       }
       break
   }
   switch (newIndex) {
     case -2:
-      $Viewlet.classList.remove('FocusOutline')
+      $Viewlet.classList.remove(focusClassName)
       $Viewlet.removeAttribute('aria-activedescendant')
       break
     case -1:
-      $Viewlet.classList.add('FocusOutline')
+      $Viewlet.classList.add(focusClassName)
       $Viewlet.removeAttribute('aria-activedescendant')
       $Viewlet.focus()
       Focus.setFocus('Explorer')
@@ -175,6 +177,9 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
       $Dirent.id = activeId
       $Viewlet.focus()
       $Viewlet.setAttribute('aria-activedescendant', activeId)
+      if (focused) {
+        $Dirent.classList.add(focusClassName)
+      }
       Focus.setFocus('Explorer')
       break
   }

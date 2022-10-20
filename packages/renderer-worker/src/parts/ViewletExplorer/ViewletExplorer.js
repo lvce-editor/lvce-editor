@@ -1380,18 +1380,15 @@ const renderFocusedIndex = {
     )
   },
   apply(oldState, newState) {
-    const oldFocusedIndex = oldState.focused
-      ? oldState.focusedIndex - oldState.minLineY
-      : -2
-    const newFocusedIndex = newState.focused
-      ? newState.focusedIndex - newState.minLineY
-      : -2
+    const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
+    const newFocusedIndex = newState.focusedIndex - newState.minLineY
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Explorer',
       /* method */ 'setFocusedIndex',
       /* oldindex */ oldFocusedIndex,
       /* newIndex */ newFocusedIndex,
+      /* focused */ newState.focused,
     ]
   },
 }
