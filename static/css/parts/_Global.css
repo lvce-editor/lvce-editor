@@ -49,6 +49,7 @@ body {
    */
   position: fixed;
   backface-visibility: hidden;
+  will-change: transform;
 }
 
 .Hidden {
