@@ -2,8 +2,9 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Id from '../Id/Id.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = 'Terminal'
+export const name = ViewletModuleId.Terminal
 
 export const create = () => {
   return {

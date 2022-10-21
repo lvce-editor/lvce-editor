@@ -1,8 +1,13 @@
 import * as Platform from '../Platform/Platform.js'
 import * as FileSystemAppShared from './FileSystemAppShared.js'
 
+const defaultContent = '{}'
+
 export const readFile = () => {
-  return FileSystemAppShared.readFileInternal(Platform.getUserSettingsPath)
+  return FileSystemAppShared.readFileInternal(
+    Platform.getUserSettingsPath,
+    defaultContent
+  )
 }
 
 export const writeFile = (content) => {

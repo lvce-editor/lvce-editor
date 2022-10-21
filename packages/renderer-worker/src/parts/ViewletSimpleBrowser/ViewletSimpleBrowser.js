@@ -3,8 +3,9 @@
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
 import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = 'SimpleBrowser'
+export const name = ViewletModuleId.SimpleBrowser
 
 export const create = (id, uri, left, top, width, height) => {
   return {

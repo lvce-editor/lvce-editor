@@ -1,4 +1,6 @@
-export const name = 'Counter'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+
+export const name = ViewletModuleId.Counter
 
 export const create = () => {
   return {

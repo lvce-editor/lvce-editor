@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals'
 import * as Callback from '../src/parts/Callback/Callback.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
-
+import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 beforeEach(() => {
   jest.resetAllMocks()
 })
@@ -30,7 +30,7 @@ beforeEach(() => {
 })
 
 test('name', () => {
-  expect(ViewletStatusBar.name).toBe('Status Bar')
+  expect(ViewletStatusBar.name).toBe(ViewletModuleId.StatusBar)
 })
 
 test('create', () => {

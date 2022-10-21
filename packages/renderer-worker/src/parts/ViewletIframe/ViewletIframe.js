@@ -1,4 +1,6 @@
-export const name = 'Iframe'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+
+export const name = ViewletModuleId.Iframe
 
 export const create = (id) => {
   return {

@@ -3,9 +3,9 @@ import * as Command from '../Command/Command.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as Icon from '../Icon/Icon.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import { focusIndex } from './ViewletActivityBarFocusIndex.js'
-
 /**
  * @enum {string}
  */
@@ -19,7 +19,7 @@ const UiStrings = {
   AdditionalViews: 'Additional Views',
 }
 
-export const name = 'ActivityBar'
+export const name = ViewletModuleId.ActivityBar
 
 // TODO rename viewlet parameter to something else (e.g. clicking settings opens context menu not settings viewlet)
 // TODO should just pass index

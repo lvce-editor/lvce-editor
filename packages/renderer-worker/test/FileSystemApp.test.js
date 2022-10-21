@@ -1,8 +1,16 @@
 import { jest } from '@jest/globals'
+import * as FileSytemErrorCodes from '../src/parts/FileSystemErrorCodes/FileSystemErrorCodes.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
+
+class NodeError extends Error {
+  constructor(code, message = code) {
+    super(code + ':' + message)
+    this.code = code
+  }
+}
 
 jest.unstable_mockModule(
   '../src/parts/RendererProcess/RendererProcess.js',
@@ -14,156 +22,157 @@ jest.unstable_mockModule(
     }
   }
 )
-jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
   return {
-    invoke: jest.fn(() => {
+    readFile: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    writeFile: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    mkdir: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    getPathSeparator: jest.fn(() => {
       throw new Error('not implemented')
     }),
   }
 })
 
-const FileSystemApp = await import('../src/parts/FileSystem/FileSystemApp.js')
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
-
-test.skip('readFile - settings', async () => {
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
-    switch (method) {
-      case 'Platform.getUserSettingsPath':
-        return '~/.config/app/settings.json'
-      case 'FileSystem.readFile':
-        return '{}'
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  expect(await FileSystemApp.readFile('app://', 'app://settings.json')).toBe(
-    '{}'
-  )
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+  return {
+    getUserSettingsPath: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
 })
 
-test.skip('readFile - settings - error', async () => {
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...parameters) => {
-    switch (method) {
-      case 'Platform.getUserSettingsPath':
-        throw new TypeError('x is not a function')
-      case 101:
-        return '{}'
-      default:
-        throw new Error('unexpected message')
-    }
-  })
+jest.unstable_mockModule('../src/parts/Workspace/Workspace.js', () => {
+  return {
+    pathDirName(path) {
+      return path.slice(0, path.lastIndexOf('/'))
+    },
+  }
+})
 
-  await expect(
-    FileSystemApp.readFile('app://', 'app://settings.json')
-  ).rejects.toThrowError(new TypeError('x is not a function'))
+const FileSystemApp = await import('../src/parts/FileSystem/FileSystemApp.js')
+const Platform = await import('../src/parts/Platform/Platform.js')
+const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
+
+test('readFile - settings', async () => {
+  // @ts-ignore
+  Platform.getUserSettingsPath.mockImplementation(() => {
+    return '~/.config/app/settings.json'
+  })
+  // @ts-ignore
+  FileSystem.readFile.mockImplementation(() => {
+    return '{}'
+  })
+  expect(await FileSystemApp.readFile('settings.json')).toBe('{}')
+})
+
+test('readFile - settings - error', async () => {
+  // @ts-ignore
+  Platform.getUserSettingsPath.mockImplementation(() => {
+    throw new TypeError('x is not a function')
+  })
+  // @ts-ignore
+  FileSystem.readFile.mockImplementation(() => {
+    return '{}'
+  })
+  await expect(FileSystemApp.readFile('settings.json')).rejects.toThrowError(
+    new TypeError('x is not a function')
+  )
 })
 
 test('rename - error', async () => {
   await expect(
-    FileSystemApp.rename(
-      'app://',
-      'app://settings.json',
-      'app://new-settings.json'
-    )
+    FileSystemApp.rename('settings.json', 'new-settings.json')
   ).rejects.toThrowError(new Error('not allowed'))
 })
 
 test('remove - error', async () => {
-  await expect(
-    FileSystemApp.remove('app://', 'app://settings.json')
-  ).rejects.toThrowError(new Error('not allowed'))
+  await expect(FileSystemApp.remove('settings.json')).rejects.toThrowError(
+    new Error('not allowed')
+  )
 })
 
 test('mkdir - error', async () => {
-  await expect(
-    FileSystemApp.remove('app://', 'app://my-folder')
-  ).rejects.toThrowError(new Error('not allowed'))
+  await expect(FileSystemApp.mkdir('my-folder')).rejects.toThrowError(
+    new Error('not allowed')
+  )
 })
 
 // TODO test writeFile and writeFile errors
 
-test.skip('writeFile - settings - error parent folder does not exist', async () => {
+test('readFile - settings - error - file does not exist', async () => {
+  // @ts-ignore
+  Platform.getUserSettingsPath.mockImplementation(() => {
+    return '~/.config/app/settings.json'
+  })
+  // @ts-ignore
+  FileSystem.mkdir.mockImplementation(() => {})
+  // @ts-ignore
+  FileSystem.getPathSeparator.mockImplementation(() => {
+    return '/'
+  })
   let i = 0
-  SharedProcess.state.send = jest.fn((message) => {
-    switch (message.method) {
-      case 'Platform.getUserSettingsPath':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: '~/.config/app/settings.json',
-        })
-        break
-      case 'FileSystem.mkdir':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: null,
-        })
-        break
-      case 'FileSystem.writeFile':
-        if (i++ === 0) {
-          SharedProcess.state.receive({
-            id: message.id,
-            jsonrpc: '2.0',
-            error: {
-              message: 'Failed to write to file "/test/app-name/settings.json": ENOENT: no such file or directory, open \'/test/app-name/settings.json\'',
-            },
-          })
-        } else {
-          SharedProcess.state.receive({
-            id: message.id,
-            jsonrpc: '2.0',
-            result: null,
-          })
-        }
-        break
-      case 'FileSystem.getPathSeparator':
-        SharedProcess.state.receive({
-          id: message.id,
-          jsonrpc: '2.0',
-          result: '/',
-        })
-        break
-      default:
-        throw new Error('unexpected message')
+  // @ts-ignore
+  FileSystem.readFile.mockImplementation((uri) => {
+    if (i++ === 0) {
+      throw new NodeError(FileSytemErrorCodes.ENOENT)
+    } else {
+      // ignore
     }
   })
-  await FileSystemApp.writeFile('app://', 'app://settings.json', '')
-  expect(SharedProcess.state.send).toHaveBeenCalledTimes(4)
-  expect(SharedProcess.state.send).toHaveBeenNthCalledWith(1, {
-    id: expect.any(Number),
-    jsonrpc: '2.0',
-    method: 'Platform.getUserSettingsPath',
-    params: [],
-  })
+  expect(await FileSystemApp.readFile('settings.json')).toBe('{}')
+  expect(FileSystem.writeFile).toHaveBeenCalledTimes(1)
+  expect(FileSystem.writeFile).toHaveBeenNthCalledWith(
+    1,
+    '~/.config/app/settings.json',
+    '{}'
+  )
+  expect(FileSystem.readFile).toHaveBeenCalledTimes(1)
+  expect(FileSystem.readFile).toHaveBeenCalledWith(
+    '~/.config/app/settings.json'
+  )
+})
 
-  expect(SharedProcess.state.send).toHaveBeenNthCalledWith(2, {
-    id: expect.any(Number),
-    jsonrpc: '2.0',
-    method: 'FileSystem.writeFile',
-    params: ['~/.config/app/settings.json', ''],
+test('writeFile - settings - error parent folder does not exist', async () => {
+  // @ts-ignore
+  Platform.getUserSettingsPath.mockImplementation(() => {
+    return '~/.config/app/settings.json'
   })
-  // expect(SharedProcess.state.send).toHaveBeenNthCalledWith(3, {
-  //   id: expect.any(Number),
-  //   jsonrpc: '2.0',
-  //   method: 112,
-  //   params: [],
-  // })
-  // expect(SharedProcess.state.send).toHaveBeenNthCalledWith(4, {
-  //   id: expect.any(Number),
-  //   jsonrpc: '2.0',
-  //   method: 'FileSystem.mkdir',
-  //   params: ['~/.config/app'],
-  // })
-
-  // expect(SharedProcess.state.send).toHaveBeenNthCalledWith(5, {
-  //   id: expect.any(Number),
-  //   jsonrpc: '2.0',
-  //   method: 102,
-  //   params: ['~/.config/app/settings.json', ''],
-  // })
+  // @ts-ignore
+  FileSystem.mkdir.mockImplementation(() => {})
+  // @ts-ignore
+  FileSystem.getPathSeparator.mockImplementation(() => {
+    return '/'
+  })
+  let i = 0
+  // @ts-ignore
+  FileSystem.writeFile.mockImplementation((uri) => {
+    if (i++ === 0) {
+      throw new NodeError(
+        FileSytemErrorCodes.ENOENT,
+        `Failed to write to file "/test/app-name/settings.json": ENOENT: no such file or directory, open \'/test/app-name/settings.json\'`
+      )
+    } else {
+      // ignore
+    }
+  })
+  await FileSystemApp.writeFile('settings.json', '')
+  expect(FileSystem.writeFile).toHaveBeenCalledTimes(2)
+  expect(FileSystem.writeFile).toHaveBeenNthCalledWith(
+    1,
+    '~/.config/app/settings.json',
+    ''
+  )
+  expect(FileSystem.writeFile).toHaveBeenNthCalledWith(
+    2,
+    '~/.config/app/settings.json',
+    ''
+  )
+  expect(FileSystem.mkdir).toHaveBeenCalledTimes(1)
+  expect(FileSystem.mkdir).toHaveBeenCalledWith('~/.config/app')
 })

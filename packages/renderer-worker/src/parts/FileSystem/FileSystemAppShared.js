@@ -1,12 +1,13 @@
-import * as Command from '../Command/Command.js'
-import * as Platform from '../Platform/Platform.js'
-import * as Workspace from '../Workspace/Workspace.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Command from '../Command/Command.js'
+import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
-import * as FileSystemDisk from './FileSystemDisk.js'
+import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as Workspace from '../Workspace/Workspace.js'
+import * as FileSystem from './FileSystem.js'
 
-export const readFileInternal = async (getPath) => {
+export const readFileInternal = async (getPath, defaultContent = '') => {
   const path = await getPath()
   Assert.string(path)
   if (Platform.platform === PlatformType.Web) {
@@ -19,8 +20,19 @@ export const readFileInternal = async (getPath) => {
     return Command.execute(/* Ajax.getText */ 'Ajax.getText', /* url */ url)
   }
   // TODO handle enoent and other errors gracefully
-  const userSettingsContent = await FileSystemDisk.readFile(path)
-  return userSettingsContent
+  try {
+    const userSettingsContent = await FileSystem.readFile(path)
+    return userSettingsContent
+  } catch (error) {
+    // @ts-ignore
+    if (error && error.code === FileSystemErrorCodes.ENOENT) {
+      const dirname = Workspace.pathDirName(path)
+      await FileSystem.mkdir(dirname)
+      await FileSystem.writeFile(path, defaultContent)
+      return defaultContent
+    }
+    throw error
+  }
 }
 
 export const writeFileInternal = async (getPath, content) => {
@@ -36,16 +48,16 @@ export const writeFileInternal = async (getPath, content) => {
   }
   // TODO handle enoent and other errors gracefully
   try {
-    await FileSystemDisk.writeFile(path, content)
+    await FileSystem.writeFile(path, content)
   } catch (error) {
     // TODO error should just have enoent code that could be checked
 
     // @ts-ignore
-    if (error.message.includes('File not found')) {
+    if (error && error.code === FileSystemErrorCodes.ENOENT) {
       try {
         const dirname = Workspace.pathDirName(path)
-        await FileSystemDisk.mkdir(dirname)
-        await FileSystemDisk.writeFile(path, content)
+        await FileSystem.mkdir(dirname)
+        await FileSystem.writeFile(path, content)
       } catch (error) {
         // @ts-ignore
         error.message = `Failed to write ${path}: ${error.message}`

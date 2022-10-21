@@ -1,6 +1,7 @@
 import * as ExtensionHostStatusBarItems from '../ExtensionHost/ExtensionHostStatusBarItems.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = 'Status Bar'
+export const name = ViewletModuleId.StatusBar
 
 export const create = () => {
   return {

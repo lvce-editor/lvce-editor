@@ -2,9 +2,9 @@ import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = 'EditorImage'
+export const name = ViewletModuleId.EditorImage
 
 export const create = (id, uri, left, top, width, height) => {
   return {

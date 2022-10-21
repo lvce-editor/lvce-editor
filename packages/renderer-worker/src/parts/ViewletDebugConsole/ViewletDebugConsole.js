@@ -1,4 +1,6 @@
-export const name = 'Debug Console'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+
+export const name = ViewletModuleId.DebugConsole
 
 export const create = () => {
   return {

@@ -1,9 +1,10 @@
 import * as ExtensionHostSourceControl from '../ExtensionHost/ExtensionHostSourceControl.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
-export const name = 'Source Control'
+export const name = ViewletModuleId.SourceControl
 
 export const create = () => {
   return {

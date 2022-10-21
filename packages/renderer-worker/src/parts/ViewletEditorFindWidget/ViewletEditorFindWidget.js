@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as TextDocumentSearch from '../TextDocumentSearch/TextDocumentSearch.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 /**
@@ -11,7 +12,7 @@ const UiStrings = {
   MatchOf: `{PH1} of {PH2}`,
 }
 
-export const name = 'EditorFindWidget'
+export const name = ViewletModuleId.EditorFindWidget
 
 export const create = () => {
   return {
