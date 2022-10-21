@@ -358,6 +358,9 @@ export const load = async (
             height,
           ])
         }
+        if (module.contentLoadedEffects) {
+          module.contentLoadedEffects(newState)
+        }
         return allCommands
       }
       // console.log('else', viewlet.id, { commands })
@@ -367,7 +370,6 @@ export const load = async (
         /* commands */ commands
       )
     }
-
     if (module.contentLoadedEffects) {
       module.contentLoadedEffects(newState)
     }
