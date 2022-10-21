@@ -1,4 +1,5 @@
 import * as QuickPickEntriesWorkspaceSymbol from '../src/parts/QuickPickEntriesWorkspaceSymbol/QuickPickEntriesWorkspaceSymbol.js'
+import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
 
 test('name', () => {
   expect(QuickPickEntriesWorkspaceSymbol.name).toBe('workspace-symbol')
@@ -26,7 +27,7 @@ test('selectPick', async () => {
   expect(
     await QuickPickEntriesWorkspaceSymbol.selectPick({ label: 'test item 1' })
   ).toEqual({
-    command: 'hide',
+    command: QuickPickReturnValue.Hide,
   })
 })
 

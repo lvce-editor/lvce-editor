@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -82,7 +83,7 @@ test('selectPick', async () => {
       label: 'xyz',
     })
   ).toEqual({
-    command: 'hide',
+    command: QuickPickReturnValue.Hide,
   })
   expect(ExtensionHostCommands.executeCommand).toHaveBeenCalledTimes(1)
   expect(ExtensionHostCommands.executeCommand).toHaveBeenCalledWith('xyz')
@@ -115,7 +116,7 @@ test('selectPick - error', async () => {
       label: 'xyz',
     })
   ).toEqual({
-    command: 'hide',
+    command: QuickPickReturnValue.Hide,
   })
   expect(ErrorHandling.showErrorDialog).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.showErrorDialog).toHaveBeenCalledWith(

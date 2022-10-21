@@ -3,6 +3,7 @@ import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionHostCommands from '../ExtensionHost/ExtensionHostCommands.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
 
 /**
  * @enum {string}
@@ -103,11 +104,11 @@ const selectPickBuiltin = async (item) => {
   await Command.execute(item.id, ...args)
   if (shouldHide(item)) {
     return {
-      command: 'hide',
+      command: QuickPickReturnValue.Hide,
     }
   }
   return {
-    command: '',
+    command: QuickPickReturnValue.KeepOpen,
   }
 }
 
@@ -119,7 +120,7 @@ const selectPickExtension = async (item) => {
     await ErrorHandling.showErrorDialog(error)
   }
   return {
-    command: 'hide',
+    command: QuickPickReturnValue.Hide,
   }
 }
 

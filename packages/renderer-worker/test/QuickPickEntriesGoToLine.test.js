@@ -1,4 +1,5 @@
 import * as QuickPickEntriesGoToLine from '../src/parts/QuickPickEntriesGoToLine/QuickPickEntriesGoToLine.js'
+import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
 
 test('name', () => {
   expect(QuickPickEntriesGoToLine.name).toBe('goToLine')
@@ -43,6 +44,6 @@ test.skip('selectPick', async () => {
   expect(
     await QuickPickEntriesGoToLine.selectPick({ label: 'test item 1' })
   ).toEqual({
-    command: 'hide',
+    command: QuickPickReturnValue.Hide,
   })
 })

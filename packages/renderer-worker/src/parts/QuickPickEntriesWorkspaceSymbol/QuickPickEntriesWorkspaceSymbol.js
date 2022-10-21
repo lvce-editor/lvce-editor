@@ -1,3 +1,5 @@
+import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
+
 // import * as ViewService from '../ViewService/ViewService.js'
 
 /**
@@ -31,7 +33,7 @@ export const getPicks = async () => {
 
 export const selectPick = async (item) => {
   return {
-    command: 'hide',
+    command: QuickPickReturnValue.Hide,
   }
 }
 

@@ -1,4 +1,5 @@
 import * as QuickPickEntriesNoop from '../src/parts/QuickPickEntriesNoop/QuickPickNoop.js'
+import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
 
 test('name', () => {
   expect(QuickPickEntriesNoop.name).toBe('noop')
@@ -22,6 +23,6 @@ test('getPicks', async () => {
 
 test('selectPick', async () => {
   expect(await QuickPickEntriesNoop.selectPick({ label: '1' })).toEqual({
-    command: 'hide',
+    command: QuickPickReturnValue.Hide,
   })
 })

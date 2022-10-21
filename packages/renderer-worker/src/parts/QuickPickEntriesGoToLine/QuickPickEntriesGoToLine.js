@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
 
 export const name = 'goToLine'
 
@@ -50,7 +51,7 @@ export const selectPick = async (item) => {
   )
   // TODO put cursor onto that line
   return {
-    command: 'hide',
+    command: QuickPickReturnValue.Hide,
   }
 }
 
