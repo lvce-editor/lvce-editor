@@ -11,7 +11,6 @@
   color: var(--StatusBarForeground, rgb(98, 112, 106));
   display: flex;
   justify-content: space-between;
-  box-sizing: border-box;
 }
 
 #StatusBarItemsLeft,
