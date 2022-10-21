@@ -20,10 +20,6 @@ export const loadContent = async (state) => {
   }
 }
 
-export const contentLoaded = (state) => {
-  // Terminal.refresh(state)
-}
-
 export const contentLoadedEffects = async (state) => {
   // TODO this should be invoke
   SharedProcess.send(

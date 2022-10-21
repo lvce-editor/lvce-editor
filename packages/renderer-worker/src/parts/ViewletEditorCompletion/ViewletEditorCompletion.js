@@ -109,10 +109,6 @@ export const loadingContent = () => {
   return changes
 }
 
-export const contentLoaded = () => {
-  // noop
-}
-
 export const handleSelectionChange = (state, selectionChanges) => {}
 
 export const advance = (state, word) => {

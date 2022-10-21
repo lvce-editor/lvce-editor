@@ -11,7 +11,6 @@
   ); /* TODO variable name should match class name */
   /* TODO investigate perf */
   /* contain: children; */
-  /* transform: translate3d(0, 0, 0); */
 }
 
 .MainTab {

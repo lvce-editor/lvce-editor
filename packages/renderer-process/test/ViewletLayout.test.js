@@ -11,3 +11,10 @@ test('create', () => {
   const state = ViewletLayout.create()
   expect(state).toBeDefined()
 })
+
+test('accessibility - viewlet should have a role of application', () => {
+  const state = ViewletLayout.create()
+  const { $Viewlet } = state
+  // @ts-ignore
+  expect($Viewlet.role).toBe('application')
+})

@@ -58,13 +58,15 @@ export const contentLoaded = async (state) => {
   if (y + contextMenuHeight > windowHeight) {
     y -= contextMenuHeight
   }
-  await RendererProcess.invoke(
-    /* Viewlet.load */ 'Viewlet.load',
-    /* id */ 'ContextMenu',
-    /* top */ y,
-    /* left */ x,
-    /* width */ contextMenuWidth,
-    /* height */ contextMenuHeight,
-    /* items */ state.items
-  )
+  return [
+    [
+      /* Viewlet.load */ 'Viewlet.load',
+      /* id */ 'ContextMenu',
+      /* top */ y,
+      /* left */ x,
+      /* width */ contextMenuWidth,
+      /* height */ contextMenuHeight,
+      /* items */ state.items,
+    ],
+  ]
 }

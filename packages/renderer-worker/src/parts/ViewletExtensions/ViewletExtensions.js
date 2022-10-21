@@ -89,27 +89,6 @@ export const loadContent = async (state) => {
   }
 }
 
-export const contentLoaded = async (state) => {
-  // if (state.searchValue === '') {
-  //   const visible = getVisible(state)
-  //   await RendererProcess.invoke(
-  //     /* Viewlet.invoke */ 'Viewlet.send',
-  //     /* id */ 'Extensions',
-  //     /* method */ 'setExtensions',
-  //     /* viewObjects */ visible,
-  //     /* negativeMargin */ -state.deltaY
-  //   )
-  //   return
-  // }
-  // await RendererProcess.invoke(
-  //   /* Viewlet.invoke */ 'Viewlet.send',
-  //   /* id */ 'Extensions',
-  //   /* method */ 'setExtensions',
-  //   /* viewObjects */ [],
-  //   /* negativeMargin */ 0
-  // )
-}
-
 const toInstalledViewObject = (extension) => {
   return {
     name: ExtensionDisplay.getName(extension),

@@ -20,6 +20,8 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.id = 'Workbench'
   $Viewlet.className = 'Viewlet Layout'
+  // @ts-ignore
+  $Viewlet.role = 'application'
   $Viewlet.append($SashSideBar, $SashPanel)
 
   window.addEventListener('resize', ViewletLayoutEvents.handleResize)

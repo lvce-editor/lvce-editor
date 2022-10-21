@@ -12,7 +12,6 @@ import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -196,7 +195,7 @@ export const getChildren = (state) => {
 // get picked up by viewletlayout and sent to renderer process
 export const contentLoaded = async (state) => {
   if (state.editors.length === 0) {
-    return
+    return []
   }
   const editor = Arrays.last(state.editors)
   const top = state.top + TAB_HEIGHT
@@ -204,29 +203,41 @@ export const contentLoaded = async (state) => {
   const width = state.width
   const height = state.height - TAB_HEIGHT
   const id = ViewletMap.getId(editor.uri)
-  const instance = ViewletManager.create(
-    ViewletModule.load,
-    id,
-    'Main',
-    editor.uri,
-    left,
-    top,
-    width,
-    height
-  )
   const tabLabel = Workspace.pathBaseName(editor.uri)
   const tabTitle = getTabTitle(editor.uri)
-  // RendererProcess.invoke(
-  //   /* Viewlet.send */ 'Viewlet.send',
-  //   /* id */ 'Main',
-  //   /* method */ 'openViewlet',
-  //   /* tabLabel */ tabLabel,
-  //   /* tabTitle */ tabTitle
-  // )
-  // TODO race condition: Viewlet may have been resized before it has loaded
-  // @ts-ignore
+  const commands = [
+    [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'Main',
+      /* method */ 'openViewlet',
+      /* tabLabel */ tabLabel,
+      /* tabTitle */ tabTitle,
+    ],
+  ]
 
-  // await ViewletManager.load(instance, /* focus */ false, /* restore */ true)
+  // // TODO race condition: Viewlet may have been resized before it has loaded
+  // // @ts-ignore
+  const extraCommands = await ViewletManager.load(
+    {
+      getModule: ViewletModule.load,
+      id,
+      parentId: 'Main',
+      uri: editor.uri,
+      left,
+      top,
+      width,
+      height,
+      show: false,
+      focus: false,
+      type: 0,
+      setBounds: false,
+    },
+    /* focus */ false,
+    /* restore */ true
+  )
+  commands.push(...extraCommands)
+  commands.push(['Viewlet.appendViewlet', 'Main', id])
+  return commands
 }
 
 export const openUri = async (state, uri, focus = true) => {

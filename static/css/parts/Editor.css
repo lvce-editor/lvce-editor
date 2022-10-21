@@ -11,10 +11,10 @@
   white-space: pre;
   font-size: var(--EditorFontSize);
   letter-spacing: var(--EditorLetterSpacing);
-  contain: strict;
   tab-size: 2;
   font-display: block;
   cursor: text;
+  position: absolute;
 }
 
 .EditorLayers {

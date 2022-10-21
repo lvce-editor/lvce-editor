@@ -154,8 +154,6 @@ export const loadContent = async (state) => {
   }
 }
 
-export const contentLoaded = () => {}
-
 export const dispose = (state) => {
   return state
 }

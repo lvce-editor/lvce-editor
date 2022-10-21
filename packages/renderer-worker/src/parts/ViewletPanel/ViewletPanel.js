@@ -25,16 +25,6 @@ export const loadContent = async (state) => {
   }
 }
 
-export const contentLoaded = async (state) => {
-  // await RendererProcess.invoke(
-  //   /* Viewlet.send */ 'Viewlet.send',
-  //   /* id */ 'Panel',
-  //   /* method */ 'setTabs',
-  //   /* tabs */ state.views
-  // )
-  // await openViewlet(state, state.currentViewlet)
-}
-
 export const dispose = (state) => {
   return {
     ...state,

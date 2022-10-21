@@ -107,8 +107,6 @@ export const loadContent = async (state, getReferences) => {
   }
 }
 
-export const contentLoaded = () => {}
-
 export const dispose = (state) => {
   return {
     ...state,

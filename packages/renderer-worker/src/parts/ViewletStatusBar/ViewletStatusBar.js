@@ -45,8 +45,6 @@ export const loadContent = async (state) => {
   }
 }
 
-export const contentLoaded = async (state) => {}
-
 export const updateStatusBarItems = async (state) => {
   const newState = await loadContent(state)
   return newState

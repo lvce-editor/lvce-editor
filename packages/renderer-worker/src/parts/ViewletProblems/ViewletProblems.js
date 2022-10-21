@@ -31,8 +31,6 @@ export const loadContent = async (state) => {
   }
 }
 
-export const contentLoaded = async (state) => {}
-
 export const focusIndex = (state, index) => {
   return {
     ...state,

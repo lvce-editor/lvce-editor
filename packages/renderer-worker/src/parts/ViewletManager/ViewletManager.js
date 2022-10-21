@@ -330,13 +330,17 @@ export const load = async (
         factory: module,
       })
     }
-
+    const commands = []
     if (viewletState !== newState && module.contentLoaded) {
-      await module.contentLoaded(newState)
+      const additionalExtraCommands = await module.contentLoaded(newState)
+      console.log({ additionalExtraCommands })
+      Assert.array(additionalExtraCommands)
+      commands.push(...additionalExtraCommands)
     }
 
     if (module.hasFunctionalRender) {
-      const commands = getRenderCommands(module, viewletState, newState)
+      const renderCommands = getRenderCommands(module, viewletState, newState)
+      commands.push(...renderCommands)
       if (viewlet.show === false) {
         const allCommands = [
           ['Viewlet.create', viewlet.id],

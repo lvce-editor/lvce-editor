@@ -122,6 +122,7 @@ export const loadContent = async (state, savedState) => {
 
 export const contentLoaded = async (state) => {
   // Editor.renderText(state)
+  return []
 }
 
 const updateSemanticTokens = async (state) => {

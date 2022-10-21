@@ -32,6 +32,7 @@ export const contentLoaded = (state) => {
     factory: ViewletLocations,
     state,
   })
+  return []
 }
 
 export const dispose = ViewletLocations.dispose
