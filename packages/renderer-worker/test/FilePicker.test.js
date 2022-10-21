@@ -40,6 +40,16 @@ test('showDirectoryPicker - error - canceled', async () => {
   )
 })
 
+test('showDirectoryPicker - error - not supported', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {
+    throw new Error('window.showDirectoryPicker is not a function')
+  })
+  await expect(FilePicker.showDirectoryPicker()).rejects.toThrowError(
+    new Error('showDirectoryPicker not supported on this browser')
+  )
+})
+
 test('showFilePicker - error', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(async () => {
