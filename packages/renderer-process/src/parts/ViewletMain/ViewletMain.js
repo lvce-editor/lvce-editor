@@ -19,6 +19,8 @@ export const create = () => {
   $Viewlet.className = 'Viewlet Main'
   $Viewlet.ondrop = ViewletMainEvents.handleDrop
   $Viewlet.ondragover = ViewletMainEvents.handleDragOver
+  // @ts-ignore
+  $Viewlet.role = 'main'
 
   // const $MainContent = document.createElement('div')
   // $MainContent.id = 'MainContent'
