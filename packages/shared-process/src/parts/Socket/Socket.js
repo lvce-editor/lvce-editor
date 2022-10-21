@@ -70,6 +70,9 @@ const handleMessage = async (event) => {
             code: /* UnexpectedError */ -32001,
             // @ts-ignore
             message: error.toString(),
+            data: {
+              code: error.code,
+            },
           },
         })
       }

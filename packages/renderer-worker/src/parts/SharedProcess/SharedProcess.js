@@ -60,6 +60,10 @@ const preparePrettyError = (rawError) => {
     // @ts-ignore
     error.category = rawError.data.category
   }
+  if (rawError.data && rawError.data.code) {
+    // @ts-ignore
+    error.code = rawError.data.code
+  }
   if (rawError.data && rawError.data.stderr) {
     // @ts-ignore
     error.stderr = rawError.data.stderr
