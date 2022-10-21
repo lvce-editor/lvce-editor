@@ -1,4 +1,6 @@
-export const name = 'TodoList'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+
+export const name = ViewletModuleId.TodoList
 
 export const create = () => {
   return {

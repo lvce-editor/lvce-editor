@@ -9,8 +9,9 @@ import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SanitizeHtml from '../SanitizeHtml/SanitizeHtml.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = 'ExtensionDetail'
+export const name = ViewletModuleId.ExtensionDetail
 
 export const create = (id, uri) => {
   return {

@@ -2,6 +2,8 @@ export const ActivityBar = 'ActivityBar'
 
 export const Clock = 'Clock'
 
+export const Counter = 'Counter'
+
 export const DebugConsole = 'Debug Console'
 
 export const EditorCompletion = 'EditorCompletion'
@@ -20,11 +22,17 @@ export const ExtensionDetail = 'ExtensionDetail'
 
 export const Extensions = 'Extensions'
 
+export const Iframe = 'Iframe'
+
 export const Implementations = 'Implementations'
 
 export const KeyBindings = 'KeyBindings'
 
 export const Layout = 'Layout'
+
+export const List = 'List'
+
+export const Locations = 'Locations'
 
 export const Main = 'Main'
 
@@ -59,3 +67,5 @@ export const TitleBar = 'TitleBar'
 export const TitleBarButtons = 'TitleBarButtons'
 
 export const TitleBarMenuBar = 'TitleBarMenuBar'
+
+export const TodoList = 'TodoList'

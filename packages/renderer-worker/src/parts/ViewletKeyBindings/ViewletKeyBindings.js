@@ -5,8 +5,9 @@
 import * as FilterKeyBindings from '../FilterKeyBindings/FilterKeyBindings.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = 'KeyBindings'
+export const name = ViewletModuleId.KeyBindings
 
 export const create = (id, uri, left, top, width, height) => {
   return {

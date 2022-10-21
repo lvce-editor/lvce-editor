@@ -2,6 +2,7 @@ import * as ExtensionHostReferences from '../ExtensionHost/ExtensionHostReferenc
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as ViewletLocations from '../ViewletLocations/ViewletLocations.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 const getReferences = async () => {
   const editor = ViewletStates.getState('EditorText')
@@ -15,7 +16,7 @@ const getReferences = async () => {
   return references
 }
 
-export const name = 'References'
+export const name = ViewletModuleId.References
 
 export const create = ViewletLocations.create
 

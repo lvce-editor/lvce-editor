@@ -6,6 +6,7 @@ import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement
 import * as ExtensionsMarketplace from '../ExtensionMarketplace/ExtensionMarketplace.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import {
   getListHeight,
   HEADER_HEIGHT,
@@ -23,7 +24,7 @@ const SUGGESTIONS = [
   '@category',
 ]
 
-export const name = 'Extensions'
+export const name = ViewletModuleId.Extensions
 
 // then state can be recycled by Viewlet when there is only a single ViewletExtensions instance
 

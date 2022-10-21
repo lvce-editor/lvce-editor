@@ -7,6 +7,8 @@ import * as Assert from '../Assert/Assert.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as SearchResultType from '../SearchResultType/SearchResultType.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+
 // TODO maybe create should have a container as param like vscode?
 // maybe not?
 
@@ -23,7 +25,7 @@ import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 const SEARCH_ORDER_FILE_NAMES = 1
 
-export const name = 'Search'
+export const name = ViewletModuleId.Search
 
 export const uiStrings = {
   NoResults: 'No results found',

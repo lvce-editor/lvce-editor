@@ -1,6 +1,7 @@
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = 'PlainText'
+export const name = ViewletModuleId.EditorPlainText
 
 export const create = (id, uri, left, top, width, height) => {
   return {
