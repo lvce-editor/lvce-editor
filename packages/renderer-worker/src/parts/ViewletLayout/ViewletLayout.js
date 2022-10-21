@@ -866,7 +866,7 @@ const renderSashes = {
         id: 'SashSideBar',
         top: sideBarTop,
         left: sideBarLeft,
-        width: 2,
+        width: 4,
         height: sideBarHeight,
         direction: 'horizontal',
       },
@@ -875,7 +875,7 @@ const renderSashes = {
         top: panelTop,
         left: panelLeft,
         width: panelWidth,
-        height: 2,
+        height: 4,
         direction: 'vertical',
       },
     ]
