@@ -43,3 +43,7 @@ export const expandRecursively = async () => {
 export const newFile = async () => {
   await Command.execute('Explorer.newFile')
 }
+
+export const handleClick = async (index) => {
+  await Command.execute('Explorer.handleClick', index)
+}

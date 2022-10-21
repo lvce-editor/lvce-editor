@@ -51,6 +51,7 @@ declare const Explorer: {
   // TODO maybe rename this to collapse
   readonly handleArrowLeft: () => Promise<void>
   readonly newFile: () => Promise<void>
+  readonly handleClick: (index: number) => Promise<void>
 }
 
 declare const Extension: {
