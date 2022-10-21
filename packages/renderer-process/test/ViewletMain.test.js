@@ -157,3 +157,10 @@ test('closeTabsLeft - last tab', () => {
   expect(state.$MainTabs.children).toHaveLength(1)
   expect(state.$MainTabs.children[0]).toBe($Tab3)
 })
+
+test('accessibility - viewlet should have a role of main', () => {
+  const state = Main.create()
+  const { $Viewlet } = state
+  // @ts-ignore
+  expect($Viewlet.role).toBe('main')
+})
