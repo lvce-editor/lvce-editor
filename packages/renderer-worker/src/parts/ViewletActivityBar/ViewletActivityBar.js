@@ -1,6 +1,5 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
 import * as Command from '../Command/Command.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as Icon from '../Icon/Icon.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
@@ -156,32 +155,6 @@ export const loadContent = async (state) => {
     selectedIndex,
     activityBarItems,
   }
-}
-
-export const contentLoaded = async (state) => {}
-
-export const contentLoadedEffects = (state) => {
-  // TODO
-  GlobalEventBus.addListener(
-    'SourceControl.changeBadgeCount',
-    updateSourceControlCount
-  )
-  GlobalEventBus.addListener('Layout.hideSideBar', handleSideBarHidden)
-  GlobalEventBus.addListener('SideBar.viewletChange', (id) =>
-    handleSideBarViewletChange(state, id)
-  )
-}
-
-export const dispose = () => {
-  GlobalEventBus.removeListener(
-    'SourceControl.changeBadgeCount',
-    updateSourceControlCount
-  )
-  GlobalEventBus.removeListener('Layout.hideSideBar', handleSideBarHidden)
-  GlobalEventBus.removeListener(
-    'SideBar.viewletChange',
-    handleSideBarViewletChange
-  )
 }
 
 const findIndex = (activityBarItems, id) => {

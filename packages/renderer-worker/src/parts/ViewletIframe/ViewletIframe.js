@@ -17,8 +17,6 @@ export const loadContent = async (state, src) => {
   }
 }
 
-export const contentLoaded = async (state) => {}
-
 export const dispose = (state) => {
   return {
     ...state,

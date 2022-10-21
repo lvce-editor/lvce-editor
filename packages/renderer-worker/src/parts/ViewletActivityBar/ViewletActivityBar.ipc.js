@@ -30,4 +30,10 @@ export const Commands = {
   'ActivityBar.updateSourceControlCount':  ViewletActivityBar.updateSourceControlCount,
 }
 
+export const Events = {
+  'SourceControl.changeBadgeCount': ViewletActivityBar.updateSourceControlCount,
+  'Layout.hideSideBar': ViewletActivityBar.handleSideBarHidden,
+  'SideBar.viewletChange': ViewletActivityBar.handleSideBarViewletChange,
+}
+
 export * from './ViewletActivityBar.js'

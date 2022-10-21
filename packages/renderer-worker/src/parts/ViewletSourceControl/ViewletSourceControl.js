@@ -56,8 +56,6 @@ export const loadContent = async (state) => {
   }
 }
 
-export const contentLoaded = async (state) => {}
-
 export const handleClick = async (state, index) => {
   const item = state.workingTree[index]
   const absolutePath = `${state.gitRoot}/${item.file}`

@@ -28,8 +28,6 @@ export const loadContent = (state) => {
 
 // TODO use contentLoadedEffects
 
-export const contentLoaded = async (state) => {}
-
 export const dispose = (state) => {
   clearInterval(state.interval)
   state.interval = -1

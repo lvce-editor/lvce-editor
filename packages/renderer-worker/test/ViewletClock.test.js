@@ -39,26 +39,6 @@ test('loadContent', async () => {
   })
 })
 
-test('contentLoaded', async () => {
-  const state = ViewletClock.create(0)
-  RendererProcess.state.send = jest.fn((message) => {
-    switch (message[0]) {
-      case 909090:
-        const callbackId = message[1]
-        RendererProcess.state.handleMessage([
-          /* Callback.resolve */ 67330,
-          /* callbackId */ callbackId,
-          /* result */ undefined,
-        ])
-        break
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  await ViewletClock.contentLoaded(state)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
-})
-
 test('dispose', () => {
   // TODO check that interval really has been cleared
   const state = ViewletClock.create(0)

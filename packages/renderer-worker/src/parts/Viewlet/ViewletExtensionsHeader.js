@@ -37,8 +37,6 @@ export const loadContent = async (state) => {
   return state
 }
 
-export const contentLoaded = async (state) => {}
-
 export const handleInput = async (state, value) => {
   // TODO call props.handleInput
 }

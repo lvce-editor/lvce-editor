@@ -13,8 +13,6 @@ export const loadContent = async (state) => {
   return state
 }
 
-export const contentLoaded = async (state) => {}
-
 // TODO make sure dispose is actually called
 export const dispose = (state) => {
   return {

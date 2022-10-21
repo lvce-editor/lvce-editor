@@ -47,13 +47,15 @@ export const loadContent = async (state) => {
 }
 
 export const contentLoaded = async (state) => {
-  await RendererProcess.invoke(
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'Output',
-    /* method */ 'setOptions',
-    /* options */ state.options,
-    /* selectedOptionIndex */ state.selectedIndex
-  )
+  return [
+    [
+      /* Viewlet.invoke */ 'Viewlet.send',
+      /* id */ 'Output',
+      /* method */ 'setOptions',
+      /* options */ state.options,
+      /* selectedOptionIndex */ state.selectedIndex,
+    ],
+  ]
 }
 
 export const setOutputChannel = async (state, option) => {

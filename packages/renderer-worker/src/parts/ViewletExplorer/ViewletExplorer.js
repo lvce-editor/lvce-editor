@@ -230,41 +230,6 @@ export const updateIcons = (state) => {
   }
 }
 
-export const contentLoaded = async (state) => {
-  // console.trace({ state })
-  // TODO execute command directly
-  // TODO this should a promise and be awaited
-}
-
-// export const contentLoadedEffects = (state) => {
-//   // TODO why is this event emitted?
-//   GlobalEventBus.emitEvent('dirents.update', state.items)
-
-//   // TODO create should not have side effects
-//   // TODO dispose listener when explorer is disposed
-//   // TODO hoist function
-//   const handleLanguagesChanged = () => {
-//     const state = Viewlet.getState('Explorer')
-//     const newState = updateIcons(state)
-//     Viewlet.setState('Explorer', newState)
-//   }
-//   GlobalEventBus.addListener('languages.changed', handleLanguagesChanged)
-
-//   // TODO hoist function
-//   GlobalEventBus.addListener('workspace.change', async () => {
-//     const newRoot = Workspace.state.workspacePath
-//     const state1 = { ...state, root: newRoot }
-//     const newState = await loadContent(state1)
-//     await Viewlet.setState('Explorer', newState)
-//     // await contentLoaded(newState)
-//     // TODO
-//   })
-
-//   GlobalEventBus.addListener('iconTheme.change', async () => {
-//     await contentLoaded(state)
-//   })
-// }
-
 export const handleLanguagesChanged = (state) => {
   return updateIcons(state)
 }

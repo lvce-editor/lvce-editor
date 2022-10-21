@@ -519,19 +519,23 @@ const loadIfVisible = async (state, module) => {
   const height = points[kHeight]
   let commands = []
   if (visible) {
-    commands = await ViewletManager.load({
-      getModule: ViewletModule.load,
-      id: moduleId,
-      type: 0,
-      // @ts-ignore
-      uri: '',
-      show: false,
-      focus: false,
-      top,
-      left,
-      width,
-      height,
-    })
+    commands = await ViewletManager.load(
+      {
+        getModule: ViewletModule.load,
+        id: moduleId,
+        type: 0,
+        // @ts-ignore
+        uri: '',
+        show: false,
+        focus: false,
+        top,
+        left,
+        width,
+        height,
+      },
+      false,
+      true
+    )
     if (commands) {
       const referenceNodes = getReferenceNodes(sideBarLocation)
       commands.push(['Viewlet.append', 'Layout', moduleId, referenceNodes])

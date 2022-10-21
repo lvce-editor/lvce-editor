@@ -68,8 +68,6 @@ export const loadContent = async (state, savedState) => {
   }
 }
 
-export const contentLoaded = async (state) => {}
-
 export const dispose = async (state) => {
   const { src } = state
   if (src.startsWith('blob:')) {
