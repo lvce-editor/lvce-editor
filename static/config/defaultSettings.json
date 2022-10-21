@@ -30,7 +30,7 @@
   "workbench.activityBar.visible": true,
   "workbench.sideBar.visible": true,
   "workbench.sideBarLocation": "right",
-  "workbench.saveStateOnVisibilityChange": false,
+  "workbench.saveStateOnVisibilityChange": true,
 
   "workspace.defaultWorkspace": "fetch:///playground",
 
