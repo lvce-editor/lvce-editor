@@ -551,8 +551,8 @@ const addExtensionLanguages = async ({
     Path.join(root, 'dist', commitHash, 'config', 'languages.json'),
     mergedLanguages
   )
-  await FileSystem.remove(Path.join(root, 'dist', commitHash, 'playground'))
   if (await FileSystem.exists(Path.join(extensionPath, 'test', 'cases'))) {
+    await FileSystem.remove(Path.join(root, 'dist', commitHash, 'playground'))
     await FileSystem.copy(
       Path.join(extensionPath, 'test', 'cases'),
       Path.join(root, 'dist', commitHash, 'playground')
