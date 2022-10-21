@@ -1,8 +1,9 @@
 import * as Command from '../Command/Command.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = 'Panel'
+export const name = ViewletModuleId.Panel
 
 export const create = () => {
   return {

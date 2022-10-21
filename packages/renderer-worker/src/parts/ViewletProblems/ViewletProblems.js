@@ -1,7 +1,8 @@
 import * as ExtensionHostDiagnostic from '../ExtensionHost/ExtensionHostDiagnostic.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = 'Problems'
+export const name = ViewletModuleId.Problems
 
 export const create = () => {
   return {

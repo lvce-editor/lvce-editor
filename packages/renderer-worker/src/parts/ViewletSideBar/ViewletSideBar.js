@@ -8,7 +8,7 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 const SIDE_BAR_TITLE_AREA_HEIGHT = 35
 
-export const name = 'SideBar'
+export const name = ViewletModuleId.SideBar
 
 export const create = (id, uri, left, top, width, height) => {
   return {

@@ -1,7 +1,8 @@
 import * as Command from '../Command/Command.js'
 import * as TitleBarButtons from '../TitleBarButtons/TitleBarButtons.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = 'TitleBarButtons'
+export const name = ViewletModuleId.TitleBarButtons
 
 export const create = (id, uri, top, left, width, height) => {
   return {

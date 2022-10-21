@@ -1,12 +1,13 @@
 // TODO menu should not be needed initially, only when item is selected and menu is opened
+import * as Command from '../Command/Command.js'
 import * as Menu from '../Menu/Menu.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuBarEntries.js'
-import * as Command from '../Command/Command.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = 'TitleBarMenuBar'
+export const name = ViewletModuleId.TitleBarMenuBar
 
 export const create = () => {
   return {
