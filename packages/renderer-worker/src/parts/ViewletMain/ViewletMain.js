@@ -11,6 +11,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
@@ -221,6 +222,7 @@ export const contentLoaded = async (state) => {
     {
       getModule: ViewletModule.load,
       id,
+      // @ts-ignore
       parentId: 'Main',
       uri: editor.uri,
       left,
