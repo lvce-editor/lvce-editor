@@ -19,13 +19,6 @@ test('loadContent', async () => {
   })
 })
 
-test('contentLoaded', async () => {
-  const state = ViewletRunAndDebug.create(0)
-  RendererProcess.state.send = jest.fn()
-  await ViewletRunAndDebug.contentLoaded(state)
-  expect(RendererProcess.state.send).not.toHaveBeenCalled()
-})
-
 test('dispose', () => {
   const state = ViewletRunAndDebug.create(0)
   expect(ViewletRunAndDebug.dispose(state)).toEqual({
