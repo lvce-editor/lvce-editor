@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 /**
@@ -56,7 +57,7 @@ export const getPicks = async (searchValue) => {
 export const selectPick = async (item) => {
   await setColorTheme(/* colorThemeId */ item.label)
   return {
-    command: 'hide',
+    command: QuickPickReturnValue.Hide,
   }
 }
 

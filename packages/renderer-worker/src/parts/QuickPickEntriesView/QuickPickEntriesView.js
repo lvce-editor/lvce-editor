@@ -30,7 +30,7 @@ export const getPicks = async () => {
 export const selectPick = async (item) => {
   // Command.execute(/* openView */ 549, /* viewName */ item.label)
   // return {
-  //   command: 'hide',
+  //   command: QuickPickReturnValue.Hide,
   // }
 }
 

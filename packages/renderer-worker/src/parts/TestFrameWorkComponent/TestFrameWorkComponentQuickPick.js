@@ -1,7 +1,12 @@
 import * as Command from '../Command/Command.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const open = async () => {
-  await Command.execute('Viewlet.openWidget', 'QuickPick', 'everything')
+  await Command.execute(
+    'Viewlet.openWidget',
+    ViewletModuleId.QuickPick,
+    'everything'
+  )
 }
 
 export const setValue = async (value) => {

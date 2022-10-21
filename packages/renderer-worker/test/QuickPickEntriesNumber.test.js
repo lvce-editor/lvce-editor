@@ -1,4 +1,5 @@
 import * as QuickPickEntriesNumber from '../src/parts/QuickPickEntriesNumber/QuickPickEntriesNumber.js'
+import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
 
 test('name', () => {
   expect(QuickPickEntriesNumber.name).toBe('number')
@@ -55,6 +56,6 @@ test('getPicks', async () => {
 
 test('selectPick', async () => {
   expect(await QuickPickEntriesNumber.selectPick({ label: '1' })).toEqual({
-    command: 'hide',
+    command: QuickPickReturnValue.Hide,
   })
 })
