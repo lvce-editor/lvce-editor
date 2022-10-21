@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -247,7 +248,7 @@ test('handleClickAt - first item', async () => {
   const provider = {
     selectPick: jest.fn(() => {
       return {
-        command: 'hide',
+        command: QuickPickReturnValue.Hide,
       }
     }),
     getPicks() {

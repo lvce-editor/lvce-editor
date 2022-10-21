@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -60,7 +61,7 @@ const mockProvider = {
   },
   selectPick() {
     return {
-      command: 'hide',
+      command: QuickPickReturnValue.Hide,
     }
   },
 }
@@ -110,7 +111,7 @@ test('selectPick', async () => {
       label: 'test-file-1.txt',
     })
   ).toEqual({
-    command: 'hide',
+    command: QuickPickReturnValue.Hide,
   })
 })
 

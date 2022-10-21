@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import { Command } from '../src/parts/TestFrameWorkComponent/TestFrameWorkComponent.js'
+import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -123,7 +124,7 @@ test.skip('selectPick', async () => {
       label: 'test-file-1.txt',
     })
   ).toEqual({
-    command: 'hide',
+    command: QuickPickReturnValue.Hide,
   })
   expect(Command.execute).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenCalledWith(

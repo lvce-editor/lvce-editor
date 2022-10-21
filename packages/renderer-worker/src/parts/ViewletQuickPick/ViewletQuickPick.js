@@ -4,6 +4,8 @@ import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as QuickPickEntries from '../QuickPickEntries/QuickPickEntries.js'
 import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEntriesEverything.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
@@ -205,8 +207,8 @@ export const selectIndex = async (state, index, button = /* left */ 0) => {
   Assert.string(selectPickResult.command)
   const { command } = selectPickResult
   switch (command) {
-    case 'hide':
-      await Viewlet.closeWidget('QuickPick')
+    case QuickPickReturnValue.Hide:
+      await Viewlet.closeWidget(ViewletModuleId.QuickPick)
       return state
     default:
       return state

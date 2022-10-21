@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 /**
  * @enum {string}
@@ -46,7 +47,7 @@ export const getMenuEntries = async () => {
       label: I18nString.i18nString(UiStrings.More),
       flags: MenuItemFlags.None,
       command: 'Viewlet.openWidget',
-      args: ['QuickPick', 'recent'],
+      args: [ViewletModuleId.QuickPick, 'recent'],
     },
     {
       id: 'separator',

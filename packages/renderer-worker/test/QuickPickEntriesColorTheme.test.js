@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -95,7 +96,7 @@ test.skip('selectPick - error', async () => {
       label: 'slime',
     })
   ).toEqual({
-    command: 'hide',
+    command: QuickPickReturnValue.Hide,
   })
 })
 

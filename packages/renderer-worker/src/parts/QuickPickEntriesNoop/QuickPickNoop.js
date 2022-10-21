@@ -1,3 +1,5 @@
+import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
+
 /**
  * @enum {string}
  */
@@ -25,7 +27,7 @@ export const getPicks = async (value) => {
 
 export const selectPick = async (item) => {
   return {
-    command: 'hide',
+    command: QuickPickReturnValue.Hide,
   }
 }
 

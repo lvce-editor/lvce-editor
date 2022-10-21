@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
 
 /**
  * @enum {string}
@@ -61,7 +62,7 @@ export const selectPick = async (pick) => {
   const path = pick.label
   await openWorkspaceFolder(path)
   return {
-    command: 'hide',
+    command: QuickPickReturnValue.Hide,
   }
 }
 
