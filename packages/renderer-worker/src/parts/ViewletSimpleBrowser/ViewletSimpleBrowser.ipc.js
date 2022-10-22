@@ -9,6 +9,7 @@ export const Commands = {
   'SimpleBrowser.handleWillNavigate': SimpleBrowser.handleWillNavigate,
   'SimpleBrowser.openDevtools': SimpleBrowser.openDevtools,
   'SimpleBrowser.reload': SimpleBrowser.reload,
+  'SimpleBrowser.handleTitleUpdated': SimpleBrowser.handleTitleUpdated,
 }
 
 export * from './ViewletSimpleBrowser.js'

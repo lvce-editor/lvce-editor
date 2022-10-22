@@ -18,6 +18,7 @@ export const create = (id, uri, left, top, width, height) => {
     headerHeight: 30,
     iframeSrc: '',
     inputValue: '',
+    title: '',
   }
 }
 
@@ -45,6 +46,7 @@ export const loadContent = async (state) => {
   return {
     ...state,
     iframeSrc,
+    title: 'Simple Browser',
   }
 }
 
@@ -124,6 +126,13 @@ export const handleWillNavigate = (state, url) => {
   }
 }
 
+export const handleTitleUpdated = (state, title) => {
+  return {
+    ...state,
+    title,
+  }
+}
+
 export const hasFunctionalResize = true
 
 export const resize = (state, dimensions) => {
@@ -155,4 +164,14 @@ const renderIframeSrc = {
   },
 }
 
-export const render = [renderIframeSrc]
+const renderTitle = {
+  isEqual(oldState, newState) {
+    return oldState.title === newState.title
+  },
+  apply(oldState, newState) {
+    console.log({ title: newState.title })
+    return ['Viewlet.send', 'Main', 'updateTab', 0, newState.title]
+  },
+}
+
+export const render = [renderIframeSrc, renderTitle]
