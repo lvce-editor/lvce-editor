@@ -30,7 +30,9 @@ jest.unstable_mockModule(
   '../src/parts/ElectronBrowserView/ElectronBrowserView.js',
   () => {
     return {
-      createBrowserView: jest.fn(),
+      createBrowserView: jest.fn(() => {
+        return 1
+      }),
     }
   }
 )
@@ -49,6 +51,9 @@ const ViewletSimpleBrowser = await import(
 const ElectronBrowserViewFunctions = await import(
   '../src/parts/ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js'
 )
+const ElectronBrowserView = await import(
+  '../src/parts/ElectronBrowserView/ElectronBrowserView.js'
+)
 
 test('name', () => {
   expect(ViewletSimpleBrowser.name).toBe('SimpleBrowser')
@@ -60,6 +65,10 @@ test('create', () => {
 })
 
 test('loadContent', async () => {
+  // @ts-ignore
+  ElectronBrowserView.createBrowserView.mockImplementation(() => {
+    return 1
+  })
   // @ts-ignore
   ElectronBrowserViewFunctions.setIframeSrc.mockImplementation(() => {})
   const state = ViewletSimpleBrowser.create()
