@@ -1,4 +1,5 @@
 import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
+import { VError } from '../VError/VError.js'
 
 export const resizeBrowserView = (left, top, width, height) => {
   return ElectronProcess.invoke(

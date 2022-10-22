@@ -1,4 +1,7 @@
 const { BrowserWindow } = require('electron')
+const { VError } = require('verror')
+const Path = require('../Path/Path.js')
+const Root = require('../Root/Root.js')
 
 exports.wrapBrowserViewCommand = (fn) => {
   const wrappedCommand = (...args) => {
@@ -20,8 +23,40 @@ exports.resizeBrowserView = (view, top, left, width, height) => {
   view.setBounds({ x: left, y: top, width, height })
 }
 
+const setIframeSrcFallback = async (view, error) => {
+  await view.webContents.loadFile(
+    Path.join(
+      Root.root,
+      'packages',
+      'main-process',
+      'pages',
+      'error',
+      'error.html'
+    ),
+    {
+      query: {
+        code: error.code,
+      },
+    }
+  )
+}
+
+/**
+ *
+ * @param {Electron.BrowserView} view
+ * @param {string} iframeSrc
+ */
 exports.setIframeSrc = async (view, iframeSrc) => {
-  await view.webContents.loadURL(iframeSrc)
+  try {
+    await view.webContents.loadURL(iframeSrc)
+  } catch (error) {
+    try {
+      await setIframeSrcFallback(view, error)
+    } catch (error) {
+      // @ts-ignore
+      throw new VError(error, `Failed to set iframe src`)
+    }
+  }
 }
 
 /**
