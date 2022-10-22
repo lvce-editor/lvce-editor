@@ -1,17 +1,13 @@
-const { BrowserWindow } = require('electron')
 const { VError } = require('verror')
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
+const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
 
 exports.wrapBrowserViewCommand = (fn) => {
-  const wrappedCommand = (...args) => {
-    const browserWindow = BrowserWindow.getFocusedWindow()
-    if (!browserWindow) {
-      return
-    }
-    const views = browserWindow.getBrowserViews()
-    const view = views[0]
+  const wrappedCommand = (id, ...args) => {
+    const view = ElectronBrowserViewState.get(id)
     if (!view) {
+      console.log(`[main process] no view with id ${id}`)
       return
     }
     return fn(view, ...args)
@@ -19,6 +15,14 @@ exports.wrapBrowserViewCommand = (fn) => {
   return wrappedCommand
 }
 
+/**
+ *
+ * @param {Electron.BrowserView} view
+ * @param {number} top
+ * @param {number} left
+ * @param {number} width
+ * @param {number} height
+ */
 exports.resizeBrowserView = (view, top, left, width, height) => {
   view.setBounds({ x: left, y: top, width, height })
 }
