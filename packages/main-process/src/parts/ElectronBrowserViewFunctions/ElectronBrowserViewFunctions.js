@@ -58,6 +58,13 @@ exports.setIframeSrc = async (view, iframeSrc) => {
     }
   }
 }
+/**
+ *
+ * @param {Electron.BrowserView} view
+ */
+exports.focus = (view) => {
+  view.webContents.focus()
+}
 
 /**
  *

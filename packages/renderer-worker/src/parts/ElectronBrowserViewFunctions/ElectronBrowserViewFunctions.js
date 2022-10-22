@@ -18,6 +18,10 @@ export const setIframeSrc = (iframeSrc) => {
   )
 }
 
+export const focus = () => {
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.focus')
+}
+
 export const openDevtools = () => {
   return ElectronProcess.invoke('ElectronBrowserViewFunctions.openDevtools')
 }

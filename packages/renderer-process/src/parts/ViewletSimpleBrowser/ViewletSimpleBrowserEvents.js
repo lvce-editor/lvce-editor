@@ -7,8 +7,18 @@ export const handleInput = (event) => {
   RendererWorker.send('SimpleBrowser.handleInput', value)
 }
 
-export const handleFocus = () => {
+export const handleFocus = (event) => {
+  const { target } = event
+  console.log('select all')
   Focus.setFocus('SimpleBrowserInput')
+  setTimeout(() => {
+    target.select()
+  })
+}
+
+export const handleBlur = (event) => {
+  const { target } = event
+  target.setSelectionRange(0, 0)
 }
 
 export const handleClickForward = () => {
