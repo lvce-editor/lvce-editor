@@ -69,8 +69,17 @@ exports.createBrowserView = async (
       params: [url],
     })
   }
+  const handlePageTitleUpdated = (event, title) => {
+    const port = getPort()
+    port.postMessage({
+      jsonrpc: '2.0',
+      method: 'SimpleBrowser.handleTitleUpdated',
+      params: [title],
+    })
+  }
   view.webContents.on('will-navigate', handleWillNavigate)
   view.webContents.on('did-navigate', handleWillNavigate)
+  view.webContents.on('page-title-updated', handlePageTitleUpdated)
   view.webContents.setWindowOpenHandler(
     ElectronSessionForBrowserView.handleWindowOpen
   )

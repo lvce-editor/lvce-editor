@@ -92,19 +92,22 @@ export const focus = () => {
 }
 
 export const openViewlet = (state, tabLabel, tabTitle, oldActiveIndex) => {
-  const $Tab = document.createElement('div')
-  $Tab.className = 'MainTab'
-  $Tab.textContent = tabLabel
-  $Tab.title = tabTitle
-  $Tab.ariaSelected = 'true'
-  // @ts-ignore
-  $Tab.role = 'tab'
+  const $TabLabel = document.createElement('div')
+  $TabLabel.className = 'Label'
+  $TabLabel.textContent = tabLabel
 
   const $TabCloseButton = document.createElement('button')
   $TabCloseButton.className = 'EditorTabCloseButton'
   $TabCloseButton.ariaLabel = 'Close'
   $TabCloseButton.title = ''
-  $Tab.append($TabCloseButton)
+
+  const $Tab = document.createElement('div')
+  $Tab.title = tabTitle
+  $Tab.ariaSelected = 'true'
+  // @ts-ignore
+  $Tab.role = 'tab'
+  $Tab.className = 'MainTab'
+  $Tab.append($TabLabel, $TabCloseButton)
 
   if (oldActiveIndex !== -1 && state.$MainTabs) {
     const $OldTab = state.$MainTabs.children[oldActiveIndex]
@@ -169,10 +172,12 @@ export const openAnotherTab = async (
   // @ts-ignore
   $Tab.role = 'tab'
   $Tab.tabIndex = 0
+  const $TabLabel = document.createElement('div')
+  $TabLabel.className = 'Label'
   const $TabCloseButton = document.createElement('button')
   $TabCloseButton.className = 'EditorTabCloseButton'
   $TabCloseButton.ariaLabel = 'Close'
-  $Tab.append($TabCloseButton)
+  $Tab.append($TabLabel, $TabCloseButton)
   state.$MainTabs.children[unFocusIndex].ariaSelected = 'false'
   state.$MainTabs.append($Tab)
 }
@@ -221,4 +226,11 @@ export const closeTabsLeft = (state, index) => {
   const $Tab = state.$MainTabs.children[0]
   $Tab.ariaSelected = 'true'
   $Tab.tabIndex = 0
+}
+
+export const updateTab = (state, index, text) => {
+  const { $MainTabs } = state
+  const $Tab = $MainTabs.children[index]
+  const $TabLabel = $Tab.firstChild
+  $TabLabel.textContent = text
 }

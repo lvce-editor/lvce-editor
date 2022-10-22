@@ -94,3 +94,12 @@ test('reload', async () => {
   await ViewletSimpleBrowser.reload(state)
   expect(ElectronBrowserViewFunctions.reload).toHaveBeenCalledTimes(1)
 })
+
+test('handleTitleUpdated', () => {
+  const state = ViewletSimpleBrowser.create()
+  expect(
+    ViewletSimpleBrowser.handleTitleUpdated(state, 'new Title')
+  ).toMatchObject({
+    title: 'new Title',
+  })
+})
