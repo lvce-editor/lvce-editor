@@ -1,9 +1,9 @@
 import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
-import { VError } from '../VError/VError.js'
 
-export const resizeBrowserView = (left, top, width, height) => {
+export const resizeBrowserView = (id, left, top, width, height) => {
   return ElectronProcess.invoke(
     'ElectronBrowserViewFunctions.resizeBrowserView',
+    id,
     left,
     top,
     width,
@@ -11,29 +11,30 @@ export const resizeBrowserView = (left, top, width, height) => {
   )
 }
 
-export const setIframeSrc = (iframeSrc) => {
+export const setIframeSrc = (id, iframeSrc) => {
   return ElectronProcess.invoke(
     'ElectronBrowserViewFunctions.setIframeSrc',
+    id,
     iframeSrc
   )
 }
 
-export const focus = () => {
-  return ElectronProcess.invoke('ElectronBrowserViewFunctions.focus')
+export const focus = (id) => {
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.focus', id)
 }
 
-export const openDevtools = () => {
-  return ElectronProcess.invoke('ElectronBrowserViewFunctions.openDevtools')
+export const openDevtools = (id) => {
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.openDevtools', id)
 }
 
-export const reload = () => {
-  return ElectronProcess.invoke('ElectronBrowserViewFunctions.reload')
+export const reload = (id) => {
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.reload', id)
 }
 
-export const forward = () => {
-  return ElectronProcess.invoke('ElectronBrowserViewFunctions.forward')
+export const forward = (id) => {
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.forward', id)
 }
 
-export const backward = () => {
-  return ElectronProcess.invoke('ElectronBrowserViewFunctions.backward')
+export const backward = (id) => {
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.backward', id)
 }

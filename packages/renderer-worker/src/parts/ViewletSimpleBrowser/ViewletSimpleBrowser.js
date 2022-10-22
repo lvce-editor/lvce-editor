@@ -5,6 +5,7 @@ import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/E
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const name = ViewletModuleId.SimpleBrowser
 
@@ -20,6 +21,7 @@ export const create = (id, uri, left, top, width, height) => {
     iframeSrc: '',
     inputValue: '',
     title: '',
+    browserViewId: 0,
   }
 }
 
@@ -36,18 +38,20 @@ export const loadContent = async (state) => {
   const iframeSrc = 'https://example.com'
   const keyBindings = await KeyBindings.getKeyBindings()
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
-  await ElectronBrowserView.createBrowserView(
+  const browserViewId = await ElectronBrowserView.createBrowserView(
     top + headerHeight,
     left,
     width,
     height - headerHeight,
     fallThroughKeyBindings
   )
-  await ElectronBrowserViewFunctions.setIframeSrc(iframeSrc)
+  Assert.number(browserViewId)
+  await ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)
   return {
     ...state,
     iframeSrc,
     title: 'Simple Browser',
+    browserViewId,
   }
 }
 
@@ -60,10 +64,10 @@ export const handleInput = (state, value) => {
 }
 
 export const go = async (state) => {
-  const { inputValue } = state
+  const { inputValue, browserViewId } = state
   const iframeSrc = IframeSrc.toIframeSrc(inputValue)
-  await ElectronBrowserViewFunctions.setIframeSrc(iframeSrc)
-  await ElectronBrowserViewFunctions.focus()
+  await ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)
+  await ElectronBrowserViewFunctions.focus(browserViewId)
   return {
     ...state,
     iframeSrc,
@@ -73,22 +77,26 @@ export const go = async (state) => {
 export const hasFunctionalRender = true
 
 export const openDevtools = async (state) => {
-  await ElectronBrowserViewFunctions.openDevtools()
+  const { browserViewId } = state
+  await ElectronBrowserViewFunctions.openDevtools(browserViewId)
   return state
 }
 
 export const reload = async (state) => {
-  await ElectronBrowserViewFunctions.reload()
+  const { browserViewId } = state
+  await ElectronBrowserViewFunctions.reload(browserViewId)
   return state
 }
 
 export const forward = async (state) => {
-  await ElectronBrowserViewFunctions.forward()
+  const { browserViewId } = state
+  await ElectronBrowserViewFunctions.forward(browserViewId)
   return state
 }
 
 export const backward = async (state) => {
-  await ElectronBrowserViewFunctions.backward()
+  const { browserViewId } = state
+  await ElectronBrowserViewFunctions.backward(browserViewId)
   return state
 }
 
@@ -109,9 +117,10 @@ export const handleTitleUpdated = (state, title) => {
 export const hasFunctionalResize = true
 
 export const resize = (state, dimensions) => {
-  const { headerHeight } = state
+  const { headerHeight, browserViewId } = state
   const { left, top, width, height } = dimensions
   ElectronBrowserViewFunctions.resizeBrowserView(
+    browserViewId,
     top + headerHeight,
     left,
     width,
@@ -142,7 +151,6 @@ const renderTitle = {
     return oldState.title === newState.title
   },
   apply(oldState, newState) {
-    console.log({ title: newState.title })
     return ['Viewlet.send', 'Main', 'updateTab', 0, newState.title]
   },
 }

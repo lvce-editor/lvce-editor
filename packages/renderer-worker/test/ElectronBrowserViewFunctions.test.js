@@ -27,7 +27,7 @@ test('focus - error', async () => {
   ElectronProcess.invoke.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
-  await expect(ElectronBrowserViewFunctions.focus()).rejects.toThrowError(
+  await expect(ElectronBrowserViewFunctions.focus(1)).rejects.toThrowError(
     new TypeError('x is not a function')
   )
 })
@@ -35,9 +35,10 @@ test('focus - error', async () => {
 test('focus', async () => {
   // @ts-ignore
   ElectronProcess.invoke.mockImplementation(() => {})
-  await ElectronBrowserViewFunctions.focus()
+  await ElectronBrowserViewFunctions.focus(1)
   expect(ElectronProcess.invoke).toHaveBeenCalledTimes(1)
   expect(ElectronProcess.invoke).toHaveBeenCalledWith(
-    'ElectronBrowserViewFunctions.focus'
+    'ElectronBrowserViewFunctions.focus',
+    1
   )
 })

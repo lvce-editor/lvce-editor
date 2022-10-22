@@ -1,6 +1,7 @@
-const { BrowserView, BrowserWindow } = require('electron')
+const { BrowserView, BrowserWindow, webContents } = require('electron')
 const ElectronSessionForBrowserView = require('../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
+const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
 
 const normalizeKey = (key) => {
   if (key === ' ') {
@@ -39,17 +40,19 @@ exports.createBrowserView = async (
 ) => {
   const browserWindow = BrowserWindow.getFocusedWindow()
   if (!browserWindow) {
-    return
+    return ElectronBrowserViewState.getAnyKey()
   }
   // TODO support multiple browser views in the future
   if (browserWindow.getBrowserViews().length > 0) {
-    return
+    return ElectronBrowserViewState.getAnyKey()
   }
   const view = new BrowserView({
     webPreferences: {
       session: ElectronSessionForBrowserView.getSession(),
     },
   })
+  const id = view.webContents.id
+  ElectronBrowserViewState.add(id, view)
 
   const getPort = () => {
     const state = AppWindowStates.findById(browserWindow.webContents.id)
@@ -77,12 +80,16 @@ exports.createBrowserView = async (
       params: [title],
     })
   }
+  const handleDestroyed = () => {
+    ElectronBrowserViewState.remove(id)
+  }
   view.webContents.on('will-navigate', handleWillNavigate)
   view.webContents.on('did-navigate', handleWillNavigate)
   view.webContents.on('page-title-updated', handlePageTitleUpdated)
   view.webContents.setWindowOpenHandler(
     ElectronSessionForBrowserView.handleWindowOpen
   )
+  view.webContents.on('destroyed', handleDestroyed)
   browserWindow.addBrowserView(view)
   view.setBounds({ x: left, y: top, width, height })
 
@@ -111,6 +118,7 @@ exports.createBrowserView = async (
     }
   }
   view.webContents.on('before-input-event', handleBeforeInput)
+  return view.webContents.id
 }
 
 exports.disposeBrowserView = (id) => {
