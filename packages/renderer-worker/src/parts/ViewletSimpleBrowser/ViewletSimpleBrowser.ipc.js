@@ -6,10 +6,10 @@ export const Commands = {
   'SimpleBrowser.forward': SimpleBrowser.forward,
   'SimpleBrowser.go': SimpleBrowser.go,
   'SimpleBrowser.handleInput': SimpleBrowser.handleInput,
+  'SimpleBrowser.handleTitleUpdated': SimpleBrowser.handleTitleUpdated,
   'SimpleBrowser.handleWillNavigate': SimpleBrowser.handleWillNavigate,
   'SimpleBrowser.openDevtools': SimpleBrowser.openDevtools,
   'SimpleBrowser.reload': SimpleBrowser.reload,
-  'SimpleBrowser.handleTitleUpdated': SimpleBrowser.handleTitleUpdated,
 }
 
 export * from './ViewletSimpleBrowser.js'

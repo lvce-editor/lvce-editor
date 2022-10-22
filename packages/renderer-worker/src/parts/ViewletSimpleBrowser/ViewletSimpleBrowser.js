@@ -71,13 +71,17 @@ const createUrl = (baseUrl, params) => {
   return baseUrl + '?' + new URLSearchParams(params).toString()
 }
 
-// TODO add preference option for search engine
-const createSearchUrl = (input) => {
+const createSearchUrlWithGoogle = (input) => {
   const searchUrl = 'https://www.google.com/search'
   const params = {
     q: input,
   }
   return createUrl(searchUrl, params)
+}
+
+// TODO add preference option for search engine
+const createSearchUrl = (input) => {
+  return createSearchUrlWithGoogle(input)
 }
 
 const toIframeSrc = (input) => {
@@ -91,6 +95,7 @@ export const go = async (state) => {
   const { inputValue } = state
   const iframeSrc = toIframeSrc(inputValue)
   await ElectronBrowserViewFunctions.setIframeSrc(iframeSrc)
+  await ElectronBrowserViewFunctions.focus()
   return {
     ...state,
     iframeSrc,

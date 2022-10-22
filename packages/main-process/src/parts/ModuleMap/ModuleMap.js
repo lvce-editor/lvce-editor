@@ -60,6 +60,7 @@ exports.getModuleId = (commandId) => {
     case 'ElectronBrowserViewFunctions.forward':
     case 'ElectronBrowserViewFunctions.reload':
     case 'ElectronBrowserViewFunctions.backward':
+    case 'ElectronBrowserViewFunctions.focus':
       return ModuleId.ElectronBrowserViewFunctions
     default:
       throw new Error(`method not found ${commandId}`)

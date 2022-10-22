@@ -29,9 +29,10 @@ export const create = () => {
 
   const $InputBox = InputBox.create()
   $InputBox.type = 'url'
-  $InputBox.oninput = ViewletSimpleBrowserEvents.handleInput
   $InputBox.enterKeyHint = 'go'
+  $InputBox.oninput = ViewletSimpleBrowserEvents.handleInput
   $InputBox.onfocus = ViewletSimpleBrowserEvents.handleFocus
+  $InputBox.onblur = ViewletSimpleBrowserEvents.handleBlur
 
   const $SimpleBrowserHeader = document.createElement('div')
   $SimpleBrowserHeader.className = 'SimpleBrowserHeader'
@@ -53,6 +54,9 @@ export const create = () => {
 
 export const setIframeSrc = (state, iframeSrc) => {
   const { $InputBox } = state
+  if ($InputBox.value === iframeSrc) {
+    return
+  }
   $InputBox.value = iframeSrc
 }
 
