@@ -4,6 +4,7 @@ import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView
 import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as IframeSrc from '../IframeSrc/IframeSrc.js'
 
 export const name = ViewletModuleId.SimpleBrowser
 
@@ -58,42 +59,9 @@ export const handleInput = (state, value) => {
   }
 }
 
-const isValidHttpUrl = (string) => {
-  try {
-    const url = new URL(string)
-    return url.protocol === 'http:' || url.protocol === 'https:'
-  } catch {
-    return false
-  }
-}
-
-const createUrl = (baseUrl, params) => {
-  return baseUrl + '?' + new URLSearchParams(params).toString()
-}
-
-const createSearchUrlWithGoogle = (input) => {
-  const searchUrl = 'https://www.google.com/search'
-  const params = {
-    q: input,
-  }
-  return createUrl(searchUrl, params)
-}
-
-// TODO add preference option for search engine
-const createSearchUrl = (input) => {
-  return createSearchUrlWithGoogle(input)
-}
-
-const toIframeSrc = (input) => {
-  if (isValidHttpUrl(input)) {
-    return input
-  }
-  return createSearchUrl(input)
-}
-
 export const go = async (state) => {
   const { inputValue } = state
-  const iframeSrc = toIframeSrc(inputValue)
+  const iframeSrc = IframeSrc.toIframeSrc(inputValue)
   await ElectronBrowserViewFunctions.setIframeSrc(iframeSrc)
   await ElectronBrowserViewFunctions.focus()
   return {
