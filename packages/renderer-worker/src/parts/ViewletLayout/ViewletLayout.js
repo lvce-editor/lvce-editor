@@ -371,10 +371,8 @@ const show = async (state, module) => {
   if (commands) {
     commands.push(['Viewlet.append', 'Layout', moduleId])
   }
-  // TODO
-  // - load that component
-  // - if component is hidden now, return
-  // - if component is still visible, render new component
+  const resizeCommands = getResizeCommands(points, newPoints)
+  commands.push(...resizeCommands)
   return {
     newState: {
       ...state,
