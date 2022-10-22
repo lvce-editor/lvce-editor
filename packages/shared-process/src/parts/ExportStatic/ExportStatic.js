@@ -225,13 +225,6 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
     `export {}
 //# sourceMappingURL`
   )
-
-  await replace(
-    Path.join(root, 'dist', commitHash, 'config', 'defaultSettings.json'),
-    `"workbench.saveStateOnVisibilityChange": false`,
-    `"workbench.saveStateOnVisibilityChange": true`
-  )
-
   const extensionDirents = await FileSystem.readDir(
     Path.join(
       root,
