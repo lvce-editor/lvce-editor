@@ -514,23 +514,19 @@ const addExtensionLanguages = async ({
     Path.join(root, 'README.md'),
     Path.join(root, 'dist', commitHash, 'extensions', extensionId, 'README.md')
   )
-  await FileSystem.copy(
-    Path.join(extensionPath, 'src'),
-    Path.join(root, 'dist', commitHash, 'extensions', extensionId, 'src')
-  )
-  await FileSystem.copyFile(
-    Path.join(extensionPath, 'extension.json'),
-    Path.join(
-      root,
-      'dist',
-      commitHash,
-      'extensions',
-      extensionId,
-      'extension.json'
-    )
-  )
+  for (const file of ['src', 'data', 'extension.json']) {
+    if (await FileSystem.exists(Path.join(extensionPath, file))) {
+      await FileSystem.copy(
+        Path.join(extensionPath, file),
+        Path.join(root, 'dist', commitHash, 'extensions', extensionId, file)
+      )
+    }
+  }
   const extensionLanguages = []
   for (const language of languages) {
+    if (!language.tokenize) {
+      continue
+    }
     extensionLanguages.push({
       ...language,
       tokenize: `${pathPrefix}/${commitHash}/extensions/${extensionId}/${language.tokenize}`,
