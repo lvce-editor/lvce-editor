@@ -4,46 +4,14 @@ import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-
-const COLUMN_WIDTH = 9 // TODO compute this automatically once
-
-// interface Editor {
-//  readonly uri: string
-//  readonly type: string
-// }
-
-// interface EditorLazy {
-//  readonly type: 'lazy'
-// }
-
-// interface EditorText extends Editor {
-//   readonly textDocument: TextDocument
-//   readonly type: 'text'
-// }
-
-// interface EditorIframe extends Editor {
-//  readonly srcdoc: string
-//  readonly type: 'iframe'
-// }
-
-// interface EditorImage extends Editor {
-//   readonly src: string
-//   readonly type: 'image'
-// }
-
-// interface EditorVideo extends Editor {
-//   readonly src: string
-//   readonly type: 'video'
-// }
 
 const canBeRestored = (editor) => {
   return FileSystem.canBeRestored(editor.uri)
@@ -86,13 +54,6 @@ const handleTokenizeChange = (languageId) => {
   //     Editor.handleTokenizeChange(editor)
   //   }
   // }
-}
-
-const hydrateLazy = async () => {
-  // TODO this should be in extension host
-  await Command.execute(
-    /* EditorDiagnostics.hydrate */ 'EditorDiagnostics.hydrate'
-  )
 }
 
 export const name = ViewletModuleId.Main
@@ -158,7 +119,7 @@ const findEditorWithUri = (editors, uri) => {
 
 const TAB_HEIGHT = 35
 
-const getRestoredEditors = async (savedState) => {
+const getRestoredEditors = (savedState) => {
   if (Workspace.isTest()) {
     return []
   }
@@ -166,12 +127,10 @@ const getRestoredEditors = async (savedState) => {
   return restoredEditors
 }
 
-export const loadContent = async (state, savedState) => {
+export const loadContent = (state, savedState) => {
   console.log({ savedState })
   // TODO get restored editors from saved state
-  const editors = await getRestoredEditors(savedState)
-  // @ts-ignore
-  LifeCycle.once(LifeCycle.PHASE_TWELVE, hydrateLazy)
+  const editors = getRestoredEditors(savedState)
   return {
     ...state,
     editors,
@@ -254,54 +213,81 @@ export const openUri = async (state, uri, focus = true) => {
   for (const editor of state.editors) {
     if (editor.uri === uri) {
       // TODO if the editor is already open, nothing needs to be done
-      const instance = ViewletManager.create(
-        ViewletModule.load,
-        id,
-        'Main',
-        uri,
-        left,
-        top,
-        width,
-        height
+      const extraCommands = await ViewletManager.load(
+        {
+          getModule: ViewletModule.load,
+          id,
+          // @ts-ignore
+          parentId: 'Main',
+          type: 0,
+          uri,
+          left,
+          top,
+          width,
+          height,
+          show: false,
+          focus: false,
+        },
+        focus
       )
-      // @ts-ignore
-
-      await ViewletManager.load(instance, focus)
-      return
+      return {
+        newState: state,
+        commands: extraCommands,
+      }
     }
   }
-  const instance = ViewletManager.create(
-    ViewletModule.load,
-    id,
-    'Main',
-    uri,
-    left,
-    top,
-    width,
-    height
-  )
+  const commands = []
+  if (state.editors.length > 0) {
+    const id = getId(state.editors[0])
+    const extraCommands = Viewlet.disposeFunctional(id)
+    commands.push(...extraCommands)
+    // TODO dispose current editor
+  }
   const oldActiveIndex = state.activeIndex
   state.editors.push({ uri })
   state.activeIndex = state.editors.length - 1
   const tabLabel = Workspace.pathBaseName(uri)
   const tabTitle = getTabTitle(uri)
-  await RendererProcess.invoke(
+  commands.push([
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ 'Main',
     /* method */ 'openViewlet',
     /* tabLabel */ tabLabel,
     /* tabTitle */ tabTitle,
-    /* oldActiveIndex */ oldActiveIndex
-  )
+    /* oldActiveIndex */ oldActiveIndex,
+  ])
   // @ts-ignore
-
-  await ViewletManager.load(instance, focus)
-  return state
+  const extraCommands = await ViewletManager.load(
+    {
+      getModule: ViewletModule.load,
+      id,
+      // @ts-ignore
+      parentId: 'Main',
+      type: 0,
+      uri,
+      left,
+      top,
+      width,
+      height,
+      show: false,
+      focus: false,
+    },
+    focus
+  )
+  console.log({ extraCommands })
+  commands.push(...extraCommands)
+  commands.push(['Viewlet.appendViewlet', 'Main', id])
+  console.log({ commands })
+  return {
+    newState: state,
+    commands: extraCommands,
+  }
 }
 
-export const save = () => {
+export const save = (state) => {
   // TODO handle different types of editors / custom editors / webviews
   Command.execute(/* EditorSave.editorSave */ 'Editor.save')
+  return state
 }
 
 // const getEditor = (uri) => {
@@ -337,90 +323,11 @@ export const handleDrop = async () => {
   console.log({ clipBoardText })
 }
 
-export const closeActiveEditor = (state) => {
-  if (!state.activeEditor) {
-  }
-}
-
 const getId = (editor) => {
   return ViewletMap.getId(editor.uri)
 }
 
-export const closeAllEditors = async (state) => {
-  RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'Main',
-    /* method */ 'dispose'
-  )
-  const ids = state.editors.map(getId)
-  state.editors = []
-  state.focusedIndex = -1
-  state.selectedIndex = -1
-  // TODO should call dispose method, but only in renderer-worker
-  for (const id of ids) {
-    await ViewletStates.dispose(id)
-  }
-}
-
 export const dispose = () => {}
-
-export const closeEditor = async (state, index) => {
-  console.log('close', index, 'of', state.editors)
-  if (state.editors.length === 1) {
-    console.log('close all')
-    closeAllEditors(state)
-    return
-  }
-  const top = state.top
-  const left = state.left
-  const width = state.width
-  const height = state.height
-  if (index === state.activeIndex) {
-    const oldActiveIndex = state.activeIndex
-    const oldEditor = state.editors[index]
-    state.editors.splice(index, 1)
-    const newActiveIndex = index === 0 ? index : index - 1
-    const id = ViewletMap.getId(oldEditor.uri)
-    Viewlet.dispose(id)
-    state.activeIndex = newActiveIndex
-    state.focusedIndex = newActiveIndex
-    // const instance = Viewlet.create(id, 'uri', left, top, width, height)
-    // TODO ideally content would load synchronously and there would be one layout and one paint for opening the new tab
-    // except in the case where the content takes long (>100ms) to load, then it should show the tab
-    // and for the content a loading spinner or (preferred) a progress bar
-    // that it replaced with the actual content once it has been loaded
-    // await instance.factory.refresh(instance.state, {
-    //   uri: previousEditor.uri,
-    //   top: instance.state.top,
-    //   left: instance.state.left,
-    //   height: instance.state.height,
-    //   columnWidth: COLUMN_WIDTH,
-    // })
-    await RendererProcess.invoke(
-      /* Main.closeOneTab */ 'Main.closeOneTab',
-      /* closeIndex */ oldActiveIndex,
-      /* focusIndex */ newActiveIndex
-    )
-    return
-  }
-  await RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'Main',
-    /* method */ 'closeOneTabOnly',
-    /* closeIndex */ index
-  )
-  state.editors.splice(index, 1)
-  if (index < state.activeIndex) {
-    state.activeIndex--
-  }
-  state.focusedIndex = state.activeIndex
-
-  // TODO just close the tab
-}
-
-export const closeFocusedTab = (state) => {
-  closeEditor(state.focusedIndex)
-}
 
 export const handleTabContextMenu = async (state, index, x, y) => {
   state.focusedIndex = index
@@ -432,136 +339,8 @@ export const handleTabContextMenu = async (state, index, x, y) => {
   )
 }
 
-export const focusIndex = (state, index) => {
-  if (index === state.activeIndex) {
-    console.log('index', index, 'is already active index')
-    return
-  }
-  const oldActiveIndex = state.activeIndex
-  state.activeIndex = index
-
-  const editor = state.editors[index]
-  const top = state.top + TAB_HEIGHT
-  const left = state.left
-  const width = state.width
-  const height = state.height - TAB_HEIGHT
-  const id = ViewletMap.getId(editor.uri)
-
-  const viewlet = ViewletManager.create(
-    ViewletModule.load,
-    id,
-    'Main',
-    editor.uri,
-    left,
-    top,
-    width,
-    height
-  )
-
-  // TODO race condition
-  RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'Main',
-    /* method */ 'focusAnotherTab',
-    /* unFocusIndex */ oldActiveIndex,
-    /* focusIndex */ state.activeIndex
-  )
-  // @ts-ignore
-  return ViewletManager.load(viewlet)
-}
-
-export const focusFirst = (state) => {
-  return focusIndex(state, 0)
-}
-
-export const focusLast = (state) => {
-  return focusIndex(state, state.editors.length - 1)
-}
-
-export const focusPrevious = (state) => {
-  const previousIndex =
-    state.activeIndex === 0 ? state.editors.length - 1 : state.activeIndex - 1
-  return focusIndex(state, previousIndex)
-}
-
-export const focusNext = (state) => {
-  const nextIndex =
-    state.activeIndex === state.editors.length - 1 ? 0 : state.activeIndex + 1
-  return focusIndex(state, nextIndex)
-}
-
-export const handleTabClick = (state, index) => {
-  console.log('focus index', index)
-  return focusIndex(state, index)
-}
-
-export const closeOthers = async (state) => {
-  if (state.focusedIndex === state.activeIndex) {
-    // view is kept the same, only tabs are closed
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Main',
-      /* method */ 'closeOthers',
-      /* keepIndex */ state.focusedIndex,
-      /* focusIndex */ state.focusedIndex
-    )
-  } else {
-    // view needs to be switched to focused index
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Main',
-      /* method */ 'closeOthers',
-      /* keepIndex */ state.focusedIndex,
-      /* focusIndex */ state.focusedIndex
-    )
-  }
-  state.editors = [state.editors[state.focusedIndex]]
-  state.activeIndex = 0
-  state.focusedIndex = 0
-}
-
-export const closeTabsRight = async (state) => {
-  if (state.focusedIndex >= state.activeIndex) {
-    // view is kept the same, only tabs are closed
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Main',
-      /* method */ 'closeTabsRight',
-      /* index */ state.focusedIndex
-    )
-  } else {
-    // view needs to be switched to focused index
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Main',
-      /* method */ 'closeTabsRight',
-      /* index */ state.focusedIndex
-    )
-  }
-  state.editors = state.editors.slice(0, state.focusedIndex + 1)
-  state.activeIndex = state.focusedIndex
-}
-
-export const closeTabsLeft = async (state) => {
-  if (state.focusedIndex <= state.activeIndex) {
-    // view is kept the same, only tabs are closed
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Main',
-      /* method */ 'closeTabsLeft',
-      /* index */ state.focusedIndex
-    )
-  } else {
-    // view needs to be switched to focused index
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Main',
-      /* method */ 'closeTabsLeft',
-      /* index */ state.focusedIndex
-    )
-  }
-  state.editors = state.editors.slice(state.focusedIndex)
-  state.activeIndex = state.focusedIndex
+export const stateUpdated = (oldState, newState) => {
+  // TODO create/update editors
 }
 
 export const resize = (state, dimensions) => {

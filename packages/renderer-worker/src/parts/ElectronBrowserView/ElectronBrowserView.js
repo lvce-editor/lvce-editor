@@ -22,9 +22,9 @@ export const createBrowserView = (
   )
 }
 
-export const disposeBrowserView = () => {
+export const disposeBrowserView = (id) => {
   state.openCount--
-  return ElectronProcess.invoke('ElectronBrowserView.disposeBrowserView')
+  return ElectronProcess.invoke('ElectronBrowserView.disposeBrowserView', id)
 }
 
 export const getOpenCount = () => {

@@ -146,7 +146,9 @@ export const disposeFunctional = (id) => {
     if (!instance.factory) {
       throw new Error(`${id} is missing a factory function`)
     }
-    instance.factory.dispose(instance.state)
+    if (instance.factory.dispose) {
+      instance.factory.dispose(instance.state)
+    }
     instance.status = 'disposed'
     ViewletStates.remove(id)
     return [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id]]

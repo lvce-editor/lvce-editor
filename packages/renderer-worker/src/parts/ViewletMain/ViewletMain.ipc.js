@@ -2,6 +2,16 @@ import * as ViewletMain from './ViewletMain.js'
 
 // prettier-ignore
 export const Commands = {
+
+  'Main.handleDrop': ViewletMain.handleDrop,
+  'Main.handleTabClick': ViewletMain.handleTabClick,
+  'Main.handleTabContextMenu': ViewletMain.handleTabContextMenu,
+  'Main.save': ViewletMain.save,
+  // 'Main.hydrate': ViewletMain.hydrate,
+}
+
+export const CommandsWithSideEffects = {
+  'Main.openUri': ViewletMain.openUri,
   'Main.closeActiveEditor': ViewletMain.closeActiveEditor,
   'Main.closeAllEditors': ViewletMain.closeAllEditors,
   'Main.closeEditor': ViewletMain.closeEditor,
@@ -13,12 +23,6 @@ export const Commands = {
   'Main.focusLast': ViewletMain.focusLast,
   'Main.focusNext': ViewletMain.focusNext,
   'Main.focusPrevious': ViewletMain.focusPrevious,
-  'Main.handleDrop': ViewletMain.handleDrop,
-  'Main.handleTabClick': ViewletMain.handleTabClick,
-  'Main.handleTabContextMenu': ViewletMain.handleTabContextMenu,
-  'Main.openUri': ViewletMain.openUri,
-  'Main.save': ViewletMain.save,
-  // 'Main.hydrate': ViewletMain.hydrate,
 }
 
 export * from './ViewletMain.js'

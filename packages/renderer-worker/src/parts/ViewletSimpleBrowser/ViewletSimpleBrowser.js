@@ -133,7 +133,8 @@ export const resize = (state, dimensions) => {
 }
 
 export const dispose = async (state) => {
-  await ElectronBrowserView.disposeBrowserView()
+  const { browserViewId } = state
+  await ElectronBrowserView.disposeBrowserView(browserViewId)
   console.log('dispose browser view')
 }
 

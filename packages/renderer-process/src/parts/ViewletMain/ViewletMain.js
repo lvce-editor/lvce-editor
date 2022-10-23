@@ -230,6 +230,9 @@ export const closeTabsLeft = (state, index) => {
 
 export const updateTab = (state, index, text) => {
   const { $MainTabs } = state
+  if (!$MainTabs) {
+    return
+  }
   const $Tab = $MainTabs.children[index]
   const $TabLabel = $Tab.firstChild
   $TabLabel.textContent = text
