@@ -50,6 +50,10 @@ export const create = (id, uri, languageId, content) => {
     invalidStartIndex: 0,
     decorations: [],
     focused: false,
+    /**
+     * Offset at which scrollbar thumb has been clicked
+     */
+    handleOffset: 0,
   }
 }
 

@@ -58,7 +58,6 @@ export const create = () => {
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
-  $ScrollBarThumb.onpointerdown = EditorEvents.handleScrollBarThumbPointerDown
 
   // TODO only create $ScrollBarDiagnostics lazily when there are actually diagnostics
   const $ScrollBarDiagnostics = document.createElement('div')
@@ -66,7 +65,7 @@ export const create = () => {
 
   const $ScrollBar = document.createElement('div')
   $ScrollBar.className = 'ScrollBar'
-  $ScrollBar.onmousedown = EditorEvents.handleScrollBarMouseDown
+  $ScrollBar.onpointerdown = EditorEvents.handleScrollBarPointerDown
   $ScrollBar.oncontextmenu = EditorEvents.handleScrollBarContextMenu
   $ScrollBar.append($ScrollBarThumb)
 
