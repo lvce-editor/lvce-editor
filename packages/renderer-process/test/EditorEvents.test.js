@@ -455,7 +455,11 @@ test('event - pointerdown - on scroll bar thumb', () => {
     button: MouseEventType.LeftClick,
   })
   $ScrollBarThumb.dispatchEvent(event)
-  expect(RendererWorker.send).not.toHaveBeenCalled()
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Editor.handleScrollBarPointerDown',
+    20
+  )
 })
 
 test('event - pointermove after pointerdown - on scroll bar thumb', () => {
@@ -477,9 +481,14 @@ test('event - pointermove after pointerdown - on scroll bar thumb', () => {
     button: MouseEventType.LeftClick,
   })
   $ScrollBarThumb.dispatchEvent(pointerMoveEvent)
-  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(2)
   expect(RendererWorker.send).toHaveBeenNthCalledWith(
     1,
+    'Editor.handleScrollBarPointerDown',
+    20
+  )
+  expect(RendererWorker.send).toHaveBeenNthCalledWith(
+    2,
     'Editor.handleScrollBarMove',
     40
   )
