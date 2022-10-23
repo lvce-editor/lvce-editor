@@ -202,7 +202,7 @@
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.theme-monokai",
