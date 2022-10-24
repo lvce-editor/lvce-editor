@@ -15,12 +15,3 @@ export const addCssStyleSheet = async (text) => {
   await sheet.replace(text)
   document.adoptedStyleSheets.push(sheet)
 }
-
-export const loadCssStyleSheet = async (css) => {
-  const response = await fetch(css)
-  if (!response.ok) {
-    throw new Error(response.statusText)
-  }
-  const text = await response.text()
-  await addCssStyleSheet(text)
-}
