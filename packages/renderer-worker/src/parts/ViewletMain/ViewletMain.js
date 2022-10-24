@@ -3,6 +3,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
+import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
@@ -10,8 +11,8 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletMap from '../ViewletMap/ViewletMap.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
@@ -171,7 +172,7 @@ export const loadContent = async (state, savedState) => {
   // TODO get restored editors from saved state
   const editors = await getRestoredEditors(savedState)
   // @ts-ignore
-  LifeCycle.once(LifeCycle.Phase.Twelve, hydrateLazy)
+  LifeCycle.once(LifeCyclePhase.Twelve, hydrateLazy)
   return {
     ...state,
     editors,
