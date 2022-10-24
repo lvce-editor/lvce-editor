@@ -406,7 +406,7 @@ test('event - mouseleave - outside', () => {
   expect(RendererWorker.send).not.toHaveBeenCalled()
 })
 
-test('event - mouseleave - outside', () => {
+test.skip('event - mouseleave - outside', () => {
   Menu.showMenu(0, 0, 100, 250, [
     {
       label: 'item 1',
