@@ -7,4 +7,6 @@ export const Commands = {
   'TitleBarButtons.handleClickToggleMaximize': ViewletTitleBarButtons.handleClickToggleMaximize,
 }
 
+export const Css = '/css/parts/ViewletTitleBarButtons.css'
+
 export * from './ViewletTitleBarButtons.js'

@@ -25,4 +25,6 @@ export const Commands = {
   'TitleBarMenuBar.toggleMenu': ViewletTitleBarMenuBar.toggleMenu,
 }
 
+export const Css = '/css/parts/ViewletTitleBarMenuBar.css'
+
 export * from './ViewletTitleBarMenuBar.js'
