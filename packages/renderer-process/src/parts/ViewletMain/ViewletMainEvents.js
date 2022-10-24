@@ -1,16 +1,18 @@
-import * as Layout from '../Layout/Layout.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
+const ClassNames = {
+  Label: 'Label',
+  EditorTabCloseButton: 'EditorTabCloseButton',
+  MainTab: 'MainTab',
+}
+
 export const handleDragOver = (event) => {
   event.preventDefault()
-  Layout.state.$Main.classList.add('DropTarget')
 }
 
 export const handleDrop = async (event) => {
-  console.log('[main] drop')
   event.preventDefault()
-  Layout.state.$Main.classList.remove('DropTarget')
   RendererWorker.send(/* handleDrop */ 'Main.handleDrop')
 }
 
@@ -24,9 +26,10 @@ const getNodeIndex = ($Node) => {
 
 const getIndex = ($Target) => {
   switch ($Target.className) {
-    case 'EditorTabCloseButton':
+    case ClassNames.EditorTabCloseButton:
+    case ClassNames.Label:
       return getNodeIndex($Target.parentNode)
-    case 'MainTab':
+    case ClassNames.MainTab:
       return getNodeIndex($Target)
     default:
       return -1
@@ -41,7 +44,8 @@ export const handleTabCloseButtonMouseDown = (event, index) => {
 }
 
 export const handleTabMouseDown = (event, index) => {
-  switch (event.button) {
+  const { button } = event
+  switch (button) {
     case MouseEventType.LeftClick:
       RendererWorker.send(
         /* Main.handleTabClick */ 'Main.handleTabClick',
@@ -62,17 +66,18 @@ export const handleTabMouseDown = (event, index) => {
 }
 
 export const handleTabsMouseDown = (event) => {
-  const $Target = event.target
-  const index = getIndex($Target)
+  const { target } = event
+  const index = getIndex(target)
   if (index === -1) {
     return
   }
   event.preventDefault()
-  switch ($Target.className) {
-    case 'EditorTabCloseButton':
+  switch (target.className) {
+    case ClassNames.EditorTabCloseButton:
       handleTabCloseButtonMouseDown(event, index)
       break
-    case 'MainTab':
+    case ClassNames.MainTab:
+    case ClassNames.Label:
       handleTabMouseDown(event, index)
       break
     default:
@@ -81,18 +86,16 @@ export const handleTabsMouseDown = (event) => {
 }
 
 export const handleTabsContextMenu = (event) => {
-  const $Target = event.target
-  const index = getIndex($Target)
+  const { clientX, clientY, target } = event
+  const index = getIndex(target)
   if (index === -1) {
     return
   }
   event.preventDefault()
-  const x = event.clientX
-  const y = event.clientY
   RendererWorker.send(
     /* Main.handleTabContextMenu */ 'Main.handleTabContextMenu',
     /* index */ index,
-    /* x */ x,
-    /* y */ y
+    /* x */ clientX,
+    /* y */ clientY
   )
 }
