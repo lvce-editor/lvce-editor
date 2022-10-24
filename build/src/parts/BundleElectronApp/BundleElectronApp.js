@@ -218,7 +218,7 @@ const copyStaticFiles = async ({ arch }) => {
 
 const copyCss = async ({ arch }) => {
   await BundleCss.bundleCss({
-    to: `build/.tmp/electron-bundle/${arch}/resources/app/static/css/App.css`,
+    outDir: `build/.tmp/electron-bundle/${arch}/resources/app/static/css`,
   })
 }
 
