@@ -432,7 +432,7 @@ export const handleTabContextMenu = async (state, index, x, y) => {
   )
 }
 
-export const focusIndex = (state, index) => {
+export const focusIndex = async (state, index) => {
   if (index === state.activeIndex) {
     console.log('index', index, 'is already active index')
     return
@@ -467,7 +467,8 @@ export const focusIndex = (state, index) => {
     /* focusIndex */ state.activeIndex
   )
   // @ts-ignore
-  return ViewletManager.load(viewlet)
+  await ViewletManager.load(viewlet)
+  return state
 }
 
 export const focusFirst = (state) => {
