@@ -1,0 +1,11 @@
+/* Alert  */
+.AriaAlert {
+  position: absolute;
+  left: -999em;
+  top: 0;
+}
+
+.monaco-aria-container {
+  width: 0;
+  height: 0;
+}

@@ -1,7 +1,24 @@
 import { jest } from '@jest/globals'
 
+beforeAll(() => {
+  // @ts-ignore
+  globalThis.Response = class {
+    constructor(input) {
+      this.ok = input.ok
+      this._text = input.text
+      this.statusText = input.statusText
+    }
+    text() {
+      return this._text
+    }
+  }
+})
+
 beforeEach(() => {
   jest.resetAllMocks()
+  globalThis.fetch = async () => {
+    throw new Error('not implemented')
+  }
 })
 
 jest.unstable_mockModule(
@@ -29,5 +46,34 @@ test('setInlineStyle', async () => {
     'Css.setInlineStyle',
     'test',
     '* { height: 500px; }'
+  )
+})
+
+test('loadCssStyleSheet - error - 404', async () => {
+  // @ts-ignore
+  globalThis.fetch = () => {
+    // @ts-ignore
+    return new Response({ ok: false, statusText: 'Not Found' })
+  }
+  await expect(
+    Css.loadCssStyleSheet('/test/Component.css')
+  ).rejects.toThrowError(new Error('Not Found'))
+})
+
+test('loadCssStyleSheet', async () => {
+  // @ts-ignore
+  globalThis.fetch = async () => {
+    return new Response({
+      ok: true,
+      statusText: 'ok',
+      // @ts-ignore
+      text: 'h1 { font-size: 20px; }',
+    })
+  }
+  await Css.loadCssStyleSheet('/test/Component.css')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(
+    'Css.addCssStyleSheet',
+    'h1 { font-size: 20px; }'
   )
 })

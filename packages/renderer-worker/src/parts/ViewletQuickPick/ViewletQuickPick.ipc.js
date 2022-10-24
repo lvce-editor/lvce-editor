@@ -27,4 +27,6 @@ export const Commands = {
   'QuickPick.selectItem': ViewletQuickPick.selectItem,
 }
 
+export const Css = '/css/parts/ViewletQuickPick.css'
+
 export * from './ViewletQuickPick.js'

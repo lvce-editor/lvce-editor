@@ -167,7 +167,6 @@ const getRestoredEditors = async (savedState) => {
 }
 
 export const loadContent = async (state, savedState) => {
-  console.log({ savedState })
   // TODO get restored editors from saved state
   const editors = await getRestoredEditors(savedState)
   // @ts-ignore
@@ -184,7 +183,6 @@ export const getChildren = (state) => {
     return []
   }
   const editor = editors[0]
-  console.log({ editor })
   return [
     // {
     //   id: ViewletModuleId.MainTabs,

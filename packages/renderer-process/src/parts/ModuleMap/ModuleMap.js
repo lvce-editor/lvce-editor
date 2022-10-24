@@ -9,6 +9,7 @@ export const getModuleId = (commandId) => {
     case 'ClipBoard.writeImage':
     case 'ClipBoard.writeText':
       return ModuleId.ClipBoard
+    case 'Css.addCssStyleSheet':
     case 'Css.setInlineStyle':
       return ModuleId.Css
     case 'Developer.getMemoryUsage':

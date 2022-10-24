@@ -1,5 +1,4 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Layout from '../Layout/Layout.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 const create$PanelTab = (label, index) => {

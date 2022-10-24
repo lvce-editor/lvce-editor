@@ -86,18 +86,10 @@ const copyStaticFiles = async ({ commitHash }) => {
     replacement: `/${commitHash}/fonts`,
   })
   await BundleCss.bundleCss({
-    to: `build/.tmp/server/server/static/${commitHash}/css/App.css`,
+    outDir: `build/.tmp/server/server/static/${commitHash}/css`,
+    assetDir: `/${commitHash}`,
   })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/${commitHash}/css/App.css`,
-    occurrence: `url(/icons/`,
-    replacement: `url(/${commitHash}/icons/`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/server/server/static/${commitHash}/css/App.css`,
-    occurrence: `url(/fonts/`,
-    replacement: `url(/${commitHash}/fonts/`,
-  })
+
   await Copy.copy({
     from: 'static/icons',
     to: `build/.tmp/server/server/static/${commitHash}/icons`,

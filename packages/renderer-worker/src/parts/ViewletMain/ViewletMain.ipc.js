@@ -21,4 +21,6 @@ export const Commands = {
   // 'Main.hydrate': ViewletMain.hydrate,
 }
 
+export const Css = '/css/parts/Main.css'
+
 export * from './ViewletMain.js'

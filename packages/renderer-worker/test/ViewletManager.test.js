@@ -5,6 +5,7 @@ import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 beforeEach(() => {
   jest.resetAllMocks()
   ViewletStates.reset()
+  ViewletManager.state.pendingModules = Object.create(null)
 })
 
 jest.unstable_mockModule(
@@ -111,8 +112,8 @@ test('load - error - no create method', async () => {
       'TypeError: module.create is not a function',
     ],
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.load', '')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.load', '')
 })
 
 test('load - error - create method throws error', async () => {
@@ -130,8 +131,8 @@ test('load - error - create method throws error', async () => {
     ['Viewlet.create', ''],
     ['Viewlet.handleError', '', '', 'TypeError: x is not a function'],
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.load', '')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.load', '')
 })
 
 test('load - error - no loadContent method', async () => {
@@ -154,8 +155,8 @@ test('load - error - no loadContent method', async () => {
       'TypeError: module.loadContent is not a function',
     ],
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.load', '')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.load', '')
 })
 
 test('load - error - loadContent method throws error', async () => {
@@ -178,8 +179,8 @@ test('load - error - loadContent method throws error', async () => {
     ['Viewlet.create', ''],
     ['Viewlet.handleError', '', '', 'TypeError: x is not a function'],
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.load', '')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.load', '')
 })
 
 test('load - error - contentLoaded is not of type function', async () => {
@@ -208,8 +209,8 @@ test('load - error - contentLoaded is not of type function', async () => {
       'TypeError: module.contentLoaded is not a function',
     ],
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.load', '')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.load', '')
 })
 
 test('load - error - contentLoaded method throws error', async () => {
@@ -235,8 +236,8 @@ test('load - error - contentLoaded method throws error', async () => {
     ['Viewlet.create', ''],
     ['Viewlet.handleError', '', '', 'TypeError: x is not a function'],
   ])
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.load', '')
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.load', '')
   expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.load', '')
 })
 

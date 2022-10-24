@@ -5,4 +5,6 @@ export const Commands = {
   'ViewletStatusBar.updateStatusBarItems': ViewletStatusBar.updateStatusBarItems
 }
 
+export const Css = '/css/parts/ViewletStatusBar.css'
+
 export * from './ViewletStatusBar.js'

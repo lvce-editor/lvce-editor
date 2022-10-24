@@ -7,4 +7,6 @@ export const Commands = {
   'KeyBindings.handleWheel':ViewletKeyBindings.handleWheel,
 }
 
+export const Css = '/css/parts/ViewletKeyBindings.css'
+
 export * from './ViewletKeyBindings.js'

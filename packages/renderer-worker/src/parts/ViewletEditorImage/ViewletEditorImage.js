@@ -59,7 +59,6 @@ const getSrc = (uri) => {
 
 // TODO revoke object url when disposed
 export const loadContent = async (state, savedState) => {
-  console.log({ savedState })
   const { uri } = state
   const src = await getSrc(uri)
   return {

@@ -1,5 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as Css from '../Css/Css.js'
+import * as Platform from '../Platform/Platform.js'
 
 export const state = {
   instances: Object.create(null),

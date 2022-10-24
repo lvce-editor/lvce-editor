@@ -12,4 +12,6 @@ export const Commands = {
   // 'EditorCompletion.selectCurrent': Viewlet.wrapViewletCommand('EditorCompletion', ViewletEditorCompletion.selectCurrent),
 }
 
+export const Css = '/css/parts/ViewletEditorCompletion.css'
+
 export * from './ViewletEditorCompletion.js'

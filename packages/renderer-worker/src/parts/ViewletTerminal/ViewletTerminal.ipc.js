@@ -6,4 +6,6 @@ export const Commands = {
   'Terminal.write': ViewletTerminal.write,
 }
 
+export const Css = '/css/parts/ViewletTerminal.css'
+
 export * from './ViewletTerminal.js'

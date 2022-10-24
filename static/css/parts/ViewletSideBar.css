@@ -1,5 +1,4 @@
 #SideBar {
-  background: var(--SideBarBackground, rgb(30, 35, 36));
   color: var(--SideBarForeground, white);
   display: flex;
   flex-direction: column;

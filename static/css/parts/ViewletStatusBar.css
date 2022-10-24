@@ -4,7 +4,6 @@
 }
 
 #StatusBar {
-  background: var(--StatusBarBackground);
   height: 23px; /* 22px content + 1px border top */
   border-top: 1px solid var(--StatusBarBorderTopColor);
   display: flex;

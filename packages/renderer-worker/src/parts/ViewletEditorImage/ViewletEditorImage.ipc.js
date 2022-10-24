@@ -19,4 +19,6 @@ export const Commands = {
   'EditorImage.handleWheel': ViewletEditorImage.handleWheel,
 }
 
+export const Css = '/css/parts/ViewletEditorImage.css'
+
 export * from './ViewletEditorImage.js'

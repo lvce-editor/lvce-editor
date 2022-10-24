@@ -7,6 +7,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletElectron from './ViewletElectron.js'
+import * as Css from '../Css/Css.js'
 
 export const focus = async (id) => {
   const instance = ViewletStates.getInstance(id)
