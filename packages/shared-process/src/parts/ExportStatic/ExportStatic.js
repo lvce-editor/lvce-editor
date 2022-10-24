@@ -358,9 +358,15 @@ const applyOverrides = async ({ root, commitHash, pathPrefix }) => {
     `/${commitHash}`,
     `${pathPrefix}/${commitHash}`
   )
-
   await replace(
-    Path.join(root, 'dist', commitHash, 'css', 'App.css'),
+    Path.join(
+      root,
+      'dist',
+      commitHash,
+      'css',
+      'parts',
+      'ViewletTitleBarButtons.css'
+    ),
     `/${commitHash}`,
     `${pathPrefix}/${commitHash}`
   )

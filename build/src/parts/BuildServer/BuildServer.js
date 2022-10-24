@@ -87,7 +87,7 @@ const copyStaticFiles = async ({ commitHash }) => {
   })
   await BundleCss.bundleCss({
     outDir: `build/.tmp/server/server/static/${commitHash}/css`,
-    assetDir: '/commitHash',
+    assetDir: `/${commitHash}`,
   })
 
   await Copy.copy({

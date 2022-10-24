@@ -22,6 +22,10 @@ const getParts = (appCss) => {
   return parts
 }
 
+const toSorted = (array) => {
+  return [...array].sort().reverse()
+}
+
 export const bundleCss = async ({
   outDir,
   additionalCss = '',
@@ -49,13 +53,24 @@ export const bundleCss = async ({
   )
   const parts = getParts(appCss)
   const cwd = join(Root.root, 'static', 'css', 'parts')
-  for (const part of parts) {
-    const absolutePath = join(cwd, part)
-    const content = await readFile(absolutePath, 'utf8')
-    css += `/*************/\n`
-    css += `/* ${part} */\n`
-    css += `/*************/\n`
-    css += content
+  const dirents = await readdir(cwd)
+  const sortedDirents = toSorted(dirents)
+  for (const dirent of sortedDirents) {
+    if (parts.includes(dirent)) {
+      for (const part of parts) {
+        const absolutePath = join(cwd, part)
+        const content = await readFile(absolutePath, 'utf8')
+        css += `/*************/\n`
+        css += `/* ${part} */\n`
+        css += `/*************/\n`
+        css += content
+      }
+    } else {
+      await Copy.copy({
+        from: `static/css/parts/${dirent}`,
+        to: Path.join(outDir, 'parts', dirent),
+      })
+    }
   }
 
   const appCssPath = Path.join(outDir, 'App.css')
@@ -63,10 +78,7 @@ export const bundleCss = async ({
     to: appCssPath,
     content: css,
   })
-  await Copy.copy({
-    from: 'static/css/parts',
-    to: Path.join(outDir, 'parts'),
-  })
+
   await Replace.replace({
     path: appCssPath,
     occurrence: `url(/icons/`,
