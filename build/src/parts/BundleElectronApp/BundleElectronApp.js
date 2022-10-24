@@ -1,8 +1,8 @@
 import { existsSync } from 'node:fs'
 import * as BundleCss from '../BundleCss/BundleCss.js'
+import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as BundleRendererProcessCached from '../BundleRendererProcessCached/BundleRendererProcessCached.js'
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
-import * as BundleExtensionHostWorkerCached from '../BundleExtensionHostWorkerCached/BundleExtensionHostWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Hash from '../Hash/Hash.js'
@@ -13,8 +13,8 @@ import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Replace from '../Replace/Replace.js'
-import * as WriteFile from '../WriteFile/WriteFile.js'
 import * as Tag from '../Tag/Tag.js'
+import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const getDependencyCacheHash = async () => {
   const files = [
@@ -123,7 +123,7 @@ const copyPlaygroundFiles = async ({ arch }) => {
   })
 }
 
-const copyMainProcessSources = async ({ arch }) => {
+const copyMainProcessSources = async ({ arch, commitHash }) => {
   await Copy.copy({
     from: 'packages/main-process/src',
     to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src`,
@@ -162,7 +162,6 @@ const copyMainProcessSources = async ({ arch }) => {
     occurrence: `exports.scheme = 'lvce-oss'`,
     replacement: `exports.scheme = '${Product.applicationName}'`,
   })
-  const commitHash = await CommitHash.getCommitHash()
   await Replace.replace({
     path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
     occurrence: `exports.commit = 'unknown commit'`,
@@ -272,7 +271,7 @@ export const build = async () => {
   console.timeEnd('copyPtyHostSources')
 
   console.time('copyMainProcessSources')
-  await copyMainProcessSources({ arch })
+  await copyMainProcessSources({ arch, commitHash })
   console.timeEnd('copyMainProcessSources')
 
   console.time('copySharedProcessSources')
