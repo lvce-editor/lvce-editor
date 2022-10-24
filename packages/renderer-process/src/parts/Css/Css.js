@@ -9,3 +9,14 @@ export const setInlineStyle = (id, css) => {
     document.head.append($Style)
   }
 }
+
+export const loadCssStyleSheet = async (css) => {
+  const response = await fetch(css)
+  if (!response.ok) {
+    throw new Error(response.statusText)
+  }
+  const text = await response.text()
+  const sheet = new CSSStyleSheet({})
+  await sheet.replace(text)
+  document.adoptedStyleSheets.push(sheet)
+}
