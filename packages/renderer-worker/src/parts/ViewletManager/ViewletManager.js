@@ -347,7 +347,6 @@ export const load = async (
     const commands = []
     if (viewletState !== newState && module.contentLoaded) {
       const additionalExtraCommands = await module.contentLoaded(newState)
-      console.log({ additionalExtraCommands })
       Assert.array(additionalExtraCommands)
       commands.push(...additionalExtraCommands)
     }

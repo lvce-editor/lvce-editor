@@ -21,8 +21,6 @@ const getBlockComment = async (editor) => {
 }
 
 export const editorToggleBlockComment = async (editor) => {
-  console.log('languages have loaded')
-  console.log({ editor: { ...editor } })
   const blockComment = await getBlockComment(editor)
   if (!blockComment) {
     return editor
