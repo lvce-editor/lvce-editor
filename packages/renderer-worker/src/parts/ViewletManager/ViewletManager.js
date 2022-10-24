@@ -7,6 +7,10 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
+export const state = {
+  pendingModules: Object.create(null),
+}
+
 const ViewletState = {
   Default: 0,
   ModuleLoaded: 1,
@@ -182,6 +186,16 @@ const maybeRegisterEvents = (module) => {
   }
 }
 
+const loadModule = async (id) => {
+  if (!(id in state.pendingModules)) {
+    state.pendingModules[id] = RendererProcess.invoke(
+      /* Viewlet.load */ 'Viewlet.loadModule',
+      /* id */ id
+    )
+  }
+  return state.pendingModules[id]
+}
+
 // TODO add lots of unit tests for this
 /**
  *
@@ -253,10 +267,7 @@ export const load = async (
       const children = module.getChildren(newState)
       for (const child of children) {
         const childModule = await viewlet.getModule(child.id)
-        await RendererProcess.invoke(
-          /* Viewlet.load */ 'Viewlet.loadModule',
-          /* id */ child.id
-        )
+        await loadModule(child.id)
         maybeRegisterWrappedCommands(childModule)
         maybeRegisterEvents(childModule)
         // TODO get position of child module
@@ -293,11 +304,7 @@ export const load = async (
       return
     }
     state = ViewletState.ContentLoaded
-
-    await RendererProcess.invoke(
-      /* Viewlet.load */ 'Viewlet.loadModule',
-      /* id */ viewlet.id
-    )
+    await loadModule(viewlet.id)
     if (viewlet.show === false) {
     } else {
       await RendererProcess.invoke(
