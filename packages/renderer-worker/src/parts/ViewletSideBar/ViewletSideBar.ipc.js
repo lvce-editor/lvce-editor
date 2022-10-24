@@ -7,6 +7,6 @@ export const Commands =  {
   'SideBar.show': ViewletSideBar.openViewlet,
 }
 
-export const css = '/css/parts/ViewletSideBar.css'
+export const Css = '/css/parts/ViewletSideBar.css'
 
 export * from './ViewletSideBar.js'

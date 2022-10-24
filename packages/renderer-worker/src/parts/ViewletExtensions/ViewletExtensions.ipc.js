@@ -46,6 +46,6 @@ export const Commands = {
   'Extensions.toggleSuggest': ViewletExtensions.toggleSuggest,
 }
 
-export const css = '/css/parts/ViewletExtensions.css'
+export const Css = '/css/parts/ViewletExtensions.css'
 
 export * from './ViewletExtensions.js'

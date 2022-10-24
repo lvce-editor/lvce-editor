@@ -19,6 +19,6 @@ export const Commands = {
   'EditorImage.handleWheel': ViewletEditorImage.handleWheel,
 }
 
-export const css = '/css/parts/ViewletEditorImage.css'
+export const Css = '/css/parts/ViewletEditorImage.css'
 
 export * from './ViewletEditorImage.js'

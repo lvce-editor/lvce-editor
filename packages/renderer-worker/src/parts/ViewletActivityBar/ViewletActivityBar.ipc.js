@@ -36,6 +36,6 @@ export const Events = {
   'SideBar.viewletChange': ViewletActivityBar.handleSideBarViewletChange,
 }
 
-export const css = '/css/parts/ViewletActivityBar.css'
+export const Css = '/css/parts/ViewletActivityBar.css'
 
 export * from './ViewletActivityBar.js'

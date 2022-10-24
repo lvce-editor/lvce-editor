@@ -193,10 +193,10 @@ const actuallyLoadModule = async (getModule, id) => {
     /* Viewlet.load */ 'Viewlet.loadModule',
     /* id */ id
   )
-  if (module.css) {
+  if (module.Css) {
     // this is a memory leak but it is not too important
     // because javascript modules also cannot be unloaded
-    await Css.loadCssStyleSheet(module.css)
+    await Css.loadCssStyleSheet(module.Css)
   }
   maybeRegisterWrappedCommands(module)
   maybeRegisterEvents(module)

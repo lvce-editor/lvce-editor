@@ -69,6 +69,6 @@ export const Commands = {
   'Explorer.setDeltaY':                      ViewletExplorer.setDeltaY,
 }
 
-export const css = '/css/parts/ViewletExplorer.css'
+export const Css = '/css/parts/ViewletExplorer.css'
 
 export * from './ViewletExplorer.js'

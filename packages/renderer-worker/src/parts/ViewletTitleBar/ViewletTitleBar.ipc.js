@@ -2,6 +2,6 @@
 export const Commands = {
 }
 
-export const css = '/css/parts/ViewletTitleBar.css'
+export const Css = '/css/parts/ViewletTitleBar.css'
 
 export * from './ViewletTitleBar.js'
