@@ -1,5 +1,4 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Layout from '../Layout/Layout.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 const create$PanelTab = (label, index) => {
@@ -117,3 +116,5 @@ export const setSelectedIndex = (state, oldIndex, newIndex) => {
     $PanelTabs.setAttribute('aria-activedescendant', $PanelTab.id)
   }
 }
+
+export const css = '/css/parts/ViewletPanel.css'

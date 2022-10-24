@@ -294,11 +294,11 @@ export const load = async (
     }
     state = ViewletState.ContentLoaded
 
+    await RendererProcess.invoke(
+      /* Viewlet.load */ 'Viewlet.loadModule',
+      /* id */ viewlet.id
+    )
     if (viewlet.show === false) {
-      await RendererProcess.invoke(
-        /* Viewlet.load */ 'Viewlet.loadModule',
-        /* id */ viewlet.id
-      )
     } else {
       await RendererProcess.invoke(
         /* Viewlet.load */ 'Viewlet.load',

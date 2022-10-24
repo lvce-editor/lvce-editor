@@ -310,3 +310,5 @@ export const setItemsHeight = (state, itemsHeight) => {
 }
 
 export const noop = (state) => {}
+
+export const css = '/css/parts/ViewletQuickPick.css'

@@ -89,3 +89,5 @@ export const setInputValue = (state, value) => {
 export const focus = (state) => {
   state.$ViewSourceControlInput.focus()
 }
+
+export const css = '/css/parts/ViewletSourceControl.css'

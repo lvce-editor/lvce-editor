@@ -5,34 +5,18 @@
 /* application css */
 @import './parts/__Theme.css';
 @import './parts/_Global.css';
-@import './parts/ViewletActivityBar.css';
 @import './parts/EditorTabs.css';
 @import './parts/Dialog.css';
 @import './parts/Menu.css';
 @import './parts/Notification.css';
-@import './parts/ViewletExplorer.css';
-@import './parts/ViewletTerminal.css';
-@import './parts/ViewletStatusBar.css';
-@import './parts/ViewletSourceControl.css';
-@import './parts/ViewletSideBar.css';
-@import './parts/ViewletQuickPick.css';
-@import './parts/ViewletExtensions.css';
 @import './parts/MonacoList.css';
 @import './parts/ViewletLayout.css';
-@import './parts/ViewletPanel.css';
 @import './parts/Viewlet.css';
-@import './parts/ViewletOutput.css';
 @import './parts/ContextMenu.css';
 @import './parts/Editor.css';
 @import './parts/ViewletEditorCompletion.css';
 @import './parts/InputBox.css';
-@import './parts/ViewletProblems.css';
-@import './parts/ViewletRunAndDebug.css';
-@import './parts/ViewletSearch.css';
-@import './parts/ViewletDebugConsole.css';
 @import './parts/Highlight.css';
-@import './parts/Main.css';
-@import './parts/ViewletTitleBar.css';
 @import './parts/ViewletTitleBarButtons.css';
 @import './parts/ViewletTitleBarMenuBar.css';
 @import './parts/Widgets.css';
@@ -42,12 +26,7 @@
 @import './parts/BackDrop.css';
 @import './parts/Animation.css';
 @import './parts/ViewletReferences.css';
-@import './parts/ViewletKeyBindings.css';
-@import './parts/ViewletEditorImage.css';
 @import './parts/Label.css';
-@import './parts/ViewletEditorFindWidget.css';
-@import './parts/ViewletExtensionDetail.css';
-@import './parts/ViewletSimpleBrowser.css';
 @import './parts/Markdown.css';
 
 /* focus css (can be overridden by components) */

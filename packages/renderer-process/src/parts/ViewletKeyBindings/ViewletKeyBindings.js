@@ -48,3 +48,5 @@ export const setValue = (state, value) => {
   const { $InputBox } = state
   $InputBox.value = value
 }
+
+export const css = '/css/parts/ViewletKeyBindings.css'

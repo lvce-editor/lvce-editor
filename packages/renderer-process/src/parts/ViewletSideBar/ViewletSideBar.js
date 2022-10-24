@@ -63,3 +63,5 @@ export const focus = async () => {
   // await
   console.log('todo focus sidebar')
 }
+
+export const css = '/css/parts/ViewletSideBar.css'

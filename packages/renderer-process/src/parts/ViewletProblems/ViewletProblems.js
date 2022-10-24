@@ -39,3 +39,5 @@ export const focus = (state) => {
   const { $Viewlet } = state
   $Viewlet.focus()
 }
+
+export const css = '/css/parts/ViewletProblems.css'

@@ -32,9 +32,29 @@ export const create = (id) => {
   }
 }
 
+const loadCssStyleSheet = async (css) => {
+  const response = await fetch(css)
+  if (!response.ok) {
+    throw new Error(response.statusText)
+  }
+  const text = await response.text()
+  const sheet = new CSSStyleSheet({})
+  await sheet.replace(text)
+  document.adoptedStyleSheets.push(sheet)
+  // console.log({ text })
+  // const css = module.css
+}
+
 export const loadModule = async (id) => {
   const module = await ViewletModule.load(id)
   state.modules[id] = module
+  // this is a memory leak but it is not too important
+  // because javascript modules also cannot be unloaded
+  // @ts-ignore
+  if (module.css) {
+    // @ts-ignore
+    await loadCssStyleSheet(module.css)
+  }
 }
 
 export const invoke = (viewletId, method, ...args) => {

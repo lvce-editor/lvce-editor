@@ -354,3 +354,5 @@ export const setScrollBar = (state, scrollBarY, scrollBarHeight) => {
   $ScrollBarThumb.style.top = `${scrollBarY}px`
   $ScrollBarThumb.style.height = `${scrollBarHeight}px`
 }
+
+export const css = '/css/parts/ViewletExtensions.css'

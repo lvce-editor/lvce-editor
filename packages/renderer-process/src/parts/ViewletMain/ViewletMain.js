@@ -234,3 +234,5 @@ export const updateTab = (state, index, text) => {
   const $TabLabel = $Tab.firstChild
   $TabLabel.textContent = text
 }
+
+export const css = '/css/parts/Main.css'

@@ -73,3 +73,5 @@ export const setMatchCountText = (state, value) => {
 }
 
 export const dispose = () => {}
+
+export const css = '/css/parts/ViewletEditorFindWidget.css'

@@ -53,3 +53,5 @@ export const setDragging = (state, isDragging) => {
 }
 
 export const dispose = (state) => {}
+
+export const css = '/css/parts/ViewletEditorImage.css'

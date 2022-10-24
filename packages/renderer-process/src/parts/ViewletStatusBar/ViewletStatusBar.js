@@ -118,3 +118,5 @@ export const focus = (state) => {
   Assert.object(state)
   state.$StatusBar.focus()
 }
+
+export const css = '/css/parts/ViewletStatusBar.css'
