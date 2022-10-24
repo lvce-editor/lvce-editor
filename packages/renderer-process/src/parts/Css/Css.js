@@ -1,5 +1,3 @@
-export const pendingStyleSheets = Object.create(null)
-
 export const setInlineStyle = (id, css) => {
   const $ExistingStyle = document.getElementById(id)
   if ($ExistingStyle) {
