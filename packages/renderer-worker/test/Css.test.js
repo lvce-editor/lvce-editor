@@ -12,14 +12,6 @@ beforeAll(() => {
       return this._text
     }
   }
-  // @ts-ignore
-  globalThis.CSSStyleSheet = class {
-    constructor() {}
-
-    replace(content) {
-      this._content = content
-    }
-  }
 })
 
 beforeEach(() => {

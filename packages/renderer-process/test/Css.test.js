@@ -3,6 +3,17 @@
  */
 import * as Css from '../src/parts/Css/Css.js'
 
+beforeAll(() => {
+  // @ts-ignore
+  globalThis.CSSStyleSheet = class {
+    constructor() {}
+
+    replace(content) {
+      this._content = content
+    }
+  }
+})
+
 beforeEach(() => {
   while (document.head.firstChild) {
     document.head.firstChild.remove()
