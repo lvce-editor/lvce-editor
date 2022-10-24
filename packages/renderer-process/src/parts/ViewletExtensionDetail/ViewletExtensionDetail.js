@@ -16,6 +16,8 @@ export const create = () => {
   $ExtensionDetailIcon.className = 'ExtensionDetailIcon'
   $ExtensionDetailIcon.alt = ''
   $ExtensionDetailIcon.draggable = false
+  $ExtensionDetailIcon.width = 150
+  $ExtensionDetailIcon.height = 150
   $ExtensionDetailIcon.onerror = ViewletExtensionDetailEvents.handleIconError
 
   const $Name = document.createElement('h3')
