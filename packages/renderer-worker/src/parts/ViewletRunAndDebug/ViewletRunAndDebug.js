@@ -21,12 +21,14 @@ export const dispose = (state) => {
   }
 }
 
+export const hasFunctionalRender = true
+
+export const hasFunctionalResize = true
+
+export const render = []
+
 export const resize = (state, dimensions) => {
   return {
-    newState: {
-      ...state,
-      ...dimensions,
-    },
-    commands: [],
+    state,
   }
 }

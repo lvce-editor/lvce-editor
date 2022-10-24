@@ -1,18 +1,12 @@
 import * as Assert from '../Assert/Assert.js'
-
-// TODO is name export necessary? (probably not)
-export const name = 'Run and Debug'
-
-const handleMousedown = (event) => {
-  // Highlight.highlightStart(state.$Viewlet)
-}
+import * as ViewletDebugEvents from './ViewletRunAndDebugEvents.js'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet RunAndDebug'
-  $Viewlet.textContent = 'run and debug'
+  $Viewlet.textContent = 'run and debug (not implemented)'
   $Viewlet.tabIndex = 0
-  $Viewlet.addEventListener('mousedown', handleMousedown)
+  $Viewlet.onmousedown = ViewletDebugEvents.handleMousedown
   return {
     $Viewlet,
   }
@@ -25,14 +19,8 @@ export const refresh = (state, message) => {
 }
 
 export const focus = (state) => {
-  // state.$Viewlet.classList.add('Focus')
-  // requestAnimationFrame(() => {
-  //   state.$Viewlet.classList.add('FocusFaded')
-  //   setTimeout(() => {
-  //     state.$Viewlet.classList.remove('FocusFaded')
-  //   }, 1000)
-  // })
-  state.$Viewlet.focus()
+  const { $Viewlet } = state
+  $Viewlet.focus()
 }
 
 export const dispose = () => {}
