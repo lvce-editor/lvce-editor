@@ -7,3 +7,16 @@ export const setInlineStyle = async (id, css) => {
     /* css */ css
   )
 }
+
+export const loadCssStyleSheet = async (css) => {
+  const response = await fetch(css)
+  if (!response.ok) {
+    throw new Error(response.statusText)
+  }
+  const text = await response.text()
+  await RendererProcess.invoke(
+    /* Css.addCssStyleSheet */
+    'Css.addCssStyleSheet',
+    /* text */ text
+  )
+}

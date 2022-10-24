@@ -12,5 +12,3 @@ export const create = () => {
     $Viewlet,
   }
 }
-
-export const css = '/css/parts/ViewletTitleBar.css'

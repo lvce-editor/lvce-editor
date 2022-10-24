@@ -150,5 +150,3 @@ export const setValue = (state, value) => {
 }
 
 export const dispose = () => {}
-
-export const css = '/css/parts/ViewletSearch.css'

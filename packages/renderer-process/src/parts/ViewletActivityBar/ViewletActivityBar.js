@@ -117,5 +117,3 @@ export const setBadgeCount = (state, index, count) => {
   // @ts-ignore
   $Item.append($Badge)
 }
-
-export const css = '/css/parts/ViewletActivityBar.css'

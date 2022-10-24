@@ -36,5 +36,3 @@ export const focus = (state) => {
 }
 
 export const dispose = () => {}
-
-export const css = '/css/parts/ViewletRunAndDebug.css'

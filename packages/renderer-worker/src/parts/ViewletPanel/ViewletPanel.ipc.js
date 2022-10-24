@@ -5,4 +5,6 @@ export const Commands = {
   'Panel.selectIndex': ViewletPanel.selectIndex
 }
 
+export const css = '/css/parts/ViewletPanel.css'
+
 export * from './ViewletPanel.js'

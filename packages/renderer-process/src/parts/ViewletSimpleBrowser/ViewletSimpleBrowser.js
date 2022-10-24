@@ -61,5 +61,3 @@ export const setIframeSrc = (state, iframeSrc) => {
 }
 
 export const dispose = (state) => {}
-
-export const css = '/css/parts/ViewletSimpleBrowser.css'

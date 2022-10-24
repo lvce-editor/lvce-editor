@@ -6,4 +6,6 @@ export const Commands = {
   'ExtensionDetail.handleReadmeContextMenu':  ViewletExtensionDetail.handleReadmeContextMenu,
 }
 
+export const css = '/css/parts/ViewletExtensionDetail.css'
+
 export * from './ViewletExtensionDetail.js'

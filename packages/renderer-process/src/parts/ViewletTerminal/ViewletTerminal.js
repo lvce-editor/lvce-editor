@@ -103,5 +103,3 @@ export const write = (data) => {
 export const Commands = {
   9922: write,
 }
-
-export const css = '/css/parts/ViewletTerminal.css'

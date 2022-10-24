@@ -194,6 +194,8 @@ const create$Extension = () => {
   $ExtensionAuthorName.append(document.createTextNode(''))
 
   const icon = document.createElement('img')
+  icon.width = 42
+  icon.height = 42
   icon.className = 'ExtensionIcon'
   icon.onerror = ViewletExtensionsEvents.handleIconError
   const buttonManage = document.createElement('button')
@@ -354,5 +356,3 @@ export const setScrollBar = (state, scrollBarY, scrollBarHeight) => {
   $ScrollBarThumb.style.top = `${scrollBarY}px`
   $ScrollBarThumb.style.height = `${scrollBarHeight}px`
 }
-
-export const css = '/css/parts/ViewletExtensions.css'

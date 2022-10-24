@@ -116,5 +116,3 @@ export const setSelectedIndex = (state, oldIndex, newIndex) => {
     $PanelTabs.setAttribute('aria-activedescendant', $PanelTab.id)
   }
 }
-
-export const css = '/css/parts/ViewletPanel.css'

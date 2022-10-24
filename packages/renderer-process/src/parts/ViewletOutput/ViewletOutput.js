@@ -87,5 +87,3 @@ export const disposeFindWidget = (state) => {
 }
 
 export const dispose = (state) => {}
-
-export const css = '/css/parts/ViewletOutput.css'

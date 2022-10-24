@@ -75,5 +75,3 @@ export const setDescription = (state, description) => {
   const { $Description } = state
   $Description.textContent = description
 }
-
-export const css = '/css/parts/ViewletExtensionDetail.css'

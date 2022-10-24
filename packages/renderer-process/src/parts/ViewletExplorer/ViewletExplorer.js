@@ -265,5 +265,3 @@ export const setDropTargets = (state, oldDropTargets, newDropTargets) => {
     }
   }
 }
-
-export const css = '/css/parts/ViewletExplorer.css'

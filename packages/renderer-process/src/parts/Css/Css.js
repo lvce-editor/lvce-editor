@@ -12,13 +12,17 @@ export const setInlineStyle = (id, css) => {
   }
 }
 
+export const addCssStyleSheet = async (text) => {
+  const sheet = new CSSStyleSheet({})
+  await sheet.replace(text)
+  document.adoptedStyleSheets.push(sheet)
+}
+
 export const loadCssStyleSheet = async (css) => {
   const response = await fetch(css)
   if (!response.ok) {
     throw new Error(response.statusText)
   }
   const text = await response.text()
-  const sheet = new CSSStyleSheet({})
-  await sheet.replace(text)
-  document.adoptedStyleSheets.push(sheet)
+  await addCssStyleSheet(text)
 }

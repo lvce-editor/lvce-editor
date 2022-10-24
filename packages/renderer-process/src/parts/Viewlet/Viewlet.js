@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as Css from '../Css/Css.js'
+import * as Platform from '../Platform/Platform.js'
 
 export const state = {
   instances: Object.create(null),
@@ -36,13 +37,6 @@ export const create = (id) => {
 export const loadModule = async (id) => {
   const module = await ViewletModule.load(id)
   state.modules[id] = module
-  // this is a memory leak but it is not too important
-  // because javascript modules also cannot be unloaded
-  // @ts-ignore
-  if (module.css) {
-    // @ts-ignore
-    await Css.loadCssStyleSheet(module.css)
-  }
 }
 
 export const invoke = (viewletId, method, ...args) => {

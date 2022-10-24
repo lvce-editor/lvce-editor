@@ -6,6 +6,7 @@ import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFu
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Css from '../Css/Css.js'
 
 export const state = {
   pendingModules: Object.create(null),
@@ -186,12 +187,25 @@ const maybeRegisterEvents = (module) => {
   }
 }
 
-const loadModule = async (id) => {
+const actuallyLoadModule = async (getModule, id) => {
+  const module = await getModule(id)
+  await RendererProcess.invoke(
+    /* Viewlet.load */ 'Viewlet.loadModule',
+    /* id */ id
+  )
+  if (module.css) {
+    // this is a memory leak but it is not too important
+    // because javascript modules also cannot be unloaded
+    await Css.loadCssStyleSheet(module.css)
+  }
+  maybeRegisterWrappedCommands(module)
+  maybeRegisterEvents(module)
+  return module
+}
+
+const loadModule = (getModule, id) => {
   if (!(id in state.pendingModules)) {
-    state.pendingModules[id] = RendererProcess.invoke(
-      /* Viewlet.load */ 'Viewlet.loadModule',
-      /* id */ id
-    )
+    state.pendingModules[id] = actuallyLoadModule(getModule, id)
   }
   return state.pendingModules[id]
 }
@@ -221,14 +235,11 @@ export const load = async (
       return
     }
 
-    module = await viewlet.getModule(viewlet.id)
+    module = await loadModule(viewlet.getModule, viewlet.id)
     if (viewlet.disposed) {
       return
     }
-    maybeRegisterWrappedCommands(module)
-    maybeRegisterEvents(module)
     state = ViewletState.ModuleLoaded
-
     let left = viewlet.left
     let top = viewlet.top
     let width = viewlet.width
@@ -266,10 +277,7 @@ export const load = async (
     if (module.getChildren) {
       const children = module.getChildren(newState)
       for (const child of children) {
-        const childModule = await viewlet.getModule(child.id)
-        await loadModule(child.id)
-        maybeRegisterWrappedCommands(childModule)
-        maybeRegisterEvents(childModule)
+        const childModule = await loadModule(viewlet.getModule, child.id)
         // TODO get position of child module
         const oldState = childModule.create(
           '',
@@ -304,7 +312,6 @@ export const load = async (
       return
     }
     state = ViewletState.ContentLoaded
-    await loadModule(viewlet.id)
     if (viewlet.show === false) {
     } else {
       await RendererProcess.invoke(
