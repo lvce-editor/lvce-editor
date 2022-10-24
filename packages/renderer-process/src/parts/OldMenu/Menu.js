@@ -125,7 +125,7 @@ const handleMouseLeave = (event) => {
   if ($RelatedTarget.classList.contains('MenuItem')) {
     return
   }
-  RendererWorker.send(/* Menu.handleMouseLeave */ 'Menu.handleMouseLeave')
+  // RendererWorker.send(/* Menu.handleMouseLeave */ 'Menu.handleMouseLeave')
 }
 
 // const handleBlur = (event) => {}
