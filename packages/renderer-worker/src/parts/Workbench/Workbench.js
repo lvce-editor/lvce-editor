@@ -6,6 +6,7 @@ import * as InitData from '../InitData/InitData.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Languages from '../Languages/Languages.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
+import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
 import * as Performance from '../Performance/Performance.js'
 import * as Platform from '../Platform/Platform.js'
@@ -27,7 +28,7 @@ import * as Workspace from '../Workspace/Workspace.js'
 export const startup = async (config) => {
   onunhandledrejection = ErrorHandling.handleUnhandledRejection
   onerror = ErrorHandling.handleUnhandledError
-  LifeCycle.mark(LifeCycle.Phase.Zero)
+  LifeCycle.mark(LifeCyclePhase.Zero)
 
   Performance.mark('willStartupWorkbench')
   await RendererProcess.listen()
@@ -35,7 +36,7 @@ export const startup = async (config) => {
     await SharedProcess.listen()
   }
 
-  LifeCycle.mark(LifeCycle.Phase.One)
+  LifeCycle.mark(LifeCyclePhase.One)
 
   const initData = await InitData.getInitData()
 
@@ -57,19 +58,19 @@ export const startup = async (config) => {
     Performance.mark('code/didLoadSessionReplay')
   }
 
-  LifeCycle.mark(LifeCycle.Phase.Twelve)
+  LifeCycle.mark(LifeCyclePhase.Twelve)
 
   Performance.mark('code/willOpenWorkspace')
   await Workspace.hydrate(initData.Location)
   Performance.mark('code/didOpenWorkspace')
 
-  LifeCycle.mark(LifeCycle.Phase.Three)
+  LifeCycle.mark(LifeCyclePhase.Three)
 
   Performance.mark('code/willLoadColorTheme')
   await ColorTheme.hydrate()
   Performance.mark('code/didLoadColorTheme')
 
-  LifeCycle.mark(LifeCycle.Phase.Four)
+  LifeCycle.mark(LifeCyclePhase.Four)
 
   Performance.mark('code/willShowLayout')
   const layout = ViewletManager.create(
@@ -109,60 +110,60 @@ export const startup = async (config) => {
   await Languages.hydrate()
   Performance.mark('code/didLoadLanguages')
 
-  LifeCycle.mark(LifeCycle.Phase.Five)
+  LifeCycle.mark(LifeCyclePhase.Five)
 
   Performance.mark('code/willLoadMain')
   await Command.execute('Layout.loadMainIfVisible')
   Performance.mark('code/didLoadMain')
 
-  LifeCycle.mark(LifeCycle.Phase.Six)
+  LifeCycle.mark(LifeCyclePhase.Six)
 
   Performance.mark('code/willLoadKeyBindings')
   await KeyBindings.hydrate()
   Performance.mark('code/didLoadKeyBindings')
 
-  LifeCycle.mark(LifeCycle.Phase.Seven)
+  LifeCycle.mark(LifeCyclePhase.Seven)
 
   Performance.mark('code/willLoadSideBar')
   await Command.execute('Layout.loadSideBarIfVisible')
   Performance.mark('code/didLoadSideBar')
 
-  LifeCycle.mark(LifeCycle.Phase.Eight)
+  LifeCycle.mark(LifeCyclePhase.Eight)
 
   Performance.mark('code/willLoadPanel')
   await Command.execute('Layout.loadPanelIfVisible')
   Performance.mark('code/didLoadPanel')
 
-  LifeCycle.mark(LifeCycle.Phase.Nine)
+  LifeCycle.mark(LifeCyclePhase.Nine)
 
   Performance.mark('code/willLoadActivityBar')
   await Command.execute('Layout.loadActivityBarIfVisible')
   Performance.mark('code/didLoadActivityBar')
 
-  LifeCycle.mark(LifeCycle.Phase.Ten)
+  LifeCycle.mark(LifeCyclePhase.Ten)
 
   Performance.mark('code/willLoadStatusBar')
   await Command.execute('Layout.loadStatusBarIfVisible')
   Performance.mark('code/didLoadStatusBar')
 
-  LifeCycle.mark(LifeCycle.Phase.Eleven)
+  LifeCycle.mark(LifeCyclePhase.Eleven)
 
   Performance.mark('code/willLoadIconTheme')
   // TODO check preferences if icon theme is enabled
   await IconTheme.hydrate()
   Performance.mark('code/didLoadIconTheme')
 
-  LifeCycle.mark(LifeCycle.Phase.Twelve)
+  LifeCycle.mark(LifeCyclePhase.Twelve)
 
-  LifeCycle.mark(LifeCycle.Phase.Thirteen)
+  LifeCycle.mark(LifeCyclePhase.Thirteen)
 
-  LifeCycle.mark(LifeCycle.Phase.Fourteen)
+  LifeCycle.mark(LifeCyclePhase.Fourteen)
 
   Performance.mark('code/willLoadTitleBar')
   await Command.execute('Layout.loadTitleBarIfVisible')
   Performance.mark('code/didLoadTitleBar')
 
-  LifeCycle.mark(LifeCycle.Phase.Fifteen)
+  LifeCycle.mark(LifeCyclePhase.Fifteen)
 
   if (Workspace.isTest()) {
     const testPath = await Platform.getTestPath()
@@ -176,7 +177,7 @@ export const startup = async (config) => {
     Performance.mark('code/didLoadSaveState')
   }
 
-  LifeCycle.mark(LifeCycle.Phase.Sixteen)
+  LifeCycle.mark(LifeCyclePhase.Sixteen)
 
   Performance.mark('code/willLoadRecentlyOpened')
   await RecentlyOpened.hydrate()
