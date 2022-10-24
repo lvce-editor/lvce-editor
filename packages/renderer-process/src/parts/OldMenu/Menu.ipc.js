@@ -7,5 +7,4 @@ export const Commands = {
   'Menu.showContextMenu': Menu.showContextMenu,
   'Menu.showControlled': Menu.showControlled,
   'Menu.showMenu': Menu.showMenu,
-  'Menu.showSubMenu': Menu.showSubMenu,
 }
