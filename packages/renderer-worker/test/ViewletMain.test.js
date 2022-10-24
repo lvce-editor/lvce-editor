@@ -14,6 +14,7 @@ jest.unstable_mockModule(
     }
   }
 )
+
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
@@ -95,7 +96,7 @@ test('openUri - no editors exist', async () => {
     height: 0,
   }
   await ViewletMain.openUri(state, '/tmp/file-1.txt') // TODO Viewlet Main should not know about ViewletEditorText
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(5)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     1,
     'Viewlet.send',
@@ -146,7 +147,7 @@ test('openUri - different editor exists', async () => {
     height: 0,
   }
   await ViewletMain.openUri(state, '/tmp/file-2.txt')
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(4)
+  expect(RendererProcess.invoke).toHaveBeenCalledTimes(2)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     1,
     'Viewlet.send',
