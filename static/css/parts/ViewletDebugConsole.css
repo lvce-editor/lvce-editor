@@ -1,3 +1,9 @@
 .DebugConsole {
   color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.DebugConsoleTop {
+  flex: 1;
 }
