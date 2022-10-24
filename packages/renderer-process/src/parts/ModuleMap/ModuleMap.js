@@ -52,10 +52,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.FilePicker
     case 'FileSystemHandle.requestPermission':
       return ModuleId.FileSystemHandle
-    case 'FindWidget.create':
-    case 'FindWidget.dispose':
-    case 'FindWidget.setResults':
-      return ModuleId.FindWidget
     case 'ImagePreview.create':
     case 'ImagePreview.dispose':
     case 'ImagePreview.showError':

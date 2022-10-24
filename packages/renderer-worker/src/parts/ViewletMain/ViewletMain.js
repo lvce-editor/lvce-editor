@@ -171,7 +171,7 @@ export const loadContent = async (state, savedState) => {
   // TODO get restored editors from saved state
   const editors = await getRestoredEditors(savedState)
   // @ts-ignore
-  LifeCycle.once(LifeCycle.PHASE_TWELVE, hydrateLazy)
+  LifeCycle.once(LifeCycle.Phase.Twelve, hydrateLazy)
   return {
     ...state,
     editors,
