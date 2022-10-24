@@ -28,7 +28,5 @@ export const hasFunctionalResize = true
 export const render = []
 
 export const resize = (state, dimensions) => {
-  return {
-    state,
-  }
+  return { ...state, ...dimensions }
 }

@@ -1,9 +1,7 @@
-import { jest } from '@jest/globals'
 import * as ViewletRunAndDebug from '../src/parts/ViewletRunAndDebug/ViewletRunAndDebug.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 
 test('name', () => {
-  expect(ViewletRunAndDebug.name).toBe('RunAndDebug')
+  expect(ViewletRunAndDebug.name).toBe('Run And Debug')
 })
 
 test('create', () => {
@@ -29,7 +27,7 @@ test('dispose', () => {
 
 test('resize', () => {
   const state = ViewletRunAndDebug.create()
-  const { newState, commands } = ViewletRunAndDebug.resize(state, {
+  const newState = ViewletRunAndDebug.resize(state, {
     top: 200,
     left: 200,
     width: 200,
@@ -44,5 +42,4 @@ test('resize', () => {
     top: 200,
     width: 200,
   })
-  expect(commands).toEqual([])
 })
