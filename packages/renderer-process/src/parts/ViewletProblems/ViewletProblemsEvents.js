@@ -1,6 +1,9 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
-export const handleMouseDown = (event) => {
+export const handlePointerDown = (event) => {
   event.preventDefault()
-  RendererWorker.send(/* ViewletProblems.focusIndex */ 7550, /* index */ -1)
+  RendererWorker.send(
+    /* Problems.focusIndex */ 'Problems.focusIndex',
+    /* index */ -1
+  )
 }

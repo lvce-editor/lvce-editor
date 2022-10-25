@@ -3,11 +3,11 @@ import * as ViewletProblemsEvents from './ViewletProblemsEvents.js'
 
 export const name = 'Problems'
 
-export const create = (problemsCount) => {
+export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Problems'
   $Viewlet.tabIndex = 0
-  $Viewlet.onmousedown = ViewletProblemsEvents.handleMouseDown
+  $Viewlet.onpointerdown = ViewletProblemsEvents.handlePointerDown
   return {
     $Viewlet,
   }
@@ -24,15 +24,12 @@ export const setFocusedIndex = (state, focusedIndex) => {
 export const setProblems = (state, problems) => {
   Assert.object(state)
   Assert.array(problems)
+  // TODO
+}
+
+export const setMessage = (state, message) => {
   const { $Viewlet } = state
-  if (problems.length === 0) {
-    $Viewlet.ariaLabel = 'No problems have been detected in the workspace.'
-    $Viewlet.textContent = 'No problems have been detected in the workspace.'
-  } else {
-    // TODO adjust aria-label
-    $Viewlet.ariaLabel = 'No problems have been detected in the workspace.'
-    $Viewlet.textContent = problems.join('\n')
-  }
+  $Viewlet.textContent = message
 }
 
 export const focus = (state) => {
