@@ -56,6 +56,13 @@ const getSavedValue = (savedState) => {
   return ''
 }
 
+export const saveState = (state) => {
+  const { value } = state
+  return {
+    value,
+  }
+}
+
 export const loadContent = async (state, savedState) => {
   const savedValue = getSavedValue(savedState)
   if (savedValue) {
@@ -92,15 +99,7 @@ const getResultCounts = (results) => {
 
 // TODO
 export const setValue = async (state, value) => {
-  // state.value = value
-  // TODO use Id module
-  // state.searchId = Math.random()
-  // SharedProcess.send(
-  //   /* Search.search */ 907771,
-  //   /* id */ state.id,
-  //   /* searchId */ state.searchId
-  // )
-  // TODO
+  console.log({ value })
   try {
     const root = Workspace.state.workspacePath
     const results = await TextSearch.textSearch(root, value)
