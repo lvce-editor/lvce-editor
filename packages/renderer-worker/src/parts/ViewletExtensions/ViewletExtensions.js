@@ -46,7 +46,7 @@ export const create = (id, uri, left, top, width, height) => {
     handleOffset: 0,
     top,
     left,
-    finalDeltaY: 2728,
+    finalDeltaY: 0,
     error: '',
     touchOffsetY: 0,
     touchTimeStamp: 0,
@@ -90,6 +90,7 @@ export const loadContent = async (state) => {
     maxLineY: maxLineY,
     scrollBarHeight,
     itemHeight,
+    finalDeltaY: 2728, // TODO compute this dynamically
   }
 }
 
@@ -519,7 +520,11 @@ const renderFocusedIndex = {
 
 const renderScrollBarY = {
   isEqual(oldState, newState) {
-    return oldState.deltaY === newState.deltaY
+    return (
+      oldState.deltaY === newState.deltaY &&
+      oldState.height === newState.height &&
+      oldState.finalDeltaY === newState.finalDeltaY
+    )
   },
   apply(oldState, newState) {
     const scrollBarY =
