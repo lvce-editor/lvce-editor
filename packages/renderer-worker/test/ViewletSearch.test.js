@@ -81,9 +81,9 @@ test('setValue - error - preview is not of type array', async () => {
       ],
     ]
   })
-  await expect(ViewletSearch.setValue(state, 'abc')).rejects.toThrowError(
-    new Error('expected value to be of type array')
-  )
+  expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
+    message: 'Error: previews must be of type array',
+  })
 })
 
 test('setValue - one match in one file', async () => {
@@ -242,9 +242,9 @@ test('handleInput - error', async () => {
     throw new Error('could not load search results')
   })
   const state = ViewletSearch.create()
-  await expect(
-    ViewletSearch.handleInput(state, 'test search')
-  ).rejects.toThrowError(new Error('could not load search results'))
+  expect(await ViewletSearch.handleInput(state, 'test search')).toMatchObject({
+    message: `Error: could not load search results`,
+  })
 })
 
 test('handleClick', async () => {

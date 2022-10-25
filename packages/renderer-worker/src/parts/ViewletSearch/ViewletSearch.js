@@ -87,19 +87,25 @@ const getResultCounts = (results) => {
 }
 
 export const setValue = async (state, value) => {
-  const root = Workspace.state.workspacePath
-  const results = await TextSearch.textSearch(root, value)
-  console.log({ results })
-  const displayResults = toDisplayResults(results)
-  console.log({ results, displayResults })
-  const resultCount = getResultCounts(results)
-  const fileResultCount = results.length
-  const message = getStatusMessage(resultCount, fileResultCount)
-  return {
-    ...state,
-    value,
-    items: displayResults,
-    message,
+  try {
+    const root = Workspace.state.workspacePath
+    const results = await TextSearch.textSearch(root, value)
+    const displayResults = toDisplayResults(results)
+    const resultCount = getResultCounts(results)
+    const fileResultCount = results.length
+    const message = getStatusMessage(resultCount, fileResultCount)
+    return {
+      ...state,
+      value,
+      items: displayResults,
+      message,
+    }
+  } catch (error) {
+    return {
+      ...state,
+      message: `${error}`,
+      value,
+    }
   }
 }
 
@@ -141,7 +147,9 @@ const getPath = (result) => {
 
 const getPreviews = (result) => {
   const previews = result[1]
-  Assert.array(previews)
+  if (!Array.isArray(previews)) {
+    throw new Error('previews must be of type array')
+  }
   return previews
 }
 
