@@ -27,7 +27,10 @@ const SEARCH_ORDER_FILE_NAMES = 1
 
 export const name = ViewletModuleId.Search
 
-export const uiStrings = {
+/**
+ * @enum {string}
+ */
+export const UiStrings = {
   NoResults: 'No results found',
   Oneresults: 'Found 1 result in 1 file',
   ManyResultsInOneFile: `Found {PH1} results in 1 file`,
@@ -73,17 +76,17 @@ export const loadContent = async (state, savedState) => {
 
 const getStatusMessage = (resultCount, fileResultCount) => {
   if (resultCount === 0) {
-    return I18nString.i18nString(uiStrings.NoResults)
+    return I18nString.i18nString(UiStrings.NoResults)
   }
   if (resultCount === 1 && fileResultCount === 1) {
-    return I18nString.i18nString(uiStrings.Oneresults)
+    return I18nString.i18nString(UiStrings.Oneresults)
   }
   if (fileResultCount === 1) {
-    return I18nString.i18nString(uiStrings.ManyResultsInOneFile, {
+    return I18nString.i18nString(UiStrings.ManyResultsInOneFile, {
       PH1: resultCount,
     })
   }
-  return I18nString.i18nString(uiStrings.ManyResultsInManyFiles, {
+  return I18nString.i18nString(UiStrings.ManyResultsInManyFiles, {
     PH1: resultCount,
     PH2: fileResultCount,
   })
@@ -120,6 +123,27 @@ export const setValue = async (state, value) => {
       message: `${error}`,
       value,
     }
+  }
+}
+
+const updateIcon = (item) => {
+  switch (item.type) {
+    case SearchResultType.File:
+      return {
+        ...item,
+        icon: IconTheme.getFileIcon({ name: item.text }),
+      }
+    default:
+      return item
+  }
+}
+
+export const handleIconThemeChange = (state) => {
+  const { items } = state
+  const newItems = items.map(updateIcon)
+  return {
+    ...state,
+    items: newItems,
   }
 }
 
