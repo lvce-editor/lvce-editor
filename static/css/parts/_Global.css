@@ -73,6 +73,10 @@ body {
   background: var(--TitleBarBackground);
 }
 
+#Panel {
+  background: var(--PanelBackground);
+}
+
 .Hidden {
   display: none !important;
 }

@@ -18,3 +18,7 @@ export const dispose = (state) => {
     disposed: true,
   }
 }
+
+export const hasFunctionalRender = true
+
+export const render = []

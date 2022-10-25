@@ -23,10 +23,10 @@ const getSavedViewletId = (savedState) => {
   if (savedState && savedState.currentViewletId) {
     return savedState.currentViewletId
   }
-  return 'Explorer'
+  return ViewletModuleId.Explorer
 }
 
-export const loadContent = async (state, savedState) => {
+export const loadContent = (state, savedState) => {
   const savedViewletId = getSavedViewletId(savedState)
   return {
     ...state,
@@ -39,6 +39,15 @@ export const loadContent = async (state, savedState) => {
 //   GlobalEventBus.addListener('Layout.hideSideBar', handleSideBarClose)
 // }
 
+const getContentDimensions = (dimensions, titleAreaHeight) => {
+  return {
+    left: dimensions.left,
+    top: dimensions.top + titleAreaHeight,
+    width: dimensions.width,
+    height: dimensions.height - titleAreaHeight,
+  }
+}
+
 // TODO
 export const getChildren = (state) => {
   const { top, left, width, height, titleAreaHeight, currentViewletId } = state
@@ -48,15 +57,6 @@ export const getChildren = (state) => {
       ...getContentDimensions(state, titleAreaHeight),
     },
   ]
-}
-
-const getContentDimensions = (dimensions, titleAreaHeight) => {
-  return {
-    left: dimensions.left,
-    top: dimensions.top + titleAreaHeight,
-    width: dimensions.width,
-    height: dimensions.height - titleAreaHeight,
-  }
 }
 
 // TODO no default parameter -> monomorphism

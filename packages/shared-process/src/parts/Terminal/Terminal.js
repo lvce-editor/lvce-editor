@@ -65,7 +65,6 @@ export const create = (socket, id, cwd) => {
   Assert.number(id)
   Assert.string(cwd)
 
-  console.log('create terminal')
   Debug.debug('creating pty host')
   switch (state.ptyHostState) {
     case /* None */ 0: {

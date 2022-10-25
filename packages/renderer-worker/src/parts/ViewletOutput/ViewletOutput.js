@@ -104,3 +104,5 @@ export const closeFindWidget = async (state) => {}
 export const handleError = (state, error) => {
   console.error(error)
 }
+
+export const render = []

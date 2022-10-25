@@ -157,7 +157,9 @@ export const dispose = (id) => {
       console.warn(`viewlet instance ${id} not found and cannot be disposed`)
       return
     }
-    instance.factory.dispose(instance.state)
+    if (instance.factory.dispose) {
+      instance.factory.dispose(instance.state)
+    }
     if (instance.state.$Viewlet && instance.state.$Viewlet.isConnected) {
       instance.state.$Viewlet.remove()
     }
