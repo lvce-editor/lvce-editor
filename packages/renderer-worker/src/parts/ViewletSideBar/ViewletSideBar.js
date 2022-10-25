@@ -6,8 +6,6 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
-const SIDE_BAR_TITLE_AREA_HEIGHT = 35
-
 export const name = ViewletModuleId.SideBar
 
 export const create = (id, uri, left, top, width, height) => {
@@ -17,7 +15,7 @@ export const create = (id, uri, left, top, width, height) => {
     top,
     width,
     height,
-    titleAreaHeight: SIDE_BAR_TITLE_AREA_HEIGHT,
+    titleAreaHeight: 35,
   }
 }
 
@@ -47,17 +45,17 @@ export const getChildren = (state) => {
   return [
     {
       id: currentViewletId,
-      ...getContentDimensions(state),
+      ...getContentDimensions(state, titleAreaHeight),
     },
   ]
 }
 
-const getContentDimensions = (dimensions) => {
+const getContentDimensions = (dimensions, titleAreaHeight) => {
   return {
     left: dimensions.left,
-    top: dimensions.top + SIDE_BAR_TITLE_AREA_HEIGHT,
+    top: dimensions.top + titleAreaHeight,
     width: dimensions.width,
-    height: dimensions.height - SIDE_BAR_TITLE_AREA_HEIGHT,
+    height: dimensions.height - titleAreaHeight,
   }
 }
 
