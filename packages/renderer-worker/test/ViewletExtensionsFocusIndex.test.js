@@ -1,6 +1,5 @@
 import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
 import * as ViewletExtensionsFocusIndex from '../src/parts/ViewletExtensions/ViewletExtensionsFocusIndex.js'
-import { HEADER_HEIGHT } from '../src/parts/ViewletExtensions/ViewletExtensionsShared.js'
 
 test('focusIndex', () => {
   const state = {
@@ -93,8 +92,9 @@ test('focusIndex - partially in view - causes scrolling down', () => {
     focusedIndex: 1,
     minLineY: 1,
     maxLineY: 3,
-    height: 100 + HEADER_HEIGHT,
+    height: 100,
     deltaY: 62,
+    headerHeight: 0,
   }
   expect(ViewletExtensionsFocusIndex.focusIndex(state, 2)).toMatchObject({
     focusedIndex: 2,
@@ -168,6 +168,8 @@ test('focusIndex - partially in view - causes scrolling up', () => {
     height: 62,
     deltaY: 10,
     negativeMargin: -10,
+    itemHeight: 62,
+    minimumSliderSize: 20,
   }
   expect(ViewletExtensionsFocusIndex.focusIndex(state, 0)).toMatchObject({
     focusedIndex: 0,
