@@ -6,6 +6,7 @@ import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import { focusIndex } from './ViewletActivityBarFocusIndex.js'
+
 /**
  * @enum {string}
  */
@@ -93,7 +94,7 @@ const getActivityBarItems = () => {
   return [
     // Top
     {
-      id: 'Explorer',
+      id: ViewletModuleId.Explorer,
       title: I18nString.i18nString(UiStrings.Explorer),
       icon: Icon.Files,
       enabled: true,
@@ -101,7 +102,7 @@ const getActivityBarItems = () => {
       keyShortcuts: 'Control+Shift+E',
     },
     {
-      id: 'Search',
+      id: ViewletModuleId.Search,
       title: I18nString.i18nString(UiStrings.Search),
       icon: Icon.Search,
       enabled: true,
@@ -109,7 +110,7 @@ const getActivityBarItems = () => {
       keyShortcuts: 'Control+Shift+F',
     },
     {
-      id: 'Source Control',
+      id: ViewletModuleId.SourceControl,
       title: I18nString.i18nString(UiStrings.SourceControl),
       icon: Icon.SourceControl,
       enabled: true,
@@ -117,7 +118,7 @@ const getActivityBarItems = () => {
       keyShortcuts: 'Control+Shift+G',
     },
     {
-      id: 'Run and Debug',
+      id: ViewletModuleId.RunAndDebug,
       title: I18nString.i18nString(UiStrings.RunAndDebug),
       icon: Icon.DebugAlt2,
       enabled: true,
@@ -125,7 +126,7 @@ const getActivityBarItems = () => {
       keyShortcuts: 'Control+Shift+D',
     },
     {
-      id: 'Extensions',
+      id: ViewletModuleId.Extensions,
       title: I18nString.i18nString(UiStrings.Extensions),
       icon: Icon.Extensions,
       enabled: true,

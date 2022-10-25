@@ -48,7 +48,7 @@ export const QuickPick = 'QuickPick'
 
 export const References = 'References'
 
-export const RunAndDebug = 'RunAndDebug'
+export const RunAndDebug = 'Run And Debug'
 
 export const Search = 'Search'
 
