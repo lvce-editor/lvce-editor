@@ -367,7 +367,7 @@ export const load = async (
         factory: module,
       })
     }
-    const commands = []
+    const commands = [[kCreate, viewlet.id]]
     if (viewletState !== newState && module.contentLoaded) {
       const additionalExtraCommands = await module.contentLoaded(newState)
       Assert.array(additionalExtraCommands)
@@ -379,7 +379,6 @@ export const load = async (
       commands.push(...renderCommands)
       if (viewlet.show === false) {
         const allCommands = [
-          [kCreate, viewlet.id],
           ...commands,
           ...extraCommands,
           // ['Viewlet.show', viewlet.id],
@@ -414,30 +413,7 @@ export const load = async (
       return
     }
     state = ViewletState.ContentRendered
-    if (viewlet.parentId) {
-      await RendererProcess.invoke(
-        /* Viewlet.append */ kAppendViewlet,
-        /* parentId */ viewlet.parentId,
-        /* id */ viewlet.id,
-        /* focus */ focus
-      )
-    }
     state = ViewletState.Appended
-
-    // TODO race condition
-    // outer: if (module.shouldApplyNewState) {
-    //   for (let i = 0; i < 2; i++) {
-    //     if (module.shouldApplyNewState(newState)) {
-    //       Viewlet.state.instances[viewlet.id] = {
-    //         state: newState,
-    //         factory: module,
-    //       }
-    //       break outer
-    //     }
-    //     newState = await module.loadContent(viewletState)
-    //   }
-    //   throw new Error('viewlet could not be updated')
-    // }
 
     if (viewlet.disposed) {
       // TODO unload the module from renderer process
