@@ -5,6 +5,7 @@ import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
  * @enum {string}
  */
 export const UiStrings = {
+  CommandPalette: 'Command Palette',
   Settings: 'Settings',
   KeyboardShortcuts: 'Keyboard Shortcuts',
   ColorTheme: 'Color Theme',
@@ -15,6 +16,13 @@ const keyBindingsUri = 'app://keybindings'
 
 export const getMenuEntries = () => {
   return [
+    {
+      id: 'commandPalette',
+      label: I18nString.i18nString(UiStrings.CommandPalette),
+      flags: MenuItemFlags.None,
+      command: 'Viewlet.openWidget',
+      args: ['QuickPick', 'everything'],
+    },
     {
       id: 'settings',
       label: I18nString.i18nString(UiStrings.Settings),

@@ -1,11 +1,21 @@
+import * as InputBox from '../InputBox/InputBox.js'
+
 export const name = 'Debug Console'
 
 export const create = () => {
-  const $Input = document.createElement('input')
+  const $DebugConsoleTop = document.createElement('div')
+  $DebugConsoleTop.className = 'DebugConsoleTop'
+  $DebugConsoleTop.textContent = 'Debug Console (not implemented)'
+
+  const $Input = InputBox.create()
+
+  const $DebugConsoleBottom = document.createElement('div')
+  $DebugConsoleBottom.className = 'DebugConsoleBottom'
+  $DebugConsoleBottom.append($Input)
+
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet DebugConsole'
-  $Viewlet.textContent = 'Debug Console'
-  $Viewlet.append($Input)
+  $Viewlet.append($DebugConsoleTop, $DebugConsoleBottom)
   return {
     $Viewlet,
     $Input,
