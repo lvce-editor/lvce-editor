@@ -16,7 +16,7 @@ test('sample.text-search-provider-error-previews-is-not-iterable', async () => {
   // assert
   const viewletSearch = Locator('.Search')
   const message = viewletSearch.locator('[role="status"]')
-  await expect(message).toHaveText('TypeError: previews is not iterable')
+  await expect(message).toHaveText('Error: previews must be of type array')
 })
 
 export {}

@@ -16,7 +16,7 @@ export const name = ViewletModuleId.Search
  */
 export const UiStrings = {
   NoResults: 'No results found',
-  Oneresults: 'Found 1 result in 1 file',
+  Oneresult: 'Found 1 result in 1 file',
   ManyResultsInOneFile: `Found {PH1} results in 1 file`,
   ManyResultsInManyFiles: `Found {PH1} results in {PH2} files`,
 }
@@ -59,11 +59,12 @@ export const loadContent = async (state, savedState) => {
 }
 
 const getStatusMessage = (resultCount, fileResultCount) => {
+  console.log({ resultCount, fileResultCount })
   if (resultCount === 0) {
     return I18nString.i18nString(UiStrings.NoResults)
   }
-  if (resultCount === 1 && fileResultCount === 1) {
-    return I18nString.i18nString(UiStrings.Oneresults)
+  if (resultCount === 1) {
+    return I18nString.i18nString(UiStrings.Oneresult)
   }
   if (fileResultCount === 1) {
     return I18nString.i18nString(UiStrings.ManyResultsInOneFile, {
@@ -79,7 +80,8 @@ const getStatusMessage = (resultCount, fileResultCount) => {
 const getResultCounts = (results) => {
   let resultCount = 0
   for (const result of results) {
-    resultCount += result.length - 1
+    const [fileName, matches] = result
+    resultCount += matches.length
   }
   return resultCount
 }
@@ -89,7 +91,6 @@ export const setValue = async (state, value) => {
     const root = Workspace.state.workspacePath
     const results = await TextSearch.textSearch(root, value)
     const displayResults = toDisplayResults(results)
-    console.log({ results, displayResults })
     const resultCount = getResultCounts(results)
     const fileResultCount = results.length
     const message = getStatusMessage(resultCount, fileResultCount)
@@ -145,7 +146,11 @@ const getPath = (result) => {
 }
 
 const getPreviews = (result) => {
-  return result[1]
+  const previews = result[1]
+  if (!Array.isArray(previews)) {
+    throw new Error('previews must be of type array')
+  }
+  return previews
 }
 
 const compareResults = (resultA, resultB) => {
@@ -158,6 +163,7 @@ const toDisplayResults = (results) => {
   results.sort(compareResults)
   const displayResults = []
   for (const result of results) {
+    console.log({ result })
     const path = getPath(result)
     const previews = getPreviews(result)
     const absolutePath = Workspace.getAbsolutePath(path)

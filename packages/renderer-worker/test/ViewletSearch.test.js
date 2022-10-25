@@ -7,17 +7,6 @@ beforeEach(() => {
   jest.resetModules()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
-  }
-)
-
 jest.unstable_mockModule('../src/parts/TextSearch/TextSearch.js', () => {
   return {
     textSearch: jest.fn(() => {
@@ -25,6 +14,7 @@ jest.unstable_mockModule('../src/parts/TextSearch/TextSearch.js', () => {
     }),
   }
 })
+
 jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   return {
     execute: jest.fn(() => {
@@ -36,9 +26,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
 const ViewletSearch = await import(
   '../src/parts/ViewletSearch/ViewletSearch.js'
 )
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
+
 const TextSearch = await import('../src/parts/TextSearch/TextSearch.js')
 const Command = await import('../src/parts/Command/Command.js')
 
@@ -49,13 +37,6 @@ test('name', () => {
 test('create', () => {
   const state = ViewletSearch.create()
   expect(state).toBeDefined()
-})
-
-test.skip('refresh', () => {
-  const state = ViewletSearch.create()
-  RendererProcess.state.send = jest.fn()
-  ViewletSearch.refresh(state)
-  // expect(RendererProcess.state.send).toHaveBeenCalledWith([3022, 0, []])
 })
 
 test.skip('dispose', () => {
@@ -75,9 +56,7 @@ test('loadContent - restore value', async () => {
   const state = ViewletSearch.create()
   // @ts-ignore
   TextSearch.textSearch.mockImplementation(() => {
-    return {
-      results: [],
-    }
+    return []
   })
   expect(
     await ViewletSearch.loadContent(state, {
@@ -88,13 +67,169 @@ test('loadContent - restore value', async () => {
   })
 })
 
+test('setValue - error - preview is not of type array', async () => {
+  const state = ViewletSearch.create()
+  // @ts-ignore
+  TextSearch.textSearch.mockImplementation(() => {
+    return [
+      [
+        './file-1.txt',
+        {
+          preview: 'abc',
+          absoluteOffset: 0,
+        },
+      ],
+    ]
+  })
+  expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
+    message: 'Error: previews must be of type array',
+  })
+})
+
+test('setValue - one match in one file', async () => {
+  const state = ViewletSearch.create()
+  // @ts-ignore
+  TextSearch.textSearch.mockImplementation(() => {
+    return [
+      [
+        './file-1.txt',
+        [
+          {
+            preview: 'abc',
+            absoluteOffset: 0,
+          },
+        ],
+      ],
+    ]
+  })
+  expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
+    value: 'abc',
+    items: [
+      {
+        icon: '',
+        text: 'file-1.txt',
+        title: '/file-1.txt',
+        type: 'file',
+      },
+      {
+        icon: '',
+        text: 'abc',
+        title: 'abc',
+        type: 'preview',
+      },
+    ],
+    message: 'Found 1 result in 1 file',
+  })
+})
+
+test('setValue - two matches in one file', async () => {
+  const state = ViewletSearch.create()
+  // @ts-ignore
+  TextSearch.textSearch.mockImplementation(() => {
+    return [
+      [
+        './file-1.txt',
+        [
+          {
+            preview: 'abc',
+            absoluteOffset: 0,
+          },
+          {
+            preview: 'abc',
+            absoluteOffset: 1,
+          },
+        ],
+      ],
+    ]
+  })
+  expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
+    value: 'abc',
+    items: [
+      {
+        icon: '',
+        text: 'file-1.txt',
+        title: '/file-1.txt',
+        type: 'file',
+      },
+      {
+        icon: '',
+        text: 'abc',
+        title: 'abc',
+        type: 'preview',
+      },
+      {
+        icon: '',
+        text: 'abc',
+        title: 'abc',
+        type: 'preview',
+      },
+    ],
+    message: 'Found 2 results in 1 file',
+  })
+})
+
+test('setValue - two matches in two files', async () => {
+  const state = ViewletSearch.create()
+  // @ts-ignore
+  TextSearch.textSearch.mockImplementation(() => {
+    return [
+      [
+        './file-1.txt',
+        [
+          {
+            preview: 'abc',
+            absoluteOffset: 0,
+          },
+        ],
+      ],
+      [
+        './file-2.txt',
+        [
+          {
+            preview: 'abc',
+            absoluteOffset: 0,
+          },
+        ],
+      ],
+    ]
+  })
+  expect(await ViewletSearch.setValue(state, 'abc')).toMatchObject({
+    value: 'abc',
+    items: [
+      {
+        icon: '',
+        text: 'file-1.txt',
+        title: '/file-1.txt',
+        type: 'file',
+      },
+      {
+        icon: '',
+        text: 'abc',
+        title: 'abc',
+        type: 'preview',
+      },
+      {
+        icon: '',
+        text: 'file-2.txt',
+        title: '/file-2.txt',
+        type: 'file',
+      },
+      {
+        icon: '',
+        text: 'abc',
+        title: 'abc',
+        type: 'preview',
+      },
+    ],
+    message: 'Found 2 results in 2 files',
+  })
+})
+
 test('handleInput - empty results', async () => {
   const state = ViewletSearch.create()
   // @ts-ignore
   TextSearch.textSearch.mockImplementation(() => {
-    return {
-      results: [],
-    }
+    return []
   })
   expect(await ViewletSearch.handleInput(state, 'test search')).toMatchObject({
     value: 'test search',
@@ -108,7 +243,7 @@ test('handleInput - error', async () => {
   })
   const state = ViewletSearch.create()
   expect(await ViewletSearch.handleInput(state, 'test search')).toMatchObject({
-    message: 'Error: could not load search results',
+    message: `Error: could not load search results`,
   })
 })
 
