@@ -1,4 +1,4 @@
-import * as ViewletModuleId from '../../../../renderer-process/src/parts/ViewletModuleId/ViewletModuleId.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ExtensionHostDiagnostic from '../ExtensionHost/ExtensionHostDiagnostic.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
