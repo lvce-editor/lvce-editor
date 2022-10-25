@@ -2,7 +2,6 @@
   display: grid;
   grid-template-rows: 35px 1fr;
   border-top: 1px solid rgba(128, 128, 128, 0.35);
-  background: var(--PanelBackground);
 }
 
 .Panel {

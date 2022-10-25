@@ -1,12 +1,12 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
+import * as Css from '../Css/Css.js'
 import { CancelationError } from '../Errors/CancelationError.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as Css from '../Css/Css.js'
 
 export const state = {
   pendingModules: Object.create(null),
@@ -20,6 +20,16 @@ const ViewletState = {
   ContentRendered: 4,
   Appended: 5,
 }
+
+const kCreate = 'Viewlet.create'
+const kAppend = 'Viewlet.append'
+const kSendMultiple = 'Viewlet.sendMultiple'
+const kLoadModule = 'Viewlet.loadModule'
+const kLoad = 'Viewlet.load'
+const kSetBounds = 'Viewlet.setBounds'
+const kAppendViewlet = 'Viewlet.appendViewlet'
+const kHandleError = 'Viewlet.handleError'
+const kDispose = 'Viewlet.dispose'
 
 // TODO maybe wrapViewletCommand should accept module instead of id string
 // then check if instance.factory matches module -> only compare reference (int) instead of string
@@ -48,7 +58,7 @@ const wrapViewletCommand = (id, fn) => {
       const commands = render(activeInstance.factory, oldState, newState)
       ViewletStates.setState(id, newState)
       await RendererProcess.invoke(
-        /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
+        /* Viewlet.sendMultiple */ kSendMultiple,
         /* commands */ commands
       )
     } else {
@@ -78,7 +88,7 @@ const wrapViewletCommandWithSideEffect = (id, fn) => {
       ViewletStates.setState(id, newState)
     }
     await RendererProcess.invoke(
-      /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
+      /* Viewlet.sendMultiple */ kSendMultiple,
       /* commands */ commands
     )
   }
@@ -139,7 +149,10 @@ const getRenderCommands = (module, oldState, newState) => {
     }
     return commands
   }
-  return module.render(oldState, newState)
+  if (module.render) {
+    return module.render(oldState, newState)
+  }
+  return []
 }
 
 const maybeRegisterWrappedCommands = (module) => {
@@ -178,7 +191,7 @@ const maybeRegisterEvents = (module) => {
         const commands = render(instance.factory, instance.state, newState)
         instance.state = newState
         await RendererProcess.invoke(
-          /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
+          /* Viewlet.sendMultiple */ kSendMultiple,
           /* commands */ commands
         )
       }
@@ -189,10 +202,7 @@ const maybeRegisterEvents = (module) => {
 
 const actuallyLoadModule = async (getModule, id) => {
   const module = await getModule(id)
-  await RendererProcess.invoke(
-    /* Viewlet.load */ 'Viewlet.loadModule',
-    /* id */ id
-  )
+  await RendererProcess.invoke(/* Viewlet.load */ kLoadModule, /* id */ id)
   if (module.Css) {
     // this is a memory leak but it is not too important
     // because javascript modules also cannot be unloaded
@@ -304,9 +314,12 @@ export const load = async (
         }
         ViewletStates.set(childModule.name, childInstance)
         const commands = getRenderCommands(childModule, oldState, newState)
-        extraCommands.push(['Viewlet.create', childModule.name])
+        extraCommands.push([kCreate, childModule.name])
         extraCommands.push(...commands)
-        extraCommands.push(['Viewlet.append', viewlet.id, childModule.name])
+        extraCommands.push([kAppend, viewlet.id, childModule.name])
+        if (childModule.contentLoadedEffects) {
+          await childModule.contentLoadedEffects(newState)
+        }
       }
     }
     if (focus && module.focus) {
@@ -325,7 +338,7 @@ export const load = async (
     if (viewlet.show === false) {
     } else {
       await RendererProcess.invoke(
-        /* Viewlet.load */ 'Viewlet.load',
+        /* Viewlet.load */ kLoad,
         /* id */ viewlet.id
       )
     }
@@ -366,14 +379,14 @@ export const load = async (
       commands.push(...renderCommands)
       if (viewlet.show === false) {
         const allCommands = [
-          ['Viewlet.create', viewlet.id],
+          [kCreate, viewlet.id],
           ...commands,
           ...extraCommands,
           // ['Viewlet.show', viewlet.id],
         ]
         if (viewlet.setBounds !== false) {
           allCommands.splice(1, 0, [
-            'Viewlet.setBounds',
+            kSetBounds,
             viewlet.id,
             left,
             top,
@@ -389,7 +402,7 @@ export const load = async (
       // console.log('else', viewlet.id, { commands })
       commands.push(...extraCommands)
       await RendererProcess.invoke(
-        /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
+        /* Viewlet.sendMultiple */ kSendMultiple,
         /* commands */ commands
       )
     }
@@ -403,7 +416,7 @@ export const load = async (
     state = ViewletState.ContentRendered
     if (viewlet.parentId) {
       await RendererProcess.invoke(
-        /* Viewlet.append */ 'Viewlet.appendViewlet',
+        /* Viewlet.append */ kAppendViewlet,
         /* parentId */ viewlet.parentId,
         /* id */ viewlet.id,
         /* focus */ focus
@@ -430,6 +443,7 @@ export const load = async (
       // TODO unload the module from renderer process
       return
     }
+    return commands
   } catch (error) {
     if (error && error instanceof CancelationError) {
       return
@@ -443,20 +457,20 @@ export const load = async (
       const commands = []
       if (state < ViewletState.RendererProcessViewletLoaded) {
         await RendererProcess.invoke(
-          /* Viewlet.load */ 'Viewlet.load',
+          /* Viewlet.load */ kLoad,
           /* id */ viewlet.id
         )
       }
-      commands.push(['Viewlet.create', viewlet.id])
+      commands.push([kCreate, viewlet.id])
       if (state < ViewletState.Appended && viewlet.parentId) {
         commands.push([
-          /* Viewlet.append */ 'Viewlet.appendViewlet',
+          /* Viewlet.append */ kAppendViewlet,
           /* parentId */ viewlet.parentId,
           /* id */ viewlet.id,
         ])
       }
       commands.push([
-        /* viewlet.handleError */ 'Viewlet.handleError',
+        /* viewlet.handleError */ kHandleError,
         /* id */ viewlet.id,
         /* parentId */ viewlet.parentId,
         /* message */ `${error}`,
@@ -475,10 +489,7 @@ export const dispose = async (id) => {
   state[id].disposed = true
   delete Viewlet.state.instances[id]
   delete state[id]
-  await RendererProcess.invoke(
-    /* Viewlet.dispose */ 'Viewlet.dispose',
-    /* id */ id
-  )
+  await RendererProcess.invoke(/* Viewlet.dispose */ kDispose, /* id */ id)
 }
 
 export const mutate = async (id, fn) => {

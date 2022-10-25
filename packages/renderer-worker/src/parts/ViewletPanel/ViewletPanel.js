@@ -1,13 +1,14 @@
-import * as Command from '../Command/Command.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 export const name = ViewletModuleId.Panel
 
 export const create = () => {
   return {
-    currentId: '',
+    currentViewletId: '',
     currentViewlet: undefined,
     views: [],
     disposed: false,
@@ -16,14 +17,48 @@ export const create = () => {
   }
 }
 
-export const loadContent = async (state) => {
-  const cachedViewlet = await getCachedViewlet()
+const getSavedViewletId = (savedState) => {
+  if (savedState && savedState.currentViewletId) {
+    return savedState.currentViewletId
+  }
+  return ViewletModuleId.Problems
+}
+
+export const loadContent = (state, savedState) => {
+  const savedViewletId = getSavedViewletId(savedState)
+  const views = [
+    ViewletModuleId.Problems,
+    ViewletModuleId.Output,
+    ViewletModuleId.DebugConsole,
+    ViewletModuleId.Terminal,
+  ]
+  const selectedIndex = views.indexOf(savedViewletId)
   return {
     ...state,
-    views: ['Problems', 'Output', 'Debug Console', 'Terminal'],
-    currentViewlet: cachedViewlet,
-    selectedIndex: 0,
+    views,
+    currentViewletId: savedViewletId,
+    selectedIndex,
   }
+}
+
+const getContentDimensions = (dimensions) => {
+  return {
+    left: dimensions.left,
+    top: dimensions.top + 35,
+    width: dimensions.width,
+    height: dimensions.height - 35,
+  }
+}
+
+// TODO
+export const getChildren = (state) => {
+  const { top, left, width, height, titleAreaHeight, currentViewletId } = state
+  return [
+    {
+      id: currentViewletId,
+      ...getContentDimensions(state),
+    },
+  ]
 }
 
 export const dispose = (state) => {
@@ -33,36 +68,35 @@ export const dispose = (state) => {
   }
 }
 
-const getCachedViewlet = async () => {
-  const cachedViewlet = await Command.execute(
-    /* LocalStorage.getJson */ 'LocalStorage.getJson',
-    /* key */ 'panelViewlet'
-  )
-  return cachedViewlet
-}
-
 // TODO this function is a bit messy
-export const openViewlet = async (state, id) => {
-  if (!id) {
-    return
-  }
-  // TODO pending state
-  if (state.currentId === id) {
-    return
-  }
-  // TODO current viewlet should be disposed if it exists
-  state.currentId = id
-  const child = ViewletManager.create(
-    ViewletModule.load,
+// TODO no default parameter -> monomorphism
+export const openViewlet = async (state, id, focus = false) => {
+  console.assert(typeof id === 'string')
+  const { currentViewletId } = state
+  state.currentViewletId = id
+  console.log({ id })
+  const childDimensions = getContentDimensions(state)
+  const commands = await ViewletManager.load({
+    getModule: ViewletModule.load,
     id,
-    'Panel',
-    '',
-    0,
-    0,
-    0,
-    0
-  )
-  await ViewletManager.load(child)
+    type: 0,
+    // @ts-ignore
+    uri: '',
+    show: false,
+    focus: false,
+    setBounds: false,
+    top: childDimensions.top,
+    left: childDimensions.left,
+    width: childDimensions.width,
+    height: childDimensions.height,
+  })
+  if (commands) {
+    commands.unshift(['Viewlet.dispose', currentViewletId])
+    commands.push(['Viewlet.append', ViewletModuleId.Panel, id])
+    await RendererProcess.invoke('Viewlet.sendMultiple', commands)
+  }
+  console.log({ commands })
+  return { ...state }
 }
 
 export const selectIndex = async (state, index) => {
