@@ -34,9 +34,11 @@ export const create = () => {
   $InputBox.type = 'search'
   $InputBox.placeholder = 'Search Extensions in Marketplace'
   $InputBox.oninput = ViewletExtensionsEvents.handleInput
+
   const $ExtensionHeader = document.createElement('div')
   $ExtensionHeader.className = 'ExtensionHeader'
   $ExtensionHeader.append($InputBox)
+
   // TODO handle error
   const $ExtensionList = document.createElement('div')
   $ExtensionList.className = 'ExtensionList'
@@ -73,6 +75,13 @@ export const create = () => {
       passive: true,
     }
   )
+  $ExtensionList.addEventListener(
+    'wheel',
+    ViewletExtensionsEvents.handleWheel,
+    {
+      passive: true,
+    }
+  )
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
@@ -93,9 +102,6 @@ export const create = () => {
   // @ts-ignore
   $Viewlet.role = 'none'
   $Viewlet.append($ExtensionHeader, $ExtensionListWrapper)
-  $Viewlet.addEventListener('wheel', ViewletExtensionsEvents.handleWheel, {
-    passive: true,
-  })
 
   return {
     $Viewlet,
