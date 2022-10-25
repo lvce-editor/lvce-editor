@@ -413,6 +413,14 @@ export const load = async (
       return
     }
     state = ViewletState.ContentRendered
+    if (viewlet.parentId && viewlet.show !== false) {
+      await RendererProcess.invoke(
+        /* Viewlet.append */ kAppendViewlet,
+        /* parentId */ viewlet.parentId,
+        /* id */ viewlet.id,
+        /* focus */ focus
+      )
+    }
     state = ViewletState.Appended
 
     if (viewlet.disposed) {
