@@ -7,11 +7,7 @@ import * as ExtensionsMarketplace from '../ExtensionMarketplace/ExtensionMarketp
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import {
-  getListHeight,
-  HEADER_HEIGHT,
-  MINIMUM_SLIDER_SIZE,
-} from './ViewletExtensionsShared.js'
+import { getListHeight } from './ViewletExtensionsShared.js'
 
 const SUGGESTIONS = [
   '@builtin',
@@ -55,7 +51,9 @@ export const create = (id, uri, left, top, width, height) => {
     touchOffsetY: 0,
     touchTimeStamp: 0,
     touchDifference: 0,
-    itemHeight: 62,
+    itemHeight: 0,
+    headerHeight: 0,
+    minimumSliderSize: 0,
   }
 }
 
@@ -65,7 +63,8 @@ const getVisible = (state) => {
 }
 
 export const loadContent = async (state) => {
-  const { itemHeight, height } = state
+  const { height } = state
+  const itemHeight = 62
   // TODO just get local extensions on demand (not when query string is already different)
 
   // TODO get installed extensions from extension host
@@ -79,7 +78,12 @@ export const loadContent = async (state) => {
 
   const listHeight = getListHeight(state)
   const contentHeight = viewObjects.length * itemHeight
-  const scrollBarHeight = getScrollBarHeight(height, contentHeight)
+  const minimumSliderSize = 20
+  const scrollBarHeight = getScrollBarHeight(
+    height,
+    contentHeight,
+    minimumSliderSize
+  )
   const maxLineY = Math.ceil(listHeight / itemHeight)
   return {
     ...state,
@@ -87,6 +91,9 @@ export const loadContent = async (state) => {
     filteredExtensions: viewObjects,
     maxLineY: maxLineY,
     scrollBarHeight,
+    itemHeight,
+    headerHeight: 35.94, // TODO improve this
+    minimumSliderSize,
   }
 }
 
@@ -474,13 +481,20 @@ export const handleWheel = (state, deltaY) => {
   return setDeltaY(state, state.deltaY + deltaY)
 }
 
-const getScrollBarHeight = (editorHeight, contentHeight) => {
+/**
+ *
+ * @param {number} editorHeight
+ * @param {number} contentHeight
+ * @param {number} minimumSliderSize
+ * @returns
+ */
+const getScrollBarHeight = (editorHeight, contentHeight, minimumSliderSize) => {
   if (editorHeight > contentHeight) {
     return 0
   }
   return Math.max(
     Math.round(editorHeight ** 2 / contentHeight),
-    MINIMUM_SLIDER_SIZE
+    minimumSliderSize
   )
 }
 
@@ -494,36 +508,37 @@ const getNewPercent = (state, relativeY) => {
 }
 
 export const handleScrollBarMove = (state, y) => {
-  const relativeY = y - state.top - HEADER_HEIGHT - state.handleOffset
+  const { top, headerHeight, handleOffset, finalDeltaY } = state
+  const relativeY = y - top - headerHeight - handleOffset
   const newPercent = getNewPercent(state, relativeY)
-  const newDeltaY = newPercent * state.finalDeltaY
+  const newDeltaY = newPercent * finalDeltaY
   return setDeltaY(state, newDeltaY)
 }
 
 const getNewDeltaPercent = (state, relativeY) => {
-  if (relativeY <= state.scrollBarHeight / 2) {
+  // TODO duplicate code with editor scrolling
+  const { scrollBarHeight, height } = state
+  if (relativeY <= scrollBarHeight / 2) {
     // clicked at top
     return 0
   }
-  if (relativeY <= state.height - state.scrollBarHeight / 2) {
+  if (relativeY <= height - scrollBarHeight / 2) {
     // clicked in middle
-    return (
-      (relativeY - state.scrollBarHeight / 2) /
-      (state.height - state.scrollBarHeight)
-    )
+    return (relativeY - scrollBarHeight / 2) / (height - scrollBarHeight)
   }
   // clicked at bottom
   return 1
 }
 
 export const handleScrollBarClick = (state, y) => {
-  const relativeY = y - state.top - HEADER_HEIGHT
+  const { top, headerHeight, finalDeltaY, scrollBarHeight } = state
+  const relativeY = y - top - headerHeight
   const newPercent = getNewDeltaPercent(state, relativeY)
-  const newDeltaY = newPercent * state.finalDeltaY
+  const newDeltaY = newPercent * finalDeltaY
 
   return {
     ...setDeltaY(state, newDeltaY),
-    handleOffset: state.scrollBarHeight / 2,
+    handleOffset: scrollBarHeight / 2,
   }
 }
 
