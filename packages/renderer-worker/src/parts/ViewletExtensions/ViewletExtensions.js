@@ -51,9 +51,9 @@ export const create = (id, uri, left, top, width, height) => {
     touchOffsetY: 0,
     touchTimeStamp: 0,
     touchDifference: 0,
-    itemHeight: 0,
-    headerHeight: 0,
-    minimumSliderSize: 0,
+    itemHeight: 62,
+    headerHeight: 35.94, // TODO improve this
+    minimumSliderSize: 20,
   }
 }
 
@@ -63,8 +63,7 @@ const getVisible = (state) => {
 }
 
 export const loadContent = async (state) => {
-  const { height } = state
-  const itemHeight = 62
+  const { height, itemHeight, minimumSliderSize } = state
   // TODO just get local extensions on demand (not when query string is already different)
 
   // TODO get installed extensions from extension host
@@ -78,7 +77,6 @@ export const loadContent = async (state) => {
 
   const listHeight = getListHeight(state)
   const contentHeight = viewObjects.length * itemHeight
-  const minimumSliderSize = 20
   const scrollBarHeight = getScrollBarHeight(
     height,
     contentHeight,
@@ -92,8 +90,6 @@ export const loadContent = async (state) => {
     maxLineY: maxLineY,
     scrollBarHeight,
     itemHeight,
-    headerHeight: 35.94, // TODO improve this
-    minimumSliderSize,
   }
 }
 
@@ -441,7 +437,7 @@ export const hasFunctionalResize = true
 export const resize = (state, dimensions) => {
   const { itemHeight, minLineY } = state
   // TODO should just return new state, render function can take old state and new state and return render commands
-  const listHeight = getListHeight(dimensions)
+  const listHeight = getListHeight({ ...state, ...dimensions })
   const maxLineY = minLineY + Math.ceil(listHeight / itemHeight)
   return {
     ...state,

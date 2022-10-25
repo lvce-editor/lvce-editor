@@ -728,7 +728,10 @@ test.skip('toggleSuggest', async () => {
 // localhost/:1 Access to fetch at 'http://localhost:39367/api/extensions/search?q=te' from origin 'http://localhost:35291' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. If an opaque response serves your needs, set the request's mode to 'no-cors' to fetch the resource with CORS disabled.
 
 test('resize', () => {
-  const state = ViewletExtensions.create()
+  const state = {
+    ...ViewletExtensions.create(),
+    itemHeight: 62,
+  }
   const newState = ViewletExtensions.resize(state, {
     top: 200,
     left: 200,
@@ -783,6 +786,7 @@ test('handleWheel - scroll down', () => {
     ],
     height: 124,
     deltaY: 0,
+    itemHeight: 62,
   }
   expect(ViewletExtensions.handleWheel(state, 62)).toMatchObject({
     minLineY: 1,
@@ -815,6 +819,7 @@ test('handleWheel - scroll up', () => {
     ],
     height: 124,
     deltaY: 62,
+    itemHeight: 62,
   }
   expect(ViewletExtensions.handleWheel(state, -62)).toMatchObject({
     deltaY: 0,
