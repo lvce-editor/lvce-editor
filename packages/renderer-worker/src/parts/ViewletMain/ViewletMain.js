@@ -266,7 +266,7 @@ export const openUri = async (state, uri, focus = true) => {
       // @ts-ignore
 
       await ViewletManager.load(instance, focus)
-      return
+      return state
     }
   }
   const instance = ViewletManager.create(
