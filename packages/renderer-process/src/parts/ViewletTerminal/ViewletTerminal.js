@@ -5,7 +5,6 @@ import * as ViewletTerminalEvents from './ViewletTerminalEvents.js'
 export const name = 'Terminal'
 
 export const create = () => {
-  console.log('create terminal')
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Terminal'
   const terminal = Terminal.create({

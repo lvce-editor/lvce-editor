@@ -95,7 +95,6 @@ export const openViewlet = async (state, id, focus = false) => {
     commands.push(['Viewlet.append', ViewletModuleId.Panel, id])
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
-  console.log({ commands })
   return { ...state }
 }
 
