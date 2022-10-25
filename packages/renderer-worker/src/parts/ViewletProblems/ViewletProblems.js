@@ -1,6 +1,14 @@
-import * as ExtensionHostDiagnostic from '../ExtensionHost/ExtensionHostDiagnostic.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Diagnostics from '../Diagnostics/Diagnostics.js'
+import * as I18NString from '../I18NString/I18NString.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  NoProblemsDetected: 'No problems have been detected in the workspace.',
+  ProblemsDetected: 'Some problems have been detected in the workspace.',
+}
 
 export const name = ViewletModuleId.Problems
 
@@ -9,26 +17,30 @@ export const create = () => {
     problems: [],
     disposed: false,
     focusedIndex: -2,
+    message: '',
   }
 }
 
 const toProblem = (diagnostic) => {
-  return diagnostic.message
+  const { message } = diagnostic
+  return message
+}
+
+const getMessage = (problems) => {
+  if (problems.length === 0) {
+    return I18NString.i18nString(UiStrings.NoProblemsDetected)
+  }
+  return I18NString.i18nString(UiStrings.ProblemsDetected)
 }
 
 export const loadContent = async (state) => {
-  const instance = ViewletStates.getInstance('EditorText')
-  if (!instance) {
-    return state
-  }
-  const editor = instance.state
-  const diagnostics = await ExtensionHostDiagnostic.executeDiagnosticProvider(
-    editor
-  )
+  const diagnostics = await Diagnostics.getDiagnostics()
   const problems = diagnostics.map(toProblem)
+  const message = getMessage(problems)
   return {
     ...state,
     problems,
+    message,
   }
 }
 
@@ -76,4 +88,18 @@ const renderFocusedIndex = {
   },
 }
 
-export const render = [renderProblems, renderFocusedIndex]
+const renderMessage = {
+  isEqual(oldState, newState) {
+    return oldState.message === newState.message
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.invoke */ 'Viewlet.send',
+      /* id */ 'Problems',
+      /* method */ 'setMessage',
+      /* focusedIndex */ newState.message,
+    ]
+  },
+}
+
+export const render = [renderProblems, renderFocusedIndex, renderMessage]
