@@ -897,7 +897,7 @@ export const handleArrowLeft = (state) => {
       return handleClickDirectoryExpanded(state, dirent, state.focusedIndex)
     default:
       // TODO handle expanding directory and cancel file system call to read child dirents
-      break
+      return state
   }
 }
 
