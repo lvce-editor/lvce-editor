@@ -1,4 +1,3 @@
-import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
@@ -447,81 +446,6 @@ export const resize = (state, dimensions) => {
   }
 }
 
-export const setDeltaY = (state, deltaY) => {
-  Assert.object(state)
-  Assert.number(deltaY)
-  const listHeight = getListHeight(state)
-  const { itemHeight, filteredExtensions } = state
-  if (deltaY < 0) {
-    deltaY = 0
-  } else if (deltaY > filteredExtensions.length * itemHeight - listHeight) {
-    deltaY = Math.max(filteredExtensions.length * itemHeight - listHeight, 0)
-  }
-  if (state.deltaY === deltaY) {
-    return state
-  }
-  // TODO when it only moves by one px, extensions don't need to be rerendered, only negative margin
-  const minLineY = Math.floor(deltaY / itemHeight)
-  const maxLineY = minLineY + Math.ceil(listHeight / itemHeight)
-  const negativeMargin = -Math.round(deltaY)
-  return {
-    ...state,
-    deltaY,
-    minLineY,
-    maxLineY,
-    negativeMargin,
-  }
-  // await scheduleExtensions(state)
-}
-
-export const handleWheel = (state, deltaY) => {
-  return setDeltaY(state, state.deltaY + deltaY)
-}
-
-const getNewPercent = (state, relativeY) => {
-  if (relativeY <= state.height - state.scrollBarHeight / 2) {
-    // clicked in middle
-    return relativeY / (state.height - state.scrollBarHeight)
-  }
-  // clicked at bottom
-  return 1
-}
-
-export const handleScrollBarMove = (state, y) => {
-  const { top, headerHeight, handleOffset, finalDeltaY } = state
-  const relativeY = y - top - headerHeight - handleOffset
-  const newPercent = getNewPercent(state, relativeY)
-  const newDeltaY = newPercent * finalDeltaY
-  return setDeltaY(state, newDeltaY)
-}
-
-const getNewDeltaPercent = (state, relativeY) => {
-  // TODO duplicate code with editor scrolling
-  const { scrollBarHeight, height } = state
-  if (relativeY <= scrollBarHeight / 2) {
-    // clicked at top
-    return 0
-  }
-  if (relativeY <= height - scrollBarHeight / 2) {
-    // clicked in middle
-    return (relativeY - scrollBarHeight / 2) / (height - scrollBarHeight)
-  }
-  // clicked at bottom
-  return 1
-}
-
-export const handleScrollBarClick = (state, y) => {
-  const { top, headerHeight, finalDeltaY, scrollBarHeight } = state
-  const relativeY = y - top - headerHeight
-  const newPercent = getNewDeltaPercent(state, relativeY)
-  const newDeltaY = newPercent * finalDeltaY
-
-  return {
-    ...setDeltaY(state, newDeltaY),
-    handleOffset: scrollBarHeight / 2,
-  }
-}
-
 export const hasFunctionalRender = true
 
 const renderExtensions = {
@@ -534,7 +458,6 @@ const renderExtensions = {
   },
   apply(oldState, newState) {
     const visibleExtensions = getVisible(newState)
-    console.log({ visibleExtensions })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',
