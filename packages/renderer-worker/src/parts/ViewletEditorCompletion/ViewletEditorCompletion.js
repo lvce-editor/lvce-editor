@@ -1,10 +1,9 @@
 import * as Command from '../Command/Command.js'
+import * as Completions from '../Completions/Completions.js'
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js'
 import * as EditorCompletionMap from '../EditorCompletionMap/EditorCompletionMap.js'
-import * as ExtensionHostCompletion from '../ExtensionHost/ExtensionHostCompletion.js'
 import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletionItems.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
 export const create = (id, uri, top, left, width, height) => {
@@ -30,20 +29,6 @@ export const create = (id, uri, top, left, width, height) => {
   }
 }
 
-// TODO possible to do this with events/state machine instead of promises -> enables canceling operations / concurrent calls
-const getCompletions = async (editor) => {
-  const rowIndex = editor.selections[0]
-  const columnIndex = editor.selections[1]
-  // Editor.sync(editor)
-  const offset = TextDocument.offsetAt(editor, rowIndex, columnIndex)
-  const completions = await ExtensionHostCompletion.executeCompletionProvider(
-    editor,
-    offset
-  )
-  console.log({ completions })
-  return completions
-}
-
 const getEditor = () => {
   return Viewlet.getState('EditorText')
 }
@@ -63,7 +48,7 @@ const getDisplayErrorMessage = (error) => {
 
 export const loadContent = async (state) => {
   const editor = getEditor()
-  const items = await getCompletions(editor)
+  const items = await Completions.getCompletions(editor)
   const filteredItems = FilterCompletionItems.filterCompletionItems(items, '')
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]

@@ -172,11 +172,13 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
       }
       break
     default:
-      const $Dirent = $Viewlet.children[newIndex]
-      $Dirent.id = activeId
-      $Viewlet.setAttribute('aria-activedescendant', activeId)
-      if (focused) {
-        $Dirent.classList.add(focusClassName)
+      if (newIndex >= 0) {
+        const $Dirent = $Viewlet.children[newIndex]
+        $Dirent.id = activeId
+        $Viewlet.setAttribute('aria-activedescendant', activeId)
+        if (focused) {
+          $Dirent.classList.add(focusClassName)
+        }
       }
       break
   }

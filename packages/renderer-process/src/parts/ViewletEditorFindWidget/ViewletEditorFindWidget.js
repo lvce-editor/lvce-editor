@@ -6,6 +6,9 @@ import * as ViewletEditorFindWidgetEvents from './ViewletEditorFindWidgetEvents.
 
 export const name = 'EditorFindWidget'
 
+/**
+ * @enum {string}
+ */
 const UiStrings = {
   Close: 'Close',
   PreviousMatch: 'Previous Match',

@@ -2019,10 +2019,28 @@ test('handleArrowLeft - when no focus', async () => {
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.handleArrowLeft(state)
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(await ViewletExplorer.handleArrowLeft(state)).toBe(state)
+})
+
+test('handleArrowLeft - symbolic link', async () => {
+  const state = {
+    root: '/test',
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    items: [
+      {
+        depth: 1,
+        posInSet: 1,
+        setSize: 3,
+        name: 'abc',
+        path: '/test/abc',
+        type: DirentType.Symlink,
+      },
+    ],
+  }
+  expect(await ViewletExplorer.handleArrowLeft(state)).toBe(state)
 })
 
 test('handleArrowRight - file', async () => {

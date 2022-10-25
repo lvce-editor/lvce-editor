@@ -9,22 +9,6 @@ import * as SearchResultType from '../SearchResultType/SearchResultType.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-// TODO maybe create should have a container as param like vscode?
-// maybe not?
-
-// const toList = ([fileName, previews]) => [
-//   {
-//     type: 'fileName',
-//     text: `file: ${fileName}`,
-//   },
-//   ...previews.map(({ preview }) => ({
-//     type: 'preview',
-//     text: preview,
-//   })),
-// ]
-
-const SEARCH_ORDER_FILE_NAMES = 1
-
 export const name = ViewletModuleId.Search
 
 /**
@@ -100,9 +84,7 @@ const getResultCounts = (results) => {
   return resultCount
 }
 
-// TODO
 export const setValue = async (state, value) => {
-  console.log({ value })
   try {
     const root = Workspace.state.workspacePath
     const results = await TextSearch.textSearch(root, value)
