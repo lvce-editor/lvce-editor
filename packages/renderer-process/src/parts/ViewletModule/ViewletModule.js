@@ -54,8 +54,8 @@ export const load = (moduleId) => {
       return import('../ViewletEditorPlainText/ViewletEditorPlainText.js')
     case ViewletModuleId.KeyBindings:
       return import('../ViewletKeyBindings/ViewletKeyBindings.js')
-    case ViewletModuleId.EditorFindWidget:
-      return import('../ViewletEditorFindWidget/ViewletEditorFindWidget.js')
+    case ViewletModuleId.FindWidget:
+      return import('../ViewletFindWidget/ViewletFindWidget.js/index.js')
     case ViewletModuleId.ExtensionDetail:
       return import('../ViewletExtensionDetail/ViewletExtensionDetail.js')
     case ViewletModuleId.TitleBarButtons:

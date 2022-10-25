@@ -52,8 +52,8 @@ export const load = (moduleId) => {
       return import('../ViewletQuickPick/ViewletQuickPick.ipc.js')
     case ViewletModuleId.KeyBindings:
       return import('../ViewletKeyBindings/ViewletKeyBindings.ipc.js')
-    case ViewletModuleId.EditorFindWidget:
-      return import('../ViewletEditorFindWidget/ViewletEditorFindWidget.ipc.js')
+    case ViewletModuleId.FindWidget:
+      return import('../ViewletFindWidget/ViewletFindWidget.ipc.js')
     case ViewletModuleId.ExtensionDetail:
       return import('../ViewletExtensionDetail/ViewletExtensionDetail.ipc.js')
     case ViewletModuleId.TitleBarButtons:

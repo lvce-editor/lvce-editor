@@ -58,7 +58,7 @@ declare const Extension: {
   readonly addWebExtension: (uri: string) => Promise<void>
 }
 
-declare const EditorFindWidget: {
+declare const FindWidget: {
   readonly focusNext: () => Promise<void>
 }
 

@@ -20,25 +20,25 @@ const RendererWorker = await import(
   '../src/parts/RendererWorker/RendererWorker.js'
 )
 
-const ViewletEditorFindWidget = await import(
-  '../src/parts/ViewletEditorFindWidget/ViewletEditorFindWidget.js'
+const ViewletFindWidget = await import(
+  '../src/parts/ViewletFindWidget/ViewletFindWidget.js'
 )
 
 test('event - input', () => {
-  const state = ViewletEditorFindWidget.create()
+  const state = ViewletFindWidget.create()
   const { $InputBox } = state
   $InputBox.value = 'abc'
   const event = new InputEvent('input')
   $InputBox.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'EditorFindWidget.handleInput',
+    'FindWidget.handleInput',
     'abc'
   )
 })
 
 test('event - click on focusPrevious', () => {
-  const state = ViewletEditorFindWidget.create()
+  const state = ViewletFindWidget.create()
   const { $ButtonFocusPrevious } = state
   const event = new MouseEvent('click', {
     bubbles: true,
@@ -46,13 +46,11 @@ test('event - click on focusPrevious', () => {
   })
   $ButtonFocusPrevious.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith(
-    'EditorFindWidget.focusPrevious'
-  )
+  expect(RendererWorker.send).toHaveBeenCalledWith('FindWidget.focusPrevious')
 })
 
 test('event - click on focusNext', () => {
-  const state = ViewletEditorFindWidget.create()
+  const state = ViewletFindWidget.create()
   const { $ButtonFocusNext } = state
   const event = new MouseEvent('click', {
     bubbles: true,
@@ -60,11 +58,11 @@ test('event - click on focusNext', () => {
   })
   $ButtonFocusNext.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
-  expect(RendererWorker.send).toHaveBeenCalledWith('EditorFindWidget.focusNext')
+  expect(RendererWorker.send).toHaveBeenCalledWith('FindWidget.focusNext')
 })
 
 test('event - click on close', () => {
-  const state = ViewletEditorFindWidget.create()
+  const state = ViewletFindWidget.create()
   const { $ButtonClose } = state
   const event = new MouseEvent('click', {
     bubbles: true,
@@ -74,6 +72,6 @@ test('event - click on close', () => {
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
     'Viewlet.closeWidget',
-    'EditorFindWidget'
+    'FindWidget'
   )
 })

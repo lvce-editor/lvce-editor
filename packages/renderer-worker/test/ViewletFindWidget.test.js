@@ -19,8 +19,8 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
   }
 })
 
-const ViewletEditorFindWidget = await import(
-  '../src/parts/ViewletEditorFindWidget/ViewletEditorFindWidget.js'
+const ViewletFindWidget = await import(
+  '../src/parts/ViewletFindWidget/ViewletFindWidget.js'
 )
 
 const ViewletStates = await import(
@@ -29,11 +29,11 @@ const ViewletStates = await import(
 const Command = await import('../src/parts/Command/Command.js')
 
 test('name', () => {
-  expect(ViewletEditorFindWidget.name).toBe('EditorFindWidget')
+  expect(ViewletFindWidget.name).toBe('FindWidget')
 })
 
 test('create', () => {
-  expect(ViewletEditorFindWidget.create()).toBeDefined()
+  expect(ViewletFindWidget.create()).toBeDefined()
 })
 
 test('getPosition', () => {
@@ -42,8 +42,8 @@ test('getPosition', () => {
 })
 
 test('loadContent', async () => {
-  const state = ViewletEditorFindWidget.create()
-  expect(await ViewletEditorFindWidget.loadContent(state)).toMatchObject({
+  const state = ViewletFindWidget.create()
+  expect(await ViewletFindWidget.loadContent(state)).toMatchObject({
     value: '',
   })
 })
@@ -56,8 +56,8 @@ test('loadContent - initial value from editor selection', async () => {
       selections: new Uint32Array([0, 0, 0, 4]),
     }
   })
-  const state = ViewletEditorFindWidget.create()
-  expect(await ViewletEditorFindWidget.loadContent(state)).toMatchObject({
+  const state = ViewletFindWidget.create()
+  expect(await ViewletFindWidget.loadContent(state)).toMatchObject({
     value: 'line',
   })
 })
@@ -70,8 +70,8 @@ test('handleInput', () => {
       selections: new Uint32Array([0, 0, 0, 4]),
     }
   })
-  const state = ViewletEditorFindWidget.create()
-  expect(ViewletEditorFindWidget.handleInput(state, 'abc')).toMatchObject({
+  const state = ViewletFindWidget.create()
+  expect(ViewletFindWidget.handleInput(state, 'abc')).toMatchObject({
     value: 'abc',
   })
 })
@@ -84,8 +84,8 @@ test('handleInput - adjust matchCount', () => {
       selections: new Uint32Array([0, 0, 0, 4]),
     }
   })
-  const state = ViewletEditorFindWidget.create()
-  expect(ViewletEditorFindWidget.handleInput(state, 'line 1')).toMatchObject({
+  const state = ViewletFindWidget.create()
+  expect(ViewletFindWidget.handleInput(state, 'line 1')).toMatchObject({
     value: 'line 1',
     matchCount: 1,
   })
@@ -102,12 +102,12 @@ test('focusPrevious', async () => {
     }
   })
   const state = {
-    ...ViewletEditorFindWidget.create(),
+    ...ViewletFindWidget.create(),
     matchIndex: 2,
     matchCount: 3,
     matches: new Uint32Array([0, 0, 1, 0, 2, 0]),
   }
-  expect(await ViewletEditorFindWidget.focusPrevious(state)).toMatchObject({
+  expect(await ViewletFindWidget.focusPrevious(state)).toMatchObject({
     matchIndex: 1,
   })
   expect(Command.execute).toHaveBeenCalledTimes(1)
@@ -128,13 +128,13 @@ test('focusNext', async () => {
     }
   })
   const state = {
-    ...ViewletEditorFindWidget.create(),
+    ...ViewletFindWidget.create(),
     value: 'line',
     matchIndex: 0,
     matchCount: 2,
     matches: new Uint32Array([0, 0, 1, 0]),
   }
-  expect(await ViewletEditorFindWidget.focusNext(state)).toMatchObject({
+  expect(await ViewletFindWidget.focusNext(state)).toMatchObject({
     matchIndex: 1,
     matchCount: 2,
   })
@@ -156,13 +156,13 @@ test('focusNext - only one match', async () => {
     }
   })
   const state = {
-    ...ViewletEditorFindWidget.create(),
+    ...ViewletFindWidget.create(),
     value: 'line',
     matchIndex: 0,
     matchCount: 1,
     matches: new Uint32Array([0, 0]),
   }
-  expect(await ViewletEditorFindWidget.focusNext(state)).toBe(state)
+  expect(await ViewletFindWidget.focusNext(state)).toBe(state)
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
@@ -177,13 +177,13 @@ test('focusNext - at end', async () => {
     }
   })
   const state = {
-    ...ViewletEditorFindWidget.create(),
+    ...ViewletFindWidget.create(),
     value: 'line',
     matchIndex: 1,
     matchCount: 2,
     matches: new Uint32Array([0, 0, 1, 0]),
   }
-  expect(await ViewletEditorFindWidget.focusNext(state)).toMatchObject({
+  expect(await ViewletFindWidget.focusNext(state)).toMatchObject({
     matchIndex: 0,
     matchCount: 2,
   })

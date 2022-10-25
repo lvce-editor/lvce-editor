@@ -3,22 +3,22 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 export const handleInput = (event) => {
   const { target } = event
   const { value } = target
-  RendererWorker.send('EditorFindWidget.handleInput', value)
+  RendererWorker.send('FindWidget.handleInput', value)
 }
 
 const handleClickClose = (event) => {
   event.preventDefault()
-  RendererWorker.send('Viewlet.closeWidget', 'EditorFindWidget')
+  RendererWorker.send('Viewlet.closeWidget', 'FindWidget')
 }
 
 const handleClickPreviousMatch = (event) => {
   event.preventDefault()
-  RendererWorker.send('EditorFindWidget.focusPrevious')
+  RendererWorker.send('FindWidget.focusPrevious')
 }
 
 const handleClickNextMatch = (event) => {
   event.preventDefault()
-  RendererWorker.send('EditorFindWidget.focusNext')
+  RendererWorker.send('FindWidget.focusNext')
 }
 
 export const handleClick = (event) => {

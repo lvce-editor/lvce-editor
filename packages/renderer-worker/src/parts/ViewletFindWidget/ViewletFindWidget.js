@@ -12,7 +12,7 @@ const UiStrings = {
   MatchOf: `{PH1} of {PH2}`,
 }
 
-export const name = ViewletModuleId.EditorFindWidget
+export const name = ViewletModuleId.FindWidget
 
 export const create = () => {
   return {
@@ -149,7 +149,7 @@ const renderValue = {
   apply(oldState, newState) {
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'EditorFindWidget',
+      /* id */ 'FindWidget',
       /* method */ 'setValue',
       /* value */ newState.value,
     ]
@@ -170,7 +170,7 @@ const renderMatchCount = {
     })
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'EditorFindWidget',
+      /* id */ 'FindWidget',
       /* method */ 'setMatchCountText',
       /* value */ matchCountText,
     ]

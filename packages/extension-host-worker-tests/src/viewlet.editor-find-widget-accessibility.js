@@ -46,12 +46,12 @@ content 2`
   await Editor.openFindWidget()
 
   // assert
-  const findWidgetInput = Locator('.EditorFindWidget .InputBox')
+  const findWidgetInput = Locator('.FindWidget .InputBox')
   await expect(findWidgetInput).toBeVisible()
   await expect(findWidgetInput).toBeFocused()
   await expect(findWidgetInput).toHaveAttribute('aria-label', 'Find')
   const findWidgetButtonFocusPrevious = Locator(
-    '.EditorFindWidget [title="Previous Match"]'
+    '.FindWidget [title="Previous Match"]'
   )
   await expect(findWidgetButtonFocusPrevious).toHaveAttribute(
     'aria-label',
