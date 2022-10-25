@@ -287,7 +287,17 @@ export const load = async (
           child.width,
           child.height
         )
-        const newState = await childModule.loadContent(oldState)
+        let instanceSavedState
+        if (restore) {
+          const stateToSave = await SaveState.getSavedState()
+          instanceSavedState = getInstanceSavedState(stateToSave, child.id)
+        } else if (restoreState) {
+          instanceSavedState = restoreState
+        }
+        const newState = await childModule.loadContent(
+          oldState,
+          instanceSavedState
+        )
         const childInstance = {
           state: newState,
           factory: childModule,
