@@ -52,7 +52,7 @@ export const create = (id, uri, left, top, width, height) => {
     touchTimeStamp: 0,
     touchDifference: 0,
     itemHeight: 62,
-    headerHeight: 35.94, // TODO improve this
+    headerHeight: 35,
     minimumSliderSize: 20,
   }
 }

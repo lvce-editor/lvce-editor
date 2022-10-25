@@ -1,7 +1,6 @@
 /* progress bar based on the vscode progress bar https://github.com/microsoft/vscode/blob/main/src/vs/base/browser/ui/progressbar/progressbar.css */
 
 .Extensions {
-  padding-top: 5px;
   display: flex;
   flex-direction: column;
   cursor: default;
