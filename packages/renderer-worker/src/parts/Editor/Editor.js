@@ -1,8 +1,9 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Assert from '../Assert/Assert.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as EditorCursor from './EditorCursor.js'
 import * as EditorScrolling from './EditorScrolling.js'
 import * as EditorSelection from './EditorSelection.js'
@@ -277,23 +278,17 @@ export const setBounds = (editor, top, left, height, columnWidth) => {
   }
 }
 
-const getScrollBarHeight = (editorHeight, contentHeight) => {
-  if (editorHeight > contentHeight) {
-    return 0
-  }
-  return Math.max(
-    Math.round(editorHeight ** 2 / contentHeight),
-    MINIMUM_SLIDER_SIZE
-  )
-}
-
 export const setText = (editor, text) => {
   const lines = text.split('\n')
   const maxLineY = Math.min(editor.numberOfVisibleLines, lines.length)
   const finalY = Math.max(lines.length - editor.numberOfVisibleLines, 0)
   const finalDeltaY = finalY * 20
   const contentHeight = lines.length * editor.rowHeight
-  const scrollBarHeight = getScrollBarHeight(editor.height, contentHeight)
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
+    editor.height,
+    contentHeight,
+    MINIMUM_SLIDER_SIZE
+  )
   return {
     ...editor,
     lines,

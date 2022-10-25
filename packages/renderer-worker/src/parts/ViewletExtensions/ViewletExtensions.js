@@ -6,6 +6,7 @@ import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement
 import * as ExtensionsMarketplace from '../ExtensionMarketplace/ExtensionMarketplace.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import { getListHeight } from './ViewletExtensionsShared.js'
 
@@ -77,7 +78,7 @@ export const loadContent = async (state) => {
 
   const listHeight = getListHeight(state)
   const contentHeight = viewObjects.length * itemHeight
-  const scrollBarHeight = getScrollBarHeight(
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
     height,
     contentHeight,
     minimumSliderSize
@@ -475,23 +476,6 @@ export const setDeltaY = (state, deltaY) => {
 
 export const handleWheel = (state, deltaY) => {
   return setDeltaY(state, state.deltaY + deltaY)
-}
-
-/**
- *
- * @param {number} editorHeight
- * @param {number} contentHeight
- * @param {number} minimumSliderSize
- * @returns
- */
-const getScrollBarHeight = (editorHeight, contentHeight, minimumSliderSize) => {
-  if (editorHeight > contentHeight) {
-    return 0
-  }
-  return Math.max(
-    Math.round(editorHeight ** 2 / contentHeight),
-    minimumSliderSize
-  )
 }
 
 const getNewPercent = (state, relativeY) => {

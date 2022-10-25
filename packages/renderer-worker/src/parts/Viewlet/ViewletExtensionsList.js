@@ -1,11 +1,13 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js' // TODO use Command.execute instead
-import * as ExtensionsMarketplace from '../ExtensionMarketplace/ExtensionMarketplace.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as Platform from '../Platform/Platform.js'
-import * as Assert from '../Assert/Assert.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as Platform from '../Platform/Platform.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+
 export const ITEM_HEIGHT = 62
 
 const MINIMUM_SLIDER_SIZE = 20
@@ -50,7 +52,11 @@ export const loadContent = async (state) => {
 
   const listHeight = state.height
   const contentHeight = viewObjects.length * ITEM_HEIGHT
-  const scrollBarHeight = getScrollBarHeight(state.height, contentHeight)
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
+    state.height,
+    contentHeight,
+    MINIMUM_SLIDER_SIZE
+  )
 
   console.log({ scrollBarHeight })
   return {
@@ -410,16 +416,6 @@ export const setDeltaY = (state, deltaY) => {
 
 export const handleWheel = (state, deltaY) => {
   return setDeltaY(state, state.deltaY + deltaY)
-}
-
-const getScrollBarHeight = (editorHeight, contentHeight) => {
-  if (editorHeight > contentHeight) {
-    return 0
-  }
-  return Math.max(
-    Math.round(editorHeight ** 2 / contentHeight),
-    MINIMUM_SLIDER_SIZE
-  )
 }
 
 const getNewPercent = (state, relativeY) => {
