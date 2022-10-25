@@ -7,29 +7,29 @@ import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
   RendererWorker.send(
-    /* ViewletExtensions.handleScrollBarMouseMove */ 'Extensions.handleScrollBarMove',
+    /* Extensions.handleScrollBarMouseMove */ 'Extensions.handleScrollBarMove',
     /* y */ clientY
   )
 }
 
-export const handleScrollBarThumbPointerUp = () => {
-  window.removeEventListener('pointermove', handleScrollBarThumbPointerMove)
-  window.removeEventListener('pointerup', handleScrollBarThumbPointerUp)
+export const handleScrollBarPointerUp = (event) => {
+  const { target, pointerId } = event
+  target.releasePointerCapture(pointerId)
+  target.removeEventListener('pointermove', handleScrollBarThumbPointerMove)
+  target.removeEventListener('pointerup', handleScrollBarPointerUp)
 }
 
 export const handleScrollBarPointerDown = (event) => {
-  const $Target = event.target
-  if ($Target.className === 'ScrollBarThumb') {
-    window.addEventListener('pointermove', handleScrollBarThumbPointerMove)
-    window.addEventListener('pointerup', handleScrollBarThumbPointerUp)
-  } else {
-    const y = event.clientY
-    console.log({ y })
-    RendererWorker.send(
-      /* ViewletExtensions.handleScrollBarClick */ 'Extensions.handleScrollBarClick',
-      /* y */ y
-    )
-  }
+  const { target, pointerId, clientY } = event
+  target.setPointerCapture(pointerId)
+  target.addEventListener('pointermove', handleScrollBarThumbPointerMove, {
+    passive: false,
+  })
+  target.addEventListener('pointerup', handleScrollBarPointerUp)
+  RendererWorker.send(
+    /* Extensions.handleScrollBarPointerDown */ 'Extensions.handleScrollBarClick',
+    /* y */ clientY
+  )
 }
 
 export const handleFocus = (event) => {

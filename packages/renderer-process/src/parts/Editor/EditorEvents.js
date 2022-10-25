@@ -287,11 +287,11 @@ export const handleScrollBarThumbPointerMove = (event) => {
   )
 }
 
-export const handleScrollBarThumbPointerUp = (event) => {
+export const handleScrollBarPointerUp = (event) => {
   const { target, pointerId } = event
   target.releasePointerCapture(pointerId)
   target.removeEventListener('pointermove', handleScrollBarThumbPointerMove)
-  target.removeEventListener('pointerup', handleScrollBarThumbPointerUp)
+  target.removeEventListener('pointerup', handleScrollBarPointerUp)
 }
 
 export const handleScrollBarPointerDown = (event) => {
@@ -300,7 +300,7 @@ export const handleScrollBarPointerDown = (event) => {
   target.addEventListener('pointermove', handleScrollBarThumbPointerMove, {
     passive: false,
   })
-  target.addEventListener('pointerup', handleScrollBarThumbPointerUp)
+  target.addEventListener('pointerup', handleScrollBarPointerUp)
   RendererWorker.send(
     /* EditorHandleScrollBarClick.editorHandleScrollBarPointerDown */ 'Editor.handleScrollBarPointerDown',
     /* y */ clientY

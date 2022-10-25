@@ -521,7 +521,7 @@ test('event - pointerup after pointerdown - on scroll bar thumb', () => {
   expect(spy1).toHaveBeenNthCalledWith(
     2,
     'pointerup',
-    EditorEvents.handleScrollBarThumbPointerUp
+    EditorEvents.handleScrollBarPointerUp
   )
   expect(spy3).toHaveBeenCalledTimes(1)
   expect(spy3).toHaveBeenCalledWith(0)
@@ -544,7 +544,7 @@ test('event - pointerup after pointerdown - on scroll bar thumb', () => {
   expect(spy2).toHaveBeenNthCalledWith(
     2,
     'pointerup',
-    EditorEvents.handleScrollBarThumbPointerUp
+    EditorEvents.handleScrollBarPointerUp
   )
 })
 

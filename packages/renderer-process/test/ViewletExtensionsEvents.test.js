@@ -16,6 +16,10 @@ beforeAll(() => {
       this.button = init.button
     }
   }
+
+  HTMLElement.prototype.setPointerCapture = () => {}
+  HTMLElement.prototype.releasePointerCapture = () => {}
+
   Object.defineProperty(HTMLElement.prototype, 'onpointerdown', {
     set(fn) {
       this.addEventListener('pointerdown', fn)
@@ -297,5 +301,23 @@ test('event - touchend', () => {
   expect(RendererWorker.send).toHaveBeenCalledWith(
     'Extensions.handleTouchEnd',
     [{ clientX: 10, clientY: 10, identifier: 0 }]
+  )
+})
+
+test('event - pointerdown - on scroll bar thumb', () => {
+  const state = ViewletExtensions.create()
+  const { $ScrollBarThumb } = state
+  const event = new PointerEvent('pointerdown', {
+    bubbles: true,
+    clientX: 10,
+    clientY: 20,
+    pointerId: 0,
+    button: MouseEventType.LeftClick,
+  })
+  $ScrollBarThumb.dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Extensions.handleScrollBarClick',
+    20
   )
 })
