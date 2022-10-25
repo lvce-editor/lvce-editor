@@ -182,3 +182,10 @@ test('handleContextMenuKeyBoard', async () => {
     MenuEntryId.Search
   )
 })
+
+test('selectIndex - negative index', async () => {
+  const state = {
+    ...ViewletSearch.create(),
+  }
+  expect(await ViewletSearch.selectIndex(state, -1)).toBe(state)
+})

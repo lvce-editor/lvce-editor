@@ -220,6 +220,9 @@ const selectIndexPreview = async (state, index) => {
 }
 
 export const selectIndex = async (state, index) => {
+  if (index === -1) {
+    return state
+  }
   const searchResult = state.items[index]
   switch (searchResult.type) {
     case SearchResultType.File:
