@@ -184,16 +184,6 @@ export const handleWheel = (state, deltaY) => {
   return setDeltaY(state, state.deltaY + deltaY)
 }
 
-const getScrollBarHeight = (editorHeight, contentHeight) => {
-  if (editorHeight > contentHeight) {
-    return 0
-  }
-  return Math.max(
-    Math.round(editorHeight ** 2 / contentHeight),
-    MINIMUM_SLIDER_SIZE
-  )
-}
-
 const getNewPercent = (state, relativeY) => {
   if (relativeY <= state.height - state.scrollBarHeight / 2) {
     // clicked in middle
