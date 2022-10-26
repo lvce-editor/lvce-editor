@@ -1,3 +1,4 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -673,6 +674,10 @@ const getResizeCommands = (oldPoints, newPoints) => {
       const newLeft = newPoints[kLeft]
       const newWidth = newPoints[kWidth]
       const newHeight = newPoints[kHeight]
+      Assert.number(newTop)
+      Assert.number(newLeft)
+      Assert.number(newWidth)
+      Assert.number(newHeight)
       const resizeCommands = Viewlet.resize(moduleId, {
         top: newTop,
         left: newLeft,
