@@ -42,7 +42,6 @@ export const focus = ($Element, key) => {
 
 export const focusPrevious = () => {
   if (state.$PreviousFocusElement) {
-    console.log(state.$PreviousFocusElement)
     state.$PreviousFocusElement.focus()
   }
 }
