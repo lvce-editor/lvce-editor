@@ -89,8 +89,7 @@ export const loadContent = async (state) => {
   )
   const numberOfVisible = Math.ceil(listHeight / itemHeight)
   const maxLineY = Math.min(numberOfVisible, total)
-  const finalY = Math.max(total - numberOfVisible, 0)
-  const finalDeltaY = contentHeight - listHeight
+  const finalDeltaY = Math.max(contentHeight - listHeight, 0)
   const size = getSize(width)
   return {
     ...state,

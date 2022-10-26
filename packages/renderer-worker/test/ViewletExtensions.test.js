@@ -165,7 +165,6 @@ test('loadContent', async () => {
       version: '0.0.1',
     },
   ])
-
   expect(newState.filteredExtensions).toEqual([
     {
       description:
@@ -202,7 +201,7 @@ test('loadContent - with scrollbar', async () => {
   const state = {
     ...ViewletExtensions.create(),
     width: 200,
-    height: 62,
+    height: 62 + 35,
     maxLineY: 10,
     itemHeight: 62,
     top: 0,
@@ -939,7 +938,7 @@ test('render - focused index is different', () => {
     focusedIndex: 1,
   }
   expect(render(oldState, newState)).toEqual([
-    ['Viewlet.send', 'Extensions', 'setFocusedIndex', 0, 1],
+    ['Viewlet.send', 'Extensions', 'setFocusedIndex', 0, 1, false],
   ])
 })
 
