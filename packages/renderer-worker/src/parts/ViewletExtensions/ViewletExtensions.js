@@ -54,6 +54,7 @@ export const create = (id, uri, left, top, width, height) => {
     itemHeight: 62,
     headerHeight: 35,
     minimumSliderSize: 20,
+    focused: false,
   }
 }
 
@@ -90,7 +91,7 @@ export const loadContent = async (state) => {
   const numberOfVisible = Math.ceil(listHeight / itemHeight)
   const maxLineY = Math.min(numberOfVisible, total)
   const finalY = Math.max(total - numberOfVisible, 0)
-  const finalDeltaY = finalY * itemHeight
+  const finalDeltaY = contentHeight - listHeight
   const size = getSize(width)
   return {
     ...state,
@@ -442,6 +443,13 @@ export const toggleSuggest = async (state) => {
   }
 }
 
+export const handleBlur = (state) => {
+  return {
+    ...state,
+    focused: false,
+  }
+}
+
 export const hasFunctionalResize = true
 
 export const resize = (state, dimensions) => {
@@ -520,12 +528,15 @@ const renderFocusedIndex = {
     )
   },
   apply(oldState, newState) {
+    const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
+    const newFocusedIndex = newState.focusedIndex - newState.minLineY
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setFocusedIndex',
-      /* oldFocusedIndex */ oldState.focusedIndex - oldState.minLineY,
-      /* newFocusedIndex */ newState.focusedIndex - newState.minLineY,
+      /* oldFocusedIndex */ oldFocusedIndex,
+      /* newFocusedIndex */ newFocusedIndex,
+      /* focused */ newState.focused,
     ]
   },
 }
@@ -533,6 +544,7 @@ const renderFocusedIndex = {
 const renderScrollBarY = {
   isEqual(oldState, newState) {
     return (
+      oldState.negativeMargin === newState.negativeMargin &&
       oldState.deltaY === newState.deltaY &&
       oldState.height === newState.height &&
       oldState.finalDeltaY === newState.finalDeltaY
@@ -545,6 +557,12 @@ const renderScrollBarY = {
       newState.height - newState.headerHeight,
       newState.scrollBarHeight
     )
+    console.log('render scrollbar', {
+      scrollBarY,
+      deltaY: newState.deltaY,
+      negative: newState.negativeMargin,
+      finalDeltaY: newState.finalDeltaY,
+    })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',

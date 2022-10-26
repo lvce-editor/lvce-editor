@@ -5,11 +5,11 @@ export const setDeltaY = (state, deltaY) => {
   Assert.object(state)
   Assert.number(deltaY)
   const listHeight = getListHeight(state)
-  const { itemHeight, filteredExtensions } = state
+  const { itemHeight, finalDeltaY } = state
   if (deltaY < 0) {
     deltaY = 0
-  } else if (deltaY > filteredExtensions.length * itemHeight - listHeight) {
-    deltaY = Math.max(filteredExtensions.length * itemHeight - listHeight, 0)
+  } else if (deltaY > finalDeltaY) {
+    deltaY = Math.max(finalDeltaY, 0)
   }
   if (state.deltaY === deltaY) {
     return state

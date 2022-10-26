@@ -6,6 +6,7 @@ export const focusIndex = (state, index) => {
     return {
       ...state,
       focusedIndex: -1,
+      focused: true,
     }
   }
   const listHeight = getListHeight(state)
@@ -20,6 +21,7 @@ export const focusIndex = (state, index) => {
       minLineY,
       maxLineY,
       negativeMargin,
+      focused: true,
     }
   }
   if (index >= state.maxLineY - 1) {
@@ -34,10 +36,12 @@ export const focusIndex = (state, index) => {
       minLineY,
       maxLineY,
       negativeMargin,
+      focused: true,
     }
   }
   return {
     ...state,
     focusedIndex: index,
+    focused: true,
   }
 }
