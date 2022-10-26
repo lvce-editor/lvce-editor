@@ -115,7 +115,7 @@
   opacity: 0.5;
 }
 
-.ExtensionDetail {
+.ExtensionListItemDetail {
   flex: 1;
   width: 100%;
   height: 100%;
@@ -123,13 +123,13 @@
   contain: strict;
 }
 
-.ExtensionIcon {
+.ExtensionListItemIcon {
   width: 42px;
   height: 42px;
   flex-shrink: 0;
 }
 
-.ExtensionName {
+.ExtensionListItemName {
   text-overflow: ellipsis;
   white-space: nowrap;
   /* color: rgb(188, 190, 190); */
@@ -138,7 +138,7 @@
   padding-right: 11px;
 }
 
-.ExtensionDescription {
+.ExtensionListItemDescription {
   height: 18px;
   font-size: 13px;
   text-overflow: ellipsis;
@@ -147,12 +147,12 @@
   padding-right: 11px;
 }
 
-.ExtensionFooter {
+.ExtensionListItemFooter {
   display: flex;
   justify-content: space-between;
 }
 
-.ExtensionAuthorName {
+.ExtensionListItemAuthorName {
   /* TODO compute automatically like vscode (opacity 0.9) */
   /* const authorForeground = foregroundColor.transparent(.9).makeOpaque(WORKBENCH_BACKGROUND(theme));
   collector.addRule(`.extensions-list .monaco-list .monaco-list-row:not(.disabled) .author { color: ${authorForeground}; }`);
@@ -163,7 +163,7 @@
   font-weight: 600;
 }
 
-.ExtensionActionInstall {
+.ExtensionListItemActionInstall {
   background: #2f6260;
   color: white;
   border: none;
@@ -175,11 +175,11 @@
   /* contain: strict; */
 }
 
-.ExtensionActionInstall:hover {
+.ExtensionListItemActionInstall:hover {
   background: #387674;
 }
 
-.ExtensionActionManage {
+.ExtensionListItemActionManage {
   all: unset;
   width: 16px;
   height: 16px;
@@ -187,10 +187,6 @@
   background: #c5c5c5;
   -webkit-mask: url(/icons/settings-gear.svg) 50% 50% / 16px no-repeat;
   mask: url(/icons/settings-gear.svg) 50% 50% / 16px no-repeat;
-}
-
-.NegativeMargin {
-  contain: strict;
 }
 
 /* TODO duplicate code with editor */
@@ -218,6 +214,6 @@
   background: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6));
 }
 
-.Extensions.Small .ExtensionIcon {
+.Extensions.Small .ExtensionListItemIcon {
   display: none;
 }
