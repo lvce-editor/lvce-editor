@@ -362,3 +362,14 @@ export const setScrollBar = (state, scrollBarY, scrollBarHeight) => {
   $ScrollBarThumb.style.top = `${scrollBarY}px`
   $ScrollBarThumb.style.height = `${scrollBarHeight}px`
 }
+
+export const setSize = (state, size) => {
+  const { $Viewlet } = state
+  if (size === 'Small') {
+    $Viewlet.classList.remove('Normal')
+    $Viewlet.classList.add('Small')
+  } else {
+    $Viewlet.classList.remove('Small')
+    $Viewlet.classList.add('Normal')
+  }
+}

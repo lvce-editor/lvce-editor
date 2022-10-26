@@ -217,3 +217,7 @@
   contain: strict;
   background: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6));
 }
+
+.Extensions.Small .ExtensionIcon {
+  display: none;
+}
