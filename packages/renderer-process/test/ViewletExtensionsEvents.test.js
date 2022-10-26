@@ -198,7 +198,7 @@ test('icon - error', () => {
   ])
   const $ExtensionList = state.$ExtensionList
   const $FirstExtension = $ExtensionList.children[0]
-  const $FirstIcon = $FirstExtension.querySelector('.ExtensionIcon')
+  const $FirstIcon = $FirstExtension.querySelector('.ExtensionListItemIcon')
   // @ts-ignore
   expect($FirstIcon.src).toBe('http://localhost/not-found.png')
   $FirstIcon.dispatchEvent(new ErrorEvent('error', { bubbles: true }))
@@ -218,7 +218,7 @@ test('icon - error - endless loop bug', () => {
   const $ExtensionList = state.$ExtensionList
   const $FirstExtension = $ExtensionList.children[0]
   // @ts-ignore
-  const $FirstIcon = $FirstExtension.querySelector('.ExtensionIcon')
+  const $FirstIcon = $FirstExtension.querySelector('.ExtensionListItemIcon')
   // @ts-ignore
   const spy = jest.spyOn($FirstIcon, 'src', 'set')
   // @ts-ignore
