@@ -76,13 +76,20 @@ export const loadContent = async (state) => {
   )
 
   const listHeight = getListHeight(state)
-  const contentHeight = viewObjects.length * itemHeight
+  const total = viewObjects.length
+  const contentHeight = total * itemHeight
   const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
     height,
     contentHeight,
     minimumSliderSize
   )
-  const maxLineY = Math.ceil(listHeight / itemHeight)
+  const numberOfVisible = Math.ceil(listHeight / itemHeight)
+  const maxLineY = Math.min(numberOfVisible, total)
+  const finalY = Math.max(total - numberOfVisible, 0)
+  const finalDeltaY = finalY * itemHeight
+
+  console.log({ finalDeltaY })
+
   return {
     ...state,
     extensions,
@@ -90,7 +97,7 @@ export const loadContent = async (state) => {
     maxLineY: maxLineY,
     scrollBarHeight,
     itemHeight,
-    finalDeltaY: 2728, // TODO compute this dynamically
+    finalDeltaY,
   }
 }
 

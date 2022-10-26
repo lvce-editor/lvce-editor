@@ -138,76 +138,126 @@ test('loadContent', async () => {
         throw new Error('unexpected message')
     }
   })
-  expect(await ViewletExtensions.loadContent(state)).toMatchObject({
-    extensions: [
-      {
-        description:
-          'Provides syntax highlighting and bracket matching in HTML files.',
-        id: 'builtin.language-basics-html',
+  const newState = await ViewletExtensions.loadContent(state)
+  expect(newState.extensions).toEqual([
+    {
+      description:
+        'Provides syntax highlighting and bracket matching in HTML files.',
+      id: 'builtin.language-basics-html',
 
-        languages: [
-          {
-            configuration: './languageConfiguration.json',
-            extensions: ['.html'],
-            id: 'html',
-            tokenize: 'src/tokenizeHtml.js',
-          },
-        ],
-        name: 'Language Basics HTML',
-      },
-      {
-        description: 'Test Extension',
-        id: 'test-author-2.test-extension',
-        main: 'main.js',
-        name: 'test-extension',
-        path: '/tmp/extensions/test-author-2.test-extension',
-        publisher: 'test-author-2',
-        version: '0.0.1',
-      },
-    ],
-    filteredExtensions: [
-      {
-        description:
-          'Provides syntax highlighting and bracket matching in HTML files.',
-        icon: '//icons/language-icon.svg',
-        id: 'builtin.language-basics-html',
-        name: 'Language Basics HTML',
-        publisher: 'builtin',
-        state: 'installed',
-        version: 'n/a',
-        posInSet: 1,
-        setSize: 2,
-        top: 0,
-      },
-      {
-        description: 'Test Extension',
-        icon: '//icons/extensionDefaultIcon.png',
-        id: 'test-author-2.test-extension',
-        name: 'test-extension',
-        publisher: 'test-author-2',
-        state: 'installed',
-        version: '0.0.1',
-        posInSet: 2,
-        setSize: 2,
-        top: 62,
-      },
-    ],
-
-    disposed: false,
-    parsedValue: {
-      isLocal: true,
-      query: '',
+      languages: [
+        {
+          configuration: './languageConfiguration.json',
+          extensions: ['.html'],
+          id: 'html',
+          tokenize: 'src/tokenizeHtml.js',
+        },
+      ],
+      name: 'Language Basics HTML',
     },
-    searchValue: '',
-    suggestionState: 0,
-    focusedIndex: -1,
+    {
+      description: 'Test Extension',
+      id: 'test-author-2.test-extension',
+      main: 'main.js',
+      name: 'test-extension',
+      path: '/tmp/extensions/test-author-2.test-extension',
+      publisher: 'test-author-2',
+      version: '0.0.1',
+    },
+  ])
+
+  expect(newState.filteredExtensions).toEqual([
+    {
+      description:
+        'Provides syntax highlighting and bracket matching in HTML files.',
+      icon: '//icons/language-icon.svg',
+      id: 'builtin.language-basics-html',
+      name: 'Language Basics HTML',
+      publisher: 'builtin',
+      state: 'installed',
+      version: 'n/a',
+      posInSet: 1,
+      setSize: 2,
+      top: 0,
+    },
+    {
+      description: 'Test Extension',
+      icon: '//icons/extensionDefaultIcon.png',
+      id: 'test-author-2.test-extension',
+      name: 'test-extension',
+      publisher: 'test-author-2',
+      state: 'installed',
+      version: '0.0.1',
+      posInSet: 2,
+      setSize: 2,
+      top: 62,
+    },
+  ])
+  expect(newState.minLineY).toBe(0)
+  expect(newState.maxLineY).toBe(2)
+  expect(newState.finalDeltaY).toBe(0)
+})
+
+test('loadContent - with scrollbar', async () => {
+  const state = {
+    ...ViewletExtensions.create(),
     width: 200,
-    height: 200,
-    maxLineY: 3,
-    minLineY: 0,
-    deltaY: 0,
-    negativeMargin: 0,
+    height: 62,
+    maxLineY: 10,
+    itemHeight: 62,
+    top: 0,
+  }
+  // @ts-ignore
+  Ajax.getJson.mockImplementation(() => {
+    return [
+      {
+        name: 'test extension 1',
+        authorId: 'test publisher 1',
+        version: '0.0.1',
+        id: 'test-publisher.test-extension',
+      },
+    ]
   })
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'ExtensionManagement.getAllExtensions':
+        return [
+          {
+            id: 'builtin.language-basics-html',
+            name: 'Language Basics HTML',
+            description:
+              'Provides syntax highlighting and bracket matching in HTML files.',
+            languages: [
+              {
+                id: 'html',
+                extensions: ['.html'],
+                tokenize: 'src/tokenizeHtml.js',
+                configuration: './languageConfiguration.json',
+              },
+            ],
+          },
+          {
+            id: 'test-author-2.test-extension',
+            publisher: 'test-author-2',
+            description: 'Test Extension',
+            name: 'test-extension',
+            version: '0.0.1',
+            main: 'main.js',
+            path: '/tmp/extensions/test-author-2.test-extension',
+          },
+        ]
+      default:
+        throw new Error('unexpected message')
+    }
+  })
+  const newState = await ViewletExtensions.loadContent(state)
+  expect(newState.filteredExtensions).toHaveLength(2)
+  expect(newState.minLineY).toBe(0)
+  expect(newState.maxLineY).toBe(1)
+  expect(newState.finalDeltaY).toBe(62)
 })
 
 // TODO sanitization is now in loadContent
