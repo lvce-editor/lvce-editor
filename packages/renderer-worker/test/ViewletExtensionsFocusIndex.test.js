@@ -95,12 +95,13 @@ test('focusIndex - partially in view - causes scrolling down', () => {
     height: 100,
     deltaY: 62,
     headerHeight: 0,
+    finalDeltaY: 3 * 62 - 100,
   }
   expect(ViewletExtensionsFocusIndex.focusIndex(state, 2)).toMatchObject({
     focusedIndex: 2,
     minLineY: 1,
     maxLineY: 3,
-    negativeMargin: -86,
+    deltaY: 38,
   })
 })
 
@@ -167,7 +168,6 @@ test('focusIndex - partially in view - causes scrolling up', () => {
     maxLineY: 2,
     height: 62,
     deltaY: 10,
-    negativeMargin: -10,
     itemHeight: 62,
     minimumSliderSize: 20,
   }
@@ -175,6 +175,6 @@ test('focusIndex - partially in view - causes scrolling up', () => {
     focusedIndex: 0,
     minLineY: 0,
     maxLineY: 1,
-    negativeMargin: -0,
+    deltaY: 0,
   })
 })

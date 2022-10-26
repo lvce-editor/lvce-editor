@@ -5,6 +5,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
+import * as Focus from '../Focus/Focus.js'
 
 export const name = 'Extensions'
 
@@ -116,7 +117,12 @@ export const create = () => {
 }
 
 // TODO possibly use aria active descendant instead
-export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
+export const setFocusedIndex = (
+  state,
+  oldFocusedIndex,
+  newFocusedIndex,
+  focused
+) => {
   Assert.object(state)
   Assert.number(oldFocusedIndex)
   Assert.number(newFocusedIndex)
@@ -128,11 +134,17 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
     $ExtensionList.children[oldFocusedIndex].removeAttribute('id')
   }
   if (newFocusedIndex === -1) {
-    $ExtensionList.removeAttribute('aria-activedescendant')
-    $ExtensionList.classList.add('FocusOutline')
+    if (focused) {
+      $ExtensionList.removeAttribute('aria-activedescendant')
+      $ExtensionList.classList.add('FocusOutline')
+    }
   } else if (newFocusedIndex >= 0 && newFocusedIndex < length) {
     $ExtensionList.children[newFocusedIndex].id = activeId
     $ExtensionList.setAttribute('aria-activedescendant', activeId)
+  }
+  if (focused) {
+    $ExtensionList.focus()
+    Focus.setFocus('Extensions')
   }
 }
 

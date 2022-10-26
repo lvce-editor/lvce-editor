@@ -27,6 +27,7 @@ test('handleWheel - scroll down', () => {
     height: 124,
     deltaY: 0,
     itemHeight: 62,
+    finalDeltaY: 3 * 62 - 124,
   }
   expect(ViewletExtensionsHandleWheel.handleWheel(state, 62)).toMatchObject({
     minLineY: 1,

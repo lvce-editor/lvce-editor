@@ -15,6 +15,7 @@ test('handleTouchMove - scroll up', () => {
     height: 62,
     filteredExtensions: [1, 2, 3],
     deltaY: 10,
+    finalDeltaY: 62 * 2 - 62,
   }
   const newState = ViewletExtensionsHandleTouchMove.handleTouchMove(state, 0, [
     { clientX: 10, clientY: -10, identifier: 0 },
