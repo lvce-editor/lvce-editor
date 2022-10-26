@@ -2,14 +2,20 @@ import * as Clamp from '../Clamp/Clamp.js'
 import * as ScrollingFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
 // TODO this should be in a separate scrolling module
-export const setDeltaY = (editor, value) => {
-  const { finalDeltaY, deltaY, numberOfVisibleLines, height, scrollBarHeight } =
-    editor
+export const setDeltaY = (state, value) => {
+  const {
+    finalDeltaY,
+    deltaY,
+    numberOfVisibleLines,
+    height,
+    scrollBarHeight,
+    itemHeight,
+  } = state
   const newDeltaY = Clamp.clamp(value, 0, finalDeltaY)
   if (deltaY === newDeltaY) {
-    return editor
+    return state
   }
-  const newMinLineY = Math.floor(newDeltaY / 20)
+  const newMinLineY = Math.floor(newDeltaY / itemHeight)
   const newMaxLineY = newMinLineY + numberOfVisibleLines
   const scrollBarY = ScrollingFunctions.getScrollBarY(
     newDeltaY,
@@ -18,7 +24,7 @@ export const setDeltaY = (editor, value) => {
     scrollBarHeight
   )
   return {
-    ...editor,
+    ...state,
     minLineY: newMinLineY,
     maxLineY: newMaxLineY,
     deltaY: newDeltaY,

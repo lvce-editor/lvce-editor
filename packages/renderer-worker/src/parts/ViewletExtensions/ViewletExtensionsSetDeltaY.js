@@ -1,25 +1,22 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Clamp from '../Clamp/Clamp.js'
 import { getListHeight } from './ViewletExtensionsShared.js'
 
-export const setDeltaY = (state, deltaY) => {
+export const setDeltaY = (state, value) => {
   Assert.object(state)
-  Assert.number(deltaY)
+  Assert.number(value)
   const listHeight = getListHeight(state)
-  const { itemHeight, finalDeltaY } = state
-  if (deltaY < 0) {
-    deltaY = 0
-  } else if (deltaY > finalDeltaY) {
-    deltaY = Math.max(finalDeltaY, 0)
-  }
-  if (state.deltaY === deltaY) {
+  const { itemHeight, finalDeltaY, deltaY } = state
+  const newDeltaY = Clamp.clamp(value, 0, finalDeltaY)
+  if (deltaY === newDeltaY) {
     return state
   }
   // TODO when it only moves by one px, extensions don't need to be rerendered, only negative margin
-  const minLineY = Math.floor(deltaY / itemHeight)
+  const minLineY = Math.floor(newDeltaY / itemHeight)
   const maxLineY = minLineY + Math.ceil(listHeight / itemHeight)
   return {
     ...state,
-    deltaY,
+    deltaY: newDeltaY,
     minLineY,
     maxLineY,
   }
