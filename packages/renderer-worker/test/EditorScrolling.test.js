@@ -9,6 +9,7 @@ test('setDeltaY - scroll down', () => {
     maxLineY: 2,
     scrollBarHeight: 10,
     height: 400,
+    itemHeight: 20,
   }
   expect(EditorScrolling.setDeltaY(editor, 80)).toMatchObject({
     minLineY: 4,
