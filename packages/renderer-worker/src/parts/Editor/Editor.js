@@ -55,6 +55,7 @@ export const create = (id, uri, languageId, content) => {
      * Offset at which scrollbar thumb has been clicked
      */
     handleOffset: 0,
+    itemHeight: 20,
   }
 }
 
@@ -261,10 +262,12 @@ export const hasSelection = (editor) => {
 }
 
 export const setBounds = (editor, top, left, height, columnWidth) => {
-  const numberOfVisibleLines = Math.floor(height / 20)
-  const maxLineY = Math.min(numberOfVisibleLines, editor.lines.length)
-  const finalY = Math.max(editor.lines.length - numberOfVisibleLines, 0)
-  const finalDeltaY = finalY * 20
+  const { itemHeight } = editor
+  const numberOfVisibleLines = Math.floor(height / itemHeight)
+  const total = editor.lines.length
+  const maxLineY = Math.min(numberOfVisibleLines, total)
+  const finalY = Math.max(total - numberOfVisibleLines, 0)
+  const finalDeltaY = finalY * itemHeight
   return {
     ...editor,
     top,
@@ -280,9 +283,11 @@ export const setBounds = (editor, top, left, height, columnWidth) => {
 
 export const setText = (editor, text) => {
   const lines = text.split('\n')
-  const maxLineY = Math.min(editor.numberOfVisibleLines, lines.length)
-  const finalY = Math.max(lines.length - editor.numberOfVisibleLines, 0)
-  const finalDeltaY = finalY * 20
+  const { itemHeight, numberOfVisibleLines } = editor
+  const total = lines.length
+  const maxLineY = Math.min(numberOfVisibleLines, total)
+  const finalY = Math.max(total - numberOfVisibleLines, 0)
+  const finalDeltaY = finalY * itemHeight
   const contentHeight = lines.length * editor.rowHeight
   const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
     editor.height,
@@ -348,9 +353,12 @@ const renderScrollBar = {
     )
   },
   apply(oldState, newState) {
-    const scrollBarY =
-      (newState.deltaY / newState.finalDeltaY) *
-      (newState.height - newState.scrollBarHeight)
+    const scrollBarY = ScrollBarFunctions.getScrollBarY(
+      newState.deltaY,
+      newState.finalDeltaY,
+      newState.height,
+      newState.scrollBarHeight
+    )
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'EditorText',

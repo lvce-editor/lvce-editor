@@ -15,3 +15,8 @@ export const getScrollBarHeight = (
   }
   return Math.max(Math.round(height ** 2 / contentHeight), minimumSliderSize)
 }
+
+export const getScrollBarY = (deltaY, finalDeltaY, height, scrollBarHeight) => {
+  const scrollBarY = (deltaY / finalDeltaY) * (height - scrollBarHeight)
+  return scrollBarY
+}
