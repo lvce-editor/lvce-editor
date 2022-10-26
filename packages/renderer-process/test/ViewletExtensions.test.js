@@ -14,7 +14,8 @@ const getTextContent = (node) => {
 }
 
 const getSimpleList = (state) => {
-  return Array.from(state.$ExtensionList.children).map((node) => {
+  const { $ExtensionList } = state
+  return Array.from($ExtensionList.children).map((node) => {
     const children = node.querySelectorAll('*')
     return Array.from(children)
       .filter(isLeaf)
@@ -79,28 +80,28 @@ test.skip('setExtensionState', () => {
     'installing'
   )
   // @ts-ignore
-  expect(state.$Extensions.children[1].dataset.state).toBe('installing')
+  expect($Extensions.children[1].dataset.state).toBe('installing')
   ViewletExtensions.setExtensionState(
     state,
     'test-author.test-extension-2',
     'installed'
   )
   // @ts-ignore
-  expect(state.$Extensions.children[1].dataset.state).toBe('installed')
+  expect($Extensions.children[1].dataset.state).toBe('installed')
   ViewletExtensions.setExtensionState(
     state,
     'test-author.test-extension-2',
     'uninstalling'
   )
   // @ts-ignore
-  expect(state.$Extensions.children[1].dataset.state).toBe('uninstalling')
+  expect($Extensions.children[1].dataset.state).toBe('uninstalling')
   ViewletExtensions.setExtensionState(
     state,
     'test-author.test-extension-2',
     'uninstalled'
   )
   // @ts-ignore
-  expect(state.$Extensions.children[1].dataset.state).toBe('uninstalled')
+  expect($Extensions.children[1].dataset.state).toBe('uninstalled')
   ViewletExtensions.setExtensionState(state, 'non-existing', 'installed')
 })
 
@@ -114,9 +115,10 @@ test('dispose', () => {
 test('openSuggest / closeSuggest', () => {
   const state = ViewletExtensions.create()
   ViewletExtensions.openSuggest(state)
-  expect(state.$ExtensionSuggestions).toBeDefined()
+  const { $ExtensionSuggestions } = state
+  expect($ExtensionSuggestions).toBeDefined()
   // TODO this should use widget
-  expect(document.body.children[0]).toBe(state.$ExtensionSuggestions)
+  expect(document.body.children[0]).toBe($ExtensionSuggestions)
   ViewletExtensions.closeSuggest(state)
   expect(document.body.children.length).toBe(0)
 })
@@ -135,7 +137,7 @@ test('icon - fallback src', () => {
       icon: '/test-publisher.test-extension/icon.png',
     },
   ])
-  const $ExtensionList = state.$ExtensionList
+  const { $ExtensionList } = state
   const $FirstExtension = $ExtensionList.children[0]
   const $FirstIcon = $FirstExtension.querySelector('.ExtensionIcon')
   // @ts-ignore
@@ -157,7 +159,7 @@ test('icon - error', () => {
       icon: '/not-found.png',
     },
   ])
-  const $ExtensionList = state.$ExtensionList
+  const { $ExtensionList } = state
   const $FirstExtension = $ExtensionList.children[0]
   const $FirstIcon = $FirstExtension.querySelector('.ExtensionIcon')
   // @ts-ignore
@@ -176,7 +178,7 @@ test('icon - error - endless loop bug', () => {
       icon: '/not-found.png',
     },
   ])
-  const $ExtensionList = state.$ExtensionList
+  const { $ExtensionList } = state
   const $FirstExtension = $ExtensionList.children[0]
   // @ts-ignore
   const $FirstIcon = $FirstExtension.querySelector('.ExtensionIcon')
@@ -205,7 +207,8 @@ test('focus', () => {
   ])
   Viewlet.mount(document.body, state)
   ViewletExtensions.focus(state)
-  expect(document.activeElement).toBe(state.$InputBox)
+  const { $InputBox } = state
+  expect(document.activeElement).toBe($InputBox)
 })
 
 test('accessibility - InputBox should have placeholder', () => {
@@ -217,8 +220,9 @@ test('accessibility - InputBox should have placeholder', () => {
       icon: '/not-found.png',
     },
   ])
-  expect(state.$InputBox.placeholder).toBe('Search Extensions in Marketplace')
-  expect(state.$InputBox.ariaLabel).toBeUndefined()
+  const { $InputBox } = state
+  expect($InputBox.placeholder).toBe('Search Extensions in Marketplace')
+  expect($InputBox.ariaLabel).toBeUndefined()
 })
 
 test('accessibility - extensions should have ariaSetSize, ariaPosInSet, and ariaRoleDescription', () => {
@@ -239,13 +243,14 @@ test('accessibility - extensions should have ariaSetSize, ariaPosInSet, and aria
       posInSet: 2,
     },
   ])
-  const $ExtensionOne = state.$ExtensionList.children[0]
+  const { $ExtensionList } = state
+  const $ExtensionOne = $ExtensionList.children[0]
   expect($ExtensionOne.ariaSetSize).toBe(2)
   expect($ExtensionOne.ariaPosInSet).toBe(1)
   expect($ExtensionOne.ariaRoleDescription).toBe('Extension')
   // expect($ExtensionOne.ariaLabel).toBe('Test Extension 1')
 
-  const $ExtensionTwo = state.$ExtensionList.children[1]
+  const $ExtensionTwo = $ExtensionList.children[1]
   expect($ExtensionTwo.ariaSetSize).toBe(2)
   expect($ExtensionTwo.ariaPosInSet).toBe(2)
   expect($ExtensionTwo.ariaRoleDescription).toBe('Extension')
@@ -255,15 +260,15 @@ test('accessibility - extensions should have ariaSetSize, ariaPosInSet, and aria
 test('handleError', () => {
   const state = ViewletExtensions.create()
   ViewletExtensions.handleError(state, 'TypeError: x is not a function')
-  expect(state.$ExtensionList.textContent).toBe(
-    'TypeError: x is not a function'
-  )
+  const { $ExtensionList } = state
+  expect($ExtensionList.textContent).toBe('TypeError: x is not a function')
 })
 
 test('setNegativeMargin', () => {
   const state = ViewletExtensions.create()
+  const { $ExtensionList } = state
   ViewletExtensions.setNegativeMargin(state, -10)
-  expect(state.$ExtensionList.style.top).toBe('-10px')
+  expect($ExtensionList.style.top).toBe('-10px')
 })
 
 test('setExtensions - add one', () => {
@@ -277,8 +282,9 @@ test('setExtensions - add one', () => {
       posInSet: 1,
     },
   ])
-  expect(state.$ExtensionList.children).toHaveLength(1)
-  const $ExtensionOne = state.$ExtensionList.children[0]
+  const { $ExtensionList } = state
+  expect($ExtensionList.children).toHaveLength(1)
+  const $ExtensionOne = $ExtensionList.children[0]
   const $ExtensionName = $ExtensionOne.querySelector('.ExtensionName')
   const $ExtensionIcon = $ExtensionOne.querySelector('.ExtensionIcon')
   expect($ExtensionName.textContent).toBe('Test Extension 1')
@@ -304,12 +310,13 @@ test('setFocusedIndex - move focus down by one', () => {
       posInSet: 2,
     },
   ])
+  const { $ExtensionList } = state
   ViewletExtensions.setFocusedIndex(state, 0, 1)
-  const $ExtensionOne = state.$ExtensionList.children[0]
+  const $ExtensionOne = $ExtensionList.children[0]
   expect($ExtensionOne.className).not.toContain('Focused')
-  const $ExtensionTwo = state.$ExtensionList.children[1]
+  const $ExtensionTwo = $ExtensionList.children[1]
   expect($ExtensionTwo.id).toBe('ExtensionActive')
-  expect(state.$ExtensionList.getAttribute('aria-activedescendant')).toBe(
+  expect($ExtensionList.getAttribute('aria-activedescendant')).toBe(
     'ExtensionActive'
   )
 })
@@ -332,12 +339,13 @@ test('setFocusedIndex - oldFocusedIndex out of range', () => {
       posInSet: 2,
     },
   ])
+  const { $ExtensionList } = state
   ViewletExtensions.setFocusedIndex(state, -10, 1)
-  const $ExtensionOne = state.$ExtensionList.children[0]
+  const $ExtensionOne = $ExtensionList.children[0]
   expect($ExtensionOne.className).not.toContain('Focused')
-  const $ExtensionTwo = state.$ExtensionList.children[1]
+  const $ExtensionTwo = $ExtensionList.children[1]
   expect($ExtensionTwo.id).toBe('ExtensionActive')
-  expect(state.$ExtensionList.getAttribute('aria-activedescendant')).toBe(
+  expect($ExtensionList.getAttribute('aria-activedescendant')).toBe(
     'ExtensionActive'
   )
 })
@@ -360,12 +368,14 @@ test('setFocusedIndex - newFocusedIndex out of range', () => {
       posInSet: 2,
     },
   ])
+
+  const { $ExtensionList } = state
   ViewletExtensions.setFocusedIndex(state, 0, -10)
-  const $ExtensionOne = state.$ExtensionList.children[0]
+  const $ExtensionOne = $ExtensionList.children[0]
   expect($ExtensionOne.className).not.toContain('Focused')
-  const $ExtensionTwo = state.$ExtensionList.children[1]
+  const $ExtensionTwo = $ExtensionList.children[1]
   expect($ExtensionTwo.id).toBe('')
-  expect(state.$ExtensionList.getAttribute('aria-activedescendant')).toBe(null)
+  expect($ExtensionList.getAttribute('aria-activedescendant')).toBe(null)
 })
 
 test('setExtensions - renderExtensionsEqual', () => {
@@ -403,7 +413,8 @@ test('setExtensions - renderExtensionsEqual', () => {
       posInSet: 2,
     },
   ])
-  expect(state.$ExtensionList.children).toHaveLength(2)
+  const { $ExtensionList } = state
+  expect($ExtensionList.children).toHaveLength(2)
   expect(spy).not.toHaveBeenCalled()
 })
 
@@ -449,7 +460,8 @@ test('setExtensions - renderExtensionsLess', () => {
       posInSet: 3,
     },
   ])
-  expect(state.$ExtensionList.children).toHaveLength(3)
+  const { $ExtensionList } = state
+  expect($ExtensionList.children).toHaveLength(3)
   expect(spy).toHaveBeenCalledTimes(11)
 })
 
@@ -495,6 +507,7 @@ test('setExtensions - renderExtensionsMore', () => {
       posInSet: 2,
     },
   ])
-  expect(state.$ExtensionList.children).toHaveLength(2)
+  const { $ExtensionList } = state
+  expect($ExtensionList.children).toHaveLength(2)
   expect(spy).not.toHaveBeenCalled()
 })
