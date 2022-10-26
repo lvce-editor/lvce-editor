@@ -33,6 +33,7 @@ export const create = (id, uri, left, top, width, height) => {
     top,
     width,
     height,
+    items: [],
   }
 }
 
