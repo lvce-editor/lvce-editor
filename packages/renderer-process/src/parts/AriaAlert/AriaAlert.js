@@ -1,3 +1,5 @@
+// based on https://github.com/microsoft/vscode/blob/5f87632829dc3ac80203e2377727935184399431/src/vs/base/browser/ui/aria/aria.ts (License MIT)
+
 export const state = {
   $AriaAlert1: undefined,
   $AriaAlert2: undefined,
@@ -8,7 +10,7 @@ const create$AriaAlert = () => {
   const $AriaAlert = document.createElement('div')
   $AriaAlert.className = 'AriaAlert'
   // @ts-ignore
-  $AriaAlert.role = 'alert' // TODO use idl once supported in chrome
+  $AriaAlert.role = 'alert'
   $AriaAlert.ariaAtomic = 'true'
   return $AriaAlert
 }
@@ -24,6 +26,7 @@ export const alert = (message) => {
   if (!message) {
     return
   }
+
   if (!state.$AriaMessages) {
     state.$AriaAlert1 = create$AriaAlert()
     state.$AriaAlert2 = create$AriaAlert()
