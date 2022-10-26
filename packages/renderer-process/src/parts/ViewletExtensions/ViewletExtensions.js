@@ -1,3 +1,5 @@
+// based on https://github.com/microsoft/vscode/blob/main/src/vs/workbench/contrib/extensions/browser/extensionsList.ts (License MIT)
+
 import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
 import * as InputBox from '../InputBox/InputBox.js'
