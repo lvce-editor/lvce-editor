@@ -353,9 +353,12 @@ const renderScrollBar = {
     )
   },
   apply(oldState, newState) {
-    const scrollBarY =
-      (newState.deltaY / newState.finalDeltaY) *
-      (newState.height - newState.scrollBarHeight)
+    const scrollBarY = ScrollBarFunctions.getScrollBarY(
+      newState.deltaY,
+      newState.finalDeltaY,
+      newState.height,
+      newState.scrollBarHeight
+    )
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'EditorText',
