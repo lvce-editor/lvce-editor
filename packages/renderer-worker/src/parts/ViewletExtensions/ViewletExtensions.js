@@ -62,8 +62,12 @@ const getVisible = (state) => {
   return state.filteredExtensions.slice(minLineY, maxLineY)
 }
 
+const getSize = (width) => {
+  return width < 180 ? 'Small' : 'Normal'
+}
+
 export const loadContent = async (state) => {
-  const { height, itemHeight, minimumSliderSize } = state
+  const { height, itemHeight, minimumSliderSize, width } = state
   // TODO just get local extensions on demand (not when query string is already different)
 
   // TODO get installed extensions from extension host
@@ -87,17 +91,15 @@ export const loadContent = async (state) => {
   const maxLineY = Math.min(numberOfVisible, total)
   const finalY = Math.max(total - numberOfVisible, 0)
   const finalDeltaY = finalY * itemHeight
-
-  console.log({ finalDeltaY })
-
+  const size = getSize(width)
   return {
     ...state,
     extensions,
     filteredExtensions: viewObjects,
     maxLineY: maxLineY,
     scrollBarHeight,
-    itemHeight,
     finalDeltaY,
+    size,
   }
 }
 
@@ -447,10 +449,13 @@ export const resize = (state, dimensions) => {
   // TODO should just return new state, render function can take old state and new state and return render commands
   const listHeight = getListHeight({ ...state, ...dimensions })
   const maxLineY = minLineY + Math.ceil(listHeight / itemHeight)
+  const size = getSize(dimensions.width)
+
   return {
     ...state,
     ...dimensions,
     maxLineY,
+    size,
   }
 }
 
@@ -564,6 +569,20 @@ const renderError = {
   },
 }
 
+const renderSize = {
+  isEqual(oldState, newState) {
+    return oldState.size === newState.size
+  },
+  apply(oldState, newState) {
+    return [
+      /* viewletSend */ 'Viewlet.send',
+      /* id */ 'Extensions',
+      /* method */ 'setSize',
+      /* size */ newState.size,
+    ]
+  },
+}
+
 export const render = [
   renderHeight,
   renderFocusedIndex,
@@ -571,4 +590,5 @@ export const render = [
   renderNegativeMargin,
   renderExtensions,
   renderError,
+  renderSize,
 ]
