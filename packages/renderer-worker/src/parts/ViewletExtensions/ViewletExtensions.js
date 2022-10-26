@@ -41,7 +41,6 @@ export const create = (id, uri, left, top, width, height) => {
     maxLineY: 0,
     width,
     height,
-    negativeMargin: 0,
     scrollBarHeight: 0,
     handleOffset: 0,
     top,
@@ -508,14 +507,14 @@ const renderHeight = {
 
 const renderNegativeMargin = {
   isEqual(oldState, newState) {
-    return oldState.negativeMargin === newState.negativeMargin
+    return oldState.deltaY === newState.deltaY
   },
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setNegativeMargin',
-      /* negativeMargin */ newState.negativeMargin,
+      /* negativeMargin */ -newState.deltaY,
     ]
   },
 }

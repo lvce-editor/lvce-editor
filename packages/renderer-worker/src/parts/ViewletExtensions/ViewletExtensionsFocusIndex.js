@@ -14,29 +14,29 @@ export const focusIndex = (state, index) => {
     // scroll up
     const minLineY = index
     const maxLineY = minLineY + Math.ceil(listHeight / itemHeight)
-    const negativeMargin = -minLineY * itemHeight
+    const deltaY = minLineY * itemHeight
     return {
       ...state,
       focusedIndex: index,
       minLineY,
       maxLineY,
-      negativeMargin,
       focused: true,
+      deltaY,
     }
   }
   if (index >= state.maxLineY - 1) {
     //  scroll down
     const maxLineY = index + 1
     const minLineY = maxLineY - Math.ceil(listHeight / itemHeight)
-    const negativeMargin =
-      -minLineY * itemHeight + (listHeight % itemHeight) - itemHeight
+    const deltaY =
+      minLineY * itemHeight + (listHeight % itemHeight) - itemHeight
     return {
       ...state,
       focusedIndex: index,
       minLineY,
       maxLineY,
-      negativeMargin,
       focused: true,
+      deltaY,
     }
   }
   return {
