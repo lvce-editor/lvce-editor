@@ -1058,7 +1058,7 @@ test('handleClick - directory', async () => {
         path: '/folder-1',
         posInSet: 1,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -1157,7 +1157,7 @@ test.skip('handleClick - directory-expanded - scrolled down', async () => {
       },
       {
         name: 'folder-2',
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
         path: '/folder-2',
         setSize: 2,
         posInSet: 2,
@@ -1272,7 +1272,7 @@ test('handleClick - collapsed folder', async () => {
         icon: '',
         name: 'test-folder',
         path: '/test-folder',
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -1304,7 +1304,7 @@ test.skip('handleClick - race condition - child folder is being expanded and par
         icon: '',
         name: 'parent-directory',
         path: '/parent-directory',
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -1429,7 +1429,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         path: '/folder-1',
         posInSet: 1,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -1447,7 +1447,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         path: '/folder-2',
         posInSet: 2,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 1,
@@ -1456,7 +1456,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         path: '/folder-3',
         posInSet: 3,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
     ]
   )
@@ -1473,7 +1473,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         path: '/folder-1',
         posInSet: 1,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -1491,7 +1491,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         path: '/folder-2',
         posInSet: 2,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -1509,7 +1509,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         path: '/folder-3',
         posInSet: 3,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
     ]
   )
@@ -1526,7 +1526,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         path: '/folder-1',
         posInSet: 1,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -1544,7 +1544,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         path: '/folder-2',
         posInSet: 2,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -1562,7 +1562,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
         path: '/folder-3',
         posInSet: 3,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -1611,7 +1611,7 @@ test('handleClick - expanded folder', async () => {
         languageId: 'unknown',
         name: 'test-folder',
         path: '/test-folder',
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -1688,7 +1688,7 @@ test('handleArrowLeft - root file', async () => {
         setSize: 3,
         name: 'test-folder',
         path: '/test-folder',
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -1776,7 +1776,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
         setSize: 4,
         name: 'test-folder',
         path: '/test-folder',
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -1784,7 +1784,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
         setSize: 2,
         name: 'a',
         path: '/test-folder/a',
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 3,
@@ -1792,7 +1792,7 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
         setSize: 2,
         name: 'a',
         path: '/test-folder/a/b',
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 3,
@@ -1859,8 +1859,127 @@ test('handleArrowLeft - expanded root folder with nested child folders inside', 
   })
 })
 
+test('handleArrowLeft - scroll up', () => {
+  const state = {
+    ...ViewletExplorer.create(),
+    root: '/test',
+    focusedIndex: 2,
+    top: 0,
+    height: 80,
+    deltaY: 40,
+    minLineY: 2,
+    maxLineY: 6,
+    items: [
+      {
+        depth: 1,
+        posInSet: 1,
+        setSize: 4,
+        name: 'index.css',
+        path: '/test/index.css',
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        posInSet: 2,
+        setSize: 4,
+        name: 'index.html',
+        path: '/test/index.html',
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        posInSet: 3,
+        setSize: 4,
+        name: 'folder',
+        path: '/test/folder',
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 2,
+        posInSet: 1,
+        setSize: 2,
+        name: 'a',
+        path: '/test/folder/a',
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 3,
+        posInSet: 1,
+        setSize: 2,
+        name: 'a',
+        path: '/test/folder/a/b',
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 3,
+        posInSet: 2,
+        setSize: 2,
+        name: 'c.html',
+        path: '/test/folder/a/c.html',
+        type: DirentType.File,
+      },
+      {
+        depth: 2,
+        posInSet: 2,
+        setSize: 2,
+        name: 'd.html',
+        path: '/test/folder/d.html',
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        posInSet: 4,
+        setSize: 4,
+        name: 'other-file.html',
+        path: '/test/other-file.html',
+        type: DirentType.File,
+      },
+    ],
+  }
+  const newState = ViewletExplorer.handleArrowLeft(state)
+  expect(newState.items).toEqual([
+    {
+      depth: 1,
+      posInSet: 1,
+      setSize: 4,
+      name: 'index.css',
+      path: '/test/index.css',
+      type: DirentType.File,
+    },
+    {
+      depth: 1,
+      posInSet: 2,
+      setSize: 4,
+      name: 'index.html',
+      path: '/test/index.html',
+      type: DirentType.File,
+    },
+    {
+      depth: 1,
+      posInSet: 3,
+      setSize: 4,
+      name: 'folder',
+      path: '/test/folder',
+      type: DirentType.Directory,
+      icon: '',
+    },
+    {
+      depth: 1,
+      posInSet: 4,
+      setSize: 4,
+      name: 'other-file.html',
+      path: '/test/other-file.html',
+      type: DirentType.File,
+    },
+  ])
+  expect(newState.minLineY).toBe(0)
+  expect(newState.maxLineY).toBe(4)
+  expect(newState.deltaY).toBe(0)
+})
+
 test('handleArrowLeft - nested file - first child', async () => {
   const state = {
+    ...ViewletExplorer.create(),
     root: '/home/test-user/test-path',
     focusedIndex: 3,
     top: 0,
@@ -1889,7 +2008,7 @@ test('handleArrowLeft - nested file - first child', async () => {
         setSize: 3,
         name: 'test-folder',
         path: '/test-folder',
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -1908,6 +2027,7 @@ test('handleArrowLeft - nested file - first child', async () => {
 
 test('handleArrowLeft - nested file - third child', async () => {
   const state = {
+    ...ViewletExplorer.create(),
     root: '/home/test-user/test-path',
     focusedIndex: 6,
     top: 0,
@@ -1936,7 +2056,7 @@ test('handleArrowLeft - nested file - third child', async () => {
         name: 'test-folder',
         path: '/test-folder',
         setSize: 4,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -1987,6 +2107,7 @@ test('handleArrowLeft - nested file - third child', async () => {
 
 test('handleArrowLeft - when no focus', async () => {
   const state = {
+    ...ViewletExplorer.create(),
     root: '/home/test-user/test-path',
     focusedIndex: -1,
     top: 0,
@@ -2015,7 +2136,7 @@ test('handleArrowLeft - when no focus', async () => {
         setSize: 3,
         name: 'test-folder',
         path: '/test-folder',
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
     ],
   }
@@ -2045,6 +2166,7 @@ test('handleArrowLeft - symbolic link', async () => {
 
 test('handleArrowRight - file', async () => {
   const state = {
+    ...ViewletExplorer.create(),
     root: '/home/test-user/test-path',
     focusedIndex: 0,
     top: 0,
@@ -2074,7 +2196,7 @@ test('handleArrowRight - file', async () => {
         setSize: 3,
         name: 'test-folder',
         path: '/test-folder',
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -2094,6 +2216,7 @@ test('handleArrowRight - file', async () => {
 
 test('handleArrowRight - symlink - file', async () => {
   const state = {
+    ...ViewletExplorer.create(),
     root: '/test',
     focusedIndex: 0,
     top: 0,
@@ -2191,7 +2314,7 @@ test('handleArrowRight - collapsed folder', async () => {
         setSize: 3,
         name: 'test-folder',
         path: '/test-folder',
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
         icon: '',
       },
       {
@@ -2276,7 +2399,7 @@ test('handleArrowRight - collapsed empty folder', async () => {
         setSize: 3,
         name: 'test-folder',
         path: '/test-folder',
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
         icon: '',
       },
     ],
@@ -2317,7 +2440,7 @@ test('handleArrowRight - expanded folder', async () => {
         name: 'test-folder',
         path: '/test-folder',
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -2368,7 +2491,7 @@ test('handleArrowRight - expanded empty folder', async () => {
         name: 'test-folder',
         path: '/test-folder',
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
     ],
   }
@@ -2408,7 +2531,7 @@ test('handleArrowRight - when no focus', async () => {
         name: 'test-folder',
         path: '/test-folder',
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -2823,7 +2946,7 @@ test.skip('newFile - inside folder', async () => {
         path: '/test/folder-2',
         posInSet: 2,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -3533,7 +3656,7 @@ test('computeRenamedDirents - file moves to the top - open directories are in be
           path: '/test/b',
           posInSet: 1,
           setSize: 3,
-          type: 'directory-expanded',
+          type: DirentType.DirectoryExpanded,
         },
         {
           depth: 2,
@@ -3551,7 +3674,7 @@ test('computeRenamedDirents - file moves to the top - open directories are in be
           path: '/test/c',
           posInSet: 2,
           setSize: 3,
-          type: 'directory-expanded',
+          type: DirentType.DirectoryExpanded,
         },
         {
           depth: 2,
@@ -3594,7 +3717,7 @@ test('computeRenamedDirents - file moves to the top - open directories are in be
         path: '/test/b',
         posInSet: 2,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -3612,7 +3735,7 @@ test('computeRenamedDirents - file moves to the top - open directories are in be
         path: '/test/c',
         posInSet: 3,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -3716,7 +3839,7 @@ test('computeRenamedDirents - file moves to the bottom - open directories are in
           path: '/test/b',
           posInSet: 2,
           setSize: 3,
-          type: 'directory-expanded',
+          type: DirentType.DirectoryExpanded,
         },
         {
           depth: 2,
@@ -3734,7 +3857,7 @@ test('computeRenamedDirents - file moves to the bottom - open directories are in
           path: '/test/c',
           posInSet: 3,
           setSize: 3,
-          type: 'directory-expanded',
+          type: DirentType.DirectoryExpanded,
         },
         {
           depth: 2,
@@ -3759,7 +3882,7 @@ test('computeRenamedDirents - file moves to the bottom - open directories are in
         path: '/test/b',
         posInSet: 1,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -3777,7 +3900,7 @@ test('computeRenamedDirents - file moves to the bottom - open directories are in
         path: '/test/c',
         posInSet: 2,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -3939,7 +4062,7 @@ test('expandAll', async () => {
         path: '/folder-1',
         posInSet: 1,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -3975,7 +4098,7 @@ test('expandAll', async () => {
         path: '/folder-2',
         posInSet: 2,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -4011,7 +4134,7 @@ test('expandAll', async () => {
         path: '/folder-3',
         posInSet: 3,
         setSize: 3,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -4061,7 +4184,7 @@ test('collapseAll', () => {
         path: '/folder-1',
         posInSet: 1,
         setSize: 4,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -4097,7 +4220,7 @@ test('collapseAll', () => {
         path: '/folder-2',
         posInSet: 2,
         setSize: 4,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,
@@ -4133,7 +4256,7 @@ test('collapseAll', () => {
         path: '/folder-3',
         posInSet: 3,
         setSize: 4,
-        type: 'directory-expanded',
+        type: DirentType.DirectoryExpanded,
       },
       {
         depth: 2,

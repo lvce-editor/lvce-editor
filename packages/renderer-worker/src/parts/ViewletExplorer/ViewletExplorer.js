@@ -736,12 +736,15 @@ const handleClickDirectory = async (state, dirent, index, keepFocus) => {
   newDirents.splice(newIndex + 1, 0, ...dirents)
   dirent.type = DirentType.DirectoryExpanded
   dirent.icon = IconTheme.getIcon(dirent)
+  const { height, itemHeight } = state2
   // TODO when focused index has changed while expanding, don't update it
+  const maxLineY = Math.min(Math.ceil(height / itemHeight), newDirents.length)
   return {
     ...state,
     items: newDirents,
     focusedIndex: newIndex,
     focused: keepFocus,
+    maxLineY,
   }
 }
 
@@ -761,6 +764,7 @@ const handleClickDirectoryExpanding = async (
 }
 
 const handleClickDirectoryExpanded = (state, dirent, index, keepFocus) => {
+  const { minLineY, maxLineY, itemHeight } = state
   dirent.type = DirentType.Directory
   dirent.icon = IconTheme.getIcon(dirent)
   const endIndex = getParentEndIndex(state.items, index)
@@ -768,6 +772,22 @@ const handleClickDirectoryExpanded = (state, dirent, index, keepFocus) => {
   // TODO race conditions and side effects are everywhere
   const newDirents = [...state.items]
   newDirents.splice(index + 1, removeCount)
+  const newTotal = newDirents.length
+  if (newTotal < maxLineY) {
+    const visibleItems = Math.min(maxLineY - minLineY, newTotal)
+    const newMaxLineY = Math.min(maxLineY, newTotal)
+    const newMinLineY = newMaxLineY - visibleItems
+    const deltaY = newMinLineY * itemHeight
+    return {
+      ...state,
+      items: newDirents,
+      focusedIndex: index,
+      focused: keepFocus,
+      minLineY: newMinLineY,
+      maxLineY: newMaxLineY,
+      deltaY,
+    }
+  }
   return {
     ...state,
     items: newDirents,
