@@ -2,10 +2,10 @@
 
 import * as FindIndex from '../../shared/findIndex.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
-import * as Focus from '../Focus/Focus.js'
 
 export const name = 'Extensions'
 
@@ -195,10 +195,10 @@ const render$Extension = ($Extension, extension) => {
 // TODO test that rendering and recycling text nodes works
 const create$Extension = () => {
   const $ExtensionDetailName = document.createElement('div')
-  $ExtensionDetailName.className = 'ExtensionName'
+  $ExtensionDetailName.className = 'ExtensionListItemName'
   $ExtensionDetailName.append(document.createTextNode(''))
   const $ExtensionDetailDescription = document.createElement('div')
-  $ExtensionDetailDescription.className = 'ExtensionDescription'
+  $ExtensionDetailDescription.className = 'ExtensionListItemDescription'
   $ExtensionDetailDescription.append(document.createTextNode(''))
   const $ExtensionActions = document.createElement('div')
   $ExtensionActions.className = 'ExtensionActions'
@@ -206,17 +206,17 @@ const create$Extension = () => {
   $ExtensionActionInstall.className = 'ExtensionActionInstall'
   $ExtensionActionInstall.textContent = 'Install'
   const $ExtensionActionManage = document.createElement('button')
-  $ExtensionActionManage.className = 'ExtensionActionManage'
+  $ExtensionActionManage.className = 'ExtensionListItemActionManage'
   $ExtensionActionManage.title = 'Manage'
   $ExtensionActionManage.ariaHasPopup = 'menu' // TODO also set this for global settings icon in activity bar
   const $ExtensionAuthorName = document.createElement('div')
-  $ExtensionAuthorName.className = 'ExtensionAuthorName'
+  $ExtensionAuthorName.className = 'ExtensionListItemAuthorName'
   $ExtensionAuthorName.append(document.createTextNode(''))
 
   const icon = document.createElement('img')
   icon.width = 42
   icon.height = 42
-  icon.className = 'ExtensionIcon'
+  icon.className = 'ExtensionListItemIcon'
   icon.onerror = ViewletExtensionsEvents.handleIconError
   const buttonManage = document.createElement('button')
   buttonManage.className = 'ExtensionManage'
@@ -241,10 +241,10 @@ const create$Extension = () => {
   //     break
   // }
   const $ExtensionFooter = document.createElement('div')
-  $ExtensionFooter.className = 'ExtensionFooter'
+  $ExtensionFooter.className = 'ExtensionListItemFooter'
   $ExtensionFooter.append($ExtensionAuthorName, $ExtensionActions)
   const $ExtensionDetail = document.createElement('div')
-  $ExtensionDetail.className = 'ExtensionDetail'
+  $ExtensionDetail.className = 'ExtensionListItemDetail'
   $ExtensionDetail.append(
     $ExtensionDetailName,
     $ExtensionDetailDescription,

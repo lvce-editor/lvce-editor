@@ -139,11 +139,11 @@ test('icon - fallback src', () => {
   ])
   const { $ExtensionList } = state
   const $FirstExtension = $ExtensionList.children[0]
-  const $FirstIcon = $FirstExtension.querySelector('.ExtensionIcon')
+  const $FirstIcon = $FirstExtension.querySelector('.ExtensionListItemIcon')
   // @ts-ignore
   expect($FirstIcon.src).toBe('http://localhost/icons/extensionDefaultIcon.png')
   const $SecondExtension = $ExtensionList.children[1]
-  const $SecondIcon = $SecondExtension.querySelector('.ExtensionIcon')
+  const $SecondIcon = $SecondExtension.querySelector('.ExtensionListItemIcon')
   // @ts-ignore
   expect($SecondIcon.src).toBe(
     'http://localhost/test-publisher.test-extension/icon.png'
@@ -161,7 +161,7 @@ test('icon - error', () => {
   ])
   const { $ExtensionList } = state
   const $FirstExtension = $ExtensionList.children[0]
-  const $FirstIcon = $FirstExtension.querySelector('.ExtensionIcon')
+  const $FirstIcon = $FirstExtension.querySelector('.ExtensionListItemIcon')
   // @ts-ignore
   expect($FirstIcon.src).toBe('http://localhost/not-found.png')
   $FirstIcon.dispatchEvent(new ErrorEvent('error', { bubbles: true }))
@@ -181,7 +181,7 @@ test('icon - error - endless loop bug', () => {
   const { $ExtensionList } = state
   const $FirstExtension = $ExtensionList.children[0]
   // @ts-ignore
-  const $FirstIcon = $FirstExtension.querySelector('.ExtensionIcon')
+  const $FirstIcon = $FirstExtension.querySelector('.ExtensionListItemIcon')
   // @ts-ignore
   const spy = jest.spyOn($FirstIcon, 'src', 'set')
   // @ts-ignore
@@ -285,11 +285,15 @@ test('setExtensions - add one', () => {
   const { $ExtensionList } = state
   expect($ExtensionList.children).toHaveLength(1)
   const $ExtensionOne = $ExtensionList.children[0]
-  const $ExtensionName = $ExtensionOne.querySelector('.ExtensionName')
-  const $ExtensionIcon = $ExtensionOne.querySelector('.ExtensionIcon')
-  expect($ExtensionName.textContent).toBe('Test Extension 1')
+  const $ExtensionListItemName = $ExtensionOne.querySelector(
+    '.ExtensionListItemName'
+  )
+  const $ExtensionListItemIcon = $ExtensionOne.querySelector(
+    '.ExtensionListItemIcon'
+  )
+  expect($ExtensionListItemName.textContent).toBe('Test Extension 1')
   // @ts-ignore
-  expect($ExtensionIcon.src).toBe('http://localhost/images/logo.png')
+  expect($ExtensionListItemIcon.src).toBe('http://localhost/images/logo.png')
 })
 
 test('setFocusedIndex - move focus down by one', () => {
