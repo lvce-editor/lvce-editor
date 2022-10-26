@@ -23,10 +23,10 @@ const getSavedViewletId = (savedState) => {
   if (savedState && savedState.currentViewletId) {
     return savedState.currentViewletId
   }
-  return 'Explorer'
+  return ViewletModuleId.Explorer
 }
 
-export const loadContent = async (state, savedState) => {
+export const loadContent = (state, savedState) => {
   const savedViewletId = getSavedViewletId(savedState)
   return {
     ...state,
@@ -39,6 +39,21 @@ export const loadContent = async (state, savedState) => {
 //   GlobalEventBus.addListener('Layout.hideSideBar', handleSideBarClose)
 // }
 
+/**
+ *
+ * @param {*} dimensions
+ * @param {number} titleAreaHeight
+ * @returns
+ */
+const getContentDimensions = (dimensions, titleAreaHeight) => {
+  return {
+    left: dimensions.left,
+    top: dimensions.top + titleAreaHeight,
+    width: dimensions.width,
+    height: dimensions.height - titleAreaHeight,
+  }
+}
+
 // TODO
 export const getChildren = (state) => {
   const { top, left, width, height, titleAreaHeight, currentViewletId } = state
@@ -50,15 +65,6 @@ export const getChildren = (state) => {
   ]
 }
 
-const getContentDimensions = (dimensions, titleAreaHeight) => {
-  return {
-    left: dimensions.left,
-    top: dimensions.top + titleAreaHeight,
-    width: dimensions.width,
-    height: dimensions.height - titleAreaHeight,
-  }
-}
-
 // TODO no default parameter -> monomorphism
 export const openViewlet = async (state, id, focus = false) => {
   console.assert(typeof id === 'string')
@@ -66,10 +72,10 @@ export const openViewlet = async (state, id, focus = false) => {
   //   console.log('dispose current viewlet', state.currentViewletId)
   //   Viewlet.dispose(state.currentViewletId)
   // }
-  const { currentViewletId } = state
+  const { currentViewletId, titleAreaHeight } = state
   state.currentViewletId = id
 
-  const childDimensions = getContentDimensions(state)
+  const childDimensions = getContentDimensions(state, titleAreaHeight)
 
   const commands = await ViewletManager.load({
     getModule: ViewletModule.load,
@@ -145,7 +151,8 @@ export const close = (state) => {
 }
 
 export const resize = (state, dimensions) => {
-  const childDimensions = getContentDimensions(dimensions)
+  const { titleAreaHeight } = state
+  const childDimensions = getContentDimensions(dimensions, titleAreaHeight)
   const commands = Viewlet.resize(state.currentViewletId, childDimensions)
   return {
     newState: {

@@ -1,3 +1,4 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -313,13 +314,33 @@ const getSideBarLocationType = () => {
   }
 }
 
+const getSavedPoints = (savedState) => {
+  if (savedState.LocalStorage && savedState.LocalStorage.savedState) {
+    let parsed
+    try {
+      parsed = JSON.parse(savedState.LocalStorage.savedState)
+    } catch {}
+    if (
+      parsed &&
+      parsed.instances &&
+      parsed.instances.Layout &&
+      parsed.instances.Layout.points &&
+      Array.isArray(parsed.instances.Layout.points) &&
+      parsed.instances.Layout.points.length === kTotal
+    ) {
+      return new Uint16Array(parsed.instances.Layout.points)
+    }
+  }
+  return new Uint16Array(kTotal)
+}
+
 export const loadContent = (state, savedState) => {
-  const { Layout } = savedState
+  console.log({ savedState })
+  const { Layout, LocalStorage } = savedState
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds
-  const { points } = state
   const sideBarLocation = getSideBarLocationType()
-  const newPoints = new Uint16Array(points)
+  const newPoints = getSavedPoints(savedState)
   newPoints[kActivityBarVisible] = 1
   newPoints[kActivityBarWidth] = 48
   newPoints[kMainVisible] = 1
@@ -329,7 +350,7 @@ export const loadContent = (state, savedState) => {
   newPoints[kSideBarMaxWidth] = 9999999
   newPoints[kSideBarMinWidth] = 170
   newPoints[kSideBarVisible] = 1
-  newPoints[kSideBarWidth] = 240
+  newPoints[kSideBarWidth] ||= 240
   newPoints[kStatusBarHeight] = 20
   newPoints[kStatusBarVisible] = 1
   newPoints[kTitleBarHeight] = 20
@@ -653,6 +674,10 @@ const getResizeCommands = (oldPoints, newPoints) => {
       const newLeft = newPoints[kLeft]
       const newWidth = newPoints[kWidth]
       const newHeight = newPoints[kHeight]
+      Assert.number(newTop)
+      Assert.number(newLeft)
+      Assert.number(newWidth)
+      Assert.number(newHeight)
       const resizeCommands = Viewlet.resize(moduleId, {
         top: newTop,
         left: newLeft,
