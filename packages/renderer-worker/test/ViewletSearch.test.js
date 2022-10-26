@@ -274,7 +274,7 @@ test('resize', () => {
     height: 200,
   })
   // TODO
-  expect(newState).toEqual({
+  expect(newState).toMatchObject({
     disposed: false,
     height: 200,
     left: 200,
