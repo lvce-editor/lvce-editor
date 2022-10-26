@@ -14,11 +14,13 @@ const inverseChange = (edit) => {
   }
 }
 
-export const editorUndo = (editor) => {
-  if (editor.undoStack.length === 0) {
-    return
+export const editorUndo = (state) => {
+  const { undoStack } = state
+  if (undoStack.length === 0) {
+    return state
   }
-  const last = editor.undoStack.pop()
+  // TODO avoid side effect?
+  const last = undoStack.pop()
   const inverseChanges = last.map(inverseChange)
-  Editor.scheduleDocumentAndCursorsSelections(editor, inverseChanges)
+  return Editor.scheduleDocumentAndCursorsSelectionIsUndo(state, inverseChanges)
 }

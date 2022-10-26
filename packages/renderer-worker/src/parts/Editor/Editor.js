@@ -197,23 +197,33 @@ export const scheduleDocumentAndCursorsSelections = (editor, changes) => {
   GlobalEventBus.emitEvent('editor.change', newEditor, changes)
 
   return newEditor
-  // const textInfos = EditorText.getVisible(editor)
-  // const cursorInfos = EditorCursor.getVisible(editor)
-  // const selectionInfos = EditorSelection.getVisible(editor)
+}
 
-  // if (editor.undoStack) {
-  //   editor.undoStack.push(changes)
-  // }
-  // RendererProcess.send([
-  //   /* Viewlet.invoke */ 'Viewlet.send',
-  //   /* id */ 'EditorText',
-  //   /* method */ 'renderTextAndCursorsAndSelections',
-  //   /* deltaY */ editor.deltaY,
-  //   /* scrollBarHeight */ editor.scrollBarHeight,
-  //   /* textInfos */ textInfos,
-  //   /* cursorInfos */ cursorInfos,
-  //   /* selectionInfos */ selectionInfos,
-  // ])
+export const scheduleDocumentAndCursorsSelectionIsUndo = (editor, changes) => {
+  Assert.object(editor)
+  Assert.array(changes)
+  if (changes.length === 0) {
+    return editor
+  }
+  const newLines = TextDocument.applyEdits(editor, changes)
+  const partialNewEditor = {
+    ...editor,
+    lines: newLines,
+  }
+  const newSelections = EditorSelection.applyEdit(partialNewEditor, changes)
+  const invalidStartIndex = Math.min(
+    editor.invalidStartIndex,
+    changes[0].start.rowIndex
+  )
+  const newEditor = {
+    ...partialNewEditor,
+    lines: newLines,
+    selections: newSelections,
+    // undoStack: [...editor.undoStack.slice(0, -2)],
+    invalidStartIndex,
+  }
+  GlobalEventBus.emitEvent('editor.change', newEditor, changes)
+  return newEditor
 }
 
 export const scheduleDocument = async (editor, changes) => {
