@@ -1,4 +1,4 @@
-.EditorFindWidget {
+.FindWidget {
   background: var(--ActivityBarBackground);
   z-index: 1;
   color: wheat;
@@ -8,7 +8,7 @@
   position: absolute;
 }
 
-.EditorFindWidgetMatchCount {
+.FindWidgetMatchCount {
   width: 70px;
   white-space: nowrap;
   flex-shrink: 0;
@@ -19,18 +19,18 @@
   margin-left: 3px;
 }
 
-.EditorFindWidgetButton {
+.FindWidgetButton {
   width: 25px;
   height: 25px;
   contain: strict;
   flex-shrink: 0;
 }
 
-.EditorFindWidgetButton:hover {
+.FindWidgetButton:hover {
   background-color: hsla(0, 0%, 100%, 0.1);
 }
 
-.EditorFindWidgetButton:focus-visible {
+.FindWidgetButton:focus-visible {
   outline: 1px solid green;
   outline-offset: -1px;
 }

@@ -11,7 +11,7 @@ export const create$Button = (label, icon) => {
   $Button.ariaLabel = label
   $Button.title = label
   $Button.tabIndex = 0
-  $Button.className = `EditorFindWidgetButton`
+  $Button.className = `FindWidgetButton`
   $Button.append($Icon)
   return $Button
 }

@@ -22,8 +22,8 @@
   {
     "key": "Escape",
     "command": "Viewlet.closeWidget",
-    "when": "focus.EditorFindWidget",
-    "args": ["EditorFindWidget"]
+    "when": "focus.FindWidget",
+    "args": ["FindWidget"]
   },
   {
     "key": "ctrl+ArrowRight",
@@ -687,18 +687,18 @@
   },
   {
     "key": "Enter",
-    "command": "EditorFindWidget.focusNext",
-    "when": "focus.EditorFindWidget"
+    "command": "FindWidget.focusNext",
+    "when": "focus.FindWidget"
   },
   {
     "key": "shift+F4",
-    "command": "EditorFindWidget.focusPrevious",
-    "when": "focus.EditorFindWidget"
+    "command": "FindWidget.focusPrevious",
+    "when": "focus.FindWidget"
   },
   {
     "key": "F4",
-    "command": "EditorFindWidget.focusNext",
-    "when": "focus.EditorFindWidget"
+    "command": "FindWidget.focusNext",
+    "when": "focus.FindWidget"
   },
   {
     "key": "ctrl+=",

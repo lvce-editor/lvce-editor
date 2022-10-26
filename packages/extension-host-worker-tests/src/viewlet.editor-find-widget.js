@@ -14,15 +14,15 @@ content 2`
   await Editor.openFindWidget()
 
   // assert
-  const findWidgetInput = Locator('.EditorFindWidget .InputBox')
+  const findWidgetInput = Locator('.FindWidget .InputBox')
   await expect(findWidgetInput).toBeVisible()
   await expect(findWidgetInput).toHaveValue('content')
-  const findWidgetMatchCount = Locator(`.EditorFindWidgetMatchCount`)
+  const findWidgetMatchCount = Locator(`.FindWidgetMatchCount`)
   await expect(findWidgetMatchCount).toBeVisible()
   await expect(findWidgetMatchCount).toHaveText('1 of 2')
 
   // act
-  await EditorFindWidget.focusNext()
+  await FindWidget.focusNext()
 
   // assert
   await expect(findWidgetMatchCount).toHaveText('2 of 2')

@@ -8,7 +8,7 @@ export const DebugConsole = 'Debug Console'
 
 export const EditorCompletion = 'EditorCompletion'
 
-export const EditorFindWidget = 'EditorFindWidget'
+export const FindWidget = 'FindWidget'
 
 export const EditorImage = 'EditorImage'
 

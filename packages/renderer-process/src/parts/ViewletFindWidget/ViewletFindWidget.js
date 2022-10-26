@@ -2,9 +2,10 @@ import * as Focus from '../Focus/Focus.js'
 import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as InputBox from '../InputBox/InputBox.js'
-import * as ViewletEditorFindWidgetEvents from './ViewletEditorFindWidgetEvents.js'
+import * as ViewletFindWidgetEvents from './ViewletFindWidgetEvents.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = 'EditorFindWidget'
+export const name = ViewletModuleId.FindWidget
 
 /**
  * @enum {string}
@@ -13,17 +14,18 @@ const UiStrings = {
   Close: 'Close',
   PreviousMatch: 'Previous Match',
   NextMatch: 'Next Match',
+  Find: 'Find',
 }
 
 export const create = () => {
   // TODO recycle nodes
   const $InputBox = InputBox.create()
-  $InputBox.oninput = ViewletEditorFindWidgetEvents.handleInput
-  $InputBox.ariaLabel = 'Find'
+  $InputBox.oninput = ViewletFindWidgetEvents.handleInput
+  $InputBox.ariaLabel = UiStrings.Find
 
   const $MatchCountText = document.createTextNode('')
   const $MatchCount = document.createElement('div')
-  $MatchCount.className = 'EditorFindWidgetMatchCount'
+  $MatchCount.className = 'FindWidgetMatchCount'
   $MatchCount.append($MatchCountText)
 
   const $ButtonFocusNext = IconButton.create$Button(
@@ -37,8 +39,8 @@ export const create = () => {
   const $ButtonClose = IconButton.create$Button(UiStrings.Close, Icon.Close)
 
   const $Viewlet = document.createElement('div')
-  $Viewlet.onclick = ViewletEditorFindWidgetEvents.handleClick
-  $Viewlet.className = 'Viewlet EditorFindWidget'
+  $Viewlet.onclick = ViewletFindWidgetEvents.handleClick
+  $Viewlet.className = 'Viewlet FindWidget'
   // @ts-ignore
   $Viewlet.role = 'group'
   $Viewlet.append(
@@ -62,7 +64,7 @@ export const create = () => {
 export const focus = (state) => {
   const { $InputBox } = state
   $InputBox.focus()
-  Focus.setFocus('EditorFindWidget')
+  Focus.setFocus('FindWidget')
 }
 
 export const setValue = (state, value) => {
