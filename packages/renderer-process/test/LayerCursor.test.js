@@ -39,7 +39,6 @@ beforeAll(() => {
   //   }
   // }
   Range.prototype.getBoundingClientRect = function () {
-    console.log(this)
     const start = this.startContainer
     const endOffset = this.endOffset
     const text = this.startContainer.nodeValue

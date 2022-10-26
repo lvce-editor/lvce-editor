@@ -1,10 +1,8 @@
 export const measureUserAgentSpecificMemory = async () => {
   // @ts-ignore
   if (performance && performance.measureUserAgentSpecificMemory) {
-    console.time('mem')
     // @ts-ignore
     const memory = await performance.measureUserAgentSpecificMemory()
-    console.timeEnd('mem')
     return memory
   }
   return undefined

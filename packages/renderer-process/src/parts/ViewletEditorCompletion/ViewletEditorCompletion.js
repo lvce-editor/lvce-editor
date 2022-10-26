@@ -47,7 +47,6 @@ export const create = () => {
 // this would make this function easier to test as it would avoid dependency on globals of other files
 
 export const setItems = (state, items, reason, focusedIndex) => {
-  console.log('COMPLETION SHOW', items)
   const { $Viewlet } = state
   Focus.setAdditionalFocus('editorCompletions')
   if (items.length === 0) {

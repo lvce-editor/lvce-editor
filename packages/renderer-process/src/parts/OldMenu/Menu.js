@@ -51,7 +51,6 @@ const handleMouseDown = (event) => {
   const $Menu = $Target.closest('.Menu')
   const index = FindIndex.findIndex($Menu, $Target)
   if (index === -1) {
-    console.log('index is negative one')
     return
   }
   event.preventDefault()

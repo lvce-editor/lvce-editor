@@ -41,12 +41,10 @@ export const prompt = async (message) => {
         $Dialog.remove()
       }
       const handleOk = () => {
-        console.log('ok clicked')
         cleanup()
         resolve($DialogInput.value)
       }
       const handleCancel = () => {
-        console.log('cancel clicked')
         cleanup()
         resolve(undefined)
       }
@@ -60,14 +58,12 @@ export const prompt = async (message) => {
 }
 
 export const alert = (message) => {
-  console.log('actual alert', message)
   window.alert(message)
   // globalThis.alert(`message ${message}`)
   // globalThis.alert('odijdiej')
 }
 
 export const close = () => {
-  console.log('dialog removed')
   Widget.remove(state.$Dialog)
   state.$Dialog = undefined
   Focus.focusPrevious()
