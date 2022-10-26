@@ -10,6 +10,7 @@ test('setDeltaYFixedValue', () => {
     scrollBarHeight: 10,
     minLineY: 1,
     maxLineY: 11,
+    itemHeight: 20,
   }
   expect(EditorSetDeltaY.setDeltaYFixedValue(editor, 20)).toMatchObject({
     deltaY: 20,
