@@ -1,3 +1,4 @@
+import * as ViewletSizeMap from '../ViewletSizeMap/ViewletSizeMap.js'
 import * as ViewletExtensionDetailEvents from './ViewletExtensionDetailEvents.js'
 
 export const name = 'ExtensionDetail'
@@ -74,4 +75,12 @@ export const setIconSrc = (state, src) => {
 export const setDescription = (state, description) => {
   const { $Description } = state
   $Description.textContent = description
+}
+
+export const setSize = (state, oldSize, newSize) => {
+  const { $Viewlet } = state
+  const oldClassName = ViewletSizeMap.getClassName(oldSize)
+  $Viewlet.classList.remove(oldClassName)
+  const newClassName = ViewletSizeMap.getClassName(newSize)
+  $Viewlet.classList.add(newClassName)
 }
