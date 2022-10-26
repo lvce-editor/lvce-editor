@@ -49,7 +49,7 @@ body {
    */
   position: fixed;
   backface-visibility: hidden;
-  will-change: transform;
+  /* will-change: transform; */
 }
 
 #ActivityBar {
