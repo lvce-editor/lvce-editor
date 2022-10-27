@@ -2,14 +2,13 @@
   color: white;
   user-select: text;
   overflow-y: auto;
-}
-
-.ExtensionDetailMain {
-  width: 80%;
-  margin: 0 auto;
-  contain: content;
   display: flex;
   flex-direction: column;
+  gap: 10px;
+}
+
+.Large.ExtensionDetail {
+  gap: 20px;
 }
 
 .ExtensionDetail::-webkit-scrollbar {
@@ -28,14 +27,19 @@
 }
 
 .ExtensionDetailHeader {
-  height: 180px;
+  height: 160px;
   width: 100%;
   contain: strict;
   display: grid;
   grid-template-columns: auto 1fr;
   gap: 1rem;
   flex-shrink: 0;
-  padding: 20px 0;
+  padding: 20px 20px;
+  padding-bottom: 0;
+}
+
+.Large .ExtensionDetailHeader {
+  padding: 20px 40px 0 40px;
 }
 
 .ExtensionDetailHeaderDetails {
@@ -58,7 +62,20 @@
 }
 
 .ExtensionDetailIcon {
-  width: 150px;
-  height: 150px;
+  width: 140px;
+  height: 140px;
   contain: strict;
+}
+
+.Normal .ExtensionDetailIcon {
+  /* width: 100px; */
+  /* height: 100px; */
+}
+
+.ExtensionDetail .Markdown {
+  padding: 0 20px;
+}
+
+.Large.ExtensionDetail .Markdown {
+  padding: 0 40px;
 }

@@ -8,13 +8,18 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as SanitizeHtml from '../SanitizeHtml/SanitizeHtml.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 
 export const name = ViewletModuleId.ExtensionDetail
 
-export const create = (id, uri) => {
+export const create = (id, uri, top, left, width, height) => {
   return {
     name: '',
     uri,
+    top,
+    left,
+    width,
+    height,
   }
 }
 
@@ -49,10 +54,28 @@ const getBaseUrl = (extensionPath) => {
   }
 }
 
+const getSize = (width) => {
+  if (width < 180) {
+    return ViewletSize.Small
+  }
+  if (width < 768) {
+    return ViewletSize.Normal
+  }
+  console.log({ width })
+  return ViewletSize.Large
+}
+
+// first heading is usually extension name, since it is alreay present
+// at the top, remove this heading
+// const removeFirstHeading = (readme) => {
+//   console.log({ readme })
+//   return readme.replace(/<h1.*?>.*?<\/h1>/s, '')
+// }
+
 // TODO when there are multiple extension with the same id,
 // probably need to pass extension location from extensions viewlet
 export const loadContent = async (state) => {
-  const { uri } = state
+  const { uri, width } = state
   const id = uri.slice('extension-detail://'.length)
   const extension = await ExtensionManagement.getExtension(id)
   const readmeContent = await loadReadmeContent(extension.path)
@@ -61,15 +84,18 @@ export const loadContent = async (state) => {
     baseUrl,
   })
   const sanitizedReadmeHtml = await SanitizeHtml.sanitizeHtml(readmeHtml)
+  const normalizedReadmeHtml = sanitizedReadmeHtml
   const iconSrc = getIconSrc(extension)
   const description = ExtensionDisplay.getDescription(extension)
   const name = ExtensionDisplay.getName(extension)
+  const size = getSize(width)
   return {
     ...state,
-    sanitizedReadmeHtml,
+    sanitizedReadmeHtml: normalizedReadmeHtml,
     iconSrc,
     name,
     description,
+    size,
   }
 }
 
@@ -81,6 +107,17 @@ export const handleIconError = (state) => {
   return {
     ...state,
     iconSrc: Icon.ExtensionDefaultIcon,
+  }
+}
+
+export const hasFunctionalResize = true
+
+export const resize = (state, dimensions) => {
+  const size = getSize(dimensions.width)
+  return {
+    ...state,
+    ...dimensions,
+    size,
   }
 }
 
@@ -118,7 +155,7 @@ const renderReadme = {
   isEqual(oldState, newState) {
     return oldState.sanitizedReadmeHtml === newState.sanitizedReadmeHtml
   },
-  apply(pldState, newState) {
+  apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'ExtensionDetail',
@@ -132,7 +169,7 @@ const renderIcon = {
   isEqual(oldState, newState) {
     return oldState.iconSrc === newState.iconSrc
   },
-  apply(pldState, newState) {
+  apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'ExtensionDetail',
@@ -142,4 +179,25 @@ const renderIcon = {
   },
 }
 
-export const render = [renderName, renderReadme, renderDescription, renderIcon]
+const renderSize = {
+  isEqual(oldState, newState) {
+    return oldState.size === newState.size
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'ExtensionDetail',
+      /* method */ 'setSize',
+      /* oldSize */ oldState.size,
+      /* newSize */ newState.size,
+    ]
+  },
+}
+
+export const render = [
+  renderName,
+  renderReadme,
+  renderDescription,
+  renderIcon,
+  renderSize,
+]

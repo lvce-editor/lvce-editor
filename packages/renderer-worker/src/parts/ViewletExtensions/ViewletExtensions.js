@@ -456,7 +456,6 @@ export const resize = (state, dimensions) => {
   const listHeight = getListHeight({ ...state, ...dimensions })
   const maxLineY = minLineY + Math.ceil(listHeight / itemHeight)
   const size = getSize(dimensions.width)
-
   return {
     ...state,
     ...dimensions,
