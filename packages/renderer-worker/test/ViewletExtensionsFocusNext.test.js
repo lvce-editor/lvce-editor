@@ -28,7 +28,7 @@ test('focusNext', () => {
 test('focusNext - already at end', () => {
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',

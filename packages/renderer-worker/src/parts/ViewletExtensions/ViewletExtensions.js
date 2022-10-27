@@ -27,7 +27,6 @@ export const name = ViewletModuleId.Extensions
 export const create = (id, uri, left, top, width, height) => {
   return {
     extensions: [],
-    filteredExtensions: [],
     searchValue: '',
     parsedValue: {
       isLocal: true, // TODO flatten this
@@ -54,12 +53,13 @@ export const create = (id, uri, left, top, width, height) => {
     headerHeight: 35,
     minimumSliderSize: 20,
     focused: false,
+    items: [],
   }
 }
 
 const getVisible = (state) => {
-  const { minLineY, maxLineY } = state
-  return state.filteredExtensions.slice(minLineY, maxLineY)
+  const { minLineY, maxLineY, items } = state
+  return items.slice(minLineY, maxLineY)
 }
 
 const getSize = (width) => {
@@ -94,7 +94,7 @@ export const loadContent = async (state) => {
   return {
     ...state,
     extensions,
-    filteredExtensions: viewObjects,
+    items: viewObjects,
     maxLineY: maxLineY,
     scrollBarHeight,
     finalDeltaY,
@@ -187,19 +187,20 @@ const matchesParsedValue = (extension, parsedValue) => {
 }
 
 const filterExtensions = (extensions, parsedValue, itemHeight) => {
-  const filteredExtensions = []
+  const items = []
   for (const extension of extensions) {
     if (matchesParsedValue(extension, parsedValue)) {
-      filteredExtensions.push(extension)
+      items.push(extension)
     }
   }
   // TODO make this more efficient / more functional
-  for (let i = 0; i < filteredExtensions.length; i++) {
-    filteredExtensions[i].setSize = filteredExtensions.length
-    filteredExtensions[i].posInSet = i + 1
-    filteredExtensions[i].top = i * itemHeight
+  const itemsLength = items.length
+  for (let i = 0; i < itemsLength; i++) {
+    items[i].setSize = itemsLength
+    items[i].posInSet = i + 1
+    items[i].top = i * itemHeight
   }
-  return filteredExtensions
+  return items
 }
 
 const getExtensionsLocal = (parsedValue) => {
@@ -260,16 +261,12 @@ export const handleInput = async (state, value) => {
     if (state.searchValue !== value) {
       return state
     }
-    const filteredExtensions = filterExtensions(
-      extensions,
-      parsedValue,
-      itemHeight
-    )
-    const displayExtensions = toDisplayExtensions(filteredExtensions)
+    const items = filterExtensions(extensions, parsedValue, itemHeight)
+    const displayExtensions = toDisplayExtensions(items)
     return {
       ...state,
       extensions,
-      filteredExtensions,
+      items,
       minLineY: 0,
       deltaY: 0,
     }
@@ -470,7 +467,7 @@ export const hasFunctionalRender = true
 const renderExtensions = {
   isEqual(oldState, newState) {
     return (
-      oldState.filteredExtensions === newState.filteredExtensions &&
+      oldState.items === newState.items &&
       oldState.minLineY === newState.minLineY &&
       oldState.maxLineY === newState.maxLineY
     )
@@ -488,13 +485,11 @@ const renderExtensions = {
 
 const renderHeight = {
   isEqual(oldState, newState) {
-    return (
-      oldState.filteredExtensions.length === newState.filteredExtensions.length
-    )
+    return oldState.items.length === newState.items.length
   },
   apply(oldState, newState) {
     const { itemHeight } = newState
-    const contentHeight = newState.filteredExtensions.length * itemHeight
+    const contentHeight = newState.items.length * itemHeight
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',

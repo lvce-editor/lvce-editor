@@ -4,7 +4,7 @@ import * as ViewletExtensionsFocusPreviousPage from '../src/parts/ViewletExtensi
 test('focusPreviousPage - already at start', () => {
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
@@ -28,7 +28,7 @@ test('focusPreviousPage - already at start', () => {
 test('focusPreviousPage - scroll up one full page', () => {
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
@@ -84,7 +84,7 @@ test('focusPreviousPage - scroll up one full page', () => {
 test('focusPreviousPage - scroll up half a page', () => {
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',

@@ -4,7 +4,7 @@ import * as ViewletExtensionsHandleWheel from '../src/parts/ViewletExtensions/Vi
 test('handleWheel - scroll down', () => {
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
@@ -38,7 +38,7 @@ test('handleWheel - scroll down', () => {
 test('handleWheel - scroll up', () => {
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',

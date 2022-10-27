@@ -4,7 +4,7 @@ import * as ViewletExtensionsFocusIndex from '../src/parts/ViewletExtensions/Vie
 test('focusIndex', () => {
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
@@ -34,7 +34,7 @@ test('focusIndex', () => {
 test('focusIndex - not in view - causes scrolling down', () => {
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
@@ -69,7 +69,7 @@ test('focusIndex - not in view - causes scrolling down', () => {
 test('focusIndex - partially in view - causes scrolling down', () => {
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
@@ -108,7 +108,7 @@ test('focusIndex - partially in view - causes scrolling down', () => {
 test('focusIndex - not in view - causes scrolling up', () => {
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
@@ -143,7 +143,7 @@ test('focusIndex - not in view - causes scrolling up', () => {
 test('focusIndex - partially in view - causes scrolling up', () => {
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
