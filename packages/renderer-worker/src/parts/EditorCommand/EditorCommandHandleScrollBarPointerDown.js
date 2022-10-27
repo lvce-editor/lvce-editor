@@ -1,4 +1,5 @@
 import * as Editor from '../Editor/Editor.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
 // TODO scrollbar position can be in interval [0, editor.height - editor.scrollBarHeight]
 // when clicked at y <= editor.scrollbarHeight/2, position is set to zero
@@ -6,32 +7,15 @@ import * as Editor from '../Editor/Editor.js'
 // when clicked at y > editor.height - editor.scrollBarHeight/2, position scrollbar at (y - scrollbarHeight/2)
 // additionally, when clicked on scrollbar, scrollbar position shouldn't move
 
-const getNewDeltaPercent = (height, scrollBarHeight, relativeY) => {
-  if (relativeY <= scrollBarHeight / 2) {
-    // clicked at top
-    return {
-      percent: 0,
-      handleOffset: relativeY,
-    }
-  }
-  if (relativeY <= height - scrollBarHeight / 2) {
-    // clicked in middle
-    return {
-      percent: (relativeY - scrollBarHeight / 2) / (height - scrollBarHeight),
-      handleOffset: scrollBarHeight / 2,
-    }
-  }
-  // clicked at bottom
-  return {
-    percent: 1,
-    handleOffset: scrollBarHeight - height + relativeY,
-  }
-}
-
 export const handleScrollBarPointerDown = (state, y) => {
   const { top, deltaY, finalDeltaY, height, scrollBarHeight } = state
   const relativeY = y - top
-  const currentScrollBarY = (deltaY / finalDeltaY) * (height - scrollBarHeight)
+  const currentScrollBarY = ScrollBarFunctions.getScrollBarY(
+    deltaY,
+    finalDeltaY,
+    height,
+    scrollBarHeight
+  )
   const diff = relativeY - currentScrollBarY
   if (diff >= 0 && diff < scrollBarHeight) {
     return {
@@ -39,7 +23,7 @@ export const handleScrollBarPointerDown = (state, y) => {
       handleOffset: diff,
     }
   }
-  const { percent, handleOffset } = getNewDeltaPercent(
+  const { percent, handleOffset } = ScrollBarFunctions.getNewDeltaPercent(
     height,
     scrollBarHeight,
     relativeY
