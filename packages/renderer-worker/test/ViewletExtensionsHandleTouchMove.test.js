@@ -13,7 +13,7 @@ test('handleTouchMove - scroll up', () => {
     ...ViewletExtensions.create(),
     itemHeight: 62,
     height: 62,
-    filteredExtensions: [1, 2, 3],
+    items: [1, 2, 3],
     deltaY: 10,
     finalDeltaY: 62 * 2 - 62,
   }

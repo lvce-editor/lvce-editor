@@ -4,7 +4,7 @@ import * as ViewletExtensionsFocusNextPage from '../src/parts/ViewletExtensions/
 test('focusNextPage - scroll down one full page', () => {
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
@@ -58,7 +58,7 @@ test('focusNextPage - scroll down one full page', () => {
 test('focusNextPage - scroll down half a page', () => {
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
@@ -112,7 +112,7 @@ test('focusNextPage - scroll down half a page', () => {
 test('focusNextPage - already at end', () => {
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
