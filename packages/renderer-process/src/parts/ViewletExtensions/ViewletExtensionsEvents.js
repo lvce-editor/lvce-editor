@@ -77,12 +77,12 @@ export const handlePointerDown = (event) => {
     case 'ExtensionListItem':
       handlePointerDownExtension(target)
       break
-    case 'ExtensionName':
-    case 'ExtensionDescription':
-    case 'ExtensionFooter':
+    case 'ExtensionListItemName':
+    case 'ExtensionListItemDescription':
+    case 'ExtensionListItemFooter':
       handlePointerDownExtensionDetail(target)
       break
-    case 'ExtensionAuthorName':
+    case 'ExtensionListItemAuthorName':
       handlePointerDownExtensionAuthorName(target)
       break
     default:

@@ -69,7 +69,7 @@ beforeEach(() => {
   jest.restoreAllMocks()
 })
 
-test('event -  input', () => {
+test('event - input', () => {
   const state = ViewletExtensions.create()
   const { $InputBox } = state
   $InputBox.value = 'abc'
