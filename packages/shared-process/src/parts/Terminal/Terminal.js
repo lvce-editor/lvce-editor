@@ -1,10 +1,8 @@
-import { ChildProcess, fork } from 'node:child_process'
 import exitHook from 'exit-hook'
-import { ptyHostPath } from '@lvce-editor/pty-host'
-import * as Debug from '../Debug/Debug.js'
-import * as Path from '../Path/Path.js'
-import * as Root from '../Root/Root.js'
+import { ChildProcess, fork } from 'node:child_process'
 import * as Assert from '../Assert/Assert.js'
+import * as Debug from '../Debug/Debug.js'
+import * as PtyHostPath from '../PtyHostPath/PtyHostPath.js'
 
 export const state = {
   /**
@@ -45,8 +43,9 @@ const handleProcessExit = () => {
   cleanUpAll()
 }
 
-const createPtyHost = () => {
+const createPtyHost = async () => {
   exitHook(handleProcessExit)
+  const ptyHostPath = await PtyHostPath.getPtyHostPath()
   const ptyHost = fork(ptyHostPath, { stdio: 'inherit' })
   return ptyHost
 }
@@ -60,7 +59,7 @@ const createPtyHost = () => {
 //   })
 // }
 
-export const create = (socket, id, cwd) => {
+export const create = async (socket, id, cwd) => {
   Assert.object(socket)
   Assert.number(id)
   Assert.string(cwd)
@@ -69,7 +68,7 @@ export const create = (socket, id, cwd) => {
   switch (state.ptyHostState) {
     case /* None */ 0: {
       state.ptyHostState = /* Creating */ 1
-      const ptyHost = createPtyHost()
+      const ptyHost = await createPtyHost()
       const handleFirstMessage = () => {
         Debug.debug('pty host ready')
         state.ptyHostState = /* Ready */ 2
