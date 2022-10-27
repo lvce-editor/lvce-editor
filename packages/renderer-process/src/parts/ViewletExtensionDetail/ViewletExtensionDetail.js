@@ -39,13 +39,9 @@ export const create = () => {
     $ExtensionDetailHeaderDetails
   )
 
-  const $ExtensionDetailMain = document.createElement('div')
-  $ExtensionDetailMain.className = 'ExtensionDetailMain'
-  $ExtensionDetailMain.append($ExtensionDetailHeader, $ReadmeHtml)
-
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet ExtensionDetail'
-  $Viewlet.append($ExtensionDetailMain)
+  $Viewlet.append($ExtensionDetailHeader, $ReadmeHtml)
   return {
     $Viewlet,
     $Name,
@@ -80,7 +76,9 @@ export const setDescription = (state, description) => {
 export const setSize = (state, oldSize, newSize) => {
   const { $Viewlet } = state
   const oldClassName = ViewletSizeMap.getClassName(oldSize)
-  $Viewlet.classList.remove(oldClassName)
+  if (oldClassName) {
+    $Viewlet.classList.remove(oldClassName)
+  }
   const newClassName = ViewletSizeMap.getClassName(newSize)
   $Viewlet.classList.add(newClassName)
 }
