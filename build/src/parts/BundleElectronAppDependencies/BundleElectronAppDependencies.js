@@ -1,16 +1,13 @@
 import { readdir } from 'node:fs/promises'
-import * as BundleCss from '../BundleCss/BundleCss.js'
 import * as BundleExtensionHostDependencies from '../BundleExtensionHostDependencies/BundleExtensionHostDependencies.js'
 import * as BundleJs from '../BundleJs/BundleJs.js'
 import * as BundleMainProcessDependencies from '../BundleMainProcessDependencies/BundleMainProcessDependencies.js'
 import * as BundlePtyHostDependencies from '../BundlePtyHostDependencies/BundlePtyHostDependencies.js'
 import * as BundleSharedProcessDependencies from '../BundleSharedProcessDependencies/BundleSharedProcessDependencies.js'
-import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'
-import * as Replace from '../Replace/Replace.js'
 import * as Tag from '../Tag/Tag.js'
 
 const isLanguageBasics = (name) => {
@@ -116,13 +113,6 @@ const copyResults = async () => {
   }
 }
 
-const getElectronVersion = async () => {
-  const packageJson = await JsonFile.readJson(
-    'packages/main-process/node_modules/electron/package.json'
-  )
-  return packageJson.version
-}
-
 const addRootPackageJson = async ({ cachePath }) => {
   const tag = await Tag.getGitTag()
   await JsonFile.writeJson({
@@ -136,8 +126,11 @@ const addRootPackageJson = async ({ cachePath }) => {
   })
 }
 
-export const bundleElectronAppDependencies = async ({ cachePath, arch }) => {
-  const electronVersion = await getElectronVersion()
+export const bundleElectronAppDependencies = async ({
+  cachePath,
+  arch,
+  electronVersion,
+}) => {
   console.time('copyPtyHostFiles')
   await copyPtyHostFiles({
     arch,

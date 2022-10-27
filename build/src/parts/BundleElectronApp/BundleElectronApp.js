@@ -5,7 +5,9 @@ import * as BundleRendererProcessCached from '../BundleRendererProcessCached/Bun
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
+import * as DownloadElectron from '../DownloadElectron/DownloadElectron.js'
 import * as Hash from '../Hash/Hash.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Product from '../Product/Product.js'
@@ -13,6 +15,7 @@ import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Replace from '../Replace/Replace.js'
+import * as Root from '../Root/Root.js'
 import * as Tag from '../Tag/Tag.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
@@ -30,6 +33,7 @@ const getDependencyCacheHash = async () => {
     'build/src/parts/BundleMainProcessDependencies/BundleMainProcessDependencies.js',
     'build/src/parts/NodeModulesIgnoredFiles/NodeModulesIgnoredFiles.js',
     'build/src/parts/NpmDependencies/NpmDependencies.js',
+    'build/src/parts/Rebuild/Rebuild.js',
   ]
   const absolutePaths = files.map(Path.absolute)
   const contents = await Promise.all(absolutePaths.map(ReadFile.readFile))
@@ -37,10 +41,23 @@ const getDependencyCacheHash = async () => {
   return hash
 }
 
-const copyElectron = async ({ arch }) => {
-  const electronPath = `packages/main-process/node_modules/electron/dist`
+const copyElectron = async ({ arch, electronVersion }) => {
+  const outDir = Path.join(
+    Root.root,
+    'build',
+    '.tmp',
+    'electron',
+    electronVersion
+  )
+  await DownloadElectron.downloadElectron({
+    electronVersion,
+    outDir,
+    platform: 'linux',
+    arch,
+  })
+  // const electronPath = `packages/main-process/node_modules/electron/dist`
   await Copy.copy({
-    from: electronPath,
+    from: outDir,
     to: `build/.tmp/electron-bundle/${arch}`,
     ignore: [
       // TODO still include en locale, but exclude other locales
@@ -221,6 +238,18 @@ const copyCss = async ({ arch }) => {
   })
 }
 
+const getElectronVersion = async () => {
+  if (Math) {
+    // this is the last version which works for rebuilding
+    // node-pty which is required for terminals to work
+    return '19.1.1'
+  }
+  const packageJson = await JsonFile.readJson(
+    'packages/main-process/node_modules/electron/package.json'
+  )
+  return packageJson.version
+}
+
 export const build = async () => {
   const arch = process.arch
   const dependencyCacheHash = await getDependencyCacheHash()
@@ -230,6 +259,7 @@ export const build = async () => {
   )
   const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
   const commitHash = await CommitHash.getCommitHash()
+  const electronVersion = await getElectronVersion()
 
   if (
     existsSync(dependencyCachePath) &&
@@ -245,6 +275,7 @@ export const build = async () => {
     await BundleElectronAppDependencies.bundleElectronAppDependencies({
       cachePath: dependencyCachePath,
       arch,
+      electronVersion,
     })
     console.timeEnd('bundleElectronAppDependencies')
   }
@@ -252,6 +283,7 @@ export const build = async () => {
   console.time('copyElectron')
   await copyElectron({
     arch,
+    electronVersion,
   })
   console.timeEnd('copyElectron')
 
