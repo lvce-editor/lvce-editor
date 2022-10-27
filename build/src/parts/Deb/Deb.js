@@ -1,5 +1,4 @@
-import { existsSync } from 'node:fs'
-import { chmod, rename, writeFile } from 'node:fs/promises'
+import { chmod, writeFile } from 'node:fs/promises'
 import VError from 'verror'
 import * as Compress from '../Compress/Compress.js'
 import * as Copy from '../Copy/Copy.js'
@@ -7,10 +6,10 @@ import * as Exec from '../Exec/Exec.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'
-import * as Stat from '../Stat/Stat.js'
-import * as Template from '../Template/Template.js'
 import * as Rename from '../Rename/Rename.js'
+import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
+import * as Template from '../Template/Template.js'
 
 const getDebPackageArch = (arch) => {
   switch (arch) {
@@ -26,10 +25,10 @@ const getDebPackageArch = (arch) => {
 }
 
 const bundleElectronMaybe = async () => {
-  if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
-    console.info('[electron build skipped]')
-    return
-  }
+  // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
+  //   console.info('[electron build skipped]')
+  //   return
+  // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
   await build()
 }

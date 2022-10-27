@@ -6,8 +6,8 @@ import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/Bundl
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
 import * as DownloadElectron from '../DownloadElectron/DownloadElectron.js'
+import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.js'
 import * as Hash from '../Hash/Hash.js'
-import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Product from '../Product/Product.js'
@@ -19,7 +19,7 @@ import * as Root from '../Root/Root.js'
 import * as Tag from '../Tag/Tag.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
-const getDependencyCacheHash = async () => {
+const getDependencyCacheHash = async ({ electronVersion, arch }) => {
   const files = [
     'packages/main-process/package-lock.json',
     'packages/shared-process/package-lock.json',
@@ -37,11 +37,11 @@ const getDependencyCacheHash = async () => {
   ]
   const absolutePaths = files.map(Path.absolute)
   const contents = await Promise.all(absolutePaths.map(ReadFile.readFile))
-  const hash = Hash.computeHash(contents)
+  const hash = Hash.computeHash(contents + electronVersion + arch)
   return hash
 }
 
-const copyElectron = async ({ arch, electronVersion }) => {
+const downloadElectron = async ({ arch, electronVersion }) => {
   const outDir = Path.join(
     Root.root,
     'build',
@@ -55,7 +55,16 @@ const copyElectron = async ({ arch, electronVersion }) => {
     platform: 'linux',
     arch,
   })
-  // const electronPath = `packages/main-process/node_modules/electron/dist`
+}
+
+const copyElectron = async ({ arch, electronVersion }) => {
+  const outDir = Path.join(
+    Root.root,
+    'build',
+    '.tmp',
+    'electron',
+    electronVersion
+  )
   await Copy.copy({
     from: outDir,
     to: `build/.tmp/electron-bundle/${arch}`,
@@ -238,28 +247,19 @@ const copyCss = async ({ arch }) => {
   })
 }
 
-const getElectronVersion = async () => {
-  if (Math) {
-    // this is the last version which works for rebuilding
-    // node-pty which is required for terminals to work
-    return '19.1.1'
-  }
-  const packageJson = await JsonFile.readJson(
-    'packages/main-process/node_modules/electron/package.json'
-  )
-  return packageJson.version
-}
-
 export const build = async () => {
   const arch = process.arch
-  const dependencyCacheHash = await getDependencyCacheHash()
+  const electronVersion = await GetElectronVersion.getElectronVersion()
+  const dependencyCacheHash = await getDependencyCacheHash({
+    electronVersion,
+    arch,
+  })
   const dependencyCachePath = Path.join(
     Path.absolute('build/.tmp/cachedDependencies'),
     dependencyCacheHash
   )
   const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
   const commitHash = await CommitHash.getCommitHash()
-  const electronVersion = await getElectronVersion()
 
   if (
     existsSync(dependencyCachePath) &&
@@ -279,6 +279,13 @@ export const build = async () => {
     })
     console.timeEnd('bundleElectronAppDependencies')
   }
+
+  console.time('downloadElectron')
+  await downloadElectron({
+    arch,
+    electronVersion,
+  })
+  console.timeEnd('downloadElectron')
 
   console.time('copyElectron')
   await copyElectron({
