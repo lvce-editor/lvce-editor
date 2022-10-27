@@ -4,7 +4,7 @@ import * as ViewletExtensionsFocusLast from '../src/parts/ViewletExtensions/View
 test('focusLast', () => {
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',

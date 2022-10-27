@@ -165,7 +165,7 @@ test('loadContent', async () => {
       version: '0.0.1',
     },
   ])
-  expect(newState.filteredExtensions).toEqual([
+  expect(newState.items).toEqual([
     {
       description:
         'Provides syntax highlighting and bracket matching in HTML files.',
@@ -253,7 +253,7 @@ test('loadContent - with scrollbar', async () => {
     }
   })
   const newState = await ViewletExtensions.loadContent(state)
-  expect(newState.filteredExtensions).toHaveLength(2)
+  expect(newState.items).toHaveLength(2)
   expect(newState.minLineY).toBe(0)
   expect(newState.maxLineY).toBe(1)
   expect(newState.finalDeltaY).toBe(62)
@@ -267,7 +267,7 @@ test.skip('contentLoaded', async () => {
     ...ViewletExtensions.create(),
     height: 200,
     maxLineY: 10,
-    filteredExtensions: [
+    items: [
       {
         id: 'builtin.language-basics-html',
         name: 'Language Basics HTML',
@@ -331,7 +331,7 @@ test.skip('contentLoaded - error - extension is null', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [null],
+    items: [null],
     maxLineY: 2,
   }
   await ViewletExtensions.contentLoaded(state)
@@ -362,7 +362,7 @@ test.skip('contentLoaded - error - extension is of type array', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   const state = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [[]],
+    items: [[]],
     height: 200,
     maxLineY: 1,
   }
@@ -673,7 +673,7 @@ test.skip('handleInput - empty', async () => {
     return []
   })
   expect(await ViewletExtensions.handleInput(state, '')).toMatchObject({
-    filteredExtensions: [],
+    items: [],
   })
 })
 
@@ -791,7 +791,7 @@ test('resize', () => {
   expect(newState).toMatchObject({
     disposed: false,
     extensions: [],
-    filteredExtensions: [],
+    items: [],
     focusedIndex: -1,
     height: 200,
     left: 200,
@@ -812,7 +812,7 @@ test('resize', () => {
 test('render - same state', () => {
   const oldState = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
@@ -842,7 +842,7 @@ test('render - same state', () => {
 test('render - filtered extensions are different', () => {
   const oldState = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
@@ -856,7 +856,7 @@ test('render - filtered extensions are different', () => {
   }
   const newState = {
     ...oldState,
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 2',
         authorId: 'test publisher 2',
@@ -885,7 +885,7 @@ test('render - filtered extensions are different', () => {
 test.skip('render - negative margin is different', () => {
   const oldState = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
@@ -909,7 +909,7 @@ test.skip('render - negative margin is different', () => {
 test('render - focused index is different', () => {
   const oldState = {
     ...ViewletExtensions.create(),
-    filteredExtensions: [
+    items: [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
@@ -945,7 +945,7 @@ test('render - focused index is different', () => {
 // test('scrollBarThumbMouseDown', () => {
 //   const oldState = {
 //     ...ViewletExtensions.create(),
-//     filteredExtensions: [
+//     items: [
 //       {
 //         name: 'test extension 1',
 //         authorId: 'test publisher 1',
