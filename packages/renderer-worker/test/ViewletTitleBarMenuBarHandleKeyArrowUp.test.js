@@ -1,3 +1,8 @@
+import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
+import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
+import * as ViewletTitleBarMenuBarHandleKeyArrowUp from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleKeyArrowUp.js'
+
 test('handleKeyArrowUp - with menu open', async () => {
   const state = {
     ...ViewletTitleBarMenuBar.create(),
@@ -32,7 +37,9 @@ test('handleKeyArrowUp - with menu open', async () => {
       },
     ],
   }
-  expect(await ViewletTitleBarMenuBar.handleKeyArrowUp(state)).toMatchObject({
+  expect(
+    await ViewletTitleBarMenuBarHandleKeyArrowUp.handleKeyArrowUp(state)
+  ).toMatchObject({
     menus: [
       {
         level: 0,

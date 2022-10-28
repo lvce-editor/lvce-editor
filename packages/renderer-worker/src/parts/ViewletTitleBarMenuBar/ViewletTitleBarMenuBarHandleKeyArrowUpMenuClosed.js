@@ -1,1 +1,3 @@
-export const handleKeyArrowUpMenuClosed = identity
+import { noop } from './ViewletTitleBarMenuBarNoop.js'
+
+export const handleKeyArrowUpMenuClosed = noop
