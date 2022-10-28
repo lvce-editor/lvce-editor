@@ -208,7 +208,7 @@ export const contentLoaded = async (state) => {
   const commands = [
     [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Main',
+      /* id */ ViewletModuleId.Main,
       /* method */ 'openViewlet',
       /* tabLabel */ tabLabel,
       /* tabTitle */ tabTitle,
@@ -222,7 +222,7 @@ export const contentLoaded = async (state) => {
       getModule: ViewletModule.load,
       id,
       // @ts-ignore
-      parentId: 'Main',
+      parentId: ViewletModuleId.Main,
       uri: editor.uri,
       left,
       top,
@@ -238,7 +238,7 @@ export const contentLoaded = async (state) => {
     /* restore */ true
   )
   commands.push(...extraCommands)
-  commands.push(['Viewlet.appendViewlet', 'Main', id])
+  commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
   return commands
 }
 
@@ -263,7 +263,7 @@ export const openUri = async (
       const instance = ViewletManager.create(
         ViewletModule.load,
         id,
-        'Main',
+        ViewletModuleId.Main,
         uri,
         left,
         top,
@@ -279,7 +279,7 @@ export const openUri = async (
   const instance = ViewletManager.create(
     ViewletModule.load,
     id,
-    'Main',
+    ViewletModuleId.Main,
     uri,
     left,
     top,
@@ -293,7 +293,7 @@ export const openUri = async (
   const tabTitle = getTabTitle(uri)
   await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'Main',
+    /* id */ ViewletModuleId.Main,
     /* method */ 'openViewlet',
     /* tabLabel */ tabLabel,
     /* tabTitle */ tabTitle,
@@ -312,7 +312,7 @@ export const openBackgroundTab = async (state, uri, props) => {
   state.editors.push({ uri })
   await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'Main',
+    /* id */ ViewletModuleId.Main,
     /* method */ 'openViewlet',
     /* tabLabel */ tabLabel,
     /* tabTitle */ tabTitle
@@ -328,7 +328,7 @@ export const openBackgroundTab = async (state, uri, props) => {
       id,
       type: 0,
       // @ts-ignore
-      parentId: 'Main',
+      parentId: ViewletModuleId.Main,
       uri,
       left,
       top,
@@ -396,7 +396,7 @@ const getId = (editor) => {
 export const closeAllEditors = async (state) => {
   RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'Main',
+    /* id */ ViewletModuleId.Main,
     /* method */ 'dispose'
   )
   const ids = state.editors.map(getId)
@@ -452,7 +452,7 @@ export const closeEditor = async (state, index) => {
   }
   await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'Main',
+    /* id */ ViewletModuleId.Main,
     /* method */ 'closeOneTabOnly',
     /* closeIndex */ index
   )
@@ -497,7 +497,7 @@ export const focusIndex = async (state, index) => {
   const viewlet = ViewletManager.create(
     ViewletModule.load,
     id,
-    'Main',
+    ViewletModuleId.Main,
     editor.uri,
     left,
     top,
@@ -508,7 +508,7 @@ export const focusIndex = async (state, index) => {
   // TODO race condition
   RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'Main',
+    /* id */ ViewletModuleId.Main,
     /* method */ 'focusAnotherTab',
     /* unFocusIndex */ oldActiveIndex,
     /* focusIndex */ state.activeIndex
@@ -548,7 +548,7 @@ export const closeOthers = async (state) => {
     // view is kept the same, only tabs are closed
     await RendererProcess.invoke(
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Main',
+      /* id */ ViewletModuleId.Main,
       /* method */ 'closeOthers',
       /* keepIndex */ state.focusedIndex,
       /* focusIndex */ state.focusedIndex
@@ -557,7 +557,7 @@ export const closeOthers = async (state) => {
     // view needs to be switched to focused index
     await RendererProcess.invoke(
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Main',
+      /* id */ ViewletModuleId.Main,
       /* method */ 'closeOthers',
       /* keepIndex */ state.focusedIndex,
       /* focusIndex */ state.focusedIndex
@@ -573,7 +573,7 @@ export const closeTabsRight = async (state) => {
     // view is kept the same, only tabs are closed
     await RendererProcess.invoke(
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Main',
+      /* id */ ViewletModuleId.Main,
       /* method */ 'closeTabsRight',
       /* index */ state.focusedIndex
     )
@@ -581,7 +581,7 @@ export const closeTabsRight = async (state) => {
     // view needs to be switched to focused index
     await RendererProcess.invoke(
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Main',
+      /* id */ ViewletModuleId.Main,
       /* method */ 'closeTabsRight',
       /* index */ state.focusedIndex
     )
@@ -595,7 +595,7 @@ export const closeTabsLeft = async (state) => {
     // view is kept the same, only tabs are closed
     await RendererProcess.invoke(
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Main',
+      /* id */ ViewletModuleId.Main,
       /* method */ 'closeTabsLeft',
       /* index */ state.focusedIndex
     )
@@ -603,7 +603,7 @@ export const closeTabsLeft = async (state) => {
     // view needs to be switched to focused index
     await RendererProcess.invoke(
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Main',
+      /* id */ ViewletModuleId.Main,
       /* method */ 'closeTabsLeft',
       /* index */ state.focusedIndex
     )
