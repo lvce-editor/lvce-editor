@@ -1,4 +1,3 @@
-import * as Command from '../Command/Command.js'
 import * as TitleBarButtons from '../TitleBarButtons/TitleBarButtons.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
@@ -20,22 +19,6 @@ export const loadContent = async (state) => {
     ...state,
     buttons,
   }
-}
-
-export const handleClickMinimize = async (state) => {
-  await Command.execute('ElectronWindow.minimize')
-  return state
-}
-
-export const handleClickClose = async (state) => {
-  await Command.execute('ElectronWindow.close')
-  return state
-}
-
-export const handleClickToggleMaximize = async (state) => {
-  // TODO need command for toggleMaximize
-  await Command.execute('ElectronWindow.maximize')
-  return state
 }
 
 export const dispose = (state) => {
