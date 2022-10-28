@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
+import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -75,9 +76,6 @@ jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
   }
 })
 
-const ViewletTitleBarMenuBar = await import(
-  '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
-)
 const ViewletTitleBarMenuBarFocusIndex = await import(
   '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarFocusIndex.js'
 )
