@@ -37,7 +37,7 @@ export const create = () => {
 
   const $ButtonOpenExternal = IconButton.create$Button(
     UiStrings.OpenExternal,
-    Icon.OpenExternal
+    Icon.LinkExternal
   )
   $ButtonOpenExternal.onclick =
     ViewletSimpleBrowserEvents.handleClickOpenExternal

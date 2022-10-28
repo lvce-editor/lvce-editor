@@ -5,3 +5,4 @@ export const ArrowLeft = '/icons/arrow-left.svg'
 export const NextMatch = '/icons/arrow-down.svg'
 export const ExtensionDefaultIcon = `/icons/extensionDefaultIcon.png`
 export const Refresh = `/icons/refresh.svg`
+export const LinkExternal = `/icons/link-external.svg`
