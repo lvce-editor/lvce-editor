@@ -194,6 +194,7 @@ export const getModuleId = (commandId) => {
     case 'Notification.showWithOptions':
       return ModuleId.Notification
     case 'Open.openUrl':
+    case 'Open.openExternal':
       return ModuleId.Open
     case 'OpenNativeFolder.openNativeFolder':
       return ModuleId.OpenNativeFolder

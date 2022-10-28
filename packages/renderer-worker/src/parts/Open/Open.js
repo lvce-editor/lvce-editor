@@ -1,3 +1,4 @@
+import * as ElectronShell from '../ElectronShell/ElectronShell.js'
 import * as ElectronWindow from '../ElectronWindow/ElectronWindow.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -25,5 +26,18 @@ export const openUrl = async (url) => {
       return openUrlElectron(url)
     default:
       return openUrlWeb(url)
+  }
+}
+
+const openExternalElectron = async (url) => {
+  await ElectronShell.openExternal(url)
+}
+
+export const openExternal = (url) => {
+  switch (Platform.platform) {
+    case PlatformType.Electron:
+      return openExternalElectron(url)
+    default:
+      throw new Error('not implemented')
   }
 }

@@ -6,6 +6,7 @@ import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Command from '../Command/Command.js'
 
 export const name = ViewletModuleId.SimpleBrowser
 

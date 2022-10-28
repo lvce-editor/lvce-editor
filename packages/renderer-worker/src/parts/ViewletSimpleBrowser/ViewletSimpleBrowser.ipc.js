@@ -1,4 +1,9 @@
 import * as SimpleBrowser from './ViewletSimpleBrowser.js'
+import * as LazyCommand from '../LazyCommand/LazyCommand.js'
+
+const Imports = {
+  OpenExternal: () => import('./ViewletSimpleBrowserOpenExternal.js'),
+}
 
 // prettier-ignore
 export const Commands = {
@@ -9,6 +14,7 @@ export const Commands = {
   'SimpleBrowser.handleTitleUpdated': SimpleBrowser.handleTitleUpdated,
   'SimpleBrowser.handleWillNavigate': SimpleBrowser.handleWillNavigate,
   'SimpleBrowser.openDevtools': SimpleBrowser.openDevtools,
+  'SimpleBrowser.openExternal': LazyCommand.create(SimpleBrowser.name, Imports.OpenExternal, 'openExternal'),
   'SimpleBrowser.reload': SimpleBrowser.reload,
 }
 
