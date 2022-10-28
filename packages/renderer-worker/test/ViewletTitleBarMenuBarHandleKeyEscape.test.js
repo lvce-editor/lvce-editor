@@ -3,7 +3,7 @@ import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
 import * as ViewletTitleBarMenuBarHandleKeyEscape from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleKeyEscape.js'
 
-test('handleKeyEscape - close sub menu', async () => {
+test('handleKeyEscape - close sub menu', () => {
   const state = {
     ...ViewletTitleBarMenuBar.create(),
     focusedIndex: 0,
@@ -55,7 +55,7 @@ test('handleKeyEscape - close sub menu', async () => {
     ],
   }
   expect(
-    await ViewletTitleBarMenuBarHandleKeyEscape.handleKeyEscape(state)
+    ViewletTitleBarMenuBarHandleKeyEscape.handleKeyEscape(state)
   ).toMatchObject({
     menus: [
       {
