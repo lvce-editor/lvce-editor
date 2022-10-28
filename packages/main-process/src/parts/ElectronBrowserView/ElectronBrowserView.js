@@ -51,6 +51,7 @@ exports.createBrowserView = async (
       session: ElectronSessionForBrowserView.getSession(),
     },
   })
+  view.setBackgroundColor('#fff')
   const id = view.webContents.id
   ElectronBrowserViewState.add(id, view)
 
