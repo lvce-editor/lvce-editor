@@ -10,6 +10,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 export const state = {
   seenFiles: [],
@@ -182,6 +183,10 @@ export const hydrate = async () => {
       /* css */ iconThemeCss
     )
   } catch (error) {
-    console.error(new VError(error, `Failed to load icon theme`))
+    if (Workspace.isTest()) {
+      // ignore
+    } else {
+      console.error(new VError(error, `Failed to load icon theme`))
+    }
   }
 }
