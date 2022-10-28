@@ -3,7 +3,7 @@ import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
 import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
 import * as ViewletTitleBarMenuBarFocusNext from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarFocusNext.js'
 
-test('focusNext', async () => {
+test('focusNext', () => {
   const state = {
     ...ViewletTitleBarMenuBar.create(),
     focusedIndex: 0,
@@ -22,12 +22,12 @@ test('focusNext', async () => {
       },
     ],
   }
-  expect(await ViewletTitleBarMenuBarFocusNext.focusNext(state)).toMatchObject({
+  expect(ViewletTitleBarMenuBarFocusNext.focusNext(state)).toMatchObject({
     focusedIndex: 1,
   })
 })
 
-test('focusNext - with disabled items', async () => {
+test('focusNext - with disabled items', () => {
   const state = {
     ...ViewletTitleBarMenuBar.create(),
     focusedIndex: 0,
@@ -49,12 +49,12 @@ test('focusNext - with disabled items', async () => {
       },
     ],
   }
-  expect(await ViewletTitleBarMenuBarFocusNext.focusNext(state)).toMatchObject({
+  expect(ViewletTitleBarMenuBarFocusNext.focusNext(state)).toMatchObject({
     focusedIndex: 1,
   })
 })
 
-test('focusNext - at end', async () => {
+test('focusNext - at end', () => {
   const state = {
     ...ViewletTitleBarMenuBar.create(),
     focusedIndex: 2,
@@ -73,7 +73,7 @@ test('focusNext - at end', async () => {
       },
     ],
   }
-  expect(await ViewletTitleBarMenuBarFocusNext.focusNext(state)).toMatchObject({
+  expect(ViewletTitleBarMenuBarFocusNext.focusNext(state)).toMatchObject({
     focusedIndex: 0,
   })
 })

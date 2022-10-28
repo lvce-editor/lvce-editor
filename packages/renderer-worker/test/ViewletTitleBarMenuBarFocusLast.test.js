@@ -1,4 +1,8 @@
-test('focusLast - at end', async () => {
+import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
+import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
+import * as ViewletTitleBarMenuBarFocusLast from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarFocusLast.js'
+
+test('focusLast - at end', () => {
   const state = {
     ...ViewletTitleBarMenuBar.create(),
     focusedIndex: 2,
@@ -17,7 +21,7 @@ test('focusLast - at end', async () => {
       },
     ],
   }
-  expect(await ViewletTitleBarMenuBar.focusLast(state)).toMatchObject({
+  expect(ViewletTitleBarMenuBarFocusLast.focusLast(state)).toMatchObject({
     focusedIndex: 2,
   })
 })
