@@ -127,6 +127,7 @@ export const backward = async (state) => {
 }
 
 export const handleWillNavigate = (state, url) => {
+  console.log('navigate', { url })
   return {
     ...state,
     iframeSrc: url,
@@ -161,7 +162,8 @@ export const resizeEffect = async (state) => {
 }
 
 export const dispose = async (state) => {
-  await ElectronBrowserView.disposeBrowserView()
+  const { browserViewId } = state
+  await ElectronBrowserView.disposeBrowserView(browserViewId)
   console.log('dispose browser view')
 }
 

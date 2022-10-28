@@ -40,13 +40,8 @@ exports.createBrowserView = async (
   height,
   falltroughKeyBindings
 ) => {
-  console.log('[main process] create browser view')
   const browserWindow = BrowserWindow.getFocusedWindow()
   if (!browserWindow) {
-    return ElectronBrowserViewState.getAnyKey()
-  }
-  // TODO support multiple browser views in the future
-  if (browserWindow.getBrowserViews().length > 0) {
     return ElectronBrowserViewState.getAnyKey()
   }
   const view = new BrowserView({
@@ -54,11 +49,17 @@ exports.createBrowserView = async (
       session: ElectronSessionForBrowserView.getSession(),
     },
   })
-  const id = view.webContents.id
+  const { webContents } = view
+  const { id } = webContents
+  console.log('[main process] create browser view', id)
+
   ElectronBrowserViewState.add(id, browserWindow, view)
 
   const getPort = () => {
-    const state = AppWindowStates.findById(browserWindow.webContents.id)
+    const state = AppWindowStates.findById(id)
+    if (!state) {
+      return undefined
+    }
     const { port } = state
     return port
   }
@@ -69,22 +70,62 @@ exports.createBrowserView = async (
    */
   const handleWillNavigate = (event, url) => {
     const port = getPort()
+    if (!port) {
+      console.info('[main-process] view will navigate to ', url)
+      return
+    }
     port.postMessage({
       jsonrpc: '2.0',
-      method: 'SimpleBrowser.handleWillNavigate',
-      params: [url],
+      method: 'Viewlet.executeViewletCommand',
+      params: ['SimpleBrowser', 'browserViewId', id, 'handleWillNavigate', url],
     })
   }
   const handlePageTitleUpdated = (event, title) => {
     const port = getPort()
+    if (!port) {
+      console.info('[main-process] view will change title to ', title)
+      return
+    }
     port.postMessage({
       jsonrpc: '2.0',
-      method: 'SimpleBrowser.handleTitleUpdated',
-      params: [title],
+      method: 'Viewlet.executeViewletCommand',
+      params: [
+        'SimpleBrowser',
+        'browserViewId',
+        id,
+        'handleTitleUpdated',
+        title,
+      ],
     })
   }
   const handleDestroyed = () => {
+    console.log(`[main process] browser view ${id} destroyed`)
     ElectronBrowserViewState.remove(id)
+  }
+
+  /**
+   * @param {Electron.Event} event
+   * @param {Electron.Input} input
+   */
+  const handleBeforeInput = (event, input) => {
+    if (input.type !== 'keyDown') {
+      return
+    }
+    const port = getPort()
+    const identifier = getIdentifier(input)
+    for (const fallThroughKeyBinding of falltroughKeyBindings) {
+      if (fallThroughKeyBinding.key === identifier) {
+        event.preventDefault()
+        console.log({ identifier, fallThroughKeyBinding })
+        console.log('post message to port')
+        port.postMessage({
+          jsonrpc: '2.0',
+          method: fallThroughKeyBinding.command,
+          params: fallThroughKeyBinding.args || [],
+        })
+        return
+      }
+    }
   }
 
   /**
@@ -121,51 +162,36 @@ exports.createBrowserView = async (
       action: ElectronWindowOpenActionType.Deny,
     }
   }
-  view.webContents.on('will-navigate', handleWillNavigate)
-  view.webContents.on('did-navigate', handleWillNavigate)
-  view.webContents.on('page-title-updated', handlePageTitleUpdated)
-  view.webContents.on('destroyed', handleDestroyed)
-  view.webContents.setWindowOpenHandler(handleWindowOpen)
-  // browserWindow.addBrowserView(view)
+  webContents.on('will-navigate', handleWillNavigate)
+  webContents.on('did-navigate', handleWillNavigate)
+  webContents.on('page-title-updated', handlePageTitleUpdated)
+  webContents.on('destroyed', handleDestroyed)
+  webContents.on('before-input-event', handleBeforeInput)
+  webContents.setWindowOpenHandler(handleWindowOpen)
   view.setBounds({ x: left, y: top, width, height })
+  return id
+}
 
-  /**
-   * @param {Electron.Event} event
-   * @param {Electron.Input} input
-   */
-  const handleBeforeInput = (event, input) => {
-    if (input.type !== 'keyDown') {
-      return
-    }
-    const port = getPort()
-    const identifier = getIdentifier(input)
-    for (const fallThroughKeyBinding of falltroughKeyBindings) {
-      if (fallThroughKeyBinding.key === identifier) {
-        event.preventDefault()
-        console.log({ identifier, fallThroughKeyBinding })
-        console.log('post message to port')
-        port.postMessage({
-          jsonrpc: '2.0',
-          method: fallThroughKeyBinding.command,
-          params: fallThroughKeyBinding.args || [],
-        })
-        return
-      }
-    }
+/**
+ *
+ * @param {Electron.WebContents} webContents
+ */
+const disposeWebContents = (webContents) => {
+  if (webContents.close) {
+    // electron v22
+    webContents.close()
+    // @ts-ignore
+  } else if (webContents.destroy) {
+    // older versions of electron
+    // @ts-ignore
+    webContents.destroy()
   }
-  view.webContents.on('before-input-event', handleBeforeInput)
-  return view.webContents.id
 }
 
 exports.disposeBrowserView = (id) => {
-  const browserWindow = BrowserWindow.getFocusedWindow()
-  if (!browserWindow) {
-    return
-  }
-  const views = browserWindow.getBrowserViews()
-  const view = views[0]
-  if (!view) {
-    return
-  }
+  console.log('[main process] dispose browser view', id)
+  const { view, browserWindow } = ElectronBrowserViewState.get(id)
+  ElectronBrowserViewState.remove(id)
   browserWindow.removeBrowserView(view)
+  disposeWebContents(view.webContents)
 }

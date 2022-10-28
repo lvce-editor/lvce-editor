@@ -120,6 +120,7 @@ exports.show = (id) => {
 exports.hide = (id) => {
   const state = ElectronBrowserViewState.get(id)
   if (!state) {
+    console.log('[main-process] failed to hide browser view', id)
     return
   }
   const { view, browserWindow } = state

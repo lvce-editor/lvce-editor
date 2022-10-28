@@ -8,11 +8,20 @@ const { BrowserWindow } = require('electron')
 const createPidWindowMap = (browserWindows) => {
   const pidWindowMap = Object.create(null)
   for (const browserWindow of browserWindows) {
-    pidWindowMap[browserWindow.webContents.getOSProcessId()] = 'renderer'
-    if (browserWindow.webContents.devToolsWebContents) {
-      pidWindowMap[
-        browserWindow.webContents.devToolsWebContents.getOSProcessId()
-      ] = 'chrome-devtools'
+    const { webContents } = browserWindow
+    const pid = webContents.getOSProcessId()
+    pidWindowMap[pid] = 'renderer'
+    const { devToolsWebContents } = webContents
+    if (devToolsWebContents) {
+      const pid = devToolsWebContents.getOSProcessId()
+      pidWindowMap[pid] = 'chrome-devtools'
+    }
+    const views = browserWindow.getBrowserViews()
+    for (const view of views) {
+      const { webContents: viewWebContents } = view
+      const pid = viewWebContents.getOSProcessId()
+      const displayName = `browser-view-${webContents.id}`
+      pidWindowMap[pid] = displayName
     }
   }
   return pidWindowMap

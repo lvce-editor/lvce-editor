@@ -7,6 +7,11 @@ exports.add = (id, browserWindow, view) => {
   state.browserViews[id] = { browserWindow, view }
 }
 
+/**
+ *
+ * @param {number} id
+ * @returns {{browserWindow: Electron.BrowserWindow, view: Electron.BrowserView}}
+ */
 exports.get = (id) => {
   return state.browserViews[id]
 }
