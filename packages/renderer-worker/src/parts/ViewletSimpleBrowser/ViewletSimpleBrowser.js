@@ -121,6 +121,7 @@ export const loadContent = async (state, savedState) => {
     iframeSrc,
     title: 'Simple Browser',
     browserViewId,
+    uri: `simple-browser://${browserViewId}`,
   }
 }
 

@@ -242,13 +242,8 @@ export const contentLoaded = async (state) => {
   return commands
 }
 
-// TODO move focus to options
-export const openUri = async (
-  state,
-  uri,
-  focus = true,
-  { background = false } = {}
-) => {
+export const openUri = async (state, uri, focus = true) => {
+  console.log('MAIN OPEN URI')
   Assert.object(state)
   Assert.string(uri)
   const top = state.top + TAB_HEIGHT
@@ -259,6 +254,7 @@ export const openUri = async (
 
   for (const editor of state.editors) {
     if (editor.uri === uri) {
+      console.log('found existing editor')
       // TODO if the editor is already open, nothing needs to be done
       const instance = ViewletManager.create(
         ViewletModule.load,
@@ -276,6 +272,8 @@ export const openUri = async (
       return state
     }
   }
+
+  console.log('CREATE INSTANCE 2')
   const instance = ViewletManager.create(
     ViewletModule.load,
     id,
@@ -287,7 +285,8 @@ export const openUri = async (
     height
   )
   const oldActiveIndex = state.activeIndex
-  state.editors.push({ uri })
+  const temporaryUri = `tmp://${Math.random()}`
+  state.editors.push({ uri: temporaryUri })
   state.activeIndex = state.editors.length - 1
   const tabLabel = Workspace.pathBaseName(uri)
   const tabTitle = getTabTitle(uri)
@@ -300,8 +299,10 @@ export const openUri = async (
     /* oldActiveIndex */ oldActiveIndex
   )
   // @ts-ignore
-
   await ViewletManager.load(instance, focus)
+  const actualUri = ViewletStates.getState(id).uri
+  const index = state.editors.findIndex((editor) => editor.uri === temporaryUri)
+  state.editors[index].uri = actualUri
   return state
 }
 
@@ -309,7 +310,6 @@ export const openBackgroundTab = async (state, initialUri, props) => {
   const id = ViewletMap.getId(initialUri)
   const tabLabel = 'Loading'
   const tabTitle = 'Loading'
-  console.log({ initialUri, props })
   await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ ViewletModuleId.Main,
@@ -317,7 +317,6 @@ export const openBackgroundTab = async (state, initialUri, props) => {
     /* tabLabel */ tabLabel,
     /* tabTitle */ tabTitle
   )
-
   const top = state.top + TAB_HEIGHT
   const left = state.left
   const width = state.width
@@ -485,6 +484,12 @@ export const focusIndex = async (state, index) => {
   const height = state.height - TAB_HEIGHT
   const id = ViewletMap.getId(editor.uri)
 
+  const oldEditor = state.editors[oldActiveIndex]
+  const oldId = ViewletMap.getId(oldEditor.uri)
+  const oldInstance = ViewletStates.getInstance(oldId)
+  if (oldInstance && oldInstance.factory.hide) {
+    await oldInstance.factory.hide(oldInstance.state)
+  }
   const viewlet = ViewletManager.create(
     ViewletModule.load,
     id,
