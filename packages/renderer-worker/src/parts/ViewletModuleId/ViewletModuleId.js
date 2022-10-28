@@ -8,8 +8,6 @@ export const DebugConsole = 'Debug Console'
 
 export const EditorCompletion = 'EditorCompletion'
 
-export const FindWidget = 'FindWidget'
-
 export const EditorImage = 'EditorImage'
 
 export const EditorPlainText = 'EditorPlainText'
@@ -21,6 +19,8 @@ export const Explorer = 'Explorer'
 export const ExtensionDetail = 'ExtensionDetail'
 
 export const Extensions = 'Extensions'
+
+export const FindWidget = 'FindWidget'
 
 export const Iframe = 'Iframe'
 
