@@ -322,22 +322,27 @@ export const openBackgroundTab = async (state, uri, props) => {
   const left = state.left
   const width = state.width
   const height = state.height - TAB_HEIGHT
-  const commands = await ViewletManager.load({
-    getModule: ViewletModule.load,
-    id,
-    type: 0,
-    // @ts-ignore
-    parentId: 'Main',
-    uri,
-    left,
-    top,
-    width,
-    height,
-    show: false,
-    focus: false,
-    visible: false,
-  })
-  console.log({ commands })
+  const commands = await ViewletManager.load(
+    {
+      getModule: ViewletModule.load,
+      id,
+      type: 0,
+      // @ts-ignore
+      parentId: 'Main',
+      uri,
+      left,
+      top,
+      width,
+      height,
+      show: false,
+      focus: false,
+      visible: false,
+    },
+    false,
+    false,
+    props
+  )
+  console.log({ commands, props })
   return state
 }
 

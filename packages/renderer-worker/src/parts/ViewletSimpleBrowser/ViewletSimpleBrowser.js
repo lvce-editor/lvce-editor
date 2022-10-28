@@ -34,9 +34,24 @@ const getFallThroughKeyBindings = (keyBindings) => {
   return keyBindings.filter(isFallThroughKeyBinding)
 }
 
-export const loadContent = async (state) => {
+export const saveState = (state) => {
+  const { iframeSrc } = state
+  return {
+    url: iframeSrc,
+  }
+}
+
+const getUrlFromSavedState = (savedState) => {
+  console.log({ savedState })
+  if (savedState && savedState.url) {
+    return savedState.url
+  }
+  return 'https://example.com'
+}
+
+export const loadContent = async (state, savedState) => {
   const { top, left, width, height, headerHeight } = state
-  const iframeSrc = 'https://example.com'
+  const iframeSrc = getUrlFromSavedState(savedState)
   const keyBindings = await KeyBindings.getKeyBindings()
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronBrowserView.createBrowserView(
