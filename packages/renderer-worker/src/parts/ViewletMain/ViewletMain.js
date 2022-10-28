@@ -232,6 +232,7 @@ export const contentLoaded = async (state) => {
       focus: false,
       type: 0,
       setBounds: false,
+      visible: true,
     },
     /* focus */ false,
     /* restore */ true
@@ -241,7 +242,13 @@ export const contentLoaded = async (state) => {
   return commands
 }
 
-export const openUri = async (state, uri, focus = true) => {
+// TODO move focus to options
+export const openUri = async (
+  state,
+  uri,
+  focus = true,
+  { background = false } = {}
+) => {
   Assert.object(state)
   Assert.string(uri)
   const top = state.top + TAB_HEIGHT
@@ -295,6 +302,42 @@ export const openUri = async (state, uri, focus = true) => {
   // @ts-ignore
 
   await ViewletManager.load(instance, focus)
+  return state
+}
+
+export const openBackgroundTab = async (state, uri, props) => {
+  const id = ViewletMap.getId(uri)
+  const tabLabel = 'new Tab'
+  const tabTitle = 'new Tab'
+  state.editors.push({ uri })
+  await RendererProcess.invoke(
+    /* Viewlet.send */ 'Viewlet.send',
+    /* id */ 'Main',
+    /* method */ 'openViewlet',
+    /* tabLabel */ tabLabel,
+    /* tabTitle */ tabTitle
+  )
+
+  const top = state.top + TAB_HEIGHT
+  const left = state.left
+  const width = state.width
+  const height = state.height - TAB_HEIGHT
+  const commands = await ViewletManager.load({
+    getModule: ViewletModule.load,
+    id,
+    type: 0,
+    // @ts-ignore
+    parentId: 'Main',
+    uri,
+    left,
+    top,
+    width,
+    height,
+    show: false,
+    focus: false,
+    visible: false,
+  })
+  console.log({ commands })
   return state
 }
 

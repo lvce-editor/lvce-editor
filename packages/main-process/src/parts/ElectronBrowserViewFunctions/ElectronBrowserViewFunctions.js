@@ -5,7 +5,7 @@ const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBr
 
 exports.wrapBrowserViewCommand = (fn) => {
   const wrappedCommand = (id, ...args) => {
-    const view = ElectronBrowserViewState.get(id)
+    const { view } = ElectronBrowserViewState.get(id)
     if (!view) {
       console.log(`[main process] no view with id ${id}`)
       return
@@ -102,4 +102,26 @@ exports.forward = (view) => {
 exports.backward = (view) => {
   // TODO return promise that resolves once devtools are actually open
   view.webContents.goBack()
+}
+
+exports.show = (id) => {
+  console.log('show browser view', id)
+  const state = ElectronBrowserViewState.get(id)
+  if (!state) {
+    console.log('[main-process] failed to show browser view', id)
+    return
+  }
+  const { view, browserWindow } = state
+  browserWindow.addBrowserView(view)
+  // workaround for electron bug, view not being shown
+  view.setBounds(view.getBounds())
+}
+
+exports.hide = (id) => {
+  const state = ElectronBrowserViewState.get(id)
+  if (!state) {
+    return
+  }
+  const { view, browserWindow } = state
+  browserWindow.removeBrowserView(view)
 }

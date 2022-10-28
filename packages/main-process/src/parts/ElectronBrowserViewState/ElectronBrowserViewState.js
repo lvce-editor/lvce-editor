@@ -2,9 +2,9 @@ const state = {
   browserViews: Object.create(null),
 }
 
-exports.add = (id, browserView) => {
+exports.add = (id, browserWindow, view) => {
   // state
-  state.browserViews[id] = browserView
+  state.browserViews[id] = { browserWindow, view }
 }
 
 exports.get = (id) => {

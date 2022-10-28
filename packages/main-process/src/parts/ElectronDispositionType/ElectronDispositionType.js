@@ -1,0 +1,1 @@
+exports.BackgroundTab = 'background-tab'

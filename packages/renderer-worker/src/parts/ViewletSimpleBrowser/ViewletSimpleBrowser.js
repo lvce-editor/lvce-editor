@@ -56,6 +56,16 @@ export const loadContent = async (state) => {
   }
 }
 
+export const show = async (state) => {
+  const { browserViewId } = state
+  await ElectronBrowserViewFunctions.show(browserViewId)
+}
+
+export const hide = async (state) => {
+  const { browserViewId } = state
+  await ElectronBrowserViewFunctions.hide(browserViewId)
+}
+
 export const handleInput = (state, value) => {
   // TODO maybe show autocomplete for urls like browsers do
   return {

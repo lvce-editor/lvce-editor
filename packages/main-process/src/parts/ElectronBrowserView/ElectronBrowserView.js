@@ -2,6 +2,8 @@ const { BrowserView, BrowserWindow, webContents } = require('electron')
 const ElectronSessionForBrowserView = require('../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
+const ElectronDispositionType = require('../ElectronDispositionType/ElectronDispositionType.js')
+const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js')
 
 const normalizeKey = (key) => {
   if (key === ' ') {
@@ -38,6 +40,7 @@ exports.createBrowserView = async (
   height,
   falltroughKeyBindings
 ) => {
+  console.log('[main process] create browser view')
   const browserWindow = BrowserWindow.getFocusedWindow()
   if (!browserWindow) {
     return ElectronBrowserViewState.getAnyKey()
@@ -52,7 +55,7 @@ exports.createBrowserView = async (
     },
   })
   const id = view.webContents.id
-  ElectronBrowserViewState.add(id, view)
+  ElectronBrowserViewState.add(id, browserWindow, view)
 
   const getPort = () => {
     const state = AppWindowStates.findById(browserWindow.webContents.id)
@@ -83,14 +86,47 @@ exports.createBrowserView = async (
   const handleDestroyed = () => {
     ElectronBrowserViewState.remove(id)
   }
+
+  /**
+   *
+   * @type {(details: Electron.HandlerDetails) => ({action: 'deny'}) | ({action: 'allow', overrideBrowserWindowOptions?: Electron.BrowserWindowConstructorOptions})} param0
+   * @returns
+   */
+  const handleWindowOpen = ({
+    url,
+    disposition,
+    features,
+    frameName,
+    referrer,
+    postBody,
+  }) => {
+    if (url === 'about:blank') {
+      return { action: ElectronWindowOpenActionType.Allow }
+    }
+    // console.log({ disposition, features, frameName, referrer, postBody })
+    if (disposition === ElectronDispositionType.BackgroundTab) {
+      // TODO open background tab
+      const port = getPort()
+      port.postMessage({
+        jsonrpc: '2.0',
+        method: 'SimpleBrowser.openBackgroundTab',
+        params: [url],
+      })
+      return {
+        action: ElectronWindowOpenActionType.Deny,
+      }
+    }
+    console.info(`[main-process] blocked popup for ${url}`)
+    return {
+      action: ElectronWindowOpenActionType.Deny,
+    }
+  }
   view.webContents.on('will-navigate', handleWillNavigate)
   view.webContents.on('did-navigate', handleWillNavigate)
   view.webContents.on('page-title-updated', handlePageTitleUpdated)
-  view.webContents.setWindowOpenHandler(
-    ElectronSessionForBrowserView.handleWindowOpen
-  )
   view.webContents.on('destroyed', handleDestroyed)
-  browserWindow.addBrowserView(view)
+  view.webContents.setWindowOpenHandler(handleWindowOpen)
+  // browserWindow.addBrowserView(view)
   view.setBounds({ x: left, y: top, width, height })
 
   /**
