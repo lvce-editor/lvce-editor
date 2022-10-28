@@ -32,3 +32,7 @@ export const handleClickBackward = () => {
 export const handleClickReload = () => {
   RendererWorker.send('SimpleBrowser.reload')
 }
+
+export const handleClickOpenExternal = () => {
+  RendererWorker.send('SimpleBrowser.openExternal')
+}

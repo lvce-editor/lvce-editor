@@ -12,6 +12,7 @@ const UiStrings = {
   Back: 'Back',
   Forward: 'Forward',
   Reload: 'Reload',
+  OpenExternal: 'Open External',
 }
 
 export const create = () => {
@@ -34,13 +35,21 @@ export const create = () => {
   $InputBox.onfocus = ViewletSimpleBrowserEvents.handleFocus
   $InputBox.onblur = ViewletSimpleBrowserEvents.handleBlur
 
+  const $ButtonOpenExternal = IconButton.create$Button(
+    UiStrings.OpenExternal,
+    Icon.LinkExternal
+  )
+  $ButtonOpenExternal.onclick =
+    ViewletSimpleBrowserEvents.handleClickOpenExternal
+
   const $SimpleBrowserHeader = document.createElement('div')
   $SimpleBrowserHeader.className = 'SimpleBrowserHeader'
   $SimpleBrowserHeader.append(
     $ButtonBack,
     $ButtonForward,
     $ButtonReload,
-    $InputBox
+    $InputBox,
+    $ButtonOpenExternal
   )
 
   const $Viewlet = document.createElement('div')

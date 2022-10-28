@@ -33,6 +33,7 @@ exports.getModuleId = (commandId) => {
       return ModuleId.Beep
     case 'ElectronShell.beep':
     case 'ElectronShell.showItemInFolder':
+    case 'ElectronShell.openExternal':
       return ModuleId.ElectronShell
     case 'ElectronPowerSaveBlocker.start':
     case 'ElectronPowerSaveBlocker.stop':

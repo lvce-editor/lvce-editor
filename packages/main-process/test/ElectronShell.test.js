@@ -7,6 +7,7 @@ jest.mock('electron', () => {
     shell: {
       showItemInFolder: jest.fn(),
       beep: jest.fn(),
+      openExternal: jest.fn(),
     },
   }
 })
@@ -29,4 +30,14 @@ test('beep', () => {
   ElectronShell.beep()
   expect(electron.shell.beep).toHaveBeenCalledTimes(1)
   expect(electron.shell.beep).toHaveBeenCalledWith()
+})
+
+test('openExternal', () => {
+  // @ts-ignore
+  electron.shell.openExternal.mockImplementation(() => {})
+  ElectronShell.openExternal('https://example.com')
+  expect(electron.shell.openExternal).toHaveBeenCalledTimes(1)
+  expect(electron.shell.openExternal).toHaveBeenCalledWith(
+    'https://example.com'
+  )
 })
