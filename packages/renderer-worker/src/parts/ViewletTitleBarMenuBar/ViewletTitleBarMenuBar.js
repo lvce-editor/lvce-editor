@@ -1,8 +1,3 @@
-import * as Command from '../Command/Command.js'
-import * as Menu from '../Menu/Menu.js'
-import * as MenuEntries from '../MenuEntries/MenuEntries.js'
-import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuBarEntries.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
@@ -23,36 +18,6 @@ export const loadContent = async (state) => {
     ...state,
     titleBarEntries,
   }
-}
-
-const identity = (state) => {
-  return state
-}
-
-const getIndexToFocusPreviousStartingAt = (items, index) => {
-  return (index + items.length) % items.length
-}
-
-const closeOneMenu = (state) => {
-  const { menus } = state
-  const parentMenu = menus.at(-2)
-  const newParentMenu = {
-    ...parentMenu,
-    expanded: false,
-  }
-  const newMenus = [...menus.slice(0, -2), newParentMenu]
-  return {
-    ...state,
-    menus: newMenus,
-  }
-}
-
-export const handleMouseOver = (state, index) => {
-  const { isMenuOpen } = state
-  if (isMenuOpen) {
-    return focusIndex(state, index)
-  }
-  return state
 }
 
 export const hasFunctionalRender = true

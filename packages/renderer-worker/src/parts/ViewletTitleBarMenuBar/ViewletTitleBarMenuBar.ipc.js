@@ -1,6 +1,31 @@
 import * as ViewletTitleBarMenuBar from './ViewletTitleBarMenuBar.js'
 
 // prettier-ignore
+const Imports = {
+  CloseMenu: () => import('./ViewletTitleBarMenuBarCloseMenu.js'),
+  Focus: () => import('./ViewletTitleBarMenuBarFocus.js'),
+  FocusFirst: () => import('./ViewletTitleBarMenuBarFocusFirst.js'),
+  FocusLast: () => import('./ViewletTitleBarMenuBarFocusLast.js'),
+  FocusIndex: () => import('./ViewletTitleBarMenuBarFocusIndex.js'),
+  FocusNext: () => import('./ViewletTitleBarMenuBarFocusNext.js'),
+  FocusPrevious: () => import('./ViewletTitleBarMenuBarFocusPrevious.js'),
+  HandleKeyArrowDown: () => import('./ViewletTitleBarMenuBarHandleKeyArrowDown.js'),
+  HandleKeyArrowLeft: () => import('./ViewletTitleBarMenuBarHandleKeyArrowLeft.js'),
+  HandleKeyArrowRight: () => import('./ViewletTitleBarMenuBarHandleKeyArrowRight.js'),
+  HandleKeyArrowUp: () => import('./ViewletTitleBarMenuBarHandleKeyArrowUp.js'),
+  HandleKeyEnd: () => import('./ViewletTitleBarMenuBarHandleKeyEnd.js'),
+  HandleKeyEnter: () => import('./ViewletTitleBarMenuBarHandleKeyEnter.js'),
+  HandleKeyEscape: () => import('./ViewletTitleBarMenuBarHandleKeyEscape.js'),
+  HandleKeyHome: () => import('./ViewletTitleBarMenuBarHandleKeyHome.js'),
+  HandleKeySpace: () => import('./ViewletTitleBarMenuBarHandleKeySpace.js'),
+  HandleMenuMouseDown: () => import('./ViewletTitleBarMenuBarHandleMenuMouseDown.js'),
+  HandleMenuMouseOver: () => import('./ViewletTitleBarMenuBarHandleMenuMouseOver.js'),
+  HandleMouseOver: () => import('./ViewletTitleBarMenuBarHandleMouseOver.js'),
+  ToggleIndex: () => import('./ViewletTitleBarMenuBarToggleIndex.js'),
+  ToggleMenu: () => import('./ViewletTitleBarMenuBarToggleMenu.js'),
+}
+
+// prettier-ignore
 export const Commands = {
   'TitleBarMenuBar.closeMenu': ViewletTitleBarMenuBar.closeMenu,
   'TitleBarMenuBar.focus': ViewletTitleBarMenuBar.focus,
