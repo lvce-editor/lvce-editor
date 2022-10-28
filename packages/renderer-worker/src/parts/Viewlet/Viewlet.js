@@ -179,6 +179,10 @@ export const resize = (id, dimensions) => {
         `functional resize not supported in ${instance.factory.name}`
       )
     }
+    if (instance.factory.resizeEffect) {
+      // TODO handle promise rejection gracefully
+      instance.factory.resizeEffect(newState)
+    }
     commands = ViewletManager.render(instance.factory, instance.state, newState)
   } else {
     const result = instance.factory.resize(oldState, dimensions)
