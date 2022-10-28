@@ -23,7 +23,7 @@
   align-items: center;
   font-size: 13px;
   white-space: nowrap;
-  /* contain: content; */
+  max-width: 200px;
 }
 
 .MainTab[aria-selected='true'] {
@@ -81,6 +81,7 @@
   border-radius: 4px;
   display: flex;
   margin-left: 4px;
+  flex-shrink: 0;
 }
 
 .EditorTabCloseButton::before {
