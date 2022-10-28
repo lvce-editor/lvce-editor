@@ -53,6 +53,9 @@ const setIframeSrcFallback = async (view, error) => {
 exports.setIframeSrc = async (view, iframeSrc) => {
   try {
     await view.webContents.loadURL(iframeSrc)
+    // TODO maybe have a separate function for getting title
+    const newTitle = view.webContents.getTitle()
+    return newTitle
   } catch (error) {
     try {
       await setIframeSrcFallback(view, error)

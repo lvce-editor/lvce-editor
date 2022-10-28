@@ -221,6 +221,24 @@ const loadModule = (getModule, id) => {
 }
 
 // TODO add lots of unit tests for this
+
+export const backgroundLoad = async ({
+  getModule,
+  id,
+  left,
+  top,
+  width,
+  height,
+  props,
+}) => {
+  const module = await loadModule(getModule, id)
+  const viewletState = module.create(id, '', top, left, width, height)
+  const { title, uri } = await module.backgroundLoadContent(viewletState, props)
+  return {
+    title,
+    uri,
+  }
+}
 /**
  *
  * @param {{getModule:()=>any, type:number, id:string, disposed:boolean }} viewlet

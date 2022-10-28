@@ -24,7 +24,7 @@ export const getId = (uri) => {
   if (uri.startsWith('extension-detail://')) {
     return ViewletModuleId.ExtensionDetail
   }
-  if (uri === 'simple-browser://') {
+  if (uri.startsWith('simple-browser://')) {
     return ViewletModuleId.SimpleBrowser
   }
   return ViewletModuleId.EditorText

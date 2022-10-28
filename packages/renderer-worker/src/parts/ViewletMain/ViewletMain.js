@@ -305,11 +305,11 @@ export const openUri = async (
   return state
 }
 
-export const openBackgroundTab = async (state, uri, props) => {
-  const id = ViewletMap.getId(uri)
-  const tabLabel = 'new Tab'
-  const tabTitle = 'new Tab'
-  state.editors.push({ uri })
+export const openBackgroundTab = async (state, initialUri, props) => {
+  const id = ViewletMap.getId(initialUri)
+  const tabLabel = 'Loading'
+  const tabTitle = 'Loading'
+  console.log({ initialUri, props })
   await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
     /* id */ ViewletModuleId.Main,
@@ -322,27 +322,18 @@ export const openBackgroundTab = async (state, uri, props) => {
   const left = state.left
   const width = state.width
   const height = state.height - TAB_HEIGHT
-  const commands = await ViewletManager.load(
-    {
-      getModule: ViewletModule.load,
-      id,
-      type: 0,
-      // @ts-ignore
-      parentId: ViewletModuleId.Main,
-      uri,
-      left,
-      top,
-      width,
-      height,
-      show: false,
-      focus: false,
-      visible: false,
-    },
-    false,
-    false,
-    props
-  )
-  console.log({ commands, props })
+  const { title, uri } = await ViewletManager.backgroundLoad({
+    getModule: ViewletModule.load,
+    id,
+    left,
+    top,
+    width,
+    height,
+    props,
+  })
+  state.editors.push({ uri })
+  await RendererProcess.invoke('Viewlet.send', 'Main', 'updateTab', 1, title)
+  // TODO update tab title with new title
   return state
 }
 

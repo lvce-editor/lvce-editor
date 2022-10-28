@@ -49,9 +49,62 @@ const getUrlFromSavedState = (savedState) => {
   return 'https://example.com'
 }
 
-export const loadContent = async (state, savedState) => {
+export const backgroundLoadContent = async (state, savedState) => {
+  // TODO duplicate code with loadContent
   const { top, left, width, height, headerHeight } = state
   const iframeSrc = getUrlFromSavedState(savedState)
+  // TODO since browser view is not visible at this point
+  // it is not necessary to load keybindings for it
+  const keyBindings = await KeyBindings.getKeyBindings()
+  const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
+  const browserViewId = await ElectronBrowserView.createBrowserView(
+    top + headerHeight,
+    left,
+    width,
+    height - headerHeight,
+    fallThroughKeyBindings
+  )
+  Assert.number(browserViewId)
+  const title = await ElectronBrowserViewFunctions.setIframeSrc(
+    browserViewId,
+    iframeSrc
+  )
+  return {
+    title,
+    uri: `simple-browser://${browserViewId}`,
+  }
+}
+
+const getId = (idPart) => {
+  if (!idPart) {
+    return 0
+  }
+  return parseInt(idPart)
+}
+
+export const loadContent = async (state, savedState) => {
+  const { top, left, width, height, headerHeight, uri } = state
+  console.log({ uri })
+  const idPart = uri.slice('simple-browser://'.length)
+  const id = getId(idPart)
+  const iframeSrc = getUrlFromSavedState(savedState)
+  if (id) {
+    await ElectronBrowserViewFunctions.show(id)
+    await ElectronBrowserViewFunctions.resizeBrowserView(
+      id,
+      top + headerHeight,
+      left,
+      width,
+      height - headerHeight
+    )
+    return {
+      ...state,
+      iframeSrc,
+      title: 'Simple Browser',
+      browserViewId: id,
+    }
+  }
+  // TODO load keybindings in parallel with creating browserview
   const keyBindings = await KeyBindings.getKeyBindings()
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronBrowserView.createBrowserView(
@@ -127,7 +180,6 @@ export const backward = async (state) => {
 }
 
 export const handleWillNavigate = (state, url) => {
-  console.log('navigate', { url })
   return {
     ...state,
     iframeSrc: url,

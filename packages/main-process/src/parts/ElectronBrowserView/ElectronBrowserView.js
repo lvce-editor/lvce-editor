@@ -56,7 +56,7 @@ exports.createBrowserView = async (
   ElectronBrowserViewState.add(id, browserWindow, view)
 
   const getPort = () => {
-    const state = AppWindowStates.findById(id)
+    const state = AppWindowStates.findById(browserWindow.webContents.id)
     if (!state) {
       return undefined
     }
@@ -148,6 +148,12 @@ exports.createBrowserView = async (
     if (disposition === ElectronDispositionType.BackgroundTab) {
       // TODO open background tab
       const port = getPort()
+      if (!port) {
+        console.warn('[main process] handlwWindowOpen - no port found')
+        return {
+          action: ElectronWindowOpenActionType.Deny,
+        }
+      }
       port.postMessage({
         jsonrpc: '2.0',
         method: 'SimpleBrowser.openBackgroundTab',

@@ -303,3 +303,46 @@ test.skip('load - shouldApplyNewState returns false', async () => {
   expect(mockModule.contentLoaded).not.toHaveBeenCalled()
   expect(ViewletStates.getInstance('test')).toBeUndefined()
 })
+
+test('backgroundLoad', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  const mockModule = {
+    create: jest.fn(() => {
+      return {
+        value: 0,
+      }
+    }),
+    backgroundLoadContent: jest.fn(async (state, savedState) => {
+      return {
+        title: 'Test Title',
+        uri: `test://1`,
+      }
+    }),
+  }
+  const getModule = jest.fn(async () => {
+    return mockModule
+  })
+  const { title, uri } = await ViewletManager.backgroundLoad({
+    getModule,
+    id: '',
+    top: 0,
+    left: 0,
+    width: 0,
+    height: 0,
+    props: {
+      value: 42,
+    },
+  })
+  expect(title).toBe('Test Title')
+  expect(uri).toBe('test://1')
+  expect(getModule).toHaveBeenCalledTimes(1)
+  expect(getModule).toHaveBeenCalledWith('')
+  expect(mockModule.backgroundLoadContent).toHaveBeenCalledTimes(1)
+  expect(mockModule.backgroundLoadContent).toHaveBeenCalledWith(
+    {
+      value: 0,
+    },
+    { value: 42 }
+  )
+})

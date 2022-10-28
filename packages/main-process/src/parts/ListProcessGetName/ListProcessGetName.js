@@ -1,5 +1,6 @@
 const Assert = require('../Assert/Assert.js')
 const { BrowserWindow } = require('electron')
+const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
 
 /**
  *
@@ -18,11 +19,19 @@ const createPidWindowMap = (browserWindows) => {
     }
     const views = browserWindow.getBrowserViews()
     for (const view of views) {
-      const { webContents: viewWebContents } = view
+      const viewWebContents = view.webContents
       const pid = viewWebContents.getOSProcessId()
-      const displayName = `browser-view-${webContents.id}`
+      const displayName = `browser-view-${viewWebContents.id}`
       pidWindowMap[pid] = displayName
     }
+  }
+  for (const { view } of ElectronBrowserViewState.getAll()) {
+    const viewWebContents = view.webContents
+    const pid = viewWebContents.getOSProcessId()
+    if (pid in pidWindowMap) {
+      continue
+    }
+    pidWindowMap[pid] = `hidden-browser-view-${viewWebContents.id}`
   }
   return pidWindowMap
 }
