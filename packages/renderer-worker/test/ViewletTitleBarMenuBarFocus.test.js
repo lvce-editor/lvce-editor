@@ -1,4 +1,8 @@
-test('focus', async () => {
+import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
+import * as ViewletTitleBarMenuBar from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js'
+import * as ViewletTitleBarMenuBarFocus from '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarFocus.js'
+
+test('focus', () => {
   const state = {
     ...ViewletTitleBarMenuBar.create(),
     focusedIndex: 42,
@@ -13,7 +17,7 @@ test('focus', async () => {
       },
     ],
   }
-  expect(await ViewletTitleBarMenuBar.focus(state)).toMatchObject({
+  expect(ViewletTitleBarMenuBarFocus.focus(state)).toMatchObject({
     focusedIndex: 0,
   })
 })
