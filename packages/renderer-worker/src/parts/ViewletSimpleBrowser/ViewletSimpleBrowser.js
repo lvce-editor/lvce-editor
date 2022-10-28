@@ -117,19 +117,21 @@ export const handleTitleUpdated = (state, title) => {
 export const hasFunctionalResize = true
 
 export const resize = (state, dimensions) => {
-  const { headerHeight, browserViewId } = state
-  const { left, top, width, height } = dimensions
-  ElectronBrowserViewFunctions.resizeBrowserView(
+  return {
+    ...state,
+    ...dimensions,
+  }
+}
+
+export const resizeEffect = async (state) => {
+  const { headerHeight, browserViewId, top, left, width, height } = state
+  await ElectronBrowserViewFunctions.resizeBrowserView(
     browserViewId,
     top + headerHeight,
     left,
     width,
     height - headerHeight
   )
-  return {
-    ...state,
-    ...dimensions,
-  }
 }
 
 export const dispose = async (state) => {
