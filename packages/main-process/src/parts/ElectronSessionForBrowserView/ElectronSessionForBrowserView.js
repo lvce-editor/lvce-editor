@@ -51,7 +51,6 @@ const loadExtension = async (session, extensionPath) => {
 const getChromeExtensionPaths = async () => {
   try {
     const chromeExtensionsPath = Platform.getChromeExtensionsPath()
-    console.log({ chromeExtensionsPath })
     const dirents = await FileSystem.readDir(chromeExtensionsPath)
     const extensionsPaths = []
     for (const dirent of dirents) {
