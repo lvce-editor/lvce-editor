@@ -5,6 +5,7 @@ export const state = {
 }
 
 export const createBrowserView = (
+  restoreId,
   left,
   top,
   width,
@@ -14,6 +15,7 @@ export const createBrowserView = (
   state.openCount++
   return ElectronProcess.invoke(
     'ElectronBrowserView.createBrowserView',
+    restoreId,
     left,
     top,
     width,

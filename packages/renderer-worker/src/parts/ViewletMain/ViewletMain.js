@@ -52,11 +52,15 @@ const canBeRestored = (editor) => {
 }
 
 const getMainEditors = (state) => {
-  if (state && state.editors) {
-    // TODO check that type is string (else runtime error occurs and page is blank)
-    return state.editors.filter(canBeRestored).slice(-1)
+  if (!state) {
+    return []
   }
-  return []
+  const { editors } = state
+  if (!editors) {
+    return []
+  }
+  // TODO check that type is string (else runtime error occurs and page is blank)
+  return editors.filter(canBeRestored).slice(-1)
 }
 
 const restoreEditors = async (state) => {
@@ -160,7 +164,7 @@ const findEditorWithUri = (editors, uri) => {
 
 const TAB_HEIGHT = 35
 
-const getRestoredEditors = async (savedState) => {
+const getRestoredEditors = (savedState) => {
   if (Workspace.isTest()) {
     return []
   }
@@ -168,9 +172,14 @@ const getRestoredEditors = async (savedState) => {
   return restoredEditors
 }
 
-export const loadContent = async (state, savedState) => {
+export const saveState = (state) => {
+  const { editors } = state
+  return { editors }
+}
+
+export const loadContent = (state, savedState) => {
   // TODO get restored editors from saved state
-  const editors = await getRestoredEditors(savedState)
+  const editors = getRestoredEditors(savedState)
   // @ts-ignore
   LifeCycle.once(LifeCyclePhase.Twelve, hydrateLazy)
   return {

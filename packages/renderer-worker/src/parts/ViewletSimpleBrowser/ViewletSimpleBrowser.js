@@ -89,7 +89,7 @@ export const loadContent = async (state, savedState) => {
   const id = getId(idPart)
   const iframeSrc = getUrlFromSavedState(savedState)
   if (id) {
-    await ElectronBrowserViewFunctions.resizeBrowserView(
+    await ElectronBrowserView.createBrowserView(
       id,
       top + headerHeight,
       left,
@@ -108,6 +108,7 @@ export const loadContent = async (state, savedState) => {
   const keyBindings = await KeyBindings.getKeyBindings()
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronBrowserView.createBrowserView(
+    /* restoreId */ 0,
     top + headerHeight,
     left,
     width,

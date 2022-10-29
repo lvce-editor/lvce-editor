@@ -34,12 +34,17 @@ const getIdentifier = (input) => {
 }
 
 exports.createBrowserView = async (
+  restoreId,
   top,
   left,
   width,
   height,
   falltroughKeyBindings
 ) => {
+  const cached = ElectronBrowserViewState.get(restoreId)
+  if (cached) {
+    return restoreId
+  }
   const browserWindow = BrowserWindow.getFocusedWindow()
   if (!browserWindow) {
     return ElectronBrowserViewState.getAnyKey()
