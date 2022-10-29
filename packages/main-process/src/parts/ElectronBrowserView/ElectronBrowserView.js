@@ -49,12 +49,11 @@ exports.createBrowserView = async (
       session: ElectronSessionForBrowserView.getSession(),
     },
   })
+  view.setBackgroundColor('#fff')
   const { webContents } = view
   const { id } = webContents
   console.log('[main process] create browser view', id)
-
   ElectronBrowserViewState.add(id, browserWindow, view)
-
   const getPort = () => {
     const state = AppWindowStates.findById(browserWindow.webContents.id)
     if (!state) {
