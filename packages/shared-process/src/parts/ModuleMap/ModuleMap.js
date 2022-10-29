@@ -17,7 +17,6 @@ export const getModuleId = (commandId) => {
     case 'Developer.sharedProcessMemoryUsage':
     case 'Developer.sharedProcessStartupPerformance':
       return ModuleId.Developer
-    case 'EXtensionHostRename.executePrepareRename':
     case 'ExtensionHost.dispose':
     case 'ExtensionHost.enableExtension':
     case 'ExtensionHost.executeCommand':
@@ -52,14 +51,15 @@ export const getModuleId = (commandId) => {
     case 'ExtensionHostOutput.getOutputChannels':
     case 'ExtensionHostQuickPick.handleQuickPickResult':
     case 'ExtensionHostReferences.executeReferenceProvider':
+    case 'EXtensionHostRename.executePrepareRename':
     case 'ExtensionHostRename.executeRename':
     case 'ExtensionHostSemanticTokens.executeSemanticTokenProvider':
     case 'ExtensionHostSourceControl.acceptInput':
-    case 'ExtensionHostTextDocument':
     case 'ExtensionHostTextDocument.setLanguageId':
     case 'ExtensionHostTextDocument.syncFull':
     case 'ExtensionHostTextDocument.syncIncremental':
     case 'ExtensionHostTextDocument.syncInitial':
+    case 'ExtensionHostTextDocument':
     case 'ExtensionHostWorkspace.setWorkspacePath':
       return ModuleId.ExtensionHost
     case 'ExtensionHost.getColorThemeJson':
@@ -97,8 +97,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.OutputChannel
     case 'Platform.getAppDir':
     case 'Platform.getBuiltinExtensionsPath':
-    case 'Platform.getCacheDir':
     case 'Platform.getCachedExtensionsPath':
+    case 'Platform.getCacheDir':
     case 'Platform.getConfigDir':
     case 'Platform.getDataDir':
     case 'Platform.getDisabledExtensionsPath':

@@ -4,8 +4,8 @@ import * as Platform from '../Platform/Platform.js'
 export const Commands = {
   'Platform.getAppDir': Platform.getAppDir,
   'Platform.getBuiltinExtensionsPath': Platform.getBuiltinExtensionsPath,
-  'Platform.getCacheDir': Platform.getCacheDir,
   'Platform.getCachedExtensionsPath': Platform.getCachedExtensionsPath,
+  'Platform.getCacheDir': Platform.getCacheDir,
   'Platform.getConfigDir': Platform.getConfigDir,
   'Platform.getDataDir': Platform.getDataDir,
   'Platform.getDisabledExtensionsPath': Platform.getDisabledExtensionsPath,

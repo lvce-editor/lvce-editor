@@ -109,10 +109,6 @@ export const getModuleId = (commandId) => {
     case 'TestFrameWork.performKeyBoardAction':
     case 'TestFrameWork.showOverlay':
       return ModuleId.TestFrameWork
-    case 549:
-    case 550:
-    case 551:
-      return ModuleId.ViewService
     case 'Viewlet.appendViewlet':
     case 'Viewlet.dispose':
     case 'Viewlet.focus':
@@ -126,6 +122,10 @@ export const getModuleId = (commandId) => {
     case 'Viewlet.sendMultiple':
     case 'Viewlet.setBounds':
       return ModuleId.Viewlet
+    case 549:
+    case 550:
+    case 551:
+      return ModuleId.ViewService
     case 'WebStorage.clear':
     case 'WebStorage.getItem':
     case 'WebStorage.setItem':
