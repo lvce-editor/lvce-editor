@@ -487,9 +487,7 @@ export const focusIndex = async (state, index) => {
   const oldEditor = state.editors[oldActiveIndex]
   const oldId = ViewletMap.getId(oldEditor.uri)
   const oldInstance = ViewletStates.getInstance(oldId)
-  if (oldInstance && oldInstance.factory.hide) {
-    await oldInstance.factory.hide(oldInstance.state)
-  }
+
   const viewlet = ViewletManager.create(
     ViewletModule.load,
     id,
@@ -511,6 +509,10 @@ export const focusIndex = async (state, index) => {
   )
   // @ts-ignore
   await ViewletManager.load(viewlet)
+
+  if (oldInstance && oldInstance.factory.hide) {
+    await oldInstance.factory.hide(oldInstance.state)
+  }
   return state
 }
 
