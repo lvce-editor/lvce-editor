@@ -89,7 +89,6 @@ export const loadContent = async (state, savedState) => {
   const id = getId(idPart)
   const iframeSrc = getUrlFromSavedState(savedState)
   if (id) {
-    await ElectronBrowserViewFunctions.show(id)
     await ElectronBrowserViewFunctions.resizeBrowserView(
       id,
       top + headerHeight,
