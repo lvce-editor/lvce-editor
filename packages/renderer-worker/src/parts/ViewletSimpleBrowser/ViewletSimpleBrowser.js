@@ -37,13 +37,13 @@ const getFallThroughKeyBindings = (keyBindings) => {
 export const saveState = (state) => {
   const { iframeSrc } = state
   return {
-    url: iframeSrc,
+    iframeSrc,
   }
 }
 
 const getUrlFromSavedState = (savedState) => {
-  if (savedState && savedState.url) {
-    return savedState.url
+  if (savedState && savedState.iframeSrc) {
+    return savedState.iframeSrc
   }
   return 'https://example.com'
 }
@@ -71,6 +71,7 @@ export const backgroundLoadContent = async (state, savedState) => {
   return {
     title,
     uri: `simple-browser://${browserViewId}`,
+    iframeSrc,
   }
 }
 
@@ -82,6 +83,7 @@ const getId = (idPart) => {
 }
 
 export const loadContent = async (state, savedState) => {
+  console.log({ savedState })
   const { top, left, width, height, headerHeight, uri } = state
   const idPart = uri.slice('simple-browser://'.length)
   const id = getId(idPart)
@@ -94,6 +96,7 @@ export const loadContent = async (state, savedState) => {
       width,
       height - headerHeight
     )
+    console.log({ iframeSrc })
     return {
       ...state,
       iframeSrc,

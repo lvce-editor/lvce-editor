@@ -14,6 +14,7 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as BackgroundTabs from '../BackgroundTabs/BackgroundTabs.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -330,7 +331,9 @@ export const openBackgroundTab = async (state, initialUri, props) => {
     height,
     props,
   })
+
   state.editors.push({ uri })
+  BackgroundTabs.add(uri, { uri, title, ...props })
   await RendererProcess.invoke('Viewlet.send', 'Main', 'updateTab', 1, title)
   // TODO update tab title with new title
   return state
@@ -507,8 +510,17 @@ export const focusIndex = async (state, index) => {
     /* unFocusIndex */ oldActiveIndex,
     /* focusIndex */ state.activeIndex
   )
-  // @ts-ignore
-  await ViewletManager.load(viewlet)
+
+  if (BackgroundTabs.has(editor.uri)) {
+    console.log('has background true')
+    const props = BackgroundTabs.get(editor.uri)
+    // @ts-ignore
+    await ViewletManager.load(viewlet, false, false, props)
+  } else {
+    console.log('has background false')
+    // @ts-ignore
+    await ViewletManager.load(viewlet)
+  }
 
   if (oldInstance && oldInstance.factory.hide) {
     await oldInstance.factory.hide(oldInstance.state)
