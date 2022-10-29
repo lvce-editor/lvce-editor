@@ -54,7 +54,6 @@ exports.open = async () => {
     }
 
     const showContextMenu = (processId) => {
-      console.log({ processId })
       const template = [
         {
           label: 'Kill Process',
@@ -68,7 +67,6 @@ exports.open = async () => {
       menu.popup({
         window: processExplorerWindow,
       })
-      console.log('show context menu')
     }
 
     // TODO possible memory leak? browserWindowPort should be destroyed when Window is closed
