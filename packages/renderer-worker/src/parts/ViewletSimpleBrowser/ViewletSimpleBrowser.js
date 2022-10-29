@@ -42,7 +42,6 @@ export const saveState = (state) => {
 }
 
 const getUrlFromSavedState = (savedState) => {
-  console.log({ savedState })
   if (savedState && savedState.url) {
     return savedState.url
   }
@@ -84,7 +83,6 @@ const getId = (idPart) => {
 
 export const loadContent = async (state, savedState) => {
   const { top, left, width, height, headerHeight, uri } = state
-  console.log({ uri })
   const idPart = uri.slice('simple-browser://'.length)
   const id = getId(idPart)
   const iframeSrc = getUrlFromSavedState(savedState)
@@ -216,7 +214,6 @@ export const resizeEffect = async (state) => {
 export const dispose = async (state) => {
   const { browserViewId } = state
   await ElectronBrowserView.disposeBrowserView(browserViewId)
-  console.log('dispose browser view')
 }
 
 const renderIframeSrc = {
