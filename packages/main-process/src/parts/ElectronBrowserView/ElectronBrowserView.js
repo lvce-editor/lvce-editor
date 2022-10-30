@@ -4,6 +4,7 @@ const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
 const ElectronDispositionType = require('../ElectronDispositionType/ElectronDispositionType.js')
 const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js')
+const Assert = require('../Assert/Assert.js')
 
 const normalizeKey = (key) => {
   if (key === ' ') {
@@ -51,6 +52,12 @@ exports.createBrowserView = async (
   height,
   falltroughKeyBindings
 ) => {
+  Assert.number(restoreId)
+  Assert.number(top)
+  Assert.number(left)
+  Assert.number(width)
+  Assert.number(height)
+  Assert.array(falltroughKeyBindings)
   console.log('[main-process] create browser view', {
     restoreId,
     top,

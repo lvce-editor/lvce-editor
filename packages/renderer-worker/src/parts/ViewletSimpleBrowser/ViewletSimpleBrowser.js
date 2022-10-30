@@ -87,13 +87,16 @@ export const loadContent = async (state, savedState) => {
   const idPart = uri.slice('simple-browser://'.length)
   const id = getId(idPart)
   const iframeSrc = getUrlFromSavedState(savedState)
+  // TODO load keybindings in parallel with creating browserview
+  const keyBindings = await KeyBindings.getKeyBindings()
   if (id) {
     const actualId = await ElectronBrowserView.createBrowserView(
       id,
       top + headerHeight,
       left,
       width,
-      height - headerHeight
+      height - headerHeight,
+      keyBindings
     )
     if (id !== actualId) {
       await ElectronBrowserViewFunctions.setIframeSrc(actualId, iframeSrc)
@@ -105,8 +108,7 @@ export const loadContent = async (state, savedState) => {
       browserViewId: actualId,
     }
   }
-  // TODO load keybindings in parallel with creating browserview
-  const keyBindings = await KeyBindings.getKeyBindings()
+
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronBrowserView.createBrowserView(
     /* restoreId */ 0,

@@ -94,7 +94,8 @@ test('loadContent - restore id - same browser view', async () => {
     30,
     0,
     0,
-    -30
+    -30,
+    []
   )
   expect(ElectronBrowserViewFunctions.setIframeSrc).not.toHaveBeenCalled()
 })
@@ -116,7 +117,8 @@ test('loadContent - restore id - browser view does not exist yet', async () => {
     30,
     0,
     0,
-    -30
+    -30,
+    []
   )
   expect(ElectronBrowserViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
   expect(ElectronBrowserViewFunctions.setIframeSrc).toHaveBeenCalledWith(
