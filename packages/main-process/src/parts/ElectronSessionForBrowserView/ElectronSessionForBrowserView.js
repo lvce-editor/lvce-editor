@@ -3,6 +3,7 @@ const { VError } = require('verror')
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
 const FileSystem = require('../FileSystem/FileSystem.js')
+const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js')
 const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
 const FileSystemErrorCodes = require('../FileSystemErrorCodes/FileSystemErrorCodes.js')
 
@@ -113,10 +114,10 @@ exports.getSession = () => {
  */
 exports.handleWindowOpen = ({ url }) => {
   if (url === 'about:blank') {
-    return { action: 'allow' }
+    return { action: ElectronWindowOpenActionType.Allow }
   }
   console.info(`[main-process] blocked popup for ${url}`)
   return {
-    action: 'deny',
+    action: ElectronWindowOpenActionType.Deny,
   }
 }
