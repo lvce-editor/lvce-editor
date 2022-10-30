@@ -3,6 +3,7 @@ const { VError } = require('verror')
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
 const FileSystem = require('../FileSystem/FileSystem.js')
+const FileSystemErrorCodes = require('../FileSystemErrorCodes/FileSystemErrorCodes.js')
 
 const state = {
   /**
@@ -59,8 +60,7 @@ const getChromeExtensionPaths = async () => {
     return extensionsPaths
   } catch (error) {
     // @ts-ignore
-    if (error && error.code === 'ENOENT') {
-      console.log('enoent')
+    if (error && error.code === FileSystemErrorCodes.ENOENT) {
       return []
     }
     // @ts-ignore
