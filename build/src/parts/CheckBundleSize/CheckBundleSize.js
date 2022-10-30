@@ -2,6 +2,7 @@ import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Stat from '../Stat/Stat.js'
+import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
 
 const computeResults = async (budget) => {
   const commitHash = await CommitHash.getCommitHash()
@@ -19,7 +20,7 @@ const computeResults = async (budget) => {
         )
       } catch (error) {
         // @ts-ignore
-        if (error && error.code === 'ENOENT') {
+        if (error && error.code === FileSystemErrorCodes.ENOENT) {
           warnings.push(`key ${key} not found in ${group}`)
         } else {
           console.log(error)

@@ -4,6 +4,8 @@ const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
 const FileSystem = require('../FileSystem/FileSystem.js')
 const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js')
+const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
+const FileSystemErrorCodes = require('../FileSystemErrorCodes/FileSystemErrorCodes.js')
 
 const state = {
   /**
@@ -14,8 +16,8 @@ const state = {
 
 const isAllowedPermission = (permission) => {
   switch (permission) {
-    case 'clipboard-read':
-    case 'clipboard-sanitized-write':
+    case ElectronPermissionType.ClipBoardRead:
+    case ElectronPermissionType.ClipBoardSanitizedWrite:
       return true
     default:
       return false
@@ -60,8 +62,7 @@ const getChromeExtensionPaths = async () => {
     return extensionsPaths
   } catch (error) {
     // @ts-ignore
-    if (error && error.code === 'ENOENT') {
-      console.log('enoent')
+    if (error && error.code === FileSystemErrorCodes.ENOENT) {
       return []
     }
     // @ts-ignore
