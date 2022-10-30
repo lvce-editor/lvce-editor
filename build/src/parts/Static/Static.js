@@ -5,6 +5,7 @@ import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
+import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
@@ -13,7 +14,6 @@ import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
-import * as ReadJson from '../JsonFile/JsonFile.js'
 
 const copyJs = async ({ commitHash }) => {
   await Copy.copy({
@@ -405,7 +405,7 @@ const copyWebExtensions = async ({ commitHash, pathPrefix }) => {
       )
     } catch (error) {
       // @ts-ignore
-      if (error && error.code === 'ENOENT') {
+      if (error && error.code === FileSystemErrorCodes.ENOENT) {
         continue
       }
       throw error
