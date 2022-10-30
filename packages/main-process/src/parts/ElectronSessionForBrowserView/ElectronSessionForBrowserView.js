@@ -3,6 +3,7 @@ const { VError } = require('verror')
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
 const FileSystem = require('../FileSystem/FileSystem.js')
+const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
 const FileSystemErrorCodes = require('../FileSystemErrorCodes/FileSystemErrorCodes.js')
 
 const state = {
@@ -14,8 +15,8 @@ const state = {
 
 const isAllowedPermission = (permission) => {
   switch (permission) {
-    case 'clipboard-read':
-    case 'clipboard-sanitized-write':
+    case ElectronPermissionType.ClipBoardRead:
+    case ElectronPermissionType.ClipBoardSanitizedWrite:
       return true
     default:
       return false
