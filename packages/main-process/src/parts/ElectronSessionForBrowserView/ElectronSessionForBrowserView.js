@@ -3,6 +3,7 @@ const { VError } = require('verror')
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
 const FileSystem = require('../FileSystem/FileSystem.js')
+const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js')
 const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
 const FileSystemErrorCodes = require('../FileSystemErrorCodes/FileSystemErrorCodes.js')
 
@@ -120,7 +121,7 @@ exports.handleWindowOpen = ({
   postBody,
 }) => {
   if (url === 'about:blank') {
-    return { action: 'allow' }
+    return { action: ElectronWindowOpenActionType.Allow }
   }
   if (disposition === ElectronDispositionType.BackgroundTab) {
     // TODO open background tab
@@ -128,6 +129,6 @@ exports.handleWindowOpen = ({
   console.log({ disposition, features, frameName, referrer })
   console.info(`[main-process] blocked popup for ${url}`)
   return {
-    action: 'deny',
+    action: ElectronWindowOpenActionType.Deny,
   }
 }
