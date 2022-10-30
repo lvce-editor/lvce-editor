@@ -2,6 +2,7 @@ const ContentSecurityPolicy = require('../ContentSecurityPolicy/ContentSecurityP
 const CrossOriginEmbedderPolicy = require('../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js')
 const CrossOriginOpenerPolicy = require('../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js')
 const Electron = require('electron')
+const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
 const Root = require('../Root/Root.js')
@@ -53,8 +54,8 @@ const handleHeadersReceived = (details, callback) => {
 
 const isAllowedPermission = (permission) => {
   switch (permission) {
-    case 'clipboard-read':
-    case 'clipboard-sanitized-write':
+    case ElectronPermissionType.ClipBoardRead:
+    case ElectronPermissionType.ClipBoardSanitizedWrite:
       return true
     default:
       return false
