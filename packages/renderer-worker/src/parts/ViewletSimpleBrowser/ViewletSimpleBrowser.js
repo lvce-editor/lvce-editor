@@ -83,7 +83,6 @@ const getId = (idPart) => {
 }
 
 export const loadContent = async (state, savedState) => {
-  console.log({ savedState })
   const { top, left, width, height, headerHeight, uri } = state
   const idPart = uri.slice('simple-browser://'.length)
   const id = getId(idPart)
