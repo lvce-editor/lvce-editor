@@ -5,6 +5,7 @@ const util = require('util')
 const { VError } = require('verror')
 const Assert = require('../Assert/Assert.js')
 const ListProcessGetName = require('../ListProcessGetName/ListProcessGetName.js')
+const FileSystemErrorCodes = require('../FileSystemErrorCodes/FileSystemErrorCodes.js')
 
 const execFile = util.promisify(childProcess.execFile)
 
@@ -58,8 +59,13 @@ const getAccurateMemoryUsage = async (pid) => {
     try {
       content = await readFile(filePath, 'utf-8')
     } catch (error) {
-      // @ts-ignore
-      if (error && (error.code === 'ENOENT' || error.code === 'ESRCH')) {
+      if (
+        error &&
+        // @ts-ignore
+        (error.code === FileSystemErrorCodes.ENOENT ||
+          // @ts-ignore
+          error.code === FileSystemErrorCodes.ESRCH)
+      ) {
         return -1
       }
       throw error

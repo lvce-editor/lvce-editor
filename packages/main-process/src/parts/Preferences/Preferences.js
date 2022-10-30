@@ -1,5 +1,6 @@
 const Platform = require('../Platform/Platform.js')
 const JsonFile = require('../JsonFile/JsonFile.js')
+const FileSystemErrorCodes = require('../FileSystemErrorCodes/FileSystemErrorCodes.js')
 const { VError } = require('verror')
 
 const get = (options, key) => {
@@ -11,7 +12,7 @@ const readSettings = async (path) => {
     return await JsonFile.readJson(path)
   } catch (error) {
     // @ts-ignore
-    if (error && error.code === 'ENOENT') {
+    if (error && error.code === FileSystemErrorCodes.ENOENT) {
       return {}
     }
     // @ts-ignore
