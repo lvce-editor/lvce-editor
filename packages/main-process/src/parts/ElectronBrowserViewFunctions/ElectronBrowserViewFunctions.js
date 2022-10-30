@@ -5,11 +5,12 @@ const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBr
 
 exports.wrapBrowserViewCommand = (fn) => {
   const wrappedCommand = (id, ...args) => {
-    const { view } = ElectronBrowserViewState.get(id)
-    if (!view) {
-      console.log(`[main process] no view with id ${id}`)
+    const state = ElectronBrowserViewState.get(id)
+    if (!state) {
+      console.log(`[main process] no browser view with id ${id}`)
       return
     }
+    const { view } = state
     return fn(view, ...args)
   }
   return wrappedCommand

@@ -89,19 +89,21 @@ export const loadContent = async (state, savedState) => {
   const id = getId(idPart)
   const iframeSrc = getUrlFromSavedState(savedState)
   if (id) {
-    await ElectronBrowserView.createBrowserView(
+    const actualId = await ElectronBrowserView.createBrowserView(
       id,
       top + headerHeight,
       left,
       width,
       height - headerHeight
     )
-    console.log({ iframeSrc })
+    if (id !== actualId) {
+      await ElectronBrowserViewFunctions.setIframeSrc(actualId, iframeSrc)
+    }
     return {
       ...state,
       iframeSrc,
       title: 'Simple Browser',
-      browserViewId: id,
+      browserViewId: actualId,
     }
   }
   // TODO load keybindings in parallel with creating browserview

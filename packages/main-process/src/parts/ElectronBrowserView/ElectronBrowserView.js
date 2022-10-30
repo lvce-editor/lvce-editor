@@ -33,6 +33,16 @@ const getIdentifier = (input) => {
   return identifier
 }
 
+/**
+ *
+ * @param {number} restoreId
+ * @param {number} top
+ * @param {number} left
+ * @param {number} width
+ * @param {number} height
+ * @param {any[]} falltroughKeyBindings
+ * @returns
+ */
 exports.createBrowserView = async (
   restoreId,
   top,
@@ -41,14 +51,23 @@ exports.createBrowserView = async (
   height,
   falltroughKeyBindings
 ) => {
+  console.log('[main-process] create browser view', {
+    restoreId,
+    top,
+    left,
+    width,
+    height,
+  })
   const cached = ElectronBrowserViewState.get(restoreId)
   if (cached) {
+    console.log('[main-process] cached browser view', restoreId)
     return restoreId
   }
   const browserWindow = BrowserWindow.getFocusedWindow()
   if (!browserWindow) {
     return ElectronBrowserViewState.getAnyKey()
   }
+  console.log('[main-process] new browser view')
   const view = new BrowserView({
     webPreferences: {
       session: ElectronSessionForBrowserView.getSession(),
