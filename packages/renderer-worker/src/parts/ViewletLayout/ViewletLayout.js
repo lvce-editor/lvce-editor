@@ -11,6 +11,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as SashDirectionType from '../SashDirectionType/SashDirectionType.js'
 
 const kWindowWidth = 0
 const kWindowHeight = 1
@@ -890,7 +891,7 @@ const renderSashes = {
         left: sideBarLeft,
         width: 4,
         height: sideBarHeight,
-        direction: 'horizontal',
+        direction: SashDirectionType.Horizontal,
       },
       {
         id: 'SashPanel',
@@ -898,7 +899,7 @@ const renderSashes = {
         left: panelLeft,
         width: panelWidth,
         height: 4,
-        direction: 'vertical',
+        direction: SashDirectionType.Vertical,
       },
     ]
   },
