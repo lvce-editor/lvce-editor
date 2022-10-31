@@ -32,6 +32,9 @@ test('getName - detect chrome devtools', () => {
             },
           },
         },
+        getBrowserViews() {
+          return []
+        },
       },
     ]
   })
@@ -53,6 +56,9 @@ test('getName - detect renderer', () => {
           getOSProcessId() {
             return 200152
           },
+        },
+        getBrowserViews() {
+          return []
         },
       },
     ]
