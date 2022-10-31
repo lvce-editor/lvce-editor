@@ -8,7 +8,6 @@ export const findIndex = ($Container, $Target) => {
     $Target = $Target.parentNode
   }
   if (!$Target) {
-    // console.log('no target to find', $Target, event.target)
     return -1
   }
   for (let i = 0; i < $Container.children.length; i++) {

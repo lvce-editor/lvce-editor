@@ -98,7 +98,6 @@ test.skip('event - click on install', () => {
     },
   ])
   const { $ExtensionList } = state
-  console.log($ExtensionList.innerHTML)
   $ExtensionList.children[0]
     // @ts-ignore
     .querySelector('.ExtensionManage')

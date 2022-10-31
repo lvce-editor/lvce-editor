@@ -23,13 +23,11 @@ const handleEditorTabsContextMenu = (event) => {
 const handleMouseDown = (event) => {
   event.preventDefault()
   const $Target = event.target
-  console.log({ $Target })
   // TODO if middle click -> close tab
   // else if tab is not focused -> focus tab
   // else noop
   switch (event.button) {
     case MouseEventType.LeftClick:
-      console.log('left click')
       break
     case MouseEventType.MiddleClick:
       RendererWorker.send(/* Main.closeEditor */ 'Main.closeFocusedEditor')

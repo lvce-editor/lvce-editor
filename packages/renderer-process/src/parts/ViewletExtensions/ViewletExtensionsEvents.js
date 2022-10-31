@@ -150,9 +150,7 @@ export const handleIconError = (event) => {
   $Target.src = Icon.ExtensionDefaultIcon
 }
 
-export const handleScroll = (event) => {
-  console.log(event)
-}
+export const handleScroll = (event) => {}
 
 /**
  *

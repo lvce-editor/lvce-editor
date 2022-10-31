@@ -63,7 +63,6 @@ const handleMouseDown = (event) => {
 }
 
 // const handleKeyDown = (event) => {
-//   console.log({ key: event.key })
 //   switch (event.key) {
 //     case 'ArrowUp':
 //       RendererWorker.send( /* Menu.focusPrevious */ 7405)
@@ -116,7 +115,6 @@ const handleMouseEnter = (event) => {
 const handleMouseMove = (event) => {
   // const x = event.clientX
   // const y = event.clientY
-  // console.log('move', { x, y })
 }
 
 const handleMouseLeave = (event) => {
