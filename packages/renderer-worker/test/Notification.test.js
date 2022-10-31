@@ -20,7 +20,7 @@ const RendererProcess = await import(
 )
 const Notification = await import('../src/parts/Notification/Notification.js')
 
-test('create', async () => {
+test.skip('create', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await Notification.create('info', 'sample text')
