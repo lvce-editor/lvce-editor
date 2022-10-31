@@ -834,6 +834,7 @@ export const moveSideBar = (state, position) => {
   const { points } = state
   const newPoints = new Uint16Array(points)
   getPoints(newPoints, newPoints, position)
+  // TODO update preferences
   return {
     ...state,
     points: newPoints,
