@@ -363,8 +363,11 @@ export const handleDrop = async () => {
 }
 
 export const closeActiveEditor = (state) => {
-  if (!state.activeEditor) {
+  const { editors, activeIndex } = state
+  if (activeIndex === -1) {
+    return state
   }
+  return closeEditor(state, activeIndex)
 }
 
 const getId = (editor) => {
