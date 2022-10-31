@@ -130,6 +130,7 @@ export const getPoints = (
   destination,
   sideBarLocation = SideBarLocationType.Right
 ) => {
+  console.log({ sideBarLocation })
   const activityBarVisible = source[kActivityBarVisible]
   const panelVisible = source[kPanelVisible]
   const sideBarVisible = source[kSideBarVisible]
@@ -336,7 +337,7 @@ const getSavedPoints = (savedState) => {
 }
 
 export const loadContent = (state, savedState) => {
-  const { Layout, LocalStorage } = savedState
+  const { Layout } = savedState
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
@@ -828,6 +829,30 @@ const handleSashDoubleClickSideBar = (state) => {
     newState: state,
     commands: [],
   }
+}
+
+export const moveSideBar = (state, position) => {
+  const { points } = state
+  const newPoints = new Uint16Array(points)
+  getPoints(newPoints, newPoints, position)
+  // TODO update preferences
+  const resizeCommands = getResizeCommands(points, newPoints)
+  return {
+    newState: {
+      ...state,
+      points: newPoints,
+      sideBarLocation: position,
+    },
+    commands: resizeCommands,
+  }
+}
+
+export const moveSideBarLeft = (state) => {
+  return moveSideBar(state, SideBarLocationType.Left)
+}
+
+export const moveSideBarRight = (state) => {
+  return moveSideBar(state, SideBarLocationType.Right)
 }
 
 export const handleSashDoubleClick = (state, sashId) => {
