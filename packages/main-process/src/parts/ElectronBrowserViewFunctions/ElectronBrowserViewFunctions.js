@@ -109,7 +109,7 @@ exports.backward = (view) => {
 }
 
 exports.show = (id) => {
-  console.log('[main-process] show browser view', id)
+  // console.log('[main-process] show browser view', id)
   const state = ElectronBrowserViewState.get(id)
   if (!state) {
     console.log('[main-process] failed to show browser view', id)

@@ -45,14 +45,14 @@ exports.createBrowserView = async (restoreId, falltroughKeyBindings) => {
   Assert.array(falltroughKeyBindings)
   const cached = ElectronBrowserViewState.get(restoreId)
   if (cached) {
-    console.log('[main-process] cached browser view', restoreId)
+    // console.log('[main-process] cached browser view', restoreId)
     return restoreId
   }
   const browserWindow = BrowserWindow.getFocusedWindow()
   if (!browserWindow) {
     return ElectronBrowserViewState.getAnyKey()
   }
-  console.log('[main-process] new browser view')
+  // console.log('[main-process] new browser view')
   const view = new BrowserView({
     webPreferences: {
       session: ElectronSessionForBrowserView.getSession(),
@@ -61,7 +61,7 @@ exports.createBrowserView = async (restoreId, falltroughKeyBindings) => {
   view.setBackgroundColor('#fff')
   const { webContents } = view
   const { id } = webContents
-  console.log('[main process] create browser view', id)
+  // console.log('[main process] create browser view', id)
   ElectronBrowserViewState.add(id, browserWindow, view)
   const getPort = () => {
     const state = AppWindowStates.findById(browserWindow.webContents.id)
