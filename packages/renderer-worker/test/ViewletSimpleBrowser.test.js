@@ -23,6 +23,9 @@ jest.unstable_mockModule(
       setIframeSrc: jest.fn(() => {
         throw new Error('not implemented')
       }),
+      resizeBrowserView: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
     }
   }
 )
@@ -70,6 +73,8 @@ test('loadContent', async () => {
     return 1
   })
   // @ts-ignore
+  ElectronBrowserViewFunctions.resizeBrowserView.mockImplementation(() => {})
+  // @ts-ignore
   ElectronBrowserViewFunctions.setIframeSrc.mockImplementation(() => {})
   const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 0, 0)
   expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
@@ -89,14 +94,7 @@ test('loadContent - restore id - same browser view', async () => {
     iframeSrc: 'https://example.com',
   })
   expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledTimes(1)
-  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(
-    1,
-    30,
-    0,
-    0,
-    -30,
-    []
-  )
+  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(1, [])
   expect(ElectronBrowserViewFunctions.setIframeSrc).not.toHaveBeenCalled()
 })
 
@@ -112,14 +110,7 @@ test('loadContent - restore id - browser view does not exist yet', async () => {
     iframeSrc: 'https://example.com',
   })
   expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledTimes(1)
-  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(
-    1,
-    30,
-    0,
-    0,
-    -30,
-    []
-  )
+  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(1, [])
   expect(ElectronBrowserViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
   expect(ElectronBrowserViewFunctions.setIframeSrc).toHaveBeenCalledWith(
     2,

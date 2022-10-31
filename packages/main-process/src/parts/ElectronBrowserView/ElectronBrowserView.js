@@ -37,34 +37,12 @@ const getIdentifier = (input) => {
 /**
  *
  * @param {number} restoreId
- * @param {number} top
- * @param {number} left
- * @param {number} width
- * @param {number} height
  * @param {any[]} falltroughKeyBindings
  * @returns
  */
-exports.createBrowserView = async (
-  restoreId,
-  top,
-  left,
-  width,
-  height,
-  falltroughKeyBindings
-) => {
+exports.createBrowserView = async (restoreId, falltroughKeyBindings) => {
   Assert.number(restoreId)
-  Assert.number(top)
-  Assert.number(left)
-  Assert.number(width)
-  Assert.number(height)
   Assert.array(falltroughKeyBindings)
-  console.log('[main-process] create browser view', {
-    restoreId,
-    top,
-    left,
-    width,
-    height,
-  })
   const cached = ElectronBrowserViewState.get(restoreId)
   if (cached) {
     console.log('[main-process] cached browser view', restoreId)
@@ -204,7 +182,6 @@ exports.createBrowserView = async (
   webContents.on('destroyed', handleDestroyed)
   webContents.on('before-input-event', handleBeforeInput)
   webContents.setWindowOpenHandler(handleWindowOpen)
-  view.setBounds({ x: left, y: top, width, height })
   return id
 }
 

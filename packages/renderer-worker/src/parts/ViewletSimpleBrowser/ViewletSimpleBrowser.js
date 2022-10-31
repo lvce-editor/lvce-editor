@@ -58,11 +58,14 @@ export const backgroundLoadContent = async (state, savedState) => {
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronBrowserView.createBrowserView(
     0,
+    fallThroughKeyBindings
+  )
+  await ElectronBrowserViewFunctions.resizeBrowserView(
+    browserViewId,
     top + headerHeight,
     left,
     width,
-    height - headerHeight,
-    fallThroughKeyBindings
+    height - headerHeight
   )
   Assert.number(browserViewId)
   const title = await ElectronBrowserViewFunctions.setIframeSrc(
@@ -93,11 +96,14 @@ export const loadContent = async (state, savedState) => {
   if (id) {
     const actualId = await ElectronBrowserView.createBrowserView(
       id,
+      keyBindings
+    )
+    await ElectronBrowserViewFunctions.resizeBrowserView(
+      actualId,
       top + headerHeight,
       left,
       width,
-      height - headerHeight,
-      keyBindings
+      height - headerHeight
     )
     if (id !== actualId) {
       await ElectronBrowserViewFunctions.setIframeSrc(actualId, iframeSrc)
@@ -113,11 +119,14 @@ export const loadContent = async (state, savedState) => {
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronBrowserView.createBrowserView(
     /* restoreId */ 0,
+    fallThroughKeyBindings
+  )
+  await ElectronBrowserViewFunctions.resizeBrowserView(
+    browserViewId,
     top + headerHeight,
     left,
     width,
-    height - headerHeight,
-    fallThroughKeyBindings
+    height - headerHeight
   )
   Assert.number(browserViewId)
   await ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)

@@ -4,23 +4,12 @@ export const state = {
   openCount: 0,
 }
 
-export const createBrowserView = (
-  restoreId,
-  left,
-  top,
-  width,
-  height,
-  fallThroughKeyBindings
-) => {
+export const createBrowserView = (restoreId, fallThroughKeyBindings) => {
   console.trace('create browser view', restoreId)
   state.openCount++
   return ElectronProcess.invoke(
     'ElectronBrowserView.createBrowserView',
     restoreId,
-    left,
-    top,
-    width,
-    height,
     fallThroughKeyBindings
   )
 }
