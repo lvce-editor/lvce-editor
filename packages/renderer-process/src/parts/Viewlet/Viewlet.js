@@ -275,7 +275,7 @@ const append = (parentId, childId, referenceNodes) => {
   }
 }
 
-const appendToBody = (childId) => {
+export const appendToBody = (childId) => {
   const $Parent = document.body
   const childInstance = state.instances[childId]
   const $Child = childInstance.state.$Viewlet

@@ -38,6 +38,8 @@ export const Main = 'Main'
 
 export const Noop = 'Noop'
 
+export const Notification = 'Notification'
+
 export const Output = 'Output'
 
 export const Panel = 'Panel'

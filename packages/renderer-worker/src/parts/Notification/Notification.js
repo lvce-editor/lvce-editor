@@ -1,4 +1,5 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const state = {
   notifications: [],
@@ -6,11 +7,16 @@ export const state = {
 
 export const create = async (type, text) => {
   state.notifications.push({ type, text })
-  await RendererProcess.invoke(
-    /* Notification.create */ 'Notification.create',
-    /* type */ type,
-    /* text */ text
-  )
+  const commands = [
+    ['Viewlet.load', ViewletModuleId.Notification],
+    ['Viewlet.create', ViewletModuleId.Notification],
+    ['Viewlet.send', ViewletModuleId.Notification, 'setType', type],
+    ['Viewlet.send', ViewletModuleId.Notification, 'setText', text],
+    ['Viewlet.appendToBody', ViewletModuleId.Notification],
+  ]
+  for (const command of commands) {
+    await RendererProcess.invoke(...command)
+  }
 }
 
 export const showWithOptions = async (type, text, options) => {

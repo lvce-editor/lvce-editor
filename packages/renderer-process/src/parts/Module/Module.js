@@ -38,8 +38,6 @@ export const load = (moduleId) => {
       return import('../Location/Location.ipc.js')
     case ModuleId.Meta:
       return import('../Meta/Meta.ipc.js')
-    case ModuleId.Notification:
-      return import('../Notification/Notification.ipc.js')
     case ModuleId.Menu:
       return import('../OldMenu/Menu.ipc.js')
     case ModuleId.Open:
@@ -54,6 +52,8 @@ export const load = (moduleId) => {
       return import('../TestFrameWork/TestFrameWork.ipc.js')
     case ModuleId.Viewlet:
       return import('../Viewlet/Viewlet.ipc.js')
+    case ModuleId.Notification:
+      return import('../ViewletNotification/Notification.ipc.js')
     case ModuleId.WebStorage:
       return import('../WebStorage/WebStorage.ipc.js')
     case ModuleId.Window:

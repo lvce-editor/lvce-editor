@@ -84,10 +84,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Menu
     case 'Meta.setThemeColor':
       return ModuleId.Meta
-    case 'Notification.create':
-    case 'Notification.createWithOptions':
-    case 'Notification.dispose':
-      return ModuleId.Notification
     case 'Open.openUrl':
       return ModuleId.Open
     case 6661:
@@ -110,6 +106,7 @@ export const getModuleId = (commandId) => {
     case 'TestFrameWork.showOverlay':
       return ModuleId.TestFrameWork
     case 'Viewlet.appendViewlet':
+    case 'Viewlet.create':
     case 'Viewlet.dispose':
     case 'Viewlet.focus':
     case 'Viewlet.focusBody':

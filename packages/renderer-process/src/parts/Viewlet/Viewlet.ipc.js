@@ -1,7 +1,9 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
 
 export const Commands = {
+  'Viewlet.appendToBody': Viewlet.appendToBody,
   'Viewlet.appendViewlet': Viewlet.appendViewlet,
+  'Viewlet.create': Viewlet.create,
   'Viewlet.dispose': Viewlet.dispose,
   'Viewlet.executeCommands': Viewlet.executeCommands,
   'Viewlet.focus': Viewlet.focus,
