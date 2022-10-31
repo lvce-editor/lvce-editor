@@ -95,7 +95,7 @@ test('writeFiles - unsupported desktop', async () => {
   Exec.exec.mockImplementation(async () => {
     return { stdout: '', stderr: '' }
   })
-  const consoleSpy = jest.spyOn(console, 'info')
+  const consoleSpy = jest.spyOn(console, 'info').mockImplementation(() => {})
   await ClipBoard.writeFiles('copy', ['/test/my-folder'])
   expect(Exec.exec).not.toHaveBeenCalled()
   expect(consoleSpy).toHaveBeenCalledTimes(1)
