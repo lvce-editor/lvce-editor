@@ -76,7 +76,6 @@ const addSessionChromeExtensions = async (session) => {
     for (const chromeExtensionPath of chromeExtensionsPaths) {
       await loadExtension(session, chromeExtensionPath)
     }
-    console.log({ chromeExtensionsPaths })
   } catch (error) {
     console.error(error)
   }

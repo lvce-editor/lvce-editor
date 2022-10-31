@@ -84,12 +84,17 @@ const getAccurateMemoryUsage = async (pid) => {
 }
 
 const getPsOutput = async () => {
-  const { stdout } = await execFile('ps', [
-    '-ax',
-    '-o',
-    'pid=,ppid=,pcpu=,pmem=,command=',
-  ])
-  return stdout.trim()
+  try {
+    const { stdout } = await execFile('ps', [
+      '-ax',
+      '-o',
+      'pid=,ppid=,pcpu=,pmem=,command=',
+    ])
+    return stdout.trim()
+  } catch (error) {
+    // @ts-ignore
+    throw new VError(error, `Failed to execute ps`)
+  }
 }
 
 const addAccurateMemoryUsage = async (process) => {
