@@ -1,5 +1,6 @@
 import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.js'
+import * as BackgroundTabs from '../BackgroundTabs/BackgroundTabs.js'
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
@@ -14,7 +15,6 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as BackgroundTabs from '../BackgroundTabs/BackgroundTabs.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -182,9 +182,11 @@ export const loadContent = (state, savedState) => {
   const editors = getRestoredEditors(savedState)
   // @ts-ignore
   LifeCycle.once(LifeCyclePhase.Twelve, hydrateLazy)
+  const activeIndex = editors.length > 0 ? 0 : -1
   return {
     ...state,
     editors,
+    activeIndex,
   }
 }
 
@@ -488,8 +490,7 @@ export const handleTabContextMenu = async (state, index, x, y) => {
 
 export const focusIndex = async (state, index) => {
   if (index === state.activeIndex) {
-    console.log('index', index, 'is already active index')
-    return
+    return state
   }
   const oldActiveIndex = state.activeIndex
   state.activeIndex = index
