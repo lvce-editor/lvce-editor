@@ -4,20 +4,13 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/Notification/Notification.js', () => {
+  return {
+    create: jest.fn(() => {}),
   }
-)
+})
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
+const Notification = await import('../src/parts/Notification/Notification.js')
 const ErrorHandling = await import(
   '../src/parts/ErrorHandling/ErrorHandling.js'
 )
@@ -25,32 +18,19 @@ const ErrorHandling = await import(
 test('handleError - normal error', async () => {
   const mockError = new Error('oops')
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-
   await ErrorHandling.handleError(mockError)
   expect(spy).toHaveBeenCalledWith(mockError)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Notification.create */ 'Notification.create',
-    'error',
-    'Error: oops'
-  )
+  expect(Notification.create).toHaveBeenCalledTimes(1)
+  expect(Notification.create).toHaveBeenCalledWith('error', 'Error: oops')
 })
 
 test('handleError - null', async () => {
   const mockError = null
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
   await ErrorHandling.handleError(mockError)
   expect(spy).toHaveBeenCalledWith(mockError)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Notification.create */ 'Notification.create',
-    'error',
-    'Error: null'
-  )
+  expect(Notification.create).toHaveBeenCalledTimes(1)
+  expect(Notification.create).toHaveBeenCalledWith('error', 'Error: null')
 })
 
 test('handleError - multiple causes', async () => {
@@ -66,14 +46,11 @@ test('handleError - multiple causes', async () => {
     cause: mockError2,
   })
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
   await ErrorHandling.handleError(mockError3)
   expect(spy).toHaveBeenCalledWith(mockError3)
   expect(spy).toHaveBeenCalledWith(mockError2)
   expect(spy).toHaveBeenCalledWith(mockError1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    /* Notification.create */ 'Notification.create',
+  expect(Notification.create).toHaveBeenCalledWith(
     'error',
     'Error: Failed to load keybindings: Error: Failed to load url /keyBindings.json: Error: SyntaxError: Unexpected token , in JSON at position 7743'
   )
