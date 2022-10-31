@@ -1,5 +1,5 @@
 import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
 
 export const exit = async () => {
-  return ElectronProcess.invoke('App.exit')
+  await ElectronProcess.invoke('App.exit')
 }
