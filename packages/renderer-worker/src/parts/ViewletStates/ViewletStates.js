@@ -41,6 +41,9 @@ export const getAllInstances = () => {
 
 export const getState = (key) => {
   const instance = getInstance(key)
+  if (!instance) {
+    throw new Error(`instance not found ${key}`)
+  }
   return instance.state
 }
 

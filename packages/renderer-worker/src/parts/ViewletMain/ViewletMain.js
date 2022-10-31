@@ -310,6 +310,9 @@ export const openUri = async (state, uri, focus = true) => {
   )
   // @ts-ignore
   await ViewletManager.load(instance, focus)
+  if (!ViewletStates.hasInstance(id)) {
+    return state
+  }
   const actualUri = ViewletStates.getState(id).uri
   const index = state.editors.findIndex((editor) => editor.uri === temporaryUri)
   state.editors[index].uri = actualUri
