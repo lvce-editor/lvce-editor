@@ -235,10 +235,10 @@ export const getModuleId = (commandId) => {
     case 'Url.revokeObjectUrl':
       return ModuleId.Url
     case 'Viewlet.closeWidget':
+    case 'Viewlet.executeViewletCommand':
     case 'Viewlet.focus':
     case 'Viewlet.getAllStates':
     case 'Viewlet.openWidget':
-    case 'Viewlet.executeViewletCommand':
     case 2133:
       return ModuleId.Viewlet
     case 'Window.close':

@@ -2,9 +2,8 @@ import * as ViewletLayout from './ViewletLayout.js'
 
 // prettier-ignore
 export const Commands = {
+
   'Layout.handleSashPointerDown': ViewletLayout.handleSashPointerDown,
-  'Layout.moveSideBarLeft': ViewletLayout.moveSideBarLeft,
-  'Layout.moveSideBarRight': ViewletLayout.moveSideBarRight,
 }
 
 export const CommandsWithSideEffects = {
@@ -35,6 +34,8 @@ export const CommandsWithSideEffects = {
   'Layout.toggleSideBar': ViewletLayout.toggleSideBar,
   'Layout.toggleStatusBar': ViewletLayout.toggleStatusBar,
   'Layout.toggleTitleBar': ViewletLayout.toggleTitleBar,
+  'Layout.moveSideBarLeft': ViewletLayout.moveSideBarLeft,
+  'Layout.moveSideBarRight': ViewletLayout.moveSideBarRight,
 }
 
 export * from './ViewletLayout.js'

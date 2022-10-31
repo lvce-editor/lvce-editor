@@ -336,7 +336,7 @@ const getSavedPoints = (savedState) => {
 }
 
 export const loadContent = (state, savedState) => {
-  const { Layout, LocalStorage } = savedState
+  const { Layout } = savedState
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
@@ -835,10 +835,14 @@ export const moveSideBar = (state, position) => {
   const newPoints = new Uint16Array(points)
   getPoints(newPoints, newPoints, position)
   // TODO update preferences
+  const resizeCommands = getResizeCommands(points, newPoints)
   return {
-    ...state,
-    points: newPoints,
-    SideBarLocation: position,
+    newState: {
+      ...state,
+      points: newPoints,
+      sideBarLocation: position,
+    },
+    commands: resizeCommands,
   }
 }
 
