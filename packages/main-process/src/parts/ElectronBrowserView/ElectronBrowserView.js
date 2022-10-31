@@ -124,8 +124,6 @@ exports.createBrowserView = async (restoreId, falltroughKeyBindings) => {
     for (const fallThroughKeyBinding of falltroughKeyBindings) {
       if (fallThroughKeyBinding.key === identifier) {
         event.preventDefault()
-        console.log({ identifier, fallThroughKeyBinding })
-        console.log('post message to port')
         port.postMessage({
           jsonrpc: '2.0',
           method: fallThroughKeyBinding.command,

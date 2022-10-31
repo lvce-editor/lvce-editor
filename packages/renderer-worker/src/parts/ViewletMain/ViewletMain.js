@@ -511,6 +511,8 @@ export const focusIndex = async (state, index) => {
 
   if (oldInstance && oldInstance.factory.hide) {
     await oldInstance.factory.hide(oldInstance.state)
+    console.log({ oldInstance })
+    BackgroundTabs.add(oldInstance.state.uri, oldInstance.state)
   }
   return state
 }
