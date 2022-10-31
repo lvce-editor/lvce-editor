@@ -49,3 +49,15 @@ export const fromAsync = async (asyncIterable) => {
   }
   return children
 }
+
+export const toSpliced = (array, index, deleteCount, ...inserted) => {
+  return [
+    ...array.slice(0, index),
+    ...inserted,
+    ...array.slice(index + deleteCount),
+  ]
+}
+
+export const removeIndex = (array, index) => {
+  return toSpliced(array, index, 1)
+}

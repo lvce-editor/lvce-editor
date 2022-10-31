@@ -1,6 +1,25 @@
 import * as EditorGroup from '../EditorGroup/EditorGroup.js'
 import * as ViewletMainEvents from './ViewletMainEvents.js'
 
+const create$Tab = (label, title) => {
+  const $TabLabel = document.createElement('div')
+  $TabLabel.className = 'Label'
+  $TabLabel.textContent = label
+
+  const $TabCloseButton = document.createElement('button')
+  $TabCloseButton.className = 'EditorTabCloseButton'
+  $TabCloseButton.ariaLabel = 'Close'
+  $TabCloseButton.title = ''
+
+  const $Tab = document.createElement('div')
+  $Tab.title = title
+  $Tab.ariaSelected = 'false '
+  // @ts-ignore
+  $Tab.role = 'tab'
+  $Tab.className = 'MainTab'
+  $Tab.append($TabLabel, $TabCloseButton)
+}
+
 const create$MainTabs = () => {
   const $MainTabs = document.createElement('div')
   $MainTabs.className = 'MainTabs'
@@ -39,6 +58,18 @@ export const create = () => {
     $MainTabs: undefined,
   }
 }
+
+export const setTabs = (state, tabs) => {
+  const { $MainTabs } = state
+  if (tabs.length === 0) {
+    $MainTabs.remove()
+  } else {
+  }
+}
+
+export const setFocusedIndex = (state, oldIndex, newIndex) => {}
+
+export const setSelectedIndex = (state, oldIndex, newIndex) => {}
 
 export const dispose = (state) => {
   console.log(state)
