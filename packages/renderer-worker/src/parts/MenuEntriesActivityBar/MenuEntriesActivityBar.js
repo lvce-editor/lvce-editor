@@ -1,10 +1,15 @@
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
+/**
+ * @enum {string}
+ */
 export const UiStrings = {
   Seperator: 'Separator',
   MoveSideBarLeft: 'Move Side Bar Left',
+  MoveSideBarRight: 'Move Side Bar Right',
   HideActivityBar: 'Hide Activity Bar',
 }
 
@@ -18,9 +23,30 @@ const toContextMenuItem = (activityBarItem) => {
   }
 }
 
-export const getMenuEntries = async () => {
-  const activityBarItems =
-    ViewletStates.getState('ActivityBar').activityBarItems
+const menuEntryMoveSideBar = (sideBarLocation) => {
+  switch (sideBarLocation) {
+    case SideBarLocationType.Left:
+      return {
+        id: 'moveSideBarRight',
+        label: I18nString.i18nString(UiStrings.MoveSideBarRight),
+        flags: MenuItemFlags.None,
+        command: 'Layout.moveSideBarRight',
+      }
+    case SideBarLocationType.Right:
+      return {
+        id: 'moveSideBarLeft',
+        label: I18nString.i18nString(UiStrings.MoveSideBarLeft),
+        flags: MenuItemFlags.None,
+        command: 'Layout.moveSideBarLeft',
+      }
+    default:
+      throw new Error('unexpected side bar location')
+  }
+}
+
+export const getMenuEntries = async (layoutState, activityBarState) => {
+  const { activityBarItems } = activityBarState
+  const { sideBarLocation } = layoutState
   return [
     ...activityBarItems.map(toContextMenuItem),
     {
@@ -28,12 +54,7 @@ export const getMenuEntries = async () => {
       label: I18nString.i18nString(UiStrings.Seperator),
       flags: MenuItemFlags.Separator,
     },
-    {
-      id: 'moveSideBarLeft',
-      label: I18nString.i18nString(UiStrings.MoveSideBarLeft), // TODO should be dynamic
-      flags: MenuItemFlags.None,
-      command: /* TODO */ -1,
-    },
+    menuEntryMoveSideBar(sideBarLocation),
     {
       id: 'hideActivityBar',
       label: I18nString.i18nString(UiStrings.HideActivityBar),
@@ -42,3 +63,5 @@ export const getMenuEntries = async () => {
     },
   ]
 }
+
+export const inject = [ViewletModuleId.Layout, ViewletModuleId.ActivityBar]

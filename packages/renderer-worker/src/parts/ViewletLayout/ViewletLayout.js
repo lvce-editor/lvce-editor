@@ -129,6 +129,7 @@ export const getPoints = (
   destination,
   sideBarLocation = SideBarLocationType.Right
 ) => {
+  console.log({ sideBarLocation })
   const activityBarVisible = source[kActivityBarVisible]
   const panelVisible = source[kPanelVisible]
   const sideBarVisible = source[kSideBarVisible]
@@ -827,6 +828,25 @@ const handleSashDoubleClickSideBar = (state) => {
     newState: state,
     commands: [],
   }
+}
+
+export const moveSideBar = (state, position) => {
+  const { points } = state
+  const newPoints = new Uint16Array(points)
+  getPoints(newPoints, newPoints, position)
+  return {
+    ...state,
+    points: newPoints,
+    SideBarLocation: position,
+  }
+}
+
+export const moveSideBarLeft = (state) => {
+  return moveSideBar(state, SideBarLocationType.Left)
+}
+
+export const moveSideBarRight = (state) => {
+  return moveSideBar(state, SideBarLocationType.Right)
 }
 
 export const handleSashDoubleClick = (state, sashId) => {

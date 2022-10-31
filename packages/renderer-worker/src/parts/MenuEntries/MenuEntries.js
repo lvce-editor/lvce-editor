@@ -1,4 +1,5 @@
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 // prettier-ignore
 const getModule = (id) => {
@@ -50,5 +51,8 @@ const getModule = (id) => {
 
 export const getMenuEntries = async (id) => {
   const module = await getModule(id)
-  return module.getMenuEntries()
+  // @ts-ignore
+  const inject = module.inject || []
+  const viewletStates = inject.map(ViewletStates.getState)
+  return module.getMenuEntries(...viewletStates)
 }
