@@ -416,6 +416,7 @@ export const closeAllEditors = async (state) => {
   for (const id of ids) {
     await ViewletStates.dispose(id)
   }
+  return state
 }
 
 export const dispose = () => {}
@@ -424,8 +425,7 @@ export const closeEditor = async (state, index) => {
   console.log('close', index, 'of', state.editors)
   if (state.editors.length === 1) {
     console.log('close all')
-    closeAllEditors(state)
-    return
+    return closeAllEditors(state)
   }
   const top = state.top
   const left = state.left
@@ -457,7 +457,7 @@ export const closeEditor = async (state, index) => {
       /* closeIndex */ oldActiveIndex,
       /* focusIndex */ newActiveIndex
     )
-    return
+    return state
   }
   await RendererProcess.invoke(
     /* Viewlet.send */ 'Viewlet.send',
@@ -475,7 +475,7 @@ export const closeEditor = async (state, index) => {
 }
 
 export const closeFocusedTab = (state) => {
-  closeEditor(state.focusedIndex)
+  return closeEditor(state.focusedIndex)
 }
 
 export const handleTabContextMenu = async (state, index, x, y) => {
