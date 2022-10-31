@@ -60,38 +60,7 @@ const getMainEditors = (state) => {
     return []
   }
   // TODO check that type is string (else runtime error occurs and page is blank)
-  return editors.filter(canBeRestored).slice(-1)
-}
-
-const restoreEditors = async (state) => {
-  // // TODO have mapping that loads custom editor module on demand
-  // // file:// -> import text editor
-  // // perf://startup-performance -> show startup performance
-  // // perf://memory-usage -> show memory usage
-  // // svg://my-file.svg -> show svg
-  // // image://my-image.png -> show image
-  // // video://my-video.png -> show video
-  // // also editor title can be shown while content is still loading
-  // if (restoredEditor.uri.startsWith('perf://')) {
-  //   Command.execute(/* Developer.openPerf */ 820)
-  //   return
-  // }
-  // @ts-ignore
-  await openUri(state, restoredEditor.uri)
-}
-
-const handleTokenizeChange = (languageId) => {
-  // @ts-ignore
-
-  const instances = ViewletState.getAllInstances()
-  if (instances.EditorText) {
-    const instance = instances.EditorText
-  }
-  // for (const editor of state.editors) {
-  //   if (editor.languageId === languageId) {
-  //     Editor.handleTokenizeChange(editor)
-  //   }
-  // }
+  return editors.filter(canBeRestored)
 }
 
 const hydrateLazy = async () => {
