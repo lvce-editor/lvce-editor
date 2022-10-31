@@ -11,7 +11,7 @@ test('create', () => {
 
 test('setText', () => {
   const state = ViewletNotification.create()
-  ViewletNotification.setText(state, 'test into')
+  ViewletNotification.setText(state, 'test info')
   const { $Viewlet } = state
   expect($Viewlet.textContent).toBe('test info')
 })
