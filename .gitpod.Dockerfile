@@ -1,9 +1,11 @@
-FROM gitpod/workspace-full:latest
+FROM gitpod/workspace-full-vnc:latest
 
 # Install Electron dependencies
 RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        libgtk-3-0
-
+        libgtk-3-0 \
+        libnss3 \
+        libasound2 \
+        libgbm1
 
 # Install playwright dependencies
 RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
