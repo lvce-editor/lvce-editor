@@ -1,4 +1,7 @@
 const isValidHttpUrl = (string) => {
+  if (!string.startsWith('http:') && !string.startsWith('https:')) {
+    return false
+  }
   try {
     const url = new URL(string)
     return url.protocol === 'http:' || url.protocol === 'https:'

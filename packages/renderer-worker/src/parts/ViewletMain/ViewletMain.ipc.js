@@ -16,6 +16,7 @@ export const Commands = {
   'Main.handleDrop': ViewletMain.handleDrop,
   'Main.handleTabClick': ViewletMain.handleTabClick,
   'Main.handleTabContextMenu': ViewletMain.handleTabContextMenu,
+  'Main.openBackgroundTab': ViewletMain.openBackgroundTab,
   'Main.openUri': ViewletMain.openUri,
   'Main.save': ViewletMain.save,
   // 'Main.hydrate': ViewletMain.hydrate,

@@ -273,3 +273,37 @@ export const closeWidget = async (id) => {
   )
   // TODO restore focus
 }
+
+export const executeViewletCommand = async (
+  moduleId,
+  uidKey,
+  uidValue,
+  fnName,
+  ...args
+) => {
+  const instances = ViewletStates.state.instances
+  for (const instance of Object.values(instances)) {
+    if (
+      instance.factory.name === moduleId &&
+      instance.state[uidKey] === uidValue
+    ) {
+      const fn = instance.factory[fnName]
+      if (!fn) {
+        throw new Error(`Command not found ${moduleId}.${fnName}`)
+      }
+      const oldState = instance.state
+      const newState = await fn(oldState, ...args)
+      const commands = ViewletManager.render(
+        instance.factory,
+        oldState,
+        newState
+      )
+      ViewletStates.setState(moduleId, newState)
+      await RendererProcess.invoke(
+        /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
+        /* commands */ commands
+      )
+      return
+    }
+  }
+}

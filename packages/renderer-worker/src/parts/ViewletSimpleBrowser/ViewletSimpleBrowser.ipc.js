@@ -3,6 +3,7 @@ import * as LazyCommand from '../LazyCommand/LazyCommand.js'
 
 const Imports = {
   OpenExternal: () => import('./ViewletSimpleBrowserOpenExternal.js'),
+  OpenBackgroundTab: () => import('./ViewletSimpleBrowserOpenBackgroundTab.js'),
 }
 
 // prettier-ignore
@@ -13,6 +14,7 @@ export const Commands = {
   'SimpleBrowser.handleInput': SimpleBrowser.handleInput,
   'SimpleBrowser.handleTitleUpdated': SimpleBrowser.handleTitleUpdated,
   'SimpleBrowser.handleWillNavigate': SimpleBrowser.handleWillNavigate,
+  'SimpleBrowser.openBackgroundTab': LazyCommand.create(SimpleBrowser.name, Imports.OpenBackgroundTab, 'openBackgroundTab'),
   'SimpleBrowser.openDevtools': SimpleBrowser.openDevtools,
   'SimpleBrowser.openExternal': LazyCommand.create(SimpleBrowser.name, Imports.OpenExternal, 'openExternal'),
   'SimpleBrowser.reload': SimpleBrowser.reload,

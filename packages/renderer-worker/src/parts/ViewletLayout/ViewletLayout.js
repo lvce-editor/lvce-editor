@@ -335,7 +335,6 @@ const getSavedPoints = (savedState) => {
 }
 
 export const loadContent = (state, savedState) => {
-  console.log({ savedState })
   const { Layout, LocalStorage } = savedState
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds

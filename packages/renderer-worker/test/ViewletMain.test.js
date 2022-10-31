@@ -65,7 +65,7 @@ test('loadContent - one restored editor', async () => {
       ],
     })
   ).toEqual({
-    activeIndex: -1,
+    activeIndex: 0,
     editors: [
       {
         uri: '/test/some-file.txt',

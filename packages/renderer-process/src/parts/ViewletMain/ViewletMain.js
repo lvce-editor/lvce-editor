@@ -91,7 +91,13 @@ export const focus = () => {
   console.log('todo focus main')
 }
 
-export const openViewlet = (state, tabLabel, tabTitle, oldActiveIndex) => {
+export const openViewlet = (
+  state,
+  tabLabel,
+  tabTitle,
+  oldActiveIndex,
+  background = false
+) => {
   const $TabLabel = document.createElement('div')
   $TabLabel.className = 'Label'
   $TabLabel.textContent = tabLabel
@@ -103,7 +109,9 @@ export const openViewlet = (state, tabLabel, tabTitle, oldActiveIndex) => {
 
   const $Tab = document.createElement('div')
   $Tab.title = tabTitle
-  $Tab.ariaSelected = 'true'
+  if (!background) {
+    $Tab.ariaSelected = 'true'
+  }
   // @ts-ignore
   $Tab.role = 'tab'
   $Tab.className = 'MainTab'
@@ -232,5 +240,6 @@ export const updateTab = (state, index, text) => {
   const { $MainTabs } = state
   const $Tab = $MainTabs.children[index]
   const $TabLabel = $Tab.firstChild
+  $Tab.title = text
   $TabLabel.textContent = text
 }

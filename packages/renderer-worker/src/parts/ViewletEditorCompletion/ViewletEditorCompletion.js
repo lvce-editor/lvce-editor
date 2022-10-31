@@ -79,7 +79,6 @@ export const handleError = async (error) => {
 
 export const loadingContent = () => {
   const editor = getEditor()
-  console.log('show loading')
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]
   const x = EditorPosition.x(editor, rowIndex, columnIndex)

@@ -34,17 +34,99 @@ const getFallThroughKeyBindings = (keyBindings) => {
   return keyBindings.filter(isFallThroughKeyBinding)
 }
 
-export const loadContent = async (state) => {
+export const saveState = (state) => {
+  const { iframeSrc } = state
+  return {
+    iframeSrc,
+  }
+}
+
+const getUrlFromSavedState = (savedState) => {
+  if (savedState && savedState.iframeSrc) {
+    return savedState.iframeSrc
+  }
+  return 'https://example.com'
+}
+
+export const backgroundLoadContent = async (state, savedState) => {
+  // TODO duplicate code with loadContent
   const { top, left, width, height, headerHeight } = state
-  const iframeSrc = 'https://example.com'
+  const iframeSrc = getUrlFromSavedState(savedState)
+  // TODO since browser view is not visible at this point
+  // it is not necessary to load keybindings for it
   const keyBindings = await KeyBindings.getKeyBindings()
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronBrowserView.createBrowserView(
+    0,
+    fallThroughKeyBindings
+  )
+  await ElectronBrowserViewFunctions.resizeBrowserView(
+    browserViewId,
     top + headerHeight,
     left,
     width,
-    height - headerHeight,
+    height - headerHeight
+  )
+  Assert.number(browserViewId)
+  const title = await ElectronBrowserViewFunctions.setIframeSrc(
+    browserViewId,
+    iframeSrc
+  )
+  return {
+    title,
+    uri: `simple-browser://${browserViewId}`,
+    iframeSrc,
+  }
+}
+
+const getId = (idPart) => {
+  if (!idPart) {
+    return 0
+  }
+  return parseInt(idPart)
+}
+
+export const loadContent = async (state, savedState) => {
+  const { top, left, width, height, headerHeight, uri } = state
+  const idPart = uri.slice('simple-browser://'.length)
+  const id = getId(idPart)
+  const iframeSrc = getUrlFromSavedState(savedState)
+  // TODO load keybindings in parallel with creating browserview
+  const keyBindings = await KeyBindings.getKeyBindings()
+  if (id) {
+    const actualId = await ElectronBrowserView.createBrowserView(
+      id,
+      keyBindings
+    )
+    await ElectronBrowserViewFunctions.resizeBrowserView(
+      actualId,
+      top + headerHeight,
+      left,
+      width,
+      height - headerHeight
+    )
+    if (id !== actualId) {
+      await ElectronBrowserViewFunctions.setIframeSrc(actualId, iframeSrc)
+    }
+    return {
+      ...state,
+      iframeSrc,
+      title: 'Simple Browser',
+      browserViewId: actualId,
+    }
+  }
+
+  const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
+  const browserViewId = await ElectronBrowserView.createBrowserView(
+    /* restoreId */ 0,
     fallThroughKeyBindings
+  )
+  await ElectronBrowserViewFunctions.resizeBrowserView(
+    browserViewId,
+    top + headerHeight,
+    left,
+    width,
+    height - headerHeight
   )
   Assert.number(browserViewId)
   await ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)
@@ -53,7 +135,18 @@ export const loadContent = async (state) => {
     iframeSrc,
     title: 'Simple Browser',
     browserViewId,
+    uri: `simple-browser://${browserViewId}`,
   }
+}
+
+export const show = async (state) => {
+  const { browserViewId } = state
+  await ElectronBrowserViewFunctions.show(browserViewId)
+}
+
+export const hide = async (state) => {
+  const { browserViewId } = state
+  await ElectronBrowserViewFunctions.hide(browserViewId)
 }
 
 export const handleInput = (state, value) => {
@@ -136,8 +229,8 @@ export const resizeEffect = async (state) => {
 }
 
 export const dispose = async (state) => {
-  await ElectronBrowserView.disposeBrowserView()
-  console.log('dispose browser view')
+  const { browserViewId } = state
+  await ElectronBrowserView.disposeBrowserView(browserViewId)
 }
 
 const renderIframeSrc = {

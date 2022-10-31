@@ -111,10 +111,21 @@ exports.getSession = () => {
  * @type {(details: Electron.HandlerDetails) => ({action: 'deny'}) | ({action: 'allow', overrideBrowserWindowOptions?: Electron.BrowserWindowConstructorOptions})} param0
  * @returns
  */
-exports.handleWindowOpen = ({ url }) => {
+exports.handleWindowOpen = ({
+  url,
+  disposition,
+  features,
+  frameName,
+  referrer,
+  postBody,
+}) => {
   if (url === 'about:blank') {
     return { action: ElectronWindowOpenActionType.Allow }
   }
+  if (disposition === ElectronDispositionType.BackgroundTab) {
+    // TODO open background tab
+  }
+  console.log({ disposition, features, frameName, referrer })
   console.info(`[main-process] blocked popup for ${url}`)
   return {
     action: ElectronWindowOpenActionType.Deny,
