@@ -303,7 +303,6 @@ export const load = async (
       (viewlet.visible === undefined || viewlet.visible === true) &&
       module.show
     ) {
-      console.log('show', viewlet.id, viewlet)
       await module.show(newState)
     }
     const extraCommands = []
