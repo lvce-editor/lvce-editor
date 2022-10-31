@@ -1,5 +1,14 @@
 FROM gitpod/workspace-full:latest
 
+# Install Electron dependencies
+RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
+        libgtk-3-dev \
+        libx11-dev \
+        libxkbfile-dev \
+        libsecret-1-dev \
+        libgconf2–4 \
+        libnss3
+
 # Install playwright dependencies
 RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
         libnss3 \
