@@ -328,7 +328,9 @@ export const openBackgroundTab = async (state, initialUri, props) => {
     /* id */ ViewletModuleId.Main,
     /* method */ 'openViewlet',
     /* tabLabel */ tabLabel,
-    /* tabTitle */ tabTitle
+    /* tabTitle */ tabTitle,
+    /* oldActiveIndex */ -1,
+    /* background */ true
   )
   const top = state.top + TAB_HEIGHT
   const left = state.left
