@@ -35,3 +35,13 @@ test('british url', () => {
     'https://example.co.uk'
   )
 })
+
+test('file url', () => {
+  expect(IframeSrc.toIframeSrc('file:///test/file.txt')).toBe(
+    'file:///test/file.txt'
+  )
+})
+
+test('file path', () => {
+  expect(IframeSrc.toIframeSrc('/test/file.txt')).toBe('file:///test/file.txt')
+})

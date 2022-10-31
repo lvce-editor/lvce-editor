@@ -27,9 +27,20 @@ const createSearchUrl = (input) => {
   return createSearchUrlWithGoogle(input)
 }
 
+const isValidFileUrl = (input) => {
+  return input.startsWith('file://')
+}
+
+const isValidFilePath = (input) => {
+  return input.startsWith('/')
+}
+
 export const toIframeSrc = (input) => {
-  if (isValidHttpUrl(input)) {
+  if (isValidHttpUrl(input) || isValidFileUrl(input)) {
     return input
+  }
+  if (isValidFilePath(input)) {
+    return 'file://' + input
   }
   const dotIndex = input.indexOf('.')
   if (dotIndex !== -1 && dotIndex !== input.length - 1) {
