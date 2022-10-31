@@ -2,7 +2,8 @@ FROM gitpod/workspace-full:latest
 
 # Install Electron dependencies
 RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
-        libgtk-3-dev
+        libgtk-3-0
+
 
 # Install playwright dependencies
 RUN sudo DEBIAN_FRONTEND=noninteractive apt-get install -y \
