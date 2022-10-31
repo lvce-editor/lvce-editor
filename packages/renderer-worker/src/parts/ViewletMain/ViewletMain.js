@@ -254,7 +254,6 @@ export const openUri = async (state, uri, focus = true) => {
     }
   }
 
-  console.log('CREATE INSTANCE 2')
   const instance = ViewletManager.create(
     ViewletModule.load,
     id,
@@ -511,7 +510,6 @@ export const focusIndex = async (state, index) => {
 
   if (oldInstance && oldInstance.factory.hide) {
     await oldInstance.factory.hide(oldInstance.state)
-    console.log({ oldInstance })
     BackgroundTabs.add(oldInstance.state.uri, oldInstance.state)
   }
   return state

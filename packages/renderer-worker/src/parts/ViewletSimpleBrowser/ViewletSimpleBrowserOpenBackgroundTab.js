@@ -5,7 +5,6 @@ export const openBackgroundTab = async (state, url) => {
   await Command.execute('Main.openBackgroundTab', simpleBrowserUrl, {
     iframeSrc: url,
   })
-  console.log('open background tab', url)
   // TODO
   return state
 }
