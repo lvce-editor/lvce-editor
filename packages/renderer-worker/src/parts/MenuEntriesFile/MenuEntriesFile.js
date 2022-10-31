@@ -2,6 +2,9 @@ import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
+/**
+ * @enum {string}
+ */
 export const UiStrings = {
   NewFile: 'New File',
   NewWindow: 'New Window',
@@ -60,7 +63,7 @@ export const getMenuEntries = () => {
       id: 'exit',
       label: I18nString.i18nString(UiStrings.Exit),
       flags: MenuItemFlags.None,
-      command: 'Window.exit',
+      command: 'Chrome.exit',
     },
   ]
 }

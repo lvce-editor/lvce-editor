@@ -103,6 +103,8 @@ export const getModuleId = (commandId) => {
     case 'EditorRename.finish':
     case 'EditorRename.open':
       return ModuleId.EditorRename
+    case 'ElectronApp.exit':
+      return ModuleId.ElectronApp
     case 'ElectronBrowserView.createBrowserViewQuickpick':
     case 'ElectronBrowserView.openBrowserViewQuickPick':
       return ModuleId.ElectronBrowserView
