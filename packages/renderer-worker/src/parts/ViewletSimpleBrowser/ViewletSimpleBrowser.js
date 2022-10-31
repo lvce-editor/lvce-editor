@@ -57,6 +57,7 @@ export const backgroundLoadContent = async (state, savedState) => {
   const keyBindings = await KeyBindings.getKeyBindings()
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronBrowserView.createBrowserView(
+    0,
     top + headerHeight,
     left,
     width,
