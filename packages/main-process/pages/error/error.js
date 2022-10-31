@@ -3,6 +3,10 @@ const knownErrors = [
     code: 'ERR_SSL_PROTOCOL_ERROR',
     message: 'This site can’t provide a secure connection',
   },
+  {
+    code: 'ERR_NAME_NOT_RESOLVED',
+    message: 'This site can’t be reached',
+  },
 ]
 
 const getError = (code) => {
