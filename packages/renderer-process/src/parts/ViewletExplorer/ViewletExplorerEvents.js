@@ -85,7 +85,6 @@ export const handleBlur = (event) => {
  */
 export const handleDragOver = (event) => {
   event.dataTransfer.effectAllowed = 'copyMove'
-  // console.log('dragover', event)
   event.dataTransfer.dropEffect = 'copy'
   event.preventDefault()
   const { clientX, clientY } = event

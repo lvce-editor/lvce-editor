@@ -292,13 +292,10 @@ const render$ExtensionsMore = ($ExtensionList, extensions) => {
 
 const render$Extensions = ($ExtensionList, extensions) => {
   if ($ExtensionList.children.length < extensions.length) {
-    // console.log('RENDER LESS')
     render$ExtensionsLess($ExtensionList, extensions)
   } else if ($ExtensionList.children.length === extensions.length) {
-    // console.log('RENDER EQUAL')
     render$ExtensionsEqual($ExtensionList, extensions)
   } else {
-    // console.log('RENDER MORE')
     render$ExtensionsMore($ExtensionList, extensions)
   }
 }
@@ -350,10 +347,6 @@ export const openSuggest = (state) => {
   // TODO check if already mounted
   // TODO don't append to body, have separate container for widgets (https://news.ycombinator.com/item?id=28230977)
   document.body.append(state.$ExtensionSuggestions)
-  // console.log(state.$InputBox)
-  // console.log({ x, y })
-  // console.log(state)
-  // console.log('open suggest in renderer')
 }
 
 export const closeSuggest = (state) => {

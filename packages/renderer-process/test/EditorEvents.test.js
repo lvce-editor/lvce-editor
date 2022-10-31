@@ -420,7 +420,6 @@ test.skip('event - beforeinput on contenteditable on mobile - no selection', () 
       cancelable: true,
     })
   )
-  console.log(Platform.state.isMobileOrTablet)
   expect(RendererWorker.send).not.toHaveBeenCalled()
   expect(spy).toHaveBeenCalledWith(
     '[Editor] cannot handle input event without selection'

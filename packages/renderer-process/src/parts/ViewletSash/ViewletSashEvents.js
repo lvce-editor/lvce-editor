@@ -8,7 +8,6 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 // }
 
 const getSashId = ($Target) => {
-  console.log({ $Target })
   if ($Target.id === 'SashPanel') {
     return 'Panel'
   }

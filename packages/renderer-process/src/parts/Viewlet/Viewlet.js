@@ -65,7 +65,6 @@ export const focus = (viewletId) => {
  * @deprecated
  */
 export const refresh = (viewletId, viewletContext) => {
-  console.log('REFRESH', viewletId)
   const instance = state.instances[viewletId]
   if (instance) {
     instance.factory.refresh(instance.state, viewletContext)
@@ -177,7 +176,7 @@ export const replace = () => {
 }
 
 export const handleError = (id, parentId, message) => {
-  console.log(`[viewlet-error] ${id}: ${message}`)
+  console.info(`[viewlet-error] ${id}: ${message}`)
   const instance = state.instances[id]
   if (instance && instance.factory && instance.factory.handleError) {
     instance.factory.handleError(instance.state, message)
@@ -194,7 +193,6 @@ export const handleError = (id, parentId, message) => {
     parentInstance.factory.handleError
   ) {
     parentInstance.factory.handleError(instance.state, message)
-    console.log('parent instance', parentInstance)
     return
   }
 }

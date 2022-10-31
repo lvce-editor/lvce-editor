@@ -41,7 +41,6 @@ export const create = () => {
 }
 
 export const dispose = (state) => {
-  console.log(state)
   state.$MainContent.remove()
   state.$MainContent = undefined
   state.$MainTabs.remove()
@@ -61,7 +60,6 @@ export const addEditor = (state, id, uri, languageId) => {
 // 2. editor group exists and new editor should be added
 // 3. editor group exists and editor should be replaced
 export const openEditor = async (state, id, uri, languageId) => {
-  console.log('open editor', id, uri, languageId)
   state.editorGroup = EditorGroup.create()
   state.activeEditorState = EditorGroup.addOne(
     state.editorGroup,
@@ -87,9 +85,7 @@ export const closeViewletAndTab = (state, index) => {
   state.$MainTabs = undefined
 }
 
-export const focus = () => {
-  console.log('todo focus main')
-}
+export const focus = () => {}
 
 export const openViewlet = (
   state,

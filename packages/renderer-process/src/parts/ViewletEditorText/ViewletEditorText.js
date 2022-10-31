@@ -20,9 +20,7 @@ export const highlightAsLink = (state, relativeY, tokenIndex) => {
     return
   }
   const $Token = $Row.children[tokenIndex + 1]
-  console.log($Token)
   $Token.classList.add('EditorGoToDefinitionLink')
-  // console.log({ state, tokenIndex, relativeY })
 }
 
 export const showOverlayMessage = (state, x, y, content) => {
