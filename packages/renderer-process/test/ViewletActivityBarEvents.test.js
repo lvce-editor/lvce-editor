@@ -2,7 +2,7 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
-import * as ActvityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActvityBarItemFlags.js'
+import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -37,21 +37,21 @@ test('event - handleClick - top', () => {
       title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Search',
       title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Button,
+      flags: ActivityBarItemFlags.Button,
     },
   ])
   ViewletActivityBar.setFocusedIndex(state, -1, 0)
@@ -79,21 +79,21 @@ test('event - handleClick - bottom', () => {
       title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Search',
       title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Button,
+      flags: ActivityBarItemFlags.Button,
     },
   ])
   state.$ActivityBar.lastChild.dispatchEvent(
@@ -119,21 +119,21 @@ test('event - handleClick - no item is clicked', () => {
       title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Search',
       title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Button,
+      flags: ActivityBarItemFlags.Button,
     },
   ])
   const event = new MouseEvent('mousedown', {
@@ -155,21 +155,21 @@ test('event - handleContextMenu', () => {
       title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Search',
       title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Button,
+      flags: ActivityBarItemFlags.Button,
     },
   ])
   const { $ActivityBar } = state

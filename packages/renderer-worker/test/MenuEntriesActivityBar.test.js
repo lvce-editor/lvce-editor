@@ -1,7 +1,7 @@
 import * as ActivityBar from '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
 import * as MenuEntriesActivityBar from '../src/parts/MenuEntriesActivityBar/MenuEntriesActivityBar.js'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
-import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActvityBarItemFlags.js'
+import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
 
 test.skip('getMenuEntries', async () => {
   ActivityBar.state.activityBarItems = [
