@@ -1,4 +1,4 @@
-import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActvityBarItemFlags.js'
+import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as Assert from '../Assert/Assert.js'
 import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
 
