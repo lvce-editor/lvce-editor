@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -831,14 +832,14 @@ test('focusIndexMouse - focusing submenu index should do nothing when already fo
       case 'Platform.getRecentlyOpenedPath':
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: '/test/recently-opened.json',
         })
         break
       case 'FileSystem.readFile':
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: '["/test/folder-1"]',
         })
         break
