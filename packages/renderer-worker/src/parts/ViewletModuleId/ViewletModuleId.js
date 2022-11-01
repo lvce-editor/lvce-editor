@@ -69,3 +69,5 @@ export const TitleBarButtons = 'TitleBarButtons'
 export const TitleBarMenuBar = 'TitleBarMenuBar'
 
 export const TodoList = 'TodoList'
+
+export const Pdf = 'Pdf'
