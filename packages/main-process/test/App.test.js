@@ -1,4 +1,5 @@
 const App = require('../src/parts/App/App.js')
+const JsonRpcErrorCode = require('../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js')
 
 jest.mock('electron', () => {
   return {
@@ -43,7 +44,7 @@ test.skip('handlePortForMainProcess - error - command not found', async () => {
     id: 1,
     error: {
       message: 'method not found App.exit',
-      code: -32601,
+      code: JsonRpcErrorCode.MethodNotFound,
       data: expect.stringMatching('Error: method not found App.exit'),
     },
   })
