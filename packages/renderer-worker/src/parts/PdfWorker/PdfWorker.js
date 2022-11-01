@@ -4,7 +4,10 @@ import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 export const create = async () => {
   const worker = await IpcParent.create({
     method: IpcParentType.ModuleWorker,
-    url: new URL('../PdfWorkerCode/PdfWorkerCode.js', import.meta.url),
+    url: new URL(
+      '../../../../pdf-worker/src/pdfWorkerMain.js',
+      import.meta.url
+    ),
     name: 'Pdf Worker',
   })
   return {

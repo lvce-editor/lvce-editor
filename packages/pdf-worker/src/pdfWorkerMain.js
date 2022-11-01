@@ -1,3 +1,6 @@
+import * as IpcChild from './parts/IpcChild/IpcChild.js'
+import * as IpcChildType from './parts/IpcChildType/IpcChildType.js'
+
 const pdfData = atob(
   'JVBERi0xLjcKCjEgMCBvYmogICUgZW50cnkgcG9pbnQKPDwKICAvVHlwZSAvQ2F0YWxvZwog' +
     'IC9QYWdlcyAyIDAgUgo+PgplbmRvYmoKCjIgMCBvYmoKPDwKICAvVHlwZSAvUGFnZXMKICAv' +
@@ -15,7 +18,7 @@ const pdfData = atob(
 )
 
 const main = async () => {
-  postMessage('ready')
+  const ipc = await IpcChild.listen({ method: IpcChildType.Auto() })
 
   console.log('start waiting')
   const canvas = await new Promise((resolve) => {
@@ -31,8 +34,7 @@ const main = async () => {
   })
   console.log('finish waiting')
 
-  await import('../../../../../static/js/pdfjs/pdf.js')
-  await import('../../../../../static/js/pdfjs/pdf.worker.js')
+  const { pdfjsLib } = await import('./parts/Pdfjs/Pdfjs.js')
 
   const loadingTask = pdfjsLib.getDocument({ data: pdfData })
   const pdf = await loadingTask.promise
