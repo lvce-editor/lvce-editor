@@ -15,7 +15,7 @@ export const create = async () => {
       worker.sendAndTransfer(
         {
           jsonrpc: '2.0',
-          method: 'setCanvas',
+          method: 'Canvas.addCanvas',
           params: [offscreenCanvas],
         },
         [offscreenCanvas]
