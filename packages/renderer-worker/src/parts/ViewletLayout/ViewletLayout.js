@@ -130,7 +130,6 @@ export const getPoints = (
   destination,
   sideBarLocation = SideBarLocationType.Right
 ) => {
-  console.log({ sideBarLocation })
   const activityBarVisible = source[kActivityBarVisible]
   const panelVisible = source[kPanelVisible]
   const sideBarVisible = source[kSideBarVisible]
