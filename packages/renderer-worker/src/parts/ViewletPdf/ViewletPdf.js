@@ -22,7 +22,7 @@ export const create = (id, uri, top, left, width, height) => {
 
 export const loadContent = async (state) => {
   const { uri } = state
-  const content = await FileSystem.readFile(uri)
+  const content = await FileSystem.readFile(uri, 'binary')
   const ipc = await PdfWorker.create()
   const { canvasId, canvas } = await OffscreenCanvas.create()
   ipc.sendCanvas(canvas, content)
