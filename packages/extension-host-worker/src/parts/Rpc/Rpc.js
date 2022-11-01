@@ -38,7 +38,7 @@ export const listen = (ipc) => {
   const handleMessage = async (event) => {
     const message = event.data
     if (message.method) {
-      const response = getResponse(message)
+      const response = await getResponse(message)
       ipc.send(response)
     }
   }
