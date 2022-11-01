@@ -58,6 +58,7 @@ export const create = async ({ url, name }) => {
         if (event.data === 'ready') {
           resolve(undefined)
         } else {
+          console.log(event.data)
           reject(new Error('unexpected first message from renderer worker'))
         }
       }

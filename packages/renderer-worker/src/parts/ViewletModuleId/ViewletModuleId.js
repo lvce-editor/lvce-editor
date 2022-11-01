@@ -42,6 +42,8 @@ export const Output = 'Output'
 
 export const Panel = 'Panel'
 
+export const Pdf = 'Pdf'
+
 export const Problems = 'Problems'
 
 export const QuickPick = 'QuickPick'
@@ -69,5 +71,3 @@ export const TitleBarButtons = 'TitleBarButtons'
 export const TitleBarMenuBar = 'TitleBarMenuBar'
 
 export const TodoList = 'TodoList'
-
-export const Pdf = 'Pdf'

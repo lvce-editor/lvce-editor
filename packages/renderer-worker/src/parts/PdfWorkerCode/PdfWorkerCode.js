@@ -1,6 +1,3 @@
-import '../../../../../static/js/pdfjs/pdf.js'
-import '../../../../../static/js/pdfjs/pdf.worker.js'
-
 const pdfData = atob(
   'JVBERi0xLjcKCjEgMCBvYmogICUgZW50cnkgcG9pbnQKPDwKICAvVHlwZSAvQ2F0YWxvZwog' +
     'IC9QYWdlcyAyIDAgUgo+PgplbmRvYmoKCjIgMCBvYmoKPDwKICAvVHlwZSAvUGFnZXMKICAv' +
@@ -18,6 +15,10 @@ const pdfData = atob(
 )
 
 const main = async () => {
+  postMessage('ready')
+
+  await import('../../../../../static/js/pdfjs/pdf.js')
+  await import('../../../../../static/js/pdfjs/pdf.worker.js')
   const canvas = await new Promise((resolve) => {
     onmessage = (event) => {
       const { data } = event
