@@ -2,3 +2,9 @@
   color: white;
   user-select: text;
 }
+
+.PdfToolBar {
+  height: 32px;
+  contain: strict;
+  background: orangered;
+}

@@ -1,9 +1,21 @@
-import * as OffscreenCanvsa from '../OffscreenCanvas/OffscreenCanvas.js'
+import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Pdf'
-  $Viewlet.textContent = 'pdf'
+
+  const $ButtonNextPage = document.createElement('button')
+  $ButtonNextPage.textContent = 'Next'
+
+  const $ButtonPreviousPage = document.createElement('button')
+  $ButtonPreviousPage.textContent = 'Previous'
+
+  const $PdfToolBar = document.createElement('div')
+  $PdfToolBar.className = 'PdfToolBar'
+  $PdfToolBar.append($ButtonPreviousPage, $ButtonNextPage)
+
+  $Viewlet.append($PdfToolBar)
+
   return {
     $Viewlet,
   }
@@ -11,6 +23,6 @@ export const create = () => {
 
 export const setCanvas = (state, id) => {
   const { $Viewlet } = state
-  const $Canvas = OffscreenCanvsa.get(id)
-  $Viewlet.replaceChildren($Canvas)
+  const $Canvas = OffscreenCanvas.get(id)
+  $Viewlet.append($Canvas)
 }
