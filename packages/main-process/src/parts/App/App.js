@@ -13,6 +13,7 @@ const AppWindow = require('../AppWindow/AppWindow.js')
 const Command = require('../Command/Command.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const PendingPorts = require('../PendingPorts/PendingPorts.js')
+const JsonRpcErrorCode = require('../JsonRpcErrorCode/JsonRpcErrorCode.js')
 
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
@@ -150,7 +151,7 @@ const handlePortForMainProcess = (event) => {
           jsonrpc: '2.0',
           id: message.id,
           error: {
-            code: -32601,
+            code: JsonRpcErrorCode.MethodNotFound,
             message: error.message,
             data: error.stack,
           },
