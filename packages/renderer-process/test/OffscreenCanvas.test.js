@@ -40,7 +40,6 @@ test('create', () => {
   expect(RendererWorker.sendAndTransfer).toHaveBeenCalledWith(
     {
       jsonrpc: '2.0',
-      method: 'setOffscreenCanvas',
       params: [
         {
           isOffscreenCanvasPlaceholder: true,

@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as Callback from '../src/parts/Callback/Callback.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -25,10 +26,10 @@ const OffscreenCanvas = await import(
 
 test('create', async () => {
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {
-    return {
+  RendererProcess.invoke.mockImplementation((method, id) => {
+    Callback.resolve(id, {
       isOffscreenCanvasPlaceholder: true,
-    }
+    })
   })
   const offscreenCanvas = await OffscreenCanvas.create()
   expect(offscreenCanvas).toEqual({

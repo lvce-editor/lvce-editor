@@ -8,19 +8,16 @@ export const get = (id) => {
   return state.canvasObjects[id]
 }
 
-export const create = () => {
+export const create = (id) => {
   const canvas = document.createElement('canvas')
-  console.log({ canvas })
   // @ts-ignore
   const offscreenCanvas = canvas.transferControlToOffscreen()
   RendererWorker.sendAndTransfer(
     {
       jsonrpc: '2.0',
-      method: 'setOffscreenCanvas',
+      id,
       params: [offscreenCanvas],
     },
     [offscreenCanvas]
   )
-  console.log({ offscreenCanvas })
-  return 123
 }
