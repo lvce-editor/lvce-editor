@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals'
 import * as Callback from '../src/parts/Callback/Callback.js'
 import * as JsonRpc from '../src/parts/JsonRpc/JsonRpc.js'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 test('send', async () => {
   const mockTransport = {
@@ -8,7 +9,7 @@ test('send', async () => {
   }
   JsonRpc.send(mockTransport, 'Notification.show', 'test message')
   expect(mockTransport.send).toHaveBeenCalledWith({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: 'Notification.show',
     params: ['test message'],
   })
@@ -32,7 +33,7 @@ test('invoke', async () => {
     result: 'success',
   })
   expect(mockTransport.send).toHaveBeenCalledWith({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     id: expect.any(Number),
     method: 'Notification.show',
     params: ['test message'],
@@ -57,7 +58,7 @@ test('invoke - error', async () => {
     result: 'success',
   })
   expect(mockTransport.send).toHaveBeenCalledWith({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     id: expect.any(Number),
     method: 'Notification.show',
     params: ['test message'],

@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals'
 import * as Callback from '../src/parts/Callback/Callback.js'
 import * as LifeCycle from '../src/parts/LifeCycle/LifeCycle.js'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -295,7 +296,7 @@ test.skip('monitorPerformance', async () => {
   SharedProcess.state.totalReceived = 1693
   await Developer.getMemoryUsageContent()
   expect(SharedProcess.invoke).toHaveBeenCalledWith({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: 284,
     params: [],
     id: 1,
