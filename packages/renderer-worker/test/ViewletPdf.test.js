@@ -39,9 +39,6 @@ jest.unstable_mockModule('../src/parts/PdfWorker/PdfWorker.js', () => {
 })
 
 const ViewletPdf = await import('../src/parts/ViewletPdf/ViewletPdf.js')
-const OffscreenCanvas = await import(
-  '../src/parts/OffscreenCanvas/OffscreenCanvas.js'
-)
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
 test('name', () => {
