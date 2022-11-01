@@ -17,17 +17,23 @@ const pdfData = atob(
 const main = async () => {
   postMessage('ready')
 
-  await import('../../../../../static/js/pdfjs/pdf.js')
-  await import('../../../../../static/js/pdfjs/pdf.worker.js')
+  console.log('start waiting')
   const canvas = await new Promise((resolve) => {
     onmessage = (event) => {
+      console.log(event)
       const { data } = event
       if (data.method === 'setCanvas') {
         const canvas = data.params[0]
+        console.log({ canvas })
         resolve(canvas)
       }
     }
   })
+  console.log('finish waiting')
+
+  await import('../../../../../static/js/pdfjs/pdf.js')
+  await import('../../../../../static/js/pdfjs/pdf.worker.js')
+
   const loadingTask = pdfjsLib.getDocument({ data: pdfData })
   const pdf = await loadingTask.promise
 
