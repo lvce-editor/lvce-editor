@@ -7,7 +7,16 @@ const main = async () => {
   const handleMessage = async (event) => {
     const { data } = event
     const { method, params } = data
-    await Command.execute(method, ...params)
+    const result = await Command.execute(method, ...params)
+    if ('id' in data) {
+      ipc.send({
+        jsonrpc: '2.0',
+        id: data.id,
+        result,
+      })
+    } else {
+      console.log({ data })
+    }
   }
   ipc.onmessage = handleMessage
 }

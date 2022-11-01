@@ -53,6 +53,7 @@ export const create = () => {
     $ButtonZoomIn,
     $ButtonZoomOut,
     $ButtonPrint,
+    $Canvas: undefined,
   }
 }
 
@@ -60,4 +61,5 @@ export const setCanvas = (state, id) => {
   const { $Viewlet } = state
   const $Canvas = OffscreenCanvas.get(id)
   $Viewlet.append($Canvas)
+  state.$Canvas = $Canvas
 }

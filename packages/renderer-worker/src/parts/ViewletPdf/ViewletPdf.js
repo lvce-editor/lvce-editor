@@ -23,12 +23,19 @@ export const create = (id, uri, top, left, width, height) => {
 }
 
 export const loadContent = async (state) => {
-  const { uri } = state
+  const { uri, width, height } = state
   const content = await FileSystem.readFile(uri, 'binary')
   const canvasId = Id.create()
   const ipc = await PdfWorker.create()
   const canvas = await OffscreenCanvas.create(canvasId)
-  ipc.sendCanvas(canvasId, canvas, content)
+  console.log('sendcanvas')
+  await PdfWorker.sendCanvas(ipc, canvasId, canvas)
+  console.log('setcontent')
+  await PdfWorker.invoke(ipc, 'Canvas.setContent', canvasId, content)
+  console.log('resize')
+  await PdfWorker.invoke(ipc, 'Canvas.resize', canvasId, width, height)
+  console.log('render')
+  await PdfWorker.invoke(ipc, 'Canvas.render', canvasId)
   return {
     ...state,
     content,
@@ -36,6 +43,18 @@ export const loadContent = async (state) => {
     canvas,
     canvasId,
   }
+}
+
+export const hasFunctionalResize = true
+
+export const resize = (state, dimensions) => {
+  return { ...state, ...dimensions }
+}
+
+export const resizeEffect = async (state) => {
+  const { canvasId, width, height, ipc } = state
+  await PdfWorker.invoke(ipc, 'Canvas.resize', canvasId, width, height)
+  await PdfWorker.invoke(ipc, 'Canvas.render', canvasId)
 }
 
 export const hasFunctionalRender = true
@@ -49,5 +68,14 @@ const renderCanvas = {
     return ['Viewlet.send', 'Pdf', 'setCanvas', newState.canvasId]
   },
 }
+
+// const renderSize = {
+//   isEqual(oldState, newState) {
+//     return oldState.canvasId === newState.canvasId
+//   },
+//   apply(oldState, newState) {
+//     return ['Viewlet.send', 'Pdf', 'setSize', newState.width, newState.height]
+//   },
+// }
 
 export const render = [renderCanvas]

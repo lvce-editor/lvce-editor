@@ -6,8 +6,23 @@ export const state = {
 }
 
 export const addCanvas = async (canvasId, canvas, data) => {
+  // Prepare canvas using PDF page dimensions
+  const context = canvas.getContext('2d', { alpha: false })
+  state.pages[canvasId] = { page: undefined, context, canvas }
+}
+
+const getPageState = (id) => {
+  const pageState = state.pages[id]
+  if (!pageState) {
+    throw new Error(`page not found ${id}`)
+  }
+  return pageState
+}
+
+export const setContent = async (id, content) => {
+  const pageState = getPageState(id)
   const loadingTask = pdfjsLib.getDocument({
-    data,
+    data: content,
     ownerDocument: Document.document,
   })
   const pdf = await loadingTask.promise
@@ -15,39 +30,35 @@ export const addCanvas = async (canvasId, canvas, data) => {
   // Fetch the first page
   const pageNumber = 1
   const page = await pdf.getPage(pageNumber)
-
-  console.log('Page loaded')
-
-  const scale = 1.5
-  const viewport = page.getViewport({ scale })
-
-  // Prepare canvas using PDF page dimensions
-  const context = canvas.getContext('2d', { alpha: false })
-
-  canvas.height = viewport.height
-  canvas.width = viewport.width
-
-  // Render PDF page into canvas context
-  const renderContext = {
-    canvasContext: context,
-    viewport: viewport,
-  }
-  const renderTask = page.render(renderContext)
-  await renderTask.promise
-
-  // postMessage('canvas', canvas./)
-  console.log('Page rendered')
-
-  state.pages[canvasId] = { page, renderContext, pdf }
+  pageState.page = page
 }
 
 export const focusPage = async (id, pageIndex) => {
-  const pageState = state.pages[id]
-  if (!pageState) {
-    throw new Error(`page not found ${id}`)
-  }
+  const pageState = getPageState(id)
   const { renderContext, pdf } = pageState
   const page = await pdf.getPage(pageIndex + 1)
+  const renderTask = page.render(renderContext)
+  await renderTask.promise
+}
+
+export const resize = async (id, width, height) => {
+  const pageState = getPageState(id)
+  const { page, canvas } = pageState
+  canvas.width = width
+  canvas.height = height
+  const viewport = page.getViewport({
+    scale: width / page.getViewport({ scale: 1 }).width,
+  })
+  pageState.viewport = viewport
+}
+
+export const render = async (id) => {
+  const pageState = getPageState(id)
+  const { context, viewport, page } = pageState
+  const renderContext = {
+    canvasContext: context,
+    viewport,
+  }
   const renderTask = page.render(renderContext)
   await renderTask.promise
 }
