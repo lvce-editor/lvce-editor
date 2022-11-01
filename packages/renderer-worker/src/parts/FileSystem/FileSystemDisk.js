@@ -13,10 +13,11 @@ export const copy = (source, target) => {
   )
 }
 
-export const readFile = (path) => {
+export const readFile = (path, encoding) => {
   return SharedProcess.invoke(
     /* FileSystem.readFile */ 'FileSystem.readFile',
-    /* path */ path
+    /* path */ path,
+    /* encoding */ encoding
   )
 }
 

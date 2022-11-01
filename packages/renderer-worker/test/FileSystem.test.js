@@ -33,7 +33,8 @@ test('readFile', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
     'FileSystem.readFile',
-    '/tmp/some-file.txt'
+    '/tmp/some-file.txt',
+    'utf8'
   )
 })
 

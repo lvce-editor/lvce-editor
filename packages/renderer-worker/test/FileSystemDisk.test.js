@@ -29,13 +29,14 @@ test('readFile', async () => {
     }
   })
   // TODO passing protocol here seems unnecessary, but it is useful for extension host which has several protocols
-  expect(await FileSystemDisk.readFile('/tmp/some-file.txt')).toEqual(
+  expect(await FileSystemDisk.readFile('/tmp/some-file.txt', 'utf8')).toEqual(
     'sample text'
   )
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
     'FileSystem.readFile',
-    '/tmp/some-file.txt'
+    '/tmp/some-file.txt',
+    'utf8'
   )
 })
 
