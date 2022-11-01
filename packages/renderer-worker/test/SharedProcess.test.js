@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 test('invoke - error', async () => {
   SharedProcess.state.ipc = {
@@ -7,7 +8,7 @@ test('invoke - error', async () => {
       switch (message.method) {
         case 123456:
           SharedProcess.handleMessageFromSharedProcess({
-            jsonrpc: '2.0',
+            jsonrpc: JsonRpcVersion.Two,
             id: message.id,
             error: {
               code: -32000,
@@ -35,7 +36,7 @@ test('invoke - error stack', async () => {
       switch (message.method) {
         case 123456:
           SharedProcess.handleMessageFromSharedProcess({
-            jsonrpc: '2.0',
+            jsonrpc: JsonRpcVersion.Two,
             id: message.id,
             error: {
               code: -32000,

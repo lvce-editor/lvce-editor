@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as PlatformType from '../src/parts/PlatformType/PlatformType.js'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -29,7 +30,7 @@ test.skip('openFolder', async () => {
   await Dialog.openFolder()
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     id: expect.any(Number),
     method: 8307,
     params: [],

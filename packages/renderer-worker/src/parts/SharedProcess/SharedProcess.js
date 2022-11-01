@@ -5,6 +5,7 @@ import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 // TODO duplicate code with platform module
 /**
@@ -83,7 +84,7 @@ export const handleMessageFromSharedProcess = async (message) => {
     const result = await Command.execute(message.method, ...message.params)
     if (message.id) {
       state.send({
-        jsonrpc: '2.0',
+        jsonrpc: JsonRpcVersion.Two,
         id: message.id,
         result,
       })
