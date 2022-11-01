@@ -2,6 +2,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as PdfWorker from '../PdfWorker/PdfWorker.js'
 import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
+import * as Id from '../Id/Id.js'
 
 export const name = ViewletModuleId.Pdf
 
@@ -24,10 +25,10 @@ export const create = (id, uri, top, left, width, height) => {
 export const loadContent = async (state) => {
   const { uri } = state
   const content = await FileSystem.readFile(uri, 'binary')
+  const canvasId = Id.create()
   const ipc = await PdfWorker.create()
-  const { canvasId, canvas } = await OffscreenCanvas.create()
-  ipc.sendCanvas(canvas, content)
-  // ipc.sendContent(content)
+  const canvas = await OffscreenCanvas.create(canvasId)
+  ipc.sendCanvas(canvasId, canvas, content)
   return {
     ...state,
     content,
@@ -37,8 +38,9 @@ export const loadContent = async (state) => {
   }
 }
 
-const focusPage = (state, page) => {
-  console.log('focus page', page)
+const focusPage = async (state, page) => {
+  const { canvasId, ipc } = state
+  await PdfWorker.invoke(ipc, 'Canvas.focusPage', canvasId, page)
   return {
     ...state,
     page,
@@ -50,7 +52,7 @@ export const previous = (state) => {
   return focusPage(state, page - 1)
 }
 
-export const next = (state) => {
+export const next = async (state) => {
   const { page } = state
   return focusPage(state, page + 1)
 }
