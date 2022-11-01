@@ -58,7 +58,7 @@ export const create = async ({ url, name }) => {
         if (event.data === 'ready') {
           resolve(undefined)
         } else {
-          reject(new Error('unexpected first message from renderer worker'))
+          reject(new Error('unexpected first message from worker'))
         }
       }
       const handleFirstError = async (event) => {
