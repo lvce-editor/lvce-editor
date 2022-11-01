@@ -1,40 +1,44 @@
 import * as Command from '../Command/Command.js'
 
+const getResponse = async (message) => {
+  try {
+    const result = await Command.execute(message.method, ...message.params)
+    return {
+      jsonrpc: '2.0',
+      id: message.id,
+      result,
+    }
+  } catch (error) {
+    if (
+      error &&
+      error instanceof Error &&
+      error.message &&
+      error.message.startsWith('method not found')
+    ) {
+      return {
+        jsonrpc: '2.0',
+        id: message.id,
+        error: {
+          code: -32601,
+          message: error.message,
+          data: error.stack,
+        },
+      }
+    }
+    return {
+      jsonrpc: '2.0',
+      id: message.id,
+      error,
+    }
+  }
+}
+
 export const listen = (ipc) => {
   const handleMessage = async (event) => {
     const message = event.data
     if (message.method) {
-      try {
-        const result = await Command.execute(message.method, ...message.params)
-        ipc.send({
-          jsonrpc: '2.0',
-          id: message.id,
-          result,
-        })
-      } catch (error) {
-        if (
-          error &&
-          error instanceof Error &&
-          error.message &&
-          error.message.startsWith('method not found')
-        ) {
-          ipc.send({
-            jsonrpc: '2.0',
-            id: message.id,
-            error: {
-              code: -32601,
-              message: error.message,
-              data: error.stack,
-            },
-          })
-        } else {
-          ipc.send({
-            jsonrpc: '2.0',
-            id: message.id,
-            error,
-          })
-        }
-      }
+      const response = getResponse(message)
+      ipc.send(response)
     }
   }
   ipc.onmessage = handleMessage
