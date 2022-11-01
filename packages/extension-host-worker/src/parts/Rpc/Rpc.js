@@ -1,4 +1,5 @@
 import * as Command from '../Command/Command.js'
+import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 
 export const listen = (ipc) => {
   const handleMessage = async (event) => {
@@ -22,7 +23,7 @@ export const listen = (ipc) => {
             jsonrpc: '2.0',
             id: message.id,
             error: {
-              code: -32601,
+              code: JsonRpcErrorCode.MethodNotFound,
               message: error.message,
               data: error.stack,
             },
