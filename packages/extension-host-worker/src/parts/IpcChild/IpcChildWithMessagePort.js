@@ -1,18 +1,19 @@
 export const listen = () => {
   const messageChannel = new MessageChannel()
-  globalThis.acceptPort(messageChannel.port2)
+  const { port1, port2 } = messageChannel
+  globalThis.acceptPort(port2)
   return {
     send(message) {
-      messageChannel.port1.postMessage(message)
+      port1.postMessage(message)
     },
     sendAndTransfer(message, transferables) {
-      messageChannel.port1.postMessage(message, transferables)
+      port1.postMessage(message, transferables)
     },
     get onmessage() {
-      return messageChannel.port1.onmessage
+      return port1.onmessage
     },
     set onmessage(listener) {
-      messageChannel.port1.onmessage = listener
+      port1.onmessage = listener
     },
   }
 }

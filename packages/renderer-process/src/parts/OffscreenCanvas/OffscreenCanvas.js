@@ -1,3 +1,4 @@
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 export const state = {
@@ -15,7 +16,7 @@ export const create = (canvasId, callbackId) => {
   state.canvasObjects[canvasId] = canvas
   RendererWorker.sendAndTransfer(
     {
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       id: callbackId,
       params: [offscreenCanvas],
     },

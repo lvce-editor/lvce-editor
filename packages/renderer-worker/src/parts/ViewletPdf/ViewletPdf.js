@@ -28,13 +28,9 @@ export const loadContent = async (state) => {
   const canvasId = Id.create()
   const ipc = await PdfWorker.create()
   const canvas = await OffscreenCanvas.create(canvasId)
-  console.log('sendcanvas')
   await PdfWorker.sendCanvas(ipc, canvasId, canvas)
-  console.log('setcontent')
   await PdfWorker.invoke(ipc, 'Canvas.setContent', canvasId, content)
-  console.log('resize')
   await PdfWorker.invoke(ipc, 'Canvas.resize', canvasId, width, height)
-  console.log('render')
   await PdfWorker.invoke(ipc, 'Canvas.render', canvasId)
   return {
     ...state,
@@ -68,14 +64,5 @@ const renderCanvas = {
     return ['Viewlet.send', 'Pdf', 'setCanvas', newState.canvasId]
   },
 }
-
-// const renderSize = {
-//   isEqual(oldState, newState) {
-//     return oldState.canvasId === newState.canvasId
-//   },
-//   apply(oldState, newState) {
-//     return ['Viewlet.send', 'Pdf', 'setSize', newState.width, newState.height]
-//   },
-// }
 
 export const render = [renderCanvas]
