@@ -1,6 +1,7 @@
 import * as Callback from '../Callback/Callback.js'
 import { JsonRpcError } from '../Errors/Errors.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 
 /**
  * @enum {number}
@@ -45,7 +46,7 @@ const restoreError = (error) => {
   if (error instanceof Error) {
     return error
   }
-  if (error.code && error.code === -32601) {
+  if (error.code && error.code === JsonRpcErrorCode.MethodNotFound) {
     console.log('create json rpc error')
     const restoredError = new JsonRpcError(error.message)
     restoredError.stack = error.stack

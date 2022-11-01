@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import { JsonRpcError } from '../src/parts/Errors/Errors.js'
+import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -45,7 +46,7 @@ test.only('handleMessage - error - method not found', async () => {
           jsonrpc: '2.0',
           id: message.id,
           error: {
-            code: -32601,
+            code: JsonRpcErrorCode.MethodNotFound,
             message: `method not found: ${message.method}`,
             data: `Error: method not found: ${message.method}
   at getFn (/test/Command.js:19:13)
