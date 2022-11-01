@@ -53,11 +53,11 @@ const getPath = (protocol, uri) => {
   return uri.slice(protocol.length + PROTOCOL_POST_FIX_LENGTH)
 }
 
-export const readFile = (uri) => {
+export const readFile = (uri, encoding = 'utf8') => {
   const protocol = getProtocol(uri)
   const path = getPath(protocol, uri)
   const fileSystem = getFileSystem(protocol)
-  return fileSystem.readFile(path)
+  return fileSystem.readFile(path, encoding)
 }
 
 export const remove = async (uri) => {

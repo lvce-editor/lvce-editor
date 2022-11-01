@@ -3,11 +3,11 @@ import * as fs from 'node:fs/promises'
 import * as os from 'node:os'
 import VError from 'verror'
 import * as DirentType from '../DirentType/DirentType.js'
+import { FileNotFoundError } from '../Error/FileNotFoundError.js'
+import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Trash from '../Trash/Trash.js'
-import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
-import { FileNotFoundError } from '../Error/FileNotFoundError.js'
 
 export const state = {
   watcherMap: Object.create(null),
@@ -33,12 +33,19 @@ export const copy = async (source, target) => {
 }
 
 // TODO extensions should only be accessed once on startup
-export const readFile = async (path) => {
+
+/**
+ *
+ * @param {string} path
+ * @param {BufferEncoding} encoding
+ * @returns
+ */
+export const readFile = async (path, encoding = 'utf8') => {
   // console.info('[shared-process] read file', path)
   try {
     // const start = performance.now()
     // console.time(`read ${path}`)
-    const content = await fs.readFile(path, 'utf8')
+    const content = await fs.readFile(path, encoding)
     // const end = performance.now()
     // console.log('read', path, 'took', (end - start).toFixed(2), 'ms')
     // console.timeEnd(`read ${path}`)
