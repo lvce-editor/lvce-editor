@@ -1,5 +1,5 @@
-import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 import { jest } from '@jest/globals'
+import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -72,19 +72,5 @@ test('loadContent', async () => {
   const state = ViewletPdf.create()
   expect(await ViewletPdf.loadContent(state)).toMatchObject({
     content: 'sample pdf content',
-  })
-})
-
-test('previous', async () => {
-  const state = { ...ViewletPdf.create(), page: 1 }
-  expect(await ViewletPdf.previous(state)).toMatchObject({
-    page: 0,
-  })
-})
-
-test('next', async () => {
-  const state = { ...ViewletPdf.create(), page: 0 }
-  expect(await ViewletPdf.next(state)).toMatchObject({
-    page: 1,
   })
 })
