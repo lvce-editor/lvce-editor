@@ -41,13 +41,13 @@ export const addCanvas = async (canvasId, canvas, data) => {
   state.pages[canvasId] = { page, renderContext, pdf }
 }
 
-export const focusPage = async (id, pageNumber) => {
+export const focusPage = async (id, pageIndex) => {
   const pageState = state.pages[id]
   if (!pageState) {
     throw new Error(`page not found ${id}`)
   }
   const { renderContext, pdf } = pageState
-  const page = await pdf.getPage(pageNumber)
+  const page = await pdf.getPage(pageIndex + 1)
   const renderTask = page.render(renderContext)
   await renderTask.promise
 }
