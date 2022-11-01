@@ -1,11 +1,12 @@
 import * as Command from '../Command/Command.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 const getResponse = async (message) => {
   try {
     const result = await Command.execute(message.method, ...message.params)
     return {
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       id: message.id,
       result,
     }
@@ -17,7 +18,7 @@ const getResponse = async (message) => {
       error.message.startsWith('method not found')
     ) {
       return {
-        jsonrpc: '2.0',
+        jsonrpc: JsonRpcVersion.Two,
         id: message.id,
         error: {
           code: JsonRpcErrorCode.MethodNotFound,
@@ -27,7 +28,7 @@ const getResponse = async (message) => {
       }
     }
     return {
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       id: message.id,
       error,
     }
