@@ -17,6 +17,7 @@ export const create = (id, uri, top, left, width, height) => {
     ipc: undefined,
     canvas: undefined,
     canvasId: 0,
+    page: 0,
   }
 }
 
@@ -34,6 +35,36 @@ export const loadContent = async (state) => {
     canvas,
     canvasId,
   }
+}
+
+const focusPage = (state, page) => {
+  console.log('focus page', page)
+  return {
+    ...state,
+    page,
+  }
+}
+
+export const previous = (state) => {
+  const { page } = state
+  return focusPage(state, page - 1)
+}
+
+export const next = (state) => {
+  const { page } = state
+  return focusPage(state, page + 1)
+}
+
+export const print = (state) => {
+  throw new Error('not implemented')
+}
+
+export const zoomIn = (state) => {
+  throw new Error('not implemented')
+}
+
+export const zoomOut = (state) => {
+  throw new Error('not implemented')
 }
 
 export const hasFunctionalRender = true
