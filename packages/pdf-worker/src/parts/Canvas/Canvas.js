@@ -1,8 +1,7 @@
-import { pdfData } from '../PdfData/PdfData.js'
 import { pdfjsLib } from '../Pdfjs/Pdfjs.js'
 
-export const addCanvas = async (canvas) => {
-  const loadingTask = pdfjsLib.getDocument({ data: pdfData })
+export const addCanvas = async (canvas, data) => {
+  const loadingTask = pdfjsLib.getDocument({ data })
   const pdf = await loadingTask.promise
 
   // Fetch the first page

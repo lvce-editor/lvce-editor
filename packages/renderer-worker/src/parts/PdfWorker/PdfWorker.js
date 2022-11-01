@@ -1,22 +1,17 @@
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as PdfWorkerIpc from '../PdfWorkerIpc/PdfWorkerIpc.js'
 
 export const create = async () => {
-  const worker = await IpcParent.create({
-    method: IpcParentType.ModuleWorker,
-    url: new URL(
-      '../../../../pdf-worker/src/pdfWorkerMain.js',
-      import.meta.url
-    ),
-    name: 'Pdf Worker',
-  })
+  const ipc = await PdfWorkerIpc.create()
   return {
-    sendCanvas(offscreenCanvas) {
-      worker.sendAndTransfer(
+    sendCanvas(offscreenCanvas, content) {
+      ipc.sendAndTransfer(
         {
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           method: 'Canvas.addCanvas',
-          params: [offscreenCanvas],
+          params: [offscreenCanvas, content],
         },
         [offscreenCanvas]
       )
