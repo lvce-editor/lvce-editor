@@ -38,7 +38,6 @@ export const loadContent = async (state) => {
     content
   )
   await PdfWorkerFunctions.resize(ipc, canvasId, width, height)
-  await PdfWorkerFunctions.render(ipc, canvasId)
   return {
     ...state,
     content,
@@ -58,7 +57,6 @@ export const resize = (state, dimensions) => {
 export const resizeEffect = async (state) => {
   const { canvasId, width, height, ipc } = state
   await PdfWorkerFunctions.resize(ipc, canvasId, width, height)
-  await PdfWorkerFunctions.render(ipc, canvasId)
 }
 
 export const hasFunctionalRender = true

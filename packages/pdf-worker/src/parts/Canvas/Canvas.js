@@ -50,18 +50,6 @@ export const focusPage = async (id, pageIndex) => {
   pageState.page = page
 }
 
-export const resize = async (id, width, height) => {
-  const pageState = getPageState(id)
-  const { page, canvas } = pageState
-  canvas.width = width
-  // canvas.height = height
-  const viewport = page.getViewport({
-    scale: width / page.getViewport({ scale: 1 }).width,
-  })
-  canvas.height = Math.floor(viewport.height)
-  pageState.viewport = viewport
-}
-
 export const render = async (id) => {
   const pageState = getPageState(id)
   const { context, viewport, page } = pageState
@@ -71,4 +59,17 @@ export const render = async (id) => {
   }
   const renderTask = page.render(renderContext)
   await renderTask.promise
+}
+
+export const resize = async (id, width, height) => {
+  const pageState = getPageState(id)
+  const { page, canvas, context } = pageState
+  // canvas.height = height
+  const viewport = page.getViewport({
+    scale: width / page.getViewport({ scale: 1 }).width,
+  })
+  pageState.viewport = viewport
+  canvas.width = width
+  canvas.height = Math.floor(viewport.height)
+  await render(id)
 }
