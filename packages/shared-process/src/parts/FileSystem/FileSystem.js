@@ -8,6 +8,7 @@ import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCo
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Trash from '../Trash/Trash.js'
+import * as EncodingType from '../EncodingType/EncodingType.js'
 
 export const state = {
   watcherMap: Object.create(null),
@@ -40,7 +41,7 @@ export const copy = async (source, target) => {
  * @param {BufferEncoding} encoding
  * @returns
  */
-export const readFile = async (path, encoding = 'utf8') => {
+export const readFile = async (path, encoding = EncodingType.Utf8) => {
   // console.info('[shared-process] read file', path)
   try {
     // const start = performance.now()
@@ -64,7 +65,11 @@ export const readFile = async (path, encoding = 'utf8') => {
  * @param {string} content
  * @param {BufferEncoding} encoding
  */
-export const writeFile = async (path, content, encoding = 'utf8') => {
+export const writeFile = async (
+  path,
+  content,
+  encoding = EncodingType.Utf8
+) => {
   try {
     // queue would be more correct for concurrent writes but also slower
     // Queue.add(`writeFile/${path}`, () =>

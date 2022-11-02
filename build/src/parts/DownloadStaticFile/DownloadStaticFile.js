@@ -6,6 +6,7 @@ import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
+import * as EncodingType from '../EncodingType/EncodingType.js'
 
 const downloadFile = async (url, outFile) => {
   try {
@@ -95,7 +96,7 @@ const downloadStaticFileJs = async (staticFile) => {
   const outFileName = getOutFileNameJs(rootName)
   const outFile = Path.absolute(`static/js/${outFileName}.js`)
   await downloadFile(actualUrl, outFile)
-  const content = await readFile(outFile, 'utf8')
+  const content = await readFile(outFile, EncodingType.Utf8)
   const lines = content.split('\n')
   const replacements = []
   for (const line of lines) {

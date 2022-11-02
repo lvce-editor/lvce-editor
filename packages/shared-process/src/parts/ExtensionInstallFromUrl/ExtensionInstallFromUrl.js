@@ -5,6 +5,7 @@ import * as Download from '../Download/Download.js'
 import * as Extract from '../Extract/Extract.js'
 import * as Platform from '../Platform/Platform.js'
 import * as TmpFile from '../TmpFile/TmpFile.js'
+import * as EncodingType from '../EncodingType/EncodingType.js'
 
 export const install = async ({ url }) => {
   try {
@@ -17,7 +18,7 @@ export const install = async ({ url }) => {
     const tmpDir = await TmpFile.getTmpDir()
     await Extract.extractTarBr(tmpFile, tmpDir)
     const manifestPath = join(tmpDir, 'extension.json')
-    const manifestContent = await readFile(manifestPath, 'utf8')
+    const manifestContent = await readFile(manifestPath, EncodingType.Utf8)
     const manifestJson = JSON.parse(manifestContent)
     const id = manifestJson.id
     if (!id) {

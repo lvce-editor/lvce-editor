@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as EncodingType from '../src/parts/EncodingType/EncodingType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -29,14 +30,14 @@ test('readFile', async () => {
     }
   })
   // TODO passing protocol here seems unnecessary, but it is useful for extension host which has several protocols
-  expect(await FileSystemDisk.readFile('/tmp/some-file.txt', 'utf8')).toEqual(
-    'sample text'
-  )
+  expect(
+    await FileSystemDisk.readFile('/tmp/some-file.txt', EncodingType.Utf8)
+  ).toEqual('sample text')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
     'FileSystem.readFile',
     '/tmp/some-file.txt',
-    'utf8'
+    EncodingType.Utf8
   )
 })
 
@@ -187,13 +188,17 @@ test('writeFile', async () => {
         throw new Error('unexpected message')
     }
   })
-  await FileSystemDisk.writeFile('/tmp/some-file.txt', 'sample text', 'utf8')
+  await FileSystemDisk.writeFile(
+    '/tmp/some-file.txt',
+    'sample text',
+    EncodingType.Utf8
+  )
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
     'FileSystem.writeFile',
     '/tmp/some-file.txt',
     'sample text',
-    'utf8'
+    EncodingType.Utf8
   )
 })
 
