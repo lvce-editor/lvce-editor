@@ -88,6 +88,8 @@ export const getModuleId = (commandId) => {
     case 'Notification.createWithOptions':
     case 'Notification.dispose':
       return ModuleId.Notification
+    case 'OffscreenCanvas.create':
+      return ModuleId.OffscreenCanvas
     case 'Open.openUrl':
       return ModuleId.Open
     case 6661:
