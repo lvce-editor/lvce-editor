@@ -1,4 +1,4 @@
-import * as IpcChildType from '../parts/IpcChildType/IpcChildType.js'
+import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 
 const getModule = (method) => {
   switch (method) {

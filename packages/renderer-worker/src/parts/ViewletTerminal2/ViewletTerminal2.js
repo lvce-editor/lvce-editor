@@ -1,8 +1,10 @@
 import * as Id from '../Id/Id.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as Terminal from '../Terminal/Terminal.js'
+import * as TerminalWorker from '../TerminalWorker/TerminalWorker.js'
+import * as TerminalWorkerFunctions from '../TerminalWorkerFunctions/TerminalWorkerFunctions.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as Workspace from '../Workspace/Workspace.js'
 
 export const name = ViewletModuleId.Terminal2
 
@@ -15,18 +17,20 @@ export const create = () => {
 
 export const loadContent = async (state) => {
   const id = Id.create()
-  await Terminal.create(id, Workspace.state.workspacePath)
+  console.log('create terminal worker')
+  const ipc = await TerminalWorker.create({
+    method: IpcParentType.ModuleWorker,
+  })
+  console.log('got terminal worker ipc')
   const canvasId = Id.create()
   const canvas = await OffscreenCanvas.create(canvasId)
-  const ctx = canvas.getContext('2d', { alpha: false })
-  ctx.fillStyle = 'red'
-  ctx.font = '30px Arial'
-  ctx.fillText('Terminal', 10, 50)
+  console.log({ canvas })
+  await TerminalWorkerFunctions.addCanvas(ipc, canvasId, canvas)
   return {
     ...state,
     id: Id.create(),
-    canvas,
     canvasId,
+    ipc,
   }
 }
 
