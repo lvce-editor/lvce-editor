@@ -1,6 +1,7 @@
 import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Id from '../Id/Id.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as PdfWorker from '../PdfWorker/PdfWorker.js'
 import * as PdfWorkerFunctions from '../PdfWorkerFunctions/PdfWorkerFunctions.js'
@@ -36,7 +37,9 @@ export const loadContent = async (state) => {
   const { uri, width, height } = state
   const content = await FileSystem.readFile(uri, EncodingType.Binary)
   const canvasId = Id.create()
-  const ipc = await PdfWorker.create()
+  const ipc = await PdfWorker.create({
+    method: IpcParentType.ModuleWorker,
+  })
   const canvas = await OffscreenCanvas.create(canvasId)
   await PdfWorkerFunctions.sendCanvas(ipc, canvasId, canvas)
   const { numberOfPages } = await PdfWorkerFunctions.setContent(

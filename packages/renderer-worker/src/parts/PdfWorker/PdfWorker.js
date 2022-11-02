@@ -11,8 +11,8 @@ const handleMessage = (message) => {
   }
 }
 
-export const create = async () => {
-  const ipc = await PdfWorkerIpc.create()
+export const create = async ({ method }) => {
+  const ipc = await PdfWorkerIpc.create({ method })
   ipc.onmessage = handleMessage
   return {
     send(message) {
