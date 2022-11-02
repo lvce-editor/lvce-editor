@@ -31,12 +31,29 @@ jest.unstable_mockModule('../src/parts/PdfWorker/PdfWorker.js', () => {
     }),
     create() {
       return {
-        sendCanvas() {},
         send() {},
+        sendAndTransfer() {},
       }
     },
   }
 })
+
+jest.unstable_mockModule(
+  '../src/parts/PdfWorkerFunctions/PdfWorkerFunctions.js',
+  () => {
+    return {
+      setContent: () => {
+        return {
+          numberOfPages: 10,
+        }
+      },
+      sendCanvas: jest.fn(),
+      resize: jest.fn(),
+      render: jest.fn(),
+      focusPage: jest.fn(),
+    }
+  }
+)
 
 const ViewletPdf = await import('../src/parts/ViewletPdf/ViewletPdf.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')

@@ -23,7 +23,7 @@ const ViewletPdfPrevious = await import(
   '../src/parts/ViewletPdf/ViewletPdfPrevious.js'
 )
 
-test('previous', async () => {
+test.skip('previous', async () => {
   const state = { ...ViewletPdf.create(), page: 1 }
   expect(await ViewletPdfPrevious.previous(state)).toMatchObject({
     page: 0,
