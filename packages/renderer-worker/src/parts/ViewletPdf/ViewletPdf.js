@@ -1,10 +1,10 @@
+import * as EncodingType from '../EncodingType/EncodingType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Id from '../Id/Id.js'
 import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as PdfWorker from '../PdfWorker/PdfWorker.js'
 import * as PdfWorkerFunctions from '../PdfWorkerFunctions/PdfWorkerFunctions.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as EncodingType from '../EncodingType/EncodingType.js'
 
 export const name = ViewletModuleId.Pdf
 
