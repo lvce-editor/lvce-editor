@@ -40,5 +40,7 @@
     "ctrl+b",
     "ctrl+m",
     "ctrl+Tab"
-  ]
+  ],
+
+  "terminal.implementation": "Terminal2"
 }

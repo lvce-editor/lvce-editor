@@ -3,6 +3,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Preferences from '../Preferences/Preferences.js'
 
 export const name = ViewletModuleId.Panel
 
@@ -24,13 +25,25 @@ const getSavedViewletId = (savedState) => {
   return ViewletModuleId.Problems
 }
 
+const getTerminalId = () => {
+  const implementation = Preferences.get('terminal.implementation')
+  console.log({ implementation })
+  switch (implementation) {
+    case 'Terminal2':
+      return ViewletModuleId.Terminal2
+    default:
+      return ViewletModuleId.Terminal
+  }
+}
+
 export const loadContent = (state, savedState) => {
   const savedViewletId = getSavedViewletId(savedState)
+  const terminalId = getTerminalId()
   const views = [
     ViewletModuleId.Problems,
     ViewletModuleId.Output,
     ViewletModuleId.DebugConsole,
-    ViewletModuleId.Terminal,
+    terminalId,
   ]
   const selectedIndex = views.indexOf(savedViewletId)
   return {

@@ -1,12 +1,9 @@
 import * as Id from '../Id/Id.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Terminal from '../Terminal/Terminal.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
-// TODO implement a functional terminal component, maybe using offscreencanvas
-
-export const name = ViewletModuleId.Terminal
+export const name = ViewletModuleId.Terminal2
 
 export const create = () => {
   return {
@@ -16,27 +13,23 @@ export const create = () => {
 }
 
 export const loadContent = async (state) => {
-  // TODO this should be async and open a pty
+  const id = Id.create()
+  await Terminal.create(id, Workspace.state.workspacePath)
   return {
     ...state,
     id: Id.create(),
   }
 }
 
-export const contentLoadedEffects = async (state) => {
-  const { id } = state
-  await Terminal.create(id, Workspace.state.workspacePath)
-}
-
 export const handleData = async (state, data) => {
   // Terminal.handleData(state, data)
   const parsedData = new Uint8Array(data.data)
-  await RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ 'Terminal',
-    /* method */ 'write',
-    /* data */ parsedData
-  )
+  // await RendererProcess.invoke(
+  //   /* Viewlet.send */ 'Viewlet.send',
+  //   /* id */ 'Terminal',
+  //   /* method */ 'write',
+  //   /* data */ parsedData
+  // )
 }
 
 export const write = async (state, input) => {
@@ -51,17 +44,29 @@ export const dispose = (state) => {
   }
 }
 
-export const resize = async (state, width, height) => {
+export const resize = async (state, dimensions) => {
+  return {
+    ...state,
+    ...dimensions,
+  }
+}
+
+export const resizeEffect = async (state) => {
+  const { id } = state
   // TODO columnWidth etc. should be in renderer process
   const columnWidth = 8.43332
   const rowHeight = 14
   // const columns = Math.round(width / columnWidth)
   const columns = 7
   const rows = Math.round(height / rowHeight)
-  const { id } = state
+
   await Terminal.resize(id, columns, rows)
 }
 
 export const clear = async (state) => {
-  await Terminal.create()
+  await Terminal.clear()
 }
+
+export const hasFunctionalRender = true
+
+export const render = []

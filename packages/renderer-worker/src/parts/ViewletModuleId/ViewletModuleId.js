@@ -62,6 +62,8 @@ export const StatusBar = 'StatusBar'
 
 export const Terminal = 'Terminal'
 
+export const Terminal2 = 'Terminal2'
+
 export const TitleBar = 'TitleBar'
 
 export const TitleBarButtons = 'TitleBarButtons'

@@ -1,8 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Terminal from '../Terminal/Terminal.js'
 import * as ViewletTerminalEvents from './ViewletTerminalEvents.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = 'Terminal'
+export const name = ViewletModuleId.Terminal
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
