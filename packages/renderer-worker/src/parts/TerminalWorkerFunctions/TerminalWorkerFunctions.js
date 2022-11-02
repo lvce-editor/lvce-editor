@@ -31,9 +31,13 @@ export const invokeAndTransfer = (ipc, method, transfer, ...params) => {
 export const addCanvas = (ipc, canvasId, offscreenCanvas) => {
   return invokeAndTransfer(
     ipc,
-    'Terminal.addCanvas',
+    'OffscreenCanvas.add',
     [offscreenCanvas],
     canvasId,
     offscreenCanvas
   )
+}
+
+export const render = (ipc, canvasId) => {
+  return invoke(ipc, 'Terminal.render', canvasId)
 }

@@ -16,16 +16,13 @@ export const create = () => {
 }
 
 export const loadContent = async (state) => {
-  const id = Id.create()
-  console.log('create terminal worker')
   const ipc = await TerminalWorker.create({
     method: IpcParentType.ModuleWorker,
   })
-  console.log('got terminal worker ipc')
   const canvasId = Id.create()
   const canvas = await OffscreenCanvas.create(canvasId)
-  console.log({ canvas })
   await TerminalWorkerFunctions.addCanvas(ipc, canvasId, canvas)
+  await TerminalWorkerFunctions.render(ipc, canvasId)
   return {
     ...state,
     id: Id.create(),

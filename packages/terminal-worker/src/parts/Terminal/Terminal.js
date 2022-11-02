@@ -1,9 +1,12 @@
+import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
+
 export const create = () => {
   // TODO create websocket ipc connection
   // TODO paint to offscreencanvas
 }
 
-export const addCanvas = (canvasId, canvas) => {
+export const render = (canvasId) => {
+  const canvas = OffscreenCanvas.get(canvasId)
   console.log({ canvas })
   const ctx = canvas.getContext('2d', { alpha: false })
   ctx.fillStyle = 'red'
