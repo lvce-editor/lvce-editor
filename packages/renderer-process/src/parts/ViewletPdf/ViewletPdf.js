@@ -10,6 +10,9 @@ import * as Icon from '../Icon/Icon.js'
 const UiStrings = {
   Next: 'Next',
   Previous: 'Previous',
+  ZoomIn: 'Zoom in',
+  ZoomOut: 'Zoom out',
+  Print: 'Print',
 }
 
 export const create = () => {
@@ -39,15 +42,15 @@ export const create = () => {
   $NumberOfPages.className = 'PdfNumberOfPages'
 
   const $ButtonZoomIn = document.createElement('button')
-  $ButtonZoomIn.textContent = 'Zoom in'
+  $ButtonZoomIn.textContent = UiStrings.ZoomIn
   $ButtonZoomIn.onclick = ViewletPdfEvents.handleClickZoomIn
 
   const $ButtonZoomOut = document.createElement('button')
-  $ButtonZoomOut.textContent = 'Zoom out'
+  $ButtonZoomOut.textContent = UiStrings.ZoomOut
   $ButtonZoomOut.onclick = ViewletPdfEvents.handleClickZoomOut
 
   const $ButtonPrint = document.createElement('button')
-  $ButtonPrint.textContent = 'Print'
+  $ButtonPrint.textContent = UiStrings.Print
   $ButtonPrint.onclick = ViewletPdfEvents.handleClickPrint
 
   const $PdfToolBar = document.createElement('div')
