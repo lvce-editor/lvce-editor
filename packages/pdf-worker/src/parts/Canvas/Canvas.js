@@ -75,11 +75,9 @@ export const render = async (id) => {
   const newRenderTask = page.render(renderContext)
   await newRenderTask.promise
   if (pageState.canvas !== newCanvas) {
-    console.info('canceled')
     return
   }
   originalContext.drawImage(newCanvas, 0, 0)
-  console.log('render')
 }
 
 export const resize = async (id, width, height) => {
