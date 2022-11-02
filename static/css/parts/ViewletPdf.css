@@ -1,3 +1,9 @@
+:root {
+  --PdfToolBarBackground: rgba(249, 249, 250, 1);
+  --PdfToolBarBorderColor: rgba(204, 204, 204, 1);
+  --PdfToolBarColor: rgba(12, 12, 13, 1);
+}
+
 .Viewlet.Pdf {
   color: white;
 }
@@ -6,7 +12,11 @@
   height: 32px;
   contain: strict;
   display: flex;
-  background: lightgray;
+  background: var(--PdfToolBarBackground);
+  box-shadow: 0 1px 0 var(--PdfToolBarBorderColor);
+  align-items: center;
+  color: var(--PdfToolBarColor);
+  gap: 5px;
 }
 
 .PdfContent {
@@ -18,7 +28,6 @@
   width: 40px;
   min-width: 40px;
   flex-grow: 0;
-  color: black;
   -moz-appearance: textfield; /* hides the spinner in moz */
 }
 
@@ -27,5 +36,4 @@
 }
 
 .PdfNumberOfPages {
-  color: black;
 }
