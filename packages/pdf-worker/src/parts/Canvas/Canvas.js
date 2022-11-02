@@ -37,6 +37,10 @@ export const setContent = async (id, content) => {
   const page = await pdf.getPage(pageNumber)
   pageState.page = page
   pageState.pdf = pdf
+  const numberOfPages = pdf.numPages
+  return {
+    numberOfPages,
+  }
 }
 
 export const focusPage = async (id, pageIndex) => {

@@ -5,11 +5,22 @@
 .PdfToolBar {
   height: 32px;
   contain: strict;
-  background: orangered;
   display: flex;
+  background: lightgray;
 }
 
 .PdfContent {
   overflow-y: auto;
   user-select: text;
+}
+
+.PdfPageNumber {
+  width: 40px;
+  min-width: 40px;
+  flex-grow: 0;
+  color: black;
+}
+
+.PdfNumberOfPages {
+  color: black;
 }

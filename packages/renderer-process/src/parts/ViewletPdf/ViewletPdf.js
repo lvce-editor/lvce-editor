@@ -16,9 +16,13 @@ export const create = () => {
 
   const $PageNumber = InputBox.create()
   $PageNumber.type = 'number'
+  $PageNumber.classList.add('PdfPageNumber')
+  $PageNumber.min = '1'
+  $PageNumber.autocomplete = 'off'
 
   const $NumberOfPages = document.createElement('div')
   $NumberOfPages.textContent = 'of 10'
+  $NumberOfPages.className = 'PdfNumberOfPages'
 
   const $ButtonZoomIn = document.createElement('button')
   $ButtonZoomIn.textContent = 'Zoom in'
@@ -58,6 +62,8 @@ export const create = () => {
     $ButtonPrint,
     $Canvas: undefined,
     $PdfContent,
+    $NumberOfPages,
+    $PageNumber,
   }
 }
 
@@ -66,4 +72,15 @@ export const setCanvas = (state, id) => {
   const $Canvas = OffscreenCanvas.get(id)
   $PdfContent.append($Canvas)
   state.$Canvas = $Canvas
+}
+
+export const setNumberOfPages = (state, numberOfPages) => {
+  const { $NumberOfPages, $PageNumber } = state
+  $NumberOfPages.textContent = `of ${numberOfPages}`
+  $PageNumber.max = `${numberOfPages}`
+}
+
+export const setPageNumber = (state, pageNumber) => {
+  const { $PageNumber } = state
+  $PageNumber.value = `${pageNumber + 1}`
 }

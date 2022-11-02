@@ -20,6 +20,7 @@ export const create = (id, uri, top, left, width, height) => {
     canvas: undefined,
     canvasId: 0,
     page: 0,
+    numberOfPages: 0,
   }
 }
 
@@ -30,7 +31,11 @@ export const loadContent = async (state) => {
   const ipc = await PdfWorker.create()
   const canvas = await OffscreenCanvas.create(canvasId)
   await PdfWorkerFunctions.sendCanvas(ipc, canvasId, canvas)
-  await PdfWorkerFunctions.setContent(ipc, canvasId, content)
+  const { numberOfPages } = await PdfWorkerFunctions.setContent(
+    ipc,
+    canvasId,
+    content
+  )
   await PdfWorkerFunctions.resize(ipc, canvasId, width, height)
   await PdfWorkerFunctions.render(ipc, canvasId)
   return {
@@ -39,6 +44,7 @@ export const loadContent = async (state) => {
     ipc,
     canvas,
     canvasId,
+    numberOfPages,
   }
 }
 
@@ -65,4 +71,22 @@ const renderCanvas = {
   },
 }
 
-export const render = [renderCanvas]
+const renderNumberOfPages = {
+  isEqual(oldState, newState) {
+    return oldState.numberOfPages === newState.numberOfPages
+  },
+  apply(oldState, newState) {
+    return ['Viewlet.send', 'Pdf', 'setNumberOfPages', newState.numberOfPages]
+  },
+}
+
+const renderPageNumber = {
+  isEqual(oldState, newState) {
+    return oldState.page === newState.page
+  },
+  apply(oldState, newState) {
+    return ['Viewlet.send', 'Pdf', 'setPageNumber', newState.page]
+  },
+}
+
+export const render = [renderCanvas, renderNumberOfPages, renderPageNumber]
