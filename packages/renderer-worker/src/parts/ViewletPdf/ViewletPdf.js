@@ -4,6 +4,7 @@ import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as PdfWorker from '../PdfWorker/PdfWorker.js'
 import * as PdfWorkerFunctions from '../PdfWorkerFunctions/PdfWorkerFunctions.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as EncodingType from '../EncodingType/EncodingType.js'
 
 export const name = ViewletModuleId.Pdf
 
@@ -26,7 +27,7 @@ export const create = (id, uri, top, left, width, height) => {
 
 export const loadContent = async (state) => {
   const { uri, width, height } = state
-  const content = await FileSystem.readFile(uri, 'binary')
+  const content = await FileSystem.readFile(uri, EncodingType.Binary)
   const canvasId = Id.create()
   const ipc = await PdfWorker.create()
   const canvas = await OffscreenCanvas.create(canvasId)
