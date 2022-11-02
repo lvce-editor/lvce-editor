@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import { FileNotFoundError } from '../src/parts/Error/FileNotFoundError.js'
+import * as EncodingType from '../src/parts/EncodingType/EncodingType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -87,7 +87,7 @@ test('addPath - error - recently opened file has invalid json', async () => {
   \"/test/new-path.txt\"
 ]
 `,
-    'utf8'
+    EncodingType.Utf8
   )
 })
 
@@ -129,7 +129,7 @@ test('addPath - error - writeFile - parent folder does not exist', async () => {
   \"/test/new-path.txt\"
 ]
 `,
-    'utf8'
+    EncodingType.Utf8
   )
   expect(fs.mkdir).toHaveBeenCalledWith('/test', { recursive: true })
   expect(fs.writeFile).toHaveBeenNthCalledWith(
@@ -139,6 +139,6 @@ test('addPath - error - writeFile - parent folder does not exist', async () => {
   \"/test/new-path.txt\"
 ]
 `,
-    'utf8'
+    EncodingType.Utf8
   )
 })
