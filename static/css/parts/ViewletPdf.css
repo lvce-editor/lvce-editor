@@ -6,6 +6,8 @@
 
 .Viewlet.Pdf {
   color: white;
+  display: flex;
+  flex-direction: column;
 }
 
 .PdfToolBar {
@@ -17,11 +19,13 @@
   align-items: center;
   color: var(--PdfToolBarColor);
   gap: 5px;
+  flex-shrink: 0;
 }
 
 .PdfContent {
   overflow-y: auto;
   user-select: text;
+  overflow-x: hidden;
 }
 
 .PdfPageNumber {

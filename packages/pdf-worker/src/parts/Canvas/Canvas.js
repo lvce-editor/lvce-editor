@@ -54,10 +54,11 @@ export const resize = async (id, width, height) => {
   const pageState = getPageState(id)
   const { page, canvas } = pageState
   canvas.width = width
-  canvas.height = height
+  // canvas.height = height
   const viewport = page.getViewport({
     scale: width / page.getViewport({ scale: 1 }).width,
   })
+  canvas.height = Math.floor(viewport.height)
   pageState.viewport = viewport
 }
 
