@@ -25,6 +25,13 @@ export const create = (id, uri, top, left, width, height) => {
   }
 }
 
+export const saveState = (state) => {
+  const { uri } = state
+  return {
+    uri,
+  }
+}
+
 export const loadContent = async (state) => {
   const { uri, width, height } = state
   const content = await FileSystem.readFile(uri, EncodingType.Binary)

@@ -7,7 +7,7 @@ export const create = async () => {
     import.meta.url
   ).toString()
   const worker = await IpcParent.create({
-    method: IpcParentType.ModuleWorker,
+    method: IpcParentType.MessagePort,
     url,
     name: 'Pdf Worker',
   })

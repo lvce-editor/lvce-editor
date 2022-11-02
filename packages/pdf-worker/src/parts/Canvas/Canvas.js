@@ -7,11 +7,14 @@ export const state = {
 
 export const addCanvas = async (canvasId, canvas, data) => {
   // Prepare canvas using PDF page dimensions
-  const context = canvas.getContext('2d', { alpha: false })
+  const context = canvas.getContext('2d', {
+    alpha: false,
+    desynchronized: true,
+  })
   state.pages[canvasId] = {
     page: undefined,
-    context,
-    canvas,
+    originalContext: context,
+    originalCanvas: canvas,
     viewport: undefined,
   }
 }
@@ -50,26 +53,46 @@ export const focusPage = async (id, pageIndex) => {
   pageState.page = page
 }
 
+// let _id = 0
+
 export const render = async (id) => {
   const pageState = getPageState(id)
-  const { context, viewport, page } = pageState
+  const { originalCanvas, originalContext, viewport, page, canvas, context } =
+    pageState
+  // @ts-ignore
+  const newCanvas = new OffscreenCanvas(
+    originalCanvas.width,
+    originalCanvas.height
+  )
+  const newContext = newCanvas.getContext('2d', {
+    alpha: false,
+    desynchronized: true,
+  })
   const renderContext = {
-    canvasContext: context,
+    canvasContext: newContext,
     viewport,
   }
-  const renderTask = page.render(renderContext)
-  await renderTask.promise
+  pageState.canvas = newCanvas
+  pageState.context = newContext
+  const newRenderTask = page.render(renderContext)
+  await newRenderTask.promise
+  if (pageState.canvas !== newCanvas) {
+    console.info('canceled')
+    return
+  }
+  originalContext.drawImage(newCanvas, 0, 0)
+  console.log('render')
 }
 
 export const resize = async (id, width, height) => {
   const pageState = getPageState(id)
-  const { page, canvas, context } = pageState
+  const { page, originalCanvas, originalContext } = pageState
   // canvas.height = height
   const viewport = page.getViewport({
     scale: width / page.getViewport({ scale: 1 }).width,
   })
   pageState.viewport = viewport
-  canvas.width = width
-  canvas.height = Math.floor(viewport.height)
+  originalCanvas.width = width
+  originalCanvas.height = Math.floor(viewport.height)
   await render(id)
 }

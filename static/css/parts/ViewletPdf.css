@@ -24,8 +24,9 @@
 
 .PdfContent {
   overflow-y: auto;
-  user-select: text;
   overflow-x: hidden;
+  user-select: text;
+  contain: content;
 }
 
 .PdfPageNumber {
