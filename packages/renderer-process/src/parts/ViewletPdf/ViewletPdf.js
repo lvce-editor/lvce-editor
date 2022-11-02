@@ -1,17 +1,31 @@
 import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as ViewletPdfEvents from './ViewletPdfEvents.js'
+import * as IconButton from '../IconButton/IconButton.js'
+import * as Icon from '../Icon/Icon.js'
+
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  Next: 'Next',
+  Previous: 'Previous',
+}
 
 export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Pdf'
 
-  const $ButtonNextPage = document.createElement('button')
-  $ButtonNextPage.textContent = 'Next'
+  const $ButtonNextPage = IconButton.create$Button(
+    UiStrings.Next,
+    Icon.ArrowRight
+  )
   $ButtonNextPage.onclick = ViewletPdfEvents.handleClickNext
 
-  const $ButtonPreviousPage = document.createElement('button')
-  $ButtonPreviousPage.textContent = 'Previous'
+  const $ButtonPreviousPage = IconButton.create$Button(
+    UiStrings.Previous,
+    Icon.ArrowLeft
+  )
   $ButtonPreviousPage.onclick = ViewletPdfEvents.handleClickPrevious
 
   const $PageNumber = InputBox.create()
