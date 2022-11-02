@@ -19,17 +19,17 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Pdf'
 
-  const $ButtonNextPage = IconButton.create$Button(
-    UiStrings.Next,
-    Icon.ArrowRight
-  )
-  $ButtonNextPage.onclick = ViewletPdfEvents.handleClickNext
-
   const $ButtonPreviousPage = IconButton.create$Button(
     UiStrings.Previous,
-    Icon.ArrowLeft
+    Icon.ChevronUp
   )
   $ButtonPreviousPage.onclick = ViewletPdfEvents.handleClickPrevious
+
+  const $ButtonNextPage = IconButton.create$Button(
+    UiStrings.Next,
+    Icon.ChevronDown
+  )
+  $ButtonNextPage.onclick = ViewletPdfEvents.handleClickNext
 
   const $PageNumber = InputBox.create()
   $PageNumber.type = 'number'
@@ -41,12 +41,13 @@ export const create = () => {
   $NumberOfPages.textContent = 'of 10'
   $NumberOfPages.className = 'PdfNumberOfPages'
 
-  const $ButtonZoomIn = document.createElement('button')
-  $ButtonZoomIn.textContent = UiStrings.ZoomIn
+  const $ButtonZoomIn = IconButton.create$Button(UiStrings.ZoomIn, Icon.ZoomIn)
   $ButtonZoomIn.onclick = ViewletPdfEvents.handleClickZoomIn
 
-  const $ButtonZoomOut = document.createElement('button')
-  $ButtonZoomOut.textContent = UiStrings.ZoomOut
+  const $ButtonZoomOut = IconButton.create$Button(
+    UiStrings.ZoomOut,
+    Icon.ZoomOut
+  )
   $ButtonZoomOut.onclick = ViewletPdfEvents.handleClickZoomOut
 
   const $ButtonPrint = document.createElement('button')
