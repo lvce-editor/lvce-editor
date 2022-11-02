@@ -53,8 +53,6 @@ export const focusPage = async (id, pageIndex) => {
   pageState.page = page
 }
 
-// let _id = 0
-
 export const render = async (id) => {
   const pageState = getPageState(id)
   const { originalCanvas, originalContext, viewport, page, canvas, context } =
