@@ -8,7 +8,12 @@ export const state = {
 export const addCanvas = async (canvasId, canvas, data) => {
   // Prepare canvas using PDF page dimensions
   const context = canvas.getContext('2d', { alpha: false })
-  state.pages[canvasId] = { page: undefined, context, canvas }
+  state.pages[canvasId] = {
+    page: undefined,
+    context,
+    canvas,
+    viewport: undefined,
+  }
 }
 
 const getPageState = (id) => {
@@ -31,14 +36,14 @@ export const setContent = async (id, content) => {
   const pageNumber = 1
   const page = await pdf.getPage(pageNumber)
   pageState.page = page
+  pageState.pdf = pdf
 }
 
 export const focusPage = async (id, pageIndex) => {
   const pageState = getPageState(id)
-  const { renderContext, pdf } = pageState
+  const { pdf } = pageState
   const page = await pdf.getPage(pageIndex + 1)
-  const renderTask = page.render(renderContext)
-  await renderTask.promise
+  pageState.page = page
 }
 
 export const resize = async (id, width, height) => {
