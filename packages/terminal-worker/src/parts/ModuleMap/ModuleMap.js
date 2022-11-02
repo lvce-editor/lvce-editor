@@ -6,6 +6,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Terminal
     case 'OffscreenCanvas.add':
       return ModuleId.OffscreenCanvas
+    case 'TerminalConnection.create':
+      return ModuleId.TerminalConnection
     default:
       throw new Error(`command ${commandId} not found`)
   }

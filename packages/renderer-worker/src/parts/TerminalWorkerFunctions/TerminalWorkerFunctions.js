@@ -41,3 +41,7 @@ export const addCanvas = (ipc, canvasId, offscreenCanvas) => {
 export const render = (ipc, canvasId) => {
   return invoke(ipc, 'Terminal.render', canvasId)
 }
+
+export const createConnection = (ipc) => {
+  return invoke(ipc, 'TerminalConnection.create')
+}

@@ -8,6 +8,7 @@ import { requiresSocket } from '../RequiresSocket/RequiresSocket.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
 import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
+import * as TerminalProcessIpc from '../TerminalProcessIpc/TerminalProcessIpc.js'
 // TODO add tests for this
 
 // TODO handle structure: one shared process multiple extension hosts
@@ -61,6 +62,11 @@ const handleWebSocketExtensionHost = async (message, handle) => {
   // console.log(rpc)
 }
 
+const handleWebSocketTerminalProcess = async (message, handle) => {
+  const ipc = await TerminalProcessIpc.create()
+  ipc.send(message, handle)
+}
+
 const handleWebSocket = (message, handle) => {
   const headers = message.headers
   if (!headers) {
@@ -75,6 +81,8 @@ const handleWebSocket = (message, handle) => {
       return handleWebSocketSharedProcess(message, handle)
     case 'lvce.extension-host':
       return handleWebSocketExtensionHost(message, handle)
+    case 'lvce.terminal-process':
+      return handleWebSocketTerminalProcess(message, handle)
     default:
       throw new VError(`unsupported sec-websocket-procotol ${protocol}`)
   }
@@ -209,7 +217,6 @@ const electronInitialize = (initializeMessage) => {
               },
             })
           }
-
         }
       } else {
         Command.execute(message.method, fakeSocket, ...message.params)

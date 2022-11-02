@@ -6,6 +6,8 @@ export const load = (moduleId) => {
       return import('../Terminal/Terminal.ipc.js')
     case ModuleId.OffscreenCanvas:
       return import('../OffscreenCanvas/OffscreenCanvas.ipc.js')
+    case ModuleId.TerminalConnection:
+      return import('../TerminalConnection/TerminalConnection.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

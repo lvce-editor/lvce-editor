@@ -22,6 +22,7 @@ export const loadContent = async (state) => {
   const canvasId = Id.create()
   const canvas = await OffscreenCanvas.create(canvasId)
   await TerminalWorkerFunctions.addCanvas(ipc, canvasId, canvas)
+  await TerminalWorkerFunctions.createConnection(ipc)
   await TerminalWorkerFunctions.render(ipc, canvasId)
   return {
     ...state,
