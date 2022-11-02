@@ -5,6 +5,7 @@ import * as WriteFile from '../WriteFile/WriteFile.js'
 import * as Path from '../Path/Path.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Replace from '../Replace/Replace.js'
+import * as EncodingType from '../EncodingType/EncodingType.js'
 
 const getParts = (appCss) => {
   const lines = appCss.split('\n')
@@ -43,13 +44,13 @@ export const bundleCss = async ({
     css += '\n\n'
   }
   const cssLibTermTerm = join(Root.root, 'static', 'lib-css', 'termterm.css')
-  css += await readFile(cssLibNormalize, 'utf8')
+  css += await readFile(cssLibNormalize, EncodingType.Utf8)
   css += '\n'
-  css += await readFile(cssLibTermTerm, 'utf8')
+  css += await readFile(cssLibTermTerm, EncodingType.Utf8)
   css += '\n'
   const appCss = await readFile(
     join(Root.root, 'static', 'css', 'App.css'),
-    'utf8'
+    EncodingType.Utf8
   )
   const parts = getParts(appCss)
   const cwd = join(Root.root, 'static', 'css', 'parts')
@@ -59,7 +60,7 @@ export const bundleCss = async ({
     if (parts.includes(dirent)) {
       for (const part of parts) {
         const absolutePath = join(cwd, part)
-        const content = await readFile(absolutePath, 'utf8')
+        const content = await readFile(absolutePath, EncodingType.Utf8)
         css += `/*************/\n`
         css += `/* ${part} */\n`
         css += `/*************/\n`
