@@ -1,4 +1,5 @@
 import * as Id from '../Id/Id.js'
+import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as Terminal from '../Terminal/Terminal.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Workspace from '../Workspace/Workspace.js'
@@ -15,9 +16,17 @@ export const create = () => {
 export const loadContent = async (state) => {
   const id = Id.create()
   await Terminal.create(id, Workspace.state.workspacePath)
+  const canvasId = Id.create()
+  const canvas = await OffscreenCanvas.create(canvasId)
+  const ctx = canvas.getContext('2d', { alpha: false })
+  ctx.fillStyle = 'red'
+  ctx.font = '30px Arial'
+  ctx.fillText('Terminal', 10, 50)
   return {
     ...state,
     id: Id.create(),
+    canvas,
+    canvasId,
   }
 }
 
@@ -58,9 +67,9 @@ export const resizeEffect = async (state) => {
   const rowHeight = 14
   // const columns = Math.round(width / columnWidth)
   const columns = 7
-  const rows = Math.round(height / rowHeight)
+  // const rows = Math.round(height / rowHeight)
 
-  await Terminal.resize(id, columns, rows)
+  // await Terminal.resize(id, columns, rows)
 }
 
 export const clear = async (state) => {
@@ -69,4 +78,18 @@ export const clear = async (state) => {
 
 export const hasFunctionalRender = true
 
-export const render = []
+const renderCanvas = {
+  isEqual(oldState, newState) {
+    return oldState.canvasId === newState.canvasId
+  },
+  apply(oldState, newState) {
+    return [
+      'Viewlet.send',
+      ViewletModuleId.Terminal2,
+      'setCanvas',
+      newState.canvasId,
+    ]
+  },
+}
+
+export const render = [renderCanvas]
