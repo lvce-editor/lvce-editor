@@ -1,11 +1,12 @@
 export const listen = () => {
-  postMessage('ready')
+  const postMessageFn = globalThis.postMessage
+  postMessageFn('ready')
   return {
     send(message) {
-      postMessage(message)
+      postMessageFn(message)
     },
     sendAndTransfer(message, transferables) {
-      postMessage(message, transferables)
+      postMessageFn(message, transferables)
     },
     get onmessage() {
       return onmessage
