@@ -11,7 +11,7 @@ jest.unstable_mockModule(
       focusPage(state, pageNumber) {
         return {
           ...state,
-          pageNumber,
+          page: pageNumber,
         }
       },
     }
