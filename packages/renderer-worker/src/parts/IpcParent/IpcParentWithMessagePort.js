@@ -31,5 +31,8 @@ export const create = async ({ url }) => {
     send(message) {
       port.postMessage(message)
     },
+    sendAndTransfer(message, transfer) {
+      port.postMessage(message, transfer)
+    },
   }
 }
