@@ -26,12 +26,16 @@ const OffscreenCanvas = await import(
 
 test('create', async () => {
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation((method, id) => {
+  RendererProcess.invoke.mockImplementation((method, canvasId, id) => {
     Callback.resolve(id, {
-      isOffscreenCanvasPlaceholder: true,
+      params: [
+        {
+          isOffscreenCanvasPlaceholder: true,
+        },
+      ],
     })
   })
-  const offscreenCanvas = await OffscreenCanvas.create()
+  const offscreenCanvas = await OffscreenCanvas.create(1)
   expect(offscreenCanvas).toEqual({
     isOffscreenCanvasPlaceholder: true,
   })
