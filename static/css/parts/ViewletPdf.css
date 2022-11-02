@@ -19,6 +19,11 @@
   min-width: 40px;
   flex-grow: 0;
   color: black;
+  -moz-appearance: textfield; /* hides the spinner in moz */
+}
+
+.PdfPageNumber::-webkit-inner-spin-button {
+  -webkit-appearance: none;
 }
 
 .PdfNumberOfPages {
