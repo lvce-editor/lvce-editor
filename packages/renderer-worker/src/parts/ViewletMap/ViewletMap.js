@@ -10,6 +10,7 @@ const mapExtToEditorType = {
   '.webp': ViewletModuleId.EditorImage,
   '.jpg': ViewletModuleId.EditorImage,
   '.jpeg': ViewletModuleId.EditorImage,
+  '.pdf': ViewletModuleId.Pdf,
 }
 
 export const getId = (uri) => {

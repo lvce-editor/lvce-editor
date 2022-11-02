@@ -40,6 +40,8 @@ export const load = (moduleId) => {
       return import('../Meta/Meta.ipc.js')
     case ModuleId.Notification:
       return import('../Notification/Notification.ipc.js')
+    case ModuleId.OffscreenCanvas:
+      return import('../OffscreenCanvas/OffscreenCanvas.ipc.js')
     case ModuleId.Menu:
       return import('../OldMenu/Menu.ipc.js')
     case ModuleId.Open:

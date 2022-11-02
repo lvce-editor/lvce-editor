@@ -41,6 +41,15 @@
     "type": "javascript"
   },
   {
+    "name": "pdfjs",
+    "version": "3.0.279",
+    "type": "file-collection",
+    "urls": [
+      "https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.js",
+      "https://unpkg.com/pdfjs-dist@3.0.279/build/pdf.worker.js"
+    ]
+  },
+  {
     "name": "termterm",
     "version": "0.0.22",
     "type": "css",

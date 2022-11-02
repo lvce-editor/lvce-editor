@@ -48,7 +48,7 @@ const COLUMN_WIDTH = 9 // TODO compute this automatically once
 // }
 
 const canBeRestored = (editor) => {
-  return FileSystem.canBeRestored(editor.uri)
+  return typeof editor.uri === 'string' && FileSystem.canBeRestored(editor.uri)
 }
 
 const getMainEditors = (state) => {

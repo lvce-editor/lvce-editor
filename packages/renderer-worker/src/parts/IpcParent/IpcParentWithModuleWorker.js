@@ -102,6 +102,9 @@ export const create = async ({ url, name }) => {
       send(message) {
         worker.postMessage(message)
       },
+      sendAndTransfer(message, transfer) {
+        worker.postMessage(message, transfer)
+      },
     }
   } catch (error) {
     if (

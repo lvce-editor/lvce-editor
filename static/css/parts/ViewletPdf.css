@@ -1,0 +1,67 @@
+:root {
+  --PdfToolBarBackground: rgba(249, 249, 250, 1);
+  --PdfToolBarBorderColor: rgba(204, 204, 204, 1);
+  --PdfToolBarColor: rgba(12, 12, 13, 1);
+}
+
+.Viewlet.Pdf {
+  color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.PdfToolBar {
+  height: 32px;
+  contain: strict;
+  display: flex;
+  background: var(--PdfToolBarBackground);
+  box-shadow: 0 1px 0 var(--PdfToolBarBorderColor);
+  align-items: center;
+  color: var(--PdfToolBarColor);
+  gap: 5px;
+  flex-shrink: 0;
+  justify-content: center;
+}
+
+.PdfContent {
+  overflow-y: auto;
+  overflow-x: hidden;
+  user-select: text;
+  contain: content;
+}
+
+.PdfPageNumber {
+  width: 40px;
+  min-width: 40px;
+  flex-grow: 0;
+  -moz-appearance: textfield; /* hides the spinner in moz */
+}
+
+.PdfPageNumber::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.PdfNumberOfPages {
+}
+
+/* TODO duplicate code with find widget */
+.FindWidgetButton {
+  width: 25px;
+  height: 25px;
+  contain: strict;
+  flex-shrink: 0;
+  color: black;
+}
+
+.FindWidgetButton:hover {
+  background-color: rgba(221, 222, 223, 1);
+}
+
+.FindWidgetButton:focus-visible {
+  outline: 1px solid green;
+  outline-offset: -1px;
+}
+
+.FindWidgetButton .MaskIcon {
+  color: black;
+}
