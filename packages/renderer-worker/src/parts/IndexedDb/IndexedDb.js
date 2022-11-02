@@ -40,6 +40,11 @@ export const saveValue = async (storeId, value) => {
     const db = await getDbMemoized()
     await db.add('session', value)
   } catch (error) {
+    // @ts-ignore
+    if (error && error.name === `DataCloneError`) {
+      // TODO
+      return
+    }
     throw new VError(error, 'Failed to save value to indexed db')
   }
 }
