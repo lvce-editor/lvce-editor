@@ -1,7 +1,5 @@
 .Viewlet.Pdf {
   color: white;
-  user-select: text;
-  overflow-y: auto;
 }
 
 .PdfToolBar {
@@ -9,4 +7,9 @@
   contain: strict;
   background: orangered;
   display: flex;
+}
+
+.PdfContent {
+  overflow-y: auto;
+  user-select: text;
 }

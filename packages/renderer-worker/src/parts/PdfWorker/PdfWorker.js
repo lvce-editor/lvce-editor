@@ -1,6 +1,5 @@
-import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
-import * as PdfWorkerIpc from '../PdfWorkerIpc/PdfWorkerIpc.js'
 import * as Callback from '../Callback/Callback.js'
+import * as PdfWorkerIpc from '../PdfWorkerIpc/PdfWorkerIpc.js'
 
 const handleMessage = (message) => {
   if ('id' in message) {
@@ -23,31 +22,4 @@ export const create = async () => {
       ipc.sendAndTransfer(message, transfer)
     },
   }
-}
-
-export const invoke = (ipc, method, ...params) => {
-  return new Promise((resolve, reject) => {
-    const callbackId = Callback.register(resolve, reject)
-    ipc.send({
-      jsonrpc: JsonRpcVersion.Two,
-      id: callbackId,
-      method,
-      params,
-    })
-  })
-}
-
-export const sendCanvas = (ipc, canvasId, offscreenCanvas) => {
-  return new Promise((resolve, reject) => {
-    const callbackId = Callback.register(resolve, reject)
-    ipc.sendAndTransfer(
-      {
-        jsonrpc: JsonRpcVersion.Two,
-        id: callbackId,
-        method: 'Canvas.addCanvas',
-        params: [canvasId, offscreenCanvas],
-      },
-      [offscreenCanvas]
-    )
-  })
 }

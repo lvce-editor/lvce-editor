@@ -1,8 +1,9 @@
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as PdfWorker from '../PdfWorker/PdfWorker.js'
-import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
 import * as Id from '../Id/Id.js'
+import * as OffscreenCanvas from '../OffscreenCanvas/OffscreenCanvas.js'
+import * as PdfWorker from '../PdfWorker/PdfWorker.js'
+import * as PdfWorkerFunctions from '../PdfWorkerFunctions/PdfWorkerFunctions.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const name = ViewletModuleId.Pdf
 
@@ -28,10 +29,10 @@ export const loadContent = async (state) => {
   const canvasId = Id.create()
   const ipc = await PdfWorker.create()
   const canvas = await OffscreenCanvas.create(canvasId)
-  await PdfWorker.sendCanvas(ipc, canvasId, canvas)
-  await PdfWorker.invoke(ipc, 'Canvas.setContent', canvasId, content)
-  await PdfWorker.invoke(ipc, 'Canvas.resize', canvasId, width, height)
-  await PdfWorker.invoke(ipc, 'Canvas.render', canvasId)
+  await PdfWorkerFunctions.sendCanvas(ipc, canvasId, canvas)
+  await PdfWorkerFunctions.setContent(ipc, canvasId, content)
+  await PdfWorkerFunctions.resize(ipc, canvasId, width, height)
+  await PdfWorkerFunctions.render(ipc, canvasId)
   return {
     ...state,
     content,
@@ -49,8 +50,8 @@ export const resize = (state, dimensions) => {
 
 export const resizeEffect = async (state) => {
   const { canvasId, width, height, ipc } = state
-  await PdfWorker.invoke(ipc, 'Canvas.resize', canvasId, width, height)
-  await PdfWorker.invoke(ipc, 'Canvas.render', canvasId)
+  await PdfWorkerFunctions.resize(ipc, canvasId, width, height)
+  await PdfWorkerFunctions.render(ipc, canvasId)
 }
 
 export const hasFunctionalRender = true
@@ -60,7 +61,6 @@ const renderCanvas = {
     return oldState.canvasId === newState.canvasId
   },
   apply(oldState, newState) {
-    console.log('render canvas')
     return ['Viewlet.send', 'Pdf', 'setCanvas', newState.canvasId]
   },
 }

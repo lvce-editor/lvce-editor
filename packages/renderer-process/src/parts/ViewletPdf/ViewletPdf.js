@@ -44,7 +44,10 @@ export const create = () => {
     $ButtonPrint
   )
 
-  $Viewlet.append($PdfToolBar)
+  const $PdfContent = document.createElement('div')
+  $PdfContent.className = 'PdfContent'
+
+  $Viewlet.append($PdfToolBar, $PdfContent)
 
   return {
     $Viewlet,
@@ -54,12 +57,13 @@ export const create = () => {
     $ButtonZoomOut,
     $ButtonPrint,
     $Canvas: undefined,
+    $PdfContent,
   }
 }
 
 export const setCanvas = (state, id) => {
-  const { $Viewlet } = state
+  const { $PdfContent } = state
   const $Canvas = OffscreenCanvas.get(id)
-  $Viewlet.append($Canvas)
+  $PdfContent.append($Canvas)
   state.$Canvas = $Canvas
 }
