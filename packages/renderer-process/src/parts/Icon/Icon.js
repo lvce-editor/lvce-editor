@@ -1,4 +1,3 @@
-export const Close = '/icons/icon-close.svg'
 export const PreviousMatch = '/icons/arrow-up.svg'
 export const ArrowRight = '/icons/arrow-right.svg'
 export const ArrowLeft = '/icons/arrow-left.svg'
