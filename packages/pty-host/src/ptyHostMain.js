@@ -16,8 +16,8 @@ import * as Debug from './parts/Debug/Debug.js'
 //   }
 // }
 
-const handleMessage = (message) => {
-  console.log({ message })
+const handleMessage = (message, socket) => {
+  console.log({ message, socket })
 }
 
 const main = async () => {
