@@ -3,6 +3,7 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 export const getModuleId = (commandId) => {
   switch (commandId) {
     case 'Terminal.render':
+    case 'Terminal.handleData':
       return ModuleId.Terminal
     case 'OffscreenCanvas.add':
       return ModuleId.OffscreenCanvas

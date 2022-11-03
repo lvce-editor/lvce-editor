@@ -17,7 +17,7 @@ export const create = () => {
 
 export const loadContent = async (state) => {
   const ipc = await TerminalWorker.create({
-    method: IpcParentType.ModuleWorker,
+    method: IpcParentType.MessagePort,
   })
   const canvasId = Id.create()
   const canvas = await OffscreenCanvas.create(canvasId)

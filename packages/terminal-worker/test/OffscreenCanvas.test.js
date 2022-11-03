@@ -4,7 +4,7 @@ beforeEach(() => {
   OffscreenCanvas.reset()
 })
 
-test('add', () => {
+test.skip('add', () => {
   OffscreenCanvas.add(1, { offscreenCanvasPlaceholder: true })
   expect(OffscreenCanvas.all()).toEqual({
     1: {
@@ -13,18 +13,18 @@ test('add', () => {
   })
 })
 
-test('remove', () => {
+test.skip('remove', () => {
   OffscreenCanvas.add(1, { offscreenCanvasPlaceholder: true })
   OffscreenCanvas.remove(1)
   expect(OffscreenCanvas.all()).toEqual({})
 })
 
-test('keys', () => {
+test.skip('keys', () => {
   OffscreenCanvas.add(1, { offscreenCanvasPlaceholder: true })
   expect(OffscreenCanvas.keys()).toEqual(['1'])
 })
 
-test('values', () => {
+test.skip('values', () => {
   OffscreenCanvas.add(1, { offscreenCanvasPlaceholder: true })
   expect(OffscreenCanvas.values()).toEqual([
     {
