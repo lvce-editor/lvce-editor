@@ -11,7 +11,9 @@ jest.unstable_mockModule('ws', () => {
   }
 })
 
-const IpcWithWebSocket = await import('../src/parts/Ipc/IpcWithWebSocket.js')
+const IpcChildWithWebSocket = await import(
+  '../src/parts/IpcChild/IpcChildWithWebSocket.js'
+)
 const ws = await import('ws')
 
 const createFakeIpc = () => {
@@ -40,7 +42,7 @@ const createFakeIpc = () => {
 
 test('listen - error - websocket expected', async () => {
   const processIpc = createFakeIpc()
-  const ipcPromise = IpcWithWebSocket.listen(processIpc)
+  const ipcPromise = IpcChildWithWebSocket.listen(processIpc)
   processIpc.emit('message', 'abc')
   await expect(ipcPromise).rejects.toThrowError(new Error('websocket expected'))
   expect(processIpc.listenerCount()).toBe(0)
@@ -48,7 +50,7 @@ test('listen - error - websocket expected', async () => {
 
 test('listen', async () => {
   const processIpc = createFakeIpc()
-  const ipcPromise = IpcWithWebSocket.listen(processIpc)
+  const ipcPromise = IpcChildWithWebSocket.listen(processIpc)
   const socket = {}
   processIpc.emit('message', '', socket)
   expect(await ipcPromise).toBeDefined()
