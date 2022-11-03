@@ -4,7 +4,7 @@
     "target": "esnext",
     "checkJs": true,
     "module": "esnext",
-    "types": ["node", "jest", "vscode-types"],
+    "types": ["node", "jest"],
     "moduleResolution": "node",
     "isolatedModules": true,
     "noImplicitAny": false,

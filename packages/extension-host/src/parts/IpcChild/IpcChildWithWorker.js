@@ -3,7 +3,7 @@ import { parentPort } from 'node:worker_threads'
 export const listen = async (commandRegistry) => {
   const port = parentPort
   if (!port) {
-    return undefined
+    throw new Error('parent port not found')
   }
   return {
     send(message) {
