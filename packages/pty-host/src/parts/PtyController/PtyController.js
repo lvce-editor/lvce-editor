@@ -1,5 +1,7 @@
 import * as Pty from '../Pty/Pty.js'
 import * as Debug from '../Debug/Debug.js'
+import * as RpcOut from '../RpcOut/RpcOut.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const state = {
   ptyMap: Object.create(null),
@@ -7,16 +9,13 @@ export const state = {
 
 // TODO maybe merge pty and pty controller
 export const create = (id, cwd) => {
+  Assert.number(id)
+  Assert.string(cwd)
+  console.log('create terminal')
   Debug.debug(`create ${id} ${cwd}`)
   const pty = Pty.create({ cwd })
   const handleData = (data) => {
-    if (process.send) {
-      process.send({
-        jsonrpc: '2.0',
-        method: 'Terminal.handleData',
-        params: [id, data],
-      })
-    }
+    RpcOut.send('Terminal.handleData', id, data)
   }
   Pty.onData(pty, handleData)
   state.ptyMap[id] = pty

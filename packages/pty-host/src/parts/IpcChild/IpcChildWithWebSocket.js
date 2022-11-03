@@ -4,7 +4,7 @@ import * as WebSocketServer from '../WebSocketServer/WebSocketServer.js'
 
 export const listen = async () => {
   Assert.object(process)
-  console.log('[extension host] listening for websocket')
+  console.log('[pty-host] listening for websocket')
 
   const webSocketServer = new WebSocketServer.WebSocketServer({
     noServer: true,
@@ -27,7 +27,7 @@ export const listen = async () => {
     process.send('ready')
   })
 
-  console.log('[extension host] got socket')
+  console.log('[pty-host] got socket')
   const webSocket = await new Promise((resolve, reject) => {
     const upgradeCallback = (webSocket) => {
       resolve(webSocket)

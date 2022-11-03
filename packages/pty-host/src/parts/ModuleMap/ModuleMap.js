@@ -2,12 +2,10 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const getModuleId = (commandId) => {
   switch (commandId) {
-    case 'Canvas.addCanvas':
-    case 'Canvas.focusPage':
-    case 'Canvas.resize':
-    case 'Canvas.setContent':
-    case 'Canvas.render':
-      return ModuleId.Canvas
+    case 'PtyController.create':
+    case 'PtyController.write':
+    case 'PtyController.dispose':
+      return ModuleId.PtyController
     default:
       throw new Error(`command ${commandId} not found`)
   }
