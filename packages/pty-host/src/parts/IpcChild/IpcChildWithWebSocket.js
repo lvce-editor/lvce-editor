@@ -1,5 +1,4 @@
 import VError from 'verror'
-import * as _ws from 'ws'
 import * as Assert from '../Assert/Assert.js'
 import * as WebSocketServer from '../WebSocketServer/WebSocketServer.js'
 
