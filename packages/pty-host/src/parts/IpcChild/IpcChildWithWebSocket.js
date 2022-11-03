@@ -1,18 +1,13 @@
 import VError from 'verror'
 import * as _ws from 'ws'
 import * as Assert from '../Assert/Assert.js'
-
-// workaround for jest or node bug
-const WebSocketServer = _ws.WebSocketServer
-  ? _ws.WebSocketServer
-  : // @ts-ignore
-    _ws.default.WebSocketServer
+import * as WebSocketServer from '../WebSocketServer/WebSocketServer.js'
 
 export const listen = async () => {
   Assert.object(process)
   console.log('[extension host] listening for websocket')
 
-  const webSocketServer = new WebSocketServer({
+  const webSocketServer = new WebSocketServer.WebSocketServer({
     noServer: true,
   })
 
