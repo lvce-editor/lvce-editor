@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "bytes": "^3.1.2",
-    "esbuild": "^0.15.12",
+    "esbuild": "^0.15.13",
     "fs-extra": "^10.1.0",
     "got": "^12.5.2",
     "gzip-size": "^7.0.0",
