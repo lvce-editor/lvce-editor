@@ -260,6 +260,9 @@ export const getModuleId = (commandId) => {
     case 'Workspace.setPath':
     case 'Workspace.setUri':
       return ModuleId.Workspace
+    case 'ElectronMenu.handleSelect':
+    case 'ElectronMenu.handleMenuClose':
+      return ModuleId.ElectronMenu
     default:
       throw new Error(`command ${commandId} not found`)
   }
