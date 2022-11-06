@@ -366,7 +366,7 @@ export const loadContent = (state, savedState) => {
   }
 }
 
-const show = async (state, module) => {
+const show = async (state, module, currentViewletId) => {
   const { points } = state
   const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
   const newPoints = new Uint16Array(points)
@@ -376,19 +376,26 @@ const show = async (state, module) => {
   const left = newPoints[kLeft]
   const width = newPoints[kWidth]
   const height = newPoints[kHeight]
-  const commands = await ViewletManager.load({
-    getModule: ViewletModule.load,
-    id: moduleId,
-    type: 0,
-    // @ts-ignore
-    uri: '',
-    show: false,
-    focus: false,
-    top,
-    left,
-    width,
-    height,
-  })
+  const commands = await ViewletManager.load(
+    {
+      getModule: ViewletModule.load,
+      id: moduleId,
+      type: 0,
+      // @ts-ignore
+      uri: '',
+      show: false,
+      focus: false,
+      top,
+      left,
+      width,
+      height,
+    },
+    false,
+    false,
+    {
+      currentViewletId,
+    }
+  )
   if (commands) {
     commands.push(['Viewlet.append', 'Layout', moduleId])
   }
@@ -422,13 +429,13 @@ const hide = (state, module) => {
   }
 }
 
-const toggle = (state, module) => {
+const toggle = (state, module, moduleId) => {
   const { points } = state
   const { kVisible } = module
   if (points[kVisible]) {
     return hide(state, module)
   }
-  return show(state, module)
+  return show(state, module, moduleId)
 }
 
 export const showSideBar = (state) => {
@@ -451,8 +458,8 @@ export const hidePanel = (state) => {
   return hide(state, mPanel)
 }
 
-export const togglePanel = (state) => {
-  return toggle(state, mPanel)
+export const togglePanel = (state, moduleId = ViewletModuleId.None) => {
+  return toggle(state, mPanel, moduleId)
 }
 
 export const showActivityBar = (state) => {
