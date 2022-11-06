@@ -11,7 +11,6 @@ export const focusIndex = (state, index) => {
   }
   const listHeight = getListHeight(state)
   if (index < minLineY + 1) {
-    console.log('if 1')
     // scroll up
     const newMinLineY = index
     const newMaxLineY = newMinLineY + Math.ceil(listHeight / itemHeight)
@@ -26,13 +25,11 @@ export const focusIndex = (state, index) => {
     }
   }
   if (index >= maxLineY - 1) {
-    console.log('if 2')
-
     //  scroll down
     const newMaxLineY = index + 1
     const newMinLineY = newMaxLineY - Math.ceil(listHeight / itemHeight)
     const newDeltaY =
-      newMinLineY * itemHeight + (listHeight % itemHeight) - itemHeight
+      newMinLineY * itemHeight - (listHeight % itemHeight) + itemHeight
     return {
       ...state,
       focusedIndex: index,
