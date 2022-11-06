@@ -101,7 +101,7 @@ test('focusIndex - partially in view - causes scrolling down', () => {
     focusedIndex: 2,
     minLineY: 1,
     maxLineY: 3,
-    deltaY: 38,
+    deltaY: 86,
   })
 })
 
