@@ -1,7 +1,7 @@
 import { getListHeight } from './ViewletExtensionsShared.js'
 
 export const focusIndex = (state, index) => {
-  const { itemHeight } = state
+  const { itemHeight, minLineY, maxLineY } = state
   if (index === -1) {
     return {
       ...state,
@@ -10,33 +10,36 @@ export const focusIndex = (state, index) => {
     }
   }
   const listHeight = getListHeight(state)
-  if (index < state.minLineY + 1) {
+  if (index < minLineY + 1) {
+    console.log('if 1')
     // scroll up
-    const minLineY = index
-    const maxLineY = minLineY + Math.ceil(listHeight / itemHeight)
-    const deltaY = minLineY * itemHeight
+    const newMinLineY = index
+    const newMaxLineY = newMinLineY + Math.ceil(listHeight / itemHeight)
+    const newDeltaY = newMinLineY * itemHeight
     return {
       ...state,
       focusedIndex: index,
-      minLineY,
-      maxLineY,
+      minLineY: newMinLineY,
+      maxLineY: newMaxLineY,
       focused: true,
-      deltaY,
+      deltaY: newDeltaY,
     }
   }
-  if (index >= state.maxLineY - 1) {
+  if (index >= maxLineY - 1) {
+    console.log('if 2')
+
     //  scroll down
-    const maxLineY = index + 1
-    const minLineY = maxLineY - Math.ceil(listHeight / itemHeight)
-    const deltaY =
-      minLineY * itemHeight + (listHeight % itemHeight) - itemHeight
+    const newMaxLineY = index + 1
+    const newMinLineY = newMaxLineY - Math.ceil(listHeight / itemHeight)
+    const newDeltaY =
+      newMinLineY * itemHeight + (listHeight % itemHeight) - itemHeight
     return {
       ...state,
       focusedIndex: index,
-      minLineY,
-      maxLineY,
+      minLineY: newMinLineY,
+      maxLineY: newMaxLineY,
       focused: true,
-      deltaY,
+      deltaY: newDeltaY,
     }
   }
   return {
