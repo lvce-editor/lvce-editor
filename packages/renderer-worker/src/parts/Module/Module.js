@@ -46,6 +46,8 @@ export const load = (moduleId) => {
       return import('../ElectronApp/ElectronApp.ipc.js')
     case ModuleId.ElectronBrowserView:
       return import('../ElectronBrowserView/ElectronBrowserView.ipc.js')
+    case ModuleId.ElectronMenu:
+      return import('../ElectronMenu/ElectronMenu.ipc.js')
     case ModuleId.ElectronWindow:
       return import('../ElectronWindow/ElectronWindow.ipc.js')
     case ModuleId.ErrorHandling:
@@ -122,8 +124,6 @@ export const load = (moduleId) => {
       return import('../Workbench/Workbench.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.ElectronMenu:
-      return import('../ElectronMenu/ElectronMenu.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
