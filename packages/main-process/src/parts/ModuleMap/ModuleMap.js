@@ -65,6 +65,8 @@ exports.getModuleId = (commandId) => {
     case 'ElectronBrowserViewFunctions.show':
     case 'ElectronBrowserViewFunctions.hide':
       return ModuleId.ElectronBrowserViewFunctions
+    case 'ElectronMenu.openContextMenu':
+      return ModuleId.ElectronMenu
     default:
       throw new Error(`method not found ${commandId}`)
   }
