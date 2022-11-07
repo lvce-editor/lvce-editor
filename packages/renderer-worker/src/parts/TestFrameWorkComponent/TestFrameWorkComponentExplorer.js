@@ -55,3 +55,11 @@ export const rename = async () => {
 export const cancelEdit = async () => {
   await Command.execute('Explorer.cancelEdit')
 }
+
+export const acceptEdit = async () => {
+  await Command.execute('Explorer.acceptEdit')
+}
+
+export const updateEditingValue = async (value) => {
+  await Command.execute('Explorer.updateEditingValue', value)
+}

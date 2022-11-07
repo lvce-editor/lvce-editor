@@ -233,24 +233,28 @@ export const showEditBox = (state, index, editingType, value) => {
   Focus.setFocus('ExplorerEditBox')
 }
 
-export const hideEditBox = (state, editingType, index, dirent) => {
-  console.log('hide', index)
+export const hideEditBox = (state, index) => {
   Assert.object(state)
   Assert.number(index)
-  Assert.object(dirent)
+  const { $Viewlet } = state
+  if (index === -1) {
+    const $InputBox = $Viewlet.lastChild
+    $InputBox.remove()
+    return $InputBox.value
+  }
+  const $InputBox = $Viewlet.children[index]
+  $InputBox.remove()
+}
+
+export const replaceEditBox = (state, index, dirent) => {
+  Assert.object(state)
+  Assert.number(index)
   const { $Viewlet } = state
   const $OldRow = $Viewlet.children[index]
-  if (
-    editingType === ExplorerEditingType.CreateFile ||
-    editingType === ExplorerEditingType.CreateFolder
-  ) {
-    $OldRow.nextElementSibling.remove()
-  } else {
-    const $Dirent = create$Row()
-    $Dirent.id = activeId
-    render$Row($Dirent, dirent)
-    $OldRow.replaceWith($Dirent)
-  }
+  const $Dirent = create$Row()
+  $Dirent.id = activeId
+  render$Row($Dirent, dirent)
+  $OldRow.replaceWith($Dirent)
   $Viewlet.focus()
   Focus.setFocus('Explorer')
 }

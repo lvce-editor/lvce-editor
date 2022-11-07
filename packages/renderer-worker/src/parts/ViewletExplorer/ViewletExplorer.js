@@ -621,7 +621,7 @@ const acceptCreate = async (state) => {
     }
   } catch (error) {
     await ErrorHandling.showErrorDialog(error)
-    return
+    return state
   }
   const parentDirent =
     focusedIndex >= 0
@@ -675,6 +675,7 @@ const acceptCreate = async (state) => {
     ...state,
     items: newDirents,
     editingIndex: -1,
+    focusedIndex: editingIndex,
   }
 }
 
@@ -1339,7 +1340,6 @@ const renderFocusedIndex = {
     )
   },
   apply(oldState, newState) {
-    console.log({ newState })
     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
     const newFocusedIndex = newState.focusedIndex - newState.minLineY
     return [
@@ -1375,13 +1375,23 @@ const renderEditingIndex = {
   apply(oldState, newState) {
     const { editingIndex, focusedIndex, editingType, editingValue } = newState
     if (editingIndex === -1) {
+      if (
+        oldState.editingType === ExplorerEditingType.CreateFile ||
+        oldState.editingType === ExplorerEditingType.CreateFolder
+      ) {
+        return [
+          /* Viewlet.invoke */ 'Viewlet.send',
+          /* id */ 'Explorer',
+          /* method */ 'hideEditBox',
+          /* index */ oldState.editingIndex,
+        ]
+      }
       const dirent = newState.items[focusedIndex]
       return [
         /* Viewlet.invoke */ 'Viewlet.send',
         /* id */ 'Explorer',
-        /* method */ 'hideEditBox',
-        /* editingType */ oldState.editingType,
-        /* index */ focusedIndex,
+        /* method */ 'replaceEditBox',
+        /* index */ oldState.editingIndex,
         /* dirent */ dirent,
       ]
     } else {
