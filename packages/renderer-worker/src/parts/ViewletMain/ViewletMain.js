@@ -331,11 +331,10 @@ const saveEditor = async (editor) => {
   }
   const { factory } = instance
   const { Commands } = factory
-  const saveCommandId = id === 'EditorText' ? 'Editor.save' : `${id}.save`
-  const saveCommand = Commands[saveCommandId]
-  if (!saveCommand) {
+  if (!('save' in Commands)) {
     return
   }
+  const saveCommandId = id === 'EditorText' ? 'Editor.save' : `${id}.save`
   await Command.execute(saveCommandId)
 }
 
