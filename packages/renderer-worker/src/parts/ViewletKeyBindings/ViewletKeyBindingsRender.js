@@ -271,7 +271,6 @@ const renderScrollBar = {
       newState.height,
       newState.scrollBarHeight
     )
-    console.log('scroll bar height', { scrollBarY })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'KeyBindings',
