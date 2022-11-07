@@ -2,8 +2,8 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
 export const handleInput = (event) => {
-  const $Target = event.target
-  const value = $Target.value
+  const { target } = event
+  const { value } = target
   RendererWorker.send('KeyBindings.handleInput', value)
 }
 
@@ -58,4 +58,8 @@ export const handleWheel = (event) => {
     default:
       break
   }
+}
+
+export const handleScrollBarPointerDown = (event) => {
+  // TODO
 }

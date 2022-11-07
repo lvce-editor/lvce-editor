@@ -25,8 +25,6 @@
   border-radius: 3px;
   vertical-align: middle;
   font-size: 11px;
-  padding: 3px 5px;
-  margin: 0 2px;
   contain: content;
 }
 
@@ -69,4 +67,29 @@
   overflow: hidden;
   text-overflow: ellipsis;
   contain: content;
+}
+
+/* TODO duplicate code with editor */
+
+.ScrollBar,
+.ScrollBarSmall {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 14px;
+  bottom: 0;
+  contain: strict;
+  cursor: default;
+}
+
+.ScrollBar {
+  width: 14px;
+}
+
+.ScrollBarThumb {
+  width: 100%;
+  /* height: 40px; */
+  position: absolute;
+  contain: strict;
+  background: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6));
 }

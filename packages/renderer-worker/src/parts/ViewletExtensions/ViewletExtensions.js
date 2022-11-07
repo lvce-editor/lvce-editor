@@ -533,7 +533,7 @@ const renderFocusedIndex = {
   },
 }
 
-const renderScrollBarY = {
+const renderScrollBar = {
   isEqual(oldState, newState) {
     return (
       oldState.negativeMargin === newState.negativeMargin &&
@@ -596,7 +596,7 @@ const renderSize = {
 export const render = [
   renderHeight,
   renderFocusedIndex,
-  renderScrollBarY,
+  renderScrollBar,
   renderNegativeMargin,
   renderExtensions,
   renderError,
