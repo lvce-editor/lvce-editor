@@ -36,6 +36,8 @@ export const Locations = 'Locations'
 
 export const Main = 'Main'
 
+export const None = ''
+
 export const Noop = 'Noop'
 
 export const Output = 'Output'
@@ -71,5 +73,3 @@ export const TitleBarButtons = 'TitleBarButtons'
 export const TitleBarMenuBar = 'TitleBarMenuBar'
 
 export const TodoList = 'TodoList'
-
-export const None = ''

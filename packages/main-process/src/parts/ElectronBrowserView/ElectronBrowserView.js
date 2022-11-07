@@ -5,6 +5,7 @@ const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBr
 const ElectronDispositionType = require('../ElectronDispositionType/ElectronDispositionType.js')
 const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js')
 const Assert = require('../Assert/Assert.js')
+const ElectronInputType = require('../ElectronInputType/ElectronInputType.js')
 
 const normalizeKey = (key) => {
   if (key === ' ') {
@@ -116,7 +117,7 @@ exports.createBrowserView = async (restoreId, falltroughKeyBindings) => {
    * @param {Electron.Input} input
    */
   const handleBeforeInput = (event, input) => {
-    if (input.type !== 'keyDown') {
+    if (input.type !== ElectronInputType.KeyDown) {
       return
     }
     const port = getPort()
