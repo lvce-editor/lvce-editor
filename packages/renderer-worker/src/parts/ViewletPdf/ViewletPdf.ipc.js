@@ -19,6 +19,6 @@ export const Commands = {
   'Pdf.zoomOut': LazyCommand.create(ViewletPdf.name, Imports.ZoomOut, 'zoomOut'),
 }
 
-export const Css = '/css/parts/ViewletPdf.css'
+export const Css = ['/css/parts/ViewletPdf.css', '/css/parts/IconButton.css']
 
 export * from './ViewletPdf.js'

@@ -206,7 +206,11 @@ const actuallyLoadModule = async (getModule, id) => {
   if (module.Css) {
     // this is a memory leak but it is not too important
     // because javascript modules also cannot be unloaded
-    await Css.loadCssStyleSheet(module.Css)
+    if (Array.isArray(module.Css)) {
+      await Css.loadCssStyleSheets(module.Css)
+    } else {
+      await Css.loadCssStyleSheet(module.Css)
+    }
   }
   maybeRegisterWrappedCommands(module)
   maybeRegisterEvents(module)

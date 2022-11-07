@@ -7,6 +7,9 @@ export const Commands = {
   'FindWidget.handleInput': ViewletFindWidget.handleInput,
 }
 
-export const Css = '/css/parts/ViewletFindWidget.css'
+export const Css = [
+  '/css/parts/ViewletFindWidget.css',
+  '/css/parts/IconButton.css',
+]
 
 export * from './ViewletFindWidget.js'
