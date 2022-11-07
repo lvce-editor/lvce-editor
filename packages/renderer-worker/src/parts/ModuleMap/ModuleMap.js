@@ -108,6 +108,9 @@ export const getModuleId = (commandId) => {
     case 'ElectronBrowserView.createBrowserViewQuickpick':
     case 'ElectronBrowserView.openBrowserViewQuickPick':
       return ModuleId.ElectronBrowserView
+    case 'ElectronMenu.handleMenuClose':
+    case 'ElectronMenu.handleSelect':
+      return ModuleId.ElectronMenu
     case 'ElectronWindow.close':
     case 'ElectronWindow.maximize':
     case 'ElectronWindow.minimize':

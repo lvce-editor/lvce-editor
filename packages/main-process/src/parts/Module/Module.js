@@ -20,6 +20,8 @@ exports.load = async (moduleId) => {
       return require('../ElectronDeveloper/ElectronDeveloper.ipc.js')
     case ModuleId.Dialog:
       return require('../ElectronDialog/ElectronDialog.ipc.js')
+    case ModuleId.ElectronMenu:
+      return require('../ElectronMenu/ElectronMenu.ipc.js')
     case ModuleId.ElectronNetLog:
       return require('../ElectronNetLog/ElectronNetLog.ipc.js')
     case ModuleId.ElectronPowerSaveBlocker:
