@@ -254,4 +254,19 @@ const renderNoResults = {
   },
 }
 
-export const render = [renderKeyBindings, renderValue, renderNoResults]
+const renderScrollBar = {
+  isEqual(oldState, newState) {
+    return false
+  },
+  apply(oldState, newState) {
+    // TODO
+    return []
+  },
+}
+
+export const render = [
+  renderKeyBindings,
+  renderValue,
+  renderNoResults,
+  renderScrollBar,
+]
