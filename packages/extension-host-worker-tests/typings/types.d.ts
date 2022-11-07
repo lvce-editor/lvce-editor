@@ -52,6 +52,8 @@ declare const Explorer: {
   readonly handleArrowLeft: () => Promise<void>
   readonly newFile: () => Promise<void>
   readonly handleClick: (index: number) => Promise<void>
+  readonly cancelEdit: () => Promise<void>
+  readonly rename: () => Promise<void>
 }
 
 declare const Extension: {

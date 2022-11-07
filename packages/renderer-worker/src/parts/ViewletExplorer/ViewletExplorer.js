@@ -502,8 +502,11 @@ export const acceptEdit = (state) => {
 }
 
 export const cancelEdit = (state) => {
+  const { editingIndex } = state
   return {
     ...state,
+    focusedIndex: editingIndex,
+    focused: true,
     editingIndex: -1,
     editingValue: '',
     editingType: ExplorerEditingType.None,
@@ -1073,6 +1076,11 @@ export const collapseAll = (state) => {
 export const handleBlur = (state) => {
   // TODO when blur event occurs because of context menu, focused index should stay the same
   // but focus outline should be removed
+  console.log('explorer blur')
+  const { editingType } = state
+  if (editingType !== ExplorerEditingType.None) {
+    return state
+  }
   return {
     ...state,
     focused: false,
@@ -1325,15 +1333,11 @@ const renderFocusedIndex = {
   isEqual(oldState, newState) {
     return (
       oldState.focusedIndex === newState.focusedIndex &&
-      oldState.focused === newState.focused &&
-      // TODO rendering dirents should not override focus
-      // when that issue is fixed, this can be removed
-      oldState.items === newState.items &&
-      oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY
+      oldState.focused === newState.focused
     )
   },
   apply(oldState, newState) {
+    console.log({ newState })
     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
     const newFocusedIndex = newState.focusedIndex - newState.minLineY
     return [
@@ -1394,6 +1398,6 @@ const renderEditingIndex = {
 export const render = [
   renderItems,
   renderDropTargets,
-  renderFocusedIndex,
   renderEditingIndex,
+  renderFocusedIndex,
 ]

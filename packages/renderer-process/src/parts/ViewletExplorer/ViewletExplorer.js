@@ -223,8 +223,11 @@ export const hideEditBox = (state, index, dirent) => {
   const { $Viewlet } = state
   const $OldRow = $Viewlet.children[index]
   const $Dirent = create$Row()
+  $Dirent.id = activeId
   render$Row($Dirent, dirent)
   $OldRow.replaceWith($Dirent)
+  $Viewlet.focus()
+  Focus.setFocus('Explorer')
 }
 
 export const setDropTargets = (state, oldDropTargets, newDropTargets) => {

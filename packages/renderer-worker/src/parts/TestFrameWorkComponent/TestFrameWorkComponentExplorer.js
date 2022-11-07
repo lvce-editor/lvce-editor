@@ -47,3 +47,11 @@ export const newFile = async () => {
 export const handleClick = async (index) => {
   await Command.execute('Explorer.handleClick', index)
 }
+
+export const rename = async () => {
+  await Command.execute('Explorer.rename')
+}
+
+export const cancelEdit = async () => {
+  await Command.execute('Explorer.cancelEdit')
+}
