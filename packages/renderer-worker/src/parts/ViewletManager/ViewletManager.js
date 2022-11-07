@@ -155,11 +155,24 @@ const getRenderCommands = (module, oldState, newState) => {
   return []
 }
 
+const registerWrappedCommand = (moduleName, key, wrappedCommand) => {
+  if (key.startsWith(moduleName)) {
+    Command.register(key, wrappedCommand)
+  } else {
+    // TODO rename editorText to editor
+    if (moduleName === 'EditorText') {
+      Command.register(`Editor.${key}`, wrappedCommand)
+    } else {
+      Command.register(`${moduleName}.${key}`, wrappedCommand)
+    }
+  }
+}
+
 const maybeRegisterWrappedCommands = (module) => {
   if (module.Commands) {
     for (const [key, value] of Object.entries(module.Commands)) {
       const wrappedCommand = wrapViewletCommand(module.name, value)
-      Command.register(key, wrappedCommand)
+      registerWrappedCommand(module.name, key, wrappedCommand)
     }
   }
   if (module.CommandsWithSideEffects) {
@@ -168,7 +181,7 @@ const maybeRegisterWrappedCommands = (module) => {
         module.name,
         value
       )
-      Command.register(key, wrappedCommand)
+      registerWrappedCommand(module.name, key, wrappedCommand)
     }
   }
 }

@@ -13,19 +13,19 @@ const Imports = {
 
 // prettier-ignore
 export const Commands = {
-  'QuickPick.focusFirst': LazyCommand.create(ViewletQuickPickElectron.name, Imports.FocusFirst, 'focusFirst'),
-  'QuickPick.focusIndex': LazyCommand.create(ViewletQuickPickElectron.name, Imports.FocusIndex, 'focusIndex'),
-  'QuickPick.focusLast': LazyCommand.create(ViewletQuickPickElectron.name, Imports.FocusLast, 'focusLast'),
-  'QuickPick.focusNext': LazyCommand.create(ViewletQuickPickElectron.name, Imports.FocusNext, 'focusNext'),
-  'QuickPick.focusPrevious': LazyCommand.create(ViewletQuickPickElectron.name, Imports.FocusPrevious, 'focusPrevious'),
-  'QuickPick.handleBeforeInput': Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.handleBeforeInput),
-  'QuickPick.handleBlur': Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.handleBlur),
-  'QuickPick.handleClickAt': Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.handleClickAt),
-  'QuickPick.handleInput': Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.handleInput),
-  'QuickPick.handleWheel': Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.handleWheel),
-  'QuickPick.selectCurrentIndex': Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.selectCurrentIndex),
-  'QuickPick.selectIndex': Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.selectIndex),
-  'QuickPick.selectItem': Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.selectItem),
+  focusFirst: LazyCommand.create(ViewletQuickPickElectron.name, Imports.FocusFirst, 'focusFirst'),
+  focusIndex: LazyCommand.create(ViewletQuickPickElectron.name, Imports.FocusIndex, 'focusIndex'),
+  focusLast: LazyCommand.create(ViewletQuickPickElectron.name, Imports.FocusLast, 'focusLast'),
+  focusNext: LazyCommand.create(ViewletQuickPickElectron.name, Imports.FocusNext, 'focusNext'),
+  focusPrevious: LazyCommand.create(ViewletQuickPickElectron.name, Imports.FocusPrevious, 'focusPrevious'),
+  handleBeforeInput: Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.handleBeforeInput),
+  handleBlur: Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.handleBlur),
+  handleClickAt: Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.handleClickAt),
+  handleInput: Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.handleInput),
+  handleWheel: Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.handleWheel),
+  selectCurrentIndex: Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.selectCurrentIndex),
+  selectIndex: Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.selectIndex),
+  selectItem: Viewlet.wrapViewletCommand(ViewletQuickPickElectron.name, ViewletQuickPickElectron.selectItem),
 }
 
 export * from './ViewletQuickPickElectron.js'

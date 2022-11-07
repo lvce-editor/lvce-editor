@@ -2,7 +2,7 @@ import * as ViewletProblems from './ViewletProblems.js'
 
 // prettier-ignore
 export const Commands = {
-  'Problems.focusIndex': ViewletProblems.focusIndex,
+  focusIndex: ViewletProblems.focusIndex,
 }
 
 export const Css = '/css/parts/ViewletProblems.css'

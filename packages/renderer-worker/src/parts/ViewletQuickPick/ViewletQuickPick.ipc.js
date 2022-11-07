@@ -12,19 +12,19 @@ const Imports = {
 
 // prettier-ignore
 export const Commands = {
-  'QuickPick.focusFirst': LazyCommand.create(ViewletQuickPick.name, Imports.FocusFirst, 'focusFirst'),
-  'QuickPick.focusIndex': LazyCommand.create(ViewletQuickPick.name, Imports.FocusIndex, 'focusIndex'),
-  'QuickPick.focusLast': LazyCommand.create(ViewletQuickPick.name, Imports.FocusLast, 'focusLast'),
-  'QuickPick.focusNext': LazyCommand.create(ViewletQuickPick.name, Imports.FocusNext, 'focusNext'),
-  'QuickPick.focusPrevious': LazyCommand.create(ViewletQuickPick.name, Imports.FocusPrevious, 'focusPrevious'),
-  'QuickPick.handleBeforeInput': ViewletQuickPick.handleBeforeInput,
-  'QuickPick.handleBlur': ViewletQuickPick.handleBlur,
-  'QuickPick.handleClickAt': ViewletQuickPick.handleClickAt,
-  'QuickPick.handleInput': ViewletQuickPick.handleInput,
-  'QuickPick.handleWheel': ViewletQuickPick.handleWheel,
-  'QuickPick.selectCurrentIndex': ViewletQuickPick.selectCurrentIndex,
-  'QuickPick.selectIndex': ViewletQuickPick.selectIndex,
-  'QuickPick.selectItem': ViewletQuickPick.selectItem,
+  focusFirst: LazyCommand.create(ViewletQuickPick.name, Imports.FocusFirst, 'focusFirst'),
+  focusIndex: LazyCommand.create(ViewletQuickPick.name, Imports.FocusIndex, 'focusIndex'),
+  focusLast: LazyCommand.create(ViewletQuickPick.name, Imports.FocusLast, 'focusLast'),
+  focusNext: LazyCommand.create(ViewletQuickPick.name, Imports.FocusNext, 'focusNext'),
+  focusPrevious: LazyCommand.create(ViewletQuickPick.name, Imports.FocusPrevious, 'focusPrevious'),
+  handleBeforeInput: ViewletQuickPick.handleBeforeInput,
+  handleBlur: ViewletQuickPick.handleBlur,
+  handleClickAt: ViewletQuickPick.handleClickAt,
+  handleInput: ViewletQuickPick.handleInput,
+  handleWheel: ViewletQuickPick.handleWheel,
+  selectCurrentIndex: ViewletQuickPick.selectCurrentIndex,
+  selectIndex: ViewletQuickPick.selectIndex,
+  selectItem: ViewletQuickPick.selectItem,
 }
 
 export const Css = '/css/parts/ViewletQuickPick.css'
