@@ -37,11 +37,15 @@
   line-height: 10px;
 }
 
+.KeyBindingsTableWrapper {
+  padding: 0 15px;
+}
+
 .KeyBindingsTable {
   width: 100%;
   table-layout: fixed;
-  padding: 0 15px;
   contain: content;
+  border-collapse: collapse;
 }
 
 .KeyBindingsTableBody {
