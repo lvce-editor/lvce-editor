@@ -202,52 +202,29 @@ export const hoverIndex = (state, oldIndex, newIndex) => {
   $NewItem.classList.add('Hover')
 }
 
-export const showCreateFileInputBox = (state, index) => {
+export const showEditBox = (state, index, name) => {
   const { $Viewlet } = state
-  const $InputBox = InputBox.create()
-  if (index === -1) {
-    $Viewlet.append($InputBox)
-  } else {
-    const $Dirent = $Viewlet.children[index]
-    // TODO this should never happen
-    if (!$Dirent) {
-      throw new Error(`dirent at index ${index} should be defined`)
-    }
-    $Dirent.before($InputBox)
-  }
-  $InputBox.focus()
-  Focus.setFocus('ExplorerCreateFile')
-}
-
-export const hideCreateFileInputBox = (state, index) => {
-  const { $Viewlet } = state
-  if (index === -1) {
-    const $InputBox = $Viewlet.lastChild
-    $InputBox.remove()
-    return $InputBox.value
-  }
-  const $InputBox = $Viewlet.children[index]
-  $InputBox.remove()
-  return $InputBox.value
-}
-
-export const showRenameInputBox = (state, index, name) => {
   const $InputBox = InputBox.create()
   $InputBox.value = name
-  const $Dirent = state.$Viewlet.children[index]
-  $Dirent.replaceWith($InputBox)
+  $InputBox.oninput = ViewletExplorerEvents.handleEditingInput
+  const $Dirent = $Viewlet.children[index]
+  const $Label = $Dirent.children[1]
+  $Label.replaceWith($InputBox)
   $InputBox.select()
-  $InputBox.setSelectionRange(0, $InputBox.value.length)
-  Focus.setFocus('ExplorerRename')
+  $InputBox.setSelectionRange(0, name.length)
+  $InputBox.focus()
+  Focus.setFocus('ExplorerEditBox')
 }
 
-export const hideRenameBox = (state, index, dirent) => {
-  const $InputBox = state.$Viewlet.children[index]
+export const hideEditBox = (state, index, dirent) => {
+  Assert.object(state)
+  Assert.number(index)
+  Assert.object(dirent)
+  const { $Viewlet } = state
+  const $OldRow = $Viewlet.children[index]
   const $Dirent = create$Row()
   render$Row($Dirent, dirent)
-  $InputBox.replaceWith($Dirent)
-  // $Dirent.focus()
-  return $InputBox.value
+  $OldRow.replaceWith($Dirent)
 }
 
 export const setDropTargets = (state, oldDropTargets, newDropTargets) => {

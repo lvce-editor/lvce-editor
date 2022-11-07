@@ -541,9 +541,9 @@ test('showRenameInputBox', () => {
       posInSet: 2,
     },
   ])
-  ViewletExplorer.showRenameInputBox(state, 0, 'file-1')
+  ViewletExplorer.showEditBox(state, 0, 'file-1')
   expect($Viewlet.children).toHaveLength(2)
-  const $InputBox = $Viewlet.children[0]
+  const $InputBox = $Viewlet.children[0].children[1]
   // @ts-ignore
   const start = $InputBox.selectionStart
   // @ts-ignore
@@ -573,8 +573,8 @@ test('hideRenameInputBox', () => {
       posInSet: 2,
     },
   ])
-  ViewletExplorer.showRenameInputBox(state, 0, 'file-1')
-  ViewletExplorer.hideRenameBox(state, 0, {
+  ViewletExplorer.showEditBox(state, 0, 'file-1')
+  ViewletExplorer.hideEditBox(state, 0, {
     name: 'file-1',
     depth: 1,
     type: DirentType.File,
