@@ -23,3 +23,7 @@ export const loadCssStyleSheet = async (css) => {
     /* text */ text
   )
 }
+
+export const loadCssStyleSheets = async (css) => {
+  return Promise.all(css.map(loadCssStyleSheet))
+}

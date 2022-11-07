@@ -20,6 +20,9 @@ export const Commands = {
   reload: SimpleBrowser.reload,
 }
 
-export const Css = '/css/parts/ViewletSimpleBrowser.css'
+export const Css = [
+  '/css/parts/ViewletSimpleBrowser.css',
+  '/css/parts/IconButton.css',
+]
 
 export * from './ViewletSimpleBrowser.js'
