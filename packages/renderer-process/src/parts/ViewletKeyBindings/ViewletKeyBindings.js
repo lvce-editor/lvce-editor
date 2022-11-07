@@ -66,8 +66,5 @@ export const setValue = (state, value) => {
   $InputBox.value = value
 }
 
-export const setScrollBar = (state, scrollBarY, scrollBarHeight) => {
-  const { $ScrollBarThumb } = state
-  $ScrollBarThumb.style.top = `${scrollBarY}px`
-  $ScrollBarThumb.style.height = `${scrollBarHeight}px`
-}
+export * from '../ViewletScrollable/ViewletScrollable.js'
+export * from '../ViewletSizable/ViewletSizable.js'

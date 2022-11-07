@@ -20,6 +20,7 @@ export const create = (id, uri, top, left, width, height) => {
     left,
     width,
     height,
+    size: ViewletSize.None,
   }
 }
 
@@ -61,7 +62,6 @@ const getSize = (width) => {
   if (width < 768) {
     return ViewletSize.Normal
   }
-  console.log({ width })
   return ViewletSize.Large
 }
 

@@ -7,6 +7,8 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ViewletSizeMap from '../ViewletSizeMap/ViewletSizeMap.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
+import * as ViewletSizable from '../ViewletSizable/ViewletSizable.js'
+import * as ViewletScrollable from '../ViewletScrollable/ViewletScrollable.js'
 
 export const name = 'Extensions'
 
@@ -365,20 +367,5 @@ export const handleError = (state, message) => {
   state.$ExtensionList.textContent = message
 }
 
-export const setScrollBar = (state, scrollBarY, scrollBarHeight) => {
-  const { $ScrollBarThumb } = state
-  $ScrollBarThumb.style.top = `${scrollBarY}px`
-  $ScrollBarThumb.style.height = `${scrollBarHeight}px`
-}
-
-export const setSize = (state, oldSize, newSize) => {
-  const { $Viewlet } = state
-  const oldClassName = ViewletSizeMap.getClassName(oldSize)
-  const newClassName = ViewletSizeMap.getClassName(newSize)
-  if (oldClassName) {
-    $Viewlet.classList.remove(oldClassName)
-  }
-  if (newClassName) {
-    $Viewlet.classList.add(newClassName)
-  }
-}
+export * from '../ViewletScrollable/ViewletScrollable.js'
+export * from '../ViewletSizable/ViewletSizable.js'
