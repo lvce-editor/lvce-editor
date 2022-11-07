@@ -8,6 +8,7 @@ import {
   thead,
   tr,
 } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
 /**
  * @enum {string}
@@ -254,4 +255,35 @@ const renderNoResults = {
   },
 }
 
-export const render = [renderKeyBindings, renderValue, renderNoResults]
+const renderScrollBar = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.negativeMargin === newState.negativeMargin &&
+      oldState.deltaY === newState.deltaY &&
+      oldState.height === newState.height &&
+      oldState.finalDeltaY === newState.finalDeltaY
+    )
+  },
+  apply(oldState, newState) {
+    const scrollBarY = ScrollBarFunctions.getScrollBarY(
+      newState.deltaY,
+      newState.finalDeltaY,
+      newState.height,
+      newState.scrollBarHeight
+    )
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ 'KeyBindings',
+      /* method */ 'setScrollBar',
+      /* scrollBarY */ scrollBarY,
+      /* scrollBarHeight */ newState.scrollBarHeight,
+    ]
+  },
+}
+
+export const render = [
+  renderKeyBindings,
+  renderValue,
+  renderNoResults,
+  renderScrollBar,
+]

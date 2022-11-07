@@ -33,15 +33,25 @@ export const create = () => {
   )
   $KeyBindingsTableWrapper.onclick = ViewletkeyBindingsEvents.handleTableClick
 
+  const $ScrollBarThumb = document.createElement('div')
+  $ScrollBarThumb.className = 'ScrollBarThumb'
+
+  const $ScrollBar = document.createElement('div')
+  $ScrollBar.className = 'ScrollBar'
+  $ScrollBar.onpointerdown = ViewletkeyBindingsEvents.handleScrollBarPointerDown
+  $ScrollBar.append($ScrollBarThumb)
+
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet KeyBindings'
-  $Viewlet.append($KeyBindingsHeader, $KeyBindingsTableWrapper)
+  $Viewlet.append($KeyBindingsHeader, $KeyBindingsTableWrapper, $ScrollBar)
 
   return {
     $Viewlet,
     $InputBox,
     $KeyBindingsHeader,
     $KeyBindingsTableWrapper,
+    $ScrollBarThumb,
+    $ScrollBar,
   }
 }
 
@@ -55,3 +65,6 @@ export const setValue = (state, value) => {
   const { $InputBox } = state
   $InputBox.value = value
 }
+
+export * from '../ViewletScrollable/ViewletScrollable.js'
+export * from '../ViewletSizable/ViewletSizable.js'

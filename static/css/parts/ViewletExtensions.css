@@ -189,6 +189,10 @@
   mask: url(/icons/settings-gear.svg) 50% 50% / 16px no-repeat;
 }
 
+.Extensions.Small .ExtensionListItemIcon {
+  display: none;
+}
+
 /* TODO duplicate code with editor */
 
 .ScrollBar,
@@ -212,8 +216,4 @@
   position: absolute;
   contain: strict;
   background: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6));
-}
-
-.Extensions.Small .ExtensionListItemIcon {
-  display: none;
 }
