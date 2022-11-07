@@ -465,7 +465,7 @@ test('event - input on rename input box', () => {
       posInSet: 2,
     },
   ])
-  ViewletExplorer.showEditBox(state, 0, 'file-1')
+  ViewletExplorer.replaceWithEditBox(state, 0, 'file-1')
   expect($Viewlet.children).toHaveLength(2)
   const $InputBox = $Viewlet.children[0].children[1]
   // @ts-ignore

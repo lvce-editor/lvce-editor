@@ -1395,12 +1395,23 @@ const renderEditingIndex = {
         /* dirent */ dirent,
       ]
     } else {
+      if (
+        oldState.editingType === ExplorerEditingType.CreateFile ||
+        oldState.editingType === ExplorerEditingType.CreateFolder
+      ) {
+        return [
+          /* Viewlet.invoke */ 'Viewlet.send',
+          /* id */ 'Explorer',
+          /* method */ 'insertEditBox',
+          /* index */ oldState.editingIndex,
+          /* value */ editingValue,
+        ]
+      }
       return [
         /* Viewlet.invoke */ 'Viewlet.send',
         /* id */ 'Explorer',
-        /* method */ 'showEditBox',
+        /* method */ 'replaceWithEditBox',
         /* index */ editingIndex,
-        /* editingType */ editingType,
         /* value */ editingValue,
       ]
     }

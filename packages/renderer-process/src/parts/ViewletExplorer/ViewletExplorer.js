@@ -3,7 +3,6 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as InputBox from '../InputBox/InputBox.js'
 import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
-import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
 
 export const name = 'Explorer'
 
@@ -203,29 +202,34 @@ export const hoverIndex = (state, oldIndex, newIndex) => {
   $NewItem.classList.add('Hover')
 }
 
-export const showEditBox = (state, index, editingType, value) => {
+export const replaceWithEditBox = (state, index, value) => {
   const { $Viewlet } = state
   const $InputBox = InputBox.create()
   $InputBox.value = value
   $InputBox.oninput = ViewletExplorerEvents.handleEditingInput
-  if (
-    editingType === ExplorerEditingType.CreateFile ||
-    editingType === ExplorerEditingType.CreateFolder
-  ) {
-    if (index === -1) {
-      $Viewlet.append($InputBox)
-    } else {
-      const $Dirent = $Viewlet.children[index]
-      // TODO this should never happen
-      if (!$Dirent) {
-        throw new Error(`dirent at index ${index} should be defined`)
-      }
-      $Dirent.before($InputBox)
-    }
+  const $Dirent = $Viewlet.children[index]
+  const $Label = $Dirent.children[1]
+  $Label.replaceWith($InputBox)
+  $InputBox.select()
+  $InputBox.setSelectionRange(0, value.length)
+  $InputBox.focus()
+  Focus.setFocus('ExplorerEditBox')
+}
+
+export const insertEditBox = (state, index, value) => {
+  const { $Viewlet } = state
+  const $InputBox = InputBox.create()
+  $InputBox.value = value
+  $InputBox.oninput = ViewletExplorerEvents.handleEditingInput
+  if (index === -1) {
+    $Viewlet.append($InputBox)
   } else {
     const $Dirent = $Viewlet.children[index]
-    const $Label = $Dirent.children[1]
-    $Label.replaceWith($InputBox)
+    // TODO this should never happen
+    if (!$Dirent) {
+      throw new Error(`dirent at index ${index} should be defined`)
+    }
+    $Dirent.before($InputBox)
   }
   $InputBox.select()
   $InputBox.setSelectionRange(0, value.length)
