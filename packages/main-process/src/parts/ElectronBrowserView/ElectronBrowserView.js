@@ -4,6 +4,7 @@ const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
 const ElectronDispositionType = require('../ElectronDispositionType/ElectronDispositionType.js')
 const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js')
+const ElectronBrowserViewCss = require('../ElectronBrowserViewCss/ElectronBrowserViewCss.js')
 const Assert = require('../Assert/Assert.js')
 
 const normalizeKey = (key) => {
@@ -58,6 +59,9 @@ exports.createBrowserView = async (restoreId, falltroughKeyBindings) => {
       session: ElectronSessionForBrowserView.getSession(),
     },
   })
+  if (ElectronBrowserViewCss.electronBrowserViewCss) {
+    view.webContents.insertCSS(ElectronBrowserViewCss.electronBrowserViewCss)
+  }
   view.setBackgroundColor('#fff')
   const { webContents } = view
   const { id } = webContents

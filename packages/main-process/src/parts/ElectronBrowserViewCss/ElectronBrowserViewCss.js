@@ -1,0 +1,1 @@
+exports.electronBrowserViewCss = ``.trim()
