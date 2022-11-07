@@ -5,6 +5,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
+import * as ViewletSizeMap from '../ViewletSizeMap/ViewletSizeMap.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 
 export const name = 'Extensions'
@@ -370,13 +371,14 @@ export const setScrollBar = (state, scrollBarY, scrollBarHeight) => {
   $ScrollBarThumb.style.height = `${scrollBarHeight}px`
 }
 
-export const setSize = (state, size) => {
+export const setSize = (state, oldSize, newSize) => {
   const { $Viewlet } = state
-  if (size === 'Small') {
-    $Viewlet.classList.remove('Normal')
-    $Viewlet.classList.add('Small')
-  } else {
-    $Viewlet.classList.remove('Small')
-    $Viewlet.classList.add('Normal')
+  const oldClassName = ViewletSizeMap.getClassName(oldSize)
+  const newClassName = ViewletSizeMap.getClassName(newSize)
+  if (oldClassName) {
+    $Viewlet.classList.remove(oldClassName)
+  }
+  if (newClassName) {
+    $Viewlet.classList.add(newClassName)
   }
 }
