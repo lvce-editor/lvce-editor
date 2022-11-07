@@ -90,6 +90,10 @@ export const writeFile = async (uri, content, encoding = EncodingType.Utf8) => {
   await fileSystem.writeFile(path, content, encoding)
 }
 
+export const createFile = (uri) => {
+  return writeFile(uri, '')
+}
+
 export const readDirWithFileTypes = (uri) => {
   const protocol = getProtocol(uri)
   const path = getPath(protocol, uri)
