@@ -349,11 +349,13 @@ const updateDirents = async (state) => {
 }
 
 export const renameDirent = (state) => {
-  const { focusedIndex } = state
+  const { focusedIndex, items } = state
+  const item = items[focusedIndex]
   return {
     ...state,
     editingIndex: focusedIndex,
     editingType: ExplorerEditingType.Rename,
+    editingValue: item.name,
   }
 }
 
@@ -462,12 +464,12 @@ export const computeRenamedDirent = (dirents, index, newName) => {
 }
 
 export const acceptRename = async (state) => {
-  const { editingIndex, editingValue, items } = state
+  const { editingIndex, editingValue, items, pathSeparator } = state
   const renamedDirent = items[editingIndex]
   try {
     // TODO this does not work with rename of nested file
     const oldAbsolutePath = renamedDirent.path
-    const newAbsolutePath = [state.root, editingValue].join(state.pathSeparator)
+    const newAbsolutePath = [oldAbsolutePath, editingValue].join(pathSeparator)
     await FileSystem.rename(oldAbsolutePath, newAbsolutePath)
   } catch (error) {
     await ErrorHandling.showErrorDialog(error)
@@ -554,7 +556,7 @@ export const openContainingFolder = async (state) => {
   return state
 }
 
-const newDirent = async (state) => {
+const newDirent = async (state, editingType) => {
   // TODO do it like vscode, select position between folders and files
   const { focusedIndex } = state
   const index = focusedIndex + 1
@@ -568,12 +570,14 @@ const newDirent = async (state) => {
   return {
     ...state,
     editingIndex: index,
+    editingType,
+    editingValue: '',
   }
 }
 
 // TODO much shared logic with newFolder
-export const newFile = async (state) => {
-  return newDirent(state)
+export const newFile = (state) => {
+  return newDirent(state, ExplorerEditingType.CreateFile)
 }
 
 const getParentFolder = (dirents, index, root) => {
@@ -674,9 +678,8 @@ const acceptCreate = async (state) => {
   }
 }
 
-// TODO much copy paste with newFIle command
 export const newFolder = (state) => {
-  return newDirent(state)
+  return newDirent(state, ExplorerEditingType.CreateFolder)
 }
 
 const handleClickFile = async (state, dirent, index, keepFocus = false) => {
@@ -1076,7 +1079,6 @@ export const collapseAll = (state) => {
 export const handleBlur = (state) => {
   // TODO when blur event occurs because of context menu, focused index should stay the same
   // but focus outline should be removed
-  console.log('explorer blur')
   const { editingType } = state
   if (editingType !== ExplorerEditingType.None) {
     return state
@@ -1371,33 +1373,33 @@ const renderEditingIndex = {
     return oldState.editingIndex === newState.editingIndex
   },
   apply(oldState, newState) {
-    const { editingIndex, focusedIndex } = newState
+    const { editingIndex, focusedIndex, editingType, editingValue } = newState
     if (editingIndex === -1) {
       const dirent = newState.items[focusedIndex]
       return [
         /* Viewlet.invoke */ 'Viewlet.send',
         /* id */ 'Explorer',
         /* method */ 'hideEditBox',
+        /* editingType */ oldState.editingType,
         /* index */ focusedIndex,
         /* dirent */ dirent,
       ]
     } else {
-      const dirent = newState.items[editingIndex]
-      const name = dirent.name
       return [
         /* Viewlet.invoke */ 'Viewlet.send',
         /* id */ 'Explorer',
         /* method */ 'showEditBox',
         /* index */ editingIndex,
-        /* name */ name,
+        /* editingType */ editingType,
+        /* value */ editingValue,
       ]
     }
   },
 }
 
 export const render = [
+  renderEditingIndex,
   renderItems,
   renderDropTargets,
-  renderEditingIndex,
   renderFocusedIndex,
 ]

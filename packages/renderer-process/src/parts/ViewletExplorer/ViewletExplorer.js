@@ -3,6 +3,7 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as InputBox from '../InputBox/InputBox.js'
 import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
+import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
 
 export const name = 'Explorer'
 
@@ -202,30 +203,54 @@ export const hoverIndex = (state, oldIndex, newIndex) => {
   $NewItem.classList.add('Hover')
 }
 
-export const showEditBox = (state, index, name) => {
+export const showEditBox = (state, index, editingType, value) => {
   const { $Viewlet } = state
   const $InputBox = InputBox.create()
-  $InputBox.value = name
+  $InputBox.value = value
   $InputBox.oninput = ViewletExplorerEvents.handleEditingInput
-  const $Dirent = $Viewlet.children[index]
-  const $Label = $Dirent.children[1]
-  $Label.replaceWith($InputBox)
+  if (
+    editingType === ExplorerEditingType.CreateFile ||
+    editingType === ExplorerEditingType.CreateFolder
+  ) {
+    if (index === -1) {
+      $Viewlet.append($InputBox)
+    } else {
+      const $Dirent = $Viewlet.children[index]
+      // TODO this should never happen
+      if (!$Dirent) {
+        throw new Error(`dirent at index ${index} should be defined`)
+      }
+      $Dirent.before($InputBox)
+    }
+  } else {
+    const $Dirent = $Viewlet.children[index]
+    const $Label = $Dirent.children[1]
+    $Label.replaceWith($InputBox)
+  }
   $InputBox.select()
-  $InputBox.setSelectionRange(0, name.length)
+  $InputBox.setSelectionRange(0, value.length)
   $InputBox.focus()
   Focus.setFocus('ExplorerEditBox')
 }
 
-export const hideEditBox = (state, index, dirent) => {
+export const hideEditBox = (state, editingType, index, dirent) => {
+  console.log('hide', index)
   Assert.object(state)
   Assert.number(index)
   Assert.object(dirent)
   const { $Viewlet } = state
   const $OldRow = $Viewlet.children[index]
-  const $Dirent = create$Row()
-  $Dirent.id = activeId
-  render$Row($Dirent, dirent)
-  $OldRow.replaceWith($Dirent)
+  if (
+    editingType === ExplorerEditingType.CreateFile ||
+    editingType === ExplorerEditingType.CreateFolder
+  ) {
+    $OldRow.nextElementSibling.remove()
+  } else {
+    const $Dirent = create$Row()
+    $Dirent.id = activeId
+    render$Row($Dirent, dirent)
+    $OldRow.replaceWith($Dirent)
+  }
   $Viewlet.focus()
   Focus.setFocus('Explorer')
 }
