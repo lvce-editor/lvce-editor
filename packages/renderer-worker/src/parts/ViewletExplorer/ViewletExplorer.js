@@ -20,6 +20,7 @@ import {
   getParentStartIndex,
   getTopLevelDirents,
 } from './ViewletExplorerShared.js'
+import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
 
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
@@ -52,6 +53,7 @@ export const create = (id, uri, left, top, width, height) => {
     dropTargets: [],
     excluded: [],
     editingValue: '',
+    editingType: ExplorerEditingType.None,
   }
 }
 
@@ -346,19 +348,12 @@ const updateDirents = async (state) => {
   await contentLoaded(state)
 }
 
-export const renameDirent = async (state) => {
+export const renameDirent = (state) => {
   const { focusedIndex } = state
   return {
     ...state,
     editingIndex: focusedIndex,
-  }
-}
-
-export const cancelRename = (state) => {
-  return {
-    ...state,
-    editingIndex: -1,
-    editingValue: '',
+    editingType: ExplorerEditingType.Rename,
   }
 }
 
@@ -494,7 +489,26 @@ export const acceptRename = async (state) => {
   }
 }
 
-export const acceptEdit = (state) => {}
+export const acceptEdit = (state) => {
+  const { editingType } = state
+  switch (editingType) {
+    case ExplorerEditingType.CreateFile:
+      return acceptCreate(state)
+    case ExplorerEditingType.Rename:
+      return acceptRename(state)
+    default:
+      return state
+  }
+}
+
+export const cancelEdit = (state) => {
+  return {
+    ...state,
+    editingIndex: -1,
+    editingValue: '',
+    editingType: ExplorerEditingType.None,
+  }
+}
 
 export const copyRelativePath = async (state) => {
   const dirent = getFocusedDirent(state)
@@ -559,17 +573,6 @@ export const newFile = async (state) => {
   return newDirent(state)
 }
 
-const cancelDirent = (state) => {
-  return {
-    ...state,
-    editingIndex: -1,
-  }
-}
-
-export const cancelNewFile = (state) => {
-  return cancelDirent(state)
-}
-
 const getParentFolder = (dirents, index, root) => {
   if (index < 0) {
     return root
@@ -584,8 +587,8 @@ export const updateEditingValue = (state, value) => {
   }
 }
 
-const acceptDirent = async (state, type) => {
-  const { editingIndex, focusedIndex, editingValue } = state
+const acceptCreate = async (state) => {
+  const { editingIndex, focusedIndex, editingValue, editingType } = state
   const newFileName = editingValue
   if (!newFileName) {
     // TODO show error message that file name must not be empty
@@ -599,11 +602,11 @@ const acceptDirent = async (state, type) => {
   const absolutePath = [parentFolder, newFileName].join(state.pathSeparator)
   // TODO better handle error
   try {
-    switch (type) {
-      case DirentType.File:
-        await FileSystem.writeFile(absolutePath, '')
+    switch (editingType) {
+      case ExplorerEditingType.CreateFile:
+        await FileSystem.createFile(absolutePath)
         break
-      case DirentType.Directory:
+      case ExplorerEditingType.CreateFolder:
         await FileSystem.mkdir(absolutePath)
         break
       default:
@@ -627,7 +630,10 @@ const acceptDirent = async (state, type) => {
     setSize: 1,
     depth,
     name: newFileName,
-    type,
+    type:
+      editingType === ExplorerEditingType.CreateFile
+        ? DirentType.File
+        : DirentType.Directory,
     icon: '',
   }
   newDirent.icon = IconTheme.getIcon(newDirent)
@@ -665,17 +671,8 @@ const acceptDirent = async (state, type) => {
   }
 }
 
-// TODO much duplicate logic with acceptNewFolder
-export const acceptCreateNewFile = (state) => {
-  return acceptDirent(state, DirentType.File)
-}
-
-export const acceptCreateNewFolder = (state) => {
-  return acceptDirent(state, DirentType.Directory)
-}
-
 // TODO much copy paste with newFIle command
-export const newFolder = async (state) => {
+export const newFolder = (state) => {
   return newDirent(state)
 }
 
@@ -723,12 +720,7 @@ const handleClickDirectory = async (state, dirent, index, keepFocus) => {
   }
 }
 
-const handleClickDirectoryExpanding = async (
-  state,
-  dirent,
-  index,
-  keepFocus
-) => {
+const handleClickDirectoryExpanding = (state, dirent, index, keepFocus) => {
   dirent.type = DirentType.Directory
   dirent.icon = IconTheme.getIcon(dirent)
   return {
