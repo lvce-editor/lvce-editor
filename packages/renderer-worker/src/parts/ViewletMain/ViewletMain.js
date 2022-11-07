@@ -323,9 +323,32 @@ export const openBackgroundTab = async (state, initialUri, props) => {
   return state
 }
 
-export const save = () => {
+const saveEditor = async (editor) => {
+  const id = getId(editor)
+  const instance = ViewletStates.getInstance(id)
+  if (!instance) {
+    return
+  }
+  const { factory } = instance
+  const { Commands } = factory
+  const saveCommandId = id === 'EditorText' ? 'Editor.save' : `${id}.save`
+  const saveCommand = Commands[saveCommandId]
+  if (!saveCommand) {
+    return
+  }
+  await Command.execute(saveCommandId)
+}
+
+export const save = async (state) => {
+  const { editors, activeIndex } = state
+  if (activeIndex === -1) {
+    return state
+  }
+  const editor = editors[activeIndex]
+  await saveEditor(editor)
   // TODO handle different types of editors / custom editors / webviews
-  Command.execute(/* EditorSave.editorSave */ 'Editor.save')
+  // Command.execute(/* EditorSave.editorSave */ 'Editor.save')
+  return state
 }
 
 // const getEditor = (uri) => {

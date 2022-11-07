@@ -8,18 +8,21 @@ const Imports = {
 
 // prettier-ignore
 export const Commands = {
-  'SimpleBrowser.backward': SimpleBrowser.backward,
-  'SimpleBrowser.forward': SimpleBrowser.forward,
-  'SimpleBrowser.go': SimpleBrowser.go,
-  'SimpleBrowser.handleInput': SimpleBrowser.handleInput,
-  'SimpleBrowser.handleTitleUpdated': SimpleBrowser.handleTitleUpdated,
-  'SimpleBrowser.handleWillNavigate': SimpleBrowser.handleWillNavigate,
-  'SimpleBrowser.openBackgroundTab': LazyCommand.create(SimpleBrowser.name, Imports.OpenBackgroundTab, 'openBackgroundTab'),
-  'SimpleBrowser.openDevtools': SimpleBrowser.openDevtools,
-  'SimpleBrowser.openExternal': LazyCommand.create(SimpleBrowser.name, Imports.OpenExternal, 'openExternal'),
-  'SimpleBrowser.reload': SimpleBrowser.reload,
+  backward: SimpleBrowser.backward,
+  forward: SimpleBrowser.forward,
+  go: SimpleBrowser.go,
+  handleInput: SimpleBrowser.handleInput,
+  handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
+  handleWillNavigate: SimpleBrowser.handleWillNavigate,
+  openBackgroundTab: LazyCommand.create(SimpleBrowser.name, Imports.OpenBackgroundTab, 'openBackgroundTab'),
+  openDevtools: SimpleBrowser.openDevtools,
+  openExternal: LazyCommand.create(SimpleBrowser.name, Imports.OpenExternal, 'openExternal'),
+  reload: SimpleBrowser.reload,
 }
 
-export const Css = '/css/parts/ViewletSimpleBrowser.css'
+export const Css = [
+  '/css/parts/ViewletSimpleBrowser.css',
+  '/css/parts/IconButton.css',
+]
 
 export * from './ViewletSimpleBrowser.js'

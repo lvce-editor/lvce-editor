@@ -8,8 +8,8 @@ const Imports = {
 
 // prettier-ignore
 export const Commands = {
-  'ExtensionDetail.handleIconError':  ViewletExtensionDetail.handleIconError,
-  'ExtensionDetail.handleReadmeContextMenu': LazyCommand.create(ViewletExtensionDetail.name, Imports.HandleReadmeContextMenu, 'handleReadmeContextMenu'),
+  handleIconError:  ViewletExtensionDetail.handleIconError,
+  handleReadmeContextMenu: LazyCommand.create(ViewletExtensionDetail.name, Imports.HandleReadmeContextMenu, 'handleReadmeContextMenu'),
 }
 
 export const Css = '/css/parts/ViewletExtensionDetail.css'

@@ -5,7 +5,10 @@ import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
+import * as ViewletSizeMap from '../ViewletSizeMap/ViewletSizeMap.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
+import * as ViewletSizable from '../ViewletSizable/ViewletSizable.js'
+import * as ViewletScrollable from '../ViewletScrollable/ViewletScrollable.js'
 
 export const name = 'Extensions'
 
@@ -364,19 +367,5 @@ export const handleError = (state, message) => {
   state.$ExtensionList.textContent = message
 }
 
-export const setScrollBar = (state, scrollBarY, scrollBarHeight) => {
-  const { $ScrollBarThumb } = state
-  $ScrollBarThumb.style.top = `${scrollBarY}px`
-  $ScrollBarThumb.style.height = `${scrollBarHeight}px`
-}
-
-export const setSize = (state, size) => {
-  const { $Viewlet } = state
-  if (size === 'Small') {
-    $Viewlet.classList.remove('Normal')
-    $Viewlet.classList.add('Small')
-  } else {
-    $Viewlet.classList.remove('Small')
-    $Viewlet.classList.add('Normal')
-  }
-}
+export * from '../ViewletScrollable/ViewletScrollable.js'
+export * from '../ViewletSizable/ViewletSizable.js'

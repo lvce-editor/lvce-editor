@@ -14,20 +14,20 @@ const Imports = {
 
 // prettier-ignore
 export const Commands = {
-  'ActivityBar.focus': LazyCommand.create(ViewletActivityBar.name, Imports.Focus, 'focus'),
-  'ActivityBar.focusFirst': LazyCommand.create(ViewletActivityBar.name, Imports.FocusFirst, 'focusFirst'),
-  'ActivityBar.focusLast': LazyCommand.create(ViewletActivityBar.name, Imports.FocusLast, 'focusLast'),
-  'ActivityBar.focusNext': LazyCommand.create(ViewletActivityBar.name, Imports.FocusNext, 'focusNext'),
-  'ActivityBar.focusPrevious': LazyCommand.create(ViewletActivityBar.name, Imports.FocusPrevious, 'focusPrevious'),
-  'ActivityBar.getHiddenItems': ViewletActivityBar.getHiddenItems,
-  'ActivityBar.handleBlur':  ViewletActivityBar.handleBlur,
-  'ActivityBar.handleClick': LazyCommand.create(ViewletActivityBar.name, Imports.HandleClick, 'handleClick'),
-  'ActivityBar.handleContextMenu':  ViewletActivityBar.handleContextMenu,
-  'ActivityBar.handleSideBarHidden': ViewletActivityBar.handleSideBarHidden,
-  'ActivityBar.handleSideBarViewletChange': ViewletActivityBar.handleSideBarViewletChange,
-  'ActivityBar.selectCurrent': LazyCommand.create(ViewletActivityBar.name,Imports.SelectCurrent, 'selectCurrent'),
-  'ActivityBar.toggleItem': ViewletActivityBar.toggleItem,
-  'ActivityBar.updateSourceControlCount':  ViewletActivityBar.updateSourceControlCount,
+  focus: LazyCommand.create(ViewletActivityBar.name, Imports.Focus, 'focus'),
+  focusFirst: LazyCommand.create(ViewletActivityBar.name, Imports.FocusFirst, 'focusFirst'),
+  focusLast: LazyCommand.create(ViewletActivityBar.name, Imports.FocusLast, 'focusLast'),
+  focusNext: LazyCommand.create(ViewletActivityBar.name, Imports.FocusNext, 'focusNext'),
+  focusPrevious: LazyCommand.create(ViewletActivityBar.name, Imports.FocusPrevious, 'focusPrevious'),
+  getHiddenItems: ViewletActivityBar.getHiddenItems,
+  handleBlur:  ViewletActivityBar.handleBlur,
+  handleClick: LazyCommand.create(ViewletActivityBar.name, Imports.HandleClick, 'handleClick'),
+  handleContextMenu:  ViewletActivityBar.handleContextMenu,
+  handleSideBarHidden: ViewletActivityBar.handleSideBarHidden,
+  handleSideBarViewletChange: ViewletActivityBar.handleSideBarViewletChange,
+  selectCurrent: LazyCommand.create(ViewletActivityBar.name,Imports.SelectCurrent, 'selectCurrent'),
+  toggleItem: ViewletActivityBar.toggleItem,
+  updateSourceControlCount:  ViewletActivityBar.updateSourceControlCount,
 }
 
 export const Events = {
