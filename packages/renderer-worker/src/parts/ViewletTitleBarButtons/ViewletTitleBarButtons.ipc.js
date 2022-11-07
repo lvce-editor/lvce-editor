@@ -10,9 +10,9 @@ const Imports = {
 
 // prettier-ignore
 export const Commands = {
-  'TitleBarButtons.handleClickClose': LazyCommand.create(ViewletTitleBarButtons.name, Imports.HandleClickClose, 'handleClickClose'),
-  'TitleBarButtons.handleClickMinimize': LazyCommand.create(ViewletTitleBarButtons.name, Imports.HandleClickMinimize, 'handleClickMinimize'),
-  'TitleBarButtons.handleClickToggleMaximize': LazyCommand.create(ViewletTitleBarButtons.name, Imports.HandleClickToggleMaximize, 'handleClickToggleMaximize'),
+  handleClickClose: LazyCommand.create(ViewletTitleBarButtons.name, Imports.HandleClickClose, 'handleClickClose'),
+  handleClickMinimize: LazyCommand.create(ViewletTitleBarButtons.name, Imports.HandleClickMinimize, 'handleClickMinimize'),
+  handleClickToggleMaximize: LazyCommand.create(ViewletTitleBarButtons.name, Imports.HandleClickToggleMaximize, 'handleClickToggleMaximize'),
 }
 
 export const Css = '/css/parts/ViewletTitleBarButtons.css'
