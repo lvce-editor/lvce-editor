@@ -94,6 +94,7 @@ export const getModuleId = (commandId) => {
       return ModuleId.Dialog
     case 'Download.downloadFile':
     case 'Download.downloadJson':
+    case 'Download.downloadToDownloadsFolder':
       return ModuleId.Download
     case 'EditorDiagnostics.hydrate':
       return ModuleId.EditorDiagnostics
