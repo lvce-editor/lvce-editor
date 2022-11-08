@@ -24,7 +24,6 @@
 @import './parts/Animation.css';
 @import './parts/ViewletReferences.css';
 @import './parts/Label.css';
-@import './parts/Markdown.css';
 
 /* focus css (can be overridden by components) */
 @import './parts/Focus.css';
