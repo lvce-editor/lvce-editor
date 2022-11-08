@@ -9,7 +9,6 @@ export const handleContextMenu = async (state, params) => {
   const { top, headerHeight, left } = state
   const actualX = left + x
   const actualY = top + headerHeight + y
-  console.log({ params })
   const args = [actualX, actualY, params]
   await ElectronMenu.openContextMenu(
     actualX,
