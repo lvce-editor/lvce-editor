@@ -55,9 +55,9 @@ test('accessibility - select should have an aria label', () => {
 
 test('setText', () => {
   const state = ViewletOutput.create()
-  ViewletOutput.setText(state, 'line 1')
+  ViewletOutput.setLines(state, 'line 1')
   expect(getSimpleList(state)).toEqual(['line 1'])
-  ViewletOutput.setText(state, 'line 2')
+  ViewletOutput.setLines(state, 'line 2')
   expect(getSimpleList(state)).toEqual(['line 1', 'line 2'])
 })
 

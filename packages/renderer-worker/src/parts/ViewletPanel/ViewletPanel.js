@@ -3,10 +3,11 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const name = ViewletModuleId.Panel
 
-export const create = () => {
+export const create = (id, uri, left, top, width, height) => {
   return {
     currentViewletId: '',
     currentViewlet: undefined,
@@ -14,6 +15,10 @@ export const create = () => {
     disposed: false,
     focusedIndex: -1,
     selectedIndex: -1,
+    left,
+    top,
+    width,
+    height,
   }
 }
 
@@ -53,6 +58,7 @@ const getContentDimensions = (dimensions) => {
 // TODO
 export const getChildren = (state) => {
   const { top, left, width, height, titleAreaHeight, currentViewletId } = state
+  Assert.number(height)
   return [
     {
       id: currentViewletId,

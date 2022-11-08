@@ -54,11 +54,18 @@ export const setOptions = (state, options) => {
   $Select.append(...options.map(create$Option))
 }
 
-export const setText = (state, text) => {
+const create$Line = (line) => {
+  const $Line = document.createElement('div')
+  $Line.className = 'Line'
+  $Line.textContent = line
+  return $Line
+}
+
+export const setLines = (state, lines) => {
   Assert.object(state)
-  Assert.string(text)
+  Assert.array(lines)
   const { $Content } = state
-  $Content.textContent = text
+  $Content.replaceChildren(...lines.map(create$Line))
 }
 
 export const handleError = (state, error) => {

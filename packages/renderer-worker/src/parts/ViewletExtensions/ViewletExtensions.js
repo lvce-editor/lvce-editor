@@ -97,7 +97,7 @@ export const loadContent = async (state) => {
     ...state,
     extensions,
     items: viewObjects,
-    maxLineY: maxLineY,
+    maxLineY,
     scrollBarHeight,
     finalDeltaY,
     size,

@@ -1,14 +1,26 @@
 import * as OutputChannel from '../OutputChannel/OutputChannel.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const name = ViewletModuleId.Output
 
-export const create = () => {
+export const create = (id, uri, top, left, width, height) => {
+  Assert.number(height)
   return {
     selectedIndex: -1,
     options: [],
     disposed: false,
     text: '',
+    minLineY: 0,
+    maxLineY: 0,
+    deltaY: 0,
+    finalDeltaY: 0,
+    lines: [],
+    top,
+    left,
+    width,
+    height,
+    itemHeight: 20,
   }
 }
 
@@ -42,16 +54,20 @@ export const setOutputChannel = async (state, option) => {
   return {
     ...state,
     selectedOption: option,
-    text: '',
+    lines: [],
   }
 }
 
 export const handleData = (state, data) => {
-  const { text } = state
-  const newText = text + data
+  const { lines, height, itemHeight } = state
+  const newLines = [...lines, ...data.split('\n')]
+  const numberOfVisible = Math.ceil(height / itemHeight)
+  const maxLineY = Math.min(newLines.length, numberOfVisible)
+  console.log({ numberOfVisible })
   return {
     ...state,
-    text: newText,
+    lines: newLines,
+    maxLineY,
   }
 }
 
@@ -78,20 +94,35 @@ export const handleError = (state, error) => {
   }
 }
 
+export const hasFunctionalResize = true
+
+export const resize = (state) => {
+  return state
+}
+
 export const hasFunctionalRender = true
 
-const renderText = {
+const getVisibleLines = (state) => {
+  const { lines, minLineY, maxLineY } = state
+  return lines.slice(minLineY, maxLineY)
+}
+
+const renderLines = {
   isEqual(oldState, newState) {
-    console.log({ newState })
-    return oldState.text === newState.text
+    return (
+      oldState.lines === newState.lines &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY
+    )
   },
   apply(oldState, newState) {
-    console.log('render text', newState.text)
+    const visibleLines = getVisibleLines(newState)
+    console.log({ visibleLines })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ ViewletModuleId.Output,
-      /* method */ 'setText',
-      /* text */ newState.text,
+      /* method */ 'setLines',
+      /* lines */ visibleLines,
     ]
   },
 }
@@ -110,10 +141,4 @@ const renderOptions = {
   },
 }
 
-export const render = [renderText, renderOptions]
-
-export const hasFunctionalResize = true
-
-export const resize = (state) => {
-  return state
-}
+export const render = [renderLines, renderOptions]
