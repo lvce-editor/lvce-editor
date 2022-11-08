@@ -14,6 +14,8 @@ exports.load = async (moduleId) => {
       return require('../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.ipc.js')
     case ModuleId.ElectronBrowserViewQuickPick:
       return require('../ElectronBrowserViewQuickPick/ElectronBrowserViewQuickPick.ipc.js')
+    case ModuleId.ElectronClipBoard:
+      return require('../ElectronClipBoard/ElectronClipBoard.ipc.js')
     case ModuleId.ElectronContentTracing:
       return require('../ElectronContentTracing/ElectronContentTracing.ipc.js')
     case ModuleId.Developer:
