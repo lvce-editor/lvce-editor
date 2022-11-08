@@ -134,6 +134,8 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
+    case 'Download.download':
+      return ModuleId.Download
     default:
       throw new Error(`command ${commandId} not found`)
   }
