@@ -12,6 +12,9 @@ export const Commands = {
   handleReadmeContextMenu: LazyCommand.create(ViewletExtensionDetail.name, Imports.HandleReadmeContextMenu, 'handleReadmeContextMenu'),
 }
 
-export const Css = '/css/parts/ViewletExtensionDetail.css'
+export const Css = [
+  '/css/parts/ViewletExtensionDetail.css',
+  '/css/parts/Markdown.css',
+]
 
 export * from './ViewletExtensionDetail.js'
