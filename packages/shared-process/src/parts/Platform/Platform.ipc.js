@@ -19,4 +19,6 @@ export const Commands = {
   'Platform.getTmpDir': Platform.getTmpDir,
   'Platform.getUserSettingsPath': Platform.getUserSettingsPath,
   'Platform.setEnvironmentVariables': Platform.setEnvironmentVariables,
+  'Platform.getDownloadDir': Platform.getDownloadDir,
+
 }
