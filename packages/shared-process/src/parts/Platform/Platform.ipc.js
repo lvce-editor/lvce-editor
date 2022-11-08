@@ -2,6 +2,7 @@ import * as Platform from '../Platform/Platform.js'
 
 // prettier-ignore
 export const Commands = {
+
   'Platform.getAppDir': Platform.getAppDir,
   'Platform.getBuiltinExtensionsPath': Platform.getBuiltinExtensionsPath,
   'Platform.getCachedExtensionsPath': Platform.getCachedExtensionsPath,
@@ -9,6 +10,7 @@ export const Commands = {
   'Platform.getConfigDir': Platform.getConfigDir,
   'Platform.getDataDir': Platform.getDataDir,
   'Platform.getDisabledExtensionsPath': Platform.getDisabledExtensionsPath,
+  'Platform.getDownloadDir': Platform.getDownloadDir,
   'Platform.getDownloadDir': Platform.getDownloadDir,
   'Platform.getExtensionsPath': Platform.getExtensionsPath,
   'Platform.getHomeDir': Platform.getHomeDir,
@@ -20,6 +22,4 @@ export const Commands = {
   'Platform.getTmpDir': Platform.getTmpDir,
   'Platform.getUserSettingsPath': Platform.getUserSettingsPath,
   'Platform.setEnvironmentVariables': Platform.setEnvironmentVariables,
-  'Platform.getDownloadDir': Platform.getDownloadDir,
-
 }
