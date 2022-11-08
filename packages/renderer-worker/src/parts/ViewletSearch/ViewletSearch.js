@@ -60,7 +60,6 @@ export const loadContent = async (state, savedState) => {
 }
 
 const getStatusMessage = (resultCount, fileResultCount) => {
-  console.log({ resultCount, fileResultCount })
   if (resultCount === 0) {
     return I18nString.i18nString(UiStrings.NoResults)
   }

@@ -47,7 +47,6 @@ const restoreError = (error) => {
     return error
   }
   if (error.code && error.code === JsonRpcErrorCode.MethodNotFound) {
-    console.log('create json rpc error')
     const restoredError = new JsonRpcError(error.message)
     restoredError.stack = error.stack
     return restoredError

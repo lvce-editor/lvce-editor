@@ -2,7 +2,6 @@ import * as Assert from '../Assert/Assert.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 
 const getProvider = (scheme) => {
-  console.log({ scheme })
   switch (scheme) {
     case '':
       return import('./TextSearchNode.js')

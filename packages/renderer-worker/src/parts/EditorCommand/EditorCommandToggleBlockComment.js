@@ -9,7 +9,6 @@ const RE_WHITESPACE_AT_END = /\s+$/
 
 const getBlockComment = async (editor) => {
   const languageConfiguration = await Languages.getLanguageConfiguration(editor)
-  console.log({ languageConfiguration })
   if (
     !languageConfiguration ||
     !languageConfiguration.comments ||
