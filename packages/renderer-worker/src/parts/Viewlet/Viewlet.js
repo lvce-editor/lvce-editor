@@ -289,7 +289,7 @@ export const executeViewletCommand = async (
       instance.factory.name === moduleId &&
       instance.state[uidKey] === uidValue
     ) {
-      const fn = instance.factory[fnName]
+      const fn = instance.factory.Commands[fnName]
       if (!fn) {
         throw new Error(`Command not found ${moduleId}.${fnName}`)
       }

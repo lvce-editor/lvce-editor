@@ -64,6 +64,25 @@ exports.createBrowserView = async (restoreId, falltroughKeyBindings) => {
     view.webContents.insertCSS(ElectronBrowserViewCss.electronBrowserViewCss)
   }
   view.setBackgroundColor('#fff')
+  /**
+   *
+   * @param {Electron.Event} event
+   * @param {Electron.ContextMenuParams} params
+   */
+  const handleContextMenu = (event, params) => {
+    console.log({ params })
+    const port = getPort()
+    if (!port) {
+      return
+    }
+    const { x, y } = params
+    port.postMessage({
+      jsonrpc: '2.0',
+      method: 'Viewlet.executeViewletCommand',
+      params: ['SimpleBrowser', 'browserViewId', id, 'handleContextMenu', x, y],
+    })
+  }
+  view.webContents.on('context-menu', handleContextMenu)
   const { webContents } = view
   const { id } = webContents
   // console.log('[main process] create browser view', id)

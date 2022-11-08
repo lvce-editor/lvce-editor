@@ -46,3 +46,12 @@ export const show = (id) => {
 export const hide = (id) => {
   return ElectronProcess.invoke('ElectronBrowserViewFunctions.hide', id)
 }
+
+export const inspectElement = (id, x, y) => {
+  return ElectronProcess.invoke(
+    'ElectronBrowserViewFunctions.inspectElement',
+    id,
+    x,
+    y
+  )
+}
