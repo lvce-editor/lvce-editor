@@ -5,6 +5,7 @@ import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 export const handleContextMenu = async (state, params) => {
   Assert.object(state)
   Assert.object(params)
+  console.log({ params })
   const { x, y } = params
   const { top, headerHeight, left } = state
   const actualX = left + x

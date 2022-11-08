@@ -3,6 +3,7 @@ const ElectronBrowserViewFunctions = require('./ElectronBrowserViewFunctions.js'
 // prettier-ignore
 exports.Commands = {
   'ElectronBrowserViewFunctions.backward': ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.backward),
+  'ElectronBrowserViewFunctions.copyImageAt': ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.copyImageAt),
   'ElectronBrowserViewFunctions.focus': ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.focus),
   'ElectronBrowserViewFunctions.forward': ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.forward),
   'ElectronBrowserViewFunctions.hide': ElectronBrowserViewFunctions.hide,

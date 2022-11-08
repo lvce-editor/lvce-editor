@@ -1,16 +1,18 @@
 import { extensionHostPath } from '@lvce-editor/extension-host'
 import { homedir, tmpdir } from 'node:os'
-import { resolve, sep } from 'node:path'
+import { join, resolve, sep } from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
 import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
 
+const { env, platform } = process
+
 export const applicationName = 'lvce-oss'
 
-export const isWindows = process.platform === 'win32'
+export const isWindows = platform === 'win32'
 
-export const isMacOs = process.platform === 'darwin'
+export const isMacOs = platform === 'darwin'
 
 export const dataDir = Path.join(xdgData || tmpdir(), applicationName)
 
@@ -52,28 +54,28 @@ export const getChromeExtensionsPath = () => {
 
 export const getMarketplaceUrl = () => {
   return (
-    process.env.LVCE_MARKETPLACE_URL ||
-    'https://marketplace.22e924c84de072d4b25b.com'
+    env.LVCE_MARKETPLACE_URL || 'https://marketplace.22e924c84de072d4b25b.com'
   )
 }
 
 export const getDesktop = () => {
+  const { ORIGINAL_XDG_CURRENT_DESKTOP, XDG_CURRENT_DESKTOP } = env
   if (
-    process.env.ORIGINAL_XDG_CURRENT_DESKTOP &&
-    process.env.ORIGINAL_XDG_CURRENT_DESKTOP !== 'undefined'
+    ORIGINAL_XDG_CURRENT_DESKTOP &&
+    ORIGINAL_XDG_CURRENT_DESKTOP !== 'undefined'
   ) {
-    if (process.env.ORIGINAL_XDG_CURRENT_DESKTOP === 'ubuntu:GNOME') {
+    if (ORIGINAL_XDG_CURRENT_DESKTOP === 'ubuntu:GNOME') {
       return 'gnome'
     }
-    return process.env.ORIGINAL_XDG_CURRENT_DESKTOP
+    return ORIGINAL_XDG_CURRENT_DESKTOP
   }
-  if (process.env.XDG_CURRENT_DESKTOP) {
-    if (process.env.XDG_CURRENT_DESKTOP === 'ubuntu:GNOME') {
+  if (XDG_CURRENT_DESKTOP) {
+    if (XDG_CURRENT_DESKTOP === 'ubuntu:GNOME') {
       return 'gnome'
     }
-    return process.env.XDG_CURRENT_DESKTOP
+    return XDG_CURRENT_DESKTOP
   }
-  if (process.platform === 'win32') {
+  if (isWindows) {
     return 'windows'
   }
   return ''
@@ -108,17 +110,15 @@ export const getDefaultSettingsPath = () => {
 }
 export const setEnvironmentVariables = (variables) => {
   for (const [key, value] of Object.entries(variables)) {
-    process.env[key] = value
+    env[key] = value
   }
 }
 
 export const getTestPath = () => {
-  if (process.env.TEST_PATH) {
+  if (env.TEST_PATH) {
     const testPath =
       '/remote' +
-      pathToFileURL(Path.join(process.cwd(), process.env.TEST_PATH))
-        .toString()
-        .slice(7)
+      pathToFileURL(Path.join(process.cwd(), env.TEST_PATH)).toString().slice(7)
     return testPath
   }
   return '/packages/extension-host-worker-tests'
@@ -133,7 +133,7 @@ export const getTmpDir = () => {
 }
 
 export const getOnlyExtensionPath = () => {
-  const onlyExtensionPath = process.env.ONLY_EXTENSION
+  const onlyExtensionPath = env.ONLY_EXTENSION
   if (onlyExtensionPath) {
     return resolve(onlyExtensionPath)
   }
@@ -158,4 +158,9 @@ export const getDataDir = () => {
 
 export const getHomeDir = () => {
   return homeDir
+}
+
+export const getDownloadDir = () => {
+  const { XDG_DOWNLOAD_DIR } = env
+  return XDG_DOWNLOAD_DIR || join(homeDir, 'Downloads')
 }

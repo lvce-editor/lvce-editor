@@ -9,6 +9,7 @@ export const Commands = {
   'Platform.getConfigDir': Platform.getConfigDir,
   'Platform.getDataDir': Platform.getDataDir,
   'Platform.getDisabledExtensionsPath': Platform.getDisabledExtensionsPath,
+  'Platform.getDownloadDir': Platform.getDownloadDir,
   'Platform.getExtensionsPath': Platform.getExtensionsPath,
   'Platform.getHomeDir': Platform.getHomeDir,
   'Platform.getLogsDir': Platform.getLogsDir,

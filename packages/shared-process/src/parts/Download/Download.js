@@ -6,6 +6,7 @@ import VError from 'verror'
 import * as Path from '../Path/Path.js'
 
 export const download = async (url, outFile) => {
+  console.log('downlaod', url, outFile)
   try {
     await mkdir(Path.dirname(outFile), { recursive: true })
     await pipeline(got.stream(url), createWriteStream(outFile))

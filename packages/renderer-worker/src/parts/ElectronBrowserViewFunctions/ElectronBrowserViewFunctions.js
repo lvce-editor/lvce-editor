@@ -55,3 +55,12 @@ export const inspectElement = (id, x, y) => {
     y
   )
 }
+
+export const copyImageAt = (id, x, y) => {
+  return ElectronProcess.invoke(
+    'ElectronBrowserViewFunctions.copyImageAt',
+    id,
+    x,
+    y
+  )
+}

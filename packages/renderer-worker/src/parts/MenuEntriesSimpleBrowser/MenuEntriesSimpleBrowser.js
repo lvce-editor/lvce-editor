@@ -1,5 +1,7 @@
 import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
+import * as Path from '../Path/Path.js'
+import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 
 /**
  * @enum {string}
@@ -11,6 +13,8 @@ export const UiStrings = {
   Paste: 'Paste',
   OpenLinkInNewTab: 'Open Link in New Tab',
   CopyLinkAddress: 'Copy Link Address',
+  SaveImageAs: 'Save Image',
+  CopyImage: 'Copy Image',
 }
 
 const getMenuEntriesLink = (x, y, params) => {
@@ -30,17 +34,10 @@ const getMenuEntriesLink = (x, y, params) => {
       command: 'ElectronClipBoard.writeText',
       args: [linkURL],
     },
-    {
-      id: 'inspect',
-      label: I18nString.i18nString(UiStrings.InspectElement),
-      flags: MenuItemFlags.None,
-      command: 'SimpleBrowser.inspectElement',
-      args: [x, y],
-    },
   ]
 }
 
-const getMenuEntriesDefault = (x, y) => {
+const getMenuEntriesDefault = (x, y, params) => {
   return [
     {
       id: 'inspect-element',
@@ -48,24 +45,6 @@ const getMenuEntriesDefault = (x, y) => {
       flags: MenuItemFlags.None,
       command: 'SimpleBrowser.inspectElement',
       args: [x, y],
-    },
-    {
-      id: 'cut',
-      label: I18nString.i18nString(UiStrings.Cut),
-      flags: MenuItemFlags.None,
-      command: 'SimpleBrowser.cut',
-    },
-    {
-      id: 'copy',
-      label: I18nString.i18nString(UiStrings.Copy),
-      flags: MenuItemFlags.None,
-      command: 'SimpleBrowser.copy',
-    },
-    {
-      id: 'paste',
-      label: I18nString.i18nString(UiStrings.Paste),
-      flags: MenuItemFlags.None,
-      command: 'SimpleBrowser.paste',
     },
   ]
 }
@@ -80,22 +59,41 @@ const getMenuEntriesSelectionText = (x, y, params) => {
       command: 'ElectronClipBoard.writeText',
       args: [selectionText],
     },
+  ]
+}
+
+const getMenuEntriesImage = (x, y, params) => {
+  const { srcURL } = params
+  const fileName = Path.getBaseName(PathSeparatorType.Slash, srcURL)
+  return [
     {
-      id: 'inspect-element',
-      label: I18nString.i18nString(UiStrings.InspectElement),
+      id: 'save-image',
+      label: I18nString.i18nString(UiStrings.SaveImageAs),
       flags: MenuItemFlags.None,
-      command: 'SimpleBrowser.inspectElement',
+      command: 'Download.downloadToDownloadsFolder',
+      args: [fileName, srcURL],
+    },
+    {
+      id: 'copy-image',
+      label: I18nString.i18nString(UiStrings.CopyImage),
+      flags: MenuItemFlags.None,
+      command: 'SimpleBrowser.copyImage',
       args: [x, y],
     },
   ]
 }
 
 export const getMenuEntries = (x, y, params) => {
+  const menuItems = []
   if (params.linkURL) {
-    return getMenuEntriesLink(x, y, params)
+    menuItems.push(...getMenuEntriesLink(x, y, params))
   }
   if (params.selectionText) {
-    return getMenuEntriesSelectionText(x, y, params)
+    menuItems.push(...getMenuEntriesSelectionText(x, y, params))
   }
-  return getMenuEntriesDefault(x, y)
+  if (params.mediaType === 'image') {
+    menuItems.push(...getMenuEntriesImage(x, y, params))
+  }
+  menuItems.push(...getMenuEntriesDefault(x, y, params))
+  return menuItems
 }

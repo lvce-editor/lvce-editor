@@ -90,6 +90,12 @@ export const getLogsDir = () => {
   return SharedProcess.invoke(/* Platform.getLogsDir */ 'Platform.getLogsDir')
 }
 
+export const getDownloadDir = () => {
+  return SharedProcess.invoke(
+    /* Platform.getDownloadDir */ 'Platform.getDownloadDir'
+  )
+}
+
 export const getUserSettingsPath = () => {
   if (platform === PlatformType.Web) {
     return 'settings'

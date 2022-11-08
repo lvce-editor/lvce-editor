@@ -29,9 +29,27 @@ jest.unstable_mockModule('../src/parts/Url/Url.js', () => {
   }
 })
 
+jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
+  return {
+    async getDownloadDir() {
+      return '/test/downloads'
+    },
+  }
+})
+jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
 const Download = await import('../src/parts/Download/Download.js')
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
+)
+const SharedProcess = await import(
+  '../src/parts/SharedProcess/SharedProcess.js'
 )
 const Url = await import('../src/parts/Url/Url.js')
 
@@ -98,4 +116,16 @@ test('downloadJson', async () => {
   )
   expect(Url.revokeObjectUrl).toHaveBeenCalledTimes(1)
   expect(Url.revokeObjectUrl).toHaveBeenCalledWith('test://test-session.json')
+})
+
+test('downloadToDownloadsFolder', async () => {
+  // @ts-ignore
+  SharedProcess.invoke.mockImplementation(() => {})
+  await Download.downloadToDownloadsFolder('file.json', 'test://file.json')
+  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
+  expect(SharedProcess.invoke).toHaveBeenCalledWith(
+    'Download.download',
+    'test://file.json',
+    '/test/downloads/file.json'
+  )
 })
