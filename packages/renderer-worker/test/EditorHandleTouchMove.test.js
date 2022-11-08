@@ -24,7 +24,7 @@ test.skip('editorHandleTouchMove - single touch', () => {
   EditorHandleTouchStart.state.deltaY = 0
   EditorHandleTouchStart.state.touchOffsetY = 40
   RendererProcess.state.send = jest.fn()
-  EditorHandleTouchMove.editorHandleTouchMove(editor, {
+  EditorHandleTouchMove.handleTouchMove(editor, {
     touches: [{ x: 45, y: 35 }],
   })
   expect(editor.deltaY).toBe(5)

@@ -7,9 +7,7 @@ test('editorSelectCharacterLeft - single character', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 1, 0, 1),
   }
-  expect(
-    EditorSelectCharacterLeft.editorSelectCharacterLeft(editor)
-  ).toMatchObject({
+  expect(EditorSelectCharacterLeft.selectCharacterLeft(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 1),
   })
 })
@@ -20,9 +18,7 @@ test('editorSelectCharacterLeft - at start of file', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(
-    EditorSelectCharacterLeft.editorSelectCharacterLeft(editor)
-  ).toMatchObject({
+  expect(EditorSelectCharacterLeft.selectCharacterLeft(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })

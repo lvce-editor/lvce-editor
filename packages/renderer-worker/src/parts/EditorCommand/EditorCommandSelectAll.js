@@ -1,7 +1,7 @@
 import * as Editor from '../Editor/Editor.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
-export const editorSelectAll = (editor) => {
+export const selectAll = (editor) => {
   const lines = editor.lines
   const startRowIndex = 0
   const startColumnIndex = 0

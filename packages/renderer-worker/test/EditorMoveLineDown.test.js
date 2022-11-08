@@ -10,19 +10,19 @@ test.skip('editorMoveLineDown', () => {
     },
     tokenizer: TokenizePlainText,
   }
-  EditorMoveLineDown.editorMoveLineDown(editor)
+  EditorMoveLineDown.moveLineDown(editor)
   expect(editor.lines).toEqual(['line 2', 'line 1', 'line 3'])
   expect(editor.cursor).toEqual({
     rowIndex: 1,
     columnIndex: 3,
   })
-  EditorMoveLineDown.editorMoveLineDown(editor)
+  EditorMoveLineDown.moveLineDown(editor)
   expect(editor.lines).toEqual(['line 2', 'line 3', 'line 1'])
   expect(editor.cursor).toEqual({
     rowIndex: 2,
     columnIndex: 3,
   })
-  EditorMoveLineDown.editorMoveLineDown(editor)
+  EditorMoveLineDown.moveLineDown(editor)
   expect(editor.lines).toEqual(['line 2', 'line 3', 'line 1'])
   expect(editor.cursor).toEqual({
     rowIndex: 2,

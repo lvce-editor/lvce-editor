@@ -1,7 +1,7 @@
 import * as EditorHandleTouchStart from './EditorCommandHandleTouchStart.js'
 import * as EditorSetDeltaY from './EditorCommandSetDeltaY.js'
 
-export const editorHandleTouchMove = (editor, touchEvent) => {
+export const handleTouchMove = (editor, touchEvent) => {
   if (touchEvent.touches.length === 0) {
     return
   }

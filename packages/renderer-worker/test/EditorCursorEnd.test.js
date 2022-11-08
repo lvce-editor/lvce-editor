@@ -7,7 +7,7 @@ test('editorCursorEnd', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 4, 0, 4),
   }
-  expect(EditorCursorEnd.editorCursorEnd(editor)).toMatchObject({
+  expect(EditorCursorEnd.cursorEnd(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 5, 0, 5),
   })
 })
@@ -21,7 +21,7 @@ test('editorCursorEnd - with selection', () => {
     },
     selections: EditorSelection.fromRange(0, 0, 0, 4),
   }
-  expect(EditorCursorEnd.editorCursorEnd(editor)).toMatchObject({
+  expect(EditorCursorEnd.cursorEnd(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 4, 0, 4),
   })
 })

@@ -3,7 +3,7 @@ import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Editor from '../Editor/Editor.js'
 
 // TODO add test
-export const editorCopy = async (editor) => {
+export const copy = async (editor) => {
   if (!Editor.hasSelection(editor)) {
     // TODO copy line where cursor is
     return editor

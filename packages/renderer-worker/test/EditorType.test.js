@@ -49,7 +49,7 @@ test('editorType', async () => {
     lineCache: [],
     undoStack: [],
   }
-  expect(await EditorType.editorType(editor, 'a')).toMatchObject({
+  expect(await EditorType.type(editor, 'a')).toMatchObject({
     lines: ['a'],
     selections: EditorSelection.fromRange(0, 1, 0, 1),
   })
@@ -62,7 +62,7 @@ test('editorType - with selection', async () => {
     lineCache: [],
     undoStack: [],
   }
-  expect(await EditorType.editorType(editor, 'a')).toMatchObject({
+  expect(await EditorType.type(editor, 'a')).toMatchObject({
     lines: ['lane 2'],
     selections: EditorSelection.fromRange(0, 2, 0, 2),
   })
@@ -75,7 +75,7 @@ test('editorType - emoji 👮🏽‍♀️', async () => {
     lineCache: [],
     undoStack: [],
   }
-  expect(await EditorType.editorType(editor, '👮🏽‍♀️')).toMatchObject({
+  expect(await EditorType.type(editor, '👮🏽‍♀️')).toMatchObject({
     lines: ['👮🏽‍♀️'],
     selections: EditorSelection.fromRange(0, 7, 0, 7),
   })
@@ -98,7 +98,7 @@ test.skip('editorType - braceCompletion - opening curly brace', async () => {
         throw new Error('unexpected message')
     }
   })
-  expect(await EditorType.editorType(editor, '{')).toMatchObject({
+  expect(await EditorType.type(editor, '{')).toMatchObject({
     lines: ['{}'],
     selections: EditorSelection.fromRange(0, 2, 0, 2),
   })
@@ -121,7 +121,7 @@ test.skip('editorType - braceCompletion - opening round brace', async () => {
         throw new Error('unexpected message')
     }
   })
-  expect(await EditorType.editorType(editor, '(')).toMatchObject({
+  expect(await EditorType.type(editor, '(')).toMatchObject({
     lines: ['()'],
     selections: EditorSelection.fromRange(0, 2, 0, 2),
   })
@@ -144,7 +144,7 @@ test.skip('editorType - braceCompletion - opening square brace', async () => {
         throw new Error('unexpected message')
     }
   })
-  expect(await EditorType.editorType(editor, '[')).toMatchObject({
+  expect(await EditorType.type(editor, '[')).toMatchObject({
     lines: ['[]'],
     selections: EditorSelection.fromRange(0, 2, 0, 2),
   })

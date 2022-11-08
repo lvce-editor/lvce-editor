@@ -11,7 +11,7 @@ test('editorDeleteWordLeft', () => {
     tokenizer: TokenizePlainText,
     undoStack: [],
   }
-  expect(EditorDeleteWordLeft.editorDeleteWordLeft(editor)).toMatchObject({
+  expect(EditorDeleteWordLeft.deleteWordLeft(editor)).toMatchObject({
     lines: ['sample '],
     selections: EditorSelection.fromRange(0, 7, 0, 7),
   })
@@ -26,7 +26,7 @@ test('editorDeleteWordLeft - merge lines', () => {
     tokenizer: TokenizePlainText,
     undoStack: [],
   }
-  expect(EditorDeleteWordLeft.editorDeleteWordLeft(editor)).toMatchObject({
+  expect(EditorDeleteWordLeft.deleteWordLeft(editor)).toMatchObject({
     lines: ['1111122222'],
     selections: EditorSelection.fromRange(0, 5, 0, 5),
   })
@@ -40,7 +40,7 @@ test.skip('editorDeleteWordLeft - no word left', () => {
     lineCache: [],
     tokenizer: TokenizePlainText,
   }
-  expect(EditorDeleteWordLeft.editorDeleteWordLeft(editor)).toMatchObject({
+  expect(EditorDeleteWordLeft.deleteWordLeft(editor)).toMatchObject({
     lines: [''],
     selections: EditorSelection.fromRange(0, 1, 0, 1),
   })
@@ -55,7 +55,7 @@ test('editorDeleteWordLeft - at start of line', () => {
     tokenizer: TokenizePlainText,
     undoStack: [],
   }
-  expect(EditorDeleteWordLeft.editorDeleteWordLeft(editor)).toMatchObject({
+  expect(EditorDeleteWordLeft.deleteWordLeft(editor)).toMatchObject({
     lines: ['12'],
     selections: EditorSelection.fromRange(0, 1, 0, 1),
   })
@@ -70,7 +70,7 @@ test('editorDeleteWordLeft - at start of file', () => {
     tokenizer: TokenizePlainText,
     undoStack: [],
   }
-  expect(EditorDeleteWordLeft.editorDeleteWordLeft(editor)).toMatchObject({
+  expect(EditorDeleteWordLeft.deleteWordLeft(editor)).toMatchObject({
     lines: ['1', '2'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })

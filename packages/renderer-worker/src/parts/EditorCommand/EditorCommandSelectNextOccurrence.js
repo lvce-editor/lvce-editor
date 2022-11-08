@@ -226,7 +226,7 @@ const isRangeInViewPort = (minLineY, maxLineY, startRowIndex, endRowIndex) => {
 }
 
 // TODO handle virtual space
-export const editorSelectNextOccurrence = (editor) => {
+export const selectNextOccurrence = (editor) => {
   const result = getSelectNextOccurrenceResult(editor)
   if (!result) {
     return editor

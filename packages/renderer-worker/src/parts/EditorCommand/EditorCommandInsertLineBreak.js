@@ -46,7 +46,7 @@ const getChanges = (lines, selections) => {
   return changes
 }
 
-export const editorInsertLineBreak = (editor) => {
+export const insertLineBreak = (editor) => {
   const lines = editor.lines
   const selections = editor.selections
   const changes = getChanges(lines, selections)

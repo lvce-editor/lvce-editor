@@ -17,7 +17,7 @@ test.skip('editorCopyLineUp', () => {
     ],
     tokenizer: TokenizePlainText,
   }
-  EditorCopyLineUp.editorCopyLineUp(editor)
+  EditorCopyLineUp.copyLineUp(editor)
   expect(editor.lines).toEqual(['line 1', 'line 2', 'line 3', 'line 3'])
   expect(editor.cursor).toEqual({
     rowIndex: 2,

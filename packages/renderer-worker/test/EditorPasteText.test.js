@@ -8,7 +8,7 @@ test('editorPasteText', () => {
     selections: EditorSelection.fromRange(0, 0, 0, 0),
     undoStack: [],
   }
-  expect(EditorPasteText.editorPasteText(editor, 'line 1')).toMatchObject({
+  expect(EditorPasteText.pasteText(editor, 'line 1')).toMatchObject({
     lines: ['line 1'],
     selections: EditorSelection.fromRange(0, 6, 0, 6),
   })
@@ -21,7 +21,7 @@ test.skip('editorPasteText - middle of line', () => {
     selections: EditorSelection.fromRange(1, 1, 1, 1),
   }
   expect(
-    EditorPasteText.editorPasteText(
+    EditorPasteText.pasteText(
       editor,
       ` 111
 222 `
@@ -54,7 +54,7 @@ test('editorPasteText - issue with pasting multiple lines', () => {
     invalidStartIndex: 3,
   }
   expect(
-    EditorPasteText.editorPasteText(
+    EditorPasteText.pasteText(
       editor,
       `line 1
 line 2

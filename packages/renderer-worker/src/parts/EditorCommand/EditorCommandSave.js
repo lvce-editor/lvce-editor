@@ -4,7 +4,7 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import { VError } from '../VError/VError.js'
 
-export const editorSave = async (editor) => {
+export const save = async (editor) => {
   const uri = editor.uri
   const content = TextDocument.getText(editor)
   try {

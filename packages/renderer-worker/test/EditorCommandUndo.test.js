@@ -22,7 +22,7 @@ test('undo - inserted character', () => {
       ],
     ],
   }
-  const newEditor = EditorCommandUndo.editorUndo(editor)
+  const newEditor = EditorCommandUndo.undo(editor)
   expect(newEditor.lines).toEqual([''])
 })
 
@@ -48,6 +48,6 @@ test('undo - deleted character', () => {
       ],
     ],
   }
-  const newEditor = EditorCommandUndo.editorUndo(editor)
+  const newEditor = EditorCommandUndo.undo(editor)
   expect(newEditor.lines).toEqual(['a'])
 })

@@ -1,7 +1,7 @@
 import * as EditorDeleteHorizontalRight from './EditorCommandDeleteHorizontalRight.js'
 import * as EditorDelta from './EditorCommandDelta.js'
 
-export const editorDeleteCharacterRight = (editor) => {
+export const deleteCharacterRight = (editor) => {
   return EditorDeleteHorizontalRight.editorDeleteHorizontalRight(
     editor,
     EditorDelta.characterRight

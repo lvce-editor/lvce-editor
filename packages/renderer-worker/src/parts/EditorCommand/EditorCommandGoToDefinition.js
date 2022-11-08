@@ -63,7 +63,7 @@ const isNoProviderFoundError = (error) => {
   )
 }
 
-export const editorGoToDefinition = (editor) => {
+export const goToDefinition = (editor) => {
   return EditorGoTo.goTo({
     editor,
     getLocation,

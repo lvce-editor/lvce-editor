@@ -37,7 +37,7 @@ const getNewSelections = (lines, selections) => {
   return newSelections
 }
 
-export const editorSelectInsideString = (editor) => {
+export const selectInsideString = (editor) => {
   const selections = editor.selections
   const lines = editor.lines
   const newSelections = getNewSelections(lines, selections)

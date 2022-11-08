@@ -6,7 +6,7 @@ import * as EditorMoveSelection from './EditorCommandMoveSelection.js'
 
 const LONG_TOUCH_THRESHOLD = 150
 
-export const editorHandleTouchEnd = (editor, touchEvent) => {
+export const handleTouchEnd = (editor, touchEvent) => {
   if (touchEvent.changedTouches.length === 0) {
     return
   }
@@ -17,13 +17,13 @@ export const editorHandleTouchEnd = (editor, touchEvent) => {
     EditorMoveSelection.state.position.columnIndex === position.columnIndex
   ) {
     if (Date.now() - EditorHandleTouchStart.state.date > LONG_TOUCH_THRESHOLD) {
-      EditorSelectWord.editorSelectWord(
+      EditorSelectWord.selectWord(
         editor,
         position.rowIndex,
         position.columnIndex
       )
     } else {
-      EditorCursorSet.editorCursorSet(editor, position)
+      EditorCursorSet.cursorSet(editor, position)
     }
   } else {
     console.log('different position')

@@ -7,11 +7,11 @@ test('editorSelectCharacterRight - no selection', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(
-    EditorSelectCharacterRight.editorSelectCharacterRight(editor)
-  ).toMatchObject({
-    selections: EditorSelection.fromRange(0, 0, 0, 1),
-  })
+  expect(EditorSelectCharacterRight.selectCharacterRight(editor)).toMatchObject(
+    {
+      selections: EditorSelection.fromRange(0, 0, 0, 1),
+    }
+  )
 })
 
 test.skip('editorSelectCharacterRight - no selection and at end of line', () => {
@@ -20,11 +20,11 @@ test.skip('editorSelectCharacterRight - no selection and at end of line', () => 
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 6, 0, 6),
   }
-  expect(
-    EditorSelectCharacterRight.editorSelectCharacterRight(editor)
-  ).toMatchObject({
-    selections: EditorSelection.fromRange(0, 6, 1, 1),
-  })
+  expect(EditorSelectCharacterRight.selectCharacterRight(editor)).toMatchObject(
+    {
+      selections: EditorSelection.fromRange(0, 6, 1, 1),
+    }
+  )
 })
 
 test('editorSelectCharacterRight - has selection - single line', () => {
@@ -32,11 +32,11 @@ test('editorSelectCharacterRight - has selection - single line', () => {
     lines: ['line 1', 'line 2', ''],
     selections: EditorSelection.fromRange(0, 0, 0, 1),
   }
-  expect(
-    EditorSelectCharacterRight.editorSelectCharacterRight(editor)
-  ).toMatchObject({
-    selections: EditorSelection.fromRange(0, 0, 0, 2),
-  })
+  expect(EditorSelectCharacterRight.selectCharacterRight(editor)).toMatchObject(
+    {
+      selections: EditorSelection.fromRange(0, 0, 0, 2),
+    }
+  )
 })
 
 test.skip('editorSelectCharacterRight - has selection - nothing more to select', () => {
@@ -45,11 +45,11 @@ test.skip('editorSelectCharacterRight - has selection - nothing more to select',
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 2, 1),
   }
-  expect(
-    EditorSelectCharacterRight.editorSelectCharacterRight(editor)
-  ).toMatchObject({
-    selections: EditorSelection.fromRange(0, 0, 2, 1),
-  })
+  expect(EditorSelectCharacterRight.selectCharacterRight(editor)).toMatchObject(
+    {
+      selections: EditorSelection.fromRange(0, 0, 2, 1),
+    }
+  )
 })
 
 test.skip('editorSelectCharacterRight - has selection - merge selections', () => {
@@ -58,9 +58,9 @@ test.skip('editorSelectCharacterRight - has selection - merge selections', () =>
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRanges([0, 0, 0, 6], [1, 0, 0, 6]),
   }
-  expect(
-    EditorSelectCharacterRight.editorSelectCharacterRight(editor)
-  ).toMatchObject({
-    selections: EditorSelection.fromRange(0, 0, 2, 1),
-  })
+  expect(EditorSelectCharacterRight.selectCharacterRight(editor)).toMatchObject(
+    {
+      selections: EditorSelection.fromRange(0, 0, 2, 1),
+    }
+  )
 })

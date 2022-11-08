@@ -60,7 +60,7 @@ test('editorTabCompletion - no tab completion available', async () => {
       return null
     }
   )
-  expect(await EditorTabCompletion.editorTabCompletion(editor)).toBe(editor)
+  expect(await EditorTabCompletion.tabCompletion(editor)).toBe(editor)
 })
 
 test('editorTabCompletion - tab completion available', async () => {
@@ -80,7 +80,7 @@ test('editorTabCompletion - tab completion available', async () => {
       }
     }
   )
-  expect(await EditorTabCompletion.editorTabCompletion(editor)).toMatchObject({
+  expect(await EditorTabCompletion.tabCompletion(editor)).toMatchObject({
     lines: ['bc'],
   })
 })
@@ -116,7 +116,7 @@ test('editorTabCompletion - multiline snippet', async () => {
       }
     }
   )
-  expect(await EditorTabCompletion.editorTabCompletion(editor)).toMatchObject({
+  expect(await EditorTabCompletion.tabCompletion(editor)).toMatchObject({
     lines: ['<div>', '  $0', '</div>'],
   })
 })
@@ -161,7 +161,7 @@ at Module.provideTabCompletion (/test/builtin.language-features-css/src/parts/Ex
   ErrorHandling.printError.mockImplementation(() => {})
   // @ts-ignore
   EditorShowMessage.showErrorMessage.mockImplementation(() => {})
-  await EditorTabCompletion.editorTabCompletion(editor)
+  await EditorTabCompletion.tabCompletion(editor)
   expect(ErrorHandling.printError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.printError).toHaveBeenCalledWith(error)
   expect(EditorShowMessage.showErrorMessage).toHaveBeenCalledTimes(1)

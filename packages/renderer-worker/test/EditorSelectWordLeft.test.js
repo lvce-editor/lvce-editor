@@ -7,7 +7,7 @@ test('editorSelectWordLeft', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 4, 0, 4),
   }
-  expect(EditorSelectWordLeft.editorSelectWordLeft(editor)).toMatchObject({
+  expect(EditorSelectWordLeft.selectWordLeft(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 4),
   })
 })
@@ -18,7 +18,7 @@ test('editorSelectWordLeft - with umlaut', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 4, 0, 4),
   }
-  expect(EditorSelectWordLeft.editorSelectWordLeft(editor)).toMatchObject({
+  expect(EditorSelectWordLeft.selectWordLeft(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 4),
   })
 })
@@ -29,7 +29,7 @@ test('editorSelectWordLeft - with accent', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 5, 0, 5),
   }
-  expect(EditorSelectWordLeft.editorSelectWordLeft(editor)).toMatchObject({
+  expect(EditorSelectWordLeft.selectWordLeft(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 5),
   })
 })

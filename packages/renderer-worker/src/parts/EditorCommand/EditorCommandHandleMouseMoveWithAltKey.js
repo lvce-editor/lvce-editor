@@ -16,7 +16,7 @@ const getTokenIndex = (tokens, offset) => {
   return -1
 }
 
-export const editorHandleMouseMoveWithAltKey = async (editor, x, y, offset) => {
+export const handleMouseMoveWithAltKey = async (editor, x, y, offset) => {
   Assert.object(editor)
   Assert.number(x)
   Assert.number(y)

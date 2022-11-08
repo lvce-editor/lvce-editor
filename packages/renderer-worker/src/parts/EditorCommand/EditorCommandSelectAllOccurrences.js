@@ -142,18 +142,10 @@ const getNewSelections = (lines, selections) => {
   return newSelections
 }
 
-export const editorSelectAllOccurrences = (editor) => {
+export const selectAllOccurrences = (editor) => {
   // when there are no selections -> first selection is word -> find all selection that include word
   const lines = editor.lines
   const selections = editor.selections
   const newSelections = getNewSelections(lines, selections)
   return Editor.scheduleSelections(editor, newSelections)
 }
-
-const editor = {
-  lines: ['sample text, sample text'],
-  primarySelectionIndex: 0,
-  selections: new Uint32Array([0, 6, 0, 6]),
-}
-
-editorSelectAllOccurrences(editor)
