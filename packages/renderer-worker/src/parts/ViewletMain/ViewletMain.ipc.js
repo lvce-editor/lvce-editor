@@ -2,6 +2,7 @@ import * as ViewletMain from './ViewletMain.js'
 
 // prettier-ignore
 export const Commands = {
+  // 'Main.hydrate': ViewletMain.hydrate,
   closeActiveEditor: ViewletMain.closeActiveEditor,
   closeAllEditors: ViewletMain.closeAllEditors,
   closeEditor: ViewletMain.closeEditor,
@@ -19,7 +20,6 @@ export const Commands = {
   openBackgroundTab: ViewletMain.openBackgroundTab,
   openUri: ViewletMain.openUri,
   save: ViewletMain.save,
-  // 'Main.hydrate': ViewletMain.hydrate,
 }
 
 export const Css = '/css/parts/ViewletMain.css'

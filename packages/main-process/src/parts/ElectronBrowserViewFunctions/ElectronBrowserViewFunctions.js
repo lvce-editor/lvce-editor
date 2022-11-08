@@ -2,6 +2,7 @@ const { VError } = require('verror')
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
+const Assert = require('../Assert/Assert.js')
 
 exports.wrapBrowserViewCommand = (fn) => {
   const wrappedCommand = (id, ...args) => {
@@ -129,4 +130,16 @@ exports.hide = (id) => {
   }
   const { view, browserWindow } = state
   browserWindow.removeBrowserView(view)
+}
+
+/**
+ *
+ * @param {Electron.BrowserView} view
+ * @param {number} x
+ * @param {number} y
+ */
+exports.inspectElement = (view, x, y) => {
+  Assert.number(x)
+  Assert.number(y)
+  view.webContents.inspectElement(x, y)
 }

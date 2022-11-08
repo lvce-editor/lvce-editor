@@ -64,6 +64,7 @@ exports.getModuleId = (commandId) => {
     case 'ElectronBrowserViewFunctions.focus':
     case 'ElectronBrowserViewFunctions.show':
     case 'ElectronBrowserViewFunctions.hide':
+    case 'ElectronBrowserViewFunctions.inspectElement':
       return ModuleId.ElectronBrowserViewFunctions
     case 'ElectronMenu.openContextMenu':
       return ModuleId.ElectronMenu

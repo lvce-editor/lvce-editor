@@ -44,15 +44,17 @@ const getModule = (id) => {
       return import('../MenuEntriesEditorImage/MenuEntriesEditorImage.js')
     case MenuEntryId.ExtensionDetailReadme:
       return import('../MenuEntriesExtensionDetailReadme/MenuEntriesExtensionDetailReadme.js')
+    case MenuEntryId.SimpleBrowser:
+      return import('../MenuEntriesSimpleBrowser/MenuEntriesSimpleBrowser.js')
     default:
       throw new Error(`module not found "${id}"`)
   }
 }
 
-export const getMenuEntries = async (id) => {
+export const getMenuEntries = async (id, x, y) => {
   const module = await getModule(id)
   // @ts-ignore
   const inject = module.inject || []
   const viewletStates = inject.map(ViewletStates.getState)
-  return module.getMenuEntries(...viewletStates)
+  return module.getMenuEntries(...viewletStates, x, y)
 }

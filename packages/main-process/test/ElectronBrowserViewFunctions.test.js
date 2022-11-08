@@ -31,3 +31,15 @@ test('openDevTools', async () => {
   ElectronBrowserViewFunctions.openDevtools(view)
   expect(view.webContents.openDevTools).toHaveBeenCalledTimes(1)
 })
+
+test('inspectElement', async () => {
+  const view = {
+    webContents: {
+      inspectElement: jest.fn(),
+    },
+  }
+  // @ts-ignore
+  ElectronBrowserViewFunctions.inspectElement(view, 0, 0)
+  expect(view.webContents.inspectElement).toHaveBeenCalledTimes(1)
+  expect(view.webContents.inspectElement).toBeCalledWith(0, 0)
+})

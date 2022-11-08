@@ -6,6 +6,7 @@ exports.Commands = {
   'ElectronBrowserViewFunctions.focus': ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.focus),
   'ElectronBrowserViewFunctions.forward': ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.forward),
   'ElectronBrowserViewFunctions.hide': ElectronBrowserViewFunctions.hide,
+  'ElectronBrowserViewFunctions.inspectElement': ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.inspectElement),
   'ElectronBrowserViewFunctions.openDevtools': ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.openDevtools),
   'ElectronBrowserViewFunctions.reload': ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.reload),
   'ElectronBrowserViewFunctions.resizeBrowserView': ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.resizeBrowserView),
