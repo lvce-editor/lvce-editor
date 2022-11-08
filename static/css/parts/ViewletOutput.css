@@ -5,7 +5,6 @@
 
 .Output {
   white-space: pre;
-  overflow-y: scroll;
   color: white;
   display: flex;
   flex-direction: column;
@@ -13,4 +12,7 @@
 
 .OutputContent {
   flex: 1;
+  user-select: text;
+  overflow: hidden;
+  contain: content;
 }

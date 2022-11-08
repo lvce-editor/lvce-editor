@@ -1,6 +1,7 @@
 import * as OutputChannel from '../OutputChannel/OutputChannel.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Assert from '../Assert/Assert.js'
+import * as ViewletList from '../ViewletList/ViewletList.js'
 
 export const name = ViewletModuleId.Output
 
@@ -11,16 +12,12 @@ export const create = (id, uri, top, left, width, height) => {
     options: [],
     disposed: false,
     text: '',
-    minLineY: 0,
-    maxLineY: 0,
-    deltaY: 0,
-    finalDeltaY: 0,
     lines: [],
     top,
     left,
     width,
     height,
-    itemHeight: 20,
+    ...ViewletList.create(),
   }
 }
 

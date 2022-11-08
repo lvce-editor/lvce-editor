@@ -89,13 +89,8 @@ export const create = () => {
     }
   )
 
-  const $ScrollBarThumb = document.createElement('div')
-  $ScrollBarThumb.className = 'ScrollBarThumb'
-
-  const $ScrollBar = document.createElement('div')
-  $ScrollBar.className = 'ScrollBarSmall'
+  const { $ScrollBar, $ScrollBarThumb } = ViewletScrollable.create()
   $ScrollBar.onpointerdown = ViewletExtensionsEvents.handleScrollBarPointerDown
-  $ScrollBar.append($ScrollBarThumb)
 
   const $ExtensionListWrapper = document.createElement('div')
   $ExtensionListWrapper.className = 'ExtensionListWrapper'

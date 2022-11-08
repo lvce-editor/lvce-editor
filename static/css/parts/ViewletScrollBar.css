@@ -1,0 +1,10 @@
+.ScrollBarSmall {
+  width: 10px;
+}
+
+.ScrollBarThumb {
+  width: 100%;
+  position: absolute;
+  contain: strict;
+  background: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6));
+}

@@ -2,6 +2,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as Assert from '../Assert/Assert.js'
 import * as ViewletOutputEvents from './ViewletOutputEvents.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletScrollable from '../ViewletScrollable/ViewletScrollable.js'
 
 // TODO name export not necessary
 export const name = ViewletModuleId.Output
@@ -30,21 +31,20 @@ export const create = () => {
   // @ts-ignore
   $ViewletOutputContent.role = 'log'
   $ViewletOutputContent.tabIndex = 0
-  const $ViewletOutputWidgets = document.createElement('div')
-  $ViewletOutputWidgets.className = 'OutputWidgets'
+
+  const { $ScrollBar, $ScrollBarThumb } = ViewletScrollable.create()
+  $ScrollBar.onpointerdown = ViewletOutputEvents.handleScrollBarPointerDown
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Output'
   $Viewlet.tabIndex = 0
-  $Viewlet.append(
-    $ViewletOutputSelect,
-    $ViewletOutputContent,
-    $ViewletOutputWidgets
-  )
+  $Viewlet.append($ViewletOutputSelect, $ViewletOutputContent, $ScrollBar)
   return {
     $Viewlet,
     $Select: $ViewletOutputSelect,
     $Content: $ViewletOutputContent,
+    $ScrollBar,
+    $ScrollBarThumb,
   }
 }
 

@@ -7,6 +7,7 @@ import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFu
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SaveState from '../SaveState/SaveState.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as LazyCommand from '../LazyCommand/LazyCommand.js'
 
 export const state = {
   pendingModules: Object.create(null),
@@ -181,6 +182,12 @@ const maybeRegisterWrappedCommands = (module) => {
         module.name,
         value
       )
+      registerWrappedCommand(module.name, key, wrappedCommand)
+    }
+  }
+  if (module.LazyCommands) {
+    for (const [key, value] of Object.entries(module.LazyCommands)) {
+      const wrappedCommand = LazyCommand.create(module.name, value, key)
       registerWrappedCommand(module.name, key, wrappedCommand)
     }
   }
