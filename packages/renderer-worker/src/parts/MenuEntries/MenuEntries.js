@@ -56,6 +56,5 @@ export const getMenuEntries = async (id, ...args) => {
   // @ts-ignore
   const inject = module.inject || []
   const viewletStates = inject.map(ViewletStates.getState)
-  console.log({ args })
   return module.getMenuEntries(...viewletStates, ...args)
 }
