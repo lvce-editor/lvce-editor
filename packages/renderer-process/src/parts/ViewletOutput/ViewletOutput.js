@@ -1,7 +1,17 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Assert from '../Assert/Assert.js'
 import * as ViewletOutputEvents from './ViewletOutputEvents.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+
+// TODO name export not necessary
+export const name = ViewletModuleId.Output
+
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  SelectALog: 'Select a Log',
+}
 
 const create$Option = (option) => {
   const $Option = document.createElement('option')
@@ -10,14 +20,11 @@ const create$Option = (option) => {
   return $Option
 }
 
-// TODO name export not necessary
-export const name = 'Output'
-
 export const create = () => {
   const $ViewletOutputSelect = document.createElement('select')
   $ViewletOutputSelect.className = 'ViewletOutputSelect'
   $ViewletOutputSelect.onchange = ViewletOutputEvents.handleChange
-  $ViewletOutputSelect.ariaLabel = 'Select a log'
+  $ViewletOutputSelect.ariaLabel = UiStrings.SelectALog
   const $ViewletOutputContent = document.createElement('div')
   $ViewletOutputContent.className = 'OutputContent'
   // @ts-ignore
@@ -36,54 +43,35 @@ export const create = () => {
   )
   return {
     $Viewlet,
-    select: $ViewletOutputSelect,
     $Select: $ViewletOutputSelect,
-    content: $ViewletOutputContent,
     $Content: $ViewletOutputContent,
-    $ViewletOutputContent,
   }
 }
 
 export const setOptions = (state, options) => {
-  state.$Select.append(...options.map(create$Option))
+  console.log({ options })
+  const { $Select } = state
+  $Select.append(...options.map(create$Option))
 }
 
-export const append = (state, text) => {
+export const setText = (state, text) => {
   Assert.object(state)
   Assert.string(text)
+  const { $Content } = state
   const $Line = document.createElement('div')
   $Line.textContent = text
-  state.content.append($Line)
-}
-
-export const clear = (state) => {
-  Assert.object(state)
-  state.content.textContent = ''
+  $Content.append($Line)
 }
 
 export const handleError = (state, error) => {
   Assert.object(state)
   Assert.string(error)
-  state.content.textContent = error
+  const { $Content } = state
+  $Content.textContent = error
 }
 
 export const focus = (state) => {
   Assert.object(state)
-  Focus.focus(state.$ViewletOutputContent, 'output')
+  const { $Content } = state
+  Focus.focus($Content, 'output')
 }
-
-// TODO handle case when output is opened -> find widget is opened -> output is disposed before find widget is ready
-export const openFindWidget = (state) => {
-  // Command.execute(findWidget.create)
-}
-
-export const disposeFindWidget = (state) => {
-  if (!state.findWidget) {
-    return
-  }
-
-  // Command.execute(FindWidget.dispose, state.findWidget)
-  state.findWidget
-}
-
-export const dispose = (state) => {}

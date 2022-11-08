@@ -1,5 +1,4 @@
 import * as Assert from '../Assert/Assert.js'
-import * as Command from '../Command/Command.js'
 import * as OutputChannel from './OutputChannel.js'
 
 export const state = {
@@ -22,16 +21,16 @@ const open = (socket, id, path) => {
     console.log('send data', data)
     socket.send({
       jsonrpc: '2.0',
-      method: 2133,
-      params: ['Output', 'handleData', data],
+      method: 'Output.handleData',
+      params: [data],
     })
   }
   const onError = (error) => {
     console.info(`[shared process] output channel error: ${error}`)
     socket.send({
       jsonrpc: '2.0',
-      method: 2133,
-      params: ['Output', 'handleError', error],
+      method: 'Output.handleError',
+      params: [error],
     })
   }
   state.outputChannels[id] = OutputChannel.open(path, onData, onError)

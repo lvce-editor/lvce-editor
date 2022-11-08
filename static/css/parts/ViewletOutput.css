@@ -3,13 +3,8 @@
   outline-offset: -1px;
 }
 
-.ViewletOutput {
+.Output {
   white-space: pre;
   overflow-y: scroll;
   color: white;
-}
-
-.OutputContent:empty::before {
-  content: '(empty file)';
-  opacity: 0.3;
 }

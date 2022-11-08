@@ -4,8 +4,13 @@
 import * as ViewletOutput from '../src/parts/ViewletOutput/ViewletOutput.js'
 import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
 
+const getText = ($Node) => {
+  return $Node.textContent
+}
+
 const getSimpleList = (state) => {
-  return Array.from(state.content.children).map((node) => node.textContent)
+  const { $Content } = state
+  return Array.from($Content.children).map(getText)
 }
 
 test('name', () => {
@@ -42,25 +47,26 @@ test('accessibility - should have role log', () => {
   expect($Content.role).toBe('log')
 })
 
-test('append', () => {
+test('accessibility - select should have an aria label', () => {
   const state = ViewletOutput.create()
-  ViewletOutput.append(state, 'line 1')
-  expect(getSimpleList(state)).toEqual(['line 1'])
-  ViewletOutput.append(state, 'line 2')
-  expect(getSimpleList(state)).toEqual(['line 1', 'line 2'])
+  const { $Select } = state
+  expect($Select.ariaLabel).toBe('Select a Log')
 })
 
-test('clear', () => {
+test('setText', () => {
   const state = ViewletOutput.create()
-  ViewletOutput.clear(state)
-  expect(getSimpleList(state)).toEqual([])
+  ViewletOutput.setText(state, 'line 1')
+  expect(getSimpleList(state)).toEqual(['line 1'])
+  ViewletOutput.setText(state, 'line 2')
+  expect(getSimpleList(state)).toEqual(['line 1', 'line 2'])
 })
 
 test('focus', () => {
   const state = ViewletOutput.create()
   Viewlet.mount(document.body, state)
   ViewletOutput.focus(state)
-  expect(document.activeElement).toBe(state.$ViewletOutputContent)
+  const { $Content } = state
+  expect(document.activeElement).toBe($Content)
 })
 
 test('handleError', () => {

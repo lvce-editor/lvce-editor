@@ -1,44 +1,27 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as ExtensionHostOutputChannel from '../ExtensionHost/ExtensionHostOutput.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as OutputChannel from '../OutputChannel/OutputChannel.js'
 
 export const name = ViewletModuleId.Output
 
 export const create = () => {
   return {
     selectedIndex: -1,
-    // TODO get list of outputChannels from extension host
     options: [],
     disposed: false,
   }
 }
 
-const toExtensionHostOption = (outputChannel) => {
+const toOption = (outputChannel) => {
   return {
-    name: outputChannel.id,
-    file: outputChannel.path,
+    name: outputChannel.name,
+    path: outputChannel.path,
   }
 }
 
 export const loadContent = async (state) => {
-  // TODO get list of outputChannels from extension host
-
-  const channels = await ExtensionHostOutputChannel.getOutputChannels()
-  const options = [
-    {
-      name: 'Main',
-      file: '/tmp/log-main.txt',
-    },
-    ...channels.map(toExtensionHostOption),
-  ]
+  const channels = await OutputChannel.getOutputChannels()
+  const options = channels.map(toOption)
   const selectedIndex = 0
-  // TODO duplicate send here
-  await SharedProcess.invoke(
-    /* OutputChannel.open */ 'OutputChannel.open',
-    /* id */ 0,
-    /* path */ options[selectedIndex].file
-  )
   return {
     ...state,
     options,
@@ -46,52 +29,37 @@ export const loadContent = async (state) => {
   }
 }
 
-export const contentLoaded = async (state) => {
-  return [
-    [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'Output',
-      /* method */ 'setOptions',
-      /* options */ state.options,
-      /* selectedOptionIndex */ state.selectedIndex,
-    ],
-  ]
+export const contentLoadedEffects = async (state) => {
+  const { options, selectedIndex } = state
+  const option = options[selectedIndex]
+  const { path } = option
+  await OutputChannel.open(0, path)
 }
 
 export const setOutputChannel = async (state, option) => {
-  state.selectedOption = option
-  // TODO race condition
-  await RendererProcess.invoke(
-    /* viewletSend */ 'Viewlet.send',
-    /* id */ 'Output',
-    /* method */ 'clear'
-  )
-  // TODO race condition
-  // TODO should use invoke
-  await SharedProcess.invoke(
-    /* OutputChannel.open */ 'OutputChannel.open',
-    /* id */ 'Output',
-    /* path */ state.selectedOption
-  )
+  await OutputChannel.open(option)
+  return {
+    ...state,
+    selectedOption: option,
+    text: '',
+  }
 }
 
-export const handleData = async (state, data) => {
-  console.log({ handleData: data })
-  await RendererProcess.invoke(
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'Output',
-    /* method */ 'append',
-    /* data */ data
-  )
+export const handleData = (state, data) => {
+  const { text } = state
+  return {
+    ...state,
+    text: text + data,
+  }
 }
 
 export const dispose = async (state) => {
-  state.disposed = true
   // TODO close output channel in shared process
-  await SharedProcess.invoke(
-    /* OutputChannel.close */ 'OutputChannel.close',
-    /* id */ 'Output'
-  )
+  await OutputChannel.close('Output')
+  return {
+    ...state,
+    disposed: true,
+  }
 }
 
 export const openFindWidget = async (state) => {
@@ -102,7 +70,38 @@ export const openFindWidget = async (state) => {
 export const closeFindWidget = async (state) => {}
 
 export const handleError = (state, error) => {
-  console.error(error)
+  return {
+    ...state,
+    text: `${error}`,
+  }
 }
 
-export const render = []
+const renderText = {
+  isEqual(oldState, newState) {
+    return oldState.text === newState.text
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ ViewletModuleId.Output,
+      /* method */ 'setText',
+      /* text */ newState.text,
+    ]
+  },
+}
+
+const renderOptions = {
+  isEqual(oldState, newState) {
+    return oldState.options === newState.options
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ ViewletModuleId.Output,
+      /* method */ 'setOptions',
+      /* options */ newState.options,
+    ]
+  },
+}
+
+export const render = [renderText, renderOptions]

@@ -4,29 +4,22 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
-  }
-)
-jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
+jest.unstable_mockModule('../src/parts/OutputChannel/OutputChannel.js', () => {
   return {
-    invoke: jest.fn(() => {
+    open: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    close: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    getOutputChannels: jest.fn(() => {
       throw new Error('not implemented')
     }),
   }
 })
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
+const OutputChannel = await import(
+  '../src/parts/OutputChannel/OutputChannel.js'
 )
 
 const ViewletOutput = await import(
@@ -42,71 +35,43 @@ test('create', () => {
   expect(state).toBeDefined()
 })
 
-test.skip('loadContent', async () => {
-  const state = ViewletOutput.create()
+test('loadContent', async () => {
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {
-    return null
+  OutputChannel.getOutputChannels.mockImplementation(() => {
+    return [
+      {
+        name: 'Test Channel 1',
+        path: '/test/channel-1.txt',
+      },
+    ]
   })
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  expect(await ViewletOutput.loadContent(state)).toEqual({})
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'OutputChannel.open',
-    0,
-    '/tmp/log-shared-process.txt'
-  )
-})
-
-test.skip('contentLoaded', async () => {
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  const state = {
-    ...ViewletOutput.create(),
+  OutputChannel.open.mockImplementation(() => {})
+  const state = ViewletOutput.create()
+  expect(await ViewletOutput.loadContent(state)).toMatchObject({
     options: [
       {
-        file: '/tmp/log-shared-process.txt',
-        name: 'Shared Process',
-      },
-      {
-        file: '/tmp/log-extension-host.txt',
-        name: 'Extension Host',
+        name: 'Test Channel 1',
+        path: '/test/channel-1.txt',
       },
     ],
-    index: 0,
-  }
-  await ViewletOutput.contentLoaded(state)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Output',
-    'setOptions',
-    [
-      {
-        file: '/tmp/log-shared-process.txt',
-        name: 'Shared Process',
-      },
-      {
-        file: '/tmp/log-extension-host.txt',
-        name: 'Extension Host',
-      },
-    ],
-    -1
-  )
+  })
+  expect(OutputChannel.getOutputChannels).toHaveBeenCalledTimes(1)
+  expect(OutputChannel.open).toHaveBeenCalledTimes(1)
+  expect(OutputChannel.open).toHaveBeenCalledWith(0, '/test/channel-1.txt')
 })
 
-test('setOutputChannel', async () => {
+test.skip('setOutputChannel', async () => {
   const state = ViewletOutput.create()
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {
+  OutputChannel.invoke.mockImplementation(() => {
     return null
   })
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletOutput.setOutputChannel(state, '/tmp/log-extension-host.txt')
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
+  expect(OutputChannel.invoke).toHaveBeenCalledTimes(1)
+  expect(OutputChannel.invoke).toHaveBeenCalledWith(
     'OutputChannel.open',
     'Output',
     '/tmp/log-extension-host.txt'
@@ -120,28 +85,10 @@ test('setOutputChannel', async () => {
 })
 
 test('dispose', async () => {
-  const state = ViewletOutput.create()
   // @ts-ignore
-  SharedProcess.invoke.mockImplementation(() => {
-    return null
-  })
-  await ViewletOutput.dispose(state)
-  expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'OutputChannel.close',
-    'Output'
-  )
-})
-
-test('handleError', () => {
+  OutputChannel.close.mockImplementation(() => {})
   const state = ViewletOutput.create()
-  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  ViewletOutput.handleError(
-    state,
-    new Error("ENOENT: no such file or directory, access '/tmp/log-main.txt'")
-  )
-  expect(spy).toHaveBeenCalledTimes(1)
-  expect(spy).toHaveBeenCalledWith(
-    new Error("ENOENT: no such file or directory, access '/tmp/log-main.txt'")
-  )
+  await ViewletOutput.dispose(state)
+  expect(OutputChannel.close).toHaveBeenCalledTimes(1)
+  expect(OutputChannel.close).toHaveBeenCalledWith('Output')
 })
