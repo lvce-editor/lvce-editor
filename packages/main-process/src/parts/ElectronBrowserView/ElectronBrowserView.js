@@ -74,9 +74,6 @@ exports.createBrowserView = async (restoreId, falltroughKeyBindings) => {
     if (!port) {
       return
     }
-    console.log({ event, params })
-    // const contextMenuType = getContextMenuType(params)
-    // const { x, y } = params
     port.postMessage({
       jsonrpc: '2.0',
       method: 'Viewlet.executeViewletCommand',
