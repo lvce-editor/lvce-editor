@@ -97,7 +97,7 @@ const getDirectoryHandle = async (uri) => {
   if (handle) {
     return handle
   }
-  const dirname = Path.getDirName(pathSeparator, uri)
+  const dirname = Path.dirname(pathSeparator, uri)
   if (uri === dirname) {
     return undefined
   }
@@ -109,7 +109,7 @@ const getFileHandle = async (uri) => {
   if (handle) {
     return handle
   }
-  const dirname = Path.getDirName(pathSeparator, uri)
+  const dirname = Path.dirname(pathSeparator, uri)
   const parentHandle = await getDirectoryHandle(dirname)
   if (!parentHandle) {
     return undefined

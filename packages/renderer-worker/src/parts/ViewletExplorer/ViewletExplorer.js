@@ -2,8 +2,10 @@ import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as Path from '../Path/Path.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as PromiseStatus from '../PromiseStatus/PromiseStatus.js'
@@ -20,7 +22,6 @@ import {
   getParentStartIndex,
   getTopLevelDirents,
 } from './ViewletExplorerShared.js'
-import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
 
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
@@ -469,7 +470,8 @@ export const acceptRename = async (state) => {
   try {
     // TODO this does not work with rename of nested file
     const oldAbsolutePath = renamedDirent.path
-    const newAbsolutePath = [oldAbsolutePath, editingValue].join(pathSeparator)
+    const oldParentPath = Path.dirname(pathSeparator, oldAbsolutePath)
+    const newAbsolutePath = [oldParentPath, editingValue].join(pathSeparator)
     await FileSystem.rename(oldAbsolutePath, newAbsolutePath)
   } catch (error) {
     await ErrorHandling.showErrorDialog(error)

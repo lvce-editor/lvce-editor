@@ -4937,6 +4937,8 @@ test('acceptEdit - rename', async () => {
       },
     ],
   })
+  expect(FileSystem.rename).toHaveBeenCalledTimes(1)
+  expect(FileSystem.rename).toHaveBeenCalledWith('/test/a.txt', '/test/b.txt')
 })
 
 test('acceptEdit - rename - nested file', async () => {
