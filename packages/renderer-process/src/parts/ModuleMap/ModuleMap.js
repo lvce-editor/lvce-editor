@@ -20,7 +20,7 @@ export const getModuleId = (commandId) => {
     case 'Dialog.prompt':
     case 'Dialog.showErrorDialogWithOptions':
       return ModuleId.Dialog
-    case 'Download.downloadFileBrowser':
+    case 'Download.downloadFile':
       return ModuleId.Download
     case 764:
     case 765:
