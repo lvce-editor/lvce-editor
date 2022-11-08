@@ -12,4 +12,6 @@ exports.Commands = {
   'ElectronBrowserViewFunctions.resizeBrowserView': ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.resizeBrowserView),
   'ElectronBrowserViewFunctions.setIframeSrc': ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.setIframeSrc),
   'ElectronBrowserViewFunctions.show': ElectronBrowserViewFunctions.show,
+  'ElectronBrowserViewFunctions.copyImageAt': ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.copyImageAt),
+
 }

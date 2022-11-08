@@ -143,3 +143,15 @@ exports.inspectElement = (view, x, y) => {
   Assert.number(y)
   view.webContents.inspectElement(x, y)
 }
+
+/**
+ *
+ * @param {Electron.BrowserView} view
+ * @param {number} x
+ * @param {number} y
+ */
+exports.copyImageAt = (view, x, y) => {
+  Assert.number(x)
+  Assert.number(y)
+  view.webContents.copyImageAt(x, y)
+}
