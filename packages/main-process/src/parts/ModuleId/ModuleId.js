@@ -15,3 +15,4 @@ exports.ElectronBrowserView = 14
 exports.ElectronBrowserViewQuickPick = 15
 exports.ElectronBrowserViewFunctions = 16
 exports.ElectronMenu = 17
+exports.ElectronClipBoard = 18
