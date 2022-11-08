@@ -108,6 +108,8 @@ export const getModuleId = (commandId) => {
     case 'ElectronBrowserView.createBrowserViewQuickpick':
     case 'ElectronBrowserView.openBrowserViewQuickPick':
       return ModuleId.ElectronBrowserView
+    case 'ElectronClipBoard.writeText':
+      return ModuleId.ElectronClipBoard
     case 'ElectronMenu.handleMenuClose':
     case 'ElectronMenu.handleSelect':
       return ModuleId.ElectronMenu

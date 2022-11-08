@@ -28,9 +28,8 @@ const convertMenuItems = (menuItems) => {
   return menuItems.map(convertMenuItem)
 }
 
-export const openContextMenu = async (x, y, id) => {
-  console.log({ x, y, id })
-  const entries = await MenuEntries.getMenuEntries(id, x, y)
+export const openContextMenu = async (x, y, id, ...args) => {
+  const entries = await MenuEntries.getMenuEntries(id, ...args)
   state.pendingMenus = entries
   const electronMenuItems = convertMenuItems(entries)
   return ElectronProcess.invoke(

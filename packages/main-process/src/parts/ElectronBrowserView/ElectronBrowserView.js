@@ -74,11 +74,16 @@ exports.createBrowserView = async (restoreId, falltroughKeyBindings) => {
     if (!port) {
       return
     }
-    const { x, y } = params
     port.postMessage({
       jsonrpc: '2.0',
       method: 'Viewlet.executeViewletCommand',
-      params: ['SimpleBrowser', 'browserViewId', id, 'handleContextMenu', x, y],
+      params: [
+        'SimpleBrowser',
+        'browserViewId',
+        id,
+        'handleContextMenu',
+        params,
+      ],
     })
   }
   view.webContents.on('context-menu', handleContextMenu)

@@ -28,11 +28,17 @@ test('openContextMenu', async () => {
   const state = {
     ...ViewletSimpleBrowser.create('', '', 10, 10, 10, 10),
   }
-  await ViewletSimpleBrowserHandleContextMenu.handleContextMenu(state, 20, 30)
+  await ViewletSimpleBrowserHandleContextMenu.handleContextMenu(state, {
+    x: 20,
+    y: 20,
+  })
   expect(ElectronMenu.openContextMenu).toHaveBeenCalledTimes(1)
   expect(ElectronMenu.openContextMenu).toHaveBeenCalledWith(
     30,
-    70,
-    MenuEntryId.SimpleBrowser
+    60,
+    MenuEntryId.SimpleBrowser,
+    30,
+    60,
+    { x: 20, y: 20 }
   )
 })
