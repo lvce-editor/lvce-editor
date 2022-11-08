@@ -129,7 +129,6 @@ const tableHeadDom = [
 ]
 
 const getTableBodyDom = (displayKeyBindings) => {
-  console.log({ displayKeyBindings })
   return [
     tbody(
       {
