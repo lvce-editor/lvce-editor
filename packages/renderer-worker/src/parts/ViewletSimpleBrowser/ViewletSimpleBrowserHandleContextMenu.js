@@ -1,7 +1,6 @@
-import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
-import * as ElectronMenu from '../ElectronMenu/ElectronMenu.js'
-import * as ElectronContextMenuType from '../ElectronContextMenuType/ElectronContextMenuType.js'
 import * as Assert from '../Assert/Assert.js'
+import * as ElectronMenu from '../ElectronMenu/ElectronMenu.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 export const handleContextMenu = async (state, params) => {
   Assert.object(state)
