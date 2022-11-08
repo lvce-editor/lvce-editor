@@ -70,7 +70,6 @@ exports.createBrowserView = async (restoreId, falltroughKeyBindings) => {
    * @param {Electron.ContextMenuParams} params
    */
   const handleContextMenu = (event, params) => {
-    console.log({ params })
     const port = getPort()
     if (!port) {
       return
