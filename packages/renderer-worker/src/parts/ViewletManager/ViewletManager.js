@@ -97,6 +97,42 @@ const wrapViewletCommandWithSideEffect = (id, fn) => {
   return wrappedViewletCommand
 }
 
+const wrapViewletCommandLazy = (id, key, importFn) => {
+  const lazyCommand = async (...args) => {
+    const module = await importFn()
+    const fn = module[key]
+    const activeInstance = ViewletStates.getInstance(id)
+    if (!activeInstance) {
+      console.info(
+        `cannot execute viewlet command ${id}.${fn.name}: no active instance for ${id}`
+      )
+      return
+    }
+    if (activeInstance.factory && activeInstance.factory.hasFunctionalRender) {
+      const oldState = activeInstance.state
+      const newState = await fn(oldState, ...args)
+      if (!newState) {
+        console.log({ fn })
+      }
+      Assert.object(newState)
+      // console.log({ fn, newState })
+      if (oldState === newState) {
+        return
+      }
+      const commands = render(activeInstance.factory, oldState, newState)
+      ViewletStates.setState(id, newState)
+      await RendererProcess.invoke(
+        /* Viewlet.sendMultiple */ kSendMultiple,
+        /* commands */ commands
+      )
+    } else {
+      return fn(activeInstance.state, ...args)
+    }
+  }
+  NameAnonymousFunction.nameAnonymousFunction(lazyCommand, `${id}/lazy/${key}`)
+  return lazyCommand
+}
+
 /**
  *
  * @param {()=>any} getModule
@@ -187,7 +223,7 @@ const maybeRegisterWrappedCommands = (module) => {
   }
   if (module.LazyCommands) {
     for (const [key, value] of Object.entries(module.LazyCommands)) {
-      const wrappedCommand = LazyCommand.create(module.name, value, key)
+      const wrappedCommand = wrapViewletCommandLazy(module.name, key, value)
       registerWrappedCommand(module.name, key, wrappedCommand)
     }
   }
