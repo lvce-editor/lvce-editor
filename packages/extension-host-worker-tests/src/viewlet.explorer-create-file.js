@@ -19,7 +19,8 @@ test('viewlet.explorer-create-file', async () => {
 
   // act
   await inputBox.type('created.txt')
-  await KeyBoard.press('Enter') // TODO use command instead
+  await Explorer.updateEditingValue('created.txt')
+  await Explorer.acceptEdit()
 
   // assert
   const newFile = Locator('text=created.txt')

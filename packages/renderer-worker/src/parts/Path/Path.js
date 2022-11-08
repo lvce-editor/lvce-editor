@@ -8,7 +8,7 @@ export const join = (pathSeparator, ...parts) => {
   return parts.join(pathSeparator)
 }
 
-export const getDirName = (pathSeparator, path) => {
+export const dirname = (pathSeparator, path) => {
   const index = path.lastIndexOf(pathSeparator)
   if (index === -1) {
     return path

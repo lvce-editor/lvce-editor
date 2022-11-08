@@ -520,7 +520,7 @@ test('accessibility - dirents should have ariaSetSize, ariaPosInSet, ariaLevel a
 
 // TODO test aria-expanded accessibility
 
-test('showRenameInputBox', () => {
+test('replaceWithEditBox', () => {
   const state = ViewletExplorer.create()
   const { $Viewlet } = state
   ViewletExplorer.updateDirents(state, [
@@ -541,9 +541,9 @@ test('showRenameInputBox', () => {
       posInSet: 2,
     },
   ])
-  ViewletExplorer.showRenameInputBox(state, 0, 'file-1')
+  ViewletExplorer.replaceWithEditBox(state, 0, 'file-1')
   expect($Viewlet.children).toHaveLength(2)
-  const $InputBox = $Viewlet.children[0]
+  const $InputBox = $Viewlet.children[0].children[1]
   // @ts-ignore
   const start = $InputBox.selectionStart
   // @ts-ignore
@@ -552,7 +552,7 @@ test('showRenameInputBox', () => {
   expect(end).toBe(6)
 })
 
-test('hideRenameInputBox', () => {
+test('hideEditBox', () => {
   const state = ViewletExplorer.create()
   const { $Viewlet } = state
   ViewletExplorer.updateDirents(state, [
@@ -573,15 +573,8 @@ test('hideRenameInputBox', () => {
       posInSet: 2,
     },
   ])
-  ViewletExplorer.showRenameInputBox(state, 0, 'file-1')
-  ViewletExplorer.hideRenameBox(state, 0, {
-    name: 'file-1',
-    depth: 1,
-    type: DirentType.File,
-    path: '/file-1',
-    setSize: 2,
-    posInSet: 1,
-  })
+  ViewletExplorer.insertEditBox(state, 0, 'file-1')
+  ViewletExplorer.hideEditBox(state, 0)
   expect($Viewlet.children).toHaveLength(2)
   const $File1 = state.$Viewlet.children[0]
   expect($File1.textContent).toBe('file-1')

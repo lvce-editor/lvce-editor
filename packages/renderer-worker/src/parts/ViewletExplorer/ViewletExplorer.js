@@ -2,12 +2,13 @@ import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
+import * as ExplorerEditingType from '../ExplorerEditingType/ExplorerEditingType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as Path from '../Path/Path.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as PromiseStatus from '../PromiseStatus/PromiseStatus.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Viewlet from '../Viewlet/Viewlet.js' // TODO should not import viewlet manager -> avoid cyclic dependency
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Workspace from '../Workspace/Workspace.js'
@@ -52,6 +53,8 @@ export const create = (id, uri, left, top, width, height) => {
     itemHeight: 22,
     dropTargets: [],
     excluded: [],
+    editingValue: '',
+    editingType: ExplorerEditingType.None,
   }
 }
 
@@ -346,31 +349,15 @@ const updateDirents = async (state) => {
   await contentLoaded(state)
 }
 
-export const renameDirent = async (state) => {
-  const index = state.focusedIndex
-  state.editingIndex = index
-  const dirent = state.items[index]
-  const name = dirent.name
-  await RendererProcess.invoke(
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'Explorer',
-    /* method */ 'showRenameInputBox',
-    /* index */ index,
-    /* name */ name
-  )
-}
-
-export const cancelRename = async (state) => {
-  const index = state.editingIndex
-  const dirent = state.items[index]
-  state.editingIndex = -1
-  await RendererProcess.invoke(
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'Explorer',
-    /* method */ 'hideRenameBox',
-    /* index */ index,
-    /* dirent */ dirent
-  )
+export const renameDirent = (state) => {
+  const { focusedIndex, items } = state
+  const item = items[focusedIndex]
+  return {
+    ...state,
+    editingIndex: focusedIndex,
+    editingType: ExplorerEditingType.Rename,
+    editingValue: item.name,
+  }
 }
 
 // TODO use posInSet and setSize properties to compute more effectively
@@ -478,39 +465,56 @@ export const computeRenamedDirent = (dirents, index, newName) => {
 }
 
 export const acceptRename = async (state) => {
-  const index = state.editingIndex
-  state.editingIndex = -1
-  const renamedDirent = state.items[index]
-  const newDirentName = await RendererProcess.invoke(
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'Explorer',
-    /* method */ 'hideRenameBox',
-    /* index */ index,
-    /* dirent */ renamedDirent
-  )
+  const { editingIndex, editingValue, items, pathSeparator } = state
+  const renamedDirent = items[editingIndex]
   try {
     // TODO this does not work with rename of nested file
     const oldAbsolutePath = renamedDirent.path
-    const newAbsolutePath = [state.root, newDirentName].join(
-      state.pathSeparator
-    )
+    const oldParentPath = Path.dirname(pathSeparator, oldAbsolutePath)
+    const newAbsolutePath = [oldParentPath, editingValue].join(pathSeparator)
     await FileSystem.rename(oldAbsolutePath, newAbsolutePath)
   } catch (error) {
     await ErrorHandling.showErrorDialog(error)
-    return
+    return state
   }
-  const { items } = state
   const { newDirents, focusedIndex } = computeRenamedDirent(
     items,
-    index,
-    newDirentName
+    editingIndex,
+    editingValue
   )
   //  TODO move focused index
   state.items = newDirents
-  await contentLoaded(state)
-  await focusIndex(state, focusedIndex)
+  return {
+    ...state,
+    editingIndex: -1,
+    editingValue: '',
+    focusedIndex,
+    focused: true,
+  }
+}
 
-  // await updateDirents(state)
+export const acceptEdit = (state) => {
+  const { editingType } = state
+  switch (editingType) {
+    case ExplorerEditingType.CreateFile:
+      return acceptCreate(state)
+    case ExplorerEditingType.Rename:
+      return acceptRename(state)
+    default:
+      return state
+  }
+}
+
+export const cancelEdit = (state) => {
+  const { editingIndex } = state
+  return {
+    ...state,
+    focusedIndex: editingIndex,
+    focused: true,
+    editingIndex: -1,
+    editingValue: '',
+    editingType: ExplorerEditingType.None,
+  }
 }
 
 export const copyRelativePath = async (state) => {
@@ -554,10 +558,10 @@ export const openContainingFolder = async (state) => {
   return state
 }
 
-const newDirent = async (state) => {
+const newDirent = async (state, editingType) => {
   // TODO do it like vscode, select position between folders and files
-  const focusedIndex = state.focusedIndex
-  const index = state.focusedIndex + 1
+  const { focusedIndex } = state
+  const index = focusedIndex + 1
   if (focusedIndex >= 0) {
     const dirent = state.items[state.focusedIndex]
     if (dirent.type === DirentType.Directory) {
@@ -565,35 +569,17 @@ const newDirent = async (state) => {
       await handleClickDirectory(state, dirent, focusIndex)
     }
   }
-  state.editingIndex = index
-  await RendererProcess.invoke(
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'Explorer',
-    /* method */ 'showCreateFileInputBox',
-    /* index */ index
-  )
-  return state
+  return {
+    ...state,
+    editingIndex: index,
+    editingType,
+    editingValue: '',
+  }
 }
 
 // TODO much shared logic with newFolder
-export const newFile = async (state) => {
-  return newDirent(state)
-}
-
-const cancelDirent = async (state) => {
-  const index = state.editingIndex
-  state.editingIndex = -1
-  await RendererProcess.invoke(
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'Explorer',
-    /* method */ 'hideCreateFileInputBox',
-    /* index */ index
-  )
-  return state
-}
-
-export const cancelNewFile = async (state) => {
-  return cancelDirent()
+export const newFile = (state) => {
+  return newDirent(state, ExplorerEditingType.CreateFile)
 }
 
 const getParentFolder = (dirents, index, root) => {
@@ -603,16 +589,16 @@ const getParentFolder = (dirents, index, root) => {
   return dirents[index].path
 }
 
-const acceptDirent = async (state, type) => {
-  const editingIndex = state.editingIndex
-  const focusedIndex = state.focusedIndex
-  state.editingIndex = -1
-  const newFileName = await RendererProcess.invoke(
-    /* Viewlet.invoke */ 'Viewlet.send',
-    /* id */ 'Explorer',
-    /* method */ 'hideCreateFileInputBox',
-    /* index */ editingIndex
-  )
+export const updateEditingValue = (state, value) => {
+  return {
+    ...state,
+    editingValue: value,
+  }
+}
+
+const acceptCreate = async (state) => {
+  const { editingIndex, focusedIndex, editingValue, editingType } = state
+  const newFileName = editingValue
   if (!newFileName) {
     // TODO show error message that file name must not be empty
     // below input box
@@ -625,11 +611,11 @@ const acceptDirent = async (state, type) => {
   const absolutePath = [parentFolder, newFileName].join(state.pathSeparator)
   // TODO better handle error
   try {
-    switch (type) {
-      case DirentType.File:
-        await FileSystem.writeFile(absolutePath, '')
+    switch (editingType) {
+      case ExplorerEditingType.CreateFile:
+        await FileSystem.createFile(absolutePath)
         break
-      case DirentType.Directory:
+      case ExplorerEditingType.CreateFolder:
         await FileSystem.mkdir(absolutePath)
         break
       default:
@@ -637,7 +623,7 @@ const acceptDirent = async (state, type) => {
     }
   } catch (error) {
     await ErrorHandling.showErrorDialog(error)
-    return
+    return state
   }
   const parentDirent =
     focusedIndex >= 0
@@ -653,7 +639,10 @@ const acceptDirent = async (state, type) => {
     setSize: 1,
     depth,
     name: newFileName,
-    type,
+    type:
+      editingType === ExplorerEditingType.CreateFile
+        ? DirentType.File
+        : DirentType.Directory,
     icon: '',
   }
   newDirent.icon = IconTheme.getIcon(newDirent)
@@ -687,21 +676,13 @@ const acceptDirent = async (state, type) => {
   return {
     ...state,
     items: newDirents,
+    editingIndex: -1,
+    focusedIndex: editingIndex,
   }
 }
 
-// TODO much duplicate logic with acceptNewFolder
-export const acceptNewFile = (state) => {
-  return acceptDirent(state, DirentType.File)
-}
-
-export const acceptNewFolder = (state) => {
-  return acceptDirent(state, DirentType.Directory)
-}
-
-// TODO much copy paste with newFIle command
-export const newFolder = async (state) => {
-  return newDirent(state)
+export const newFolder = (state) => {
+  return newDirent(state, ExplorerEditingType.CreateFolder)
 }
 
 const handleClickFile = async (state, dirent, index, keepFocus = false) => {
@@ -748,12 +729,7 @@ const handleClickDirectory = async (state, dirent, index, keepFocus) => {
   }
 }
 
-const handleClickDirectoryExpanding = async (
-  state,
-  dirent,
-  index,
-  keepFocus
-) => {
+const handleClickDirectoryExpanding = (state, dirent, index, keepFocus) => {
   dirent.type = DirentType.Directory
   dirent.icon = IconTheme.getIcon(dirent)
   return {
@@ -1106,6 +1082,10 @@ export const collapseAll = (state) => {
 export const handleBlur = (state) => {
   // TODO when blur event occurs because of context menu, focused index should stay the same
   // but focus outline should be removed
+  const { editingType } = state
+  if (editingType !== ExplorerEditingType.None) {
+    return state
+  }
   return {
     ...state,
     focused: false,
@@ -1358,12 +1338,7 @@ const renderFocusedIndex = {
   isEqual(oldState, newState) {
     return (
       oldState.focusedIndex === newState.focusedIndex &&
-      oldState.focused === newState.focused &&
-      // TODO rendering dirents should not override focus
-      // when that issue is fixed, this can be removed
-      oldState.items === newState.items &&
-      oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY
+      oldState.focused === newState.focused
     )
   },
   apply(oldState, newState) {
@@ -1395,4 +1370,59 @@ const renderDropTargets = {
   },
 }
 
-export const render = [renderItems, renderDropTargets, renderFocusedIndex]
+const renderEditingIndex = {
+  isEqual(oldState, newState) {
+    return oldState.editingIndex === newState.editingIndex
+  },
+  apply(oldState, newState) {
+    const { editingIndex, focusedIndex, editingType, editingValue } = newState
+    if (editingIndex === -1) {
+      if (
+        oldState.editingType === ExplorerEditingType.CreateFile ||
+        oldState.editingType === ExplorerEditingType.CreateFolder
+      ) {
+        return [
+          /* Viewlet.invoke */ 'Viewlet.send',
+          /* id */ 'Explorer',
+          /* method */ 'hideEditBox',
+          /* index */ oldState.editingIndex,
+        ]
+      }
+      const dirent = newState.items[focusedIndex]
+      return [
+        /* Viewlet.invoke */ 'Viewlet.send',
+        /* id */ 'Explorer',
+        /* method */ 'replaceEditBox',
+        /* index */ oldState.editingIndex,
+        /* dirent */ dirent,
+      ]
+    } else {
+      if (
+        oldState.editingType === ExplorerEditingType.CreateFile ||
+        oldState.editingType === ExplorerEditingType.CreateFolder
+      ) {
+        return [
+          /* Viewlet.invoke */ 'Viewlet.send',
+          /* id */ 'Explorer',
+          /* method */ 'insertEditBox',
+          /* index */ oldState.editingIndex,
+          /* value */ editingValue,
+        ]
+      }
+      return [
+        /* Viewlet.invoke */ 'Viewlet.send',
+        /* id */ 'Explorer',
+        /* method */ 'replaceWithEditBox',
+        /* index */ editingIndex,
+        /* value */ editingValue,
+      ]
+    }
+  },
+}
+
+export const render = [
+  renderEditingIndex,
+  renderItems,
+  renderDropTargets,
+  renderFocusedIndex,
+]

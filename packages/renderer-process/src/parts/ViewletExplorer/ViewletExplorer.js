@@ -202,9 +202,25 @@ export const hoverIndex = (state, oldIndex, newIndex) => {
   $NewItem.classList.add('Hover')
 }
 
-export const showCreateFileInputBox = (state, index) => {
+export const replaceWithEditBox = (state, index, value) => {
   const { $Viewlet } = state
   const $InputBox = InputBox.create()
+  $InputBox.value = value
+  $InputBox.oninput = ViewletExplorerEvents.handleEditingInput
+  const $Dirent = $Viewlet.children[index]
+  const $Label = $Dirent.children[1]
+  $Label.replaceWith($InputBox)
+  $InputBox.select()
+  $InputBox.setSelectionRange(0, value.length)
+  $InputBox.focus()
+  Focus.setFocus('ExplorerEditBox')
+}
+
+export const insertEditBox = (state, index, value) => {
+  const { $Viewlet } = state
+  const $InputBox = InputBox.create()
+  $InputBox.value = value
+  $InputBox.oninput = ViewletExplorerEvents.handleEditingInput
   if (index === -1) {
     $Viewlet.append($InputBox)
   } else {
@@ -215,11 +231,15 @@ export const showCreateFileInputBox = (state, index) => {
     }
     $Dirent.before($InputBox)
   }
+  $InputBox.select()
+  $InputBox.setSelectionRange(0, value.length)
   $InputBox.focus()
-  Focus.setFocus('ExplorerCreateFile')
+  Focus.setFocus('ExplorerEditBox')
 }
 
-export const hideCreateFileInputBox = (state, index) => {
+export const hideEditBox = (state, index) => {
+  Assert.object(state)
+  Assert.number(index)
   const { $Viewlet } = state
   if (index === -1) {
     const $InputBox = $Viewlet.lastChild
@@ -228,26 +248,19 @@ export const hideCreateFileInputBox = (state, index) => {
   }
   const $InputBox = $Viewlet.children[index]
   $InputBox.remove()
-  return $InputBox.value
 }
 
-export const showRenameInputBox = (state, index, name) => {
-  const $InputBox = InputBox.create()
-  $InputBox.value = name
-  const $Dirent = state.$Viewlet.children[index]
-  $Dirent.replaceWith($InputBox)
-  $InputBox.select()
-  $InputBox.setSelectionRange(0, $InputBox.value.length)
-  Focus.setFocus('ExplorerRename')
-}
-
-export const hideRenameBox = (state, index, dirent) => {
-  const $InputBox = state.$Viewlet.children[index]
+export const replaceEditBox = (state, index, dirent) => {
+  Assert.object(state)
+  Assert.number(index)
+  const { $Viewlet } = state
+  const $OldRow = $Viewlet.children[index]
   const $Dirent = create$Row()
+  $Dirent.id = activeId
   render$Row($Dirent, dirent)
-  $InputBox.replaceWith($Dirent)
-  // $Dirent.focus()
-  return $InputBox.value
+  $OldRow.replaceWith($Dirent)
+  $Viewlet.focus()
+  Focus.setFocus('Explorer')
 }
 
 export const setDropTargets = (state, oldDropTargets, newDropTargets) => {

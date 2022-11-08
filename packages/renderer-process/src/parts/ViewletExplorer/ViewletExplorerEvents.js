@@ -226,3 +226,12 @@ export const handleMouseLeave = (event) => {
   //   /* index */ index
   // )
 }
+
+export const handleEditingInput = (event) => {
+  const { target } = event
+  const { value } = target
+  RendererWorker.send(
+    /* Explorer.updateEditingValue */ 'Explorer.updateEditingValue',
+    /* value */ value
+  )
+}

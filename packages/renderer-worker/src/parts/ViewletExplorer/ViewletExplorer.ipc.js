@@ -25,10 +25,8 @@ export const Events = {
 
 // prettier-ignore
 export const Commands = {
-  acceptNewFile:                  ViewletExplorer.acceptNewFile,
-  acceptRename:                   ViewletExplorer.acceptRename,
-  cancelNewFile:                  ViewletExplorer.cancelNewFile,
-  cancelRename:                   ViewletExplorer.cancelRename,
+  acceptEdit:                     ViewletExplorer.acceptEdit,
+  cancelEdit:                     ViewletExplorer.cancelEdit,
   collapseAll:                    ViewletExplorer.collapseAll,
   copyPath:                       ViewletExplorer.copyPath,
   copyRelativePath:               ViewletExplorer.copyRelativePath,
@@ -62,11 +60,13 @@ export const Commands = {
   newFolder:                      ViewletExplorer.newFolder,
   openContainingFolder:           ViewletExplorer.openContainingFolder,
   removeDirent:                   ViewletExplorer.removeDirent,
+  rename:                         ViewletExplorer.renameDirent,
   renameDirent:                   ViewletExplorer.renameDirent,
   revealItem:                     ViewletExplorer.revealItem,
   scrollDown:                     ViewletExplorer.scrollDown,
   scrollUp:                       ViewletExplorer.scrollUp,
   setDeltaY:                      ViewletExplorer.setDeltaY,
+  updateEditingValue:             ViewletExplorer.updateEditingValue,
 }
 
 export const Css = '/css/parts/ViewletExplorer.css'
