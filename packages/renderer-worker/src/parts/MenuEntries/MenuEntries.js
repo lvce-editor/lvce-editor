@@ -51,10 +51,11 @@ const getModule = (id) => {
   }
 }
 
-export const getMenuEntries = async (id, x, y) => {
+export const getMenuEntries = async (id, ...args) => {
   const module = await getModule(id)
   // @ts-ignore
   const inject = module.inject || []
   const viewletStates = inject.map(ViewletStates.getState)
-  return module.getMenuEntries(...viewletStates, x, y)
+  console.log({ args })
+  return module.getMenuEntries(...viewletStates, ...args)
 }

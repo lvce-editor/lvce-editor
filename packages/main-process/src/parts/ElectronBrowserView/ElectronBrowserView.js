@@ -7,6 +7,7 @@ const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/El
 const ElectronBrowserViewCss = require('../ElectronBrowserViewCss/ElectronBrowserViewCss.js')
 const Assert = require('../Assert/Assert.js')
 const ElectronInputType = require('../ElectronInputType/ElectronInputType.js')
+const ElectronContextMenuType = require('../ElectronContextMenuType/ElectronContextMenuType.js')
 
 const normalizeKey = (key) => {
   if (key === ' ') {
@@ -34,6 +35,18 @@ const getIdentifier = (input) => {
   }
   identifier += normalizeKey(input.key)
   return identifier
+}
+
+/**
+ *
+ * @param {Electron.ContextMenuParams} params
+ * @returns
+ */
+const getContextMenuType = (params) => {
+  if (params.linkURL) {
+    return ElectronContextMenuType.Link
+  }
+  return ElectronContextMenuType.Default
 }
 
 /**
@@ -74,11 +87,19 @@ exports.createBrowserView = async (restoreId, falltroughKeyBindings) => {
     if (!port) {
       return
     }
-    const { x, y } = params
+    console.log({ event, params })
+    // const contextMenuType = getContextMenuType(params)
+    // const { x, y } = params
     port.postMessage({
       jsonrpc: '2.0',
       method: 'Viewlet.executeViewletCommand',
-      params: ['SimpleBrowser', 'browserViewId', id, 'handleContextMenu', x, y],
+      params: [
+        'SimpleBrowser',
+        'browserViewId',
+        id,
+        'handleContextMenu',
+        params,
+      ],
     })
   }
   view.webContents.on('context-menu', handleContextMenu)

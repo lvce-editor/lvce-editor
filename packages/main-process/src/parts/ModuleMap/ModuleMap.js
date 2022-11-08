@@ -68,6 +68,8 @@ exports.getModuleId = (commandId) => {
       return ModuleId.ElectronBrowserViewFunctions
     case 'ElectronMenu.openContextMenu':
       return ModuleId.ElectronMenu
+    case 'ElectronClipBoard.writeText':
+      return ModuleId.ElectronClipBoard
     default:
       throw new Error(`method not found ${commandId}`)
   }
