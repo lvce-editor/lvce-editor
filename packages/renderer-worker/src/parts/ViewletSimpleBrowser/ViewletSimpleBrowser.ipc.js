@@ -6,11 +6,13 @@ const Imports = {
   OpenBackgroundTab: () => import('./ViewletSimpleBrowserOpenBackgroundTab.js'),
   HandleContextMenu: () => import('./ViewletSimpleBrowserHandleContextMenu.js'),
   InspectElement: () => import('./ViewletSimpleBrowserInspectElement.js'),
+  CopyImage: () => import('./ViewletSimpleBrowserCopyImage.js'),
 }
 
 // prettier-ignore
 export const Commands = {
   backward: SimpleBrowser.backward,
+  copyImage: LazyCommand.create(SimpleBrowser.name, Imports.CopyImage, 'copyImage'),
   forward: SimpleBrowser.forward,
   go: SimpleBrowser.go,
   handleContextMenu: LazyCommand.create(SimpleBrowser.name, Imports.HandleContextMenu, 'handleContextMenu'),

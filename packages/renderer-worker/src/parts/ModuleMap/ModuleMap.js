@@ -266,8 +266,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace.setPath':
     case 'Workspace.setUri':
       return ModuleId.Workspace
-    case 'ElectronClipBoard.writeText':
-      return ModuleId.ElectronClipBoard
     default:
       throw new Error(`command ${commandId} not found`)
   }

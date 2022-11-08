@@ -51,3 +51,32 @@ test('getMenuEntries - selectionText', () => {
     label: 'Copy',
   })
 })
+
+test('getMenuEntries - image', () => {
+  const params = {
+    mediaType: 'image',
+    srcURL: 'https://example.com/image.png',
+  }
+  const menuEntries = MenuEntriesSimpleBrowser.getMenuEntries(0, 0, params)
+  expect(menuEntries[0]).toEqual({
+    command: 'Download.downloadToDownloadsFolder',
+    flags: MenuItemFlags.None,
+    id: 'save-image',
+    label: 'Save Image',
+    args: ['image.png', 'https://example.com/image.png'],
+  })
+  expect(menuEntries[1]).toEqual({
+    command: 'SimpleBrowser.copyImage',
+    flags: MenuItemFlags.None,
+    id: 'copy-image',
+    label: 'Copy Image',
+    args: [0, 0],
+  })
+  expect(menuEntries[2]).toEqual({
+    command: 'SimpleBrowser.inspectElement',
+    flags: MenuItemFlags.None,
+    id: 'inspect-element',
+    label: 'Inspect Element',
+    args: [0, 0],
+  })
+})

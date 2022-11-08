@@ -126,8 +126,6 @@ export const load = (moduleId) => {
       return import('../Workbench/Workbench.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.ElectronClipBoard:
-      return import('../ElectronClipBoard/ElectronClipBoard.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

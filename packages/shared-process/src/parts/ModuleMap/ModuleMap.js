@@ -17,6 +17,8 @@ export const getModuleId = (commandId) => {
     case 'Developer.sharedProcessMemoryUsage':
     case 'Developer.sharedProcessStartupPerformance':
       return ModuleId.Developer
+    case 'Download.download':
+      return ModuleId.Download
     case 'ExtensionHost.dispose':
     case 'ExtensionHost.enableExtension':
     case 'ExtensionHost.executeCommand':
@@ -102,6 +104,7 @@ export const getModuleId = (commandId) => {
     case 'Platform.getConfigDir':
     case 'Platform.getDataDir':
     case 'Platform.getDisabledExtensionsPath':
+    case 'Platform.getDownloadDir':
     case 'Platform.getExtensionsPath':
     case 'Platform.getHomeDir':
     case 'Platform.getLogsDir':
@@ -131,8 +134,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':
       return ModuleId.Workspace
-    case 'Download.download':
-      return ModuleId.Download
     default:
       throw new Error(`command ${commandId} not found`)
   }
