@@ -1,7 +1,7 @@
 import * as Editor from '../Editor/Editor.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
-export const editorCancelSelection = (editor) => {
+export const cancelSelection = (editor) => {
   const selections = editor.selections
   if (
     selections.length === 4 &&

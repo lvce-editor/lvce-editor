@@ -34,7 +34,7 @@ test('editorCut', async () => {
     lineCache: [],
     undoStack: [],
   }
-  expect(await EditorCut.editorCut(editor)).toMatchObject({
+  expect(await EditorCut.cut(editor)).toMatchObject({
     selections: EditorSelection.fromRange(1, 1, 1, 1),
     lines: ['line 1', 'lne 3', ''],
   })
@@ -60,7 +60,7 @@ test('editorCut - error with clipboard', async () => {
     lineCache: [],
     undoStack: [],
   }
-  await expect(EditorCut.editorCut(editor)).rejects.toThrowError(
+  await expect(EditorCut.cut(editor)).rejects.toThrowError(
     new Error('Writing to clipboard not allowed')
   )
 })
@@ -73,7 +73,7 @@ test.skip('editorCut - no selection', async () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(1, 1, 1, 1),
   }
-  expect(await EditorCut.editorCut(editor)).toMatchObject({
+  expect(await EditorCut.cut(editor)).toMatchObject({
     selections: EditorSelection.fromRange(1, 1, 1, 1),
     lines: ['line 1', 'line 2', 'line 3', ''],
   })

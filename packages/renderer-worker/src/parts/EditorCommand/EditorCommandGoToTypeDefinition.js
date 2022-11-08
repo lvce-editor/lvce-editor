@@ -69,7 +69,7 @@ const isNoProviderFoundError = (error) => {
   )
 }
 
-export const editorGoToTypeDefinition = (editor, explicit = true) => {
+export const goToTypeDefinition = (editor, explicit = true) => {
   return EditorGoTo.goTo({
     editor,
     getLocation,

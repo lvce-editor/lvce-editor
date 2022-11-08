@@ -7,23 +7,23 @@ test.skip('editorCursorWordLeft', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 27, 0, 27),
   }
-  const moved1 = EditorCursorWordLeft.editorCursorWordLeft(editor)
+  const moved1 = EditorCursorWordLeft.cursorWordLeft(editor)
   expect(moved1).toMatchObject({
     selections: EditorSelection.fromRange(0, 21, 0, 21),
   })
-  const moved2 = EditorCursorWordLeft.editorCursorWordLeft(moved1)
+  const moved2 = EditorCursorWordLeft.cursorWordLeft(moved1)
   expect(moved2).toMatchObject({
     selections: EditorSelection.fromRange(0, 19, 0, 19),
   })
-  const moved3 = EditorCursorWordLeft.editorCursorWordLeft(moved2)
+  const moved3 = EditorCursorWordLeft.cursorWordLeft(moved2)
   expect(moved3).toMatchObject({
     selections: EditorSelection.fromRange(0, 11, 0, 11),
   })
-  const moved4 = EditorCursorWordLeft.editorCursorWordLeft(moved3)
+  const moved4 = EditorCursorWordLeft.cursorWordLeft(moved3)
   expect(moved4).toMatchObject({
     selections: EditorSelection.fromRange(0, 5, 0, 5),
   })
-  const moved5 = EditorCursorWordLeft.editorCursorWordLeft(moved4)
+  const moved5 = EditorCursorWordLeft.cursorWordLeft(moved4)
   expect(moved5).toMatchObject({
     selections: EditorSelection.fromRange(0, 4, 0, 4),
   })
@@ -35,19 +35,19 @@ test('editorCursorWordLeft - with dots', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 14, 0, 14),
   }
-  const moved1 = EditorCursorWordLeft.editorCursorWordLeft(editor)
+  const moved1 = EditorCursorWordLeft.cursorWordLeft(editor)
   expect(moved1).toMatchObject({
     selections: EditorSelection.fromRange(0, 10, 0, 10),
   })
-  const moved2 = EditorCursorWordLeft.editorCursorWordLeft(moved1)
+  const moved2 = EditorCursorWordLeft.cursorWordLeft(moved1)
   expect(moved2).toMatchObject({
     selections: EditorSelection.fromRange(0, 8, 0, 8),
   })
-  const moved3 = EditorCursorWordLeft.editorCursorWordLeft(moved2)
+  const moved3 = EditorCursorWordLeft.cursorWordLeft(moved2)
   expect(moved3).toMatchObject({
     selections: EditorSelection.fromRange(0, 5, 0, 5),
   })
-  const moved4 = EditorCursorWordLeft.editorCursorWordLeft(moved3)
+  const moved4 = EditorCursorWordLeft.cursorWordLeft(moved3)
   expect(moved4).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
@@ -59,7 +59,7 @@ test.skip('editorCursorWordLeft - with selection', () => {
     lines,
     selections: EditorSelection.fromRange(0, 20, 0, 23),
   }
-  expect(EditorCursorWordLeft.editorCursorWordLeft(editor)).toMatchObject({
+  expect(EditorCursorWordLeft.cursorWordLeft(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 17, 0, 17),
   })
 })

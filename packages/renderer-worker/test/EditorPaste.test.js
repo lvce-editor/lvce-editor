@@ -30,7 +30,7 @@ test.skip('editorPaste', async () => {
     tokenizer: TokenizePlainText,
   }
   RendererProcess.state.send = jest.fn()
-  await EditorPaste.editorPaste(editor)
+  await EditorPaste.paste(editor)
   expect(editor.lines).toEqual(['abc'])
   expect(editor.cursor).toEqual({
     rowIndex: 0,

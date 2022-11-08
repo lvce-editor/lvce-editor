@@ -2,7 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 
-export const editorCut = async (editor) => {
+export const cut = async (editor) => {
   const selection = editor.selections[0]
   if (selection.start === selection.end) {
     // TODO cut line where cursor is

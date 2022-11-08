@@ -3,7 +3,7 @@ export const state = {
   deltaY: 0,
 }
 
-export const editorHandleTouchStart = (editor, touchEvent) => {
+export const handleTouchStart = (editor, touchEvent) => {
   if (touchEvent.touches.length === 0) {
     return
   }

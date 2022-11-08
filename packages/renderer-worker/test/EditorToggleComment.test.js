@@ -63,7 +63,7 @@ test('comment line', async () => {
   Languages.getLanguageConfiguration.mockImplementation(() => {
     return LANGUAGE_CONFIGURATION_JAVASCRIPT
   })
-  const newEditor = await EditorToggleComment.editorToggleComment(editor)
+  const newEditor = await EditorToggleComment.toggleComment(editor)
   expect(newEditor.lines).toEqual(['// const x = 1'])
   expect(newEditor.selections).toEqual(new Uint32Array([0, 3, 0, 3]))
 })
@@ -80,7 +80,7 @@ test('uncomment line', async () => {
   Languages.getLanguageConfiguration.mockImplementation(() => {
     return LANGUAGE_CONFIGURATION_JAVASCRIPT
   })
-  const newEditor = await EditorToggleComment.editorToggleComment(editor)
+  const newEditor = await EditorToggleComment.toggleComment(editor)
   expect(newEditor.lines).toEqual(['const x = 1'])
   expect(newEditor.selections).toEqual(new Uint32Array([0, 0, 0, 0]))
 })
@@ -98,7 +98,7 @@ test('uncomment line, no space after comment', async () => {
   Languages.getLanguageConfiguration.mockImplementation(() => {
     return LANGUAGE_CONFIGURATION_JAVASCRIPT
   })
-  const newEditor = await EditorToggleComment.editorToggleComment(editor)
+  const newEditor = await EditorToggleComment.toggleComment(editor)
   expect(newEditor).toMatchObject({
     lines: ['const x = 1'],
     languageId: 'javascript',
@@ -120,7 +120,7 @@ test.skip('comment line with block comment - error - block comment configuration
   Languages.getLanguageConfiguration.mockImplementation(() => {
     return LANGUAGE_CONFIGURATION_HTML_INVALID
   })
-  const newEditor = await EditorToggleComment.editorToggleComment(editor)
+  const newEditor = await EditorToggleComment.toggleComment(editor)
   // TODO should not apply block comment in this case when it is invalid
   expect(newEditor.lines).toEqual(['undefined <h1></h1> -->'])
 })
@@ -139,7 +139,7 @@ test('comment line - error - loading language configuration', async () => {
   Languages.getLanguageConfiguration.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  expect(await EditorToggleComment.editorToggleComment(editor)).toBe(editor)
+  expect(await EditorToggleComment.toggleComment(editor)).toBe(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
@@ -162,7 +162,7 @@ test.skip('comment line with block comment', async () => {
   Languages.getLanguageConfiguration.mockImplementation(() => {
     return LANGUAGE_CONFIGURATION_HTML
   })
-  const newEditor = await EditorToggleComment.editorToggleComment(editor)
+  const newEditor = await EditorToggleComment.toggleComment(editor)
   // TODO there should be a space after the comment
   expect(newEditor.lines).toEqual(['<!--<h1></h1>-->'])
   // TODO adjust cursor index
@@ -185,7 +185,7 @@ test.skip('uncomment line with block comment', async () => {
   Languages.getLanguageConfiguration.mockImplementation(() => {
     return LANGUAGE_CONFIGURATION_HTML
   })
-  const newEditor = await EditorToggleComment.editorToggleComment(editor)
+  const newEditor = await EditorToggleComment.toggleComment(editor)
   expect(newEditor.lines).toEqual([' <h1></h1> '])
   expect(newEditor.cursor).toEqual({
     rowIndex: 0,

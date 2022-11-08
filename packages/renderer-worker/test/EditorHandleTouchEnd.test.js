@@ -19,13 +19,13 @@ test.skip('editorHandleTouchEnd - selection was moved', () => {
     tokenizer: TokenizePlainText,
     deltaY: 0,
   }
-  EditorHandleTouchStart.editorHandleTouchStart(editor, {
+  EditorHandleTouchStart.handleTouchStart(editor, {
     touches: [{ x: 45, y: 35 }],
   })
-  EditorHandleTouchMove.editorHandleTouchMove(editor, {
+  EditorHandleTouchMove.handleTouchMove(editor, {
     touches: [{ x: 60, y: 60 }],
   })
-  EditorHandleTouchEnd.editorHandleTouchEnd(editor, {
+  EditorHandleTouchEnd.handleTouchEnd(editor, {
     changedTouches: [{ x: 60, y: 60 }],
   })
   expect(editor.selections).toEqual([
@@ -57,10 +57,10 @@ test.skip('editorHandleTouchEnd - short tap should set cursor position', () => {
     tokenizer: TokenizePlainText,
     deltaY: 0,
   }
-  EditorHandleTouchStart.editorHandleTouchStart(editor, {
+  EditorHandleTouchStart.handleTouchStart(editor, {
     touches: [{ x: 45, y: 15 }],
   })
-  EditorHandleTouchEnd.editorHandleTouchEnd(editor, {
+  EditorHandleTouchEnd.handleTouchEnd(editor, {
     changedTouches: [{ x: 45, y: 15 }],
   })
 })
@@ -82,11 +82,11 @@ test.skip('editorHandleTouchEnd - long tap should select word', () => {
   }
   jest.useFakeTimers().setSystemTime(new Date('2020-01-01'))
   console.log(new Date())
-  EditorHandleTouchStart.editorHandleTouchStart(editor, {
+  EditorHandleTouchStart.handleTouchStart(editor, {
     touches: [{ x: 45, y: 15 }],
   })
   jest.useFakeTimers().advanceTimersByTime(151)
-  EditorHandleTouchEnd.editorHandleTouchEnd(editor, {
+  EditorHandleTouchEnd.handleTouchEnd(editor, {
     changedTouches: [{ x: 45, y: 15 }],
   })
 })

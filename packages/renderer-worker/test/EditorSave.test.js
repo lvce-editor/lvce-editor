@@ -39,7 +39,7 @@ test('editorSave', async () => {
   FileSystem.writeFile.mockImplementation(() => {
     return null
   })
-  expect(await EditorSave.editorSave(editor)).toBe(editor)
+  expect(await EditorSave.save(editor)).toBe(editor)
   expect(FileSystem.writeFile).toHaveBeenCalledWith(
     '/tmp/some-file.txt',
     'line 1\nline 2'
@@ -57,7 +57,7 @@ test('editorSave - error with fileSystem', async () => {
   })
   // @ts-ignore
   ErrorHandling.handleError.mockImplementation(() => {})
-  await EditorSave.editorSave(editor)
+  await EditorSave.save(editor)
   expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.handleError).toHaveBeenCalledWith(
     new VError(

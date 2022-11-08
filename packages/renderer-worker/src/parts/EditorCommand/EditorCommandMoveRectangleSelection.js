@@ -2,7 +2,7 @@ import * as Editor from '../Editor/Editor.js'
 import * as EditorHandleClick from './EditorCommandHandleSingleClick.js'
 import * as EditorMoveSelection from './EditorCommandMoveSelection.js'
 
-export const editorMoveRectangleSelection = (editor, position) => {
+export const moveRectangleSelection = (editor, position) => {
   const anchor = EditorMoveSelection.state.position
   const startRowIndex = anchor.rowIndex
   const startColumnIndex = anchor.columnIndex

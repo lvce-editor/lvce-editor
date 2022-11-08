@@ -3,7 +3,7 @@ import * as EditorToggleLineComment from './EditorCommandToggleLineComment.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
 // TODO rename file
 // TODO when handle case when editor has selection
-export const editorToggleComment = async (editor) => {
+export const toggleComment = async (editor) => {
   try {
     const newEditor = await EditorToggleLineComment.editorToggleLineComment(
       editor
@@ -11,7 +11,7 @@ export const editorToggleComment = async (editor) => {
     if (editor !== newEditor) {
       return newEditor
     }
-    return EditorToggleBlockComment.editorToggleBlockComment(editor)
+    return EditorToggleBlockComment.toggleBlockComment(editor)
   } catch (error) {
     console.error(error)
     // TODO use correct position

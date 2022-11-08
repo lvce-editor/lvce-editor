@@ -19,7 +19,7 @@ const getBlockComment = async (editor) => {
   return languageConfiguration.comments.blockComment
 }
 
-export const editorToggleBlockComment = async (editor) => {
+export const toggleBlockComment = async (editor) => {
   const blockComment = await getBlockComment(editor)
   if (!blockComment) {
     return editor

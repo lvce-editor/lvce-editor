@@ -7,7 +7,7 @@ test('editorSelectAll', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(EditorSelectAll.editorSelectAll(editor)).toMatchObject({
+  expect(EditorSelectAll.selectAll(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 3, 0),
   })
 })

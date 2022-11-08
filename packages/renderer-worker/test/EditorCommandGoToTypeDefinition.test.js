@@ -74,7 +74,7 @@ test('editorGoToTypeDefinition', async () => {
         throw new Error('unexpected message')
     }
   })
-  await EditorGoToTypeDefinition.editorGoToTypeDefinition(editor)
+  await EditorGoToTypeDefinition.goToTypeDefinition(editor)
 })
 
 test('editorGoToTypeDefinition - startOffset is 0', async () => {
@@ -108,7 +108,7 @@ test('editorGoToTypeDefinition - startOffset is 0', async () => {
         throw new Error('unexpected message')
     }
   })
-  await EditorGoToTypeDefinition.editorGoToTypeDefinition(editor)
+  await EditorGoToTypeDefinition.goToTypeDefinition(editor)
 })
 
 test('editorGoToTypeDefinition - error', async () => {
@@ -130,7 +130,7 @@ test('editorGoToTypeDefinition - error', async () => {
   // @ts-ignore
   EditorShowMessage.editorShowMessage.mockImplementation(() => {})
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  await EditorGoToTypeDefinition.editorGoToTypeDefinition(editor)
+  await EditorGoToTypeDefinition.goToTypeDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
@@ -164,7 +164,7 @@ test('editorGoToTypeDefinition - error - no type definition provider found', asy
   // @ts-ignore
   EditorShowMessage.editorShowMessage.mockImplementation(() => {})
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  await EditorGoToTypeDefinition.editorGoToTypeDefinition(editor)
+  await EditorGoToTypeDefinition.goToTypeDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
@@ -194,7 +194,7 @@ test('editorGoToTypeDefinition - no type definition found', async () => {
   )
   // @ts-ignore
   EditorShowMessage.editorShowMessage.mockImplementation(() => {})
-  await EditorGoToTypeDefinition.editorGoToTypeDefinition(editor)
+  await EditorGoToTypeDefinition.goToTypeDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,

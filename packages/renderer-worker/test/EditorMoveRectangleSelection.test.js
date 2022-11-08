@@ -18,7 +18,7 @@ test.skip('editorMoveRectangleSelection', () => {
     rowIndex: 0,
     columnIndex: 2,
   }
-  EditorMoveRectangleSelection.editorMoveRectangleSelection(editor, {
+  EditorMoveRectangleSelection.moveRectangleSelection(editor, {
     rowIndex: 2,
     columnIndex: 4,
   })

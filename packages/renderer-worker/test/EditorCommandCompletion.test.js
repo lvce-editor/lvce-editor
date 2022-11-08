@@ -143,7 +143,7 @@ test.skip('open - cursor changes to row above', async () => {
     invalidStartIndex: 0,
   }
   await EditorCompletion.open(editor)
-  await EditorCommandCursorUp.editorCursorsUp(editor)
+  await EditorCommandCursorUp.cursorsUp(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,
@@ -268,7 +268,7 @@ test.skip('open - cursor changes to row below', async () => {
     invalidStartIndex: 0,
   }
   await EditorCompletion.open(editor)
-  await EditorCommandCursorDown.editorCursorDown(editor)
+  await EditorCommandCursorDown.cursorDown(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,
@@ -389,7 +389,7 @@ test.skip('open - cursor changes to column left - matches word', async () => {
     invalidStartIndex: 0,
   }
   await EditorCompletion.open(editor)
-  await EditorCommandCursorCharacterLeft.editorCursorCharacterLeft(editor)
+  await EditorCommandCursorCharacterLeft.cursorCharacterLeft(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     'Viewlet.send',
@@ -513,7 +513,7 @@ test.skip('open - cursor changes to column left - matches no word', async () => 
     invalidStartIndex: 0,
   }
   await EditorCompletion.open(editor)
-  await EditorCommandCursorCharacterLeft.editorCursorCharacterLeft(editor)
+  await EditorCommandCursorCharacterLeft.cursorCharacterLeft(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,
@@ -634,7 +634,7 @@ test.skip('open - cursor changes to column right - matches word', async () => {
     invalidStartIndex: 0,
   }
   await EditorCompletion.open(editor)
-  await EditorCommandCursorCharacterRight.editorCursorCharacterRight(editor)
+  await EditorCommandCursorCharacterRight.cursorCharacterRight(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     'Viewlet.send',
@@ -758,7 +758,7 @@ test.skip('open - cursor changes to column right - matches no word', async () =>
     invalidStartIndex: 0,
   }
   await EditorCompletion.open(editor)
-  await EditorCommandCursorCharacterRight.editorCursorCharacterRight(editor)
+  await EditorCommandCursorCharacterRight.cursorCharacterRight(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,

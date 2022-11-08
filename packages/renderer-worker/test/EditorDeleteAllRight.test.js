@@ -10,7 +10,7 @@ test('editorDeleteAllRight - at start', () => {
     tokenizer: TokenizePlainText,
     undoStack: [],
   }
-  expect(EditorDeleteAllRight.editorDeleteAllRight(editor)).toMatchObject({
+  expect(EditorDeleteAllRight.deleteAllRight(editor)).toMatchObject({
     lines: [''],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
@@ -29,7 +29,7 @@ test('editorDeleteAllRight in middle', () => {
     tokenizer: TokenizePlainText,
     undoStack: [],
   }
-  expect(EditorDeleteAllRight.editorDeleteAllRight(editor)).toMatchObject({
+  expect(EditorDeleteAllRight.deleteAllRight(editor)).toMatchObject({
     lines: ['1 2 3'],
     selections: EditorSelection.fromRange(0, 5, 0, 5),
   })

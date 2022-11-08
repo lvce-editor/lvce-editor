@@ -10,7 +10,7 @@ test.skip('editorHandleTripleClick', () => {
     selections: [],
   }
   expect(
-    EditorHandleTripleClick.editorHandleTripleClick(
+    EditorHandleTripleClick.handleTripleClick(
       editor,
       editor.cursor.rowIndex,
       editor.cursor.columnIndex

@@ -2,7 +2,7 @@ export const state = {
   blurListeners: [],
 }
 
-export const editorBlur = (editor) => {
+export const blur = (editor) => {
   // for (const listener of state.blurListeners) {
   //   listener(editor)
   // }

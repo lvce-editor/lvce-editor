@@ -5,7 +5,7 @@ export const state = {
   compositionText: '',
 }
 
-export const editorCompositionStart = (editor, event) => {
+export const compositionStart = (editor, event) => {
   state.isComposing = true
   return editor
 }
@@ -35,14 +35,14 @@ const getCompositionChanges = (selections, data) => {
   return changes
 }
 
-export const editorCompositionUpdate = (editor, data) => {
+export const compositionUpdate = (editor, data) => {
   const selections = editor.selections
   const changes = getCompositionChanges(selections, data)
   state.compositionText = data
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
 
-export const editorCompositionEnd = (editor, data) => {
+export const compositionEnd = (editor, data) => {
   const selections = editor.selections
   const changes = getCompositionChanges(selections, data)
   state.isComposing = false
