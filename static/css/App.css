@@ -1,6 +1,5 @@
 /* third party css */
 @import '/static/lib-css/modern-normalize.css';
-@import '/static/lib-css/termterm.css';
 
 /* application css */
 @import './parts/__Theme.css';
