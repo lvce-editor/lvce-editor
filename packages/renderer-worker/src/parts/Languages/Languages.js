@@ -44,11 +44,9 @@ export const getLanguageId = (fileName) => {
 }
 
 export const getLanguageIdByFirstLine = (firstLine) => {
-  console.log('get by first line', { firstLine, state: state.firstLines })
   for (const { regex, languageId } of state.firstLines) {
     const actualRegex = new RegExp(regex)
     if (actualRegex.test(firstLine)) {
-      console.log({ languageId })
       return languageId
     }
   }
