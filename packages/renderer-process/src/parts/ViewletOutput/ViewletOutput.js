@@ -22,7 +22,7 @@ const create$Option = (option) => {
 
 export const create = () => {
   const $ViewletOutputSelect = document.createElement('select')
-  $ViewletOutputSelect.className = 'ViewletOutputSelect'
+  $ViewletOutputSelect.className = 'OutputSelect'
   $ViewletOutputSelect.onchange = ViewletOutputEvents.handleChange
   $ViewletOutputSelect.ariaLabel = UiStrings.SelectALog
   const $ViewletOutputContent = document.createElement('div')
@@ -58,9 +58,7 @@ export const setText = (state, text) => {
   Assert.object(state)
   Assert.string(text)
   const { $Content } = state
-  const $Line = document.createElement('div')
-  $Line.textContent = text
-  $Content.append($Line)
+  $Content.textContent = text
 }
 
 export const handleError = (state, error) => {

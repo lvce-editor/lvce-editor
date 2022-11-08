@@ -1,5 +1,5 @@
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as OutputChannel from '../OutputChannel/OutputChannel.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const name = ViewletModuleId.Output
 
@@ -8,6 +8,7 @@ export const create = () => {
     selectedIndex: -1,
     options: [],
     disposed: false,
+    text: '',
   }
 }
 
@@ -47,9 +48,10 @@ export const setOutputChannel = async (state, option) => {
 
 export const handleData = (state, data) => {
   const { text } = state
+  const newText = text + data
   return {
     ...state,
-    text: text + data,
+    text: newText,
   }
 }
 
@@ -76,11 +78,15 @@ export const handleError = (state, error) => {
   }
 }
 
+export const hasFunctionalRender = true
+
 const renderText = {
   isEqual(oldState, newState) {
+    console.log({ newState })
     return oldState.text === newState.text
   },
   apply(oldState, newState) {
+    console.log('render text', newState.text)
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ ViewletModuleId.Output,
@@ -105,3 +111,9 @@ const renderOptions = {
 }
 
 export const render = [renderText, renderOptions]
+
+export const hasFunctionalResize = true
+
+export const resize = (state) => {
+  return state
+}

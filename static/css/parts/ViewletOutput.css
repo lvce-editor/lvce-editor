@@ -7,4 +7,10 @@
   white-space: pre;
   overflow-y: scroll;
   color: white;
+  display: flex;
+  flex-direction: column;
+}
+
+.OutputContent {
+  flex: 1;
 }

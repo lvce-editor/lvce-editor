@@ -1,7 +1,6 @@
 // @ts-ignore
 performance.mark('code/start')
-// TODO figure out whether logging slows down startup time
-require('./logging.js') // must be first import
+const Logging = require('./parts/Logging/Logging.js')
 const App = require('./parts/App/App.js')
 
 const firstErrorLine = (error) => {
@@ -22,7 +21,10 @@ const handleUncaughtExceptionMonitor = (error, origin) => {
 
 const main = () => {
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
+  Logging.start()
   App.hydrate()
+
+  console.log('main started')
 }
 
 main()
