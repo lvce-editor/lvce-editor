@@ -17,6 +17,5 @@ export const executeReferenceProvider = async (editor, offset) => {
     noProviderFoundResult: [],
   })
   Assert.array(result)
-  console.log({ result })
   return result
 }

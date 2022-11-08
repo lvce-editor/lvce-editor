@@ -125,7 +125,6 @@ const selectPickExtension = async (item) => {
 }
 
 export const selectPick = (item) => {
-  console.log('select pick', item)
   if (item.id.startsWith('ext.')) {
     return selectPickExtension(item)
   }

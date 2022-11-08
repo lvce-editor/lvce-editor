@@ -7,7 +7,6 @@ export const editorHandleTouchStart = (editor, touchEvent) => {
   if (touchEvent.touches.length === 0) {
     return
   }
-  console.log('touch start')
   const firstTouch = touchEvent.touches[0]
   state.touchOffsetY = firstTouch.y
   state.deltaY = editor.deltaY

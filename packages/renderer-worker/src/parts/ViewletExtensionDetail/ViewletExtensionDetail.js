@@ -45,7 +45,6 @@ const getIconSrc = (extension) => {
 }
 
 const getBaseUrl = (extensionPath) => {
-  console.log({ platform: Platform.platform })
   switch (Platform.platform) {
     case PlatformType.Remote:
     case PlatformType.Electron:
