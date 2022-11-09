@@ -13,20 +13,22 @@ const fileSystemWatch = (socket, id, path) => {
   // })
 }
 
+export const name = 'FileSystem'
+
 // TODO separate ipc from code like in renderer worker
 export const Commands = {
-  'FileSystem.chmod': FileSystem.chmod,
-  'FileSystem.copy': FileSystem.copy,
-  'FileSystem.createFile': FileSystem.createFile,
-  'FileSystem.createFolder': FileSystem.createFolder,
-  'FileSystem.ensureFile': FileSystem.ensureFile,
-  'FileSystem.getPathSeparator': FileSystem.getPathSeparator,
-  'FileSystem.getRealPath': FileSystem.getRealPath,
-  'FileSystem.mkdir': FileSystem.mkdir,
-  'FileSystem.readDirWithFileTypes': FileSystem.readDirWithFileTypes,
-  'FileSystem.readFile': FileSystem.readFile,
-  'FileSystem.remove': FileSystem.remove,
-  'FileSystem.rename': FileSystem.rename,
-  'FileSystem.stat': FileSystem.stat,
-  'FileSystem.writeFile': FileSystem.writeFile,
+  chmod: FileSystem.chmod,
+  copy: FileSystem.copy,
+  createFile: FileSystem.createFile,
+  createFolder: FileSystem.createFolder,
+  ensureFile: FileSystem.ensureFile,
+  getPathSeparator: FileSystem.getPathSeparator,
+  getRealPath: FileSystem.getRealPath,
+  mkdir: FileSystem.mkdir,
+  readDirWithFileTypes: FileSystem.readDirWithFileTypes,
+  readFile: FileSystem.readFile,
+  remove: FileSystem.remove,
+  rename: FileSystem.rename,
+  stat: FileSystem.stat,
+  writeFile: FileSystem.writeFile,
 }

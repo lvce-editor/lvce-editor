@@ -1,5 +1,7 @@
 import * as SearchFile from './SearchFile.js'
 
+export const name = 'SearchFile'
+
 export const Commands = {
-  'SearchFile.searchFile': SearchFile.searchFile,
+  searchFile: SearchFile.searchFile,
 }

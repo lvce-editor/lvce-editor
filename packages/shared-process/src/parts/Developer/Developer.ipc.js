@@ -1,13 +1,15 @@
 import * as Developer from './Developer.js'
 
+export const name = 'Developer'
+
 // prettier-ignore
 export const Commands = {
-  'Developer.allocateMemory': Developer.allocateMemory,
-  'Developer.crashSharedProcess': Developer.crashSharedProcess,
-  'Developer.createHeapSnapshot': Developer.createHeapSnapshot,
-  'Developer.createProfile': Developer.createProfile,
-  'Developer.getNodeStartupTime': Developer.getNodeStartupTiming,
-  'Developer.getNodeStartupTiming': Developer.getNodeStartupTiming,
-  'Developer.sharedProcessMemoryUsage': Developer.sharedProcessMemoryUsage,
-  'Developer.sharedProcessStartupPerformance': Developer.sharedProcessStartupPerformance,
+  allocateMemory: Developer.allocateMemory,
+  crashSharedProcess: Developer.crashSharedProcess,
+  createHeapSnapshot: Developer.createHeapSnapshot,
+  createProfile: Developer.createProfile,
+  getNodeStartupTime: Developer.getNodeStartupTiming,
+  getNodeStartupTiming: Developer.getNodeStartupTiming,
+  sharedProcessMemoryUsage: Developer.sharedProcessMemoryUsage,
+  sharedProcessStartupPerformance: Developer.sharedProcessStartupPerformance,
 }

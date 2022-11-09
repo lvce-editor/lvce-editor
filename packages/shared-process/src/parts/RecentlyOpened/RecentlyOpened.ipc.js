@@ -1,5 +1,7 @@
 import * as RecentlyOpened from './RecentlyOpened.js'
 
+export const name = 'RecentlyOpened'
+
 export const Commands = {
-  'RecentlyOpened.addPath': RecentlyOpened.addPath,
+  addPath: RecentlyOpened.addPath,
 }

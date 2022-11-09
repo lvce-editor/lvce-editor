@@ -1,6 +1,8 @@
 import * as Download from './Download.js'
 
+export const name = 'Download'
+
 // prettier-ignore
 export const Commands = {
-  'Download.download': Download.download,
+  download: Download.download,
 }
