@@ -1,5 +1,7 @@
 import * as Test from './Test.js'
 
+export const name = 'Test'
+
 export const Commands = {
-  'Test.execute': Test.execute,
+  execute: Test.execute,
 }

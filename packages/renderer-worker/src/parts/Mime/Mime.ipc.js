@@ -1,6 +1,8 @@
 import * as Mime from './Mime.js'
 
+export const name = 'Mime'
+
 export const Commands = {
-  'Mime.getMediaMimeType': Mime.getMediaMimeType,
-  'Mime.getTextMime': Mime.getTextMime,
+  getMediaMimeType: Mime.getMediaMimeType,
+  getTextMime: Mime.getTextMime,
 }
