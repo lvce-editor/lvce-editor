@@ -37,6 +37,7 @@ declare const Editor: {
   readonly setSelections: (selections: Uint32Array) => Promise<void>
   readonly type: (text: string) => Promise<void>
   readonly setDeltaY: (deltaY: number) => Promise<void>
+  readonly format: () => Promise<void>
 }
 
 declare const Explorer: {
