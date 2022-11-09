@@ -7,18 +7,20 @@ export const state = {
 }
 
 const initializeModule = (module) => {
-  if (typeof module.__initialize__ !== 'function') {
-    if (module.Commands) {
-      for (const [key, value] of Object.entries(module.Commands)) {
+  if (module.Commands) {
+    for (const [key, value] of Object.entries(module.Commands)) {
+      if (module.name) {
+        const actualKey = `${module.name}.${key}`
+        register(actualKey, value)
+      } else {
         register(key, value)
       }
-      return
     }
-    throw new Error(
-      `module ${module.name} is missing an initialize function and commands`
-    )
+    return
   }
-  return module.__initialize__()
+  throw new Error(
+    `module ${module.name} is missing an initialize function and commands`
+  )
 }
 
 const getOrLoadModule = (moduleId) => {

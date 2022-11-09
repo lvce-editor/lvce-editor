@@ -1,14 +1,16 @@
-import * as Window from './Window.js'
 import * as Chrome from '../Chrome/Chrome.js'
+import * as Window from './Window.js'
+
+export const name = 'Window'
 
 export const Commands = {
-  'Window.close': Chrome.close,
-  'Window.exit': Chrome.exit,
-  'Window.maximize': Chrome.maximize,
-  'Window.minimize': Chrome.minimize,
-  'Window.openNew': Chrome.openNew,
-  'Window.reload': Window.reload,
-  'Window.unmaximize': Chrome.unmaximize,
-  'Window.zoomIn': Chrome.zoomIn,
-  'Window.zoomOut': Chrome.zoomOut,
+  close: Chrome.close,
+  exit: Chrome.exit,
+  maximize: Chrome.maximize,
+  minimize: Chrome.minimize,
+  openNew: Chrome.openNew,
+  reload: Window.reload,
+  unmaximize: Chrome.unmaximize,
+  zoomIn: Chrome.zoomIn,
+  zoomOut: Chrome.zoomOut,
 }

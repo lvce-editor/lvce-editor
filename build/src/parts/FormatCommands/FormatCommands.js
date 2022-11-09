@@ -22,7 +22,6 @@ const formatCommands = async (absolutePath) => {
     }
   }
   if (commandsIndex === -1) {
-    console.warn(`Command start index not found in ${absolutePath}`)
     return
   }
   let commandsEndIndex = -1

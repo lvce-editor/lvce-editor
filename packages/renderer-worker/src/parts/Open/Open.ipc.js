@@ -1,6 +1,8 @@
 import * as Open from './Open.js'
 
+export const name = 'Open'
+
 export const Commands = {
-  'Open.openExternal': Open.openExternal,
-  'Open.openUrl': Open.openUrl,
+  openExternal: Open.openExternal,
+  openUrl: Open.openUrl,
 }
