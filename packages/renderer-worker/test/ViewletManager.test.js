@@ -104,6 +104,7 @@ test('load - error - no create method', async () => {
   }
   const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
   expect(await ViewletManager.load(state)).toEqual([
+    ['Viewlet.create', '', ''],
     ['Viewlet.setBounds', '', 0, 0, 0, 0],
     [
       'Viewlet.handleError',
@@ -132,6 +133,7 @@ test('load - error - create method throws error', async () => {
   }
   const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
   expect(await ViewletManager.load(state)).toEqual([
+    ['Viewlet.create', '', ''],
     ['Viewlet.setBounds', '', 0, 0, 0, 0],
     ['Viewlet.handleError', '', '', 'TypeError: x is not a function'],
   ])
@@ -155,6 +157,7 @@ test('load - error - no loadContent method', async () => {
   }
   const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
   expect(await ViewletManager.load(state)).toEqual([
+    ['Viewlet.create', '', ''],
     ['Viewlet.setBounds', '', 0, 0, 0, 0],
     [
       'Viewlet.handleError',
@@ -188,6 +191,7 @@ test('load - error - loadContent method throws error', async () => {
   }
   const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
   expect(await ViewletManager.load(state)).toEqual([
+    ['Viewlet.create', '', ''],
     ['Viewlet.setBounds', '', 0, 0, 0, 0],
     ['Viewlet.handleError', '', '', 'TypeError: x is not a function'],
   ])
@@ -217,6 +221,7 @@ test('load - error - contentLoaded is not of type function', async () => {
   }
   const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
   expect(await ViewletManager.load(state)).toEqual([
+    ['Viewlet.create', '', ''],
     ['Viewlet.setBounds', '', 0, 0, 0, 0],
     [
       'Viewlet.handleError',
@@ -253,6 +258,7 @@ test('load - error - contentLoaded method throws error', async () => {
   }
   const state = ViewletManager.create(getModule, '', '', '', 0, 0, 0, 0)
   expect(await ViewletManager.load(state)).toEqual([
+    ['Viewlet.create', '', ''],
     ['Viewlet.setBounds', '', 0, 0, 0, 0],
     ['Viewlet.handleError', '', '', 'TypeError: x is not a function'],
   ])
