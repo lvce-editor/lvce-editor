@@ -1,9 +1,11 @@
 import * as Canvas from './Canvas.js'
 
+export const name = 'Canvas'
+
 export const Commands = {
-  'Canvas.addCanvas': Canvas.addCanvas,
-  'Canvas.focusPage': Canvas.focusPage,
-  'Canvas.resize': Canvas.resize,
-  'Canvas.setContent': Canvas.setContent,
-  'Canvas.render': Canvas.render,
+  addCanvas: Canvas.addCanvas,
+  focusPage: Canvas.focusPage,
+  resize: Canvas.resize,
+  setContent: Canvas.setContent,
+  render: Canvas.render,
 }
