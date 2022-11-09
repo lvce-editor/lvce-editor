@@ -1,6 +1,8 @@
 const AppWindow = require('./AppWindow.js')
 
+exports.name = 'AppWindow'
+
 exports.Commands = {
-  'AppWindow.createAppWindow': AppWindow.createAppWindow,
-  'AppWindow.openNew': AppWindow.openNew,
+  createAppWindow: AppWindow.createAppWindow,
+  openNew: AppWindow.openNew,
 }

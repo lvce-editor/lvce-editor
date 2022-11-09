@@ -1,5 +1,7 @@
 const ElectronClipBoard = require('./ElectronClipBoard.js')
 
+exports.name = 'ElectronClipBoard'
+
 exports.Commands = {
-  'ElectronClipBoard.writeText': ElectronClipBoard.writeText,
+  writeText: ElectronClipBoard.writeText,
 }

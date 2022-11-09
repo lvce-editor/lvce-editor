@@ -1,7 +1,9 @@
 const ElectronContentTracing = require('./ElectronContentTracing.js')
 
+exports.name = 'ElectronContentTracing'
+
 // prettier-ignore
 exports.Commands = {
-  'ElectronContentTracing.startRecording': ElectronContentTracing.startRecording,
-  'ElectronContentTracing.stopRecording': ElectronContentTracing.stopRecording,
+  startRecording: ElectronContentTracing.startRecording,
+  stopRecording: ElectronContentTracing.stopRecording,
 }

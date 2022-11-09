@@ -1,8 +1,10 @@
 const ElectronSafeStorage = require('./ElectronSafeStorage.js')
 
+exports.name = 'ElectronSafeStorage'
+
 // prettier-ignore
 exports.Commands = {
-  'ElectronSafeStorage.decryptString': ElectronSafeStorage.decryptString,
-  'ElectronSafeStorage.encryptString': ElectronSafeStorage.encryptString,
-  'ElectronSafeStorage.isEncryptionAvailable': ElectronSafeStorage.isEncryptionAvailable,
+  decryptString: ElectronSafeStorage.decryptString,
+  encryptString: ElectronSafeStorage.encryptString,
+  isEncryptionAvailable: ElectronSafeStorage.isEncryptionAvailable,
 }
