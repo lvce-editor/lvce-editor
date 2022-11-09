@@ -1,6 +1,8 @@
 import * as ElectronApp from './ElectronApp.js'
 
+export const name = 'ElectronApp'
+
 // prettier-ignore
 export const Commands = {
-  'ElectronApp.exit': ElectronApp.exit,
+  exit: ElectronApp.exit,
 }
