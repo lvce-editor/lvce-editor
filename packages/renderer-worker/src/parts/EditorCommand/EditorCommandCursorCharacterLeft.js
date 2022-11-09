@@ -7,3 +7,5 @@ export const cursorCharacterLeft = (editor) => {
     EditorDelta.characterLeft
   )
 }
+
+export const cursorLeft = cursorCharacterLeft
