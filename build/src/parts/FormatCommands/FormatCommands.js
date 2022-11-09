@@ -14,8 +14,9 @@ const formatCommands = async (absolutePath) => {
     const line = lines[i]
     newLines.push(line)
     if (
-      line.startsWith('export const Commands') ||
-      line.startsWith('exports.Commands')
+      (line.startsWith('export const Commands') ||
+        line.startsWith('exports.Commands')) &&
+      !line.includes('{}')
     ) {
       commandsIndex = i
       break
@@ -72,7 +73,8 @@ export const formatAllCommands = async () => {
     'packages/shared-process/src',
     'packages/renderer-process/src',
     'packages/renderer-worker/src',
-    'packages/main-process/src'
+    'packages/main-process/src',
+    'packages/pdf-worker/src'
   )
   for (const path of allIpcFiles) {
     await formatCommands(path)

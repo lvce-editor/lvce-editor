@@ -13,7 +13,7 @@ export const Commands = {
 }
 
 // prettier-ignore
-export const LazyCommands={
+export const LazyCommands = {
   focusFirst: () => import('./ViewletQuickPickFocusFirst.js'),
   focusIndex: () => import('./ViewletQuickPickFocusIndex.js'),
   focusLast: () => import('./ViewletQuickPickFocusLast.js'),

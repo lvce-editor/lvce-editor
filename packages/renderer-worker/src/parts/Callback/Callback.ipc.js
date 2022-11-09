@@ -1,6 +1,8 @@
 import * as Callback from './Callback.js'
 
+export const name = 'Callback'
+
 export const Commands = {
-  'Callback.reject': Callback.reject,
-  'Callback.resolve': Callback.resolve,
+  reject: Callback.reject,
+  resolve: Callback.resolve,
 }

@@ -4,6 +4,7 @@ export const name = 'Developer'
 
 // prettier-ignore
 export const Commands = {
+  // TODO certain commands are only available in electron -> treeshake them out
   allocateMemoryInSharedProcess: Developer.allocateMemoryInSharedProcess,
   clearCache: Developer.clearCache,
   crashMainProcess: Developer.crashMainProcess,
@@ -26,5 +27,4 @@ export const Commands = {
   showStartupPerformance: Developer.showStartupPerformance,
   startupPerformance: Developer.showStartupPerformance,
   toggleDeveloperTools: Developer.toggleDeveloperTools,
-  // TODO certain commands are only available in electron -> treeshake them out
 }

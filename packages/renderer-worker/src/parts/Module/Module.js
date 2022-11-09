@@ -118,8 +118,6 @@ export const load = (moduleId) => {
       return import('../Url/Url.ipc.js')
     case ModuleId.Viewlet:
       return import('../Viewlet/Viewlet.ipc.js')
-    case ModuleId.ViewletQuickPick:
-      return import('../ViewletQuickPick/ViewletQuickPick.ipc.js')
     case ModuleId.Window:
       return import('../Window/Window.ipc.js')
     case ModuleId.Workbench:

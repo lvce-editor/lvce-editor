@@ -1,7 +1,8 @@
-import * as Command from '../Command/Command.js'
 import * as ColorPicker from './ColorPicker.js'
 
+export const name = 'ColorPicker'
+
 export const Commands = {
-  'ColorPicker.close': ColorPicker.close,
-  'ColorPicker.open': ColorPicker.open,
+  close: ColorPicker.close,
+  open: ColorPicker.open,
 }
