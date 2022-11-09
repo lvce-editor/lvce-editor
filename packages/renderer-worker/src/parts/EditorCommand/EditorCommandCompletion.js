@@ -91,7 +91,7 @@ const handleCursorChange = (anyEditor, cursorChange) => {
 // TODO there are still race conditions in this function:
 // - when open is called twice, previous dom nodes can either be reused or the previous dom nodes must be disposed
 
-export const open = async (editor, openingReason = 1) => {
+export const openCompletion = async (editor, openingReason = 1) => {
   console.log('open editor completion')
   const viewlet = ViewletManager.create(
     ViewletModule.load,

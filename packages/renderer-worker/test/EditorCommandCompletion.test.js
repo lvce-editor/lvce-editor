@@ -29,7 +29,7 @@ test.skip('open', async () => {
         throw new Error('unexpected message')
     }
   })
-  await EditorCompletion.open({})
+  await EditorCompletion.openCompletion({})
 })
 
 test.skip('open - cursor changes to row above', async () => {
@@ -142,8 +142,8 @@ test.skip('open - cursor changes to row above', async () => {
     rowHeight: 8,
     invalidStartIndex: 0,
   }
-  await EditorCompletion.open(editor)
-  await EditorCommandCursorUp.cursorsUp(editor)
+  await EditorCompletion.openCompletion(editor)
+  await EditorCommandCursorUp.cursorUp(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,
@@ -267,7 +267,7 @@ test.skip('open - cursor changes to row below', async () => {
     rowHeight: 8,
     invalidStartIndex: 0,
   }
-  await EditorCompletion.open(editor)
+  await EditorCompletion.openCompletion(editor)
   await EditorCommandCursorDown.cursorDown(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
@@ -388,7 +388,7 @@ test.skip('open - cursor changes to column left - matches word', async () => {
     rowHeight: 8,
     invalidStartIndex: 0,
   }
-  await EditorCompletion.open(editor)
+  await EditorCompletion.openCompletion(editor)
   await EditorCommandCursorCharacterLeft.cursorCharacterLeft(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
@@ -512,7 +512,7 @@ test.skip('open - cursor changes to column left - matches no word', async () => 
     rowHeight: 8,
     invalidStartIndex: 0,
   }
-  await EditorCompletion.open(editor)
+  await EditorCompletion.openCompletion(editor)
   await EditorCommandCursorCharacterLeft.cursorCharacterLeft(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
@@ -633,7 +633,7 @@ test.skip('open - cursor changes to column right - matches word', async () => {
     rowHeight: 8,
     invalidStartIndex: 0,
   }
-  await EditorCompletion.open(editor)
+  await EditorCompletion.openCompletion(editor)
   await EditorCommandCursorCharacterRight.cursorCharacterRight(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
@@ -757,7 +757,7 @@ test.skip('open - cursor changes to column right - matches no word', async () =>
     rowHeight: 8,
     invalidStartIndex: 0,
   }
-  await EditorCompletion.open(editor)
+  await EditorCompletion.openCompletion(editor)
   await EditorCommandCursorCharacterRight.cursorCharacterRight(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [

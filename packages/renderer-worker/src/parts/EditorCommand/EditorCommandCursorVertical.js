@@ -70,12 +70,7 @@ const getNewSelections = (selections) => {
   return EditorSelection.map(selections, moveSelectionWithoutIntlSegmenter)
 }
 
-export const editorCommandCursorVertical = (
-  editor,
-  getPosition,
-  getEdgePosition,
-  delta
-) => {
+export const cursorVertical = (editor, getPosition, getEdgePosition, delta) => {
   // if (TextSegmenter.supported()) {
   //   return editorCursorsVerticalWithIntlSegmenter(
   //     editor,
