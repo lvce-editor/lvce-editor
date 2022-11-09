@@ -1,7 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
-import * as Css from '../Css/Css.js'
-import * as Platform from '../Platform/Platform.js'
 
 export const state = {
   instances: Object.create(null),
@@ -12,15 +10,6 @@ export const state = {
 
 export const mount = ($Parent, state) => {
   $Parent.replaceChildren(state.$Viewlet)
-}
-
-export const load = async (id, ...args) => {
-  const module = await ViewletModule.load(id)
-  state.modules[id] = module
-  state.instances[id] = {
-    state: module.create(...args),
-    factory: module,
-  }
 }
 
 export const create = (id) => {
@@ -101,6 +90,7 @@ const isSpecial = (id) => {
 }
 
 const createPlaceholder = (viewletId, parentId, top, left, width, height) => {
+  console.log('create placeholder', viewletId)
   const $PlaceHolder = document.createElement('div')
   $PlaceHolder.className = `Viewlet ${viewletId}`
   $PlaceHolder.style.top = `${top}px`
@@ -178,6 +168,11 @@ export const replace = () => {
 export const handleError = (id, parentId, message) => {
   console.info(`[viewlet-error] ${id}: ${message}`)
   const instance = state.instances[id]
+  console.log({ ...state.instances })
+  if (instance && instance.state.$Viewlet.isConnected) {
+    console.log('is connected')
+    instance.state.$Viewlet.remove()
+  }
   if (instance && instance.factory && instance.factory.handleError) {
     instance.factory.handleError(instance.state, message)
     return
@@ -195,15 +190,6 @@ export const handleError = (id, parentId, message) => {
     parentInstance.factory.handleError(instance.state, message)
     return
   }
-}
-
-/**
- * @deprecated
- */
-export const hydrate = (id, ...args) => {
-  const module = state.modules[id]
-  const instanceState = module.create(...args)
-  state.instances[id] = { state: instanceState, factory: module }
 }
 
 /**
