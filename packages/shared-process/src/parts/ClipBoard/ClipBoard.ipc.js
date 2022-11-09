@@ -1,6 +1,8 @@
 import * as ClipBoard from './ClipBoard.js'
 
+export const name = 'ClipBoard'
+
 export const Commands = {
-  'ClipBoard.readFiles': ClipBoard.readFiles,
-  'ClipBoard.writeFiles': ClipBoard.writeFiles,
+  readFiles: ClipBoard.readFiles,
+  writeFiles: ClipBoard.writeFiles,
 }

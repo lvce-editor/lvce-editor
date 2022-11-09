@@ -1,5 +1,7 @@
 import * as Native from './Native.js'
 
+export const name = 'Native'
+
 export const Commands = {
-  'Native.openFolder': Native.openFolder,
+  openFolder: Native.openFolder,
 }
