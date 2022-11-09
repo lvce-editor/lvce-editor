@@ -58,3 +58,24 @@ test('format - error', async () => {
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith(new TypeError('x is not a function'))
 })
+
+test('format', async () => {
+  // @ts-ignore
+  Format.format.mockImplementation(() => {
+    return 'b'
+  })
+  const editor = {
+    lines: ['a'],
+    primarySelectionIndex: 0,
+    selections: new Uint32Array([0, 0, 0, 0]),
+    top: 10,
+    left: 20,
+    rowHeight: 10,
+    columnWidth: 8,
+    lineCache: [],
+    undoStack: [],
+  }
+  expect(await EditorFormat.format(editor)).toMatchObject({
+    lines: ['b'],
+  })
+})

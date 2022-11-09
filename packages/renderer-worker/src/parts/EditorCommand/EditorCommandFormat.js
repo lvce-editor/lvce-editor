@@ -11,10 +11,22 @@ export const format = async (editor) => {
       console.warn('something is wrong with format on save', newContent)
       return editor
     }
+    const { lines } = editor
+    const { length } = lines
+    const lineLength = lines[length - 1].length
     const documentEdits = [
       {
+        start: {
+          rowIndex: 0,
+          columnIndex: 0,
+        },
+        end: {
+          rowIndex: length,
+          columnIndex: lineLength,
+        },
         type: /* replace */ 3,
-        text: newContent,
+        inserted: [newContent],
+        deleted: [''],
       },
     ]
     return Editor.scheduleDocumentAndCursorsSelections(editor, documentEdits)

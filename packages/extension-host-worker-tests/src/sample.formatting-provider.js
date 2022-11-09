@@ -14,11 +14,8 @@ test('sample.formatting-provider', async () => {
   await Editor.format()
 
   // assert
-  const overlayMessage = Locator('.EditorOverlayMessage')
-  await expect(overlayMessage).toBeVisible()
-  await expect(overlayMessage).toHaveText(
-    'Error: Failed to execute formatting provider: oops'
-  )
+  const editorRow = Locator('.EditorRow')
+  await expect(editorRow).toHaveText('b')
 })
 
 export {}

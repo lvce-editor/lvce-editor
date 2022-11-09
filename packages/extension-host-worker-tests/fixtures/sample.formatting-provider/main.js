@@ -1,7 +1,7 @@
 const formattingProvider = {
   languageId: 'xyz',
   format(textDocument, offset) {
-    const text = textDocument.lines.join('\n')
+    const { text } = textDocument
     return text.replaceAll('a', 'b')
   },
 }

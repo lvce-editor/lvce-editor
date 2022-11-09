@@ -8,8 +8,8 @@ export const executeFormattingProvider = (editor) => {
     method: 'ExtensionHostFormatting.executeFormattingProvider',
     args: [],
     noProviderFoundMessage: 'No formatting provider found',
-    combineResults() {
-      return ''
+    combineResults(results) {
+      return results[0]
     },
   })
 }
