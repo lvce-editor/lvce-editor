@@ -4,6 +4,6 @@ export const name = 'ExtensionMeta'
 
 // prettier-ignore
 export const Commands = {
-  'ExtensionMeta.addNodeExtension': ExtensionMeta.addNodeExtension,
-  'ExtensionMeta.addWebExtension': ExtensionMeta.addWebExtension,
+  addNodeExtension: ExtensionMeta.addNodeExtension,
+  addWebExtension: ExtensionMeta.addWebExtension,
 }
