@@ -10,6 +10,7 @@ import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/Ext
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
+import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
 import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.js'
 
 const getFn = (method) => {
@@ -47,6 +48,8 @@ const getFn = (method) => {
       return ExtensionHostDefinition.executeDefinitionProvider
     case 'ExtensionHost.sourceControlGetChangedFiles':
       return ExtensionHostSourceControl.getChangedFiles
+    case 'ExtensionHostFormatting.executeFormattingProvider':
+      return ExtensionHostFormatting.executeFormattingProvider
     default:
       throw new Error(`[extension-host-worker] method not found: ${method}`)
   }

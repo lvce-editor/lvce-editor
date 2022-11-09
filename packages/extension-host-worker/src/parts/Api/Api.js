@@ -13,19 +13,6 @@ import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHo
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 
 // prettier-ignore
-export const createCommandMap = () => {
-  return {
-    'ExtensionHostExtension.activate': ExtensionHostExtension.activate,
-    'ExtensionHostExtension.enableExtension': ExtensionHostExtension.activate,
-    'Reference.execute': ExtensionHostReference.executeReferenceProvider,
-    'References.execute': ExtensionHostReference.executeReferenceProvider,
-    'ExtensionHostCompletion.execute': ExtensionHostCompletion.executeCompletionProvider,
-    'ExtensionHostTextDocument.syncFull': TextDocument.syncFull,
-    'ExtensionHostTypeDefinition.executeTypeDefinitionProvider': ExtensionHostTypeDefinition.executeTypeDefinitionProvider,
-  }
-}
-
-// prettier-ignore
 export const create = () => {
   return {
     // Brace Completion

@@ -43,10 +43,11 @@ const ensureError = (input) => {
   return input
 }
 
-export const create = ({ name, resultShape }) => {
+export const create = ({ name, resultShape, executeKey = '' }) => {
   const providers = Object.create(null)
   const multipleResults = resultShape.type === 'array'
-  const methodName = multipleResults ? `provide${name}s` : `provide${name}`
+  const methodName =
+    executeKey || (multipleResults ? `provide${name}s` : `provide${name}`)
   return {
     [`register${name}Provider`](provider) {
       providers[provider.languageId] = provider
