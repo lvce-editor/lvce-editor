@@ -59,7 +59,7 @@ test.skip('open', async () => {
     openingReason: 0,
   })
   setActiveEditor(EMPTY_EDITOR)
-  await EditorCompletion.open()
+  await EditorCompletion.openCompletion()
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
     836,
     0,
@@ -111,7 +111,7 @@ test.skip('close on blur', async () => {
     openingReason: 0,
   })
   setActiveEditor(EMPTY_EDITOR)
-  await EditorCompletion.open()
+  await EditorCompletion.openCompletion()
   EditorBlur.blur(EMPTY_EDITOR)
   expect(RendererProcess.state.send).toHaveBeenCalledWith([835])
 })
@@ -136,7 +136,7 @@ test.skip('selectIndex', async () => {
     }
   })
   Editor.state.activeEditor = EMPTY_EDITOR
-  await EditorCompletion.open()
+  await EditorCompletion.openCompletion()
   EditorCompletion.selectIndex(0)
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
     836,
@@ -208,14 +208,14 @@ test.skip('selectIndex', async () => {
   })
   // Edi
   Editor.state.activeEditor = EMPTY_EDITOR
-  await EditorCompletion.open()
+  await EditorCompletion.openCompletion()
   EditorCompletion.selectIndex(0)
   expect(RendererProcess.state.send).toHaveBeenLastCalledWith(2, [835])
 })
 
 test.skip('selectCurrent', async () => {
   SharedProcess.state.send = jest.fn()
-  await EditorCompletion.open()
+  await EditorCompletion.openCompletion()
   await EditorCompletion.selectCurrent()
   expect(RendererProcess.state.send).toHaveBeenLastCalledWith(1, [835])
 })
