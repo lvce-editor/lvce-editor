@@ -527,6 +527,7 @@ export const load = async (
           /* id */ viewlet.id
         )
       }
+      commands.push([kCreate, viewlet.id, viewlet.parentId])
       commands.push([
         kSetBounds,
         viewlet.id,
