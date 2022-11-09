@@ -1,7 +1,9 @@
 const Developer = require('./ElectronDeveloper.js')
 
+exports.name = 'ElectronDeveloper'
+
 // prettier-ignore
 exports.Commands =  {
-  'ElectronDeveloper.crashMainProcess': Developer.crashMainProcess,
-  'ElectronDeveloper.getPerformanceEntries': Developer.getPerformanceEntries,
+  crashMainProcess: Developer.crashMainProcess,
+  getPerformanceEntries: Developer.getPerformanceEntries,
 }

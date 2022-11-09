@@ -1,5 +1,7 @@
 const ElectronMenu = require('./ElectronMenu.js')
 
+exports.name = 'ElectronMenu'
+
 exports.Commands = {
-  'ElectronMenu.openContextMenu': ElectronMenu.openContextMenu,
+  openContextMenu: ElectronMenu.openContextMenu,
 }

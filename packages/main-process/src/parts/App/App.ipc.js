@@ -1,5 +1,7 @@
 const App = require('./App.js')
 
+exports.name = 'App'
+
 exports.Commands = {
-  'App.exit': App.exit,
+  exit: App.exit,
 }

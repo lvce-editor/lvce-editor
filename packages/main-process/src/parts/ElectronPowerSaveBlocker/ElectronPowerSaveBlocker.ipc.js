@@ -1,6 +1,8 @@
 const ElectronPowerSaveBlocker = require('./ElectronPowerSaveBlocker.js')
 
+exports.name = 'ElectronPowerSaveBlocker'
+
 exports.Commands = {
-  'ElectronPowerSaveBlocker.start': ElectronPowerSaveBlocker.start,
-  'ElectronPowerSaveBlocker.stop': ElectronPowerSaveBlocker.stop,
+  start: ElectronPowerSaveBlocker.start,
+  stop: ElectronPowerSaveBlocker.stop,
 }

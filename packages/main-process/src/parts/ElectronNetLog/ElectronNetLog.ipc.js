@@ -1,7 +1,9 @@
 const ElectronNetLog = require('./ElectronNetLog.js')
 
+exports.name = 'ElectronNetLog'
+
 // prettier-ignore
 exports.Commands = {
-  'ElectronNetLog.startLogging': ElectronNetLog.startLogging,
-  'ElectronNetLog.stopLogging': ElectronNetLog.stopLogging,
+  startLogging: ElectronNetLog.startLogging,
+  stopLogging: ElectronNetLog.stopLogging,
 }
