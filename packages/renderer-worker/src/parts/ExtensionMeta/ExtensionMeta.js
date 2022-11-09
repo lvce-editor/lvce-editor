@@ -65,10 +65,35 @@ const getStaticWebExtensions = () => {
   return Command.execute('Ajax.getJson', webExtensionsUrl)
 }
 
+const getWebExtensionsWeb = async () => {
+  const staticWebExtensions = await getStaticWebExtensions()
+  return [...staticWebExtensions, ...state.webExtensions]
+}
+
+const isWebExtension = (extension) => {
+  return extension && typeof extension.browser === 'string'
+}
+
+const getWebExtensionsDefault = async () => {
+  const staticWebExtensions = await getStaticWebExtensions()
+  const sharedProcessExtensions = await getSharedProcessExtensions()
+  const sharedProcessWebExtensions =
+    sharedProcessExtensions.filter(isWebExtension)
+  return [
+    ...staticWebExtensions,
+    sharedProcessWebExtensions,
+    ...state.webExtensions,
+  ]
+}
+
 const getWebExtensions = async () => {
   try {
-    const staticWebExtensions = await getStaticWebExtensions()
-    return [...staticWebExtensions, ...state.webExtensions]
+    switch (Platform.platform) {
+      case PlatformType.Web:
+        return getWebExtensionsWeb()
+      default:
+        return getWebExtensionsDefault()
+    }
   } catch {
     return state.webExtensions
   }
