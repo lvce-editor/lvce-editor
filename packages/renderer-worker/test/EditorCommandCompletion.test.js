@@ -143,7 +143,7 @@ test.skip('open - cursor changes to row above', async () => {
     invalidStartIndex: 0,
   }
   await EditorCompletion.openCompletion(editor)
-  await EditorCommandCursorUp.cursorsUp(editor)
+  await EditorCommandCursorUp.cursorUp(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,

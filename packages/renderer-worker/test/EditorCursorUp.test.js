@@ -7,7 +7,7 @@ test('editorCursorUp - at start of file', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(EditorCursorUp.cursorsUp(editor)).toMatchObject({
+  expect(EditorCursorUp.cursorUp(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })
@@ -18,7 +18,7 @@ test('editorCursorUp - one line below top', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(1, 0, 1, 0),
   }
-  expect(EditorCursorUp.cursorsUp(editor)).toMatchObject({
+  expect(EditorCursorUp.cursorUp(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })
@@ -29,7 +29,7 @@ test('editorCursorUp - with selection', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 1),
   }
-  expect(EditorCursorUp.cursorsUp(editor)).toMatchObject({
+  expect(EditorCursorUp.cursorUp(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })
@@ -40,7 +40,7 @@ test.skip('editorCursorUp - with emoji - 👮🏽‍♀️', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(1, 21, 1, 21),
   }
-  expect(EditorCursorUp.cursorsUp(editor)).toMatchObject({
+  expect(EditorCursorUp.cursorUp(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 3, 0, 3),
   })
 })
@@ -51,7 +51,7 @@ test.skip('editorCursorUp - line above is shorter', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(1, 4, 1, 4),
   }
-  expect(EditorCursorUp.cursorsUp(editor)).toMatchObject({
+  expect(EditorCursorUp.cursorUp(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 1, 0, 1), // TODO with virtual space, this would be 0,4
   })
 })
