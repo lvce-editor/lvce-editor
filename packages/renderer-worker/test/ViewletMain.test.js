@@ -109,7 +109,7 @@ test('openUri - no editors exist', async () => {
   )
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     3,
-    'Viewlet.load',
+    'Viewlet.loadModule',
     'EditorText'
   )
   // expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, [

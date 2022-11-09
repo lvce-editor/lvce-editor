@@ -7,7 +7,6 @@ export const Commands = {
   'Viewlet.focus': Viewlet.focus,
   'Viewlet.handleError': Viewlet.handleError,
   'Viewlet.invoke': Viewlet.invoke,
-  'Viewlet.load': Viewlet.load,
   'Viewlet.loadModule': Viewlet.loadModule,
   'Viewlet.refresh': Viewlet.refresh,
   'Viewlet.send': Viewlet.invoke,

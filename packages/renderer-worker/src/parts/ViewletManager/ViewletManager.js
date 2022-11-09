@@ -420,7 +420,7 @@ export const load = async (
     if (viewlet.show === false) {
     } else {
       await RendererProcess.invoke(
-        /* Viewlet.load */ kLoad,
+        /* Viewlet.loadModule */ kLoadModule,
         /* id */ viewlet.id
       )
     }
@@ -523,18 +523,19 @@ export const load = async (
       const commands = []
       if (state < ViewletState.RendererProcessViewletLoaded) {
         await RendererProcess.invoke(
-          /* Viewlet.load */ kLoad,
+          /* Viewlet.loadModule */ kLoadModule,
           /* id */ viewlet.id
         )
       }
-      commands.push([kCreate, viewlet.id])
-      if (state < ViewletState.Appended && viewlet.parentId) {
-        commands.push([
-          /* Viewlet.append */ kAppendViewlet,
-          /* parentId */ viewlet.parentId,
-          /* id */ viewlet.id,
-        ])
-      }
+      commands.push([kCreate, viewlet.id, viewlet.parentId])
+      commands.push([
+        kSetBounds,
+        viewlet.id,
+        viewlet.left,
+        viewlet.top,
+        viewlet.width,
+        viewlet.height,
+      ])
       commands.push([
         /* viewlet.handleError */ kHandleError,
         /* id */ viewlet.id,
