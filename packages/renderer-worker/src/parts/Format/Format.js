@@ -2,6 +2,7 @@ import * as Editor from '../Editor/Editor.js'
 import * as Platform from '../Platform/Platform.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as ExtensionHostFormatting from '../ExtensionHost/ExtensionHostFormatting.js'
 
 // TODO format should be executed in parallel with saving
 // -> fast save, no need to wait for formatting
@@ -37,9 +38,8 @@ const onDidSaveEditor = async (editor) => {
   Editor.scheduleDocumentAndCursorsSelections(editor, documentEdits)
 }
 
-export const hydrate = async () => {
-  if (Platform.platform === PlatformType.Web) {
-  }
-  // TODO check preferences if format on save is enabled
-  // EditorSave.onDidSave(onDidSaveEditor)
+export const format = async (editor) => {
+  const formatted = await ExtensionHostFormatting.executeFormattingProvider(
+    editor
+  )
 }

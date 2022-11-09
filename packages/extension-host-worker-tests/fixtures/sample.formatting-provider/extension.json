@@ -1,0 +1,10 @@
+{
+  "browser": "main.js",
+  "activation": ["onFormat:xyz"],
+  "languages": [
+    {
+      "id": "xyz",
+      "extensions": [".xyz"]
+    }
+  ]
+}
