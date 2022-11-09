@@ -9,7 +9,12 @@ export const state = {
 const initializeModule = (module) => {
   if (module.Commands) {
     for (const [key, value] of Object.entries(module.Commands)) {
-      register(key, value)
+      if (module.name) {
+        const actualKey = `${module.name}.${key}`
+        register(actualKey, value)
+      } else {
+        register(key, value)
+      }
     }
     return
   }
