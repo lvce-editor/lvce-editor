@@ -1,5 +1,7 @@
 import * as ErrorHandling from './ErrorHandling.js'
 
+export const name = 'ErrorHandling'
+
 export const Commands = {
-  'ErrorHandling.handleError': ErrorHandling.handleError,
+  handleError: ErrorHandling.handleError,
 }
