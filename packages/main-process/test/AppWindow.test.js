@@ -1,87 +1,74 @@
 beforeEach(() => {
   jest.resetModules()
+  jest.resetAllMocks()
 })
 
-afterEach(() => {
-  require('../src/parts/AppWindowStates/AppWindowStates.js').state.windows = []
+jest.mock('../src/parts/AppWindowStates/AppWindowStates.js', () => {
+  return {
+    state: {
+      windows: [],
+    },
+    add: jest.fn(),
+  }
+})
+
+jest.mock('electron', () => {
+  const EventEmitter = require('events')
+  return {
+    session: {
+      fromPartition() {
+        return {
+          webRequest: {
+            onHeadersReceived() {},
+          },
+          protocol: {
+            registerFileProtocol() {},
+          },
+          setPermissionRequestHandler() {},
+          setPermissionCheckHandler() {},
+        }
+      },
+    },
+    screen: {
+      getPrimaryDisplay() {
+        return {
+          bounds: {
+            width: 10,
+            height: 10,
+          },
+        }
+      },
+    },
+    BrowserWindow: class extends EventEmitter {
+      async loadURL() {
+        throw new Error(`ERR_FAILED (-2) loading 'lvce-oss://-'`)
+      }
+    },
+  }
 })
 
 const AppWindowStates = require('../src/parts/AppWindowStates/AppWindowStates.js')
 
-test.skip('createAppWindow', async () => {
-  jest.mock('electron', () => {
-    const EventEmitter = require('events')
-    return {
-      session: {
-        fromPartition() {
-          return {
-            webRequest: {
-              onHeadersReceived() {},
-            },
-            protocol: {
-              registerFileProtocol() {},
-            },
-            setPermissionRequestHandler() {},
-            setPermissionCheckHandler() {},
-          }
-        },
-      },
-      screen: {
-        getPrimaryDisplay() {
-          return {
-            bounds: {
-              width: 10,
-              height: 10,
-            },
-          }
-        },
-      },
-      BrowserWindow: class extends EventEmitter {
-        async loadURL() {}
-      },
-    }
-  })
-  const AppWindow = require('../src/parts/AppWindow/AppWindow.js')
+const AppWindow = require('../src/parts/AppWindow/AppWindow.js')
+const electron = require('electron')
+const { EventEmitter } = require('node:events')
+
+test('createAppWindow', async () => {
+  // @ts-ignore
+  electron.BrowserWindow = class extends EventEmitter {
+    async loadURL() {}
+  }
   await AppWindow.createAppWindow([], '')
-  expect(AppWindowStates.state.windows).toHaveLength(1)
+  expect(AppWindowStates.add).toHaveBeenCalledTimes(1)
 })
 
 test('createAppWindow - error', async () => {
-  jest.mock('electron', () => {
-    const EventEmitter = require('events')
-    return {
-      session: {
-        fromPartition() {
-          return {
-            webRequest: {
-              onHeadersReceived() {},
-            },
-            protocol: {
-              registerFileProtocol() {},
-            },
-            setPermissionRequestHandler() {},
-            setPermissionCheckHandler() {},
-          }
-        },
-      },
-      screen: {
-        getPrimaryDisplay() {
-          return {
-            bounds: {
-              width: 10,
-              height: 10,
-            },
-          }
-        },
-      },
-      BrowserWindow: class extends EventEmitter {
-        async loadURL() {
-          throw new Error(`ERR_FAILED (-2) loading 'lvce-oss://-'`)
-        }
-      },
+  // @ts-ignore
+  electron.BrowserWindow = class extends EventEmitter {
+    async loadURL() {
+      throw new Error(`ERR_FAILED (-2) loading 'lvce-oss://-'`)
     }
-  })
-  const AppWindow = require('../src/parts/AppWindow/AppWindow.js')
+  }
   // TODO error message should be improved
   await expect(AppWindow.createAppWindow([], '')).rejects.toThrowError(
     new Error(
