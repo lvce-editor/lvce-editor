@@ -1,11 +1,13 @@
 import * as ElectronWindow from './ElectronWindow.js'
 
+export const name = 'ElectronWindow'
+
 export const Commands = {
-  'ElectronWindow.close': ElectronWindow.close,
-  'ElectronWindow.maximize': ElectronWindow.maximize,
-  'ElectronWindow.minimize': ElectronWindow.minimize,
-  'ElectronWindow.toggleDevtools': ElectronWindow.toggleDevtools,
-  'ElectronWindow.unmaximize': ElectronWindow.unmaximize,
-  'ElectronWindow.zoomIn': ElectronWindow.zoomIn,
-  'ElectronWindow.zoomOut': ElectronWindow.zoomOut,
+  close: ElectronWindow.close,
+  maximize: ElectronWindow.maximize,
+  minimize: ElectronWindow.minimize,
+  toggleDevtools: ElectronWindow.toggleDevtools,
+  unmaximize: ElectronWindow.unmaximize,
+  zoomIn: ElectronWindow.zoomIn,
+  zoomOut: ElectronWindow.zoomOut,
 }

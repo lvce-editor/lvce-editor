@@ -1,6 +1,8 @@
 import * as IndexedDb from './IndexedDb.js'
 
+export const name = 'IndexedDb'
+
 export const Commands = {
-  'IndexedDb.addHandle': IndexedDb.addHandle,
-  'IndexedDb.getHandle': IndexedDb.getHandle,
+  addHandle: IndexedDb.addHandle,
+  getHandle: IndexedDb.getHandle,
 }

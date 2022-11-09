@@ -1,7 +1,9 @@
 import * as ElectronMenu from './ElectronMenu.js'
 
+export const name = 'ElectronMenu'
+
 // prettier-ignore
 export const Commands = {
-  'ElectronMenu.handleMenuClose': ElectronMenu.handleMenuClose,
-  'ElectronMenu.handleSelect': ElectronMenu.handleSelect,
+  handleMenuClose: ElectronMenu.handleMenuClose,
+  handleSelect: ElectronMenu.handleSelect,
 }

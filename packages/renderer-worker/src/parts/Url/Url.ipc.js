@@ -1,6 +1,8 @@
 import * as Url from './Url.js'
 
+export const name = 'Url'
+
 export const Commands = {
-  'Url.createObjectUrl': Url.createObjectUrl,
-  'Url.revokeObjectUrl': Url.revokeObjectUrl,
+  createObjectUrl: Url.createObjectUrl,
+  revokeObjectUrl: Url.revokeObjectUrl,
 }
