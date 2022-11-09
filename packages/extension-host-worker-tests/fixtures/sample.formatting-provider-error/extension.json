@@ -1,6 +1,6 @@
 {
   "browser": "main.js",
-  "activation": ["onFormat:xyz"],
+  "activation": ["onFormatting:xyz"],
   "languages": [
     {
       "id": "xyz",

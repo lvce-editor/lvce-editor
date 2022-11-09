@@ -6,5 +6,6 @@ const formattingProvider = {
 }
 
 export const activate = () => {
+  console.log('active formatt')
   vscode.registerFormattingProvider(formattingProvider)
 }

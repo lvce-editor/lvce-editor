@@ -14,6 +14,8 @@ export const execute = ({
   noProviderFoundMessage,
   noProviderFoundResult = undefined,
 }) => {
+  const eventa = `${event}:${editor.languageId}`
+  console.log({ method, eventa })
   return ExtensionHostShared.executeProviders({
     event: `${event}:${editor.languageId}`,
     method: method,

@@ -1,26 +1,19 @@
 import * as Editor from '../Editor/Editor.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as Format from '../Format/Format.js'
 
+// TODO only transfer incremental edits from shared process
+// TODO also format with cursor
 export const format = async (editor) => {
-  // Editor.sync(editor)
-  // console.log(textDocument)
-  // TODO only transfer incremental edits from shared process
-  // TODO also format with cursor
-  const newContent = await SharedProcess.invoke(
-    /* ExtensionHost.format */ 'ExtensionHost.format',
-    /* textDocumentId */ editor.textDocument.id
-  )
+  const newContent = await Format.format(editor)
   if (typeof newContent !== 'string') {
     console.warn('something is wrong with format on save', newContent)
-    return
+    return editor
   }
-  console.log({ newContent })
-  // TODO use  incremental edit
   const documentEdits = [
     {
       type: /* replace */ 3,
       text: newContent,
     },
   ]
-  Editor.scheduleDocumentAndCursorsSelections(editor, documentEdits)
+  return Editor.scheduleDocumentAndCursorsSelections(editor, documentEdits)
 }

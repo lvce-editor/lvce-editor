@@ -9,7 +9,7 @@ export const executeFormattingProvider = (editor) => {
     args: [],
     noProviderFoundMessage: 'No formatting provider found',
     combineResults() {
-      return []
+      return ''
     },
   })
 }

@@ -8,7 +8,9 @@ export const executeProviders = async ({
   noProviderFoundResult,
   combineResults,
 }) => {
+  console.log('start active')
   const extensionHosts = await ExtensionHostManagement.activateByEvent(event)
+  console.log('finish active', event, extensionHosts.length)
   if (extensionHosts.length === 0) {
     return noProviderFoundResult ?? undefined
   }
