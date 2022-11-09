@@ -90,7 +90,6 @@ const isSpecial = (id) => {
 }
 
 const createPlaceholder = (viewletId, parentId, top, left, width, height) => {
-  console.log('create placeholder', viewletId)
   const $PlaceHolder = document.createElement('div')
   $PlaceHolder.className = `Viewlet ${viewletId}`
   $PlaceHolder.style.top = `${top}px`
@@ -168,9 +167,7 @@ export const replace = () => {
 export const handleError = (id, parentId, message) => {
   console.info(`[viewlet-error] ${id}: ${message}`)
   const instance = state.instances[id]
-  console.log({ ...state.instances })
   if (instance && instance.state.$Viewlet.isConnected) {
-    console.log('is connected')
     instance.state.$Viewlet.remove()
   }
   if (instance && instance.factory && instance.factory.handleError) {
