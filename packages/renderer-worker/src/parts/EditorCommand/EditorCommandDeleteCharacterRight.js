@@ -7,3 +7,5 @@ export const deleteCharacterRight = (editor) => {
     EditorDelta.characterRight
   )
 }
+
+export const deleteRight = deleteCharacterRight
