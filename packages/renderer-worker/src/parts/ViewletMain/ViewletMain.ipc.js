@@ -10,6 +10,7 @@ export const Commands = {
   closeOthers: ViewletMain.closeOthers,
   closeTabsLeft: ViewletMain.closeTabsLeft,
   closeTabsRight: ViewletMain.closeTabsRight,
+  focus: ViewletMain.focus,
   focusFirst: ViewletMain.focusFirst,
   focusLast: ViewletMain.focusLast,
   focusNext: ViewletMain.focusNext,
