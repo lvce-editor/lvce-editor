@@ -32,7 +32,6 @@ const getId = (extension) => {
 }
 
 export const activate = async (extension) => {
-  console.log('activating ', extension)
   try {
     Assert.string(extension.path)
     Assert.string(extension.browser)
