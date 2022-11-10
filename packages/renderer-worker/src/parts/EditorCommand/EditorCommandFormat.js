@@ -2,6 +2,16 @@ import * as Editor from '../Editor/Editor.js'
 import * as Format from '../Format/Format.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
 
+const expectedErrorMessage = `Failed to execute formatting provider: FormattingError:`
+
+const isFormattingError = (error) => {
+  return (
+    error &&
+    error instanceof Error &&
+    error.message.startsWith(expectedErrorMessage)
+  )
+}
+
 // TODO only transfer incremental edits from shared process
 // TODO also format with cursor
 export const format = async (editor) => {
@@ -31,6 +41,14 @@ export const format = async (editor) => {
     ]
     return Editor.scheduleDocumentAndCursorsSelections(editor, documentEdits)
   } catch (error) {
+    if (isFormattingError(error)) {
+      // @ts-ignore
+      console.error(
+        `Formatting Error:`,
+        error.message.slice(expectedErrorMessage.length)
+      )
+      return editor
+    }
     console.error(error)
     const displayErrorMessage = `${error}`
     await EditorShowMessage.editorShowMessage(
