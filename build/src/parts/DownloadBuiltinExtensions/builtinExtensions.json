@@ -87,12 +87,12 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "0.0.8"
+    "version": "0.0.9"
   },
   {
     "name": "builtin.language-basics-json",
     "repository": "github.com/lvce-editor/language-basics-json",
-    "version": "0.0.15"
+    "version": "0.0.17"
   },
   {
     "name": "builtin.language-basics-julia",
