@@ -1,12 +1,15 @@
 import * as Assert from '../Assert/Assert.js'
-import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
 const getSelectionFromChange = (change) => {
-  if (change.inserted.length === 1) {
+  const { start, inserted, end } = change
+  const startRowIndex = start.rowIndex
+  const startColumnIndex = start.columnIndex
+  const insertedLength = inserted.length
+  if (insertedLength === 1) {
     const newPosition = {
-      rowIndex: change.start.rowIndex + change.inserted.length - 1,
-      columnIndex: change.inserted.at(-1).length + change.start.columnIndex,
+      rowIndex: startRowIndex + insertedLength - 1,
+      columnIndex: inserted.at(-1).length + startColumnIndex,
     }
     return {
       start: newPosition,
@@ -14,8 +17,8 @@ const getSelectionFromChange = (change) => {
     }
   }
   const newPosition = {
-    rowIndex: change.start.rowIndex + change.inserted.length - 1,
-    columnIndex: change.inserted.at(-1).length,
+    rowIndex: startRowIndex + insertedLength - 1,
+    columnIndex: inserted.at(-1).length,
   }
   return {
     start: newPosition,
