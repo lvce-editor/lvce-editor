@@ -39,7 +39,7 @@ export const create = (id, uri, left, top, width, height) => {
     maxLineY: 0,
     deltaY: 0,
     headerHeight: 61, // TODO
-    itemHeight: 20,
+    itemHeight: 22,
     scrollBarHeight: 0,
     minimumSliderSize: 20, // TODO this should be the same for all components
   }
