@@ -56,7 +56,7 @@ const create$Row = () => {
   $Row.className = 'TreeItem'
   const $LabelText = document.createTextNode('')
   const $Label = document.createElement('div')
-  $Label.className = 'TreeItemLabel'
+  $Label.className = 'Label'
   $Label.append($LabelText)
   const $Icon = document.createElement('i')
   $Row.append($Icon, $Label)

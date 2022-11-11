@@ -9,6 +9,6 @@ export const Commands = {
   setValue: ViewletSearch.setValue,
 }
 
-export const Css = '/css/parts/ViewletSearch.css'
+export const Css = ['/css/parts/ViewletSearch.css', '/css/parts/Label.css']
 
 export * from './ViewletSearch.js'

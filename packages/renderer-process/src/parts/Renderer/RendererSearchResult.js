@@ -1,6 +1,6 @@
 export const renderTemplate = () => {
   const label = document.createElement('div')
-  label.className = 'SearchResultLabel'
+  label.className = 'Label'
   const root = document.createElement('div')
   root.className = 'ListItem SearchResults'
   // @ts-ignore
