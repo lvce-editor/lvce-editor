@@ -27,16 +27,27 @@ export const create = () => {
   // TODO onclick vs onmousedown, should be consistent in whole application
   $SearchResults.onmousedown = ViewletSearchEvents.handleClick
   $SearchResults.oncontextmenu = ViewletSearchEvents.handleContextMenu
+  $SearchResults.onwheel = ViewletSearchEvents.handleWheel
+
+  const $ScrollBarThumb = document.createElement('div')
+  $ScrollBarThumb.className = 'ScrollBarThumb'
+
+  const $ScrollBar = document.createElement('div')
+  $ScrollBar.className = 'ScrollBarSmall'
+  $ScrollBar.onpointerdown = ViewletSearchEvents.handleScrollBarPointerDown
+  $ScrollBar.append($ScrollBarThumb)
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Search'
-  $Viewlet.append($SearchHeader, $SearchResults)
+  $Viewlet.append($SearchHeader, $SearchResults, $ScrollBar)
 
   return {
     $Viewlet,
     $ViewletSearchInput,
     $SearchResults,
     $SearchStatus,
+    $ScrollBar,
+    $ScrollBarThumb,
   }
 }
 
@@ -133,9 +144,10 @@ const render$Rows = ($Rows, rowInfos) => {
 export const setResults = (state, results) => {
   Assert.object(state)
   Assert.array(results)
+  const { $SearchResults } = state
   // TODO should recycle nodes when rendering only search results
   // maybe could also recycle node from noResults and vice versa
-  render$Rows(state.$SearchResults, results)
+  render$Rows($SearchResults, results)
 }
 
 export const setMessage = (state, message) => {
@@ -150,3 +162,5 @@ export const setValue = (state, value) => {
 }
 
 export const dispose = () => {}
+
+export * from '../ViewletScrollable/ViewletScrollable.js'

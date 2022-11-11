@@ -1,5 +1,6 @@
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
 export const handleInput = (event) => {
   const $Target = event.target
@@ -72,5 +73,52 @@ export const handleContextMenu = (event) => {
       return handleContextMenuKeyboard(event)
     default:
       return handleContextMenuMouse(event)
+  }
+}
+
+export const handleScrollBarThumbPointerMove = (event) => {
+  const { clientY } = event
+  RendererWorker.send(
+    /* Search.handleScrollBarMouseMove */ 'Search.handleScrollBarMove',
+    /* y */ clientY
+  )
+}
+
+export const handleScrollBarPointerUp = (event) => {
+  const { target, pointerId } = event
+  target.releasePointerCapture(pointerId)
+  target.removeEventListener('pointermove', handleScrollBarThumbPointerMove)
+  target.removeEventListener('pointerup', handleScrollBarPointerUp)
+}
+
+export const handleScrollBarPointerDown = (event) => {
+  const { target, pointerId, clientY } = event
+  target.setPointerCapture(pointerId)
+  target.addEventListener('pointermove', handleScrollBarThumbPointerMove, {
+    passive: false,
+  })
+  target.addEventListener('pointerup', handleScrollBarPointerUp)
+  RendererWorker.send(
+    /* Search.handleScrollBarPointerDown */ 'Search.handleScrollBarClick',
+    /* y */ clientY
+  )
+}
+
+export const handleWheel = (event) => {
+  switch (event.deltaMode) {
+    case WheelEventType.DomDeltaLine:
+      RendererWorker.send(
+        /* ViewletSearch.handleWheel */ 'Search.handleWheel',
+        /* deltaY */ event.deltaY
+      )
+      break
+    case WheelEventType.DomDeltaPixel:
+      RendererWorker.send(
+        /* ViewletSearch.handleWheel */ 'Search.handleWheel',
+        /* deltaY */ event.deltaY
+      )
+      break
+    default:
+      break
   }
 }

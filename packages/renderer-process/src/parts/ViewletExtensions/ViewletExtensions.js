@@ -5,10 +5,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
-import * as ViewletSizeMap from '../ViewletSizeMap/ViewletSizeMap.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
-import * as ViewletSizable from '../ViewletSizable/ViewletSizable.js'
-import * as ViewletScrollable from '../ViewletScrollable/ViewletScrollable.js'
 
 export const name = 'Extensions'
 

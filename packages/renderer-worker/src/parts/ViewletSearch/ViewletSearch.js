@@ -8,6 +8,7 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as SearchResultType from '../SearchResultType/SearchResultType.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
 export const name = ViewletModuleId.Search
 
@@ -34,6 +35,13 @@ export const create = (id, uri, left, top, width, height) => {
     width,
     height,
     items: [],
+    minLineY: 0,
+    maxLineY: 0,
+    deltaY: 0,
+    headerHeight: 61, // TODO
+    itemHeight: 20,
+    scrollBarHeight: 0,
+    minimumSliderSize: 20, // TODO this should be the same for all components
   }
 }
 
@@ -88,17 +96,34 @@ const getResultCounts = (results) => {
 
 export const setValue = async (state, value) => {
   try {
+    const { height, itemHeight, minimumSliderSize, headerHeight } = state
     const root = Workspace.state.workspacePath
     const results = await TextSearch.textSearch(root, value)
     const displayResults = toDisplayResults(results)
     const resultCount = getResultCounts(results)
     const fileResultCount = results.length
     const message = getStatusMessage(resultCount, fileResultCount)
+    const total = displayResults.length
+    const contentHeight = total * itemHeight
+    const listHeight = height - headerHeight
+    console.log({ height, contentHeight, minimumSliderSize })
+    const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
+      height,
+      contentHeight,
+      minimumSliderSize
+    )
+    const numberOfVisible = Math.ceil(listHeight / itemHeight)
+    const maxLineY = Math.min(numberOfVisible, total)
+    const finalDeltaY = Math.max(contentHeight - listHeight, 0)
+    console.log({ scrollBarHeight })
     return {
       ...state,
       value,
       items: displayResults,
       message,
+      maxLineY: maxLineY,
+      scrollBarHeight,
+      finalDeltaY,
     }
   } catch (error) {
     return {
@@ -284,18 +309,52 @@ export const resize = (state, dimensions) => {
 
 export const hasFunctionalRender = true
 
+const getVisible = (state) => {
+  const { minLineY, maxLineY, items } = state
+  return items.slice(minLineY, maxLineY)
+}
+
 const renderItems = {
   isEqual(oldState, newState) {
-    return oldState.items === newState.items
+    return (
+      oldState.items === newState.items &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY
+    )
   },
   apply(oldState, newState) {
+    const visible = getVisible(newState)
     return [
       /* viewletSend */ 'Viewlet.send',
-      /* id */ 'Search',
+      /* id */ ViewletModuleId.Search,
       /* method */ 'setResults',
-      /* results */ newState.items,
-      /* resultCount */ newState.items.length,
-      /* fileCount */ newState.fileCount,
+      /* results */ visible,
+    ]
+  },
+}
+
+const renderScrollBar = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.negativeMargin === newState.negativeMargin &&
+      oldState.deltaY === newState.deltaY &&
+      oldState.height === newState.height &&
+      oldState.finalDeltaY === newState.finalDeltaY
+    )
+  },
+  apply(oldState, newState) {
+    const scrollBarY = ScrollBarFunctions.getScrollBarY(
+      newState.deltaY,
+      newState.finalDeltaY,
+      newState.height - newState.headerHeight,
+      newState.scrollBarHeight
+    )
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ ViewletModuleId.Search,
+      /* method */ 'setScrollBar',
+      /* scrollBarY */ scrollBarY,
+      /* scrollBarHeight */ newState.scrollBarHeight,
     ]
   },
 }
@@ -307,7 +366,7 @@ const renderMessage = {
   apply(oldState, newState) {
     return [
       /* viewletSend */ 'Viewlet.send',
-      /* id */ 'Search',
+      /* id */ ViewletModuleId.Search,
       /* method */ 'setMessage',
       /* message */ newState.message,
     ]
@@ -321,11 +380,11 @@ const renderValue = {
   apply(oldState, newState) {
     return [
       /* viewletSend */ 'Viewlet.send',
-      /* id */ 'Search',
+      /* id */ ViewletModuleId.Search,
       /* method */ 'setValue',
       /* value */ newState.value,
     ]
   },
 }
 
-export const render = [renderItems, renderMessage, renderValue]
+export const render = [renderItems, renderMessage, renderValue, renderScrollBar]
