@@ -54,12 +54,12 @@ test('event - click', () => {
   ])
   // @ts-ignore
   RendererWorker.send.mockImplementation(() => {})
-  const { $SearchResults } = state
+  const { $ListItems } = state
   const event = new Event('mousedown', {
     bubbles: true,
     cancelable: true,
   })
-  $SearchResults.children[0].dispatchEvent(event)
+  $ListItems.children[0].dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith('Search.handleClick', 0)
 })
@@ -80,7 +80,8 @@ test('event - contextmenu - activated via keyboard', () => {
     button: -1,
     cancelable: true,
   })
-  state.$SearchResults.dispatchEvent(event)
+  const { $ListItems } = state
+  $ListItems.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
@@ -104,7 +105,8 @@ test('event - contextmenu - activated via mouse', () => {
     button: MouseEventType.LeftClick,
     cancelable: true,
   })
-  state.$SearchResults.dispatchEvent(event)
+  const { $ListItems } = state
+  $ListItems.dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
