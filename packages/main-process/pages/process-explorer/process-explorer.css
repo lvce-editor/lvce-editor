@@ -34,11 +34,27 @@ body {
 }
 
 .Row[aria-expanded] td:first-child::before {
-  content: '> ';
+  content: '';
+  width: 1em;
+  aspect-ratio: 1;
+  background: currentColor;
+  display: inline-block;
+  -webkit-mask-image: url(../../../../static/icons/chevron-down.svg);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  mask-position: center;
+  -webkit-mask-size: 85%;
+  mask-size: 85%;
+  vertical-align: middle;
+  line-height: normal;
 }
 
 .Row[aria-expanded='false'] td:first-child::before {
-  content: '< ';
+  -webkit-mask-image: url(../../../../static/icons/chevron-right.svg);
+}
+
+.Cell {
 }
 
 .Row:focus,
