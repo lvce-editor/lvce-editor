@@ -106,7 +106,6 @@ export const setValue = async (state, value) => {
     const total = displayResults.length
     const contentHeight = total * itemHeight
     const listHeight = height - headerHeight
-    console.log({ height, contentHeight, minimumSliderSize })
     const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
       height,
       contentHeight,
@@ -115,7 +114,6 @@ export const setValue = async (state, value) => {
     const numberOfVisible = Math.ceil(listHeight / itemHeight)
     const maxLineY = Math.min(numberOfVisible, total)
     const finalDeltaY = Math.max(contentHeight - listHeight, 0)
-    console.log({ scrollBarHeight })
     return {
       ...state,
       value,

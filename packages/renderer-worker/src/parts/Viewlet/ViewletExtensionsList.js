@@ -58,7 +58,6 @@ export const loadContent = async (state) => {
     MINIMUM_SLIDER_SIZE
   )
 
-  console.log({ scrollBarHeight })
   return {
     ...state,
     maxLineY: Math.round(listHeight / ITEM_HEIGHT),

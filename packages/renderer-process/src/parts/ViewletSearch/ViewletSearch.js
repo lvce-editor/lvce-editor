@@ -150,7 +150,6 @@ const render$Rows = ($Rows, rowInfos) => {
 export const setResults = (state, results) => {
   Assert.object(state)
   Assert.array(results)
-  console.log({ results })
   const { $ListItems } = state
   // TODO should recycle nodes when rendering only search results
   // maybe could also recycle node from noResults and vice versa
