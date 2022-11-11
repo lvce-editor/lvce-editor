@@ -15,7 +15,7 @@ const getNewPercent = (state, relativeY) => {
   return 1
 }
 
-export const editorHandleScrollBarMove = (state, y) => {
+export const handleScrollBarMove = (state, y) => {
   const { top, finalDeltaY, handleOffset } = state
   const relativeY = y - top - handleOffset
   const newPercent = getNewPercent(state, relativeY)

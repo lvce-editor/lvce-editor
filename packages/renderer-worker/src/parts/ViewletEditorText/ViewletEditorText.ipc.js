@@ -52,6 +52,7 @@ export const LazyCommands = {
   handleMouseMoveWithAltKey: () => import('../EditorCommand/EditorCommandHandleMouseMoveWithAltKey.js'),
   handleNativeSelectionChange: () => import('../EditorCommand/EditorCommandHandleNativeSelectionChange.js'),
   handleScrollBarClick: () => import('../EditorCommand/EditorCommandHandleScrollBarPointerDown.js'),
+  handleScrollBarPointerDown: () => import('../EditorCommand/EditorCommandHandleScrollBarPointerDown.js'),
   handleScrollBarMove: () => import('../EditorCommand/EditorCommandHandleScrollBarMove.js'),
   handleSingleClick: () => import('../EditorCommand/EditorCommandHandleSingleClick.js'),
   handleTab: () => import('../EditorCommand/EditorCommandHandleTab.js'),
