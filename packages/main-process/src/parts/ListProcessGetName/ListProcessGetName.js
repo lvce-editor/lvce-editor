@@ -56,6 +56,9 @@ exports.getName = (pid, cmd, rootPid) => {
   if (cmd.includes('extensionHostMain.js')) {
     return 'extension-host'
   }
+  if (cmd.includes('ptyHostMain.js')) {
+    return 'pty-host'
+  }
   if (cmd.includes('--lvce-window-kind=process-explorer')) {
     return 'process-explorer'
   }
