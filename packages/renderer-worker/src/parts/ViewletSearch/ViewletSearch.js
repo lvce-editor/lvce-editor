@@ -99,8 +99,8 @@ export const setValue = async (state, value) => {
     const { height, itemHeight, minimumSliderSize, headerHeight } = state
     const root = Workspace.state.workspacePath
     const results = await TextSearch.textSearch(root, value)
-    const displayResults = toDisplayResults(results, itemHeight)
     const resultCount = getResultCounts(results)
+    const displayResults = toDisplayResults(results, itemHeight, resultCount)
     const fileResultCount = results.length
     const message = getStatusMessage(resultCount, fileResultCount)
     const total = displayResults.length
@@ -182,11 +182,11 @@ const compareResults = (resultA, resultB) => {
   return Compare.compareString(pathA, pathB)
 }
 
-const toDisplayResults = (results, itemHeight) => {
+const toDisplayResults = (results, itemHeight, resultCount) => {
   results.sort(compareResults)
   const displayResults = []
-  let i = 0
-  const setSize = results.length
+  let i = -1
+  const setSize = resultCount
   for (const result of results) {
     i++
     const path = getPath(result)
@@ -198,7 +198,7 @@ const toDisplayResults = (results, itemHeight) => {
       type: SearchResultType.File,
       text: baseName,
       icon: IconTheme.getFileIcon({ name: baseName }),
-      posInSet: i,
+      posInSet: i + 1,
       setSize,
       top: i * itemHeight,
     })
@@ -209,7 +209,7 @@ const toDisplayResults = (results, itemHeight) => {
         type: SearchResultType.Preview,
         text: preview.preview,
         icon: '',
-        posInSet: i,
+        posInSet: i + 1,
         setSize,
         top: i * itemHeight,
       })
