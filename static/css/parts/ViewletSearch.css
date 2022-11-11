@@ -18,6 +18,10 @@
   height: 100%;
 }
 
+.Search .TreeItem {
+  position: absolute;
+}
+
 /* TODO duplicate code with explorer.css */
 
 .TreeItem {

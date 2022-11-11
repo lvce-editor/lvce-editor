@@ -91,6 +91,7 @@ const render$Row = ($Row, rowInfo) => {
   $Row.ariaPosInSet = `${rowInfo.posInSet}`
   $Row.ariaLabel = rowInfo.name
   $Row.ariaDescription = ''
+  $Row.style.top = `${rowInfo.top}px`
   switch (rowInfo.type) {
     // TODO type should be a number for efficiency
     case DirentType.Directory:
@@ -149,6 +150,7 @@ const render$Rows = ($Rows, rowInfos) => {
 export const setResults = (state, results) => {
   Assert.object(state)
   Assert.array(results)
+  console.log({ results })
   const { $ListItems } = state
   // TODO should recycle nodes when rendering only search results
   // maybe could also recycle node from noResults and vice versa
@@ -167,5 +169,17 @@ export const setValue = (state, value) => {
 }
 
 export const dispose = () => {}
+
+// TODO duplicate code with extensions list
+
+export const setContentHeight = (state, height) => {
+  const { $ListItems } = state
+  $ListItems.style.height = `${height}px`
+}
+
+export const setNegativeMargin = (state, negativeMargin) => {
+  const { $ListItems } = state
+  $ListItems.style.top = `${negativeMargin}px`
+}
 
 export * from '../ViewletScrollable/ViewletScrollable.js'

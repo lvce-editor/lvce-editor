@@ -99,7 +99,7 @@ export const setValue = async (state, value) => {
     const { height, itemHeight, minimumSliderSize, headerHeight } = state
     const root = Workspace.state.workspacePath
     const results = await TextSearch.textSearch(root, value)
-    const displayResults = toDisplayResults(results)
+    const displayResults = toDisplayResults(results, itemHeight)
     const resultCount = getResultCounts(results)
     const fileResultCount = results.length
     const message = getStatusMessage(resultCount, fileResultCount)
@@ -184,11 +184,13 @@ const compareResults = (resultA, resultB) => {
   return Compare.compareString(pathA, pathB)
 }
 
-const toDisplayResults = (results) => {
+const toDisplayResults = (results, itemHeight) => {
   results.sort(compareResults)
   const displayResults = []
+  let i = 0
+  const setSize = results.length
   for (const result of results) {
-    console.log({ result })
+    i++
     const path = getPath(result)
     const previews = getPreviews(result)
     const absolutePath = Workspace.getAbsolutePath(path)
@@ -198,13 +200,20 @@ const toDisplayResults = (results) => {
       type: SearchResultType.File,
       text: baseName,
       icon: IconTheme.getFileIcon({ name: baseName }),
+      posInSet: i,
+      setSize,
+      top: i * itemHeight,
     })
     for (const preview of previews) {
+      i++
       displayResults.push({
         title: preview.preview,
         type: SearchResultType.Preview,
         text: preview.preview,
         icon: '',
+        posInSet: i,
+        setSize,
+        top: i * itemHeight,
       })
     }
   }
@@ -359,6 +368,22 @@ const renderScrollBar = {
   },
 }
 
+const renderHeight = {
+  isEqual(oldState, newState) {
+    return oldState.items.length === newState.items.length
+  },
+  apply(oldState, newState) {
+    const { itemHeight } = newState
+    const contentHeight = newState.items.length * itemHeight
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ ViewletModuleId.Search,
+      /* method */ 'setContentHeight',
+      /* contentHeight */ contentHeight,
+    ]
+  },
+}
+
 const renderMessage = {
   isEqual(oldState, newState) {
     return oldState.message === newState.message
@@ -387,4 +412,25 @@ const renderValue = {
   },
 }
 
-export const render = [renderItems, renderMessage, renderValue, renderScrollBar]
+const renderNegativeMargin = {
+  isEqual(oldState, newState) {
+    return oldState.deltaY === newState.deltaY
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ ViewletModuleId.Search,
+      /* method */ 'setNegativeMargin',
+      /* negativeMargin */ -newState.deltaY,
+    ]
+  },
+}
+
+export const render = [
+  renderItems,
+  renderMessage,
+  renderValue,
+  renderScrollBar,
+  renderHeight,
+  renderNegativeMargin,
+]

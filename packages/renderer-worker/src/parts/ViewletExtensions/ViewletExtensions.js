@@ -81,6 +81,7 @@ export const loadContent = async (state) => {
     itemHeight
   )
 
+  console.log({ viewObjects })
   const listHeight = getListHeight(state)
   const total = viewObjects.length
   const contentHeight = total * itemHeight
@@ -264,7 +265,6 @@ export const handleInput = async (state, value) => {
       return state
     }
     const items = filterExtensions(extensions, parsedValue, itemHeight)
-    const displayExtensions = toDisplayExtensions(items)
     return {
       ...state,
       extensions,
