@@ -6,7 +6,7 @@ const getNewSelections = (line, rowIndex) => {
   return new Uint32Array([rowIndex, 0, rowIndex, line.length])
 }
 
-export const editorSelectLine = (editor) => {
+export const selectLine = (editor) => {
   const selections = editor.selections
   const rowIndex = selections[editor.primarySelectionIndex]
   const line = TextDocument.getLine(editor, rowIndex)

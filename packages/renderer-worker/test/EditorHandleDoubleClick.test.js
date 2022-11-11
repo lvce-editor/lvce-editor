@@ -16,7 +16,7 @@ test('editorHandleDoubleClick - with selection', () => {
     maxLineY: 100,
   }
   expect(
-    EditorHandleDoubleClick.editorHandleDoubleClick(editor, 21, 11, 4)
+    EditorHandleDoubleClick.handleDoubleClick(editor, 21, 11, 4)
   ).toMatchObject({
     lines: ['line 1', 'line 2'],
     selections: EditorSelection.fromRange(0, 0, 0, 4),
@@ -36,7 +36,7 @@ test.skip('editorHandleDoubleClick - no word to select', () => {
   }
   // TODO should select whitespace
   expect(
-    EditorHandleDoubleClick.editorHandleDoubleClick(editor, 68, 11)
+    EditorHandleDoubleClick.handleDoubleClick(editor, 68, 11)
   ).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })

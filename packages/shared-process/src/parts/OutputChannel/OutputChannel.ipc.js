@@ -42,7 +42,9 @@ const close = (socket, id) => {
   delete state.outputChannels[id]
 }
 
+export const name = 'OutputChannel'
+
 export const Commands = {
-  'OutputChannel.close': close,
-  'OutputChannel.open': open,
+  close: close,
+  open: open,
 }

@@ -26,7 +26,6 @@ exports.showOpenDialog = async (title, properties) => {
   if (result.canceled || result.filePaths.length !== 1) {
     return
   }
-  console.log(result)
   // TODO maybe return whole result (including canceled or not)
   return result.filePaths
 }

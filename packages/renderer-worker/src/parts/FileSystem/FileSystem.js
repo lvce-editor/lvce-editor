@@ -10,6 +10,7 @@ import * as FileSystemGitHub from './FileSystemGitHub.js'
 import * as FileSystemHtml from './FileSystemHtml.js'
 import * as FileSystemMemory from './FileSystemMemory.js'
 import * as FileSystemWeb from './FileSystemWeb.js'
+import * as EncodingType from '../EncodingType/EncodingType.js'
 
 // TODO when it rejects, it should throw a custom error,
 // FileSystemError
@@ -53,11 +54,11 @@ const getPath = (protocol, uri) => {
   return uri.slice(protocol.length + PROTOCOL_POST_FIX_LENGTH)
 }
 
-export const readFile = (uri) => {
+export const readFile = (uri, encoding = EncodingType.Utf8) => {
   const protocol = getProtocol(uri)
   const path = getPath(protocol, uri)
   const fileSystem = getFileSystem(protocol)
-  return fileSystem.readFile(path)
+  return fileSystem.readFile(path, encoding)
 }
 
 export const remove = async (uri) => {
@@ -82,11 +83,15 @@ export const mkdir = async (uri) => {
   await fileSystem.mkdir(path)
 }
 
-export const writeFile = async (uri, content, encoding = 'utf8') => {
+export const writeFile = async (uri, content, encoding = EncodingType.Utf8) => {
   const protocol = getProtocol(uri)
   const path = getPath(protocol, uri)
   const fileSystem = getFileSystem(protocol)
   await fileSystem.writeFile(path, content, encoding)
+}
+
+export const createFile = (uri) => {
+  return writeFile(uri, '')
 }
 
 export const readDirWithFileTypes = (uri) => {

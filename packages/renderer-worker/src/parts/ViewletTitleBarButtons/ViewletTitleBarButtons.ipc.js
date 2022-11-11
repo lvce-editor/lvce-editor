@@ -1,18 +1,11 @@
-import * as ViewletTitleBarButtons from './ViewletTitleBarButtons.js'
-import * as LazyCommand from '../LazyCommand/LazyCommand.js'
+// prettier-ignore
+export const Commands = {}
 
 // prettier-ignore
-const Imports = {
-  HandleClickClose: () => import('./ViewletTitleBarButtonsHandleClickClose.js'),
-  HandleClickMinimize: () => import('./ViewletTitleBarButtonsHandleClickMinimize.js'),
-  HandleClickToggleMaximize: () => import('./ViewletTitleBarButtonsHandleClickToggleMaximize.js'),
-}
-
-// prettier-ignore
-export const Commands = {
-  'TitleBarButtons.handleClickClose': LazyCommand.create(ViewletTitleBarButtons.name, Imports.HandleClickClose, 'handleClickClose'),
-  'TitleBarButtons.handleClickMinimize': LazyCommand.create(ViewletTitleBarButtons.name, Imports.HandleClickMinimize, 'handleClickMinimize'),
-  'TitleBarButtons.handleClickToggleMaximize': LazyCommand.create(ViewletTitleBarButtons.name, Imports.HandleClickToggleMaximize, 'handleClickToggleMaximize'),
+export const LazyCommands = {
+  handleClickClose: () => import('./ViewletTitleBarButtonsHandleClickClose.js'),
+  handleClickMinimize: () => import('./ViewletTitleBarButtonsHandleClickMinimize.js'),
+  handleClickToggleMaximize: () => import('./ViewletTitleBarButtonsHandleClickToggleMaximize.js'),
 }
 
 export const Css = '/css/parts/ViewletTitleBarButtons.css'

@@ -25,7 +25,7 @@ test('handleScrollBarMove', () => {
     newState1,
     184
   )
-  const newState3 = EditorHandleScrollBarMove.editorHandleScrollBarMove(
+  const newState3 = EditorHandleScrollBarMove.handleScrollBarMove(
     newState2,
     190
   )
@@ -56,10 +56,7 @@ test.skip('editorHandleScrollBarMove - another test', () => {
     newState1,
     34
   )
-  const newState3 = EditorHandleScrollBarMove.editorHandleScrollBarMove(
-    newState2,
-    36
-  )
+  const newState3 = EditorHandleScrollBarMove.handleScrollBarMove(newState2, 36)
   expect(newState3.deltaY).toBe(0)
 })
 
@@ -90,7 +87,7 @@ test('editorHandleScrollBarMove - click scroll bar at top and move down', () => 
     180
   )
   // moves down 4 pixels
-  const newState3 = EditorHandleScrollBarMove.editorHandleScrollBarMove(
+  const newState3 = EditorHandleScrollBarMove.handleScrollBarMove(
     newState2,
     184
   )
@@ -124,7 +121,7 @@ test('editorHandleScrollBarMove - click scroll bar in middle and move down', () 
     200
   )
   // moves down 2 pixels
-  const newState3 = EditorHandleScrollBarMove.editorHandleScrollBarMove(
+  const newState3 = EditorHandleScrollBarMove.handleScrollBarMove(
     newState2,
     202
   )
@@ -158,7 +155,7 @@ test('editorHandleScrollBarMove - click scroll bar at bottom and move down', () 
     219
   )
   // moves down 3 pixels
-  const newState3 = EditorHandleScrollBarMove.editorHandleScrollBarMove(
+  const newState3 = EditorHandleScrollBarMove.handleScrollBarMove(
     newState2,
     222
   )

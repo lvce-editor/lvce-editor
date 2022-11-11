@@ -5,7 +5,10 @@ import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
+import * as ViewletSizeMap from '../ViewletSizeMap/ViewletSizeMap.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
+import * as ViewletSizable from '../ViewletSizable/ViewletSizable.js'
+import * as ViewletScrollable from '../ViewletScrollable/ViewletScrollable.js'
 
 export const name = 'Extensions'
 
@@ -292,13 +295,10 @@ const render$ExtensionsMore = ($ExtensionList, extensions) => {
 
 const render$Extensions = ($ExtensionList, extensions) => {
   if ($ExtensionList.children.length < extensions.length) {
-    // console.log('RENDER LESS')
     render$ExtensionsLess($ExtensionList, extensions)
   } else if ($ExtensionList.children.length === extensions.length) {
-    // console.log('RENDER EQUAL')
     render$ExtensionsEqual($ExtensionList, extensions)
   } else {
-    // console.log('RENDER MORE')
     render$ExtensionsMore($ExtensionList, extensions)
   }
 }
@@ -350,10 +350,6 @@ export const openSuggest = (state) => {
   // TODO check if already mounted
   // TODO don't append to body, have separate container for widgets (https://news.ycombinator.com/item?id=28230977)
   document.body.append(state.$ExtensionSuggestions)
-  // console.log(state.$InputBox)
-  // console.log({ x, y })
-  // console.log(state)
-  // console.log('open suggest in renderer')
 }
 
 export const closeSuggest = (state) => {
@@ -371,19 +367,5 @@ export const handleError = (state, message) => {
   state.$ExtensionList.textContent = message
 }
 
-export const setScrollBar = (state, scrollBarY, scrollBarHeight) => {
-  const { $ScrollBarThumb } = state
-  $ScrollBarThumb.style.top = `${scrollBarY}px`
-  $ScrollBarThumb.style.height = `${scrollBarHeight}px`
-}
-
-export const setSize = (state, size) => {
-  const { $Viewlet } = state
-  if (size === 'Small') {
-    $Viewlet.classList.remove('Normal')
-    $Viewlet.classList.add('Small')
-  } else {
-    $Viewlet.classList.remove('Small')
-    $Viewlet.classList.add('Normal')
-  }
-}
+export * from '../ViewletScrollable/ViewletScrollable.js'
+export * from '../ViewletSizable/ViewletSizable.js'

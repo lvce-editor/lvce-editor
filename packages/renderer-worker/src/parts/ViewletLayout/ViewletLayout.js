@@ -11,6 +11,7 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as SashDirectionType from '../SashDirectionType/SashDirectionType.js'
 
 const kWindowWidth = 0
 const kWindowHeight = 1
@@ -335,8 +336,7 @@ const getSavedPoints = (savedState) => {
 }
 
 export const loadContent = (state, savedState) => {
-  console.log({ savedState })
-  const { Layout, LocalStorage } = savedState
+  const { Layout } = savedState
   const { bounds } = Layout
   const { windowWidth, windowHeight } = bounds
   const sideBarLocation = getSideBarLocationType()
@@ -366,7 +366,7 @@ export const loadContent = (state, savedState) => {
   }
 }
 
-const show = async (state, module) => {
+const show = async (state, module, currentViewletId) => {
   const { points } = state
   const { kVisible, kTop, kLeft, kWidth, kHeight, moduleId } = module
   const newPoints = new Uint16Array(points)
@@ -376,19 +376,26 @@ const show = async (state, module) => {
   const left = newPoints[kLeft]
   const width = newPoints[kWidth]
   const height = newPoints[kHeight]
-  const commands = await ViewletManager.load({
-    getModule: ViewletModule.load,
-    id: moduleId,
-    type: 0,
-    // @ts-ignore
-    uri: '',
-    show: false,
-    focus: false,
-    top,
-    left,
-    width,
-    height,
-  })
+  const commands = await ViewletManager.load(
+    {
+      getModule: ViewletModule.load,
+      id: moduleId,
+      type: 0,
+      // @ts-ignore
+      uri: '',
+      show: false,
+      focus: false,
+      top,
+      left,
+      width,
+      height,
+    },
+    false,
+    false,
+    {
+      currentViewletId,
+    }
+  )
   if (commands) {
     commands.push(['Viewlet.append', 'Layout', moduleId])
   }
@@ -422,13 +429,13 @@ const hide = (state, module) => {
   }
 }
 
-const toggle = (state, module) => {
+const toggle = (state, module, moduleId) => {
   const { points } = state
   const { kVisible } = module
   if (points[kVisible]) {
     return hide(state, module)
   }
-  return show(state, module)
+  return show(state, module, moduleId)
 }
 
 export const showSideBar = (state) => {
@@ -451,8 +458,8 @@ export const hidePanel = (state) => {
   return hide(state, mPanel)
 }
 
-export const togglePanel = (state) => {
-  return toggle(state, mPanel)
+export const togglePanel = (state, moduleId = ViewletModuleId.None) => {
+  return toggle(state, mPanel, moduleId)
 }
 
 export const showActivityBar = (state) => {
@@ -830,6 +837,30 @@ const handleSashDoubleClickSideBar = (state) => {
   }
 }
 
+export const moveSideBar = (state, position) => {
+  const { points } = state
+  const newPoints = new Uint16Array(points)
+  getPoints(newPoints, newPoints, position)
+  // TODO update preferences
+  const resizeCommands = getResizeCommands(points, newPoints)
+  return {
+    newState: {
+      ...state,
+      points: newPoints,
+      sideBarLocation: position,
+    },
+    commands: resizeCommands,
+  }
+}
+
+export const moveSideBarLeft = (state) => {
+  return moveSideBar(state, SideBarLocationType.Left)
+}
+
+export const moveSideBarRight = (state) => {
+  return moveSideBar(state, SideBarLocationType.Right)
+}
+
 export const handleSashDoubleClick = (state, sashId) => {
   switch (sashId) {
     case SashType.Panel:
@@ -891,7 +922,7 @@ const renderSashes = {
         left: sideBarLeft,
         width: 4,
         height: sideBarHeight,
-        direction: 'horizontal',
+        direction: SashDirectionType.Horizontal,
       },
       {
         id: 'SashPanel',
@@ -899,7 +930,7 @@ const renderSashes = {
         left: panelLeft,
         width: panelWidth,
         height: 4,
-        direction: 'vertical',
+        direction: SashDirectionType.Vertical,
       },
     ]
   },

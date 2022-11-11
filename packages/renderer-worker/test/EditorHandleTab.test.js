@@ -62,7 +62,7 @@ test.skip('editorHandleTab - no tab completion available', async () => {
       return null
     }
   )
-  expect(await EditorHandleTab.editorHandleTab(editor)).toMatchObject({
+  expect(await EditorHandleTab.handleTab(editor)).toMatchObject({
     lines: ['a  '],
   })
 })
@@ -102,7 +102,7 @@ test.skip('editorHandleTab - tab completion available', async () => {
         throw new Error('unexpected message')
     }
   }
-  expect(await EditorHandleTab.editorHandleTab(editor)).toMatchObject({
+  expect(await EditorHandleTab.handleTab(editor)).toMatchObject({
     lines: ['bc'],
   })
 })
@@ -129,7 +129,7 @@ test.skip('editorHandleTab - indent one selection - single line', async () => {
     lineCache: [],
     undoStack: [],
   }
-  expect(await EditorHandleTab.editorHandleTab(editor)).toMatchObject({
+  expect(await EditorHandleTab.handleTab(editor)).toMatchObject({
     lines: ['  '],
     cursor: {
       rowIndex: 0,
@@ -170,7 +170,7 @@ test.skip('editorHandleTab - indent one selection - multiple lines', async () =>
       },
     ],
   }
-  expect(await EditorHandleTab.editorHandleTab(editor)).toMatchObject({
+  expect(await EditorHandleTab.handleTab(editor)).toMatchObject({
     lines: ['line 1', '  line 2', '  line 3', 'line 4'],
     selections: [
       {

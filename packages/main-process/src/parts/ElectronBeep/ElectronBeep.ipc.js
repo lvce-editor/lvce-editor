@@ -1,5 +1,7 @@
 const Beep = require('./ElectronBeep.js')
 
+exports.name = 'ElectronBeep'
+
 exports.Commands = {
-  'ElectronBeep.beep': Beep.beep,
+  beep: Beep.beep,
 }

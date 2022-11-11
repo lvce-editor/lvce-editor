@@ -1,10 +1,12 @@
 import * as Preferences from './Preferences.js'
 
+export const name = 'Preferences'
+
 // prettier-ignore
 export const Commands = {
-  'Preferences.hydrate': Preferences.hydrate,
-  'Preferences.openKeyBindingsJson': Preferences.openKeyBindingsJson,
-  'Preferences.openSettingsJson': Preferences.openSettingsJson,
   // TODO is this needed?
   // TODO rename to openKeyBindingsJson -> similar to openSettingsJson
+  hydrate: Preferences.hydrate,
+  openKeyBindingsJson: Preferences.openKeyBindingsJson,
+  openSettingsJson: Preferences.openSettingsJson,
 }

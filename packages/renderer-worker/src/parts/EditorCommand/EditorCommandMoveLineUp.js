@@ -2,7 +2,7 @@ import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Editor from '../Editor/Editor.js'
 
 // TODO handle multiple cursors
-export const editorMoveLineUp = (editor) => {
+export const moveLineUp = (editor) => {
   const rowIndex = editor.cursor.rowIndex
   if (rowIndex === 0) {
     return

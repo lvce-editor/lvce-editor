@@ -7,7 +7,6 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletElectron from './ViewletElectron.js'
-import * as Css from '../Css/Css.js'
 
 export const focus = async (id) => {
   const instance = ViewletStates.getInstance(id)
@@ -147,7 +146,9 @@ export const disposeFunctional = (id) => {
     if (!instance.factory) {
       throw new Error(`${id} is missing a factory function`)
     }
-    instance.factory.dispose(instance.state)
+    if (instance.factory.dispose) {
+      instance.factory.dispose(instance.state)
+    }
     instance.status = 'disposed'
     ViewletStates.remove(id)
     return [[/* Viewlet.dispose */ 'Viewlet.dispose', /* id */ id]]
@@ -272,4 +273,38 @@ export const closeWidget = async (id) => {
     /* id */ id
   )
   // TODO restore focus
+}
+
+export const executeViewletCommand = async (
+  moduleId,
+  uidKey,
+  uidValue,
+  fnName,
+  ...args
+) => {
+  const instances = ViewletStates.state.instances
+  for (const instance of Object.values(instances)) {
+    if (
+      instance.factory.name === moduleId &&
+      instance.state[uidKey] === uidValue
+    ) {
+      const fn = instance.factory.Commands[fnName]
+      if (!fn) {
+        throw new Error(`Command not found ${moduleId}.${fnName}`)
+      }
+      const oldState = instance.state
+      const newState = await fn(oldState, ...args)
+      const commands = ViewletManager.render(
+        instance.factory,
+        oldState,
+        newState
+      )
+      ViewletStates.setState(moduleId, newState)
+      await RendererProcess.invoke(
+        /* Viewlet.sendMultiple */ 'Viewlet.sendMultiple',
+        /* commands */ commands
+      )
+      return
+    }
+  }
 }

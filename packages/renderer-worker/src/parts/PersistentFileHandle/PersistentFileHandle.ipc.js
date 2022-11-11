@@ -1,7 +1,9 @@
 import * as FileHandle from './PersistentFileHandle.js'
 
+export const name = 'PersistentFileHandle'
+
 export const Commands = {
-  'PersistentFileHandle.addHandle': FileHandle.addHandle,
-  'PersistentFileHandle.getHandle': FileHandle.getHandle,
-  'PersistentFileHandle.removeHandle': FileHandle.removeHandle,
+  addHandle: FileHandle.addHandle,
+  getHandle: FileHandle.getHandle,
+  removeHandle: FileHandle.removeHandle,
 }

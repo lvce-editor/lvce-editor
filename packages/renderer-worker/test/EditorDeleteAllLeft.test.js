@@ -10,7 +10,7 @@ test('editorDeleteAllLeft', () => {
     tokenizer: TokenizePlainText,
     undoStack: [],
   }
-  expect(EditorDeleteAllLeft.editorDeleteAllLeft(editor)).toMatchObject({
+  expect(EditorDeleteAllLeft.deleteAllLeft(editor)).toMatchObject({
     lines: [''],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
@@ -25,7 +25,7 @@ test('editorDeleteAllLeft in middle', () => {
     tokenizer: TokenizePlainText,
     undoStack: [],
   }
-  expect(EditorDeleteAllLeft.editorDeleteAllLeft(editor)).toMatchObject({
+  expect(EditorDeleteAllLeft.deleteAllLeft(editor)).toMatchObject({
     lines: [' 4 5'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
@@ -38,7 +38,7 @@ test.skip('editorDeleteAllLeft - with selection', () => {
     lineCache: [],
     tokenizer: TokenizePlainText,
   }
-  expect(EditorDeleteAllLeft.editorDeleteAllLeft(editor)).toMatchObject({
+  expect(EditorDeleteAllLeft.deleteAllLeft(editor)).toMatchObject({
     line: ['lne 2'],
     selections: EditorSelection.fromRange(0, 1, 0, 1),
   })
@@ -52,7 +52,7 @@ test('editorDeleteAllLeft - at start of line', () => {
     tokenizer: TokenizePlainText,
     undoStack: [],
   }
-  expect(EditorDeleteAllLeft.editorDeleteAllLeft(editor)).toMatchObject({
+  expect(EditorDeleteAllLeft.deleteAllLeft(editor)).toMatchObject({
     lines: ['12'],
     selections: EditorSelection.fromRange(0, 1, 0, 1),
   })
@@ -71,7 +71,7 @@ test('editorDeleteAllLeft - at start of file', () => {
     tokenizer: TokenizePlainText,
     undoStack: [],
   }
-  expect(EditorDeleteAllLeft.editorDeleteAllLeft(editor)).toMatchObject({
+  expect(EditorDeleteAllLeft.deleteAllLeft(editor)).toMatchObject({
     lines: ['1', '2'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })

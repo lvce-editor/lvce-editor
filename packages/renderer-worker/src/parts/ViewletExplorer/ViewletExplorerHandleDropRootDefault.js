@@ -2,6 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as FileHandleType from '../FileHandleType/FileHandleType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Path from '../Path/Path.js'
+import * as EncodingType from '../EncodingType/EncodingType.js'
 import { getChildDirents } from './ViewletExplorerShared.js'
 
 const mergeDirents = (oldDirents, newDirents) => {
@@ -38,7 +39,7 @@ const uploadFilesDefault = async (root, pathSeparator, files) => {
     }
     const content = await Command.execute('Blob.blobToBinaryString', file)
     const to = Path.join(pathSeparator, root, file.name)
-    await FileSystem.writeFile(to, content, 'binary')
+    await FileSystem.writeFile(to, content, EncodingType.Binary)
   }
   return false
 }

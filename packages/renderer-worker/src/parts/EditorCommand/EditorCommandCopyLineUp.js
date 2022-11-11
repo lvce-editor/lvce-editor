@@ -1,7 +1,7 @@
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Editor from '../Editor/Editor.js'
 
-export const editorCopyLineUp = (editor) => {
+export const copyLineUp = (editor) => {
   const rowIndex = editor.cursor.rowIndex
   const changes = [
     {

@@ -23,6 +23,9 @@ jest.unstable_mockModule(
       setIframeSrc: jest.fn(() => {
         throw new Error('not implemented')
       }),
+      resizeBrowserView: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
     }
   }
 )
@@ -70,11 +73,49 @@ test('loadContent', async () => {
     return 1
   })
   // @ts-ignore
+  ElectronBrowserViewFunctions.resizeBrowserView.mockImplementation(() => {})
+  // @ts-ignore
   ElectronBrowserViewFunctions.setIframeSrc.mockImplementation(() => {})
-  const state = ViewletSimpleBrowser.create()
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://', 0, 0, 0, 0)
   expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
     iframeSrc: 'https://example.com',
   })
+})
+
+test('loadContent - restore id - same browser view', async () => {
+  // @ts-ignore
+  ElectronBrowserView.createBrowserView.mockImplementation(() => {
+    return 1
+  })
+  // @ts-ignore
+  ElectronBrowserViewFunctions.setIframeSrc.mockImplementation(() => {})
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://1', 0, 0, 0, 0)
+  expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
+    iframeSrc: 'https://example.com',
+  })
+  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledTimes(1)
+  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(1, [])
+  expect(ElectronBrowserViewFunctions.setIframeSrc).not.toHaveBeenCalled()
+})
+
+test('loadContent - restore id - browser view does not exist yet', async () => {
+  // @ts-ignore
+  ElectronBrowserView.createBrowserView.mockImplementation(() => {
+    return 2
+  })
+  // @ts-ignore
+  ElectronBrowserViewFunctions.setIframeSrc.mockImplementation(() => {})
+  const state = ViewletSimpleBrowser.create(0, 'simple-browser://1', 0, 0, 0, 0)
+  expect(await ViewletSimpleBrowser.loadContent(state)).toMatchObject({
+    iframeSrc: 'https://example.com',
+  })
+  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledTimes(1)
+  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(1, [])
+  expect(ElectronBrowserViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
+  expect(ElectronBrowserViewFunctions.setIframeSrc).toHaveBeenCalledWith(
+    2,
+    'https://example.com'
+  )
 })
 
 // TODO handle error

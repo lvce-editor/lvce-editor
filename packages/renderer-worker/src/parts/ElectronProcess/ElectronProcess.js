@@ -4,6 +4,7 @@ import { JsonRpcError } from '../Errors/Errors.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
+import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 
 export const state = {
   /**
@@ -41,7 +42,7 @@ const restoreError = (error) => {
   if (error instanceof Error) {
     return error
   }
-  if (error.code && error.code === -32601) {
+  if (error.code && error.code === JsonRpcErrorCode.MethodNotFound) {
     console.log('create json rpc error')
     const restoredError = new JsonRpcError(error.message)
     restoredError.stack = error.stack

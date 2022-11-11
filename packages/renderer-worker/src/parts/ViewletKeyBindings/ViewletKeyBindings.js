@@ -5,6 +5,7 @@
 import * as FilterKeyBindings from '../FilterKeyBindings/FilterKeyBindings.js'
 import * as KeyBindingsInitial from '../KeyBindingsInitial/KeyBindingsInitial.js'
 import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const name = ViewletModuleId.KeyBindings
@@ -17,7 +18,6 @@ export const create = (id, uri, left, top, width, height) => {
     maxLineY: 0,
     maxVisibleItems: 0,
     rowHeight: 24,
-    deltaY: 0,
     top,
     left,
     width,
@@ -25,6 +25,9 @@ export const create = (id, uri, left, top, width, height) => {
     value: '',
     selectedIndex: -1,
     focusedIndex: -1,
+    finalDeltaY: 0,
+    deltaY: 0,
+    uri,
   }
 }
 
@@ -70,7 +73,15 @@ export const loadContent = async (state, savedState) => {
     parsedKeyBindings,
     savedValue
   )
+  const listHeight = height - searchHeaderHeight - tableHeaderHeight
+  const contentHeight = 2121
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
+    listHeight,
+    contentHeight,
+    10
+  )
   const maxLineY = Math.min(filteredKeyBindings.length, maxVisibleItems)
+  const finalDeltaY = Math.max(contentHeight - listHeight, 0)
   return {
     ...state,
     parsedKeyBindings,
@@ -78,6 +89,8 @@ export const loadContent = async (state, savedState) => {
     maxLineY,
     maxVisibleItems,
     value: savedValue,
+    scrollBarHeight,
+    finalDeltaY,
   }
 }
 

@@ -20,6 +20,7 @@ export const create = (id, uri, top, left, width, height) => {
     left,
     width,
     height,
+    size: ViewletSize.None,
   }
 }
 
@@ -44,7 +45,6 @@ const getIconSrc = (extension) => {
 }
 
 const getBaseUrl = (extensionPath) => {
-  console.log({ platform: Platform.platform })
   switch (Platform.platform) {
     case PlatformType.Remote:
     case PlatformType.Electron:
@@ -61,7 +61,6 @@ const getSize = (width) => {
   if (width < 768) {
     return ViewletSize.Normal
   }
-  console.log({ width })
   return ViewletSize.Large
 }
 

@@ -8,7 +8,7 @@ test.skip('editorIndentLess - already at start of line', () => {
     minLineY: 0,
     lineCache: [],
   }
-  expect(EditorIndentLess.editorIndentLess(editor)).toMatchObject({
+  expect(EditorIndentLess.indentLess(editor)).toMatchObject({
     lines: ['line 1'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
@@ -21,7 +21,7 @@ test.skip('editorIndentLess - indented by one space', () => {
     minLineY: 0,
     lineCache: [],
   }
-  expect(EditorIndentLess.editorIndentLess(editor)).toMatchObject({
+  expect(EditorIndentLess.indentLess(editor)).toMatchObject({
     lines: ['line 1'],
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
@@ -36,7 +36,7 @@ test('editorIndentLess - indented by two spaces', () => {
     minLineY: 0,
     undoStack: [],
   }
-  expect(EditorIndentLess.editorIndentLess(editor)).toMatchObject({
+  expect(EditorIndentLess.indentLess(editor)).toMatchObject({
     lines: ['line 1'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
@@ -48,7 +48,7 @@ test.skip('editorIndentLess - indented by tab', () => {
     selections: EditorSelection.fromRange(0, 0, 0, 0),
     minLineY: 0,
   }
-  expect(EditorIndentLess.editorIndentLess(editor)).toMatchObject({
+  expect(EditorIndentLess.indentLess(editor)).toMatchObject({
     lines: ['line 1'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })

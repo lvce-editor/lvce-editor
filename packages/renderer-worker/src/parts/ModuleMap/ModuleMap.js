@@ -94,6 +94,7 @@ export const getModuleId = (commandId) => {
       return ModuleId.Dialog
     case 'Download.downloadFile':
     case 'Download.downloadJson':
+    case 'Download.downloadToDownloadsFolder':
       return ModuleId.Download
     case 'EditorDiagnostics.hydrate':
       return ModuleId.EditorDiagnostics
@@ -103,9 +104,16 @@ export const getModuleId = (commandId) => {
     case 'EditorRename.finish':
     case 'EditorRename.open':
       return ModuleId.EditorRename
+    case 'ElectronApp.exit':
+      return ModuleId.ElectronApp
     case 'ElectronBrowserView.createBrowserViewQuickpick':
     case 'ElectronBrowserView.openBrowserViewQuickPick':
       return ModuleId.ElectronBrowserView
+    case 'ElectronClipBoard.writeText':
+      return ModuleId.ElectronClipBoard
+    case 'ElectronMenu.handleMenuClose':
+    case 'ElectronMenu.handleSelect':
+      return ModuleId.ElectronMenu
     case 'ElectronWindow.close':
     case 'ElectronWindow.maximize':
     case 'ElectronWindow.minimize':
@@ -235,6 +243,7 @@ export const getModuleId = (commandId) => {
     case 'Url.revokeObjectUrl':
       return ModuleId.Url
     case 'Viewlet.closeWidget':
+    case 'Viewlet.executeViewletCommand':
     case 'Viewlet.focus':
     case 'Viewlet.getAllStates':
     case 'Viewlet.openWidget':

@@ -1,4 +1,5 @@
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
 // prettier-ignore
 const getModule = (id) => {
@@ -43,12 +44,17 @@ const getModule = (id) => {
       return import('../MenuEntriesEditorImage/MenuEntriesEditorImage.js')
     case MenuEntryId.ExtensionDetailReadme:
       return import('../MenuEntriesExtensionDetailReadme/MenuEntriesExtensionDetailReadme.js')
+    case MenuEntryId.SimpleBrowser:
+      return import('../MenuEntriesSimpleBrowser/MenuEntriesSimpleBrowser.js')
     default:
       throw new Error(`module not found "${id}"`)
   }
 }
 
-export const getMenuEntries = async (id) => {
+export const getMenuEntries = async (id, ...args) => {
   const module = await getModule(id)
-  return module.getMenuEntries()
+  // @ts-ignore
+  const inject = module.inject || []
+  const viewletStates = inject.map(ViewletStates.getState)
+  return module.getMenuEntries(...viewletStates, ...args)
 }

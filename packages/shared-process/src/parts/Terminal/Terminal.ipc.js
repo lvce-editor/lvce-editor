@@ -37,9 +37,11 @@ const dispose = (socket, id) => {
   Terminal.dispose(id)
 }
 
+export const name = 'Terminal'
+
 export const Commands = {
-  'Terminal.create': create,
-  'Terminal.dispose': dispose,
-  'Terminal.resize': resize,
-  'Terminal.write': write,
+  create: create,
+  dispose: dispose,
+  resize: resize,
+  write: write,
 }

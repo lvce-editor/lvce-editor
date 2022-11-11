@@ -9,6 +9,7 @@ import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 export const state = {
   isQuickPickOpen: false,
@@ -72,7 +73,7 @@ export const openElectronQuickPick = async (...args) => {
     )
     const commands = ViewletManager.render(instance.factory, oldState, newState)
     ipc.send({
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       method: 'executeCommands',
       params: commands,
     })
@@ -86,7 +87,7 @@ export const openElectronQuickPick = async (...args) => {
     quickPickKeyBindings,
   ])
   ipc.send({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: 'executeCommands',
     params: commands,
   })

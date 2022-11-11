@@ -1,7 +1,7 @@
 import { jest } from '@jest/globals'
 import * as ExtensionHost from '../src/parts/ExtensionHost/ExtensionHostCore.js'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
-import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 
 beforeEach(() => {
   ExtensionHost.state.runningExtensions = []
@@ -15,21 +15,21 @@ test.skip('start', async () => {
       case 'ExtensionHost.start':
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: null,
         })
         break
       case 'ExtensionManagement.getExtensions':
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: [],
         })
         break
       case 'ExtensionHost.setWorkspaceRoot':
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: null,
         })
         break
@@ -41,13 +41,13 @@ test.skip('start', async () => {
   expect(SharedProcess.state.send).toHaveBeenCalledTimes(3)
   expect(SharedProcess.state.send).toHaveBeenNthCalledWith(1, {
     id: expect.any(Number),
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: 'ExtensionHost.start',
     params: [],
   })
   expect(SharedProcess.state.send).toHaveBeenNthCalledWith(3, {
     id: expect.any(Number),
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: 'ExtensionManagement.getExtensions',
     params: [],
   })
@@ -58,7 +58,7 @@ test.skip('start - error', async () => {
     switch (message.method) {
       case 'ExtensionHost.start':
         SharedProcess.state.receive({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           error: {
             message: 'TypeError: x is not a function',
@@ -80,21 +80,21 @@ test.skip('activateByEvent', async () => {
       case 416:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: null,
         })
         break
       case 'ExtensionHost.start':
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: null,
         })
         break
       case 'ExtensionManagement.getExtensions':
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: [
             {
               main: 'main.js',
@@ -110,7 +110,7 @@ test.skip('activateByEvent', async () => {
   expect(SharedProcess.state.send).toHaveBeenCalledTimes(4)
   expect(SharedProcess.state.send).toHaveBeenNthCalledWith(3, {
     id: expect.any(Number),
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: 416,
     params: [
       {
@@ -127,7 +127,7 @@ test.skip('activateByEvent - error', async () => {
     switch (message.method) {
       case 416:
         SharedProcess.state.receive({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           error: {
             message: 'TypeError: x is not a function',
@@ -136,7 +136,7 @@ test.skip('activateByEvent - error', async () => {
         break
       case 'ExtensionHost.start':
         SharedProcess.state.receive({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           result: null,
         })
@@ -144,7 +144,7 @@ test.skip('activateByEvent - error', async () => {
       case 'ExtensionManagement.getExtensions':
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: [
             {
               main: 'main.js',

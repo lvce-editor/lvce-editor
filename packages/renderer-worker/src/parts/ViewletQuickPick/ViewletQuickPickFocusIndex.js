@@ -21,7 +21,6 @@ export const focusIndex = async (state, index) => {
     // TODO need to scroll down
     const maxLineY = index + 1
     const minLineY = maxLineY - maxVisibleItems
-    console.log('scroll down', { index, maxLineY, maxVisibleItems, minLineY })
     return {
       ...state,
       minLineY,

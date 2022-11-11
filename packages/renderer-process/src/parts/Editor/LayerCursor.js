@@ -88,7 +88,6 @@ const renderCursorsNative = (state, cursors) => {
   let $Anchor
   for (let i = 0; i < $StartRow.children.length; i++) {
     if (startOffset >= cursor.columnIndex) {
-      console.log({ startOffset })
       $Anchor = $StartRow.children[i - 1].firstChild
       startOffset -= $Anchor.textContent.length
       startOffset = cursor.columnIndex - startOffset

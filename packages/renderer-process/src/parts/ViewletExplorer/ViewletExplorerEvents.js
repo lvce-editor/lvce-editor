@@ -85,7 +85,6 @@ export const handleBlur = (event) => {
  */
 export const handleDragOver = (event) => {
   event.dataTransfer.effectAllowed = 'copyMove'
-  // console.log('dragover', event)
   event.dataTransfer.dropEffect = 'copy'
   event.preventDefault()
   const { clientX, clientY } = event
@@ -226,4 +225,13 @@ export const handleMouseLeave = (event) => {
   //   /* Explorer.handleMouseLeave */ 'Explorer.handleMouseLeave',
   //   /* index */ index
   // )
+}
+
+export const handleEditingInput = (event) => {
+  const { target } = event
+  const { value } = target
+  RendererWorker.send(
+    /* Explorer.updateEditingValue */ 'Explorer.updateEditingValue',
+    /* value */ value
+  )
 }

@@ -242,7 +242,6 @@ export const handlePointerMove = (event) => {
       /* offset */ offset
     )
   }
-  // console.log(event.altKey)
   // RendererWorker.send(/* Editor.handleMouseMove */ 389, /* x */ x, /* y */ y)
 }
 

@@ -1,12 +1,14 @@
 import * as FileSystem from './FileSystem.js'
 
+export const name = 'FileSystem'
+
 // prettier-ignore
 export const Commands = {
-  'FileSystem.chmod': FileSystem.chmod,
-  'FileSystem.getPathSeparator': FileSystem.getPathSeparator,
-  'FileSystem.mkdir': FileSystem.mkdir,
-  'FileSystem.readDirWithFileTypes': FileSystem.readDirWithFileTypes,
-  'FileSystem.readFile': FileSystem.readFile,
-  'FileSystem.remove': FileSystem.remove,
-  'FileSystem.writeFile': FileSystem.writeFile,
+  chmod: FileSystem.chmod,
+  getPathSeparator: FileSystem.getPathSeparator,
+  mkdir: FileSystem.mkdir,
+  readDirWithFileTypes: FileSystem.readDirWithFileTypes,
+  readFile: FileSystem.readFile,
+  remove: FileSystem.remove,
+  writeFile: FileSystem.writeFile,
 }

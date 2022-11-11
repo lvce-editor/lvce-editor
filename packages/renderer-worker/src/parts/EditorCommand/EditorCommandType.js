@@ -75,7 +75,7 @@ const editorTypeWithSlashCompletion = async (editor, text) => {
 }
 
 // TODO implement typing command without brace completion -> brace completion should be independent module
-export const editorType = async (editor, text) => {
+export const type = async (editor, text) => {
   // if (isBrace(text)) {
   //   console.log('is brace')
   //   return editorTypeWithBraceCompletion(editor, text)

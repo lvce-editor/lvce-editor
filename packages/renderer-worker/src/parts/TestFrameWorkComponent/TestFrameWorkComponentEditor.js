@@ -75,3 +75,7 @@ export const openFindWidget = async () => {
 export const setDeltaY = async (deltaY) => {
   await Command.execute('Editor.setDeltaY', deltaY)
 }
+
+export const format = async () => {
+  await Command.execute('Editor.format')
+}

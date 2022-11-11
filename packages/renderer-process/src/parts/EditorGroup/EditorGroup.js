@@ -42,7 +42,6 @@ export const addOne = (state, id, uri, languageId) => {
 }
 
 export const replaceOne = (state, id, uri, languageId) => {
-  console.log('replace one')
   EditorTabs.addOne(state.$EditorTabs, id, uri, languageId)
 }
 

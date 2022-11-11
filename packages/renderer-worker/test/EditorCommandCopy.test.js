@@ -48,7 +48,7 @@ test('editorCopy', async () => {
     undoStack: [],
   }
 
-  expect(await EditorCopy.editorCopy(editor)).toBe(editor)
+  expect(await EditorCopy.copy(editor)).toBe(editor)
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy).toHaveBeenCalledWith('line 1\nline 2\nline 3')
 })
@@ -85,7 +85,7 @@ test('editorCopy - error from clipboard - document is not focused', async () => 
     scrollBarHeight: 0,
     undoStack: [],
   }
-  await expect(EditorCopy.editorCopy(editor)).rejects.toThrowError(
+  await expect(EditorCopy.copy(editor)).rejects.toThrowError(
     new DOMException('Document is not focused.')
   )
 })

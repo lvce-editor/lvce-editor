@@ -14,7 +14,7 @@ const inverseChange = (edit) => {
   }
 }
 
-export const editorUndo = (state) => {
+export const undo = (state) => {
   const { undoStack } = state
   if (undoStack.length === 0) {
     return state

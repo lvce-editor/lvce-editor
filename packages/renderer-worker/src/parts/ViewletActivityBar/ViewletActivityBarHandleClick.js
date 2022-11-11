@@ -34,7 +34,6 @@ const handleClickOther = async (state, x, y, viewletId) => {
     if (sideBarState.currentViewletId === viewletId) {
       await Command.execute('Layout.hideSideBar')
     } else {
-      console.log({ sideBarState })
       await Command.execute(
         /* SideBar.show */ 'SideBar.show',
         /* id */ viewletId

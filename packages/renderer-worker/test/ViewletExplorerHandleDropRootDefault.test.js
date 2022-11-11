@@ -1,6 +1,7 @@
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import { jest } from '@jest/globals'
 import * as FileHandleType from '../src/parts/FileHandleType/FileHandleType.js'
+import * as EncodingType from '../src/parts/EncodingType/EncodingType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -130,6 +131,6 @@ test('handleDrop - single file', async () => {
   expect(FileSystem.writeFile).toHaveBeenCalledWith(
     '/test/file-1.txt',
     'file 1 content',
-    'binary'
+    EncodingType.Binary
   )
 })

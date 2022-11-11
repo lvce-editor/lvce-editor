@@ -65,7 +65,6 @@ const create$Location = () => {
 }
 
 const render$Location = ($Location, location) => {
-  console.log({ reference: location })
   switch (location.type) {
     case 'leaf':
       $Location.className = 'TreeItem'

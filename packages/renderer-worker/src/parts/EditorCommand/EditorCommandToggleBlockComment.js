@@ -9,7 +9,6 @@ const RE_WHITESPACE_AT_END = /\s+$/
 
 const getBlockComment = async (editor) => {
   const languageConfiguration = await Languages.getLanguageConfiguration(editor)
-  console.log({ languageConfiguration })
   if (
     !languageConfiguration ||
     !languageConfiguration.comments ||
@@ -20,7 +19,7 @@ const getBlockComment = async (editor) => {
   return languageConfiguration.comments.blockComment
 }
 
-export const editorToggleBlockComment = async (editor) => {
+export const toggleBlockComment = async (editor) => {
   const blockComment = await getBlockComment(editor)
   if (!blockComment) {
     return editor

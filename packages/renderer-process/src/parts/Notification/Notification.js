@@ -47,7 +47,6 @@ const handleNotificationClick = (event) => {
     default:
       break
   }
-  console.log('notification clicked')
 }
 
 const create$NotificationWithOptions = (message, options) => {

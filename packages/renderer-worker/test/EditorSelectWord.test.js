@@ -7,7 +7,7 @@ test('editorSelectWord', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 5, 0, 5),
   }
-  expect(EditorSelectWord.editorSelectWord(editor, 0, 5)).toMatchObject({
+  expect(EditorSelectWord.selectWord(editor, 0, 5)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 5),
   })
 })
@@ -17,7 +17,7 @@ test('editorSelectWord - with numbers', () => {
     lines: ['11111', '22222'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(EditorSelectWord.editorSelectWord(editor, 0, 0)).toMatchObject({
+  expect(EditorSelectWord.selectWord(editor, 0, 0)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 5),
   })
 })
@@ -28,7 +28,7 @@ test('editorSelectWord - with umlaut', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(EditorSelectWord.editorSelectWord(editor, 0, 0)).toMatchObject({
+  expect(EditorSelectWord.selectWord(editor, 0, 0)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 4),
   })
 })
@@ -39,7 +39,7 @@ test('editorSelectWord - with accent', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(EditorSelectWord.editorSelectWord(editor, 0, 0)).toMatchObject({
+  expect(EditorSelectWord.selectWord(editor, 0, 0)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 5),
   })
 })
@@ -54,7 +54,7 @@ test('editorSelectWord - with word before', () => {
     cursor,
     selections: EditorSelection.fromRange(0, 3, 0, 3),
   }
-  expect(EditorSelectWord.editorSelectWord(editor, 0, 3)).toMatchObject({
+  expect(EditorSelectWord.selectWord(editor, 0, 3)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 3),
   })
 })
@@ -65,7 +65,7 @@ test('editorSelectWord - with word after', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 3, 0, 3),
   }
-  expect(EditorSelectWord.editorSelectWord(editor, 0, 3)).toMatchObject({
+  expect(EditorSelectWord.selectWord(editor, 0, 3)).toMatchObject({
     selections: EditorSelection.fromRange(0, 3, 0, 6),
   })
 })

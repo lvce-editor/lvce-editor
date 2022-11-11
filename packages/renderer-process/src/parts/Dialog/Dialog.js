@@ -85,7 +85,6 @@ const create$ErrorStack = (stack) => {
   //   }
   //   if (match) {
   //     const [_, path, line, column] = match
-  //     console.log({ match })
   //     const $Line = document.createElement('div')
   //     const $Link = document.createElement('a')
   //     $Link.setAttribute('target', 'noopener noreferrer')

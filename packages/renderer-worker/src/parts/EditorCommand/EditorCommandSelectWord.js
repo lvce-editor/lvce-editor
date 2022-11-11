@@ -21,7 +21,7 @@ const getNewSelections = (line, rowIndex, columnIndex) => {
   return newSelections
 }
 
-export const editorSelectWord = (editor, rowIndex, columnIndex) => {
+export const selectWord = (editor, rowIndex, columnIndex) => {
   const line = TextDocument.getLine(editor, rowIndex)
   const newSelections = getNewSelections(line, rowIndex, columnIndex)
   return Editor.scheduleSelections(editor, newSelections)

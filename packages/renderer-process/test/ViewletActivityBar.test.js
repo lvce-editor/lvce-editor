@@ -1,7 +1,7 @@
 /**
  * @jest-environment jsdom
  */
-import * as ActvityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActvityBarItemFlags.js'
+import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as ViewletActivityBar from '../src/parts/ViewletActivityBar/ViewletActivityBar.js'
 
 const getTitle = ($Element) => {
@@ -24,21 +24,21 @@ test('create', () => {
       title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Search',
       title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Button,
+      flags: ActivityBarItemFlags.Button,
     },
   ])
   expect(getSimpleList(state.$ActivityBar)).toEqual([
@@ -56,21 +56,21 @@ test('setItems', () => {
       title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Search',
       title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Button,
+      flags: ActivityBarItemFlags.Button,
     },
   ])
   ViewletActivityBar.setItems(state, [
@@ -79,21 +79,21 @@ test('setItems', () => {
       title: 'Run and Debug',
       icon: './icons/debug-alt-2.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Extensions',
       title: 'Extensions',
       icon: './icons/extensions.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Button,
+      flags: ActivityBarItemFlags.Button,
     },
   ])
   expect(getSimpleList(state.$ActivityBar)).toEqual([
@@ -111,21 +111,21 @@ test('setFocusedIndex', () => {
       title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Search',
       title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Button,
+      flags: ActivityBarItemFlags.Button,
     },
   ])
   ViewletActivityBar.setFocusedIndex(state, -1, 0, true)
@@ -149,7 +149,7 @@ test('accessibility - ActivityBarItem tab should have role tab and aria-keyshort
       title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Control+Shift+X',
     },
     {
@@ -157,14 +157,14 @@ test('accessibility - ActivityBarItem tab should have role tab and aria-keyshort
       title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Button,
+      flags: ActivityBarItemFlags.Button,
     },
   ])
   expect(state.$ActivityBar.firstChild.role).toBe('tab')
@@ -179,21 +179,21 @@ test('accessibility - ActivityBar should have role toolbar, ariaLabel and ariaOr
       title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Search',
       title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
     },
     {
       id: 'Settings',
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Button,
+      flags: ActivityBarItemFlags.Button,
     },
   ])
   expect(state.$ActivityBar.role).toBe('toolbar')
@@ -209,7 +209,7 @@ test('accessibility - ActivityBarItem button should have role button and ariaHas
       title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Ctrl+Shift+X',
     },
     {
@@ -217,7 +217,7 @@ test('accessibility - ActivityBarItem button should have role button and ariaHas
       title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Ctrl+Shift+F',
     },
     {
@@ -225,7 +225,7 @@ test('accessibility - ActivityBarItem button should have role button and ariaHas
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Button,
+      flags: ActivityBarItemFlags.Button,
       keyShortcuts: '',
     },
   ])
@@ -241,7 +241,7 @@ test('accessibility - ActivityBarItems should have ariaKeyShortcuts if applicabl
       title: 'Explorer',
       icon: './icons/files.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Ctrl+Shift+X',
     },
     {
@@ -249,7 +249,7 @@ test('accessibility - ActivityBarItems should have ariaKeyShortcuts if applicabl
       title: 'Search',
       icon: './icons/search.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Tab,
+      flags: ActivityBarItemFlags.Tab,
       keyShortcuts: 'Ctrl+Shift+F',
     },
     {
@@ -257,7 +257,7 @@ test('accessibility - ActivityBarItems should have ariaKeyShortcuts if applicabl
       title: 'Settings',
       icon: './icons/settings-gear.svg',
       enabled: true,
-      flags: ActvityBarItemFlags.Button,
+      flags: ActivityBarItemFlags.Button,
       keyShortcuts: '',
     },
   ])

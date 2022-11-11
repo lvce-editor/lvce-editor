@@ -1,4 +1,5 @@
-import * as Ipc from '../Ipc/Ipc.js'
+import * as IpcChild from '../IpcChild/IpcChild.js'
+import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 
 // import * as PrettyError from '../PrettyError/PrettyError.js'
 
@@ -52,24 +53,10 @@ const shouldPrintError = (error) => {
   return true
 }
 
-const getIpcType = (argv) => {
-  if (argv.includes('--ipc-type=websocket')) {
-    return Ipc.Methods.WebSocket
-  }
-  if (argv.includes('--ipc-type=parent')) {
-    return Ipc.Methods.ChildProcess
-  }
-  if (argv.includes('--ipc-type=worker')) {
-    return Ipc.Methods.Worker
-  }
-
-  throw new Error('[extension-host] unknown ipc type')
-}
-
 export const listen = async (InternalCommand) => {
-  const argv = process.argv.slice(2)
-  const ipcType = getIpcType(argv)
-  const ipc = await Ipc.listen(ipcType)
+  const ipc = await IpcChild.listen({
+    method: IpcChildType.Auto,
+  })
   const handleMessage = async (message) => {
     if (Array.isArray(message)) {
       for (const subMessage of message) {
@@ -113,7 +100,7 @@ export const listen = async (InternalCommand) => {
             })
             return
           }
-          ipc.send({
+          send({
             jsonrpc: '2.0',
             id: message.id,
             result: result ?? null,

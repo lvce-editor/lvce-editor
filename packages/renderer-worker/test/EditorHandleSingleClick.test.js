@@ -35,7 +35,7 @@ test('editorHandleClick', async () => {
     deltaY: 0,
   }
   expect(
-    await EditorHandleSingleClick.editorHandleSingleClick(editor, '', 21, 11, 0)
+    await EditorHandleSingleClick.handleSingleClick(editor, '', 21, 11, 0)
   ).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
@@ -56,7 +56,7 @@ test('editorHandleClick - with selection', async () => {
     deltaY: 0,
   }
   expect(
-    await EditorHandleSingleClick.editorHandleSingleClick(editor, '', 21, 11, 0)
+    await EditorHandleSingleClick.handleSingleClick(editor, '', 21, 11, 0)
   ).toMatchObject({
     lines: ['line 1', 'line 2'],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
@@ -74,7 +74,7 @@ test('editorHandleClick - with ctrl - add second cursor', async () => {
     deltaY: 0,
   }
   expect(
-    await EditorHandleSingleClick.editorHandleSingleClick(
+    await EditorHandleSingleClick.handleSingleClick(
       editor,
       ModifierKey.Ctrl,
       21,
@@ -98,7 +98,7 @@ test('editorHandleClick - with ctrl - remove second cursor', async () => {
     maxLineY: 100,
   }
   expect(
-    await EditorHandleSingleClick.editorHandleSingleClick(
+    await EditorHandleSingleClick.handleSingleClick(
       editor,
       ModifierKey.Ctrl,
       21,

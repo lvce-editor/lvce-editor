@@ -9,7 +9,6 @@ export const handleInput = (event) => {
 
 export const handleFocus = (event) => {
   const { target } = event
-  console.log('select all')
   Focus.setFocus('SimpleBrowserInput')
   setTimeout(() => {
     target.select()

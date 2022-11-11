@@ -8,7 +8,7 @@ import * as EditorPosition from './EditorCommandPosition.js'
 const handleSingleClickWithAlt = async (editor, position) => {
   // TODO rectangular selection with alt click,
   // but also go to definition with alt click
-  const newEditor = await EditorGoToDefinition.editorGoToDefinition(
+  const newEditor = await EditorGoToDefinition.goToDefinition(
     editor,
     position,
     /* explicit */ false
@@ -73,7 +73,7 @@ const getFn = (modifier) => {
   }
 }
 
-export const editorHandleSingleClick = (editor, modifier, x, y, offset) => {
+export const handleSingleClick = (editor, modifier, x, y, offset) => {
   Assert.object(editor)
   Assert.string(modifier)
   Assert.number(x)

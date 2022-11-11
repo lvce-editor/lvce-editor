@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -65,7 +66,7 @@ test('loadContent - one restored editor', async () => {
       ],
     })
   ).toEqual({
-    activeIndex: -1,
+    activeIndex: 0,
     editors: [
       {
         uri: '/test/some-file.txt',
@@ -108,7 +109,7 @@ test('openUri - no editors exist', async () => {
   )
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
     3,
-    'Viewlet.load',
+    'Viewlet.loadModule',
     'EditorText'
   )
   // expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, [
@@ -171,7 +172,7 @@ test.skip('openUri - race condition', async () => {
           for (const pendingMessage of pending) {
             SharedProcess.state.receive({
               id: message.id,
-              jsonrpc: '2.0',
+              jsonrpc: JsonRpcVersion.Two,
               result: `sample text for ${pendingMessage.params[0]}`,
             })
           }
@@ -218,7 +219,7 @@ test.skip('openUri - editor with same uri exists', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break
@@ -240,7 +241,7 @@ test.skip('openUri - editor with different uri exists', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break
@@ -279,7 +280,7 @@ test.skip('openUri - error reading file', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           error: {
             message: 'TypeError: x is not a function',
           },
@@ -308,7 +309,7 @@ test.skip('event - handleTabClick on active tab', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break
@@ -330,7 +331,7 @@ test.skip('openUri, then opening a different uri, then open the first uri again'
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break
@@ -363,7 +364,7 @@ test.skip('event - handleTabClick on another tab', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break
@@ -396,7 +397,7 @@ test.skip('focusFirst', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break
@@ -421,7 +422,7 @@ test.skip('focusLast', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break
@@ -447,7 +448,7 @@ test.skip('focusNext - in middle', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break
@@ -473,7 +474,7 @@ test.skip('focusNext - at end', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break
@@ -499,7 +500,7 @@ test.skip('focusPrevious - in middle', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break
@@ -525,7 +526,7 @@ test.skip('focusPrevious - at start', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break
@@ -551,7 +552,7 @@ test.skip('closeAllEditors', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break
@@ -576,7 +577,7 @@ test.skip('closeEditor - single editor', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break
@@ -945,7 +946,7 @@ test.skip('closeEditor - should then show editor to the left', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break
@@ -981,7 +982,7 @@ test.skip('closeFocusedTab - single editor', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break
@@ -1007,7 +1008,7 @@ test.skip('handleTabContextMenu', async () => {
       case 101:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: 'sample text',
         })
         break

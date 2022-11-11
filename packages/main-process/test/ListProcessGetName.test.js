@@ -32,6 +32,9 @@ test('getName - detect chrome devtools', () => {
             },
           },
         },
+        getBrowserViews() {
+          return []
+        },
       },
     ]
   })
@@ -53,6 +56,9 @@ test('getName - detect renderer', () => {
           getOSProcessId() {
             return 200152
           },
+        },
+        getBrowserViews() {
+          return []
         },
       },
     ]
@@ -78,4 +84,14 @@ test('getName - unknown renderer', () => {
       1
     )
   ).toBe('<unknown renderer>')
+})
+
+test('getName - detect pty host', () => {
+  // @ts-ignore
+  electron.BrowserWindow.getAllWindows.mockImplementation(() => {
+    return []
+  })
+  expect(ListProcessGetName.getName(123, 'node dist/ptyHostMain.js', 1)).toBe(
+    'pty-host'
+  )
 })

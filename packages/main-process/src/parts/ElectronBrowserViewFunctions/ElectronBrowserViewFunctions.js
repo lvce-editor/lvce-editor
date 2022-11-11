@@ -2,14 +2,16 @@ const { VError } = require('verror')
 const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
+const Assert = require('../Assert/Assert.js')
 
 exports.wrapBrowserViewCommand = (fn) => {
   const wrappedCommand = (id, ...args) => {
-    const view = ElectronBrowserViewState.get(id)
-    if (!view) {
-      console.log(`[main process] no view with id ${id}`)
+    const state = ElectronBrowserViewState.get(id)
+    if (!state) {
+      console.log(`[main process] no browser view with id ${id}`)
       return
     }
+    const { view } = state
     return fn(view, ...args)
   }
   return wrappedCommand
@@ -53,6 +55,9 @@ const setIframeSrcFallback = async (view, error) => {
 exports.setIframeSrc = async (view, iframeSrc) => {
   try {
     await view.webContents.loadURL(iframeSrc)
+    // TODO maybe have a separate function for getting title
+    const newTitle = view.webContents.getTitle()
+    return newTitle
   } catch (error) {
     try {
       await setIframeSrcFallback(view, error)
@@ -102,4 +107,51 @@ exports.forward = (view) => {
 exports.backward = (view) => {
   // TODO return promise that resolves once devtools are actually open
   view.webContents.goBack()
+}
+
+exports.show = (id) => {
+  // console.log('[main-process] show browser view', id)
+  const state = ElectronBrowserViewState.get(id)
+  if (!state) {
+    console.log('[main-process] failed to show browser view', id)
+    return
+  }
+  const { view, browserWindow } = state
+  browserWindow.addBrowserView(view)
+  // workaround for electron bug, view not being shown
+  view.setBounds(view.getBounds())
+}
+
+exports.hide = (id) => {
+  const state = ElectronBrowserViewState.get(id)
+  if (!state) {
+    console.log('[main-process] failed to hide browser view', id)
+    return
+  }
+  const { view, browserWindow } = state
+  browserWindow.removeBrowserView(view)
+}
+
+/**
+ *
+ * @param {Electron.BrowserView} view
+ * @param {number} x
+ * @param {number} y
+ */
+exports.inspectElement = (view, x, y) => {
+  Assert.number(x)
+  Assert.number(y)
+  view.webContents.inspectElement(x, y)
+}
+
+/**
+ *
+ * @param {Electron.BrowserView} view
+ * @param {number} x
+ * @param {number} y
+ */
+exports.copyImageAt = (view, x, y) => {
+  Assert.number(x)
+  Assert.number(y)
+  view.webContents.copyImageAt(x, y)
 }

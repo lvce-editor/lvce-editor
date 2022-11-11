@@ -7,11 +7,11 @@ test('editorCursorCharacterRight', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(
-    EditorCursorCharacterRight.editorCursorCharacterRight(editor)
-  ).toMatchObject({
-    selections: EditorSelection.fromRange(0, 1, 0, 1),
-  })
+  expect(EditorCursorCharacterRight.cursorCharacterRight(editor)).toMatchObject(
+    {
+      selections: EditorSelection.fromRange(0, 1, 0, 1),
+    }
+  )
 })
 
 test('editorCursorCharacterRight - with selection', () => {
@@ -20,11 +20,11 @@ test('editorCursorCharacterRight - with selection', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 1),
   }
-  expect(
-    EditorCursorCharacterRight.editorCursorCharacterRight(editor)
-  ).toMatchObject({
-    selections: EditorSelection.fromRange(0, 1, 0, 1),
-  })
+  expect(EditorCursorCharacterRight.cursorCharacterRight(editor)).toMatchObject(
+    {
+      selections: EditorSelection.fromRange(0, 1, 0, 1),
+    }
+  )
 })
 
 test.skip('editorCursorCharacterRight - at end of line', () => {
@@ -33,11 +33,11 @@ test.skip('editorCursorCharacterRight - at end of line', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 6, 0, 6),
   }
-  expect(
-    EditorCursorCharacterRight.editorCursorCharacterRight(editor)
-  ).toMatchObject({
-    selections: EditorSelection.fromRange(1, 0, 1, 0),
-  })
+  expect(EditorCursorCharacterRight.cursorCharacterRight(editor)).toMatchObject(
+    {
+      selections: EditorSelection.fromRange(1, 0, 1, 0),
+    }
+  )
 })
 
 test('editorCursorCharacterRight - emoji - 👮🏽‍♀️', () => {
@@ -46,11 +46,11 @@ test('editorCursorCharacterRight - emoji - 👮🏽‍♀️', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(
-    EditorCursorCharacterRight.editorCursorCharacterRight(editor)
-  ).toMatchObject({
-    selections: EditorSelection.fromRange(0, 7, 0, 7),
-  })
+  expect(EditorCursorCharacterRight.cursorCharacterRight(editor)).toMatchObject(
+    {
+      selections: EditorSelection.fromRange(0, 7, 0, 7),
+    }
+  )
 })
 
 test('editorCursorCharacterRight - unicode - zero width space', () => {
@@ -59,9 +59,9 @@ test('editorCursorCharacterRight - unicode - zero width space', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(
-    EditorCursorCharacterRight.editorCursorCharacterRight(editor)
-  ).toMatchObject({
-    selections: EditorSelection.fromRange(0, 1, 0, 1),
-  })
+  expect(EditorCursorCharacterRight.cursorCharacterRight(editor)).toMatchObject(
+    {
+      selections: EditorSelection.fromRange(0, 1, 0, 1),
+    }
+  )
 })

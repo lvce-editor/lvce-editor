@@ -22,7 +22,7 @@
   },
   "devDependencies": {
     "@types/babel__code-frame": "^7.0.3",
-    "@types/lodash": "^4.14.186",
+    "@types/lodash": "^4.14.188",
     "@types/verror": "^1.10.6",
     "@types/ws": "^8.5.3"
   },
@@ -34,9 +34,9 @@
     "lines-and-columns": "^2.0.3",
     "ow": "^1.1.0",
     "p-timeout": "^6.0.0",
-    "stack-utils": "^2.0.5",
+    "stack-utils": "^2.0.6",
     "verror": "^1.10.1",
-    "ws": "^8.10.0"
+    "ws": "^8.11.0"
   },
   "xo": {
     "rules": {

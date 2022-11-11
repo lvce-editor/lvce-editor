@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals'
 import { join } from 'node:path'
 import { setTimeout } from 'node:timers/promises'
+import * as EncodingType from '../src/parts/EncodingType/EncodingType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -142,7 +143,7 @@ test('writeFile', async () => {
   expect(fs.writeFile).toHaveBeenCalledWith(
     '/test/a.txt',
     'Hello World',
-    'utf8'
+    EncodingType.Utf8
   )
 })
 
@@ -173,11 +174,11 @@ test.skip('writeFile - parallel write on different files works', async () => {
     FileSystem.writeFile(testFile4, 'Hello World 4'),
     FileSystem.writeFile(testFile5, 'Hello World 5'),
   ])
-  expect(fs.readFileSync(testFile1, 'utf8')).toBe('Hello World 1')
-  expect(fs.readFileSync(testFile2, 'utf8')).toBe('Hello World 2')
-  expect(fs.readFileSync(testFile3, 'utf8')).toBe('Hello World 3')
-  expect(fs.readFileSync(testFile4, 'utf8')).toBe('Hello World 4')
-  expect(fs.readFileSync(testFile5, 'utf8')).toBe('Hello World 5')
+  expect(fs.readFileSync(testFile1, EncodingType.Utf8)).toBe('Hello World 1')
+  expect(fs.readFileSync(testFile2, EncodingType.Utf8)).toBe('Hello World 2')
+  expect(fs.readFileSync(testFile3, EncodingType.Utf8)).toBe('Hello World 3')
+  expect(fs.readFileSync(testFile4, EncodingType.Utf8)).toBe('Hello World 4')
+  expect(fs.readFileSync(testFile5, EncodingType.Utf8)).toBe('Hello World 5')
 })
 
 test.skip('writeFile - parallel write on same files works and is sequentialized', async () => {
@@ -192,7 +193,7 @@ test.skip('writeFile - parallel write on same files works and is sequentialized'
     FileSystem.writeFile(testFile, 'Hello World 4'),
     setTimeout(10).then(() => FileSystem.writeFile(testFile, 'Hello World 5')),
   ])
-  expect(fs.readFileSync(testFile, 'utf8')).toBe('Hello World 5')
+  expect(fs.readFileSync(testFile, EncodingType.Utf8)).toBe('Hello World 5')
 })
 
 test.skip('writeFile (string, error handling)', async () => {

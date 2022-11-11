@@ -4,27 +4,18 @@ export const state = {
   openCount: 0,
 }
 
-export const createBrowserView = (
-  left,
-  top,
-  width,
-  height,
-  fallThroughKeyBindings
-) => {
+export const createBrowserView = (restoreId, fallThroughKeyBindings) => {
   state.openCount++
   return ElectronProcess.invoke(
     'ElectronBrowserView.createBrowserView',
-    left,
-    top,
-    width,
-    height,
+    restoreId,
     fallThroughKeyBindings
   )
 }
 
-export const disposeBrowserView = () => {
+export const disposeBrowserView = (id) => {
   state.openCount--
-  return ElectronProcess.invoke('ElectronBrowserView.disposeBrowserView')
+  return ElectronProcess.invoke('ElectronBrowserView.disposeBrowserView', id)
 }
 
 export const getOpenCount = () => {

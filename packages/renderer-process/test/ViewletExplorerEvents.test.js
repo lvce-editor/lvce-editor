@@ -443,3 +443,42 @@ test('event - drop', () => {
     ]
   )
 })
+
+test('event - input on rename input box', () => {
+  const state = ViewletExplorer.create()
+  const { $Viewlet } = state
+  ViewletExplorer.updateDirents(state, [
+    {
+      name: 'file-1',
+      depth: 1,
+      type: DirentType.File,
+      path: '/file-1',
+      setSize: 2,
+      posInSet: 1,
+    },
+    {
+      name: 'folder-2',
+      depth: 1,
+      type: DirentType.Directory,
+      path: '/folder-2',
+      setSize: 2,
+      posInSet: 2,
+    },
+  ])
+  ViewletExplorer.replaceWithEditBox(state, 0, 'file-1')
+  expect($Viewlet.children).toHaveLength(2)
+  const $InputBox = $Viewlet.children[0].children[1]
+  // @ts-ignore
+  $InputBox.value = 'file-3'
+  $InputBox.dispatchEvent(
+    new InputEvent('input', {
+      bubbles: true,
+      cancelable: true,
+    })
+  )
+  expect(RendererWorker.send).toHaveBeenCalledTimes(1)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Explorer.updateEditingValue',
+    'file-3'
+  )
+})

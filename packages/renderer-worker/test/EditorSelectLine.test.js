@@ -8,7 +8,7 @@ test('editorSelectLine', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   }
-  expect(EditorSelectLine.editorSelectLine(editor)).toMatchObject({
+  expect(EditorSelectLine.selectLine(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 17),
   })
 })

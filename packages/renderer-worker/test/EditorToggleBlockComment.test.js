@@ -38,7 +38,7 @@ test('comment with block comment', async () => {
     uri: '',
   }
   expect(
-    await EditorToggleBlockComment.editorToggleBlockComment(editor)
+    await EditorToggleBlockComment.toggleBlockComment(editor)
   ).toMatchObject({
     lines: ['  <body>', '    <!--sample test-->', '  </body>'],
     // TODO should be at 22
@@ -62,7 +62,7 @@ test('uncomment block comment', async () => {
     uri: '',
   }
   expect(
-    await EditorToggleBlockComment.editorToggleBlockComment(editor)
+    await EditorToggleBlockComment.toggleBlockComment(editor)
   ).toMatchObject({
     lines: ['  <body>', '    sample test', '  </body>'],
     // TODO should be at 15
@@ -87,7 +87,7 @@ test('uncomment multiline block comment', async () => {
     uri: '',
   }
   expect(
-    await EditorToggleBlockComment.editorToggleBlockComment(editor)
+    await EditorToggleBlockComment.toggleBlockComment(editor)
   ).toMatchObject({
     lines: ['  <body>', '    sample test', '', '  </body>'],
     selections: new Uint32Array([1, 20, 1, 20]),

@@ -4,7 +4,7 @@ import * as Assert from '../Assert/Assert.js'
 // TODO handle multiline selection
 // TODO handle multiple cursors
 
-export const editorCopyLineDown = (editor) => {
+export const copyLineDown = (editor) => {
   const selections = editor.selections
   const primarySelectionIndex = editor.primarySelectionIndex
   const rowIndex = selections[primarySelectionIndex]

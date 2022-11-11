@@ -83,7 +83,7 @@ export const toHaveId = (locator, { id }) => {
   if (!element) {
     return `expected ${locatorString} to have id ${id} but element was not found`
   }
-  return `expected ${locatorString} to have id ${id}`
+  return `expected ${locatorString} to have id ${id} but was ${element.id}`
 }
 
 export const toBeHidden = (locator) => {

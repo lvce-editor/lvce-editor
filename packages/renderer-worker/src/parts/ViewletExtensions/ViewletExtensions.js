@@ -7,6 +7,7 @@ import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 import { getListHeight } from './ViewletExtensionsShared.js'
 
 const SUGGESTIONS = [
@@ -54,6 +55,7 @@ export const create = (id, uri, left, top, width, height) => {
     minimumSliderSize: 20,
     focused: false,
     items: [],
+    size: ViewletSize.None,
   }
 }
 
@@ -63,7 +65,7 @@ const getVisible = (state) => {
 }
 
 const getSize = (width) => {
-  return width < 180 ? 'Small' : 'Normal'
+  return width < 180 ? ViewletSize.Small : ViewletSize.Normal
 }
 
 export const loadContent = async (state) => {
@@ -533,7 +535,7 @@ const renderFocusedIndex = {
   },
 }
 
-const renderScrollBarY = {
+const renderScrollBar = {
   isEqual(oldState, newState) {
     return (
       oldState.negativeMargin === newState.negativeMargin &&
@@ -588,7 +590,8 @@ const renderSize = {
       /* viewletSend */ 'Viewlet.send',
       /* id */ 'Extensions',
       /* method */ 'setSize',
-      /* size */ newState.size,
+      /* oldSize */ oldState.size,
+      /* newSize */ newState.size,
     ]
   },
 }
@@ -596,7 +599,7 @@ const renderSize = {
 export const render = [
   renderHeight,
   renderFocusedIndex,
-  renderScrollBarY,
+  renderScrollBar,
   renderNegativeMargin,
   renderExtensions,
   renderError,

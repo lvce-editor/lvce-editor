@@ -8,6 +8,7 @@ import * as Languages from '../src/parts/Languages/Languages.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../src/parts/SharedProcess/SharedProcess.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
 beforeEach(() => {
   EditorCompletion.state.isOpened = false
@@ -28,7 +29,7 @@ test.skip('open', async () => {
         throw new Error('unexpected message')
     }
   })
-  await EditorCompletion.open({})
+  await EditorCompletion.openCompletion({})
 })
 
 test.skip('open - cursor changes to row above', async () => {
@@ -54,7 +55,7 @@ test.skip('open - cursor changes to row above', async () => {
       case 242:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: {
             source: 'gnomeCopiedFiles',
             type: 'copy',
@@ -64,14 +65,14 @@ test.skip('open - cursor changes to row above', async () => {
         break
       case 'ExtensionHost.start':
         SharedProcess.state.receive({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           result: null,
         })
         break
       case 'ExtensionHost.setWorkspaceRoot':
         SharedProcess.state.receive({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           result: null,
         })
@@ -79,7 +80,7 @@ test.skip('open - cursor changes to row above', async () => {
       case 'ExtensionManagement.getExtensions':
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: [],
         })
         break
@@ -141,8 +142,8 @@ test.skip('open - cursor changes to row above', async () => {
     rowHeight: 8,
     invalidStartIndex: 0,
   }
-  await EditorCompletion.open(editor)
-  await EditorCommandCursorUp.editorCursorsUp(editor)
+  await EditorCompletion.openCompletion(editor)
+  await EditorCommandCursorUp.cursorUp(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,
@@ -175,7 +176,7 @@ test.skip('open - cursor changes to row below', async () => {
       case 242:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: {
             source: 'gnomeCopiedFiles',
             type: 'copy',
@@ -185,14 +186,14 @@ test.skip('open - cursor changes to row below', async () => {
         break
       case 'ExtensionHost.start':
         SharedProcess.state.receive({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           result: null,
         })
         break
       case 'ExtensionHost.setWorkspaceRoot':
         SharedProcess.state.receive({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           result: null,
         })
@@ -200,7 +201,7 @@ test.skip('open - cursor changes to row below', async () => {
       case 'ExtensionManagement.getExtensions':
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: [],
         })
         break
@@ -266,8 +267,8 @@ test.skip('open - cursor changes to row below', async () => {
     rowHeight: 8,
     invalidStartIndex: 0,
   }
-  await EditorCompletion.open(editor)
-  await EditorCommandCursorDown.editorCursorDown(editor)
+  await EditorCompletion.openCompletion(editor)
+  await EditorCommandCursorDown.cursorDown(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,
@@ -300,7 +301,7 @@ test.skip('open - cursor changes to column left - matches word', async () => {
       case 242:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: {
             source: 'gnomeCopiedFiles',
             type: 'copy',
@@ -310,14 +311,14 @@ test.skip('open - cursor changes to column left - matches word', async () => {
         break
       case 'ExtensionHost.start':
         SharedProcess.state.receive({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           result: null,
         })
         break
       case 'ExtensionHost.setWorkspaceRoot':
         SharedProcess.state.receive({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           result: null,
         })
@@ -325,7 +326,7 @@ test.skip('open - cursor changes to column left - matches word', async () => {
       case 'ExtensionManagement.getExtensions':
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: [],
         })
         break
@@ -387,8 +388,8 @@ test.skip('open - cursor changes to column left - matches word', async () => {
     rowHeight: 8,
     invalidStartIndex: 0,
   }
-  await EditorCompletion.open(editor)
-  await EditorCommandCursorCharacterLeft.editorCursorCharacterLeft(editor)
+  await EditorCompletion.openCompletion(editor)
+  await EditorCommandCursorCharacterLeft.cursorCharacterLeft(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     'Viewlet.send',
@@ -424,7 +425,7 @@ test.skip('open - cursor changes to column left - matches no word', async () => 
       case 242:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: {
             source: 'gnomeCopiedFiles',
             type: 'copy',
@@ -434,14 +435,14 @@ test.skip('open - cursor changes to column left - matches no word', async () => 
         break
       case 'ExtensionHost.start':
         SharedProcess.state.receive({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           result: null,
         })
         break
       case 'ExtensionHost.setWorkspaceRoot':
         SharedProcess.state.receive({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           result: null,
         })
@@ -449,7 +450,7 @@ test.skip('open - cursor changes to column left - matches no word', async () => 
       case 'ExtensionManagement.getExtensions':
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: [],
         })
         break
@@ -511,8 +512,8 @@ test.skip('open - cursor changes to column left - matches no word', async () => 
     rowHeight: 8,
     invalidStartIndex: 0,
   }
-  await EditorCompletion.open(editor)
-  await EditorCommandCursorCharacterLeft.editorCursorCharacterLeft(editor)
+  await EditorCompletion.openCompletion(editor)
+  await EditorCommandCursorCharacterLeft.cursorCharacterLeft(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,
@@ -545,7 +546,7 @@ test.skip('open - cursor changes to column right - matches word', async () => {
       case 242:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: {
             source: 'gnomeCopiedFiles',
             type: 'copy',
@@ -555,14 +556,14 @@ test.skip('open - cursor changes to column right - matches word', async () => {
         break
       case 'ExtensionHost.start':
         SharedProcess.state.receive({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           result: null,
         })
         break
       case 'ExtensionHost.setWorkspaceRoot':
         SharedProcess.state.receive({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           result: null,
         })
@@ -570,7 +571,7 @@ test.skip('open - cursor changes to column right - matches word', async () => {
       case 'ExtensionManagement.getExtensions':
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: [],
         })
         break
@@ -632,8 +633,8 @@ test.skip('open - cursor changes to column right - matches word', async () => {
     rowHeight: 8,
     invalidStartIndex: 0,
   }
-  await EditorCompletion.open(editor)
-  await EditorCommandCursorCharacterRight.editorCursorCharacterRight(editor)
+  await EditorCompletion.openCompletion(editor)
+  await EditorCommandCursorCharacterRight.cursorCharacterRight(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     'Viewlet.send',
@@ -669,7 +670,7 @@ test.skip('open - cursor changes to column right - matches no word', async () =>
       case 242:
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: {
             source: 'gnomeCopiedFiles',
             type: 'copy',
@@ -679,14 +680,14 @@ test.skip('open - cursor changes to column right - matches no word', async () =>
         break
       case 'ExtensionHost.start':
         SharedProcess.state.receive({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           result: null,
         })
         break
       case 'ExtensionHost.setWorkspaceRoot':
         SharedProcess.state.receive({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           result: null,
         })
@@ -694,7 +695,7 @@ test.skip('open - cursor changes to column right - matches no word', async () =>
       case 'ExtensionManagement.getExtensions':
         SharedProcess.state.receive({
           id: message.id,
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           result: [],
         })
         break
@@ -756,8 +757,8 @@ test.skip('open - cursor changes to column right - matches no word', async () =>
     rowHeight: 8,
     invalidStartIndex: 0,
   }
-  await EditorCompletion.open(editor)
-  await EditorCommandCursorCharacterRight.editorCursorCharacterRight(editor)
+  await EditorCompletion.openCompletion(editor)
+  await EditorCommandCursorCharacterRight.cursorCharacterRight(editor)
   expect(RendererProcess.state.send).toHaveBeenCalledTimes(5)
   expect(RendererProcess.state.send).toHaveBeenNthCalledWith(4, [
     909090,

@@ -329,23 +329,13 @@
   },
   {
     "key": "Escape",
-    "command": "Explorer.cancelRename",
-    "when": "focus.ExplorerRename"
+    "command": "Explorer.cancelEdit",
+    "when": "focus.ExplorerEditBox"
   },
   {
     "key": "Enter",
-    "command": "Explorer.acceptRename",
-    "when": "focus.ExplorerRename"
-  },
-  {
-    "key": "Escape",
-    "command": "Explorer.cancelNewFile",
-    "when": "focus.ExplorerCreateFile"
-  },
-  {
-    "key": "Enter",
-    "command": "Explorer.acceptNewFile",
-    "when": "focus.ExplorerCreateFile"
+    "command": "Explorer.acceptEdit",
+    "when": "focus.ExplorerEditBox"
   },
   {
     "key": "Delete",

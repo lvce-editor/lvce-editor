@@ -17,7 +17,7 @@ test.skip('editorHandleTouchStart - no touches', () => {
     tokenizer: TokenizePlainText,
     deltaY: 0,
   }
-  EditorHandleTouchStart.editorHandleTouchStart(editor, [])
+  EditorHandleTouchStart.handleTouchStart(editor, [])
   expect(EditorMoveSelection.state.position).toEqual({
     rowIndex: 0,
     columnIndex: 0,
@@ -39,7 +39,7 @@ test('editorHandleTouchStart - single touch', () => {
     tokenizer: TokenizePlainText,
     deltaY: 0,
   }
-  EditorHandleTouchStart.editorHandleTouchStart(editor, {
+  EditorHandleTouchStart.handleTouchStart(editor, {
     touches: [{ x: 45, y: 35 }],
   })
   expect(EditorHandleTouchStart.state).toEqual({

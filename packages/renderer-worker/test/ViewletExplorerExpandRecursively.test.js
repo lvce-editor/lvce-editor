@@ -292,7 +292,6 @@ test('expandRecursively - no dirent focused', async () => {
   }
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
-    console.log({ uri })
     switch (uri) {
       case '/test':
         return [

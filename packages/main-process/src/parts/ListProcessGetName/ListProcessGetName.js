@@ -1,5 +1,6 @@
 const Assert = require('../Assert/Assert.js')
 const { BrowserWindow } = require('electron')
+const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
 
 /**
  *
@@ -8,12 +9,29 @@ const { BrowserWindow } = require('electron')
 const createPidWindowMap = (browserWindows) => {
   const pidWindowMap = Object.create(null)
   for (const browserWindow of browserWindows) {
-    pidWindowMap[browserWindow.webContents.getOSProcessId()] = 'renderer'
-    if (browserWindow.webContents.devToolsWebContents) {
-      pidWindowMap[
-        browserWindow.webContents.devToolsWebContents.getOSProcessId()
-      ] = 'chrome-devtools'
+    const { webContents } = browserWindow
+    const pid = webContents.getOSProcessId()
+    pidWindowMap[pid] = 'renderer'
+    const { devToolsWebContents } = webContents
+    if (devToolsWebContents) {
+      const pid = devToolsWebContents.getOSProcessId()
+      pidWindowMap[pid] = 'chrome-devtools'
     }
+    const views = browserWindow.getBrowserViews()
+    for (const view of views) {
+      const viewWebContents = view.webContents
+      const pid = viewWebContents.getOSProcessId()
+      const displayName = `browser-view-${viewWebContents.id}`
+      pidWindowMap[pid] = displayName
+    }
+  }
+  for (const { view } of ElectronBrowserViewState.getAll()) {
+    const viewWebContents = view.webContents
+    const pid = viewWebContents.getOSProcessId()
+    if (pid in pidWindowMap) {
+      continue
+    }
+    pidWindowMap[pid] = `hidden-browser-view-${viewWebContents.id}`
   }
   return pidWindowMap
 }
@@ -37,6 +55,9 @@ exports.getName = (pid, cmd, rootPid) => {
   }
   if (cmd.includes('extensionHostMain.js')) {
     return 'extension-host'
+  }
+  if (cmd.includes('ptyHostMain.js')) {
+    return 'pty-host'
   }
   if (cmd.includes('--lvce-window-kind=process-explorer')) {
     return 'process-explorer'

@@ -11,7 +11,7 @@ test('editorCopyLineDown - cursor at start of line', () => {
     tokenizer: TokenizePlainText,
     undoStack: [],
   }
-  expect(EditorCopyLineDown.editorCopyLineDown(editor)).toMatchObject({
+  expect(EditorCopyLineDown.copyLineDown(editor)).toMatchObject({
     lines: ['line 1', 'line 1', 'line 2', 'line 3'],
     selections: EditorSelection.fromRange(1, 0, 1, 0),
   })
@@ -26,7 +26,7 @@ test('editorCopyLineDown - cursor in middle of line', () => {
     tokenizer: TokenizePlainText,
     undoStack: [],
   }
-  expect(EditorCopyLineDown.editorCopyLineDown(editor)).toMatchObject({
+  expect(EditorCopyLineDown.copyLineDown(editor)).toMatchObject({
     lines: ['line 1', 'line 1', 'line 2', 'line 3'],
     selections: EditorSelection.fromRange(1, 0, 1, 0),
   })

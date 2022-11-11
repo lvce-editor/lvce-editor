@@ -2,22 +2,12 @@ import { jest } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
 import * as PathSeparatorType from '../src/parts/PathSeparatorType/PathSeparatorType.js'
+import * as ExplorerEditingType from '../src/parts/ExplorerEditingType/ExplorerEditingType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
   GlobalEventBus.state.listenerMap = Object.create(null)
 })
-
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
-  }
-)
 
 jest.unstable_mockModule('../src/parts/Viewlet/Viewlet.js', () => {
   return {
@@ -62,10 +52,6 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
   }
 })
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
-
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
 const ViewletExplorer = await import(
@@ -107,9 +93,6 @@ test('create', () => {
 test('loadContent', async () => {
   const state = ViewletExplorer.create()
   Workspace.state.workspacePath = '/test'
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  // @ts-ignore
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     return [
@@ -173,6 +156,8 @@ test('loadContent', async () => {
     pathSeparator: PathSeparatorType.Slash,
     editingIndex: -1,
     excluded: [],
+    editingValue: '',
+    editingType: ExplorerEditingType.None,
   })
 })
 
@@ -624,9 +609,6 @@ test('loadContent - error - typeError', async () => {
   const state = ViewletExplorer.create()
   Workspace.state.workspacePath = '/test'
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-
-  // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
@@ -638,8 +620,6 @@ test('loadContent - error - typeError', async () => {
 test('loadContent - error - syntaxError', async () => {
   const state = ViewletExplorer.create()
   Workspace.state.workspacePath = '/test'
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     throw new SyntaxError('unexpected token x')
@@ -653,12 +633,9 @@ test('loadContent - error - syntaxError', async () => {
 test('loadContent - error - command not found', async () => {
   const state = ViewletExplorer.create()
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     throw new Error('command -1 not found')
   })
-
   await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(
     new Error('command -1 not found')
   )
@@ -1700,10 +1677,8 @@ test('handleArrowLeft - root file', async () => {
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.handleArrowLeft(state)
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  const newState = await ViewletExplorer.handleArrowLeft(state)
+  expect(newState).toBe(state)
 })
 
 test('handleArrowLeft - collapsed root folder', async () => {
@@ -1740,10 +1715,8 @@ test('handleArrowLeft - collapsed root folder', async () => {
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.handleArrowLeft(state)
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  const newState = await ViewletExplorer.handleArrowLeft(state)
+  expect(newState).toBe(state)
 })
 
 test('handleArrowLeft - expanded root folder with nested child folders inside', async () => {
@@ -2208,10 +2181,8 @@ test('handleArrowRight - file', async () => {
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.handleArrowRight(state)
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  const newState = await ViewletExplorer.handleArrowRight(state)
+  expect(newState).toBe(state)
 })
 
 test('handleArrowRight - symlink - file', async () => {
@@ -2234,10 +2205,7 @@ test('handleArrowRight - symlink - file', async () => {
       },
     ],
   }
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.handleArrowRight(state)
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
+  expect(await ViewletExplorer.handleArrowRight(state)).toBe(state)
 })
 
 test('handleArrowRight - collapsed folder', async () => {
@@ -2596,7 +2564,6 @@ test('handleWheel - up', () => {
         },
       ],
     ],
-    ['Viewlet.send', 'Explorer', 'setFocusedIndex', -1, -1, false],
   ])
 })
 
@@ -2827,7 +2794,7 @@ test.skip('newFile - root', async () => {
     }
   })
   await ViewletExplorer.newFile(state)
-  await ViewletExplorer.acceptNewFile(state)
+  await ViewletExplorer.acceptCreateNewFile(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, [
     909090,
@@ -2928,7 +2895,7 @@ test.skip('newFile - inside folder', async () => {
   })
 
   await ViewletExplorer.newFile(state)
-  expect(await ViewletExplorer.acceptNewFile(state)).toMatchObject({
+  expect(await ViewletExplorer.acceptCreateNewFile(state)).toMatchObject({
     items: [
       {
         depth: 1,
@@ -3026,7 +2993,7 @@ test.skip('newFile - error with writeFile', async () => {
     }
   })
   await ViewletExplorer.newFile(state)
-  await ViewletExplorer.acceptNewFile(state)
+  await ViewletExplorer.acceptCreateNewFile(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [
     909090,
@@ -3063,16 +3030,9 @@ test('newFile - canceled', async () => {
   const state = ViewletExplorer.create('', 0, 0, 0, 0)
   // @ts-ignore
   FileSystem.writeFile.mockImplementation(() => {})
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await ViewletExplorer.newFile(state)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Explorer',
-    'showCreateFileInputBox',
-    0
-  )
+  expect(await ViewletExplorer.newFile(state)).toMatchObject({
+    editingIndex: 0,
+  })
 })
 
 test.skip('newFile - race condition', () => {
@@ -3120,18 +3080,6 @@ test('removeDirent - first', async () => {
   }
   // @ts-ignore
   FileSystem.remove.mockImplementation(() => {})
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation((method, ...params) => {
-    switch (params[1]) {
-      case 'hideCreateFileInputBox':
-        return 'created.txt'
-      case 'updateDirents':
-      case 'setFocusedIndex':
-        return null
-      default:
-        throw new Error('unexpected message')
-    }
-  })
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
     items: [
       {
@@ -3180,18 +3128,6 @@ test('removeDirent - only folder', async () => {
   }
   // @ts-ignore
   FileSystem.remove.mockImplementation(() => {})
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation((method, ...params) => {
-    switch (params[1]) {
-      case 'hideCreateFileInputBox':
-        return 'created.txt'
-      case 'updateDirents':
-      case 'setFocusedIndex':
-        return null
-      default:
-        throw new Error('unexpected message')
-    }
-  })
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
     items: [],
     focusedIndex: -1,
@@ -3257,18 +3193,6 @@ test('removeDirent - expanded folder', async () => {
   }
   // @ts-ignore
   FileSystem.remove.mockImplementation(() => {})
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation((method, ...params) => {
-    switch (params[1]) {
-      case 'hideCreateFileInputBox':
-        return 'created.txt'
-      case 'updateDirents':
-      case 'setFocusedIndex':
-        return null
-      default:
-        throw new Error('unexpected message')
-    }
-  })
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
     items: [
       {
@@ -3335,19 +3259,6 @@ test('removeDirent - middle', async () => {
   }
   // @ts-ignore
   FileSystem.remove.mockImplementation(() => {})
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation((method, ...params) => {
-    switch (params[1]) {
-      case 'hideCreateFileInputBox':
-        return 'created.txt'
-      case 'updateDirents':
-      case 'setFocusedIndex':
-        return null
-      default:
-        console.log({ method, params })
-        throw new Error('unexpected message')
-    }
-  })
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
     items: [
       {
@@ -3414,19 +3325,6 @@ test('removeDirent - last', async () => {
   }
   // @ts-ignore
   FileSystem.remove.mockImplementation(() => {})
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation((method, ...params) => {
-    switch (params[1]) {
-      case 'hideCreateFileInputBox':
-        return 'created.txt'
-      case 'updateDirents':
-      case 'setFocusedIndex':
-        return null
-      default:
-        console.log({ method, params })
-        throw new Error('unexpected message')
-    }
-  })
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
     items: [
       {
@@ -3465,17 +3363,9 @@ test('removeDirent - no dirents left', async () => {
   }
   // @ts-ignore
   FileSystem.remove.mockImplementation(() => {})
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'hideCreateFileInputBox':
-        return 'created.txt'
-      default:
-        throw new Error('unexpected message')
-    }
+  expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
+    items: [],
   })
-  await ViewletExplorer.removeDirent(state)
-  expect(RendererProcess.invoke).not.toHaveBeenCalled()
 })
 
 test('resize - same height', () => {
@@ -4998,6 +4888,112 @@ test('revealItem - scroll up', async () => {
         icon: '',
         name: 'b.txt',
         path: '/test/a/b.txt',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.File,
+      },
+    ],
+  })
+})
+
+test('acceptEdit - rename', async () => {
+  // @ts-ignore
+  FileSystem.rename.mockImplementation(() => {})
+  const state = {
+    ...ViewletExplorer.create(),
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 1,
+    maxLineY: 2,
+    root: '/test',
+    pathSeparator: PathSeparatorType.Slash,
+    items: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a.txt',
+        path: '/test/a.txt',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.File,
+      },
+    ],
+    editingIndex: 0,
+    editingType: ExplorerEditingType.Rename,
+    editingValue: 'b.txt',
+  }
+  expect(await ViewletExplorer.acceptEdit(state)).toMatchObject({
+    items: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'b.txt',
+        path: '/test/b.txt',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.File,
+      },
+    ],
+  })
+  expect(FileSystem.rename).toHaveBeenCalledTimes(1)
+  expect(FileSystem.rename).toHaveBeenCalledWith('/test/a.txt', '/test/b.txt')
+})
+
+test('acceptEdit - rename - nested file', async () => {
+  // @ts-ignore
+  FileSystem.rename.mockImplementation(() => {})
+  const state = {
+    ...ViewletExplorer.create(),
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 1,
+    maxLineY: 2,
+    root: '/test',
+    pathSeparator: PathSeparatorType.Slash,
+    items: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'b.txt',
+        path: '/test/a/b.txt',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.File,
+      },
+    ],
+    editingIndex: 1,
+    editingType: ExplorerEditingType.Rename,
+    editingValue: 'c.txt',
+  }
+  expect(await ViewletExplorer.acceptEdit(state)).toMatchObject({
+    items: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.Directory,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'c.txt',
+        path: '/test/a/c.txt',
         posInSet: 1,
         setSize: 1,
         type: DirentType.File,

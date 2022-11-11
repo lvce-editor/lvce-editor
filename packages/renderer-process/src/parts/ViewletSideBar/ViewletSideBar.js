@@ -61,5 +61,4 @@ export const setTitle = (state, name) => {
 
 export const focus = async () => {
   // await
-  console.log('todo focus sidebar')
 }

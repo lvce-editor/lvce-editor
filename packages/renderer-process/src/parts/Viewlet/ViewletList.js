@@ -65,7 +65,6 @@ const handleScrollBarMouseDown = (event) => {
     window.addEventListener('mouseup', handleScrollBarThumbMouseUp)
   } else {
     const y = event.clientY
-    console.log({ y })
     RendererWorker.send(/* ViewletList.handleScrollBarClick */ 878, /* y */ y)
   }
 }
@@ -120,7 +119,6 @@ export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex) => {
   Assert.number(newFocusedIndex)
   const { $List } = state
   if (oldFocusedIndex !== -1) {
-    console.log($List)
     $List.children[oldFocusedIndex].classList.remove('Focused')
   }
   if (newFocusedIndex === -1) {
@@ -173,13 +171,10 @@ const render$ListMore = ({ $List, render$ListItem, items }) => {
 const render$List = (state) => {
   const { $List, items } = state
   if ($List.children.length < items.length) {
-    // console.log('RENDER LESS')
     render$ListLess(state)
   } else if ($List.children.length === items.length) {
-    // console.log('RENDER EQUAL')
     render$ListEqual(state)
   } else {
-    // console.log('RENDER MORE')
     render$ListMore(state)
   }
 }

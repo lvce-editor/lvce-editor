@@ -20,7 +20,7 @@ const getErrorMessage = (error) => {
   return `${error}`
 }
 
-export const editorTabCompletion = async (editor) => {
+export const tabCompletion = async (editor) => {
   try {
     // TODO race condition
     // TODO get tab completion for each cursor

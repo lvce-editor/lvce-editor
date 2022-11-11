@@ -151,7 +151,7 @@ test("addLanguage - don't override tokenize path", async () => {
 // TODO this could be even more accurate with exact line numbers
 // and reading exact extension.json file
 test('addLanguage - error - lower case filename property', () => {
-  const spy = jest.spyOn(console, 'warn')
+  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
   Languages.addLanguage({
     id: 'test',
     filenames: ['Test'],

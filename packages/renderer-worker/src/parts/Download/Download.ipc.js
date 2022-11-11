@@ -1,6 +1,9 @@
 import * as Download from './Download.js'
 
+export const name = 'Download'
+
 export const Commands = {
-  'Download.downloadFile': Download.downloadFile,
-  'Download.downloadJson': Download.downloadJson,
+  downloadFile: Download.downloadFile,
+  downloadJson: Download.downloadJson,
+  downloadToDownloadsFolder: Download.downloadToDownloadsFolder,
 }

@@ -8,6 +8,8 @@ export const load = (moduleId) => {
       return import('../ClipBoard/ClipBoard.ipc.js')
     case ModuleId.Developer:
       return import('../Developer/Developer.ipc.js')
+    case ModuleId.Download:
+      return import('../Download/Download.ipc.js')
     case ModuleId.ExtensionHost:
       return import('../ExtensionHost/ExtensionHost.ipc.js')
     case ModuleId.ExtensionManagement:

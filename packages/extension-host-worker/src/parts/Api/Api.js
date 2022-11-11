@@ -1,26 +1,22 @@
 import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
+import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
 import * as ExtensionHostExtension from '../ExtensionHostExtension/ExtensionHostExtension.js'
+import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
 import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
+import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.js'
 import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
-import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
-import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
-import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.js'
+import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 
-// prettier-ignore
-export const createCommandMap = () => {
-  return {
-    'ExtensionHostExtension.activate': ExtensionHostExtension.activate,
-    'ExtensionHostExtension.enableExtension': ExtensionHostExtension.activate,
-    'Reference.execute': ExtensionHostReference.executeReferenceProvider,
-    'References.execute': ExtensionHostReference.executeReferenceProvider,
-    'ExtensionHostCompletion.execute': ExtensionHostCompletion.executeCompletionProvider,
-    'ExtensionHostTextDocument.syncFull': TextDocument.syncFull,
-    'ExtensionHostTypeDefinition.executeTypeDefinitionProvider': ExtensionHostTypeDefinition.executeTypeDefinitionProvider,
+class FormattingError extends Error {
+  constructor(message, codeFrame) {
+    super(message)
+    this.codeFrame = codeFrame
+    this.name = 'FormattingError'
   }
 }
 
@@ -42,6 +38,13 @@ export const create = () => {
     // Definition
     registerDefinitionProvider: ExtensionHostDefinition.registerDefinitionProvider,
     executeDefinitionProvider: ExtensionHostDefinition.executeDefinitionProvider,
+
+    // Errors
+    FormattingError,
+
+    // Formatting
+    registerFormattingProvider: ExtensionHostFormatting.registerFormattingProvider,
+    executeFormattingProvider: ExtensionHostFormatting.executeFormattingProvider,
 
     // Implementation
     registerImplementationProvider: ExtensionHostImplementation.registerImplementationProvider,
@@ -68,5 +71,6 @@ export const create = () => {
     // Type Definition
     registerTypeDefinitionProvider: ExtensionHostTypeDefinition.registerTypeDefinitionProvider,
     executeTypeDefinitionProvider: ExtensionHostTypeDefinition.executeTypeDefinitionProvider,
+
   }
 }

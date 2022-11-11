@@ -1,7 +1,9 @@
 import * as FilePicker from './FilePicker.js'
 
+export const name = 'FilePicker'
+
 export const Commands = {
-  'FilePicker.showDirectoryPicker': FilePicker.showDirectoryPicker,
-  'FilePicker.showFilePicker': FilePicker.showFilePicker,
-  'FilePicker.showSaveFilePicker': FilePicker.showSaveFilePicker,
+  showDirectoryPicker: FilePicker.showDirectoryPicker,
+  showFilePicker: FilePicker.showFilePicker,
+  showSaveFilePicker: FilePicker.showSaveFilePicker,
 }

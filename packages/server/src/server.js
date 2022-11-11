@@ -41,6 +41,7 @@ const IS_WINDOWS = process.platform === 'win32'
 const textMimeType = {
   '.html': 'text/html',
   '.js': 'text/javascript',
+  '.mjs': 'text/javascript',
   '.json': 'application/json',
   '.css': 'text/css',
   '.svg': 'image/svg+xml',
@@ -85,8 +86,9 @@ const serveStatic = (root, skip = '') =>
     }
     const cachingHeader =
       immutable && root === STATIC ? 'public, max-age=31536000, immutable' : ''
+    const contentType = textMimeType[extname(filePath)] || 'text/plain'
     res.writeHead(200, {
-      'Content-Type': textMimeType[extname(filePath)] || 'text/plain',
+      'Content-Type': contentType,
       Etag: etag,
       'Cache-Control': cachingHeader,
       // enables access for performance.measureUserAgentSpecificMemory, see https://web.dev/monitor-total-page-memory-usage/

@@ -1,12 +1,10 @@
 /**
  * @jest-environment jsdom
  */
-import * as Viewlet from '../src/parts/Viewlet/Viewlet.js'
 import * as Main from '../src/parts/ViewletMain/ViewletMain.js'
-import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 beforeEach(async () => {
-  await Viewlet.load(ViewletModuleId.EditorPlainText)
+  // await Viewlet.load(ViewletModuleId.EditorPlainText)
   // Main.state.$MainContent = undefined
   // Main.state.$MainTabs = undefined
 })

@@ -9,7 +9,7 @@ beforeEach(() => {
 })
 
 test.skip('editorCompositionStart', () => {
-  EditorComposition.editorCompositionStart({}, {})
+  EditorComposition.compositionStart({}, {})
   expect(EditorComposition.state.isComposing).toBe(true)
 })
 
@@ -19,7 +19,7 @@ test.skip('editorCompositionUpdate', () => {
 
 test.skip('editorCompositionEnd', () => {
   EditorComposition.state.isComposing = true
-  EditorComposition.editorCompositionEnd({})
+  EditorComposition.compositionEnd({})
   expect(EditorComposition.state.isComposing).toBe(false)
 })
 
@@ -52,23 +52,23 @@ test('editorComposition - ä', async () => {
     invalidStartIndex: 0,
     undoStack: [],
   }
-  const editor2 = EditorComposition.editorCompositionStart(editor, '')
+  const editor2 = EditorComposition.compositionStart(editor, '')
   expect(editor2).toMatchObject({
     lines: [''],
   })
-  const editor3 = EditorComposition.editorCompositionUpdate(editor2, '·')
+  const editor3 = EditorComposition.compositionUpdate(editor2, '·')
   expect(editor3).toMatchObject({
     lines: ['·'],
   })
-  const editor4 = EditorComposition.editorCompositionUpdate(editor3, '"')
+  const editor4 = EditorComposition.compositionUpdate(editor3, '"')
   expect(editor4).toMatchObject({
     lines: ['"'],
   })
-  const editor5 = EditorComposition.editorCompositionUpdate(editor4, 'ä')
+  const editor5 = EditorComposition.compositionUpdate(editor4, 'ä')
   expect(editor5).toMatchObject({
     lines: ['ä'],
   })
-  const editor6 = EditorComposition.editorCompositionEnd(editor5, 'ä')
+  const editor6 = EditorComposition.compositionEnd(editor5, 'ä')
   expect(editor6).toMatchObject({
     lines: ['ä'],
   })
@@ -104,23 +104,23 @@ test('editorComposition - ñ', async () => {
     undoStack: [],
   }
   // TODO is it possible to make this function without sideeffects? maybe store composition state in editor or in weakmap
-  const editor2 = EditorComposition.editorCompositionStart(editor, '')
+  const editor2 = EditorComposition.compositionStart(editor, '')
   expect(editor2).toMatchObject({
     lines: [''],
   })
-  const editor3 = EditorComposition.editorCompositionUpdate(editor2, '·')
+  const editor3 = EditorComposition.compositionUpdate(editor2, '·')
   expect(editor3).toMatchObject({
     lines: ['·'],
   })
-  const editor4 = EditorComposition.editorCompositionUpdate(editor3, '~')
+  const editor4 = EditorComposition.compositionUpdate(editor3, '~')
   expect(editor4).toMatchObject({
     lines: ['~'],
   })
-  const editor5 = EditorComposition.editorCompositionUpdate(editor4, 'ñ')
+  const editor5 = EditorComposition.compositionUpdate(editor4, 'ñ')
   expect(editor5).toMatchObject({
     lines: ['ñ'],
   })
-  const editor6 = EditorComposition.editorCompositionEnd(editor5, 'ñ')
+  const editor6 = EditorComposition.compositionEnd(editor5, 'ñ')
   expect(editor6).toMatchObject({
     lines: ['ñ'],
   })
@@ -155,19 +155,19 @@ test('editorComposition - on and off', async () => {
     invalidStartIndex: 0,
     undoStack: [],
   }
-  const editor2 = EditorComposition.editorCompositionStart(editor, '')
+  const editor2 = EditorComposition.compositionStart(editor, '')
   expect(editor2).toMatchObject({
     lines: [''],
   })
-  const editor3 = EditorComposition.editorCompositionUpdate(editor2, '·')
+  const editor3 = EditorComposition.compositionUpdate(editor2, '·')
   expect(editor3).toMatchObject({
     lines: ['·'],
   })
-  const editor4 = EditorComposition.editorCompositionUpdate(editor3, '')
+  const editor4 = EditorComposition.compositionUpdate(editor3, '')
   expect(editor4).toMatchObject({
     lines: [''],
   })
-  const editor5 = EditorComposition.editorCompositionEnd(editor4, '')
+  const editor5 = EditorComposition.compositionEnd(editor4, '')
   expect(editor5).toMatchObject({
     lines: [''],
   })

@@ -1,22 +1,25 @@
 import * as Platform from '../Platform/Platform.js'
 
+export const name = 'Platform'
+
 // prettier-ignore
 export const Commands = {
-  'Platform.getAppDir': Platform.getAppDir,
-  'Platform.getBuiltinExtensionsPath': Platform.getBuiltinExtensionsPath,
-  'Platform.getCachedExtensionsPath': Platform.getCachedExtensionsPath,
-  'Platform.getCacheDir': Platform.getCacheDir,
-  'Platform.getConfigDir': Platform.getConfigDir,
-  'Platform.getDataDir': Platform.getDataDir,
-  'Platform.getDisabledExtensionsPath': Platform.getDisabledExtensionsPath,
-  'Platform.getExtensionsPath': Platform.getExtensionsPath,
-  'Platform.getHomeDir': Platform.getHomeDir,
-  'Platform.getLogsDir': Platform.getLogsDir,
-  'Platform.getMarketplaceUrl': Platform.getMarketplaceUrl,
-  'Platform.getNodePath': Platform.getNodePath,
-  'Platform.getRecentlyOpenedPath': Platform.getRecentlyOpenedPath,
-  'Platform.getTestPath': Platform.getTestPath,
-  'Platform.getTmpDir': Platform.getTmpDir,
-  'Platform.getUserSettingsPath': Platform.getUserSettingsPath,
-  'Platform.setEnvironmentVariables': Platform.setEnvironmentVariables,
+  getAppDir: Platform.getAppDir,
+  getBuiltinExtensionsPath: Platform.getBuiltinExtensionsPath,
+  getCachedExtensionsPath: Platform.getCachedExtensionsPath,
+  getCacheDir: Platform.getCacheDir,
+  getConfigDir: Platform.getConfigDir,
+  getDataDir: Platform.getDataDir,
+  getDisabledExtensionsPath: Platform.getDisabledExtensionsPath,
+  getDownloadDir: Platform.getDownloadDir,
+  getExtensionsPath: Platform.getExtensionsPath,
+  getHomeDir: Platform.getHomeDir,
+  getLogsDir: Platform.getLogsDir,
+  getMarketplaceUrl: Platform.getMarketplaceUrl,
+  getNodePath: Platform.getNodePath,
+  getRecentlyOpenedPath: Platform.getRecentlyOpenedPath,
+  getTestPath: Platform.getTestPath,
+  getTmpDir: Platform.getTmpDir,
+  getUserSettingsPath: Platform.getUserSettingsPath,
+  setEnvironmentVariables: Platform.setEnvironmentVariables,
 }

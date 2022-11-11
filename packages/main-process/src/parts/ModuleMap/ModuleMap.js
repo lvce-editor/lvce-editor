@@ -62,7 +62,15 @@ exports.getModuleId = (commandId) => {
     case 'ElectronBrowserViewFunctions.reload':
     case 'ElectronBrowserViewFunctions.backward':
     case 'ElectronBrowserViewFunctions.focus':
+    case 'ElectronBrowserViewFunctions.show':
+    case 'ElectronBrowserViewFunctions.hide':
+    case 'ElectronBrowserViewFunctions.inspectElement':
+    case 'ElectronBrowserViewFunctions.copyImageAt':
       return ModuleId.ElectronBrowserViewFunctions
+    case 'ElectronMenu.openContextMenu':
+      return ModuleId.ElectronMenu
+    case 'ElectronClipBoard.writeText':
+      return ModuleId.ElectronClipBoard
     default:
       throw new Error(`method not found ${commandId}`)
   }

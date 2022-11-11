@@ -4,6 +4,7 @@ import * as Command from '../Command/Command.js'
 import { JsonRpcError } from '../Errors/Errors.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 export const state = {
   pendingMessages: [],
@@ -24,14 +25,14 @@ const handleMessageFromRendererProcess = async (event) => {
       try {
         const result = await Command.execute(message.method, ...message.params)
         state.ipc.send({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           result,
         })
         return
       } catch (error) {
         state.ipc.send({
-          jsonrpc: '2.0',
+          jsonrpc: JsonRpcVersion.Two,
           id: message.id,
           error,
         })
@@ -97,7 +98,7 @@ export const invoke = async (method, ...parameters) => {
       return
     }
     state.ipc.send({
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       method,
       params: parameters,
       id: callbackId,

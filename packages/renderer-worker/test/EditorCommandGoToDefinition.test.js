@@ -68,7 +68,7 @@ test('editorGoToDefinition', async () => {
         throw new Error('unexpected message')
     }
   })
-  await EditorGoToDefinition.editorGoToDefinition(editor)
+  await EditorGoToDefinition.goToDefinition(editor)
 })
 
 test('editorGoToDefinition - start offset is 0', async () => {
@@ -100,7 +100,7 @@ test('editorGoToDefinition - start offset is 0', async () => {
         throw new Error('unexpected message')
     }
   })
-  await EditorGoToDefinition.editorGoToDefinition(editor)
+  await EditorGoToDefinition.goToDefinition(editor)
 })
 
 test('editorGoToDefinition - error', async () => {
@@ -120,7 +120,7 @@ test('editorGoToDefinition - error', async () => {
   // @ts-ignore
   EditorShowMessage.editorShowMessage.mockImplementation(() => {})
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  await EditorGoToDefinition.editorGoToDefinition(editor)
+  await EditorGoToDefinition.goToDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
@@ -154,7 +154,7 @@ test('editorGoToDefinition - error - no definition provider found', async () => 
   // @ts-ignore
   EditorShowMessage.editorShowMessage.mockImplementation(() => {})
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
-  await EditorGoToDefinition.editorGoToDefinition(editor)
+  await EditorGoToDefinition.goToDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
@@ -182,7 +182,7 @@ test('editorGoToDefinition - no definition found', async () => {
   })
   // @ts-ignore
   EditorShowMessage.editorShowMessage.mockImplementation(() => {})
-  await EditorGoToDefinition.editorGoToDefinition(editor)
+  await EditorGoToDefinition.goToDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,
@@ -209,7 +209,7 @@ test('editorGoToDefinition - no definition found and no word at position', async
   })
   // @ts-ignore
   EditorShowMessage.editorShowMessage.mockImplementation(() => {})
-  await EditorGoToDefinition.editorGoToDefinition(editor)
+  await EditorGoToDefinition.goToDefinition(editor)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.editorShowMessage).toHaveBeenCalledWith(
     editor,

@@ -38,3 +38,29 @@ export const forward = (id) => {
 export const backward = (id) => {
   return ElectronProcess.invoke('ElectronBrowserViewFunctions.backward', id)
 }
+
+export const show = (id) => {
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.show', id)
+}
+
+export const hide = (id) => {
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.hide', id)
+}
+
+export const inspectElement = (id, x, y) => {
+  return ElectronProcess.invoke(
+    'ElectronBrowserViewFunctions.inspectElement',
+    id,
+    x,
+    y
+  )
+}
+
+export const copyImageAt = (id, x, y) => {
+  return ElectronProcess.invoke(
+    'ElectronBrowserViewFunctions.copyImageAt',
+    id,
+    x,
+    y
+  )
+}

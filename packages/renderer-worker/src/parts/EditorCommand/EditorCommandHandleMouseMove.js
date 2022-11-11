@@ -25,7 +25,7 @@ const showHover = async (editor, position) => {
   console.log({ hover })
 }
 
-export const editorHandleMouseMove = (editor, x, y) => {
+export const handleMouseMove = (editor, x, y) => {
   const position = EditorPosition.at(editor, x, y)
   // console.log(position)
   // showHover(editor, position)

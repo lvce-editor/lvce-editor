@@ -7,11 +7,11 @@ test('editorCursorWordPartLeft - camelCase', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 6, 0, 6),
   }
-  const moved1 = EditorCursorWordPartLeft.editorCursorWordPartLeft(editor)
+  const moved1 = EditorCursorWordPartLeft.cursorWordPartLeft(editor)
   expect(moved1).toMatchObject({
     selections: EditorSelection.fromRange(0, 3, 0, 3),
   })
-  const moved2 = EditorCursorWordPartLeft.editorCursorWordPartLeft(moved1)
+  const moved2 = EditorCursorWordPartLeft.cursorWordPartLeft(moved1)
   expect(moved2).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
@@ -23,11 +23,11 @@ test('editorCursorWordPartLeft - snake case', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 7, 0, 7),
   }
-  const moved1 = EditorCursorWordPartLeft.editorCursorWordPartLeft(editor)
+  const moved1 = EditorCursorWordPartLeft.cursorWordPartLeft(editor)
   expect(moved1).toMatchObject({
     selections: EditorSelection.fromRange(0, 4, 0, 4),
   })
-  const moved2 = EditorCursorWordPartLeft.editorCursorWordPartLeft(moved1)
+  const moved2 = EditorCursorWordPartLeft.cursorWordPartLeft(moved1)
   expect(moved2).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
@@ -39,11 +39,11 @@ test('editorCursorWordPartLeft - foo1Bar', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 7, 0, 7),
   }
-  const moved1 = EditorCursorWordPartLeft.editorCursorWordPartLeft(editor)
+  const moved1 = EditorCursorWordPartLeft.cursorWordPartLeft(editor)
   expect(moved1).toMatchObject({
     selections: EditorSelection.fromRange(0, 4, 0, 4),
   })
-  const moved2 = EditorCursorWordPartLeft.editorCursorWordPartLeft(moved1)
+  const moved2 = EditorCursorWordPartLeft.cursorWordPartLeft(moved1)
   expect(moved2).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
@@ -55,9 +55,7 @@ test('editorCursorWordPartLeft - at start of line', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(1, 0, 1, 0),
   }
-  expect(
-    EditorCursorWordPartLeft.editorCursorWordPartLeft(editor)
-  ).toMatchObject({
+  expect(EditorCursorWordPartLeft.cursorWordPartLeft(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 6, 0, 6),
   })
 })
@@ -68,23 +66,23 @@ test('editorCursorWordPartLeft - multiple capital letters', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 15, 0, 15),
   }
-  const moved1 = EditorCursorWordPartLeft.editorCursorWordPartLeft(editor)
+  const moved1 = EditorCursorWordPartLeft.cursorWordPartLeft(editor)
   expect(moved1).toMatchObject({
     selections: EditorSelection.fromRange(0, 5, 0, 5),
   })
-  const moved2 = EditorCursorWordPartLeft.editorCursorWordPartLeft(moved1)
+  const moved2 = EditorCursorWordPartLeft.cursorWordPartLeft(moved1)
   expect(moved2).toMatchObject({
     selections: EditorSelection.fromRange(0, 4, 0, 4),
   })
-  const moved3 = EditorCursorWordPartLeft.editorCursorWordPartLeft(moved2)
+  const moved3 = EditorCursorWordPartLeft.cursorWordPartLeft(moved2)
   expect(moved3).toMatchObject({
     selections: EditorSelection.fromRange(0, 2, 0, 2),
   })
-  const moved4 = EditorCursorWordPartLeft.editorCursorWordPartLeft(moved3)
+  const moved4 = EditorCursorWordPartLeft.cursorWordPartLeft(moved3)
   expect(moved4).toMatchObject({
     selections: EditorSelection.fromRange(0, 1, 0, 1),
   })
-  const moved5 = EditorCursorWordPartLeft.editorCursorWordPartLeft(moved4)
+  const moved5 = EditorCursorWordPartLeft.cursorWordPartLeft(moved4)
   expect(moved5).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
@@ -98,11 +96,11 @@ test('editorCursorWordPartLeft - multiple underscores', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 4, 0, 4),
   }
-  const moved1 = EditorCursorWordPartLeft.editorCursorWordPartLeft(editor)
+  const moved1 = EditorCursorWordPartLeft.cursorWordPartLeft(editor)
   expect(moved1).toMatchObject({
     selections: EditorSelection.fromRange(0, 3, 0, 3),
   })
-  const moved2 = EditorCursorWordPartLeft.editorCursorWordPartLeft(moved1)
+  const moved2 = EditorCursorWordPartLeft.cursorWordPartLeft(moved1)
   expect(moved2).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
@@ -114,9 +112,7 @@ test('editorCursorWordPartLeft - jump over whitespace', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 6, 0, 6),
   }
-  expect(
-    EditorCursorWordPartLeft.editorCursorWordPartLeft(editor)
-  ).toMatchObject({
+  expect(EditorCursorWordPartLeft.cursorWordPartLeft(editor)).toMatchObject({
     selections: EditorSelection.fromRange(0, 0, 0, 0),
   })
 })
@@ -127,11 +123,11 @@ test.skip('editorCursorWordPartLeft - jump over punctuation', () => {
     primarySelectionIndex: 0,
     selections: EditorSelection.fromRange(0, 10, 0, 10),
   }
-  EditorCursorWordPartLeft.editorCursorWordPartLeft(editor)
+  EditorCursorWordPartLeft.cursorWordPartLeft(editor)
   expect(editor).toMatchObject({
     selections: EditorSelection.fromRange(0, 9, 0, 9),
   })
-  EditorCursorWordPartLeft.editorCursorWordPartLeft(editor)
+  EditorCursorWordPartLeft.cursorWordPartLeft(editor)
   expect(editor).toMatchObject({
     selections: EditorSelection.fromRange(0, 2, 0, 2),
   })

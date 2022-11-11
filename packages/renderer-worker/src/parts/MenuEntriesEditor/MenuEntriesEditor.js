@@ -1,6 +1,9 @@
 import * as I18nString from '../I18NString/I18NString.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
+/**
+ * @enum {string}
+ */
 export const UiStrings = {
   GoToTypeDefinition: 'Go To Type Definition',
   FindAllReferences: 'Find All References',

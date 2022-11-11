@@ -1,17 +1,18 @@
 import * as ViewletExtensionDetail from './ViewletExtensionDetail.js'
-import * as LazyCommand from '../LazyCommand/LazyCommand.js'
-
-// prettier-ignore
-const Imports = {
-  HandleReadmeContextMenu: () => import('./ViewletExtensionDetailHandleReadmeContextMenu.js'),
-}
 
 // prettier-ignore
 export const Commands = {
-  'ExtensionDetail.handleIconError':  ViewletExtensionDetail.handleIconError,
-  'ExtensionDetail.handleReadmeContextMenu': LazyCommand.create(ViewletExtensionDetail.name, Imports.HandleReadmeContextMenu, 'handleReadmeContextMenu'),
+  handleIconError:  ViewletExtensionDetail.handleIconError,
 }
 
-export const Css = '/css/parts/ViewletExtensionDetail.css'
+// prettier-ignore
+export const LazyCommands = {
+  HandleReadmeContextMenu: () => import('./ViewletExtensionDetailHandleReadmeContextMenu.js'),
+}
+
+export const Css = [
+  '/css/parts/ViewletExtensionDetail.css',
+  '/css/parts/Markdown.css',
+]
 
 export * from './ViewletExtensionDetail.js'

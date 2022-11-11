@@ -86,6 +86,7 @@ export const formatAllModuleMaps = async () => {
     'packages/renderer-process/src/parts/ModuleMap/ModuleMap.js',
     'packages/shared-process/src/parts/ModuleMap/ModuleMap.js',
     'packages/renderer-worker/src/parts/ModuleMap/ModuleMap.js',
+    'packages/pdf-worker/src/parts/ModuleMap/ModuleMap.js',
   ]
   for (const moduleMapPath of moduleMapPaths) {
     const absolutePath = Path.join(Root.root, moduleMapPath)

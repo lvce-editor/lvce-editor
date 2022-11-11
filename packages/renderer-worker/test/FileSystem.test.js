@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as EncodingType from '../src/parts/EncodingType/EncodingType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -33,7 +34,8 @@ test('readFile', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
     'FileSystem.readFile',
-    '/tmp/some-file.txt'
+    '/tmp/some-file.txt',
+    EncodingType.Utf8
   )
 })
 
@@ -168,7 +170,7 @@ test('writeFile', async () => {
     'FileSystem.writeFile',
     '/tmp/some-file.txt',
     'sample text',
-    'utf8'
+    EncodingType.Utf8
   )
 })
 

@@ -1,8 +1,13 @@
-export const Close = '/icons/icon-close.svg'
 export const PreviousMatch = '/icons/arrow-up.svg'
 export const ArrowRight = '/icons/arrow-right.svg'
 export const ArrowLeft = '/icons/arrow-left.svg'
+export const ArrowDown = '/icons/arrow-down.svg'
+export const ArrowUp = '/icons/arrow-up.svg'
 export const NextMatch = '/icons/arrow-down.svg'
 export const ExtensionDefaultIcon = `/icons/extensionDefaultIcon.png`
 export const Refresh = `/icons/refresh.svg`
 export const LinkExternal = `/icons/link-external.svg`
+export const ZoomIn = `/icons/zoom-in.svg`
+export const ZoomOut = `/icons/zoom-out.svg`
+export const ChevronUp = `/icons/chevron-up.svg`
+export const ChevronDown = `/icons/chevron-down.svg`

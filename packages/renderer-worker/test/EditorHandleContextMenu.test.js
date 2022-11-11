@@ -13,7 +13,7 @@ test.skip('editorHandleContextMenu', async () => {
     },
     selections: [],
   }
-  await EditorHandleContextMenu.editorHandleContextMenu(editor, 20, 20)
+  await EditorHandleContextMenu.handleContextMenu(editor, 20, 20)
   expect(RendererProcess.state.send).toHaveBeenCalledWith([
     661,
     20,

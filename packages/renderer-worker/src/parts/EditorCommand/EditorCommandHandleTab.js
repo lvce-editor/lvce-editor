@@ -4,17 +4,17 @@ import * as EditorIndent from './EditorCommandIndentMore.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
 
 // TODO tab doesn't work well with configurable keybindings
-export const editorHandleTab = async (editor) => {
+export const handleTab = async (editor) => {
   if (EditorSelection.isEverySelectionEmpty(editor.selections)) {
     console.log('call tab completion')
-    const applied = await EditorTabCompletion.editorTabCompletion(editor)
+    const applied = await EditorTabCompletion.tabCompletion(editor)
     if (applied !== editor) {
       return applied
     }
     // TODO have setting what should be inserted on tab
-    return EditorType.editorType(editor, '  ')
+    return EditorType.type(editor, '  ')
   }
-  return EditorIndent.editorIndentMore(editor)
+  return EditorIndent.indentMore(editor)
 }
 
 // const editor = {

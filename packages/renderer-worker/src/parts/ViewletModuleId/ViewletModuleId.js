@@ -36,11 +36,15 @@ export const Locations = 'Locations'
 
 export const Main = 'Main'
 
+export const None = ''
+
 export const Noop = 'Noop'
 
 export const Output = 'Output'
 
 export const Panel = 'Panel'
+
+export const Pdf = 'Pdf'
 
 export const Problems = 'Problems'
 

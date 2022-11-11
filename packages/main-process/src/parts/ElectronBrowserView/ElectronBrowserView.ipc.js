@@ -1,7 +1,9 @@
 const ElectronBrowserView = require('./ElectronBrowserView.js')
 
+exports.name = 'ElectronBrowserView'
+
 // prettier-ignore
 exports.Commands = {
-  'ElectronBrowserView.createBrowserView': ElectronBrowserView.createBrowserView,
-  'ElectronBrowserView.disposeBrowserView': ElectronBrowserView.disposeBrowserView,
+  createBrowserView: ElectronBrowserView.createBrowserView,
+  disposeBrowserView: ElectronBrowserView.disposeBrowserView,
 }
