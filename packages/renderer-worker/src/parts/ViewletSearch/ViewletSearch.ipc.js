@@ -20,6 +20,7 @@ export const LazyCommands = {
 export const Css = [
   '/css/parts/ViewletSearch.css',
   '/css/parts/ViewletList.css',
+  '/css/parts/Label.css',
 ]
 
 export * from './ViewletSearch.js'

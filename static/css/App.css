@@ -21,7 +21,6 @@
 @import './parts/BackDrop.css';
 @import './parts/Animation.css';
 @import './parts/ViewletReferences.css';
-@import './parts/Label.css';
 
 /* focus css (can be overridden by components) */
 @import './parts/Focus.css';
