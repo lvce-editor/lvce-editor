@@ -23,7 +23,7 @@ const getIndexTreeItem = ($Target) => {
   return getNodeIndex($Target)
 }
 
-const getIndexTreeItemLabel = ($Target) => {
+const getIndexLabel = ($Target) => {
   return getNodeIndex($Target.parentNode)
 }
 
@@ -31,8 +31,8 @@ const getIndex = ($Target) => {
   switch ($Target.className) {
     case 'TreeItem':
       return getIndexTreeItem($Target)
-    case 'TreeItemLabel':
-      return getIndexTreeItemLabel($Target)
+    case 'Label':
+      return getIndexLabel($Target)
     default:
       return -1
   }
