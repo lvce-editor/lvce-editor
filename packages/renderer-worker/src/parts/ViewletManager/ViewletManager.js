@@ -100,6 +100,9 @@ const wrapViewletCommandLazy = (id, key, importFn) => {
   const lazyCommand = async (...args) => {
     const module = await importFn()
     const fn = module[key]
+    if (typeof fn !== 'function') {
+      throw new Error(`${id}.${key} is not a function`)
+    }
     const activeInstance = ViewletStates.getInstance(id)
     if (!activeInstance) {
       console.info(
