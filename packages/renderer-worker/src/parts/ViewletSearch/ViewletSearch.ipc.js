@@ -17,6 +17,9 @@ export const LazyCommands = {
   handleScrollBarMove: () => import('./ViewletSearchHandleScrollBarMove.js'),
 }
 
-export const Css = '/css/parts/ViewletSearch.css'
+export const Css = [
+  '/css/parts/ViewletSearch.css',
+  '/css/parts/ViewletList.css',
+]
 
 export * from './ViewletSearch.js'

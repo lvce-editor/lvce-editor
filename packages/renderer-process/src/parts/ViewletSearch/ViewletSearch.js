@@ -22,12 +22,12 @@ export const create = () => {
   $SearchHeader.className = 'SearchHeader'
   $SearchHeader.append($ViewletSearchInput, $SearchStatus)
 
-  const $SearchResults = document.createElement('div')
-  $SearchResults.className = 'SearchResults'
+  const $ListItems = document.createElement('div')
+  $ListItems.className = 'ListItems'
   // TODO onclick vs onmousedown, should be consistent in whole application
-  $SearchResults.onmousedown = ViewletSearchEvents.handleClick
-  $SearchResults.oncontextmenu = ViewletSearchEvents.handleContextMenu
-  $SearchResults.onwheel = ViewletSearchEvents.handleWheel
+  $ListItems.onmousedown = ViewletSearchEvents.handleClick
+  $ListItems.oncontextmenu = ViewletSearchEvents.handleContextMenu
+  $ListItems.onwheel = ViewletSearchEvents.handleWheel
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
@@ -37,14 +37,19 @@ export const create = () => {
   $ScrollBar.onpointerdown = ViewletSearchEvents.handleScrollBarPointerDown
   $ScrollBar.append($ScrollBarThumb)
 
+  const $List = document.createElement('div')
+  $List.className = 'Viewlet List'
+  $List.append($ListItems, $ScrollBar)
+
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Search'
-  $Viewlet.append($SearchHeader, $SearchResults, $ScrollBar)
+  $Viewlet.append($SearchHeader, $List)
 
   return {
     $Viewlet,
     $ViewletSearchInput,
-    $SearchResults,
+    $ListItems,
+    $List,
     $SearchStatus,
     $ScrollBar,
     $ScrollBarThumb,
@@ -144,10 +149,10 @@ const render$Rows = ($Rows, rowInfos) => {
 export const setResults = (state, results) => {
   Assert.object(state)
   Assert.array(results)
-  const { $SearchResults } = state
+  const { $ListItems } = state
   // TODO should recycle nodes when rendering only search results
   // maybe could also recycle node from noResults and vice versa
-  render$Rows($SearchResults, results)
+  render$Rows($ListItems, results)
 }
 
 export const setMessage = (state, message) => {
