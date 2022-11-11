@@ -2,7 +2,17 @@ const formattingProvider = {
   languageId: 'xyz',
   format(textDocument, offset) {
     const { text } = textDocument
-    return text.replaceAll('a', 'b')
+    const formatted = text.replaceAll('a', 'b')
+    if (text === formatted) {
+      return []
+    }
+    return [
+      {
+        startOffset: 0,
+        endOffset: text.length,
+        inserted: formatted,
+      },
+    ]
   },
 }
 

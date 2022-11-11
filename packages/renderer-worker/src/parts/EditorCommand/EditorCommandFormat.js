@@ -1,5 +1,6 @@
 import * as Editor from '../Editor/Editor.js'
 import * as Format from '../Format/Format.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
 
 const expectedErrorMessage = `Failed to execute formatting provider: FormattingError:`
@@ -12,39 +13,36 @@ const isFormattingError = (error) => {
   )
 }
 
-// TODO only transfer incremental edits from shared process
 // TODO also format with cursor
 export const format = async (editor) => {
   try {
-    const newContent = await Format.format(editor)
-    if (typeof newContent !== 'string') {
-      console.warn('something is wrong with format on save', newContent)
+    const edits = await Format.format(editor)
+    if (!Array.isArray(edits)) {
+      console.warn('something is wrong with format on save', edits)
+      return editor
+    }
+    if (edits.length === 0) {
       return editor
     }
     const { lines } = editor
-    const { length } = lines
-    const lineLength = lines[length - 1].length
+    // TODO support multiple edits?
+    const edit = edits[0]
+    const start = TextDocument.positionAt(editor, edit.startOffset)
+    const end = TextDocument.positionAt(editor, edit.endOffset)
     const documentEdits = [
       {
-        start: {
-          rowIndex: 0,
-          columnIndex: 0,
-        },
-        end: {
-          rowIndex: length,
-          columnIndex: lineLength,
-        },
-        type: /* replace */ 3,
-        inserted: [newContent],
-        deleted: [''],
+        start,
+        end,
+        inserted: edit.inserted.split('\n'),
+        deleted: lines,
       },
     ]
     return Editor.scheduleDocumentAndCursorsSelections(editor, documentEdits)
   } catch (error) {
     if (isFormattingError(error)) {
-      // @ts-ignore
       console.error(
         `Formatting Error:`,
+        // @ts-ignore
         error.message.slice(expectedErrorMessage.length)
       )
       return editor

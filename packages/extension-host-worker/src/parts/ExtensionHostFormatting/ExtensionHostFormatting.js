@@ -6,7 +6,21 @@ const { registerFormattingProvider, executeFormattingProvider, reset } =
     executeKey: 'format',
     resultShape: {
       allowUndefined: true,
-      type: 'string',
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          startOffset: {
+            type: 'number',
+          },
+          endOffset: {
+            type: 'number',
+          },
+          inserted: {
+            type: 'string',
+          },
+        },
+      },
     },
   })
 

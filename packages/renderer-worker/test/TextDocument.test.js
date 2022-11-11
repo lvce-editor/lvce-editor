@@ -278,16 +278,16 @@ test('applyEdits - issue with pasting many lines', () => {
           rowIndex: 0,
           columnIndex: 0,
         },
-        inserted: [...Array.from({length: 150_000}).fill('a')],
+        inserted: [...Array.from({ length: 150_000 }).fill('a')],
         deleted: [''],
       },
     ])
-  ).toEqual([...Array.from({length: 150_000}).fill('a')])
+  ).toEqual([...Array.from({ length: 150_000 }).fill('a')])
 })
 
 test('applyEdits - virtual space', () => {
   const textDocument = {
-    uri: '/tmp/foo-dQ1pOm/test.txt',
+    uri: '/test/test.txt',
     languageId: 'plaintext',
     lines: ['line 1', 'line 2', 'line 3'],
     cursor: {
@@ -341,7 +341,7 @@ test('applyEdits - virtual space', () => {
 
 test('applyEdits - issue with inserting multiple lines', () => {
   const editor = {
-    uri: '/tmp/foo-ScUYJ4/test.txt',
+    uri: '/test/test.txt',
     languageId: 'plaintext',
     lines: ['line 1', 'line 2', 'line 3'],
     cursor: {
@@ -425,4 +425,43 @@ test('applyEdits - insert multiline snippet', () => {
     },
   ])
   expect(newLines).toEqual(['  <div>', '    test', '  </div>'])
+})
+
+test('applyEdits - replace multiple lines', () => {
+  const editor = {
+    lines: ['h1 {', '  font-size: 20px', '}'],
+    cursor: {
+      rowIndex: 0,
+      columnIndex: 2,
+    },
+    selections: [
+      {
+        start: {
+          rowIndex: 0,
+          columnIndex: 2,
+        },
+        end: {
+          rowIndex: 0,
+          columnIndex: 2,
+        },
+      },
+    ],
+    undoStack: [],
+  }
+  const newLines = TextDocument.applyEdits(editor, [
+    {
+      start: {
+        rowIndex: 0,
+        columnIndex: 0,
+      },
+      end: {
+        rowIndex: 3,
+        columnIndex: 0,
+      },
+      inserted: ['h1 {', '  font-size: 20px;', '}', ''],
+      deleted: ['h1 {', '  font-size: 20px', '}'],
+      origin: 'format',
+    },
+  ])
+  expect(newLines).toEqual(['h1 {', '  font-size: 20px;', '}', ''])
 })

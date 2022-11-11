@@ -224,7 +224,6 @@ export const contentLoaded = async (state) => {
 }
 
 export const openUri = async (state, uri, focus = true) => {
-  console.log('MAIN OPEN URI')
   Assert.object(state)
   Assert.string(uri)
   const top = state.top + TAB_HEIGHT

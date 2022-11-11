@@ -62,7 +62,13 @@ test('format - error', async () => {
 test('format', async () => {
   // @ts-ignore
   Format.format.mockImplementation(() => {
-    return 'b'
+    return [
+      {
+        startOffset: 0,
+        endOffset: 1,
+        inserted: 'b',
+      },
+    ]
   })
   const editor = {
     lines: ['a'],
@@ -77,5 +83,34 @@ test('format', async () => {
   }
   expect(await EditorFormat.format(editor)).toMatchObject({
     lines: ['b'],
+  })
+})
+
+test('format - multiple lines', async () => {
+  // @ts-ignore
+  Format.format.mockImplementation(() => {
+    return [
+      {
+        startOffset: 0,
+        endOffset: 25,
+        inserted: `h1 {
+  font-size: 20px;
+}`,
+      },
+    ]
+  })
+  const editor = {
+    lines: ['h1 {', '  font-size: 20px', '}'],
+    primarySelectionIndex: 0,
+    selections: new Uint32Array([0, 0, 0, 0]),
+    top: 10,
+    left: 20,
+    rowHeight: 10,
+    columnWidth: 8,
+    lineCache: [],
+    undoStack: [],
+  }
+  expect(await EditorFormat.format(editor)).toMatchObject({
+    lines: ['h1 {', '  font-size: 20px;', '}'],
   })
 })

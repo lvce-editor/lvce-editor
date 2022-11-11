@@ -10,8 +10,6 @@ import * as ExtensionHostFormatting from '../ExtensionHost/ExtensionHostFormatti
 // TODO should be in editor folder
 
 export const format = async (editor) => {
-  const formatted = await ExtensionHostFormatting.executeFormattingProvider(
-    editor
-  )
-  return formatted
+  const edits = await ExtensionHostFormatting.executeFormattingProvider(editor)
+  return edits
 }
