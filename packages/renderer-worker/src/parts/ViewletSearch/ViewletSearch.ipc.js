@@ -9,6 +9,17 @@ export const Commands = {
   setValue: ViewletSearch.setValue,
 }
 
-export const Css = '/css/parts/ViewletSearch.css'
+// prettier-ignore
+export const LazyCommands = {
+  handleWheel: () => import('./ViewletSearchHandleWheel.js'),
+  setDeltaY: () => import('./ViewletSearchSetDeltaY.js'),
+  handleScrollBarClick: () => import('./ViewletSearchHandleScrollBarClick.js'),
+  handleScrollBarMove: () => import('./ViewletSearchHandleScrollBarMove.js'),
+}
+
+export const Css = [
+  '/css/parts/ViewletSearch.css',
+  '/css/parts/ViewletList.css',
+]
 
 export * from './ViewletSearch.js'

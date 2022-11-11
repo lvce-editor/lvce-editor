@@ -32,6 +32,9 @@ export const LazyCommands = {
   setDeltaY: () => import('./ViewletExtensionsSetDeltaY.js'),
 }
 
-export const Css = '/css/parts/ViewletExtensions.css'
+export const Css = [
+  '/css/parts/ViewletExtensions.css',
+  '/css/parts/ViewletList.css',
+]
 
 export * from './ViewletExtensions.js'

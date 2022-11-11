@@ -81,6 +81,7 @@ export const loadContent = async (state) => {
     itemHeight
   )
 
+  console.log({ viewObjects })
   const listHeight = getListHeight(state)
   const total = viewObjects.length
   const contentHeight = total * itemHeight
@@ -264,7 +265,6 @@ export const handleInput = async (state, value) => {
       return state
     }
     const items = filterExtensions(extensions, parsedValue, itemHeight)
-    const displayExtensions = toDisplayExtensions(items)
     return {
       ...state,
       extensions,
@@ -551,12 +551,6 @@ const renderScrollBar = {
       newState.height - newState.headerHeight,
       newState.scrollBarHeight
     )
-    console.log('render scrollbar', {
-      scrollBarY,
-      deltaY: newState.deltaY,
-      negative: newState.negativeMargin,
-      finalDeltaY: newState.finalDeltaY,
-    })
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ 'Extensions',

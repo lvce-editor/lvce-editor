@@ -8,6 +8,7 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as SearchResultType from '../SearchResultType/SearchResultType.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 
 export const name = ViewletModuleId.Search
 
@@ -34,6 +35,13 @@ export const create = (id, uri, left, top, width, height) => {
     width,
     height,
     items: [],
+    minLineY: 0,
+    maxLineY: 0,
+    deltaY: 0,
+    headerHeight: 61, // TODO
+    itemHeight: 22,
+    scrollBarHeight: 0,
+    minimumSliderSize: 20, // TODO this should be the same for all components
   }
 }
 
@@ -88,17 +96,32 @@ const getResultCounts = (results) => {
 
 export const setValue = async (state, value) => {
   try {
+    const { height, itemHeight, minimumSliderSize, headerHeight } = state
     const root = Workspace.state.workspacePath
     const results = await TextSearch.textSearch(root, value)
-    const displayResults = toDisplayResults(results)
     const resultCount = getResultCounts(results)
+    const displayResults = toDisplayResults(results, itemHeight, resultCount)
     const fileResultCount = results.length
     const message = getStatusMessage(resultCount, fileResultCount)
+    const total = displayResults.length
+    const contentHeight = total * itemHeight
+    const listHeight = height - headerHeight
+    const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
+      height,
+      contentHeight,
+      minimumSliderSize
+    )
+    const numberOfVisible = Math.ceil(listHeight / itemHeight)
+    const maxLineY = Math.min(numberOfVisible, total)
+    const finalDeltaY = Math.max(contentHeight - listHeight, 0)
     return {
       ...state,
       value,
       items: displayResults,
       message,
+      maxLineY: maxLineY,
+      scrollBarHeight,
+      finalDeltaY,
     }
   } catch (error) {
     return {
@@ -159,11 +182,13 @@ const compareResults = (resultA, resultB) => {
   return Compare.compareString(pathA, pathB)
 }
 
-const toDisplayResults = (results) => {
+const toDisplayResults = (results, itemHeight, resultCount) => {
   results.sort(compareResults)
   const displayResults = []
+  let i = -1
+  const setSize = resultCount
   for (const result of results) {
-    console.log({ result })
+    i++
     const path = getPath(result)
     const previews = getPreviews(result)
     const absolutePath = Workspace.getAbsolutePath(path)
@@ -173,13 +198,20 @@ const toDisplayResults = (results) => {
       type: SearchResultType.File,
       text: baseName,
       icon: IconTheme.getFileIcon({ name: baseName }),
+      posInSet: i + 1,
+      setSize,
+      top: i * itemHeight,
     })
     for (const preview of previews) {
+      i++
       displayResults.push({
         title: preview.preview,
         type: SearchResultType.Preview,
         text: preview.preview,
         icon: '',
+        posInSet: i + 1,
+        setSize,
+        top: i * itemHeight,
       })
     }
   }
@@ -284,18 +316,68 @@ export const resize = (state, dimensions) => {
 
 export const hasFunctionalRender = true
 
+const getVisible = (state) => {
+  const { minLineY, maxLineY, items } = state
+  return items.slice(minLineY, maxLineY)
+}
+
 const renderItems = {
   isEqual(oldState, newState) {
-    return oldState.items === newState.items
+    return (
+      oldState.items === newState.items &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY
+    )
   },
   apply(oldState, newState) {
+    const visible = getVisible(newState)
     return [
       /* viewletSend */ 'Viewlet.send',
-      /* id */ 'Search',
+      /* id */ ViewletModuleId.Search,
       /* method */ 'setResults',
-      /* results */ newState.items,
-      /* resultCount */ newState.items.length,
-      /* fileCount */ newState.fileCount,
+      /* results */ visible,
+    ]
+  },
+}
+
+const renderScrollBar = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.negativeMargin === newState.negativeMargin &&
+      oldState.deltaY === newState.deltaY &&
+      oldState.height === newState.height &&
+      oldState.finalDeltaY === newState.finalDeltaY
+    )
+  },
+  apply(oldState, newState) {
+    const scrollBarY = ScrollBarFunctions.getScrollBarY(
+      newState.deltaY,
+      newState.finalDeltaY,
+      newState.height - newState.headerHeight,
+      newState.scrollBarHeight
+    )
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ ViewletModuleId.Search,
+      /* method */ 'setScrollBar',
+      /* scrollBarY */ scrollBarY,
+      /* scrollBarHeight */ newState.scrollBarHeight,
+    ]
+  },
+}
+
+const renderHeight = {
+  isEqual(oldState, newState) {
+    return oldState.items.length === newState.items.length
+  },
+  apply(oldState, newState) {
+    const { itemHeight } = newState
+    const contentHeight = newState.items.length * itemHeight
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ ViewletModuleId.Search,
+      /* method */ 'setContentHeight',
+      /* contentHeight */ contentHeight,
     ]
   },
 }
@@ -307,7 +389,7 @@ const renderMessage = {
   apply(oldState, newState) {
     return [
       /* viewletSend */ 'Viewlet.send',
-      /* id */ 'Search',
+      /* id */ ViewletModuleId.Search,
       /* method */ 'setMessage',
       /* message */ newState.message,
     ]
@@ -321,11 +403,32 @@ const renderValue = {
   apply(oldState, newState) {
     return [
       /* viewletSend */ 'Viewlet.send',
-      /* id */ 'Search',
+      /* id */ ViewletModuleId.Search,
       /* method */ 'setValue',
       /* value */ newState.value,
     ]
   },
 }
 
-export const render = [renderItems, renderMessage, renderValue]
+const renderNegativeMargin = {
+  isEqual(oldState, newState) {
+    return oldState.deltaY === newState.deltaY
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ ViewletModuleId.Search,
+      /* method */ 'setNegativeMargin',
+      /* negativeMargin */ -newState.deltaY,
+    ]
+  },
+}
+
+export const render = [
+  renderItems,
+  renderMessage,
+  renderValue,
+  renderScrollBar,
+  renderHeight,
+  renderNegativeMargin,
+]

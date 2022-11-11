@@ -22,21 +22,37 @@ export const create = () => {
   $SearchHeader.className = 'SearchHeader'
   $SearchHeader.append($ViewletSearchInput, $SearchStatus)
 
-  const $SearchResults = document.createElement('div')
-  $SearchResults.className = 'SearchResults'
+  const $ListItems = document.createElement('div')
+  $ListItems.className = 'ListItems'
   // TODO onclick vs onmousedown, should be consistent in whole application
-  $SearchResults.onmousedown = ViewletSearchEvents.handleClick
-  $SearchResults.oncontextmenu = ViewletSearchEvents.handleContextMenu
+  $ListItems.onmousedown = ViewletSearchEvents.handleClick
+  $ListItems.oncontextmenu = ViewletSearchEvents.handleContextMenu
+  $ListItems.onwheel = ViewletSearchEvents.handleWheel
+
+  const $ScrollBarThumb = document.createElement('div')
+  $ScrollBarThumb.className = 'ScrollBarThumb'
+
+  const $ScrollBar = document.createElement('div')
+  $ScrollBar.className = 'ScrollBarSmall'
+  $ScrollBar.onpointerdown = ViewletSearchEvents.handleScrollBarPointerDown
+  $ScrollBar.append($ScrollBarThumb)
+
+  const $List = document.createElement('div')
+  $List.className = 'Viewlet List'
+  $List.append($ListItems, $ScrollBar)
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Search'
-  $Viewlet.append($SearchHeader, $SearchResults)
+  $Viewlet.append($SearchHeader, $List)
 
   return {
     $Viewlet,
     $ViewletSearchInput,
-    $SearchResults,
+    $ListItems,
+    $List,
     $SearchStatus,
+    $ScrollBar,
+    $ScrollBarThumb,
   }
 }
 
@@ -75,6 +91,7 @@ const render$Row = ($Row, rowInfo) => {
   $Row.ariaPosInSet = `${rowInfo.posInSet}`
   $Row.ariaLabel = rowInfo.name
   $Row.ariaDescription = ''
+  $Row.style.top = `${rowInfo.top}px`
   switch (rowInfo.type) {
     // TODO type should be a number for efficiency
     case DirentType.Directory:
@@ -133,9 +150,10 @@ const render$Rows = ($Rows, rowInfos) => {
 export const setResults = (state, results) => {
   Assert.object(state)
   Assert.array(results)
+  const { $ListItems } = state
   // TODO should recycle nodes when rendering only search results
   // maybe could also recycle node from noResults and vice versa
-  render$Rows(state.$SearchResults, results)
+  render$Rows($ListItems, results)
 }
 
 export const setMessage = (state, message) => {
@@ -150,3 +168,17 @@ export const setValue = (state, value) => {
 }
 
 export const dispose = () => {}
+
+// TODO duplicate code with extensions list
+
+export const setContentHeight = (state, height) => {
+  const { $ListItems } = state
+  $ListItems.style.height = `${height}px`
+}
+
+export const setNegativeMargin = (state, negativeMargin) => {
+  const { $ListItems } = state
+  $ListItems.style.top = `${negativeMargin}px`
+}
+
+export * from '../ViewletScrollable/ViewletScrollable.js'
