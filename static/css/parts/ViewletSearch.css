@@ -1,3 +1,8 @@
+.Search {
+  display: flex;
+  flex-direction: column;
+}
+
 .SearchHeader {
   display: grid;
   padding: 5px 12px 6px 16px;
@@ -11,6 +16,10 @@
 .SearchResults {
   overflow-y: auto;
   height: 100%;
+}
+
+.Search .TreeItem {
+  position: absolute;
 }
 
 /* TODO duplicate code with explorer.css */

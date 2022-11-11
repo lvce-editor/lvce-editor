@@ -97,8 +97,8 @@ test.skip('event - click on install', () => {
       state: 'uninstalled',
     },
   ])
-  const { $ExtensionList } = state
-  $ExtensionList.children[0]
+  const { $ListItems } = state
+  $ListItems.children[0]
     // @ts-ignore
     .querySelector('.ExtensionManage')
     .dispatchEvent(
@@ -146,8 +146,8 @@ test('event - click - on extension', () => {
       state: 'uninstalled',
     },
   ])
-  const { $ExtensionList } = state
-  $ExtensionList.children[0].dispatchEvent(
+  const { $ListItems } = state
+  $ListItems.children[0].dispatchEvent(
     new PointerEvent('pointerdown', {
       bubbles: true,
       cancelable: true,
@@ -195,8 +195,8 @@ test('icon - error', () => {
       icon: '/not-found.png',
     },
   ])
-  const $ExtensionList = state.$ExtensionList
-  const $FirstExtension = $ExtensionList.children[0]
+  const { $ListItems } = state
+  const $FirstExtension = $ListItems.children[0]
   const $FirstIcon = $FirstExtension.querySelector('.ExtensionListItemIcon')
   // @ts-ignore
   expect($FirstIcon.src).toBe('http://localhost/not-found.png')
@@ -214,8 +214,8 @@ test('icon - error - endless loop bug', () => {
       icon: '/not-found.png',
     },
   ])
-  const $ExtensionList = state.$ExtensionList
-  const $FirstExtension = $ExtensionList.children[0]
+  const { $ListItems } = state
+  const $FirstExtension = $ListItems.children[0]
   // @ts-ignore
   const $FirstIcon = $FirstExtension.querySelector('.ExtensionListItemIcon')
   // @ts-ignore
@@ -234,7 +234,7 @@ test('icon - error - endless loop bug', () => {
 
 test('event - touchstart', () => {
   const state = ViewletExtensions.create()
-  const { $ExtensionList } = state
+  const { $ListItems } = state
   const event = new TouchEvent('touchstart', {
     bubbles: true,
     cancelable: true,
@@ -243,11 +243,11 @@ test('event - touchstart', () => {
         identifier: 0,
         clientX: 10,
         clientY: 10,
-        target: $ExtensionList,
+        target: $ListItems,
       }),
     ],
   })
-  $ExtensionList.dispatchEvent(event)
+  $ListItems.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
     'Extensions.handleTouchStart',
@@ -258,7 +258,7 @@ test('event - touchstart', () => {
 
 test('event - touchmove', () => {
   const state = ViewletExtensions.create()
-  const { $ExtensionList } = state
+  const { $ListItems } = state
   const event = new TouchEvent('touchmove', {
     bubbles: true,
     cancelable: true,
@@ -267,11 +267,11 @@ test('event - touchmove', () => {
         identifier: 0,
         clientX: 10,
         clientY: 10,
-        target: $ExtensionList,
+        target: $ListItems,
       }),
     ],
   })
-  $ExtensionList.dispatchEvent(event)
+  $ListItems.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
     'Extensions.handleTouchMove',
@@ -282,7 +282,7 @@ test('event - touchmove', () => {
 
 test('event - touchend', () => {
   const state = ViewletExtensions.create()
-  const { $ExtensionList } = state
+  const { $ListItems } = state
   const event = new TouchEvent('touchend', {
     bubbles: true,
     cancelable: true,
@@ -291,11 +291,11 @@ test('event - touchend', () => {
         identifier: 0,
         clientX: 10,
         clientY: 10,
-        target: $ExtensionList,
+        target: $ListItems,
       }),
     ],
   })
-  $ExtensionList.dispatchEvent(event)
+  $ListItems.dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledTimes(1)
   expect(RendererWorker.send).toHaveBeenCalledWith(
     'Extensions.handleTouchEnd',

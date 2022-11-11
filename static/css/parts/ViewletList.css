@@ -1,0 +1,9 @@
+.List {
+  position: relative;
+}
+
+.ListItems {
+  flex: 1;
+  contain: strict;
+  position: relative;
+}

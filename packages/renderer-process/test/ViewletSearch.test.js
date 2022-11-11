@@ -20,7 +20,8 @@ test('refresh', () => {
 test('setResults - no results', () => {
   const state = ViewletSearch.create()
   ViewletSearch.setResults(state, [])
-  expect(state.$SearchResults.children).toHaveLength(0)
+  const { $ListItems } = state
+  expect($ListItems.children).toHaveLength(0)
 })
 
 test('setResults - one result in one file', () => {
@@ -30,7 +31,8 @@ test('setResults - one result in one file', () => {
       name: './result-1.txt',
     },
   ])
-  expect(state.$SearchResults.children).toHaveLength(1)
+  const { $ListItems } = state
+  expect($ListItems.children).toHaveLength(1)
 })
 
 test('setResults - multiple results in one file', () => {
@@ -40,7 +42,8 @@ test('setResults - multiple results in one file', () => {
       name: './result-1.txt',
     },
   ])
-  expect(state.$SearchResults.children).toHaveLength(1)
+  const { $ListItems } = state
+  expect($ListItems.children).toHaveLength(1)
 })
 
 test('setResults - multiple results in multiple files', () => {
@@ -53,7 +56,8 @@ test('setResults - multiple results in multiple files', () => {
       name: './result-2.txt',
     },
   ])
-  expect(state.$SearchResults.children).toHaveLength(2)
+  const { $ListItems } = state
+  expect($ListItems.children).toHaveLength(2)
 })
 
 test('accessibility - input box should have type search', () => {
