@@ -85,3 +85,13 @@ test('getName - unknown renderer', () => {
     )
   ).toBe('<unknown renderer>')
 })
+
+test('getName - detect pty host', () => {
+  // @ts-ignore
+  electron.BrowserWindow.getAllWindows.mockImplementation(() => {
+    return []
+  })
+  expect(ListProcessGetName.getName(123, 'node dist/ptyHostMain.js', 1)).toBe(
+    'pty-host'
+  )
+})
