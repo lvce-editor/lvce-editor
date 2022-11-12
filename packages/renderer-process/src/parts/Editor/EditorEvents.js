@@ -278,6 +278,10 @@ export const handlePaste = (event) => {
   RendererWorker.send(/* Editor.paste */ 'Editor.paste', /* text */ text)
 }
 
+/**
+ *
+ * @param {PointerEvent} event
+ */
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
   RendererWorker.send(
@@ -286,19 +290,33 @@ export const handleScrollBarThumbPointerMove = (event) => {
   )
 }
 
+/**
+ *
+ * @param {PointerEvent} event
+ */
 export const handleScrollBarPointerUp = (event) => {
   const { target, pointerId } = event
+  // @ts-ignore
   target.releasePointerCapture(pointerId)
+  // @ts-ignore
   target.removeEventListener('pointermove', handleScrollBarThumbPointerMove)
+  // @ts-ignore
   target.removeEventListener('pointerup', handleScrollBarPointerUp)
 }
 
+/**
+ *
+ * @param {PointerEvent} event
+ */
 export const handleScrollBarPointerDown = (event) => {
   const { target, pointerId, clientY } = event
+  // @ts-ignore
   target.setPointerCapture(pointerId)
+  // @ts-ignore
   target.addEventListener('pointermove', handleScrollBarThumbPointerMove, {
     passive: false,
   })
+  // @ts-ignore
   target.addEventListener('pointerup', handleScrollBarPointerUp)
   RendererWorker.send(
     /* EditorHandleScrollBarClick.editorHandleScrollBarPointerDown */ 'Editor.handleScrollBarPointerDown',

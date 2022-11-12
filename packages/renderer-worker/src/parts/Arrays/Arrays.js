@@ -49,3 +49,13 @@ export const fromAsync = async (asyncIterable) => {
   }
   return children
 }
+
+export const findObjectIndex = (array, key, value) => {
+  for (let i = 0; i < array.length; i++) {
+    const element = array[i]
+    if (element[key] === value) {
+      return i
+    }
+  }
+  return -1
+}

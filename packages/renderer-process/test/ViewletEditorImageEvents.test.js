@@ -141,6 +141,7 @@ test('event - pointermove after pointerdown', () => {
 test('event - pointerup after pointerdown', () => {
   const state = ViewletEditorImage.create()
   const spy1 = jest.spyOn(HTMLElement.prototype, 'addEventListener')
+  const spy2 = jest.spyOn(HTMLElement.prototype, 'removeEventListener')
   // @ts-ignore
   const spy3 = jest.spyOn(HTMLElement.prototype, 'setPointerCapture')
   // @ts-ignore
@@ -155,7 +156,25 @@ test('event - pointerup after pointerdown', () => {
   })
   // @ts-ignore
   $Viewlet.dispatchEvent(pointerDownEvent)
-  expect(spy1).not.toHaveBeenCalled()
+  expect(spy1).toHaveBeenCalledTimes(3)
+  expect(spy1).toHaveBeenNthCalledWith(
+    1,
+    'pointermove',
+    ViewletEditorImageEvents.handlePointerMove,
+    {
+      passive: false,
+    }
+  )
+  expect(spy1).toHaveBeenNthCalledWith(
+    2,
+    'pointerup',
+    ViewletEditorImageEvents.handlePointerUp
+  )
+  expect(spy1).toHaveBeenNthCalledWith(
+    3,
+    'lostpointercapture',
+    ViewletEditorImageEvents.handlePointerCaptureLost
+  )
   expect(spy3).toHaveBeenCalledTimes(1)
   expect(spy3).toHaveBeenCalledWith(0)
   const pointerUpEvent = new PointerEvent('pointerup', {
@@ -166,8 +185,26 @@ test('event - pointerup after pointerdown', () => {
     button: MouseEventType.LeftClick,
   })
   $Viewlet.dispatchEvent(pointerUpEvent)
-  expect(spy4).toHaveBeenCalledTimes(1)
-  expect(spy4).toHaveBeenCalledWith(0)
+  const pointerLostEvent = new PointerEvent('lostpointercapture', {
+    bubbles: true,
+    clientX: 10,
+    clientY: 20,
+    pointerId: 0,
+    button: MouseEventType.LeftClick,
+  })
+  $Viewlet.dispatchEvent(pointerLostEvent)
+  expect(spy4).not.toHaveBeenCalled()
+  expect(spy2).toHaveBeenCalledTimes(2)
+  expect(spy2).toHaveBeenNthCalledWith(
+    1,
+    'pointermove',
+    ViewletEditorImageEvents.handlePointerMove
+  )
+  expect(spy2).toHaveBeenNthCalledWith(
+    2,
+    'pointerup',
+    ViewletEditorImageEvents.handlePointerUp
+  )
 })
 
 // TODO some other test causes this test to fail
