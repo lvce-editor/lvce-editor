@@ -20,8 +20,8 @@ export const downloadElectron = async ({
       outDir,
     })
   } catch (error) {
-    // @ts-ignore
     throw new VError(
+      // @ts-ignore
       error,
       `Failed to download electron version ${electronVersion}`
     )
