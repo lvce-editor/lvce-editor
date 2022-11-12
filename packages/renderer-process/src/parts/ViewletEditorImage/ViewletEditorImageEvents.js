@@ -22,14 +22,21 @@ export const handlePointerUp = (event) => {
   if (button !== MouseEventType.LeftClick) {
     return
   }
-  // @ts-ignore
-  target.releasePointerCapture(pointerId)
   RendererWorker.send(
     'EditorImage.handlePointerUp',
     pointerId,
     clientX,
     clientY
   )
+}
+
+export const handlePointerCaptureLost = (event) => {
+  console.log('lost pointer capture')
+  const { target } = event
+  // @ts-ignore
+  target.removeEventListener('pointermove', handlePointerMove)
+  // @ts-ignore
+  target.removeEventListener('pointerup', handlePointerUp)
 }
 
 /**
@@ -42,6 +49,13 @@ export const handlePointerDown = (event) => {
   }
   // @ts-ignore
   target.setPointerCapture(pointerId)
+  // @ts-ignore
+  target.addEventListener('pointermove', handlePointerMove, {
+    passive: false,
+  })
+  // @ts-ignore
+  target.addEventListener('pointerup', handlePointerUp)
+  target.addEventListener('lostpointercapture', handlePointerCaptureLost)
   RendererWorker.send(
     'EditorImage.handlePointerDown',
     pointerId,

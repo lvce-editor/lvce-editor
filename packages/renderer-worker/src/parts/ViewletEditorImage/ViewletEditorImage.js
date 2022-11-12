@@ -1,3 +1,4 @@
+import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
 import * as Command from '../Command/Command.js'
@@ -135,6 +136,7 @@ const handleZoom = (state) => {
       }
     }
   }
+  return state
 }
 
 const handleMove = (state, x, y) => {
@@ -165,7 +167,7 @@ export const handlePointerMove = (state, pointerId, x, y) => {
   if (pointerDownCount === 0) {
     return state
   }
-  const index = eventCache.findIndex((event) => event.pointerId === pointerId)
+  const index = Arrays.findObjectIndex(eventCache, 'pointerId', pointerId)
   // TODO avoid mutation
   eventCache[index] = { pointerId, x, y }
   if (eventCache.length === 2) {
@@ -175,7 +177,7 @@ export const handlePointerMove = (state, pointerId, x, y) => {
 }
 
 const removePointer = (eventCache, pointerId) => {
-  const index = eventCache.findIndex((event) => event.pointerId === pointerId)
+  const index = Arrays.findObjectIndex(eventCache, 'pointerId', pointerId)
   const newEventCache = [
     ...eventCache.slice(0, index),
     ...eventCache.slice(index + 1),

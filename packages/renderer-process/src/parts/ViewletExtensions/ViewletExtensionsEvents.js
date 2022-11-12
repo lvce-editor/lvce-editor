@@ -12,11 +12,9 @@ export const handleScrollBarThumbPointerMove = (event) => {
   )
 }
 
-export const handleScrollBarPointerUp = (event) => {
-  const { target, pointerId } = event
-  target.releasePointerCapture(pointerId)
+const handlePointerCaptureLost = (event) => {
+  const { target } = event
   target.removeEventListener('pointermove', handleScrollBarThumbPointerMove)
-  target.removeEventListener('pointerup', handleScrollBarPointerUp)
 }
 
 export const handleScrollBarPointerDown = (event) => {
@@ -25,7 +23,7 @@ export const handleScrollBarPointerDown = (event) => {
   target.addEventListener('pointermove', handleScrollBarThumbPointerMove, {
     passive: false,
   })
-  target.addEventListener('pointerup', handleScrollBarPointerUp)
+  target.addEventListener('lostpointercapture', handlePointerCaptureLost)
   RendererWorker.send(
     /* Extensions.handleScrollBarPointerDown */ 'Extensions.handleScrollBarClick',
     /* y */ clientY
