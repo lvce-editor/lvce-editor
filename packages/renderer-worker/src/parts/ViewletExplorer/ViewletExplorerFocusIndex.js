@@ -1,6 +1,6 @@
 export const focusIndex = (state, index) => {
   const { minLineY, maxLineY } = state
-  if (index < state.minLineY) {
+  if (index < minLineY) {
     if (index < 0) {
       return {
         ...state,
