@@ -10,6 +10,7 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 import { getListHeight } from './ViewletExtensionsShared.js'
 import * as Height from '../Height/Height.js'
+import * as VirtualList from '../VirtualList/VirtualList.js'
 
 const SUGGESTIONS = [
   '@builtin',
@@ -36,27 +37,23 @@ export const create = (id, uri, left, top, width, height) => {
     },
     suggestionState: /* Closed */ 0,
     disposed: false,
-    focusedIndex: -1,
-    deltaY: 0,
-    minLineY: 0,
-    maxLineY: 0,
     width,
     height,
     scrollBarHeight: 0,
     handleOffset: 0,
     top,
     left,
-    finalDeltaY: 0,
     error: '',
     touchOffsetY: 0,
     touchTimeStamp: 0,
     touchDifference: 0,
-    itemHeight: Height.ExtensionListItem,
-    headerHeight: 35,
-    minimumSliderSize: Height.MinimumSliderSize,
     focused: false,
-    items: [],
     size: ViewletSize.None,
+    ...VirtualList.create({
+      itemHeight: Height.ExtensionListItem,
+      minimumSliderSize: Height.MinimumSliderSize,
+      headerHeight: 35,
+    }),
   }
 }
 

@@ -1,5 +1,19 @@
 import * as Assert from '../Assert/Assert.js'
 
+export const create = ({ itemHeight, headerHeight, minimumSliderSize }) => {
+  return {
+    deltaY: 0,
+    minLineY: 0,
+    maxLineY: 0,
+    finalDeltaY: 0,
+    itemHeight,
+    headerHeight,
+    items: [],
+    minimumSliderSize,
+    focusedIndex: -1,
+  }
+}
+
 const getListHeight = (height, headerHeight) => {
   if (headerHeight) {
     return height - headerHeight
