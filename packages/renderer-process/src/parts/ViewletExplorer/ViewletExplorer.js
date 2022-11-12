@@ -3,6 +3,7 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as InputBox from '../InputBox/InputBox.js'
 import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
+import * as Label from '../Label/Label.js'
 
 export const name = 'Explorer'
 
@@ -48,10 +49,7 @@ const create$Row = () => {
   $Row.role = 'treeitem'
   $Row.className = 'TreeItem'
   $Row.draggable = true
-  const $LabelText = document.createTextNode('')
-  const $Label = document.createElement('div')
-  $Label.className = 'Label'
-  $Label.append($LabelText)
+  const $Label = Label.create('')
   const $Icon = document.createElement('i')
   $Row.append($Icon, $Label)
   return $Row

@@ -2,6 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
+import * as Label from '../Label/Label.js'
 
 // TODO name export not necessary
 export const name = 'Search'
@@ -71,10 +72,7 @@ const create$Row = () => {
   // @ts-ignore
   $Row.role = 'treeitem'
   $Row.className = 'TreeItem'
-  const $LabelText = document.createTextNode('')
-  const $Label = document.createElement('div')
-  $Label.className = 'Label'
-  $Label.append($LabelText)
+  const $Label = Label.create('')
   const $Icon = document.createElement('i')
   $Row.append($Icon, $Label)
   return $Row

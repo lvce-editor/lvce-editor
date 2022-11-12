@@ -1,13 +1,12 @@
 import * as Focus from '../Focus/Focus.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
+import * as Label from '../Label/Label.js'
 
 export const name = 'EditorCompletion'
 
 const create$CompletionItem = (item, index) => {
-  const $CompletionItemText = document.createElement('div')
-  $CompletionItemText.className = 'Label'
-  $CompletionItemText.textContent = item.label
+  const $CompletionItemText = Label.create(item.label)
 
   const $Icon = document.createElement('div')
   $Icon.className = 'ColoredMaskIcon'
