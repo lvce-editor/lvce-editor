@@ -8,6 +8,9 @@ export const LazyCommands = {
   handleClickToggleMaximize: () => import('./ViewletTitleBarButtonsHandleClickToggleMaximize.js'),
 }
 
-export const Css = '/css/parts/ViewletTitleBarButtons.css'
+export const Css = [
+  '/css/parts/ViewletTitleBarButtons.css',
+  '/css/parts/MaskIcon.css',
+]
 
 export * from './ViewletTitleBarButtons.js'
