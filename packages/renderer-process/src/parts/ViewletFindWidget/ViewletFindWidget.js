@@ -77,4 +77,10 @@ export const setMatchCountText = (state, value) => {
   $MatchCountText.nodeValue = value
 }
 
+export const setButtonsEnabled = (state, enabled) => {
+  const { $ButtonFocusNext, $ButtonFocusPrevious } = state
+  $ButtonFocusNext.disabled = !enabled
+  $ButtonFocusPrevious.disabled = !enabled
+}
+
 export const dispose = () => {}

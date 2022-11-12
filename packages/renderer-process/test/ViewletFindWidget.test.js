@@ -30,9 +30,18 @@ test('accessibility - buttons should have title', () => {
   const { $ButtonClose } = state
   expect($ButtonClose.title).toBe('Close')
 })
+
 test('accessibility - viewlet should have a role of group', () => {
   const state = ViewletFindWidget.create()
   const { $Viewlet } = state
   // @ts-ignore
   expect($Viewlet.role).toBe('group')
+})
+
+test('setButtonsEnabled - false', () => {
+  const state = ViewletFindWidget.create()
+  ViewletFindWidget.setButtonsEnabled(state, false)
+  const { $ButtonFocusNext, $ButtonFocusPrevious } = state
+  expect($ButtonFocusNext.disabled).toBe(true)
+  expect($ButtonFocusPrevious.disabled).toBe(true)
 })
