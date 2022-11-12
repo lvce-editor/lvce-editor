@@ -1,4 +1,4 @@
-test('viewlet.editor-cursor-up', async () => {
+test('viewlet.editor-find-widget', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(
@@ -29,4 +29,14 @@ content 2`
   const editorSelection = Locator('.EditorSelection')
   await expect(editorSelection).toHaveCSS('top', '20px')
   await expect(editorSelection).toHaveCSS('width', '63px')
+
+  // act
+  await FindWidget.setValue('content-not-found')
+
+  // assert
+  await expect(findWidgetMatchCount).toHaveText('No Results')
+  const buttonPreviousMatch = Locator('[title="Previous Match"]')
+  await expect(buttonPreviousMatch).toHaveAttribute('disabled', '')
+  const buttonNextMatch = Locator('[title="Next Match"]')
+  await expect(buttonNextMatch).toHaveAttribute('disabled', '')
 })

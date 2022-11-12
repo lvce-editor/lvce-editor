@@ -4,7 +4,7 @@ export const name = 'TitleBarButtons'
 
 const create$TitleBarButton = (id, icon, label) => {
   const $Icon = document.createElement('i')
-  $Icon.className = `MaskIcon${icon}`
+  $Icon.className = `MaskIcon ${icon}`
 
   const $TitleBarButton = document.createElement('button')
   $TitleBarButton.className = 'TitleBarButton'

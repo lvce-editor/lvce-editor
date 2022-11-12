@@ -10,6 +10,7 @@
   contain: strict;
   background: transparent;
   border: none;
+  color: currentColor;
 }
 
 .TitleBarButton:hover {
@@ -20,27 +21,12 @@
   background-color: rgba(232, 17, 35, 0.9);
 }
 
-[class^='MaskIcon'] {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: currentColor;
-  color: var(--TitleBarForeground, rgb(204, 204, 204));
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: 16px;
-  -webkit-mask-position: 50% 50%;
-  pointer-events: none;
-}
-
-.MaskIconMinimize {
+.MaskIcon.Minimize {
   -webkit-mask-image: url(/icons/chrome-minimize.svg);
 }
-.MaskIconToggleMaximize {
+.MaskIcon.ToggleMaximize {
   -webkit-mask-image: url(/icons/chrome-maximize.svg);
 }
-.MaskIconClose {
+.MaskIcon.Close {
   -webkit-mask-image: url(/icons/chrome-close.svg);
 }
