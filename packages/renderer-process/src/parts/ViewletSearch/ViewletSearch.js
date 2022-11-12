@@ -82,18 +82,42 @@ const create$Row = () => {
 
 // TODO much duplication with explorer
 const render$Row = ($Row, rowInfo) => {
+  const {
+    top,
+    type,
+    matchStart,
+    matchLength,
+    text,
+    title,
+    icon,
+    setSize,
+    posInSet,
+    depth,
+  } = rowInfo
   const $Icon = $Row.childNodes[0]
-  const $LabelText = $Row.childNodes[1].childNodes[0]
-  $Icon.className = `Icon${rowInfo.icon}`
-  $LabelText.data = rowInfo.text
-  $Row.title = rowInfo.title
-  $Row.ariaSetSize = `${rowInfo.setSize}`
-  $Row.ariaLevel = `${rowInfo.depth}`
-  $Row.ariaPosInSet = `${rowInfo.posInSet}`
+  const $Label = $Row.childNodes[1]
+  $Icon.className = `Icon${icon}`
+  if (matchLength) {
+    const before = text.slice(0, matchStart)
+    const highlight = text.slice(matchStart, matchStart + matchLength)
+    const after = text.slice(matchStart + matchLength)
+    const $Before = document.createTextNode(before)
+    const $Highlight = document.createElement('span')
+    $Highlight.className = 'Highlight'
+    $Highlight.textContent = highlight
+    const $After = document.createTextNode(after)
+    $Label.replaceChildren($Before, $Highlight, $After)
+  } else {
+    $Label.textContent = text
+  }
+  $Row.title = title
+  $Row.ariaSetSize = `${setSize}`
+  $Row.ariaLevel = `${depth}`
+  $Row.ariaPosInSet = `${posInSet}`
   $Row.ariaLabel = rowInfo.name
   $Row.ariaDescription = ''
-  $Row.style.top = `${rowInfo.top}px`
-  switch (rowInfo.type) {
+  $Row.style.top = `${top}px`
+  switch (type) {
     // TODO type should be a number for efficiency
     case DirentType.Directory:
       $Row.ariaExpanded = 'false'

@@ -101,7 +101,12 @@ export const setValue = async (state, value) => {
     const root = Workspace.state.workspacePath
     const results = await TextSearch.textSearch(root, value)
     const resultCount = getResultCounts(results)
-    const displayResults = toDisplayResults(results, itemHeight, resultCount)
+    const displayResults = toDisplayResults(
+      results,
+      itemHeight,
+      resultCount,
+      value
+    )
     const fileResultCount = results.length
     const message = getStatusMessage(resultCount, fileResultCount)
     const total = displayResults.length
@@ -183,7 +188,7 @@ const compareResults = (resultA, resultB) => {
   return Compare.compareString(pathA, pathB)
 }
 
-const toDisplayResults = (results, itemHeight, resultCount) => {
+const toDisplayResults = (results, itemHeight, resultCount, searchTerm) => {
   results.sort(compareResults)
   const displayResults = []
   let i = -1
@@ -203,6 +208,8 @@ const toDisplayResults = (results, itemHeight, resultCount) => {
       setSize,
       top: i * itemHeight,
       lineNumber: result.lineNumber,
+      matchStart: 0,
+      matchLength: 0,
     })
     for (const preview of previews) {
       i++
@@ -215,6 +222,8 @@ const toDisplayResults = (results, itemHeight, resultCount) => {
         setSize,
         top: i * itemHeight,
         lineNumber: preview.lineNumber,
+        matchStart: preview.preview.indexOf(searchTerm),
+        matchLength: searchTerm.length,
       })
     }
   }
