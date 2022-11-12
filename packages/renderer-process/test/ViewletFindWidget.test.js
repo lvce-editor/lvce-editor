@@ -25,10 +25,10 @@ test('accessibility - buttons should have tabindex 0', () => {
   expect($ButtonClose.tabIndex).toBe(0)
 })
 
-test('accessibility - buttons should have aria label', () => {
+test('accessibility - buttons should have title', () => {
   const state = ViewletFindWidget.create()
   const { $ButtonClose } = state
-  expect($ButtonClose.ariaLabel).toBe('Close')
+  expect($ButtonClose.title).toBe('Close')
 })
 test('accessibility - viewlet should have a role of group', () => {
   const state = ViewletFindWidget.create()

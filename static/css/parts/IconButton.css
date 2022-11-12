@@ -3,6 +3,8 @@
   height: 25px;
   contain: strict;
   flex-shrink: 0;
+  background: transparent;
+  border: none;
 }
 
 .IconButton:hover {
