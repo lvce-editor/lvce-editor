@@ -1,5 +1,6 @@
 import * as EditorGroup from '../EditorGroup/EditorGroup.js'
 import * as ViewletMainEvents from './ViewletMainEvents.js'
+import * as Label from '../Label/Label.js'
 
 const create$MainTabs = () => {
   const $MainTabs = document.createElement('div')
@@ -94,9 +95,7 @@ export const openViewlet = (
   oldActiveIndex,
   background = false
 ) => {
-  const $TabLabel = document.createElement('div')
-  $TabLabel.className = 'Label'
-  $TabLabel.textContent = tabLabel
+  const $TabLabel = Label.create(tabLabel)
 
   const $TabCloseButton = document.createElement('button')
   $TabCloseButton.className = 'EditorTabCloseButton'
@@ -176,8 +175,7 @@ export const openAnotherTab = async (
   // @ts-ignore
   $Tab.role = 'tab'
   $Tab.tabIndex = 0
-  const $TabLabel = document.createElement('div')
-  $TabLabel.className = 'Label'
+  const $TabLabel = Label.create(tabLabel)
   const $TabCloseButton = document.createElement('button')
   $TabCloseButton.className = 'EditorTabCloseButton'
   $TabCloseButton.ariaLabel = 'Close'
