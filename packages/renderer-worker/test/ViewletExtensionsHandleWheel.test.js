@@ -1,5 +1,5 @@
 import * as ViewletExtensions from '../src/parts/ViewletExtensions/ViewletExtensions.js'
-import * as ViewletExtensionsHandleWheel from '../src/parts/ViewletExtensions/ViewletExtensionsHandleWheel.js'
+import * as ViewletExtensionsHandleWheel from '../src/parts/VirtualList/VirtualListHandleWheel.js'
 
 test('handleWheel - scroll down', () => {
   const state = {

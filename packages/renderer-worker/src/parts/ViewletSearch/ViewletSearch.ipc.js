@@ -11,10 +11,10 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  handleWheel: () => import('./ViewletSearchHandleWheel.js'),
-  setDeltaY: () => import('./ViewletSearchSetDeltaY.js'),
-  handleScrollBarClick: () => import('./ViewletSearchHandleScrollBarClick.js'),
-  handleScrollBarMove: () => import('./ViewletSearchHandleScrollBarMove.js'),
+  handleWheel: () => import('../VirtualList/VirtualListHandleWheel.js'),
+  setDeltaY: () => import('../VirtualList/VirtualListSetDeltaY.js'),
+  handleScrollBarClick: () => import('../VirtualList/VirtualListHandleScrollBarClick.js'),
+  handleScrollBarMove: () => import('../VirtualList/VirtualListHandleScrollBarMove.js'),
 }
 
 export const Css = [

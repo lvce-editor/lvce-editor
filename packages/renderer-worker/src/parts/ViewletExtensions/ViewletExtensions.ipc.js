@@ -13,23 +13,23 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  focusFirst: () => import('./ViewletExtensionsFocusFirst.js'),
-  focusIndex: () => import('./ViewletExtensionsFocusIndex.js'),
-  focusLast: () => import('./ViewletExtensionsFocusLast.js'),
-  focusNext: () => import('./ViewletExtensionsFocusNext.js'),
+  focusFirst: () => import('../VirtualList/VirtualListFocusFirst.js'),
+  focusIndex: () => import('../VirtualList/VirtualListFocusIndex.js'),
+  focusLast: () => import('../VirtualList/VirtualListFocusLast.js'),
+  focusNext: () => import('../VirtualList/VirtualListFocusNext.js'),
   focusNextPage: () => import('./ViewletExtensionsFocusNextPage.js'),
-  focusPrevious: () => import('./ViewletExtensionsFocusPrevious.js'),
+  focusPrevious: () => import('../VirtualList/VirtualListFocusPrevious.js'),
   focusPreviousPage: () => import('./ViewletExtensionsFocusPreviousPage.js'),
   handleClick: () => import('./ViewletExtensionsHandleClick.js'),
   handleClickCurrent: () => import('./ViewletExtensionsHandleClickCurrent.js'),
   handleClickCurrentButKeepFocus: () => import('./ViewletExtensionsHandleClickCurrentButKeepFocus.js'),
-  handleScrollBarClick: () => import('./ViewletExtensionsHandleScrollBarClick.js'),
-  handleScrollBarMove: () => import('./ViewletExtensionsHandleScrollBarMove.js'),
+  handleScrollBarClick: () => import('../VirtualList/VirtualListHandleScrollBarClick.js'),
+  handleScrollBarMove: () => import('../VirtualList/VirtualListHandleScrollBarMove.js'),
   handleTouchEnd: () => import('./ViewletExtensionsHandleTouchEnd.js'),
   handleTouchMove: () => import('./ViewletExtensionsHandleTouchMove.js'),
   handleTouchStart: () => import('./ViewletExtensionsHandleTouchStart.js'),
-  handleWheel: () => import('./ViewletExtensionsHandleWheel.js'),
-  setDeltaY: () => import('./ViewletExtensionsSetDeltaY.js'),
+  handleWheel: () => import('../VirtualList/VirtualList.js'),
+  setDeltaY: () => import('../VirtualList/VirtualList.js'),
 }
 
 export const Css = [

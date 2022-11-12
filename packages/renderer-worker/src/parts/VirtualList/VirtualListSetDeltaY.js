@@ -1,12 +1,11 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
-import { getListHeight } from './ViewletExtensionsShared.js'
 
 export const setDeltaY = (state, value) => {
   Assert.object(state)
   Assert.number(value)
-  const listHeight = getListHeight(state)
-  const { itemHeight, finalDeltaY, deltaY } = state
+  const { itemHeight, finalDeltaY, deltaY, height, headerHeight } = state
+  const listHeight = height - headerHeight
   const newDeltaY = Clamp.clamp(value, 0, finalDeltaY)
   if (deltaY === newDeltaY) {
     return state
