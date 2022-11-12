@@ -82,7 +82,6 @@ const create$Row = () => {
 
 // TODO much duplication with explorer
 const render$Row = ($Row, rowInfo) => {
-  console.log({ rowInfo })
   const {
     top,
     type,
@@ -177,7 +176,6 @@ export const setResults = (state, results) => {
   Assert.object(state)
   Assert.array(results)
   const { $ListItems } = state
-  console.log({ results })
   // TODO should recycle nodes when rendering only search results
   // maybe could also recycle node from noResults and vice versa
   render$Rows($ListItems, results)
