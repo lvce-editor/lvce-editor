@@ -31,7 +31,6 @@ export const handlePointerUp = (event) => {
 }
 
 export const handlePointerCaptureLost = (event) => {
-  console.log('lost pointer capture')
   const { target } = event
   // @ts-ignore
   target.removeEventListener('pointermove', handlePointerMove)
