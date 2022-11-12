@@ -54,8 +54,7 @@ content 2`
     '.FindWidget [title="Previous Match"]'
   )
   await expect(findWidgetButtonFocusPrevious).toHaveAttribute(
-    'aria-label',
+    'title',
     'Previous Match'
   )
-  await expect(findWidgetButtonFocusPrevious).toHaveAttribute('tabindex', '0')
 })

@@ -5,6 +5,7 @@ import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js
 import * as EditorCompletionMap from '../EditorCompletionMap/EditorCompletionMap.js'
 import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletionItems.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as Height from '../Height/Height.js'
 
 export const create = (id, uri, top, left, width, height) => {
   return {
@@ -22,7 +23,7 @@ export const create = (id, uri, top, left, width, height) => {
     top: 0,
     minLineY: 0,
     maxLineY: 0,
-    itemHeight: 20,
+    itemHeight: Height.CompletionItem,
     width: 250,
     height: 150,
     deltaY: 0,
