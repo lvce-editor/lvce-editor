@@ -7,7 +7,6 @@
 }
 
 .TreeItem {
-  cursor: pointer;
   color: var(--TreeItemForeground, rgb(188, 190, 190));
   padding-left: 11px;
   display: flex;
