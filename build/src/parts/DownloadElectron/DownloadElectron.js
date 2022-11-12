@@ -1,5 +1,5 @@
 import * as ElectronGet from '@electron/get'
-import { VError } from 'verror'
+import VError from 'verror'
 import * as ExtractZip from '../ExtractZip/ExtractZip.js'
 
 export const downloadElectron = async ({
