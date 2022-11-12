@@ -98,11 +98,15 @@ const getLanguageId = (state) => {
   return languageId
 }
 
+const kLineHeight = 'editor.lineHeight'
+const kFontSize = 'editor.fontSize'
+const kLetterSpacing = 'editor.letterSpacing'
+
 export const loadContent = async (state, savedState) => {
   const { uri } = state
-  const rowHeight = Preferences.get('editor.lineHeight') || 20
-  const fontSize = Preferences.get('editor.fontSize') || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
-  const letterSpacing = Preferences.get('editor.letterSpacing') || 0.5
+  const rowHeight = Preferences.get(kLineHeight) || 20
+  const fontSize = Preferences.get(kFontSize) || 15 // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
+  const letterSpacing = Preferences.get(kLetterSpacing) || 0.5
   const content = await getContent(uri)
   const newState1 = Editor.setText(state, content)
   const languageId = getLanguageId(newState1)
@@ -110,6 +114,7 @@ export const loadContent = async (state, savedState) => {
   const savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
   const newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
+  // const selections = new Uint32Array([10, 10, 10, 10])
   return {
     ...newState2,
     rowHeight,
@@ -118,6 +123,7 @@ export const loadContent = async (state, savedState) => {
     tokenizer,
     selections: savedSelections,
     deltaY: savedDeltaY,
+    // selections,
   }
 }
 

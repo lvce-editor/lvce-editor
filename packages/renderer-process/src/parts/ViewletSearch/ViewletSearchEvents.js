@@ -39,11 +39,11 @@ const getIndex = ($Target) => {
 }
 
 export const handleClick = (event) => {
-  if (event.button === MouseEventType.RightClick) {
+  const { target, button } = event
+  if (button === MouseEventType.RightClick) {
     return
   }
-  const $Target = event.target
-  const index = getIndex($Target)
+  const index = getIndex(target)
   RendererWorker.send(
     /* Search.handleClick */ 'Search.handleClick',
     /* index */ index

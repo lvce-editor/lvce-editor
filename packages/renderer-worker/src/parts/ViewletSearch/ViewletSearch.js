@@ -201,6 +201,7 @@ const toDisplayResults = (results, itemHeight, resultCount) => {
       posInSet: i + 1,
       setSize,
       top: i * itemHeight,
+      lineNumber: result.lineNumber,
     })
     for (const preview of previews) {
       i++
@@ -212,6 +213,7 @@ const toDisplayResults = (results, itemHeight, resultCount) => {
         posInSet: i + 1,
         setSize,
         top: i * itemHeight,
+        lineNumber: preview.lineNumber,
       })
     }
   }
@@ -242,23 +244,32 @@ const getFileIndex = (items, index) => {
   return -1
 }
 
-const selectIndexFile = async (state, index) => {
-  const searchResult = state.items[index]
+const selectIndexFile = async (state, searchResult, index) => {
   const path = searchResult.title
   Assert.string(path)
   await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path)
   return state
 }
 
-const selectIndexPreview = async (state, index) => {
-  const fileIndex = getFileIndex(state.items, index)
+const selectIndexPreview = async (state, searchResult, index) => {
+  const { items } = state
+  const fileIndex = getFileIndex(items, index)
   if (fileIndex === -1) {
     throw new Error('Search result is missing file')
   }
-  const searchResult = state.items[fileIndex]
-  const path = searchResult.title
+  const { lineNumber } = searchResult
+  // console.log({ searchResult })
+  const fileResult = items[fileIndex]
+  const path = fileResult.title
   Assert.string(path)
-  await Command.execute(/* Main.openUri */ 'Main.openUri', /* uri */ path)
+  await Command.execute(
+    /* Main.openUri */ 'Main.openUri',
+    /* uri */ path,
+    /* focus */ true,
+    {
+      selections: new Uint32Array([lineNumber, 0, lineNumber, 0]),
+    }
+  )
   return state
 }
 
@@ -266,12 +277,13 @@ export const selectIndex = async (state, index) => {
   if (index === -1) {
     return state
   }
-  const searchResult = state.items[index]
+  const { items } = state
+  const searchResult = items[index]
   switch (searchResult.type) {
     case SearchResultType.File:
-      return selectIndexFile(state, index)
+      return selectIndexFile(state, searchResult, index)
     case SearchResultType.Preview:
-      return selectIndexPreview(state, index)
+      return selectIndexPreview(state, searchResult, index)
     default:
       throw new Error(`unexpected search result type ${searchResult.type}`)
   }
@@ -302,7 +314,9 @@ export const handleContextMenuKeyboard = async (state) => {
 }
 
 export const handleClick = async (state, index) => {
-  return selectIndex(state, index)
+  const { minLineY } = state
+  const actualIndex = index + minLineY
+  return selectIndex(state, actualIndex)
 }
 
 export const hasFunctionalResize = true

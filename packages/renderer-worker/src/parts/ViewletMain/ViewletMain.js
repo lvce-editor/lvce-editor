@@ -223,7 +223,7 @@ export const contentLoaded = async (state) => {
   return commands
 }
 
-export const openUri = async (state, uri, focus = true) => {
+export const openUri = async (state, uri, focus = true, options = {}) => {
   Assert.object(state)
   Assert.string(uri)
   const top = state.top + TAB_HEIGHT
@@ -248,7 +248,7 @@ export const openUri = async (state, uri, focus = true) => {
       )
       // @ts-ignore
 
-      await ViewletManager.load(instance, focus)
+      await ViewletManager.load(instance, focus, false, options)
       return state
     }
   }
