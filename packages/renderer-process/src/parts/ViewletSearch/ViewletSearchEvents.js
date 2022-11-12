@@ -1,14 +1,19 @@
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as Focus from '../Focus/Focus.js'
 
 export const handleInput = (event) => {
-  const $Target = event.target
-  const value = $Target.value
+  const { target } = event
+  const { value } = target
   RendererWorker.send(
     /* ViewletSearch.handleInput */ 'Search.handleInput',
     /* value */ value
   )
+}
+
+export const handleFocus = (event) => {
+  Focus.setFocus('SearchInput')
 }
 
 const getNodeIndex = ($Node) => {
