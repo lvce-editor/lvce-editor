@@ -5,6 +5,7 @@ import * as Command from '../Command/Command.js'
 import * as DomMatrix from '../DomMatrix/DomMatrix.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as WheelEvent from '../WheelEvent/WheelEvent.js'
 
 export const name = ViewletModuleId.EditorImage
 
@@ -197,11 +198,13 @@ export const handleWheel = (state, x, y, deltaX, deltaY) => {
   if (deltaY === 0) {
     return state
   }
+  const normalizedDeltaY = WheelEvent.normalizeDelta(deltaY)
+  console.log({ normalizedDeltaY })
   const { top, left } = state
   const relativeX = x - left
   const relativeY = y - top
   const { domMatrix, zoomFactor, minZoom, maxZoom } = state
-  const currentZoomFactor = getCurrentZoomFactor(zoomFactor, deltaY)
+  const currentZoomFactor = getCurrentZoomFactor(zoomFactor, normalizedDeltaY)
   const newDomMatrix = DomMatrix.zoomInto(
     domMatrix,
     currentZoomFactor,
