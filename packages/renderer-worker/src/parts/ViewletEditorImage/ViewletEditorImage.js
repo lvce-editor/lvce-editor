@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Clamp from '../Clamp/Clamp.js'
 import * as Command from '../Command/Command.js'
+import * as DomMatrix from '../DomMatrix/DomMatrix.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
@@ -15,7 +16,7 @@ export const create = (id, uri, left, top, width, height) => {
     width,
     height,
     uri,
-    domMatrix: new DOMMatrix(),
+    domMatrix: DomMatrix.create(),
     pointerOffsetX: 0,
     pointerOffsetY: 0,
     minZoom: 0.1,
@@ -105,14 +106,7 @@ const handleZoom = (state) => {
   const currentDiff = distance(eventCache[0], eventCache[1])
   if (previousDiff > 0) {
     if (currentDiff > previousDiff) {
-      const newDomMatrix = new DOMMatrix([
-        (domMatrix.a *= touchZoomFactor),
-        domMatrix.b,
-        domMatrix.c,
-        (domMatrix.d *= touchZoomFactor),
-        domMatrix.e,
-        domMatrix.f,
-      ])
+      const newDomMatrix = DomMatrix.scaleUp(domMatrix, touchZoomFactor)
       return {
         ...state,
         previousDiff: currentDiff,
@@ -120,14 +114,7 @@ const handleZoom = (state) => {
       }
     }
     if (currentDiff < previousDiff) {
-      const newDomMatrix = new DOMMatrix([
-        (domMatrix.a /= touchZoomFactor),
-        domMatrix.b,
-        domMatrix.c,
-        (domMatrix.d /= touchZoomFactor),
-        domMatrix.e,
-        domMatrix.f,
-      ])
+      const newDomMatrix = DomMatrix.scaleDown(domMatrix, touchZoomFactor)
       return {
         ...state,
         previousDiff: currentDiff,
@@ -141,14 +128,7 @@ const handleMove = (state, x, y) => {
   const { pointerOffsetX, pointerOffsetY, domMatrix } = state
   const deltaX = x - pointerOffsetX
   const deltaY = y - pointerOffsetY
-  const newDomMatrix = new DOMMatrix([
-    domMatrix.a,
-    domMatrix.b,
-    domMatrix.c,
-    domMatrix.d,
-    domMatrix.e + deltaX,
-    domMatrix.f + deltaY,
-  ])
+  const newDomMatrix = DomMatrix.move(domMatrix, deltaX, deltaY)
   return {
     ...state,
     pointerOffsetX: x,
@@ -220,11 +200,12 @@ export const handleWheel = (state, x, y, deltaX, deltaY) => {
   const relativeY = y - top
   const { domMatrix, zoomFactor, minZoom, maxZoom } = state
   const currentZoomFactor = getCurrentZoomFactor(zoomFactor, deltaY)
-  const newDomMatrix = new DOMMatrix()
-    .translateSelf(relativeX, relativeY)
-    .scaleSelf(currentZoomFactor)
-    .translateSelf(-relativeX, -relativeY)
-    .multiplySelf(domMatrix)
+  const newDomMatrix = DomMatrix.zoomInto(
+    domMatrix,
+    currentZoomFactor,
+    relativeX,
+    relativeY
+  )
   return {
     ...state,
     domMatrix: newDomMatrix,
@@ -247,18 +228,12 @@ const renderSrc = {
   },
 }
 
-// workaround for browser bug
-const stringifyDomMatrix = (domMatrix) => {
-  const { a, b, c, d, e, f } = domMatrix
-  return `matrix(${a}, ${b}, ${c}, ${d}, ${e}, ${f})`
-}
-
 const renderTransform = {
   isEqual(oldState, newState) {
     return oldState.domMatrix === newState.domMatrix
   },
   apply(oldState, newState) {
-    const transform = stringifyDomMatrix(newState.domMatrix)
+    const transform = DomMatrix.toString(newState.domMatrix)
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'EditorImage',
