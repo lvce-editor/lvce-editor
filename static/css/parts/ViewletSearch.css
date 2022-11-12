@@ -22,6 +22,10 @@
   position: absolute;
 }
 
+.Highlight {
+  background: rgba(129, 85, 14, 0.4);
+}
+
 /* TODO duplicate code with explorer.css */
 
 .TreeItem {
