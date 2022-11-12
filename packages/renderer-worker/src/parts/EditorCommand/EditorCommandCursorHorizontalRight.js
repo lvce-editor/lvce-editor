@@ -21,16 +21,15 @@ const getNewSelections = (selections, lines, getDelta) => {
         getDelta
       )
     } else {
-      newSelections[i] = newSelections[i + 2] = selections[i + 2]
-      newSelections[i + 1] = newSelections[i + 3] = selections[i + 3]
+      newSelections[i] = newSelections[i + 2] = selectionEndRow
+      newSelections[i + 1] = newSelections[i + 3] = selectionEndColumn
     }
   }
   return newSelections
 }
 
 export const editorCursorHorizontalRight = (editor, getDelta) => {
-  const lines = editor.lines
-  const selections = editor.selections
+  const { lines, selections } = editor
   const newSelections = getNewSelections(selections, lines, getDelta)
   return Editor.scheduleSelections(editor, newSelections)
 }

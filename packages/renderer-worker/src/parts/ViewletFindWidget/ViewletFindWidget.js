@@ -177,6 +177,21 @@ const renderMatchCount = {
   },
 }
 
+const renderButtonsEnabled = {
+  isEqual(oldState, newState) {
+    return oldState.matchCount === newState.matchCount
+  },
+  apply(oldState, newState) {
+    const enabled = newState.matchCount > 0
+    return [
+      /* Viewlet.invoke */ 'Viewlet.send',
+      /* id */ 'FindWidget',
+      /* method */ 'setButtonsEnabled',
+      /* enabled */ enabled,
+    ]
+  },
+}
+
 const getAriaLabel = (state) => {
   const { matchIndex, matchCount, value } = state
   return I18nString.i18nString(UiStrings.MatchesFoundFor, {
@@ -201,4 +216,9 @@ const renderAriaAnnouncement = {
   },
 }
 
-export const render = [renderValue, renderMatchCount, renderAriaAnnouncement]
+export const render = [
+  renderValue,
+  renderMatchCount,
+  renderAriaAnnouncement,
+  renderButtonsEnabled,
+]
