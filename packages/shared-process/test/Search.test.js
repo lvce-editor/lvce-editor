@@ -39,6 +39,7 @@ test(
           [
             {
               absoluteOffset: 208,
+              lineNumber: 6,
               preview: '    <title>Document</title>\n',
             },
           ],

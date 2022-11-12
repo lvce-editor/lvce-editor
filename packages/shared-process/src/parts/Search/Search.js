@@ -4,10 +4,13 @@ import * as Platform from '../Platform/Platform.js'
 
 const MAX_SEARCH_RESULTS = 300
 
-const toSearchResult = (parsedLine) => ({
-  preview: parsedLine.data.lines.text,
-  absoluteOffset: parsedLine.data.absolute_offset,
-})
+const toSearchResult = (parsedLine) => {
+  return {
+    preview: parsedLine.data.lines.text,
+    absoluteOffset: parsedLine.data.absolute_offset,
+    lineNumber: parsedLine.data.line_number - 1,
+  }
+}
 
 // TODO update vscode-ripgrep when https://github.com/mhinz/vim-grepper/issues/244, https://github.com/BurntSushi/ripgrep/issues/1892 is fixed
 
@@ -59,7 +62,8 @@ export const search = async (searchDir, searchString) => {
     let stats = {}
     let numberOfResults = 0
     // TODO use pipeline / transform stream maybe
-    childProcess.stdout.on('data', (chunk) => {
+
+    const handleData = (chunk) => {
       buffer += chunk
       const lines = buffer.split('\n')
       // @ts-ignore
@@ -88,20 +92,24 @@ export const search = async (searchDir, searchString) => {
       if (numberOfResults > MAX_SEARCH_RESULTS) {
         childProcess.kill()
       }
-    })
-    childProcess.once('close', () => {
+    }
+
+    const handleClose = () => {
       resolve({
         results: Object.entries(allSearchResults),
         stats,
       })
-    })
-    childProcess.once('error', (error) => {
+    }
+    const handleError = (error) => {
       // TODO check type of error
       console.error(error)
       resolve({
         results: [],
         stats,
       })
-    })
+    }
+    childProcess.stdout.on('data', handleData)
+    childProcess.once('close', handleClose)
+    childProcess.once('error', handleError)
   })
 }
