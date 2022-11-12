@@ -21,8 +21,8 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "msw": "0.48.0",
-    "node-fetch": "^3.2.10"
+    "msw": "0.48.1",
+    "node-fetch": "^3.3.0"
   },
   "jest": {
     "moduleNameMapper": {
