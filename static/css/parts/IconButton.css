@@ -5,13 +5,34 @@
   flex-shrink: 0;
   background: transparent;
   border: none;
+  color: #c5c5c5;
 }
 
-.IconButton:hover {
+.IconButton[disabled] {
+  color: rgba(204, 204, 204, 0.5);
+}
+
+.IconButton:enabled:hover {
   background-color: hsla(0, 0%, 100%, 0.1);
 }
 
 .IconButton:focus-visible {
   outline: 1px solid green;
   outline-offset: -1px;
+}
+
+.MaskIcon {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: currentColor;
+  /* color: red; */
+  /* var(--TitleBarForeground, rgb(204, 204, 204)); */
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: 16px;
+  -webkit-mask-position: 50% 50%;
+  pointer-events: none;
 }

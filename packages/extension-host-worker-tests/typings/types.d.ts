@@ -65,6 +65,7 @@ declare const Extension: {
 
 declare const FindWidget: {
   readonly focusNext: () => Promise<void>
+  readonly setValue: (value: string) => Promise<void>
 }
 
 declare const FileSystem: {

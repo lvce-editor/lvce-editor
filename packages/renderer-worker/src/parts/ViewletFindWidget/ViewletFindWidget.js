@@ -10,6 +10,7 @@ import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 const UiStrings = {
   MatchesFoundFor: `{PH1} of {PH2} found for {PH3}`,
   MatchOf: `{PH1} of {PH2}`,
+  NoResults: 'No Results',
 }
 
 export const name = ViewletModuleId.FindWidget
@@ -156,6 +157,16 @@ const renderValue = {
   },
 }
 
+const getMatchCountText = (matchIndex, matchCount) => {
+  if (matchCount === 0) {
+    return I18nString.i18nString(UiStrings.NoResults)
+  }
+  return I18nString.i18nString(UiStrings.MatchOf, {
+    PH1: matchIndex + 1,
+    PH2: matchCount,
+  })
+}
+
 const renderMatchCount = {
   isEqual(oldState, newState) {
     return (
@@ -164,10 +175,10 @@ const renderMatchCount = {
     )
   },
   apply(oldState, newState) {
-    const matchCountText = I18nString.i18nString(UiStrings.MatchOf, {
-      PH1: newState.matchIndex + 1,
-      PH2: newState.matchCount,
-    })
+    const matchCountText = getMatchCountText(
+      newState.matchIndex,
+      newState.matchCount
+    )
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ 'FindWidget',
