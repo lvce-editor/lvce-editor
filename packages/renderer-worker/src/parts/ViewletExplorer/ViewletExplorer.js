@@ -22,6 +22,7 @@ import {
   getParentStartIndex,
   getTopLevelDirents,
 } from './ViewletExplorerShared.js'
+import * as Height from '../Height/Height.js'
 
 // TODO viewlet should only have create and refresh functions
 // every thing else can be in a separate module <viewlet>.lazy.js
@@ -50,7 +51,7 @@ export const create = (id, uri, left, top, width, height) => {
     pathSeparator: PathSeparatorType.Slash,
     version: 0,
     editingIndex: -1,
-    itemHeight: 22,
+    itemHeight: Height.ListItem,
     dropTargets: [],
     excluded: [],
     editingValue: '',

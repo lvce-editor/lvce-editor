@@ -9,6 +9,7 @@ import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 import { getListHeight } from './ViewletExtensionsShared.js'
+import * as Height from '../Height/Height.js'
 
 const SUGGESTIONS = [
   '@builtin',
@@ -50,9 +51,9 @@ export const create = (id, uri, left, top, width, height) => {
     touchOffsetY: 0,
     touchTimeStamp: 0,
     touchDifference: 0,
-    itemHeight: 62,
+    itemHeight: Height.ExtensionListItem,
     headerHeight: 35,
-    minimumSliderSize: 20,
+    minimumSliderSize: Height.MinimumSliderSize,
     focused: false,
     items: [],
     size: ViewletSize.None,

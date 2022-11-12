@@ -6,7 +6,7 @@ import * as QuickPickEveryThing from '../QuickPickEntriesEverything/QuickPickEnt
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-
+import * as Height from '../Height/Height.js'
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
 
@@ -45,7 +45,7 @@ export const create = (id, uri, top, left, width, height) => {
     uri,
     cursorOffset: 0,
     deltaY: 0,
-    itemHeight: 22,
+    itemHeight: Height.ListItem,
     height: 300,
     headerHeight: 30,
     top: 50,

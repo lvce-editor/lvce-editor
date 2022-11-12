@@ -3,8 +3,6 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const ITEM_HEIGHT = 62
 
-const MINIMUM_SLIDER_SIZE = 20
-
 export const name = ViewletModuleId.List
 
 export const create = (id, uri, left, top, width, height) => {
