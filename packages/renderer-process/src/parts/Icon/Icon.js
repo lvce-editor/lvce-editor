@@ -11,3 +11,4 @@ export const ZoomIn = `/icons/zoom-in.svg`
 export const ZoomOut = `/icons/zoom-out.svg`
 export const ChevronUp = `/icons/chevron-up.svg`
 export const ChevronDown = `/icons/chevron-down.svg`
+export const Close = `/icons/close.svg`
