@@ -5,13 +5,9 @@ export const create$Button = (label, icon) => {
   // @ts-ignore
   $Icon.role = 'none'
 
-  const $Button = document.createElement('div')
-  // @ts-ignore
-  $Button.role = 'button'
-  $Button.ariaLabel = label
-  $Button.title = label
-  $Button.tabIndex = 0
+  const $Button = document.createElement('button')
   $Button.className = `IconButton`
+  $Button.title = label
   $Button.append($Icon)
   return $Button
 }
