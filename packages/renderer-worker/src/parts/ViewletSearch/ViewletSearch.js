@@ -9,6 +9,7 @@ import * as SearchResultType from '../SearchResultType/SearchResultType.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as Height from '../Height/Height.js'
 
 export const name = ViewletModuleId.Search
 
@@ -39,9 +40,9 @@ export const create = (id, uri, left, top, width, height) => {
     maxLineY: 0,
     deltaY: 0,
     headerHeight: 61, // TODO
-    itemHeight: 22,
+    itemHeight: Height.ListItem,
     scrollBarHeight: 0,
-    minimumSliderSize: 20, // TODO this should be the same for all components
+    minimumSliderSize: Height.MinimumSliderSize,
   }
 }
 

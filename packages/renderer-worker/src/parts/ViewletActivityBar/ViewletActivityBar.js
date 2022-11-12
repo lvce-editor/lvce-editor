@@ -5,6 +5,7 @@ import * as Icon from '../Icon/Icon.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
+import * as Height from '../Height/Height.js'
 import { focusIndex } from './ViewletActivityBarFocusIndex.js'
 
 /**
@@ -86,7 +87,7 @@ export const create = (id, uri, left, top, width, height) => {
     top,
     width,
     height,
-    itemHeight: 48,
+    itemHeight: Height.ActivityBarItem,
   }
 }
 
