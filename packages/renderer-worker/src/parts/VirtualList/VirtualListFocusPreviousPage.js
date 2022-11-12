@@ -1,4 +1,4 @@
-import { focusIndex } from './ViewletExtensionsFocusIndex.js'
+import { focusIndex } from './VirtualListFocusIndex.js'
 
 export const focusPreviousPage = (state) => {
   const { focusedIndex, minLineY, maxLineY } = state

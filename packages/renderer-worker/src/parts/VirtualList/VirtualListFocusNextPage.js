@@ -1,4 +1,4 @@
-import { focusIndex } from './ViewletExtensionsFocusIndex.js'
+import { focusIndex } from './VirtualListFocusIndex.js'
 import * as Arrays from '../Arrays/Arrays.js'
 
 export const focusNextPage = (state) => {
