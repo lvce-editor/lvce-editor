@@ -17,7 +17,7 @@ export const create = (id, uri, top, left, width, height) => {
     columnIndex: 0,
     leadingWord: '',
     loadingTimeout: -1,
-    filteredItems: [],
+    unfilteredItems: [],
     items: [],
     left: 0,
     top: 0,
@@ -49,17 +49,17 @@ const getDisplayErrorMessage = (error) => {
 
 export const loadContent = async (state) => {
   const editor = getEditor()
-  const items = await Completions.getCompletions(editor)
-  const filteredItems = FilterCompletionItems.filterCompletionItems(items, '')
+  const unfilteredItems = await Completions.getCompletions(editor)
+  const items = FilterCompletionItems.filterCompletionItems(unfilteredItems, '')
   const rowIndex = editor.selections[0]
   const columnIndex = editor.selections[1]
   const left = EditorPosition.x(editor, rowIndex, columnIndex)
   const top = EditorPosition.y(editor, rowIndex, columnIndex)
-  const newMaxLineY = Math.min(filteredItems.length, 8)
+  const newMaxLineY = Math.min(items.length, 8)
   return {
     ...state,
+    unfilteredItems,
     items,
-    filteredItems,
     left,
     top,
     maxLineY: newMaxLineY,
@@ -107,62 +107,6 @@ export const advance = (state, word) => {
   }
 }
 
-const getInsertSnippet = (word, leadingWord) => {
-  if (word.startsWith(leadingWord)) {
-    return word.slice(leadingWord.length)
-  }
-  return word
-}
-
-const select = async (state, completionItem) => {
-  const { leadingWord } = state
-  const word = completionItem.label
-  const snippet = getInsertSnippet(word, leadingWord)
-  // TODO type and dispose commands should be sent to renderer process at the same time
-  await Command.execute(/* Editor.type */ 'Editor.type', /* text */ snippet)
-  return {
-    ...state,
-    disposed: true,
-  }
-}
-
-export const selectIndex = (state, index) => {
-  const completionItem = state.filteredItems[index]
-  return select(state, completionItem)
-}
-
-export const focusIndex = (state, index) => {
-  return {
-    ...state,
-    focusedIndex: index,
-  }
-}
-
-export const focusFirst = (state) => {
-  return focusIndex(state, 0)
-}
-
-export const focusLast = (state) => {
-  const { filteredItems } = state
-  return focusIndex(state, filteredItems.length - 1)
-}
-
-export const focusPrevious = (state) => {
-  const { focusedIndex } = state
-  if (focusedIndex === 0) {
-    return focusLast(state)
-  }
-  return focusIndex(state, focusedIndex - 1)
-}
-
-export const focusNext = (state) => {
-  const { focusedIndex, filteredItems } = state
-  if (focusedIndex === filteredItems.length - 1) {
-    return focusFirst(state)
-  }
-  return focusIndex(state, focusedIndex + 1)
-}
-
 export const dispose = (state) => {
   return {
     ...state,
@@ -202,14 +146,14 @@ const getVisibleItems = (filteredItems, minLineY, maxLineY) => {
 const renderItems = {
   isEqual(oldState, newState) {
     return (
-      oldState.filteredItems === newState.filteredItems &&
+      oldState.items === newState.items &&
       oldState.minLineY === newState.minLineY &&
       oldState.maxLineY === newState.maxLineY
     )
   },
   apply(oldState, newState) {
     const visibleItems = getVisibleItems(
-      newState.filteredItems,
+      newState.items,
       newState.minLineY,
       newState.maxLineY
     )
@@ -226,7 +170,7 @@ const renderItems = {
 const renderBounds = {
   isEqual(oldState, newState) {
     return (
-      oldState.filteredItems === newState.filteredItems &&
+      oldState.items === newState.items &&
       oldState.minLineY === newState.minLineY &&
       oldState.maxLineY === newState.maxLineY
     )
