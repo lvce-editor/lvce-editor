@@ -77,7 +77,7 @@
   {
     "name": "builtin.language-basics-html",
     "repository": "github.com/lvce-editor/language-basics-html",
-    "version": "0.0.6"
+    "version": "0.0.7"
   },
   {
     "name": "builtin.language-basics-java",
