@@ -9,33 +9,14 @@
   flex-direction: column;
 }
 
-/* #ActivityBar:focus-within {
-  border: 1px solid rgba(62, 100, 170, 0.575);
-} */
-
-/* #ActivityBarItemsTop,
-#ActivityBarItemsBottom {
-  contain: content;
-  display: grid;
-  grid-auto-rows: 48px;
-} */
-
 .ActivityBarItem {
   position: relative;
   outline: none;
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: 24px;
-  mask-size: 24px;
-  /* background: var(--ActivityBarBackground); */
-  position: relative;
   width: 48px;
   height: 48px;
   contain: strict;
-  /* margin-top: 100px; */
   flex-shrink: 0;
+  --MaskIconSize: 24px;
 }
 
 .ActivityBarItem[title='Settings'] {
@@ -58,19 +39,6 @@
 .ActivityBarItem:focus-visible {
   /* background: var(--ActivityBarActiveBackground); */
   color: var(--ActivityBarActiveForeground);
-}
-
-.ActivityBarItemIcon {
-  position: absolute;
-  inset: 0;
-  background: currentColor;
-  /* filter: 1; */
-  -webkit-mask-repeat: no-repeat;
-  mask-repeat: no-repeat;
-  -webkit-mask-position: center;
-  mask-position: center;
-  -webkit-mask-size: 24px;
-  mask-size: 24px;
 }
 
 /* .ActivityBarItem:focus .ActivityBarItemIcon,

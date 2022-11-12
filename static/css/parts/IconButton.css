@@ -20,19 +20,3 @@
   outline: 1px solid green;
   outline-offset: -1px;
 }
-
-.MaskIcon {
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: currentColor;
-  /* color: red; */
-  /* var(--TitleBarForeground, rgb(204, 204, 204)); */
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: 16px;
-  -webkit-mask-position: 50% 50%;
-  pointer-events: none;
-}

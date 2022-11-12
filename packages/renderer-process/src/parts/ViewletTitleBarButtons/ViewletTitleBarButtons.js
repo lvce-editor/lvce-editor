@@ -44,7 +44,7 @@ export const setButtons = (state, buttons) => {
   const { $TitleBarButtons } = state
   for (const button of buttons) {
     const $Icon = document.createElement('i')
-    $Icon.className = `MaskIcon${button.icon}`
+    $Icon.className = `MaskIcon ${button.icon}`
     const $TitleBarButton = document.createElement('button')
     $TitleBarButton.className = 'TitleBarButton'
     $TitleBarButton.id = `TitleBarButton${button.id}`

@@ -1,5 +1,6 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as Assert from '../Assert/Assert.js'
+import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
 
 const activeId = 'ActivityBarItemActive'
@@ -7,14 +8,7 @@ const activeId = 'ActivityBarItemActive'
 // TODO set aria-selected false when sidebar is collapsed
 
 const create$ActivityBarItemIcon = (icon) => {
-  const $ActivityBarItemIcon = document.createElement('div')
-  // @ts-ignore
-  $ActivityBarItemIcon.role = 'none'
-  $ActivityBarItemIcon.className = 'ActivityBarItemIcon'
-  // @ts-ignore
-  $ActivityBarItemIcon.style.maskImage = `url(${icon})`
-  $ActivityBarItemIcon.style.webkitMaskImage = `url(${icon})`
-  return $ActivityBarItemIcon
+  return MaskIcon.create(icon)
 }
 
 // TODO assetDir might not work with non-builtin extension icons

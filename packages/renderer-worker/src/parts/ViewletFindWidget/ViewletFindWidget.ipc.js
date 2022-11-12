@@ -10,6 +10,7 @@ export const Commands = {
 export const Css = [
   '/css/parts/ViewletFindWidget.css',
   '/css/parts/IconButton.css',
+  '/css/parts/MaskIcon.css',
 ]
 
 export * from './ViewletFindWidget.js'
