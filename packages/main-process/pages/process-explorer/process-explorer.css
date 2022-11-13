@@ -1,6 +1,11 @@
 body {
   background: var(--MainBackground);
   color: var(--TreeItemForeground);
+  margin: 0;
+}
+
+h1 {
+  margin: 20px 10px;
 }
 
 #ProcessExplorer {
@@ -10,20 +15,35 @@ body {
 }
 
 #ProcessExplorer tr[aria-level='2'] > td:first-child {
-  padding-left: 2.5ch;
+  padding-left: 1.5ch;
+}
+
+#ProcessExplorer tr:not([aria-expanded])[aria-level='2'] > td:first-child {
+  padding-left: calc(1.5ch + 17px);
 }
 
 #ProcessExplorer tr[aria-level='3'] > td:first-child {
-  padding-left: 5ch;
+  padding-left: 3ch;
 }
+#ProcessExplorer tr:not([aria-expanded])[aria-level='3'] > td:first-child {
+  padding-left: calc(3ch + 17px);
+}
+
 #ProcessExplorer tr[aria-level='4'] > td:first-child {
-  padding-left: 7.5ch;
+  padding-left: 4.5ch;
+}
+#ProcessExplorer tr:not([aria-expanded])[aria-level='4'] > td:first-child {
+  padding-left: calc(4.5ch + 17px);
 }
 
 #ProcessExplorer tr > td:not(:first-child),
 #ProcessExplorer tr > th:not(:first-child) {
   padding-left: 3ch;
   text-align: right;
+}
+
+.ColumnProcessName {
+  min-width: 180px;
 }
 
 .Row {
@@ -40,6 +60,7 @@ body {
   background: currentColor;
   display: inline-block;
   -webkit-mask-image: url(../../../../static/icons/chevron-down.svg);
+  mask-image: url(../../../../static/icons/chevron-down.svg);
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
   -webkit-mask-position: center;
@@ -48,10 +69,15 @@ body {
   mask-size: 85%;
   vertical-align: middle;
   line-height: normal;
+  margin-right: 1px;
 }
 
 .Row[aria-expanded='false'] td:first-child::before {
   -webkit-mask-image: url(../../../../static/icons/chevron-right.svg);
+}
+
+.Row {
+  margin-left: 100px;
 }
 
 .Cell {
