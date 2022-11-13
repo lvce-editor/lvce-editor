@@ -148,7 +148,6 @@ test('handleWillNavigate', () => {
       false
     )
   ).toMatchObject({
-    title: 'new Title',
     isLoading: true,
   })
 })
@@ -163,7 +162,6 @@ test('handleDidNavigate', () => {
       false
     )
   ).toMatchObject({
-    title: 'new Title',
     isLoading: false,
   })
 })
