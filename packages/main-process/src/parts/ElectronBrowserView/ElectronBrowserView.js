@@ -38,13 +38,172 @@ const getIdentifier = (input) => {
 
 /**
  *
- * @param {number} restoreId
- * @param {any[]} falltroughKeyBindings
+ * @param {Electron.WebContents} webContents
+ */
+const getPort = (webContents) => {
+  const browserWindow = ElectronBrowserViewState.getWindow(webContents)
+  const state = AppWindowStates.findById(browserWindow.webContents.id)
+  if (!state) {
+    console.info('[main process] no message port found')
+    return undefined
+  }
+  const { port } = state
+  return port
+}
+
+/**
+ * @param {Electron.Event} event
+ * @param {string} url
+ */
+const handleWillNavigate = (event, url) => {
+  // console.log({ event, url })
+  const webContents = event.sender
+  const canGoForward = webContents.canGoForward()
+  const canGoBack = webContents.canGoBack()
+  const port = getPort(webContents)
+  if (!port) {
+    console.info('[main-process] view will navigate to ', url)
+    return
+  }
+  port.postMessage({
+    jsonrpc: '2.0',
+    method: 'Viewlet.executeViewletCommand',
+    params: [
+      'SimpleBrowser',
+      'browserViewId',
+      webContents.id,
+      'handleWillNavigate',
+      url,
+      canGoBack,
+      canGoForward,
+    ],
+  })
+}
+
+/**
+ *
+ * @param {Electron.Event} event
+ * @param {Electron.ContextMenuParams} params
+ */
+const handleContextMenu = (event, params) => {
+  const webContents = event.sender
+  const port = getPort(webContents)
+  if (!port) {
+    return
+  }
+  port.postMessage({
+    jsonrpc: '2.0',
+    method: 'Viewlet.executeViewletCommand',
+    params: [
+      'SimpleBrowser',
+      'browserViewId',
+      webContents.id,
+      'handleContextMenu',
+      params,
+    ],
+  })
+}
+
+const handlePageTitleUpdated = (event, title) => {
+  const webContents = event.sender
+  const port = getPort(webContents)
+  if (!port) {
+    console.info('[main-process] view will change title to ', title)
+    return
+  }
+  port.postMessage({
+    jsonrpc: '2.0',
+    method: 'Viewlet.executeViewletCommand',
+    params: [
+      'SimpleBrowser',
+      'browserViewId',
+      webContents.id,
+      'handleTitleUpdated',
+      title,
+    ],
+  })
+}
+
+/**
+ * @param {Electron.Event} event
+ * @param {Electron.Input} input
+ */
+const handleBeforeInput = (event, input) => {
+  if (input.type !== ElectronInputType.KeyDown) {
+    return
+  }
+  const webContents = event.sender
+  const falltroughKeyBindings = [] // TODO
+  const port = getPort(webContents)
+  const identifier = getIdentifier(input)
+  for (const fallThroughKeyBinding of falltroughKeyBindings) {
+    if (fallThroughKeyBinding.key === identifier) {
+      event.preventDefault()
+      port.postMessage({
+        jsonrpc: '2.0',
+        method: fallThroughKeyBinding.command,
+        params: fallThroughKeyBinding.args || [],
+      })
+      return
+    }
+  }
+}
+
+const handleDestroyed = (event) => {
+  const webContents = event.sender
+  console.log(`[main process] browser view ${webContents.id} destroyed`)
+  ElectronBrowserViewState.remove(webContents.id)
+}
+
+/**
+ *
+ * @type {(details: Electron.HandlerDetails) => ({action: 'deny'}) | ({action: 'allow', overrideBrowserWindowOptions?: Electron.BrowserWindowConstructorOptions})} param0
  * @returns
  */
-exports.createBrowserView = async (restoreId, falltroughKeyBindings) => {
+const handleWindowOpen = ({
+  url,
+  disposition,
+  features,
+  frameName,
+  referrer,
+  postBody,
+}) => {
+  // TODO maybe need to put this function into a closure
+  if (url === 'about:blank') {
+    return { action: ElectronWindowOpenActionType.Allow }
+  }
+  // console.log({ disposition, features, frameName, referrer, postBody })
+  if (disposition === ElectronDispositionType.BackgroundTab) {
+    // TODO open background tab
+    const port = getPort()
+    if (!port) {
+      console.warn('[main process] handlwWindowOpen - no port found')
+      return {
+        action: ElectronWindowOpenActionType.Deny,
+      }
+    }
+    port.postMessage({
+      jsonrpc: '2.0',
+      method: 'SimpleBrowser.openBackgroundTab',
+      params: [url],
+    })
+    return {
+      action: ElectronWindowOpenActionType.Deny,
+    }
+  }
+  console.info(`[main-process] blocked popup for ${url}`)
+  return {
+    action: ElectronWindowOpenActionType.Deny,
+  }
+}
+
+/**
+ *
+ * @param {number} restoreId
+ * @returns
+ */
+exports.createBrowserView = async (restoreId) => {
   Assert.number(restoreId)
-  Assert.array(falltroughKeyBindings)
   const cached = ElectronBrowserViewState.get(restoreId)
   if (cached) {
     // console.log('[main-process] cached browser view', restoreId)
@@ -64,144 +223,13 @@ exports.createBrowserView = async (restoreId, falltroughKeyBindings) => {
     view.webContents.insertCSS(ElectronBrowserViewCss.electronBrowserViewCss)
   }
   view.setBackgroundColor('#fff')
-  /**
-   *
-   * @param {Electron.Event} event
-   * @param {Electron.ContextMenuParams} params
-   */
-  const handleContextMenu = (event, params) => {
-    const port = getPort()
-    if (!port) {
-      return
-    }
-    port.postMessage({
-      jsonrpc: '2.0',
-      method: 'Viewlet.executeViewletCommand',
-      params: [
-        'SimpleBrowser',
-        'browserViewId',
-        id,
-        'handleContextMenu',
-        params,
-      ],
-    })
-  }
+
   view.webContents.on('context-menu', handleContextMenu)
   const { webContents } = view
   const { id } = webContents
   // console.log('[main process] create browser view', id)
   ElectronBrowserViewState.add(id, browserWindow, view)
-  const getPort = () => {
-    const state = AppWindowStates.findById(browserWindow.webContents.id)
-    if (!state) {
-      return undefined
-    }
-    const { port } = state
-    return port
-  }
 
-  /**
-   * @param {Electron.Event} event
-   * @param {string} url
-   */
-  const handleWillNavigate = (event, url) => {
-    const port = getPort()
-    if (!port) {
-      console.info('[main-process] view will navigate to ', url)
-      return
-    }
-    port.postMessage({
-      jsonrpc: '2.0',
-      method: 'Viewlet.executeViewletCommand',
-      params: ['SimpleBrowser', 'browserViewId', id, 'handleWillNavigate', url],
-    })
-  }
-  const handlePageTitleUpdated = (event, title) => {
-    const port = getPort()
-    if (!port) {
-      console.info('[main-process] view will change title to ', title)
-      return
-    }
-    port.postMessage({
-      jsonrpc: '2.0',
-      method: 'Viewlet.executeViewletCommand',
-      params: [
-        'SimpleBrowser',
-        'browserViewId',
-        id,
-        'handleTitleUpdated',
-        title,
-      ],
-    })
-  }
-  const handleDestroyed = () => {
-    console.log(`[main process] browser view ${id} destroyed`)
-    ElectronBrowserViewState.remove(id)
-  }
-
-  /**
-   * @param {Electron.Event} event
-   * @param {Electron.Input} input
-   */
-  const handleBeforeInput = (event, input) => {
-    if (input.type !== ElectronInputType.KeyDown) {
-      return
-    }
-    const port = getPort()
-    const identifier = getIdentifier(input)
-    for (const fallThroughKeyBinding of falltroughKeyBindings) {
-      if (fallThroughKeyBinding.key === identifier) {
-        event.preventDefault()
-        port.postMessage({
-          jsonrpc: '2.0',
-          method: fallThroughKeyBinding.command,
-          params: fallThroughKeyBinding.args || [],
-        })
-        return
-      }
-    }
-  }
-
-  /**
-   *
-   * @type {(details: Electron.HandlerDetails) => ({action: 'deny'}) | ({action: 'allow', overrideBrowserWindowOptions?: Electron.BrowserWindowConstructorOptions})} param0
-   * @returns
-   */
-  const handleWindowOpen = ({
-    url,
-    disposition,
-    features,
-    frameName,
-    referrer,
-    postBody,
-  }) => {
-    if (url === 'about:blank') {
-      return { action: ElectronWindowOpenActionType.Allow }
-    }
-    // console.log({ disposition, features, frameName, referrer, postBody })
-    if (disposition === ElectronDispositionType.BackgroundTab) {
-      // TODO open background tab
-      const port = getPort()
-      if (!port) {
-        console.warn('[main process] handlwWindowOpen - no port found')
-        return {
-          action: ElectronWindowOpenActionType.Deny,
-        }
-      }
-      port.postMessage({
-        jsonrpc: '2.0',
-        method: 'SimpleBrowser.openBackgroundTab',
-        params: [url],
-      })
-      return {
-        action: ElectronWindowOpenActionType.Deny,
-      }
-    }
-    console.info(`[main-process] blocked popup for ${url}`)
-    return {
-      action: ElectronWindowOpenActionType.Deny,
-    }
-  }
   webContents.on('will-navigate', handleWillNavigate)
   webContents.on('did-navigate', handleWillNavigate)
   webContents.on('page-title-updated', handlePageTitleUpdated)

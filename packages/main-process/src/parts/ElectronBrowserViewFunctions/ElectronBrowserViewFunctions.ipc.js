@@ -15,4 +15,5 @@ exports.Commands = {
   resizeBrowserView: ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.resizeBrowserView),
   setIframeSrc: ElectronBrowserViewFunctions.wrapBrowserViewCommand(ElectronBrowserViewFunctions.setIframeSrc),
   show: ElectronBrowserViewFunctions.show,
+  setFallthroughKeyBindings: ElectronBrowserViewFunctions.setFallThroughKeyBindings,
 }

@@ -30,3 +30,11 @@ test('accessibility - input box should enterkeyhint attribute', () => {
   const { $InputBox } = state
   expect($InputBox.enterKeyHint).toBe('go')
 })
+
+test('setButtonsEnabled - false', () => {
+  const state = ViewletSimpleBrowser.create()
+  ViewletSimpleBrowser.setButtonsEnabled(state, false, false)
+  const { $ButtonBack, $ButtonForward } = state
+  expect($ButtonBack.disabled).toBe(true)
+  expect($ButtonForward.disabled).toBe(true)
+})
