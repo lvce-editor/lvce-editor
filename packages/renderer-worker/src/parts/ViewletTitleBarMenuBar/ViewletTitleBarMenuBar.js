@@ -1,8 +1,6 @@
 import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuBarEntries.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = ViewletModuleId.TitleBarMenuBar
-
 export const create = () => {
   return {
     titleBarEntries: [],

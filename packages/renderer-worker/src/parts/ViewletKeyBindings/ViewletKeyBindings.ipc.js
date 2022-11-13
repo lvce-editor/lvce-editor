@@ -1,5 +1,7 @@
 import * as ViewletKeyBindings from './ViewletKeyBindings.js'
 
+export const name = 'KeyBindings'
+
 // prettier-ignore
 export const Commands = {
   handleClick:ViewletKeyBindings.handleClick,

@@ -1,6 +1,8 @@
 import * as ViewletExtensions from './ViewletExtensions.js'
 import * as VirtualList from '../VirtualList/VirtualList.ipc.js'
 
+export const name = 'Extensions'
+
 // prettier-ignore
 export const Commands = {
   closeSuggest: ViewletExtensions.closeSuggest,

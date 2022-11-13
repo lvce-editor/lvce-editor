@@ -58,10 +58,6 @@ jest.unstable_mockModule(
 const ViewletPdf = await import('../src/parts/ViewletPdf/ViewletPdf.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
-test('name', () => {
-  expect(ViewletPdf.name).toBe(ViewletModuleId.Pdf)
-})
-
 test('create', () => {
   const state = ViewletPdf.create()
   expect(state).toBeDefined()

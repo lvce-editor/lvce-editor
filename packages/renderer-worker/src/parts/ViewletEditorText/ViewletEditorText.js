@@ -38,8 +38,6 @@ export const handleTokenizeChange = () => {
   Viewlet.setState('EditorText', newState)
 }
 
-export const name = ViewletModuleId.EditorText
-
 // TODO uri?
 export const create = (id, uri, left, top, width, height) => {
   const instanceId = Id.create()

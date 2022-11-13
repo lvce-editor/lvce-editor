@@ -1,9 +1,5 @@
 import * as ViewletTodoList from '../src/parts/ViewletTodoList/ViewletTodoList.js'
 
-test('name', () => {
-  expect(ViewletTodoList.name).toBe('TodoList')
-})
-
 test('create', () => {
   expect(ViewletTodoList.create()).toBeDefined()
 })

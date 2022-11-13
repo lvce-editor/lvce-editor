@@ -45,10 +45,6 @@ const kTitleBarHeight = 35
 
 const kTotal = 36
 
-test('name', () => {
-  expect(ViewletLayout.name).toBe('Layout')
-})
-
 test('create', () => {
   const state = ViewletLayout.create()
   expect(state).toBeDefined()

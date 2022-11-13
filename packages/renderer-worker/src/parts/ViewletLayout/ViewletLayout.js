@@ -114,8 +114,6 @@ const mPanel = {
   kHeight: kPanelHeight,
 }
 
-export const name = ViewletModuleId.Layout
-
 const getDefaultTitleBarHeight = () => {
   switch (Platform.platform) {
     case PlatformType.Electron:

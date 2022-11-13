@@ -1,5 +1,7 @@
 import * as ViewletLocations from './ViewletLocations.js'
 
+export const name = 'Locations'
+
 // prettier-ignore
 export const Commands = {
   focusFirst: ViewletLocations.focusFirst,

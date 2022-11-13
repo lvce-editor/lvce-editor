@@ -23,8 +23,6 @@ const SUGGESTIONS = [
   '@category',
 ]
 
-export const name = ViewletModuleId.Extensions
-
 // then state can be recycled by Viewlet when there is only a single ViewletExtensions instance
 
 export const create = (id, uri, left, top, width, height) => {

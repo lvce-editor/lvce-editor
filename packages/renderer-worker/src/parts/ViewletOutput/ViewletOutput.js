@@ -3,8 +3,6 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as ExtensionHostOutputChannel from '../ExtensionHost/ExtensionHostOutput.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = ViewletModuleId.Output
-
 export const create = () => {
   return {
     selectedIndex: -1,

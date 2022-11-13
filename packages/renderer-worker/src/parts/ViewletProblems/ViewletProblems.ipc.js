@@ -1,5 +1,7 @@
 import * as ViewletProblems from './ViewletProblems.js'
 
+export const name = 'Problems'
+
 // prettier-ignore
 export const Commands = {
   focusIndex: ViewletProblems.focusIndex,

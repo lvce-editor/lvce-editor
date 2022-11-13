@@ -1,5 +1,7 @@
 import * as SimpleBrowser from './ViewletSimpleBrowser.js'
 
+export const name = 'SimpleBrowser'
+
 // prettier-ignore
 export const Commands = {
   backward: SimpleBrowser.backward,

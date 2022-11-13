@@ -11,8 +11,6 @@ import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
-export const name = ViewletModuleId.Search
-
 /**
  * @enum {string}
  */

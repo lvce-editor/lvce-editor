@@ -5,10 +5,6 @@ const render = (oldState, newState) => {
   return ViewletManager.render(ViewletCounter, oldState, newState)
 }
 
-test('name', () => {
-  expect(ViewletCounter.name).toBe('Counter')
-})
-
 test('create', () => {
   expect(ViewletCounter.create()).toBeDefined()
 })

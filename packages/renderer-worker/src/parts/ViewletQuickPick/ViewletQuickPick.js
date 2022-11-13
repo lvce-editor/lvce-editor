@@ -27,8 +27,6 @@ const QuickPickState = {
   Finished: 2,
 }
 
-export const name = ViewletModuleId.QuickPick
-
 export const create = (id, uri, top, left, width, height) => {
   return {
     state: QuickPickState.Default,

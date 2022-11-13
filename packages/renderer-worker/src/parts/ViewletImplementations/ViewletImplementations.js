@@ -4,8 +4,6 @@ import * as ViewletLocations from '../ViewletLocations/ViewletLocations.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
-export const name = ViewletModuleId.Implementations
-
 // TODO speed up this function by 130% by not running activation event (onReferences) again and again
 // e.g. (21ms activation event, 11ms getReferences) => (11ms getReferences)
 const getImplementations = async () => {

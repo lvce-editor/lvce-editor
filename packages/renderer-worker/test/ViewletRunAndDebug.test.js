@@ -1,9 +1,5 @@
 import * as ViewletRunAndDebug from '../src/parts/ViewletRunAndDebug/ViewletRunAndDebug.js'
 
-test('name', () => {
-  expect(ViewletRunAndDebug.name).toBe('Run And Debug')
-})
-
 test('create', () => {
   const state = ViewletRunAndDebug.create(0)
   expect(state).toBeDefined()

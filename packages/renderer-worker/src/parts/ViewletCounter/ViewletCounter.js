@@ -1,7 +1,5 @@
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = ViewletModuleId.Counter
-
 export const create = () => {
   return {
     count: 0,

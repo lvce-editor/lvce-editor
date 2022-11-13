@@ -7,8 +7,6 @@ import * as PdfWorker from '../PdfWorker/PdfWorker.js'
 import * as PdfWorkerFunctions from '../PdfWorkerFunctions/PdfWorkerFunctions.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = ViewletModuleId.Pdf
-
 export const create = (id, uri, top, left, width, height) => {
   return {
     id,

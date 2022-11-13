@@ -1,5 +1,7 @@
 import * as ViewletExtensionDetail from './ViewletExtensionDetail.js'
 
+export const name = 'ExtensionDetail'
+
 // prettier-ignore
 export const Commands = {
   handleIconError:  ViewletExtensionDetail.handleIconError,

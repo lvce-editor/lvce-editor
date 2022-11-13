@@ -72,10 +72,6 @@ const render = (oldState, newState) => {
   return ViewletManager.render(ViewletExtensions, oldState, newState)
 }
 
-test('name', () => {
-  expect(ViewletExtensions.name).toBe('Extensions')
-})
-
 test('create', () => {
   const state = ViewletExtensions.create()
   expect(state).toBeDefined()

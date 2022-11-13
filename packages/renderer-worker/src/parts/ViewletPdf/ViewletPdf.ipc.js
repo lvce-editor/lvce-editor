@@ -1,3 +1,5 @@
+export const name = 'Pdf'
+
 export const LazyCommands = {
   previous: () => import('./ViewletPdfPrevious.js'),
   next: () => import('./ViewletPdfNext.js'),

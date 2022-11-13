@@ -35,10 +35,6 @@ const ViewletImplementations = await import(
   '../src/parts/ViewletImplementations/ViewletImplementations.js'
 )
 
-test('name', () => {
-  expect(ViewletImplementations.name).toBe('Implementations')
-})
-
 test('loadContent - error - reference provider throws error', async () => {
   const state = ViewletImplementations.create()
   // @ts-ignore

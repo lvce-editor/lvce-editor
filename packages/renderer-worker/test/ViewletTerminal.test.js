@@ -42,10 +42,6 @@ const ViewletTerminal = await import(
   '../src/parts/ViewletTerminal/ViewletTerminal.js'
 )
 
-test('name', () => {
-  expect(ViewletTerminal.name).toBe('Terminal')
-})
-
 test('create', () => {
   const state = ViewletTerminal.create()
   expect(state).toBeDefined()
