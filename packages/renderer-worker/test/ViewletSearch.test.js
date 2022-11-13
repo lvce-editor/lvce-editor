@@ -232,6 +232,19 @@ test('handleInput - empty results', async () => {
   })
 })
 
+test('handleInput - empty value', async () => {
+  const state = ViewletSearch.create()
+  // @ts-ignore
+  TextSearch.textSearch.mockImplementation(() => {
+    return []
+  })
+  expect(await ViewletSearch.handleInput(state, '')).toMatchObject({
+    value: '',
+    items: [],
+  })
+  expect(TextSearch.textSearch).not.toHaveBeenCalled()
+})
+
 test('handleInput - error', async () => {
   // @ts-ignore
   TextSearch.textSearch.mockImplementation(() => {
