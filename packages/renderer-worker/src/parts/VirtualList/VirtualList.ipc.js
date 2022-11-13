@@ -4,9 +4,12 @@ export const LazyCommands = {
   focusLast: () => import('./VirtualListFocusLast.js'),
   focusNext: () => import('./VirtualListFocusNext.js'),
   focusNextPage: () => import('./VirtualListFocusNextPage.js'),
+  focusPrevious: () => import('./VirtualListFocusPrevious.js'),
   focusPreviousPage: () => import('./VirtualListFocusPreviousPage.js'),
-  handleTouchStart: () => import('./VirtualListHandleTouchStart.js'),
   handleTouchEnd: () => import('./VirtualListHandleTouchEnd.js'),
   handleTouchMove: () => import('./VirtualListHandleTouchMove.js'),
+  handleTouchStart: () => import('./VirtualListHandleTouchStart.js'),
   handleWheel: () => import('./VirtualListHandleWheel.js'),
+  handleScrollBarMove: () => import('./VirtualListHandleScrollBarMove.js'),
+  handleScrollBarClick: () => import('./VirtualListHandleScrollBarClick.js'),
 }
