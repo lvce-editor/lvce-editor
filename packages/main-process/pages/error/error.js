@@ -1,25 +1,4 @@
-const knownErrors = [
-  {
-    code: 'ERR_SSL_PROTOCOL_ERROR',
-    message: 'This site can’t provide a secure connection',
-  },
-  {
-    code: 'ERR_NAME_NOT_RESOLVED',
-    message: 'This site can’t be reached',
-  },
-]
-
-const getError = (code) => {
-  for (const error of knownErrors) {
-    if (error.code === code) {
-      return error
-    }
-  }
-  return {
-    code,
-    message: 'An unknown error occurred',
-  }
-}
+import { getError } from './errorMessage.js'
 
 const main = () => {
   const href = location.href
