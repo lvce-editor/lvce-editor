@@ -37,10 +37,6 @@ const render = (oldState, newState) => {
   return ViewletManager.render(ViewletSourceControl, oldState, newState)
 }
 
-test('name', () => {
-  expect(ViewletSourceControl.name).toBe('Source Control')
-})
-
 test('create', () => {
   const state = ViewletSourceControl.create()
   expect(state).toBeDefined()

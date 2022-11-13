@@ -1,5 +1,7 @@
 import * as ViewletActivityBar from './ViewletActivityBar.js'
 
+export const name = 'ActivityBar'
+
 // prettier-ignore
 export const Commands = {
   getHiddenItems: ViewletActivityBar.getHiddenItems,
