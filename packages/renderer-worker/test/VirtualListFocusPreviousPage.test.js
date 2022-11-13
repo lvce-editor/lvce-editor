@@ -4,6 +4,7 @@ test('focusPreviousPage - already at start', () => {
   const state = {
     items: [1, 2],
     focusedIndex: 0,
+    headerHeight: 0,
   }
   expect(VirtualListFocusPreviousPage.focusPreviousPage(state)).toBe(state)
 })
@@ -16,6 +17,7 @@ test('focusPreviousPage - scroll up one full page', () => {
     maxLineY: 6,
     itemHeight: 62,
     height: 62 * 3,
+    headerHeight: 0,
   }
   expect(VirtualListFocusPreviousPage.focusPreviousPage(state)).toMatchObject({
     minLineY: 1,
@@ -32,6 +34,7 @@ test('focusPreviousPage - scroll up half a page', () => {
     maxLineY: 4,
     itemHeight: 62,
     height: 62 * 3,
+    headerHeight: 0,
   }
   expect(VirtualListFocusPreviousPage.focusPreviousPage(state)).toMatchObject({
     minLineY: 0,
