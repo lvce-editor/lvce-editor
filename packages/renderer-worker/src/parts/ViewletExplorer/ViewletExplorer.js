@@ -338,16 +338,6 @@ export const removeDirent = async (state) => {
   }
 }
 
-const updateDirents = async (state) => {
-  const newVersion = ++state.version
-  const newState = await loadContent(state)
-  if (state.version !== newVersion || state.disposed) {
-    return
-  }
-  Object.assign(state, newState)
-  await contentLoaded(state)
-}
-
 export const renameDirent = (state) => {
   const { focusedIndex, items } = state
   const item = items[focusedIndex]
@@ -1326,7 +1316,7 @@ const renderItems = {
     const visibleDirents = getVisible(newState)
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Explorer',
+      /* id */ ViewletModuleId.Explorer,
       /* method */ 'updateDirents',
       /* visibleDirents */ visibleDirents,
     ]
@@ -1345,7 +1335,7 @@ const renderFocusedIndex = {
     const newFocusedIndex = newState.focusedIndex - newState.minLineY
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Explorer',
+      /* id */ ViewletModuleId.Explorer,
       /* method */ 'setFocusedIndex',
       /* oldindex */ oldFocusedIndex,
       /* newIndex */ newFocusedIndex,
@@ -1361,7 +1351,7 @@ const renderDropTargets = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Explorer',
+      /* id */ ViewletModuleId.Explorer,
       /* method */ 'setDropTargets',
       /* oldDropTargets */ oldState.dropTargets,
       /* newDropTargets */ newState.dropTargets,
@@ -1382,7 +1372,7 @@ const renderEditingIndex = {
       ) {
         return [
           /* Viewlet.invoke */ 'Viewlet.send',
-          /* id */ 'Explorer',
+          /* id */ ViewletModuleId.Explorer,
           /* method */ 'hideEditBox',
           /* index */ oldState.editingIndex,
         ]
@@ -1390,7 +1380,7 @@ const renderEditingIndex = {
       const dirent = newState.items[focusedIndex]
       return [
         /* Viewlet.invoke */ 'Viewlet.send',
-        /* id */ 'Explorer',
+        /* id */ ViewletModuleId.Explorer,
         /* method */ 'replaceEditBox',
         /* index */ oldState.editingIndex,
         /* dirent */ dirent,
@@ -1402,7 +1392,7 @@ const renderEditingIndex = {
       ) {
         return [
           /* Viewlet.invoke */ 'Viewlet.send',
-          /* id */ 'Explorer',
+          /* id */ ViewletModuleId.Explorer,
           /* method */ 'insertEditBox',
           /* index */ oldState.editingIndex,
           /* value */ editingValue,
@@ -1410,7 +1400,7 @@ const renderEditingIndex = {
       }
       return [
         /* Viewlet.invoke */ 'Viewlet.send',
-        /* id */ 'Explorer',
+        /* id */ ViewletModuleId.Explorer,
         /* method */ 'replaceWithEditBox',
         /* index */ editingIndex,
         /* value */ editingValue,

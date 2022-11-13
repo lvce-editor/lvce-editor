@@ -282,7 +282,7 @@ export const handleInput = async (state, value) => {
 export const handleInstall = async (state, id) => {
   await RendererProcess.invoke(
     /* viewletSend */ 'Viewlet.send',
-    /* id */ 'Extensions',
+    /* id */ ViewletModuleId.Extensions,
     /* method */ 'setExtensionState',
     /* id */ id,
     /* state */ 'installing'
@@ -293,7 +293,7 @@ export const handleInstall = async (state, id) => {
     // TODO have multi send command
     await RendererProcess.invoke(
       /* viewletSend */ 'Viewlet.send',
-      /* id */ 'Extensions',
+      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setExtensionState',
       /* id */ id,
       /* state */ 'uninstalled'
@@ -304,7 +304,7 @@ export const handleInstall = async (state, id) => {
   }
   await RendererProcess.invoke(
     /* viewletSend */ 'Viewlet.send',
-    /* id */ 'Extensions',
+    /* id */ ViewletModuleId.Extensions,
     /* method */ 'setExtensionState',
     /* id */ id,
     /* state */ 'installed'
@@ -315,7 +315,7 @@ export const handleInstall = async (state, id) => {
 export const handleUninstall = async (state, id) => {
   await RendererProcess.invoke(
     /* viewletSend */ 'Viewlet.send',
-    /* id */ 'Extensions',
+    /* id */ ViewletModuleId.Extensions,
     /* method */ 'setExtensionState',
     /* id */ id,
     /* state */ 'uninstalling'
@@ -325,7 +325,7 @@ export const handleUninstall = async (state, id) => {
   } catch (error) {
     await RendererProcess.invoke(
       /* viewletSend */ 'Viewlet.send',
-      /* id */ 'Extensions',
+      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setExtensionState',
       /* id */ id,
       /* state */ 'installed'
@@ -335,7 +335,7 @@ export const handleUninstall = async (state, id) => {
   }
   await RendererProcess.invoke(
     /* viewletSend */ 'Viewlet.send',
-    /* id */ 'Extensions',
+    /* id */ ViewletModuleId.Extensions,
     /* method */ 'setExtensionState',
     /* id */ id,
     /* state */ 'uninstalled'
@@ -349,7 +349,7 @@ export const handleEnable = async (state, id) => {
   } catch (error) {
     await RendererProcess.invoke(
       /* viewletSend */ 'Viewlet.send',
-      /* id */ 'Extensions',
+      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setExtensionState',
       /* id */ id,
       /* state */ 'disabled'
@@ -359,7 +359,7 @@ export const handleEnable = async (state, id) => {
   }
   await RendererProcess.invoke(
     /* viewletSend */ 'Viewlet.send',
-    /* id */ 'Extensions',
+    /* id */ ViewletModuleId.Extensions,
     /* method */ 'setExtensionState',
     /* id */ id,
     /* state */ 'enabled'
@@ -377,7 +377,7 @@ export const handleDisable = async (state, id) => {
   }
   await RendererProcess.invoke(
     /* viewletSend */ 'Viewlet.send',
-    /* id */ 'Extensions',
+    /* id */ ViewletModuleId.Extensions,
     /* method */ 'setExtensionState',
     /* id */ id,
     /* state */ 'disabled'
@@ -404,7 +404,7 @@ export const openSuggest = async (state) => {
   state.suggestionState = /* Open */ 1
   await RendererProcess.invoke(
     /* viewletSend */ 'Viewlet.send',
-    /* id */ 'Extensions',
+    /* id */ ViewletModuleId.Extensions,
     /* method */ 'openSuggest',
     /* suggestions */ filteredSuggestions
   )
@@ -414,7 +414,7 @@ export const closeSuggest = async (state) => {
   state.suggestionState = /* Closed */ 0
   await RendererProcess.invoke(
     /* viewletSend */ 'Viewlet.send',
-    /* id */ 'Extensions',
+    /* id */ ViewletModuleId.Extensions,
     /* method */ 'closeSuggest'
   )
 }
@@ -469,7 +469,7 @@ const renderExtensions = {
     const visibleExtensions = getVisible(newState)
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Extensions',
+      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setExtensions',
       /* visibleExtensions */ visibleExtensions,
     ]
@@ -485,7 +485,7 @@ const renderHeight = {
     const contentHeight = newState.items.length * itemHeight
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Extensions',
+      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setContentHeight',
       /* contentHeight */ contentHeight,
     ]
@@ -499,7 +499,7 @@ const renderNegativeMargin = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Extensions',
+      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setNegativeMargin',
       /* negativeMargin */ -newState.deltaY,
     ]
@@ -518,7 +518,7 @@ const renderFocusedIndex = {
     const newFocusedIndex = newState.focusedIndex - newState.minLineY
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Extensions',
+      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldFocusedIndex,
       /* newFocusedIndex */ newFocusedIndex,
@@ -545,7 +545,7 @@ const renderScrollBar = {
     )
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Extensions',
+      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setScrollBar',
       /* scrollBarY */ scrollBarY,
       /* scrollBarHeight */ newState.scrollBarHeight,
@@ -560,7 +560,7 @@ const renderError = {
   apply(oldState, newState) {
     return [
       /* viewletSend */ 'Viewlet.send',
-      /* id */ 'Extensions',
+      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setError',
       /* error */ newState.error,
     ]
@@ -574,7 +574,7 @@ const renderSize = {
   apply(oldState, newState) {
     return [
       /* viewletSend */ 'Viewlet.send',
-      /* id */ 'Extensions',
+      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setSize',
       /* oldSize */ oldState.size,
       /* newSize */ newState.size,

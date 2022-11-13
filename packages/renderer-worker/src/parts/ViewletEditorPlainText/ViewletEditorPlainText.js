@@ -33,7 +33,7 @@ const renderContent = {
   apply(oldState, newState) {
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'EditorPlainText',
+      /* id */ ViewletModuleId.EditorPlainText,
       /* method */ 'setContent',
       /* content */ newState.content,
     ]

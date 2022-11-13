@@ -83,7 +83,12 @@ const renderNumberOfPages = {
     return oldState.numberOfPages === newState.numberOfPages
   },
   apply(oldState, newState) {
-    return ['Viewlet.send', 'Pdf', 'setNumberOfPages', newState.numberOfPages]
+    return [
+      'Viewlet.send',
+      ViewletModuleId.Pdf,
+      'setNumberOfPages',
+      newState.numberOfPages,
+    ]
   },
 }
 
@@ -92,7 +97,7 @@ const renderPageNumber = {
     return oldState.page === newState.page
   },
   apply(oldState, newState) {
-    return ['Viewlet.send', 'Pdf', 'setPageNumber', newState.page]
+    return ['Viewlet.send', ViewletModuleId.Pdf, 'setPageNumber', newState.page]
   },
 }
 

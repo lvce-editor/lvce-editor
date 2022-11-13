@@ -127,7 +127,7 @@ const renderName = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'ExtensionDetail',
+      /* id */ ViewletModuleId.ExtensionDetail,
       /* method */ 'setName',
       /* name */ newState.name,
     ]
@@ -141,7 +141,7 @@ const renderDescription = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'ExtensionDetail',
+      /* id */ ViewletModuleId.ExtensionDetail,
       /* method */ 'setDescription',
       /* description */ newState.description,
     ]
@@ -155,7 +155,7 @@ const renderReadme = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'ExtensionDetail',
+      /* id */ ViewletModuleId.ExtensionDetail,
       /* method */ 'setReadmeHtml',
       /* sanizedHtml */ newState.sanitizedReadmeHtml,
     ]
@@ -169,7 +169,7 @@ const renderIcon = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'ExtensionDetail',
+      /* id */ ViewletModuleId.ExtensionDetail,
       /* method */ 'setIconSrc',
       /* src */ newState.iconSrc,
     ]
@@ -183,7 +183,7 @@ const renderSize = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'ExtensionDetail',
+      /* id */ ViewletModuleId.ExtensionDetail,
       /* method */ 'setSize',
       /* oldSize */ oldState.size,
       /* newSize */ newState.size,

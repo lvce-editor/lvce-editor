@@ -86,7 +86,7 @@ const renderValue = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Source Control',
+      /* id */ ViewletModuleId.SourceControl,
       /* method */ 'setInputValue',
       /* value */ newState.inputValue,
     ]
@@ -100,7 +100,7 @@ const renderChangeFiles = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Source Control',
+      /* id */ ViewletModuleId.SourceControl,
       /* method */ 'setChangedFiles',
       /* changedFiles */ newState.workingTree,
     ]

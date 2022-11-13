@@ -21,7 +21,6 @@ const UiStrings = {
   AdditionalViews: 'Additional Views',
 }
 
-
 // TODO rename viewlet parameter to something else (e.g. clicking settings opens context menu not settings viewlet)
 // TODO should just pass index
 // then if item is viewlet -> open viewlet
@@ -263,7 +262,7 @@ const renderActivityBarItems = {
     const visibleItems = getVisibleActivityBarItems(newState)
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'ActivityBar',
+      /* id */ ViewletModuleId.ActivityBar,
       /* method */ 'setItems',
       /* items */ visibleItems,
     ]
@@ -280,7 +279,7 @@ const renderFocusedIndex = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'ActivityBar',
+      /* id */ ViewletModuleId.ActivityBar,
       /* method */ 'setFocusedIndex',
       /* unFocusIndex */ oldState.focusedIndex,
       /* focusIndex */ newState.focusedIndex,
@@ -296,7 +295,7 @@ const renderSelectedIndex = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'ActivityBar',
+      /* id */ ViewletModuleId.ActivityBar,
       /* method */ 'setSelectedIndex',
       /* oldIndex */ oldState.selectedIndex,
       /* newIndex */ newState.selectedIndex,

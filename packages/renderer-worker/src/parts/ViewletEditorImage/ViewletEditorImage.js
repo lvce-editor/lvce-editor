@@ -239,7 +239,7 @@ const renderTransform = {
     const transform = DomMatrix.toString(newState.domMatrix)
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'EditorImage',
+      /* id */ ViewletModuleId.EditorImage,
       /* method */ 'setTransform',
       /* transform */ transform,
     ]
@@ -254,7 +254,7 @@ const renderCursor = {
     const isDragging = newState.eventCache.length > 0
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'EditorImage',
+      /* id */ ViewletModuleId.EditorImage,
       /* method */ 'setDragging',
       /* isDragging */ isDragging,
     ]

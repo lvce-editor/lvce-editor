@@ -31,7 +31,7 @@ const renderSrc = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Iframe',
+      /* id */ ViewletModuleId.Iframe,
       /* method */ 'setSrc',
       /* src */ newState.src,
     ]
