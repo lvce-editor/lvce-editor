@@ -1,6 +1,10 @@
 import * as Assert from '../Assert/Assert.js'
 
-export const create = ({ itemHeight, headerHeight, minimumSliderSize }) => {
+export const create = ({
+  itemHeight,
+  headerHeight = 0,
+  minimumSliderSize = 20,
+}) => {
   return {
     deltaY: 0,
     minLineY: 0,
@@ -11,6 +15,10 @@ export const create = ({ itemHeight, headerHeight, minimumSliderSize }) => {
     items: [],
     minimumSliderSize,
     focusedIndex: -1,
+    touchOffsetY: 0,
+    touchTimeStamp: 0,
+    touchDifference: 0,
+    scrollBarHeight: 0,
   }
 }
 
