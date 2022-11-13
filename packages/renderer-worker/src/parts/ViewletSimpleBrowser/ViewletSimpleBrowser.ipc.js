@@ -4,14 +4,10 @@ export const name = 'SimpleBrowser'
 
 // prettier-ignore
 export const Commands = {
-  backward: SimpleBrowser.backward,
-  forward: SimpleBrowser.forward,
   go: SimpleBrowser.go,
   handleInput: SimpleBrowser.handleInput,
   handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
-  openDevtools: SimpleBrowser.openDevtools,
-  reload: SimpleBrowser.reload,
 }
 
 export const LazyCommands = {
@@ -20,6 +16,10 @@ export const LazyCommands = {
   handleContextMenu: () => import('./ViewletSimpleBrowserHandleContextMenu.js'),
   inspectElement: () => import('./ViewletSimpleBrowserInspectElement.js'),
   copyImage: () => import('./ViewletSimpleBrowserCopyImage.js'),
+  backward: () => import('./ViewletSimpleBrowserBackward.js'),
+  forward: () => import('./ViewletSimpleBrowserForward.js'),
+  openDevtools: () => import('./ViewletSimpleBrowserOpenDevtools.js'),
+  reload: () => import('./ViewletSimpleBrowserReload.js'),
 }
 
 export const Css = [
