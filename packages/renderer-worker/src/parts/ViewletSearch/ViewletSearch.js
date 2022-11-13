@@ -95,6 +95,19 @@ const getResultCounts = (results) => {
 
 export const setValue = async (state, value) => {
   try {
+    if (value === '') {
+      return {
+        ...state,
+        value,
+        minLineY: 0,
+        maxLineY: 0,
+        deltaY: 0,
+        items: [],
+        matchIndex: 0,
+        matchCount: 0,
+        message: '',
+      }
+    }
     const { height, itemHeight, minimumSliderSize, headerHeight } = state
     const root = Workspace.state.workspacePath
     const results = await TextSearch.textSearch(root, value)
