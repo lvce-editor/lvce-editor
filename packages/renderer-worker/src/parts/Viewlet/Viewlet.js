@@ -275,6 +275,23 @@ export const closeWidget = async (id) => {
   // TODO restore focus
 }
 
+const getFn = async (module, fnName) => {
+  const fn = module.Commands[fnName]
+  if (fn) {
+    return fn
+  }
+  const lazyImport = module.LazyCommands[fnName]
+  if (!lazyImport) {
+    throw new Error(`Command not found ${module.name}.${fnName}`)
+  }
+  const importedModule = await lazyImport()
+  const lazyFn = importedModule[fnName]
+  if (!lazyFn) {
+    throw new Error(`Command not found ${module.name}.${fnName}`)
+  }
+  return lazyFn
+}
+
 export const executeViewletCommand = async (
   moduleId,
   uidKey,
@@ -288,10 +305,7 @@ export const executeViewletCommand = async (
       instance.factory.name === moduleId &&
       instance.state[uidKey] === uidValue
     ) {
-      const fn = instance.factory.Commands[fnName]
-      if (!fn) {
-        throw new Error(`Command not found ${moduleId}.${fnName}`)
-      }
+      const fn = await getFn(instance.factory, fnName)
       const oldState = instance.state
       const newState = await fn(oldState, ...args)
       const commands = ViewletManager.render(
