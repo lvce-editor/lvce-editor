@@ -1,6 +1,16 @@
 import * as Command from '../Command/Command.js'
+import * as I18nString from '../I18NString/I18NString.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  NoResults: 'No Results',
+  OneResultInOneFile: '1 result in 1 file',
+  ManyResultsInOneFile: '{PH1} results in 1 file',
+  ManyResultsInManyFiles: '{PH1} results in {PH2} files',
+}
 
 export const create = (id, uri) => {
   return {
@@ -14,15 +24,20 @@ export const create = (id, uri) => {
 
 const getMessage = (resultCount, fileCount) => {
   if (resultCount === 0) {
-    return 'No Results'
+    return I18nString.i18nString(UiStrings.NoResults)
   }
   if (resultCount === 1 && fileCount === 1) {
-    return '1 result in 1 file'
+    return I18nString.i18nString(UiStrings.OneResultInOneFile)
   }
   if (fileCount === 1) {
-    return `${resultCount} results in 1 file`
+    return I18nString.i18nString(UiStrings.ManyResultsInOneFile, {
+      PH1: resultCount,
+    })
   }
-  return `${resultCount} results in ${fileCount} files`
+  return I18nString.i18nString(UiStrings.ManyResultsInManyFiles, {
+    PH1: resultCount,
+    PH2: fileCount,
+  })
 }
 
 const getName = (uri) => {
