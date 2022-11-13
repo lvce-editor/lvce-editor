@@ -30,10 +30,6 @@ const ViewletSearch = await import(
 const TextSearch = await import('../src/parts/TextSearch/TextSearch.js')
 const Command = await import('../src/parts/Command/Command.js')
 
-test('name', () => {
-  expect(ViewletSearch.name).toBe('Search')
-})
-
 test('create', () => {
   const state = ViewletSearch.create()
   expect(state).toBeDefined()

@@ -10,8 +10,6 @@ const UiStrings = {
   ProblemsDetected: 'Some problems have been detected in the workspace.',
 }
 
-export const name = ViewletModuleId.Problems
-
 export const create = () => {
   return {
     problems: [],

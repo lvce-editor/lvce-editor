@@ -22,9 +22,6 @@ const render = (oldState, newState) => {
   return ViewletManager.render(ViewletQuickPick, oldState, newState)
 }
 
-test('name', () => {
-  expect(ViewletQuickPick.name).toBe('QuickPick')
-})
 
 test('create', () => {
   expect(ViewletQuickPick.create()).toBeDefined()

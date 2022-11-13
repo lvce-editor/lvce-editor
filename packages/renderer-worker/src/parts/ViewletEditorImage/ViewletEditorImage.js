@@ -7,8 +7,6 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as WheelEvent from '../WheelEvent/WheelEvent.js'
 
-export const name = ViewletModuleId.EditorImage
-
 export const create = (id, uri, left, top, width, height) => {
   return {
     src: '',

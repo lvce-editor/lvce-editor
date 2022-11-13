@@ -1,5 +1,7 @@
 import * as ViewletSearch from './ViewletSearch.js'
 
+export const name = 'Search'
+
 // prettier-ignore
 export const Commands = {
   handleClick: ViewletSearch.handleClick,

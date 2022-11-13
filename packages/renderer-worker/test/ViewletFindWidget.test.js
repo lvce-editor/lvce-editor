@@ -28,10 +28,6 @@ const ViewletStates = await import(
 )
 const Command = await import('../src/parts/Command/Command.js')
 
-test('name', () => {
-  expect(ViewletFindWidget.name).toBe('FindWidget')
-})
-
 test('create', () => {
   expect(ViewletFindWidget.create()).toBeDefined()
 })

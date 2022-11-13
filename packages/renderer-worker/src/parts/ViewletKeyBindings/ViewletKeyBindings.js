@@ -8,8 +8,6 @@ import * as ParseKeyBindings from '../ParseKeyBindings/ParseKeyBindings.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = ViewletModuleId.KeyBindings
-
 export const create = (id, uri, left, top, width, height) => {
   return {
     parsedKeyBindings: [],

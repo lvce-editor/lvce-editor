@@ -70,8 +70,6 @@ const hydrateLazy = async () => {
   )
 }
 
-export const name = ViewletModuleId.Main
-
 export const create = (id, uri, left, top, width, height) => {
   return {
     editors: [],

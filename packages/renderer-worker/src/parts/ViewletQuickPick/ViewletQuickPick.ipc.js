@@ -1,5 +1,7 @@
 import * as ViewletQuickPick from './ViewletQuickPick.js'
 
+export const name = 'QuickPick'
+
 // prettier-ignore
 export const Commands = {
   handleBeforeInput: ViewletQuickPick.handleBeforeInput,

@@ -1,9 +1,6 @@
 import * as ViewletPanel from '../src/parts/ViewletPanel/ViewletPanel.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
 
-test('name', () => {
-  expect(ViewletPanel.name).toBe('Panel')
-})
 
 test('create', () => {
   const state = ViewletPanel.create()

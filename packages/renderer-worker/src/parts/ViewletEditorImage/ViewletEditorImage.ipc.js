@@ -1,5 +1,7 @@
 import * as ViewletEditorImage from './ViewletEditorImage.js'
 
+export const name = 'EditorImage'
+
 // prettier-ignore
 export const Commands = {
   handlePointerDown: ViewletEditorImage.handlePointerDown,

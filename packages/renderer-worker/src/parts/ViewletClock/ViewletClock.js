@@ -1,7 +1,6 @@
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = ViewletModuleId.Clock
 
 export const create = (id, uri, left, top, width, height) => {
   return {
