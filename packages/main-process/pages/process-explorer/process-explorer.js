@@ -127,13 +127,11 @@ const handleDoubleClick = (event) => {
 }
 
 const handleFocusIn = (event) => {
-  console.log('focus in')
   const oldFocusedElement = state.$Tbody.querySelector('[tabIndex="0"]')
   const $Target = event.target
   if (oldFocusedElement) {
     oldFocusedElement.tabIndex = -1
   }
-  console.log($Target)
   $Target.tabIndex = 0
 }
 
@@ -308,7 +306,6 @@ const handleArrowRight = () => {
 }
 
 const handleArrowLeftRow = ($ActiveElement) => {
-  console.log($ActiveElement.ariaExpanded)
   if ($ActiveElement.ariaExpanded === 'true') {
     const index = getNodeIndex($ActiveElement)
     const displayProcess = state.displayProcesses[index]
@@ -369,7 +366,6 @@ const handleMouseDown = (event) => {
 }
 
 const handleContextMenu = (event) => {
-  console.log(event)
   event.preventDefault()
   const $Target = event.target
 
@@ -471,7 +467,7 @@ const create$Row = () => {
   const $Row = document.createElement('tr')
   $Row.className = 'Row'
   // @ts-ignore
-  $Row.role= 'row'
+  $Row.role = 'row'
   $Row.tabIndex = -1
   // Set aria-description to empty string so that screen readers don't read title as well
   // More details https://github.com/microsoft/vscode/issues/95378
