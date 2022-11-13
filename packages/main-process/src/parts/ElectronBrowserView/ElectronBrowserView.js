@@ -79,6 +79,34 @@ const handleWillNavigate = (event, url) => {
     ],
   })
 }
+/**
+ * @param {Electron.Event} event
+ * @param {string} url
+ */
+const handleDidNavigate = (event, url) => {
+  // console.log({ event, url })
+  const webContents = event.sender
+  const canGoForward = webContents.canGoForward()
+  const canGoBack = webContents.canGoBack()
+  const port = getPort(webContents)
+  if (!port) {
+    console.info('[main-process] view did navigate to ', url)
+    return
+  }
+  port.postMessage({
+    jsonrpc: '2.0',
+    method: 'Viewlet.executeViewletCommand',
+    params: [
+      'SimpleBrowser',
+      'browserViewId',
+      webContents.id,
+      'handleDidNavigate',
+      url,
+      canGoBack,
+      canGoForward,
+    ],
+  })
+}
 
 /**
  *
@@ -231,7 +259,7 @@ exports.createBrowserView = async (restoreId) => {
   }
 
   webContents.on('will-navigate', handleWillNavigate)
-  webContents.on('did-navigate', handleWillNavigate)
+  webContents.on('did-navigate', handleDidNavigate)
   webContents.on('page-title-updated', handlePageTitleUpdated)
   webContents.on('destroyed', handleDestroyed)
   webContents.on('before-input-event', handleBeforeInput)

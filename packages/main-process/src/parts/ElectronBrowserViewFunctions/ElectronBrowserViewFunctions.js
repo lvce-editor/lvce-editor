@@ -59,6 +59,7 @@ exports.setIframeSrc = async (view, iframeSrc) => {
     const newTitle = view.webContents.getTitle()
     return newTitle
   } catch (error) {
+    console.log({ error })
     try {
       await setIframeSrcFallback(view, error)
     } catch (error) {
@@ -107,6 +108,14 @@ exports.forward = (view) => {
 exports.backward = (view) => {
   // TODO return promise that resolves once devtools are actually open
   view.webContents.goBack()
+}
+
+/**
+ *
+ * @param {Electron.BrowserView} view
+ */
+exports.cancelNavigation = (view) => {
+  view.webContents.stop()
 }
 
 exports.show = (id) => {

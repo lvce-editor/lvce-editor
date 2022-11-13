@@ -28,8 +28,14 @@ export const handleClickBackward = () => {
   RendererWorker.send('SimpleBrowser.backward')
 }
 
-export const handleClickReload = () => {
-  RendererWorker.send('SimpleBrowser.reload')
+export const handleClickReload = (event) => {
+  const { target } = event
+  // TODO maybe set data attribute to check if it is a cancel button
+  if (target.title === 'Cancel') {
+    RendererWorker.send('SimpleBrowser.cancelNavigation')
+  } else {
+    RendererWorker.send('SimpleBrowser.reload')
+  }
 }
 
 export const handleClickOpenExternal = () => {

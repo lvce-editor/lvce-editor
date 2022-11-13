@@ -67,6 +67,7 @@ exports.getModuleId = (commandId) => {
     case 'ElectronBrowserViewFunctions.inspectElement':
     case 'ElectronBrowserViewFunctions.copyImageAt':
     case 'ElectronBrowserViewFunctions.setFallthroughKeyBindings':
+    case 'ElectronBrowserViewFunctions.cancelNavigation':
       return ModuleId.ElectronBrowserViewFunctions
     case 'ElectronMenu.openContextMenu':
       return ModuleId.ElectronMenu

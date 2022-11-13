@@ -39,6 +39,13 @@ export const backward = (id) => {
   return ElectronProcess.invoke('ElectronBrowserViewFunctions.backward', id)
 }
 
+export const cancelNavigation = (id) => {
+  return ElectronProcess.invoke(
+    'ElectronBrowserViewFunctions.cancelNavigation',
+    id
+  )
+}
+
 export const show = (id) => {
   return ElectronProcess.invoke('ElectronBrowserViewFunctions.show', id)
 }

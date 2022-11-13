@@ -137,3 +137,33 @@ test('handleTitleUpdated', () => {
     title: 'new Title',
   })
 })
+
+test('handleWillNavigate', () => {
+  const state = ViewletSimpleBrowser.create()
+  expect(
+    ViewletSimpleBrowser.handleWillNavigate(
+      state,
+      'https://example.com',
+      false,
+      false
+    )
+  ).toMatchObject({
+    title: 'new Title',
+    isLoading: true,
+  })
+})
+
+test('handleDidNavigate', () => {
+  const state = { ...ViewletSimpleBrowser.create(), isLoading: true }
+  expect(
+    ViewletSimpleBrowser.handleDidNavigate(
+      state,
+      'https://example.com',
+      false,
+      false
+    )
+  ).toMatchObject({
+    title: 'new Title',
+    isLoading: false,
+  })
+})
