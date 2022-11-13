@@ -6,8 +6,6 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
-export const name = ViewletModuleId.SideBar
-
 export const create = (id, uri, left, top, width, height) => {
   return {
     currentViewletId: '',

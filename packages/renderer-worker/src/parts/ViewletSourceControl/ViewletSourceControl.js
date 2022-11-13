@@ -4,8 +4,6 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
-export const name = ViewletModuleId.SourceControl
-
 export const create = () => {
   return {
     merge: [],

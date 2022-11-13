@@ -21,7 +21,6 @@ const UiStrings = {
   AdditionalViews: 'Additional Views',
 }
 
-export const name = ViewletModuleId.ActivityBar
 
 // TODO rename viewlet parameter to something else (e.g. clicking settings opens context menu not settings viewlet)
 // TODO should just pass index

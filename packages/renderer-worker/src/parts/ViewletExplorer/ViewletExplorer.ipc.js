@@ -1,5 +1,7 @@
 import * as ViewletExplorer from './ViewletExplorer.js'
 
+export const name = 'Explorer'
+
 export const Events = {
   'languages.changed': ViewletExplorer.handleLanguagesChanged,
   'workspace.change': ViewletExplorer.handleWorkspaceChange,
