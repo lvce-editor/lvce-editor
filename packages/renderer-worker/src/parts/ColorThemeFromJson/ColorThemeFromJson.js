@@ -65,18 +65,23 @@ export const createColorThemeFromJson = (colorThemeId, colorThemeJson) => {
   const tokenColorRules = tokenColors.map(toTokenColorRule)
   const extraRules = []
   if (colors.ContrastBorder) {
-    console.log('has contrast border')
-    extraRules.push(`#ActivityBar, #SideBar {
+    extraRules.push(
+      `#ActivityBar, #SideBar {
   border-left: 1px solid var(--ContrastBorder);
-}`, `#Panel {
+}`,
+      `#Panel {
   border-top: 1px solid var(--ContrastBorder);
-}`, `#StatusBar {
+}`,
+      `#StatusBar {
   border-top: 1px solid var(--ContrastBorder);
-}`, `.ActivityBarItemBadge {
+}`,
+      `.ActivityBarItemBadge {
   border: 1px solid var(--ContrastBorder);
-}`, `#QuickPick {
+}`,
+      `#QuickPick {
   border: 1px solid var(--ContrastBorder);
-}`)
+}`
+    )
   }
   const colorThemeCss = `:root {\n${colorRules.join(
     '\n'

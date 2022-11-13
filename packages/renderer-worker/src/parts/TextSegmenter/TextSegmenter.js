@@ -28,7 +28,6 @@ export const create = () => {
         if (currentVisualIndex >= visualIndex) {
           return segment.index
         }
-        console.log({ segment })
         currentVisualIndex++
       }
       return line.length

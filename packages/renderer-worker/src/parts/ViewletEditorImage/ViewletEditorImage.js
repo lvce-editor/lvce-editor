@@ -197,7 +197,6 @@ export const handleWheel = (state, x, y, deltaX, deltaY) => {
     return state
   }
   const normalizedDeltaY = WheelEvent.normalizeDelta(deltaY)
-  console.log({ normalizedDeltaY })
   const { top, left } = state
   const relativeX = x - left
   const relativeY = y - top

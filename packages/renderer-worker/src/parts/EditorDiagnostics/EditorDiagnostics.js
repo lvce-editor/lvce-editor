@@ -11,7 +11,6 @@ const getDiagnostics = async (editor) => {
   const diagnostics = await ExtensionHostDiagnostics.executeDiagnosticProvider(
     editor
   )
-  console.log({ diagnostics })
   return diagnostics
 }
 

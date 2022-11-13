@@ -73,7 +73,6 @@ export const loadContent = async (state) => {
     itemHeight
   )
 
-  console.log({ viewObjects })
   const listHeight = getListHeight(state)
   const total = viewObjects.length
   const contentHeight = total * itemHeight

@@ -25,7 +25,6 @@ const handleDropIntoFolder = async (state, dirent, index, files) => {
   ]
 
   // const mergedDirents = mergeDirents(dirents, childDirents)
-  console.log({ childDirents })
   return {
     ...state,
     items: mergedDirents,

@@ -422,9 +422,7 @@ export const closeAllEditors = async (state) => {
 export const dispose = () => {}
 
 export const closeEditor = async (state, index) => {
-  console.log('close', index, 'of', state.editors)
   if (state.editors.length === 1) {
-    console.log('close all')
     return closeAllEditors(state)
   }
   const top = state.top
