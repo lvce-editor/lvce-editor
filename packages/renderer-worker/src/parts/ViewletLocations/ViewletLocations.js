@@ -210,7 +210,7 @@ const renderLocations = {
   apply(oldState, newState) {
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Locations,
+      /* id */ newState.id,
       /* method */ 'setLocations',
       /* references */ newState.displayReferences,
     ]
@@ -224,7 +224,7 @@ const renderMessage = {
   apply(oldState, newState) {
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Locations,
+      /* id */ newState.id,
       /* method */ 'setMessage',
       /* message */ newState.message,
     ]
@@ -238,7 +238,7 @@ const renderFocusedIndex = {
   apply(oldState, newState) {
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Locations,
+      /* id */ newState.id,
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldState.focusedIndex,
       /* newFocusedIndex */ newState.focusedIndex,
