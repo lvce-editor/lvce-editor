@@ -25,9 +25,6 @@ const render = (oldState, newState) => {
   return ViewletManager.render(ViewletProblems, oldState, newState)
 }
 
-test('name', () => {
-  expect(ViewletProblems.name).toBe('Problems')
-})
 
 test('create', () => {
   const state = ViewletProblems.create()

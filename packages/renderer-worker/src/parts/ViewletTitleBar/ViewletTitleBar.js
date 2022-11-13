@@ -1,7 +1,5 @@
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = ViewletModuleId.TitleBar
-
 export const create = (id, uri, top, left, width, height) => {
   return {
     disposed: false,

@@ -52,9 +52,6 @@ const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 const Markdown = await import('../src/parts/Markdown/Markdown.js')
 const SanitizeHtml = await import('../src/parts/SanitizeHtml/SanitizeHtml.js')
 
-test('name', () => {
-  expect(ViewletExtensionDetail.name).toBe('ExtensionDetail')
-})
 
 test('create', () => {
   const state = ViewletExtensionDetail.create()

@@ -1,9 +1,5 @@
 import * as ViewletDebugConsole from '../src/parts/ViewletDebugConsole/ViewletDebugConsole.js'
 
-test('name', () => {
-  expect(ViewletDebugConsole.name).toBe('Debug Console')
-})
-
 test('create', () => {
   const state = ViewletDebugConsole.create()
   expect(state).toBeDefined()

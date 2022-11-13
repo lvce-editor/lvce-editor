@@ -1,5 +1,7 @@
 import * as ViewletMain from './ViewletMain.js'
 
+export const name = 'Main'
+
 // prettier-ignore
 export const Commands = {
   // 'Main.hydrate': ViewletMain.hydrate,

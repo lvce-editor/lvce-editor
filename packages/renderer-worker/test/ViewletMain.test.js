@@ -37,10 +37,6 @@ const ViewletStates = await import(
 
 const ViewletMain = await import('../src/parts/ViewletMain/ViewletMain.js')
 
-test('name', () => {
-  expect(ViewletMain.name).toBe('Main')
-})
-
 test('create', () => {
   const state = ViewletMain.create()
   expect(state).toBeDefined()

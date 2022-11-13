@@ -10,8 +10,6 @@ import * as SanitizeHtml from '../SanitizeHtml/SanitizeHtml.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 
-export const name = ViewletModuleId.ExtensionDetail
-
 export const create = (id, uri, top, left, width, height) => {
   return {
     name: '',

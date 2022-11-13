@@ -1,5 +1,7 @@
 import * as ViewletTerminal from './ViewletTerminal.js'
 
+export const name = 'Terminal'
+
 // prettier-ignore
 export const Commands = {
   clear: ViewletTerminal.clear,

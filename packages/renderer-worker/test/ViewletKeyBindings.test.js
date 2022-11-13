@@ -22,10 +22,6 @@ const KeyBindingsInitial = await import(
   '../src/parts/KeyBindingsInitial/KeyBindingsInitial.js'
 )
 
-test('name', () => {
-  expect(ViewletKeyBindings.name).toBe('KeyBindings')
-})
-
 test('create', () => {
   expect(ViewletKeyBindings.create()).toBeDefined()
 })

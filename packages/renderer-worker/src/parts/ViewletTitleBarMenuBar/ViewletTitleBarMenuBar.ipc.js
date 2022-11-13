@@ -1,3 +1,5 @@
+export const name = 'TitleBarMenuBar'
+
 // prettier-ignore
 export const LazyCommands={
   closeMenu: () => import('./ViewletTitleBarMenuBarCloseMenu.js'),

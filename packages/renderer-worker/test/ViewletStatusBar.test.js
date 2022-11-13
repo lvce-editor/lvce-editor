@@ -29,10 +29,6 @@ beforeEach(() => {
   Callback.state.id = 0
 })
 
-test('name', () => {
-  expect(ViewletStatusBar.name).toBe(ViewletModuleId.StatusBar)
-})
-
 test('create', () => {
   const state = ViewletStatusBar.create()
   expect(state).toBeDefined()

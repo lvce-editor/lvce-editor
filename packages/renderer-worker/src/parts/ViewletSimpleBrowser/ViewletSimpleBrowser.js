@@ -8,8 +8,6 @@ import * as IframeSrc from '../IframeSrc/IframeSrc.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 
-export const name = ViewletModuleId.SimpleBrowser
-
 export const create = (id, uri, left, top, width, height) => {
   return {
     id,

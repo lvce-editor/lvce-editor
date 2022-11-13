@@ -58,10 +58,6 @@ const ElectronBrowserView = await import(
   '../src/parts/ElectronBrowserView/ElectronBrowserView.js'
 )
 
-test('name', () => {
-  expect(ViewletSimpleBrowser.name).toBe('SimpleBrowser')
-})
-
 test('create', () => {
   const state = ViewletSimpleBrowser.create()
   expect(state).toBeDefined()

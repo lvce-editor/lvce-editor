@@ -4,8 +4,6 @@ import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
-export const name = ViewletModuleId.Panel
-
 export const create = () => {
   return {
     currentViewletId: '',

@@ -11,8 +11,6 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as Height from '../Height/Height.js'
 
-export const name = ViewletModuleId.Search
-
 /**
  * @enum {string}
  */

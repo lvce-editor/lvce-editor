@@ -1,5 +1,7 @@
 import * as ViewletEditorText from './ViewletEditorText.js'
 
+export const name = 'EditorText'
+
 // prettier-ignore
 export const Commands = {
     // TODO command to set cursor position

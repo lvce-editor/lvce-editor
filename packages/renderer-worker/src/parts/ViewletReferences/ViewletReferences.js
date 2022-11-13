@@ -16,8 +16,6 @@ const getReferences = async () => {
   return references
 }
 
-export const name = ViewletModuleId.References
-
 export const create = ViewletLocations.create
 
 // TODO speed up this function by 130% by not running activation event (onReferences) again and again

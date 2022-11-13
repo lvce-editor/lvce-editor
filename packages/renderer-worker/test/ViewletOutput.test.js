@@ -33,10 +33,6 @@ const ViewletOutput = await import(
   '../src/parts/ViewletOutput/ViewletOutput.js'
 )
 
-test('name', () => {
-  expect(ViewletOutput.name).toBe('Output')
-})
-
 test('create', () => {
   const state = ViewletOutput.create()
   expect(state).toBeDefined()

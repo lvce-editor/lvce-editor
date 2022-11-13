@@ -2,8 +2,6 @@ import * as Command from '../Command/Command.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = ViewletModuleId.Locations
-
 export const create = (id, uri) => {
   return {
     references: [],

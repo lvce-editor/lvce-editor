@@ -1,7 +1,5 @@
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
-export const name = ViewletModuleId.Iframe
-
 export const create = (id) => {
   return {
     disposed: false,

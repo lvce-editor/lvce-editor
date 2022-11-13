@@ -13,8 +13,6 @@ const UiStrings = {
   NoResults: 'No Results',
 }
 
-export const name = ViewletModuleId.FindWidget
-
 export const create = () => {
   return {
     value: '',

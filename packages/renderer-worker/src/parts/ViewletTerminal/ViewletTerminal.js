@@ -6,8 +6,6 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 // TODO implement a functional terminal component, maybe using offscreencanvas
 
-export const name = ViewletModuleId.Terminal
-
 export const create = () => {
   return {
     disposed: false,

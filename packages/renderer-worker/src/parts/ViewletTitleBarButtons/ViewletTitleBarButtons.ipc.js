@@ -1,3 +1,5 @@
+export const name = 'TitleBarButtons'
+
 // prettier-ignore
 export const Commands = {}
 

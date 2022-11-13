@@ -35,10 +35,6 @@ const ViewletReferences = await import(
   '../src/parts/ViewletReferences/ViewletReferences.js'
 )
 
-test('name', () => {
-  expect(ViewletReferences.name).toBe('References')
-})
-
 test('loadContent - error - reference provider throws error', async () => {
   const state = ViewletReferences.create()
   // @ts-ignore

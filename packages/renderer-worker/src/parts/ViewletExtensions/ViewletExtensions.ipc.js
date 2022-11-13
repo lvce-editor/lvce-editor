@@ -1,5 +1,7 @@
 import * as ViewletExtensions from './ViewletExtensions.js'
 
+export const name = 'Extensions'
+
 // prettier-ignore
 export const Commands = {
   closeSuggest: ViewletExtensions.closeSuggest,

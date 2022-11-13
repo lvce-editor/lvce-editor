@@ -88,9 +88,6 @@ const render = (oldState, newState) => {
   return ViewletManager.render(ViewletEditorImage, oldState, newState)
 }
 
-test('name', () => {
-  expect(ViewletEditorImage.name).toBe('EditorImage')
-})
 
 test('create', () => {
   const state = ViewletEditorImage.create()

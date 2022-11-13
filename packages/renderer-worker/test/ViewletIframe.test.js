@@ -8,10 +8,6 @@ const render = (oldState, newState) => {
   return ViewletManager.render(ViewletIframe, oldState, newState)
 }
 
-test('name', () => {
-  expect(ViewletIframe.name).toBe('Iframe')
-})
-
 test('create', () => {
   const state = ViewletIframe.create(0)
   expect(state).toBeDefined()
