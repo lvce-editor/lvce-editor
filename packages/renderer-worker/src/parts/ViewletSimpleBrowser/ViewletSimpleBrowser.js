@@ -173,7 +173,6 @@ export const go = (state) => {
 export const hasFunctionalRender = true
 
 export const handleWillNavigate = (state, url, canGoBack, canGoForward) => {
-  console.log('will navigate')
   return {
     ...state,
     iframeSrc: url,
