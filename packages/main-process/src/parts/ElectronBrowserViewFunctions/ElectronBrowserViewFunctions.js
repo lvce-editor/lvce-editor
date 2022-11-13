@@ -3,6 +3,7 @@ const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
 const Assert = require('../Assert/Assert.js')
+const LoadErrorCode = require('../LoadErrorCode/LoadErrorCode.js')
 
 exports.wrapBrowserViewCommand = (fn) => {
   const wrappedCommand = (id, ...args) => {
@@ -49,23 +50,48 @@ const setIframeSrcFallback = async (view, error) => {
 
 /**
  *
+ * @param {Electron.WebContents} webContents
+ */
+const getTitle = (webContents) => {
+  const title = webContents.getTitle()
+  if (title) {
+    return title
+  }
+  return webContents.getURL()
+}
+
+/**
+ *
  * @param {Electron.BrowserView} view
  * @param {string} iframeSrc
  */
 exports.setIframeSrc = async (view, iframeSrc) => {
+  const { webContents } = view
   try {
-    await view.webContents.loadURL(iframeSrc)
-    // TODO maybe have a separate function for getting title
-    const newTitle = view.webContents.getTitle()
+    await webContents.loadURL(iframeSrc)
+    const newTitle = getTitle(webContents)
     return newTitle
   } catch (error) {
-    console.log({ error })
+    if (error && error.code === LoadErrorCode.ERR_ABORTED) {
+      console.info(`[main process] navigation to ${iframeSrc} aborted`)
+      return
+    }
+    if (
+      error &&
+      error.code === LoadErrorCode.ERR_FAILED &&
+      ElectronBrowserViewState.isCanceled(webContents.id)
+    ) {
+      console.info(`[main process] navigation to ${iframeSrc} canceled`)
+      ElectronBrowserViewState.removeCanceled(webContents.id)
+      return
+    }
     try {
       await setIframeSrcFallback(view, error)
     } catch (error) {
       // @ts-ignore
       throw new VError(error, `Failed to set iframe src`)
     }
+    ElectronBrowserViewState.removeCanceled(webContents.id)
   }
 }
 /**
@@ -73,7 +99,8 @@ exports.setIframeSrc = async (view, iframeSrc) => {
  * @param {Electron.BrowserView} view
  */
 exports.focus = (view) => {
-  view.webContents.focus()
+  const { webContents } = view
+  webContents.focus()
 }
 
 /**
@@ -81,24 +108,27 @@ exports.focus = (view) => {
  * @param {Electron.BrowserView} view
  */
 exports.openDevtools = (view) => {
+  const { webContents } = view
   // TODO return promise that resolves once devtools are actually open
-  view.webContents.openDevTools()
+  webContents.openDevTools()
 }
 /**
  *
  * @param {Electron.BrowserView} view
  */
 exports.reload = (view) => {
-  // TODO return promise that resolves once devtools are actually open
-  view.webContents.reload()
+  const { webContents } = view
+  webContents.reload()
 }
 /**
  *
  * @param {Electron.BrowserView} view
  */
 exports.forward = (view) => {
-  // TODO return promise that resolves once devtools are actually open
-  view.webContents.goForward()
+  const { webContents } = view
+  webContents.goForward()
+  const canGoForward = webContents.canGoForward()
+  return canGoForward
 }
 
 /**
@@ -107,7 +137,10 @@ exports.forward = (view) => {
  */
 exports.backward = (view) => {
   // TODO return promise that resolves once devtools are actually open
-  view.webContents.goBack()
+  const { webContents } = view
+  webContents.goBack()
+  const canGoBack = webContents.canGoBack()
+  return canGoBack
 }
 
 /**
@@ -115,7 +148,13 @@ exports.backward = (view) => {
  * @param {Electron.BrowserView} view
  */
 exports.cancelNavigation = (view) => {
-  view.webContents.stop()
+  const { webContents } = view
+  ElectronBrowserViewState.setCanceled(webContents.id)
+  webContents.stop()
+  if (webContents.canGoBack()) {
+    webContents.goBack()
+  }
+  return webContents.getURL()
 }
 
 exports.show = (id) => {
@@ -150,7 +189,8 @@ exports.hide = (id) => {
 exports.inspectElement = (view, x, y) => {
   Assert.number(x)
   Assert.number(y)
-  view.webContents.inspectElement(x, y)
+  const { webContents } = view
+  webContents.inspectElement(x, y)
 }
 
 /**
@@ -162,9 +202,12 @@ exports.inspectElement = (view, x, y) => {
 exports.copyImageAt = (view, x, y) => {
   Assert.number(x)
   Assert.number(y)
-  view.webContents.copyImageAt(x, y)
+  const { webContents } = view
+  webContents.copyImageAt(x, y)
 }
 
 exports.setFallThroughKeyBindings = (fallthroughKeyBindings) => {
   ElectronBrowserViewState.setFallthroughKeyBindings(fallthroughKeyBindings)
 }
+
+// TODO maybe move some of these to webContentFunctions

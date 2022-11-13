@@ -192,6 +192,13 @@ export const handleDidNavigate = (state, url, canGoBack, canGoForward) => {
   }
 }
 
+export const handleDidNavigationCancel = (state, url) => {
+  return {
+    ...state,
+    isLoading: false,
+  }
+}
+
 export const handleTitleUpdated = (state, title) => {
   return {
     ...state,

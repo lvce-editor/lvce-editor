@@ -11,7 +11,7 @@ export const resizeBrowserView = (id, left, top, width, height) => {
   )
 }
 
-export const setIframeSrc = (id, iframeSrc) => {
+export const setIframeSrc = async (id, iframeSrc) => {
   return ElectronProcess.invoke(
     'ElectronBrowserViewFunctions.setIframeSrc',
     id,

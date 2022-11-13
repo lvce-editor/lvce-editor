@@ -1,6 +1,7 @@
 const state = {
   browserViews: Object.create(null),
   fallThroughKeyBindings: [],
+  canceled: Object.create(null),
 }
 
 exports.add = (id, browserWindow, view) => {
@@ -44,4 +45,16 @@ exports.getWindow = (webContents) => {
 
 exports.setFallthroughKeyBindings = (fallthroughKeyBindings) => {
   state.fallThroughKeyBindings = fallthroughKeyBindings
+}
+
+exports.isCanceled = (id) => {
+  return id in state.canceled
+}
+
+exports.removeCanceled = (id) => {
+  delete state.canceled[id]
+}
+
+exports.setCanceled = (id) => {
+  state.canceled[id] = true
 }

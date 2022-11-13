@@ -56,6 +56,7 @@ const getPort = (webContents) => {
  * @param {string} url
  */
 const handleWillNavigate = (event, url) => {
+  console.info(`[main-process] will navigate to ${url}`)
   // console.log({ event, url })
   const webContents = event.sender
   const canGoForward = webContents.canGoForward()
@@ -84,6 +85,8 @@ const handleWillNavigate = (event, url) => {
  * @param {string} url
  */
 const handleDidNavigate = (event, url) => {
+  console.info(`[main-process] did navigate to ${url}`)
+
   // console.log({ event, url })
   const webContents = event.sender
   const canGoForward = webContents.canGoForward()

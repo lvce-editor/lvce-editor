@@ -1,3 +1,5 @@
+const LoadErrorCode = require('../src/parts/LoadErrorCode/LoadErrorCode.js')
+
 beforeEach(() => {
   jest.resetAllMocks()
 })
@@ -71,7 +73,7 @@ test('setIframeSrc - error - connection refused', async () => {
   const view = {
     webContents: {
       loadURL: jest.fn(() => {
-        throw new LoadError('ERR_CONNECTION_REFUSED')
+        throw new LoadError(LoadErrorCode.ERR_CONNECTION_REFUSED)
       }),
       loadFile: jest.fn(),
       getTitle() {
@@ -88,7 +90,7 @@ test('setIframeSrc - error - connection refused', async () => {
     expect.stringContaining('error.html'),
     {
       query: {
-        code: 'ERR_CONNECTION_REFUSED',
+        code: LoadErrorCode.ERR_CONNECTION_REFUSED,
       },
     }
   )
@@ -98,7 +100,7 @@ test('setIframeSrc - error - canceled', async () => {
   const view = {
     webContents: {
       loadURL: jest.fn(() => {
-        throw new LoadError('ERR_CONNECTION_REFUSED')
+        throw new LoadError(LoadErrorCode.ERR_CONNECTION_REFUSED)
       }),
       loadFile: jest.fn(),
       getTitle() {
@@ -115,20 +117,37 @@ test('setIframeSrc - error - canceled', async () => {
     expect.stringContaining('error.html'),
     {
       query: {
-        code: 'ERR_CONNECTION_REFUSED',
+        code: LoadErrorCode.ERR_CONNECTION_REFUSED,
       },
     }
   )
+})
+
+test('setIframeSrc - error - aborted', async () => {
+  const view = {
+    webContents: {
+      loadURL: jest.fn(() => {
+        throw new LoadError(LoadErrorCode.ERR_ABORTED)
+      }),
+      loadFile: jest.fn(),
+      getTitle() {
+        return ''
+      },
+    },
+  }
+  // @ts-ignore
+  await ElectronBrowserViewFunctions.setIframeSrc(view, 'https://example.com')
+  expect(view.webContents.loadFile).not.toHaveBeenCalled()
 })
 
 test('setIframeSrc - two errors', async () => {
   const view = {
     webContents: {
       loadURL: jest.fn(() => {
-        throw new LoadError('ERR_CONNECTION_REFUSED')
+        throw new LoadError(LoadErrorCode.ERR_CONNECTION_REFUSED)
       }),
       loadFile: jest.fn(() => {
-        throw new LoadError('ERR_CONNECTION_REFUSED')
+        throw new LoadError(LoadErrorCode.ERR_CONNECTION_REFUSED)
       }),
       getTitle() {
         return ''

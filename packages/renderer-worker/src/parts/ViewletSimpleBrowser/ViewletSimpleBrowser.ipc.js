@@ -9,6 +9,7 @@ export const Commands = {
   handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
   handleDidNavigate: SimpleBrowser.handleDidNavigate,
+  handleDidNavigationCancel: SimpleBrowser.handleDidNavigationCancel,
 }
 
 export const LazyCommands = {
