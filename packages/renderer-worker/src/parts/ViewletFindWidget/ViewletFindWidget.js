@@ -148,7 +148,7 @@ const renderValue = {
   apply(oldState, newState) {
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'FindWidget',
+      /* id */ ViewletModuleId.FindWidget,
       /* method */ 'setValue',
       /* value */ newState.value,
     ]
@@ -179,7 +179,7 @@ const renderMatchCount = {
     )
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'FindWidget',
+      /* id */ ViewletModuleId.FindWidget,
       /* method */ 'setMatchCountText',
       /* value */ matchCountText,
     ]
@@ -194,7 +194,7 @@ const renderButtonsEnabled = {
     const enabled = newState.matchCount > 0
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'FindWidget',
+      /* id */ ViewletModuleId.FindWidget,
       /* method */ 'setButtonsEnabled',
       /* enabled */ enabled,
     ]

@@ -138,7 +138,7 @@ const renderItems = {
   apply(oldState, newState) {
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'StatusBar',
+      /* id */ ViewletModuleId.StatusBar,
       /* method */ 'setItems',
       /* statusBarItemsLeft */ newState.statusBarItemsLeft,
       /* statusBarItemsRight */ newState.statusBarItemsRight,

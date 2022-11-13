@@ -6,6 +6,7 @@ import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletio
 import * as Height from '../Height/Height.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = (id, uri, top, left, width, height) => {
   return {
@@ -122,7 +123,7 @@ const renderPosition = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'EditorCompletion',
+      /* id */ ViewletModuleId.EditorCompletion,
       /* method */ 'setPosition',
       /* x */ newState.x,
       /* y */ newState.y,
@@ -158,7 +159,7 @@ const renderItems = {
     )
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'EditorCompletion',
+      /* id */ ViewletModuleId.EditorCompletion,
       /* method */ 'setItems',
       /* items */ visibleItems,
       /* reason */ 1,
@@ -178,7 +179,7 @@ const renderBounds = {
     const { left, top, width, height } = newState
     return [
       /* Viewlet.send */ 'Viewlet.setBounds',
-      /* id */ 'EditorCompletion',
+      /* id */ ViewletModuleId.EditorCompletion,
       /* left */ left,
       /* top */ top,
       /* width */ width,
@@ -194,7 +195,7 @@ const renderFocusedIndex = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'EditorCompletion',
+      /* id */ ViewletModuleId.EditorCompletion,
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldState.focusedIndex,
       /* newFocusedIndex */ newState.focusedIndex,

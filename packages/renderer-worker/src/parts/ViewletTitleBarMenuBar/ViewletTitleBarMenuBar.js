@@ -27,7 +27,7 @@ const renderTitleBarEntries = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'TitleBarMenuBar',
+      /* id */ ViewletModuleId.TitleBarMenuBar,
       /* method */ 'setEntries',
       /* titleBarEntries */ newState.titleBarEntries,
     ]
@@ -44,7 +44,7 @@ const renderFocusedIndex = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'TitleBarMenuBar',
+      /* id */ ViewletModuleId.TitleBarMenuBar,
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldState.focusedIndex,
       /* newfocusedIndex */ newState.focusedIndex,
@@ -84,7 +84,7 @@ const renderMenus = {
     }
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'TitleBarMenuBar',
+      /* id */ ViewletModuleId.TitleBarMenuBar,
       /* method */ 'setMenus',
       /* changes */ changes,
     ]

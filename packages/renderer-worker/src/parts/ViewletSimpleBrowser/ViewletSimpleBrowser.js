@@ -236,16 +236,28 @@ const renderIframeSrc = {
     return oldState.iframeSrc === newState.iframeSrc
   },
   apply(oldState, newState) {
-    return ['Viewlet.send', 'SimpleBrowser', 'setIframeSrc', newState.iframeSrc]
+    return [
+      'Viewlet.send',
+      ViewletModuleId.SimpleBrowser,
+      'setIframeSrc',
+      newState.iframeSrc,
+    ]
   },
 }
 
+// TODO this component shouldn't depend on Main
 const renderTitle = {
   isEqual(oldState, newState) {
     return oldState.title === newState.title
   },
   apply(oldState, newState) {
-    return ['Viewlet.send', 'Main', 'updateTab', 0, newState.title]
+    return [
+      'Viewlet.send',
+      ViewletModuleId.Main,
+      'updateTab',
+      0,
+      newState.title,
+    ]
   },
 }
 

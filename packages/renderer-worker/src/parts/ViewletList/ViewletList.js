@@ -234,7 +234,7 @@ export const render = (oldState, newState) => {
     const visibleItems = getVisible(newState)
     changes.push([
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'List',
+      /* id */ ViewletModuleId.List,
       /* method */ 'setItems',
       /* visibleExtensions */ visibleItems,
     ])
@@ -243,7 +243,7 @@ export const render = (oldState, newState) => {
     const contentHeight = newState.items.length * ITEM_HEIGHT
     changes.push([
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'List',
+      /* id */ ViewletModuleId.List,
       /* method */ 'setContentHeight',
       /* contentHeight */ contentHeight,
     ])
@@ -252,7 +252,7 @@ export const render = (oldState, newState) => {
   if (oldState.negativeMargin !== newState.negativeMargin) {
     changes.push([
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'List',
+      /* id */ ViewletModuleId.List,
       /* method */ 'setNegativeMargin',
       /* negativeMargin */ newState.negativeMargin,
     ])
@@ -261,7 +261,7 @@ export const render = (oldState, newState) => {
   if (oldState.focusedIndex !== newState.focusedIndex) {
     changes.push([
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'List',
+      /* id */ ViewletModuleId.List,
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldState.focusedIndex - oldState.minLineY,
       /* newFocusedIndex */ newState.focusedIndex - newState.minLineY,
@@ -273,7 +273,7 @@ export const render = (oldState, newState) => {
       (newState.height - newState.scrollBarHeight)
     changes.push([
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'List',
+      /* id */ ViewletModuleId.List,
       /* method */ 'setScrollBar',
       /* scrollBarY */ scrollBarY,
       /* scrollBarHeight */ newState.scrollBarHeight,

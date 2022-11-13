@@ -912,7 +912,7 @@ const renderSashes = {
     const panelWidth = points[kPanelWidth]
     return [
       'Viewlet.send',
-      'Layout',
+      ViewletModuleId.Layout,
       'setSashes',
       {
         id: 'SashSideBar',

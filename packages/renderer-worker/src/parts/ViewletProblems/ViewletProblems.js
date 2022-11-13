@@ -65,7 +65,7 @@ const renderProblems = {
   apply(oldState, newState) {
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'Problems',
+      /* id */ ViewletModuleId.Problems,
       /* method */ 'setProblems',
       /* problems */ newState.problems,
     ]
@@ -79,7 +79,7 @@ const renderFocusedIndex = {
   apply(oldState, newState) {
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'Problems',
+      /* id */ ViewletModuleId.Problems,
       /* method */ 'setFocusedIndex',
       /* focusedIndex */ newState.focusedIndex,
     ]
@@ -93,7 +93,7 @@ const renderMessage = {
   apply(oldState, newState) {
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'Problems',
+      /* id */ ViewletModuleId.Problems,
       /* method */ 'setMessage',
       /* focusedIndex */ newState.message,
     ]

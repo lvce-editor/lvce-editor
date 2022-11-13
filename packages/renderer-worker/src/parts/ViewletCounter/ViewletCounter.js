@@ -37,7 +37,7 @@ const renderCount = {
   apply(oldState, newState) {
     return [
       /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'Counter',
+      /* id */ ViewletModuleId.Counter,
       /* method */ 'setCount',
       /* newCount */ newState.count,
     ]
