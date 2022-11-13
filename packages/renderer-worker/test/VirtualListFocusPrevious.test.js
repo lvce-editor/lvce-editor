@@ -19,3 +19,11 @@ test('focusPrevious - at start', () => {
     focusedIndex: 2,
   })
 })
+
+test('focusPrevious - no items', () => {
+  const state = {
+    items: [],
+    focusedIndex: 0,
+  }
+  expect(VirtualListFocusPrevious.focusPrevious(state)).toBe(state)
+})

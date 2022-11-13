@@ -9,3 +9,10 @@ test('focusFirst', () => {
     focusedIndex: 0,
   })
 })
+test('focusFirst - no items', () => {
+  const state = {
+    items: [],
+    focusedIndex: -1,
+  }
+  expect(VirtualListFocusFirst.focusFirst(state)).toBe(state)
+})

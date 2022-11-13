@@ -19,3 +19,11 @@ test('focusNext - at end', () => {
     focusedIndex: 0,
   })
 })
+
+test('focusNext - no items', () => {
+  const state = {
+    items: [],
+    focusedIndex: -1,
+  }
+  expect(VirtualListFocusNext.focusNext(state)).toBe(state)
+})
