@@ -15,5 +15,5 @@
     "strict": true,
     "noImplicitAny": false
   },
-  "include": ["src", "test", "typings/types.d.ts"]
+  "include": ["src", "test", "typings"]
 }
