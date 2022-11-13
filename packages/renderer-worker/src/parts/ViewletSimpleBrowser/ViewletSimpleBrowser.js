@@ -5,6 +5,7 @@ import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView
 import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js'
 import * as IframeSrc from '../IframeSrc/IframeSrc.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = (id, uri, left, top, width, height) => {
   return {
@@ -19,6 +20,8 @@ export const create = (id, uri, left, top, width, height) => {
     inputValue: '',
     title: '',
     browserViewId: 0,
+    canGoForward: true,
+    canGoBack: true,
   }
 }
 
@@ -52,10 +55,11 @@ export const backgroundLoadContent = async (state, savedState) => {
   // it is not necessary to load keybindings for it
   const keyBindings = await KeyBindings.getKeyBindings()
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
-  const browserViewId = await ElectronBrowserView.createBrowserView(
-    0,
+  const browserViewId = await ElectronBrowserView.createBrowserView(0)
+  await ElectronBrowserViewFunctions.setFallthroughKeyBindings(
     fallThroughKeyBindings
   )
+  Assert.number(browserViewId)
   await ElectronBrowserViewFunctions.resizeBrowserView(
     browserViewId,
     top + headerHeight,
@@ -63,7 +67,6 @@ export const backgroundLoadContent = async (state, savedState) => {
     width,
     height - headerHeight
   )
-  Assert.number(browserViewId)
   const title = await ElectronBrowserViewFunctions.setIframeSrc(
     browserViewId,
     iframeSrc
@@ -90,10 +93,8 @@ export const loadContent = async (state, savedState) => {
   // TODO load keybindings in parallel with creating browserview
   const keyBindings = await KeyBindings.getKeyBindings()
   if (id) {
-    const actualId = await ElectronBrowserView.createBrowserView(
-      id,
-      keyBindings
-    )
+    const actualId = await ElectronBrowserView.createBrowserView(id)
+    await ElectronBrowserViewFunctions.setFallthroughKeyBindings(keyBindings)
     await ElectronBrowserViewFunctions.resizeBrowserView(
       actualId,
       top + headerHeight,
@@ -114,7 +115,9 @@ export const loadContent = async (state, savedState) => {
 
   const fallThroughKeyBindings = getFallThroughKeyBindings(keyBindings)
   const browserViewId = await ElectronBrowserView.createBrowserView(
-    /* restoreId */ 0,
+    /* restoreId */ 0
+  )
+  await ElectronBrowserViewFunctions.setFallthroughKeyBindings(
     fallThroughKeyBindings
   )
   await ElectronBrowserViewFunctions.resizeBrowserView(
@@ -166,10 +169,12 @@ export const go = async (state) => {
 
 export const hasFunctionalRender = true
 
-export const handleWillNavigate = (state, url) => {
+export const handleWillNavigate = (state, url, canGoBack, canGoForward) => {
   return {
     ...state,
     iframeSrc: url,
+    canGoBack,
+    canGoForward,
   }
 }
 
@@ -235,4 +240,22 @@ const renderTitle = {
   },
 }
 
-export const render = [renderIframeSrc, renderTitle]
+const renderButtonsEnabled = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.canGoBack === newState.canGoBack &&
+      oldState.canGoForward === newState.canGoForward
+    )
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.invoke */ 'Viewlet.send',
+      /* id */ ViewletModuleId.SimpleBrowser,
+      /* method */ 'setButtonsEnabled',
+      /* canGoBack */ newState.canGoBack,
+      /* canGoFoward */ newState.canGoForward,
+    ]
+  },
+}
+
+export const render = [renderIframeSrc, renderTitle, renderButtonsEnabled]

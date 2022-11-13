@@ -1,5 +1,6 @@
 const state = {
   browserViews: Object.create(null),
+  fallThroughKeyBindings: [],
 }
 
 exports.add = (id, browserWindow, view) => {
@@ -30,4 +31,17 @@ exports.getAnyKey = () => {
     throw new Error('no browser view found')
   }
   return parseInt(keys[0])
+}
+
+exports.getWindow = (webContents) => {
+  for (const value of Object.values(state.browserViews)) {
+    if (value.view.webContents === webContents) {
+      return value.browserWindow
+    }
+  }
+  return undefined
+}
+
+exports.setFallthroughKeyBindings = (fallthroughKeyBindings) => {
+  state.fallThroughKeyBindings = fallthroughKeyBindings
 }

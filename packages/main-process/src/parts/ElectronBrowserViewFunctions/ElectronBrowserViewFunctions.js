@@ -155,3 +155,7 @@ exports.copyImageAt = (view, x, y) => {
   Assert.number(y)
   view.webContents.copyImageAt(x, y)
 }
+
+exports.setFallThroughKeyBindings = (fallthroughKeyBindings) => {
+  ElectronBrowserViewState.setFallthroughKeyBindings(fallthroughKeyBindings)
+}

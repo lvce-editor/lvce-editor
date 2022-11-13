@@ -26,6 +26,9 @@ jest.unstable_mockModule(
       resizeBrowserView: jest.fn(() => {
         throw new Error('not implemented')
       }),
+      setFallthroughKeyBindings: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
     }
   }
 )
@@ -90,7 +93,13 @@ test('loadContent - restore id - same browser view', async () => {
     iframeSrc: 'https://example.com',
   })
   expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledTimes(1)
-  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(1, [])
+  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(1)
+  expect(
+    ElectronBrowserViewFunctions.setFallthroughKeyBindings
+  ).toHaveBeenCalledTimes(1)
+  expect(
+    ElectronBrowserViewFunctions.setFallthroughKeyBindings
+  ).toHaveBeenCalledWith([])
   expect(ElectronBrowserViewFunctions.setIframeSrc).not.toHaveBeenCalled()
 })
 
@@ -106,7 +115,13 @@ test('loadContent - restore id - browser view does not exist yet', async () => {
     iframeSrc: 'https://example.com',
   })
   expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledTimes(1)
-  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(1, [])
+  expect(ElectronBrowserView.createBrowserView).toHaveBeenCalledWith(1)
+  expect(
+    ElectronBrowserViewFunctions.setFallthroughKeyBindings
+  ).toHaveBeenCalledTimes(1)
+  expect(
+    ElectronBrowserViewFunctions.setFallthroughKeyBindings
+  ).toHaveBeenCalledWith([])
   expect(ElectronBrowserViewFunctions.setIframeSrc).toHaveBeenCalledTimes(1)
   expect(ElectronBrowserViewFunctions.setIframeSrc).toHaveBeenCalledWith(
     2,

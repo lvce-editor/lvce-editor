@@ -58,6 +58,8 @@ export const create = () => {
   return {
     $Viewlet,
     $InputBox,
+    $ButtonBack,
+    $ButtonForward,
   }
 }
 
@@ -67,6 +69,12 @@ export const setIframeSrc = (state, iframeSrc) => {
     return
   }
   $InputBox.value = iframeSrc
+}
+
+export const setButtonsEnabled = (state, canGoBack, canGoForward) => {
+  const { $ButtonForward, $ButtonBack } = state
+  $ButtonBack.disabled = !canGoBack
+  $ButtonForward.disabled = !canGoForward
 }
 
 export const dispose = (state) => {}
