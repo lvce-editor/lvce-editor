@@ -7,6 +7,8 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as QuickPickReturnValue from '../QuickPickReturnValue/QuickPickReturnValue.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Height from '../Height/Height.js'
+import * as VirtualList from '../VirtualList/VirtualList.js'
+
 // TODO send open signal to renderer process before items are ready
 // that way user can already type while items are still loading
 
@@ -29,25 +31,23 @@ export const create = (id, uri, top, left, width, height) => {
   return {
     state: QuickPickState.Default,
     picks: [],
-    items: [],
     recentPicks: [],
     recentPickIds: new Map(), // TODO use object.create(null) instead
     versionId: 0,
     provider: QuickPickEveryThing, // TODO make this dynamic again
-    focusedIndex: -1,
     warned: [],
     visiblePicks: [],
-    minLineY: 0,
-    maxLineY: 0,
     maxVisibleItems: 10,
     uri,
     cursorOffset: 0,
-    deltaY: 0,
-    itemHeight: Height.ListItem,
     height: 300,
-    headerHeight: 30,
     top: 50,
     width: 600,
+    ...VirtualList.create({
+      itemHeight: Height.ListItem,
+      headerHeight: 30,
+      minimumSliderSize: Height.MinimumSliderSize,
+    }),
   }
 }
 

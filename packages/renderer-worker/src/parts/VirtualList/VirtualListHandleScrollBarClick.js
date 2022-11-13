@@ -1,6 +1,4 @@
-// TODO duplicate code with extensions list
-
-import { setDeltaY } from './ViewletSearchSetDeltaY.js'
+import { setDeltaY } from './VirtualListSetDeltaY.js'
 
 const getNewDeltaPercent = (state, relativeY) => {
   // TODO duplicate code with editor scrolling

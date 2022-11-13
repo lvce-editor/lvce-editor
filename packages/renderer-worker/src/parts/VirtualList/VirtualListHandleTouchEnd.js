@@ -1,7 +1,7 @@
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Timeout from '../Timeout/Timeout.js'
-import { setDeltaY } from './ViewletExtensionsSetDeltaY.js'
+import { setDeltaY } from './VirtualListSetDeltaY.js'
 
 const applyInertia = async (touchDifference) => {
   let inertia = touchDifference

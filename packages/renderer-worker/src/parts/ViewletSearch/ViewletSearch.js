@@ -1,15 +1,16 @@
-import * as Command from '../Command/Command.js'
-import * as I18nString from '../I18NString/I18NString.js'
-import * as TextSearch from '../TextSearch/TextSearch.js'
-import * as Workspace from '../Workspace/Workspace.js'
-import * as Compare from '../Compare/Compare.js'
 import * as Assert from '../Assert/Assert.js'
-import * as IconTheme from '../IconTheme/IconTheme.js'
-import * as SearchResultType from '../SearchResultType/SearchResultType.js'
-import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as Command from '../Command/Command.js'
+import * as Compare from '../Compare/Compare.js'
 import * as Height from '../Height/Height.js'
+import * as I18nString from '../I18NString/I18NString.js'
+import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as SearchResultType from '../SearchResultType/SearchResultType.js'
+import * as TextSearch from '../TextSearch/TextSearch.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as VirtualList from '../VirtualList/VirtualList.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 /**
  * @enum {string}
@@ -33,14 +34,11 @@ export const create = (id, uri, left, top, width, height) => {
     top,
     width,
     height,
-    items: [],
-    minLineY: 0,
-    maxLineY: 0,
-    deltaY: 0,
-    headerHeight: 61, // TODO
-    itemHeight: Height.ListItem,
-    scrollBarHeight: 0,
-    minimumSliderSize: Height.MinimumSliderSize,
+    ...VirtualList.create({
+      itemHeight: Height.ListItem,
+      minimumSliderSize: Height.MinimumSliderSize,
+      headerHeight: 61, // TODO
+    }),
   }
 }
 

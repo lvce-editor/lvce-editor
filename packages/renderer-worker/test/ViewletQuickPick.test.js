@@ -218,7 +218,7 @@ test('handleBeforeInput - deleteWordForward', async () => {
   })
 })
 
-test('handleWheel - up', () => {
+test.skip('handleWheel - up', () => {
   const state = {
     ...ViewletQuickPick.create(),
     itemHeight: 22,
@@ -234,6 +234,7 @@ test('handleWheel - up', () => {
         label: 'index.html',
       },
     ],
+    headerHeight: 0,
   }
   expect(ViewletQuickPick.handleWheel(state, -22)).toMatchObject({
     minLineY: 0,

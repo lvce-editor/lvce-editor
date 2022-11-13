@@ -1,4 +1,4 @@
-import { setDeltaY } from './ViewletExtensionsSetDeltaY.js'
+import { setDeltaY } from './VirtualListSetDeltaY.js'
 
 const getNewPercent = (state, relativeY) => {
   if (relativeY <= state.height - state.scrollBarHeight / 2) {

@@ -1,9 +1,9 @@
-import { focusIndex } from './ViewletExtensionsFocusIndex.js'
+import { focusIndex } from './VirtualListFocusIndex.js'
 import * as Arrays from '../Arrays/Arrays.js'
 
 export const focusNextPage = (state) => {
   const { focusedIndex, items, maxLineY, minLineY } = state
-  if (focusedIndex === Arrays.lastIndex(items)) {
+  if (Arrays.isLastIndex(items, focusedIndex)) {
     return state
   }
   const indexNextPage = Math.min(

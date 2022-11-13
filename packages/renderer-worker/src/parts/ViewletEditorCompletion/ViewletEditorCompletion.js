@@ -1,15 +1,14 @@
-import * as Command from '../Command/Command.js'
 import * as Completions from '../Completions/Completions.js'
 import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as EditorShowMessage from '../EditorCommand/EditorCommandShowMessage.js'
 import * as EditorCompletionMap from '../EditorCompletionMap/EditorCompletionMap.js'
 import * as FilterCompletionItems from '../FilterCompletionItems/FilterCompletionItems.js'
-import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as Height from '../Height/Height.js'
+import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as VirtualList from '../VirtualList/VirtualList.js'
 
 export const create = (id, uri, top, left, width, height) => {
   return {
-    focusedIndex: 0,
     isOpened: false,
     openingReason: 0,
     editor: undefined,
@@ -18,15 +17,15 @@ export const create = (id, uri, top, left, width, height) => {
     leadingWord: '',
     loadingTimeout: -1,
     unfilteredItems: [],
-    items: [],
     left: 0,
     top: 0,
-    minLineY: 0,
-    maxLineY: 0,
-    itemHeight: Height.CompletionItem,
     width: 250,
     height: 150,
-    deltaY: 0,
+    ...VirtualList.create({
+      headerHeight: 0,
+      itemHeight: Height.CompletionItem,
+      minimumSliderSize: Height.MinimumSliderSize,
+    }),
   }
 }
 

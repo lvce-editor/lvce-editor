@@ -1,4 +1,5 @@
 import * as ViewletEditorCompletion from './ViewletEditorCompletion.js'
+import * as VirtualList from '../VirtualList/VirtualList.ipc.js'
 
 export const name = 'EditorCompletion'
 
@@ -8,14 +9,10 @@ export const Commands = {
   dispose:  ViewletEditorCompletion.dispose,
 }
 
+// prettier-ignore
 export const LazyCommands = {
-  focusIndex: () => import('../VirtualList/VirtualListFocusIndex.js'),
-  focusFirst: () => import('../VirtualList/VirtualListFocusFirst.js'),
-  focusLast: () => import('../VirtualList/VirtualListFocusLast.js'),
-  focusNext: () => import('../VirtualList/VirtualListFocusNext.js'),
-  focusPrevious: () => import('../VirtualList/VirtualListFocusPrevious.js'),
-  handleWheel: () => import('../VirtualList/VirtualList.js'),
   selectIndex: () => import('./ViewletEditorCompletionSelectIndex.js'),
+  ...VirtualList.LazyCommands
 }
 
 export const Css = '/css/parts/ViewletEditorCompletion.css'

@@ -1,4 +1,5 @@
 import * as ViewletExtensions from './ViewletExtensions.js'
+import * as VirtualList from '../VirtualList/VirtualList.ipc.js'
 
 export const name = 'Extensions'
 
@@ -15,23 +16,10 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  focusFirst: () => import('./ViewletExtensionsFocusFirst.js'),
-  focusIndex: () => import('./ViewletExtensionsFocusIndex.js'),
-  focusLast: () => import('./ViewletExtensionsFocusLast.js'),
-  focusNext: () => import('./ViewletExtensionsFocusNext.js'),
-  focusNextPage: () => import('./ViewletExtensionsFocusNextPage.js'),
-  focusPrevious: () => import('./ViewletExtensionsFocusPrevious.js'),
-  focusPreviousPage: () => import('./ViewletExtensionsFocusPreviousPage.js'),
   handleClick: () => import('./ViewletExtensionsHandleClick.js'),
   handleClickCurrent: () => import('./ViewletExtensionsHandleClickCurrent.js'),
   handleClickCurrentButKeepFocus: () => import('./ViewletExtensionsHandleClickCurrentButKeepFocus.js'),
-  handleScrollBarClick: () => import('./ViewletExtensionsHandleScrollBarClick.js'),
-  handleScrollBarMove: () => import('./ViewletExtensionsHandleScrollBarMove.js'),
-  handleTouchEnd: () => import('./ViewletExtensionsHandleTouchEnd.js'),
-  handleTouchMove: () => import('./ViewletExtensionsHandleTouchMove.js'),
-  handleTouchStart: () => import('./ViewletExtensionsHandleTouchStart.js'),
-  handleWheel: () => import('./ViewletExtensionsHandleWheel.js'),
-  setDeltaY: () => import('./ViewletExtensionsSetDeltaY.js'),
+  ...VirtualList.LazyCommands
 }
 
 export const Css = [

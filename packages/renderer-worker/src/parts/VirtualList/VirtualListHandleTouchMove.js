@@ -1,5 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
-import { setDeltaY } from './ViewletExtensionsSetDeltaY.js'
+import { setDeltaY } from './VirtualListSetDeltaY.js'
 
 export const handleTouchMove = (state, timeStamp, touches) => {
   Assert.number(timeStamp)

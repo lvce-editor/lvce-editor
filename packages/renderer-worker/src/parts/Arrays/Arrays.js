@@ -59,3 +59,7 @@ export const findObjectIndex = (array, key, value) => {
   }
   return -1
 }
+
+export const isLastIndex = (array, index) => {
+  return index === array.length - 1
+}
