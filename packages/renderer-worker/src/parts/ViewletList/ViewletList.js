@@ -150,7 +150,6 @@ export const resize = (state, dimensions) => {
 }
 
 export const setDeltaY = (state, deltaY) => {
-  console.log({ deltaY })
   Assert.object(state)
   Assert.number(deltaY)
   const listHeight = state.height

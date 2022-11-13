@@ -71,7 +71,7 @@ export const getVisible = (editor) => {
     if (isInRange(selectionEndRow, minLineY, maxLineY)) {
       const lineCache = editor.lineCache[selectionEndRow + 1]
       if (!lineCache) {
-        console.log('line caches', editor, editor.lineCache)
+        // console.log('line caches', editor, editor.lineCache)
       }
       const tokenIndex = getTokenIndex(lineCache, selectionEndColumn)
       // TODO maybe don't allocate object here, push numbers to flat array instead
