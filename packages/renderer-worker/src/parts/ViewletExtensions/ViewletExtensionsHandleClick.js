@@ -1,4 +1,4 @@
-import { focusIndex } from './ViewletExtensionsFocusIndex.js'
+import { focusIndex } from '../VirtualList/VirtualListFocusIndex.js'
 import * as Command from '../Command/Command.js'
 
 export const handleClick = async (state, index) => {
