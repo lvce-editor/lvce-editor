@@ -157,48 +157,6 @@ const handleDestroyed = (event) => {
 
 /**
  *
- * @type {(details: Electron.HandlerDetails) => ({action: 'deny'}) | ({action: 'allow', overrideBrowserWindowOptions?: Electron.BrowserWindowConstructorOptions})} param0
- * @returns
- */
-const handleWindowOpen = ({
-  url,
-  disposition,
-  features,
-  frameName,
-  referrer,
-  postBody,
-}) => {
-  // TODO maybe need to put this function into a closure
-  if (url === 'about:blank') {
-    return { action: ElectronWindowOpenActionType.Allow }
-  }
-  // console.log({ disposition, features, frameName, referrer, postBody })
-  if (disposition === ElectronDispositionType.BackgroundTab) {
-    // TODO open background tab
-    const port = getPort()
-    if (!port) {
-      console.warn('[main process] handlwWindowOpen - no port found')
-      return {
-        action: ElectronWindowOpenActionType.Deny,
-      }
-    }
-    port.postMessage({
-      jsonrpc: '2.0',
-      method: 'SimpleBrowser.openBackgroundTab',
-      params: [url],
-    })
-    return {
-      action: ElectronWindowOpenActionType.Deny,
-    }
-  }
-  console.info(`[main-process] blocked popup for ${url}`)
-  return {
-    action: ElectronWindowOpenActionType.Deny,
-  }
-}
-
-/**
- *
  * @param {number} restoreId
  * @returns
  */
@@ -229,6 +187,48 @@ exports.createBrowserView = async (restoreId) => {
   const { id } = webContents
   // console.log('[main process] create browser view', id)
   ElectronBrowserViewState.add(id, browserWindow, view)
+
+  /**
+   *
+   * @type {(details: Electron.HandlerDetails) => ({action: 'deny'}) | ({action: 'allow', overrideBrowserWindowOptions?: Electron.BrowserWindowConstructorOptions})} param0
+   * @returns
+   */
+  const handleWindowOpen = ({
+    url,
+    disposition,
+    features,
+    frameName,
+    referrer,
+    postBody,
+  }) => {
+    // TODO maybe need to put this function into a closure
+    if (url === 'about:blank') {
+      return { action: ElectronWindowOpenActionType.Allow }
+    }
+    // console.log({ disposition, features, frameName, referrer, postBody })
+    if (disposition === ElectronDispositionType.BackgroundTab) {
+      // TODO open background tab
+      const port = getPort(webContents)
+      if (!port) {
+        console.warn('[main process] handlwWindowOpen - no port found')
+        return {
+          action: ElectronWindowOpenActionType.Deny,
+        }
+      }
+      port.postMessage({
+        jsonrpc: '2.0',
+        method: 'SimpleBrowser.openBackgroundTab',
+        params: [url],
+      })
+      return {
+        action: ElectronWindowOpenActionType.Deny,
+      }
+    }
+    console.info(`[main-process] blocked popup for ${url}`)
+    return {
+      action: ElectronWindowOpenActionType.Deny,
+    }
+  }
 
   webContents.on('will-navigate', handleWillNavigate)
   webContents.on('did-navigate', handleWillNavigate)
