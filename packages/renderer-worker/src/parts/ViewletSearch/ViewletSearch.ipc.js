@@ -1,4 +1,5 @@
 import * as ViewletSearch from './ViewletSearch.js'
+import * as VirtualList from '../VirtualList/VirtualList.ipc.js'
 
 // prettier-ignore
 export const Commands = {
@@ -11,10 +12,7 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  handleWheel: () => import('../VirtualList/VirtualListHandleWheel.js'),
-  setDeltaY: () => import('../VirtualList/VirtualListSetDeltaY.js'),
-  handleScrollBarClick: () => import('../VirtualList/VirtualListHandleScrollBarClick.js'),
-  handleScrollBarMove: () => import('../VirtualList/VirtualListHandleScrollBarMove.js'),
+  ...VirtualList.LazyCommands,
 }
 
 export const Css = [
