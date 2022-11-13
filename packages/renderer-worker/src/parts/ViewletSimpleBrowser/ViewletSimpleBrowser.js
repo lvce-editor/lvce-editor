@@ -1,12 +1,11 @@
 // based on vscode's simple browser by Microsoft (https://github.com/microsoft/vscode/blob/e8fe2d07d31f30698b9262dd5e1fcc59a85c6bb1/extensions/simple-browser/src/extension.ts, License MIT)
 
+import * as Assert from '../Assert/Assert.js'
 import * as ElectronBrowserView from '../ElectronBrowserView/ElectronBrowserView.js'
 import * as ElectronBrowserViewFunctions from '../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.js'
+import * as IframeSrc from '../IframeSrc/IframeSrc.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as IframeSrc from '../IframeSrc/IframeSrc.js'
-import * as Assert from '../Assert/Assert.js'
-import * as Command from '../Command/Command.js'
 
 export const create = (id, uri, left, top, width, height) => {
   return {
@@ -169,30 +168,6 @@ export const go = async (state) => {
 }
 
 export const hasFunctionalRender = true
-
-export const openDevtools = async (state) => {
-  const { browserViewId } = state
-  await ElectronBrowserViewFunctions.openDevtools(browserViewId)
-  return state
-}
-
-export const reload = async (state) => {
-  const { browserViewId } = state
-  await ElectronBrowserViewFunctions.reload(browserViewId)
-  return state
-}
-
-export const forward = async (state) => {
-  const { browserViewId } = state
-  await ElectronBrowserViewFunctions.forward(browserViewId)
-  return state
-}
-
-export const backward = async (state) => {
-  const { browserViewId } = state
-  await ElectronBrowserViewFunctions.backward(browserViewId)
-  return state
-}
 
 export const handleWillNavigate = (state, url, canGoBack, canGoForward) => {
   return {
