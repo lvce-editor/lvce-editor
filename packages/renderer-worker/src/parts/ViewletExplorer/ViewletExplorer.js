@@ -31,8 +31,6 @@ import * as Height from '../Height/Height.js'
 // viewlet: creating | refreshing | done | disposed
 // TODO recycle viewlets (maybe)
 
-export const name = ViewletModuleId.Explorer
-
 // TODO instead of root string, there should be a root dirent
 
 export const create = (id, uri, left, top, width, height) => {

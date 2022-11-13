@@ -43,10 +43,6 @@ const render = (oldState, newState) => {
   return ViewletManager.render(ViewletActivityBar, oldState, newState)
 }
 
-test('name', () => {
-  expect(ViewletActivityBar.name).toBe('ActivityBar')
-})
-
 test('loadContent', async () => {
   const state = ViewletActivityBar.create()
   ViewletStates.set('SideBar', {

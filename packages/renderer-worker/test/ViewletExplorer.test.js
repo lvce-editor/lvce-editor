@@ -81,10 +81,6 @@ const render = (oldState, newState) => {
   return ViewletManager.render(ViewletExplorer, oldState, newState)
 }
 
-test('name', () => {
-  expect(ViewletExplorer.name).toBe('Explorer')
-})
-
 test('create', () => {
   const state = ViewletExplorer.create()
   expect(state).toBeDefined()
