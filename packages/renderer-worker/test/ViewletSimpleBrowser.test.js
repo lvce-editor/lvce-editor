@@ -114,33 +114,6 @@ test('loadContent - restore id - browser view does not exist yet', async () => {
   )
 })
 
-// TODO handle error
-test('forward', async () => {
-  // @ts-ignore
-  ElectronBrowserViewFunctions.forward.mockImplementation(() => {})
-  // TODO iframe url should be changed
-  const state = ViewletSimpleBrowser.create()
-  await ViewletSimpleBrowser.forward(state)
-  expect(ElectronBrowserViewFunctions.forward).toHaveBeenCalledTimes(1)
-})
-
-test('backward', async () => {
-  // @ts-ignore
-  ElectronBrowserViewFunctions.backward.mockImplementation(() => {})
-  // TODO iframe url should be changed
-  const state = ViewletSimpleBrowser.create()
-  await ViewletSimpleBrowser.backward(state)
-  expect(ElectronBrowserViewFunctions.backward).toHaveBeenCalledTimes(1)
-})
-
-test('reload', async () => {
-  // @ts-ignore
-  ElectronBrowserViewFunctions.reload.mockImplementation(() => {})
-  const state = ViewletSimpleBrowser.create()
-  await ViewletSimpleBrowser.reload(state)
-  expect(ElectronBrowserViewFunctions.reload).toHaveBeenCalledTimes(1)
-})
-
 test('handleTitleUpdated', () => {
   const state = ViewletSimpleBrowser.create()
   expect(
