@@ -87,9 +87,10 @@ const handleWillNavigate = (event, url) => {
  */
 const handleDidNavigate = (event, url) => {
   Debug.debug(`[main-process] did navigate to ${url}`)
+  console.log(`[main-process] did navigate to ${url}`)
 
-  // console.log({ event, url })
   const webContents = event.sender
+  blockAds(webContents)
   const canGoForward = webContents.canGoForward()
   const canGoBack = webContents.canGoBack()
   const port = getPort(webContents)
@@ -187,6 +188,40 @@ const handleDestroyed = (event) => {
   ElectronBrowserViewState.remove(webContents.id)
 }
 
+const blockAds = (webContents) => {
+  console.log('block ads')
+  // based on uBlock origin json-prune function
+  const code = `
+
+  setInterval(()=>{
+    console.log("test");
+  }, 1000)
+
+// ;(()=>{
+//   console.log('block ads')
+//   const prune = json => {
+//     console.log({json})
+//     return json
+//   }
+
+//   JSON.parse = new Proxy(JSON.parse, {
+//       apply() {
+//           return pruner(Reflect.apply(...arguments));
+//       },
+//   });
+//   Response.prototype.json = new Proxy(Response.prototype.json, {
+//       apply() {
+//           return Reflect.apply(...arguments).then(o => pruner(o));
+//       },
+//   });
+// })();
+
+0
+`
+
+  webContents.executeJavaScript(code)
+}
+
 /**
  *
  * @param {number} restoreId
@@ -262,27 +297,7 @@ exports.createBrowserView = async (restoreId) => {
     }
   }
 
-  // based on uBlock origin json-prune function
-  webContents.executeJavaScript(`
-
-const prune = json => {
-  console.log({json})
-  return json
-}
-
-JSON.parse = new Proxy(JSON.parse, {
-    apply() {
-        return pruner(Reflect.apply(...arguments));
-    },
-});
-Response.prototype.json = new Proxy(Response.prototype.json, {
-    apply() {
-        return Reflect.apply(...arguments).then(o => pruner(o));
-    },
-});
-
-0
-`)
+  blockAds(webContents)
   webContents.on('context-menu', handleContextMenu)
   webContents.on('will-navigate', handleWillNavigate)
   webContents.on('did-navigate', handleDidNavigate)

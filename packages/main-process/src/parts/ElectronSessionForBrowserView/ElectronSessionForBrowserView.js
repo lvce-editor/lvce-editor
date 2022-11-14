@@ -119,7 +119,9 @@ const getBeforeRequestResponseXhrGet = (url) => {
 }
 
 const getBeforeRequestResponseXhrHead = (url) => {
-  const canceledUrls = ['https://www.youtube.com/generate_204']
+  const canceledUrls = [
+    // 'https://www.youtube.com/generate_204'
+  ]
   return cancelIfStartsWith(url, canceledUrls)
 }
 
@@ -172,11 +174,11 @@ const getBeforeRequestResponse = (details) => {
 const handleBeforeRequest = (details, callback) => {
   const response = getBeforeRequestResponse(details)
   if (!response.cancel && details.resourceType === ElectronResourceType.Xhr) {
-    console.log({
-      resourceType: details.resourceType,
-      url: details.url,
-      method: details.method,
-    })
+    // console.log({
+    //   resourceType: details.resourceType,
+    //   url: details.url,
+    //   method: details.method,
+    // })
   }
   callback(response)
 }
