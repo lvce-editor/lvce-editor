@@ -261,6 +261,28 @@ exports.createBrowserView = async (restoreId) => {
       action: ElectronWindowOpenActionType.Deny,
     }
   }
+
+  // based on uBlock origin json-prune function
+  webContents.executeJavaScript(`
+
+const prune = json => {
+  console.log({json})
+  return json
+}
+
+JSON.parse = new Proxy(JSON.parse, {
+    apply() {
+        return pruner(Reflect.apply(...arguments));
+    },
+});
+Response.prototype.json = new Proxy(Response.prototype.json, {
+    apply() {
+        return Reflect.apply(...arguments).then(o => pruner(o));
+    },
+});
+
+0
+`)
   webContents.on('context-menu', handleContextMenu)
   webContents.on('will-navigate', handleWillNavigate)
   webContents.on('did-navigate', handleDidNavigate)
