@@ -1,5 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as Editor from '../Editor/Editor.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 
 export const cut = async (editor) => {
@@ -9,7 +10,7 @@ export const cut = async (editor) => {
   } else {
     // cut selection
   }
-  const changes = editorReplaceSelections(editor, [''], 'editorCut')
+  const changes = editorReplaceSelections(editor, [''], EditOrigin.EditorCut)
   const text = changes[0].deleted.join('\n')
   // TODO remove selected text from document
   await Command.execute(

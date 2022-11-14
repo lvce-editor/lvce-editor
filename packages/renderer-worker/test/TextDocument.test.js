@@ -1,4 +1,5 @@
 import * as TextDocument from '../src/parts/TextDocument/TextDocument.js'
+import * as EditOrigin from '../src/parts/EditOrigin/EditOrigin.js'
 
 test('applyEdits - one single line edit', () => {
   const textDocument = {
@@ -127,7 +128,7 @@ test('applyEdits - new line inserted in middle', () => {
         },
         inserted: ['', ''],
         deleted: [''],
-        origin: 'insertLineBreak',
+        origin: EditOrigin.InsertLineBreak,
       },
     ])
   ).toEqual(['  ', '  11111', '22222'])
@@ -144,14 +145,14 @@ test('applyEdits - multiple insertions in one line', () => {
         end: { rowIndex: 1, columnIndex: 4 },
         inserted: ['<!--'],
         deleted: [],
-        origin: 'toggleBlockComment',
+        origin: EditOrigin.ToggleBlockComment,
       },
       {
         start: { rowIndex: 1, columnIndex: 20 },
         end: { rowIndex: 1, columnIndex: 20 },
         inserted: ['-->'],
         deleted: [],
-        origin: 'toggleBlockComment',
+        origin: EditOrigin.ToggleBlockComment,
       },
     ])
   ).toEqual(['  <body>', '    <!--sample test -->', '  </body>'])
@@ -168,7 +169,7 @@ test('applyEdits - single deletion in one line', () => {
         end: { rowIndex: 1, columnIndex: 8 },
         inserted: [],
         deleted: ['<!--'],
-        origin: 'toggleBlockComment',
+        origin: EditOrigin.ToggleBlockComment,
       },
     ])
   ).toEqual(['  <body>', '    sample test-->', '  </body>'])
@@ -185,14 +186,14 @@ test('applyEdits - multiple deletions in one line', () => {
         end: { rowIndex: 1, columnIndex: 8 },
         inserted: [],
         deleted: ['<!--'],
-        origin: 'toggleBlockComment',
+        origin: EditOrigin.ToggleBlockComment,
       },
       {
         start: { rowIndex: 1, columnIndex: 15 },
         end: { rowIndex: 1, columnIndex: 18 },
         inserted: [],
         deleted: ['-->'],
-        origin: 'toggleBlockComment',
+        origin: EditOrigin.ToggleBlockComment,
       },
     ])
   ).toEqual(['  <body>', '    sample test', '  </body>'])
@@ -208,14 +209,14 @@ test('applyEdits - deletions in multiple lines', () => {
         end: { rowIndex: 1, columnIndex: 8 },
         inserted: [],
         deleted: ['<!--'],
-        origin: 'toggleBlockComment',
+        origin: EditOrigin.ToggleBlockComment,
       },
       {
         start: { rowIndex: 2, columnIndex: 0 },
         end: { rowIndex: 2, columnIndex: 3 },
         inserted: [],
         deleted: ['-->'],
-        origin: 'toggleBlockComment',
+        origin: EditOrigin.ToggleBlockComment,
       },
     ])
   ).toEqual(['  <body>', '    sample test', '', '  </body>'])
@@ -333,7 +334,7 @@ test('applyEdits - virtual space', () => {
         },
         inserted: ['line 1,line 2,line 3'],
         deleted: ['line 1', 'line 2', 'line 3'],
-        origin: 'editorPasteText',
+        origin: EditOrigin.EditorPasteText,
       },
     ])
   ).toEqual(['line 1,line 2,line 3'])
@@ -382,7 +383,7 @@ test('applyEdits - issue with inserting multiple lines', () => {
         end: { rowIndex: 3, columnIndex: 6 },
         inserted: ['line 1', 'line 2', 'line 3'],
         deleted: ['line 1', 'line 2', 'line 3'],
-        origin: 'editorPasteText',
+        origin: EditOrigin.EditorPasteText,
       },
     ])
   ).toEqual(['line 1', 'line 2', 'line 3'])
@@ -421,7 +422,7 @@ test('applyEdits - insert multiline snippet', () => {
       },
       inserted: ['<div>', '    test', '  </div>'],
       deleted: [''],
-      origin: 'editorSnippet',
+      origin: EditOrigin.EditorSnippet,
     },
   ])
   expect(newLines).toEqual(['  <div>', '    test', '  </div>'])
@@ -460,7 +461,7 @@ test('applyEdits - replace multiple lines', () => {
       },
       inserted: ['h1 {', '  font-size: 20px;', '}', ''],
       deleted: ['h1 {', '  font-size: 20px', '}'],
-      origin: 'format',
+      origin: EditOrigin.Format,
     },
   ])
   expect(newLines).toEqual(['h1 {', '  font-size: 20px;', '}', ''])

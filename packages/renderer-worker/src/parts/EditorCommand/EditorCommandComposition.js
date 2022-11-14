@@ -1,4 +1,5 @@
 import * as Editor from '../Editor/Editor.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 
 export const state = {
   isComposing: false,
@@ -29,7 +30,7 @@ const getCompositionChanges = (selections, data) => {
       },
       inserted: [data],
       deleted: [state.compositionText],
-      origin: 'compositionUpdate',
+      origin: EditOrigin.CompositionUpdate,
     })
   }
   return changes

@@ -1,4 +1,5 @@
 import * as Editor from '../Editor/Editor.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 
 const getChanges = (selections) => {
   const changes = []
@@ -22,7 +23,7 @@ const getChanges = (selections) => {
       },
       inserted: [''],
       deleted: ['  '],
-      origin: 'indentLess',
+      origin: EditOrigin.IndentLess,
     })
   }
   return changes

@@ -1,6 +1,7 @@
 import { jest } from '@jest/globals'
 import * as Editor from '../src/parts/Editor/Editor.js'
 import * as RendererProcess from '../src/parts/RendererProcess/RendererProcess.js'
+import * as EditOrigin from '../src/parts/EditOrigin/EditOrigin.js'
 import * as TokenizePlainText from '../src/parts/Tokenizer/TokenizePlainText.js'
 
 test('create', () => {
@@ -106,7 +107,7 @@ test('scheduleDocumentAndCursorsSelections', () => {
       },
       inserted: ['ä'],
       deleted: [],
-      origin: 'compositionUpdate',
+      origin: EditOrigin.CompositionUpdate,
     },
   ]
   expect(
@@ -169,7 +170,7 @@ test('scheduleDocumentAndCursorsSelections - add one character', () => {
       },
       inserted: ['a'],
       deleted: [],
-      origin: 'compositionUpdate',
+      origin: EditOrigin.CompositionUpdate,
     },
   ]
   expect(
@@ -232,7 +233,7 @@ test('scheduleDocumentAndCursorsSelections - delete one character', () => {
       },
       inserted: [''],
       deleted: ['a'],
-      origin: 'compositionUpdate',
+      origin: EditOrigin.CompositionUpdate,
     },
   ]
   expect(

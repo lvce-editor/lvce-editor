@@ -1,5 +1,6 @@
 import * as Editor from '../Editor/Editor.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 
 const getChanges = (lines, selections, snippet) => {
   // TODO verify that deleted fits in the line
@@ -28,7 +29,7 @@ const getChanges = (lines, selections, snippet) => {
         },
         inserted: insertedLinesHere,
         deleted: [''],
-        origin: 'editorSnippet',
+        origin: EditOrigin.EditorSnippet,
       })
     } else {
       changes.push({
@@ -42,7 +43,7 @@ const getChanges = (lines, selections, snippet) => {
         },
         inserted: insertedLines,
         deleted: [''],
-        origin: 'editorSnippet',
+        origin: EditOrigin.EditorSnippet,
       })
     }
   }

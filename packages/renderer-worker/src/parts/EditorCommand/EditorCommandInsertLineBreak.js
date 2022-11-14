@@ -1,4 +1,5 @@
 import * as Editor from '../Editor/Editor.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 
 const getChanges = (lines, selections) => {
@@ -31,7 +32,7 @@ const getChanges = (lines, selections) => {
         end: end,
         inserted: ['', indent],
         deleted: TextDocument.getSelectionText({ lines }, range),
-        origin: 'insertLineBreak',
+        origin: EditOrigin.InsertLineBreak,
       })
     } else {
       changes.push({
@@ -39,7 +40,7 @@ const getChanges = (lines, selections) => {
         end: end,
         inserted: ['', ''],
         deleted: TextDocument.getSelectionText({ lines }, range),
-        origin: 'insertLineBreak',
+        origin: EditOrigin.InsertLineBreak,
       })
     }
   }

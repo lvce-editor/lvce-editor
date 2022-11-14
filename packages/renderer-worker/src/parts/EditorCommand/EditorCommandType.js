@@ -1,10 +1,9 @@
 // import * as EditorCompletion from '../EditorCompletion/EditorCompletion.js'
 import * as Editor from '../Editor/Editor.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHost/ExtensionHostBraceCompletion.js'
-import * as TextDocument from '../TextDocument/TextDocument.js'
-import * as Languages from '../Languages/Languages.js'
 import * as ExtensionHostClosingTag from '../ExtensionHost/ExtensionHostClosingTagCompletion.js'
-import * as EditorCommandCompletion from './EditorCommandCompletion.js'
+import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 
 const RE_CHARACTER = new RegExp(/^\p{L}/, 'u')
@@ -70,7 +69,7 @@ const editorTypeWithSlashCompletion = async (editor, text) => {
     offset,
     text
   )
-  const changes = editorReplaceSelections(editor, [text], 'editorType')
+  const changes = editorReplaceSelections(editor, [text], EditOrigin.EditorType)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
 
@@ -83,7 +82,7 @@ export const type = async (editor, text) => {
   // if (isSlash(text)) {
   //   return editorTypeWithSlashCompletion(editor, text)
   // }
-  const changes = editorReplaceSelections(editor, [text], 'editorType')
+  const changes = editorReplaceSelections(editor, [text], EditOrigin.EditorType)
   // // TODO trigger characters should be monomorph -> then skip this check
   // if (
   //   editor.completionTriggerCharacters &&
