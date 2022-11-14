@@ -4,6 +4,9 @@ const Root = require('../Root/Root.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
 const Assert = require('../Assert/Assert.js')
 const LoadErrorCode = require('../LoadErrorCode/LoadErrorCode.js')
+const Debug = require('../Debug/Debug.js')
+
+// TODO create output channel for browser view debug logs
 
 exports.wrapBrowserViewCommand = (fn) => {
   const wrappedCommand = (id, ...args) => {
@@ -71,15 +74,17 @@ exports.setIframeSrc = async (view, iframeSrc) => {
     await webContents.loadURL(iframeSrc)
   } catch (error) {
     if (error && error.code === LoadErrorCode.ERR_ABORTED) {
-      console.info(`[main process] navigation to ${iframeSrc} aborted`)
+      Debug.debug(`[main process] navigation to ${iframeSrc} aborted`)
+      return
     }
     if (
       error &&
       error.code === LoadErrorCode.ERR_FAILED &&
       ElectronBrowserViewState.isCanceled(webContents.id)
     ) {
-      console.info(`[main process] navigation to ${iframeSrc} canceled`)
+      Debug.debug(`[main process] navigation to ${iframeSrc} canceled`)
       ElectronBrowserViewState.removeCanceled(webContents.id)
+      return
     }
     try {
       await setIframeSrcFallback(view, error)
@@ -142,7 +147,7 @@ exports.backward = (view) => {
 exports.cancelNavigation = (view) => {
   const { webContents } = view
   ElectronBrowserViewState.setCanceled(webContents.id)
-  console.info(`[main process] canceled navigation to ${webContents.getURL()}`)
+  Debug.debug(`[main process] canceled navigation to ${webContents.getURL()}`)
   webContents.stop()
   if (webContents.canGoBack()) {
     webContents.goBack()
@@ -153,7 +158,7 @@ exports.show = (id) => {
   // console.log('[main-process] show browser view', id)
   const state = ElectronBrowserViewState.get(id)
   if (!state) {
-    console.log('[main-process] failed to show browser view', id)
+    Debug.debug('[main-process] failed to show browser view', id)
     return
   }
   const { view, browserWindow } = state
@@ -165,7 +170,7 @@ exports.show = (id) => {
 exports.hide = (id) => {
   const state = ElectronBrowserViewState.get(id)
   if (!state) {
-    console.log('[main-process] failed to hide browser view', id)
+    Debug.debug('[main-process] failed to hide browser view', id)
     return
   }
   const { view, browserWindow } = state

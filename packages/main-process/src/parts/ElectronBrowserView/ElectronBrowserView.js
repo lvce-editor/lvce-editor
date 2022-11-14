@@ -7,6 +7,7 @@ const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/El
 const ElectronBrowserViewCss = require('../ElectronBrowserViewCss/ElectronBrowserViewCss.js')
 const Assert = require('../Assert/Assert.js')
 const ElectronInputType = require('../ElectronInputType/ElectronInputType.js')
+const Debug = require('../Debug/Debug.js')
 
 const normalizeKey = (key) => {
   if (key === ' ') {
@@ -56,7 +57,7 @@ const getPort = (webContents) => {
  * @param {string} url
  */
 const handleWillNavigate = (event, url) => {
-  console.info(`[main-process] will navigate to ${url}`)
+  Debug.debug(`[main-process] will navigate to ${url}`)
   // console.log({ event, url })
   const webContents = event.sender
   const canGoForward = webContents.canGoForward()
@@ -85,7 +86,7 @@ const handleWillNavigate = (event, url) => {
  * @param {string} url
  */
 const handleDidNavigate = (event, url) => {
-  console.info(`[main-process] did navigate to ${url}`)
+  Debug.debug(`[main-process] did navigate to ${url}`)
 
   // console.log({ event, url })
   const webContents = event.sender
@@ -182,7 +183,7 @@ const handleBeforeInput = (event, input) => {
 
 const handleDestroyed = (event) => {
   const webContents = event.sender
-  console.log(`[main process] browser view ${webContents.id} destroyed`)
+  Debug.debug(`[main process] browser view ${webContents.id} destroyed`)
   ElectronBrowserViewState.remove(webContents.id)
 }
 
