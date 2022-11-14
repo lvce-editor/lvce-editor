@@ -26,7 +26,7 @@
   font-size: 11px;
   font-family: system-ui, Ubuntu, Droid Sans, sans-serif;
   text-transform: uppercase;
-  height: 100%;
+  height: 85%;
   line-height: 35px;
   /* color: rgba(231, 231, 231, 0.6); */
   color: var(--PanelTabForeground);
@@ -36,6 +36,7 @@
   /* color: rgb(231, 231, 231); */
   color: var(--PanelTabActiveForeground);
   border-bottom-color: rgb(231, 231, 231);
+  border-bottom: 1px solid;
 }
 
 .PanelTab:hover {
