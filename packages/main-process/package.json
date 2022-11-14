@@ -22,7 +22,7 @@
     "@types/debug": "^4.1.7",
     "@types/verror": "^1.10.6",
     "electron": "^22.0.0-beta.5",
-    "electron-rebuild": "^3.2.9"
+    "@electron/rebuild": "^3.2.10"
   },
   "dependencies": {
     "debug": "^4.3.4",
