@@ -8,11 +8,14 @@
   background: var(--PanelBackground);
 }
 
-#PanelHeader {
+.PanelHeader {
   contain: strict;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 8px;
 }
 
-#PanelTabs {
+.PanelTabs {
   display: flex;
   gap: 1rem;
   height: 100%;
@@ -37,6 +40,11 @@
 
 .PanelTab:hover {
   color: var(--PanelTabHoverForeground);
+}
+
+.PanelToolBar {
+  display: flex;
+  align-items: center;
 }
 
 #PanelContent {
