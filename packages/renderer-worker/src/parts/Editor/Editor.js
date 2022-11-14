@@ -163,7 +163,18 @@ export const scheduleSelectionsAndScrollPosition = (
   // ])
 }
 
-export const scheduleDocumentAndCursorsSelections = (editor, changes) => {
+/**
+ *
+ * @param {any} editor
+ * @param {any[]} changes
+ * @param {Uint32Array|undefined} selectionChanges
+ * @returns
+ */
+export const scheduleDocumentAndCursorsSelections = (
+  editor,
+  changes,
+  selectionChanges = undefined
+) => {
   Assert.object(editor)
   Assert.array(changes)
   if (changes.length === 0) {
@@ -174,7 +185,8 @@ export const scheduleDocumentAndCursorsSelections = (editor, changes) => {
     ...editor,
     lines: newLines,
   }
-  const newSelections = EditorSelection.applyEdit(partialNewEditor, changes)
+  const newSelections =
+    selectionChanges || EditorSelection.applyEdit(partialNewEditor, changes)
   // TODO should separate rendering from business logic somehow
   // currently hard to test because need to mock editor height, top, left,
   // invalidStartIndex, lineCache, etc. just for testing editorType
