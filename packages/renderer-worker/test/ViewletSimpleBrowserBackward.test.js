@@ -11,6 +11,14 @@ jest.unstable_mockModule(
       backward: jest.fn(() => {
         throw new Error('not implemented')
       }),
+      getStats() {
+        return {
+          title: '',
+          url: '',
+          canGoBack: true,
+          canGoForward: true,
+        }
+      },
     }
   }
 )

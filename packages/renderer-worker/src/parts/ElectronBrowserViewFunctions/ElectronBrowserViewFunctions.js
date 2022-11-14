@@ -11,7 +11,7 @@ export const resizeBrowserView = (id, left, top, width, height) => {
   )
 }
 
-export const setIframeSrc = (id, iframeSrc) => {
+export const setIframeSrc = async (id, iframeSrc) => {
   return ElectronProcess.invoke(
     'ElectronBrowserViewFunctions.setIframeSrc',
     id,
@@ -39,6 +39,13 @@ export const backward = (id) => {
   return ElectronProcess.invoke('ElectronBrowserViewFunctions.backward', id)
 }
 
+export const cancelNavigation = (id) => {
+  return ElectronProcess.invoke(
+    'ElectronBrowserViewFunctions.cancelNavigation',
+    id
+  )
+}
+
 export const show = (id) => {
   return ElectronProcess.invoke('ElectronBrowserViewFunctions.show', id)
 }
@@ -64,9 +71,14 @@ export const copyImageAt = (id, x, y) => {
     y
   )
 }
+
 export const setFallthroughKeyBindings = (fallthroughKeyBindings) => {
   return ElectronProcess.invoke(
     'ElectronBrowserViewFunctions.setFallthroughKeyBindings',
     fallthroughKeyBindings
   )
+}
+
+export const getStats = (id) => {
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.getStats', id)
 }

@@ -3,6 +3,10 @@ const Path = require('../Path/Path.js')
 const Root = require('../Root/Root.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
 const Assert = require('../Assert/Assert.js')
+const LoadErrorCode = require('../LoadErrorCode/LoadErrorCode.js')
+const Debug = require('../Debug/Debug.js')
+
+// TODO create output channel for browser view debug logs
 
 exports.wrapBrowserViewCommand = (fn) => {
   const wrappedCommand = (id, ...args) => {
@@ -49,22 +53,46 @@ const setIframeSrcFallback = async (view, error) => {
 
 /**
  *
+ * @param {Electron.WebContents} webContents
+ */
+const getTitle = (webContents) => {
+  const title = webContents.getTitle()
+  if (title) {
+    return title
+  }
+  return webContents.getURL()
+}
+
+/**
+ *
  * @param {Electron.BrowserView} view
  * @param {string} iframeSrc
  */
 exports.setIframeSrc = async (view, iframeSrc) => {
+  const { webContents } = view
   try {
-    await view.webContents.loadURL(iframeSrc)
-    // TODO maybe have a separate function for getting title
-    const newTitle = view.webContents.getTitle()
-    return newTitle
+    await webContents.loadURL(iframeSrc)
   } catch (error) {
+    if (error && error.code === LoadErrorCode.ERR_ABORTED) {
+      Debug.debug(`[main process] navigation to ${iframeSrc} aborted`)
+      return
+    }
+    if (
+      error &&
+      error.code === LoadErrorCode.ERR_FAILED &&
+      ElectronBrowserViewState.isCanceled(webContents.id)
+    ) {
+      Debug.debug(`[main process] navigation to ${iframeSrc} canceled`)
+      ElectronBrowserViewState.removeCanceled(webContents.id)
+      return
+    }
     try {
       await setIframeSrcFallback(view, error)
     } catch (error) {
       // @ts-ignore
       throw new VError(error, `Failed to set iframe src`)
     }
+    ElectronBrowserViewState.removeCanceled(webContents.id)
   }
 }
 /**
@@ -72,7 +100,8 @@ exports.setIframeSrc = async (view, iframeSrc) => {
  * @param {Electron.BrowserView} view
  */
 exports.focus = (view) => {
-  view.webContents.focus()
+  const { webContents } = view
+  webContents.focus()
 }
 
 /**
@@ -80,24 +109,25 @@ exports.focus = (view) => {
  * @param {Electron.BrowserView} view
  */
 exports.openDevtools = (view) => {
+  const { webContents } = view
   // TODO return promise that resolves once devtools are actually open
-  view.webContents.openDevTools()
+  webContents.openDevTools()
 }
 /**
  *
  * @param {Electron.BrowserView} view
  */
 exports.reload = (view) => {
-  // TODO return promise that resolves once devtools are actually open
-  view.webContents.reload()
+  const { webContents } = view
+  webContents.reload()
 }
 /**
  *
  * @param {Electron.BrowserView} view
  */
 exports.forward = (view) => {
-  // TODO return promise that resolves once devtools are actually open
-  view.webContents.goForward()
+  const { webContents } = view
+  webContents.goForward()
 }
 
 /**
@@ -106,14 +136,29 @@ exports.forward = (view) => {
  */
 exports.backward = (view) => {
   // TODO return promise that resolves once devtools are actually open
-  view.webContents.goBack()
+  const { webContents } = view
+  webContents.goBack()
+}
+
+/**
+ *
+ * @param {Electron.BrowserView} view
+ */
+exports.cancelNavigation = (view) => {
+  const { webContents } = view
+  ElectronBrowserViewState.setCanceled(webContents.id)
+  Debug.debug(`[main process] canceled navigation to ${webContents.getURL()}`)
+  webContents.stop()
+  if (webContents.canGoBack()) {
+    webContents.goBack()
+  }
 }
 
 exports.show = (id) => {
   // console.log('[main-process] show browser view', id)
   const state = ElectronBrowserViewState.get(id)
   if (!state) {
-    console.log('[main-process] failed to show browser view', id)
+    Debug.debug('[main-process] failed to show browser view', id)
     return
   }
   const { view, browserWindow } = state
@@ -125,7 +170,7 @@ exports.show = (id) => {
 exports.hide = (id) => {
   const state = ElectronBrowserViewState.get(id)
   if (!state) {
-    console.log('[main-process] failed to hide browser view', id)
+    Debug.debug('[main-process] failed to hide browser view', id)
     return
   }
   const { view, browserWindow } = state
@@ -141,7 +186,8 @@ exports.hide = (id) => {
 exports.inspectElement = (view, x, y) => {
   Assert.number(x)
   Assert.number(y)
-  view.webContents.inspectElement(x, y)
+  const { webContents } = view
+  webContents.inspectElement(x, y)
 }
 
 /**
@@ -153,9 +199,29 @@ exports.inspectElement = (view, x, y) => {
 exports.copyImageAt = (view, x, y) => {
   Assert.number(x)
   Assert.number(y)
-  view.webContents.copyImageAt(x, y)
+  const { webContents } = view
+  webContents.copyImageAt(x, y)
 }
 
 exports.setFallThroughKeyBindings = (fallthroughKeyBindings) => {
   ElectronBrowserViewState.setFallthroughKeyBindings(fallthroughKeyBindings)
+}
+
+// TODO maybe move some of these to webContentFunctions
+
+/**
+ * @param {Electron.BrowserView} view
+ */
+exports.getStats = (view) => {
+  const { webContents } = view
+  const canGoBack = webContents.canGoBack()
+  const canGoForward = webContents.canGoForward()
+  const url = webContents.getURL()
+  const title = webContents.getTitle()
+  return {
+    canGoBack,
+    canGoForward,
+    url,
+    title,
+  }
 }

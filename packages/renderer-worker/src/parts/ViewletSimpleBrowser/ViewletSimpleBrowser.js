@@ -22,6 +22,7 @@ export const create = (id, uri, left, top, width, height) => {
     browserViewId: 0,
     canGoForward: true,
     canGoBack: true,
+    isLoading: false,
   }
 }
 
@@ -67,12 +68,12 @@ export const backgroundLoadContent = async (state, savedState) => {
     width,
     height - headerHeight
   )
-  const title = await ElectronBrowserViewFunctions.setIframeSrc(
+  const { newTitle } = await ElectronBrowserViewFunctions.setIframeSrc(
     browserViewId,
     iframeSrc
   )
   return {
-    title,
+    title: newTitle,
     uri: `simple-browser://${browserViewId}`,
     iframeSrc,
   }
@@ -129,11 +130,15 @@ export const loadContent = async (state, savedState) => {
   )
   Assert.number(browserViewId)
   await ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)
+  const { title, canGoBack, canGoForward } =
+    await ElectronBrowserViewFunctions.getStats(browserViewId)
   return {
     ...state,
     iframeSrc,
-    title: 'Simple Browser',
+    title,
     browserViewId,
+    canGoBack,
+    canGoForward,
     uri: `simple-browser://${browserViewId}`,
   }
 }
@@ -156,14 +161,16 @@ export const handleInput = (state, value) => {
   }
 }
 
-export const go = async (state) => {
+export const go = (state) => {
   const { inputValue, browserViewId } = state
   const iframeSrc = IframeSrc.toIframeSrc(inputValue)
-  await ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)
-  await ElectronBrowserViewFunctions.focus(browserViewId)
+  // TODO await promises
+  void ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)
+  void ElectronBrowserViewFunctions.focus(browserViewId)
   return {
     ...state,
     iframeSrc,
+    isLoading: true,
   }
 }
 
@@ -175,6 +182,24 @@ export const handleWillNavigate = (state, url, canGoBack, canGoForward) => {
     iframeSrc: url,
     canGoBack,
     canGoForward,
+    isLoading: true,
+  }
+}
+
+export const handleDidNavigate = (state, url, canGoBack, canGoForward) => {
+  return {
+    ...state,
+    iframeSrc: url,
+    canGoBack,
+    canGoForward,
+    isLoading: false,
+  }
+}
+
+export const handleDidNavigationCancel = (state, url) => {
+  return {
+    ...state,
+    isLoading: false,
   }
 }
 
@@ -258,4 +283,23 @@ const renderButtonsEnabled = {
   },
 }
 
-export const render = [renderIframeSrc, renderTitle, renderButtonsEnabled]
+const renderLoading = {
+  isEqual(oldState, newState) {
+    return oldState.isLoading === newState.isLoading
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.invoke */ 'Viewlet.send',
+      /* id */ ViewletModuleId.SimpleBrowser,
+      /* method */ 'setLoading',
+      /* isLoading */ newState.isLoading,
+    ]
+  },
+}
+
+export const render = [
+  renderIframeSrc,
+  renderTitle,
+  renderButtonsEnabled,
+  renderLoading,
+]

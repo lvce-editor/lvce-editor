@@ -29,6 +29,14 @@ jest.unstable_mockModule(
       setFallthroughKeyBindings: jest.fn(() => {
         throw new Error('not implemented')
       }),
+      getStats() {
+        return {
+          title: 'test',
+          url: '',
+          canGoBack: true,
+          canGoForward: true,
+        }
+      },
     }
   }
 )
@@ -135,5 +143,33 @@ test('handleTitleUpdated', () => {
     ViewletSimpleBrowser.handleTitleUpdated(state, 'new Title')
   ).toMatchObject({
     title: 'new Title',
+  })
+})
+
+test('handleWillNavigate', () => {
+  const state = ViewletSimpleBrowser.create()
+  expect(
+    ViewletSimpleBrowser.handleWillNavigate(
+      state,
+      'https://example.com',
+      false,
+      false
+    )
+  ).toMatchObject({
+    isLoading: true,
+  })
+})
+
+test('handleDidNavigate', () => {
+  const state = { ...ViewletSimpleBrowser.create(), isLoading: true }
+  expect(
+    ViewletSimpleBrowser.handleDidNavigate(
+      state,
+      'https://example.com',
+      false,
+      false
+    )
+  ).toMatchObject({
+    isLoading: false,
   })
 })

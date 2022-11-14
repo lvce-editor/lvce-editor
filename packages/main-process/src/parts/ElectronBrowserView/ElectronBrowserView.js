@@ -7,6 +7,7 @@ const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/El
 const ElectronBrowserViewCss = require('../ElectronBrowserViewCss/ElectronBrowserViewCss.js')
 const Assert = require('../Assert/Assert.js')
 const ElectronInputType = require('../ElectronInputType/ElectronInputType.js')
+const Debug = require('../Debug/Debug.js')
 
 const normalizeKey = (key) => {
   if (key === ' ') {
@@ -56,6 +57,7 @@ const getPort = (webContents) => {
  * @param {string} url
  */
 const handleWillNavigate = (event, url) => {
+  Debug.debug(`[main-process] will navigate to ${url}`)
   // console.log({ event, url })
   const webContents = event.sender
   const canGoForward = webContents.canGoForward()
@@ -73,6 +75,36 @@ const handleWillNavigate = (event, url) => {
       'browserViewId',
       webContents.id,
       'handleWillNavigate',
+      url,
+      canGoBack,
+      canGoForward,
+    ],
+  })
+}
+/**
+ * @param {Electron.Event} event
+ * @param {string} url
+ */
+const handleDidNavigate = (event, url) => {
+  Debug.debug(`[main-process] did navigate to ${url}`)
+
+  // console.log({ event, url })
+  const webContents = event.sender
+  const canGoForward = webContents.canGoForward()
+  const canGoBack = webContents.canGoBack()
+  const port = getPort(webContents)
+  if (!port) {
+    console.info('[main-process] view did navigate to ', url)
+    return
+  }
+  port.postMessage({
+    jsonrpc: '2.0',
+    method: 'Viewlet.executeViewletCommand',
+    params: [
+      'SimpleBrowser',
+      'browserViewId',
+      webContents.id,
+      'handleDidNavigate',
       url,
       canGoBack,
       canGoForward,
@@ -151,7 +183,7 @@ const handleBeforeInput = (event, input) => {
 
 const handleDestroyed = (event) => {
   const webContents = event.sender
-  console.log(`[main process] browser view ${webContents.id} destroyed`)
+  Debug.debug(`[main process] browser view ${webContents.id} destroyed`)
   ElectronBrowserViewState.remove(webContents.id)
 }
 
@@ -231,7 +263,7 @@ exports.createBrowserView = async (restoreId) => {
   }
 
   webContents.on('will-navigate', handleWillNavigate)
-  webContents.on('did-navigate', handleWillNavigate)
+  webContents.on('did-navigate', handleDidNavigate)
   webContents.on('page-title-updated', handlePageTitleUpdated)
   webContents.on('destroyed', handleDestroyed)
   webContents.on('before-input-event', handleBeforeInput)

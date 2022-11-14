@@ -7,3 +7,8 @@ export const create = (icon) => {
   $Icon.role = 'none'
   return $Icon
 }
+
+export const setIcon = ($Icon, icon) => {
+  $Icon.style.maskImage = `url('${icon}')`
+  $Icon.style.webkitMaskImage = `url('${icon}')`
+}

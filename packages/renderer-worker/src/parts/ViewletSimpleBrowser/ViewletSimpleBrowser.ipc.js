@@ -8,6 +8,8 @@ export const Commands = {
   handleInput: SimpleBrowser.handleInput,
   handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
+  handleDidNavigate: SimpleBrowser.handleDidNavigate,
+  handleDidNavigationCancel: SimpleBrowser.handleDidNavigationCancel,
 }
 
 export const LazyCommands = {
@@ -20,6 +22,7 @@ export const LazyCommands = {
   forward: () => import('./ViewletSimpleBrowserForward.js'),
   openDevtools: () => import('./ViewletSimpleBrowserOpenDevtools.js'),
   reload: () => import('./ViewletSimpleBrowserReload.js'),
+  cancelNavigation: () => import('./ViewletSimpleBrowserCancelNavigation.js'),
 }
 
 export const Css = [
