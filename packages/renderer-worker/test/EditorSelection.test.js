@@ -1,4 +1,5 @@
 import * as EditorSelection from '../src/parts/Editor/EditorSelection.js'
+import * as EditOrigin from '../src/parts/EditOrigin/EditOrigin.js'
 
 test('getVisible', () => {
   const editor = {
@@ -147,7 +148,7 @@ test.skip('applyEdit - emoji ', () => {
           },
           inserted: ['😁'],
           deleted: [''],
-          origin: 'editorType',
+          origin: EditOrigin.EditorType,
         },
       ],
       [
@@ -162,7 +163,7 @@ test.skip('applyEdit - emoji ', () => {
           },
           inserted: [''],
           deleted: ['😁'],
-          origin: 'delete',
+          origin: EditOrigin.Delete,
         },
       ],
     ],
@@ -193,7 +194,7 @@ test.skip('applyEdit - emoji ', () => {
       },
       inserted: ['👮'],
       deleted: [''],
-      origin: 'editorType',
+      origin: EditOrigin.EditorType,
     },
   ]
   expect(EditorSelection.applyEdit(editor, changes)).toMatchObject({})

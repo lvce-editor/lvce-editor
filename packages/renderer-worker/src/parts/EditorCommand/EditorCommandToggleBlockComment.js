@@ -1,6 +1,7 @@
 import * as Languages from '../Languages/Languages.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as Editor from '../Editor/Editor.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 
 const RE_WHITESPACE_AT_START = /^\s+/
 const RE_WHITESPACE_AT_END = /\s+$/
@@ -65,7 +66,7 @@ export const toggleBlockComment = async (editor) => {
         },
         inserted: [],
         deleted: [blockCommentStart],
-        origin: 'toggleBlockComment',
+        origin: EditOrigin.ToggleBlockComment,
       }
       const change2 = {
         start: {
@@ -79,7 +80,7 @@ export const toggleBlockComment = async (editor) => {
         },
         inserted: [],
         deleted: [blockCommentEnd],
-        origin: 'toggleBlockComment',
+        origin: EditOrigin.ToggleBlockComment,
       }
       changes.push(change1, change2)
       // Editor.moveCursors(editor, (editor, cursor) => {
@@ -104,7 +105,7 @@ export const toggleBlockComment = async (editor) => {
         },
         inserted: [],
         deleted: [blockCommentStart],
-        origin: 'toggleBlockComment',
+        origin: EditOrigin.ToggleBlockComment,
       }
       const change2 = {
         start: {
@@ -117,7 +118,7 @@ export const toggleBlockComment = async (editor) => {
         },
         inserted: [],
         deleted: [blockCommentEnd],
-        origin: 'toggleBlockComment',
+        origin: EditOrigin.ToggleBlockComment,
       }
       changes.push(change1, change2)
 
@@ -156,7 +157,7 @@ export const toggleBlockComment = async (editor) => {
       },
       inserted: [blockCommentStart],
       deleted: [],
-      origin: 'toggleBlockComment',
+      origin: EditOrigin.ToggleBlockComment,
     }
     const change2 = {
       start: {
@@ -169,7 +170,7 @@ export const toggleBlockComment = async (editor) => {
       },
       inserted: [blockCommentEnd],
       deleted: [],
-      origin: 'toggleBlockComment',
+      origin: EditOrigin.ToggleBlockComment,
     }
     changes.push(change1, change2)
     // TextDocument.setLine(

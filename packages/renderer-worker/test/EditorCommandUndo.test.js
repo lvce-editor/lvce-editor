@@ -1,4 +1,5 @@
 import * as EditorCommandUndo from '../src/parts/EditorCommand/EditorCommandUndo.js'
+import * as EditOrigin from '../src/parts/EditOrigin/EditOrigin.js'
 
 test('undo - inserted character', () => {
   const editor = {
@@ -17,7 +18,7 @@ test('undo - inserted character', () => {
           },
           inserted: ['a'],
           deleted: [''],
-          origin: 'editorType',
+          origin: EditOrigin.EditorType,
         },
       ],
     ],
@@ -43,7 +44,7 @@ test('undo - deleted character', () => {
           },
           inserted: [''],
           deleted: ['a'],
-          origin: 'editorType',
+          origin: EditOrigin.EditorType,
         },
       ],
     ],

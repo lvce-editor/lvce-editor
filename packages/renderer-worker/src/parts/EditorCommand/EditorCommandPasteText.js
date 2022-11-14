@@ -1,4 +1,5 @@
 import * as Editor from '../Editor/Editor.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 
 export const pasteText = (editor, text) => {
@@ -6,7 +7,7 @@ export const pasteText = (editor, text) => {
   const changes = editorReplaceSelections(
     editor,
     insertedLines,
-    'editorPasteText'
+    EditOrigin.EditorPasteText
   )
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }

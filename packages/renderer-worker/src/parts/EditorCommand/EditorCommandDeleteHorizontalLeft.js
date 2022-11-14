@@ -3,6 +3,7 @@ import * as TextDocument from '../TextDocument/TextDocument.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 import * as EditorGetPositionLeft from './EditorCommandGetPositionLeft.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 
 // TODO optimize this function by profiling and not allocating too many objects
 const getChanges = (lines, selections, getDelta) => {
@@ -34,7 +35,7 @@ const getChanges = (lines, selections, getDelta) => {
           end: selectionEnd,
         }
       ),
-      origin: 'delete',
+      origin: EditOrigin.Delete,
     })
   }
   EditorSelection.forEach(selections, deleteSelection)
@@ -48,6 +49,6 @@ export const editorDeleteHorizontalLeft = (editor, getDelta) => {
     const changes = getChanges(lines, selections, getDelta)
     return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
   }
-  const changes = editorReplaceSelections(editor, [''], 'delete')
+  const changes = editorReplaceSelections(editor, [''], EditOrigin.Delete)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }

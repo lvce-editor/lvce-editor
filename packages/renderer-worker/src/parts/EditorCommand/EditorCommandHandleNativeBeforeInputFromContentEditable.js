@@ -1,5 +1,6 @@
 import * as Editor from '../Editor/Editor.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as EditorGetSelectionFromNativeRange from './EditorCommandGetSelectionFromNativeRange.js'
 
 const getChanges = (editor, data, range) => {
@@ -21,7 +22,7 @@ const getChanges = (editor, data, range) => {
       end: selectionRange.end,
       inserted: [data],
       deleted: TextDocument.getSelectionText(editor, selectionRange),
-      origin: 'contentEditableInput',
+      origin: EditOrigin.ContentEditableInput,
     },
   ]
   return changes

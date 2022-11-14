@@ -3,6 +3,7 @@ import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditorGetPositionRight from './EditorCommandGetPositionRight.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
 import * as EditorSelection from '../EditorSelection/EditorSelection.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 
 const getChanges = (editor, getDelta) => {
   const selections = editor.selections
@@ -31,12 +32,16 @@ const getChanges = (editor, getDelta) => {
           start: start,
           end: positionRight,
         }),
-        origin: 'deleteHorizontalRight',
+        origin: EditOrigin.DeleteHorizontalRight,
       })
     }
     return changes
   }
-  const changes = editorReplaceSelections(editor, [''], 'deleteHorizontalRight')
+  const changes = editorReplaceSelections(
+    editor,
+    [''],
+    EditOrigin.DeleteHorizontalRight
+  )
   return changes
 }
 

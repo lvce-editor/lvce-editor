@@ -5,11 +5,11 @@ export const name = 'SimpleBrowser'
 // prettier-ignore
 export const Commands = {
   go: SimpleBrowser.go,
+  handleDidNavigate: SimpleBrowser.handleDidNavigate,
+  handleDidNavigationCancel: SimpleBrowser.handleDidNavigationCancel,
   handleInput: SimpleBrowser.handleInput,
   handleTitleUpdated: SimpleBrowser.handleTitleUpdated,
   handleWillNavigate: SimpleBrowser.handleWillNavigate,
-  handleDidNavigate: SimpleBrowser.handleDidNavigate,
-  handleDidNavigationCancel: SimpleBrowser.handleDidNavigationCancel,
 }
 
 export const LazyCommands = {
