@@ -43,5 +43,8 @@ test('setLoading - true', () => {
   const state = ViewletSimpleBrowser.create()
   ViewletSimpleBrowser.setLoading(state, true)
   const { $ButtonReload } = state
-  expect($ButtonReload.disabled).toBe(true)
+  expect($ButtonReload.title).toBe('Cancel')
+  const $Icon = $ButtonReload.firstChild
+  // @ts-ignore
+  expect($Icon.style.maskImage).toBe("url('/icons/close.svg')")
 })
