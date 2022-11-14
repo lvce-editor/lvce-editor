@@ -1,9 +1,9 @@
 // import * as EditorCompletion from '../EditorCompletion/EditorCompletion.js'
 import * as Editor from '../Editor/Editor.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHost/ExtensionHostBraceCompletion.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
-import * as ExtensionHostTabCompletion from '../ExtensionHost/ExtensionHostTabCompletion.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
 
 const getErrorMessage = (error) => {
@@ -38,11 +38,15 @@ export const braceCompletion = async (editor, text) => {
       const changes = editorReplaceSelections(
         editor,
         [insertText],
-        'editorType'
+        EditOrigin.EditorType
       )
       return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
     }
-    const changes = editorReplaceSelections(editor, [text], 'editorType')
+    const changes = editorReplaceSelections(
+      editor,
+      [text],
+      EditOrigin.EditorType
+    )
     return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
   } catch (error) {
     console.error(error)

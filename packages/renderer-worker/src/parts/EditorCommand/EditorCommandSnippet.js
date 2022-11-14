@@ -1,5 +1,6 @@
 import * as Editor from '../Editor/Editor.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 
 const getChanges = (lines, selections, snippet) => {
   // TODO verify that deleted fits in the line
@@ -30,7 +31,7 @@ const getChanges = (lines, selections, snippet) => {
         },
         inserted: insertedLinesHere,
         deleted,
-        origin: 'editorSnippet',
+        origin: EditOrigin.EditorSnippet,
       })
       const lastInsertedLine = insertedLines.at(-1)
       selectionChanges.push(
@@ -62,7 +63,7 @@ const getChanges = (lines, selections, snippet) => {
           },
           inserted: [inserted],
           deleted: [''],
-          origin: 'editorSnippet',
+          origin: EditOrigin.EditorSnippet,
         })
       } else {
         const cursorColumnIndex = selectionStartColumn - snippet.deleted
@@ -83,7 +84,7 @@ const getChanges = (lines, selections, snippet) => {
           },
           inserted: insertedLines,
           deleted: [''],
-          origin: 'editorSnippet',
+          origin: EditOrigin.EditorSnippet,
         })
       }
     }

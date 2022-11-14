@@ -1,6 +1,7 @@
 import * as Editor from '../Editor/Editor.js'
 import * as Format from '../Format/Format.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
 
 const expectedErrorMessage = `Failed to execute formatting provider: FormattingError:`
@@ -35,6 +36,7 @@ export const format = async (editor) => {
         end,
         inserted: edit.inserted.split('\n'),
         deleted: lines,
+        origin: EditOrigin.Format,
       },
     ]
     return Editor.scheduleDocumentAndCursorsSelections(editor, documentEdits)
