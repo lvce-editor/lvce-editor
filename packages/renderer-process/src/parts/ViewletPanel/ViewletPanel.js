@@ -1,5 +1,15 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Icon from '../Icon/Icon.js'
+import * as IconButton from '../IconButton/IconButton.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as ViewletPanelEvents from './ViewletPanelEvents.js'
+
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  Close: 'Close',
+}
 
 const create$PanelTab = (label, index) => {
   const $PanelTab = document.createElement('div')
@@ -37,14 +47,24 @@ const panelTabsHandleClick = (event) => {
 
 export const create = () => {
   const $PanelTabs = document.createElement('div')
-  $PanelTabs.id = 'PanelTabs'
+  $PanelTabs.className = 'PanelTabs'
   // @ts-ignore
   $PanelTabs.role = 'tablist'
   $PanelTabs.onmousedown = panelTabsHandleClick
   $PanelTabs.tabIndex = -1
+
+  const $ButtonClose = IconButton.create$Button(UiStrings.Close, Icon.Close)
+  $ButtonClose.onclick = ViewletPanelEvents.handleClickClose
+
+  const $PanelToolBar = document.createElement('div')
+  $PanelToolBar.className = 'PanelToolBar'
+  // @ts-ignore
+  $PanelToolBar.role = 'toolbar'
+  $PanelToolBar.append($ButtonClose)
+
   const $PanelHeader = document.createElement('div')
-  $PanelHeader.id = 'PanelHeader'
-  $PanelHeader.append($PanelTabs)
+  $PanelHeader.className = 'PanelHeader'
+  $PanelHeader.append($PanelTabs, $PanelToolBar)
   // const $PanelContent = document.createElement('div')
   // $PanelContent.id = 'PanelContent'
   const $Viewlet = document.createElement('div')
@@ -63,7 +83,8 @@ export const create = () => {
 }
 
 export const setTabs = (state, tabs) => {
-  state.$PanelTabs.append(...tabs.map(create$PanelTab))
+  const { $PanelTabs } = state
+  $PanelTabs.append(...tabs.map(create$PanelTab))
 }
 
 export const appendViewlet = (state, name, $Viewlet) => {
