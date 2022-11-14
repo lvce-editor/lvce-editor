@@ -285,7 +285,6 @@ const renderButtonsEnabled = {
 
 const renderLoading = {
   isEqual(oldState, newState) {
-    console.log('render loading', oldState.isLoading, newState.isLoading)
     return oldState.isLoading === newState.isLoading
   },
   apply(oldState, newState) {
