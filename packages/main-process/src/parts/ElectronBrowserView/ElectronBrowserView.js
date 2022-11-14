@@ -209,17 +209,17 @@ exports.createBrowserView = async (restoreId) => {
       session: ElectronSessionForBrowserView.getSession(),
     },
   })
-  if (ElectronBrowserViewCss.electronBrowserViewCss) {
-    view.webContents.insertCSS(ElectronBrowserViewCss.electronBrowserViewCss)
-  }
+
   view.setBackgroundColor('#fff')
 
-  view.webContents.on('context-menu', handleContextMenu)
   const { webContents } = view
   const { id } = webContents
   // console.log('[main process] create browser view', id)
   ElectronBrowserViewState.add(id, browserWindow, view)
 
+  if (ElectronBrowserViewCss.electronBrowserViewCss) {
+    webContents.insertCSS(ElectronBrowserViewCss.electronBrowserViewCss)
+  }
   /**
    *
    * @type {(details: Electron.HandlerDetails) => ({action: 'deny'}) | ({action: 'allow', overrideBrowserWindowOptions?: Electron.BrowserWindowConstructorOptions})} param0
@@ -261,7 +261,7 @@ exports.createBrowserView = async (restoreId) => {
       action: ElectronWindowOpenActionType.Deny,
     }
   }
-
+  webContents.on('context-menu', handleContextMenu)
   webContents.on('will-navigate', handleWillNavigate)
   webContents.on('did-navigate', handleDidNavigate)
   webContents.on('page-title-updated', handlePageTitleUpdated)
