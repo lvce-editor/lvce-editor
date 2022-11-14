@@ -3,7 +3,6 @@ const { VError } = require('verror')
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
 const FileSystem = require('../FileSystem/FileSystem.js')
-const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js')
 const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
 const FileSystemErrorCodes = require('../FileSystemErrorCodes/FileSystemErrorCodes.js')
 
@@ -88,14 +87,6 @@ const createSession = () => {
   session.setPermissionRequestHandler(handlePermissionRequest)
   session.setPermissionCheckHandler(handlePermissionCheck)
   addSessionChromeExtensions(session)
-
-  // const extensionPath = Path.join(
-  //   Root.root,
-  //   'packages',
-  //   'electron-browser-view-chrome-extensions',
-  //   'ublock'
-  // )
-  // loadExtension(session, extensionPath)
   return session
 }
 
@@ -104,30 +95,4 @@ exports.getSession = () => {
     state.session = createSession()
   }
   return state.session
-}
-
-/**
- *
- * @type {(details: Electron.HandlerDetails) => ({action: 'deny'}) | ({action: 'allow', overrideBrowserWindowOptions?: Electron.BrowserWindowConstructorOptions})} param0
- * @returns
- */
-exports.handleWindowOpen = ({
-  url,
-  disposition,
-  features,
-  frameName,
-  referrer,
-  postBody,
-}) => {
-  if (url === 'about:blank') {
-    return { action: ElectronWindowOpenActionType.Allow }
-  }
-  if (disposition === ElectronDispositionType.BackgroundTab) {
-    // TODO open background tab
-  }
-  console.log({ disposition, features, frameName, referrer })
-  console.info(`[main-process] blocked popup for ${url}`)
-  return {
-    action: ElectronWindowOpenActionType.Deny,
-  }
 }
