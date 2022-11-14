@@ -6,6 +6,7 @@ const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermis
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
 const Root = require('../Root/Root.js')
+const ElectronResourceType = require('../ElectronResourceType/ElectronResourceType.js')
 
 const state = {
   /**
@@ -22,7 +23,7 @@ const state = {
 const handleHeadersReceived = (details, callback) => {
   const { responseHeaders, resourceType } = details
   switch (resourceType) {
-    case 'mainFrame':
+    case ElectronResourceType.MainFrame:
       callback({
         responseHeaders: {
           ...responseHeaders,
@@ -32,7 +33,7 @@ const handleHeadersReceived = (details, callback) => {
         },
       })
       break
-    case 'subFrame':
+    case ElectronResourceType.SubFrame:
       callback({
         responseHeaders: {
           ...responseHeaders,
