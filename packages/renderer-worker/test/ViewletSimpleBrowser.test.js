@@ -29,6 +29,14 @@ jest.unstable_mockModule(
       setFallthroughKeyBindings: jest.fn(() => {
         throw new Error('not implemented')
       }),
+      getStats() {
+        return {
+          title: 'test',
+          url: '',
+          canGoBack: true,
+          canGoForward: true,
+        }
+      },
     }
   }
 )
