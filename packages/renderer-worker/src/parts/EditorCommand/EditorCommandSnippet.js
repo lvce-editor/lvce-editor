@@ -5,6 +5,7 @@ const getChanges = (lines, selections, snippet) => {
   // TODO verify that deleted fits in the line
   const insertedLines = snippet.inserted.split('\n')
   const changes = []
+  const selectionChanges = []
   for (let i = 0; i < selections.length; i += 4) {
     const selectionStartRow = selections[i]
     const selectionStartColumn = selections[i + 1]
@@ -17,6 +18,7 @@ const getChanges = (lines, selections, snippet) => {
         insertedLines[0],
         ...insertedLines.slice(1).map((line) => indent + line),
       ]
+      const deleted = ['']
       changes.push({
         start: {
           rowIndex: selectionStartRow,
@@ -27,26 +29,66 @@ const getChanges = (lines, selections, snippet) => {
           columnIndex: selectionEndColumn,
         },
         inserted: insertedLinesHere,
-        deleted: [''],
+        deleted,
         origin: 'editorSnippet',
       })
+      const lastInsertedLine = insertedLines.at(-1)
+      selectionChanges.push(
+        selectionEndRow + insertedLines.length - deleted.length,
+        selectionEndColumn + lastInsertedLine.length,
+        selectionEndRow + insertedLines.length - deleted.length,
+        selectionEndColumn + lastInsertedLine.length
+      )
     } else {
-      changes.push({
-        start: {
-          rowIndex: selectionStartRow,
-          columnIndex: selectionStartColumn - snippet.deleted,
-        },
-        end: {
-          rowIndex: selectionEndRow,
-          columnIndex: selectionEndColumn,
-        },
-        inserted: insertedLines,
-        deleted: [''],
-        origin: 'editorSnippet',
-      })
+      const line = insertedLines[0]
+      const placeholderIndex = line.indexOf('$0')
+      if (placeholderIndex !== -1) {
+        const inserted = line.replace('$0', '')
+        const cursorColumnIndex = selectionEndColumn + 2
+        selectionChanges.push(
+          selectionStartRow,
+          cursorColumnIndex,
+          selectionStartRow,
+          cursorColumnIndex
+        )
+        changes.push({
+          start: {
+            rowIndex: selectionStartRow,
+            columnIndex: selectionStartColumn - snippet.deleted,
+          },
+          end: {
+            rowIndex: selectionEndRow,
+            columnIndex: selectionEndColumn,
+          },
+          inserted: [inserted],
+          deleted: [''],
+          origin: 'editorSnippet',
+        })
+      } else {
+        const cursorColumnIndex = selectionStartColumn - snippet.deleted
+        selectionChanges.push(
+          selectionStartRow,
+          cursorColumnIndex,
+          selectionStartRow,
+          cursorColumnIndex
+        )
+        changes.push({
+          start: {
+            rowIndex: selectionStartRow,
+            columnIndex: selectionStartColumn - snippet.deleted,
+          },
+          end: {
+            rowIndex: selectionEndRow,
+            columnIndex: selectionEndColumn,
+          },
+          inserted: insertedLines,
+          deleted: [''],
+          origin: 'editorSnippet',
+        })
+      }
     }
   }
-  return changes
+  return { changes, selectionChanges: new Uint32Array(selectionChanges) }
 }
 
 // const getIndent =
@@ -56,6 +98,10 @@ export const editorSnippet = (editor, snippet) => {
   // TODO verify that deleted fits in the line
   const lines = editor.lines
   const selections = editor.selections
-  const changes = getChanges(lines, selections, snippet)
-  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
+  const { changes, selectionChanges } = getChanges(lines, selections, snippet)
+  return Editor.scheduleDocumentAndCursorsSelections(
+    editor,
+    changes,
+    selectionChanges
+  )
 }
