@@ -68,12 +68,12 @@ export const backgroundLoadContent = async (state, savedState) => {
     width,
     height - headerHeight
   )
-  const title = await ElectronBrowserViewFunctions.setIframeSrc(
+  const { newTitle } = await ElectronBrowserViewFunctions.setIframeSrc(
     browserViewId,
     iframeSrc
   )
   return {
-    title,
+    title: newTitle,
     uri: `simple-browser://${browserViewId}`,
     iframeSrc,
   }
@@ -130,11 +130,15 @@ export const loadContent = async (state, savedState) => {
   )
   Assert.number(browserViewId)
   await ElectronBrowserViewFunctions.setIframeSrc(browserViewId, iframeSrc)
+  const { title, canGoBack, canGoForward } =
+    await ElectronBrowserViewFunctions.getStats(browserViewId)
   return {
     ...state,
     iframeSrc,
-    title: 'Simple Browser',
+    title,
     browserViewId,
+    canGoBack,
+    canGoForward,
     uri: `simple-browser://${browserViewId}`,
   }
 }

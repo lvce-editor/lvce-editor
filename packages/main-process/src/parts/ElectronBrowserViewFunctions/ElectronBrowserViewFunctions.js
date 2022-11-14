@@ -69,12 +69,9 @@ exports.setIframeSrc = async (view, iframeSrc) => {
   const { webContents } = view
   try {
     await webContents.loadURL(iframeSrc)
-    const newTitle = getTitle(webContents)
-    return newTitle
   } catch (error) {
     if (error && error.code === LoadErrorCode.ERR_ABORTED) {
       console.info(`[main process] navigation to ${iframeSrc} aborted`)
-      return
     }
     if (
       error &&
@@ -83,7 +80,6 @@ exports.setIframeSrc = async (view, iframeSrc) => {
     ) {
       console.info(`[main process] navigation to ${iframeSrc} canceled`)
       ElectronBrowserViewState.removeCanceled(webContents.id)
-      return
     }
     try {
       await setIframeSrcFallback(view, error)
@@ -127,8 +123,6 @@ exports.reload = (view) => {
 exports.forward = (view) => {
   const { webContents } = view
   webContents.goForward()
-  const canGoForward = webContents.canGoForward()
-  return canGoForward
 }
 
 /**
@@ -139,8 +133,6 @@ exports.backward = (view) => {
   // TODO return promise that resolves once devtools are actually open
   const { webContents } = view
   webContents.goBack()
-  const canGoBack = webContents.canGoBack()
-  return canGoBack
 }
 
 /**
@@ -150,11 +142,11 @@ exports.backward = (view) => {
 exports.cancelNavigation = (view) => {
   const { webContents } = view
   ElectronBrowserViewState.setCanceled(webContents.id)
+  console.info(`[main process] canceled navigation to ${webContents.getURL()}`)
   webContents.stop()
   if (webContents.canGoBack()) {
     webContents.goBack()
   }
-  return webContents.getURL()
 }
 
 exports.show = (id) => {
@@ -211,3 +203,20 @@ exports.setFallThroughKeyBindings = (fallthroughKeyBindings) => {
 }
 
 // TODO maybe move some of these to webContentFunctions
+
+/**
+ * @param {Electron.BrowserView} view
+ */
+exports.getStats = (view) => {
+  const { webContents } = view
+  const canGoBack = webContents.canGoBack()
+  const canGoForward = webContents.canGoForward()
+  const url = webContents.getURL()
+  const title = webContents.getTitle()
+  return {
+    canGoBack,
+    canGoForward,
+    url,
+    title,
+  }
+}

@@ -71,9 +71,14 @@ export const copyImageAt = (id, x, y) => {
     y
   )
 }
+
 export const setFallthroughKeyBindings = (fallthroughKeyBindings) => {
   return ElectronProcess.invoke(
     'ElectronBrowserViewFunctions.setFallthroughKeyBindings',
     fallthroughKeyBindings
   )
+}
+
+export const getStats = (id) => {
+  return ElectronProcess.invoke('ElectronBrowserViewFunctions.getStats', id)
 }
