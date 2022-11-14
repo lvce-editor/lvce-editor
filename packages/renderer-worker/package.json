@@ -21,7 +21,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "msw": "0.48.1",
+    "msw": "0.48.2",
     "node-fetch": "^3.3.0"
   },
   "jest": {
