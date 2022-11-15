@@ -1,13 +1,13 @@
-const { BrowserView, BrowserWindow, webContents } = require('electron')
+const { BrowserView, BrowserWindow } = require('electron')
 const ElectronSessionForBrowserView = require('../ElectronSessionForBrowserView/ElectronSessionForBrowserView.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
 const ElectronDispositionType = require('../ElectronDispositionType/ElectronDispositionType.js')
 const ElectronWindowOpenActionType = require('../ElectronWindowOpenActionType/ElectronWindowOpenActionType.js')
-const ElectronBrowserViewCss = require('../ElectronBrowserViewCss/ElectronBrowserViewCss.js')
 const Assert = require('../Assert/Assert.js')
 const ElectronInputType = require('../ElectronInputType/ElectronInputType.js')
 const Debug = require('../Debug/Debug.js')
+const ElectronBrowserViewAdBlock = require('../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js')
 
 const normalizeKey = (key) => {
   if (key === ' ') {
@@ -87,8 +87,7 @@ const handleWillNavigate = (event, url) => {
  */
 const handleDidNavigate = (event, url) => {
   Debug.debug(`[main-process] did navigate to ${url}`)
-
-  // console.log({ event, url })
+  console.log(`[main-process] did navigate to ${url}`)
   const webContents = event.sender
   const canGoForward = webContents.canGoForward()
   const canGoBack = webContents.canGoBack()
@@ -217,9 +216,6 @@ exports.createBrowserView = async (restoreId) => {
   // console.log('[main process] create browser view', id)
   ElectronBrowserViewState.add(id, browserWindow, view)
 
-  if (ElectronBrowserViewCss.electronBrowserViewCss) {
-    webContents.insertCSS(ElectronBrowserViewCss.electronBrowserViewCss)
-  }
   /**
    *
    * @type {(details: Electron.HandlerDetails) => ({action: 'deny'}) | ({action: 'allow', overrideBrowserWindowOptions?: Electron.BrowserWindowConstructorOptions})} param0
@@ -268,6 +264,7 @@ exports.createBrowserView = async (restoreId) => {
   webContents.on('destroyed', handleDestroyed)
   webContents.on('before-input-event', handleBeforeInput)
   webContents.setWindowOpenHandler(handleWindowOpen)
+  ElectronBrowserViewAdBlock.enableForWebContents(webContents)
   return id
 }
 

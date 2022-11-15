@@ -5,6 +5,7 @@ const Platform = require('../Platform/Platform.js')
 const FileSystem = require('../FileSystem/FileSystem.js')
 const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
 const FileSystemErrorCodes = require('../FileSystemErrorCodes/FileSystemErrorCodes.js')
+const ElectronBrowserViewAdBlock = require('../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js')
 
 const state = {
   /**
@@ -84,12 +85,17 @@ const addSessionChromeExtensions = async (session) => {
 }
 
 const createSession = () => {
-  const session = Electron.session.fromPartition('persist:browserView', {
+  const sessionId = `persist:browserView`
+  const session = Electron.session.fromPartition(sessionId, {
     cache: true,
   })
   session.setPermissionRequestHandler(handlePermissionRequest)
   session.setPermissionCheckHandler(handlePermissionCheck)
-  addSessionChromeExtensions(session)
+  session.webRequest.onBeforeRequest(
+    ElectronBrowserViewAdBlock.filter,
+    ElectronBrowserViewAdBlock.handleBeforeRequest
+  )
+  // session.webRequest.addSessionChromeExtensions(session)
   return session
 }
 
