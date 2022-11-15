@@ -8,6 +8,8 @@ const ElectronBrowserViewCss = require('../ElectronBrowserViewCss/ElectronBrowse
 const Assert = require('../Assert/Assert.js')
 const ElectronInputType = require('../ElectronInputType/ElectronInputType.js')
 const Debug = require('../Debug/Debug.js')
+const { readFileSync } = require('fs')
+const { join } = require('path')
 
 const normalizeKey = (key) => {
   if (key === ' ') {
@@ -189,36 +191,7 @@ const handleDestroyed = (event) => {
 }
 
 const blockAds = (webContents) => {
-  console.log('block ads')
-  // based on uBlock origin json-prune function
-  const code = `
-
-  setInterval(()=>{
-    console.log("test");
-  }, 1000)
-
-// ;(()=>{
-//   console.log('block ads')
-//   const prune = json => {
-//     console.log({json})
-//     return json
-//   }
-
-//   JSON.parse = new Proxy(JSON.parse, {
-//       apply() {
-//           return pruner(Reflect.apply(...arguments));
-//       },
-//   });
-//   Response.prototype.json = new Proxy(Response.prototype.json, {
-//       apply() {
-//           return Reflect.apply(...arguments).then(o => pruner(o));
-//       },
-//   });
-// })();
-
-0
-`
-
+  const code = readFileSync(join(__dirname, './block.js'), 'utf8')
   webContents.executeJavaScript(code)
 }
 
