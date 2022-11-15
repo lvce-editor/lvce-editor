@@ -1,4 +1,4 @@
-import * as ElectronRebuild from 'electron-rebuild'
+import * as ElectronRebuild from '@electron/rebuild'
 import VError from 'verror'
 
 export const rebuild = async ({ electronVersion, buildPath, arch }) => {
