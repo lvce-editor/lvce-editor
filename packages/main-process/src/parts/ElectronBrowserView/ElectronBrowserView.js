@@ -8,8 +8,7 @@ const ElectronBrowserViewCss = require('../ElectronBrowserViewCss/ElectronBrowse
 const Assert = require('../Assert/Assert.js')
 const ElectronInputType = require('../ElectronInputType/ElectronInputType.js')
 const Debug = require('../Debug/Debug.js')
-const { readFileSync } = require('fs')
-const { join } = require('path')
+const ElectronBrowserViewAdBlock = require('../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js')
 
 const normalizeKey = (key) => {
   if (key === ' ') {
@@ -92,7 +91,7 @@ const handleDidNavigate = (event, url) => {
   console.log(`[main-process] did navigate to ${url}`)
 
   const webContents = event.sender
-  blockAds(webContents)
+  ElectronBrowserViewAdBlock.blockAds(webContents)
   const canGoForward = webContents.canGoForward()
   const canGoBack = webContents.canGoBack()
   const port = getPort(webContents)
@@ -190,11 +189,6 @@ const handleDestroyed = (event) => {
   ElectronBrowserViewState.remove(webContents.id)
 }
 
-const blockAds = (webContents) => {
-  const code = readFileSync(join(__dirname, './block.js'), 'utf8')
-  webContents.executeJavaScript(code)
-}
-
 /**
  *
  * @param {number} restoreId
@@ -270,7 +264,7 @@ exports.createBrowserView = async (restoreId) => {
     }
   }
 
-  blockAds(webContents)
+  ElectronBrowserViewAdBlock.blockAds(webContents)
   webContents.on('context-menu', handleContextMenu)
   webContents.on('will-navigate', handleWillNavigate)
   webContents.on('did-navigate', handleDidNavigate)
