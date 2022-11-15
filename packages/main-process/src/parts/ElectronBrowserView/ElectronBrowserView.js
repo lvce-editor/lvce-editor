@@ -89,9 +89,7 @@ const handleWillNavigate = (event, url) => {
 const handleDidNavigate = (event, url) => {
   Debug.debug(`[main-process] did navigate to ${url}`)
   console.log(`[main-process] did navigate to ${url}`)
-
   const webContents = event.sender
-  ElectronBrowserViewAdBlock.blockAds(webContents)
   const canGoForward = webContents.canGoForward()
   const canGoBack = webContents.canGoBack()
   const port = getPort(webContents)
@@ -263,8 +261,6 @@ exports.createBrowserView = async (restoreId) => {
       action: ElectronWindowOpenActionType.Deny,
     }
   }
-
-  ElectronBrowserViewAdBlock.blockAds(webContents)
   webContents.on('context-menu', handleContextMenu)
   webContents.on('will-navigate', handleWillNavigate)
   webContents.on('did-navigate', handleDidNavigate)
@@ -272,6 +268,7 @@ exports.createBrowserView = async (restoreId) => {
   webContents.on('destroyed', handleDestroyed)
   webContents.on('before-input-event', handleBeforeInput)
   webContents.setWindowOpenHandler(handleWindowOpen)
+  ElectronBrowserViewAdBlock.enableForWebContents(webContents)
   return id
 }
 

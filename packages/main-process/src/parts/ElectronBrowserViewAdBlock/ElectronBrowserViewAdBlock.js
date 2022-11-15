@@ -110,7 +110,16 @@ exports.filter = {
   // urls: ['<all_urls>'],
 }
 
-exports.blockAds = (webContents) => {
+/**
+ *
+ * @param {Electron.Event} event
+ */
+const handleDidNavigate = (event) => {
+  const webContents = event.sender
   const code = readFileSync(join(__dirname, './block.js'), 'utf8')
   webContents.executeJavaScript(code)
+}
+
+exports.enableForWebContents = (webContents) => {
+  webContents.on('did-navigate', handleDidNavigate)
 }
