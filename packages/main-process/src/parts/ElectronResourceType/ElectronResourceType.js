@@ -1,9 +1,8 @@
+exports.Font = 'font'
+exports.Image = 'image'
 exports.MainFrame = 'mainFrame'
-
-exports.SubFrame = 'subFrame'
-
+exports.Media = 'media'
 exports.Script = 'script'
-
 exports.Stylesheet = 'stylesheet'
-
+exports.SubFrame = 'subFrame'
 exports.Xhr = 'xhr'
