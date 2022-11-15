@@ -1,5 +1,3 @@
-// based on ublock's json-prune function
-
 ;(() => {
   const removeKeys = ['playerAds', 'adPlacements']
 
@@ -22,14 +20,16 @@
   }
 
   JSON.parse = new Proxy(JSON.parse, {
-    apply() {
-      return prune(Reflect.apply(...arguments))
+    apply(...args) {
+      return prune(Reflect.apply(...args))
     },
   })
 
+  // @ts-ignore
   Response.prototype.json = new Proxy(Response.prototype.json, {
-    apply() {
-      return Reflect.apply(...arguments).then(prune)
+    async apply(...args) {
+      const json = await Reflect.apply(...args)
+      return prune(json)
     },
   })
 })()
