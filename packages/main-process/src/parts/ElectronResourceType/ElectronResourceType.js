@@ -7,3 +7,9 @@ exports.Script = 'script'
 exports.Stylesheet = 'stylesheet'
 
 exports.Xhr = 'xhr'
+
+exports.Image = 'image'
+
+exports.Font = 'font'
+
+exports.Media = 'media'

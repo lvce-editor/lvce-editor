@@ -4,7 +4,7 @@ const { join } = require('node:path')
 const ElectronResourceType = require('../ElectronResourceType/ElectronResourceType.js')
 const HttpMethod = require('../HttpMethod/HttpMethod.js')
 
-const getBeforeRequestResponseMainFrame = (url) => {
+const getBeforeRequestResponseMainFrame = (method, url) => {
   return {}
 }
 
@@ -23,6 +23,7 @@ const getBeforeRequestResponseXhrPost = (url) => {
   const canceledUrls = [
     'https://www.youtube.com/api/stats/qoe',
     'https://www.youtube.com/youtubei/v1/log_event',
+    'https://play.google.com/log',
   ]
   return cancelIfStartsWith(url, canceledUrls)
 }
@@ -36,14 +37,18 @@ const getBeforeRequestResponseXhrGet = (url) => {
     'https://www.youtube.com/ptracking',
     'https://www.youtube.com/api/timedtext',
     'https://www.youtube.com/pcs/activeview',
+    'https://googleads.g.doubleclick.net/pagead/id',
   ]
   return cancelIfStartsWith(url, canceledUrls)
 }
 
+const getBeforeRequestResponseXhrOptions = (url) => {
+  const canceledUrls = ['https://play.google.com/log']
+  return cancelIfStartsWith(url, canceledUrls)
+}
+
 const getBeforeRequestResponseXhrHead = (url) => {
-  const canceledUrls = [
-    // 'https://www.youtube.com/generate_204'
-  ]
+  const canceledUrls = ['https://www.youtube.com/generate_204']
   return cancelIfStartsWith(url, canceledUrls)
 }
 
@@ -55,9 +60,28 @@ const getBeforeRequestResponseXhr = (method, url) => {
       return getBeforeRequestResponseXhrGet(url)
     case HttpMethod.Head:
       return getBeforeRequestResponseXhrHead(url)
+    case HttpMethod.Options:
+      return getBeforeRequestResponseXhrOptions(url)
     default:
       return {}
   }
+}
+
+const getBeforeRequestResponseImage = (method, url) => {
+  return {}
+}
+
+const getBeforeRequestResponseFont = (method, url) => {
+  return {}
+}
+
+const getBeforeRequestResponseMedia = (method, url) => {
+  return {}
+}
+
+const getBeforeRequestResponseScript = (method, url) => {
+  const canceledUrls = ['https://static.doubleclick.net']
+  return cancelIfStartsWith(url, canceledUrls)
 }
 
 const getBeforeRequestResponse = (details) => {
@@ -74,17 +98,22 @@ const getBeforeRequestResponse = (details) => {
 
   switch (resourceType) {
     case ElectronResourceType.MainFrame:
-      return getBeforeRequestResponseMainFrame(url)
+      return getBeforeRequestResponseMainFrame(method, url)
     case ElectronResourceType.Stylesheet:
       return {}
     case ElectronResourceType.Script:
-      return {}
+      return getBeforeRequestResponseScript(method, url)
     case ElectronResourceType.Xhr:
       return getBeforeRequestResponseXhr(method, url)
+    case ElectronResourceType.Image:
+      return getBeforeRequestResponseImage(method, url)
+    case ElectronResourceType.Font:
+      return getBeforeRequestResponseFont(method, url)
+    case ElectronResourceType.Media:
+      return getBeforeRequestResponseMedia(method, url)
     default:
-      return {
-        cancel: true,
-      }
+      console.log({ resourceType })
+      return {}
   }
 }
 
@@ -106,8 +135,8 @@ exports.handleBeforeRequest = (details, callback) => {
 }
 
 exports.filter = {
-  urls: ['https://*.youtube.com/*'],
-  // urls: ['<all_urls>'],
+  // urls: ['https://*.youtube.com/*'],
+  urls: ['<all_urls>'],
 }
 
 /**
