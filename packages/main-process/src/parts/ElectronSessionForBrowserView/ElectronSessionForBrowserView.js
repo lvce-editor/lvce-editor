@@ -184,7 +184,7 @@ const handleBeforeRequest = (details, callback) => {
 }
 
 const createSession = () => {
-  const sessionId = `persist:browserView` + Math.random()
+  const sessionId = `persist:browserView`
   const session = Electron.session.fromPartition(sessionId, {
     cache: true,
   })
