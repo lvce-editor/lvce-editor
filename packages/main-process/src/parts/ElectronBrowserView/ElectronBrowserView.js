@@ -197,7 +197,10 @@ exports.createBrowserView = async (restoreId) => {
   const cached = ElectronBrowserViewState.get(restoreId)
   if (cached) {
     // console.log('[main-process] cached browser view', restoreId)
-    return restoreId
+    return {
+      restored: true,
+      id: restoreId,
+    }
   }
   const browserWindow = BrowserWindow.getFocusedWindow()
   if (!browserWindow) {
@@ -268,7 +271,10 @@ exports.createBrowserView = async (restoreId) => {
   webContents.on('destroyed', handleDestroyed)
   webContents.on('before-input-event', handleBeforeInput)
   webContents.setWindowOpenHandler(handleWindowOpen)
-  return id
+  return {
+    restored: false,
+    id,
+  }
 }
 
 /**

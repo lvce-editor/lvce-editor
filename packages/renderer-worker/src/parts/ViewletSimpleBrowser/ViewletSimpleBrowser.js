@@ -89,28 +89,30 @@ const getId = (idPart) => {
 export const loadContent = async (state, savedState) => {
   const { top, left, width, height, headerHeight, uri } = state
   const idPart = uri.slice('simple-browser://'.length)
-  const id = getId(idPart)
+  const savedId = getId(idPart)
   const iframeSrc = getUrlFromSavedState(savedState)
   // TODO load keybindings in parallel with creating browserview
   const keyBindings = await KeyBindings.getKeyBindings()
-  if (id) {
-    const actualId = await ElectronBrowserView.createBrowserView(id)
-    await ElectronBrowserViewFunctions.setFallthroughKeyBindings(keyBindings)
+  if (savedId) {
+    const { id, restored } = await ElectronBrowserView.createBrowserView(
+      savedId
+    )
     await ElectronBrowserViewFunctions.resizeBrowserView(
-      actualId,
+      id,
       top + headerHeight,
       left,
       width,
       height - headerHeight
     )
-    if (id !== actualId) {
-      await ElectronBrowserViewFunctions.setIframeSrc(actualId, iframeSrc)
+    if (!restored) {
+      await ElectronBrowserViewFunctions.setFallthroughKeyBindings(keyBindings)
+      await ElectronBrowserViewFunctions.setIframeSrc(id, iframeSrc)
     }
     return {
       ...state,
       iframeSrc,
       title: 'Simple Browser',
-      browserViewId: actualId,
+      browserViewId: id,
     }
   }
 
