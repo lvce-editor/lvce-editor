@@ -224,6 +224,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.SaveState
     case 'ServiceWorker.hydrate':
     case 'ServiceWorker.uninstall':
+    case 'ServiceWorker.register':
+    case 'ServiceWorker.connect':
       return ModuleId.ServiceWorker
     case 'SessionReplay.downloadSession':
     case 'SessionReplay.openSession':

@@ -11,13 +11,14 @@ const handleControllerChange = () => {
   location.reload()
 }
 
-export const register = async (url) => {
+export const register = async (url, scope) => {
   if (!supportsServiceWorker()) {
     return
   }
   const registration = await navigator.serviceWorker.register(url, {
-    scope: '/',
+    scope,
     type: 'module',
+    updateViaCache: 'all',
   })
   registration.onupdatefound = handleUpdateFound
   navigator.serviceWorker.oncontrollerchange = handleControllerChange
@@ -33,4 +34,13 @@ export const uninstall = async () => {
   }
   const registrations = await navigator.serviceWorker.getRegistrations()
   await Promise.all(registrations.map(uninstallRegistration))
+}
+
+export const connect = async (port) => {
+  await new Promise((resolve) => {
+    navigator.serviceWorker.controller.postMessage(
+      { jsonrpc: '2.0', method: 'ServiceWorker.connect', params: [port] },
+      [port]
+    )
+  })
 }
