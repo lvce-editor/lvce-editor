@@ -28,5 +28,8 @@ export const getId = (uri) => {
   if (uri.startsWith('simple-browser://')) {
     return ViewletModuleId.SimpleBrowser
   }
+  if (uri.startsWith('diff://')) {
+    return ViewletModuleId.DiffEditor
+  }
   return ViewletModuleId.EditorText
 }
