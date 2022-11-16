@@ -1,8 +1,10 @@
 import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
+import * as ExtensionHostConfiguration from '../ExtensionHostConfiguration/ExtensionHostConfiguration.js'
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
-import * as ExtensionHostExtension from '../ExtensionHostExtension/ExtensionHostExtension.js'
+import * as ExtensionHostEnv from '../ExtensionHostEnv/ExtensionHostEnv.js'
+import * as ExtensionHostExec from '../ExtensionHostExec/ExtensionHostExec.js'
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
 import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
@@ -11,6 +13,9 @@ import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/Exten
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
+import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
+
+import { VError } from '../VError/VError.js'
 
 class FormattingError extends Error {
   constructor(message, codeFrame) {
@@ -35,12 +40,23 @@ export const create = () => {
     registerCompletionProvider:ExtensionHostCompletion.registerCompletionProvider,
     executeCompletionProvider: ExtensionHostCompletion.executeCompletionProvider,
 
+
+    // Configuration
+    getConfiguration: ExtensionHostConfiguration.getConfiguration,
+
     // Definition
     registerDefinitionProvider: ExtensionHostDefinition.registerDefinitionProvider,
     executeDefinitionProvider: ExtensionHostDefinition.executeDefinitionProvider,
 
+    // Env
+    env: ExtensionHostEnv.env,
+
     // Errors
     FormattingError,
+    VError,
+
+    // Exec
+    exec: ExtensionHostExec.exec,
 
     // Formatting
     registerFormattingProvider: ExtensionHostFormatting.registerFormattingProvider,
@@ -71,6 +87,9 @@ export const create = () => {
     // Type Definition
     registerTypeDefinitionProvider: ExtensionHostTypeDefinition.registerTypeDefinitionProvider,
     executeTypeDefinitionProvider: ExtensionHostTypeDefinition.executeTypeDefinitionProvider,
+
+    // Workspace
+    getWorkspaceFolder: ExtensionHostWorkspace.getWorkspaceFolder
 
   }
 }
