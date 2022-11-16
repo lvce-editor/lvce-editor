@@ -68,6 +68,8 @@ export const load = (moduleId) => {
       return import('../ViewletSimpleBrowser/ViewletSimpleBrowser.js')
     case ViewletModuleId.Pdf:
       return import('../ViewletPdf/ViewletPdf.js')
+    case ViewletModuleId.DiffEditor:
+      return import('../ViewletDiffEditor/ViewletDiffEditor.js')
     default:
       throw new Error(`unknown module ${moduleId}`)
   }
