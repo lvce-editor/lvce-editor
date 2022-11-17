@@ -1,4 +1,5 @@
 import { findIndex } from '../../shared/findIndex.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Context from '../Context/Context.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as Renderer from '../Renderer/Renderer.js'
@@ -206,7 +207,7 @@ export const create = (props) => {
   $Viewlet.className = 'ListItems Viewlet'
   $Viewlet.tabIndex = 0
   // @ts-ignore
-  $Viewlet.role = 'tree'
+  $Viewlet.role = AriaRoles.Tree
   $Viewlet.ariaLabel = 'Files Explorer'
   $Viewlet.addEventListener('keydown', handleKeyDown)
   $Viewlet.addEventListener('mousedown', handleMouseDown)

@@ -1,4 +1,4 @@
-import * as FindIndex from '../../shared/findIndex.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
@@ -85,7 +85,7 @@ export const create = ({ create$ListItem, render$ListItem, handleClick }) => {
   $List.tabIndex = 0
   $List.ariaLabel = 'Extensions'
   // @ts-ignore
-  $List.role = 'list'
+  $List.role = AriaRoles.List
   $List.oncontextmenu = handleContextMenu
   $List.onclick = handleClick
   $List.onfocus = handleFocus

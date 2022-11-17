@@ -1,3 +1,4 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
@@ -15,7 +16,7 @@ const create$PanelTab = (label, index) => {
   const $PanelTab = document.createElement('div')
   $PanelTab.className = 'PanelTab'
   // @ts-ignore
-  $PanelTab.role = 'tab'
+  $PanelTab.role = AriaRoles.Tab
   $PanelTab.textContent = label
   $PanelTab.id = `PanelTab-${index + 1}`
   return $PanelTab
@@ -49,7 +50,7 @@ export const create = () => {
   const $PanelTabs = document.createElement('div')
   $PanelTabs.className = 'PanelTabs'
   // @ts-ignore
-  $PanelTabs.role = 'tablist'
+  $PanelTabs.role = AriaRoles.TabList
   $PanelTabs.onmousedown = panelTabsHandleClick
   $PanelTabs.tabIndex = -1
 
@@ -59,7 +60,7 @@ export const create = () => {
   const $PanelToolBar = document.createElement('div')
   $PanelToolBar.className = 'PanelToolBar'
   // @ts-ignore
-  $PanelToolBar.role = 'toolbar'
+  $PanelToolBar.role = AriaRoles.ToolBar
   $PanelToolBar.append($ButtonClose)
 
   const $PanelHeader = document.createElement('div')

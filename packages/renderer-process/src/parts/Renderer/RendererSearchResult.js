@@ -1,10 +1,12 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+
 export const renderTemplate = () => {
   const label = document.createElement('div')
   label.className = 'Label'
   const root = document.createElement('div')
   root.className = 'ListItem SearchResults'
   // @ts-ignore
-  root.role = 'option'
+  root.role = AriaRoles.Option
   root.append(label)
   return {
     root,

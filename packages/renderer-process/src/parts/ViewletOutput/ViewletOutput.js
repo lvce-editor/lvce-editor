@@ -1,6 +1,6 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Focus from '../Focus/Focus.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Focus from '../Focus/Focus.js'
 import * as ViewletOutputEvents from './ViewletOutputEvents.js'
 
 const create$Option = (option) => {
@@ -21,7 +21,7 @@ export const create = () => {
   const $ViewletOutputContent = document.createElement('div')
   $ViewletOutputContent.className = 'OutputContent'
   // @ts-ignore
-  $ViewletOutputContent.role = 'log'
+  $ViewletOutputContent.role = AriaRoles.Log
   $ViewletOutputContent.tabIndex = 0
   const $ViewletOutputWidgets = document.createElement('div')
   $ViewletOutputWidgets.className = 'OutputWidgets'

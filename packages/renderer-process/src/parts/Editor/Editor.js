@@ -1,5 +1,6 @@
 // TODO so many things in this file
 
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as EditorEvents from './EditorEvents.js'
 import * as LayerCursor from './LayerCursor.js'
@@ -7,6 +8,7 @@ import * as LayerDiagnostics from './LayerDiagnostics.js'
 import * as LayerScrollBar from './LayerScrollBar.js'
 import * as LayerSelections from './LayerSelections.js'
 import * as LayerText3 from './LayerText.js'
+
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
 // TODO tree shake out mobile support when targeting electron -> less code -> less event listeners -> less memory -> less cpu
@@ -28,7 +30,7 @@ export const create = () => {
   $EditorInput.setAttribute('wrap', 'off')
   $EditorInput.setAttribute('spellcheck', 'false')
   // @ts-ignore
-  $EditorInput.role = 'textbox'
+  $EditorInput.role = AriaRoles.TextBox
   $EditorInput.onpaste = EditorEvents.handlePaste
   // TODO where to best put listeners (side effects)
   $EditorInput.addEventListener('beforeinput', EditorEvents.handleBeforeInput)
@@ -98,7 +100,7 @@ export const create = () => {
   const $Editor = document.createElement('div')
   $Editor.className = 'Viewlet Editor'
   // @ts-ignore
-  $Editor.role = 'code'
+  $Editor.role = AriaRoles.Code
   $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBar)
   $Editor.addEventListener('contextmenu', EditorEvents.handleContextMenu)
   $Editor.addEventListener('wheel', EditorEvents.handleWheel, { passive: true })

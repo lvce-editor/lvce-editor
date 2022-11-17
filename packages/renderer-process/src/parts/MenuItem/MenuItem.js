@@ -1,3 +1,4 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 const getLabel = (item) => {
@@ -15,19 +16,19 @@ export const create$MenuItem = (item) => {
     case MenuItemFlags.RestoreFocus:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
-      $MenuItem.role = 'menuitem'
+      $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = getLabel(item)
       $MenuItem.tabIndex = -1
       break
     case MenuItemFlags.Separator:
       $MenuItem.className = 'MenuItemSeparator'
       // @ts-ignore
-      $MenuItem.role = 'separator'
+      $MenuItem.role = AriaRoles.Separator
       break
     case MenuItemFlags.Checked:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
-      $MenuItem.role = 'menuitemcheckbox'
+      $MenuItem.role = AriaRoles.MenuItemCheckBox
       $MenuItem.ariaChecked = 'true'
       $MenuItem.textContent = getLabel(item)
       $MenuItem.tabIndex = -1
@@ -35,7 +36,7 @@ export const create$MenuItem = (item) => {
     case MenuItemFlags.Unchecked:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
-      $MenuItem.role = 'menuitemcheckbox'
+      $MenuItem.role = AriaRoles.MenuItemCheckBox
       $MenuItem.ariaChecked = 'false'
       $MenuItem.textContent = getLabel(item)
       $MenuItem.tabIndex = -1
@@ -43,7 +44,7 @@ export const create$MenuItem = (item) => {
     case MenuItemFlags.SubMenu:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
-      $MenuItem.role = 'menuitem'
+      $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = getLabel(item)
       $MenuItem.tabIndex = -1
       $MenuItem.ariaHasPopup = 'true'
@@ -52,7 +53,7 @@ export const create$MenuItem = (item) => {
     case MenuItemFlags.Disabled:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
-      $MenuItem.role = 'menuitem'
+      $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = getLabel(item)
       $MenuItem.tabIndex = -1
       $MenuItem.setAttribute('disabled', 'true')
@@ -60,7 +61,7 @@ export const create$MenuItem = (item) => {
     default:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
-      $MenuItem.role = 'menuitem'
+      $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = getLabel(item)
       $MenuItem.tabIndex = -1
       console.warn('invalid menu item flags:', item)

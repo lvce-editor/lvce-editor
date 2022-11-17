@@ -1,9 +1,10 @@
 import * as FindIndex from '../../shared/findIndex.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Widget from '../Widget/Widget.js'
-import * as MenuItem from '../MenuItem/MenuItem.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as BackDrop from '../BackDrop/BackDrop.js'
 import * as Focus from '../Focus/Focus.js'
+import * as MenuItem from '../MenuItem/MenuItem.js'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as Widget from '../Widget/Widget.js'
 
 // TODO when pressing tab -> focus next element in tab order and close menu
 
@@ -139,7 +140,7 @@ const create$Menu = () => {
   const $Menu = document.createElement('ul')
   $Menu.className = 'Menu'
   // @ts-ignore
-  $Menu.role = 'menu'
+  $Menu.role = AriaRoles.Menu
   $Menu.tabIndex = -1
   // $ContextMenu.onmousedown = contextMenuHandleMouseDown
   // TODO mousedown vs click? (click is usually better but mousedown is faster, why wait 100ms?)

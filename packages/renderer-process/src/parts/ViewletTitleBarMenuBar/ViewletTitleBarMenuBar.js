@@ -1,8 +1,9 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
-import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
+import * as MenuItem from '../MenuItem/MenuItem.js'
 import * as Menu from '../OldMenu/Menu.js'
 import * as Widget from '../Widget/Widget.js'
-import * as MenuItem from '../MenuItem/MenuItem.js'
+import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
 
 const activeId = 'TitleBarEntryActive'
 
@@ -10,7 +11,7 @@ export const create = () => {
   const $TitleBarMenuBar = document.createElement('div')
   $TitleBarMenuBar.id = 'TitleBarMenuBar'
   // @ts-ignore
-  $TitleBarMenuBar.role = 'menubar'
+  $TitleBarMenuBar.role = AriaRoles.MenuBar
   $TitleBarMenuBar.tabIndex = 0
   $TitleBarMenuBar.onmousedown = ViewletTitleBarMenuBarEvents.handleClick
   $TitleBarMenuBar.addEventListener(
@@ -87,7 +88,7 @@ const create$TopLevelEntry = (item) => {
   $TitleBarTopLevelEntry.ariaHasPopup = 'true'
   $TitleBarTopLevelEntry.ariaExpanded = 'false'
   // @ts-ignore
-  $TitleBarTopLevelEntry.role = 'menuitem'
+  $TitleBarTopLevelEntry.role = AriaRoles.MenuItem
   if (item.keyboardShortCut) {
     $TitleBarTopLevelEntry.ariaKeyShortcuts = item.keyboardShortCut
   }
@@ -222,7 +223,7 @@ const create$Menu = () => {
   const $Menu = document.createElement('div')
   $Menu.className = 'Menu'
   // @ts-ignore
-  $Menu.role = 'menu'
+  $Menu.role = AriaRoles.Menu
   $Menu.tabIndex = -1
   // $ContextMenu.onmousedown = contextMenuHandleMouseDown
   // TODO mousedown vs click? (click is usually better but mousedown is faster, why wait 100ms?)

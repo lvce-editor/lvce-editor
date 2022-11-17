@@ -1,3 +1,5 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+
 class TreeView {
   constructor(props) {
     this.props = props
@@ -5,7 +7,7 @@ class TreeView {
     this.$Viewlet.className = 'ListItems Viewlet'
     this.$Viewlet.tabIndex = 0
     // @ts-ignore
-    this.$Viewlet.role = 'tree'
+    this.$Viewlet.role = AriaRoles.Tree
     this.$Viewlet.addEventListener('keydown', this.handleKeyDown.bind(this))
     this.$Viewlet.addEventListener('mousedown', this.handleMouseDown.bind(this))
     this.$Viewlet.addEventListener(

@@ -1,3 +1,4 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 
 export const create = () => {
@@ -18,7 +19,7 @@ export const create = () => {
   $Viewlet.id = 'SideBar'
   $Viewlet.className = 'Viewlet SideBar'
   // @ts-ignore
-  $Viewlet.role = 'complementary'
+  $Viewlet.role = AriaRoles.Complementary
   $Viewlet.ariaRoleDescription = 'Side Bar'
   $Viewlet.append($SideBarTitleArea)
 
