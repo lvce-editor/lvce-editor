@@ -5,8 +5,7 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as GitHubDirentType from '../GitHubDirentType/GitHubDirentType.js'
 import * as GitHubRestApi from '../GitHubRestApi/GitHubRestApi.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
-import * as DirentType from '../DirentType/DirentType.js'
-import * as GitHubDirentType from '../GitHubDirentType/GitHubDirentType.js'
+
 export const name = 'GitHub'
 
 export const state = {
