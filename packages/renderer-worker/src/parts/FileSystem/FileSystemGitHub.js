@@ -3,6 +3,8 @@
 import * as GitHubRestApi from '../GitHubRestApi/GitHubRestApi.js'
 import * as Command from '../Command/Command.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
+import * as GitHubDirentType from '../GitHubDirentType/GitHubDirentType.js'
+import * as DirentType from '../DirentType/DirentType.js'
 
 export const name = 'GitHub'
 
@@ -32,12 +34,12 @@ export const readFile = async (path) => {
 
 const getType = (githubType) => {
   switch (githubType) {
-    case 'tree':
-      return 'folder'
-    case 'blob':
-      return 'file'
+    case GitHubDirentType.Tree:
+      return DirentType.Directory
+    case GitHubDirentType.Blob:
+      return DirentType.File
     default:
-      return 'unknown'
+      return DirentType.Unknown
   }
 }
 
