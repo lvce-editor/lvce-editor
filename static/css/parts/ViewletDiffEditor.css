@@ -7,3 +7,11 @@
 .DiffEditorContentRight {
   flex: 1;
 }
+
+.Deletion {
+  background: rgba(255, 0, 0, 0.2);
+}
+
+.Insertion {
+  background: rgba(155, 185, 85, 0.2);
+}

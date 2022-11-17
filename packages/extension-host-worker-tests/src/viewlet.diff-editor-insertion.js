@@ -13,4 +13,8 @@ test('sample.diff-editor-insertion', async () => {
   const contentRight = Locator('.DiffEditorContentRight')
   await expect(contentLeft).toHaveText('')
   await expect(contentRight).toHaveText('def')
+  const rowLeft = contentLeft.locator('.EditorRow')
+  await expect(rowLeft).toHaveClass('Deletion')
+  const rowRight = contentRight.locator('.EditorRow')
+  await expect(rowRight).toHaveClass('Insertion')
 })

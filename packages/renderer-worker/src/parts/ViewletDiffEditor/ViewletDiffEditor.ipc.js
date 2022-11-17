@@ -10,6 +10,9 @@ export const Commands = {
 export const LazyCommands = {
 }
 
-export const Css = '/css/parts/ViewletDiffEditor.css'
+export const Css = [
+  '/css/parts/ViewletDiffEditor.css',
+  '/css/parts/ViewletEditor.css',
+]
 
 export * from './ViewletDiffEditor.js'

@@ -17,6 +17,7 @@ export const create = () => {
 
 const create$Line = (line) => {
   const $Line = document.createElement('div')
+  $Line.className = 'EditorRow'
   $Line.textContent = line
   return $Line
 }
@@ -40,12 +41,14 @@ export const setChanges = (state, changes) => {
   const { changesLeft, changesRight } = changes
   for (const change of changesLeft) {
     if (change.type === 'delete') {
-      $ContentLeft.children[change.index].style.background = 'red'
+      const $Row = $ContentLeft.children[change.index]
+      $Row.classList.add('Deletion')
     }
   }
   for (const change of changesRight) {
     if (change.type === 'insert') {
-      $ContentRight.children[change.index].style.background = 'green'
+      const $Row = $ContentRight.children[change.index]
+      $Row.classList.add('Insertion')
     }
   }
 }
