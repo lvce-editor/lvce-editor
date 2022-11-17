@@ -15,16 +15,37 @@ export const create = () => {
   }
 }
 
-const setContent = ($Content, content) => {
-  $Content.textContent = content
+const create$Line = (line) => {
+  const $Line = document.createElement('div')
+  $Line.textContent = line
+  return $Line
 }
 
-export const setContentLeft = (state, content) => {
+const setContent = ($Content, lines) => {
+  $Content.replaceChildren(...lines.map(create$Line))
+}
+
+export const setContentLeft = (state, lines) => {
   const { $ContentLeft } = state
-  setContent($ContentLeft, content)
+  setContent($ContentLeft, lines)
 }
 
-export const setContentRight = (state, content) => {
+export const setContentRight = (state, lines) => {
   const { $ContentRight } = state
-  setContent($ContentRight, content)
+  setContent($ContentRight, lines)
+}
+
+export const setChanges = (state, changes) => {
+  const { $ContentLeft, $ContentRight } = state
+  const { changesLeft, changesRight } = changes
+  for (const change of changesLeft) {
+    if (change.type === 'delete') {
+      $ContentLeft.children[change.index].style.background = 'red'
+    }
+  }
+  for (const change of changesRight) {
+    if (change.type === 'insert') {
+      $ContentRight.children[change.index].style.background = 'green'
+    }
+  }
 }

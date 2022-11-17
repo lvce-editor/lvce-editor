@@ -1,51 +1,83 @@
 import * as Diff from '../src/parts/Diff/Diff.js'
 
-test.only('deletion', () => {
+test.skip('deletion', () => {
   const linesA = ['a']
   const linesB = []
-  const expected = [
-    /* originalStart */ 1 /******* */, /* originalEnd */ 1 /* */,
-    /* modifiedStart */ 0, /* modifiedEnd */ 0,
-  ]
+  const expected = [1, 1, 0, 0]
   expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
 })
 
-test('insertion', () => {
-  const stringA = ''
-  const stringB = 'a'
-  expect(Diff.diff(stringA, stringB)).toEqual(
-    new Uint16Array([/* insertion */ 0, /* start */ 0, /* length */ 1])
-  )
+test.only('insertion', () => {
+  const linesA = []
+  const linesB = ['a']
+  const expected = [0, 0, 1, 1]
+  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
+})
+
+test.only('two insertions', () => {
+  const linesA = []
+  const linesB = ['a', 'b']
+  const expected = [0, 0, 1, 1]
+  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
+})
+test.only('three insertions', () => {
+  const linesA = []
+  const linesB = ['a', 'b', 'c']
+  const expected = [0, 0, 1, 1]
+  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
+})
+
+test('insertion at start', () => {
+  const linesA = ['b', 'c']
+  const linesB = ['a', 'b', 'c']
+  const expected = [0, 0, 1, 1]
+  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
+})
+test('insertion at end', () => {
+  const linesA = ['a', 'b']
+  const linesB = ['a', 'b', 'c']
+  const expected = [0, 0, 1, 1]
+  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
+})
+
+test('insertion at start and end', () => {
+  const linesA = ['c']
+  const linesB = ['a', 'b', 'c', 'd']
+  const expected = [0, 0, 1, 2, 1, 0, 4, 4]
+  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
 })
 
 test('replacement', () => {
-  const stringA = 'a'
-  const stringB = 'b'
-  expect(Diff.diff(stringA, stringB)).toEqual([])
+  const linesA = ['a']
+  const linesB = ['b']
+  const expected = [1, 1, 1, 1]
+  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
 })
 
 test('word replacement', () => {
-  const stringA = 'The cat in the hat.'
-  const stringB = 'The dog in the hat.'
-  expect(Diff.diff(stringA, stringB)).toEqual([
-    /* change */
-  ])
+  const linesA = ['The', 'cat', 'in', 'the', 'hat']
+  const linesB = ['The', 'dog', 'in', 'the', 'hat']
+  const expected = [2, 2, 2, 2]
+  expect(Diff.diff(linesA, linesB)).toEqual([new Uint32Array(expected)])
 })
 
 test('word insertion', () => {
-  const stringA = 'The cat in the hat.'
-  const stringB = 'The furry cat in the hat.'
-  expect(Diff.diff(stringA, stringB)).toEqual([])
+  const linesA = ['The', 'cat', 'in', 'the', 'hat']
+  const linesB = ['The', 'furry', 'cat', 'in', 'the', 'hat']
+  const expected = [1, 0, 2, 2]
+  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
 })
 
 test('wordDeletion', () => {
-  const stringA = 'The cat in the hat.'
-  const stringB = 'The cat.'
-  expect(Diff.diff(stringA, stringB)).toEqual([])
+  const linesA = ['The', 'cat', 'in', 'the', 'hat']
+  const linesB = ['The', 'cat']
+  const expected = [3, 5, 2, 0]
+  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
 })
 
 test('two edits', () => {
-  const stringA = 'The cat in the hat.'
-  const stringB = 'The ox in the box.'
-  expect(Diff.diff(stringA, stringB)).toEqual([])
+  const linesA = ['The', 'cat', 'in', 'the', 'hat']
+  const linesB = ['The', 'ox', 'in', 'the', 'box']
+  const expected = [1, 1, 1, 1, 5, 5, 5, 5]
+  expect(Diff.diff(linesA, linesB)).toEqual(new Uint32Array(expected))
 })
