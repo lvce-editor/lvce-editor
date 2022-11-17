@@ -1,9 +1,9 @@
 import * as Diff from '../Diff/Diff.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as Height from '../Height/Height.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as VirtualList from '../VirtualList/VirtualList.js'
 
 export const create = (id, uri, top, left, width, height) => {
   return {
@@ -15,9 +15,7 @@ export const create = (id, uri, top, left, width, height) => {
     left,
     width,
     height,
-    minimumSliderSize: Height.MinimumSliderSize,
-    scrollBarHeight: 0,
-    rowHeight: 20,
+    ...VirtualList.create({ itemHeight: 20 }),
   }
 }
 
@@ -26,7 +24,7 @@ const getContents = (left, right) => {
 }
 
 export const loadContent = async (state) => {
-  const { uri, top, left, width, height, minimumSliderSize, rowHeight } = state
+  const { uri, top, left, width, height, minimumSliderSize, itemHeight } = state
   const uriContentPart = uri.slice('diff://'.length)
   const [uriLeft, uriRight] = uriContentPart.split('<->')
   const [contentLeft, contentRight] = await getContents(uriLeft, uriRight)
@@ -34,8 +32,8 @@ export const loadContent = async (state) => {
   const linesRight = SplitLines.splitLines(contentRight)
   const changes = Diff.diff(linesLeft, linesRight)
 
-  const contentHeight =
-    Math.max(linesLeft.length, linesRight.length) * rowHeight
+  const total = Math.max(linesLeft.length, linesRight.length)
+  const contentHeight = total * itemHeight
 
   const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
     height,
@@ -43,6 +41,12 @@ export const loadContent = async (state) => {
     minimumSliderSize
   )
 
+  const numberOfVisible = Math.ceil(height / itemHeight)
+  const maxLineY = Math.min(numberOfVisible, total)
+
+  const finalDeltaY = Math.max(contentHeight - height, 0)
+
+  console.log({ finalDeltaY })
   console.log({ scrollBarHeight })
   // const editorLeft = ViewletEditorText.create(
   //   '',
@@ -65,6 +69,8 @@ export const loadContent = async (state) => {
     linesRight,
     changes,
     scrollBarHeight,
+    finalDeltaY,
+    maxLineY,
   }
 }
 
@@ -114,21 +120,24 @@ const renderChanges = {
 
 const renderScrollBar = {
   isEqual(oldState, newState) {
-    return oldState.scrollBarHeight === newState.scrollBarHeight
+    return (
+      oldState.deltaY === newState.deltaY &&
+      oldState.height === newState.height &&
+      oldState.finalDeltaY === newState.finalDeltaY
+    )
   },
   apply(oldState, newState) {
-    console.log('render scrollbar')
-    // const scrollBarY = ScrollBarFunctions.getScrollBarY(
-    //   newState.deltaY,
-    //   newState.finalDeltaY,
-    //   newState.height - newState.headerHeight,
-    //   newState.scrollBarHeight
-    // )
+    const scrollBarY = ScrollBarFunctions.getScrollBarY(
+      newState.deltaY,
+      newState.finalDeltaY,
+      newState.height - newState.headerHeight,
+      newState.scrollBarHeight
+    )
     return [
       /* Viewlet.send */ 'Viewlet.send',
       /* id */ ViewletModuleId.DiffEditor,
       /* method */ 'setScrollBar',
-      /* scrollBarY */ 0,
+      /* scrollBarY */ scrollBarY,
       /* scrollBarHeight */ newState.scrollBarHeight,
     ]
   },

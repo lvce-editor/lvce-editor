@@ -376,7 +376,6 @@ const renderItems = {
 const renderScrollBar = {
   isEqual(oldState, newState) {
     return (
-      oldState.negativeMargin === newState.negativeMargin &&
       oldState.deltaY === newState.deltaY &&
       oldState.height === newState.height &&
       oldState.finalDeltaY === newState.finalDeltaY

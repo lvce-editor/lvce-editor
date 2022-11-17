@@ -12,13 +12,13 @@ export const handleWheel = (event) => {
   switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
       RendererWorker.send(
-        /* DiffEditor.setDeltaY */ 'DiffEditor.setDeltaY',
+        /* DiffEditor.handleWheel */ 'DiffEditor.handleWheel',
         /* value */ deltaY
       )
       break
     case WheelEventType.DomDeltaPixel:
       RendererWorker.send(
-        /* DiffEditor.setDeltaY */ 'DiffEditor.setDeltaY',
+        /* DiffEditor.handleWheel */ 'DiffEditor.handleWheel',
         /* value */ deltaY
       )
       break
