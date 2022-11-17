@@ -3,7 +3,7 @@ import VError from 'verror'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
-import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 
 const RE_EXTENSION_FRAGMENT = /.+(\/|\\)(.+)$/
 
@@ -35,9 +35,9 @@ export const get = async (path) => {
       error,
       `Failed to load extension manifest for ${id}`
     )
-    if (error.code === FileSystemErrorCodes.ENOENT) {
+    if (error.code === ErrorCodes.ENOENT) {
       // @ts-ignore
-      enhancedError.code = FileSystemErrorCodes.E_MANIFEST_NOT_FOUND
+      enhancedError.code = ErrorCodes.E_MANIFEST_NOT_FOUND
     } else {
       // @ts-ignore
       enhancedError.code = error.code

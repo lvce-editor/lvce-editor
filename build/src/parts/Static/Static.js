@@ -5,7 +5,7 @@ import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
-import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
@@ -405,7 +405,7 @@ const copyWebExtensions = async ({ commitHash, pathPrefix }) => {
       )
     } catch (error) {
       // @ts-ignore
-      if (error && error.code === FileSystemErrorCodes.ENOENT) {
+      if (error && error.code === ErrorCodes.ENOENT) {
         continue
       }
       throw error
