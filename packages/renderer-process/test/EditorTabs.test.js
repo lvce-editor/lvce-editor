@@ -2,13 +2,14 @@
  * @jest-environment jsdom
  */
 import { jest } from '@jest/globals'
+import * as AriaRoles from '../src/parts/AriaRoles/AriaRoles.js'
 import * as EditorTabs from '../src/parts/EditorTab/EditorTab.js'
 import * as RendererWorker from '../src/parts/RendererWorker/RendererWorker.js'
 
 const create$Tab = () => {
   const $Tab = document.createElement('li')
   // @ts-ignore
-  $Tab.role = 'tab'
+  $Tab.role = AriaRoles.Tab
   $Tab.className = 'EditorTab'
   $Tab.setAttribute('aria-description', '')
   return $Tab

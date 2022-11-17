@@ -1,4 +1,5 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ViewletActivityBarEvents from './ViewletActivityBarEvents.js'
@@ -24,12 +25,12 @@ const create$ActivityBarItem = (item) => {
   switch (item.flags) {
     case ActivityBarItemFlags.Tab:
       // @ts-ignore
-      $ActivityBarItem.role = 'tab'
+      $ActivityBarItem.role = AriaRoles.Tab
       $ActivityBarItem.ariaSelected = 'false'
       break
     case ActivityBarItemFlags.Button:
       // @ts-ignore
-      $ActivityBarItem.role = 'button'
+      $ActivityBarItem.role = AriaRoles.Button
       $ActivityBarItem.ariaHasPopup = 'true'
       break
     default:
@@ -47,7 +48,7 @@ export const create = () => {
   $Viewlet.id = 'ActivityBar'
   $Viewlet.className = 'Viewlet ActivityBar'
   // @ts-ignore
-  $Viewlet.role = 'toolbar'
+  $Viewlet.role = AriaRoles.ToolBar
   $Viewlet.ariaRoleDescription = 'Activity Bar'
   $Viewlet.ariaOrientation = 'vertical'
   $Viewlet.tabIndex = 0

@@ -1,9 +1,10 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as InputBox from '../InputBox/InputBox.js'
-import * as ViewletFindWidgetEvents from './ViewletFindWidgetEvents.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletFindWidgetEvents from './ViewletFindWidgetEvents.js'
 
 export const name = ViewletModuleId.FindWidget
 
@@ -42,7 +43,7 @@ export const create = () => {
   $Viewlet.onclick = ViewletFindWidgetEvents.handleClick
   $Viewlet.className = 'Viewlet FindWidget'
   // @ts-ignore
-  $Viewlet.role = 'group'
+  $Viewlet.role = AriaRoles.Group
   $Viewlet.append(
     $InputBox,
     $MatchCount,

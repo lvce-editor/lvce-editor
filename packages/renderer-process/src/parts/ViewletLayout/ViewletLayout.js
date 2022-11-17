@@ -1,3 +1,4 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ViewletLayoutEvents from './ViewletLayoutEvents.js'
 
 export const name = 'Layout'
@@ -21,7 +22,7 @@ export const create = () => {
   $Viewlet.id = 'Workbench'
   $Viewlet.className = 'Viewlet Layout'
   // @ts-ignore
-  $Viewlet.role = 'application'
+  $Viewlet.role = AriaRoles.Application
   $Viewlet.append($SashSideBar, $SashPanel)
 
   window.addEventListener('resize', ViewletLayoutEvents.handleResize)

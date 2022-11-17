@@ -1,10 +1,12 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+
 export const renderTemplate = () => {
   const label = document.createElement('div')
   label.className = 'TreeItemLabel'
   const root = document.createElement('div')
   root.className = 'ListItem TreeItem'
   // @ts-ignore
-  root.role = 'treeitem'
+  root.role = AriaRoles.TreeItem
   root.append(label)
   return {
     root,
@@ -35,7 +37,7 @@ export const renderElement = (template, data, index) => {
 }
 
 export const renderWrapper = (wrapper) => {
-  wrapper.role = 'tree'
+  wrapper.role = AriaRoles.Tree
   wrapper.ariaLabel = 'Files Explorer'
   wrapper.setAttribute('aria-multiselectable', 'true')
 }

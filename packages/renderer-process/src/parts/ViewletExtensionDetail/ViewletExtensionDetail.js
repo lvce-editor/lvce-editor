@@ -1,3 +1,4 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ViewletExtensionDetailEvents from './ViewletExtensionDetailEvents.js'
 
 export const name = 'ExtensionDetail'
@@ -8,7 +9,7 @@ export const create = () => {
   const $ReadmeHtml = document.createElement('div')
   $ReadmeHtml.className = 'Markdown'
   // @ts-ignore
-  $ReadmeHtml.role = 'document'
+  $ReadmeHtml.role = AriaRoles.Document
   $ReadmeHtml.oncontextmenu =
     ViewletExtensionDetailEvents.handleReadmeContextMenu
 

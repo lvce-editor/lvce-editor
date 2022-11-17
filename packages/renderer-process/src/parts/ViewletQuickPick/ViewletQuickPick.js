@@ -261,7 +261,7 @@ export const setPicks = (state, visiblePicks) => {
 const create$QuickPickStatus = () => {
   const $QuickPickStatus = document.createElement('div')
   $QuickPickStatus.className = 'QuickPickStatus'
-  // const te.$QuickPickStatus.role = 'status'
+  // const te.$QuickPickStatus.role = AriaRoles.Status
   // $QuickPickStatus.ariaLive = 'polite'
   // $QuickPickStatus.id = 'QuickPickStatus'
   return $QuickPickStatus
