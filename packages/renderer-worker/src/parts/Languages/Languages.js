@@ -4,6 +4,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as ExtensionHostLanguages from '../ExtensionHost/ExtensionHostLanguages.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 export const state = {
   loadState: false,
@@ -112,7 +113,7 @@ const warnFileNames = (languageId, language) => {
   }
   state.hasWarned.push(languageId)
   const code = JSON.stringify(language, null, 2)
-  const lines = code.split('\n')
+  const lines = SplitLines.splitLines(code)
   let rowIndex = 0
   let columnIndex = 0
   for (let i = 0; i < lines.length; i++) {

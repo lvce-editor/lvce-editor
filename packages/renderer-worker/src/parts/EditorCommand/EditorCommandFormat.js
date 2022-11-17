@@ -2,6 +2,7 @@ import * as Editor from '../Editor/Editor.js'
 import * as Format from '../Format/Format.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as EditorShowMessage from './EditorCommandShowMessage.js'
 
 const expectedErrorMessage = `Failed to execute formatting provider: FormattingError:`
@@ -34,7 +35,7 @@ export const format = async (editor) => {
       {
         start,
         end,
-        inserted: edit.inserted.split('\n'),
+        inserted: SplitLines.splitLines(edit.inserted),
         deleted: lines,
         origin: EditOrigin.Format,
       },
