@@ -1,4 +1,5 @@
 import * as ViewletSash from '../ViewletSash/ViewletSash.js'
+import * as ViewletDiffEditorEvents from './ViewletDiffEditorEvents.js'
 
 export const create = () => {
   const $ContentLeft = document.createElement('div')
@@ -8,14 +9,27 @@ export const create = () => {
 
   const $Sash = ViewletSash.create()
 
+  const $ScrollBarThumb = document.createElement('div')
+  $ScrollBarThumb.className = 'ScrollBarThumb'
+
+  const $ScrollBar = document.createElement('div')
+  $ScrollBar.className = 'ScrollBar'
+  $ScrollBar.onpointerdown = ViewletDiffEditorEvents.handleScrollBarPointerDown
+  $ScrollBar.append($ScrollBarThumb)
+
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet DiffEditor'
-  $Viewlet.append($ContentLeft, $Sash, $ContentRight)
+  $Viewlet.append($ContentLeft, $Sash, $ContentRight, $ScrollBar)
+  $Viewlet.addEventListener('wheel', ViewletDiffEditorEvents.handleWheel, {
+    passive: true,
+  })
 
   return {
     $Viewlet,
     $ContentLeft,
     $ContentRight,
+    $ScrollBar,
+    $ScrollBarThumb,
   }
 }
 
@@ -56,3 +70,5 @@ export const setChanges = (state, changes) => {
     }
   }
 }
+
+export * from '../ViewletScrollable/ViewletScrollable.js'
