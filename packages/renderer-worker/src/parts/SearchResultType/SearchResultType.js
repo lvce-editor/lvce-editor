@@ -1,3 +1,3 @@
-export const Preview = 'preview'
+export const Preview = 1
 
-export const File = 'file'
+export const File = 2
