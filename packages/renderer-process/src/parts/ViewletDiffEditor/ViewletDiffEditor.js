@@ -1,12 +1,16 @@
+import * as ViewletSash from '../ViewletSash/ViewletSash.js'
+
 export const create = () => {
   const $ContentLeft = document.createElement('div')
   $ContentLeft.className = 'DiffEditorContentLeft'
   const $ContentRight = document.createElement('div')
   $ContentRight.className = 'DiffEditorContentRight'
 
+  const $Sash = ViewletSash.create()
+
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet DiffEditor'
-  $Viewlet.append($ContentLeft, $ContentRight)
+  $Viewlet.append($ContentLeft, $Sash, $ContentRight)
 
   return {
     $Viewlet,

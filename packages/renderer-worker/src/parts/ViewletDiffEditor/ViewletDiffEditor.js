@@ -1,6 +1,7 @@
-import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as Diff from '../Diff/Diff.js'
+import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = (id, uri) => {
   return {
@@ -20,11 +21,9 @@ export const loadContent = async (state) => {
   const uriContentPart = uri.slice('diff://'.length)
   const [left, right] = uriContentPart.split('<->')
   const [contentLeft, contentRight] = await getContents(left, right)
-  const linesLeft = contentLeft.split('\n')
-  const linesRight = contentRight.split('\n')
+  const linesLeft = SplitLines.splitLines(contentLeft)
+  const linesRight = SplitLines.splitLines(contentRight)
   const changes = Diff.diff(linesLeft, linesRight)
-  console.log({ changes, linesLeft, linesRight })
-  // TODO compute diff
   return {
     ...state,
     linesLeft,
