@@ -76,30 +76,52 @@ export const loadContent = async (state) => {
 
 export const hasFunctionalRender = true
 
+const getVisible = (lines, minLineY, maxLineY) => {
+  return lines.slice(minLineY, maxLineY)
+}
+
 const renderLeft = {
   isEqual(oldState, newState) {
-    return oldState.linesLeft === newState.linesLeft
+    return (
+      oldState.linesLeft === newState.linesLeft &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY
+    )
   },
   apply(oldState, newState) {
+    const visible = getVisible(
+      newState.linesLeft,
+      newState.minLineY,
+      newState.maxLineY
+    )
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ ViewletModuleId.DiffEditor,
       /* method */ 'setContentLeft',
-      /* linesLeft */ newState.linesLeft,
+      /* linesLeft */ visible,
     ]
   },
 }
 
 const renderRight = {
   isEqual(oldState, newState) {
-    return oldState.linesRight === newState.linesRight
+    return (
+      oldState.linesRight === newState.linesRight &&
+      oldState.minLineY === newState.minLineY &&
+      oldState.maxLineY === newState.maxLineY
+    )
   },
   apply(oldState, newState) {
+    const visible = getVisible(
+      newState.linesRight,
+      newState.minLineY,
+      newState.maxLineY
+    )
     return [
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ ViewletModuleId.DiffEditor,
       /* method */ 'setContentRight',
-      /* linesRight */ newState.linesRight,
+      /* linesRight */ visible,
     ]
   },
 }
@@ -113,7 +135,7 @@ const renderChanges = {
       /* Viewlet.invoke */ 'Viewlet.send',
       /* id */ ViewletModuleId.DiffEditor,
       /* method */ 'setChanges',
-      /* contentLeft */ newState.changes,
+      /* changes */ newState.changes,
     ]
   },
 }

@@ -60,13 +60,17 @@ export const setChanges = (state, changes) => {
   for (const change of changesLeft) {
     if (change.type === 'delete') {
       const $Row = $ContentLeft.children[change.index]
-      $Row.classList.add('Deletion')
+      if ($Row) {
+        $Row.classList.add('Deletion')
+      }
     }
   }
   for (const change of changesRight) {
     if (change.type === 'insert') {
       const $Row = $ContentRight.children[change.index]
-      $Row.classList.add('Insertion')
+      if ($Row) {
+        $Row.classList.add('Insertion')
+      }
     }
   }
 }
