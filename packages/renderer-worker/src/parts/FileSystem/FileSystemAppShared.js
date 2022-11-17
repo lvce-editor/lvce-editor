@@ -1,6 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
-import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as LocalStorage from '../LocalStorage/LocalStorage.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -25,7 +25,7 @@ export const readFileInternal = async (getPath, defaultContent = '') => {
     return userSettingsContent
   } catch (error) {
     // @ts-ignore
-    if (error && error.code === FileSystemErrorCodes.ENOENT) {
+    if (error && error.code === ErrorCodes.ENOENT) {
       const dirname = Workspace.pathDirName(path)
       await FileSystem.mkdir(dirname)
       await FileSystem.writeFile(path, defaultContent)
@@ -53,7 +53,7 @@ export const writeFileInternal = async (getPath, content) => {
     // TODO error should just have enoent code that could be checked
 
     // @ts-ignore
-    if (error && error.code === FileSystemErrorCodes.ENOENT) {
+    if (error && error.code === ErrorCodes.ENOENT) {
       try {
         const dirname = Workspace.pathDirName(path)
         await FileSystem.mkdir(dirname)

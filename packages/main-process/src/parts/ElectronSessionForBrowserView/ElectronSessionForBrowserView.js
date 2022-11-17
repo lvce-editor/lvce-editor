@@ -4,7 +4,7 @@ const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
 const FileSystem = require('../FileSystem/FileSystem.js')
 const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
-const FileSystemErrorCodes = require('../FileSystemErrorCodes/FileSystemErrorCodes.js')
+const ErrorCodes = require('../ErrorCodes/ErrorCodes.js')
 const ElectronBrowserViewAdBlock = require('../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js')
 
 const state = {
@@ -65,7 +65,7 @@ const getChromeExtensionPaths = async () => {
     return extensionsPaths
   } catch (error) {
     // @ts-ignore
-    if (error && error.code === FileSystemErrorCodes.ENOENT) {
+    if (error && error.code === ErrorCodes.ENOENT) {
       return []
     }
     // @ts-ignore

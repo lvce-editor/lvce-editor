@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
-import * as FileSystemErrorCodes from '../src/parts/FileSystemErrorCodes/FileSystemErrorCodes.js'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -77,7 +77,7 @@ test('getChildDirentsRaw - resolve symbolic links - error - ENOENT', async () =>
   })
   // @ts-ignore
   FileSystem.stat.mockImplementation(() => {
-    throw new NodeError(FileSystemErrorCodes.ENOENT)
+    throw new NodeError(ErrorCodes.ENOENT)
   })
   expect(await ViewletExplorerShared.getChildDirentsRaw('/test')).toEqual([
     {

@@ -1,7 +1,9 @@
 // based on https://github.com/conwnet/github1s/blob/master/extensions/github1s/src/interfaces/github-api-rest.ts
 
-import * as GitHubRestApi from '../GitHubRestApi/GitHubRestApi.js'
 import * as Command from '../Command/Command.js'
+import * as DirentType from '../DirentType/DirentType.js'
+import * as GitHubDirentType from '../GitHubDirentType/GitHubDirentType.js'
+import * as GitHubRestApi from '../GitHubRestApi/GitHubRestApi.js'
 import * as PathSeparatorType from '../PathSeparatorType/PathSeparatorType.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as GitHubDirentType from '../GitHubDirentType/GitHubDirentType.js'

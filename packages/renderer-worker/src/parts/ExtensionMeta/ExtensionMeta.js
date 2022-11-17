@@ -1,6 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
-import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as Languages from '../Languages/Languages.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -150,10 +150,7 @@ const getOriginalStackFromError = (error) => {
 const handleRejectedExtension = async (extension) => {
   const { reason } = extension
   const { message, code } = reason
-  if (
-    code === FileSystemErrorCodes.E_MANIFEST_NOT_FOUND ||
-    code === FileSystemErrorCodes.ENOTDIR
-  ) {
+  if (code === ErrorCodes.E_MANIFEST_NOT_FOUND || code === ErrorCodes.ENOTDIR) {
     return
   }
   const codeFrame = getCodeFrameFromError(reason)

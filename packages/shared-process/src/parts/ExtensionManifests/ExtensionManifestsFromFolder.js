@@ -2,7 +2,7 @@ import VError from 'verror'
 import * as ExtensionManifest from '../ExtensionManifest/ExtensionManifest.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Path from '../Path/Path.js'
-import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 
 const toAbsolutePaths = (path, dirents) => {
   const absolutePaths = []
@@ -26,7 +26,7 @@ export const getExtensionManifests = async (path) => {
   } catch (error) {
     // TODO how to make typescript happy?
     // @ts-ignore
-    if (error.code === FileSystemErrorCodes.ENOENT) {
+    if (error.code === ErrorCodes.ENOENT) {
       return []
     }
     throw new VError(error, 'Failed to get extension manifests')
