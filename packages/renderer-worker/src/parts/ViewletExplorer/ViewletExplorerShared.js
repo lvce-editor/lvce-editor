@@ -19,9 +19,9 @@ export const getIndexFromPosition = (state, x, y) => {
 
 const priorityMapFoldersFirst = {
   [DirentType.Directory]: 1,
-  [DirentType.SymlinkFolder]: 1,
+  [DirentType.SymLinkFolder]: 1,
   [DirentType.File]: 0,
-  [DirentType.SymlinkFile]: 0,
+  [DirentType.SymLinkFile]: 0,
   [DirentType.Unknown]: 0,
   [DirentType.Socket]: 0,
 }
@@ -107,9 +107,9 @@ const hasSymbolicLinks = (rawDirents) => {
 const getSymlinkType = (type) => {
   switch (type) {
     case DirentType.File:
-      return DirentType.SymlinkFile
+      return DirentType.SymLinkFile
     case DirentType.Directory:
-      return DirentType.SymlinkFolder
+      return DirentType.SymLinkFolder
     default:
       return DirentType.Symlink
   }
@@ -131,7 +131,7 @@ const resolveSymbolicLink = async (uri, rawDirent) => {
     if (error && error.code === FileSystemErrorCodes.ENOENT) {
       return {
         name: rawDirent.name,
-        type: DirentType.SymlinkFile,
+        type: DirentType.SymLinkFile,
       }
     }
     console.error(
