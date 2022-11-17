@@ -2,7 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Compare from '../Compare/Compare.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 
 export const getIndexFromPosition = (state, x, y) => {
@@ -128,7 +128,7 @@ const resolveSymbolicLink = async (uri, rawDirent) => {
     }
   } catch (error) {
     // @ts-ignore
-    if (error && error.code === FileSystemErrorCodes.ENOENT) {
+    if (error && error.code === ErrorCodes.ENOENT) {
       return {
         name: rawDirent.name,
         type: DirentType.SymlinkFile,
