@@ -61,6 +61,10 @@ const handleWebSocketExtensionHost = async (message, handle) => {
   // console.log(rpc)
 }
 
+const handleWebSocketExtensionHostHelperProcess = (message, handle) => {
+  console.log({ message, handle })
+}
+
 const handleWebSocket = (message, handle) => {
   const headers = message.headers
   if (!headers) {
@@ -75,6 +79,8 @@ const handleWebSocket = (message, handle) => {
       return handleWebSocketSharedProcess(message, handle)
     case 'lvce.extension-host':
       return handleWebSocketExtensionHost(message, handle)
+    case 'lvce.extension-host-helper-process':
+      return handleWebSocketExtensionHostHelperProcess(message, handle)
     default:
       throw new VError(`unsupported sec-websocket-procotol ${protocol}`)
   }
@@ -209,7 +215,6 @@ const electronInitialize = (initializeMessage) => {
               },
             })
           }
-
         }
       } else {
         Command.execute(message.method, fakeSocket, ...message.params)
