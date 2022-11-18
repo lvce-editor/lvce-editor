@@ -28,10 +28,6 @@ beforeEach(() => {
   jest.restoreAllMocks()
 })
 
-test('name', () => {
-  expect(ViewletExtensions.name).toBe('Extensions')
-})
-
 test('create', () => {
   const state = ViewletExtensions.create()
   expect(state).toBeDefined()

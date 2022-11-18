@@ -10,9 +10,6 @@ const create$Option = (option) => {
   return $Option
 }
 
-// TODO name export not necessary
-export const name = 'Output'
-
 export const create = () => {
   const $ViewletOutputSelect = document.createElement('select')
   $ViewletOutputSelect.className = 'ViewletOutputSelect'

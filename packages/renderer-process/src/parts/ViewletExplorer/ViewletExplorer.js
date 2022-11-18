@@ -6,8 +6,6 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
 import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
 
-export const name = 'Explorer'
-
 const activeId = 'TreeItemActive'
 const focusClassName = 'FocusOutline'
 

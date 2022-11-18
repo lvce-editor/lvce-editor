@@ -4,8 +4,6 @@ import * as Label from '../Label/Label.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
 
-export const name = 'EditorCompletion'
-
 const create$CompletionItem = (item, index) => {
   const $CompletionItemText = Label.create(item.label)
 
