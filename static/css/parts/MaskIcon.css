@@ -1,6 +1,6 @@
 .MaskIcon {
   display: block;
-  /* position: absolute; */
+  position: absolute;
   inset: 0;
   background: currentColor;
   mask-repeat: no-repeat;
@@ -11,10 +11,4 @@
   -webkit-mask-position: 50% 50%;
   pointer-events: none;
   content: ' ';
-}
-
-.MaskIcon {
-  width: 16px;
-  height: 16px;
-  flex-shrink: 0;
 }
