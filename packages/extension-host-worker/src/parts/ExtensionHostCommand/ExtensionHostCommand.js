@@ -30,6 +30,9 @@ export const executeCommand = async (id, ...args) => {
     const results = await command.execute(...args)
     return results
   } catch (error) {
+    if (error && error.isExpected) {
+      throw error
+    }
     throw new VError(error, `Failed to execute command`)
   }
 }

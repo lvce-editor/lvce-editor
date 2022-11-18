@@ -1,18 +1,26 @@
 import * as ExtensionHostHelperProcess from '../ExtensionHostHelperProcess/ExtensionHostHelperProcess.js'
 
+class ExecError extends Error {
+  constructor(stdout, stderr, exitCode) {
+    super(`Failed to execute`)
+    this.stdout = stdout
+    this.stderr = stderr
+    this.exitCode = exitCode
+  }
+}
+
 export const exec = async (command, args, options) => {
-  console.log({ command, args, options })
-  const response = await ExtensionHostHelperProcess.invoke(
+  const { stdout, stderr, exitCode } = await ExtensionHostHelperProcess.invoke(
     'Exec.exec',
     command,
     args
   )
-  console.log({ response })
-
-  // TODO
+  if (exitCode !== 0) {
+    throw new ExecError(stdout, stderr, exitCode)
+  }
   return {
-    stdout: '',
-    stderr: '',
-    exitCode: 0,
+    stdout,
+    stderr,
+    exitCode,
   }
 }

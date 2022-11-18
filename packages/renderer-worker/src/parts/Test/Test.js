@@ -4,6 +4,7 @@ import * as TestFrameWork from '../TestFrameWork/TestFrameWork.js'
 import * as TestFrameWorkComponent from '../TestFrameWorkComponent/TestFrameWorkComponent.js'
 import * as TestState from '../TestState/TestState.js'
 import * as Timestamp from '../Timestamp/Timestamp.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 export const state = {
   tests: [],
@@ -72,7 +73,8 @@ export const execute = async (href) => {
   // 2. import that script
   const module = await ImportScript.importScript(scriptUrl)
   if (module.mockExec) {
-    console.log({ mockExec: module.mockExec })
+    // TODO this should not be in workspace but in another module
+    Workspace.state.mockExec = module.mockExec
   }
   console.log({ module })
 
