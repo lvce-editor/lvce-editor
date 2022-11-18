@@ -1,5 +1,8 @@
+// based on the audio editor by vscode
+
 export const create = () => {
   const $Audio = document.createElement('audio')
+  $Audio.controls = true
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Audio'
@@ -11,7 +14,6 @@ export const create = () => {
 }
 
 export const setSrc = (state, src) => {
-  console.log('set src', src)
   const { $Audio } = state
   $Audio.src = src
 }

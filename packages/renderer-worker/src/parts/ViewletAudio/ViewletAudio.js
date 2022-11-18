@@ -10,10 +10,10 @@ export const create = (id, uri) => {
 export const loadContent = (state) => {
   // TODO get src from uri
   const { uri } = state
-  console.log({ uri })
+  const src = '/remote' + uri
   return {
     ...state,
-    src: uri,
+    src,
   }
 }
 
