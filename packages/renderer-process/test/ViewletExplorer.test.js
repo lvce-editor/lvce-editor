@@ -32,10 +32,6 @@ const getSimpleList = (state) => {
   return Array.from(state.$Viewlet.children).map(getTextContent)
 }
 
-test('name', () => {
-  expect(ViewletExplorer.name).toBe('Explorer')
-})
-
 test('create', () => {
   const state = ViewletExplorer.create()
   expect(state).toBeDefined()

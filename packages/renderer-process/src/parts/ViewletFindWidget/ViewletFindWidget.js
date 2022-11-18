@@ -6,8 +6,6 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletFindWidgetEvents from './ViewletFindWidgetEvents.js'
 
-export const name = ViewletModuleId.FindWidget
-
 /**
  * @enum {string}
  */

@@ -3,8 +3,6 @@ import * as Focus from '../Focus/Focus.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
-export const name = 'Locations'
-
 const getNodeIndex = ($Node) => {
   let index = 0
   while (($Node = $Node.previousElementSibling)) {

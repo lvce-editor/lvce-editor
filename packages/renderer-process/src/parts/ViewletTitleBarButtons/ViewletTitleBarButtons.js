@@ -1,7 +1,5 @@
 import * as ViewletTitleBarButtonEvents from './ViewletTitleBarButtonsEvents.js'
 
-export const name = 'TitleBarButtons'
-
 const create$TitleBarButton = (id, icon, label) => {
   const $Icon = document.createElement('i')
   $Icon.className = `MaskIcon ${icon}`

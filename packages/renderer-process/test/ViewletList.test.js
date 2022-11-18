@@ -8,10 +8,6 @@ beforeEach(() => {
   jest.restoreAllMocks()
 })
 
-test('name', () => {
-  expect(ViewletList.name).toBe('List')
-})
-
 test('create', () => {
   const state = ViewletList.create({
     create$ListItem() {},

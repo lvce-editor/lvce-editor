@@ -4,8 +4,6 @@ import * as IconButton from '../IconButton/IconButton.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ViewletSimpleBrowserEvents from './ViewletSimpleBrowserEvents.js'
 
-export const name = 'SimpleBrowser'
-
 /**
  * @enum {string}
  */

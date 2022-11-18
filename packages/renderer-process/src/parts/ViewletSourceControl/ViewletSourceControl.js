@@ -5,8 +5,6 @@ import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Assert from '../Assert/Assert.js'
 
-export const name = 'Source Control'
-
 const getFileName = (file) => {
   return file.slice(file.lastIndexOf('/') + 1)
 }

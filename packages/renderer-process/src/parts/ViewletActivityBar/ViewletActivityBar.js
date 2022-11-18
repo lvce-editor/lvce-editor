@@ -41,8 +41,6 @@ const create$ActivityBarItem = (item) => {
   return $ActivityBarItem
 }
 
-export const name = 'ActivityBar'
-
 export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.id = 'ActivityBar'

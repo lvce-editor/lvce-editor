@@ -1,5 +1,3 @@
-export const name = 'Empty'
-
 export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.dataset.viewlet = 'Empty'
