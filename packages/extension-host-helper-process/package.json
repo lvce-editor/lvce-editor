@@ -50,5 +50,11 @@
     "ignores": [
       "distmin"
     ]
+  },
+  "dependencies": {
+    "ws": "^8.11.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.3"
   }
 }
