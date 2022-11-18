@@ -3,6 +3,9 @@ import * as Assert from '../Assert/Assert.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
+import * as MaskIcon from '../MaskIcon/MaskIcon.js'
+import * as Icon from '../Icon/Icon.js'
+import * as SearchResultType from '../SearchResultType/SearchResultType.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
 
 // TODO name export not necessary
@@ -69,18 +72,16 @@ export const focus = (state) => {
 }
 
 const create$Row = () => {
+  const $Label = Label.create('')
   const $Row = document.createElement('div')
   // @ts-ignore
   $Row.role = AriaRoles.TreeItem
   $Row.className = 'TreeItem'
-  const $Label = Label.create('')
-  const $Icon = document.createElement('i')
-  $Row.append($Icon, $Label)
+  $Row.append($Label)
   return $Row
 }
 
-// TODO much duplication with explorer
-const render$Row = ($Row, rowInfo) => {
+const render$RowDirectory = ($Row, rowInfo) => {
   const {
     top,
     type,
@@ -93,9 +94,21 @@ const render$Row = ($Row, rowInfo) => {
     posInSet,
     depth,
   } = rowInfo
-  const $Icon = $Row.childNodes[0]
-  const $Label = $Row.childNodes[1]
+  if ($Row.children.length === 1) {
+    const $Arrow = MaskIcon.create(Icon.ChevronDown)
+    const $Icon = document.createElement('i')
+    $Row.prepend($Arrow, $Icon)
+  }
+  const $Arrow = $Row.children[0]
+  const $Icon = $Row.children[1]
   $Icon.className = `Icon${icon}`
+  const $Label = $Row.lastChild
+  $Label.textContent = text
+}
+
+const render$RowFile = ($Row, rowInfo) => {
+  const { matchStart, matchLength, text } = rowInfo
+  const $Label = $Row.lastChild
   if (matchLength) {
     const before = text.slice(0, matchStart)
     const highlight = text.slice(matchStart, matchStart + matchLength)
@@ -109,6 +122,14 @@ const render$Row = ($Row, rowInfo) => {
   } else {
     $Label.textContent = text
   }
+  if ($Row.children.length > 1) {
+    $Row.replaceChildren($Label)
+  }
+}
+
+// TODO much duplication with explorer
+const render$Row = ($Row, rowInfo) => {
+  const { top, type, title, setSize, posInSet, depth } = rowInfo
   $Row.title = title
   $Row.ariaSetSize = `${setSize}`
   $Row.ariaLevel = `${depth}`
@@ -117,15 +138,17 @@ const render$Row = ($Row, rowInfo) => {
   $Row.ariaDescription = ''
   $Row.style.top = `${top}px`
   switch (type) {
-    // TODO type should be a number for efficiency
-    case DirentType.Directory:
+    case SearchResultType.File:
       $Row.ariaExpanded = 'false'
+      render$RowDirectory($Row, rowInfo)
       break
-    case DirentType.DirectoryExpanded:
+    case SearchResultType.File:
       $Row.ariaExpanded = 'true'
+      render$RowDirectory($Row, rowInfo)
       break
-    case DirentType.File:
+    case SearchResultType.Preview:
       $Row.ariaExpanded = undefined
+      render$RowFile($Row, rowInfo)
       break
     default:
       break
