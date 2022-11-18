@@ -1,8 +1,4 @@
 import { jest } from '@jest/globals'
-import * as ActivityBarItemFlags from '../src/parts/ActivityBarItemFlags/ActivityBarItemFlags.js'
-import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
-import * as Icon from '../src/parts/Icon/Icon.js'
-import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
