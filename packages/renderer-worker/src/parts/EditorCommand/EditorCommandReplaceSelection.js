@@ -2,7 +2,7 @@ import * as TextDocument from '../TextDocument/TextDocument.js'
 
 export const editorReplaceSelections = (editor, replacement, origin) => {
   const changes = []
-  const selections = editor.selections
+  const { selections } = editor
   for (let i = 0; i < selections.length; i += 4) {
     const selectionStartRow = selections[i]
     const selectionStartColumn = selections[i + 1]

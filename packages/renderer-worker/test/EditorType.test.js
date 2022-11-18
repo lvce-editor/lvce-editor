@@ -42,7 +42,7 @@ const EditorSelection = await import(
   '../src/parts/EditorSelection/EditorSelection.js'
 )
 
-test('editorType', async () => {
+test('type', async () => {
   const editor = {
     lines: [''],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
@@ -55,7 +55,7 @@ test('editorType', async () => {
   })
 })
 
-test('editorType - with selection', async () => {
+test('type - with selection', async () => {
   const editor = {
     lines: ['line 1', 'line 2'],
     selections: EditorSelection.fromRange(0, 1, 1, 2),
@@ -68,7 +68,7 @@ test('editorType - with selection', async () => {
   })
 })
 
-test('editorType - emoji 👮🏽‍♀️', async () => {
+test('type - emoji 👮🏽‍♀️', async () => {
   const editor = {
     lines: [''],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
@@ -81,7 +81,7 @@ test('editorType - emoji 👮🏽‍♀️', async () => {
   })
 })
 
-test.skip('editorType - braceCompletion - opening curly brace', async () => {
+test.skip('type - braceCompletion - opening curly brace', async () => {
   const editor = {
     lines: [''],
     primarySelectionIndex: 0,
@@ -104,7 +104,7 @@ test.skip('editorType - braceCompletion - opening curly brace', async () => {
   })
 })
 
-test.skip('editorType - braceCompletion - opening round brace', async () => {
+test.skip('type - braceCompletion - opening round brace', async () => {
   const editor = {
     lines: [''],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
@@ -127,7 +127,7 @@ test.skip('editorType - braceCompletion - opening round brace', async () => {
   })
 })
 
-test.skip('editorType - braceCompletion - opening square brace', async () => {
+test.skip('type - braceCompletion - opening square brace', async () => {
   const editor = {
     lines: [''],
     selections: EditorSelection.fromRange(0, 0, 0, 0),
@@ -147,5 +147,31 @@ test.skip('editorType - braceCompletion - opening square brace', async () => {
   expect(await EditorType.type(editor, '[')).toMatchObject({
     lines: ['[]'],
     selections: EditorSelection.fromRange(0, 2, 0, 2),
+  })
+})
+
+test('type - auto close double quote', async () => {
+  const editor = {
+    lines: [''],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
+    lineCache: [],
+    undoStack: [],
+  }
+  expect(await EditorType.type(editor, '"')).toMatchObject({
+    lines: ['""'],
+    selections: EditorSelection.fromRange(0, 1, 0, 1),
+  })
+})
+
+test('type - auto close single quote', async () => {
+  const editor = {
+    lines: [''],
+    selections: EditorSelection.fromRange(0, 0, 0, 0),
+    lineCache: [],
+    undoStack: [],
+  }
+  expect(await EditorType.type(editor, "'")).toMatchObject({
+    lines: ["'"],
+    selections: EditorSelection.fromRange(0, 1, 0, 1),
   })
 })

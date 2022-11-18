@@ -5,6 +5,7 @@ import * as ExtensionHostClosingTag from '../ExtensionHost/ExtensionHostClosingT
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
 import { editorReplaceSelections } from './EditorCommandReplaceSelection.js'
+import * as Quotes from '../Quotes/Quotes.js'
 
 const RE_CHARACTER = new RegExp(/^\p{L}/, 'u')
 
@@ -73,8 +74,7 @@ const editorTypeWithSlashCompletion = async (editor, text) => {
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
 }
 
-// TODO implement typing command without brace completion -> brace completion should be independent module
-export const type = async (editor, text) => {
+const typeDefault = (editor, text) => {
   // if (isBrace(text)) {
   //   console.log('is brace')
   //   return editorTypeWithBraceCompletion(editor, text)
@@ -94,6 +94,53 @@ export const type = async (editor, text) => {
   // TODO should editor type command know about editor completion? -> no
   // EditorCommandCompletion.openFromType(editor, text)
   return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
+}
+
+const typeSingleQuote = (editor, text) => {}
+
+const typeDoubleQuote = (editor, text) => {
+  const { lines, selections } = editor
+  const rowIndex = selections[0]
+  const line = lines[rowIndex]
+  if (line.includes(Quotes.DoubleQuote)) {
+    return typeDefault(editor, text)
+  }
+  const changes = []
+  const inserted = [Quotes.DoubleQuote + Quotes.DoubleQuote]
+  for (let i = 0; i < selections.length; i += 4) {
+    const selectionStartRow = selections[i]
+    const selectionStartColumn = selections[i + 1]
+    const selectionEndRow = selections[i + 2]
+    const selectionEndColumn = selections[i + 3]
+    const start = {
+      rowIndex: selectionStartRow,
+      columnIndex: selectionStartColumn,
+    }
+    const end = {
+      rowIndex: selectionEndRow,
+      columnIndex: selectionEndColumn,
+    }
+    const selection = {
+      start,
+      end,
+    }
+    changes.push({
+      start: start,
+      end: end,
+      inserted,
+      deleted: TextDocument.getSelectionText(editor, selection),
+      origin: EditOrigin.EditorType,
+    })
+  }
+  return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
+}
+
+// TODO implement typing command without brace completion -> brace completion should be independent module
+export const type = async (editor, text) => {
+  if (text === Quotes.DoubleQuote) {
+    return typeDoubleQuote(editor, text)
+  }
+  return typeDefault(editor, text)
 }
 
 export const onDidType = (listener) => {

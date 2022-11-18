@@ -19,4 +19,5 @@ declare const Editor: {
   readonly type: (text: string) => Promise<void>
   readonly setDeltaY: (deltaY: number) => Promise<void>
   readonly format: () => Promise<void>
+  readonly deleteLeft: () => Promise<void>
 }

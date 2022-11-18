@@ -57,7 +57,7 @@ export const goToTypeDefinition = async () => {
 }
 
 export const type = async (text) => {
-  await Command.execute('Editor.type')
+  await Command.execute('Editor.type', text)
 }
 
 export const findAllReferences = async () => {
@@ -78,4 +78,8 @@ export const setDeltaY = async (deltaY) => {
 
 export const format = async () => {
   await Command.execute('Editor.format')
+}
+
+export const deleteLeft = async () => {
+  await Command.execute('Editor.deleteLeft')
 }

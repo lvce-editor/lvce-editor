@@ -43,8 +43,7 @@ const getChanges = (lines, selections, getDelta) => {
 }
 
 export const editorDeleteHorizontalLeft = (editor, getDelta) => {
-  const lines = editor.lines
-  const selections = editor.selections
+  const { lines, selections } = editor
   if (EditorSelection.isEverySelectionEmpty(selections)) {
     const changes = getChanges(lines, selections, getDelta)
     return Editor.scheduleDocumentAndCursorsSelections(editor, changes)
