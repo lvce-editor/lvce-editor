@@ -26,70 +26,67 @@ class FormattingError extends Error {
 }
 
 // prettier-ignore
-export const create = () => {
-  return {
-    // Brace Completion
-    registerBraceCompletionProvider:ExtensionHostBraceCompletion.registerBraceCompletionProvider,
-    executeBraceCompletionProvider: ExtensionHostBraceCompletion.executeBraceCompletionProvider,
+export const api =  {
+  // Brace Completion
+  registerBraceCompletionProvider:ExtensionHostBraceCompletion.registerBraceCompletionProvider,
+  executeBraceCompletionProvider: ExtensionHostBraceCompletion.executeBraceCompletionProvider,
 
-    // Command
-    registerCommand: ExtensionHostCommand.registerCommand,
-    executeCommand: ExtensionHostCommand.executeCommand,
+  // Command
+  registerCommand: ExtensionHostCommand.registerCommand,
+  executeCommand: ExtensionHostCommand.executeCommand,
 
-    // Completion
-    registerCompletionProvider:ExtensionHostCompletion.registerCompletionProvider,
-    executeCompletionProvider: ExtensionHostCompletion.executeCompletionProvider,
+  // Completion
+  registerCompletionProvider:ExtensionHostCompletion.registerCompletionProvider,
+  executeCompletionProvider: ExtensionHostCompletion.executeCompletionProvider,
 
 
-    // Configuration
-    getConfiguration: ExtensionHostConfiguration.getConfiguration,
+  // Configuration
+  getConfiguration: ExtensionHostConfiguration.getConfiguration,
 
-    // Definition
-    registerDefinitionProvider: ExtensionHostDefinition.registerDefinitionProvider,
-    executeDefinitionProvider: ExtensionHostDefinition.executeDefinitionProvider,
+  // Definition
+  registerDefinitionProvider: ExtensionHostDefinition.registerDefinitionProvider,
+  executeDefinitionProvider: ExtensionHostDefinition.executeDefinitionProvider,
 
-    // Env
-    env: ExtensionHostEnv.env,
+  // Env
+  env: ExtensionHostEnv.env,
 
-    // Errors
-    FormattingError,
-    VError,
+  // Errors
+  FormattingError,
+  VError,
 
-    // Exec
-    exec: ExtensionHostExec.exec,
+  // Exec
+  exec: ExtensionHostExec.exec,
 
-    // Formatting
-    registerFormattingProvider: ExtensionHostFormatting.registerFormattingProvider,
-    executeFormattingProvider: ExtensionHostFormatting.executeFormattingProvider,
+  // Formatting
+  registerFormattingProvider: ExtensionHostFormatting.registerFormattingProvider,
+  executeFormattingProvider: ExtensionHostFormatting.executeFormattingProvider,
 
-    // Implementation
-    registerImplementationProvider: ExtensionHostImplementation.registerImplementationProvider,
-    executeImplementationProvider: ExtensionHostImplementation.executeImplementationProvider,
+  // Implementation
+  registerImplementationProvider: ExtensionHostImplementation.registerImplementationProvider,
+  executeImplementationProvider: ExtensionHostImplementation.executeImplementationProvider,
 
-    // Reference
-    registerReferenceProvider: ExtensionHostReference.registerReferenceProvider,
-    executeReferenceProvider: ExtensionHostReference.executeReferenceProvider,
+  // Reference
+  registerReferenceProvider: ExtensionHostReference.registerReferenceProvider,
+  executeReferenceProvider: ExtensionHostReference.executeReferenceProvider,
 
-    // Source Control
-    registerSourceControlProvider: ExtensionHostSourceControl.registerSourceControlProvider,
+  // Source Control
+  registerSourceControlProvider: ExtensionHostSourceControl.registerSourceControlProvider,
 
-    // Tab Completion
-    registerTabCompletionProvider: ExtensionHostTabCompletion.registerTabCompletionProvider,
-    executeTabCompletionProvider: ExtensionHostTabCompletion.executeTabCompletionProvider,
+  // Tab Completion
+  registerTabCompletionProvider: ExtensionHostTabCompletion.registerTabCompletionProvider,
+  executeTabCompletionProvider: ExtensionHostTabCompletion.executeTabCompletionProvider,
 
-    // Text Document
-    getTextFromTextDocument: TextDocument.getText,
+  // Text Document
+  getTextFromTextDocument: TextDocument.getText,
 
-    // Text Search
-    registerTextSearchProvider: ExtensionHostTextSearch.registerTextSearchProvider,
-    executeTextSearchProvider: ExtensionHostTextSearch.executeTextSearchProvider,
+  // Text Search
+  registerTextSearchProvider: ExtensionHostTextSearch.registerTextSearchProvider,
+  executeTextSearchProvider: ExtensionHostTextSearch.executeTextSearchProvider,
 
-    // Type Definition
-    registerTypeDefinitionProvider: ExtensionHostTypeDefinition.registerTypeDefinitionProvider,
-    executeTypeDefinitionProvider: ExtensionHostTypeDefinition.executeTypeDefinitionProvider,
+  // Type Definition
+  registerTypeDefinitionProvider: ExtensionHostTypeDefinition.registerTypeDefinitionProvider,
+  executeTypeDefinitionProvider: ExtensionHostTypeDefinition.executeTypeDefinitionProvider,
 
-    // Workspace
-    getWorkspaceFolder: ExtensionHostWorkspace.getWorkspaceFolder
-
-  }
+  // Workspace
+  getWorkspaceFolder: ExtensionHostWorkspace.getWorkspaceFolder
 }

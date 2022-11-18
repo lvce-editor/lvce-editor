@@ -71,6 +71,10 @@ export const execute = async (href) => {
   const scriptUrl = href
   // 2. import that script
   const module = await ImportScript.importScript(scriptUrl)
+  if (module.mockExec) {
+    console.log({ mockExec: module.mockExec })
+  }
+  console.log({ module })
 
   const tests = TestState.getTests()
   for (const test of tests) {
