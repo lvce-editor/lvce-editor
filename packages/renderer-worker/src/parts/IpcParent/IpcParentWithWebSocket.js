@@ -1,6 +1,7 @@
-const getWsUrl = () => {
-  const wsProtocol = location.protocol === 'https:' ? 'wss:' : 'ws:'
+import * as WebSocketProtocol from '../WebSocketProtocol/WebSocketProtocol.js'
 
+const getWsUrl = () => {
+  const wsProtocol = WebSocketProtocol.getWebSocketProtocol()
   return `${wsProtocol}//${location.host}`
 }
 
