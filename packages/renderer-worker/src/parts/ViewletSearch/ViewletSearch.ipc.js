@@ -18,10 +18,11 @@ export const LazyCommands = {
 }
 
 export const Css = [
-  '/css/parts/ViewletSearch.css',
-  '/css/parts/ViewletList.css',
-  '/css/parts/Label.css',
+  '/css/parts/Highlight.css',
   '/css/parts/InputBox.css',
+  '/css/parts/Label.css',
+  '/css/parts/ViewletList.css',
+  '/css/parts/ViewletSearch.css',
 ]
 
 export * from './ViewletSearch.js'
