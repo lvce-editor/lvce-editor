@@ -3,10 +3,6 @@
  */
 import * as ViewletSearch from '../src/parts/ViewletSearch/ViewletSearch.js'
 
-test('name', () => {
-  expect(ViewletSearch.name).toBe('Search')
-})
-
 test('create', () => {
   const state = ViewletSearch.create()
   expect(state).toBeDefined()

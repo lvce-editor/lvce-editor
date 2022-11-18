@@ -23,6 +23,9 @@ export const LazyCommands = {
   focusPrevious: () => import('./ViewletQuickPickFocusPrevious.js'),
 }
 
-export const Css = '/css/parts/ViewletQuickPick.css'
+export const Css = [
+  '/css/parts/ViewletQuickPick.css',
+  '/css/parts/InputBox.css',
+]
 
 export * from './ViewletQuickPick.js'

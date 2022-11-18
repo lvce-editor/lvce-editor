@@ -59,12 +59,18 @@
   contain: strict;
 }
 
+.KeyBindingsTableRowEven:hover,
+.KeyBindingsTableRowOdd:hover {
+  color: #e0e0e0;
+  background: rgba(64, 92, 80, 0.2);
+}
+
 .KeyBindingsTableRowOdd {
   background: rgba(156, 162, 160, 0.04);
 }
 
 .KeyBindingsTableRowSelected {
-  background: #515f59;
+  background: #515f59 !important;
 }
 
 .KeyBindingsTableCell {

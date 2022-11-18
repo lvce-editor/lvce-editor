@@ -8,8 +8,6 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 
-export const name = 'Extensions'
-
 const activeId = 'ExtensionActive'
 
 // TODO vscode uninstall behaviour is better -> more subtle uninstall -> no cta for uninstalling

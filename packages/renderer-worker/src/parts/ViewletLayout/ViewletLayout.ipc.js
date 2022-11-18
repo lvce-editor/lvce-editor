@@ -37,6 +37,7 @@ export const CommandsWithSideEffects = {
   toggleTitleBar: ViewletLayout.toggleTitleBar,
   moveSideBarLeft: ViewletLayout.moveSideBarLeft,
   moveSideBarRight: ViewletLayout.moveSideBarRight,
+  toggleSideBarPosition: ViewletLayout.toggleSideBarPosition,
 }
 
 export * from './ViewletLayout.js'

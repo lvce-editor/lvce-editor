@@ -3,10 +3,6 @@
  */
 import * as ViewletEditorPlainText from '../src/parts/ViewletEditorPlainText/ViewletEditorPlainText.js'
 
-test('name', () => {
-  expect(ViewletEditorPlainText.name).toBe('EditorPlainText')
-})
-
 test('create', () => {
   const state = ViewletEditorPlainText.create()
   expect(state).toBeDefined()

@@ -1,7 +1,5 @@
 import * as ViewletEditorImageEvents from './ViewletEditorImageEvents.js'
 
-export const name = 'EditorImage'
-
 export const create = () => {
   const $Image = document.createElement('img')
   $Image.className = 'ViewletImage'

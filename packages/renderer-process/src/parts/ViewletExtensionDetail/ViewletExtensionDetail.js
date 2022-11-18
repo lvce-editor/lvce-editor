@@ -1,8 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ViewletExtensionDetailEvents from './ViewletExtensionDetailEvents.js'
 
-export const name = 'ExtensionDetail'
-
 export const create = () => {
   const $NameText = document.createTextNode('')
 
