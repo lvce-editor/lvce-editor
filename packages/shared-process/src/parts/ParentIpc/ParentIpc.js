@@ -8,6 +8,7 @@ import { requiresSocket } from '../RequiresSocket/RequiresSocket.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
 import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
+import * as ExtensionHostHelperProcessIpc from '../ExtensionHostHelperProcessIpc/ExtensionHostHelperProcessIpc.js'
 // TODO add tests for this
 
 // TODO handle structure: one shared process multiple extension hosts
@@ -62,7 +63,8 @@ const handleWebSocketExtensionHost = async (message, handle) => {
 }
 
 const handleWebSocketExtensionHostHelperProcess = (message, handle) => {
-  console.log({ message, handle })
+  const ipc = ExtensionHostHelperProcessIpc.create()
+  ipc._process.send(message, handle)
 }
 
 const handleWebSocket = (message, handle) => {

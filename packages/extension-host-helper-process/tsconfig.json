@@ -1,18 +1,20 @@
 {
   "compilerOptions": {
-    "lib": ["esnext", "webworker"],
+    "lib": ["esnext"],
+    "target": "esnext",
     "checkJs": true,
     "module": "esnext",
-    "target": "esnext",
-    "types": ["jest"],
+    "types": ["node", "jest"],
     "moduleResolution": "node",
+    "isolatedModules": true,
+    "noImplicitAny": false,
     "skipLibCheck": true,
+    "rootDir": ".",
     "noEmit": true,
     "allowSyntheticDefaultImports": true,
-    "isolatedModules": true,
     "assumeChangesOnlyAffectDirectDependencies": true,
     "strict": true,
-    "noImplicitAny": false
+    "useUnknownInCatchVariables": false
   },
   "include": ["src", "test"]
 }

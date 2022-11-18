@@ -101,6 +101,16 @@ export const getExtensionHostPath = () => {
   return extensionHostPath
 }
 
+export const getExtensionHostHelperProcessPath = () => {
+  return Path.join(
+    Root.root,
+    'packages',
+    'extension-host-helper-process',
+    'src',
+    'extensionHostHelperProcessMain.js'
+  )
+}
+
 export const getRecentlyOpenedPath = () => {
   return Path.join(cacheDir, 'recently-opened.json')
 }
