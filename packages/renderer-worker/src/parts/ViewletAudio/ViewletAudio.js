@@ -1,3 +1,4 @@
+import * as BlobSrc from '../BlobSrc/BlobSrc.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = (id, uri) => {
@@ -7,14 +8,20 @@ export const create = (id, uri) => {
   }
 }
 
-export const loadContent = (state) => {
+export const loadContent = async (state) => {
   // TODO get src from uri
   const { uri } = state
-  const src = '/remote' + uri
+  const src = await BlobSrc.getSrc(uri)
   return {
     ...state,
     src,
   }
+}
+
+export const dispose = async (state) => {
+  const { src } = state
+  await BlobSrc.disposeSrc(src)
+  return state
 }
 
 export const hasFunctionalRender = true
