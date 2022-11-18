@@ -1,6 +1,5 @@
-import * as IpcParent from '../IpcParent/IpcParent.js'
-import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as Callback from '../Callback/Callback.js'
+import * as ExtensionHostHelperProcessIpx from '../ExtensionHostHelperProcessIpc/ExtensionHostHelperProcessIpc.js'
 
 export const state = {
   /**
@@ -21,10 +20,7 @@ const handleMessage = (message) => {
 
 export const getIpc = async () => {
   if (!state.ipcPromise) {
-    state.ipcPromise = IpcParent.create({
-      method: IpcParentType.WebSocket,
-      protocol: ['lvce.extension-host-helper-process'],
-    })
+    state.ipcPromise = ExtensionHostHelperProcessIpx.create()
     const ipc = await state.ipcPromise
     ipc.onmessage = handleMessage
   }

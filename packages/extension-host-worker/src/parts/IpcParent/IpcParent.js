@@ -4,6 +4,8 @@ const getModule = (method) => {
   switch (method) {
     case IpcParentType.WebSocket:
       return import('./IpcParentWithWebSocket.js')
+    case IpcParentType.ElectronMessagePort:
+      return import('./IpcParentWithElectronMessagePort.js')
     default:
       throw new Error('unexpected ipc type')
   }

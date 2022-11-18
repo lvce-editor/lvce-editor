@@ -2,6 +2,7 @@ import * as Callback from '../Callback/Callback.js'
 import { JsonRpcError } from '../Errors/Errors.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
+import * as Command from '../Command/Command.js'
 
 /**
  * @enum {number}
@@ -64,13 +65,36 @@ const restoreError = (error) => {
   return restoredError
 }
 
+const handleMessageResult = (message) => {
+  Callback.resolve(message.id, message.result)
+}
+
+const handleMessageError = (message) => {
+  const restoredError = restoreError(message.error)
+  Callback.reject(message.id, restoredError)
+}
+
+const handleMessageMethod = async (message) => {
+  if (message.method === 'ElectronMessagePort.create') {
+    const IpcParentWithElectron = await import(
+      '../IpcParent/IpcParentWithElectron.js'
+    )
+    const ipc = await IpcParentWithElectron.create({
+      type: 'extension-host-helper-process',
+    })
+    console.log({ ipc })
+  }
+  console.log({ message })
+}
+
 const handleMessage = (message) => {
   if (message.id) {
     if (isResultMessage(message)) {
-      Callback.resolve(message.id, message.result)
+      handleMessageResult(message)
     } else if (isErrorMessage(message)) {
-      const restoredError = restoreError(message.error)
-      Callback.reject(message.id, restoredError)
+      handleMessageError(message)
+    } else if ('method' in message) {
+      handleMessageMethod(message)
     } else {
       throw new JsonRpcError('unexpected message type')
     }

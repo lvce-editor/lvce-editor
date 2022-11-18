@@ -6,6 +6,8 @@ const getModule = (method) => {
       return import('./IpcChildWithMessagePort.js')
     case IpcChildType.WebSocket:
       return import('./IpcChildWithWebSocket.js')
+    case IpcChildType.Parent:
+      return import('./IpcChildWithParent.js')
     default:
       throw new Error('unexpected ipc type')
   }
