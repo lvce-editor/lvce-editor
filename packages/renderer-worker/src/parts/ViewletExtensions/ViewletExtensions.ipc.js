@@ -25,6 +25,7 @@ export const LazyCommands = {
 export const Css = [
   '/css/parts/ViewletExtensions.css',
   '/css/parts/ViewletList.css',
+  '/css/parts/InputBox.css',
 ]
 
 export * from './ViewletExtensions.js'
