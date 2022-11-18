@@ -1,12 +1,13 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as EditorGroup from '../EditorGroup/EditorGroup.js'
-import * as ViewletMainEvents from './ViewletMainEvents.js'
 import * as Label from '../Label/Label.js'
+import * as ViewletMainEvents from './ViewletMainEvents.js'
 
 const create$MainTabs = () => {
   const $MainTabs = document.createElement('div')
   $MainTabs.className = 'MainTabs'
   // @ts-ignore
-  $MainTabs.role = 'tablist'
+  $MainTabs.role = AriaRoles.TabList
   $MainTabs.onmousedown = ViewletMainEvents.handleTabsMouseDown
   $MainTabs.oncontextmenu = ViewletMainEvents.handleTabsContextMenu
   // TODO race condition: what if tab has already been closed?
@@ -21,7 +22,7 @@ export const create = () => {
   $Viewlet.ondrop = ViewletMainEvents.handleDrop
   $Viewlet.ondragover = ViewletMainEvents.handleDragOver
   // @ts-ignore
-  $Viewlet.role = 'main'
+  $Viewlet.role = AriaRoles.Main
 
   // const $MainContent = document.createElement('div')
   // $MainContent.id = 'MainContent'
@@ -108,7 +109,7 @@ export const openViewlet = (
     $Tab.ariaSelected = 'true'
   }
   // @ts-ignore
-  $Tab.role = 'tab'
+  $Tab.role = AriaRoles.Tab
   $Tab.className = 'MainTab'
   $Tab.append($TabLabel, $TabCloseButton)
 
@@ -173,7 +174,7 @@ export const openAnotherTab = async (
   $Tab.title = tabTitle
   $Tab.ariaSelected = 'true'
   // @ts-ignore
-  $Tab.role = 'tab'
+  $Tab.role = AriaRoles.Tab
   $Tab.tabIndex = 0
   const $TabLabel = Label.create(tabLabel)
   const $TabCloseButton = document.createElement('button')

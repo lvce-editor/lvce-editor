@@ -4,6 +4,7 @@ import * as EditorPosition from '../EditorCommand/EditorCommandPosition.js'
 import * as ExtensionHostRename from '../ExtensionHost/ExtensionHostRename.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as Assert from '../Assert/Assert.js'
 
 // TODO memory leak
@@ -65,7 +66,7 @@ const toPositionBasedEdits = (textDocument, edits) => {
     positionBasedEdits.push({
       start,
       end,
-      inserted: edit.inserted.split('\n'),
+      inserted: SplitLines.splitLines(edit.inserted),
       deleted: [''],
     })
     console.log(edit)

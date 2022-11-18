@@ -1,7 +1,8 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Focus from '../Focus/Focus.js'
+import * as Label from '../Label/Label.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
-import * as Label from '../Label/Label.js'
 
 export const name = 'EditorCompletion'
 
@@ -14,7 +15,7 @@ const create$CompletionItem = (item, index) => {
 
   const $CompletionItem = document.createElement('div')
   // @ts-ignore
-  $CompletionItem.role = 'option'
+  $CompletionItem.role = AriaRoles.Option
   $CompletionItem.id = `CompletionItem-${index}`
   $CompletionItem.className = `EditorCompletionItem`
   $CompletionItem.append($Icon, $CompletionItemText)
@@ -27,7 +28,7 @@ export const create = () => {
   $Viewlet.className = 'Viewlet EditorCompletion'
   $Viewlet.id = 'Completions'
   // @ts-ignore
-  $Viewlet.role = 'listbox'
+  $Viewlet.role = AriaRoles.ListBox
   $Viewlet.ariaLabel = 'Suggest'
   $Viewlet.onmousedown = ViewletEditorCompletionEvents.handleMousedown
   $Viewlet.addEventListener(

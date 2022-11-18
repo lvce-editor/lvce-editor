@@ -1,74 +1,15 @@
 import * as NameAnonymousFunction from '../NameAnonymousFunction/NameAnonymousFunction.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as Timestamp from '../Timestamp/Timestamp.js'
+import * as TestState from '../TestState/TestState.js'
 export { create as Locator } from './Locator.js'
 
 export const getTmpDir = async () => {
   return `memfs://`
 }
 
-const waitForReady = async () => {
-  //   const startTime = Time.getTimeStamp()
-  //   const endTime = startTime + maxTimeout
-  //   let currentTime = startTime
-  //   while (currentTime < endTime) {
-  //     const element = querySelectorWithOptions(
-  //       '.ActivityBarItem[title="Explorer"]'
-  //     )
-  //     if (element) {
-  //       return
-  //     }
-  //     await Timeout.waitForMutation(100)
-  //     currentTime = Time.getTimeStamp()
-  //   }
-  // throw new Error(`Main element not found`)
-}
-
-const printError = (error) => {
-  if (error && error.constructor.name === 'AssertionError') {
-    console.error(error.message)
-  } else {
-    console.error(error)
-  }
-}
-
 export const test = async (name, fn) => {
   NameAnonymousFunction.nameAnonymousFunction(fn, `test/${name}`)
-  let _error
-  let _start
-  let _end
-  let _duration
-  try {
-    await waitForReady()
-    _start = Timestamp.now()
-    await fn()
-    _end = Timestamp.now()
-    _duration = `${_end - _start}ms`
-    console.info(`[test passed] ${name} in ${_duration}`)
-  } catch (error) {
-    console.log({ error })
-    _error = error.message
-    error.message = `Test failed: ${name}: ${error.message}`
-    printError(error)
-  }
-  let state
-  let background
-  let text
-  if (_error) {
-    state = 'fail'
-    background = 'red'
-    text = `test failed: ${_error}`
-  } else {
-    background = 'green'
-    text = `test passed in ${_duration}`
-    state = 'pass'
-  }
-  await RendererProcess.invoke(
-    'TestFrameWork.showOverlay',
-    state,
-    background,
-    text
-  )
+  TestState.addTest(name, fn)
 }
 
 test.skip = async (id, fn) => {

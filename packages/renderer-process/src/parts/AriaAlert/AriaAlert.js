@@ -1,4 +1,5 @@
 // based on https://github.com/microsoft/vscode/blob/5f87632829dc3ac80203e2377727935184399431/src/vs/base/browser/ui/aria/aria.ts (License MIT)
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
 export const state = {
   $AriaAlert1: undefined,
@@ -10,7 +11,7 @@ const create$AriaAlert = () => {
   const $AriaAlert = document.createElement('div')
   $AriaAlert.className = 'AriaAlert'
   // @ts-ignore
-  $AriaAlert.role = 'alert'
+  $AriaAlert.role = AriaRoles.Alert
   $AriaAlert.ariaAtomic = 'true'
   return $AriaAlert
 }

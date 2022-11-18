@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
-import * as FileSystemErrorCodes from '../src/parts/FileSystemErrorCodes/FileSystemErrorCodes.js'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -54,7 +54,7 @@ test('getChildDirentsRaw - resolve symbolic links', async () => {
     },
     {
       name: 'link-1.txt',
-      type: DirentType.SymlinkFile,
+      type: DirentType.SymLinkFile,
     },
   ])
   expect(FileSystem.stat).toHaveBeenCalledTimes(1)
@@ -77,7 +77,7 @@ test('getChildDirentsRaw - resolve symbolic links - error - ENOENT', async () =>
   })
   // @ts-ignore
   FileSystem.stat.mockImplementation(() => {
-    throw new NodeError(FileSystemErrorCodes.ENOENT)
+    throw new NodeError(ErrorCodes.ENOENT)
   })
   expect(await ViewletExplorerShared.getChildDirentsRaw('/test')).toEqual([
     {
@@ -86,7 +86,7 @@ test('getChildDirentsRaw - resolve symbolic links - error - ENOENT', async () =>
     },
     {
       name: 'link-1.txt',
-      type: DirentType.SymlinkFile,
+      type: DirentType.SymLinkFile,
     },
   ])
   expect(FileSystem.stat).toHaveBeenCalledTimes(1)
@@ -102,7 +102,7 @@ test('compare dirent - symlink to file and file should be ordered next to each o
       },
       {
         name: 'file-1.txt',
-        type: DirentType.SymlinkFile,
+        type: DirentType.SymLinkFile,
       }
     )
   ).toBe(0)
@@ -117,7 +117,7 @@ test('compare dirent - symlink to directory and directory should be ordered next
       },
       {
         name: 'folder-1',
-        type: DirentType.SymlinkFolder,
+        type: DirentType.SymLinkFolder,
       }
     )
   ).toBe(0)

@@ -1,10 +1,11 @@
 import * as Editor from '../Editor/Editor.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
 import * as EditOrigin from '../EditOrigin/EditOrigin.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const getChanges = (lines, selections, snippet) => {
   // TODO verify that deleted fits in the line
-  const insertedLines = snippet.inserted.split('\n')
+  const insertedLines = SplitLines.splitLines(snippet.inserted)
   const changes = []
   const selectionChanges = []
   for (let i = 0; i < selections.length; i += 4) {

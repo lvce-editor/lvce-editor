@@ -1,8 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Arrays from '../Arrays/Arrays.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 export const create = (text) => {
-  const lines = text.split('\n')
+  const lines = SplitLines.splitLines(text)
   const state = {
     lines,
   }

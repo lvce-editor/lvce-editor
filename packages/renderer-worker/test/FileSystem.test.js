@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as EncodingType from '../src/parts/EncodingType/EncodingType.js'
+import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -197,15 +198,15 @@ test('readDirWithFileTypes', async () => {
         return [
           {
             name: 'file 1',
-            type: 'file',
+            type: DirentType.File,
           },
           {
             name: 'file 2',
-            type: 'file',
+            type: DirentType.File,
           },
           {
             name: 'file 3',
-            type: 'file',
+            type: DirentType.File,
           },
         ]
       default:
@@ -215,15 +216,15 @@ test('readDirWithFileTypes', async () => {
   expect(await FileSystem.readDirWithFileTypes('/tmp/some-dir')).toEqual([
     {
       name: 'file 1',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'file 2',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'file 3',
-      type: 'file',
+      type: DirentType.File,
     },
   ])
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)

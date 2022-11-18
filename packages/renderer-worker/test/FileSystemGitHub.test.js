@@ -6,6 +6,7 @@ import { setupServer } from 'msw/node'
 import fetch, { Headers, Request, Response } from 'node-fetch'
 import { TextDecoder } from 'util'
 import * as FileSystemGitHub from '../src/parts/FileSystem/FileSystemGitHub.js'
+import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
 const mswServer = setupServer()
 
@@ -305,131 +306,131 @@ test('readDirWithFileTypes', async () => {
   ).toEqual([
     {
       name: '.devcontainer',
-      type: 'folder',
+      type: DirentType.Directory,
     },
     {
       name: '.editorconfig',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: '.eslintignore',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: '.eslintrc.json',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: '.git-blame-ignore',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: '.gitattributes',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: '.github',
-      type: 'folder',
+      type: DirentType.Directory,
     },
     {
       name: '.gitignore',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: '.lsifrc.json',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: '.mailmap',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: '.mention-bot',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: '.vscode',
-      type: 'folder',
+      type: DirentType.Directory,
     },
     {
       name: '.yarnrc',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'CONTRIBUTING.md',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'LICENSE.txt',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'README.md',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'SECURITY.md',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'ThirdPartyNotices.txt',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'build',
-      type: 'folder',
+      type: DirentType.Directory,
     },
     {
       name: 'cglicenses.json',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'cgmanifest.json',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'extensions',
-      type: 'folder',
+      type: DirentType.Directory,
     },
     {
       name: 'gulpfile.js',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'package.json',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'product.json',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'remote',
-      type: 'folder',
+      type: DirentType.Directory,
     },
     {
       name: 'resources',
-      type: 'folder',
+      type: DirentType.Directory,
     },
     {
       name: 'scripts',
-      type: 'folder',
+      type: DirentType.Directory,
     },
     {
       name: 'src',
-      type: 'folder',
+      type: DirentType.Directory,
     },
     {
       name: 'test',
-      type: 'folder',
+      type: DirentType.Directory,
     },
     {
       name: 'tsfmt.json',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'yarn.lock',
-      type: 'file',
+      type: DirentType.File,
     },
   ])
   expect(FileSystemGitHub.state.cache['microsoft/vscode']).toBeDefined()

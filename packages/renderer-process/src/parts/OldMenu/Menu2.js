@@ -1,7 +1,8 @@
 import * as FindIndex from '../../shared/findIndex.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Widget from '../Widget/Widget.js'
-import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 export const state = {
   $$Menus: [],
@@ -13,19 +14,19 @@ const create$MenuItem = (item) => {
     case MenuItemFlags.None:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
-      $MenuItem.role = 'menuitem'
+      $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
       break
     case MenuItemFlags.Separator:
       $MenuItem.className = 'MenuItemSeparator'
       // @ts-ignore
-      $MenuItem.role = 'separator'
+      $MenuItem.role = AriaRoles.Separator
       break
     case MenuItemFlags.Checked:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
-      $MenuItem.role = 'menuitemcheckbox'
+      $MenuItem.role = AriaRoles.MenuItemCheckBox
       $MenuItem.ariaChecked = 'true'
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
@@ -33,7 +34,7 @@ const create$MenuItem = (item) => {
     case MenuItemFlags.Unchecked:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
-      $MenuItem.role = 'menuitemcheckbox'
+      $MenuItem.role = AriaRoles.MenuItemCheckBox
       $MenuItem.ariaChecked = 'false'
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
@@ -41,7 +42,7 @@ const create$MenuItem = (item) => {
     case MenuItemFlags.SubMenu:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
-      $MenuItem.role = 'menuitem'
+      $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
       $MenuItem.ariaHasPopup = 'true'
@@ -50,7 +51,7 @@ const create$MenuItem = (item) => {
     case MenuItemFlags.Disabled:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
-      $MenuItem.role = 'menuitem'
+      $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
       $MenuItem.setAttribute('disabled', 'true')
@@ -58,7 +59,7 @@ const create$MenuItem = (item) => {
     default:
       $MenuItem.className = 'MenuItem'
       // @ts-ignore
-      $MenuItem.role = 'menuitem'
+      $MenuItem.role = AriaRoles.MenuItem
       $MenuItem.textContent = item.label
       $MenuItem.tabIndex = -1
       console.warn(`invalid menu item flags: "${item.flags}"`)
@@ -109,7 +110,7 @@ export const show = (x, y, level, items) => {
   const $Menu = document.createElement('ul')
   $Menu.className = 'Menu'
   // @ts-ignore
-  $Menu.role = 'menu'
+  $Menu.role = AriaRoles.Menu
   $Menu.tabIndex = -1
   $Menu.addEventListener('mousedown', handleMouseDown)
   $Menu.addEventListener('mouseenter', handleMouseEnter, {

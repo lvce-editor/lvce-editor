@@ -212,7 +212,7 @@ test('getIcon - symbolic link to file', () => {
   }
   expect(
     IconTheme.getIcon({
-      type: DirentType.SymlinkFile,
+      type: DirentType.SymLinkFile,
       name: '.nvmrc',
     })
   ).toBe('f_nvmrc')

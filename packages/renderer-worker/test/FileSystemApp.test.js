@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import * as FileSytemErrorCodes from '../src/parts/FileSystemErrorCodes/FileSystemErrorCodes.js'
+import * as FileSytemErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 beforeEach(() => {
   jest.resetAllMocks()

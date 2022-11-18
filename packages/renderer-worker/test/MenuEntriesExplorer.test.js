@@ -60,7 +60,7 @@ test('getMenuEntries - focused file', () => {
         {
           name: 'sample-file',
           depth: 1,
-          type: 'file',
+          type: DirentType.File,
           path: '/sample-file',
         },
       ],
