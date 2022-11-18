@@ -2,7 +2,12 @@ import * as ExtensionHostHelperProcess from '../ExtensionHostHelperProcess/Exten
 
 export const exec = async (command, args, options) => {
   console.log({ command, args, options })
-  const response = await ExtensionHostHelperProcess.connect()
+  const response = await ExtensionHostHelperProcess.invoke(
+    'Exec.exec',
+    command,
+    args
+  )
+  console.log({ response })
 
   // TODO
   return {
