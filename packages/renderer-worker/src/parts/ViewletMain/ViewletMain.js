@@ -232,21 +232,19 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
 
   for (const editor of state.editors) {
     if (editor.uri === uri) {
-      console.log('found existing editor')
-      // TODO if the editor is already open, nothing needs to be done
-      const instance = ViewletManager.create(
-        ViewletModule.load,
-        id,
-        ViewletModuleId.Main,
-        uri,
-        left,
-        top,
-        width,
-        height
+      const instance = ViewletStates.getInstance(id)
+      const oldState = instance.state
+      const newState = { ...instance.state, ...options, focused: true }
+      instance.state = newState
+      const commands = ViewletManager.render(
+        instance.factory,
+        oldState,
+        newState
       )
-      // @ts-ignore
-
-      await ViewletManager.load(instance, focus, false, options)
+      if (commands.length === 0) {
+        return
+      }
+      await RendererProcess.invoke('Viewlet.sendMultiple', commands)
       return state
     }
   }
