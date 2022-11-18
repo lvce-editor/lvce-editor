@@ -1,9 +1,8 @@
 import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.js'
+import * as BlobSrc from '../BlobSrc/BlobSrc.js'
 import * as Clamp from '../Clamp/Clamp.js'
-import * as Command from '../Command/Command.js'
 import * as DomMatrix from '../DomMatrix/DomMatrix.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as WheelEvent from '../WheelEvent/WheelEvent.js'
 
@@ -29,39 +28,10 @@ export const create = (id, uri, left, top, width, height) => {
   }
 }
 
-const getSrcRemote = (uri) => {
-  const src = `/remote${uri}`
-  return src
-}
-
-const getSrcWithBlobUrl = async (uri) => {
-  const content = await FileSystem.readFile(uri)
-  const mimeType = await Command.execute('Mime.getMediaMimeType', uri)
-  const blob = await Command.execute(
-    'Blob.binaryStringToBlob',
-    content,
-    mimeType
-  )
-  const dataUrl = await Command.execute('Url.createObjectUrl', blob)
-  return dataUrl
-}
-
-const canUseRemoteLoading = (uri) => {
-  const protocol = FileSystem.getProtocol(uri)
-  return protocol === ''
-}
-
-const getSrc = (uri) => {
-  if (canUseRemoteLoading(uri)) {
-    return getSrcRemote(uri)
-  }
-  return getSrcWithBlobUrl(uri)
-}
-
 // TODO revoke object url when disposed
 export const loadContent = async (state, savedState) => {
   const { uri } = state
-  const src = await getSrc(uri)
+  const src = await BlobSrc.getSrc(uri)
   return {
     ...state,
     src,
@@ -70,9 +40,7 @@ export const loadContent = async (state, savedState) => {
 
 export const dispose = async (state) => {
   const { src } = state
-  if (src.startsWith('blob:')) {
-    await Command.execute('Url.revokeObjectUrl', src)
-  }
+  await BlobSrc.disposeSrc(src)
   return {
     ...state,
     disposed: true,
