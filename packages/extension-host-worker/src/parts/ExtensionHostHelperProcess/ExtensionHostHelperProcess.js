@@ -9,6 +9,13 @@ export const connect = async () => {
   ipc.send({
     jsonrpc: '2.0',
     method: 'Exec.exec',
-    params: ['git', '--version'],
+    id: 1,
+    params: ['git', ['--version']],
   })
+}
+
+export const invoke = (method, params) => {
+  // TODO create connection
+  // TODO send json rpc message
+  // TODO wait for json rpc response
 }

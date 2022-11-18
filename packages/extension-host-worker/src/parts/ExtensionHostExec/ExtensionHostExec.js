@@ -2,10 +2,8 @@ import * as ExtensionHostHelperProcess from '../ExtensionHostHelperProcess/Exten
 
 export const exec = async (command, args, options) => {
   console.log({ command, args, options })
-  await ExtensionHostHelperProcess.connect()
-  if (Math) {
-    throw new Error('not implemented')
-  }
+  const response = await ExtensionHostHelperProcess.connect()
+
   // TODO
   return {
     stdout: '',

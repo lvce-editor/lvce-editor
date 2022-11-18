@@ -52,6 +52,7 @@
     ]
   },
   "dependencies": {
+    "execa": "^6.1.0",
     "ws": "^8.11.0"
   },
   "devDependencies": {
