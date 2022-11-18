@@ -107,10 +107,10 @@ const getFolderIconExpanded = (folder) => {
 export const getIcon = (dirent) => {
   switch (dirent.type) {
     case DirentType.File:
-    case DirentType.SymlinkFile:
+    case DirentType.SymLinkFile:
       return getFileIcon(dirent)
     case DirentType.Directory:
-    case DirentType.SymlinkFolder:
+    case DirentType.SymLinkFolder:
       return getFolderIcon(dirent)
     case DirentType.DirectoryExpanded:
       return getFolderIconExpanded(dirent)

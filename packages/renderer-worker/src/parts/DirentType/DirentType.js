@@ -1,21 +1,11 @@
-export const File = 'file'
-
-export const Directory = 'directory'
-
-export const DirectoryExpanding = 'directory-expanding'
-
-export const DirectoryExpanded = 'directory-expanded'
-
-export const Symlink = 'symlink'
-
-export const Socket = 'socket'
-
-export const BlockDevice = 'block-device'
-
-export const CharacterDevice = 'character-device'
-
-export const Unknown = 'unknown'
-
-export const SymlinkFile = 'symlink-file'
-
-export const SymlinkFolder = 'symlink-folder'
+export const BlockDevice = 1
+export const CharacterDevice = 2
+export const Directory = 3
+export const DirectoryExpanded = 4
+export const DirectoryExpanding = 5
+export const File = 6
+export const Socket = 7
+export const Symlink = 8
+export const SymLinkFile = 9
+export const SymLinkFolder = 10
+export const Unknown = 11

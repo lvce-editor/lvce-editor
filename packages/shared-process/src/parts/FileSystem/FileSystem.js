@@ -152,7 +152,7 @@ const getType = (dirent) => {
     return DirentType.File
   }
   if (dirent.isDirectory()) {
-    return DirentType.Direcory
+    return DirentType.Directory
   }
   if (dirent.isSymbolicLink()) {
     return DirentType.Symlink

@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -152,15 +153,15 @@ test('readDirWithFileTypes', async () => {
     return [
       {
         name: 'file 1',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         name: 'file 2',
-        type: 'file',
+        type: DirentType.File,
       },
       {
         name: 'file 3',
-        type: 'file',
+        type: DirentType.File,
       },
     ]
   })
@@ -169,15 +170,15 @@ test('readDirWithFileTypes', async () => {
   ).toEqual([
     {
       name: 'file 1',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'file 2',
-      type: 'file',
+      type: DirentType.File,
     },
     {
       name: 'file 3',
-      type: 'file',
+      type: DirentType.File,
     },
   ])
 })
