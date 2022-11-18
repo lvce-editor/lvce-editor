@@ -6,4 +6,9 @@ export const connect = async () => {
     method: IpcParentType.WebSocket,
     protocol: ['lvce.extension-host-helper-process'],
   })
+  ipc.send({
+    jsonrpc: '2.0',
+    method: 'Exec.exec',
+    params: ['git', '--version'],
+  })
 }
