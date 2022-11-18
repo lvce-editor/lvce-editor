@@ -1,3 +1,4 @@
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
@@ -23,9 +24,18 @@ export const create = (id, uri, top, left, width, height) => {
 }
 
 const loadReadmeContent = async (path) => {
-  const readmeUrl = Path.join('/', path, 'README.md')
-  const readmeContent = await FileSystem.readFile(readmeUrl)
-  return readmeContent
+  try {
+    const readmeUrl = Path.join('/', path, 'README.md')
+    const readmeContent = await FileSystem.readFile(readmeUrl)
+    return readmeContent
+  } catch (error) {
+    // @ts-ignore
+    if (error && error.code === ErrorCodes.ENOENT) {
+      return ''
+    }
+    console.error(error)
+    return `${error}`
+  }
 }
 
 // TODO duplicate code with viewletExtensions
