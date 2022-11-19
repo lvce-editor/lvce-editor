@@ -775,11 +775,11 @@ export const handleClick = (state, index, keepFocus = false) => {
   // TODO dirent type should be numeric
   switch (type) {
     case DirentType.File:
-    case DirentType.SymlinkFile:
+    case DirentType.SymLinkFile:
       return handleClickFile(state, dirent, actualIndex, keepFocus)
     // TODO decide on one name
     case DirentType.Directory:
-    case DirentType.SymlinkFolder:
+    case DirentType.SymLinkFolder:
       return handleClickDirectory(state, dirent, actualIndex, keepFocus)
     case DirentType.DirectoryExpanding:
       return handleClickDirectoryExpanding(
@@ -847,10 +847,10 @@ export const handleArrowRight = async (state) => {
   const dirent = state.items[state.focusedIndex]
   switch (dirent.type) {
     case DirentType.File:
-    case DirentType.SymlinkFile:
+    case DirentType.SymLinkFile:
       return state
     case DirentType.Directory:
-    case DirentType.SymlinkFolder:
+    case DirentType.SymLinkFolder:
       return handleClickDirectory(state, dirent, state.focusedIndex)
     case DirentType.DirectoryExpanded:
       return handleArrowRightDirectoryExpanded(state, dirent)
