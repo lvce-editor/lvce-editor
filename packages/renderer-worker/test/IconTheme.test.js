@@ -217,3 +217,13 @@ test('getIcon - symbolic link to file', () => {
     })
   ).toBe('f_nvmrc')
 })
+
+test('getIcon - no fileNames property', () => {
+  IconTheme.state.iconTheme = {}
+  expect(
+    IconTheme.getIcon({
+      type: DirentType.File,
+      name: 'test',
+    })
+  ).toBe('_file')
+})

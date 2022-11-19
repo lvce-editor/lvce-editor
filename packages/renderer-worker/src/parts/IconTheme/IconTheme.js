@@ -11,6 +11,7 @@ import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 
 export const state = {
   seenFiles: [],
@@ -39,6 +40,19 @@ const getIconThemeJson = async (iconThemeId) => {
       extensionPath: `${assetDir}/extensions/builtin.${iconThemeId}`,
     }
   }
+  for (const webExtension of ExtensionMeta.state.webExtensions) {
+    if (webExtension.iconThemes) {
+      for (const iconTheme of webExtension.iconThemes) {
+        // TODO handle error when icon theme path is not of type string
+        const iconThemeUrl = `${webExtension.path}/${iconTheme.path}`
+        const json = await Command.execute('Ajax.getJson', iconThemeUrl)
+        return {
+          json,
+          extensionPath: webExtension.path,
+        }
+      }
+    }
+  }
   return SharedProcess.invoke(
     /* ExtensionHost.getIconThemeJson */ 'ExtensionHost.getIconThemeJson',
     /* iconThemeId */ iconThemeId
@@ -55,19 +69,25 @@ export const getFileIcon = (file) => {
   if (!iconTheme) {
     return ''
   }
-  const fileNameIcon = iconTheme.fileNames[fileNameLower]
-  if (fileNameIcon) {
-    return fileNameIcon
+  if (iconTheme.fileNames) {
+    const fileNameIcon = iconTheme.fileNames[fileNameLower]
+    if (fileNameIcon) {
+      return fileNameIcon
+    }
   }
-  const extension = getExtension(fileNameLower)
-  const extensionIcon = iconTheme.fileExtensions[extension]
-  if (extensionIcon) {
-    return extensionIcon
+  if (iconTheme.fileExtensions) {
+    const extension = getExtension(fileNameLower)
+    const extensionIcon = iconTheme.fileExtensions[extension]
+    if (extensionIcon) {
+      return extensionIcon
+    }
   }
-  const languageId = Languages.getLanguageId(fileNameLower)
-  const languageIcon = iconTheme.languageIds[languageId]
-  if (languageIcon) {
-    return languageIcon
+  if (iconTheme.languageIds) {
+    const languageId = Languages.getLanguageId(fileNameLower)
+    const languageIcon = iconTheme.languageIds[languageId]
+    if (languageIcon) {
+      return languageIcon
+    }
   }
   return DefaultIcon.File
 }
