@@ -945,7 +945,7 @@ test('handleClick - symlink - file', async () => {
     items: [
       {
         name: 'index.css',
-        type: DirentType.SymlinkFile,
+        type: DirentType.SymLinkFile,
         path: '/index.css',
       },
     ],
@@ -2229,7 +2229,7 @@ test('handleArrowRight - symlink - file', async () => {
         setSize: 1,
         name: 'index.css',
         path: '/index.css',
-        type: DirentType.SymlinkFile,
+        type: DirentType.SymLinkFile,
       },
     ],
   }
