@@ -2,3 +2,7 @@
   display: grid;
   place-items: center;
 }
+
+.AudioErrorMessage {
+  color: white;
+}

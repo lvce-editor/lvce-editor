@@ -3,8 +3,9 @@ import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = (id, uri) => {
   return {
-    src: '',
     uri,
+    src: '',
+    audioErrorMessage: '',
   }
 }
 
@@ -15,6 +16,18 @@ export const loadContent = async (state) => {
   return {
     ...state,
     src,
+  }
+}
+
+const getImprovedErrorMessage = (message) => {
+  return `Failed to load audio: ${message}`
+}
+
+export const handleAudioError = (state, code, message) => {
+  const improvedMessage = getImprovedErrorMessage(message)
+  return {
+    ...state,
+    audioErrorMessage: improvedMessage,
   }
 }
 
@@ -40,4 +53,18 @@ export const renderSrc = {
   },
 }
 
-export const render = [renderSrc]
+const renderAudioErrorMessage = {
+  isEqual(oldState, newState) {
+    return oldState.audioErrorMessage === newState.audioErrorMessage
+  },
+  apply(oldState, newState) {
+    return [
+      /* Viewlet.send */ 'Viewlet.send',
+      /* id */ ViewletModuleId.Audio,
+      /* method */ 'setAudioErrorMessage',
+      /* src */ newState.audioErrorMessage,
+    ]
+  },
+}
+
+export const render = [renderSrc, renderAudioErrorMessage]
