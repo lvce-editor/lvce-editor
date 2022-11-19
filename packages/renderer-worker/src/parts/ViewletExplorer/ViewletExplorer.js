@@ -151,6 +151,9 @@ const restoreExpandedState = async (
   const expandedDirentChildren = await Promise.allSettled(
     expandedDirentPaths.map(getChildDirentsRaw)
   )
+  if (expandedDirentChildren[0].status === 'rejected') {
+    throw expandedDirentChildren[0].reason
+  }
   const savedRoot = savedState.root
   const dirents = createDirents(
     savedRoot,
