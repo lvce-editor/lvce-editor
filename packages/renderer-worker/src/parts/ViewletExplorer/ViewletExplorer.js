@@ -877,6 +877,7 @@ export const handleArrowLeft = (state) => {
   switch (dirent.type) {
     case DirentType.Directory:
     case DirentType.File:
+    case DirentType.SymLinkFile:
       return focusParentFolder(state)
     case DirentType.DirectoryExpanded:
       return handleClickDirectoryExpanded(state, dirent, state.focusedIndex)
