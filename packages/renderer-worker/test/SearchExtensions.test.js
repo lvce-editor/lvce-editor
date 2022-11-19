@@ -12,12 +12,11 @@ test('searchExtensions - error - extension has no name, use id for filtering', a
   const expected = [
     {
       id: 'test-author.test-extension',
-      main: 'main.js',
     },
   ]
-  expect(await SearchExtensions.searchExtensions(extensions, 'test')).toEqual(
-    expected
-  )
+  expect(
+    await SearchExtensions.searchExtensions(extensions, 'test')
+  ).toMatchObject(expected)
 })
 
 test('searchExtensions - error - extension has no name and no id', async () => {

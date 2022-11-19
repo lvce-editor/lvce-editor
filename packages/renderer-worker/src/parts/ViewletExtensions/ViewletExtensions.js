@@ -1,17 +1,15 @@
 import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js' // TODO use Command.execute instead
-import * as ExtensionsMarketplace from '../ExtensionMarketplace/ExtensionMarketplace.js'
+import * as Height from '../Height/Height.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as SearchExtensions from '../SearchExtensions/SearchExtensions.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
-import { getListHeight } from './ViewletExtensionsShared.js'
-import * as Height from '../Height/Height.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
-import * as SearchExtensions from '../SearchExtensions/SearchExtensions.js'
+import { getListHeight } from './ViewletExtensionsShared.js'
 
 const SUGGESTIONS = [
   '@builtin',
@@ -28,7 +26,6 @@ const SUGGESTIONS = [
 
 export const create = (id, uri, left, top, width, height) => {
   return {
-    extensions: [],
     searchValue: '',
     suggestionState: /* Closed */ 0,
     disposed: false,
@@ -45,12 +42,19 @@ export const create = (id, uri, left, top, width, height) => {
       minimumSliderSize: Height.MinimumSliderSize,
       headerHeight: 35,
     }),
+    allExtensions: [],
   }
 }
 
 const getVisible = (state) => {
-  const { minLineY, maxLineY, items } = state
-  return items.slice(minLineY, maxLineY)
+  const { minLineY, maxLineY, items, itemHeight } = state
+  const setSize = items.length
+  const visible = []
+  for (let i = minLineY; i < maxLineY; i++) {
+    const item = items[i]
+    visible.push({ ...item, setSize, posInSet: i + 1, top: i * itemHeight })
+  }
+  return visible
 }
 
 const getSize = (width) => {
@@ -64,14 +68,11 @@ export const loadContent = async (state) => {
   const allExtensions = await ExtensionManagement.getAllExtensions()
   // TODO get installed extensions from extension host
   // TODO just get local extensions on demand (not when query string is already different)
-  const extensions = await SearchExtensions.searchExtensions(
+  const items = await SearchExtensions.searchExtensions(
     allExtensions,
     searchValue
   )
 
-  console.log({ extensions })
-
-  const viewObjects = []
   // const viewObjects = filterExtensions(
   //   extensions.map(toInstalledViewObject),
   //   state.parsedValue,
@@ -79,7 +80,7 @@ export const loadContent = async (state) => {
   // )
 
   const listHeight = getListHeight(state)
-  const total = viewObjects.length
+  const total = items.length
   const contentHeight = total * itemHeight
   const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
     height,
@@ -92,8 +93,8 @@ export const loadContent = async (state) => {
   const size = getSize(width)
   return {
     ...state,
-    extensions,
-    items: viewObjects,
+    allExtensions,
+    items,
     maxLineY: maxLineY,
     scrollBarHeight,
     finalDeltaY,
@@ -106,17 +107,12 @@ export const dispose = () => {}
 // TODO debounce
 export const handleInput = async (state, value) => {
   try {
-    const { itemHeight, extensions } = state
+    const { itemHeight, allExtensions } = state
     // TODO cancel ongoing requests
     // TODO handle errors
-    const filteredExtensions = await SearchExtensions.searchExtensions(
-      extensions,
-      value
-    )
-    const items = []
+    const items = await SearchExtensions.searchExtensions(allExtensions, value)
     return {
       ...state,
-      extensions,
       items,
       minLineY: 0,
       deltaY: 0,
@@ -323,6 +319,7 @@ const renderExtensions = {
     )
   },
   apply(oldState, newState) {
+    // TODO render extensions incrementally when scrolling
     const visibleExtensions = getVisible(newState)
     return [
       /* Viewlet.send */ 'Viewlet.send',
