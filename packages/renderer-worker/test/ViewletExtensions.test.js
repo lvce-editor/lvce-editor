@@ -14,6 +14,16 @@ jest.unstable_mockModule(
     }
   }
 )
+jest.unstable_mockModule(
+  '../src/parts/SearchExtensions/SearchExtensions.js',
+  () => {
+    return {
+      invoke: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
@@ -55,6 +65,9 @@ const RendererProcess = await import(
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
 )
+const SearchExtensions = await import(
+  '../src/parts/SearchExtensions/SearchExtensions.js'
+)
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
 
 const ViewletExtensions = await import(
@@ -78,6 +91,25 @@ test('create', () => {
 })
 
 // TODO test refreshing and one extension has invalid shape (e.g. null or array where object is expected)
+
+test('loadContent - error - ReferenceError', async () => {
+  // @ts-ignore
+  SearchExtensions.searchExtensions.mockImplementation(() => {
+    throw new Error(
+      "VError: Failed to search for extensions: ReferenceError: Cannot access 'extensions' before initialization"
+    )
+  })
+  const state = {
+    ...ViewletExtensions.create(),
+    width: 200,
+    height: 200,
+  }
+  await expect(ViewletExtensions.loadContent(state)).rejects.toThrowError(
+    new Error(
+      "VError: Failed to search for extensions: ReferenceError: Cannot access 'extensions' before initialization"
+    )
+  )
+})
 
 test('loadContent', async () => {
   const state = {
