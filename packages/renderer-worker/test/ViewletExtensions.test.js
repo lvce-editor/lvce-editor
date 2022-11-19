@@ -14,6 +14,16 @@ jest.unstable_mockModule(
     }
   }
 )
+jest.unstable_mockModule(
+  '../src/parts/SearchExtensions/SearchExtensions.js',
+  () => {
+    return {
+      searchExtensions: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
@@ -21,6 +31,16 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
     }),
   }
 })
+jest.unstable_mockModule(
+  '../src/parts/ExtensionManagement/ExtensionManagement.js',
+  () => {
+    return {
+      getAllExtensions: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     getMarketPlaceUrl: jest.fn(() => {
@@ -55,6 +75,9 @@ const RendererProcess = await import(
 const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
 )
+const SearchExtensions = await import(
+  '../src/parts/SearchExtensions/SearchExtensions.js'
+)
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
 
 const ViewletExtensions = await import(
@@ -66,6 +89,9 @@ const ErrorHandling = await import(
 
 const ViewletManager = await import(
   '../src/parts/ViewletManager/ViewletManager.js'
+)
+const ExtensionManagement = await import(
+  '../src/parts/ExtensionManagement/ExtensionManagement.js'
 )
 
 const render = (oldState, newState) => {
@@ -79,6 +105,24 @@ test('create', () => {
 
 // TODO test refreshing and one extension has invalid shape (e.g. null or array where object is expected)
 
+test('loadContent - error - ReferenceError', async () => {
+  // @ts-ignore
+  SearchExtensions.searchExtensions.mockImplementation(() => {
+    throw new Error(
+      "VError: Failed to search for extensions: ReferenceError: Cannot access 'extensions' before initialization"
+    )
+  })
+  const state = {
+    ...ViewletExtensions.create(),
+    width: 200,
+    height: 200,
+  }
+  expect(await ViewletExtensions.loadContent(state)).toMatchObject({
+    error:
+      "Error: VError: Failed to search for extensions: ReferenceError: Cannot access 'extensions' before initialization",
+  })
+})
+
 test('loadContent', async () => {
   const state = {
     ...ViewletExtensions.create(),
@@ -89,53 +133,53 @@ test('loadContent', async () => {
     top: 0,
   }
   // @ts-ignore
-  Ajax.getJson.mockImplementation(() => {
+  SearchExtensions.searchExtensions.mockImplementation(() => {
     return [
       {
-        name: 'test extension 1',
-        authorId: 'test publisher 1',
+        id: 'builtin.language-basics-html',
+        name: 'Language Basics HTML',
+        description:
+          'Provides syntax highlighting and bracket matching in HTML files.',
+        icon: '//icons/language-icon.svg',
+      },
+      {
+        name: 'test extension 2',
+        publisher: 'test publisher 2',
         version: '0.0.1',
-        id: 'test-publisher.test-extension',
+        id: 'test-publisher-2.test-extension',
       },
     ]
   })
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'ExtensionManagement.getAllExtensions':
-        return [
+  ExtensionManagement.getAllExtensions.mockImplementation(() => {
+    return [
+      {
+        id: 'builtin.language-basics-html',
+        name: 'Language Basics HTML',
+        description:
+          'Provides syntax highlighting and bracket matching in HTML files.',
+        languages: [
           {
-            id: 'builtin.language-basics-html',
-            name: 'Language Basics HTML',
-            description:
-              'Provides syntax highlighting and bracket matching in HTML files.',
-            languages: [
-              {
-                id: 'html',
-                extensions: ['.html'],
-                tokenize: 'src/tokenizeHtml.js',
-                configuration: './languageConfiguration.json',
-              },
-            ],
+            id: 'html',
+            extensions: ['.html'],
+            tokenize: 'src/tokenizeHtml.js',
+            configuration: './languageConfiguration.json',
           },
-          {
-            id: 'test-author-2.test-extension',
-            publisher: 'test-author-2',
-            description: 'Test Extension',
-            name: 'test-extension',
-            version: '0.0.1',
-            main: 'main.js',
-            path: '/tmp/extensions/test-author-2.test-extension',
-          },
-        ]
-      default:
-        throw new Error('unexpected message')
-    }
+        ],
+      },
+      {
+        id: 'test-author-2.test-extension',
+        publisher: 'test-author-2',
+        description: 'Test Extension',
+        name: 'test-extension',
+        version: '0.0.1',
+        main: 'main.js',
+        path: '/tmp/extensions/test-author-2.test-extension',
+      },
+    ]
   })
   const newState = await ViewletExtensions.loadContent(state)
-  expect(newState.extensions).toEqual([
+  expect(newState.allExtensions).toEqual([
     {
       description:
         'Provides syntax highlighting and bracket matching in HTML files.',
@@ -168,24 +212,12 @@ test('loadContent', async () => {
       icon: '//icons/language-icon.svg',
       id: 'builtin.language-basics-html',
       name: 'Language Basics HTML',
-      publisher: 'builtin',
-      state: 'installed',
-      version: 'n/a',
-      posInSet: 1,
-      setSize: 2,
-      top: 0,
     },
     {
-      description: 'Test Extension',
-      icon: '//icons/extensionDefaultIcon.png',
-      id: 'test-author-2.test-extension',
-      name: 'test-extension',
-      publisher: 'test-author-2',
-      state: 'installed',
+      id: 'test-publisher-2.test-extension',
+      name: 'test extension 2',
+      publisher: 'test publisher 2',
       version: '0.0.1',
-      posInSet: 2,
-      setSize: 2,
-      top: 62,
     },
   ])
   expect(newState.minLineY).toBe(0)
@@ -203,80 +235,38 @@ test('loadContent - with scrollbar', async () => {
     top: 0,
   }
   // @ts-ignore
-  Ajax.getJson.mockImplementation(() => {
+  SearchExtensions.searchExtensions.mockImplementation(() => {
     return [
       {
         name: 'test extension 1',
         authorId: 'test publisher 1',
         version: '0.0.1',
-        id: 'test-publisher.test-extension',
+        id: 'test-publisher-2.test-extension',
+      },
+      {
+        name: 'test extension 2',
+        authorId: 'test publisher 2',
+        version: '0.0.1',
+        id: 'test-publisher-2.test-extension',
       },
     ]
   })
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 'ExtensionManagement.getAllExtensions':
-        return [
-          {
-            id: 'builtin.language-basics-html',
-            name: 'Language Basics HTML',
-            description:
-              'Provides syntax highlighting and bracket matching in HTML files.',
-            languages: [
-              {
-                id: 'html',
-                extensions: ['.html'],
-                tokenize: 'src/tokenizeHtml.js',
-                configuration: './languageConfiguration.json',
-              },
-            ],
-          },
-          {
-            id: 'test-author-2.test-extension',
-            publisher: 'test-author-2',
-            description: 'Test Extension',
-            name: 'test-extension',
-            version: '0.0.1',
-            main: 'main.js',
-            path: '/tmp/extensions/test-author-2.test-extension',
-          },
-        ]
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  const newState = await ViewletExtensions.loadContent(state)
-  expect(newState.items).toHaveLength(2)
-  expect(newState.minLineY).toBe(0)
-  expect(newState.maxLineY).toBe(1)
-  expect(newState.finalDeltaY).toBe(62)
-})
-
-// TODO sanitization is now in loadContent
-test.skip('contentLoaded', async () => {
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  const state = {
-    ...ViewletExtensions.create(),
-    height: 200,
-    maxLineY: 10,
-    items: [
+  ExtensionManagement.getAllExtensions.mockImplementation(() => {
+    return [
       {
         id: 'builtin.language-basics-html',
         name: 'Language Basics HTML',
         description:
           'Provides syntax highlighting and bracket matching in HTML files.',
-        // languages: [
-        //   {
-        //     id: 'html',
-        //     extensions: ['.html'],
-        //     tokenize: 'src/tokenizeHtml.js',
-        //     configuration: './languageConfiguration.json',
-        //   },
-        // ],
+        languages: [
+          {
+            id: 'html',
+            extensions: ['.html'],
+            tokenize: 'src/tokenizeHtml.js',
+            configuration: './languageConfiguration.json',
+          },
+        ],
       },
       {
         id: 'test-author-2.test-extension',
@@ -287,104 +277,16 @@ test.skip('contentLoaded', async () => {
         main: 'main.js',
         path: '/tmp/extensions/test-author-2.test-extension',
       },
-    ],
-  }
-  await ViewletExtensions.contentLoaded(state)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    'Viewlet.send',
-    'Extensions',
-    'setExtensions',
-    [
-      {
-        description:
-          'Provides syntax highlighting and bracket matching in HTML files.',
-        id: 'builtin.language-basics-html',
-        name: 'Language Basics HTML',
-        publisher: 'builtin',
-        state: 'installed',
-        version: 'n/a',
-        icon: '',
-      },
-      {
-        id: 'test-author-2.test-extension',
-        name: 'test-extension',
-        description: 'Test Extension',
-        publisher: 'test-author-2',
-        state: 'installed',
-        version: '0.0.1',
-        icon: '',
-      },
-    ],
-  ])
+    ]
+  })
+  const newState = await ViewletExtensions.loadContent(state)
+  expect(newState.items).toHaveLength(2)
+  expect(newState.minLineY).toBe(0)
+  expect(newState.maxLineY).toBe(1)
+  expect(newState.finalDeltaY).toBe(62)
 })
 
-// TODO sanitization is now in loadContent
-test.skip('contentLoaded - error - extension is null', async () => {
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  const state = {
-    ...ViewletExtensions.create(),
-    items: [null],
-    maxLineY: 2,
-  }
-  await ViewletExtensions.contentLoaded(state)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    'Viewlet.send',
-    'Extensions',
-    'setExtensions',
-    [
-      {
-        description: 'n/a',
-        id: 'n/a',
-        name: 'n/a',
-        publisher: 'n/a',
-        state: 'installed',
-        version: 'n/a',
-        icon: '',
-      },
-    ],
-  ])
-})
-
-// TODO sanitization is now in loadContent
-test.skip('contentLoaded - error - extension is of type array', async () => {
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  const state = {
-    ...ViewletExtensions.create(),
-    items: [[]],
-    height: 200,
-    maxLineY: 1,
-  }
-  await ViewletExtensions.contentLoaded(state)
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    909090,
-    expect.any(Number),
-    'Viewlet.send',
-    'Extensions',
-    'setExtensions',
-    [
-      {
-        description: 'n/a',
-        id: 'n/a',
-        name: 'n/a',
-        publisher: 'n/a',
-        state: 'installed',
-        version: 'n/a',
-        icon: '',
-      },
-    ],
-  ])
-})
-
-test('install', async () => {
+test.skip('install', async () => {
   const state = ViewletExtensions.create()
   // @ts-ignore
   ErrorHandling.handleError.mockImplementation(() => {})
@@ -421,7 +323,7 @@ test('install', async () => {
   expect(ErrorHandling.handleError).not.toHaveBeenCalled()
 })
 
-test('install - error', async () => {
+test.skip('install - error', async () => {
   const state = ViewletExtensions.create()
   // @ts-ignore
   ErrorHandling.handleError.mockImplementation(() => {})
@@ -451,7 +353,7 @@ test('install - error', async () => {
   )
 })
 
-test('uninstall', async () => {
+test.skip('uninstall', async () => {
   const state = ViewletExtensions.create()
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
@@ -486,7 +388,7 @@ test('uninstall', async () => {
   )
 })
 
-test('uninstall - error', async () => {
+test.skip('uninstall - error', async () => {
   const state = ViewletExtensions.create()
   // @ts-ignore
   ErrorHandling.handleError.mockImplementation(() => {})
@@ -514,7 +416,7 @@ test('uninstall - error', async () => {
   )
 })
 
-test('enable', async () => {
+test.skip('enable', async () => {
   // TODO there can only be one viewlet -> use object instead of factory function (maybe)
   const state = ViewletExtensions.create()
   // @ts-ignore
@@ -556,7 +458,7 @@ test('enable', async () => {
   expect(ErrorHandling.handleError).not.toHaveBeenCalled()
 })
 
-test('enable - error', async () => {
+test.skip('enable - error', async () => {
   const state = ViewletExtensions.create()
   // @ts-ignore
   ErrorHandling.handleError.mockImplementation(() => {})
@@ -624,25 +526,14 @@ test.skip('handleInput', async () => {
 test('handleInput - error', async () => {
   const state = ViewletExtensions.create()
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  // @ts-ignore
-  SharedProcess.invoke.mockImplementation((method, ...params) => {
-    switch (method) {
-      case 519:
-        return 'https://example.com'
-      default:
-        throw new Error('unexpected message')
-    }
-  })
-  // @ts-ignore
-  Ajax.getJson.mockImplementation(() => {
+  SearchExtensions.searchExtensions.mockImplementation(() => {
     throw new Error(
-      'Failed to request json from "https://example.com/api/extensions/search": HTTPError: Request failed with status code 404 Not Found'
+      'Failed to load extensions from marketplace: Error: Failed to request json from "https://example.com/api/extensions/search": HTTPError: Request failed with status code 404 Not Found'
     )
   })
   expect(await ViewletExtensions.handleInput(state, 'test')).toMatchObject({
     error:
-      'Failed to load extensions from marketplace: Error: Failed to request json from "https://example.com/api/extensions/search": HTTPError: Request failed with status code 404 Not Found',
+      'Error: Failed to load extensions from marketplace: Error: Failed to request json from "https://example.com/api/extensions/search": HTTPError: Request failed with status code 404 Not Found',
   })
 })
 
@@ -786,7 +677,6 @@ test('resize', () => {
   // TODO
   expect(newState).toMatchObject({
     disposed: false,
-    extensions: [],
     items: [],
     focusedIndex: -1,
     height: 200,
@@ -794,10 +684,6 @@ test('resize', () => {
     minLineY: 0,
     maxLineY: 3,
     deltaY: 0,
-    parsedValue: {
-      isLocal: true,
-      query: '',
-    },
     searchValue: '',
     suggestionState: 0,
     top: 200,
@@ -848,7 +734,7 @@ test('render - filtered extensions are different', () => {
     ],
     height: 124,
     deltaY: 62,
-    maxLineY: 10,
+    maxLineY: 1,
   }
   const newState = {
     ...oldState,
@@ -872,6 +758,9 @@ test('render - filtered extensions are different', () => {
           id: 'test-publisher.test-extension-2',
           name: 'test extension 2',
           version: '0.0.1',
+          posInSet: 1,
+          setSize: 1,
+          top: 0,
         },
       ],
     ],
