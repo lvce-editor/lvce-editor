@@ -2,10 +2,10 @@ import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
 
 const matchesParsedValue = (extension, parsedValue) => {
   if (extension && typeof extension.name === 'string') {
-    return extension.name.includes(parsedValue.query)
+    return extension.name.toLowerCase().includes(parsedValue.query)
   }
   if (extension && typeof extension.id === 'string') {
-    return extension.id.includes(parsedValue.query)
+    return extension.id.toLowerCase().includes(parsedValue.query)
   }
   return false
 }

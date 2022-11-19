@@ -107,10 +107,11 @@ export const dispose = () => {}
 // TODO debounce
 export const handleInput = async (state, value) => {
   try {
-    const { itemHeight, allExtensions } = state
+    const { allExtensions } = state
     // TODO cancel ongoing requests
     // TODO handle errors
     const items = await SearchExtensions.searchExtensions(allExtensions, value)
+    console.log({ items })
     return {
       ...state,
       items,
