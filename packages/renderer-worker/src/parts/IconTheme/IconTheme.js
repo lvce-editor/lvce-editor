@@ -146,6 +146,9 @@ const getBackgroundUrl = (extensionPath, value) => {
   if (Platform.platform === PlatformType.Web) {
     return `${extensionPath}${value}`
   }
+  if (extensionPath.startsWith('http://')) {
+    return `${extensionPath}${value}`
+  }
   // TODO what if the file in on linux and includes a backslash?
   if (extensionPath.includes('\\')) {
     const extensionUri = extensionPath.replaceAll('\\', '/')
