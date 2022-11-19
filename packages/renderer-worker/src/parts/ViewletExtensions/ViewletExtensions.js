@@ -124,7 +124,7 @@ export const handleInput = async (state, value) => {
     ErrorHandling.printError(error)
     return {
       ...state,
-      error: `Failed to load extensions from marketplace: ${error}`,
+      error: `${error}`,
     }
   }
 }
