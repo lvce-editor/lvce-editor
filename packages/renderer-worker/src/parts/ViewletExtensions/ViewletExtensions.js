@@ -61,62 +61,33 @@ const getSize = (width) => {
   return width < 180 ? ViewletSize.Small : ViewletSize.Normal
 }
 
-export const loadContent = async (state) => {
-  const { height, itemHeight, minimumSliderSize, width, searchValue } = state
-  // TODO just get local extensions on demand (not when query string is already different)
-
-  const allExtensions = await ExtensionManagement.getAllExtensions()
-  // TODO get installed extensions from extension host
-  // TODO just get local extensions on demand (not when query string is already different)
-  const items = await SearchExtensions.searchExtensions(
-    allExtensions,
-    searchValue
-  )
-
-  // const viewObjects = filterExtensions(
-  //   extensions.map(toInstalledViewObject),
-  //   state.parsedValue,
-  //   itemHeight
-  // )
-
-  const listHeight = getListHeight(state)
-  const total = items.length
-  const contentHeight = total * itemHeight
-  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
-    height,
-    contentHeight,
-    minimumSliderSize
-  )
-  const numberOfVisible = Math.ceil(listHeight / itemHeight)
-  const maxLineY = Math.min(numberOfVisible, total)
-  const finalDeltaY = Math.max(contentHeight - listHeight, 0)
-  const size = getSize(width)
-  return {
-    ...state,
-    allExtensions,
-    items,
-    maxLineY: maxLineY,
-    scrollBarHeight,
-    finalDeltaY,
-    size,
-  }
-}
-
-export const dispose = () => {}
-
 // TODO debounce
 export const handleInput = async (state, value) => {
   try {
-    const { allExtensions } = state
+    const { allExtensions, itemHeight, minimumSliderSize, height } = state
     // TODO cancel ongoing requests
     // TODO handle errors
     const items = await SearchExtensions.searchExtensions(allExtensions, value)
-    console.log({ items })
+    const listHeight = getListHeight(state)
+    const total = items.length
+    const contentHeight = total * itemHeight
+    const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
+      height,
+      contentHeight,
+      minimumSliderSize
+    )
+    const numberOfVisible = Math.ceil(listHeight / itemHeight)
+    const maxLineY = Math.min(numberOfVisible, total)
+    const finalDeltaY = Math.max(contentHeight - listHeight, 0)
     return {
       ...state,
       items,
       minLineY: 0,
       deltaY: 0,
+      allExtensions,
+      maxLineY,
+      scrollBarHeight,
+      finalDeltaY,
     }
 
     // TODO handle out of order responses (a bit complicated)
@@ -129,6 +100,18 @@ export const handleInput = async (state, value) => {
     }
   }
 }
+
+export const loadContent = async (state) => {
+  const { width, searchValue } = state
+  // TODO just get local extensions on demand (not when query string is already different)
+  const allExtensions = await ExtensionManagement.getAllExtensions()
+  const size = getSize(width)
+  return handleInput({ ...state, allExtensions, size }, searchValue)
+  // TODO get installed extensions from extension host
+  // TODO just get local extensions on demand (not when query string is already different)
+}
+
+export const dispose = () => {}
 
 // TODO lazyload this
 
