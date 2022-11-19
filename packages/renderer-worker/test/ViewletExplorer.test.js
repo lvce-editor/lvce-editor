@@ -3,6 +3,7 @@ import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
 import * as ExplorerEditingType from '../src/parts/ExplorerEditingType/ExplorerEditingType.js'
 import * as PathSeparatorType from '../src/parts/PathSeparatorType/PathSeparatorType.js'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -226,6 +227,37 @@ test('loadContent - restore from saved state', async () => {
       },
     ],
   })
+})
+
+test('loadContent - restore from saved state - error root not found', async () => {
+  const state = {
+    ...ViewletExplorer.create(),
+    root: '/test',
+  }
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test':
+        throw new NodeError(ErrorCodes.ENOENT)
+      case '/test/a':
+        return [
+          {
+            name: 'c',
+            type: DirentType.Directory,
+          },
+        ]
+      default:
+        throw new Error('file not found')
+    }
+  })
+
+  const savedState = {
+    root: '/test',
+    expandedPaths: ['/test/a'],
+  }
+  await expect(
+    ViewletExplorer.loadContent(state, savedState)
+  ).rejects.toThrowError(new Error('ENOENT'))
 })
 
 test('loadContent - restore from saved state - sort dirents', async () => {
