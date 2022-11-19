@@ -117,11 +117,10 @@ test('loadContent - error - ReferenceError', async () => {
     width: 200,
     height: 200,
   }
-  await expect(ViewletExtensions.loadContent(state)).rejects.toThrowError(
-    new Error(
-      "VError: Failed to search for extensions: ReferenceError: Cannot access 'extensions' before initialization"
-    )
-  )
+  expect(await ViewletExtensions.loadContent(state)).toMatchObject({
+    error:
+      "Error: VError: Failed to search for extensions: ReferenceError: Cannot access 'extensions' before initialization",
+  })
 })
 
 test('loadContent', async () => {
