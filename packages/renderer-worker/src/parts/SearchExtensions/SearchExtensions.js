@@ -1,4 +1,3 @@
-import * as ExtensionsMarketplace from '../ExtensionMarketplace/ExtensionMarketplace.js'
 import { VError } from '../VError/VError.js'
 
 const RE_PARAM = /@\w+/g
@@ -46,45 +45,23 @@ const parseValue = (value) => {
 }
 
 const matchesParsedValue = (extension, parsedValue) => {
-  // TODO handle error when extension.name is not of type string
-  if (extension && extension.name) {
+  if (extension && typeof extension.name === 'string') {
     return extension.name.includes(parsedValue.query)
   }
-  // TODO handle error when extension id is not of type string
-  if (extension && extension.id) {
+  if (extension && typeof extension.id === 'string') {
     return extension.id.includes(parsedValue.query)
   }
   return false
 }
 
-const filterExtensions = (extensions, parsedValue, itemHeight) => {
-  const items = []
+const getExtensionsLocal = (extensions, parsedValue) => {
+  const filteredExtensions = []
   for (const extension of extensions) {
     if (matchesParsedValue(extension, parsedValue)) {
-      items.push(extension)
+      filteredExtensions.push(extension)
     }
   }
-  // TODO make this more efficient / more functional
-  const itemsLength = items.length
-  for (let i = 0; i < itemsLength; i++) {
-    items[i].setSize = itemsLength
-    items[i].posInSet = i + 1
-    items[i].top = i * itemHeight
-  }
-  return items
-}
-
-const getExtensionsLocal = (extensions, parsedValue) => {
-  // TODO get local extensions from shared process
-  // return state.localExtensions
-  return extensions
-}
-
-const getExtensionsMarketplace = (parsedValue) => {
-  return ExtensionsMarketplace.getMarketplaceExtensions({
-    q: parsedValue.query,
-    ...parsedValue.params,
-  })
+  return filteredExtensions
 }
 
 const getExtensions = (extensions, parsedValue) => {
@@ -94,32 +71,11 @@ const getExtensions = (extensions, parsedValue) => {
   // return getExtensionsMarketplace(parsedValue)
 }
 
-const toUiExtension = (extension, index) => {
-  return {
-    name: extension.name,
-    authorId: extension.authorId,
-    version: extension.version,
-    id: extension.id,
-  }
-}
-
-const toDisplayExtensions = (extensions) => {
-  const toDisplayExtension = (extension, index) => {
-    return {
-      name: extension.name,
-      posInSet: index + 1,
-      setSize: extensions.length,
-    }
-  }
-  return extensions.map(toDisplayExtension)
-}
-
 export const searchExtensions = async (extensions, value) => {
   try {
     const parsedValue = parseValue(value)
-    const extensions = await getExtensions(extensions, parsedValue)
-    const items = filterExtensions(extensions, parsedValue, 62)
-    return items
+    const filteredExtensions = await getExtensions(extensions, parsedValue)
+    return filteredExtensions
   } catch (error) {
     throw new VError(error, `Failed to search for extensions`)
   }

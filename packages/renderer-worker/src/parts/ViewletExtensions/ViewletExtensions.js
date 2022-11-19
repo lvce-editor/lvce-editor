@@ -101,61 +101,18 @@ export const loadContent = async (state) => {
   }
 }
 
-const toInstalledViewObject = (extension) => {
-  return {
-    name: ExtensionDisplay.getName(extension),
-    publisher: ExtensionDisplay.getPublisher(extension),
-    version: ExtensionDisplay.getVersion(extension),
-    description: ExtensionDisplay.getDescription(extension),
-    // TODO type field: builtin|marketplace|external
-    // TODO should be status
-    state: 'installed',
-    id: ExtensionDisplay.getId(extension),
-    icon: ExtensionDisplay.getIcon(extension),
-  }
-}
-
-const toDisabledViewObject = (extension) => {
-  return {
-    name: extension.name,
-    publisher: extension.authorId || extension.publisher,
-    version: extension.version,
-    // TODO type field: builtin|marketplace|external
-    // TODO should be status
-    state: 'disabled',
-    id: extension.id,
-  }
-}
-
 export const dispose = () => {}
-
-const toUiExtension = (extension, index) => {
-  return {
-    name: extension.name,
-    authorId: extension.authorId,
-    version: extension.version,
-    id: extension.id,
-  }
-}
-
-const toDisplayExtensions = (extensions) => {
-  const toDisplayExtension = (extension, index) => {
-    return {
-      name: extension.name,
-      posInSet: index + 1,
-      setSize: extensions.length,
-    }
-  }
-  return extensions.map(toDisplayExtension)
-}
 
 // TODO debounce
 export const handleInput = async (state, value) => {
   try {
-    const { itemHeight } = state
+    const { itemHeight, extensions } = state
     // TODO cancel ongoing requests
     // TODO handle errors
-    const extensions = await SearchExtensions.searchExtensions(value)
+    const filteredExtensions = await SearchExtensions.searchExtensions(
+      extensions,
+      value
+    )
     const items = []
     return {
       ...state,
