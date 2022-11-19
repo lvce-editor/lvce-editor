@@ -1978,6 +1978,54 @@ test('handleArrowLeft - scroll up', () => {
   expect(newState.deltaY).toBe(0)
 })
 
+test('handleArrowLeft - symlink to file', async () => {
+  const state = {
+    ...ViewletExplorer.create(),
+    root: '/home/test-user/test-path',
+    focusedIndex: 3,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    items: [
+      {
+        depth: 1,
+        posInSet: 1,
+        setSize: 3,
+        name: 'index.css',
+        path: '/index.css',
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        posInSet: 2,
+        name: 'index.html',
+        path: '/index.html',
+        setSize: 3,
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        posInSet: 3,
+        setSize: 3,
+        name: 'test-folder',
+        path: '/test-folder',
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 2,
+        posInSet: 1,
+        setSize: 1,
+        name: 'index.js',
+        path: '/test-folder/index.js',
+        type: DirentType.SymLinkFile,
+      },
+    ],
+  }
+  expect(ViewletExplorer.handleArrowLeft(state)).toMatchObject({
+    focusedIndex: 2,
+  })
+})
+
 test('handleArrowLeft - nested file - first child', async () => {
   const state = {
     ...ViewletExplorer.create(),
