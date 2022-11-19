@@ -2,10 +2,7 @@ const SearchExtensionsMarketplace = await import(
   '../src/parts/SearchExtensionsMarketplace/SearchExtensionsMarketplace.js'
 )
 
-test('handleInput - error', async () => {
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-
+test.skip('getExtensions - error', async () => {
   // @ts-ignore
   Ajax.getJson.mockImplementation(() => {
     throw new Error(
