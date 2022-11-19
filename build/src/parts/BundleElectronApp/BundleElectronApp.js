@@ -41,7 +41,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch }) => {
   return hash
 }
 
-const downloadElectron = async ({ arch, electronVersion }) => {
+const downloadElectron = async ({ platform, arch, electronVersion }) => {
   const outDir = Path.join(
     Root.root,
     'build',
@@ -52,7 +52,7 @@ const downloadElectron = async ({ arch, electronVersion }) => {
   await DownloadElectron.downloadElectron({
     electronVersion,
     outDir,
-    platform: 'linux',
+    platform,
     arch,
   })
 }
@@ -284,6 +284,7 @@ export const build = async () => {
   await downloadElectron({
     arch,
     electronVersion,
+    platform: process.platform,
   })
   console.timeEnd('downloadElectron')
 
