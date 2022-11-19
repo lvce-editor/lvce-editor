@@ -10,6 +10,7 @@
   },
   "homepage": "@@HOMEPAGE@@",
   "build": {
+    "productName": "@@PRODUCT_NAME@@",
     "asar": false,
     "includeSubNodeModules": true,
     "electronVersion": "@@ELECTRON_VERSION@@",
