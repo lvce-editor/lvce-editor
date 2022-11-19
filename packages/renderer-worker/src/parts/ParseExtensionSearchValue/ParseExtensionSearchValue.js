@@ -37,10 +37,11 @@ export const parseValue = (value) => {
     parameters.enabled ||
     parameters.builtin ||
     parameters.disabled ||
-    parameters.outdated
+    parameters.outdated ||
+    parameters.installed
   return {
     query: replaced,
+    ...parameters,
     isLocal,
-    params: parameters,
   }
 }

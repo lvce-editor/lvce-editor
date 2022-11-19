@@ -3,7 +3,7 @@ import * as ParseExtensionSearchValue from '../src/parts/ParseExtensionSearchVal
 test('parseValue - @installed', () => {
   expect(ParseExtensionSearchValue.parseValue('@installed abc')).toMatchObject({
     installed: true,
-    query: 'abc',
+    query: ' abc',
     isLocal: true,
   })
 })
@@ -11,7 +11,7 @@ test('parseValue - @installed', () => {
 test('parseValue - @enabled', () => {
   expect(ParseExtensionSearchValue.parseValue('@enabled abc')).toMatchObject({
     enabled: true,
-    query: 'abc',
+    query: ' abc',
     isLocal: true,
   })
 })
@@ -19,7 +19,7 @@ test('parseValue - @enabled', () => {
 test('parseValue - @disabled', () => {
   expect(ParseExtensionSearchValue.parseValue('@disabled abc')).toMatchObject({
     disabled: true,
-    query: 'abc',
+    query: ' abc',
     isLocal: true,
   })
 })
