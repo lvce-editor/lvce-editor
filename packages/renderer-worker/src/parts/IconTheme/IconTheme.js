@@ -146,6 +146,28 @@ const getIconThemeCss2 = (iconTheme) => {
   return rulesCss
 }
 
+export const setIconTheme = async (iconThemeId) => {
+  const iconTheme = await getIconThemeJson(iconThemeId)
+  state.iconTheme = iconTheme.json
+  state.extensionPath = iconTheme.extensionPath
+  const iconThemeCss = getIconThemeCss2(iconTheme)
+
+  const instances = ViewletStates.getAllInstances()
+  // TODO have one recalculate style and one paint
+  for (const [key, value] of Object.entries(instances)) {
+    const { factory, state } = value
+    if (factory.handleIconThemeChange) {
+      const newState = factory.handleIconThemeChange(state)
+      await Viewlet.setState(factory.name, newState)
+    }
+  }
+  await RendererProcess.invoke(
+    /* Css.setInlineStyle */ 'Css.setInlineStyle',
+    /* id */ 'ContributedIconTheme',
+    /* css */ iconThemeCss
+  )
+}
+
 export const hydrate = async () => {
   try {
     // TODO icon theme css can be really large (3000+ lines)
@@ -163,25 +185,7 @@ export const hydrate = async () => {
     // )
 
     const iconThemeId = Preferences.get('icon-theme') || 'vscode-icons'
-    const iconTheme = await getIconThemeJson(iconThemeId)
-    state.iconTheme = iconTheme.json
-    state.extensionPath = iconTheme.extensionPath
-    const iconThemeCss = getIconThemeCss2(iconTheme)
-
-    const instances = ViewletStates.getAllInstances()
-    // TODO have one recalculate style and one paint
-    for (const [key, value] of Object.entries(instances)) {
-      const { factory, state } = value
-      if (factory.handleIconThemeChange) {
-        const newState = factory.handleIconThemeChange(state)
-        await Viewlet.setState(factory.name, newState)
-      }
-    }
-    await RendererProcess.invoke(
-      /* Css.setInlineStyle */ 'Css.setInlineStyle',
-      /* id */ 'ContributedIconTheme',
-      /* css */ iconThemeCss
-    )
+    await setIconTheme(iconThemeId)
   } catch (error) {
     if (Workspace.isTest()) {
       // ignore
