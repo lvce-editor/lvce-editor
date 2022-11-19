@@ -13,11 +13,10 @@ test('sample.icon-theme-error-not-found', async () => {
 
   // act
   await IconTheme.setIconTheme('test-icon-theme')
-  // await Main.openUri(`${tmpDir}/test.xyz`)
 
-  // // assert
-  // const token = Locator('.Token')
-  // await expect(token).toHaveClass('Xyz')
+  // assert
+  // TODO check that warning message is printed to console
+  // warning message should say that icon theme at path <path> could not be found
 })
 
 export {}

@@ -13,11 +13,10 @@ test('sample.icon-theme-error-invalid-json', async () => {
 
   // act
   await IconTheme.setIconTheme('test-icon-theme')
-  // await Main.openUri(`${tmpDir}/test.xyz`)
 
-  // // assert
-  // const token = Locator('.Token')
-  // await expect(token).toHaveClass('Xyz')
+  // assert
+  // TODO check that warning message is printed to console
+  // warning message should contain babel code frame with json error
 })
 
 export {}
