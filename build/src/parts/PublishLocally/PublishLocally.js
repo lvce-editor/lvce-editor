@@ -1,12 +1,12 @@
+import * as os from 'node:os'
 import * as Exec from '../Exec/Exec.js'
-import * as Root from '../Root/Root.js'
+import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
 import * as ReadDir from '../ReadDir/ReadDir.js'
-import * as Mkdir from '../Mkdir/Mkdir.js'
-import * as WriteFile from '../WriteFile/WriteFile.js'
-import * as os from 'node:os'
-import { rm } from 'node:fs/promises'
+import * as Remove from '../Remove/Remove.js'
+import * as Root from '../Root/Root.js'
 import * as Verdaccio from '../Verdaccio/Verdaccio.js'
+import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const registryUrl = 'http://localhost:4873'
 
@@ -41,7 +41,8 @@ const publishPackages = async () => {
 const installPackagesLocally = async () => {
   const tmpDir = Path.join(os.tmpdir(), 'lvce-local-packages-test')
   await Mkdir.mkdir(tmpDir)
-  await rm(tmpDir, { force: true, recursive: true })
+  await Remove.remove(Path.join(tmpDir, 'node_modules'))
+  await Remove.remove(Path.join(tmpDir, 'package.json'))
   await WriteFile.writeFile({
     to: Path.join(tmpDir, 'package.json'),
     content: '{}',
