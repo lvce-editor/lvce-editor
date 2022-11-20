@@ -38,6 +38,10 @@ const getBuildModule = (target) => {
       return import('./parts/BuildEditor/BuildEditor.js')
     case 'server':
       return import('./parts/BuildServer/BuildServer.js')
+    case 'electron-windows-installer':
+      return import(
+        './parts/ElectronWindowsInstaller/ElectronWindowsInstaller.js'
+      )
     default:
       console.info(`unknown target "${target}"`)
       process.exit(1)

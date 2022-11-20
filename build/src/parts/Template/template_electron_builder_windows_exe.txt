@@ -18,7 +18,7 @@
       "target": [{ "target": "nsis" }]
     },
     "nsis": {
-      "artifactName": "@@NAME@@Setup.${ext}"
+      "artifactName": "@@NAME@@-setup.${ext}"
     }
   }
 }

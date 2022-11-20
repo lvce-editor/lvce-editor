@@ -9,7 +9,7 @@ Visual Studio and Visual Studio build tools must be installed.
 ## Build
 
 ```sh
-node bin/build.js --target=electron-builder-windows-exe --force
+node bin/build.js --target=electron-windows-installer --force
 ```
 
 ## Try out
