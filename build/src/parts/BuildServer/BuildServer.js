@@ -760,6 +760,7 @@ const setVersions = async () => {
     'build/.tmp/server/extension-host-helper-process/package.json',
   ]
   for (const file of files) {
+    delete file['xo']
     const json = await JsonFile.readJson(file)
     if (json.dependencies && json.dependencies['@lvce-editor/shared-process']) {
       json.dependencies['@lvce-editor/shared-process'] = gitTag
