@@ -42,7 +42,7 @@ const handleMessageError = (message) => {
   Callback.reject(message.id, restoredError)
 }
 
-const handleMessageMethod = async (message) => {
+const handleMessageMethod = async (message, event) => {
   if (message.method === 'ElectronMessagePort.create') {
     const IpcParentWithElectron = await import(
       '../IpcParent/IpcParentWithElectron.js'
@@ -50,19 +50,26 @@ const handleMessageMethod = async (message) => {
     const ipc = await IpcParentWithElectron.create({
       type: 'extension-host-helper-process',
     })
-    console.log({ ipc })
+    event.target.postMessage(
+      {
+        jsonrpc: '2.0',
+        id: message.id,
+        result: ipc._port,
+      },
+      [ipc._port]
+    )
+    console.log({ ipc, event, target: event.target })
   }
-  console.log({ message })
 }
 
-const handleMessage = (message) => {
+const handleMessage = (message, event) => {
   if (message.id) {
     if (isResultMessage(message)) {
       handleMessageResult(message)
     } else if (isErrorMessage(message)) {
       handleMessageError(message)
     } else if ('method' in message) {
-      handleMessageMethod(message)
+      handleMessageMethod(message, event)
     } else {
       throw new JsonRpcError('unexpected message type')
     }

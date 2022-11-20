@@ -1,7 +1,7 @@
 import * as Callback from '../Callback/Callback.js'
 
-export const create = () => {
-  return new Promise((resolve, reject) => {
+export const create = async () => {
+  const port = await new Promise((resolve, reject) => {
     const id = Callback.register(resolve, reject)
     const message = {
       jsonrpc: '2.0',
@@ -11,4 +11,5 @@ export const create = () => {
     }
     postMessage(message)
   })
+  console.log({ port })
 }
