@@ -1,11 +1,11 @@
 /* istanbul ignore file */
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
-import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as IpcParent from '../IpcParent/IpcParent.js'
-import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as SharedProcessIpc from '../SharedProcessIpc/SharedProcessIpc.js'
 
 // TODO duplicate code with platform module
 /**
@@ -94,26 +94,21 @@ export const handleMessageFromSharedProcess = async (message) => {
   }
 }
 
-const getIpc = () => {
+const getIpcMethod = () => {
   switch (platform) {
     case 'web':
     case 'remote':
-      return IpcParent.create({
-        method: IpcParentType.WebSocket,
-        protocol: 'lvce.shared-process',
-      })
+      return IpcParentType.WebSocket
     case 'electron':
-      return IpcParent.create({
-        method: IpcParentType.ElectronMessagePort,
-        type: 'shared-process',
-      })
+      return IpcParentType.ElectronMessagePort
     default:
       throw new Error('unsupported platform')
   }
 }
 
 export const listen = async () => {
-  const ipc = await getIpc()
+  const ipcMethod = await getIpcMethod()
+  const ipc = await SharedProcessIpc.listen(ipcMethod)
   ipc.onmessage = handleMessageFromSharedProcess
   state.ipc = ipc
 }
