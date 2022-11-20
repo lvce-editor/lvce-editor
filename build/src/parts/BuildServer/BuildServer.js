@@ -711,6 +711,25 @@ const copyExtensionHostFiles = async () => {
   })
 }
 
+const copyExtensionHostHelperProcessFiles = async () => {
+  await Copy.copy({
+    from: 'packages/extension-host-helper-process',
+    to: 'build/.tmp/server/extension-host-helper-process',
+    ignore: [
+      'tsconfig.json',
+      'node_modules',
+      'distmin',
+      'example',
+      'test',
+      'package-lock.json',
+    ],
+  })
+  await Copy.copyFile({
+    from: 'LICENSE',
+    to: 'build/.tmp/server/extension-host-helper-process/LICENSE',
+  })
+}
+
 const copyPtyHostFiles = async () => {
   await Copy.copy({
     from: 'packages/pty-host',
@@ -738,6 +757,7 @@ const setVersions = async () => {
     'build/.tmp/server/pty-host/package.json',
     'build/.tmp/server/server/package.json',
     'build/.tmp/server/shared-process/package.json',
+    'build/.tmp/server/extension-host-helper-process/package.json',
   ]
   for (const file of files) {
     const json = await JsonFile.readJson(file)
@@ -839,6 +859,10 @@ export const build = async () => {
   console.time('copyExtensionHostFiles')
   await copyExtensionHostFiles()
   console.timeEnd('copyExtensionHostFiles')
+
+  console.time('copyExtensionHostHelperProcessFiles')
+  await copyExtensionHostHelperProcessFiles()
+  console.timeEnd('copyExtensionHostHelperProcessFiles')
 
   console.time('copyPtyHostFiles')
   await copyPtyHostFiles()
