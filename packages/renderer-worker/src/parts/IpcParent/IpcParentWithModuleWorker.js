@@ -89,7 +89,7 @@ export const create = async ({ url, name }) => {
             // TODO why are some events not instance of message event?
             if (event instanceof MessageEvent) {
               const message = event.data
-              listener(message)
+              listener(message, event)
             } else {
               listener(event)
             }

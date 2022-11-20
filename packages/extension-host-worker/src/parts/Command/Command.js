@@ -1,17 +1,17 @@
 import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
+import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
 import * as ExtensionHostExtension from '../ExtensionHostExtension/ExtensionHostExtension.js'
-import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
+import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
+import * as ExtensionHostMockExec from '../ExtensionHostMockExec/ExtensionHostMockExec.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
+import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.js'
 import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/ExtensionHostTabCompletion.js'
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
-import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
-import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
+import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
-import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
-import * as ExtensionHostSourceControl from '../ExtensionHostSourceControl/ExtensionHostSourceControl.js'
 
 const getFn = (method) => {
   switch (method) {
@@ -50,6 +50,8 @@ const getFn = (method) => {
       return ExtensionHostSourceControl.getChangedFiles
     case 'ExtensionHostFormatting.executeFormattingProvider':
       return ExtensionHostFormatting.executeFormattingProvider
+    case 'ExtensionHostMockExec.mockExec':
+      return ExtensionHostMockExec.mockExec
     default:
       throw new Error(`[extension-host-worker] method not found: ${method}`)
   }

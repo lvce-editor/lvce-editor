@@ -15,7 +15,7 @@ export const state = {
 
 const createIpc = async () => {
   return IpcParent.create({
-    method: IpcParentType.Electron,
+    method: IpcParentType.ElectronMessagePort,
     type: 'electron-process',
   })
 }

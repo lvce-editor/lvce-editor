@@ -1,10 +1,8 @@
-import * as Command from '../Command/Command.js'
-import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
-import * as Languages from '../Languages/Languages.js'
 import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
+import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
 
 /**
- * @enum
+ * @enum {number}
  */
 const ExtensionHostState = {
   Off: 0,
@@ -43,7 +41,7 @@ export const startExtensionHost = async (name, ipcType) => {
   if (state.extensionHosts[name]) {
     return state.extensionHosts[name]
   }
-  const promise = ExtensionHostIpc.listen(ipcType)
+  const promise = ExtensionHostIpc.listen(ipcType).then(ExtensionHostRpc.listen)
   state.pendingIpcs[name] = promise
   const ipc = await promise
   delete state.pendingIpcs[name]

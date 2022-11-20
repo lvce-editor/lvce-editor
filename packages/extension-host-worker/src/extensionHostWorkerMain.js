@@ -3,7 +3,7 @@ import * as IpcChild from './parts/IpcChild/IpcChild.js'
 import * as Rpc from './parts/Rpc/Rpc.js'
 
 const main = async () => {
-  globalThis.vscode = Api.create()
+  globalThis.vscode = Api.api
   const ipc = await IpcChild.listen({ method: IpcChild.Methods.Auto })
   Rpc.listen(ipc)
 }
