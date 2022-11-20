@@ -69,5 +69,5 @@ jobs:
         if: matrix.os == 'ubuntu-22.04'
         run: node build/bin/build.js --target=electron-deb --use-installed-electron-version --force # --force workaround for issue with node-pty
       - name: Build Electron App (exe)
-        if: false
-        run: node build/bin/build.js --target=electron-builder-windows-exe
+        if: matrix.os == 'windows-2022'
+        run: node build/bin/build.js --target=electron-builder-windows-exe --use-installed-electron-version --force # --force workaround for issue with node-pty
