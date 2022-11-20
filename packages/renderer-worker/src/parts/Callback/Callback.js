@@ -1,17 +1,18 @@
 import * as Assert from '../Assert/Assert.js'
+import * as Id from '../Id/Id.js'
 
 export const state = {
   callbacks: Object.create(null),
   onceListeners: new Set(),
-  id: 2,
 }
 
 export const register = (resolve, reject) => {
-  state.callbacks[++state.id] = {
+  const id = Id.create()
+  state.callbacks[id] = {
     resolve,
     reject,
   }
-  return state.id
+  return id
 }
 
 export const unregister = (id) => {
@@ -45,6 +46,7 @@ export const reject = (id, error) => {
     return
   }
   state.callbacks[id].reject(error)
+  delete state.callbacks[id]
 }
 
 export const isAllEmpty = () => {

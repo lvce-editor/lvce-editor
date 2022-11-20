@@ -87,8 +87,14 @@ const startSynching = async (extensionHost) => {
     handleEditorLanguageChange
   )
 
-  const handleWorkspaceChange = (workspacePath) => {
-    return extensionHost.ipc.invoke('Workspace.setWorkspacePath', workspacePath)
+  const handleWorkspaceChange = async (workspacePath) => {
+    await extensionHost.ipc.invoke('Workspace.setWorkspacePath', workspacePath)
+    if (Workspace.state.mockExec) {
+      await extensionHost.ipc.invoke(
+        'ExtensionHostMockExec.mockExec',
+        `${Workspace.state.mockExec}`
+      )
+    }
   }
 
   const handlePreferencesChange = () => {
@@ -103,7 +109,7 @@ const startSynching = async (extensionHost) => {
   if (editorInstance) {
     await handleEditorCreate(editorInstance.state)
   }
-  await handleWorkspaceChange(Workspace.state.workspacePath)
+  await handleWorkspaceChange(Workspace.state.workspacePath, Workspace.isTest())
 }
 
 const actuallyActivateByEvent = async (event) => {

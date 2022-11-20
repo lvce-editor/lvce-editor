@@ -5,6 +5,7 @@ const locations = [
   'package-lock.json',
   'build/package-lock.json',
   'packages/extension-host/package-lock.json',
+  'packages/extension-host-helper-process/package-lock.json',
   'packages/extension-host-worker-tests/package-lock.json',
   'packages/pty-host/package-lock.json',
   'packages/main-process/package-lock.json',

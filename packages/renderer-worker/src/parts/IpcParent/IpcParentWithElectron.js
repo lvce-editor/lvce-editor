@@ -40,5 +40,6 @@ export const create = async (options) => {
     send(message) {
       port.postMessage(message)
     },
+    _port: port,
   }
 }

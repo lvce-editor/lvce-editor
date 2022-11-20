@@ -87,3 +87,13 @@ exports.getPreloadUrl = () => {
 exports.getChromeExtensionsPath = () => {
   return join(dataDir, 'electron-browser-view-chrome-extensions')
 }
+
+exports.getExtensionHostHelperProcessPath = () => {
+  return join(
+    Root.root,
+    'packages',
+    'extension-host-helper-process',
+    'src',
+    'extensionHostHelperProcessMain.js'
+  )
+}
