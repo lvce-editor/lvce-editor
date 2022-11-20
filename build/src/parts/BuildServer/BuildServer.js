@@ -763,6 +763,9 @@ const setVersions = async () => {
     const json = await JsonFile.readJson(file)
     delete json['xo']
     delete json['scripts']
+    if (json['optionalDependencies']) {
+      delete json['optionalDependencies']['electron-clipboard-ex']
+    }
     if (json.dependencies && json.dependencies['@lvce-editor/shared-process']) {
       json.dependencies['@lvce-editor/shared-process'] = gitTag
     }
