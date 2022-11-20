@@ -763,6 +763,7 @@ const setVersions = async () => {
     const json = await JsonFile.readJson(file)
     delete json['xo']
     delete json['scripts']
+    delete json['devDependencies']
     if (json['optionalDependencies']) {
       delete json['optionalDependencies']['electron-clipboard-ex']
     }
