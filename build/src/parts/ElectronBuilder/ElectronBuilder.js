@@ -70,7 +70,7 @@ const getFinalFileName = (config, version) => {
     case 'electron_builder_deb':
       return `build/.tmp/electron-builder/dist/${Product.applicationName}_${version}_amd64.deb`
     case 'electron_builder_windows_exe':
-      return `build/.tmp/electron-builder/dist/${Product.nameShort} Setup ${version}.exe`
+      return `build/.tmp/electron-builder/dist/${Product.applicationName}Setup.exe`
     case 'electron_builder_snap':
       return `build/.tmp/electron-builder/dist/${Product.applicationName}_${version}_amd64.snap`
     case 'electron_builder_mac':
@@ -87,7 +87,7 @@ const getReleaseFileName = (config) => {
     case 'electron_builder_deb':
       return `${Product.applicationName}-amd64.deb`
     case 'electron_builder_windows_exe':
-      return `${Product.nameShort} Setup.exe`
+      return `${Product.applicationName}Setup.exe`
     case 'electron_builder_snap':
       return `${Product.applicationName}.snap`
     case 'electron_builder_mac':

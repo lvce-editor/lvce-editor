@@ -16,6 +16,9 @@
     "electronVersion": "@@ELECTRON_VERSION@@",
     "win": {
       "target": [{ "target": "nsis" }]
+    },
+    "nsis": {
+      "artifactName": "@@NAME@@Setup.${ext}"
     }
   }
 }
