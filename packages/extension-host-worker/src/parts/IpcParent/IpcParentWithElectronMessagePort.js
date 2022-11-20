@@ -17,7 +17,6 @@ export const create = async () => {
   const port = await getPort()
   let handleMessage
   return {
-    _listener: () => {},
     get onmessage() {
       return handleMessage
     },
