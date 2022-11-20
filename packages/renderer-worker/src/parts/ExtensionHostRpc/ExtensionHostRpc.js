@@ -78,7 +78,7 @@ const handleMessage = (message, event) => {
   }
 }
 
-export const listen = async (ipc) => {
+export const listen = (ipc) => {
   // TODO maybe pass handleMessage as paramter to make code more functional
   ipc.onmessage = handleMessage
   return {

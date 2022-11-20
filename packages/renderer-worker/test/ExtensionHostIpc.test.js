@@ -1,5 +1,7 @@
 import { jest } from '@jest/globals'
 import { JsonRpcError } from '../src/parts/Errors/Errors.js'
+import * as ExtensionHostRpc from '../src/parts/ExtensionHostRpc/ExtensionHostRpc.js'
+import * as IpcParentType from '../src/parts/IpcParentType/IpcParentType.js'
 import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 
@@ -7,23 +9,18 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/IpcParent/IpcParentWithModuleWorker.js',
-  () => {
-    return {
-      create: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/IpcParent/IpcParent.js', () => {
+  return {
+    create: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 
 const ExtensionHostIpc = await import(
   '../src/parts/ExtensionHostIpc/ExtensionHostIpc.js'
 )
-const ExtensionHostIpcWithModuleWorker = await import(
-  '../src/parts/IpcParent/IpcParentWithModuleWorker.js'
-)
+const IpcParent = await import('../src/parts/IpcParent/IpcParent.js')
 
 test('listen - error - unexpected extension host type', async () => {
   await expect(ExtensionHostIpc.listen(123)).rejects.toThrowError(
@@ -33,7 +30,7 @@ test('listen - error - unexpected extension host type', async () => {
 
 test.only('handleMessage - error - method not found', async () => {
   // @ts-ignore
-  ExtensionHostIpcWithModuleWorker.create.mockImplementation(() => {
+  IpcParent.create.mockImplementation(() => {
     let _onmessage
     return {
       get onmessage() {
@@ -58,11 +55,10 @@ test.only('handleMessage - error - method not found', async () => {
       },
     }
   })
-  const ipc = await ExtensionHostIpc.listen(
-    ExtensionHostIpc.Methods.ModuleWebWorker
-  )
+  const ipc = await ExtensionHostIpc.listen(IpcParentType.ModuleWorker)
+  const rpc = ExtensionHostRpc.listen(ipc)
   await expect(
-    ipc.invoke('ExtensionHostTypeDefinition.executeTypeDefinitionProvider')
+    rpc.invoke('ExtensionHostTypeDefinition.executeTypeDefinitionProvider')
   ).rejects.toThrowError(
     new JsonRpcError(
       'method not found: ExtensionHostTypeDefinition.executeTypeDefinitionProvider'
