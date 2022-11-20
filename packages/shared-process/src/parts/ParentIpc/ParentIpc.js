@@ -62,8 +62,8 @@ const handleWebSocketExtensionHost = async (message, handle) => {
   // console.log(rpc)
 }
 
-const handleWebSocketExtensionHostHelperProcess = (message, handle) => {
-  const ipc = ExtensionHostHelperProcessIpc.create()
+const handleWebSocketExtensionHostHelperProcess = async (message, handle) => {
+  const ipc = await ExtensionHostHelperProcessIpc.create()
   ipc._process.send(message, handle)
 }
 

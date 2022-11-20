@@ -3,4 +3,8 @@ import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-export const extensionHostPath = join(__dirname, 'src', 'extensionHostMain.js')
+export const extensionHostHelperProcessPath = join(
+  __dirname,
+  'src',
+  'extensionHostHelperProcessMain.js'
+)

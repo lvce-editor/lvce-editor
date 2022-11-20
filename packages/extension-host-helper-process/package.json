@@ -2,7 +2,7 @@
   "name": "extension-host-helper-process",
   "version": "0.0.0-dev",
   "description": "",
-  "main": "src/extensionHostHelperProcessMain.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
