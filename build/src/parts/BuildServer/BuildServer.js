@@ -770,6 +770,12 @@ const setVersions = async () => {
     if (json.dependencies && json.dependencies['@lvce-editor/extension-host']) {
       json.dependencies['@lvce-editor/extension-host'] = gitTag
     }
+    if (
+      json.dependencies &&
+      json.dependencies['@lvce-editor/extension-host-helper-process']
+    ) {
+      json.dependencies['@lvce-editor/extension-host-helper-process'] = gitTag
+    }
     if (json.version) {
       json.version = gitTag
     }
