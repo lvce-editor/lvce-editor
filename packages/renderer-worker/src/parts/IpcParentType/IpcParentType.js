@@ -1,4 +1,4 @@
-export const Electron = 1
+export const ElectronMessagePort = 1
 export const MessagePort = 2
 export const ModuleWorker = 3
 export const ReferencePort = 4

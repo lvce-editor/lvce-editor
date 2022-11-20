@@ -104,7 +104,7 @@ const getIpc = () => {
       })
     case 'electron':
       return IpcParent.create({
-        method: IpcParentType.Electron,
+        method: IpcParentType.ElectronMessagePort,
         type: 'shared-process',
       })
     default:

@@ -1,9 +1,7 @@
 import * as Callback from '../Callback/Callback.js'
 import { JsonRpcError } from '../Errors/Errors.js'
-import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
-import * as Platform from '../Platform/Platform.js'
 
 const isResultMessage = (message) => {
   return 'result' in message
@@ -73,11 +71,12 @@ const handleMessage = (message) => {
   }
 }
 
-export const listen = (method) => {
-  return IpcParent.create({
-    method,
-    type: 'extension-host',
-    name: 'Extension Host',
-    url: Platform.getExtensionHostWorkerUrl(),
-  })
+export const listen = async (ipc) => {
+  // TODO maybe pass handleMessage as paramter to make code more functional
+  ipc.onmessage = handleMessage
+  return {
+    invoke(method, ...params) {
+      return JsonRpc.invoke(ipc, method, ...params)
+    },
+  }
 }

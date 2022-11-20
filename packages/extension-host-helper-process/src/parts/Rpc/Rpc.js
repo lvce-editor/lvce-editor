@@ -42,4 +42,7 @@ export const listen = (ipc) => {
     }
   }
   ipc.on('message', handleMessage)
+  if (process.send) {
+    process.send('ready')
+  }
 }

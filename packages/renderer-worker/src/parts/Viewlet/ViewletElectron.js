@@ -46,7 +46,7 @@ export const openElectronQuickPick = async (...args) => {
     height
   )
   const ipc = await IpcParent.create({
-    method: IpcParentType.Electron,
+    method: IpcParentType.ElectronMessagePort,
     type: 'quickpick',
   })
   const type = args[0]

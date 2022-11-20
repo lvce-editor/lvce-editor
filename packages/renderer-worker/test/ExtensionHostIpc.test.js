@@ -8,7 +8,7 @@ beforeEach(() => {
 })
 
 jest.unstable_mockModule(
-  '../src/parts/ExtensionHostIpc/ExtensionHostIpcWithModuleWorker.js',
+  '../src/parts/IpcParent/IpcParentWithModuleWorker.js',
   () => {
     return {
       create: jest.fn(() => {
@@ -22,7 +22,7 @@ const ExtensionHostIpc = await import(
   '../src/parts/ExtensionHostIpc/ExtensionHostIpc.js'
 )
 const ExtensionHostIpcWithModuleWorker = await import(
-  '../src/parts/ExtensionHostIpc/ExtensionHostIpcWithModuleWorker.js'
+  '../src/parts/IpcParent/IpcParentWithModuleWorker.js'
 )
 
 test('listen - error - unexpected extension host type', async () => {
