@@ -12,10 +12,6 @@ const getSimpleList = ($ActivityBar) => {
   return Array.from($ActivityBar.children).map(getTitle)
 }
 
-test('name', () => {
-  expect(ViewletActivityBar.name).toBe('ActivityBar')
-})
-
 test('create', () => {
   const state = ViewletActivityBar.create()
   ViewletActivityBar.setItems(state, [

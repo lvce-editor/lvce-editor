@@ -14,4 +14,4 @@ node bin/build.js --target=electron-builder-windows-exe --force
 
 ## Try out
 
-Install the exe at `.tmp/releases/lvce-oss.exe`
+Install the exe at `.tmp/releases/lvce-oss.exe` by opening it in the windows file explorer, right clicking and selecting "Run as Administrator"

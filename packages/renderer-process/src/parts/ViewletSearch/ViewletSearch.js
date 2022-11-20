@@ -5,9 +5,6 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
 
-// TODO name export not necessary
-export const name = 'Search'
-
 export const create = () => {
   const $ViewletSearchInput = InputBox.create()
   $ViewletSearchInput.placeholder = 'Search'

@@ -26,10 +26,6 @@ const ViewletLocations = await import(
   '../src/parts/ViewletLocations/ViewletLocations.js'
 )
 
-test('name', () => {
-  expect(ViewletLocations.name).toBe('Locations')
-})
-
 test('create', () => {
   const state = ViewletLocations.create()
   expect(state).toBeDefined()

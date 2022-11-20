@@ -1,6 +1,5 @@
 import VError from 'verror'
 import * as _ws from 'ws'
-import * as Assert from '../Assert/Assert.js'
 
 // workaround for jest or node bug
 const WebSocketServer = _ws.WebSocketServer
@@ -8,8 +7,7 @@ const WebSocketServer = _ws.WebSocketServer
   : // @ts-ignore
     _ws.default.WebSocketServer
 
-export const listen = async (processIpc) => {
-  Assert.object(processIpc)
+export const listen = async (processIpc = process) => {
   console.log('[extension host] listening for websocket')
 
   const webSocketServer = new WebSocketServer({
@@ -29,9 +27,10 @@ export const listen = async (processIpc) => {
       processIpc.off('message', handleFirstMessage)
     }
     processIpc.on('message', handleFirstMessage)
-    processIpc.send('ready')
+    if (processIpc.send) {
+      processIpc.send('ready')
+    }
   })
-
   console.log('[extension host] got socket')
   const webSocket = await new Promise((resolve, reject) => {
     const upgradeCallback = (webSocket) => {

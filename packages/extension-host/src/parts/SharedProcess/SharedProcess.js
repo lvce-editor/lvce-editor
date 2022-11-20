@@ -55,7 +55,7 @@ const shouldPrintError = (error) => {
 
 export const listen = async (InternalCommand) => {
   const ipc = await IpcChild.listen({
-    method: IpcChildType.Auto,
+    method: IpcChildType.Auto(),
   })
   const handleMessage = async (message) => {
     if (Array.isArray(message)) {

@@ -4,10 +4,6 @@
 
 import * as ViewletProblems from '../src/parts/ViewletProblems/ViewletProblems.js'
 
-test('name', () => {
-  expect(ViewletProblems.name).toBe('Problems')
-})
-
 test('create', () => {
   const state = ViewletProblems.create()
   expect(state).toBeDefined()

@@ -4,8 +4,6 @@ import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 
-export const name = 'List'
-
 const handleWheel = (event) => {
   switch (event.deltaMode) {
     case WheelEventType.DomDeltaLine:

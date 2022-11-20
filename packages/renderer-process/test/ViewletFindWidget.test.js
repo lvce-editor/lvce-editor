@@ -3,10 +3,6 @@
  */
 import * as ViewletFindWidget from '../src/parts/ViewletFindWidget/ViewletFindWidget.js'
 
-test('name', () => {
-  expect(ViewletFindWidget.name).toBe('FindWidget')
-})
-
 test('create', () => {
   const state = ViewletFindWidget.create()
   const { $Viewlet } = state

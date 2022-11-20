@@ -3,6 +3,7 @@ import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import { CancelationError } from '../src/parts/Errors/CancelationError.js'
 import * as ExplorerEditingType from '../src/parts/ExplorerEditingType/ExplorerEditingType.js'
 import * as PathSeparatorType from '../src/parts/PathSeparatorType/PathSeparatorType.js'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -226,6 +227,37 @@ test('loadContent - restore from saved state', async () => {
       },
     ],
   })
+})
+
+test('loadContent - restore from saved state - error root not found', async () => {
+  const state = {
+    ...ViewletExplorer.create(),
+    root: '/test',
+  }
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test':
+        throw new NodeError(ErrorCodes.ENOENT)
+      case '/test/a':
+        return [
+          {
+            name: 'c',
+            type: DirentType.Directory,
+          },
+        ]
+      default:
+        throw new Error('file not found')
+    }
+  })
+
+  const savedState = {
+    root: '/test',
+    expandedPaths: ['/test/a'],
+  }
+  await expect(
+    ViewletExplorer.loadContent(state, savedState)
+  ).rejects.toThrowError(new Error('ENOENT'))
 })
 
 test('loadContent - restore from saved state - sort dirents', async () => {
@@ -913,7 +945,7 @@ test('handleClick - symlink - file', async () => {
     items: [
       {
         name: 'index.css',
-        type: DirentType.SymlinkFile,
+        type: DirentType.SymLinkFile,
         path: '/index.css',
       },
     ],
@@ -1946,6 +1978,54 @@ test('handleArrowLeft - scroll up', () => {
   expect(newState.deltaY).toBe(0)
 })
 
+test('handleArrowLeft - symlink to file', async () => {
+  const state = {
+    ...ViewletExplorer.create(),
+    root: '/home/test-user/test-path',
+    focusedIndex: 3,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    items: [
+      {
+        depth: 1,
+        posInSet: 1,
+        setSize: 3,
+        name: 'index.css',
+        path: '/index.css',
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        posInSet: 2,
+        name: 'index.html',
+        path: '/index.html',
+        setSize: 3,
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        posInSet: 3,
+        setSize: 3,
+        name: 'test-folder',
+        path: '/test-folder',
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 2,
+        posInSet: 1,
+        setSize: 1,
+        name: 'index.js',
+        path: '/test-folder/index.js',
+        type: DirentType.SymLinkFile,
+      },
+    ],
+  }
+  expect(ViewletExplorer.handleArrowLeft(state)).toMatchObject({
+    focusedIndex: 2,
+  })
+})
+
 test('handleArrowLeft - nested file - first child', async () => {
   const state = {
     ...ViewletExplorer.create(),
@@ -2197,7 +2277,7 @@ test('handleArrowRight - symlink - file', async () => {
         setSize: 1,
         name: 'index.css',
         path: '/index.css',
-        type: DirentType.SymlinkFile,
+        type: DirentType.SymLinkFile,
       },
     ],
   }
