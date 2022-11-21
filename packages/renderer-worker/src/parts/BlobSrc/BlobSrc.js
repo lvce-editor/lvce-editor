@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Procotol from '../Protocol/Protocol.js'
+import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 
 const getSrcRemote = (uri) => {
   const src = `/remote${uri}`
@@ -20,7 +21,7 @@ const getSrcWithBlobUrl = async (uri) => {
 }
 
 const canUseRemoteLoading = (uri) => {
-  const protocol = FileSystem.getProtocol(uri)
+  const protocol = GetProtocol.getProtocol(uri)
   return protocol === ''
 }
 
