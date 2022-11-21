@@ -571,28 +571,33 @@ export const handleTabClick = (state, index) => {
 }
 
 export const closeOthers = async (state) => {
-  if (state.focusedIndex === state.activeIndex) {
+  const { focusedIndex, activeIndex, editors } = state
+  if (focusedIndex === activeIndex) {
     // view is kept the same, only tabs are closed
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
-      /* method */ 'closeOthers',
-      /* keepIndex */ state.focusedIndex,
-      /* focusIndex */ state.focusedIndex
-    )
-  } else {
-    // view needs to be switched to focused index
-    await RendererProcess.invoke(
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
-      /* method */ 'closeOthers',
-      /* keepIndex */ state.focusedIndex,
-      /* focusIndex */ state.focusedIndex
-    )
+    //   await RendererProcess.invoke(
+    //     /* Viewlet.send */ 'Viewlet.send',
+    //     /* id */ ViewletModuleId.Main,
+    //     /* method */ 'closeOthers',
+    //     /* keepIndex */ focusedIndex,
+    //     /* focusIndex */ focusedIndex
+    //   )
+    // } else {
+    //   // view needs to be switched to focused index
+    //   await RendererProcess.invoke(
+    //     /* Viewlet.send */ 'Viewlet.send',
+    //     /* id */ ViewletModuleId.Main,
+    //     /* method */ 'closeOthers',
+    //     /* keepIndex */ focusedIndex,
+    //     /* focusIndex */ focusedIndex
+    //   )
   }
-  state.editors = [state.editors[state.focusedIndex]]
-  state.activeIndex = 0
-  state.focusedIndex = 0
+  const newEditors = [editors[focusedIndex]]
+  return {
+    ...state,
+    editors: newEditors,
+    focusedIndex: 0,
+    activeIndex: 0,
+  }
 }
 
 export const closeTabsRight = async (state) => {
@@ -667,5 +672,18 @@ export const resize = (state, dimensions) => {
 }
 
 export const hasFunctionalRender = true
+
+const renderTabs = {
+  isEqual(oldState, newState) {
+    return oldState.editors === newState.editors
+  },
+  apply(oldState, newState) {
+    return [
+      /* method */ 'setTabs',
+      /* editors */ newState.editors,
+      /* focusIndex */ newState.selectedIndex,
+    ]
+  },
+}
 
 export const render = []
