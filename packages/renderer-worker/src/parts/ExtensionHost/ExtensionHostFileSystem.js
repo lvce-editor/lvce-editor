@@ -1,6 +1,9 @@
 import * as ExtensionHostShared from './ExtensionHostShared.js'
+import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 
-export const readFile = (protocol, path) => {
+export const readFile = (uri) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const path = GetProtocol.getPath(protocol, uri)
   // TODO there shouldn't be multiple file system providers for the same protocol
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
@@ -10,7 +13,9 @@ export const readFile = (protocol, path) => {
   })
 }
 
-export const remove = (protocol, path) => {
+export const remove = (uri) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const path = GetProtocol.getPath(protocol, uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.remove',
@@ -21,11 +26,13 @@ export const remove = (protocol, path) => {
 
 /**
  *
- * @param {string} protocol
- * @param {string} oldPath
- * @param {string} newPath
+ * @param {string} oldUri
+ * @param {string} newUri
  */
-export const rename = (protocol, oldPath, newPath) => {
+export const rename = (oldUri, newUri) => {
+  const protocol = GetProtocol.getProtocol(oldUri)
+  const oldPath = GetProtocol.getPath(protocol, oldUri)
+  const newPath = GetProtocol.getPath(protocol, newUri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.rename',
@@ -34,7 +41,9 @@ export const rename = (protocol, oldPath, newPath) => {
   })
 }
 
-export const mkdir = (protocol, path) => {
+export const mkdir = (uri) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const path = GetProtocol.getPath(protocol, uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.mkdir',
@@ -43,7 +52,9 @@ export const mkdir = (protocol, path) => {
   })
 }
 
-export const createFile = (protocol, path) => {
+export const createFile = (uri) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const path = GetProtocol.getPath(protocol, uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.writeFile',
@@ -52,7 +63,9 @@ export const createFile = (protocol, path) => {
   })
 }
 
-export const createFolder = (protocol, path) => {
+export const createFolder = (uri) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const path = GetProtocol.getPath(protocol, uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.createFolder',
@@ -61,7 +74,9 @@ export const createFolder = (protocol, path) => {
   })
 }
 
-export const writeFile = (protocol, path, content) => {
+export const writeFile = (uri, content) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const path = GetProtocol.getPath(protocol, uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.writeFile',
@@ -70,7 +85,9 @@ export const writeFile = (protocol, path, content) => {
   })
 }
 
-export const readDirWithFileTypes = (protocol, path) => {
+export const readDirWithFileTypes = (uri) => {
+  const protocol = GetProtocol.getProtocol(uri)
+  const path = GetProtocol.getPath(protocol, uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.readDirWithFileTypes',
@@ -79,7 +96,8 @@ export const readDirWithFileTypes = (protocol, path) => {
   })
 }
 
-export const getPathSeparator = (protocol) => {
+export const getPathSeparator = (uri) => {
+  const protocol = GetProtocol.getProtocol(uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.getPathSeparator',

@@ -1,0 +1,9 @@
+{
+  "browser": "main.js",
+  "activation": ["onFileSystem:extension-host"],
+  "fileSystems": [
+    {
+      "scheme": "extension-host"
+    }
+  ]
+}
