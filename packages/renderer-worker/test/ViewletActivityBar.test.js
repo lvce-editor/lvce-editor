@@ -40,7 +40,12 @@ const ViewletManager = await import(
 const ACTIVITY_BAR_ITEM_HEIGHT = 48
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(ViewletActivityBar, oldState, newState)
+  return ViewletManager.render(
+    ViewletActivityBar,
+    oldState,
+    newState,
+    ViewletModuleId.ActivityBar
+  )
 }
 
 test('loadContent', async () => {

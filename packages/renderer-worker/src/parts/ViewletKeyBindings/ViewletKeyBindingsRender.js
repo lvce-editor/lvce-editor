@@ -214,12 +214,7 @@ const renderKeyBindings = {
     const tableDom = getTableDom(filteredKeyBindings, displayKeyBindings)
     // console.timeEnd('tableDom')
     // console.log({ tableDom })
-    return [
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ 'KeyBindings',
-      /* method */ 'setTableDom',
-      /* tableDom */ tableDom,
-    ]
+    return [/* method */ 'setTableDom', /* tableDom */ tableDom]
   },
 }
 
@@ -228,12 +223,7 @@ const renderValue = {
     return oldState.value === newState.value
   },
   apply(oldState, newState) {
-    return [
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ 'KeyBindings',
-      /* method */ 'setValue',
-      /* setValue */ newState.value,
-    ]
+    return [/* method */ 'setValue', /* setValue */ newState.value]
   },
 }
 
@@ -271,8 +261,6 @@ const renderScrollBar = {
       newState.scrollBarHeight
     )
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'KeyBindings',
       /* method */ 'setScrollBar',
       /* scrollBarY */ scrollBarY,
       /* scrollBarHeight */ newState.scrollBarHeight,

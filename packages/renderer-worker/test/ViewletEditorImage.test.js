@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 import * as ViewletEditorImage from '../src/parts/ViewletEditorImage/ViewletEditorImage.js'
+import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 beforeAll(() => {
   // workaround for jsdom not supporting DOMMatrixReadonly
@@ -85,9 +86,13 @@ const ViewletManager = await import(
 )
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(ViewletEditorImage, oldState, newState)
+  return ViewletManager.render(
+    ViewletEditorImage,
+    oldState,
+    newState,
+    ViewletModuleId.EditorImage
+  )
 }
-
 
 test('create', () => {
   const state = ViewletEditorImage.create()
