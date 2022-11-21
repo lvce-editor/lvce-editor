@@ -44,12 +44,7 @@ export const renderSrc = {
     return oldState.src === newState.src
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Audio,
-      /* method */ 'setSrc',
-      /* src */ newState.src,
-    ]
+    return [/* method */ 'setSrc', /* src */ newState.src]
   },
 }
 
@@ -59,8 +54,6 @@ const renderAudioErrorMessage = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Audio,
       /* method */ 'setAudioErrorMessage',
       /* src */ newState.audioErrorMessage,
     ]

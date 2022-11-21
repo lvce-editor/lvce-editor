@@ -84,12 +84,7 @@ const renderValue = {
     return oldState.inputValue === newState.inputValue
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.SourceControl,
-      /* method */ 'setInputValue',
-      /* value */ newState.inputValue,
-    ]
+    return [/* method */ 'setInputValue', /* value */ newState.inputValue]
   },
 }
 
@@ -99,8 +94,6 @@ const renderChangeFiles = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.SourceControl,
       /* method */ 'setChangedFiles',
       /* changedFiles */ newState.workingTree,
     ]

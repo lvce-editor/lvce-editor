@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as QuickPickReturnValue from '../src/parts/QuickPickReturnValue/QuickPickReturnValue.js'
+import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -19,9 +20,13 @@ const ViewletManager = await import(
 )
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(ViewletQuickPick, oldState, newState)
+  return ViewletManager.render(
+    ViewletQuickPick,
+    oldState,
+    newState,
+    ViewletModuleId.QuickPick
+  )
 }
-
 
 test('create', () => {
   expect(ViewletQuickPick.create()).toBeDefined()

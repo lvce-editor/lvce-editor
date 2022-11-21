@@ -189,12 +189,7 @@ const renderSrc = {
     return oldState.src === newState.src
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'EditorImage',
-      /* method */ 'setSrc',
-      /* src */ newState.src,
-    ]
+    return [/* method */ 'setSrc', /* src */ newState.src]
   },
 }
 
@@ -204,12 +199,7 @@ const renderTransform = {
   },
   apply(oldState, newState) {
     const transform = DomMatrix.toString(newState.domMatrix)
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.EditorImage,
-      /* method */ 'setTransform',
-      /* transform */ transform,
-    ]
+    return [/* method */ 'setTransform', /* transform */ transform]
   },
 }
 
@@ -219,12 +209,7 @@ const renderCursor = {
   },
   apply(oldState, newState) {
     const isDragging = newState.eventCache.length > 0
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.EditorImage,
-      /* method */ 'setDragging',
-      /* isDragging */ isDragging,
-    ]
+    return [/* method */ 'setDragging', /* isDragging */ isDragging]
   },
 }
 

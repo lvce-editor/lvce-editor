@@ -346,23 +346,14 @@ const renderItems = {
   },
   apply(oldState, newState) {
     if (newState.items.length === 0) {
-      return [
-        /* Viewlet.send */ 'Viewlet.send',
-        /* id */ ViewletModuleId.QuickPick,
-        /* method */ 'showNoResults',
-      ]
+      return [/* method */ 'showNoResults']
     }
     const visibleItems = getVisible(
       newState.items,
       newState.minLineY,
       newState.maxLineY
     )
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.QuickPick,
-      /* method */ 'setVisiblePicks',
-      /* visiblePicks */ visibleItems,
-    ]
+    return [/* method */ 'setVisiblePicks', /* visiblePicks */ visibleItems]
   },
 }
 
@@ -374,8 +365,6 @@ const renderFocusedIndex = {
     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
     const newFocusedIndex = newState.focusedIndex - newState.minLineY
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.QuickPick,
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldFocusedIndex,
       /* newFocusedIndex */ newFocusedIndex,
@@ -391,12 +380,7 @@ const renderHeight = {
     const maxLineY = Math.min(newState.maxLineY, newState.items.length)
     const itemCount = maxLineY - newState.minLineY
     const height = itemCount * newState.itemHeight
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.QuickPick,
-      /* method */ 'setItemsHeight',
-      /* height */ height,
-    ]
+    return [/* method */ 'setItemsHeight', /* height */ height]
   },
 }
 
