@@ -2,12 +2,11 @@ import * as Assert from '../Assert/Assert.js'
 import * as FuzzySearch from '../FuzzySearch/FuzzySearch.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
-import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
+import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as ViewletState from '../ViewletStates/ViewletStates.js'
 import * as EditorBlur from './EditorCommandBlur.js'
 import * as EditorPosition from './EditorCommandPosition.js'
-import * as ViewletState from '../ViewletStates/ViewletStates.js'
-import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 
 const handleBlur = () => {
   close()
@@ -93,18 +92,7 @@ const handleCursorChange = (anyEditor, cursorChange) => {
 
 export const openCompletion = async (editor, openingReason = 1) => {
   console.log('open editor completion')
-  const viewlet = ViewletManager.create(
-    ViewletModule.load,
-    'EditorCompletion',
-    'Widget',
-    'builtin://',
-    0,
-    0,
-    0,
-    0
-  )
-
-  await ViewletManager.load(viewlet)
+  await Viewlet.openWidget(ViewletModuleId.EditorCompletion)
   return editor
 
   // if (state.isOpened) {
@@ -226,6 +214,6 @@ export const close = async (editor) => {
   EditorBlur.removeListener(handleBlur)
   GlobalEventBus.removeListener('editor.selectionChange', handleSelectionChange)
   GlobalEventBus.removeListener('editor.cursorChange', handleCursorChange)
-  await Viewlet.dispose('EditorCompletion')
+  await Viewlet.dispose(ViewletModuleId.EditorCompletion)
   return editor
 }

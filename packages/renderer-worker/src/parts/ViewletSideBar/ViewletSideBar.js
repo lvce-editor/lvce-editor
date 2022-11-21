@@ -26,6 +26,7 @@ const getSavedViewletId = (savedState) => {
 
 export const loadContent = (state, savedState) => {
   const savedViewletId = getSavedViewletId(savedState)
+  console.log(state)
   return {
     ...state,
     currentViewletId: savedViewletId,

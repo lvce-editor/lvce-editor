@@ -361,6 +361,20 @@ export const load = async (
       instanceSavedState = restoreState
     }
     let newState = await module.loadContent(viewletState, instanceSavedState)
+    if (!module.getPosition) {
+      if (newState.left) {
+        left = newState.left
+      }
+      if (newState.top) {
+        top = newState.top
+      }
+      if (newState.width) {
+        width = newState.width
+      }
+      if (newState.height) {
+        height = newState.height
+      }
+    }
     if (
       (viewlet.visible === undefined || viewlet.visible === true) &&
       module.show
@@ -397,6 +411,7 @@ export const load = async (
           state: newState,
           factory: childModule,
         }
+
         ViewletStates.set(childModule.name, childInstance)
         const commands = getRenderCommands(childModule, oldState, newState)
         extraCommands.push([kCreate, childModule.name])

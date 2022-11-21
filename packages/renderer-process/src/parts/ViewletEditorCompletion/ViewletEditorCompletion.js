@@ -1,7 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Label from '../Label/Label.js'
-import * as Widget from '../Widget/Widget.js'
 import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
 
 const create$CompletionItem = (item, index) => {
@@ -52,18 +51,15 @@ export const setItems = (state, items, reason, focusedIndex) => {
       return
     }
     $Viewlet.textContent = 'No Results'
-    Widget.append($Viewlet)
     return
   }
   // TODO recycle nodes
   $Viewlet.replaceChildren(...items.map(create$CompletionItem))
-  Widget.append($Viewlet)
   setFocusedIndex(state, 0, 0)
   // TODO set right aria attributes on $EditorInput
 }
 
 export const dispose = (state) => {
-  Widget.remove(state.$Viewlet)
   // state.$EditorInput.removeAttribute('aria-activedescendant')
   Focus.removeAdditionalFocus('editorCompletions')
 }
@@ -82,16 +78,6 @@ export const setFocusedIndex = (state, oldIndex, newIndex) => {
   }
   Focus.setAdditionalFocus('editorCompletions')
   // state.$EditorInput.setAttribute('aria-activedescendant', $NewItem.id) // TODO use idl once supported
-}
-
-export const showLoading = (state, x, y) => {
-  const { $Viewlet } = state
-  $Viewlet.style.transform = `translate(${x}px, ${y}px)`
-  const $Loading = document.createElement('div')
-  $Loading.textContent = 'Loading'
-  $Viewlet.append($Loading)
-  Widget.append($Viewlet)
-  Focus.setAdditionalFocus('editorCompletions')
 }
 
 export const handleError = (state, error) => {
