@@ -758,6 +758,7 @@ const setVersions = async () => {
     'build/.tmp/server/server/package.json',
     'build/.tmp/server/shared-process/package.json',
     'build/.tmp/server/extension-host-helper-process/package.json',
+    'build/.tmp/server/jest-environment/package.json',
   ]
   for (const file of files) {
     const json = await JsonFile.readJson(file)
@@ -845,6 +846,18 @@ const copyPlaygroundFiles = async ({ commitHash }) => {
   })
 }
 
+const copyJestEnvironment = async ({ commitHash }) => {
+  await Copy.copy({
+    from: 'build/files/jest-environment',
+    to: `build/.tmp/server/jest-environment`,
+  })
+  await Replace.replace({
+    path: `build/.tmp/server/jest-environment/src/index.js`,
+    occurrence: 'COMMIT_HASH',
+    replacement: commitHash,
+  })
+}
+
 export const build = async () => {
   const commitHash = await CommitHash.getCommitHash()
 
@@ -879,6 +892,10 @@ export const build = async () => {
   console.time('copyPtyHostFiles')
   await copyPtyHostFiles()
   console.timeEnd('copyPtyHostFiles')
+
+  console.time('copyJestEnvironment')
+  await copyJestEnvironment({ commitHash })
+  console.timeEnd('copyJestEnvironment')
 
   console.time('setVersions')
   await setVersions()
