@@ -1,0 +1,9 @@
+{
+  "browser": "main.js",
+  "activation": ["onFileSystem:xyz"],
+  "fileSystems": [
+    {
+      "scheme": "xyz"
+    }
+  ]
+}
