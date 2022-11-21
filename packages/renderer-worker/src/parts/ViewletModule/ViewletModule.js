@@ -68,6 +68,10 @@ export const load = (moduleId) => {
       return import('../ViewletPdf/ViewletPdf.ipc.js')
     case ViewletModuleId.Audio:
       return import('../ViewletAudio/ViewletAudio.ipc.js')
+    case ViewletModuleId.SideBarHeader:
+      return import('../ViewletSideBarHeader/ViewletSideBarHeader.ipc.js')
+    case ViewletModuleId.PanelHeader:
+      return import('../ViewletPanelHeader/ViewletPanelHeader.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }

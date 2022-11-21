@@ -70,6 +70,10 @@ export const load = (moduleId) => {
       return import('../ViewletPdf/ViewletPdf.js')
     case ViewletModuleId.Audio:
       return import('../ViewletAudio/ViewletAudio.js')
+    case ViewletModuleId.SideBarHeader:
+      return import('../ViewletSideBarHeader/ViewletSideBarHeader.js')
+    case ViewletModuleId.PanelHeader:
+      return import('../ViewletPanelHeader/ViewletPanelHeader.js')
     default:
       throw new Error(`unknown module ${moduleId}`)
   }

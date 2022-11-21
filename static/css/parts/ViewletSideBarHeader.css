@@ -1,0 +1,29 @@
+.SideBarTitleArea {
+  flex: initial;
+}
+
+#SideBarTitleArea {
+  contain: strict;
+  padding: 0 8px;
+  line-height: 35px;
+  display: grid;
+  height: 35px;
+  grid-template-columns: auto 1fr;
+}
+
+#SideBarTitleAreaTitle {
+  font-size: 11px;
+  cursor: default;
+  font-weight: 400;
+  margin: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  padding-left: 12px;
+}
+
+/* TODO */
+#SideBarTitleAreaButtons {
+  display: none;
+}

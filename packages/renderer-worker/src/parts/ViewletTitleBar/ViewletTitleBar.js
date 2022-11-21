@@ -7,14 +7,11 @@ export const create = (id, uri, top, left, width, height) => {
     left,
     width,
     height,
+    children: [],
   }
 }
 
 export const loadContent = (state) => {
-  return state
-}
-
-export const getChildren = (state) => {
   const children = []
   if (true) {
     children.push({
@@ -26,7 +23,10 @@ export const getChildren = (state) => {
       id: ViewletModuleId.TitleBarButtons,
     })
   }
-  return children
+  return {
+    ...state,
+    children,
+  }
 }
 
 export const hasFunctionalRender = true

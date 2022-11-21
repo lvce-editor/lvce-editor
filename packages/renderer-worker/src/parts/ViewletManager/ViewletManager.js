@@ -376,6 +376,40 @@ export const load = async (
       await module.show(newState)
     }
     const extraCommands = []
+    if (newState.children) {
+      for (const child of newState.children) {
+        const childModule = await loadModule(viewlet.getModule, child.id)
+        // TODO get position of child module
+        const oldState = childModule.create(
+          '',
+          '',
+          child.left,
+          child.top,
+          child.width,
+          child.height
+        )
+        let instanceSavedState
+        if (restore) {
+          const stateToSave = await SaveState.getSavedState()
+          instanceSavedState = getInstanceSavedState(stateToSave, child.id)
+        } else if (restoreState) {
+          instanceSavedState = restoreState
+        }
+        const newState = await childModule.loadContent(
+          oldState,
+          instanceSavedState
+        )
+        const childInstance = {
+          state: newState,
+          factory: childModule,
+        }
+        ViewletStates.set(childModule.name, childInstance)
+        const commands = getRenderCommands(childModule, oldState, newState)
+        extraCommands.push([kCreate, childModule.name])
+        extraCommands.push(...commands)
+        extraCommands.push([kAppend, viewlet.id, childModule.name])
+      }
+    }
 
     if (module.getChildren) {
       const children = module.getChildren(newState)

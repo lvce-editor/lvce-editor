@@ -2,16 +2,17 @@ import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 
-export const create = () => {
+export const create = (id, uri, top, left, width, height) => {
   return {
     currentViewletId: '',
     currentViewlet: undefined,
-    views: [],
     disposed: false,
-    focusedIndex: -1,
-    selectedIndex: -1,
+    children: [],
+    top,
+    left,
+    width,
+    height,
   }
 }
 
@@ -31,11 +32,23 @@ export const loadContent = (state, savedState) => {
     ViewletModuleId.Terminal,
   ]
   const selectedIndex = views.indexOf(savedViewletId)
+  const children = [
+    {
+      id: ViewletModuleId.PanelHeader,
+    },
+  ]
+  if (savedViewletId) {
+    children.push({
+      id: savedViewletId,
+    })
+  }
+  console.log({ state })
   return {
     ...state,
     views,
     currentViewletId: savedViewletId,
     selectedIndex,
+    children,
   }
 }
 
@@ -49,15 +62,15 @@ const getContentDimensions = (dimensions) => {
 }
 
 // TODO
-export const getChildren = (state) => {
-  const { top, left, width, height, titleAreaHeight, currentViewletId } = state
-  return [
-    {
-      id: currentViewletId,
-      ...getContentDimensions(state),
-    },
-  ]
-}
+// export const getChildren = (state) => {
+//   const { top, left, width, height, titleAreaHeight, currentViewletId } = state
+//   return [
+//     {
+//       id: currentViewletId,
+//       ...getContentDimensions(state),
+//     },
+//   ]
+// }
 
 export const dispose = (state) => {
   return {
@@ -103,32 +116,6 @@ export const selectIndex = async (state, index) => {
     selectedIndex: index,
   }
 }
-
-export const hasFunctionalRender = true
-
-const renderTabs = {
-  isEqual(oldState, newState) {
-    return oldState.views === newState.views
-  },
-  apply(oldState, newState) {
-    return [/* method */ 'setTabs', /* tabs */ newState.views]
-  },
-}
-
-const renderSelectedIndex = {
-  isEqual(oldState, newState) {
-    return oldState.selectedIndex === newState.selectedIndex
-  },
-  apply(oldState, newState) {
-    return [
-      /* method */ 'setSelectedIndex',
-      /* unFocusIndex */ oldState.selectedIndex,
-      /* focusIndex */ newState.selectedIndex,
-    ]
-  },
-}
-
-export const render = [renderTabs, renderSelectedIndex]
 
 export const hasFunctionalResize = true
 

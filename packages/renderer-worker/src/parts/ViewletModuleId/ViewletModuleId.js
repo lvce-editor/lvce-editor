@@ -75,3 +75,7 @@ export const TitleBarMenuBar = 'TitleBarMenuBar'
 export const TodoList = 'TodoList'
 
 export const Audio = 'Audio'
+
+export const SideBarHeader = 'SideBarHeader'
+
+export const PanelHeader = 'PanelHeader'

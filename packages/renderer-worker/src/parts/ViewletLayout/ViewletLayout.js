@@ -397,6 +397,7 @@ const show = async (state, module, currentViewletId) => {
   if (commands) {
     commands.push(['Viewlet.append', 'Layout', moduleId])
   }
+  console.log({ commands })
   const resizeCommands = getResizeCommands(points, newPoints)
   commands.push(...resizeCommands)
   return {

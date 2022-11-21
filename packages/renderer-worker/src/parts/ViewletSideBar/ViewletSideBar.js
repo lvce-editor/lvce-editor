@@ -14,6 +14,7 @@ export const create = (id, uri, left, top, width, height) => {
     width,
     height,
     titleAreaHeight: 35,
+    children: [],
   }
 }
 
@@ -26,8 +27,19 @@ const getSavedViewletId = (savedState) => {
 
 export const loadContent = (state, savedState) => {
   const savedViewletId = getSavedViewletId(savedState)
+  const children = [
+    {
+      id: ViewletModuleId.SideBarHeader,
+    },
+  ]
+  if (savedViewletId) {
+    children.push({
+      id: savedViewletId,
+    })
+  }
   return {
     ...state,
+    children,
     currentViewletId: savedViewletId,
   }
 }
@@ -53,15 +65,15 @@ const getContentDimensions = (dimensions, titleAreaHeight) => {
 }
 
 // TODO
-export const getChildren = (state) => {
-  const { top, left, width, height, titleAreaHeight, currentViewletId } = state
-  return [
-    {
-      id: currentViewletId,
-      ...getContentDimensions(state, titleAreaHeight),
-    },
-  ]
-}
+// export const getChildren = (state) => {
+//   const { top, left, width, height, titleAreaHeight, currentViewletId } = state
+//   return [
+//     {
+//       id: currentViewletId,
+//       ...getContentDimensions(state, titleAreaHeight),
+//     },
+//   ]
+// }
 
 // TODO no default parameter -> monomorphism
 export const openViewlet = async (state, id, focus = false) => {
@@ -184,18 +196,4 @@ export const focus = async (state) => {
 
 export const hasFunctionalRender = true
 
-const renderTitle = {
-  isEqual(oldState, newState) {
-    return false
-  },
-  apply(oldState, newState) {
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'SideBar',
-      /* method */ 'setTitle',
-      /* name */ newState.currentViewletId,
-    ]
-  },
-}
-
-export const render = [renderTitle]
+export const render = []
