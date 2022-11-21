@@ -338,12 +338,7 @@ const renderLines = {
   },
   apply(oldState, newState) {
     const textInfos = EditorText.getVisible(newState)
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'EditorText',
-      /* method */ 'setText',
-      /* textInfos */ textInfos,
-    ]
+    return [/* method */ 'setText', /* textInfos */ textInfos]
   },
 }
 
@@ -359,8 +354,6 @@ const renderSelections = {
     const cursorInfos = EditorCursor.getVisible(newState)
     const selectionInfos = EditorSelection.getVisible(newState)
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'EditorText',
       /* method */ 'setSelections',
       /* cursorInfos */ cursorInfos,
       /* selectionInfos */ selectionInfos,
@@ -383,8 +376,6 @@ const renderScrollBar = {
       newState.scrollBarHeight
     )
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'EditorText',
       /* method */ 'setScrollBar',
       /* scrollBarY */ scrollBarY,
       /* scrollBarHeight */ newState.scrollBarHeight,
@@ -400,11 +391,7 @@ const renderFocus = {
     if (!newState.focused) {
       return []
     }
-    return [
-      /* Viewlet.send */ 'Viewlet.invoke',
-      /* id */ 'EditorText',
-      /* method */ 'focus',
-    ]
+    return [/* method */ 'focus']
   },
 }
 

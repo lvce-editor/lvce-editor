@@ -150,8 +150,6 @@ const renderDescription = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.ExtensionDetail,
       /* method */ 'setDescription',
       /* description */ newState.description,
     ]
@@ -164,8 +162,6 @@ const renderReadme = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.ExtensionDetail,
       /* method */ 'setReadmeHtml',
       /* sanizedHtml */ newState.sanitizedReadmeHtml,
     ]
@@ -177,12 +173,7 @@ const renderIcon = {
     return oldState.iconSrc === newState.iconSrc
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.ExtensionDetail,
-      /* method */ 'setIconSrc',
-      /* src */ newState.iconSrc,
-    ]
+    return [/* method */ 'setIconSrc', /* src */ newState.iconSrc]
   },
 }
 
@@ -192,8 +183,6 @@ const renderSize = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.ExtensionDetail,
       /* method */ 'setSize',
       /* oldSize */ oldState.size,
       /* newSize */ newState.size,

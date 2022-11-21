@@ -364,12 +364,7 @@ const renderItems = {
   },
   apply(oldState, newState) {
     const visible = getVisible(newState)
-    return [
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Search,
-      /* method */ 'setResults',
-      /* results */ visible,
-    ]
+    return [/* method */ 'setResults', /* results */ visible]
   },
 }
 
@@ -390,8 +385,6 @@ const renderScrollBar = {
       newState.scrollBarHeight
     )
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Search,
       /* method */ 'setScrollBar',
       /* scrollBarY */ scrollBarY,
       /* scrollBarHeight */ newState.scrollBarHeight,
@@ -406,12 +399,7 @@ const renderHeight = {
   apply(oldState, newState) {
     const { itemHeight } = newState
     const contentHeight = newState.items.length * itemHeight
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Search,
-      /* method */ 'setContentHeight',
-      /* contentHeight */ contentHeight,
-    ]
+    return [/* method */ 'setContentHeight', /* contentHeight */ contentHeight]
   },
 }
 
@@ -420,12 +408,7 @@ const renderMessage = {
     return oldState.message === newState.message
   },
   apply(oldState, newState) {
-    return [
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Search,
-      /* method */ 'setMessage',
-      /* message */ newState.message,
-    ]
+    return [/* method */ 'setMessage', /* message */ newState.message]
   },
 }
 
@@ -434,12 +417,7 @@ const renderValue = {
     return oldState.value === newState.value
   },
   apply(oldState, newState) {
-    return [
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Search,
-      /* method */ 'setValue',
-      /* value */ newState.value,
-    ]
+    return [/* method */ 'setValue', /* value */ newState.value]
   },
 }
 
@@ -449,8 +427,6 @@ const renderNegativeMargin = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Search,
       /* method */ 'setNegativeMargin',
       /* negativeMargin */ -newState.deltaY,
     ]

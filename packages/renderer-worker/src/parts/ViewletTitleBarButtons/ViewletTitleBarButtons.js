@@ -43,8 +43,6 @@ const renderTitleBarButtons = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.TitleBarButtons,
       /* method */ 'setButtons',
       /* titleBarEntries */ newState.titleBarButtons,
     ]

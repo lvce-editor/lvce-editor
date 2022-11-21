@@ -177,12 +177,7 @@ const renderMatchCount = {
       newState.matchIndex,
       newState.matchCount
     )
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.FindWidget,
-      /* method */ 'setMatchCountText',
-      /* value */ matchCountText,
-    ]
+    return [/* method */ 'setMatchCountText', /* value */ matchCountText]
   },
 }
 
@@ -192,12 +187,7 @@ const renderButtonsEnabled = {
   },
   apply(oldState, newState) {
     const enabled = newState.matchCount > 0
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.FindWidget,
-      /* method */ 'setButtonsEnabled',
-      /* enabled */ enabled,
-    ]
+    return [/* method */ 'setButtonsEnabled', /* enabled */ enabled]
   },
 }
 
