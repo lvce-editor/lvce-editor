@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "@lvce-editor/extension-host": "file:../extension-host",
+    "@lvce-editor/extension-host-helper-process": "file:../extension-host-helper-process",
     "@lvce-editor/pty-host": "file:../pty-host",
     "debug": "^4.3.4",
     "execa": "^6.1.0",

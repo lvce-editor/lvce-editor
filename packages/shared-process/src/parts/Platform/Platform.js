@@ -1,7 +1,7 @@
 import { extensionHostPath } from '@lvce-editor/extension-host'
 import { homedir, tmpdir } from 'node:os'
-import { join, resolve, sep } from 'node:path'
-import { pathToFileURL } from 'node:url'
+import { dirname, join, resolve, sep } from 'node:path'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import { xdgCache, xdgConfig, xdgData, xdgState } from 'xdg-basedir'
 import * as Path from '../Path/Path.js'
 import * as Root from '../Root/Root.js'
@@ -23,6 +23,8 @@ export const cacheDir = Path.join(xdgCache || tmpdir(), applicationName)
 export const homeDir = isWindows ? '' : homedir()
 
 export const appDir = Root.root
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export const getExtensionsPath = () => {
   return Path.join(dataDir, 'extensions')
@@ -101,14 +103,11 @@ export const getExtensionHostPath = () => {
   return extensionHostPath
 }
 
-export const getExtensionHostHelperProcessPath = () => {
-  return Path.join(
-    Root.root,
-    'packages',
-    'extension-host-helper-process',
-    'src',
-    'extensionHostHelperProcessMain.js'
+export const getExtensionHostHelperProcessPath = async () => {
+  const { extensionHostHelperProcessPath } = await import(
+    '@lvce-editor/extension-host-helper-process'
   )
+  return extensionHostHelperProcessPath
 }
 
 export const getRecentlyOpenedPath = () => {

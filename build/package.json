@@ -17,12 +17,12 @@
   },
   "devDependencies": {
     "@electron/get": "^2.0.2",
+    "@electron/rebuild": "^3.2.10",
     "@types/bytes": "^3.1.1",
     "@types/fs-extra": "^9.0.13",
     "@types/tar-fs": "^2.0.1",
     "@types/verror": "^1.10.6",
     "electron-builder": "^23.6.0",
-    "@electron/rebuild": "^3.2.10",
     "execa": "^6.1.0",
     "extract-zip": "^2.0.1"
   },
@@ -37,6 +37,7 @@
     "pretty-bytes": "^6.0.0",
     "rollup": "^3.3.0",
     "tar-fs": "^2.1.1",
+    "verdaccio": "^5.17.0",
     "verror": "^1.10.1"
   },
   "xo": {

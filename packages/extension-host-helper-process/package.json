@@ -1,8 +1,8 @@
 {
-  "name": "extension-host-helper-process",
+  "name": "@lvce-editor/extension-host-helper-process",
   "version": "0.0.0-dev",
   "description": "",
-  "main": "src/extensionHostHelperProcessMain.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
@@ -11,6 +11,14 @@
   "keywords": [],
   "author": "",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lvce-editor/lvce-editor.git",
+    "directory": "packages/extension-host-helper-process"
+  },
+  "engines": {
+    "node": ">=16"
+  },
   "xo": {
     "rules": {
       "unicorn/filename-case": "off",

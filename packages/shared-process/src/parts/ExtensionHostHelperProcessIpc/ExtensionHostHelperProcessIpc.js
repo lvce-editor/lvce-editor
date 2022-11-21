@@ -1,9 +1,9 @@
 import * as ChildProcess from '../ChildProcess/ChildProcess.js'
 import * as Platform from '../Platform/Platform.js'
 
-export const create = () => {
+export const create = async () => {
   const extensionHostHelperProcessPath =
-    Platform.getExtensionHostHelperProcessPath()
+    await Platform.getExtensionHostHelperProcessPath()
   const childProcess = ChildProcess.fork(
     extensionHostHelperProcessPath,
     ['--ipc-type=websocket', '--max-old-space-size=60', '--enable-source-maps'],
