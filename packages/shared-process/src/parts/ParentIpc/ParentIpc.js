@@ -84,7 +84,7 @@ const handleWebSocket = (message, handle) => {
     case 'lvce.extension-host-helper-process':
       return handleWebSocketExtensionHostHelperProcess(message, handle)
     default:
-      throw new VError(`unsupported sec-websocket-procotol ${protocol}`)
+      console.warn(`unsupported sec-websocket-procotol ${protocol}`)
   }
 }
 
