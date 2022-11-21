@@ -34,7 +34,7 @@ const kDispose = 'Viewlet.dispose'
 // TODO maybe wrapViewletCommand should accept module instead of id string
 // then check if instance.factory matches module -> only compare reference (int) instead of string
 // should be faster
-const wrapViewletCommand = (id, fn) => {
+const wrapViewletCommand = (id, fn, getModule) => {
   const wrappedViewletCommand = async (...args) => {
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
@@ -57,6 +57,22 @@ const wrapViewletCommand = (id, fn) => {
       }
       const commands = render(activeInstance.factory, oldState, newState)
       ViewletStates.setState(id, newState)
+      if (oldState.children !== newState.children) {
+        const childCommands = await loadChildren(
+          id,
+          newState.children,
+          getModule,
+          false,
+          undefined
+        )
+        commands.push(...childCommands)
+        console.log(
+          'children changed',
+          oldState.children,
+          newState.children,
+          childCommands
+        )
+      }
       await RendererProcess.invoke(
         /* Viewlet.sendMultiple */ kSendMultiple,
         /* commands */ commands
@@ -215,10 +231,10 @@ const registerWrappedCommand = (moduleName, key, wrappedCommand) => {
   }
 }
 
-const maybeRegisterWrappedCommands = (module) => {
+const maybeRegisterWrappedCommands = (module, getModule) => {
   if (module.Commands) {
     for (const [key, value] of Object.entries(module.Commands)) {
-      const wrappedCommand = wrapViewletCommand(module.name, value)
+      const wrappedCommand = wrapViewletCommand(module.name, value, getModule)
       registerWrappedCommand(module.name, key, wrappedCommand)
     }
   }
@@ -278,7 +294,7 @@ const actuallyLoadModule = async (getModule, id) => {
       await Css.loadCssStyleSheet(module.Css)
     }
   }
-  maybeRegisterWrappedCommands(module)
+  maybeRegisterWrappedCommands(module, getModule)
   maybeRegisterEvents(module)
   return module
 }
@@ -309,6 +325,49 @@ export const backgroundLoad = async ({
     uri,
   }
 }
+
+const loadChildren = async (
+  parentId,
+  children,
+  getModule,
+  restore,
+  restoreState
+) => {
+  const extraCommands = []
+  // TODO load children in parallel
+  for (const child of children) {
+    const childModule = await loadModule(getModule, child.id)
+    // TODO get position of child module
+    const oldState = childModule.create(
+      child.id,
+      child.uri,
+      child.left,
+      child.top,
+      child.width,
+      child.height
+    )
+    let instanceSavedState
+    if (restore) {
+      const stateToSave = await SaveState.getSavedState()
+      instanceSavedState = getInstanceSavedState(stateToSave, child.id)
+    } else if (restoreState) {
+      instanceSavedState = restoreState
+    }
+    const newState = await childModule.loadContent(oldState, instanceSavedState)
+    const childInstance = {
+      state: newState,
+      factory: childModule,
+    }
+    ViewletStates.set(childModule.name, childInstance)
+    const commands = getRenderCommands(childModule, oldState, newState)
+    extraCommands.push([kCreate, childModule.name])
+    extraCommands.push(...commands)
+    extraCommands.push([kAppend, parentId, childModule.name])
+  }
+  // TODO what if children are already disposed at this point?
+  return extraCommands
+}
+
 /**
  *
  * @param {{getModule:()=>any, type:number, id:string, disposed:boolean }} viewlet
@@ -377,78 +436,16 @@ export const load = async (
     }
     const extraCommands = []
     if (newState.children) {
-      for (const child of newState.children) {
-        const childModule = await loadModule(viewlet.getModule, child.id)
-        // TODO get position of child module
-        const oldState = childModule.create(
-          '',
-          '',
-          child.left,
-          child.top,
-          child.width,
-          child.height
-        )
-        let instanceSavedState
-        if (restore) {
-          const stateToSave = await SaveState.getSavedState()
-          instanceSavedState = getInstanceSavedState(stateToSave, child.id)
-        } else if (restoreState) {
-          instanceSavedState = restoreState
-        }
-        const newState = await childModule.loadContent(
-          oldState,
-          instanceSavedState
-        )
-        const childInstance = {
-          state: newState,
-          factory: childModule,
-        }
-        ViewletStates.set(childModule.name, childInstance)
-        const commands = getRenderCommands(childModule, oldState, newState)
-        extraCommands.push([kCreate, childModule.name])
-        extraCommands.push(...commands)
-        extraCommands.push([kAppend, viewlet.id, childModule.name])
-      }
+      const childCommands = await loadChildren(
+        viewlet.id,
+        newState.children,
+        viewlet.getModule,
+        false,
+        undefined
+      )
+      extraCommands.push(...childCommands)
     }
 
-    if (module.getChildren) {
-      const children = module.getChildren(newState)
-      for (const child of children) {
-        const childModule = await loadModule(viewlet.getModule, child.id)
-        // TODO get position of child module
-        const oldState = childModule.create(
-          '',
-          '',
-          child.left,
-          child.top,
-          child.width,
-          child.height
-        )
-        let instanceSavedState
-        if (restore) {
-          const stateToSave = await SaveState.getSavedState()
-          instanceSavedState = getInstanceSavedState(stateToSave, child.id)
-        } else if (restoreState) {
-          instanceSavedState = restoreState
-        }
-        const newState = await childModule.loadContent(
-          oldState,
-          instanceSavedState
-        )
-        const childInstance = {
-          state: newState,
-          factory: childModule,
-        }
-        ViewletStates.set(childModule.name, childInstance)
-        const commands = getRenderCommands(childModule, oldState, newState)
-        extraCommands.push([kCreate, childModule.name])
-        extraCommands.push(...commands)
-        extraCommands.push([kAppend, viewlet.id, childModule.name])
-        if (childModule.contentLoadedEffects) {
-          await childModule.contentLoadedEffects(newState)
-        }
-      }
-    }
     if (focus && module.focus) {
       newState = await module.focus(newState)
     }

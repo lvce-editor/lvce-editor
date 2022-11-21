@@ -79,6 +79,8 @@ export const create = (id, uri, left, top, width, height) => {
     top,
     width,
     height,
+    children: [],
+    headerHeight: 35,
   }
 }
 
@@ -145,144 +147,124 @@ export const saveState = (state) => {
 }
 
 export const loadContent = (state, savedState) => {
+  const { top, left, width, height, headerHeight } = state
   // TODO get restored editors from saved state
   const editors = getRestoredEditors(savedState)
   // @ts-ignore
   LifeCycle.once(LifeCyclePhase.Twelve, hydrateLazy)
   const activeIndex = editors.length > 0 ? 0 : -1
+  const children = []
+  if (editors.length > 0) {
+    children.push({
+      id: ViewletModuleId.MainHeader,
+      uri: '',
+      top,
+      left,
+      width,
+      height: headerHeight,
+    })
+    const editor = editors[activeIndex]
+    const id = ViewletMap.getId(editor)
+    children.push({
+      id,
+      top: top + headerHeight,
+      left,
+      width,
+      height: height - headerHeight,
+      uri: editor.uri,
+    })
+  }
   return {
     ...state,
     editors,
     activeIndex,
+    children,
   }
-}
-
-export const getChildren = (state) => {
-  const { editors } = state
-  if (editors.length === 0) {
-    return []
-  }
-  const editor = editors[0]
-  return [
-    // {
-    //   id: ViewletModuleId.MainTabs,
-    // },
-  ]
 }
 
 // TODO content loaded should return commands which
 // get picked up by viewletlayout and sent to renderer process
-export const contentLoaded = async (state) => {
-  if (state.editors.length === 0) {
-    return []
-  }
-  const editor = Arrays.last(state.editors)
-  const top = state.top + TAB_HEIGHT
-  const left = state.left
-  const width = state.width
-  const height = state.height - TAB_HEIGHT
-  const id = ViewletMap.getId(editor.uri)
-  const tabLabel = Workspace.pathBaseName(editor.uri)
-  const tabTitle = getTabTitle(editor.uri)
-  const commands = [
-    [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Main,
-      /* method */ 'openViewlet',
-      /* tabLabel */ tabLabel,
-      /* tabTitle */ tabTitle,
-    ],
-  ]
+// export const contentLoaded = async (state) => {
+//   if (state.editors.length === 0) {
+//     return []
+//   }
+//   const editor = Arrays.last(state.editors)
+//   const top = state.top + TAB_HEIGHT
+//   const left = state.left
+//   const width = state.width
+//   const height = state.height - TAB_HEIGHT
+//   const id = ViewletMap.getId(editor.uri)
+//   const tabLabel = Workspace.pathBaseName(editor.uri)
+//   const tabTitle = getTabTitle(editor.uri)
+//   const commands = [
+//     [
+//       /* Viewlet.send */ 'Viewlet.send',
+//       /* id */ ViewletModuleId.Main,
+//       /* method */ 'openViewlet',
+//       /* tabLabel */ tabLabel,
+//       /* tabTitle */ tabTitle,
+//     ],
+//   ]
 
-  // // TODO race condition: Viewlet may have been resized before it has loaded
-  // // @ts-ignore
-  const extraCommands = await ViewletManager.load(
-    {
-      getModule: ViewletModule.load,
-      id,
-      // @ts-ignore
-      parentId: ViewletModuleId.Main,
-      uri: editor.uri,
-      left,
-      top,
-      width,
-      height,
-      show: false,
-      focus: false,
-      type: 0,
-      setBounds: false,
-      visible: true,
-    },
-    /* focus */ false,
-    /* restore */ true
-  )
-  commands.push(...extraCommands)
-  commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
-  return commands
-}
+//   // // TODO race condition: Viewlet may have been resized before it has loaded
+//   // // @ts-ignore
+//   const extraCommands = await ViewletManager.load(
+//     {
+//       getModule: ViewletModule.load,
+//       id,
+//       // @ts-ignore
+//       parentId: ViewletModuleId.Main,
+//       uri: editor.uri,
+//       left,
+//       top,
+//       width,
+//       height,
+//       show: false,
+//       focus: false,
+//       type: 0,
+//       setBounds: false,
+//       visible: true,
+//     },
+//     /* focus */ false,
+//     /* restore */ true
+//   )
+//   commands.push(...extraCommands)
+//   commands.push(['Viewlet.appendViewlet', ViewletModuleId.Main, id])
+//   return commands
+// }
 
 export const openUri = async (state, uri, focus = true, options = {}) => {
   Assert.object(state)
   Assert.string(uri)
-  const top = state.top + TAB_HEIGHT
-  const left = state.left
-  const width = state.width
-  const height = state.height - TAB_HEIGHT
+  const { editors, children, headerHeight, top, left, width, height } = state
   const id = ViewletMap.getId(uri)
 
-  for (const editor of state.editors) {
-    if (editor.uri === uri) {
-      console.log('found existing editor')
-      // TODO if the editor is already open, nothing needs to be done
-      const instance = ViewletManager.create(
-        ViewletModule.load,
-        id,
-        ViewletModuleId.Main,
-        uri,
-        left,
-        top,
-        width,
-        height
-      )
-      // @ts-ignore
-
-      await ViewletManager.load(instance, focus, false, options)
-      return state
+  if (children.length === 0) {
+    // TODO add editor
+    return {
+      editors: [{ uri }],
+      children: [
+        {
+          id: ViewletModuleId.MainHeader,
+          uri: '',
+          top,
+          left,
+          width,
+          height: headerHeight,
+        },
+        {
+          id,
+          uri,
+          top: top + headerHeight,
+          left,
+          width,
+          height: height - headerHeight,
+        },
+      ],
     }
+  } else {
+    // TODO replace editor
   }
-
-  const instance = ViewletManager.create(
-    ViewletModule.load,
-    id,
-    ViewletModuleId.Main,
-    uri,
-    left,
-    top,
-    width,
-    height
-  )
-  const oldActiveIndex = state.activeIndex
-  const temporaryUri = `tmp://${Math.random()}`
-  state.editors.push({ uri: temporaryUri })
-  state.activeIndex = state.editors.length - 1
-  const tabLabel = Workspace.pathBaseName(uri)
-  const tabTitle = getTabTitle(uri)
-  await RendererProcess.invoke(
-    /* Viewlet.send */ 'Viewlet.send',
-    /* id */ ViewletModuleId.Main,
-    /* method */ 'openViewlet',
-    /* tabLabel */ tabLabel,
-    /* tabTitle */ tabTitle,
-    /* oldActiveIndex */ oldActiveIndex
-  )
-  // @ts-ignore
-  await ViewletManager.load(instance, focus)
-  if (!ViewletStates.hasInstance(id)) {
-    return state
-  }
-  const actualUri = ViewletStates.getState(id).uri
-  const index = state.editors.findIndex((editor) => editor.uri === temporaryUri)
-  state.editors[index].uri = actualUri
   return state
 }
 
@@ -672,18 +654,5 @@ export const resize = (state, dimensions) => {
 }
 
 export const hasFunctionalRender = true
-
-const renderTabs = {
-  isEqual(oldState, newState) {
-    return oldState.editors === newState.editors
-  },
-  apply(oldState, newState) {
-    return [
-      /* method */ 'setTabs',
-      /* editors */ newState.editors,
-      /* focusIndex */ newState.selectedIndex,
-    ]
-  },
-}
 
 export const render = []

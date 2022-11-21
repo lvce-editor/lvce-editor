@@ -26,15 +26,24 @@ const getSavedViewletId = (savedState) => {
 }
 
 export const loadContent = (state, savedState) => {
+  const { titleAreaHeight, top, left, width, height } = state
   const savedViewletId = getSavedViewletId(savedState)
   const children = [
     {
       id: ViewletModuleId.SideBarHeader,
+      left,
+      top,
+      width,
+      height: titleAreaHeight,
     },
   ]
   if (savedViewletId) {
     children.push({
       id: savedViewletId,
+      top: top + titleAreaHeight,
+      left,
+      width,
+      height: height - titleAreaHeight,
     })
   }
   return {
@@ -63,17 +72,6 @@ const getContentDimensions = (dimensions, titleAreaHeight) => {
     height: dimensions.height - titleAreaHeight,
   }
 }
-
-// TODO
-// export const getChildren = (state) => {
-//   const { top, left, width, height, titleAreaHeight, currentViewletId } = state
-//   return [
-//     {
-//       id: currentViewletId,
-//       ...getContentDimensions(state, titleAreaHeight),
-//     },
-//   ]
-// }
 
 // TODO no default parameter -> monomorphism
 export const openViewlet = async (state, id, focus = false) => {
@@ -122,21 +120,6 @@ export const openViewlet = async (state, id, focus = false) => {
     await RendererProcess.invoke('Viewlet.sendMultiple', commands)
   }
 
-  // // TODO race condition (check if disposed after created)
-  // const viewlet = ViewletManager.create(
-  //   ViewletModule.load,
-  //   id,
-  //   'SideBar',
-  //   'builtin://',
-  //   childDimensions.left,
-  //   childDimensions.top,
-  //   childDimensions.width,
-  //   childDimensions.height
-  // )
-
-  // // TODO add keybinding to title
-  // // @ts-ignore
-  // await ViewletManager.load(viewlet, focus, /* restore */ true)
   return { ...state }
 }
 

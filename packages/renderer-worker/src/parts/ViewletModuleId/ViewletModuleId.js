@@ -79,3 +79,5 @@ export const Audio = 'Audio'
 export const SideBarHeader = 'SideBarHeader'
 
 export const PanelHeader = 'PanelHeader'
+
+export const MainHeader = 'MainHeader'

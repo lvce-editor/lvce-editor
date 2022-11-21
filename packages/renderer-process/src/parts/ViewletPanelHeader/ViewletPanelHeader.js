@@ -21,12 +21,12 @@ const create$PanelTab = (label, index) => {
 }
 
 export const create = () => {
-  const $PanelTabs = document.createElement('div')
-  $PanelTabs.className = 'PanelTabs'
+  const $Tabs = document.createElement('div')
+  $Tabs.className = 'PanelTabs'
   // @ts-ignore
-  $PanelTabs.role = AriaRoles.TabList
-  $PanelTabs.onmousedown = ViewletPanelHeaderEvents.handleClickTab
-  $PanelTabs.tabIndex = -1
+  $Tabs.role = AriaRoles.TabList
+  $Tabs.onmousedown = ViewletPanelHeaderEvents.handleClickTab
+  $Tabs.tabIndex = -1
 
   const $ButtonClose = IconButton.create$Button(UiStrings.Close, Icon.Close)
   $ButtonClose.onclick = ViewletPanelHeaderEvents.handleClickClose
@@ -39,29 +39,29 @@ export const create = () => {
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet PanelHeader'
-  $Viewlet.append($PanelTabs, $PanelToolBar)
+  $Viewlet.append($Tabs, $PanelToolBar)
 
   return {
     $PanelHeader: $Viewlet,
     $Viewlet,
-    $PanelTabs,
+    $Tabs,
   }
 }
 
 export const setTabs = (state, tabs) => {
-  const { $PanelTabs } = state
-  $PanelTabs.append(...tabs.map(create$PanelTab))
+  const { $Tabs } = state
+  $Tabs.append(...tabs.map(create$PanelTab))
 }
 
 export const setSelectedIndex = (state, oldIndex, newIndex) => {
-  const { $PanelTabs } = state
+  const { $Tabs } = state
   if (oldIndex !== -1) {
-    const $PanelTab = $PanelTabs.children[oldIndex]
-    $PanelTab.removeAttribute('aria-selected')
+    const $Tab = $Tabs.children[oldIndex]
+    $Tab.removeAttribute('aria-selected')
   }
   if (newIndex !== -1) {
-    const $PanelTab = $PanelTabs.children[newIndex]
-    $PanelTab.ariaSelected = true
-    $PanelTabs.setAttribute('aria-activedescendant', $PanelTab.id)
+    const $Tab = $Tabs.children[newIndex]
+    $Tab.ariaSelected = true
+    $Tabs.setAttribute('aria-activedescendant', $Tab.id)
   }
 }

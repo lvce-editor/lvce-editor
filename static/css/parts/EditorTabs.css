@@ -1,9 +1,14 @@
-.MainTabs {
+.MainHeader {
+  flex: initial;
   height: 35px;
+  contain: strict;
+}
+
+.MainTabs {
   background: rgb(40, 46, 47);
   display: flex;
-  contain: strict;
   width: 100%;
+  height: 100%;
   margin: 0;
   padding: 0;
   background: var(

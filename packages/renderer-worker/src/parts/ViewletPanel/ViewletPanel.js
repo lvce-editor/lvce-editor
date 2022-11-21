@@ -61,17 +61,6 @@ const getContentDimensions = (dimensions) => {
   }
 }
 
-// TODO
-// export const getChildren = (state) => {
-//   const { top, left, width, height, titleAreaHeight, currentViewletId } = state
-//   return [
-//     {
-//       id: currentViewletId,
-//       ...getContentDimensions(state),
-//     },
-//   ]
-// }
-
 export const dispose = (state) => {
   return {
     ...state,

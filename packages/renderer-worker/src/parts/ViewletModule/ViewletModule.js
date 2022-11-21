@@ -72,6 +72,8 @@ export const load = (moduleId) => {
       return import('../ViewletSideBarHeader/ViewletSideBarHeader.ipc.js')
     case ViewletModuleId.PanelHeader:
       return import('../ViewletPanelHeader/ViewletPanelHeader.ipc.js')
+    case ViewletModuleId.MainHeader:
+      return import('../ViewletMainHeader/ViewletMainHeader.ipc.js')
     default:
       throw new Error(`unknown module "${moduleId}"`)
   }
