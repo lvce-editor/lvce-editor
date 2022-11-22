@@ -30,7 +30,6 @@ const handleMessage = async (event) => {
       return
     }
     const response = await GetResponse.getResponse(object, state.socket)
-    console.log({ response })
     send(response)
   } else {
     if (!object.params) {

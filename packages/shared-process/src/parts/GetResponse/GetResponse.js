@@ -11,7 +11,7 @@ export const getResponse = async (message, handle) => {
     return {
       jsonrpc: JsonRpc.Version,
       id: message.id,
-      result,
+      result: result ?? null,
     }
   } catch (error) {
     if (

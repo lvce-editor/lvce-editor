@@ -1,7 +1,6 @@
 import * as Callback from '../Callback/Callback.js'
 import { JsonRpcError } from '../Errors/Errors.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
-import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 
 const isResultMessage = (message) => {
   return 'result' in message
@@ -9,37 +8,6 @@ const isResultMessage = (message) => {
 
 const isErrorMessage = (message) => {
   return 'error' in message
-}
-
-const restoreError = (error) => {
-  if (error instanceof Error) {
-    return error
-  }
-  if (error.code && error.code === JsonRpcErrorCode.MethodNotFound) {
-    const restoredError = new JsonRpcError(error.message)
-    restoredError.stack = error.stack
-    return restoredError
-  }
-  const restoredError = new Error(error.message)
-  if (error.data) {
-    if (error.data.stack) {
-      restoredError.stack = error.data.stack
-    }
-    if (error.data.codeFrame) {
-      // @ts-ignore
-      restoredError.codeFrame = error.data.codeFrame
-    }
-  }
-  return restoredError
-}
-
-const handleMessageResult = (message) => {
-  Callback.resolve(message.id, message.result)
-}
-
-const handleMessageError = (message) => {
-  const restoredError = restoreError(message.error)
-  Callback.reject(message.id, restoredError)
 }
 
 const handleMessageMethod = async (message, event) => {
@@ -64,10 +32,8 @@ const handleMessageMethod = async (message, event) => {
 
 const handleMessage = (message, event) => {
   if (message.id) {
-    if (isResultMessage(message)) {
-      handleMessageResult(message)
-    } else if (isErrorMessage(message)) {
-      handleMessageError(message)
+    if (isResultMessage(message) || isErrorMessage(message)) {
+      Callback.resolve(message.id, message)
     } else if ('method' in message) {
       handleMessageMethod(message, event)
     } else {
