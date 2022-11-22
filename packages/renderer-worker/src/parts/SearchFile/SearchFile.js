@@ -1,5 +1,5 @@
-import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
+import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 
 const getModule = (protocol) => {
   switch (protocol) {
@@ -15,7 +15,7 @@ const getModule = (protocol) => {
 }
 
 export const searchFile = async (path, value) => {
-  const protocol = FileSystem.getProtocol(path)
+  const protocol = GetProtocol.getProtocol(path)
   const module = await getModule(protocol)
   return module.searchFile(path, value)
 }
