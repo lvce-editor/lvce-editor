@@ -3,11 +3,11 @@ import { JsonRpcError } from '../Errors/Errors.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
-export const send = (transport, method, ...parameters) => {
+export const send = (transport, method, ...params) => {
   transport.send({
     jsonrpc: JsonRpcVersion.Two,
     method,
-    params: parameters,
+    params: params,
   })
 }
 
@@ -61,14 +61,14 @@ const restoreError = (error) => {
   return new Error(`JsonRpc Error: ${error}`)
 }
 
-export const invoke = async (transport, method, ...parameters) => {
+export const invoke = async (transport, method, ...params) => {
   const responseMessage = await new Promise((resolve, reject) => {
     // TODO use one map instead of two
     const callbackId = Callback.register(resolve, reject)
     transport.send({
       jsonrpc: JsonRpcVersion.Two,
       method,
-      params: parameters,
+      params: params,
       id: callbackId,
     })
   })
