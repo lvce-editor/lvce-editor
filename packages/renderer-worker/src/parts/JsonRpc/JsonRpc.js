@@ -2,6 +2,7 @@ import * as Callback from '../Callback/Callback.js'
 import { JsonRpcError } from '../Errors/Errors.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import { VError } from '../VError/VError.js'
 
 export const send = (transport, method, ...params) => {
   transport.send({
@@ -11,20 +12,26 @@ export const send = (transport, method, ...params) => {
   })
 }
 
-const constructError = (message) => {
-  if (message.startsWith('Error: ')) {
-    return new Error(message.slice('Error: '.length))
-  }
+const getErrorConstructor = (message) => {
   if (message.startsWith('TypeError: ')) {
-    return new TypeError(message.slice('TypeError: '.length))
+    return TypeError
   }
   if (message.startsWith('SyntaxError: ')) {
-    return new SyntaxError(message.slice('SyntaxError: '.length))
+    return SyntaxError
   }
   if (message.startsWith('ReferenceError: ')) {
-    return new ReferenceError(message.slice('ReferenceError: '.length))
+    return ReferenceError
   }
-  return new Error(message)
+  return Error
+}
+
+const constructError = (message) => {
+  const ErrorConstructor = getErrorConstructor(message)
+  if (ErrorConstructor === Error) {
+    return new Error(message)
+  }
+  const shortMessage = message.slice(ErrorConstructor.name.length + 2)
+  return new ErrorConstructor(shortMessage)
 }
 
 const restoreError = (error) => {
@@ -51,7 +58,8 @@ const restoreError = (error) => {
     } else if (error.stack) {
       console.log('set stack')
       // restoredError.stack = error.stack
-      Error.captureStackTrace(invoke)
+      const obj = {}
+      Error.captureStackTrace(obj)
     }
     return restoredError
   }
