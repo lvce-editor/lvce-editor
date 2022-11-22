@@ -46,13 +46,13 @@ test('readFile - error', async () => {
 test('remove', async () => {
   // @ts-ignore
   ExtensionHostShared.executeProvider.mockImplementation(() => {})
-  await ExtensionHostFileSystem.remove('memfs://', 'memfs:///test.txt')
+  await ExtensionHostFileSystem.remove('memfs:///test.txt')
   expect(ExtensionHostShared.executeProvider).toHaveBeenCalledTimes(1)
   expect(ExtensionHostShared.executeProvider).toHaveBeenCalledWith({
-    event: 'onFileSystem:memfs://',
+    event: 'onFileSystem:memfs',
     method: 'ExtensionHostFileSystem.remove',
     noProviderFoundMessage: 'no file system provider found',
-    params: ['memfs://', 'memfs:///test.txt'],
+    params: ['memfs', '/test.txt'],
   })
 })
 
@@ -70,7 +70,6 @@ test('rename', async () => {
   // @ts-ignore
   ExtensionHostShared.executeProvider.mockImplementation(() => {})
   await ExtensionHostFileSystem.rename(
-    'memfs',
     'memfs:///test.txt',
     'memfs:///test2.txt'
   )
@@ -79,7 +78,7 @@ test('rename', async () => {
     event: 'onFileSystem:memfs',
     method: 'ExtensionHostFileSystem.rename',
     noProviderFoundMessage: 'no file system provider found',
-    params: ['memfs', 'memfs:///test.txt', 'memfs:///test2.txt'],
+    params: ['memfs', '/test.txt', '/test2.txt'],
   })
 })
 
@@ -100,13 +99,13 @@ test('rename - error', async () => {
 test('mkdir', async () => {
   // @ts-ignore
   ExtensionHostShared.executeProvider.mockImplementation(() => {})
-  await ExtensionHostFileSystem.mkdir('memfs', 'memfs:///test-folder')
+  await ExtensionHostFileSystem.mkdir('memfs:///test-folder')
   expect(ExtensionHostShared.executeProvider).toHaveBeenCalledTimes(1)
   expect(ExtensionHostShared.executeProvider).toHaveBeenCalledWith({
     event: 'onFileSystem:memfs',
     method: 'ExtensionHostFileSystem.mkdir',
     noProviderFoundMessage: 'no file system provider found',
-    params: ['memfs', 'memfs:///test-folder'],
+    params: ['memfs', '/test-folder'],
   })
 })
 
@@ -123,16 +122,13 @@ test('mkdir - error', async () => {
 test('writeFile', async () => {
   // @ts-ignore
   ExtensionHostShared.executeProvider.mockImplementation(() => {})
-  await ExtensionHostFileSystem.writeFile(
-    'extension-host://memfs:///test-folder',
-    'test'
-  )
+  await ExtensionHostFileSystem.writeFile('memfs:///test-folder', 'test')
   expect(ExtensionHostShared.executeProvider).toHaveBeenCalledTimes(1)
   expect(ExtensionHostShared.executeProvider).toHaveBeenCalledWith({
     event: 'onFileSystem:memfs',
     method: 'ExtensionHostFileSystem.writeFile',
     noProviderFoundMessage: 'no file system provider found',
-    params: ['memfs', 'memfs:///test-folder', 'test'],
+    params: ['memfs', '/test-folder', 'test'],
   })
 })
 
