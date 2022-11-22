@@ -43,7 +43,6 @@ const restoreError = (error) => {
     restoredError.stack = error.stack
     return restoredError
   }
-  console.log({ error })
   if (error && error.message) {
     const restoredError = constructError(error.message)
     if (error.data) {
@@ -56,10 +55,12 @@ const restoreError = (error) => {
         }
       }
     } else if (error.stack) {
-      console.log('set stack')
-      // restoredError.stack = error.stack
-      const obj = {}
-      Error.captureStackTrace(obj)
+      // TODO accessing stack might be slow
+      const lowerStack = restoredError.stack
+      // @ts-ignore
+      const indexNewLine = lowerStack.indexOf('\n')
+      // @ts-ignore
+      restoredError.stack = error.stack + lowerStack.slice(indexNewLine)
     }
     return restoredError
   }

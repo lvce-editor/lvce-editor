@@ -124,8 +124,7 @@ test('writeFile', async () => {
   // @ts-ignore
   ExtensionHostShared.executeProvider.mockImplementation(() => {})
   await ExtensionHostFileSystem.writeFile(
-    'memfs',
-    'memfs:///test-folder',
+    'extension-host://memfs:///test-folder',
     'test'
   )
   expect(ExtensionHostShared.executeProvider).toHaveBeenCalledTimes(1)
