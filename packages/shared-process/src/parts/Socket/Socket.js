@@ -1,7 +1,6 @@
 import VError from 'verror'
 import * as Command from '../Command/Command.js'
-import * as Error from '../Error/Error.js'
-import { requiresSocket } from '../RequiresSocket/RequiresSocket.js'
+import * as GetResponse from '../GetResponse/GetResponse.js'
 
 export const state = {
   /**
@@ -30,59 +29,9 @@ const handleMessage = async (event) => {
       )
       return
     }
-    let result
-    try {
-      result = requiresSocket(object.method)
-        ? await Command.invoke(object.method, state.socket, ...object.params)
-        : await Command.invoke(object.method, ...object.params)
-    } catch (error) {
-      if (error instanceof Error.OperationalError) {
-        // console.log({ error })
-        const rawCause = error.cause()
-        const errorCause = rawCause ? rawCause.message : ''
-        const errorMessage = rawCause
-          ? error.message.slice(0, error.message.indexOf(errorCause))
-          : ''
-
-        // console.info('expected error', error)
-        send({
-          jsonrpc: '2.0',
-          id: object.id,
-          error: {
-            code: /* ExpectedError */ -32000,
-            message: error.message,
-            data: {
-              stack: error.originalStack,
-              codeFrame: error.originalCodeFrame,
-              category: error.category,
-              // @ts-ignore
-              stderr: error.stderr,
-            },
-          },
-        })
-      } else {
-        console.error(error)
-        // TODO check if socket is active
-        send({
-          jsonrpc: '2.0',
-          id: object.id,
-          error: {
-            code: /* UnexpectedError */ -32001,
-            // @ts-ignore
-            message: error.toString(),
-            data: {
-              code: error.code,
-            },
-          },
-        })
-      }
-      return
-    }
-    send({
-      jsonrpc: '2.0',
-      result,
-      id: object.id,
-    })
+    const response = await GetResponse.getResponse(object, state.socket)
+    console.log({ response })
+    send(response)
   } else {
     if (!object.params) {
       console.warn('invalid message', typeof object, object.params, object)

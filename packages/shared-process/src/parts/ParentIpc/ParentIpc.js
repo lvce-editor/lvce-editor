@@ -3,12 +3,11 @@ import VError from 'verror'
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
 import * as Debug from '../Debug/Debug.js'
-import * as Error from '../Error/Error.js'
-import { requiresSocket } from '../RequiresSocket/RequiresSocket.js'
-import * as Platform from '../Platform/Platform.js'
+import * as ExtensionHostHelperProcessIpc from '../ExtensionHostHelperProcessIpc/ExtensionHostHelperProcessIpc.js'
 import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
 import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
-import * as ExtensionHostHelperProcessIpc from '../ExtensionHostHelperProcessIpc/ExtensionHostHelperProcessIpc.js'
+import * as GetResponse from '../GetResponse/GetResponse.js'
+
 // TODO add tests for this
 
 // TODO handle structure: one shared process multiple extension hosts
@@ -94,27 +93,8 @@ const handleJsonRpcResult = (message) => {
 
 const handleJsonRpcMessage = async (message, handle) => {
   if (message.id) {
-    try {
-      const result = requiresSocket(message.method)
-        ? await Command.invoke(message.method, handle, ...message.params)
-        : await Command.invoke(message.method, ...message.params)
-      electronSend({
-        jsonrpc: '2.0',
-        id: message.id,
-        result: result ?? null,
-      })
-    } catch (error) {
-      console.error('[shared process] command failed to execute')
-      console.error(error)
-      electronSend({
-        jsonrpc: '2.0',
-        code: /* ExpectedError */ -32000,
-        id: message.id,
-        error: 'ExpectedError',
-        // @ts-ignore
-        data: error.toString(),
-      })
-    }
+    const response = await GetResponse.getResponse(message, handle)
+    electronSend(response)
   } else {
     // TODO handle error
     Command.execute(message.method, null, ...message.params)
@@ -163,61 +143,8 @@ const electronInitialize = (initializeMessage) => {
       Callback.resolve(message.id, message.result)
     } else if (message.method) {
       if (message.id) {
-        try {
-          const result = requiresSocket(message.method)
-            ? await Command.invoke(
-                message.method,
-                fakeSocket,
-                ...message.params
-              )
-            : await Command.invoke(message.method, ...message.params)
-
-          port.postMessage({
-            jsonrpc: '2.0',
-            id: message.id,
-            result: result ?? null,
-          })
-        } catch (error) {
-          // TODO duplicate code with Socket.js, clean this up
-          if (error instanceof Error.OperationalError) {
-            // console.log({ error })
-            const rawCause = error.cause()
-            const errorCause = rawCause ? rawCause.message : ''
-            const errorMessage = rawCause
-              ? error.message.slice(0, error.message.indexOf(errorCause))
-              : ''
-
-            // console.info('expected error', error)
-            port.postMessage({
-              jsonrpc: '2.0',
-              id: message.id,
-              error: {
-                code: /* ExpectedError */ -32000,
-                message: error.message,
-                data: {
-                  stack: error.originalStack,
-                  codeFrame: error.originalCodeFrame,
-                  category: error.category,
-                  // @ts-ignore
-                  stderr: error.stderr,
-                },
-              },
-            })
-          } else {
-            console.error('[shared process] command failed to execute')
-            console.error(error)
-            // TODO check if socket is active
-            port.postMessage({
-              jsonrpc: '2.0',
-              id: message.id,
-              error: {
-                code: /* UnexpectedError */ -32001,
-                // @ts-ignore
-                message: error.toString(),
-              },
-            })
-          }
-        }
+        const response = await GetResponse.getResponse(message, fakeSocket)
+        port.postMessage(response)
       } else {
         Command.execute(message.method, fakeSocket, ...message.params)
       }
