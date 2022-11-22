@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
+import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 
 const getProvider = (scheme) => {
   switch (scheme) {
@@ -15,7 +16,7 @@ const getProvider = (scheme) => {
 export const textSearch = async (root, query) => {
   Assert.string(root)
   Assert.string(query)
-  const scheme = FileSystem.getProtocol(root)
+  const scheme = GetProtocol.getProtocol(root)
   const provider = await getProvider(scheme)
   const results = await provider.textSearch(scheme, root, query)
   return results
