@@ -4,7 +4,6 @@ export const listen = (ipc) => {
   const handleMessage = async (message) => {
     if ('method' in message) {
       const response = await GetResponse.getResponse(message)
-      console.log({ response })
       ipc.send(response)
     }
   }
