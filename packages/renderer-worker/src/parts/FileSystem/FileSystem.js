@@ -77,8 +77,9 @@ export const copy = (sourceUri, targetUri) => {
 
 export const getPathSeparator = (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
+  const path = GetProtocol.getPath(protocol, uri)
   const fileSystem = GetFileSystem.getFileSystem(protocol)
-  return fileSystem.getPathSeparator(protocol)
+  return fileSystem.getPathSeparator(path)
 }
 
 export const getRealPath = (uri) => {

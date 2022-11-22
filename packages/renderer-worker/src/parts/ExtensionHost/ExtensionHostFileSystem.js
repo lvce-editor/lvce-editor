@@ -77,6 +77,7 @@ export const createFolder = (uri) => {
 export const writeFile = (uri, content) => {
   const protocol = GetProtocol.getProtocol(uri)
   const path = GetProtocol.getPath(protocol, uri)
+  console.log({ protocol })
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.writeFile',

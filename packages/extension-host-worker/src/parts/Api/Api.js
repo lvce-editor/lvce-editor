@@ -14,6 +14,7 @@ import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDoc
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
+import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
 
 import { VError } from '../VError/VError.js'
 
@@ -56,6 +57,9 @@ export const api =  {
 
   // Exec
   exec: ExtensionHostExec.exec,
+
+  // File System
+  registerFileSystemProvider: ExtensionHostFileSystem.registerFileSystemProvider,
 
   // Formatting
   registerFormattingProvider: ExtensionHostFormatting.registerFormattingProvider,

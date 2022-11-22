@@ -1,7 +1,7 @@
 const callbacks = []
 
 const fileSystemProvider = {
-  scheme: 'extension-host',
+  scheme: 'xyz',
   readFile(uri) {
     return new Promise((resolve, reject) => {
       callbacks.push({ resolve, reject })
