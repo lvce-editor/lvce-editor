@@ -31,10 +31,6 @@ test('invoke - error', async () => {
       })
     },
   }
-  const expectedError = new Error(
-    'Test failed: sample.tab-completion-provider: expected selector .Viewlet.Editor to have text "test3" but was "test"'
-  )
-  expectedError.stack = ''
   const error = await getError(
     RendererProcess.invoke(
       'TestFrameWork.checkSingleElementCondition',

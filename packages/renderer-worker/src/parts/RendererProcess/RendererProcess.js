@@ -1,9 +1,9 @@
 /* istanbul ignore file */
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
-import { JsonRpcError } from '../Errors/Errors.js'
 import * as IpcChild from '../IpcChild/IpcChild.js'
 import * as IpcChildType from '../IpcChildType/IpcChildType.js'
+import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 export const state = {
@@ -64,53 +64,8 @@ export const send = (message) => {
   state.ipc.send(message)
 }
 
-const deserializeError = (serializedError) => {
-  const error = new Error()
-  if (serializedError && serializedError.message) {
-    error.message = serializedError.message
-  }
-  if (serializedError && serializedError.stack) {
-    error.stack = serializedError.stack
-  }
-  return error
-}
-
-const combineStacks = (upperStack, lowerStack) => {
-  const indexNewLine = lowerStack.indexOf('\n')
-  return upperStack + lowerStack.slice(indexNewLine)
-}
-
-class RendererProcessError extends Error {
-  constructor(serializedError) {
-    const deserializedError = deserializeError(serializedError)
-    super(deserializedError.message)
-    if (this.stack) {
-      this.stack = combineStacks(deserializedError.stack, this.stack)
-    }
-  }
-}
-
-export const invoke = async (method, ...parameters) => {
-  const responseMessage = await new Promise((resolve, reject) => {
-    const callbackId = Callback.register(resolve, reject)
-    if (!state.ipc) {
-      reject(new Error('ipc not active'))
-      return
-    }
-    state.ipc.send({
-      jsonrpc: JsonRpcVersion.Two,
-      method,
-      params: parameters,
-      id: callbackId,
-    })
-  })
-  if ('error' in responseMessage) {
-    throw new RendererProcessError(responseMessage.error)
-  }
-  if ('result' in responseMessage) {
-    return responseMessage.result
-  }
-  new JsonRpcError('unexpected message from renderer process')
+export const invoke = async (method, ...params) => {
+  return JsonRpc.invoke(state.ipc, method, params)
 }
 
 export const sendAndTransfer = (message, transferables) => {
