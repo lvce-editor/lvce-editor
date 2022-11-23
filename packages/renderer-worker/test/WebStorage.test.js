@@ -78,8 +78,7 @@ test('setJson - localStorage', async () => {
     'WebStorage.setItem',
     1,
     'item-1',
-    `43
-`
+    `43`
   )
 })
 
