@@ -1,9 +1,9 @@
 export const create = (init = [1, 0, 0, 1, 0, 0]) => {
-  return new DOMMatrix(init)
+  return new DOMMatrixReadOnly(init)
 }
 
 export const scaleUp = (domMatrix, deltaScale) => {
-  return new DOMMatrix([
+  return new DOMMatrixReadOnly([
     (domMatrix.a *= deltaScale),
     domMatrix.b,
     domMatrix.c,
@@ -32,7 +32,7 @@ export const toString = (domMatrix) => {
 }
 
 export const move = (domMatrix, deltaX, deltaY) => {
-  return new DOMMatrix([
+  return new DOMMatrixReadOnly([
     domMatrix.a,
     domMatrix.b,
     domMatrix.c,
