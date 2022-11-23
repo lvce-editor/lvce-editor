@@ -78,7 +78,7 @@ beforeAll(() => {
 })
 
 test('create', () => {
-  expect(DomMatrix.create()).toBeInstanceOf(DOMMatrix)
+  expect(DomMatrix.create()).toBeInstanceOf(DOMMatrixReadOnly)
 })
 
 test('scaleUp', () => {
