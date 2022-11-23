@@ -141,7 +141,7 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
   }
   await BundleCss.bundleCss({
     outDir: `build/.tmp/dist/${commitHash}/css`,
-    assetDir: `/${commitHash}`,
+    assetDir: `${pathPrefix}/${commitHash}`,
   })
   await Copy.copy({
     from: 'static/icons',
