@@ -19,3 +19,7 @@ test('contentSecurityPolicy - should allow only local scripts', () => {
 test('contentSecurityPolicy - should allow images (local, https and data)', () => {
   expect(ContentSecurityPolicy.value).toContain(`img-src 'self' https: data:`)
 })
+
+test('contentSecurityPolicy - should allow prefetching local files', () => {
+  expect(ContentSecurityPolicy.value).toContain(`prefetch-src 'self'`)
+})
