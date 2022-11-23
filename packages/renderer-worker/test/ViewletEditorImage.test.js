@@ -133,36 +133,67 @@ test('render', () => {
 test('handlePointerMove - move left', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    pointerDownCount: 1,
+    eventCache: [
+      {
+        pointerId: 5,
+        x: 210.5,
+        y: 165.5,
+      },
+    ],
   }
-  const newState = ViewletEditorImage.handlePointerMove(state, 0, -10, 0)
+  const newState = ViewletEditorImage.handlePointerMove(state, 5, -10, 0)
   expect(newState.domMatrix.e).toBe(-10)
+  expect(newState.eventCache).toEqual([
+    {
+      pointerId: 5,
+      x: -10,
+      y: 0,
+    },
+  ])
 })
 
 test('handlePointerMove - move right', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    pointerDownCount: 1,
+    eventCache: [
+      {
+        pointerId: 5,
+        x: 210.5,
+        y: 165.5,
+      },
+    ],
   }
-  const newState = ViewletEditorImage.handlePointerMove(state, 0, 10, 0)
+  const newState = ViewletEditorImage.handlePointerMove(state, 5, 10, 0)
   expect(newState.domMatrix.e).toBe(10)
 })
 
 test('handlePointerMove - move up', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    pointerDownCount: 1,
+    eventCache: [
+      {
+        pointerId: 5,
+        x: 210.5,
+        y: 165.5,
+      },
+    ],
   }
-  const newState = ViewletEditorImage.handlePointerMove(state, 0, 0, -10)
+  const newState = ViewletEditorImage.handlePointerMove(state, 5, 0, -10)
   expect(newState.domMatrix.f).toBe(-10)
 })
 
 test('handlePointerMove - move down', () => {
   const state = {
     ...ViewletEditorImage.create(),
-    pointerDownCount: 1,
+    eventCache: [
+      {
+        pointerId: 5,
+        x: 210.5,
+        y: 165.5,
+      },
+    ],
   }
-  const newState = ViewletEditorImage.handlePointerMove(state, 0, 0, 10)
+  const newState = ViewletEditorImage.handlePointerMove(state, 5, 0, 10)
   expect(newState.domMatrix.f).toBe(10)
 })
 
@@ -170,9 +201,15 @@ test('handlePointerMove - move right after zoom', () => {
   const state = {
     ...ViewletEditorImage.create(),
     domMatrix: new DOMMatrix([2, 0, 0, 2, 0, 0]),
-    pointerDownCount: 1,
+    eventCache: [
+      {
+        pointerId: 5,
+        x: 210.5,
+        y: 165.5,
+      },
+    ],
   }
-  const newState = ViewletEditorImage.handlePointerMove(state, 0, 10, 20)
+  const newState = ViewletEditorImage.handlePointerMove(state, 5, 10, 20)
   expect(newState.domMatrix.e).toBe(10)
   expect(newState.domMatrix.f).toBe(20)
 })
@@ -298,4 +335,23 @@ test('copyImage', () => {
   expect(newState.domMatrix.d).toBe(1.13)
   expect(newState.domMatrix.e).toBe(-6.499999999999993)
   expect(newState.domMatrix.f).toBe(-6.499999999999993)
+})
+
+test('handlePointerUp', () => {
+  const state = {
+    ...ViewletEditorImage.create(),
+    top: 0,
+    left: 0,
+    width: 100,
+    height: 100,
+    eventCache: [
+      {
+        pointerId: 5,
+        x: 210.5,
+        y: 165.5,
+      },
+    ],
+  }
+  const newState = ViewletEditorImage.handlePointerUp(state, 5, 0, 0)
+  expect(newState.eventCache).toEqual([])
 })
