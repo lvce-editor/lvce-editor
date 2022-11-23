@@ -24,7 +24,6 @@ export const create = (id, uri, left, top, width, height) => {
     touchZoomFactor: 1.015,
     eventCache: [],
     previousDiff: 0,
-    pointerDownCount: 0,
   }
 }
 
@@ -51,15 +50,13 @@ export const handlePointerDown = (state, pointerId, x, y) => {
   Assert.object(state)
   Assert.number(x)
   Assert.number(y)
-  const { eventCache, pointerDownCount } = state
+  const { eventCache } = state
   const newEventCache = [...eventCache, { pointerId, x, y }]
-  const newPointerDownCount = pointerDownCount + 1
   return {
     ...state,
     pointerOffsetX: x,
     pointerOffsetY: y,
     eventCache: newEventCache,
-    pointerDownCount: newPointerDownCount,
   }
 }
 
@@ -72,9 +69,10 @@ const distance = (point1, point2) => {
 const handleZoom = (state) => {
   const { domMatrix, eventCache, previousDiff, touchZoomFactor } = state
   const currentDiff = distance(eventCache[0], eventCache[1])
-  if (previousDiff > 0) {
+  if (previousDiff !== 0) {
+    const delta = 1 + Math.abs(previousDiff - currentDiff) / 300
     if (currentDiff > previousDiff) {
-      const newDomMatrix = DomMatrix.scaleUp(domMatrix, touchZoomFactor)
+      const newDomMatrix = DomMatrix.scaleUp(domMatrix, delta)
       return {
         ...state,
         previousDiff: currentDiff,
@@ -82,7 +80,7 @@ const handleZoom = (state) => {
       }
     }
     if (currentDiff < previousDiff) {
-      const newDomMatrix = DomMatrix.scaleDown(domMatrix, touchZoomFactor)
+      const newDomMatrix = DomMatrix.scaleDown(domMatrix, delta)
       return {
         ...state,
         previousDiff: currentDiff,
@@ -90,7 +88,11 @@ const handleZoom = (state) => {
       }
     }
   }
-  return state
+
+  return {
+    ...state,
+    previousDiff: currentDiff,
+  }
 }
 
 const handleMove = (state, x, y) => {
@@ -110,39 +112,40 @@ export const handlePointerMove = (state, pointerId, x, y) => {
   Assert.object(state)
   Assert.number(x)
   Assert.number(y)
-  const { eventCache, pointerDownCount } = state
-  if (pointerDownCount === 0) {
+  const { eventCache } = state
+  if (eventCache.length === 0) {
     return state
   }
   const index = Arrays.findObjectIndex(eventCache, 'pointerId', pointerId)
-  // TODO avoid mutation
-  eventCache[index] = { pointerId, x, y }
-  if (eventCache.length === 2) {
-    return handleZoom(state)
+  const newEventCache = Arrays.toSpliced(eventCache, index, 1, {
+    pointerId,
+    x,
+    y,
+  })
+  const newState = { ...state, eventCache: newEventCache }
+  if (newEventCache.length === 2) {
+    return handleZoom(newState)
   }
-  return handleMove(state, x, y)
+  return handleMove(newState, x, y)
 }
 
 const removePointer = (eventCache, pointerId) => {
   const index = Arrays.findObjectIndex(eventCache, 'pointerId', pointerId)
-  const newEventCache = [
-    ...eventCache.slice(0, index),
-    ...eventCache.slice(index + 1),
-  ]
+  const newEventCache = Arrays.toSpliced(eventCache, index, 1)
   return newEventCache
 }
 
 export const handlePointerUp = (state, pointerId, x, y) => {
-  const { eventCache, pointerDownCount } = state
-  if (pointerDownCount === 0) {
+  const { eventCache, previousDiff } = state
+  if (eventCache.length === 0) {
     return state
   }
   const newEventCache = removePointer(eventCache, pointerId)
-  const newPointerDownCount = pointerDownCount - 1
+  const newPreviousDiff = newEventCache.length === 0 ? 0 : previousDiff
   return {
     ...state,
     eventCache: newEventCache,
-    pointerDownCount: newPointerDownCount,
+    previousDiff: newPreviousDiff,
   }
 }
 
