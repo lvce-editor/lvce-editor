@@ -1,6 +1,8 @@
 import * as Workspace from './Workspace.js'
 
+export const name = 'Workspace'
+
 export const Commands = {
-  'Workspace.getHomeDir': Workspace.getHomeDir,
-  'Workspace.resolveRoot': Workspace.resolveRoot,
+  getHomeDir: Workspace.getHomeDir,
+  resolveRoot: Workspace.resolveRoot,
 }
