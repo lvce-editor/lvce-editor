@@ -7,6 +7,7 @@ const Session = require('../ElectronSession/ElectronSession.js')
 const Platform = require('../Platform/Platform.js')
 const Preferences = require('../Preferences/Preferences.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
+const Logger = require('../Logger/Logger.js')
 
 // TODO impossible to test these methods
 // and ensure that there is no memory leak
@@ -24,7 +25,7 @@ const loadUrl = async (browserWindow, url) => {
     await browserWindow.loadURL(url)
   } catch (error) {
     if (LifeCycle.isShutDown()) {
-      console.info('error during shutdown', error)
+      Logger.info('error during shutdown', error)
     } else {
       throw new VError(
         // @ts-ignore

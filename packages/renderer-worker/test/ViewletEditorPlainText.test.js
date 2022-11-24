@@ -1,9 +1,15 @@
-import * as FileSystem from '../src/parts/FileSystem/FileSystem.js'
+import * as GetFileSystem from '../src/parts/GetFileSystem/GetFileSystem.js'
 import * as ViewletEditorPlainText from '../src/parts/ViewletEditorPlainText/ViewletEditorPlainText.js'
 import * as ViewletManager from '../src/parts/ViewletManager/ViewletManager.js'
+import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(ViewletEditorPlainText, oldState, newState)
+  return ViewletManager.render(
+    ViewletEditorPlainText,
+    oldState,
+    newState,
+    ViewletModuleId.EditorPlainText
+  )
 }
 
 test('create', () => {
@@ -12,7 +18,7 @@ test('create', () => {
 })
 
 test('loadContent', async () => {
-  FileSystem.state.fileSystems.test = {
+  GetFileSystem.state.fileSystems.test = {
     readFile(uri) {
       return 'test content'
     },

@@ -1,3 +1,4 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
@@ -33,7 +34,7 @@ const create$StatusBarItem = (item) => {
   const $StatusBarItem = document.createElement('li')
   $StatusBarItem.className = 'StatusBarItem'
   // @ts-ignore
-  $StatusBarItem.role = 'button'
+  $StatusBarItem.role = AriaRoles.Button
   $StatusBarItem.dataset.name = item.name
   $StatusBarItem.tabIndex = -1
   $StatusBarItem.textContent = item.text
@@ -86,7 +87,7 @@ export const create = (statusBarItemsLeft, statusBarItemsRight) => {
   $Viewlet.onclick = handleClick
   $Viewlet.tabIndex = 0
   // @ts-ignore
-  $Viewlet.role = 'status'
+  $Viewlet.role = AriaRoles.Status
   $Viewlet.ariaRoleDescription = 'Status Bar'
   $Viewlet.ariaLive = 'off' // see https://github.com/microsoft/vscode/issues/94677
   $Viewlet.append($StatusBarItemsLeft, $StatusBarItemsRight)

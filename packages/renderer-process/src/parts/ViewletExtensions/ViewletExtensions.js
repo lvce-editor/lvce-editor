@@ -1,13 +1,12 @@
 // based on https://github.com/microsoft/vscode/blob/main/src/vs/workbench/contrib/extensions/browser/extensionsList.ts (License MIT)
 
 import * as FindIndex from '../../shared/findIndex.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
-
-export const name = 'Extensions'
 
 const activeId = 'ExtensionActive'
 
@@ -48,7 +47,7 @@ export const create = () => {
   $ListItems.tabIndex = 0
   $ListItems.ariaLabel = 'Extensions'
   // @ts-ignore
-  $ListItems.role = 'list'
+  $ListItems.role = AriaRoles.List
   $ListItems.oncontextmenu = ViewletExtensionsEvents.handleContextMenu
   if (Platform.isMobile) {
     $ListItems.onclick = ViewletExtensionsEvents.handlePointerDown
@@ -99,7 +98,7 @@ export const create = () => {
   $Viewlet.ariaBusy = 'true'
   $Viewlet.ariaLive = 'polite'
   // @ts-ignore
-  $Viewlet.role = 'none'
+  $Viewlet.role = AriaRoles.None
   $Viewlet.append($ExtensionHeader, $List)
 
   return {
@@ -249,11 +248,11 @@ const create$Extension = () => {
   )
   const $ExtensionListItem = document.createElement('div')
   // @ts-ignore
-  $ExtensionListItem.role = 'article'
+  $ExtensionListItem.role = AriaRoles.Article
   $ExtensionListItem.ariaRoleDescription = 'Extension'
   $ExtensionListItem.className = 'ExtensionListItem'
   // @ts-ignore
-  $ExtensionListItem.role = 'listitem'
+  $ExtensionListItem.role = AriaRoles.ListItem
   $ExtensionListItem.append(icon, $ExtensionDetail)
   return $ExtensionListItem
 }

@@ -711,6 +711,25 @@ const copyExtensionHostFiles = async () => {
   })
 }
 
+const copyExtensionHostHelperProcessFiles = async () => {
+  await Copy.copy({
+    from: 'packages/extension-host-helper-process',
+    to: 'build/.tmp/server/extension-host-helper-process',
+    ignore: [
+      'tsconfig.json',
+      'node_modules',
+      'distmin',
+      'example',
+      'test',
+      'package-lock.json',
+    ],
+  })
+  await Copy.copyFile({
+    from: 'LICENSE',
+    to: 'build/.tmp/server/extension-host-helper-process/LICENSE',
+  })
+}
+
 const copyPtyHostFiles = async () => {
   await Copy.copy({
     from: 'packages/pty-host',
@@ -738,9 +757,17 @@ const setVersions = async () => {
     'build/.tmp/server/pty-host/package.json',
     'build/.tmp/server/server/package.json',
     'build/.tmp/server/shared-process/package.json',
+    'build/.tmp/server/extension-host-helper-process/package.json',
+    'build/.tmp/server/jest-environment/package.json',
   ]
   for (const file of files) {
     const json = await JsonFile.readJson(file)
+    delete json['xo']
+    delete json['scripts']
+    delete json['devDependencies']
+    if (json['optionalDependencies']) {
+      delete json['optionalDependencies']['electron-clipboard-ex']
+    }
     if (json.dependencies && json.dependencies['@lvce-editor/shared-process']) {
       json.dependencies['@lvce-editor/shared-process'] = gitTag
     }
@@ -749,6 +776,12 @@ const setVersions = async () => {
     }
     if (json.dependencies && json.dependencies['@lvce-editor/extension-host']) {
       json.dependencies['@lvce-editor/extension-host'] = gitTag
+    }
+    if (
+      json.dependencies &&
+      json.dependencies['@lvce-editor/extension-host-helper-process']
+    ) {
+      json.dependencies['@lvce-editor/extension-host-helper-process'] = gitTag
     }
     if (json.version) {
       json.version = gitTag
@@ -813,6 +846,18 @@ const copyPlaygroundFiles = async ({ commitHash }) => {
   })
 }
 
+const copyJestEnvironment = async ({ commitHash }) => {
+  await Copy.copy({
+    from: 'build/files/jest-environment',
+    to: `build/.tmp/server/jest-environment`,
+  })
+  await Replace.replace({
+    path: `build/.tmp/server/jest-environment/src/index.js`,
+    occurrence: 'COMMIT_HASH',
+    replacement: commitHash,
+  })
+}
+
 export const build = async () => {
   const commitHash = await CommitHash.getCommitHash()
 
@@ -840,9 +885,17 @@ export const build = async () => {
   await copyExtensionHostFiles()
   console.timeEnd('copyExtensionHostFiles')
 
+  console.time('copyExtensionHostHelperProcessFiles')
+  await copyExtensionHostHelperProcessFiles()
+  console.timeEnd('copyExtensionHostHelperProcessFiles')
+
   console.time('copyPtyHostFiles')
   await copyPtyHostFiles()
   console.timeEnd('copyPtyHostFiles')
+
+  console.time('copyJestEnvironment')
+  await copyJestEnvironment({ commitHash })
+  console.timeEnd('copyJestEnvironment')
 
   console.time('setVersions')
   await setVersions()

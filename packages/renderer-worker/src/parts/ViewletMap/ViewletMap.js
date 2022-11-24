@@ -11,6 +11,7 @@ const mapExtToEditorType = {
   '.jpg': ViewletModuleId.EditorImage,
   '.jpeg': ViewletModuleId.EditorImage,
   '.pdf': ViewletModuleId.Pdf,
+  '.mp3': ViewletModuleId.Audio,
 }
 
 export const getId = (uri) => {

@@ -220,6 +220,10 @@
     {
       "name": "YamlPropertyValueString",
       "foreground": "#8CAEC1"
+    },
+    {
+      "name": "CssAtRule",
+      "foreground": "#E78484"
     }
   ]
 }

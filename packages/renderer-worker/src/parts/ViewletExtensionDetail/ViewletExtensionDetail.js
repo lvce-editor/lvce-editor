@@ -1,3 +1,4 @@
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
@@ -23,9 +24,18 @@ export const create = (id, uri, top, left, width, height) => {
 }
 
 const loadReadmeContent = async (path) => {
-  const readmeUrl = Path.join('/', path, 'README.md')
-  const readmeContent = await FileSystem.readFile(readmeUrl)
-  return readmeContent
+  try {
+    const readmeUrl = Path.join('/', path, 'README.md')
+    const readmeContent = await FileSystem.readFile(readmeUrl)
+    return readmeContent
+  } catch (error) {
+    // @ts-ignore
+    if (error && error.code === ErrorCodes.ENOENT) {
+      return ''
+    }
+    console.error(error)
+    return `${error}`
+  }
 }
 
 // TODO duplicate code with viewletExtensions
@@ -140,8 +150,6 @@ const renderDescription = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.ExtensionDetail,
       /* method */ 'setDescription',
       /* description */ newState.description,
     ]
@@ -154,8 +162,6 @@ const renderReadme = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.ExtensionDetail,
       /* method */ 'setReadmeHtml',
       /* sanizedHtml */ newState.sanitizedReadmeHtml,
     ]
@@ -167,12 +173,7 @@ const renderIcon = {
     return oldState.iconSrc === newState.iconSrc
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.ExtensionDetail,
-      /* method */ 'setIconSrc',
-      /* src */ newState.iconSrc,
-    ]
+    return [/* method */ 'setIconSrc', /* src */ newState.iconSrc]
   },
 }
 
@@ -182,8 +183,6 @@ const renderSize = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.ExtensionDetail,
       /* method */ 'setSize',
       /* oldSize */ oldState.size,
       /* newSize */ newState.size,

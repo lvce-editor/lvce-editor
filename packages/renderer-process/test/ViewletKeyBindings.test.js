@@ -4,10 +4,6 @@
 import * as ViewletKeyBindings from '../src/parts/ViewletKeyBindings/ViewletKeyBindings.js'
 import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomElements.js'
 
-test('name', () => {
-  expect(ViewletKeyBindings.name).toBe('KeyBindings')
-})
-
 test('create', () => {
   expect(ViewletKeyBindings.create()).toBeDefined()
 })

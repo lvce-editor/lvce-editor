@@ -74,6 +74,14 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
       - run: npm publish --access public
+        working-directory: ./build/.tmp/server/extension-host-helper-process
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - run: npm publish --access public
+        working-directory: ./build/.tmp/server/jest-environment
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - run: npm publish --access public
         working-directory: ./build/.tmp/server/pty-host
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import * as FileSystemErrorCodes from '../src/parts/FileSystemErrorCodes/FileSystemErrorCodes.js'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -30,7 +30,7 @@ test('handleCliArgs - error - manifest not found', async () => {
   ExtensionLink.link.mockImplementation(() => {
     throw new ErrorWithCode(
       `Error: Failed to link extension: Failed to load extension manifest for test: File not found '/test/extension.json'`,
-      FileSystemErrorCodes.E_MANIFEST_NOT_FOUND
+      ErrorCodes.E_MANIFEST_NOT_FOUND
     )
   })
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})

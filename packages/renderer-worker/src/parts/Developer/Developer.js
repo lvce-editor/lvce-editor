@@ -9,6 +9,7 @@ import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
 import * as ProcessExplorer from '../ProcessExplorer/ProcessExplorer.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 // TODO vscode's version of this is shorter
 // if it is a bottleneck, check performance of this function (not very optimized now)
@@ -167,7 +168,7 @@ const formatStartupPerformance = ({
     )
     lines.push('## main-process')
     lines.push('')
-    lines.push(...formattedElectronEntries.split('\n'))
+    lines.push(...SplitLines.splitLines(formattedElectronEntries))
     lines.push('')
   }
   if (measureEntries) {
@@ -184,21 +185,21 @@ const formatStartupPerformance = ({
       lines.push('## renderer-worker')
     }
     lines.push('')
-    lines.push(...formattedMeasureEntries.split('\n'))
+    lines.push(...SplitLines.splitLines(formattedMeasureEntries))
     lines.push('')
   }
   if (webVitals) {
     const formattedWebVitals = formatWebVitals(webVitals)
     lines.push('## Web Vitals')
     lines.push('')
-    lines.push(...formattedWebVitals.split('\n'))
+    lines.push(...SplitLines.splitLines(formattedWebVitals))
     lines.push('')
   }
   if (nodeStartupTiming) {
     const formattedNodeStartupTiming = formatNodeTiming(nodeStartupTiming)
     lines.push('## Node Startup Timing')
     lines.push('')
-    lines.push(...formattedNodeStartupTiming.split('\n'))
+    lines.push(...SplitLines.splitLines(formattedNodeStartupTiming))
     lines.push('')
   }
   lines.push('## Extension Host')

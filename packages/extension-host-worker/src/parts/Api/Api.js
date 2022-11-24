@@ -1,8 +1,10 @@
 import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
+import * as ExtensionHostConfiguration from '../ExtensionHostConfiguration/ExtensionHostConfiguration.js'
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
-import * as ExtensionHostExtension from '../ExtensionHostExtension/ExtensionHostExtension.js'
+import * as ExtensionHostEnv from '../ExtensionHostEnv/ExtensionHostEnv.js'
+import * as ExtensionHostExec from '../ExtensionHostExec/ExtensionHostExec.js'
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
 import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
@@ -11,6 +13,9 @@ import * as ExtensionHostTabCompletion from '../ExtensionHostTabCompletion/Exten
 import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDocument.js'
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
+import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
+
+import { VError } from '../VError/VError.js'
 
 class FormattingError extends Error {
   constructor(message, codeFrame) {
@@ -21,56 +26,67 @@ class FormattingError extends Error {
 }
 
 // prettier-ignore
-export const create = () => {
-  return {
-    // Brace Completion
-    registerBraceCompletionProvider:ExtensionHostBraceCompletion.registerBraceCompletionProvider,
-    executeBraceCompletionProvider: ExtensionHostBraceCompletion.executeBraceCompletionProvider,
+export const api =  {
+  // Brace Completion
+  registerBraceCompletionProvider:ExtensionHostBraceCompletion.registerBraceCompletionProvider,
+  executeBraceCompletionProvider: ExtensionHostBraceCompletion.executeBraceCompletionProvider,
 
-    // Command
-    registerCommand: ExtensionHostCommand.registerCommand,
-    executeCommand: ExtensionHostCommand.executeCommand,
+  // Command
+  registerCommand: ExtensionHostCommand.registerCommand,
+  executeCommand: ExtensionHostCommand.executeCommand,
 
-    // Completion
-    registerCompletionProvider:ExtensionHostCompletion.registerCompletionProvider,
-    executeCompletionProvider: ExtensionHostCompletion.executeCompletionProvider,
+  // Completion
+  registerCompletionProvider:ExtensionHostCompletion.registerCompletionProvider,
+  executeCompletionProvider: ExtensionHostCompletion.executeCompletionProvider,
 
-    // Definition
-    registerDefinitionProvider: ExtensionHostDefinition.registerDefinitionProvider,
-    executeDefinitionProvider: ExtensionHostDefinition.executeDefinitionProvider,
 
-    // Errors
-    FormattingError,
+  // Configuration
+  getConfiguration: ExtensionHostConfiguration.getConfiguration,
 
-    // Formatting
-    registerFormattingProvider: ExtensionHostFormatting.registerFormattingProvider,
-    executeFormattingProvider: ExtensionHostFormatting.executeFormattingProvider,
+  // Definition
+  registerDefinitionProvider: ExtensionHostDefinition.registerDefinitionProvider,
+  executeDefinitionProvider: ExtensionHostDefinition.executeDefinitionProvider,
 
-    // Implementation
-    registerImplementationProvider: ExtensionHostImplementation.registerImplementationProvider,
-    executeImplementationProvider: ExtensionHostImplementation.executeImplementationProvider,
+  // Env
+  env: ExtensionHostEnv.env,
 
-    // Reference
-    registerReferenceProvider: ExtensionHostReference.registerReferenceProvider,
-    executeReferenceProvider: ExtensionHostReference.executeReferenceProvider,
+  // Errors
+  FormattingError,
+  VError,
 
-    // Source Control
-    registerSourceControlProvider: ExtensionHostSourceControl.registerSourceControlProvider,
+  // Exec
+  exec: ExtensionHostExec.exec,
 
-    // Tab Completion
-    registerTabCompletionProvider: ExtensionHostTabCompletion.registerTabCompletionProvider,
-    executeTabCompletionProvider: ExtensionHostTabCompletion.executeTabCompletionProvider,
+  // Formatting
+  registerFormattingProvider: ExtensionHostFormatting.registerFormattingProvider,
+  executeFormattingProvider: ExtensionHostFormatting.executeFormattingProvider,
 
-    // Text Document
-    getTextFromTextDocument: TextDocument.getText,
+  // Implementation
+  registerImplementationProvider: ExtensionHostImplementation.registerImplementationProvider,
+  executeImplementationProvider: ExtensionHostImplementation.executeImplementationProvider,
 
-    // Text Search
-    registerTextSearchProvider: ExtensionHostTextSearch.registerTextSearchProvider,
-    executeTextSearchProvider: ExtensionHostTextSearch.executeTextSearchProvider,
+  // Reference
+  registerReferenceProvider: ExtensionHostReference.registerReferenceProvider,
+  executeReferenceProvider: ExtensionHostReference.executeReferenceProvider,
 
-    // Type Definition
-    registerTypeDefinitionProvider: ExtensionHostTypeDefinition.registerTypeDefinitionProvider,
-    executeTypeDefinitionProvider: ExtensionHostTypeDefinition.executeTypeDefinitionProvider,
+  // Source Control
+  registerSourceControlProvider: ExtensionHostSourceControl.registerSourceControlProvider,
 
-  }
+  // Tab Completion
+  registerTabCompletionProvider: ExtensionHostTabCompletion.registerTabCompletionProvider,
+  executeTabCompletionProvider: ExtensionHostTabCompletion.executeTabCompletionProvider,
+
+  // Text Document
+  getTextFromTextDocument: TextDocument.getText,
+
+  // Text Search
+  registerTextSearchProvider: ExtensionHostTextSearch.registerTextSearchProvider,
+  executeTextSearchProvider: ExtensionHostTextSearch.executeTextSearchProvider,
+
+  // Type Definition
+  registerTypeDefinitionProvider: ExtensionHostTypeDefinition.registerTypeDefinitionProvider,
+  executeTypeDefinitionProvider: ExtensionHostTypeDefinition.executeTypeDefinitionProvider,
+
+  // Workspace
+  getWorkspaceFolder: ExtensionHostWorkspace.getWorkspaceFolder
 }

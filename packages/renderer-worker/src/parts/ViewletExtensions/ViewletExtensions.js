@@ -1,16 +1,15 @@
 import * as Command from '../Command/Command.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
-import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
 import * as ExtensionManagement from '../ExtensionManagement/ExtensionManagement.js' // TODO use Command.execute instead
-import * as ExtensionsMarketplace from '../ExtensionMarketplace/ExtensionMarketplace.js'
+import * as Height from '../Height/Height.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
+import * as SearchExtensions from '../SearchExtensions/SearchExtensions.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletSize from '../ViewletSize/ViewletSize.js'
-import { getListHeight } from './ViewletExtensionsShared.js'
-import * as Height from '../Height/Height.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
+import { getListHeight } from './ViewletExtensionsShared.js'
 
 const SUGGESTIONS = [
   '@builtin',
@@ -27,12 +26,7 @@ const SUGGESTIONS = [
 
 export const create = (id, uri, left, top, width, height) => {
   return {
-    extensions: [],
     searchValue: '',
-    parsedValue: {
-      isLocal: true, // TODO flatten this
-      query: '',
-    },
     suggestionState: /* Closed */ 0,
     disposed: false,
     width,
@@ -48,220 +42,52 @@ export const create = (id, uri, left, top, width, height) => {
       minimumSliderSize: Height.MinimumSliderSize,
       headerHeight: 35,
     }),
+    allExtensions: [],
   }
 }
 
 const getVisible = (state) => {
-  const { minLineY, maxLineY, items } = state
-  return items.slice(minLineY, maxLineY)
+  const { minLineY, maxLineY, items, itemHeight } = state
+  const setSize = items.length
+  const visible = []
+  for (let i = minLineY; i < maxLineY; i++) {
+    const item = items[i]
+    visible.push({ ...item, setSize, posInSet: i + 1, top: i * itemHeight })
+  }
+  return visible
 }
 
 const getSize = (width) => {
   return width < 180 ? ViewletSize.Small : ViewletSize.Normal
 }
 
-export const loadContent = async (state) => {
-  const { height, itemHeight, minimumSliderSize, width } = state
-  // TODO just get local extensions on demand (not when query string is already different)
-
-  // TODO get installed extensions from extension host
-  // TODO just get local extensions on demand (not when query string is already different)
-  const extensions = await ExtensionManagement.getAllExtensions()
-  const viewObjects = filterExtensions(
-    extensions.map(toInstalledViewObject),
-    state.parsedValue,
-    itemHeight
-  )
-
-  const listHeight = getListHeight(state)
-  const total = viewObjects.length
-  const contentHeight = total * itemHeight
-  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
-    height,
-    contentHeight,
-    minimumSliderSize
-  )
-  const numberOfVisible = Math.ceil(listHeight / itemHeight)
-  const maxLineY = Math.min(numberOfVisible, total)
-  const finalDeltaY = Math.max(contentHeight - listHeight, 0)
-  const size = getSize(width)
-  return {
-    ...state,
-    extensions,
-    items: viewObjects,
-    maxLineY: maxLineY,
-    scrollBarHeight,
-    finalDeltaY,
-    size,
-  }
-}
-
-const toInstalledViewObject = (extension) => {
-  return {
-    name: ExtensionDisplay.getName(extension),
-    publisher: ExtensionDisplay.getPublisher(extension),
-    version: ExtensionDisplay.getVersion(extension),
-    description: ExtensionDisplay.getDescription(extension),
-    // TODO type field: builtin|marketplace|external
-    // TODO should be status
-    state: 'installed',
-    id: ExtensionDisplay.getId(extension),
-    icon: ExtensionDisplay.getIcon(extension),
-  }
-}
-
-const toDisabledViewObject = (extension) => {
-  return {
-    name: extension.name,
-    publisher: extension.authorId || extension.publisher,
-    version: extension.version,
-    // TODO type field: builtin|marketplace|external
-    // TODO should be status
-    state: 'disabled',
-    id: extension.id,
-  }
-}
-
-export const dispose = () => {}
-
-const RE_PARAM = /@\w+/g
-
-// TODO test sorting and filtering
-const parseValue = (value) => {
-  const parameters = Object.create(null)
-  // TODO this is not very functional code (assignment)
-  const replaced = value.replace(RE_PARAM, (match, by, order) => {
-    if (match.startsWith('@installed')) {
-      parameters.installed = true
-    }
-    if (match.startsWith('@enabled')) {
-      parameters.enabled = true
-    }
-    if (match.startsWith('@disabled')) {
-      parameters.disabled = true
-    }
-    if (match.startsWith('@builtin')) {
-      parameters.builtin = true
-    }
-    if (match.startsWith('@sort')) {
-      // TODO
-      parameters.sort = 'installs'
-    }
-    if (match.startsWith('@id')) {
-      // TODO
-      parameters.id = 'abc'
-    }
-    if (match.startsWith('@outdated')) {
-      parameters.outdated = true
-    }
-    return ''
-  })
-  const isLocal =
-    parameters.enabled ||
-    parameters.builtin ||
-    parameters.disabled ||
-    parameters.outdated
-  return {
-    query: replaced,
-    isLocal,
-    params: parameters,
-  }
-}
-
-const matchesParsedValue = (extension, parsedValue) => {
-  // TODO handle error when extension.name is not of type string
-  if (extension && extension.name) {
-    return extension.name.includes(parsedValue.query)
-  }
-  // TODO handle error when extension id is not of type string
-  if (extension && extension.id) {
-    return extension.id.includes(parsedValue.query)
-  }
-  return false
-}
-
-const filterExtensions = (extensions, parsedValue, itemHeight) => {
-  const items = []
-  for (const extension of extensions) {
-    if (matchesParsedValue(extension, parsedValue)) {
-      items.push(extension)
-    }
-  }
-  // TODO make this more efficient / more functional
-  const itemsLength = items.length
-  for (let i = 0; i < itemsLength; i++) {
-    items[i].setSize = itemsLength
-    items[i].posInSet = i + 1
-    items[i].top = i * itemHeight
-  }
-  return items
-}
-
-const getExtensionsLocal = (parsedValue) => {
-  // TODO get local extensions from shared process
-  // return state.localExtensions
-  return []
-}
-
-const getExtensionsMarketplace = (parsedValue) => {
-  return ExtensionsMarketplace.getMarketplaceExtensions({
-    q: parsedValue.query,
-    ...parsedValue.params,
-  })
-}
-
-const getExtensions = (parsedValue) => {
-  if (parsedValue.isLocal) {
-    return getExtensionsLocal(parsedValue)
-  }
-  return getExtensionsMarketplace(parsedValue)
-}
-
-const toUiExtension = (extension, index) => {
-  return {
-    name: extension.name,
-    authorId: extension.authorId,
-    version: extension.version,
-    id: extension.id,
-  }
-}
-
-const toDisplayExtensions = (extensions) => {
-  const toDisplayExtension = (extension, index) => {
-    return {
-      name: extension.name,
-      posInSet: index + 1,
-      setSize: extensions.length,
-    }
-  }
-  return extensions.map(toDisplayExtension)
-}
-
 // TODO debounce
 export const handleInput = async (state, value) => {
   try {
-    // TODO make this functional somehow
-    state.searchValue = value
-    const { itemHeight } = state
+    const { allExtensions, itemHeight, minimumSliderSize, height } = state
     // TODO cancel ongoing requests
     // TODO handle errors
-    const parsedValue = parseValue(value)
-    // TODO let not good here, error handling should be automatic,
-    // exceptions handled by supervisor
-    const extensions = await getExtensions(parsedValue)
-
-    // TODO race condition: viewlet might already be disposed after this
-
-    if (state.searchValue !== value) {
-      return state
-    }
-    const items = filterExtensions(extensions, parsedValue, itemHeight)
+    const items = await SearchExtensions.searchExtensions(allExtensions, value)
+    const listHeight = getListHeight(state)
+    const total = items.length
+    const contentHeight = total * itemHeight
+    const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
+      height,
+      contentHeight,
+      minimumSliderSize
+    )
+    const numberOfVisible = Math.ceil(listHeight / itemHeight)
+    const maxLineY = Math.min(numberOfVisible, total)
+    const finalDeltaY = Math.max(contentHeight - listHeight, 0)
     return {
       ...state,
-      extensions,
       items,
       minLineY: 0,
       deltaY: 0,
+      allExtensions,
+      maxLineY,
+      scrollBarHeight,
+      finalDeltaY,
     }
 
     // TODO handle out of order responses (a bit complicated)
@@ -270,10 +96,22 @@ export const handleInput = async (state, value) => {
     ErrorHandling.printError(error)
     return {
       ...state,
-      error: `Failed to load extensions from marketplace: ${error}`,
+      error: `${error}`,
     }
   }
 }
+
+export const loadContent = async (state) => {
+  const { width, searchValue } = state
+  // TODO just get local extensions on demand (not when query string is already different)
+  const allExtensions = await ExtensionManagement.getAllExtensions()
+  const size = getSize(width)
+  return handleInput({ ...state, allExtensions, size }, searchValue)
+  // TODO get installed extensions from extension host
+  // TODO just get local extensions on demand (not when query string is already different)
+}
+
+export const dispose = () => {}
 
 // TODO lazyload this
 
@@ -465,10 +303,9 @@ const renderExtensions = {
     )
   },
   apply(oldState, newState) {
+    // TODO render extensions incrementally when scrolling
     const visibleExtensions = getVisible(newState)
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setExtensions',
       /* visibleExtensions */ visibleExtensions,
     ]
@@ -482,12 +319,7 @@ const renderHeight = {
   apply(oldState, newState) {
     const { itemHeight } = newState
     const contentHeight = newState.items.length * itemHeight
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Extensions,
-      /* method */ 'setContentHeight',
-      /* contentHeight */ contentHeight,
-    ]
+    return [/* method */ 'setContentHeight', /* contentHeight */ contentHeight]
   },
 }
 
@@ -497,8 +329,6 @@ const renderNegativeMargin = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setNegativeMargin',
       /* negativeMargin */ -newState.deltaY,
     ]
@@ -516,8 +346,6 @@ const renderFocusedIndex = {
     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
     const newFocusedIndex = newState.focusedIndex - newState.minLineY
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldFocusedIndex,
       /* newFocusedIndex */ newFocusedIndex,
@@ -543,8 +371,6 @@ const renderScrollBar = {
       newState.scrollBarHeight
     )
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setScrollBar',
       /* scrollBarY */ scrollBarY,
       /* scrollBarHeight */ newState.scrollBarHeight,
@@ -557,12 +383,7 @@ const renderError = {
     return oldState.error === newState.error
   },
   apply(oldState, newState) {
-    return [
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Extensions,
-      /* method */ 'setError',
-      /* error */ newState.error,
-    ]
+    return [/* method */ 'setError', /* error */ newState.error]
   },
 }
 
@@ -572,8 +393,6 @@ const renderSize = {
   },
   apply(oldState, newState) {
     return [
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setSize',
       /* oldSize */ oldState.size,
       /* newSize */ newState.size,

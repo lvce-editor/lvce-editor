@@ -1,9 +1,8 @@
 import * as Arrays from '../Arrays/Arrays.js'
 import * as Assert from '../Assert/Assert.js'
+import * as BlobSrc from '../BlobSrc/BlobSrc.js'
 import * as Clamp from '../Clamp/Clamp.js'
-import * as Command from '../Command/Command.js'
 import * as DomMatrix from '../DomMatrix/DomMatrix.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as WheelEvent from '../WheelEvent/WheelEvent.js'
 
@@ -25,43 +24,13 @@ export const create = (id, uri, left, top, width, height) => {
     touchZoomFactor: 1.015,
     eventCache: [],
     previousDiff: 0,
-    pointerDownCount: 0,
   }
-}
-
-const getSrcRemote = (uri) => {
-  const src = `/remote${uri}`
-  return src
-}
-
-const getSrcWithBlobUrl = async (uri) => {
-  const content = await FileSystem.readFile(uri)
-  const mimeType = await Command.execute('Mime.getMediaMimeType', uri)
-  const blob = await Command.execute(
-    'Blob.binaryStringToBlob',
-    content,
-    mimeType
-  )
-  const dataUrl = await Command.execute('Url.createObjectUrl', blob)
-  return dataUrl
-}
-
-const canUseRemoteLoading = (uri) => {
-  const protocol = FileSystem.getProtocol(uri)
-  return protocol === ''
-}
-
-const getSrc = (uri) => {
-  if (canUseRemoteLoading(uri)) {
-    return getSrcRemote(uri)
-  }
-  return getSrcWithBlobUrl(uri)
 }
 
 // TODO revoke object url when disposed
 export const loadContent = async (state, savedState) => {
   const { uri } = state
-  const src = await getSrc(uri)
+  const src = await BlobSrc.getSrc(uri)
   return {
     ...state,
     src,
@@ -70,9 +39,7 @@ export const loadContent = async (state, savedState) => {
 
 export const dispose = async (state) => {
   const { src } = state
-  if (src.startsWith('blob:')) {
-    await Command.execute('Url.revokeObjectUrl', src)
-  }
+  await BlobSrc.disposeSrc(src)
   return {
     ...state,
     disposed: true,
@@ -83,15 +50,13 @@ export const handlePointerDown = (state, pointerId, x, y) => {
   Assert.object(state)
   Assert.number(x)
   Assert.number(y)
-  const { eventCache, pointerDownCount } = state
+  const { eventCache } = state
   const newEventCache = [...eventCache, { pointerId, x, y }]
-  const newPointerDownCount = pointerDownCount + 1
   return {
     ...state,
     pointerOffsetX: x,
     pointerOffsetY: y,
     eventCache: newEventCache,
-    pointerDownCount: newPointerDownCount,
   }
 }
 
@@ -104,9 +69,10 @@ const distance = (point1, point2) => {
 const handleZoom = (state) => {
   const { domMatrix, eventCache, previousDiff, touchZoomFactor } = state
   const currentDiff = distance(eventCache[0], eventCache[1])
-  if (previousDiff > 0) {
+  if (previousDiff !== 0) {
+    const delta = 1 + Math.abs(previousDiff - currentDiff) / 300
     if (currentDiff > previousDiff) {
-      const newDomMatrix = DomMatrix.scaleUp(domMatrix, touchZoomFactor)
+      const newDomMatrix = DomMatrix.scaleUp(domMatrix, delta)
       return {
         ...state,
         previousDiff: currentDiff,
@@ -114,7 +80,7 @@ const handleZoom = (state) => {
       }
     }
     if (currentDiff < previousDiff) {
-      const newDomMatrix = DomMatrix.scaleDown(domMatrix, touchZoomFactor)
+      const newDomMatrix = DomMatrix.scaleDown(domMatrix, delta)
       return {
         ...state,
         previousDiff: currentDiff,
@@ -122,7 +88,11 @@ const handleZoom = (state) => {
       }
     }
   }
-  return state
+
+  return {
+    ...state,
+    previousDiff: currentDiff,
+  }
 }
 
 const handleMove = (state, x, y) => {
@@ -142,39 +112,40 @@ export const handlePointerMove = (state, pointerId, x, y) => {
   Assert.object(state)
   Assert.number(x)
   Assert.number(y)
-  const { eventCache, pointerDownCount } = state
-  if (pointerDownCount === 0) {
+  const { eventCache } = state
+  if (eventCache.length === 0) {
     return state
   }
   const index = Arrays.findObjectIndex(eventCache, 'pointerId', pointerId)
-  // TODO avoid mutation
-  eventCache[index] = { pointerId, x, y }
-  if (eventCache.length === 2) {
-    return handleZoom(state)
+  const newEventCache = Arrays.toSpliced(eventCache, index, 1, {
+    pointerId,
+    x,
+    y,
+  })
+  const newState = { ...state, eventCache: newEventCache }
+  if (newEventCache.length === 2) {
+    return handleZoom(newState)
   }
-  return handleMove(state, x, y)
+  return handleMove(newState, x, y)
 }
 
 const removePointer = (eventCache, pointerId) => {
   const index = Arrays.findObjectIndex(eventCache, 'pointerId', pointerId)
-  const newEventCache = [
-    ...eventCache.slice(0, index),
-    ...eventCache.slice(index + 1),
-  ]
+  const newEventCache = Arrays.toSpliced(eventCache, index, 1)
   return newEventCache
 }
 
 export const handlePointerUp = (state, pointerId, x, y) => {
-  const { eventCache, pointerDownCount } = state
-  if (pointerDownCount === 0) {
+  const { eventCache, previousDiff } = state
+  if (eventCache.length === 0) {
     return state
   }
   const newEventCache = removePointer(eventCache, pointerId)
-  const newPointerDownCount = pointerDownCount - 1
+  const newPreviousDiff = newEventCache.length === 0 ? 0 : previousDiff
   return {
     ...state,
     eventCache: newEventCache,
-    pointerDownCount: newPointerDownCount,
+    previousDiff: newPreviousDiff,
   }
 }
 
@@ -221,12 +192,7 @@ const renderSrc = {
     return oldState.src === newState.src
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ 'EditorImage',
-      /* method */ 'setSrc',
-      /* src */ newState.src,
-    ]
+    return [/* method */ 'setSrc', /* src */ newState.src]
   },
 }
 
@@ -236,12 +202,7 @@ const renderTransform = {
   },
   apply(oldState, newState) {
     const transform = DomMatrix.toString(newState.domMatrix)
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.EditorImage,
-      /* method */ 'setTransform',
-      /* transform */ transform,
-    ]
+    return [/* method */ 'setTransform', /* transform */ transform]
   },
 }
 
@@ -251,12 +212,7 @@ const renderCursor = {
   },
   apply(oldState, newState) {
     const isDragging = newState.eventCache.length > 0
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.EditorImage,
-      /* method */ 'setDragging',
-      /* isDragging */ isDragging,
-    ]
+    return [/* method */ 'setDragging', /* isDragging */ isDragging]
   },
 }
 

@@ -1,7 +1,5 @@
 import * as InputBox from '../InputBox/InputBox.js'
 
-export const name = 'Debug Console'
-
 export const create = () => {
   const $DebugConsoleTop = document.createElement('div')
   $DebugConsoleTop.className = 'DebugConsoleTop'

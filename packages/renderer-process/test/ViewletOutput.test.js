@@ -8,10 +8,6 @@ const getSimpleList = (state) => {
   return Array.from(state.content.children).map((node) => node.textContent)
 }
 
-test('name', () => {
-  expect(ViewletOutput.name).toBe('Output')
-})
-
 test('create', () => {
   const state = ViewletOutput.create()
   expect(state).toBeDefined()

@@ -1,5 +1,6 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 
 // TODO windows
 const getFileName = (uri) => {
@@ -48,7 +49,7 @@ export const create = () => {
 const create$Tab = () => {
   const $Tab = document.createElement('li')
   // @ts-ignore
-  $Tab.role = 'tab'
+  $Tab.role = AriaRoles.Tab
   $Tab.className = 'EditorTab'
   $Tab.ariaSelected = 'true'
   $Tab.tabIndex = 0

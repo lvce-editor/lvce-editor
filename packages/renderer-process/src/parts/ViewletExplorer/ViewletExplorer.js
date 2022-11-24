@@ -1,11 +1,10 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as InputBox from '../InputBox/InputBox.js'
-import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
 import * as Label from '../Label/Label.js'
-
-export const name = 'Explorer'
+import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
 
 const activeId = 'TreeItemActive'
 const focusClassName = 'FocusOutline'
@@ -15,7 +14,7 @@ export const create = () => {
   $Viewlet.className = 'Viewlet Explorer'
   $Viewlet.tabIndex = 0
   // @ts-ignore
-  $Viewlet.role = 'tree'
+  $Viewlet.role = AriaRoles.Tree
   $Viewlet.ariaLabel = 'Files Explorer'
   $Viewlet.onmousedown = ViewletExplorerEvents.handleMouseDown
   $Viewlet.oncontextmenu = ViewletExplorerEvents.handleContextMenu
@@ -46,7 +45,7 @@ export const create = () => {
 const create$Row = () => {
   const $Row = document.createElement('div')
   // @ts-ignore
-  $Row.role = 'treeitem'
+  $Row.role = AriaRoles.TreeItem
   $Row.className = 'TreeItem'
   $Row.draggable = true
   const $Label = Label.create('')

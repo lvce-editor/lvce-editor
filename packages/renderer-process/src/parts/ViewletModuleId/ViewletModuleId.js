@@ -65,3 +65,5 @@ export const TitleBarButtons = 'TitleBarButtons'
 export const TitleBarMenuBar = 'TitleBarMenuBar'
 
 export const DiffEditor = 'DiffEditor'
+
+export const Audio = 'Audio'

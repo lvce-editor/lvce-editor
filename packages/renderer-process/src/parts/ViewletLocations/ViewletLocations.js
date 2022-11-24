@@ -1,8 +1,7 @@
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Focus from '../Focus/Focus.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
-
-export const name = 'Locations'
+import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 const getNodeIndex = ($Node) => {
   let index = 0
@@ -36,11 +35,11 @@ export const create = () => {
   $Message.className = 'LocationsMessage'
   $Message.id = 'LocationsMessage'
   // @ts-ignore
-  $Message.role = 'status'
+  $Message.role = AriaRoles.Status
   const $Locations = document.createElement('div')
   $Locations.className = 'LocationList'
   // @ts-ignore
-  $Locations.role = 'tree'
+  $Locations.role = AriaRoles.Tree
   $Locations.ariaLabel = 'Locations'
   $Locations.tabIndex = 0
   $Locations.onmousedown = handleLocationsMouseDown
@@ -60,7 +59,7 @@ const create$Location = () => {
   const $Location = document.createElement('div')
   $Location.className = 'TreeItem'
   // @ts-ignore
-  $Location.role = 'treeitem'
+  $Location.role = AriaRoles.TreeItem
   return $Location
 }
 

@@ -10,6 +10,7 @@ export const bundleRendererWorkerCached = async ({
 }) => {
   const rendererWorkerCachePath = await CachePaths.getRendererWorkerCachePath([
     platform,
+    commitHash,
   ])
   if (existsSync(rendererWorkerCachePath)) {
     console.info('[build step skipped] bundleRendererWorker')

@@ -3,10 +3,6 @@
  */
 import * as ViewletEditorImage from '../src/parts/ViewletEditorImage/ViewletEditorImage.js'
 
-test('name', () => {
-  expect(ViewletEditorImage.name).toBe('EditorImage')
-})
-
 test('create', () => {
   const state = ViewletEditorImage.create()
   expect(state).toBeDefined()

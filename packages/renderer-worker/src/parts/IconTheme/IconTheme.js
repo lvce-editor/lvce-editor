@@ -11,6 +11,7 @@ import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 
 export const state = {
   seenFiles: [],
@@ -39,6 +40,19 @@ const getIconThemeJson = async (iconThemeId) => {
       extensionPath: `${assetDir}/extensions/builtin.${iconThemeId}`,
     }
   }
+  for (const webExtension of ExtensionMeta.state.webExtensions) {
+    if (webExtension.iconThemes) {
+      for (const iconTheme of webExtension.iconThemes) {
+        // TODO handle error when icon theme path is not of type string
+        const iconThemeUrl = `${webExtension.path}/${iconTheme.path}`
+        const json = await Command.execute('Ajax.getJson', iconThemeUrl)
+        return {
+          json,
+          extensionPath: webExtension.path,
+        }
+      }
+    }
+  }
   return SharedProcess.invoke(
     /* ExtensionHost.getIconThemeJson */ 'ExtensionHost.getIconThemeJson',
     /* iconThemeId */ iconThemeId
@@ -55,19 +69,25 @@ export const getFileIcon = (file) => {
   if (!iconTheme) {
     return ''
   }
-  const fileNameIcon = iconTheme.fileNames[fileNameLower]
-  if (fileNameIcon) {
-    return fileNameIcon
+  if (iconTheme.fileNames) {
+    const fileNameIcon = iconTheme.fileNames[fileNameLower]
+    if (fileNameIcon) {
+      return fileNameIcon
+    }
   }
-  const extension = getExtension(fileNameLower)
-  const extensionIcon = iconTheme.fileExtensions[extension]
-  if (extensionIcon) {
-    return extensionIcon
+  if (iconTheme.fileExtensions) {
+    const extension = getExtension(fileNameLower)
+    const extensionIcon = iconTheme.fileExtensions[extension]
+    if (extensionIcon) {
+      return extensionIcon
+    }
   }
-  const languageId = Languages.getLanguageId(fileNameLower)
-  const languageIcon = iconTheme.languageIds[languageId]
-  if (languageIcon) {
-    return languageIcon
+  if (iconTheme.languageIds) {
+    const languageId = Languages.getLanguageId(fileNameLower)
+    const languageIcon = iconTheme.languageIds[languageId]
+    if (languageIcon) {
+      return languageIcon
+    }
   }
   return DefaultIcon.File
 }
@@ -107,10 +127,10 @@ const getFolderIconExpanded = (folder) => {
 export const getIcon = (dirent) => {
   switch (dirent.type) {
     case DirentType.File:
-    case DirentType.SymlinkFile:
+    case DirentType.SymLinkFile:
       return getFileIcon(dirent)
     case DirentType.Directory:
-    case DirentType.SymlinkFolder:
+    case DirentType.SymLinkFolder:
       return getFolderIcon(dirent)
     case DirentType.DirectoryExpanded:
       return getFolderIconExpanded(dirent)
@@ -124,6 +144,9 @@ export const getIcon = (dirent) => {
 
 const getBackgroundUrl = (extensionPath, value) => {
   if (Platform.platform === PlatformType.Web) {
+    return `${extensionPath}${value}`
+  }
+  if (extensionPath.startsWith('http://')) {
     return `${extensionPath}${value}`
   }
   // TODO what if the file in on linux and includes a backslash?
@@ -146,23 +169,8 @@ const getIconThemeCss2 = (iconTheme) => {
   return rulesCss
 }
 
-export const hydrate = async () => {
+export const setIconTheme = async (iconThemeId) => {
   try {
-    // TODO icon theme css can be really large (3000+ lines)
-    // and slow down recalculate style by 5x (e.g. rendering text in editor: 1.42ms normal, 7.42ms with icon theme)
-    // icon theme should not slow down editor.
-    // maybe set applied css only to actual used icons
-    // for example, when a js file is in explorer, only generate the css for the js icon
-    // that way there would be much less rules, but when a new file type appears (which should not happen often)
-    // the css must be recalculated again
-    // const iconThemeCss = await getIconThemeCss()
-    // await RendererProcess.invoke(
-    //   /* Css.setInlineStyle */ 4551,
-    //   /* id */ 'ContributedIconTheme',
-    //   /* css */ iconThemeCss
-    // )
-
-    const iconThemeId = Preferences.get('icon-theme') || 'vscode-icons'
     const iconTheme = await getIconThemeJson(iconThemeId)
     state.iconTheme = iconTheme.json
     state.extensionPath = iconTheme.extensionPath
@@ -189,4 +197,23 @@ export const hydrate = async () => {
       console.error(new VError(error, `Failed to load icon theme`))
     }
   }
+}
+
+export const hydrate = async () => {
+  // TODO icon theme css can be really large (3000+ lines)
+  // and slow down recalculate style by 5x (e.g. rendering text in editor: 1.42ms normal, 7.42ms with icon theme)
+  // icon theme should not slow down editor.
+  // maybe set applied css only to actual used icons
+  // for example, when a js file is in explorer, only generate the css for the js icon
+  // that way there would be much less rules, but when a new file type appears (which should not happen often)
+  // the css must be recalculated again
+  // const iconThemeCss = await getIconThemeCss()
+  // await RendererProcess.invoke(
+  //   /* Css.setInlineStyle */ 4551,
+  //   /* id */ 'ContributedIconTheme',
+  //   /* css */ iconThemeCss
+  // )
+
+  const iconThemeId = Preferences.get('icon-theme') || 'vscode-icons'
+  await setIconTheme(iconThemeId)
 }

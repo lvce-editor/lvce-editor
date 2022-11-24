@@ -1,5 +1,6 @@
 import { readdir } from 'node:fs/promises'
 import * as BundleExtensionHostDependencies from '../BundleExtensionHostDependencies/BundleExtensionHostDependencies.js'
+import * as BundleExtensionHostHelperProcessDependencies from '../BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.js'
 import * as BundleJs from '../BundleJs/BundleJs.js'
 import * as BundleMainProcessDependencies from '../BundleMainProcessDependencies/BundleMainProcessDependencies.js'
 import * as BundlePtyHostDependencies from '../BundlePtyHostDependencies/BundlePtyHostDependencies.js'
@@ -20,6 +21,14 @@ const copyPtyHostFiles = async ({ arch, electronVersion, cachePath }) => {
     arch,
     to: `${cachePath}/packages/pty-host`,
   })
+}
+
+const copyExtensionHostHelperProcessFiles = async ({ cachePath }) => {
+  await BundleExtensionHostHelperProcessDependencies.bundleExtensionHostHelperProcessDependencies(
+    {
+      to: `${cachePath}/packages/extension-host-helper-process`,
+    }
+  )
 }
 
 const copyExtensionHostFiles = async ({ cachePath }) => {
@@ -144,6 +153,12 @@ export const bundleElectronAppDependencies = async ({
     cachePath,
   })
   console.timeEnd('copyExtensionHostFiles')
+
+  console.time('copyExtensionHostHelperProcessFiles')
+  await copyExtensionHostHelperProcessFiles({
+    cachePath,
+  })
+  console.timeEnd('copyExtensionHostHelperProcessFiles')
 
   console.time('copySharedProcessFiles')
   await copySharedProcessFiles({

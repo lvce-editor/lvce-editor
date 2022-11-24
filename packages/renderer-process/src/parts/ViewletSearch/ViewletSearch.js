@@ -1,11 +1,9 @@
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as InputBox from '../InputBox/InputBox.js'
-import * as ViewletSearchEvents from './ViewletSearchEvents.js'
 import * as Label from '../Label/Label.js'
-
-// TODO name export not necessary
-export const name = 'Search'
+import * as ViewletSearchEvents from './ViewletSearchEvents.js'
 
 export const create = () => {
   const $ViewletSearchInput = InputBox.create()
@@ -17,7 +15,7 @@ export const create = () => {
 
   const $SearchStatus = document.createElement('div')
   // @ts-ignore
-  $SearchStatus.role = 'status'
+  $SearchStatus.role = AriaRoles.Status
   $SearchStatus.className = 'ViewletSearchMessage'
 
   const $SearchHeader = document.createElement('div')
@@ -70,7 +68,7 @@ export const focus = (state) => {
 const create$Row = () => {
   const $Row = document.createElement('div')
   // @ts-ignore
-  $Row.role = 'treeitem'
+  $Row.role = AriaRoles.TreeItem
   $Row.className = 'TreeItem'
   const $Label = Label.create('')
   const $Icon = document.createElement('i')

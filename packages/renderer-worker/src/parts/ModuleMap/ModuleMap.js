@@ -152,6 +152,7 @@ export const getModuleId = (commandId) => {
     case 'IconTheme.addIcons':
     case 'IconTheme.getIconThemeCss':
     case 'IconTheme.hydrate':
+    case 'IconTheme.setIconTheme':
       return ModuleId.IconTheme
     case 'ImagePreview.hide':
     case 'ImagePreview.show':

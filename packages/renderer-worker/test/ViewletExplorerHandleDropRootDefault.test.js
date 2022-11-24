@@ -1,7 +1,7 @@
-import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import { jest } from '@jest/globals'
-import * as FileHandleType from '../src/parts/FileHandleType/FileHandleType.js'
+import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as EncodingType from '../src/parts/EncodingType/EncodingType.js'
+import * as FileHandleType from '../src/parts/FileHandleType/FileHandleType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -118,7 +118,7 @@ test('handleDrop - single file', async () => {
         path: '/test/file.txt',
         posInSet: 1,
         setSize: 1,
-        type: 'file',
+        type: DirentType.File,
       },
     ],
   })

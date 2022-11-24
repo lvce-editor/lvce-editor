@@ -9,7 +9,7 @@ export const bundleRendererProcessCached = async ({
   assetDir,
 }) => {
   const rendererProcessCachePath = await CachePaths.getRendererProcessCachePath(
-    [platform]
+    [platform, commitHash]
   )
   if (existsSync(rendererProcessCachePath)) {
     console.info('[build step skipped] bundleRendererProcess')

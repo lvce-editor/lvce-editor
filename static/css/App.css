@@ -11,14 +11,9 @@
 @import './parts/ViewletLayout.css';
 @import './parts/Viewlet.css';
 @import './parts/ContextMenu.css';
-@import './parts/InputBox.css';
 @import './parts/Widgets.css';
-@import './parts/EditorHover.css';
 @import './parts/Mobile.css';
-@import './parts/ImagePreview.css';
 @import './parts/BackDrop.css';
-@import './parts/Animation.css';
-@import './parts/ViewletReferences.css';
 
 /* focus css (can be overridden by components) */
 @import './parts/Focus.css';

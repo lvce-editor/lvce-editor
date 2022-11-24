@@ -11,10 +11,6 @@ const getSimpleList = ($Element) => {
   return Array.from($Element.childNodes).map(getTextContent)
 }
 
-test('name', () => {
-  expect(ViewletEditorCompletion.name).toBe('EditorCompletion')
-})
-
 test('create', () => {
   const state = ViewletEditorCompletion.create()
   expect(state).toBeDefined()

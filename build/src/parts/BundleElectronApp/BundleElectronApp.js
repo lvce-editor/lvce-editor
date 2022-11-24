@@ -25,9 +25,11 @@ const getDependencyCacheHash = async ({ electronVersion, arch }) => {
     'packages/shared-process/package-lock.json',
     'packages/pty-host/package-lock.json',
     'packages/extension-host/package-lock.json',
+    'packages/extension-host-helper-process/package-lock.json',
     'build/src/parts/BundleElectronApp/BundleElectronApp.js',
     'build/src/parts/BundleElectronAppDependencies/BundleElectronAppDependencies.js',
     'build/src/parts/BundleExtensionHostDependencies/BundleExtensionHostDependencies.js',
+    'build/src/parts/BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.js',
     'build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.js',
     'build/src/parts/BundlePtyHostDependencies/BundlePtyHostDependencies.js',
     'build/src/parts/BundleMainProcessDependencies/BundleMainProcessDependencies.js',
@@ -41,7 +43,7 @@ const getDependencyCacheHash = async ({ electronVersion, arch }) => {
   return hash
 }
 
-const downloadElectron = async ({ arch, electronVersion }) => {
+const downloadElectron = async ({ platform, arch, electronVersion }) => {
   const outDir = Path.join(
     Root.root,
     'build',
@@ -52,7 +54,7 @@ const downloadElectron = async ({ arch, electronVersion }) => {
   await DownloadElectron.downloadElectron({
     electronVersion,
     outDir,
-    platform: 'linux',
+    platform,
     arch,
   })
 }
@@ -123,6 +125,18 @@ const copySharedProcessSources = async ({ arch }) => {
 }`,
     replacement: `export const getExtensionHostPath = () => {
   return Path.join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
+}`,
+  })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src/parts/Platform/Platform.js`,
+    occurrence: `export const getExtensionHostHelperProcessPath = async () => {
+  const { extensionHostHelperProcessPath } = await import(
+    '@lvce-editor/extension-host-helper-process'
+  )
+  return extensionHostHelperProcessPath
+}`,
+    replacement: `export const getExtensionHostHelperProcessPath = () => {
+  return Path.join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
 }`,
   })
 }
@@ -215,6 +229,13 @@ const copyExtensionHostSources = async ({ arch }) => {
   })
 }
 
+const copyExtensionHostHelperProcessSources = async ({ arch }) => {
+  await Copy.copy({
+    from: 'packages/extension-host-helper-process/src',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/extension-host-helper-process/src`,
+  })
+}
+
 const copyExtensions = async ({ arch }) => {
   await Copy.copy({
     from: 'extensions',
@@ -284,6 +305,7 @@ export const build = async () => {
   await downloadElectron({
     arch,
     electronVersion,
+    platform: process.platform,
   })
   console.timeEnd('downloadElectron')
 
@@ -316,6 +338,10 @@ export const build = async () => {
   console.time('copySharedProcessSources')
   await copySharedProcessSources({ arch })
   console.timeEnd('copySharedProcessSources')
+
+  console.time('copyExtensionHostHelperProcessSources')
+  await copyExtensionHostHelperProcessSources({ arch })
+  console.timeEnd('copyExtensionHostHelperProcessSources')
 
   console.time('copyExtensions')
   await copyExtensions({ arch })

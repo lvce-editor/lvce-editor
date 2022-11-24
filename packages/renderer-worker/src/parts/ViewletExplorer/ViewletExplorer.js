@@ -151,6 +151,9 @@ const restoreExpandedState = async (
   const expandedDirentChildren = await Promise.allSettled(
     expandedDirentPaths.map(getChildDirentsRaw)
   )
+  if (expandedDirentChildren[0].status === 'rejected') {
+    throw expandedDirentChildren[0].reason
+  }
   const savedRoot = savedState.root
   const dirents = createDirents(
     savedRoot,
@@ -775,11 +778,11 @@ export const handleClick = (state, index, keepFocus = false) => {
   // TODO dirent type should be numeric
   switch (type) {
     case DirentType.File:
-    case DirentType.SymlinkFile:
+    case DirentType.SymLinkFile:
       return handleClickFile(state, dirent, actualIndex, keepFocus)
     // TODO decide on one name
     case DirentType.Directory:
-    case DirentType.SymlinkFolder:
+    case DirentType.SymLinkFolder:
       return handleClickDirectory(state, dirent, actualIndex, keepFocus)
     case DirentType.DirectoryExpanding:
       return handleClickDirectoryExpanding(
@@ -847,10 +850,10 @@ export const handleArrowRight = async (state) => {
   const dirent = state.items[state.focusedIndex]
   switch (dirent.type) {
     case DirentType.File:
-    case DirentType.SymlinkFile:
+    case DirentType.SymLinkFile:
       return state
     case DirentType.Directory:
-    case DirentType.SymlinkFolder:
+    case DirentType.SymLinkFolder:
       return handleClickDirectory(state, dirent, state.focusedIndex)
     case DirentType.DirectoryExpanded:
       return handleArrowRightDirectoryExpanded(state, dirent)
@@ -877,6 +880,7 @@ export const handleArrowLeft = (state) => {
   switch (dirent.type) {
     case DirentType.Directory:
     case DirentType.File:
+    case DirentType.SymLinkFile:
       return focusParentFolder(state)
     case DirentType.DirectoryExpanded:
       return handleClickDirectoryExpanded(state, dirent, state.focusedIndex)
@@ -1314,12 +1318,7 @@ const renderItems = {
   },
   apply(oldState, newState) {
     const visibleDirents = getVisible(newState)
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Explorer,
-      /* method */ 'updateDirents',
-      /* visibleDirents */ visibleDirents,
-    ]
+    return [/* method */ 'updateDirents', /* visibleDirents */ visibleDirents]
   },
 }
 
@@ -1334,8 +1333,6 @@ const renderFocusedIndex = {
     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
     const newFocusedIndex = newState.focusedIndex - newState.minLineY
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Explorer,
       /* method */ 'setFocusedIndex',
       /* oldindex */ oldFocusedIndex,
       /* newIndex */ newFocusedIndex,
@@ -1350,8 +1347,6 @@ const renderDropTargets = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Explorer,
       /* method */ 'setDropTargets',
       /* oldDropTargets */ oldState.dropTargets,
       /* newDropTargets */ newState.dropTargets,
@@ -1370,17 +1365,10 @@ const renderEditingIndex = {
         oldState.editingType === ExplorerEditingType.CreateFile ||
         oldState.editingType === ExplorerEditingType.CreateFolder
       ) {
-        return [
-          /* Viewlet.invoke */ 'Viewlet.send',
-          /* id */ ViewletModuleId.Explorer,
-          /* method */ 'hideEditBox',
-          /* index */ oldState.editingIndex,
-        ]
+        return [/* method */ 'hideEditBox', /* index */ oldState.editingIndex]
       }
       const dirent = newState.items[focusedIndex]
       return [
-        /* Viewlet.invoke */ 'Viewlet.send',
-        /* id */ ViewletModuleId.Explorer,
         /* method */ 'replaceEditBox',
         /* index */ oldState.editingIndex,
         /* dirent */ dirent,
@@ -1391,16 +1379,12 @@ const renderEditingIndex = {
         oldState.editingType === ExplorerEditingType.CreateFolder
       ) {
         return [
-          /* Viewlet.invoke */ 'Viewlet.send',
-          /* id */ ViewletModuleId.Explorer,
           /* method */ 'insertEditBox',
           /* index */ oldState.editingIndex,
           /* value */ editingValue,
         ]
       }
       return [
-        /* Viewlet.invoke */ 'Viewlet.send',
-        /* id */ ViewletModuleId.Explorer,
         /* method */ 'replaceWithEditBox',
         /* index */ editingIndex,
         /* value */ editingValue,

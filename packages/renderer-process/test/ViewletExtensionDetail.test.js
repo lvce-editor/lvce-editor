@@ -4,10 +4,6 @@
 import * as ViewletExtensionDetail from '../src/parts/ViewletExtensionDetail/ViewletExtensionDetail.js'
 import * as ViewletSize from '../src/parts/ViewletSize/ViewletSize.js'
 
-test('name', () => {
-  expect(ViewletExtensionDetail.name).toBe('ExtensionDetail')
-})
-
 test('create', () => {
   const state = ViewletExtensionDetail.create()
   expect(state).toBeDefined()

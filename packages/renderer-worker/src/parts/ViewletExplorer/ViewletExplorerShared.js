@@ -2,7 +2,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Compare from '../Compare/Compare.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 
 export const getIndexFromPosition = (state, x, y) => {
@@ -19,9 +19,9 @@ export const getIndexFromPosition = (state, x, y) => {
 
 const priorityMapFoldersFirst = {
   [DirentType.Directory]: 1,
-  [DirentType.SymlinkFolder]: 1,
+  [DirentType.SymLinkFolder]: 1,
   [DirentType.File]: 0,
-  [DirentType.SymlinkFile]: 0,
+  [DirentType.SymLinkFile]: 0,
   [DirentType.Unknown]: 0,
   [DirentType.Socket]: 0,
 }
@@ -107,9 +107,9 @@ const hasSymbolicLinks = (rawDirents) => {
 const getSymlinkType = (type) => {
   switch (type) {
     case DirentType.File:
-      return DirentType.SymlinkFile
+      return DirentType.SymLinkFile
     case DirentType.Directory:
-      return DirentType.SymlinkFolder
+      return DirentType.SymLinkFolder
     default:
       return DirentType.Symlink
   }
@@ -128,10 +128,10 @@ const resolveSymbolicLink = async (uri, rawDirent) => {
     }
   } catch (error) {
     // @ts-ignore
-    if (error && error.code === FileSystemErrorCodes.ENOENT) {
+    if (error && error.code === ErrorCodes.ENOENT) {
       return {
         name: rawDirent.name,
-        type: DirentType.SymlinkFile,
+        type: DirentType.SymLinkFile,
       }
     }
     console.error(

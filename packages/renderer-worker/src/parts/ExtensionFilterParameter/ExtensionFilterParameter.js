@@ -1,0 +1,7 @@
+export const Installed = '@installed'
+export const Enabled = '@enabled'
+export const Disabled = '@disabled'
+export const Builtin = '@builtin'
+export const Sort = '@sort'
+export const Id = '@id'
+export const Outdated = '@outdated'

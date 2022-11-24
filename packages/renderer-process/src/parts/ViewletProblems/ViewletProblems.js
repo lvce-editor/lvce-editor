@@ -1,8 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ViewletProblemsEvents from './ViewletProblemsEvents.js'
 
-export const name = 'Problems'
-
 export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet Problems'

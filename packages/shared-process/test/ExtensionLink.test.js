@@ -1,6 +1,6 @@
 import { jest } from '@jest/globals'
 import { FileNotFoundError } from '../src/parts/Error/FileNotFoundError.js'
-import * as FileSystemErrorCodes from '../src/parts/FileSystemErrorCodes/FileSystemErrorCodes.js'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -85,7 +85,7 @@ test('link - error - symlink already exists', async () => {
   SymLink.createSymLink.mockImplementation(() => {
     switch (i++) {
       case 0:
-        throw new NodeError(FileSystemErrorCodes.EEXIST)
+        throw new NodeError(ErrorCodes.EEXIST)
     }
   })
   // @ts-ignore

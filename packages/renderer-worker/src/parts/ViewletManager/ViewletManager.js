@@ -178,17 +178,25 @@ const getInstanceSavedState = (savedState, id) => {
   return undefined
 }
 
-const getRenderCommands = (module, oldState, newState) => {
+const getRenderCommands = (module, oldState, newState, name = module.name) => {
   if (Array.isArray(module.render)) {
     const commands = []
     for (const item of module.render) {
       if (!item.isEqual(oldState, newState)) {
-        commands.push(item.apply(oldState, newState))
+        const command = item.apply(oldState, newState)
+        if (
+          command[0] !== 'Viewlet.send' &&
+          command[0] !== 'Viewlet.ariaAnnounce'
+        ) {
+          command.unshift('Viewlet.send', name)
+        }
+        commands.push(command)
       }
     }
     return commands
   }
   if (module.render) {
+    console.log('else')
     return module.render(oldState, newState)
   }
   return []
@@ -568,15 +576,6 @@ export const mutate = async (id, fn) => {
   await fn(state)
 }
 
-export const render = (module, oldState, newState) => {
-  if (Array.isArray(module.render)) {
-    const commands = []
-    for (const item of module.render) {
-      if (!item.isEqual(oldState, newState)) {
-        commands.push(item.apply(oldState, newState))
-      }
-    }
-    return commands
-  }
-  return module.render(oldState, newState)
+export const render = (module, oldState, newState, name = module.name) => {
+  return getRenderCommands(module, oldState, newState, name)
 }

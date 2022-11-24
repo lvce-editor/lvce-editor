@@ -21,11 +21,12 @@
   },
   "dependencies": {
     "@lvce-editor/extension-host": "file:../extension-host",
+    "@lvce-editor/extension-host-helper-process": "file:../extension-host-helper-process",
     "@lvce-editor/pty-host": "file:../pty-host",
     "debug": "^4.3.4",
     "execa": "^6.1.0",
     "exit-hook": "^3.1.2",
-    "got": "^12.5.2",
+    "got": "^12.5.3",
     "is-object": "^1.0.2",
     "lines-and-columns": "^2.0.3",
     "open": "^8.4.0",
@@ -42,7 +43,7 @@
   "optionalDependencies": {
     "electron-clipboard-ex": "^1.3.3",
     "keytar": "^7.9.0",
-    "vscode-ripgrep-with-github-api-error-fix": "^2.5.0",
+    "vscode-ripgrep-with-github-api-error-fix": "^2.6.0",
     "extract-zip": "^2.0.1"
   },
   "devDependencies": {

@@ -3,6 +3,7 @@ import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as TextDocument from '../TextDocument/TextDocument.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as EditorCursor from './EditorCursor.js'
 import * as EditorScrolling from './EditorScrolling.js'
@@ -19,7 +20,7 @@ export const create = (id, uri, languageId, content) => {
   return {
     uri,
     languageId,
-    lines: content.split('\n'),
+    lines: SplitLines.splitLines(content),
     // TODO cursor should be part of selection,
     // codemirror has selections: Selection[]
     //            selectionIndex: number
@@ -304,7 +305,7 @@ export const setBounds = (editor, top, left, height, columnWidth) => {
 }
 
 export const setText = (editor, text) => {
-  const lines = text.split('\n')
+  const lines = SplitLines.splitLines(text)
   const { itemHeight, numberOfVisibleLines } = editor
   const total = lines.length
   const maxLineY = Math.min(numberOfVisibleLines, total)
@@ -337,12 +338,7 @@ const renderLines = {
   },
   apply(oldState, newState) {
     const textInfos = EditorText.getVisible(newState)
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'EditorText',
-      /* method */ 'setText',
-      /* textInfos */ textInfos,
-    ]
+    return [/* method */ 'setText', /* textInfos */ textInfos]
   },
 }
 
@@ -358,8 +354,6 @@ const renderSelections = {
     const cursorInfos = EditorCursor.getVisible(newState)
     const selectionInfos = EditorSelection.getVisible(newState)
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'EditorText',
       /* method */ 'setSelections',
       /* cursorInfos */ cursorInfos,
       /* selectionInfos */ selectionInfos,
@@ -382,8 +376,6 @@ const renderScrollBar = {
       newState.scrollBarHeight
     )
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ 'EditorText',
       /* method */ 'setScrollBar',
       /* scrollBarY */ scrollBarY,
       /* scrollBarHeight */ newState.scrollBarHeight,
@@ -399,11 +391,7 @@ const renderFocus = {
     if (!newState.focused) {
       return []
     }
-    return [
-      /* Viewlet.send */ 'Viewlet.invoke',
-      /* id */ 'EditorText',
-      /* method */ 'focus',
-    ]
+    return [/* method */ 'focus']
   },
 }
 

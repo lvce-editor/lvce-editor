@@ -1,5 +1,3 @@
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-
 export const create = () => {
   return {
     todos: [],
@@ -18,12 +16,7 @@ export const hasFunctionalRender = true
 export const render = (oldState, newState) => {
   const changes = []
   if (oldState.todos !== newState.todos) {
-    changes.push([
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.TodoList,
-      /* method */ 'setTodos',
-      /* todos */ newState.todos,
-    ])
+    changes.push([/* method */ 'setTodos', /* todos */ newState.todos])
   }
   return changes
 }

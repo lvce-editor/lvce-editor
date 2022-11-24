@@ -35,9 +35,6 @@ const getSimpleList = (state) => {
   return Array.from(state.$ViewletTree.children).map(getTextContent)
 }
 
-test('name', () => {
-  expect(ViewletSourceControl.name).toBe('Source Control')
-})
 
 test('create', () => {
   const state = ViewletSourceControl.create()

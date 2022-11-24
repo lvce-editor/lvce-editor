@@ -2,8 +2,6 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletkeyBindingsEvents from './ViewletKeyBindingsEvents.js'
 
-export const name = 'KeyBindings'
-
 /**
  * @enum {string}
  */

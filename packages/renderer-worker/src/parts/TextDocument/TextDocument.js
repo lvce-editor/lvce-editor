@@ -1,8 +1,9 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Arrays from '../Arrays/Arrays.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 export const create = (text) => {
-  const lines = text.split('\n')
+  const lines = SplitLines.splitLines(text)
   const state = {
     lines,
   }
@@ -48,7 +49,7 @@ export const applyEdits = (textDocument, changes) => {
         const line = newLines[startRowIndex]
         const before = line.slice(0, startColumnIndex) + inserted[0]
         const after = inserted.at(-1) + line.slice(endColumnIndex)
-        Arrays.splice(newLines, startRowIndex, deleted.length, [
+        Arrays.spliceLargeArray(newLines, startRowIndex, deleted.length, [
           before,
           ...inserted.slice(1, -1),
           after,
@@ -67,7 +68,9 @@ export const applyEdits = (textDocument, changes) => {
           endRowIndex >= newLines.length
             ? ''
             : newLines[endRowIndex].slice(endColumnIndex)
-        Arrays.splice(newLines, startRowIndex, deleted.length, [before + after])
+        Arrays.spliceLargeArray(newLines, startRowIndex, deleted.length, [
+          before + after,
+        ])
       } else {
         const before =
           newLines[startRowIndex].slice(0, startColumnIndex) + inserted[0]
@@ -77,7 +80,7 @@ export const applyEdits = (textDocument, changes) => {
           (endRowIndex >= newLines.length
             ? ''
             : newLines[endRowIndex].slice(endColumnIndex))
-        Arrays.splice(newLines, startRowIndex, deleted.length, [
+        Arrays.spliceLargeArray(newLines, startRowIndex, deleted.length, [
           before,
           ...middle,
           after,

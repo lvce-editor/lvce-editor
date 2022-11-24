@@ -1,5 +1,4 @@
 import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuBarEntries.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 
 export const create = () => {
   return {
@@ -26,8 +25,6 @@ const renderTitleBarEntries = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.TitleBarMenuBar,
       /* method */ 'setEntries',
       /* titleBarEntries */ newState.titleBarEntries,
     ]
@@ -43,8 +40,6 @@ const renderFocusedIndex = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.TitleBarMenuBar,
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldState.focusedIndex,
       /* newfocusedIndex */ newState.focusedIndex,
@@ -82,12 +77,7 @@ const renderMenus = {
     } else if (difference < 0) {
       changes.push(['closeMenus', newLength])
     }
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.TitleBarMenuBar,
-      /* method */ 'setMenus',
-      /* changes */ changes,
-    ]
+    return [/* method */ 'setMenus', /* changes */ changes]
   },
 }
 

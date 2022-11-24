@@ -111,12 +111,7 @@ const renderTabs = {
     return oldState.views === newState.views
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Panel,
-      /* method */ 'setTabs',
-      /* tabs */ newState.views,
-    ]
+    return [/* method */ 'setTabs', /* tabs */ newState.views]
   },
 }
 
@@ -126,8 +121,6 @@ const renderSelectedIndex = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Panel,
       /* method */ 'setSelectedIndex',
       /* unFocusIndex */ oldState.selectedIndex,
       /* focusIndex */ newState.selectedIndex,

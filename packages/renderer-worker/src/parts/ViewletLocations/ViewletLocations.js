@@ -1,6 +1,7 @@
 import * as Command from '../Command/Command.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as DirentType from '../DirentType/DirentType.js'
 
 /**
  * @enum {string}
@@ -83,7 +84,7 @@ const getDisplayReferences = (references) => {
         name,
         lineText: '',
         icon: IconTheme.getIcon({
-          type: 'file',
+          type: DirentType.File,
           path: reference.uri,
           name,
         }),

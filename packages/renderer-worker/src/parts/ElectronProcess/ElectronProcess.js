@@ -15,7 +15,7 @@ export const state = {
 
 const createIpc = async () => {
   return IpcParent.create({
-    method: IpcParentType.Electron,
+    method: IpcParentType.ElectronMessagePort,
     type: 'electron-process',
   })
 }
@@ -25,6 +25,7 @@ const handleMessage = async (message) => {
     Callback.resolve(message.id, message)
   } else if ('method' in message) {
     await Command.execute(message.method, ...message.params)
+  } else {
   }
 }
 
@@ -63,13 +64,6 @@ const restoreError = (error) => {
 
 export const invoke = async (method, ...params) => {
   const ipc = await getIpc()
-  const response = await JsonRpc.invoke(ipc, method, ...params)
-  if ('result' in response) {
-    return response.result
-  }
-  if ('error' in response) {
-    const restoredError = restoreError(response.error)
-    throw restoredError
-  }
-  throw new Error('unexpected response')
+  const result = await JsonRpc.invoke(ipc, method, ...params)
+  return result
 }

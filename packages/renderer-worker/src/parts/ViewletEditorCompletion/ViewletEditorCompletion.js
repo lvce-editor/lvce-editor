@@ -157,13 +157,7 @@ const renderItems = {
       newState.minLineY,
       newState.maxLineY
     )
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.EditorCompletion,
-      /* method */ 'setItems',
-      /* items */ visibleItems,
-      /* reason */ 1,
-    ]
+    return [/* method */ 'setItems', /* items */ visibleItems, /* reason */ 1]
   },
 }
 
@@ -178,8 +172,6 @@ const renderBounds = {
   apply(oldState, newState) {
     const { left, top, width, height } = newState
     return [
-      /* Viewlet.send */ 'Viewlet.setBounds',
-      /* id */ ViewletModuleId.EditorCompletion,
       /* left */ left,
       /* top */ top,
       /* width */ width,
@@ -194,8 +186,6 @@ const renderFocusedIndex = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.EditorCompletion,
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldState.focusedIndex,
       /* newFocusedIndex */ newState.focusedIndex,

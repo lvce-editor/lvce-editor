@@ -3,10 +3,6 @@
  */
 import * as ViewletClock from '../src/parts/ViewletClock/ViewletClock.js'
 
-test('name', () => {
-  expect(ViewletClock.name).toBe('Clock')
-})
-
 test('create', () => {
   const state = ViewletClock.create()
   expect(state).toBeDefined()

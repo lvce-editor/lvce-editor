@@ -14,5 +14,5 @@ export const getElectronVersion = async () => {
   }
   // this is the last version which works for rebuilding
   // node-pty which is required for terminals to work
-  return '19.1.1'
+  return '19.1.6'
 }

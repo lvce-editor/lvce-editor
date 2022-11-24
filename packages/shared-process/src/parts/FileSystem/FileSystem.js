@@ -4,7 +4,7 @@ import * as os from 'node:os'
 import VError from 'verror'
 import * as DirentType from '../DirentType/DirentType.js'
 import { FileNotFoundError } from '../Error/FileNotFoundError.js'
-import * as FileSystemErrorCodes from '../FileSystemErrorCodes/FileSystemErrorCodes.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as Path from '../Path/Path.js'
 import * as Platform from '../Platform/Platform.js'
 import * as Trash from '../Trash/Trash.js'
@@ -52,7 +52,7 @@ export const readFile = async (path, encoding = EncodingType.Utf8) => {
     // console.timeEnd(`read ${path}`)
     return content
   } catch (error) {
-    if (error && error.code === FileSystemErrorCodes.ENOENT) {
+    if (error && error.code === ErrorCodes.ENOENT) {
       throw new FileNotFoundError(path)
     }
     throw new VError(error, `Failed to read file "${path}"`)
@@ -75,7 +75,7 @@ export const writeFile = async (
     // Queue.add(`writeFile/${path}`, () =>
     await fs.writeFile(path, content, encoding)
   } catch (error) {
-    if (error && error.code === FileSystemErrorCodes.ENOENT) {
+    if (error && error.code === ErrorCodes.ENOENT) {
       throw new FileNotFoundError(path)
     }
     throw new VError(error, `Failed to write to file "${path}"`)
@@ -152,7 +152,7 @@ const getType = (dirent) => {
     return DirentType.File
   }
   if (dirent.isDirectory()) {
-    return DirentType.Direcory
+    return DirentType.Directory
   }
   if (dirent.isSymbolicLink()) {
     return DirentType.Symlink
@@ -194,7 +194,7 @@ export const readDir = async (path) => {
     const dirents = await fs.readdir(path)
     return dirents
   } catch (error) {
-    if (error && error.code === FileSystemErrorCodes.ENOENT) {
+    if (error && error.code === ErrorCodes.ENOENT) {
       throw new FileNotFoundError(path)
     }
     throw new VError(error, `Failed to read directory "${path}"`)
@@ -222,7 +222,7 @@ export const rename = async (oldPath, newPath) => {
   try {
     await fs.rename(oldPath, newPath)
   } catch (error) {
-    if (error && error.code === FileSystemErrorCodes.EXDEV) {
+    if (error && error.code === ErrorCodes.EXDEV) {
       return fallbackRename(oldPath, newPath)
     }
     throw new VError(error, `Failed to rename "${oldPath}" to "${newPath}"`)
@@ -258,7 +258,7 @@ export const getRealPath = async (path) => {
       error &&
       error instanceof globalThis.Error &&
       // @ts-ignore
-      error.code === FileSystemErrorCodes.ENOENT
+      error.code === ErrorCodes.ENOENT
     ) {
       let content
       try {
