@@ -1,6 +1,8 @@
 import * as Process from './Process.js'
 
+export const name = 'Process'
+
 export const Commands = {
-  555: Process.crash,
-  556: Process.crashAsync,
+  crash: Process.crash,
+  crashAsync: Process.crashAsync,
 }

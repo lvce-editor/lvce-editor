@@ -42,7 +42,7 @@ const handleWebSocketSharedProcess = (message, handle) => {
     console.info('[info shared process: handle error]', error)
   })
   Command.execute(
-    /* WebSocketServer.handleUpgrade */ 5621,
+    /* WebSocketServer.handleUpgrade */ 'WebSocketServer.handleUpgrade',
     /* message */ message,
     /* handle */ handle
   )
