@@ -1,8 +1,12 @@
 export const ActivityBar = 'ActivityBar'
 
+export const Audio = 'Audio'
+
 export const Clock = 'Clock'
 
 export const DebugConsole = 'Debug Console'
+
+export const DiffEditor = 'DiffEditor'
 
 export const EditorCompletion = 'EditorCompletion'
 
@@ -63,5 +67,3 @@ export const TitleBar = 'TitleBar'
 export const TitleBarButtons = 'TitleBarButtons'
 
 export const TitleBarMenuBar = 'TitleBarMenuBar'
-
-export const Audio = 'Audio'
