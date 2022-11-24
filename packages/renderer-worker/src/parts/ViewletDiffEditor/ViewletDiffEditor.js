@@ -2,7 +2,6 @@ import * as Diff from '../Diff/Diff.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 
 export const create = (id, uri, top, left, width, height) => {
@@ -94,12 +93,7 @@ const renderLeft = {
       newState.minLineY,
       newState.maxLineY
     )
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.DiffEditor,
-      /* method */ 'setContentLeft',
-      /* linesLeft */ visible,
-    ]
+    return [/* method */ 'setContentLeft', /* linesLeft */ visible]
   },
 }
 
@@ -117,12 +111,7 @@ const renderRight = {
       newState.minLineY,
       newState.maxLineY
     )
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.DiffEditor,
-      /* method */ 'setContentRight',
-      /* linesRight */ visible,
-    ]
+    return [/* method */ 'setContentRight', /* linesRight */ visible]
   },
 }
 
@@ -131,12 +120,7 @@ const renderChanges = {
     return oldState.changes === newState.changes
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.DiffEditor,
-      /* method */ 'setChanges',
-      /* changes */ newState.changes,
-    ]
+    return [/* method */ 'setChanges', /* changes */ newState.changes]
   },
 }
 
@@ -156,8 +140,6 @@ const renderScrollBar = {
       newState.scrollBarHeight
     )
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.DiffEditor,
       /* method */ 'setScrollBar',
       /* scrollBarY */ scrollBarY,
       /* scrollBarHeight */ newState.scrollBarHeight,
