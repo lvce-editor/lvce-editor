@@ -1,7 +1,9 @@
 import * as Performance from './Performance.js'
 
+export const name = 'Performance'
+
 // prettier-ignore
 export const Commands = {
-  'Performance.getMemory': Performance.getMemory,
-  'Performance.measureUserAgentSpecificMemory': Performance.measureUserAgentSpecificMemory,
+  getMemory: Performance.getMemory,
+  measureUserAgentSpecificMemory: Performance.measureUserAgentSpecificMemory,
 }
