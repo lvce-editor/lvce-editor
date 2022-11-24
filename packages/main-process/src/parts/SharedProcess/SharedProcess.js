@@ -1,10 +1,9 @@
 const { Worker } = require('worker_threads')
-const ChildProcess = require('../ChildProcess/ChildProcess.js')
 const Command = require('../Command/Command.js')
-const Path = require('../Path/Path.js')
 const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
 const Platform = require('../Platform/Platform.js')
 const Logger = require('../Logger/Logger.js')
+const GetResponse = require('../GetResponse/GetResponse.js')
 
 const state = (exports.state = {
   /**
@@ -34,49 +33,28 @@ const handleChildMessage = async (message) => {
     Logger.warn('invalid message', message)
     return
   }
-  const object = message
-  if (object.result || object.error) {
+  if (message.result || message.error) {
     state.onMessage(message)
     return
   }
-  if (!object.id && !object.params) {
+  if (!message.id && !message.params) {
     // TODO need better way to send terminal data
-    const parsed = JSON.parse(object)
+    const parsed = JSON.parse(message)
     state.onMessage(parsed)
     return
   }
-  if (object.id) {
-    if ('result' in object) {
-      state.onMessage(object)
+  if (message.id) {
+    if ('result' in message) {
+      state.onMessage(message)
       return
     }
-    let result
-    try {
-      result = await Command.invoke(object.method, ...object.params)
-    } catch (error) {
-      Logger.error(error)
-      if (state.sharedProcess) {
-        state.sharedProcess.postMessage({
-          jsonrpc: '2.0',
-          code: /* UnexpectedError */ -32001,
-          id: object.id,
-          error: 'UnexpectedError',
-          // @ts-ignore
-          data: error.toString(),
-        })
-      }
-      return
-    }
+    const response = await GetResponse.getResponse(message)
     if (state.sharedProcess) {
-      state.sharedProcess.postMessage({
-        jsonrpc: '2.0',
-        result,
-        id: object.id,
-      })
+      state.sharedProcess.postMessage(response)
     }
   } else {
     try {
-      await Command.execute(object.method, ...object.params)
+      await Command.execute(message.method, ...message.params)
     } catch (error) {
       ErrorHandling.handleError(error)
     }
