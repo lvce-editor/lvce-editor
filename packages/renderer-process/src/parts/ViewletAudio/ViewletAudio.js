@@ -17,7 +17,6 @@ export const create = () => {
     $Viewlet,
     $Audio,
     $Content,
-    $AudioErrorMessage: undefined,
   }
 }
 
@@ -27,11 +26,9 @@ export const setSrc = (state, src) => {
 }
 
 export const setAudioErrorMessage = (state, audioErrorMessage) => {
-  if (!state.$AudioErrorMessage) {
-    state.$AudioErrorMessage = document.createElement('div')
-    state.$AudioErrorMessage.className = 'AudioErrorMessage'
-    state.$Content.append(state.$AudioErrorMessage)
-  }
-  const { $AudioErrorMessage } = state
-  $AudioErrorMessage.textContent = audioErrorMessage
+  const { $Viewlet } = state
+  const $Error = document.createElement('div')
+  $Error.className = 'ViewletError'
+  $Error.textContent = audioErrorMessage
+  $Viewlet.replaceChildren($Error)
 }
