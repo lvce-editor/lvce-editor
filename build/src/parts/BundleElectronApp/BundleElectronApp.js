@@ -5,7 +5,6 @@ import * as BundleRendererProcessCached from '../BundleRendererProcessCached/Bun
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
-import * as DownloadElectron from '../DownloadElectron/DownloadElectron.js'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.js'
 import * as Hash from '../Hash/Hash.js'
 import * as Path from '../Path/Path.js'
@@ -51,6 +50,9 @@ const downloadElectron = async ({ platform, arch, electronVersion }) => {
     'electron',
     electronVersion
   )
+  const DownloadElectron = await import(
+    '../DownloadElectron/DownloadElectron.js'
+  )
   await DownloadElectron.downloadElectron({
     electronVersion,
     outDir,
@@ -59,14 +61,21 @@ const downloadElectron = async ({ platform, arch, electronVersion }) => {
   })
 }
 
-const copyElectron = async ({ arch, electronVersion }) => {
-  const outDir = Path.join(
-    Root.root,
-    'build',
-    '.tmp',
-    'electron',
-    electronVersion
-  )
+const copyElectron = async ({
+  arch,
+  electronVersion,
+  useInstalledElectronVersion,
+}) => {
+  const outDir = useInstalledElectronVersion
+    ? Path.join(
+        Root.root,
+        'packages',
+        'main-process',
+        'node_modules',
+        'electron',
+        'dist'
+      )
+    : Path.join(Root.root, 'build', '.tmp', 'electron', electronVersion)
   await Copy.copy({
     from: outDir,
     to: `build/.tmp/electron-bundle/${arch}`,
@@ -270,6 +279,9 @@ const copyCss = async ({ arch }) => {
 
 export const build = async () => {
   const arch = process.arch
+  const useInstalledElectronVersion = process.argv.includes(
+    '--use-installed-electron-version'
+  )
   const electronVersion = await GetElectronVersion.getElectronVersion()
   const dependencyCacheHash = await getDependencyCacheHash({
     electronVersion,
@@ -301,18 +313,21 @@ export const build = async () => {
     console.timeEnd('bundleElectronAppDependencies')
   }
 
-  console.time('downloadElectron')
-  await downloadElectron({
-    arch,
-    electronVersion,
-    platform: process.platform,
-  })
-  console.timeEnd('downloadElectron')
+  if (!useInstalledElectronVersion) {
+    console.time('downloadElectron')
+    await downloadElectron({
+      arch,
+      electronVersion,
+      platform: process.platform,
+    })
+    console.timeEnd('downloadElectron')
+  }
 
   console.time('copyElectron')
   await copyElectron({
     arch,
     electronVersion,
+    useInstalledElectronVersion,
   })
   console.timeEnd('copyElectron')
 
