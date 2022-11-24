@@ -1,10 +1,12 @@
 import * as TestFrameWork from './TestFrameWork.js'
 
+export const name = 'TestFrameWork'
+
 // prettier-ignore
 export const Commands = {
-  'TestFrameWork.checkMultiElementCondition': TestFrameWork.checkMultiElementCondition,
-  'TestFrameWork.checkSingleElementCondition': TestFrameWork.checkSingleElementCondition,
-  'TestFrameWork.performAction': TestFrameWork.performAction,
-  'TestFrameWork.performKeyBoardAction': TestFrameWork.performKeyBoardAction,
-  'TestFrameWork.showOverlay': TestFrameWork.showOverlay,
+  checkMultiElementCondition: TestFrameWork.checkMultiElementCondition,
+  checkSingleElementCondition: TestFrameWork.checkSingleElementCondition,
+  performAction: TestFrameWork.performAction,
+  performKeyBoardAction: TestFrameWork.performKeyBoardAction,
+  showOverlay: TestFrameWork.showOverlay,
 }

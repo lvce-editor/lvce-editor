@@ -1,5 +1,7 @@
 import * as InitData from './InitData.js'
 
+export const name = 'InitData'
+
 export const Commands = {
-  'InitData.getInitData': InitData.getInitData,
+  getInitData: InitData.getInitData,
 }
