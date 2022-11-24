@@ -1,5 +1,7 @@
 import * as EditorHover from './EditorHover.js'
 
+export const name = 'EditorHover'
+
 export const Commands = {
-  'EditorHover.create': EditorHover.create,
+  create: EditorHover.create,
 }

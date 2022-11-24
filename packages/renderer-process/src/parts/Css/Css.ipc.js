@@ -1,6 +1,8 @@
 import * as Css from './Css.js'
 
+export const name = 'Css'
+
 export const Commands = {
-  'Css.addCssStyleSheet': Css.addCssStyleSheet,
-  'Css.setInlineStyle': Css.setInlineStyle,
+  addCssStyleSheet: Css.addCssStyleSheet,
+  setInlineStyle: Css.setInlineStyle,
 }

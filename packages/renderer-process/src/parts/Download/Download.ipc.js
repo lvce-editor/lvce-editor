@@ -1,5 +1,7 @@
 import * as Download from './Download.js'
 
+export const name = 'Download'
+
 export const Commands = {
-  'Download.downloadFile': Download.downloadFile,
+  downloadFile: Download.downloadFile,
 }

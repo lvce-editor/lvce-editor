@@ -1,7 +1,9 @@
 import * as EditorRename from './EditorRename.js'
 
+export const name = 'EditorRename'
+
 export const Commands = {
-  'EditorRename.create': EditorRename.create,
-  'EditorRename.dispose': EditorRename.dispose,
-  'EditorRename.finish': EditorRename.finish,
+  create: EditorRename.create,
+  dispose: EditorRename.dispose,
+  finish: EditorRename.finish,
 }
