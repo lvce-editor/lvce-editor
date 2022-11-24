@@ -86,3 +86,7 @@ export const handleContextMenu = (event) => {
   const { clientX, clientY } = event
   RendererWorker.send('EditorImage.handleContextMenu', clientX, clientY)
 }
+
+export const handleError = (event) => {
+  RendererWorker.send('EditorImage.handleImageError')
+}

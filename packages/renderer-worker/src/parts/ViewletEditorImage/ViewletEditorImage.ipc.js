@@ -8,6 +8,7 @@ export const Commands = {
   handlePointerMove: ViewletEditorImage.handlePointerMove,
   handlePointerUp: ViewletEditorImage.handlePointerUp,
   handleWheel: ViewletEditorImage.handleWheel,
+  handleImageError: ViewletEditorImage.handleImageError
 }
 
 // prettier-ignore
