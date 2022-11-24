@@ -50,6 +50,7 @@ export const bundleJs = async ({
     },
     freeze: false,
     inlineDynamicImports: !codeSplitting,
+    minifyInternalExports: false,
   }
   await result.write(outputOptions)
 }
