@@ -3,7 +3,6 @@ import * as Assert from '../Assert/Assert.js'
 import * as BlobSrc from '../BlobSrc/BlobSrc.js'
 import * as Clamp from '../Clamp/Clamp.js'
 import * as DomMatrix from '../DomMatrix/DomMatrix.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as WheelEvent from '../WheelEvent/WheelEvent.js'
 
 export const create = (id, uri, left, top, width, height) => {
@@ -24,6 +23,7 @@ export const create = (id, uri, left, top, width, height) => {
     touchZoomFactor: 1.015,
     eventCache: [],
     previousDiff: 0,
+    errorMessage: '',
   }
 }
 
@@ -149,6 +149,13 @@ export const handlePointerUp = (state, pointerId, x, y) => {
   }
 }
 
+export const handleImageError = (state) => {
+  return {
+    ...state,
+    errorMessage: `Image could not be loaded`,
+  }
+}
+
 const getNewZoom = (zoom, currentZoomFactor, minZoom, maxZoom) => {
   const newZoom = zoom * currentZoomFactor
   return Clamp.clamp(newZoom, minZoom, maxZoom)
@@ -215,5 +222,18 @@ const renderCursor = {
     return [/* method */ 'setDragging', /* isDragging */ isDragging]
   },
 }
+const renderErrorMessage = {
+  isEqual(oldState, newState) {
+    return oldState.errorMessage === newState.errorMessage
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setError', /* errorMessage */ newState.errorMessage]
+  },
+}
 
-export const render = [renderSrc, renderTransform, renderCursor]
+export const render = [
+  renderSrc,
+  renderTransform,
+  renderCursor,
+  renderErrorMessage,
+]
