@@ -1,9 +1,11 @@
 import * as Chrome from './Chrome.js'
 
+export const name = 'Chrome'
+
 export const Commands = {
-  'Chrome.close': Chrome.close,
-  'Chrome.exit': Chrome.exit,
-  'Chrome.maximize': Chrome.maximize,
-  'Chrome.minimize': Chrome.minimize,
-  'Chrome.unmaximize': Chrome.unmaximize,
+  close: Chrome.close,
+  exit: Chrome.exit,
+  maximize: Chrome.maximize,
+  minimize: Chrome.minimize,
+  unmaximize: Chrome.unmaximize,
 }

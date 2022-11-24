@@ -1,6 +1,8 @@
 import * as ColorThemeFromJson from './ColorThemeFromJson.js'
 
+export const name = 'ColorThemeFromJson'
+
 // prettier-ignore
 export const Commands = {
-  'ColorThemeFromJson.createColorThemeFromJson': ColorThemeFromJson.createColorThemeFromJson
+  createColorThemeFromJson: ColorThemeFromJson.createColorThemeFromJson
 }

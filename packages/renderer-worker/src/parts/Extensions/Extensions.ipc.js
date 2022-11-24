@@ -1,7 +1,9 @@
 import * as Extensions from './Extensions.js'
 
+export const name = 'Extensions'
+
 // prettier-ignore
 export const Commands = {
-  'Extensions.openCachedExtensionsFolder': Extensions.openCachedExtensionsFolder,
-  'Extensions.openExtensionsFolder': Extensions.openExtensionsFolder,
+  openCachedExtensionsFolder: Extensions.openCachedExtensionsFolder,
+  openExtensionsFolder: Extensions.openExtensionsFolder,
 }

@@ -1,10 +1,12 @@
 import * as Viewlet from './Viewlet.js'
 
+export const name = 'Viewlet'
+
 export const Commands = {
-  'Viewlet.closeWidget': Viewlet.closeWidget,
-  'Viewlet.executeViewletCommand': Viewlet.executeViewletCommand,
-  'Viewlet.focus': Viewlet.focus,
-  'Viewlet.getAllStates': Viewlet.getAllStates,
-  'Viewlet.openWidget': Viewlet.openWidget,
+  closeWidget: Viewlet.closeWidget,
+  executeViewletCommand: Viewlet.executeViewletCommand,
+  focus: Viewlet.focus,
+  getAllStates: Viewlet.getAllStates,
+  openWidget: Viewlet.openWidget,
   2133: Viewlet.send,
 }

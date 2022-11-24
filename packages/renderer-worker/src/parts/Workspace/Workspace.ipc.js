@@ -1,7 +1,9 @@
 import * as Workspace from './Workspace.js'
 
+export const name = 'Workspace'
+
 export const Commands = {
-  'Workspace.hydrate': Workspace.hydrate,
-  'Workspace.setPath': Workspace.setPath,
-  'Workspace.setUri': Workspace.setUri,
+  hydrate: Workspace.hydrate,
+  setPath: Workspace.setPath,
+  setUri: Workspace.setUri,
 }

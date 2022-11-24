@@ -1,6 +1,8 @@
 import * as KeyBindings from './KeyBindings.js'
 
+export const name = 'KeyBindings'
+
 export const Commands = {
-  'KeyBindings.handleKeyBinding': KeyBindings.handleKeyBinding,
-  'KeyBindings.hydrate': KeyBindings.hydrate,
+  handleKeyBinding: KeyBindings.handleKeyBinding,
+  hydrate: KeyBindings.hydrate,
 }
