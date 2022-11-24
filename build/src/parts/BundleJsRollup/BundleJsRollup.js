@@ -51,6 +51,10 @@ export const bundleJs = async ({
     freeze: false,
     inlineDynamicImports: !codeSplitting,
     minifyInternalExports: false,
+    generatedCode: {
+      constBindings: true,
+      objectShorthand: true,
+    },
   }
   await result.write(outputOptions)
 }
