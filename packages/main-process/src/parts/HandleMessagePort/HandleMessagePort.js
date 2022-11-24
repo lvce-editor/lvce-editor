@@ -11,6 +11,7 @@ const Command = require('../Command/Command.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const PendingPorts = require('../PendingPorts/PendingPorts.js')
 const JsonRpcErrorCode = require('../JsonRpcErrorCode/JsonRpcErrorCode.js')
+const Logger = require('../Logger/Logger.js')
 
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
@@ -52,7 +53,7 @@ const handlePortForExtensionHost = async (event) => {
   const end = Date.now()
   const pid = extensionHost.pid
   const forkTime = end - start
-  console.info(
+  Logger.info(
     `[main-process] Starting extension host with pid ${pid} (fork took ${forkTime} ms).`
   )
   const browserWindowPort = event.ports[0]
@@ -91,7 +92,7 @@ const handlePortForExtensionHostHelperProcess = async (event) => {
   const end = Date.now()
   const pid = extensionHost.pid
   const forkTime = end - start
-  console.info(
+  Logger.info(
     `[main-process] Starting extension host helper with pid ${pid} (fork took ${forkTime} ms).`
   )
   const browserWindowPort = event.ports[0]
@@ -128,7 +129,7 @@ const getFolder = (args) => {
 const handlePortForSharedProcess = async (event) => {
   const config = AppWindow.findById(event.sender.id)
   if (!config) {
-    console.warn('port event - config expected')
+    Logger.warn('port event - config expected')
     return
   }
   const browserWindowPort = event.ports[0]
@@ -269,6 +270,6 @@ exports.handlePort = async (event, data) => {
     case 'extension-host-helper-process':
       return handlePortForExtensionHostHelperProcess(event)
     default:
-      console.error(`[main-process] unexpected port type ${data}`)
+      Logger.error(`[main-process] unexpected port type ${data}`)
   }
 }
