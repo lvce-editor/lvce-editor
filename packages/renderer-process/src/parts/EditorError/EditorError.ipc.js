@@ -1,5 +1,7 @@
 import * as EditorError from './EditorError.js'
 
+export const name = 'EditorError'
+
 export const Commands = {
-  'EditorError.create': EditorError.create,
+  create: EditorError.create,
 }

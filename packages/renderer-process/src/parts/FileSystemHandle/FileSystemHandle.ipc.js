@@ -1,5 +1,7 @@
 import * as FileSystemHandle from './FileSystemHandle.js'
 
+export const name = 'FileSystemHandle'
+
 export const Commands = {
-  'FileSystemHandle.requestPermission': FileSystemHandle.requestPermission,
+  requestPermission: FileSystemHandle.requestPermission,
 }

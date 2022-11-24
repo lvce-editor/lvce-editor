@@ -1,5 +1,7 @@
 import * as Developer from './Developer.js'
 
+export const name = 'Developer'
+
 export const Commands = {
-  'Developer.showState': Developer.showState,
+  showState: Developer.showState,
 }
