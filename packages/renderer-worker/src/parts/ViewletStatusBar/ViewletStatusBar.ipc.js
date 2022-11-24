@@ -4,7 +4,7 @@ export const name = 'StatusBar'
 
 // prettier-ignore
 export const Commands = {
-  'ViewletStatusBar.updateStatusBarItems': ViewletStatusBar.updateStatusBarItems
+  updateStatusBarItems: ViewletStatusBar.updateStatusBarItems
 }
 
 export const Css = '/css/parts/ViewletStatusBar.css'
