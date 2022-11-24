@@ -28,16 +28,16 @@
   },
   "dependencies": {
     "bytes": "^3.1.2",
-    "esbuild": "^0.15.14",
+    "esbuild": "^0.15.15",
     "fs-extra": "^10.1.0",
     "got": "^12.5.3",
     "gzip-size": "^7.0.0",
     "minimist": "^1.2.7",
     "p-map": "^5.5.0",
     "pretty-bytes": "^6.0.0",
-    "rollup": "^3.3.0",
+    "rollup": "^3.4.0",
     "tar-fs": "^2.1.1",
-    "verdaccio": "^5.17.0",
+    "verdaccio": "^5.18.0",
     "verror": "^1.10.1"
   },
   "xo": {
