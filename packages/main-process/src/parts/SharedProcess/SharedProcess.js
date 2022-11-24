@@ -4,6 +4,7 @@ const Command = require('../Command/Command.js')
 const Path = require('../Path/Path.js')
 const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
 const Platform = require('../Platform/Platform.js')
+const Logger = require('../Logger/Logger.js')
 
 const state = (exports.state = {
   /**
@@ -14,14 +15,14 @@ const state = (exports.state = {
 })
 
 const handleChildError = (error) => {
-  console.info('[main] Child Error')
-  console.error(error.toString())
+  Logger.info('[main] Child Error')
+  Logger.error(error.toString())
   process.exit(1)
 }
 
 const handleStdError = (error) => {
-  console.info('[main] Child std error')
-  console.error(error.toString())
+  Logger.info('[main] Child std error')
+  Logger.error(error.toString())
   process.exit(1)
 }
 
@@ -30,7 +31,7 @@ const handleChildMessage = async (message) => {
     return
   }
   if (Array.isArray(message)) {
-    console.warn('invalid message', message)
+    Logger.warn('invalid message', message)
     return
   }
   const object = message
@@ -53,7 +54,7 @@ const handleChildMessage = async (message) => {
     try {
       result = await Command.invoke(object.method, ...object.params)
     } catch (error) {
-      console.error(error)
+      Logger.error(error)
       if (state.sharedProcess) {
         state.sharedProcess.postMessage({
           jsonrpc: '2.0',
@@ -86,19 +87,19 @@ const handleProcessExit = async () => {
   if (state.sharedProcess) {
     // await state.sharedProcess.terminate()
     // state.sharedProcess.postMessage('terminate')
-    console.info('[main-process] terminating shared process')
+    Logger.info('[main-process] terminating shared process')
     await state.sharedProcess.terminate()
     // state.sharedProcess.
   }
 }
 
 const handleChildExit = (code) => {
-  console.info(`[main] shared process exited with code ${code}`)
+  Logger.info(`[main] shared process exited with code ${code}`)
   process.exit(code)
 }
 
 const handleChildDisconnect = () => {
-  console.info('[main] shared process disconnected')
+  Logger.info('[main] shared process disconnected')
 }
 
 exports.send = (message) => {

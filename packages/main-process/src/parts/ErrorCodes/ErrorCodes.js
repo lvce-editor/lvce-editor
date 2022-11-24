@@ -9,3 +9,5 @@ exports.ENOTDIR = 'ENOTDIR'
 exports.E_MANIFEST_NOT_FOUND = 'E_MANIFEST_NOT_FOUND'
 
 exports.ESRCH = 'ESRCH'
+
+exports.EIO = 'EIO'
