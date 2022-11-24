@@ -15,18 +15,137 @@ import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
-const copyJs = async ({ commitHash }) => {
+const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
   await Copy.copy({
     from: 'packages/renderer-process/src',
     to: `build/.tmp/dist/${commitHash}/packages/renderer-process/src`,
   })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
+    occurrence: `ASSET_DIR`,
+    replacement: `'${pathPrefix}/${commitHash}'`,
+  })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
+    occurrence: `PLATFORM`,
+    replacement: "'web'",
+  })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/IpcParent/IpcParent.js`,
+    occurrence: `import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+
+const getModule = (method) => {
+  switch (method) {
+    case IpcParentType.ModuleWorker:
+      return import('./IpcParentWithModuleWorker.js')
+    case IpcParentType.MessagePort:
+      return import('./IpcParentWithMessagePort.js')
+    case IpcParentType.ReferencePort:
+      return import('./IpcParentWithReferencePort.js')
+    default:
+      throw new Error('unexpected ipc type')
+  }
+}`,
+    replacement: `import * as IpcParentType from '../IpcParentType/IpcParentType.js'
+import * as IpcParentWithModuleWorker from './IpcParentWithModuleWorker.js'
+import * as IpcParentWithMessagePort from './IpcParentWithMessagePort.js'
+import * as IpcParentWithReferencePort from './IpcParentWithReferencePort.js'
+
+const getModule = (method) => {
+  switch (method) {
+    case IpcParentType.ModuleWorker:
+      return IpcParentWithModuleWorker
+    case IpcParentType.MessagePort:
+      return IpcParentWithMessagePort
+    case IpcParentType.ReferencePort:
+      return IpcParentWithReferencePort
+    default:
+      throw new Error('unexpected ipc type')
+  }
+}`,
+  })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
+    occurrence: `/src/rendererWorkerMain.js`,
+    replacement: '/dist/rendererWorkerMain.js',
+  })
+}
+
+const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
   await Copy.copy({
     from: 'packages/renderer-worker/src',
     to: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src`,
   })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IconTheme/IconTheme.js`,
+    occurrence: `const getIconThemeUrl = (iconThemeId) => {
+  return \`/extensions/builtin.\${iconThemeId}/icon-theme.json\`
+}`,
+    replacement: `const getIconThemeUrl = (iconThemeId) => {
+  const assetDir = Platform.getAssetDir()
+  return \`\${assetDir}/icon-themes/\${iconThemeId}.json\`
+}`,
+  })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js`,
+    occurrence: `const platform = getPlatform() `,
+    replacement: "const platform = 'web'",
+  })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IconTheme/IconTheme.js`,
+    occurrence: `return \`\${extensionPath}\${value}\``,
+    replacement: `return \`${pathPrefix}/file-icons/\${value.slice(7)}\``,
+  })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
+    occurrence: '/packages/extension-host-worker-tests',
+    replacement: `/${commitHash}/packages/extension-host-worker-tests`,
+  })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,
+    occurrence: `await SharedProcess.listen()`,
+    replacement: ``,
+  })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,
+    occurrence: `import * as SharedProcess from '../SharedProcess/SharedProcess.js'`,
+    replacement: ``,
+  })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
+    occurrence: `ASSET_DIR`,
+    replacement: `'${pathPrefix}/${commitHash}'`,
+  })
+  // TODO enable loading themes from extension folder in production, just like language basics extensions
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js`,
+    occurrence: `const getColorThemeUrlWeb = (colorThemeId) => {
+  return \`/extensions/builtin.theme-\${colorThemeId}/color-theme.json\`
+}`,
+
+    replacement: `const getColorThemeUrlWeb = (colorThemeId) => {
+  const assetDir = Platform.getAssetDir()
+  return \`\${assetDir}/themes/\${colorThemeId}.json\`
+}
+`,
+  })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
+    occurrence: 'PLATFORM',
+    replacement: `'web'`,
+  })
+}
+
+const copyExtensionHostWorkerFiles = async ({ commitHash }) => {
   await Copy.copy({
     from: 'packages/extension-host-worker/src',
     to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src`,
+  })
+  // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/extensionHostWorkerMain.js`,
+    occurrence: `main()`,
+    replacement: `main()\n\nexport const x = 42`,
   })
 }
 
@@ -90,21 +209,7 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
       replacement: `${pathPrefix}/manifest.json`,
     })
   }
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IconTheme/IconTheme.js`,
-    occurrence: `const getIconThemeUrl = (iconThemeId) => {
-  return \`/extensions/builtin.\${iconThemeId}/icon-theme.json\`
-}`,
-    replacement: `const getIconThemeUrl = (iconThemeId) => {
-  const assetDir = Platform.getAssetDir()
-  return \`\${assetDir}/icon-themes/\${iconThemeId}.json\`
-}`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/IconTheme/IconTheme.js`,
-    occurrence: `return \`\${extensionPath}\${value}\``,
-    replacement: `return \`${pathPrefix}/file-icons/\${value.slice(7)}\``,
-  })
+
   if (pathPrefix) {
     await Replace.replace({
       path: `build/.tmp/dist/index.html`,
@@ -200,72 +305,7 @@ const bundleLanguageJsonFiles = async ({ commitHash, pathPrefix }) => {
   })
 }
 
-const applyJsOverrides = async ({ pathPrefix, commitHash }) => {
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
-    occurrence: `ASSET_DIR`,
-    replacement: `'${pathPrefix}/${commitHash}'`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
-    occurrence: `PLATFORM`,
-    replacement: "'web'",
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/SharedProcess/SharedProcess.js`,
-    occurrence: `const platform = getPlatform() `,
-    replacement: "const platform = 'web'",
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
-    occurrence: `/src/rendererWorkerMain.js`,
-    replacement: '/dist/rendererWorkerMain.js',
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
-    occurrence: '/packages/extension-host-worker-tests',
-    replacement: `/${commitHash}/packages/extension-host-worker-tests`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,
-    occurrence: `await SharedProcess.listen()`,
-    replacement: ``,
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,
-    occurrence: `import * as SharedProcess from '../SharedProcess/SharedProcess.js'`,
-    replacement: ``,
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
-    occurrence: `ASSET_DIR`,
-    replacement: `'${pathPrefix}/${commitHash}'`,
-  })
-  // TODO enable loading themes from extension folder in production, just like language basics extensions
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/ColorTheme/ColorTheme.js`,
-    occurrence: `const getColorThemeUrlWeb = (colorThemeId) => {
-  return \`/extensions/builtin.theme-\${colorThemeId}/color-theme.json\`
-}`,
-
-    replacement: `const getColorThemeUrlWeb = (colorThemeId) => {
-  const assetDir = Platform.getAssetDir()
-  return \`\${assetDir}/themes/\${colorThemeId}.json\`
-}
-`,
-  })
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
-    occurrence: 'PLATFORM',
-    replacement: `'web'`,
-  })
-  // workaround for firefox module worker bug: Error: Dynamic module import is disabled or not supported in this context
-  await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/extension-host-worker/src/extensionHostWorkerMain.js`,
-    occurrence: `main()`,
-    replacement: `main()\n\nexport const x = 42`,
-  })
-}
+const applyJsOverrides = async ({ pathPrefix, commitHash }) => {}
 
 const addRobotsTxt = async () => {
   await WriteFile.writeFile({
@@ -445,6 +485,7 @@ const bundleJs = async ({ commitHash }) => {
     from: 'src/rendererProcessMain.js',
     platform: 'web',
     codeSplitting: true,
+    minify: true,
   })
   await BundleJs.bundleJs({
     cwd: Path.absolute(
@@ -549,13 +590,21 @@ export const build = async () => {
   await Remove.remove('build/.tmp/dist')
   Console.timeEnd('clean')
 
-  Console.time('copyJs')
-  await copyJs({ commitHash })
-  Console.timeEnd('copyJs')
-
   Console.time('copyStaticFiles')
   await copyStaticFiles({ pathPrefix, ignoreIconTheme })
   Console.timeEnd('copyStaticFiles')
+
+  Console.time('copyRendererProcessFiles')
+  await copyRendererProcessFiles({ pathPrefix, commitHash })
+  Console.timeEnd('copyRendererProcessFiles')
+
+  Console.time('copyRendererWorkerFiles')
+  await copyRendererWorkerFiles({ pathPrefix, commitHash })
+  Console.timeEnd('copyRendererWorkerFiles')
+
+  Console.time('copyExtensionHostWorkerFiles')
+  await copyExtensionHostWorkerFiles({ commitHash })
+  Console.timeEnd('copyExtensionHostWorkerFiles')
 
   Console.time('applyJsOverrides')
   await applyJsOverrides({ pathPrefix, commitHash })
