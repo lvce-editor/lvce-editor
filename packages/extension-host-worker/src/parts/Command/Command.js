@@ -12,6 +12,7 @@ import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDoc
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
+import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
 
 const getFn = (method) => {
   switch (method) {
@@ -52,6 +53,10 @@ const getFn = (method) => {
       return ExtensionHostFormatting.executeFormattingProvider
     case 'ExtensionHostMockExec.mockExec':
       return ExtensionHostMockExec.mockExec
+    case 'ExtensionHostFileSystem.readFile':
+      return ExtensionHostFileSystem.readFile
+    case 'ExtensionHostFileSystem.writeFile':
+      return ExtensionHostFileSystem.writeFile
     default:
       throw new Error(`[extension-host-worker] method not found: ${method}`)
   }
