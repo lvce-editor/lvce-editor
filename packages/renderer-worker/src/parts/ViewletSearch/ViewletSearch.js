@@ -8,7 +8,6 @@ import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SearchResultType from '../SearchResultType/SearchResultType.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
@@ -197,6 +196,14 @@ const compareResults = (resultA, resultB) => {
   return Compare.compareString(pathA, pathB)
 }
 
+const getMatchStart = (preview, searchTerm) => {
+  const index = preview.preview.indexOf(searchTerm)
+  if (index === -1) {
+    return preview.preview.toLowerCase().indexOf(searchTerm)
+  }
+  return index
+}
+
 const toDisplayResults = (results, itemHeight, resultCount, searchTerm) => {
   results.sort(compareResults)
   const displayResults = []
@@ -231,7 +238,7 @@ const toDisplayResults = (results, itemHeight, resultCount, searchTerm) => {
         setSize,
         top: i * itemHeight,
         lineNumber: preview.lineNumber,
-        matchStart: preview.preview.indexOf(searchTerm),
+        matchStart: getMatchStart(preview, searchTerm),
         matchLength: searchTerm.length,
       })
     }
