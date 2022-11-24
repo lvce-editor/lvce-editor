@@ -1,5 +1,7 @@
 import * as OpenNativeFolder from './OpenNativeFolder.js'
 
+export const name = 'OpenNativeFolder'
+
 export const Commands = {
-  'OpenNativeFolder.openNativeFolder': OpenNativeFolder.openNativeFolder,
+  openNativeFolder: OpenNativeFolder.openNativeFolder,
 }

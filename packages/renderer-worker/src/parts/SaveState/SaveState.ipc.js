@@ -1,7 +1,9 @@
 import * as SaveState from './SaveState.js'
 
+export const name = 'SaveState'
+
 // prettier-ignore
 export const Commands = {
-  'SaveState.handleVisibilityChange': SaveState.handleVisibilityChange,
-  'SaveState.hydrate': SaveState.hydrate,
+  handleVisibilityChange: SaveState.handleVisibilityChange,
+  hydrate: SaveState.hydrate,
 }

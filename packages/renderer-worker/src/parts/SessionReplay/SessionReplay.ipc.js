@@ -1,9 +1,11 @@
 import * as SessionReplay from './SessionReplay.js'
 
+export const name = 'SessionReplay'
+
 // prettier-ignore
 export const Commands = {
-  'SessionReplay.downloadSession': SessionReplay.downloadSession,
-  'SessionReplay.openSession': SessionReplay.openSession,
-  'SessionReplay.replayCurrentSession': SessionReplay.replayCurrentSession,
-  'SessionReplay.replaySession': SessionReplay.replaySession,
+  downloadSession: SessionReplay.downloadSession,
+  openSession: SessionReplay.openSession,
+  replayCurrentSession: SessionReplay.replayCurrentSession,
+  replaySession: SessionReplay.replaySession,
 }

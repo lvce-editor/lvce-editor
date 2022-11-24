@@ -1,9 +1,11 @@
 import * as RecentlyOpened from './RecentlyOpened.js'
 
+export const name = 'RecentlyOpened'
+
 // prettier-ignore
 export const Commands = {
-  'RecentlyOpened.addToRecentlyOpened': RecentlyOpened.addToRecentlyOpened,
-  'RecentlyOpened.clearRecentlyOpened': RecentlyOpened.clearRecentlyOpened,
-  'RecentlyOpened.getRecentlyOpened': RecentlyOpened.getRecentlyOpened,
-  'RecentlyOpened.hydrate': RecentlyOpened.hydrate,
+  addToRecentlyOpened: RecentlyOpened.addToRecentlyOpened,
+  clearRecentlyOpened: RecentlyOpened.clearRecentlyOpened,
+  getRecentlyOpened: RecentlyOpened.getRecentlyOpened,
+  hydrate: RecentlyOpened.hydrate,
 }
