@@ -1,3 +1,4 @@
+import * as Json from '../Json/Json.js'
 import * as WebSocketProtocol from '../WebSocketProtocol/WebSocketProtocol.js'
 
 const getWsUrl = () => {
@@ -12,7 +13,7 @@ export const create = ({ protocol }) => {
   const pendingMessages = []
   webSocket.onopen = () => {
     ipc.send = (message) => {
-      const stringifiedMessage = JSON.stringify(message)
+      const stringifiedMessage = Json.stringifyCompact(message)
       webSocket.send(stringifiedMessage)
     }
     for (const message of pendingMessages) {
@@ -30,7 +31,7 @@ export const create = ({ protocol }) => {
         handleMessage = (event) => {
           // TODO why are some events not instance of message event?
           if (event instanceof MessageEvent) {
-            const message = JSON.parse(event.data)
+            const message = Json.parse(event.data)
             listener(message)
           } else {
             listener(event)
