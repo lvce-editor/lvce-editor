@@ -1,7 +1,14 @@
 import * as FileSystemProtocol from '../FileSystemProtocol/FileSystemProtocol.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
+import * as Preferences from '../Preferences/Preferences.js'
 
 const getModule = (protocol) => {
+  if (protocol === '') {
+    const preference = Preferences.get('search.searchWith')
+    if (preference === 'git-ls-files') {
+      return import('../SearchFileWIthGitLsFiles/SearchFileWIthGitLsFiles.js')
+    }
+  }
   switch (protocol) {
     case FileSystemProtocol.Web:
       return import('../SearchFileWeb/SearchFileWeb.js')
