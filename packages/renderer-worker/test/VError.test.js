@@ -11,8 +11,8 @@ test('VError - missing child stack', () => {
   const cause = new DOMException(
     'The requested version (1) is less than the existing version (6).'
   )
-  const error = new VError(cause, `Failed to save IndexedDb value`)
-  expect(error.stack).toMatch(
+  const verror = new VError(cause, `Failed to save IndexedDb value`)
+  expect(verror.stack).toMatch(
     'VError: Failed to save IndexedDb value: DOMException: The requested version (1) is less than the existing version (6).'
   )
 })
@@ -24,12 +24,28 @@ test('VError - merging stacks', () => {
   at getProtocol (http://localhost:3000/packages/renderer-worker/src/parts/FileSystem/FileSystem.js:18:29)
   at Module.copy (http://localhost:3000/packages/renderer-worker/src/parts/FileSystem/FileSystem.js:110:20)
   at handleDropIntoFolder (http://localhost:3000/packages/renderer-worker/src/parts/ViewletExplorer/ViewletExplorerHandleDropIndex.js:14:22)`
-  const error = new VError(cause, `Failed to drop files`)
-  console.log(error.stack)
-  expect(error.stack).toBe(
+  const verror = new VError(cause, `Failed to drop files`)
+  expect(verror.stack).toBe(
     `VError: Failed to drop files: TypeError: Cannot read properties of undefined (reading \'match\')
   at getProtocol (http://localhost:3000/packages/renderer-worker/src/parts/FileSystem/FileSystem.js:18:29)
   at Module.copy (http://localhost:3000/packages/renderer-worker/src/parts/FileSystem/FileSystem.js:110:20)
   at handleDropIntoFolder (http://localhost:3000/packages/renderer-worker/src/parts/ViewletExplorer/ViewletExplorerHandleDropIndex.js:14:22)`
+  )
+})
+
+test('VError - merging stacks - parent stack does not include message', () => {
+  const error = new Error()
+  error.message = 'Unknown command "ElectronWindowAbout.open"'
+  error.stack = `  at exports.invoke (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/Command/Command.js:64:13)
+  at async exports.getResponse (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/GetResponse/GetResponse.js:8:20)
+  at async MessagePortMain.handleMessage (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:179:22)`
+  const verror = new VError(error, `Failed to open about window`)
+  expect(verror.message).toBe(
+    `Failed to open about window: Error: Unknown command \"ElectronWindowAbout.open\"`
+  )
+  expect(verror.stack).toBe(
+    `  at exports.invoke (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/Command/Command.js:64:13)
+  at async exports.getResponse (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/GetResponse/GetResponse.js:8:20)
+  at async MessagePortMain.handleMessage (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:179:22)`
   )
 })
