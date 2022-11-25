@@ -6,5 +6,6 @@ export const searchFile = async (path, value) => {
     /* path */ path,
     /* searchTerm */ value
   )
-  return files
+  const actualFiles = files.split('\n')
+  return actualFiles
 }

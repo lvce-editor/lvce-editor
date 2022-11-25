@@ -34,8 +34,7 @@ export const searchFile = async (path, searchTerm) => {
         cwd: path,
       }
     )
-    const lines = stdout.split('\n')
-    return lines
+    return stdout
   } catch (error) {
     // @ts-ignore
     if (isEnoentError(error)) {
