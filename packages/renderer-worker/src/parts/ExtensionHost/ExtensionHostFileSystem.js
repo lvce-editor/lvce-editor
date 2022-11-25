@@ -1,5 +1,6 @@
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const readFile = (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
@@ -77,7 +78,6 @@ export const createFolder = (uri) => {
 export const writeFile = (uri, content) => {
   const protocol = GetProtocol.getProtocol(uri)
   const path = GetProtocol.getPath(protocol, uri)
-  console.log({ protocol })
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.writeFile',
@@ -97,12 +97,14 @@ export const readDirWithFileTypes = (uri) => {
   })
 }
 
-export const getPathSeparator = (uri) => {
+export const getPathSeparator = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
-  return ExtensionHostShared.executeProvider({
+  const pathSeparator = await ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
     method: 'ExtensionHostFileSystem.getPathSeparator',
     params: [protocol],
     noProviderFoundMessage: 'no file system provider found',
   })
+  Assert.string(pathSeparator)
+  return pathSeparator
 }

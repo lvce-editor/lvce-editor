@@ -55,8 +55,12 @@ const getFn = (method) => {
       return ExtensionHostMockExec.mockExec
     case 'ExtensionHostFileSystem.readFile':
       return ExtensionHostFileSystem.readFile
+    case 'ExtensionHostFileSystem.readDirWithFileTypes':
+      return ExtensionHostFileSystem.readDirWithFileTypes
     case 'ExtensionHostFileSystem.writeFile':
       return ExtensionHostFileSystem.writeFile
+    case 'ExtensionHostFileSystem.getPathSeparator':
+      return ExtensionHostFileSystem.getPathSeparator
     default:
       throw new Error(`[extension-host-worker] method not found: ${method}`)
   }
