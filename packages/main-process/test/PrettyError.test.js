@@ -86,7 +86,7 @@ exports.invoke = async (command, ...args) => {
 
 `
   })
-  const prettyError = PrettyError.prepare(error)
+  const prettyError = await PrettyError.prepare(error)
   expect(prettyError).toEqual({
     message: 'Unknown command "ElectronWindowAbout.open"',
     stack: `  at exports.invoke (/test/packages/main-process/src/parts/Command/Command.js:64:13)

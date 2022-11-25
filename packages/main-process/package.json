@@ -4,8 +4,8 @@
   "description": "",
   "main": "src/mainProcessMain.js",
   "scripts": {
-    "test": "node --unhandled-rejections=warn ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
-    "test:watch": "node ../../node_modules/jest/bin/jest.js --watch"
+    "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
+    "test:watch": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch"
   },
   "keywords": [],
   "author": "",
@@ -45,7 +45,10 @@
       "tsx",
       "json",
       "node"
-    ]
+    ],
+    "moduleNameMapper": {
+      "#home-directory": "./home-directory.js"
+    }
   },
   "xo": {
     "rules": {
