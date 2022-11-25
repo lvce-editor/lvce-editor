@@ -36,16 +36,16 @@ test('VError - merging stacks', () => {
 test('VError - merging stacks - parent stack does not include message', () => {
   const error = new Error()
   error.message = 'Unknown command "ElectronWindowAbout.open"'
-  error.stack = `  at exports.invoke (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/Command/Command.js:64:13)
-  at async exports.getResponse (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/GetResponse/GetResponse.js:8:20)
-  at async MessagePortMain.handleMessage (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:179:22)`
+  error.stack = `  at exports.invoke (/test/packages/main-process/src/parts/Command/Command.js:64:13)
+  at async exports.getResponse (/test/packages/main-process/src/parts/GetResponse/GetResponse.js:8:20)
+  at async MessagePortMain.handleMessage (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:179:22)`
   const verror = new VError(error, `Failed to open about window`)
   expect(verror.message).toBe(
     `Failed to open about window: Error: Unknown command \"ElectronWindowAbout.open\"`
   )
   expect(verror.stack).toBe(
-    `  at exports.invoke (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/Command/Command.js:64:13)
-  at async exports.getResponse (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/GetResponse/GetResponse.js:8:20)
-  at async MessagePortMain.handleMessage (/home/simon/Documents/levivilet/lvce-editor/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:179:22)`
+    `  at exports.invoke (/test/packages/main-process/src/parts/Command/Command.js:64:13)
+  at async exports.getResponse (/test/packages/main-process/src/parts/GetResponse/GetResponse.js:8:20)
+  at async MessagePortMain.handleMessage (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:179:22)`
   )
 })
