@@ -1,6 +1,7 @@
 const Command = require('../Command/Command.js')
 const Logger = require('../Logger/Logger.js')
 const JsonRpc = require('../JsonRpc/JsonRpc.js')
+const PrettyError = require('../PrettyError/PrettyError.js')
 
 exports.getResponse = async (message) => {
   try {
@@ -11,7 +12,8 @@ exports.getResponse = async (message) => {
       id: message.id,
     }
   } catch (error) {
-    Logger.error(error)
+    const prettyError = await PrettyError.prepare(error)
+    PrettyError.print(prettyError)
     if (
       error &&
       error instanceof Error &&
@@ -34,10 +36,11 @@ exports.getResponse = async (message) => {
       error: {
         // TODO actually check that error.message and error.stack exist
         // @ts-ignore
-        message: error.message,
+        message: prettyError.message,
         data: {
           // @ts-ignore
-          stack: error.stack,
+          stack: prettyError.stack,
+          codeFrame: prettyError.codeFrame,
         },
       },
     }
