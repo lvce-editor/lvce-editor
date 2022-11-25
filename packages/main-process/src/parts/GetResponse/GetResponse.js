@@ -14,7 +14,6 @@ exports.getResponse = async (message) => {
   } catch (error) {
     const prettyError = await PrettyError.prepare(error)
     PrettyError.print(prettyError)
-    // Logger.error(prety)
     if (
       error &&
       error instanceof Error &&
