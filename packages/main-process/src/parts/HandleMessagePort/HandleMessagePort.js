@@ -1,4 +1,4 @@
-const { spawn, fork } = require('child_process')
+const { fork } = require('child_process')
 const { MessageChannel } = require('worker_threads')
 const Electron = require('electron')
 const Platform = require('../Platform/Platform.js')
@@ -7,11 +7,10 @@ const Debug = require('../Debug/Debug.js')
 const LifeCycle = require('../LifeCycle/LifeCycle.js')
 const Performance = require('../Performance/Performance.js')
 const AppWindow = require('../AppWindow/AppWindow.js')
-const Command = require('../Command/Command.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const PendingPorts = require('../PendingPorts/PendingPorts.js')
-const JsonRpcErrorCode = require('../JsonRpcErrorCode/JsonRpcErrorCode.js')
 const Logger = require('../Logger/Logger.js')
+const GetResponse = require('../GetResponse/GetResponse.js')
 
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
@@ -173,42 +172,12 @@ const handlePortForSharedProcess = async (event) => {
 const handlePortForMainProcess = (event) => {
   const browserWindowPort = event.ports[0]
   const id = event.sender.id
-  // console.log({ id })
   const state = AppWindowStates.findById(id)
   state.port = browserWindowPort
   const handleMessage = async (event) => {
     const message = event.data
-    try {
-      const result = await Command.execute(message.method, ...message.params)
-      browserWindowPort.postMessage({
-        jsonrpc: '2.0',
-        id: message.id,
-        result,
-      })
-    } catch (error) {
-      if (
-        error &&
-        error instanceof Error &&
-        error.message &&
-        error.message.startsWith('method not found')
-      ) {
-        browserWindowPort.postMessage({
-          jsonrpc: '2.0',
-          id: message.id,
-          error: {
-            code: JsonRpcErrorCode.MethodNotFound,
-            message: error.message,
-            data: error.stack,
-          },
-        })
-      } else {
-        browserWindowPort.postMessage({
-          jsonrpc: '2.0',
-          id: message.id,
-          error,
-        })
-      }
-    }
+    const response = await GetResponse.getResponse(message)
+    browserWindowPort.postMessage(response)
   }
   browserWindowPort.on('message', handleMessage)
   browserWindowPort.start()
