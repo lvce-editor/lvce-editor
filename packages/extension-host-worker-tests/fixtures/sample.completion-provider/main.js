@@ -3,17 +3,17 @@ const getCompletions = (text, offset) => {
     {
       label: 'Option A',
       snippet: `Option A`,
-      kind: /*  */ 1,
+      kind: vscode.EditorCompletionType.Property,
     },
     {
       label: 'Option B',
       snippet: `Option B`,
-      kind: /*  */ 2,
+      kind: vscode.EditorCompletionType.Value,
     },
     {
       label: 'Option C',
       snippet: `Option C`,
-      kind: /*  */ 3,
+      kind: vscode.EditorCompletionType.Function,
     },
   ]
 }
