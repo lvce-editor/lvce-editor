@@ -14,6 +14,8 @@ import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as ReadFile from '../ReadFile/ReadFile.js'
+import * as InlineDynamicImportsFile from '../InlineDynamicImportsFile/InlineDynamicImportsFile.js'
 
 const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
   await Copy.copy({
@@ -68,6 +70,35 @@ const getModule = (method) => {
     path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
     occurrence: `/src/rendererWorkerMain.js`,
     replacement: '/dist/rendererWorkerMain.js',
+  })
+  await InlineDynamicImportsFile.inlineDynamicModules({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Module/Module.js`,
+    eagerlyLoadedModules: [
+      'Css',
+      'InitData',
+      'KeyBindings',
+      'Layout',
+      'Location',
+      'Meta',
+      'Viewlet',
+      'WebStorage',
+      'Window',
+    ],
+    ipcPostFix: true,
+  })
+  await InlineDynamicImportsFile.inlineDynamicModules({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/ViewletModule/ViewletModule.js`,
+    eagerlyLoadedModules: [
+      'ViewletMain',
+      'ViewletLayout',
+      'ViewletSideBar',
+      'ViewletActivityBar',
+      'ViewletTitleBar',
+      'ViewletStatusBar',
+      'ViewletExplorer',
+      'ViewletTitleBarMenuBar',
+    ],
+    viewlet: true,
   })
 }
 
