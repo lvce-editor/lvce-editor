@@ -1,8 +1,9 @@
 import * as ExtensionHostCore from './ExtensionHostCore.js'
 
-// prettier-ignore
-export const Commands={
+export const name = 'ExtensionHost'
 
-  'ExtensionHost.loadWebExtension': ExtensionHostCore.loadWebExtension,
-  'ExtensionHost.startWebExtensionHost': ExtensionHostCore.startWebExtensionHost,
+// prettier-ignore
+export const Commands = {
+  loadWebExtension: ExtensionHostCore.loadWebExtension,
+  startWebExtensionHost: ExtensionHostCore.startWebExtensionHost,
 }

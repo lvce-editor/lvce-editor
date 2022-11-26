@@ -29,9 +29,9 @@ const getOrLoadModule = (moduleId) => {
 
 const loadCommand = (command) => getOrLoadModule(ModuleMap.getModuleId(command))
 
-const register = (exports.register = (commandId, listener) => {
+const register = (commandId, listener) => {
   commands[commandId] = listener
-})
+}
 
 const hasThrown = new Set()
 

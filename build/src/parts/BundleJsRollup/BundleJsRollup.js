@@ -44,11 +44,17 @@ export const bundleJs = async ({
     file: codeSplitting ? undefined : join(cwd, 'dist', basename(from)),
     entryFileNames: 'renderer-process.modern.js',
     exports: 'auto',
+    sourcemapExcludeSources: true,
     chunkFileNames(x) {
       return `${x.name}.js`
     },
     freeze: false,
     inlineDynamicImports: !codeSplitting,
+    minifyInternalExports: false,
+    generatedCode: {
+      constBindings: true,
+      objectShorthand: true,
+    },
   }
   await result.write(outputOptions)
 }

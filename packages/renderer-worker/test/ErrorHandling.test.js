@@ -78,3 +78,39 @@ test('handleError - multiple causes', async () => {
     'Error: Failed to load keybindings: Error: Failed to load url /keyBindings.json: Error: SyntaxError: Unexpected token , in JSON at position 7743'
   )
 })
+
+test('handleError - with code frame, error stack includes message', async () => {
+  const mockError = new Error()
+  mockError.name = 'VError'
+  mockError.message = `Failed to open about window: Error: Unknown command "ElectronWindowAbout.open"`
+  mockError.stack = `VError: Failed to open about window: Error: Unknown command "ElectronWindowAbout.open"
+  at async exports.getResponse (/test/packages/main-process/src/parts/GetResponse/GetResponse.js:8:20)
+  at async MessagePortMain.handleMessage (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:179:22)`
+  // @ts-ignore
+  mockError.codeFrame = `  62 |     await loadCommand(command)
+  63 |     if (!(command in commands)) {
+> 64 |       throw new Error(\`Unknown command "\${command}"\`)
+     |             ^
+  65 |     }
+  66 |   }
+  67 |   return commands[command](...args)`
+  const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(() => {})
+  await ErrorHandling.handleError(mockError)
+  expect(spy).toHaveBeenCalledTimes(1)
+  expect(spy)
+    .toHaveBeenCalledWith(`Failed to open about window: Error: Unknown command "ElectronWindowAbout.open"
+
+  62 |     await loadCommand(command)
+  63 |     if (!(command in commands)) {
+> 64 |       throw new Error(\`Unknown command "\${command}"\`)
+     |             ^
+  65 |     }
+  66 |   }
+  67 |   return commands[command](...args)
+
+VError: Failed to open about window: Error: Unknown command "ElectronWindowAbout.open"
+  at async exports.getResponse (/test/packages/main-process/src/parts/GetResponse/GetResponse.js:8:20)
+  at async MessagePortMain.handleMessage (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:179:22)`)
+})

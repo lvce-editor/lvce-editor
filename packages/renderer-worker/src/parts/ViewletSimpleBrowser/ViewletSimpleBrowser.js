@@ -240,12 +240,7 @@ const renderIframeSrc = {
     return oldState.iframeSrc === newState.iframeSrc
   },
   apply(oldState, newState) {
-    return [
-      'Viewlet.send',
-      ViewletModuleId.SimpleBrowser,
-      'setIframeSrc',
-      newState.iframeSrc,
-    ]
+    return ['setIframeSrc', newState.iframeSrc]
   },
 }
 
@@ -274,8 +269,6 @@ const renderButtonsEnabled = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.SimpleBrowser,
       /* method */ 'setButtonsEnabled',
       /* canGoBack */ newState.canGoBack,
       /* canGoFoward */ newState.canGoForward,
@@ -288,12 +281,7 @@ const renderLoading = {
     return oldState.isLoading === newState.isLoading
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.SimpleBrowser,
-      /* method */ 'setLoading',
-      /* isLoading */ newState.isLoading,
-    ]
+    return [/* method */ 'setLoading', /* isLoading */ newState.isLoading]
   },
 }
 

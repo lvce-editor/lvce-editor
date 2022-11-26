@@ -4,8 +4,8 @@
   "description": "",
   "main": "src/mainProcessMain.js",
   "scripts": {
-    "test": "node --unhandled-rejections=warn ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
-    "test:watch": "node ../../node_modules/jest/bin/jest.js --watch"
+    "test": "node --unhandled-rejections=warn --experimental-vm-modules ../../node_modules/jest/bin/jest.js --detectOpenHandles --forceExit",
+    "test:watch": "node --experimental-vm-modules ../../node_modules/jest/bin/jest.js --watch"
   },
   "keywords": [],
   "author": "",
@@ -19,14 +19,17 @@
     "node": ">=16"
   },
   "devDependencies": {
+    "@electron/rebuild": "^3.2.10",
     "@types/debug": "^4.1.7",
     "@types/verror": "^1.10.6",
-    "electron": "^22.0.0-beta.6",
-    "@electron/rebuild": "^3.2.10"
+    "electron": "^22.0.0-beta.8"
   },
   "dependencies": {
+    "@babel/code-frame": "^7.18.6",
+    "clean-stack": "^5.0.1",
     "debug": "^4.3.4",
     "electron-unhandled": "^4.0.1",
+    "lines-and-columns": "^2.0.3",
     "minimist": "^1.2.7",
     "verror": "^1.10.1"
   },
@@ -42,7 +45,10 @@
       "tsx",
       "json",
       "node"
-    ]
+    ],
+    "moduleNameMapper": {
+      "#home-directory": "./home-directory.js"
+    }
   },
   "xo": {
     "rules": {

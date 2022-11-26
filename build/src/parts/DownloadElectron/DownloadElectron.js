@@ -9,6 +9,7 @@ export const downloadElectron = async ({
   arch,
 }) => {
   try {
+    console.info(`downloading electron ${electronVersion}`)
     const zipFilePath = await ElectronGet.downloadArtifact({
       version: electronVersion,
       platform,

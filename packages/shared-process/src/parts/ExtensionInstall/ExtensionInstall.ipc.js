@@ -1,6 +1,8 @@
 import * as ExensionInstall from './ExtensionInstall.js'
 
+export const name = 'ExtensionInstall'
+
 // prettier-ignore
 export const Commands = {
-  'ExtensionInstall.install': ExensionInstall.install,
+  install: ExensionInstall.install,
 }

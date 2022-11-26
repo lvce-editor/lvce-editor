@@ -16,6 +16,8 @@ export const load = (moduleId) => {
       return import('../ExtensionManagement/ExtensionManagement.ipc.js')
     case ModuleId.FileSystem:
       return import('../FileSystem/FileSystem.ipc.js')
+    case ModuleId.GitLsFiles:
+      return import('../GitLsFiles/GitLsFiles.ipc.js')
     case ModuleId.Native:
       return import('../Native/Native.ipc.js')
     case ModuleId.OutputChannel:

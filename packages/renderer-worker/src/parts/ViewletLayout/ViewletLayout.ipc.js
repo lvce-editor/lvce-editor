@@ -4,7 +4,7 @@ export const name = 'Layout'
 
 // prettier-ignore
 export const Commands = {
-  'Layout.handleSashPointerDown': ViewletLayout.handleSashPointerDown,
+  handleSashPointerDown: ViewletLayout.handleSashPointerDown,
 }
 
 export const CommandsWithSideEffects = {

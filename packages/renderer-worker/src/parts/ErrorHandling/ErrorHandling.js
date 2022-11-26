@@ -24,25 +24,6 @@ const enhanceErrorMessage = (error) => {
   }
 }
 
-// const getErrorMessage = (error) => {
-//   let message = ``
-//   if (error && error.message) {
-//     message += error.message
-//   }
-//   if (error && error.stack) {
-//     message += `\n${error.stack}`
-//   }
-//   if (error && error.cause) {
-//     message += getErrorMessage(error.cause)
-//   }
-//   return message
-// }
-
-// const printError = (error) => {
-//   const message = getErrorMessage(error)
-//   console.error(message)
-// }
-
 export const printError = (error) => {
   if (error && error.message && error.codeFrame) {
     console.error(`${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)

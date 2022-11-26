@@ -29,6 +29,6 @@ export const save = async (editor) => {
     // @ts-ignore
     const betterError = new VError(error, `Failed to save file "${editor.uri}"`)
     await ErrorHandling.handleError(betterError)
-    return
+    return editor
   }
 }

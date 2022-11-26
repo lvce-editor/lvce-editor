@@ -1,8 +1,10 @@
 import * as Notification from './Notification.js'
 
+export const name = 'Notification'
+
 // prettier-ignore
 export const Commands =  {
-  'Notification.create': Notification.create,
-  'Notification.createWithOptions': Notification.createWithOptions,
-  'Notification.dispose': Notification.dispose,
+  create: Notification.create,
+  createWithOptions: Notification.createWithOptions,
+  dispose: Notification.dispose,
 }

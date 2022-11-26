@@ -1,6 +1,7 @@
 const Electron = require('electron')
 const Session = require('../ElectronSession/ElectronSession.js')
 const Platform = require('../Platform/Platform.js')
+const Logger = require('../Logger/Logger.js')
 
 // const __dirname = dirname(fileURLToPath(import.meta.url))
 
@@ -40,7 +41,7 @@ exports.open = async () => {
   try {
     await aboutWindow.loadURL(aboutWindowUrl)
   } catch (error) {
-    console.warn('Failed to load about window')
-    console.warn(error)
+    Logger.warn('Failed to load about window')
+    Logger.warn(error)
   }
 }

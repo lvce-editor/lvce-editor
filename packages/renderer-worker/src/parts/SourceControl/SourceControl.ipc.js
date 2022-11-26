@@ -1,7 +1,8 @@
 import * as SourceControl from './SourceControl.js'
 
+export const name = 'SourceControl'
+
 // prettier-ignore
 export const Commands = {
-
-  'SourceControl.updateDecorations': SourceControl.updateDecorations
+  updateDecorations: SourceControl.updateDecorations
 }

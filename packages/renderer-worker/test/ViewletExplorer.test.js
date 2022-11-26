@@ -79,7 +79,7 @@ class NodeError extends Error {
 }
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(ViewletExplorer, oldState, newState)
+  return ViewletManager.render(ViewletExplorer, oldState, newState, 'Explorer')
 }
 
 test('create', () => {
@@ -2594,6 +2594,7 @@ test('handleArrowRight - when no focus', async () => {
 test('handleWheel - up', () => {
   const state = {
     ...ViewletExplorer.create(),
+    name: 'Explorer',
     root: '/home/test-user/test-path',
     focusedIndex: -1,
     top: 0,

@@ -1,4 +1,5 @@
 import * as ViewletTodoList from '../src/parts/ViewletTodoList/ViewletTodoList.js'
+import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 test('create', () => {
   expect(ViewletTodoList.create()).toBeDefined()
@@ -20,6 +21,6 @@ test('render', () => {
     todos: [{ id: 1, text: 'test' }],
   }
   expect(ViewletTodoList.render(oldState, newState)).toEqual([
-    ['Viewlet.send', 'TodoList', 'setTodos', [{ id: 1, text: 'test' }]],
+    ['setTodos', [{ id: 1, text: 'test' }]],
   ])
 })

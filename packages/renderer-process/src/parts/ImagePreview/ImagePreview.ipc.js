@@ -1,8 +1,10 @@
 import * as ImagePreview from './ImagePreview.js'
 
+export const name = 'ImagePreview'
+
 export const Commands = {
-  'ImagePreview.create': ImagePreview.create,
-  'ImagePreview.dispose': ImagePreview.dispose,
-  'ImagePreview.showError': ImagePreview.showError,
-  'ImagePreview.update': ImagePreview.update,
+  create: ImagePreview.create,
+  dispose: ImagePreview.dispose,
+  showError: ImagePreview.showError,
+  update: ImagePreview.update,
 }

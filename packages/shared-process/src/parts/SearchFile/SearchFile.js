@@ -1,10 +1,11 @@
-import * as RgPath from '../RgPath/RgPath.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as Exec from '../Exec/Exec.js'
+import * as RgPath from '../RgPath/RgPath.js'
 
 const ripGrepPath = process.env.RIP_GREP_PATH || RgPath.rgPath
 
 const isEnoentErrorLinux = (error) => {
-  return error.code === 'ENOENT'
+  return error.code === ErrorCodes.ENOENT
 }
 
 const isEnoentErrorWindows = (error) => {
@@ -33,8 +34,7 @@ export const searchFile = async (path, searchTerm) => {
         cwd: path,
       }
     )
-    const lines = stdout.split('\n')
-    return lines
+    return stdout
   } catch (error) {
     // @ts-ignore
     if (isEnoentError(error)) {

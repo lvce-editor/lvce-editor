@@ -1318,12 +1318,7 @@ const renderItems = {
   },
   apply(oldState, newState) {
     const visibleDirents = getVisible(newState)
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Explorer,
-      /* method */ 'updateDirents',
-      /* visibleDirents */ visibleDirents,
-    ]
+    return [/* method */ 'updateDirents', /* visibleDirents */ visibleDirents]
   },
 }
 
@@ -1338,8 +1333,6 @@ const renderFocusedIndex = {
     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
     const newFocusedIndex = newState.focusedIndex - newState.minLineY
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Explorer,
       /* method */ 'setFocusedIndex',
       /* oldindex */ oldFocusedIndex,
       /* newIndex */ newFocusedIndex,
@@ -1354,8 +1347,6 @@ const renderDropTargets = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Explorer,
       /* method */ 'setDropTargets',
       /* oldDropTargets */ oldState.dropTargets,
       /* newDropTargets */ newState.dropTargets,
@@ -1374,17 +1365,10 @@ const renderEditingIndex = {
         oldState.editingType === ExplorerEditingType.CreateFile ||
         oldState.editingType === ExplorerEditingType.CreateFolder
       ) {
-        return [
-          /* Viewlet.invoke */ 'Viewlet.send',
-          /* id */ ViewletModuleId.Explorer,
-          /* method */ 'hideEditBox',
-          /* index */ oldState.editingIndex,
-        ]
+        return [/* method */ 'hideEditBox', /* index */ oldState.editingIndex]
       }
       const dirent = newState.items[focusedIndex]
       return [
-        /* Viewlet.invoke */ 'Viewlet.send',
-        /* id */ ViewletModuleId.Explorer,
         /* method */ 'replaceEditBox',
         /* index */ oldState.editingIndex,
         /* dirent */ dirent,
@@ -1395,16 +1379,12 @@ const renderEditingIndex = {
         oldState.editingType === ExplorerEditingType.CreateFolder
       ) {
         return [
-          /* Viewlet.invoke */ 'Viewlet.send',
-          /* id */ ViewletModuleId.Explorer,
           /* method */ 'insertEditBox',
           /* index */ oldState.editingIndex,
           /* value */ editingValue,
         ]
       }
       return [
-        /* Viewlet.invoke */ 'Viewlet.send',
-        /* id */ ViewletModuleId.Explorer,
         /* method */ 'replaceWithEditBox',
         /* index */ editingIndex,
         /* value */ editingValue,

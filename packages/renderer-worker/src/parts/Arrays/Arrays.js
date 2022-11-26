@@ -18,7 +18,7 @@ export const insertInto = (array, start, newItems) => {
  * Alternative to the native Array.splice method, it
  * can only support limited number of items due to the maximum call stack size limit.
  */
-export const splice = (array, start, deleteCount, newItems) => {
+export const spliceLargeArray = (array, start, deleteCount, newItems) => {
   const result = array.splice(start, deleteCount)
   insertInto(array, start, newItems)
   return result
@@ -62,4 +62,12 @@ export const findObjectIndex = (array, key, value) => {
 
 export const isLastIndex = (array, index) => {
   return index === array.length - 1
+}
+
+export const toSpliced = (array, index, deleteCount, ...inserted) => {
+  return [
+    ...array.slice(0, index),
+    ...inserted,
+    ...array.slice(index + deleteCount),
+  ]
 }

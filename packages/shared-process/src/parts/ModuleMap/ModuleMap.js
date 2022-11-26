@@ -92,6 +92,8 @@ export const getModuleId = (commandId) => {
     case 'FileSystem.rename':
     case 'FileSystem.writeFile':
       return ModuleId.FileSystem
+    case 'GitLsFiles.gitLsFiles':
+      return ModuleId.GitLsFiles
     case 'Native.openFolder':
       return ModuleId.Native
     case 'OutputChannel.close':
@@ -129,7 +131,7 @@ export const getModuleId = (commandId) => {
       return ModuleId.Terminal
     case 4820:
       return ModuleId.TextDocument
-    case 5621:
+    case 'WebSocketServer.handleUpgrade':
       return ModuleId.WebSocketServer
     case 'Workspace.getHomeDir':
     case 'Workspace.resolveRoot':

@@ -1,6 +1,7 @@
 const ChildProcess = require('../ChildProcess/ChildProcess.js')
 const Command = require('../Command/Command.js')
 const Path = require('../Path/Path.js')
+const Logger = require('../Logger/Logger.js')
 
 const state = (exports.state = {
   /**
@@ -10,20 +11,20 @@ const state = (exports.state = {
 })
 
 const handleChildError = (error) => {
-  console.info('[main] Child Error')
-  console.error(error)
+  Logger.info('[main] Child Error')
+  Logger.error(error)
   process.exit(1)
 }
 
 const handleStdError = (error) => {
-  console.info('[main] Child std error')
-  console.error(error)
+  Logger.info('[main] Child std error')
+  Logger.error(error)
   process.exit(1)
 }
 
 const handleChildMessage = async (message) => {
   if (Array.isArray(message)) {
-    console.warn('invalid message', message)
+    Logger.warn('invalid message', message)
     return
   }
   const object = message
@@ -32,7 +33,7 @@ const handleChildMessage = async (message) => {
     try {
       result = await Command.invoke(object.method, ...object.params)
     } catch (error) {
-      console.error(error)
+      Logger.error(error)
       if (state.child) {
         state.child.send({
           jsonrpc: '2.0',
@@ -63,12 +64,12 @@ const handleProcessExit = () => {
 }
 
 const handleChildExit = (code) => {
-  console.info(`[main] web process exited with code ${code}`)
+  Logger.info(`[main] web process exited with code ${code}`)
   process.exit(code)
 }
 
 const handleChildDisconnect = () => {
-  console.info('[main] child disconnected')
+  Logger.info('[main] child disconnected')
 }
 
 exports.hydrate = async () => {

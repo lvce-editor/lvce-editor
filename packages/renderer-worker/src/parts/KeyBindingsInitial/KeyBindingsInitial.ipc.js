@@ -1,6 +1,8 @@
 import * as KeyBindingsInitial from './KeyBindingsInitial.js'
 
+export const name = 'KeyBindingsInitial'
+
 // prettier-ignore
 export const Commands = {
-  'KeyBindingsInitial.getKeyBindings': KeyBindingsInitial.getKeyBindings,
+  getKeyBindings: KeyBindingsInitial.getKeyBindings,
 }

@@ -31,6 +31,7 @@ export const bundleCss = async ({
   outDir,
   additionalCss = '',
   assetDir = '',
+  pathPrefix = '',
 }) => {
   let css = ``
   const cssLibNormalize = join(
@@ -98,6 +99,6 @@ export const bundleCss = async ({
   await Replace.replace({
     path: appCssPath,
     occurrence: `url(/fonts/`,
-    replacement: `url(${assetDir}/fonts/`,
+    replacement: `url(${pathPrefix}/fonts/`,
   })
 }

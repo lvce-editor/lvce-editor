@@ -9,7 +9,6 @@ const Performance = require('../Performance/Performance.js')
 const Cli = require('../Cli/Cli.js')
 const AppWindow = require('../AppWindow/AppWindow.js')
 const HandleMessagePort = require('../HandleMessagePort/HandleMessagePort.js')
-
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
 // const handleAppReady = async () => {

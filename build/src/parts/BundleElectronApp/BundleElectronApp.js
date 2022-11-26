@@ -5,7 +5,6 @@ import * as BundleRendererProcessCached from '../BundleRendererProcessCached/Bun
 import * as BundleRendererWorkerCached from '../BundleRendererWorkerCached/BundleRendererWorkerCached.js'
 import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Copy from '../Copy/Copy.js'
-import * as DownloadElectron from '../DownloadElectron/DownloadElectron.js'
 import * as GetElectronVersion from '../GetElectronVersion/GetElectronVersion.js'
 import * as Hash from '../Hash/Hash.js'
 import * as Path from '../Path/Path.js'
@@ -25,9 +24,11 @@ const getDependencyCacheHash = async ({ electronVersion, arch }) => {
     'packages/shared-process/package-lock.json',
     'packages/pty-host/package-lock.json',
     'packages/extension-host/package-lock.json',
+    'packages/extension-host-helper-process/package-lock.json',
     'build/src/parts/BundleElectronApp/BundleElectronApp.js',
     'build/src/parts/BundleElectronAppDependencies/BundleElectronAppDependencies.js',
     'build/src/parts/BundleExtensionHostDependencies/BundleExtensionHostDependencies.js',
+    'build/src/parts/BundleExtensionHostHelperProcessDependencies/BundleExtensionHostHelperProcessDependencies.js',
     'build/src/parts/BundleSharedProcessDependencies/BundleSharedProcessDependencies.js',
     'build/src/parts/BundlePtyHostDependencies/BundlePtyHostDependencies.js',
     'build/src/parts/BundleMainProcessDependencies/BundleMainProcessDependencies.js',
@@ -49,6 +50,9 @@ const downloadElectron = async ({ platform, arch, electronVersion }) => {
     'electron',
     electronVersion
   )
+  const DownloadElectron = await import(
+    '../DownloadElectron/DownloadElectron.js'
+  )
   await DownloadElectron.downloadElectron({
     electronVersion,
     outDir,
@@ -57,14 +61,21 @@ const downloadElectron = async ({ platform, arch, electronVersion }) => {
   })
 }
 
-const copyElectron = async ({ arch, electronVersion }) => {
-  const outDir = Path.join(
-    Root.root,
-    'build',
-    '.tmp',
-    'electron',
-    electronVersion
-  )
+const copyElectron = async ({
+  arch,
+  electronVersion,
+  useInstalledElectronVersion,
+}) => {
+  const outDir = useInstalledElectronVersion
+    ? Path.join(
+        Root.root,
+        'packages',
+        'main-process',
+        'node_modules',
+        'electron',
+        'dist'
+      )
+    : Path.join(Root.root, 'build', '.tmp', 'electron', electronVersion)
   await Copy.copy({
     from: outDir,
     to: `build/.tmp/electron-bundle/${arch}`,
@@ -123,6 +134,18 @@ const copySharedProcessSources = async ({ arch }) => {
 }`,
     replacement: `export const getExtensionHostPath = () => {
   return Path.join(Root.root, 'packages', 'extension-host', 'src', 'extensionHostMain.js')
+}`,
+  })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/packages/shared-process/src/parts/Platform/Platform.js`,
+    occurrence: `export const getExtensionHostHelperProcessPath = async () => {
+  const { extensionHostHelperProcessPath } = await import(
+    '@lvce-editor/extension-host-helper-process'
+  )
+  return extensionHostHelperProcessPath
+}`,
+    replacement: `export const getExtensionHostHelperProcessPath = () => {
+  return Path.join(Root.root, 'packages', 'extension-host-helper-process', 'src', 'extensionHostHelperProcessMain.js')
 }`,
   })
 }
@@ -215,6 +238,13 @@ const copyExtensionHostSources = async ({ arch }) => {
   })
 }
 
+const copyExtensionHostHelperProcessSources = async ({ arch }) => {
+  await Copy.copy({
+    from: 'packages/extension-host-helper-process/src',
+    to: `build/.tmp/electron-bundle/${arch}/resources/app/packages/extension-host-helper-process/src`,
+  })
+}
+
 const copyExtensions = async ({ arch }) => {
   await Copy.copy({
     from: 'extensions',
@@ -249,6 +279,7 @@ const copyCss = async ({ arch }) => {
 
 export const build = async () => {
   const arch = process.arch
+  const useInstalledElectronVersion = true
   const electronVersion = await GetElectronVersion.getElectronVersion()
   const dependencyCacheHash = await getDependencyCacheHash({
     electronVersion,
@@ -280,18 +311,21 @@ export const build = async () => {
     console.timeEnd('bundleElectronAppDependencies')
   }
 
-  console.time('downloadElectron')
-  await downloadElectron({
-    arch,
-    electronVersion,
-    platform: process.platform,
-  })
-  console.timeEnd('downloadElectron')
+  if (!useInstalledElectronVersion) {
+    console.time('downloadElectron')
+    await downloadElectron({
+      arch,
+      electronVersion,
+      platform: process.platform,
+    })
+    console.timeEnd('downloadElectron')
+  }
 
   console.time('copyElectron')
   await copyElectron({
     arch,
     electronVersion,
+    useInstalledElectronVersion,
   })
   console.timeEnd('copyElectron')
 
@@ -317,6 +351,10 @@ export const build = async () => {
   console.time('copySharedProcessSources')
   await copySharedProcessSources({ arch })
   console.timeEnd('copySharedProcessSources')
+
+  console.time('copyExtensionHostHelperProcessSources')
+  await copyExtensionHostHelperProcessSources({ arch })
+  console.timeEnd('copyExtensionHostHelperProcessSources')
 
   console.time('copyExtensions')
   await copyExtensions({ arch })

@@ -1,6 +1,8 @@
 import * as OffscreenCanvas from './OffscreenCanvas.js'
 
+export const name = 'OffscreenCanvas'
+
 // prettier-ignore
 export const Commands =  {
-  'OffscreenCanvas.create': OffscreenCanvas.create,
+  create: OffscreenCanvas.create,
 }

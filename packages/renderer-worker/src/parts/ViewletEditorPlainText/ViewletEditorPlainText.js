@@ -31,12 +31,7 @@ const renderContent = {
     return oldState.content === newState.content
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.EditorPlainText,
-      /* method */ 'setContent',
-      /* content */ newState.content,
-    ]
+    return [/* method */ 'setContent', /* content */ newState.content]
   },
 }
 

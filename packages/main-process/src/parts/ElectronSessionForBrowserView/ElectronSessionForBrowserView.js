@@ -5,6 +5,7 @@ const Platform = require('../Platform/Platform.js')
 const FileSystem = require('../FileSystem/FileSystem.js')
 const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
 const ErrorCodes = require('../ErrorCodes/ErrorCodes.js')
+const Logger = require('../Logger/Logger.js')
 const ElectronBrowserViewAdBlock = require('../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js')
 
 const state = {
@@ -80,7 +81,7 @@ const addSessionChromeExtensions = async (session) => {
       await loadExtension(session, chromeExtensionPath)
     }
   } catch (error) {
-    console.error(error)
+    Logger.error(error)
   }
 }
 

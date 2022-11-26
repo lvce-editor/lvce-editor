@@ -306,8 +306,6 @@ const renderExtensions = {
     // TODO render extensions incrementally when scrolling
     const visibleExtensions = getVisible(newState)
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setExtensions',
       /* visibleExtensions */ visibleExtensions,
     ]
@@ -321,12 +319,7 @@ const renderHeight = {
   apply(oldState, newState) {
     const { itemHeight } = newState
     const contentHeight = newState.items.length * itemHeight
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Extensions,
-      /* method */ 'setContentHeight',
-      /* contentHeight */ contentHeight,
-    ]
+    return [/* method */ 'setContentHeight', /* contentHeight */ contentHeight]
   },
 }
 
@@ -336,8 +329,6 @@ const renderNegativeMargin = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setNegativeMargin',
       /* negativeMargin */ -newState.deltaY,
     ]
@@ -355,8 +346,6 @@ const renderFocusedIndex = {
     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
     const newFocusedIndex = newState.focusedIndex - newState.minLineY
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setFocusedIndex',
       /* oldFocusedIndex */ oldFocusedIndex,
       /* newFocusedIndex */ newFocusedIndex,
@@ -382,8 +371,6 @@ const renderScrollBar = {
       newState.scrollBarHeight
     )
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setScrollBar',
       /* scrollBarY */ scrollBarY,
       /* scrollBarHeight */ newState.scrollBarHeight,
@@ -396,12 +383,7 @@ const renderError = {
     return oldState.error === newState.error
   },
   apply(oldState, newState) {
-    return [
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Extensions,
-      /* method */ 'setError',
-      /* error */ newState.error,
-    ]
+    return [/* method */ 'setError', /* error */ newState.error]
   },
 }
 
@@ -411,8 +393,6 @@ const renderSize = {
   },
   apply(oldState, newState) {
     return [
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Extensions,
       /* method */ 'setSize',
       /* oldSize */ oldState.size,
       /* newSize */ newState.size,

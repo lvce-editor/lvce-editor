@@ -1,7 +1,9 @@
 import * as WebStorage from './WebStorage.js'
 
+export const name = 'WebStorage'
+
 export const Commands = {
-  'WebStorage.clear': WebStorage.clear,
-  'WebStorage.getItem': WebStorage.getItem,
-  'WebStorage.setItem': WebStorage.setItem,
+  clear: WebStorage.clear,
+  getItem: WebStorage.getItem,
+  setItem: WebStorage.setItem,
 }

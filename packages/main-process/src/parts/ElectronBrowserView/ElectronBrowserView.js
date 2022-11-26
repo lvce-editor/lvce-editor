@@ -8,6 +8,7 @@ const Assert = require('../Assert/Assert.js')
 const ElectronInputType = require('../ElectronInputType/ElectronInputType.js')
 const Debug = require('../Debug/Debug.js')
 const ElectronBrowserViewAdBlock = require('../ElectronBrowserViewAdBlock/ElectronBrowserViewAdBlock.js')
+const Logger = require('../Logger/Logger.js')
 
 const normalizeKey = (key) => {
   if (key === ' ') {
@@ -45,7 +46,7 @@ const getPort = (webContents) => {
   const browserWindow = ElectronBrowserViewState.getWindow(webContents)
   const state = AppWindowStates.findById(browserWindow.webContents.id)
   if (!state) {
-    console.info('[main process] no message port found')
+    Logger.info('[main process] no message port found')
     return undefined
   }
   const { port } = state
@@ -64,7 +65,7 @@ const handleWillNavigate = (event, url) => {
   const canGoBack = webContents.canGoBack()
   const port = getPort(webContents)
   if (!port) {
-    console.info('[main-process] view will navigate to ', url)
+    Logger.info('[main-process] view will navigate to ', url)
     return
   }
   port.postMessage({
@@ -93,7 +94,7 @@ const handleDidNavigate = (event, url) => {
   const canGoBack = webContents.canGoBack()
   const port = getPort(webContents)
   if (!port) {
-    console.info('[main-process] view did navigate to ', url)
+    Logger.info('[main-process] view did navigate to ', url)
     return
   }
   port.postMessage({
@@ -139,7 +140,7 @@ const handlePageTitleUpdated = (event, title) => {
   const webContents = event.sender
   const port = getPort(webContents)
   if (!port) {
-    console.info('[main-process] view will change title to ', title)
+    Logger.info('[main-process] view will change title to ', title)
     return
   }
   port.postMessage({
@@ -238,7 +239,7 @@ exports.createBrowserView = async (restoreId) => {
       // TODO open background tab
       const port = getPort(webContents)
       if (!port) {
-        console.warn('[main process] handlwWindowOpen - no port found')
+        Logger.warn('[main process] handlwWindowOpen - no port found')
         return {
           action: ElectronWindowOpenActionType.Deny,
         }
@@ -252,7 +253,7 @@ exports.createBrowserView = async (restoreId) => {
         action: ElectronWindowOpenActionType.Deny,
       }
     }
-    console.info(`[main-process] blocked popup for ${url}`)
+    Logger.info(`[main-process] blocked popup for ${url}`)
     return {
       action: ElectronWindowOpenActionType.Deny,
     }

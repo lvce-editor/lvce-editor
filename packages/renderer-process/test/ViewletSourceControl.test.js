@@ -35,7 +35,6 @@ const getSimpleList = (state) => {
   return Array.from(state.$ViewletTree.children).map(getTextContent)
 }
 
-
 test('create', () => {
   const state = ViewletSourceControl.create()
   expect(state).toBeDefined()
@@ -80,7 +79,7 @@ test('event - click', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    2133,
+    'Viewlet.send',
     'Source Control',
     'handleClick',
     0

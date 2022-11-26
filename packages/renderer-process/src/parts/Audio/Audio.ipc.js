@@ -1,5 +1,7 @@
 import * as Audio from './Audio.js'
 
+export const name = 'Audio'
+
 export const Commands = {
-  'Audio.play': Audio.play,
+  play: Audio.play,
 }

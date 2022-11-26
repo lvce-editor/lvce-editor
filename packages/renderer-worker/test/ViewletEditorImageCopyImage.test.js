@@ -3,6 +3,8 @@ import { jest } from '@jest/globals'
 beforeAll(() => {
   // @ts-ignore
   globalThis.DOMMatrix = class {}
+  // @ts-ignore
+  globalThis.DOMMatrixReadOnly = class {}
 })
 
 beforeEach(() => {

@@ -1,10 +1,12 @@
 import * as Menu from './Menu.js'
 
+export const name = 'Menu'
+
 export const Commands = {
-  'Menu.focusIndex': Menu.focusIndex,
-  'Menu.hide': Menu.hide,
-  'Menu.hideSubMenu': Menu.hideSubMenu,
-  'Menu.showContextMenu': Menu.showContextMenu,
-  'Menu.showControlled': Menu.showControlled,
-  'Menu.showMenu': Menu.showMenu,
+  focusIndex: Menu.focusIndex,
+  hide: Menu.hide,
+  hideSubMenu: Menu.hideSubMenu,
+  showContextMenu: Menu.showContextMenu,
+  showControlled: Menu.showControlled,
+  showMenu: Menu.showMenu,
 }

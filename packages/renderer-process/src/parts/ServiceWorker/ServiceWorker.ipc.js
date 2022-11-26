@@ -1,6 +1,8 @@
 import * as ServiceWorker from './ServiceWorker.js'
 
+export const name = 'ServiceWorker'
+
 export const Commands = {
-  'ServiceWorker.register': ServiceWorker.register,
-  'ServiceWorker.uninstall': ServiceWorker.uninstall,
+  register: ServiceWorker.register,
+  uninstall: ServiceWorker.uninstall,
 }

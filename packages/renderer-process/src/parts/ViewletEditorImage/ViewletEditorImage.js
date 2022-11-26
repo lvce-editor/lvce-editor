@@ -4,6 +4,7 @@ export const create = () => {
   const $Image = document.createElement('img')
   $Image.className = 'ViewletImage'
   $Image.draggable = false
+  $Image.onerror = ViewletEditorImageEvents.handleError
 
   const $ImageWrapper = document.createElement('div')
   $ImageWrapper.className = 'ImageWrapper'
@@ -41,3 +42,11 @@ export const setDragging = (state, isDragging) => {
 }
 
 export const dispose = (state) => {}
+
+export const setError = (state, message) => {
+  const { $Viewlet } = state
+  const $Error = document.createElement('div')
+  $Error.className = 'ViewletError'
+  $Error.textContent = message
+  $Viewlet.replaceChildren($Error)
+}

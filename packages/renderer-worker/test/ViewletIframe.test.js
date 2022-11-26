@@ -1,11 +1,17 @@
 import * as ViewletIframe from '../src/parts/ViewletIframe/ViewletIframe.js'
+import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 const ViewletManager = await import(
   '../src/parts/ViewletManager/ViewletManager.js'
 )
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(ViewletIframe, oldState, newState)
+  return ViewletManager.render(
+    ViewletIframe,
+    oldState,
+    newState,
+    ViewletModuleId.Iframe
+  )
 }
 
 test('create', () => {

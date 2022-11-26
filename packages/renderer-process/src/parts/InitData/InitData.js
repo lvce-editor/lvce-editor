@@ -11,7 +11,6 @@ export const getInitData = () => {
     },
     LocalStorage: {
       savedState: localStorage.getItem('stateToSave'),
-      layout: localStorage.getItem('layout'),
     },
   }
   return initData

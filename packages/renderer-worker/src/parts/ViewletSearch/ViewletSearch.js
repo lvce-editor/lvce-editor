@@ -8,7 +8,6 @@ import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
 import * as SearchResultType from '../SearchResultType/SearchResultType.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
@@ -197,6 +196,14 @@ const compareResults = (resultA, resultB) => {
   return Compare.compareString(pathA, pathB)
 }
 
+const getMatchStart = (preview, searchTerm) => {
+  const index = preview.preview.indexOf(searchTerm)
+  if (index === -1) {
+    return preview.preview.toLowerCase().indexOf(searchTerm)
+  }
+  return index
+}
+
 const toDisplayResults = (results, itemHeight, resultCount, searchTerm) => {
   results.sort(compareResults)
   const displayResults = []
@@ -231,7 +238,7 @@ const toDisplayResults = (results, itemHeight, resultCount, searchTerm) => {
         setSize,
         top: i * itemHeight,
         lineNumber: preview.lineNumber,
-        matchStart: preview.preview.indexOf(searchTerm),
+        matchStart: getMatchStart(preview, searchTerm),
         matchLength: searchTerm.length,
       })
     }
@@ -364,19 +371,13 @@ const renderItems = {
   },
   apply(oldState, newState) {
     const visible = getVisible(newState)
-    return [
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Search,
-      /* method */ 'setResults',
-      /* results */ visible,
-    ]
+    return [/* method */ 'setResults', /* results */ visible]
   },
 }
 
 const renderScrollBar = {
   isEqual(oldState, newState) {
     return (
-      oldState.negativeMargin === newState.negativeMargin &&
       oldState.deltaY === newState.deltaY &&
       oldState.height === newState.height &&
       oldState.finalDeltaY === newState.finalDeltaY
@@ -390,8 +391,6 @@ const renderScrollBar = {
       newState.scrollBarHeight
     )
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Search,
       /* method */ 'setScrollBar',
       /* scrollBarY */ scrollBarY,
       /* scrollBarHeight */ newState.scrollBarHeight,
@@ -406,12 +405,7 @@ const renderHeight = {
   apply(oldState, newState) {
     const { itemHeight } = newState
     const contentHeight = newState.items.length * itemHeight
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Search,
-      /* method */ 'setContentHeight',
-      /* contentHeight */ contentHeight,
-    ]
+    return [/* method */ 'setContentHeight', /* contentHeight */ contentHeight]
   },
 }
 
@@ -420,12 +414,7 @@ const renderMessage = {
     return oldState.message === newState.message
   },
   apply(oldState, newState) {
-    return [
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Search,
-      /* method */ 'setMessage',
-      /* message */ newState.message,
-    ]
+    return [/* method */ 'setMessage', /* message */ newState.message]
   },
 }
 
@@ -434,12 +423,7 @@ const renderValue = {
     return oldState.value === newState.value
   },
   apply(oldState, newState) {
-    return [
-      /* viewletSend */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Search,
-      /* method */ 'setValue',
-      /* value */ newState.value,
-    ]
+    return [/* method */ 'setValue', /* value */ newState.value]
   },
 }
 
@@ -449,8 +433,6 @@ const renderNegativeMargin = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Search,
       /* method */ 'setNegativeMargin',
       /* negativeMargin */ -newState.deltaY,
     ]

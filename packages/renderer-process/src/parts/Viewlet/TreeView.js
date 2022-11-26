@@ -288,7 +288,7 @@ const treeViewCollapseAll = () => {
   activeTreeView.collapseAll()
 }
 
-export const COmmands = {
+export const Commands = {
   3000: treeViewFocusDown,
   3001: treeViewFocusUp,
   3002: treeViewCollapse,

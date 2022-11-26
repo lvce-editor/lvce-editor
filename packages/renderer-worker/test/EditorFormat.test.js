@@ -86,6 +86,38 @@ test('format', async () => {
   })
 })
 
+test('format - preserve cursor position', async () => {
+  // @ts-ignore
+  Format.format.mockImplementation(() => {
+    return [
+      {
+        startOffset: 3,
+        endOffset: 5,
+        inserted: '',
+      },
+      {
+        startOffset: 4,
+        endOffset: 34,
+        inserted: '\n',
+      },
+    ]
+  })
+  const editor = {
+    lines: ['<h1   class="abc">hello world</h1>'],
+    primarySelectionIndex: 0,
+    selections: new Uint32Array([0, 5, 0, 5]),
+    top: 10,
+    left: 20,
+    rowHeight: 10,
+    columnWidth: 8,
+    lineCache: [],
+    undoStack: [],
+  }
+  expect(await EditorFormat.format(editor)).toMatchObject({
+    lines: ['<h1 class="abc">hello world</h1>'],
+  })
+})
+
 test('format - multiple lines', async () => {
   // @ts-ignore
   Format.format.mockImplementation(() => {

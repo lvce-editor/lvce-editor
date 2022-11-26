@@ -76,8 +76,6 @@ export const execute = async (href) => {
     // TODO this should not be in workspace but in another module
     Workspace.state.mockExec = module.mockExec
   }
-  console.log({ module })
-
   const tests = TestState.getTests()
   for (const test of tests) {
     await executeTest(test.name, test.fn)

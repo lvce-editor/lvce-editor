@@ -1,4 +1,5 @@
 const { dialog } = require('electron')
+const Logger = require('../Logger/Logger.js')
 
 const getDisplayMessage = (error) => {
   if (!error || !error.stack) {
@@ -9,7 +10,7 @@ const getDisplayMessage = (error) => {
 }
 
 const printError = (error) => {
-  console.error(`[main-process] ${error.stack}`)
+  Logger.error(`[main-process] ${error.stack}`)
 }
 
 const showError = (error) => {

@@ -1,9 +1,9 @@
 const { Worker } = require('worker_threads')
-const ChildProcess = require('../ChildProcess/ChildProcess.js')
 const Command = require('../Command/Command.js')
-const Path = require('../Path/Path.js')
 const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
 const Platform = require('../Platform/Platform.js')
+const Logger = require('../Logger/Logger.js')
+const GetResponse = require('../GetResponse/GetResponse.js')
 
 const state = (exports.state = {
   /**
@@ -14,14 +14,14 @@ const state = (exports.state = {
 })
 
 const handleChildError = (error) => {
-  console.info('[main] Child Error')
-  console.error(error.toString())
+  Logger.info('[main] Child Error')
+  Logger.error(error.toString())
   process.exit(1)
 }
 
 const handleStdError = (error) => {
-  console.info('[main] Child std error')
-  console.error(error.toString())
+  Logger.info('[main] Child std error')
+  Logger.error(error.toString())
   process.exit(1)
 }
 
@@ -30,52 +30,31 @@ const handleChildMessage = async (message) => {
     return
   }
   if (Array.isArray(message)) {
-    console.warn('invalid message', message)
+    Logger.warn('invalid message', message)
     return
   }
-  const object = message
-  if (object.result || object.error) {
+  if (message.result || message.error) {
     state.onMessage(message)
     return
   }
-  if (!object.id && !object.params) {
+  if (!message.id && !message.params) {
     // TODO need better way to send terminal data
-    const parsed = JSON.parse(object)
+    const parsed = JSON.parse(message)
     state.onMessage(parsed)
     return
   }
-  if (object.id) {
-    if ('result' in object) {
-      state.onMessage(object)
+  if (message.id) {
+    if ('result' in message) {
+      state.onMessage(message)
       return
     }
-    let result
-    try {
-      result = await Command.invoke(object.method, ...object.params)
-    } catch (error) {
-      console.error(error)
-      if (state.sharedProcess) {
-        state.sharedProcess.postMessage({
-          jsonrpc: '2.0',
-          code: /* UnexpectedError */ -32001,
-          id: object.id,
-          error: 'UnexpectedError',
-          // @ts-ignore
-          data: error.toString(),
-        })
-      }
-      return
-    }
+    const response = await GetResponse.getResponse(message)
     if (state.sharedProcess) {
-      state.sharedProcess.postMessage({
-        jsonrpc: '2.0',
-        result,
-        id: object.id,
-      })
+      state.sharedProcess.postMessage(response)
     }
   } else {
     try {
-      await Command.execute(object.method, ...object.params)
+      await Command.execute(message.method, ...message.params)
     } catch (error) {
       ErrorHandling.handleError(error)
     }
@@ -86,19 +65,19 @@ const handleProcessExit = async () => {
   if (state.sharedProcess) {
     // await state.sharedProcess.terminate()
     // state.sharedProcess.postMessage('terminate')
-    console.info('[main-process] terminating shared process')
+    Logger.info('[main-process] terminating shared process')
     await state.sharedProcess.terminate()
     // state.sharedProcess.
   }
 }
 
 const handleChildExit = (code) => {
-  console.info(`[main] shared process exited with code ${code}`)
+  Logger.info(`[main] shared process exited with code ${code}`)
   process.exit(code)
 }
 
 const handleChildDisconnect = () => {
-  console.info('[main] shared process disconnected')
+  Logger.info('[main] shared process disconnected')
 }
 
 exports.send = (message) => {

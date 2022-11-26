@@ -4,6 +4,7 @@ export const name = 'EditorImage'
 
 // prettier-ignore
 export const Commands = {
+  handleImageError: ViewletEditorImage.handleImageError,
   handlePointerDown: ViewletEditorImage.handlePointerDown,
   handlePointerMove: ViewletEditorImage.handlePointerMove,
   handlePointerUp: ViewletEditorImage.handlePointerUp,

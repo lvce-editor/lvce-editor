@@ -1,11 +1,11 @@
 import * as ActivityBarItemFlags from '../ActivityBarItemFlags/ActivityBarItemFlags.js'
 import * as Command from '../Command/Command.js'
+import * as Height from '../Height/Height.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as Icon from '../Icon/Icon.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
-import * as Height from '../Height/Height.js'
 import { focusIndex } from './ViewletActivityBarFocusIndex.js'
 
 /**
@@ -260,12 +260,7 @@ const renderActivityBarItems = {
   },
   apply(oldState, newState) {
     const visibleItems = getVisibleActivityBarItems(newState)
-    return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.ActivityBar,
-      /* method */ 'setItems',
-      /* items */ visibleItems,
-    ]
+    return [/* method */ 'setItems', /* items */ visibleItems]
   },
 }
 
@@ -278,8 +273,6 @@ const renderFocusedIndex = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.ActivityBar,
       /* method */ 'setFocusedIndex',
       /* unFocusIndex */ oldState.focusedIndex,
       /* focusIndex */ newState.focusedIndex,
@@ -294,8 +287,6 @@ const renderSelectedIndex = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.send */ 'Viewlet.send',
-      /* id */ ViewletModuleId.ActivityBar,
       /* method */ 'setSelectedIndex',
       /* oldIndex */ oldState.selectedIndex,
       /* newIndex */ newState.selectedIndex,

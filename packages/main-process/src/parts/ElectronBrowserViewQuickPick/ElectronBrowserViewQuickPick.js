@@ -4,6 +4,7 @@ const Platform = require('../Platform/Platform.js')
 const Root = require('../Root/Root.js')
 const Path = require('../Path/Path.js')
 const PendingPorts = require('../PendingPorts/PendingPorts.js')
+const Logger = require('../Logger/Logger.js')
 const { VError } = require('verror')
 
 exports.disposeBrowserViewQuickPick = () => {
@@ -60,7 +61,7 @@ exports.createBrowserViewQuickPick = async (top, left, width, height) => {
     //   mode: 'detach',
     // })
   } catch (error) {
-    console.error(error)
+    Logger.error(error)
     // @ts-ignore
     throw new VError(error, `Failed to create quickpick browser view`)
   }

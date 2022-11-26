@@ -13,7 +13,12 @@ const mergeStacks = (parent, child) => {
   const childNewLineIndex = child.indexOf('\n')
   const parentFirstLine = parent.slice(0, parentNewLineIndex)
   const childRest = child.slice(childNewLineIndex)
-  return parentFirstLine + childRest
+  const childFirstLine = child.slice(0, childNewLineIndex)
+  if (parentFirstLine.includes(childFirstLine)) {
+    return parentFirstLine + childRest
+  }
+  return child
+  // console.log({ parent, child, childRest })
 }
 
 export class VError extends Error {
@@ -23,6 +28,9 @@ export class VError extends Error {
     this.name = 'VError'
     if (error instanceof Error) {
       this.stack = mergeStacks(this.stack, error.stack)
+    }
+    if (error.codeFrame) {
+      this.codeFrame = error.codeFrame
     }
   }
 }

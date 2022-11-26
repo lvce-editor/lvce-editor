@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -34,7 +35,12 @@ const ViewletManager = await import(
 )
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(ViewletSourceControl, oldState, newState)
+  return ViewletManager.render(
+    ViewletSourceControl,
+    oldState,
+    newState,
+    ViewletModuleId.SourceControl
+  )
 }
 
 test('create', () => {

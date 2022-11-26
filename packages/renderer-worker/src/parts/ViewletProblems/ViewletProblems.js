@@ -63,12 +63,7 @@ const renderProblems = {
     return oldState.problems === newState.problems
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Problems,
-      /* method */ 'setProblems',
-      /* problems */ newState.problems,
-    ]
+    return [/* method */ 'setProblems', /* problems */ newState.problems]
   },
 }
 
@@ -78,8 +73,6 @@ const renderFocusedIndex = {
   },
   apply(oldState, newState) {
     return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Problems,
       /* method */ 'setFocusedIndex',
       /* focusedIndex */ newState.focusedIndex,
     ]
@@ -91,12 +84,7 @@ const renderMessage = {
     return oldState.message === newState.message
   },
   apply(oldState, newState) {
-    return [
-      /* Viewlet.invoke */ 'Viewlet.send',
-      /* id */ ViewletModuleId.Problems,
-      /* method */ 'setMessage',
-      /* focusedIndex */ newState.message,
-    ]
+    return [/* method */ 'setMessage', /* focusedIndex */ newState.message]
   },
 }
 

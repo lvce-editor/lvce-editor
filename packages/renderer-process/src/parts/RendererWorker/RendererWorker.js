@@ -2,10 +2,8 @@ import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
 import { JsonRpcError } from '../Errors/JsonRpcError.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
+import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as Platform from '../Platform/Platform.js'
-
-// const URL_RENDERER_WORKER =
-// '/packages/renderer-worker/distmin/rendererWorkerMain-0ead0bed.js'
 
 export const state = {
   /**
@@ -77,7 +75,7 @@ const handleMessageFromRendererWorker = async (event) => {
 
 const getIpc = async () => {
   const rendererWorker = await IpcParent.create({
-    method: IpcParent.Methods.ModuleWorker,
+    method: IpcParentType.Auto,
     url: Platform.getRendererWorkerUrl(),
     name: 'Renderer Worker',
   })

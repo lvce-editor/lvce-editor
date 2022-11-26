@@ -16,3 +16,4 @@ export const WebSocketServer = 15
 export const Workspace = 16
 export const ChromeExtension = 17
 export const Download = 18
+export const GitLsFiles = 19

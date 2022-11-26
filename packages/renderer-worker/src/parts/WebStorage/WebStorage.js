@@ -39,6 +39,6 @@ export const setText = async (storageType, key, value) => {
 }
 
 export const setJson = async (storageType, key, value) => {
-  const stringifiedValue = Json.stringify(value)
+  const stringifiedValue = Json.stringifyCompact(value)
   await setText(storageType, key, stringifiedValue)
 }
