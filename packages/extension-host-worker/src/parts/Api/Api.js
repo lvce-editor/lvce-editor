@@ -15,6 +15,7 @@ import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHo
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
 import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
+import * as EditorCompletionType from '../EditorCompletionType/EditorCompletionType.js'
 
 import { VError } from '../VError/VError.js'
 
@@ -39,7 +40,7 @@ export const api =  {
   // Completion
   registerCompletionProvider:ExtensionHostCompletion.registerCompletionProvider,
   executeCompletionProvider: ExtensionHostCompletion.executeCompletionProvider,
-
+  EditorCompletionType,
 
   // Configuration
   getConfiguration: ExtensionHostConfiguration.getConfiguration,
@@ -59,7 +60,7 @@ export const api =  {
   exec: ExtensionHostExec.exec,
 
   // File System
-registerFileSystemProvider: ExtensionHostFileSystem.registerFileSystemProvider,
+  registerFileSystemProvider: ExtensionHostFileSystem.registerFileSystemProvider,
 
 
   // Formatting
