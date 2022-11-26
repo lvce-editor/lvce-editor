@@ -18,6 +18,7 @@ export const executeProviders = async ({
   }
   const results = await Promise.all(promises)
   const combinedResult = combineResults(results)
+  console.log({ combinedResult })
   return combinedResult
 }
 
