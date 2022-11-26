@@ -4,6 +4,7 @@ export const name = 'Viewlet'
 
 export const Commands = {
   2133: Viewlet.send,
+  send: Viewlet.send,
   closeWidget: Viewlet.closeWidget,
   executeViewletCommand: Viewlet.executeViewletCommand,
   focus: Viewlet.focus,
