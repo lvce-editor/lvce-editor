@@ -6,6 +6,7 @@ import * as CommitHash from '../CommitHash/CommitHash.js'
 import * as Console from '../Console/Console.js'
 import * as Copy from '../Copy/Copy.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as InlineDynamicImportsFile from '../InlineDynamicImportsFile/InlineDynamicImportsFile.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
@@ -14,8 +15,6 @@ import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Replace from '../Replace/Replace.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
-import * as ReadFile from '../ReadFile/ReadFile.js'
-import * as InlineDynamicImportsFile from '../InlineDynamicImportsFile/InlineDynamicImportsFile.js'
 
 const copyRendererProcessFiles = async ({ pathPrefix, commitHash }) => {
   await Copy.copy({
@@ -70,6 +69,11 @@ const getModule = (method) => {
     path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Platform/Platform.js`,
     occurrence: `/src/rendererWorkerMain.js`,
     replacement: '/dist/rendererWorkerMain.js',
+  })
+  await Replace.replace({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Icon/Icon.js`,
+    occurrence: `/icons`,
+    replacement: `${pathPrefix}/${commitHash}/icons`,
   })
   await InlineDynamicImportsFile.inlineDynamicModules({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Module/Module.js`,
