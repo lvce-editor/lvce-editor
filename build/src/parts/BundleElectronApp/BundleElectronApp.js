@@ -279,9 +279,7 @@ const copyCss = async ({ arch }) => {
 
 export const build = async () => {
   const arch = process.arch
-  const useInstalledElectronVersion = process.argv.includes(
-    '--use-installed-electron-version'
-  )
+  const useInstalledElectronVersion = true
   const electronVersion = await GetElectronVersion.getElectronVersion()
   const dependencyCacheHash = await getDependencyCacheHash({
     electronVersion,
