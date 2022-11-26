@@ -1,4 +1,3 @@
-import { dirname } from 'path'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as Exec from '../Exec/Exec.js'
 import * as RgPath from '../RgPath/RgPath.js'
@@ -26,9 +25,7 @@ const isEnoentError = (error) => {
 // do a delta comparison, so the first time it would send 100kB
 // but the second time only a few hundred bytes of changes
 
-const cache = Object.create(null)
-
-export const searchFileDefault = async (path, searchTerm) => {
+export const searchFile = async (path, searchTerm) => {
   try {
     const { stdout, stderr } = await Exec.exec(
       ripGrepPath,
@@ -52,33 +49,4 @@ export const searchFileDefault = async (path, searchTerm) => {
     console.error(error)
     return []
   }
-}
-
-const getFolders = (files) => {
-  const folders = []
-  for (const file of files) {
-    const dir = dirname(file)
-    if (!folders.includes(dir)) {
-      folders.push(dir)
-    }
-  }
-  return folders
-}
-
-const getLastModified = async (path, files) => {
-  const folders = getFolders(files)
-  console.log({ folders })
-  return -1
-}
-
-export const searchFile = async (path, searchTerm) => {
-  if (!(path in cache)) {
-    cache[path] = await searchFileDefault(path, searchTerm)
-  }
-  const files = cache[path]
-  console.log({ files })
-  const modified = await getLastModified(files)
-  // const modified = await getLastModified(path, files)
-  console.log({ modified })
-  return files
 }
