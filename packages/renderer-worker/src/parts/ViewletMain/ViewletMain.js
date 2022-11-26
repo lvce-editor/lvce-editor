@@ -242,6 +242,7 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
   if (children.length === 0) {
     // TODO add editor
     return {
+      ...state,
       editors: [{ uri }],
       children: [
         {
@@ -263,7 +264,21 @@ export const openUri = async (state, uri, focus = true, options = {}) => {
       ],
     }
   } else {
-    // TODO replace editor
+    return {
+      ...state,
+      editors: [{ uri }],
+      children: [
+        children[0],
+        {
+          id,
+          uri,
+          top: top + headerHeight,
+          left,
+          width,
+          height: height - headerHeight,
+        },
+      ],
+    }
   }
   return state
 }
