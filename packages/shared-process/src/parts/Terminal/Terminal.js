@@ -76,7 +76,7 @@ export const create = async (socket, id, cwd) => {
           const data = message.params[1]
           socket.send({
             jsonrpc: '2.0',
-            method: 2133,
+            method: 'Viewlet.send',
             params: ['Terminal', 'handleData', data],
           })
         }

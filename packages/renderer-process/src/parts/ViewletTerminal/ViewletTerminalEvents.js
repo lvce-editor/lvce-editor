@@ -3,7 +3,7 @@ import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 
 export const handleInput = (input) => {
   RendererWorker.send(
-    /* viewletSend */ 2133,
+    /* viewletSend */ 'Viewlet.send',
     /* viewletId */ 'Terminal',
     /* method */ 'write',
     /* input */ input

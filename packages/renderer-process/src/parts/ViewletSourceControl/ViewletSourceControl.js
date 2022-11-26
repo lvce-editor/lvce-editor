@@ -29,7 +29,7 @@ const handleClick = (event) => {
   const index = findIndex($Parent, $Target)
   // TODO ignore when index === -1
   RendererWorker.send(
-    /* viewletCommand */ 2133,
+    /* viewletCommand */ 'Viewlet.send',
     /* viewletId */ 'Source Control',
     /* type */ 'handleClick',
     /* index */ index
