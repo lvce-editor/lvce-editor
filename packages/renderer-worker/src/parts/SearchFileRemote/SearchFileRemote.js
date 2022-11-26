@@ -1,10 +1,12 @@
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 export const searchFile = async (path, value) => {
-  const files = await SharedProcess.invoke(
+  const stdout = await SharedProcess.invoke(
     /* SearchFile.searchFile */ 'SearchFile.searchFile',
     /* path */ path,
     /* searchTerm */ value
   )
-  return files
+  const lines = SplitLines.splitLines(stdout)
+  return lines
 }
