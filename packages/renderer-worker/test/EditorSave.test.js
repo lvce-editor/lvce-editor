@@ -78,7 +78,7 @@ test('editorSave - error with fileSystem', async () => {
   })
   // @ts-ignore
   ErrorHandling.handleError.mockImplementation(() => {})
-  await EditorSave.save(editor)
+  expect(await EditorSave.save(editor)).toBe(editor)
   expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
   expect(ErrorHandling.handleError).toHaveBeenCalledWith(
     new VError(
