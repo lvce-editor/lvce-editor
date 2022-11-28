@@ -9,7 +9,7 @@ export const Commands = {
 
 // prettier-ignore
 export const LazyCommands = {
-  HandleReadmeContextMenu: () => import('./ViewletExtensionDetailHandleReadmeContextMenu.js'),
+  handleReadmeContextMenu: () => import('./ViewletExtensionDetailHandleReadmeContextMenu.js'),
 }
 
 export const Css = [
