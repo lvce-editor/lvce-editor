@@ -100,6 +100,8 @@ export const load = (moduleId) => {
       return import('../Preferences/Preferences.ipc.js')
     case ModuleId.RecentlyOpened:
       return import('../RecentlyOpened/RecentlyOpened.ipc.js')
+    case ModuleId.SaveFileAs:
+      return import('../SaveFileAs/SaveFileAs.ipc.js')
     case ModuleId.SaveState:
       return import('../SaveState/SaveState.ipc.js')
     case ModuleId.ServiceWorker:

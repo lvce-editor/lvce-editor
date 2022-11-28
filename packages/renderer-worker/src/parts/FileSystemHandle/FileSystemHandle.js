@@ -11,6 +11,11 @@ export const write = async (handle, content) => {
   await writable.close()
 }
 
+export const writeResponse = async (handle, response) => {
+  const writable = await handle.createWritable()
+  await response.body.pipeTo(writable)
+}
+
 export const getChildHandles = async (handle) => {
   Assert.object(handle)
   const handles = await Arrays.fromAsync(handle.values())

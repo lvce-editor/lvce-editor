@@ -7,6 +7,8 @@ import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 export const UiStrings = {
   Copy: 'Copy',
   OpenInNewTab: 'Open in New Tab',
+  OpenImageInNewTab: 'Open Image in New Tab',
+  SaveImageAs: 'Save Image as',
 }
 
 export const getMenuEntries = (props) => {
@@ -20,6 +22,23 @@ export const getMenuEntries = (props) => {
       command: 'Open.openUrl',
       args: [props.url],
     })
+  } else if (props.isImage) {
+    menuEntries.push(
+      {
+        id: 'openImageInNewTab',
+        label: I18nString.i18nString(UiStrings.OpenImageInNewTab),
+        flags: MenuItemFlags.None,
+        command: 'Open.openUrl',
+        args: [props.url],
+      },
+      {
+        id: 'saveImageAs',
+        label: I18nString.i18nString(UiStrings.SaveImageAs),
+        flags: MenuItemFlags.None,
+        command: 'SaveFileAs.saveFileAs',
+        args: ['image.png', props.url],
+      }
+    )
   }
   menuEntries.push({
     id: 'copy',

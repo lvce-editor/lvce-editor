@@ -8,6 +8,10 @@ const isLink = ($Element) => {
   return $Element.nodeName === 'A'
 }
 
+const isImage = ($Element) => {
+  return $Element.nodeName === 'IMG'
+}
+
 export const handleReadmeContextMenu = (event) => {
   event.preventDefault()
   const { clientX, clientY, target } = event
@@ -15,6 +19,9 @@ export const handleReadmeContextMenu = (event) => {
   if (isLink(target)) {
     props.isLink = true
     props.url = target.href
+  } else if (isImage(target)) {
+    props.isImage = true
+    props.url = target.src
   }
   RendererWorker.send(
     'ExtensionDetail.handleReadmeContextMenu',
