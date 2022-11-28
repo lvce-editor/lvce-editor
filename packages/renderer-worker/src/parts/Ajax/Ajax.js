@@ -70,3 +70,11 @@ export const getBlob = async (url, options = {}) => {
     throw new VError(error, `Failed to request blob from "${url}"`)
   }
 }
+
+export const getResponse = async (url, options) => {
+  try {
+    return await ky(url, options)
+  } catch (error) {
+    throw new VError(error, `Failed to request response from "${url}"`)
+  }
+}

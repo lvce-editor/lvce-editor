@@ -220,6 +220,8 @@ export const getModuleId = (commandId) => {
     case 'RecentlyOpened.getRecentlyOpened':
     case 'RecentlyOpened.hydrate':
       return ModuleId.RecentlyOpened
+    case 'SaveFileAs.saveFileAs':
+      return ModuleId.SaveFileAs
     case 'SaveState.handleVisibilityChange':
     case 'SaveState.hydrate':
       return ModuleId.SaveState

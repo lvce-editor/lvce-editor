@@ -62,3 +62,4 @@ export const ChromeExtension = 60
 export const ElectronApp = 61
 export const ElectronMenu = 62
 export const ElectronClipBoard = 63
+export const SaveFileAs = 64
