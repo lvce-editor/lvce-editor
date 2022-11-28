@@ -2,7 +2,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Label from '../Label/Label.js'
 import * as ViewletMainHeaderEvents from './ViewletMainHeaderEvents.js'
 
-const create$MainTab = (label, index) => {
+const create$MainTab = ({ uri, label }) => {
   const $TabLabel = Label.create(label)
 
   const $TabCloseButton = document.createElement('button')
@@ -11,11 +11,12 @@ const create$MainTab = (label, index) => {
   $TabCloseButton.title = ''
 
   const $Tab = document.createElement('div')
-  $Tab.title = label
+  $Tab.title = uri
   // @ts-ignore
   $Tab.role = AriaRoles.Tab
   $Tab.className = 'MainTab'
   $Tab.append($TabLabel, $TabCloseButton)
+  return $Tab
 }
 
 // TODO Main should not be bound to Editor -> Lazy load Editor

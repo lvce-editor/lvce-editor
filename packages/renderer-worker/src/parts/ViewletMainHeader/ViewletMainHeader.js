@@ -3,7 +3,15 @@ export const create = () => {
 }
 
 export const loadContent = (state) => {
-  return state
+  return {
+    ...state,
+    editors: [
+      {
+        uri: 'new-file.txt',
+        label: 'new-file.txt',
+      },
+    ],
+  }
 }
 
 const renderTabs = {
