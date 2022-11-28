@@ -18,10 +18,10 @@ const getModule = () => {
   return import('./ContextMenuBrowser.js')
 }
 
-export const show = async (x, y, id) => {
+export const show = async (x, y, id, ...args) => {
   Assert.number(x)
   Assert.number(y)
   Assert.number(id)
   const module = await getModule()
-  return module.show(x, y, id)
+  return module.show(x, y, id, ...args)
 }

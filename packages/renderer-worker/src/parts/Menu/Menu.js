@@ -85,8 +85,8 @@ const getMenuBounds = (x, y, items) => {
   }
 }
 
-export const show = async (x, y, id, mouseBlocking = false) => {
-  const items = await MenuEntries.getMenuEntries(id)
+export const show = async (x, y, id, mouseBlocking = false, ...args) => {
+  const items = await MenuEntries.getMenuEntries(id, ...args)
   const bounds = getMenuBounds(x, y, items)
   const menu = addMenuInternal({
     id,
