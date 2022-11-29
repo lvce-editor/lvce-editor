@@ -69,3 +69,13 @@ test('showSaveFilePicker - error', async () => {
     new TypeError('x is not a function')
   )
 })
+
+test('showSaveFilePicker - error - not supported', async () => {
+  // @ts-ignore
+  RendererProcess.invoke.mockImplementation(async () => {
+    throw new Error('window.showSaveFilePicker is not a function')
+  })
+  await expect(FilePicker.showSaveFilePicker()).rejects.toThrowError(
+    new Error('showSaveFilePicker not supported on this browser')
+  )
+})
