@@ -250,6 +250,36 @@ test('invoke - error - with stack', async () => {
   )
 })
 
+test.skip('invoke - error - with only one line in stack', async () => {
+  const ipc = {
+    send: jest.fn((message) => {
+      if (message.method === 'Test.execute') {
+        Callback.resolve(message.id, {
+          error: {
+            message: 'The user aborted a request.',
+            name: 'AbortError',
+            stack: 'Error: The user aborted a request.',
+            type: 'DOMException',
+          },
+        })
+      } else {
+        throw new Error('unexpected message')
+      }
+    }),
+  }
+  const error = await getError(
+    JsonRpc.invoke(ipc, 'Test.execute', 'test message')
+  )
+  expect(error).toBeInstanceOf(DOMException)
+  expect(error.message).toBe('The user aborted a request.')
+  expect(error.stack).toMatch(
+    `Error: expected selector .Viewlet.Editor to have text \"test3\" but was \"test\"
+    at Object.checkSingleElementCondition [as TestFrameWork.checkSingleElementCondition] (http://localhost/packages/renderer-process/src/parts/TestFrameWork/TestFrameWork.js:122:9)
+    at async Worker.handleMessageFromRendererWorker (http://localhost/packages/renderer-process/src/parts/RendererWorker/RendererWorker.js:46:24)
+    at constructError`
+  )
+})
+
 test('invoke - error - method not found', async () => {
   const ipc = {
     send: jest.fn((message) => {
