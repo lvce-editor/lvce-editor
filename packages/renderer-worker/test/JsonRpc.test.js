@@ -193,6 +193,30 @@ test('invoke - error - empty object', async () => {
   })
 })
 
+test('invoke - error - DOMException', async () => {
+  const ipc = {
+    send: jest.fn((message) => {
+      if (message.method === 'Test.execute') {
+        Callback.resolve(message.id, {
+          error: {
+            type: 'DomException',
+            name: 'AbortError',
+            message: 'The user aborted a request.',
+          },
+        })
+      } else {
+        throw new Error('unexpected message')
+      }
+    }),
+  }
+  const error = await getError(
+    JsonRpc.invoke(ipc, 'Test.execute', 'test message')
+  )
+  expect(error).toBeInstanceOf(DOMException)
+  expect(error.name).toBe('AbortError')
+  expect(error.message).toBe(`The user aborted a request.`)
+})
+
 test('invoke - error - with stack', async () => {
   const ipc = {
     send: jest.fn((message) => {

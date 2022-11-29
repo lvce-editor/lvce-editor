@@ -12,7 +12,23 @@ export const send = (transport, method, ...params) => {
   })
 }
 
-const getErrorConstructor = (message) => {
+const getErrorConstructor = (message, type) => {
+  if (type) {
+    switch (type) {
+      case 'DomException':
+        return DOMException
+      case 'TypeError':
+        return TypeError
+      case 'SyntaxError':
+        return SyntaxError
+      case 'ReferenceError':
+        return ReferenceError
+      case 'DOMException':
+        return DOMException
+      default:
+        return Error
+    }
+  }
   if (message.startsWith('TypeError: ')) {
     return TypeError
   }
@@ -25,8 +41,11 @@ const getErrorConstructor = (message) => {
   return Error
 }
 
-const constructError = (message) => {
-  const ErrorConstructor = getErrorConstructor(message)
+const constructError = (message, type, name) => {
+  const ErrorConstructor = getErrorConstructor(message, type)
+  if (ErrorConstructor === DOMException && name) {
+    return new ErrorConstructor(message, name)
+  }
   if (ErrorConstructor === Error) {
     return new Error(message)
   }
@@ -44,7 +63,7 @@ const restoreError = (error) => {
     return restoredError
   }
   if (error && error.message) {
-    const restoredError = constructError(error.message)
+    const restoredError = constructError(error.message, error.type, error.name)
     if (error.data) {
       if (error.data.stack) {
         restoredError.stack = error.data.stack

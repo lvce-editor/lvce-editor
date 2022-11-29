@@ -33,6 +33,8 @@ const serializeError = (error) => {
   return {
     stack: error.stack,
     message: error.message,
+    name: error.name,
+    type: error.constructor.name,
   }
 }
 
@@ -56,6 +58,8 @@ const handleMessageFromRendererWorker = async (event) => {
           error: {
             message: serializedError.message,
             stack: serializedError.stack,
+            name: serializedError.name,
+            type: serializedError.type,
           },
         })
       }
