@@ -1,0 +1,6 @@
+export const Desktop = 'desktop'
+export const Documents = 'documents'
+export const Downloads = 'downloads'
+export const Music = 'music'
+export const Pictures = 'pictures'
+export const Videos = 'videos'
