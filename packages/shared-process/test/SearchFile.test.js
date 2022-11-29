@@ -27,7 +27,7 @@ beforeAll(async () => {
 })
 
 test('searchFile - exact match', async () => {
-  expect(await searchFile(tmpDir, 'fileA')).toEqual(
+  expect(await searchFile(tmpDir, 'fileA', 10)).toEqual(
     JoinLines.joinLines([
       fixPath('fileA'),
       fixPath('fileB'),
@@ -37,7 +37,7 @@ test('searchFile - exact match', async () => {
 })
 
 test('searchFile - match filename in nested folder', async () => {
-  expect(await searchFile(tmpDir, 'fileC')).toEqual(
+  expect(await searchFile(tmpDir, 'fileC', 10)).toEqual(
     JoinLines.joinLines([
       fixPath('fileA'),
       fixPath('fileB'),
@@ -47,7 +47,7 @@ test('searchFile - match filename in nested folder', async () => {
 })
 
 test('searchFile - match files that start with searchTerm', async () => {
-  expect(await searchFile(tmpDir, 'file')).toEqual(
+  expect(await searchFile(tmpDir, 'file', 10)).toEqual(
     JoinLines.joinLines([
       fixPath('fileA'),
       fixPath('fileB'),
@@ -57,7 +57,7 @@ test('searchFile - match files that start with searchTerm', async () => {
 })
 
 test('searchFile - match files that contain searchTerm', async () => {
-  expect(await searchFile(tmpDir, 'ile')).toEqual(
+  expect(await searchFile(tmpDir, 'ile', 10)).toEqual(
     JoinLines.joinLines([
       fixPath('fileA'),
       fixPath('fileB'),
@@ -67,7 +67,7 @@ test('searchFile - match files that contain searchTerm', async () => {
 })
 
 test('searchFile - match files that end with searchTerm', async () => {
-  expect(await searchFile(tmpDir, 'eA')).toEqual(
+  expect(await searchFile(tmpDir, 'eA', 10)).toEqual(
     JoinLines.joinLines([
       fixPath('fileA'),
       fixPath('fileB'),
@@ -78,7 +78,7 @@ test('searchFile - match files that end with searchTerm', async () => {
 
 test('searchFile - no matching files', async () => {
   expect(
-    await searchFile(`${__dirname}/fixture-search-file-1`, 'non-existing')
+    await searchFile(`${__dirname}/fixture-search-file-1`, 'non-existing', 10)
   ).toEqual(
     JoinLines.joinLines([
       fixPath('fileA'),
@@ -89,7 +89,9 @@ test('searchFile - no matching files', async () => {
 })
 
 test('searchFile - empty string', async () => {
-  expect(await searchFile(`${__dirname}/fixture-search-file-1`, '')).toEqual(
+  expect(
+    await searchFile(`${__dirname}/fixture-search-file-1`, '', 10)
+  ).toEqual(
     JoinLines.joinLines([
       fixPath('fileA'),
       fixPath('fileB'),
