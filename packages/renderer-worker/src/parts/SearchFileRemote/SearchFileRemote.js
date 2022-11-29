@@ -5,7 +5,8 @@ export const searchFile = async (path, value) => {
   const stdout = await SharedProcess.invoke(
     /* SearchFile.searchFile */ 'SearchFile.searchFile',
     /* path */ path,
-    /* searchTerm */ value
+    /* searchTerm */ value,
+    /* limit */ 512
   )
   const lines = SplitLines.splitLines(stdout)
   return lines

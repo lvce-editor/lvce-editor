@@ -1,5 +1,7 @@
+import * as Assert from '../Assert/Assert.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as Exec from '../Exec/Exec.js'
+import * as LimitString from '../LimitString/LimitString.js'
 import * as RgPath from '../RgPath/RgPath.js'
 
 const ripGrepPath = process.env.RIP_GREP_PATH || RgPath.rgPath
@@ -25,8 +27,11 @@ const isEnoentError = (error) => {
 // do a delta comparison, so the first time it would send 100kB
 // but the second time only a few hundred bytes of changes
 
-export const searchFile = async (path, searchTerm) => {
+export const searchFile = async (path, searchTerm, limit) => {
   try {
+    Assert.string(path)
+    Assert.string(searchTerm)
+    Assert.number(limit)
     const { stdout, stderr } = await Exec.exec(
       ripGrepPath,
       ['--files', '--sort-files'],
@@ -34,7 +39,7 @@ export const searchFile = async (path, searchTerm) => {
         cwd: path,
       }
     )
-    return stdout
+    return LimitString.limitString(stdout, limit)
   } catch (error) {
     // @ts-ignore
     if (isEnoentError(error)) {
