@@ -22,6 +22,20 @@ export const showFilePicker = (options) => {
   return RendererProcess.invoke('FilePicker.showFilePicker', options)
 }
 
-export const showSaveFilePicker = (options) => {
-  return RendererProcess.invoke('FilePicker.showSaveFilePicker', options)
+export const showSaveFilePicker = async (options) => {
+  try {
+    return await RendererProcess.invoke(
+      'FilePicker.showSaveFilePicker',
+      options
+    )
+  } catch (error) {
+    if (
+      error &&
+      // @ts-ignore
+      error.message === 'window.showSaveFilePicker is not a function'
+    ) {
+      throw new Error(`showSaveFilePicker not supported on this browser`)
+    }
+    throw error
+  }
 }
