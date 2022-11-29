@@ -2,11 +2,13 @@ import * as Ajax from '../Ajax/Ajax.js'
 import * as FilePicker from '../FilePicker/FilePicker.js'
 import * as FileSystemHandle from '../FileSystemHandle/FileSystemHandle.js'
 import { VError } from '../VError/VError.js'
+import * as WellKnownDirectoryType from '../WellKnownDirectoryType/WellKnownDirectoryType.js'
 
 export const saveFileAs = async (fileName, url) => {
   try {
     const fileHandle = await FilePicker.showSaveFilePicker({
       suggestedName: fileName,
+      startIn: WellKnownDirectoryType.Downloads,
       types: [
         {
           description: 'Text File',

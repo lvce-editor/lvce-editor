@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as WellKnownDirectoryType from '../src/parts/WellKnownDirectoryType/WellKnownDirectoryType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -62,6 +63,7 @@ test('saveFileAs', async () => {
   expect(FilePicker.showSaveFilePicker).toHaveBeenCalledTimes(1)
   expect(FilePicker.showSaveFilePicker).toHaveBeenCalledWith({
     suggestedName: 'image.png',
+    startIn: WellKnownDirectoryType.Downloads,
     types: [
       {
         accept: {
