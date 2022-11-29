@@ -15,7 +15,6 @@ export const saveFileAs = async (fileName, url) => {
           },
         },
       ],
-      startIn: 'downloads',
     })
     const response = await Ajax.getResponse(url)
     await FileSystemHandle.writeResponse(fileHandle, response)
