@@ -17,11 +17,7 @@ const openFolderWeb = async () => {
       startIn: 'pictures',
       mode: 'readwrite',
     })
-    await Command.execute(
-      'PersistentFileHandle.addHandle',
-      `html://${result.name}`,
-      result
-    )
+    await Command.execute('PersistentFileHandle.addHandle', result.name, result)
     await Command.execute('Workspace.setPath', `html://${result.name}`)
   } catch (error) {
     if (IsAbortError.isAbortError(error)) {
