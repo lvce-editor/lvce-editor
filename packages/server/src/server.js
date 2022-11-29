@@ -38,6 +38,38 @@ const immutable = argv.includes('--immutable')
 
 const IS_WINDOWS = process.platform === 'win32'
 
+const addSemicolon = (line) => {
+  return line + ';'
+}
+
+const ContentSecurityPolicy = {
+  key: 'Content-Security-Policy',
+  value: [
+    `default-src 'none'`,
+    `connect-src 'self'`,
+    `font-src 'self'`,
+    `frame-src *`,
+    `img-src 'self' https: data:`,
+    `script-src 'self'`,
+    `media-src 'self'`,
+    `prefetch-src 'self'`,
+    `manifest-src 'self'`,
+    `style-src 'self' 'unsafe-inline'`, // TODO remove unsafe-inline
+  ]
+    .map(addSemicolon)
+    .join(' '),
+}
+
+const CrossOriginOpenerPolicy = {
+  key: 'Cross-Origin-Opener-Policy',
+  value: 'same-origin',
+}
+
+const CrossOriginEmbedderPolicy = {
+  key: 'Cross-Origin-Embedder-Policy',
+  value: 'require-corp',
+}
+
 const textMimeType = {
   '.html': 'text/html',
   '.js': 'text/javascript',
@@ -92,8 +124,9 @@ const serveStatic = (root, skip = '') =>
       Etag: etag,
       'Cache-Control': cachingHeader,
       // enables access for performance.measureUserAgentSpecificMemory, see https://web.dev/monitor-total-page-memory-usage/
-      'Cross-Origin-Embedder-Policy': 'require-corp',
-      'Cross-Origin-Opener-Policy': 'same-origin',
+      [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
+      [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
+      [ContentSecurityPolicy.key]: ContentSecurityPolicy.value,
     })
     try {
       await pipeline(createReadStream(filePath), res)
