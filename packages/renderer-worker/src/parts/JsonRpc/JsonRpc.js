@@ -2,7 +2,6 @@ import * as Callback from '../Callback/Callback.js'
 import { JsonRpcError } from '../Errors/Errors.js'
 import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
-import { VError } from '../VError/VError.js'
 
 export const send = (transport, method, ...params) => {
   transport.send({
@@ -73,7 +72,7 @@ const restoreError = (error) => {
           restoredError.codeFrame = error.data.codeFrame
         }
       }
-    } else if (error.stack) {
+    } else if (restoredError.stack) {
       // TODO accessing stack might be slow
       const lowerStack = restoredError.stack
       // @ts-ignore

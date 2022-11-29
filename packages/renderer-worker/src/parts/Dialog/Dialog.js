@@ -1,20 +1,14 @@
 import * as Command from '../Command/Command.js'
 import * as ElectronDialog from '../ElectronDialog/ElectronDialog.js'
 import * as ElectronWindowAbout from '../ElectronWindowAbout/ElectronWindowAbout.js'
+import * as IsAbortError from '../IsAbortError/IsAbortError.js'
 import * as Platform from '../Platform/Platform.js'
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import { VError } from '../VError/VError.js'
 
 export const state = {
   dialog: undefined,
-}
-
-const isAbortError = (error) => {
-  if (error && error.message === 'The user aborted a request.') {
-    return true
-  }
-  return false
 }
 
 const openFolderWeb = async () => {
@@ -23,10 +17,14 @@ const openFolderWeb = async () => {
       startIn: 'pictures',
       mode: 'readwrite',
     })
-    await Command.execute('PersistentFileHandle.addHandle',`html://${result.name}`,  result)
+    await Command.execute(
+      'PersistentFileHandle.addHandle',
+      `html://${result.name}`,
+      result
+    )
     await Command.execute('Workspace.setPath', `html://${result.name}`)
   } catch (error) {
-    if (isAbortError(error)) {
+    if (IsAbortError.isAbortError(error)) {
       return
     }
     throw new VError(error, `Failed to open folder`)
