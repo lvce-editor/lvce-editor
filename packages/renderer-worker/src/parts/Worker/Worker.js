@@ -1,3 +1,5 @@
+import * as WorkerType from '../WorkerType/WorkerType.js'
+
 const METHOD_MESSAGE_PORT = 1
 const METHOD_MODULE_WORKER = 2
 
@@ -9,7 +11,7 @@ const METHOD_PREFERRED = METHOD_MESSAGE_PORT
 // TODO add tests for both these methods (if possible)
 const createModuleWorker = (url) => {
   return new Worker(url, {
-    type: 'module',
+    type: WorkerType.Module,
   })
 }
 
