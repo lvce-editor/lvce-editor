@@ -93,7 +93,7 @@ export const handleInput = async (state, value) => {
     // TODO handle out of order responses (a bit complicated)
     // for now just assume everything comes back in order
   } catch (error) {
-    ErrorHandling.printError(error)
+    await ErrorHandling.handleError(error)
     return {
       ...state,
       error: `${error}`,
