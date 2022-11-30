@@ -1,15 +1,42 @@
-import http from 'node:http'
 import { mkdtemp, writeFile } from 'node:fs/promises'
+import http from 'node:http'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { WebSocket } from 'ws'
-import * as WebSocketServer from '../src/parts/WebSocketServer/WebSocketServer.js'
+
+import { jest } from '@jest/globals'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
+  execute: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+  invoke: jest.fn(() => {
+    throw new Error('not implemented')
+  }),
+}))
+
+const WebSocketServer = await import(
+  '../src/parts/WebSocketServer/WebSocketServer.js'
+)
+const Command = await import('../src/parts/Command/Command.js')
 
 const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
 }
 
 test('WebSocketServer', async () => {
+  // @ts-ignore
+  Command.execute.mockImplementation(() => {
+    return 'abc'
+  })
+  // @ts-ignore
+  Command.invoke.mockImplementation(() => {
+    return 'abc'
+  })
   const httpServer = http.createServer((req, res) => {
     WebSocketServer.handleUpgrade(
       {
