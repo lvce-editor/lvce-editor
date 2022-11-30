@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as Preferences from '../src/parts/Preferences/Preferences.js'
+import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -31,6 +32,20 @@ const SharedProcess = await import(
 )
 
 const ColorTheme = await import('../src/parts/ColorTheme/ColorTheme.js')
+const Command = await import('../src/parts/Command/Command.js')
+
+beforeAll(() => {
+  Command.setLoad((moduleId) => {
+    switch (moduleId) {
+      case ModuleId.ColorThemeFromJson:
+        return import(
+          '../src/parts/ColorThemeFromJson/ColorThemeFromJson.ipc.js'
+        )
+      default:
+        throw new Error(`module not found ${moduleId}`)
+    }
+  })
+})
 
 test('hydrate', async () => {
   Preferences.state['workbench.colorTheme'] = 'slime'
