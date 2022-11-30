@@ -6,7 +6,7 @@ const getContent = () => {
   return content
 }
 
-test('sample.diff-editor-insertion', async () => {
+test.skip('sample.diff-editor-insertion', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.writeFile(`${tmpDir}/file-1.txt`, ``)
