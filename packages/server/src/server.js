@@ -60,6 +60,14 @@ const ContentSecurityPolicy = {
     .join(' '),
 }
 
+const ContentSecurityPolicyTests = {
+  key: 'Content-Security-Policy',
+  value: ContentSecurityPolicy.value.replace(
+    `script-src 'self'`,
+    `script-src 'self' 'unsafe-eval'`
+  ),
+}
+
 const CrossOriginOpenerPolicy = {
   key: 'Cross-Origin-Opener-Policy',
   value: 'same-origin',
@@ -91,6 +99,10 @@ const getPath = (url) => {
   return url.split(/[?#]/)[0]
 }
 
+const getContentType = (filePath) => {
+  return textMimeType[extname(filePath)] || 'text/plain'
+}
+
 const serveStatic = (root, skip = '') =>
   async function serveStatic(req, res, next) {
     const parsedUrl = parseUrl(req.url)
@@ -118,16 +130,19 @@ const serveStatic = (root, skip = '') =>
     }
     const cachingHeader =
       immutable && root === STATIC ? 'public, max-age=31536000, immutable' : ''
-    const contentType = textMimeType[extname(filePath)] || 'text/plain'
-    res.writeHead(200, {
+    const contentType = getContentType(filePath)
+    const headers = {
       'Content-Type': contentType,
       Etag: etag,
       'Cache-Control': cachingHeader,
+    }
+    if (contentType === 'text/html') {
+      headers[ContentSecurityPolicy.key] = ContentSecurityPolicy.value
       // enables access for performance.measureUserAgentSpecificMemory, see https://web.dev/monitor-total-page-memory-usage/
-      [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-      [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
-      [ContentSecurityPolicy.key]: ContentSecurityPolicy.value,
-    })
+      headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
+      headers[CrossOriginOpenerPolicy.key] = CrossOriginOpenerPolicy.value
+    }
+    res.writeHead(200, headers)
     try {
       await pipeline(createReadStream(filePath), res)
     } catch (error) {
@@ -251,6 +266,12 @@ const serveTests = async (req, res, next) => {
   const parsedUrl = parseUrl(req.url || '')
   const pathName = parsedUrl.pathname || ''
   if (pathName.endsWith('.html')) {
+    res.writeHead(200, {
+      'Content-Type': 'text/html',
+      [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
+      [CrossOriginOpenerPolicy.key]: CrossOriginOpenerPolicy.value,
+      [ContentSecurityPolicyTests.key]: ContentSecurityPolicyTests.value,
+    })
     try {
       await pipeline(createReadStream(join(ROOT, 'static', 'index.html')), res)
     } catch (error) {
