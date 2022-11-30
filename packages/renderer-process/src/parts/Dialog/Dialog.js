@@ -120,6 +120,19 @@ const handleDialogOptionClick = (event) => {
   )
 }
 
+const getErrorMessage = (error) => {
+  if (typeof error === 'string') {
+    return error
+  }
+  if (error.type && error.message) {
+    return `${error.type}: ${error.message}`
+  }
+  if (error.message) {
+    return `${error.message}`
+  }
+  return `${error}`
+}
+
 // TODO this show be a viewlet
 export const showErrorDialogWithOptions = (error, options) => {
   if (!Platform.supportsHtml5Dialog()) {
@@ -135,8 +148,7 @@ export const showErrorDialogWithOptions = (error, options) => {
 
   const $DialogBodyErrorMessage = document.createElement('p')
   $DialogBodyErrorMessage.id = 'DialogBodyErrorMessage'
-  $DialogBodyErrorMessage.textContent =
-    typeof error === 'string' ? error : error.message
+  $DialogBodyErrorMessage.textContent = getErrorMessage(error)
 
   const $DialogBodyErrorCodeFrame = document.createElement('code')
   $DialogBodyErrorCodeFrame.id = 'DialogBodyErrorCodeFrame'
