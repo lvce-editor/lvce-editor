@@ -81,3 +81,17 @@ test('prepare - fetch codeFrame - error', async () => {
   expect(spy).toHaveBeenNthCalledWith(1, 'ErrorHandling Error')
   expect(spy).toHaveBeenNthCalledWith(2, new TypeError('x is not a function'))
 })
+
+test('prepare - error without stack', async () => {
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    throw new TypeError('x is not a function')
+  })
+  const error = new Error()
+  error.message = `VError: Failed to import script http://localhost:3000/packages/extension-host-worker-tests/src/ample.tab-completion-provider-error-invalid-return-value-number.js: TypeError: Failed to fetch dynamically imported module: http://localhost:3000/packages/extension-host-worker-tests/src/ample.tab-completion-provider-error-invalid-return-value-number.jss`
+  error.stack = `VError: Failed to import script http://localhost:3000/packages/extension-host-worker-tests/src/ample.tab-completion-provider-error-invalid-return-value-number.js: TypeError: Failed to fetch dynamically imported module: http://localhost:3000/packages/extension-host-worker-tests/src/ample.tab-completion-provider-error-invalid-return-value-number.jss`
+  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  const prettyError = await PrettyError.prepare(error)
+  expect(prettyError).toBe(error)
+  expect(spy).not.toHaveBeenCalled()
+})

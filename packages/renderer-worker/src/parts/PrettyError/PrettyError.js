@@ -67,7 +67,9 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
     if (!match) {
       match = file.match(RE_PATH_2)
     }
-    // @ts-ignore
+    if (!match) {
+      return error
+    }
     const [_, path, line, column] = match
     const text = await Ajax.getText(path)
     const parsedLine = parseInt(line)
