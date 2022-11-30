@@ -43,7 +43,8 @@ test('prepare - fetch codeFrame', async () => {
   at TitleBarMenuBar/lazy/handleKeyArrowDown [as TitleBarMenuBar.handleKeyArrowDown] (test:///packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:115:30)
   at async Object.handleKeyBinding [as KeyBindings.handleKeyBinding] (test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3)
   at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`
-  expect(await PrettyError.prepare(error)).toEqual({
+  const prettyError = await PrettyError.prepare(error)
+  expect(prettyError).toEqual({
     message: 'Menu is not defined',
     codeFrame: `  2 |   const { menus } = state
   3 |   const menu = menus.at(-1)
@@ -74,7 +75,8 @@ test('prepare - fetch codeFrame - error', async () => {
   at async Object.handleKeyBinding [as KeyBindings.handleKeyBinding] (test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3)
   at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`
   const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
-  expect(await PrettyError.prepare(error)).toBe(error)
+  const prettyError = await PrettyError.prepare(error)
+  expect(prettyError).toBe(error)
   expect(spy).toHaveBeenCalledTimes(2)
   expect(spy).toHaveBeenNthCalledWith(1, 'ErrorHandling Error')
   expect(spy).toHaveBeenNthCalledWith(2, new TypeError('x is not a function'))

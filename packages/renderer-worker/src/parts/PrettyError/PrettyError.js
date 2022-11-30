@@ -3,18 +3,35 @@ import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
 import * as JoinLines from '../JoinLines/JoinLines.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 
-const prepareErrorMessageWithCodeFrame = (error) => {
+const getErrorMessage = (error) => {
   if (!error) {
-    return {
-      message: `Error: ${error}`,
-      stack: undefined,
-      codeFrame: undefined,
-    }
+    return `Error: ${error}`
   }
-  let message = `${error}`
+  let message = error.message
   while (error.cause) {
     error = error.cause
     message += `: ${error}`
+  }
+  return message
+}
+
+const prepareErrorMessageWithCodeFrame = (error) => {
+  if (!error) {
+    return {
+      message: error,
+      stack: undefined,
+      codeFrame: undefined,
+      type: 'Error',
+    }
+  }
+  const message = getErrorMessage(error)
+  if (error.codeFrame) {
+    return {
+      message,
+      stack: error.stack,
+      codeFrame: error.codeFrame,
+      type: error.constructor.name,
+    }
   }
   return {
     message,
@@ -66,8 +83,9 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       },
     })
     const relevantStack = JoinLines.joinLines(lines.slice(1))
+    let message = getErrorMessage(error)
     return {
-      message: error.message,
+      message,
       codeFrame,
       stack: relevantStack,
       type: error.constructor.name,
@@ -96,8 +114,24 @@ export const print = (error) => {
   if (error && error.message && error.codeFrame) {
     return `${error.message}\n\n${error.codeFrame}\n\n${error.stack}`
   }
+  if (error && error.type && error.message) {
+    return `${error.type}: ${error.message}\n${error.stack}`
+  }
   if (error && error.stack) {
-    return `${error.message}\n${error.stack}`
+    return `${error.stack}`
+  }
+  if (error === null) {
+    return null
   }
   return `${error}`
+}
+
+export const getMessage = (error) => {
+  if (error && error.type && error.message) {
+    return `${error.type}: ${error.message}`
+  }
+  if (error && error.message) {
+    return `${error.constructor.name}: ${error.message}`
+  }
+  return `Error: ${error}`
 }

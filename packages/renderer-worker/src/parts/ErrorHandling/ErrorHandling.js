@@ -11,14 +11,17 @@ export const state = {
 export const handleError = async (error) => {
   try {
     const prettyError = await PrettyError.prepare(error)
-    console.error(PrettyError.print(prettyError))
+    const prettyErrorString = PrettyError.print(prettyError)
+    console.error(prettyErrorString)
     await Command.execute(
       /* Notification.create */ 'Notification.create',
       /* type */ 'error',
-      /* text */ prettyError.message
+      /* text */ PrettyError.getMessage(prettyError)
     )
-  } catch {
-    // ignore
+  } catch (otherError) {
+    console.warn(`ErrorHandling error`)
+    console.warn(otherError)
+    console.error(error)
   }
 }
 
