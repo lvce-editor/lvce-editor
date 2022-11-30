@@ -38,7 +38,7 @@ beforeAll(() => {
       case ModuleId.Ajax:
         return import('../src/parts/Ajax/Ajax.ipc.js')
       default:
-        throw new Error('module node found')
+        throw new Error('module not found')
     }
   })
 })
