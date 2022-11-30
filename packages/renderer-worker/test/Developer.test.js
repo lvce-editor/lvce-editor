@@ -18,6 +18,13 @@ jest.unstable_mockModule(
     }
   }
 )
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
@@ -86,6 +93,7 @@ const SharedProcess = await import(
 const ElectronWindow = await import(
   '../src/parts/ElectronWindow/ElectronWindow.js'
 )
+const Command = await import('../src/parts/Command/Command.js')
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const Download = await import('../src/parts/Download/Download.js')
 
@@ -490,7 +498,7 @@ test('open process explorer - error', async () => {
 
 test('getAllStates', async () => {
   // @ts-ignore
-  Viewlet.getAllStates.mockImplementation(() => {
+  Command.execute.mockImplementation(() => {
     return {
       Explorer: {
         state: {

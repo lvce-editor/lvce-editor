@@ -10,6 +10,8 @@ import * as ProcessExplorer from '../ProcessExplorer/ProcessExplorer.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as Download from '../Download/Download.js'
+import * as OpenNativeFolder from '../OpenNativeFolder/OpenNativeFolder.js'
 
 // TODO vscode's version of this is shorter
 // if it is a bottleneck, check performance of this function (not very optimized now)
@@ -414,10 +416,7 @@ export const openLogsFolder = async () => {
     return
   }
   const logsFolder = await Platform.getLogsDir()
-  await Command.execute(
-    /* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder',
-    /* path */ logsFolder
-  )
+  await OpenNativeFolder.openNativeFolder(/* path */ logsFolder)
 }
 
 export const toggleDeveloperTools = () => {
@@ -469,28 +468,19 @@ export const editors = {
 
 export const openConfigFolder = async () => {
   const configFolder = await Platform.getConfigPath()
-  await Command.execute(
-    /* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder',
-    /* path */ configFolder
-  )
+  await OpenNativeFolder.openNativeFolder(/* path */ configFolder)
 }
 
 export const openCacheFolder = async () => {
   const cacheFolder = await Platform.getCachePath()
-  await Command.execute(
-    /* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder',
-    /* path */ cacheFolder
-  )
+  await OpenNativeFolder.openNativeFolder(/* path */ cacheFolder)
 }
 
 export const openDataFolder = async () => {
   const dataFolder = await SharedProcess.invoke(
     /* Platform.getDataDir */ 'Platform.getDataDir'
   )
-  await Command.execute(
-    /* OpenNativeFolder.openNativeFolder */ 'OpenNativeFolder.openNativeFolder',
-    /* path */ dataFolder
-  )
+  await OpenNativeFolder.openNativeFolder(/* path */ dataFolder)
 }
 
 export const showMessageBox = () => {}
@@ -501,9 +491,5 @@ export const openProcessExplorer = () => {
 
 export const downloadViewletState = async () => {
   const states = await Command.execute('Viewlet.getAllStates')
-  await Command.execute(
-    'Download.downloadJson',
-    /* json */ states,
-    /* fileName */ 'viewlets.json'
-  )
+  await Download.downloadJson(/* json */ states, /* fileName */ 'viewlets.json')
 }

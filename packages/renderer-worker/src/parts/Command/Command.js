@@ -3,7 +3,9 @@ import * as ModuleMap from '../ModuleMap/ModuleMap.js'
 export const state = {
   commands: Object.create(null),
   pendingModules: Object.create(null),
-  async load(moduleId) {},
+  async load(moduleId) {
+    throw new Error('not implemented')
+  },
 }
 
 const initializeModule = (module) => {
