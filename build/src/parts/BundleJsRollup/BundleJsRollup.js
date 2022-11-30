@@ -3,7 +3,8 @@ import * as rollup from 'rollup'
 
 /**
  *
- * @param {{from:string,cwd:string, exclude?:string[], platform:'node'|'webworker'|'web'|'node/cjs', minify?:boolean, codeSplitting?:boolean }} param0
+ * @param {{from:string,cwd:string, exclude?:string[], platform:'node'|'webworker'|'web'|'node/cjs', minify?:boolean, codeSplitting?:boolean,
+ * allowCyclicDependencies?:boolean }} param0
  */
 export const bundleJs = async ({
   cwd,
@@ -12,6 +13,7 @@ export const bundleJs = async ({
   exclude,
   minify = false,
   codeSplitting = false,
+  allowCyclicDependencies = false,
 }) => {
   /**
    * @type {import('rollup').RollupOptions}
@@ -25,6 +27,20 @@ export const bundleJs = async ({
       // moduleSideEffects: false,
     },
     perf: true,
+    onwarn: (message) => {
+      // fail build if circular dependencies are found
+      if (message.code === 'CIRCULAR_DEPENDENCY') {
+        if (allowCyclicDependencies) {
+          console.warn(message.message)
+        } else {
+          console.error(`RollupError: Cyclic dependency detected`)
+          console.error(message.message)
+          process.exit(1)
+        }
+      } else {
+        console.error(message.message)
+      }
+    },
   }
   const result = await rollup.rollup(inputOptions)
   if (result.getTimings) {

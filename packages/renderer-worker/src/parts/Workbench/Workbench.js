@@ -8,6 +8,7 @@ import * as Languages from '../Languages/Languages.js'
 import * as LifeCycle from '../LifeCycle/LifeCycle.js'
 import * as LifeCyclePhase from '../LifeCyclePhase/LifeCyclePhase.js'
 import * as Location from '../Location/Location.js'
+import * as Module from '../Module/Module.js'
 import * as Performance from '../Performance/Performance.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
@@ -28,6 +29,8 @@ import * as Workspace from '../Workspace/Workspace.js'
 export const startup = async (config) => {
   onunhandledrejection = ErrorHandling.handleUnhandledRejection
   onerror = ErrorHandling.handleUnhandledError
+
+  Command.setLoad(Module.load)
   LifeCycle.mark(LifeCyclePhase.Zero)
 
   Performance.mark('willStartupWorkbench')

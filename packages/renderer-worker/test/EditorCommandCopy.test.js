@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 jest.unstable_mockModule('../src/parts/ClipBoard/ClipBoard.js', () => ({
   writeText: jest.fn().mockImplementation(() => {
@@ -13,10 +14,22 @@ beforeAll(() => {
 })
 
 const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
+const Command = await import('../src/parts/Command/Command.js')
 
 const EditorCopy = await import(
   '../src/parts/EditorCommand/EditorCommandCopy.js'
 )
+
+beforeAll(() => {
+  Command.setLoad((moduleId) => {
+    switch (moduleId) {
+      case ModuleId.ClipBoard:
+        return import('../src/parts/ClipBoard/ClipBoard.ipc.js')
+      default:
+        throw new Error(`module not found ${moduleId}`)
+    }
+  })
+})
 
 test('editorCopy', async () => {
   // @ts-ignore

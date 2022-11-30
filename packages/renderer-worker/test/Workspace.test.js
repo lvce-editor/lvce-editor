@@ -1,6 +1,7 @@
 import { setTimeout } from 'node:timers/promises'
 import { jest } from '@jest/globals'
 import * as GlobalEventBus from '../src/parts/GlobalEventBus/GlobalEventBus.js'
+import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -47,6 +48,20 @@ const SharedProcess = await import(
   '../src/parts/SharedProcess/SharedProcess.js'
 )
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
+const Command = await import('../src/parts/Command/Command.js')
+
+beforeAll(() => {
+  Command.setLoad((moduleId) => {
+    switch (moduleId) {
+      case ModuleId.Ajax:
+        return import('../src/parts/Ajax/Ajax.ipc.js')
+      case ModuleId.SessionStorage:
+        return import('../src/parts/SessionStorage/SessionStorage.ipc.js')
+      default:
+        throw new Error(`module not found ${moduleId}`)
+    }
+  })
+})
 
 test('hydrate', async () => {
   // @ts-ignore

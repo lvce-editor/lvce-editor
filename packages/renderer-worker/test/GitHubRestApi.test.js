@@ -6,6 +6,8 @@ import { setupServer } from 'msw/node'
 import fetch, { Headers, Request, Response } from 'node-fetch'
 import { TextDecoder } from 'util'
 import * as GitHubRestApi from '../src/parts/GitHubRestApi/GitHubRestApi.js'
+import * as Command from '../src/parts/Command/Command.js'
+import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 const mswServer = setupServer()
 
@@ -29,6 +31,17 @@ afterEach(() => {
 
 afterAll(() => {
   mswServer.close()
+})
+
+beforeAll(() => {
+  Command.setLoad((moduleId) => {
+    switch (moduleId) {
+      case ModuleId.Ajax:
+        return import('../src/parts/Ajax/Ajax.ipc.js')
+      default:
+        throw new Error(`module not found ${moduleId}`)
+    }
+  })
 })
 
 test('readGitHubDirectory', async () => {

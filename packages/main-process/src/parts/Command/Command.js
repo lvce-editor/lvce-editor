@@ -1,8 +1,10 @@
-const Module = require('../Module/Module.js')
 const ModuleMap = require('../ModuleMap/ModuleMap.js')
 
-const commands = Object.create(null)
-const pendingModules = Object.create(null)
+const state = {
+  commands: Object.create(null),
+  pendingModules: Object.create(null),
+  async load(moduleId) {},
+}
 
 const initializeModule = (module) => {
   if (module.Commands) {
@@ -20,17 +22,17 @@ const initializeModule = (module) => {
 }
 
 const getOrLoadModule = (moduleId) => {
-  if (!pendingModules[moduleId]) {
-    const importPromise = Module.load(moduleId)
-    pendingModules[moduleId] = importPromise.then(initializeModule)
+  if (!state.pendingModules[moduleId]) {
+    const importPromise = state.load(moduleId)
+    state.pendingModules[moduleId] = importPromise.then(initializeModule)
   }
-  return pendingModules[moduleId]
+  return state.pendingModules[moduleId]
 }
 
 const loadCommand = (command) => getOrLoadModule(ModuleMap.getModuleId(command))
 
 const register = (commandId, listener) => {
-  commands[commandId] = listener
+  state.commands[commandId] = listener
 }
 
 const hasThrown = new Set()
@@ -38,7 +40,7 @@ const hasThrown = new Set()
 const loadThenExecute = async (command, ...args) => {
   await loadCommand(command)
   // TODO can skip then block in prod (only to prevent endless loop in dev)
-  if (!(command in commands)) {
+  if (!(command in state.commands)) {
     if (hasThrown.has(command)) {
       return
     }
@@ -49,8 +51,8 @@ const loadThenExecute = async (command, ...args) => {
 }
 
 const execute = (command, ...args) => {
-  if (command in commands) {
-    return commands[command](...args)
+  if (command in state.commands) {
+    return state.commands[command](...args)
   }
   return loadThenExecute(command, ...args)
 }
@@ -58,11 +60,15 @@ const execute = (command, ...args) => {
 exports.execute = execute
 
 exports.invoke = async (command, ...args) => {
-  if (!(command in commands)) {
+  if (!(command in state.commands)) {
     await loadCommand(command)
-    if (!(command in commands)) {
+    if (!(command in state.commands)) {
       throw new Error(`Unknown command "${command}"`)
     }
   }
-  return commands[command](...args)
+  return state.commands[command](...args)
+}
+
+exports.setLoad = (load) => {
+  state.load = load
 }
