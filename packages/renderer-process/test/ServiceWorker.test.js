@@ -1,10 +1,12 @@
 import { jest } from '@jest/globals'
 import * as ServiceWorker from '../src/parts/ServiceWorker/ServiceWorker.js'
+import * as WorkerType from '../src/parts/WorkerType/WorkerType.js'
 
 test('register', async () => {
   globalThis.navigator = {
     // @ts-ignore
     serviceWorker: {
+      // @ts-ignore
       register: jest.fn(() => {
         return {
           onupdatefound: jest.fn(),
@@ -15,7 +17,7 @@ test('register', async () => {
   await ServiceWorker.register('/service-worker.js')
   expect(globalThis.navigator.serviceWorker.register).toHaveBeenCalledWith(
     '/service-worker.js',
-    { scope: '/', type: 'module' }
+    { scope: '/', type: WorkerType.Module }
   )
 })
 
