@@ -575,6 +575,7 @@ const bundleJs = async ({ commitHash }) => {
     from: 'src/rendererWorkerMain.js',
     platform: 'webworker',
     codeSplitting: true,
+    allowCyclicDependencies: true, // TODO
   })
   await BundleJs.bundleJs({
     cwd: Path.absolute(
