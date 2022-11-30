@@ -1,5 +1,5 @@
-import * as Module from '../Module/Module.js'
-import * as ModuleMap from '../ModuleMap/ModuleMap.js'
+// import * as Module from '../Module/Module.js'
+// import * as ModuleMap from '../ModuleMap/ModuleMap.js'
 
 export const state = {
   commands: Object.create(null),
