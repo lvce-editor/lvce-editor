@@ -25,10 +25,18 @@ const initializeModule = (module) => {
   )
 }
 
+const loadModule = async (moduleId) => {
+  try {
+    const module = await state.load(moduleId)
+    initializeModule(module)
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 const getOrLoadModule = (moduleId) => {
   if (!state.pendingModules[moduleId]) {
-    const importPromise = state.load(moduleId)
-    state.pendingModules[moduleId] = importPromise.then(initializeModule)
+    state.pendingModules[moduleId] = loadModule(moduleId)
   }
   return state.pendingModules[moduleId]
 }
