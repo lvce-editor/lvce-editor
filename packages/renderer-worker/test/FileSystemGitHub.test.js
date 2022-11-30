@@ -7,6 +7,8 @@ import fetch, { Headers, Request, Response } from 'node-fetch'
 import { TextDecoder } from 'util'
 import * as FileSystemGitHub from '../src/parts/FileSystem/FileSystemGitHub.js'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
+import * as Command from '../src/parts/Command/Command.js'
+import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 const mswServer = setupServer()
 
@@ -39,6 +41,19 @@ afterEach(() => {
 
 afterAll(() => {
   mswServer.close()
+})
+
+beforeAll(() => {
+  Command.setLoad((moduleId) => {
+    switch (moduleId) {
+      case ModuleId.Ajax:
+        return import('../src/parts/Ajax/Ajax.ipc.js')
+      case ModuleId.Base64:
+        return import('../src/parts/Base64/Base64.ipc.js')
+      default:
+        throw new Error(`module not found ${moduleId}`)
+    }
+  })
 })
 
 test('readDirWithFileTypes', async () => {
