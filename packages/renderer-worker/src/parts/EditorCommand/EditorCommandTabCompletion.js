@@ -17,7 +17,7 @@ export const tabCompletion = async (editor) => {
     }
     return EditorSnippet.editorSnippet(editor, tabCompletion)
   } catch (error) {
-    ErrorHandling.printError(error)
+    await ErrorHandling.handleError(error)
     // TODO cursor should always be of type object
     const rowIndex = editor.selections[0]
     const columnIndex = editor.selections[1]

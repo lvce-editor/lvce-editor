@@ -158,12 +158,12 @@ at Module.provideTabCompletion (/test/builtin.language-features-css/src/parts/Ex
     }
   )
   // @ts-ignore
-  ErrorHandling.printError.mockImplementation(() => {})
+  ErrorHandling.handleError.mockImplementation(() => {})
   // @ts-ignore
   EditorShowMessage.showErrorMessage.mockImplementation(() => {})
   await EditorTabCompletion.tabCompletion(editor)
-  expect(ErrorHandling.printError).toHaveBeenCalledTimes(1)
-  expect(ErrorHandling.printError).toHaveBeenCalledWith(error)
+  expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
+  expect(ErrorHandling.handleError).toHaveBeenCalledWith(error)
   expect(EditorShowMessage.showErrorMessage).toHaveBeenCalledTimes(1)
   expect(EditorShowMessage.showErrorMessage).toHaveBeenCalledWith(
     editor,
