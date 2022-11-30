@@ -2,6 +2,7 @@ import { jest } from '@jest/globals'
 import * as Callback from '../src/parts/Callback/Callback.js'
 import * as LifeCycle from '../src/parts/LifeCycle/LifeCycle.js'
 import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
+import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -18,13 +19,7 @@ jest.unstable_mockModule(
     }
   }
 )
-jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
-  return {
-    execute: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
-  }
-})
+
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
@@ -98,6 +93,21 @@ const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 const Download = await import('../src/parts/Download/Download.js')
 
 const Developer = await import('../src/parts/Developer/Developer.js')
+
+beforeAll(() => {
+  Command.setLoad((moduleId) => {
+    switch (moduleId) {
+      case ModuleId.Download:
+        return import('../src/parts/Download/Download.ipc.js')
+      case ModuleId.Viewlet:
+        return import('../src/parts/Viewlet/Viewlet.ipc.js')
+      case ModuleId.OpenNativeFolder:
+        return import('../src/parts/OpenNativeFolder/OpenNativeFolder.ipc.js')
+      default:
+        throw new Error(`module not found ${moduleId}`)
+    }
+  })
+})
 
 // // TODO maybe put toMarkdownTable into another file (not sure where since it is only used in Developer.js currently)
 // test('toMarkdownTable', () => {
@@ -498,7 +508,7 @@ test('open process explorer - error', async () => {
 
 test('getAllStates', async () => {
   // @ts-ignore
-  Command.execute.mockImplementation(() => {
+  Viewlet.getAllStates.mockImplementation(() => {
     return {
       Explorer: {
         state: {
