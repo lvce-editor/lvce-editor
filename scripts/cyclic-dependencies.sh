@@ -16,12 +16,12 @@ else
     echo "dpdm is installed"
 fi
 
-cd packages/extension-host                          && dpdm src/extensionHostMain.js  && cd ../.. &&
-cd packages/main-process                            && dpdm src/mainProcessMain.js  && cd ../.. &&
-cd packages/pty-host                                && dpdm src/ptyHostMain.js  && cd ../.. &&
-cd packages/renderer-process                        && dpdm src/rendererProcessMain.js  && cd ../.. &&
-cd packages/renderer-worker                         && dpdm src/rendererWorkerMain.js  && cd ../.. &&
-cd packages/shared-process                          && dpdm src/sharedProcessMain.js  && cd ../.. &&
+cd packages/extension-host         && echo "Checking extension-host"                 && dpdm --no-warning --no-tree --exit-code circular:1 src/extensionHostMain.js  && cd ../.. &&
+cd packages/main-process           && echo "Checking main-process"                   && dpdm --no-warning --no-tree --exit-code circular:1 src/mainProcessMain.js  && cd ../.. &&
+cd packages/pty-host               && echo "Checking pty-host"                       && dpdm --no-warning --no-tree --exit-code circular:1 src/ptyHostMain.js  && cd ../.. &&
+cd packages/renderer-process       && echo "Checking renderer-process"               && dpdm --no-warning --no-tree --exit-code circular:1 src/rendererProcessMain.js  && cd ../.. &&
+cd packages/renderer-worker        && echo "Checking renderer-worker"                && dpdm --no-warning --no-tree --exit-code circular:1 src/rendererWorkerMain.js  && cd ../.. &&
+cd packages/shared-process         && echo "Checking shared-process"                 && dpdm --no-warning --no-tree --exit-code circular:1 src/sharedProcessMain.js  && cd ../.. &&
 
 echo "Great Success!"
 
