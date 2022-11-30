@@ -1,3 +1,5 @@
+import * as WorkerType from '../WorkerType/WorkerType.js'
+
 const supportsServiceWorker = () => {
   return 'serviceWorker' in navigator
 }
@@ -17,7 +19,7 @@ export const register = async (url) => {
   }
   const registration = await navigator.serviceWorker.register(url, {
     scope: '/',
-    type: 'module',
+    type: WorkerType.Module,
   })
   registration.onupdatefound = handleUpdateFound
   navigator.serviceWorker.oncontrollerchange = handleControllerChange

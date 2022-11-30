@@ -1,3 +1,5 @@
+import * as WorkerType from '../WorkerType/WorkerType.js'
+
 const getDisplayName = (name) => {
   if (!name) {
     return '<unknown> worker'
@@ -45,7 +47,7 @@ const isFirefoxError = (message) => {
 export const create = async ({ url, name }) => {
   try {
     const worker = new Worker(url, {
-      type: 'module',
+      type: WorkerType.Module,
       name,
     })
     await new Promise((resolve, reject) => {

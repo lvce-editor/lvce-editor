@@ -2,6 +2,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 import * as Workspace from '../Workspace/Workspace.js'
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
+import * as WorkerType from '../WorkerType/WorkerType.js'
 
 export const STATUS_OFF = 0
 export const STATUS_LOADING = 1
@@ -55,7 +56,7 @@ export const startWebExtensionHost = async () => {
   const worker = new Worker(
     '/packages/extension-host-worker/src/extensionHostWorkerMain.js',
     {
-      type: 'module',
+      type: WorkerType.Module,
       name: 'Extension Host',
     }
   )

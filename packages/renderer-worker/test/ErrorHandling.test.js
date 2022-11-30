@@ -15,6 +15,13 @@ jest.unstable_mockModule(
     }
   }
 )
+jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => {
+  return {
+    getText() {
+      return ''
+    },
+  }
+})
 
 const RendererProcess = await import(
   '../src/parts/RendererProcess/RendererProcess.js'
@@ -40,9 +47,8 @@ test('handleError - normal error', async () => {
   const spy = jest.spyOn(console, 'error').mockImplementation(() => {})
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
-
   await ErrorHandling.handleError(mockError)
-  expect(spy).toHaveBeenCalledWith(mockError)
+  expect(spy).toHaveBeenCalledWith(expect.stringMatching(/^Error: oops/))
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
     /* Notification.create */ 'Notification.create',
@@ -82,9 +88,13 @@ test('handleError - multiple causes', async () => {
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ErrorHandling.handleError(mockError3)
-  expect(spy).toHaveBeenCalledWith(mockError3)
-  expect(spy).toHaveBeenCalledWith(mockError2)
-  expect(spy).toHaveBeenCalledWith(mockError1)
+  expect(spy).toHaveBeenCalledWith(
+    expect.stringMatching(
+      'Error: Failed to load keybindings: Error: Failed to load url /keyBindings.json: Error: SyntaxError: Unexpected token , in JSON at position 7743'
+    )
+  )
+  // expect(spy).toHaveBeenCalledWith(mockError2)
+  // expect(spy).toHaveBeenCalledWith(mockError1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(
     /* Notification.create */ 'Notification.create',
     'error',
@@ -113,7 +123,7 @@ test('handleError - with code frame, error stack includes message', async () => 
   await ErrorHandling.handleError(mockError)
   expect(spy).toHaveBeenCalledTimes(1)
   expect(spy)
-    .toHaveBeenCalledWith(`Failed to open about window: Error: Unknown command "ElectronWindowAbout.open"
+    .toHaveBeenCalledWith(`Error: Failed to open about window: Error: Unknown command "ElectronWindowAbout.open"
 
   62 |     await loadCommand(command)
   63 |     if (!(command in commands)) {
