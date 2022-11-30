@@ -5,9 +5,9 @@ import { rest } from 'msw'
 import { setupServer } from 'msw/node'
 import fetch, { Headers, Request, Response } from 'node-fetch'
 import { TextDecoder } from 'util'
-import * as FileSystemGitHub from '../src/parts/FileSystem/FileSystemGitHub.js'
-import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as Command from '../src/parts/Command/Command.js'
+import * as DirentType from '../src/parts/DirentType/DirentType.js'
+import * as FileSystemGitHub from '../src/parts/FileSystem/FileSystemGitHub.js'
 import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 const mswServer = setupServer()
