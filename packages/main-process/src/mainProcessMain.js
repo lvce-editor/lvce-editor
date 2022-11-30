@@ -2,6 +2,8 @@
 performance.mark('code/start')
 const App = require('./parts/App/App.js')
 const Logger = require('./parts/Logger/Logger.js')
+const Command = require('./parts/Command/Command.js')
+const Module = require('./parts/Module/Module.js')
 
 const firstErrorLine = (error) => {
   if (error.stack) {
@@ -21,6 +23,7 @@ const handleUncaughtExceptionMonitor = (error, origin) => {
 
 const main = () => {
   process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
+  Command.setLoad(Module.load)
   App.hydrate()
 }
 
