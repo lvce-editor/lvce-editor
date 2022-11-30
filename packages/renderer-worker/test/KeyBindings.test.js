@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -60,6 +61,22 @@ const CacheStorage = await import('../src/parts/CacheStorage/CacheStorage.js')
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
 
 const KeyBindings = await import('../src/parts/KeyBindings/KeyBindings.js')
+const Command = await import('../src/parts/Command/Command.js')
+
+beforeAll(() => {
+  Command.setLoad((moduleId) => {
+    switch (moduleId) {
+      case ModuleId.Ajax:
+        return import('../src/parts/Ajax/Ajax.ipc.js')
+      case ModuleId.KeyBindingsInitial:
+        return import(
+          '../src/parts/KeyBindingsInitial/KeyBindingsInitial.ipc.js'
+        )
+      default:
+        throw new Error(`module not found ${moduleId}`)
+    }
+  })
+})
 
 // TODO when https://github.com/facebook/jest/issues/11598 is fixed, could use spyOn(CacheStorage.getJsonFromCache)
 test.skip('hydrate - use data from cache storage first', async () => {

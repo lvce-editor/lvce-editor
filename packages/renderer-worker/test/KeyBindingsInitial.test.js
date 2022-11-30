@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -25,10 +26,22 @@ jest.unstable_mockModule('../src/parts/CacheStorage/CacheStorage.js', () => {
 
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
 const CacheStorage = await import('../src/parts/CacheStorage/CacheStorage.js')
+const Command = await import('../src/parts/Command/Command.js')
 
 const KeyBindingsInitial = await import(
   '../src/parts/KeyBindingsInitial/KeyBindingsInitial.js'
 )
+
+beforeAll(() => {
+  Command.setLoad((moduleId) => {
+    switch (moduleId) {
+      case ModuleId.Ajax:
+        return import('../src/parts/Ajax/Ajax.ipc.js')
+      default:
+        throw new Error('module node found')
+    }
+  })
+})
 
 test('getKeyBindings', async () => {
   // @ts-ignore

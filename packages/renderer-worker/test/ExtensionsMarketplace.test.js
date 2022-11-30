@@ -13,6 +13,7 @@ jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => ({
 }))
 
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
+const Command = await import('../src/parts/Command/Command.js')
 const ExtensionsMarketplace = await import(
   '../src/parts/ExtensionMarketplace/ExtensionMarketplace.js'
 )
