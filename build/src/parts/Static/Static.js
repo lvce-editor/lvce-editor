@@ -215,6 +215,26 @@ export const listen = ({ method }) => {
 }
 `,
   })
+  await InlineDynamicImportsFile.inlineDynamicModules({
+    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Module/Module.js`,
+    eagerlyLoadedModules: [
+      'Ajax',
+      'Callback',
+      'ColorTheme',
+      'ColorThemeFromJson',
+      'IconTheme',
+      'KeyBindings',
+      'KeyBindingsInitial',
+      'LocalStorage',
+      'RecentlyOpened',
+      'SaveState',
+      'SessionStorage',
+      'Viewlet',
+      'Workbench',
+      'Workspace',
+    ],
+    ipcPostFix: true,
+  })
 }
 
 const copyExtensionHostWorkerFiles = async ({ commitHash }) => {
