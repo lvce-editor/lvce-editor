@@ -13,6 +13,7 @@ const getDisplayName = (name) => {
 const tryToGetActualErrorMessage = async ({ url, name }) => {
   const displayName = getDisplayName(name)
   try {
+    globalThis.DONT_EXECUTE = 1
     await import(url)
     return `Failed to start ${displayName}: Unknown Error`
   } catch (error) {
@@ -64,6 +65,7 @@ export const create = async ({ url, name }) => {
         }
       }
       const handleFirstError = async (event) => {
+        console.log({ event })
         cleanup()
         if (isFirefoxError(event.message)) {
           event.preventDefault()
