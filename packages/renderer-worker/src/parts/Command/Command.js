@@ -1,9 +1,11 @@
-import * as Module from '../Module/Module.js'
 import * as ModuleMap from '../ModuleMap/ModuleMap.js'
 
 export const state = {
   commands: Object.create(null),
   pendingModules: Object.create(null),
+  async load(moduleId) {
+    throw new Error('not implemented')
+  },
 }
 
 const initializeModule = (module) => {
@@ -25,7 +27,7 @@ const initializeModule = (module) => {
 
 const getOrLoadModule = (moduleId) => {
   if (!state.pendingModules[moduleId]) {
-    const importPromise = Module.load(moduleId)
+    const importPromise = state.load(moduleId)
     state.pendingModules[moduleId] = importPromise.then(initializeModule)
   }
   return state.pendingModules[moduleId]
@@ -64,4 +66,8 @@ export const execute = (command, ...args) => {
         return execute(command, ...args)
       })
   )
+}
+
+export const setLoad = (load) => {
+  state.load = load
 }

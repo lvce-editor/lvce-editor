@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as EditorSelection from '../src/parts/EditorSelection/EditorSelection.js'
+import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -38,6 +39,18 @@ const ExtensionHostRename = await import(
   '../src/parts/ExtensionHost/ExtensionHostRename.js'
 )
 const EditorRename = await import('../src/parts/EditorRename/EditorRename.js')
+const Command = await import('../src/parts/Command/Command.js')
+
+beforeAll(() => {
+  Command.setLoad((moduleId) => {
+    switch (moduleId) {
+      case ModuleId.EditorError:
+        return import('../src/parts/EditorError/EditorError.ipc.js')
+      default:
+        throw new Error(`module not found ${moduleId}`)
+    }
+  })
+})
 
 // TODO rename open or openWidget, but should be consistent with editorCompletions, editorHover
 test('open - can rename', async () => {

@@ -11,8 +11,16 @@ jest.unstable_mockModule('../src/parts/ClipBoard/ClipBoard.js', () => {
     }),
   }
 })
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
 
 const ClipBoard = await import('../src/parts/ClipBoard/ClipBoard.js')
+const Command = await import('../src/parts/Command/Command.js')
 
 const EditorCut = await import('../src/parts/EditorCommand/EditorCommandCut.js')
 
@@ -22,7 +30,7 @@ const EditorSelection = await import(
 
 test('editorCut', async () => {
   // @ts-ignore
-  ClipBoard.writeText.mockImplementation(() => {})
+  Command.execute.mockImplementation(() => {})
   const editor = {
     lines: ['line 1', 'line 2', 'line 3', ''],
     primarySelectionIndex: 0,
@@ -39,15 +47,18 @@ test('editorCut', async () => {
     lines: ['line 1', 'lne 3', ''],
   })
 
-  expect(ClipBoard.writeText).toHaveBeenCalledTimes(1)
-  expect(ClipBoard.writeText).toHaveBeenCalledWith(`ine 2
-li`)
+  expect(Command.execute).toHaveBeenCalledTimes(1)
+  expect(Command.execute).toHaveBeenCalledWith(
+    'ClipBoard.writeText',
+    `ine 2
+li`
+  )
 })
 
 // TODO handle error gracefully
 test('editorCut - error with clipboard', async () => {
   // @ts-ignore
-  ClipBoard.writeText.mockImplementation(() => {
+  Command.execute.mockImplementation(() => {
     throw new Error('Writing to clipboard not allowed')
   })
   const editor = {
@@ -67,7 +78,7 @@ test('editorCut - error with clipboard', async () => {
 
 test.skip('editorCut - no selection', async () => {
   // @ts-ignore
-  ClipBoard.writeText.mockImplementation(() => {})
+  Command.execute.mockImplementation(() => {})
   const editor = {
     lines: ['line 1', 'line 2', 'line 3', ''],
     primarySelectionIndex: 0,
@@ -77,5 +88,5 @@ test.skip('editorCut - no selection', async () => {
     selections: EditorSelection.fromRange(1, 1, 1, 1),
     lines: ['line 1', 'line 2', 'line 3', ''],
   })
-  expect(ClipBoard.writeText).not.toHaveBeenCalled()
+  expect(Command.execute).not.toHaveBeenCalled()
 })

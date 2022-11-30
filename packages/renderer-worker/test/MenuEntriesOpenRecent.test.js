@@ -14,16 +14,23 @@ jest.unstable_mockModule(
   }
 )
 
+jest.unstable_mockModule('../src/parts/Command/Command.js', () => {
+  return {
+    execute: jest.fn(),
+  }
+})
+
 const MenuEntriesOpenRecent = await import(
   '../src/parts/MenuEntriesOpenRecent/MenuEntriesOpenRecent.js'
 )
 const RecentlyOpened = await import(
   '../src/parts/RecentlyOpened/RecentlyOpened.js'
 )
+const Command = await import('../src/parts/Command/Command.js')
 
 test('getMenuEntries', async () => {
   // @ts-ignore
-  RecentlyOpened.getRecentlyOpened.mockImplementation(() => {
+  Command.execute.mockImplementation(() => {
     return ['/workspace/folder-1', '/workspace/folder-2']
   })
   const menuEntries = await MenuEntriesOpenRecent.getMenuEntries()
@@ -43,7 +50,7 @@ test('getMenuEntries', async () => {
 
 test('getMenuEntries - should not show separator when there are no recent items', async () => {
   // @ts-ignore
-  RecentlyOpened.getRecentlyOpened.mockImplementation(() => {
+  Command.execute.mockImplementation(() => {
     return []
   })
   const menuEntries = await MenuEntriesOpenRecent.getMenuEntries()
@@ -58,7 +65,7 @@ test('getMenuEntries - should not show separator when there are no recent items'
 
 test('getMenuEntries - error with recently opened', async () => {
   // @ts-ignore
-  RecentlyOpened.getRecentlyOpened.mockImplementation(async () => {
+  Command.execute.mockImplementation(async () => {
     throw new TypeError('x is not a function')
   })
   await expect(MenuEntriesOpenRecent.getMenuEntries()).rejects.toThrowError(

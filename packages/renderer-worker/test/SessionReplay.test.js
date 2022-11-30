@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -29,6 +30,18 @@ const SessionReplay = await import(
   '../src/parts/SessionReplay/SessionReplay.js'
 )
 const IndexedDb = await import('../src/parts/IndexedDb/IndexedDb.js')
+const Command = await import('../src/parts/Command/Command.js')
+
+beforeAll(() => {
+  Command.setLoad((moduleId) => {
+    switch (moduleId) {
+      case ModuleId.Download:
+        return import('../src/parts/Download/Download.ipc.js')
+      default:
+        throw new Error(`module not found ${moduleId}`)
+    }
+  })
+})
 
 test('downloadSession - error with download', async () => {
   // @ts-ignore

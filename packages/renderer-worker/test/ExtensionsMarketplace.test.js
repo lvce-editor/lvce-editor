@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => ({
   getMarketPlaceUrl() {
@@ -13,12 +14,24 @@ jest.unstable_mockModule('../src/parts/Ajax/Ajax.js', () => ({
 }))
 
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
+const Command = await import('../src/parts/Command/Command.js')
 const ExtensionsMarketplace = await import(
   '../src/parts/ExtensionMarketplace/ExtensionMarketplace.js'
 )
 
 afterEach(() => {
   jest.resetAllMocks()
+})
+
+beforeAll(() => {
+  Command.setLoad((moduleId) => {
+    switch (moduleId) {
+      case ModuleId.Ajax:
+        return import('../src/parts/Ajax/Ajax.ipc.js')
+      default:
+        throw new Error(`module not found ${moduleId}`)
+    }
+  })
 })
 
 test('getMarketplaceExtensions', async () => {
