@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -21,6 +22,18 @@ const RendererProcess = await import(
 const ErrorHandling = await import(
   '../src/parts/ErrorHandling/ErrorHandling.js'
 )
+const Command = await import('../src/parts/Command/Command.js')
+
+beforeAll(() => {
+  Command.setLoad((moduleId) => {
+    switch (moduleId) {
+      case ModuleId.Notification:
+        return import('../src/parts/Notification/Notification.ipc.js')
+      default:
+        throw new Error(`module not found ${moduleId}`)
+    }
+  })
+})
 
 test('handleError - normal error', async () => {
   const mockError = new Error('oops')
