@@ -1,3 +1,5 @@
+import * as Command from './parts/Command/Command.js'
+import * as Module from './parts/Module/Module.js'
 import * as ParentIpc from './parts/ParentIpc/ParentIpc.js'
 import * as PrettyError from './parts/PrettyError/PrettyError.js'
 
@@ -48,6 +50,7 @@ const handleSigTerm = () => {
 const knownCliArgs = ['install', 'list', 'link', 'unlink']
 
 const main = async () => {
+  Command.setLoad(Module.load)
   const argv = process.argv.slice(2)
   const argv0 = argv[0]
   if (knownCliArgs.includes(argv0)) {
