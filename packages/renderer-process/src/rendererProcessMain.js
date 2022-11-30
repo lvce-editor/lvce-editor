@@ -1,3 +1,5 @@
+import * as Command from './parts/Command/Command.js'
+import * as Module from './parts/Module/Module.js'
 import * as Platform from './parts/Platform/Platform.js'
 import * as PlatformType from './parts/PlatformType/PlatformType.js'
 import * as RendererWorker from './parts/RendererWorker/RendererWorker.js'
@@ -23,7 +25,7 @@ const handleBeforeInstallPrompt = (event) => {
 const main = async () => {
   onerror = handleError
   onunhandledrejection = handleUnhandledRejection
-
+  Command.setLoad(Module.load)
   if (Platform.platform === PlatformType.Web) {
     // disable prompt to download app as pwa
     // @ts-ignore
