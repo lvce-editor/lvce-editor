@@ -1,7 +1,7 @@
-import * as Command from '../Command/Command.js'
+import * as Ajax from '../Ajax/Ajax.js'
 import * as CodeFrameColumns from '../CodeFrameColumns/CodeFrameColumns.js'
-
-// TODO use https://github.com/stack-tools-js/stack-tools to print error
+import * as JoinLines from '../JoinLines/JoinLines.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const prepareErrorMessageWithCodeFrame = (error) => {
   if (!error) {
@@ -44,7 +44,7 @@ const getFile = (lines) => {
 
 const prepareErrorMessageWithoutCodeFrame = async (error) => {
   try {
-    const lines = error.stack.split('\n')
+    const lines = SplitLines.splitLines(error.stack)
     const file = getFile(lines)
     let match = file.match(RE_PATH_1)
     if (!match) {
@@ -52,12 +52,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
     }
     // @ts-ignore
     const [_, path, line, column] = match
-    const response = await fetch(path)
-    if (!response.ok) {
-      throw new Error(response.statusText)
-    }
-    const text = await response.text()
-
+    const text = await Ajax.getText(path)
     const parsedLine = parseInt(line)
     const parsedColumn = parseInt(column)
     const codeFrame = CodeFrameColumns.create(text, {
@@ -70,15 +65,16 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
         column: parsedColumn,
       },
     })
-    console.log({ codeFrame })
-    console.log({ path, line, column, text, codeFrame })
+    const relevantStack = JoinLines.joinLines(lines.slice(1))
     return {
       message: error.message,
       codeFrame,
-      stack: error.stack,
+      stack: relevantStack,
+      type: error.constructor.name,
     }
   } catch (otherError) {
-    console.warn(`ErrorHandling Error: ${otherError}`)
+    console.warn(`ErrorHandling Error`)
+    console.warn(otherError)
     return error
   }
 }
@@ -94,7 +90,9 @@ export const prepare = async (error) => {
 }
 
 export const print = (error) => {
-  console.log({ error })
+  if (error && error.type && error.message && error.codeFrame) {
+    return `${error.type}: ${error.message}\n\n${error.codeFrame}\n\n${error.stack}`
+  }
   if (error && error.message && error.codeFrame) {
     return `${error.message}\n\n${error.codeFrame}\n\n${error.stack}`
   }

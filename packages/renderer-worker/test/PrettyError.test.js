@@ -44,20 +44,20 @@ test('prepare - fetch codeFrame', async () => {
   at async Object.handleKeyBinding [as KeyBindings.handleKeyBinding] (test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3)
   at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`
   expect(await PrettyError.prepare(error)).toEqual({
-    message: 'ReferenceError: Menu is not defined',
+    message: 'Menu is not defined',
     codeFrame: `  2 |   const { menus } = state
   3 |   const menu = menus.at(-1)
 > 4 |   const newFocusedIndex = Menu.getIndexToFocusNext(menu)
     |                           ^
   5 |   const newMenus = [
   6 |     ...menus.slice(0, -1),
-  7 |     {
-`,
+  7 |     {`,
     stack: `  at handleKeyArrowDownMenuOpen (test:///packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleKeyArrowDownMenuOpen.js:4:27)
   at ifElseFunction (test:///packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarIfElse.js:5:14)
   at TitleBarMenuBar/lazy/handleKeyArrowDown [as TitleBarMenuBar.handleKeyArrowDown] (test:///packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:115:30)
   at async Object.handleKeyBinding [as KeyBindings.handleKeyBinding] (test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3)
   at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`,
+    type: 'ReferenceError',
   })
 })
 
@@ -67,19 +67,15 @@ test('prepare - fetch codeFrame - error', async () => {
     throw new TypeError('x is not a function')
   })
   const error = new ReferenceError('Menu is not defined')
-  error.stack = `"ReferenceError: Menu is not defined
+  error.stack = `ReferenceError: Menu is not defined
   at handleKeyArrowDownMenuOpen (test:///packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleKeyArrowDownMenuOpen.js:4:27)
   at ifElseFunction (test:///packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarIfElse.js:5:14)
   at TitleBarMenuBar/lazy/handleKeyArrowDown [as TitleBarMenuBar.handleKeyArrowDown] (test:///packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:115:30)
   at async Object.handleKeyBinding [as KeyBindings.handleKeyBinding] (test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3)
   at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`
-  expect(await PrettyError.prepare(error)).toEqual({
-    message: 'Menu is not defined',
-    codeFrame: ``,
-    stack: `  at handleKeyArrowDownMenuOpen (test:///packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleKeyArrowDownMenuOpen.js:4:27)
-  at ifElseFunction (test:///packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarIfElse.js:5:14)
-  at TitleBarMenuBar/lazy/handleKeyArrowDown [as TitleBarMenuBar.handleKeyArrowDown] (test:///packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:115:30)
-  at async Object.handleKeyBinding [as KeyBindings.handleKeyBinding] (test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3)
-  at async handleMessageFromRendererProcess (test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3)`,
-  })
+  const spy = jest.spyOn(console, 'warn').mockImplementation(() => {})
+  expect(await PrettyError.prepare(error)).toBe(error)
+  expect(spy).toHaveBeenCalledTimes(2)
+  expect(spy).toHaveBeenNthCalledWith(1, 'ErrorHandling Error')
+  expect(spy).toHaveBeenNthCalledWith(2, new TypeError('x is not a function'))
 })
