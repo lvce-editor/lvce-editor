@@ -1,40 +1,5 @@
 import * as Command from '../Command/Command.js'
-
-// TODO use https://github.com/stack-tools-js/stack-tools to print error
-
-const enhanceErrorMessage = (error) => {
-  if (!error) {
-    return {
-      message: `Error: ${error}`,
-      stack: undefined,
-      codeFrame: undefined,
-    }
-  }
-  let message = `${error}`
-  while (error.cause) {
-    error = error.cause
-    message += `: ${error}`
-  }
-  return {
-    message,
-    stack: error.originalStack,
-    codeFrame: error.originalCodeFrame,
-    category: error.category,
-    stderr: error.stderr,
-  }
-}
-
-export const printError = (error) => {
-  if (error && error.message && error.codeFrame) {
-    console.error(`${error.message}\n\n${error.codeFrame}\n\n${error.stack}`)
-  } else {
-    console.error(error)
-    if (error && error.cause) {
-      console.error('caused by')
-      printError(error.cause)
-    }
-  }
-}
+import * as PrettyError from '../PrettyError/PrettyError.js'
 
 export const state = {
   /**
@@ -45,12 +10,12 @@ export const state = {
 
 export const handleError = async (error) => {
   try {
-    printError(error)
-    const enhancedErrorMessage = enhanceErrorMessage(error)
+    const prettyError = await PrettyError.prepare(error)
+    console.error(PrettyError.print(prettyError))
     await Command.execute(
       /* Notification.create */ 'Notification.create',
       /* type */ 'error',
-      /* text */ enhancedErrorMessage.message
+      /* text */ prettyError.message
     )
   } catch {
     // ignore
@@ -59,10 +24,10 @@ export const handleError = async (error) => {
 
 export const showErrorDialog = async (error) => {
   try {
-    const enhancedErrorMessage = enhanceErrorMessage(error)
+    const prettyError = await PrettyError.prepare(error)
     await Command.execute(
       /* Dialog.showMessage */ 'Dialog.showMessage',
-      /* message */ enhancedErrorMessage
+      /* message */ prettyError
     )
   } catch {
     // ignore
