@@ -1,6 +1,6 @@
 import { ModuleMocker } from 'jest-mock'
 import { createContext } from 'node:vm'
-import { vscode as api } from '@lvce-editor/server/static/COMMIT_HASH/packages/extension-host-worker/src/parts/Api/Api.js'
+import { api } from '@lvce-editor/server/static/COMMIT_HASH/packages/extension-host-worker/src/parts/Api/Api.js'
 
 export default class CustomEnvironment {
   constructor() {
