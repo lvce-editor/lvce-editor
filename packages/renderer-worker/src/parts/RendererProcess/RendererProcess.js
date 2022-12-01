@@ -14,11 +14,7 @@ export const state = {
   ipc: undefined,
 }
 
-let i = 0
 const handleMessageFromRendererProcess = async (event) => {
-  if (i++ > 500) {
-    return
-  }
   const message = event.data
   if (typeof message === 'string') {
     console.warn(`unexpected message from renderer process: ${message}`)
