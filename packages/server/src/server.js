@@ -49,7 +49,7 @@ const ContentSecurityPolicy = {
     `connect-src 'self'`,
     `font-src 'self'`,
     `frame-src *`,
-    `img-src 'self' https: data:`,
+    `img-src 'self' https: data: blob:`,
     `script-src 'self'`,
     `media-src 'self'`,
     `prefetch-src 'self'`,
