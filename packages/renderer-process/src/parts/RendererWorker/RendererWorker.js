@@ -40,7 +40,6 @@ const serializeError = (error) => {
 
 const handleMessageFromRendererWorker = async (event) => {
   const message = event.data
-  console.log({ message })
   if ('id' in message) {
     if ('method' in message) {
       try {
