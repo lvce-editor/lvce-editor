@@ -43,7 +43,7 @@ const addSemicolon = (line) => {
 }
 
 const ContentSecurityPolicy = {
-  key: 'Content-Security-Policy',
+  key: 'Content-Security-Policy-Report-Only',
   value: [
     `default-src 'none'`,
     `connect-src 'self'`,
@@ -61,7 +61,7 @@ const ContentSecurityPolicy = {
 }
 
 const ContentSecurityPolicyTests = {
-  key: 'Content-Security-Policy',
+  key: ContentSecurityPolicy.key,
   value: ContentSecurityPolicy.value.replace(
     `script-src 'self'`,
     `script-src 'self' 'unsafe-eval'`
