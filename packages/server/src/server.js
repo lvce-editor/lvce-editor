@@ -43,7 +43,7 @@ const addSemicolon = (line) => {
 }
 
 const ContentSecurityPolicy = {
-  key: 'Content-Security-Policy-Report-Only',
+  key: 'Content-Security-Policy',
   value: [
     `default-src 'none'`,
     `connect-src 'self'`,
@@ -141,6 +141,9 @@ const serveStatic = (root, skip = '') =>
       // enables access for performance.measureUserAgentSpecificMemory, see https://web.dev/monitor-total-page-memory-usage/
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
       headers[CrossOriginOpenerPolicy.key] = CrossOriginOpenerPolicy.value
+    }
+    if (filePath.endsWith('WorkerMain.js')) {
+      headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
     }
     res.writeHead(200, headers)
     try {
