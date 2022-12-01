@@ -142,8 +142,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Window
     case 33111:
       return ModuleId.Workbench
-    case 'InitData.getInitData':
-      return ModuleId.InitData
     default:
       throw new Error(`command ${commandId} not found`)
   }
