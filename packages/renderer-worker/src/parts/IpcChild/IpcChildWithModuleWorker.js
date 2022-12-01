@@ -1,7 +1,4 @@
 export const listen = () => {
-  if (typeof WorkerGlobalScope === 'undefined') {
-    throw new Error('module is not in web worker scope')
-  }
   const postMessageFn = globalThis.postMessage
   postMessageFn('ready')
   return {
