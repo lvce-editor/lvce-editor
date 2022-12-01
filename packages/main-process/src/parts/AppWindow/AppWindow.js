@@ -8,6 +8,7 @@ const Platform = require('../Platform/Platform.js')
 const Preferences = require('../Preferences/Preferences.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const Logger = require('../Logger/Logger.js')
+// const Electron = require('electron')
 
 // TODO impossible to test these methods
 // and ensure that there is no memory leak
@@ -78,6 +79,12 @@ exports.createAppWindow = async (
     zoomLevel,
     titleBarOverlay,
   })
+  const menu = Electron.Menu.buildFromTemplate([
+    new Electron.MenuItem({
+      label: 'abc',
+    }),
+  ])
+  window.setMenu(menu)
   window.on('close', handleWindowClose)
   AppWindowStates.add({
     window,
