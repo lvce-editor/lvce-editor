@@ -88,14 +88,14 @@ const restoreError = (error) => {
   return new Error(`JsonRpc Error: ${error}`)
 }
 
-export const invoke = async (ipc, method, ...params) => {
+export const invoke = async (transport, method, ...params) => {
   const responseMessage = await new Promise((resolve, reject) => {
     // TODO use one map instead of two
     const callbackId = Callback.register(resolve, reject)
-    ipc.send({
+    transport.send({
       jsonrpc: JsonRpcVersion.Two,
       method,
-      params,
+      params: params,
       id: callbackId,
     })
   })
