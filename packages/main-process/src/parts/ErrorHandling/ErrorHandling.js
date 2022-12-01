@@ -1,5 +1,6 @@
 const { dialog } = require('electron')
 const Logger = require('../Logger/Logger.js')
+const Process = require('../Process/Process.js')
 
 const getDisplayMessage = (error) => {
   if (!error || !error.stack) {
@@ -21,4 +22,26 @@ const showError = (error) => {
 exports.handleError = (error) => {
   printError(error)
   showError(error)
+}
+
+const firstErrorLine = (error) => {
+  if (error.stack) {
+    return error.stack.slice(0, error.stack.indexOf('\n'))
+  }
+  if (error.message) {
+    return error.message
+  }
+  return `${error}`
+}
+
+exports.handleUncaughtExceptionMonitor = (error, origin) => {
+  Logger.info(`[main process] uncaught exception: ${firstErrorLine(error)}`)
+  Logger.error(error)
+  Process.exit(1)
+}
+
+exports.handleUnhandledRejection = (reason, promise) => {
+  Logger.info(`[main process] unhandled rejection: ${firstErrorLine(reason)}`)
+  Logger.error(reason)
+  Process.exit(1)
 }
