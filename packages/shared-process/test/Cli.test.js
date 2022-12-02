@@ -14,9 +14,13 @@ jest.unstable_mockModule('../src/parts/CliInstall/CliInstall.js', () => ({
     throw new Error('not implemented')
   }),
 }))
+jest.unstable_mockModule('../src/parts/Process/Process.js', () => ({
+  setExitCode: jest.fn(),
+}))
 
 const CliInstall = await import('../src/parts/CliInstall/CliInstall.js')
 const CliList = await import('../src/parts/CliList/CliList.js')
+const Process = await import('../src/parts/Process/Process.js')
 const Cli = await import('../src/parts/Cli/Cli.js')
 
 test('handleCliArgs - install - error', async () => {
@@ -42,7 +46,8 @@ test('handleCliArgs - install - error', async () => {
   expect(console.error).toHaveBeenCalledWith(
     new TypeError('x is not a function')
   )
-  expect(process.exitCode).toBe(1)
+  expect(Process.setExitCode).toHaveBeenCalledTimes(1)
+  expect(Process.setExitCode).toHaveBeenCalledWith(1)
 })
 
 test('handleCliArgs - install', async () => {
