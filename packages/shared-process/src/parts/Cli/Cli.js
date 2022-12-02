@@ -1,3 +1,5 @@
+import * as Logger from '../Logger/Logger.js'
+
 const getModule = (argv0) => {
   switch (argv0) {
     case 'install':
@@ -20,7 +22,7 @@ export const handleCliArgs = async (argv, console, process) => {
   try {
     await module.handleCliArgs(argv, console, process)
   } catch (error) {
-    console.error(error)
+    Logger.error(error)
     process.exitCode = 1
   }
 }
