@@ -1,4 +1,5 @@
 import * as ToElectronMenuItem from '../src/parts/ToElectronMenuItem/ToElectronMenuItem.js'
+import * as ElectronMenuItemType from '../src/parts/ElectronMenuItemType/ElectronMenuItemType.js'
 
 test('Help', () => {
   expect(
@@ -6,7 +7,7 @@ test('Help', () => {
       name: 'Help',
     })
   ).toEqual({
-    role: 'help',
+    role: ElectronMenuItemType.Help,
   })
 })
 
@@ -16,7 +17,7 @@ test('File', () => {
       name: 'File',
     })
   ).toEqual({
-    role: 'fileMenu',
+    role: ElectronMenuItemType.FileMenu,
   })
 })
 
@@ -26,7 +27,7 @@ test('Edit', () => {
       name: 'Edit',
     })
   ).toEqual({
-    role: 'editMenu',
+    role: ElectronMenuItemType.EditMenu,
   })
 })
 
@@ -36,7 +37,7 @@ test('Exit', () => {
       label: 'Exit',
     })
   ).toEqual({
-    role: 'quit',
+    role: ElectronMenuItemType.Quit,
   })
 })
 
@@ -46,6 +47,6 @@ test('Undo', () => {
       label: 'Undo',
     })
   ).toEqual({
-    role: 'undo',
+    role: ElectronMenuItemType.Undo,
   })
 })

@@ -1,70 +1,71 @@
+import * as ElectronMenuItemType from '../ElectronMenuItemType/ElectronMenuItemType.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 export const toElectronMenuItem = (entry) => {
   switch (entry.flags) {
     case MenuItemFlags.Separator:
       return {
-        role: 'separator',
+        role: '',
       }
     default:
       if (entry.name === 'Help') {
         return {
-          role: 'help',
+          role: ElectronMenuItemType.Help,
         }
       }
       if (entry.name === 'File') {
         return {
-          role: 'fileMenu',
+          role: ElectronMenuItemType.FileMenu,
         }
       }
       if (entry.name === 'Edit') {
         return {
-          role: 'editMenu',
+          role: ElectronMenuItemType.EditMenu,
         }
       }
       if (entry.label === 'Exit') {
         return {
-          role: 'quit',
+          role: ElectronMenuItemType.Quit,
         }
       }
       if (entry.label === 'Undo') {
         return {
-          role: 'undo',
+          role: ElectronMenuItemType.Undo,
         }
       }
       if (entry.label === 'Redo') {
         return {
-          role: 'redo',
+          role: ElectronMenuItemType.Redo,
         }
       }
       if (entry.label === 'Cut') {
         return {
-          role: 'cut',
+          role: ElectronMenuItemType.Cut,
         }
       }
       if (entry.label === 'Copy') {
         return {
-          role: 'copy',
+          role: ElectronMenuItemType.Copy,
         }
       }
       if (entry.label === 'Paste') {
         return {
-          role: 'paste',
+          role: ElectronMenuItemType.Paste,
         }
       }
       if (entry.label === 'Select All') {
         return {
-          role: 'selectAll',
+          role: ElectronMenuItemType.SelectAll,
         }
       }
       if (entry.label === 'Toggle Developer Tools') {
         return {
-          role: 'toggleDevTools',
+          role: ElectronMenuItemType.ToggleDevTools,
         }
       }
       if (entry.label === 'About') {
         return {
-          role: 'about',
+          role: ElectronMenuItemType.About,
         }
       }
       return {
