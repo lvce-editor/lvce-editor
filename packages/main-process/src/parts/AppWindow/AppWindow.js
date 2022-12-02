@@ -8,7 +8,7 @@ const Platform = require('../Platform/Platform.js')
 const Preferences = require('../Preferences/Preferences.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const Logger = require('../Logger/Logger.js')
-// const Electron = require('electron')
+const Electron = require('electron')
 
 // TODO impossible to test these methods
 // and ensure that there is no memory leak
