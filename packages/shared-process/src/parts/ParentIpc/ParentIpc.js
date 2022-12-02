@@ -3,6 +3,7 @@ import VError from 'verror'
 import * as Callback from '../Callback/Callback.js'
 import * as Command from '../Command/Command.js'
 import * as Debug from '../Debug/Debug.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as ExtensionHostHelperProcessIpc from '../ExtensionHostHelperProcessIpc/ExtensionHostHelperProcessIpc.js'
 import * as ExtensionHostIpc from '../ExtensionHostIpc/ExtensionHostIpc.js'
 import * as ExtensionHostRpc from '../ExtensionHostRpc/ExtensionHostRpc.js'
@@ -36,7 +37,7 @@ export const electronSend = (message) => {
 const handleWebSocketSharedProcess = (message, handle) => {
   // TODO when it is an extension host websocket, spawn extension host
   handle.on('error', (error) => {
-    if (error && error.code === 'ECONNRESET') {
+    if (error && error.code === ErrorCodes.ECONNRESET) {
       return
     }
     console.info('[info shared process: handle error]', error)
