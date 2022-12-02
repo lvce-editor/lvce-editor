@@ -47,17 +47,19 @@ const getGitTagFromGit = async () => {
 }
 
 export const getGitTag = async () => {
-  if (process.env.RG_VERSION) {
-    if (process.env.RG_VERSION.startsWith('v')) {
-      return process.env.RG_VERSION.slice(1)
+  const { env } = process
+  const { RG_VERSION, GIT_TAG } = env
+  if (RG_VERSION) {
+    if (RG_VERSION.startsWith('v')) {
+      return RG_VERSION.slice(1)
     }
-    return process.env.RG_VERSION
+    return RG_VERSION
   }
-  if (process.env.GIT_TAG) {
-    if (process.env.GIT_TAG.startsWith('v')) {
-      return process.env.GIT_TAG.slice(1)
+  if (GIT_TAG) {
+    if (GIT_TAG.startsWith('v')) {
+      return GIT_TAG.slice(1)
     }
-    return process.env.GIT_TAG
+    return GIT_TAG
   }
   return getGitTagFromGit()
 }

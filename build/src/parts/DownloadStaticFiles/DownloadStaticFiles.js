@@ -1,6 +1,7 @@
 import * as DownloadStaticFile from '../DownloadStaticFile/DownloadStaticFile.js'
 import staticFiles from './StaticFiles.json' assert { type: 'json' }
 import * as Remove from '../Remove/Remove.js'
+import * as Process from '../Process/Process.js'
 
 const downloadStaticFiles = async (staticFiles) => {
   for (const staticFile of staticFiles) {
@@ -25,7 +26,7 @@ const main = async () => {
     } else {
       console.error(error)
     }
-    process.exit(1)
+    Process.exit(1)
   }
 }
 

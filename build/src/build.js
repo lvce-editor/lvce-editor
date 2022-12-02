@@ -1,4 +1,5 @@
 import minimist from 'minimist'
+import * as Process from './parts/Process/Process.js'
 
 const getBuildModule = (target) => {
   console.log({ target })
@@ -40,19 +41,19 @@ const getBuildModule = (target) => {
       return import('./parts/BuildServer/BuildServer.js')
     default:
       console.info(`unknown target "${target}"`)
-      process.exit(1)
+      Process.exit(1)
   }
 }
 
 // TODO warn when build dependencies are not yet installed
 
 const main = async () => {
-  const argv = minimist(process.argv.slice(2))
+  const argv = minimist(Process.argv.slice(2))
   const target = argv.target
   if (!target) {
     console.error('Error: target not specified')
     console.error(`Hint: Try using "node build.js --target=static"`)
-    process.exit(1)
+    Process.exit(1)
   }
   const module = await getBuildModule(target)
   try {
@@ -60,7 +61,7 @@ const main = async () => {
   } catch (error) {
     console.error(`Build failed:`)
     console.error(error)
-    process.exit(1)
+    Process.exit(1)
   }
 }
 

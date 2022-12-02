@@ -6,6 +6,7 @@ import * as ReadDir from '../ReadDir/ReadDir.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Root from '../Root/Root.js'
 import * as Verdaccio from '../Verdaccio/Verdaccio.js'
+import * as Process from '../Process/Process.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
 
 const registryUrl = 'http://localhost:4873'
@@ -79,7 +80,7 @@ const main = async () => {
 
   console.info('published packages successfully')
 
-  process.exit(0)
+  Process.exit(0)
 }
 
 main()

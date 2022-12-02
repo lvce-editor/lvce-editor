@@ -29,7 +29,12 @@ const getFile = (lines) => {
 }
 
 const cleanStack = (stack) => {
-  // TODO
+  const lines = stack.split('\n')
+  for (let i = lines.length - 1; i >= 0; i--) {
+    if (lines[i].includes('node:electron')) {
+      return lines.slice(i + 1).join('\n')
+    }
+  }
   return stack
 }
 
