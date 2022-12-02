@@ -1,5 +1,6 @@
 import * as ExtensionLink from '../ExtensionLink/ExtensionLink.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Process from '../Process/Process.js'
 
 export const handleCliArgs = async (argv) => {
@@ -8,7 +9,7 @@ export const handleCliArgs = async (argv) => {
     await ExtensionLink.link(path)
   } catch (error) {
     if (error && error.code === ErrorCodes.E_MANIFEST_NOT_FOUND) {
-      console.error(error.message)
+      Logger.error(error.message)
       Process.setExitCode(128)
       return
     }
