@@ -2,6 +2,7 @@ const childProcess = require('node:child_process')
 const fsPromises = require('node:fs/promises')
 const electron = require('electron')
 const ListProcessesWithMemoryUsage = require('../src/parts/ListProcessesWithMemoryUsage/ListProcessesWithMemoryUsageUnix.js')
+const ErrorCodes = require('../src/parts/ErrorCodes/ErrorCodes.js')
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -204,7 +205,7 @@ test('listProcessesWithMemoryUsage - error - ESRCH', async () => {
   fsPromises.readFile.mockImplementation((path) => {
     switch (path) {
       case '/proc/2127/statm':
-        throw new NodeError('ESRCH', 'no such process, read')
+        throw new NodeError(ErrorCodes.ESRCH, 'no such process, read')
       default:
         return '41700 2023 1199 224 0 5027 0'
     }
