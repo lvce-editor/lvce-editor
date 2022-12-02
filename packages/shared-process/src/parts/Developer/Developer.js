@@ -1,6 +1,7 @@
 import { createWriteStream, writeFileSync } from 'node:fs'
 import { performance } from 'node:perf_hooks'
 import * as ExtensionHost from '../ExtensionHost/ExtensionHost.js'
+import * as Process from '../Process/Process.js'
 
 export const measureLatencyBetweenExtensionHostAndSharedProcess = async (
   socket,
@@ -63,7 +64,7 @@ export const getNodeStartupTiming = () => {
 
 export const sharedProcessMemoryUsage = () => {
   // TODO also print out number of watched files
-  return process.memoryUsage()
+  return Process.memoryUsage()
 }
 
 // TODO not sure if this is actually useful

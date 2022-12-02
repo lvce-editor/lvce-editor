@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -44,13 +45,13 @@ test('createSymLink - error', async () => {
 test('createSymLink - error - EEXIST', async () => {
   // @ts-ignore
   fs.symlink.mockImplementation(async () => {
-    throw new NodeError('EEXIST')
+    throw new NodeError(ErrorCodes.EEXIST)
   })
   // @ts-ignore
   fs.mkdir.mockImplementation(() => {})
   await expect(
     SymLink.createSymLink('/test/from', '/test/to')
-  ).rejects.toHaveProperty('code', 'EEXIST')
+  ).rejects.toHaveProperty('code', ErrorCodes.EEXIST)
 })
 
 test('createSymLink', async () => {

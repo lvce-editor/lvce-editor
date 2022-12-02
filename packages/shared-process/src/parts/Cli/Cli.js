@@ -1,3 +1,5 @@
+import * as Process from '../Process/Process.js'
+
 const getModule = (argv0) => {
   switch (argv0) {
     case 'install':
@@ -21,6 +23,6 @@ export const handleCliArgs = async (argv, console, process) => {
     await module.handleCliArgs(argv, console, process)
   } catch (error) {
     console.error(error)
-    process.exitCode = 1
+    Process.setExitCode(1)
   }
 }

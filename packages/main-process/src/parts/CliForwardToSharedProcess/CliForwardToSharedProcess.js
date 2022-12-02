@@ -4,13 +4,13 @@ const { Worker } = require('worker_threads')
 
 const handleCliArgs = async (parsedArgs) => {
   const sharedProcessPath = Platform.getSharedProcessPath()
-  const process = new Worker(sharedProcessPath, {
+  const worker = new Worker(sharedProcessPath, {
     argv: parsedArgs._,
   })
-  process.postMessage({ method: '' })
+  worker.postMessage({ method: '' })
   await new Promise((resolve, reject) => {
-    process.on('error', reject)
-    process.on('exit', resolve)
+    worker.on('error', reject)
+    worker.on('exit', resolve)
   })
   Electron.app.quit()
 }

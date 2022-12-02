@@ -7,3 +7,15 @@ export const EEXIST = 'EEXIST'
 export const ENOTDIR = 'ENOTDIR'
 
 export const E_MANIFEST_NOT_FOUND = 'E_MANIFEST_NOT_FOUND'
+
+export const EPIPE = 'EPIPE'
+
+export const ERR_IPC_CHANNEL_CLOSED = 'ERR_IPC_CHANNEL_CLOSED'
+
+export const E_COLOR_THEME_NOT_FOUND = 'E_COLOR_THEME_NOT_FOUND'
+
+export const E_ICON_THEME_NOT_FOUND = 'E_ICON_THEME_NOT_FOUND'
+
+export const ECONNRESET = 'ECONNRESET'
+
+export const EPERM = 'EPERM'

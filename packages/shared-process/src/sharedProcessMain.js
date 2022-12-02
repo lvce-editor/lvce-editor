@@ -1,39 +1,11 @@
 import * as Command from './parts/Command/Command.js'
+import * as ErrorHandling from './parts/ErrorHandling/ErrorHandling.js'
 import * as Module from './parts/Module/Module.js'
 import * as ParentIpc from './parts/ParentIpc/ParentIpc.js'
-import * as PrettyError from './parts/PrettyError/PrettyError.js'
-
+import * as Process from './parts/Process/Process.js'
 // TODO handle structure: one shared process multiple extension hosts
 
 // TODO use named functions here
-
-const firstErrorLine = (error) => {
-  if (error.stack) {
-    return error.stack.slice(0, error.stack.indexOf('\n'))
-  }
-  if (error.message) {
-    return error.message
-  }
-  return `${error}`
-}
-
-const handleUncaughtExceptionMonitor = (error, origin) => {
-  console.info(`[shared process] uncaught exception: ${firstErrorLine(error)}`)
-  if (error && error.code === 'EPIPE' && !process.connected) {
-    // parent process is disposed, ignore
-    return
-  }
-  if (error && error.code === 'ERR_IPC_CHANNEL_CLOSED' && !process.connected) {
-    // parent process is disposed, ignore
-    return
-  }
-  // console.log(error)
-  const prettyError = PrettyError.prepare(error)
-  // console.error(prettyError.message)
-  console.error(prettyError.codeFrame)
-  console.error(prettyError.stack)
-  process.exit(1)
-}
 
 const handleDisconnect = () => {
   console.info('[shared process] disconnected')
@@ -51,7 +23,7 @@ const knownCliArgs = ['install', 'list', 'link', 'unlink']
 
 const main = async () => {
   Command.setLoad(Module.load)
-  const argv = process.argv.slice(2)
+  const argv = Process.argv.slice(2)
   const argv0 = argv[0]
   if (knownCliArgs.includes(argv0)) {
     const module = await import('./parts/Cli/Cli.js')
@@ -64,7 +36,10 @@ const main = async () => {
   process.on('disconnect', handleDisconnect)
   process.on('SIGTERM', handleSigTerm)
 
-  process.on('uncaughtExceptionMonitor', handleUncaughtExceptionMonitor)
+  process.on(
+    'uncaughtExceptionMonitor',
+    ErrorHandling.handleUncaughtExceptionMonitor
+  )
   ParentIpc.listen()
 
   // ExtensionHost.start() // TODO start on demand, e.g. not when extensions should be disabled

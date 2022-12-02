@@ -59,6 +59,7 @@ const handleSecondInstance = async (
 exports.hydrate = async () => {
   unhandled({
     showDialog: true,
+    logger() {}, // already exists in mainProcessMain.js
   })
 
   // TODO electron error ERROR:sandbox_linux.cc(364)] InitializeSandbox() called with multiple threads in process gpu-process
