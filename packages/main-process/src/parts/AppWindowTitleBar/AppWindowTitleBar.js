@@ -42,4 +42,5 @@ exports.createTitleBar = () => {
       label: UiStrings.Help,
     },
   ])
+  return menuBar
 }
