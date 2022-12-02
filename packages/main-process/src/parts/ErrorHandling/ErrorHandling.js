@@ -1,6 +1,7 @@
 const { dialog } = require('electron')
 const Logger = require('../Logger/Logger.js')
 const Process = require('../Process/Process.js')
+const PrettyError = require('../PrettyError/PrettyError.js')
 
 const getDisplayMessage = (error) => {
   if (!error || !error.stack) {
@@ -36,12 +37,16 @@ const firstErrorLine = (error) => {
 
 exports.handleUncaughtExceptionMonitor = (error, origin) => {
   Logger.info(`[main process] uncaught exception: ${firstErrorLine(error)}`)
-  Logger.error(error)
+  const prettyError = PrettyError.prepare(error)
+  Logger.error(prettyError.codeFrame)
+  Logger.error(prettyError.stack)
   Process.exit(1)
 }
 
 exports.handleUnhandledRejection = (reason, promise) => {
   Logger.info(`[main process] unhandled rejection: ${firstErrorLine(reason)}`)
-  Logger.error(reason)
+  const prettyError = PrettyError.prepare(reason)
+  Logger.error(prettyError.codeFrame)
+  Logger.error(prettyError.stack)
   Process.exit(1)
 }
