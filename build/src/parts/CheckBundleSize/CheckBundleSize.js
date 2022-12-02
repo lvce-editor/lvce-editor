@@ -3,6 +3,7 @@ import * as PrettyBytes from '../PrettyBytes/PrettyBytes.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Stat from '../Stat/Stat.js'
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import * as Process from '../Process/Process.js'
 
 const computeResults = async (budget) => {
   const commitHash = await CommitHash.getCommitHash()
@@ -58,7 +59,7 @@ const checkBundleSize = async () => {
       `Bundle Size Error: ${results.errors.length} size assertions failed:`
     )
     console.error(results.errors)
-    process.exit(1)
+    Process.exit(1)
   }
   if (results.warnings.length > 0) {
     console.log(results.warnings)
