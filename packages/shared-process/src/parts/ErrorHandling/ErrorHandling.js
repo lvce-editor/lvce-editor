@@ -1,6 +1,7 @@
 import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as Socket from '../Socket/Socket.js'
+import * as Process from '../Process/Process.js'
 
 export const state = {
   seenErrors: [],
@@ -64,7 +65,7 @@ export const handleUncaughtExceptionMonitor = (error, origin) => {
   if (
     error &&
     error.code === ErrorCodes.ERR_IPC_CHANNEL_CLOSED &&
-    !process.connected
+    !Process.isConnected()
   ) {
     // parent process is disposed, ignore
     return
@@ -74,5 +75,5 @@ export const handleUncaughtExceptionMonitor = (error, origin) => {
   // console.error(prettyError.message)
   console.error(prettyError.codeFrame)
   console.error(prettyError.stack)
-  process.exit(1)
+  Process.exit(1)
 }

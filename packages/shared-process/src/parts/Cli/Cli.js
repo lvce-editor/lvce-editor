@@ -1,4 +1,5 @@
 import * as Logger from '../Logger/Logger.js'
+import * as Process from '../Process/Process.js'
 
 const getModule = (argv0) => {
   switch (argv0) {
@@ -23,6 +24,6 @@ export const handleCliArgs = async (argv, console, process) => {
     await module.handleCliArgs(argv, console, process)
   } catch (error) {
     Logger.error(error)
-    process.exitCode = 1
+    Process.setExitCode(1)
   }
 }
