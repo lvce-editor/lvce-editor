@@ -1,5 +1,5 @@
 import * as ToElectronMenuItem from '../src/parts/ToElectronMenuItem/ToElectronMenuItem.js'
-import * as ElectronMenuItemType from '../src/parts/ElectronMenuItemType/ElectronMenuItemType.js'
+import * as ElectronMenuItemRole from '../src/parts/ElectronMenuItemRole/ElectronMenuItemRole.js'
 
 test('Help', () => {
   expect(
@@ -7,7 +7,7 @@ test('Help', () => {
       name: 'Help',
     })
   ).toEqual({
-    role: ElectronMenuItemType.Help,
+    role: ElectronMenuItemRole.Help,
   })
 })
 
@@ -17,7 +17,7 @@ test('File', () => {
       name: 'File',
     })
   ).toEqual({
-    role: ElectronMenuItemType.FileMenu,
+    role: ElectronMenuItemRole.FileMenu,
   })
 })
 
@@ -27,7 +27,7 @@ test('Edit', () => {
       name: 'Edit',
     })
   ).toEqual({
-    role: ElectronMenuItemType.EditMenu,
+    role: ElectronMenuItemRole.EditMenu,
   })
 })
 
@@ -37,7 +37,7 @@ test('Exit', () => {
       label: 'Exit',
     })
   ).toEqual({
-    role: ElectronMenuItemType.Quit,
+    role: ElectronMenuItemRole.Quit,
   })
 })
 
@@ -47,6 +47,6 @@ test('Undo', () => {
       label: 'Undo',
     })
   ).toEqual({
-    role: ElectronMenuItemType.Undo,
+    role: ElectronMenuItemRole.Undo,
   })
 })
