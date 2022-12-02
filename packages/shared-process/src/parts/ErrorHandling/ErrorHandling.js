@@ -1,5 +1,6 @@
-import * as Socket from '../Socket/Socket.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
+import * as Socket from '../Socket/Socket.js'
 
 export const state = {
   seenErrors: [],
@@ -56,11 +57,15 @@ const firstErrorLine = (error) => {
 
 export const handleUncaughtExceptionMonitor = (error, origin) => {
   console.info(`[shared process] uncaught exception: ${firstErrorLine(error)}`)
-  if (error && error.code === 'EPIPE' && !process.connected) {
+  if (error && error.code === ErrorCodes.EPIPE && !process.connected) {
     // parent process is disposed, ignore
     return
   }
-  if (error && error.code === 'ERR_IPC_CHANNEL_CLOSED' && !process.connected) {
+  if (
+    error &&
+    error.code === ErrorCodes.ERR_IPC_CHANNEL_CLOSED &&
+    !process.connected
+  ) {
     // parent process is disposed, ignore
     return
   }

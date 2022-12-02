@@ -41,7 +41,6 @@ const handleMessage = async (event) => {
 }
 
 const handleError = (error) => {
-  console.log('EEERRR')
   // console.error(error)
   throw new VError(error, 'Shared Process Socket Error')
 

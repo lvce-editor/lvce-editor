@@ -1,5 +1,6 @@
 import { jest } from '@jest/globals'
 import * as EncodingType from '../src/parts/EncodingType/EncodingType.js'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -58,7 +59,7 @@ class NodeError extends Error {
 test('addPath - error - file does not exist yet', async () => {
   // @ts-ignore
   fs.readFile.mockImplementation(() => {
-    throw new NodeError('ENOENT')
+    throw new NodeError(ErrorCodes.ENOENT)
   })
   await RecentlyOpened.addPath('/test/new-path.txt')
 })
@@ -94,7 +95,7 @@ test('addPath - error - recently opened file has invalid json', async () => {
 test('addPath - error - permission denied', async () => {
   // @ts-ignore
   fs.readFile.mockImplementation(() => {
-    throw new NodeError('EPERM')
+    throw new NodeError(ErrorCodes.EPERM)
   })
   await expect(
     RecentlyOpened.addPath('/test/new-path.txt')
@@ -114,7 +115,7 @@ test('addPath - error - writeFile - parent folder does not exist', async () => {
   // @ts-ignore
   fs.writeFile.mockImplementation((path) => {
     if (i++ === 0) {
-      throw new NodeError('ENOENT')
+      throw new NodeError(ErrorCodes.ENOENT)
     }
   })
   // @ts-ignore

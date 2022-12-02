@@ -2,6 +2,7 @@ import { jest } from '@jest/globals'
 import { join } from 'node:path'
 import { setTimeout } from 'node:timers/promises'
 import * as EncodingType from '../src/parts/EncodingType/EncodingType.js'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
@@ -150,7 +151,7 @@ test('writeFile', async () => {
 test('writeFile - nonexistent file', async () => {
   // @ts-ignore
   fs.writeFile.mockImplementation(() => {
-    throw new NodeError('ENOENT')
+    throw new NodeError(ErrorCodes.ENOENT)
   })
   await expect(
     FileSystem.writeFile('/test/non-existing-file.txt', 'Hello World')
@@ -257,7 +258,7 @@ test('rename', async () => {
 test('rename - error - non existing old path', async () => {
   // @ts-ignore
   fs.rename.mockImplementation(() => {
-    throw new Error('ENOENT')
+    throw new Error(ErrorCodes.ENOENT)
   })
   await expect(
     FileSystem.rename('/test/non-existing.txt', '/test/file-has-been-moved.txt')
@@ -269,7 +270,7 @@ test('rename - error - non existing old path', async () => {
 test('rename - error - EXDEV', async () => {
   // @ts-ignore
   fs.rename.mockImplementation(() => {
-    throw new NodeError('EXDEV')
+    throw new NodeError(ErrorCodes.EXDEV)
   })
   // @ts-ignore
   fs.cp.mockImplementation(() => {})
@@ -294,7 +295,7 @@ test('rename - error - EXDEV', async () => {
 test('rename - error - new path in non-existing nested directory', async () => {
   // @ts-ignore
   fs.rename.mockImplementation(() => {
-    throw new Error('ENOENT')
+    throw new Error(ErrorCodes.ENOENT)
   })
   await expect(
     FileSystem.rename(
@@ -414,7 +415,7 @@ test('getRealPath', async () => {
 test('getRealPath - error - broken symlink - file not found', async () => {
   // @ts-ignore
   fs.realpath.mockImplementation((source) => {
-    throw new NodeError('ENOENT')
+    throw new NodeError(ErrorCodes.ENOENT)
   })
   // @ts-ignore
   fs.readlink.mockImplementation(() => {
@@ -428,7 +429,7 @@ test('getRealPath - error - broken symlink - file not found', async () => {
 test('getRealPath - error - broken symlink and error with readlink', async () => {
   // @ts-ignore
   fs.realpath.mockImplementation((source) => {
-    throw new NodeError('ENOENT')
+    throw new NodeError(ErrorCodes.ENOENT)
   })
   // @ts-ignore
   fs.readlink.mockImplementation(() => {
@@ -442,7 +443,7 @@ test('getRealPath - error - broken symlink and error with readlink', async () =>
 test('readFile - error - file not found', async () => {
   // @ts-ignore
   fs.readFile.mockImplementation(() => {
-    throw new NodeError('ENOENT')
+    throw new NodeError(ErrorCodes.ENOENT)
   })
   await expect(
     FileSystem.readFile('/test/non-existing.txt')
