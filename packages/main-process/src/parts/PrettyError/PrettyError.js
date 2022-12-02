@@ -28,12 +28,16 @@ const getFile = (lines) => {
   return ''
 }
 
-exports.prepare = async (error) => {
+const cleanStack = (stack) => {
+  // TODO
+  return stack
+}
+
+exports.prepare = (error) => {
   const message = error.message
   if (error instanceof VError) {
     error = error.cause()
   }
-  const { default: cleanStack } = await import('clean-stack')
   const cleanedStack = cleanStack(error.stack)
   const lines = cleanedStack.split('\n')
   const file = getFile(lines)

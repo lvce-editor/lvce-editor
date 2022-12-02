@@ -14,6 +14,10 @@ const main = async () => {
   process.on('unhandledRejection', ErrorHandling.handleUnhandledRejection)
   Command.setLoad(Module.load)
   await App.hydrate()
+
+  if (Math) {
+    throw new Error('oops')
+  }
 }
 
 main()
