@@ -74,6 +74,8 @@ exports.getModuleId = (commandId) => {
       return ModuleId.ElectronMenu
     case 'ElectronClipBoard.writeText':
       return ModuleId.ElectronClipBoard
+    case 'AppWindowTitleBar.setItems':
+      return ModuleId.AppWindowTitleBar
     default:
       throw new Error(`method not found ${commandId}`)
   }

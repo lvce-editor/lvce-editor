@@ -12,6 +12,15 @@ const UiStrings = {
   Help: 'Help',
 }
 
+exports.setMenu = (menu) => {
+  Menu.setApplicationMenu(menu)
+}
+
+exports.setItems = (items) => {
+  const menu = Menu.buildFromTemplate(items)
+  exports.setMenu(menu)
+}
+
 exports.createTitleBar = () => {
   const menuBar = Menu.buildFromTemplate([
     {

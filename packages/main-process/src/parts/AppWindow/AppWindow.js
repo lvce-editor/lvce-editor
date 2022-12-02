@@ -81,7 +81,7 @@ exports.createAppWindow = async (
     titleBarOverlay,
   })
   const menu = AppWindowTitleBar.createTitleBar()
-  Electron.Menu.setApplicationMenu(menu)
+  AppWindowTitleBar.setMenu(menu)
 
   // window.setMenu(menu)
   window.setMenuBarVisibility(true)

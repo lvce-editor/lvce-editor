@@ -196,6 +196,9 @@ export const startup = async (config) => {
   await Location.hydrate()
   Performance.mark('code/didLoadLocation')
 
+  // TODO check if custom title is enabled in settings
+  await Command.execute('ElectronApplicationMenu.hydrate')
+
   Performance.measure(
     'code/loadKeyBindings',
     'code/willLoadKeyBindings',

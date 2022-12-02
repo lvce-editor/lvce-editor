@@ -4,6 +4,8 @@ import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as Command from '../Command/Command.js'
 
+// TODO rename to electron context menu
+
 const EMPTY_MENU = []
 
 export const state = {
