@@ -1,4 +1,4 @@
-import * as ElectronMenuItemType from '../ElectronMenuItemType/ElectronMenuItemType.js'
+import * as ElectronMenuItemRole from '../ElectronMenuItemRole/ElectronMenuItemRole.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 
 export const toElectronMenuItem = (entry) => {
@@ -10,62 +10,62 @@ export const toElectronMenuItem = (entry) => {
     default:
       if (entry.name === 'Help') {
         return {
-          role: ElectronMenuItemType.Help,
+          role: ElectronMenuItemRole.Help,
         }
       }
       if (entry.name === 'File') {
         return {
-          role: ElectronMenuItemType.FileMenu,
+          role: ElectronMenuItemRole.FileMenu,
         }
       }
       if (entry.name === 'Edit') {
         return {
-          role: ElectronMenuItemType.EditMenu,
+          role: ElectronMenuItemRole.EditMenu,
         }
       }
       if (entry.label === 'Exit') {
         return {
-          role: ElectronMenuItemType.Quit,
+          role: ElectronMenuItemRole.Quit,
         }
       }
       if (entry.label === 'Undo') {
         return {
-          role: ElectronMenuItemType.Undo,
+          role: ElectronMenuItemRole.Undo,
         }
       }
       if (entry.label === 'Redo') {
         return {
-          role: ElectronMenuItemType.Redo,
+          role: ElectronMenuItemRole.Redo,
         }
       }
       if (entry.label === 'Cut') {
         return {
-          role: ElectronMenuItemType.Cut,
+          role: ElectronMenuItemRole.Cut,
         }
       }
       if (entry.label === 'Copy') {
         return {
-          role: ElectronMenuItemType.Copy,
+          role: ElectronMenuItemRole.Copy,
         }
       }
       if (entry.label === 'Paste') {
         return {
-          role: ElectronMenuItemType.Paste,
+          role: ElectronMenuItemRole.Paste,
         }
       }
       if (entry.label === 'Select All') {
         return {
-          role: ElectronMenuItemType.SelectAll,
+          role: ElectronMenuItemRole.SelectAll,
         }
       }
       if (entry.label === 'Toggle Developer Tools') {
         return {
-          role: ElectronMenuItemType.ToggleDevTools,
+          role: ElectronMenuItemRole.ToggleDevTools,
         }
       }
       if (entry.label === 'About') {
         return {
-          role: ElectronMenuItemType.About,
+          role: ElectronMenuItemRole.About,
         }
       }
       return {
