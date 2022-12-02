@@ -5,6 +5,7 @@ import { performance } from 'node:perf_hooks'
 import VError from 'verror'
 import builtinExtensions from '../DownloadBuiltinExtensions/builtinExtensions.json' assert { type: 'json' }
 import * as Root from '../Root/Root.js'
+import * as Process from '../Process/Process.js'
 
 const getRepository = (name) => {
   if (name.startsWith('builtin.')) {
@@ -153,7 +154,7 @@ const main = async () => {
     } else {
       console.error(error)
     }
-    process.exit(1)
+    Process.exit(1)
   }
 }
 

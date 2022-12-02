@@ -7,6 +7,7 @@ import pMap from 'p-map'
 import tar from 'tar-fs'
 import VError from 'verror'
 import * as Assert from '../Assert/Assert.js'
+import * as Process from '../Process/Process.js'
 import * as Path from '../Path/Path.js'
 import extensions from './builtinExtensions.json' assert { type: 'json' }
 
@@ -110,7 +111,7 @@ const main = async () => {
     await downloadExtensions(extensions)
   } catch (error) {
     printError(error)
-    process.exit(1)
+    Process.exit(1)
   }
 }
 

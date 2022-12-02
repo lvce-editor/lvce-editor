@@ -1,9 +1,10 @@
 import * as ElectronBuilder from '../ElectronBuilder/ElectronBuilder.js'
+import * as Process from '../Process/Process.js'
 
 export const build = async () => {
-  if (process.platform === 'win32') {
+  if (Process.platform === 'win32') {
     console.info('building deb is not supported on windows')
-    process.exit(1)
+    Process.exit(1)
   }
   await ElectronBuilder.build({
     config: 'electron_builder_deb',
