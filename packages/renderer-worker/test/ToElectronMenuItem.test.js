@@ -9,7 +9,9 @@ test('Help', () => {
       label: 'Help',
     })
   ).toEqual({
+    label: 'Help',
     role: ElectronMenuItemRole.Help,
+    submenu: [],
   })
 })
 
@@ -19,7 +21,9 @@ test('File', () => {
       label: 'File',
     })
   ).toEqual({
+    label: 'File',
     role: ElectronMenuItemRole.FileMenu,
+    submenu: [],
   })
 })
 
@@ -29,7 +33,9 @@ test('Edit', () => {
       label: 'Edit',
     })
   ).toEqual({
+    label: 'Edit',
     role: ElectronMenuItemRole.EditMenu,
+    submenu: [],
   })
 })
 
@@ -39,6 +45,7 @@ test('Exit', () => {
       label: 'Exit',
     })
   ).toEqual({
+    label: 'Exit',
     role: ElectronMenuItemRole.Quit,
   })
 })
@@ -49,6 +56,7 @@ test('Undo', () => {
       label: 'Undo',
     })
   ).toEqual({
+    label: 'Undo',
     role: ElectronMenuItemRole.Undo,
   })
 })
@@ -66,9 +74,12 @@ test('Separator', () => {
 test('SubMenu', () => {
   expect(
     ToElectronMenuItem.toElectronMenuItem({
+      label: 'test',
       flags: MenuItemFlags.SubMenu,
     })
   ).toEqual({
+    label: 'test',
     type: ElectronMenuItemType.SubMenu,
+    submenu: [],
   })
 })
