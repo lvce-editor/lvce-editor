@@ -2,7 +2,7 @@ import * as Command from '../Command/Command.js'
 import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
-import * as ToElectronMenuItem from '../ToElectronMenuItem/ToElectronMenuItem.js'
+import * as ToElectronMenu from '../ToElectronMenu/ToElectronMenu.js'
 
 export const state = {
   commandMap: Object.create(null),
@@ -26,40 +26,9 @@ const getEntries = () => {
   ])
 }
 
-const toElectronMenu = (entries, subMenus) => {
-  const electronEntries = []
-  for (let i = 0; i < entries.length; i++) {
-    const entry = entries[i]
-    const subMenu = subMenus[i]
-    const electronEntry = {
-      label: entry.label,
-      /**
-       * @type {any[]}
-       */
-      submenu: [],
-    }
-    if (subMenu) {
-      console.log({ subMenu })
-      for (const subMenuEntry of subMenu) {
-        const electronSubEntry =
-          ToElectronMenuItem.toElectronMenuItem(subMenuEntry)
-        electronEntry.submenu.push(electronSubEntry)
-        if (subMenuEntry.command) {
-          state.commandMap[subMenuEntry.label] = {
-            command: subMenuEntry.command,
-            args: subMenuEntry.args,
-          }
-        }
-      }
-    }
-    electronEntries.push(electronEntry)
-  }
-  return electronEntries
-}
-
 export const hydrate = async () => {
   const [entriesTitleBar, ...subMenus] = await getEntries()
-  const electronMenu = toElectronMenu(entriesTitleBar, subMenus)
+  const electronMenu = ToElectronMenu.toElectronMenu(entriesTitleBar, subMenus)
   console.log({ electronMenu })
   await setItems(electronMenu)
   // TODO get all menu items
