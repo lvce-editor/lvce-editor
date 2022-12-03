@@ -1,6 +1,6 @@
 const ElectronAplicationMenu = require('./ElectronApplicationMenu.js')
 
-exports.name = 'ElectronAplicationMenu'
+exports.name = 'ElectronApplicationMenu'
 
 // prettier-ignore
 exports.Commands = {
