@@ -117,7 +117,7 @@ const updateBuiltinExtensions = async () => {
   const duration = end - start
   const diffCount = getDiffCount(builtinExtensions, newBuiltinExtensions)
   if (diffCount === 0) {
-    console.info(`all releases are up to date in ${duration}ms`)
+    console.info(`All releases are up to date in ${duration}ms`)
   } else {
     const builtinExtensionsPath = join(
       Root.root,
@@ -133,9 +133,9 @@ const updateBuiltinExtensions = async () => {
     )
     // TODO print which releases were updated
     if (diffCount === 1) {
-      console.info(`updated ${diffCount} release in ${duration}ms`)
+      console.info(`Updated ${diffCount} release in ${duration}ms`)
     } else {
-      console.info(`updated ${diffCount} releases in ${duration}ms`)
+      console.info(`Updated ${diffCount} releases in ${duration}ms`)
     }
     await import('../DownloadBuiltinExtensions/DownloadBuiltinExtensions.js')
   }
