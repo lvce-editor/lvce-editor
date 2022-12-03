@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs'
 import * as CachePaths from '../CachePaths/CachePaths.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const bundleRendererWorkerCached = async ({
   commitHash,
@@ -13,7 +14,7 @@ export const bundleRendererWorkerCached = async ({
     commitHash,
   ])
   if (existsSync(rendererWorkerCachePath)) {
-    console.info('[build step skipped] bundleRendererWorker')
+    Logger.info('[build step skipped] bundleRendererWorker')
   } else {
     console.time('bundleRendererWorker')
     await Remove.remove(

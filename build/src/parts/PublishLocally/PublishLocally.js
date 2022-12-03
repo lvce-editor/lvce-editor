@@ -8,6 +8,7 @@ import * as Root from '../Root/Root.js'
 import * as Verdaccio from '../Verdaccio/Verdaccio.js'
 import * as Process from '../Process/Process.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as Logger from '../Logger/Logger.js'
 
 const registryUrl = 'http://localhost:4873'
 
@@ -78,7 +79,7 @@ const main = async () => {
   await installPackagesLocally()
   console.timeEnd('installPackagesLocally')
 
-  console.info('published packages successfully')
+  Logger.info('published packages successfully')
 
   Process.exit(0)
 }

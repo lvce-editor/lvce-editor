@@ -1,5 +1,6 @@
 import minimist from 'minimist'
 import * as Process from './parts/Process/Process.js'
+import * as Logger from './parts/Logger/Logger.js'
 
 const getBuildModule = (target) => {
   console.log({ target })
@@ -40,7 +41,7 @@ const getBuildModule = (target) => {
     case 'server':
       return import('./parts/BuildServer/BuildServer.js')
     default:
-      console.info(`unknown target "${target}"`)
+      Logger.info(`unknown target "${target}"`)
       Process.exit(1)
   }
 }

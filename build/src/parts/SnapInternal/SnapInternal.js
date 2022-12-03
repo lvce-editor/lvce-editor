@@ -2,12 +2,13 @@ import { existsSync } from 'node:fs'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'
+import * as Logger from '../Logger/Logger.js'
 
 // TODO get rid of no-sandbox somehow https://github.com/electron/electron/issues/17972
 
 const bundleElectronMaybe = async () => {
   if (existsSync(Path.absolute(`build/.tmp/bundle/electron-result`))) {
-    console.info('[electron build skipped]')
+    Logger.info('[electron build skipped]')
     return
   }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
