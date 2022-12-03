@@ -1,4 +1,5 @@
 const { Menu } = require('electron')
+const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 
 const UiStrings = {
   File: 'File',
@@ -16,8 +17,32 @@ exports.setMenu = (menu) => {
   Menu.setApplicationMenu(menu)
 }
 
+const click = (menuItem, browserWindow, keys) => {
+  const { port } = AppWindowStates.findById(browserWindow.webContents.id)
+  port.postMessage({
+    jsonrpc: '2.0',
+    method: 'ElectronApplicationMenu.handleClick',
+    params: [menuItem.label],
+  })
+}
+
+const addClickListener = (item) => {
+  if (item.submenu) {
+    return {
+      ...item,
+      click,
+      submenu: item.submenu.map(addClickListener),
+    }
+  }
+  return {
+    ...item,
+    click,
+  }
+}
+
 exports.setItems = (items) => {
-  const menu = Menu.buildFromTemplate(items)
+  const itemsWithClickListeners = items.map(addClickListener)
+  const menu = Menu.buildFromTemplate(itemsWithClickListeners)
   exports.setMenu(menu)
 }
 

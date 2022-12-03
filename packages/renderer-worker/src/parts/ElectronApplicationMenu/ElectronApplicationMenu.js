@@ -56,3 +56,7 @@ export const hydrate = async () => {
   // TODO send menu items to electron
   // TODO add listener for when menu items change
 }
+
+export const handleClick = (label) => {
+  console.log({ label })
+}

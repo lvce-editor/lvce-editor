@@ -271,6 +271,7 @@ export const getModuleId = (commandId) => {
     case 'Workspace.setUri':
       return ModuleId.Workspace
     case 'ElectronApplicationMenu.hydrate':
+    case 'ElectronApplicationMenu.handleClick':
       return ModuleId.ElectronApplicationMenu
     default:
       throw new Error(`command ${commandId} not found`)
