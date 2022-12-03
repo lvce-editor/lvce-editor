@@ -19,7 +19,7 @@ const click = (menuItem, browserWindow) => {
   }
   port.postMessage({
     jsonrpc: '2.0',
-    method: 'ElectronMenu.handleSelect',
+    method: 'ElectronContextMenu.handleSelect',
     params: [label],
   })
 }
@@ -52,7 +52,7 @@ exports.openContextMenu = (menuItems, x, y) => {
     }
     port.postMessage({
       jsonrpc: '2.0',
-      method: 'ElectronMenu.handleMenuClose',
+      method: 'ElectronContextMenu.handleMenuClose',
       params: [],
     })
   }

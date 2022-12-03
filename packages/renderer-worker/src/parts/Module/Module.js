@@ -50,8 +50,8 @@ export const load = (moduleId) => {
       return import('../ElectronBrowserView/ElectronBrowserView.ipc.js')
     case ModuleId.ElectronClipBoard:
       return import('../ElectronClipBoard/ElectronClipBoard.ipc.js')
-    case ModuleId.ElectronMenu:
-      return import('../ElectronMenu/ElectronMenu.ipc.js')
+    case ModuleId.ElectronContextMenu:
+      return import('../ElectronContextMenu/ElectronContextMenu.ipc.js')
     case ModuleId.ElectronWindow:
       return import('../ElectronWindow/ElectronWindow.ipc.js')
     case ModuleId.ErrorHandling:

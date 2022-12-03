@@ -34,6 +34,7 @@ exports.getModuleId = (commandId) => {
     case 'ElectronShell.beep':
     case 'ElectronShell.showItemInFolder':
     case 'ElectronShell.openExternal':
+    case 'ElectronShell.openPath':
       return ModuleId.ElectronShell
     case 'ElectronPowerSaveBlocker.start':
     case 'ElectronPowerSaveBlocker.stop':
@@ -70,8 +71,8 @@ exports.getModuleId = (commandId) => {
     case 'ElectronBrowserViewFunctions.cancelNavigation':
     case 'ElectronBrowserViewFunctions.getStats':
       return ModuleId.ElectronBrowserViewFunctions
-    case 'ElectronMenu.openContextMenu':
-      return ModuleId.ElectronMenu
+    case 'ElectronContextMenu.openContextMenu':
+      return ModuleId.ElectronContextMenu
     case 'ElectronClipBoard.writeText':
       return ModuleId.ElectronClipBoard
     case 'AppWindowTitleBar.setItems':

@@ -111,9 +111,9 @@ export const getModuleId = (commandId) => {
       return ModuleId.ElectronBrowserView
     case 'ElectronClipBoard.writeText':
       return ModuleId.ElectronClipBoard
-    case 'ElectronMenu.handleMenuClose':
-    case 'ElectronMenu.handleSelect':
-      return ModuleId.ElectronMenu
+    case 'ElectronContextMenu.handleMenuClose':
+    case 'ElectronContextMenu.handleSelect':
+      return ModuleId.ElectronContextMenu
     case 'ElectronWindow.close':
     case 'ElectronWindow.maximize':
     case 'ElectronWindow.minimize':
