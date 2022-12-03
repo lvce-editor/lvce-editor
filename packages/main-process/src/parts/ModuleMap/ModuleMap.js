@@ -70,8 +70,8 @@ exports.getModuleId = (commandId) => {
     case 'ElectronBrowserViewFunctions.cancelNavigation':
     case 'ElectronBrowserViewFunctions.getStats':
       return ModuleId.ElectronBrowserViewFunctions
-    case 'ElectronMenu.openContextMenu':
-      return ModuleId.ElectronMenu
+    case 'ElectronContextMenu.openContextMenu':
+      return ModuleId.ElectronContextMenu
     case 'ElectronClipBoard.writeText':
       return ModuleId.ElectronClipBoard
     default:

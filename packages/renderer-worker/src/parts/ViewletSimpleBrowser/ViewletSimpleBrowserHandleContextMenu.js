@@ -1,5 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
-import * as ElectronMenu from '../ElectronMenu/ElectronMenu.js'
+import * as ElectronContextMenu from '../ElectronContextMenu/ElectronContextMenu.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 
 export const handleContextMenu = async (state, params) => {
@@ -10,7 +10,7 @@ export const handleContextMenu = async (state, params) => {
   const actualX = left + x
   const actualY = top + headerHeight + y
   const args = [actualX, actualY, params]
-  await ElectronMenu.openContextMenu(
+  await ElectronContextMenu.openContextMenu(
     actualX,
     actualY,
     MenuEntryId.SimpleBrowser,
