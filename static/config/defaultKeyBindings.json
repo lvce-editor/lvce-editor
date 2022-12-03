@@ -742,5 +742,9 @@
     "key": "Enter",
     "command": "SimpleBrowser.go",
     "when": "focus.SimpleBrowserInput"
+  },
+  {
+    "key": "ctrl+r",
+    "command": "Window.reload"
   }
 ]

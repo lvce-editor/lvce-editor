@@ -4,6 +4,7 @@ import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as SashDirectionType from '../SashDirectionType/SashDirectionType.js'
 import * as SashType from '../SashType/SashType.js'
 import * as SideBarLocationType from '../SideBarLocationType/SideBarLocationType.js'
 import { VError } from '../VError/VError.js'
@@ -11,7 +12,6 @@ import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletManager from '../ViewletManager/ViewletManager.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
 import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
-import * as SashDirectionType from '../SashDirectionType/SashDirectionType.js'
 
 const kWindowWidth = 0
 const kWindowHeight = 1
@@ -351,8 +351,16 @@ export const loadContent = (state, savedState) => {
   newPoints[kSideBarWidth] ||= 240
   newPoints[kStatusBarHeight] = 20
   newPoints[kStatusBarVisible] = 1
-  newPoints[kTitleBarHeight] = 20
-  newPoints[kTitleBarVisible] = 1
+  if (
+    Platform.platform === PlatformType.Electron &&
+    Preferences.get('window.titleBarStyle') === 'native'
+  ) {
+    newPoints[kTitleBarHeight] = 0
+    newPoints[kTitleBarVisible] = 0
+  } else {
+    newPoints[kTitleBarHeight] = 20
+    newPoints[kTitleBarVisible] = 1
+  }
   newPoints[kWindowHeight] = windowHeight
   newPoints[kWindowWidth] = windowWidth
   // TODO get side bar min width from preferences
