@@ -75,6 +75,11 @@ exports.getModuleId = (commandId) => {
       return ModuleId.ElectronContextMenu
     case 'ElectronClipBoard.writeText':
       return ModuleId.ElectronClipBoard
+    case 'ElectronAutoUpdater.checkForUpdates':
+    case 'ElectronAutoUpdater.getFeedUrl':
+    case 'ElectronAutoUpdater.quitAndInstall':
+    case 'ElectronAutoUpdater.setFeedUrl':
+      return ModuleId.ElectronAutoUpdater
     case 'ElectronApplicationMenu.setItems':
       return ModuleId.ElectronApplicationMenu
     default:
