@@ -238,3 +238,93 @@ exports.findById = (id) => {
   87 |   window.setMenuBarVisibility(true)`,
   })
 })
+
+test('prepare - module not found error', async () => {
+  const error =
+    new Error(`Cannot find module '../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js/index.js.js'
+Require stack:
+- /test/packages/main-process/src/parts/Module/Module.js
+- /test/packages/main-process/src/mainProcessMain.js
+- /test/packages/main-process/node_modules/electron/dist/resources/default_app.asar/main.js`)
+  error.stack = `Error: Cannot find module '../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js/index.js.js'
+Require stack:
+- /test/packages/main-process/src/parts/Module/Module.js
+- /test/packages/main-process/src/mainProcessMain.js
+- /test/packages/main-process/node_modules/electron/dist/resources/default_app.asar/main.js
+-
+    at Module._resolveFilename (node:internal/modules/cjs/loader:963:15)
+    at n._resolveFilename (node:electron/js2c/browser_init:2:109416)
+    at Module._load (node:internal/modules/cjs/loader:811:27)
+    at f._load (node:electron/js2c/asar_bundle:2:13328)
+    at Module.require (node:internal/modules/cjs/loader:1035:19)
+    at require (node:internal/modules/cjs/helpers:102:18)
+    at exports.load (/test/packages/main-process/src/parts/Module/Module.js:42:14)
+    at getOrLoadModule (/test/packages/main-process/src/parts/Command/Command.js:26:33)
+    at loadCommand (/test/packages/main-process/src/parts/Command/Command.js:32:34)
+    at exports.invoke (/test/packages/main-process/src/parts/Command/Command.js:64:11)`
+  // @ts-ignore
+  fs.readFileSync.mockImplementation(() => {
+    return `const ModuleId = require('../ModuleId/ModuleId.js')
+
+exports.load = async (moduleId) => {
+  switch (moduleId) {
+    case ModuleId.App:
+      return require('../App/App.ipc.js')
+    case ModuleId.AppWindow:
+      return require('../AppWindow/AppWindow.ipc.js')
+    case ModuleId.Beep:
+      return require('../ElectronBeep/ElectronBeep.js')
+    case ModuleId.ElectronBrowserView:
+      return require('../ElectronBrowserView/ElectronBrowserView.ipc.js')
+    case ModuleId.ElectronBrowserViewFunctions:
+      return require('../ElectronBrowserViewFunctions/ElectronBrowserViewFunctions.ipc.js')
+    case ModuleId.ElectronBrowserViewQuickPick:
+      return require('../ElectronBrowserViewQuickPick/ElectronBrowserViewQuickPick.ipc.js')
+    case ModuleId.ElectronClipBoard:
+      return require('../ElectronClipBoard/ElectronClipBoard.ipc.js')
+    case ModuleId.ElectronContentTracing:
+      return require('../ElectronContentTracing/ElectronContentTracing.ipc.js')
+    case ModuleId.ElectronContextMenu:
+      return require('../ElectronContextMenu/ElectronContextMenu.ipc.js/index.js')
+    case ModuleId.Developer:
+      return require('../ElectronDeveloper/ElectronDeveloper.ipc.js')
+    case ModuleId.Dialog:
+      return require('../ElectronDialog/ElectronDialog.ipc.js')
+    case ModuleId.ElectronNetLog:
+      return require('../ElectronNetLog/ElectronNetLog.ipc.js')
+    case ModuleId.ElectronPowerSaveBlocker:
+      return require('../ElectronPowerSaveBlocker/ElectronPowerSaveBlocker.ipc.js')
+    case ModuleId.ElectronSafeStorage:
+      return require('../ElectronSafeStorage/ElectronSafeStorage.ipc.js')
+    case ModuleId.ElectronShell:
+      return require('../ElectronShell/ElectronShell.ipc.js')
+    case ModuleId.Window:
+      return require('../ElectronWindow/ElectronWindow.ipc.js')
+    case ModuleId.ElectronWindowAbout:
+      return require('../ElectronWindowAbout/ElectronWindowAbout.ipc.js')
+    case ModuleId.ElectronWindowProcessExplorer:
+      return require('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
+    case ModuleId.ElectronApplicationMenu:
+      return require('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js/index.js.js')
+    default:
+      throw new Error(\`module \${moduleId} not found\`)
+  }
+}
+`
+  })
+  const prettyError = PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    codeFrame: `  40 |       return require('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
+  41 |     case ModuleId.ElectronApplicationMenu:
+> 42 |       return require('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js/index.js.js')
+     |              ^
+  43 |     default:
+  44 |       throw new Error(\`module \${moduleId} not found\`)
+  45 |   }`,
+    message: `Cannot find module '../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js/index.js.js'`,
+    stack: `    at exports.load (/test/packages/main-process/src/parts/Module/Module.js:42:14)
+    at getOrLoadModule (/test/packages/main-process/src/parts/Command/Command.js:26:33)
+    at loadCommand (/test/packages/main-process/src/parts/Command/Command.js:32:34)
+    at exports.invoke (/test/packages/main-process/src/parts/Command/Command.js:64:11)`,
+  })
+})
