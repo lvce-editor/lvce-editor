@@ -28,8 +28,12 @@ const getEntries = () => {
 
 export const hydrate = async () => {
   const [entriesTitleBar, ...subMenus] = await getEntries()
-  const electronMenu = ToElectronMenu.toElectronMenu(entriesTitleBar, subMenus)
-  console.log({ electronMenu })
+  const { electronMenu, commandMap } = ToElectronMenu.toElectronMenu(
+    entriesTitleBar,
+    subMenus
+  )
+  state.commandMap = commandMap
+  // console.log({ electronMenu })
   await setItems(electronMenu)
   // TODO get all menu items
   // TODO send menu items to electron

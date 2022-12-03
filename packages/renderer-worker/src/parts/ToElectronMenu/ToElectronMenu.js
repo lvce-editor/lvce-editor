@@ -1,7 +1,8 @@
 import * as ToElectronMenuItem from '../ToElectronMenuItem/ToElectronMenuItem.js'
 
 export const toElectronMenu = (entries, subMenus) => {
-  const electronEntries = []
+  const electronMenu = []
+  const commandMap = Object.create(null)
   for (let i = 0; i < entries.length; i++) {
     const entry = entries[i]
     const subMenu = subMenus[i]
@@ -19,14 +20,14 @@ export const toElectronMenu = (entries, subMenus) => {
           ToElectronMenuItem.toElectronMenuItem(subMenuEntry)
         electronEntry.submenu.push(electronSubEntry)
         if (subMenuEntry.command) {
-          state.commandMap[subMenuEntry.label] = {
+          commandMap[subMenuEntry.label] = {
             command: subMenuEntry.command,
             args: subMenuEntry.args,
           }
         }
       }
     }
-    electronEntries.push(electronEntry)
+    electronMenu.push(electronEntry)
   }
-  return electronEntries
+  return { electronMenu, commandMap }
 }
