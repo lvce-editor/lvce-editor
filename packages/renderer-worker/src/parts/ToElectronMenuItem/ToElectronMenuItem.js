@@ -21,6 +21,58 @@ const UiStrings = {
 }
 
 export const toElectronMenuItem = (entry) => {
+  switch (entry.label) {
+    case UiStrings.Help:
+      return {
+        role: ElectronMenuItemRole.Help,
+      }
+    case UiStrings.File:
+      return {
+        role: ElectronMenuItemRole.FileMenu,
+      }
+    case UiStrings.Edit:
+      return {
+        role: ElectronMenuItemRole.EditMenu,
+      }
+    case UiStrings.Exit:
+      return {
+        role: ElectronMenuItemRole.Quit,
+      }
+    case UiStrings.Undo:
+      return {
+        role: ElectronMenuItemRole.Undo,
+      }
+    case UiStrings.Redo:
+      return {
+        role: ElectronMenuItemRole.Redo,
+      }
+    case UiStrings.Cut:
+      return {
+        role: ElectronMenuItemRole.Cut,
+      }
+    case UiStrings.Copy:
+      return {
+        role: ElectronMenuItemRole.Copy,
+      }
+    case UiStrings.Paste:
+      return {
+        role: ElectronMenuItemRole.Paste,
+      }
+    case UiStrings.SelectAll:
+      return {
+        role: ElectronMenuItemRole.SelectAll,
+      }
+    case UiStrings.ToggleDeveloperTools:
+      return {
+        role: ElectronMenuItemRole.ToggleDevTools,
+      }
+    case UiStrings.About:
+      return {
+        role: ElectronMenuItemRole.About,
+      }
+    default:
+      break
+  }
   switch (entry.flags) {
     case MenuItemFlags.Separator:
       return {
@@ -31,66 +83,6 @@ export const toElectronMenuItem = (entry) => {
         type: ElectronMenuItemType.SubMenu,
       }
     default:
-      if (entry.label === UiStrings.Help) {
-        return {
-          role: ElectronMenuItemRole.Help,
-        }
-      }
-      if (entry.label === UiStrings.File) {
-        return {
-          role: ElectronMenuItemRole.FileMenu,
-        }
-      }
-      if (entry.label === UiStrings.Edit) {
-        return {
-          role: ElectronMenuItemRole.EditMenu,
-        }
-      }
-      if (entry.label === UiStrings.Exit) {
-        return {
-          role: ElectronMenuItemRole.Quit,
-        }
-      }
-      if (entry.label === UiStrings.Undo) {
-        return {
-          role: ElectronMenuItemRole.Undo,
-        }
-      }
-      if (entry.label === UiStrings.Redo) {
-        return {
-          role: ElectronMenuItemRole.Redo,
-        }
-      }
-      if (entry.label === UiStrings.Cut) {
-        return {
-          role: ElectronMenuItemRole.Cut,
-        }
-      }
-      if (entry.label === UiStrings.Copy) {
-        return {
-          role: ElectronMenuItemRole.Copy,
-        }
-      }
-      if (entry.label === UiStrings.Paste) {
-        return {
-          role: ElectronMenuItemRole.Paste,
-        }
-      }
-      if (entry.label === UiStrings.SelectAll) {
-        return {
-          role: ElectronMenuItemRole.SelectAll,
-        }
-      }
-      if (entry.label === UiStrings.ToggleDeveloperTools) {
-        return {
-          role: ElectronMenuItemRole.ToggleDevTools,
-        }
-      }
-      if (entry.label === UiStrings.About) {
-        return {
-          role: ElectronMenuItemRole.About,
-        }
-      }
       return {
         label: entry.label,
       }
