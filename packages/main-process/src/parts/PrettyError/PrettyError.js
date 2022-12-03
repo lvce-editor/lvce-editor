@@ -31,15 +31,25 @@ const getFile = (lines) => {
 const cleanStack = (stack) => {
   const lines = stack.split('\n')
   for (let i = lines.length - 1; i >= 0; i--) {
-    if (lines[i].includes('node:electron')) {
+    if (
+      lines[i].includes('node:electron') ||
+      lines[i].includes('node:internal')
+    ) {
       return lines.slice(i + 1).join('\n')
     }
   }
   return stack
 }
 
+const prepareMessage = (message) => {
+  if (message.startsWith('Cannot find module ') && message.includes('\n')) {
+    return message.slice(0, message.indexOf('\n'))
+  }
+  return message
+}
+
 exports.prepare = (error) => {
-  const message = error.message
+  const message = prepareMessage(error.message)
   if (error instanceof VError) {
     error = error.cause()
   }
