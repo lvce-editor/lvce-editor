@@ -92,7 +92,7 @@ const create$TopLevelEntry = (item) => {
   if (item.keyboardShortCut) {
     $TitleBarTopLevelEntry.ariaKeyShortcuts = item.keyboardShortCut
   }
-  $TitleBarTopLevelEntry.textContent = item.name
+  $TitleBarTopLevelEntry.textContent = item.label
   return $TitleBarTopLevelEntry
 }
 

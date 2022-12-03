@@ -24,17 +24,17 @@ test('setEntries', () => {
   ViewletTitleBarMenuBar.setEntries(state, [
     {
       id: 'file',
-      name: 'File',
+      label: 'File',
       children: [],
     },
     {
       id: 'edit',
-      name: 'Edit',
+      label: 'Edit',
       children: [],
     },
     {
       id: 'selection',
-      name: 'Selection',
+      label: 'Selection',
       children: [],
     },
   ])
