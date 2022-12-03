@@ -31,17 +31,17 @@ export const toElectronMenuItem = (entry) => {
         type: ElectronMenuItemType.SubMenu,
       }
     default:
-      if (entry.name === UiStrings.Help) {
+      if (entry.label === UiStrings.Help) {
         return {
           role: ElectronMenuItemRole.Help,
         }
       }
-      if (entry.name === UiStrings.File) {
+      if (entry.label === UiStrings.File) {
         return {
           role: ElectronMenuItemRole.FileMenu,
         }
       }
-      if (entry.name === UiStrings.Edit) {
+      if (entry.label === UiStrings.Edit) {
         return {
           role: ElectronMenuItemRole.EditMenu,
         }

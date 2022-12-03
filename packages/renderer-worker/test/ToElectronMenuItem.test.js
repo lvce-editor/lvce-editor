@@ -6,7 +6,7 @@ import * as ToElectronMenuItem from '../src/parts/ToElectronMenuItem/ToElectronM
 test('Help', () => {
   expect(
     ToElectronMenuItem.toElectronMenuItem({
-      name: 'Help',
+      label: 'Help',
     })
   ).toEqual({
     role: ElectronMenuItemRole.Help,
@@ -16,7 +16,7 @@ test('Help', () => {
 test('File', () => {
   expect(
     ToElectronMenuItem.toElectronMenuItem({
-      name: 'File',
+      label: 'File',
     })
   ).toEqual({
     role: ElectronMenuItemRole.FileMenu,
@@ -26,7 +26,7 @@ test('File', () => {
 test('Edit', () => {
   expect(
     ToElectronMenuItem.toElectronMenuItem({
-      name: 'Edit',
+      label: 'Edit',
     })
   ).toEqual({
     role: ElectronMenuItemRole.EditMenu,
