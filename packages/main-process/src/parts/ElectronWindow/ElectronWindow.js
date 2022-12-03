@@ -59,6 +59,13 @@ exports.getFocusedWindow = () => {
   return Electron.BrowserWindow.getFocusedWindow() || undefined
 }
 
+const getIcon = () => {
+  if (!Platform.isProduction && Platform.isLinux) {
+    return Path.join(Root.root, 'build', 'files', 'icon.png')
+  }
+  return undefined
+}
+
 /**
  *
  * @param {{
@@ -112,6 +119,7 @@ exports.create = ({
     },
     backgroundColor: background,
     show: false,
+    icon: getIcon(),
   })
   const handleReadyToShow = () => {
     // due to electron bug, zoom level needs to be set here,
