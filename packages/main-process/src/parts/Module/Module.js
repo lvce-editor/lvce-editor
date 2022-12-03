@@ -38,8 +38,8 @@ exports.load = async (moduleId) => {
       return require('../ElectronWindowAbout/ElectronWindowAbout.ipc.js')
     case ModuleId.ElectronWindowProcessExplorer:
       return require('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
-    case ModuleId.AppWindowTitleBar:
-      return require('../AppWindowTitleBar/AppWindowTitleBar.ipc.js')
+    case ModuleId.ElectronApplicationMenu:
+      return require('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js/index.js.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

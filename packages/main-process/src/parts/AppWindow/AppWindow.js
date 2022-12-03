@@ -9,7 +9,7 @@ const Preferences = require('../Preferences/Preferences.js')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
 const Logger = require('../Logger/Logger.js')
 const Electron = require('electron')
-const AppWindowTitleBar = require('../AppWindowTitleBar/AppWindowTitleBar.js')
+const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.js')
 
 // TODO impossible to test these methods
 // and ensure that there is no memory leak
@@ -80,8 +80,8 @@ exports.createAppWindow = async (
     zoomLevel,
     titleBarOverlay,
   })
-  const menu = AppWindowTitleBar.createTitleBar()
-  AppWindowTitleBar.setMenu(menu)
+  const menu = ElectronApplicationMenu.createTitleBar()
+  ElectronApplicationMenu.setMenu(menu)
 
   // window.setMenu(menu)
   window.setMenuBarVisibility(true)

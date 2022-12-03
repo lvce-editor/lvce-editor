@@ -9,7 +9,7 @@ export const state = {
 }
 
 const setItems = (items) => {
-  return ElectronProcess.invoke('AppWindowTitleBar.setItems', items)
+  return ElectronProcess.invoke('ElectronApplicationMenu.setItems', items)
 }
 
 const getEntries = (ids) => {
