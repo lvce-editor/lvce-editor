@@ -6,6 +6,7 @@ import VError from 'verror'
 import builtinExtensions from '../DownloadBuiltinExtensions/builtinExtensions.json' assert { type: 'json' }
 import * as Root from '../Root/Root.js'
 import * as Process from '../Process/Process.js'
+import * as Logger from '../Logger/Logger.js'
 
 const getRepository = (name) => {
   if (name.startsWith('builtin.')) {
@@ -117,7 +118,7 @@ const updateBuiltinExtensions = async () => {
   const duration = end - start
   const diffCount = getDiffCount(builtinExtensions, newBuiltinExtensions)
   if (diffCount === 0) {
-    console.info(`All releases are up to date in ${duration}ms`)
+    Logger.info(`All releases are up to date in ${duration}ms`)
   } else {
     const builtinExtensionsPath = join(
       Root.root,
@@ -133,9 +134,9 @@ const updateBuiltinExtensions = async () => {
     )
     // TODO print which releases were updated
     if (diffCount === 1) {
-      console.info(`Updated ${diffCount} release in ${duration}ms`)
+      Logger.info(`Updated ${diffCount} release in ${duration}ms`)
     } else {
-      console.info(`Updated ${diffCount} releases in ${duration}ms`)
+      Logger.info(`Updated ${diffCount} releases in ${duration}ms`)
     }
     await import('../DownloadBuiltinExtensions/DownloadBuiltinExtensions.js')
   }

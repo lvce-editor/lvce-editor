@@ -2,6 +2,7 @@ import { existsSync } from 'node:fs'
 import * as CachePaths from '../CachePaths/CachePaths.js'
 import * as Path from '../Path/Path.js'
 import * as Remove from '../Remove/Remove.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const bundleExtensionHostWorkerCached = async ({
   commitHash,
@@ -11,7 +12,7 @@ export const bundleExtensionHostWorkerCached = async ({
   const extensionHostWorkerCachePath =
     await CachePaths.getExtensionHostWorkerCachePath([platform])
   if (existsSync(extensionHostWorkerCachePath)) {
-    console.info('[build step skipped] bundleExtensionHostWorker')
+    Logger.info('[build step skipped] bundleExtensionHostWorker')
   } else {
     console.time('bundleExtensionHostWorker')
     await Remove.remove(

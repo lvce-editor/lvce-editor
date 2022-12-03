@@ -17,6 +17,7 @@ import * as Replace from '../Replace/Replace.js'
 import * as Root from '../Root/Root.js'
 import * as Tag from '../Tag/Tag.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as Logger from '../Logger/Logger.js'
 
 const getDependencyCacheHash = async ({ electronVersion, arch }) => {
   const files = [
@@ -296,7 +297,7 @@ export const build = async () => {
     existsSync(dependencyCachePath) &&
     existsSync(dependencyCachePathFinished)
   ) {
-    console.info('[build step skipped] bundleElectronAppDependencies')
+    Logger.info('[build step skipped] bundleElectronAppDependencies')
   } else {
     console.time('bundleElectronAppDependencies')
     await Remove.remove(Path.absolute('build/.tmp/cachedDependencies'))
