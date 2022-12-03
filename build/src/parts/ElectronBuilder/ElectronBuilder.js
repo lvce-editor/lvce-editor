@@ -1,25 +1,26 @@
 import * as ElectronBuilder from 'electron-builder'
-import { existsSync } from 'node:fs'
-import { readdir } from 'node:fs/promises'
+import { readdir, readFile, writeFile } from 'node:fs/promises'
+import { join } from 'node:path'
+import { xdgCache } from 'xdg-basedir'
 import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
-import * as Logger from '../Logger/Logger.js'
 
 // TODO don't need to include whole node-pty module
 // TODO maybe don't need to include nan module
 // TODO don't need to include whole vscode-ripgrep-with-github-api-error-fix module (only path)
 
 const bundleElectronMaybe = async () => {
-  if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
-    Logger.info('[electron build skipped]')
-    return
-  }
+  // if (existsSync(Path.absolute(`build/.tmp/electron-bundle`))) {
+  //   Logger.info('[electron build skipped]')
+  //   return
+  // }
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
   await build()
 }
@@ -33,6 +34,9 @@ const getElectronVersion = async () => {
 
 const copyElectronBuilderConfig = async (config, version) => {
   const electronVersion = await getElectronVersion()
+  // if (config === 'electron_builder_arch_linux') {
+  //   version = version.replaceAll('-', '_') // https://wiki.archlinux.org/title/creating_packages#pkgver()
+  // }
   await Template.write(config, 'build/.tmp/electron-builder/package.json', {
     '@@NAME@@': Product.applicationName,
     '@@AUTHOR@@': Product.linuxMaintainer,
@@ -40,16 +44,58 @@ const copyElectronBuilderConfig = async (config, version) => {
     '@@HOMEPAGE@@': Product.homePage,
     '@@ELECTRON_VERSION@@': electronVersion,
     '@@NAME_LONG@@': Product.nameLong,
+    '@@LICENSE@@': Product.licenseName,
   })
 }
 
-const runElectronBuilder = async () => {
+const replaceFpmConfig = async () => {
+  try {
+    if (!xdgCache) {
+      throw new Error(`cache path not supported`)
+    }
+    const pacmanErbPath = join(
+      xdgCache,
+      'electron-builder/fpm/fpm-1.9.3-2.3.1-linux-x86_64/lib/app/templates/pacman.erb'
+    )
+    const content = await readFile(pacmanErbPath, 'utf8')
+    if (content.includes(`<%= version %>-<%= iteration %>`)) {
+      const newContent = content.replaceAll(
+        `<%= version %>-<%= iteration %>`,
+        `<%= version %>`
+      )
+      await writeFile(pacmanErbPath, newContent)
+      console.info(`[build] replaced fpm pacman config`)
+    }
+    return true
+  } catch (error) {
+    console.log(error)
+    return false
+  }
+}
+
+const runElectronBuilder = async ({ config }) => {
   const debArch = 'amd64'
-  await ElectronBuilder.build({
+
+  let runTwice = false
+  if (config === 'electron_builder_arch_linux') {
+    const replaced = await replaceFpmConfig()
+    runTwice = !replaced
+  }
+  const options = {
     projectDir: Path.absolute('build/.tmp/electron-builder'),
     prepackaged: Path.absolute(`build/.tmp/linux/snap/${debArch}/app`),
     // win: ['portable'],
-  })
+  }
+  await ElectronBuilder.build(options)
+  // workaround for iteration being injected by fpm leading to invalid pkgversion
+  if (runTwice) {
+    const replaced = await replaceFpmConfig()
+    if (replaced) {
+      await ElectronBuilder.build(options)
+    } else {
+      console.warn('[build] could not replace iteration in fpm config')
+    }
+  }
 }
 
 const copyBuildResources = async () => {
@@ -109,13 +155,30 @@ const printFinalSize = async (releaseFilePath) => {
   }
 }
 
-const copyElectronResult = async () => {
+const addRootPackageJson = async ({ cachePath, version }) => {
+  await JsonFile.writeJson({
+    to: `${cachePath}/package.json`,
+    value: {
+      main: 'packages/main-process/src/mainProcessMain.js',
+      name: Product.applicationName + 'abc',
+      productName: Product.nameLong,
+      version: version,
+    },
+  })
+}
+
+const copyElectronResult = async ({ version }) => {
   await bundleElectronMaybe()
   const debArch = 'amd64'
   await Copy.copy({
     from: `build/.tmp/electron-bundle/x64`,
     to: `build/.tmp/linux/snap/${debArch}/app`,
   })
+  await addRootPackageJson({
+    cachePath: `build/.tmp/linux/snap/${debArch}/app/resources/app`,
+    version,
+  })
+  console.log('wrote version', version)
 }
 
 const renameReleaseFile = async (config, version) => {
@@ -133,10 +196,10 @@ export const build = async ({ config }) => {
   // workaround for https://github.com/electron-userland/electron-builder/issues/4594
   // @ts-ignore
   process.env.USE_HARD_LINKS = false
-  const version = await Tag.getGitTag()
+  const version = await Tag.getSemverVersion()
 
   console.time('copyElectronResult')
-  await copyElectronResult()
+  await copyElectronResult({ version })
   console.timeEnd('copyElectronResult')
 
   console.time('copyElectronBuilderConfig')
@@ -148,7 +211,7 @@ export const build = async ({ config }) => {
   console.timeEnd('copyBuildResources')
 
   console.time('runElectronBuilder')
-  await runElectronBuilder()
+  await runElectronBuilder({ config })
   console.timeEnd('runElectronBuilder')
 
   console.time('renameReleaseFile')
