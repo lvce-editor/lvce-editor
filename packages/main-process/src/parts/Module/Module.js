@@ -6,6 +6,8 @@ exports.load = async (moduleId) => {
       return require('../App/App.ipc.js')
     case ModuleId.AppWindow:
       return require('../AppWindow/AppWindow.ipc.js')
+    case ModuleId.ElectronApplicationMenu:
+      return require('../ElectronApplicationMenu/ElectronApplicationMenu.ipc.js')
     case ModuleId.ElectronAutoUpdater:
       return require('../ElectronAutoUpdater/ElectronAutoUpdater.ipc.js')
     case ModuleId.Beep:
@@ -21,7 +23,7 @@ exports.load = async (moduleId) => {
     case ModuleId.ElectronContentTracing:
       return require('../ElectronContentTracing/ElectronContentTracing.ipc.js')
     case ModuleId.ElectronContextMenu:
-      return require('../ElectronContextMenu/ElectronContextMenu.ipc.js/index.js')
+      return require('../ElectronContextMenu/ElectronContextMenu.ipc.js')
     case ModuleId.Developer:
       return require('../ElectronDeveloper/ElectronDeveloper.ipc.js')
     case ModuleId.Dialog:

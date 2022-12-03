@@ -80,6 +80,8 @@ exports.getModuleId = (commandId) => {
     case 'ElectronAutoUpdater.quitAndInstall':
     case 'ElectronAutoUpdater.setFeedUrl':
       return ModuleId.ElectronAutoUpdater
+    case 'ElectronApplicationMenu.setItems':
+      return ModuleId.ElectronApplicationMenu
     default:
       throw new Error(`method not found ${commandId}`)
   }
