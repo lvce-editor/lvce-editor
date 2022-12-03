@@ -17,44 +17,44 @@ export const getMenuEntries = () => {
   return [
     {
       id: MenuEntryId.File,
-      name: I18nString.i18nString(UiStrings.File),
+      label: I18nString.i18nString(UiStrings.File),
       flags: MenuItemFlags.None,
     },
     {
       id: MenuEntryId.Edit,
-      name: I18nString.i18nString(UiStrings.Edit),
+      label: I18nString.i18nString(UiStrings.Edit),
       flags: MenuItemFlags.None,
     },
     {
       id: MenuEntryId.Selection,
-      name: I18nString.i18nString(UiStrings.Selection),
+      label: I18nString.i18nString(UiStrings.Selection),
       flags: MenuItemFlags.None,
     },
     {
       id: MenuEntryId.View,
-      name: I18nString.i18nString(UiStrings.View),
+      label: I18nString.i18nString(UiStrings.View),
       flags: MenuItemFlags.None,
     },
     {
       id: MenuEntryId.Go,
-      name: I18nString.i18nString(UiStrings.Go),
+      label: I18nString.i18nString(UiStrings.Go),
       flags: MenuItemFlags.None,
     },
     {
       id: MenuEntryId.Run,
-      name: I18nString.i18nString(UiStrings.Run),
+      label: I18nString.i18nString(UiStrings.Run),
       keyboardShortCut: 'Alt+r',
       flags: MenuItemFlags.None,
     },
     {
       id: MenuEntryId.Terminal,
-      name: I18nString.i18nString(UiStrings.Terminal),
+      label: I18nString.i18nString(UiStrings.Terminal),
       keyboardShortCut: 'Alt+t',
       flags: MenuItemFlags.None,
     },
     {
       id: MenuEntryId.Help,
-      name: I18nString.i18nString(UiStrings.Help),
+      label: I18nString.i18nString(UiStrings.Help),
       keyboardShortCut: 'Alt+h',
       flags: MenuItemFlags.None,
     },

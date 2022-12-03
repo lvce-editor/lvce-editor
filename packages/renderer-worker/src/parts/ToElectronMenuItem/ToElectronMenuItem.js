@@ -8,17 +8,17 @@ export const toElectronMenuItem = (entry) => {
         role: '',
       }
     default:
-      if (entry.name === 'Help') {
+      if (entry.label === 'Help') {
         return {
           role: ElectronMenuItemRole.Help,
         }
       }
-      if (entry.name === 'File') {
+      if (entry.label === 'File') {
         return {
           role: ElectronMenuItemRole.FileMenu,
         }
       }
-      if (entry.name === 'Edit') {
+      if (entry.label === 'Edit') {
         return {
           role: ElectronMenuItemRole.EditMenu,
         }
