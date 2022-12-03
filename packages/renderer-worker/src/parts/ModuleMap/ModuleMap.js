@@ -106,6 +106,9 @@ export const getModuleId = (commandId) => {
       return ModuleId.EditorRename
     case 'ElectronApp.exit':
       return ModuleId.ElectronApp
+    case 'ElectronApplicationMenu.handleClick':
+    case 'ElectronApplicationMenu.hydrate':
+      return ModuleId.ElectronApplicationMenu
     case 'ElectronBrowserView.createBrowserViewQuickpick':
     case 'ElectronBrowserView.openBrowserViewQuickPick':
       return ModuleId.ElectronBrowserView
@@ -270,9 +273,6 @@ export const getModuleId = (commandId) => {
     case 'Workspace.setPath':
     case 'Workspace.setUri':
       return ModuleId.Workspace
-    case 'ElectronApplicationMenu.hydrate':
-    case 'ElectronApplicationMenu.handleClick':
-      return ModuleId.ElectronApplicationMenu
     default:
       throw new Error(`command ${commandId} not found`)
   }
