@@ -162,9 +162,13 @@ export const startup = async (config) => {
 
   LifeCycle.mark(LifeCyclePhase.Fourteen)
 
-  Performance.mark('code/willLoadTitleBar')
-  await Command.execute('Layout.loadTitleBarIfVisible')
-  Performance.mark('code/didLoadTitleBar')
+  if (Preferences.get('window.titleBarStyle') === 'native') {
+    await Command.execute('ElectronApplicationMenu.hydrate')
+  } else {
+    Performance.mark('code/willLoadTitleBar')
+    await Command.execute('Layout.loadTitleBarIfVisible')
+    Performance.mark('code/didLoadTitleBar')
+  }
 
   LifeCycle.mark(LifeCyclePhase.Fifteen)
 
@@ -195,9 +199,6 @@ export const startup = async (config) => {
   Performance.mark('code/willLoadLocation')
   await Location.hydrate()
   Performance.mark('code/didLoadLocation')
-
-  // TODO check if custom title is enabled in settings
-  await Command.execute('ElectronApplicationMenu.hydrate')
 
   Performance.measure(
     'code/loadKeyBindings',

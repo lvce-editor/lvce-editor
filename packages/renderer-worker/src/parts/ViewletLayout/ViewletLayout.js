@@ -351,8 +351,13 @@ export const loadContent = (state, savedState) => {
   newPoints[kSideBarWidth] ||= 240
   newPoints[kStatusBarHeight] = 20
   newPoints[kStatusBarVisible] = 1
-  newPoints[kTitleBarHeight] = 20
-  newPoints[kTitleBarVisible] = 1
+  if (Preferences.get('window.titleBarStyle') === 'custom') {
+    newPoints[kTitleBarHeight] = 20
+    newPoints[kTitleBarVisible] = 1
+  } else {
+    newPoints[kTitleBarHeight] = 0
+    newPoints[kTitleBarVisible] = 0
+  }
   newPoints[kWindowHeight] = windowHeight
   newPoints[kWindowWidth] = windowWidth
   // TODO get side bar min width from preferences
