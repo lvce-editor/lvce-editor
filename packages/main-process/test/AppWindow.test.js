@@ -11,9 +11,23 @@ jest.mock('../src/parts/AppWindowStates/AppWindowStates.js', () => {
     add: jest.fn(),
   }
 })
+jest.mock(
+  '../src/parts/ElectronApplicationMenu/ElectronApplicationMenu.js',
+  () => {
+    return {
+      createTitleBar: jest.fn(),
+      setItems: jest.fn(),
+      setMenu: jest.fn(),
+    }
+  }
+)
 
 jest.mock('electron', () => {
   const EventEmitter = require('events')
+  const BrowserWindow = class extends EventEmitter {}
+  BrowserWindow.prototype.loadURL = jest.fn()
+  BrowserWindow.prototype.setMenuBarVisibility = jest.fn()
+  BrowserWindow.prototype.setAutoHideMenuBar = jest.fn()
   return {
     session: {
       fromPartition() {
@@ -39,11 +53,7 @@ jest.mock('electron', () => {
         }
       },
     },
-    BrowserWindow: class extends EventEmitter {
-      async loadURL() {
-        throw new Error(`ERR_FAILED (-2) loading 'lvce-oss://-'`)
-      }
-    },
+    BrowserWindow,
   }
 })
 
@@ -51,24 +61,19 @@ const AppWindowStates = require('../src/parts/AppWindowStates/AppWindowStates.js
 
 const AppWindow = require('../src/parts/AppWindow/AppWindow.js')
 const electron = require('electron')
-const { EventEmitter } = require('node:events')
 
 test('createAppWindow', async () => {
   // @ts-ignore
-  electron.BrowserWindow = class extends EventEmitter {
-    async loadURL() {}
-  }
+  electron.BrowserWindow.prototype.loadURL.mockImplementation(() => {})
   await AppWindow.createAppWindow([], '')
   expect(AppWindowStates.add).toHaveBeenCalledTimes(1)
 })
 
 test('createAppWindow - error', async () => {
   // @ts-ignore
-  electron.BrowserWindow = class extends EventEmitter {
-    async loadURL() {
-      throw new Error(`ERR_FAILED (-2) loading 'lvce-oss://-'`)
-    }
-  }
+  electron.BrowserWindow.prototype.loadURL.mockImplementation(() => {
+    throw new Error(`ERR_FAILED (-2) loading 'lvce-oss://-'`)
+  })
   // TODO error message should be improved
   await expect(AppWindow.createAppWindow([], '')).rejects.toThrowError(
     new Error(
