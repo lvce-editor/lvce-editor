@@ -12,25 +12,38 @@ const setItems = (items) => {
   return ElectronProcess.invoke('AppWindowTitleBar.setItems', items)
 }
 
-const getEntries = () => {
-  return Promise.all([
-    MenuEntries.getMenuEntries(MenuEntryId.TitleBar),
-    MenuEntries.getMenuEntries(MenuEntryId.File),
-    MenuEntries.getMenuEntries(MenuEntryId.Edit),
-    MenuEntries.getMenuEntries(MenuEntryId.Selection),
-    MenuEntries.getMenuEntries(MenuEntryId.View),
-    MenuEntries.getMenuEntries(MenuEntryId.Go),
-    MenuEntries.getMenuEntries(MenuEntryId.Run),
-    MenuEntries.getMenuEntries(MenuEntryId.Terminal),
-    MenuEntries.getMenuEntries(MenuEntryId.Help),
-  ])
+const getEntries = (ids) => {
+  return Promise.all(ids.map(MenuEntries.getMenuEntries))
+}
+
+const getEntryMap = (ids, entries) => {
+  const map = Object.create(null)
+  for (let i = 0; i < ids.length; i++) {
+    const id = ids[i]
+    const value = entries[i]
+    map[id] = value
+  }
+  return map
 }
 
 export const hydrate = async () => {
-  const [entriesTitleBar, ...subMenus] = await getEntries()
+  const ids = [
+    MenuEntryId.TitleBar,
+    MenuEntryId.File,
+    MenuEntryId.Edit,
+    MenuEntryId.Selection,
+    MenuEntryId.View,
+    MenuEntryId.Go,
+    MenuEntryId.Run,
+    MenuEntryId.Terminal,
+    MenuEntryId.Help,
+    MenuEntryId.OpenRecent,
+  ]
+  const entries = await getEntries(ids)
+  const map = getEntryMap(ids, entries)
   const { electronMenu, commandMap } = ToElectronMenu.toElectronMenu(
-    entriesTitleBar,
-    subMenus
+    map,
+    MenuEntryId.TitleBar
   )
   state.commandMap = commandMap
   // console.log({ electronMenu })
