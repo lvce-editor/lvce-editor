@@ -5,26 +5,31 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule('../src/parts/ElectronMenu/ElectronMenu.js', () => {
-  return {
-    openContextMenu: jest.fn(() => {
-      throw new Error('not implemented')
-    }),
+jest.unstable_mockModule(
+  '../src/parts/ElectronContextMenu/ElectronContextMenu.js',
+  () => {
+    return {
+      openContextMenu: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
   }
-})
+)
 
 const ViewletSimpleBrowser = await import(
   '../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowser.js'
 )
 
-const ElectronMenu = await import('../src/parts/ElectronMenu/ElectronMenu.js')
+const ElectronContextMenu = await import(
+  '../src/parts/ElectronContextMenu/ElectronContextMenu.js'
+)
 const ViewletSimpleBrowserHandleContextMenu = await import(
   '../src/parts/ViewletSimpleBrowser/ViewletSimpleBrowserHandleContextMenu.js'
 )
 
 test('openContextMenu', async () => {
   // @ts-ignore
-  ElectronMenu.openContextMenu.mockImplementation(() => {})
+  ElectronContextMenu.openContextMenu.mockImplementation(() => {})
   const state = {
     ...ViewletSimpleBrowser.create('', '', 10, 10, 10, 10),
   }
@@ -32,8 +37,8 @@ test('openContextMenu', async () => {
     x: 20,
     y: 20,
   })
-  expect(ElectronMenu.openContextMenu).toHaveBeenCalledTimes(1)
-  expect(ElectronMenu.openContextMenu).toHaveBeenCalledWith(
+  expect(ElectronContextMenu.openContextMenu).toHaveBeenCalledTimes(1)
+  expect(ElectronContextMenu.openContextMenu).toHaveBeenCalledWith(
     30,
     60,
     MenuEntryId.SimpleBrowser,
