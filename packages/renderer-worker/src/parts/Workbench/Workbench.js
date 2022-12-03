@@ -162,7 +162,10 @@ export const startup = async (config) => {
 
   LifeCycle.mark(LifeCyclePhase.Fourteen)
 
-  if (Preferences.get('window.titleBarStyle') === 'native') {
+  if (
+    Platform.platform === PlatformType.Electron &&
+    Preferences.get('window.titleBarStyle') === 'native'
+  ) {
     await Command.execute('ElectronApplicationMenu.hydrate')
   } else {
     Performance.mark('code/willLoadTitleBar')
