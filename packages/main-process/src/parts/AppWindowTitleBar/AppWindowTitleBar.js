@@ -41,7 +41,8 @@ const addClickListener = (item) => {
 }
 
 exports.setItems = (items) => {
-  const itemsWithClickListeners = items.map(addClickListener)
+  const itemsWithClickListeners = items.slice(0, 1).map(addClickListener)
+  console.log(JSON.stringify(items, null, 2))
   const menu = Menu.buildFromTemplate(itemsWithClickListeners)
   exports.setMenu(menu)
 }

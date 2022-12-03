@@ -1,7 +1,12 @@
+import * as Command from '../Command/Command.js'
 import * as ElectronProcess from '../ElectronProcess/ElectronProcess.js'
 import * as MenuEntries from '../MenuEntries/MenuEntries.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ToElectronMenuItem from '../ToElectronMenuItem/ToElectronMenuItem.js'
+
+export const state = {
+  commandMap: Object.create(null),
+}
 
 const setItems = (items) => {
   return ElectronProcess.invoke('AppWindowTitleBar.setItems', items)
@@ -27,7 +32,7 @@ const toElectronMenu = (entries, subMenus) => {
     const entry = entries[i]
     const subMenu = subMenus[i]
     const electronEntry = {
-      label: entry.name,
+      label: entry.label,
       /**
        * @type {any[]}
        */
@@ -39,6 +44,12 @@ const toElectronMenu = (entries, subMenus) => {
         const electronSubEntry =
           ToElectronMenuItem.toElectronMenuItem(subMenuEntry)
         electronEntry.submenu.push(electronSubEntry)
+        if (subMenuEntry.command) {
+          state.commandMap[subMenuEntry.label] = {
+            command: subMenuEntry.command,
+            args: subMenuEntry.args,
+          }
+        }
       }
     }
     electronEntries.push(electronEntry)
@@ -48,7 +59,6 @@ const toElectronMenu = (entries, subMenus) => {
 
 export const hydrate = async () => {
   const [entriesTitleBar, ...subMenus] = await getEntries()
-
   const electronMenu = toElectronMenu(entriesTitleBar, subMenus)
   console.log({ electronMenu })
   await setItems(electronMenu)
@@ -57,6 +67,11 @@ export const hydrate = async () => {
   // TODO add listener for when menu items change
 }
 
-export const handleClick = (label) => {
-  console.log({ label })
+export const handleClick = async (label) => {
+  const commandPair = state.commandMap[label]
+  if (!commandPair) {
+    throw new Error(`no command found for ${label}`)
+  }
+  const { command, args } = commandPair
+  await Command.execute(command, ...args)
 }
