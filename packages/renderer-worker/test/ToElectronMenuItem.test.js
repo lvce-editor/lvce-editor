@@ -1,10 +1,12 @@
-import * as ToElectronMenuItem from '../src/parts/ToElectronMenuItem/ToElectronMenuItem.js'
 import * as ElectronMenuItemRole from '../src/parts/ElectronMenuItemRole/ElectronMenuItemRole.js'
+import * as ElectronMenuItemType from '../src/parts/ElectronMenuItemType/ElectronMenuItemType.js'
+import * as MenuItemFlags from '../src/parts/MenuItemFlags/MenuItemFlags.js'
+import * as ToElectronMenuItem from '../src/parts/ToElectronMenuItem/ToElectronMenuItem.js'
 
 test('Help', () => {
   expect(
     ToElectronMenuItem.toElectronMenuItem({
-      name: 'Help',
+      label: 'Help',
     })
   ).toEqual({
     role: ElectronMenuItemRole.Help,
@@ -14,7 +16,7 @@ test('Help', () => {
 test('File', () => {
   expect(
     ToElectronMenuItem.toElectronMenuItem({
-      name: 'File',
+      label: 'File',
     })
   ).toEqual({
     role: ElectronMenuItemRole.FileMenu,
@@ -24,7 +26,7 @@ test('File', () => {
 test('Edit', () => {
   expect(
     ToElectronMenuItem.toElectronMenuItem({
-      name: 'Edit',
+      label: 'Edit',
     })
   ).toEqual({
     role: ElectronMenuItemRole.EditMenu,
@@ -48,5 +50,25 @@ test('Undo', () => {
     })
   ).toEqual({
     role: ElectronMenuItemRole.Undo,
+  })
+})
+
+test('Separator', () => {
+  expect(
+    ToElectronMenuItem.toElectronMenuItem({
+      flags: MenuItemFlags.Separator,
+    })
+  ).toEqual({
+    type: ElectronMenuItemType.Separator,
+  })
+})
+
+test('SubMenu', () => {
+  expect(
+    ToElectronMenuItem.toElectronMenuItem({
+      flags: MenuItemFlags.SubMenu,
+    })
+  ).toEqual({
+    type: ElectronMenuItemType.SubMenu,
   })
 })
