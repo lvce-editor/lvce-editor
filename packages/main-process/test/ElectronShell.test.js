@@ -8,6 +8,7 @@ jest.mock('electron', () => {
       showItemInFolder: jest.fn(),
       beep: jest.fn(),
       openExternal: jest.fn(),
+      openPath: jest.fn(),
     },
   }
 })
@@ -40,4 +41,12 @@ test('openExternal', () => {
   expect(electron.shell.openExternal).toHaveBeenCalledWith(
     'https://example.com'
   )
+})
+
+test('openPath', () => {
+  // @ts-ignore
+  electron.shell.openPath.mockImplementation(() => {})
+  ElectronShell.openPath('/test/file.txt')
+  expect(electron.shell.openPath).toHaveBeenCalledTimes(1)
+  expect(electron.shell.openPath).toHaveBeenCalledWith('/test/file.txt')
 })

@@ -8,6 +8,11 @@ exports.openExternal = async (url) => {
   await shell.openExternal(url)
 }
 
+exports.openPath = async (path) => {
+  // TODO handle error
+  await shell.openPath(path)
+}
+
 exports.beep = () => {
   shell.beep()
 }
