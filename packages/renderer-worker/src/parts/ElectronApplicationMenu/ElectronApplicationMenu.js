@@ -58,6 +58,6 @@ export const handleClick = async (label) => {
   if (!commandPair) {
     throw new Error(`no command found for ${label}`)
   }
-  const { command, args } = commandPair
+  const { command, args = [] } = commandPair
   await Command.execute(command, ...args)
 }
