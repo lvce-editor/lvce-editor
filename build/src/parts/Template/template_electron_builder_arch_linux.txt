@@ -9,6 +9,7 @@
     "vscode-ripgrep-with-github-api-error-fix": "^2.0.4"
   },
   "homepage": "@@HOMEPAGE@@",
+  "license": "@@LICENSE@@",
   "build": {
     "asar": false,
     "includeSubNodeModules": true,

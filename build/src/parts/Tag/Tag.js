@@ -63,3 +63,11 @@ export const getGitTag = async () => {
   }
   return getGitTagFromGit()
 }
+
+export const getSemverVersion = async () => {
+  const version = await getGitTag()
+  if (version.includes('-')) {
+    return version.replace(/\-.*$/, '')
+  }
+  return version
+}
