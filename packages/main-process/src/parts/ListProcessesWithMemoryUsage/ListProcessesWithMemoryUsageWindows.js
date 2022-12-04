@@ -1,35 +1,11 @@
 // listProcesses windows implementation based on https://github.com/microsoft/vscode/blob/c0769274fa136b45799edeccc0d0a2f645b75caf/src/vs/base/node/ps.ts (License MIT)
 
-// @ts-ignore
-const WindowsProcessTree = require('windows-process-tree')
 const { VError } = require('verror')
 const ListProcessGetName = require('../ListProcessGetName/ListProcessGetName.js')
+const WindowsProcessTree = require('../WindowsProcessTree/WindowsProcessTree.js')
 
 /**
- *
- * @param {number} rootPid
- * @param {WindowsProcessTree.ProcessDataFlag} flags
- * @returns {Promise<WindowsProcessTree.IProcessInfo[] | undefined>}
- */
-const getProcessList = (rootPid, flags) => {
-  return new Promise((resolve, reject) => {
-    WindowsProcessTree.getProcessList(rootPid, resolve, flags)
-  })
-}
-
-/**
- *
- * @param {WindowsProcessTree.IProcessInfo[]} processList
- * @returns Promise< WindowsProcessTree.IProcessCpuInfo[]>
- */
-const addCpuUsage = (processList) => {
-  return new Promise((resolve) => {
-    WindowsProcessTree.getProcessCpuUsage(processList, resolve)
-  })
-}
-
-/**
- * @param {WindowsProcessTree.IProcessCpuInfo} item
+ * @param {import('windows-process-tree').IProcessCpuInfo} item
  * @param {number} rootPid
  */
 const toResultItem = (item, rootPid) => {
@@ -44,7 +20,7 @@ const toResultItem = (item, rootPid) => {
 
 /**
  *
- * @param {WindowsProcessTree.IProcessCpuInfo[]} completeProcessList
+ * @param {import('windows-process-tree').IProcessCpuInfo[]} completeProcessList
  * @param {number} rootPid
  */
 const toResult = (completeProcessList, rootPid) => {
@@ -56,15 +32,22 @@ const toResult = (completeProcessList, rootPid) => {
 }
 
 exports.listProcessesWithMemoryUsage = async (rootPid) => {
-  const processList = await getProcessList(
-    rootPid,
-    WindowsProcessTree.ProcessDataFlag.CommandLine |
-      WindowsProcessTree.ProcessDataFlag.Memory
-  )
-  if (!processList) {
-    throw new VError(`Root process ${rootPid} not found`)
+  try {
+    const processList = await WindowsProcessTree.getProcessList(
+      rootPid,
+      WindowsProcessTree.ProcessDataFlag.CommandLine |
+        WindowsProcessTree.ProcessDataFlag.Memory
+    )
+    if (!processList) {
+      throw new VError(`Root process ${rootPid} not found`)
+    }
+    const completeProcessList = await WindowsProcessTree.addCpuUsage(
+      processList
+    )
+    const result = toResult(completeProcessList, rootPid)
+    return result
+  } catch (error) {
+    // @ts-ignore
+    throw new VError(error, `Failed to list processes`)
   }
-  const completeProcessList = await addCpuUsage(processList)
-  const result = toResult(completeProcessList, rootPid)
-  return result
 }
