@@ -63,6 +63,9 @@ const getIcon = () => {
   if (!Platform.isProduction && Platform.isLinux) {
     return Path.join(Root.root, 'build', 'files', 'icon.png')
   }
+  if (!Platform.isProduction && Platform.isWindows) {
+    return Path.join(Root.root, 'build', 'files', 'icon.png')
+  }
   return undefined
 }
 
