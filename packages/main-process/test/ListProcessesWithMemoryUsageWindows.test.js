@@ -208,16 +208,7 @@ test('listProcessesWithMemoryUsage - error - rootPid not found', async () => {
   await expect(
     ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(25666)
     // @ts-ignore
-  ).rejects.toThrowError(new VError('Root process 25666 not found'))
-})
-
-test('listProcessesWithMemoryUsage - error', async () => {
-  // @ts-ignore
-  WindowsProcessTree.getProcessList.mockImplementation((rootPid, callback) => {
-    callback(undefined)
-  })
-  await expect(
-    ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(25666)
-    // @ts-ignore
-  ).rejects.toThrowError(new VError('Root process 25666 not found'))
+  ).rejects.toThrowError(
+    new VError('Failed to list processes: Root process 25666 not found')
+  )
 })
