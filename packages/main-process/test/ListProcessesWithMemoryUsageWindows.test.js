@@ -208,5 +208,7 @@ test('listProcessesWithMemoryUsage - error - rootPid not found', async () => {
   await expect(
     ListProcessesWithMemoryUsage.listProcessesWithMemoryUsage(25666)
     // @ts-ignore
-  ).rejects.toThrowError(new VError('Root process 25666 not found'))
+  ).rejects.toThrowError(
+    new VError('Failed to list processes: Root process 25666 not found')
+  )
 })
