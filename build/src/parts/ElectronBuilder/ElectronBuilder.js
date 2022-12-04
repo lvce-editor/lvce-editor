@@ -8,6 +8,7 @@ import * as Logger from '../Logger/Logger.js'
 import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'
 import * as Rename from '../Rename/Rename.js'
+import * as Replace from '../Replace/Replace.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
@@ -160,14 +161,14 @@ const addRootPackageJson = async ({ cachePath, version }) => {
     to: `${cachePath}/package.json`,
     value: {
       main: 'packages/main-process/src/mainProcessMain.js',
-      name: Product.applicationName + 'abc',
+      name: Product.applicationName,
       productName: Product.nameLong,
       version: version,
     },
   })
 }
 
-const copyElectronResult = async ({ version }) => {
+const copyElectronResult = async ({ config, version }) => {
   await bundleElectronMaybe()
   const debArch = 'amd64'
   await Copy.copy({
@@ -178,7 +179,13 @@ const copyElectronResult = async ({ version }) => {
     cachePath: `build/.tmp/linux/snap/${debArch}/app/resources/app`,
     version,
   })
-  console.log('wrote version', version)
+  if (config === 'electron_builder_arch_linux') {
+    await Replace.replace({
+      path: `build/.tmp/linux/snap/${debArch}/app/resources/app/packages/main-process/src/parts/Platform/Platform.js`,
+      occurrence: `exports.isArchLinux = false`,
+      replacement: `exports.isArchLinux = true`,
+    })
+  }
 }
 
 const renameReleaseFile = async (config, version) => {
@@ -199,7 +206,7 @@ export const build = async ({ config }) => {
   const version = await Tag.getSemverVersion()
 
   console.time('copyElectronResult')
-  await copyElectronResult({ version })
+  await copyElectronResult({ version, config })
   console.timeEnd('copyElectronResult')
 
   console.time('copyElectronBuilderConfig')

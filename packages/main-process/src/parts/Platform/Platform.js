@@ -10,6 +10,8 @@ exports.isWindows = process.platform === 'win32'
 
 exports.isProduction = false
 
+exports.isArchLinux = false
+
 const homeDirectory = homedir()
 
 const { env } = process
