@@ -103,10 +103,12 @@ const copyBuildResources = async () => {
     from: `build/files/icon.png`,
     to: 'build/.tmp/electron-builder/build/icon.png',
   })
-  await Copy.copyFile({
-    from: `build/files/icon.png`,
-    to: 'build/.tmp/electron-builder/build/icons/512x512.png',
-  })
+  for (const size of [16, 32, 48, 64, 128, 256, 512, 1024]) {
+    await Copy.copyFile({
+      from: 'build/files/icons/16.png',
+      to: `build/.tmp/electron-builder/build/icons/${size}x${size}.png`,
+    })
+  }
 }
 
 const getFinalFileName = (config, version) => {
