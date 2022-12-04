@@ -28,14 +28,25 @@ const getFile = (lines) => {
   return ''
 }
 
+const isInternalLine = (line) => {
+  return line.includes('node:electron') || line.includes('node:internal')
+}
+
+const isNotInternalLine = (line) => {
+  return !isInternalLine(line)
+}
+
 const cleanStack = (stack) => {
   const lines = stack.split('\n')
   for (let i = lines.length - 1; i >= 0; i--) {
-    if (
-      lines[i].includes('node:electron') ||
-      lines[i].includes('node:internal')
-    ) {
-      return lines.slice(i + 1).join('\n')
+    if (isInternalLine(lines[i])) {
+      if (i === lines.length - 1) {
+        continue
+      }
+      return lines
+        .slice(i + 1)
+        .filter(isNotInternalLine)
+        .join('\n')
     }
   }
   return stack
