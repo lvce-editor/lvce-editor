@@ -1,8 +1,6 @@
 import * as ElectronBuilder from 'electron-builder'
-import { readdir, readFile, writeFile } from 'node:fs/promises'
-import { join } from 'node:path'
+import { readdir } from 'node:fs/promises'
 import VError from 'verror'
-import { xdgCache } from 'xdg-basedir'
 import * as Copy from '../Copy/Copy.js'
 import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Logger from '../Logger/Logger.js'
@@ -50,55 +48,16 @@ const copyElectronBuilderConfig = async (config, version) => {
   })
 }
 
-const replaceFpmConfig = async () => {
-  try {
-    if (!xdgCache) {
-      throw new Error(`cache path not supported`)
-    }
-    const pacmanErbPath = join(
-      xdgCache,
-      'electron-builder/fpm/fpm-1.9.3-2.3.1-linux-x86_64/lib/app/templates/pacman.erb'
-    )
-    const content = await readFile(pacmanErbPath, 'utf8')
-    if (content.includes(`<%= version %>-<%= iteration %>`)) {
-      const newContent = content.replaceAll(
-        `<%= version %>-<%= iteration %>`,
-        `<%= version %>`
-      )
-      await writeFile(pacmanErbPath, newContent)
-      console.info(`[build] replaced fpm pacman config`)
-    }
-    return true
-  } catch (error) {
-    console.log(error)
-    return false
-  }
-}
-
 const runElectronBuilder = async ({ config }) => {
   try {
     const debArch = 'amd64'
 
-    let runTwice = false
-    if (config === 'electron_builder_arch_linux') {
-      const replaced = await replaceFpmConfig()
-      runTwice = !replaced
-    }
     const options = {
       projectDir: Path.absolute('build/.tmp/electron-builder'),
       prepackaged: Path.absolute(`build/.tmp/linux/snap/${debArch}/app`),
       // win: ['portable'],
     }
     await ElectronBuilder.build(options)
-    // workaround for iteration being injected by fpm leading to invalid pkgversion
-    if (runTwice) {
-      const replaced = await replaceFpmConfig()
-      if (replaced) {
-        await ElectronBuilder.build()
-      } else {
-        console.warn('[build] could not replace iteration in fpm config')
-      }
-    }
   } catch (error) {
     // @ts-ignore
     throw new VError(error, `Electron builder failed to execute`)

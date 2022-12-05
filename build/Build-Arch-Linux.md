@@ -22,7 +22,9 @@ node bin/build.js --target=electron-builder-arch-linux --force
 
 ## Try out
 
-TODO
+```sh
+sudo pacman -U .tmp/releases/lvce-oss.pacman
+```
 
 ## Linting
 
