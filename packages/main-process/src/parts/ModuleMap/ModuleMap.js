@@ -1,86 +1,52 @@
 const ModuleId = require('../ModuleId/ModuleId.js')
 
+const getPrefix = (commandId) => {
+  return commandId.slice(0, commandId.indexOf('.'))
+}
+
 exports.getModuleId = (commandId) => {
-  switch (commandId) {
-    case 'ElectronApp.exit':
-    case 'App.exit':
+  const prefix = getPrefix(commandId)
+  switch (prefix) {
+    case 'ElectronApp':
+    case 'App':
       return ModuleId.App
-    case 'ElectronWindow.minimize':
-    case 'ElectronWindow.maximize':
-    case 'ElectronWindow.toggleDevtools':
-    case 'ElectronWindow.toggleDevtools':
-    case 'ElectronWindow.unmaximize':
-    case 'ElectronWindow.close':
-    case 'ElectronWindow.reload':
-    case 'ElectronWindow.zoomIn':
-    case 'ElectronWindow.zoomOut':
-    case 'ElectronWindow.focus':
+    case 'ElectronWindow':
       return ModuleId.Window
-    case 'ElectronDeveloper.getPerformanceEntries':
-    case 'ElectronDeveloper.crashMainProcess':
+    case 'ElectronDeveloper':
       return ModuleId.Developer
-    case 'AppWindow.createAppWindow':
-    case 'AppWindow.openNew':
+    case 'AppWindow':
       return ModuleId.AppWindow
-    case 'ElectronWindowProcessExplorer.open':
+    case 'ElectronWindowProcessExplorer':
       return ModuleId.ElectronWindowProcessExplorer
-    case 'ElectronWindowAbout.open':
+    case 'ElectronWindowAbout':
       return ModuleId.ElectronWindowAbout
-    case 'ElectronDialog.showOpenDialog':
-    case 'ElectronDialog.showMessageBox':
+    case 'ElectronDialog':
       return ModuleId.Dialog
-    case 'ElectronBeep.beep':
+    case 'ElectronBeep':
       return ModuleId.Beep
-    case 'ElectronShell.beep':
-    case 'ElectronShell.showItemInFolder':
-    case 'ElectronShell.openExternal':
-    case 'ElectronShell.openPath':
+    case 'ElectronShell':
       return ModuleId.ElectronShell
-    case 'ElectronPowerSaveBlocker.start':
-    case 'ElectronPowerSaveBlocker.stop':
+    case 'ElectronPowerSaveBlocker':
       return ModuleId.ElectronPowerSaveBlocker
-    case 'ElectronSafeStorage.isEncryptionAvailable':
-    case 'ElectronSafeStorage.encryptString':
-    case 'ElectronSafeStorage.decryptString':
+    case 'ElectronSafeStorage':
       return ModuleId.ElectronSafeStorage
-    case 'ElectronContentTracing.startRecording':
-    case 'ElectronContentTracing.stopRecording':
+    case 'ElectronContentTracing':
       return ModuleId.ElectronContentTracing
-    case 'ElectronNetLog.startLogging':
-    case 'ElectronNetLog.stopLogging':
+    case 'ElectronNetLog':
       return ModuleId.ElectronNetLog
-    case 'ElectronBrowserView.createBrowserView':
-    case 'ElectronBrowserView.disposeBrowserView':
+    case 'ElectronBrowserView':
       return ModuleId.ElectronBrowserView
-    case 'ElectronBrowserViewQuickPick.createBrowserViewQuickPick':
-    case 'ElectronBrowserViewQuickPick.disposeBrowserViewQuickPick':
+    case 'ElectronBrowserViewQuickPick':
       return ModuleId.ElectronBrowserViewQuickPick
-    case 'ElectronBrowserViewFunctions.resizeBrowserView':
-    case 'ElectronBrowserViewFunctions.disposeBrowserView':
-    case 'ElectronBrowserViewFunctions.setIframeSrc':
-    case 'ElectronBrowserViewFunctions.openDevtools':
-    case 'ElectronBrowserViewFunctions.forward':
-    case 'ElectronBrowserViewFunctions.reload':
-    case 'ElectronBrowserViewFunctions.backward':
-    case 'ElectronBrowserViewFunctions.focus':
-    case 'ElectronBrowserViewFunctions.show':
-    case 'ElectronBrowserViewFunctions.hide':
-    case 'ElectronBrowserViewFunctions.inspectElement':
-    case 'ElectronBrowserViewFunctions.copyImageAt':
-    case 'ElectronBrowserViewFunctions.setFallthroughKeyBindings':
-    case 'ElectronBrowserViewFunctions.cancelNavigation':
-    case 'ElectronBrowserViewFunctions.getStats':
+    case 'ElectronBrowserViewFunctions':
       return ModuleId.ElectronBrowserViewFunctions
-    case 'ElectronContextMenu.openContextMenu':
+    case 'ElectronContextMenu':
       return ModuleId.ElectronContextMenu
-    case 'ElectronClipBoard.writeText':
+    case 'ElectronClipBoard':
       return ModuleId.ElectronClipBoard
-    case 'ElectronAutoUpdater.checkForUpdates':
-    case 'ElectronAutoUpdater.getFeedUrl':
-    case 'ElectronAutoUpdater.quitAndInstall':
-    case 'ElectronAutoUpdater.setFeedUrl':
+    case 'ElectronAutoUpdater':
       return ModuleId.ElectronAutoUpdater
-    case 'ElectronApplicationMenu.setItems':
+    case 'ElectronApplicationMenu':
       return ModuleId.ElectronApplicationMenu
     default:
       throw new Error(`method not found ${commandId}`)
