@@ -1,25 +1,12 @@
-export const Methods = {
-  MessagePort: 1,
-  ModuleWorker: 2,
-  ReferencePort: 3,
-  get Auto() {
-    if (globalThis.acceptPort) {
-      return Methods.MessagePort
-    }
-    if (globalThis.acceptReferencePort) {
-      return Methods.ReferencePort
-    }
-    return Methods.ModuleWorker
-  },
-}
+import * as IpcChildType from '../IpcChildType/IpcChildType.js'
 
 const getModule = (method) => {
   switch (method) {
-    case Methods.MessagePort:
+    case IpcChildType.MessagePort:
       return import('./IpcChildWithMessagePort.js')
-    case Methods.ModuleWorker:
+    case IpcChildType.ModuleWorker:
       return import('./IpcChildWithModuleWorker.js')
-    case Methods.ReferencePort:
+    case IpcChildType.ReferencePort:
       return import('./IpcChildWithReferencePort.js')
     default:
       throw new Error('unexpected ipc type')
