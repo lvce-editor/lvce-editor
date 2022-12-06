@@ -26,6 +26,8 @@ export const load = (moduleId) => {
       return import('../Platform/Platform.ipc.js')
     case ModuleId.Preferences:
       return import('../Preferences/Preferences.ipc.js')
+    case ModuleId.ProcessCrash:
+      return import('../ProcessCrash/ProcessCrash.ipc.js')
     case ModuleId.RecentlyOpened:
       return import('../RecentlyOpened/RecentlyOpened.ipc.js')
     case ModuleId.Search:

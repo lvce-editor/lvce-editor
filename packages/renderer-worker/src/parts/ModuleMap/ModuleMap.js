@@ -138,6 +138,10 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workbench
     case 'Workspace':
       return ModuleId.Workspace
+    case 'ElectronProcessCrash':
+      return ModuleId.ElectronProcessCrash
+    case 'SharedProcessCrash':
+      return ModuleId.SharedProcessCrash
     default:
       throw new Error(`command ${commandId} not found`)
   }

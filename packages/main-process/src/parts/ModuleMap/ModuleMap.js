@@ -48,6 +48,8 @@ exports.getModuleId = (commandId) => {
       return ModuleId.ElectronAutoUpdater
     case 'ElectronApplicationMenu':
       return ModuleId.ElectronApplicationMenu
+    case 'ProcessCrash':
+      return ModuleId.ProcessCrash
     default:
       throw new Error(`method not found ${commandId}`)
   }

@@ -9,7 +9,7 @@ const ElectronMessageBoxType = require('../ElectronMessageBoxType/ElectronMessag
  * artificial timeout to work around electron bug https://github.com/electron/electron/issues/31449
  */
 const enableElectronFreezeDesktopWorkaround = async () => {
-  await Timeout.setTimeout(140)
+  await Timeout.wait(140)
 }
 
 exports.showOpenDialog = async (title, properties) => {

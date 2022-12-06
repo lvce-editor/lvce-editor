@@ -42,6 +42,8 @@ exports.load = async (moduleId) => {
       return require('../ElectronWindowAbout/ElectronWindowAbout.ipc.js')
     case ModuleId.ElectronWindowProcessExplorer:
       return require('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
+    case ModuleId.ProcessCrash:
+      return require('../ProcessCrash/ProcessCrash.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

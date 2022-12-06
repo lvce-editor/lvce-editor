@@ -52,6 +52,8 @@ export const load = (moduleId) => {
       return import('../ElectronClipBoard/ElectronClipBoard.ipc.js')
     case ModuleId.ElectronContextMenu:
       return import('../ElectronContextMenu/ElectronContextMenu.ipc.js')
+    case ModuleId.ElectronProcessCrash:
+      return import('../ElectronProcessCrash/ElectronProcessCrash.ipc.js')
     case ModuleId.ElectronWindow:
       return import('../ElectronWindow/ElectronWindow.ipc.js')
     case ModuleId.ErrorHandling:
@@ -112,6 +114,8 @@ export const load = (moduleId) => {
       return import('../SessionReplay/SessionReplay.ipc.js')
     case ModuleId.SessionStorage:
       return import('../SessionStorage/SessionStorage.ipc.js')
+    case ModuleId.SharedProcessCrash:
+      return import('../SharedProcessCrash/SharedProcessCrash.ipc.js')
     case ModuleId.Test:
       return import('../Test/Test.ipc.js')
     case ModuleId.TestFramework:

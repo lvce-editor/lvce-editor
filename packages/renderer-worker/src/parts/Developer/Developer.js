@@ -389,19 +389,15 @@ export const allocateMemoryInSharedProcess = () => {
 }
 
 export const crashSharedProcess = () => {
-  return SharedProcess.invoke(
-    /* Developer.crashSharedProcess */ 'Developer.crashSharedProcess'
-  )
+  return Command.execute('SharedProcessCrash.crash')
 }
 
 export const crashRendererProcess = () => {}
 
 export const crashRendererWorker = () => {}
 
-export const crashMainProcess = () => {
-  return SharedProcess.invoke(
-    /* Electron.crashMainProcess */ 'Electron.crashMainProcess'
-  )
+export const crashMainProcess = async () => {
+  await Command.execute('ElectronProcessCrash.crash')
 }
 
 export const openExtensionsFolder = () => {
