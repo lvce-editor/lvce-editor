@@ -34,32 +34,25 @@ const ParsedLineType = {
 export const search = async (searchDir, searchString) => {
   // TODO reject promise when ripgrep search fails
   return new Promise((resolve, reject) => {
+    const ripGrepArgs = [
+      '--smart-case',
+      '--stats',
+      '--json',
+      '--fixed-strings',
+      searchString,
+      '.',
+    ]
     const childProcess = useNice
-      ? spawn(
-          'nice',
-          [
-            '-20',
-            RgPath.rgPath,
-            '--smart-case',
-            '--stats',
-            '--json',
-            searchString,
-            '.',
-          ],
-          {
-            cwd: searchDir,
-          }
-        )
-      : spawn(
-          RgPath.rgPath,
-          ['--smart-case', '--stats', '--json', searchString, '.'],
-          {
-            cwd: searchDir,
-          }
-        )
+      ? spawn('nice', ['-20', RgPath.rgPath, ...ripGrepArgs], {
+          cwd: searchDir,
+        })
+      : spawn(RgPath.rgPath, ripGrepArgs, {
+          cwd: searchDir,
+        })
     const allSearchResults = Object.create(null)
     let buffer = ''
     let stats = {}
+    let limitHit = false
     let numberOfResults = 0
     // TODO use pipeline / transform stream maybe
 
@@ -75,13 +68,12 @@ export const search = async (searchDir, searchString) => {
             allSearchResults[parsedLine.data.path.text] = []
             break
           }
-          case ParsedLineType.Match: {
+          case ParsedLineType.Match:
             numberOfResults++
             allSearchResults[parsedLine.data.path.text].push(
               toSearchResult(parsedLine)
             )
             break
-          }
           case ParsedLineType.Summary:
             stats = parsedLine.data
             break
@@ -90,6 +82,7 @@ export const search = async (searchDir, searchString) => {
         }
       }
       if (numberOfResults > MAX_SEARCH_RESULTS) {
+        limitHit = true
         childProcess.kill()
       }
     }
@@ -98,6 +91,7 @@ export const search = async (searchDir, searchString) => {
       resolve({
         results: Object.entries(allSearchResults),
         stats,
+        limitHit,
       })
     }
     const handleError = (error) => {
@@ -106,6 +100,7 @@ export const search = async (searchDir, searchString) => {
       resolve({
         results: [],
         stats,
+        limitHit,
       })
     }
     childProcess.stdout.on('data', handleData)

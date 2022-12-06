@@ -46,6 +46,7 @@ test(
         ],
       ],
       stats: expect.any(Object),
+      limitHit: false,
     })
   },
   TIMEOUT_LONG
