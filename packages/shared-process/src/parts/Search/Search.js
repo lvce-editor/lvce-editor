@@ -1,6 +1,6 @@
 import { spawn } from 'node:child_process'
-import * as RgPath from '../RgPath/RgPath.js'
 import * as Platform from '../Platform/Platform.js'
+import * as RgPath from '../RgPath/RgPath.js'
 
 const MAX_SEARCH_RESULTS = 300
 
