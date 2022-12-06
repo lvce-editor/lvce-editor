@@ -1,140 +1,69 @@
 import * as ModuleId from '../ModuleId/ModuleId.js'
 
+const getPrefix = (commandId) => {
+  return commandId.slice(0, commandId.indexOf('.'))
+}
+
 export const getModuleId = (commandId) => {
-  switch (commandId) {
-    case 'ChromeExtension.install':
-    case 'ChromeExtension.uninstall':
+  const prefix = getPrefix(commandId)
+  switch (prefix) {
+    case 'ChromeExtension':
       return ModuleId.ChromeExtension
-    case 'ClipBoard.readFiles':
-    case 'ClipBoard.writeFiles':
+    case 'ClipBoard':
       return ModuleId.ClipBoard
-    case 'Developer.allocateMemory':
-    case 'Developer.crashSharedProcess':
-    case 'Developer.createHeapSnapshot':
-    case 'Developer.createProfile':
-    case 'Developer.getNodeStartupTime':
-    case 'Developer.getNodeStartupTiming':
-    case 'Developer.sharedProcessMemoryUsage':
-    case 'Developer.sharedProcessStartupPerformance':
+    case 'Developer':
       return ModuleId.Developer
-    case 'Download.download':
+    case 'Download':
       return ModuleId.Download
-    case 'ExtensionHost.dispose':
-    case 'ExtensionHost.enableExtension':
-    case 'ExtensionHost.executeCommand':
-    case 'ExtensionHost.executeTabCompletionProvider':
-    case 'ExtensionHost.format':
-    case 'ExtensionHost.getMemoryUsage':
-    case 'ExtensionHost.getSourceControlBadgeCount':
-    case 'ExtensionHost.getStatusBarItems':
-    case 'ExtensionHost.registerChangeListener':
-    case 'ExtensionHost.setWorkspacePath':
-    case 'ExtensionHost.sourceControlGetChangedFiles':
-    case 'ExtensionHost.start':
-    case 'ExtensionHostBraceCompletion.executeBraceCompletionProvider':
-    case 'ExtensionHostClosingTag.execute':
-    case 'ExtensionHostClosingTag.executeClosingTagProvider':
-    case 'ExtensionHostClosingTag.executeTypeDefinitionProvider':
-    case 'ExtensionHostCompletion.execute':
-    case 'ExtensionHostDefinition.executeDefinitionProvider':
-    case 'ExtensionHostDiagnostic.execute':
-    case 'ExtensionHostFileSystem.getPathSeparator':
-    case 'ExtensionHostFileSystem.readDirWithFileTypes':
-    case 'ExtensionHostFileSystem.readFile':
-    case 'ExtensionHostFileSystem.remove':
-    case 'ExtensionHostFileSystem.rename':
-    case 'ExtensionHostFileSystem.writeFile':
-    case 'ExtensionHostHover.execute':
-    case 'ExtensionHostImplementation.executeImplementationProvider':
-    case 'ExtensionHostKeyBindings.getKeyBindings':
-    case 'ExtensionHostLanguages.getLanguages':
-    case 'ExtensionHostManagement.activateAll':
-    case 'ExtensionHostManagement.enableExtensions':
-    case 'ExtensionHostOutput.getOutputChannels':
-    case 'ExtensionHostQuickPick.handleQuickPickResult':
-    case 'ExtensionHostReferences.executeReferenceProvider':
-    case 'EXtensionHostRename.executePrepareRename':
-    case 'ExtensionHostRename.executeRename':
-    case 'ExtensionHostSemanticTokens.executeSemanticTokenProvider':
-    case 'ExtensionHostSourceControl.acceptInput':
-    case 'ExtensionHostTextDocument.setLanguageId':
-    case 'ExtensionHostTextDocument.syncFull':
-    case 'ExtensionHostTextDocument.syncIncremental':
-    case 'ExtensionHostTextDocument.syncInitial':
+    case 'ExtensionHost':
+    case 'ExtensionHostBraceCompletion':
+    case 'ExtensionHostClosingTag':
+    case 'ExtensionHostCompletion':
+    case 'ExtensionHostDefinition':
+    case 'ExtensionHostDiagnostic':
+    case 'ExtensionHostFileSystem':
+    case 'ExtensionHostHover':
+    case 'ExtensionHostImplementation':
+    case 'ExtensionHostKeyBindings':
+    case 'ExtensionHostLanguages':
+    case 'ExtensionHostManagement':
+    case 'ExtensionHostOutput':
+    case 'ExtensionHostQuickPick':
+    case 'ExtensionHostReferences':
+    case 'EXtensionHostRename':
+    case 'ExtensionHostSemanticTokens':
+    case 'ExtensionHostSourceControl':
     case 'ExtensionHostTextDocument':
-    case 'ExtensionHostWorkspace.setWorkspacePath':
+    case 'ExtensionHostWorkspace':
       return ModuleId.ExtensionHost
-    case 'ExtensionHost.getColorThemeJson':
-    case 'ExtensionHost.getColorThemeNames':
-    case 'ExtensionHost.getColorThemes':
-    case 'ExtensionHost.getIconTheme':
-    case 'ExtensionHost.getIconThemeJson':
-    case 'ExtensionHost.getLanguageConfiguration':
-    case 'ExtensionHost.getLanguages':
-    case 'ExtensionHost.watchColorTheme':
-    case 'ExtensionManagement.disable':
-    case 'ExtensionManagement.enable':
-    case 'ExtensionManagement.getAllExtensions':
-    case 'ExtensionManagement.getExtensions':
-    case 'ExtensionManagement.install':
-    case 'ExtensionManagement.uninstall':
+    case 'ExtensionHost':
+    case 'ExtensionManagement':
       return ModuleId.ExtensionManagement
-    case 'FileSystem.chmod':
-    case 'FileSystem.copy':
-    case 'FileSystem.createFile':
-    case 'FileSystem.createFolder':
-    case 'FileSystem.ensureFile':
-    case 'FileSystem.getPathSeparator':
-    case 'FileSystem.mkdir':
-    case 'FileSystem.readDirWithFileTypes':
-    case 'FileSystem.readFile':
-    case 'FileSystem.remove':
-    case 'FileSystem.rename':
-    case 'FileSystem.writeFile':
+    case 'FileSystem':
       return ModuleId.FileSystem
-    case 'GitLsFiles.gitLsFiles':
+    case 'GitLsFiles':
       return ModuleId.GitLsFiles
-    case 'Native.openFolder':
+    case 'Native':
       return ModuleId.Native
-    case 'OutputChannel.close':
-    case 'OutputChannel.open':
+    case 'OutputChannel':
       return ModuleId.OutputChannel
-    case 'Platform.getAppDir':
-    case 'Platform.getBuiltinExtensionsPath':
-    case 'Platform.getCachedExtensionsPath':
-    case 'Platform.getCacheDir':
-    case 'Platform.getConfigDir':
-    case 'Platform.getDataDir':
-    case 'Platform.getDisabledExtensionsPath':
-    case 'Platform.getDownloadDir':
-    case 'Platform.getExtensionsPath':
-    case 'Platform.getHomeDir':
-    case 'Platform.getLogsDir':
-    case 'Platform.getMarketplaceUrl':
-    case 'Platform.getRecentlyOpenedPath':
-    case 'Platform.getTestPath':
-    case 'Platform.getUserSettingsPath':
-    case 'Platform.setEnvironmentVariables':
+    case 'Platform':
       return ModuleId.Platform
-    case 'Preferences.getAll':
+    case 'Preferences':
       return ModuleId.Preferences
-    case 'RecentlyOpened.addPath':
+    case 'RecentlyOpened':
       return ModuleId.RecentlyOpened
-    case 'Search.search':
+    case 'Search':
       return ModuleId.Search
-    case 'SearchFile.searchFile':
+    case 'SearchFile':
       return ModuleId.SearchFile
-    case 'Terminal.create':
-    case 'Terminal.dispose':
-    case 'Terminal.resize':
-    case 'Terminal.write':
+    case 'Terminal':
       return ModuleId.Terminal
     case 4820:
       return ModuleId.TextDocument
-    case 'WebSocketServer.handleUpgrade':
+    case 'WebSocketServer':
       return ModuleId.WebSocketServer
-    case 'Workspace.getHomeDir':
-    case 'Workspace.resolveRoot':
+    case 'Workspace':
       return ModuleId.Workspace
     default:
       throw new Error(`command ${commandId} not found`)
