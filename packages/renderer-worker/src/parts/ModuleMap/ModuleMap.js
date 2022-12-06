@@ -1,6 +1,9 @@
 import * as ModuleId from '../ModuleId/ModuleId.js'
 
 const getPrefix = (commandId) => {
+  if (!commandId || typeof commandId !== 'string') {
+    return commandId
+  }
   return commandId.slice(0, commandId.indexOf('.'))
 }
 
