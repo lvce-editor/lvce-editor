@@ -32,9 +32,6 @@ const getDetailString = () => {
 }
 
 exports.showAbout = async () => {
-  // TODO get message string
-  // TODO show about dialog
-  console.log('show about')
   const detail = getDetailString()
   const result = await ElectronDialog.showMessageBox(
     Platform.ProductName,
