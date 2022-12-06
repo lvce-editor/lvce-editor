@@ -1,277 +1,139 @@
 import * as ModuleId from '../ModuleId/ModuleId.js'
 
+const getPrefix = (commandId) => {
+  return commandId.slice(0, commandId.indexOf('.'))
+}
+
 export const getModuleId = (commandId) => {
-  switch (commandId) {
+  const prefix = getPrefix(commandId)
+  switch (prefix) {
     // TODO this should be in layout module
-    case 'Ajax.getBlob':
-    case 'Ajax.getJson':
-    case 'Ajax.getText':
+    case 'Ajax':
       return ModuleId.Ajax
-    case 'Audio.playBell':
+    case 'Audio':
       return ModuleId.Audio
-    case 'Base64.decode':
-    case 'Base64.encode':
+    case 'Base64':
       return ModuleId.Base64
-    case 'Blob.base64StringToBlob':
-    case 'Blob.binaryStringToBlob':
-    case 'Blob.blobToBinaryString':
+    case 'Blob':
       return ModuleId.Blob
-    case 'CacheStorage.clearCache':
-    case 'CacheStorage.getJson':
-    case 'CacheStorage.setJson':
+    case 'CacheStorage':
       return ModuleId.CacheStorage
-    case 'Callback.reject':
-    case 'Callback.resolve':
+    case 'Callback':
       return ModuleId.Callback
-    case 'Chrome.close':
-    case 'Chrome.exit':
-    case 'Chrome.maximize':
-    case 'Chrome.minimize':
-    case 'Chrome.unmaximize':
+    case 'Chrome':
       return ModuleId.Chrome
-    case 'ChromeExtension.install':
-    case 'ChromeExtension.uninstall':
+    case 'ChromeExtension':
       return ModuleId.ChromeExtension
-    case 'ClipBoard.execCopy':
-    case 'ClipBoard.readNativeFiles':
-    case 'ClipBoard.readText':
-    case 'ClipBoard.writeImage':
-    case 'ClipBoard.writeNativeFiles':
-    case 'ClipBoard.writeText':
+    case 'ClipBoard':
       return ModuleId.ClipBoard
-    case 'ColorPicker.close':
-    case 'ColorPicker.open':
+    case 'ColorPicker':
       return ModuleId.ColorPicker
-    case 'ColorTheme.hydrate':
-    case 'ColorTheme.reload':
-    case 'ColorTheme.setColorTheme':
+    case 'ColorTheme':
       return ModuleId.ColorTheme
-    case 'ColorThemeFromJson.createColorThemeFromJson':
+    case 'ColorThemeFromJson':
       return ModuleId.ColorThemeFromJson
-    case 'ContentTracing.start':
-    case 'ContentTracing.stop':
+    case 'ContentTracing':
       return ModuleId.ContentTracing
-    case 'ContextMenu.focusFirst':
-    case 'ContextMenu.focusLast':
-    case 'ContextMenu.focusNext':
-    case 'ContextMenu.focusPrevious':
-    case 'ContextMenu.hide':
-    case 'ContextMenu.select':
-    case 'ContextMenu.selectCurrent':
-    case 'ContextMenu.show':
+    case 'ContextMenu':
       return ModuleId.ContextMenu
-    case 'Developer.allocateMemoryInSharedProcess':
-    case 'Developer.clearCache':
-    case 'Developer.crashMainProcess':
-    case 'Developer.crashSharedProcess':
-    case 'Developer.createSharedProcessHeapSnapshot':
-    case 'Developer.createSharedProcessProfile':
-    case 'Developer.downloadViewletState':
-    case 'Developer.getMemoryUsageContent':
-    case 'Developer.getStartupPerformanceContent':
-    case 'Developer.installChromeExtensionIStillDontCareAboutCookies':
-    case 'Developer.installChromeExtensionUBlockOrigin':
-    case 'Developer.openCacheFolder':
-    case 'Developer.openConfigFolder':
-    case 'Developer.openDataFolder':
-    case 'Developer.openLogsFolder':
-    case 'Developer.openProcessExplorer':
-    case 'Developer.reloadColorTheme':
-    case 'Developer.reloadIconTheme':
-    case 'Developer.showColorThemeCss':
-    case 'Developer.showIconThemeCss':
-    case 'Developer.showMemoryUsage':
-    case 'Developer.showStartupPerformance':
-    case 'Developer.startupPerformance':
-    case 'Developer.toggleDeveloperTools':
+    case 'Developer':
       return ModuleId.Developer
-    case 'Dialog.close':
-    case 'Dialog.handleClick':
-    case 'Dialog.openFile':
-    case 'Dialog.openFolder':
-    case 'Dialog.showAbout':
-    case 'Dialog.showMessage':
+    case 'Dialog':
       return ModuleId.Dialog
-    case 'Download.downloadFile':
-    case 'Download.downloadJson':
-    case 'Download.downloadToDownloadsFolder':
+    case 'Download':
       return ModuleId.Download
-    case 'EditorDiagnostics.hydrate':
+    case 'EditorDiagnostics':
       return ModuleId.EditorDiagnostics
     case 3900:
       return ModuleId.EditorError
-    case 'EditorRename.abort':
-    case 'EditorRename.finish':
-    case 'EditorRename.open':
+    case 'EditorRename':
       return ModuleId.EditorRename
-    case 'ElectronApp.exit':
+    case 'ElectronApp':
       return ModuleId.ElectronApp
-    case 'ElectronApplicationMenu.handleClick':
-    case 'ElectronApplicationMenu.hydrate':
+    case 'ElectronApplicationMenu':
       return ModuleId.ElectronApplicationMenu
-    case 'ElectronBrowserView.createBrowserViewQuickpick':
-    case 'ElectronBrowserView.openBrowserViewQuickPick':
+    case 'ElectronBrowserView':
       return ModuleId.ElectronBrowserView
-    case 'ElectronClipBoard.writeText':
+    case 'ElectronClipBoard':
       return ModuleId.ElectronClipBoard
-    case 'ElectronContextMenu.handleMenuClose':
-    case 'ElectronContextMenu.handleSelect':
+    case 'ElectronContextMenu':
       return ModuleId.ElectronContextMenu
-    case 'ElectronWindow.close':
-    case 'ElectronWindow.maximize':
-    case 'ElectronWindow.minimize':
-    case 'ElectronWindow.toggleDevtools':
-    case 'ElectronWindow.unmaximize':
-    case 'ElectronWindow.zoomIn':
-    case 'ElectronWindow.zoomOut':
+    case 'ElectronWindow':
       return ModuleId.ElectronWindow
-    case 'ErrorHandling.handleError':
+    case 'ErrorHandling':
       return ModuleId.ErrorHandling
-    case 'Eval.evalInRendererProcess':
+    case 'Eval':
       return ModuleId.Eval
-    case 'ExtensionHost.loadWebExtension':
-    case 'ExtensionHost.startWebExtensionHost':
+    case 'ExtensionHost':
       return ModuleId.ExtensionHostCode
-    case 'ExtensionMeta.addExtension':
-    case 'ExtensionMeta.addNodeExtension':
-    case 'ExtensionMeta.addWebExtension':
+    case 'ExtensionMeta':
       return ModuleId.ExtensionMeta
-    case 'Extensions.openCachedExtensionsFolder':
-    case 'Extensions.openExtensionsFolder':
+    case 'Extensions':
       return ModuleId.Extensions
-    case 'FilePicker.showDirectoryPicker':
-    case 'FilePicker.showFilePicker':
-    case 'FilePicker.showSaveFilePicker':
+    case 'FilePicker':
       return ModuleId.FilePicker
-    case 'FileSystem.getPathSeparator':
-    case 'FileSystem.mkdir':
-    case 'FileSystem.readDirWithFileTypes':
-    case 'FileSystem.readFile':
-    case 'FileSystem.remove':
-    case 'FileSystem.writeFile':
+    case 'FileSystem':
       return ModuleId.FileSystem
-    case 'Format.hydrate':
+    case 'Format':
       return ModuleId.Format
-    case 'IconTheme.addIcons':
-    case 'IconTheme.getIconThemeCss':
-    case 'IconTheme.hydrate':
-    case 'IconTheme.setIconTheme':
+    case 'IconTheme':
       return ModuleId.IconTheme
-    case 'ImagePreview.hide':
-    case 'ImagePreview.show':
+    case 'ImagePreview':
       return ModuleId.ImagePreview
-    case 'IndexedDb.addHandle':
-    case 'IndexedDb.getHandle':
+    case 'IndexedDb':
       return ModuleId.IndexedDb
-    case 'KeyBindings.handleKeyBinding':
-    case 'KeyBindings.hydrate':
+    case 'KeyBindings':
       return ModuleId.KeyBindings
-    case 'KeyBindingsInitial.getKeyBindings':
+    case 'KeyBindingsInitial':
       return ModuleId.KeyBindingsInitial
     case 3444:
       return ModuleId.Listener
-    case 'LocalStorage.clear':
-    case 'LocalStorage.getItem':
-    case 'LocalStorage.getJson':
-    case 'LocalStorage.getText':
-    case 'LocalStorage.setJson':
-    case 'LocalStorage.setText':
+    case 'LocalStorage':
       return ModuleId.LocalStorage
-    case 'Menu.focusFirst':
-    case 'Menu.focusIndex':
-    case 'Menu.focusLast':
-    case 'Menu.focusNext':
-    case 'Menu.focusPrevious':
-    case 'Menu.handleMouseEnter':
-    case 'Menu.hide':
-    case 'Menu.selectIndex':
-    case 'Menu.selectItem':
-    case 'Menu.show':
+    case 'Menu':
       return ModuleId.Menu
-    case 'Mime.getMediaMimeType':
-    case 'Mime.getTextMime':
+    case 'Mime':
       return ModuleId.Mime
-    case 'Navigation.focusActivityBar':
-    case 'Navigation.focusMain':
-    case 'Navigation.focusNextPart':
-    case 'Navigation.focusPanel':
-    case 'Navigation.focusPreviousPart':
-    case 'Navigation.focusSideBar':
-    case 'Navigation.focusStatusBar':
-    case 'Navigation.focusTitleBar':
+    case 'Navigation':
       return ModuleId.Navigatiom
-    case 'Notification.create':
-    case 'Notification.dispose':
-    case 'Notification.handleClick':
-    case 'Notification.showWithOptions':
+    case 'Notification':
       return ModuleId.Notification
-    case 'Open.openExternal':
-    case 'Open.openUrl':
+    case 'Open':
       return ModuleId.Open
-    case 'OpenNativeFolder.openNativeFolder':
+    case 'OpenNativeFolder':
       return ModuleId.OpenNativeFolder
-    case 'PersistentFileHandle.addHandle':
-    case 'PersistentFileHandle.getHandle':
-    case 'PersistentFileHandle.removeHandle':
+    case 'PersistentFileHandle':
       return ModuleId.PersistentFileHandle
-    case 'Preferences.hydrate':
-    case 'Preferences.openKeyBindingsJson':
-    case 'Preferences.openSettingsJson':
+    case 'Preferences':
       return ModuleId.Preferences
-    case 'RecentlyOpened.addToRecentlyOpened':
-    case 'RecentlyOpened.clearRecentlyOpened':
-    case 'RecentlyOpened.getRecentlyOpened':
-    case 'RecentlyOpened.hydrate':
+    case 'RecentlyOpened':
       return ModuleId.RecentlyOpened
-    case 'SaveFileAs.saveFileAs':
+    case 'SaveFileAs':
       return ModuleId.SaveFileAs
-    case 'SaveState.handleVisibilityChange':
-    case 'SaveState.hydrate':
+    case 'SaveState':
       return ModuleId.SaveState
-    case 'ServiceWorker.hydrate':
-    case 'ServiceWorker.uninstall':
+    case 'ServiceWorker':
       return ModuleId.ServiceWorker
-    case 'SessionReplay.downloadSession':
-    case 'SessionReplay.openSession':
-    case 'SessionReplay.replayCurrentSession':
-    case 'SessionReplay.replaySession':
+    case 'SessionReplay':
       return ModuleId.SessionReplay
-    case 'SessionStorage.clear':
-    case 'SessionStorage.getJson':
+    case 'SessionStorage':
       return ModuleId.SessionStorage
-    case 'Test.execute':
+    case 'Test':
       return ModuleId.Test
     case '001':
       return ModuleId.TestFramework
     case '002':
       return ModuleId.TestFrameworkComponent
-    case 'Url.createObjectUrl':
-    case 'Url.revokeObjectUrl':
+    case 'Url':
       return ModuleId.Url
-    case 'Viewlet.closeWidget':
-    case 'Viewlet.executeViewletCommand':
-    case 'Viewlet.focus':
-    case 'Viewlet.getAllStates':
-    case 'Viewlet.openWidget':
-    case 'Viewlet.send':
+    case 'Viewlet':
     case 2133:
       return ModuleId.Viewlet
-    case 'Window.close':
-    case 'Window.exit':
-    case 'Window.makeScreenshot':
-    case 'Window.maximize':
-    case 'Window.minimize':
-    case 'Window.openNew':
-    case 'Window.reload':
-    case 'Window.unmaximize':
-    case 'Window.zoomIn':
-    case 'Window.zoomOut':
+    case 'Window':
       return ModuleId.Window
-    case 'Workbench.unload':
+    case 'Workbench':
       return ModuleId.Workbench
-    case 'Workspace.hydrate':
-    case 'Workspace.setPath':
-    case 'Workspace.setUri':
+    case 'Workspace':
       return ModuleId.Workspace
     default:
       throw new Error(`command ${commandId} not found`)
