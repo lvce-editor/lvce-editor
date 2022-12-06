@@ -14,3 +14,19 @@ exports.exit = (code) => {
 exports.on = (event, listener) => {
   process.on(event, listener)
 }
+
+exports.getElectronVersion = () => {
+  return process.versions.electron
+}
+
+exports.getChromeVersion = () => {
+  return process.versions.chrome
+}
+
+exports.getNodeVersion = () => {
+  return process.versions.node
+}
+
+exports.getV8Version = () => {
+  return process.versions.v8
+}

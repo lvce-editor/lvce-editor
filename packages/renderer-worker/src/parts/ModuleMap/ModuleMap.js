@@ -138,6 +138,8 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workbench
     case 'Workspace':
       return ModuleId.Workspace
+    case 'About':
+      return ModuleId.About
     default:
       throw new Error(`command ${commandId} not found`)
   }

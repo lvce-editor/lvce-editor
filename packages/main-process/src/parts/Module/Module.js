@@ -38,10 +38,10 @@ exports.load = async (moduleId) => {
       return require('../ElectronShell/ElectronShell.ipc.js')
     case ModuleId.Window:
       return require('../ElectronWindow/ElectronWindow.ipc.js')
-    case ModuleId.ElectronWindowAbout:
-      return require('../ElectronWindowAbout/ElectronWindowAbout.ipc.js')
     case ModuleId.ElectronWindowProcessExplorer:
       return require('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
+    case ModuleId.About:
+      return require('../About/About.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }
