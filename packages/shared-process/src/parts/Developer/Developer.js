@@ -2,6 +2,7 @@ import { createWriteStream, writeFileSync } from 'node:fs'
 import { performance } from 'node:perf_hooks'
 import * as ExtensionHost from '../ExtensionHost/ExtensionHost.js'
 import * as Process from '../Process/Process.js'
+import * as Timeout from '../Timeout/Timeout.js'
 
 export const measureLatencyBetweenExtensionHostAndSharedProcess = async (
   socket,
@@ -77,7 +78,7 @@ export const allocateMemory = () => {
 
 /* istanbul ignore next */
 export const crashSharedProcess = () => {
-  setTimeout(() => {
+  Timeout.setTimeout(() => {
     throw new Error('oops')
   }, 0)
 }
@@ -113,7 +114,7 @@ export const createProfile = async () => {
       session.post('Profiler.start', () => {
         // Invoke business logic under measurement here...
 
-        setTimeout(() => {
+        Timeout.setTimeout(() => {
           session.post('Profiler.stop', (error, { profile }) => {
             // Write profile to disk, upload, etc.
             if (!error) {
