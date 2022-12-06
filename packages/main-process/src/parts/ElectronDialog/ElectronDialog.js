@@ -2,13 +2,14 @@ const Electron = require('electron')
 const Window = require('../ElectronWindow/ElectronWindow.js')
 const Assert = require('../Assert/Assert.js')
 const Platform = require('../Platform/Platform.js')
-const Timout = require('../Timeout/Timeout.js')
+const Timeout = require('../Timeout/Timeout.js')
+const ElectronMessageBoxType = require('../ElectronMessageBoxType/ElectronMessageBoxType.js')
 
 /**
  * artificial timeout to work around electron bug https://github.com/electron/electron/issues/31449
  */
 const enableElectronFreezeDesktopWorkaround = async () => {
-  await Timout.setTimeout(140)
+  await Timeout.setTimeout(140)
 }
 
 exports.showOpenDialog = async (title, properties) => {
@@ -43,7 +44,7 @@ exports.showMessageBox = async (message, buttons) => {
   }
   const appName = Platform.applicationName
   const result = await Electron.dialog.showMessageBox(focusedWindow, {
-    type: 'error',
+    type: ElectronMessageBoxType.Error,
     message,
     title: appName,
     buttons,
