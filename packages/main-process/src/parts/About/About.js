@@ -2,6 +2,15 @@ const ElectronDialog = require('../ElectronDialog/ElectronDialog.js')
 const ElectronMessageBoxType = require('../ElectronMessageBoxType/ElectronMessageBoxType.js')
 const Process = require('../Process/Process.js')
 const Platform = require('../Platform/Platform.js')
+const ElectronClipBoard = require('../ElectronClipBoard/ElectronClipBoard.js')
+
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  Ok: 'Ok',
+  Copy: 'Copy',
+}
 
 const getDetailString = () => {
   const electronVersion = Process.getElectronVersion()
@@ -21,15 +30,24 @@ const getDetailString = () => {
   ]
   return lines.join('\n')
 }
+
 exports.showAbout = async () => {
   // TODO get message string
   // TODO show about dialog
   console.log('show about')
   const detail = getDetailString()
-  await ElectronDialog.showMessageBox(
+  const result = await ElectronDialog.showMessageBox(
     Platform.ProductName,
-    ['Ok'],
+    [UiStrings.Copy, UiStrings.Ok],
     ElectronMessageBoxType.Info,
     detail
   )
+  switch (result) {
+    case 0:
+      ElectronClipBoard.writeText(detail)
+      break
+    case 1:
+    default:
+      break
+  }
 }
