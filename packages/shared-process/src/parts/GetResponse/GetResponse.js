@@ -32,6 +32,7 @@ export const getResponse = async (message, handle) => {
         },
       }
     }
+    // @ts-ignore
     if (error && error instanceof Error && error.code === ErrorCodes.ENOENT) {
       return {
         jsonrpc: JsonRpc.Version,
@@ -43,7 +44,7 @@ export const getResponse = async (message, handle) => {
       }
     }
     const prettyError = PrettyError.prepare(error)
-    PrettyError.print(prettyError)
+    PrettyError.print(prettyError, `[shared-process] `)
     return {
       jsonrpc: JsonRpc.Version,
       id: message.id,

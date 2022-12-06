@@ -82,8 +82,8 @@ export const prepareJsonError = (json, property, message) => {
   return jsonError
 }
 
-export const print = (prettyError) => {
+export const print = (prettyError, prefix = '') => {
   console.error(
-    `Error: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}`
+    `${prefix}Error: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}`
   )
 }
