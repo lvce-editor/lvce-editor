@@ -8,6 +8,7 @@ import { TextDecoder } from 'util'
 import * as Command from '../src/parts/Command/Command.js'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as FileSystemGitHub from '../src/parts/FileSystem/FileSystemGitHub.js'
+import * as GitHubDirentType from '../src/parts/GitHubDirentType/GitHubDirentType.js'
 import * as ModuleId from '../src/parts/ModuleId/ModuleId.js'
 
 const mswServer = setupServer()
@@ -67,14 +68,14 @@ test('readDirWithFileTypes', async () => {
             {
               path: '.devcontainer',
               mode: '040000',
-              type: 'tree',
+              type: GitHubDirentType.Tree,
               sha: '9c3e79c7fedd05f1eb5cb5ee9d7c3099b39092e3',
               url: 'https://api.github.com/repos/microsoft/vscode/git/trees/9c3e79c7fedd05f1eb5cb5ee9d7c3099b39092e3',
             },
             {
               path: '.editorconfig',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: 'e7e99b5bcb5209057e262ff462c94a87800cc5f0',
               size: 365,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/e7e99b5bcb5209057e262ff462c94a87800cc5f0',
@@ -82,7 +83,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: '.eslintignore',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: '27603af2b5bfe0097905a367a52b48b6059c9b5f',
               size: 1069,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/27603af2b5bfe0097905a367a52b48b6059c9b5f',
@@ -90,7 +91,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: '.eslintrc.json',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: '26e182bca3121803f48e92f0e33b8afb0541be14',
               size: 15048,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/26e182bca3121803f48e92f0e33b8afb0541be14',
@@ -98,7 +99,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: '.git-blame-ignore',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: '24b19f36c3078dae3dce15df17572fc525716418',
               size: 699,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/24b19f36c3078dae3dce15df17572fc525716418',
@@ -106,7 +107,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: '.gitattributes',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: 'f6263094d01a2de129ccec850512c503ef9e25ae',
               size: 167,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/f6263094d01a2de129ccec850512c503ef9e25ae',
@@ -114,14 +115,14 @@ test('readDirWithFileTypes', async () => {
             {
               path: '.github',
               mode: '040000',
-              type: 'tree',
+              type: GitHubDirentType.Tree,
               sha: '9ad4a172f384bd7389b5c9a945060962933bcf4d',
               url: 'https://api.github.com/repos/microsoft/vscode/git/trees/9ad4a172f384bd7389b5c9a945060962933bcf4d',
             },
             {
               path: '.gitignore',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: '738d6793fa9d5db6ec43745ca4c4720b94924b27',
               size: 215,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/738d6793fa9d5db6ec43745ca4c4720b94924b27',
@@ -129,7 +130,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: '.lsifrc.json',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: '5b992e89ca8b2b6be4d6d9acdd9dfb29caea0728',
               size: 116,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/5b992e89ca8b2b6be4d6d9acdd9dfb29caea0728',
@@ -137,7 +138,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: '.mailmap',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: 'd4542abf73c17dbb2d808e8b06236c03a3f09a3b',
               size: 412,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/d4542abf73c17dbb2d808e8b06236c03a3f09a3b',
@@ -145,7 +146,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: '.mention-bot',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: 'ea1a170775a7c2778f2ff80e1232147cf62d911e',
               size: 153,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/ea1a170775a7c2778f2ff80e1232147cf62d911e',
@@ -153,14 +154,14 @@ test('readDirWithFileTypes', async () => {
             {
               path: '.vscode',
               mode: '040000',
-              type: 'tree',
+              type: GitHubDirentType.Tree,
               sha: '4627e9cb1df7f9396a4dd2f8f668f5e6a4ec8bfa',
               url: 'https://api.github.com/repos/microsoft/vscode/git/trees/4627e9cb1df7f9396a4dd2f8f668f5e6a4ec8bfa',
             },
             {
               path: '.yarnrc',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: '481bf7bfa46daf06480fa43375149aec33aca9c3',
               size: 101,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/481bf7bfa46daf06480fa43375149aec33aca9c3',
@@ -168,7 +169,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: 'CONTRIBUTING.md',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: 'b96e077aa67eaffdc4590e81d4fc1b863e4f3fbc',
               size: 5696,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/b96e077aa67eaffdc4590e81d4fc1b863e4f3fbc',
@@ -176,7 +177,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: 'LICENSE.txt',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: '0ac28ee234d232ac0691f39cebf95bf6b2a763a5',
               size: 1088,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/0ac28ee234d232ac0691f39cebf95bf6b2a763a5',
@@ -184,7 +185,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: 'README.md',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: 'f6e8f39e2d5c4fe8fd4167eff36603c50d979e27',
               size: 6292,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/f6e8f39e2d5c4fe8fd4167eff36603c50d979e27',
@@ -192,7 +193,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: 'SECURITY.md',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: 'a050f362c1528508093c19072be352443de4b926',
               size: 2780,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/a050f362c1528508093c19072be352443de4b926',
@@ -200,7 +201,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: 'ThirdPartyNotices.txt',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: '83a9e45c392e2bad8ae24b426b1a06cb0b94b4b1',
               size: 174422,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/83a9e45c392e2bad8ae24b426b1a06cb0b94b4b1',
@@ -208,14 +209,14 @@ test('readDirWithFileTypes', async () => {
             {
               path: 'build',
               mode: '040000',
-              type: 'tree',
+              type: GitHubDirentType.Tree,
               sha: 'c7ccaedf5cde629d3a481ae0b76e2777714ee0b2',
               url: 'https://api.github.com/repos/microsoft/vscode/git/trees/c7ccaedf5cde629d3a481ae0b76e2777714ee0b2',
             },
             {
               path: 'cglicenses.json',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: 'e969eb826e9a53c525dac077e9e188224804325a',
               size: 10233,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/e969eb826e9a53c525dac077e9e188224804325a',
@@ -223,7 +224,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: 'cgmanifest.json',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: '62bb0a3718d4204dbbca350ea7a503233d27e5b0',
               size: 25254,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/62bb0a3718d4204dbbca350ea7a503233d27e5b0',
@@ -231,14 +232,14 @@ test('readDirWithFileTypes', async () => {
             {
               path: 'extensions',
               mode: '040000',
-              type: 'tree',
+              type: GitHubDirentType.Tree,
               sha: '20308edf74e9713edf9ae557dd4995a7929cd8d3',
               url: 'https://api.github.com/repos/microsoft/vscode/git/trees/20308edf74e9713edf9ae557dd4995a7929cd8d3',
             },
             {
               path: 'gulpfile.js',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: '9691ba80607abd11c77a3ae791da903c64bc4fcc',
               size: 382,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/9691ba80607abd11c77a3ae791da903c64bc4fcc',
@@ -246,7 +247,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: 'package.json',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: '9b1f2679a347a9a80b5f837483c6376a7e48ae3c',
               size: 9113,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/9b1f2679a347a9a80b5f837483c6376a7e48ae3c',
@@ -254,7 +255,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: 'product.json',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: '15aa2da235e88acf332ae29dc4603dc336d2d51f',
               size: 3335,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/15aa2da235e88acf332ae29dc4603dc336d2d51f',
@@ -262,42 +263,42 @@ test('readDirWithFileTypes', async () => {
             {
               path: 'remote',
               mode: '040000',
-              type: 'tree',
+              type: GitHubDirentType.Tree,
               sha: '3fb053983b051f7246c126c6512dd98293b16c60',
               url: 'https://api.github.com/repos/microsoft/vscode/git/trees/3fb053983b051f7246c126c6512dd98293b16c60',
             },
             {
               path: 'resources',
               mode: '040000',
-              type: 'tree',
+              type: GitHubDirentType.Tree,
               sha: '0db3b58f2a9ef7852c20cfae44d12753a59e33f3',
               url: 'https://api.github.com/repos/microsoft/vscode/git/trees/0db3b58f2a9ef7852c20cfae44d12753a59e33f3',
             },
             {
               path: 'scripts',
               mode: '040000',
-              type: 'tree',
+              type: GitHubDirentType.Tree,
               sha: '143d95e2b847a394237bbeb28b9e4e51f2ff3c90',
               url: 'https://api.github.com/repos/microsoft/vscode/git/trees/143d95e2b847a394237bbeb28b9e4e51f2ff3c90',
             },
             {
               path: 'src',
               mode: '040000',
-              type: 'tree',
+              type: GitHubDirentType.Tree,
               sha: 'c56accd958c775a6e2b4bc6c82a80c6e2b240dba',
               url: 'https://api.github.com/repos/microsoft/vscode/git/trees/c56accd958c775a6e2b4bc6c82a80c6e2b240dba',
             },
             {
               path: 'test',
               mode: '040000',
-              type: 'tree',
+              type: GitHubDirentType.Tree,
               sha: '9391ccf5453a0d72b7de901a44b5dbf6b4c5b25d',
               url: 'https://api.github.com/repos/microsoft/vscode/git/trees/9391ccf5453a0d72b7de901a44b5dbf6b4c5b25d',
             },
             {
               path: 'tsfmt.json',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: '741eb1e55278c59f948d49bc1ac4ef390f5fb32b',
               size: 746,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/741eb1e55278c59f948d49bc1ac4ef390f5fb32b',
@@ -305,7 +306,7 @@ test('readDirWithFileTypes', async () => {
             {
               path: 'yarn.lock',
               mode: '100644',
-              type: 'blob',
+              type: GitHubDirentType.Blob,
               sha: '871e4e4940fd50fa8f6c5f258e89f32e8ea057a7',
               size: 541472,
               url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/871e4e4940fd50fa8f6c5f258e89f32e8ea057a7',
@@ -482,7 +483,7 @@ test('readFile', async () => {
         {
           path: '.gitattributes',
           mode: '100644',
-          type: 'blob',
+          type: GitHubDirentType.Blob,
           sha: 'f6263094d01a2de129ccec850512c503ef9e25ae',
           size: 167,
           url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/f6263094d01a2de129ccec850512c503ef9e25ae',
@@ -531,7 +532,7 @@ test('readFile - unicode decoding issue', async () => {
         {
           path: '.gitattributes',
           mode: '100644',
-          type: 'blob',
+          type: GitHubDirentType.Blob,
           sha: 'f6263094d01a2de129ccec850512c503ef9e25ae',
           size: 167,
           url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/f6263094d01a2de129ccec850512c503ef9e25ae',
@@ -591,7 +592,7 @@ test.skip('readFile - ajax error', async () => {
         {
           path: '.gitattributes',
           mode: '100644',
-          type: 'blob',
+          type: GitHubDirentType.Blob,
           sha: 'f6263094d01a2de129ccec850512c503ef9e25ae',
           size: 167,
           url: 'https://api.github.com/repos/microsoft/vscode/git/blobs/f6263094d01a2de129ccec850512c503ef9e25ae',
