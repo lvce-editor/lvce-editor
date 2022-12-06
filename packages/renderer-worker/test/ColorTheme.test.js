@@ -52,7 +52,7 @@ test('hydrate', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
-      case 'ExtensionHost.getColorThemeJson':
+      case 'ExtensionHostColorTheme.getColorThemeJson':
         const colorThemeId = params[0]
         switch (colorThemeId) {
           case 'slime':
@@ -75,7 +75,7 @@ test('hydrate', async () => {
   await ColorTheme.hydrate()
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'ExtensionHost.getColorThemeJson',
+    'ExtensionHostColorTheme.getColorThemeJson',
     'slime'
   )
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
@@ -99,7 +99,7 @@ test('hydrate - color theme fails to load from shared process', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
-      case 'ExtensionHost.getColorThemeJson':
+      case 'ExtensionHostColorTheme.getColorThemeJson':
         const colorThemeId = params[0]
         switch (colorThemeId) {
           case 'atom-one-dark':
@@ -141,7 +141,7 @@ test('hydrate - color theme fails to load and fallback color theme also fails to
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
-      case 'ExtensionHost.getColorThemeJson':
+      case 'ExtensionHostColorTheme.getColorThemeJson':
         const colorThemeId = params[0]
         switch (colorThemeId) {
           case 'atom-one-dark':
@@ -181,7 +181,7 @@ test('hydrate - color id is fallback color theme id and fails to load', async ()
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
     switch (method) {
-      case 'ExtensionHost.getColorThemeJson':
+      case 'ExtensionHostColorTheme.getColorThemeJson':
         const colorThemeId = params[0]
         switch (colorThemeId) {
           case 'slime':

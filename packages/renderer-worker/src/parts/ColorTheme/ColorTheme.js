@@ -32,7 +32,7 @@ const getColorThemeJsonFromSharedProcess = async (colorThemeId) => {
   //   }
   // }
   return SharedProcess.invoke(
-    /* ExtensionHost.getColorThemeJson */ 'ExtensionHost.getColorThemeJson',
+    /* ExtensionHostColorTheme.getColorThemeJson */ 'ExtensionHostColorTheme.getColorThemeJson',
     /* colorThemeId */ colorThemeId
   )
 }

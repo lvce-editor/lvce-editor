@@ -54,7 +54,7 @@ const getIconThemeJson = async (iconThemeId) => {
     }
   }
   return SharedProcess.invoke(
-    /* ExtensionHost.getIconThemeJson */ 'ExtensionHost.getIconThemeJson',
+    /* ExtensionHostIconTheme.getIconThemeJson */ 'ExtensionHostIconTheme.getIconThemeJson',
     /* iconThemeId */ iconThemeId
   )
 }

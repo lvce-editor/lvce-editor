@@ -30,7 +30,7 @@ test('getLanguageConfiguration - error - languages must be loaded before request
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
-      case 'ExtensionHost.getLanguageConfiguration':
+      case 'ExtensionHostLanguages.getLanguageConfiguration':
         return {
           comments: {
             blockComment: ['<!--', '-->'],
@@ -56,7 +56,7 @@ test('getLanguageConfiguration - error - languages must be loaded before request
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
-      case 'ExtensionHost.getLanguageConfiguration':
+      case 'ExtensionHostLanguages.getLanguageConfiguration':
         return {
           comments: {
             blockComment: ['<!--', '-->'],
@@ -77,7 +77,7 @@ test.skip('hydrate', async () => {
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...parameters) => {
     switch (method) {
-      case 'ExtensionHost.getLanguages':
+      case 'ExtensionHostLanguages.getLanguages':
         return {
           id: 'html',
           extensions: ['.html'],
@@ -91,7 +91,7 @@ test.skip('hydrate', async () => {
   await Languages.hydrate()
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'ExtensionHost.getLanguages'
+    'ExtensionHostLanguages.getLanguages'
   )
 })
 

@@ -5,12 +5,12 @@ import * as ExtensionHostLanguages from './ExtensionManagementLanguages.js'
 
 // prettier-ignore
 export const Commands = {
-  'ExtensionHost.getColorThemeJson': ExtensionHostColorTheme.getColorThemeJson,
-  'ExtensionHost.getColorThemeNames': ExtensionHostColorTheme.getColorThemeNames,
-  'ExtensionHost.getIconThemeJson': ExtensionHostIconTheme.getIconTheme,
-  'ExtensionHost.getLanguageConfiguration': ExtensionHostLanguages.getLanguageConfiguration,
-  'ExtensionHost.getLanguages': ExtensionHostLanguages.getLanguages,
-  'ExtensionHost.watchColorTheme':ExtensionHostColorTheme.watch,
+  'ExtensionHostColorTheme.getColorThemeJson': ExtensionHostColorTheme.getColorThemeJson,
+  'ExtensionHostColorTheme.getColorThemeNames': ExtensionHostColorTheme.getColorThemeNames,
+  'ExtensionHostIconTheme.getIconThemeJson': ExtensionHostIconTheme.getIconTheme,
+  'ExtensionHostLanguages.getLanguageConfiguration': ExtensionHostLanguages.getLanguageConfiguration,
+  'ExtensionHostLanguages.getLanguages': ExtensionHostLanguages.getLanguages,
+  'ExtensionHostColorTheme.watchColorTheme':ExtensionHostColorTheme.watch,
   'ExtensionManagement.disable': ExtensionManagement.disable,
   'ExtensionManagement.enable': ExtensionManagement.enable,
   'ExtensionManagement.getAllExtensions': ExtensionManagement.getExtensions,

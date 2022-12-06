@@ -36,8 +36,10 @@ export const getModuleId = (commandId) => {
     case 'ExtensionHostTextDocument':
     case 'ExtensionHostWorkspace':
       return ModuleId.ExtensionHost
-    case 'ExtensionHost':
     case 'ExtensionManagement':
+    case 'ExtensionColorTheme':
+    case 'ExtensionIconTheme':
+    case 'ExtensionLanguages':
       return ModuleId.ExtensionManagement
     case 'FileSystem':
       return ModuleId.FileSystem
