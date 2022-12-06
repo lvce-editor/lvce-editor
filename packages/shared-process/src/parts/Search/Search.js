@@ -1,6 +1,7 @@
 import { spawn } from 'node:child_process'
 import * as Platform from '../Platform/Platform.js'
 import * as RgPath from '../RgPath/RgPath.js'
+import * as RipGrepParsedLineType from '../RipGrepParsedLineType/RipGrepParsedLineType.js'
 
 const MAX_SEARCH_RESULTS = 300
 
@@ -24,12 +25,6 @@ const useNice = !Platform.isWindows
 // TODO stats flag might not be necessary
 // TODO update client
 // TODO not always run nice, maybe configure nice via flag/options
-
-const ParsedLineType = {
-  Begin: 'begin',
-  Match: 'match',
-  Summary: 'summary',
-}
 
 export const search = async (searchDir, searchString) => {
   // TODO reject promise when ripgrep search fails
@@ -64,17 +59,17 @@ export const search = async (searchDir, searchString) => {
       for (const line of lines) {
         const parsedLine = JSON.parse(line)
         switch (parsedLine.type) {
-          case ParsedLineType.Begin: {
+          case RipGrepParsedLineType.Begin: {
             allSearchResults[parsedLine.data.path.text] = []
             break
           }
-          case ParsedLineType.Match:
+          case RipGrepParsedLineType.Match:
             numberOfResults++
             allSearchResults[parsedLine.data.path.text].push(
               toSearchResult(parsedLine)
             )
             break
-          case ParsedLineType.Summary:
+          case RipGrepParsedLineType.Summary:
             stats = parsedLine.data
             break
           default:
