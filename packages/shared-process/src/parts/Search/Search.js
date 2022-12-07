@@ -6,12 +6,22 @@ import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const MAX_SEARCH_RESULTS = 300
 
+const BEFORE = 20
+const AFTER = 20
+
 const toSearchResult = (parsedLine) => {
-  return {
-    preview: parsedLine.data.lines.text,
-    absoluteOffset: parsedLine.data.absolute_offset,
-    lineNumber: parsedLine.data.line_number - 1,
+  console.log(parsedLine.data.submatches)
+  const results = []
+  const lines = parsedLine.data.lines.text
+  for (const submatch of parsedLine.data.submatches) {
+    console.log(submatch)
   }
+  return results
+  // return {
+  //   preview: parsedLine.data.lines.text,
+  //   absoluteOffset: parsedLine.data.absolute_offset,
+  //   lineNumber: parsedLine.data.line_number - 1,
+  // }
 }
 
 // TODO update vscode-ripgrep when https://github.com/mhinz/vim-grepper/issues/244, https://github.com/BurntSushi/ripgrep/issues/1892 is fixed
@@ -59,7 +69,6 @@ export const search = async (searchDir, searchString) => {
       buffer = lines.pop()
       for (const line of lines) {
         const parsedLine = JSON.parse(line)
-        console.log(parsedLine)
         switch (parsedLine.type) {
           case RipGrepParsedLineType.Begin: {
             allSearchResults[parsedLine.data.path.text] = []
