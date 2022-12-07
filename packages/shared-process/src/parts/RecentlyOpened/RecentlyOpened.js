@@ -4,6 +4,7 @@ import * as Assert from '../Assert/Assert.js'
 import { FileNotFoundError } from '../Error/FileNotFoundError.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as Json from '../Json/Json.js'
+import * as JsonFile from '../JsonFile/JsonFile.js'
 import * as Platform from '../Platform/Platform.js'
 
 const isValid = (recentlyOpened) => {
@@ -24,8 +25,7 @@ const addToArrayUnique = (recentlyOpened, path) => {
 
 const getRecentlyOpened = async (recentlyOpenedPath) => {
   try {
-    const content = await FileSystem.readFile(recentlyOpenedPath)
-    const parsed = await Json.parse(content, recentlyOpenedPath)
+    const parsed = await JsonFile.readJson(recentlyOpenedPath)
     return parsed
   } catch (error) {
     // TODO should check for error.code

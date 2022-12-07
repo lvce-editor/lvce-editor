@@ -3,6 +3,7 @@ import { tmpdir } from 'node:os'
 import { join, sep } from 'node:path'
 import { writeFile } from '../src/parts/FileSystem/FileSystem.js'
 import * as Search from '../src/parts/Search/Search.js'
+import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
 
 const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
@@ -34,18 +35,23 @@ test(
     )
     expect(await Search.search(tmpDir, 'Document')).toEqual({
       results: [
-        [
-          fixPath('./index.html'),
-          [
-            {
-              absoluteOffset: 208,
-              lineNumber: 6,
-              preview: '    <title>Document</title>\n',
-            },
-          ],
-        ],
+        {
+          type: TextSearchResultType.File,
+          text: fixPath('./index.html'),
+          lineNumber: 0,
+          start: 0,
+          end: 0,
+        },
+        {
+          type: TextSearchResultType.Match,
+          lineNumber: 7,
+          start: 11,
+          end: 19,
+          text: '    <title>Document</title>\n',
+        },
       ],
       stats: expect.any(Object),
+      limitHit: false,
     })
   },
   TIMEOUT_LONG

@@ -8,11 +8,16 @@ export const state = {
   seenWarnings: [],
 }
 
+export const logError = async (error) => {
+  const prettyError = await PrettyError.prepare(error)
+  const prettyErrorString = PrettyError.print(prettyError)
+  console.error(prettyErrorString)
+  return prettyError
+}
+
 export const handleError = async (error) => {
   try {
-    const prettyError = await PrettyError.prepare(error)
-    const prettyErrorString = PrettyError.print(prettyError)
-    console.error(prettyErrorString)
+    const prettyError = await logError(error)
     await Command.execute(
       /* Notification.create */ 'Notification.create',
       /* type */ 'error',

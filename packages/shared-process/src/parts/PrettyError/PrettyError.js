@@ -1,8 +1,9 @@
-import { readFileSync } from 'node:fs'
-import { fileURLToPath } from 'node:url'
 import { codeFrameColumns } from '@babel/code-frame'
 import cleanStack from 'clean-stack'
 import { LinesAndColumns } from 'lines-and-columns'
+import { readFileSync } from 'node:fs'
+import { fileURLToPath } from 'node:url'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const getActualPath = (fileUri) => {
   if (fileUri.startsWith('file://')) {
@@ -20,7 +21,7 @@ export const prepare = (error) => {
     }
   }
   const cleanedStack = cleanStack(error.stack)
-  const lines = cleanedStack.split('\n')
+  const lines = SplitLines.splitLines(cleanedStack)
   const file = lines[1]
   let codeFrame = ''
   if (error.codeFrame) {
