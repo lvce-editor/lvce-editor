@@ -1,3 +1,5 @@
+import * as SplitLines from '../SplitLines/SplitLines.js'
+
 const State = {
   Top: 1,
   AfterSwitchStart: 2,
@@ -18,7 +20,7 @@ export const getNewModuleCode = (
   ipcPostFix,
   viewlet
 ) => {
-  const lines = moduleCode.split('\n')
+  const lines = SplitLines.splitLines(moduleCode)
   const firstLine = ipcPostFix ? firstLineIpcPostFix : firstLineNoIpcPostFix
   const newLines = eagerlyLoadedModules.map(firstLine)
   let state = State.Top

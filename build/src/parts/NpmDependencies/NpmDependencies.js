@@ -1,6 +1,7 @@
 import VError from 'verror'
 import * as Exec from '../Exec/Exec.js'
 import * as Path from '../Path/Path.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const RE_NUMBER = /^\d+/
 
@@ -13,7 +14,7 @@ const getNodeVersionMajor = (nodeVersion) => {
 }
 
 const getElsProblemMessage = (message) => {
-  const lines = message.split('\n')
+  const lines = SplitLines.splitLines(message)
   for (const line of lines) {
     if (line.includes('npm ERR! invalid:')) {
       return line
