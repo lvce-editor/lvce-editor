@@ -1,4 +1,3 @@
-import * as Assert from '../Assert/Assert.js'
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 const combineResults = (results) => {
@@ -14,7 +13,5 @@ export const executeTextSearchProvider = async (scheme, query) => {
     noProviderFoundResult: [],
     combineResults,
   })
-  Assert.array(result)
-  console.log({ result })
   return result
 }

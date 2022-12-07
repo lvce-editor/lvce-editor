@@ -1,15 +1,13 @@
 const textSearchProvider = {
   scheme: 'memfs',
   provideTextSearchResults(query) {
-    return [
-      [
-        './index.txt',
-        {
-          absoluteOffset: 208,
-          preview: '    <title>Document</title>\n',
-        },
-      ],
-    ]
+    return {
+      type: vscode.TextSearchResultType.File,
+      text: './index.txt',
+      start: 0,
+      end: 0,
+      lineNumber: 0,
+    }
   },
 }
 
