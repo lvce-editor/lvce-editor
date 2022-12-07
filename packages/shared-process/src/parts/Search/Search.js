@@ -20,8 +20,8 @@ const toSearchResult = (parsedLine) => {
     const previewText = lines.slice(previewStart, previewEnd)
     results.push({
       type: TextSearchResultType.Match,
-      start: submatch.start,
-      end: submatch.end,
+      start: submatch.start - previewStart,
+      end: submatch.end - previewStart,
       lineNumber,
       text: previewText,
     })
