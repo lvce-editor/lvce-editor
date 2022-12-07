@@ -99,6 +99,6 @@ export const bundleCss = async ({
   await Replace.replace({
     path: appCssPath,
     occurrence: `url(/fonts/`,
-    replacement: `url(${pathPrefix}/fonts/`,
+    replacement: `url(${assetDir}/fonts/`,
   })
 }

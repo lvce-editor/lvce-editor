@@ -270,7 +270,7 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
   })
   await Copy.copy({
     from: 'static/fonts',
-    to: `build/.tmp/dist/fonts`,
+    to: `build/.tmp/dist/${commitHash}/fonts`,
   })
   await Copy.copy({
     from: 'static/images',
