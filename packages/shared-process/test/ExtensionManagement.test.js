@@ -246,7 +246,7 @@ test("uninstall should fail when extension doesn't exist", async () => {
 // TODO test for extension deactivation fails (in extension host)
 // TODO test for global unhandlederror/unhandledrejection (in extension host)
 
-test('getExtensions', async () => {
+test.skip('getExtensions', async () => {
   const tmpDir1 = await getTmpDir()
   const manifestPath1 = join(tmpDir1, 'test-extension', 'extension.json')
   await mkdir(dirname(manifestPath1))
