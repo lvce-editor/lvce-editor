@@ -1,5 +1,4 @@
 import * as Assert from '../Assert/Assert.js'
-import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 
 const getProvider = (scheme) => {

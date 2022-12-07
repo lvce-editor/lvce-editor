@@ -1,3 +1,4 @@
+import * as EditorCompletionType from '../EditorCompletionType/EditorCompletionType.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
@@ -5,6 +6,7 @@ import * as ExtensionHostConfiguration from '../ExtensionHostConfiguration/Exten
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
 import * as ExtensionHostEnv from '../ExtensionHostEnv/ExtensionHostEnv.js'
 import * as ExtensionHostExec from '../ExtensionHostExec/ExtensionHostExec.js'
+import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
 import * as ExtensionHostImplementation from '../ExtensionHostImplementation/ExtensionHostImplementation.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
@@ -14,8 +16,7 @@ import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDoc
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
-import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
-import * as EditorCompletionType from '../EditorCompletionType/EditorCompletionType.js'
+import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 
 import { VError } from '../VError/VError.js'
 
@@ -88,6 +89,7 @@ export const api =  {
   // Text Search
   registerTextSearchProvider: ExtensionHostTextSearch.registerTextSearchProvider,
   executeTextSearchProvider: ExtensionHostTextSearch.executeTextSearchProvider,
+  TextSearchResultType,
 
   // Type Definition
   registerTypeDefinitionProvider: ExtensionHostTypeDefinition.registerTypeDefinitionProvider,

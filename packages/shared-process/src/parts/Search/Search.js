@@ -3,15 +3,30 @@ import * as Platform from '../Platform/Platform.js'
 import * as RgPath from '../RgPath/RgPath.js'
 import * as RipGrepParsedLineType from '../RipGrepParsedLineType/RipGrepParsedLineType.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 
 const MAX_SEARCH_RESULTS = 300
 
+const BEFORE = 20
+const AFTER = 20
+
 const toSearchResult = (parsedLine) => {
-  return {
-    preview: parsedLine.data.lines.text,
-    absoluteOffset: parsedLine.data.absolute_offset,
-    lineNumber: parsedLine.data.line_number - 1,
+  const results = []
+  const lines = parsedLine.data.lines.text
+  const lineNumber = parsedLine.data.line_number
+  for (const submatch of parsedLine.data.submatches) {
+    const previewStart = Math.max(submatch.start - BEFORE, 0)
+    const previewEnd = Math.min(submatch.end + AFTER, lines.length)
+    const previewText = lines.slice(previewStart, previewEnd)
+    results.push({
+      type: TextSearchResultType.Match,
+      start: submatch.start,
+      end: submatch.end,
+      lineNumber,
+      text: previewText,
+    })
   }
+  return results
 }
 
 // TODO update vscode-ripgrep when https://github.com/mhinz/vim-grepper/issues/244, https://github.com/BurntSushi/ripgrep/issues/1892 is fixed
@@ -59,16 +74,23 @@ export const search = async (searchDir, searchString) => {
       buffer = lines.pop()
       for (const line of lines) {
         const parsedLine = JSON.parse(line)
-        console.log(parsedLine)
         switch (parsedLine.type) {
           case RipGrepParsedLineType.Begin: {
-            allSearchResults[parsedLine.data.path.text] = []
+            allSearchResults[parsedLine.data.path.text] = [
+              {
+                type: TextSearchResultType.File,
+                start: 0,
+                end: 0,
+                lineNumber: 0,
+                text: parsedLine.data.path.text,
+              },
+            ]
             break
           }
           case RipGrepParsedLineType.Match:
             numberOfResults++
             allSearchResults[parsedLine.data.path.text].push(
-              toSearchResult(parsedLine)
+              ...toSearchResult(parsedLine)
             )
             break
           case RipGrepParsedLineType.Summary:
@@ -85,8 +107,9 @@ export const search = async (searchDir, searchString) => {
     }
 
     const handleClose = () => {
+      const results = Object.values(allSearchResults).flat(1)
       resolve({
-        results: Object.entries(allSearchResults),
+        results,
         stats,
         limitHit,
       })
