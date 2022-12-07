@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Command from '../Command/Command.js'
 import * as Compare from '../Compare/Compare.js'
+import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 import * as Height from '../Height/Height.js'
 import * as I18nString from '../I18NString/I18NString.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
@@ -83,9 +84,11 @@ const getStatusMessage = (resultCount, fileResultCount) => {
 
 const getResultCounts = (results) => {
   let resultCount = 0
+  let fileCount = 0
   for (const result of results) {
     switch (result.type) {
       case TextSearchResultType.File:
+        fileCount++
         break
       case TextSearchResultType.Match:
         resultCount++
@@ -94,7 +97,7 @@ const getResultCounts = (results) => {
         break
     }
   }
-  return resultCount
+  return { fileCount, resultCount }
 }
 
 export const setValue = async (state, value) => {
@@ -115,15 +118,17 @@ export const setValue = async (state, value) => {
     const { height, itemHeight, minimumSliderSize, headerHeight } = state
     const root = Workspace.state.workspacePath
     const results = await TextSearch.textSearch(root, value)
-    const resultCount = getResultCounts(results)
+    if (!Array.isArray(results)) {
+      throw new Error(`results must be of type array`)
+    }
+    const { fileCount, resultCount } = getResultCounts(results)
     const displayResults = toDisplayResults(
       results,
       itemHeight,
       resultCount,
       value
     )
-    const fileResultCount = results.length
-    const message = getStatusMessage(resultCount, fileResultCount)
+    const message = getStatusMessage(resultCount, fileCount)
     const total = displayResults.length
     const contentHeight = total * itemHeight
     const listHeight = height - headerHeight
@@ -145,6 +150,7 @@ export const setValue = async (state, value) => {
       finalDeltaY,
     }
   } catch (error) {
+    ErrorHandling.logError(error)
     return {
       ...state,
       message: `${error}`,
@@ -185,13 +191,9 @@ export const dispose = async (state) => {
   }
 }
 
-const getPath = (result) => {
-  return result[0]
-}
-
 const compareResults = (resultA, resultB) => {
-  const pathA = getPath(resultA)
-  const pathB = getPath(resultB)
+  const pathA = resultA.text
+  const pathB = resultB.text
   return Compare.compareString(pathA, pathB)
 }
 
@@ -209,12 +211,11 @@ const toDisplayResults = (results, itemHeight, resultCount, searchTerm) => {
   let i = -1
   const setSize = resultCount
   let path = ''
-  console.log({ results })
   for (const result of results) {
     i++
     switch (result.type) {
       case TextSearchResultType.File:
-        path = getPath(result)
+        path = result.text
         const absolutePath = Workspace.getAbsolutePath(path)
         const baseName = Workspace.pathBaseName(path)
         displayResults.push({
