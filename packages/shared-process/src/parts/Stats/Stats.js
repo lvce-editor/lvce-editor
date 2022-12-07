@@ -1,9 +1,9 @@
 // parse ps output based on vscode https://github.com/microsoft/vscode/blob/c0769274fa136b45799edeccc0d0a2f645b75caf/src/vs/base/node/ps.ts (License MIT)
 
 import * as Exec from '../Exec/Exec.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
-const PID_CMD =
-  /^\s*(\d+)\s+(\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(.+)$/
+const PID_CMD = /^\s*(\d+)\s+(\d+)\s+(\d+\.\d+)\s+(\d+\.\d+)\s+(.+)$/
 
 const parsePsOutputLine = (line) => {
   const matches = PID_CMD.exec(line.trim())
@@ -18,7 +18,7 @@ const parsePsOutputLine = (line) => {
   }
 }
 const parsePsOutput = (stdout, rootPid) => {
-  const lines = stdout.split('\n')
+  const lines = SplitLines.splitLines(stdout)
   return lines.map(parsePsOutputLine)
 }
 

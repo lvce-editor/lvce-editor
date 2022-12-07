@@ -4,6 +4,7 @@
 
 import VError from 'verror'
 import * as Exec from '../Exec/Exec.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const removePrefix = (file) => {
   if (file.startsWith('file://')) {
@@ -35,7 +36,7 @@ export const readFiles = async () => {
     }
     throw error
   }
-  const [type, ...files] = result.stdout.split('\n')
+  const [type, ...files] = SplitLines.splitLines(result.stdout)
   const actualFiles = files.map(removePrefix)
   return {
     source: 'gnomeCopiedFiles',
