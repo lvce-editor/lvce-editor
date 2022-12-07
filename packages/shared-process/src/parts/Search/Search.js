@@ -2,6 +2,7 @@ import { spawn } from 'node:child_process'
 import * as Platform from '../Platform/Platform.js'
 import * as RgPath from '../RgPath/RgPath.js'
 import * as RipGrepParsedLineType from '../RipGrepParsedLineType/RipGrepParsedLineType.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const MAX_SEARCH_RESULTS = 300
 
@@ -53,11 +54,12 @@ export const search = async (searchDir, searchString) => {
 
     const handleData = (chunk) => {
       buffer += chunk
-      const lines = buffer.split('\n')
+      const lines = SplitLines.splitLines(buffer)
       // @ts-ignore
       buffer = lines.pop()
       for (const line of lines) {
         const parsedLine = JSON.parse(line)
+        console.log(parsedLine)
         switch (parsedLine.type) {
           case RipGrepParsedLineType.Begin: {
             allSearchResults[parsedLine.data.path.text] = []
