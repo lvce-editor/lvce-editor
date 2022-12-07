@@ -99,31 +99,6 @@ export const openFile = () => {
   }
 }
 
-const showAboutWeb = () => {
-  console.warn('show about - not implemented')
-}
-
-const showAboutRemote = () => {
-  console.warn('show about - not implemented')
-}
-
-const showAboutElectron = async () => {
-  await ElectronWindowAbout.open()
-}
-
-export const showAbout = async () => {
-  switch (Platform.platform) {
-    case 'web':
-      return showAboutWeb()
-    case 'remote':
-      return showAboutRemote()
-    case 'electron':
-      return showAboutElectron()
-    default:
-      return
-  }
-}
-
 export const showMessage = async (message, options) => {
   if (state.dialog) {
     console.info('cannot show multiple dialogs at the same time', message)

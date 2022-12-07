@@ -7,6 +7,5 @@ export const Commands = {
   handleClick: Dialog.handleClick,
   openFile: Dialog.openFile,
   openFolder: Dialog.openFolder,
-  showAbout: Dialog.showAbout,
   showMessage: Dialog.showMessage,
 }

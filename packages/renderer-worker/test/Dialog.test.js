@@ -37,71 +37,9 @@ test.skip('openFolder', async () => {
   })
 })
 
-test('showAbout - electron', async () => {
-  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
-    return {
-      platform: PlatformType.Electron,
-    }
-  })
-  jest.unstable_mockModule(
-    '../src/parts/ElectronWindowAbout/ElectronWindowAbout.js',
-    () => {
-      return {
-        open: jest.fn(() => {}),
-      }
-    }
-  )
-  const ElectronWindowAbout = await import(
-    '../src/parts/ElectronWindowAbout/ElectronWindowAbout.js'
-  )
-  const Dialog = await import('../src/parts/Dialog/Dialog.js')
-  await Dialog.showAbout()
-  expect(ElectronWindowAbout.open).toHaveBeenCalledTimes(1)
-})
-
 // TODO what if showErrorMessage results in error?
 // Then showing error message would result in endless loop
 // be careful and add test
-
-test('showMessage - web', async () => {
-  jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
-    return {
-      platform: PlatformType.Web,
-    }
-  })
-  jest.unstable_mockModule(
-    '../src/parts/RendererProcess/RendererProcess.js',
-    () => {
-      return {
-        invoke: jest.fn(() => {}),
-      }
-    }
-  )
-  const RendererProcess = await import(
-    '../src/parts/RendererProcess/RendererProcess.js'
-  )
-  const Dialog = await import('../src/parts/Dialog/Dialog.js')
-  // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => {})
-  await Dialog.showMessage(
-    {
-      message: 'Error: Oops',
-      codeFrame: '',
-      stack: '',
-    },
-    []
-  )
-  expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Dialog.showErrorDialogWithOptions',
-    {
-      message: 'Error: Oops',
-      codeFrame: '',
-      stack: '',
-    },
-    []
-  )
-})
 
 test('showMessage - electron', async () => {
   jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {

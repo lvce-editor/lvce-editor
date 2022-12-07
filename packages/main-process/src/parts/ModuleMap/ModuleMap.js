@@ -18,8 +18,6 @@ exports.getModuleId = (commandId) => {
       return ModuleId.AppWindow
     case 'ElectronWindowProcessExplorer':
       return ModuleId.ElectronWindowProcessExplorer
-    case 'ElectronWindowAbout':
-      return ModuleId.ElectronWindowAbout
     case 'ElectronDialog':
       return ModuleId.Dialog
     case 'ElectronBeep':
@@ -48,6 +46,8 @@ exports.getModuleId = (commandId) => {
       return ModuleId.ElectronAutoUpdater
     case 'ElectronApplicationMenu':
       return ModuleId.ElectronApplicationMenu
+    case 'About':
+      return ModuleId.About
     default:
       throw new Error(`method not found ${commandId}`)
   }
