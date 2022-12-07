@@ -7,6 +7,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
 import * as EncodingType from '../EncodingType/EncodingType.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const downloadFile = async (url, outFile) => {
   try {
@@ -54,7 +55,7 @@ const getImportExportUrl = (line) => {
 }
 
 const getActualFileUrl = (text) => {
-  const lines = text.split('\n')
+  const lines = SplitLines.splitLines(text)
   for (const line of lines) {
     if (line.startsWith('export * from')) {
       const actualUrlRelative = getImportExportUrl(line)
@@ -97,7 +98,7 @@ const downloadStaticFileJs = async (staticFile) => {
   const outFile = Path.absolute(`static/js/${outFileName}.js`)
   await downloadFile(actualUrl, outFile)
   const content = await readFile(outFile, EncodingType.Utf8)
-  const lines = content.split('\n')
+  const lines = SplitLines.splitLines(content)
   const replacements = []
   for (const line of lines) {
     if (line.startsWith('import')) {

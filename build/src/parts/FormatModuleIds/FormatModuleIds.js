@@ -2,11 +2,12 @@ import * as Path from '../Path/Path.js'
 import * as ReadFile from '../ReadFile/ReadFile.js'
 import * as Root from '../Root/Root.js'
 import * as WriteFile from '../WriteFile/WriteFile.js'
+import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const formatModuleIds = async (relativePath) => {
   const absolutePath = Path.join(Root.root, relativePath)
   const content = await ReadFile.readFile(absolutePath)
-  const lines = content.split('\n')
+  const lines = SplitLines.splitLines(content)
   const newLines = []
   let i = 1
   for (const line of lines) {
