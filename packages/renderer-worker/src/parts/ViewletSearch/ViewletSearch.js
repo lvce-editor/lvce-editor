@@ -6,8 +6,8 @@ import * as I18nString from '../I18NString/I18NString.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 import * as ScrollBarFunctions from '../ScrollBarFunctions/ScrollBarFunctions.js'
-import * as SearchResultType from '../SearchResultType/SearchResultType.js'
 import * as TextSearch from '../TextSearch/TextSearch.js'
+import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
@@ -84,8 +84,15 @@ const getStatusMessage = (resultCount, fileResultCount) => {
 const getResultCounts = (results) => {
   let resultCount = 0
   for (const result of results) {
-    const [fileName, matches] = result
-    resultCount += matches.length
+    switch (result.type) {
+      case TextSearchResultType.File:
+        break
+      case TextSearchResultType.Match:
+        resultCount++
+        break
+      default:
+        break
+    }
   }
   return resultCount
 }
@@ -148,7 +155,7 @@ export const setValue = async (state, value) => {
 
 const updateIcon = (item) => {
   switch (item.type) {
-    case SearchResultType.File:
+    case TextSearchResultType.File:
       return {
         ...item,
         icon: IconTheme.getFileIcon({ name: item.text }),
@@ -182,14 +189,6 @@ const getPath = (result) => {
   return result[0]
 }
 
-const getPreviews = (result) => {
-  const previews = result[1]
-  if (!Array.isArray(previews)) {
-    throw new Error('previews must be of type array')
-  }
-  return previews
-}
-
 const compareResults = (resultA, resultB) => {
   const pathA = getPath(resultA)
   const pathB = getPath(resultB)
@@ -205,42 +204,48 @@ const getMatchStart = (preview, searchTerm) => {
 }
 
 const toDisplayResults = (results, itemHeight, resultCount, searchTerm) => {
-  results.sort(compareResults)
+  // results.sort(compareResults)
   const displayResults = []
   let i = -1
   const setSize = resultCount
+  let path = ''
+  console.log({ results })
   for (const result of results) {
     i++
-    const path = getPath(result)
-    const previews = getPreviews(result)
-    const absolutePath = Workspace.getAbsolutePath(path)
-    const baseName = Workspace.pathBaseName(path)
-    displayResults.push({
-      title: absolutePath,
-      type: SearchResultType.File,
-      text: baseName,
-      icon: IconTheme.getFileIcon({ name: baseName }),
-      posInSet: i + 1,
-      setSize,
-      top: i * itemHeight,
-      lineNumber: result.lineNumber,
-      matchStart: 0,
-      matchLength: 0,
-    })
-    for (const preview of previews) {
-      i++
-      displayResults.push({
-        title: preview.preview,
-        type: SearchResultType.Preview,
-        text: preview.preview,
-        icon: '',
-        posInSet: i + 1,
-        setSize,
-        top: i * itemHeight,
-        lineNumber: preview.lineNumber,
-        matchStart: getMatchStart(preview, searchTerm),
-        matchLength: searchTerm.length,
-      })
+    switch (result.type) {
+      case TextSearchResultType.File:
+        path = getPath(result)
+        const absolutePath = Workspace.getAbsolutePath(path)
+        const baseName = Workspace.pathBaseName(path)
+        displayResults.push({
+          title: absolutePath,
+          type: TextSearchResultType.File,
+          text: baseName,
+          icon: IconTheme.getFileIcon({ name: baseName }),
+          posInSet: i + 1,
+          setSize,
+          top: i * itemHeight,
+          lineNumber: result.lineNumber,
+          matchStart: 0,
+          matchLength: 0,
+        })
+        break
+      case TextSearchResultType.Match:
+        displayResults.push({
+          title: result.text,
+          type: TextSearchResultType.Match,
+          text: result.text,
+          icon: '',
+          posInSet: i + 1,
+          setSize,
+          top: i * itemHeight,
+          lineNumber: result.lineNumber,
+          matchStart: result.start,
+          matchLength: searchTerm.length,
+        })
+        break
+      default:
+        break
     }
   }
   return displayResults
@@ -263,7 +268,7 @@ const getFileIndex = (items, index) => {
   console.log({ items })
   for (let i = index; i >= 0; i--) {
     const item = items[i]
-    if (item.type === SearchResultType.File) {
+    if (item.type === TextSearchResultType.File) {
       return i
     }
   }
@@ -306,9 +311,9 @@ export const selectIndex = async (state, index) => {
   const { items } = state
   const searchResult = items[index]
   switch (searchResult.type) {
-    case SearchResultType.File:
+    case TextSearchResultType.File:
       return selectIndexFile(state, searchResult, index)
-    case SearchResultType.Preview:
+    case TextSearchResultType.Match:
       return selectIndexPreview(state, searchResult, index)
     default:
       throw new Error(`unexpected search result type ${searchResult.type}`)
