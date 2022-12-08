@@ -2,7 +2,6 @@ import { spawn } from 'node:child_process'
 import * as Platform from '../Platform/Platform.js'
 import * as RgPath from '../RgPath/RgPath.js'
 import * as RipGrepParsedLineType from '../RipGrepParsedLineType/RipGrepParsedLineType.js'
-import * as SplitLines from '../SplitLines/SplitLines.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 
 const MAX_SEARCH_RESULTS = 300
@@ -67,39 +66,53 @@ export const search = async (searchDir, searchString) => {
     let numberOfResults = 0
     // TODO use pipeline / transform stream maybe
 
-    const handleData = (chunk) => {
-      buffer += chunk
-      const lines = SplitLines.splitLines(buffer)
-      // @ts-ignore
-      buffer = lines.pop()
-      for (const line of lines) {
-        const parsedLine = JSON.parse(line)
-        switch (parsedLine.type) {
-          case RipGrepParsedLineType.Begin: {
-            allSearchResults[parsedLine.data.path.text] = [
-              {
-                type: TextSearchResultType.File,
-                start: 0,
-                end: 0,
-                lineNumber: 0,
-                text: parsedLine.data.path.text,
-              },
-            ]
-            break
-          }
-          case RipGrepParsedLineType.Match:
-            numberOfResults++
-            allSearchResults[parsedLine.data.path.text].push(
-              ...toSearchResult(parsedLine)
-            )
-            break
-          case RipGrepParsedLineType.Summary:
-            stats = parsedLine.data
-            break
-          default:
-            break
-        }
+    const handleLine = (line) => {
+      const parsedLine = JSON.parse(line)
+      switch (parsedLine.type) {
+        case RipGrepParsedLineType.Begin:
+          allSearchResults[parsedLine.data.path.text] = [
+            {
+              type: TextSearchResultType.File,
+              start: 0,
+              end: 0,
+              lineNumber: 0,
+              text: parsedLine.data.path.text,
+            },
+          ]
+          break
+        case RipGrepParsedLineType.Match:
+          numberOfResults++
+          allSearchResults[parsedLine.data.path.text].push(
+            ...toSearchResult(parsedLine)
+          )
+          break
+        case RipGrepParsedLineType.Summary:
+          stats = parsedLine.data
+          break
+        default:
+          break
       }
+    }
+
+    let total = 0
+    const handleData = (chunk) => {
+      let newLineIndex = chunk.indexOf('\n')
+      const dataString = buffer + chunk
+      if (newLineIndex === -1) {
+        buffer = dataString
+        return
+      }
+      total += chunk.length
+      newLineIndex += buffer.length
+      let previousIndex = 0
+      while (newLineIndex >= 0) {
+        const line = dataString.slice(previousIndex, newLineIndex)
+        handleLine(line)
+        previousIndex = newLineIndex + 1
+        newLineIndex = dataString.indexOf('\n', previousIndex)
+      }
+      buffer = dataString.slice(previousIndex)
+
       if (numberOfResults > MAX_SEARCH_RESULTS) {
         limitHit = true
         childProcess.kill()
@@ -123,6 +136,7 @@ export const search = async (searchDir, searchString) => {
         limitHit,
       })
     }
+    childProcess.stdout.setEncoding('utf8')
     childProcess.stdout.on('data', handleData)
     childProcess.once('close', handleClose)
     childProcess.once('error', handleError)
