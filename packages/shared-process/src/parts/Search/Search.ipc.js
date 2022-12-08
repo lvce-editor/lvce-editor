@@ -4,4 +4,5 @@ export const name = 'Search'
 
 export const Commands = {
   search: Search.search,
+  getRangedResults: Search.getRangedResults,
 }

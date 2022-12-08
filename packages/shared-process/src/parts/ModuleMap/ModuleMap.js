@@ -121,6 +121,7 @@ export const getModuleId = (commandId) => {
     case 'RecentlyOpened.addPath':
       return ModuleId.RecentlyOpened
     case 'Search.search':
+    case 'Search.getRangedResults':
       return ModuleId.Search
     case 'SearchFile.searchFile':
       return ModuleId.SearchFile

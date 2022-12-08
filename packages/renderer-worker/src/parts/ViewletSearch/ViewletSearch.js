@@ -29,7 +29,6 @@ export const create = (id, uri, left, top, width, height) => {
     searchId: -1,
     value: '',
     disposed: false,
-    fileCount: 0,
     left,
     top,
     width,
@@ -39,6 +38,9 @@ export const create = (id, uri, left, top, width, height) => {
       minimumSliderSize: Height.MinimumSliderSize,
       headerHeight: 61, // TODO
     }),
+    resultMap: Object.create(null),
+    resultCount: 0,
+    fileCount: 0,
   }
 }
 
@@ -117,11 +119,17 @@ export const setValue = async (state, value) => {
     }
     const { height, itemHeight, minimumSliderSize, headerHeight } = state
     const root = Workspace.state.workspacePath
-    const results = await TextSearch.textSearch(root, value)
+    const { resultCount, fileCount } = await TextSearch.textSearch(
+      root,
+      value,
+      0,
+      20
+    )
+    const results = await TextSearch.getRangedResults(root, 0, 20)
+
     if (!Array.isArray(results)) {
       throw new Error(`results must be of type array`)
     }
-    const { fileCount, resultCount } = getResultCounts(results)
     const displayResults = toDisplayResults(
       results,
       itemHeight,
@@ -129,7 +137,7 @@ export const setValue = async (state, value) => {
       value
     )
     const message = getStatusMessage(resultCount, fileCount)
-    const total = displayResults.length
+    const total = resultCount + fileCount
     const contentHeight = total * itemHeight
     const listHeight = height - headerHeight
     const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
@@ -148,6 +156,8 @@ export const setValue = async (state, value) => {
       maxLineY: maxLineY,
       scrollBarHeight,
       finalDeltaY,
+      resultCount,
+      fileCount,
     }
   } catch (error) {
     ErrorHandling.logError(error)
@@ -189,20 +199,6 @@ export const dispose = async (state) => {
     ...state,
     disposed: true,
   }
-}
-
-const compareResults = (resultA, resultB) => {
-  const pathA = resultA.text
-  const pathB = resultB.text
-  return Compare.compareString(pathA, pathB)
-}
-
-const getMatchStart = (preview, searchTerm) => {
-  const index = preview.preview.indexOf(searchTerm)
-  if (index === -1) {
-    return preview.preview.toLowerCase().indexOf(searchTerm)
-  }
-  return index
 }
 
 const toDisplayResults = (results, itemHeight, resultCount, searchTerm) => {
@@ -406,11 +402,15 @@ const renderScrollBar = {
 
 const renderHeight = {
   isEqual(oldState, newState) {
-    return oldState.items.length === newState.items.length
+    return (
+      oldState.fileCount === newState.fileCount &&
+      oldState.resultCount === newState.resultCount
+    )
   },
   apply(oldState, newState) {
     const { itemHeight } = newState
-    const contentHeight = newState.items.length * itemHeight
+    const contentHeight =
+      (newState.fileCount + newState.resultCount) * itemHeight
     return [/* method */ 'setContentHeight', /* contentHeight */ contentHeight]
   },
 }

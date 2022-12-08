@@ -3,6 +3,14 @@ import * as Platform from '../Platform/Platform.js'
 import * as RgPath from '../RgPath/RgPath.js'
 import * as RipGrepParsedLineType from '../RipGrepParsedLineType/RipGrepParsedLineType.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
+import * as Assert from '../Assert/Assert.js'
+
+export const state = {
+  /**
+   * @type {any}
+   */
+  results: [],
+}
 
 const MAX_SEARCH_RESULTS = 300
 
@@ -41,7 +49,25 @@ const useNice = !Platform.isWindows
 // TODO update client
 // TODO not always run nice, maybe configure nice via flag/options
 
-export const search = async (searchDir, searchString) => {
+const getResultCounts = (results) => {
+  let resultCount = 0
+  let fileCount = 0
+  for (const result of results) {
+    switch (result.type) {
+      case TextSearchResultType.File:
+        fileCount++
+        break
+      case TextSearchResultType.Match:
+        resultCount++
+        break
+      default:
+        break
+    }
+  }
+  return { fileCount, resultCount }
+}
+
+export const search = async (searchDir, searchString, startIndex, endIndex) => {
   // TODO reject promise when ripgrep search fails
   return new Promise((resolve, reject) => {
     const ripGrepArgs = [
@@ -94,7 +120,6 @@ export const search = async (searchDir, searchString) => {
       }
     }
 
-    let total = 0
     const handleData = (chunk) => {
       let newLineIndex = chunk.indexOf('\n')
       const dataString = buffer + chunk
@@ -102,7 +127,6 @@ export const search = async (searchDir, searchString) => {
         buffer = dataString
         return
       }
-      total += chunk.length
       newLineIndex += buffer.length
       let previousIndex = 0
       while (newLineIndex >= 0) {
@@ -121,8 +145,13 @@ export const search = async (searchDir, searchString) => {
 
     const handleClose = () => {
       const results = Object.values(allSearchResults).flat(1)
+      state.results = results
+      const rangedResults = results.slice(startIndex, endIndex)
+      const { fileCount, resultCount } = getResultCounts(results)
       resolve({
-        results,
+        results: rangedResults,
+        resultCount,
+        fileCount,
         stats,
         limitHit,
       })
@@ -141,4 +170,12 @@ export const search = async (searchDir, searchString) => {
     childProcess.once('close', handleClose)
     childProcess.once('error', handleError)
   })
+}
+
+export const getRangedResults = (startIndex, endIndex) => {
+  // console.log({ startIndex, endIndex })
+  Assert.number(startIndex)
+  Assert.number(endIndex)
+  // TODO
+  return state.results.slice(startIndex, endIndex)
 }
