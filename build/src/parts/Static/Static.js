@@ -301,7 +301,7 @@ const copyStaticFiles = async ({ pathPrefix, ignoreIconTheme }) => {
   await Replace.replace({
     path: `build/.tmp/dist/index.html`,
     occurrence: '/fonts/',
-    replacement: `${pathPrefix}/${commitHash}fonts/`,
+    replacement: `${pathPrefix}/${commitHash}/fonts/`,
   })
   if (pathPrefix) {
     await Replace.replace({
