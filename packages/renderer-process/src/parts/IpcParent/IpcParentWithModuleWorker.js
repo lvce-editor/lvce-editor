@@ -65,7 +65,6 @@ export const create = async ({ url, name }) => {
         }
       }
       const handleFirstError = async (event) => {
-        console.log({ event })
         cleanup()
         if (isFirefoxError(event.message)) {
           event.preventDefault()
