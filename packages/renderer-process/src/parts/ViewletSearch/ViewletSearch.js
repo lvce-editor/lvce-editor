@@ -27,7 +27,9 @@ export const create = () => {
   // TODO onclick vs onmousedown, should be consistent in whole application
   $ListItems.onmousedown = ViewletSearchEvents.handleClick
   $ListItems.oncontextmenu = ViewletSearchEvents.handleContextMenu
-  $ListItems.onwheel = ViewletSearchEvents.handleWheel
+  $ListItems.addEventListener('wheel', ViewletSearchEvents.handleWheel, {
+    passive: true,
+  })
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
