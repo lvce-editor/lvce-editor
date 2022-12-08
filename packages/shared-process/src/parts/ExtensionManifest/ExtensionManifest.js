@@ -1,9 +1,9 @@
 import isObject from 'is-object'
-import VError from 'verror'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as ExtensionManifestStatus from '../ExtensionManifestStatus/ExtensionManifestStatus.js'
 import * as ReadJson from '../JsonFile/JsonFile.js'
 import * as Path from '../Path/Path.js'
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
+import { VError } from '../VError/VError.js'
 
 const RE_EXTENSION_FRAGMENT = /.+(\/|\\)(.+)$/
 

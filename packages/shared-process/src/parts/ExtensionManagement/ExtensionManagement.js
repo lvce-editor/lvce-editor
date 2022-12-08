@@ -1,5 +1,5 @@
 import { mkdir, rename, rm } from 'node:fs/promises'
-import VError from 'verror'
+import { VError } from '../VError/VError.js'
 import * as Debug from '../Debug/Debug.js'
 import * as ExtensionManifestInputType from '../ExtensionManifestInputType/ExtensionManifestInputType.js'
 import * as ExtensionManifests from '../ExtensionManifests/ExtensionManifests.js'
