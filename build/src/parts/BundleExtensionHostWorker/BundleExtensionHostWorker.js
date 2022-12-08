@@ -1,4 +1,4 @@
-import * as BundleJs from '../BundleJs/BundleJs.js'
+import * as BundleJs from '../BundleJsRollup/BundleJsRollup.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
@@ -26,5 +26,6 @@ export const bundleExtensionHostWorker = async ({
     cwd: cachePath,
     from: `./src/extensionHostWorkerMain.js`,
     platform: 'webworker',
+    allowCyclicDependencies: false,
   })
 }
