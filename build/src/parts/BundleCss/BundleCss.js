@@ -58,22 +58,25 @@ export const bundleCss = async ({
   const cwd = join(Root.root, 'static', 'css', 'parts')
   const dirents = await readdir(cwd)
   const sortedDirents = toSorted(dirents)
+  console.log({ sortedDirents })
   for (const dirent of sortedDirents) {
     if (parts.includes(dirent)) {
-      for (const part of parts) {
-        const absolutePath = join(cwd, part)
-        const content = await readFile(absolutePath, EncodingType.Utf8)
-        css += `/*************/\n`
-        css += `/* ${part} */\n`
-        css += `/*************/\n`
-        css += content
-      }
+      // ignore
     } else {
       await Copy.copy({
         from: `static/css/parts/${dirent}`,
         to: Path.join(outDir, 'parts', dirent),
       })
     }
+  }
+
+  for (const part of parts) {
+    const absolutePath = join(cwd, part)
+    const content = await readFile(absolutePath, EncodingType.Utf8)
+    css += `/*************/\n`
+    css += `/* ${part} */\n`
+    css += `/*************/\n`
+    css += content
   }
 
   const appCssPath = Path.join(outDir, 'App.css')
