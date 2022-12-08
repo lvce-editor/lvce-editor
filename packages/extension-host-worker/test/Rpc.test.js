@@ -22,12 +22,13 @@ const ErrorHandling = await import(
 const Rpc = await import('../src/parts/Rpc/Rpc.js')
 
 test('send - error - promise could not be cloned', async () => {
+  const mockResult = Promise.resolve()
   // @ts-ignore
   GetResponse.getResponse.mockImplementation((message) => {
     return {
       jsonrpc: '2.0',
       id: message,
-      result: Promise.resolve(),
+      result: mockResult,
     }
   })
   // @ts-ignore
@@ -76,7 +77,7 @@ test('send - error - promise could not be cloned', async () => {
       params: [],
     },
     jsonrpc: '2.0',
-    result: Promise.resolve(),
+    result: mockResult,
   })
   expect(ipc.send).toHaveBeenNthCalledWith(2, {
     error: {
