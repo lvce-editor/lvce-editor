@@ -637,11 +637,76 @@ const addExtension = async ({
   })
 }
 
+const generateTestOverviewHtml = (dirents) => {
+  const pre = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tests</title>
+  </head>
+  <body>
+    <h1>Tests</h1>
+    <p>Available Tests</p>
+    <ul>
+`
+  let middle = ``
+  // TODO properly escape name
+  for (const dirent of dirents) {
+    const name = dirent
+    middle += `      <li><a href="./${name}.html">${name}</a></li>
+`
+  }
+
+  const post = `    </ul>
+  </body>
+</html>
+`
+  return pre + middle + post
+}
+
+const getName = (name) => {
+  return name.slice(0, -'.js'.length)
+}
+const isTestFile = (file) => {
+  return file !== '_all.js'
+}
+
+const getTestFiles = (testFilesRaw) => {
+  return testFilesRaw.map(getName).filter(isTestFile)
+}
+
+const addTestFiles = async ({ testPath, commitHash, root, pathPrefix }) => {
+  await FileSystem.copy(
+    `${root}/${testPath}/src`,
+    `${root}/dist/${commitHash}/packages/extension-host-worker-tests/src`
+  )
+  const testFilesRaw = await FileSystem.readDir(`${root}/${testPath}/src`)
+  const testFiles = getTestFiles(testFilesRaw)
+  await FileSystem.mkdir(`${root}/dist/${commitHash}/tests`)
+  await FileSystem.mkdir(`${root}/dist/tests`)
+  console.log({ testFiles })
+  for (const testFile of testFiles) {
+    await FileSystem.copyFile(
+      `${root}/dist/index.html`,
+      `${root}/dist/tests/${testFile}.html`
+    )
+  }
+  const testOverviewHtml = generateTestOverviewHtml(testFiles)
+  await FileSystem.writeFile(`${root}/dist/tests/index.html`, testOverviewHtml)
+}
+
 /**
  *
- * @param {{root:string, pathPrefix:string , extensionPath:string  }} param0
+ * @param {{root:string, pathPrefix:string , extensionPath:string, testPath:string   }} param0
  */
-export const exportStatic = async ({ root, pathPrefix, extensionPath }) => {
+export const exportStatic = async ({
+  root,
+  pathPrefix,
+  extensionPath,
+  testPath,
+}) => {
   if (pathPrefix === 'auto') {
     const extensionJson = await readExtensionManifest(
       Path.join(extensionPath, 'extension.json')
@@ -679,4 +744,15 @@ export const exportStatic = async ({ root, pathPrefix, extensionPath }) => {
     root,
   })
   console.timeEnd('addExtension')
+
+  if (testPath) {
+    console.time('addTestFiles')
+    await addTestFiles({
+      testPath,
+      commitHash,
+      pathPrefix,
+      root,
+    })
+    console.timeEnd('addTestFiles')
+  }
 }
