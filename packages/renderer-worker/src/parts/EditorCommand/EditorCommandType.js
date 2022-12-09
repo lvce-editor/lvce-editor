@@ -51,7 +51,6 @@ const editorTypeWithBraceCompletion = async (editor, text) => {
       offset,
       text
     )
-  console.log({ result })
   if (result) {
     const closingBrace = getMatchingClosingBrace(text)
     const insertText = text + closingBrace

@@ -10,9 +10,9 @@ const getFilesFromProvider = (provider) => {
   return provider.getChangedFiles()
 }
 
-export const getChangedFiles = () => {
+export const getChangedFiles = async () => {
   const providers = Object.values(state.providers)
-  const changedFiles = providers.map(getFilesFromProvider)
+  const changedFiles = await Promise.all(providers.map(getFilesFromProvider))
   const flattenedChangedFiles = changedFiles.flat(1)
   return flattenedChangedFiles
 }
