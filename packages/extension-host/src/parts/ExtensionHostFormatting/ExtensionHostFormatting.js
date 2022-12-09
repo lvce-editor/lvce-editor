@@ -37,7 +37,6 @@ export const executeFormattingProvider = async (id) => {
     }
     const textDocument = TextDocument.state.textDocuments[id]
     const result = await formattingProvider.format(textDocument)
-    console.log({ result })
     return result
   } catch (error) {
     throw new ExecutionError({

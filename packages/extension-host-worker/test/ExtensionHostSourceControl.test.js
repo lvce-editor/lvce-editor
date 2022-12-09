@@ -4,14 +4,14 @@ beforeEach(() => {
   ExtensionHostSourceControl.reset()
 })
 
-test('getChangedFiles', () => {
+test('getChangedFiles', async () => {
   ExtensionHostSourceControl.registerSourceControlProvider({
     id: 'test',
     getChangedFiles() {
       return [{ file: '/test/file-1.txt', status: 1 }]
     },
   })
-  expect(ExtensionHostSourceControl.getChangedFiles()).toEqual([
+  expect(await ExtensionHostSourceControl.getChangedFiles()).toEqual([
     {
       file: '/test/file-1.txt',
       status: 1,

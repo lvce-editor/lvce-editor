@@ -13,7 +13,8 @@ export const exec = async (command, args, options) => {
   const { stdout, stderr, exitCode } = await ExtensionHostHelperProcess.invoke(
     'Exec.exec',
     command,
-    args
+    args,
+    options
   )
   if (exitCode !== 0) {
     throw new ExecError(stdout, stderr, exitCode)
