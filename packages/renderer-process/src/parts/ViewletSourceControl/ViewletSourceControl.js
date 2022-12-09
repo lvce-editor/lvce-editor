@@ -1,39 +1,22 @@
-import { findIndex } from '../../shared/findIndex.js'
-import * as Focus from '../Focus/Focus.js'
+import * as AriaRoles from '../AriaRoles/AriaRoles.js'
+import * as Assert from '../Assert/Assert.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
-import * as RendererWorker from '../RendererWorker/RendererWorker.js'
-import * as Assert from '../Assert/Assert.js'
+import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
 
 const getFileName = (file) => {
   return file.slice(file.lastIndexOf('/') + 1)
 }
 
 const create$Item = (item) => {
-  const $Item = document.createElement('li')
+  const $Item = document.createElement('div')
+  $Item.role = AriaRoles.TreeItem
   $Item.className = 'TreeItem'
   $Item.textContent = getFileName(item.file)
   $Item.title = `${item.file}`
   // TODO use same virtual list as for explorer
   $Item.style.position = 'relative'
   return $Item
-}
-
-const handleFocus = () => {
-  Focus.setFocus('sourceControlInput')
-}
-
-const handleClick = (event) => {
-  const $Target = event.target
-  const $Parent = $Target.closest('.ViewletTree')
-  const index = findIndex($Parent, $Target)
-  // TODO ignore when index === -1
-  RendererWorker.send(
-    /* viewletCommand */ 'Viewlet.send',
-    /* viewletId */ 'Source Control',
-    /* type */ 'handleClick',
-    /* index */ index
-  )
 }
 
 const getPlaceHolderText = () => {
@@ -45,11 +28,13 @@ const getPlaceHolderText = () => {
 export const create = () => {
   const $ViewSourceControlInput = InputBox.create()
   $ViewSourceControlInput.placeholder = getPlaceHolderText()
-  $ViewSourceControlInput.onfocus = handleFocus
+  $ViewSourceControlInput.onfocus = ViewletSourceControlEvents.handleFocus
   $ViewSourceControlInput.ariaLabel = 'Source Control Input'
-  const $ViewletTree = document.createElement('ul')
-  $ViewletTree.className = 'ViewletTree'
-  $ViewletTree.onclick = handleClick
+
+  const $ViewletTree = document.createElement('div')
+  $ViewletTree.className = 'SourceControlItems'
+  $ViewletTree.onclick = ViewletSourceControlEvents.handleClick
+
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet SourceControl'
   $Viewlet.tabIndex = 0
@@ -67,7 +52,8 @@ export const setChangedFiles = (state, workingTree) => {
   Assert.object(state)
   Assert.array(workingTree)
   const $$Entries = workingTree.map(create$Item)
-  state.$ViewletTree.append(...$$Entries)
+  const { $ViewletTree } = state
+  $ViewletTree.append(...$$Entries)
 }
 
 export const setError = (state, error) => {
@@ -76,7 +62,8 @@ export const setError = (state, error) => {
   const $Error = document.createElement('div')
   $Error.className = 'Error'
   $Error.textContent = error
-  state.$ViewletTree.append($Error)
+  const { $ViewletTree } = state
+  $ViewletTree.append($Error)
 }
 
 export const setInputValue = (state, value) => {
@@ -85,5 +72,6 @@ export const setInputValue = (state, value) => {
 }
 
 export const focus = (state) => {
-  state.$ViewSourceControlInput.focus()
+  const { $ViewSourceControlInput } = state
+  $ViewSourceControlInput.focus()
 }

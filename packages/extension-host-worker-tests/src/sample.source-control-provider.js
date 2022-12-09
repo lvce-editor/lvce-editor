@@ -10,7 +10,7 @@ test('sample.source-control-provider', async () => {
   )
   await SideBar.open('Source Control')
 
-  const viewletTree = Locator('.ViewletTree')
+  const viewletTree = Locator('.SourceControlItems')
 
   await expect(viewletTree).toBeVisible()
 
