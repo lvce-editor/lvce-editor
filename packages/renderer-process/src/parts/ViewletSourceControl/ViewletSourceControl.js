@@ -4,18 +4,22 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
 
-const getFileName = (file) => {
-  return file.slice(file.lastIndexOf('/') + 1)
-}
-
 const create$Item = (item) => {
+  const $Icon = document.createElement('div')
+  $Icon.className = `Icon${item.icon}`
+
+  const $Label = document.createElement('div')
+  $Label.className = 'Label'
+  $Label.textContent = item.label
+
   const $Item = document.createElement('div')
-  $Item.role = AriaRoles.TreeItem
   $Item.className = 'TreeItem'
-  $Item.textContent = getFileName(item.file)
-  $Item.title = `${item.file}`
+  $Item.role = AriaRoles.TreeItem
+  $Item.ariaPosInSet = item.posInSet
+  $Item.ariaSetSize = item.setSize
+  $Item.title = item.file
+  $Item.append($Icon, $Label)
   // TODO use same virtual list as for explorer
-  $Item.style.position = 'relative'
   return $Item
 }
 
@@ -39,6 +43,7 @@ export const create = () => {
   $ViewletTree.className = 'SourceControlItems'
   $ViewletTree.onclick = ViewletSourceControlEvents.handleClick
   $ViewletTree.oncontextmenu = ViewletSourceControlEvents.handleContextMenu
+  $ViewletTree.onmouseover = ViewletSourceControlEvents.handleMouseOver
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet SourceControl'
@@ -58,7 +63,7 @@ export const setChangedFiles = (state, workingTree) => {
   Assert.array(workingTree)
   const $$Entries = workingTree.map(create$Item)
   const { $ViewletTree } = state
-  $ViewletTree.append(...$$Entries)
+  $ViewletTree.replaceChildren(...$$Entries)
 }
 
 export const setError = (state, error) => {
@@ -79,4 +84,9 @@ export const setInputValue = (state, value) => {
 export const focus = (state) => {
   const { $ViewSourceControlInput } = state
   $ViewSourceControlInput.focus()
+}
+
+export const setItemButtons = (state, index) => {
+  const { $ViewletTree } = state
+  const $Item = $ViewletTree.children[index]
 }
