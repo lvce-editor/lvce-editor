@@ -44,7 +44,7 @@ export const keyDown = (element, options) => {
 }
 
 export const keyUp = (element, options) => {
-  keyboardEvent(element, DomEventType.KeyUp, options)
+  keyboardEvent(element, DomEventType.KeyUp,, options)
 }
 
 const getEventClass = (eventType) => {

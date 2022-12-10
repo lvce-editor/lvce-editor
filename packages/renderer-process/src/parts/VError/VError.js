@@ -25,7 +25,7 @@ const getErrorStack = (error) => {
     return error.stack
   }
   if (error && error.lineNumber && error.columnNumber && error.fileName) {
-    return `  at ${error.fileName}:${error.lineNumber}:${error.columnNumber}`
+    return `${error.message}\n  at ${error.fileName}:${error.lineNumber}:${error.columnNumber}`
   }
   return ''
 }
