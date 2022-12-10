@@ -1,5 +1,12 @@
 // TODO treeshake out this whole module in production
 
+class AssertionError extends Error {
+  constructor(message) {
+    super(message)
+    this.name = 'AssertionError'
+  }
+}
+
 const getType = (value) => {
   switch (typeof value) {
     case 'number':
@@ -26,41 +33,41 @@ const getType = (value) => {
 export const object = (value) => {
   const type = getType(value)
   if (type !== 'object') {
-    throw new Error('expected value to be of type object')
+    throw new AssertionError('expected value to be of type object')
   }
 }
 
 export const number = (value) => {
   const type = getType(value)
   if (type !== 'number') {
-    throw new Error('expected value to be of type number')
+    throw new AssertionError('expected value to be of type number')
   }
 }
 
 export const array = (value) => {
   const type = getType(value)
   if (type !== 'array') {
-    throw new Error('expected value to be of type array')
+    throw new AssertionError('expected value to be of type array')
   }
 }
 
 export const string = (value) => {
   const type = getType(value)
   if (type !== 'string') {
-    throw new Error('expected value to be of type string')
+    throw new AssertionError('expected value to be of type string')
   }
 }
 
 export const null_ = (value) => {
   const type = getType(value)
   if (type !== 'null') {
-    throw new Error('expected value to be of type null')
+    throw new AssertionError('expected value to be of type null')
   }
 }
 
 export const boolean = (value) => {
   const type = getType(value)
   if (type !== 'boolean') {
-    throw new Error('expected value to be of type boolean')
+    throw new AssertionError('expected value to be of type boolean')
   }
 }
