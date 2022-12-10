@@ -44,7 +44,7 @@ const getIconSrc = (extension) => {
     return ExtensionDisplay.getIcon(extension)
   }
   if (extension.name && extension.name.startsWith('Language Basics')) {
-    return Icon.EXtensionLanguageBasics
+    return Icon.ExtensionLanguageBasics
   }
   if (extension.name && extension.name.endsWith(' Theme')) {
     return Icon.ExtensionTheme
