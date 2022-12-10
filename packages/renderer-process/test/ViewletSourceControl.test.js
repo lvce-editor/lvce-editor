@@ -22,10 +22,18 @@ test('setChangedFiles', () => {
   const state = ViewletSourceControl.create()
   ViewletSourceControl.setChangedFiles(state, [
     {
-      file: '/test/file-1',
+      label: 'file-1',
+      title: '/test/file-1',
+      icon: '',
+      posInSet: 1,
+      setSize: 2,
     },
     {
-      file: '/test/file-2',
+      label: 'file-2',
+      title: '/test/file-2',
+      icon: '',
+      posInSet: 1,
+      setSize: 2,
     },
   ])
   expect(getSimpleList(state)).toEqual(['file-1', 'file-2'])

@@ -181,6 +181,7 @@ export const startup = async (config) => {
       .replace('/tests', `${testPath}/src`)
       .replace(/\.html$/, '.js')
     await Command.execute('Test.execute', jsPath)
+    return
   } else {
     Performance.mark('code/willLoadSaveState')
     await SaveState.hydrate()

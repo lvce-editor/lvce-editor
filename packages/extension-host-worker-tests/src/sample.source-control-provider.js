@@ -15,9 +15,9 @@ test('sample.source-control-provider', async () => {
   await expect(viewletTree).toBeVisible()
 
   const treeItem1 = Locator('.TreeItem').nth(0)
-  await expect(treeItem1).toHaveText('file-1.txt')
+  await expect(treeItem1).toHaveText('/test/file-1.txt')
   const treeItem2 = Locator('.TreeItem').nth(1)
-  await expect(treeItem2).toHaveText('file-2.txt')
+  await expect(treeItem2).toHaveText('/test/file-2.txt')
 })
 
 export {}

@@ -10,6 +10,7 @@ export const Commands = {
 export const Css = [
   '/css/parts/ViewletSourceControl.css',
   '/css/parts/InputBox.css',
+  '/css/parts/TreeItem.css',
 ]
 
 export * from './ViewletSourceControl.js'

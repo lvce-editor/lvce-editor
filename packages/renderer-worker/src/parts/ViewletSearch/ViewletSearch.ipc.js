@@ -23,6 +23,7 @@ export const Css = [
   '/css/parts/Label.css',
   '/css/parts/ViewletList.css',
   '/css/parts/ViewletSearch.css',
+  '/css/parts/TreeItem.css',
 ]
 
 export * from './ViewletSearch.js'
