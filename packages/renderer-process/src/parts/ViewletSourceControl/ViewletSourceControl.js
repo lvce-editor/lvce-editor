@@ -31,6 +31,10 @@ export const create = () => {
   $ViewSourceControlInput.onfocus = ViewletSourceControlEvents.handleFocus
   $ViewSourceControlInput.ariaLabel = 'Source Control Input'
 
+  const $SourceControlHeader = document.createElement('div')
+  $SourceControlHeader.className = 'SourceControlHeader'
+  $SourceControlHeader.append($ViewSourceControlInput)
+
   const $ViewletTree = document.createElement('div')
   $ViewletTree.className = 'SourceControlItems'
   $ViewletTree.onclick = ViewletSourceControlEvents.handleClick
@@ -38,7 +42,7 @@ export const create = () => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet SourceControl'
   $Viewlet.tabIndex = 0
-  $Viewlet.append($ViewSourceControlInput, $ViewletTree)
+  $Viewlet.append($SourceControlHeader, $ViewletTree)
   return {
     $Viewlet,
     $ViewletTree,
