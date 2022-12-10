@@ -1,6 +1,6 @@
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as SourceControl from '../SourceControl/SourceControl.js'
-
+import * as IconTheme from '../IconTheme/IconTheme.js'
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
 export const create = () => {
@@ -11,6 +11,7 @@ export const create = () => {
     workingTree: [],
     disposed: false,
     inputValue: '',
+    displayItems: [],
   }
 }
 
@@ -41,8 +42,25 @@ const getChangedFiles = async () => {
   }
 }
 
+const getDisplayItems = (workingTree) => {
+  const displayItems = []
+  const setSize = workingTree.length
+  for (let i = 0; i < workingTree.length; i++) {
+    const item = workingTree[i]
+    displayItems.push({
+      file: item.file,
+      label: item.file,
+      posInSet: i + 1,
+      setSize,
+      icon: IconTheme.getFileIcon({ name: item.file }),
+    })
+  }
+  return displayItems
+}
+
 export const loadContent = async (state) => {
   const changedFiles = await getChangedFiles()
+  const displayItems = getDisplayItems(changedFiles.workingTree)
   return {
     ...state,
     index: changedFiles.index,
@@ -50,7 +68,28 @@ export const loadContent = async (state) => {
     untracked: changedFiles.untracked,
     workingTree: changedFiles.workingTree,
     gitRoot: changedFiles.gitRoot,
+    displayItems,
   }
+}
+
+const updateIcon = (displayItem) => {
+  return {
+    ...displayItem,
+    icon: IconTheme.getFileIcon({ name: displayItem.file }),
+  }
+}
+
+export const updateIcons = (state) => {
+  const { displayItems } = state
+  const newDisplayItems = displayItems.map(updateIcon)
+  return {
+    ...state,
+    displayItems: newDisplayItems,
+  }
+}
+
+export const handleIconThemeChange = (state) => {
+  return updateIcons(state)
 }
 
 export const handleClick = async (state, index) => {
@@ -87,16 +126,16 @@ const renderValue = {
   },
 }
 
-const renderChangeFiles = {
+const renderChangedFiles = {
   isEqual(oldState, newState) {
-    return oldState.workingTree === newState.workingTree
+    return oldState.displayItems === newState.displayItems
   },
   apply(oldState, newState) {
     return [
       /* method */ 'setChangedFiles',
-      /* changedFiles */ newState.workingTree,
+      /* changedFiles */ newState.displayItems,
     ]
   },
 }
 
-export const render = [renderValue, renderChangeFiles]
+export const render = [renderValue, renderChangedFiles]
