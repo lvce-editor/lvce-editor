@@ -18,7 +18,16 @@ const mergeStacks = (parent, child) => {
     return parentFirstLine + childRest
   }
   return child
-  // console.log({ parent, child, childRest })
+}
+
+const getErrorStack = (error) => {
+  if (error && error.stack) {
+    return error.stack
+  }
+  if (error && error.lineNumber && error.columnNumber && error.fileName) {
+    return `  at ${error.fileName}:${error.lineNumber}:${error.columnNumber}`
+  }
+  return ''
 }
 
 export class VError extends Error {
@@ -26,8 +35,11 @@ export class VError extends Error {
     const combinedMessage = getCombinedMessage(error, message)
     super(combinedMessage)
     this.name = 'VError'
+    console.log({ originalStack: error.stack, originalError: error })
+
     if (error instanceof Error) {
-      this.stack = mergeStacks(this.stack, error.stack)
+      const errorStack = getErrorStack(error)
+      this.stack = mergeStacks(this.stack, errorStack)
     }
     if (error.codeFrame) {
       this.codeFrame = error.codeFrame
