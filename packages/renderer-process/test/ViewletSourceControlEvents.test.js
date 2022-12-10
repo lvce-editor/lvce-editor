@@ -49,6 +49,30 @@ test('event - click', () => {
   )
 })
 
+test('event - mouseover', () => {
+  const state = ViewletSourceControl.create()
+  ViewletSourceControl.setChangedFiles(state, [
+    {
+      file: '/test/file-1',
+    },
+    {
+      file: '/test/file-2',
+    },
+  ])
+  const { $ViewletTree } = state
+  const event = new Event('mouseover', {
+    bubbles: true,
+    cancelable: true,
+  })
+  $ViewletTree.children[0].dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Viewlet.send',
+    'Source Control',
+    'handleMouseOver',
+    0
+  )
+})
+
 test('event - contextmenu', () => {
   const state = ViewletSourceControl.create()
   ViewletSourceControl.setChangedFiles(state, [
