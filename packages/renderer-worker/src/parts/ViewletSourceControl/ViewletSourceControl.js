@@ -1,6 +1,5 @@
-import * as ExtensionHostSourceControl from '../ExtensionHost/ExtensionHostSourceControl.js'
 import * as FileSystem from '../FileSystem/FileSystem.js'
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as SourceControl from '../SourceControl/SourceControl.js'
 
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
@@ -24,7 +23,7 @@ export const dispose = (state) => {
 
 export const acceptInput = async (state, text) => {
   state.inputValue = text // TODO avoid side effect here
-  await ExtensionHostSourceControl.acceptInput(text)
+  await SourceControl.acceptInput(text)
   return {
     ...state,
     inputValue: '',
@@ -32,7 +31,7 @@ export const acceptInput = async (state, text) => {
 }
 
 const getChangedFiles = async () => {
-  const changedFiles = await ExtensionHostSourceControl.getChangedFiles()
+  const changedFiles = await SourceControl.getChangedFiles()
   return {
     index: [],
     merge: [],
@@ -59,7 +58,7 @@ export const handleClick = async (state, index) => {
   const absolutePath = `${state.gitRoot}/${item.file}`
   // TODO handle error
   const [fileBefore, fileNow] = await Promise.all([
-    ExtensionHostSourceControl.getFileBefore(item.file),
+    SourceControl.getFileBefore(item.file),
     FileSystem.readFile(absolutePath),
   ])
   const content = `before:\n${fileBefore}\n\n\nnow:\n${fileNow}`
