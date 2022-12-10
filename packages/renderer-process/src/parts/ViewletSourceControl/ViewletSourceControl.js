@@ -42,6 +42,7 @@ export const create = () => {
   const $ViewletTree = document.createElement('div')
   $ViewletTree.className = 'SourceControlItems'
   $ViewletTree.onclick = ViewletSourceControlEvents.handleClick
+  $ViewletTree.onmouseover = ViewletSourceControlEvents.handleMouseOver
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet SourceControl'
@@ -82,4 +83,9 @@ export const setInputValue = (state, value) => {
 export const focus = (state) => {
   const { $ViewSourceControlInput } = state
   $ViewSourceControlInput.focus()
+}
+
+export const setItemButtons = (state, index) => {
+  const { $ViewletTree } = state
+  const $Item = $ViewletTree.children[index]
 }

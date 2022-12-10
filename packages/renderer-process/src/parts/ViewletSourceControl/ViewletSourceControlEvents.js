@@ -18,3 +18,15 @@ export const handleClick = (event) => {
     /* index */ index
   )
 }
+
+export const handleMouseOver = (event) => {
+  const { target } = event
+  const $Parent = target.closest('.SourceControlItems')
+  const index = findIndex($Parent, target)
+  RendererWorker.send(
+    /* viewletCommand */ 'Viewlet.send',
+    /* viewletId */ 'Source Control',
+    /* type */ 'handleMouseOver',
+    /* index */ index
+  )
+}
