@@ -109,3 +109,8 @@ test('render - inputValue changed', () => {
     ['Viewlet.send', 'Source Control', 'setInputValue', 'abc'],
   ])
 })
+
+test('handleMouseOver', () => {
+  const state = { ...ViewletSourceControl.create(), displayItems: [] }
+  expect(ViewletSourceControl.handleMouseOver(state, 0)).toBe(state)
+})
