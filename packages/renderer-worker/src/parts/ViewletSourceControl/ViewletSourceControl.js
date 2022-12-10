@@ -106,6 +106,11 @@ export const handleClick = async (state, index) => {
   // await Main.openAbsolutePath(absolutePath)
 }
 
+export const handleMouseOver = (state, index) => {
+  // TODO
+  return state
+}
+
 export const hasFunctionalResize = true
 
 export const resize = (state, dimensions) => {
