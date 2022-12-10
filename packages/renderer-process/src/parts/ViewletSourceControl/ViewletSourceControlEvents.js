@@ -20,8 +20,8 @@ export const handleClick = (event) => {
 }
 
 export const handleContextMenu = (event) => {
-  const { target, preventDefault } = event
-  preventDefault()
+  event.preventDefault()
+  const { target } = event
   const $Parent = target.closest('.SourceControlItems')
   const index = findIndex($Parent, target)
   RendererWorker.send(
