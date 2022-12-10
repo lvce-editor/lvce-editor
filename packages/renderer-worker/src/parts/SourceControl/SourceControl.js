@@ -1,38 +1,13 @@
-import * as Platform from '../Platform/Platform.js'
-import * as SharedProcess from '../SharedProcess/SharedProcess.js'
-import * as Workspace from '../Workspace/Workspace.js'
+import * as ExtensionHostSourceControl from '../ExtensionHost/ExtensionHostSourceControl.js'
 
-export const state = {
-  count: 0,
-  decorations: [],
-  listeners: [],
+export const acceptInput = (text) => {
+  return ExtensionHostSourceControl.acceptInput(text)
 }
 
-export const onDidChangeCount = (listener) => {
-  state.listeners.push(listener)
+export const getChangedFiles = () => {
+  return ExtensionHostSourceControl.getChangedFiles()
 }
 
-export const setCount = (count) => {
-  state.count = count
-  for (const listener of state.listeners) {
-    listener()
-  }
-}
-
-export const updateDecorations = () => {
-  for (const listener of state.listeners) {
-    listener()
-  }
-}
-
-export const getBadgeCount = async () => {
-  if (Platform.platform === 'web') {
-    return 0
-  }
-  const workspacePath = Workspace.getWorkspacePath()
-  const count = await SharedProcess.invoke(
-    /* ExtensionHost.getSourceControlBadgeCount */ 'ExtensionHostSourceControl.getSourceControlBadgeCount',
-    /* cwd */ workspacePath
-  )
-  return count
+export const getFileBefore = (file) => {
+  return ExtensionHostSourceControl.getFileBefore(file)
 }
