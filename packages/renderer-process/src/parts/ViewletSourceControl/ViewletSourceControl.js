@@ -95,7 +95,6 @@ const create$Button = (button) => {
 }
 
 export const setItemButtons = (state, index, buttons) => {
-  console.log({ buttons })
   const { $ViewletTree } = state
   if (index === -1) {
     return

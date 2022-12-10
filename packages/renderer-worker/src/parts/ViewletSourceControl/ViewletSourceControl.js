@@ -118,7 +118,6 @@ export const handleClick = async (state, index) => {
 }
 
 export const handleMouseOver = (state, index) => {
-  console.log('mouse over', state.buttonIndex, index)
   return {
     ...state,
     buttonIndex: index,
@@ -137,6 +136,11 @@ export const handleMouseOver = (state, index) => {
       },
     ],
   }
+}
+
+export const handleContextMenu = (state) => {
+  console.warn('source control context menu not yet implemented')
+  return state
 }
 
 export const hasFunctionalResize = true
@@ -173,14 +177,12 @@ const renderChangedFiles = {
 
 const renderButtons = {
   isEqual(oldState, newState) {
-    console.log('render buttons', oldState.buttonIndex, newState.buttonIndex)
     return (
       oldState.buttonIndex === newState.buttonIndex &&
       oldState.buttons === newState.buttons
     )
   },
   apply(oldState, newState) {
-    console.log('apply')
     return [
       /* method */ 'setItemButtons',
       /* index */ newState.buttonIndex,

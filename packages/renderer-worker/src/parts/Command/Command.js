@@ -55,10 +55,11 @@ const hasThrown = new Set()
 
 export const execute = (command, ...args) => {
   if (command in state.commands) {
-    if (typeof state.commands[command] !== 'function') {
+    const fn = state.commands[command]
+    if (typeof fn !== 'function') {
       throw new Error(`[renderer-worker] Command ${command} is not a function`)
     }
-    return state.commands[command](...args)
+    return fn(...args)
   }
   return (
     loadCommand(command)

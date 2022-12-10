@@ -6,6 +6,7 @@ export const name = 'Source Control'
 export const Commands = {
   acceptInput: ViewletSourceControl.acceptInput,
   handleMouseOver: ViewletSourceControl.handleMouseOver,
+  handleContextMenu: ViewletSourceControl.handleContextMenu,
 }
 
 export const Css = [
