@@ -1,7 +1,17 @@
 import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as SourceControl from '../SourceControl/SourceControl.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
+import * as Icon from '../Icon/Icon.js'
 // TODO when accept input is invoked multiple times, it should not lead to errors
+
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  Add: 'Add',
+  Restore: 'Restore',
+  OpenFile: 'Open File',
+}
 
 export const create = () => {
   return {
@@ -12,6 +22,7 @@ export const create = () => {
     disposed: false,
     inputValue: '',
     displayItems: [],
+    buttonIndex: -1,
   }
 }
 
@@ -107,8 +118,25 @@ export const handleClick = async (state, index) => {
 }
 
 export const handleMouseOver = (state, index) => {
-  // TODO
-  return state
+  console.log('mouse over', state.buttonIndex, index)
+  return {
+    ...state,
+    buttonIndex: index,
+    buttons: [
+      {
+        label: UiStrings.OpenFile,
+        icon: Icon.Close,
+      },
+      {
+        label: UiStrings.Restore,
+        icon: Icon.Close,
+      },
+      {
+        label: UiStrings.Add,
+        icon: Icon.Close,
+      },
+    ],
+  }
 }
 
 export const hasFunctionalResize = true
@@ -143,4 +171,22 @@ const renderChangedFiles = {
   },
 }
 
-export const render = [renderValue, renderChangedFiles]
+const renderButtons = {
+  isEqual(oldState, newState) {
+    console.log('render buttons', oldState.buttonIndex, newState.buttonIndex)
+    return (
+      oldState.buttonIndex === newState.buttonIndex &&
+      oldState.buttons === newState.buttons
+    )
+  },
+  apply(oldState, newState) {
+    console.log('apply')
+    return [
+      /* method */ 'setItemButtons',
+      /* index */ newState.buttonIndex,
+      /* buttons */ newState.buttons,
+    ]
+  },
+}
+
+export const render = [renderValue, renderChangedFiles, renderButtons]

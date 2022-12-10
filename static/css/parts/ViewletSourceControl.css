@@ -1,3 +1,8 @@
+.SourceControl {
+  display: flex;
+  flex-direction: column;
+}
+
 .SourceControl:focus {
   outline: var(--FocusOutline);
   outline-offset: -1px;
@@ -24,4 +29,8 @@
 
 .ListItems.DropTarget {
   background: darkblue;
+}
+
+.SourceControlItems {
+  flex: 1;
 }

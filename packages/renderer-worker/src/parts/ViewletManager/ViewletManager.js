@@ -35,7 +35,9 @@ const kDispose = 'Viewlet.dispose'
 // then check if instance.factory matches module -> only compare reference (int) instead of string
 // should be faster
 const wrapViewletCommand = (id, fn) => {
+  console.log('wrap', id)
   const wrappedViewletCommand = async (...args) => {
+    console.log('wrapped command', id)
     // TODO get actual focused instance
     const activeInstance = ViewletStates.getInstance(id)
     if (!activeInstance) {
@@ -53,15 +55,18 @@ const wrapViewletCommand = (id, fn) => {
       Assert.object(newState)
       // console.log({ fn, newState })
       if (oldState === newState) {
+        console.log('state is eq')
         return
       }
       const commands = render(activeInstance.factory, oldState, newState)
+      console.log({ newState })
       ViewletStates.setState(id, newState)
       await RendererProcess.invoke(
         /* Viewlet.sendMultiple */ kSendMultiple,
         /* commands */ commands
       )
     } else {
+      console.log('else', fn.name)
       return fn(activeInstance.state, ...args)
     }
   }
@@ -210,6 +215,7 @@ const registerWrappedCommand = (moduleName, key, wrappedCommand) => {
     if (moduleName === 'EditorText') {
       Command.register(`Editor.${key}`, wrappedCommand)
     } else {
+      console.log('else', `${moduleName}.${key}`)
       Command.register(`${moduleName}.${key}`, wrappedCommand)
     }
   }
@@ -217,6 +223,7 @@ const registerWrappedCommand = (moduleName, key, wrappedCommand) => {
 
 const maybeRegisterWrappedCommands = (module) => {
   if (module.Commands) {
+    console.log(module.name, module.Commands)
     for (const [key, value] of Object.entries(module.Commands)) {
       const wrappedCommand = wrapViewletCommand(module.name, value)
       registerWrappedCommand(module.name, key, wrappedCommand)

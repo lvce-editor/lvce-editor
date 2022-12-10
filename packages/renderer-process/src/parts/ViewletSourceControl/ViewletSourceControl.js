@@ -86,7 +86,21 @@ export const focus = (state) => {
   $ViewSourceControlInput.focus()
 }
 
-export const setItemButtons = (state, index) => {
+const create$Button = (button) => {
+  const $Button = document.createElement('img')
+  $Button.role = 'button'
+  $Button.src = button.src
+  $Button.textContent = button.label
+  return $Button
+}
+
+export const setItemButtons = (state, index, buttons) => {
+  console.log({ buttons })
   const { $ViewletTree } = state
+  if (index === -1) {
+    return
+  }
   const $Item = $ViewletTree.children[index]
+  // TODO handle icon loading error?
+  $Item.append(...buttons.map(create$Button))
 }

@@ -51,3 +51,36 @@ test('accessibility - SourceControlInput should have aria-label', () => {
   const { $ViewSourceControlInput } = state
   expect($ViewSourceControlInput.ariaLabel).toBe('Source Control Input')
 })
+
+test('setButtons', () => {
+  const state = ViewletSourceControl.create()
+  const { $ViewletTree } = state
+  ViewletSourceControl.setChangedFiles(state, [
+    {
+      label: 'file-1',
+      title: '/test/file-1',
+      icon: '',
+      posInSet: 1,
+      setSize: 2,
+    },
+  ])
+  ViewletSourceControl.setItemButtons(state, 0, [
+    {
+      src: '/icons/reset.svg',
+      label: 'Reset',
+    },
+    {
+      src: '/icons/add.svg',
+      label: 'Add',
+    },
+  ])
+  const $Item = $ViewletTree.children[0]
+  const $Button1 = $Item.children[2]
+  const $Button2 = $Item.children[3]
+  // @ts-ignore
+  expect($Button1.src).toBe('http://localhost/icons/reset.svg')
+  expect($Button1.textContent).toBe('Reset')
+  // @ts-ignore
+  expect($Button2.src).toBe('http://localhost/icons/add.svg')
+  expect($Button2.textContent).toBe('Add')
+})
