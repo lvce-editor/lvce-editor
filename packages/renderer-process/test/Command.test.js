@@ -1,5 +1,19 @@
 import { jest } from '@jest/globals'
-import * as Command from '../src/parts/Command/Command.js'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/ModuleMap/ModuleMap.js', () => {
+  return {
+    getModuleId: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const Command = await import('../src/parts/Command/Command.js')
+const ModuleMap = await import('../src/parts/ModuleMap/ModuleMap.js')
 
 test('register', () => {
   const mockFn = jest.fn()
@@ -21,4 +35,19 @@ test('execute - command already registered but throws error', async () => {
   })
   Command.register(-12, mockFn)
   expect(() => Command.execute(-12, 'abc')).toThrowError(new Error('Oops'))
+})
+
+test('execute - error - module has syntax error', async () => {
+  // @ts-ignore
+  ModuleMap.getModuleId.mockImplementation(() => {
+    return 21
+  })
+  Command.state.load = async () => {
+    throw new SyntaxError(`Unexpected token ','`)
+  }
+  await expect(Command.execute('test.test')).rejects.toThrowError(
+    new Error(
+      `Failed to load command test.test: VError: failed to load module 21: SyntaxError: Unexpected token ','`
+    )
+  )
 })
