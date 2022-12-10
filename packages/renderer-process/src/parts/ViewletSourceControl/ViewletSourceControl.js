@@ -42,6 +42,7 @@ export const create = () => {
   const $ViewletTree = document.createElement('div')
   $ViewletTree.className = 'SourceControlItems'
   $ViewletTree.onclick = ViewletSourceControlEvents.handleClick
+  $ViewletTree.oncontextmenu = ViewletSourceControlEvents.handleContextMenu
   $ViewletTree.onmouseover = ViewletSourceControlEvents.handleMouseOver
 
   const $Viewlet = document.createElement('div')
