@@ -1,6 +1,8 @@
 .SourceControl:focus {
-  outline: 1px solid red;
+  outline: var(--FocusOutline);
   outline-offset: -1px;
+  outline-style: solid;
+  outline-width: 1px;
 }
 
 .ViewSourceControlInput {
