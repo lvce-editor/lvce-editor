@@ -15,6 +15,23 @@ jest.unstable_mockModule('../src/parts/ModuleMap/ModuleMap.js', () => {
 const Command = await import('../src/parts/Command/Command.js')
 const ModuleMap = await import('../src/parts/ModuleMap/ModuleMap.js')
 
+class NoErrorThrownError extends Error {}
+
+/**
+ *
+ * @param {any} promise
+ * @returns {Promise<Error>}
+ *  */
+const getError = async (promise) => {
+  try {
+    await promise
+    throw new NoErrorThrownError()
+  } catch (error) {
+    // @ts-ignore
+    return error
+  }
+}
+
 test('register', () => {
   const mockFn = jest.fn()
   Command.register(-12, mockFn)
@@ -43,11 +60,17 @@ test('execute - error - module has syntax error', async () => {
     return 21
   })
   Command.state.load = async () => {
-    throw new SyntaxError(`Unexpected token ','`)
+    const error = new SyntaxError(`Unexpected token ','`)
+    error.stack = `SyntaxError: Unexpected token ','`
+    throw error
   }
-  await expect(Command.execute('test.test')).rejects.toThrowError(
-    new Error(
-      `Failed to load command test.test: VError: failed to load module 21: SyntaxError: Unexpected token ','`
-    )
+  const error = await getError(Command.execute('test.test'))
+  expect(error.message).toBe(
+    `Failed to load command test.test: VError: failed to load module 21: SyntaxError: Unexpected token ','`
   )
+  const lines = error.stack.split('\n')
+  expect(lines[0]).toBe(
+    `VError: Failed to load command test.test: VError: failed to load module 21: SyntaxError: Unexpected token ','`
+  )
+  expect(lines[2]).toMatch(`  at loadCommand`)
 })

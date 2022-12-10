@@ -29,6 +29,13 @@ const loadModule = async (moduleId) => {
     const module = await state.load(moduleId)
     initializeModule(module)
   } catch (error) {
+    if (
+      error &&
+      error instanceof SyntaxError &&
+      error.stack === `SyntaxError: ${error.message}`
+    ) {
+      Error.captureStackTrace(error, loadModule)
+    }
     throw new VError(error, `failed to load module ${moduleId}`)
   }
 }
