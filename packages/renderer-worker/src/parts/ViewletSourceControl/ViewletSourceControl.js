@@ -141,7 +141,6 @@ export const handleMouseOver = (state, index) => {
 }
 
 export const handleContextMenu = async (state, x, y) => {
-  console.log({ x, y })
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
@@ -150,6 +149,12 @@ export const handleContextMenu = async (state, x, y) => {
   )
   return state
 }
+
+export const handleClickAdd = () => {}
+
+export const handleClickRestore = () => {}
+
+export const handleClickDiscard = () => {}
 
 export const hasFunctionalResize = true
 

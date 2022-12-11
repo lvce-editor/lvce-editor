@@ -8,7 +8,7 @@ import * as IconButton from '../IconButton/IconButton.js'
 
 const create$Item = (item) => {
   const $Icon = document.createElement('div')
-  $Icon.className = `Icon${item.icon}`
+  $Icon.className = `FileIcon${item.icon}`
 
   const $Label = document.createElement('div')
   $Label.className = 'Label'
@@ -90,7 +90,7 @@ export const focus = (state) => {
 
 const create$Button = (button) => {
   const $Button = IconButton.create$Button(button.label, button.icon)
-  $Button.className += ' SourceControlButton'
+  $Button.className = 'SourceControlButton'
   return $Button
 }
 

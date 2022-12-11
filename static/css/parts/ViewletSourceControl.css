@@ -34,3 +34,21 @@
 .SourceControlItems {
   flex: 1;
 }
+
+.SourceControlButton {
+  width: 20px;
+  height: 20px;
+  contain: strict;
+  flex-shrink: 0;
+  border: none;
+  color: #c5c5c5;
+  background: transparent;
+}
+
+.SourceControlButton[disabled] {
+  color: rgba(204, 204, 204, 0.5);
+}
+
+.SourceControlButton:hover {
+  background-color: hsla(0, 0%, 100%, 0.1);
+}

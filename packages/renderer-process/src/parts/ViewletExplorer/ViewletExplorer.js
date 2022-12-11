@@ -58,7 +58,7 @@ const create$Row = () => {
 const render$Row = ($Row, rowInfo) => {
   const $Icon = $Row.childNodes[0]
   const $LabelText = $Row.childNodes[1].childNodes[0]
-  $Icon.className = `Icon${rowInfo.icon}`
+  $Icon.className = `FileIcon${rowInfo.icon}`
   $LabelText.data = rowInfo.name
   $Row.title = rowInfo.path
   $Row.ariaSetSize = `${rowInfo.setSize}`

@@ -163,7 +163,7 @@ const getIconThemeCss2 = (iconTheme) => {
   const extensionPath = iconTheme.extensionPath
   for (const [key, value] of Object.entries(iconDefinitions)) {
     const backgroundUrl = getBackgroundUrl(extensionPath, value)
-    rules.push(`.Icon${key} { background-image: url(${backgroundUrl}) }`)
+    rules.push(`.FileIcon${key} { background-image: url(${backgroundUrl}) }`)
   }
   const rulesCss = rules.join('\n')
   return rulesCss
