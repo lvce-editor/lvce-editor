@@ -93,7 +93,7 @@ const render$QuickPickItemLabel = ($QuickPickItem, quickPickItem) => {
 }
 
 const render$QuickPickItemIcon = ($QuickPickItem, quickPickItem) => {
-  $QuickPickItem.children[0].className = `Icon${quickPickItem.icon}`
+  $QuickPickItem.children[0].className = `FileIcon${quickPickItem.icon}`
 }
 
 const render$QuickPickItemEqual = ($QuickPickItem, quickPickItem) => {

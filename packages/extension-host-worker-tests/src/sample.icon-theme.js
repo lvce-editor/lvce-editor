@@ -13,7 +13,7 @@ test('sample.icon-theme', async () => {
 
   // assert
   const iconFile = Locator('.TreeItem[aria-label="test.xyz"] i')
-  await expect(iconFile).toHaveClass('Icon_file')
+  await expect(iconFile).toHaveClass('FileIcon_file')
   const baseUrl = BaseUrl.getBaseUrl()
   await expect(iconFile).toHaveCSS(
     'background-image',
