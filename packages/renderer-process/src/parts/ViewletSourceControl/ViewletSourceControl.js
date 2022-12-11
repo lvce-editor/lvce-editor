@@ -89,9 +89,11 @@ export const focus = (state) => {
 
 const create$Button = (button) => {
   const $Button = document.createElement('img')
+  $Button.className = 'SourceControlButton'
   $Button.role = 'button'
-  $Button.src = button.src
-  $Button.textContent = button.label
+  $Button.src = button.icon
+  $Button.ariaLabel = button.label
+  $Button.tabIndex = 0
   return $Button
 }
 
@@ -103,6 +105,9 @@ export const setItemButtons = (state, index, buttons) => {
     return
   }
   const $Item = $ViewletTree.children[index]
+  if ($Item.children[2]) {
+    return
+  }
   if (!$Item) {
     Logger.warn(`no source control item found at index ${index}`)
     return
