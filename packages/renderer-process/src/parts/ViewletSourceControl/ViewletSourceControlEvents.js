@@ -23,8 +23,6 @@ export const handleMouseOver = (event) => {
   const index = findIndex($Parent, target)
   RendererWorker.send(
     /* SourceControl.handleMouseOver */ 'Source Control.handleMouseOver',
-    /* viewletId */ 'Source Control',
-    /* type */ 'handleMouseOver',
     /* index */ index
   )
 }

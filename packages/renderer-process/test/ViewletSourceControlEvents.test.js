@@ -42,9 +42,7 @@ test('event - click', () => {
     })
   )
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Source Control',
-    'handleClick',
+    'Source Control.handleClick',
     0
   )
 })
@@ -66,9 +64,7 @@ test('event - mouseover', () => {
   })
   $ViewletTree.children[0].dispatchEvent(event)
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Source Control',
-    'handleMouseOver',
+    'Source Control.handleMouseOver',
     0
   )
 })
@@ -91,9 +87,7 @@ test('event - contextmenu', () => {
   $ViewletTree.children[0].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Source Control',
-    'handleContextMenu',
+    'Source Control.handleContextMenu',
     0
   )
 })
