@@ -124,15 +124,15 @@ export const handleMouseOver = (state, index) => {
     buttons: [
       {
         label: UiStrings.OpenFile,
-        icon: Icon.Close,
+        icon: Icon.GoToFile,
       },
       {
         label: UiStrings.Restore,
-        icon: Icon.Close,
+        icon: Icon.Discard,
       },
       {
         label: UiStrings.Add,
-        icon: Icon.Close,
+        icon: Icon.Add,
       },
     ],
   }

@@ -4,6 +4,7 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Logger from '../Logger/Logger.js'
 import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
+import * as IconButton from '../IconButton/IconButton.js'
 
 const create$Item = (item) => {
   const $Icon = document.createElement('div')
@@ -88,12 +89,8 @@ export const focus = (state) => {
 }
 
 const create$Button = (button) => {
-  const $Button = document.createElement('img')
-  $Button.className = 'SourceControlButton'
-  $Button.role = 'button'
-  $Button.src = button.icon
-  $Button.ariaLabel = button.label
-  $Button.tabIndex = 0
+  const $Button = IconButton.create$Button(button.label, button.icon)
+  $Button.className += ' SourceControlButton'
   return $Button
 }
 
