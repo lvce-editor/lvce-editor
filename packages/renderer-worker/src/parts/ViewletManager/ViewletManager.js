@@ -196,7 +196,6 @@ const getRenderCommands = (module, oldState, newState, name = module.name) => {
     return commands
   }
   if (module.render) {
-    console.log('else')
     return module.render(oldState, newState)
   }
   return []

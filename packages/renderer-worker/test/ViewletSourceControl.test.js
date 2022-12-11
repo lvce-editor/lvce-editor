@@ -112,5 +112,7 @@ test('render - inputValue changed', () => {
 
 test('handleMouseOver', () => {
   const state = { ...ViewletSourceControl.create(), displayItems: [] }
-  expect(ViewletSourceControl.handleMouseOver(state, 0)).toBe(state)
+  expect(ViewletSourceControl.handleMouseOver(state, 0)).toMatchObject({
+    buttonIndex: 0,
+  })
 })

@@ -2,6 +2,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
+import * as Logger from '../Logger/Logger.js'
 import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
 
 const create$Item = (item) => {
@@ -86,7 +87,31 @@ export const focus = (state) => {
   $ViewSourceControlInput.focus()
 }
 
-export const setItemButtons = (state, index) => {
+const create$Button = (button) => {
+  const $Button = document.createElement('img')
+  $Button.className = 'SourceControlButton'
+  $Button.role = 'button'
+  $Button.src = button.icon
+  $Button.ariaLabel = button.label
+  $Button.tabIndex = 0
+  return $Button
+}
+
+export const setItemButtons = (state, index, buttons) => {
+  Assert.number(index)
+  Assert.array(buttons)
   const { $ViewletTree } = state
+  if (index === -1) {
+    return
+  }
   const $Item = $ViewletTree.children[index]
+  if ($Item.children[2]) {
+    return
+  }
+  if (!$Item) {
+    Logger.warn(`no source control item found at index ${index}`)
+    return
+  }
+  // TODO handle icon loading error?
+  $Item.append(...buttons.map(create$Button))
 }
