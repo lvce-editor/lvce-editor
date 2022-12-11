@@ -29,14 +29,14 @@
   },
   "dependencies": {
     "bytes": "^3.1.2",
-    "esbuild": "^0.16.2",
+    "esbuild": "^0.16.4",
     "fs-extra": "^11.1.0",
     "got": "^12.5.3",
     "gzip-size": "^7.0.0",
     "minimist": "^1.2.7",
     "p-map": "^5.5.0",
     "pretty-bytes": "^6.0.0",
-    "rollup": "^3.7.0",
+    "rollup": "^3.7.3",
     "tar-fs": "^2.1.1",
     "verdaccio": "^5.18.0",
     "verror": "^1.10.1"
