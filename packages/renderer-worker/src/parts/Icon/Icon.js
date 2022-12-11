@@ -24,3 +24,4 @@ export const SymbolProperty = `${assetDir}/icons/symbol-property.svg`
 export const SymbolValue = `${assetDir}/icons/symbol-enum.svg`
 export const SymbolVariable = `${assetDir}/icons/symbol-variable.svg`
 export const GoToFile = `${assetDir}/icons/go-to-file.svg`
+export const Blank = `${assetDir}/icons/blank.svg`

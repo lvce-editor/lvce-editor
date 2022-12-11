@@ -95,3 +95,50 @@ test('prepare - error without stack', async () => {
   expect(prettyError).toBe(error)
   expect(spy).not.toHaveBeenCalled()
 })
+
+test('prepare - error with firefox stacktrace', async () => {
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    return `export const handleKeyArrowDownMenuOpen = (state) => {
+  const { menus } = state
+  const menu = menus.at(-1)
+  const newFocusedIndex = Menu.getIndexToFocusNext(menu)
+  const newMenus = [
+    ...menus.slice(0, -1),
+    {
+      ...menu,
+      focusedIndex: newFocusedIndex,
+    },
+  ]
+  return {
+    ...state,
+    menus: newMenus,
+  }
+}
+`
+  })
+  const error = new ReferenceError('Menu is not defined')
+  error.stack = `ReferenceError: Menu is not defined
+handleKeyArrowDownMenuOpen@test:///packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleKeyArrowDownMenuOpen.js:4:27
+ifElseFunction@test:///packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarIfElse.js:5:14
+TitleBarMenuBar/lazy/handleKeyArrowDown@test:///packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:115:30
+Object.handleKeyBinding@test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3
+handleMessageFromRendererProcess@test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3`
+  const prettyError = await PrettyError.prepare(error)
+  expect(prettyError).toEqual({
+    message: 'Menu is not defined',
+    codeFrame: `  2 |   const { menus } = state
+  3 |   const menu = menus.at(-1)
+> 4 |   const newFocusedIndex = Menu.getIndexToFocusNext(menu)
+    |                           ^
+  5 |   const newMenus = [
+  6 |     ...menus.slice(0, -1),
+  7 |     {`,
+    stack: `handleKeyArrowDownMenuOpen@test:///packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarHandleKeyArrowDownMenuOpen.js:4:27
+ifElseFunction@test:///packages/renderer-worker/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarIfElse.js:5:14
+TitleBarMenuBar/lazy/handleKeyArrowDown@test:///packages/renderer-worker/src/parts/ViewletManager/ViewletManager.js:115:30
+Object.handleKeyBinding@test:///packages/renderer-worker/src/parts/KeyBindings/KeyBindings.js:36:3
+handleMessageFromRendererProcess@test:///packages/renderer-worker/src/parts/RendererProcess/RendererProcess.js:45:3`,
+    type: 'ReferenceError',
+  })
+})
