@@ -1,4 +1,5 @@
 import * as ModuleMap from '../ModuleMap/ModuleMap.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   commands: Object.create(null),
@@ -28,7 +29,14 @@ const loadModule = async (moduleId) => {
     const module = await state.load(moduleId)
     initializeModule(module)
   } catch (error) {
-    console.error(error)
+    if (
+      error &&
+      error instanceof SyntaxError &&
+      error.stack === `SyntaxError: ${error.message}`
+    ) {
+      Error.captureStackTrace(error, loadModule)
+    }
+    throw new VError(error, `failed to load module ${moduleId}`)
   }
 }
 
@@ -53,10 +61,7 @@ const executeCommandAsync = async (command, ...args) => {
   try {
     await loadCommand(command)
   } catch (error) {
-    // @ts-ignore
-    throw new Error(`Failed to load command ${command}`, {
-      cause: error,
-    })
+    throw new VError(error, `Failed to load command ${command}`)
   }
   if (!(command in state.commands)) {
     if (hasThrown.has(command)) {

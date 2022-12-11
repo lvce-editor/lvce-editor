@@ -44,6 +44,7 @@ const prepareErrorMessageWithCodeFrame = (error) => {
 
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
+const RE_PATH_3 = /@(.*):(\d+):(\d+)$/ // Firefox
 
 /**
  *
@@ -52,7 +53,11 @@ const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
  */
 const getFile = (lines) => {
   for (const line of lines) {
-    if (line.match(RE_PATH_1) || line.match(RE_PATH_2)) {
+    if (
+      line.match(RE_PATH_1) ||
+      line.match(RE_PATH_2) ||
+      line.match(RE_PATH_3)
+    ) {
       return line
     }
   }
@@ -66,6 +71,9 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
     let match = file.match(RE_PATH_1)
     if (!match) {
       match = file.match(RE_PATH_2)
+    }
+    if (!match) {
+      match = file.match(RE_PATH_3)
     }
     if (!match) {
       return error
