@@ -84,7 +84,7 @@ test('setPicks - with icons', () => {
   const { $QuickPickItems } = state
   expect($QuickPickItems.children).toHaveLength(2)
   expect($QuickPickItems.children[0].innerHTML).toBe(
-    '<i class="Icon_file"></i><div class="Label">file-1.txt</div>'
+    '<i class="FileIcon_file"></i><div class="Label">file-1.txt</div>'
   )
 })
 
