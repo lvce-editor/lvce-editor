@@ -35,9 +35,16 @@ export const dispose = (state) => {
   }
 }
 
-export const acceptInput = async (state, text) => {
-  state.inputValue = text // TODO avoid side effect here
-  await SourceControl.acceptInput(text)
+export const handleInput = (state, text) => {
+  return {
+    ...state,
+    inputValue: text,
+  }
+}
+
+export const acceptInput = async (state) => {
+  const { inputValue } = state
+  await SourceControl.acceptInput(inputValue)
   return {
     ...state,
     inputValue: '',

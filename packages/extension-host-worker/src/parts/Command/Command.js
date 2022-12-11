@@ -49,6 +49,9 @@ const getFn = (method) => {
       return ExtensionHostDefinition.executeDefinitionProvider
     case 'ExtensionHost.sourceControlGetChangedFiles':
       return ExtensionHostSourceControl.getChangedFiles
+    case 'ExtensionHostSourceControl.acceptInput':
+    case 'ExtensionHost.sourceControlAcceptInput':
+      return ExtensionHostSourceControl.acceptInput
     case 'ExtensionHostFormatting.executeFormattingProvider':
       return ExtensionHostFormatting.executeFormattingProvider
     case 'ExtensionHostMockExec.mockExec':

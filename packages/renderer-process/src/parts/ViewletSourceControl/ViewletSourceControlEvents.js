@@ -36,3 +36,12 @@ export const handleContextMenu = (event) => {
     /* y */ clientY
   )
 }
+
+export const handleInput = (event) => {
+  const { target } = event
+  const { value } = target
+  RendererWorker.send(
+    /* SourceControl.handleContextMenu */ 'Source Control.handleInput',
+    /* value */ value
+  )
+}

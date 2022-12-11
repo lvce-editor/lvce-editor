@@ -17,6 +17,14 @@ export const getChangedFiles = async () => {
   return flattenedChangedFiles
 }
 
+export const acceptInput = async (value) => {
+  const provider = Object.values(state.providers)[0]
+  if (!provider) {
+    return
+  }
+  await provider.acceptInput(value)
+}
+
 export const reset = () => {
   state.providers = Object.create(null)
 }

@@ -149,7 +149,7 @@
   },
   {
     "key": "ctrl+Enter",
-    "command": "SourceControl.acceptInput",
+    "command": "Source Control.acceptInput",
     "when": "focus.sourceControlInput"
   },
   {
