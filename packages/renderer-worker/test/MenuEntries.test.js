@@ -1,6 +1,25 @@
-import * as MenuEntries from '../src/parts/MenuEntries/MenuEntries.js'
-import * as ViewletStates from '../src/parts/ViewletStates/ViewletStates.js'
 import * as MenuEntryId from '../src/parts/MenuEntryId/MenuEntryId.js'
+import { jest } from '@jest/globals'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule(
+  '../src/parts/MenuEntriesModule/MenuEntriesModule.js',
+  () => {
+    return {
+      load: jest.fn(() => {
+        throw new Error('not implemented')
+      }),
+    }
+  }
+)
+
+const MenuEntries = await import('../src/parts/MenuEntries/MenuEntries.js')
+const MenuEntriesModule = await import(
+  '../src/parts/MenuEntriesModule/MenuEntriesModule.js'
+)
 
 // TODO mock external modules for unit test
 
@@ -10,104 +29,38 @@ test.skip('getMenuEntries - activityBar', async () => {
   ).toBeInstanceOf(Array)
 })
 
-test('getMenuEntries - edit', async () => {
-  expect(await MenuEntries.getMenuEntries(MenuEntryId.Edit)).toBeInstanceOf(
-    Array
-  )
-})
-
-test('getMenuEntries - editor', async () => {
-  expect(await MenuEntries.getMenuEntries(MenuEntryId.Editor)).toBeInstanceOf(
-    Array
-  )
-})
-
-test('getMenuEntries - explorer', async () => {
-  const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
-  ViewletStates.set('Explorer', {
-    state: {
-      focusedIndex: -1,
-      items: [],
-    },
-    factory: {},
+test('getMenuEntries - empty', async () => {
+  // @ts-ignore
+  MenuEntriesModule.load.mockImplementation(() => {
+    return {
+      getMenuEntries() {
+        return []
+      },
+    }
   })
-  expect(await MenuEntries.getMenuEntries(MenuEntryId.Explorer)).toBeInstanceOf(
-    Array
-  )
+  expect(await MenuEntries.getMenuEntries(123)).toEqual([])
 })
 
-test('getMenuEntries - file', async () => {
-  expect(await MenuEntries.getMenuEntries(MenuEntryId.File)).toBeInstanceOf(
-    Array
-  )
-})
-
-test('getMenuEntries - go', async () => {
-  expect(await MenuEntries.getMenuEntries(MenuEntryId.Go)).toBeInstanceOf(Array)
-})
-
-test('getMenuEntries - help', async () => {
-  expect(await MenuEntries.getMenuEntries(MenuEntryId.Help)).toBeInstanceOf(
-    Array
-  )
-})
-
-test('getMenuEntries - manageExtension', async () => {
-  expect(
-    await MenuEntries.getMenuEntries(MenuEntryId.ManageExtension)
-  ).toBeInstanceOf(Array)
-})
-
-test.skip('getMenuEntries - openRecent', async () => {
-  expect(
-    await MenuEntries.getMenuEntries(MenuEntryId.OpenRecent)
-  ).toBeInstanceOf(Array)
-})
-
-test('getMenuEntries - run', async () => {
-  expect(await MenuEntries.getMenuEntries(MenuEntryId.Run)).toBeInstanceOf(
-    Array
-  )
-})
-
-test('getMenuEntries - settings', async () => {
-  expect(await MenuEntries.getMenuEntries(MenuEntryId.Settings)).toBeInstanceOf(
-    Array
-  )
-})
-
-test('getMenuEntries - selection', async () => {
-  expect(
-    await MenuEntries.getMenuEntries(MenuEntryId.Selection)
-  ).toBeInstanceOf(Array)
-})
-
-test.skip('getMenuEntries - tab', async () => {
-  expect(await MenuEntries.getMenuEntries(MenuEntryId.Tab)).toBeInstanceOf(
-    Array
-  )
-})
-
-test('getMenuEntries - terminal', async () => {
-  expect(await MenuEntries.getMenuEntries(MenuEntryId.Terminal)).toBeInstanceOf(
-    Array
-  )
-})
-
-test('getMenuEntries - titleBar', async () => {
-  expect(await MenuEntries.getMenuEntries(MenuEntryId.TitleBar)).toBeInstanceOf(
-    Array
-  )
-})
-
-test('getMenuEntries - view', async () => {
-  expect(await MenuEntries.getMenuEntries(MenuEntryId.View)).toBeInstanceOf(
-    Array
-  )
-})
-
-test('getMenuEntries - invalid id', async () => {
+test('getMenuEntries - error - invalid id', async () => {
+  // @ts-ignore
+  MenuEntriesModule.load.mockImplementation(() => {
+    throw new Error(`module not found -1`)
+  })
   await expect(MenuEntries.getMenuEntries(-1)).rejects.toThrowError(
-    'module not found "-1"'
+    'Failed to load menu entries for id -1: Error: module not found -1'
+  )
+})
+
+test('getMenuEntries - error - module fails to load', async () => {
+  // @ts-ignore
+  MenuEntriesModule.load.mockImplementation(() => {
+    throw new TypeError(
+      `Failed to fetch dynamically imported module: https://example.com/renderer-worker/src/parts/not-found.js`
+    )
+  })
+  await expect(MenuEntries.getMenuEntries(-1)).rejects.toThrowError(
+    new Error(
+      `Failed to load menu entries for id -1: TypeError: Failed to fetch dynamically imported module: https://example.com/renderer-worker/src/parts/not-found.js`
+    )
   )
 })
