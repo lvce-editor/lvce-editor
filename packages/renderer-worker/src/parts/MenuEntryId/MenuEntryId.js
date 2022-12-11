@@ -39,3 +39,5 @@ export const EditorImage = 19
 export const ExtensionDetailReadme = 20
 
 export const SimpleBrowser = 21
+
+export const SourceControl = 22

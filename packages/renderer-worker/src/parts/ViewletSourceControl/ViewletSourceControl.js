@@ -2,6 +2,8 @@ import * as FileSystem from '../FileSystem/FileSystem.js'
 import * as SourceControl from '../SourceControl/SourceControl.js'
 import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Icon from '../Icon/Icon.js'
+import * as Command from '../Command/Command.js'
+import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
 /**
@@ -138,8 +140,13 @@ export const handleMouseOver = (state, index) => {
   }
 }
 
-export const handleContextMenu = (state) => {
-  console.warn('source control context menu not yet implemented')
+export const handleContextMenu = async (state, x, y) => {
+  await Command.execute(
+    /* ContextMenu.show */ 'ContextMenu.show',
+    /* x */ x,
+    /* y */ y,
+    /* id */ MenuEntryId.SourceControl
+  )
   return state
 }
 

@@ -29,11 +29,13 @@ export const handleMouseOver = (event) => {
 
 export const handleContextMenu = (event) => {
   event.preventDefault()
-  const { target } = event
+  const { target, clientX, clientY } = event
   const $Parent = target.closest('.SourceControlItems')
   const index = findIndex($Parent, target)
   RendererWorker.send(
     /* SourceControl.handleContextMenu */ 'Source Control.handleContextMenu',
-    /* index */ index
+    /* index */ index,
+    /* x */ clientX,
+    /* y */ clientY
   )
 }
