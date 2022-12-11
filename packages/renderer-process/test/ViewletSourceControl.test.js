@@ -66,11 +66,11 @@ test('setButtons', () => {
   ])
   ViewletSourceControl.setItemButtons(state, 0, [
     {
-      src: '/icons/reset.svg',
+      icon: '/icons/reset.svg',
       label: 'Reset',
     },
     {
-      src: '/icons/add.svg',
+      icon: '/icons/add.svg',
       label: 'Add',
     },
   ])
@@ -79,8 +79,8 @@ test('setButtons', () => {
   const $Button2 = $Item.children[3]
   // @ts-ignore
   expect($Button1.src).toBe('http://localhost/icons/reset.svg')
-  expect($Button1.textContent).toBe('Reset')
+  expect($Button1.ariaLabel).toBe('Reset')
   // @ts-ignore
   expect($Button2.src).toBe('http://localhost/icons/add.svg')
-  expect($Button2.textContent).toBe('Add')
+  expect($Button2.ariaLabel).toBe('Add')
 })
