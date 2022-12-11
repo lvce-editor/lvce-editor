@@ -7,6 +7,7 @@ export const create$Button = (label, icon) => {
   const $Button = document.createElement('button')
   $Button.className = `IconButton`
   $Button.title = label
+  $Button.ariaLabel = label
   $Button.append($Icon)
   return $Button
 }
