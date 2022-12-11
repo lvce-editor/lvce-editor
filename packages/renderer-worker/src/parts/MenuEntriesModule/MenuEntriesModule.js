@@ -45,6 +45,8 @@ export const load = (id) => {
       return import('../MenuEntriesExtensionDetailReadme/MenuEntriesExtensionDetailReadme.js')
     case MenuEntryId.SimpleBrowser:
       return import('../MenuEntriesSimpleBrowser/MenuEntriesSimpleBrowser.js')
+      case MenuEntryId.SourceControl:
+        return import('../MenuEntriesSourceControl/MenuEntriesSourceControl.js')
     default:
       throw new Error(`module not found "${id}"`)
   }

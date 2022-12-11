@@ -80,14 +80,17 @@ test('event - contextmenu', () => {
     },
   ])
   const { $ViewletTree } = state
-  const event = new Event('contextmenu', {
+  const event = new MouseEvent('contextmenu', {
     bubbles: true,
     cancelable: true,
+    clientX: 10,
+    clientY: 20,
   })
   $ViewletTree.children[0].dispatchEvent(event)
   expect(event.defaultPrevented).toBe(true)
   expect(RendererWorker.send).toHaveBeenCalledWith(
     'Source Control.handleContextMenu',
-    0
+    10,
+    20
   )
 })
