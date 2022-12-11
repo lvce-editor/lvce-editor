@@ -141,6 +141,7 @@ export const handleMouseOver = (state, index) => {
 }
 
 export const handleContextMenu = async (state, x, y) => {
+  console.log({ x, y })
   await Command.execute(
     /* ContextMenu.show */ 'ContextMenu.show',
     /* x */ x,
