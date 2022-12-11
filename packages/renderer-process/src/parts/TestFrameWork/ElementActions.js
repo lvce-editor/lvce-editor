@@ -14,7 +14,7 @@ export const mouseUp = (element, options) => {
 }
 
 export const contextMenu = (element, options) => {
-  mouseEvent(element, DomEventType.ContextMenu,, options)
+  mouseEvent(element, DomEventType.ContextMenu, options)
 }
 
 export const click = (element, options) => {
@@ -44,7 +44,7 @@ export const keyDown = (element, options) => {
 }
 
 export const keyUp = (element, options) => {
-  keyboardEvent(element, DomEventType.KeyUp,, options)
+  keyboardEvent(element, DomEventType.KeyUp, options)
 }
 
 const getEventClass = (eventType) => {
