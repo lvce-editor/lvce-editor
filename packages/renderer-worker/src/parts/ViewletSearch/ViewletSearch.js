@@ -11,6 +11,7 @@ import * as TextSearch from '../TextSearch/TextSearch.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Preferences from '../Preferences/Preferences.js'
 
 /**
  * @enum {string}
@@ -39,6 +40,7 @@ export const create = (id, uri, left, top, width, height) => {
       minimumSliderSize: Height.MinimumSliderSize,
       headerHeight: 61, // TODO
     }),
+    threads: 0,
   }
 }
 
@@ -56,12 +58,21 @@ export const saveState = (state) => {
   }
 }
 
+const getThreads = () => {
+  const value = Preferences.get('search.threads')
+  if (typeof value !== 'number' || value < 0 || value > 8) {
+    return 0
+  }
+  return value
+}
+
 export const loadContent = async (state, savedState) => {
   const savedValue = getSavedValue(savedState)
+  const threads = getThreads()
   if (savedValue) {
-    return setValue(state, savedValue)
+    return setValue(state, savedValue, threads)
   }
-  return state
+  return { ...state, threads }
 }
 
 const getStatusMessage = (resultCount, fileResultCount) => {
@@ -100,7 +111,7 @@ const getResultCounts = (results) => {
   return { fileCount, resultCount }
 }
 
-export const setValue = async (state, value) => {
+export const setValue = async (state, value, threads = state.threads) => {
   try {
     if (value === '') {
       return {
@@ -113,11 +124,14 @@ export const setValue = async (state, value) => {
         matchIndex: 0,
         matchCount: 0,
         message: '',
+        threads,
       }
     }
     const { height, itemHeight, minimumSliderSize, headerHeight } = state
     const root = Workspace.state.workspacePath
-    const results = await TextSearch.textSearch(root, value)
+    const results = await TextSearch.textSearch(root, value, {
+      threads,
+    })
     if (!Array.isArray(results)) {
       throw new Error(`results must be of type array`)
     }
@@ -148,6 +162,7 @@ export const setValue = async (state, value) => {
       maxLineY: maxLineY,
       scrollBarHeight,
       finalDeltaY,
+      threads,
     }
   } catch (error) {
     ErrorHandling.logError(error)
@@ -155,6 +170,7 @@ export const setValue = async (state, value) => {
       ...state,
       message: `${error}`,
       value,
+      threads,
     }
   }
 }
