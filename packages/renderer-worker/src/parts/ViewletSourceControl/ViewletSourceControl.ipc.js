@@ -7,6 +7,11 @@ export const Commands = {
   acceptInput: ViewletSourceControl.acceptInput,
   handleMouseOver: ViewletSourceControl.handleMouseOver,
   handleContextMenu: ViewletSourceControl.handleContextMenu,
+  handleClick: ViewletSourceControl.handleClick,
+  handleClickAdd: ViewletSourceControl.handleClickAdd,
+  handleClickDiscard: ViewletSourceControl.handleClickDiscard,
+  handleClickRestore: ViewletSourceControl.handleClickRestore,
+  handleInput: ViewletSourceControl.handleInput,
 }
 
 export const Css = [

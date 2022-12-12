@@ -26,3 +26,21 @@ export const getFileBefore = (path) => {
     noProviderFoundMessage: 'No source control provider found',
   })
 }
+
+export const add = (path) => {
+  return ExtensionHostShared.executeProvider({
+    event: 'onSourceControl',
+    method: 'ExtensionHostSourceControl.add',
+    params: [path],
+    noProviderFoundMessage: 'No source control provider found',
+  })
+}
+
+export const discard = (path) => {
+  return ExtensionHostShared.executeProvider({
+    event: 'onSourceControl',
+    method: 'ExtensionHostSourceControl.discard',
+    params: [path],
+    noProviderFoundMessage: 'No source control provider found',
+  })
+}

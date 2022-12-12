@@ -94,3 +94,18 @@ test('event - contextmenu', () => {
     20
   )
 })
+
+test('event - input', () => {
+  const state = ViewletSourceControl.create()
+  const { $ViewSourceControlInput } = state
+  $ViewSourceControlInput.value = 'test'
+  const event = new InputEvent('input', {
+    bubbles: true,
+    cancelable: true,
+  })
+  $ViewSourceControlInput.dispatchEvent(event)
+  expect(RendererWorker.send).toHaveBeenCalledWith(
+    'Source Control.handleInput',
+    'test'
+  )
+})
