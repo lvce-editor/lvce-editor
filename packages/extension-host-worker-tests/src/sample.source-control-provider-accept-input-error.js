@@ -1,6 +1,6 @@
 const name = 'sample.source-control-provider-accept-input-error'
 
-test('sample.source-control-provider-accept-input-error', async () => {
+test.skip('sample.source-control-provider-accept-input-error', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
