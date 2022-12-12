@@ -1,6 +1,7 @@
 import * as Context from '../Context/Context.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Platform from '../Platform/Platform.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 const RE_ASCII = /[\p{ASCII}]+/u
 
@@ -142,9 +143,9 @@ export const hydrate = async (keyBindings) => {
   const browser = Platform.getBrowser()
   Context.set(`browser.${browser}`, true)
   state.keyBindings = keyBindings
-  window.addEventListener('keydown', handleKeyDown)
+  window.addEventListener(DomEventType.KeyDown, handleKeyDown)
   // TODO only need keyup listener if keybindings include double modifier key (e.g "shift shift")
-  window.addEventListener('keyup', handleKeyUp)
+  window.addEventListener(DomEventType.KeyUp, handleKeyUp)
 }
 
 // TODO should be in renderer worker

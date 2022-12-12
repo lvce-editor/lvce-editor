@@ -2,6 +2,7 @@ import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
 import * as Focus from '../Focus/Focus.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 export const handleInput = (event) => {
   const { target } = event
@@ -92,17 +93,24 @@ export const handleScrollBarThumbPointerMove = (event) => {
 export const handleScrollBarPointerUp = (event) => {
   const { target, pointerId } = event
   target.releasePointerCapture(pointerId)
-  target.removeEventListener('pointermove', handleScrollBarThumbPointerMove)
-  target.removeEventListener('pointerup', handleScrollBarPointerUp)
+  target.removeEventListener(
+    DomEventType.PointerMove,
+    handleScrollBarThumbPointerMove
+  )
+  target.removeEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
 }
 
 export const handleScrollBarPointerDown = (event) => {
   const { target, pointerId, clientY } = event
   target.setPointerCapture(pointerId)
-  target.addEventListener('pointermove', handleScrollBarThumbPointerMove, {
-    passive: false,
-  })
-  target.addEventListener('pointerup', handleScrollBarPointerUp)
+  target.addEventListener(
+    DomEventType.PointerMove,
+    handleScrollBarThumbPointerMove,
+    {
+      passive: false,
+    }
+  )
+  target.addEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
   RendererWorker.send(
     /* Search.handleScrollBarPointerDown */ 'Search.handleScrollBarClick',
     /* y */ clientY

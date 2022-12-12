@@ -8,6 +8,7 @@ import * as LayerDiagnostics from './LayerDiagnostics.js'
 import * as LayerScrollBar from './LayerScrollBar.js'
 import * as LayerSelections from './LayerSelections.js'
 import * as LayerText3 from './LayerText.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
@@ -33,17 +34,20 @@ export const create = () => {
   $EditorInput.role = AriaRoles.TextBox
   $EditorInput.onpaste = EditorEvents.handlePaste
   // TODO where to best put listeners (side effects)
-  $EditorInput.addEventListener('beforeinput', EditorEvents.handleBeforeInput)
   $EditorInput.addEventListener(
-    'compositionstart',
+    DomEventType.BeforeInput,
+    EditorEvents.handleBeforeInput
+  )
+  $EditorInput.addEventListener(
+    DomEventType.CompositionStart,
     EditorEvents.handleCompositionStart
   )
   $EditorInput.addEventListener(
-    'compositionupdate',
+    DomEventType.CompositionUpdate,
     EditorEvents.handleCompositionUpdate
   )
   $EditorInput.addEventListener(
-    'compositionend',
+    DomEventType.CompositionEnd,
     EditorEvents.handleCompositionEnd
   )
   $EditorInput.onfocus = EditorEvents.handleFocus
@@ -56,7 +60,10 @@ export const create = () => {
   const $LayerText = document.createElement('div')
   $LayerText.className = 'EditorRows'
 
-  $LayerText.addEventListener('mousedown', EditorEvents.handleMouseDown)
+  $LayerText.addEventListener(
+    DomEventType.MouseDown,
+    EditorEvents.handleMouseDown
+  )
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
@@ -102,11 +109,20 @@ export const create = () => {
   // @ts-ignore
   $Editor.role = AriaRoles.Code
   $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBar)
-  $Editor.addEventListener('contextmenu', EditorEvents.handleContextMenu)
-  $Editor.addEventListener('wheel', EditorEvents.handleWheel, { passive: true })
-  $Editor.addEventListener('mousemove', EditorEvents.handlePointerMove, {
+  $Editor.addEventListener(
+    DomEventType.ContextMenu,
+    EditorEvents.handleContextMenu
+  )
+  $Editor.addEventListener(DomEventType.Wheel, EditorEvents.handleWheel, {
     passive: true,
   })
+  $Editor.addEventListener(
+    DomEventType.MouseMove,
+    EditorEvents.handlePointerMove,
+    {
+      passive: true,
+    }
+  )
   return {
     $LayerCursor,
     $LayerSelections,
