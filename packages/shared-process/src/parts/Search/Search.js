@@ -6,16 +6,16 @@ import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultT
 
 const MAX_SEARCH_RESULTS = 300
 
-const BEFORE = 20
-const AFTER = 20
+const CHARS_BEFORE = 20
+const CHARS_AFTER = 50
 
 const toSearchResult = (parsedLine) => {
   const results = []
   const lines = parsedLine.data.lines.text
   const lineNumber = parsedLine.data.line_number
   for (const submatch of parsedLine.data.submatches) {
-    const previewStart = Math.max(submatch.start - BEFORE, 0)
-    const previewEnd = Math.min(submatch.end + AFTER, lines.length)
+    const previewStart = Math.max(submatch.start - CHARS_BEFORE, 0)
+    const previewEnd = Math.min(submatch.end + CHARS_AFTER, lines.length)
     const previewText = lines.slice(previewStart, previewEnd)
     results.push({
       type: TextSearchResultType.Match,
