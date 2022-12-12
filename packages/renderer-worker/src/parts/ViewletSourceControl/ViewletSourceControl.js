@@ -36,6 +36,7 @@ export const dispose = (state) => {
 }
 
 export const handleInput = (state, text) => {
+  console.log({ text })
   return {
     ...state,
     inputValue: text,
@@ -44,6 +45,7 @@ export const handleInput = (state, text) => {
 
 export const acceptInput = async (state) => {
   const { inputValue } = state
+  console.log({ inputValue })
   await SourceControl.acceptInput(inputValue)
   return {
     ...state,
@@ -157,11 +159,21 @@ export const handleContextMenu = async (state, x, y) => {
   return state
 }
 
-export const handleClickAdd = () => {}
+export const handleClickAdd = async (state, index) => {
+  const { displayItems } = state
+  const item = displayItems[index]
+  const { file } = item
+  await SourceControl.add(file)
+  return state
+}
 
-export const handleClickRestore = () => {}
+export const handleClickRestore = (state, index) => {
+  return state
+}
 
-export const handleClickDiscard = () => {}
+export const handleClickDiscard = (state, index) => {
+  return state
+}
 
 export const hasFunctionalResize = true
 

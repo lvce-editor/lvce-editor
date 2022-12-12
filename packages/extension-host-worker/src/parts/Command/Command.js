@@ -64,6 +64,10 @@ const getFn = (method) => {
       return ExtensionHostFileSystem.writeFile
     case 'ExtensionHostFileSystem.getPathSeparator':
       return ExtensionHostFileSystem.getPathSeparator
+    case 'ExtensionHostSourceControl.add':
+      return ExtensionHostSourceControl.add
+    case 'ExtensionHostSourceContro.discard':
+      return ExtensionHostSourceControl.discard
     default:
       throw new Error(`[extension-host-worker] method not found: ${method}`)
   }

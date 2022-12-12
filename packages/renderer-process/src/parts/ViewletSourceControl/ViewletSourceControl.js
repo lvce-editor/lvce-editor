@@ -34,8 +34,9 @@ const getPlaceHolderText = () => {
 export const create = () => {
   const $ViewSourceControlInput = InputBox.create()
   $ViewSourceControlInput.placeholder = getPlaceHolderText()
-  $ViewSourceControlInput.onfocus = ViewletSourceControlEvents.handleFocus
   $ViewSourceControlInput.ariaLabel = 'Source Control Input'
+  $ViewSourceControlInput.onfocus = ViewletSourceControlEvents.handleFocus
+  $ViewSourceControlInput.oninput = ViewletSourceControlEvents.handleInput
 
   const $SourceControlHeader = document.createElement('div')
   $SourceControlHeader.className = 'SourceControlHeader'

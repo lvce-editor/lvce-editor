@@ -11,3 +11,15 @@ export const getChangedFiles = () => {
 export const getFileBefore = (file) => {
   return ExtensionHostSourceControl.getFileBefore(file)
 }
+
+export const add = (file) => {
+  return ExtensionHostSourceControl.add(file)
+}
+
+export const discard = (file) => {
+  return ExtensionHostSourceControl.discard(file)
+}
+
+export const openFile = (file) => {
+  // TODO
+}

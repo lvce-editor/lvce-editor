@@ -25,6 +25,22 @@ export const acceptInput = async (value) => {
   await provider.acceptInput(value)
 }
 
+export const add = async (path) => {
+  const provider = Object.values(state.providers)[0]
+  if (!provider) {
+    return
+  }
+  await provider.add(path)
+}
+
+export const discard = async (path) => {
+  const provider = Object.values(state.providers)[0]
+  if (!provider) {
+    return
+  }
+  await provider.discard(path)
+}
+
 export const reset = () => {
   state.providers = Object.create(null)
 }
