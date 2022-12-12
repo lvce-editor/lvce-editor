@@ -13,6 +13,7 @@ import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHo
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
 import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
+import { CommandNotFoundError } from '../Errors/Errors.js'
 
 const getFn = (method) => {
   switch (method) {
@@ -69,7 +70,7 @@ const getFn = (method) => {
     case 'ExtensionHostSourceContro.discard':
       return ExtensionHostSourceControl.discard
     default:
-      throw new Error(`[extension-host-worker] method not found: ${method}`)
+      throw new CommandNotFoundError(`method not found: ${method}`)
   }
 }
 

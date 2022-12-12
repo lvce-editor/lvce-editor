@@ -11,3 +11,10 @@ export class JsonRpcError extends Error {
     this.name = 'JsonRpcError'
   }
 }
+
+export class CommandNotFoundError extends Error {
+  constructor(message) {
+    super(message)
+    this.name = 'CommandNotFoundError'
+  }
+}
