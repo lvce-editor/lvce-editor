@@ -1,5 +1,9 @@
 const name = 'sample.source-control-provider-accept-input-error'
 
+// TODO add test for when source control provider returns invalid changed files
+// e.g. string[] instead of {file:string}[]
+// currently it throws an error `cannot read properties of undefined, reading toLowerCase` in IconTheme.js
+
 test.skip('sample.source-control-provider-accept-input-error', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
