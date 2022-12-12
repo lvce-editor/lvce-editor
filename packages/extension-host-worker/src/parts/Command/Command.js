@@ -67,8 +67,10 @@ const getFn = (method) => {
       return ExtensionHostFileSystem.getPathSeparator
     case 'ExtensionHostSourceControl.add':
       return ExtensionHostSourceControl.add
-    case 'ExtensionHostSourceContro.discard':
+    case 'ExtensionHostSourceControl.discard':
       return ExtensionHostSourceControl.discard
+    case 'ExtensionHostSourceControl.getEnabledProviderIds':
+      return ExtensionHostSourceControl.getEnabledProviderIds
     default:
       throw new CommandNotFoundError(`method not found: ${method}`)
   }

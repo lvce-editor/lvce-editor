@@ -4,6 +4,10 @@ import * as IconTheme from '../IconTheme/IconTheme.js'
 import * as Icon from '../Icon/Icon.js'
 import * as Command from '../Command/Command.js'
 import * as MenuEntryId from '../MenuEntryId/MenuEntryId.js'
+import * as Workspace from '../Workspace/Workspace.js'
+import * as GetProtocol from '../GetProtocol/GetProtocol.js'
+import * as Logger from '../Logger/Logger.js'
+import * as Assert from '../Assert/Assert.js'
 // TODO when accept input is invoked multiple times, it should not lead to errors
 
 /**
@@ -25,6 +29,7 @@ export const create = () => {
     inputValue: '',
     displayItems: [],
     buttonIndex: -1,
+    enabledProviderIds: [],
   }
 }
 
@@ -36,7 +41,7 @@ export const dispose = (state) => {
 }
 
 export const handleInput = (state, text) => {
-  console.log({ text })
+  Assert.string(text)
   return {
     ...state,
     inputValue: text,
@@ -44,21 +49,30 @@ export const handleInput = (state, text) => {
 }
 
 export const acceptInput = async (state) => {
-  const { inputValue } = state
-  await SourceControl.acceptInput(inputValue)
+  const { inputValue, enabledProviderIds } = state
+  if (enabledProviderIds.length === 0) {
+    Logger.info(`[ViewletSourceControl] no source control provider found`)
+    return state
+  }
+  const providerId = enabledProviderIds[0]
+  await SourceControl.acceptInput(providerId, inputValue)
   return {
     ...state,
     inputValue: '',
   }
 }
 
-const getChangedFiles = async () => {
-  const changedFiles = await SourceControl.getChangedFiles()
+const getChangedFiles = async (enabledProviderIds) => {
+  const allChangedFiles = []
+  for (const providerId of enabledProviderIds) {
+    const changedFiles = await SourceControl.getChangedFiles(providerId)
+    allChangedFiles.push(...changedFiles)
+  }
   return {
     index: [],
     merge: [],
     untracked: [],
-    workingTree: changedFiles,
+    workingTree: allChangedFiles,
     gitRoot: '',
   }
 }
@@ -80,7 +94,13 @@ const getDisplayItems = (workingTree) => {
 }
 
 export const loadContent = async (state) => {
-  const changedFiles = await getChangedFiles()
+  const root = Workspace.state.workspacePath
+  const scheme = GetProtocol.getProtocol(root)
+  const enabledProviderIds = await SourceControl.getEnabledProviderIds(
+    scheme,
+    root
+  )
+  const changedFiles = await getChangedFiles(enabledProviderIds)
   const displayItems = getDisplayItems(changedFiles.workingTree)
   return {
     ...state,
@@ -90,6 +110,7 @@ export const loadContent = async (state) => {
     workingTree: changedFiles.workingTree,
     gitRoot: changedFiles.gitRoot,
     displayItems,
+    enabledProviderIds,
   }
 }
 

@@ -1,11 +1,19 @@
 import * as ExtensionHostSourceControl from '../ExtensionHost/ExtensionHostSourceControl.js'
+import * as Assert from '../Assert/Assert.js'
 
-export const acceptInput = (text) => {
-  return ExtensionHostSourceControl.acceptInput(text)
+export const state = {
+  enabledProviders: [],
+  initialized: false,
 }
 
-export const getChangedFiles = () => {
-  return ExtensionHostSourceControl.getChangedFiles()
+export const acceptInput = (providerId, text) => {
+  Assert.string(providerId)
+  Assert.string(text)
+  return ExtensionHostSourceControl.acceptInput(providerId, text)
+}
+
+export const getChangedFiles = (providerId) => {
+  return ExtensionHostSourceControl.getChangedFiles(providerId)
 }
 
 export const getFileBefore = (file) => {
@@ -22,4 +30,10 @@ export const discard = (file) => {
 
 export const openFile = (file) => {
   // TODO
+}
+
+export const getEnabledProviderIds = (scheme, root) => {
+  Assert.string(scheme)
+  Assert.string(root)
+  return ExtensionHostSourceControl.getEnabledProviderIds(scheme, root)
 }

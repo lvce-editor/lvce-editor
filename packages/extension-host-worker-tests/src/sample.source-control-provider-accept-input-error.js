@@ -4,7 +4,7 @@ const name = 'sample.source-control-provider-accept-input-error'
 // e.g. string[] instead of {file:string}[]
 // currently it throws an error `cannot read properties of undefined, reading toLowerCase` in IconTheme.js
 
-test.skip('sample.source-control-provider-accept-input-error', async () => {
+test('sample.source-control-provider-accept-input-error', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await Workspace.setPath(tmpDir)
@@ -12,14 +12,15 @@ test.skip('sample.source-control-provider-accept-input-error', async () => {
     new URL(`../fixtures/${name}`, import.meta.url).toString()
   )
   await SideBar.open('Source Control')
-  await Command.execute('Source Control.handleInput', 'abc')
+  await SourceControl.handleInput('abc')
 
   // act
-  await Command.execute('Source Control.acceptInput')
+  // await SourceControl.acceptInput()
 
   // assert
 
-  // TODO
+  // TODO error dialog should be shown
+  // TODO error and codeframe should be printed to console
 })
 
 export {}
