@@ -18,6 +18,8 @@
     "Thumbs.db": true
   },
 
+  "search.threads": 1,
+
   "sessionReplay.enabled": false,
 
   "serviceWorker.enabled": false,

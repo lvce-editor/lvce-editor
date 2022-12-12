@@ -104,7 +104,7 @@ test('textSearch - file', async () => {
       ],
     }
   })
-  expect(await TextSearch.textSearch('/test', 'abc')).toEqual([
+  expect(await TextSearch.textSearch('/test', 'abc', {})).toEqual([
     {
       type: TextSearchResultType.File,
       text: './index.txt',
@@ -124,6 +124,7 @@ test('textSearch - file', async () => {
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
     'Search.search',
     '/test',
-    'abc'
+    'abc',
+    {}
   )
 })
