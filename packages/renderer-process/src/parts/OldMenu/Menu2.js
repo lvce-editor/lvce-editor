@@ -3,7 +3,7 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Widget from '../Widget/Widget.js'
-
+import * as DomEventType from '../DomEventType/DomEventType.js'
 export const state = {
   $$Menus: [],
 }
@@ -112,8 +112,8 @@ export const show = (x, y, level, items) => {
   // @ts-ignore
   $Menu.role = AriaRoles.Menu
   $Menu.tabIndex = -1
-  $Menu.addEventListener('mousedown', handleMouseDown)
-  $Menu.addEventListener('mouseenter', handleMouseEnter, {
+  $Menu.addEventListener(DomEventType.MouseDown, handleMouseDown)
+  $Menu.addEventListener(DomEventType.MouseEnter, handleMouseEnter, {
     capture: true,
   })
   $Menu.style.left = `${x}px`

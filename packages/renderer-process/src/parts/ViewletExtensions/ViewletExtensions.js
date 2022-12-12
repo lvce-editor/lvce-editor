@@ -7,6 +7,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 const activeId = 'ExtensionActive'
 
@@ -77,9 +78,13 @@ export const create = () => {
       passive: true,
     }
   )
-  $ListItems.addEventListener('wheel', ViewletExtensionsEvents.handleWheel, {
-    passive: true,
-  })
+  $ListItems.addEventListener(
+    DomEventType.Wheel,
+    ViewletExtensionsEvents.handleWheel,
+    {
+      passive: true,
+    }
+  )
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'

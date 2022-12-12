@@ -1,5 +1,6 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 /**
  * @param {PointerEvent} event
@@ -33,9 +34,9 @@ export const handlePointerUp = (event) => {
 export const handlePointerCaptureLost = (event) => {
   const { target } = event
   // @ts-ignore
-  target.removeEventListener('pointermove', handlePointerMove)
+  target.removeEventListener(DomEventType.PointerMove, handlePointerMove)
   // @ts-ignore
-  target.removeEventListener('pointerup', handlePointerUp)
+  target.removeEventListener(DomEventType.PointerUp, handlePointerUp)
 }
 
 /**
@@ -49,12 +50,15 @@ export const handlePointerDown = (event) => {
   // @ts-ignore
   target.setPointerCapture(pointerId)
   // @ts-ignore
-  target.addEventListener('pointermove', handlePointerMove, {
+  target.addEventListener(DomEventType.PointerMove, handlePointerMove, {
     passive: false,
   })
   // @ts-ignore
-  target.addEventListener('pointerup', handlePointerUp)
-  target.addEventListener('lostpointercapture', handlePointerCaptureLost)
+  target.addEventListener(DomEventType.PointerUp, handlePointerUp)
+  target.addEventListener(
+    DomEventType.LostPointerCapture,
+    handlePointerCaptureLost
+  )
   RendererWorker.send(
     'EditorImage.handlePointerDown',
     pointerId,

@@ -7,6 +7,7 @@ import * as ModifierKey from '../ModifierKey/ModifierKey.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 
 // TODO tree shake out mobile support when targeting electron -> less code -> less event listeners -> less memory -> less cpu
@@ -108,8 +109,8 @@ export const handleSelectionMove = (event) => {
 }
 
 export const handleSelectionDone = (event) => {
-  document.removeEventListener('mousemove', handleSelectionMove)
-  document.removeEventListener('mouseup', handleSelectionDone)
+  document.removeEventListener(DomEventType.MouseMove, handleSelectionMove)
+  document.removeEventListener(DomEventType.MouseUp, handleSelectionDone)
 }
 
 const getModifier = (event) => {
@@ -135,8 +136,10 @@ export const handleSingleClick = (event, x, y, offset) => {
   // const $InputBox = $Target.closest('.Editor').firstElementChild
   // $InputBox.focus()
   // TODO this logic should be in renderer worker
-  document.addEventListener('mousemove', handleSelectionMove, { passive: true })
-  document.addEventListener('mouseup', handleSelectionDone)
+  document.addEventListener(DomEventType.MouseMove, handleSelectionMove, {
+    passive: true,
+  })
+  document.addEventListener(DomEventType.MouseUp, handleSelectionDone)
 }
 
 export const handleDoubleClick = (event, x, y, offset) => {
@@ -299,9 +302,12 @@ export const handleScrollBarPointerUp = (event) => {
   // @ts-ignore
   target.releasePointerCapture(pointerId)
   // @ts-ignore
-  target.removeEventListener('pointermove', handleScrollBarThumbPointerMove)
+  target.removeEventListener(
+    DomEventType.PointerMove,
+    handleScrollBarThumbPointerMove
+  )
   // @ts-ignore
-  target.removeEventListener('pointerup', handleScrollBarPointerUp)
+  target.removeEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
 }
 
 /**
@@ -313,11 +319,15 @@ export const handleScrollBarPointerDown = (event) => {
   // @ts-ignore
   target.setPointerCapture(pointerId)
   // @ts-ignore
-  target.addEventListener('pointermove', handleScrollBarThumbPointerMove, {
-    passive: false,
-  })
+  target.addEventListener(
+    DomEventType.PointerMove,
+    handleScrollBarThumbPointerMove,
+    {
+      passive: false,
+    }
+  )
   // @ts-ignore
-  target.addEventListener('pointerup', handleScrollBarPointerUp)
+  target.addEventListener(DomEventType.PointerUp, handleScrollBarPointerUp)
   RendererWorker.send(
     /* EditorHandleScrollBarClick.editorHandleScrollBarPointerDown */ 'Editor.handleScrollBarPointerDown',
     /* y */ clientY
