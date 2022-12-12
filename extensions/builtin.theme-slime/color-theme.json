@@ -224,6 +224,10 @@
     {
       "name": "CssAtRule",
       "foreground": "#E78484"
+    },
+    {
+      "name": "KeywordThis",
+      "foreground": "#BE9296"
     }
   ]
 }
