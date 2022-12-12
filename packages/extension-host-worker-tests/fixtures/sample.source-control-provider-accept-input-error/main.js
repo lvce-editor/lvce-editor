@@ -1,4 +1,5 @@
 const sourceControlProvider = {
+  id: 'xyz',
   languageId: 'xyz',
   getBadgeCount() {
     return 4
@@ -17,6 +18,9 @@ const sourceControlProvider = {
   },
   acceptInput() {
     throw new TypeError('x is not a function')
+  },
+  isActive() {
+    return true
   },
 }
 

@@ -1,19 +1,19 @@
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 
-export const acceptInput = async (text) => {
+export const acceptInput = async (providerId, text) => {
   return ExtensionHostShared.executeProvider({
     event: 'onSourceControl',
     method: 'ExtensionHost.sourceControlAcceptInput',
-    params: [text],
+    params: [providerId, text],
     noProviderFoundMessage: 'No source control provider found',
   })
 }
 
-export const getChangedFiles = async () => {
+export const getChangedFiles = (providerId) => {
   return ExtensionHostShared.executeProvider({
     event: 'onSourceControl',
     method: 'ExtensionHost.sourceControlGetChangedFiles',
-    params: [],
+    params: [providerId],
     noProviderFoundMessage: 'No source control provider found',
   })
 }
@@ -41,6 +41,15 @@ export const discard = (path) => {
     event: 'onSourceControl',
     method: 'ExtensionHostSourceControl.discard',
     params: [path],
+    noProviderFoundMessage: 'No source control provider found',
+  })
+}
+
+export const getEnabledProviderIds = (scheme, root) => {
+  return ExtensionHostShared.executeProvider({
+    event: 'onSourceControl',
+    method: 'ExtensionHostSourceControl.getEnabledProviderIds',
+    params: [scheme, root],
     noProviderFoundMessage: 'No source control provider found',
   })
 }
