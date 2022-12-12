@@ -45,7 +45,6 @@ export const handleInput = (state, text) => {
 
 export const acceptInput = async (state) => {
   const { inputValue } = state
-  console.log({ inputValue })
   await SourceControl.acceptInput(inputValue)
   return {
     ...state,
