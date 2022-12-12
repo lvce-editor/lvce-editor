@@ -37,6 +37,7 @@
 
 .KeyBindingsTableWrapper {
   padding: 0 15px;
+  position: relative;
 }
 
 .KeyBindingsTable {
@@ -102,4 +103,13 @@
   position: absolute;
   contain: strict;
   background: var(--EditorScrollBarBackground, rgba(57, 71, 71, 0.6));
+}
+
+.Resizer {
+  cursor: ew-resize;
+  position: absolute;
+  width: 5px;
+  height: 100%;
+  /* background: red; */
+  top: 0;
 }
