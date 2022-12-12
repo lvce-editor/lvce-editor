@@ -5,6 +5,7 @@ import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at star
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
 import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 const activeId = 'TreeItemActive'
 const focusClassName = 'FocusOutline'
@@ -29,9 +30,13 @@ export const create = () => {
     ViewletExplorerEvents.handleMouseLeave,
     { capture: true }
   )
-  $Viewlet.addEventListener('wheel', ViewletExplorerEvents.handleWheel, {
-    passive: true,
-  })
+  $Viewlet.addEventListener(
+    DomEventType.Wheel,
+    ViewletExplorerEvents.handleWheel,
+    {
+      passive: true,
+    }
+  )
   $Viewlet.onblur = ViewletExplorerEvents.handleBlur
   $Viewlet.ondragover = ViewletExplorerEvents.handleDragOver
   $Viewlet.ondragstart = ViewletExplorerEvents.handleDragStart

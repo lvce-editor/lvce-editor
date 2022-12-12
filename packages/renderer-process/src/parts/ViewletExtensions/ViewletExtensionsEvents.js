@@ -3,6 +3,7 @@ import * as Icon from '../Icon/Icon.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 export const handleScrollBarThumbPointerMove = (event) => {
   const { clientY } = event
@@ -14,16 +15,26 @@ export const handleScrollBarThumbPointerMove = (event) => {
 
 const handlePointerCaptureLost = (event) => {
   const { target } = event
-  target.removeEventListener('pointermove', handleScrollBarThumbPointerMove)
+  target.removeEventListener(
+    DomEventType.PointerMove,
+    handleScrollBarThumbPointerMove
+  )
 }
 
 export const handleScrollBarPointerDown = (event) => {
   const { target, pointerId, clientY } = event
   target.setPointerCapture(pointerId)
-  target.addEventListener('pointermove', handleScrollBarThumbPointerMove, {
-    passive: false,
-  })
-  target.addEventListener('lostpointercapture', handlePointerCaptureLost)
+  target.addEventListener(
+    DomEventType.PointerMove,
+    handleScrollBarThumbPointerMove,
+    {
+      passive: false,
+    }
+  )
+  target.addEventListener(
+    DomEventType.LostPointerCapture,
+    handlePointerCaptureLost
+  )
   RendererWorker.send(
     /* Extensions.handleScrollBarPointerDown */ 'Extensions.handleScrollBarClick',
     /* y */ clientY

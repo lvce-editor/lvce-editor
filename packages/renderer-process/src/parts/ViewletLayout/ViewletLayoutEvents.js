@@ -1,4 +1,5 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 const getSashId = ($Target) => {
   if ($Target.id === 'SashPanel') {
@@ -22,15 +23,15 @@ export const handleSashPointerMove = (event) => {
 export const handleSashPointerUp = (event) => {
   const { target, pointerId } = event
   target.releasePointerCapture(pointerId)
-  target.removeEventListener('pointermove', handleSashPointerMove)
-  target.removeEventListener('pointerup', handleSashPointerUp)
+  target.removeEventListener(DomEventType.PointerMove, handleSashPointerMove)
+  target.removeEventListener(DomEventType.PointerUp, handleSashPointerUp)
 }
 
 export const handleSashPointerDown = (event) => {
   const { target, pointerId, detail } = event
   target.setPointerCapture(pointerId)
-  target.addEventListener('pointermove', handleSashPointerMove)
-  target.addEventListener('pointerup', handleSashPointerUp)
+  target.addEventListener(DomEventType.PointerMove, handleSashPointerMove)
+  target.addEventListener(DomEventType.PointerUp, handleSashPointerUp)
   const id = getSashId(target)
   RendererWorker.send(
     /* Layout.handleSashPointerDown */ 'Layout.handleSashPointerDown',

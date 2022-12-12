@@ -5,7 +5,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as MenuItem from '../MenuItem/MenuItem.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Widget from '../Widget/Widget.js'
-
+import * as DomEventType from '../DomEventType/DomEventType.js'
 // TODO when pressing tab -> focus next element in tab order and close menu
 
 // TODO menu and contextmenu should have own keybinding logic
@@ -144,18 +144,18 @@ const create$Menu = () => {
   $Menu.tabIndex = -1
   // $ContextMenu.onmousedown = contextMenuHandleMouseDown
   // TODO mousedown vs click? (click is usually better but mousedown is faster, why wait 100ms?)
-  $Menu.addEventListener('mousedown', handleMouseDown)
-  $Menu.addEventListener('mouseenter', handleMouseEnter, {
+  $Menu.addEventListener(DomEventType.MouseDown, handleMouseDown)
+  $Menu.addEventListener(DomEventType.MouseEnter, handleMouseEnter, {
     capture: true,
   })
-  $Menu.addEventListener('mouseleave', handleMouseLeave, {
+  $Menu.addEventListener(DomEventType.MouseLeave, handleMouseLeave, {
     capture: true,
   })
   // $Menu.addEventListener('mousemove', handleMouseMove, {
   //   passive: true,
   // })
   $Menu.onkeydown = handleKeyDown
-  $Menu.addEventListener('focusout', handleFocusOut)
+  $Menu.addEventListener(DomEventType.FocusOut, handleFocusOut)
   $Menu.oncontextmenu = handleContextMenu
   // $ContextMenu.onfocus = handleFocus
   // $ContextMenu.onblur = handleBlur
