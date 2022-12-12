@@ -12,12 +12,24 @@ test('getChangedFiles', async () => {
       return [{ file: '/test/file-1.txt', status: 1 }]
     },
   })
-  expect(await ExtensionHostSourceControl.getChangedFiles()).toEqual([
+  expect(await ExtensionHostSourceControl.getChangedFiles('test')).toEqual([
     {
       file: '/test/file-1.txt',
       status: 1,
     },
   ])
+})
+
+test('getChangedFiles - error - no provider id specified', async () => {
+  ExtensionHostSourceControl.registerSourceControlProvider({
+    id: 'test',
+    getChangedFiles() {
+      return [{ file: '/test/file-1.txt', status: 1 }]
+    },
+  })
+  await expect(
+    ExtensionHostSourceControl.getChangedFiles()
+  ).rejects.toThrowError(new Error('no source control provider found'))
 })
 
 test('getEnabledProviderIds', async () => {
