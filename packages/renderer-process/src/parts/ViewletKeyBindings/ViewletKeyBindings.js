@@ -1,6 +1,7 @@
 import * as InputBox from '../InputBox/InputBox.js'
 import * as VirtualDom from '../VirtualDom/VirtualDom.js'
 import * as ViewletkeyBindingsEvents from './ViewletKeyBindingsEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 /**
  * @enum {string}
@@ -25,7 +26,7 @@ export const create = () => {
   const $KeyBindingsTableWrapper = document.createElement('div')
   $KeyBindingsTableWrapper.className = 'KeyBindingsTableWrapper'
   $KeyBindingsTableWrapper.addEventListener(
-    'wheel',
+    DomEventType.Wheel,
     ViewletkeyBindingsEvents.handleWheel,
     { passive: true }
   )

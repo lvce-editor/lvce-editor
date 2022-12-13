@@ -4,6 +4,7 @@ import * as MenuItem from '../MenuItem/MenuItem.js'
 import * as Menu from '../OldMenu/Menu.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 const activeId = 'TitleBarEntryActive'
 
@@ -15,11 +16,11 @@ export const create = () => {
   $TitleBarMenuBar.tabIndex = 0
   $TitleBarMenuBar.onmousedown = ViewletTitleBarMenuBarEvents.handleClick
   $TitleBarMenuBar.addEventListener(
-    'focusout',
+    DomEventType.FocusOut,
     ViewletTitleBarMenuBarEvents.handleFocusOut
   )
   $TitleBarMenuBar.addEventListener(
-    'focusin',
+    DomEventType.FocusIn,
     ViewletTitleBarMenuBarEvents.handleFocus
   )
   $TitleBarMenuBar.onmouseover = ViewletTitleBarMenuBarEvents.handleMouseOver

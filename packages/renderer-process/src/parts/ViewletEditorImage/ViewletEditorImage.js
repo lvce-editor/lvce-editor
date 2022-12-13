@@ -1,4 +1,5 @@
 import * as ViewletEditorImageEvents from './ViewletEditorImageEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 export const create = () => {
   const $Image = document.createElement('img')
@@ -16,9 +17,13 @@ export const create = () => {
   $Viewlet.onpointerdown = ViewletEditorImageEvents.handlePointerDown
   $Viewlet.onpointerup = ViewletEditorImageEvents.handlePointerUp
   $Viewlet.oncontextmenu = ViewletEditorImageEvents.handleContextMenu
-  $Viewlet.addEventListener('wheel', ViewletEditorImageEvents.handleWheel, {
-    passive: true,
-  })
+  $Viewlet.addEventListener(
+    DomEventType.Wheel,
+    ViewletEditorImageEvents.handleWheel,
+    {
+      passive: true,
+    }
+  )
   return {
     $Viewlet,
     $Image,

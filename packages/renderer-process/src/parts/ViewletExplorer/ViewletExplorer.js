@@ -21,12 +21,12 @@ export const create = () => {
   $Viewlet.oncontextmenu = ViewletExplorerEvents.handleContextMenu
   // TODO use the other mouse events that capture automatically
   $Viewlet.addEventListener(
-    'mouseenter',
+    DomEventType.MouseEnter,
     ViewletExplorerEvents.handleMouseEnter,
     { capture: true }
   )
   $Viewlet.addEventListener(
-    'mouseleave',
+    DomEventType.MouseLeave,
     ViewletExplorerEvents.handleMouseLeave,
     { capture: true }
   )

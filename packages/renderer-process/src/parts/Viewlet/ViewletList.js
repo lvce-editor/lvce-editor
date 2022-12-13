@@ -3,6 +3,7 @@ import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 const handleWheel = (event) => {
   switch (event.deltaMode) {
@@ -59,8 +60,11 @@ const handleFocus = (event) => {
 const handleScrollBarMouseDown = (event) => {
   const $Target = event.target
   if ($Target.className === 'ScrollBarThumb') {
-    window.addEventListener('mousemove', handleScrollBarThumbMouseMove)
-    window.addEventListener('mouseup', handleScrollBarThumbMouseUp)
+    window.addEventListener(
+      DomEventType.MouseMove,
+      handleScrollBarThumbMouseMove
+    )
+    window.addEventListener(DomEventType.MouseUp, handleScrollBarThumbMouseUp)
   } else {
     const y = event.clientY
     RendererWorker.send(/* ViewletList.handleScrollBarClick */ 878, /* y */ y)
@@ -73,8 +77,11 @@ const handleScrollBarThumbMouseMove = (event) => {
 }
 
 const handleScrollBarThumbMouseUp = () => {
-  window.removeEventListener('mousemove', handleScrollBarThumbMouseMove)
-  window.removeEventListener('mouseup', handleScrollBarThumbMouseUp)
+  window.removeEventListener(
+    DomEventType.MouseMove,
+    handleScrollBarThumbMouseMove
+  )
+  window.removeEventListener(DomEventType.MouseUp, handleScrollBarThumbMouseUp)
 }
 
 export const create = ({ create$ListItem, render$ListItem, handleClick }) => {
@@ -99,7 +106,7 @@ export const create = ({ create$ListItem, render$ListItem, handleClick }) => {
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet List'
   $Viewlet.append($List, $ScrollBar)
-  $Viewlet.addEventListener('wheel', handleWheel, { passive: true })
+  $Viewlet.addEventListener(DomEventType.Wheel, handleWheel, { passive: true })
 
   return {
     $Viewlet,
