@@ -260,16 +260,37 @@ const copyStaticFiles = async ({ arch }) => {
     ignore: ['css', 'js'],
   })
   await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index-electron.html`,
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
     occurrence: 'packages/renderer-process/src/rendererProcessMain.js',
     replacement: `packages/renderer-process/dist/rendererProcessMain.js`,
   })
   await Replace.replace({
-    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index-electron.html`,
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
     occurrence: 'packages/renderer-worker/src/rendererWorkerMain.js',
     replacement: `packages/renderer-worker/dist/rendererWorkerMain.js`,
   })
-  // await
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
+    occurrence: '\n    <link rel="manifest" href="/manifest.json" />',
+    replacement: ``,
+  })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
+    occurrence:
+      '\n    <link rel="apple-touch-icon" href="/icons/pwa-icon-192.png" />',
+    replacement: ``,
+  })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
+    occurrence: '\n    <meta name="theme-color" content="#282e2f" />',
+    replacement: ``,
+  })
+  await Replace.replace({
+    path: `build/.tmp/electron-bundle/${arch}/resources/app/static/index.html`,
+    occurrence:
+      '\n    <meta name="description" content="Online Code Editor" />',
+    replacement: ``,
+  })
 }
 
 const copyCss = async ({ arch }) => {
