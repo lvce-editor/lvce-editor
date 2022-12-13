@@ -55,12 +55,16 @@ const getMainEditors = (state) => {
   if (!state) {
     return []
   }
-  const { editors } = state
+  const { editors, activeIndex } = state
   if (!editors) {
     return []
   }
+  const restoredEditor = editors.filter(canBeRestored)[activeIndex]
+  if (!restoredEditor) {
+    return []
+  }
   // TODO check that type is string (else runtime error occurs and page is blank)
-  return editors.filter(canBeRestored)
+  return [restoredEditor]
 }
 
 const hydrateLazy = async () => {
@@ -140,8 +144,8 @@ const getRestoredEditors = (savedState) => {
 }
 
 export const saveState = (state) => {
-  const { editors } = state
-  return { editors }
+  const { editors, activeIndex } = state
+  return { editors, activeIndex }
 }
 
 export const loadContent = (state, savedState) => {
@@ -657,6 +661,7 @@ export const resize = (state, dimensions) => {
     const id = ViewletMap.getId(editor.uri)
     commands = Viewlet.resize(id, childDimensions)
   }
+  console.log({ commands })
   return {
     newState: {
       ...state,

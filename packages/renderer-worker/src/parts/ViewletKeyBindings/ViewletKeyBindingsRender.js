@@ -1,4 +1,6 @@
 import {
+  col,
+  colgroup,
   kbd,
   table,
   tbody,
@@ -117,7 +119,7 @@ const tableHeadRow = tr(
 
 const tableHeading = th(tableCellProps, 1)
 
-const tableHeadDom = [
+const staticTableHeadDom = [
   tableHead,
   tableHeadRow,
   tableHeading,
@@ -140,7 +142,13 @@ const getTableBodyDom = (displayKeyBindings) => {
   ]
 }
 
-const getTableDom = (filteredKeyBindings, displayKeyBindings) => {
+const getTableDom = (
+  filteredKeyBindings,
+  displayKeyBindings,
+  columnWidth1,
+  columnWidth2,
+  columnWidth3
+) => {
   const tableDom = [
     table(
       {
@@ -148,9 +156,34 @@ const getTableDom = (filteredKeyBindings, displayKeyBindings) => {
         ariaLabel: UiStrings.KeyBindings,
         ariaRowCount: filteredKeyBindings.length,
       },
-      2
+      3
     ),
-    ...tableHeadDom,
+    colgroup({}, 3),
+    col(
+      {
+        style: {
+          width: `${columnWidth1}px`,
+        },
+      },
+      0
+    ),
+    col(
+      {
+        style: {
+          width: `${columnWidth2}px`,
+        },
+      },
+      0
+    ),
+    col(
+      {
+        style: {
+          width: `${columnWidth3}px`,
+        },
+      },
+      0
+    ),
+    ...staticTableHeadDom,
     ...getTableBodyDom(displayKeyBindings),
   ]
   return tableDom
@@ -198,11 +231,22 @@ const renderKeyBindings = {
       oldState.minLineY === newState.minLineY &&
       oldState.maxLineY === newState.maxLineY &&
       oldState.selectedIndex === newState.selectedIndex &&
-      oldState.focusedIndex === newState.focusedIndex
+      oldState.focusedIndex === newState.focusedIndex &&
+      oldState.columnWidth1 === newState.columnWidth1 &&
+      oldState.columnWidth2 === newState.columnWidth2 &&
+      oldState.columnWidth3 === newState.columnWidth3
     )
   },
   apply(oldState, newState) {
-    const { filteredKeyBindings, minLineY, maxLineY, selectedIndex } = newState
+    const {
+      filteredKeyBindings,
+      minLineY,
+      maxLineY,
+      selectedIndex,
+      columnWidth1,
+      columnWidth2,
+      columnWidth3,
+    } = newState
     const displayKeyBindings = getVisible(
       filteredKeyBindings,
       minLineY,
@@ -211,10 +255,34 @@ const renderKeyBindings = {
     )
     // TODO do dom diffing for faster incremental updates, e.g. when scrolling
     // console.time('tableDom')
-    const tableDom = getTableDom(filteredKeyBindings, displayKeyBindings)
+    const tableDom = getTableDom(
+      filteredKeyBindings,
+      displayKeyBindings,
+      columnWidth1,
+      columnWidth2,
+      columnWidth3
+    )
     // console.timeEnd('tableDom')
     // console.log({ tableDom })
     return [/* method */ 'setTableDom', /* tableDom */ tableDom]
+  },
+}
+
+const renderColumnWidths = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.columnWidth1 === newState.columnWidth1 &&
+      oldState.columnWidth2 === newState.columnWidth2 &&
+      oldState.columnWidth3 === newState.columnWidth3
+    )
+  },
+  apply(oldState, newState) {
+    return [
+      /* method */ 'setColumnWidths',
+      newState.columnWidth1,
+      newState.columnWidth2,
+      newState.columnWidth3,
+    ]
   },
 }
 
@@ -273,4 +341,5 @@ export const render = [
   renderValue,
   renderNoResults,
   renderScrollBar,
+  renderColumnWidths,
 ]

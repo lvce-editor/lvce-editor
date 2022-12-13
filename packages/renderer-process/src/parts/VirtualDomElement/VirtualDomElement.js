@@ -7,7 +7,13 @@ const renderDomTextNode = (element) => {
 
 const setProps = ($Element, props) => {
   for (const key in props) {
-    $Element[key] = props[key]
+    if (key === 'style') {
+      for (const [property, value] of Object.entries(props.style)) {
+        $Element.style[property] = value
+      }
+    } else {
+      $Element[key] = props[key]
+    }
   }
 }
 

@@ -53,3 +53,11 @@ export const th = (props, childCount) => {
 export const table = (props, childCount) => {
   return h(VirtualDomElements.Table, props, childCount)
 }
+
+export const colgroup = (props, childCount) => {
+  return h(VirtualDomElements.ColGroup, props, childCount)
+}
+
+export const col = (props, childCount) => {
+  return h(VirtualDomElements.Col, props, childCount)
+}

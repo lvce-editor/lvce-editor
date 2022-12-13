@@ -60,6 +60,7 @@ test('loadContent - one restored editor', async () => {
           uri: '/test/some-file.txt',
         },
       ],
+      activeIndex: 0,
     })
   ).toEqual({
     activeIndex: 0,
