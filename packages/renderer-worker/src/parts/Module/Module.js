@@ -2,6 +2,8 @@ import * as ModuleId from '../ModuleId/ModuleId.js'
 
 export const load = (moduleId) => {
   switch (moduleId) {
+    case ModuleId.About:
+      return import('../About/About.ipc.js')
     case ModuleId.Ajax:
       return import('../Ajax/Ajax.ipc.js')
     case ModuleId.Audio:
@@ -128,8 +130,6 @@ export const load = (moduleId) => {
       return import('../Workbench/Workbench.ipc.js')
     case ModuleId.Workspace:
       return import('../Workspace/Workspace.ipc.js')
-    case ModuleId.About:
-      return import('../About/About.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

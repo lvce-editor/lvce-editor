@@ -5,13 +5,13 @@ export const name = 'Source Control'
 // prettier-ignore
 export const Commands = {
   acceptInput: ViewletSourceControl.acceptInput,
-  handleMouseOver: ViewletSourceControl.handleMouseOver,
-  handleContextMenu: ViewletSourceControl.handleContextMenu,
   handleClick: ViewletSourceControl.handleClick,
   handleClickAdd: ViewletSourceControl.handleClickAdd,
   handleClickDiscard: ViewletSourceControl.handleClickDiscard,
   handleClickRestore: ViewletSourceControl.handleClickRestore,
+  handleContextMenu: ViewletSourceControl.handleContextMenu,
   handleInput: ViewletSourceControl.handleInput,
+  handleMouseOver: ViewletSourceControl.handleMouseOver,
 }
 
 export const Css = [
