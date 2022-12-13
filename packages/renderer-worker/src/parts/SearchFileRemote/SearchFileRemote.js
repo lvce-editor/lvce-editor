@@ -6,7 +6,7 @@ export const searchFile = async (path, value) => {
     /* SearchFile.searchFile */ 'SearchFile.searchFile',
     /* path */ path,
     /* searchTerm */ value,
-    /* limit */ 512
+    /* limit */ 9999999
   )
   const lines = SplitLines.splitLines(stdout)
   return lines
