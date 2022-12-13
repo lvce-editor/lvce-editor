@@ -2,8 +2,9 @@ import { mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, sep } from 'node:path'
 import { writeFile } from '../src/parts/FileSystem/FileSystem.js'
-import * as TextSearch from '../src/parts/TextSearch/TextSearch.js'
 import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
+
+const TextSearch = await import('../src/parts/TextSearch/TextSearch.js')
 
 const getTmpDir = () => {
   return mkdtemp(join(tmpdir(), 'foo-'))
@@ -13,7 +14,7 @@ const fixPath = (path) => {
   return path.replaceAll('/', sep)
 }
 
-const TIMEOUT_LONG = 10_000
+const TIMEOUT_LONG = 15_000
 
 test(
   'search',

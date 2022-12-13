@@ -1,101 +1,73 @@
-import { mkdtemp } from 'node:fs/promises'
-import { tmpdir } from 'node:os'
-import { dirname, join, sep } from 'node:path'
-import { fileURLToPath } from 'node:url'
-import { mkdir, writeFile } from '../src/parts/FileSystem/FileSystem.js'
-import * as JoinLines from '../src/parts/JoinLines/JoinLines.js'
-import { searchFile } from '../src/parts/SearchFile/SearchFile.js'
+import * as ErrorCodes from '../src/parts/ErrorCodes/ErrorCodes.js'
 
-const __dirname = dirname(fileURLToPath(import.meta.url))
+import { jest } from '@jest/globals'
 
-const getTmpDir = () => {
-  return mkdtemp(join(tmpdir(), 'foo-'))
+afterEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/RipGrep/RipGrep.js', () => {
+  return {
+    exec: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+    ripGrepPath: '/test/rg',
+  }
+})
+jest.unstable_mockModule('../src/parts/Logger/Logger.js', () => {
+  return {
+    info: jest.fn(() => {}),
+    error: jest.fn(() => {}),
+  }
+})
+
+const SearchFile = await import('../src/parts/SearchFile/SearchFile.js')
+const RipGrep = await import('../src/parts/RipGrep/RipGrep.js')
+const Logger = await import('../src/parts/Logger/Logger.js')
+
+class NodeError extends Error {
+  constructor(code, message = code) {
+    super(code + ':' + message)
+    this.code = code
+  }
 }
 
-const fixPath = (path) => {
-  return path.replaceAll('/', sep)
-}
-
-let tmpDir
-
-beforeAll(async () => {
-  tmpDir = await getTmpDir()
-  await writeFile(join(tmpDir, 'fileA'), '')
-  await writeFile(join(tmpDir, 'fileB'), '')
-  await mkdir(join(tmpDir, 'nested'))
-  await writeFile(join(tmpDir, 'nested', 'fileC'), '')
-})
-
-test('searchFile - exact match', async () => {
-  expect(await searchFile(tmpDir, 'fileA', 10)).toEqual(
-    JoinLines.joinLines([
-      fixPath('fileA'),
-      fixPath('fileB'),
-      fixPath('nested/fileC'),
-    ])
+test('searchFile', async () => {
+  // @ts-ignore
+  RipGrep.exec.mockImplementation(() => {
+    return {
+      stdout: `fileA
+fileB
+nested/fileC`,
+    }
+  })
+  expect(await SearchFile.searchFile('/test', 'fileA', 10)).toBe(
+    `fileA
+fileB
+nested/fileC`
   )
 })
 
-test('searchFile - match filename in nested folder', async () => {
-  expect(await searchFile(tmpDir, 'fileC', 10)).toEqual(
-    JoinLines.joinLines([
-      fixPath('fileA'),
-      fixPath('fileB'),
-      fixPath('nested/fileC'),
-    ])
+test('searchFile - error - ripgrep could not be found', async () => {
+  // @ts-ignore
+  RipGrep.exec.mockImplementation(() => {
+    throw new NodeError(ErrorCodes.ENOENT)
+  })
+  expect(await SearchFile.searchFile('/test', 'fileA', 10)).toBe(``)
+  expect(Logger.info).toHaveBeenCalledTimes(1)
+  expect(Logger.info).toHaveBeenCalledWith(
+    '[shared-process] ripgrep could not be found at "/test/rg"'
   )
 })
 
-test('searchFile - match files that start with searchTerm', async () => {
-  expect(await searchFile(tmpDir, 'file', 10)).toEqual(
-    JoinLines.joinLines([
-      fixPath('fileA'),
-      fixPath('fileB'),
-      fixPath('nested/fileC'),
-    ])
-  )
-})
-
-test('searchFile - match files that contain searchTerm', async () => {
-  expect(await searchFile(tmpDir, 'ile', 10)).toEqual(
-    JoinLines.joinLines([
-      fixPath('fileA'),
-      fixPath('fileB'),
-      fixPath('nested/fileC'),
-    ])
-  )
-})
-
-test('searchFile - match files that end with searchTerm', async () => {
-  expect(await searchFile(tmpDir, 'eA', 10)).toEqual(
-    JoinLines.joinLines([
-      fixPath('fileA'),
-      fixPath('fileB'),
-      fixPath('nested/fileC'),
-    ])
-  )
-})
-
-test('searchFile - no matching files', async () => {
-  expect(
-    await searchFile(`${__dirname}/fixture-search-file-1`, 'non-existing', 10)
-  ).toEqual(
-    JoinLines.joinLines([
-      fixPath('fileA'),
-      fixPath('fileB'),
-      fixPath('nested/fileC'),
-    ])
-  )
-})
-
-test('searchFile - empty string', async () => {
-  expect(
-    await searchFile(`${__dirname}/fixture-search-file-1`, '', 10)
-  ).toEqual(
-    JoinLines.joinLines([
-      fixPath('fileA'),
-      fixPath('fileB'),
-      fixPath('nested/fileC'),
-    ])
+test('searchFile - error', async () => {
+  // @ts-ignore
+  RipGrep.exec.mockImplementation(() => {
+    throw new TypeError('x is not a function')
+  })
+  expect(await SearchFile.searchFile('/test', 'fileA', 10)).toBe(``)
+  expect(Logger.error).toHaveBeenCalledTimes(1)
+  expect(Logger.error).toHaveBeenCalledWith(
+    new TypeError(`x is not a function`)
   )
 })

@@ -1,6 +1,4 @@
-import { spawn } from 'node:child_process'
-import * as Platform from '../Platform/Platform.js'
-import * as RgPath from '../RgPath/RgPath.js'
+import * as RipGrep from '../RipGrep/RipGrep.js'
 import * as RipGrepParsedLineType from '../RipGrepParsedLineType/RipGrepParsedLineType.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 
@@ -35,8 +33,6 @@ const toSearchResult = (parsedLine) => {
 // issue 2 https://github.com/BurntSushi/ripgrep/issues/1892
 // remove workaround when ripgrep is fixed
 
-// TODO no function call at toplevel!
-const useNice = !Platform.isWindows
 // TODO stats flag might not be necessary
 // TODO update client
 // TODO not always run nice, maybe configure nice via flag/options
@@ -54,13 +50,9 @@ export const search = async (searchDir, searchString, { threads = 1 } = {}) => {
       searchString,
       '.',
     ]
-    const childProcess = useNice
-      ? spawn('nice', ['-20', RgPath.rgPath, ...ripGrepArgs], {
-          cwd: searchDir,
-        })
-      : spawn(RgPath.rgPath, ripGrepArgs, {
-          cwd: searchDir,
-        })
+    const childProcess = RipGrep.spawn(ripGrepArgs, {
+      cwd: searchDir,
+    })
     const allSearchResults = Object.create(null)
     let buffer = ''
     let stats = {}
