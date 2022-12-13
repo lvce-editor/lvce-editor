@@ -2,6 +2,8 @@ const ModuleId = require('../ModuleId/ModuleId.js')
 
 exports.load = async (moduleId) => {
   switch (moduleId) {
+    case ModuleId.About:
+      return require('../About/About.ipc.js')
     case ModuleId.App:
       return require('../App/App.ipc.js')
     case ModuleId.AppWindow:
@@ -40,8 +42,6 @@ exports.load = async (moduleId) => {
       return require('../ElectronWindow/ElectronWindow.ipc.js')
     case ModuleId.ElectronWindowProcessExplorer:
       return require('../ElectronWindowProcessExplorer/ElectronWindowProcessExplorer.ipc.js')
-    case ModuleId.About:
-      return require('../About/About.ipc.js')
     default:
       throw new Error(`module ${moduleId} not found`)
   }

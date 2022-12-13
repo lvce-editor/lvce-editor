@@ -6,9 +6,9 @@ export const name = 'KeyBindings'
 export const Commands = {
   handleClick: ViewletKeyBindings.handleClick,
   handleInput: ViewletKeyBindings.handleInput,
-  handleWheel: ViewletKeyBindings.handleWheel,
-  handleResizerMove: ViewletKeyBindings.handleResizerMove,
   handleResizerClick: ViewletKeyBindings.handleResizerClick,
+  handleResizerMove: ViewletKeyBindings.handleResizerMove,
+  handleWheel: ViewletKeyBindings.handleWheel,
 }
 
 export const Css = [

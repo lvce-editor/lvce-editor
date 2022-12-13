@@ -28,14 +28,14 @@ export const load = (moduleId) => {
       return import('../Preferences/Preferences.ipc.js')
     case ModuleId.RecentlyOpened:
       return import('../RecentlyOpened/RecentlyOpened.ipc.js')
-    case ModuleId.Search:
-      return import('../TextSearch/TextSearch.ipc.js')
     case ModuleId.SearchFile:
       return import('../SearchFile/SearchFile.ipc.js')
     case ModuleId.Terminal:
       return import('../Terminal/Terminal.ipc.js')
     case ModuleId.TextDocument:
       return import('../TextDocument/TextDocument.ipc.js')
+    case ModuleId.Search:
+      return import('../TextSearch/TextSearch.ipc.js')
     case ModuleId.WebSocketServer:
       return import('../WebSocketServer/WebSocketServer.ipc.js')
     case ModuleId.Workspace:

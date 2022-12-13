@@ -95,6 +95,11 @@
     "version": "0.0.17"
   },
   {
+    "name": "builtin.language-basics-json5",
+    "repository": "github.com/lvce-editor/language-basics-json5",
+    "version": "0.0.3"
+  },
+  {
     "name": "builtin.language-basics-julia",
     "repository": "github.com/lvce-editor/language-basics-julia",
     "version": "0.0.1"
