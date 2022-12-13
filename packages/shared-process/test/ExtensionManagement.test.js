@@ -197,6 +197,22 @@ test.skip('install should fail when the server sends a bad status code', async (
 })
 
 test('install should fail when the server sends an invalid compressed object', async () => {
+  const tmpDir1 = await getTmpDir()
+  const tmpDir2 = await getTmpDir()
+  const tmpDir3 = await getTmpDir()
+  const tmpDir4 = await getTmpDir()
+  // @ts-ignore
+  Platform.getExtensionsPath.mockImplementation(() => tmpDir1)
+  // @ts-ignore
+  Platform.getBuiltinExtensionsPath.mockImplementation(() => tmpDir2)
+  // @ts-ignore
+  Platform.getDisabledExtensionsPath.mockImplementation(() => tmpDir3)
+  // @ts-ignore
+  Platform.getOnlyExtensionPath.mockImplementation(() => undefined)
+  // @ts-ignore
+  Platform.getLinkedExtensionsPath.mockImplementation(() => undefined)
+  // @ts-ignore
+  Platform.getCachedExtensionsPath.mockImplementation(() => tmpDir4)
   // TODO avoid side effect in tests, use createServer
   handler = (request, res) => {
     switch (request.url) {
