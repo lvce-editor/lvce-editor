@@ -2,7 +2,7 @@ import { mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join, sep } from 'node:path'
 import { writeFile } from '../src/parts/FileSystem/FileSystem.js'
-import * as Search from '../src/parts/Search/Search.js'
+import * as TextSearch from '../src/parts/TextSearch/TextSearch.js'
 import * as TextSearchResultType from '../src/parts/TextSearchResultType/TextSearchResultType.js'
 
 const getTmpDir = () => {
@@ -33,7 +33,7 @@ test(
 </html>
 `
     )
-    expect(await Search.search(tmpDir, 'Document')).toEqual({
+    expect(await TextSearch.search(tmpDir, 'Document')).toEqual({
       results: [
         {
           type: TextSearchResultType.File,

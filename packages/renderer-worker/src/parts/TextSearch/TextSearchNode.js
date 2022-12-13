@@ -2,7 +2,7 @@ import * as SharedProcess from '../SharedProcess/SharedProcess.js'
 
 export const textSearch = async (scheme, root, query, options) => {
   const result = await SharedProcess.invoke(
-    /* Search.search */ 'Search.search',
+    /* Search.search */ 'TextSearch.search',
     /* folder */ root,
     /* searchTerm */ query,
     /* options */ options
