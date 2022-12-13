@@ -3,6 +3,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as Label from '../Label/Label.js'
 import * as Widget from '../Widget/Widget.js'
 import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 const create$CompletionItem = (item, index) => {
   const $CompletionItemText = Label.create(item.label)
@@ -30,7 +31,7 @@ export const create = () => {
   $Viewlet.ariaLabel = 'Suggest'
   $Viewlet.onmousedown = ViewletEditorCompletionEvents.handleMousedown
   $Viewlet.addEventListener(
-    'wheel',
+    DomEventType.Wheel,
     ViewletEditorCompletionEvents.handleWheel,
     {
       passive: true,

@@ -5,7 +5,7 @@ import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
-
+import * as DomEventType from '../DomEventType/DomEventType.js'
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
 // be good as well but is not as important as fast show/hide
@@ -214,7 +214,7 @@ export const create = () => {
   $QuickPickInput.ariaAutoComplete = 'list'
   $QuickPickInput.onblur = ViewletQuickPickEvents.handleBlur
   $QuickPickInput.addEventListener(
-    'beforeinput',
+    DomEventType.BeforeInput,
     ViewletQuickPickEvents.handleBeforeInput
   )
   $QuickPickInput.ariaExpanded = 'true'
@@ -229,7 +229,7 @@ export const create = () => {
   $QuickPickItems.role = Roles.ListBox
   $QuickPickItems.onpointerdown = ViewletQuickPickEvents.handlePointerDown
   $QuickPickItems.addEventListener(
-    'wheel',
+    DomEventType.Wheel,
     ViewletQuickPickEvents.handleWheel,
     { passive: true }
   )

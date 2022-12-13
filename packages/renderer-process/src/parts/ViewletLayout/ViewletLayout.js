@@ -1,5 +1,6 @@
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as ViewletLayoutEvents from './ViewletLayoutEvents.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 
 export const create = () => {
   // TODO use aria role splitter once supported https://github.com/w3c/aria/issues/1348
@@ -23,7 +24,7 @@ export const create = () => {
   $Viewlet.role = AriaRoles.Application
   $Viewlet.append($SashSideBar, $SashPanel)
 
-  window.addEventListener('resize', ViewletLayoutEvents.handleResize)
+  window.addEventListener(DomEventType.Resize, ViewletLayoutEvents.handleResize)
 
   return {
     $Viewlet,

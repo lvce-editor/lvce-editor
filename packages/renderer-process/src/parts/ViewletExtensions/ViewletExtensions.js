@@ -58,21 +58,21 @@ export const create = () => {
   $ListItems.onfocus = ViewletExtensionsEvents.handleFocus
   $ListItems.onscroll = ViewletExtensionsEvents.handleScroll
   $ListItems.addEventListener(
-    'touchstart',
+    DomEventType.TouchStart,
     ViewletExtensionsEvents.handleTouchStart,
     {
       passive: true,
     }
   )
   $ListItems.addEventListener(
-    'touchmove',
+    DomEventType.TouchMove,
     ViewletExtensionsEvents.handleTouchMove,
     {
       passive: true,
     }
   )
   $ListItems.addEventListener(
-    'touchend',
+    DomEventType.TouchEnd,
     ViewletExtensionsEvents.handleTouchEnd,
     {
       passive: true,
