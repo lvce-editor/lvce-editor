@@ -122,7 +122,7 @@ test('textSearch - file', async () => {
   ])
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
   expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'Search.search',
+    'TextSearch.search',
     '/test',
     'abc',
     {}

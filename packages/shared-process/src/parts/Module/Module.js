@@ -29,7 +29,7 @@ export const load = (moduleId) => {
     case ModuleId.RecentlyOpened:
       return import('../RecentlyOpened/RecentlyOpened.ipc.js')
     case ModuleId.Search:
-      return import('../Search/Search.ipc.js')
+      return import('../TextSearch/TextSearch.ipc.js')
     case ModuleId.SearchFile:
       return import('../SearchFile/SearchFile.ipc.js')
     case ModuleId.Terminal:
