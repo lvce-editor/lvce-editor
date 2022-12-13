@@ -40,13 +40,45 @@ test.only('render - add one keybinding', () => {
       'setTableDom',
       [
         {
-          childCount: 2,
+          childCount: 3,
           props: {
             ariaLabel: 'KeyBindings',
             ariaRowCount: 1,
             className: 'KeyBindingsTable',
           },
           type: VirtualDomElements.Table,
+        },
+        {
+          childCount: 3,
+          props: {},
+          type: 2,
+        },
+        {
+          childCount: 0,
+          props: {
+            style: {
+              width: '0px',
+            },
+          },
+          type: 1,
+        },
+        {
+          childCount: 0,
+          props: {
+            style: {
+              width: '0px',
+            },
+          },
+          type: 1,
+        },
+        {
+          childCount: 0,
+          props: {
+            style: {
+              width: '0px',
+            },
+          },
+          type: 1,
         },
         {
           childCount: 1,
