@@ -29,6 +29,6 @@ test('setTableDom', () => {
   ])
   const { $KeyBindingsTableWrapper } = state
   expect($KeyBindingsTableWrapper.innerHTML).toBe(
-    '<table><thead></thead><tbody></tbody></table>'
+    '<table><thead></thead><tbody></tbody></table><div class="Resizer"></div><div class="Resizer"></div>'
   )
 })
