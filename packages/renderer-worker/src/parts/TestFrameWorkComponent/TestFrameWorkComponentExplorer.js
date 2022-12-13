@@ -63,3 +63,7 @@ export const acceptEdit = async () => {
 export const updateEditingValue = async (value) => {
   await Command.execute('Explorer.updateEditingValue', value)
 }
+
+export const expandAll = async (value) => {
+  await Command.execute('Explorer.expandAll', value)
+}
