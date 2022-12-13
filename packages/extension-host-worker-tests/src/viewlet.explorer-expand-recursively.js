@@ -1,5 +1,5 @@
 // TODO maybe merge this test with the other explorer test, less end to end tests will run faster
-test('viewlet.explorer-keyboard-navigation', async () => {
+test('viewlet.explorer-expand-recursively', async () => {
   // arrange
   const tmpDir = await FileSystem.getTmpDir()
   await FileSystem.mkdir(`${tmpDir}/a/b`)
