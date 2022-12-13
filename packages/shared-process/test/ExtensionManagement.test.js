@@ -173,7 +173,9 @@ test.skip('install', async () => {
   ).toBe('{ "type" : "module" }')
 })
 
-test('install should fail when the server sends a bad status code', async () => {
+// TODO test is flaky https://github.com/lvce-editor/lvce-editor/actions/runs/3684799038/jobs/6234968296
+// probably should use unit test instead of e2e test here
+test.skip('install should fail when the server sends a bad status code', async () => {
   handler = (request, response) => {
     switch (request.url) {
       default:
