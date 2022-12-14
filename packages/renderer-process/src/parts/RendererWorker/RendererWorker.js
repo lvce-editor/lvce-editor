@@ -70,7 +70,14 @@ const handleMessageFromRendererWorker = async (event) => {
   }
   if (message.method === 'get-port') {
     const port = await getPort(...message.params)
-    state.ipc.sendAndTransfer('port', [port])
+    state.ipc.sendAndTransfer(
+      {
+        jsonrpc: '2.0',
+        id: message._id,
+        result: port,
+      },
+      [port]
+    )
     return
   }
   throw new JsonRpcError('unexpected message from renderer worker')

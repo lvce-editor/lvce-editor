@@ -1,22 +1,24 @@
-import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Callback from '../Callback/Callback.js'
+import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const create = async (options) => {
   const type = options.type
   Assert.string(type)
-  const originalOnMessage = RendererProcess.state.ipc.onmessage
-  const port = await new Promise((resolve, reject) => {
-    RendererProcess.state.ipc.onmessage = (event) => {
-      if (event.data === 'port') {
-        const port = event.ports[0]
-        resolve(port)
-      } else {
-        originalOnMessage(event)
-      }
-    }
-    RendererProcess.state.ipc.send({ method: 'get-port', params: [type] })
+  const response = await new Promise((resolve, reject) => {
+    const id = Callback.register(resolve, reject)
+    RendererProcess.send({
+      jsonrpc: '2.0',
+      method: 'get-port',
+      _id: id,
+      params: [type],
+    })
   })
-  RendererProcess.state.ipc.onmessage = originalOnMessage
+  const port = response.result
+  return port
+}
+
+export const wrap = (port) => {
   let handleMessage
   return {
     get onmessage() {

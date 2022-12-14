@@ -4,6 +4,10 @@ export const create = async ({ url }) => {
     import(url)
   })
   delete globalThis.acceptReferencePort
+  return referencePort
+}
+
+export const wrap = (referencePort) => {
   let handleMessage
   return {
     get onmessage() {

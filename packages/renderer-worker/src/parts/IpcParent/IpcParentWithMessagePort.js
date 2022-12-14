@@ -7,6 +7,10 @@ export const create = async ({ url }) => {
     import(url)
   })
   delete globalThis.acceptPort
+  return port
+}
+
+export const wrap = (port) => {
   let handleMessage
   return {
     get onmessage() {

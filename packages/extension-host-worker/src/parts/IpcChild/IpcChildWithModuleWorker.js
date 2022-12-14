@@ -17,7 +17,6 @@ export const listen = async () => {
   const type = firstMessage.params[0]
   if (type === 'message-port') {
     const port = firstMessage.params[1]
-    console.log({ port })
     return {
       send(message) {
         port.postMessage(message)
