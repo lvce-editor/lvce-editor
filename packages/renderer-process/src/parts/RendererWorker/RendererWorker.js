@@ -69,8 +69,7 @@ const handleMessageFromRendererWorker = async (event) => {
     return
   }
   if (message.method === 'get-port') {
-    const type = message.params[0]
-    const port = await getPort(type)
+    const port = await getPort(...message.params)
     state.ipc.sendAndTransfer('port', [port])
     return
   }
@@ -99,7 +98,12 @@ const getIpc = async () => {
   }
 }
 
-const getPort = (type) => {
+const getPort = async (type, ...args) => {
+  if (type === 'worker') {
+    const arg = args[0]
+    const ipc = await IpcParent.create(arg)
+    return ipc
+  }
   return new Promise((resolve, reject) => {
     const handleMessageFromWindow = (event) => {
       const port = event.ports[0]
@@ -133,8 +137,7 @@ export const hydrate = async (config) => {
     if (event.data.method !== 'get-port') {
       throw new Error('unexpected message from renderer worker')
     }
-    const type = event.data.params[0]
-    const port = await getPort(type)
+    const port = await getPort(...event.data.params)
     ipc.sendAndTransfer('port', [port])
   }
   ipc.onmessage = handleMessageFromRendererWorker
