@@ -12,6 +12,10 @@ const getModule = (method) => {
       return import('./IpcParentWithReferencePort.js')
     case IpcParentType.WebSocket:
       return import('./IpcParentWithWebSocket.js')
+    case IpcParentType.ModuleWorkerAndWorkaroundForChromeDevtoolsBug:
+      return import(
+        './IpcParentWithModuleWorkerAndWorkaroundForChromeDevtoolsBug.js'
+      )
     default:
       throw new Error('unexpected ipc type')
   }
@@ -19,5 +23,7 @@ const getModule = (method) => {
 
 export const create = async ({ method, ...options }) => {
   const module = await getModule(method)
-  return module.create(options)
+  const rawIpc = await module.create(options)
+  const ipc = module.wrap(rawIpc)
+  return ipc
 }

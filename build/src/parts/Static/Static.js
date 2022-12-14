@@ -43,6 +43,10 @@ const getModule = (method) => {
       return import('./IpcParentWithMessagePort.js')
     case IpcParentType.ReferencePort:
       return import('./IpcParentWithReferencePort.js')
+    case IpcParentType.ModuleWorkerWithMessagePort:
+      return import('./IpcParentWithModuleWorkerWithMessagePort.js')
+    case IpcParentType.Electron:
+      return import('./IpcParentWithElectron.js')
     default:
       throw new Error('unexpected ipc type')
   }
@@ -60,6 +64,8 @@ const getModule = (method) => {
       return IpcParentWithMessagePort
     case IpcParentType.ReferencePort:
       return IpcParentWithReferencePort
+    case IpcParentType.Electron:
+      return IpcParentWithElectron
     default:
       throw new Error('unexpected ipc type')
   }

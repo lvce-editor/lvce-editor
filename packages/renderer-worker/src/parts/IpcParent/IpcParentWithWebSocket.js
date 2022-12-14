@@ -6,23 +6,22 @@ const getWsUrl = () => {
   return `${wsProtocol}//${location.host}`
 }
 
-export const create = ({ protocol }) => {
+export const create = async ({ protocol }) => {
   // TODO replace this during build
   const wsUrl = getWsUrl()
   const webSocket = new WebSocket(wsUrl, [protocol])
-  const pendingMessages = []
-  webSocket.onopen = () => {
-    ipc.send = (message) => {
-      const stringifiedMessage = Json.stringifyCompact(message)
-      webSocket.send(stringifiedMessage)
+  await new Promise((resolve) => {
+    webSocket.onopen = () => {
+      webSocket.onopen = null
+      resolve(undefined)
     }
-    for (const message of pendingMessages) {
-      ipc.send(message)
-    }
-    pendingMessages.length = 0
-  }
+  })
+  return webSocket
+}
+
+export const wrap = (webSocket) => {
   let handleMessage
-  const ipc = {
+  return {
     get onmessage() {
       return handleMessage
     },
@@ -43,8 +42,8 @@ export const create = ({ protocol }) => {
       webSocket.onmessage = handleMessage
     },
     send(message) {
-      pendingMessages.push(message)
+      const stringifiedMessage = Json.stringifyCompact(message)
+      webSocket.send(stringifiedMessage)
     },
   }
-  return ipc
 }

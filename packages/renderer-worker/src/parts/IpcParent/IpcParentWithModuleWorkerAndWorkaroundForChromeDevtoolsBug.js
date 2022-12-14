@@ -1,11 +1,8 @@
-import * as Assert from '../Assert/Assert.js'
 import * as Callback from '../Callback/Callback.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 
-export const create = async (options) => {
-  const type = options.type
-  Assert.string(type)
+export const create = async ({ url, name }) => {
   const response = await new Promise((resolve, reject) => {
     const id = Callback.register(resolve, reject)
     RendererProcess.send({
@@ -14,8 +11,9 @@ export const create = async (options) => {
       _id: id,
       params: [
         {
-          method: RendererProcessIpcParentType.Electron,
-          type,
+          method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
+          url,
+          name,
         },
       ],
     })
@@ -28,14 +26,15 @@ export const wrap = (port) => {
   let handleMessage
   return {
     get onmessage() {
-      return handleMessage
+      return port.onmessage
     },
     set onmessage(listener) {
       if (listener) {
         handleMessage = (event) => {
           // TODO why are some events not instance of message event?
           if (event instanceof MessageEvent) {
-            listener(event.data)
+            const message = event.data
+            listener(message)
           } else {
             listener(event)
           }
@@ -48,6 +47,8 @@ export const wrap = (port) => {
     send(message) {
       port.postMessage(message)
     },
-    _port: port,
+    sendAndTransfer(message, transfer) {
+      port.postMessage(message, transfer)
+    },
   }
 }
