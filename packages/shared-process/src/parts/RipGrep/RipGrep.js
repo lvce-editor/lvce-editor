@@ -16,6 +16,9 @@ export const spawn = (args, options) => {
     },
     stdout: childProcess.stdout,
     stderr: childProcess.stderr,
+    kill() {
+      childProcess.kill()
+    },
   }
 }
 
