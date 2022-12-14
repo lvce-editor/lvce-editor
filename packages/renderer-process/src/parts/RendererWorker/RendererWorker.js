@@ -84,10 +84,12 @@ const handleMessageFromRendererWorker = async (event) => {
 }
 
 const getIpc = async () => {
+  const isElectron = Platform.isElectron()
+  const name = isElectron ? `Renderer Worker (Electron)` : 'Renderer Worker'
   const rendererWorker = await IpcParent.create({
     method: IpcParentType.Auto,
     url: Platform.getRendererWorkerUrl(),
-    name: 'Renderer Worker',
+    name,
   })
   return {
     send(message) {

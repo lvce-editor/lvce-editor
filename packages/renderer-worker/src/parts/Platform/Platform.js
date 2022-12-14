@@ -120,10 +120,8 @@ const getPlatform = () => {
   if (typeof location !== 'undefined' && location.search === '?web') {
     return PlatformType.Web
   }
-  if (
-    typeof location !== 'undefined' &&
-    location.search.includes('platform=electron')
-  ) {
+  // TODO find a better way to pass runtime environment
+  if (typeof name !== 'undefined' && name.endsWith('(Electron)')) {
     return PlatformType.Electron
   }
   return PlatformType.Remote
