@@ -1,4 +1,3 @@
-import * as WorkerType from '../WorkerType/WorkerType.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
 
 export const create = async ({ url, name }) => {
