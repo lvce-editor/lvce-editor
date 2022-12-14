@@ -97,20 +97,9 @@ export const isElectron = () => {
   return state.isElectron()
 }
 
-const getQueryParams = () => {
-  if (isElectron()) {
-    if (location.search) {
-      return location.search + '&platform=electron'
-    }
-    return '?platform=electron'
-  }
-  return location.search
-}
-
 export const getRendererWorkerUrl = () => {
   const assetDir = getAssetDir()
-  const queryParams = getQueryParams()
-  const urlRendererWorker = `${assetDir}/packages/renderer-worker/src/rendererWorkerMain.js${queryParams}`
+  const urlRendererWorker = `${assetDir}/packages/renderer-worker/src/rendererWorkerMain.js`
   return urlRendererWorker
 }
 
