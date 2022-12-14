@@ -1,5 +1,6 @@
 import * as Callback from '../Callback/Callback.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 
 export const create = async ({ url, name }) => {
   const response = await new Promise((resolve, reject) => {
@@ -9,8 +10,11 @@ export const create = async ({ url, name }) => {
       method: 'get-port',
       _id: id,
       params: [
-        'worker',
-        { method: /* ModuleWorkerWithMessagePort */ 4, url, name },
+        {
+          method: RendererProcessIpcParentType.ModuleWorkerWithMessagePort,
+          url,
+          name,
+        },
       ],
     })
   })

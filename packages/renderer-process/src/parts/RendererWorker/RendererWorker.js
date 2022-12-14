@@ -105,48 +105,12 @@ const getIpc = async () => {
   }
 }
 
-const getPort = async (type, ...args) => {
-  if (type === 'worker') {
-    const arg = args[0]
-    const ipc = await IpcParent.create(arg)
-    return ipc
-  }
-  return new Promise((resolve, reject) => {
-    const handleMessageFromWindow = (event) => {
-      const port = event.ports[0]
-      resolve(port)
-    }
-
-    // @ts-ignore
-    window.addEventListener('message', handleMessageFromWindow, {
-      once: true,
-    })
-    // @ts-ignore
-    if (typeof window.myApi === 'undefined') {
-      reject(new Error(`Electron api was requested but is not available`))
-    }
-    // @ts-ignore
-    window.myApi.ipcConnect(type)
-  })
+const getPort = (options) => {
+  return IpcParent.create(options)
 }
 
 export const hydrate = async (config) => {
   const ipc = await getIpc()
-
-  // setup electron message port
-  if (Platform.isElectron()) {
-    const event = await new Promise((resolve, reject) => {
-      const handleIpcMessage = async (event) => {
-        resolve(event)
-      }
-      ipc.onmessage = handleIpcMessage
-    })
-    if (event.data.method !== 'get-port') {
-      throw new Error('unexpected message from renderer worker')
-    }
-    const port = await getPort(...event.data.params)
-    ipc.sendAndTransfer('port', [port])
-  }
   ipc.onmessage = handleMessageFromRendererWorker
   state.ipc = ipc
 }

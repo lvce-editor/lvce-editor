@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as Callback from '../Callback/Callback.js'
 import * as RendererProcess from '../RendererProcess/RendererProcess.js'
+import * as RendererProcessIpcParentType from '../RendererProcessIpcParentType/RendererProcessIpcParentType.js'
 
 export const create = async (options) => {
   const type = options.type
@@ -11,7 +12,12 @@ export const create = async (options) => {
       jsonrpc: '2.0',
       method: 'get-port',
       _id: id,
-      params: [type],
+      params: [
+        {
+          method: RendererProcessIpcParentType.Electron,
+          type,
+        },
+      ],
     })
   })
   const port = response.result
