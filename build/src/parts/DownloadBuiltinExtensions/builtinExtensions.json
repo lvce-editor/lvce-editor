@@ -30,6 +30,11 @@
     "version": "0.0.1"
   },
   {
+    "name": "builtin.language-basics-gn",
+    "repository": "github.com/lvce-editor/language-basics-gn",
+    "version": "0.0.2"
+  },
+  {
     "name": "builtin.language-basics-desktop",
     "repository": "github.com/lvce-editor/language-basics-desktop",
     "version": "0.0.5"
@@ -87,7 +92,7 @@
   {
     "name": "builtin.language-basics-javascript",
     "repository": "github.com/lvce-editor/language-basics-javascript",
-    "version": "0.0.9"
+    "version": "0.0.11"
   },
   {
     "name": "builtin.language-basics-json",
@@ -142,7 +147,7 @@
   {
     "name": "builtin.language-basics-python",
     "repository": "github.com/lvce-editor/language-basics-python",
-    "version": "0.0.1"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-r",
