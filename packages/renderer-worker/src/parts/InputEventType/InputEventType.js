@@ -11,3 +11,5 @@ export const DeleteWordBackward = 'deleteWordBackward'
 export const InsertLineBreak = 'insertLineBreak'
 
 export const InsertCompositionText = 'insertCompositionText'
+
+export const InsertFromPaste = 'insertFromPaste'
