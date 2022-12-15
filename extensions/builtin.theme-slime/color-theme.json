@@ -19,6 +19,8 @@
     "InputBackground": "rgb(36, 41, 42)",
     "InputForeground": "rgb(225, 225, 225)",
 
+    "LinkForeground": "#3794ff",
+
     "ListActiveSelectionBackground": "#515f59",
     "ListActiveSelectionForeground": "#ffffff",
     "ListHoverBackground": "#405c5033",
