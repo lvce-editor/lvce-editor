@@ -18,6 +18,7 @@ import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/Ext
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
 import * as ExtensionHostDebug from '../ExtensionHostDebug/ExtensionHostDebug.js'
+import * as ExtensionHostAjax from '../ExtensionHostAjax/ExtensionHostAjax.js'
 
 import { VError } from '../VError/VError.js'
 
@@ -31,6 +32,9 @@ class FormattingError extends Error {
 
 // prettier-ignore
 export const api =  {
+  // Ajax
+  getJson: ExtensionHostAjax.getJson,
+
   // Brace Completion
   registerBraceCompletionProvider:ExtensionHostBraceCompletion.registerBraceCompletionProvider,
   executeBraceCompletionProvider: ExtensionHostBraceCompletion.executeBraceCompletionProvider,
