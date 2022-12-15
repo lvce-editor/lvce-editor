@@ -34,7 +34,7 @@
 
 .Markdown a {
   background-color: transparent;
-  color: #0969da;
+  color: var(--LinkForeground);
   text-decoration: none;
 }
 
