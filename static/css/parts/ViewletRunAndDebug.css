@@ -1,3 +1,4 @@
 .RunAndDebug {
   white-space: pre;
+  user-select: text;
 }
