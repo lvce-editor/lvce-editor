@@ -60,6 +60,13 @@ const ContentSecurityPolicy = {
     .join(' '),
 }
 
+const ContentSecurityPolicyWorker = {
+  key: 'Content-Security-Policy',
+  value: [`default-src 'none'`, `connect-src 'self'`, `script-src 'self'`]
+    .map(addSemicolon)
+    .join(' '),
+}
+
 const ContentSecurityPolicyTests = {
   key: ContentSecurityPolicy.key,
   value: ContentSecurityPolicy.value.replace(
@@ -144,6 +151,8 @@ const serveStatic = (root, skip = '') =>
     }
     if (filePath.endsWith('WorkerMain.js')) {
       headers[CrossOriginEmbedderPolicy.key] = CrossOriginEmbedderPolicy.value
+      headers[ContentSecurityPolicyWorker.key] =
+        ContentSecurityPolicyWorker.value
     }
     res.writeHead(200, headers)
     try {
