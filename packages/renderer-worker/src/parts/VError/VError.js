@@ -18,7 +18,6 @@ const mergeStacks = (parent, child) => {
     return parentFirstLine + childRest
   }
   return child
-  // console.log({ parent, child, childRest })
 }
 
 export class VError extends Error {
