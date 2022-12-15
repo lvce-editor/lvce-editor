@@ -1,8 +1,10 @@
 const stringifyError = (error) => {
-  const errorPrefix = 'Error: '
+  const errorPrefixes = ['Error: ', 'VError: ']
   const stringifiedError = `${error}`
-  if (stringifiedError.startsWith(errorPrefix)) {
-    return stringifiedError.slice(errorPrefix.length)
+  for (const errorPrefix of errorPrefixes) {
+    if (stringifiedError.startsWith(errorPrefix)) {
+      return stringifiedError.slice(errorPrefix.length)
+    }
   }
   return stringifiedError
 }
