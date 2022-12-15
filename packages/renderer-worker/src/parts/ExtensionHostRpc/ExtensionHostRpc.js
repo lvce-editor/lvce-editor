@@ -27,6 +27,7 @@ const handleMessageMethod = async (message, event) => {
       [ipc._port]
     )
     console.log({ ipc, event, target: event.target })
+  } else {
   }
 }
 

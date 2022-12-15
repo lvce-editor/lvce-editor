@@ -12,6 +12,17 @@ export const create = () => {
   }
 }
 
+const create$Process = (process) => {
+  const $Process = document.createElement('div')
+  $Process.textContent = JSON.stringify(process, null, 2)
+  return $Process
+}
+
+export const setProcesses = (state, processes) => {
+  const { $Viewlet } = state
+  $Viewlet.replaceChildren(...processes.map(create$Process))
+}
+
 export const refresh = (state, message) => {
   Assert.object(state)
   Assert.string(message)

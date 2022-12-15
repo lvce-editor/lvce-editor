@@ -10,7 +10,6 @@ export const create = (id) => {
 
 export const loadContent = async (state) => {
   const processes = await Debug.listProcesses()
-  console.log({ processes })
   return {
     ...state,
     processes,
@@ -29,7 +28,16 @@ export const hasFunctionalRender = true
 
 export const hasFunctionalResize = true
 
-export const render = []
+const renderProcesses = {
+  isEqual(oldState, newState) {
+    return oldState.processes === newState.processes
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setProcesses', /* processes */ newState.processes]
+  },
+}
+
+export const render = [renderProcesses]
 
 export const resize = (state, dimensions) => {
   return { ...state, ...dimensions }
