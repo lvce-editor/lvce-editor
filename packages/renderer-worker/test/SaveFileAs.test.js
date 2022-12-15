@@ -111,7 +111,7 @@ test('saveFileAs - error - not supported', async () => {
     SaveFileAs.saveFileAs('image.png', 'https://example.com/image.png')
   ).rejects.toThrowError(
     new Error(
-      'Failed to save file: Error: showSaveFilePicker not supported on this browser'
+      'Failed to save file: showSaveFilePicker not supported on this browser'
     )
   )
 })

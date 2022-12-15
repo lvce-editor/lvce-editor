@@ -46,6 +46,6 @@ test('executeCommand - error', async () => {
   await expect(
     ExtensionHostCommand.executeCommand('xyz', 'abc')
   ).rejects.toThrowError(
-    new Error('Failed to execute command: x is not a function')
+    new Error('Failed to execute command: TypeError: x is not a function')
   )
 })

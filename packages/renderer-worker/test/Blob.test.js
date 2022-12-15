@@ -49,7 +49,7 @@ test('blobToBinaryString - error - progress event', async () => {
   })
   await expect(Blob.blobToBinaryString('YWJj')).rejects.toThrowError(
     new Error(
-      'Failed to convert blob to binary string: Error: A requested file or directory could not be found at the time an operation was processed.'
+      'Failed to convert blob to binary string: A requested file or directory could not be found at the time an operation was processed.'
     )
   )
 })
