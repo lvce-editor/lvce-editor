@@ -95,7 +95,7 @@ test('writeText - error', async () => {
     throw new Error('not allowed')
   })
   await expect(ClipBoard.writeText('abc')).rejects.toThrowError(
-    new Error('Failed to write text to clipboard: Error: not allowed')
+    new Error('Failed to write text to clipboard: not allowed')
   )
 })
 
@@ -189,7 +189,7 @@ test('writeImage - error - format not supported', async () => {
     })
   ).rejects.toThrowError(
     new Error(
-      'Failed to write image to clipboard: Error: Type image/avif not supported on write.'
+      'Failed to write image to clipboard: Type image/avif not supported on write.'
     )
   )
 })

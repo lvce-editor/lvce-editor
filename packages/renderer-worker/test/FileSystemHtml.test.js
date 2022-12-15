@@ -274,7 +274,7 @@ test('readDirWithFileTypes - error - user activation required', async () => {
     FileSystemHtml.readDirWithFileTypes('test-folder')
   ).rejects.toThrowError(
     new TypeError(
-      'failed to read directory: Error: User activation is required to request permissions.'
+      'failed to read directory: User activation is required to request permissions.'
     )
   )
 })
