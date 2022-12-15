@@ -10,6 +10,7 @@ export const create = (id) => {
 
 export const loadContent = async (state) => {
   const processes = await Debug.listProcesses()
+  console.log({ processes })
   return {
     ...state,
     processes,

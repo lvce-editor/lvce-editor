@@ -16,14 +16,14 @@ export const registerDebugProvider = (debugProvider) => {
   if (!debugProvider.id) {
     throw new Error(`Failed to register debug system provider: missing id`)
   }
-  state.fileSystemProviderMap[debugProvider.id] = debugProvider
+  state.debugProviderMap[debugProvider.id] = debugProvider
 }
 
 export const listProcesses = async (protocol, path) => {
   try {
     const provider = getDebugProvider(protocol)
-    return await provider.readDirWithFileTypes(path)
+    return await provider.listProcesses(path)
   } catch (error) {
-    throw new VError(error, 'Failed to execute file system provider')
+    throw new VError(error, 'Failed to execute debug provider')
   }
 }

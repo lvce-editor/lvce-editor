@@ -1,5 +1,5 @@
 import * as ExtensionHostDebug from '../ExtensionHost/ExtensionHostDebug.js'
 
 export const listProcesses = async () => {
-  return ExtensionHostDebug.listProcesses()
+  return ExtensionHostDebug.listProcesses('node-debug')
 }
