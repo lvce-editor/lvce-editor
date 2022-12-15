@@ -137,7 +137,7 @@ test('readDirWithFileTypes - error', async () => {
     FileSystemHtml.readDirWithFileTypes('test-folder')
   ).rejects.toThrowError(
     new Error(
-      'failed to read directory: VError: failed to get child handles: TypeError: x is not a function'
+      'failed to read directory: failed to get child handles: TypeError: x is not a function'
     )
   )
 })
