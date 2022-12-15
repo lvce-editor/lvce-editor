@@ -1,8 +1,18 @@
-const getCombinedMessage = (error, message) => {
-  if (message) {
-    return `${message}: ${error}`
+const stringifyError = (error) => {
+  const errorPrefix = 'Error: '
+  const stringifiedError = `${error}`
+  if (stringifiedError.startsWith(errorPrefix)) {
+    return stringifiedError.slice(errorPrefix.length)
   }
-  return `${error}`
+  return stringifiedError
+}
+
+const getCombinedMessage = (error, message) => {
+  const stringifiedError = stringifyError(error)
+  if (message) {
+    return `${message}: ${stringifiedError}`
+  }
+  return `${stringifiedError}`
 }
 
 const mergeStacks = (parent, child) => {
