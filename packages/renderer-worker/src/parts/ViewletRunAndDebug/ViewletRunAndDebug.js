@@ -1,14 +1,19 @@
-import * as ViewletModuleId from '../ViewletModuleId/ViewletModuleId.js'
+import * as Debug from '../Debug/Debug.js'
 
 export const create = (id) => {
   return {
     id,
     disposed: false,
+    processes: [],
   }
 }
 
 export const loadContent = async (state) => {
-  return state
+  const processes = await Debug.listProcesses()
+  return {
+    ...state,
+    processes,
+  }
 }
 
 // TODO make sure dispose is actually called

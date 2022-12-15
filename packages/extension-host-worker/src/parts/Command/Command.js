@@ -1,8 +1,11 @@
+import { CommandNotFoundError } from '../Errors/Errors.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
+import * as ExtensionHostDebug from '../ExtensionHostDebug/ExtensionHostDebug.js'
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
 import * as ExtensionHostExtension from '../ExtensionHostExtension/ExtensionHostExtension.js'
+import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
 import * as ExtensionHostFormatting from '../ExtensionHostFormatting/ExtensionHostFormatting.js'
 import * as ExtensionHostMockExec from '../ExtensionHostMockExec/ExtensionHostMockExec.js'
 import * as ExtensionHostReference from '../ExtensionHostReference/ExtensionHostReference.js'
@@ -12,8 +15,6 @@ import * as TextDocument from '../ExtensionHostTextDocument/ExtensionHostTextDoc
 import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHostTextSearch.js'
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
-import * as ExtensionHostFileSystem from '../ExtensionHostFileSystem/ExtensionHostFileSystem.js'
-import { CommandNotFoundError } from '../Errors/Errors.js'
 
 const getFn = (method) => {
   switch (method) {
@@ -71,6 +72,8 @@ const getFn = (method) => {
       return ExtensionHostSourceControl.discard
     case 'ExtensionHostSourceControl.getEnabledProviderIds':
       return ExtensionHostSourceControl.getEnabledProviderIds
+    case 'ExtensionHostDebug.listProcesses':
+      return ExtensionHostDebug.listProcesses
     default:
       throw new CommandNotFoundError(`method not found: ${method}`)
   }

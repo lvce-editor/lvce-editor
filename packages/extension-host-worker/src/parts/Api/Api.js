@@ -17,6 +17,7 @@ import * as ExtensionHostTextSearch from '../ExtensionHostTextSearch/ExtensionHo
 import * as ExtensionHostTypeDefinition from '../ExtensionHostTypeDefinition/ExtensionHostTypeDefinition.js'
 import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHostWorkspace.js'
 import * as TextSearchResultType from '../TextSearchResultType/TextSearchResultType.js'
+import * as ExtensionHostDebug from '../ExtensionHostDebug/ExtensionHostDebug.js'
 
 import { VError } from '../VError/VError.js'
 
@@ -45,6 +46,9 @@ export const api =  {
 
   // Configuration
   getConfiguration: ExtensionHostConfiguration.getConfiguration,
+
+  // Debug
+  registerDebugProvider: ExtensionHostDebug.registerDebugProvider,
 
   // Definition
   registerDefinitionProvider: ExtensionHostDefinition.registerDefinitionProvider,
