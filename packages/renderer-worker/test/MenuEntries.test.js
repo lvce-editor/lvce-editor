@@ -47,7 +47,7 @@ test('getMenuEntries - error - invalid id', async () => {
     throw new Error(`module not found -1`)
   })
   await expect(MenuEntries.getMenuEntries(-1)).rejects.toThrowError(
-    'Failed to load menu entries for id -1: Error: module not found -1'
+    'Failed to load menu entries for id -1: module not found -1'
   )
 })
 

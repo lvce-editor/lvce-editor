@@ -23,7 +23,6 @@ test('sample.reference-provider-error-main-not-found', async () => {
   const viewletLocations = Locator('.Locations')
   await expect(viewletLocations).toBeVisible()
 
-  // TODO should improve error message
   // TODO should show part of stack trace maybe?
   // const origin = location.origin
   const mainUrl = new URL(
@@ -31,7 +30,7 @@ test('sample.reference-provider-error-main-not-found', async () => {
     import.meta.url
   ).toString()
   await expect(viewletLocations).toHaveText(
-    `Error: Failed to activate extension sample.reference-provider-error-main-not-found: TypeError: Failed to fetch dynamically imported module: ${mainUrl}`
+    `Error: Failed to activate extension sample.reference-provider-error-main-not-found: Failed to import ${mainUrl}: Not found (404)`
   )
 })
 

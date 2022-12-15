@@ -81,7 +81,7 @@ test('getEvents - error with indexeddb', async () => {
   })
   await expect(SessionReplay.getEvents(``)).rejects.toThrowError(
     new Error(
-      "failed to get session replay events: Error: Failed to execute 'index' on 'IDBObjectStore': The specified index was not found."
+      "failed to get session replay events: Failed to execute 'index' on 'IDBObjectStore': The specified index was not found."
     )
   )
 })

@@ -58,6 +58,8 @@ test('executeTextSearchProvider - error', async () => {
   await expect(
     ExtensionHostTextSearch.executeTextSearchProvider('xyz', 'abc')
   ).rejects.toThrowError(
-    new Error('Failed to execute text search provider: x is not a function')
+    new Error(
+      'Failed to execute text search provider: TypeError: x is not a function'
+    )
   )
 })
