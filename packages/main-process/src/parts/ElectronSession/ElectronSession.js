@@ -1,4 +1,5 @@
 const ContentSecurityPolicy = require('../ContentSecurityPolicy/ContentSecurityPolicy.js')
+const ContentSecurityPolicyWorker = require('../ContentSecurityPolicyWorker/ContentSecurityPolicyWorker.js')
 const CrossOriginEmbedderPolicy = require('../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js')
 const CrossOriginOpenerPolicy = require('../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js')
 const Electron = require('electron')
@@ -21,7 +22,7 @@ const state = {
  * @param {(headersReceivedResponse: import('electron').HeadersReceivedResponse)=>void} callback
  */
 const handleHeadersReceived = (details, callback) => {
-  const { responseHeaders, resourceType } = details
+  const { responseHeaders, resourceType, url } = details
   switch (resourceType) {
     case ElectronResourceType.MainFrame:
       callback({
@@ -43,11 +44,19 @@ const handleHeadersReceived = (details, callback) => {
       })
       break
     default:
+      if (url.endsWith('WorkerMain.js')) {
+        callback({
+          responseHeaders: {
+            ...responseHeaders,
+            [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
+            [ContentSecurityPolicyWorker.key]:
+              ContentSecurityPolicyWorker.value,
+          },
+        })
+        break
+      }
       callback({
-        responseHeaders: {
-          ...responseHeaders,
-          [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-        },
+        responseHeaders,
       })
       break
   }
