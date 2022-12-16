@@ -142,7 +142,6 @@ export const updateDirents = (state, dirents) => {
   Assert.object(state)
   Assert.array(dirents)
   const { $Viewlet } = state
-  console.log({ dirents })
   render$Rows($Viewlet, dirents)
 }
 
