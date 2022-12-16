@@ -1,5 +1,5 @@
-import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import { jest } from '@jest/globals'
+import * as DirentType from '../src/parts/DirentType/DirentType.js'
 import * as PathSeparatorType from '../src/parts/PathSeparatorType/PathSeparatorType.js'
 
 beforeEach(() => {
@@ -67,6 +67,112 @@ test('expandRecursively', async () => {
         icon: '',
         name: 'a',
         path: '/test/a',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.Directory,
+      },
+    ],
+  }
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/test/a':
+        return [
+          {
+            name: 'b',
+            type: DirentType.Directory,
+          },
+        ]
+      case '/test/a/b':
+        return [
+          {
+            name: 'c',
+            type: DirentType.Directory,
+          },
+          {
+            name: 'd.txt',
+            type: DirentType.File,
+          },
+        ]
+      case '/test/a/b/c':
+        return []
+      default:
+        throw new Error(`File not found ${uri}`)
+    }
+  })
+  expect(
+    await ViewletExplorerExpandRecursively.expandRecursively(state)
+  ).toMatchObject({
+    focused: true,
+    focusedIndex: 0,
+    items: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'b',
+        path: '/test/a/b',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 3,
+        icon: '',
+        name: 'c',
+        path: '/test/a/b/c',
+        posInSet: 1,
+        setSize: 2,
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 3,
+        icon: '',
+        name: 'd.txt',
+        path: '/test/a/b/d.txt',
+        posInSet: 2,
+        setSize: 2,
+        type: DirentType.File,
+      },
+    ],
+  })
+})
+
+test('expandRecursively - should work when folder is already expanded', async () => {
+  const state = {
+    ...ViewletExplorer.create(),
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    maxLineY: 20,
+    root: '/test',
+    pathSeparator: PathSeparatorType.Slash,
+    focused: true,
+    items: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'a',
+        path: '/test/a',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'b',
+        path: '/test/a/b',
         posInSet: 1,
         setSize: 1,
         type: DirentType.Directory,
