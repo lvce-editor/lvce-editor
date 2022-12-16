@@ -1202,6 +1202,72 @@ test.skip('handleClick - directory-expanded - scrolled down', async () => {
   })
 })
 
+test('handleClick - directory - issue with invisible items', async () => {
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    return [
+      { name: 'index.css', type: DirentType.File },
+      { name: 'index.html', type: DirentType.File },
+    ]
+  })
+  const state = {
+    root: '/test',
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    maxLineY: 3,
+    itemHeight: 20,
+    pathSeparator: '/',
+    items: [
+      {
+        name: 'folder',
+        type: DirentType.Directory,
+        path: '/test/folder',
+        depth: 1,
+        setSize: 1,
+        posInSet: 1,
+      },
+    ],
+  }
+  // @ts-ignore
+  Viewlet.getState.mockImplementation(() => {
+    return state
+  })
+  expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
+    focusedIndex: 0,
+    minLineY: 0,
+    maxLineY: 3,
+    items: [
+      {
+        name: 'folder',
+        type: DirentType.DirectoryExpanded,
+        path: '/test/folder',
+        depth: 1,
+        setSize: 1,
+        posInSet: 1,
+      },
+      {
+        name: 'index.css',
+        type: DirentType.File,
+        path: '/test/folder/index.css',
+        depth: 2,
+        setSize: 2,
+        posInSet: 1,
+      },
+      {
+        name: 'index.html',
+        type: DirentType.File,
+        path: '/test/folder/index.html',
+        depth: 2,
+        setSize: 2,
+        posInSet: 2,
+      },
+    ],
+  })
+})
+
 test('handleClick - collapsed folder', async () => {
   const state = {
     ...ViewletExplorer.create(),

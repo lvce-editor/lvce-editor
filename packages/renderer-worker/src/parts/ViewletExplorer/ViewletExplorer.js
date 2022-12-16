@@ -709,9 +709,10 @@ const handleClickDirectory = async (state, dirent, index, keepFocus) => {
   newDirents.splice(newIndex + 1, 0, ...dirents)
   dirent.type = DirentType.DirectoryExpanded
   dirent.icon = IconTheme.getIcon(dirent)
-  const { height, itemHeight } = state2
+  const { height, itemHeight, minLineY } = state2
   // TODO when focused index has changed while expanding, don't update it
-  const maxLineY = Math.min(Math.ceil(height / itemHeight), newDirents.length)
+  const maxLineY =
+    minLineY + Math.min(Math.ceil(height / itemHeight), newDirents.length)
   return {
     ...state,
     items: newDirents,
@@ -1217,7 +1218,6 @@ const orderDirents = (dirents) => {
     return [parent, ...children]
   }
   const topLevelDirents = dirents.filter(isTopLevel)
-
   const ordered = topLevelDirents.flatMap(withDeepChildren)
   return ordered
 }

@@ -134,13 +134,16 @@ const render$Rows = ($Rows, rowInfos) => {
 export const handleError = (state, message) => {
   Assert.object(state)
   Assert.string(message)
-  state.$Viewlet.textContent = message
+  const { $Viewlet } = state
+  $Viewlet.textContent = message
 }
 
 export const updateDirents = (state, dirents) => {
   Assert.object(state)
   Assert.array(dirents)
-  render$Rows(state.$Viewlet, dirents)
+  const { $Viewlet } = state
+  console.log({ dirents })
+  render$Rows($Viewlet, dirents)
 }
 
 export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
@@ -176,6 +179,9 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
     default:
       if (newIndex >= 0) {
         const $Dirent = $Viewlet.children[newIndex]
+        if (!$Dirent) {
+          break
+        }
         $Dirent.id = activeId
         $Viewlet.setAttribute('aria-activedescendant', activeId)
         if (focused) {
