@@ -23,7 +23,8 @@ export const expandRecursively = async (state) => {
       : items[focusedIndex]
   if (
     dirent.type !== DirentType.Directory &&
-    dirent.type !== DirentType.DirectoryExpanding
+    dirent.type !== DirentType.DirectoryExpanding &&
+    dirent.type !== DirentType.DirectoryExpanded
   ) {
     return state
   }
@@ -33,6 +34,8 @@ export const expandRecursively = async (state) => {
       case DirentType.File:
         return [dirent]
       case DirentType.Directory:
+      case DirentType.DirectoryExpanding:
+      case DirentType.DirectoryExpanded:
         const childDirents = await getChildDirents(root, pathSeparator, dirent)
         const all = [makeExpanded(dirent)]
         for (const childDirent of childDirents) {
