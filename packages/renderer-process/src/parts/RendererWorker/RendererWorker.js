@@ -1,6 +1,6 @@
 import * as Callback from '../Callback/Callback.js'
-import * as Command from '../Command/Command.js'
 import { JsonRpcError } from '../Errors/JsonRpcError.js'
+import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as Platform from '../Platform/Platform.js'
@@ -12,57 +12,12 @@ export const state = {
   ipc: undefined,
 }
 
-class NonError extends Error {
-  name = 'NonError'
-
-  constructor(message) {
-    super(message)
-  }
-}
-
-// ensureError based on https://github.com/sindresorhus/ensure-error/blob/main/index.js (License MIT)
-const ensureError = (input) => {
-  if (!(input instanceof Error)) {
-    return new NonError(input)
-  }
-  return input
-}
-
-const serializeError = (error) => {
-  error = ensureError(error)
-  return {
-    stack: error.stack,
-    message: error.message,
-    name: error.name,
-    type: error.constructor.name,
-  }
-}
-
 const handleMessageFromRendererWorker = async (event) => {
   const message = event.data
   if ('id' in message) {
     if ('method' in message) {
-      try {
-        const result = await Command.execute(message.method, ...message.params)
-        state.ipc.send({
-          jsonrpc: '2.0',
-          id: message.id,
-          result,
-        })
-        return
-      } catch (error) {
-        const serializedError = serializeError(error)
-        state.ipc.send({
-          jsonrpc: '2.0',
-          id: message.id,
-          error: {
-            message: serializedError.message,
-            stack: serializedError.stack,
-            name: serializedError.name,
-            type: serializedError.type,
-          },
-        })
-      }
+      const response = await GetResponse.getResponse(message)
+      state.ipc.send(response)
       return
     }
     Callback.resolve(message.id, message)
