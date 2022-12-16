@@ -14,7 +14,7 @@ export const send = (transport, method, ...params) => {
 const getErrorConstructor = (message, type) => {
   if (type) {
     switch (type) {
-      case 'DomException':
+      case 'DOMException':
         return DOMException
       case 'TypeError':
         return TypeError
@@ -22,8 +22,6 @@ const getErrorConstructor = (message, type) => {
         return SyntaxError
       case 'ReferenceError':
         return ReferenceError
-      case 'DOMException':
-        return DOMException
       default:
         return Error
     }
@@ -48,8 +46,7 @@ const constructError = (message, type, name) => {
   if (ErrorConstructor === Error) {
     return new Error(message)
   }
-  const shortMessage = message.slice(ErrorConstructor.name.length + 2)
-  return new ErrorConstructor(shortMessage)
+  return new ErrorConstructor(message)
 }
 
 const restoreError = (error) => {
