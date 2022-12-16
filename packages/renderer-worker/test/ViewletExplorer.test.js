@@ -1216,18 +1216,34 @@ test('handleClick - directory - issue with invisible items', async () => {
     top: 0,
     height: 600,
     deltaY: 0,
-    minLineY: 0,
+    minLineY: 2,
     maxLineY: 3,
     itemHeight: 20,
     pathSeparator: '/',
     items: [
       {
+        name: 'file-1.txt',
+        type: DirentType.File,
+        path: '/test/file-1.txt',
+        depth: 1,
+        setSize: 3,
+        posInSet: 1,
+      },
+      {
+        name: 'file-2.txt',
+        type: DirentType.File,
+        path: '/test/file-2.txt',
+        depth: 1,
+        setSize: 3,
+        posInSet: 2,
+      },
+      {
         name: 'folder',
         type: DirentType.Directory,
         path: '/test/folder',
         depth: 1,
-        setSize: 1,
-        posInSet: 1,
+        setSize: 3,
+        posInSet: 3,
       },
     ],
   }
@@ -1236,17 +1252,33 @@ test('handleClick - directory - issue with invisible items', async () => {
     return state
   })
   expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
-    focusedIndex: 0,
-    minLineY: 0,
-    maxLineY: 3,
+    focusedIndex: 2,
+    minLineY: 2,
+    maxLineY: 7,
     items: [
+      {
+        name: 'file-1.txt',
+        type: DirentType.File,
+        path: '/test/file-1.txt',
+        depth: 1,
+        setSize: 3,
+        posInSet: 1,
+      },
+      {
+        name: 'file-2.txt',
+        type: DirentType.File,
+        path: '/test/file-2.txt',
+        depth: 1,
+        setSize: 3,
+        posInSet: 2,
+      },
       {
         name: 'folder',
         type: DirentType.DirectoryExpanded,
         path: '/test/folder',
         depth: 1,
-        setSize: 1,
-        posInSet: 1,
+        setSize: 3,
+        posInSet: 3,
       },
       {
         name: 'index.css',
