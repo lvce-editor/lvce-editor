@@ -1,8 +1,8 @@
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
+import * as Platform from '../Platform/Platform.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as WheelEventType from '../WheelEventType/WheelEventType.js'
-import * as Platform from '../Platform/Platform.js'
 
 // TODO put drop into separate module and use executeCommand to call it
 
@@ -135,12 +135,11 @@ export const handleDrop = async (event) => {
 }
 
 const handleContextMenuMouse = (event) => {
-  const x = event.clientX
-  const y = event.clientY
+  const { clientX, clientY } = event
   RendererWorker.send(
     /* Explorer.handleContextMenuMouseAt */ 'Explorer.handleContextMenuMouseAt',
-    /* x */ x,
-    /* y */ y
+    /* x */ clientX,
+    /* y */ clientY
   )
 }
 
@@ -172,30 +171,30 @@ export const handleContextMenu = (event) => {
 }
 
 export const handleMouseDown = (event) => {
-  if (event.button !== MouseEventType.LeftClick) {
+  const { button, clientX, clientY } = event
+  if (button !== MouseEventType.LeftClick) {
     return
   }
-  const x = event.clientX
-  const y = event.clientY
   RendererWorker.send(
     /* Explorer.handleClickAt */ 'Explorer.handleClickAt',
-    /* x */ x,
-    /* y */ y
+    /* x */ clientX,
+    /* y */ clientY
   )
 }
 
 export const handleWheel = (event) => {
-  switch (event.deltaMode) {
+  const { deltaMode, deltaY } = event
+  switch (deltaMode) {
     case WheelEventType.DomDeltaLine:
       RendererWorker.send(
         /* Explorer.handleWheel */ 'Explorer.handleWheel',
-        /* deltaY */ event.deltaY
+        /* deltaY */ deltaY
       )
       break
     case WheelEventType.DomDeltaPixel:
       RendererWorker.send(
         /* Explorer.handleWheel */ 'Explorer.handleWheel',
-        /* deltaY */ event.deltaY
+        /* deltaY */ deltaY
       )
       break
     default:
