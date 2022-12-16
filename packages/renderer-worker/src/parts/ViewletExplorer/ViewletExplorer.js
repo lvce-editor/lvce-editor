@@ -1326,7 +1326,8 @@ const renderFocusedIndex = {
   isEqual(oldState, newState) {
     return (
       oldState.focusedIndex === newState.focusedIndex &&
-      oldState.focused === newState.focused
+      oldState.focused === newState.focused &&
+      oldState.minLineY === newState.minLineY
     )
   },
   apply(oldState, newState) {
