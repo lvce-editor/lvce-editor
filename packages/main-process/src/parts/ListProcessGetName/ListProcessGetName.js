@@ -1,5 +1,5 @@
-const Assert = require('../Assert/Assert.js')
 const { BrowserWindow } = require('electron')
+const Assert = require('../Assert/Assert.js')
 const ElectronBrowserViewState = require('../ElectronBrowserViewState/ElectronBrowserViewState.js')
 
 /**

@@ -3,7 +3,7 @@ const Performance = require('../Performance/Performance.js')
 
 exports.getPerformanceEntries = () => {
   const entries = Performance.getEntries()
-  const timeOrigin = Performance.timeOrigin
+  const { timeOrigin } = Performance
   return {
     entries,
     timeOrigin,

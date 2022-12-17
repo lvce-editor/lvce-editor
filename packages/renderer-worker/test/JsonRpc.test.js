@@ -37,7 +37,9 @@ test('send', async () => {
 test('invoke - error - string', async () => {
   const ipc = {
     send: jest.fn((message) => {
+      // @ts-ignore
       if (message.method === 'Test.execute') {
+        // @ts-ignore
         Callback.resolve(message.id, {
           error: 'something went wrong',
         })
@@ -62,10 +64,13 @@ test('invoke - error - string', async () => {
 test('invoke - error - TypeError', async () => {
   const ipc = {
     send: jest.fn((message) => {
+      // @ts-ignore
       if (message.method === 'Test.execute') {
+        // @ts-ignore
         Callback.resolve(message.id, {
           error: {
-            message: 'TypeError: x is not a function',
+            type: 'TypeError',
+            message: 'x is not a function',
           },
         })
       } else {
@@ -87,13 +92,52 @@ test('invoke - error - TypeError', async () => {
   })
 })
 
+test('invoke - error - TypeError object', async () => {
+  const ipc = {
+    send: jest.fn((message) => {
+      // @ts-ignore
+      if (message.method === 'Test.execute') {
+        // @ts-ignore
+        Callback.resolve(message.id, {
+          error: {
+            message: "Cannot set properties of undefined (setting 'id')",
+            stack:
+              "TypeError: Cannot set properties of undefined (setting 'id')\n    at Module.setFocusedIndex (/packages/renderer-process/src/parts/ViewletExplorer/ViewletExplorer.js:179:20)\n    at invoke",
+            name: 'TypeError',
+            type: 'TypeError',
+          },
+        })
+      } else {
+        throw new Error('unexpected message')
+      }
+    }),
+  }
+  const error = await getError(
+    JsonRpc.invoke(ipc, 'Test.execute', 'test message')
+  )
+  expect(error).toBeInstanceOf(TypeError)
+  expect(error.message).toBe(
+    `Cannot set properties of undefined (setting 'id')`
+  )
+  expect(ipc.send).toHaveBeenCalledTimes(1)
+  expect(ipc.send).toHaveBeenCalledWith({
+    jsonrpc: JsonRpcVersion.Two,
+    id: expect.any(Number),
+    method: 'Test.execute',
+    params: ['test message'],
+  })
+})
+
 test('invoke - error - SyntaxError', async () => {
   const ipc = {
     send: jest.fn((message) => {
+      // @ts-ignore
       if (message.method === 'Test.execute') {
+        // @ts-ignore
         Callback.resolve(message.id, {
           error: {
-            message: 'SyntaxError: unexpected token',
+            type: 'SyntaxError',
+            message: 'unexpected token',
           },
         })
       } else {
@@ -118,10 +162,13 @@ test('invoke - error - SyntaxError', async () => {
 test('invoke - error - ReferenceError', async () => {
   const ipc = {
     send: jest.fn((message) => {
+      // @ts-ignore
       if (message.method === 'Test.execute') {
+        // @ts-ignore
         Callback.resolve(message.id, {
           error: {
-            message: 'ReferenceError: x is not defined',
+            type: 'ReferenceError',
+            message: 'x is not defined',
           },
         })
       } else {
@@ -146,7 +193,9 @@ test('invoke - error - ReferenceError', async () => {
 test('invoke - error - null', async () => {
   const ipc = {
     send: jest.fn((message) => {
+      // @ts-ignore
       if (message.method === 'Test.execute') {
+        // @ts-ignore
         Callback.resolve(message.id, {
           error: null,
         })
@@ -171,7 +220,9 @@ test('invoke - error - null', async () => {
 test('invoke - error - empty object', async () => {
   const ipc = {
     send: jest.fn((message) => {
+      // @ts-ignore
       if (message.method === 'Test.execute') {
+        // @ts-ignore
         Callback.resolve(message.id, {
           error: {},
         })
@@ -196,10 +247,12 @@ test('invoke - error - empty object', async () => {
 test('invoke - error - DOMException', async () => {
   const ipc = {
     send: jest.fn((message) => {
+      // @ts-ignore
       if (message.method === 'Test.execute') {
+        // @ts-ignore
         Callback.resolve(message.id, {
           error: {
-            type: 'DomException',
+            type: 'DOMException',
             name: 'AbortError',
             message: 'The user aborted a request.',
           },
@@ -220,7 +273,9 @@ test('invoke - error - DOMException', async () => {
 test('invoke - error - with stack', async () => {
   const ipc = {
     send: jest.fn((message) => {
+      // @ts-ignore
       if (message.method === 'Test.execute') {
+        // @ts-ignore
         Callback.resolve(message.id, {
           error: {
             message:
@@ -253,7 +308,9 @@ test('invoke - error - with stack', async () => {
 test.skip('invoke - error - with only one line in stack', async () => {
   const ipc = {
     send: jest.fn((message) => {
+      // @ts-ignore
       if (message.method === 'Test.execute') {
+        // @ts-ignore
         Callback.resolve(message.id, {
           error: {
             message: 'The user aborted a request.',
@@ -283,7 +340,9 @@ test.skip('invoke - error - with only one line in stack', async () => {
 test('invoke - error - method not found', async () => {
   const ipc = {
     send: jest.fn((message) => {
+      // @ts-ignore
       if (message.method === 'Test.execute') {
+        // @ts-ignore
         Callback.resolve(message.id, {
           error: {
             message: 'method not found',
@@ -313,7 +372,9 @@ test('invoke - error - method not found', async () => {
 test('invoke', async () => {
   const ipc = {
     send: jest.fn((message) => {
+      // @ts-ignore
       if (message.method === 'Test.execute') {
+        // @ts-ignore
         Callback.resolve(message.id, {
           result: 'success',
         })
@@ -337,7 +398,9 @@ test('invoke', async () => {
 test('invoke - result is of type number', async () => {
   const ipc = {
     send: jest.fn((message) => {
+      // @ts-ignore
       if (message.method === 'Test.execute') {
+        // @ts-ignore
         Callback.resolve(message.id, {
           result: 0,
         })

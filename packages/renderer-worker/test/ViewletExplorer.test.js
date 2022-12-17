@@ -1202,6 +1202,104 @@ test.skip('handleClick - directory-expanded - scrolled down', async () => {
   })
 })
 
+test('handleClick - directory - issue with invisible items', async () => {
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    return [
+      { name: 'index.css', type: DirentType.File },
+      { name: 'index.html', type: DirentType.File },
+    ]
+  })
+  const state = {
+    root: '/test',
+    focusedIndex: 0,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 2,
+    maxLineY: 3,
+    itemHeight: 20,
+    pathSeparator: '/',
+    items: [
+      {
+        name: 'file-1.txt',
+        type: DirentType.File,
+        path: '/test/file-1.txt',
+        depth: 1,
+        setSize: 3,
+        posInSet: 1,
+      },
+      {
+        name: 'file-2.txt',
+        type: DirentType.File,
+        path: '/test/file-2.txt',
+        depth: 1,
+        setSize: 3,
+        posInSet: 2,
+      },
+      {
+        name: 'folder',
+        type: DirentType.Directory,
+        path: '/test/folder',
+        depth: 1,
+        setSize: 3,
+        posInSet: 3,
+      },
+    ],
+  }
+  // @ts-ignore
+  Viewlet.getState.mockImplementation(() => {
+    return state
+  })
+  expect(await ViewletExplorer.handleClick(state, 0)).toMatchObject({
+    focusedIndex: 2,
+    minLineY: 2,
+    maxLineY: 7,
+    items: [
+      {
+        name: 'file-1.txt',
+        type: DirentType.File,
+        path: '/test/file-1.txt',
+        depth: 1,
+        setSize: 3,
+        posInSet: 1,
+      },
+      {
+        name: 'file-2.txt',
+        type: DirentType.File,
+        path: '/test/file-2.txt',
+        depth: 1,
+        setSize: 3,
+        posInSet: 2,
+      },
+      {
+        name: 'folder',
+        type: DirentType.DirectoryExpanded,
+        path: '/test/folder',
+        depth: 1,
+        setSize: 3,
+        posInSet: 3,
+      },
+      {
+        name: 'index.css',
+        type: DirentType.File,
+        path: '/test/folder/index.css',
+        depth: 2,
+        setSize: 2,
+        posInSet: 1,
+      },
+      {
+        name: 'index.html',
+        type: DirentType.File,
+        path: '/test/folder/index.html',
+        depth: 2,
+        setSize: 2,
+        posInSet: 2,
+      },
+    ],
+  })
+})
+
 test('handleClick - collapsed folder', async () => {
   const state = {
     ...ViewletExplorer.create(),

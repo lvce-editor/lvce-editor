@@ -31,7 +31,7 @@ exports.getAnyKey = () => {
   if (keys.length === 0) {
     throw new Error('no browser view found')
   }
-  return parseInt(keys[0])
+  return Number.parseInt(keys[0])
 }
 
 exports.getWindow = (webContents) => {

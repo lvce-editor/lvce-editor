@@ -1,7 +1,8 @@
+const Electron = require('electron')
 const ContentSecurityPolicy = require('../ContentSecurityPolicy/ContentSecurityPolicy.js')
+const ContentSecurityPolicyWorker = require('../ContentSecurityPolicyWorker/ContentSecurityPolicyWorker.js')
 const CrossOriginEmbedderPolicy = require('../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js')
 const CrossOriginOpenerPolicy = require('../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js')
-const Electron = require('electron')
 const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
@@ -21,7 +22,7 @@ const state = {
  * @param {(headersReceivedResponse: import('electron').HeadersReceivedResponse)=>void} callback
  */
 const handleHeadersReceived = (details, callback) => {
-  const { responseHeaders, resourceType } = details
+  const { responseHeaders, resourceType, url } = details
   switch (resourceType) {
     case ElectronResourceType.MainFrame:
       callback({
@@ -43,11 +44,19 @@ const handleHeadersReceived = (details, callback) => {
       })
       break
     default:
+      if (url.endsWith('WorkerMain.js')) {
+        callback({
+          responseHeaders: {
+            ...responseHeaders,
+            [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
+            [ContentSecurityPolicyWorker.key]:
+              ContentSecurityPolicyWorker.value,
+          },
+        })
+        break
+      }
       callback({
-        responseHeaders: {
-          ...responseHeaders,
-          [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-        },
+        responseHeaders,
       })
       break
   }
@@ -80,7 +89,7 @@ const handlePermissionCheck = (webContents, permission, origin, details) => {
 
 const getAbsolutePath = (requestUrl) => {
   const pathName = new URL(requestUrl).pathname
-  const scheme = Platform.scheme
+  const { scheme } = Platform
   // TODO remove if/else in prod (use replacement)
   if (
     requestUrl === `${scheme}://-/` ||

@@ -27,7 +27,7 @@ const formatModuleMap = async (absolutePath) => {
       state = State.Switch
     } else if (trimmedLine.startsWith('case')) {
       state = State.Case
-    } else if (trimmedLine.startsWith('return')) {
+    } else if (trimmedLine.startsWith('return ModuleId.')) {
       state = State.Return
     } else if (trimmedLine.startsWith('default')) {
       state = State.Default

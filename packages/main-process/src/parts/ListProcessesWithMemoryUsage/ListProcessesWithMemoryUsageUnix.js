@@ -1,7 +1,7 @@
 const { join } = require('node:path')
 const childProcess = require('node:child_process')
 const { readFile } = require('node:fs/promises')
-const util = require('util')
+const util = require('node:util')
 const { VError } = require('verror')
 const Assert = require('../Assert/Assert.js')
 const ListProcessGetName = require('../ListProcessGetName/ListProcessGetName.js')

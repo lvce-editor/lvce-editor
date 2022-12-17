@@ -42,7 +42,7 @@ test('create - error - not supported in firefox', async () => {
 
       setTimeout(() => {
         const errorEvent = new ErrorEvent('error', {
-          message: `SyntaxError: import declarations may only appear at top level of a module`,
+          message: 'SyntaxError: import declarations may only appear at top level of a module',
         })
         this._onerror(errorEvent)
       }, 0)
@@ -51,6 +51,7 @@ test('create - error - not supported in firefox', async () => {
     get onerror() {
       return this._onerror
     }
+
     set onerror(listener) {
       this._onerror = listener
     }
@@ -58,6 +59,7 @@ test('create - error - not supported in firefox', async () => {
     get onmessage() {
       return this._onmessage
     }
+
     set onmessage(listener) {
       this._onmessage = listener
     }
@@ -94,6 +96,7 @@ test('create - error - not found', async () => {
     get onerror() {
       return this._onerror
     }
+
     set onerror(listener) {
       this._onerror = listener
     }
@@ -101,6 +104,7 @@ test('create - error - not found', async () => {
     get onmessage() {
       return this._onmessage
     }
+
     set onmessage(listener) {
       this._onmessage = listener
     }
@@ -122,7 +126,7 @@ test('create - error - not found', async () => {
     })
   ).rejects.toThrowError(
     new Error(
-      `Failed to start renderer worker: Error: Cannot find module 'https://example.com/not-found.js' from 'src/parts/IpcParent/IpcParentWithModuleWorker.js'`
+      'Failed to start renderer worker: Error: Cannot find module \'https://example.com/not-found.js\' from \'src/parts/IpcParent/IpcParentWithModuleWorker.js\''
     )
   )
 })
@@ -145,6 +149,7 @@ test('create', async () => {
     get onerror() {
       return this._onerror
     }
+
     set onerror(listener) {
       this._onerror = listener
     }
@@ -152,6 +157,7 @@ test('create', async () => {
     get onmessage() {
       return this._onmessage
     }
+
     set onmessage(listener) {
       this._onmessage = listener
     }

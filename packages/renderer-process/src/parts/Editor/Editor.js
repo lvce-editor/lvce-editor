@@ -2,13 +2,13 @@
 
 import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Assert from '../Assert/Assert.js'
+import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as EditorEvents from './EditorEvents.js'
 import * as LayerCursor from './LayerCursor.js'
 import * as LayerDiagnostics from './LayerDiagnostics.js'
 import * as LayerScrollBar from './LayerScrollBar.js'
 import * as LayerSelections from './LayerSelections.js'
 import * as LayerText3 from './LayerText.js'
-import * as DomEventType from '../DomEventType/DomEventType.js'
 
 // TODO go back to edit mode after pressing escape so screenreaders can navigate https://stackoverflow.com/questions/53909477/how-to-handle-tabbing-for-accessibility-with-a-textarea-that-uses-the-tab-button
 

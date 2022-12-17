@@ -3,8 +3,8 @@ import * as Assert from '../Assert/Assert.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as KeyBindings from '../KeyBindings/KeyBindings.js'
 import * as Logger from '../Logger/Logger.js'
-import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
 import * as IconButton from '../IconButton/IconButton.js'
+import * as ViewletSourceControlEvents from './ViewletSourceControlEvents.js'
 
 const create$Item = (item) => {
   const $Icon = document.createElement('div')

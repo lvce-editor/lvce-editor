@@ -4,8 +4,8 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
-import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
 
 const activeId = 'TreeItemActive'
 const focusClassName = 'FocusOutline'
@@ -134,13 +134,15 @@ const render$Rows = ($Rows, rowInfos) => {
 export const handleError = (state, message) => {
   Assert.object(state)
   Assert.string(message)
-  state.$Viewlet.textContent = message
+  const { $Viewlet } = state
+  $Viewlet.textContent = message
 }
 
 export const updateDirents = (state, dirents) => {
   Assert.object(state)
   Assert.array(dirents)
-  render$Rows(state.$Viewlet, dirents)
+  const { $Viewlet } = state
+  render$Rows($Viewlet, dirents)
 }
 
 export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
@@ -176,6 +178,9 @@ export const setFocusedIndex = (state, oldIndex, newIndex, focused) => {
     default:
       if (newIndex >= 0) {
         const $Dirent = $Viewlet.children[newIndex]
+        if (!$Dirent) {
+          break
+        }
         $Dirent.id = activeId
         $Viewlet.setAttribute('aria-activedescendant', activeId)
         if (focused) {

@@ -3,8 +3,8 @@ import * as Assert from '../Assert/Assert.js'
 import * as DirentType from '../DirentType/DirentType.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
-import * as ViewletSearchEvents from './ViewletSearchEvents.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as ViewletSearchEvents from './ViewletSearchEvents.js'
 
 export const create = () => {
   const $ViewletSearchInput = InputBox.create()

@@ -1,6 +1,6 @@
 import * as ViewletSash from '../ViewletSash/ViewletSash.js'
-import * as ViewletDiffEditorEvents from './ViewletDiffEditorEvents.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as ViewletDiffEditorEvents from './ViewletDiffEditorEvents.js'
 
 export const create = () => {
   const $ContentLeft = document.createElement('div')

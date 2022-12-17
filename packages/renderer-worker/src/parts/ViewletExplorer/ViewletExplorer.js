@@ -709,9 +709,10 @@ const handleClickDirectory = async (state, dirent, index, keepFocus) => {
   newDirents.splice(newIndex + 1, 0, ...dirents)
   dirent.type = DirentType.DirectoryExpanded
   dirent.icon = IconTheme.getIcon(dirent)
-  const { height, itemHeight } = state2
+  const { height, itemHeight, minLineY } = state2
   // TODO when focused index has changed while expanding, don't update it
-  const maxLineY = Math.min(Math.ceil(height / itemHeight), newDirents.length)
+  const maxLineY =
+    minLineY + Math.min(Math.ceil(height / itemHeight), newDirents.length)
   return {
     ...state,
     items: newDirents,
@@ -764,40 +765,38 @@ const handleClickDirectoryExpanded = (state, dirent, index, keepFocus) => {
   }
 }
 
+const getClickFn = (direntType) => {
+  switch (direntType) {
+    case DirentType.File:
+    case DirentType.SymLinkFile:
+      return handleClickFile
+    case DirentType.Directory:
+    case DirentType.SymLinkFolder:
+      return handleClickDirectory
+    case DirentType.DirectoryExpanding:
+      return handleClickDirectoryExpanding
+    case DirentType.DirectoryExpanded:
+      return handleClickDirectoryExpanded
+    case DirentType.Symlink:
+      return handleClickSymLink
+    default:
+      throw new Error(`unsupported dirent type ${direntType}`)
+  }
+}
+
 export const handleClick = (state, index, keepFocus = false) => {
+  const { items, minLineY } = state
   if (index === -1) {
     return focusIndex(state, -1)
   }
-  const actualIndex = index + state.minLineY
-  const dirent = state.items[actualIndex]
+  const actualIndex = index + minLineY
+  const dirent = items[actualIndex]
   if (!dirent) {
     console.warn(`[explorer] dirent at index ${actualIndex} not found`, state)
     return state
   }
-  const { type } = dirent
-  // TODO dirent type should be numeric
-  switch (type) {
-    case DirentType.File:
-    case DirentType.SymLinkFile:
-      return handleClickFile(state, dirent, actualIndex, keepFocus)
-    // TODO decide on one name
-    case DirentType.Directory:
-    case DirentType.SymLinkFolder:
-      return handleClickDirectory(state, dirent, actualIndex, keepFocus)
-    case DirentType.DirectoryExpanding:
-      return handleClickDirectoryExpanding(
-        state,
-        dirent,
-        actualIndex,
-        keepFocus
-      )
-    case DirentType.DirectoryExpanded:
-      return handleClickDirectoryExpanded(state, dirent, actualIndex, keepFocus)
-    case DirentType.Symlink:
-      return handleClickSymLink(state, dirent, state.focusedIndex)
-    default:
-      throw new Error(`unsupported dirent type ${type}`)
-  }
+  const clickFn = getClickFn(dirent.type)
+  return clickFn(state, dirent, actualIndex, keepFocus)
 }
 
 export const handleClickAt = (state, x, y) => {
@@ -1219,7 +1218,6 @@ const orderDirents = (dirents) => {
     return [parent, ...children]
   }
   const topLevelDirents = dirents.filter(isTopLevel)
-
   const ordered = topLevelDirents.flatMap(withDeepChildren)
   return ordered
 }
@@ -1326,7 +1324,8 @@ const renderFocusedIndex = {
   isEqual(oldState, newState) {
     return (
       oldState.focusedIndex === newState.focusedIndex &&
-      oldState.focused === newState.focused
+      oldState.focused === newState.focused &&
+      oldState.minLineY === newState.minLineY
     )
   },
   apply(oldState, newState) {

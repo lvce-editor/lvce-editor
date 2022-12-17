@@ -6,8 +6,8 @@ import * as Assert from '../Assert/Assert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
-import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
 
 const activeId = 'ExtensionActive'
 

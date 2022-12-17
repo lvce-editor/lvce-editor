@@ -1,6 +1,6 @@
-const { fork, spawn } = require('child_process')
-const { EventEmitter } = require('events')
-const { Worker } = require('worker_threads')
+const { fork, spawn } = require('node:child_process')
+const { EventEmitter } = require('node:events')
+const { Worker } = require('node:worker_threads')
 
 const METHOD_FORK = 1
 const METHOD_SPAWN = 2

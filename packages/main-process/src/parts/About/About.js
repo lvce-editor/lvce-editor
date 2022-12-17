@@ -16,9 +16,8 @@ const getDetailString = () => {
   const electronVersion = Process.getElectronVersion()
   const nodeVersion = Process.getNodeVersion()
   const chromeVersion = Process.getChromeVersion()
-  const version = Platform.version
+  const { version, commit } = Platform
   const v8Version = Process.getV8Version()
-  const commit = Platform.commit
 
   const lines = [
     `Version: ${version}`,
