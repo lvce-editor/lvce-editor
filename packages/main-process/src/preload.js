@@ -2,7 +2,7 @@ const { ipcRenderer, contextBridge } = require('electron')
 
 const ipcConnect = (type) => {
   if (typeof type !== 'string') {
-    throw new Error('[preload] type must be of type string')
+    throw new TypeError('[preload] type must be of type string')
   }
   // renderer.js ///////////////////////////////////////////////////////////////
   // MessagePorts are created in pairs. A connected pair of message ports is

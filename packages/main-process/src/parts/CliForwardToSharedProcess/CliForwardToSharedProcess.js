@@ -1,6 +1,6 @@
 const Electron = require('electron')
+const { Worker } = require('node:worker_threads')
 const Platform = require('../Platform/Platform.js')
-const { Worker } = require('worker_threads')
 
 const handleCliArgs = async (parsedArgs) => {
   const sharedProcessPath = Platform.getSharedProcessPath()

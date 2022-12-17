@@ -1,11 +1,11 @@
 const { BrowserView, BrowserWindow } = require('electron')
+const { VError } = require('verror')
 const ElectronSession = require('../ElectronSession/ElectronSession.js')
 const Platform = require('../Platform/Platform.js')
 const Root = require('../Root/Root.js')
 const Path = require('../Path/Path.js')
 const PendingPorts = require('../PendingPorts/PendingPorts.js')
 const Logger = require('../Logger/Logger.js')
-const { VError } = require('verror')
 
 exports.disposeBrowserViewQuickPick = () => {
   const browserWindow = BrowserWindow.getFocusedWindow()

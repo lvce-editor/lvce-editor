@@ -8,8 +8,7 @@ const ipcConnect = () => {
 
   // The only difference between port1 and port2 is in how you use them. Messages
   // sent to port1 will be received by port2 and vice-versa.
-  const port1 = channel.port1
-  const port2 = channel.port2
+  const { port1, port2 } = channel
 
   // Here we send the other end of the channel, port1, to the main process. It's
   // also possible to send MessagePorts to other frames, or to Web Workers, etc.

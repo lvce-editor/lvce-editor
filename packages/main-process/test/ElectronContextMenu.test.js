@@ -6,9 +6,8 @@ jest.mock('electron', () => {
   }
 })
 
-const ElectronClipBoard = require('../src/parts/ElectronClipBoard/ElectronClipBoard.js')
-
 const electron = require('electron')
+const ElectronClipBoard = require('../src/parts/ElectronClipBoard/ElectronClipBoard.js')
 
 test('writeText', () => {
   // @ts-ignore

@@ -3,6 +3,6 @@ const ElectronWindowProcessExplorer = require('./ElectronWindowProcessExplorer.j
 exports.name = 'ElectronWindowProcessExplorer'
 
 // prettier-ignore
-exports.Commands =  {
+exports.Commands = {
   open: ElectronWindowProcessExplorer.open
 }
