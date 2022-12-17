@@ -1,5 +1,5 @@
-import * as ViewletEditorImageEvents from './ViewletEditorImageEvents.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as ViewletEditorImageEvents from './ViewletEditorImageEvents.js'
 
 export const create = () => {
   const $Image = document.createElement('img')

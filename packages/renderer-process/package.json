@@ -57,7 +57,8 @@
       "no-unused-expressions": "off",
       "node/prefer-global/process": "off",
       "unicorn/no-for-loop": "off",
-      "unicorn/prevent-abbreviations": "off"
+      "unicorn/prevent-abbreviations": "off",
+      "unicorn/switch-case-braces": "off"
     },
     "ignores": [
       "distmin"

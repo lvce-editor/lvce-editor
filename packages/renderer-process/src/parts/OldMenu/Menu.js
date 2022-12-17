@@ -120,9 +120,7 @@ const handleMouseMove = (event) => {
 
 const handleMouseLeave = (event) => {
   const $RelatedTarget = event.relatedTarget
-  if ($RelatedTarget.classList.contains('MenuItem')) {
-    return
-  }
+  if ($RelatedTarget.classList.contains('MenuItem')) {}
   // RendererWorker.send(/* Menu.handleMouseLeave */ 'Menu.handleMouseLeave')
 }
 

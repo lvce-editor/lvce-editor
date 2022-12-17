@@ -1,12 +1,12 @@
 /**
  * @jest-environment jsdom
  */
+import { jest } from '@jest/globals'
 import * as DirentType from '../src/parts/DirentType/DirentType.js'
 
 /**
  * @jest-environment jsdom
  */
-import { jest } from '@jest/globals'
 
 jest.unstable_mockModule(
   '../src/parts/RendererWorker/RendererWorker.js',

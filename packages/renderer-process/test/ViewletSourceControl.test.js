@@ -78,9 +78,9 @@ test('setButtons', () => {
   const $Button1 = $Item.children[2]
   const $Button2 = $Item.children[3]
   // @ts-ignore
-  expect($Button1.children[0].style.maskImage).toBe(`url('/icons/reset.svg')`)
+  expect($Button1.children[0].style.maskImage).toBe("url('/icons/reset.svg')")
   expect($Button1.ariaLabel).toBe('Reset')
   // @ts-ignore
-  expect($Button2.children[0].style.maskImage).toBe(`url('/icons/add.svg')`)
+  expect($Button2.children[0].style.maskImage).toBe("url('/icons/add.svg')")
   expect($Button2.ariaLabel).toBe('Add')
 })

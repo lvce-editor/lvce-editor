@@ -76,17 +76,17 @@ export const send = (viewletId, method, ...args) => {
   }
 }
 
-const specialIds = [
+const specialIds = new Set([
   'TitleBar',
   'SideBar',
   'Main',
   'ActivityBar',
   'StatusBar',
   'Panel',
-]
+])
 
 const isSpecial = (id) => {
-  return specialIds.includes(id)
+  return specialIds.has(id)
 }
 
 const createPlaceholder = (viewletId, parentId, top, left, width, height) => {
@@ -113,26 +113,55 @@ const createPlaceholder = (viewletId, parentId, top, left, width, height) => {
 export const sendMultiple = (commands) => {
   for (const command of commands) {
     const [_, viewletId, method, ...args] = command
-    if (_ === 'Viewlet.ariaAnnounce') {
+    switch (_) {
+    case 'Viewlet.ariaAnnounce': {
       ariaAnnounce(viewletId)
-    } else if (_ === 'Viewlet.setBounds') {
+
+    break;
+    }
+    case 'Viewlet.setBounds': {
       setBounds(viewletId, method, ...args)
-    } else if (_ === 'Viewlet.create') {
+
+    break;
+    }
+    case 'Viewlet.create': {
       create(viewletId)
-    } else if (_ === 'Viewlet.append') {
+
+    break;
+    }
+    case 'Viewlet.append': {
       append(viewletId, method, ...args)
-    } else if (_ === 'Viewlet.dispose') {
+
+    break;
+    }
+    case 'Viewlet.dispose': {
       dispose(viewletId)
-    } else if (_ === 'Viewlet.createPlaceholder') {
+
+    break;
+    }
+    case 'Viewlet.createPlaceholder': {
       createPlaceholder(viewletId, method, ...args)
-    } else if (_ === 'Viewlet.handleError') {
+
+    break;
+    }
+    case 'Viewlet.handleError': {
       handleError(viewletId, method, ...args)
-    } else if (_ === 'Viewlet.focus') {
+
+    break;
+    }
+    case 'Viewlet.focus': {
       focus(viewletId)
-    } else if (_ === 'Viewlet.appendViewlet') {
+
+    break;
+    }
+    case 'Viewlet.appendViewlet': {
       appendViewlet(viewletId, method, ...args)
-    } else {
+
+    break;
+    }
+    default: {
       invoke(viewletId, method, ...args)
+    }
     }
   }
 }
@@ -152,7 +181,7 @@ export const dispose = (id) => {
       instance.state.$Viewlet.remove()
     }
     delete state.instances[id]
-  } catch (error) {
+  } catch {
     throw new Error(`Failed to dispose ${id}`)
   }
 }
@@ -185,7 +214,7 @@ export const handleError = (id, parentId, message) => {
     parentInstance.factory.handleError
   ) {
     parentInstance.factory.handleError(instance.state, message)
-    return
+
   }
 }
 

@@ -11,7 +11,7 @@ export const create = ({ type }) => {
     })
     // @ts-ignore
     if (typeof window.myApi === 'undefined') {
-      reject(new Error(`Electron api was requested but is not available`))
+      reject(new Error('Electron api was requested but is not available'))
     }
     // @ts-ignore
     window.myApi.ipcConnect(type)

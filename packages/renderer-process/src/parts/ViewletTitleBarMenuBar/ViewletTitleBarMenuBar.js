@@ -3,8 +3,8 @@ import * as Assert from '../Assert/Assert.js'
 import * as MenuItem from '../MenuItem/MenuItem.js'
 import * as Menu from '../OldMenu/Menu.js'
 import * as Widget from '../Widget/Widget.js'
-import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
 
 const activeId = 'TitleBarEntryActive'
 
@@ -251,63 +251,82 @@ export const setMenus = (state, changes) => {
   const { $$Menus } = state
   for (const change of changes) {
     const type = change[0]
-    if (type === 'addMenu') {
-      const menu = change[1]
-      const $Menu = create$Menu()
-      $Menu.onmouseover = ViewletTitleBarMenuBarEvents.handleMenuMouseOver
-      $Menu.onmousedown = ViewletTitleBarMenuBarEvents.handleMenuMouseDown
-      const { top, left, width, height, level, focusedIndex } = menu
-      $Menu.style.width = `${width}px`
-      $Menu.style.height = `${height}px`
-      $Menu.style.top = `${top}px`
-      $Menu.style.left = `${left}px`
-      $Menu.append(...menu.items.map(MenuItem.create$MenuItem))
-      $Menu.id = `Menu-${level}`
-      Widget.append($Menu)
-      if (focusedIndex !== -1) {
-        const $Child = $Menu.children[focusedIndex]
-        $Child.classList.add('Focused')
-        // @ts-ignore
-        $Child.focus()
-      }
-      $$Menus.push($Menu)
-    } else if (type === 'updateMenu') {
-      const menu = change[1]
-      const newLength = change[2]
-      const replaceItems = change[3]
-      const { level, top, left, width, height, focusedIndex, items, expanded } =
-        menu
-      const $Menu = $$Menus[level]
-      $Menu.style.width = `${width}px`
-      $Menu.style.height = `${height}px`
-      $Menu.style.top = `${top}px`
-      $Menu.style.left = `${left}px`
-      // TODO recycle menu item nodes
-      const $$Children = items.map(MenuItem.create$MenuItem)
-      if (focusedIndex !== -1) {
-        const $Child = $$Children[focusedIndex]
-        $Child.classList.add('Focused')
-        if (expanded) {
-          $Child.ariaExpanded = true
-          $Child.setAttribute('aria-owns', `Menu-${level + 1}`)
-        }
-      }
-      $Menu.replaceChildren(...$$Children)
-      if (level === newLength - 1) {
-        if (focusedIndex === -1) {
-          $Menu.focus()
-        } else {
+    switch (type) {
+      case 'addMenu': {
+        const menu = change[1]
+        const $Menu = create$Menu()
+        $Menu.onmouseover = ViewletTitleBarMenuBarEvents.handleMenuMouseOver
+        $Menu.onmousedown = ViewletTitleBarMenuBarEvents.handleMenuMouseDown
+        const { top, left, width, height, level, focusedIndex } = menu
+        $Menu.style.width = `${width}px`
+        $Menu.style.height = `${height}px`
+        $Menu.style.top = `${top}px`
+        $Menu.style.left = `${left}px`
+        $Menu.append(...menu.items.map(MenuItem.create$MenuItem))
+        $Menu.id = `Menu-${level}`
+        Widget.append($Menu)
+        if (focusedIndex !== -1) {
           const $Child = $Menu.children[focusedIndex]
+          $Child.classList.add('Focused')
+          // @ts-ignore
           $Child.focus()
         }
+        $$Menus.push($Menu)
+
+        break
       }
-    } else if (type === 'closeMenus') {
-      const keepCount = change[1]
-      const $$ToDispose = $$Menus.slice(keepCount)
-      for (const $ToDispose of $$ToDispose) {
-        Widget.remove($ToDispose)
+      case 'updateMenu': {
+        const menu = change[1]
+        const newLength = change[2]
+        const replaceItems = change[3]
+        const {
+          level,
+          top,
+          left,
+          width,
+          height,
+          focusedIndex,
+          items,
+          expanded,
+        } = menu
+        const $Menu = $$Menus[level]
+        $Menu.style.width = `${width}px`
+        $Menu.style.height = `${height}px`
+        $Menu.style.top = `${top}px`
+        $Menu.style.left = `${left}px`
+        // TODO recycle menu item nodes
+        const $$Children = items.map(MenuItem.create$MenuItem)
+        if (focusedIndex !== -1) {
+          const $Child = $$Children[focusedIndex]
+          $Child.classList.add('Focused')
+          if (expanded) {
+            $Child.ariaExpanded = true
+            $Child.setAttribute('aria-owns', `Menu-${level + 1}`)
+          }
+        }
+        $Menu.replaceChildren(...$$Children)
+        if (level === newLength - 1) {
+          if (focusedIndex === -1) {
+            $Menu.focus()
+          } else {
+            const $Child = $Menu.children[focusedIndex]
+            $Child.focus()
+          }
+        }
+
+        break
       }
-      $$Menus.length = keepCount
+      case 'closeMenus': {
+        const keepCount = change[1]
+        const $$ToDispose = $$Menus.slice(keepCount)
+        for (const $ToDispose of $$ToDispose) {
+          Widget.remove($ToDispose)
+        }
+        $$Menus.length = keepCount
+
+        break
+      }
+      // No default
     }
   }
 }

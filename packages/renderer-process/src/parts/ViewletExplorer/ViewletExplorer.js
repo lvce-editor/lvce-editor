@@ -4,8 +4,8 @@ import * as DirentType from '../DirentType/DirentType.js'
 import * as Focus from '../Focus/Focus.js' // TODO focus is never needed at start -> use command.execute which lazy-loads focus module
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
-import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as ViewletExplorerEvents from './ViewletExplorerEvents.js'
 
 const activeId = 'TreeItemActive'
 const focusClassName = 'FocusOutline'
