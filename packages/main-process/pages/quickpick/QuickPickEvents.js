@@ -54,7 +54,7 @@ const getIdentifier = (event) => {
   if (event.altKey) {
     identifier += 'alt+'
   }
-  let key = event.key
+  let { key } = event
   if (key === ' ') {
     key = 'Space'
   }

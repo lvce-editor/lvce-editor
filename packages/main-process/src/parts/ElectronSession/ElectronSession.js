@@ -1,8 +1,8 @@
+const Electron = require('electron')
 const ContentSecurityPolicy = require('../ContentSecurityPolicy/ContentSecurityPolicy.js')
 const ContentSecurityPolicyWorker = require('../ContentSecurityPolicyWorker/ContentSecurityPolicyWorker.js')
 const CrossOriginEmbedderPolicy = require('../CrossOriginEmbedderPolicy/CrossOriginEmbedderPolicy.js')
 const CrossOriginOpenerPolicy = require('../CrossOriginOpenerPolicy/CrossOriginOpenerPolicy.js')
-const Electron = require('electron')
 const ElectronPermissionType = require('../ElectronPermissionType/ElectronPermissionType.js')
 const Path = require('../Path/Path.js')
 const Platform = require('../Platform/Platform.js')
@@ -89,7 +89,7 @@ const handlePermissionCheck = (webContents, permission, origin, details) => {
 
 const getAbsolutePath = (requestUrl) => {
   const pathName = new URL(requestUrl).pathname
-  const scheme = Platform.scheme
+  const { scheme } = Platform
   // TODO remove if/else in prod (use replacement)
   if (
     requestUrl === `${scheme}://-/` ||

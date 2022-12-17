@@ -1,4 +1,4 @@
-const { Worker } = require('worker_threads')
+const { Worker } = require('node:worker_threads')
 const Command = require('../Command/Command.js')
 const ErrorHandling = require('../ErrorHandling/ErrorHandling.js')
 const Platform = require('../Platform/Platform.js')

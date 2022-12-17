@@ -1,8 +1,8 @@
+const { readFileSync } = require('node:fs')
+const { fileURLToPath } = require('node:url')
 const VError = require('verror')
 const { codeFrameColumns } = require('@babel/code-frame')
 const { LinesAndColumns } = require('lines-and-columns')
-const { readFileSync } = require('node:fs')
-const { fileURLToPath } = require('node:url')
 
 const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
@@ -21,7 +21,7 @@ const getActualPath = (fileUri) => {
  */
 const getFile = (lines) => {
   for (const line of lines) {
-    if (line.match(RE_PATH_1) || line.match(RE_PATH_2)) {
+    if (RE_PATH_1.test(line) || RE_PATH_2.test(line)) {
       return line
     }
   }
@@ -94,8 +94,7 @@ exports.prepare = (error) => {
   if (index !== -1) {
     relevantStack = lines.slice(index)
   }
-  for (let i = 0; i < relevantStack.length; i++) {
-    const line = relevantStack[i]
+  for (const line of relevantStack) {
     let match = line.match(RE_PATH_1)
     if (!match) {
       match = line.match(RE_PATH_2)

@@ -1,7 +1,7 @@
-const { spawn } = require('child_process')
+const { spawn } = require('node:child_process')
 const { app } = require('electron')
-const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
 const Electron = require('electron')
+const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
 const Platform = require('../Platform/Platform.js')
 const Debug = require('../Debug/Debug.js')
 const LifeCycle = require('../LifeCycle/LifeCycle.js')
@@ -70,7 +70,7 @@ exports.hydrate = async () => {
   // TODO need to wait for playwright bugs to be resolved
   // before being able to test multi-window behavior
   // see https://github.com/microsoft/playwright/issues/12345
-  const argv = process.argv
+  const { argv } = process
 
   const parsedCliArgs = Cli.parseCliArgs(argv)
   const handled = Cli.handleFastCliArgsMaybe(parsedCliArgs) // TODO don't like the side effect here

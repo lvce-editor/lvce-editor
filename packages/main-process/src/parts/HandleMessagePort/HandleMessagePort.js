@@ -1,5 +1,5 @@
-const { fork } = require('child_process')
-const { MessageChannel } = require('worker_threads')
+const { fork } = require('node:child_process')
+const { MessageChannel } = require('node:worker_threads')
 const Electron = require('electron')
 const Platform = require('../Platform/Platform.js')
 const SharedProcess = require('../SharedProcess/SharedProcess.js')
@@ -50,7 +50,7 @@ const handlePortForExtensionHost = async (event) => {
     },
   })
   const end = Date.now()
-  const pid = extensionHost.pid
+  const { pid } = extensionHost
   const forkTime = end - start
   Logger.info(
     `[main-process] Starting extension host with pid ${pid} (fork took ${forkTime} ms).`
@@ -89,7 +89,7 @@ const handlePortForExtensionHostHelperProcess = async (event) => {
     },
   })
   const end = Date.now()
-  const pid = extensionHost.pid
+  const { pid } = extensionHost
   const forkTime = end - start
   Logger.info(
     `[main-process] Starting extension host helper with pid ${pid} (fork took ${forkTime} ms).`
@@ -138,8 +138,8 @@ const handlePortForSharedProcess = async (event) => {
     FOLDER: folder,
   })
   const messageChannel = new MessageChannel()
-  const port1 = messageChannel.port1
-  const port2 = messageChannel.port2
+  const { port1 } = messageChannel
+  const { port2 } = messageChannel
   Performance.mark('code/didStartSharedProcess')
   browserWindowPort.on('message', (event) => {
     // console.log('got message from browser window', event.data)
@@ -171,7 +171,7 @@ const handlePortForSharedProcess = async (event) => {
 
 const handlePortForMainProcess = (event) => {
   const browserWindowPort = event.ports[0]
-  const id = event.sender.id
+  const { id } = event.sender
   const state = AppWindowStates.findById(id)
   state.port = browserWindowPort
   const handleMessage = async (event) => {
