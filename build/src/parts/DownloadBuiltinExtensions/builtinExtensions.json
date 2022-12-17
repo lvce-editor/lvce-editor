@@ -17,12 +17,12 @@
   {
     "name": "builtin.language-basics-cpp",
     "repository": "github.com/lvce-editor/language-basics-cpp",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-basics-css",
     "repository": "github.com/lvce-editor/language-basics-css",
-    "version": "0.0.10"
+    "version": "0.0.11"
   },
   {
     "name": "builtin.language-basics-dart",
@@ -147,7 +147,7 @@
   {
     "name": "builtin.language-basics-python",
     "repository": "github.com/lvce-editor/language-basics-python",
-    "version": "0.0.4"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.language-basics-r",
@@ -177,7 +177,7 @@
   {
     "name": "builtin.language-basics-typescript",
     "repository": "github.com/lvce-editor/language-basics-typescript",
-    "version": "0.0.4"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.language-basics-xml",
