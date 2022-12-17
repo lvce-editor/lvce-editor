@@ -3,6 +3,7 @@ import cleanStack from 'clean-stack'
 import { LinesAndColumns } from 'lines-and-columns'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+import * as Json from '../Json/Json.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const getActualPath = (fileUri) => {
@@ -57,12 +58,8 @@ const fixBackslashes = (string) => {
   return string.replaceAll('\\\\', '\\')
 }
 
-const stringifyJson = (json) => {
-  return JSON.stringify(json, null, 2) + '\n'
-}
-
 export const prepareJsonError = (json, property, message) => {
-  const string = fixBackslashes(stringifyJson(json))
+  const string = fixBackslashes(Json.stringify(json))
   const stringifiedPropertyName = `"${property}"`
   const index = string.indexOf(stringifiedPropertyName) // TODO this could be wrong in some cases, find a better way
   console.log({ string, index })
