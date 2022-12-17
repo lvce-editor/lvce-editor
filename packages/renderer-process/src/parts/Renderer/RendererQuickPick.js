@@ -6,7 +6,7 @@ export const renderTemplate = () => {
   const root = document.createElement('li')
   root.className = 'ListItem QuickPickItem'
   // @ts-ignore
-  root.role= 'option'
+  root.role = 'option'
   root.append(label, description)
   return {
     root,

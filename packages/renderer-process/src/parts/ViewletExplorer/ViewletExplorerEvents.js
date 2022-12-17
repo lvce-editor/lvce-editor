@@ -56,8 +56,7 @@ const getAllEntries = async (dataTransfer) => {
           handleEntryFile(entry)
         } else if (entry.isDirectory) {
           handleEntryDirectory(entry)
-        } else {
-        }
+        } else {}
       }
     }
 

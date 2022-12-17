@@ -23,7 +23,7 @@ const isElement = (selector) => {
 
 export const querySelector = (selector) => {
   if (typeof selector !== 'string') {
-    throw new Error('selector must be of type string')
+    throw new TypeError('selector must be of type string')
   }
   if (selector.startsWith('text=')) {
     return querySelectorByText(document.body, selector.slice('text='.length))

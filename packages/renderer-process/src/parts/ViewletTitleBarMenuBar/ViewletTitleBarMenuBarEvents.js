@@ -74,7 +74,7 @@ const getLevelAndIndex = (event) => {
   const $Menu = target.closest('.Menu')
   const index = FindIndex.findIndex($Menu, target)
   const { id } = $Menu
-  const level = parseInt(id.slice(5))
+  const level = Number.parseInt(id.slice(5))
   return {
     level,
     index,

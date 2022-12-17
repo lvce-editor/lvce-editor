@@ -4,8 +4,8 @@ import * as AriaAlert from '../AriaAlert/AriaAlert.js'
 import * as Focus from '../Focus/Focus.js'
 import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
-import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as ViewletQuickPickEvents from './ViewletQuickPickEvents.js'
 // TODO use another virtual list that just appends elements and
 // is optimized for fast show/hide, scrolling performance should
 // be good as well but is not as important as fast show/hide

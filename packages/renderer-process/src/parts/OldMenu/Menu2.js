@@ -4,6 +4,7 @@ import * as MenuItemFlags from '../MenuItemFlags/MenuItemFlags.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Widget from '../Widget/Widget.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+
 export const state = {
   $$Menus: [],
 }

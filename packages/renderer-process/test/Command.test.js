@@ -66,10 +66,10 @@ test('execute - error - module has syntax error', async () => {
   }
   const error = await getError(Command.execute('test.test'))
   expect(error.message).toBe(
-    `Failed to load command test.test: VError: failed to load module 21: SyntaxError: Unexpected token ','`
+    "Failed to load command test.test: VError: failed to load module 21: SyntaxError: Unexpected token ','"
   )
   expect(error.stack).toMatch(
-    `VError: Failed to load command test.test: VError: failed to load module 21: SyntaxError: Unexpected token ','`
+    "VError: Failed to load command test.test: VError: failed to load module 21: SyntaxError: Unexpected token ','"
   )
-  expect(error.stack).toMatch(`  at loadCommand`)
+  expect(error.stack).toMatch('  at loadCommand')
 })

@@ -5,7 +5,7 @@ export const create$Button = (label, icon) => {
   const $Icon = MaskIcon.create(icon)
 
   const $Button = document.createElement('button')
-  $Button.className = `IconButton`
+  $Button.className = 'IconButton'
   $Button.title = label
   $Button.ariaLabel = label
   $Button.append($Icon)

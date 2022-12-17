@@ -1,5 +1,5 @@
-import * as Performance from '../src/parts/Performance/Performance.js'
 import { jest } from '@jest/globals'
+import * as Performance from '../src/parts/Performance/Performance.js'
 
 test('getMemory - performance.memory is not available', () => {
   // @ts-ignore

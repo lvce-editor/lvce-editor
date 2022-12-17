@@ -9,9 +9,9 @@ export const handleFocus = () => {
 const getButtonFunctionName = (title) => {
   switch (title) {
     case 'Add':
-      return `Source Control.handleClickAdd`
+      return 'Source Control.handleClickAdd'
     case 'Restore':
-      return `Source Control.handleClickRestore`
+      return 'Source Control.handleClickRestore'
     case 'Open File':
       return 'Source Control.handleClickOpenFile'
     default:

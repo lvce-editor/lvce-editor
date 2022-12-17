@@ -2,8 +2,8 @@ import * as AriaRoles from '../AriaRoles/AriaRoles.js'
 import * as Focus from '../Focus/Focus.js'
 import * as Label from '../Label/Label.js'
 import * as Widget from '../Widget/Widget.js'
-import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as ViewletEditorCompletionEvents from './ViewletEditorCompletionEvents.js'
 
 const create$CompletionItem = (item, index) => {
   const $CompletionItemText = Label.create(item.label)
@@ -16,7 +16,7 @@ const create$CompletionItem = (item, index) => {
   // @ts-ignore
   $CompletionItem.role = AriaRoles.Option
   $CompletionItem.id = `CompletionItem-${index}`
-  $CompletionItem.className = `EditorCompletionItem`
+  $CompletionItem.className = 'EditorCompletionItem'
   $CompletionItem.append($Icon, $CompletionItemText)
   return $CompletionItem
 }
