@@ -11,6 +11,8 @@ export const getModuleId = (commandId) => {
   const prefix = getPrefix(commandId)
   switch (prefix) {
     // TODO this should be in layout module
+    case 'About':
+      return ModuleId.About
     case 'Ajax':
       return ModuleId.Ajax
     case 'Audio':
@@ -138,8 +140,6 @@ export const getModuleId = (commandId) => {
       return ModuleId.Workbench
     case 'Workspace':
       return ModuleId.Workspace
-    case 'About':
-      return ModuleId.About
     default:
       throw new Error(`command ${commandId} not found`)
   }
