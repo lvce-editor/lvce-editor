@@ -1,13 +1,14 @@
 import VError from 'verror'
+import * as Compress from '../Compress/Compress.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Exec from '../Exec/Exec.js'
 import * as Logger from '../Logger/Logger.js'
+import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
-import * as Compress from '../Compress/Compress.js'
 
 const bundleElectronMaybe = async () => {
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
@@ -80,16 +81,13 @@ const copyMetaFiles = async () => {
 
 const printTarZstSize = async () => {
   try {
-    const debArch = 'amd64'
     const size = await Stat.getFileSize(
-      Path.absolute(
-        `build/.tmp/releases/${Product.applicationName}-${debArch}.deb`
-      )
+      Path.absolute(`build/.tmp/releases/${Product.applicationName}.pacman`)
     )
-    Logger.info(`deb size: ${size}`)
+    Logger.info(`tar zstd size: ${size}`)
   } catch (error) {
     // @ts-ignore
-    throw new VError(error, `Failed to print deb size`)
+    throw new VError(error, `Failed to print tar zstd size`)
   }
 }
 
@@ -101,6 +99,17 @@ const isFakeRoot = () => {
 
 const createMTree = async () => {
   await Compress.createMTree(Path.absolute(`build/.tmp/arch-linux/x64`), 'usr')
+}
+
+const compress = async () => {
+  const cwd = `build/.tmp/arch-linux/x64`
+  const outFile = Path.absolute(
+    `build/.tmp/releases/${Product.applicationName}.pacman`
+  )
+  await Mkdir.mkdir(`build/.tmp/releases`)
+  await Compress.tarZstd('.', outFile, {
+    cwd,
+  })
 }
 
 export const build = async () => {
@@ -120,6 +129,10 @@ export const build = async () => {
   console.time('createMTree')
   await createMTree()
   console.timeEnd('createMTree')
+
+  console.time('compress')
+  await compress()
+  console.timeEnd('compress')
 
   await printTarZstSize()
 }
