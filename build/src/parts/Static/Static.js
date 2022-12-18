@@ -412,7 +412,7 @@ const bundleLanguageJsonFiles = async ({ commitHash, pathPrefix }) => {
   })
 }
 
-const applyJsOverrides = async ({ pathPrefix, commitHash }) => {}
+const applyJsOverrides = async ({ pathPrefix, commitHash }) => { }
 
 const addRobotsTxt = async () => {
   await WriteFile.writeFile({
@@ -664,7 +664,7 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
     to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`,
   })
 
-  const testFilesRaw = await ReadDir.readDir(
+  const testFilesRaw = await ReadDir.readDirWithFileTypes(
     'packages/extension-host-worker-tests/src'
   )
   const testFiles = getTestFiles(testFilesRaw)

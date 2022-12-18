@@ -1,3 +1,4 @@
+import VError from 'verror'
 import * as Exec from '../Exec/Exec.js'
 import * as Logger from '../Logger/Logger.js'
 
@@ -18,6 +19,23 @@ const getXzOptions = () => {
 export const tarXz = async (inDir, outFile, options) => {
   const xzOptions = getXzOptions()
   await Exec.exec('tar', ['cfJ', outFile, inDir], {
+    ...options,
+    env: {
+      ...options.env,
+      XZ_OPT: xzOptions,
+    },
+  })
+}
+
+/**
+ *
+ * @param {string[]} inDirs
+ * @param {string} outFile
+ * @param {import('execa').Options} options
+ */
+export const tarXzFolders = async (inDirs, outFile, options) => {
+  const xzOptions = getXzOptions()
+  await Exec.exec('tar', ['cfJ', outFile, ...inDirs], {
     ...options,
     env: {
       ...options.env,
@@ -84,9 +102,9 @@ export const deb = async (controlArchive, dataArchive, options) => {
 
 /**
  * @param {string} cwd
- * @param {string} folder
  */
-export const createMTree = async (cwd, folder) => {
+export const createMTree = async (cwd, dirents) => {
+  console.log({ cwd })
   try {
     await Exec.exec(
       `bsdtar`,
@@ -97,10 +115,11 @@ export const createMTree = async (cwd, folder) => {
         'mtree',
         '--options',
         '!all,use-set,type,uid,gid,mode,time,size,md5,sha256,link',
-        folder,
+        ...dirents
       ],
       {
         env: {
+          ...process.env,
           LANG: 'C',
         },
         cwd,

@@ -9,6 +9,7 @@ import * as Product from '../Product/Product.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
+import * as ReadDir from '../ReadDir/ReadDir.js'
 
 const bundleElectronMaybe = async () => {
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
@@ -46,7 +47,7 @@ const copyMetaFiles = async () => {
       '@@APPNAME@@': Product.applicationName,
     }
   )
-  const version = await Tag.getSemverVersion()
+  const version = (await Tag.getSemverVersion()) + '-1'
   const buildDate = new Date().getTime()
   await Template.write(
     'arch_linux_pkginfo',
@@ -68,6 +69,10 @@ const copyMetaFiles = async () => {
     },
     755
   )
+  await Template.write(
+    'arch_linux_install',
+    `build/.tmp/arch-linux/${arch}/.INSTALL`, {}
+  )
   await Copy.copyFile({
     from: 'build/files/icon.png',
     to: `build/.tmp/arch-linux/${arch}/usr/share/pixmaps/${Product.applicationName}.png`,
@@ -86,17 +91,32 @@ const isFakeRoot = () => {
   return ldLibraryPath && ldLibraryPath.includes('libfakeroot')
 }
 
+const isIncludededMtreeDirent = (dirent) => {
+  if (dirent === '.MTREE') {
+    return false
+  }
+  if (dirent === '.PKGINFO') {
+    return false
+  }
+  return true
+}
+
 const createMTree = async () => {
-  await Compress.createMTree(Path.absolute(`build/.tmp/arch-linux/x64`), 'usr')
+  const dirents = await ReadDir.readDir(Path.absolute('build/.tmp/arch-linux/x64'))
+  const filteredDirents = [
+    '.PKGINFO', // .PKGINFO must be the first file in the archive
+    ...dirents.filter(isIncludededMtreeDirent)]
+  await Compress.createMTree(Path.absolute(`build/.tmp/arch-linux/x64`),
+    filteredDirents)
 }
 
 const compress = async () => {
   const cwd = `build/.tmp/arch-linux/x64`
   const outFile = Path.absolute(
-    `build/.tmp/releases/${Product.applicationName}.tar.zst`
+    `build/.tmp/releases/${Product.applicationName}.tar.xz`
   )
   await Mkdir.mkdir(`build/.tmp/releases`)
-  await Compress.tarZstd('.', outFile, {
+  await Compress.tarXzFolders(['.MTREE', '.PKGINFO', '*'], outFile, {
     cwd,
   })
 }
@@ -104,12 +124,12 @@ const compress = async () => {
 const printTarZstSize = async () => {
   try {
     const size = await Stat.getFileSize(
-      Path.absolute(`build/.tmp/releases/${Product.applicationName}.tar.zst`)
+      Path.absolute(`build/.tmp/releases/${Product.applicationName}.tar.xz`)
     )
-    Logger.info(`tar zstd size: ${size}`)
+    Logger.info(`tar xz size: ${size}`)
   } catch (error) {
     // @ts-ignore
-    throw new VError(error, `Failed to print tar zstd size`)
+    throw new VError(error, `Failed to print tar xz size`)
   }
 }
 export const build = async () => {

@@ -52,7 +52,7 @@ const formatCommands = async (absolutePath) => {
 const getIpcFiles = async (...roots) => {
   const allIpcFiles = []
   const getIpcFilesInternal = async (root) => {
-    const dirents = await ReadDir.readDir(root)
+    const dirents = await ReadDir.readDirWithFileTypes(root)
     for (const dirent of dirents) {
       if (dirent.isDirectory()) {
         const folderPath = Path.join(root, dirent.name)
