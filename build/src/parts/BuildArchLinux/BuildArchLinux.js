@@ -101,13 +101,21 @@ const isIncludededMtreeDirent = (dirent) => {
   return true
 }
 
-const createMTree = async () => {
+
+const getOtherDirents = async () => {
   const dirents = await ReadDir.readDir(Path.absolute('build/.tmp/arch-linux/x64'))
   const filteredDirents = [
-    '.PKGINFO', // .PKGINFO must be the first file in the archive
-    ...dirents.filter(isIncludededMtreeDirent)]
+    ...dirents.filter(isIncludededMtreeDirent)
+  ]
+  return filteredDirents
+}
+
+const createMTree = async () => {
+  const otherDirents = await getOtherDirents()
   await Compress.createMTree(Path.absolute(`build/.tmp/arch-linux/x64`),
-    filteredDirents)
+    ['.PKGINFO', // .PKGINFO must be the first file in the archive
+      ...otherDirents]
+  )
 }
 
 const compress = async () => {
@@ -115,8 +123,13 @@ const compress = async () => {
   const outFile = Path.absolute(
     `build/.tmp/releases/${Product.applicationName}.tar.xz`
   )
+  const otherDirents = await getOtherDirents()
   await Mkdir.mkdir(`build/.tmp/releases`)
-  await Compress.tarXzFolders(['.MTREE', '.PKGINFO', '*'], outFile, {
+  await Compress.tarXzFolders([
+    '.MTREE', // .MTREE must be the first file in the archive
+    '.PKGINFO',  // .PKGINFO must be the first file in the archive
+    ...otherDirents
+  ], outFile, {
     cwd,
   })
 }
