@@ -47,6 +47,7 @@ const copyMetaFiles = async () => {
     }
   )
   const version = await Tag.getSemverVersion()
+  const buildDate = new Date().getTime()
   await Template.write(
     'arch_linux_pkginfo',
     `build/.tmp/arch-linux/${arch}/.PKGINFO`,
@@ -56,7 +57,7 @@ const copyMetaFiles = async () => {
       '@@PACKAGER@@': Product.linuxMaintainer,
       '@@LICENSE@@': Product.licenseName,
       '@@SIZE@@': '1000',
-      '@@BUILD_DATE@@': '1000',
+      '@@BUILD_DATE@@': `${buildDate}`,
     }
   )
   await Template.write(
@@ -79,18 +80,6 @@ const copyMetaFiles = async () => {
   // const tag = await Tag.getGitTag()
 }
 
-const printTarZstSize = async () => {
-  try {
-    const size = await Stat.getFileSize(
-      Path.absolute(`build/.tmp/releases/${Product.applicationName}.pacman`)
-    )
-    Logger.info(`tar zstd size: ${size}`)
-  } catch (error) {
-    // @ts-ignore
-    throw new VError(error, `Failed to print tar zstd size`)
-  }
-}
-
 const isFakeRoot = () => {
   // https://stackoverflow.com/questions/33446353/bash-check-if-user-is-root
   const ldLibraryPath = process.env.LD_LIBRARY_PATH
@@ -104,7 +93,7 @@ const createMTree = async () => {
 const compress = async () => {
   const cwd = `build/.tmp/arch-linux/x64`
   const outFile = Path.absolute(
-    `build/.tmp/releases/${Product.applicationName}.pacman`
+    `build/.tmp/releases/${Product.applicationName}.tar.zst`
   )
   await Mkdir.mkdir(`build/.tmp/releases`)
   await Compress.tarZstd('.', outFile, {
@@ -112,6 +101,17 @@ const compress = async () => {
   })
 }
 
+const printTarZstSize = async () => {
+  try {
+    const size = await Stat.getFileSize(
+      Path.absolute(`build/.tmp/releases/${Product.applicationName}.tar.zst`)
+    )
+    Logger.info(`tar zstd size: ${size}`)
+  } catch (error) {
+    // @ts-ignore
+    throw new VError(error, `Failed to print tar zstd size`)
+  }
+}
 export const build = async () => {
   if (!isFakeRoot()) {
     Logger.info('[info] enabling fakeroot')

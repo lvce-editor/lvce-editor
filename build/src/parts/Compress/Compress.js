@@ -33,7 +33,7 @@ export const tarXz = async (inDir, outFile, options) => {
  * @param {import('execa').Options} options
  */
 export const tarZstd = async (inDir, outFile, options) => {
-  await Exec.exec('tar', ['-I', 'zstd', '-cvpf', outFile, inDir], {
+  await Exec.exec('tar', ['--zstd', '-cf', outFile, inDir], {
     ...options,
   })
 }
