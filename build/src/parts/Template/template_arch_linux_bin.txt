@@ -1,2 +1,2 @@
 #!/bin/sh
-exec electron /usr/lib/@@APPNAME@@ "$@"
+exec electron19 /usr/lib/@@APPNAME@@ "$@"
