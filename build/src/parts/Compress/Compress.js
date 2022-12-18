@@ -69,3 +69,33 @@ export const deb = async (controlArchive, dataArchive, options) => {
     options
   )
 }
+
+/**
+ * @param {string} cwd
+ * @param {string} folder
+ */
+export const createMTree = async (cwd, folder) => {
+  try {
+    await Exec.exec(
+      `bsdtar`,
+      [
+        '-czf',
+        '.MTREE',
+        '--format',
+        'mtree',
+        '--options',
+        '!all,use-set,type,uid,gid,mode,time,size,md5,sha256,link',
+        folder,
+      ],
+      {
+        env: {
+          LANG: 'C',
+        },
+        cwd,
+      }
+    )
+  } catch (error) {
+    // @ts-ignore
+    throw new VError(error, `Failed to create mtree`)
+  }
+}
