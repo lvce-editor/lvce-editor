@@ -104,7 +104,6 @@ export const deb = async (controlArchive, dataArchive, options) => {
  * @param {string} cwd
  */
 export const createMTree = async (cwd, dirents) => {
-  console.log({ cwd })
   try {
     await Exec.exec(
       `bsdtar`,
@@ -115,7 +114,7 @@ export const createMTree = async (cwd, dirents) => {
         'mtree',
         '--options',
         '!all,use-set,type,uid,gid,mode,time,size,md5,sha256,link',
-        ...dirents
+        ...dirents,
       ],
       {
         env: {

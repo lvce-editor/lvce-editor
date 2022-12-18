@@ -6,11 +6,11 @@ import * as Logger from '../Logger/Logger.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'
+import * as ReadDir from '../ReadDir/ReadDir.js'
+import * as Remove from '../Remove/Remove.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
-import * as ReadDir from '../ReadDir/ReadDir.js'
-import * as Remove from '../Remove/Remove.js'
 
 const bundleElectronMaybe = async () => {
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
@@ -24,10 +24,10 @@ const copyElectronResult = async () => {
     to: `build/.tmp/arch-linux/x64/usr/lib/${Product.applicationName}`,
   })
   await Remove.remove(
-    `build/.tmp/arch-linux/x64/usr/lib/${Product.applicationName}/packages/shared-process/node_modules/keytar`,
+    `build/.tmp/arch-linux/x64/usr/lib/${Product.applicationName}/packages/shared-process/node_modules/keytar`
   )
   await Remove.remove(
-    `build/.tmp/arch-linux/x64/usr/lib/${Product.applicationName}/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix`,
+    `build/.tmp/arch-linux/x64/usr/lib/${Product.applicationName}/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix`
   )
 }
 
@@ -78,7 +78,8 @@ const copyMetaFiles = async () => {
   )
   await Template.write(
     'arch_linux_install',
-    `build/.tmp/arch-linux/${arch}/.INSTALL`, {}
+    `build/.tmp/arch-linux/${arch}/.INSTALL`,
+    {}
   )
   await Copy.copyFile({
     from: 'build/files/icon.png',
@@ -108,21 +109,20 @@ const isIncludededMtreeDirent = (dirent) => {
   return true
 }
 
-
 const getOtherDirents = async () => {
-  const dirents = await ReadDir.readDir(Path.absolute('build/.tmp/arch-linux/x64'))
-  const filteredDirents = [
-    ...dirents.filter(isIncludededMtreeDirent)
-  ]
+  const dirents = await ReadDir.readDir(
+    Path.absolute('build/.tmp/arch-linux/x64')
+  )
+  const filteredDirents = [...dirents.filter(isIncludededMtreeDirent)]
   return filteredDirents
 }
 
 const createMTree = async () => {
   const otherDirents = await getOtherDirents()
-  await Compress.createMTree(Path.absolute(`build/.tmp/arch-linux/x64`),
-    ['.PKGINFO', // .PKGINFO must be the first file in the archive
-      ...otherDirents]
-  )
+  await Compress.createMTree(Path.absolute(`build/.tmp/arch-linux/x64`), [
+    '.PKGINFO', // .PKGINFO must be the first file in the archive
+    ...otherDirents,
+  ])
 }
 
 const compress = async () => {
@@ -132,16 +132,20 @@ const compress = async () => {
   )
   const otherDirents = await getOtherDirents()
   await Mkdir.mkdir(`build/.tmp/releases`)
-  await Compress.tarXzFolders([
-    '.MTREE', // .MTREE must be the first file in the archive
-    '.PKGINFO',  // .PKGINFO must be the first file in the archive
-    ...otherDirents
-  ], outFile, {
-    cwd,
-  })
+  await Compress.tarXzFolders(
+    [
+      '.MTREE', // .MTREE must be the first file in the archive
+      '.PKGINFO', // .PKGINFO must be the second file in the archive
+      ...otherDirents,
+    ],
+    outFile,
+    {
+      cwd,
+    }
+  )
 }
 
-const printTarZstSize = async () => {
+const printFinalSize = async () => {
   try {
     const size = await Stat.getFileSize(
       Path.absolute(`build/.tmp/releases/${Product.applicationName}.tar.xz`)
@@ -152,6 +156,7 @@ const printTarZstSize = async () => {
     throw new VError(error, `Failed to print tar xz size`)
   }
 }
+
 export const build = async () => {
   if (!isFakeRoot()) {
     Logger.info('[info] enabling fakeroot')
@@ -174,5 +179,5 @@ export const build = async () => {
   await compress()
   console.timeEnd('compress')
 
-  await printTarZstSize()
+  await printFinalSize()
 }
