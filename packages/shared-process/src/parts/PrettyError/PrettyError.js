@@ -42,7 +42,6 @@ const prepareModuleNotFoundError = (error) => {
       break
     }
   }
-  console.log({ line, column })
   const location = {
     start: {
       line,
@@ -57,7 +56,6 @@ const prepareModuleNotFoundError = (error) => {
     ...stackLines.slice(1),
   ]
   const newStack = newStackLines.join('\n')
-  console.log({ newStack })
   return {
     message,
     stack: newStack,
@@ -66,7 +64,6 @@ const prepareModuleNotFoundError = (error) => {
 }
 
 export const prepare = (error) => {
-  console.log({ code: error.code })
   if (error && error.code === ErrorCodes.ERR_MODULE_NOT_FOUND) {
     return prepareModuleNotFoundError(error)
   }
