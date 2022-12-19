@@ -472,13 +472,9 @@ const launchSharedProcess = () => {
   const sharedProcess = fork(
     sharedProcessPath,
     // execArgv: ['--trace-deopt'],
-    [
-      // '--enable-source-maps',
-      ...argvSliced,
-    ],
+    ['--enable-source-maps', ...argvSliced],
     {
       stdio: 'inherit',
-      execArgv: ['--stack-trace-limit=100'],
       env: {
         ...process.env,
         ELECTRON_RUN_AS_NODE: '1', // TODO only needed when server is run inside electron app
