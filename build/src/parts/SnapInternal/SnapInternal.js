@@ -3,7 +3,7 @@ import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'
 import * as Logger from '../Logger/Logger.js'
-
+import * as ArchType from '../ArchType/ArchType.js'
 // TODO get rid of no-sandbox somehow https://github.com/electron/electron/issues/17972
 
 const bundleElectronMaybe = async () => {
@@ -25,7 +25,7 @@ const copyElectronResult = async (arch) => {
 }
 
 export const build = async () => {
-  const arch = 'x64'
+  const arch = ArchType.X64
 
   console.time('copyElectronResult')
   await copyElectronResult(arch)
