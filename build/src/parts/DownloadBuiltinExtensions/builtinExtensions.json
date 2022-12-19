@@ -30,11 +30,6 @@
     "version": "0.0.1"
   },
   {
-    "name": "builtin.language-basics-gn",
-    "repository": "github.com/lvce-editor/language-basics-gn",
-    "version": "0.0.2"
-  },
-  {
     "name": "builtin.language-basics-desktop",
     "repository": "github.com/lvce-editor/language-basics-desktop",
     "version": "0.0.5"
@@ -68,6 +63,11 @@
     "name": "builtin.language-basics-gitattributes",
     "repository": "github.com/lvce-editor/language-basics-gitattributes",
     "version": "0.0.3"
+  },
+  {
+    "name": "builtin.language-basics-gn",
+    "repository": "github.com/lvce-editor/language-basics-gn",
+    "version": "0.0.2"
   },
   {
     "name": "builtin.language-basics-go",

@@ -1,9 +1,7 @@
 import { codeFrameColumns } from '@babel/code-frame'
 import cleanStack from 'clean-stack'
-import { LinesAndColumns } from 'lines-and-columns'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
-import * as Json from '../Json/Json.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
 
 const getActualPath = (fileUri) => {
@@ -52,36 +50,4 @@ export const prepare = (error) => {
     stack: relevantStack,
     codeFrame,
   }
-}
-
-const fixBackslashes = (string) => {
-  return string.replaceAll('\\\\', '\\')
-}
-
-export const prepareJsonError = (json, property, message) => {
-  const string = fixBackslashes(Json.stringify(json))
-  const stringifiedPropertyName = `"${property}"`
-  const index = string.indexOf(stringifiedPropertyName) // TODO this could be wrong in some cases, find a better way
-  console.log({ string, index })
-  const jsonError = {
-    stack: '',
-  }
-  if (index !== -1) {
-    const lines = new LinesAndColumns(string)
-    const location = lines.locationForIndex(
-      index + stringifiedPropertyName.length + 1
-    )
-    const codeFrame = codeFrameColumns(string, {
-      start: { line: location.line + 1, column: location.column + 1 },
-    })
-    jsonError.codeFrame = codeFrame
-  }
-  // jsonError.stack = `${bottomMessage}\n    at ${filePath}`
-  return jsonError
-}
-
-export const print = (prettyError, prefix = '') => {
-  console.error(
-    `${prefix}Error: ${prettyError.message}\n\n${prettyError.codeFrame}\n\n${prettyError.stack}`
-  )
 }

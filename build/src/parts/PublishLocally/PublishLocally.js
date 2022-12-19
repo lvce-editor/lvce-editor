@@ -36,7 +36,7 @@ const publishPackages = async () => {
     cwd: Root.root,
     stdio: 'inherit',
   })
-  const packages = await ReadDir.readDir('build/.tmp/server')
+  const packages = await ReadDir.readDirWithFileTypes('build/.tmp/server')
   await Promise.all(packages.map(getName).map(publishPackage))
 }
 

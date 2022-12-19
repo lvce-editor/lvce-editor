@@ -7,8 +7,8 @@ import { requiresSocket } from '../RequiresSocket/RequiresSocket.js'
 export const getResponse = async (message, handle) => {
   try {
     const result = requiresSocket(message.method)
-      ? await Command.invoke(message.method, handle, ...message.params)
-      : await Command.invoke(message.method, ...message.params)
+      ? await Command.execute(message.method, handle, ...message.params)
+      : await Command.execute(message.method, ...message.params)
 
     return {
       jsonrpc: JsonRpc.Version,
