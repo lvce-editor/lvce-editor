@@ -3,9 +3,9 @@ import cleanStack from 'clean-stack'
 import { LinesAndColumns } from 'lines-and-columns'
 import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as Json from '../Json/Json.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
-import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 
 const getActualPath = (fileUri) => {
   if (fileUri.startsWith('file://')) {

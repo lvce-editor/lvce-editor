@@ -40,8 +40,6 @@ const main = async () => {
     'uncaughtExceptionMonitor',
     ErrorHandling.handleUncaughtExceptionMonitor
   )
-  // console.log(Error.stackTraceLimit)
-  // Error.stackTraceLimit = 100
   ParentIpc.listen()
 
   // ExtensionHost.start() // TODO start on demand, e.g. not when extensions should be disabled
