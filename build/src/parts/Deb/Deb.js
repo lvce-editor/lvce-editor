@@ -97,6 +97,7 @@ const copyMetaFiles = async () => {
     'libxss1',
     'libgbm1',
   ]
+  // TODO add options to process.argv whether or not ripgrep should be bundled or a dependency
   const additionalDepends = ['ripgrep']
   const depends = [...defaultDepends, ...additionalDepends].join(', ')
   await Template.write(
