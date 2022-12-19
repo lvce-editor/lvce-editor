@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import * as Json from '../Json/Json.js'
 import * as SplitLines from '../SplitLines/SplitLines.js'
+import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 
 const getActualPath = (fileUri) => {
   if (fileUri.startsWith('file://')) {
@@ -13,7 +14,62 @@ const getActualPath = (fileUri) => {
   return fileUri
 }
 
+const RE_MODULE_NOT_FOUND_STACK =
+  /Cannot find package '([^']+)' imported from (.+)$/
+
+const prepareModuleNotFoundError = (error) => {
+  const message = error.message
+  const match = message.match(RE_MODULE_NOT_FOUND_STACK)
+  if (!match) {
+    return {
+      message,
+      stack: error.stack,
+      codeFrame: '',
+    }
+  }
+  const notFoundModule = match[1]
+  const importedFrom = match[2]
+  const rawLines = readFileSync(importedFrom, 'utf-8')
+  let line = 0
+  let column = 0
+  const splittedLines = rawLines.split('\n')
+  for (let i = 0; i < splittedLines.length; i++) {
+    const splittedLine = splittedLines[i]
+    const index = splittedLine.indexOf(notFoundModule)
+    if (index !== -1) {
+      line = i + 1
+      column = index
+      break
+    }
+  }
+  console.log({ line, column })
+  const location = {
+    start: {
+      line,
+      column,
+    },
+  }
+  const codeFrame = codeFrameColumns(rawLines, location)
+  const stackLines = SplitLines.splitLines(error.stack)
+  const newStackLines = [
+    stackLines[0],
+    `    at ${importedFrom}:${line}:${column}`,
+    ...stackLines.slice(1),
+  ]
+  const newStack = newStackLines.join('\n')
+  console.log({ newStack })
+  return {
+    message,
+    stack: newStack,
+    codeFrame,
+  }
+}
+
 export const prepare = (error) => {
+  console.log({ code: error.code })
+  if (error && error.code === ErrorCodes.ERR_MODULE_NOT_FOUND) {
+    return prepareModuleNotFoundError(error)
+  }
   const message = error.message
   if (error && error.cause) {
     const cause = error.cause()

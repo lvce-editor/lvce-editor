@@ -19,3 +19,5 @@ export const E_ICON_THEME_NOT_FOUND = 'E_ICON_THEME_NOT_FOUND'
 export const ECONNRESET = 'ECONNRESET'
 
 export const EPERM = 'EPERM'
+
+export const ERR_MODULE_NOT_FOUND = 'ERR_MODULE_NOT_FOUND'

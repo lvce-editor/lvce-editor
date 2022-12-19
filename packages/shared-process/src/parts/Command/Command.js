@@ -29,6 +29,11 @@ const loadModule = async (moduleId) => {
     const module = await state.load(moduleId)
     initializeModule(module)
   } catch (error) {
+    console.log({
+      code: error.code,
+      message: error.message,
+      stack: error.stack,
+    })
     if (
       error &&
       error instanceof SyntaxError &&
