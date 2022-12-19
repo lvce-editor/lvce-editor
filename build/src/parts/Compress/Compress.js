@@ -1,3 +1,4 @@
+import VError from 'verror'
 import * as Exec from '../Exec/Exec.js'
 import * as Logger from '../Logger/Logger.js'
 
@@ -23,6 +24,35 @@ export const tarXz = async (inDir, outFile, options) => {
       ...options.env,
       XZ_OPT: xzOptions,
     },
+  })
+}
+
+/**
+ *
+ * @param {string[]} inDirs
+ * @param {string} outFile
+ * @param {import('execa').Options} options
+ */
+export const tarXzFolders = async (inDirs, outFile, options) => {
+  const xzOptions = getXzOptions()
+  await Exec.exec('tar', ['cfJ', outFile, ...inDirs], {
+    ...options,
+    env: {
+      ...options.env,
+      XZ_OPT: xzOptions,
+    },
+  })
+}
+
+/**
+ *
+ * @param {string} inDir
+ * @param {string} outFile
+ * @param {import('execa').Options} options
+ */
+export const tarZstd = async (inDir, outFile, options) => {
+  await Exec.exec('tar', ['--zstd', '-cf', outFile, inDir], {
+    ...options,
   })
 }
 
@@ -68,4 +98,34 @@ export const deb = async (controlArchive, dataArchive, options) => {
     ['r', 'app.deb', 'debian-binary', controlArchive, dataArchive],
     options
   )
+}
+
+/**
+ * @param {string} cwd
+ */
+export const createMTree = async (cwd, dirents) => {
+  try {
+    await Exec.exec(
+      `bsdtar`,
+      [
+        '-czf',
+        '.MTREE',
+        '--format',
+        'mtree',
+        '--options',
+        '!all,use-set,type,uid,gid,mode,time,size,md5,sha256,link',
+        ...dirents,
+      ],
+      {
+        env: {
+          ...process.env,
+          LANG: 'C',
+        },
+        cwd,
+      }
+    )
+  } catch (error) {
+    // @ts-ignore
+    throw new VError(error, `Failed to create mtree`)
+  }
 }

@@ -7,7 +7,7 @@ import * as Path from '../Path/Path.js'
  * @param {string} relativePath
  * @returns
  */
-export const readDir = async (relativePath) => {
+export const readDirWithFileTypes = async (relativePath) => {
   try {
     const absolutePath = Path.absolute(relativePath)
     const dirents = await fs.readdir(absolutePath, { withFileTypes: true })
@@ -17,3 +17,21 @@ export const readDir = async (relativePath) => {
     throw new VError(error, `Failed to read directory ${relativePath}`)
   }
 }
+
+
+/**
+ *
+ * @param {string} relativePath
+ * @returns
+ */
+export const readDir = async (relativePath) => {
+  try {
+    const absolutePath = Path.absolute(relativePath)
+    const dirents = await fs.readdir(absolutePath)
+    return dirents
+  } catch (error) {
+    // @ts-ignore
+    throw new VError(error, `Failed to read directory ${relativePath}`)
+  }
+}
+
