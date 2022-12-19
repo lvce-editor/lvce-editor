@@ -3,10 +3,11 @@ import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'
 import * as Template from '../Template/Template.js'
 import * as Copy from '../Copy/Copy.js'
+import * as ArchType from '../ArchType/ArchType.js'
 
 const getRpmArch = (arch) => {
   switch (arch) {
-    case 'x64':
+    case ArchType.X64:
       return 'x86_64'
     case 'armhf':
       return 'armv7hl'

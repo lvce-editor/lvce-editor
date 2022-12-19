@@ -33,10 +33,6 @@ test('WebSocketServer', async () => {
   Command.execute.mockImplementation(() => {
     return 'abc'
   })
-  // @ts-ignore
-  Command.invoke.mockImplementation(() => {
-    return 'abc'
-  })
   const httpServer = http.createServer((req, res) => {
     WebSocketServer.handleUpgrade(
       {

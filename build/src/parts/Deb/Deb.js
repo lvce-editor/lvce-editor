@@ -1,21 +1,23 @@
 import { chmod, writeFile } from 'node:fs/promises'
 import VError from 'verror'
+import * as ArchType from '../ArchType/ArchType.js'
 import * as Compress from '../Compress/Compress.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Exec from '../Exec/Exec.js'
+import * as GetInstalledSize from '../GetInstalledSize/GetInstalledSize.js'
 import * as Logger from '../Logger/Logger.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'
+import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
-import * as Remove from '../Remove/Remove.js'
 
 const getDebPackageArch = (arch) => {
   switch (arch) {
-    case 'x64':
+    case ArchType.X64:
       return 'amd64'
     case 'armhf':
       return 'armhf'
@@ -45,16 +47,6 @@ const copyElectronResult = async () => {
   await Remove.remove(
     `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix`
   )
-}
-
-// see https://stackoverflow.com/questions/19029008/how-to-create-a-simply-debian-package-just-compress-extract-sources-or-any-file
-const getInstalledSize = async (cwd) => {
-  const { stdout } = await Exec.exec(`du -ks usr|cut -f 1`, {
-    cwd,
-    shell: true,
-  })
-  const installedSize = Number.parseInt(stdout, 10)
-  return installedSize
 }
 
 const copyMetaFiles = async () => {
@@ -91,7 +83,7 @@ const copyMetaFiles = async () => {
     to: `build/.tmp/linux/deb/${debArch}/app/usr/share/pixmaps/${Product.applicationName}.png`,
   })
 
-  const installedSize = await getInstalledSize(
+  const installedSize = await GetInstalledSize.getInstalledSize(
     Path.absolute(`build/.tmp/linux/deb/${debArch}/app`)
   )
   const tag = await Tag.getGitTag()
