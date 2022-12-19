@@ -11,6 +11,7 @@ import * as Remove from '../Remove/Remove.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
+import * as ArchType from '../ArchType/ArchType.js'
 
 const bundleElectronMaybe = async () => {
   const { build } = await import('../BundleElectronApp/BundleElectronApp.js')
@@ -32,7 +33,7 @@ const copyElectronResult = async () => {
 }
 
 const copyMetaFiles = async () => {
-  const arch = 'x64'
+  const arch = ArchType.X64
   await Template.write(
     'linux_desktop',
     `build/.tmp/arch-linux/${arch}/usr/share/applications/${Product.applicationName}.desktop`,
