@@ -74,6 +74,12 @@ const getFn = (method) => {
       return ExtensionHostSourceControl.getEnabledProviderIds
     case 'ExtensionHostDebug.listProcesses':
       return ExtensionHostDebug.listProcesses
+    case 'ExtensionHostDebug.pause':
+      return ExtensionHostDebug.pause
+    case 'ExtensionHostDebug.continue':
+      return ExtensionHostDebug.continue_
+    case 'ExtensionHostDebug.setPauseOnException':
+      return ExtensionHostDebug.setPauseOnException
     default:
       throw new CommandNotFoundError(`method not found: ${method}`)
   }

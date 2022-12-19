@@ -11,3 +11,30 @@ export const listProcesses = async (debugId) => {
   Assert.array(processes)
   return processes
 }
+
+export const continue_ = async (debugId) => {
+  await ExtensionHostShared.executeProvider({
+    event: `onDebug`,
+    method: 'ExtensionHostDebug.continue',
+    params: [debugId],
+    noProviderFoundMessage: 'no debug provider found',
+  })
+}
+
+export const pause = async (debugId) => {
+  await ExtensionHostShared.executeProvider({
+    event: `onDebug`,
+    method: 'ExtensionHostDebug.pause',
+    params: [debugId],
+    noProviderFoundMessage: 'no debug provider found',
+  })
+}
+
+export const setPauseOnExceptions = async (debugId, value) => {
+  await ExtensionHostShared.executeProvider({
+    event: `onDebug`,
+    method: 'ExtensionHostDebug.setPauseOnExceptions',
+    params: [debugId, value],
+    noProviderFoundMessage: 'no debug provider found',
+  })
+}

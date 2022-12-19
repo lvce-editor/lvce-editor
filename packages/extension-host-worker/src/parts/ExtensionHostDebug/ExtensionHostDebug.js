@@ -27,3 +27,30 @@ export const listProcesses = async (protocol, path) => {
     throw new VError(error, 'Failed to execute debug provider')
   }
 }
+
+export const continue_ = async (protocol) => {
+  try {
+    const provider = getDebugProvider(protocol)
+    return await provider.continue_()
+  } catch (error) {
+    throw new VError(error, 'Failed to execute debug provider')
+  }
+}
+
+export const pause = async (protocol) => {
+  try {
+    const provider = getDebugProvider(protocol)
+    return await provider.continue_()
+  } catch (error) {
+    throw new VError(error, 'Failed to execute debug provider')
+  }
+}
+
+export const setPauseOnException = async (protocol, value) => {
+  try {
+    const provider = getDebugProvider(protocol)
+    return await provider.setPauseOnExceptions(value)
+  } catch (error) {
+    throw new VError(error, 'Failed to execute debug provider')
+  }
+}

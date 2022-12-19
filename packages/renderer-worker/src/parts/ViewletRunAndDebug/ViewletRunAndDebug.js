@@ -16,6 +16,18 @@ export const loadContent = async (state) => {
   }
 }
 
+export const continue_ = async (state) => {
+  await Debug.continue_()
+  console.log('continue')
+  return state
+}
+
+export const pause = async (state) => {
+  await Debug.pause()
+  console.log('pause')
+  return state
+}
+
 // TODO make sure dispose is actually called
 export const dispose = (state) => {
   return {
