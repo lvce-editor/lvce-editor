@@ -11,6 +11,7 @@ import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'
 import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
+import * as Replace from '../Replace/Replace.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
@@ -47,6 +48,11 @@ const copyElectronResult = async () => {
   await Remove.remove(
     `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix`
   )
+  await Replace.replace({
+    path: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/shared-process/src/parts/RgPath/RgPath.js`,
+    occurrence: `export { rgPath } from 'vscode-ripgrep-with-github-api-error-fix'`,
+    replacement: `export const rgPath = 'rg'`,
+  })
 }
 
 const copyMetaFiles = async () => {
