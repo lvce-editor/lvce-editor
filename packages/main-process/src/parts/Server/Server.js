@@ -31,7 +31,7 @@ const handleChildMessage = async (message) => {
   if (object.id) {
     let result
     try {
-      result = await Command.invoke(object.method, ...object.params)
+      result = await Command.execute(object.method, ...object.params)
     } catch (error) {
       Logger.error(error)
       if (state.child) {

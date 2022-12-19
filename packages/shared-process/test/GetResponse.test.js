@@ -41,7 +41,7 @@ class NodeError extends Error {
 
 test('getResponse - error - ENOENT', async () => {
   // @ts-ignore
-  Command.invoke.mockImplementation(() => {
+  Command.execute.mockImplementation(() => {
     throw new NodeError(ErrorCodes.ENOENT)
   })
 
@@ -64,7 +64,7 @@ test('getResponse - error - ENOENT', async () => {
 
 test('getResponse - error - search error', async () => {
   // @ts-ignore
-  Command.invoke.mockImplementation(() => {
+  Command.execute.mockImplementation(() => {
     throw new Error('files is not iterable')
   })
   // @ts-ignore
