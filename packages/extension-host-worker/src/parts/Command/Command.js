@@ -76,10 +76,12 @@ const getFn = (method) => {
       return ExtensionHostDebug.listProcesses
     case 'ExtensionHostDebug.pause':
       return ExtensionHostDebug.pause
-    case 'ExtensionHostDebug.continue':
-      return ExtensionHostDebug.continue_
+    case 'ExtensionHostDebug.resume':
+      return ExtensionHostDebug.resume
     case 'ExtensionHostDebug.setPauseOnException':
       return ExtensionHostDebug.setPauseOnException
+    case 'ExtensionHostDebug.start':
+      return ExtensionHostDebug.start
     default:
       throw new CommandNotFoundError(`method not found: ${method}`)
   }

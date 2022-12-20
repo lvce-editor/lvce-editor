@@ -1,5 +1,6 @@
 import { VError } from '../VError/VError.js'
 import * as Rpc from '../Rpc/Rpc.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const state = {
   debugProviderMap: Object.create(null),
@@ -20,28 +21,37 @@ export const registerDebugProvider = (debugProvider) => {
   state.debugProviderMap[debugProvider.id] = debugProvider
 }
 
-export const listProcesses = async (protocol, path) => {
+export const start = async (protocol, path) => {
   try {
-    const emitter = new EventTarget()
     const handlePaused = () => {
+      console.log('send paused')
       Rpc.send('Debug.paused')
     }
     const handleResumed = () => {
       Rpc.send('Debug.resumed')
     }
-    emitter.addEventListener('paused', handlePaused)
-    emitter.addEventListener('resumed', handleResumed)
     const provider = getDebugProvider(protocol)
-    return await provider.listProcesses(emitter, path)
+    await provider.start({ handlePaused, handleResumed }, path)
   } catch (error) {
     throw new VError(error, 'Failed to execute debug provider')
   }
 }
 
-export const continue_ = async (protocol) => {
+export const listProcesses = async (protocol, path) => {
   try {
     const provider = getDebugProvider(protocol)
-    return await provider.continue_()
+    const processes = await provider.listProcesses(path)
+    Assert.array(processes)
+    return processes
+  } catch (error) {
+    throw new VError(error, 'Failed to execute debug provider')
+  }
+}
+
+export const resume = async (protocol) => {
+  try {
+    const provider = getDebugProvider(protocol)
+    return await provider.resume()
   } catch (error) {
     throw new VError(error, 'Failed to execute debug provider')
   }

@@ -5,34 +5,48 @@ export const create = (id) => {
     id,
     disposed: false,
     processes: [],
+    debugState: 'none',
   }
 }
 
 export const loadContent = async (state) => {
-  const processes = await Debug.listProcesses()
-  const handlePaused = () => {
-    // TODO
-  }
-  const handleResumed = () => {
-    // TODO
-  }
-
-  Debug.addEventListener('paused', handlePaused)
-  Debug.addEventListener('resumed', handleResumed)
+  const debugState = Debug.create('node-debug')
+  const { debugId } = debugState
+  await Debug.start(debugId)
+  const processes = await Debug.listProcesses(debugId)
   return {
     ...state,
     processes,
+    debugId,
+    debugState: 'default',
   }
 }
 
-export const continue_ = async (state) => {
-  await Debug.continue_()
+export const handlePaused = (state) => {
+  console.log('handle paused')
+  return {
+    ...state,
+    debugState: 'paused',
+  }
+}
+
+export const handleResumed = (state) => {
+  return {
+    ...state,
+    debugState: 'default',
+  }
+}
+
+export const resume = async (state) => {
+  const { debugId } = state
+  await Debug.resume(debugId)
   console.log('continue')
   return state
 }
 
 export const pause = async (state) => {
-  await Debug.pause()
+  const { debugId } = state
+  await Debug.pause(debugId)
   console.log('pause')
   return state
 }
@@ -58,7 +72,16 @@ const renderProcesses = {
   },
 }
 
-export const render = [renderProcesses]
+const renderDebugState = {
+  isEqual(oldState, newState) {
+    return oldState.debugState === newState.debugState
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setDebugState', /* buttons */ newState.debugState]
+  },
+}
+
+export const render = [renderProcesses, renderDebugState]
 
 export const resize = (state, dimensions) => {
   return { ...state, ...dimensions }

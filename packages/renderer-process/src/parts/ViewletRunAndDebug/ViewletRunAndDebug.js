@@ -2,13 +2,13 @@ import * as Assert from '../Assert/Assert.js'
 import * as ViewletDebugEvents from './ViewletRunAndDebugEvents.js'
 
 export const create = () => {
-  const $ButtonPause = document.createElement('button')
-  $ButtonPause.textContent = 'pause'
-  $ButtonPause.className = 'DebugButtonPause'
+  // const $ButtonPause = document.createElement('button')
+  // $ButtonPause.textContent = 'pause'
+  // $ButtonPause.className = 'DebugButtonPause'
 
-  const $ButtonContinue = document.createElement('button')
-  $ButtonContinue.className = 'DebugButtonContinue'
-  $ButtonContinue.textContent = 'continue'
+  const $ButtonPauseContinue = document.createElement('button')
+  $ButtonPauseContinue.className = 'DebugButtonPauseContinue'
+  // $ButtonPauseContinue.textContent = 'continue'
 
   const $Title = document.createElement('div')
   $Title.textContent = 'Threads'
@@ -19,13 +19,12 @@ export const create = () => {
   $Viewlet.className = 'Viewlet RunAndDebug'
   $Viewlet.tabIndex = 0
   $Viewlet.onmousedown = ViewletDebugEvents.handleMouseDown
-  $Viewlet.append($ButtonPause, $ButtonContinue, $Title, $Processes)
+  $Viewlet.append($ButtonPauseContinue, $Title, $Processes)
 
   return {
     $Viewlet,
     $Processes,
-    $ButtonPause,
-    $ButtonContinue,
+    $ButtonPauseContinue,
   }
 }
 
@@ -38,6 +37,21 @@ const create$Process = (process) => {
 export const setProcesses = (state, processes) => {
   const { $Processes } = state
   $Processes.replaceChildren(...processes.map(create$Process))
+}
+
+export const setDebugState = (state, debugState) => {
+  const { $ButtonPauseContinue } = state
+  switch (debugState) {
+    case 'paused':
+      $ButtonPauseContinue.textContent = 'continue'
+      break
+    case 'default':
+      $ButtonPauseContinue.textContent = 'pause'
+      break
+    default:
+      break
+  }
+  console.log({ debugState })
 }
 
 export const refresh = (state, message) => {

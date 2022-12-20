@@ -12,10 +12,10 @@ export const listProcesses = async (debugId) => {
   return processes
 }
 
-export const continue_ = async (debugId) => {
+export const resume = async (debugId) => {
   await ExtensionHostShared.executeProvider({
     event: `onDebug`,
-    method: 'ExtensionHostDebug.continue',
+    method: 'ExtensionHostDebug.resume',
     params: [debugId],
     noProviderFoundMessage: 'no debug provider found',
   })
@@ -35,6 +35,15 @@ export const setPauseOnExceptions = async (debugId, value) => {
     event: `onDebug`,
     method: 'ExtensionHostDebug.setPauseOnExceptions',
     params: [debugId, value],
+    noProviderFoundMessage: 'no debug provider found',
+  })
+}
+
+export const start = async (debugId) => {
+  await ExtensionHostShared.executeProvider({
+    event: `onDebug`,
+    method: 'ExtensionHostDebug.start',
+    params: [debugId],
     noProviderFoundMessage: 'no debug provider found',
   })
 }

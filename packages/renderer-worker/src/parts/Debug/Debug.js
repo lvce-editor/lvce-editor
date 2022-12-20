@@ -1,17 +1,29 @@
+import * as Command from '../Command/Command.js'
 import * as ExtensionHostDebug from '../ExtensionHost/ExtensionHostDebug.js'
 
-export const listProcesses = async () => {
-  return ExtensionHostDebug.listProcesses('node-debug')
+export const create = (debugId) => {
+  Command.register('Debug.paused')
+  return {
+    debugId,
+  }
 }
 
-export const continue_ = async () => {
-  return ExtensionHostDebug.continue_('node-debug')
+export const start = (id) => {
+  return ExtensionHostDebug.start(id)
 }
 
-export const pause = async () => {
-  return ExtensionHostDebug.pause('node-debug')
+export const listProcesses = async (id) => {
+  return ExtensionHostDebug.listProcesses(id)
 }
 
-export const setPauseOnExceptions = () => {
-  return ExtensionHostDebug.setPauseOnExceptions('node-debug', 'all')
+export const resume = async (id) => {
+  return ExtensionHostDebug.resume(id)
+}
+
+export const pause = async (id) => {
+  return ExtensionHostDebug.pause(id)
+}
+
+export const setPauseOnExceptions = (id) => {
+  return ExtensionHostDebug.setPauseOnExceptions(id, 'all')
 }

@@ -242,15 +242,18 @@ const maybeRegisterEvents = (module) => {
   if (module.Events) {
     // TODO remove event listeners when viewlet is disposed
     for (const [key, value] of Object.entries(module.Events)) {
+      console.log(module.Events)
       const handleUpdate = async () => {
         const instance = ViewletStates.getInstance(module.name)
         const newState = await value(instance.state)
         if (!newState) {
           throw new Error('newState must be defined')
         }
-        if (!module.shouldApplyNewState(newState)) {
+        if (
+          module.shouldApplyNewstate &&
+          !module.shouldApplyNewState(newState)
+        ) {
           console.log('[viewlet manager] return', newState)
-
           return
         }
         const commands = render(instance.factory, instance.state, newState)
