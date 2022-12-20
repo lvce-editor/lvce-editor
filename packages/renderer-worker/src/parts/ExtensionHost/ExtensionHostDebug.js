@@ -30,6 +30,42 @@ export const pause = async (debugId) => {
   })
 }
 
+export const stepOver = async (debugId) => {
+  await ExtensionHostShared.executeProvider({
+    event: `onDebug`,
+    method: 'ExtensionHostDebug.stepOver',
+    params: [debugId],
+    noProviderFoundMessage: 'no debug provider found',
+  })
+}
+
+export const stepInto = async (debugId) => {
+  await ExtensionHostShared.executeProvider({
+    event: `onDebug`,
+    method: 'ExtensionHostDebug.stepInto',
+    params: [debugId],
+    noProviderFoundMessage: 'no debug provider found',
+  })
+}
+
+export const stepOut = async (debugId) => {
+  await ExtensionHostShared.executeProvider({
+    event: `onDebug`,
+    method: 'ExtensionHostDebug.stepOut',
+    params: [debugId],
+    noProviderFoundMessage: 'no debug provider found',
+  })
+}
+
+export const step = async (debugId) => {
+  await ExtensionHostShared.executeProvider({
+    event: `onDebug`,
+    method: 'ExtensionHostDebug.step',
+    params: [debugId],
+    noProviderFoundMessage: 'no debug provider found',
+  })
+}
+
 export const setPauseOnExceptions = async (debugId, value) => {
   await ExtensionHostShared.executeProvider({
     event: `onDebug`,

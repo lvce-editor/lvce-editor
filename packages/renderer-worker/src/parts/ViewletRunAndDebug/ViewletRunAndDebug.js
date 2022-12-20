@@ -51,6 +51,24 @@ export const pause = async (state) => {
   return state
 }
 
+export const stepOver = async (state) => {
+  const { debugId } = state
+  await Debug.stepOver(debugId)
+  return state
+}
+
+export const stepInto = async (state) => {
+  const { debugId } = state
+  await Debug.stepInto(debugId)
+  return state
+}
+
+export const stepOut = async (state) => {
+  const { debugId } = state
+  await Debug.stepOut(debugId)
+  return state
+}
+
 // TODO make sure dispose is actually called
 export const dispose = (state) => {
   return {

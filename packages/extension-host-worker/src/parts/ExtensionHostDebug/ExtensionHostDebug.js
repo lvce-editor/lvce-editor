@@ -66,6 +66,42 @@ export const pause = async (protocol) => {
   }
 }
 
+export const step = async (protocol) => {
+  try {
+    const provider = getDebugProvider(protocol)
+    return await provider.step()
+  } catch (error) {
+    throw new VError(error, 'Failed to execute debug provider')
+  }
+}
+
+export const stepInto = async (protocol) => {
+  try {
+    const provider = getDebugProvider(protocol)
+    return await provider.stepInto()
+  } catch (error) {
+    throw new VError(error, 'Failed to execute debug provider')
+  }
+}
+
+export const stepOut = async (protocol) => {
+  try {
+    const provider = getDebugProvider(protocol)
+    return await provider.stepOut()
+  } catch (error) {
+    throw new VError(error, 'Failed to execute debug provider')
+  }
+}
+
+export const stepOver = async (protocol) => {
+  try {
+    const provider = getDebugProvider(protocol)
+    return await provider.stepOver()
+  } catch (error) {
+    throw new VError(error, 'Failed to execute debug provider')
+  }
+}
+
 export const setPauseOnException = async (protocol, value) => {
   try {
     const provider = getDebugProvider(protocol)

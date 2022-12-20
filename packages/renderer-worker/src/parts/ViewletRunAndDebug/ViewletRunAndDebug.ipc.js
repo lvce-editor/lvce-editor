@@ -6,6 +6,9 @@ export const Commands = {
   continue: ViewletRunAndDebug.resume,
   resume: ViewletRunAndDebug.resume,
   pause: ViewletRunAndDebug.pause,
+  stepOver: ViewletRunAndDebug.stepOver,
+  stepInto: ViewletRunAndDebug.stepInto,
+  stepOut: ViewletRunAndDebug.stepOut,
 }
 
 export const Events = {

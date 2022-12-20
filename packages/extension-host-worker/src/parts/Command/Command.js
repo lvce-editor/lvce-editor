@@ -82,6 +82,12 @@ const getFn = (method) => {
       return ExtensionHostDebug.setPauseOnException
     case 'ExtensionHostDebug.start':
       return ExtensionHostDebug.start
+    case 'ExtensionHostDebug.stepOver':
+      return ExtensionHostDebug.stepOver
+    case 'ExtensionHostDebug.stepOut':
+      return ExtensionHostDebug.stepOut
+    case 'ExtensionHostDebug.stepInto':
+      return ExtensionHostDebug.stepInto
     default:
       throw new CommandNotFoundError(`method not found: ${method}`)
   }

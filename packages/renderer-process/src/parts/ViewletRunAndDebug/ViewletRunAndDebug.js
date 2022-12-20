@@ -1,14 +1,25 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ViewletDebugEvents from './ViewletRunAndDebugEvents.js'
 
+const create$DebugButton = (text) => {
+  const $Button = document.createElement('button')
+  $Button.className = 'DebugButton'
+  $Button.textContent = text
+  return $Button
+}
+
 export const create = () => {
   // const $ButtonPause = document.createElement('button')
   // $ButtonPause.textContent = 'pause'
   // $ButtonPause.className = 'DebugButtonPause'
 
-  const $ButtonPauseContinue = document.createElement('button')
-  $ButtonPauseContinue.className = 'DebugButtonPauseContinue'
-  // $ButtonPauseContinue.textContent = 'continue'
+  const $ButtonPauseContinue = create$DebugButton('')
+
+  const $ButtonStepOver = create$DebugButton('Step over')
+
+  const $ButtonStepInto = create$DebugButton('Step into')
+
+  const $ButtonStepOut = create$DebugButton('Step out')
 
   const $Title = document.createElement('div')
   $Title.textContent = 'Threads'
@@ -19,7 +30,14 @@ export const create = () => {
   $Viewlet.className = 'Viewlet RunAndDebug'
   $Viewlet.tabIndex = 0
   $Viewlet.onmousedown = ViewletDebugEvents.handleMouseDown
-  $Viewlet.append($ButtonPauseContinue, $Title, $Processes)
+  $Viewlet.append(
+    $ButtonPauseContinue,
+    $ButtonStepOver,
+    $ButtonStepInto,
+    $ButtonStepOut,
+    $Title,
+    $Processes
+  )
 
   return {
     $Viewlet,
