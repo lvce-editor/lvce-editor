@@ -1,4 +1,25 @@
 .RunAndDebug {
   white-space: pre;
-  user-select: text;
+}
+
+.DebugSectionHeader {
+  height: 22px;
+  contain: strict;
+  background: rgb(30, 37, 35);
+  border-top: 1px solid var(--SideBarBackground);
+  border-bottom: 1px solid var(--SideBarBackground);
+  padding-left: 10px;
+  display: flex;
+  align-items: center;
+  font-size: 12px;
+}
+
+.DebugMaskIcon {
+  position: static !important;
+  width: 12px;
+  height: 12px;
+  contain: strict;
+  display: inline-block;
+  flex-shrink: 0;
+  --MaskIconSize: 12px;
 }

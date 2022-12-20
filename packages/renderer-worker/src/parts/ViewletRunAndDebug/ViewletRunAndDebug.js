@@ -6,6 +6,10 @@ export const create = (id) => {
     disposed: false,
     processes: [],
     debugState: 'none',
+    watchExpanded: false,
+    breakPointsExpanded: false,
+    scopeExpanded: false,
+    callstackExpanded: false,
   }
 }
 
@@ -69,6 +73,38 @@ export const stepOut = async (state) => {
   return state
 }
 
+export const handleClickSectionWatch = (state) => {
+  const { watchExpanded } = state
+  return {
+    ...state,
+    watchExpanded: !watchExpanded,
+  }
+}
+
+export const handleClickSectionBreakPoints = (state) => {
+  const { breakPointsExpanded } = state
+  return {
+    ...state,
+    breakPointsExpanded: !breakPointsExpanded,
+  }
+}
+
+export const handleClickSectionScope = (state) => {
+  const { scopeExpanded } = state
+  return {
+    ...state,
+    scopeExpanded: !scopeExpanded,
+  }
+}
+
+export const handleClickSectionCallstack = (state) => {
+  const { callStackExpanded } = state
+  return {
+    ...state,
+    callStackExpanded: !callStackExpanded,
+  }
+}
+
 // TODO make sure dispose is actually called
 export const dispose = (state) => {
   return {
@@ -99,7 +135,27 @@ const renderDebugState = {
   },
 }
 
-export const render = [renderProcesses, renderDebugState]
+const renderSections = {
+  isEqual(oldState, newState) {
+    return (
+      oldState.watchExpanded === newState.watchExpanded &&
+      oldState.breakpointsExpanded === newState.breakpointsExpanded &&
+      oldState.scopeExpanded === newState.scopeExpanded &&
+      oldState.callstackExpanded === newState.callstackExpanded
+    )
+  },
+  apply(oldState, newState) {
+    return [
+      /* method */ 'setSections',
+      newState.watchExpanded,
+      newState.breakpointsExanded,
+      newState.scopeExpanded,
+      newState.callstackExpanded,
+    ]
+  },
+}
+
+export const render = [renderProcesses, renderDebugState, renderSections]
 
 export const resize = (state, dimensions) => {
   return { ...state, ...dimensions }

@@ -45,12 +45,51 @@ const handleClickPauseContinue = (event, target) => {
   }
 }
 
+const handleClickSectionWatch = () => {
+  RendererWorker.send('Run And Debug.handleClickSectionWatch')
+}
+
+const handleClickSectionBreakpoints = () => {
+  RendererWorker.send('Run And Debug.handleClickSectionBreakPoints')
+}
+
+const handleClickSectionScope = () => {
+  RendererWorker.send('Run And Debug.handleClickSectionScope')
+}
+
+const handleClickSectionCallstack = () => {
+  RendererWorker.send('Run And Debug.handleClickSectionCallstack')
+}
+
+const handleClickDebugSectionHeader = (event, target) => {
+  event.preventDefault()
+  switch (target.textContent) {
+    case 'Watch':
+      handleClickSectionWatch()
+      break
+    case 'BreakPoints':
+      handleClickSectionBreakpoints()
+      break
+    case 'Scope':
+      handleClickSectionScope()
+      break
+    case 'Call Stack':
+      handleClickSectionCallstack()
+      break
+    default:
+      break
+  }
+}
+
 export const handleMouseDown = (event) => {
   const { target } = event
   console.log(target.className)
   switch (target.className) {
     case 'DebugButton':
       handleClickPauseContinue(event, target)
+      break
+    case 'DebugSectionHeader':
+      handleClickDebugSectionHeader(event, target)
       break
     default:
       break

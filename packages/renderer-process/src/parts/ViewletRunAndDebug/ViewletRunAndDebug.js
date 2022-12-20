@@ -1,11 +1,23 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ViewletDebugEvents from './ViewletRunAndDebugEvents.js'
+import * as MaskIcon from '../MaskIcon/MaskIcon.js'
+import * as Icon from '../Icon/Icon.js'
 
 const create$DebugButton = (text) => {
   const $Button = document.createElement('button')
   $Button.className = 'DebugButton'
   $Button.textContent = text
   return $Button
+}
+
+const create$DebugSectionHeader = (text) => {
+  const $DebugSectionHeader = document.createElement('div')
+  $DebugSectionHeader.className = 'DebugSectionHeader'
+  const $Icon = MaskIcon.create(Icon.TriangleRight)
+  $Icon.classList.add('DebugMaskIcon')
+  const $Label = document.createTextNode(text)
+  $DebugSectionHeader.append($Icon, $Label)
+  return $DebugSectionHeader
 }
 
 export const create = () => {
@@ -21,10 +33,13 @@ export const create = () => {
 
   const $ButtonStepOut = create$DebugButton('Step out')
 
-  const $Title = document.createElement('div')
-  $Title.textContent = 'Threads'
-
   const $Processes = document.createElement('div')
+
+  const $DebugSectionHeaderWatch = create$DebugSectionHeader('Watch')
+  const $DebugSectionHeaderBreakPoints =
+    create$DebugSectionHeader('Breakpoints')
+  const $DebugSectionHeaderScope = create$DebugSectionHeader('Scope')
+  const $DebugSectionHeaderCallstack = create$DebugSectionHeader('Call Stack')
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet RunAndDebug'
@@ -35,8 +50,10 @@ export const create = () => {
     $ButtonStepOver,
     $ButtonStepInto,
     $ButtonStepOut,
-    $Title,
-    $Processes
+    $DebugSectionHeaderWatch,
+    $DebugSectionHeaderBreakPoints,
+    $DebugSectionHeaderScope,
+    $DebugSectionHeaderCallstack
   )
 
   return {
