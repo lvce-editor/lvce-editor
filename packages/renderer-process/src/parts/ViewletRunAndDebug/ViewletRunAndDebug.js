@@ -93,12 +93,16 @@ export const setDebugState = (state, debugState) => {
   console.log({ debugState })
 }
 
-const create$ScopeChain = (scopeChain) => {
+const create$ScopeChain = (scopeChain, thisObject) => {
   console.log({ scopeChain })
   const $ScopeChain = document.createElement('div')
   for (const element of scopeChain) {
     const $Node = document.createElement('div')
-    $Node.textContent = element.type
+    if (element.type === 'closure' && element.name) {
+      $Node.textContent = `${element.type} (${element.name})`
+    } else {
+      $Node.textContent = element.type
+    }
     $ScopeChain.append($Node)
   }
   return $ScopeChain
