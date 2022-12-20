@@ -207,6 +207,7 @@ exports.createBrowserView = async (restoreId) => {
   const view = new BrowserView({
     webPreferences: {
       session: ElectronSessionForBrowserView.getSession(),
+      webSecurity: false,
     },
   })
 
