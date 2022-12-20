@@ -8,7 +8,7 @@
   background: rgb(30, 37, 35);
   border-top: 1px solid var(--SideBarBackground);
   border-bottom: 1px solid var(--SideBarBackground);
-  padding-left: 10px;
+  padding-left: 3px;
   display: flex;
   align-items: center;
   font-size: 12px;

@@ -39,7 +39,7 @@ export const create = () => {
   const $DebugSectionHeaderBreakPoints =
     create$DebugSectionHeader('Breakpoints')
   const $DebugSectionHeaderScope = create$DebugSectionHeader('Scope')
-  const $DebugSectionHeaderCallstack = create$DebugSectionHeader('Call Stack')
+  const $DebugSectionHeaderCallStack = create$DebugSectionHeader('Call Stack')
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet RunAndDebug'
@@ -53,7 +53,7 @@ export const create = () => {
     $DebugSectionHeaderWatch,
     $DebugSectionHeaderBreakPoints,
     $DebugSectionHeaderScope,
-    $DebugSectionHeaderCallstack
+    $DebugSectionHeaderCallStack
   )
 
   return {
@@ -63,7 +63,7 @@ export const create = () => {
     $DebugSectionHeaderWatch,
     $DebugSectionHeaderBreakPoints,
     $DebugSectionHeaderScope,
-    $DebugSectionHeaderCallstack,
+    $DebugSectionHeaderCallStack,
   }
 }
 
@@ -103,7 +103,7 @@ const create$ScopeChain = (scopeChain, thisObject) => {
   for (const element of scopeChain) {
     const $Node = document.createElement('div')
     if (element.type === 'closure' && element.name) {
-      $Node.textContent = `${element.type} (${element.name})`
+      $Node.textContent = `Closure (${element.name})`
     } else {
       $Node.textContent = element.type
     }
@@ -121,6 +121,27 @@ export const setScopeChain = (state, scopeChain) => {
     $DebugSectionHeaderScope.after($ScopeChain)
   } else {
     $Next.replaceWith($ScopeChain)
+  }
+}
+
+const create$CallStack = (callStack) => {
+  const $CallStack = document.createElement('div')
+  for (const element of callStack) {
+    const $Node = document.createElement('div')
+    $Node.textContent = element
+    $CallStack.append($Node)
+  }
+  return $CallStack
+}
+
+export const setCallStack = (state, callStack) => {
+  const { $DebugSectionHeaderCallStack } = state
+  const $CallStack = create$CallStack(callStack)
+  const $Next = $DebugSectionHeaderCallStack.nextElementSibling
+  if (!$Next || $Next.className === 'DebugSectionHeader') {
+    $DebugSectionHeaderCallStack.after($CallStack)
+  } else {
+    $Next.replaceWith($CallStack)
   }
 }
 

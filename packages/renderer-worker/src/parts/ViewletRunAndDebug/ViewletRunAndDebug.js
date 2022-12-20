@@ -11,6 +11,7 @@ export const create = (id) => {
     scopeExpanded: false,
     callstackExpanded: false,
     scopeChain: [],
+    callStack: [],
   }
 }
 
@@ -30,11 +31,13 @@ export const loadContent = async (state) => {
 export const handlePaused = (state, params) => {
   console.log({ params })
   const scopeChain = params.callFrames[0].scopeChain
+  const callStack = [params.callFrames[0].functionName]
   return {
     ...state,
     debugState: 'paused',
     scopeChain,
     scopeExpanded: true,
+    callStack,
   }
 }
 
@@ -42,6 +45,7 @@ export const handleResumed = (state) => {
   return {
     ...state,
     debugState: 'default',
+    scopeChain: [],
   }
 }
 
@@ -168,11 +172,21 @@ const renderScopeChain = {
   },
 }
 
+const renderCallStack = {
+  isEqual(oldState, newState) {
+    return oldState.scopeChain === newState.scopeChain
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setCallStack', newState.callStack]
+  },
+}
+
 export const render = [
   renderProcesses,
   renderDebugState,
   renderSections,
   renderScopeChain,
+  renderCallStack,
 ]
 
 export const resize = (state, dimensions) => {
