@@ -12,6 +12,7 @@ export const create = (id) => {
     callstackExpanded: false,
     scopeChain: [],
     callStack: [],
+    parsedScripts: Object.create(null),
   }
 }
 
@@ -31,7 +32,12 @@ export const loadContent = async (state) => {
 export const handlePaused = (state, params) => {
   console.log({ params })
   const scopeChain = params.callFrames[0].scopeChain
-  const callStack = [params.callFrames[0].functionName]
+  const callStack = [
+    {
+      functionName: params.callFrames[0].functionName,
+      functionLocation: params.callFrames[0].functionLocation,
+    },
+  ]
   return {
     ...state,
     debugState: 'paused',
@@ -49,18 +55,36 @@ export const handleResumed = (state) => {
   }
 }
 
+export const handleScriptParsed = (state, parsedScript) => {
+  console.log({ parsedScript })
+  const { parsedScripts } = state
+  return {
+    ...state,
+    parsedScripts: {
+      ...parsedScripts,
+      [parsedScript.id]: parsedScript,
+    },
+  }
+}
+
 export const resume = async (state) => {
   const { debugId } = state
   await Debug.resume(debugId)
-  console.log('continue')
   return state
 }
 
 export const pause = async (state) => {
   const { debugId } = state
   await Debug.pause(debugId)
-  console.log('pause')
   return state
+}
+
+export const togglePause = async (state) => {
+  const { debugState } = state
+  if (debugState === 'default') {
+    return pause(state)
+  }
+  return resume(state)
 }
 
 export const stepOver = async (state) => {

@@ -14,11 +14,13 @@ export const Commands = {
   handleClickSectionBreakPoints: ViewletRunAndDebug.handleClickSectionBreakPoints,
   handleClickSectionScope: ViewletRunAndDebug.handleClickSectionScope,
   handleClickSectionCallstack: ViewletRunAndDebug.handleClickSectionCallstack,
+  togglePause: ViewletRunAndDebug.togglePause,
 }
 
 export const Events = {
   'Debug.paused': ViewletRunAndDebug.handlePaused,
   'Debug.resumed': ViewletRunAndDebug.handleResumed,
+  'Debug.scriptParsed': ViewletRunAndDebug.handleScriptParsed,
 }
 
 export const Css = [

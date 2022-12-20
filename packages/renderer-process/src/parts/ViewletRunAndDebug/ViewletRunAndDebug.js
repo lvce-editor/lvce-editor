@@ -128,7 +128,7 @@ const create$CallStack = (callStack) => {
   const $CallStack = document.createElement('div')
   for (const element of callStack) {
     const $Node = document.createElement('div')
-    $Node.textContent = element
+    $Node.textContent = element.functionName
     $CallStack.append($Node)
   }
   return $CallStack

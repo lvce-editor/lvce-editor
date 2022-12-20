@@ -30,8 +30,15 @@ export const start = async (protocol, path) => {
     const handleResumed = () => {
       Rpc.send('Debug.resumed')
     }
+    const handleScriptParsed = (parsedScript) => {
+      console.log({ parsedScript })
+      Rpc.send('Debug.scriptParsed', parsedScript)
+    }
     const provider = getDebugProvider(protocol)
-    await provider.start({ handlePaused, handleResumed }, path)
+    await provider.start(
+      { handlePaused, handleResumed, handleScriptParsed },
+      path
+    )
   } catch (error) {
     throw new VError(error, 'Failed to execute debug provider')
   }
