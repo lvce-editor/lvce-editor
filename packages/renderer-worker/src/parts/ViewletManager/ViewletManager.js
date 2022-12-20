@@ -243,9 +243,9 @@ const maybeRegisterEvents = (module) => {
     // TODO remove event listeners when viewlet is disposed
     for (const [key, value] of Object.entries(module.Events)) {
       console.log(module.Events)
-      const handleUpdate = async () => {
+      const handleUpdate = async (...params) => {
         const instance = ViewletStates.getInstance(module.name)
-        const newState = await value(instance.state)
+        const newState = await value(instance.state, ...params)
         if (!newState) {
           throw new Error('newState must be defined')
         }

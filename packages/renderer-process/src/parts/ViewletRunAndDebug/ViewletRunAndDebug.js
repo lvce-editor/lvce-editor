@@ -60,6 +60,10 @@ export const create = () => {
     $Viewlet,
     $Processes,
     $ButtonPauseContinue,
+    $DebugSectionHeaderWatch,
+    $DebugSectionHeaderBreakPoints,
+    $DebugSectionHeaderScope,
+    $DebugSectionHeaderCallstack,
   }
 }
 
@@ -87,6 +91,24 @@ export const setDebugState = (state, debugState) => {
       break
   }
   console.log({ debugState })
+}
+
+const create$ScopeChain = (scopeChain) => {
+  console.log({ scopeChain })
+  const $ScopeChain = document.createElement('div')
+  for (const element of scopeChain) {
+    const $Node = document.createElement('div')
+    $Node.textContent = element.type
+    $ScopeChain.append($Node)
+  }
+  return $ScopeChain
+}
+
+export const setScopeChain = (state, scopeChain) => {
+  Assert.array(scopeChain)
+  const { $DebugSectionHeaderScope } = state
+  const $ScopeChain = create$ScopeChain(scopeChain)
+  $DebugSectionHeaderScope.after($ScopeChain)
 }
 
 export const refresh = (state, message) => {

@@ -10,6 +10,7 @@ export const create = (id) => {
     breakPointsExpanded: false,
     scopeExpanded: false,
     callstackExpanded: false,
+    scopeChain: [],
   }
 }
 
@@ -26,11 +27,14 @@ export const loadContent = async (state) => {
   }
 }
 
-export const handlePaused = (state) => {
-  console.log('handle paused')
+export const handlePaused = (state, params) => {
+  console.log({ params })
+  const scopeChain = params.callFrames[0].scopeChain
   return {
     ...state,
     debugState: 'paused',
+    scopeChain,
+    scopeExpanded: true,
   }
 }
 
@@ -155,7 +159,21 @@ const renderSections = {
   },
 }
 
-export const render = [renderProcesses, renderDebugState, renderSections]
+const renderScopeChain = {
+  isEqual(oldState, newState) {
+    return oldState.scopeChain === newState.scopeChain
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setScopeChain', newState.scopeChain]
+  },
+}
+
+export const render = [
+  renderProcesses,
+  renderDebugState,
+  renderSections,
+  renderScopeChain,
+]
 
 export const resize = (state, dimensions) => {
   return { ...state, ...dimensions }
