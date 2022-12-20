@@ -2,11 +2,11 @@ import * as Assert from '../Assert/Assert.js'
 import * as ViewletDebugEvents from './ViewletRunAndDebugEvents.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as Icon from '../Icon/Icon.js'
+import * as IconButton from '../IconButton/IconButton.js'
 
-const create$DebugButton = (text) => {
-  const $Button = document.createElement('button')
-  $Button.className = 'DebugButton'
-  $Button.textContent = text
+const create$DebugButton = (text, icon) => {
+  const $Button = IconButton.create$Button(text, icon)
+  $Button.className += ' DebugButton'
   return $Button
 }
 
@@ -25,13 +25,13 @@ export const create = () => {
   // $ButtonPause.textContent = 'pause'
   // $ButtonPause.className = 'DebugButtonPause'
 
-  const $ButtonPauseContinue = create$DebugButton('')
+  const $ButtonPauseContinue = create$DebugButton('pause', Icon.DebugContinue)
 
-  const $ButtonStepOver = create$DebugButton('Step over')
+  const $ButtonStepOver = create$DebugButton('Step over', Icon.DebugStepOver)
 
-  const $ButtonStepInto = create$DebugButton('Step into')
+  const $ButtonStepInto = create$DebugButton('Step into', Icon.DebugStepInto)
 
-  const $ButtonStepOut = create$DebugButton('Step out')
+  const $ButtonStepOut = create$DebugButton('Step out', Icon.DebugStepOut)
 
   const $Processes = document.createElement('div')
 
@@ -82,10 +82,14 @@ export const setDebugState = (state, debugState) => {
   const { $ButtonPauseContinue } = state
   switch (debugState) {
     case 'paused':
-      $ButtonPauseContinue.textContent = 'continue'
+      $ButtonPauseContinue.ariaLabel = 'continue'
+      $ButtonPauseContinue.title = 'continue'
+      MaskIcon.setIcon($ButtonPauseContinue.firstChild, Icon.DebugContinue)
       break
     case 'default':
-      $ButtonPauseContinue.textContent = 'pause'
+      $ButtonPauseContinue.ariaLabel = 'pause'
+      $ButtonPauseContinue.title = 'pause'
+      MaskIcon.setIcon($ButtonPauseContinue.firstChild, Icon.DebugPause)
       break
     default:
       break
@@ -112,7 +116,12 @@ export const setScopeChain = (state, scopeChain) => {
   Assert.array(scopeChain)
   const { $DebugSectionHeaderScope } = state
   const $ScopeChain = create$ScopeChain(scopeChain)
-  $DebugSectionHeaderScope.after($ScopeChain)
+  const $Next = $DebugSectionHeaderScope.nextElementSibling
+  if ($Next.className === 'DebugSectionHeader') {
+    $DebugSectionHeaderScope.after($ScopeChain)
+  } else {
+    $Next.replaceWith($ScopeChain)
+  }
 }
 
 export const refresh = (state, message) => {

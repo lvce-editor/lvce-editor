@@ -5,6 +5,7 @@ const handleClickContinue = () => {
 }
 
 const handleClickPause = (event) => {
+  console.log('pause debugger')
   RendererWorker.send('Run And Debug.pause')
 }
 
@@ -21,10 +22,9 @@ const handleClickStepOut = (event) => {
   RendererWorker.send('Run And Debug.stepOut')
 }
 
-const handleClickPauseContinue = (event, target) => {
+const handleClickDebugButton = (event, target) => {
   event.preventDefault()
-  console.log(target.textContent)
-  switch (target.textContent) {
+  switch (target.ariaLabel) {
     case 'pause':
       handleClickPause()
       break
@@ -41,6 +41,7 @@ const handleClickPauseContinue = (event, target) => {
       handleClickStepOut()
       break
     default:
+      console.log(target)
       break
   }
 }
@@ -85,8 +86,8 @@ export const handleMouseDown = (event) => {
   const { target } = event
   console.log(target.className)
   switch (target.className) {
-    case 'DebugButton':
-      handleClickPauseContinue(event, target)
+    case 'IconButton DebugButton':
+      handleClickDebugButton(event, target)
       break
     case 'DebugSectionHeader':
       handleClickDebugSectionHeader(event, target)
