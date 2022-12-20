@@ -1,4 +1,5 @@
 import { VError } from '../VError/VError.js'
+import * as Rpc from '../Rpc/Rpc.js'
 
 export const state = {
   debugProviderMap: Object.create(null),
@@ -21,8 +22,17 @@ export const registerDebugProvider = (debugProvider) => {
 
 export const listProcesses = async (protocol, path) => {
   try {
+    const emitter = new EventTarget()
+    const handlePaused = () => {
+      Rpc.send('Debug.paused')
+    }
+    const handleResumed = () => {
+      Rpc.send('Debug.resumed')
+    }
+    emitter.addEventListener('paused', handlePaused)
+    emitter.addEventListener('resumed', handleResumed)
     const provider = getDebugProvider(protocol)
-    return await provider.listProcesses(path)
+    return await provider.listProcesses(emitter, path)
   } catch (error) {
     throw new VError(error, 'Failed to execute debug provider')
   }

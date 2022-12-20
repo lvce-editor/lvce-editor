@@ -10,6 +10,15 @@ export const create = (id) => {
 
 export const loadContent = async (state) => {
   const processes = await Debug.listProcesses()
+  const handlePaused = () => {
+    // TODO
+  }
+  const handleResumed = () => {
+    // TODO
+  }
+
+  Debug.addEventListener('paused', handlePaused)
+  Debug.addEventListener('resumed', handleResumed)
   return {
     ...state,
     processes,
