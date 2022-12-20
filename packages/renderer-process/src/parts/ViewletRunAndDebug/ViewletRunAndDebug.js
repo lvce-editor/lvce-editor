@@ -97,16 +97,29 @@ export const setDebugState = (state, debugState) => {
   console.log({ debugState })
 }
 
+const getLabel = (element) => {
+  switch (element.type) {
+    case 'local':
+      return 'Local'
+    case 'closure':
+      if (element.name) {
+        return `Closure (${element.name})`
+      }
+      return `Closure`
+    case 'global':
+      return 'Global'
+    default:
+      return element.type
+  }
+}
+
 const create$ScopeChain = (scopeChain, thisObject) => {
   console.log({ scopeChain })
   const $ScopeChain = document.createElement('div')
   for (const element of scopeChain) {
     const $Node = document.createElement('div')
-    if (element.type === 'closure' && element.name) {
-      $Node.textContent = `Closure (${element.name})`
-    } else {
-      $Node.textContent = element.type
-    }
+    const label = getLabel(element)
+    $Node.textContent = label
     $ScopeChain.append($Node)
   }
   return $ScopeChain

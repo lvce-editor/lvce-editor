@@ -52,6 +52,7 @@ export const handleResumed = (state) => {
     ...state,
     debugState: 'default',
     scopeChain: [],
+    callStack: [],
   }
 }
 
