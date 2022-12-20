@@ -1,5 +1,6 @@
 import { chmod, writeFile } from 'node:fs/promises'
 import VError from 'verror'
+import * as ArchType from '../ArchType/ArchType.js'
 import * as Compress from '../Compress/Compress.js'
 import * as Copy from '../Copy/Copy.js'
 import * as Exec from '../Exec/Exec.js'
@@ -8,11 +9,12 @@ import * as Logger from '../Logger/Logger.js'
 import * as Mkdir from '../Mkdir/Mkdir.js'
 import * as Path from '../Path/Path.js'
 import * as Product from '../Product/Product.js'
+import * as Remove from '../Remove/Remove.js'
 import * as Rename from '../Rename/Rename.js'
+import * as Replace from '../Replace/Replace.js'
 import * as Stat from '../Stat/Stat.js'
 import * as Tag from '../Tag/Tag.js'
 import * as Template from '../Template/Template.js'
-import * as ArchType from '../ArchType/ArchType.js'
 
 const getDebPackageArch = (arch) => {
   switch (arch) {
@@ -43,10 +45,19 @@ const copyElectronResult = async () => {
     from: `build/.tmp/electron-bundle/x64`,
     to: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}`,
   })
+  await Remove.remove(
+    `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/shared-process/node_modules/vscode-ripgrep-with-github-api-error-fix`
+  )
+  await Replace.replace({
+    path: `build/.tmp/linux/deb/${debArch}/app/usr/lib/${Product.applicationName}/resources/app/packages/shared-process/src/parts/RgPath/RgPath.js`,
+    occurrence: `export { rgPath } from 'vscode-ripgrep-with-github-api-error-fix'`,
+    replacement: `export const rgPath = 'rg'`,
+  })
 }
 
 const copyMetaFiles = async () => {
   const debArch = 'amd64'
+
   await Template.write(
     'linux_desktop',
     `build/.tmp/linux/deb/${debArch}/app/usr/share/applications/${Product.applicationName}.desktop`,
@@ -82,6 +93,19 @@ const copyMetaFiles = async () => {
     Path.absolute(`build/.tmp/linux/deb/${debArch}/app`)
   )
   const tag = await Tag.getGitTag()
+  const defaultDepends = [
+    'libnss3 (>= 2:3.26)',
+    'gnupg',
+    'apt',
+    'libxkbfile1',
+    'libsecret-1-0',
+    'libgtk-3-0 (>= 3.10.0)',
+    'libxss1',
+    'libgbm1',
+  ]
+  // TODO add options to process.argv whether or not ripgrep should be bundled or a dependency
+  const additionalDepends = ['ripgrep']
+  const depends = [...defaultDepends, ...additionalDepends].join(', ')
   await Template.write(
     'debian_control',
     `build/.tmp/linux/deb/${debArch}/DEBIAN/control`,
@@ -92,6 +116,7 @@ const copyMetaFiles = async () => {
       '@@INSTALLED_SIZE@@': `${installedSize}`,
       '@@HOMEPAGE@@': Product.homePage,
       '@@MAINTAINER@@': Product.linuxMaintainer,
+      '@@DEPENDS@@': depends,
     }
   )
   await Template.write(
