@@ -40,7 +40,7 @@ export const continue_ = async (protocol) => {
 export const pause = async (protocol) => {
   try {
     const provider = getDebugProvider(protocol)
-    return await provider.continue_()
+    return await provider.pause()
   } catch (error) {
     throw new VError(error, 'Failed to execute debug provider')
   }
