@@ -48,10 +48,20 @@ const toDisplayScopeChain = (thisObject, scopeChain, knownProperties) => {
   const elements = []
   for (const scope of scopeChain) {
     const label = DebugDisplay.getScopeLabel(scope)
-    elements.push({ label, indent: 10 })
+    elements.push({
+      type: 'scope',
+      key: label,
+      value: '',
+      valueType: '',
+      label,
+      indent: 10,
+    })
     if (scope.type === DebugScopeType.Local) {
       elements.push({
-        label: `this: ${thisObject.description}`,
+        type: 'this',
+        key: 'this',
+        value: thisObject.description,
+        valueType: '',
         indent: 20,
       })
     }
@@ -59,9 +69,11 @@ const toDisplayScopeChain = (thisObject, scopeChain, knownProperties) => {
     if (children) {
       for (const child of children.result.result) {
         const valueLabel = getPropertyValueLabel(child.value)
-        const label = `${child.name}: ${valueLabel}`
         elements.push({
-          label,
+          type: 'property',
+          key: child.name,
+          value: valueLabel,
+          valueType: child.value.type,
           indent: 20,
         })
       }

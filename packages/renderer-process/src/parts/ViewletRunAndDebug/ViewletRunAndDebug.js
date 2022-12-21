@@ -104,7 +104,41 @@ const create$ScopeChain = (scopeChain, thisObject) => {
   const $ScopeChain = document.createElement('div')
   for (const element of scopeChain) {
     const $Node = document.createElement('div')
-    $Node.textContent = element.label
+    switch (element.type) {
+      case 'this':
+        const $ThisKey = document.createElement('span')
+        $ThisKey.textContent = element.key
+        const $ThisValue = document.createElement('span')
+        $ThisValue.textContent = element.value
+        $Node.append($ThisKey, ': ', $ThisValue)
+        break
+      case 'scope':
+        const $ScopeKey = document.createElement('span')
+        $ScopeKey.className = 'DebugScopeKey'
+        $ScopeKey.textContent = element.key
+        $Node.append($ScopeKey)
+        break
+      case 'property':
+        const $PropertyKey = document.createElement('span')
+        $PropertyKey.textContent = element.key
+        $PropertyKey.className = 'DebugPropertyKey'
+        const $PropertyValue = document.createElement('span')
+        switch (element.valueType) {
+          case 'undefined':
+            $PropertyValue.className = 'DebugValueUndefined'
+            break
+          case 'number':
+            $PropertyValue.className = 'DebugValueNumber'
+            break
+          default:
+            break
+        }
+        $PropertyValue.textContent = element.value
+        $Node.append($PropertyKey, ': ', $PropertyValue)
+        break
+      default:
+        throw new Error('unsupported scope type')
+    }
     $Node.style.paddingLeft = `${element.indent}px`
     $ScopeChain.append($Node)
   }

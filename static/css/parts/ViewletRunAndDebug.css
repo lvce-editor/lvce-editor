@@ -23,3 +23,16 @@
   flex-shrink: 0;
   --MaskIconSize: 12px;
 }
+
+.DebugPropertyKey {
+  font-weight: 500;
+  color: #be9296;
+}
+
+.DebugValueNumber {
+  color: hsl(252deg 100% 75%);
+}
+
+.DebugValueUndefined {
+  color: rgb(128, 134, 139);
+}
