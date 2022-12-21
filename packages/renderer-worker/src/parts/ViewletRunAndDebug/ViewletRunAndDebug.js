@@ -63,13 +63,19 @@ const toDisplayScopeChain = (scopeChain, knownProperties) => {
   return elements
 }
 
+const toDisplayCallStack = (callFrames) => {
+  const callStack = []
+  for (const callFrame of callFrames) {
+    callStack.push({
+      functionName: callFrame.functionName || '(anonymous)',
+      functionLocation: callFrame.functionLocation,
+    })
+  }
+  return callStack
+}
+
 export const handlePaused = async (state, params) => {
-  const callStack = [
-    {
-      functionName: params.callFrames[0].functionName,
-      functionLocation: params.callFrames[0].functionLocation,
-    },
-  ]
+  const callStack = toDisplayCallStack(params.callFrames)
   const objectId = params.callFrames[0].scopeChain[0].object.objectId
   const { debugId } = state
   const properties = await Debug.getProperties(debugId, objectId)
