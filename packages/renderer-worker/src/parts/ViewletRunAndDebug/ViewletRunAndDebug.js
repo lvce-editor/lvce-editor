@@ -58,6 +58,17 @@ const getScopeLabel = (element) => {
   }
 }
 
+const getPropertyValueLabel = (property) => {
+  switch (property.type) {
+    case 'number':
+      return property.description
+    case 'undefined':
+      return `undefined`
+    default:
+      return `${JSON.stringify(property)}`
+  }
+}
+
 const toDisplayScopeChain = (scopeChain, knownProperties) => {
   const elements = []
   for (const scope of scopeChain) {
@@ -67,8 +78,10 @@ const toDisplayScopeChain = (scopeChain, knownProperties) => {
     console.log({ children, knownProperties, objectId: scope.object.objectId })
     if (children) {
       for (const child of children.result.result) {
+        const valueLabel = getPropertyValueLabel(child.value)
+        const label = `${child.name}: ${valueLabel}`
         elements.push({
-          label: child.name,
+          label,
           indent: 20,
         })
       }
