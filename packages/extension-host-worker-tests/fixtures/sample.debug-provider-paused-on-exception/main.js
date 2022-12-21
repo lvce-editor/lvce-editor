@@ -25,7 +25,7 @@ const debugProvider = {
                   type: 'object',
                   className: 'Object',
                   description: 'Object',
-                  objectId: '-6093838151779154534.1.1',
+                  objectId: '-6093838151779154534.1.15',
                 },
                 startLocation: {
                   scriptId: '464',
@@ -44,7 +44,7 @@ const debugProvider = {
                   type: 'object',
                   className: 'global',
                   description: 'global',
-                  objectId: '-6093838151779154534.1.2',
+                  objectId: '-6093838151779154534.1.16',
                 },
               },
             ],
@@ -73,7 +73,7 @@ const debugProvider = {
                   type: 'object',
                   className: 'Object',
                   description: 'Object',
-                  objectId: '-6093838151779154534.1.3',
+                  objectId: '-6093838151779154534.1.17',
                 },
                 name: 'listOnTimeout',
                 startLocation: {
@@ -93,7 +93,7 @@ const debugProvider = {
                   type: 'object',
                   className: 'Object',
                   description: 'Object',
-                  objectId: '-6093838151779154534.1.4',
+                  objectId: '-6093838151779154534.1.18',
                 },
                 name: 'listOnTimeout',
                 startLocation: {
@@ -113,7 +113,7 @@ const debugProvider = {
                   type: 'object',
                   className: 'Object',
                   description: 'Object',
-                  objectId: '-6093838151779154534.1.5',
+                  objectId: '-6093838151779154534.1.19',
                 },
                 name: 'listOnTimeout',
                 startLocation: {
@@ -133,7 +133,7 @@ const debugProvider = {
                   type: 'object',
                   className: 'Object',
                   description: 'Object',
-                  objectId: '-6093838151779154534.1.6',
+                  objectId: '-6093838151779154534.1.20',
                 },
                 name: 'getTimerCallbacks',
                 startLocation: {
@@ -153,7 +153,7 @@ const debugProvider = {
                   type: 'object',
                   className: 'Object',
                   description: 'Object',
-                  objectId: '-6093838151779154534.1.7',
+                  objectId: '-6093838151779154534.1.21',
                 },
                 startLocation: {
                   scriptId: '18',
@@ -172,7 +172,7 @@ const debugProvider = {
                   type: 'object',
                   className: 'global',
                   description: 'global',
-                  objectId: '-6093838151779154534.1.8',
+                  objectId: '-6093838151779154534.1.22',
                 },
               },
             ],
@@ -201,7 +201,7 @@ const debugProvider = {
                   type: 'object',
                   className: 'Object',
                   description: 'Object',
-                  objectId: '-6093838151779154534.1.9',
+                  objectId: '-6093838151779154534.1.23',
                 },
                 name: 'processTimers',
                 startLocation: {
@@ -221,7 +221,7 @@ const debugProvider = {
                   type: 'object',
                   className: 'Object',
                   description: 'Object',
-                  objectId: '-6093838151779154534.1.10',
+                  objectId: '-6093838151779154534.1.24',
                 },
                 name: 'getTimerCallbacks',
                 startLocation: {
@@ -241,7 +241,7 @@ const debugProvider = {
                   type: 'object',
                   className: 'Object',
                   description: 'Object',
-                  objectId: '-6093838151779154534.1.11',
+                  objectId: '-6093838151779154534.1.25',
                 },
                 startLocation: {
                   scriptId: '18',
@@ -260,7 +260,7 @@ const debugProvider = {
                   type: 'object',
                   className: 'global',
                   description: 'global',
-                  objectId: '-6093838151779154534.1.12',
+                  objectId: '-6093838151779154534.1.26',
                 },
               },
             ],
@@ -268,11 +268,20 @@ const debugProvider = {
               type: 'object',
               className: 'process',
               description: 'process',
-              objectId: '-6093838151779154534.1.13',
+              objectId: '-6093838151779154534.1.27',
             },
           },
         ],
-        reason: 'other',
+        reason: 'exception',
+        data: {
+          type: 'object',
+          subtype: 'error',
+          className: 'Error',
+          description:
+            'Error: oops\n    at Timeout._onTimeout (/test/index.js:5:11)\n    at listOnTimeout (node:internal/timers:564:17)\n    at process.processTimers (node:internal/timers:507:7)',
+          objectId: '-6093838151779154534.1.14',
+          uncaught: false,
+        },
         hitBreakpoints: [],
       })
     })

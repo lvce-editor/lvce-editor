@@ -46,7 +46,12 @@ const getPropertyValueLabel = (property) => {
   }
 }
 
-const toDisplayScopeChain = (thisObject, scopeChain, knownProperties) => {
+const toDisplayScopeChain = (
+  params,
+  thisObject,
+  scopeChain,
+  knownProperties
+) => {
   const elements = []
   for (const scope of scopeChain) {
     const label = DebugDisplay.getScopeLabel(scope)
@@ -58,7 +63,18 @@ const toDisplayScopeChain = (thisObject, scopeChain, knownProperties) => {
       label,
       indent: 10,
     })
+    // if(params.reason)
     if (scope.type === DebugScopeType.Local) {
+      if (params.reason === DebugPausedReason.Exception) {
+        const value = params.data.description.replaceAll('\n', ' ')
+        elements.push({
+          type: 'exception',
+          key: 'Exception',
+          value,
+          valueType: '',
+          indent: 20,
+        })
+      }
       const valueLabel = getPropertyValueLabel(thisObject)
       elements.push({
         type: 'this',
@@ -105,6 +121,7 @@ export const handlePaused = async (state, params) => {
   const thisObject = params.callFrames[0].this
   Assert.object(thisObject)
   const scopeChain = toDisplayScopeChain(
+    params,
     thisObject,
     params.callFrames[0].scopeChain,
     {

@@ -12,18 +12,18 @@ test('sample.debug-provider-paused-on-exception', async () => {
   await SideBar.open('Run And Debug')
 
   // assert
+  const debugPausedMessage = Locator('.DebugPausedMessage')
+  await expect(debugPausedMessage).toHaveText('Paused on exception')
   const debugButtonOne = Locator('.DebugButton').nth(0)
   await expect(debugButtonOne).toHaveAttribute('title', 'continue')
   const rows = Locator('.DebugSectionRow')
-  await expect(rows).toHaveCount(8)
+  await expect(rows).toHaveCount(4)
   await expect(rows.nth(0)).toHaveText('Local')
-  await expect(rows.nth(1)).toHaveText('this: process')
-  await expect(rows.nth(2)).toHaveText('now: 1985388')
-  await expect(rows.nth(3)).toHaveText('list: undefined')
-  await expect(rows.nth(4)).toHaveText('ranAtLeastOneList: undefined')
-  await expect(rows.nth(5)).toHaveText('Closure (getTimerCallbacks)')
-  await expect(rows.nth(6)).toHaveText('Closure')
-  await expect(rows.nth(7)).toHaveText('Global')
+  await expect(rows.nth(1)).toHaveText(
+    'Exception: Error: oops     at Timeout._onTimeout (/test/index.js:5:11)     at listOnTimeout (node:internal/timers:564:17)     at process.processTimers (node:internal/timers:507:7)'
+  )
+  await expect(rows.nth(2)).toHaveText('this: undefined')
+  await expect(rows.nth(3)).toHaveText('Global')
 })
 
 export {}

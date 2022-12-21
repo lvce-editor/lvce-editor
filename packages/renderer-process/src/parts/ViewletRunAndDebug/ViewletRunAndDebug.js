@@ -113,6 +113,13 @@ const create$ScopeChain = (scopeChain, thisObject) => {
         $ThisValue.textContent = element.value
         $Node.append($ThisKey, ': ', $ThisValue)
         break
+      case 'exception':
+        const $ExceptionKey = document.createElement('span')
+        $ExceptionKey.textContent = element.key
+        const $ExceptionValue = document.createElement('span')
+        $ExceptionValue.textContent = element.value
+        $Node.append($ExceptionKey, ': ', $ExceptionValue)
+        break
       case 'scope':
         const $ScopeKey = document.createElement('span')
         $ScopeKey.className = 'DebugScopeKey'
