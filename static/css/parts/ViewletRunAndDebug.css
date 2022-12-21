@@ -6,7 +6,7 @@
 .DebugSectionHeader {
   height: 22px;
   contain: strict;
-  background: rgb(30, 37, 35);
+  background: var(--DebugSectionHeaderBackground, rgb(30, 37, 35));
   border-top: 1px solid var(--SideBarBackground);
   border-bottom: 1px solid var(--SideBarBackground);
   padding-left: 3px;
