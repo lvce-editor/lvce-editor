@@ -18,45 +18,39 @@ import * as ExtensionHostWorkspace from '../ExtensionHostWorkspace/ExtensionHost
 
 const getFn = (method) => {
   switch (method) {
-    case 'ExtensionHostExtension.activate':
-    case 'ExtensionHostExtension.enableExtension':
+    case ExtensionHostCommandType.ExtensionActivate:
       return ExtensionHostExtension.activate
-    case 'Reference.execute':
-    case 'References.execute':
-    case 'ExtensionHostReference.executeReferenceProvider':
-    case 'ExtensionHostReferences.executeReferenceProvider':
+    case ExtensionHostCommandType.ReferenceExecuteReferenceProvider:
       return ExtensionHostReference.executeReferenceProvider
-    case 'ExtensionHostCompletion.execute':
+    case ExtensionHostCommandType.CompletionExecute:
       return ExtensionHostCompletion.executeCompletionProvider
-    case 'ExtensionHostTextDocument.syncFull':
+    case ExtensionHostCommandType.TextDocumentSyncFull:
       return TextDocument.syncFull
-    case 'ExtensionHostTextDocument.setLanguageId':
+    case ExtensionHostCommandType.TextDocumentSetLanguageId:
       return TextDocument.setLanguageId
-    case 'ExtensionHostTypeDefinition.executeTypeDefinitionProvider':
+    case ExtensionHostCommandType.TypeDefinitionExecuteTypeDefinitionProvider:
       return ExtensionHostTypeDefinition.executeTypeDefinitionProvider
-    case 'ExtensionHost.executeTabCompletionProvider':
+    case ExtensionHostCommandType.TabCompletionExecuteTabCompletionProvider:
       return ExtensionHostTabCompletion.executeTabCompletionProvider
-    case 'ExtensionHostBraceCompletion.executeBraceCompletionProvider':
+    case ExtensionHostCommandType.BraceCompletionExecuteBraceCompletionProvider:
       return ExtensionHostBraceCompletion.executeBraceCompletionProvider
-    case 'ExtensionHostTextDocument.syncIncremental':
+    case ExtensionHostCommandType.TextDocumentSyncIncremental:
       return TextDocument.syncIncremental
-    case 'ExtensionHostTextSearch.executeTextSearchProvider':
+    case ExtensionHostCommandType.TextSearchExecuteTextSearchProvider:
       return ExtensionHostTextSearch.executeTextSearchProvider
-    case 'ExtensionHostCommand.executeCommand':
-    case 'ExtensionHost.executeCommand':
+    case ExtensionHostCommandType.CommandExecute:
       return ExtensionHostCommand.executeCommand
-    case 'Workspace.setWorkspacePath':
+    case ExtensionHostCommandType.WorkspaceSetPath:
       return ExtensionHostWorkspace.setWorkspacePath
-    case 'ExtensionHostDefinition.executeDefinitionProvider':
+    case ExtensionHostCommandType.DefinitionExecuteDefinitionProvider:
       return ExtensionHostDefinition.executeDefinitionProvider
-    case 'ExtensionHost.sourceControlGetChangedFiles':
+    case ExtensionHostCommandType.SourceControlGetChangedFiles:
       return ExtensionHostSourceControl.getChangedFiles
-    case 'ExtensionHostSourceControl.acceptInput':
-    case 'ExtensionHost.sourceControlAcceptInput':
+    case ExtensionHostCommandType.SourceControlAcceptInput:
       return ExtensionHostSourceControl.acceptInput
-    case 'ExtensionHostFormatting.executeFormattingProvider':
+    case ExtensionHostCommandType.FormattingExecuteFormmattingProvider:
       return ExtensionHostFormatting.executeFormattingProvider
-    case 'ExtensionHostMockExec.mockExec':
+    case ExtensionHostCommandType.MockExec:
       return ExtensionHostMockExec.mockExec
     case ExtensionHostCommandType.FileSystemReadFile:
       return ExtensionHostFileSystem.readFile
@@ -66,11 +60,11 @@ const getFn = (method) => {
       return ExtensionHostFileSystem.writeFile
     case ExtensionHostCommandType.FileSystemGetPathSeparator:
       return ExtensionHostFileSystem.getPathSeparator
-    case 'ExtensionHostSourceControl.add':
+    case ExtensionHostCommandType.SourceControlAdd:
       return ExtensionHostSourceControl.add
-    case 'ExtensionHostSourceControl.discard':
+    case ExtensionHostCommandType.SourceControlDiscard:
       return ExtensionHostSourceControl.discard
-    case 'ExtensionHostSourceControl.getEnabledProviderIds':
+    case ExtensionHostCommandType.SourceControlGetEnabledProviderIds:
       return ExtensionHostSourceControl.getEnabledProviderIds
     default:
       throw new CommandNotFoundError(`method not found: ${method}`)
