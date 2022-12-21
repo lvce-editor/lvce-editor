@@ -22,7 +22,7 @@
   {
     "name": "builtin.language-basics-css",
     "repository": "github.com/lvce-editor/language-basics-css",
-    "version": "0.0.11"
+    "version": "0.0.12"
   },
   {
     "name": "builtin.language-basics-dart",
@@ -217,7 +217,7 @@
   {
     "name": "builtin.theme-ayu",
     "repository": "github.com/lvce-editor/theme-ayu",
-    "version": "0.0.4"
+    "version": "0.0.5"
   },
   {
     "name": "builtin.theme-cobalt2",
