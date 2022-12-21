@@ -1,36 +1,28 @@
 import { jest } from '@jest/globals'
 import * as ExtensionHostActivationEvent from '../src/parts/ExtensionHostActivationEvent/ExtensionHostActivationEvent.js'
+import * as ExtensionHostCommandType from '../src/parts/ExtensionHostCommandType/ExtensionHostCommandType.js'
 
 beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHost/ExtensionHostEditor.js',
-  () => {
-    return {
-      execute: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHost/ExtensionHostEditor.js', () => {
+  return {
+    execute: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
-const ExtensionHostEditor = await import(
-  '../src/parts/ExtensionHost/ExtensionHostEditor.js'
-)
+})
+const ExtensionHostEditor = await import('../src/parts/ExtensionHost/ExtensionHostEditor.js')
 
-const ExtensionHostReference = await import(
-  '../src/parts/ExtensionHost/ExtensionHostReference.js'
-)
+const ExtensionHostReference = await import('../src/parts/ExtensionHost/ExtensionHostReference.js')
 
 test('executeReferenceProvider - no references found', async () => {
   // @ts-ignore
   ExtensionHostEditor.execute.mockImplementation(() => {
     return []
   })
-  expect(
-    await ExtensionHostReference.executeReferenceProvider({ id: 1, uri: '' }, 0)
-  ).toEqual([])
+  expect(await ExtensionHostReference.executeReferenceProvider({ id: 1, uri: '' }, 0)).toEqual([])
 })
 
 test('executeReferenceProvider - single reference found', async () => {
@@ -46,9 +38,7 @@ test('executeReferenceProvider - single reference found', async () => {
     ]
   })
   const editor = { id: 1, uri: '' }
-  expect(
-    await ExtensionHostReference.executeReferenceProvider(editor, 0)
-  ).toEqual([
+  expect(await ExtensionHostReference.executeReferenceProvider(editor, 0)).toEqual([
     {
       uri: '/test/index.js',
       lineText: '',
@@ -62,7 +52,7 @@ test('executeReferenceProvider - single reference found', async () => {
     combineResults: expect.any(Function),
     editor,
     event: ExtensionHostActivationEvent.OnReferences,
-    method: 'ExtensionHostReferences.executeReferenceProvider',
+    method: ExtensionHostCommandType.ReferenceExecuteReferenceProvider,
     noProviderFoundMessage: 'no reference providers found',
     noProviderFoundResult: [],
   })
@@ -71,15 +61,9 @@ test('executeReferenceProvider - single reference found', async () => {
 test('executeReferenceProvider - error - referenceProvider throws error', async () => {
   // @ts-ignore
   ExtensionHostEditor.execute.mockImplementation(async () => {
-    throw new Error(
-      'Failed to execute reference provider: TypeError: x is not a function'
-    )
+    throw new Error('Failed to execute reference provider: TypeError: x is not a function')
   })
-  await expect(
-    ExtensionHostReference.executeReferenceProvider({ id: 1, uri: '' }, 0)
-  ).rejects.toThrowError(
-    new Error(
-      'Failed to execute reference provider: TypeError: x is not a function'
-    )
+  await expect(ExtensionHostReference.executeReferenceProvider({ id: 1, uri: '' }, 0)).rejects.toThrowError(
+    new Error('Failed to execute reference provider: TypeError: x is not a function')
   )
 })

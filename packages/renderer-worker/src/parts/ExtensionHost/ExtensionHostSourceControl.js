@@ -1,9 +1,10 @@
+import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 export const acceptInput = async (providerId, text) => {
   return ExtensionHostShared.executeProvider({
     event: 'onSourceControl',
-    method: 'ExtensionHost.sourceControlAcceptInput',
+    method: ExtensionHostCommandType.SourceControlAcceptInput,
     params: [providerId, text],
     noProviderFoundMessage: 'No source control provider found',
   })
@@ -12,7 +13,7 @@ export const acceptInput = async (providerId, text) => {
 export const getChangedFiles = (providerId) => {
   return ExtensionHostShared.executeProvider({
     event: 'onSourceControl',
-    method: 'ExtensionHost.sourceControlGetChangedFiles',
+    method: ExtensionHostCommandType.SourceControlGetChangedFiles,
     params: [providerId],
     noProviderFoundMessage: 'No source control provider found',
   })
@@ -21,7 +22,7 @@ export const getChangedFiles = (providerId) => {
 export const getFileBefore = (path) => {
   return ExtensionHostShared.executeProvider({
     event: 'onSourceControl',
-    method: 'ExtensionHost.sourceControlGetFileBefore',
+    method: ExtensionHostCommandType.SourceControlGetFileBefore,
     params: [path],
     noProviderFoundMessage: 'No source control provider found',
   })
@@ -30,7 +31,7 @@ export const getFileBefore = (path) => {
 export const add = (path) => {
   return ExtensionHostShared.executeProvider({
     event: 'onSourceControl',
-    method: 'ExtensionHostSourceControl.add',
+    method: ExtensionHostCommandType.SourceControlAdd,
     params: [path],
     noProviderFoundMessage: 'No source control provider found',
   })
@@ -39,7 +40,7 @@ export const add = (path) => {
 export const discard = (path) => {
   return ExtensionHostShared.executeProvider({
     event: 'onSourceControl',
-    method: 'ExtensionHostSourceControl.discard',
+    method: ExtensionHostCommandType.SourceControlDiscard,
     params: [path],
     noProviderFoundMessage: 'No source control provider found',
   })
@@ -48,7 +49,7 @@ export const discard = (path) => {
 export const getEnabledProviderIds = (scheme, root) => {
   return ExtensionHostShared.executeProvider({
     event: 'onSourceControl',
-    method: 'ExtensionHostSourceControl.getEnabledProviderIds',
+    method: ExtensionHostCommandType.SourceControlGetEnabledProviderIds,
     params: [scheme, root],
     noProviderFoundMessage: 'No source control provider found',
   })
