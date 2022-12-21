@@ -1,4 +1,20 @@
-import * as ViewletRunAndDebug from '../src/parts/ViewletRunAndDebug/ViewletRunAndDebug.js'
+import { jest } from '@jest/globals'
+
+beforeEach(() => {
+  jest.resetAllMocks()
+})
+
+jest.unstable_mockModule('../src/parts/Debug/Debug.js', () => {
+  return {
+    start: jest.fn(() => {}),
+    listProcesses: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
+  }
+})
+
+const ViewletRunAndDebug = await import('../src/parts/ViewletRunAndDebug/ViewletRunAndDebug.js')
+const Debug = await import('../src/parts/Debug/Debug.js')
 
 test('create', () => {
   const state = ViewletRunAndDebug.create(0)
@@ -6,8 +22,12 @@ test('create', () => {
 })
 
 test('loadContent', async () => {
+  // @ts-ignore
+  Debug.listProcesses.mockImplementation(() => {
+    return []
+  })
   const state = ViewletRunAndDebug.create(0)
-  expect(await ViewletRunAndDebug.loadContent(state)).toEqual({
+  expect(await ViewletRunAndDebug.loadContent(state)).toMatchObject({
     disposed: false,
     id: 0,
   })
@@ -15,8 +35,7 @@ test('loadContent', async () => {
 
 test('dispose', () => {
   const state = ViewletRunAndDebug.create(0)
-  expect(ViewletRunAndDebug.dispose(state)).toEqual({
-    id: 0,
+  expect(ViewletRunAndDebug.dispose(state)).toMatchObject({
     disposed: true,
   })
 })
@@ -30,7 +49,7 @@ test('resize', () => {
     height: 200,
   })
   // TODO
-  expect(newState).toEqual({
+  expect(newState).toMatchObject({
     disposed: false,
     height: 200,
     id: undefined,
