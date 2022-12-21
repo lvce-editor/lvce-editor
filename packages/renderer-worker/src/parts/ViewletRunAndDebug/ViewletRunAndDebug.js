@@ -78,7 +78,6 @@ const toDisplayScopeChain = (scopeChain, knownProperties) => {
     const label = getScopeLabel(scope)
     elements.push({ label, indent: 10 })
     const children = knownProperties[scope.object.objectId]
-    console.log({ children, knownProperties, objectId: scope.object.objectId })
     if (children) {
       for (const child of children.result.result) {
         const valueLabel = getPropertyValueLabel(child.value)
@@ -94,7 +93,6 @@ const toDisplayScopeChain = (scopeChain, knownProperties) => {
 }
 
 export const handlePaused = async (state, params) => {
-  console.log({ params })
   const callStack = [
     {
       functionName: params.callFrames[0].functionName,
@@ -104,7 +102,6 @@ export const handlePaused = async (state, params) => {
   const objectId = params.callFrames[0].scopeChain[0].object.objectId
   const { debugId } = state
   const properties = await Debug.getProperties(debugId, objectId)
-  console.log({ properties })
   const scopeChain = toDisplayScopeChain(params.callFrames[0].scopeChain, {
     [objectId]: properties,
   })
@@ -129,7 +126,6 @@ export const handleResumed = (state) => {
 }
 
 export const handleScriptParsed = (state, parsedScript) => {
-  console.log({ parsedScript })
   const { parsedScripts } = state
   return {
     ...state,
