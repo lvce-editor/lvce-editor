@@ -137,6 +137,5 @@ const debugProvider = {
 }
 
 export const activate = () => {
-  console.log('activate ')
   vscode.registerDebugProvider(debugProvider)
 }

@@ -18,6 +18,7 @@ const UiStrings = {
   With: '`With` block',
   Catch: '`Catch` block',
   DebuggerPaused: 'Debugger paused',
+  DebuggerPausedOnException: 'Paused on exception',
 }
 
 export const getScopeLabel = (element) => {
@@ -67,6 +68,8 @@ export const getPausedMessage = (reason) => {
   switch (reason) {
     case DebugPauseReason.Other:
       return I18nString.i18nString(UiStrings.DebuggerPaused)
+    case DebugPauseReason.Exception:
+      return I18nString.i18nString(UiStrings.DebuggerPausedOnException)
     default:
       return `Debugger paused (${reason})`
   }

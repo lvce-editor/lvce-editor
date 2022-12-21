@@ -59,10 +59,11 @@ const toDisplayScopeChain = (thisObject, scopeChain, knownProperties) => {
       indent: 10,
     })
     if (scope.type === DebugScopeType.Local) {
+      const valueLabel = getPropertyValueLabel(thisObject)
       elements.push({
         type: 'this',
         key: 'this',
-        value: thisObject.description,
+        value: valueLabel,
         valueType: '',
         indent: 20,
       })
@@ -101,8 +102,10 @@ export const handlePaused = async (state, params) => {
   const objectId = params.callFrames[0].scopeChain[0].object.objectId
   const { debugId } = state
   const properties = await Debug.getProperties(debugId, objectId)
+  const thisObject = params.callFrames[0].this
+  Assert.object(thisObject)
   const scopeChain = toDisplayScopeChain(
-    params.callFrames[0].this,
+    thisObject,
     params.callFrames[0].scopeChain,
     {
       [objectId]: properties,
