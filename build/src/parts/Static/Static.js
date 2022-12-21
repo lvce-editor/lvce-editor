@@ -53,6 +53,7 @@ const getModule = (method) => {
 }`,
     replacement: `import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as IpcParentWithModuleWorker from './IpcParentWithModuleWorker.js'
+import * as IpcParentWithModuleWorkerWithMessagePort from './IpcParentWithModuleWorkerWithMessagePort.js'
 import * as IpcParentWithMessagePort from './IpcParentWithMessagePort.js'
 import * as IpcParentWithReferencePort from './IpcParentWithReferencePort.js'
 
@@ -64,6 +65,8 @@ const getModule = (method) => {
       return IpcParentWithMessagePort
     case IpcParentType.ReferencePort:
       return IpcParentWithReferencePort
+    case IpcParentType.ModuleWorkerWithMessagePort:
+      return IpcParentWithModuleWorkerWithMessagePort
     case IpcParentType.Electron:
       return IpcParentWithElectron
     default:
@@ -83,17 +86,7 @@ const getModule = (method) => {
   })
   await InlineDynamicImportsFile.inlineDynamicModules({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-process/src/parts/Module/Module.js`,
-    eagerlyLoadedModules: [
-      'Css',
-      'InitData',
-      'KeyBindings',
-      'Layout',
-      'Location',
-      'Meta',
-      'Viewlet',
-      'WebStorage',
-      'Window',
-    ],
+    eagerlyLoadedModules: ['Css', 'InitData', 'KeyBindings', 'Layout', 'Location', 'Meta', 'Viewlet', 'WebStorage', 'Window'],
     ipcPostFix: true,
   })
   await InlineDynamicImportsFile.inlineDynamicModules({
@@ -392,9 +385,7 @@ const bundleLanguageJsonFiles = async ({ commitHash, pathPrefix }) => {
   const languageBasics = await getLanguageBasicsNames()
   const extensionPaths = languageBasics.map(getAbsolutePath)
   const existingExtensionPaths = extensionPaths.filter(exists)
-  const extensions = await Promise.all(
-    existingExtensionPaths.map(JsonFile.readJson)
-  )
+  const extensions = await Promise.all(existingExtensionPaths.map(JsonFile.readJson))
   const getLanguages = (extension) => {
     const getLanguage = (language) => {
       return {
@@ -412,7 +403,7 @@ const bundleLanguageJsonFiles = async ({ commitHash, pathPrefix }) => {
   })
 }
 
-const applyJsOverrides = async ({ pathPrefix, commitHash }) => { }
+const applyJsOverrides = async ({ pathPrefix, commitHash }) => {}
 
 const addRobotsTxt = async () => {
   await WriteFile.writeFile({
@@ -484,10 +475,7 @@ const TEMPLATE_NETLIFY_NOT_FOUND_PAGE = `<!DOCTYPE html>
 
 const addNetlifyConfigFiles = async () => {
   const commitHash = await CommitHash.getCommitHash()
-  const netlifyHeaders = TEMPLATE_NETLIFY_HEADERS.replaceAll(
-    'COMMIT_HASH',
-    commitHash
-  )
+  const netlifyHeaders = TEMPLATE_NETLIFY_HEADERS.replaceAll('COMMIT_HASH', commitHash)
   await WriteFile.writeFile({
     to: `build/.tmp/dist/_headers`,
     content: netlifyHeaders,
@@ -548,9 +536,7 @@ const copyWebExtensions = async ({ commitHash, pathPrefix }) => {
   for (const languageFeature of languageFeatures) {
     let manifest
     try {
-      manifest = await JsonFile.readJson(
-        Path.absolute(`extensions/${languageFeature}/extension.json`)
-      )
+      manifest = await JsonFile.readJson(Path.absolute(`extensions/${languageFeature}/extension.json`))
     } catch (error) {
       // @ts-ignore
       if (error && error.code === ErrorCodes.ENOENT) {
@@ -586,27 +572,21 @@ const copyIconThemes = async ({ commitHash }) => {
 
 const bundleJs = async ({ commitHash }) => {
   await BundleJs.bundleJs({
-    cwd: Path.absolute(
-      `build/.tmp/dist/${commitHash}/packages/renderer-process`
-    ),
+    cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/renderer-process`),
     from: 'src/rendererProcessMain.js',
     platform: 'web',
     codeSplitting: true,
     minify: true,
   })
   await BundleJs.bundleJs({
-    cwd: Path.absolute(
-      `build/.tmp/dist/${commitHash}/packages/renderer-worker`
-    ),
+    cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/renderer-worker`),
     from: 'src/rendererWorkerMain.js',
     platform: 'webworker',
     codeSplitting: true,
     allowCyclicDependencies: true, // TODO
   })
   await BundleJs.bundleJs({
-    cwd: Path.absolute(
-      `build/.tmp/dist/${commitHash}/packages/extension-host-worker`
-    ),
+    cwd: Path.absolute(`build/.tmp/dist/${commitHash}/packages/extension-host-worker`),
     from: 'src/extensionHostWorkerMain.js',
     platform: 'webworker',
     codeSplitting: false,
@@ -664,9 +644,7 @@ const copyTestFiles = async ({ pathPrefix, commitHash }) => {
     to: `build/.tmp/dist/${commitHash}/packages/extension-host-worker-tests/fixtures`,
   })
 
-  const testFilesRaw = await ReadDir.readDirWithFileTypes(
-    'packages/extension-host-worker-tests/src'
-  )
+  const testFilesRaw = await ReadDir.readDirWithFileTypes('packages/extension-host-worker-tests/src')
   const testFiles = getTestFiles(testFilesRaw)
   await Mkdir.mkdir(`build/.tmp/dist/${commitHash}/tests`)
   for (const testFile of testFiles) {
