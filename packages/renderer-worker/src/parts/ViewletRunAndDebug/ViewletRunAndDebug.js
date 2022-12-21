@@ -2,6 +2,7 @@ import * as Debug from '../Debug/Debug.js'
 import * as DebugDisplay from '../DebugDisplay/DebugDisplay.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
+import * as Workspace from '../Workspace/Workspace.js'
 
 export const create = (id) => {
   return {
@@ -22,8 +23,7 @@ export const create = (id) => {
 }
 
 export const loadContent = async (state) => {
-  const debugState = Debug.create('node-debug')
-  const { debugId } = debugState
+  const debugId = Workspace.isTest() ? 'test-debug' : 'node-debug' // TODO
   await Debug.start(debugId)
   const processes = await Debug.listProcesses(debugId)
   return {
