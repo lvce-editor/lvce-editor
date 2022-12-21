@@ -29,9 +29,34 @@ export const loadContent = async (state) => {
   }
 }
 
+const getScopeLabel = (element) => {
+  switch (element.type) {
+    case 'local':
+      return 'Local'
+    case 'closure':
+      if (element.name) {
+        return `Closure (${element.name})`
+      }
+      return `Closure`
+    case 'global':
+      return 'Global'
+    default:
+      return element.type
+  }
+}
+
+const toDisplayScopeChain = (scopeChain) => {
+  const elements = []
+  for (const scope of scopeChain) {
+    const label = getScopeLabel(scope)
+    elements.push({ label })
+  }
+  return elements
+}
+
 export const handlePaused = (state, params) => {
   console.log({ params })
-  const scopeChain = params.callFrames[0].scopeChain
+  const scopeChain = toDisplayScopeChain(params.callFrames[0].scopeChain)
   const callStack = [
     {
       functionName: params.callFrames[0].functionName,
