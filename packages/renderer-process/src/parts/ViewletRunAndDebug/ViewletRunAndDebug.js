@@ -64,6 +64,7 @@ export const create = () => {
     $DebugSectionHeaderBreakPoints,
     $DebugSectionHeaderScope,
     $DebugSectionHeaderCallStack,
+    $ButtonStepOut,
   }
 }
 
@@ -138,6 +139,19 @@ export const setCallStack = (state, callStack) => {
     $DebugSectionHeaderCallStack.after($CallStack)
   } else {
     $Next.replaceWith($CallStack)
+  }
+}
+
+export const setPausedReason = (state, pausedReason) => {
+  const { $ButtonStepOut } = state
+  const $Next = $ButtonStepOut.nextElementSibling
+  if ($Next.className === 'DebugPausedMessage') {
+    // TODO replace
+  } else {
+    const $DebugPausedMessage = document.createElement('div')
+    $DebugPausedMessage.className = 'DebugPausedMessage'
+    $DebugPausedMessage.textContent = `Debugger paused because of ${pausedReason}`
+    $ButtonStepOut.after($DebugPausedMessage)
   }
 }
 

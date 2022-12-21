@@ -1,6 +1,8 @@
 import * as Debug from '../Debug/Debug.js'
 import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
 import * as I18nString from '../I18NString/I18NString.js'
+import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
+
 /**
  * @enum {string}
  */
@@ -24,6 +26,7 @@ export const create = (id) => {
     scopeChain: [],
     callStack: [],
     parsedScripts: Object.create(null),
+    pausedReason: DebugPausedReason.None,
   }
 }
 
@@ -105,13 +108,14 @@ export const handlePaused = async (state, params) => {
   const scopeChain = toDisplayScopeChain(params.callFrames[0].scopeChain, {
     [objectId]: properties,
   })
-
+  const pausedReason = params.reason
   return {
     ...state,
     debugState: 'paused',
     scopeChain,
     scopeExpanded: true,
     callStack,
+    pausedReason,
   }
 }
 
@@ -274,12 +278,22 @@ const renderCallStack = {
   },
 }
 
+const renderPausedReason = {
+  isEqual(oldState, newState) {
+    return oldState.pausedReason === newState.pausedReason
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setPausedReason', newState.pausedReason]
+  },
+}
+
 export const render = [
   renderProcesses,
   renderDebugState,
   renderSections,
   renderScopeChain,
   renderCallStack,
+  renderPausedReason,
 ]
 
 export const resize = (state, dimensions) => {
