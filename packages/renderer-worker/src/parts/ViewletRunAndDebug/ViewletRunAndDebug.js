@@ -1,4 +1,15 @@
 import * as Debug from '../Debug/Debug.js'
+import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
+import * as I18nString from '../I18NString/I18NString.js'
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  Local: 'Local',
+  Closure: 'Closure',
+  NamedClosure: 'Closure ({PH1})',
+  Global: 'Global',
+}
 
 export const create = (id) => {
   return {
@@ -31,15 +42,17 @@ export const loadContent = async (state) => {
 
 const getScopeLabel = (element) => {
   switch (element.type) {
-    case 'local':
-      return 'Local'
-    case 'closure':
+    case DebugScopeType.Local:
+      return I18nString.i18nString(UiStrings.Local)
+    case DebugScopeType.Closure:
       if (element.name) {
-        return `Closure (${element.name})`
+        return I18nString.i18nString(UiStrings.NamedClosure, {
+          PH1: element.name,
+        })
       }
-      return `Closure`
-    case 'global':
-      return 'Global'
+      return I18nString.i18nString(UiStrings.Closure)
+    case DebugScopeType.Global:
+      return I18nString.i18nString(UiStrings.Global)
     default:
       return element.type
   }
