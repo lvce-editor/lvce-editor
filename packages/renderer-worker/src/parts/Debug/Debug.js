@@ -41,3 +41,6 @@ export const step = (id) => {
 export const setPauseOnExceptions = (id) => {
   return ExtensionHostDebug.setPauseOnExceptions(id, 'all')
 }
+export const getProperties = (id, objectId) => {
+  return ExtensionHostDebug.getProperties(id, objectId)
+}

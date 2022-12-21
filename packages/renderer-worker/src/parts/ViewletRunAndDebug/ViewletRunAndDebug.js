@@ -54,7 +54,7 @@ const toDisplayScopeChain = (scopeChain) => {
   return elements
 }
 
-export const handlePaused = (state, params) => {
+export const handlePaused = async (state, params) => {
   console.log({ params })
   const scopeChain = toDisplayScopeChain(params.callFrames[0].scopeChain)
   const callStack = [
@@ -63,6 +63,10 @@ export const handlePaused = (state, params) => {
       functionLocation: params.callFrames[0].functionLocation,
     },
   ]
+  const objectId = params.callFrames[0].scopeChain[0].object.objectId
+  const { debugId } = state
+  const properties = await Debug.getProperties(debugId, objectId)
+  console.log({ properties })
   return {
     ...state,
     debugState: 'paused',

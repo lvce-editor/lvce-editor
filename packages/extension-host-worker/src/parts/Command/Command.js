@@ -88,6 +88,8 @@ const getFn = (method) => {
       return ExtensionHostDebug.stepOut
     case 'ExtensionHostDebug.stepInto':
       return ExtensionHostDebug.stepInto
+    case 'ExtensionHostDebug.getProperties':
+      return ExtensionHostDebug.getProperties
     default:
       throw new CommandNotFoundError(`method not found: ${method}`)
   }

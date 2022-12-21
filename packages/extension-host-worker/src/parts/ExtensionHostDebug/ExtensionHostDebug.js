@@ -1,6 +1,6 @@
-import { VError } from '../VError/VError.js'
-import * as Rpc from '../Rpc/Rpc.js'
 import * as Assert from '../Assert/Assert.js'
+import * as Rpc from '../Rpc/Rpc.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   debugProviderMap: Object.create(null),
@@ -113,6 +113,15 @@ export const setPauseOnException = async (protocol, value) => {
   try {
     const provider = getDebugProvider(protocol)
     return await provider.setPauseOnExceptions(value)
+  } catch (error) {
+    throw new VError(error, 'Failed to execute debug provider')
+  }
+}
+
+export const getProperties = async (protocol, objectId) => {
+  try {
+    const provider = getDebugProvider(protocol)
+    return await provider.getProperties(objectId)
   } catch (error) {
     throw new VError(error, 'Failed to execute debug provider')
   }

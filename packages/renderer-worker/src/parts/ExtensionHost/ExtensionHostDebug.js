@@ -12,8 +12,8 @@ export const listProcesses = async (debugId) => {
   return processes
 }
 
-export const resume = async (debugId) => {
-  await ExtensionHostShared.executeProvider({
+export const resume = (debugId) => {
+  return ExtensionHostShared.executeProvider({
     event: `onDebug`,
     method: 'ExtensionHostDebug.resume',
     params: [debugId],
@@ -21,8 +21,8 @@ export const resume = async (debugId) => {
   })
 }
 
-export const pause = async (debugId) => {
-  await ExtensionHostShared.executeProvider({
+export const pause = (debugId) => {
+  return ExtensionHostShared.executeProvider({
     event: `onDebug`,
     method: 'ExtensionHostDebug.pause',
     params: [debugId],
@@ -30,8 +30,8 @@ export const pause = async (debugId) => {
   })
 }
 
-export const stepOver = async (debugId) => {
-  await ExtensionHostShared.executeProvider({
+export const stepOver = (debugId) => {
+  return ExtensionHostShared.executeProvider({
     event: `onDebug`,
     method: 'ExtensionHostDebug.stepOver',
     params: [debugId],
@@ -39,8 +39,8 @@ export const stepOver = async (debugId) => {
   })
 }
 
-export const stepInto = async (debugId) => {
-  await ExtensionHostShared.executeProvider({
+export const stepInto = (debugId) => {
+  return ExtensionHostShared.executeProvider({
     event: `onDebug`,
     method: 'ExtensionHostDebug.stepInto',
     params: [debugId],
@@ -48,8 +48,8 @@ export const stepInto = async (debugId) => {
   })
 }
 
-export const stepOut = async (debugId) => {
-  await ExtensionHostShared.executeProvider({
+export const stepOut = (debugId) => {
+  return ExtensionHostShared.executeProvider({
     event: `onDebug`,
     method: 'ExtensionHostDebug.stepOut',
     params: [debugId],
@@ -57,8 +57,8 @@ export const stepOut = async (debugId) => {
   })
 }
 
-export const step = async (debugId) => {
-  await ExtensionHostShared.executeProvider({
+export const step = (debugId) => {
+  return ExtensionHostShared.executeProvider({
     event: `onDebug`,
     method: 'ExtensionHostDebug.step',
     params: [debugId],
@@ -66,8 +66,8 @@ export const step = async (debugId) => {
   })
 }
 
-export const setPauseOnExceptions = async (debugId, value) => {
-  await ExtensionHostShared.executeProvider({
+export const setPauseOnExceptions = (debugId, value) => {
+  return ExtensionHostShared.executeProvider({
     event: `onDebug`,
     method: 'ExtensionHostDebug.setPauseOnExceptions',
     params: [debugId, value],
@@ -75,11 +75,20 @@ export const setPauseOnExceptions = async (debugId, value) => {
   })
 }
 
-export const start = async (debugId) => {
-  await ExtensionHostShared.executeProvider({
+export const start = (debugId) => {
+  return ExtensionHostShared.executeProvider({
     event: `onDebug`,
     method: 'ExtensionHostDebug.start',
     params: [debugId],
+    noProviderFoundMessage: 'no debug provider found',
+  })
+}
+
+export const getProperties = (debugId, objectId) => {
+  return ExtensionHostShared.executeProvider({
+    event: `onDebug`,
+    method: 'ExtensionHostDebug.getProperties',
+    params: [debugId, objectId],
     noProviderFoundMessage: 'no debug provider found',
   })
 }
