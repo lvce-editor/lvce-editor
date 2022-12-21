@@ -58,18 +58,27 @@ const getScopeLabel = (element) => {
   }
 }
 
-const toDisplayScopeChain = (scopeChain) => {
+const toDisplayScopeChain = (scopeChain, knownProperties) => {
   const elements = []
   for (const scope of scopeChain) {
     const label = getScopeLabel(scope)
-    elements.push({ label })
+    elements.push({ label, indent: 10 })
+    const children = knownProperties[scope.object.objectId]
+    console.log({ children, knownProperties, objectId: scope.object.objectId })
+    if (children) {
+      for (const child of children.result.result) {
+        elements.push({
+          label: child.name,
+          indent: 20,
+        })
+      }
+    }
   }
   return elements
 }
 
 export const handlePaused = async (state, params) => {
   console.log({ params })
-  const scopeChain = toDisplayScopeChain(params.callFrames[0].scopeChain)
   const callStack = [
     {
       functionName: params.callFrames[0].functionName,
@@ -80,6 +89,10 @@ export const handlePaused = async (state, params) => {
   const { debugId } = state
   const properties = await Debug.getProperties(debugId, objectId)
   console.log({ properties })
+  const scopeChain = toDisplayScopeChain(params.callFrames[0].scopeChain, {
+    [objectId]: properties,
+  })
+
   return {
     ...state,
     debugState: 'paused',

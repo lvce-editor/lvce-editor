@@ -102,6 +102,7 @@ const create$ScopeChain = (scopeChain, thisObject) => {
   for (const element of scopeChain) {
     const $Node = document.createElement('div')
     $Node.textContent = element.label
+    $Node.style.paddingLeft = `${element.indent}px`
     $ScopeChain.append($Node)
   }
   return $ScopeChain
