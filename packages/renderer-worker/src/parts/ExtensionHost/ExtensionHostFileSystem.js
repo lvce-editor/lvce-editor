@@ -1,6 +1,7 @@
-import * as ExtensionHostShared from './ExtensionHostShared.js'
-import * as GetProtocol from '../GetProtocol/GetProtocol.js'
 import * as Assert from '../Assert/Assert.js'
+import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
+import * as GetProtocol from '../GetProtocol/GetProtocol.js'
+import * as ExtensionHostShared from './ExtensionHostShared.js'
 
 export const readFile = (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
@@ -8,7 +9,7 @@ export const readFile = (uri) => {
   // TODO there shouldn't be multiple file system providers for the same protocol
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
-    method: 'ExtensionHostFileSystem.readFile',
+    method: ExtensionHostCommandType.FileSystemReadFile,
     params: [protocol, path],
     noProviderFoundMessage: 'no file system provider found',
   })
@@ -19,7 +20,7 @@ export const remove = (uri) => {
   const path = GetProtocol.getPath(protocol, uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
-    method: 'ExtensionHostFileSystem.remove',
+    method: ExtensionHostCommandType.FileSystemRemove,
     params: [protocol, path],
     noProviderFoundMessage: 'no file system provider found',
   })
@@ -36,7 +37,7 @@ export const rename = (oldUri, newUri) => {
   const newPath = GetProtocol.getPath(protocol, newUri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
-    method: 'ExtensionHostFileSystem.rename',
+    method: ExtensionHostCommandType.FileSystemRename,
     params: [protocol, oldPath, newPath],
     noProviderFoundMessage: 'no file system provider found',
   })
@@ -47,7 +48,7 @@ export const mkdir = (uri) => {
   const path = GetProtocol.getPath(protocol, uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
-    method: 'ExtensionHostFileSystem.mkdir',
+    method: ExtensionHostCommandType.FileSystemMkdir,
     params: [protocol, path],
     noProviderFoundMessage: 'no file system provider found',
   })
@@ -58,7 +59,7 @@ export const createFile = (uri) => {
   const path = GetProtocol.getPath(protocol, uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
-    method: 'ExtensionHostFileSystem.writeFile',
+    method: ExtensionHostCommandType.FileSystemWriteFile,
     params: [protocol, path, ''],
     noProviderFoundMessage: 'no file system provider found',
   })
@@ -69,7 +70,7 @@ export const createFolder = (uri) => {
   const path = GetProtocol.getPath(protocol, uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
-    method: 'ExtensionHostFileSystem.createFolder',
+    method: ExtensionHostCommandType.FileSystemCreateFolder,
     params: [protocol, path],
     noProviderFoundMessage: 'no file system provider found',
   })
@@ -80,7 +81,7 @@ export const writeFile = (uri, content) => {
   const path = GetProtocol.getPath(protocol, uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
-    method: 'ExtensionHostFileSystem.writeFile',
+    method: ExtensionHostCommandType.FileSystemWriteFile,
     params: [protocol, path, content],
     noProviderFoundMessage: 'no file system provider found',
   })
@@ -91,7 +92,7 @@ export const readDirWithFileTypes = (uri) => {
   const path = GetProtocol.getPath(protocol, uri)
   return ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
-    method: 'ExtensionHostFileSystem.readDirWithFileTypes',
+    method: ExtensionHostCommandType.FileSystemReadDirWithFileTypes,
     params: [protocol, path],
     noProviderFoundMessage: 'no file system provider found',
   })
@@ -101,7 +102,7 @@ export const getPathSeparator = async (uri) => {
   const protocol = GetProtocol.getProtocol(uri)
   const pathSeparator = await ExtensionHostShared.executeProvider({
     event: `onFileSystem:${protocol}`,
-    method: 'ExtensionHostFileSystem.getPathSeparator',
+    method: ExtensionHostCommandType.FileSystemGetPathSeparator,
     params: [protocol],
     noProviderFoundMessage: 'no file system provider found',
   })
