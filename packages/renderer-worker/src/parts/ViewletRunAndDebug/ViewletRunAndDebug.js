@@ -1,6 +1,7 @@
 import * as Debug from '../Debug/Debug.js'
 import * as DebugDisplay from '../DebugDisplay/DebugDisplay.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
+import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
 
 export const create = (id) => {
   return {
@@ -43,11 +44,17 @@ const getPropertyValueLabel = (property) => {
   }
 }
 
-const toDisplayScopeChain = (scopeChain, knownProperties) => {
+const toDisplayScopeChain = (thisObject, scopeChain, knownProperties) => {
   const elements = []
   for (const scope of scopeChain) {
     const label = DebugDisplay.getScopeLabel(scope)
     elements.push({ label, indent: 10 })
+    if (scope.type === DebugScopeType.Local) {
+      elements.push({
+        label: `this: ${thisObject.description}`,
+        indent: 20,
+      })
+    }
     const children = knownProperties[scope.object.objectId]
     if (children) {
       for (const child of children.result.result) {
@@ -79,9 +86,13 @@ export const handlePaused = async (state, params) => {
   const objectId = params.callFrames[0].scopeChain[0].object.objectId
   const { debugId } = state
   const properties = await Debug.getProperties(debugId, objectId)
-  const scopeChain = toDisplayScopeChain(params.callFrames[0].scopeChain, {
-    [objectId]: properties,
-  })
+  const scopeChain = toDisplayScopeChain(
+    params.callFrames[0].this,
+    params.callFrames[0].scopeChain,
+    {
+      [objectId]: properties,
+    }
+  )
   const pausedReason = params.reason
   return {
     ...state,
