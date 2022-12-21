@@ -1,17 +1,6 @@
 import * as Debug from '../Debug/Debug.js'
-import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
-import * as I18nString from '../I18NString/I18NString.js'
+import * as DebugDisplay from '../DebugDisplay/DebugDisplay.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
-
-/**
- * @enum {string}
- */
-const UiStrings = {
-  Local: 'Local',
-  Closure: 'Closure',
-  NamedClosure: 'Closure ({PH1})',
-  Global: 'Global',
-}
 
 export const create = (id) => {
   return {
@@ -43,24 +32,6 @@ export const loadContent = async (state) => {
   }
 }
 
-const getScopeLabel = (element) => {
-  switch (element.type) {
-    case DebugScopeType.Local:
-      return I18nString.i18nString(UiStrings.Local)
-    case DebugScopeType.Closure:
-      if (element.name) {
-        return I18nString.i18nString(UiStrings.NamedClosure, {
-          PH1: element.name,
-        })
-      }
-      return I18nString.i18nString(UiStrings.Closure)
-    case DebugScopeType.Global:
-      return I18nString.i18nString(UiStrings.Global)
-    default:
-      return element.type
-  }
-}
-
 const getPropertyValueLabel = (property) => {
   switch (property.type) {
     case 'number':
@@ -75,7 +46,7 @@ const getPropertyValueLabel = (property) => {
 const toDisplayScopeChain = (scopeChain, knownProperties) => {
   const elements = []
   for (const scope of scopeChain) {
-    const label = getScopeLabel(scope)
+    const label = DebugDisplay.getScopeLabel(scope)
     elements.push({ label, indent: 10 })
     const children = knownProperties[scope.object.objectId]
     if (children) {
