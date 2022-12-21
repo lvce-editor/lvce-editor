@@ -146,7 +146,7 @@ export const setPausedReason = (state, pausedReason) => {
   const { $ButtonStepOut } = state
   const $Next = $ButtonStepOut.nextElementSibling
   if ($Next.className === 'DebugPausedMessage') {
-    // TODO replace
+    $Next.textContent = `Debugger paused because of ${pausedReason}`
   } else {
     const $DebugPausedMessage = document.createElement('div')
     $DebugPausedMessage.className = 'DebugPausedMessage'
