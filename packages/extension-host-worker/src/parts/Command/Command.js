@@ -1,6 +1,7 @@
 import { CommandNotFoundError } from '../Errors/Errors.js'
 import * as ExtensionHostBraceCompletion from '../ExtensionHostBraceCompletion/ExtensionHostBraceCompletion.js'
 import * as ExtensionHostCommand from '../ExtensionHostCommand/ExtensionHostCommand.js'
+import * as ExtensionHostCommandType from '../ExtensionHostCommandType/ExtensionHostCommandType.js'
 import * as ExtensionHostCompletion from '../ExtensionHostCompletion/ExtensionHostCompletion.js'
 import * as ExtensionHostDebug from '../ExtensionHostDebug/ExtensionHostDebug.js'
 import * as ExtensionHostDefinition from '../ExtensionHostDefinition/ExtensionHostDefinition.js'
@@ -58,13 +59,13 @@ const getFn = (method) => {
       return ExtensionHostFormatting.executeFormattingProvider
     case 'ExtensionHostMockExec.mockExec':
       return ExtensionHostMockExec.mockExec
-    case 'ExtensionHostFileSystem.readFile':
+    case ExtensionHostCommandType.FileSystemReadFile:
       return ExtensionHostFileSystem.readFile
-    case 'ExtensionHostFileSystem.readDirWithFileTypes':
+    case ExtensionHostCommandType.FileSystemReadDirWithFileTypes:
       return ExtensionHostFileSystem.readDirWithFileTypes
-    case 'ExtensionHostFileSystem.writeFile':
+    case ExtensionHostCommandType.FileSystemWriteFile:
       return ExtensionHostFileSystem.writeFile
-    case 'ExtensionHostFileSystem.getPathSeparator':
+    case ExtensionHostCommandType.FileSystemGetPathSeparator:
       return ExtensionHostFileSystem.getPathSeparator
     case 'ExtensionHostSourceControl.add':
       return ExtensionHostSourceControl.add
