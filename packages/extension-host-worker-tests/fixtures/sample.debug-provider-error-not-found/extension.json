@@ -1,4 +1,4 @@
 {
   "browser": "main.js",
-  "activation": ["onDebug:xyz"]
+  "activation": ["onDebug:test-debug"]
 }
