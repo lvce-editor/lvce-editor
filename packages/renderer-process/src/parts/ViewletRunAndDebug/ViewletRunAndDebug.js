@@ -114,7 +114,6 @@ const getLabel = (element) => {
 }
 
 const create$ScopeChain = (scopeChain, thisObject) => {
-  console.log({ scopeChain })
   const $ScopeChain = document.createElement('div')
   for (const element of scopeChain) {
     const $Node = document.createElement('div')
