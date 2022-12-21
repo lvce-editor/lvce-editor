@@ -1,8 +1,8 @@
 import * as Assert from '../Assert/Assert.js'
-import * as ViewletDebugEvents from './ViewletRunAndDebugEvents.js'
-import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
+import * as MaskIcon from '../MaskIcon/MaskIcon.js'
+import * as ViewletDebugEvents from './ViewletRunAndDebugEvents.js'
 
 const create$DebugButton = (text, icon) => {
   const $Button = IconButton.create$Button(text, icon)
@@ -13,6 +13,8 @@ const create$DebugButton = (text, icon) => {
 const create$DebugSectionHeader = (text) => {
   const $DebugSectionHeader = document.createElement('div')
   $DebugSectionHeader.className = 'DebugSectionHeader'
+  $DebugSectionHeader.role = 'treeitem'
+  $DebugSectionHeader.tabIndex = 0
   const $Icon = MaskIcon.create(Icon.TriangleRight)
   $Icon.classList.add('DebugMaskIcon')
   const $Label = document.createTextNode(text)
