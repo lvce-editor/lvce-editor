@@ -38,6 +38,7 @@ export const loadContent = async (state) => {
 const getPropertyValueLabel = (property) => {
   switch (property.type) {
     case 'number':
+    case 'object':
       return property.description
     case 'undefined':
       return `undefined`
@@ -46,12 +47,7 @@ const getPropertyValueLabel = (property) => {
   }
 }
 
-const toDisplayScopeChain = (
-  params,
-  thisObject,
-  scopeChain,
-  knownProperties
-) => {
+const toDisplayScopeChain = (params, thisObject, scopeChain, knownProperties) => {
   const elements = []
   for (const scope of scopeChain) {
     const label = DebugDisplay.getScopeLabel(scope)
@@ -120,14 +116,9 @@ export const handlePaused = async (state, params) => {
   const properties = await Debug.getProperties(debugId, objectId)
   const thisObject = params.callFrames[0].this
   Assert.object(thisObject)
-  const scopeChain = toDisplayScopeChain(
-    params,
-    thisObject,
-    params.callFrames[0].scopeChain,
-    {
-      [objectId]: properties,
-    }
-  )
+  const scopeChain = toDisplayScopeChain(params, thisObject, params.callFrames[0].scopeChain, {
+    [objectId]: properties,
+  })
   const pausedReason = params.reason
   const pausedMessage = DebugDisplay.getPausedMessage(params.reason)
   return {
@@ -273,13 +264,7 @@ const renderSections = {
     )
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setSections',
-      newState.watchExpanded,
-      newState.breakpointsExanded,
-      newState.scopeExpanded,
-      newState.callstackExpanded,
-    ]
+    return [/* method */ 'setSections', newState.watchExpanded, newState.breakpointsExanded, newState.scopeExpanded, newState.callstackExpanded]
   },
 }
 
@@ -303,28 +288,14 @@ const renderCallStack = {
 
 const renderPausedReason = {
   isEqual(oldState, newState) {
-    return (
-      oldState.pausedReason === newState.pausedReason &&
-      oldState.pausedMessage === newState.pausedMessage
-    )
+    return oldState.pausedReason === newState.pausedReason && oldState.pausedMessage === newState.pausedMessage
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setPausedReason',
-      newState.pausedReason,
-      newState.pausedMessage,
-    ]
+    return [/* method */ 'setPausedReason', newState.pausedReason, newState.pausedMessage]
   },
 }
 
-export const render = [
-  renderProcesses,
-  renderDebugState,
-  renderSections,
-  renderScopeChain,
-  renderCallStack,
-  renderPausedReason,
-]
+export const render = [renderProcesses, renderDebugState, renderSections, renderScopeChain, renderCallStack, renderPausedReason]
 
 export const resize = (state, dimensions) => {
   return { ...state, ...dimensions }
