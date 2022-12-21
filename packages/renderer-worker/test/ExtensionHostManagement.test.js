@@ -1,4 +1,5 @@
 import { jest } from '@jest/globals'
+import * as ExtensionHostCommandType from '../src/parts/ExtensionHostCommandType/ExtensionHostCommandType.js'
 
 beforeEach(() => {
   jest.resetModules()
@@ -14,16 +15,13 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   }
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     platform: 'remote',
@@ -36,26 +34,20 @@ jest.unstable_mockModule('../src/parts/Languages/Languages.js', () => {
     }),
   }
 })
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHostManagement/ExtensionHostManagementShared.js',
-  () => {
-    return {
-      startExtensionHost: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionHostManagement/ExtensionHostManagementShared.js', () => {
+  return {
+    startExtensionHost: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
-jest.unstable_mockModule(
-  '../src/parts/ExtensionHostManagement/ExtensionHostManagementNode.js',
-  () => {
-    return {
-      canActivate: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+})
+jest.unstable_mockModule('../src/parts/ExtensionHostManagement/ExtensionHostManagementNode.js', () => {
+  return {
+    canActivate: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 jest.unstable_mockModule('../src/parts/ExtensionMeta/ExtensionMeta.js', () => {
   return {
     getExtensions: jest.fn(() => {
@@ -73,19 +65,11 @@ jest.unstable_mockModule('../src/parts/ExtensionMeta/ExtensionMeta.js', () => {
   }
 })
 
-const ExtensionHostManagement = await import(
-  '../src/parts/ExtensionHostManagement/ExtensionHostManagement.js'
-)
-const ExtensionHostManagementNode = await import(
-  '../src/parts/ExtensionHostManagement/ExtensionHostManagementNode.js'
-)
-const ExtensionHostManagementShared = await import(
-  '../src/parts/ExtensionHostManagement/ExtensionHostManagementShared.js'
-)
+const ExtensionHostManagement = await import('../src/parts/ExtensionHostManagement/ExtensionHostManagement.js')
+const ExtensionHostManagementNode = await import('../src/parts/ExtensionHostManagement/ExtensionHostManagementNode.js')
+const ExtensionHostManagementShared = await import('../src/parts/ExtensionHostManagement/ExtensionHostManagementShared.js')
 const Languages = await import('../src/parts/Languages/Languages.js')
-const ExtensionMeta = await import(
-  '../src/parts/ExtensionMeta/ExtensionMeta.js'
-)
+const ExtensionMeta = await import('../src/parts/ExtensionMeta/ExtensionMeta.js')
 
 test('activateByEvent', async () => {
   // @ts-ignore
@@ -126,16 +110,8 @@ test('activateByEvent', async () => {
   })
   await ExtensionHostManagement.activateByEvent('onLanguage:test')
   expect(ipc.invoke).toHaveBeenCalledTimes(2)
-  expect(ipc.invoke).toHaveBeenNthCalledWith(
-    1,
-    'Workspace.setWorkspacePath',
-    ''
-  )
-  expect(ipc.invoke).toHaveBeenNthCalledWith(
-    2,
-    'ExtensionHostExtension.enableExtension',
-    { main: './main.js' }
-  )
+  expect(ipc.invoke).toHaveBeenNthCalledWith(1, 'Workspace.setWorkspacePath', '')
+  expect(ipc.invoke).toHaveBeenNthCalledWith(2, ExtensionHostCommandType.ExtensionActivate, { main: './main.js' })
 })
 
 test('activateByEvent - twice - should activate extension only once', async () => {
@@ -177,18 +153,8 @@ test('activateByEvent - twice - should activate extension only once', async () =
   })
   await ExtensionHostManagement.activateByEvent('onLanguage:test')
   await ExtensionHostManagement.activateByEvent('onLanguage:test')
-  expect(
-    ExtensionHostManagementShared.startExtensionHost
-  ).toHaveBeenCalledTimes(2)
+  expect(ExtensionHostManagementShared.startExtensionHost).toHaveBeenCalledTimes(2)
   expect(ipc.invoke).toHaveBeenCalledTimes(2)
-  expect(ipc.invoke).toHaveBeenNthCalledWith(
-    1,
-    'Workspace.setWorkspacePath',
-    ''
-  )
-  expect(ipc.invoke).toHaveBeenNthCalledWith(
-    2,
-    'ExtensionHostExtension.enableExtension',
-    { main: './main.js' }
-  )
+  expect(ipc.invoke).toHaveBeenNthCalledWith(1, 'Workspace.setWorkspacePath', '')
+  expect(ipc.invoke).toHaveBeenNthCalledWith(2, ExtensionHostCommandType.ExtensionActivate, { main: './main.js' })
 })
