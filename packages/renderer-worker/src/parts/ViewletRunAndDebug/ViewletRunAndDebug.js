@@ -17,6 +17,7 @@ export const create = (id) => {
     callStack: [],
     parsedScripts: Object.create(null),
     pausedReason: DebugPausedReason.None,
+    pausedMessage: '',
   }
 }
 
@@ -106,6 +107,7 @@ export const handlePaused = async (state, params) => {
     }
   )
   const pausedReason = params.reason
+  const pausedMessage = DebugDisplay.getPausedMessage(params.reason)
   return {
     ...state,
     debugState: 'paused',
@@ -113,6 +115,7 @@ export const handlePaused = async (state, params) => {
     scopeExpanded: true,
     callStack,
     pausedReason,
+    pausedMessage,
   }
 }
 
@@ -122,6 +125,8 @@ export const handleResumed = (state) => {
     debugState: 'default',
     scopeChain: [],
     callStack: [],
+    pausedMessage: '',
+    pausedReason: DebugPausedReason.None,
   }
 }
 
@@ -276,10 +281,17 @@ const renderCallStack = {
 
 const renderPausedReason = {
   isEqual(oldState, newState) {
-    return oldState.pausedReason === newState.pausedReason
+    return (
+      oldState.pausedReason === newState.pausedReason &&
+      oldState.pausedMessage === newState.pausedMessage
+    )
   },
   apply(oldState, newState) {
-    return [/* method */ 'setPausedReason', newState.pausedReason]
+    return [
+      /* method */ 'setPausedReason',
+      newState.pausedReason,
+      newState.pausedMessage,
+    ]
   },
 }
 

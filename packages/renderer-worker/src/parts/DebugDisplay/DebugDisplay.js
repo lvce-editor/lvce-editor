@@ -1,5 +1,6 @@
 import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
 import * as I18nString from '../I18NString/I18NString.js'
+import * as DebugPauseReason from '../DebugPausedReason/DebugPausedReason.js'
 
 /**
  * @enum {string}
@@ -16,6 +17,7 @@ const UiStrings = {
   Script: 'Script',
   With: '`With` block',
   Catch: '`Catch` block',
+  DebuggerPaused: 'Debugger paused',
 }
 
 export const getScopeLabel = (element) => {
@@ -58,5 +60,14 @@ export const getPropertyValueLabel = (property) => {
       return `undefined`
     default:
       return `${JSON.stringify(property)}`
+  }
+}
+
+export const getPausedMessage = (reason) => {
+  switch (reason) {
+    case DebugPauseReason.Other:
+      return I18nString.i18nString(UiStrings.DebuggerPaused)
+    default:
+      return `Debugger paused (${reason})`
   }
 }

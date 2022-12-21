@@ -178,15 +178,15 @@ export const setCallStack = (state, callStack) => {
   }
 }
 
-export const setPausedReason = (state, pausedReason) => {
+export const setPausedReason = (state, pausedReason, pausedMessage) => {
   const { $ButtonStepOut } = state
   const $Next = $ButtonStepOut.nextElementSibling
   if ($Next.className === 'DebugPausedMessage') {
-    $Next.textContent = `Debugger paused because of ${pausedReason}`
+    $Next.textContent = pausedMessage
   } else {
     const $DebugPausedMessage = document.createElement('div')
     $DebugPausedMessage.className = 'DebugPausedMessage'
-    $DebugPausedMessage.textContent = `Debugger paused because of ${pausedReason}`
+    $DebugPausedMessage.textContent = pausedMessage
     $ButtonStepOut.after($DebugPausedMessage)
   }
 }
