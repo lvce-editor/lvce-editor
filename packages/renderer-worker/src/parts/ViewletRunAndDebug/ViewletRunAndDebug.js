@@ -3,6 +3,7 @@ import * as DebugDisplay from '../DebugDisplay/DebugDisplay.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Assert from '../Assert/Assert.js'
 
 export const create = (id) => {
   return {
@@ -84,6 +85,7 @@ const toDisplayScopeChain = (thisObject, scopeChain, knownProperties) => {
 }
 
 const toDisplayCallStack = (callFrames) => {
+  Assert.array(callFrames)
   const callStack = []
   for (const callFrame of callFrames) {
     callStack.push({

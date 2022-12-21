@@ -104,6 +104,7 @@ const create$ScopeChain = (scopeChain, thisObject) => {
   const $ScopeChain = document.createElement('div')
   for (const element of scopeChain) {
     const $Node = document.createElement('div')
+    $Node.className = 'DebugSectionRow'
     switch (element.type) {
       case 'this':
         const $ThisKey = document.createElement('span')
