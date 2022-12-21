@@ -570,7 +570,6 @@ export const focusNext = (state) => {
 }
 
 export const handleTabClick = (state, index) => {
-  console.log('focus index', index)
   return focusIndex(state, index)
 }
 
@@ -661,7 +660,6 @@ export const resize = (state, dimensions) => {
     const id = ViewletMap.getId(editor.uri)
     commands = Viewlet.resize(id, childDimensions)
   }
-  console.log({ commands })
   return {
     newState: {
       ...state,
