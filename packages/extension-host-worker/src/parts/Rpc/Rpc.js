@@ -2,6 +2,22 @@ import * as Callback from '../Callback/Callback.js'
 import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as ErrorHandling from '../ErrorHandling/ErrorHandling.js'
 
+export const state = {
+  /**
+   * @type {any}
+   */
+  ipc: undefined,
+}
+
+export const send = (method, ...params) => {
+  const { ipc } = state
+  ipc.send({
+    jsonrpc: '2.0',
+    method,
+    params,
+  })
+}
+
 export const listen = (ipc) => {
   const handleMessage = async (event) => {
     const message = event.data
@@ -23,4 +39,5 @@ export const listen = (ipc) => {
     }
   }
   ipc.onmessage = handleMessage
+  state.ipc = ipc
 }

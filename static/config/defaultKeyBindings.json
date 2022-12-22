@@ -746,5 +746,9 @@
   {
     "key": "ctrl+r",
     "command": "Window.reload"
+  },
+  {
+    "key": "ctrl+\\",
+    "command": "Run And Debug.togglePause"
   }
 ]
