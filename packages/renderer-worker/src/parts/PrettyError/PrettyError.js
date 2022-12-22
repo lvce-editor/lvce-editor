@@ -46,6 +46,8 @@ const RE_PATH_1 = /\((.*):(\d+):(\d+)\)$/
 const RE_PATH_2 = /at (.*):(\d+):(\d+)$/
 const RE_PATH_3 = /@(.*):(\d+):(\d+)$/ // Firefox
 
+const RE_SOURCE_MAP = /^\/\/# sourceMappingURL=(.*)$/
+
 /**
  *
  * @param {readonly string[]} lines
@@ -53,15 +55,22 @@ const RE_PATH_3 = /@(.*):(\d+):(\d+)$/ // Firefox
  */
 const getFile = (lines) => {
   for (const line of lines) {
-    if (
-      line.match(RE_PATH_1) ||
-      line.match(RE_PATH_2) ||
-      line.match(RE_PATH_3)
-    ) {
+    if (line.match(RE_PATH_1) || line.match(RE_PATH_2) || line.match(RE_PATH_3)) {
       return line
     }
   }
   return ''
+}
+
+const getLastLine = (text) => {
+  const index = text.lastIndexOf('\n', text.length - 2)
+  return text.slice(index + 1, -1)
+}
+
+const getSourceMapAbsolutePath = (file, relativePath) => {
+  const folder = file.slice(0, file.lastIndexOf('/'))
+  const absolutePath = folder + '/' + relativePath
+  return absolutePath
 }
 
 const prepareErrorMessageWithoutCodeFrame = async (error) => {
@@ -80,6 +89,15 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
     }
     const [_, path, line, column] = match
     const text = await Ajax.getText(path)
+    const lastLine = getLastLine(text)
+    const sourceMapMatch = lastLine.match(RE_SOURCE_MAP)
+    if (sourceMapMatch) {
+      const sourceMapUrl = sourceMapMatch[1]
+      const sourceMapAbsolutePath = getSourceMapAbsolutePath(path, sourceMapUrl)
+      const sourceMap = await Ajax.getJson(sourceMapAbsolutePath)
+      console.log({ sourceMap })
+    }
+    // console.log({ text, lastLine, sourceMapMatch })
     const parsedLine = parseInt(line)
     const parsedColumn = parseInt(column)
     const codeFrame = CodeFrameColumns.create(text, {
