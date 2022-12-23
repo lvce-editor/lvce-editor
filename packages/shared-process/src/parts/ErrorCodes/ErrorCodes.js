@@ -1,23 +1,13 @@
-export const ENOENT = 'ENOENT'
-
-export const EXDEV = 'EXDEV'
-
-export const EEXIST = 'EEXIST'
-
-export const ENOTDIR = 'ENOTDIR'
-
-export const E_MANIFEST_NOT_FOUND = 'E_MANIFEST_NOT_FOUND'
-
-export const EPIPE = 'EPIPE'
-
-export const ERR_IPC_CHANNEL_CLOSED = 'ERR_IPC_CHANNEL_CLOSED'
-
 export const E_COLOR_THEME_NOT_FOUND = 'E_COLOR_THEME_NOT_FOUND'
-
 export const E_ICON_THEME_NOT_FOUND = 'E_ICON_THEME_NOT_FOUND'
-
+export const E_MANIFEST_NOT_FOUND = 'E_MANIFEST_NOT_FOUND'
 export const ECONNRESET = 'ECONNRESET'
-
+export const EEXIST = 'EEXIST'
+export const ELOOP = 'ELOOP'
+export const ENOENT = 'ENOENT'
+export const ENOTDIR = 'ENOTDIR'
 export const EPERM = 'EPERM'
-
+export const EPIPE = 'EPIPE'
+export const ERR_IPC_CHANNEL_CLOSED = 'ERR_IPC_CHANNEL_CLOSED'
 export const ERR_MODULE_NOT_FOUND = 'ERR_MODULE_NOT_FOUND'
+export const EXDEV = 'EXDEV'
