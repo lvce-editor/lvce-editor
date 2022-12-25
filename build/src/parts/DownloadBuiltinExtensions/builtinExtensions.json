@@ -132,7 +132,7 @@
   {
     "name": "builtin.language-basics-perl",
     "repository": "github.com/lvce-editor/language-basics-perl",
-    "version": "0.0.2"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-plaintext",
@@ -147,7 +147,7 @@
   {
     "name": "builtin.language-basics-python",
     "repository": "github.com/lvce-editor/language-basics-python",
-    "version": "0.0.5"
+    "version": "0.0.6"
   },
   {
     "name": "builtin.language-basics-r",
@@ -162,7 +162,7 @@
   {
     "name": "builtin.language-basics-shellscript",
     "repository": "github.com/lvce-editor/language-basics-shellscript",
-    "version": "0.0.10"
+    "version": "0.0.12"
   },
   {
     "name": "builtin.language-basics-svelte",
