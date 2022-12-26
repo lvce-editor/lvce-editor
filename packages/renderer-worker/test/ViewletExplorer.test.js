@@ -55,19 +55,13 @@ jest.unstable_mockModule('../src/parts/FileSystem/FileSystem.js', () => {
 
 const Workspace = await import('../src/parts/Workspace/Workspace.js')
 
-const ViewletExplorer = await import(
-  '../src/parts/ViewletExplorer/ViewletExplorer.js'
-)
+const ViewletExplorer = await import('../src/parts/ViewletExplorer/ViewletExplorer.js')
 
-const GlobalEventBus = await import(
-  '../src/parts/GlobalEventBus/GlobalEventBus.js'
-)
+const GlobalEventBus = await import('../src/parts/GlobalEventBus/GlobalEventBus.js')
 
 const Viewlet = await import('../src/parts/Viewlet/Viewlet.js')
 
-const ViewletManager = await import(
-  '../src/parts/ViewletManager/ViewletManager.js'
-)
+const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
 const Command = await import('../src/parts/Command/Command.js')
 const FileSystem = await import('../src/parts/FileSystem/FileSystem.js')
 
@@ -149,6 +143,77 @@ test('loadContent', async () => {
     maxLineY: Number.NaN,
     minLineY: 0,
     root: '/test',
+    top: undefined,
+    pathSeparator: PathSeparatorType.Slash,
+    editingIndex: -1,
+    excluded: [],
+    editingValue: '',
+    editingType: ExplorerEditingType.None,
+  })
+})
+
+test.only('loadContent - root', async () => {
+  const state = ViewletExplorer.create()
+  Workspace.state.workspacePath = '/'
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    return [
+      {
+        name: 'file 1',
+        type: DirentType.File,
+      },
+      {
+        name: 'file 2',
+        type: DirentType.File,
+      },
+      {
+        name: 'file 3',
+        type: DirentType.File,
+      },
+    ]
+  })
+  expect(await ViewletExplorer.loadContent(state)).toEqual({
+    deltaY: 0,
+    version: 0,
+    itemHeight: 22,
+    dropTargets: [],
+    items: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'file 1',
+        path: '/file 1',
+        posInSet: 1,
+        setSize: 3,
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'file 2',
+        path: '/file 2',
+        posInSet: 2,
+        setSize: 3,
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'file 3',
+        path: '/file 3',
+        posInSet: 3,
+        setSize: 3,
+        type: DirentType.File,
+      },
+    ],
+    focusedIndex: -1,
+    focused: false,
+    height: undefined,
+    hoverIndex: -1,
+    left: undefined,
+    maxLineY: Number.NaN,
+    minLineY: 0,
+    root: '/',
     top: undefined,
     pathSeparator: PathSeparatorType.Slash,
     editingIndex: -1,
@@ -255,9 +320,7 @@ test('loadContent - restore from saved state - error root not found', async () =
     root: '/test',
     expandedPaths: ['/test/a'],
   }
-  await expect(
-    ViewletExplorer.loadContent(state, savedState)
-  ).rejects.toThrowError(new Error('ENOENT'))
+  await expect(ViewletExplorer.loadContent(state, savedState)).rejects.toThrowError(new Error('ENOENT'))
 })
 
 test('loadContent - restore from saved state - sort dirents', async () => {
@@ -514,9 +577,7 @@ test.skip('loadContent - race condition - workspace changes while loading after 
         throw new Error('unexpected message')
     }
   })
-  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(
-    new CancelationError()
-  )
+  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(new CancelationError())
 })
 
 test.skip('loadContent - race condition - workspace changes while loading after reading dirents', async () => {
@@ -549,9 +610,7 @@ test.skip('loadContent - race condition - workspace changes while loading after 
         throw new Error('unexpected message')
     }
   })
-  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(
-    new CancelationError()
-  )
+  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(new CancelationError())
 })
 
 // TODO race conditions can happen at several locations, find good pattern/architecture
@@ -606,31 +665,26 @@ test.skip('loadContent - race condition', async () => {
   const promise2 = load(state)
   await Promise.all([promise1, promise2])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Explorer',
-    'updateDirents',
-    [
-      {
-        depth: 1,
-        icon: '',
-        name: 'file 1',
-        path: '/test/file 1',
-        posInSet: 1,
-        setSize: 2,
-        type: DirentType.File,
-      },
-      {
-        depth: 1,
-        icon: '',
-        name: 'file 2',
-        path: '/test/file 2',
-        posInSet: 2,
-        setSize: 2,
-        type: DirentType.File,
-      },
-    ]
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Explorer', 'updateDirents', [
+    {
+      depth: 1,
+      icon: '',
+      name: 'file 1',
+      path: '/test/file 1',
+      posInSet: 1,
+      setSize: 2,
+      type: DirentType.File,
+    },
+    {
+      depth: 1,
+      icon: '',
+      name: 'file 2',
+      path: '/test/file 2',
+      posInSet: 2,
+      setSize: 2,
+      type: DirentType.File,
+    },
+  ])
 })
 
 test('loadContent - error - typeError', async () => {
@@ -640,9 +694,7 @@ test('loadContent - error - typeError', async () => {
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('loadContent - error - syntaxError', async () => {
@@ -653,9 +705,7 @@ test('loadContent - error - syntaxError', async () => {
     throw new SyntaxError('unexpected token x')
   })
 
-  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(
-    new SyntaxError('unexpected token x')
-  )
+  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(new SyntaxError('unexpected token x'))
 })
 
 test('loadContent - error - command not found', async () => {
@@ -664,9 +714,7 @@ test('loadContent - error - command not found', async () => {
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     throw new Error('command -1 not found')
   })
-  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(
-    new Error('command -1 not found')
-  )
+  await expect(ViewletExplorer.loadContent(state)).rejects.toThrowError(new Error('command -1 not found'))
 })
 
 // TODO add test for contentLoaded with windows paths separators ('\')
@@ -717,40 +765,35 @@ test.skip('contentLoaded', async () => {
   }
   await ViewletExplorer.contentLoaded(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Explorer',
-    'updateDirents',
-    [
-      {
-        depth: 1,
-        icon: '',
-        name: 'file 1',
-        path: 'file 1',
-        posInSet: 1,
-        setSize: 3,
-        type: DirentType.File,
-      },
-      {
-        depth: 1,
-        icon: '',
-        name: 'file 2',
-        path: 'file 2',
-        posInSet: 2,
-        setSize: 3,
-        type: DirentType.File,
-      },
-      {
-        depth: 1,
-        icon: '',
-        name: 'file 3',
-        path: 'file 3',
-        posInSet: 3,
-        setSize: 3,
-        type: DirentType.File,
-      },
-    ]
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Explorer', 'updateDirents', [
+    {
+      depth: 1,
+      icon: '',
+      name: 'file 1',
+      path: 'file 1',
+      posInSet: 1,
+      setSize: 3,
+      type: DirentType.File,
+    },
+    {
+      depth: 1,
+      icon: '',
+      name: 'file 2',
+      path: 'file 2',
+      posInSet: 2,
+      setSize: 3,
+      type: DirentType.File,
+    },
+    {
+      depth: 1,
+      icon: '',
+      name: 'file 3',
+      path: 'file 3',
+      posInSet: 3,
+      setSize: 3,
+      type: DirentType.File,
+    },
+  ])
 })
 
 // TODO should handle error gracefully
@@ -772,12 +815,7 @@ test.skip('refresh - error', async () => {
   // @ts-ignore
   await ViewletExplorer.refresh(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    'Viewlet.send',
-    'Explorer',
-    'handleError',
-    new Error('TypeError: x is not a function'),
-  ])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(['Viewlet.send', 'Explorer', 'handleError', new Error('TypeError: x is not a function')])
 })
 
 test('handleClick - no element focused', async () => {
@@ -850,11 +888,7 @@ test('handleClick - file', async () => {
     focusedIndex: 0,
   })
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'Main.openUri',
-    '/index.css',
-    true
-  )
+  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/index.css', true)
 })
 
 test('handleClick - file - error', async () => {
@@ -896,11 +930,7 @@ test('handleClick - file - error', async () => {
     focusedIndex: 0,
   })
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'Main.openUri',
-    '/index.css',
-    true
-  )
+  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/index.css', true)
 })
 
 test('handleClick - unsupported dirent type', async () => {
@@ -928,9 +958,7 @@ test('handleClick - unsupported dirent type', async () => {
         throw new Error('unexpected method')
     }
   })
-  expect(() => ViewletExplorer.handleClick(state, 0)).toThrowError(
-    new Error('unsupported dirent type abc')
-  )
+  expect(() => ViewletExplorer.handleClick(state, 0)).toThrowError(new Error('unsupported dirent type abc'))
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
@@ -963,11 +991,7 @@ test('handleClick - symlink - file', async () => {
     focusedIndex: 0,
   })
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'Main.openUri',
-    '/index.css',
-    true
-  )
+  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/index.css', true)
 })
 
 test('handleClickCurrentButKeepFocus - file', async () => {
@@ -997,15 +1021,9 @@ test('handleClickCurrentButKeepFocus - file', async () => {
         throw new Error('unexpected method')
     }
   })
-  expect(await ViewletExplorer.handleClickCurrentButKeepFocus(state)).toEqual(
-    state
-  )
+  expect(await ViewletExplorer.handleClickCurrentButKeepFocus(state)).toEqual(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'Main.openUri',
-    '/test/index.css',
-    false
-  )
+  expect(Command.execute).toHaveBeenCalledWith('Main.openUri', '/test/index.css', false)
 })
 
 // TODO test error
@@ -1445,22 +1463,17 @@ test.skip('handleClick - race condition - child folder is being expanded and par
   await Promise.all([promise1, promise2])
   expect(state.focusedIndex).toBe(0)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Explorer',
-    'updateDirents',
-    [
-      {
-        depth: 1,
-        posInSet: 1,
-        setSize: 1,
-        icon: '',
-        name: 'parent-directory',
-        path: '/parent-directory',
-        type: DirentType.Directory,
-      },
-    ]
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Explorer', 'updateDirents', [
+    {
+      depth: 1,
+      posInSet: 1,
+      setSize: 1,
+      icon: '',
+      name: 'parent-directory',
+      path: '/parent-directory',
+      type: DirentType.Directory,
+    },
+  ])
 })
 // TODO test expanding folder
 
@@ -1519,165 +1532,147 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
   await Promise.all([promise1, promise2, promise3])
   expect(state.focusedIndex).toBe(2)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
-    1,
-    'Viewlet.send',
-    'Explorer',
-    'updateDirents',
-    [
-      {
-        depth: 1,
-        icon: '',
-        name: 'folder-1',
-        path: '/folder-1',
-        posInSet: 1,
-        setSize: 3,
-        type: DirentType.DirectoryExpanded,
-      },
-      {
-        depth: 2,
-        icon: '',
-        name: 'index.js',
-        path: '/folder-1,index.js', // TODO
-        posInSet: 1,
-        setSize: 1,
-        type: DirentType.File,
-      },
-      {
-        depth: 1,
-        icon: '',
-        name: 'folder-2',
-        path: '/folder-2',
-        posInSet: 2,
-        setSize: 3,
-        type: DirentType.DirectoryExpanded,
-      },
-      {
-        depth: 1,
-        icon: '',
-        name: 'folder-3',
-        path: '/folder-3',
-        posInSet: 3,
-        setSize: 3,
-        type: DirentType.DirectoryExpanded,
-      },
-    ]
-  )
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
-    2,
-    'Viewlet.send',
-    'Explorer',
-    'updateDirents',
-    [
-      {
-        depth: 1,
-        icon: '',
-        name: 'folder-1',
-        path: '/folder-1',
-        posInSet: 1,
-        setSize: 3,
-        type: DirentType.DirectoryExpanded,
-      },
-      {
-        depth: 2,
-        icon: '',
-        name: 'index.js',
-        path: '/folder-1,index.js', // TODO
-        posInSet: 1,
-        setSize: 1,
-        type: DirentType.File,
-      },
-      {
-        depth: 1,
-        icon: '',
-        name: 'folder-2',
-        path: '/folder-2',
-        posInSet: 2,
-        setSize: 3,
-        type: DirentType.DirectoryExpanded,
-      },
-      {
-        depth: 2,
-        icon: '',
-        name: 'index.js',
-        path: '/folder-2,index.js', // TODO
-        posInSet: 1,
-        setSize: 1,
-        type: DirentType.File,
-      },
-      {
-        depth: 1,
-        icon: '',
-        name: 'folder-3',
-        path: '/folder-3',
-        posInSet: 3,
-        setSize: 3,
-        type: DirentType.DirectoryExpanded,
-      },
-    ]
-  )
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(
-    3,
-    'Viewlet.send',
-    'Explorer',
-    'updateDirents',
-    [
-      {
-        depth: 1,
-        icon: '',
-        name: 'folder-1',
-        path: '/folder-1',
-        posInSet: 1,
-        setSize: 3,
-        type: DirentType.DirectoryExpanded,
-      },
-      {
-        depth: 2,
-        icon: '',
-        name: 'index.js',
-        path: '/folder-1,index.js',
-        posInSet: 1,
-        setSize: 1,
-        type: DirentType.File,
-      },
-      {
-        depth: 1,
-        icon: '',
-        name: 'folder-2',
-        path: '/folder-2',
-        posInSet: 2,
-        setSize: 3,
-        type: DirentType.DirectoryExpanded,
-      },
-      {
-        depth: 2,
-        icon: '',
-        name: 'index.js',
-        path: '/folder-2,index.js',
-        posInSet: 1,
-        setSize: 1,
-        type: DirentType.File,
-      },
-      {
-        depth: 1,
-        icon: '',
-        name: 'folder-3',
-        path: '/folder-3',
-        posInSet: 3,
-        setSize: 3,
-        type: DirentType.DirectoryExpanded,
-      },
-      {
-        depth: 2,
-        icon: '',
-        name: 'index.js',
-        path: '/folder-3,index.js',
-        posInSet: 1,
-        setSize: 1,
-        type: DirentType.File,
-      },
-    ]
-  )
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, 'Viewlet.send', 'Explorer', 'updateDirents', [
+    {
+      depth: 1,
+      icon: '',
+      name: 'folder-1',
+      path: '/folder-1',
+      posInSet: 1,
+      setSize: 3,
+      type: DirentType.DirectoryExpanded,
+    },
+    {
+      depth: 2,
+      icon: '',
+      name: 'index.js',
+      path: '/folder-1,index.js', // TODO
+      posInSet: 1,
+      setSize: 1,
+      type: DirentType.File,
+    },
+    {
+      depth: 1,
+      icon: '',
+      name: 'folder-2',
+      path: '/folder-2',
+      posInSet: 2,
+      setSize: 3,
+      type: DirentType.DirectoryExpanded,
+    },
+    {
+      depth: 1,
+      icon: '',
+      name: 'folder-3',
+      path: '/folder-3',
+      posInSet: 3,
+      setSize: 3,
+      type: DirentType.DirectoryExpanded,
+    },
+  ])
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, 'Viewlet.send', 'Explorer', 'updateDirents', [
+    {
+      depth: 1,
+      icon: '',
+      name: 'folder-1',
+      path: '/folder-1',
+      posInSet: 1,
+      setSize: 3,
+      type: DirentType.DirectoryExpanded,
+    },
+    {
+      depth: 2,
+      icon: '',
+      name: 'index.js',
+      path: '/folder-1,index.js', // TODO
+      posInSet: 1,
+      setSize: 1,
+      type: DirentType.File,
+    },
+    {
+      depth: 1,
+      icon: '',
+      name: 'folder-2',
+      path: '/folder-2',
+      posInSet: 2,
+      setSize: 3,
+      type: DirentType.DirectoryExpanded,
+    },
+    {
+      depth: 2,
+      icon: '',
+      name: 'index.js',
+      path: '/folder-2,index.js', // TODO
+      posInSet: 1,
+      setSize: 1,
+      type: DirentType.File,
+    },
+    {
+      depth: 1,
+      icon: '',
+      name: 'folder-3',
+      path: '/folder-3',
+      posInSet: 3,
+      setSize: 3,
+      type: DirentType.DirectoryExpanded,
+    },
+  ])
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, 'Viewlet.send', 'Explorer', 'updateDirents', [
+    {
+      depth: 1,
+      icon: '',
+      name: 'folder-1',
+      path: '/folder-1',
+      posInSet: 1,
+      setSize: 3,
+      type: DirentType.DirectoryExpanded,
+    },
+    {
+      depth: 2,
+      icon: '',
+      name: 'index.js',
+      path: '/folder-1,index.js',
+      posInSet: 1,
+      setSize: 1,
+      type: DirentType.File,
+    },
+    {
+      depth: 1,
+      icon: '',
+      name: 'folder-2',
+      path: '/folder-2',
+      posInSet: 2,
+      setSize: 3,
+      type: DirentType.DirectoryExpanded,
+    },
+    {
+      depth: 2,
+      icon: '',
+      name: 'index.js',
+      path: '/folder-2,index.js',
+      posInSet: 1,
+      setSize: 1,
+      type: DirentType.File,
+    },
+    {
+      depth: 1,
+      icon: '',
+      name: 'folder-3',
+      path: '/folder-3',
+      posInSet: 3,
+      setSize: 3,
+      type: DirentType.DirectoryExpanded,
+    },
+    {
+      depth: 2,
+      icon: '',
+      name: 'index.js',
+      path: '/folder-3,index.js',
+      posInSet: 1,
+      setSize: 1,
+      type: DirentType.File,
+    },
+  ])
 })
 
 test('handleClick - expanded folder', async () => {
@@ -2933,12 +2928,7 @@ test.skip('event - workspace change', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await GlobalEventBus.emitEvent('workspace.change', '/test')
   expect(RendererProcess.invoke).toBeCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith([
-    'Viewlet.send',
-    'Explorer',
-    'updateDirents',
-    [],
-  ])
+  expect(RendererProcess.invoke).toHaveBeenCalledWith(['Viewlet.send', 'Explorer', 'updateDirents', []])
 })
 
 test.skip('newFile - root', async () => {
@@ -3170,22 +3160,8 @@ test.skip('newFile - error with writeFile', async () => {
   await ViewletExplorer.newFile(state)
   await ViewletExplorer.acceptCreateNewFile(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(3)
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [
-    909090,
-    expect.any(Number),
-    'Viewlet.send',
-    'Explorer',
-    'showCreateFileInputBox',
-    0,
-  ])
-  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, [
-    909090,
-    expect.any(Number),
-    'Viewlet.send',
-    'Explorer',
-    'hideCreateFileInputBox',
-    0,
-  ])
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(1, [909090, expect.any(Number), 'Viewlet.send', 'Explorer', 'showCreateFileInputBox', 0])
+  expect(RendererProcess.invoke).toHaveBeenNthCalledWith(2, [909090, expect.any(Number), 'Viewlet.send', 'Explorer', 'hideCreateFileInputBox', 0])
   expect(RendererProcess.invoke).toHaveBeenNthCalledWith(3, [
     909090,
     expect.any(Number),
@@ -4477,10 +4453,7 @@ test('openContainingFolder', async () => {
   })
   await ViewletExplorer.openContainingFolder(state1)
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'OpenNativeFolder.openNativeFolder',
-    '/test'
-  )
+  expect(Command.execute).toHaveBeenCalledWith('OpenNativeFolder.openNativeFolder', '/test')
 })
 
 test('openContainingFolder - nested', async () => {
@@ -4521,10 +4494,7 @@ test('openContainingFolder - nested', async () => {
   })
   await ViewletExplorer.openContainingFolder(state1)
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'OpenNativeFolder.openNativeFolder',
-    '/test/a'
-  )
+  expect(Command.execute).toHaveBeenCalledWith('OpenNativeFolder.openNativeFolder', '/test/a')
 })
 
 test.skip('revealItem - error - not found', async () => {
@@ -4543,9 +4513,7 @@ test.skip('revealItem - error - not found', async () => {
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     throw new Error('File not found: /test/index.js')
   })
-  await expect(
-    ViewletExplorer.revealItem(state, '/test/index.js')
-  ).rejects.toThrowError('File not found: /test/index.js')
+  await expect(ViewletExplorer.revealItem(state, '/test/index.js')).rejects.toThrowError('File not found: /test/index.js')
 })
 
 test('revealItem - two levels deep', async () => {
@@ -4572,9 +4540,7 @@ test('revealItem - two levels deep', async () => {
         throw new Error(`file not found ${uri}`)
     }
   })
-  expect(
-    await ViewletExplorer.revealItem(state, '/test/a/b.txt')
-  ).toMatchObject({
+  expect(await ViewletExplorer.revealItem(state, '/test/a/b.txt')).toMatchObject({
     items: [
       {
         depth: 1,
@@ -4741,9 +4707,7 @@ test('revealItem - insert into existing tree', async () => {
         throw new Error(`file not found ${uri}`)
     }
   })
-  expect(
-    await ViewletExplorer.revealItem(state, '/test/folder-1/a.txt')
-  ).toMatchObject({
+  expect(await ViewletExplorer.revealItem(state, '/test/folder-1/a.txt')).toMatchObject({
     items: [
       {
         depth: 1,
@@ -4849,9 +4813,7 @@ test("revealItem - insert into existing tree - some sibling nodes don't exist an
         throw new Error(`file not found ${uri}`)
     }
   })
-  expect(
-    await ViewletExplorer.revealItem(state, '/test/folder-1/a.txt')
-  ).toMatchObject({
+  expect(await ViewletExplorer.revealItem(state, '/test/folder-1/a.txt')).toMatchObject({
     items: [
       {
         depth: 1,
@@ -4913,9 +4875,7 @@ test('revealItem - already visible', async () => {
   FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
     throw new Error(`file not found ${uri}`)
   })
-  expect(
-    await ViewletExplorer.revealItem(state, '/test/a/b.txt')
-  ).toMatchObject({
+  expect(await ViewletExplorer.revealItem(state, '/test/a/b.txt')).toMatchObject({
     focused: true,
     focusedIndex: 1,
     items: [
@@ -4977,9 +4937,7 @@ test('revealItem - scroll down', async () => {
   FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
     throw new Error(`file not found ${uri}`)
   })
-  expect(
-    await ViewletExplorer.revealItem(state, '/test/a/b.txt')
-  ).toMatchObject({
+  expect(await ViewletExplorer.revealItem(state, '/test/a/b.txt')).toMatchObject({
     focused: true,
     focusedIndex: 1,
     minLineY: 1,
@@ -5206,9 +5164,7 @@ test('handleArrowRight - symlink - error', async () => {
   FileSystem.getRealPath.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  await expect(ViewletExplorer.handleArrowRight(state)).rejects.toThrowError(
-    new TypeError('x is not a function')
-  )
+  await expect(ViewletExplorer.handleArrowRight(state)).rejects.toThrowError(new TypeError('x is not a function'))
 })
 
 test('handleClickCurrent', async () => {
@@ -5291,8 +5247,5 @@ test('copyPath - when scrolled down', async () => {
   Command.execute.mockImplementation(() => {})
   await ViewletExplorer.copyPath(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
-  expect(Command.execute).toHaveBeenCalledWith(
-    'ClipBoard.writeText',
-    '/index.html'
-  )
+  expect(Command.execute).toHaveBeenCalledWith('ClipBoard.writeText', '/index.html')
 })

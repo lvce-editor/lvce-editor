@@ -10,7 +10,7 @@ const mergeDirents = (oldDirents, newDirents) => {
 }
 
 const getMergedDirents = async (root, pathSeparator, dirents) => {
-  const childDirents = await getChildDirents(root, pathSeparator, {
+  const childDirents = await getChildDirents(pathSeparator, {
     path: root,
     depth: 0,
   })
@@ -23,11 +23,7 @@ const uploadFilesDefault = async (root, pathSeparator, files) => {
     const file = files[0]
     const { name, kind } = file
     if (kind === FileHandleType.Directory) {
-      await Command.execute(
-        'PersistentFileHandle.addHandle',
-        `html://${name}`,
-        file
-      )
+      await Command.execute('PersistentFileHandle.addHandle', `html://${name}`, file)
       await Command.execute('Workspace.setPath', `html://${name}`)
       return true
     }
