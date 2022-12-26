@@ -297,6 +297,61 @@ test('loadContent - restore from saved state - root', async () => {
   })
 })
 
+test('loadContent - restore from saved state - root and symlinked open folder', async () => {
+  const state = { ...ViewletExplorer.create(), root: '/' }
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
+    switch (uri) {
+      case '/':
+        return [
+          {
+            name: 'bin',
+            type: DirentType.SymLinkFolder,
+          },
+        ]
+      case '/bin':
+        return [
+          {
+            name: 'file',
+            type: DirentType.File,
+          },
+        ]
+      default:
+        throw new Error('file not found')
+    }
+  })
+  const savedState = {
+    root: '/',
+    expandedPaths: ['/bin'],
+  }
+  expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
+    deltaY: 0,
+    version: 0,
+    itemHeight: 22,
+    dropTargets: [],
+    items: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'bin',
+        path: '/bin',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.DirectoryExpanded,
+      },
+      {
+        depth: 2,
+        icon: '',
+        name: 'file',
+        path: '/bin/file',
+        posInSet: 1,
+        setSize: 1,
+        type: DirentType.File,
+      },
+    ],
+  })
+})
+
 // TODO handle ENOENT error
 // TODO handle ENOTDIR error
 

@@ -88,7 +88,7 @@ const getSavedChildDirents = (map, path, depth, excluded, pathSeparator) => {
     const child = visible[i]
     const { name, type } = child
     const childPath = displayRoot + name
-    if (child.type === DirentType.Directory && childPath in map) {
+    if ((child.type === DirentType.Directory || child.type === DirentType.SymLinkFolder) && childPath in map) {
       dirents.push({
         depth,
         posInSet: i + 1,
