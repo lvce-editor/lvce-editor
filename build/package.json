@@ -36,9 +36,9 @@
     "minimist": "^1.2.7",
     "p-map": "^5.5.0",
     "pretty-bytes": "^6.0.0",
-    "rollup": "^3.7.5",
+    "rollup": "^3.8.1",
     "tar-fs": "^2.1.1",
-    "verdaccio": "^5.18.0",
+    "verdaccio": "^5.19.0",
     "verror": "^1.10.1"
   },
   "xo": {
