@@ -16,7 +16,7 @@ const copyFilesElectron = async (root, pathSeparator, files) => {
 }
 
 const getMergedDirents = async (root, pathSeparator, dirents) => {
-  const childDirents = await getChildDirents(root, pathSeparator, {
+  const childDirents = await getChildDirents(pathSeparator, {
     path: root,
     depth: 0,
   })

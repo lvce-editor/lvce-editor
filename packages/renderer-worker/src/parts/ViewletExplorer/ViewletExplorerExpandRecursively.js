@@ -21,11 +21,7 @@ export const expandRecursively = async (state) => {
           depth: 0,
         }
       : items[focusedIndex]
-  if (
-    dirent.type !== DirentType.Directory &&
-    dirent.type !== DirentType.DirectoryExpanding &&
-    dirent.type !== DirentType.DirectoryExpanded
-  ) {
+  if (dirent.type !== DirentType.Directory && dirent.type !== DirentType.DirectoryExpanding && dirent.type !== DirentType.DirectoryExpanded) {
     return state
   }
   // TODO this is very inefficient
@@ -36,7 +32,7 @@ export const expandRecursively = async (state) => {
       case DirentType.Directory:
       case DirentType.DirectoryExpanding:
       case DirentType.DirectoryExpanded:
-        const childDirents = await getChildDirents(root, pathSeparator, dirent)
+        const childDirents = await getChildDirents(pathSeparator, dirent)
         const all = [makeExpanded(dirent)]
         for (const childDirent of childDirents) {
           const childAll = await getChildDirentsRecursively(childDirent)
@@ -54,11 +50,7 @@ export const expandRecursively = async (state) => {
   const startIndex = focusedIndex
   if (focusedIndex >= 0) {
     const endIndex = getParentEndIndex(items, focusedIndex)
-    const newDirents = [
-      ...items.slice(0, startIndex),
-      ...childDirents,
-      ...items.slice(endIndex),
-    ]
+    const newDirents = [...items.slice(0, startIndex), ...childDirents, ...items.slice(endIndex)]
     return { ...state, items: newDirents }
   }
   return {

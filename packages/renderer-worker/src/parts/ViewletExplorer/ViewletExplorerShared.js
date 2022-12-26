@@ -27,10 +27,7 @@ const priorityMapFoldersFirst = {
 }
 
 const compareDirentType = (direntA, direntB) => {
-  return (
-    priorityMapFoldersFirst[direntB.type] -
-    priorityMapFoldersFirst[direntA.type]
-  )
+  return priorityMapFoldersFirst[direntB.type] - priorityMapFoldersFirst[direntA.type]
 }
 
 const compareDirentName = (direntA, direntB) => {
@@ -38,24 +35,14 @@ const compareDirentName = (direntA, direntB) => {
 }
 
 export const compareDirent = (direntA, direntB) => {
-  return (
-    compareDirentType(direntA, direntB) || compareDirentName(direntA, direntB)
-  )
+  return compareDirentType(direntA, direntB) || compareDirentName(direntA, direntB)
 }
 
-const toDisplayDirents = (
-  root,
-  pathSeparator,
-  rawDirents,
-  parentDirent,
-  excluded
-) => {
+const toDisplayDirents = (pathSeparator, rawDirents, parentDirent, excluded) => {
   rawDirents.sort(compareDirent) // TODO maybe shouldn't mutate input argument, maybe sort after mapping
   // TODO figure out whether this uses too much memory (name,path -> redundant, depth could be computed on demand)
   const toDisplayDirent = (rawDirent, index) => {
-    const path = parentDirent.path
-      ? [parentDirent.path, rawDirent.name].join(pathSeparator)
-      : [root, rawDirent.name].join(pathSeparator)
+    const path = [parentDirent.path, rawDirent.name].join(pathSeparator)
     return {
       name: rawDirent.name,
       posInSet: index + 1,
@@ -134,9 +121,7 @@ const resolveSymbolicLink = async (uri, rawDirent) => {
         type: DirentType.SymLinkFile,
       }
     }
-    console.error(
-      `Failed to resolve symbolic link for ${rawDirent.name}: ${error}`
-    )
+    console.error(`Failed to resolve symbolic link for ${rawDirent.name}: ${error}`)
     return rawDirent
   }
 }
@@ -162,13 +147,7 @@ export const getChildDirentsRaw = async (uri) => {
   return rawDirents
 }
 
-export const getChildDirents = async (
-  root,
-  pathSeparator,
-  parentDirent,
-  excluded = []
-) => {
-  Assert.string(root)
+export const getChildDirents = async (pathSeparator, parentDirent, excluded = []) => {
   Assert.string(pathSeparator)
   Assert.object(parentDirent)
   // TODO use event/actor based code instead, this is impossible to cancel right now
@@ -179,13 +158,7 @@ export const getChildDirents = async (
   // and more performant
   const uri = parentDirent.path
   const rawDirents = await getChildDirentsRaw(uri)
-  const displayDirents = toDisplayDirents(
-    root,
-    pathSeparator,
-    rawDirents,
-    parentDirent,
-    excluded
-  )
+  const displayDirents = toDisplayDirents(pathSeparator, rawDirents, parentDirent, excluded)
   return displayDirents
 }
 
@@ -210,7 +183,6 @@ export const getTopLevelDirents = (root, pathSeparator, excluded) => {
     return []
   }
   return getChildDirents(
-    root,
     pathSeparator,
     {
       depth: 0,
