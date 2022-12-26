@@ -151,6 +151,9 @@ const restoreExpandedState = async (savedState, root, pathSeparator, excluded) =
   // restore scroll location
   const expandedPaths = getSavedExpandedPaths(savedState)
   const savedRoot = getSavedRoot(savedState, root)
+  if (savedRoot === '') {
+    return []
+  }
   const expandedDirentPaths = [savedRoot, ...expandedPaths]
   const expandedDirentChildren = await Promise.allSettled(expandedDirentPaths.map(getChildDirentsRaw))
   if (expandedDirentChildren[0].status === PromiseStatus.Rejected) {
