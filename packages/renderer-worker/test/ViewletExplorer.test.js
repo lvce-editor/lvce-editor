@@ -152,6 +152,77 @@ test('loadContent', async () => {
   })
 })
 
+test('loadContent - root', async () => {
+  const state = { ...ViewletExplorer.create(), root: '/' }
+  Workspace.state.workspacePath = '/'
+  // @ts-ignore
+  FileSystem.readDirWithFileTypes.mockImplementation(() => {
+    return [
+      {
+        name: 'file 1',
+        type: DirentType.File,
+      },
+      {
+        name: 'file 2',
+        type: DirentType.File,
+      },
+      {
+        name: 'file 3',
+        type: DirentType.File,
+      },
+    ]
+  })
+  expect(await ViewletExplorer.loadContent(state)).toEqual({
+    deltaY: 0,
+    version: 0,
+    itemHeight: 22,
+    dropTargets: [],
+    items: [
+      {
+        depth: 1,
+        icon: '',
+        name: 'file 1',
+        path: '/file 1',
+        posInSet: 1,
+        setSize: 3,
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'file 2',
+        path: '/file 2',
+        posInSet: 2,
+        setSize: 3,
+        type: DirentType.File,
+      },
+      {
+        depth: 1,
+        icon: '',
+        name: 'file 3',
+        path: '/file 3',
+        posInSet: 3,
+        setSize: 3,
+        type: DirentType.File,
+      },
+    ],
+    focusedIndex: -1,
+    focused: false,
+    height: undefined,
+    hoverIndex: -1,
+    left: undefined,
+    maxLineY: Number.NaN,
+    minLineY: 0,
+    root: '/',
+    top: undefined,
+    pathSeparator: PathSeparatorType.Slash,
+    editingIndex: -1,
+    excluded: [],
+    editingValue: '',
+    editingType: ExplorerEditingType.None,
+  })
+})
+
 test('loadContent - restore from saved state - root', async () => {
   const state = { ...ViewletExplorer.create(), root: '/' }
   // @ts-ignore
@@ -405,7 +476,7 @@ test('loadContent - restore from saved state - sort dirents', async () => {
 })
 
 test('loadContent - restore from saved state - no saved state exists', async () => {
-  const state = ViewletExplorer.create()
+  const state = { ...ViewletExplorer.create(), root: '/test' }
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation((uri) => {
     switch (uri) {
@@ -421,10 +492,9 @@ test('loadContent - restore from saved state - no saved state exists', async () 
           },
         ]
       default:
-        throw new Error('file not found')
+        throw new Error(`file not found: ${uri}`)
     }
   })
-
   const savedState = undefined
   expect(await ViewletExplorer.loadContent(state, savedState)).toMatchObject({
     items: [

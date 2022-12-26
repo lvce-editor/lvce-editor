@@ -128,21 +128,34 @@ const createDirents = (root, expandedDirentPaths, expandedDirentChildren, exclud
   return dirents
 }
 
+const getSavedExpandedPaths = (savedState) => {
+  if (savedState && savedState.expandedPaths && Array.isArray(savedState.expandedPaths)) {
+    return savedState.expandedPaths
+  }
+  return []
+}
+
+const getSavedRoot = (savedState, root) => {
+  if (savedState && savedState.root && typeof savedState.root === 'string') {
+    return savedState.root
+  }
+
+  return root
+}
+
 const restoreExpandedState = async (savedState, root, pathSeparator, excluded) => {
   // TODO read all opened folders in parallel
   // ignore ENOENT errors
   // ignore ENOTDIR errors
   // merge all dirents
   // restore scroll location
-  if (!savedState || !savedState.expandedPaths || savedState.root !== root) {
-    return await getTopLevelDirents(root, pathSeparator, excluded)
-  }
-  const expandedDirentPaths = [root, ...savedState.expandedPaths]
+  const expandedPaths = getSavedExpandedPaths(savedState)
+  const savedRoot = getSavedRoot(savedState, root)
+  const expandedDirentPaths = [savedRoot, ...expandedPaths]
   const expandedDirentChildren = await Promise.allSettled(expandedDirentPaths.map(getChildDirentsRaw))
   if (expandedDirentChildren[0].status === PromiseStatus.Rejected) {
     throw expandedDirentChildren[0].reason
   }
-  const savedRoot = savedState.root
   const dirents = createDirents(savedRoot, expandedDirentPaths, expandedDirentChildren, excluded, pathSeparator)
   return dirents
 }
