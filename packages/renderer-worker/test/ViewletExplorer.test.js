@@ -152,9 +152,8 @@ test('loadContent', async () => {
   })
 })
 
-test.only('loadContent - root', async () => {
-  const state = ViewletExplorer.create()
-  Workspace.state.workspacePath = '/'
+test('loadContent - restore from saved state - root', async () => {
+  const state = { ...ViewletExplorer.create(), root: '/' }
   // @ts-ignore
   FileSystem.readDirWithFileTypes.mockImplementation(() => {
     return [
@@ -172,7 +171,11 @@ test.only('loadContent - root', async () => {
       },
     ]
   })
-  expect(await ViewletExplorer.loadContent(state)).toEqual({
+  const savedState = {
+    root: '/',
+    expandedPaths: [],
+  }
+  expect(await ViewletExplorer.loadContent(state, savedState)).toEqual({
     deltaY: 0,
     version: 0,
     itemHeight: 22,
