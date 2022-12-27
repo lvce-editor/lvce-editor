@@ -129,7 +129,7 @@ const createDirents = (root, expandedDirentPaths, expandedDirentChildren, exclud
 }
 
 const getSavedExpandedPaths = (savedState, root) => {
-  if (savedState.root !== root) {
+  if (savedState && savedState.root !== root) {
     return []
   }
   if (savedState && savedState.expandedPaths && Array.isArray(savedState.expandedPaths)) {
