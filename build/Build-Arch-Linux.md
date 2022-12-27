@@ -11,7 +11,7 @@ sudo apt install -y libarchive-tools
 ## Dependencies (when building on Arch Linux)
 
 ```sh
-sudo pacman -Syu libxcrypt-compat
+sudo pacman -Syu libxcrypt-compat make
 ```
 
 ## Build
