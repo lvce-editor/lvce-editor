@@ -128,19 +128,14 @@ const createDirents = (root, expandedDirentPaths, expandedDirentChildren, exclud
   return dirents
 }
 
-const getSavedExpandedPaths = (savedState) => {
+const getSavedExpandedPaths = (savedState, root) => {
+  if (savedState && savedState.root !== root) {
+    return []
+  }
   if (savedState && savedState.expandedPaths && Array.isArray(savedState.expandedPaths)) {
     return savedState.expandedPaths
   }
   return []
-}
-
-const getSavedRoot = (savedState, root) => {
-  if (savedState && savedState.root && typeof savedState.root === 'string') {
-    return savedState.root
-  }
-
-  return root
 }
 
 const restoreExpandedState = async (savedState, root, pathSeparator, excluded) => {
@@ -149,17 +144,16 @@ const restoreExpandedState = async (savedState, root, pathSeparator, excluded) =
   // ignore ENOTDIR errors
   // merge all dirents
   // restore scroll location
-  const expandedPaths = getSavedExpandedPaths(savedState)
-  const savedRoot = getSavedRoot(savedState, root)
-  if (savedRoot === '') {
+  const expandedPaths = getSavedExpandedPaths(savedState, root)
+  if (root === '') {
     return []
   }
-  const expandedDirentPaths = [savedRoot, ...expandedPaths]
+  const expandedDirentPaths = [root, ...expandedPaths]
   const expandedDirentChildren = await Promise.allSettled(expandedDirentPaths.map(getChildDirentsRaw))
   if (expandedDirentChildren[0].status === PromiseStatus.Rejected) {
     throw expandedDirentChildren[0].reason
   }
-  const dirents = createDirents(savedRoot, expandedDirentPaths, expandedDirentChildren, excluded, pathSeparator)
+  const dirents = createDirents(root, expandedDirentPaths, expandedDirentChildren, excluded, pathSeparator)
   return dirents
 }
 
@@ -598,9 +592,9 @@ const acceptCreate = async (state) => {
     focusedIndex >= 0
       ? state.items[focusedIndex]
       : {
-          depth: 0,
-          path: state.root,
-        }
+        depth: 0,
+        path: state.root,
+      }
   const depth = parentDirent.depth + 1
   const newDirent = {
     path: absolutePath,
@@ -780,9 +774,9 @@ export const handleClickCurrentButKeepFocus = (state) => {
   return handleClick(state, state.focusedIndex - state.minLineY, /* keepFocus */ true)
 }
 
-export const scrollUp = () => {}
+export const scrollUp = () => { }
 
-export const scrollDown = () => {}
+export const scrollDown = () => { }
 // export const handleBlur=()=>{}
 
 const handleClickSymLink = async (state, dirent, index) => {
@@ -868,7 +862,7 @@ export const handleUpload = async (state, dirents) => {
   }
 }
 
-const cancelRequest = (state) => {}
+const cancelRequest = (state) => { }
 
 export const dispose = (state) => {
   if (!state.pendingRequests) {
