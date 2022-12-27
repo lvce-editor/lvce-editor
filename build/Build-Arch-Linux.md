@@ -14,7 +14,14 @@ sudo apt install -y libarchive-tools
 sudo pacman -Syu libxcrypt-compat make
 ```
 
+
 ## Build
+
+```sh
+node bin/build.js --target=arch-linux --electronVersion=19.1.9  
+```
+
+## Build with electron-builder
 
 ```sh
 node bin/build.js --target=electron-builder-arch-linux --force

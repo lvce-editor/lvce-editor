@@ -69,13 +69,13 @@ const copyElectron = async ({
 }) => {
   const outDir = useInstalledElectronVersion
     ? Path.join(
-        Root.root,
-        'packages',
-        'main-process',
-        'node_modules',
-        'electron',
-        'dist'
-      )
+      Root.root,
+      'packages',
+      'main-process',
+      'node_modules',
+      'electron',
+      'dist'
+    )
     : Path.join(Root.root, 'build', '.tmp', 'electron', electronVersion)
   await Copy.copy({
     from: outDir,
@@ -301,8 +301,7 @@ const copyCss = async ({ arch }) => {
 
 export const build = async () => {
   const arch = process.arch
-  const useInstalledElectronVersion = true
-  const electronVersion = await GetElectronVersion.getElectronVersion()
+  const { electronVersion, isInstalled } = await GetElectronVersion.getElectronVersion()
   const dependencyCacheHash = await getDependencyCacheHash({
     electronVersion,
     arch,
@@ -313,6 +312,17 @@ export const build = async () => {
   )
   const dependencyCachePathFinished = Path.join(dependencyCachePath, 'finished')
   const commitHash = await CommitHash.getCommitHash()
+
+
+  if (!isInstalled) {
+    console.time('downloadElectron')
+    await downloadElectron({
+      arch,
+      electronVersion,
+      platform: process.platform,
+    })
+    console.timeEnd('downloadElectron')
+  }
 
   if (
     existsSync(dependencyCachePath) &&
@@ -333,21 +343,13 @@ export const build = async () => {
     console.timeEnd('bundleElectronAppDependencies')
   }
 
-  if (!useInstalledElectronVersion) {
-    console.time('downloadElectron')
-    await downloadElectron({
-      arch,
-      electronVersion,
-      platform: process.platform,
-    })
-    console.timeEnd('downloadElectron')
-  }
+
 
   console.time('copyElectron')
   await copyElectron({
     arch,
     electronVersion,
-    useInstalledElectronVersion,
+    useInstalledElectronVersion: isInstalled,
   })
   console.timeEnd('copyElectron')
 
