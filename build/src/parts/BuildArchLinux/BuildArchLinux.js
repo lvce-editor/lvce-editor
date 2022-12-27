@@ -39,6 +39,12 @@ const copyElectronResult = async () => {
     occurrence: `export { rgPath } from 'vscode-ripgrep-with-github-api-error-fix'`,
     replacement: `export const rgPath = 'rg'`,
   })
+  // because of using system electron, argv will be /usr/lib/electron /usr/lib/appName <path>
+  await Replace.replace({
+    path: `build/.tmp/arch-linux/x64/usr/lib/${Product.applicationName}/packages/main-process/src/parts/Cli/Cli.js`,
+    occurrence: `const relevantArgv = argv.slice(1)`,
+    replacement: `const relevantArgv = argv.slice(2)`,
+  })
 }
 
 const copyMetaFiles = async () => {
