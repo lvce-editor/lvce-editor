@@ -679,7 +679,7 @@ test.skip('loadContent - race condition - workspace changes while loading after 
   const state = ViewletExplorer.create()
   Workspace.state.workspacePath = '/test'
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => { })
+  RendererProcess.invoke.mockImplementation(() => {})
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...params) => {
     switch (method) {
@@ -712,7 +712,7 @@ test.skip('loadContent - race condition - workspace changes while loading after 
   const state = ViewletExplorer.create()
   Workspace.state.workspacePath = '/test'
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => { })
+  RendererProcess.invoke.mockImplementation(() => {})
   // @ts-ignore
   SharedProcess.invoke.mockImplementation(async (method, ...params) => {
     switch (method) {
@@ -746,7 +746,7 @@ test.skip('loadContent - race condition - workspace changes while loading after 
 test.skip('loadContent - race condition', async () => {
   Workspace.state.workspacePath = '/test'
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => { })
+  RendererProcess.invoke.mockImplementation(() => {})
 
   let x = 0
   // @ts-ignore
@@ -849,7 +849,7 @@ test('loadContent - error - command not found', async () => {
 
 test.skip('contentLoaded', async () => {
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => { })
+  RendererProcess.invoke.mockImplementation(() => {})
   const state = {
     ...ViewletExplorer.create(),
     deltaY: 0,
@@ -929,7 +929,7 @@ test.skip('refresh - error', async () => {
   const state = ViewletExplorer.create()
   Workspace.state.workspacePath = '/home/test-user/test-path'
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => { })
+  RendererProcess.invoke.mockImplementation(() => {})
   // @ts-ignore
   // @ts-ignore
   SharedProcess.invoke.mockImplementation((method, ...params) => {
@@ -1087,6 +1087,35 @@ test('handleClick - unsupported dirent type', async () => {
     }
   })
   expect(() => ViewletExplorer.handleClick(state, 0)).toThrowError(new Error('unsupported dirent type abc'))
+  expect(Command.execute).not.toHaveBeenCalled()
+})
+
+test('handleClick - character device', async () => {
+  const state = {
+    root: '/test',
+    focusedIndex: -1,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    items: [
+      {
+        name: 'index.css',
+        type: DirentType.CharacterDevice,
+        path: '/index.css',
+      },
+    ],
+  }
+  // @ts-ignore
+  Command.execute.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Main.openUri':
+        break
+      default:
+        throw new Error('unexpected method')
+    }
+  })
+  expect(() => ViewletExplorer.handleClick(state, 0)).toThrowError(new Error('Cannot open character device files'))
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
@@ -1585,7 +1614,7 @@ test.skip('handleClick - race condition - child folder is being expanded and par
     }
   })
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => { })
+  RendererProcess.invoke.mockImplementation(() => {})
   const promise1 = ViewletExplorer.handleClick(state, 1)
   const promise2 = ViewletExplorer.handleClick(state, 0)
   await Promise.all([promise1, promise2])
@@ -1653,7 +1682,7 @@ test.skip('handleClick - folder - race condition - opening multiple folders at t
     }
   })
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => { })
+  RendererProcess.invoke.mockImplementation(() => {})
   const promise1 = ViewletExplorer.handleClick(state, 0)
   const promise2 = ViewletExplorer.handleClick(state, 1)
   const promise3 = ViewletExplorer.handleClick(state, 2)
@@ -3053,7 +3082,7 @@ test.skip('event - workspace change', async () => {
     }
   })
   // @ts-ignore
-  RendererProcess.invoke.mockImplementation(() => { })
+  RendererProcess.invoke.mockImplementation(() => {})
   await GlobalEventBus.emitEvent('workspace.change', '/test')
   expect(RendererProcess.invoke).toBeCalledTimes(1)
   expect(RendererProcess.invoke).toHaveBeenCalledWith(['Viewlet.send', 'Explorer', 'updateDirents', []])
@@ -3308,7 +3337,7 @@ test.skip('newFile - error with writeFile', async () => {
 test('newFile - canceled', async () => {
   const state = ViewletExplorer.create('', 0, 0, 0, 0)
   // @ts-ignore
-  FileSystem.writeFile.mockImplementation(() => { })
+  FileSystem.writeFile.mockImplementation(() => {})
   expect(await ViewletExplorer.newFile(state)).toMatchObject({
     editingIndex: 0,
   })
@@ -3358,7 +3387,7 @@ test('removeDirent - first', async () => {
     maxLineY: 100,
   }
   // @ts-ignore
-  FileSystem.remove.mockImplementation(() => { })
+  FileSystem.remove.mockImplementation(() => {})
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
     items: [
       {
@@ -3406,7 +3435,7 @@ test('removeDirent - only folder', async () => {
     maxLineY: 100,
   }
   // @ts-ignore
-  FileSystem.remove.mockImplementation(() => { })
+  FileSystem.remove.mockImplementation(() => {})
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
     items: [],
     focusedIndex: -1,
@@ -3471,7 +3500,7 @@ test('removeDirent - expanded folder', async () => {
     maxLineY: 100,
   }
   // @ts-ignore
-  FileSystem.remove.mockImplementation(() => { })
+  FileSystem.remove.mockImplementation(() => {})
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
     items: [
       {
@@ -3537,7 +3566,7 @@ test('removeDirent - middle', async () => {
     maxLineY: 100,
   }
   // @ts-ignore
-  FileSystem.remove.mockImplementation(() => { })
+  FileSystem.remove.mockImplementation(() => {})
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
     items: [
       {
@@ -3603,7 +3632,7 @@ test('removeDirent - last', async () => {
     maxLineY: 100,
   }
   // @ts-ignore
-  FileSystem.remove.mockImplementation(() => { })
+  FileSystem.remove.mockImplementation(() => {})
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
     items: [
       {
@@ -3641,7 +3670,7 @@ test('removeDirent - no dirents left', async () => {
     maxLineY: 100,
   }
   // @ts-ignore
-  FileSystem.remove.mockImplementation(() => { })
+  FileSystem.remove.mockImplementation(() => {})
   expect(await ViewletExplorer.removeDirent(state)).toMatchObject({
     items: [],
   })
@@ -5159,7 +5188,7 @@ test('revealItem - scroll up', async () => {
 
 test('acceptEdit - rename', async () => {
   // @ts-ignore
-  FileSystem.rename.mockImplementation(() => { })
+  FileSystem.rename.mockImplementation(() => {})
   const state = {
     ...ViewletExplorer.create(),
     focusedIndex: 0,
@@ -5204,7 +5233,7 @@ test('acceptEdit - rename', async () => {
 
 test('acceptEdit - rename - nested file', async () => {
   // @ts-ignore
-  FileSystem.rename.mockImplementation(() => { })
+  FileSystem.rename.mockImplementation(() => {})
   const state = {
     ...ViewletExplorer.create(),
     focusedIndex: 0,
@@ -5372,7 +5401,7 @@ test('copyPath - when scrolled down', async () => {
     ],
   }
   // @ts-ignore
-  Command.execute.mockImplementation(() => { })
+  Command.execute.mockImplementation(() => {})
   await ViewletExplorer.copyPath(state)
   expect(Command.execute).toHaveBeenCalledTimes(1)
   expect(Command.execute).toHaveBeenCalledWith('ClipBoard.writeText', '/index.html')
