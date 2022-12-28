@@ -21,6 +21,9 @@ export const create = (id) => {
     parsedScripts: Object.create(null),
     pausedReason: DebugPausedReason.None,
     pausedMessage: '',
+    debugInputValue: '',
+    debugOutputValue: '',
+    callFrameId: '',
   }
 }
 
@@ -113,6 +116,7 @@ const toDisplayCallStack = (callFrames) => {
 export const handlePaused = async (state, params) => {
   const callStack = toDisplayCallStack(params.callFrames)
   const objectId = params.callFrames[0].scopeChain[0].object.objectId
+  const callFrameId = params.callFrames[0].callFrameId
   const { debugId } = state
   const properties = await Debug.getProperties(debugId, objectId)
   const thisObject = params.callFrames[0].this
@@ -130,6 +134,7 @@ export const handlePaused = async (state, params) => {
     callStack,
     pausedReason,
     pausedMessage,
+    callFrameId,
   }
 }
 
@@ -141,6 +146,7 @@ export const handleResumed = (state) => {
     callStack: [],
     pausedMessage: '',
     pausedReason: DebugPausedReason.None,
+    callFrameId: '',
   }
 }
 
@@ -225,6 +231,24 @@ export const handleClickSectionCallstack = (state) => {
   }
 }
 
+export const handleDebugInput = (state, value) => {
+  return {
+    ...state,
+    debugInputValue: value,
+  }
+}
+
+export const handleEvaluate = async (state) => {
+  const { debugInputValue, callFrameId, debugId } = state
+  const result = await Debug.evaluate(debugId, debugInputValue, callFrameId)
+  const actualResult = result.result.result.value
+  return {
+    ...state,
+    debugInputValue: '',
+    debugOutputValue: `${actualResult}`,
+  }
+}
+
 // TODO make sure dispose is actually called
 export const dispose = (state) => {
   return {
@@ -296,7 +320,16 @@ const renderPausedReason = {
   },
 }
 
-export const render = [renderProcesses, renderDebugState, renderSections, renderScopeChain, renderCallStack, renderPausedReason]
+const renderOutput = {
+  isEqual(oldState, newState) {
+    return oldState.debugOutputValue === newState.debugOutputValue
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setOutputValue', newState.debugOutputValue]
+  },
+}
+
+export const render = [renderProcesses, renderDebugState, renderSections, renderScopeChain, renderCallStack, renderPausedReason, renderOutput]
 
 export const resize = (state, dimensions) => {
   return { ...state, ...dimensions }

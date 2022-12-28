@@ -15,6 +15,8 @@ export const Commands = {
   stepOut: ViewletRunAndDebug.stepOut,
   stepOver: ViewletRunAndDebug.stepOver,
   togglePause: ViewletRunAndDebug.togglePause,
+  handleEvaluate: ViewletRunAndDebug.handleEvaluate,
+  handleDebugInput: ViewletRunAndDebug.handleDebugInput
 }
 
 export const Events = {
@@ -23,10 +25,6 @@ export const Events = {
   'Debug.scriptParsed': ViewletRunAndDebug.handleScriptParsed,
 }
 
-export const Css = [
-  '/css/parts/MaskIcon.css',
-  '/css/parts/IconButton.css',
-  '/css/parts/ViewletRunAndDebug.css',
-]
+export const Css = ['/css/parts/MaskIcon.css', '/css/parts/IconButton.css', '/css/parts/ViewletRunAndDebug.css']
 
 export * from './ViewletRunAndDebug.js'
