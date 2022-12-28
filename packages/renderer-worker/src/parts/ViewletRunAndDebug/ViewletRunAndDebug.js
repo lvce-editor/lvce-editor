@@ -1,16 +1,17 @@
+import * as Assert from '../Assert/Assert.js'
 import * as Debug from '../Debug/Debug.js'
 import * as DebugDisplay from '../DebugDisplay/DebugDisplay.js'
 import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
+import * as DebugState from '../DebugState/DebugState.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as Assert from '../Assert/Assert.js'
 
 export const create = (id) => {
   return {
     id,
     disposed: false,
     processes: [],
-    debugState: 'none',
+    debugState: DebugState.None,
     watchExpanded: false,
     breakPointsExpanded: false,
     scopeExpanded: false,
@@ -31,7 +32,7 @@ export const loadContent = async (state) => {
     ...state,
     processes,
     debugId,
-    debugState: 'default',
+    debugState: DebugState.Default,
   }
 }
 
@@ -123,7 +124,7 @@ export const handlePaused = async (state, params) => {
   const pausedMessage = DebugDisplay.getPausedMessage(params.reason)
   return {
     ...state,
-    debugState: 'paused',
+    debugState: DebugState.Paused,
     scopeChain,
     scopeExpanded: true,
     callStack,
@@ -135,7 +136,7 @@ export const handlePaused = async (state, params) => {
 export const handleResumed = (state) => {
   return {
     ...state,
-    debugState: 'default',
+    debugState: DebugState.Default,
     scopeChain: [],
     callStack: [],
     pausedMessage: '',
@@ -168,7 +169,7 @@ export const pause = async (state) => {
 
 export const togglePause = async (state) => {
   const { debugState } = state
-  if (debugState === 'default') {
+  if (debugState === DebugState.Default) {
     return pause(state)
   }
   return resume(state)
