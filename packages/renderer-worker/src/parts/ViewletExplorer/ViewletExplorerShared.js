@@ -127,15 +127,16 @@ const resolveSymbolicLink = async (uri, rawDirent) => {
 }
 
 const resolveSymbolicLinks = async (uri, rawDirents) => {
-  const resolvedDirents = []
+  const promises = []
   for (const rawDirent of rawDirents) {
     if (isSymbolicLink(rawDirent)) {
-      const resolvedDirent = await resolveSymbolicLink(uri, rawDirent)
-      resolvedDirents.push(resolvedDirent)
+      const resolvedDirent = resolveSymbolicLink(uri, rawDirent)
+      promises.push(resolvedDirent)
     } else {
-      resolvedDirents.push(rawDirent)
+      promises.push(rawDirent)
     }
   }
+  const resolvedDirents = await Promise.all(promises)
   return resolvedDirents
 }
 
