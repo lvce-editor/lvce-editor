@@ -74,3 +74,12 @@ export const getPausedMessage = (reason) => {
       return `Debugger paused (${reason})`
   }
 }
+
+export const getPausedMessageDetail = (params) => {
+  if (!params.data) {
+    return ''
+  }
+  const description = params.data.description
+  const shortDescription = description.slice(0, description.indexOf('\n'))
+  return shortDescription
+}

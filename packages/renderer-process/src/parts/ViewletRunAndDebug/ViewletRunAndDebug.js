@@ -38,8 +38,7 @@ export const create = () => {
   const $Processes = document.createElement('div')
 
   const $DebugSectionHeaderWatch = create$DebugSectionHeader('Watch')
-  const $DebugSectionHeaderBreakPoints =
-    create$DebugSectionHeader('Breakpoints')
+  const $DebugSectionHeaderBreakPoints = create$DebugSectionHeader('Breakpoints')
   const $DebugSectionHeaderScope = create$DebugSectionHeader('Scope')
   const $DebugSectionHeaderCallStack = create$DebugSectionHeader('Call Stack')
 
@@ -186,15 +185,27 @@ export const setCallStack = (state, callStack) => {
   }
 }
 
-export const setPausedReason = (state, pausedReason, pausedMessage) => {
+export const setPausedReason = (state, pausedReason, pausedMessage, pausedMessageDetailShort, pausedMessageDetail) => {
   const { $ButtonStepOut } = state
   const $Next = $ButtonStepOut.nextElementSibling
   if ($Next.className === 'DebugPausedMessage') {
-    $Next.textContent = pausedMessage
+    const $DebugPausedMessageTitle = $Next.children[0]
+    $DebugPausedMessageTitle.textContent = pausedMessage
+    const $DebugPausedMessageDetail = $Next.children[1]
+    $DebugPausedMessageDetail.textContent = pausedMessageDetailShort
+    $DebugPausedMessageDetail.title = pausedMessageDetail
   } else {
+    const $DebugPausedMessageTitle = document.createElement('div')
+    $DebugPausedMessageTitle.className = 'DebugPausedMessageTitle'
+    $DebugPausedMessageTitle.textContent = pausedMessage
+    const $DebugPausedMessageDetail = document.createElement('div')
+    $DebugPausedMessageDetail.className = 'DebugPausedMessageDetail'
+    $DebugPausedMessageDetail.textContent = pausedMessageDetailShort
+    $DebugPausedMessageDetail.textContent = pausedMessageDetail
+
     const $DebugPausedMessage = document.createElement('div')
     $DebugPausedMessage.className = 'DebugPausedMessage'
-    $DebugPausedMessage.textContent = pausedMessage
+    $DebugPausedMessage.append($DebugPausedMessageTitle, $DebugPausedMessageDetail)
     $ButtonStepOut.after($DebugPausedMessage)
   }
 }
