@@ -227,3 +227,17 @@ test('getIcon - no fileNames property', () => {
     })
   ).toBe('_file')
 })
+
+test('getIcon - character device', () => {
+  IconTheme.state.iconTheme = {
+    fileNames: {
+      license: 'f_license',
+    },
+  }
+  expect(
+    IconTheme.getIcon({
+      type: DirentType.CharacterDevice,
+      name: 'null',
+    })
+  ).toBe('_file')
+})

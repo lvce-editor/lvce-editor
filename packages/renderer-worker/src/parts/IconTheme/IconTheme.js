@@ -30,10 +30,7 @@ const getIconThemeUrl = (iconThemeId) => {
 const getIconThemeJson = async (iconThemeId) => {
   if (Platform.platform === PlatformType.Web) {
     const url = getIconThemeUrl(iconThemeId)
-    const json = await Command.execute(
-      /* Ajax.getJson */ 'Ajax.getJson',
-      /* url */ url
-    )
+    const json = await Command.execute(/* Ajax.getJson */ 'Ajax.getJson', /* url */ url)
     const assetDir = Platform.getAssetDir()
     return {
       json,
@@ -53,10 +50,7 @@ const getIconThemeJson = async (iconThemeId) => {
       }
     }
   }
-  return SharedProcess.invoke(
-    /* ExtensionHost.getIconThemeJson */ 'ExtensionHost.getIconThemeJson',
-    /* iconThemeId */ iconThemeId
-  )
+  return SharedProcess.invoke(/* ExtensionHost.getIconThemeJson */ 'ExtensionHost.getIconThemeJson', /* iconThemeId */ iconThemeId)
 }
 
 const getExtension = (file) => {
@@ -135,6 +129,7 @@ export const getIcon = (dirent) => {
     case DirentType.DirectoryExpanded:
       return getFolderIconExpanded(dirent)
     case DirentType.Symlink:
+    case DirentType.CharacterDevice:
       return DefaultIcon.File
     default:
       console.warn(`unsupported type ${dirent.type}`)
@@ -185,11 +180,7 @@ export const setIconTheme = async (iconThemeId) => {
         await Viewlet.setState(factory.name, newState)
       }
     }
-    await RendererProcess.invoke(
-      /* Css.setInlineStyle */ 'Css.setInlineStyle',
-      /* id */ 'ContributedIconTheme',
-      /* css */ iconThemeCss
-    )
+    await RendererProcess.invoke(/* Css.setInlineStyle */ 'Css.setInlineStyle', /* id */ 'ContributedIconTheme', /* css */ iconThemeCss)
   } catch (error) {
     if (Workspace.isTest()) {
       // ignore
