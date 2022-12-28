@@ -1,7 +1,9 @@
 import * as Command from '../Command/Command.js'
 import * as DefaultIcon from '../DefaultIcon/DefaultIcon.js'
 import * as DirentType from '../DirentType/DirentType.js'
+import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 import * as Languages from '../Languages/Languages.js'
+import * as Logger from '../Logger/Logger.js'
 import * as Platform from '../Platform/Platform.js'
 import * as PlatformType from '../PlatformType/PlatformType.js'
 import * as Preferences from '../Preferences/Preferences.js'
@@ -11,7 +13,6 @@ import { VError } from '../VError/VError.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
-import * as ExtensionMeta from '../ExtensionMeta/ExtensionMeta.js'
 
 export const state = {
   seenFiles: [],
@@ -132,7 +133,7 @@ export const getIcon = (dirent) => {
     case DirentType.CharacterDevice:
       return DefaultIcon.File
     default:
-      console.warn(`unsupported type ${dirent.type}`)
+      Logger.warn(`unsupported type ${dirent.type}`)
       return DefaultIcon.None
   }
 }
