@@ -1,6 +1,7 @@
 import * as Assert from '../Assert/Assert.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as Platform from '../Platform/Platform.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const applyEdits = (editor, cursor) => {
   // TODO multiple cursors
@@ -34,7 +35,7 @@ const getTokenIndex = (lineCache, endColumnIndex) => {
     }
     offset = newOffset
   }
-  console.warn(`token at columnIndex ${endColumnIndex} not found`)
+  Logger.warn(`token at columnIndex ${endColumnIndex} not found`)
   return {
     index: -1,
     offset: -1,
