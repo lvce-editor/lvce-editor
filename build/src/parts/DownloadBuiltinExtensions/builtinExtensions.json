@@ -7,7 +7,7 @@
   {
     "name": "builtin.language-basics-c",
     "repository": "github.com/lvce-editor/language-basics-c",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-coffeescript",
@@ -17,7 +17,7 @@
   {
     "name": "builtin.language-basics-cpp",
     "repository": "github.com/lvce-editor/language-basics-cpp",
-    "version": "0.0.3"
+    "version": "0.0.4"
   },
   {
     "name": "builtin.language-basics-css",
@@ -157,7 +157,7 @@
   {
     "name": "builtin.language-basics-ruby",
     "repository": "github.com/lvce-editor/language-basics-ruby",
-    "version": "0.0.2"
+    "version": "0.0.3"
   },
   {
     "name": "builtin.language-basics-rust",
@@ -167,7 +167,7 @@
   {
     "name": "builtin.language-basics-shellscript",
     "repository": "github.com/lvce-editor/language-basics-shellscript",
-    "version": "0.0.15"
+    "version": "0.0.16"
   },
   {
     "name": "builtin.language-basics-svelte",
@@ -177,7 +177,7 @@
   {
     "name": "builtin.language-basics-toml",
     "repository": "github.com/lvce-editor/language-basics-toml",
-    "version": "0.0.9"
+    "version": "0.0.10"
   },
   {
     "name": "builtin.language-basics-typescript",
