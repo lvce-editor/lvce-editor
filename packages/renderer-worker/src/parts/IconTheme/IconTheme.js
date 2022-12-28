@@ -131,6 +131,7 @@ export const getIcon = (dirent) => {
       return getFolderIconExpanded(dirent)
     case DirentType.Symlink:
     case DirentType.CharacterDevice:
+    case DirentType.BlockDevice:
       return DefaultIcon.File
     default:
       Logger.warn(`unsupported type ${dirent.type}`)

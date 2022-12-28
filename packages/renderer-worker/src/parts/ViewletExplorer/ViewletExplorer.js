@@ -743,6 +743,8 @@ const getClickFn = (direntType) => {
       return handleClickSymLink
     case DirentType.CharacterDevice:
       throw new Error(`Cannot open character device files`)
+    case DirentType.BlockDevice:
+      throw new Error(`Cannot open block device files`)
     default:
       throw new Error(`unsupported dirent type ${direntType}`)
   }

@@ -1119,6 +1119,35 @@ test('handleClick - character device', async () => {
   expect(Command.execute).not.toHaveBeenCalled()
 })
 
+test('handleClick - block device', async () => {
+  const state = {
+    root: '/test',
+    focusedIndex: -1,
+    top: 0,
+    height: 600,
+    deltaY: 0,
+    minLineY: 0,
+    items: [
+      {
+        name: 'index.css',
+        type: DirentType.BlockDevice,
+        path: '/index.css',
+      },
+    ],
+  }
+  // @ts-ignore
+  Command.execute.mockImplementation((method, ...params) => {
+    switch (method) {
+      case 'Main.openUri':
+        break
+      default:
+        throw new Error('unexpected method')
+    }
+  })
+  expect(() => ViewletExplorer.handleClick(state, 0)).toThrowError(new Error('Cannot open block device files'))
+  expect(Command.execute).not.toHaveBeenCalled()
+})
+
 test('handleClick - symlink - file', async () => {
   const state = {
     root: '/test',
