@@ -5,15 +5,15 @@ export const name = 'Run And Debug'
 // prettier-ignore
 export const Commands = {
   continue: ViewletRunAndDebug.resume,
-  resume: ViewletRunAndDebug.resume,
+  handleClickSectionBreakPoints: ViewletRunAndDebug.handleClickSectionBreakPoints,
+  handleClickSectionCallstack: ViewletRunAndDebug.handleClickSectionCallstack,
+  handleClickSectionScope: ViewletRunAndDebug.handleClickSectionScope,
+  handleClickSectionWatch: ViewletRunAndDebug.handleClickSectionWatch,
   pause: ViewletRunAndDebug.pause,
-  stepOver: ViewletRunAndDebug.stepOver,
+  resume: ViewletRunAndDebug.resume,
   stepInto: ViewletRunAndDebug.stepInto,
   stepOut: ViewletRunAndDebug.stepOut,
-  handleClickSectionWatch: ViewletRunAndDebug.handleClickSectionWatch,
-  handleClickSectionBreakPoints: ViewletRunAndDebug.handleClickSectionBreakPoints,
-  handleClickSectionScope: ViewletRunAndDebug.handleClickSectionScope,
-  handleClickSectionCallstack: ViewletRunAndDebug.handleClickSectionCallstack,
+  stepOver: ViewletRunAndDebug.stepOver,
   togglePause: ViewletRunAndDebug.togglePause,
 }
 
