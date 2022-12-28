@@ -3,6 +3,7 @@ import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ViewletDebugEvents from './ViewletRunAndDebugEvents.js'
+import * as InputBox from '../InputBox/InputBox.js'
 
 const create$DebugButton = (text, icon) => {
   const $Button = IconButton.create$Button(text, icon)
@@ -38,8 +39,7 @@ export const create = () => {
   const $Processes = document.createElement('div')
 
   const $DebugSectionHeaderWatch = create$DebugSectionHeader('Watch')
-  const $DebugSectionHeaderBreakPoints =
-    create$DebugSectionHeader('Breakpoints')
+  const $DebugSectionHeaderBreakPoints = create$DebugSectionHeader('Breakpoints')
   const $DebugSectionHeaderScope = create$DebugSectionHeader('Scope')
   const $DebugSectionHeaderCallStack = create$DebugSectionHeader('Call Stack')
 
@@ -47,6 +47,15 @@ export const create = () => {
   $Viewlet.className = 'Viewlet RunAndDebug'
   $Viewlet.tabIndex = 0
   $Viewlet.onmousedown = ViewletDebugEvents.handleMouseDown
+
+  const $DebugOutput = document.createElement('output')
+  $DebugOutput.className = 'DebugOutput'
+
+  const $DebugInput = InputBox.create()
+  $DebugInput.classList.add('DebugInput')
+  $DebugInput.onfocus = ViewletDebugEvents.handleDebugInputFocus
+  $DebugInput.oninput = ViewletDebugEvents.handleDebugInput
+
   $Viewlet.append(
     $ButtonPauseContinue,
     $ButtonStepOver,
@@ -55,7 +64,9 @@ export const create = () => {
     $DebugSectionHeaderWatch,
     $DebugSectionHeaderBreakPoints,
     $DebugSectionHeaderScope,
-    $DebugSectionHeaderCallStack
+    $DebugSectionHeaderCallStack,
+    $DebugOutput,
+    $DebugInput
   )
 
   return {
@@ -67,6 +78,7 @@ export const create = () => {
     $DebugSectionHeaderScope,
     $DebugSectionHeaderCallStack,
     $ButtonStepOut,
+    $DebugOutput,
   }
 }
 
@@ -182,7 +194,7 @@ export const setCallStack = (state, callStack) => {
   if (!$Next || $Next.className === 'DebugSectionHeader') {
     $DebugSectionHeaderCallStack.after($CallStack)
   } else {
-    $Next.replaceWith($CallStack)
+    $Next.before($CallStack)
   }
 }
 
@@ -207,6 +219,11 @@ export const refresh = (state, message) => {
 export const focus = (state) => {
   const { $Viewlet } = state
   $Viewlet.focus()
+}
+
+export const setOutputValue = (state, value) => {
+  const { $DebugOutput } = state
+  $DebugOutput.textContent = value
 }
 
 export const dispose = () => {}
