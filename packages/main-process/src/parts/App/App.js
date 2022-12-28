@@ -1,6 +1,4 @@
 const { spawn } = require('node:child_process')
-const { app } = require('electron')
-const Electron = require('electron')
 const unhandled = require('electron-unhandled') // TODO this might slow down initial startup
 const Platform = require('../Platform/Platform.js')
 const Debug = require('../Debug/Debug.js')
@@ -9,6 +7,10 @@ const Performance = require('../Performance/Performance.js')
 const Cli = require('../Cli/Cli.js')
 const AppWindow = require('../AppWindow/AppWindow.js')
 const HandleMessagePort = require('../HandleMessagePort/HandleMessagePort.js')
+const ElectronApp = require('../ElectronApp/ElectronApp.js')
+const ElectronProtocol = require('../ElectronProtocol/ElectronProtocol.js')
+const ElectronIpcMain = require('../ElectronIpcMain/ElectronIpcMain.js')
+const ElectronApplicationMenu = require('../ElectronApplicationMenu/ElectronApplicationMenu.js')
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
 // const handleAppReady = async () => {
@@ -19,7 +21,7 @@ const handleWindowAllClosed = () => {
   Debug.debug('[info] all windows closed')
   if (!Platform.isMacOs) {
     Debug.debug('[info] quitting')
-    Electron.app.quit()
+    ElectronApp.quit()
   }
 }
 
@@ -57,6 +59,7 @@ const handleSecondInstance = async (
 }
 
 exports.hydrate = async () => {
+  ElectronApplicationMenu.setMenu(null)
   unhandled({
     showDialog: true,
     logger() {}, // already exists in mainProcessMain.js
@@ -78,10 +81,10 @@ exports.hydrate = async () => {
     return
   }
 
-  const hasLock = Electron.app.requestSingleInstanceLock(argv)
+  const hasLock = ElectronApp.requestSingleInstanceLock(argv)
   if (!hasLock) {
     Debug.debug('[info] quitting because no lock')
-    Electron.app.quit()
+    ElectronApp.quit()
     return
   }
 
@@ -97,16 +100,16 @@ exports.hydrate = async () => {
 
   // command line switches
   if (parsedCliArgs.sandbox) {
-    Electron.app.enableSandbox()
+    ElectronApp.enableSandbox()
   } else {
     // see https://github.com/microsoft/vscode/issues/151187#issuecomment-1221475319
     if (Platform.isLinux) {
-      app.commandLine.appendSwitch('--disable-gpu-sandbox')
+      ElectronApp.appendCommandLineSwitch('--disable-gpu-sandbox')
     }
   }
 
   // protocol
-  Electron.protocol.registerSchemesAsPrivileged([
+  ElectronProtocol.registerSchemesAsPrivileged([
     {
       scheme: Platform.scheme,
       privileges: {
@@ -119,14 +122,14 @@ exports.hydrate = async () => {
   ])
 
   // ipcMain
-  Electron.ipcMain.on('port', HandleMessagePort.handlePort)
+  ElectronIpcMain.on('port', HandleMessagePort.handlePort)
 
   // app
-  Electron.app.on('window-all-closed', handleWindowAllClosed)
-  Electron.app.on('before-quit', handleBeforeQuit)
+  ElectronApp.on('window-all-closed', handleWindowAllClosed)
+  ElectronApp.on('before-quit', handleBeforeQuit)
   // Electron.app.on('ready', handleAppReady)
-  Electron.app.on('second-instance', handleSecondInstance)
-  await Electron.app.whenReady()
+  ElectronApp.on('second-instance', handleSecondInstance)
+  await ElectronApp.whenReady()
   Performance.mark('code/appReady')
 
   await handleReady(parsedCliArgs, process.cwd())
