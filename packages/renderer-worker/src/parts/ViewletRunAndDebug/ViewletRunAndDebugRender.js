@@ -145,6 +145,13 @@ const iconTriangleRight = div(
   },
   0
 )
+const iconTriangleDown = div(
+  {
+    className: ClassNames.DebugMaskIcon,
+    maskImage: Icon.TriangleDown,
+  },
+  0
+)
 
 const textWatch = text(UiStrings.Watch)
 
@@ -152,18 +159,12 @@ const renderWatch = (state) => {
   return [watchHeader, iconTriangleRight, textWatch]
 }
 
+const breakPointsHeader = div({ className: ClassNames.DebugSectionHeader }, 2)
+
+const textBreakPoints = text(UiStrings.BreakPoints)
+
 const renderBreakPoints = (state) => {
-  return [
-    div({ className: ClassNames.DebugSectionHeader }, 2),
-    div(
-      {
-        className: ClassNames.DebugMaskIcon,
-        maskImage: Icon.TriangleRight,
-      },
-      0
-    ),
-    text(UiStrings.BreakPoints),
-  ]
+  return [breakPointsHeader, iconTriangleRight, textBreakPoints]
 }
 
 const getDebugValueClassName = (valueType) => {
@@ -177,22 +178,15 @@ const getDebugValueClassName = (valueType) => {
   }
 }
 
+const scopeHeader = div({ className: ClassNames.DebugSectionHeader, role: Roles.TreeItem, ariaLevel: 1, ariaExpanded: false }, 2)
+const scopeHeaderExpanded = div({ className: ClassNames.DebugSectionHeader, role: Roles.TreeItem, ariaLevel: 1, ariaExpanded: true }, 2)
+const textScope = text(UiStrings.Scope)
+
 const renderScope = (state) => {
   const { scopeChain, scopeExpanded } = state
   const elements = []
-  const headerIcon = scopeExpanded ? Icon.TriangleDown : Icon.TriangleRight
-  elements.push(
-    div({ className: ClassNames.DebugSectionHeader, role: Roles.TreeItem, ariaLevel: 1, ariaExpanded: scopeExpanded }, 2),
-    div(
-      {
-        className: ClassNames.DebugMaskIcon,
-        maskImage: headerIcon,
-      },
-      0
-    ),
-    text(UiStrings.Scope)
-  )
   if (scopeExpanded) {
+    elements.push(scopeHeaderExpanded, iconTriangleDown, textScope)
     if (scopeChain.length === 0) {
       elements.push(div({ className: ClassNames.DebugPausedMessage }, 1), text(UiStrings.NotPaused))
     } else {
@@ -241,32 +235,33 @@ const renderScope = (state) => {
         // elements.push(div({ className: ClassNames.DebugRow }, 1), text(scope.key))
       }
     }
+  } else {
+    elements.push(scopeHeader, iconTriangleRight, textScope)
   }
   return elements
 }
 
+const headerCallStack = div({ className: ClassNames.DebugSectionHeader, ariaExpanded: false }, 2)
+const headerCallStackExpanded = div({ className: ClassNames.DebugSectionHeader, ariaExpanded: true }, 2)
+const textCallStack = text(UiStrings.CallStack)
+
+const debugPausedMessage = div({ className: ClassNames.DebugPausedMessage }, 1)
+const textNotPaused = text(UiStrings.NotPaused)
+
 const renderCallStack = (state) => {
   const { callStack, callStackExpanded } = state
-  const headerIcon = callStackExpanded ? Icon.TriangleDown : Icon.TriangleRight
-  const elements = [
-    div({ className: ClassNames.DebugSectionHeader }, 2),
-    div(
-      {
-        className: ClassNames.DebugMaskIcon,
-        maskImage: headerIcon,
-      },
-      0
-    ),
-    text(UiStrings.CallStack),
-  ]
+  const elements = []
   if (callStackExpanded) {
+    elements.push(headerCallStackExpanded, iconTriangleDown, textCallStack)
     if (callStack.length === 0) {
-      elements.push(div({ className: ClassNames.DebugPausedMessage }, 1), text(UiStrings.NotPaused))
+      elements.push(debugPausedMessage, textNotPaused)
     } else {
       for (const item of callStack) {
         elements.push(div({ className: ClassNames.DebugRow }, 1), text(item.functionName))
       }
     }
+  } else {
+    elements.push(headerCallStack, iconTriangleRight, textCallStack)
   }
   return elements
 }
@@ -288,9 +283,9 @@ const renderDebug = {
   apply(oldState, newState) {
     const oldDom = getVirtualDom(oldState)
     const newDom = getVirtualDom(newState)
-    console.log({ oldDom, newDom })
+    // console.log({ oldDom, newDom })
     const diff = DiffDom.diffDom(oldDom, newDom)
-    console.log({ diff })
+    // console.log({ diff })
     return ['setDom', newDom]
   },
 }

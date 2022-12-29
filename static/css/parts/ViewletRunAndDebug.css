@@ -42,6 +42,9 @@
 .DebugMessage,
 .DebugPausedMessage {
   font-style: italic;
+  contain: strict;
+  height: 20px;
+  width: 100%;
 }
 
 .DebugRow {
