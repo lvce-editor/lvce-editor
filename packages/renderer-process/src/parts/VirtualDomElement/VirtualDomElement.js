@@ -15,6 +15,9 @@ const setProps = ($Element, props) => {
       case 'paddingLeft':
         $Element.style.paddingLeft = `${props.paddingLeft}px`
         break
+      case 'width':
+        $Element.style.width = `${props.width}px`
+        break
       case 'style':
         throw new Error('style property is not supported')
       default:
