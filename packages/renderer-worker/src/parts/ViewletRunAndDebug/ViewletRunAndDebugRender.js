@@ -263,18 +263,25 @@ const renderCallStack = (state) => {
   return elements
 }
 
+const getVirtualDom = (state) => {
+  const elements = []
+  elements.push(...renderButtons(state))
+  elements.push(...renderWatch(state))
+  elements.push(...renderBreakPoints(state))
+  elements.push(...renderScope(state))
+  elements.push(...renderCallStack(state))
+  return elements
+}
+
 const renderDebug = {
   isEqual(oldState, newState) {
     return false
   },
   apply(oldState, newState) {
-    const elements = []
-    elements.push(...renderButtons(newState))
-    elements.push(...renderWatch(newState))
-    elements.push(...renderBreakPoints(newState))
-    elements.push(...renderScope(newState))
-    elements.push(...renderCallStack(newState))
-    return ['setDom', elements]
+    const oldDom = getVirtualDom(oldState)
+    const newDom = getVirtualDom(newState)
+    console.log({ oldDom, newDom })
+    return ['setDom', newDom]
   },
 }
 
