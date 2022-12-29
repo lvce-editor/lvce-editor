@@ -4,12 +4,7 @@ import * as VirtualDomElements from '../src/parts/VirtualDomElements/VirtualDomE
 import * as ViewletModuleId from '../src/parts/ViewletModuleId/ViewletModuleId.js'
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(
-    ViewletKeyBindings,
-    oldState,
-    newState,
-    ViewletModuleId.KeyBindings
-  )
+  return ViewletManager.render(ViewletKeyBindings, oldState, newState, ViewletModuleId.KeyBindings)
 }
 
 test.only('render - add one keybinding', () => {
@@ -51,34 +46,28 @@ test.only('render - add one keybinding', () => {
         {
           childCount: 3,
           props: {},
-          type: 2,
+          type: VirtualDomElements.ColGroup,
         },
         {
           childCount: 0,
           props: {
-            style: {
-              width: '0px',
-            },
+            width: 0,
           },
-          type: 1,
+          type: VirtualDomElements.Col,
         },
         {
           childCount: 0,
           props: {
-            style: {
-              width: '0px',
-            },
+            width: 0,
           },
-          type: 1,
+          type: VirtualDomElements.Col,
         },
         {
           childCount: 0,
           props: {
-            style: {
-              width: '0px',
-            },
+            width: 0,
           },
-          type: 1,
+          type: VirtualDomElements.Col,
         },
         {
           childCount: 1,
