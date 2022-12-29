@@ -126,7 +126,9 @@ const renderCallStack = (state) => {
   if (callStack.length === 0) {
     elements.push(div({ className: ClassNames.DebugPausedMessage }, 1), text('Not Paused'))
   } else {
-    // TODO
+    for (const item of callStack) {
+      elements.push(div({ className: ClassNames.DebugRow }, 1), text(item.functionName))
+    }
   }
   return elements
 }
