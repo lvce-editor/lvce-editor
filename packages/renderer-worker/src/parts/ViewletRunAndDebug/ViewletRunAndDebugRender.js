@@ -1,8 +1,7 @@
-import { button, div, h, span, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-import * as Icon from '../Icon/Icon.js'
-import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
 import * as DebugValueType from '../DebugValueType/DebugValueType.js'
+import * as Icon from '../Icon/Icon.js'
+import { button, div, span, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 
 /**
  * @enum {string}
@@ -132,10 +131,26 @@ const renderScope = (state) => {
   if (scopeChain.length === 0) {
     elements.push(div({ className: ClassNames.DebugPausedMessage }, 1), text(UiStrings.NotPaused))
   } else {
+    console.log({ scopeChain })
     for (const scope of scopeChain) {
       switch (scope.type) {
         case DebugScopeChainType.This:
-          elements.push(div({ className: ClassNames.DebugRow }, 3), span({}, 1), text(scope.key), text(': '), span({}, 1), text(scope.value))
+          elements.push(
+            div(
+              {
+                className: ClassNames.DebugRow,
+                style: {
+                  paddingLeft: `${scope.indent}px`,
+                },
+              },
+              3
+            ),
+            span({}, 1),
+            text(scope.key),
+            text(': '),
+            span({}, 1),
+            text(scope.value)
+          )
           break
         case DebugScopeChainType.Exception:
           elements.push(div({ className: ClassNames.DebugRow }, 3), span({}, 1), text(scope.key), text(': '), span({}, 1), text(scope.value))
@@ -146,21 +161,19 @@ const renderScope = (state) => {
         case DebugScopeChainType.Property:
           const className = getDebugValueClassName(scope.valueType)
           elements.push(
-            div({ className: ClassNames.DebugRow }, 3),
-            span(
+            div(
               {
-                className: ClassNames.DebugPropertyKey,
+                className: ClassNames.DebugRow,
+                style: {
+                  paddingLeft: `${scope.indent}px`,
+                },
               },
-              1
+              3
             ),
+            span({ className: ClassNames.DebugPropertyKey }, 1),
             text(scope.key),
             text(': '),
-            span(
-              {
-                className,
-              },
-              1
-            ),
+            span({ className }, 1),
             text(scope.value)
           )
           break
