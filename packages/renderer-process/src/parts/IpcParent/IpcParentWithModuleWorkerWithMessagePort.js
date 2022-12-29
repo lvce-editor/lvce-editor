@@ -1,4 +1,5 @@
 import * as WorkerType from '../WorkerType/WorkerType.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 export const create = async ({ url, name }) => {
   const worker = new Worker(url, {
@@ -29,7 +30,7 @@ export const create = async ({ url, name }) => {
   const { port1, port2 } = channel
   worker.postMessage(
     {
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       method: 'initialize',
       params: ['message-port', port1],
     },

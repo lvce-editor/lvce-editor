@@ -1,6 +1,10 @@
 const { Menu } = require('electron')
 const AppWindowStates = require('../AppWindowStates/AppWindowStates.js')
+const JsonRpcVersion = require('../JsonRpcVersion/JsonRpcVersion.js')
 
+/**
+ * @enum {string}
+ */
 const UiStrings = {
   File: 'File',
   Edit: 'Edit',
@@ -20,7 +24,7 @@ exports.setMenu = (menu) => {
 const click = (menuItem, browserWindow, keys) => {
   const { port } = AppWindowStates.findById(browserWindow.webContents.id)
   port.postMessage({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: 'ElectronApplicationMenu.handleClick',
     params: [menuItem.label],
   })

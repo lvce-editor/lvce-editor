@@ -4,6 +4,7 @@ import * as GetResponse from '../GetResponse/GetResponse.js'
 import * as IpcParent from '../IpcParent/IpcParent.js'
 import * as IpcParentType from '../IpcParentType/IpcParentType.js'
 import * as Platform from '../Platform/Platform.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 export const state = {
   /**
@@ -27,7 +28,7 @@ const handleMessageFromRendererWorker = async (event) => {
     const port = await getPort(...message.params)
     state.ipc.sendAndTransfer(
       {
-        jsonrpc: '2.0',
+        jsonrpc: JsonRpcVersion.Two,
         id: message._id,
         result: port,
       },
@@ -81,7 +82,7 @@ export const dispose = () => {
 
 export const send = (method, ...params) => {
   state.ipc.send({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method,
     params,
   })
@@ -117,7 +118,7 @@ export const invoke = async (method, ...params) => {
   const responseMessage = await new Promise((resolve, reject) => {
     const callbackId = Callback.register(resolve, reject)
     state.ipc.send({
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       method,
       params,
       id: callbackId,
