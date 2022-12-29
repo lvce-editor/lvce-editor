@@ -1,5 +1,5 @@
 import * as Callback from '../Callback/Callback.js'
-import { JsonRpcError } from '../Errors/Errors.js'
+import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 
@@ -13,9 +13,7 @@ const isErrorMessage = (message) => {
 
 const handleMessageMethod = async (message, event) => {
   if (message.method === 'ElectronMessagePort.create') {
-    const IpcParentWithElectron = await import(
-      '../IpcParent/IpcParentWithElectron.js'
-    )
+    const IpcParentWithElectron = await import('../IpcParent/IpcParentWithElectron.js')
     const ipc = await IpcParentWithElectron.create({
       type: 'extension-host-helper-process',
     })
