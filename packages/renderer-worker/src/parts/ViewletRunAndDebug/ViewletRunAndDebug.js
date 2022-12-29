@@ -6,6 +6,13 @@ import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
 import * as DebugState from '../DebugState/DebugState.js'
 import * as Workspace from '../Workspace/Workspace.js'
 
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  NotPaused: 'Not paused',
+}
+
 export const create = (id) => {
   return {
     id,
@@ -295,18 +302,24 @@ const renderSections = {
 
 const renderScopeChain = {
   isEqual(oldState, newState) {
-    return oldState.scopeChain === newState.scopeChain
+    return oldState.scopeChain === newState.scopeChain && oldState.debugState === newState.debugState
   },
   apply(oldState, newState) {
+    if (newState.debugState === DebugState.None || newState.debugState === DebugState.Default) {
+      return [/* method */ 'setScopeChainMessage', UiStrings.NotPaused]
+    }
     return [/* method */ 'setScopeChain', newState.scopeChain]
   },
 }
 
 const renderCallStack = {
   isEqual(oldState, newState) {
-    return oldState.scopeChain === newState.scopeChain
+    return oldState.scopeChain === newState.scopeChain && oldState.debugState === newState.debugState
   },
   apply(oldState, newState) {
+    if (newState.debugstate === DebugState.None || newState.debugState === DebugState.Default) {
+      return [/* method */ 'setCallStackMessage', UiStrings.NotPaused]
+    }
     return [/* method */ 'setCallStack', newState.callStack]
   },
 }
