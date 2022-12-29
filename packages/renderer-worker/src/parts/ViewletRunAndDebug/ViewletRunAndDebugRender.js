@@ -3,7 +3,7 @@ import * as DebugValueType from '../DebugValueType/DebugValueType.js'
 import * as Icon from '../Icon/Icon.js'
 import { button, div, span, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as DebugState from '../DebugState/DebugState.js'
-
+import * as DiffDom from '../DiffDom/DiffDom.js'
 /**
  * @enum {string}
  */
@@ -44,104 +44,112 @@ const Roles = {
   None: 'none',
 }
 
+const buttonResume = button(
+  {
+    className: ClassNames.IconButton,
+    title: UiStrings.Resume,
+  },
+  1
+)
+
+const iconContinue = div(
+  {
+    className: ClassNames.MaskIcon,
+    maskImage: Icon.DebugContinue,
+  },
+  0
+)
+
+const buttonPause = button(
+  {
+    className: ClassNames.IconButton,
+    title: UiStrings.Pause,
+  },
+  1
+)
+
+const iconPause = div(
+  {
+    className: ClassNames.MaskIcon,
+    maskImage: Icon.DebugPause,
+  },
+  0
+)
+
+const buttonStepOver = button(
+  {
+    className: ClassNames.IconButton,
+    title: UiStrings.StepOver,
+  },
+  1
+)
+
+const iconStepOver = div(
+  {
+    className: ClassNames.MaskIcon,
+    maskImage: Icon.DebugStepOver,
+  },
+  0
+)
+
+const buttonStepInto = button(
+  {
+    className: ClassNames.IconButton,
+    title: UiStrings.StepInto,
+  },
+  1
+)
+
+const iconStepInto = div(
+  {
+    className: ClassNames.MaskIcon,
+    maskImage: Icon.DebugStepInto,
+  },
+  0
+)
+
+const buttonStepOut = button(
+  {
+    className: ClassNames.IconButton,
+    title: UiStrings.StepOut,
+  },
+  1
+)
+
+const iconStepOut = div(
+  {
+    className: ClassNames.MaskIcon,
+    maskImage: Icon.DebugStepOut,
+  },
+  0
+)
+
 const renderButtons = (state) => {
   const { debugState } = state
 
   const elements = []
   if (debugState === DebugState.Paused) {
-    elements.push(
-      button(
-        {
-          className: ClassNames.IconButton,
-          title: UiStrings.Resume,
-        },
-        1
-      ),
-      div(
-        {
-          className: ClassNames.MaskIcon,
-          maskImage: Icon.DebugContinue,
-        },
-        0
-      )
-    )
+    elements.push(buttonResume, iconContinue)
   } else {
-    elements.push(
-      button(
-        {
-          className: ClassNames.IconButton,
-          title: UiStrings.Pause,
-        },
-        1
-      ),
-      div(
-        {
-          className: ClassNames.MaskIcon,
-          maskImage: Icon.DebugPause,
-        },
-        0
-      )
-    )
+    elements.push(buttonPause, iconPause)
   }
-  elements.push(
-    button(
-      {
-        className: ClassNames.IconButton,
-        title: UiStrings.StepOver,
-      },
-      1
-    ),
-    div(
-      {
-        className: ClassNames.MaskIcon,
-        maskImage: Icon.DebugStepOver,
-      },
-      0
-    ),
-    button(
-      {
-        className: ClassNames.IconButton,
-        title: UiStrings.StepInto,
-      },
-      1
-    ),
-    div(
-      {
-        className: ClassNames.MaskIcon,
-        maskImage: Icon.DebugStepInto,
-      },
-      0
-    ),
-    button(
-      {
-        className: ClassNames.IconButton,
-        title: UiStrings.StepOut,
-      },
-      1
-    ),
-    div(
-      {
-        className: ClassNames.MaskIcon,
-        maskImage: Icon.DebugStepOut,
-      },
-      0
-    )
-  )
+  elements.push(buttonStepOver, iconStepOver, buttonStepInto, iconStepInto, buttonStepOut, iconStepOut)
   return elements
 }
 
+const watchHeader = div({ className: ClassNames.DebugSectionHeader }, 2)
+const iconTriangleRight = div(
+  {
+    className: ClassNames.DebugMaskIcon,
+    maskImage: Icon.TriangleRight,
+  },
+  0
+)
+
+const textWatch = text(UiStrings.Watch)
+
 const renderWatch = (state) => {
-  return [
-    div({ className: ClassNames.DebugSectionHeader }, 2),
-    div(
-      {
-        className: ClassNames.DebugMaskIcon,
-        maskImage: Icon.TriangleRight,
-      },
-      0
-    ),
-    text(UiStrings.Watch),
-  ]
+  return [watchHeader, iconTriangleRight, textWatch]
 }
 
 const renderBreakPoints = (state) => {
@@ -281,6 +289,8 @@ const renderDebug = {
     const oldDom = getVirtualDom(oldState)
     const newDom = getVirtualDom(newState)
     console.log({ oldDom, newDom })
+    const diff = DiffDom.diffDom(oldDom, newDom)
+    console.log({ diff })
     return ['setDom', newDom]
   },
 }
