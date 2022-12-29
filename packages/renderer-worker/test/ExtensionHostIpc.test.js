@@ -1,5 +1,5 @@
 import { jest } from '@jest/globals'
-import { JsonRpcError } from '../src/parts/Errors/Errors.js'
+import { JsonRpcError } from '../src/parts/JsonRpcError/JsonRpcError.js'
 import * as ExtensionHostRpc from '../src/parts/ExtensionHostRpc/ExtensionHostRpc.js'
 import * as IpcParentType from '../src/parts/IpcParentType/IpcParentType.js'
 import * as JsonRpcErrorCode from '../src/parts/JsonRpcErrorCode/JsonRpcErrorCode.js'
@@ -17,15 +17,11 @@ jest.unstable_mockModule('../src/parts/IpcParent/IpcParent.js', () => {
   }
 })
 
-const ExtensionHostIpc = await import(
-  '../src/parts/ExtensionHostIpc/ExtensionHostIpc.js'
-)
+const ExtensionHostIpc = await import('../src/parts/ExtensionHostIpc/ExtensionHostIpc.js')
 const IpcParent = await import('../src/parts/IpcParent/IpcParent.js')
 
 test('listen - error - unexpected extension host type', async () => {
-  await expect(ExtensionHostIpc.listen(123)).rejects.toThrowError(
-    new Error('unexpected extension host type: 123')
-  )
+  await expect(ExtensionHostIpc.listen(123)).rejects.toThrowError(new Error('unexpected extension host type: 123'))
 })
 
 test.only('handleMessage - error - method not found', async () => {
@@ -57,11 +53,7 @@ test.only('handleMessage - error - method not found', async () => {
   })
   const ipc = await ExtensionHostIpc.listen(IpcParentType.ModuleWorker)
   const rpc = ExtensionHostRpc.listen(ipc)
-  await expect(
-    rpc.invoke('ExtensionHostTypeDefinition.executeTypeDefinitionProvider')
-  ).rejects.toThrowError(
-    new JsonRpcError(
-      'method not found: ExtensionHostTypeDefinition.executeTypeDefinitionProvider'
-    )
+  await expect(rpc.invoke('ExtensionHostTypeDefinition.executeTypeDefinitionProvider')).rejects.toThrowError(
+    new JsonRpcError('method not found: ExtensionHostTypeDefinition.executeTypeDefinitionProvider')
   )
 })

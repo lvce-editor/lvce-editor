@@ -1,5 +1,5 @@
 import * as Callback from '../Callback/Callback.js'
-import { JsonRpcError } from '../Errors/Errors.js'
+import { JsonRpcError } from '../JsonRpcError/JsonRpcError.js'
 import * as JsonRpc from '../JsonRpc/JsonRpc.js'
 import * as GlobalEventBus from '../GlobalEventBus/GlobalEventBus.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'

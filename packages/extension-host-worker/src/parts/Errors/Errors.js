@@ -5,13 +5,6 @@ export class ExtensionActivationError extends Error {
   }
 }
 
-export class JsonRpcError extends Error {
-  constructor(message) {
-    super(message)
-    this.name = 'JsonRpcError'
-  }
-}
-
 export class CommandNotFoundError extends Error {
   constructor(message) {
     super(message)
