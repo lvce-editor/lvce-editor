@@ -17,6 +17,7 @@ const ClassNames = {
   DebugValueUndefined: 'DebugValueUndefined',
   DebugValueNumber: 'DebugValueNumber',
   DebugPropertyValue: 'DebugPropertyValue',
+  DebugMaskIcon: 'DebugMaskIcon',
 }
 
 /**
@@ -35,6 +36,14 @@ const UiStrings = {
   Resume: 'Resume',
 }
 
+/**
+ * @enum {string}
+ */
+const Roles = {
+  TreeItem: 'treeitem',
+  None: 'none',
+}
+
 const renderButtons = (state) => {
   const { debugState } = state
 
@@ -51,10 +60,7 @@ const renderButtons = (state) => {
       div(
         {
           className: ClassNames.MaskIcon,
-          style: {
-            maskImage: `url('${Icon.DebugContinue}')`,
-            webkitMaskImage: `url('${Icon.DebugContinue}')`,
-          },
+          maskImage: Icon.DebugContinue,
         },
         0
       )
@@ -71,10 +77,7 @@ const renderButtons = (state) => {
       div(
         {
           className: ClassNames.MaskIcon,
-          style: {
-            maskImage: `url('${Icon.DebugPause}')`,
-            webkitMaskImage: `url('${Icon.DebugPause}')`,
-          },
+          maskImage: Icon.DebugPause,
         },
         0
       )
@@ -91,10 +94,7 @@ const renderButtons = (state) => {
     div(
       {
         className: ClassNames.MaskIcon,
-        style: {
-          maskImage: `url('${Icon.DebugStepOver}')`,
-          webkitMaskImage: `url('${Icon.DebugStepOver}')`,
-        },
+        maskImage: Icon.DebugStepOver,
       },
       0
     ),
@@ -108,10 +108,7 @@ const renderButtons = (state) => {
     div(
       {
         className: ClassNames.MaskIcon,
-        style: {
-          maskImage: `url('${Icon.DebugStepInto}')`,
-          webkitMaskImage: `url('${Icon.DebugStepInto}')`,
-        },
+        maskImage: Icon.DebugStepInto,
       },
       0
     ),
@@ -125,10 +122,7 @@ const renderButtons = (state) => {
     div(
       {
         className: ClassNames.MaskIcon,
-        style: {
-          maskImage: `url('${Icon.DebugStepOut}')`,
-          webkitMaskImage: `url('${Icon.DebugStepOut}')`,
-        },
+        maskImage: Icon.DebugStepOut,
       },
       0
     )
@@ -137,11 +131,31 @@ const renderButtons = (state) => {
 }
 
 const renderWatch = (state) => {
-  return [div({ className: ClassNames.DebugSectionHeader }, 1), text(UiStrings.Watch)]
+  return [
+    div({ className: ClassNames.DebugSectionHeader }, 2),
+    div(
+      {
+        className: ClassNames.DebugMaskIcon,
+        maskImage: Icon.DebugStepOut,
+      },
+      0
+    ),
+    text(UiStrings.Watch),
+  ]
 }
 
 const renderBreakPoints = (state) => {
-  return [div({ className: ClassNames.DebugSectionHeader }, 1), text(UiStrings.BreakPoints)]
+  return [
+    div({ className: ClassNames.DebugSectionHeader }, 2),
+    div(
+      {
+        className: ClassNames.DebugMaskIcon,
+        maskImage: Icon.DebugStepOut,
+      },
+      0
+    ),
+    text(UiStrings.BreakPoints),
+  ]
 }
 
 const getDebugValueClassName = (valueType) => {
@@ -156,59 +170,69 @@ const getDebugValueClassName = (valueType) => {
 }
 
 const renderScope = (state) => {
-  const { scopeChain } = state
-  const elements = [div({ className: ClassNames.DebugSectionHeader }, 1), text(UiStrings.Scope)]
-  if (scopeChain.length === 0) {
-    elements.push(div({ className: ClassNames.DebugPausedMessage }, 1), text(UiStrings.NotPaused))
-  } else {
-    console.log({ scopeChain })
-    for (const scope of scopeChain) {
-      switch (scope.type) {
-        case DebugScopeChainType.This:
-          elements.push(
-            div(
-              {
-                className: ClassNames.DebugRow,
-                style: {
-                  paddingLeft: `${scope.indent}px`,
+  const { scopeChain, scopeExpanded } = state
+  const elements = []
+  const icon = scopeExpanded ? Icon.TriangleRight : Icon.TriangleRight
+  elements.push(
+    div({ className: ClassNames.DebugSectionHeader, role: Roles.TreeItem, ariaLevel: 1, ariaExpanded: scopeExpanded }, 2),
+    div(
+      {
+        className: ClassNames.DebugMaskIcon,
+        maskImage: icon,
+      },
+      0
+    ),
+    text(UiStrings.Scope)
+  )
+  if (scopeExpanded) {
+    if (scopeChain.length === 0) {
+      elements.push(div({ className: ClassNames.DebugPausedMessage }, 1), text(UiStrings.NotPaused))
+    } else {
+      console.log({ scopeChain })
+      for (const scope of scopeChain) {
+        switch (scope.type) {
+          case DebugScopeChainType.This:
+            elements.push(
+              div(
+                {
+                  className: ClassNames.DebugRow,
+                  paddingLeft: scope.indent,
                 },
-              },
-              3
-            ),
-            span({}, 1),
-            text(scope.key),
-            text(': '),
-            span({}, 1),
-            text(scope.value)
-          )
-          break
-        case DebugScopeChainType.Exception:
-          elements.push(div({ className: ClassNames.DebugRow }, 3), span({}, 1), text(scope.key), text(': '), span({}, 1), text(scope.value))
-          break
-        case DebugScopeChainType.Scope:
-          elements.push(div({ className: ClassNames.DebugRow }, 1), span({}, 1), text(scope.key))
-          break
-        case DebugScopeChainType.Property:
-          const className = getDebugValueClassName(scope.valueType)
-          elements.push(
-            div(
-              {
-                className: ClassNames.DebugRow,
-                style: {
-                  paddingLeft: `${scope.indent}px`,
+                3
+              ),
+              span({}, 1),
+              text(scope.key),
+              text(': '),
+              span({}, 1),
+              text(scope.value)
+            )
+            break
+          case DebugScopeChainType.Exception:
+            elements.push(div({ className: ClassNames.DebugRow }, 3), span({}, 1), text(scope.key), text(': '), span({}, 1), text(scope.value))
+            break
+          case DebugScopeChainType.Scope:
+            elements.push(div({ className: ClassNames.DebugRow }, 1), span({}, 1), text(scope.key))
+            break
+          case DebugScopeChainType.Property:
+            const className = getDebugValueClassName(scope.valueType)
+            elements.push(
+              div(
+                {
+                  className: ClassNames.DebugRow,
+                  paddingLeft: scope.indent,
                 },
-              },
-              3
-            ),
-            span({ className: ClassNames.DebugPropertyKey }, 1),
-            text(scope.key),
-            text(': '),
-            span({ className }, 1),
-            text(scope.value)
-          )
-          break
+                3
+              ),
+              span({ className: ClassNames.DebugPropertyKey }, 1),
+              text(scope.key),
+              text(': '),
+              span({ className }, 1),
+              text(scope.value)
+            )
+            break
+        }
+        // elements.push(div({ className: ClassNames.DebugRow }, 1), text(scope.key))
       }
-      // elements.push(div({ className: ClassNames.DebugRow }, 1), text(scope.key))
     }
   }
   return elements

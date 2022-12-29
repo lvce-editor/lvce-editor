@@ -38,6 +38,7 @@
   color: rgb(128, 134, 139);
 }
 
-.DebugMessage {
+.DebugMessage,
+.DebugPausedMessage {
   font-style: italic;
 }

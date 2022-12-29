@@ -44,6 +44,8 @@ export const loadContent = async (state) => {
     processes,
     debugId,
     debugState: DebugState.Default,
+    scopeExpanded: true,
+    callStackExpanded: true,
   }
 }
 
