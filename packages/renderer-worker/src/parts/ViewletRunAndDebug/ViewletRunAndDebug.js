@@ -5,7 +5,8 @@ import * as DebugPausedReason from '../DebugPausedReason/DebugPausedReason.js'
 import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
 import * as DebugState from '../DebugState/DebugState.js'
 import * as Workspace from '../Workspace/Workspace.js'
-
+import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
+import * as DebugValueType from '../DebugValueType/DebugValueType.js'
 /**
  * @enum {string}
  */
@@ -43,15 +44,17 @@ export const loadContent = async (state) => {
     processes,
     debugId,
     debugState: DebugState.Default,
+    scopeExpanded: true,
+    callStackExpanded: true,
   }
 }
 
 const getPropertyValueLabel = (property) => {
   switch (property.type) {
-    case 'number':
-    case 'object':
+    case DebugValueType.Number:
+    case DebugValueType.Object:
       return property.description
-    case 'undefined':
+    case DebugValueType.Undefined:
       return `undefined`
     default:
       return `${JSON.stringify(property)}`
@@ -63,7 +66,7 @@ const toDisplayScopeChain = (params, thisObject, scopeChain, knownProperties) =>
   for (const scope of scopeChain) {
     const label = DebugDisplay.getScopeLabel(scope)
     elements.push({
-      type: 'scope',
+      type: DebugScopeChainType.Scope,
       key: label,
       value: '',
       valueType: '',
@@ -75,7 +78,7 @@ const toDisplayScopeChain = (params, thisObject, scopeChain, knownProperties) =>
       if (params.reason === DebugPausedReason.Exception) {
         const value = params.data.description.replaceAll('\n', ' ')
         elements.push({
-          type: 'exception',
+          type: DebugScopeChainType.Exception,
           key: 'Exception',
           value,
           valueType: '',
@@ -84,7 +87,7 @@ const toDisplayScopeChain = (params, thisObject, scopeChain, knownProperties) =>
       }
       const valueLabel = getPropertyValueLabel(thisObject)
       elements.push({
-        type: 'this',
+        type: DebugScopeChainType.This,
         key: 'this',
         value: valueLabel,
         valueType: '',
@@ -96,7 +99,7 @@ const toDisplayScopeChain = (params, thisObject, scopeChain, knownProperties) =>
       for (const child of children.result.result) {
         const valueLabel = getPropertyValueLabel(child.value)
         elements.push({
-          type: 'property',
+          type: DebugScopeChainType.Property,
           key: child.name,
           value: valueLabel,
           valueType: child.value.type,
