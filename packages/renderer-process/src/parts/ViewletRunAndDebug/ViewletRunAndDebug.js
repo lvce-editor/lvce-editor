@@ -4,6 +4,11 @@ import * as IconButton from '../IconButton/IconButton.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ViewletDebugEvents from './ViewletRunAndDebugEvents.js'
 import * as InputBox from '../InputBox/InputBox.js'
+import * as VirtualDom from '../VirtualDom/VirtualDom.js'
+
+export const ClassNames = {
+  MaskIcon: 'MaskIcon',
+}
 
 const create$DebugButton = (text, icon) => {
   const $Button = IconButton.create$Button(text, icon)
@@ -28,57 +33,57 @@ export const create = () => {
   // $ButtonPause.textContent = 'pause'
   // $ButtonPause.className = 'DebugButtonPause'
 
-  const $ButtonPauseContinue = create$DebugButton('pause', Icon.DebugContinue)
+  // const $ButtonPauseContinue = create$DebugButton('pause', Icon.DebugContinue)
 
-  const $ButtonStepOver = create$DebugButton('Step over', Icon.DebugStepOver)
+  // const $ButtonStepOver = create$DebugButton('Step over', Icon.DebugStepOver)
 
-  const $ButtonStepInto = create$DebugButton('Step into', Icon.DebugStepInto)
+  // const $ButtonStepInto = create$DebugButton('Step into', Icon.DebugStepInto)
 
-  const $ButtonStepOut = create$DebugButton('Step out', Icon.DebugStepOut)
+  // const $ButtonStepOut = create$DebugButton('Step out', Icon.DebugStepOut)
 
-  const $Processes = document.createElement('div')
+  // const $Processes = document.createElement('div')
 
-  const $DebugSectionHeaderWatch = create$DebugSectionHeader('Watch')
-  const $DebugSectionHeaderBreakPoints = create$DebugSectionHeader('Breakpoints')
-  const $DebugSectionHeaderScope = create$DebugSectionHeader('Scope')
-  const $DebugSectionHeaderCallStack = create$DebugSectionHeader('Call Stack')
+  // const $DebugSectionHeaderWatch = create$DebugSectionHeader('Watch')
+  // const $DebugSectionHeaderBreakPoints = create$DebugSectionHeader('Breakpoints')
+  // const $DebugSectionHeaderScope = create$DebugSectionHeader('Scope')
+  // const $DebugSectionHeaderCallStack = create$DebugSectionHeader('Call Stack')
 
   const $Viewlet = document.createElement('div')
   $Viewlet.className = 'Viewlet RunAndDebug'
   $Viewlet.tabIndex = 0
-  $Viewlet.onmousedown = ViewletDebugEvents.handleMouseDown
+  // $Viewlet.onmousedown = ViewletDebugEvents.handleMouseDown
 
-  const $DebugOutput = document.createElement('output')
-  $DebugOutput.className = 'DebugOutput'
+  // const $DebugOutput = document.createElement('output')
+  // $DebugOutput.className = 'DebugOutput'
 
-  const $DebugInput = InputBox.create()
-  $DebugInput.classList.add('DebugInput')
-  $DebugInput.onfocus = ViewletDebugEvents.handleDebugInputFocus
-  $DebugInput.oninput = ViewletDebugEvents.handleDebugInput
+  // const $DebugInput = InputBox.create()
+  // $DebugInput.classList.add('DebugInput')
+  // $DebugInput.onfocus = ViewletDebugEvents.handleDebugInputFocus
+  // $DebugInput.oninput = ViewletDebugEvents.handleDebugInput
 
-  $Viewlet.append(
-    $ButtonPauseContinue,
-    $ButtonStepOver,
-    $ButtonStepInto,
-    $ButtonStepOut,
-    $DebugSectionHeaderWatch,
-    $DebugSectionHeaderBreakPoints,
-    $DebugSectionHeaderScope,
-    $DebugSectionHeaderCallStack,
-    $DebugOutput,
-    $DebugInput
-  )
+  // $Viewlet.append(
+  //   $ButtonPauseContinue,
+  //   $ButtonStepOver,
+  //   $ButtonStepInto,
+  //   $ButtonStepOut,
+  //   $DebugSectionHeaderWatch,
+  //   $DebugSectionHeaderBreakPoints,
+  //   $DebugSectionHeaderScope,
+  //   $DebugSectionHeaderCallStack,
+  //   $DebugOutput,
+  //   $DebugInput
+  // )
 
   return {
     $Viewlet,
-    $Processes,
-    $ButtonPauseContinue,
-    $DebugSectionHeaderWatch,
-    $DebugSectionHeaderBreakPoints,
-    $DebugSectionHeaderScope,
-    $DebugSectionHeaderCallStack,
-    $ButtonStepOut,
-    $DebugOutput,
+    // $Processes,
+    // $ButtonPauseContinue,
+    // $DebugSectionHeaderWatch,
+    // $DebugSectionHeaderBreakPoints,
+    // $DebugSectionHeaderScope,
+    // $DebugSectionHeaderCallStack,
+    // $ButtonStepOut,
+    // $DebugOutput,
   }
 }
 
@@ -227,3 +232,10 @@ export const setOutputValue = (state, value) => {
 }
 
 export const dispose = () => {}
+
+export const setDom = (state, dom) => {
+  console.log({ dom })
+  const { $Viewlet } = state
+  const $Root = VirtualDom.render(dom)
+  $Viewlet.replaceChildren($Root)
+}

@@ -61,3 +61,7 @@ export const colgroup = (props, childCount) => {
 export const col = (props, childCount) => {
   return h(VirtualDomElements.Col, props, childCount)
 }
+
+export const button = (props, childCount) => {
+  return h(VirtualDomElements.Button, props, childCount)
+}

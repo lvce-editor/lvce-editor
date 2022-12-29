@@ -25,3 +25,7 @@ export const SymbolValue = `${assetDir}/icons/symbol-enum.svg`
 export const SymbolVariable = `${assetDir}/icons/symbol-variable.svg`
 export const GoToFile = `${assetDir}/icons/go-to-file.svg`
 export const Blank = `${assetDir}/icons/blank.svg`
+export const DebugPause = `${assetDir}/icons/debug-pause.svg`
+export const DebugStepOver = `${assetDir}/icons/debug-step-over.svg`
+export const DebugStepInto = `${assetDir}/icons/debug-step-into.svg`
+export const DebugStepOut = `${assetDir}/icons/debug-step-out.svg`
