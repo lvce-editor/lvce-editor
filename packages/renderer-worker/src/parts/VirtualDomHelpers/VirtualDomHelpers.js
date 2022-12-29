@@ -65,3 +65,7 @@ export const col = (props, childCount) => {
 export const button = (props, childCount) => {
   return h(VirtualDomElements.Button, props, childCount)
 }
+
+export const span = (props, childCount) => {
+  return h(VirtualDomElements.Span, props, childCount)
+}

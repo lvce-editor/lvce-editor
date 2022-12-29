@@ -1,5 +1,8 @@
-import { button, div, h, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import { button, div, h, span, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
 import * as Icon from '../Icon/Icon.js'
+import * as DebugScopeType from '../DebugScopeType/DebugScopeType.js'
+import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
+import * as DebugValueType from '../DebugValueType/DebugValueType.js'
 
 /**
  * @enum {string}
@@ -10,6 +13,10 @@ const ClassNames = {
   DebugSectionHeader: 'DebugSectionHeader',
   DebugPausedMessage: 'DebugPausedMessage',
   DebugRow: 'DebugRow',
+  DebugPropertyKey: 'DebugPropertyKey',
+  DebugValueUndefined: 'DebugValueUndefined',
+  DebugValueNumber: 'DebugValueNumber',
+  DebugPropertyValue: 'DebugPropertyValue',
 }
 
 /**
@@ -24,6 +31,7 @@ const UiStrings = {
   BreakPoints: 'BreakPoints',
   Scope: 'Scope',
   CallStack: 'Call Stack',
+  NotPaused: 'Not Paused',
 }
 
 const renderButtons = (state) => {
@@ -107,14 +115,57 @@ const renderBreakPoints = (state) => {
   return [div({ className: ClassNames.DebugSectionHeader }, 1), text(UiStrings.BreakPoints)]
 }
 
+const getDebugValueClassName = (valueType) => {
+  switch (valueType) {
+    case DebugValueType.Undefined:
+      return ClassNames.DebugValueUndefined
+    case DebugValueType.Number:
+      return ClassNames.DebugValueNumber
+    default:
+      return ''
+  }
+}
+
 const renderScope = (state) => {
   const { scopeChain } = state
   const elements = [div({ className: ClassNames.DebugSectionHeader }, 1), text(UiStrings.Scope)]
   if (scopeChain.length === 0) {
-    elements.push(div({ className: ClassNames.DebugPausedMessage }, 1), text('Not Paused'))
+    elements.push(div({ className: ClassNames.DebugPausedMessage }, 1), text(UiStrings.NotPaused))
   } else {
     for (const scope of scopeChain) {
-      elements.push(div({ className: ClassNames.DebugRow }, 1), text(scope.key))
+      switch (scope.type) {
+        case DebugScopeChainType.This:
+          elements.push(div({ className: ClassNames.DebugRow }, 3), span({}, 1), text(scope.key), text(': '), span({}, 1), text(scope.value))
+          break
+        case DebugScopeChainType.Exception:
+          elements.push(div({ className: ClassNames.DebugRow }, 3), span({}, 1), text(scope.key), text(': '), span({}, 1), text(scope.value))
+          break
+        case DebugScopeChainType.Scope:
+          elements.push(div({ className: ClassNames.DebugRow }, 1), span({}, 1), text(scope.key))
+          break
+        case DebugScopeChainType.Property:
+          const className = getDebugValueClassName(scope.valueType)
+          elements.push(
+            div({ className: ClassNames.DebugRow }, 3),
+            span(
+              {
+                className: ClassNames.DebugPropertyKey,
+              },
+              1
+            ),
+            text(scope.key),
+            text(': '),
+            span(
+              {
+                className,
+              },
+              1
+            ),
+            text(scope.value)
+          )
+          break
+      }
+      // elements.push(div({ className: ClassNames.DebugRow }, 1), text(scope.key))
     }
   }
   return elements
@@ -124,7 +175,7 @@ const renderCallStack = (state) => {
   const { callStack } = state
   const elements = [div({ className: ClassNames.DebugSectionHeader }, 1), text(UiStrings.CallStack)]
   if (callStack.length === 0) {
-    elements.push(div({ className: ClassNames.DebugPausedMessage }, 1), text('Not Paused'))
+    elements.push(div({ className: ClassNames.DebugPausedMessage }, 1), text(UiStrings.NotPaused))
   } else {
     for (const item of callStack) {
       elements.push(div({ className: ClassNames.DebugRow }, 1), text(item.functionName))

@@ -12,3 +12,4 @@ export const Th = 11
 export const THead = 12
 export const Tr = 13
 export const Button = 14
+export const Span = 15
