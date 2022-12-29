@@ -3,7 +3,7 @@ import http from 'node:http'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { WebSocket } from 'ws'
-
+import * as JsonRpcVersion from '../src/parts/JsonRpcVersion/JsonRpcVersion.js'
 import { jest } from '@jest/globals'
 
 beforeEach(() => {
@@ -19,9 +19,7 @@ jest.unstable_mockModule('../src/parts/Command/Command.js', () => ({
   }),
 }))
 
-const WebSocketServer = await import(
-  '../src/parts/WebSocketServer/WebSocketServer.js'
-)
+const WebSocketServer = await import('../src/parts/WebSocketServer/WebSocketServer.js')
 const Command = await import('../src/parts/Command/Command.js')
 
 const getTmpDir = () => {
@@ -67,7 +65,7 @@ test('WebSocketServer', async () => {
   await writeFile(join(tmpDir, 'abc.txt'), 'abc')
   webSocket.send(
     JSON.stringify({
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       method: /* FileSystem.readFile */ 'FileSystem.readFile',
       params: [join(tmpDir, 'abc.txt')],
       id: 1,
@@ -78,7 +76,7 @@ test('WebSocketServer', async () => {
   const message = JSON.parse(messageString)
   expect(message).toEqual({
     id: 1,
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     result: 'abc',
   })
   webSocket.close()

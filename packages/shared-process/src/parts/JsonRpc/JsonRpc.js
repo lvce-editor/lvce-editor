@@ -1,12 +1,9 @@
 import * as Callback from '../Callback/Callback.js'
-
-export const Version = '2.0'
-
-export const ErrorMethodNotFound = -32601
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 export const send = (transport, method, ...params) => {
   transport.send({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method,
     params,
   })
@@ -17,7 +14,7 @@ export const invoke = (ipc, method, ...params) => {
     // TODO use one map instead of two
     const callbackId = Callback.register(resolve, reject)
     ipc.send({
-      jsonrpc: '2.0',
+      jsonrpc: JsonRpcVersion.Two,
       method,
       params,
       id: callbackId,

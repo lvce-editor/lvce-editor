@@ -2,6 +2,7 @@ import * as ErrorCodes from '../ErrorCodes/ErrorCodes.js'
 import * as PrettyError from '../PrettyError/PrettyError.js'
 import * as Socket from '../Socket/Socket.js'
 import * as Process from '../Process/Process.js'
+import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
 
 export const state = {
   seenErrors: [],
@@ -17,9 +18,7 @@ const preparePrettyError = (error) => {
 }
 
 const printPrettyError = (prettyError) => {
-  console.error(
-    `${prettyError.message}\n${prettyError.codeFrame}\n${prettyError.stack}`
-  )
+  console.error(`${prettyError.message}\n${prettyError.codeFrame}\n${prettyError.stack}`)
 }
 
 export const handleError = (error) => {
@@ -29,7 +28,7 @@ export const handleError = (error) => {
   state.seenErrors.push(error.message)
   const prettyError = preparePrettyError(error)
   Socket.send({
-    jsonrpc: '2.0',
+    jsonrpc: JsonRpcVersion.Two,
     method: /* Dialog.showErrorDialogWithOptions */ 'Dialog.showMessage',
     params: [
       {
@@ -62,11 +61,7 @@ export const handleUncaughtExceptionMonitor = (error, origin) => {
     // parent process is disposed, ignore
     return
   }
-  if (
-    error &&
-    error.code === ErrorCodes.ERR_IPC_CHANNEL_CLOSED &&
-    !Process.isConnected()
-  ) {
+  if (error && error.code === ErrorCodes.ERR_IPC_CHANNEL_CLOSED && !Process.isConnected()) {
     // parent process is disposed, ignore
     return
   }
