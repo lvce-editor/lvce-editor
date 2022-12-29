@@ -163,6 +163,9 @@ const breakPointsHeader = div({ className: ClassNames.DebugSectionHeader }, 2)
 
 const textBreakPoints = text(UiStrings.BreakPoints)
 
+const debugRow1 = div({ className: ClassNames.DebugRow }, 1)
+const debugRow3 = div({ className: ClassNames.DebugRow }, 3)
+
 const renderBreakPoints = (state) => {
   return [breakPointsHeader, iconTriangleRight, textBreakPoints]
 }
@@ -209,10 +212,10 @@ const renderScope = (state) => {
             )
             break
           case DebugScopeChainType.Exception:
-            elements.push(div({ className: ClassNames.DebugRow }, 3), span({}, 1), text(scope.key), text(': '), span({}, 1), text(scope.value))
+            elements.push(debugRow3, span({}, 1), text(scope.key), text(': '), span({}, 1), text(scope.value))
             break
           case DebugScopeChainType.Scope:
-            elements.push(div({ className: ClassNames.DebugRow }, 1), span({}, 1), text(scope.key))
+            elements.push(debugRow1, span({}, 1), text(scope.key))
             break
           case DebugScopeChainType.Property:
             const className = getDebugValueClassName(scope.valueType)
@@ -257,7 +260,7 @@ const renderCallStack = (state) => {
       elements.push(debugPausedMessage, textNotPaused)
     } else {
       for (const item of callStack) {
-        elements.push(div({ className: ClassNames.DebugRow }, 1), text(item.functionName))
+        elements.push(debugRow1, text(item.functionName))
       }
     }
   } else {
@@ -276,6 +279,8 @@ const getVirtualDom = (state) => {
   return elements
 }
 
+let first = true
+
 const renderDebug = {
   isEqual(oldState, newState) {
     return false
@@ -286,7 +291,11 @@ const renderDebug = {
     // console.log({ oldDom, newDom })
     const diff = DiffDom.diffDom(oldDom, newDom)
     // console.log({ diff })
-    return ['setDom', newDom]
+    if (first) {
+      first = false
+      return ['setDom', newDom]
+    }
+    return ['setPatches', diff]
   },
 }
 
