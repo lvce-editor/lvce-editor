@@ -37,3 +37,7 @@
 .DebugValueUndefined {
   color: rgb(128, 134, 139);
 }
+
+.DebugMessage {
+  font-style: italic;
+}

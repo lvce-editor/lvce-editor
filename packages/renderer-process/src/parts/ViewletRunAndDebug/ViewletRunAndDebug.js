@@ -177,6 +177,27 @@ export const setScopeChain = (state, scopeChain) => {
   }
 }
 
+const setMessage = (state, message, key) => {
+  const $Header = state[key]
+  const $Next = $Header.nextElementSibling
+  const $Message = document.createElement('div')
+  $Message.className = 'DebugMessage'
+  $Message.textContent = message
+  if ($Next.className === 'DebugSectionHeader') {
+    $Header.after($Message)
+  } else {
+    $Next.replaceWith($Message)
+  }
+}
+
+export const setScopeChainMessage = (state, message) => {
+  setMessage(state, message, '$DebugSectionHeaderScope')
+}
+
+export const setCallStackMessage = (state, message) => {
+  setMessage(state, message, '$DebugSectionHeaderCallStack')
+}
+
 const create$CallStack = (callStack) => {
   const $CallStack = document.createElement('div')
   for (const element of callStack) {
@@ -193,6 +214,8 @@ export const setCallStack = (state, callStack) => {
   const $Next = $DebugSectionHeaderCallStack.nextElementSibling
   if (!$Next || $Next.className === 'DebugSectionHeader') {
     $DebugSectionHeaderCallStack.after($CallStack)
+  } else if ($Next.className === 'DebugMessage') {
+    $Next.replaceWith($CallStack)
   } else {
     $Next.before($CallStack)
   }
