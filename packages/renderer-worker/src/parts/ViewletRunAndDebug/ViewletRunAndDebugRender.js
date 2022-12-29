@@ -2,6 +2,7 @@ import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType
 import * as DebugValueType from '../DebugValueType/DebugValueType.js'
 import * as Icon from '../Icon/Icon.js'
 import { button, div, span, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
+import * as DebugState from '../DebugState/DebugState.js'
 
 /**
  * @enum {string}
@@ -31,27 +32,55 @@ const UiStrings = {
   Scope: 'Scope',
   CallStack: 'Call Stack',
   NotPaused: 'Not Paused',
+  Resume: 'Resume',
 }
 
 const renderButtons = (state) => {
-  return [
-    button(
-      {
-        className: ClassNames.IconButton,
-        title: UiStrings.Pause,
-      },
-      1
-    ),
-    div(
-      {
-        className: ClassNames.MaskIcon,
-        style: {
-          maskImage: `url('${Icon.DebugPause}')`,
-          webkitMaskImage: `url('${Icon.DebugPause}')`,
+  const { debugState } = state
+
+  const elements = []
+  if (debugState === DebugState.Paused) {
+    elements.push(
+      button(
+        {
+          className: ClassNames.IconButton,
+          title: UiStrings.Resume,
         },
-      },
-      0
-    ),
+        1
+      ),
+      div(
+        {
+          className: ClassNames.MaskIcon,
+          style: {
+            maskImage: `url('${Icon.DebugContinue}')`,
+            webkitMaskImage: `url('${Icon.DebugContinue}')`,
+          },
+        },
+        0
+      )
+    )
+  } else {
+    elements.push(
+      button(
+        {
+          className: ClassNames.IconButton,
+          title: UiStrings.Pause,
+        },
+        1
+      ),
+      div(
+        {
+          className: ClassNames.MaskIcon,
+          style: {
+            maskImage: `url('${Icon.DebugPause}')`,
+            webkitMaskImage: `url('${Icon.DebugPause}')`,
+          },
+        },
+        0
+      )
+    )
+  }
+  elements.push(
     button(
       {
         className: ClassNames.IconButton,
@@ -102,8 +131,9 @@ const renderButtons = (state) => {
         },
       },
       0
-    ),
-  ]
+    )
+  )
+  return elements
 }
 
 const renderWatch = (state) => {

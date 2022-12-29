@@ -29,3 +29,4 @@ export const DebugPause = `${assetDir}/icons/debug-pause.svg`
 export const DebugStepOver = `${assetDir}/icons/debug-step-over.svg`
 export const DebugStepInto = `${assetDir}/icons/debug-step-into.svg`
 export const DebugStepOut = `${assetDir}/icons/debug-step-out.svg`
+export const DebugContinue = `${assetDir}/icons/debug-continue.svg`
