@@ -17,7 +17,7 @@ const ClassNames = {
   DebugValueUndefined: 'DebugValueUndefined',
   DebugValueNumber: 'DebugValueNumber',
   DebugPropertyValue: 'DebugPropertyValue',
-  DebugMaskIcon: 'DebugMaskIcon',
+  DebugMaskIcon: 'MaskIcon DebugMaskIcon',
 }
 
 /**
@@ -136,7 +136,7 @@ const renderWatch = (state) => {
     div(
       {
         className: ClassNames.DebugMaskIcon,
-        maskImage: Icon.DebugStepOut,
+        maskImage: Icon.TriangleRight,
       },
       0
     ),
@@ -150,7 +150,7 @@ const renderBreakPoints = (state) => {
     div(
       {
         className: ClassNames.DebugMaskIcon,
-        maskImage: Icon.DebugStepOut,
+        maskImage: Icon.TriangleRight,
       },
       0
     ),
@@ -172,13 +172,13 @@ const getDebugValueClassName = (valueType) => {
 const renderScope = (state) => {
   const { scopeChain, scopeExpanded } = state
   const elements = []
-  const icon = scopeExpanded ? Icon.TriangleRight : Icon.TriangleRight
+  const headerIcon = scopeExpanded ? Icon.TriangleDown : Icon.TriangleRight
   elements.push(
     div({ className: ClassNames.DebugSectionHeader, role: Roles.TreeItem, ariaLevel: 1, ariaExpanded: scopeExpanded }, 2),
     div(
       {
         className: ClassNames.DebugMaskIcon,
-        maskImage: icon,
+        maskImage: headerIcon,
       },
       0
     ),
@@ -239,8 +239,19 @@ const renderScope = (state) => {
 }
 
 const renderCallStack = (state) => {
-  const { callStack } = state
-  const elements = [div({ className: ClassNames.DebugSectionHeader }, 1), text(UiStrings.CallStack)]
+  const { callStack, callStackExpanded } = state
+  const headerIcon = callStackExpanded ? Icon.TriangleDown : Icon.TriangleRight
+  const elements = [
+    div({ className: ClassNames.DebugSectionHeader }, 2),
+    div(
+      {
+        className: ClassNames.DebugMaskIcon,
+        maskImage: headerIcon,
+      },
+      0
+    ),
+    text(UiStrings.CallStack),
+  ]
   if (callStack.length === 0) {
     elements.push(div({ className: ClassNames.DebugPausedMessage }, 1), text(UiStrings.NotPaused))
   } else {
