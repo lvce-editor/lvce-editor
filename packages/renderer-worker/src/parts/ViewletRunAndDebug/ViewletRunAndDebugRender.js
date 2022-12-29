@@ -252,11 +252,13 @@ const renderCallStack = (state) => {
     ),
     text(UiStrings.CallStack),
   ]
-  if (callStack.length === 0) {
-    elements.push(div({ className: ClassNames.DebugPausedMessage }, 1), text(UiStrings.NotPaused))
-  } else {
-    for (const item of callStack) {
-      elements.push(div({ className: ClassNames.DebugRow }, 1), text(item.functionName))
+  if (callStackExpanded) {
+    if (callStack.length === 0) {
+      elements.push(div({ className: ClassNames.DebugPausedMessage }, 1), text(UiStrings.NotPaused))
+    } else {
+      for (const item of callStack) {
+        elements.push(div({ className: ClassNames.DebugRow }, 1), text(item.functionName))
+      }
     }
   }
   return elements

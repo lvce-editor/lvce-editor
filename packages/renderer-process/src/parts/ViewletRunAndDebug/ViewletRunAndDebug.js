@@ -13,7 +13,6 @@ export const create = () => {
 }
 
 export const setDom = (state, dom) => {
-  console.log({ dom })
   const { $Viewlet } = state
   const $Root = VirtualDom.render(dom)
   $Viewlet.replaceChildren($Root)
