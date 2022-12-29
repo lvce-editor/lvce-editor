@@ -25,11 +25,11 @@ const handleClickStepOut = (event) => {
 
 const handleClickDebugButton = (event, target) => {
   event.preventDefault()
-  switch (target.ariaLabel) {
-    case 'pause':
+  switch (target.title) {
+    case 'Pause':
       handleClickPause()
       break
-    case 'continue':
+    case 'Resume':
       handleClickContinue()
       break
     case 'Step over':

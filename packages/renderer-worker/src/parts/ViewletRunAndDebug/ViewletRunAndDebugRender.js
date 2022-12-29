@@ -8,7 +8,7 @@ import * as DebugState from '../DebugState/DebugState.js'
  * @enum {string}
  */
 const ClassNames = {
-  IconButton: 'IconButton',
+  IconButton: 'IconButton DebugButton',
   MaskIcon: 'MaskIcon',
   DebugSectionHeader: 'DebugSectionHeader',
   DebugPausedMessage: 'DebugPausedMessage',
