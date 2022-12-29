@@ -65,9 +65,9 @@ export const isLastIndex = (array, index) => {
 }
 
 export const toSpliced = (array, index, deleteCount, ...inserted) => {
-  return [
-    ...array.slice(0, index),
-    ...inserted,
-    ...array.slice(index + deleteCount),
-  ]
+  return [...array.slice(0, index), ...inserted, ...array.slice(index + deleteCount)]
+}
+
+export const toSorted = (array, compare) => {
+  return [...array].sort(compare)
 }
