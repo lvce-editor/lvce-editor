@@ -188,7 +188,6 @@ const renderScope = (state) => {
     if (scopeChain.length === 0) {
       elements.push(div({ className: ClassNames.DebugPausedMessage }, 1), text(UiStrings.NotPaused))
     } else {
-      console.log({ scopeChain })
       for (const scope of scopeChain) {
         switch (scope.type) {
           case DebugScopeChainType.This:
