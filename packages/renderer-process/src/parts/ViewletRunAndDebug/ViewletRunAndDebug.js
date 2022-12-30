@@ -15,8 +15,7 @@ export const create = () => {
 
 export const setDom = (state, dom) => {
   const { $Viewlet } = state
-  const $Root = VirtualDom.render(dom)
-  $Viewlet.replaceChildren(...$Root.children)
+  VirtualDom.renderInto($Viewlet, dom)
 }
 
 export const setPatches = (state, diff) => {

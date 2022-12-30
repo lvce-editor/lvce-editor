@@ -19,6 +19,13 @@ export const renderInternal = ($Parent, elements) => {
   }
   $Parent.append(...stack)
 }
+
+export const renderInto = ($Parent, dom) => {
+  // TODO
+  const $Root = render(dom)
+  $Parent.replaceChildren(...$Root.children)
+}
+
 /**
  *
  * @param {any[]} elements

@@ -1,9 +1,9 @@
 import * as DebugScopeChainType from '../DebugScopeChainType/DebugScopeChainType.js'
+import * as DebugState from '../DebugState/DebugState.js'
 import * as DebugValueType from '../DebugValueType/DebugValueType.js'
+import * as DiffDom from '../DiffDom/DiffDom.js'
 import * as Icon from '../Icon/Icon.js'
 import { button, div, span, text } from '../VirtualDomHelpers/VirtualDomHelpers.js'
-import * as DebugState from '../DebugState/DebugState.js'
-import * as DiffDom from '../DiffDom/DiffDom.js'
 /**
  * @enum {string}
  */
@@ -18,6 +18,7 @@ const ClassNames = {
   DebugValueNumber: 'DebugValueNumber',
   DebugPropertyValue: 'DebugPropertyValue',
   DebugMaskIcon: 'MaskIcon DebugMaskIcon',
+  DebugButtons: 'DebugButtons',
 }
 
 /**
@@ -124,10 +125,17 @@ const iconStepOut = div(
   0
 )
 
+const buttons = div(
+  {
+    className: ClassNames.DebugButtons,
+  },
+  4
+)
+
 const renderButtons = (state) => {
   const { debugState } = state
-
   const elements = []
+  elements.push(buttons)
   if (debugState === DebugState.Paused) {
     elements.push(buttonResume, iconContinue)
   } else {
@@ -137,7 +145,7 @@ const renderButtons = (state) => {
   return elements
 }
 
-const watchHeader = div({ className: ClassNames.DebugSectionHeader }, 2)
+const watchHeader = div({ className: ClassNames.DebugSectionHeader, tabIndex: 0 }, 2)
 const iconTriangleRight = div(
   {
     className: ClassNames.DebugMaskIcon,
@@ -159,7 +167,7 @@ const renderWatch = (state) => {
   return [watchHeader, iconTriangleRight, textWatch]
 }
 
-const breakPointsHeader = div({ className: ClassNames.DebugSectionHeader }, 2)
+const breakPointsHeader = div({ className: ClassNames.DebugSectionHeader, tabIndex: 0 }, 2)
 
 const textBreakPoints = text(UiStrings.BreakPoints)
 
@@ -181,9 +189,14 @@ const getDebugValueClassName = (valueType) => {
   }
 }
 
-const scopeHeader = div({ className: ClassNames.DebugSectionHeader, role: Roles.TreeItem, ariaLevel: 1, ariaExpanded: false }, 2)
+const scopeHeader = div({ className: ClassNames.DebugSectionHeader, role: Roles.TreeItem, ariaLevel: 1, ariaExpanded: false, tabIndex: 0 }, 2)
 const scopeHeaderExpanded = div({ className: ClassNames.DebugSectionHeader, role: Roles.TreeItem, ariaLevel: 1, ariaExpanded: true }, 2)
 const textScope = text(UiStrings.Scope)
+const separator = text(': ')
+const debugPropertyKey = span({ className: ClassNames.DebugPropertyKey }, 1)
+
+const debugPausedMessage = div({ className: ClassNames.DebugPausedMessage }, 1)
+const textNotPaused = text(UiStrings.NotPaused)
 
 const renderScope = (state) => {
   const { scopeChain, scopeExpanded } = state
@@ -191,7 +204,7 @@ const renderScope = (state) => {
   if (scopeExpanded) {
     elements.push(scopeHeaderExpanded, iconTriangleDown, textScope)
     if (scopeChain.length === 0) {
-      elements.push(div({ className: ClassNames.DebugPausedMessage }, 1), text(UiStrings.NotPaused))
+      elements.push(debugPausedMessage, textNotPaused)
     } else {
       for (const scope of scopeChain) {
         switch (scope.type) {
@@ -206,13 +219,13 @@ const renderScope = (state) => {
               ),
               span({}, 1),
               text(scope.key),
-              text(': '),
+              separator,
               span({}, 1),
               text(scope.value)
             )
             break
           case DebugScopeChainType.Exception:
-            elements.push(debugRow3, span({}, 1), text(scope.key), text(': '), span({}, 1), text(scope.value))
+            elements.push(debugRow3, span({}, 1), text(scope.key), separator, span({}, 1), text(scope.value))
             break
           case DebugScopeChainType.Scope:
             elements.push(debugRow1, span({}, 1), text(scope.key))
@@ -227,9 +240,9 @@ const renderScope = (state) => {
                 },
                 3
               ),
-              span({ className: ClassNames.DebugPropertyKey }, 1),
+              debugPropertyKey,
               text(scope.key),
-              text(': '),
+              separator,
               span({ className }, 1),
               text(scope.value)
             )
@@ -247,9 +260,6 @@ const renderScope = (state) => {
 const headerCallStack = div({ className: ClassNames.DebugSectionHeader, ariaExpanded: false }, 2)
 const headerCallStackExpanded = div({ className: ClassNames.DebugSectionHeader, ariaExpanded: true }, 2)
 const textCallStack = text(UiStrings.CallStack)
-
-const debugPausedMessage = div({ className: ClassNames.DebugPausedMessage }, 1)
-const textNotPaused = text(UiStrings.NotPaused)
 
 const renderCallStack = (state) => {
   const { callStack, callStackExpanded } = state
