@@ -291,11 +291,11 @@ const renderDebug = {
     // console.log({ oldDom, newDom })
     const diff = DiffDom.diffDom(oldDom, newDom)
     // console.log({ diff })
-    if (first) {
-      first = false
-      return ['setDom', newDom]
-    }
-    return ['setPatches', diff]
+    // if (first) {
+    //   first = false
+    return ['setDom', newDom]
+    // }
+    // return ['setPatches', diff]
   },
 }
 
