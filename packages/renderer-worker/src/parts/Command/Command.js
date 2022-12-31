@@ -1,4 +1,5 @@
 import * as ModuleMap from '../ModuleMap/ModuleMap.js'
+import { VError } from '../VError/VError.js'
 
 export const state = {
   commands: Object.create(null),
@@ -20,9 +21,7 @@ const initializeModule = (module) => {
     }
     return
   }
-  throw new Error(
-    `module ${module.name} is missing an initialize function and commands`
-  )
+  throw new Error(`module ${module.name} is missing an initialize function and commands`)
 }
 
 const loadModule = async (moduleId) => {
@@ -30,7 +29,7 @@ const loadModule = async (moduleId) => {
     const module = await state.load(moduleId)
     initializeModule(module)
   } catch (error) {
-    console.error(error)
+    throw new VError(error, `failed to load module ${moduleId}`)
   }
 }
 
