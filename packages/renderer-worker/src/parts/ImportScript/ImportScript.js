@@ -1,13 +1,17 @@
+const isImportErrorChrome = (error) => {
+  return error && error instanceof Error && error.message.startsWith('Failed to fetch dynamically imported module')
+}
+
+const isImportErrorFirefox = (error) => {
+  return error && error instanceof TypeError && error.message === 'error loading dynamically imported module'
+}
+
 const tryToGetActualErrorMessage = async (url) => {
   try {
     await import(url)
     return `Failed to import ${url}: Unknown Error`
   } catch (error) {
-    if (
-      error &&
-      error instanceof Error &&
-      error.message.startsWith('Failed to fetch dynamically imported module')
-    ) {
+    if (isImportErrorChrome(error) || isImportErrorFirefox(error)) {
       try {
         const response = await fetch(url)
         switch (response.status) {
