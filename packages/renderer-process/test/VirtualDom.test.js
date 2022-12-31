@@ -124,9 +124,7 @@ test('render - nesting level 4', () => {
       childCount: 0,
     },
   ])
-  expect(dom.innerHTML).toBe(
-    '<div><div><div><div><div></div></div></div></div></div>'
-  )
+  expect(dom.innerHTML).toBe('<div><div><div><div><div></div></div></div></div></div>')
 })
 
 test('render - nesting level 5', () => {
@@ -162,9 +160,7 @@ test('render - nesting level 5', () => {
       childCount: 0,
     },
   ])
-  expect(dom.innerHTML).toBe(
-    '<div><div><div><div><div><div></div></div></div></div></div></div>'
-  )
+  expect(dom.innerHTML).toBe('<div><div><div><div><div><div></div></div></div></div></div></div>')
 })
 
 test('render - trailing text node', () => {
@@ -237,4 +233,50 @@ test('render - element with element children and text children', () => {
     },
   ])
   expect(dom.innerHTML).toBe('<td><kbd>Ctrl</kbd>+<kbd>P</kbd></td>')
+})
+
+test('renderInto - update title', () => {
+  const dom = VirtualDom.render([
+    {
+      type: VirtualDomElements.Button,
+      props: {
+        title: 'a',
+      },
+      childCount: 0,
+    },
+  ])
+  expect(dom.innerHTML).toBe('<button title="a"></button>')
+  VirtualDom.renderInto(dom, [
+    {
+      type: VirtualDomElements.Button,
+      props: {
+        title: 'b',
+      },
+      childCount: 0,
+    },
+  ])
+  expect(dom.innerHTML).toBe('<button title="b"></button>')
+})
+
+test('renderInto - update text node', () => {
+  const dom = VirtualDom.render([
+    {
+      type: VirtualDomElements.Text,
+      props: {
+        text: 'a',
+      },
+      childCount: 0,
+    },
+  ])
+  expect(dom.innerHTML).toBe('a')
+  VirtualDom.renderInto(dom, [
+    {
+      type: VirtualDomElements.Text,
+      props: {
+        text: 'b',
+      },
+      childCount: 0,
+    },
+  ])
+  expect(dom.innerHTML).toBe('b')
 })
