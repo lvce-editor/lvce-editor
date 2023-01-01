@@ -3,12 +3,7 @@ import * as Copy from '../Copy/Copy.js'
 import * as Path from '../Path/Path.js'
 import * as Replace from '../Replace/Replace.js'
 
-export const bundleExtensionHostWorker = async ({
-  cachePath,
-  commitHash,
-  platform,
-  assetDir,
-}) => {
+export const bundleExtensionHostWorker = async ({ cachePath, commitHash, platform, assetDir }) => {
   await Copy.copy({
     from: 'packages/extension-host-worker/src',
     to: Path.join(cachePath, 'src'),
@@ -27,5 +22,10 @@ export const bundleExtensionHostWorker = async ({
     from: `./src/extensionHostWorkerMain.js`,
     platform: 'webworker',
     allowCyclicDependencies: false,
+  })
+  await Replace.replace({
+    path: `${cachePath}/src/parts/Ajax/Ajax.js`,
+    occurrence: `../../../static/`,
+    replacement: `../../../../../static/`,
   })
 }
