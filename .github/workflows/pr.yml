@@ -68,6 +68,12 @@ jobs:
       - name: Build Electron App (deb)
         if: matrix.os == 'ubuntu-22.04'
         run: node build/bin/build.js --target=electron-deb --force # --force workaround for issue with node-pty
+      - name: Cache Electron Builder Dependencies (Windows)
+        uses: actions/cache@v3
+        id: electron-builder-cache-windows
+        if: matrix.os == 'windows-2022'
+        with:
+          path: '~\AppData\Local\electron-builder'
       - name: Build Electron App (exe)
         if: matrix.os == 'windows-2022'
         run: node build/bin/build.js --target=electron-builder-windows-exe --force # --force workaround for issue with node-pty
