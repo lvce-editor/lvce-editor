@@ -131,11 +131,6 @@ const copyRendererWorkerFiles = async ({ pathPrefix, commitHash }) => {
     replacement: `return \`${pathPrefix}/file-icons/\${value.slice(7)}\``,
   })
   await Replace.replace({
-    path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Platform/Platform.js`,
-    occurrence: '/packages/extension-host-worker-tests',
-    replacement: `/${commitHash}/packages/extension-host-worker-tests`,
-  })
-  await Replace.replace({
     path: `build/.tmp/dist/${commitHash}/packages/renderer-worker/src/parts/Workbench/Workbench.js`,
     occurrence: `await SharedProcess.listen()`,
     replacement: ``,
