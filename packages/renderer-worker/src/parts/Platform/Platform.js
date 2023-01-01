@@ -55,35 +55,25 @@ const getIsFirefox = () => {
 export const isFirefox = getIsFirefox()
 
 export const getExtensionsPath = () => {
-  return SharedProcess.invoke(
-    /* Platform.getExtensionsPath */ 'Platform.getExtensionsPath'
-  )
+  return SharedProcess.invoke(/* Platform.getExtensionsPath */ 'Platform.getExtensionsPath')
 }
 
 export const getBuiltinExtensionsPath = () => {
-  return SharedProcess.invoke(
-    /* Platform.getBuiltinExtensionsPath */ 'Platform.getBuiltinExtensionsPath'
-  )
+  return SharedProcess.invoke(/* Platform.getBuiltinExtensionsPath */ 'Platform.getBuiltinExtensionsPath')
 }
 
 export const getDisabledExtensionsPath = () => {
-  return SharedProcess.invoke(
-    /* Platform.getDisabledExtensionsPath */ 'Platform.getDisabledExtensionsPath'
-  )
+  return SharedProcess.invoke(/* Platform.getDisabledExtensionsPath */ 'Platform.getDisabledExtensionsPath')
 }
 
 export const getCachedExtensionsPath = () => {
-  return SharedProcess.invoke(
-    /* Platform.getCachedExtensionsPath */ 'Platform.getCachedExtensionsPath'
-  )
+  return SharedProcess.invoke(/* Platform.getCachedExtensionsPath */ 'Platform.getCachedExtensionsPath')
 }
 
 export const getMarketPlaceUrl = () => {
   // TODO this should be configurable via settings
   // TODO in web this should be static
-  return SharedProcess.invoke(
-    /* Platform.getMarketPlaceUrl */ 'Platform.getMarketplaceUrl'
-  )
+  return SharedProcess.invoke(/* Platform.getMarketPlaceUrl */ 'Platform.getMarketplaceUrl')
 }
 
 export const getLogsDir = () => {
@@ -91,18 +81,14 @@ export const getLogsDir = () => {
 }
 
 export const getDownloadDir = () => {
-  return SharedProcess.invoke(
-    /* Platform.getDownloadDir */ 'Platform.getDownloadDir'
-  )
+  return SharedProcess.invoke(/* Platform.getDownloadDir */ 'Platform.getDownloadDir')
 }
 
 export const getUserSettingsPath = () => {
   if (platform === PlatformType.Web) {
     return 'settings'
   }
-  return SharedProcess.invoke(
-    /* Platform.getUserSettingsPath */ 'Platform.getUserSettingsPath'
-  )
+  return SharedProcess.invoke(/* Platform.getUserSettingsPath */ 'Platform.getUserSettingsPath')
 }
 
 /**
@@ -145,15 +131,11 @@ export const getRecentlyOpenedPath = () => {
   if (platform === PlatformType.Web) {
     return 'recently-opened'
   }
-  return SharedProcess.invoke(
-    /* Platform.getRecentlyOpenedPath */ 'Platform.getRecentlyOpenedPath'
-  )
+  return SharedProcess.invoke(/* Platform.getRecentlyOpenedPath */ 'Platform.getRecentlyOpenedPath')
 }
 
 export const getConfigPath = () => {
-  return SharedProcess.invoke(
-    /* Platform.getConfigDir */ 'Platform.getConfigDir'
-  )
+  return SharedProcess.invoke(/* Platform.getConfigDir */ 'Platform.getConfigDir')
 }
 
 export const getCachePath = () => {
@@ -183,7 +165,8 @@ const getTestPathRemote = () => {
 }
 
 const getTestPathWeb = () => {
-  return '/packages/extension-host-worker-tests'
+  const assetDir = getAssetDir()
+  return `${assetDir}/packages/extension-host-worker-tests`
 }
 
 export const getTestPath = () => {
