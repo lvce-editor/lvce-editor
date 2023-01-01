@@ -1,4 +1,5 @@
 import * as ExecuteTest from '../ExecuteTest/ExecuteTest.js'
+import * as ExposeGlobals from '../ExposeGlobals/ExposeGlobals.js'
 import * as ImportScript from '../ImportScript/ImportScript.js'
 import * as TestFrameWork from '../TestFrameWork/TestFrameWork.js'
 import * as TestFrameWorkComponent from '../TestFrameWorkComponent/TestFrameWorkComponent.js'
@@ -9,15 +10,9 @@ export const state = {
   tests: [],
 }
 
-const exposeGlobals = (global, object) => {
-  for (const [key, value] of Object.entries(object)) {
-    global[key] = value
-  }
-}
-
 export const execute = async (href) => {
-  exposeGlobals(globalThis, TestFrameWorkComponent)
-  exposeGlobals(globalThis, TestFrameWork)
+  ExposeGlobals.exposeGlobals(globalThis, TestFrameWorkComponent)
+  ExposeGlobals.exposeGlobals(globalThis, TestFrameWork)
   // TODO
   // 0. wait for page to be ready
   // 1. get script to import from renderer process (url or from html)

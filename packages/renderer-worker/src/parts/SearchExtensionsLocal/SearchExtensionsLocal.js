@@ -1,13 +1,24 @@
 import * as ExtensionDisplay from '../ExtensionDisplay/ExtensionDisplay.js'
+import * as Arrays from '../Arrays/Arrays.js'
 
 const matchesParsedValue = (extension, parsedValue) => {
   if (extension && typeof extension.name === 'string') {
-    return extension.name.toLowerCase().includes(parsedValue.query)
+    const extensionNameLower = extension.name.toLowerCase()
+    return extensionNameLower.includes(parsedValue.query)
   }
   if (extension && typeof extension.id === 'string') {
-    return extension.id.toLowerCase().includes(parsedValue.query)
+    const extensionIdLower = extension.id.toLowerCase()
+    return extensionIdLower.includes(parsedValue.query)
   }
   return false
+}
+
+const compareExtension = (extensionA, extensionB) => {
+  return extensionA.name.localeCompare(extensionB.name) || extensionA.id.localeCompare(extensionB.id)
+}
+
+const sortExtensions = (extensions) => {
+  return Arrays.toSorted(extensions, compareExtension)
 }
 
 export const getExtensions = async (extensions, parsedValue) => {
@@ -23,5 +34,6 @@ export const getExtensions = async (extensions, parsedValue) => {
       })
     }
   }
-  return filteredExtensions
+  const sortedExtensions = sortExtensions(filteredExtensions)
+  return sortedExtensions
 }

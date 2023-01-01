@@ -1,7 +1,6 @@
 import * as Callback from '../Callback/Callback.js'
-import { JsonRpcError } from '../Errors/Errors.js'
-import * as JsonRpcErrorCode from '../JsonRpcErrorCode/JsonRpcErrorCode.js'
 import * as JsonRpcVersion from '../JsonRpcVersion/JsonRpcVersion.js'
+import * as RestoreJsonRpcError from '../RestoreJsonRpcError/RestoreJsonRpcError.js'
 
 export const send = (transport, method, ...params) => {
   transport.send({
@@ -9,80 +8,6 @@ export const send = (transport, method, ...params) => {
     method,
     params: params,
   })
-}
-
-const getErrorConstructor = (message, type) => {
-  if (type) {
-    switch (type) {
-      case 'DOMException':
-        return DOMException
-      case 'TypeError':
-        return TypeError
-      case 'SyntaxError':
-        return SyntaxError
-      case 'ReferenceError':
-        return ReferenceError
-      default:
-        return Error
-    }
-  }
-  if (message.startsWith('TypeError: ')) {
-    return TypeError
-  }
-  if (message.startsWith('SyntaxError: ')) {
-    return SyntaxError
-  }
-  if (message.startsWith('ReferenceError: ')) {
-    return ReferenceError
-  }
-  return Error
-}
-
-const constructError = (message, type, name) => {
-  const ErrorConstructor = getErrorConstructor(message, type)
-  if (ErrorConstructor === DOMException && name) {
-    return new ErrorConstructor(message, name)
-  }
-  if (ErrorConstructor === Error) {
-    return new Error(message)
-  }
-  return new ErrorConstructor(message)
-}
-
-const restoreError = (error) => {
-  if (error && error instanceof Error) {
-    return error
-  }
-  if (error && error.code && error.code === JsonRpcErrorCode.MethodNotFound) {
-    const restoredError = new JsonRpcError(error.message)
-    restoredError.stack = error.stack
-    return restoredError
-  }
-  if (error && error.message) {
-    const restoredError = constructError(error.message, error.type, error.name)
-    if (error.data) {
-      if (error.data.stack) {
-        restoredError.stack = error.data.stack
-
-        if (error.data.codeFrame) {
-          // @ts-ignore
-          restoredError.codeFrame = error.data.codeFrame
-        }
-      }
-    } else if (restoredError.stack) {
-      // TODO accessing stack might be slow
-      const lowerStack = restoredError.stack
-      // @ts-ignore
-      const indexNewLine = lowerStack.indexOf('\n')
-      // @ts-ignore
-      restoredError.stack = error.stack + lowerStack.slice(indexNewLine)
-    }
-    return restoredError
-  }
-  if (typeof error === 'string') {
-    return new Error(`JsonRpc Error: ${error}`)
-  }
-  return new Error(`JsonRpc Error: ${error}`)
 }
 
 export const invoke = async (ipc, method, ...params) => {
@@ -97,7 +22,7 @@ export const invoke = async (ipc, method, ...params) => {
     })
   })
   if ('error' in responseMessage) {
-    const restoredError = restoreError(responseMessage.error)
+    const restoredError = RestoreJsonRpcError.restoreJsonRpcError(responseMessage.error)
     throw restoredError
   }
   if ('result' in responseMessage) {

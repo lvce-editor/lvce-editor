@@ -49,5 +49,6 @@ export const prepare = (error) => {
     message,
     stack: relevantStack,
     codeFrame,
+    code: error.code,
   }
 }

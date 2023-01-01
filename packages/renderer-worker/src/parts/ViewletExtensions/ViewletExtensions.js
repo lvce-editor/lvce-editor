@@ -11,16 +11,7 @@ import * as ViewletSize from '../ViewletSize/ViewletSize.js'
 import * as VirtualList from '../VirtualList/VirtualList.js'
 import { getListHeight } from './ViewletExtensionsShared.js'
 
-const SUGGESTIONS = [
-  '@builtin',
-  '@disabled',
-  '@enabled',
-  '@installed',
-  '@outdated',
-  '@sort:installs',
-  '@id:',
-  '@category',
-]
+const SUGGESTIONS = ['@builtin', '@disabled', '@enabled', '@installed', '@outdated', '@sort:installs', '@id:', '@category']
 
 // then state can be recycled by Viewlet when there is only a single ViewletExtensions instance
 
@@ -71,11 +62,7 @@ export const handleInput = async (state, value) => {
     const listHeight = getListHeight(state)
     const total = items.length
     const contentHeight = total * itemHeight
-    const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
-      height,
-      contentHeight,
-      minimumSliderSize
-    )
+    const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(height, contentHeight, minimumSliderSize)
     const numberOfVisible = Math.ceil(listHeight / itemHeight)
     const maxLineY = Math.min(numberOfVisible, total)
     const finalDeltaY = Math.max(contentHeight - listHeight, 0)
@@ -105,6 +92,7 @@ export const loadContent = async (state) => {
   const { width, searchValue } = state
   // TODO just get local extensions on demand (not when query string is already different)
   const allExtensions = await ExtensionManagement.getAllExtensions()
+  console.log({ allExtensions })
   const size = getSize(width)
   return handleInput({ ...state, allExtensions, size }, searchValue)
   // TODO get installed extensions from extension host
@@ -227,12 +215,7 @@ const handleContextMenuIndex = (state, index) => {}
 
 // TODO pass index instead
 export const handleContextMenu = async (state, x, y, index) => {
-  await Command.execute(
-    /* ContextMenu.show */ 'ContextMenu.show',
-    /* x */ x,
-    /* y */ y,
-    /* id */ MenuEntryId.ManageExtension
-  )
+  await Command.execute(/* ContextMenu.show */ 'ContextMenu.show', /* x */ x, /* y */ y, /* id */ MenuEntryId.ManageExtension)
   return state
 }
 
@@ -249,11 +232,7 @@ export const openSuggest = async (state) => {
 
 export const closeSuggest = async (state) => {
   state.suggestionState = /* Closed */ 0
-  await RendererProcess.invoke(
-    /* viewletSend */ 'Viewlet.send',
-    /* id */ ViewletModuleId.Extensions,
-    /* method */ 'closeSuggest'
-  )
+  await RendererProcess.invoke(/* viewletSend */ 'Viewlet.send', /* id */ ViewletModuleId.Extensions, /* method */ 'closeSuggest')
 }
 
 export const toggleSuggest = async (state) => {
@@ -296,19 +275,12 @@ export const hasFunctionalRender = true
 
 const renderExtensions = {
   isEqual(oldState, newState) {
-    return (
-      oldState.items === newState.items &&
-      oldState.minLineY === newState.minLineY &&
-      oldState.maxLineY === newState.maxLineY
-    )
+    return oldState.items === newState.items && oldState.minLineY === newState.minLineY && oldState.maxLineY === newState.maxLineY
   },
   apply(oldState, newState) {
     // TODO render extensions incrementally when scrolling
     const visibleExtensions = getVisible(newState)
-    return [
-      /* method */ 'setExtensions',
-      /* visibleExtensions */ visibleExtensions,
-    ]
+    return [/* method */ 'setExtensions', /* visibleExtensions */ visibleExtensions]
   },
 }
 
@@ -328,19 +300,13 @@ const renderNegativeMargin = {
     return oldState.deltaY === newState.deltaY
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setNegativeMargin',
-      /* negativeMargin */ -newState.deltaY,
-    ]
+    return [/* method */ 'setNegativeMargin', /* negativeMargin */ -newState.deltaY]
   },
 }
 
 const renderFocusedIndex = {
   isEqual(oldState, newState) {
-    return (
-      oldState.focusedIndex === newState.focusedIndex &&
-      oldState.minLineY === newState.minLineY
-    )
+    return oldState.focusedIndex === newState.focusedIndex && oldState.minLineY === newState.minLineY
   },
   apply(oldState, newState) {
     const oldFocusedIndex = oldState.focusedIndex - oldState.minLineY
@@ -370,11 +336,7 @@ const renderScrollBar = {
       newState.height - newState.headerHeight,
       newState.scrollBarHeight
     )
-    return [
-      /* method */ 'setScrollBar',
-      /* scrollBarY */ scrollBarY,
-      /* scrollBarHeight */ newState.scrollBarHeight,
-    ]
+    return [/* method */ 'setScrollBar', /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
   },
 }
 
@@ -392,20 +354,8 @@ const renderSize = {
     return oldState.size === newState.size
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setSize',
-      /* oldSize */ oldState.size,
-      /* newSize */ newState.size,
-    ]
+    return [/* method */ 'setSize', /* oldSize */ oldState.size, /* newSize */ newState.size]
   },
 }
 
-export const render = [
-  renderHeight,
-  renderFocusedIndex,
-  renderScrollBar,
-  renderNegativeMargin,
-  renderExtensions,
-  renderError,
-  renderSize,
-]
+export const render = [renderHeight, renderFocusedIndex, renderScrollBar, renderNegativeMargin, renderExtensions, renderError, renderSize]

@@ -750,5 +750,10 @@
   {
     "key": "ctrl+\\",
     "command": "Run And Debug.togglePause"
+  },
+  {
+    "key": "Enter",
+    "command": "Run And Debug.handleEvaluate",
+    "when": "focus.DebugInput"
   }
 ]

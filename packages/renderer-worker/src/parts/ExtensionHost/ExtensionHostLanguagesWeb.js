@@ -1,5 +1,6 @@
 import * as Command from '../Command/Command.js'
 import * as Platform from '../Platform/Platform.js'
+import * as Logger from '../Logger/Logger.js'
 
 export const getLanguages = async () => {
   const assetDir = Platform.getAssetDir()
@@ -9,5 +10,5 @@ export const getLanguages = async () => {
 }
 
 export const getLanguageConfiguration = async (languageId) => {
-  console.warn('get language configuration not yet supported on web')
+  Logger.warn('get language configuration not yet supported on web')
 }

@@ -11,12 +11,7 @@ export const getResponse = async (message) => {
       result,
     }
   } catch (error) {
-    if (
-      error &&
-      error instanceof Error &&
-      error.message &&
-      error.message.startsWith('method not found')
-    ) {
+    if (error && error instanceof Error && error.message && error.message.startsWith('method not found')) {
       return {
         jsonrpc: JsonRpc.Version,
         id: message.id,
@@ -37,6 +32,7 @@ export const getResponse = async (message) => {
         data: {
           stack: prettyError.stack,
           codeFrame: prettyError.codeFrame,
+          code: prettyError.code,
         },
       },
     }

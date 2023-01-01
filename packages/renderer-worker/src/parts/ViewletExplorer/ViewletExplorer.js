@@ -592,9 +592,9 @@ const acceptCreate = async (state) => {
     focusedIndex >= 0
       ? state.items[focusedIndex]
       : {
-        depth: 0,
-        path: state.root,
-      }
+          depth: 0,
+          path: state.root,
+        }
   const depth = parentDirent.depth + 1
   const newDirent = {
     path: absolutePath,
@@ -741,6 +741,10 @@ const getClickFn = (direntType) => {
       return handleClickDirectoryExpanded
     case DirentType.Symlink:
       return handleClickSymLink
+    case DirentType.CharacterDevice:
+      throw new Error(`Cannot open character device files`)
+    case DirentType.BlockDevice:
+      throw new Error(`Cannot open block device files`)
     default:
       throw new Error(`unsupported dirent type ${direntType}`)
   }
@@ -774,9 +778,9 @@ export const handleClickCurrentButKeepFocus = (state) => {
   return handleClick(state, state.focusedIndex - state.minLineY, /* keepFocus */ true)
 }
 
-export const scrollUp = () => { }
+export const scrollUp = () => {}
 
-export const scrollDown = () => { }
+export const scrollDown = () => {}
 // export const handleBlur=()=>{}
 
 const handleClickSymLink = async (state, dirent, index) => {
@@ -862,7 +866,7 @@ export const handleUpload = async (state, dirents) => {
   }
 }
 
-const cancelRequest = (state) => { }
+const cancelRequest = (state) => {}
 
 export const dispose = (state) => {
   if (!state.pendingRequests) {

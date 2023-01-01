@@ -1,4 +1,5 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
+import * as Focus from '../Focus/Focus.js'
 
 const handleClickContinue = () => {
   RendererWorker.send('Run And Debug.continue')
@@ -95,4 +96,14 @@ export const handleMouseDown = (event) => {
     default:
       break
   }
+}
+
+export const handleDebugInputFocus = () => {
+  Focus.setFocus('DebugInput')
+}
+
+export const handleDebugInput = (event) => {
+  const { target } = event
+  const { value } = target
+  RendererWorker.send('Run And Debug.handleDebugInput', value)
 }

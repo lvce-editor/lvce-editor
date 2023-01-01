@@ -3,6 +3,7 @@ import * as Icon from '../Icon/Icon.js'
 import * as IconButton from '../IconButton/IconButton.js'
 import * as MaskIcon from '../MaskIcon/MaskIcon.js'
 import * as ViewletDebugEvents from './ViewletRunAndDebugEvents.js'
+import * as InputBox from '../InputBox/InputBox.js'
 
 const create$DebugButton = (text, icon) => {
   const $Button = IconButton.create$Button(text, icon)
@@ -38,8 +39,7 @@ export const create = () => {
   const $Processes = document.createElement('div')
 
   const $DebugSectionHeaderWatch = create$DebugSectionHeader('Watch')
-  const $DebugSectionHeaderBreakPoints =
-    create$DebugSectionHeader('Breakpoints')
+  const $DebugSectionHeaderBreakPoints = create$DebugSectionHeader('Breakpoints')
   const $DebugSectionHeaderScope = create$DebugSectionHeader('Scope')
   const $DebugSectionHeaderCallStack = create$DebugSectionHeader('Call Stack')
 
@@ -47,6 +47,15 @@ export const create = () => {
   $Viewlet.className = 'Viewlet RunAndDebug'
   $Viewlet.tabIndex = 0
   $Viewlet.onmousedown = ViewletDebugEvents.handleMouseDown
+
+  const $DebugOutput = document.createElement('output')
+  $DebugOutput.className = 'DebugOutput'
+
+  const $DebugInput = InputBox.create()
+  $DebugInput.classList.add('DebugInput')
+  $DebugInput.onfocus = ViewletDebugEvents.handleDebugInputFocus
+  $DebugInput.oninput = ViewletDebugEvents.handleDebugInput
+
   $Viewlet.append(
     $ButtonPauseContinue,
     $ButtonStepOver,
@@ -55,7 +64,9 @@ export const create = () => {
     $DebugSectionHeaderWatch,
     $DebugSectionHeaderBreakPoints,
     $DebugSectionHeaderScope,
-    $DebugSectionHeaderCallStack
+    $DebugSectionHeaderCallStack,
+    $DebugOutput,
+    $DebugInput
   )
 
   return {
@@ -67,6 +78,7 @@ export const create = () => {
     $DebugSectionHeaderScope,
     $DebugSectionHeaderCallStack,
     $ButtonStepOut,
+    $DebugOutput,
   }
 }
 
@@ -165,6 +177,27 @@ export const setScopeChain = (state, scopeChain) => {
   }
 }
 
+const setMessage = (state, message, key) => {
+  const $Header = state[key]
+  const $Next = $Header.nextElementSibling
+  const $Message = document.createElement('div')
+  $Message.className = 'DebugMessage'
+  $Message.textContent = message
+  if ($Next.className === 'DebugSectionHeader') {
+    $Header.after($Message)
+  } else {
+    $Next.replaceWith($Message)
+  }
+}
+
+export const setScopeChainMessage = (state, message) => {
+  setMessage(state, message, '$DebugSectionHeaderScope')
+}
+
+export const setCallStackMessage = (state, message) => {
+  setMessage(state, message, '$DebugSectionHeaderCallStack')
+}
+
 const create$CallStack = (callStack) => {
   const $CallStack = document.createElement('div')
   for (const element of callStack) {
@@ -181,8 +214,10 @@ export const setCallStack = (state, callStack) => {
   const $Next = $DebugSectionHeaderCallStack.nextElementSibling
   if (!$Next || $Next.className === 'DebugSectionHeader') {
     $DebugSectionHeaderCallStack.after($CallStack)
-  } else {
+  } else if ($Next.className === 'DebugMessage') {
     $Next.replaceWith($CallStack)
+  } else {
+    $Next.before($CallStack)
   }
 }
 
@@ -207,6 +242,11 @@ export const refresh = (state, message) => {
 export const focus = (state) => {
   const { $Viewlet } = state
   $Viewlet.focus()
+}
+
+export const setOutputValue = (state, value) => {
+  const { $DebugOutput } = state
+  $DebugOutput.textContent = value
 }
 
 export const dispose = () => {}
