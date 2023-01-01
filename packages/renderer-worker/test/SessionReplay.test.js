@@ -26,9 +26,7 @@ jest.unstable_mockModule('../src/parts/IndexedDb/IndexedDb.js', () => {
 })
 
 const Download = await import('../src/parts/Download/Download.js')
-const SessionReplay = await import(
-  '../src/parts/SessionReplay/SessionReplay.js'
-)
+const SessionReplay = await import('../src/parts/SessionReplay/SessionReplay.js')
 const IndexedDb = await import('../src/parts/IndexedDb/IndexedDb.js')
 const Command = await import('../src/parts/Command/Command.js')
 
@@ -52,9 +50,7 @@ test('downloadSession - error with download', async () => {
   IndexedDb.getValuesByIndexName.mockImplementation(() => {
     return []
   })
-  await expect(SessionReplay.downloadSession()).rejects.toThrowError(
-    new Error('Failed to download session: TypeError: x is not a function')
-  )
+  await expect(SessionReplay.downloadSession()).rejects.toThrowError(new Error('Failed to download session: TypeError: x is not a function'))
 })
 
 test('downloadSession', async () => {
@@ -66,23 +62,16 @@ test('downloadSession', async () => {
   })
   await SessionReplay.downloadSession()
   expect(Download.downloadJson).toHaveBeenCalledTimes(1)
-  expect(Download.downloadJson).toHaveBeenCalledWith(
-    [],
-    'session-2020-01-01T00:00:00.000Z.json'
-  )
+  expect(Download.downloadJson).toHaveBeenCalledWith([], 'session-2020-01-01T00:00:00.000Z.json')
 })
 
 test('getEvents - error with indexeddb', async () => {
   // @ts-ignore
   IndexedDb.getValuesByIndexName.mockImplementation(() => {
-    throw new DOMException(
-      `Failed to execute 'index' on 'IDBObjectStore': The specified index was not found.`
-    )
+    throw new DOMException(`Failed to execute 'index' on 'IDBObjectStore': The specified index was not found.`)
   })
   await expect(SessionReplay.getEvents(``)).rejects.toThrowError(
-    new Error(
-      "failed to get session replay events: Failed to execute 'index' on 'IDBObjectStore': The specified index was not found."
-    )
+    new Error("failed to get session replay events: DOMException: Failed to execute 'index' on 'IDBObjectStore': The specified index was not found.")
   )
 })
 
@@ -93,9 +82,5 @@ test('getEvents', async () => {
   })
   expect(await SessionReplay.getEvents(`test`)).toEqual([])
   expect(IndexedDb.getValuesByIndexName).toHaveBeenCalledTimes(1)
-  expect(IndexedDb.getValuesByIndexName).toHaveBeenCalledWith(
-    'session',
-    'sessionId',
-    'test'
-  )
+  expect(IndexedDb.getValuesByIndexName).toHaveBeenCalledWith('session', 'sessionId', 'test')
 })
