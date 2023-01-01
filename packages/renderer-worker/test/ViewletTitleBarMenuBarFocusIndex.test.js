@@ -7,19 +7,24 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: () => {
-        return {
-          left: 0,
-          bottom: 0,
-        }
-      },
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: () => {
+      return {
+        left: 0,
+        bottom: 0,
+      }
+    },
   }
-)
+})
+
+jest.unstable_mockModule('../src/parts/MeasureTextWidth/MeasureTextWidth.js', () => {
+  return {
+    measureTextWidth: () => {
+      return 25
+    },
+  }
+})
 
 jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
   return {
@@ -76,9 +81,7 @@ jest.unstable_mockModule('../src/parts/MenuEntries/MenuEntries.js', () => {
   }
 })
 
-const ViewletTitleBarMenuBarFocusIndex = await import(
-  '../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarFocusIndex.js'
-)
+const ViewletTitleBarMenuBarFocusIndex = await import('../src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBarFocusIndex.js')
 
 test('focusIndex - when open - when same index', async () => {
   const state = {
@@ -96,9 +99,7 @@ test('focusIndex - when open - when same index', async () => {
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarFocusIndex.focusIndex(state, 0)
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarFocusIndex.focusIndex(state, 0)).toMatchObject({
     focusedIndex: 0,
     menus: [
       {
@@ -141,9 +142,7 @@ test('focusIndex - when opening different index', async () => {
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarFocusIndex.focusIndex(state, 1)
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarFocusIndex.focusIndex(state, 1)).toMatchObject({
     focusedIndex: 1,
     menus: [
       {
@@ -173,17 +172,15 @@ test('focusIndex - when open - race condition', async () => {
     titleBarEntries: [
       {
         id: MenuEntryId.File,
-        name: 'File',
+        label: 'File',
       },
       {
         id: MenuEntryId.Edit,
-        name: 'Edit',
+        label: 'Edit',
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarFocusIndex.focusIndex(state, 1)
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarFocusIndex.focusIndex(state, 1)).toMatchObject({
     focusedIndex: 1,
     menus: [
       {
@@ -221,9 +218,7 @@ test('focusIndex - when closed - when same index', async () => {
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarFocusIndex.focusIndex(state, 0)
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarFocusIndex.focusIndex(state, 0)).toMatchObject({
     focusedIndex: 0,
   })
 })
@@ -244,9 +239,7 @@ test('focusIndex - when closed - when different index', async () => {
       },
     ],
   }
-  expect(
-    await ViewletTitleBarMenuBarFocusIndex.focusIndex(state, 1)
-  ).toMatchObject({
+  expect(await ViewletTitleBarMenuBarFocusIndex.focusIndex(state, 1)).toMatchObject({
     focusedIndex: 1,
   })
 })

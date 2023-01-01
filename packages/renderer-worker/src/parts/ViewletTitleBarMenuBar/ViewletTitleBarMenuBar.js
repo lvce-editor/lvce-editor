@@ -1,11 +1,15 @@
 import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuBarEntries.js'
 
-export const create = () => {
+export const create = (id, uri, left, top, width, height) => {
   return {
     titleBarEntries: [],
     focusedIndex: -1,
     isMenuOpen: false,
     menus: [],
+    labelFontSize: 13,
+    labelFontFamily: 'system-ui, Ubuntu, Droid Sans, sans-serif',
+    labelPadding: 5,
+    titleBarHeight: height,
   }
 }
 
@@ -24,19 +28,13 @@ const renderTitleBarEntries = {
     return oldState.titleBarEntries === newState.titleBarEntries
   },
   apply(oldState, newState) {
-    return [
-      /* method */ 'setEntries',
-      /* titleBarEntries */ newState.titleBarEntries,
-    ]
+    return [/* method */ 'setEntries', /* titleBarEntries */ newState.titleBarEntries]
   },
 }
 
 const renderFocusedIndex = {
   isEqual(oldState, newState) {
-    return (
-      oldState.focusedIndex === newState.focusedIndex &&
-      oldState.isMenuOpen === newState.isMenuOpen
-    )
+    return oldState.focusedIndex === newState.focusedIndex && oldState.isMenuOpen === newState.isMenuOpen
   },
   apply(oldState, newState) {
     return [
@@ -64,11 +62,7 @@ const renderMenus = {
       const oldMenu = oldMenus[i]
       const newMenu = newMenus[i]
       if (oldMenu !== newMenu) {
-        changes.push([
-          /* method */ 'updateMenu',
-          /* newMenu */ newMenu,
-          /* newLength */ newLength,
-        ])
+        changes.push([/* method */ 'updateMenu', /* newMenu */ newMenu, /* newLength */ newLength])
       }
     }
     const difference = newLength - oldLength
