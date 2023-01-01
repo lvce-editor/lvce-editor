@@ -31,6 +31,10 @@ const isEqualNodeName = ($Node, node) => {
 }
 
 export const renderInto = ($Parent, dom) => {
+  if ($Parent.textContent === '') {
+    renderInternal($Parent, dom)
+    return
+  }
   // TODO
   console.log({ dom })
   const oldCount = $Parent.children.length
