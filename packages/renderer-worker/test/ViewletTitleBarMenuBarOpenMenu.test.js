@@ -110,6 +110,7 @@ test('openMenu - when focusedIndex', async () => {
         name: 'Edit',
       },
     ],
+    titleBarHeight: 20,
   }
   expect(await ViewletTitleBarMenuBarOpenMenu.openMenu(state, /* focus */ true)).toMatchObject({
     menus: [
