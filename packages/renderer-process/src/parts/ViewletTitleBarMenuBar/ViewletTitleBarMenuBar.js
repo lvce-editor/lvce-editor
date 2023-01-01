@@ -15,14 +15,8 @@ export const create = () => {
   $TitleBarMenuBar.role = AriaRoles.MenuBar
   $TitleBarMenuBar.tabIndex = 0
   $TitleBarMenuBar.onmousedown = ViewletTitleBarMenuBarEvents.handleClick
-  $TitleBarMenuBar.addEventListener(
-    DomEventType.FocusOut,
-    ViewletTitleBarMenuBarEvents.handleFocusOut
-  )
-  $TitleBarMenuBar.addEventListener(
-    DomEventType.FocusIn,
-    ViewletTitleBarMenuBarEvents.handleFocus
-  )
+  $TitleBarMenuBar.addEventListener(DomEventType.FocusOut, ViewletTitleBarMenuBarEvents.handleFocusOut)
+  $TitleBarMenuBar.addEventListener(DomEventType.FocusIn, ViewletTitleBarMenuBarEvents.handleFocus)
   $TitleBarMenuBar.onmouseover = ViewletTitleBarMenuBarEvents.handleMouseOver
 
   return {
@@ -97,23 +91,7 @@ const create$TopLevelEntry = (item) => {
   return $TitleBarTopLevelEntry
 }
 
-export const getMenuEntryBounds = (state, index) => {
-  const { $TitleBarMenuBar } = state
-  const $MenuEntry = $TitleBarMenuBar.children[index]
-  const rect = $MenuEntry.getBoundingClientRect()
-  return {
-    left: rect.left,
-    bottom: rect.bottom,
-  }
-}
-
-export const setFocusedIndex = (
-  state,
-  unFocusIndex,
-  focusIndex,
-  oldIsMenuOpen,
-  newIsMenuOpen
-) => {
+export const setFocusedIndex = (state, unFocusIndex, focusIndex, oldIsMenuOpen, newIsMenuOpen) => {
   Assert.object(state)
   Assert.number(unFocusIndex)
   Assert.number(focusIndex)
@@ -137,19 +115,7 @@ export const setFocusedIndex = (
 }
 
 // TODO the focus variable is confusing: false means keep focus in menubar, true means focus the menu
-export const openMenu = (
-  state,
-  unFocusIndex,
-  index,
-  level,
-  menuItems,
-  menuFocusedIndex,
-  focus,
-  x,
-  y,
-  width,
-  height
-) => {
+export const openMenu = (state, unFocusIndex, index, level, menuItems, menuFocusedIndex, focus, x, y, width, height) => {
   Assert.object(state)
   Assert.number(unFocusIndex)
   Assert.number(index)
@@ -163,13 +129,9 @@ export const openMenu = (
   Assert.number(height)
   const { $TitleBarMenuBar } = state
   // TODO this code is very unclean
-  $TitleBarMenuBar.addEventListener(
-    'mouseenter',
-    ViewletTitleBarMenuBarEvents.handleMouseOver,
-    {
-      capture: true,
-    }
-  )
+  $TitleBarMenuBar.addEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handleMouseOver, {
+    capture: true,
+  })
   if (unFocusIndex !== -1) {
     $TitleBarMenuBar.children[unFocusIndex].ariaExpanded = 'false'
     $TitleBarMenuBar.children[unFocusIndex].removeAttribute('aria-owns')
@@ -206,13 +168,9 @@ export const closeMenu = (state, unFocusIndex, index) => {
     $TitleBarMenuBar.children[index].focus()
   }
   Menu.hide(/* restoreFocus */ false)
-  $TitleBarMenuBar.removeEventListener(
-    'mouseenter',
-    ViewletTitleBarMenuBarEvents.handleMouseOver,
-    {
-      capture: true,
-    }
-  )
+  $TitleBarMenuBar.removeEventListener('mouseenter', ViewletTitleBarMenuBarEvents.handleMouseOver, {
+    capture: true,
+  })
 }
 
 export const setEntries = (state, titleBarEntries) => {
@@ -279,16 +237,7 @@ export const setMenus = (state, changes) => {
         const menu = change[1]
         const newLength = change[2]
         const replaceItems = change[3]
-        const {
-          level,
-          top,
-          left,
-          width,
-          height,
-          focusedIndex,
-          items,
-          expanded,
-        } = menu
+        const { level, top, left, width, height, focusedIndex, items, expanded } = menu
         const $Menu = $$Menus[level]
         $Menu.style.width = `${width}px`
         $Menu.style.height = `${height}px`
