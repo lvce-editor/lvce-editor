@@ -42,7 +42,7 @@ export const create = (id, uri, languageId, content) => {
     left: 0,
     columnWidth: 0,
     rowHeight: 0,
-    fontSize: 0, // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
+    fontSize: 15, // TODO find out if it is possible to use all numeric values for settings for efficiency, maybe settings could be an array
     letterSpacing: 0,
     scrollBarHeight: 0,
     undoStack: [],
@@ -57,6 +57,8 @@ export const create = (id, uri, languageId, content) => {
      */
     handleOffset: 0,
     itemHeight: 20,
+    fontFamily: `'Fira Code'`,
+    fontWeight: 400,
   }
 }
 
@@ -86,9 +88,7 @@ export const renderTextAndCursorAndSelectionsCommands = (editor) => {
   const cursorInfos = EditorCursor.getVisible(editor)
   const selectionInfos = EditorSelection.getVisible(editor)
   const scrollBarHeight = editor.scrollBarHeight
-  const scrollBarY =
-    (editor.deltaY / editor.finalDeltaY) *
-    (editor.height - editor.scrollBarHeight)
+  const scrollBarY = (editor.deltaY / editor.finalDeltaY) * (editor.height - editor.scrollBarHeight)
   return [
     /* Viewlet.invoke */ 'Viewlet.send',
     /* id */ 'EditorText',
@@ -134,11 +134,7 @@ export const scheduleSelections = (editor, selectionEdits) => {
   // ])
 }
 
-export const scheduleSelectionsAndScrollPosition = (
-  editor,
-  selectionEdits,
-  deltaY
-) => {
+export const scheduleSelectionsAndScrollPosition = (editor, selectionEdits, deltaY) => {
   const newEditor1 = EditorSelection.setSelections(editor, selectionEdits)
   const newEditor2 = EditorScrolling.setDeltaY(newEditor1, deltaY)
   return newEditor2
@@ -171,11 +167,7 @@ export const scheduleSelectionsAndScrollPosition = (
  * @param {Uint32Array|undefined} selectionChanges
  * @returns
  */
-export const scheduleDocumentAndCursorsSelections = (
-  editor,
-  changes,
-  selectionChanges = undefined
-) => {
+export const scheduleDocumentAndCursorsSelections = (editor, changes, selectionChanges = undefined) => {
   Assert.object(editor)
   Assert.array(changes)
   if (changes.length === 0) {
@@ -186,15 +178,11 @@ export const scheduleDocumentAndCursorsSelections = (
     ...editor,
     lines: newLines,
   }
-  const newSelections =
-    selectionChanges || EditorSelection.applyEdit(partialNewEditor, changes)
+  const newSelections = selectionChanges || EditorSelection.applyEdit(partialNewEditor, changes)
   // TODO should separate rendering from business logic somehow
   // currently hard to test because need to mock editor height, top, left,
   // invalidStartIndex, lineCache, etc. just for testing editorType
-  const invalidStartIndex = Math.min(
-    editor.invalidStartIndex,
-    changes[0].start.rowIndex
-  )
+  const invalidStartIndex = Math.min(editor.invalidStartIndex, changes[0].start.rowIndex)
 
   // TODO maybe put undostack into indexeddb so that there is no memory leak in application
   // then clear old undostack from indexeddb after 3 days
@@ -224,10 +212,7 @@ export const scheduleDocumentAndCursorsSelectionIsUndo = (editor, changes) => {
     lines: newLines,
   }
   const newSelections = EditorSelection.applyEdit(partialNewEditor, changes)
-  const invalidStartIndex = Math.min(
-    editor.invalidStartIndex,
-    changes[0].start.rowIndex
-  )
+  const invalidStartIndex = Math.min(editor.invalidStartIndex, changes[0].start.rowIndex)
   const newEditor = {
     ...partialNewEditor,
     lines: newLines,
@@ -312,11 +297,7 @@ export const setText = (editor, text) => {
   const finalY = Math.max(total - numberOfVisibleLines, 0)
   const finalDeltaY = finalY * itemHeight
   const contentHeight = lines.length * editor.rowHeight
-  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(
-    editor.height,
-    contentHeight,
-    MINIMUM_SLIDER_SIZE
-  )
+  const scrollBarHeight = ScrollBarFunctions.getScrollBarHeight(editor.height, contentHeight, MINIMUM_SLIDER_SIZE)
   return {
     ...editor,
     lines,
@@ -344,42 +325,22 @@ const renderLines = {
 
 const renderSelections = {
   isEqual(oldState, newState) {
-    return (
-      oldState.selections === newState.selections &&
-      oldState.focused === newState.focused &&
-      oldState.minLineY === newState.minLineY
-    )
+    return oldState.selections === newState.selections && oldState.focused === newState.focused && oldState.minLineY === newState.minLineY
   },
   apply(oldState, newState) {
     const cursorInfos = EditorCursor.getVisible(newState)
     const selectionInfos = EditorSelection.getVisible(newState)
-    return [
-      /* method */ 'setSelections',
-      /* cursorInfos */ cursorInfos,
-      /* selectionInfos */ selectionInfos,
-    ]
+    return [/* method */ 'setSelections', /* cursorInfos */ cursorInfos, /* selectionInfos */ selectionInfos]
   },
 }
 
 const renderScrollBar = {
   isEqual(oldState, newState) {
-    return (
-      oldState.deltaY === newState.deltaY &&
-      oldState.scrollBarHeight === newState.scrollBarHeight
-    )
+    return oldState.deltaY === newState.deltaY && oldState.scrollBarHeight === newState.scrollBarHeight
   },
   apply(oldState, newState) {
-    const scrollBarY = ScrollBarFunctions.getScrollBarY(
-      newState.deltaY,
-      newState.finalDeltaY,
-      newState.height,
-      newState.scrollBarHeight
-    )
-    return [
-      /* method */ 'setScrollBar',
-      /* scrollBarY */ scrollBarY,
-      /* scrollBarHeight */ newState.scrollBarHeight,
-    ]
+    const scrollBarY = ScrollBarFunctions.getScrollBarY(newState.deltaY, newState.finalDeltaY, newState.height, newState.scrollBarHeight)
+    return [/* method */ 'setScrollBar', /* scrollBarY */ scrollBarY, /* scrollBarHeight */ newState.scrollBarHeight]
   },
 }
 
@@ -395,9 +356,4 @@ const renderFocus = {
   },
 }
 
-export const render = [
-  renderLines,
-  renderSelections,
-  renderScrollBar,
-  renderFocus,
-]
+export const render = [renderLines, renderSelections, renderScrollBar, renderFocus]

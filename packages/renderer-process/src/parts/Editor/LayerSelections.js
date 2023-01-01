@@ -1,4 +1,3 @@
-import * as Platform from '../Platform/Platform.js'
 import * as Assert from '../Assert/Assert.js'
 
 const create$Selection = () => {
@@ -23,12 +22,7 @@ const render$Selection = ($Selection, selections, i) => {
   $Selection.style.height = `${height}px`
 }
 
-const render$SelectionsLess = (
-  $Selections,
-  childCount,
-  selections,
-  selectionCount
-) => {
+const render$SelectionsLess = ($Selections, childCount, selections, selectionCount) => {
   for (let i = 0, j = 0; i < childCount; i++, j += 4) {
     render$Selection($Selections.children[i], selections, i)
   }
@@ -41,23 +35,13 @@ const render$SelectionsLess = (
   $Selections.append(fragment)
 }
 
-const render$SelectionsEqual = (
-  $Selections,
-  childCount,
-  selections,
-  selectionCount
-) => {
+const render$SelectionsEqual = ($Selections, childCount, selections, selectionCount) => {
   for (let i = 0; i < selectionCount; i++) {
     render$Selection($Selections.children[i], selections, i)
   }
 }
 
-const render$SelectionsMore = (
-  $Selections,
-  childCount,
-  selections,
-  selectionCount
-) => {
+const render$SelectionsMore = ($Selections, childCount, selections, selectionCount) => {
   for (let i = 0; i < selectionCount; i++) {
     render$Selection($Selections.children[i], selections, i)
   }
