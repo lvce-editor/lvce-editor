@@ -1,6 +1,6 @@
 import * as TitleBarMenuBarEntries from '../TitleBarMenuBarEntries/TitleBarMenuBarEntries.js'
 
-export const create = () => {
+export const create = (id, uri, left, top, width, height) => {
   return {
     titleBarEntries: [],
     focusedIndex: -1,
@@ -9,7 +9,7 @@ export const create = () => {
     labelFontSize: 13,
     labelFontFamily: 'system-ui, Ubuntu, Droid Sans, sans-serif',
     labelPadding: 5,
-    titleBarHeight: 20,
+    titleBarHeight: height,
   }
 }
 

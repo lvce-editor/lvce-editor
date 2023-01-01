@@ -16,9 +16,13 @@ export const loadContent = (state) => {
 
 export const getChildren = (state) => {
   const children = []
+  const { top, left, width, height } = state
   if (true) {
     children.push({
       id: ViewletModuleId.TitleBarMenuBar,
+      top,
+      height,
+      left,
     })
   }
   if (true) {
