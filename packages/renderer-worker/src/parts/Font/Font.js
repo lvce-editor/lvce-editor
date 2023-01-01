@@ -2,7 +2,7 @@ import { VError } from '../VError/VError.js'
 
 const getFonts = () => {
   // @ts-ignore
-  return self.fonts || document.fonts
+  return globalThis.fonts || document.fonts
 }
 
 export const load = async (fontSize, fontFamily) => {
