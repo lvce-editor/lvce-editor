@@ -25,9 +25,7 @@ export const measureTextWidth = (text, fontWeight, fontSize, fontFamily) => {
   Assert.number(fontSize)
   Assert.string(fontFamily)
   const ctx = getOrCreateCtx()
-  // ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`
-  ctx.font = `bold ${fontSize}px serif`
+  ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`
   const metrics = ctx.measureText(text)
-  console.log(ctx.font, metrics.width)
   return metrics.width
 }
