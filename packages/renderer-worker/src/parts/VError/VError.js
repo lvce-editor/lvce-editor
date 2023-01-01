@@ -23,9 +23,13 @@ const mergeStacks = (parent, child) => {
   }
   const parentNewLineIndex = parent.indexOf('\n')
   const childNewLineIndex = child.indexOf('\n')
+  if (childNewLineIndex === -1) {
+    return parent
+  }
   const parentFirstLine = parent.slice(0, parentNewLineIndex)
   const childRest = child.slice(childNewLineIndex)
   const childFirstLine = child.slice(0, childNewLineIndex)
+  console.log({ parentNewLineIndex, childNewLineIndex, parentFirstLine, childRest, childFirstLine, incl: parentFirstLine.includes(childFirstLine) })
   if (parentFirstLine.includes(childFirstLine)) {
     return parentFirstLine + childRest
   }
@@ -37,9 +41,11 @@ export class VError extends Error {
     const combinedMessage = getCombinedMessage(error, message)
     super(combinedMessage)
     this.name = 'VError'
+    console.log({ error, message, merged: mergeStacks(this.stack, error.stack), thisStack: this.stack })
     if (error instanceof Error) {
       this.stack = mergeStacks(this.stack, error.stack)
     }
+    console.log({ error, message })
     if (error.codeFrame) {
       this.codeFrame = error.codeFrame
     }

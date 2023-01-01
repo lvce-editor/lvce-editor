@@ -8,9 +8,7 @@ test('VError - missing child stack', () => {
       this.name = 'DOMException'
     }
   }
-  const cause = new DOMException(
-    'The requested version (1) is less than the existing version (6).'
-  )
+  const cause = new DOMException('The requested version (1) is less than the existing version (6).')
   const verror = new VError(cause, `Failed to save IndexedDb value`)
   expect(verror.stack).toMatch(
     'VError: Failed to save IndexedDb value: DOMException: The requested version (1) is less than the existing version (6).'
@@ -40,9 +38,7 @@ test('VError - merging stacks - parent stack does not include message', () => {
   at async exports.getResponse (/test/packages/main-process/src/parts/GetResponse/GetResponse.js:8:20)
   at async MessagePortMain.handleMessage (/test/packages/main-process/src/parts/HandleMessagePort/HandleMessagePort.js:179:22)`
   const verror = new VError(error, `Failed to open about window`)
-  expect(verror.message).toBe(
-    `Failed to open about window: Unknown command \"ElectronWindowAbout.open\"`
-  )
+  expect(verror.message).toBe(`Failed to open about window: Unknown command \"ElectronWindowAbout.open\"`)
   expect(verror.stack).toBe(
     `  at exports.invoke (/test/packages/main-process/src/parts/Command/Command.js:64:13)
   at async exports.getResponse (/test/packages/main-process/src/parts/GetResponse/GetResponse.js:8:20)
@@ -53,11 +49,21 @@ test('VError - merging stacks - parent stack does not include message', () => {
 test('VError - remove unnecessary Error prefix', () => {
   const error = new Error()
   error.message = 'Failed to import script /test/extension.js: Not found (404)'
-  const verror = new VError(
-    error,
-    `Failed to activate extension test.test-extension`
-  )
+  const verror = new VError(error, `Failed to activate extension test.test-extension`)
+  expect(verror.message).toBe(`Failed to activate extension test.test-extension: Failed to import script /test/extension.js: Not found (404)`)
+})
+
+test('VError - dynamic import error stack', () => {
+  const error = new TypeError()
+  error.message = `Failed to fetch dynamically imported module: http://localhost:3000/packages/renderer-worker/src/parts/Test/Test.ipc.js`
+  error.stack = `TypeError: Failed to fetch dynamically imported module: http://localhost:3000/packages/renderer-worker/src/parts/Test/Test.ipc.js`
+  const verror = new VError(error, `Failed to load module 42`)
   expect(verror.message).toBe(
-    `Failed to activate extension test.test-extension: Failed to import script /test/extension.js: Not found (404)`
+    `Failed to load module 42: TypeError: Failed to fetch dynamically imported module: http://localhost:3000/packages/renderer-worker/src/parts/Test/Test.ipc.js`
   )
+  const stackLines = verror.stack.split('\n')
+  expect(stackLines[0]).toBe(
+    'VError: Failed to load module 42: TypeError: Failed to fetch dynamically imported module: http://localhost:3000/packages/renderer-worker/src/parts/Test/Test.ipc.js'
+  )
+  expect(stackLines[1]).toMatch('VError.test.js')
 })
