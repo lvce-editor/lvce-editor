@@ -33,7 +33,7 @@ export const getVisible = (editor) => {
   // TODO could use uint16array here
   // TODO handle case when text segmenter not supported
   const visibleCursors = []
-  const { selections, minLineY, maxLineY, rowHeight, lines, fontSize, fontFamily, fontWeight } = editor
+  const { selections, minLineY, maxLineY, rowHeight, lines, fontSize, fontFamily, fontWeight, letterSpacing } = editor
   const selectionLength = selections.length
   for (let i = 0; i < selectionLength; i += 4) {
     const selectionStartRow = selections[i]
@@ -45,7 +45,7 @@ export const getVisible = (editor) => {
       // TODO maybe use float32 array instead
       const line = lines[selectionEndRow]
       const partialText = line.slice(0, selectionEndColumn)
-      const left = MeasureTextWidth.measureTextWidth(partialText, fontWeight, fontSize, fontFamily)
+      const left = MeasureTextWidth.measureTextWidth(partialText, fontWeight, fontSize, fontFamily, letterSpacing)
       const top = (selectionEndRow - minLineY) * rowHeight
       visibleCursors.push(top, left)
     }
