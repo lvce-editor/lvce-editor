@@ -45,7 +45,9 @@ export const getVisible = (editor) => {
       // TODO maybe use float32 array instead
       const line = lines[selectionEndRow]
       const partialText = line.slice(0, selectionEndColumn)
-      const left = MeasureTextWidth.measureTextWidth(partialText, fontWeight, fontSize, fontFamily, letterSpacing)
+      // TODO reuse same text measurements for selections and cursors
+      // TODO when font is monospace and ascii, could just multiply selectionEndColumn by charWidth to get offset
+      const left = Math.round(MeasureTextWidth.measureTextWidth(partialText, fontWeight, fontSize, fontFamily, letterSpacing))
       const top = (selectionEndRow - minLineY) * rowHeight
       visibleCursors.push(top, left)
     }
