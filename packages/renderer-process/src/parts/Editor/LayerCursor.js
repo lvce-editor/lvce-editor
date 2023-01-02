@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 const create$Cursor = () => {
   const $Cursor = document.createElement('div')
@@ -9,8 +10,7 @@ const create$Cursor = () => {
 const render$Cursor = ($Cursor, cursors, i) => {
   const top = cursors[i]
   const left = cursors[i + 1]
-  $Cursor.style.top = `${top}px`
-  $Cursor.style.left = `${left}px`
+  SetBounds.setTopAndLeftTransform($Cursor, top, left)
 }
 
 const render$CursorsLess = ($Cursors, childCount, cursors, cursorCount) => {
