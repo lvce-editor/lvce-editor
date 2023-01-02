@@ -6,6 +6,7 @@ export const create = (id, uri, left, top, width, height) => {
     focusedIndex: -1,
     isMenuOpen: false,
     menus: [],
+    labelFontWeight: 400,
     labelFontSize: 13,
     labelFontFamily: 'system-ui, Ubuntu, Droid Sans, sans-serif',
     labelPadding: 5,
