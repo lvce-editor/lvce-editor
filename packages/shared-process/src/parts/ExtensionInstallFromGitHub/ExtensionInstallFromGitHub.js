@@ -9,10 +9,7 @@ export const install = async ({ user, repo, branch }) => {
   try {
     const cachedExtensionsPath = Platform.getCachedExtensionsPath()
     const url = `https://codeload.github.com/${user}/${repo}/tar.gz/${branch}`
-    const cachedExtensionPath = Path.join(
-      cachedExtensionsPath,
-      `github-${user}-${repo}-${branch}`
-    )
+    const cachedExtensionPath = Path.join(cachedExtensionsPath, `github-${user}-${repo}-${branch}`)
     await DownloadAndExtract.downloadAndExtractTarGz({
       url,
       outDir: cachedExtensionPath,
