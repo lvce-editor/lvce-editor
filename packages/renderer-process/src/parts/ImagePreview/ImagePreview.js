@@ -1,4 +1,5 @@
 import * as Widget from '../Widget/Widget.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 const handleImageLoad = (event) => {
   const $ImagePreviewImage = event.target
@@ -26,8 +27,7 @@ export const showError = (message, top, left) => {
   const $ImagePreview = document.createElement('figure')
   $ImagePreview.className = 'ImagePreview'
   $ImagePreview.append($ImagePreviewImage, $ImagePreviewCaption)
-  $ImagePreview.style.top = `${top}px`
-  $ImagePreview.style.left = `${left}px`
+  SetBounds.setTopAndLeft($ImagePreview, top, left)
   $ImagePreview.style.display = 'none'
   Widget.append($ImagePreview)
   return {

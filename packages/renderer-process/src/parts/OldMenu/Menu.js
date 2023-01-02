@@ -6,6 +6,7 @@ import * as MenuItem from '../MenuItem/MenuItem.js'
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as Widget from '../Widget/Widget.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 // TODO when pressing tab -> focus next element in tab order and close menu
 
 // TODO menu and contextmenu should have own keybinding logic
@@ -56,11 +57,7 @@ const handleMouseDown = (event) => {
   }
   event.preventDefault()
   const level = getLevel($Menu)
-  RendererWorker.send(
-    /* Menu.handleClick */ 'Menu.selectIndex',
-    /* level */ level,
-    /* index */ index
-  )
+  RendererWorker.send(/* Menu.handleClick */ 'Menu.selectIndex', /* level */ level, /* index */ index)
 }
 
 // const handleKeyDown = (event) => {
@@ -120,7 +117,8 @@ const handleMouseMove = (event) => {
 
 const handleMouseLeave = (event) => {
   const $RelatedTarget = event.relatedTarget
-  if ($RelatedTarget.classList.contains('MenuItem')) {}
+  if ($RelatedTarget.classList.contains('MenuItem')) {
+  }
   // RendererWorker.send(/* Menu.handleMouseLeave */ 'Menu.handleMouseLeave')
 }
 
@@ -183,16 +181,7 @@ const handleContextMenu = (event) => {
   event.preventDefault()
 }
 
-export const showMenu = (
-  x,
-  y,
-  width,
-  height,
-  items,
-  level,
-  parentIndex = -1,
-  mouseBlocking = false
-) => {
+export const showMenu = (x, y, width, height, items, level, parentIndex = -1, mouseBlocking = false) => {
   if (mouseBlocking) {
     const $BackDrop = BackDrop.create$BackDrop()
     $BackDrop.onmousedown = handleBackDropMouseDown
@@ -203,8 +192,7 @@ export const showMenu = (
 
   const $Menu = create$Menu()
   $Menu.append(...items.map(MenuItem.create$MenuItem))
-  $Menu.style.left = `${x}px`
-  $Menu.style.top = `${y}px`
+  SetBounds.setTopAndLeft($Menu, y, x)
   $Menu.id = `Menu-${level}`
 
   if (parentIndex !== -1) {
@@ -232,8 +220,7 @@ export const showContextMenu = (x, y, width, height, level, items) => {
   }
   const $Menu = create$Menu()
   $Menu.append(...items.map(MenuItem.create$MenuItem))
-  $Menu.style.left = `${x}px`
-  $Menu.style.top = `${y}px`
+  SetBounds.setTopAndLeft($Menu, y, x)
   $Menu.id = `Menu-${level}`
   Widget.append($Menu)
   state.$$Menus.push($Menu)
@@ -276,17 +263,7 @@ export const hideSubMenu = (level) => {
 // }
 
 // TODO support nested menus / submenus
-export const showControlled = ({
-  x,
-  y,
-  items,
-  handleKeyDown,
-  handleFocusOut,
-  $Parent,
-  level,
-  width,
-  height,
-}) => {
+export const showControlled = ({ x, y, items, handleKeyDown, handleFocusOut, $Parent, level, width, height }) => {
   showMenu(x, y, width, height, items, level)
   // TODO menu should not necessarily know about parent (titleBarMenuBar)
   // it should be the other way around

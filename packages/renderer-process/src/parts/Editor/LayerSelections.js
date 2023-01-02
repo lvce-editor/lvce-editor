@@ -1,4 +1,5 @@
 import * as Assert from '../Assert/Assert.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 const create$Selection = () => {
   const $Selection = document.createElement('div')
@@ -16,10 +17,7 @@ const render$Selection = ($Selection, selections, i) => {
   const height = selections[i * 4 + 3]
   // TODO have many decorations per row
   // no absolute positioning
-  $Selection.style.top = `${top}px`
-  $Selection.style.left = `${left}px`
-  $Selection.style.width = `${width}px`
-  $Selection.style.height = `${height}px`
+  SetBounds.setBounds($Selection, top, left, width, height)
 }
 
 const render$SelectionsLess = ($Selections, childCount, selections, selectionCount) => {

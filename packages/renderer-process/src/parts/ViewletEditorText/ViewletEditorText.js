@@ -1,5 +1,6 @@
 import * as Editor from '../Editor/Editor.js'
 import * as Widget from '../Widget/Widget.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 export const create = Editor.create
 
@@ -28,8 +29,7 @@ export const showOverlayMessage = (state, x, y, content) => {
   $OverLayMessage.className = 'EditorOverlayMessage'
   $OverLayMessage.style.position = 'fixed'
   $OverLayMessage.textContent = content
-  $OverLayMessage.style.top = `${y}px`
-  $OverLayMessage.style.left = `${x}px`
+  SetBounds.setTopAndLeft($OverLayMessage, top, length)
   Widget.append($OverLayMessage)
 }
 

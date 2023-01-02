@@ -11,9 +11,9 @@
   "display_override": ["window-controls-overlay", "minimal-ui"],
   "icons": [
     {
-      "src": "/icons/pwa-icon-196.png",
+      "src": "/icons/pwa-icon-192.png",
       "type": "image/png",
-      "sizes": "196x196",
+      "sizes": "192x192",
       "purpose": "any maskable"
     },
     {

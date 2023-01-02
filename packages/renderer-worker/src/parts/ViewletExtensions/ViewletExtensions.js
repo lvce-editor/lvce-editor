@@ -13,6 +13,13 @@ import { getListHeight } from './ViewletExtensionsShared.js'
 
 const SUGGESTIONS = ['@builtin', '@disabled', '@enabled', '@installed', '@outdated', '@sort:installs', '@id:', '@category']
 
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  NoExtensionsFound: 'No extensions found',
+}
+
 // then state can be recycled by Viewlet when there is only a single ViewletExtensions instance
 
 export const create = (id, uri, left, top, width, height) => {
@@ -25,7 +32,7 @@ export const create = (id, uri, left, top, width, height) => {
     handleOffset: 0,
     top,
     left,
-    error: '',
+    message: '',
     focused: false,
     size: ViewletSize.None,
     ...VirtualList.create({
@@ -59,6 +66,19 @@ export const handleInput = async (state, value) => {
     // TODO cancel ongoing requests
     // TODO handle errors
     const items = await SearchExtensions.searchExtensions(allExtensions, value)
+    if (items.length === 0) {
+      return {
+        ...state,
+        items,
+        minLineY: 0,
+        deltaY: 0,
+        allExtensions,
+        maxLineY: 0,
+        scrollBarHeight: 0,
+        finalDeltaY: 0,
+        message: UiStrings.NoExtensionsFound,
+      }
+    }
     const listHeight = getListHeight(state)
     const total = items.length
     const contentHeight = total * itemHeight
@@ -75,6 +95,7 @@ export const handleInput = async (state, value) => {
       maxLineY,
       scrollBarHeight,
       finalDeltaY,
+      message: '',
     }
 
     // TODO handle out of order responses (a bit complicated)
@@ -83,7 +104,7 @@ export const handleInput = async (state, value) => {
     await ErrorHandling.handleError(error)
     return {
       ...state,
-      error: `${error}`,
+      message: `${error}`,
     }
   }
 }
@@ -340,12 +361,12 @@ const renderScrollBar = {
   },
 }
 
-const renderError = {
+const renderMessage = {
   isEqual(oldState, newState) {
-    return oldState.error === newState.error
+    return oldState.message === newState.message
   },
   apply(oldState, newState) {
-    return [/* method */ 'setError', /* error */ newState.error]
+    return [/* method */ 'setMessage', /* message */ newState.message]
   },
 }
 
@@ -358,4 +379,4 @@ const renderSize = {
   },
 }
 
-export const render = [renderHeight, renderFocusedIndex, renderScrollBar, renderNegativeMargin, renderExtensions, renderError, renderSize]
+export const render = [renderHeight, renderFocusedIndex, renderScrollBar, renderNegativeMargin, renderMessage, renderExtensions, renderSize]

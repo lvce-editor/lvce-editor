@@ -33,7 +33,7 @@ export const alert = (message) => {
     state.$AriaAlert2 = create$AriaAlert()
     // TODO find better name, for example AriaMessages, AriaOutlet, AriaContainer, ScreenReaderMessages
     state.$AriaMessages = document.createElement('div')
-    state.$AriaMessages.className = 'monaco-aria-container'
+    state.$AriaMessages.className = 'AriaContainer'
     state.$AriaMessages.append(state.$AriaAlert1, state.$AriaAlert2)
     document.body.append(state.$AriaMessages)
   }
