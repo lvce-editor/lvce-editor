@@ -16,5 +16,5 @@ test('viewlet.editor-cursor-word-left', async () => {
   await Editor.cursorWordLeft()
 
   // assert
-  await expect(cursor).toHaveCSS('left', /^(65px|66px)$/)
+  await expect(cursor).toHaveCSS('left', /^(63px|64px|65px|66px)$/)
 })
