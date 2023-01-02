@@ -5,6 +5,7 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as Label from '../Label/Label.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletSearchEvents from './ViewletSearchEvents.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 export const create = () => {
   const $ViewletSearchInput = InputBox.create()
@@ -28,13 +29,9 @@ export const create = () => {
   // TODO onclick vs onmousedown, should be consistent in whole application
   $ListItems.onmousedown = ViewletSearchEvents.handleClick
   $ListItems.oncontextmenu = ViewletSearchEvents.handleContextMenu
-  $ListItems.addEventListener(
-    DomEventType.Wheel,
-    ViewletSearchEvents.handleWheel,
-    {
-      passive: true,
-    }
-  )
+  $ListItems.addEventListener(DomEventType.Wheel, ViewletSearchEvents.handleWheel, {
+    passive: true,
+  })
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
@@ -85,18 +82,7 @@ const create$Row = () => {
 
 // TODO much duplication with explorer
 const render$Row = ($Row, rowInfo) => {
-  const {
-    top,
-    type,
-    matchStart,
-    matchLength,
-    text,
-    title,
-    icon,
-    setSize,
-    posInSet,
-    depth,
-  } = rowInfo
+  const { top, type, matchStart, matchLength, text, title, icon, setSize, posInSet, depth } = rowInfo
   const $Icon = $Row.childNodes[0]
   const $Label = $Row.childNodes[1]
   $Icon.className = `FileIcon${icon}`
@@ -119,7 +105,7 @@ const render$Row = ($Row, rowInfo) => {
   $Row.ariaPosInSet = `${posInSet}`
   $Row.ariaLabel = rowInfo.name
   $Row.ariaDescription = ''
-  $Row.style.top = `${top}px`
+  SetBounds.setTop($Row, top)
   switch (type) {
     // TODO type should be a number for efficiency
     case DirentType.Directory:
@@ -201,12 +187,12 @@ export const dispose = () => {}
 
 export const setContentHeight = (state, height) => {
   const { $ListItems } = state
-  $ListItems.style.height = `${height}px`
+  SetBounds.setHeight($ListItems, height)
 }
 
 export const setNegativeMargin = (state, negativeMargin) => {
   const { $ListItems } = state
-  $ListItems.style.top = `${negativeMargin}px`
+  SetBounds.setTop($ListItems, negativeMargin)
 }
 
 export * from '../ViewletScrollable/ViewletScrollable.js'

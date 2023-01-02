@@ -5,6 +5,7 @@ import * as Menu from '../OldMenu/Menu.js'
 import * as Widget from '../Widget/Widget.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletTitleBarMenuBarEvents from './ViewletTitleBarMenuBarEvents.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 const activeId = 'TitleBarEntryActive'
 
@@ -216,10 +217,7 @@ export const setMenus = (state, changes) => {
         $Menu.onmouseover = ViewletTitleBarMenuBarEvents.handleMenuMouseOver
         $Menu.onmousedown = ViewletTitleBarMenuBarEvents.handleMenuMouseDown
         const { top, left, width, height, level, focusedIndex } = menu
-        $Menu.style.width = `${width}px`
-        $Menu.style.height = `${height}px`
-        $Menu.style.top = `${top}px`
-        $Menu.style.left = `${left}px`
+        SetBounds.setBounds($Menu, top, left, width, height)
         $Menu.append(...menu.items.map(MenuItem.create$MenuItem))
         $Menu.id = `Menu-${level}`
         Widget.append($Menu)
@@ -239,10 +237,7 @@ export const setMenus = (state, changes) => {
         const replaceItems = change[3]
         const { level, top, left, width, height, focusedIndex, items, expanded } = menu
         const $Menu = $$Menus[level]
-        $Menu.style.width = `${width}px`
-        $Menu.style.height = `${height}px`
-        $Menu.style.top = `${top}px`
-        $Menu.style.left = `${left}px`
+        SetBounds.setBounds($Menu, top, left, width, height)
         // TODO recycle menu item nodes
         const $$Children = items.map(MenuItem.create$MenuItem)
         if (focusedIndex !== -1) {

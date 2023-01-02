@@ -1,5 +1,6 @@
 import * as Platform from '../Platform/Platform.js'
 import * as Assert from '../Assert/Assert.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 const create$Selection = () => {
   const $Selection = document.createElement('div')
@@ -17,18 +18,10 @@ const render$Selection = ($Selection, selections, i) => {
   const height = selections[i * 4 + 3]
   // TODO have many decorations per row
   // no absolute positioning
-  $Selection.style.top = `${top}px`
-  $Selection.style.left = `${left}px`
-  $Selection.style.width = `${width}px`
-  $Selection.style.height = `${height}px`
+  SetBounds.setBounds($Selection, top, left, width, height)
 }
 
-const render$SelectionsLess = (
-  $Selections,
-  childCount,
-  selections,
-  selectionCount
-) => {
+const render$SelectionsLess = ($Selections, childCount, selections, selectionCount) => {
   for (let i = 0, j = 0; i < childCount; i++, j += 4) {
     render$Selection($Selections.children[i], selections, i)
   }
@@ -41,23 +34,13 @@ const render$SelectionsLess = (
   $Selections.append(fragment)
 }
 
-const render$SelectionsEqual = (
-  $Selections,
-  childCount,
-  selections,
-  selectionCount
-) => {
+const render$SelectionsEqual = ($Selections, childCount, selections, selectionCount) => {
   for (let i = 0; i < selectionCount; i++) {
     render$Selection($Selections.children[i], selections, i)
   }
 }
 
-const render$SelectionsMore = (
-  $Selections,
-  childCount,
-  selections,
-  selectionCount
-) => {
+const render$SelectionsMore = ($Selections, childCount, selections, selectionCount) => {
   for (let i = 0; i < selectionCount; i++) {
     render$Selection($Selections.children[i], selections, i)
   }

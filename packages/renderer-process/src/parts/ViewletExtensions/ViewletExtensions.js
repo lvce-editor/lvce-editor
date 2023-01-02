@@ -8,6 +8,7 @@ import * as InputBox from '../InputBox/InputBox.js'
 import * as Platform from '../Platform/Platform.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
 import * as ViewletExtensionsEvents from './ViewletExtensionsEvents.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 const activeId = 'ExtensionActive'
 
@@ -57,34 +58,18 @@ export const create = () => {
   }
   $ListItems.onfocus = ViewletExtensionsEvents.handleFocus
   $ListItems.onscroll = ViewletExtensionsEvents.handleScroll
-  $ListItems.addEventListener(
-    DomEventType.TouchStart,
-    ViewletExtensionsEvents.handleTouchStart,
-    {
-      passive: true,
-    }
-  )
-  $ListItems.addEventListener(
-    DomEventType.TouchMove,
-    ViewletExtensionsEvents.handleTouchMove,
-    {
-      passive: true,
-    }
-  )
-  $ListItems.addEventListener(
-    DomEventType.TouchEnd,
-    ViewletExtensionsEvents.handleTouchEnd,
-    {
-      passive: true,
-    }
-  )
-  $ListItems.addEventListener(
-    DomEventType.Wheel,
-    ViewletExtensionsEvents.handleWheel,
-    {
-      passive: true,
-    }
-  )
+  $ListItems.addEventListener(DomEventType.TouchStart, ViewletExtensionsEvents.handleTouchStart, {
+    passive: true,
+  })
+  $ListItems.addEventListener(DomEventType.TouchMove, ViewletExtensionsEvents.handleTouchMove, {
+    passive: true,
+  })
+  $ListItems.addEventListener(DomEventType.TouchEnd, ViewletExtensionsEvents.handleTouchEnd, {
+    passive: true,
+  })
+  $ListItems.addEventListener(DomEventType.Wheel, ViewletExtensionsEvents.handleWheel, {
+    passive: true,
+  })
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
@@ -117,12 +102,7 @@ export const create = () => {
 }
 
 // TODO possibly use aria active descendant instead
-export const setFocusedIndex = (
-  state,
-  oldFocusedIndex,
-  newFocusedIndex,
-  focused
-) => {
+export const setFocusedIndex = (state, oldFocusedIndex, newFocusedIndex, focused) => {
   Assert.object(state)
   Assert.number(oldFocusedIndex)
   Assert.number(newFocusedIndex)
@@ -185,7 +165,7 @@ const render$Extension = ($Extension, extension) => {
   $Extension.ariaSetSize = extension.setSize
   $Extension.dataset.state = extension.state
   $Extension.dataset.id = extension.id
-  $Extension.style.top = `${extension.top}px`
+  SetBounds.setTop($Extension, extension.top)
 
   $ExtensionDetailName.firstChild.nodeValue = extension.name
   $ExtensionDetailDescription.firstChild.nodeValue = extension.description
@@ -246,11 +226,7 @@ const create$Extension = () => {
   $ExtensionFooter.append($ExtensionAuthorName, $ExtensionActions)
   const $ExtensionDetail = document.createElement('div')
   $ExtensionDetail.className = 'ExtensionListItemDetail'
-  $ExtensionDetail.append(
-    $ExtensionDetailName,
-    $ExtensionDetailDescription,
-    $ExtensionFooter
-  )
+  $ExtensionDetail.append($ExtensionDetailName, $ExtensionDetailDescription, $ExtensionFooter)
   const $ExtensionListItem = document.createElement('div')
   // @ts-ignore
   $ExtensionListItem.role = AriaRoles.Article
@@ -303,7 +279,7 @@ const render$Extensions = ($ExtensionList, extensions) => {
 
 export const setNegativeMargin = (state, negativeMargin) => {
   const { $ListItems } = state
-  $ListItems.style.top = `${negativeMargin}px`
+  SetBounds.setBounds($ListItems, negativeMargin)
   // Assert.number(negativeMargin)
   // const { $NegativeMargin } = state
   // $NegativeMargin.style.marginTop = `${negativeMargin}px`
@@ -339,11 +315,8 @@ export const openSuggest = (state) => {
   // const x = state.$InputBox.offsetLeft
   // const y = state.$InputBox.offsetTop
   state.$ExtensionSuggestions ||= create$ExtensionSuggestions()
-  state.$ExtensionSuggestions.style.left = `${x}px`
-  state.$ExtensionSuggestions.style.top = `${y}px`
+  SetBounds.setBounds(state.$ExtensionSuggestions, y, x, 100, 100)
   state.$ExtensionSuggestions.style.position = 'fixed'
-  state.$ExtensionSuggestions.style.width = '100px'
-  state.$ExtensionSuggestions.style.height = '100px'
   state.$ExtensionSuggestions.style.background = 'lime'
   // TODO check if already mounted
   // TODO don't append to body, have separate container for widgets (https://news.ycombinator.com/item?id=28230977)

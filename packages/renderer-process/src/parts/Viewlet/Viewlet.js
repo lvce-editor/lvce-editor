@@ -1,5 +1,6 @@
 import * as Assert from '../Assert/Assert.js'
 import * as ViewletModule from '../ViewletModule/ViewletModule.js'
+import * as SetBounds from '../SetBounds/SetBounds.js'
 
 export const state = {
   instances: Object.create(null),
@@ -76,14 +77,7 @@ export const send = (viewletId, method, ...args) => {
   }
 }
 
-const specialIds = new Set([
-  'TitleBar',
-  'SideBar',
-  'Main',
-  'ActivityBar',
-  'StatusBar',
-  'Panel',
-])
+const specialIds = new Set(['TitleBar', 'SideBar', 'Main', 'ActivityBar', 'StatusBar', 'Panel'])
 
 const isSpecial = (id) => {
   return specialIds.has(id)
@@ -92,10 +86,7 @@ const isSpecial = (id) => {
 const createPlaceholder = (viewletId, parentId, top, left, width, height) => {
   const $PlaceHolder = document.createElement('div')
   $PlaceHolder.className = `Viewlet ${viewletId}`
-  $PlaceHolder.style.top = `${top}px`
-  $PlaceHolder.style.left = `${left}px`
-  $PlaceHolder.style.width = `${width}px`
-  $PlaceHolder.style.height = `${height}px`
+  SetBounds.setBounds($PlaceHolder, top, left, width, height)
   if (isSpecial(viewletId)) {
     $PlaceHolder.id = viewletId
   }
@@ -114,54 +105,54 @@ export const sendMultiple = (commands) => {
   for (const command of commands) {
     const [_, viewletId, method, ...args] = command
     switch (_) {
-    case 'Viewlet.ariaAnnounce': {
-      ariaAnnounce(viewletId)
+      case 'Viewlet.ariaAnnounce': {
+        ariaAnnounce(viewletId)
 
-    break;
-    }
-    case 'Viewlet.setBounds': {
-      setBounds(viewletId, method, ...args)
+        break
+      }
+      case 'Viewlet.setBounds': {
+        setBounds(viewletId, method, ...args)
 
-    break;
-    }
-    case 'Viewlet.create': {
-      create(viewletId)
+        break
+      }
+      case 'Viewlet.create': {
+        create(viewletId)
 
-    break;
-    }
-    case 'Viewlet.append': {
-      append(viewletId, method, ...args)
+        break
+      }
+      case 'Viewlet.append': {
+        append(viewletId, method, ...args)
 
-    break;
-    }
-    case 'Viewlet.dispose': {
-      dispose(viewletId)
+        break
+      }
+      case 'Viewlet.dispose': {
+        dispose(viewletId)
 
-    break;
-    }
-    case 'Viewlet.createPlaceholder': {
-      createPlaceholder(viewletId, method, ...args)
+        break
+      }
+      case 'Viewlet.createPlaceholder': {
+        createPlaceholder(viewletId, method, ...args)
 
-    break;
-    }
-    case 'Viewlet.handleError': {
-      handleError(viewletId, method, ...args)
+        break
+      }
+      case 'Viewlet.handleError': {
+        handleError(viewletId, method, ...args)
 
-    break;
-    }
-    case 'Viewlet.focus': {
-      focus(viewletId)
+        break
+      }
+      case 'Viewlet.focus': {
+        focus(viewletId)
 
-    break;
-    }
-    case 'Viewlet.appendViewlet': {
-      appendViewlet(viewletId, method, ...args)
+        break
+      }
+      case 'Viewlet.appendViewlet': {
+        appendViewlet(viewletId, method, ...args)
 
-    break;
-    }
-    default: {
-      invoke(viewletId, method, ...args)
-    }
+        break
+      }
+      default: {
+        invoke(viewletId, method, ...args)
+      }
     }
   }
 }
@@ -208,13 +199,8 @@ export const handleError = (id, parentId, message) => {
   }
   // TODO error should bubble up to until highest possible component
   const parentInstance = state.instances[parentId]
-  if (
-    parentInstance &&
-    parentInstance.factory &&
-    parentInstance.factory.handleError
-  ) {
+  if (parentInstance && parentInstance.factory && parentInstance.factory.handleError) {
     parentInstance.factory.handleError(instance.state, message)
-
   }
 }
 
@@ -232,11 +218,7 @@ export const appendViewlet = (parentId, childId, focus) => {
   if (!childInstance) {
     throw new Error('child instance must be defined to be appended to parent')
   }
-  parentModule.appendViewlet(
-    parentInstanceState.state,
-    childInstance.factory.name,
-    childInstance.state.$Viewlet
-  )
+  parentModule.appendViewlet(parentInstanceState.state, childInstance.factory.name, childInstance.state.$Viewlet)
   if (focus && childInstance.factory.focus) {
     childInstance.factory.focus(childInstance.state)
   }
@@ -344,8 +326,5 @@ export const setBounds = (id, left, top, width, height) => {
     return
   }
   const $Viewlet = instance.state.$Viewlet
-  $Viewlet.style.left = `${left}px`
-  $Viewlet.style.top = `${top}px`
-  $Viewlet.style.width = `${width}px`
-  $Viewlet.style.height = `${height}px`
+  SetBounds.setBounds($Viewlet, top, left, width, height)
 }
