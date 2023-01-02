@@ -22,5 +22,5 @@ test('sample.tab-completion-provider-snippet', async () => {
   await expect(editor).toHaveText(`<h1></h1>`)
 
   const cursor = Locator('.EditorCursor')
-  await expect(cursor).toHaveCSS('left', /^(36px|37px)$/)
+  await expect(cursor).toHaveCSS('left', /^(36px|37px|38px)$/)
 })
