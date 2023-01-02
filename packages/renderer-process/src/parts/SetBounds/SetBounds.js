@@ -26,7 +26,7 @@ export const setTopAndLeft = ($Element, top, left) => {
  * @param {number} left
  */
 export const setTopAndLeftTransform = ($Element, top, left) => {
-  $Element.style.translate = `${left}px ${top}px `
+  $Element.style.translate = `${left}px ${top}px`
 }
 
 export const setHeight = ($Element, height) => {
