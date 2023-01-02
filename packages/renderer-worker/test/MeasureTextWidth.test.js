@@ -1,5 +1,4 @@
 import * as MeasureTextWidth from '../src/parts/MeasureTextWidth/MeasureTextWidth.js'
-import { jest } from '@jest/globals'
 
 beforeAll(() => {
   // @ts-ignore
