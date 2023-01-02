@@ -19,12 +19,13 @@ const getOrCreateCtx = () => {
   return state.ctx
 }
 
-export const measureTextWidth = (text, fontSize, fontFamily) => {
+export const measureTextWidth = (text, fontWeight, fontSize, fontFamily) => {
   Assert.string(text)
+  Assert.number(fontWeight)
   Assert.number(fontSize)
   Assert.string(fontFamily)
   const ctx = getOrCreateCtx()
-  ctx.font = `${fontSize}px ${fontFamily}`
+  ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`
   const metrics = ctx.measureText(text)
   return metrics.width
 }
