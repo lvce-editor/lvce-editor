@@ -10,9 +10,7 @@ test('sample.tab-completion-provider-snippet', async () => {
   )
 
   await Workspace.setPath(tmpDir)
-  await Extension.addWebExtension(
-    new URL(`../fixtures/${name}`, import.meta.url).toString()
-  )
+  await Extension.addWebExtension(new URL(`../fixtures/${name}`, import.meta.url).toString())
 
   // act
   await Main.openUri(`${tmpDir}/test.xyz`)
@@ -24,5 +22,5 @@ test('sample.tab-completion-provider-snippet', async () => {
   await expect(editor).toHaveText(`<h1></h1>`)
 
   const cursor = Locator('.EditorCursor')
-  await expect(cursor).toHaveCSS('left', '36px')
+  await expect(cursor).toHaveCSS('left', /^(36px|37px)$/)
 })

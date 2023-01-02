@@ -15,6 +15,7 @@ jest.unstable_mockModule('../src/parts/CliInstall/CliInstall.js', () => ({
     throw new Error('not implemented')
   }),
 }))
+
 jest.unstable_mockModule('../src/parts/Process/Process.js', () => ({
   setExitCode: jest.fn(),
 }))
@@ -36,24 +37,9 @@ test('handleCliArgs - install - error', async () => {
   CliInstall.handleCliArgs.mockImplementation(() => {
     throw new TypeError('x is not a function')
   })
-  const console = {
-    info: jest.fn(),
-    error: jest.fn(),
-  }
-  const process = {
-    _exitCode: 0,
-    get exitCode() {
-      return this._exitCode
-    },
-    set exitCode(value) {
-      this._exitCode = value
-    },
-  }
-  await Cli.handleCliArgs(['install'], console, process)
+  await Cli.handleCliArgs(['install'])
   expect(Logger.error).toHaveBeenCalledTimes(1)
-  expect(Logger.error).toHaveBeenCalledWith(
-    new TypeError('x is not a function')
-  )
+  expect(Logger.error).toHaveBeenCalledWith(new TypeError('x is not a function'))
   expect(Process.setExitCode).toHaveBeenCalledTimes(1)
   expect(Process.setExitCode).toHaveBeenCalledWith(1)
 })
@@ -61,33 +47,15 @@ test('handleCliArgs - install - error', async () => {
 test('handleCliArgs - install', async () => {
   // @ts-ignore
   CliInstall.handleCliArgs.mockImplementation(() => {})
-  const console = {
-    info: jest.fn(),
-    error: jest.fn(),
-  }
-  const process = {
-    exit: jest.fn(),
-  }
-  await Cli.handleCliArgs(['install'], console, process)
+  await Cli.handleCliArgs(['install'])
   expect(CliInstall.handleCliArgs).toHaveBeenCalledTimes(1)
-  expect(CliInstall.handleCliArgs).toHaveBeenCalledWith(
-    ['install'],
-    console,
-    process
-  )
+  expect(CliInstall.handleCliArgs).toHaveBeenCalledWith(['install'])
 })
 
 test('handleCliArgs - list', async () => {
   // @ts-ignore
   CliList.handleCliArgs.mockImplementation(() => {})
-  const console = {
-    info: jest.fn(),
-    error: jest.fn(),
-  }
-  const process = {
-    exit: jest.fn(),
-  }
-  await Cli.handleCliArgs(['list'], console, process)
+  await Cli.handleCliArgs(['list'])
   expect(CliList.handleCliArgs).toHaveBeenCalledTimes(1)
-  expect(CliList.handleCliArgs).toHaveBeenCalledWith(['list'], console, process)
+  expect(CliList.handleCliArgs).toHaveBeenCalledWith(['list'])
 })
