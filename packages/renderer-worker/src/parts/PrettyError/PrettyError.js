@@ -75,7 +75,7 @@ const prepareErrorMessageWithoutCodeFrame = async (error) => {
       return error
     }
     const [_, path, line, column] = match
-    if (path === '<anonymous>') {
+    if (path === '<anonymous>' || path === 'debugger eval code') {
       return error
     }
     const text = await Ajax.getText(path)

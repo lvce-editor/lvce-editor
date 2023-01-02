@@ -146,11 +146,24 @@ handleMessageFromRendererProcess@test:///packages/renderer-worker/src/parts/Rend
 test('prepare - anonymous stack', async () => {
   // @ts-ignore
   Ajax.getText.mockImplementation(() => {
-    throw new TypeError('x is not a function')
+    throw new Error('not implemented')
   })
   const error = new TypeError('Illegal invocation')
   error.stack = `  at HTMLElement.focus (<anonymous>:1:65)
   at Module.setFocusedIndex (ViewletTitleBarMenuBar.js:109:22)`
+  const prettyError = await PrettyError.prepare(error)
+  expect(Ajax.getText).not.toHaveBeenCalled()
+  expect(prettyError).toBe(error)
+})
+
+test('prepare - debugger eval code stack', async () => {
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    throw new Error('not implemented')
+  })
+  const error = new ReferenceError('original is not defined')
+  error.stack = `  HTMLElement.prototype.focus@debugger eval code:1:56
+  setFocusedIndex@http://localhost:3000/packages/renderer-process/src/parts/ViewletTitleBarMenuBar/ViewletTitleBarMenuBar.js:109:22`
   const prettyError = await PrettyError.prepare(error)
   expect(Ajax.getText).not.toHaveBeenCalled()
   expect(prettyError).toBe(error)
