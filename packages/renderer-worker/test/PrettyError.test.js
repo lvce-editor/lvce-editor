@@ -142,3 +142,16 @@ handleMessageFromRendererProcess@test:///packages/renderer-worker/src/parts/Rend
     type: 'ReferenceError',
   })
 })
+
+test('prepare - anonymous stack', async () => {
+  // @ts-ignore
+  Ajax.getText.mockImplementation(() => {
+    throw new TypeError('x is not a function')
+  })
+  const error = new TypeError('Illegal invocation')
+  error.stack = `  at HTMLElement.focus (<anonymous>:1:65)
+  at Module.setFocusedIndex (ViewletTitleBarMenuBar.js:109:22)`
+  const prettyError = await PrettyError.prepare(error)
+  expect(Ajax.getText).not.toHaveBeenCalled()
+  expect(prettyError).toBe(error)
+})
