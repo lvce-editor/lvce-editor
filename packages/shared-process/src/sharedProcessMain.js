@@ -27,7 +27,7 @@ const main = async () => {
   const argv0 = argv[0]
   if (knownCliArgs.includes(argv0)) {
     const module = await import('./parts/Cli/Cli.js')
-    await module.handleCliArgs(argv, console, process)
+    await module.handleCliArgs(argv)
     return
   }
 
@@ -36,10 +36,7 @@ const main = async () => {
   process.on('disconnect', handleDisconnect)
   process.on('SIGTERM', handleSigTerm)
 
-  process.on(
-    'uncaughtExceptionMonitor',
-    ErrorHandling.handleUncaughtExceptionMonitor
-  )
+  process.on('uncaughtExceptionMonitor', ErrorHandling.handleUncaughtExceptionMonitor)
   ParentIpc.listen()
 
   // ExtensionHost.start() // TODO start on demand, e.g. not when extensions should be disabled
