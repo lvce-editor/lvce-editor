@@ -30,7 +30,6 @@ const render$Cursor = ($Cursor, $Texts, cursor) => {
     range.setEnd($TextNode, cursor.remainingOffset)
     const rect = range.getBoundingClientRect()
     const left = Math.round(rect.left)
-    console.log({ left: rect.left })
     $Cursor.style.left = `${left}px`
   }
 }
