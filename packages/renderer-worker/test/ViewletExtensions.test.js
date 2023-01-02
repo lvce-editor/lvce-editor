@@ -713,6 +713,20 @@ test('render - focused index is different', () => {
   expect(render(oldState, newState)).toEqual([['Viewlet.send', 'Extensions', 'setFocusedIndex', 0, 1, false]])
 })
 
+test('saveState', () => {
+  const state = {
+    ...ViewletExtensions.create(),
+    searchValue: 'test',
+    items: [],
+    height: 124,
+    deltaY: 62,
+    focusedIndex: 0,
+  }
+  expect(ViewletExtensions.saveState(state)).toEqual({
+    searchValue: 'test',
+  })
+})
+
 // test('scrollBarThumbMouseDown', () => {
 //   const oldState = {
 //     ...ViewletExtensions.create(),

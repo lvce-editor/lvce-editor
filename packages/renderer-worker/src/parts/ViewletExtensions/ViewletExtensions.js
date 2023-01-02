@@ -22,6 +22,13 @@ const UiStrings = {
 
 // then state can be recycled by Viewlet when there is only a single ViewletExtensions instance
 
+export const saveState = (state) => {
+  const { searchValue } = state
+  return {
+    searchValue,
+  }
+}
+
 export const create = (id, uri, left, top, width, height) => {
   return {
     searchValue: '',
@@ -77,6 +84,7 @@ export const handleInput = async (state, value) => {
         scrollBarHeight: 0,
         finalDeltaY: 0,
         message: UiStrings.NoExtensionsFound,
+        searchValue: value,
       }
     }
     const listHeight = getListHeight(state)
@@ -96,6 +104,7 @@ export const handleInput = async (state, value) => {
       scrollBarHeight,
       finalDeltaY,
       message: '',
+      searchValue: value,
     }
 
     // TODO handle out of order responses (a bit complicated)
@@ -104,16 +113,24 @@ export const handleInput = async (state, value) => {
     await ErrorHandling.handleError(error)
     return {
       ...state,
+      searchValue: value,
       message: `${error}`,
     }
   }
 }
 
-export const loadContent = async (state) => {
-  const { width, searchValue } = state
+const getSavedValue = (savedState) => {
+  if (savedState && savedState.searchValue) {
+    return savedState.searchValue
+  }
+  return ''
+}
+
+export const loadContent = async (state, savedState) => {
+  const { width } = state
+  const searchValue = getSavedValue(savedState)
   // TODO just get local extensions on demand (not when query string is already different)
   const allExtensions = await ExtensionManagement.getAllExtensions()
-  console.log({ allExtensions })
   const size = getSize(width)
   return handleInput({ ...state, allExtensions, size }, searchValue)
   // TODO get installed extensions from extension host
@@ -379,4 +396,22 @@ const renderSize = {
   },
 }
 
-export const render = [renderHeight, renderFocusedIndex, renderScrollBar, renderNegativeMargin, renderMessage, renderExtensions, renderSize]
+const renderSearchValue = {
+  isEqual(oldState, newState) {
+    return oldState.searchValue === newState.searchValue
+  },
+  apply(oldState, newState) {
+    return [/* method */ 'setSearchValue', oldState.searchValue, newState.searchValue]
+  },
+}
+
+export const render = [
+  renderHeight,
+  renderFocusedIndex,
+  renderScrollBar,
+  renderNegativeMargin,
+  renderMessage,
+  renderExtensions,
+  renderSize,
+  renderSearchValue,
+]
