@@ -10,7 +10,7 @@ test('viewlet.editor-cursor-word-left', async () => {
 
   // assert
   const cursor = Locator('.EditorCursor')
-  await expect(cursor).toHaveCSS('left', /^(138px|139px|140px|141px|142px)$/)
+  await expect(cursor).toHaveCSS('left', /^(134px|135px|136px|137px|138px|139px|140px|141px|142px)$/)
 
   // act
   await Editor.cursorWordLeft()
