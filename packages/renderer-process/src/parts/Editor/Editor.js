@@ -34,22 +34,10 @@ export const create = () => {
   $EditorInput.role = AriaRoles.TextBox
   $EditorInput.onpaste = EditorEvents.handlePaste
   // TODO where to best put listeners (side effects)
-  $EditorInput.addEventListener(
-    DomEventType.BeforeInput,
-    EditorEvents.handleBeforeInput
-  )
-  $EditorInput.addEventListener(
-    DomEventType.CompositionStart,
-    EditorEvents.handleCompositionStart
-  )
-  $EditorInput.addEventListener(
-    DomEventType.CompositionUpdate,
-    EditorEvents.handleCompositionUpdate
-  )
-  $EditorInput.addEventListener(
-    DomEventType.CompositionEnd,
-    EditorEvents.handleCompositionEnd
-  )
+  $EditorInput.addEventListener(DomEventType.BeforeInput, EditorEvents.handleBeforeInput)
+  $EditorInput.addEventListener(DomEventType.CompositionStart, EditorEvents.handleCompositionStart)
+  $EditorInput.addEventListener(DomEventType.CompositionUpdate, EditorEvents.handleCompositionUpdate)
+  $EditorInput.addEventListener(DomEventType.CompositionEnd, EditorEvents.handleCompositionEnd)
   $EditorInput.onfocus = EditorEvents.handleFocus
   $EditorInput.onblur = EditorEvents.handleBlur
   $EditorInput.oncut = EditorEvents.handleCut
@@ -60,10 +48,7 @@ export const create = () => {
   const $LayerText = document.createElement('div')
   $LayerText.className = 'EditorRows'
 
-  $LayerText.addEventListener(
-    DomEventType.MouseDown,
-    EditorEvents.handleMouseDown
-  )
+  $LayerText.addEventListener(DomEventType.MouseDown, EditorEvents.handleMouseDown)
 
   const $ScrollBarThumb = document.createElement('div')
   $ScrollBarThumb.className = 'ScrollBarThumb'
@@ -97,32 +82,20 @@ export const create = () => {
 
   const $EditorLayers = document.createElement('div')
   $EditorLayers.className = 'EditorLayers'
-  $EditorLayers.append(
-    $LayerSelections,
-    $LayerText,
-    $LayerCursor,
-    $LayerDiagnostics
-  )
+  $EditorLayers.append($LayerSelections, $LayerText, $LayerCursor, $LayerDiagnostics)
 
   const $Editor = document.createElement('div')
   $Editor.className = 'Viewlet Editor'
   // @ts-ignore
   $Editor.role = AriaRoles.Code
   $Editor.append($EditorInput, $EditorLayers, $ScrollBarDiagnostics, $ScrollBar)
-  $Editor.addEventListener(
-    DomEventType.ContextMenu,
-    EditorEvents.handleContextMenu
-  )
+  $Editor.addEventListener(DomEventType.ContextMenu, EditorEvents.handleContextMenu)
   $Editor.addEventListener(DomEventType.Wheel, EditorEvents.handleWheel, {
     passive: true,
   })
-  $Editor.addEventListener(
-    DomEventType.MouseMove,
-    EditorEvents.handlePointerMove,
-    {
-      passive: true,
-    }
-  )
+  $Editor.addEventListener(DomEventType.MouseMove, EditorEvents.handlePointerMove, {
+    passive: true,
+  })
   return {
     $LayerCursor,
     $LayerSelections,
@@ -148,7 +121,7 @@ export const setSettings = (state, fontSize, lineHeight, letterSpacing) => {
   const root = document.documentElement
   root.style.setProperty('--EditorFontSize', `${fontSize}px`)
   root.style.setProperty('--EditorLineHeight', `${lineHeight}px`)
-  root.style.setProperty('--EditorLetterSpacing', letterSpacing)
+  root.style.setProperty('--EditorLetterSpacing', `${letterSpacing}px`)
 }
 
 export const setScrollBar = (state, scrollBarY, scrollBarHeight) => {
@@ -173,14 +146,7 @@ export const setSelections = (state, cursorInfos, selectionInfos) => {
   LayerSelections.setSelections(state, selectionInfos)
 }
 
-export const renderTextAndCursorsAndSelections = (
-  state,
-  scrollBarY,
-  scrollBarHeight,
-  textInfos,
-  cursorInfos,
-  selectionInfos
-) => {
+export const renderTextAndCursorsAndSelections = (state, scrollBarY, scrollBarHeight, textInfos, cursorInfos, selectionInfos) => {
   Assert.object(state)
   Assert.number(scrollBarY)
   Assert.number(scrollBarHeight)

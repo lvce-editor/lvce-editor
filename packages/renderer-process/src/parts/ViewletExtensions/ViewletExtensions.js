@@ -333,5 +333,10 @@ export const handleError = (state, message) => {
   $ListItems.textContent = message
 }
 
+export const setSearchValue = (state, oldValue, newValue) => {
+  const { $InputBox } = state
+  $InputBox.value = newValue
+}
+
 export * from '../ViewletScrollable/ViewletScrollable.js'
 export * from '../ViewletSizable/ViewletSizable.js'
