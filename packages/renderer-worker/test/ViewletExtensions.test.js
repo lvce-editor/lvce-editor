@@ -5,26 +5,20 @@ beforeEach(() => {
   jest.resetAllMocks()
 })
 
-jest.unstable_mockModule(
-  '../src/parts/RendererProcess/RendererProcess.js',
-  () => {
-    return {
-      invoke: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/RendererProcess/RendererProcess.js', () => {
+  return {
+    invoke: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
-jest.unstable_mockModule(
-  '../src/parts/SearchExtensions/SearchExtensions.js',
-  () => {
-    return {
-      searchExtensions: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+})
+jest.unstable_mockModule('../src/parts/SearchExtensions/SearchExtensions.js', () => {
+  return {
+    searchExtensions: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
   return {
     invoke: jest.fn(() => {
@@ -32,16 +26,13 @@ jest.unstable_mockModule('../src/parts/SharedProcess/SharedProcess.js', () => {
     }),
   }
 })
-jest.unstable_mockModule(
-  '../src/parts/ExtensionManagement/ExtensionManagement.js',
-  () => {
-    return {
-      getAllExtensions: jest.fn(() => {
-        throw new Error('not implemented')
-      }),
-    }
+jest.unstable_mockModule('../src/parts/ExtensionManagement/ExtensionManagement.js', () => {
+  return {
+    getAllExtensions: jest.fn(() => {
+      throw new Error('not implemented')
+    }),
   }
-)
+})
 jest.unstable_mockModule('../src/parts/Platform/Platform.js', () => {
   return {
     getMarketPlaceUrl: jest.fn(() => {
@@ -70,38 +61,19 @@ jest.unstable_mockModule('../src/parts/ErrorHandling/ErrorHandling.js', () => {
   }
 })
 
-const RendererProcess = await import(
-  '../src/parts/RendererProcess/RendererProcess.js'
-)
-const SharedProcess = await import(
-  '../src/parts/SharedProcess/SharedProcess.js'
-)
-const SearchExtensions = await import(
-  '../src/parts/SearchExtensions/SearchExtensions.js'
-)
+const RendererProcess = await import('../src/parts/RendererProcess/RendererProcess.js')
+const SharedProcess = await import('../src/parts/SharedProcess/SharedProcess.js')
+const SearchExtensions = await import('../src/parts/SearchExtensions/SearchExtensions.js')
 const Ajax = await import('../src/parts/Ajax/Ajax.js')
 
-const ViewletExtensions = await import(
-  '../src/parts/ViewletExtensions/ViewletExtensions.js'
-)
-const ErrorHandling = await import(
-  '../src/parts/ErrorHandling/ErrorHandling.js'
-)
+const ViewletExtensions = await import('../src/parts/ViewletExtensions/ViewletExtensions.js')
+const ErrorHandling = await import('../src/parts/ErrorHandling/ErrorHandling.js')
 
-const ViewletManager = await import(
-  '../src/parts/ViewletManager/ViewletManager.js'
-)
-const ExtensionManagement = await import(
-  '../src/parts/ExtensionManagement/ExtensionManagement.js'
-)
+const ViewletManager = await import('../src/parts/ViewletManager/ViewletManager.js')
+const ExtensionManagement = await import('../src/parts/ExtensionManagement/ExtensionManagement.js')
 
 const render = (oldState, newState) => {
-  return ViewletManager.render(
-    ViewletExtensions,
-    oldState,
-    newState,
-    ViewletModuleId.Extensions
-  )
+  return ViewletManager.render(ViewletExtensions, oldState, newState, ViewletModuleId.Extensions)
 }
 
 test('create', () => {
@@ -114,9 +86,7 @@ test('create', () => {
 test('loadContent - error - ReferenceError', async () => {
   // @ts-ignore
   SearchExtensions.searchExtensions.mockImplementation(() => {
-    throw new Error(
-      "VError: Failed to search for extensions: ReferenceError: Cannot access 'extensions' before initialization"
-    )
+    throw new Error("VError: Failed to search for extensions: ReferenceError: Cannot access 'extensions' before initialization")
   })
   const state = {
     ...ViewletExtensions.create(),
@@ -124,8 +94,7 @@ test('loadContent - error - ReferenceError', async () => {
     height: 200,
   }
   expect(await ViewletExtensions.loadContent(state)).toMatchObject({
-    error:
-      "Error: VError: Failed to search for extensions: ReferenceError: Cannot access 'extensions' before initialization",
+    message: "Error: VError: Failed to search for extensions: ReferenceError: Cannot access 'extensions' before initialization",
   })
 })
 
@@ -144,8 +113,7 @@ test('loadContent', async () => {
       {
         id: 'builtin.language-basics-html',
         name: 'Language Basics HTML',
-        description:
-          'Provides syntax highlighting and bracket matching in HTML files.',
+        description: 'Provides syntax highlighting and bracket matching in HTML files.',
         icon: '//icons/language-icon.svg',
       },
       {
@@ -162,8 +130,7 @@ test('loadContent', async () => {
       {
         id: 'builtin.language-basics-html',
         name: 'Language Basics HTML',
-        description:
-          'Provides syntax highlighting and bracket matching in HTML files.',
+        description: 'Provides syntax highlighting and bracket matching in HTML files.',
         languages: [
           {
             id: 'html',
@@ -187,8 +154,7 @@ test('loadContent', async () => {
   const newState = await ViewletExtensions.loadContent(state)
   expect(newState.allExtensions).toEqual([
     {
-      description:
-        'Provides syntax highlighting and bracket matching in HTML files.',
+      description: 'Provides syntax highlighting and bracket matching in HTML files.',
       id: 'builtin.language-basics-html',
 
       languages: [
@@ -213,8 +179,7 @@ test('loadContent', async () => {
   ])
   expect(newState.items).toEqual([
     {
-      description:
-        'Provides syntax highlighting and bracket matching in HTML files.',
+      description: 'Provides syntax highlighting and bracket matching in HTML files.',
       icon: '//icons/language-icon.svg',
       id: 'builtin.language-basics-html',
       name: 'Language Basics HTML',
@@ -263,8 +228,7 @@ test('loadContent - with scrollbar', async () => {
       {
         id: 'builtin.language-basics-html',
         name: 'Language Basics HTML',
-        description:
-          'Provides syntax highlighting and bracket matching in HTML files.',
+        description: 'Provides syntax highlighting and bracket matching in HTML files.',
         languages: [
           {
             id: 'html',
@@ -308,17 +272,8 @@ test.skip('install', async () => {
     }
   })
   await ViewletExtensions.handleInstall(state, 'test-author.test-extension')
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'ExtensionManagement.install',
-    'test-author.test-extension'
-  )
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Extensions',
-    'setExtensionState',
-    'test-author.test-extension',
-    'installing'
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionManagement.install', 'test-author.test-extension')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Extensions', 'setExtensionState', 'test-author.test-extension', 'installing')
   expect(RendererProcess.invoke).toHaveBeenLastCalledWith(
     'Viewlet.send',
     'Extensions',
@@ -354,9 +309,7 @@ test.skip('install - error', async () => {
     'uninstalled'
   )
   expect(ErrorHandling.handleError).toHaveBeenCalledTimes(1)
-  expect(ErrorHandling.handleError).toHaveBeenCalledWith(
-    new Error('Test Error 2')
-  )
+  expect(ErrorHandling.handleError).toHaveBeenCalledWith(new Error('Test Error 2'))
 })
 
 test.skip('uninstall', async () => {
@@ -374,17 +327,8 @@ test.skip('uninstall', async () => {
   })
   await ViewletExtensions.handleUninstall(state, 'test-author.test-extension')
   expect(SharedProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'ExtensionManagement.uninstall',
-    'test-author.test-extension'
-  )
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Extensions',
-    'setExtensionState',
-    'test-author.test-extension',
-    'uninstalling'
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionManagement.uninstall', 'test-author.test-extension')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Extensions', 'setExtensionState', 'test-author.test-extension', 'uninstalling')
   expect(RendererProcess.invoke).toHaveBeenLastCalledWith(
     'Viewlet.send',
     'Extensions',
@@ -410,16 +354,8 @@ test.skip('uninstall - error', async () => {
     }
   })
   await ViewletExtensions.handleUninstall(state, 'test-author.test-extension')
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Extensions',
-    'setExtensionState',
-    'test-author.test-extension',
-    'installed'
-  )
-  expect(ErrorHandling.handleError).toHaveBeenCalledWith(
-    new Error('Test Error 1')
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Extensions', 'setExtensionState', 'test-author.test-extension', 'installed')
+  expect(ErrorHandling.handleError).toHaveBeenCalledWith(new Error('Test Error 1'))
 })
 
 test.skip('enable', async () => {
@@ -439,28 +375,13 @@ test.skip('enable', async () => {
     }
   })
   await ViewletExtensions.handleEnable(state, 'test-author.test-extension')
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'ExtensionManagement.enable',
-    'test-author.test-extension'
-  )
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Extensions',
-    'setExtensionState',
-    'test-author.test-extension',
-    'enabled'
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionManagement.enable', 'test-author.test-extension')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Extensions', 'setExtensionState', 'test-author.test-extension', 'enabled')
   // SharedProcess.state.receive({
   //   jsonrpc: '2.0',
   //   id: ,
   // })
-  expect(RendererProcess.invoke).toHaveBeenLastCalledWith(
-    'Viewlet.send',
-    'Extensions',
-    'setExtensionState',
-    'test-author.test-extension',
-    'enabled'
-  )
+  expect(RendererProcess.invoke).toHaveBeenLastCalledWith('Viewlet.send', 'Extensions', 'setExtensionState', 'test-author.test-extension', 'enabled')
   expect(ErrorHandling.handleError).not.toHaveBeenCalled()
 })
 
@@ -480,20 +401,9 @@ test.skip('enable - error', async () => {
     }
   })
   await ViewletExtensions.handleEnable(state, 'test-author.test-extension')
-  expect(SharedProcess.invoke).toHaveBeenCalledWith(
-    'ExtensionManagement.enable',
-    'test-author.test-extension'
-  )
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Extensions',
-    'setExtensionState',
-    'test-author.test-extension',
-    'disabled'
-  )
-  expect(ErrorHandling.handleError).toHaveBeenCalledWith(
-    new Error('Test Error 3')
-  )
+  expect(SharedProcess.invoke).toHaveBeenCalledWith('ExtensionManagement.enable', 'test-author.test-extension')
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Extensions', 'setExtensionState', 'test-author.test-extension', 'disabled')
+  expect(ErrorHandling.handleError).toHaveBeenCalledWith(new Error('Test Error 3'))
 })
 
 // TODO test when error handling when `getMarketplaceUrl` fails
@@ -519,14 +429,11 @@ test.skip('handleInput', async () => {
   })
   await ViewletExtensions.handleInput(state, 'test')
   expect(Ajax.getJson).toHaveBeenCalledTimes(1)
-  expect(Ajax.getJson).toHaveBeenCalledWith(
-    'https://example.com/api/extensions/search',
-    {
-      searchParams: {
-        q: 'test',
-      },
-    }
-  )
+  expect(Ajax.getJson).toHaveBeenCalledWith('https://example.com/api/extensions/search', {
+    searchParams: {
+      q: 'test',
+    },
+  })
 })
 
 test('handleInput - error', async () => {
@@ -538,7 +445,7 @@ test('handleInput - error', async () => {
     )
   })
   expect(await ViewletExtensions.handleInput(state, 'test')).toMatchObject({
-    error:
+    message:
       'Error: Failed to load extensions from marketplace: Error: Failed to request json from "https://example.com/api/extensions/search": HTTPError: Request failed with status code 404 Not Found',
   })
 })
@@ -552,9 +459,7 @@ test.skip('handleInput - should encode uri in ajax requests', async () => {
     return []
   })
   await ViewletExtensions.handleInput(state, 'test?')
-  expect(Ajax.getJson).toHaveBeenCalledWith(
-    expect.stringContaining('/api/extensions/search?q=test%3F')
-  )
+  expect(Ajax.getJson).toHaveBeenCalledWith(expect.stringContaining('/api/extensions/search?q=test%3F'))
 })
 
 test.skip('handleInput - empty', async () => {
@@ -578,10 +483,7 @@ test.skip('handleInput - multiple calls', async () => {
   Ajax.state.getJson = jest.fn(async () => {
     return []
   })
-  await Promise.all([
-    ViewletExtensions.handleInput(state, 'test-1'),
-    ViewletExtensions.handleInput(state, 'test-2'),
-  ])
+  await Promise.all([ViewletExtensions.handleInput(state, 'test-1'), ViewletExtensions.handleInput(state, 'test-2')])
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
 })
 // test('handleInput')
@@ -603,21 +505,16 @@ test('openSuggest', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExtensions.openSuggest(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Extensions',
-    'openSuggest',
-    [
-      '@builtin',
-      '@disabled',
-      '@enabled',
-      '@installed',
-      '@outdated',
-      '@sort:installs',
-      '@id:',
-      '@category',
-    ]
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Extensions', 'openSuggest', [
+    '@builtin',
+    '@disabled',
+    '@enabled',
+    '@installed',
+    '@outdated',
+    '@sort:installs',
+    '@id:',
+    '@category',
+  ])
 })
 
 test('closeSuggest', async () => {
@@ -626,11 +523,7 @@ test('closeSuggest', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExtensions.closeSuggest(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Extensions',
-    'closeSuggest'
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Extensions', 'closeSuggest')
 })
 
 test.skip('toggleSuggest', async () => {
@@ -639,30 +532,21 @@ test.skip('toggleSuggest', async () => {
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExtensions.toggleSuggest(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Extensions',
-    'openSuggest',
-    [
-      '@builtin',
-      '@disabled',
-      '@enabled',
-      '@installed',
-      '@outdated',
-      '@sort:installs',
-      '@id:',
-      '@category',
-    ]
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Extensions', 'openSuggest', [
+    '@builtin',
+    '@disabled',
+    '@enabled',
+    '@installed',
+    '@outdated',
+    '@sort:installs',
+    '@id:',
+    '@category',
+  ])
   // @ts-ignore
   RendererProcess.invoke.mockImplementation(() => {})
   await ViewletExtensions.toggleSuggest(state)
   expect(RendererProcess.invoke).toHaveBeenCalledTimes(1)
-  expect(RendererProcess.invoke).toHaveBeenCalledWith(
-    'Viewlet.send',
-    'Extensions',
-    'closeSuggest'
-  )
+  expect(RendererProcess.invoke).toHaveBeenCalledWith('Viewlet.send', 'Extensions', 'closeSuggest')
 })
 
 // TODO test cors error
@@ -792,9 +676,7 @@ test.skip('render - negative margin is different', () => {
     ...oldState,
     deltaY: 10,
   }
-  expect(render(oldState, newState)).toEqual([
-    ['Viewlet.send', 'Extensions', 'setNegativeMargin', -10],
-  ])
+  expect(render(oldState, newState)).toEqual([['Viewlet.send', 'Extensions', 'setNegativeMargin', -10]])
 })
 
 test('render - focused index is different', () => {
@@ -828,9 +710,7 @@ test('render - focused index is different', () => {
     ...oldState,
     focusedIndex: 1,
   }
-  expect(render(oldState, newState)).toEqual([
-    ['Viewlet.send', 'Extensions', 'setFocusedIndex', 0, 1, false],
-  ])
+  expect(render(oldState, newState)).toEqual([['Viewlet.send', 'Extensions', 'setFocusedIndex', 0, 1, false]])
 })
 
 // test('scrollBarThumbMouseDown', () => {
