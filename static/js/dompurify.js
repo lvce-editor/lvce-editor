@@ -1,4 +1,4 @@
-/*! @license DOMPurify 2.4.0 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.4.0/LICENSE */
+/*! @license DOMPurify 2.4.1 | (c) Cure53 and other contributors | Released under the Apache license 2.0 and Mozilla Public License 2.0 | github.com/cure53/DOMPurify/blob/2.4.1/LICENSE */
 function _typeof(obj) {
   "@babel/helpers - typeof";
   return _typeof = typeof Symbol == "function" && typeof Symbol.iterator == "symbol" ? function(obj2) {
@@ -106,6 +106,7 @@ var arrayForEach = unapply(Array.prototype.forEach);
 var arrayPop = unapply(Array.prototype.pop);
 var arrayPush = unapply(Array.prototype.push);
 var stringToLowerCase = unapply(String.prototype.toLowerCase);
+var stringToString = unapply(String.prototype.toString);
 var stringMatch = unapply(String.prototype.match);
 var stringReplace = unapply(String.prototype.replace);
 var stringIndexOf = unapply(String.prototype.indexOf);
@@ -191,6 +192,7 @@ var mathMl = freeze(["accent", "accentunder", "align", "bevelled", "close", "col
 var xml = freeze(["xlink:href", "xml:id", "xlink:title", "xml:space", "xmlns:xlink"]);
 var MUSTACHE_EXPR = seal(/\{\{[\w\W]*|[\w\W]*\}\}/gm);
 var ERB_EXPR = seal(/<%[\w\W]*|[\w\W]*%>/gm);
+var TMPLIT_EXPR = seal(/\${[\w\W]*}/gm);
 var DATA_ATTR = seal(/^data-[\-\w.\u00B7-\uFFFF]/);
 var ARIA_ATTR = seal(/^aria-[\-\w]+$/);
 var IS_ALLOWED_URI = seal(/^(?:(?:(?:f|ht)tps?|mailto|tel|callto|cid|xmpp):|[^a-z]|[a-z+.\-]+(?:[^a-z+.\-:]|$))/i);
@@ -229,7 +231,7 @@ function createDOMPurify() {
   var DOMPurify = function DOMPurify2(root) {
     return createDOMPurify(root);
   };
-  DOMPurify.version = "2.4.0";
+  DOMPurify.version = "2.4.1";
   DOMPurify.removed = [];
   if (!window2 || !window2.document || window2.document.nodeType !== 9) {
     DOMPurify.isSupported = false;
@@ -260,7 +262,7 @@ function createDOMPurify() {
   }
   var hooks = {};
   DOMPurify.isSupported = typeof getParentNode === "function" && implementation && typeof implementation.createHTMLDocument !== "undefined" && documentMode !== 9;
-  var MUSTACHE_EXPR$1 = MUSTACHE_EXPR, ERB_EXPR$1 = ERB_EXPR, DATA_ATTR$1 = DATA_ATTR, ARIA_ATTR$1 = ARIA_ATTR, IS_SCRIPT_OR_DATA$1 = IS_SCRIPT_OR_DATA, ATTR_WHITESPACE$1 = ATTR_WHITESPACE;
+  var MUSTACHE_EXPR$1 = MUSTACHE_EXPR, ERB_EXPR$1 = ERB_EXPR, TMPLIT_EXPR$1 = TMPLIT_EXPR, DATA_ATTR$1 = DATA_ATTR, ARIA_ATTR$1 = ARIA_ATTR, IS_SCRIPT_OR_DATA$1 = IS_SCRIPT_OR_DATA, ATTR_WHITESPACE$1 = ATTR_WHITESPACE;
   var IS_ALLOWED_URI$1 = IS_ALLOWED_URI;
   var ALLOWED_TAGS = null;
   var DEFAULT_ALLOWED_TAGS = addToSet({}, [].concat(_toConsumableArray(html$1), _toConsumableArray(svg$1), _toConsumableArray(svgFilters), _toConsumableArray(mathMl$1), _toConsumableArray(text)));
@@ -315,6 +317,8 @@ function createDOMPurify() {
   var HTML_NAMESPACE = "http://www.w3.org/1999/xhtml";
   var NAMESPACE = HTML_NAMESPACE;
   var IS_EMPTY_INPUT = false;
+  var ALLOWED_NAMESPACES = null;
+  var DEFAULT_ALLOWED_NAMESPACES = addToSet({}, [MATHML_NAMESPACE, SVG_NAMESPACE, HTML_NAMESPACE], stringToString);
   var PARSER_MEDIA_TYPE;
   var SUPPORTED_PARSER_MEDIA_TYPES = ["application/xhtml+xml", "text/html"];
   var DEFAULT_PARSER_MEDIA_TYPE = "text/html";
@@ -333,11 +337,10 @@ function createDOMPurify() {
     }
     cfg = clone(cfg);
     PARSER_MEDIA_TYPE = SUPPORTED_PARSER_MEDIA_TYPES.indexOf(cfg.PARSER_MEDIA_TYPE) === -1 ? PARSER_MEDIA_TYPE = DEFAULT_PARSER_MEDIA_TYPE : PARSER_MEDIA_TYPE = cfg.PARSER_MEDIA_TYPE;
-    transformCaseFunc = PARSER_MEDIA_TYPE === "application/xhtml+xml" ? function(x) {
-      return x;
-    } : stringToLowerCase;
+    transformCaseFunc = PARSER_MEDIA_TYPE === "application/xhtml+xml" ? stringToString : stringToLowerCase;
     ALLOWED_TAGS = "ALLOWED_TAGS" in cfg ? addToSet({}, cfg.ALLOWED_TAGS, transformCaseFunc) : DEFAULT_ALLOWED_TAGS;
     ALLOWED_ATTR = "ALLOWED_ATTR" in cfg ? addToSet({}, cfg.ALLOWED_ATTR, transformCaseFunc) : DEFAULT_ALLOWED_ATTR;
+    ALLOWED_NAMESPACES = "ALLOWED_NAMESPACES" in cfg ? addToSet({}, cfg.ALLOWED_NAMESPACES, stringToString) : DEFAULT_ALLOWED_NAMESPACES;
     URI_SAFE_ATTRIBUTES = "ADD_URI_SAFE_ATTR" in cfg ? addToSet(clone(DEFAULT_URI_SAFE_ATTRIBUTES), cfg.ADD_URI_SAFE_ATTR, transformCaseFunc) : DEFAULT_URI_SAFE_ATTRIBUTES;
     DATA_URI_TAGS = "ADD_DATA_URI_TAGS" in cfg ? addToSet(clone(DEFAULT_DATA_URI_TAGS), cfg.ADD_DATA_URI_TAGS, transformCaseFunc) : DEFAULT_DATA_URI_TAGS;
     FORBID_CONTENTS = "FORBID_CONTENTS" in cfg ? addToSet({}, cfg.FORBID_CONTENTS, transformCaseFunc) : DEFAULT_FORBID_CONTENTS;
@@ -445,12 +448,15 @@ function createDOMPurify() {
     var parent = getParentNode(element);
     if (!parent || !parent.tagName) {
       parent = {
-        namespaceURI: HTML_NAMESPACE,
+        namespaceURI: NAMESPACE,
         tagName: "template"
       };
     }
     var tagName = stringToLowerCase(element.tagName);
     var parentTagName = stringToLowerCase(parent.tagName);
+    if (!ALLOWED_NAMESPACES[element.namespaceURI]) {
+      return false;
+    }
     if (element.namespaceURI === SVG_NAMESPACE) {
       if (parent.namespaceURI === HTML_NAMESPACE) {
         return tagName === "svg";
@@ -477,6 +483,9 @@ function createDOMPurify() {
         return false;
       }
       return !ALL_MATHML_TAGS[tagName] && (COMMON_SVG_AND_HTML_ELEMENTS[tagName] || !ALL_SVG_TAGS[tagName]);
+    }
+    if (PARSER_MEDIA_TYPE === "application/xhtml+xml" && ALLOWED_NAMESPACES[element.namespaceURI]) {
+      return true;
     }
     return false;
   };
@@ -530,7 +539,7 @@ function createDOMPurify() {
       var matches = stringMatch(dirty, /^[\r\n\t ]+/);
       leadingWhitespace = matches && matches[0];
     }
-    if (PARSER_MEDIA_TYPE === "application/xhtml+xml") {
+    if (PARSER_MEDIA_TYPE === "application/xhtml+xml" && NAMESPACE === HTML_NAMESPACE) {
       dirty = '<html xmlns="http://www.w3.org/1999/xhtml"><head></head><body>' + dirty + "</body></html>";
     }
     var dirtyPayload = trustedTypesPolicy ? trustedTypesPolicy.createHTML(dirty) : dirty;
@@ -560,7 +569,7 @@ function createDOMPurify() {
     return createNodeIterator.call(root.ownerDocument || root, root, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_COMMENT | NodeFilter.SHOW_TEXT, null, false);
   };
   var _isClobbered = function _isClobbered2(elm) {
-    return elm instanceof HTMLFormElement && (typeof elm.nodeName !== "string" || typeof elm.textContent !== "string" || typeof elm.removeChild !== "function" || !(elm.attributes instanceof NamedNodeMap) || typeof elm.removeAttribute !== "function" || typeof elm.setAttribute !== "function" || typeof elm.namespaceURI !== "string" || typeof elm.insertBefore !== "function");
+    return elm instanceof HTMLFormElement && (typeof elm.nodeName !== "string" || typeof elm.textContent !== "string" || typeof elm.removeChild !== "function" || !(elm.attributes instanceof NamedNodeMap) || typeof elm.removeAttribute !== "function" || typeof elm.setAttribute !== "function" || typeof elm.namespaceURI !== "string" || typeof elm.insertBefore !== "function" || typeof elm.hasChildNodes !== "function");
   };
   var _isNode = function _isNode2(object) {
     return _typeof(Node) === "object" ? object instanceof Node : object && _typeof(object) === "object" && typeof object.nodeType === "number" && typeof object.nodeName === "string";
@@ -629,6 +638,7 @@ function createDOMPurify() {
       content = currentNode.textContent;
       content = stringReplace(content, MUSTACHE_EXPR$1, " ");
       content = stringReplace(content, ERB_EXPR$1, " ");
+      content = stringReplace(content, TMPLIT_EXPR$1, " ");
       if (currentNode.textContent !== content) {
         arrayPush(DOMPurify.removed, {
           element: currentNode.cloneNode()
@@ -713,6 +723,7 @@ function createDOMPurify() {
       if (SAFE_FOR_TEMPLATES) {
         value = stringReplace(value, MUSTACHE_EXPR$1, " ");
         value = stringReplace(value, ERB_EXPR$1, " ");
+        value = stringReplace(value, TMPLIT_EXPR$1, " ");
       }
       var lcTag = transformCaseFunc(currentNode.nodeName);
       if (!_isValidAttribute(lcTag, lcName, value)) {
@@ -871,6 +882,7 @@ function createDOMPurify() {
     if (SAFE_FOR_TEMPLATES) {
       serializedHTML = stringReplace(serializedHTML, MUSTACHE_EXPR$1, " ");
       serializedHTML = stringReplace(serializedHTML, ERB_EXPR$1, " ");
+      serializedHTML = stringReplace(serializedHTML, TMPLIT_EXPR$1, " ");
     }
     return trustedTypesPolicy && RETURN_TRUSTED_TYPE ? trustedTypesPolicy.createHTML(serializedHTML) : serializedHTML;
   };
