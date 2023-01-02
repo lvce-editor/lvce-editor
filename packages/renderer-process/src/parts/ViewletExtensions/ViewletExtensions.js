@@ -98,6 +98,7 @@ export const create = () => {
     $InputBox,
     $ExtensionSuggestions: undefined,
     $ScrollBarThumb,
+    $Message: undefined,
   }
 }
 
@@ -142,17 +143,20 @@ export const setExtensionState = (state, id, extensionState) => {
   // render(state)
 }
 
-export const setError = (state, error) => {
+export const setMessage = (state, message) => {
   Assert.object(state)
-  Assert.string(error)
+  Assert.string(message)
+  const { $List, $ListItems, $ScrollBar } = state
+  if (!message) {
+    $List.replaceChildren($ListItems, $ScrollBar)
+    state.$Message = undefined
+    return
+  }
   const $Message = document.createElement('div')
   $Message.className = 'ViewletExtensionMessage'
-  $Message.textContent = error
-  const { $List } = state
-  while ($List.firstChild) {
-    $List.firstChild.remove()
-  }
-  $List.append($Message)
+  $Message.textContent = message
+  $List.replaceChildren($Message)
+  state.$Message = $Message
 }
 
 const render$Extension = ($Extension, extension) => {
@@ -291,17 +295,7 @@ export const setExtensions = (state, extensions) => {
   Assert.array(extensions)
   const { $Viewlet, $ListItems } = state
   $Viewlet.removeAttribute('aria-busy')
-  if (extensions.length === 0) {
-    const $Message = document.createElement('div')
-    $Message.className = 'ViewletExtensionMessage'
-    $Message.textContent = 'No extensions found.'
-    while ($ListItems.firstChild) {
-      $ListItems.firstChild.remove()
-    }
-    $ListItems.append($Message)
-  } else {
-    render$Extensions($ListItems, extensions)
-  }
+  render$Extensions($ListItems, extensions)
 }
 
 export const dispose = (state) => {}
