@@ -16,12 +16,12 @@ const getModule = (argv0) => {
   }
 }
 
-export const handleCliArgs = async (argv, console, process) => {
+export const handleCliArgs = async (argv) => {
   const argv0 = argv[0]
   const module = await getModule(argv0)
   // console.log('handle cli args')
   try {
-    await module.handleCliArgs(argv, console, process)
+    await module.handleCliArgs(argv)
   } catch (error) {
     Logger.error(error)
     Process.setExitCode(1)
