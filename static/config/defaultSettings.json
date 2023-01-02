@@ -7,7 +7,7 @@
   "editor.fontFamily": "'Fira Code'",
   "editor.lineHeight": 20,
   "editor.formatOnSave": false,
-  "editor.letterSpacing": -0.2,
+  "editor.letterSpacing": 0.5,
 
   "extensions.autoUpdate": true,
 
