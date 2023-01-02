@@ -1,3 +1,4 @@
+var _a;
 class HTTPError extends Error {
   constructor(response, request, options) {
     const code = response.status || response.status === 0 ? response.status : "";
@@ -88,7 +89,7 @@ const deepMerge = (...sources) => {
   }
   return returnValue;
 };
-const supportsStreams = (() => {
+const supportsRequestStreams = (() => {
   let duplexAccessed = false;
   let hasContentType = false;
   const supportsReadableStream = typeof globalThis.ReadableStream === "function";
@@ -105,6 +106,7 @@ const supportsStreams = (() => {
   return duplexAccessed && !hasContentType;
 })();
 const supportsAbortController = typeof globalThis.AbortController === "function";
+const supportsResponseStreams = typeof globalThis.ReadableStream === "function";
 const supportsFormData = typeof globalThis.FormData === "function";
 const requestMethods = ["get", "post", "put", "patch", "head", "delete"];
 const responseTypes = {
@@ -125,7 +127,8 @@ const defaultRetryOptions = {
   methods: retryMethods,
   statusCodes: retryStatusCodes,
   afterStatusCodes: retryAfterStatusCodes,
-  maxRetryAfter: Number.POSITIVE_INFINITY
+  maxRetryAfter: Number.POSITIVE_INFINITY,
+  backoffLimit: Number.POSITIVE_INFINITY
 };
 const normalizeRetryOptions = (retry = {}) => {
   if (typeof retry === "number") {
@@ -146,23 +149,104 @@ const normalizeRetryOptions = (retry = {}) => {
     afterStatusCodes: retryAfterStatusCodes
   };
 };
-const timeout = async (request, abortController, options) => new Promise((resolve, reject) => {
-  const timeoutId = setTimeout(() => {
-    if (abortController) {
-      abortController.abort();
-    }
-    reject(new TimeoutError(request));
-  }, options.timeout);
-  void options.fetch(request).then(resolve).catch(reject).then(() => {
-    clearTimeout(timeoutId);
+async function timeout(request, abortController, options) {
+  return new Promise((resolve, reject) => {
+    const timeoutId = setTimeout(() => {
+      if (abortController) {
+        abortController.abort();
+      }
+      reject(new TimeoutError(request));
+    }, options.timeout);
+    void options.fetch(request).then(resolve).catch(reject).then(() => {
+      clearTimeout(timeoutId);
+    });
   });
-});
-const delay = async (ms) => new Promise((resolve) => {
-  setTimeout(resolve, ms);
-});
+}
+const DOMException = (_a = globalThis.DOMException) != null ? _a : Error;
+function composeAbortError(signal) {
+  var _a2;
+  return new DOMException((_a2 = signal == null ? void 0 : signal.reason) != null ? _a2 : "The operation was aborted.");
+}
+async function delay(ms, {signal}) {
+  return new Promise((resolve, reject) => {
+    if (signal) {
+      if (signal.aborted) {
+        reject(composeAbortError(signal));
+        return;
+      }
+      signal.addEventListener("abort", handleAbort, {once: true});
+    }
+    function handleAbort() {
+      reject(composeAbortError(signal));
+      clearTimeout(timeoutId);
+    }
+    const timeoutId = setTimeout(() => {
+      signal == null ? void 0 : signal.removeEventListener("abort", handleAbort);
+      resolve();
+    }, ms);
+  });
+}
 class Ky {
+  static create(input, options) {
+    const ky2 = new Ky(input, options);
+    const fn = async () => {
+      if (ky2._options.timeout > maxSafeTimeout) {
+        throw new RangeError(`The \`timeout\` option cannot be greater than ${maxSafeTimeout}`);
+      }
+      await Promise.resolve();
+      let response = await ky2._fetch();
+      for (const hook of ky2._options.hooks.afterResponse) {
+        const modifiedResponse = await hook(ky2.request, ky2._options, ky2._decorateResponse(response.clone()));
+        if (modifiedResponse instanceof globalThis.Response) {
+          response = modifiedResponse;
+        }
+      }
+      ky2._decorateResponse(response);
+      if (!response.ok && ky2._options.throwHttpErrors) {
+        let error = new HTTPError(response, ky2.request, ky2._options);
+        for (const hook of ky2._options.hooks.beforeError) {
+          error = await hook(error);
+        }
+        throw error;
+      }
+      if (ky2._options.onDownloadProgress) {
+        if (typeof ky2._options.onDownloadProgress !== "function") {
+          throw new TypeError("The `onDownloadProgress` option must be a function");
+        }
+        if (!supportsResponseStreams) {
+          throw new Error("Streams are not supported in your environment. `ReadableStream` is missing.");
+        }
+        return ky2._stream(response.clone(), ky2._options.onDownloadProgress);
+      }
+      return response;
+    };
+    const isRetriableMethod = ky2._options.retry.methods.includes(ky2.request.method.toLowerCase());
+    const result = isRetriableMethod ? ky2._retry(fn) : fn();
+    for (const [type, mimeType] of Object.entries(responseTypes)) {
+      result[type] = async () => {
+        ky2.request.headers.set("accept", ky2.request.headers.get("accept") || mimeType);
+        const awaitedResult = await result;
+        const response = awaitedResult.clone();
+        if (type === "json") {
+          if (response.status === 204) {
+            return "";
+          }
+          const arrayBuffer = await response.clone().arrayBuffer();
+          const responseSize = arrayBuffer.byteLength;
+          if (responseSize === 0) {
+            return "";
+          }
+          if (options.parseJson) {
+            return options.parseJson(await response.text());
+          }
+        }
+        return response[type]();
+      };
+    }
+    return result;
+  }
   constructor(input, options = {}) {
-    var _a, _b, _c;
+    var _a2, _b, _c;
     Object.defineProperty(this, "request", {
       enumerable: true,
       configurable: true,
@@ -204,7 +288,7 @@ class Ky {
         beforeError: [],
         afterResponse: []
       }, options.hooks),
-      method: normalizeRequestMethod((_a = options.method) != null ? _a : this._input.method),
+      method: normalizeRequestMethod((_a2 = options.method) != null ? _a2 : this._input.method),
       prefixUrl: String(options.prefixUrl || ""),
       retry: normalizeRetryOptions(options.retry),
       throwHttpErrors: options.throwHttpErrors !== false,
@@ -226,16 +310,17 @@ class Ky {
     if (supportsAbortController) {
       this.abortController = new globalThis.AbortController();
       if (this._options.signal) {
+        const originalSignal = this._options.signal;
         this._options.signal.addEventListener("abort", () => {
-          this.abortController.abort();
+          this.abortController.abort(originalSignal.reason);
         });
       }
       this._options.signal = this.abortController.signal;
     }
-    this.request = new globalThis.Request(this._input, this._options);
-    if (supportsStreams) {
-      this.request.duplex = "half";
+    if (supportsRequestStreams) {
+      this._options.duplex = "half";
     }
+    this.request = new globalThis.Request(this._input, this._options);
     if (this._options.searchParams) {
       const textSearchParams = typeof this._options.searchParams === "string" ? this._options.searchParams.replace(/^\?/, "") : new URLSearchParams(this._options.searchParams).toString();
       const searchParams = "?" + textSearchParams;
@@ -243,66 +328,13 @@ class Ky {
       if ((supportsFormData && this._options.body instanceof globalThis.FormData || this._options.body instanceof URLSearchParams) && !(this._options.headers && this._options.headers["content-type"])) {
         this.request.headers.delete("content-type");
       }
-      this.request = new globalThis.Request(new globalThis.Request(url, this.request), this._options);
+      this.request = new globalThis.Request(new globalThis.Request(url, {...this.request}), this._options);
     }
     if (this._options.json !== void 0) {
       this._options.body = JSON.stringify(this._options.json);
       this.request.headers.set("content-type", (_c = this._options.headers.get("content-type")) != null ? _c : "application/json");
       this.request = new globalThis.Request(this.request, {body: this._options.body});
     }
-  }
-  static create(input, options) {
-    const ky2 = new Ky(input, options);
-    const fn = async () => {
-      if (ky2._options.timeout > maxSafeTimeout) {
-        throw new RangeError(`The \`timeout\` option cannot be greater than ${maxSafeTimeout}`);
-      }
-      await Promise.resolve();
-      let response = await ky2._fetch();
-      for (const hook of ky2._options.hooks.afterResponse) {
-        const modifiedResponse = await hook(ky2.request, ky2._options, ky2._decorateResponse(response.clone()));
-        if (modifiedResponse instanceof globalThis.Response) {
-          response = modifiedResponse;
-        }
-      }
-      ky2._decorateResponse(response);
-      if (!response.ok && ky2._options.throwHttpErrors) {
-        let error = new HTTPError(response, ky2.request, ky2._options);
-        for (const hook of ky2._options.hooks.beforeError) {
-          error = await hook(error);
-        }
-        throw error;
-      }
-      if (ky2._options.onDownloadProgress) {
-        if (typeof ky2._options.onDownloadProgress !== "function") {
-          throw new TypeError("The `onDownloadProgress` option must be a function");
-        }
-        if (!supportsStreams) {
-          throw new Error("Streams are not supported in your environment. `ReadableStream` is missing.");
-        }
-        return ky2._stream(response.clone(), ky2._options.onDownloadProgress);
-      }
-      return response;
-    };
-    const isRetriableMethod = ky2._options.retry.methods.includes(ky2.request.method.toLowerCase());
-    const result = isRetriableMethod ? ky2._retry(fn) : fn();
-    for (const [type, mimeType] of Object.entries(responseTypes)) {
-      result[type] = async () => {
-        ky2.request.headers.set("accept", ky2.request.headers.get("accept") || mimeType);
-        const awaitedResult = await result;
-        const response = awaitedResult.clone();
-        if (type === "json") {
-          if (response.status === 204) {
-            return "";
-          }
-          if (options.parseJson) {
-            return options.parseJson(await response.text());
-          }
-        }
-        return response[type]();
-      };
-    }
-    return result;
   }
   _calculateRetryDelay(error) {
     this._retryCount++;
@@ -329,7 +361,7 @@ class Ky {
         }
       }
       const BACKOFF_FACTOR = 0.3;
-      return BACKOFF_FACTOR * 2 ** (this._retryCount - 1) * 1e3;
+      return Math.min(this._options.retry.backoffLimit, BACKOFF_FACTOR * 2 ** (this._retryCount - 1) * 1e3);
     }
     return 0;
   }
@@ -345,7 +377,7 @@ class Ky {
     } catch (error) {
       const ms = Math.min(this._calculateRetryDelay(error), maxSafeTimeout);
       if (ms !== 0 && this._retryCount > 0) {
-        await delay(ms);
+        await delay(ms, {signal: this._options.signal});
         for (const hook of this._options.hooks.beforeRetry) {
           const hookResult = await hook({
             request: this.request,
