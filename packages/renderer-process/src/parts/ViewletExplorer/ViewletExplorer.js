@@ -20,23 +20,11 @@ export const create = () => {
   $Viewlet.onmousedown = ViewletExplorerEvents.handleMouseDown
   $Viewlet.oncontextmenu = ViewletExplorerEvents.handleContextMenu
   // TODO use the other mouse events that capture automatically
-  $Viewlet.addEventListener(
-    DomEventType.MouseEnter,
-    ViewletExplorerEvents.handleMouseEnter,
-    { capture: true }
-  )
-  $Viewlet.addEventListener(
-    DomEventType.MouseLeave,
-    ViewletExplorerEvents.handleMouseLeave,
-    { capture: true }
-  )
-  $Viewlet.addEventListener(
-    DomEventType.Wheel,
-    ViewletExplorerEvents.handleWheel,
-    {
-      passive: true,
-    }
-  )
+  $Viewlet.addEventListener(DomEventType.MouseEnter, ViewletExplorerEvents.handleMouseEnter, { capture: true })
+  $Viewlet.addEventListener(DomEventType.MouseLeave, ViewletExplorerEvents.handleMouseLeave, { capture: true })
+  $Viewlet.addEventListener(DomEventType.Wheel, ViewletExplorerEvents.handleWheel, {
+    passive: true,
+  })
   $Viewlet.onblur = ViewletExplorerEvents.handleBlur
   $Viewlet.ondragover = ViewletExplorerEvents.handleDragOver
   $Viewlet.ondragstart = ViewletExplorerEvents.handleDragStart
@@ -215,8 +203,15 @@ export const replaceWithEditBox = (state, index, value) => {
   $InputBox.value = value
   $InputBox.oninput = ViewletExplorerEvents.handleEditingInput
   const $Dirent = $Viewlet.children[index]
-  const $Label = $Dirent.children[1]
-  $Label.replaceWith($InputBox)
+  if ($Dirent) {
+    const $Label = $Dirent.children[1]
+    $Label.replaceWith($InputBox)
+  } else {
+    const $Dirent = document.createElement('div')
+    $Dirent.className = 'ExplorerItem'
+    $Dirent.append($InputBox)
+    $Viewlet.append($Dirent)
+  }
   $InputBox.select()
   $InputBox.setSelectionRange(0, value.length)
   $InputBox.focus()
