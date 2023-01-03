@@ -1,18 +1,14 @@
 import * as RendererWorker from '../RendererWorker/RendererWorker.js'
 import * as MouseEventType from '../MouseEventType/MouseEventType.js'
 import * as DomEventType from '../DomEventType/DomEventType.js'
+import * as Focus from '../Focus/Focus.js'
 
 /**
  * @param {PointerEvent} event
  */
 export const handlePointerMove = (event) => {
   const { pointerId, clientX, clientY } = event
-  RendererWorker.send(
-    'EditorImage.handlePointerMove',
-    pointerId,
-    clientX,
-    clientY
-  )
+  RendererWorker.send('EditorImage.handlePointerMove', pointerId, clientX, clientY)
 }
 
 /**
@@ -23,12 +19,7 @@ export const handlePointerUp = (event) => {
   if (button !== MouseEventType.LeftClick) {
     return
   }
-  RendererWorker.send(
-    'EditorImage.handlePointerUp',
-    pointerId,
-    clientX,
-    clientY
-  )
+  RendererWorker.send('EditorImage.handlePointerUp', pointerId, clientX, clientY)
 }
 
 export const handlePointerCaptureLost = (event) => {
@@ -55,16 +46,8 @@ export const handlePointerDown = (event) => {
   })
   // @ts-ignore
   target.addEventListener(DomEventType.PointerUp, handlePointerUp)
-  target.addEventListener(
-    DomEventType.LostPointerCapture,
-    handlePointerCaptureLost
-  )
-  RendererWorker.send(
-    'EditorImage.handlePointerDown',
-    pointerId,
-    clientX,
-    clientY
-  )
+  target.addEventListener(DomEventType.LostPointerCapture, handlePointerCaptureLost)
+  RendererWorker.send('EditorImage.handlePointerDown', pointerId, clientX, clientY)
 }
 
 /**
@@ -72,13 +55,7 @@ export const handlePointerDown = (event) => {
  */
 export const handleWheel = (event) => {
   const { clientX, clientY, deltaX, deltaY } = event
-  RendererWorker.send(
-    'EditorImage.handleWheel',
-    clientX,
-    clientY,
-    deltaX,
-    deltaY
-  )
+  RendererWorker.send('EditorImage.handleWheel', clientX, clientY, deltaX, deltaY)
 }
 
 /**
@@ -93,4 +70,8 @@ export const handleContextMenu = (event) => {
 
 export const handleError = (event) => {
   RendererWorker.send('EditorImage.handleImageError')
+}
+
+export const handleFocus = () => {
+  Focus.setFocus('EditorImage')
 }
