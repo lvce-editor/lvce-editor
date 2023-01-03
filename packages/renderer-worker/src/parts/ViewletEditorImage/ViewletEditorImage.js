@@ -3,7 +3,15 @@ import * as Assert from '../Assert/Assert.js'
 import * as BlobSrc from '../BlobSrc/BlobSrc.js'
 import * as Clamp from '../Clamp/Clamp.js'
 import * as DomMatrix from '../DomMatrix/DomMatrix.js'
+import * as I18nString from '../I18NString/I18NString.js'
 import * as WheelEvent from '../WheelEvent/WheelEvent.js'
+
+/**
+ * @enum {string}
+ */
+const UiStrings = {
+  ImageCouldNotBeLoaded: `Image could not be loaded`,
+}
 
 export const create = (id, uri, left, top, width, height) => {
   return {
@@ -152,7 +160,7 @@ export const handlePointerUp = (state, pointerId, x, y) => {
 export const handleImageError = (state) => {
   return {
     ...state,
-    errorMessage: `Image could not be loaded`,
+    errorMessage: I18nString.i18nString(UiStrings.ImageCouldNotBeLoaded),
   }
 }
 
@@ -165,8 +173,7 @@ const getCurrentZoomFactor = (zoomFactor, deltaY) => {
   // TODO use enum for direction
   const direction = deltaY < 0 ? 'up' : 'down'
   const normalizedDeltaY = 1 + Math.abs(deltaY) / zoomFactor
-  const currentZoomFactor =
-    direction === 'up' ? normalizedDeltaY : 1 / normalizedDeltaY
+  const currentZoomFactor = direction === 'up' ? normalizedDeltaY : 1 / normalizedDeltaY
   return currentZoomFactor
 }
 
@@ -180,12 +187,7 @@ export const handleWheel = (state, x, y, deltaX, deltaY) => {
   const relativeY = y - top
   const { domMatrix, zoomFactor, minZoom, maxZoom } = state
   const currentZoomFactor = getCurrentZoomFactor(zoomFactor, normalizedDeltaY)
-  const newDomMatrix = DomMatrix.zoomInto(
-    domMatrix,
-    currentZoomFactor,
-    relativeX,
-    relativeY
-  )
+  const newDomMatrix = DomMatrix.zoomInto(domMatrix, currentZoomFactor, relativeX, relativeY)
   return {
     ...state,
     domMatrix: newDomMatrix,
@@ -231,9 +233,4 @@ const renderErrorMessage = {
   },
 }
 
-export const render = [
-  renderSrc,
-  renderTransform,
-  renderCursor,
-  renderErrorMessage,
-]
+export const render = [renderSrc, renderTransform, renderCursor, renderErrorMessage]
