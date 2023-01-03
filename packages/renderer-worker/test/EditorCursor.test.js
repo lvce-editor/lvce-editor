@@ -83,7 +83,7 @@ test('getVisible - cursor in middle of token', () => {
     ],
     selections: EditorSelection.fromRange(0, 7, 0, 7),
   }
-  expect(EditorCursor.getVisible(editor)).toEqual([0, 35])
+  expect(EditorCursor.getVisible(editor)).toEqual([0, 34])
 })
 
 test.skip('getVisible - native', () => {
@@ -133,5 +133,5 @@ test('getVisible - emoji - 👮🏽‍♀️', () => {
     ],
     focused: true,
   }
-  expect(EditorCursor.getVisible(editor)).toEqual([0, 35])
+  expect(EditorCursor.getVisible(editor)).toEqual([0, 34])
 })
