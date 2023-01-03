@@ -9,6 +9,8 @@ export const create = () => {
 
   const $ImageWrapper = document.createElement('div')
   $ImageWrapper.className = 'ImageWrapper'
+  $ImageWrapper.tabIndex = 0
+  $ImageWrapper.onfocus = ViewletEditorImageEvents.handleFocus
   $ImageWrapper.append($Image)
 
   const $Viewlet = document.createElement('div')
@@ -17,13 +19,9 @@ export const create = () => {
   $Viewlet.onpointerdown = ViewletEditorImageEvents.handlePointerDown
   $Viewlet.onpointerup = ViewletEditorImageEvents.handlePointerUp
   $Viewlet.oncontextmenu = ViewletEditorImageEvents.handleContextMenu
-  $Viewlet.addEventListener(
-    DomEventType.Wheel,
-    ViewletEditorImageEvents.handleWheel,
-    {
-      passive: true,
-    }
-  )
+  $Viewlet.addEventListener(DomEventType.Wheel, ViewletEditorImageEvents.handleWheel, {
+    passive: true,
+  })
   return {
     $Viewlet,
     $Image,

@@ -31,6 +31,7 @@ export const create = (id, uri, left, top, width, height) => {
     eventCache: [],
     previousDiff: 0,
     errorMessage: '',
+    defaultMoveDelta: 8,
   }
 }
 
@@ -111,6 +112,50 @@ const handleMove = (state, x, y) => {
     ...state,
     pointerOffsetX: x,
     pointerOffsetY: y,
+    domMatrix: newDomMatrix,
+  }
+}
+
+export const moveLeft = (state) => {
+  const { domMatrix, defaultMoveDelta } = state
+  const deltaX = defaultMoveDelta
+  const deltaY = 0
+  const newDomMatrix = DomMatrix.move(domMatrix, deltaX, deltaY)
+  return {
+    ...state,
+    domMatrix: newDomMatrix,
+  }
+}
+
+export const moveRight = (state) => {
+  const { domMatrix, defaultMoveDelta } = state
+  const deltaX = -defaultMoveDelta
+  const deltaY = 0
+  const newDomMatrix = DomMatrix.move(domMatrix, deltaX, deltaY)
+  return {
+    ...state,
+    domMatrix: newDomMatrix,
+  }
+}
+
+export const moveUp = (state) => {
+  const { domMatrix, defaultMoveDelta } = state
+  const deltaX = 0
+  const deltaY = -defaultMoveDelta
+  const newDomMatrix = DomMatrix.move(domMatrix, deltaX, deltaY)
+  return {
+    ...state,
+    domMatrix: newDomMatrix,
+  }
+}
+
+export const moveDown = (state) => {
+  const { domMatrix, defaultMoveDelta } = state
+  const deltaX = 0
+  const deltaY = defaultMoveDelta
+  const newDomMatrix = DomMatrix.move(domMatrix, deltaX, deltaY)
+  return {
+    ...state,
     domMatrix: newDomMatrix,
   }
 }
