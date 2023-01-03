@@ -24,7 +24,9 @@ export const measureTextWidth = (text, fontWeight, fontSize, fontFamily, letterS
   Assert.number(fontWeight)
   Assert.number(fontSize)
   Assert.string(fontFamily)
-  Assert.number(letterSpacing)
+  if (typeof letterSpacing !== 'number' && typeof letterSpacing !== 'string') {
+    throw new Error('letterSpacing must be of type number or of type string')
+  }
   const ctx = getOrCreateCtx()
   // @ts-ignore
   ctx.letterSpacing = `${letterSpacing}px`
