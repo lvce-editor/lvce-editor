@@ -19,6 +19,8 @@ export const create = () => {
   // TODO recycle nodes
   const $InputBox = InputBox.create()
   $InputBox.oninput = ViewletFindWidgetEvents.handleInput
+  $InputBox.onblur = ViewletFindWidgetEvents.handleInputBlur
+  $InputBox.onfocus = ViewletFindWidgetEvents.handleFocus
   $InputBox.ariaLabel = UiStrings.Find
 
   const $MatchCountText = document.createTextNode('')
@@ -26,14 +28,8 @@ export const create = () => {
   $MatchCount.className = 'FindWidgetMatchCount'
   $MatchCount.append($MatchCountText)
 
-  const $ButtonFocusNext = IconButton.create$Button(
-    UiStrings.NextMatch,
-    Icon.NextMatch
-  )
-  const $ButtonFocusPrevious = IconButton.create$Button(
-    UiStrings.PreviousMatch,
-    Icon.PreviousMatch
-  )
+  const $ButtonFocusNext = IconButton.create$Button(UiStrings.NextMatch, Icon.NextMatch)
+  const $ButtonFocusPrevious = IconButton.create$Button(UiStrings.PreviousMatch, Icon.PreviousMatch)
   const $ButtonClose = IconButton.create$Button(UiStrings.Close, Icon.Close)
 
   const $Viewlet = document.createElement('div')
@@ -41,13 +37,7 @@ export const create = () => {
   $Viewlet.className = 'Viewlet FindWidget'
   // @ts-ignore
   $Viewlet.role = AriaRoles.Group
-  $Viewlet.append(
-    $InputBox,
-    $MatchCount,
-    $ButtonFocusPrevious,
-    $ButtonFocusNext,
-    $ButtonClose
-  )
+  $Viewlet.append($InputBox, $MatchCount, $ButtonFocusPrevious, $ButtonFocusNext, $ButtonClose)
   return {
     $Viewlet,
     $InputBox,
@@ -62,7 +52,6 @@ export const create = () => {
 export const focus = (state) => {
   const { $InputBox } = state
   $InputBox.focus()
-  Focus.setFocus('FindWidget')
 }
 
 export const setValue = (state, value) => {
