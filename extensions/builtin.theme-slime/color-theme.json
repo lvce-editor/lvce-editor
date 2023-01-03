@@ -52,7 +52,9 @@
     "TitleBarBackground": "rgb(40, 46, 47)",
     "TitleBarBorderBottomColor": "#222",
     "TitleBarColor": "#cccccc",
-    "TitleBarColorInactive": "rgba(204, 204, 204, 0.6)"
+    "TitleBarColorInactive": "rgba(204, 204, 204, 0.6)",
+
+    "WorkbenchForeground": "#cccccc"
   },
   "tokenColors": [
     {

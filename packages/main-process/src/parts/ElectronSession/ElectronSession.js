@@ -49,8 +49,7 @@ const handleHeadersReceived = (details, callback) => {
           responseHeaders: {
             ...responseHeaders,
             [CrossOriginEmbedderPolicy.key]: CrossOriginEmbedderPolicy.value,
-            [ContentSecurityPolicyWorker.key]:
-              ContentSecurityPolicyWorker.value,
+            [ContentSecurityPolicyWorker.key]: ContentSecurityPolicyWorker.value,
           },
         })
         break
@@ -72,12 +71,7 @@ const isAllowedPermission = (permission) => {
   }
 }
 
-const handlePermissionRequest = (
-  webContents,
-  permission,
-  callback,
-  details
-) => {
+const handlePermissionRequest = (webContents, permission, callback, details) => {
   callback(isAllowedPermission(permission))
 }
 
@@ -88,27 +82,25 @@ const handlePermissionCheck = (webContents, permission, origin, details) => {
 // TODO use Platform.getScheme() instead of Product.getTheme()
 
 const getAbsolutePath = (requestUrl) => {
-  const pathName = new URL(requestUrl).pathname
+  const decoded = decodeURI(requestUrl)
   const { scheme } = Platform
+  const pathName = decoded.slice(`${scheme}://-`.length)
   // TODO remove if/else in prod (use replacement)
-  if (
-    requestUrl === `${scheme}://-/` ||
-    requestUrl.startsWith(`${scheme}://-/?`)
-  ) {
+  if (pathName === `/` || pathName.startsWith(`/?`)) {
     return Path.join(Root.root, 'static', 'index.html')
   }
-  if (requestUrl.startsWith(`${scheme}://-/packages`)) {
+  if (pathName.startsWith(`/packages`)) {
     return Path.join(Root.root, pathName)
   }
-  if (requestUrl.startsWith(`${scheme}://-/static`)) {
+  if (pathName.startsWith(`/static`)) {
     return Path.join(Root.root, pathName)
   }
-  if (requestUrl.startsWith(`${scheme}://-/extensions`)) {
+  if (pathName.startsWith(`/extensions`)) {
     return Path.join(Root.root, pathName)
   }
   // TODO maybe have a separate protocol for remote, e.g. vscode has vscode-remote
-  if (requestUrl.startsWith(`${scheme}://-/remote`)) {
-    return requestUrl.slice(scheme.length + 4 + '/remote'.length)
+  if (pathName.startsWith(`/remote`)) {
+    return pathName.slice('/remote'.length)
   }
   return Path.join(Root.root, 'static', pathName)
 }
