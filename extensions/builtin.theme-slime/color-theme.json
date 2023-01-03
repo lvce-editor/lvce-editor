@@ -232,6 +232,10 @@
     {
       "name": "KeywordThis",
       "foreground": "#BE9296"
+    },
+    {
+      "name": "KeywordOperator",
+      "foreground": "#B4B4B4"
     }
   ]
 }
