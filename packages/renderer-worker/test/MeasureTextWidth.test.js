@@ -32,7 +32,7 @@ beforeAll(() => {
 })
 
 test('measureTextWidth', () => {
-  expect(MeasureTextWidth.measureTextWidth('test', 400, 15, "'Test Font'")).toBe(40)
+  expect(MeasureTextWidth.measureTextWidth('test', 400, 15, "'Test Font'", 0.5)).toBe(40)
   // @ts-ignore
   expect(MeasureTextWidth.state.ctx._font).toBe("400 15px 'Test Font'")
 })
