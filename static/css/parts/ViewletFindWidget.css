@@ -2,7 +2,6 @@
   /* TODO create separate variable for this */
   background: var(--ActivityBarBackground);
   z-index: 1;
-  color: wheat;
   display: flex;
   align-items: center;
   padding: 0 4px;
