@@ -165,6 +165,11 @@
     "version": "0.0.2"
   },
   {
+    "name": "builtin.language-basics-scss",
+    "repository": "github.com/lvce-editor/language-basics-scss",
+    "version": "0.0.1"
+  },
+  {
     "name": "builtin.language-basics-shellscript",
     "repository": "github.com/lvce-editor/language-basics-shellscript",
     "version": "0.0.16"
