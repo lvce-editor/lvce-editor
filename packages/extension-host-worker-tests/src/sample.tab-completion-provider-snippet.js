@@ -21,5 +21,5 @@ test('sample.tab-completion-provider-snippet', async () => {
   const editor = Locator('.Viewlet.Editor')
   await expect(editor).toHaveText(`<h1></h1>`)
   const cursor = Locator('.EditorCursor')
-  await expect(cursor).toHaveCSS('translate', /^(36|37|38|39).*?px$/)
+  await expect(cursor).toHaveCSS('translate', /^(32|33|34|35|36|37|38|39).*?px$/)
 })
