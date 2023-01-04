@@ -14,11 +14,11 @@ content 2`
 
   // assert
   const cursor = Locator('.EditorCursor')
-  await expect(cursor).toHaveCSS('top', '20px')
+  await expect(cursor).toHaveCSS('translate', /^(6|7|8|9|10).*?px 20px$/)
 
   // act
   await Editor.cursorUp()
 
   // assert
-  await expect(cursor).toHaveCSS('top', '0px')
+  await expect(cursor).toHaveCSS('translate', /^(6|7|8|9|10).*?px$/)
 })
