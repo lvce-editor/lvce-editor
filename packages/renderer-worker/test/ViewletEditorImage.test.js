@@ -394,3 +394,23 @@ test('moveDown', () => {
   const newState = ViewletEditorImage.moveDown(state)
   expect(newState.domMatrix.toString()).toBe('matrix(1, 0, 0, 1, 0, 8)')
 })
+
+test('handleImageError - not found', async () => {
+  // @ts-ignore
+  globalThis.fetch = () => {
+    return {
+      ok: false,
+      status: 404,
+    }
+  }
+  const state = {
+    ...ViewletEditorImage.create(),
+    top: 0,
+    left: 0,
+    width: 100,
+    height: 100,
+    eventCache: [],
+  }
+  const newState = await ViewletEditorImage.handleImageError(state)
+  expect(newState.errorMessage).toBe('Image could not be loaded: Not Found')
+})
