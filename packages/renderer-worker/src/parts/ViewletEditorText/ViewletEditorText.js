@@ -102,6 +102,13 @@ const kFontSize = 'editor.fontSize'
 const kFontFamily = 'editor.fontFamily'
 const kLetterSpacing = 'editor.letterSpacing'
 
+const unquoteString = (string) => {
+  if (string.startsWith(`'`) && string.endsWith(`'`)) {
+    return string.slice(1, -1)
+  }
+  return string
+}
+
 export const loadContent = async (state, savedState) => {
   const { uri } = state
   const rowHeight = Preferences.get(kLineHeight) || 20
@@ -115,10 +122,10 @@ export const loadContent = async (state, savedState) => {
   const savedSelections = getSavedSelections(savedState)
   const savedDeltaY = getSavedDeltaY(savedState)
   const newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
-  // const selections = new Uint32Array([10, 10, 10, 10])
   if ((fontFamily === 'Fira Code' || fontFamily === `'Fira Code'`) && !Font.has(fontFamily, fontSize)) {
     const assetDir = Platform.getAssetDir()
-    await Font.load(fontFamily, `url('${assetDir}/fonts/FiraCode-VariableFont.ttf')`)
+    const fontName = unquoteString(fontFamily)
+    await Font.load(fontName, `url('${assetDir}/fonts/FiraCode-VariableFont.ttf')`)
   }
   return {
     ...newState2,
