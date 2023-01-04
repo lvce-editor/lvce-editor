@@ -116,7 +116,7 @@ export const loadContent = async (state, savedState) => {
   const savedDeltaY = getSavedDeltaY(savedState)
   const newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
   // const selections = new Uint32Array([10, 10, 10, 10])
-  if (fontFamily === 'Fira Code'||fontFamily===`'Fira Code'`) {
+  if ((fontFamily === 'Fira Code' || fontFamily === `'Fira Code'`) && !Font.has(fontFamily, fontSize)) {
     const assetDir = Platform.getAssetDir()
     await Font.load(fontFamily, `url('${assetDir}/fonts/FiraCode-VariableFont.ttf')`)
   }

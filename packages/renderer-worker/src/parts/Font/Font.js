@@ -6,6 +6,11 @@ const getFonts = () => {
   return globalThis.fonts || document.fonts
 }
 
+export const has = (fontName, fontSize) => {
+  const fonts = getFonts()
+  return fonts.check(`${fontSize}px ${fontName}`)
+}
+
 export const load = async (fontName, fontUrl) => {
   try {
     Assert.string(fontName)
