@@ -13,6 +13,7 @@ import * as Tokenizer from '../Tokenizer/Tokenizer.js'
 import * as Viewlet from '../Viewlet/Viewlet.js'
 import * as ViewletStates from '../ViewletStates/ViewletStates.js'
 import * as Workspace from '../Workspace/Workspace.js'
+import * as Platform from '../Platform/Platform.js'
 
 const COLUMN_WIDTH = 9 // TODO compute this automatically once
 
@@ -115,7 +116,10 @@ export const loadContent = async (state, savedState) => {
   const savedDeltaY = getSavedDeltaY(savedState)
   const newState2 = Editor.setDeltaYFixedValue(newState1, savedDeltaY)
   // const selections = new Uint32Array([10, 10, 10, 10])
-  await Font.load(fontSize, fontFamily)
+  if (fontFamily === 'Fira Code') {
+    const assetDir = Platform.getAssetDir()
+    await Font.load(fontFamily, `url('${assetDir}/fonts/FiraCode-VariableFont.ttf')`)
+  }
   return {
     ...newState2,
     rowHeight,
